@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小学拼音练习题生成器</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+    .container {
+        max-width: 1150px;
+        margin: 0 auto;
+    }
+    .header {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 20px;
+    }
+    .header h1 {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .header p {
+        font-size: 1rem;
+        opacity: 0.95;
+    }
+    .nav-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+    .nav-tab {
+        padding: 10px 22px;
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: 2px solid rgba(255,255,255,0.4);
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+        backdrop-filter: blur(10px);
+        text-decoration: none;
+    }
+    .nav-tab:hover {
+        background: rgba(255,255,255,0.35);
+        transform: translateY(-1px);
+    }
+    .nav-tab.active {
+        background: #fff;
+        color: #f5576c;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    .settings-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        margin-bottom: 30px;
+    }
+    .settings-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 22px;
+        margin-bottom: 18px;
+    }
+    .setting-group {
+        flex: 1;
+        min-width: 180px;
+    }
+    .setting-group label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+    }
+    .number-input, .select-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+        background: #fff;
+    }
+    .number-input:focus, .select-input:focus {
+        outline: none;
+        border-color: #f5576c;
+    }
+    .qtype-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+    }
+    .qtype-checkbox { display: none; }
+    .qtype-label {
+        display: block;
+        padding: 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+    }
+    .qtype-label .icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+    .qtype-label .name { font-weight: 600; color: #333; font-size: 0.95rem; }
+    .qtype-checkbox:checked + .qtype-label {
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        border-color: transparent;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(245, 87, 108, 0.35);
+    }
+    .qtype-checkbox:checked + .qtype-label .name { color: #fff; }
+    .columns-select {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .col-radio { display: none; }
+    .col-label {
+        padding: 8px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .col-radio:checked + .col-label {
+        background: #f5576c;
+        color: #fff;
+        border-color: #f5576c;
+    }
+    .level-select {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .level-radio { display: none; }
+    .level-label {
+        padding: 8px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    .level-radio:checked + .level-label {
+        background: #8e44ad;
+        color: #fff;
+        border-color: #8e44ad;
+    }
+    .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 8px;
+    }
+    .btn {
+        padding: 12px 28px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(245, 87, 108, 0.4);
+    }
+    .btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.5);
+    }
+    .btn-success {
+        background: linear-gradient(135deg, #11998e, #38ef7d);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(56, 239, 125, 0.4);
+    }
+    .btn-success:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(56, 239, 125, 0.5);
+    }
+    .btn-warning {
+        background: linear-gradient(135deg, #f7971e, #ffd200);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(247, 151, 30, 0.4);
+    }
+    .btn-warning:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 151, 30, 0.5);
+    }
+    .btn-danger {
+        background: linear-gradient(135deg, #eb3349, #f45c43);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(235, 51, 73, 0.4);
+    }
+    .btn-danger:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(235, 51, 73, 0.5);
+    }
+    .btn-info {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(79, 172, 254, 0.4);
+    }
+    .btn-info:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
+    }
+    .score-panel {
+        display: none;
+        background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+        border-radius: 14px;
+        padding: 22px 28px;
+        margin: 0 0 25px 0;
+        border: 2px solid #ffd27a;
+        box-shadow: 0 6px 20px rgba(255, 193, 7, 0.18);
+    }
+    .score-panel.show { display: block; }
+    .score-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 16px;
+    }
+    .score-big {
+        font-size: 2.4rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #f7971e, #eb3349);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .score-big.excellent { background: linear-gradient(135deg, #11998e, #38ef7d); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
+    .score-big.good { background: linear-gradient(135deg, #4facfe, #00c6fb); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
+    .score-big.pass { background: linear-gradient(135deg, #f7971e, #ffd200); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
+    .score-big.fail { background: linear-gradient(135deg, #eb3349, #f45c43); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
+    .score-detail {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+        color: #555;
+        font-size: 0.95rem;
+    }
+    .score-detail .item span:first-child { font-weight: 600; color: #333; margin-right: 6px;}
+    .score-detail .ok { color: #10ac84; font-weight: 700;}
+    .score-detail .bad { color: #ee5253; font-weight: 700;}
+    .score-detail .total { color: #2e86de; font-weight: 700;}
+    .score-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .questions-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        display: none;
+    }
+    .questions-card.show { display: block; }
+    .sheet-title {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    .sheet-title h2 {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .sheet-title .info-line {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        color: #666;
+        font-size: 0.95rem;
+        flex-wrap: wrap;
+    }
+    .section-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #444;
+        margin: 25px 0 15px;
+        padding-left: 12px;
+        border-left: 4px solid #f5576c;
+    }
+    .questions-grid {
+        display: grid;
+        gap: 18px 25px;
+        margin: 15px 0;
+    }
+    .question-item {
+        font-size: 1.1rem;
+        padding: 8px 8px;
+        border-bottom: 1px dashed #ddd;
+        line-height: 1.6;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+    .question-item.correct {
+        background: rgba(56, 239, 125, 0.1);
+        border: 1px solid #38ef7d;
+        border-bottom: 1px solid #38ef7d;
+    }
+    .question-item.wrong {
+        background: rgba(235, 51, 73, 0.08);
+        border: 1px solid #eb3349;
+        border-bottom: 1px solid #eb3349;
+    }
+    .question-item .num {
+        display: inline-block;
+        min-width: 28px;
+        color: #888;
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+    .hanzi {
+        font-size: 1.2rem;
+        font-family: "KaiTi", "STKaiti", "楷体", serif;
+        letter-spacing: 2px;
+    }
+    .pinyin {
+        font-family: "Times New Roman", "SimSun", serif;
+        font-size: 1.05rem;
+        color: #d63031;
+    }
+    .mark-icon {
+        font-size: 1rem;
+        font-weight: 800;
+        display: inline-block;
+        margin-left: 4px;
+    }
+    .mark-icon.ok { color: #10ac84; }
+    .mark-icon.bad { color: #ee5253; }
+    .correct-answer {
+        font-size: 0.85rem;
+        color: #10ac84;
+        font-weight: 600;
+        background: #e8fff3;
+        padding: 2px 7px;
+        border-radius: 4px;
+        margin-left: 4px;
+    }
+    .user-ans-input {
+        padding: 3px 8px;
+        border: 1.5px solid #bbb;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-family: inherit;
+        text-align: center;
+        width: 110px;
+        transition: all 0.2s;
+        margin: 0 3px;
+    }
+    .user-ans-input.small { width: 60px;}
+    .user-ans-input.wide { width: 140px;}
+    .user-ans-input:focus {
+        outline: none;
+        border-color: #f5576c;
+        box-shadow: 0 0 0 3px rgba(245,87,108,0.12);
+    }
+    .question-item.correct .user-ans-input {
+        border-color: #10ac84;
+        background: #e8fff3;
+        color: #10ac84;
+    }
+    .question-item.wrong .user-ans-input {
+        border-color: #ee5253;
+        background: #fff0ef;
+        color: #ee5253;
+    }
+    .wrong-section {
+        display: none;
+        margin-top: 30px;
+        padding: 22px;
+        background: linear-gradient(135deg, #fff5f5, #fff);
+        border-radius: 12px;
+        border: 2px solid #fecaca;
+    }
+    .wrong-section.show { display: block; }
+    .wrong-section h3 {
+        color: #eb3349;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    .wrong-grid {
+        display: grid;
+        gap: 15px 25px;
+    }
+    .footer-note {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        color: #666;
+        font-size: 0.9rem;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    @media print {
+        body { background: #fff; padding: 0; }
+        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .user-ans-input, .mark-icon, .correct-answer { display: none !important; }
+        .questions-card { box-shadow: none; border-radius: 0; padding: 15px; }
+        .question-item.correct, .question-item.wrong { background: transparent; border: none; border-bottom: 1px dashed #ddd;}
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📖 小学拼音练习题生成器</h1>
+        <p>多题型组合·在线答题·自动评分·错题重做</p>
+    </div>
+
+    <div class="nav-tabs">
+        <a href="math-practice.html" class="nav-tab">🧮 口算练习</a>
+        <a href="pinyin-practice.html" class="nav-tab active">📖 拼音练习</a>
+    </div>
+
+    <div class="settings-card">
+        <div class="settings-row">
+            <div class="setting-group">
+                <label>📝 题目总数</label>
+                <input type="number" id="count" class="number-input" value="24" min="5" max="200">
+            </div>
+            <div class="setting-group">
+                <label>📄 每行题数</label>
+                <div class="columns-select">
+                    <input type="radio" id="col2" name="columns" class="col-radio" value="2">
+                    <label for="col2" class="col-label">2题</label>
+                    <input type="radio" id="col3" name="columns" class="col-radio" value="3" checked>
+                    <label for="col3" class="col-label">3题</label>
+                    <input type="radio" id="col4" name="columns" class="col-radio" value="4">
+                    <label for="col4" class="col-label">4题</label>
+                </div>
+            </div>
+            <div class="setting-group">
+                <label>📚 难度等级</label>
+                <div class="level-select">
+                    <input type="radio" id="lv1" name="level" class="level-radio" value="1" checked>
+                    <label for="lv1" class="level-label">一年级</label>
+                    <input type="radio" id="lv2" name="level" class="level-radio" value="2">
+                    <label for="lv2" class="level-label">二年级</label>
+                    <input type="radio" id="lv3" name="level" class="level-radio" value="3">
+                    <label for="lv3" class="level-label">三年级</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-row">
+            <div class="setting-group" style="flex: 3; min-width: 100%;">
+                <label>🎯 题型选择（可多选）</label>
+                <div class="qtype-grid">
+                    <input type="checkbox" id="qt1" class="qtype-checkbox" checked>
+                    <label for="qt1" class="qtype-label">
+                        <span class="icon">📝</span>
+                        <span class="name">看拼音写汉字</span>
+                    </label>
+                    <input type="checkbox" id="qt2" class="qtype-checkbox" checked>
+                    <label for="qt2" class="qtype-label">
+                        <span class="icon">🔤</span>
+                        <span class="name">给汉字注拼音</span>
+                    </label>
+                    <input type="checkbox" id="qt3" class="qtype-checkbox">
+                    <label for="qt3" class="qtype-label">
+                        <span class="icon">🎵</span>
+                        <span class="name">标声调练习</span>
+                    </label>
+                    <input type="checkbox" id="qt4" class="qtype-checkbox">
+                    <label for="qt4" class="qtype-label">
+                        <span class="icon">✏️</span>
+                        <span class="name">声母/韵母填空</span>
+                    </label>
+                    <input type="checkbox" id="qt5" class="qtype-checkbox">
+                    <label for="qt5" class="qtype-label">
+                        <span class="icon">🅰️</span>
+                        <span class="name">区分声母韵母</span>
+                    </label>
+                    <input type="checkbox" id="qt6" class="qtype-checkbox">
+                    <label for="qt6" class="qtype-label">
+                        <span class="icon">🌟</span>
+                        <span class="name">整体认读音节</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="generateQuestions()">🎲 生成题目</button>
+            <button class="btn btn-success" onclick="exportWord()" id="exportBtn" disabled>📄 导出Word文档</button>
+            <button class="btn btn-warning" onclick="window.print()" id="printBtn" disabled>🖨️ 直接打印</button>
+            <button class="btn btn-danger" onclick="submitAnswers()" id="submitBtn" disabled>✅ 提交答案并评分</button>
+        </div>
+    </div>
+
+    <div class="score-panel" id="scorePanel">
+        <div class="score-top">
+            <div>
+                <div id="scoreBig" class="score-big">0 分</div>
+                <div style="color:#888;font-size:0.9rem;margin-top:4px;" id="scoreComment">继续努力！</div>
+            </div>
+            <div class="score-detail">
+                <div class="item"><span>答对：</span><span class="ok" id="correctCount">0</span>题</div>
+                <div class="item"><span>答错：</span><span class="bad" id="wrongCount">0</span>题</div>
+                <div class="item"><span>总数：</span><span class="total" id="totalCount">0</span>题</div>
+            </div>
+        </div>
+        <div class="score-btns">
+            <button class="btn btn-warning" onclick="redoWrong()" id="redoBtn" disabled>📝 重做错题</button>
+            <button class="btn btn-info" onclick="reviewAll()" id="reviewBtn">🔍 查看正确答案</button>
+            <button class="btn btn-success" onclick="submitWrongCorrections()" id="correctBtn" style="display:none;">💾 提交错题修改</button>
+            <button class="btn btn-primary" onclick="resetAll()">🔄 重新开始新练习</button>
+        </div>
+    </div>
+
+    <div class="questions-card" id="questionsCard">
+        <div class="sheet-title">
+            <h2 id="sheetTitle">小学拼音练习题</h2>
+            <div class="info-line">
+                <span>姓名：_____________</span>
+                <span>班级：_____________</span>
+                <span>日期：_____________</span>
+                <span>得分：_____________</span>
+            </div>
+        </div>
+        <div id="questionsContent"></div>
+        <div class="wrong-section" id="wrongSection">
+            <h3>📝 错题修改区（请重新作答以下错题）</h3>
+            <div class="wrong-grid" id="wrongGrid"></div>
+        </div>
+        <div class="footer-note">
+            <span id="questionCount">共 0 道题</span>
+            <span id="generateTime">生成时间：-</span>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============ 拼音题库 ============
+const SHENGMU = ['b','p','m','f','d','t','n','l','g','k','h','j','q','x','zh','ch','sh','r','z','c','s','y','w'];
+const YUNMU_DAN = ['a','o','e','i','u','ü'];
+const YUNMU_ALL = ['a','o','e','i','u','ü','ai','ei','ui','ao','ou','iu','ie','üe','er','an','en','in','un','ün','ang','eng','ing','ong'];
+const ZHENGTI = ['zhi','chi','shi','ri','zi','ci','si','yi','wu','yu','ye','yue','yuan','yin','yun','ying'];
+
+const WORD_BANK = {
+    1: [
+        {hz:'爸爸',py:'bà ba'},{hz:'妈妈',py:'mā ma'},{hz:'大米',py:'dà mǐ'},{hz:'土地',py:'tǔ dì'},
+        {hz:'马儿',py:'mǎ ér'},{hz:'花朵',py:'huā duǒ'},{hz:'哥哥',py:'gē ge'},{hz:'弟弟',py:'dì di'},
+        {hz:'画画',py:'huà huà'},{hz:'下棋',py:'xià qí'},{hz:'小鸡',py:'xiǎo jī'},{hz:'小鱼',py:'xiǎo yú'},
+        {hz:'衣服',py:'yī fu'},{hz:'下雨',py:'xià yǔ'},{hz:'西瓜',py:'xī guā'},{hz:'桌子',py:'zhuō zi'},
+        {hz:'日出',py:'rì chū'},{hz:'读书',py:'dú shū'},{hz:'骑车',py:'qí chē'},{hz:'老师',py:'lǎo shī'},
+        {hz:'树叶',py:'shù yè'},{hz:'白兔',py:'bái tù'},{hz:'牛奶',py:'niú nǎi'},{hz:'水果',py:'shuǐ guǒ'},
+        {hz:'爬山',py:'pá shān'},{hz:'回家',py:'huí jiā'},{hz:'写字',py:'xiě zì'},{hz:'学校',py:'xué xiào'},
+        {hz:'月亮',py:'yuè liang'},{hz:'星星',py:'xīng xing'},{hz:'蓝天',py:'lán tiān'},{hz:'白云',py:'bái yún'},
+        {hz:'大家',py:'dà jiā'},{hz:'朋友',py:'péng you'},{hz:'春天',py:'chūn tiān'},{hz:'夏天',py:'xià tiān'},
+        {hz:'秋天',py:'qiū tiān'},{hz:'冬天',py:'dōng tiān'},{hz:'开门',py:'kāi mén'},{hz:'关门',py:'guān mén'},
+        {hz:'中国',py:'zhōng guó'},{hz:'红花',py:'hóng huā'},{hz:'青草',py:'qīng cǎo'},{hz:'黄牛',py:'huáng niú'},
+        {hz:'小猫',py:'xiǎo māo'},{hz:'小狗',py:'xiǎo gǒu'},{hz:'鸭子',py:'yā zi'},{hz:'小鸟',py:'xiǎo niǎo'},
+        {hz:'苹果',py:'píng guǒ'},{hz:'桃子',py:'táo zi'},{hz:'梨子',py:'lí zi'},{hz:'竹子',py:'zhú zi'},
+        {hz:'木头',py:'mù tou'},{hz:'火车',py:'huǒ chē'},{hz:'汽车',py:'qì chē'},{hz:'马路',py:'mǎ lù'},
+    ],
+    2: [
+        {hz:'表扬',py:'biǎo yáng'},{hz:'准备',py:'zhǔn bèi'},{hz:'感谢',py:'gǎn xiè'},{hz:'帮助',py:'bāng zhù'},
+        {hz:'勇敢',py:'yǒng gǎn'},{hz:'认真',py:'rèn zhēn'},{hz:'勤奋',py:'qín fèn'},{hz:'诚实',py:'chéng shí'},
+        {hz:'森林',py:'sēn lín'},{hz:'草原',py:'cǎo yuán'},{hz:'海洋',py:'hǎi yáng'},{hz:'山川',py:'shān chuān'},
+        {hz:'城市',py:'chéng shì'},{hz:'乡村',py:'xiāng cūn'},{hz:'房屋',py:'fáng wū'},{hz:'公园',py:'gōng yuán'},
+        {hz:'故事',py:'gù shi'},{hz:'谜语',py:'mí yǔ'},{hz:'歌曲',py:'gē qǔ'},{hz:'舞蹈',py:'wǔ dǎo'},
+        {hz:'照相',py:'zhào xiàng'},{hz:'游泳',py:'yóu yǒng'},{hz:'跑步',py:'pǎo bù'},{hz:'跳高',py:'tiào gāo'},
+        {hz:'温暖',py:'wēn nuǎn'},{hz:'寒冷',py:'hán lěng'},{hz:'漂亮',py:'piào liang'},{hz:'高兴',py:'gāo xìng'},
+        {hz:'难过',py:'nán guò'},{hz:'生气',py:'shēng qì'},{hz:'害怕',py:'hài pà'},{hz:'惊讶',py:'jīng yà'},
+        {hz:'彩虹',py:'cǎi hóng'},{hz:'雷电',py:'léi diàn'},{hz:'冰雹',py:'bīng báo'},{hz:'浓雾',py:'nóng wù'},
+        {hz:'指南针',py:'zhǐ nán zhēn'},{hz:'降落伞',py:'jiàng luò sǎn'},{hz:'大自然',py:'dà zì rán'},
+        {hz:'科学家',py:'kē xué jiā'},{hz:'动物园',py:'dòng wù yuán'},{hz:'博物馆',py:'bó wù guǎn'},
+    ],
+    3: [
+        {hz:'雄伟',py:'xióng wěi'},{hz:'壮观',py:'zhuàng guān'},{hz:'秀丽',py:'xiù lì'},{hz:'神奇',py:'shén qí'},
+        {hz:'探索',py:'tàn suǒ'},{hz:'研究',py:'yán jiū'},{hz:'发明',py:'fā míng'},{hz:'创造',py:'chuàng zào'},
+        {hz:'辉煌',py:'huī huáng'},{hz:'灿烂',py:'càn làn'},{hz:'悠久',py:'yōu jiǔ'},{hz:'繁荣',py:'fán róng'},
+        {hz:'友谊',py:'yǒu yì'},{hz:'团结',py:'tuán jié'},{hz:'尊重',py:'zūn zhòng'},{hz:'宽容',py:'kuān róng'},
+        {hz:'理想',py:'lǐ xiǎng'},{hz:'希望',py:'xī wàng'},{hz:'梦想',py:'mèng xiǎng'},{hz:'追求',py:'zhuī qiú'},
+        {hz:'蝴蝶',py:'hú dié'},{hz:'蜻蜓',py:'qīng tíng'},{hz:'蜜蜂',py:'mì fēng'},{hz:'蚂蚁',py:'mǎ yǐ'},
+        {hz:'宇宙',py:'yǔ zhòu'},{hz:'地球',py:'dì qiú'},{hz:'太阳',py:'tài yáng'},{hz:'银河',py:'yín hé'},
+        {hz:'氧气',py:'yǎng qì'},{hz:'水源',py:'shuǐ yuán'},{hz:'土壤',py:'tǔ rǎng'},{hz:'生态',py:'shēng tài'},
+        {hz:'信息',py:'xìn xī'},{hz:'网络',py:'wǎng luò'},{hz:'数据',py:'shù jù'},{hz:'智能',py:'zhì néng'},
+    ]
+};
+
+// ============ 工具函数 ============
+const TONE_MAP = {'ā':'a','á':'a','ǎ':'a','à':'a','ō':'o','ó':'o','ǒ':'o','ò':'o','ē':'e','é':'e','ě':'e','è':'e','ī':'i','í':'i','ǐ':'i','ì':'i','ū':'u','ú':'u','ǔ':'u','ù':'u','ǖ':'ü','ǘ':'ü','ǚ':'ü','ǜ':'ü'};
+function normPY(s) {
+    if (!s) return '';
+    return s.toLowerCase()
+        .split('').map(c => TONE_MAP[c] || c).join('')
+        .replace(/\s+/g, '')
+        .replace(/v/g, 'ü')
+        .replace(/[:：]/g, '');
+}
+function normHZ(s) {
+    if (!s) return '';
+    return s.replace(/\s+/g, '').trim();
+}
+function rand(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+function randInt(min, max) { return Math.floor(Math.random()*(max-min+1))+min; }
+function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
+
+// ============ 题目生成 ============
+let currentQuestions = []; // {sectionIdx, type, html, prompt, answer, userAnswer, correct, inputType, inputWidth}
+// sectionIdx: 原section索引 + 该section题目内索引
+let globalNum = 0;
+let wrongIndices = [];
+let reviewed = false;
+let mode = 'full';
+
+function nextNum() { globalNum++; return globalNum; }
+
+// 根据题型生成输入框HTML
+function makeInput(idx, width='') {
+    const w = width ? ` ${width}` : '';
+    return `<input type="text" class="user-ans-input${w}" id="ans_${idx}" 
+        oninput="updateAnswer(${idx}, this.value)" 
+        autocomplete="off" autocapitalize="off" spellcheck="false">`;
+}
+
+// 看拼音写汉字
+function genWriteHanzi(level, globalIdx) {
+    const item = rand(WORD_BANK[level]);
+    return {
+        type: 'write',
+        promptHtml: `<span class="pinyin">${item.py}</span>`,
+        fullHtml: `<span class="num">${globalIdx}.</span> <span class="pinyin">${item.py}</span> ${makeInput(globalIdx, 'wide')}`,
+        answer: item.hz,
+        normAnswer: normHZ(item.hz),
+        check: (user) => normHZ(user) === normHZ(item.hz),
+        widthClass: 'wide',
+        placeholder: '写汉字'
+    };
+}
+
+// 给汉字注拼音
+function genWritePinyin(level, globalIdx) {
+    const item = rand(WORD_BANK[level]);
+    return {
+        type: 'markpy',
+        promptHtml: `<span class="hanzi">${item.hz}</span>`,
+        fullHtml: `<span class="num">${globalIdx}.</span> <span class="hanzi">${item.hz}</span> ${makeInput(globalIdx, 'wide')}`,
+        answer: item.py,
+        normAnswer: normPY(item.py),
+        // 拼音允许无声调
+        check: (user) => normPY(user) === normPY(item.py),
+        widthClass: 'wide',
+        placeholder: '写拼音'
+    };
+}
+
+// 标声调练习
+function genMarkTone(level, globalIdx) {
+    const pool = WORD_BANK[level];
+    const item = rand(pool);
+    // 去声调版本
+    const noTone = item.py.split('').map(c => TONE_MAP[c] || c).join('');
+    return {
+        type: 'tone',
+        promptHtml: `<span class="pinyin">${noTone}</span> <span class="hanzi">(${item.hz})</span>`,
+        fullHtml: `<span class="num">${globalIdx}.</span> <span class="pinyin">${noTone}</span> → ${makeInput(globalIdx, 'wide')} <span class="hanzi" style="font-size:0.9rem;">(${item.hz})</span>`,
+        answer: item.py,
+        normAnswer: normPY(item.py),
+        check: (user) => normPY(user) === normPY(item.py),
+        widthClass: 'wide',
+        placeholder: '标声调'
+    };
+}
+
+// 声母/韵母填空
+function genShengYunFill(level, globalIdx) {
+    const pool = WORD_BANK[level];
+    const item = rand(pool);
+    const hzArr = item.hz.split('');
+    const pyArr = item.py.split(' ');
+    const idx = randInt(0, hzArr.length-1);
+    const syllable = pyArr[idx]; // 带声调
+    const noTone = syllable.split('').map(c => TONE_MAP[c] || c).join('');
+    
+    let sm = '';
+    for (const s of SHENGMU) {
+        if (noTone.startsWith(s)) { sm = s; break; }
+    }
+    const fillType = Math.random() > 0.5 ? 'shengmu' : 'yunmu';
+    let displayBefore = '', displayAfter = '', correctAns = '';
+    
+    if (sm && fillType === 'shengmu') {
+        // 填声母：给出韵母(带声调)
+        const ymWithTone = syllable.slice(sm.length);
+        displayBefore = '';
+        displayAfter = `<span class="pinyin">${ymWithTone}</span>`;
+        correctAns = sm;
+    } else {
+        // 填韵母：给出声母
+        correctAns = syllable.slice(sm.length);
+        const smPart = sm || '';
+        displayBefore = `<span class="pinyin">${smPart}</span>`;
+        displayAfter = '';
+    }
+    const fillTypeLabel = fillType === 'shengmu' ? '声母' : '韵母';
+    
+    return {
+        type: 'fill',
+        promptHtml: `补${fillTypeLabel}：<span class="hanzi">${hzArr[idx]}</span> ${displayBefore}__${displayAfter}`,
+        fullHtml: `<span class="num">${globalIdx}.</span> 补${fillTypeLabel}：<span class="hanzi">${hzArr[idx]}</span> ${displayBefore}${makeInput(globalIdx, 'small')}${displayAfter}`,
+        answer: correctAns,
+        normAnswer: normPY(correctAns),
+        check: (user) => normPY(user) === normPY(correctAns),
+        widthClass: 'small',
+        placeholder: fillTypeLabel
+    };
+}
+
+// 区分声母韵母
+function genClassify(level, globalIdx) {
+    const isShengmu = Math.random() > 0.5;
+    let char;
+    if (isShengmu) {
+        char = rand(SHENGMU.filter(s => s.length === 1));
+    } else {
+        char = rand(YUNMU_DAN);
+    }
+    return {
+        type: 'classify',
+        promptHtml: `<span class="pinyin" style="font-size:1.3rem;font-weight:bold;">${char}</span> 是声母/韵母？`,
+        fullHtml: `<span class="num">${globalIdx}.</span> "<span class="pinyin" style="font-size:1.3rem;font-weight:bold;">${char}</span>"是：${makeInput(globalIdx, '')}`,
+        answer: isShengmu ? '声母' : '韵母',
+        normAnswer: isShengmu ? '声母' : '韵母',
+        check: (user) => {
+            const u = (user||'').trim();
+            if (isShengmu) return /^(声母|shēng mǔ|shengmu|sheng|sm|sheng mu)$/i.test(u);
+            else return /^(韵母|yùn mǔ|yunmu|yunmu|ym|yun mu|yun)$/i.test(u);
+        },
+        widthClass: '',
+        placeholder: '声母/韵母'
+    };
+}
+
+// 整体认读音节
+function genZhengti(globalIdx) {
+    const useRead = Math.random() > 0.4;
+    if (useRead) {
+        const zt = rand(ZHENGTI);
+        // 无声调的拼音 -> 写整体认读
+        const noTone = zt.split('').map(c => TONE_MAP[c] || c).join('');
+        return {
+            type: 'zhengti',
+            promptHtml: `写出整体认读：${noTone}`,
+            fullHtml: `<span class="num">${globalIdx}.</span> 写整体认读"<span class="pinyin">${noTone}</span>"：${makeInput(globalIdx, '')}`,
+            answer: zt,
+            normAnswer: normPY(zt),
+            check: (user) => normPY(user) === normPY(zt),
+            widthClass: '',
+            placeholder: '整体认读'
+        };
+    } else {
+        const zt = rand(ZHENGTI);
+        const pinyinMap = {zhi:'知',chi:'吃',shi:'诗',ri:'日',zi:'资',ci:'次',si:'思',yi:'一',wu:'五',yu:'鱼',ye:'叶',yue:'月',yuan:'园',yin:'因',yun:'云',ying:'英'};
+        const hz = pinyinMap[zt] || '字';
+        return {
+            type: 'zhengti',
+            promptHtml: `读汉字写音节：${hz}`,
+            fullHtml: `<span class="num">${globalIdx}.</span> 读"<span class="hanzi">${hz}</span>"写音节：${makeInput(globalIdx, '')}`,
+            answer: zt,
+            normAnswer: normPY(zt),
+            check: (user) => normPY(user) === normPY(zt),
+            widthClass: '',
+            placeholder: '整体认读'
+        };
+    }
+}
+
+// ============ 主生成函数 ============
+let allQuestionsFlat = []; // 扁平数组
+let sectionsFlat = []; // 每题对应的 section 标题
+
+function generateQuestions() {
+    globalNum = 0;
+    allQuestionsFlat = [];
+    sectionsFlat = [];
+    wrongIndices = [];
+    reviewed = false;
+    mode = 'full';
+    resetUIState();
+    
+    const total = parseInt(document.getElementById('count').value) || 24;
+    const columns = parseInt(document.querySelector('input[name="columns"]:checked').value) || 3;
+    const level = parseInt(document.querySelector('input[name="level"]:checked').value) || 1;
+    
+    const qTypes = [];
+    if (document.getElementById('qt1').checked) qTypes.push('write');
+    if (document.getElementById('qt2').checked) qTypes.push('markpy');
+    if (document.getElementById('qt3').checked) qTypes.push('tone');
+    if (document.getElementById('qt4').checked) qTypes.push('fill');
+    if (document.getElementById('qt5').checked) qTypes.push('classify');
+    if (document.getElementById('qt6').checked) qTypes.push('zhengti');
+    
+    if (qTypes.length === 0) {
+        alert('请至少选择一种题型！');
+        return;
+    }
+    
+    const typeCount = qTypes.length;
+    let perType = Math.floor(total / typeCount);
+    let remainder = total % typeCount;
+    // 确保每种至少1题
+    if (perType < 1) { perType = 1; remainder = Math.max(0, total - typeCount); }
+    
+    const typeNameMap = {
+        'write': '一、看拼音，写汉字',
+        'markpy': '二、给下面的汉字注上拼音',
+        'tone': '三、给下面的拼音加上正确的声调',
+        'fill': '四、把声母或韵母补充完整',
+        'classify': '五、判断是声母还是韵母',
+        'zhengti': '六、整体认读音节练习'
+    };
+    const typeOrder = ['write','markpy','tone','fill','classify','zhengti'];
+    
+    currentQuestions = [];
+    let flatIdx = 0;
+    
+    typeOrder.forEach(type => {
+        if (!qTypes.includes(type)) return;
+        let count = perType;
+        if (remainder > 0) { count++; remainder--; }
+        
+        const qInSection = [];
+        for (let i=0; i<count; i++) {
+            const num = nextNum();
+            let q;
+            switch(type) {
+                case 'write': q = genWriteHanzi(level, num); break;
+                case 'markpy': q = genWritePinyin(level, num); break;
+                case 'tone': q = genMarkTone(level, num); break;
+                case 'fill': q = genShengYunFill(level, num); break;
+                case 'classify': q = genClassify(level, num); break;
+                case 'zhengti': q = genZhengti(num); break;
+            }
+            q.globalNum = num;
+            q.flatIdx = flatIdx;
+            q.userAnswer = null;
+            q.correct = null;
+            qInSection.push(q);
+            allQuestionsFlat.push(q);
+            sectionsFlat.push(typeNameMap[type]);
+            flatIdx++;
+        }
+        currentQuestions.push({
+            title: typeNameMap[type],
+            questions: qInSection,
+            columns: columns
+        });
+    });
+    
+    renderQuestions();
+    updateHeaderInfo(level);
+    
+    document.getElementById('questionsCard').classList.add('show');
+    document.getElementById('exportBtn').disabled = false;
+    document.getElementById('printBtn').disabled = false;
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('wrongSection').classList.remove('show');
+}
+
+function resetUIState() {
+    document.getElementById('scorePanel').classList.remove('show');
+    document.getElementById('wrongSection').classList.remove('show');
+    document.getElementById('correctBtn').style.display = 'none';
+    document.getElementById('submitBtn').disabled = true;
+}
+
+function updateHeaderInfo(level) {
+    const levelName = {'1':'一年级','2':'二年级','3':'三年级'}[level];
+    document.getElementById('sheetTitle').textContent = `小学${levelName}拼音练习题`;
+    document.getElementById('questionCount').textContent = `共 ${allQuestionsFlat.length} 道题`;
+    const now = new Date();
+    document.getElementById('generateTime').textContent = 
+        `生成时间：${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+}
+
+function renderQuestions() {
+    const content = document.getElementById('questionsContent');
+    content.innerHTML = '';
+    
+    currentQuestions.forEach(section => {
+        const titleEl = document.createElement('div');
+        titleEl.className = 'section-title';
+        titleEl.textContent = section.title;
+        content.appendChild(titleEl);
+        
+        const grid = document.createElement('div');
+        grid.className = 'questions-grid';
+        grid.style.gridTemplateColumns = `repeat(${section.columns}, 1fr)`;
+        section.questions.forEach(q => {
+            const item = document.createElement('div');
+            item.className = 'question-item';
+            item.id = `q_${q.flatIdx}`;
+            item.innerHTML = q.fullHtml;
+            // 恢复值
+            const input = item.querySelector('.user-ans-input');
+            if (input && q.userAnswer) input.value = q.userAnswer;
+            grid.appendChild(item);
+        });
+        content.appendChild(grid);
+    });
+}
+
+function updateAnswer(globalNum, val) {
+    // 通过globalNum找到题目
+    const q = allQuestionsFlat.find(x => x.globalNum === globalNum);
+    if (q) q.userAnswer = val.trim() === '' ? null : val.trim();
+}
+
+function submitAnswers() {
+    // 收集答案
+    allQuestionsFlat.forEach(q => {
+        const el = document.getElementById(`ans_${q.globalNum}`);
+        if (el) q.userAnswer = el.value.trim() === '' ? null : el.value.trim();
+    });
+    
+    let right = 0, wrong = 0;
+    wrongIndices = [];
+    allQuestionsFlat.forEach(q => {
+        q.correct = q.check(q.userAnswer);
+        if (q.correct) right++;
+        else { wrong++; wrongIndices.push(q.flatIdx); }
+    });
+    const total = allQuestionsFlat.length;
+    const score = Math.round((right / total) * 100);
+    
+    // 更新DOM状态
+    allQuestionsFlat.forEach(q => {
+        const item = document.getElementById(`q_${q.flatIdx}`);
+        if (item) {
+            item.classList.remove('correct','wrong');
+            item.classList.add(q.correct ? 'correct' : 'wrong');
+            const oldMk = item.querySelector('.mark-icon');
+            if (oldMk) oldMk.remove();
+            const oldCa = item.querySelector('.correct-answer');
+            if (oldCa) oldCa.remove();
+            const input = item.querySelector('.user-ans-input');
+            if (input) input.setAttribute('readonly', 'true');
+            const mk = document.createElement('span');
+            mk.className = 'mark-icon ' + (q.correct ? 'ok' : 'bad');
+            mk.textContent = q.correct ? '✓' : '✗';
+            item.appendChild(mk);
+        }
+    });
+    
+    showScorePanel(score, right, wrong, total);
+    document.getElementById('submitBtn').disabled = true;
+    mode = 'full';
+}
+
+function showScorePanel(score, right, wrong, total) {
+    const panel = document.getElementById('scorePanel');
+    const big = document.getElementById('scoreBig');
+    const comment = document.getElementById('scoreComment');
+    big.textContent = `${score} 分`;
+    big.className = 'score-big';
+    if (score === 100) { big.classList.add('excellent'); comment.textContent = '🎉 太棒了！满分！'; }
+    else if (score >= 90) { big.classList.add('excellent'); comment.textContent = '🌟 非常优秀！'; }
+    else if (score >= 75) { big.classList.add('good'); comment.textContent = '👍 成绩不错，继续加油！'; }
+    else if (score >= 60) { big.classList.add('pass'); comment.textContent = '📚 刚好及格，多练练！'; }
+    else { big.classList.add('fail'); comment.textContent = '💪 不要灰心，多做练习！'; }
+    document.getElementById('correctCount').textContent = right;
+    document.getElementById('wrongCount').textContent = wrong;
+    document.getElementById('totalCount').textContent = total;
+    document.getElementById('redoBtn').disabled = wrong === 0;
+    panel.classList.add('show');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function reviewAll() {
+    reviewed = true;
+    allQuestionsFlat.forEach(q => {
+        if (q.correct === false) {
+            const item = document.getElementById(`q_${q.flatIdx}`);
+            if (item) {
+                const oldCa = item.querySelector('.correct-answer');
+                if (oldCa) oldCa.remove();
+                const ca = document.createElement('span');
+                ca.className = 'correct-answer';
+                ca.textContent = `正确：${q.answer}`;
+                item.appendChild(ca);
+            }
+        }
+    });
+    alert('已显示全部错题的正确答案！');
+}
+
+function redoWrong() {
+    if (wrongIndices.length === 0) { alert('没有错题！'); return; }
+    mode = 'wrong';
+    const columns = Math.min(2, parseInt(document.querySelector('input[name="columns"]:checked').value) || 2);
+    const grid = document.getElementById('wrongGrid');
+    grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+    grid.innerHTML = '';
+    
+    wrongIndices.forEach((flatIdx, i) => {
+        const q = allQuestionsFlat[flatIdx];
+        q.userAnswer = null;
+        q.correct = null;
+        const item = document.createElement('div');
+        item.className = 'question-item';
+        item.id = `wq_${flatIdx}`;
+        item.innerHTML = `
+            <span class="num">${i+1}.</span>
+            ${q.promptHtml}
+            <input type="text" class="user-ans-input ${q.widthClass}" 
+                   id="wans_${flatIdx}" 
+                   oninput="updateWrongAnswer(${flatIdx}, this.value)"
+                   autocomplete="off" autocapitalize="off" spellcheck="false">
+        `;
+        grid.appendChild(item);
+    });
+    
+    document.getElementById('correctBtn').style.display = 'inline-flex';
+    document.getElementById('correctBtn').disabled = false;
+    document.getElementById('wrongSection').classList.add('show');
+    document.getElementById('wrongSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateWrongAnswer(flatIdx, val) {
+    const v = val.trim() === '' ? null : val.trim();
+    if (!allQuestionsFlat[flatIdx]._redo) allQuestionsFlat[flatIdx]._redo = {};
+    allQuestionsFlat[flatIdx]._redo.newAnswer = v;
+}
+
+function submitWrongCorrections() {
+    let reRight = 0, stillWrong = 0;
+    wrongIndices.forEach(flatIdx => {
+        const q = allQuestionsFlat[flatIdx];
+        const newAns = (q._redo && q._redo.newAnswer !== undefined) ? q._redo.newAnswer : q.userAnswer;
+        const correctNow = q.check(newAns);
+        if (correctNow) {
+            q.correct = true;
+            q.userAnswer = newAns;
+            reRight++;
+            // 更新主区域
+            const item = document.getElementById(`q_${flatIdx}`);
+            if (item) {
+                item.classList.remove('wrong');
+                item.classList.add('correct');
+                const mk = item.querySelector('.mark-icon');
+                if (mk) { mk.className = 'mark-icon ok'; mk.textContent = '✓'; }
+                const ca = item.querySelector('.correct-answer');
+                if (ca) ca.remove();
+                const input = item.querySelector('.user-ans-input');
+                if (input) { input.value = newAns || ''; input.setAttribute('readonly','true'); }
+            }
+            // 更新错题区域
+            const witem = document.getElementById(`wq_${flatIdx}`);
+            if (witem) {
+                witem.classList.add('correct');
+                const inp = witem.querySelector('.user-ans-input');
+                if (inp) inp.setAttribute('readonly','true');
+                let m = witem.querySelector('.mark-icon');
+                if (!m) { m = document.createElement('span'); m.className = 'mark-icon ok'; witem.appendChild(m);}
+                m.className = 'mark-icon ok';
+                m.textContent = '✓ 已订正';
+            }
+        } else {
+            stillWrong++;
+            q.userAnswer = newAns;
+            const witem = document.getElementById(`wq_${flatIdx}`);
+            if (witem) {
+                witem.classList.add('wrong');
+                const inp = witem.querySelector('.user-ans-input');
+                if (inp) inp.setAttribute('readonly','true');
+                let m = witem.querySelector('.mark-icon');
+                if (!m) { m = document.createElement('span'); witem.appendChild(m);}
+                m.className = 'mark-icon bad';
+                m.textContent = `✗ 正确:${q.answer}`;
+            }
+        }
+    });
+    // 重新计算总分
+    let right = 0;
+    allQuestionsFlat.forEach(q => { if (q.correct) right++; });
+    const total = allQuestionsFlat.length;
+    const score = Math.round((right/total)*100);
+    showScorePanel(score, right, total-right, total);
+    document.getElementById('correctBtn').disabled = true;
+    setTimeout(()=>{
+        alert(`错题修改完成！\n本次订正对：${reRight} 题\n仍未答对：${stillWrong} 题\n最终得分：${score} 分`);
+    }, 200);
+}
+
+function resetAll() {
+    if (!confirm('确定要重新开始吗？当前作答记录将清空。')) return;
+    allQuestionsFlat.forEach(q => { q.userAnswer = null; q.correct = null; if (q._redo) delete q._redo; });
+    wrongIndices = [];
+    reviewed = false;
+    resetUIState();
+    renderQuestions();
+    allQuestionsFlat.forEach(q => {
+        const el = document.getElementById(`ans_${q.globalNum}`);
+        if (el) el.value = '';
+    });
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('scorePanel').classList.remove('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function replaceStylesForWord(htmlStr) {
+    return htmlStr
+        .replace(/class="num"/g, 'style="display:inline-block;min-width:22pt;color:#888;font-weight:bold;"')
+        .replace(/class="hanzi"/g, 'style="font-family:KaiTi,楷体,serif;letter-spacing:1pt;font-size:13pt;"')
+        .replace(/class="pinyin"/g, 'style="font-family:Times New Roman,SimSun,serif;color:#c0392b;"')
+        .replace(/<input[^>]*>/g, '<span style="display:inline-block;border-bottom:1pt solid #000;min-width:60pt;"></span>');
+}
+
+function exportWord() {
+    if (currentQuestions.length === 0) { alert('请先生成题目！'); return; }
+    const title = document.getElementById('sheetTitle').textContent;
+    const totalCount = allQuestionsFlat.length;
+    const genTime = document.getElementById('generateTime').textContent.replace('生成时间：', '');
+    
+    let sectionsHtml = '';
+    currentQuestions.forEach(section => {
+        sectionsHtml += `<h3 style="font-size: 14pt; margin: 20pt 0 10pt 0; padding-left: 8pt; border-left: 4pt solid #f5576c;">${section.title}</h3>`;
+        const cols = section.columns;
+        const rows = Math.ceil(section.questions.length / cols);
+        sectionsHtml += '<table style="width:100%; border-collapse: collapse;">';
+        for (let r=0; r<rows; r++) {
+            sectionsHtml += '<tr>';
+            for (let c=0; c<cols; c++) {
+                const idx = r + c * rows;
+                if (idx < section.questions.length) {
+                    sectionsHtml += `<td style="padding: 10pt 8pt; border-bottom: 1pt dashed #ccc; font-size: 12pt; line-height: 1.6;">${replaceStylesForWord(section.questions[idx].fullHtml)}</td>`;
+                } else {
+                    sectionsHtml += '<td style="padding: 10pt 8pt;"></td>';
+                }
+            }
+            sectionsHtml += '</tr>';
+        }
+        sectionsHtml += '</table>';
+    });
+    
+    const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>${title}</title>
+<style>
+    body { font-family: "SimSun", "宋体", sans-serif; }
+    .title-center { text-align: center; font-size: 20pt; font-weight: bold; margin: 15pt 0; }
+    .info-bar { text-align: center; font-size: 11pt; margin-bottom: 15pt; }
+    .info-bar span { margin: 0 15pt; }
+    .foot { margin-top: 25pt; padding-top: 8pt; border-top: 1pt solid #ccc; display: flex; justify-content: space-between; font-size: 10pt; color: #666; }
+</style>
+</head>
+<body>
+    <div class="title-center">${title}</div>
+    <div class="info-bar">
+        <span>姓名：_______________</span>
+        <span>班级：_______________</span>
+        <span>日期：_______________</span>
+        <span>得分：_______________</span>
+    </div>
+    ${sectionsHtml}
+    <div class="foot">
+        <span>共 ${totalCount} 道题</span>
+        <span>生成时间：${genTime}</span>
+    </div>
+</body>
+</html>`;
+    const blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const now = new Date();
+    const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+    a.download = `拼音练习题_${ts}.doc`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+window.onload = function() {
+    generateQuestions();
+};
+</script>
+</body>
+</html>
