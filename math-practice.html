@@ -270,6 +270,14 @@
         padding: 40px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         display: none;
+        max-width: 210mm;
+        width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+    @page {
+        size: A4;
+        margin: 15mm 12mm;
     }
     .questions-card.show {
         display: block;
@@ -396,15 +404,27 @@
             background: #fff;
             padding: 0;
         }
-        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .answer-input, .mark-icon, .correct-answer {
+        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .answer-input, .mark-icon, .correct-answer, .back-home, .grade-badge {
             display: none !important;
         }
         .questions-card {
             box-shadow: none;
             border-radius: 0;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
+            max-width: none;
+            width: 100%;
         }
-        .question-item { border: none; padding: 6px 0;}
+        .questions-grid {
+            gap: 10px 20px;
+            margin: 10px 0;
+        }
+        .question-item { border: none; padding: 4px 0; font-size: 1rem; page-break-inside: avoid;}
+        .question-item .num {
+            min-width: 22px;
+            font-size: 0.7rem !important;
+            color: #aaa;
+        }
         .question-item.correct, .question-item.wrong {
             background: transparent;
             border: none;
@@ -901,7 +921,7 @@ function exportWord() {
         for (let c = 0; c < columns; c++) {
             const idx = r + c * rows;
             if (idx < count) {
-                rowHtml += `<td style="padding: 12px 8px; border-bottom: 1px dashed #ccc; font-size: 14pt; font-family: 'Times New Roman', serif; white-space: nowrap;">${idx + 1}. ${currentQuestions[idx].text}</td>`;
+                rowHtml += `<td style="padding: 10px 8px; border-bottom: 1px dashed #ccc; font-size: 14pt; font-family: 'Times New Roman', serif; white-space: nowrap;"><span style="font-size: 9pt; color: #888; vertical-align: baseline; margin-right: 3pt;">${idx + 1}.</span>${currentQuestions[idx].text}</td>`;
             } else {
                 rowHtml += '<td style="padding: 12px 8px;"></td>';
             }

@@ -283,6 +283,14 @@
         padding: 40px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         display: none;
+        max-width: 210mm;
+        width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+    @page {
+        size: A4;
+        margin: 15mm 12mm;
     }
     .questions-card.show { display: block; }
     .sheet-title {
@@ -426,8 +434,15 @@
     }
     @media print {
         body { background: #fff; padding: 0; }
-        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .user-ans-input, .mark-icon, .correct-answer { display: none !important; }
-        .questions-card { box-shadow: none; border-radius: 0; padding: 15px; }
+        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .user-ans-input, .mark-icon, .correct-answer, .back-home, .grade-badge { display: none !important; }
+        .questions-card { box-shadow: none; border-radius: 0; padding: 0; margin: 0; max-width: none; width: 100%; }
+        .question-item { padding: 4px 0; page-break-inside: avoid; border-bottom: 1px dashed #ddd;}
+        .question-item .num {
+            min-width: 22px;
+            font-size: 0.7rem !important;
+            color: #aaa;
+            font-weight: 500;
+        }
         .question-item.correct, .question-item.wrong { background: transparent; border: none; border-bottom: 1px dashed #ddd;}
     }
 </style>
@@ -1123,7 +1138,7 @@ function resetAll() {
 
 function replaceStylesForWord(htmlStr) {
     return htmlStr
-        .replace(/class="num"/g, 'style="display:inline-block;min-width:22pt;color:#888;font-weight:bold;"')
+        .replace(/class="num"/g, 'style="display:inline-block;min-width:22pt;color:#888;font-weight:500;font-size:9pt;vertical-align:baseline;margin-right:3pt;"')
         .replace(/class="hanzi"/g, 'style="font-family:KaiTi,楷体,serif;letter-spacing:1pt;font-size:13pt;"')
         .replace(/class="pinyin"/g, 'style="font-family:Times New Roman,SimSun,serif;color:#c0392b;"')
         .replace(/<input[^>]*>/g, '<span style="display:inline-block;border-bottom:1pt solid #000;min-width:60pt;"></span>');
