@@ -34,33 +34,38 @@
         font-size: 1rem;
         opacity: 0.95;
     }
-    .nav-tabs {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin-bottom: 25px;
-        flex-wrap: wrap;
-    }
-    .nav-tab {
-        padding: 10px 22px;
+    .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 18px;
         background: rgba(255,255,255,0.2);
         color: #fff;
         border: 2px solid rgba(255,255,255,0.4);
-        border-radius: 25px;
+        border-radius: 22px;
         cursor: pointer;
         font-weight: 600;
+        font-size: 0.9rem;
         transition: all 0.2s;
         backdrop-filter: blur(10px);
         text-decoration: none;
+        margin-bottom: 20px;
     }
-    .nav-tab:hover {
+    .back-home:hover {
         background: rgba(255,255,255,0.35);
         transform: translateY(-1px);
+        color: #fff;
     }
-    .nav-tab.active {
-        background: #fff;
+    .grade-badge {
+        display: inline-block;
+        margin-left: 10px;
+        padding: 4px 14px;
+        background: rgba(255,255,255,0.95);
         color: #f5576c;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        vertical-align: middle;
     }
     .settings-card {
         background: #fff;
@@ -430,13 +435,12 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>📖 小学拼音练习题生成器</h1>
+        <h1>📖 语文拼音练习<span class="grade-badge" id="gradeBadge"></span></h1>
         <p>多题型组合·在线答题·自动评分·错题重做</p>
     </div>
 
-    <div class="nav-tabs">
-        <a href="math-practice.html" class="nav-tab">🧮 口算练习</a>
-        <a href="pinyin-practice.html" class="nav-tab active">📖 拼音练习</a>
+    <div style="text-align:left;">
+        <a href="index.html" class="back-home">← 返回首页</a>
     </div>
 
     <div class="settings-card">
@@ -454,17 +458,6 @@
                     <label for="col3" class="col-label">3题</label>
                     <input type="radio" id="col4" name="columns" class="col-radio" value="4">
                     <label for="col4" class="col-label">4题</label>
-                </div>
-            </div>
-            <div class="setting-group">
-                <label>📚 难度等级</label>
-                <div class="level-select">
-                    <input type="radio" id="lv1" name="level" class="level-radio" value="1" checked>
-                    <label for="lv1" class="level-label">一年级</label>
-                    <input type="radio" id="lv2" name="level" class="level-radio" value="2">
-                    <label for="lv2" class="level-label">二年级</label>
-                    <input type="radio" id="lv3" name="level" class="level-radio" value="3">
-                    <label for="lv3" class="level-label">三年级</label>
                 </div>
             </div>
         </div>
@@ -810,7 +803,7 @@ function generateQuestions() {
     
     const total = parseInt(document.getElementById('count').value) || 24;
     const columns = parseInt(document.querySelector('input[name="columns"]:checked').value) || 3;
-    const level = parseInt(document.querySelector('input[name="level"]:checked').value) || 1;
+    const level = getGradeParam();
     
     const qTypes = [];
     if (document.getElementById('qt1').checked) qTypes.push('write');
@@ -1203,7 +1196,22 @@ function exportWord() {
     URL.revokeObjectURL(url);
 }
 
+function getGradeParam() {
+    const p = new URLSearchParams(window.location.search).get('grade');
+    const g = (p === '1' || p === '2' || p === '3') ? p : '1';
+    return Number(g);
+}
+function applyGradeDefaults() {
+    const g = getGradeParam();
+    const gradeName = {1:'一年级', 2:'二年级', 3:'三年级'}[g];
+    document.getElementById('gradeBadge').textContent = gradeName;
+    // 根据年级设置默认题目数量
+    const defaults = {1: {count: 16}, 2: {count: 24}, 3: {count: 30}}[g];
+    const countEl = document.getElementById('count');
+    if (countEl && !countEl.dataset.touched) countEl.value = defaults.count;
+}
 window.onload = function() {
+    applyGradeDefaults();
     generateQuestions();
 };
 </script>
