@@ -275,10 +275,6 @@
         margin: 0 auto;
         box-sizing: border-box;
     }
-    @page {
-        size: A4;
-        margin: 15mm 12mm;
-    }
     .questions-card.show {
         display: block;
     }
@@ -400,11 +396,12 @@
         font-size: 0.9rem;
     }
     @media print {
+        @page { size: A4; margin: 15mm 12mm; }
         body {
             background: #fff;
             padding: 0;
         }
-        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .answer-input, .mark-icon, .correct-answer, .back-home, .grade-badge {
+        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .mark-icon, .correct-answer, .back-home, .grade-badge, .timerDisplay {
             display: none !important;
         }
         .questions-card {
@@ -429,6 +426,16 @@
             background: transparent;
             border: none;
         }
+        .answer-input {
+            border: none;
+            border-bottom: 1.5px solid #333;
+            border-radius: 0;
+            background: transparent;
+            width: 60px;
+            padding: 2px 4px;
+            font-size: 1rem;
+            color: #333;
+        }
     }
 </style>
 </head>
@@ -440,7 +447,7 @@
     </div>
 
     <div style="text-align:left;">
-        <a href="index.html" class="back-home">← 返回首页</a>
+        <a href="math-types.html" class="back-home">← 返回题型选择</a>
     </div>
 
     <div class="settings-card">
@@ -527,7 +534,7 @@
             <div class="info-line">
                 <span>姓名：_____________</span>
                 <span>日期：_____________</span>
-                <span>用时：_____________</span>
+                <span>用时：<span id="timerDisplay">00:00</span></span>
                 <span>得分：_____________</span>
             </div>
         </div>
@@ -548,6 +555,8 @@ let currentQuestions = [];   // { text, answer, userAnswer:null, correct:null }
 let wrongIndices = [];       // 当前错题索引
 let reviewed = false;        // 是否已经显示正确答案
 let mode = 'full';           // full: 全题; wrong: 错题模式
+let timer = null;
+let timerStart = 0;
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -630,8 +639,15 @@ function generateQuestions() {
     }
 
     currentQuestions = [];
+    const seen = new Set();
     for (let i = 0; i < count; i++) {
-        currentQuestions.push(generateOneQuestion(operators, maxNum, noNegative, exactDiv));
+        let q, attempts = 0;
+        do {
+            q = generateOneQuestion(operators, maxNum, noNegative, exactDiv);
+            attempts++;
+        } while (seen.has(q.text) && attempts < 10);
+        seen.add(q.text);
+        currentQuestions.push(q);
     }
     
     wrongIndices = [];
@@ -639,6 +655,7 @@ function generateQuestions() {
     mode = 'full';
     resetUIState();
     renderQuestions(columns);
+    startTimer();
 
     const opNames = {'+':'加法','-':'减法','×':'乘法','÷':'除法'};
     const opStr = operators.map(o => opNames[o]).join('、');
@@ -711,7 +728,21 @@ function isAnswerCorrect(userAns, trueAns) {
     return Math.abs(u - t) < 0.005;
 }
 
+function startTimer(){
+    stopTimer();
+    timerStart = Date.now();
+    timer = setInterval(()=>{
+        const t = Math.floor((Date.now()-timerStart)/1000);
+        const el = document.getElementById('timerDisplay');
+        if(el) el.textContent = `${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
+    },1000);
+}
+function stopTimer(){ if(timer){clearInterval(timer);timer=null;} }
+function getElapsed(){ return Math.floor((Date.now()-timerStart)/1000); }
+
 function submitAnswers() {
+    stopTimer();
+    const elapsed = getElapsed();
     // 收集输入答案
     currentQuestions.forEach((q, idx) => {
         const el = document.getElementById(`ans_${idx}`);
@@ -748,22 +779,25 @@ function submitAnswers() {
     });
 
     // 显示评分面板
-    showScorePanel(score, right, wrong, total);
+    showScorePanel(score, right, wrong, total, elapsed);
     document.getElementById('submitBtn').disabled = true;
     mode = 'full';
 }
 
-function showScorePanel(score, right, wrong, total) {
+function showScorePanel(score, right, wrong, total, elapsed) {
     const panel = document.getElementById('scorePanel');
     const big = document.getElementById('scoreBig');
     const comment = document.getElementById('scoreComment');
     big.textContent = `${score} 分`;
     big.className = 'score-big';
-    if (score === 100) { big.classList.add('excellent'); comment.textContent = '🎉 太棒了！满分！'; }
-    else if (score >= 90) { big.classList.add('excellent'); comment.textContent = '🌟 非常优秀！'; }
-    else if (score >= 75) { big.classList.add('good'); comment.textContent = '👍 成绩不错，继续加油！'; }
-    else if (score >= 60) { big.classList.add('pass'); comment.textContent = '📚 刚好及格，多练练！'; }
-    else { big.classList.add('fail'); comment.textContent = '💪 不要灰心，多做练习！'; }
+    const mins = Math.floor(elapsed/60);
+    const secs = elapsed%60;
+    const timeStr = mins>0?`${mins}分${secs}秒`:`${secs}秒`;
+    if (score === 100) { big.classList.add('excellent'); comment.textContent = `🎉 太棒了！满分！用时${timeStr}`; }
+    else if (score >= 90) { big.classList.add('excellent'); comment.textContent = `🌟 非常优秀！用时${timeStr}`; }
+    else if (score >= 75) { big.classList.add('good'); comment.textContent = `👍 成绩不错，继续加油！用时${timeStr}`; }
+    else if (score >= 60) { big.classList.add('pass'); comment.textContent = `📚 刚好及格，多练练！用时${timeStr}`; }
+    else { big.classList.add('fail'); comment.textContent = `💪 不要灰心，多做练习！用时${timeStr}`; }
     document.getElementById('correctCount').textContent = right;
     document.getElementById('wrongCount').textContent = wrong;
     document.getElementById('totalCount').textContent = total;
@@ -882,7 +916,7 @@ function submitWrongCorrections() {
     currentQuestions.forEach(q => { if (q.correct) right++; });
     const total = currentQuestions.length;
     const score = Math.round((right/total)*100);
-    showScorePanel(score, right, total-right, total);
+    showScorePanel(score, right, total-right, total, getElapsed());
 
     document.getElementById('correctBtn').disabled = true;
     setTimeout(()=>{
@@ -900,6 +934,7 @@ function resetAll() {
     renderQuestions(cols);
     document.getElementById('submitBtn').disabled = false;
     document.getElementById('scorePanel').classList.remove('show');
+    startTimer();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学题型选择</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        min-height: 100vh;
+        padding: 30px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .wrapper {
+        width: 100%;
+        max-width: 600px;
+    }
+    .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 18px;
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        border: 2px solid rgba(255,255,255,0.4);
+        border-radius: 22px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        backdrop-filter: blur(10px);
+        text-decoration: none;
+        margin-bottom: 20px;
+    }
+    .back-home:hover { background: rgba(255,255,255,0.35); transform: translateY(-1px); color: #fff; }
+    .header {
+        text-align: center;
+        color: #fff;
+        margin-bottom: 30px;
+    }
+    .header .logo {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+    .header h1 {
+        font-size: 2.2rem;
+        text-shadow: 3px 3px 8px rgba(0,0,0,0.25);
+    }
+    .header p {
+        font-size: 1rem;
+        opacity: 0.92;
+        margin-top: 6px;
+    }
+    .grade-badge {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 4px 16px;
+        background: rgba(255,255,255,0.95);
+        color: #667eea;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+    .card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 40px 36px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .section-label {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 20px;
+        padding-left: 12px;
+        border-left: 5px solid #667eea;
+    }
+    .type-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .type-grid.three-col {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .type-card {
+        display: block;
+        padding: 32px 18px;
+        border: 2.5px solid #e0e0e0;
+        border-radius: 16px;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.25s;
+        user-select: none;
+        text-decoration: none;
+        color: inherit;
+    }
+    .type-card .t-icon {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 10px;
+    }
+    .type-card .t-name {
+        font-size: 1.4rem;
+        font-weight: 800;
+        margin-bottom: 6px;
+        color: #444;
+    }
+    .type-card .t-desc {
+        font-size: 0.85rem;
+        color: #888;
+        line-height: 1.5;
+    }
+    .type-card:hover {
+        border-color: #667eea;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px rgba(102,126,234,0.2);
+    }
+    .type-card:hover .t-name { color: #667eea; }
+    .foot-tip {
+        text-align: center;
+        color: #fff;
+        opacity: 0.85;
+        margin-top: 25px;
+        font-size: 0.9rem;
+    }
+    @media print {
+        @page { size: A4; margin: 15mm 12mm; }
+        body { background: #fff; }
+    }
+    @media (max-width: 480px) {
+        .type-grid { grid-template-columns: 1fr; }
+        .card { padding: 28px 18px; }
+        .header h1 { font-size: 1.7rem; }
+    }
+</style>
+</head>
+<body>
+<div class="wrapper">
+    <a href="index.html" class="back-home">← 返回首页</a>
+
+    <div class="header">
+        <div class="logo">🧮</div>
+        <h1>数学练习</h1>
+        <p>请选择要练习的题型</p>
+        <div class="grade-badge" id="gradeBadge">一年级</div>
+    </div>
+
+    <div class="card">
+        <div class="section-label">📐 选择题型</div>
+        <div class="type-grid" id="typeGrid">
+            <a href="math-practice.html" class="type-card" id="calcLink">
+                <span class="t-icon">🔢</span>
+                <div class="t-name">口算练习</div>
+                <div class="t-desc">加减乘除 · 在线答题<br>自动评分 · 错题重做</div>
+            </a>
+            <a href="math-word-problems.html" class="type-card" id="wordLink">
+                <span class="t-icon">📝</span>
+                <div class="t-name">应用题</div>
+                <div class="t-desc">生活场景 · 分年级<br>解题思路 · 在线批改</div>
+            </a>
+            <a href="math-make-ten.html" class="type-card" id="cushiLink" style="border-color:#f6ad55;">
+                <span class="t-icon">🧩</span>
+                <div class="t-name" style="color:#dd6b20;">凑十法·平十法</div>
+                <div class="t-desc">凑十法加法 · 平十法减法<br>一年级数学基础</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="foot-tip">💡 选择题型后进入对应练习页面，每个题型独立生成题目</div>
+</div>
+
+<script>
+function getGradeParam() {
+    const p = new URLSearchParams(window.location.search).get('grade');
+    return (p === '1' || p === '2' || p === '3') ? p : '1';
+}
+const grade = getGradeParam();
+const gradeName = { '1': '一年级', '2': '二年级', '3': '三年级' }[grade];
+document.getElementById('gradeBadge').textContent = gradeName;
+document.getElementById('calcLink').href = `math-practice.html?grade=${grade}`;
+document.getElementById('wordLink').href = `math-word-problems.html?grade=${grade}`;
+document.getElementById('cushiLink').href = `math-make-ten.html?grade=${grade}`;
+// Show 3-column grid for 1st grade (has 凑十法), 2-column for others
+if (grade === '1') {
+    document.getElementById('typeGrid').classList.add('three-col');
+} else {
+    document.getElementById('cushiLink').style.display = 'none';
+}
+</script>
+</body>
+</html>

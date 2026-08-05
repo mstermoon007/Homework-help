@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小学1-3年级数学应用题练习</title>
+<style>
+  :root{
+    --bg:#f3f7fb;
+    --card:#ffffff;
+    --ink:#27324a;
+    --muted:#7a879c;
+    --line:#e3e9f2;
+    --brand:#5b8def;
+    --brand-d:#3f6fd1;
+    --ok:#22a06b;
+    --ok-bg:#e7f7ee;
+    --bad:#e0556b;
+    --bad-bg:#fdeef0;
+    --warn:#e6a23c;
+    --shadow:0 8px 24px rgba(40,70,120,.10);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:linear-gradient(180deg,#eaf2ff 0%,#f3f7fb 220px,#f3f7fb 100%);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:16px 16px 60px}
+
+  .back-home{
+    display:inline-flex;align-items:center;gap:6px;padding:8px 18px;
+    background:var(--brand);color:#fff;border-radius:22px;cursor:pointer;
+    font-weight:600;font-size:0.9rem;transition:all .2s;text-decoration:none;border:none;
+  }
+  .back-home:hover{background:var(--brand-d);transform:translateY(-1px);}
+
+  header.hero{
+    text-align:center;padding:18px 10px 10px;
+  }
+  header.hero h1{
+    margin:0;font-size:26px;letter-spacing:1px;
+    background:linear-gradient(90deg,#5b8def,#7c5cff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  header.hero p{margin:8px 0 0;color:var(--muted);font-size:14px}
+
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    box-shadow:var(--shadow);padding:18px 18px;margin:16px 0;
+  }
+  .panel h2{margin:0 0 12px;font-size:15px;color:var(--muted);font-weight:700;letter-spacing:.5px}
+
+  .seg{display:flex;flex-wrap:wrap;gap:10px}
+  .seg button{
+    flex:1 1 auto;min-width:84px;cursor:pointer;border:1.5px solid var(--line);
+    background:#fff;color:var(--ink);border-radius:12px;padding:12px 10px;font-size:15px;
+    font-weight:600;transition:.15s;
+  }
+  .seg button .sub{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+  .seg button:hover{border-color:var(--brand)}
+  .seg button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+  .seg button.active .sub{color:rgba(255,255,255,.85)}
+
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+  .count-group{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .count-group .lbl{font-size:14px;color:var(--muted);margin-right:2px}
+  .chip{
+    cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink);
+    border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;transition:.15s;
+  }
+  .chip:hover{border-color:var(--brand)}
+  .chip.active{background:var(--brand-d);border-color:var(--brand-d);color:#fff}
+  .count-group input[type=number]{
+    width:74px;padding:8px 10px;border:1.5px solid var(--line);border-radius:10px;
+    font-size:14px;color:var(--ink);text-align:center;
+  }
+
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .btn{
+    cursor:pointer;border:none;border-radius:12px;padding:12px 20px;font-size:15px;font-weight:700;
+    transition:.15s;
+  }
+  .btn-primary{background:linear-gradient(90deg,#5b8def,#6f6bff);color:#fff;box-shadow:0 6px 16px rgba(91,141,239,.35)}
+  .btn-primary:hover{filter:brightness(1.05)}
+  .btn-ghost{background:#eef3fb;color:var(--brand-d)}
+  .btn-ghost:hover{background:#e2ebf9}
+
+  .info{font-size:13px;color:var(--muted);margin-top:12px}
+  .info b{color:var(--ink)}
+
+  .meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .meta .pill{background:#eef3fb;color:var(--brand-d);border-radius:999px;padding:4px 12px;font-weight:600}
+
+  .problem{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:16px 16px 16px 52px;margin:12px 0;position:relative;
+  }
+  .problem .num{
+    position:absolute;left:14px;top:16px;width:26px;height:26px;border-radius:50%;
+    background:#eef3fb;color:var(--brand-d);font-weight:800;font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .problem .q{font-size:16px;margin:0 0 10px;line-height:1.7}
+  .problem .ans{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  }
+  .problem input{
+    width:120px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;
+    font-size:16px;color:var(--ink);outline:none;transition:.15s;
+  }
+  .problem input:focus{border-color:var(--brand)}
+  .problem .unit{font-size:14px;color:var(--muted)}
+  .problem .feedback{font-size:13px;font-weight:700;min-height:18px}
+  .problem.correct{border-color:var(--ok);background:var(--ok-bg)}
+  .problem.wrong{border-color:var(--bad);background:var(--bad-bg)}
+  .problem .reveal{font-size:13px;color:var(--warn);font-weight:600}
+  .problem .reveal.hide{display:none}
+  .problem .badge{position:absolute;right:14px;top:14px;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px}
+  .problem .badge.adv{background:#fdeccd;color:#c87a16}
+  .problem .badge.basic{background:#eef3fb;color:#5b8def}
+  .problem .step-hint{
+    font-size:12px;color:var(--brand-d);margin-top:6px;padding:6px 10px;
+    background:#eef3fb;border-radius:8px;display:none;
+  }
+  .problem .step-hint.show{display:block}
+
+  .result{
+    background:linear-gradient(135deg,#eef4ff,#f6efff);border:1px solid var(--line);
+    border-radius:16px;padding:18px;margin:16px 0;text-align:center;box-shadow:var(--shadow);
+  }
+  .result .score{font-size:34px;font-weight:800;color:var(--brand-d)}
+  .result .detail{font-size:14px;color:var(--ink);margin-top:4px}
+  .result .tips{font-size:13px;color:var(--muted);margin-top:8px}
+
+  .empty{text-align:center;color:var(--muted);padding:30px 10px;font-size:14px}
+
+  .history-box{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 18px;margin:12px 0;box-shadow:var(--shadow);
+  }
+  .history-box h3{font-size:14px;color:var(--muted);margin:0 0 8px}
+  .history-item{font-size:13px;color:var(--ink);padding:4px 0;border-bottom:1px dashed var(--line)}
+  .history-item:last-child{border-bottom:none}
+
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:10px}
+
+  @media print{
+    @page { size: A4; margin: 15mm 12mm; }
+    body{background:#fff;padding:0}
+    .wrap{max-width:none;padding:0;margin:0}
+    .panel.controls,.actions,.meta,.result,.result .tips,header.hero p,.back-home,.history-box,footer{display:none !important}
+    header.hero{padding:5px 0}
+    header.hero h1{font-size:20px;-webkit-text-fill-color:#333;color:#333}
+    .problem{box-shadow:none;border:1px solid #ccc;break-inside:avoid;padding-left:48px;margin:8px 0}
+    .problem .q{font-size:14px;line-height:1.5}
+    .problem input{border:none;border-bottom:1.5px solid #333;border-radius:0;width:100px;padding:4px 8px;font-size:14px}
+    .problem .unit{font-size:12px}
+    .feedback,.reveal,.step-hint{display:none !important}
+    .problem .badge{display:none}
+    .problem .num{width:24px;height:24px;font-size:12px;left:10px;top:14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom:10px;">
+    <a href="math-types.html" class="back-home">← 返回题型选择</a>
+  </div>
+
+  <header class="hero">
+    <h1>🧮 <span id="gradeTitle">一年级</span>数学应用题</h1>
+    <p>参考人教版教材与常见练习册题型 · 随机生成 · 在线作答 · 一键打印</p>
+  </header>
+
+  <section class="panel controls">
+    <div class="row">
+      <div class="count-group">
+        <span class="lbl">① 题目数量：</span>
+        <button class="chip active" data-count="5">5题</button>
+        <button class="chip" data-count="10">10题</button>
+        <button class="chip" data-count="15">15题</button>
+        <button class="chip" data-count="20">20题</button>
+        <input type="number" id="customCount" min="1" max="50" placeholder="自定义">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="count-group">
+        <span class="lbl">② 难度：</span>
+        <button class="chip active" data-diff="mix">混合</button>
+        <button class="chip" data-diff="basic">基础</button>
+        <button class="chip" data-diff="adv">进阶·逻辑</button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="genBtn">🎲 生成练习题</button>
+      <button class="btn btn-primary" id="checkBtn">✅ 检查答案</button>
+      <button class="btn btn-ghost" id="hintBtn">💡 解题思路</button>
+      <button class="btn btn-ghost" id="revealBtn">👀 显示答案</button>
+      <button class="btn btn-ghost" id="printBtn">🖨️ 打印</button>
+    </div>
+
+    </section>
+
+  <section id="problemsArea">
+    <div class="empty">点击「生成练习题」开始吧～ 可以切换题量和难度哦。</div>
+  </section>
+
+  <div id="resultArea"></div>
+
+  <div class="history-box" id="historyBox" style="display:none;">
+    <h3>📊 练习记录</h3>
+    <div id="historyList"></div>
+  </div>
+
+  <footer>题目由程序随机生成，仅供参考练习。如有疑问以教材为准。</footer>
+</div>
+
+<script>
+function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function pick(arr){return arr[rnd(0,arr.length-1)];}
+
+/* ============ 一年级：20以内加减、100以内、人民币、钟表、排队、比多少、连加连减 ============ */
+const G1 = [
+  // 加法(20以内)
+  function(){let a=rnd(2,9),b=rnd(2,9);const n=pick(["小鸟","小兔","苹果","气球","花朵"]);
+    return {q:`树上有 ${a} 只${n}，又飞来 ${b} 只，现在一共有多少只${n}？`,a:a+b,unit:"只",hint:`把树上的 ${a} 只和飞来的 ${b} 只合起来：${a}+${b}=${a+b}`};},
+  // 减法(20以内)
+  function(){let a=rnd(6,18),b=rnd(1,Math.min(a-1,9));const it=pick(["糖","铅笔","草莓","饼干"]);
+    return {q:`小红有 ${a} 颗${it}，送给小明 ${b} 颗，小红还剩几颗${it}？`,a:a-b,unit:"颗",hint:`从 ${a} 颗里面去掉送出的 ${b} 颗：${a}-${b}=${a-b}`};},
+  // 两位数加法(100以内)
+  function(){let a=rnd(11,89),b=rnd(10,99-a);
+    return {q:`停车场原来有 ${a} 辆汽车，又开来了 ${b} 辆，现在一共有多少辆？`,a:a+b,unit:"辆",hint:`原有的加上新来的：${a}+${b}=${a+b}`};},
+  // 两位数减法(100以内)
+  function(){let a=rnd(30,99),b=rnd(10,a-1);
+    return {q:`书架上有 ${a} 本书，借走了 ${b} 本，还剩多少本？`,a:a-b,unit:"本",hint:`从总数 ${a} 本中去掉借走的 ${b} 本：${a}-${b}=${a-b}`};},
+  // 比多少(求较小数)
+  function(){let a=rnd(10,40),b=rnd(3,Math.min(a-1,15));
+    return {q:`小明有 ${a} 张贴画，小红比小明少 ${b} 张，小红有几张贴画？`,a:a-b,unit:"张",hint:`比 ${a} 少 ${b}，用减法：${a}-${b}=${a-b}`};},
+  // 比多少(求较大数)
+  function(){let a=rnd(3,15),b=rnd(5,30);
+    return {q:`小华有 ${a} 个气球，小丽比小华多 ${b} 个，小丽有多少个气球？`,a:a+b,unit:"个",hint:`比 ${a} 多 ${b}，用加法：${a}+${b}=${a+b}`};},
+  // 排队问题
+  function(){let a=rnd(2,8),b=rnd(2,8);
+    return {q:`小朋友们排成一队，从前面数乐乐排第 ${a} 个，从后面数排第 ${b} 个，这一队一共有多少个小朋友？`,a:a+b-1,unit:"个",hint:`乐乐被数了2次，要减去1次：${a}+${b}-1=${a+b-1}`};},
+  // 人民币
+  function(){let a=rnd(2,9),b=rnd(a+1,15);
+    return {q:`一个笔记本 ${a} 元，小明付给售货员 ${b} 元，应找回几元？`,a:b-a,unit:"元",hint:`付的钱减去商品价格：${b}-${a}=${b-a}`};},
+  // 人民币(元角)
+  function(){let a=rnd(1,9),b=rnd(1,9);
+    return {q:`一支铅笔 ${a} 元 ${b} 角，一个橡皮 ${a} 元，铅笔比橡皮贵多少钱？`,a:b,unit:"角",hint:`铅笔 ${a}元${b}角，橡皮 ${a}元，贵的部分是 ${b} 角`};},
+  // 钟表
+  function(){let a=rnd(1,9),b=rnd(1,Math.min(12-a,4));
+    return {q:`现在是 ${a} 时，过了 ${b} 小时后是几时？`,a:a+b,unit:"时",hint:`从 ${a} 时开始往后数 ${b} 小时：${a}+${b}=${a+b} 时`};},
+  // 连加
+  function(){let a=rnd(2,9),b=rnd(2,9),c=rnd(2,9);
+    return {q:`小华第一天看 ${a} 页书，第二天看 ${b} 页，第三天看 ${c} 页，三天一共看多少页？`,a:a+b+c,unit:"页",hint:`把三天看的页数加起来：${a}+${b}+${c}=${a+b+c}`};},
+  // 求部分数
+  function(){let a=rnd(10,30),b=rnd(3,Math.min(a-1,12));
+    return {q:`篮子里有 ${a} 个鸡蛋，打破了 ${b} 个，还剩几个好的？`,a:a-b,unit:"个",hint:`从总数中去掉打破的：${a}-${b}=${a-b}`};},
+];
+
+/* ============ 二年级：100以内加减、表内乘除、长度、加减混合、两步计算 ============ */
+const G2 = [
+  // 100以内进退位加法
+  function(){let a=rnd(15,85),b=rnd(15,99-a);
+    return {q:`水果店有 ${a} 个苹果，又运来 ${b} 个，现在一共有多少个？`,a:a+b,unit:"个",hint:`列竖式：${a}+${b}，个位和十位分别相加，注意进位`};},
+  // 100以内退位减法
+  function(){let a=rnd(40,99),b=rnd(15,a-1);
+    return {q:`花园里原来有 ${a} 朵花，凋谢了 ${b} 朵，还剩多少朵？`,a:a-b,unit:"朵",hint:`列竖式：${a}-${b}，个位不够减向十位借1`};},
+  // 表内乘法
+  function(){let a=rnd(2,9),b=rnd(2,9);const it=pick(["气球","糖果","草莓","本子"]);
+    return {q:`每盒有 ${a} 个${it}，一共有 ${b} 盒，一共有多少个${it}？`,a:a*b,unit:"个",hint:`${b} 个 ${a} 相加，用乘法：${a}×${b}=${a*b}`};},
+  // 平均分(除法)
+  function(){let b=rnd(2,9),a=b*rnd(2,9);
+    return {q:`老师把 ${a} 块糖平均分给 ${b} 个小朋友，每个小朋友分到几块？`,a:a/b,unit:"块",hint:`把 ${a} 平均分成 ${b} 份：${a}÷${b}=${a/b}`};},
+  // 包含除
+  function(){let a=rnd(2,9),b=a*rnd(2,9);
+    return {q:`每 ${a} 个装一袋，一共有 ${b} 个，可以装几袋？`,a:b/a,unit:"袋",hint:`求 ${b} 里面有几个 ${a}：${b}÷${a}=${b/a}`};},
+  // 长度(厘米)
+  function(){let a=rnd(20,90),b=rnd(5,a-1);
+    return {q:`一根绳子长 ${a} 厘米，用去了 ${b} 厘米，还剩多少厘米？`,a:a-b,unit:"厘米",hint:`总长度减去用去的：${a}-${b}=${a-b} 厘米`};},
+  // 比长短
+  function(){let a=rnd(30,90),b=rnd(10,a-1);
+    return {q:`铅笔长 ${a} 厘米，橡皮长 ${b} 厘米，铅笔比橡皮长多少厘米？`,a:a-b,unit:"厘米",hint:`求相差多少，用减法：${a}-${b}=${a-b} 厘米`};},
+  // 加减混合
+  function(){let a=rnd(20,60),b=rnd(5,Math.min(30,a-1)),c=rnd(5,Math.min(30,a-b));
+    return {q:`公交车上原有 ${a} 人，到站下去 ${b} 人，又上来 ${c} 人，现在车上有多少人？`,a:a-b+c,unit:"人",hint:`先下去再上来：${a}-${b}+${c}=${a-b+c}`};},
+  // 两步：先乘后加
+  function(){let a=rnd(2,8),b=rnd(2,9),c=rnd(3,15);
+    return {q:`一包铅笔有 ${a} 支，买 ${b} 包，又单独买 ${c} 支，一共有多少支？`,a:a*b+c,unit:"支",hint:`先算 ${b} 包有多少：${a}×${b}=${a*b}，再加 ${c}：${a*b}+${c}=${a*b+c}`};},
+  // 两步：先加后除
+  function(){let b=rnd(2,6),a=rnd(2,5),c=rnd(2,5),total=(a+c)*b;
+    return {q:`男生 ${a} 人、女生 ${c} 人，平均分成 ${b} 组，每组几人？`,a:(a+c),unit:"人",hint:`先算总人数：${a}+${c}=${a+c}，再除以 ${b} 组：${a+c}÷${b}=${(a+c)/b}`};},
+  // 价格比较
+  function(){let a=rnd(8,30),b=rnd(3,a-1);
+    return {q:`一个书包 ${a} 元，一个文具盒 ${b} 元，买一个书包比买一个文具盒多花多少元？`,a:a-b,unit:"元",hint:`求相差：${a}-${b}=${a-b} 元`};},
+  // 倍数关系
+  function(){let a=rnd(3,9),b=rnd(2,6);
+    return {q:`小明有 ${a} 本故事书，小红的故事书是小明的 ${b} 倍，小红有多少本？`,a:a*b,unit:"本",hint:`求 ${a} 的 ${b} 倍：${a}×${b}=${a*b}`};},
+];
+
+/* ============ 三年级：万以内加减、倍、多位数乘、周长、除法、时分秒、分数 ============ */
+const G3 = [
+  // 万以内加法
+  function(){let a=rnd(200,4000),b=rnd(200,Math.max(200,5000-a));
+    return {q:`果园里有 ${a} 棵苹果树，又栽了 ${b} 棵梨树，现在一共有多少棵果树？`,a:a+b,unit:"棵",hint:`列竖式相加：${a}+${b}=${a+b}，注意数位对齐`};},
+  // 万以内减法
+  function(){let a=rnd(1000,5000),b=rnd(200,a-1);
+    return {q:`图书馆有 ${a} 本书，借出去 ${b} 本，还剩多少本？`,a:a-b,unit:"本",hint:`从总数中减去借出的：${a}-${b}=${a-b}`};},
+  // 倍的认识
+  function(){let a=rnd(4,20),b=rnd(2,8);
+    return {q:`池塘里有 ${a} 只鸭，鹅的只数是鸭的 ${b} 倍，鹅有多少只？`,a:a*b,unit:"只",hint:`求 ${a} 的 ${b} 倍：${a}×${b}=${a*b}`};},
+  // 求一个数是另一个数的几倍
+  function(){let b=rnd(2,9),a=b*rnd(3,15);
+    return {q:`红气球有 ${a} 个，蓝气球有 ${b} 个，红气球是蓝气球的几倍？`,a:a/b,unit:"倍",hint:`求 ${a} 是 ${b} 的几倍：${a}÷${b}=${a/b}`};},
+  // 多位数乘一位数
+  function(){let a=rnd(12,999),b=rnd(2,9);
+    return {q:`买 ${b} 盒彩笔，每盒 ${a} 元，一共要多少元？`,a:a*b,unit:"元",hint:`${b} 个 ${a} 元：${a}×${b}=${a*b} 元`};},
+  // 除数是一位数的除法
+  function(){let b=rnd(2,9),a=b*rnd(11,99);
+    return {q:`把 ${a} 个苹果平均分给 ${b} 个班，每班分到几个？`,a:a/b,unit:"个",hint:`平均分：${a}÷${b}=${a/b} 个`};},
+  // 长方形周长
+  function(){let a=rnd(5,40),b=rnd(3,a-1);
+    return {q:`一个长方形花坛长 ${a} 米，宽 ${b} 米，它的周长是多少米？`,a:2*(a+b),unit:"米",hint:`长方形周长=(长+宽)×2：(${a}+${b})×2=${2*(a+b)} 米`};},
+  // 正方形周长
+  function(){let a=rnd(4,40);
+    return {q:`一个正方形手帕边长 ${a} 厘米，它的周长是多少厘米？`,a:4*a,unit:"厘米",hint:`正方形周长=边长×4：${a}×4=${4*a} 厘米`};},
+  // 两步应用题
+  function(){let a=rnd(2,9),b=rnd(3,12),c=rnd(2,Math.max(3,a*b-5));
+    return {q:`小明买了 ${a} 盒铅笔，每盒 ${b} 支，送给同学 ${c} 支，还剩几支铅笔？`,a:a*b-c,unit:"支",hint:`先算一共有多少支：${a}×${b}=${a*b}，再减去送出的：${a*b}-${c}=${a*b-c}`};},
+  // 时分秒换算
+  function(){let a=rnd(1,9);
+    return {q:`${a} 分钟等于多少秒？`,a:a*60,unit:"秒",hint:`1分钟=60秒，${a}×60=${a*60} 秒`};},
+  // 经过时间
+  function(){let a=rnd(1,9),b=rnd(a+1,12);
+    return {q:`电影从 ${a} 时开始，到 ${b} 时结束，放映了几小时？`,a:b-a,unit:"小时",hint:`用结束时间减开始时间：${b}-${a}=${b-a} 小时`};},
+  // 简单分数
+  function(){let a=rnd(2,10),b=rnd(1,a-1);
+    return {q:`把一个蛋糕平均分成 ${a} 块，小明吃了 ${b} 块，小明吃了这个蛋糕的几分之几？`,a:`${b}/${a}`,frac:true,hint:`分母是总块数 ${a}，分子是吃的块数 ${b}：${b}/${a}`};},
+  // 面积(长方形)
+  function(){let a=rnd(5,30),b=rnd(3,a-1);
+    return {q:`一个长方形操场长 ${a} 米，宽 ${b} 米，它的面积是多少平方米？`,a:a*b,unit:"平方米",hint:`长方形面积=长×宽：${a}×${b}=${a*b} 平方米`};},
+  // 归一问题
+  function(){let a=rnd(2,5),b=a*rnd(2,9),c=rnd(2,6);
+    return {q:`买 ${a} 个同样的文具盒用了 ${b} 元，照这样计算，买 ${c} 个这样的文具盒要用多少元？`,a:b/a*c,unit:"元",hint:`先算1个的价格：${b}÷${a}=${b/a}，再算${c}个：${b/a}×${c}=${b/a*c} 元`};},
+];
+
+/* ============ 进阶/深度题型（各年级混合） ============ */
+const ADV1 = [
+  function(){let a=rnd(12,22),b=rnd(2,6),c=rnd(1,Math.max(2,a-b-2));
+    return {q:`妈妈买了 ${a} 个橘子，第一天吃了 ${b} 个，第二天吃了 ${c} 个，还剩几个？`,a:a-b-c,unit:"个",depth:"adv",hint:`连减：${a}-${b}=${a-b}，${a-b}-${c}=${a-b-c}`};},
+  function(){let a=rnd(6,15),b=rnd(2,8);
+    return {q:`小明有 ${a} 张贴画，小红比小明多 ${b} 张，两人一共有多少张？`,a:a+(a+b),unit:"张",depth:"adv",hint:`先求小红：${a}+${b}=${a+b}，再求两人：${a}+${a+b}=${a+(a+b)}`};},
+  function(){let a=rnd(8,20),b=rnd(8,20);
+    return {q:`书架第一层有 ${a} 本书，第二层有 ${b} 本书，旁边还有 3 个文具盒，两层一共有多少本书？`,a:a+b,unit:"本",depth:"adv",hint:`3个文具盒是多余条件，忽略它。只算两层书：${a}+${b}=${a+b}`};},
+  function(){let a=rnd(15,30),b=rnd(2,8),c=rnd(2,8),d=rnd(2,Math.max(3,a-b+c-2));
+    return {q:`停车场原有 ${a} 辆车，上午开走 ${b} 辆又开来 ${c} 辆，下午又开走 ${d} 辆，现在有几辆？`,a:a-b+c-d,unit:"辆",depth:"adv",hint:`逐步计算：${a}-${b}=${a-b}，${a-b}+${c}=${a-b+c}，${a-b+c}-${d}=${a-b+c-d}`};},
+  function(){let a=rnd(10,30),b=rnd(3,10);
+    return {q:`小军有 ${a} 元钱，买书花了 ${b} 元，剩下的钱比花的钱多多少元？`,a:a-2*b,unit:"元",depth:"adv",hint:`剩下：${a}-${b}=${a-b}，多的：${a-b}-${b}=${a-2*b} 元`};},
+  function(){let a=rnd(2,8),b=rnd(1,a-1);
+    return {q:`从 ${a} 个苹果中吃掉了 ${b} 个，剩下的苹果和吃掉的相差几个？`,a:a-2*b,unit:"个",depth:"adv",hint:`剩下：${a}-${b}=${a-b}，相差：${a-b}-${b}=${a-2*b}`};},
+];
+
+const ADV2 = [
+  function(){let a=rnd(2,9),b=rnd(2,9),c=rnd(2,15);
+    return {q:`每盒有 ${a} 个糖果，有 ${b} 盒，又买来 ${c} 个，一共有多少个？`,a:a*b+c,unit:"个",depth:"adv",hint:`先乘后加：${a}×${b}=${a*b}，${a*b}+${c}=${a*b+c}`};},
+  function(){let b=rnd(2,9),c=rnd(2,6),rem=rnd(1,15),a=b*c+rem;
+    return {q:`有 ${a} 个橘子，每 ${b} 个装一袋，装了 ${c} 袋，还剩几个？`,a:a-b*c,unit:"个",depth:"adv",hint:`已装：${b}×${c}=${b*c}，剩余：${a}-${b*c}=${a-b*c}`};},
+  function(){let a=rnd(15,40),b=rnd(3,15);
+    return {q:`一班有 ${a} 人，二班比一班多 ${b} 人，两个班一共有多少人？`,a:a+(a+b),unit:"人",depth:"adv",hint:`二班：${a}+${b}=${a+b}，总人数：${a}+${a+b}=${a+(a+b)}`};},
+  function(){let b=rnd(2,5),segs=rnd(2,8),a=b*segs;
+    return {q:`一条长 ${a} 米的小路一边植树，每隔 ${b} 米种一棵，两端都种，一共种几棵？`,a:segs+1,unit:"棵",depth:"adv",hint:`段数：${a}÷${b}=${segs}，两端都种：棵数=段数+1=${segs+1}`};},
+  function(){let a=rnd(2,9),b=rnd(2,9);
+    return {q:`商店有 ${a} 盒皮球，每盒 ${b} 个，今天又进了 4 辆自行车，一共有多少个皮球？`,a:a*b,unit:"个",depth:"adv",hint:`4辆自行车是多余条件。只算皮球：${a}×${b}=${a*b} 个`};},
+  function(){let a=rnd(20,50),b=rnd(3,15),c=rnd(2,10),d=rnd(2,12);
+    return {q:`图书角有 ${a} 本书，借出 ${b} 本，还回 ${c} 本，又买来 ${d} 本，现在有多少本？`,a:a-b+c+d,unit:"本",depth:"adv",hint:`逐步：${a}-${b}=${a-b}，${a-b}+${c}=${a-b+c}，${a-b+c}+${d}=${a-b+c+d}`};},
+  function(){let a=rnd(2,6),b=rnd(2,8),c=rnd(2,5);
+    return {q:`每个小组有 ${a} 人，每组发 ${b} 本练习本，有 ${c} 个小组，一共发多少本？`,a:b*c,unit:"本",depth:"adv",hint:`每组人数是多余条件。只算练习本：${b}×${c}=${b*c} 本`};},
+  function(){let a=rnd(3,9),b=rnd(2,6);
+    return {q:`小明每天看 ${a} 页书，看了 ${b} 天后还剩 12 页没看，这本书一共有多少页？`,a:a*b+12,unit:"页",depth:"adv",hint:`已看：${a}×${b}=${a*b}，总页数：${a*b}+12=${a*b+12}`};},
+];
+
+const ADV3 = [
+  function(){let b=rnd(2,6),segs=rnd(3,12),a=b*segs;
+    return {q:`一个圆形花坛周长 ${a} 米，每隔 ${b} 米放一盆花，一共放几盆？`,a:segs,unit:"盆",depth:"adv",hint:`圆形：段数=棵数。${a}÷${b}=${segs} 段，所以放 ${segs} 盆`};},
+  function(){let a=rnd(2,6),b=a*rnd(2,9),c=rnd(2,6);
+    return {q:`买 ${a} 支笔用了 ${b} 元，照这样计算，买 ${c} 支笔要用多少元？`,a:b/a*c,unit:"元",depth:"adv",hint:`先求单价：${b}÷${a}=${b/a}，再求${c}支：${b/a}×${c}=${b/a*c} 元`};},
+  function(){let b=rnd(2,5),base=rnd(2,9),a=(b+1)*base;
+    return {q:`小明和小红一共有 ${a} 颗糖，小红的糖是小明的 ${b} 倍，小明有几颗糖？`,a:base,unit:"颗",depth:"adv",hint:`和倍问题：总份数=${b}+1，小明：${a}÷${b+1}=${base} 颗`};},
+  function(){let a=rnd(2,5),b=rnd(3,8),c=rnd(6,12);
+    return {q:`教学楼有 ${a} 层，每层 ${b} 间教室，每间坐 ${c} 人，一共可坐多少人？`,a:a*b*c,unit:"人",depth:"adv",hint:`连乘：${a}×${b}=${a*b}，${a*b}×${c}=${a*b*c} 人`};},
+  function(){let b=rnd(2,9),c=rnd(2,9),rem=rnd(1,b-1),a=b*c+rem;
+    return {q:`有 ${a} 块巧克力，平均分给 ${b} 个小朋友，每人 ${c} 块，还剩几块？`,a:a-b*c,unit:"块",depth:"adv",hint:`已分：${b}×${c}=${b*c}，剩余：${a}-${b*c}=${a-b*c} 块`};},
+  function(){let a=rnd(20,60),b=rnd(8,30);
+    return {q:`果园里有 ${a} 棵苹果树，${b} 棵梨树，还有 6 只小鸟在树上，苹果树和梨树一共有多少棵？`,a:a+b,unit:"棵",depth:"adv",hint:`6只小鸟是多余条件。只算树：${a}+${b}=${a+b} 棵`};},
+  function(){let a=rnd(20,60),b=rnd(8,30),c=rnd(2,5);
+    return {q:`一个书包 ${a} 元，一个文具盒 ${b} 元，买这样一套 ${c} 套一共要多少元？`,a:(a+b)*c,unit:"元",depth:"adv",hint:`一套：${a}+${b}=${a+b}，${c}套：${a+b}×${c}=${(a+b)*c} 元`};},
+  function(){let a=rnd(2,6),b=rnd(2,8),c=rnd(2,9);
+    return {q:`一辆卡车每次运 ${a} 吨，每天运 ${b} 次，运了 ${c} 天，一共运了多少吨？`,a:a*b*c,unit:"吨",depth:"adv",hint:`每天：${a}×${b}=${a*b}吨，${c}天：${a*b}×${c}=${a*b*c}吨`};},
+  function(){let a=rnd(10,50),b=rnd(2,8);
+    return {q:`一本书有 ${a} 页，每天读 ${b} 页，读了几天后还剩 5 页没读，读了几天？`,a:Math.floor((a-5)/b),unit:"天",depth:"adv",hint:`已读：${a}-5=${a-5}页，天数：${a-5}÷${b}=${Math.floor((a-5)/b)} 天`};},
+  function(){let a=rnd(100,500),b=rnd(2,6);
+    return {q:`一个工程队修一条 ${a} 米的路，已经修了 ${b} 天，每天修 40 米，还剩多少米？`,a:a-b*40,unit:"米",depth:"adv",hint:`已修：${b}×40=${b*40}米，剩余：${a}-${b*40}=${a-b*40}米`};},
+];
+
+// 标记深度
+G1.forEach(f=>f.depth='basic'); G2.forEach(f=>f.depth='basic'); G3.forEach(f=>f.depth='basic');
+ADV1.forEach(f=>f.depth='adv'); ADV2.forEach(f=>f.depth='adv'); ADV3.forEach(f=>f.depth='adv');
+const GEN = {1:[...G1,...ADV1], 2:[...G2,...ADV2], 3:[...G3,...ADV3]};
+let state = {grade:1, count:5, difficulty:'mix', problems:[], revealed:false, hints:false, timer:null, start:0};
+let history = [];
+
+const problemsArea = document.getElementById('problemsArea');
+const resultArea = document.getElementById('resultArea');
+const customCount = document.getElementById('customCount');
+
+// 从URL获取年级参数
+function getGradeParam(){
+  const p = new URLSearchParams(window.location.search).get('grade');
+  const g = (p==='1'||p==='2'||p==='3')?p:'1';
+  return Number(g);
+}
+
+// 初始化年级
+const initGrade = getGradeParam();
+state.grade = initGrade;
+const gradeName = {1:'一年级',2:'二年级',3:'三年级'}[initGrade];
+document.getElementById('gradeTitle').textContent = gradeName;
+
+document.querySelectorAll('.count-group .chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.count-group .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    state.count = +chip.dataset.count;
+    customCount.value='';
+  });
+});
+customCount.addEventListener('input',()=>{
+  if(customCount.value){
+    document.querySelectorAll('.count-group .chip').forEach(c=>c.classList.remove('active'));
+    let v=Math.max(1,Math.min(50,parseInt(customCount.value)||1));
+    state.count=v;
+  }
+});
+
+document.querySelectorAll('.count-group [data-diff]').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.count-group [data-diff]').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    state.difficulty = chip.dataset.diff;
+    if(state.problems.length) generate();
+  });
+});
+
+function norm(v){return (v==null?'':(''+v)).trim().replace(/\s+/g,'').toLowerCase();}
+
+function generate(){
+  console.group('📝 应用题生成器 - 开始生成');
+  console.log('年级:', state.grade, '| 数量:', state.count, '| 难度:', state.difficulty);
+
+  const list=[];
+  let pool = GEN[state.grade];
+  const poolTotal = pool.length;
+  if(state.difficulty!=='mix'){
+    pool = pool.filter(f=>f.depth===state.difficulty);
+    console.log(`难度筛选: ${state.difficulty}, 可用题型 ${pool.length}/${poolTotal}`);
+  } else {
+    const basicCount = pool.filter(f=>f.depth==='basic').length;
+    const advCount = pool.filter(f=>f.depth==='adv').length;
+    console.log(`混合模式: 基础 ${basicCount} 种 + 进阶 ${advCount} 种 = 共 ${pool.length} 种题型`);
+  }
+
+  // 去重：记录已使用的题目类型索引
+  let used = new Set();
+  let dedupHits = 0;
+  let totalAttempts = 0;
+
+  for(let i=0;i<state.count;i++){
+    let fn, attempts=0, fnIdx;
+    do{
+      fn = pick(pool);
+      fnIdx = pool.indexOf(fn);
+      attempts++;
+      totalAttempts++;
+    }while(used.has(fnIdx) && attempts<20 && used.size<pool.length);
+
+    if(attempts > 1){
+      dedupHits++;
+      console.log(`  第${i+1}题: 去重命中 ${attempts-1} 次, 最终选用索引 ${fnIdx}`);
+    }
+
+    used.add(fnIdx);
+    const q = fn();
+    list.push(q);
+  }
+
+  // 验证是否有重复题目文本
+  const qTexts = list.map(q=>q.q);
+  const uniqueTexts = new Set(qTexts);
+  const dupCount = qTexts.length - uniqueTexts.size;
+
+  console.log('--- 生成结果 ---');
+  console.log('已用题型索引:', [...used].sort((a,b)=>a-b).join(', '));
+  console.log(`总尝试次数: ${totalAttempts}, 去重触发: ${dedupHits} 次`);
+  console.log(`题目文本去重: ${qTexts.length} 题, 唯一文本 ${uniqueTexts.size} 个` + (dupCount>0?` ⚠️ 仍有 ${dupCount} 个重复!`:' ✅ 全部唯一'));
+  console.log('题目列表:');
+  list.forEach((q,i)=>console.log(`  ${i+1}. [${q.depth}] ${q.q} → ${q.a}${q.unit||''}`));
+  console.groupEnd();
+
+  state.problems = list;
+  state.revealed = false;
+  state.hints = false;
+  renderProblems();
+  resultArea.innerHTML='';
+  startTimer();
+}
+
+function renderProblems(){
+  if(!state.problems.length){
+    problemsArea.innerHTML='<div class="empty">点击「生成练习题」开始吧～</div>';
+    return;
+  }
+  const meta = `<div class="meta">
+      <span class="pill">${state.grade}年级</span>
+      <span class="pill">共 ${state.problems.length} 题</span>
+      <span class="pill" id="timer">⏱ 00:00</span>
+    </div>`;
+  const cards = state.problems.map((p,i)=>{
+    const fracHint = p.frac?'（填几分之几，如 2/5）':'（只填数字）';
+    const hintHtml = p.hint?`<div class="step-hint" id="hint${i}">💡 ${p.hint}</div>`:'';
+    return `<div class="problem" data-i="${i}">
+      <div class="num">${i+1}</div>
+      <span class="badge ${p.depth}">${p.depth==='adv'?'进阶':'基础'}</span>
+      <p class="q">${p.q}</p>
+      <div class="ans">
+        <input type="text" inputmode="text" placeholder="${fracHint}" autocomplete="off">
+        ${p.unit?`<span class="unit">${p.unit}</span>`:''}
+        <span class="feedback"></span>
+        <span class="reveal hide">正确答案：${p.a}${p.unit||''}</span>
+      </div>
+      ${hintHtml}
+    </div>`;
+  }).join('');
+  problemsArea.innerHTML = meta + cards;
+}
+
+function startTimer(){
+  stopTimer();
+  state.start = Date.now();
+  state.timer = setInterval(()=>{
+    const t=Math.floor((Date.now()-state.start)/1000);
+    const m=String(Math.floor(t/60)).padStart(2,'0');
+    const s=String(t%60).padStart(2,'0');
+    const el=document.getElementById('timer');
+    if(el) el.textContent=`⏱ ${m}:${s}`;
+  },1000);
+}
+function stopTimer(){ if(state.timer){clearInterval(state.timer);state.timer=null;} }
+
+function getElapsed(){return Math.floor((Date.now()-state.start)/1000);}
+
+function check(){
+  if(!state.problems.length) return;
+  stopTimer();
+  let correct=0;
+  const elapsed = getElapsed();
+  const cards = problemsArea.querySelectorAll('.problem');
+
+  console.group('✅ 检查答案');
+  state.problems.forEach((p,i)=>{
+    const card=cards[i];
+    const input=card.querySelector('input');
+    const fb=card.querySelector('.feedback');
+    const user=norm(input.value);
+    const right=norm(p.a);
+    card.classList.remove('correct','wrong');
+    if(user===''){
+      fb.textContent='未作答'; fb.style.color='var(--warn)'; card.classList.add('wrong');
+      console.log(`  ${i+1}. 未作答 | 期望: ${right}${p.unit||''}`);
+    }else if(user===right){
+      fb.textContent='✓ 正确'; fb.style.color='var(--ok)'; card.classList.add('correct'); correct++;
+      console.log(`  ${i+1}. ✅ 正确 | 输入: ${user}, 期望: ${right}`);
+    }else{
+      fb.textContent=`✗ 正确答案：${p.a}${p.unit||''}`; fb.style.color='var(--bad)'; card.classList.add('wrong');
+      console.log(`  ${i+1}. ❌ 错误 | 输入: ${user}, 期望: ${right}${p.unit||''}`);
+    }
+  });
+  const total=state.problems.length;
+  const pct=Math.round(correct/total*100);
+  const mins = Math.floor(elapsed/60);
+  const secs = elapsed%60;
+  const timeStr = mins>0?`${mins}分${secs}秒`:`${secs}秒`;
+  const tips = correct===total?'太棒了，全部答对！👏'
+    : correct>=total*0.8?'表现很好，再练练就满分啦！💪'
+    : '别灰心，把错题弄懂，下次一定行！🌟';
+  resultArea.innerHTML=`<div class="result">
+    <div class="score">${correct} / ${total}</div>
+    <div class="detail">正确率 ${pct}% &nbsp;·&nbsp; 用时 ${timeStr} &nbsp;·&nbsp; ${tips}</div>
+    <div class="tips">提示：点击「解题思路」查看每道题的解法；点击「显示答案」查看所有正确答案。</div>
+  </div>`;
+  // 保存练习记录
+  addHistory(correct, total, elapsed);
+}
+
+function toggleReveal(){
+  state.revealed=!state.revealed;
+  problemsArea.querySelectorAll('.reveal').forEach(r=>r.classList.toggle('hide',!state.revealed));
+  document.getElementById('revealBtn').textContent = state.revealed?'🙈 隐藏答案':'👀 显示答案';
+}
+
+function toggleHints(){
+  state.hints=!state.hints;
+  problemsArea.querySelectorAll('.step-hint').forEach(h=>h.classList.toggle('show',state.hints));
+  document.getElementById('hintBtn').textContent = state.hints?'💡 隐藏思路':'💡 解题思路';
+}
+
+function addHistory(correct, total, elapsed){
+  const now = new Date();
+  const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  const pct = Math.round(correct/total*100);
+  const diffName = state.difficulty==='mix'?'混合':(state.difficulty==='basic'?'基础':'进阶');
+  history.unshift({time:timeStr, grade:state.grade, diff:diffName, correct, total, pct});
+  if(history.length>10) history.length=10;
+  renderHistory();
+}
+
+function renderHistory(){
+  const box = document.getElementById('historyBox');
+  const list = document.getElementById('historyList');
+  if(history.length===0){box.style.display='none';return;}
+  box.style.display='block';
+  list.innerHTML = history.map(h=>{
+    const emoji = h.pct===100?'🌟':h.pct>=80?'👍':h.pct>=60?'📚':'💪';
+    return `<div class="history-item">${emoji} ${h.time} · ${h.grade}年级(${h.diff}) · ${h.correct}/${h.total} · ${h.pct}%</div>`;
+  }).join('');
+}
+
+document.getElementById('genBtn').addEventListener('click',generate);
+document.getElementById('checkBtn').addEventListener('click',check);
+document.getElementById('revealBtn').addEventListener('click',toggleReveal);
+document.getElementById('hintBtn').addEventListener('click',toggleHints);
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+// 从URL获取年级参数
+function getGradeParam(){
+  const p = new URLSearchParams(window.location.search).get('grade');
+  const g = (p==='1'||p==='2'||p==='3')?p:'1';
+  return Number(g);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>凑十法 · 平十法练习</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+        --pri: #4a6cf7;
+        --succ: #48bb78;
+        --err: #fc8181;
+        --bg: #f0f4ff;
+        --card: #fff;
+        --ink: #333;
+        --muted: #999;
+        --line: #e2e8f0;
+    }
+    body {
+        font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        padding: 24px 16px 40px;
+        color: var(--ink);
+    }
+    .wrap { max-width: 820px; margin: 0 auto; }
+    .back-home {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 18px; background: #fff; color: var(--pri);
+        border: 2px solid var(--line); border-radius: 22px;
+        cursor: pointer; font-weight: 600; font-size: 0.9rem;
+        text-decoration: none; transition: all 0.2s; margin-bottom: 12px;
+    }
+    .back-home:hover { border-color: var(--pri); transform: translateY(-1px); }
+    header.hero { text-align: center; margin-bottom: 20px; }
+    header.hero h1 { font-size: 2rem; color: var(--pri); margin-bottom: 4px; }
+    header.hero p { font-size: 0.95rem; color: var(--muted); }
+    .panel {
+        background: var(--card); border-radius: 16px; padding: 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 16px;
+    }
+    .panel h2 { font-size: 1.05rem; color: var(--ink); margin-bottom: 14px; padding-left: 10px; border-left: 4px solid var(--pri); }
+    .seg { display: flex; gap: 8px; flex-wrap: wrap; }
+    .seg button {
+        flex: 1; min-width: 80px; padding: 10px 14px;
+        border: 2px solid var(--line); border-radius: 10px;
+        background: #fff; font-size: 0.9rem; font-weight: 600;
+        cursor: pointer; transition: all 0.15s; color: var(--ink);
+    }
+    .seg button:hover { border-color: var(--pri); }
+    .seg button.active { border-color: var(--pri); background: #eef2ff; color: var(--pri); }
+    .seg button .sub { display: block; font-size: 0.72rem; font-weight: 400; color: var(--muted); margin-top: 2px; }
+    .row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+    .count-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .lbl { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+    .chip {
+        padding: 6px 14px; border: 2px solid var(--line); border-radius: 20px;
+        background: #fff; font-size: 0.85rem; cursor: pointer; transition: all 0.15s;
+    }
+    .chip:hover { border-color: var(--pri); }
+    .chip.active { border-color: var(--pri); background: #eef2ff; color: var(--pri); font-weight: 700; }
+    .count-group input[type=number] {
+        width: 70px; padding: 6px 10px; border: 2px solid var(--line); border-radius: 8px;
+        font-size: 0.85rem; text-align: center;
+    }
+    .btn {
+        padding: 12px 32px; border: none; border-radius: 10px; font-size: 1rem;
+        font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-gen { background: var(--pri); color: #fff; }
+    .btn-gen:hover { background: #3d5ce5; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(74,108,247,0.3); }
+    .btn-check { background: var(--succ); color: #fff; }
+    .btn-check:hover { background: #38a169; }
+    .btn-reset { background: #edf2f7; color: var(--ink); }
+    .btn-reset:hover { background: #e2e8f0; }
+    .btn-print { background: #f6ad55; color: #fff; }
+    .btn-print:hover { background: #ed8936; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+    .timer-bar { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--muted); margin-bottom: 8px; }
+    .timer-bar .time { font-weight: 700; color: var(--pri); font-variant-numeric: tabular-nums; }
+
+    /* ===== 课本风格树形分解图 ===== */
+    .q-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .tb-item {
+        background: #fdfdfd; border: 1.5px solid #e8e8e8; border-radius: 12px;
+        padding: 12px 10px 10px; text-align: center; position: relative;
+        min-height: 180px; display: flex; flex-direction: column; align-items: center;
+    }
+    .tb-item .tb-num {
+        position: absolute; left: 8px; top: 8px;
+        width: 22px; height: 22px; background: var(--pri); color: #fff;
+        border-radius: 50%; font-size: 0.7rem; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .tb-item.correct { border-color: var(--succ); background: #f0fff4; }
+    .tb-item.wrong { border-color: var(--err); background: #fff5f5; }
+    .tb-eq {
+        font-size: 1.4rem; font-weight: 700; letter-spacing: 4px;
+        margin-bottom: 4px; color: var(--ink);
+    }
+    .tb-eq .tb-op { color: var(--pri); }
+    .tb-eq input.tb-ans {
+        width: 42px; height: 34px; border: 2px dashed #ccc; border-radius: 6px;
+        font-size: 1.3rem; text-align: center; font-weight: 700; color: var(--pri);
+        background: #fafafa; vertical-align: middle; margin: 0 2px;
+    }
+    .tb-eq input.tb-ans:focus { outline: none; border-color: var(--pri); background: #fff; }
+    .tb-eq input.tb-ans.correct { border-color: var(--succ); background: #f0fff4; }
+    .tb-eq input.tb-ans.wrong { border-color: var(--err); background: #fff5f5; }
+
+    /* 树形分解区域 */
+    .tb-tree {
+        display: flex; align-items: flex-start; justify-content: center;
+        margin: 0 auto; position: relative; padding-top: 4px;
+    }
+    /* 分支线 */
+    .tb-branch-wrap {
+        display: flex; flex-direction: column; align-items: center;
+        position: relative;
+    }
+    .tb-branch-arrow {
+        width: 60px; height: 28px; position: relative;
+    }
+    .tb-branch-arrow::before {
+        content: ''; position: absolute; bottom: 0; width: 2px; height: 28px;
+        background: #999;
+    }
+    .tb-branch-arrow.left::before { left: 0; transform: rotate(-25deg); transform-origin: bottom left; }
+    .tb-branch-arrow.right::before { right: 0; transform: rotate(25deg); transform-origin: bottom right; }
+
+    .tb-decomp {
+        width: 44px; height: 36px; border: 2px solid #ddd; border-radius: 8px;
+        font-size: 1.2rem; text-align: center; font-weight: 700; color: var(--ink);
+        background: #fff; margin: 0 8px;
+    }
+    .tb-decomp:focus { outline: none; border-color: var(--pri); background: #fafaff; }
+    .tb-decomp.correct { border-color: var(--succ); background: #f0fff4; color: var(--succ); }
+    .tb-decomp.wrong { border-color: var(--err); background: #fff5f5; color: var(--err); }
+
+    /* 弧线连接凑十的两个数 */
+    .tb-arc {
+        display: flex; align-items: center; justify-content: center;
+        margin: 2px 0 0; position: relative; height: 24px;
+    }
+    .tb-arc-line {
+        width: 72px; height: 24px;
+        border: 2px solid var(--pri); border-color: var(--pri) var(--pri) transparent transparent;
+        border-radius: 36px 36px 0 0;
+    }
+    .tb-arc-label {
+        font-size: 0.75rem; color: var(--pri); font-weight: 700;
+        position: absolute; bottom: -2px;
+    }
+
+    /* 想一想提示 */
+    .tb-think {
+        font-size: 0.78rem; color: var(--muted); margin-top: 4px;
+        background: #f8f9ff; border-radius: 6px; padding: 3px 10px;
+    }
+    .tb-think b { color: var(--pri); }
+
+    .tb-feedback { font-size: 0.75rem; margin-top: 2px; min-height: 18px; }
+    .tb-feedback.ok { color: var(--succ); }
+    .tb-feedback.err { color: var(--err); }
+
+    .result { display: none; text-align: center; }
+    .result.show { display: block; }
+    .result .score { font-size: 2.5rem; font-weight: 800; color: var(--pri); }
+    .result .tips { font-size: 0.9rem; color: var(--muted); margin-top: 6px; }
+    .wrong-section { margin-top: 16px; }
+    .wrong-section h3 { font-size: 0.95rem; color: var(--err); margin-bottom: 8px; }
+    .wrong-item { font-size: 0.9rem; padding: 4px 0; border-bottom: 1px dashed var(--line); }
+    .meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin-top: 8px; }
+    footer { text-align: center; color: var(--muted); font-size: 0.78rem; margin-top: 20px; }
+
+    @media (max-width: 640px) {
+        .q-grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+        @page { size: A4; margin: 12mm 10mm; }
+        body { background: #fff; padding: 0; }
+        .wrap { max-width: none; padding: 0; margin: 0; }
+        .panel.controls, .actions, .meta, .result, .result .tips, header.hero p, .back-home, footer { display: none !important; }
+        header.hero { padding: 3px 0; }
+        header.hero h1 { font-size: 18px; color: #333; }
+        .q-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .tb-item { border: 1px solid #ccc; border-radius: 6px; padding: 8px 6px; min-height: 140px; break-inside: avoid; }
+        .tb-item .tb-num { width: 18px; height: 18px; font-size: 10px; }
+        .tb-eq { font-size: 1.1rem; }
+        .tb-eq input.tb-ans { width: 34px; height: 26px; font-size: 1rem; }
+        .tb-branch-arrow { width: 44px; height: 20px; }
+        .tb-branch-arrow::before { height: 20px; }
+        .tb-decomp { width: 34px; height: 28px; font-size: 1rem; }
+        .tb-arc-line { width: 56px; height: 18px; }
+        .tb-think { font-size: 0.7rem; }
+        .tb-feedback { display: none; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <a href="math-types.html" class="back-home">← 返回题型选择</a>
+    <header class="hero">
+        <h1>🧮 凑十法 · 平十法</h1>
+        <p>小学一年级数学 · 课本同步树形分解格式</p>
+    </header>
+
+    <section class="panel controls">
+        <h2>① 选择练习类型</h2>
+        <div class="seg" id="typeSeg">
+            <button data-type="cushi" class="active">凑十法（加法）<span class="sub">看大数，分小数，凑成十，加剩数</span></button>
+            <button data-type="pingshi">平十法（减法）<span class="sub">看小数，分大数，减到十，再减剩</span></button>
+            <button data-type="mix">混合练习<span class="sub">凑十法 + 平十法 混合训练</span></button>
+        </div>
+        <div class="row">
+            <div class="count-group">
+                <span class="lbl">② 题目数量：</span>
+                <button class="chip active" data-count="6">6题</button>
+                <button class="chip" data-count="10">10题</button>
+                <button class="chip" data-count="15">15题</button>
+                <button class="chip" data-count="20">20题</button>
+                <input type="number" id="customCount" min="1" max="50" placeholder="自定义">
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn btn-gen" id="btnGen">✏️ 生成题目</button>
+            <button class="btn btn-check" id="btnCheck" style="display:none">✔️ 批改评分</button>
+            <button class="btn btn-reset" id="btnReset" style="display:none">🔄 重新生成</button>
+            <button class="btn btn-print" id="btnPrint" style="display:none">🖨️ 打印试卷</button>
+        </div>
+    </section>
+
+    <section class="panel" id="qPanel" style="display:none">
+        <div class="timer-bar">⏱ 用时：<span class="time" id="timerDisplay">00:00</span></div>
+        <div class="q-grid" id="qGrid"></div>
+        <div class="meta">
+            <span id="metaInfo"></span>
+            <span id="statusText"></span>
+        </div>
+    </section>
+
+    <section class="result" id="resultPanel">
+        <div class="score" id="scoreText"></div>
+        <div class="tips" id="tipsText"></div>
+        <div class="wrong-section" id="wrongSection"></div>
+    </section>
+
+    <footer>凑十法 · 平十法 — 小学一年级数学基础</footer>
+</div>
+
+<script>
+// ========== STATE ==========
+const state = {
+    type: 'cushi', count: 6, questions: [], answered: false,
+    startTime: 0, timerInterval: null
+};
+
+// ========== DOM ==========
+const $ = id => document.getElementById(id);
+const typeSeg = $('typeSeg');
+const btnGen = $('btnGen'), btnCheck = $('btnCheck'), btnReset = $('btnReset'), btnPrint = $('btnPrint');
+const qPanel = $('qPanel'), qGrid = $('qGrid'), resultPanel = $('resultPanel');
+const timerDisplay = $('timerDisplay');
+const metaInfo = $('metaInfo'), statusText = $('statusText');
+
+// ========== GENERATORS ==========
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+// 凑十法：大数 + 小数，分解小数，凑成10
+function genCushi() {
+    const big = rand(6, 9);
+    const small = rand(2, 9);
+    const need = 10 - big;
+    const rest = small - need;
+    return { type: '凑十法', big, small, need, rest, answer: big + small, q: `${big}+${small}` };
+}
+
+// 平十法：被减数 - 减数，分解减数，先减到10
+function genPingshi() {
+    const total = rand(11, 18);
+    const to10 = total - 10;
+    const sub = rand(to10 + 1, 9);
+    const rest = sub - to10;
+    return { type: '平十法', total, sub, to10, rest, answer: total - sub, q: `${total}-${sub}` };
+}
+
+// ========== TIMER ==========
+function stopTimer() { if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; } }
+function startTimer() {
+    stopTimer();
+    state.startTime = Date.now();
+    updateTimer();
+    state.timerInterval = setInterval(updateTimer, 1000);
+}
+function updateTimer() {
+    const e = Math.floor((Date.now() - state.startTime) / 1000);
+    timerDisplay.textContent = `${Math.floor(e/60).toString().padStart(2,'0')}:${(e%60).toString().padStart(2,'0')}`;
+}
+function getElapsed() {
+    const e = Math.floor((Date.now() - state.startTime) / 1000);
+    const m = Math.floor(e / 60);
+    return m > 0 ? `${m}分${e%60}秒` : `${e%60}秒`;
+}
+
+// ========== GENERATE ==========
+function generate() {
+    state.questions = []; state.answered = false;
+    const used = new Set();
+    let totalAttempts = 0, dedupHits = 0;
+
+    const genFn = state.type === 'cushi' ? genCushi :
+                  state.type === 'pingshi' ? genPingshi :
+                  () => Math.random() < 0.5 ? genCushi() : genPingshi();
+
+    for (let i = 0; i < state.count; i++) {
+        let q, attempts = 0;
+        do {
+            q = state.type === 'mix' ? (Math.random() < 0.5 ? genCushi() : genPingshi()) : genFn();
+            attempts++; totalAttempts++;
+        } while (used.has(q.q) && attempts < 50);
+        if (attempts > 1) dedupHits++;
+        used.add(q.q);
+        q.id = i;
+        state.questions.push(q);
+    }
+
+    console.group('凑十法/平十法 - 生成报告');
+    console.log(`类型: ${state.type}, 数量: ${state.count}`);
+    console.log(`总尝试: ${totalAttempts}, 去重命中: ${dedupHits}`);
+    console.log(`题目唯一性: ${new Set(state.questions.map(q=>q.q)).size}/${state.questions.length}`);
+    state.questions.forEach((q,i) => console.log(`  ${i+1}. [${q.type}] ${q.q} → ${q.answer}`));
+    console.groupEnd();
+
+    renderQuestions();
+}
+
+// ========== RENDER (课本树形图格式) ==========
+function renderQuestions() {
+    qGrid.innerHTML = state.questions.map((q, i) => {
+        if (q.type === '凑十法') {
+            return `
+            <div class="tb-item" data-id="${i}">
+                <span class="tb-num">${i+1}</span>
+                <div class="tb-eq">
+                    <span>${q.big}</span>
+                    <span class="tb-op">+</span>
+                    <span>${q.small}</span>
+                    <span class="tb-op">=</span>
+                    <input type="number" class="tb-ans" id="r${i}" placeholder="?">
+                </div>
+                <div class="tb-tree">
+                    <div class="tb-branch-wrap">
+                        <div class="tb-branch-arrow left"></div>
+                        <input type="number" class="tb-decomp" id="s${i}_0" placeholder="?">
+                    </div>
+                    <div class="tb-branch-wrap">
+                        <div class="tb-branch-arrow right"></div>
+                        <input type="number" class="tb-decomp" id="s${i}_1" placeholder="?">
+                    </div>
+                </div>
+                <div class="tb-arc">
+                    <div class="tb-arc-line"></div>
+                    <span class="tb-arc-label">10</span>
+                </div>
+                <div class="tb-think">想：${q.big}+<b>?</b>=10, 10+<b>?</b>=${q.answer}</div>
+                <div class="tb-feedback" id="fb${i}"></div>
+            </div>`;
+        } else {
+            return `
+            <div class="tb-item" data-id="${i}">
+                <span class="tb-num">${i+1}</span>
+                <div class="tb-eq">
+                    <span>${q.total}</span>
+                    <span class="tb-op">−</span>
+                    <span>${q.sub}</span>
+                    <span class="tb-op">=</span>
+                    <input type="number" class="tb-ans" id="r${i}" placeholder="?">
+                </div>
+                <div class="tb-tree">
+                    <div class="tb-branch-wrap">
+                        <div class="tb-branch-arrow left"></div>
+                        <input type="number" class="tb-decomp" id="s${i}_0" placeholder="?">
+                    </div>
+                    <div class="tb-branch-wrap">
+                        <div class="tb-branch-arrow right"></div>
+                        <input type="number" class="tb-decomp" id="s${i}_1" placeholder="?">
+                    </div>
+                </div>
+                <div class="tb-arc">
+                    <div class="tb-arc-line"></div>
+                    <span class="tb-arc-label">10</span>
+                </div>
+                <div class="tb-think">想：${q.total}−<b>?</b>=10, 10−<b>?</b>=${q.answer}</div>
+                <div class="tb-feedback" id="fb${i}"></div>
+            </div>`;
+        }
+    }).join('');
+
+    qPanel.style.display = 'block';
+    resultPanel.classList.remove('show');
+    btnCheck.style.display = 'inline-block';
+    btnReset.style.display = 'inline-block';
+    btnPrint.style.display = 'inline-block';
+    btnGen.textContent = '🔄 重新生成';
+    const typeNames = { cushi: '凑十法', pingshi: '平十法', mix: '混合' };
+    metaInfo.textContent = `${typeNames[state.type]} · ${state.count}题`;
+    statusText.textContent = '等待作答...';
+    timerDisplay.textContent = '00:00';
+    startTimer();
+}
+
+// ========== CHECK ==========
+function check() {
+    stopTimer();
+    state.answered = true;
+    let correct = 0;
+    const wrongList = [];
+
+    state.questions.forEach((q, i) => {
+        const item = qGrid.children[i];
+        const r = $(`r${i}`);
+        const fb = $(`fb${i}`);
+        let allCorrect = true;
+
+        if (q.type === '凑十法') {
+            // s0=need, s1=rest, r=answer
+            const checks = [
+                { el: $(`s${i}_0`), val: q.need },
+                { el: $(`s${i}_1`), val: q.rest },
+                { el: r, val: q.answer }
+            ];
+            checks.forEach(c => {
+                const isOk = parseInt(c.el.value) === c.val;
+                c.el.classList.add(isOk ? 'correct' : 'wrong');
+                c.el.readOnly = true;
+                if (!isOk) allCorrect = false;
+            });
+        } else {
+            const checks = [
+                { el: $(`s${i}_0`), val: q.to10 },
+                { el: $(`s${i}_1`), val: q.rest },
+                { el: r, val: q.answer }
+            ];
+            checks.forEach(c => {
+                const isOk = parseInt(c.el.value) === c.val;
+                c.el.classList.add(isOk ? 'correct' : 'wrong');
+                c.el.readOnly = true;
+                if (!isOk) allCorrect = false;
+            });
+        }
+
+        if (allCorrect) {
+            correct++;
+            item.classList.add('correct');
+            fb.className = 'tb-feedback ok';
+            fb.textContent = '✓ 正确';
+        } else {
+            item.classList.add('wrong');
+            fb.className = 'tb-feedback err';
+            fb.textContent = '✗ 有误';
+            if (q.type === '凑十法') {
+                wrongList.push({ idx: i+1, q: q.q, ans: q.answer, detail: `${q.small}=${q.need}+${q.rest}, ${q.big}+${q.need}=10, 10+${q.rest}=${q.answer}` });
+            } else {
+                wrongList.push({ idx: i+1, q: q.q, ans: q.answer, detail: `${q.sub}=${q.to10}+${q.rest}, ${q.total}-${q.to10}=10, 10-${q.rest}=${q.answer}` });
+            }
+        }
+    });
+
+    const score = Math.round((correct / state.count) * 100);
+    resultPanel.classList.add('show');
+    $('scoreText').textContent = `${score}分`;
+    const elapsed = getElapsed();
+    if (score === 100) {
+        $('tipsText').textContent = `太棒了！全部正确！用时 ${elapsed}`;
+    } else if (score >= 80) {
+        $('tipsText').textContent = `还不错！答对 ${correct}/${state.count} 题。用时 ${elapsed}`;
+    } else {
+        $('tipsText').textContent = `继续加油！答对 ${correct}/${state.count} 题。用时 ${elapsed}`;
+    }
+
+    $('wrongSection').innerHTML = wrongList.length > 0 ? `
+        <h3>错题回顾</h3>
+        ${wrongList.map(w => `<div class="wrong-item">第${w.idx}题 ${w.q}=${w.ans}：${w.detail}</div>`).join('')}
+    ` : '';
+
+    statusText.textContent = `已批改 · ${correct}/${state.count} 正确`;
+    btnCheck.style.display = 'none';
+}
+
+// ========== PRINT ==========
+function printSheet() { window.print(); }
+
+// ========== EVENTS ==========
+typeSeg.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    typeSeg.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.type = btn.dataset.type;
+});
+
+document.querySelector('.count-group').addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    document.querySelectorAll('.count-group .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    state.count = parseInt(chip.dataset.count);
+    $('customCount').value = '';
+});
+
+$('customCount').addEventListener('input', function() {
+    const v = parseInt(this.value);
+    if (v >= 1 && v <= 50) {
+        state.count = v;
+        document.querySelectorAll('.count-group .chip').forEach(c => c.classList.remove('active'));
+    }
+});
+
+btnGen.addEventListener('click', generate);
+btnCheck.addEventListener('click', check);
+btnReset.addEventListener('click', generate);
+btnPrint.addEventListener('click', printSheet);
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && state.questions.length > 0 && !state.answered) check();
+});
+
+// ========== INIT ==========
+generate();
+</script>
+</body>
+</html>

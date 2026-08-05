@@ -132,12 +132,14 @@
     }
     .subject-card.math .s-name { color: #667eea; }
     .subject-card.chinese .s-name { color: #f5576c; }
+    .subject-card.word .s-name { color: #38a169; }
     .subject-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 10px 24px rgba(0,0,0,0.12);
     }
     .subject-card.math:hover { border-color: #667eea; }
     .subject-card.chinese:hover { border-color: #f5576c; }
+    .subject-card.word:hover { border-color: #38a169; }
     .subject-option:checked + .subject-card {
         transform: translateY(-4px);
     }
@@ -150,6 +152,11 @@
         border-color: #f5576c;
         background: linear-gradient(135deg, #fff0f3, #fdf2ff);
         box-shadow: 0 10px 24px rgba(245,87,108,0.2);
+    }
+    .subject-option:checked + .subject-card.word {
+        border-color: #38a169;
+        background: linear-gradient(135deg, #f0fff4, #e6fffa);
+        box-shadow: 0 10px 24px rgba(56,161,105,0.2);
     }
     .start-area {
         text-align: center;
@@ -202,6 +209,10 @@
         margin-top: 25px;
         font-size: 0.9rem;
     }
+    @media print {
+        @page { size: A4; margin: 15mm 12mm; }
+        body { background: #fff; }
+    }
     @media (max-width: 520px) {
         .grade-grid { grid-template-columns: repeat(3, 1fr); gap: 8px;}
         .subject-grid { grid-template-columns: 1fr; }
@@ -215,7 +226,7 @@
     <div class="header">
         <div class="logo">📓</div>
         <h1>小学练习本</h1>
-        <p>口算练习 · 拼音练习 · 在线答题 · 智能评分</p>
+        <p>口算练习 · 应用题 · 拼音练习 · 在线答题 · 智能评分</p>
     </div>
 
     <div class="card">
@@ -248,13 +259,13 @@
                     <label for="sMath" class="subject-card math" onclick="updateSummary()">
                         <span class="s-icon">🧮</span>
                         <div class="s-name">数学</div>
-                        <div class="s-desc">100以内加减乘除 · 在线批改</div>
+                        <div class="s-desc">口算练习 · 应用题 · 凑十法</div>
                     </label>
                     <input type="radio" name="subject" id="sChinese" class="subject-option" value="chinese">
                     <label for="sChinese" class="subject-card chinese" onclick="updateSummary()">
                         <span class="s-icon">📖</span>
                         <div class="s-name">语文</div>
-                        <div class="s-desc">拼音读写 · 声调 · 整体认读</div>
+                        <div class="s-desc">拼音练习 · 字词练习</div>
                     </label>
                 </div>
             </div>
@@ -285,7 +296,7 @@ function updateSummary() {
 function goTo(e) {
     e.preventDefault();
     const { grade, subject } = getSelected();
-    const target = subject === 'math' ? 'math-practice.html' : 'pinyin-practice.html';
+    const target = subject === 'math' ? 'math-types.html' : 'chinese-types.html';
     window.location.href = `${target}?grade=${encodeURIComponent(grade)}`;
 }
 document.querySelectorAll('.grade-card, .subject-card').forEach(el => {

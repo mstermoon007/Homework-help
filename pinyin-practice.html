@@ -288,10 +288,6 @@
         margin: 0 auto;
         box-sizing: border-box;
     }
-    @page {
-        size: A4;
-        margin: 15mm 12mm;
-    }
     .questions-card.show { display: block; }
     .sheet-title {
         text-align: center;
@@ -433,8 +429,9 @@
         gap: 10px;
     }
     @media print {
+        @page { size: A4; margin: 15mm 12mm; }
         body { background: #fff; padding: 0; }
-        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .user-ans-input, .mark-icon, .correct-answer, .back-home, .grade-badge { display: none !important; }
+        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .mark-icon, .correct-answer, .back-home, .grade-badge, #timerDisplay { display: none !important; }
         .questions-card { box-shadow: none; border-radius: 0; padding: 0; margin: 0; max-width: none; width: 100%; }
         .question-item { padding: 4px 0; page-break-inside: avoid; border-bottom: 1px dashed #ddd;}
         .question-item .num {
@@ -444,6 +441,16 @@
             font-weight: 500;
         }
         .question-item.correct, .question-item.wrong { background: transparent; border: none; border-bottom: 1px dashed #ddd;}
+        .user-ans-input {
+            border: none;
+            border-bottom: 1.5px solid #333;
+            border-radius: 0;
+            background: transparent;
+            padding: 2px 4px;
+            font-size: 0.9rem;
+            color: #333;
+            text-align: center;
+        }
     }
 </style>
 </head>
@@ -455,7 +462,7 @@
     </div>
 
     <div style="text-align:left;">
-        <a href="index.html" class="back-home">← 返回首页</a>
+        <a href="chinese-types.html" class="back-home">← 返回题型选择</a>
     </div>
 
     <div class="settings-card">
@@ -550,6 +557,7 @@
                 <span>姓名：_____________</span>
                 <span>班级：_____________</span>
                 <span>日期：_____________</span>
+                <span>用时：<span id="timerDisplay">00:00</span></span>
                 <span>得分：_____________</span>
             </div>
         </div>
@@ -640,6 +648,20 @@ let globalNum = 0;
 let wrongIndices = [];
 let reviewed = false;
 let mode = 'full';
+let timer = null;
+let timerStart = 0;
+
+function startTimer(){
+    stopTimer();
+    timerStart = Date.now();
+    timer = setInterval(()=>{
+        const t = Math.floor((Date.now()-timerStart)/1000);
+        const el = document.getElementById('timerDisplay');
+        if(el) el.textContent = `${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
+    },1000);
+}
+function stopTimer(){ if(timer){clearInterval(timer);timer=null;} }
+function getElapsed(){ return Math.floor((Date.now()-timerStart)/1000); }
 
 function nextNum() { globalNum++; return globalNum; }
 
@@ -887,6 +909,7 @@ function generateQuestions() {
     
     renderQuestions();
     updateHeaderInfo(level);
+    startTimer();
     
     document.getElementById('questionsCard').classList.add('show');
     document.getElementById('exportBtn').disabled = false;
@@ -945,6 +968,8 @@ function updateAnswer(globalNum, val) {
 }
 
 function submitAnswers() {
+    stopTimer();
+    const elapsed = getElapsed();
     // 收集答案
     allQuestionsFlat.forEach(q => {
         const el = document.getElementById(`ans_${q.globalNum}`);
@@ -980,22 +1005,23 @@ function submitAnswers() {
         }
     });
     
-    showScorePanel(score, right, wrong, total);
-    document.getElementById('submitBtn').disabled = true;
-    mode = 'full';
+    showScorePanel(score, right, wrong, total, elapsed);
 }
 
-function showScorePanel(score, right, wrong, total) {
+function showScorePanel(score, right, wrong, total, elapsed) {
     const panel = document.getElementById('scorePanel');
     const big = document.getElementById('scoreBig');
     const comment = document.getElementById('scoreComment');
     big.textContent = `${score} 分`;
     big.className = 'score-big';
-    if (score === 100) { big.classList.add('excellent'); comment.textContent = '🎉 太棒了！满分！'; }
-    else if (score >= 90) { big.classList.add('excellent'); comment.textContent = '🌟 非常优秀！'; }
-    else if (score >= 75) { big.classList.add('good'); comment.textContent = '👍 成绩不错，继续加油！'; }
-    else if (score >= 60) { big.classList.add('pass'); comment.textContent = '📚 刚好及格，多练练！'; }
-    else { big.classList.add('fail'); comment.textContent = '💪 不要灰心，多做练习！'; }
+    const mins = Math.floor(elapsed/60);
+    const secs = elapsed%60;
+    const timeStr = mins>0?`${mins}分${secs}秒`:`${secs}秒`;
+    if (score === 100) { big.classList.add('excellent'); comment.textContent = `🎉 太棒了！满分！用时${timeStr}`; }
+    else if (score >= 90) { big.classList.add('excellent'); comment.textContent = `🌟 非常优秀！用时${timeStr}`; }
+    else if (score >= 75) { big.classList.add('good'); comment.textContent = `👍 成绩不错，继续加油！用时${timeStr}`; }
+    else if (score >= 60) { big.classList.add('pass'); comment.textContent = `📚 刚好及格，多练练！用时${timeStr}`; }
+    else { big.classList.add('fail'); comment.textContent = `💪 不要灰心，多做练习！用时${timeStr}`; }
     document.getElementById('correctCount').textContent = right;
     document.getElementById('wrongCount').textContent = wrong;
     document.getElementById('totalCount').textContent = total;
@@ -1113,7 +1139,7 @@ function submitWrongCorrections() {
     allQuestionsFlat.forEach(q => { if (q.correct) right++; });
     const total = allQuestionsFlat.length;
     const score = Math.round((right/total)*100);
-    showScorePanel(score, right, total-right, total);
+    showScorePanel(score, right, total-right, total, getElapsed());
     document.getElementById('correctBtn').disabled = true;
     setTimeout(()=>{
         alert(`错题修改完成！\n本次订正对：${reRight} 题\n仍未答对：${stillWrong} 题\n最终得分：${score} 分`);
@@ -1133,6 +1159,7 @@ function resetAll() {
     });
     document.getElementById('submitBtn').disabled = false;
     document.getElementById('scorePanel').classList.remove('show');
+    startTimer();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
