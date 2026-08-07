@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英语题型选择</title>
+<link rel="stylesheet" href="common.css">
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: linear-gradient(135deg, #38a169 0%, #48bb78 100%);
+        min-height: 100vh;
+        padding: 30px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .type-card:hover { border-color: #38a169; }
+    .type-card .t-name { color: #38a169; }
+    .section-label { border-left-color: #38a169; }
+    .grade-badge { color: #38a169; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+    <a href="index.html" class="back-home">← 返回首页</a>
+
+    <div class="page-header">
+        <div class="logo">🔤</div>
+        <h1>英语练习<span class="grade-badge" id="gradeBadge">一年级</span></h1>
+        <p>请选择要练习的题型</p>
+    </div>
+
+    <div class="card">
+        <div class="section-label">📚 选择题型</div>
+        <div class="type-grid">
+            <div class="type-card coming-soon">
+                <span class="t-icon">🔠</span>
+                <div class="t-name">字母练习</div>
+                <div class="t-desc">26个英文字母大小写 · 书写笔顺 · 字母识别</div>
+                <span class="t-badge">即将上线</span>
+            </div>
+            <div class="type-card coming-soon">
+                <span class="t-icon">📝</span>
+                <div class="t-name">单词拼写</div>
+                <div class="t-desc">看图写单词 · 中英互译 · 听音拼写</div>
+                <span class="t-badge">即将上线</span>
+            </div>
+            <div class="type-card coming-soon">
+                <span class="t-icon">🎧</span>
+                <div class="t-name">听力练习</div>
+                <div class="t-desc">听音选词 · 听音辨义 · 情景对话</div>
+                <span class="t-badge">即将上线</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="foot-tip">💡 英语题型持续开发中，敬请期待</div>
+</div>
+
+<script src="common.js"></script>
+<script>
+document.getElementById('gradeBadge').textContent = App.getGradeName(App.currentGrade());
+</script>
+</body>
+</html>

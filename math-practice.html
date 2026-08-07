@@ -4,12 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>100以内加减乘除口算题生成器</title>
+<link rel="stylesheet" href="common.css">
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
     body {
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -34,71 +30,7 @@
         font-size: 1rem;
         opacity: 0.9;
     }
-    .back-home {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 18px;
-        background: rgba(255,255,255,0.2);
-        color: #fff;
-        border: 2px solid rgba(255,255,255,0.4);
-        border-radius: 22px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.2s;
-        backdrop-filter: blur(10px);
-        text-decoration: none;
-        margin-bottom: 20px;
-    }
-    .back-home:hover {
-        background: rgba(255,255,255,0.35);
-        transform: translateY(-1px);
-        color: #fff;
-    }
-    .grade-badge {
-        display: inline-block;
-        margin-left: 10px;
-        padding: 4px 14px;
-        background: rgba(255,255,255,0.95);
-        color: #667eea;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        vertical-align: middle;
-    }
-    .settings-card {
-        background: #fff;
-        border-radius: 16px;
-        padding: 30px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-        margin-bottom: 30px;
-    }
-    .settings-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 25px;
-        margin-bottom: 20px;
-    }
-    .setting-group {
-        flex: 1;
-        min-width: 200px;
-    }
-    .setting-group label {
-        display: block;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-    }
-    .number-input {
-        width: 100%;
-        padding: 10px 14px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: border-color 0.2s;
-    }
+    .grade-badge { color: #667eea; }
     .number-input:focus {
         outline: none;
         border-color: #667eea;
@@ -152,75 +84,6 @@
         background: #667eea;
         color: #fff;
         border-color: #667eea;
-    }
-    .btn-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-top: 10px;
-    }
-    .btn {
-        padding: 12px 28px;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none !important;
-        box-shadow: none !important;
-    }
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(102, 126, 234, 0.4);
-    }
-    .btn-primary:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-    }
-    .btn-success {
-        background: linear-gradient(135deg, #11998e, #38ef7d);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(56, 239, 125, 0.4);
-    }
-    .btn-success:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(56, 239, 125, 0.5);
-    }
-    .btn-warning {
-        background: linear-gradient(135deg, #f7971e, #ffd200);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(247, 151, 30, 0.4);
-    }
-    .btn-warning:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(247, 151, 30, 0.5);
-    }
-    .btn-danger {
-        background: linear-gradient(135deg, #eb3349, #f45c43);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(235, 51, 73, 0.4);
-    }
-    .btn-danger:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(235, 51, 73, 0.5);
-    }
-    .btn-info {
-        background: linear-gradient(135deg, #4facfe, #00f2fe);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(79, 172, 254, 0.4);
-    }
-    .btn-info:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
     }
     .score-panel {
         display: none;
@@ -396,12 +259,8 @@
         font-size: 0.9rem;
     }
     @media print {
-        @page { size: A4; margin: 15mm 12mm; }
-        body {
-            background: #fff;
-            padding: 0;
-        }
-        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .mark-icon, .correct-answer, .back-home, .grade-badge, .timerDisplay {
+        body { padding: 0; }
+        .header, .nav-tabs, .mark-icon, .correct-answer, .timerDisplay {
             display: none !important;
         }
         .questions-card {
@@ -447,7 +306,7 @@
     </div>
 
     <div style="text-align:left;">
-        <a href="math-types.html" class="back-home">← 返回题型选择</a>
+        <a href="math-types.html" class="back-home" id="backLink">← 返回题型选择</a>
     </div>
 
     <div class="settings-card">
@@ -502,8 +361,7 @@
 
         <div class="btn-row">
             <button class="btn btn-primary" onclick="generateQuestions()">🎲 生成题目</button>
-            <button class="btn btn-success" onclick="exportWord()" id="exportBtn" disabled>📄 导出Word文档</button>
-            <button class="btn btn-warning" onclick="window.print()" id="printBtn" disabled>🖨️ 直接打印</button>
+            <button class="btn btn-success" onclick="printFile()" id="exportBtn" disabled>📄 生成打印文件</button>
             <button class="btn btn-danger" onclick="submitAnswers()" id="submitBtn" disabled>✅ 提交答案并评分</button>
         </div>
     </div>
@@ -550,6 +408,7 @@
     </div>
 </div>
 
+<script src="common.js"></script>
 <script>
 let currentQuestions = [];   // { text, answer, userAnswer:null, correct:null }
 let wrongIndices = [];       // 当前错题索引
@@ -558,56 +417,56 @@ let mode = 'full';           // full: 全题; wrong: 错题模式
 let timer = null;
 let timerStart = 0;
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+function getRandomInt(min, max) { return App.randInt(min, max); }
+
+function shuffleArray(arr) { return App.shuffle(arr); }
 
 function generateOneQuestion(operators, maxNum, noNegative, exactDiv) {
-    const op = operators[Math.floor(Math.random() * operators.length)];
+    const op = operators[getRandomInt(0, operators.length - 1)];
     let a, b, answer, qText;
 
     switch(op) {
         case '+':
+            // 扩大取数范围：a 和 b 都在 1~maxNum 内独立随机
             a = getRandomInt(1, maxNum);
-            b = getRandomInt(1, maxNum - a > 1 ? maxNum - a : 1);
-            if (a + b > maxNum) {
-                let temp = getRandomInt(1, maxNum);
-                b = getRandomInt(1, maxNum - temp > 1 ? maxNum - temp : 1);
-                a = temp;
-            }
+            b = getRandomInt(1, maxNum);
             answer = a + b;
             if (answer > maxNum) {
-                a = getRandomInt(1, Math.floor(maxNum/2));
-                b = getRandomInt(1, maxNum - a);
+                // 如果超范围，等比例缩小
+                const scale = maxNum / answer;
+                a = Math.max(1, Math.floor(a * scale));
+                b = Math.max(1, Math.floor(b * scale));
                 answer = a + b;
             }
             qText = `${a} + ${b} =`;
             break;
         case '-':
             a = getRandomInt(2, maxNum);
-            b = getRandomInt(1, noNegative ? a - 1 : maxNum);
-            if (noNegative && b > a) {
-                [a, b] = [b, a];
+            b = getRandomInt(1, maxNum);
+            if (noNegative) {
+                // 确保 a >= b，同时让数值分布更均匀
+                if (b > a) [a, b] = [b, a];
+                if (a === b) a = getRandomInt(b + 1, maxNum);
             }
             answer = a - b;
             qText = `${a} − ${b} =`;
             break;
         case '×':
-            const sqrtMax = Math.floor(Math.sqrt(maxNum));
-            a = getRandomInt(1, sqrtMax > 1 ? sqrtMax : 9);
-            b = getRandomInt(1, sqrtMax > 1 ? sqrtMax : 9);
-            while (a * b > maxNum) {
-                a = getRandomInt(1, sqrtMax > 1 ? sqrtMax : 9);
-                b = getRandomInt(1, sqrtMax > 1 ? sqrtMax : 9);
-            }
+            // 扩大乘法范围：一个因子取 2~sqrt(maxNum)，另一个取 2~maxNum/第一个因子
+            const maxFactor1 = Math.max(9, Math.floor(Math.sqrt(maxNum)) * 2);
+            a = getRandomInt(2, Math.min(maxFactor1, maxNum));
+            const maxB = Math.floor(maxNum / a);
+            b = getRandomInt(2, Math.max(2, maxB));
             answer = a * b;
             qText = `${a} × ${b} =`;
             break;
         case '÷':
-            const sqrtMaxD = Math.floor(Math.sqrt(maxNum));
-            b = getRandomInt(1, sqrtMaxD > 1 ? sqrtMaxD : 9);
+            // 扩大除法范围：除数 2~sqrt(maxNum)*2，被除数=除数*商
+            const maxDiv = Math.max(9, Math.floor(Math.sqrt(maxNum)) * 2);
+            b = getRandomInt(2, Math.min(maxDiv, maxNum));
             if (exactDiv) {
-                const q = getRandomInt(1, Math.floor(maxNum / b));
+                const maxQ = Math.floor(maxNum / b);
+                const q = getRandomInt(1, Math.max(1, maxQ));
                 a = b * q;
                 answer = q;
             } else {
@@ -640,15 +499,25 @@ function generateQuestions() {
 
     currentQuestions = [];
     const seen = new Set();
-    for (let i = 0; i < count; i++) {
-        let q, attempts = 0;
-        do {
-            q = generateOneQuestion(operators, maxNum, noNegative, exactDiv);
-            attempts++;
-        } while (seen.has(q.text) && attempts < 10);
-        seen.add(q.text);
-        currentQuestions.push(q);
+    const maxAttempts = Math.max(count * 3, 50);
+    let totalAttempts = 0;
+
+    while (currentQuestions.length < count && totalAttempts < maxAttempts) {
+        const q = generateOneQuestion(operators, maxNum, noNegative, exactDiv);
+        totalAttempts++;
+        if (!seen.has(q.text)) {
+            seen.add(q.text);
+            currentQuestions.push(q);
+        }
     }
+    // 如果还不够（极端情况），放宽去重再生成
+    if (currentQuestions.length < count) {
+        while (currentQuestions.length < count) {
+            currentQuestions.push(generateOneQuestion(operators, maxNum, noNegative, exactDiv));
+        }
+    }
+    // Fisher-Yates 洗牌，让题目顺序更随机
+    currentQuestions = shuffleArray(currentQuestions);
     
     wrongIndices = [];
     reviewed = false;
@@ -667,7 +536,6 @@ function generateQuestions() {
 
     document.getElementById('questionsCard').classList.add('show');
     document.getElementById('exportBtn').disabled = false;
-    document.getElementById('printBtn').disabled = false;
     document.getElementById('submitBtn').disabled = false;
     document.getElementById('wrongSection').classList.remove('show');
 }
@@ -938,86 +806,24 @@ function resetAll() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function exportWord() {
+function printFile() {
     if (currentQuestions.length === 0) {
         alert('请先生成题目！');
         return;
     }
-
-    const columns = parseInt(document.querySelector('input[name="columns"]:checked').value) || 3;
-    const title = document.getElementById('sheetTitle').textContent;
-    const count = currentQuestions.length;
-    const genTime = document.getElementById('generateTime').textContent.replace('生成时间：', '');
-
-    let questionsHtml = '';
-    const rows = Math.ceil(count / columns);
-    for (let r = 0; r < rows; r++) {
-        let rowHtml = '<tr>';
-        for (let c = 0; c < columns; c++) {
-            const idx = r + c * rows;
-            if (idx < count) {
-                rowHtml += `<td style="padding: 10px 8px; border-bottom: 1px dashed #ccc; font-size: 14pt; font-family: 'Times New Roman', serif; white-space: nowrap;"><span style="font-size: 9pt; color: #888; vertical-align: baseline; margin-right: 3pt;">${idx + 1}.</span>${currentQuestions[idx].text}</td>`;
-            } else {
-                rowHtml += '<td style="padding: 12px 8px;"></td>';
-            }
-        }
-        rowHtml += '</tr>';
-        questionsHtml += rowHtml;
-    }
-
-    const html = `
-<html xmlns:o="urn:schemas-microsoft-com:office:office" 
-      xmlns:w="urn:schemas-microsoft-com:office:word" 
-      xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-<meta charset="utf-8">
-<title>${title}</title>
-<style>
-    body { font-family: "Microsoft YaHei", "SimSun", sans-serif; }
-    .title { text-align: center; font-size: 22pt; font-weight: bold; margin: 20pt 0; }
-    .info { display: flex; justify-content: center; gap: 30pt; font-size: 12pt; margin-bottom: 20pt; }
-    table { width: 100%; border-collapse: collapse; }
-    .footer { margin-top: 30pt; padding-top: 10pt; border-top: 1pt solid #ccc; display: flex; justify-content: space-between; font-size: 10pt; color: #666; }
-</style>
-</head>
-<body>
-    <div class="title">${title}</div>
-    <div class="info">
-        <span>姓名：_______________</span>
-        <span>日期：_______________</span>
-        <span>用时：_______________</span>
-        <span>得分：_______________</span>
-    </div>
-    <table>
-        ${questionsHtml}
-    </table>
-    <div class="footer">
-        <span>共 ${count} 道题</span>
-        <span>生成时间：${genTime}</span>
-    </div>
-</body>
-</html>`;
-
-    const blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    const timestamp = `${new Date().getFullYear()}${String(new Date().getMonth()+1).padStart(2,'0')}${String(new Date().getDate()).padStart(2,'0')}`;
-    a.download = `口算练习题_${timestamp}.doc`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    var title = document.getElementById('sheetTitle').textContent;
+    var cols = parseInt(document.querySelector('input[name="columns"]:checked').value) || 3;
+    var grid = document.getElementById('questionsGrid');
+    if (grid) grid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+    App.openPrintPage('#questionsCard', title, {
+        extraStyle: '.questions-grid { grid-template-columns: repeat(' + cols + ', 1fr); }'
+    });
 }
 
-function getGradeParam() {
-    const p = new URLSearchParams(window.location.search).get('grade');
-    const g = (p === '1' || p === '2' || p === '3') ? p : '1';
-    return Number(g);
-}
+function getGradeParam() { return App.getGradeParam(); }
 function applyGradeDefaults() {
     const g = getGradeParam();
-    const gradeName = {1:'一年级', 2:'二年级', 3:'三年级'}[g];
+    const gradeName = App.getGradeName(g);
     document.getElementById('gradeBadge').textContent = gradeName;
     // 根据年级设置默认值（一年级 20以内，二年级 50以内，三年级 100以内）
     const defaults = {
@@ -1031,6 +837,7 @@ function applyGradeDefaults() {
     if (maxEl && !maxEl.dataset.touched) maxEl.value = defaults.max;
 }
 window.onload = function() {
+    document.getElementById('backLink').href = App.buildLink('math-types.html');
     applyGradeDefaults();
     generateQuestions();
 };

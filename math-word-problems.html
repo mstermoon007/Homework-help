@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小学1-3年级数学应用题练习</title>
+<link rel="stylesheet" href="common.css">
 <style>
   :root{
     --bg:#f3f7fb;
@@ -20,8 +21,6 @@
     --warn:#e6a23c;
     --shadow:0 8px 24px rgba(40,70,120,.10);
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
     background:linear-gradient(180deg,#eaf2ff 0%,#f3f7fb 220px,#f3f7fb 100%);
@@ -168,7 +167,7 @@
 <body>
 <div class="wrap">
   <div style="margin-bottom:10px;">
-    <a href="math-types.html" class="back-home">← 返回题型选择</a>
+    <a href="math-types.html" class="back-home" id="backLink">← 返回题型选择</a>
   </div>
 
   <header class="hero">
@@ -202,7 +201,7 @@
       <button class="btn btn-primary" id="checkBtn">✅ 检查答案</button>
       <button class="btn btn-ghost" id="hintBtn">💡 解题思路</button>
       <button class="btn btn-ghost" id="revealBtn">👀 显示答案</button>
-      <button class="btn btn-ghost" id="printBtn">🖨️ 打印</button>
+      <button class="btn btn-ghost" id="printBtn">📄 生成打印文件</button>
     </div>
 
     </section>
@@ -221,9 +220,12 @@
   <footer>题目由程序随机生成，仅供参考练习。如有疑问以教材为准。</footer>
 </div>
 
+<script src="common.js"></script>
 <script>
-function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
-function pick(arr){return arr[rnd(0,arr.length-1)];}
+// 使用 App.randInt, App.shuffle, App.rand（来自 common.js）
+function rnd(min,max){ return App.randInt(min,max); }
+function shuffleArr(arr) { return App.shuffle(arr); }
+function pick(arr){ return App.rand(arr); }
 
 /* ============ 一年级：20以内加减、100以内、人民币、钟表、排队、比多少、连加连减 ============ */
 const G1 = [
@@ -234,10 +236,10 @@ const G1 = [
   function(){let a=rnd(6,18),b=rnd(1,Math.min(a-1,9));const it=pick(["糖","铅笔","草莓","饼干"]);
     return {q:`小红有 ${a} 颗${it}，送给小明 ${b} 颗，小红还剩几颗${it}？`,a:a-b,unit:"颗",hint:`从 ${a} 颗里面去掉送出的 ${b} 颗：${a}-${b}=${a-b}`};},
   // 两位数加法(100以内)
-  function(){let a=rnd(11,89),b=rnd(10,99-a);
+  function(){let a=rnd(10,99),b=rnd(10,99-a);
     return {q:`停车场原来有 ${a} 辆汽车，又开来了 ${b} 辆，现在一共有多少辆？`,a:a+b,unit:"辆",hint:`原有的加上新来的：${a}+${b}=${a+b}`};},
   // 两位数减法(100以内)
-  function(){let a=rnd(30,99),b=rnd(10,a-1);
+  function(){let a=rnd(20,99),b=rnd(5,a-1);
     return {q:`书架上有 ${a} 本书，借走了 ${b} 本，还剩多少本？`,a:a-b,unit:"本",hint:`从总数 ${a} 本中去掉借走的 ${b} 本：${a}-${b}=${a-b}`};},
   // 比多少(求较小数)
   function(){let a=rnd(10,40),b=rnd(3,Math.min(a-1,15));
@@ -268,10 +270,10 @@ const G1 = [
 /* ============ 二年级：100以内加减、表内乘除、长度、加减混合、两步计算 ============ */
 const G2 = [
   // 100以内进退位加法
-  function(){let a=rnd(15,85),b=rnd(15,99-a);
+  function(){let a=rnd(10,90),b=rnd(5,99-a);
     return {q:`水果店有 ${a} 个苹果，又运来 ${b} 个，现在一共有多少个？`,a:a+b,unit:"个",hint:`列竖式：${a}+${b}，个位和十位分别相加，注意进位`};},
   // 100以内退位减法
-  function(){let a=rnd(40,99),b=rnd(15,a-1);
+  function(){let a=rnd(20,99),b=rnd(5,a-1);
     return {q:`花园里原来有 ${a} 朵花，凋谢了 ${b} 朵，还剩多少朵？`,a:a-b,unit:"朵",hint:`列竖式：${a}-${b}，个位不够减向十位借1`};},
   // 表内乘法
   function(){let a=rnd(2,9),b=rnd(2,9);const it=pick(["气球","糖果","草莓","本子"]);
@@ -308,10 +310,10 @@ const G2 = [
 /* ============ 三年级：万以内加减、倍、多位数乘、周长、除法、时分秒、分数 ============ */
 const G3 = [
   // 万以内加法
-  function(){let a=rnd(200,4000),b=rnd(200,Math.max(200,5000-a));
+  function(){let a=rnd(100,5000),b=rnd(100,Math.max(200,5000-a));
     return {q:`果园里有 ${a} 棵苹果树，又栽了 ${b} 棵梨树，现在一共有多少棵果树？`,a:a+b,unit:"棵",hint:`列竖式相加：${a}+${b}=${a+b}，注意数位对齐`};},
   // 万以内减法
-  function(){let a=rnd(1000,5000),b=rnd(200,a-1);
+  function(){let a=rnd(500,5000),b=rnd(100,a-1);
     return {q:`图书馆有 ${a} 本书，借出去 ${b} 本，还剩多少本？`,a:a-b,unit:"本",hint:`从总数中减去借出的：${a}-${b}=${a-b}`};},
   // 倍的认识
   function(){let a=rnd(4,20),b=rnd(2,8);
@@ -420,18 +422,13 @@ const problemsArea = document.getElementById('problemsArea');
 const resultArea = document.getElementById('resultArea');
 const customCount = document.getElementById('customCount');
 
-// 从URL获取年级参数
-function getGradeParam(){
-  const p = new URLSearchParams(window.location.search).get('grade');
-  const g = (p==='1'||p==='2'||p==='3')?p:'1';
-  return Number(g);
-}
-
-// 初始化年级
-const initGrade = getGradeParam();
+// 初始化年级（使用 App 路由）
+const initGrade = App.getGradeParam();
 state.grade = initGrade;
-const gradeName = {1:'一年级',2:'二年级',3:'三年级'}[initGrade];
+const gradeName = App.getGradeName(initGrade);
 document.getElementById('gradeTitle').textContent = gradeName;
+// 设置返回链接
+document.getElementById('backLink').href = App.buildLink('math-types.html');
 
 document.querySelectorAll('.count-group .chip').forEach(chip=>{
   chip.addEventListener('click',()=>{
@@ -476,26 +473,18 @@ function generate(){
     console.log(`混合模式: 基础 ${basicCount} 种 + 进阶 ${advCount} 种 = 共 ${pool.length} 种题型`);
   }
 
-  // 去重：记录已使用的题目类型索引
-  let used = new Set();
-  let dedupHits = 0;
-  let totalAttempts = 0;
+  // 洗牌选型：Fisher-Yates 打乱后依次取用，保证不重复 + 高随机性
+  let shuffledPool = shuffleArr(pool);
+  let poolIdx = 0;
 
   for(let i=0;i<state.count;i++){
-    let fn, attempts=0, fnIdx;
-    do{
-      fn = pick(pool);
-      fnIdx = pool.indexOf(fn);
-      attempts++;
-      totalAttempts++;
-    }while(used.has(fnIdx) && attempts<20 && used.size<pool.length);
-
-    if(attempts > 1){
-      dedupHits++;
-      console.log(`  第${i+1}题: 去重命中 ${attempts-1} 次, 最终选用索引 ${fnIdx}`);
+    if (poolIdx >= shuffledPool.length) {
+      // 题目类型不够，重新洗牌再循环
+      shuffledPool = shuffleArr(pool);
+      poolIdx = 0;
     }
-
-    used.add(fnIdx);
+    const fn = shuffledPool[poolIdx];
+    poolIdx++;
     const q = fn();
     list.push(q);
   }
@@ -506,8 +495,6 @@ function generate(){
   const dupCount = qTexts.length - uniqueTexts.size;
 
   console.log('--- 生成结果 ---');
-  console.log('已用题型索引:', [...used].sort((a,b)=>a-b).join(', '));
-  console.log(`总尝试次数: ${totalAttempts}, 去重触发: ${dedupHits} 次`);
   console.log(`题目文本去重: ${qTexts.length} 题, 唯一文本 ${uniqueTexts.size} 个` + (dupCount>0?` ⚠️ 仍有 ${dupCount} 个重复!`:' ✅ 全部唯一'));
   console.log('题目列表:');
   list.forEach((q,i)=>console.log(`  ${i+1}. [${q.depth}] ${q.q} → ${q.a}${q.unit||''}`));
@@ -645,13 +632,16 @@ document.getElementById('genBtn').addEventListener('click',generate);
 document.getElementById('checkBtn').addEventListener('click',check);
 document.getElementById('revealBtn').addEventListener('click',toggleReveal);
 document.getElementById('hintBtn').addEventListener('click',toggleHints);
-document.getElementById('printBtn').addEventListener('click',()=>window.print());
+document.getElementById('printBtn').addEventListener('click',printFile);
 
-// 从URL获取年级参数
-function getGradeParam(){
-  const p = new URLSearchParams(window.location.search).get('grade');
-  const g = (p==='1'||p==='2'||p==='3')?p:'1';
-  return Number(g);
+function printFile() {
+  if (!state.problems.length) { alert('请先生成练习题！'); return; }
+  var title = document.getElementById('gradeTitle').textContent + '数学应用题';
+  App.openPrintPage('#problemsArea', title, {
+    extraStyle: '.problem { page-break-inside: avoid; }' +
+      '.problem input { border: none; border-bottom: 1.5px solid #333; border-radius: 0; }' +
+      '.empty { display: none; }'
+  });
 }
 </script>
 </body>

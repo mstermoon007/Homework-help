@@ -4,21 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小学拼音练习题生成器</title>
+<link rel="stylesheet" href="common.css">
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
     body {
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
         background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         min-height: 100vh;
         padding: 20px;
+        position: relative;
+        overflow-x: hidden;
+    }
+    body::before, body::after {
+        content: '';
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(40px);
+        opacity: 0.25;
+        pointer-events: none;
+        z-index: 0;
+    }
+    body::before {
+        width: 320px;
+        height: 320px;
+        background: #ffd166;
+        top: -100px;
+        right: -70px;
+    }
+    body::after {
+        width: 280px;
+        height: 280px;
+        background: #6ec5ff;
+        bottom: -90px;
+        left: -60px;
     }
     .container {
         max-width: 1150px;
         margin: 0 auto;
+        position: relative;
+        z-index: 1;
     }
     .header {
         text-align: center;
@@ -33,72 +56,9 @@
     .header p {
         font-size: 1rem;
         opacity: 0.95;
-    }
-    .back-home {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 18px;
-        background: rgba(255,255,255,0.2);
-        color: #fff;
-        border: 2px solid rgba(255,255,255,0.4);
-        border-radius: 22px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.2s;
-        backdrop-filter: blur(10px);
-        text-decoration: none;
-        margin-bottom: 20px;
-    }
-    .back-home:hover {
-        background: rgba(255,255,255,0.35);
-        transform: translateY(-1px);
-        color: #fff;
-    }
-    .grade-badge {
-        display: inline-block;
-        margin-left: 10px;
-        padding: 4px 14px;
-        background: rgba(255,255,255,0.95);
-        color: #f5576c;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        vertical-align: middle;
-    }
-    .settings-card {
-        background: #fff;
-        border-radius: 16px;
-        padding: 28px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-        margin-bottom: 30px;
-    }
-    .settings-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 22px;
-        margin-bottom: 18px;
-    }
-    .setting-group {
-        flex: 1;
-        min-width: 180px;
-    }
-    .setting-group label {
-        display: block;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 10px;
-        font-size: 0.95rem;
-    }
-    .number-input, .select-input {
-        width: 100%;
-        padding: 10px 14px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: border-color 0.2s;
-        background: #fff;
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.8;
     }
     .number-input:focus, .select-input:focus {
         outline: none;
@@ -118,6 +78,12 @@
         cursor: pointer;
         transition: all 0.2s;
         text-align: center;
+        background: #fff;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+    }
+    .qtype-label:hover {
+        transform: translateY(-2px);
+        border-color: #f5576c;
     }
     .qtype-label .icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
     .qtype-label .name { font-weight: 600; color: #333; font-size: 0.95rem; }
@@ -166,83 +132,18 @@
         color: #fff;
         border-color: #8e44ad;
     }
-    .btn-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-top: 8px;
-    }
-    .btn {
-        padding: 12px 28px;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        transform: none !important;
-        box-shadow: none !important;
-    }
-    .btn-primary {
-        background: linear-gradient(135deg, #f093fb, #f5576c);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(245, 87, 108, 0.4);
-    }
-    .btn-primary:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(245, 87, 108, 0.5);
-    }
-    .btn-success {
-        background: linear-gradient(135deg, #11998e, #38ef7d);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(56, 239, 125, 0.4);
-    }
-    .btn-success:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(56, 239, 125, 0.5);
-    }
-    .btn-warning {
-        background: linear-gradient(135deg, #f7971e, #ffd200);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(247, 151, 30, 0.4);
-    }
-    .btn-warning:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(247, 151, 30, 0.5);
-    }
-    .btn-danger {
-        background: linear-gradient(135deg, #eb3349, #f45c43);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(235, 51, 73, 0.4);
-    }
-    .btn-danger:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(235, 51, 73, 0.5);
-    }
-    .btn-info {
-        background: linear-gradient(135deg, #4facfe, #00f2fe);
-        color: #fff;
-        box-shadow: 0 4px 14px rgba(79, 172, 254, 0.4);
-    }
-    .btn-info:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
-    }
+    .score-detail .item span:first-child { font-weight: 600; color: #333; margin-right: 6px;}
+    .score-detail .ok { color: #10ac84; font-weight: 700;}
+    .score-detail .bad { color: #ee5253; font-weight: 700;}
+    .score-detail .total { color: #2e86de; font-weight: 700;}
     .score-panel {
         display: none;
         background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
-        border-radius: 14px;
+        border-radius: 18px;
         padding: 22px 28px;
         margin: 0 0 25px 0;
         border: 2px solid #ffd27a;
-        box-shadow: 0 6px 20px rgba(255, 193, 7, 0.18);
+        box-shadow: 0 10px 26px rgba(255, 193, 7, 0.18);
     }
     .score-panel.show { display: block; }
     .score-top {
@@ -272,21 +173,18 @@
         color: #555;
         font-size: 0.95rem;
     }
-    .score-detail .item span:first-child { font-weight: 600; color: #333; margin-right: 6px;}
-    .score-detail .ok { color: #10ac84; font-weight: 700;}
-    .score-detail .bad { color: #ee5253; font-weight: 700;}
-    .score-detail .total { color: #2e86de; font-weight: 700;}
     .score-btns { display: flex; gap: 12px; flex-wrap: wrap; }
     .questions-card {
-        background: #fff;
-        border-radius: 16px;
+        background: rgba(255,255,255,0.98);
+        border-radius: 20px;
         padding: 40px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        box-shadow: 0 16px 45px rgba(0,0,0,0.14);
         display: none;
         max-width: 210mm;
         width: 100%;
         margin: 0 auto;
         box-sizing: border-box;
+        border: 1px solid rgba(245,87,108,0.12);
     }
     .questions-card.show { display: block; }
     .sheet-title {
@@ -321,11 +219,54 @@
     }
     .question-item {
         font-size: 1.1rem;
-        padding: 8px 8px;
-        border-bottom: 1px dashed #ddd;
+        padding: 12px;
+        border: 1px solid #f0e7ff;
+        border-radius: 16px;
         line-height: 1.6;
-        border-radius: 6px;
         transition: all 0.2s;
+        background: linear-gradient(135deg, #ffffff 0%, #fdf7ff 100%);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .question-visual {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 126px;
+        padding: 16px 14px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #fef3ff 0%, #eef7ff 100%);
+        border: 1px solid #f2d6ff;
+        text-align: center;
+    }
+    .question-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #8c6cff;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .question-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .question-input-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 4px;
+    }
+    .question-input-wrap .user-ans-input {
+        width: 140px;
+        background: rgba(255,255,255,0.95);
     }
     .question-item.correct {
         background: rgba(56, 239, 125, 0.1);
@@ -429,11 +370,11 @@
         gap: 10px;
     }
     @media print {
-        @page { size: A4; margin: 15mm 12mm; }
-        body { background: #fff; padding: 0; }
-        .header, .settings-card, .btn-row, .nav-tabs, .score-panel, .wrong-section, .mark-icon, .correct-answer, .back-home, .grade-badge, #timerDisplay { display: none !important; }
+        .header, .nav-tabs, .mark-icon, .correct-answer, #timerDisplay { display: none !important; }
+        body { padding: 0 !important; }
         .questions-card { box-shadow: none; border-radius: 0; padding: 0; margin: 0; max-width: none; width: 100%; }
-        .question-item { padding: 4px 0; page-break-inside: avoid; border-bottom: 1px dashed #ddd;}
+        .question-item { padding: 4px 0; page-break-inside: avoid; border: none; box-shadow: none; background: transparent; }
+        .question-visual { min-height: 92px; padding: 10px 8px; border: 1px solid #eee; background: #fff; }
         .question-item .num {
             min-width: 22px;
             font-size: 0.7rem !important;
@@ -458,18 +399,18 @@
 <div class="container">
     <div class="header">
         <h1>📖 语文拼音练习<span class="grade-badge" id="gradeBadge"></span></h1>
-        <p>多题型组合·在线答题·自动评分·错题重做</p>
+        <p>生字注音·词语注音·在线答题·自动评分·错题重做</p>
     </div>
 
     <div style="text-align:left;">
-        <a href="chinese-types.html" class="back-home">← 返回题型选择</a>
+        <a href="chinese-types.html" class="back-home" id="backLink">← 返回题型选择</a>
     </div>
 
     <div class="settings-card">
         <div class="settings-row">
             <div class="setting-group">
                 <label>📝 题目总数</label>
-                <input type="number" id="count" class="number-input" value="24" min="5" max="200">
+                <input type="number" id="count" class="number-input" value="20" min="5" max="200">
             </div>
             <div class="setting-group">
                 <label>📄 每行题数</label>
@@ -491,41 +432,21 @@
                     <input type="checkbox" id="qt1" class="qtype-checkbox" checked>
                     <label for="qt1" class="qtype-label">
                         <span class="icon">📝</span>
-                        <span class="name">看拼音写汉字</span>
+                        <span class="name">生字注音</span>
                     </label>
                     <input type="checkbox" id="qt2" class="qtype-checkbox" checked>
                     <label for="qt2" class="qtype-label">
-                        <span class="icon">🔤</span>
-                        <span class="name">给汉字注拼音</span>
-                    </label>
-                    <input type="checkbox" id="qt3" class="qtype-checkbox">
-                    <label for="qt3" class="qtype-label">
-                        <span class="icon">🎵</span>
-                        <span class="name">标声调练习</span>
-                    </label>
-                    <input type="checkbox" id="qt4" class="qtype-checkbox">
-                    <label for="qt4" class="qtype-label">
-                        <span class="icon">✏️</span>
-                        <span class="name">声母/韵母填空</span>
-                    </label>
-                    <input type="checkbox" id="qt5" class="qtype-checkbox">
-                    <label for="qt5" class="qtype-label">
-                        <span class="icon">🅰️</span>
-                        <span class="name">区分声母韵母</span>
-                    </label>
-                    <input type="checkbox" id="qt6" class="qtype-checkbox">
-                    <label for="qt6" class="qtype-label">
-                        <span class="icon">🌟</span>
-                        <span class="name">整体认读音节</span>
+                        <span class="icon">📖</span>
+                        <span class="name">词语注音</span>
                     </label>
                 </div>
+                <div class="helper-note" style="margin-top: 10px; color: #7c5cff; font-size: 0.86rem; font-weight: 600;">💡 当前字库已扩展到 2500+，词语会根据随机汉字自动组合生成。</div>
             </div>
         </div>
 
         <div class="btn-row">
             <button class="btn btn-primary" onclick="generateQuestions()">🎲 生成题目</button>
-            <button class="btn btn-success" onclick="exportWord()" id="exportBtn" disabled>📄 导出Word文档</button>
-            <button class="btn btn-warning" onclick="window.print()" id="printBtn" disabled>🖨️ 直接打印</button>
+            <button class="btn btn-success" onclick="printFile()" id="exportBtn" disabled>📄 生成打印文件</button>
             <button class="btn btn-danger" onclick="submitAnswers()" id="submitBtn" disabled>✅ 提交答案并评分</button>
         </div>
     </div>
@@ -573,77 +494,47 @@
     </div>
 </div>
 
+<script src="pinyin-bank.js"></script>
+<script src="common.js"></script>
 <script>
-// ============ 拼音题库 ============
-const SHENGMU = ['b','p','m','f','d','t','n','l','g','k','h','j','q','x','zh','ch','sh','r','z','c','s','y','w'];
-const YUNMU_DAN = ['a','o','e','i','u','ü'];
-const YUNMU_ALL = ['a','o','e','i','u','ü','ai','ei','ui','ao','ou','iu','ie','üe','er','an','en','in','un','ün','ang','eng','ing','ong'];
-const ZHENGTI = ['zhi','chi','shi','ri','zi','ci','si','yi','wu','yu','ye','yue','yuan','yin','yun','ying'];
+// ============ 词库 ============
+const WORD_BANK = PINYIN_BANK.bank;
 
-const WORD_BANK = {
-    1: [
-        {hz:'爸爸',py:'bà ba'},{hz:'妈妈',py:'mā ma'},{hz:'大米',py:'dà mǐ'},{hz:'土地',py:'tǔ dì'},
-        {hz:'马儿',py:'mǎ ér'},{hz:'花朵',py:'huā duǒ'},{hz:'哥哥',py:'gē ge'},{hz:'弟弟',py:'dì di'},
-        {hz:'画画',py:'huà huà'},{hz:'下棋',py:'xià qí'},{hz:'小鸡',py:'xiǎo jī'},{hz:'小鱼',py:'xiǎo yú'},
-        {hz:'衣服',py:'yī fu'},{hz:'下雨',py:'xià yǔ'},{hz:'西瓜',py:'xī guā'},{hz:'桌子',py:'zhuō zi'},
-        {hz:'日出',py:'rì chū'},{hz:'读书',py:'dú shū'},{hz:'骑车',py:'qí chē'},{hz:'老师',py:'lǎo shī'},
-        {hz:'树叶',py:'shù yè'},{hz:'白兔',py:'bái tù'},{hz:'牛奶',py:'niú nǎi'},{hz:'水果',py:'shuǐ guǒ'},
-        {hz:'爬山',py:'pá shān'},{hz:'回家',py:'huí jiā'},{hz:'写字',py:'xiě zì'},{hz:'学校',py:'xué xiào'},
-        {hz:'月亮',py:'yuè liang'},{hz:'星星',py:'xīng xing'},{hz:'蓝天',py:'lán tiān'},{hz:'白云',py:'bái yún'},
-        {hz:'大家',py:'dà jiā'},{hz:'朋友',py:'péng you'},{hz:'春天',py:'chūn tiān'},{hz:'夏天',py:'xià tiān'},
-        {hz:'秋天',py:'qiū tiān'},{hz:'冬天',py:'dōng tiān'},{hz:'开门',py:'kāi mén'},{hz:'关门',py:'guān mén'},
-        {hz:'中国',py:'zhōng guó'},{hz:'红花',py:'hóng huā'},{hz:'青草',py:'qīng cǎo'},{hz:'黄牛',py:'huáng niú'},
-        {hz:'小猫',py:'xiǎo māo'},{hz:'小狗',py:'xiǎo gǒu'},{hz:'鸭子',py:'yā zi'},{hz:'小鸟',py:'xiǎo niǎo'},
-        {hz:'苹果',py:'píng guǒ'},{hz:'桃子',py:'táo zi'},{hz:'梨子',py:'lí zi'},{hz:'竹子',py:'zhú zi'},
-        {hz:'木头',py:'mù tou'},{hz:'火车',py:'huǒ chē'},{hz:'汽车',py:'qì chē'},{hz:'马路',py:'mǎ lù'},
-    ],
-    2: [
-        {hz:'表扬',py:'biǎo yáng'},{hz:'准备',py:'zhǔn bèi'},{hz:'感谢',py:'gǎn xiè'},{hz:'帮助',py:'bāng zhù'},
-        {hz:'勇敢',py:'yǒng gǎn'},{hz:'认真',py:'rèn zhēn'},{hz:'勤奋',py:'qín fèn'},{hz:'诚实',py:'chéng shí'},
-        {hz:'森林',py:'sēn lín'},{hz:'草原',py:'cǎo yuán'},{hz:'海洋',py:'hǎi yáng'},{hz:'山川',py:'shān chuān'},
-        {hz:'城市',py:'chéng shì'},{hz:'乡村',py:'xiāng cūn'},{hz:'房屋',py:'fáng wū'},{hz:'公园',py:'gōng yuán'},
-        {hz:'故事',py:'gù shi'},{hz:'谜语',py:'mí yǔ'},{hz:'歌曲',py:'gē qǔ'},{hz:'舞蹈',py:'wǔ dǎo'},
-        {hz:'照相',py:'zhào xiàng'},{hz:'游泳',py:'yóu yǒng'},{hz:'跑步',py:'pǎo bù'},{hz:'跳高',py:'tiào gāo'},
-        {hz:'温暖',py:'wēn nuǎn'},{hz:'寒冷',py:'hán lěng'},{hz:'漂亮',py:'piào liang'},{hz:'高兴',py:'gāo xìng'},
-        {hz:'难过',py:'nán guò'},{hz:'生气',py:'shēng qì'},{hz:'害怕',py:'hài pà'},{hz:'惊讶',py:'jīng yà'},
-        {hz:'彩虹',py:'cǎi hóng'},{hz:'雷电',py:'léi diàn'},{hz:'冰雹',py:'bīng báo'},{hz:'浓雾',py:'nóng wù'},
-        {hz:'指南针',py:'zhǐ nán zhēn'},{hz:'降落伞',py:'jiàng luò sǎn'},{hz:'大自然',py:'dà zì rán'},
-        {hz:'科学家',py:'kē xué jiā'},{hz:'动物园',py:'dòng wù yuán'},{hz:'博物馆',py:'bó wù guǎn'},
-    ],
-    3: [
-        {hz:'雄伟',py:'xióng wěi'},{hz:'壮观',py:'zhuàng guān'},{hz:'秀丽',py:'xiù lì'},{hz:'神奇',py:'shén qí'},
-        {hz:'探索',py:'tàn suǒ'},{hz:'研究',py:'yán jiū'},{hz:'发明',py:'fā míng'},{hz:'创造',py:'chuàng zào'},
-        {hz:'辉煌',py:'huī huáng'},{hz:'灿烂',py:'càn làn'},{hz:'悠久',py:'yōu jiǔ'},{hz:'繁荣',py:'fán róng'},
-        {hz:'友谊',py:'yǒu yì'},{hz:'团结',py:'tuán jié'},{hz:'尊重',py:'zūn zhòng'},{hz:'宽容',py:'kuān róng'},
-        {hz:'理想',py:'lǐ xiǎng'},{hz:'希望',py:'xī wàng'},{hz:'梦想',py:'mèng xiǎng'},{hz:'追求',py:'zhuī qiú'},
-        {hz:'蝴蝶',py:'hú dié'},{hz:'蜻蜓',py:'qīng tíng'},{hz:'蜜蜂',py:'mì fēng'},{hz:'蚂蚁',py:'mǎ yǐ'},
-        {hz:'宇宙',py:'yǔ zhòu'},{hz:'地球',py:'dì qiú'},{hz:'太阳',py:'tài yáng'},{hz:'银河',py:'yín hé'},
-        {hz:'氧气',py:'yǎng qì'},{hz:'水源',py:'shuǐ yuán'},{hz:'土壤',py:'tǔ rǎng'},{hz:'生态',py:'shēng tài'},
-        {hz:'信息',py:'xìn xī'},{hz:'网络',py:'wǎng luò'},{hz:'数据',py:'shù jù'},{hz:'智能',py:'zhì néng'},
-    ]
-};
+function buildRandomWordPool(level, count) {
+    const pool = (WORD_BANK[level] || WORD_BANK[1] || []).filter(function(item) {
+        return item && item.hz && item.hz.length === 1 && item.py;
+    });
+    if (!pool.length) return [];
 
-// ============ 工具函数 ============
-const TONE_MAP = {'ā':'a','á':'a','ǎ':'a','à':'a','ō':'o','ó':'o','ǒ':'o','ò':'o','ē':'e','é':'e','ě':'e','è':'e','ī':'i','í':'i','ǐ':'i','ì':'i','ū':'u','ú':'u','ǔ':'u','ù':'u','ǖ':'ü','ǘ':'ü','ǚ':'ü','ǜ':'ü'};
-function normPY(s) {
-    if (!s) return '';
-    return s.toLowerCase()
-        .split('').map(c => TONE_MAP[c] || c).join('')
-        .replace(/\s+/g, '')
-        .replace(/v/g, 'ü')
-        .replace(/[:：]/g, '');
+    const words = [];
+    const seen = {};
+    let attempts = 0;
+    while (words.length < count && attempts < count * 20) {
+        const first = pool[randInt(0, pool.length - 1)];
+        const second = pool[randInt(0, pool.length - 1)];
+        if (!first || !second || first.hz === second.hz) {
+            attempts++;
+            continue;
+        }
+        const hz = first.hz + second.hz;
+        if (!seen[hz] && hz.length === 2) {
+            words.push({ hz: hz, py: first.py + ' ' + second.py });
+            seen[hz] = true;
+        }
+        attempts++;
+    }
+    return words;
 }
-function normHZ(s) {
-    if (!s) return '';
-    return s.replace(/\s+/g, '').trim();
-}
-function rand(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
-function randInt(min, max) { return Math.floor(Math.random()*(max-min+1))+min; }
-function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
+
+// ============ 工具函数（使用 App 共享函数） ============
+function normPY(s) { return App.normPY(s); }
+function normHZ(s) { return App.normHZ(s); }
+function rand(arr) { return App.rand(arr); }
+function randInt(min, max) { return App.randInt(min, max); }
+function shuffle(arr) { return App.shuffle(arr); }
 
 // ============ 题目生成 ============
-let currentQuestions = []; // {sectionIdx, type, html, prompt, answer, userAnswer, correct, inputType, inputWidth}
-// sectionIdx: 原section索引 + 该section题目内索引
+let currentQuestions = [];
 let globalNum = 0;
 let wrongIndices = [];
 let reviewed = false;
@@ -665,7 +556,6 @@ function getElapsed(){ return Math.floor((Date.now()-timerStart)/1000); }
 
 function nextNum() { globalNum++; return globalNum; }
 
-// 根据题型生成输入框HTML
 function makeInput(idx, width='') {
     const w = width ? ` ${width}` : '';
     return `<input type="text" class="user-ans-input${w}" id="ans_${idx}" 
@@ -673,166 +563,52 @@ function makeInput(idx, width='') {
         autocomplete="off" autocapitalize="off" spellcheck="false">`;
 }
 
-// 看拼音写汉字
-function genWriteHanzi(level, globalIdx) {
-    const item = rand(WORD_BANK[level]);
+// 生字注音：给单个汉字注拼音
+function genCharPinyin(item, globalIdx) {
     return {
-        type: 'write',
-        promptHtml: `<span class="pinyin">${item.py}</span>`,
-        fullHtml: `<span class="num">${globalIdx}.</span> <span class="pinyin">${item.py}</span> ${makeInput(globalIdx, 'wide')}`,
-        answer: item.hz,
-        normAnswer: normHZ(item.hz),
-        check: (user) => normHZ(user) === normHZ(item.hz),
-        widthClass: 'wide',
-        placeholder: '写汉字'
-    };
-}
-
-// 给汉字注拼音
-function genWritePinyin(level, globalIdx) {
-    const item = rand(WORD_BANK[level]);
-    return {
-        type: 'markpy',
+        type: 'char_py',
         promptHtml: `<span class="hanzi">${item.hz}</span>`,
-        fullHtml: `<span class="num">${globalIdx}.</span> <span class="hanzi">${item.hz}</span> ${makeInput(globalIdx, 'wide')}`,
+        fullHtml: `<div class="question-visual">
+            <div class="question-content">
+                <span class="num">${globalIdx}.</span>
+                <span class="hanzi">${item.hz}</span>
+            </div>
+            <div class="question-input-wrap">${makeInput(globalIdx, 'wide')}</div>
+        </div>`,
         answer: item.py,
         normAnswer: normPY(item.py),
-        // 拼音允许无声调
         check: (user) => normPY(user) === normPY(item.py),
         widthClass: 'wide',
         placeholder: '写拼音'
     };
 }
 
-// 标声调练习
-function genMarkTone(level, globalIdx) {
-    const pool = WORD_BANK[level];
-    const item = rand(pool);
-    // 去声调版本
-    const noTone = item.py.split('').map(c => TONE_MAP[c] || c).join('');
+// 词语注音：给双字词语注拼音
+function genWordPinyin(word, globalIdx) {
     return {
-        type: 'tone',
-        promptHtml: `<span class="pinyin">${noTone}</span> <span class="hanzi">(${item.hz})</span>`,
-        fullHtml: `<span class="num">${globalIdx}.</span> <span class="pinyin">${noTone}</span> → ${makeInput(globalIdx, 'wide')} <span class="hanzi" style="font-size:0.9rem;">(${item.hz})</span>`,
-        answer: item.py,
-        normAnswer: normPY(item.py),
-        check: (user) => normPY(user) === normPY(item.py),
+        type: 'word_py',
+        promptHtml: `<span class="hanzi">${word.hz}</span>`,
+        fullHtml: `<div class="question-visual">
+            <div class="question-content">
+                <span class="num">${globalIdx}.</span>
+                <span class="hanzi">${word.hz}</span>
+            </div>
+            <div class="question-input-wrap">${makeInput(globalIdx, 'wide')}</div>
+        </div>`,
+        answer: word.py,
+        normAnswer: normPY(word.py),
+        check: (user) => normPY(user) === normPY(word.py),
         widthClass: 'wide',
-        placeholder: '标声调'
+        placeholder: '写拼音'
     };
-}
-
-// 声母/韵母填空
-function genShengYunFill(level, globalIdx) {
-    const pool = WORD_BANK[level];
-    const item = rand(pool);
-    const hzArr = item.hz.split('');
-    const pyArr = item.py.split(' ');
-    const idx = randInt(0, hzArr.length-1);
-    const syllable = pyArr[idx]; // 带声调
-    const noTone = syllable.split('').map(c => TONE_MAP[c] || c).join('');
-    
-    let sm = '';
-    for (const s of SHENGMU) {
-        if (noTone.startsWith(s)) { sm = s; break; }
-    }
-    const fillType = Math.random() > 0.5 ? 'shengmu' : 'yunmu';
-    let displayBefore = '', displayAfter = '', correctAns = '';
-    
-    if (sm && fillType === 'shengmu') {
-        // 填声母：给出韵母(带声调)
-        const ymWithTone = syllable.slice(sm.length);
-        displayBefore = '';
-        displayAfter = `<span class="pinyin">${ymWithTone}</span>`;
-        correctAns = sm;
-    } else {
-        // 填韵母：给出声母
-        correctAns = syllable.slice(sm.length);
-        const smPart = sm || '';
-        displayBefore = `<span class="pinyin">${smPart}</span>`;
-        displayAfter = '';
-    }
-    const fillTypeLabel = fillType === 'shengmu' ? '声母' : '韵母';
-    
-    return {
-        type: 'fill',
-        promptHtml: `补${fillTypeLabel}：<span class="hanzi">${hzArr[idx]}</span> ${displayBefore}__${displayAfter}`,
-        fullHtml: `<span class="num">${globalIdx}.</span> 补${fillTypeLabel}：<span class="hanzi">${hzArr[idx]}</span> ${displayBefore}${makeInput(globalIdx, 'small')}${displayAfter}`,
-        answer: correctAns,
-        normAnswer: normPY(correctAns),
-        check: (user) => normPY(user) === normPY(correctAns),
-        widthClass: 'small',
-        placeholder: fillTypeLabel
-    };
-}
-
-// 区分声母韵母
-function genClassify(level, globalIdx) {
-    const isShengmu = Math.random() > 0.5;
-    let char;
-    if (isShengmu) {
-        char = rand(SHENGMU.filter(s => s.length === 1));
-    } else {
-        char = rand(YUNMU_DAN);
-    }
-    return {
-        type: 'classify',
-        promptHtml: `<span class="pinyin" style="font-size:1.3rem;font-weight:bold;">${char}</span> 是声母/韵母？`,
-        fullHtml: `<span class="num">${globalIdx}.</span> "<span class="pinyin" style="font-size:1.3rem;font-weight:bold;">${char}</span>"是：${makeInput(globalIdx, '')}`,
-        answer: isShengmu ? '声母' : '韵母',
-        normAnswer: isShengmu ? '声母' : '韵母',
-        check: (user) => {
-            const u = (user||'').trim();
-            if (isShengmu) return /^(声母|shēng mǔ|shengmu|sheng|sm|sheng mu)$/i.test(u);
-            else return /^(韵母|yùn mǔ|yunmu|yunmu|ym|yun mu|yun)$/i.test(u);
-        },
-        widthClass: '',
-        placeholder: '声母/韵母'
-    };
-}
-
-// 整体认读音节
-function genZhengti(globalIdx) {
-    const useRead = Math.random() > 0.4;
-    if (useRead) {
-        const zt = rand(ZHENGTI);
-        // 无声调的拼音 -> 写整体认读
-        const noTone = zt.split('').map(c => TONE_MAP[c] || c).join('');
-        return {
-            type: 'zhengti',
-            promptHtml: `写出整体认读：${noTone}`,
-            fullHtml: `<span class="num">${globalIdx}.</span> 写整体认读"<span class="pinyin">${noTone}</span>"：${makeInput(globalIdx, '')}`,
-            answer: zt,
-            normAnswer: normPY(zt),
-            check: (user) => normPY(user) === normPY(zt),
-            widthClass: '',
-            placeholder: '整体认读'
-        };
-    } else {
-        const zt = rand(ZHENGTI);
-        const pinyinMap = {zhi:'知',chi:'吃',shi:'诗',ri:'日',zi:'资',ci:'次',si:'思',yi:'一',wu:'五',yu:'鱼',ye:'叶',yue:'月',yuan:'园',yin:'因',yun:'云',ying:'英'};
-        const hz = pinyinMap[zt] || '字';
-        return {
-            type: 'zhengti',
-            promptHtml: `读汉字写音节：${hz}`,
-            fullHtml: `<span class="num">${globalIdx}.</span> 读"<span class="hanzi">${hz}</span>"写音节：${makeInput(globalIdx, '')}`,
-            answer: zt,
-            normAnswer: normPY(zt),
-            check: (user) => normPY(user) === normPY(zt),
-            widthClass: '',
-            placeholder: '整体认读'
-        };
-    }
 }
 
 // ============ 主生成函数 ============
-let allQuestionsFlat = []; // 扁平数组
-let sectionsFlat = []; // 每题对应的 section 标题
+let allQuestionsFlat = [];
 
 function generateQuestions() {
     globalNum = 0;
     allQuestionsFlat = [];
-    sectionsFlat = [];
     wrongIndices = [];
     reviewed = false;
     mode = 'full';
@@ -843,12 +619,8 @@ function generateQuestions() {
     const level = getGradeParam();
     
     const qTypes = [];
-    if (document.getElementById('qt1').checked) qTypes.push('write');
-    if (document.getElementById('qt2').checked) qTypes.push('markpy');
-    if (document.getElementById('qt3').checked) qTypes.push('tone');
-    if (document.getElementById('qt4').checked) qTypes.push('fill');
-    if (document.getElementById('qt5').checked) qTypes.push('classify');
-    if (document.getElementById('qt6').checked) qTypes.push('zhengti');
+    if (document.getElementById('qt1').checked) qTypes.push('char_py');
+    if (document.getElementById('qt2').checked) qTypes.push('word_py');
     
     if (qTypes.length === 0) {
         alert('请至少选择一种题型！');
@@ -858,18 +630,45 @@ function generateQuestions() {
     const typeCount = qTypes.length;
     let perType = Math.floor(total / typeCount);
     let remainder = total % typeCount;
-    // 确保每种至少1题
     if (perType < 1) { perType = 1; remainder = Math.max(0, total - typeCount); }
     
     const typeNameMap = {
-        'write': '一、看拼音，写汉字',
-        'markpy': '二、给下面的汉字注上拼音',
-        'tone': '三、给下面的拼音加上正确的声调',
-        'fill': '四、把声母或韵母补充完整',
-        'classify': '五、判断是声母还是韵母',
-        'zhengti': '六、整体认读音节练习'
+        'char_py': '一、生字注音（给下面的汉字注上拼音）',
+        'word_py': '二、词语注音（给下面的词语注上拼音）'
     };
-    const typeOrder = ['write','markpy','tone','fill','classify','zhengti'];
+    const typeOrder = ['char_py','word_py'];
+    
+    // 洗牌词库，按顺序取用，降低重复
+    const shuffledBank = shuffle(WORD_BANK[level]);
+    let bankIdx = 0;
+    function pickWord() {
+        if (bankIdx >= shuffledBank.length) {
+            const reshuffled = shuffle(WORD_BANK[level]);
+            if (reshuffled[0] === shuffledBank[shuffledBank.length - 1]) {
+                [reshuffled[0], reshuffled[1]] = [reshuffled[1], reshuffled[0]];
+            }
+            shuffledBank.splice(0, shuffledBank.length, ...reshuffled);
+            bankIdx = 0;
+        }
+        return shuffledBank[bankIdx++];
+    }
+    
+    // 随机组合词语库
+    const wordPool = buildRandomWordPool(level, Math.max(total * 2, 80));
+    const shuffledWords = shuffle(wordPool);
+    let wordIdx = 0;
+    function pickWordItem() {
+        if (!wordPool.length) return { hz: '汉字', py: 'hàn zì' };
+        if (wordIdx >= shuffledWords.length) {
+            const reshuffled = shuffle(wordPool);
+            if (reshuffled[0] === shuffledWords[shuffledWords.length - 1]) {
+                [reshuffled[0], reshuffled[1]] = [reshuffled[1], reshuffled[0]];
+            }
+            shuffledWords.splice(0, shuffledWords.length, ...reshuffled);
+            wordIdx = 0;
+        }
+        return shuffledWords[wordIdx++];
+    }
     
     currentQuestions = [];
     let flatIdx = 0;
@@ -883,13 +682,10 @@ function generateQuestions() {
         for (let i=0; i<count; i++) {
             const num = nextNum();
             let q;
-            switch(type) {
-                case 'write': q = genWriteHanzi(level, num); break;
-                case 'markpy': q = genWritePinyin(level, num); break;
-                case 'tone': q = genMarkTone(level, num); break;
-                case 'fill': q = genShengYunFill(level, num); break;
-                case 'classify': q = genClassify(level, num); break;
-                case 'zhengti': q = genZhengti(num); break;
+            if (type === 'char_py') {
+                q = genCharPinyin(pickWord(), num);
+            } else {
+                q = genWordPinyin(pickWordItem(), num);
             }
             q.globalNum = num;
             q.flatIdx = flatIdx;
@@ -897,7 +693,6 @@ function generateQuestions() {
             q.correct = null;
             qInSection.push(q);
             allQuestionsFlat.push(q);
-            sectionsFlat.push(typeNameMap[type]);
             flatIdx++;
         }
         currentQuestions.push({
@@ -913,7 +708,6 @@ function generateQuestions() {
     
     document.getElementById('questionsCard').classList.add('show');
     document.getElementById('exportBtn').disabled = false;
-    document.getElementById('printBtn').disabled = false;
     document.getElementById('submitBtn').disabled = false;
     document.getElementById('wrongSection').classList.remove('show');
 }
@@ -926,8 +720,14 @@ function resetUIState() {
 }
 
 function updateHeaderInfo(level) {
-    const levelName = {'1':'一年级','2':'二年级','3':'三年级'}[level];
-    document.getElementById('sheetTitle').textContent = `小学${levelName}拼音练习题`;
+    const levelName = App.getGradeName(level);
+    const hasChar = document.getElementById('qt1').checked;
+    const hasWord = document.getElementById('qt2').checked;
+    let title = `小学${levelName}`;
+    if (hasChar && hasWord) title += '生字词语注音练习';
+    else if (hasChar) title += '生字注音练习';
+    else title += '词语注音练习';
+    document.getElementById('sheetTitle').textContent = title;
     document.getElementById('questionCount').textContent = `共 ${allQuestionsFlat.length} 道题`;
     const now = new Date();
     document.getElementById('generateTime').textContent = 
@@ -1163,97 +963,27 @@ function resetAll() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function replaceStylesForWord(htmlStr) {
-    return htmlStr
-        .replace(/class="num"/g, 'style="display:inline-block;min-width:22pt;color:#888;font-weight:500;font-size:9pt;vertical-align:baseline;margin-right:3pt;"')
-        .replace(/class="hanzi"/g, 'style="font-family:KaiTi,楷体,serif;letter-spacing:1pt;font-size:13pt;"')
-        .replace(/class="pinyin"/g, 'style="font-family:Times New Roman,SimSun,serif;color:#c0392b;"')
-        .replace(/<input[^>]*>/g, '<span style="display:inline-block;border-bottom:1pt solid #000;min-width:60pt;"></span>');
-}
-
-function exportWord() {
+function printFile() {
     if (currentQuestions.length === 0) { alert('请先生成题目！'); return; }
-    const title = document.getElementById('sheetTitle').textContent;
-    const totalCount = allQuestionsFlat.length;
-    const genTime = document.getElementById('generateTime').textContent.replace('生成时间：', '');
-    
-    let sectionsHtml = '';
-    currentQuestions.forEach(section => {
-        sectionsHtml += `<h3 style="font-size: 14pt; margin: 20pt 0 10pt 0; padding-left: 8pt; border-left: 4pt solid #f5576c;">${section.title}</h3>`;
-        const cols = section.columns;
-        const rows = Math.ceil(section.questions.length / cols);
-        sectionsHtml += '<table style="width:100%; border-collapse: collapse;">';
-        for (let r=0; r<rows; r++) {
-            sectionsHtml += '<tr>';
-            for (let c=0; c<cols; c++) {
-                const idx = r + c * rows;
-                if (idx < section.questions.length) {
-                    sectionsHtml += `<td style="padding: 10pt 8pt; border-bottom: 1pt dashed #ccc; font-size: 12pt; line-height: 1.6;">${replaceStylesForWord(section.questions[idx].fullHtml)}</td>`;
-                } else {
-                    sectionsHtml += '<td style="padding: 10pt 8pt;"></td>';
-                }
-            }
-            sectionsHtml += '</tr>';
-        }
-        sectionsHtml += '</table>';
+    var title = document.getElementById('sheetTitle').textContent;
+    var cols = parseInt(document.querySelector('input[name="columns"]:checked').value) || 3;
+    App.openPrintPage('#questionsCard', title, {
+        extraStyle: '.questions-grid { grid-template-columns: repeat(' + cols + ', 1fr); }'
     });
-    
-    const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
-<head>
-<meta charset="utf-8">
-<title>${title}</title>
-<style>
-    body { font-family: "SimSun", "宋体", sans-serif; }
-    .title-center { text-align: center; font-size: 20pt; font-weight: bold; margin: 15pt 0; }
-    .info-bar { text-align: center; font-size: 11pt; margin-bottom: 15pt; }
-    .info-bar span { margin: 0 15pt; }
-    .foot { margin-top: 25pt; padding-top: 8pt; border-top: 1pt solid #ccc; display: flex; justify-content: space-between; font-size: 10pt; color: #666; }
-</style>
-</head>
-<body>
-    <div class="title-center">${title}</div>
-    <div class="info-bar">
-        <span>姓名：_______________</span>
-        <span>班级：_______________</span>
-        <span>日期：_______________</span>
-        <span>得分：_______________</span>
-    </div>
-    ${sectionsHtml}
-    <div class="foot">
-        <span>共 ${totalCount} 道题</span>
-        <span>生成时间：${genTime}</span>
-    </div>
-</body>
-</html>`;
-    const blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    const now = new Date();
-    const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-    a.download = `拼音练习题_${ts}.doc`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
 }
 
-function getGradeParam() {
-    const p = new URLSearchParams(window.location.search).get('grade');
-    const g = (p === '1' || p === '2' || p === '3') ? p : '1';
-    return Number(g);
-}
+function getGradeParam() { return App.getGradeParam(); }
 function applyGradeDefaults() {
     const g = getGradeParam();
-    const gradeName = {1:'一年级', 2:'二年级', 3:'三年级'}[g];
+    const gradeName = App.getGradeName(g);
     document.getElementById('gradeBadge').textContent = gradeName;
-    // 根据年级设置默认题目数量
-    const defaults = {1: {count: 16}, 2: {count: 24}, 3: {count: 30}}[g];
+    const defaults = {1: {count: 20}, 2: {count: 24}, 3: {count: 30}, 4: {count: 36}, 5: {count: 40}, 6: {count: 40}}[g];
     const countEl = document.getElementById('count');
     if (countEl && !countEl.dataset.touched) countEl.value = defaults.count;
 }
 window.onload = function() {
     applyGradeDefaults();
+    document.getElementById('backLink').href = App.buildLink('chinese-types.html');
     generateQuestions();
 };
 </script>

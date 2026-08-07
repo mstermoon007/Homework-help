@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>语文题型选择</title>
+<link rel="stylesheet" href="common.css">
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
         background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
@@ -15,156 +15,20 @@
         align-items: center;
         justify-content: center;
     }
-    .wrapper {
-        width: 100%;
-        max-width: 600px;
-    }
-    .back-home {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 18px;
-        background: rgba(255,255,255,0.2);
-        color: #fff;
-        border: 2px solid rgba(255,255,255,0.4);
-        border-radius: 22px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.2s;
-        backdrop-filter: blur(10px);
-        text-decoration: none;
-        margin-bottom: 20px;
-    }
-    .back-home:hover { background: rgba(255,255,255,0.35); transform: translateY(-1px); color: #fff; }
-    .header {
-        text-align: center;
-        color: #fff;
-        margin-bottom: 30px;
-    }
-    .header .logo {
-        font-size: 3rem;
-        margin-bottom: 10px;
-        display: inline-block;
-    }
-    .header h1 {
-        font-size: 2.2rem;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.25);
-    }
-    .header p {
-        font-size: 1rem;
-        opacity: 0.92;
-        margin-top: 6px;
-    }
-    .grade-badge {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 4px 16px;
-        background: rgba(255,255,255,0.95);
-        color: #f5576c;
-        border-radius: 20px;
-        font-size: 0.9rem;
-        font-weight: 700;
-    }
-    .card {
-        background: #fff;
-        border-radius: 24px;
-        padding: 40px 36px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    }
-    .section-label {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #333;
-        margin-bottom: 20px;
-        padding-left: 12px;
-        border-left: 5px solid #f5576c;
-    }
-    .type-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    .type-card {
-        display: block;
-        padding: 32px 18px;
-        border: 2.5px solid #e0e0e0;
-        border-radius: 16px;
-        cursor: pointer;
-        text-align: center;
-        transition: all 0.25s;
-        user-select: none;
-        text-decoration: none;
-        color: inherit;
-    }
-    .type-card .t-icon {
-        font-size: 3rem;
-        display: block;
-        margin-bottom: 10px;
-    }
-    .type-card .t-name {
-        font-size: 1.4rem;
-        font-weight: 800;
-        margin-bottom: 6px;
-        color: #f5576c;
-    }
-    .type-card .t-desc {
-        font-size: 0.85rem;
-        color: #888;
-        line-height: 1.5;
-    }
-    .type-card:hover {
-        border-color: #f5576c;
-        transform: translateY(-4px);
-        box-shadow: 0 10px 24px rgba(245,87,108,0.2);
-    }
-    .type-card.coming-soon {
-        opacity: 0.6;
-        cursor: default;
-        border-style: dashed;
-    }
-    .type-card.coming-soon:hover {
-        transform: none;
-        box-shadow: none;
-        border-color: #e0e0e0;
-    }
-    .type-card.coming-soon .t-name { color: #999; }
-    .type-card .t-badge {
-        display: inline-block;
-        margin-top: 8px;
-        padding: 2px 10px;
-        background: #fdeccd;
-        color: #c87a16;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: 600;
-    }
-    .foot-tip {
-        text-align: center;
-        color: #fff;
-        opacity: 0.85;
-        margin-top: 25px;
-        font-size: 0.9rem;
-    }
-    @media print {
-        @page { size: A4; margin: 15mm 12mm; }
-        body { background: #fff; }
-    }
-    @media (max-width: 480px) {
-        .card { padding: 28px 18px; }
-        .header h1 { font-size: 1.7rem; }
-    }
+    .type-card:hover { border-color: #f5576c; }
+    .type-card .t-name { color: #f5576c; }
+    .section-label { border-left-color: #f5576c; }
+    .grade-badge { color: #f5576c; }
 </style>
 </head>
 <body>
 <div class="wrapper">
     <a href="index.html" class="back-home">← 返回首页</a>
 
-    <div class="header">
+    <div class="page-header">
         <div class="logo">📖</div>
-        <h1>语文练习</h1>
+        <h1>语文练习<span class="grade-badge" id="gradeBadge">一年级</span></h1>
         <p>请选择要练习的题型</p>
-        <div class="grade-badge" id="gradeBadge">一年级</div>
     </div>
 
     <div class="card">
@@ -187,15 +51,11 @@
     <div class="foot-tip">💡 更多题型持续更新中，敬请期待</div>
 </div>
 
+<script src="common.js"></script>
 <script>
-function getGradeParam() {
-    const p = new URLSearchParams(window.location.search).get('grade');
-    return (p === '1' || p === '2' || p === '3') ? p : '1';
-}
-const grade = getGradeParam();
-const gradeName = { '1': '一年级', '2': '二年级', '3': '三年级' }[grade];
-document.getElementById('gradeBadge').textContent = gradeName;
-document.getElementById('pinyinLink').href = `pinyin-practice.html?grade=${grade}`;
+const grade = App.currentGrade();
+document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
+document.getElementById('pinyinLink').href = App.buildLink('pinyin-practice.html');
 </script>
 </body>
 </html>

@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>练习本 - 小学口算与拼音</title>
+<title>小学练习本</title>
+<link rel="stylesheet" href="common.css">
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
@@ -15,208 +15,82 @@
         align-items: center;
         justify-content: center;
     }
-    .wrapper {
-        width: 100%;
-        max-width: 720px;
-    }
-    .header {
-        text-align: center;
-        color: #fff;
-        margin-bottom: 40px;
-    }
-    .header .logo {
-        font-size: 3.5rem;
-        margin-bottom: 14px;
-        animation: float 3s ease-in-out infinite;
-        display: inline-block;
-    }
-    @keyframes float {
-        0%,100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    .header h1 {
-        font-size: 2.8rem;
-        margin-bottom: 10px;
-        text-shadow: 3px 3px 8px rgba(0,0,0,0.25);
-    }
-    .header p {
-        font-size: 1.1rem;
-        opacity: 0.92;
-    }
-    .card {
-        background: #fff;
-        border-radius: 24px;
-        padding: 45px 40px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    }
-    .section {
-        margin-bottom: 38px;
-    }
-    .section-label {
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: #333;
-        margin-bottom: 16px;
-        padding-left: 12px;
-        border-left: 5px solid #667eea;
-    }
-    .grade-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 14px;
-    }
-    .grade-option { display: none; }
-    .grade-card {
-        display: block;
-        padding: 22px 10px;
-        border: 2.5px solid #e0e0e0;
-        border-radius: 14px;
-        cursor: pointer;
-        text-align: center;
-        transition: all 0.25s;
-        user-select: none;
-    }
-    .grade-card .g-icon {
-        font-size: 2.3rem;
-        display: block;
-        margin-bottom: 6px;
-    }
-    .grade-card .g-name {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #444;
-    }
-    .grade-card:hover {
-        border-color: #667eea;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(102,126,234,0.2);
-    }
-    .grade-option:checked + .grade-card {
-        border-color: #667eea;
-        background: linear-gradient(135deg, #eef2ff, #f5f3ff);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(102,126,234,0.25);
-    }
-    .grade-option:checked + .grade-card .g-name {
-        color: #667eea;
-    }
-    .subject-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-    }
+    .wrapper { max-width: 760px; }
+    .header { text-align: center; color: #fff; margin-bottom: 36px; }
+    .header .logo { font-size: 3.5rem; margin-bottom: 14px; animation: float 3s ease-in-out infinite; display: inline-block; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .header h1 { font-size: 2.8rem; margin-bottom: 10px; text-shadow: 3px 3px 8px rgba(0,0,0,0.25); }
+    .header p { font-size: 1.1rem; opacity: 0.92; }
+
+    /* 科目选择 */
+    .subject-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
     .subject-option { display: none; }
     .subject-card {
-        display: block;
-        padding: 28px 18px;
-        border: 2.5px solid #e0e0e0;
-        border-radius: 16px;
-        cursor: pointer;
-        text-align: center;
-        transition: all 0.25s;
-        user-select: none;
+        display: block; padding: 28px 18px; border: 2.5px solid #e0e0e0;
+        border-radius: 16px; cursor: pointer; text-align: center;
+        transition: all 0.25s; user-select: none;
     }
-    .subject-card .s-icon {
-        font-size: 3rem;
-        display: block;
-        margin-bottom: 10px;
-    }
-    .subject-card .s-name {
-        font-size: 1.4rem;
-        font-weight: 800;
-        margin-bottom: 6px;
-    }
-    .subject-card .s-desc {
-        font-size: 0.88rem;
-        color: #888;
-    }
+    .subject-card .s-icon { font-size: 3rem; display: block; margin-bottom: 10px; }
+    .subject-card .s-name { font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
+    .subject-card .s-desc { font-size: 0.85rem; color: #888; }
     .subject-card.math .s-name { color: #667eea; }
     .subject-card.chinese .s-name { color: #f5576c; }
-    .subject-card.word .s-name { color: #38a169; }
-    .subject-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 24px rgba(0,0,0,0.12);
-    }
+    .subject-card.english .s-name { color: #38a169; }
+    .subject-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
     .subject-card.math:hover { border-color: #667eea; }
     .subject-card.chinese:hover { border-color: #f5576c; }
-    .subject-card.word:hover { border-color: #38a169; }
-    .subject-option:checked + .subject-card {
-        transform: translateY(-4px);
-    }
+    .subject-card.english:hover { border-color: #38a169; }
+    .subject-option:checked + .subject-card { transform: translateY(-4px); }
     .subject-option:checked + .subject-card.math {
-        border-color: #667eea;
-        background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+        border-color: #667eea; background: linear-gradient(135deg, #eef2ff, #f5f3ff);
         box-shadow: 0 10px 24px rgba(102,126,234,0.2);
     }
     .subject-option:checked + .subject-card.chinese {
-        border-color: #f5576c;
-        background: linear-gradient(135deg, #fff0f3, #fdf2ff);
+        border-color: #f5576c; background: linear-gradient(135deg, #fff0f3, #fdf2ff);
         box-shadow: 0 10px 24px rgba(245,87,108,0.2);
     }
-    .subject-option:checked + .subject-card.word {
-        border-color: #38a169;
-        background: linear-gradient(135deg, #f0fff4, #e6fffa);
+    .subject-option:checked + .subject-card.english {
+        border-color: #38a169; background: linear-gradient(135deg, #f0fff4, #e6fffa);
         box-shadow: 0 10px 24px rgba(56,161,105,0.2);
     }
-    .start-area {
-        text-align: center;
-        margin-top: 10px;
+
+    /* 年级选择 */
+    .grade-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .grade-option { display: none; }
+    .grade-card {
+        display: block; padding: 18px 8px; border: 2.5px solid #e0e0e0;
+        border-radius: 14px; cursor: pointer; text-align: center;
+        transition: all 0.25s; user-select: none;
     }
+    .grade-card .g-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
+    .grade-card .g-name { font-size: 1.05rem; font-weight: 700; color: #444; }
+    .grade-card:hover { border-color: #667eea; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(102,126,234,0.2); }
+    .grade-option:checked + .grade-card {
+        border-color: #667eea; background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+        transform: translateY(-3px); box-shadow: 0 8px 20px rgba(102,126,234,0.25);
+    }
+    .grade-option:checked + .grade-card .g-name { color: #667eea; }
+
+    .start-area { text-align: center; margin-top: 6px; }
     .start-btn {
-        display: inline-block;
-        padding: 18px 60px;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #fff;
-        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
-        background-size: 300% 300%;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s;
-        box-shadow: 0 10px 30px rgba(102,126,234,0.35);
+        display: inline-block; padding: 18px 60px; font-size: 1.25rem; font-weight: 700;
+        color: #fff; background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
+        background-size: 300% 300%; border: none; border-radius: 50px; cursor: pointer;
+        transition: all 0.3s; box-shadow: 0 10px 30px rgba(102,126,234,0.35);
         animation: gradientMove 6s ease infinite;
     }
-    @keyframes gradientMove {
-        0%,100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-    }
-    .start-btn:hover:not(:disabled) {
-        transform: translateY(-3px);
-        box-shadow: 0 14px 38px rgba(102,126,234,0.5);
-    }
-    .start-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-        animation: none;
-    }
+    @keyframes gradientMove { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .start-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 14px 38px rgba(102,126,234,0.5); }
+    .start-btn:disabled { opacity: 0.5; cursor: not-allowed; animation: none; }
     .summary {
-        margin-top: 20px;
-        padding: 14px;
-        background: #f8f9ff;
-        border-radius: 10px;
-        font-size: 0.95rem;
-        color: #666;
-        text-align: center;
-        min-height: 46px;
-        line-height: 1.8;
+        margin-top: 20px; padding: 14px; background: #f8f9ff; border-radius: 10px;
+        font-size: 0.95rem; color: #666; text-align: center; min-height: 46px; line-height: 1.8;
     }
     .summary b { color: #333; }
-    .foot-tip {
-        text-align: center;
-        color: #fff;
-        opacity: 0.85;
-        margin-top: 25px;
-        font-size: 0.9rem;
-    }
-    @media print {
-        @page { size: A4; margin: 15mm 12mm; }
-        body { background: #fff; }
-    }
+
     @media (max-width: 520px) {
-        .grade-grid { grid-template-columns: repeat(3, 1fr); gap: 8px;}
+        .grade-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .subject-grid { grid-template-columns: 1fr; }
-        .card { padding: 30px 20px; }
         .header h1 { font-size: 2rem; }
     }
 </style>
@@ -226,12 +100,36 @@
     <div class="header">
         <div class="logo">📓</div>
         <h1>小学练习本</h1>
-        <p>口算练习 · 应用题 · 拼音练习 · 在线答题 · 智能评分</p>
+        <p>口算练习 · 应用题 · 拼音练习 · 英语启蒙 · 在线答题 · 智能评分</p>
     </div>
 
     <div class="card">
         <form onsubmit="goTo(event)">
-            <div class="section">
+            <div class="section" style="margin-bottom:34px;">
+                <div class="section-label">📚 请选择科目</div>
+                <div class="subject-grid">
+                    <input type="radio" name="subject" id="sMath" class="subject-option" value="math" checked>
+                    <label for="sMath" class="subject-card math" onclick="updateSummary()">
+                        <span class="s-icon">🧮</span>
+                        <div class="s-name">数学</div>
+                        <div class="s-desc">口算 · 应用题 · 凑十法</div>
+                    </label>
+                    <input type="radio" name="subject" id="sChinese" class="subject-option" value="chinese">
+                    <label for="sChinese" class="subject-card chinese" onclick="updateSummary()">
+                        <span class="s-icon">📖</span>
+                        <div class="s-name">语文</div>
+                        <div class="s-desc">拼音 · 字词练习</div>
+                    </label>
+                    <input type="radio" name="subject" id="sEnglish" class="subject-option" value="english">
+                    <label for="sEnglish" class="subject-card english" onclick="updateSummary()">
+                        <span class="s-icon">🔤</span>
+                        <div class="s-name">英语</div>
+                        <div class="s-desc">字母 · 单词 · 启蒙</div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="section" style="margin-bottom:34px;">
                 <div class="section-label">🎓 请选择年级</div>
                 <div class="grade-grid">
                     <input type="radio" name="grade" id="g1" class="grade-option" value="1" checked>
@@ -249,28 +147,25 @@
                         <span class="g-icon">🌳</span>
                         <span class="g-name">三年级</span>
                     </label>
-                </div>
-            </div>
-
-            <div class="section">
-                <div class="section-label">📚 请选择科目</div>
-                <div class="subject-grid">
-                    <input type="radio" name="subject" id="sMath" class="subject-option" value="math" checked>
-                    <label for="sMath" class="subject-card math" onclick="updateSummary()">
-                        <span class="s-icon">🧮</span>
-                        <div class="s-name">数学</div>
-                        <div class="s-desc">口算练习 · 应用题 · 凑十法</div>
+                    <input type="radio" name="grade" id="g4" class="grade-option" value="4">
+                    <label for="g4" class="grade-card" onclick="updateSummary()">
+                        <span class="g-icon">🌲</span>
+                        <span class="g-name">四年级</span>
                     </label>
-                    <input type="radio" name="subject" id="sChinese" class="subject-option" value="chinese">
-                    <label for="sChinese" class="subject-card chinese" onclick="updateSummary()">
-                        <span class="s-icon">📖</span>
-                        <div class="s-name">语文</div>
-                        <div class="s-desc">拼音练习 · 字词练习</div>
+                    <input type="radio" name="grade" id="g5" class="grade-option" value="5">
+                    <label for="g5" class="grade-card" onclick="updateSummary()">
+                        <span class="g-icon">🍀</span>
+                        <span class="g-name">五年级</span>
+                    </label>
+                    <input type="radio" name="grade" id="g6" class="grade-option" value="6">
+                    <label for="g6" class="grade-card" onclick="updateSummary()">
+                        <span class="g-icon">🌾</span>
+                        <span class="g-name">六年级</span>
                     </label>
                 </div>
             </div>
 
-            <div class="summary" id="summary">当前选择：<b>一年级 · 数学</b></div>
+            <div class="summary" id="summary">当前选择：<b>数学 · 一年级</b></div>
 
             <div class="start-area" style="margin-top:28px;">
                 <button type="submit" class="start-btn" id="startBtn">🚀 开始练习</button>
@@ -278,28 +173,33 @@
         </form>
     </div>
 
-    <div class="foot-tip">💡 选择年级与科目后，点击"开始练习"进入对应练习页面</div>
+    <div class="foot-tip">💡 选择科目与年级后，点击"开始练习"进入对应题型页</div>
 </div>
 
+<script src="common.js"></script>
 <script>
 function getSelected() {
-    const grade = document.querySelector('input[name="grade"]:checked').value;
-    const subject = document.querySelector('input[name="subject"]:checked').value;
-    return { grade, subject };
+    var grade = document.querySelector('input[name="grade"]:checked').value;
+    var subject = document.querySelector('input[name="subject"]:checked').value;
+    return { grade: grade, subject: subject };
 }
 function updateSummary() {
-    const { grade, subject } = getSelected();
-    const gradeName = { '1': '一年级', '2': '二年级', '3': '三年级' }[grade];
-    const subjName = { 'math': '数学', 'chinese': '语文' }[subject];
-    document.getElementById('summary').innerHTML = `当前选择：<b>${gradeName} · ${subjName}</b>`;
+    var sel = getSelected();
+    var gradeName = App.GRADE_NAMES[sel.grade];
+    var subjName = App.SUBJECT_NAMES[sel.subject];
+    document.getElementById('summary').innerHTML = '当前选择：<b>' + subjName + ' · ' + gradeName + '</b>';
 }
 function goTo(e) {
     e.preventDefault();
-    const { grade, subject } = getSelected();
-    const target = subject === 'math' ? 'math-types.html' : 'chinese-types.html';
-    window.location.href = `${target}?grade=${encodeURIComponent(grade)}`;
+    var sel = getSelected();
+    var target = {
+        math: 'math-types.html',
+        chinese: 'chinese-types.html',
+        english: 'english-types.html'
+    }[sel.subject];
+    window.location.href = target + '?grade=' + encodeURIComponent(sel.grade);
 }
-document.querySelectorAll('.grade-card, .subject-card').forEach(el => {
+document.querySelectorAll('.grade-card, .subject-card').forEach(function(el) {
     el.addEventListener('click', function() { setTimeout(updateSummary, 0); });
 });
 updateSummary();
