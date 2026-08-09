@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一年级数学图形练习</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  :root{
+    --bg:#f3f7fb; --card:#fff; --ink:#27324a; --muted:#7a879c;
+    --line:#e3e9f2; --brand:#5b8def; --brand-d:#3f6fd1;
+    --ok:#22a06b; --ok-bg:#e7f7ee; --bad:#e0556b; --bad-bg:#fdeef0;
+    --warn:#e6a23c; --shadow:0 8px 24px rgba(40,70,120,.10);
+  }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:linear-gradient(180deg,#eaf2ff 0%,#f3f7fb 220px,#f3f7fb 100%);
+    color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:16px 16px 60px}
+  .back-home{
+    display:inline-flex;align-items:center;gap:6px;padding:8px 18px;
+    background:var(--brand);color:#fff;border-radius:22px;cursor:pointer;
+    font-weight:600;font-size:.9rem;transition:all .2s;text-decoration:none;border:none;
+  }
+  .back-home:hover{background:var(--brand-d);transform:translateY(-1px)}
+  header.hero{text-align:center;padding:18px 10px 10px}
+  header.hero h1{margin:0;font-size:26px;letter-spacing:1px;background:linear-gradient(90deg,#5b8def,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  header.hero p{margin:8px 0 0;color:var(--muted);font-size:14px}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px;margin:16px 0}
+  .panel h2{margin:0 0 12px;font-size:15px;color:var(--muted);font-weight:700;letter-spacing:.5px}
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+  .count-group{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .count-group .lbl{font-size:14px;color:var(--muted);margin-right:2px}
+  .chip{cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;transition:.15s}
+  .chip:hover{border-color:var(--brand)}
+  .chip.active{background:var(--brand-d);border-color:var(--brand-d);color:#fff}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .btn{cursor:pointer;border:none;border-radius:12px;padding:12px 20px;font-size:15px;font-weight:700;transition:.15s}
+  .btn-primary{background:linear-gradient(90deg,#5b8def,#6f6bff);color:#fff;box-shadow:0 6px 16px rgba(91,141,239,.35)}
+  .btn-primary:hover{filter:brightness(1.05)}
+  .btn-ghost{background:#eef3fb;color:var(--brand-d)}
+  .btn-ghost:hover{background:#e2ebf9}
+  .meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .meta .pill{background:#eef3fb;color:var(--brand-d);border-radius:999px;padding:4px 12px;font-weight:600}
+
+  .problem{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px 16px 16px 52px;margin:12px 0;position:relative}
+  .problem .num{position:absolute;left:14px;top:16px;width:26px;height:26px;border-radius:50%;background:#eef3fb;color:var(--brand-d);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .problem .q{font-size:16px;margin:0 0 10px;line-height:1.7}
+  .problem .ans{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .problem .options{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .problem .opt{cursor:pointer;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 16px;font-size:14px;font-weight:600;transition:.15s;display:flex;align-items:center;gap:6px}
+  .problem .opt:hover{border-color:var(--brand)}
+  .problem .opt.chosen{background:var(--brand);border-color:var(--brand);color:#fff}
+  .problem .opt.chosen svg{stroke:#fff;fill:rgba(255,255,255,.2)}
+  .problem.correct{border-color:var(--ok);background:var(--ok-bg)}
+  .problem.wrong{border-color:var(--bad);background:var(--bad-bg)}
+  .problem .feedback{font-size:13px;font-weight:700;min-height:18px}
+  .problem .reveal{font-size:13px;color:var(--warn);font-weight:600}
+  .problem .reveal.hide{display:none}
+  .shape-svg{display:inline-block;vertical-align:middle}
+  .scene-box{display:flex;align-items:center;justify-content:center;gap:20px;padding:16px;background:#f8fafd;border-radius:12px;margin:8px 0;flex-wrap:wrap;min-height:100px}
+
+  .result{background:linear-gradient(135deg,#eef4ff,#f6efff);border:1px solid var(--line);border-radius:16px;padding:18px;margin:16px 0;text-align:center;box-shadow:var(--shadow)}
+  .result .score{font-size:34px;font-weight:800;color:var(--brand-d)}
+  .result .detail{font-size:14px;color:var(--ink);margin-top:4px}
+  .empty{text-align:center;color:var(--muted);padding:30px 10px;font-size:14px}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom:10px">
+    <a href="math-types.html" class="back-home" id="backLink">← 返回题型选择</a>
+  </div>
+  <header class="hero">
+    <h1>🔷 <span id="gradeTitle">一年级</span>数学图形练习</h1>
+    <p>认识图形 · 辨别方位 · 简单拼组</p>
+  </header>
+
+  <section class="panel controls">
+    <div class="row">
+      <div class="count-group">
+        <span class="lbl">① 题目数量：</span>
+        <button class="chip active" data-count="5">5题</button>
+        <button class="chip" data-count="10">10题</button>
+        <button class="chip" data-count="15">15题</button>
+        <button class="chip" data-count="20">20题</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="count-group">
+        <span class="lbl">② 练习类型：</span>
+        <button class="chip active" data-type="all">全部</button>
+        <button class="chip" data-type="3d">立体图形</button>
+        <button class="chip" data-type="2d">平面图形</button>
+        <button class="chip" data-type="pos">辨别方位</button>
+        <button class="chip" data-type="comp">图形拼组</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="genBtn">🎲 生成练习题</button>
+      <button class="btn btn-primary" id="checkBtn">✅ 检查答案</button>
+      <button class="btn btn-ghost" id="revealBtn">👀 显示答案</button>
+      <button class="btn btn-ghost" id="printBtn">📄 生成打印文件</button>
+    </div>
+  </section>
+
+  <section id="problemsArea">
+    <div class="empty">点击「生成练习题」开始吧～</div>
+  </section>
+  <div id="resultArea"></div>
+  <footer>题目由程序随机生成，仅供参考练习。</footer>
+</div>
+
+<script src="common.js"></script>
+<script src="print.js"></script>
+<script>
+function rnd(min,max){ return App.randInt(min,max); }
+function pick(arr){ return App.rand(arr); }
+function shuffleArr(arr){ return App.shuffle(arr); }
+
+// ========== SVG 图形 ==========
+const SHAPES_3D = {
+  cuboid: { name:'长方体', svg:'<svg class="shape-svg" width="72" height="56" viewBox="0 0 72 56"><rect x="2" y="10" width="48" height="32" fill="#e8f0fe" stroke="#5b8def" stroke-width="2"/><polygon points="2,10 18,2 66,2 50,10" fill="#d0e0ff" stroke="#5b8def" stroke-width="2"/><polygon points="50,10 66,2 66,34 50,42" fill="#b8d0ff" stroke="#5b8def" stroke-width="2"/></svg>' },
+  cube: { name:'正方体', svg:'<svg class="shape-svg" width="56" height="56" viewBox="0 0 56 56"><rect x="4" y="14" width="34" height="34" fill="#e8f0fe" stroke="#5b8def" stroke-width="2"/><polygon points="4,14 16,4 50,4 38,14" fill="#d0e0ff" stroke="#5b8def" stroke-width="2"/><polygon points="38,14 50,4 50,38 38,48" fill="#b8d0ff" stroke="#5b8def" stroke-width="2"/></svg>' },
+  cylinder: { name:'圆柱', svg:'<svg class="shape-svg" width="56" height="64" viewBox="0 0 56 64"><ellipse cx="28" cy="8" rx="24" ry="8" fill="#e8f0fe" stroke="#5b8def" stroke-width="2"/><rect x="4" y="8" width="48" height="42" fill="#d0e0ff" stroke="#5b8def" stroke-width="2"/><path d="M4 8 L4 50" stroke="#5b8def" stroke-width="2"/><path d="M52 8 L52 50" stroke="#5b8def" stroke-width="2"/><ellipse cx="28" cy="50" rx="24" ry="8" fill="#b8d0ff" stroke="#5b8def" stroke-width="2"/></svg>' },
+  sphere: { name:'球', svg:'<svg class="shape-svg" width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#e8f0fe" stroke="#5b8def" stroke-width="2"/><ellipse cx="24" cy="24" rx="22" ry="8" fill="none" stroke="#5b8def" stroke-width="1.5" stroke-dasharray="4,3"/></svg>' }
+};
+
+const SHAPES_2D = {
+  rectangle: { name:'长方形', svg:'<svg class="shape-svg" width="64" height="40" viewBox="0 0 64 40"><rect x="2" y="2" width="60" height="36" fill="#fff3e0" stroke="#f6ad55" stroke-width="2.5" rx="2"/></svg>' },
+  square: { name:'正方形', svg:'<svg class="shape-svg" width="40" height="40" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" fill="#fff3e0" stroke="#f6ad55" stroke-width="2.5" rx="2"/></svg>' },
+  triangle: { name:'三角形', svg:'<svg class="shape-svg" width="52" height="44" viewBox="0 0 52 44"><polygon points="26,2 50,42 2,42" fill="#fff3e0" stroke="#f6ad55" stroke-width="2.5" stroke-linejoin="round"/></svg>' },
+  circle: { name:'圆', svg:'<svg class="shape-svg" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#fff3e0" stroke="#f6ad55" stroke-width="2.5"/></svg>' }
+};
+
+// ========== 题目生成器 ==========
+let state = { count:5, type:'all', problems:[], revealed:false };
+
+function gen3D(){
+  const keys = Object.keys(SHAPES_3D);
+  const correct = pick(keys);
+  const opts = shuffleArr(keys).slice(0,3);
+  if(!opts.includes(correct)) opts[0]=correct;
+  return {
+    q:'下面这个图形是什么？',
+    svg:SHAPES_3D[correct].svg,
+    options:shuffleArr(opts).map(k=>SHAPES_3D[k].name),
+    answer:SHAPES_3D[correct].name,
+    type:'3d'
+  };
+}
+
+function gen2D(){
+  const keys = Object.keys(SHAPES_2D);
+  const correct = pick(keys);
+  const opts = shuffleArr(keys).slice(0,3);
+  if(!opts.includes(correct)) opts[0]=correct;
+  return {
+    q:'下面这个图形是什么？',
+    svg:SHAPES_2D[correct].svg,
+    options:shuffleArr(opts).map(k=>SHAPES_2D[k].name),
+    answer:SHAPES_2D[correct].name,
+    type:'2d'
+  };
+}
+
+function genPos(){
+  const objs = ['球','积木','铅笔','橡皮','尺子','书包','苹果','水杯','帽子','书本'];
+  const refs = ['盒子','桌子','椅子','书架','柜子','床','黑板','窗户','门','沙发'];
+  const dirs = [
+    {q:'上',a:'上'},{q:'下',a:'下'},{q:'前',a:'前'},{q:'后',a:'后'},{q:'左',a:'左'},{q:'右',a:'右'}
+  ];
+  const obj = pick(objs), ref = pick(refs), dir = pick(dirs);
+  const allDirs = ['上','下','前','后','左','右'];
+  const opts = shuffleArr(allDirs).slice(0,3);
+  if(!opts.includes(dir.a)) opts[0]=dir.a;
+  return {
+    q:`${obj}在${ref}的${dir.q}面，那么${ref}在${obj}的什么面？`,
+    options:shuffleArr(opts),
+    answer:dir.a==='上'?'下':dir.a==='下'?'上':dir.a==='前'?'后':dir.a==='后'?'前':dir.a==='左'?'右':'左',
+    type:'pos'
+  };
+}
+
+function genComp(){
+  const comps = [
+    {q:'两个完全一样的三角形可以拼成一个什么图形？', opts:['正方形','长方形','平行四边形','圆形'], ans:'平行四边形'},
+    {q:'两个完全一样的正方形可以拼成一个什么图形？', opts:['长方形','三角形','圆形','正方体'], ans:'长方形'},
+    {q:'最少用几个小正方形可以拼成一个大正方形？', opts:['2个','3个','4个','6个'], ans:'4个'},
+    {q:'用两个完全一样的长方形（短边是长边的一半）可以拼成一个什么图形？', opts:['正方形','三角形','圆形','梯形'], ans:'正方形'},
+    {q:'一个正方形对折一次后，变成什么图形？', opts:['长方形','正方形','圆形','平行四边形'], ans:'长方形'},
+    {q:'一个长方形对折一次后，可能变成什么图形？', opts:['正方形','圆形','梯形','正六边形'], ans:'正方形'},
+    {q:'4个同样的小正方形拼在一起，能拼出几种不同的图形？', opts:['1种','2种','3种','很多种'], ans:'很多种'},
+    {q:'用两个三角形不能拼成什么图形？', opts:['正方形','长方形','圆形','平行四边形'], ans:'圆形'},
+  ];
+  const c = pick(comps);
+  return { q:c.q, options:shuffleArr(c.opts), answer:c.ans, type:'comp' };
+}
+
+function generate(){
+  const gens = [];
+  if(state.type==='all'||state.type==='3d') gens.push(gen3D);
+  if(state.type==='all'||state.type==='2d') gens.push(gen2D);
+  if(state.type==='all'||state.type==='pos') gens.push(genPos);
+  if(state.type==='all'||state.type==='comp') gens.push(genComp);
+
+  const list = [];
+  for(let i=0;i<state.count;i++){
+    list.push(pick(gens)());
+  }
+  state.problems = list;
+  state.revealed = false;
+  renderProblems();
+  resultArea.innerHTML='';
+}
+
+function renderProblems(){
+  if(!state.problems.length){
+    problemsArea.innerHTML='<div class="empty">点击「生成练习题」开始吧～</div>';
+    return;
+  }
+  const typeNames = {all:'全部', '3d':'立体图形', '2d':'平面图形', pos:'辨别方位', comp:'图形拼组'};
+  const meta = `<div class="meta">
+    <span class="pill">${state.problems.length} 题</span>
+    <span class="pill">${typeNames[state.type]}</span>
+  </div>`;
+  const cards = state.problems.map((p,i)=>{
+    const svgHtml = p.svg?`<div class="scene-box">${p.svg}</div>`:'';
+    const optsHtml = p.options.map(o=>`<span class="opt" data-ans="${o}">${o}</span>`).join('');
+    return `<div class="problem" data-i="${i}">
+      <div class="num">${i+1}</div>
+      <p class="q">${p.q}</p>
+      ${svgHtml}
+      <div class="options">${optsHtml}</div>
+      <div class="ans">
+        <span class="feedback"></span>
+        <span class="reveal hide">正确答案：${p.answer}</span>
+      </div>
+    </div>`;
+  }).join('');
+  problemsArea.innerHTML = meta + cards;
+
+  // 绑定选项点击
+  problemsArea.querySelectorAll('.opt').forEach(opt=>{
+    opt.addEventListener('click',function(){
+      const card = this.closest('.problem');
+      card.querySelectorAll('.opt').forEach(o=>o.classList.remove('chosen'));
+      this.classList.add('chosen');
+    });
+  });
+}
+
+function check(){
+  if(!state.problems.length) return;
+  let correct=0;
+  const cards = problemsArea.querySelectorAll('.problem');
+  state.problems.forEach((p,i)=>{
+    const card=cards[i];
+    const chosen=card.querySelector('.opt.chosen');
+    const fb=card.querySelector('.feedback');
+    card.classList.remove('correct','wrong');
+    if(!chosen){
+      fb.textContent='未作答';fb.style.color='var(--warn)';card.classList.add('wrong');
+    }else if(chosen.dataset.ans===p.answer){
+      fb.textContent='✓ 正确';fb.style.color='var(--ok)';card.classList.add('correct');correct++;
+    }else{
+      fb.textContent=`✗ 正确答案：${p.answer}`;fb.style.color='var(--bad)';card.classList.add('wrong');
+    }
+  });
+  const total=state.problems.length;
+  const pct=Math.round(correct/total*100);
+  const tips = correct===total?'太棒了，全部答对！👏':correct>=total*0.8?'表现很好，再练练就满分啦！💪':'别灰心，把错题弄懂，下次一定行！🌟';
+  resultArea.innerHTML=`<div class="result">
+    <div class="score">${correct} / ${total}</div>
+    <div class="detail">正确率 ${pct}% &nbsp;·&nbsp; ${tips}</div>
+  </div>`;
+}
+
+function toggleReveal(){
+  state.revealed=!state.revealed;
+  problemsArea.querySelectorAll('.reveal').forEach(r=>r.classList.toggle('hide',!state.revealed));
+  document.getElementById('revealBtn').textContent = state.revealed?'🙈 隐藏答案':'👀 显示答案';
+}
+
+function printFile(){
+  if(!state.problems.length){alert('请先生成练习题！');return;}
+  Print.open('#problemsArea','一年级数学图形练习',{pageType:'word'});
+}
+
+// ========== 初始化 ==========
+const problemsArea = document.getElementById('problemsArea');
+const resultArea = document.getElementById('resultArea');
+const grade = App.getGradeParam();
+document.getElementById('gradeTitle').textContent = App.getGradeName(grade);
+document.getElementById('backLink').href = App.buildLink('math-types.html');
+
+document.querySelectorAll('[data-count]').forEach(chip=>{
+  chip.addEventListener('click',function(){
+    document.querySelectorAll('[data-count]').forEach(c=>c.classList.remove('active'));
+    this.classList.add('active');
+    state.count = +this.dataset.count;
+  });
+});
+document.querySelectorAll('[data-type]').forEach(chip=>{
+  chip.addEventListener('click',function(){
+    document.querySelectorAll('[data-type]').forEach(c=>c.classList.remove('active'));
+    this.classList.add('active');
+    state.type = this.dataset.type;
+    if(state.problems.length) generate();
+  });
+});
+document.getElementById('genBtn').addEventListener('click',generate);
+document.getElementById('checkBtn').addEventListener('click',check);
+document.getElementById('revealBtn').addEventListener('click',toggleReveal);
+document.getElementById('printBtn').addEventListener('click',printFile);
+App.initPageController('mathShapes', 'math');
+</script>
+</body>
+</html>

@@ -49,6 +49,16 @@
                 <div class="t-name" style="color:#dd6b20;">凑十法·平十法</div>
                 <div class="t-desc">凑十法加法 · 平十法减法<br>一年级数学基础</div>
             </a>
+            <a href="math-shapes.html" class="type-card" id="shapesLink" style="border-color:#5b8def;">
+                <span class="t-icon">🔷</span>
+                <div class="t-name">图形练习</div>
+                <div class="t-desc">立体图形 · 平面图形<br>方位辨别 · 简单拼组</div>
+            </a>
+            <a href="math-unit-convert.html" class="type-card" id="unitLink" style="border-color:#22a06b;">
+                <span class="t-icon">⏰</span>
+                <div class="t-name">单位换算</div>
+                <div class="t-desc">认读时钟 · 元角分<br>换算与简单计算</div>
+            </a>
         </div>
     </div>
 
@@ -62,7 +72,13 @@ document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
 document.getElementById('calcLink').href = App.buildLink('math-practice.html');
 document.getElementById('wordLink').href = App.buildLink('math-word-problems.html');
 document.getElementById('cushiLink').href = App.buildLink('math-make-ten.html');
-if (grade !== 1) { document.getElementById('cushiLink').style.display = 'none'; }
+document.getElementById('shapesLink').href = App.buildLink('math-shapes.html');
+document.getElementById('unitLink').href = App.buildLink('math-unit-convert.html');
+if (grade !== 1) {
+  document.getElementById('cushiLink').style.display = 'none';
+  document.getElementById('shapesLink').style.display = 'none';
+  document.getElementById('unitLink').style.display = 'none';
+}
 </script>
 </body>
 </html>

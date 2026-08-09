@@ -113,67 +113,6 @@
         color: #fff;
         border-color: #f5576c;
     }
-    .level-select {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-    .level-radio { display: none; }
-    .level-label {
-        padding: 8px 16px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: all 0.2s;
-    }
-    .level-radio:checked + .level-label {
-        background: #8e44ad;
-        color: #fff;
-        border-color: #8e44ad;
-    }
-    .score-detail .item span:first-child { font-weight: 600; color: #333; margin-right: 6px;}
-    .score-detail .ok { color: #10ac84; font-weight: 700;}
-    .score-detail .bad { color: #ee5253; font-weight: 700;}
-    .score-detail .total { color: #2e86de; font-weight: 700;}
-    .score-panel {
-        display: none;
-        background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
-        border-radius: 18px;
-        padding: 22px 28px;
-        margin: 0 0 25px 0;
-        border: 2px solid #ffd27a;
-        box-shadow: 0 10px 26px rgba(255, 193, 7, 0.18);
-    }
-    .score-panel.show { display: block; }
-    .score-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-bottom: 16px;
-    }
-    .score-big {
-        font-size: 2.4rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #f7971e, #eb3349);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    .score-big.excellent { background: linear-gradient(135deg, #11998e, #38ef7d); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
-    .score-big.good { background: linear-gradient(135deg, #4facfe, #00c6fb); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
-    .score-big.pass { background: linear-gradient(135deg, #f7971e, #ffd200); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
-    .score-big.fail { background: linear-gradient(135deg, #eb3349, #f45c43); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
-    .score-detail {
-        display: flex;
-        gap: 25px;
-        flex-wrap: wrap;
-        color: #555;
-        font-size: 0.95rem;
-    }
-    .score-btns { display: flex; gap: 12px; flex-wrap: wrap; }
     .questions-card {
         background: rgba(255,255,255,0.98);
         border-radius: 20px;
@@ -242,14 +181,6 @@
         border: 1px solid #f2d6ff;
         text-align: center;
     }
-    .question-label {
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        color: #8c6cff;
-        text-transform: uppercase;
-        margin-bottom: 6px;
-    }
     .question-content {
         display: flex;
         align-items: center;
@@ -264,19 +195,13 @@
         gap: 8px;
         margin-top: 4px;
     }
-    .question-input-wrap .user-ans-input {
-        width: 140px;
-        background: rgba(255,255,255,0.95);
-    }
     .question-item.correct {
         background: rgba(56, 239, 125, 0.1);
         border: 1px solid #38ef7d;
-        border-bottom: 1px solid #38ef7d;
     }
     .question-item.wrong {
         background: rgba(235, 51, 73, 0.08);
         border: 1px solid #eb3349;
-        border-bottom: 1px solid #eb3349;
     }
     .question-item .num {
         display: inline-block;
@@ -290,10 +215,36 @@
         font-family: "KaiTi", "STKaiti", "楷体", serif;
         letter-spacing: 2px;
     }
-    .pinyin {
+    .pinyin-text {
         font-family: "Times New Roman", "SimSun", serif;
-        font-size: 1.05rem;
+        font-size: 1.15rem;
         color: #d63031;
+        letter-spacing: 1px;
+    }
+    .pinyin-copy {
+        font-size: 1.4rem;
+        font-family: "Times New Roman", "SimSun", serif;
+        color: #d63031;
+        letter-spacing: 2px;
+        background: #fff8e1;
+        padding: 6px 14px;
+        border-radius: 8px;
+        border: 1px dashed #f9a825;
+    }
+    .mixed-blank {
+        display: inline-block;
+        min-width: 50px;
+        border-bottom: 2px dashed #f5576c;
+        margin: 0 4px;
+        padding: 2px 4px;
+        color: #f5576c;
+        font-weight: 600;
+    }
+    .mixed-hint {
+        font-size: 0.8rem;
+        color: #888;
+        display: block;
+        margin-top: 2px;
     }
     .mark-icon {
         font-size: 1rem;
@@ -340,6 +291,48 @@
         background: #fff0ef;
         color: #ee5253;
     }
+    .score-panel {
+        display: none;
+        background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+        border-radius: 18px;
+        padding: 22px 28px;
+        margin: 0 0 25px 0;
+        border: 2px solid #ffd27a;
+        box-shadow: 0 10px 26px rgba(255, 193, 7, 0.18);
+    }
+    .score-panel.show { display: block; }
+    .score-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 16px;
+    }
+    .score-big {
+        font-size: 2.4rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #f7971e, #eb3349);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .score-big.excellent { background: linear-gradient(135deg, #11998e, #38ef7d); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
+    .score-big.good { background: linear-gradient(135deg, #4facfe, #00c6fb); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
+    .score-big.pass { background: linear-gradient(135deg, #f7971e, #ffd200); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
+    .score-big.fail { background: linear-gradient(135deg, #eb3349, #f45c43); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;}
+    .score-detail {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+        color: #555;
+        font-size: 0.95rem;
+    }
+    .score-detail .item span:first-child { font-weight: 600; color: #333; margin-right: 6px;}
+    .score-detail .ok { color: #10ac84; font-weight: 700;}
+    .score-detail .bad { color: #ee5253; font-weight: 700;}
+    .score-detail .total { color: #2e86de; font-weight: 700;}
+    .score-btns { display: flex; gap: 12px; flex-wrap: wrap; }
     .wrong-section {
         display: none;
         margin-top: 30px;
@@ -369,37 +362,13 @@
         flex-wrap: wrap;
         gap: 10px;
     }
-    @media print {
-        .header, .nav-tabs, .mark-icon, .correct-answer, #timerDisplay { display: none !important; }
-        body { padding: 0 !important; }
-        .questions-card { box-shadow: none; border-radius: 0; padding: 0; margin: 0; max-width: none; width: 100%; }
-        .question-item { padding: 4px 0; page-break-inside: avoid; border: none; box-shadow: none; background: transparent; }
-        .question-visual { min-height: 92px; padding: 10px 8px; border: 1px solid #eee; background: #fff; }
-        .question-item .num {
-            min-width: 22px;
-            font-size: 0.7rem !important;
-            color: #aaa;
-            font-weight: 500;
-        }
-        .question-item.correct, .question-item.wrong { background: transparent; border: none; border-bottom: 1px dashed #ddd;}
-        .user-ans-input {
-            border: none;
-            border-bottom: 1.5px solid #333;
-            border-radius: 0;
-            background: transparent;
-            padding: 2px 4px;
-            font-size: 0.9rem;
-            color: #333;
-            text-align: center;
-        }
-    }
 </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>📖 语文拼音练习<span class="grade-badge" id="gradeBadge"></span></h1>
-        <p>生字注音·词语注音·在线答题·自动评分·错题重做</p>
+        <h1>语文拼音练习<span class="grade-badge" id="gradeBadge"></span></h1>
+        <p id="headerDesc">拼音抄写·汉字注音·混合填空·在线答题·自动评分</p>
     </div>
 
     <div style="text-align:left;">
@@ -409,11 +378,12 @@
     <div class="settings-card">
         <div class="settings-row">
             <div class="setting-group">
-                <label>📝 题目总数</label>
+                <label>题目总数</label>
                 <input type="number" id="count" class="number-input" value="20" min="5" max="200">
+                <div class="helper-note">推荐 12-15 题，打印输出刚好填满一张 A4 纸</div>
             </div>
             <div class="setting-group">
-                <label>📄 每行题数</label>
+                <label>每行题数</label>
                 <div class="columns-select">
                     <input type="radio" id="col2" name="columns" class="col-radio" value="2">
                     <label for="col2" class="col-label">2题</label>
@@ -427,27 +397,18 @@
 
         <div class="settings-row">
             <div class="setting-group" style="flex: 3; min-width: 100%;">
-                <label>🎯 题型选择（可多选）</label>
-                <div class="qtype-grid">
-                    <input type="checkbox" id="qt1" class="qtype-checkbox" checked>
-                    <label for="qt1" class="qtype-label">
-                        <span class="icon">📝</span>
-                        <span class="name">生字注音</span>
-                    </label>
-                    <input type="checkbox" id="qt2" class="qtype-checkbox" checked>
-                    <label for="qt2" class="qtype-label">
-                        <span class="icon">📖</span>
-                        <span class="name">词语注音</span>
-                    </label>
+                <label>题型选择（可多选）</label>
+                <div class="qtype-grid" id="qtypeGrid">
+                    <!-- 动态生成 -->
                 </div>
-                <div class="helper-note" style="margin-top: 10px; color: #7c5cff; font-size: 0.86rem; font-weight: 600;">💡 当前字库已扩展到 2500+，词语会根据随机汉字自动组合生成。</div>
+                <div class="helper-note" id="qtypeHint" style="margin-top: 10px; color: #7c5cff; font-size: 0.86rem; font-weight: 600;"></div>
             </div>
         </div>
 
         <div class="btn-row">
-            <button class="btn btn-primary" onclick="generateQuestions()">🎲 生成题目</button>
-            <button class="btn btn-success" onclick="printFile()" id="exportBtn" disabled>📄 生成打印文件</button>
-            <button class="btn btn-danger" onclick="submitAnswers()" id="submitBtn" disabled>✅ 提交答案并评分</button>
+            <button class="btn btn-primary" onclick="generateQuestions()">生成题目</button>
+            <button class="btn btn-success" onclick="printFile()" id="exportBtn" disabled>生成打印文件</button>
+            <button class="btn btn-danger" onclick="submitAnswers()" id="submitBtn" disabled>提交答案并评分</button>
         </div>
     </div>
 
@@ -464,10 +425,10 @@
             </div>
         </div>
         <div class="score-btns">
-            <button class="btn btn-warning" onclick="redoWrong()" id="redoBtn" disabled>📝 重做错题</button>
-            <button class="btn btn-info" onclick="reviewAll()" id="reviewBtn">🔍 查看正确答案</button>
-            <button class="btn btn-success" onclick="submitWrongCorrections()" id="correctBtn" style="display:none;">💾 提交错题修改</button>
-            <button class="btn btn-primary" onclick="resetAll()">🔄 重新开始新练习</button>
+            <button class="btn btn-warning" onclick="redoWrong()" id="redoBtn" disabled>重做错题</button>
+            <button class="btn btn-info" onclick="reviewAll()" id="reviewBtn">查看正确答案</button>
+            <button class="btn btn-success" onclick="submitWrongCorrections()" id="correctBtn" style="display:none;">提交错题修改</button>
+            <button class="btn btn-primary" onclick="resetAll()">重新开始新练习</button>
         </div>
     </div>
 
@@ -484,7 +445,7 @@
         </div>
         <div id="questionsContent"></div>
         <div class="wrong-section" id="wrongSection">
-            <h3>📝 错题修改区（请重新作答以下错题）</h3>
+            <h3>错题修改区（请重新作答以下错题）</h3>
             <div class="wrong-grid" id="wrongGrid"></div>
         </div>
         <div class="footer-note">
@@ -496,45 +457,18 @@
 
 <script src="pinyin-bank.js"></script>
 <script src="common.js"></script>
+<script src="print.js"></script>
 <script>
-// ============ 词库 ============
-const WORD_BANK = PINYIN_BANK.bank;
-
-function buildRandomWordPool(level, count) {
-    const pool = (WORD_BANK[level] || WORD_BANK[1] || []).filter(function(item) {
-        return item && item.hz && item.hz.length === 1 && item.py;
-    });
-    if (!pool.length) return [];
-
-    const words = [];
-    const seen = {};
-    let attempts = 0;
-    while (words.length < count && attempts < count * 20) {
-        const first = pool[randInt(0, pool.length - 1)];
-        const second = pool[randInt(0, pool.length - 1)];
-        if (!first || !second || first.hz === second.hz) {
-            attempts++;
-            continue;
-        }
-        const hz = first.hz + second.hz;
-        if (!seen[hz] && hz.length === 2) {
-            words.push({ hz: hz, py: first.py + ' ' + second.py });
-            seen[hz] = true;
-        }
-        attempts++;
-    }
-    return words;
-}
-
-// ============ 工具函数（使用 App 共享函数） ============
+// ============ 工具函数 ============
 function normPY(s) { return App.normPY(s); }
 function normHZ(s) { return App.normHZ(s); }
 function rand(arr) { return App.rand(arr); }
 function randInt(min, max) { return App.randInt(min, max); }
 function shuffle(arr) { return App.shuffle(arr); }
 
-// ============ 题目生成 ============
+// ============ 全局状态 ============
 let currentQuestions = [];
+let allQuestionsFlat = [];
 let globalNum = 0;
 let wrongIndices = [];
 let reviewed = false;
@@ -545,66 +479,129 @@ let timerStart = 0;
 function startTimer(){
     stopTimer();
     timerStart = Date.now();
-    timer = setInterval(()=>{
-        const t = Math.floor((Date.now()-timerStart)/1000);
-        const el = document.getElementById('timerDisplay');
-        if(el) el.textContent = `${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`;
+    timer = setInterval(function(){
+        var t = Math.floor((Date.now()-timerStart)/1000);
+        var el = document.getElementById('timerDisplay');
+        if(el) el.textContent = String(Math.floor(t/60)).padStart(2,'0') + ':' + String(t%60).padStart(2,'0');
     },1000);
 }
 function stopTimer(){ if(timer){clearInterval(timer);timer=null;} }
 function getElapsed(){ return Math.floor((Date.now()-timerStart)/1000); }
-
 function nextNum() { globalNum++; return globalNum; }
 
-function makeInput(idx, width='') {
-    const w = width ? ` ${width}` : '';
-    return `<input type="text" class="user-ans-input${w}" id="ans_${idx}" 
-        oninput="updateAnswer(${idx}, this.value)" 
-        autocomplete="off" autocapitalize="off" spellcheck="false">`;
+function makeInput(idx, width) {
+    var w = width ? ' ' + width : '';
+    return '<input type="text" class="user-ans-input' + w + '" id="ans_' + idx + '" oninput="updateAnswer(' + idx + ', this.value)" autocomplete="off" autocapitalize="off" spellcheck="false">';
 }
 
-// 生字注音：给单个汉字注拼音
-function genCharPinyin(item, globalIdx) {
+// ============ 题型定义 ============
+// 一年级题型
+var G1_TYPES = [
+    { id: 'py_copy', icon: '✍️', name: '拼音抄写', desc: '看拼音，照着抄写拼音' },
+    { id: 'char_py', icon: '📝', name: '汉字注音', desc: '看汉字，写出对应拼音' },
+    { id: 'mixed', icon: '🧩', name: '混合填空', desc: '拼音与汉字互相填空，综合练习' }
+];
+// 二年级及以上题型
+var G2_TYPES = [
+    { id: 'word_py', icon: '📖', name: '词语注音', desc: '看两字词语，写出对应拼音' }
+];
+
+// ============ 题目生成函数 ============
+
+// 拼音抄写：显示拼音，学生抄写
+function genPinyinCopy(item, globalIdx) {
     return {
-        type: 'char_py',
-        promptHtml: `<span class="hanzi">${item.hz}</span>`,
-        fullHtml: `<div class="question-visual">
-            <div class="question-content">
-                <span class="num">${globalIdx}.</span>
-                <span class="hanzi">${item.hz}</span>
-            </div>
-            <div class="question-input-wrap">${makeInput(globalIdx, 'wide')}</div>
-        </div>`,
+        type: 'py_copy',
         answer: item.py,
         normAnswer: normPY(item.py),
-        check: (user) => normPY(user) === normPY(item.py),
+        check: function(user) { return normPY(user) === normPY(item.py); },
         widthClass: 'wide',
-        placeholder: '写拼音'
+        fullHtml: '<div class="question-visual">' +
+            '<div class="question-content">' +
+                '<span class="num">' + globalIdx + '.</span>' +
+                '<span class="pinyin-copy">' + item.py + '</span>' +
+            '</div>' +
+            '<div class="question-input-wrap">' + makeInput(globalIdx, 'wide') + '</div>' +
+            '<div class="mixed-hint">请抄写上面的拼音</div>' +
+        '</div>'
     };
 }
 
-// 词语注音：给双字词语注拼音
+// 汉字注音：显示汉字，学生写拼音
+function genCharPinyin(item, globalIdx) {
+    return {
+        type: 'char_py',
+        answer: item.py,
+        normAnswer: normPY(item.py),
+        check: function(user) { return normPY(user) === normPY(item.py); },
+        widthClass: 'wide',
+        fullHtml: '<div class="question-visual">' +
+            '<div class="question-content">' +
+                '<span class="num">' + globalIdx + '.</span>' +
+                '<span class="hanzi">' + item.hz + '</span>' +
+            '</div>' +
+            '<div class="question-input-wrap">' + makeInput(globalIdx, 'wide') + '</div>' +
+        '</div>'
+    };
+}
+
+// 混合填空：拼音↔汉字互相填空
+function genMixedFill(item, globalIdx) {
+    // 随机决定：填拼音还是填汉字
+    var fillPinyin = Math.random() < 0.5;
+    var answer, checkFn, promptHtml;
+
+    if (fillPinyin) {
+        // 显示汉字，填拼音
+        answer = item.py;
+        promptHtml = '<span class="hanzi">' + item.hz + '</span>' +
+            '<span class="mixed-blank">?</span>' +
+            '<div class="mixed-hint">请写出拼音</div>';
+        checkFn = function(user) { return normPY(user) === normPY(item.py); };
+    } else {
+        // 显示拼音，填汉字
+        answer = item.hz;
+        promptHtml = '<span class="pinyin-text">' + item.py + '</span>' +
+            '<span class="mixed-blank">?</span>' +
+            '<div class="mixed-hint">请写出汉字</div>';
+        checkFn = function(user) { return normHZ(user) === normHZ(item.hz); };
+    }
+
+    return {
+        type: 'mixed',
+        answer: answer,
+        normAnswer: fillPinyin ? normPY(item.py) : item.hz,
+        check: checkFn,
+        widthClass: 'wide',
+        fullHtml: '<div class="question-visual">' +
+            '<div class="question-content">' +
+                '<span class="num">' + globalIdx + '.</span>' +
+                promptHtml +
+            '</div>' +
+            '<div class="question-input-wrap">' + makeInput(globalIdx, 'wide') + '</div>' +
+        '</div>'
+    };
+}
+
+// 词语注音：从词库获取两字词语，学生写拼音
 function genWordPinyin(word, globalIdx) {
     return {
         type: 'word_py',
-        promptHtml: `<span class="hanzi">${word.hz}</span>`,
-        fullHtml: `<div class="question-visual">
-            <div class="question-content">
-                <span class="num">${globalIdx}.</span>
-                <span class="hanzi">${word.hz}</span>
-            </div>
-            <div class="question-input-wrap">${makeInput(globalIdx, 'wide')}</div>
-        </div>`,
         answer: word.py,
         normAnswer: normPY(word.py),
-        check: (user) => normPY(user) === normPY(word.py),
+        check: function(user) { return normPY(user) === normPY(word.py); },
         widthClass: 'wide',
-        placeholder: '写拼音'
+        fullHtml: '<div class="question-visual">' +
+            '<div class="question-content">' +
+                '<span class="num">' + globalIdx + '.</span>' +
+                '<span class="hanzi">' + word.w + '</span>' +
+            '</div>' +
+            '<div class="question-input-wrap">' + makeInput(globalIdx, 'wide') + '</div>' +
+        '</div>'
     };
 }
 
 // ============ 主生成函数 ============
-let allQuestionsFlat = [];
 
 function generateQuestions() {
     globalNum = 0;
@@ -613,79 +610,89 @@ function generateQuestions() {
     reviewed = false;
     mode = 'full';
     resetUIState();
-    
-    const total = parseInt(document.getElementById('count').value) || 24;
-    const columns = parseInt(document.querySelector('input[name="columns"]:checked').value) || 3;
-    const level = getGradeParam();
-    
-    const qTypes = [];
-    if (document.getElementById('qt1').checked) qTypes.push('char_py');
-    if (document.getElementById('qt2').checked) qTypes.push('word_py');
-    
+
+    var total = parseInt(document.getElementById('count').value) || 20;
+    var columns = parseInt(document.querySelector('input[name="columns"]:checked').value) || 3;
+    var level = getGradeParam();
+
+    // 收集选中的题型
+    var qTypes = [];
+    var checkboxes = document.querySelectorAll('.qtype-checkbox:checked');
+    checkboxes.forEach(function(cb) { qTypes.push(cb.value); });
+
     if (qTypes.length === 0) {
         alert('请至少选择一种题型！');
         return;
     }
-    
-    const typeCount = qTypes.length;
-    let perType = Math.floor(total / typeCount);
-    let remainder = total % typeCount;
-    if (perType < 1) { perType = 1; remainder = Math.max(0, total - typeCount); }
-    
-    const typeNameMap = {
-        'char_py': '一、生字注音（给下面的汉字注上拼音）',
-        'word_py': '二、词语注音（给下面的词语注上拼音）'
-    };
-    const typeOrder = ['char_py','word_py'];
-    
-    // 洗牌词库，按顺序取用，降低重复
-    const shuffledBank = shuffle(WORD_BANK[level]);
-    let bankIdx = 0;
-    function pickWord() {
-        if (bankIdx >= shuffledBank.length) {
-            const reshuffled = shuffle(WORD_BANK[level]);
-            if (reshuffled[0] === shuffledBank[shuffledBank.length - 1]) {
-                [reshuffled[0], reshuffled[1]] = [reshuffled[1], reshuffled[0]];
-            }
-            shuffledBank.splice(0, shuffledBank.length, ...reshuffled);
-            bankIdx = 0;
-        }
-        return shuffledBank[bankIdx++];
+
+    // 按题型设置标题
+    var typeNameMap = {};
+    if (level === 1) {
+        typeNameMap = {
+            'py_copy': '一、拼音抄写（照样子抄写拼音）',
+            'char_py': '二、汉字注音（给下面的汉字注上拼音）',
+            'mixed': '三、混合填空（拼音与汉字互相填空）'
+        };
+    } else {
+        typeNameMap = {
+            'word_py': '词语注音（给下面的词语注上拼音）'
+        };
     }
-    
-    // 随机组合词语库
-    const wordPool = buildRandomWordPool(level, Math.max(total * 2, 80));
-    const shuffledWords = shuffle(wordPool);
-    let wordIdx = 0;
-    function pickWordItem() {
-        if (!wordPool.length) return { hz: '汉字', py: 'hàn zì' };
+
+    var typeOrder = level === 1 ? ['py_copy','char_py','mixed'] : ['word_py'];
+    var typeCount = qTypes.length;
+    var perType = Math.floor(total / typeCount);
+    var remainder = total % typeCount;
+    if (perType < 1) { perType = 1; remainder = Math.max(0, total - typeCount); }
+
+    // 准备词库
+    var charBank = PINYIN_BANK.bank;
+    var wordBank = PINYIN_BANK.wordLibrary;
+
+    // 洗牌字库
+    var shuffledChars = shuffle(charBank[level]);
+    var charIdx = 0;
+    function pickChar() {
+        if (charIdx >= shuffledChars.length) {
+            shuffledChars = shuffle(charBank[level]);
+            charIdx = 0;
+        }
+        return shuffledChars[charIdx++];
+    }
+
+    // 洗牌词库
+    var wordsForLevel = level === 1 ? (wordBank[1] || []) : PINYIN_BANK.getWordsUpTo(level);
+    var shuffledWords = shuffle(wordsForLevel);
+    var wordIdx = 0;
+    function pickWord() {
+        if (!shuffledWords.length) return { w: '汉字', py: 'hàn zì' };
         if (wordIdx >= shuffledWords.length) {
-            const reshuffled = shuffle(wordPool);
-            if (reshuffled[0] === shuffledWords[shuffledWords.length - 1]) {
-                [reshuffled[0], reshuffled[1]] = [reshuffled[1], reshuffled[0]];
-            }
-            shuffledWords.splice(0, shuffledWords.length, ...reshuffled);
+            shuffledWords = shuffle(wordsForLevel);
             wordIdx = 0;
         }
         return shuffledWords[wordIdx++];
     }
-    
+
     currentQuestions = [];
-    let flatIdx = 0;
-    
-    typeOrder.forEach(type => {
-        if (!qTypes.includes(type)) return;
-        let count = perType;
+    var flatIdx = 0;
+
+    typeOrder.forEach(function(type) {
+        if (qTypes.indexOf(type) === -1) return;
+        var count = perType;
         if (remainder > 0) { count++; remainder--; }
-        
-        const qInSection = [];
-        for (let i=0; i<count; i++) {
-            const num = nextNum();
-            let q;
-            if (type === 'char_py') {
-                q = genCharPinyin(pickWord(), num);
-            } else {
-                q = genWordPinyin(pickWordItem(), num);
+
+        var qInSection = [];
+        for (var i = 0; i < count; i++) {
+            var num = nextNum();
+            var q;
+            if (type === 'py_copy') {
+                q = genPinyinCopy(pickChar(), num);
+            } else if (type === 'char_py') {
+                q = genCharPinyin(pickChar(), num);
+            } else if (type === 'mixed') {
+                q = genMixedFill(pickChar(), num);
+            } else if (type === 'word_py') {
+                q = genWordPinyin(pickWord(), num);
             }
             q.globalNum = num;
             q.flatIdx = flatIdx;
@@ -701,11 +708,11 @@ function generateQuestions() {
             columns: columns
         });
     });
-    
+
     renderQuestions();
     updateHeaderInfo(level);
     startTimer();
-    
+
     document.getElementById('questionsCard').classList.add('show');
     document.getElementById('exportBtn').disabled = false;
     document.getElementById('submitBtn').disabled = false;
@@ -720,40 +727,46 @@ function resetUIState() {
 }
 
 function updateHeaderInfo(level) {
-    const levelName = App.getGradeName(level);
-    const hasChar = document.getElementById('qt1').checked;
-    const hasWord = document.getElementById('qt2').checked;
-    let title = `小学${levelName}`;
-    if (hasChar && hasWord) title += '生字词语注音练习';
-    else if (hasChar) title += '生字注音练习';
-    else title += '词语注音练习';
+    var levelName = App.getGradeName(level);
+    var title;
+    if (level === 1) {
+        var hasCopy = document.getElementById('qt_py_copy') && document.getElementById('qt_py_copy').checked;
+        var hasChar = document.getElementById('qt_char_py') && document.getElementById('qt_char_py').checked;
+        var hasMixed = document.getElementById('qt_mixed') && document.getElementById('qt_mixed').checked;
+        var parts = [];
+        if (hasCopy) parts.push('拼音抄写');
+        if (hasChar) parts.push('汉字注音');
+        if (hasMixed) parts.push('混合填空');
+        title = '小学' + levelName + (parts.length ? parts.join('·') : '拼音练习');
+    } else {
+        title = '小学' + levelName + '词语注音练习';
+    }
     document.getElementById('sheetTitle').textContent = title;
-    document.getElementById('questionCount').textContent = `共 ${allQuestionsFlat.length} 道题`;
-    const now = new Date();
-    document.getElementById('generateTime').textContent = 
-        `生成时间：${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    document.getElementById('questionCount').textContent = '共 ' + allQuestionsFlat.length + ' 道题';
+    var now = new Date();
+    document.getElementById('generateTime').textContent =
+        '生成时间：' + now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
 }
 
 function renderQuestions() {
-    const content = document.getElementById('questionsContent');
+    var content = document.getElementById('questionsContent');
     content.innerHTML = '';
-    
-    currentQuestions.forEach(section => {
-        const titleEl = document.createElement('div');
+
+    currentQuestions.forEach(function(section) {
+        var titleEl = document.createElement('div');
         titleEl.className = 'section-title';
         titleEl.textContent = section.title;
         content.appendChild(titleEl);
-        
-        const grid = document.createElement('div');
+
+        var grid = document.createElement('div');
         grid.className = 'questions-grid';
-        grid.style.gridTemplateColumns = `repeat(${section.columns}, 1fr)`;
-        section.questions.forEach(q => {
-            const item = document.createElement('div');
+        grid.style.gridTemplateColumns = 'repeat(' + section.columns + ', 1fr)';
+        section.questions.forEach(function(q) {
+            var item = document.createElement('div');
             item.className = 'question-item';
-            item.id = `q_${q.flatIdx}`;
+            item.id = 'q_' + q.flatIdx;
             item.innerHTML = q.fullHtml;
-            // 恢复值
-            const input = item.querySelector('.user-ans-input');
+            var input = item.querySelector('.user-ans-input');
             if (input && q.userAnswer) input.value = q.userAnswer;
             grid.appendChild(item);
         });
@@ -762,66 +775,63 @@ function renderQuestions() {
 }
 
 function updateAnswer(globalNum, val) {
-    // 通过globalNum找到题目
-    const q = allQuestionsFlat.find(x => x.globalNum === globalNum);
+    var q = allQuestionsFlat.find(function(x) { return x.globalNum === globalNum; });
     if (q) q.userAnswer = val.trim() === '' ? null : val.trim();
 }
 
 function submitAnswers() {
     stopTimer();
-    const elapsed = getElapsed();
-    // 收集答案
-    allQuestionsFlat.forEach(q => {
-        const el = document.getElementById(`ans_${q.globalNum}`);
+    var elapsed = getElapsed();
+    allQuestionsFlat.forEach(function(q) {
+        var el = document.getElementById('ans_' + q.globalNum);
         if (el) q.userAnswer = el.value.trim() === '' ? null : el.value.trim();
     });
-    
-    let right = 0, wrong = 0;
+
+    var right = 0, wrong = 0;
     wrongIndices = [];
-    allQuestionsFlat.forEach(q => {
+    allQuestionsFlat.forEach(function(q) {
         q.correct = q.check(q.userAnswer);
         if (q.correct) right++;
         else { wrong++; wrongIndices.push(q.flatIdx); }
     });
-    const total = allQuestionsFlat.length;
-    const score = Math.round((right / total) * 100);
-    
-    // 更新DOM状态
-    allQuestionsFlat.forEach(q => {
-        const item = document.getElementById(`q_${q.flatIdx}`);
+    var total = allQuestionsFlat.length;
+    var score = Math.round((right / total) * 100);
+
+    allQuestionsFlat.forEach(function(q) {
+        var item = document.getElementById('q_' + q.flatIdx);
         if (item) {
             item.classList.remove('correct','wrong');
             item.classList.add(q.correct ? 'correct' : 'wrong');
-            const oldMk = item.querySelector('.mark-icon');
+            var oldMk = item.querySelector('.mark-icon');
             if (oldMk) oldMk.remove();
-            const oldCa = item.querySelector('.correct-answer');
+            var oldCa = item.querySelector('.correct-answer');
             if (oldCa) oldCa.remove();
-            const input = item.querySelector('.user-ans-input');
+            var input = item.querySelector('.user-ans-input');
             if (input) input.setAttribute('readonly', 'true');
-            const mk = document.createElement('span');
+            var mk = document.createElement('span');
             mk.className = 'mark-icon ' + (q.correct ? 'ok' : 'bad');
             mk.textContent = q.correct ? '✓' : '✗';
             item.appendChild(mk);
         }
     });
-    
+
     showScorePanel(score, right, wrong, total, elapsed);
 }
 
 function showScorePanel(score, right, wrong, total, elapsed) {
-    const panel = document.getElementById('scorePanel');
-    const big = document.getElementById('scoreBig');
-    const comment = document.getElementById('scoreComment');
-    big.textContent = `${score} 分`;
+    var panel = document.getElementById('scorePanel');
+    var big = document.getElementById('scoreBig');
+    var comment = document.getElementById('scoreComment');
+    big.textContent = score + ' 分';
     big.className = 'score-big';
-    const mins = Math.floor(elapsed/60);
-    const secs = elapsed%60;
-    const timeStr = mins>0?`${mins}分${secs}秒`:`${secs}秒`;
-    if (score === 100) { big.classList.add('excellent'); comment.textContent = `🎉 太棒了！满分！用时${timeStr}`; }
-    else if (score >= 90) { big.classList.add('excellent'); comment.textContent = `🌟 非常优秀！用时${timeStr}`; }
-    else if (score >= 75) { big.classList.add('good'); comment.textContent = `👍 成绩不错，继续加油！用时${timeStr}`; }
-    else if (score >= 60) { big.classList.add('pass'); comment.textContent = `📚 刚好及格，多练练！用时${timeStr}`; }
-    else { big.classList.add('fail'); comment.textContent = `💪 不要灰心，多做练习！用时${timeStr}`; }
+    var mins = Math.floor(elapsed/60);
+    var secs = elapsed%60;
+    var timeStr = mins>0 ? mins + '分' + secs + '秒' : secs + '秒';
+    if (score === 100) { big.classList.add('excellent'); comment.textContent = '太棒了！满分！用时' + timeStr; }
+    else if (score >= 90) { big.classList.add('excellent'); comment.textContent = '非常优秀！用时' + timeStr; }
+    else if (score >= 75) { big.classList.add('good'); comment.textContent = '成绩不错，继续加油！用时' + timeStr; }
+    else if (score >= 60) { big.classList.add('pass'); comment.textContent = '刚好及格，多练练！用时' + timeStr; }
+    else { big.classList.add('fail'); comment.textContent = '不要灰心，多做练习！用时' + timeStr; }
     document.getElementById('correctCount').textContent = right;
     document.getElementById('wrongCount').textContent = wrong;
     document.getElementById('totalCount').textContent = total;
@@ -832,15 +842,15 @@ function showScorePanel(score, right, wrong, total, elapsed) {
 
 function reviewAll() {
     reviewed = true;
-    allQuestionsFlat.forEach(q => {
+    allQuestionsFlat.forEach(function(q) {
         if (q.correct === false) {
-            const item = document.getElementById(`q_${q.flatIdx}`);
+            var item = document.getElementById('q_' + q.flatIdx);
             if (item) {
-                const oldCa = item.querySelector('.correct-answer');
+                var oldCa = item.querySelector('.correct-answer');
                 if (oldCa) oldCa.remove();
-                const ca = document.createElement('span');
+                var ca = document.createElement('span');
                 ca.className = 'correct-answer';
-                ca.textContent = `正确：${q.answer}`;
+                ca.textContent = '正确：' + q.answer;
                 item.appendChild(ca);
             }
         }
@@ -851,29 +861,26 @@ function reviewAll() {
 function redoWrong() {
     if (wrongIndices.length === 0) { alert('没有错题！'); return; }
     mode = 'wrong';
-    const columns = Math.min(2, parseInt(document.querySelector('input[name="columns"]:checked').value) || 2);
-    const grid = document.getElementById('wrongGrid');
-    grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+    var columns = Math.min(2, parseInt(document.querySelector('input[name="columns"]:checked').value) || 2);
+    var grid = document.getElementById('wrongGrid');
+    grid.style.gridTemplateColumns = 'repeat(' + columns + ', 1fr)';
     grid.innerHTML = '';
-    
-    wrongIndices.forEach((flatIdx, i) => {
-        const q = allQuestionsFlat[flatIdx];
+
+    wrongIndices.forEach(function(flatIdx, i) {
+        var q = allQuestionsFlat[flatIdx];
         q.userAnswer = null;
         q.correct = null;
-        const item = document.createElement('div');
+        var item = document.createElement('div');
         item.className = 'question-item';
-        item.id = `wq_${flatIdx}`;
-        item.innerHTML = `
-            <span class="num">${i+1}.</span>
-            ${q.promptHtml}
-            <input type="text" class="user-ans-input ${q.widthClass}" 
-                   id="wans_${flatIdx}" 
-                   oninput="updateWrongAnswer(${flatIdx}, this.value)"
-                   autocomplete="off" autocapitalize="off" spellcheck="false">
-        `;
+        item.id = 'wq_' + flatIdx;
+        item.innerHTML = '<span class="num">' + (i+1) + '.</span>' +
+            '<span style="display:inline-block;">' + (q.type === 'py_copy' ? '<span class="pinyin-copy">' + q.answer + '</span>' :
+             q.type === 'mixed' ? (q.normAnswer === q.answer ? '<span class="pinyin-text">' + q.answer + '</span>' : '<span class="hanzi">' + q.answer + '</span>') :
+             '<span class="hanzi">' + (q.answer || '') + '</span>') + '</span>' +
+            '<input type="text" class="user-ans-input ' + q.widthClass + '" id="wans_' + flatIdx + '" oninput="updateWrongAnswer(' + flatIdx + ', this.value)" autocomplete="off" autocapitalize="off" spellcheck="false">';
         grid.appendChild(item);
     });
-    
+
     document.getElementById('correctBtn').style.display = 'inline-flex';
     document.getElementById('correctBtn').disabled = false;
     document.getElementById('wrongSection').classList.add('show');
@@ -881,40 +888,38 @@ function redoWrong() {
 }
 
 function updateWrongAnswer(flatIdx, val) {
-    const v = val.trim() === '' ? null : val.trim();
+    var v = val.trim() === '' ? null : val.trim();
     if (!allQuestionsFlat[flatIdx]._redo) allQuestionsFlat[flatIdx]._redo = {};
     allQuestionsFlat[flatIdx]._redo.newAnswer = v;
 }
 
 function submitWrongCorrections() {
-    let reRight = 0, stillWrong = 0;
-    wrongIndices.forEach(flatIdx => {
-        const q = allQuestionsFlat[flatIdx];
-        const newAns = (q._redo && q._redo.newAnswer !== undefined) ? q._redo.newAnswer : q.userAnswer;
-        const correctNow = q.check(newAns);
+    var reRight = 0, stillWrong = 0;
+    wrongIndices.forEach(function(flatIdx) {
+        var q = allQuestionsFlat[flatIdx];
+        var newAns = (q._redo && q._redo.newAnswer !== undefined) ? q._redo.newAnswer : q.userAnswer;
+        var correctNow = q.check(newAns);
         if (correctNow) {
             q.correct = true;
             q.userAnswer = newAns;
             reRight++;
-            // 更新主区域
-            const item = document.getElementById(`q_${flatIdx}`);
+            var item = document.getElementById('q_' + flatIdx);
             if (item) {
                 item.classList.remove('wrong');
                 item.classList.add('correct');
-                const mk = item.querySelector('.mark-icon');
+                var mk = item.querySelector('.mark-icon');
                 if (mk) { mk.className = 'mark-icon ok'; mk.textContent = '✓'; }
-                const ca = item.querySelector('.correct-answer');
+                var ca = item.querySelector('.correct-answer');
                 if (ca) ca.remove();
-                const input = item.querySelector('.user-ans-input');
+                var input = item.querySelector('.user-ans-input');
                 if (input) { input.value = newAns || ''; input.setAttribute('readonly','true'); }
             }
-            // 更新错题区域
-            const witem = document.getElementById(`wq_${flatIdx}`);
+            var witem = document.getElementById('wq_' + flatIdx);
             if (witem) {
                 witem.classList.add('correct');
-                const inp = witem.querySelector('.user-ans-input');
+                var inp = witem.querySelector('.user-ans-input');
                 if (inp) inp.setAttribute('readonly','true');
-                let m = witem.querySelector('.mark-icon');
+                var m = witem.querySelector('.mark-icon');
                 if (!m) { m = document.createElement('span'); m.className = 'mark-icon ok'; witem.appendChild(m);}
                 m.className = 'mark-icon ok';
                 m.textContent = '✓ 已订正';
@@ -922,39 +927,38 @@ function submitWrongCorrections() {
         } else {
             stillWrong++;
             q.userAnswer = newAns;
-            const witem = document.getElementById(`wq_${flatIdx}`);
+            var witem = document.getElementById('wq_' + flatIdx);
             if (witem) {
                 witem.classList.add('wrong');
-                const inp = witem.querySelector('.user-ans-input');
+                var inp = witem.querySelector('.user-ans-input');
                 if (inp) inp.setAttribute('readonly','true');
-                let m = witem.querySelector('.mark-icon');
+                var m = witem.querySelector('.mark-icon');
                 if (!m) { m = document.createElement('span'); witem.appendChild(m);}
                 m.className = 'mark-icon bad';
-                m.textContent = `✗ 正确:${q.answer}`;
+                m.textContent = '✗ 正确:' + q.answer;
             }
         }
     });
-    // 重新计算总分
-    let right = 0;
-    allQuestionsFlat.forEach(q => { if (q.correct) right++; });
-    const total = allQuestionsFlat.length;
-    const score = Math.round((right/total)*100);
+    var right = 0;
+    allQuestionsFlat.forEach(function(q) { if (q.correct) right++; });
+    var total = allQuestionsFlat.length;
+    var score = Math.round((right/total)*100);
     showScorePanel(score, right, total-right, total, getElapsed());
     document.getElementById('correctBtn').disabled = true;
-    setTimeout(()=>{
-        alert(`错题修改完成！\n本次订正对：${reRight} 题\n仍未答对：${stillWrong} 题\n最终得分：${score} 分`);
+    setTimeout(function(){
+        alert('错题修改完成！\n本次订正对：' + reRight + ' 题\n仍未答对：' + stillWrong + ' 题\n最终得分：' + score + ' 分');
     }, 200);
 }
 
 function resetAll() {
     if (!confirm('确定要重新开始吗？当前作答记录将清空。')) return;
-    allQuestionsFlat.forEach(q => { q.userAnswer = null; q.correct = null; if (q._redo) delete q._redo; });
+    allQuestionsFlat.forEach(function(q) { q.userAnswer = null; q.correct = null; if (q._redo) delete q._redo; });
     wrongIndices = [];
     reviewed = false;
     resetUIState();
     renderQuestions();
-    allQuestionsFlat.forEach(q => {
-        const el = document.getElementById(`ans_${q.globalNum}`);
+    allQuestionsFlat.forEach(function(q) {
+        var el = document.getElementById('ans_' + q.globalNum);
         if (el) el.value = '';
     });
     document.getElementById('submitBtn').disabled = false;
@@ -967,24 +971,53 @@ function printFile() {
     if (currentQuestions.length === 0) { alert('请先生成题目！'); return; }
     var title = document.getElementById('sheetTitle').textContent;
     var cols = parseInt(document.querySelector('input[name="columns"]:checked').value) || 3;
-    App.openPrintPage('#questionsCard', title, {
-        extraStyle: '.questions-grid { grid-template-columns: repeat(' + cols + ', 1fr); }'
-    });
+    Print.open('#questionsCard', title, { pageType: 'pinyin', columns: cols });
 }
 
 function getGradeParam() { return App.getGradeParam(); }
+
+// ============ 初始化 ============
+function initQTypeSelector() {
+    var level = getGradeParam();
+    var grid = document.getElementById('qtypeGrid');
+    var hint = document.getElementById('qtypeHint');
+    var headerDesc = document.getElementById('headerDesc');
+    var types = level === 1 ? G1_TYPES : G2_TYPES;
+
+    grid.innerHTML = '';
+    types.forEach(function(t, i) {
+        var checked = i === 0 ? ' checked' : '';
+        grid.innerHTML += '<input type="checkbox" id="qt_' + t.id + '" class="qtype-checkbox" value="' + t.id + '"' + checked + '>' +
+            '<label for="qt_' + t.id + '" class="qtype-label">' +
+                '<span class="icon">' + t.icon + '</span>' +
+                '<span class="name">' + t.name + '</span>' +
+            '</label>';
+    });
+
+    if (level === 1) {
+        hint.textContent = '一年级：拼音抄写、汉字注音、混合填空三种题型';
+        headerDesc.textContent = '拼音抄写·汉字注音·混合填空·在线答题·自动评分';
+    } else {
+        hint.textContent = '当前字库已扩展到2500+汉字，词库约800+两字词语，按年级分级调用';
+        headerDesc.textContent = '词语注音·在线答题·自动评分·错题重做';
+    }
+}
+
 function applyGradeDefaults() {
-    const g = getGradeParam();
-    const gradeName = App.getGradeName(g);
+    var g = getGradeParam();
+    var gradeName = App.getGradeName(g);
     document.getElementById('gradeBadge').textContent = gradeName;
-    const defaults = {1: {count: 20}, 2: {count: 24}, 3: {count: 30}, 4: {count: 36}, 5: {count: 40}, 6: {count: 40}}[g];
-    const countEl = document.getElementById('count');
+    var defaults = {1: {count: 15}, 2: {count: 20}, 3: {count: 24}, 4: {count: 30}, 5: {count: 36}, 6: {count: 40}}[g];
+    var countEl = document.getElementById('count');
     if (countEl && !countEl.dataset.touched) countEl.value = defaults.count;
 }
+
 window.onload = function() {
     applyGradeDefaults();
+    initQTypeSelector();
     document.getElementById('backLink').href = App.buildLink('chinese-types.html');
     generateQuestions();
+    App.initPageController('pinyinPractice', 'chinese');
 };
 </script>
 </body>

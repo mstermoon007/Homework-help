@@ -37,14 +37,8 @@
             <a href="pinyin-practice.html" class="type-card" id="pinyinLink">
                 <span class="t-icon">🔤</span>
                 <div class="t-name">拼音练习</div>
-                <div class="t-desc">看拼音写汉字 · 注拼音 · 标声调 · 声母韵母 · 整体认读</div>
+                <div class="t-desc" id="pinyinDesc">拼音抄写 · 汉字注音 · 混合填空 · 词语注音</div>
             </a>
-            <div class="type-card coming-soon">
-                <span class="t-icon">✍️</span>
-                <div class="t-name">看拼音写词语</div>
-                <div class="t-desc">根据拼音写出对应词语，巩固字词基础</div>
-                <span class="t-badge">即将上线</span>
-            </div>
         </div>
     </div>
 
@@ -53,9 +47,15 @@
 
 <script src="common.js"></script>
 <script>
-const grade = App.currentGrade();
+var grade = App.currentGrade();
 document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
 document.getElementById('pinyinLink').href = App.buildLink('pinyin-practice.html');
+// 一年级显示拼音抄写/注音/混合，二年级及以上显示词语注音
+if (grade === 1) {
+    document.getElementById('pinyinDesc').textContent = '拼音抄写 · 汉字注音 · 拼音汉字混合填空';
+} else {
+    document.getElementById('pinyinDesc').textContent = '看两字词语写拼音，词库按年级分级，巩固字词基础';
+}
 </script>
 </body>
 </html>
