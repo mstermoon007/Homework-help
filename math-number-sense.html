@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二年级数学数的认识</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:linear-gradient(180deg,#eaf2ff 0%,#f3f7fb 220px,#f3f7fb 100%);
+    color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:16px 16px 60px}
+  header.hero{text-align:center;padding:18px 10px 10px}
+  header.hero h1{margin:0;font-size:26px;letter-spacing:1px;background:linear-gradient(90deg,#5b8def,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  header.hero p{margin:8px 0 0;color:var(--muted);font-size:14px}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px;margin:16px 0}
+  .panel h2{margin:0 0 12px;font-size:15px;color:var(--muted);font-weight:700;letter-spacing:.5px}
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+  .count-group{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .count-group .lbl{font-size:14px;color:var(--muted);margin-right:2px}
+  .chip{cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;transition:.15s}
+  .chip:hover{border-color:var(--brand)}
+  .chip.active{background:var(--brand-d);border-color:var(--brand-d);color:#fff}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .btn{cursor:pointer;border:none;border-radius:12px;padding:12px 20px;font-size:15px;font-weight:700;transition:.15s}
+  .btn-primary{background:linear-gradient(90deg,#5b8def,#6f6bff);color:#fff;box-shadow:0 6px 16px rgba(91,141,239,.35)}
+  .btn-primary:hover{filter:brightness(1.05)}
+  .btn-ghost{background:#eef3fb;color:var(--brand-d)}
+  .btn-ghost:hover{background:#e2ebf9}
+  .meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .meta .pill{background:#eef3fb;color:var(--brand-d);border-radius:999px;padding:4px 12px;font-weight:600}
+
+  .problem{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px 16px 16px 52px;margin:12px 0;position:relative}
+  .problem .num{position:absolute;left:14px;top:16px;width:26px;height:26px;border-radius:50%;background:#eef3fb;color:var(--brand-d);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .problem .q{font-size:16px;margin:0 0 10px;line-height:1.7}
+  .problem .ans{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .problem .options{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .problem .opt{cursor:pointer;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 16px;font-size:14px;font-weight:600;transition:.15s}
+  .problem .opt:hover{border-color:var(--brand)}
+  .problem .opt.chosen{background:var(--brand);border-color:var(--brand);color:#fff}
+  .problem input{width:140px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;color:var(--ink);outline:none;transition:.15s}
+  .problem input:focus{border-color:var(--brand)}
+  .problem .input-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .problem .input-group input{width:80px}
+  .problem.correct{border-color:var(--ok);background:var(--ok-bg)}
+  .problem.wrong{border-color:var(--bad);background:var(--bad-bg)}
+  .problem .feedback{font-size:13px;font-weight:700;min-height:18px}
+  .problem .reveal{font-size:13px;color:var(--warn);font-weight:600}
+  .problem .reveal.hide{display:none}
+  .problem .badge{position:absolute;right:14px;top:14px;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px}
+  .problem .badge.within1k{background:#eef3fb;color:#5b8def}
+  .problem .badge.within10k{background:#fdeccd;color:#c87a16}
+
+  .result{background:linear-gradient(135deg,#eef4ff,#f6efff);border:1px solid var(--line);border-radius:16px;padding:18px;margin:16px 0;text-align:center;box-shadow:var(--shadow)}
+  .result .score{font-size:34px;font-weight:800;color:var(--brand-d)}
+  .result .detail{font-size:14px;color:var(--ink);margin-top:4px}
+  .empty{text-align:center;color:var(--muted);padding:30px 10px;font-size:14px}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom:10px">
+    <a href="math-types.html" class="back-home" id="backLink">← 返回题型选择</a>
+  </div>
+  <header class="hero">
+    <h1>🔢 <span id="gradeTitle">二年级</span>数学·数的认识</h1>
+    <p>数的组成 · 数位 · 比大小 · 读写数 · 近似数 · 整百整千加减</p>
+  </header>
+
+  <section class="panel controls">
+    <div class="row">
+      <div class="count-group">
+        <span class="lbl">① 题目数量：</span>
+        <button class="chip active" data-count="5">5题</button>
+        <button class="chip" data-count="10">10题</button>
+        <button class="chip" data-count="15">15题</button>
+        <button class="chip" data-count="20">20题</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="count-group">
+        <span class="lbl">② 练习类型：</span>
+        <button class="chip active" data-type="all">全部</button>
+        <button class="chip" data-type="within1k">1000以内</button>
+        <button class="chip" data-type="within10k">万以内</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="genBtn">🎲 生成练习题</button>
+      <button class="btn btn-primary" id="checkBtn">✅ 检查答案</button>
+      <button class="btn btn-ghost" id="revealBtn">👀 显示答案</button>
+      <button class="btn btn-ghost" id="printBtn">📄 生成打印文件</button>
+    </div>
+  </section>
+
+  <section id="problemsArea">
+    <div class="empty">点击「生成练习题」开始吧～</div>
+  </section>
+  <div id="resultArea"></div>
+  <footer>题目由程序随机生成，仅供参考练习。</footer>
+</div>
+
+<script src="common.js"></script>
+<script src="print.js"></script>
+<script>
+function rnd(min,max){ return App.randInt(min,max); }
+function pick(arr){ return App.rand(arr); }
+function shuffleArr(arr){ return App.shuffle(arr); }
+
+// ========== 题目生成器 ==========
+let state = { count:5, type:'all', problems:[], revealed:false };
+
+// ── 1000以内数的认识 ──
+
+// 数的组成：几个百+几个十+几个一
+function genCompose1k(){
+  var h = rnd(1,9), t = rnd(0,9), o = rnd(0,9);
+  var num = h*100 + t*10 + o;
+  var parts = [];
+  if(h>0) parts.push(h+'个百');
+  if(t>0) parts.push(t+'个十');
+  if(o>0) parts.push(o+'个一');
+  if(parts.length===0) parts.push('0个一');
+  return {
+    q: parts.join('、') + '组成的数是（  ）',
+    answer: String(num),
+    type:'within1k', subtype:'compose',
+    inputType:'text'
+  };
+}
+
+// 数位识别
+function genPlace1k(){
+  var num = rnd(100,999);
+  var s = String(num);
+  var pos = pick([0,1,2]);
+  var posNames = ['百','十','个'];
+  var posValues = ['百位','十位','个位'];
+  var digit = s[pos];
+  return {
+    q: '在数字 <b>'+num+'</b> 中，数字 <b>'+digit+'</b> 在（  ）位上，表示（  ）个'+posNames[pos],
+    answer: posValues[pos],
+    answer2: digit,
+    type:'within1k', subtype:'place',
+    inputType:'text'
+  };
+}
+
+// 比大小
+function genCompare1k(){
+  var a = rnd(100,999), b = rnd(100,999);
+  while(a===b) b = rnd(100,999);
+  var cmp = a>b?'＞':a<b?'＜':'＝';
+  return {
+    q: '比较大小：<b>'+a+'</b> ○ <b>'+b+'</b>',
+    answer: cmp,
+    options: shuffleArr(['＞','＜','＝']),
+    type:'within1k', subtype:'compare',
+    inputType:'choice'
+  };
+}
+
+// 数的顺序/规律
+function genSeq1k(){
+  var step = pick([1,2,5,10]);
+  var start = rnd(100, 900-step*2);
+  var nums = [start, start+step, start+step*2];
+  var hideIdx = pick([0,1,2]);
+  var display = nums.map(function(n,i){ return i===hideIdx?'___':String(n); });
+  return {
+    q: '按规律填数：'+display.join('、'),
+    answer: String(nums[hideIdx]),
+    type:'within1k', subtype:'sequence',
+    inputType:'text'
+  };
+}
+
+// ── 万以内数的认识 ──
+
+// 计数单位
+function genUnit10k(){
+  var qs = [
+    {q:'10个一百是（  ）', a:'1000'},
+    {q:'10个一千是（  ）', a:'10000'},
+    {q:'100个十是（  ）', a:'1000'},
+    {q:'1000个一是（  ）', a:'1000'},
+    {q:'一万里面有（  ）个一千', a:'10'},
+    {q:'一千里面有（  ）个一百', a:'10'},
+    {q:'一百里面有（  ）个十', a:'10'},
+    {q:'从右边起，第四位是（  ）位', a:'千'},
+    {q:'从右边起，第五位是（  ）位', a:'万'},
+    {q:'数位顺序表中，千位的左边是（  ）位', a:'万'},
+    {q:'数位顺序表中，百位的右边是（  ）位', a:'十'}
+  ];
+  var c = pick(qs);
+  return {
+    q: c.q, answer: c.a,
+    type:'within10k', subtype:'unit',
+    inputType:'text'
+  };
+}
+
+// 数的组成（几千几百几十几）
+function genCompose10k(){
+  var th = rnd(1,9), h = rnd(0,9), t = rnd(0,9), o = rnd(0,9);
+  var num = th*1000 + h*100 + t*10 + o;
+  if(rnd(0,1)===0){
+    // 正向：组成→数
+    var parts = [];
+    if(th>0) parts.push(th+'个千');
+    if(h>0) parts.push(h+'个百');
+    if(t>0) parts.push(t+'个十');
+    if(o>0) parts.push(o+'个一');
+    if(parts.length===0) parts.push('0个一');
+    return {
+      q: parts.join('、') + '组成的数是（  ）',
+      answer: String(num),
+      type:'within10k', subtype:'compose',
+      inputType:'text'
+    };
+  }else{
+    // 反向：数→组成
+    return {
+      q: '<b>'+num+'</b> 由（  ）个千、（  ）个百、（  ）个十和（  ）个一组成',
+      answer: th+','+h+','+t+','+o,
+      answerDisplay: th+'个千、'+h+'个百、'+t+'个十、'+o+'个一',
+      type:'within10k', subtype:'decompose',
+      inputType:'multi', inputCount:4
+    };
+  }
+}
+
+// 读写万以内的数
+function genReadWrite10k(){
+  var digits = ['零','一','二','三','四','五','六','七','八','九'];
+  var th = rnd(1,9), h = rnd(0,9), t = rnd(0,9), o = rnd(0,9);
+  var num = th*1000 + h*100 + t*10 + o;
+
+  // 生成中文读法
+  function toChinese(n){
+    var s = String(n);
+    var result = '';
+    var len = s.length;
+    for(var i=0;i<len;i++){
+      var d = parseInt(s[i]);
+      var pos = len - i;
+      if(d===0){
+        if(result && result[result.length-1]!=='零' && i<len-1) result += '零';
+      }else{
+        result += digits[d];
+        if(pos===4) result += '千';
+        else if(pos===3) result += '百';
+        else if(pos===2) result += '十';
+      }
+    }
+    // 去掉末尾的零
+    while(result[result.length-1]==='零') result = result.slice(0,-1);
+    return result || '零';
+  }
+
+  if(rnd(0,1)===0){
+    // 读法→写法
+    return {
+      q: toChinese(num)+' 写作（  ）',
+      answer: String(num),
+      type:'within10k', subtype:'read',
+      inputType:'text'
+    };
+  }else{
+    // 写法→读法
+    return {
+      q: '<b>'+num+'</b> 读作（  ）',
+      answer: toChinese(num),
+      type:'within10k', subtype:'write',
+      inputType:'text'
+    };
+  }
+}
+
+// 近似数
+function genApprox10k(){
+  var roundTo = pick([100,1000]);
+  var base = rnd(roundTo===100?1:1, roundTo===100?99:9) * roundTo;
+  var offset = rnd(1, roundTo-1);
+  var method = rnd(0,1);
+  var num = method===0 ? base + offset : base - offset;
+  if(num<1) num = base + offset;
+  var approx = Math.round(num/roundTo)*roundTo;
+  var unit = roundTo===100?'百':'千';
+  return {
+    q: '<b>'+num+'</b> 约等于（  ）'+unit,
+    answer: String(approx),
+    type:'within10k', subtype:'approx',
+    inputType:'text'
+  };
+}
+
+// 整百、整千数加减法
+function genCalc10k(){
+  var modes = [
+    // 整百+整百
+    function(){ var a=rnd(1,9)*100, b=rnd(1,9)*100; return {q:a+' + '+b+' =（  ）', a:a+b}; },
+    // 整百-整百
+    function(){ var a=rnd(2,9)*100, b=rnd(1,a/100-1)*100; return {q:a+' - '+b+' =（  ）', a:a-b}; },
+    // 整千+整千
+    function(){ var a=rnd(1,9)*1000, b=rnd(1,9)*1000; return {q:a+' + '+b+' =（  ）', a:a+b}; },
+    // 整千-整千
+    function(){ var a=rnd(2,9)*1000, b=rnd(1,a/1000-1)*1000; return {q:a+' - '+b+' =（  ）', a:a-b}; },
+    // 整千+整百
+    function(){ var a=rnd(1,9)*1000, b=rnd(1,9)*100; return {q:a+' + '+b+' =（  ）', a:a+b}; },
+    // 整千-整百
+    function(){ var a=rnd(1,9)*1000, b=rnd(1,a/100-1)*100; return {q:a+' - '+b+' =（  ）', a:a-b}; },
+    // 几千几百+整百
+    function(){ var th=rnd(1,9), h=rnd(0,8), a=th*1000+h*100, b=rnd(1,10-h)*100; return {q:a+' + '+b+' =（  ）', a:a+b}; },
+    // 几千几百-整百
+    function(){ var th=rnd(1,9), h=rnd(1,9), a=th*1000+h*100, b=rnd(1,h)*100; return {q:a+' - '+b+' =（  ）', a:a-b}; }
+  ];
+  var m = pick(modes)();
+  return {
+    q: m.q, answer: String(m.a),
+    type:'within10k', subtype:'calc',
+    inputType:'text'
+  };
+}
+
+// 比大小（万以内）
+function genCompare10k(){
+  var a = rnd(1000,9999), b = rnd(1000,9999);
+  while(a===b) b = rnd(1000,9999);
+  var cmp = a>b?'＞':a<b?'＜':'＝';
+  return {
+    q: '比较大小：<b>'+a+'</b> ○ <b>'+b+'</b>',
+    answer: cmp,
+    options: shuffleArr(['＞','＜','＝']),
+    type:'within10k', subtype:'compare',
+    inputType:'choice'
+  };
+}
+
+// ========== 生成入口 ==========
+function generate(){
+  var gens = [];
+  if(state.type==='all'||state.type==='within1k'){
+    gens.push(genCompose1k, genPlace1k, genCompare1k, genSeq1k);
+  }
+  if(state.type==='all'||state.type==='within10k'){
+    gens.push(genUnit10k, genCompose10k, genReadWrite10k, genApprox10k, genCalc10k, genCompare10k);
+  }
+
+  var list = [];
+  var seen = {};
+  for(var i=0;i<state.count;i++){
+    var q;
+    var attempts=0;
+    do{
+      q = pick(gens)();
+      attempts++;
+    }while(seen[q.q] && attempts<20);
+    seen[q.q]=true;
+    list.push(q);
+  }
+  state.problems = list;
+  state.revealed = false;
+  renderProblems();
+  resultArea.innerHTML='';
+}
+
+function renderProblems(){
+  if(!state.problems.length){
+    problemsArea.innerHTML='<div class="empty">点击「生成练习题」开始吧～</div>';
+    return;
+  }
+  var typeNames = {all:'全部', within1k:'1000以内', within10k:'万以内'};
+  var meta = '<div class="meta">'+
+    '<span class="pill">'+state.problems.length+' 题</span>'+
+    '<span class="pill">'+typeNames[state.type]+'</span>'+
+    '</div>';
+
+  var cards = state.problems.map(function(p,i){
+    var inputHtml = '';
+    if(p.inputType==='choice'){
+      inputHtml = '<div class="options">'+p.options.map(function(o){
+        return '<span class="opt" data-ans="'+o+'">'+o+'</span>';
+      }).join('')+'</div>';
+    }else if(p.inputType==='multi'){
+      var inputs = '';
+      for(var j=0;j<p.inputCount;j++){
+        inputs += '<input type="text" inputmode="numeric" placeholder="?" autocomplete="off" data-idx="'+j+'">';
+      }
+      inputHtml = '<div class="input-group">'+inputs+'</div>';
+    }else{
+      inputHtml = '<div class="input-group"><input type="text" placeholder="填写答案" autocomplete="off"></div>';
+    }
+    var badgeClass = p.type==='within1k'?'within1k':'within10k';
+    var badgeLabel = p.type==='within1k'?'1000以内':'万以内';
+    var answerText = p.answerDisplay || p.answer;
+    return '<div class="problem" data-i="'+i+'">'+
+      '<div class="num">'+(i+1)+'</div>'+
+      '<span class="badge '+badgeClass+'">'+badgeLabel+'</span>'+
+      '<p class="q">'+p.q+'</p>'+
+      inputHtml+
+      '<div class="ans">'+
+        '<span class="feedback"></span>'+
+        '<span class="reveal hide">正确答案：'+answerText+'</span>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  problemsArea.innerHTML = meta + cards;
+
+  // 绑定选项点击
+  problemsArea.querySelectorAll('.opt').forEach(function(opt){
+    opt.addEventListener('click',function(){
+      var card = this.closest('.problem');
+      card.querySelectorAll('.opt').forEach(function(o){ o.classList.remove('chosen'); });
+      this.classList.add('chosen');
+    });
+  });
+}
+
+function check(){
+  if(!state.problems.length) return;
+  var correct=0;
+  var cards = problemsArea.querySelectorAll('.problem');
+  state.problems.forEach(function(p,i){
+    var card=cards[i];
+    var fb=card.querySelector('.feedback');
+    card.classList.remove('correct','wrong');
+
+    var userAnswer;
+    if(p.inputType==='choice'){
+      var chosen=card.querySelector('.opt.chosen');
+      userAnswer = chosen?chosen.dataset.ans:'';
+    }else if(p.inputType==='multi'){
+      var inputs = card.querySelectorAll('input');
+      userAnswer = Array.from(inputs).map(function(inp){ return inp.value.trim(); }).join(',');
+    }else{
+      var input = card.querySelector('input');
+      userAnswer = (input?input.value:'').trim();
+    }
+
+    var normUser = userAnswer.replace(/\s+/g,'').toLowerCase();
+    var normRight = String(p.answer).replace(/\s+/g,'').toLowerCase();
+
+    if(!userAnswer){
+      fb.textContent='未作答';fb.style.color='var(--warn)';card.classList.add('wrong');
+    }else if(normUser===normRight){
+      fb.textContent='✓ 正确';fb.style.color='var(--ok)';card.classList.add('correct');correct++;
+    }else{
+      fb.textContent='✗ 正确答案：'+(p.answerDisplay || p.answer);
+      fb.style.color='var(--bad)';card.classList.add('wrong');
+    }
+  });
+  var total=state.problems.length;
+  var pct=Math.round(correct/total*100);
+  var tips = correct===total?'太棒了，全部答对！👏':correct>=total*0.8?'表现很好，再练练就满分啦！💪':'别灰心，把错题弄懂，下次一定行！🌟';
+  resultArea.innerHTML='<div class="result">'+
+    '<div class="score">'+correct+' / '+total+'</div>'+
+    '<div class="detail">正确率 '+pct+'% &nbsp;·&nbsp; '+tips+'</div>'+
+    '</div>';
+}
+
+function toggleReveal(){
+  state.revealed=!state.revealed;
+  problemsArea.querySelectorAll('.reveal').forEach(function(r){ r.classList.toggle('hide',!state.revealed); });
+  document.getElementById('revealBtn').textContent = state.revealed?'🙈 隐藏答案':'👀 显示答案';
+}
+
+function printFile(){
+  if(!state.problems.length){alert('请先生成练习题！');return;}
+  Print.open('#problemsArea','二年级数学·数的认识',{pageType:'numberSense'});
+}
+
+// ========== 初始化 ==========
+var problemsArea = document.getElementById('problemsArea');
+var resultArea = document.getElementById('resultArea');
+var grade = App.getGradeParam();
+document.getElementById('gradeTitle').textContent = App.getGradeName(grade);
+document.getElementById('backLink').href = App.buildLink('math-types.html');
+
+document.querySelectorAll('[data-count]').forEach(function(chip){
+  chip.addEventListener('click',function(){
+    document.querySelectorAll('[data-count]').forEach(function(c){ c.classList.remove('active'); });
+    this.classList.add('active');
+    state.count = +this.dataset.count;
+  });
+});
+document.querySelectorAll('[data-type]').forEach(function(chip){
+  chip.addEventListener('click',function(){
+    document.querySelectorAll('[data-type]').forEach(function(c){ c.classList.remove('active'); });
+    this.classList.add('active');
+    state.type = this.dataset.type;
+    if(state.problems.length) generate();
+  });
+});
+document.getElementById('genBtn').addEventListener('click',generate);
+document.getElementById('checkBtn').addEventListener('click',check);
+document.getElementById('revealBtn').addEventListener('click',toggleReveal);
+document.getElementById('printBtn').addEventListener('click',printFile);
+App.initPageController('mathNumberSense', 'math');
+</script>
+</body>
+</html>

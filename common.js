@@ -15,10 +15,18 @@
     mathTypes:  'math-types.html',
     chineseTypes: 'chinese-types.html',
     englishTypes: 'english-types.html',
+    englishAlphabet: 'english-alphabet.html',
     mathPractice: 'math-practice.html',
     mathWord:   'math-word-problems.html',
     mathMakeTen: 'math-make-ten.html',
+    mathShapes: 'math-shapes.html',
+    mathUnitConvert: 'math-unit-convert.html',
+    mathNumberSense: 'math-number-sense.html',
+    mathMeasurement: 'math-measurement.html',
+    mathGeometry: 'math-geometry.html',
     pinyinPractice: 'pinyin-practice.html',
+    pinyinToChar: 'pinyin-to-char.html',
+    comprehensive: 'comprehensive.html',
     print:      'print.js'
   };
 
@@ -117,12 +125,19 @@
       { id: 'mathWord', route: 'mathWord', icon: '📝', label: '应用题' },
       { id: 'mathMakeTen', route: 'mathMakeTen', icon: '🧩', label: '凑十法', grades: [1] },
       { id: 'mathShapes', route: 'mathShapes', icon: '🔷', label: '图形练习', grades: [1] },
-      { id: 'mathUnitConvert', route: 'mathUnitConvert', icon: '⏰', label: '单位换算', grades: [1] }
+      { id: 'mathUnitConvert', route: 'mathUnitConvert', icon: '⏰', label: '单位换算', grades: [1] },
+      { id: 'mathNumberSense', route: 'mathNumberSense', icon: '🔢', label: '数的认识', grades: [2] },
+      { id: 'mathMeasurement', route: 'mathMeasurement', icon: '📏', label: '量换算与测量', grades: [2] },
+      { id: 'mathGeometry', route: 'mathGeometry', icon: '📐', label: '图形的认识', grades: [2] }
     ],
     chinese: [
-      { id: 'pinyinPractice', route: 'pinyinPractice', icon: '🔤', label: '拼音练习' }
+      { id: 'pinyinPractice', route: 'pinyinPractice', icon: '🔤', label: '拼音练习' },
+      { id: 'pinyinToChar', route: 'pinyinToChar', icon: '✏️', label: '看拼音写字', grades: [1] },
+      { id: 'comprehensive', route: 'comprehensive', icon: '🧩', label: '综合练习', grades: [1] }
     ],
-    english: []
+    english: [
+      { id: 'englishAlphabet', route: 'englishAlphabet', icon: '🔠', label: '字母练习' }
+    ]
   };
 
   /** 初始化页面控制器 */

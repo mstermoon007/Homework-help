@@ -7,332 +7,484 @@
 <link rel="stylesheet" href="common.css">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+        --brand-blue: #4A90D9;
+        --brand-orange: #F5A623;
+        --math-color: #4A90D9;
+        --math-light: #EBF3FD;
+        --chinese-color: #38A169;
+        --chinese-light: #E6F7EE;
+        --english-color: #F5A623;
+        --english-light: #FFF7EB;
+        --bg: #F0F4F8;
+        --card-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        --card-radius: 16px;
+    }
     body {
-        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-        background: #667eea;
+        font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
+        background: var(--bg);
         min-height: 100vh;
+        font-size: 16px;
+        -webkit-tap-highlight-color: transparent;
     }
 
-    /* ============ Hero ============ */
-    .hero {
-        text-align: center;
+    /* ============ 顶部导航栏 ============ */
+    .top-nav {
+        background: #fff;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .top-nav .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--brand-blue);
+    }
+    .top-nav .nav-logo {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, var(--brand-blue), #7EB6F0);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
         color: #fff;
-        padding: 36px 20px 24px;
     }
-    .hero-logo {
-        font-size: 3rem;
-        display: inline-block;
-        animation: float 3.5s ease-in-out infinite;
-        margin-bottom: 10px;
+
+    /* ============ 主视觉区 ============ */
+    .hero {
+        background: linear-gradient(160deg, #4A90D9 0%, #6DB3F2 40%, #7EB6F0 100%);
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        min-height: 260px;
     }
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
+    .hero-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        transition: opacity 0.5s;
     }
-    .hero h1 {
+    .hero-bg.active { opacity: 1; }
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(160deg, rgba(74,144,217,0.55) 0%, rgba(109,179,242,0.4) 40%, rgba(126,182,240,0.35) 100%);
+    }
+    .hero-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 50px 32px;
+        position: relative;
+        z-index: 2;
+    }
+    .hero-text {
+        text-align: left;
+    }
+    .hero-text h1 {
         font-size: 2.2rem;
         font-weight: 900;
-        letter-spacing: 2px;
         margin-bottom: 8px;
+        text-shadow: 0 2px 12px rgba(0,0,0,0.35), 0 0 40px rgba(0,0,0,0.2);
     }
-    .hero p {
+    .hero-text .hero-desc {
         font-size: 0.95rem;
-        opacity: 0.85;
-        max-width: 480px;
-        margin: 0 auto;
+        opacity: 0.95;
+        margin-bottom: 16px;
         line-height: 1.6;
+        text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+    .hero-text .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .hero-text .tag {
+        background: rgba(255,255,255,0.28);
+        backdrop-filter: blur(6px);
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        white-space: nowrap;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: -80px;
+        right: -60px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.06);
+        border-radius: 50%;
+        z-index: 1;
+    }
+    .hero::after {
+        content: '';
+        position: absolute;
+        bottom: -40px;
+        left: -40px;
+        width: 120px;
+        height: 120px;
+        background: rgba(255,255,255,0.04);
+        border-radius: 50%;
+        z-index: 1;
     }
 
-    /* ============ 卡片容器 ============ */
-    .wrapper {
-        max-width: 1100px;
+    /* ============ 主内容区 ============ */
+    .main-wrapper {
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 0 16px 50px;
+        padding: 24px 24px 40px;
     }
-    .home-card {
+
+    /* ============ 选择卡片（科目+年级左右两栏） ============ */
+    .select-card {
         background: #fff;
-        border-radius: 12px;
-        padding: 36px 40px;
-        margin-bottom: 16px;
-        border: 1px solid #e8e8e8;
+        border-radius: var(--card-radius);
+        padding: 28px 32px;
+        margin-bottom: 20px;
+        box-shadow: var(--card-shadow);
     }
-    .section-label {
-        font-size: 1.1rem;
+    .select-row {
+        display: flex;
+        gap: 32px;
+        align-items: flex-start;
+    }
+    .select-col {
+        flex: 1;
+        min-width: 0;
+    }
+    .select-col + .select-col {
+        border-left: 1px solid #E8ECF1;
+        padding-left: 32px;
+    }
+    .col-title {
+        font-size: 1.05rem;
         font-weight: 700;
         color: #333;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
         padding-left: 12px;
-        border-left: 4px solid #667eea;
+        border-left: 4px solid var(--brand-blue);
     }
 
-    /* ============ 科目选择 ============ */
-    .home-card.subject-section { padding: 24px 32px; }
+    /* 科目卡片 */
     .subject-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
     }
-    .subject-option { display: none; }
+    .subject-radio { display: none; }
     .subject-card {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 20px 14px 18px;
-        border: 1.5px solid #e0e0e0;
-        border-radius: 10px;
+        padding: 20px 10px 16px;
+        border: 2px solid #E8ECF1;
+        border-radius: 14px;
         cursor: pointer;
         text-align: center;
         transition: all 0.2s;
         user-select: none;
-        background: #fff;
+        background: #FAFBFC;
     }
     .subject-card .s-icon {
-        font-size: 2.2rem;
+        font-size: 2.4rem;
         margin-bottom: 8px;
+        line-height: 1;
     }
     .subject-card .s-name {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         font-weight: 800;
         margin-bottom: 4px;
     }
     .subject-card .s-desc {
-        font-size: 0.8rem;
+        font-size: 0.72rem;
         color: #999;
         line-height: 1.4;
     }
-    .subject-card.math .s-name { color: #667eea; }
-    .subject-card.chinese .s-name { color: #f5576c; }
-    .subject-card.english .s-name { color: #38a169; }
-    .subject-card:hover { border-color: #aaa; background: #fafafa; }
-    .subject-option:checked + .subject-card.math {
-        border-color: #667eea;
-        background: #eef2ff;
+    .subject-card:hover { border-color: #C0C8D0; }
+    .subject-radio:checked + .subject-card.math {
+        border-color: var(--math-color);
+        background: var(--math-light);
     }
-    .subject-option:checked + .subject-card.chinese {
-        border-color: #f5576c;
-        background: #fff0f3;
+    .subject-radio:checked + .subject-card.math .s-name { color: var(--math-color); }
+    .subject-radio:checked + .subject-card.chinese {
+        border-color: var(--chinese-color);
+        background: var(--chinese-light);
     }
-    .subject-option:checked + .subject-card.english {
-        border-color: #38a169;
-        background: #f0fff4;
+    .subject-radio:checked + .subject-card.chinese .s-name { color: var(--chinese-color); }
+    .subject-radio:checked + .subject-card.english {
+        border-color: var(--english-color);
+        background: var(--english-light);
     }
+    .subject-radio:checked + .subject-card.english .s-name { color: var(--english-color); }
 
-    /* ============ 年级选择 ============ */
-    .home-card.grade-section { padding: 32px 40px; }
+    /* 年级选择器 */
     .grade-grid {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 14px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
     }
-    .grade-option { display: none; }
-    .grade-card {
+    .grade-radio { display: none; }
+    .grade-chip {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 24px 12px 22px;
-        border: 1.5px solid #e0e0e0;
-        border-radius: 10px;
+        gap: 4px;
+        padding: 14px 10px;
+        border: 2px solid #E8ECF1;
+        border-radius: 14px;
         cursor: pointer;
-        text-align: center;
         transition: all 0.2s;
         user-select: none;
-        background: #fff;
+        background: #FAFBFC;
     }
-    .grade-card .g-icon {
-        font-size: 2.4rem;
-        margin-bottom: 8px;
+    .grade-chip .g-icon {
+        font-size: 1.5rem;
+        line-height: 1;
     }
-    .grade-card .g-name {
-        font-size: 1.2rem;
+    .grade-chip .g-name {
+        font-size: 0.95rem;
         font-weight: 700;
-        color: #555;
+        color: #666;
     }
-    .grade-card:hover { border-color: #aaa; background: #fafafa; }
-    .grade-option:checked + .grade-card {
-        border-color: #667eea;
-        background: #eef2ff;
+    .grade-chip:hover { border-color: #C0C8D0; }
+    .grade-radio:checked + .grade-chip {
+        border-color: var(--brand-blue);
+        background: #EBF3FD;
     }
-    .grade-option:checked + .grade-card .g-name { color: #667eea; }
+    .grade-radio:checked + .grade-chip .g-name { color: var(--brand-blue); }
 
-    /* ============ 摘要 + CTA ============ */
-    .home-summary {
-        text-align: center;
-        padding: 14px 24px;
-        margin-bottom: 16px;
-        background: rgba(255,255,255,0.18);
-        border-radius: 10px;
-        font-size: 1rem;
-        color: rgba(255,255,255,0.9);
+    /* ============ 开始练习按钮 ============ */
+    .action-area {
+        margin-bottom: 0;
     }
-    .home-summary b { color: #fff; font-size: 1.05rem; }
-    .home-cta {
-        text-align: center;
-        margin-bottom: 16px;
-    }
-    .start-btn {
-        display: inline-flex;
+    .btn-start {
+        display: flex;
         align-items: center;
-        gap: 10px;
-        padding: 20px 72px;
-        font-size: 1.3rem;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+        padding: 16px 32px;
+        font-size: 1.2rem;
         font-weight: 800;
         color: #fff;
-        background: #764ba2;
+        background: linear-gradient(135deg, #F5A623, #F7B84E);
         border: none;
-        border-radius: 10px;
+        border-radius: 24px;
         cursor: pointer;
+        box-shadow: 0 6px 20px rgba(245,166,35,0.35);
         transition: all 0.2s;
-        letter-spacing: 2px;
+        letter-spacing: 1px;
     }
-    .start-btn:hover:not(:disabled) {
-        background: #5a3a80;
+    .btn-start:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(245,166,35,0.45);
     }
-    .start-btn:active:not(:disabled) {
-        background: #4a2e6e;
+    .btn-start:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 4px 16px rgba(245,166,35,0.35);
     }
-    .start-btn:disabled {
-        opacity: 0.45;
+    .btn-start:disabled {
+        opacity: 0.5;
         cursor: not-allowed;
     }
+    .btn-start .arrow {
+        font-size: 1.3rem;
+        transition: transform 0.2s;
+    }
+    .btn-start:hover:not(:disabled) .arrow {
+        transform: translateX(3px);
+    }
 
-    /* ============ 底部 ============ */
-    .home-footer {
+    /* ============ 底部版权 ============ */
+    .site-footer {
         text-align: center;
-        color: rgba(255,255,255,0.7);
-        font-size: 0.9rem;
-        padding-bottom: 6px;
+        padding: 0 16px 24px;
+        color: #AAA;
+        font-size: 0.75rem;
+        line-height: 1.8;
     }
-    .home-feedback {
-        text-align: center;
-        color: rgba(255,255,255,0.55);
-        font-size: 0.8rem;
-        padding-bottom: 16px;
+    .site-footer a {
+        color: #999;
+        text-decoration: none;
     }
+    .site-footer a:hover { color: var(--brand-blue); }
 
     /* ============ 响应式 ============ */
     @media (max-width: 768px) {
-        .hero { padding: 30px 20px 20px; }
-        .hero-logo { font-size: 2.5rem; }
-        .hero h1 { font-size: 1.8rem; }
-        .hero p { font-size: 0.85rem; }
-        .wrapper { padding: 0 12px 40px; }
-        .home-card { padding: 24px 20px; border-radius: 10px; }
-        .home-card.subject-section { padding: 20px 20px; }
-        .home-card.grade-section { padding: 24px 20px; }
-        .subject-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .subject-card { padding: 16px 8px 14px; }
-        .subject-card .s-icon { font-size: 1.8rem; }
-        .subject-card .s-name { font-size: 1rem; }
-        .subject-card .s-desc { font-size: 0.72rem; }
-        .grade-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .grade-card { padding: 20px 8px 18px; }
-        .grade-card .g-icon { font-size: 2rem; }
-        .grade-card .g-name { font-size: 1.05rem; }
-        .start-btn { padding: 18px 56px; font-size: 1.15rem; width: 100%; justify-content: center; }
+        .hero-inner {
+            padding: 28px 20px 24px;
+        }
+        .hero-text h1 { font-size: 1.8rem; }
+        .select-row {
+            flex-direction: column;
+            gap: 24px;
+        }
+        .select-col + .select-col {
+            border-left: none;
+            padding-left: 0;
+            border-top: 1px solid #E8ECF1;
+            padding-top: 24px;
+        }
+        .main-wrapper { padding: 20px 16px 32px; }
+        .select-card { padding: 20px 18px; }
     }
 
     @media (max-width: 480px) {
-        .hero { padding: 24px 16px 16px; }
-        .hero-logo { font-size: 2.2rem; }
-        .hero h1 { font-size: 1.6rem; }
-        .subject-grid { grid-template-columns: 1fr; gap: 8px; }
-        .subject-card { flex-direction: row; padding: 14px 16px; gap: 12px; text-align: left; }
-        .subject-card .s-icon { font-size: 1.6rem; margin-bottom: 0; }
-        .grade-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        .grade-card { padding: 16px 6px 14px; }
-        .grade-card .g-icon { font-size: 1.8rem; }
-        .grade-card .g-name { font-size: 0.95rem; }
-        .home-card { padding: 18px 14px; }
-        .home-card.subject-section { padding: 16px 14px; }
-        .home-card.grade-section { padding: 20px 14px; }
-        .start-btn { padding: 16px 40px; font-size: 1.1rem; }
+        .hero-inner { padding: 24px 16px 20px; }
+        .hero-text h1 { font-size: 1.6rem; }
+        .hero-text .hero-desc { font-size: 0.85rem; }
+        .hero-text .tag { font-size: 0.72rem; padding: 4px 10px; }
+        .main-wrapper { padding: 16px 12px 28px; }
+        .select-card { padding: 16px 14px; border-radius: 12px; }
+        .select-row { gap: 18px; }
+        .select-col + .select-col { padding-top: 18px; }
+        .col-title { font-size: 0.95rem; margin-bottom: 14px; }
+        .subject-grid { gap: 8px; }
+        .subject-card { padding: 14px 6px 12px; border-radius: 12px; }
+        .subject-card .s-icon { font-size: 2rem; }
+        .subject-card .s-name { font-size: 1rem; }
+        .subject-card .s-desc { font-size: 0.68rem; }
+        .grade-grid { gap: 8px; }
+        .grade-chip { padding: 12px 8px; border-radius: 12px; }
+        .grade-chip .g-icon { font-size: 1.3rem; }
+        .grade-chip .g-name { font-size: 0.82rem; }
+        .btn-start { max-width: 100%; padding: 14px 24px; font-size: 1.1rem; border-radius: 22px; }
     }
 </style>
 </head>
 <body>
-<div class="hero">
-    <div class="hero-logo">📓</div>
-    <h1>小学练习本</h1>
-    <p>口算练习 · 应用题 · 拼音练习 · 英语启蒙 · 在线答题 · 智能评分</p>
-</div>
 
-<div class="wrapper">
-    <form onsubmit="goTo(event)">
-        <div class="home-card subject-section">
-            <div class="section-label">📚 请选择科目</div>
-            <div class="subject-grid">
-                <input type="radio" name="subject" id="sMath" class="subject-option" value="math" checked>
-                <label for="sMath" class="subject-card math">
-                    <span class="s-icon">🧮</span>
-                    <div>
-                        <div class="s-name">数学</div>
-                        <div class="s-desc">口算 · 应用题 · 凑十法</div>
+<!-- 顶部导航栏 -->
+<nav class="top-nav">
+    <div class="nav-brand">
+        <div class="nav-logo">📓</div>
+        <span>小学练习本</span>
+    </div>
+</nav>
+
+<!-- 主视觉区 -->
+<section class="hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+        <div class="hero-text">
+            <h1>小学练习本</h1>
+            <p class="hero-desc">同步教材知识，趣味互动练习，帮助孩子巩固知识，提升学习能力</p>
+            <div class="tag-list">
+                <span class="tag">口算练习</span>
+                <span class="tag">应用题</span>
+                <span class="tag">拼音练习</span>
+                <span class="tag">英语启蒙</span>
+                <span class="tag">在线答题</span>
+                <span class="tag">智能评分</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 主内容区 -->
+<div class="main-wrapper">
+    <form id="homeForm" onsubmit="goTo(event)">
+        <!-- 科目 + 年级 左右两栏 -->
+        <div class="select-card">
+            <div class="select-row">
+                <div class="select-col">
+                    <div class="col-title">📚 选择科目</div>
+                    <div class="subject-grid">
+                        <input type="radio" name="subject" id="sMath" class="subject-radio" value="math" checked>
+                        <label for="sMath" class="subject-card math">
+                            <span class="s-icon">🧮</span>
+                            <span class="s-name">数学</span>
+                            <span class="s-desc">口算·应用题·凑十法</span>
+                        </label>
+                        <input type="radio" name="subject" id="sChinese" class="subject-radio" value="chinese">
+                        <label for="sChinese" class="subject-card chinese">
+                            <span class="s-icon">📖</span>
+                            <span class="s-name">语文</span>
+                            <span class="s-desc">拼音·字词练习</span>
+                        </label>
+                        <input type="radio" name="subject" id="sEnglish" class="subject-radio" value="english">
+                        <label for="sEnglish" class="subject-card english">
+                            <span class="s-icon">🔤</span>
+                            <span class="s-name">英语</span>
+                            <span class="s-desc">字母·单词·启蒙</span>
+                        </label>
                     </div>
-                </label>
-                <input type="radio" name="subject" id="sChinese" class="subject-option" value="chinese">
-                <label for="sChinese" class="subject-card chinese">
-                    <span class="s-icon">📖</span>
-                    <div>
-                        <div class="s-name">语文</div>
-                        <div class="s-desc">拼音 · 字词练习</div>
+                </div>
+                <div class="select-col">
+                    <div class="col-title">🎓 选择年级</div>
+                    <div class="grade-grid">
+                        <input type="radio" name="grade" id="g1" class="grade-radio" value="1" checked>
+                        <label for="g1" class="grade-chip">
+                            <span class="g-icon">🌱</span>
+                            <span class="g-name">一年级</span>
+                        </label>
+                        <input type="radio" name="grade" id="g2" class="grade-radio" value="2">
+                        <label for="g2" class="grade-chip">
+                            <span class="g-icon">🌿</span>
+                            <span class="g-name">二年级</span>
+                        </label>
+                        <input type="radio" name="grade" id="g3" class="grade-radio" value="3">
+                        <label for="g3" class="grade-chip">
+                            <span class="g-icon">🌳</span>
+                            <span class="g-name">三年级</span>
+                        </label>
+                        <input type="radio" name="grade" id="g4" class="grade-radio" value="4">
+                        <label for="g4" class="grade-chip">
+                            <span class="g-icon">🌲</span>
+                            <span class="g-name">四年级</span>
+                        </label>
+                        <input type="radio" name="grade" id="g5" class="grade-radio" value="5">
+                        <label for="g5" class="grade-chip">
+                            <span class="g-icon">🍀</span>
+                            <span class="g-name">五年级</span>
+                        </label>
+                        <input type="radio" name="grade" id="g6" class="grade-radio" value="6">
+                        <label for="g6" class="grade-chip">
+                            <span class="g-icon">🌾</span>
+                            <span class="g-name">六年级</span>
+                        </label>
                     </div>
-                </label>
-                <input type="radio" name="subject" id="sEnglish" class="subject-option" value="english">
-                <label for="sEnglish" class="subject-card english">
-                    <span class="s-icon">🔤</span>
-                    <div>
-                        <div class="s-name">英语</div>
-                        <div class="s-desc">字母 · 单词 · 启蒙</div>
-                    </div>
-                </label>
+                </div>
             </div>
         </div>
 
-        <div class="home-card grade-section">
-            <div class="section-label">🎓 请选择年级</div>
-            <div class="grade-grid">
-                <input type="radio" name="grade" id="g1" class="grade-option" value="1" checked>
-                <label for="g1" class="grade-card">
-                    <span class="g-icon">🌱</span>
-                    <span class="g-name">一年级</span>
-                </label>
-                <input type="radio" name="grade" id="g2" class="grade-option" value="2">
-                <label for="g2" class="grade-card">
-                    <span class="g-icon">🌿</span>
-                    <span class="g-name">二年级</span>
-                </label>
-                <input type="radio" name="grade" id="g3" class="grade-option" value="3">
-                <label for="g3" class="grade-card">
-                    <span class="g-icon">🌳</span>
-                    <span class="g-name">三年级</span>
-                </label>
-                <input type="radio" name="grade" id="g4" class="grade-option" value="4">
-                <label for="g4" class="grade-card">
-                    <span class="g-icon">🌲</span>
-                    <span class="g-name">四年级</span>
-                </label>
-                <input type="radio" name="grade" id="g5" class="grade-option" value="5">
-                <label for="g5" class="grade-card">
-                    <span class="g-icon">🍀</span>
-                    <span class="g-name">五年级</span>
-                </label>
-                <input type="radio" name="grade" id="g6" class="grade-option" value="6">
-                <label for="g6" class="grade-card">
-                    <span class="g-icon">🌾</span>
-                    <span class="g-name">六年级</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="home-summary" id="summary">当前选择：<b>数学 · 一年级</b></div>
-        <div class="home-cta">
-            <button type="submit" class="start-btn" id="startBtn">🚀 开始练习</button>
+        <!-- 开始练习按钮 -->
+        <div class="action-area">
+            <button type="submit" class="btn-start" id="startBtn">
+                开始练习 <span class="arrow">→</span>
+            </button>
         </div>
     </form>
-
-    <div class="home-footer">💡 选择科目与年级后，点击"开始练习"进入对应题型页</div>
-    <div class="home-feedback">问题反馈 V+13369372133</div>
 </div>
+
+<!-- 底部版权 -->
+<footer class="site-footer">
+    <div>© 2024 小学练习本 版权所有</div>
+    <div>
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">粤ICP备XXXXXXXX号</a>
+        &nbsp;|&nbsp;
+        <a href="http://www.beian.gov.cn/" target="_blank" rel="noopener">粤公网安备 XXXXXXXXXXXX号</a>
+    </div>
+</footer>
 
 <script src="common.js"></script>
 <script>
@@ -341,12 +493,7 @@ function getSelected() {
     var subject = document.querySelector('input[name="subject"]:checked').value;
     return { grade: grade, subject: subject };
 }
-function updateSummary() {
-    var sel = getSelected();
-    var gradeName = App.GRADE_NAMES[sel.grade];
-    var subjName = App.SUBJECT_NAMES[sel.subject];
-    document.getElementById('summary').innerHTML = '当前选择：<b>' + subjName + ' · ' + gradeName + '</b>';
-}
+
 function goTo(e) {
     e.preventDefault();
     var sel = getSelected();
@@ -357,10 +504,38 @@ function goTo(e) {
     }[sel.subject];
     window.location.href = target + '?grade=' + encodeURIComponent(sel.grade);
 }
-document.querySelectorAll('.grade-card, .subject-card').forEach(function(el) {
-    el.addEventListener('click', function() { setTimeout(updateSummary, 0); });
+
+// 更换 Banner 图片（设为背景图，文字浮于图片上）
+function setBanner(imgUrl) {
+    var bg = document.getElementById('heroBg');
+    if (imgUrl) {
+        bg.style.backgroundImage = 'url(' + imgUrl + ')';
+        bg.classList.add('active');
+    } else {
+        bg.style.backgroundImage = '';
+        bg.classList.remove('active');
+    }
+}
+
+// 设置 Banner 底图
+setBanner('banner.jpg');
+
+// 科目卡片点击切换选中
+document.querySelectorAll('.subject-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+        var radio = document.getElementById(this.getAttribute('for'));
+        if (radio) radio.checked = true;
+    });
 });
-updateSummary();
+
+// 年级卡片点击切换选中
+document.querySelectorAll('.grade-chip').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+        var radio = document.getElementById(this.getAttribute('for'));
+        if (radio) radio.checked = true;
+    });
+});
 </script>
+
 </body>
 </html>

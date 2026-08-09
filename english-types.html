@@ -34,33 +34,31 @@
     <div class="card">
         <div class="section-label">📚 选择题型</div>
         <div class="type-grid">
-            <div class="type-card coming-soon">
+            <a href="english-alphabet.html" class="type-card" id="alphabetCard">
                 <span class="t-icon">🔠</span>
-                <div class="t-name">字母练习</div>
-                <div class="t-desc">26个英文字母大小写 · 书写笔顺 · 字母识别</div>
-                <span class="t-badge">即将上线</span>
-            </div>
+                <div class="t-name">字母跟读练习</div>
+                <div class="t-desc">26个字母名与字母音 · 例词跟读 · 发音提示</div>
+            </a>
             <div class="type-card coming-soon">
-                <span class="t-icon">📝</span>
-                <div class="t-name">单词拼写</div>
-                <div class="t-desc">看图写单词 · 中英互译 · 听音拼写</div>
-                <span class="t-badge">即将上线</span>
-            </div>
-            <div class="type-card coming-soon">
-                <span class="t-icon">🎧</span>
-                <div class="t-name">听力练习</div>
-                <div class="t-desc">听音选词 · 听音辨义 · 情景对话</div>
+                <span class="t-icon">📦</span>
+                <div class="t-name">待开发</div>
+                <div class="t-desc">更多英语题型即将上线</div>
                 <span class="t-badge">即将上线</span>
             </div>
         </div>
     </div>
 
-    <div class="foot-tip">💡 英语题型持续开发中，敬请期待</div>
+    <div class="foot-tip">💡 更多英语题型持续开发中，敬请期待</div>
 </div>
 
 <script src="common.js"></script>
 <script>
 document.getElementById('gradeBadge').textContent = App.getGradeName(App.currentGrade());
+// 给字母跟读练习链接添加年级参数
+var alphabetCard = document.getElementById('alphabetCard');
+if (alphabetCard) {
+  alphabetCard.href = App.buildLink('english-alphabet.html');
+}
 </script>
 </body>
 </html>

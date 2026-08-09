@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二年级数学图形的认识</title>
+<link rel="stylesheet" href="common.css">
+<style>
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:linear-gradient(180deg,#eaf2ff 0%,#f3f7fb 220px,#f3f7fb 100%);
+    color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:16px 16px 60px}
+  header.hero{text-align:center;padding:18px 10px 10px}
+  header.hero h1{margin:0;font-size:26px;letter-spacing:1px;background:linear-gradient(90deg,#5b8def,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  header.hero p{margin:8px 0 0;color:var(--muted);font-size:14px}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px;margin:16px 0}
+  .panel h2{margin:0 0 12px;font-size:15px;color:var(--muted);font-weight:700;letter-spacing:.5px}
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+  .count-group{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .count-group .lbl{font-size:14px;color:var(--muted);margin-right:2px}
+  .chip{cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;transition:.15s}
+  .chip:hover{border-color:var(--brand)}
+  .chip.active{background:var(--brand-d);border-color:var(--brand-d);color:#fff}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .btn{cursor:pointer;border:none;border-radius:12px;padding:12px 20px;font-size:15px;font-weight:700;transition:.15s}
+  .btn-primary{background:linear-gradient(90deg,#5b8def,#6f6bff);color:#fff;box-shadow:0 6px 16px rgba(91,141,239,.35)}
+  .btn-primary:hover{filter:brightness(1.05)}
+  .btn-ghost{background:#eef3fb;color:var(--brand-d)}
+  .btn-ghost:hover{background:#e2ebf9}
+  .meta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .meta .pill{background:#eef3fb;color:var(--brand-d);border-radius:999px;padding:4px 12px;font-weight:600}
+
+  .problem{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px 16px 16px 52px;margin:12px 0;position:relative}
+  .problem .num{position:absolute;left:14px;top:16px;width:26px;height:26px;border-radius:50%;background:#eef3fb;color:var(--brand-d);font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+  .problem .q{font-size:16px;margin:0 0 10px;line-height:1.7}
+  .problem .ans{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .problem .options{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .problem .opt{cursor:pointer;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 16px;font-size:14px;font-weight:600;transition:.15s}
+  .problem .opt:hover{border-color:var(--brand)}
+  .problem .opt.chosen{background:var(--brand);border-color:var(--brand);color:#fff}
+  .problem input{width:140px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;color:var(--ink);outline:none;transition:.15s}
+  .problem input:focus{border-color:var(--brand)}
+  .problem .input-group{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .problem .input-group input{width:80px}
+  .problem.correct{border-color:var(--ok);background:var(--ok-bg)}
+  .problem.wrong{border-color:var(--bad);background:var(--bad-bg)}
+  .problem .feedback{font-size:13px;font-weight:700;min-height:18px}
+  .problem .reveal{font-size:13px;color:var(--warn);font-weight:600}
+  .problem .reveal.hide{display:none}
+  .problem .badge{position:absolute;right:14px;top:14px;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px}
+  .problem .badge.angle{background:#fce4ec;color:#c62828}
+  .problem .badge.movement{background:#e8f5e9;color:#2e7d32}
+
+  .geom-svg{display:block;margin:8px auto}
+
+  .result{background:linear-gradient(135deg,#eef4ff,#f6efff);border:1px solid var(--line);border-radius:16px;padding:18px;margin:16px 0;text-align:center;box-shadow:var(--shadow)}
+  .result .score{font-size:34px;font-weight:800;color:var(--brand-d)}
+  .result .detail{font-size:14px;color:var(--ink);margin-top:4px}
+  .empty{text-align:center;color:var(--muted);padding:30px 10px;font-size:14px}
+  footer{text-align:center;color:var(--muted);font-size:12px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom:10px">
+    <a href="math-types.html" class="back-home" id="backLink">← 返回题型选择</a>
+  </div>
+  <header class="hero">
+    <h1>📐 <span id="gradeTitle">二年级</span>数学·图形的认识</h1>
+    <p>角的初步认识 · 图形的运动</p>
+  </header>
+
+  <section class="panel controls">
+    <div class="row">
+      <div class="count-group">
+        <span class="lbl">① 题目数量：</span>
+        <button class="chip active" data-count="5">5题</button>
+        <button class="chip" data-count="10">10题</button>
+        <button class="chip" data-count="15">15题</button>
+        <button class="chip" data-count="20">20题</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="count-group">
+        <span class="lbl">② 练习类型：</span>
+        <button class="chip active" data-type="all">全部</button>
+        <button class="chip" data-type="angle">角的初步认识</button>
+        <button class="chip" data-type="movement">图形的运动</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="genBtn">🎲 生成练习题</button>
+      <button class="btn btn-primary" id="checkBtn">✅ 检查答案</button>
+      <button class="btn btn-ghost" id="revealBtn">👀 显示答案</button>
+      <button class="btn btn-ghost" id="printBtn">📄 生成打印文件</button>
+    </div>
+  </section>
+
+  <section id="problemsArea">
+    <div class="empty">点击「生成练习题」开始吧～</div>
+  </section>
+  <div id="resultArea"></div>
+  <footer>题目由程序随机生成，仅供参考练习。</footer>
+</div>
+
+<script src="common.js"></script>
+<script src="print.js"></script>
+<script>
+function rnd(min,max){ return App.randInt(min,max); }
+function pick(arr){ return App.rand(arr); }
+function shuffleArr(arr){ return App.shuffle(arr); }
+
+// ========== 题目生成器 ==========
+var state = { count:5, type:'all', problems:[], revealed:false };
+
+// ── 角 SVG ──
+// 画一个角，degrees为角度（0~180），type为'right'/'acute'/'obtuse'
+function angleSVG(degrees, opts){
+  opts = opts || {};
+  var rad = degrees * Math.PI / 180;
+  var cx = 50, cy = 70;
+  var r = 60;
+  var x2 = cx + r * Math.cos(rad);
+  var y2 = cy - r * Math.sin(rad);
+  var x1 = cx + r;
+  var y1 = cy;
+
+  // 弧线（角度标记）
+  var arcR = 18;
+  var arcD = degrees <= 90 ? '0' : '0';
+  var largeArc = degrees > 180 ? 1 : 0;
+  var ax = cx + arcR * Math.cos(rad);
+  var ay = cy - arcR * Math.sin(rad);
+  var ax0 = cx + arcR;
+  var ay0 = cy;
+
+  var svg = '<svg class="geom-svg" width="140" height="110" viewBox="0 0 120 95">';
+  // 两条边
+  svg += '<line x1="'+cx+'" y1="'+cy+'" x2="'+x1+'" y2="'+y1+'" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>';
+  svg += '<line x1="'+cx+'" y1="'+cy+'" x2="'+x2+'" y2="'+y2+'" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>';
+  // 角度弧线
+  svg += '<path d="M'+ax0+','+ay0+' A'+arcR+','+arcR+' 0 '+largeArc+',0 '+ax+','+ay+'" fill="none" stroke="#5b8def" stroke-width="2"/>';
+  // 直角标记（小方块）
+  if(opts.markRight){
+    var sq = 8;
+    svg += '<polyline points="'+(cx+sq)+','+cy+' '+(cx+sq)+','+(cy-sq)+' '+cx+','+(cy-sq)+'" fill="none" stroke="#5b8def" stroke-width="1.5"/>';
+  }
+  // 顶点
+  svg += '<circle cx="'+cx+'" cy="'+cy+'" r="3" fill="#333"/>';
+  // 顶点标注
+  if(opts.labelVertex) svg += '<text x="'+cx+'" y="'+(cy+16)+'" text-anchor="middle" font-size="12" fill="#333">顶点</text>';
+  // 边标注
+  if(opts.labelEdges){
+    svg += '<text x="'+(cx+r/2+8)+'" y="'+(cy-2)+'" font-size="11" fill="#555">边</text>';
+    svg += '<text x="'+(cx+r*Math.cos(rad)/2+6)+'" y="'+(cy-r*Math.sin(rad)/2-4)+'" font-size="11" fill="#555">边</text>';
+  }
+  svg += '</svg>';
+  return svg;
+}
+
+// 三角尺 SVG
+function triangleRulerSVG(type){
+  if(type === '30-60'){
+    return '<svg class="geom-svg" width="130" height="110" viewBox="0 0 130 110">'+
+      '<polygon points="10,95 110,95 110,10" fill="none" stroke="#5b8def" stroke-width="2.5" stroke-linejoin="round"/>'+
+      '<rect x="95" y="80" width="15" height="15" fill="none" stroke="#5b8def" stroke-width="1.5"/>'+
+      '<text x="56" y="55" text-anchor="middle" font-size="12" fill="#c62828" font-weight="700">30°</text>'+
+      '<text x="95" y="55" text-anchor="middle" font-size="12" fill="#c62828" font-weight="700">60°</text>'+
+      '</svg>';
+  }else{
+    return '<svg class="geom-svg" width="130" height="110" viewBox="0 0 130 110">'+
+      '<polygon points="10,95 105,95 57,10" fill="none" stroke="#5b8def" stroke-width="2.5" stroke-linejoin="round"/>'+
+      '<rect x="42" y="80" width="15" height="15" fill="none" stroke="#5b8def" stroke-width="1.5"/>'+
+      '<text x="80" y="55" text-anchor="middle" font-size="12" fill="#c62828" font-weight="700">45°</text>'+
+      '<text x="38" y="55" text-anchor="middle" font-size="12" fill="#c62828" font-weight="700">45°</text>'+
+      '</svg>';
+  }
+}
+
+// 对称图形 SVG
+function symmetrySVG(shapeKeys){
+  var shapes = {
+    heart: {d:'M50,55 C50,55 20,38 20,24 A14,14 0 0,1 48,24 A14,14 0 0,1 76,24 C76,38 50,55 50,55Z', w:96, h:70, line:48},
+    butterfly: {d:'M48,12 C48,12 36,4 24,10 C12,16 8,32 8,32 C8,32 20,28 28,36 C36,44 48,60 48,60 C48,60 60,44 68,36 C76,28 88,32 88,32 C88,32 84,16 72,10 C60,4 48,12 48,12Z', w:96, h:72, line:48},
+    house: {d:'M48,10 L10,40 L10,70 L32,70 L32,46 L64,46 L64,70 L86,70 L86,40Z', w:96, h:80, line:48},
+    tree: {d:'M48,8 L24,42 L36,42 L36,72 L60,72 L60,42 L72,42Z', w:96, h:80, line:48},
+    star: {d:'M48,4 L60,34 L92,34 L66,54 L76,86 L48,66 L20,86 L30,54 L4,34 L36,34Z', w:96, h:92, line:48}
+  };
+  var s = shapes[shapeKeys];
+  var svg = '<svg class="geom-svg" width="'+s.w+'" height="'+s.h+'" viewBox="0 0 '+s.w+' '+s.h+'">';
+  // 对称轴虚线
+  svg += '<line x1="'+s.line+'" y1="0" x2="'+s.line+'" y2="'+s.h+'" stroke="#999" stroke-width="1" stroke-dasharray="4,3"/>';
+  svg += '<path d="'+s.d+'" fill="#e8f0fe" stroke="#5b8def" stroke-width="2"/>';
+  svg += '</svg>';
+  return svg;
+}
+
+// 平移/旋转示意 SVG
+function movementSVG(type){
+  if(type === 'translation'){
+    return '<svg class="geom-svg" width="200" height="80" viewBox="0 0 200 80">'+
+      '<rect x="20" y="15" width="40" height="40" fill="#e8f0fe" stroke="#5b8def" stroke-width="2" rx="3"/>'+
+      '<line x1="65" y1="35" x2="95" y2="35" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>'+
+      '<text x="80" y="28" text-anchor="middle" font-size="10" fill="#999">平移</text>'+
+      '<rect x="100" y="15" width="40" height="40" fill="#e8f0fe" stroke="#5b8def" stroke-width="2" rx="3"/>'+
+      '<defs><marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6Z" fill="#999"/></marker></defs>'+
+      '</svg>';
+  }else{
+    return '<svg class="geom-svg" width="200" height="80" viewBox="0 0 200 80">'+
+      '<rect x="50" y="15" width="40" height="40" fill="#e8f0fe" stroke="#5b8def" stroke-width="2" rx="3"/>'+
+      '<path d="M115,35 A30,30 0 0,1 150,55" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#arrow2)"/>'+
+      '<text x="145" y="50" font-size="10" fill="#999">旋转</text>'+
+      '<rect x="130" y="10" width="40" height="40" fill="#e8f0fe" stroke="#5b8def" stroke-width="2" rx="3" transform="rotate(30,150,30)"/>'+
+      '<defs><marker id="arrow2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6Z" fill="#999"/></marker></defs>'+
+      '</svg>';
+  }
+}
+
+// ── 角的初步认识 ──
+
+// 角的基本概念
+function genAngleConcept(){
+  var qs = [
+    {q:'角有（  ）个顶点和（  ）条边', a:'1,2', multi:2, hint:'一个角有1个顶点和2条边'},
+    {q:'角的大小与边的长短（  ）', a:'无关', opts:['有关','无关'], hint:'角的大小与边的长短无关，与两边张开的大小有关'},
+    {q:'角的两条边张开得越大，角就越（  ）', a:'大', opts:['大','小'], hint:'两边张开越大，角越大'},
+    {q:'从一个点起，用尺子向不同的方向画（  ）条笔直的线，就画成一个角', a:'2', hint:'画角需要2条边'},
+    {q:'比直角小的角叫（  ）角', a:'锐', opts:['锐','钝','直'], hint:'锐角<直角<钝角'},
+    {q:'比直角大的角叫（  ）角', a:'钝', opts:['锐','钝','直'], hint:'钝角>直角>锐角'}
+  ];
+  var c = pick(qs);
+  var result = { q:c.q, answer:c.a, type:'angle', subtype:'concept' };
+  if(c.opts){
+    result.options = shuffleArr(c.opts);
+    result.inputType = 'choice';
+  }else if(c.multi){
+    result.inputType = 'multi';
+    result.inputCount = c.multi;
+  }else{
+    result.inputType = 'text';
+  }
+  if(c.hint) result.hint = c.hint;
+  return result;
+}
+
+// 看角判断类型
+function genAngleType(){
+  var types = [
+    {deg:90, name:'直角', svg: angleSVG(90, {markRight:true})},
+    {deg:45, name:'锐角', svg: angleSVG(45)},
+    {deg:30, name:'锐角', svg: angleSVG(30)},
+    {deg:60, name:'锐角', svg: angleSVG(60)},
+    {deg:135, name:'钝角', svg: angleSVG(135)},
+    {deg:120, name:'钝角', svg: angleSVG(120)},
+    {deg:150, name:'钝角', svg: angleSVG(150)}
+  ];
+  var t = pick(types);
+  var opts = ['锐角','直角','钝角'];
+  return {
+    q: '观察下面的角，这是什么角？',
+    svg: t.svg,
+    answer: t.name,
+    options: shuffleArr(opts),
+    type:'angle', subtype:'type',
+    inputType:'choice'
+  };
+}
+
+// 角的各部分名称
+function genAngleParts(){
+  return {
+    q: '指出下面角各部分的名称：',
+    svg: angleSVG(60, {labelVertex:true, labelEdges:true}),
+    answer: '顶点,边,边',
+    answerDisplay: '顶点、两条边',
+    type:'angle', subtype:'parts',
+    inputType:'text'
+  };
+}
+
+// 三角尺相关
+function genAngleTriangle(){
+  var qs = [
+    {q:'一个三角尺上有（  ）个角', a:'3', hint:'三角尺有3个角'},
+    {q:'三角尺上最大的角是（  ）角', a:'直', opts:['锐','直','钝'], hint:'三角尺上最大的角是直角'},
+    {q:'用三角尺上的直角可以帮助判断一个角是不是（  ）角', a:'直', hint:'用三角尺的直角去比'},
+    {q:'一个三角尺上有（  ）个直角', a:'1', hint:'三角尺上只有1个直角'},
+    {q:'三角尺上另外两个角都是（  ）角', a:'锐', opts:['锐','直','钝'], hint:'除了直角，三角尺上其他角都比直角小'},
+    {q:'一个三角尺上三个角的和是（  ）度', a:'180', hint:'三角尺三个角之和=180°'}
+  ];
+  var c = pick(qs);
+  var result = { q:c.q, answer:c.a, type:'angle', subtype:'triangle' };
+  if(c.opts){
+    result.options = shuffleArr(c.opts);
+    result.inputType = 'choice';
+  }else{
+    result.inputType = 'text';
+  }
+  if(c.hint) result.hint = c.hint;
+  return result;
+}
+
+// 拼角
+function genAngleCombine(){
+  var qs = [
+    {q:'用三角尺上的30°角和60°角可以拼出一个（  ）°的角', a:'90', svgType:'30-60'},
+    {q:'用三角尺上的45°角和45°角可以拼出一个（  ）°的角', a:'90', svgType:'45-45'},
+    {q:'用三角尺上的30°角和45°角可以拼出一个（  ）°的角', a:'75'},
+    {q:'用三角尺上的60°角和45°角可以拼出一个（  ）°的角', a:'105'},
+    {q:'用三角尺上的90°角和30°角可以拼出一个（  ）°的角', a:'120'},
+    {q:'用三角尺上的90°角和45°角可以拼出一个（  ）°的角', a:'135'}
+  ];
+  var c = pick(qs);
+  return {
+    q: c.q,
+    svg: c.svgType?triangleRulerSVG(c.svgType):'',
+    answer: c.a,
+    type:'angle', subtype:'combine',
+    inputType:'text'
+  };
+}
+
+// ── 图形的运动 ──
+
+// 轴对称判断
+function genSymmetryIdentify(){
+  var shapes = {
+    heart: {name:'爱心', symmetric:true},
+    butterfly: {name:'蝴蝶', symmetric:true},
+    house: {name:'房子', symmetric:true},
+    tree: {name:'松树', symmetric:true},
+    star: {name:'五角星', symmetric:true}
+  };
+  var keys = Object.keys(shapes);
+  var correct = pick(keys);
+  var s = shapes[correct];
+
+  if(rnd(0,1)===0){
+    // 看图形判断
+    return {
+      q: '观察下面的图形，它是不是轴对称图形？',
+      svg: symmetrySVG(correct),
+      answer: '是',
+      options: shuffleArr(['是','不是']),
+      type:'movement', subtype:'symmetry',
+      inputType:'choice'
+    };
+  }else{
+    // 文字题
+    var qs = [
+      {q:'正方形有（  ）条对称轴', a:'4'},
+      {q:'长方形有（  ）条对称轴', a:'2'},
+      {q:'圆形有（  ）条对称轴', a:'无数', hint:'圆形有无数条对称轴'},
+      {q:'等腰三角形有（  ）条对称轴', a:'1'},
+      {q:'等边三角形有（  ）条对称轴', a:'3'},
+      {q:'下面的字母中，哪个是轴对称图形？', a:'A', opts:['A','F','G','P']},
+      {q:'下面的汉字中，哪个是轴对称图形？', a:'中', opts:['中','上','下','左']},
+      {q:'下面的数字中，哪个是轴对称图形？', a:'8', opts:['8','4','5','7']}
+    ];
+    var c = pick(qs);
+    var result = { q:c.q, answer:c.a, type:'movement', subtype:'symmetry' };
+    if(c.opts){
+      result.options = shuffleArr(c.opts);
+      result.inputType = 'choice';
+    }else{
+      result.inputType = 'text';
+    }
+    if(c.hint) result.hint = c.hint;
+    return result;
+  }
+}
+
+// 补全轴对称图形
+function genSymmetryComplete(){
+  var shapes = ['heart','butterfly','house','tree','star'];
+  var s = pick(shapes);
+  return {
+    q: '虚线是对称轴，请画出另一半。这个图形一共有（  ）条对称轴',
+    svg: symmetrySVG(s),
+    answer: '1',
+    answerDisplay: '1条对称轴（已画出的这条）',
+    type:'movement', subtype:'symmetryDraw',
+    inputType:'text'
+  };
+}
+
+// 平移和旋转现象识别
+function genMovementType(){
+  var qs = [
+    {q:'升国旗时，国旗的运动是（  ）现象', a:'平移', opts:['平移','旋转','对称']},
+    {q:'电风扇扇叶的转动是（  ）现象', a:'旋转', opts:['平移','旋转','对称']},
+    {q:'推拉窗户是（  ）现象', a:'平移', opts:['平移','旋转','对称']},
+    {q:'拧开瓶盖是（  ）现象', a:'旋转', opts:['平移','旋转','对称']},
+    {q:'火车在笔直的铁轨上行驶是（  ）现象', a:'平移', opts:['平移','旋转','对称']},
+    {q:'钟面上指针的走动是（  ）现象', a:'旋转', opts:['平移','旋转','对称']},
+    {q:'坐滑梯下滑是（  ）现象', a:'平移', opts:['平移','旋转','对称']},
+    {q:'玩陀螺时陀螺的运动是（  ）现象', a:'旋转', opts:['平移','旋转','对称']},
+    {q:'汽车在平直的公路上行驶是（  ）现象', a:'平移', opts:['平移','旋转','对称']},
+    {q:'摩天轮的运动是（  ）现象', a:'旋转', opts:['平移','旋转','对称']}
+  ];
+  var c = pick(qs);
+  return {
+    q: c.q, answer: c.a,
+    options: shuffleArr(c.opts),
+    type:'movement', subtype:'movement',
+    inputType:'choice'
+  };
+}
+
+// 平移/旋转综合判断
+function genMovementMulti(){
+  var items = [
+    {desc:'拉开抽屉', ans:'平移'},
+    {desc:'开关水龙头', ans:'旋转'},
+    {desc:'电梯上下移动', ans:'平移'},
+    {desc:'方向盘转动', ans:'旋转'},
+    {desc:'缆车沿索道移动', ans:'平移'},
+    {desc:'直升机螺旋桨转动', ans:'旋转'}
+  ];
+  var item = pick(items);
+  return {
+    q: '"'+item.desc+'" 是（  ）现象',
+    answer: item.ans,
+    options: shuffleArr(['平移','旋转']),
+    type:'movement', subtype:'movement',
+    inputType:'choice'
+  };
+}
+
+// 图形运动综合（看SVG）
+function genMovementVisual(){
+  if(rnd(0,1)===0){
+    return {
+      q: '观察下图，这是什么运动现象？',
+      svg: movementSVG('translation'),
+      answer: '平移',
+      options: shuffleArr(['平移','旋转','对称']),
+      type:'movement', subtype:'movement',
+      inputType:'choice'
+    };
+  }else{
+    return {
+      q: '观察下图，这是什么运动现象？',
+      svg: movementSVG('rotation'),
+      answer: '旋转',
+      options: shuffleArr(['平移','旋转','对称']),
+      type:'movement', subtype:'movement',
+      inputType:'choice'
+    };
+  }
+}
+
+// ========== 生成入口 ==========
+function generate(){
+  var gens = [];
+  if(state.type==='all'||state.type==='angle'){
+    gens.push(genAngleConcept, genAngleType, genAngleParts, genAngleTriangle, genAngleCombine);
+  }
+  if(state.type==='all'||state.type==='movement'){
+    gens.push(genSymmetryIdentify, genSymmetryComplete, genMovementType, genMovementMulti, genMovementVisual);
+  }
+
+  var list = [];
+  var seen = {};
+  for(var i=0;i<state.count;i++){
+    var q;
+    var attempts=0;
+    do{
+      q = pick(gens)();
+      attempts++;
+    }while(seen[q.q] && attempts<20);
+    seen[q.q]=true;
+    list.push(q);
+  }
+  state.problems = list;
+  state.revealed = false;
+  renderProblems();
+  resultArea.innerHTML='';
+}
+
+function renderProblems(){
+  if(!state.problems.length){
+    problemsArea.innerHTML='<div class="empty">点击「生成练习题」开始吧～</div>';
+    return;
+  }
+  var typeNames = {all:'全部', angle:'角的初步认识', movement:'图形的运动'};
+  var meta = '<div class="meta">'+
+    '<span class="pill">'+state.problems.length+' 题</span>'+
+    '<span class="pill">'+typeNames[state.type]+'</span>'+
+    '</div>';
+
+  var cards = state.problems.map(function(p,i){
+    var svgHtml = p.svg?p.svg:'';
+    var inputHtml = '';
+    if(p.inputType==='choice'){
+      inputHtml = '<div class="options">'+p.options.map(function(o){
+        return '<span class="opt" data-ans="'+o+'">'+o+'</span>';
+      }).join('')+'</div>';
+    }else if(p.inputType==='multi'){
+      var inputs = '';
+      for(var j=0;j<p.inputCount;j++){
+        inputs += '<input type="text" inputmode="numeric" placeholder="?" autocomplete="off" data-idx="'+j+'">';
+      }
+      inputHtml = '<div class="input-group">'+inputs+'</div>';
+    }else{
+      inputHtml = '<div class="input-group"><input type="text" placeholder="填写答案" autocomplete="off"></div>';
+    }
+    var badgeClass = p.type==='angle'?'angle':'movement';
+    var badgeLabels = {angle:'角的初步认识', movement:'图形的运动'};
+    var answerText = p.answerDisplay || p.answer;
+    return '<div class="problem" data-i="'+i+'">'+
+      '<div class="num">'+(i+1)+'</div>'+
+      '<span class="badge '+badgeClass+'">'+badgeLabels[p.type]+'</span>'+
+      '<p class="q">'+p.q+'</p>'+
+      svgHtml+
+      inputHtml+
+      '<div class="ans">'+
+        '<span class="feedback"></span>'+
+        '<span class="reveal hide">正确答案：'+answerText+'</span>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  problemsArea.innerHTML = meta + cards;
+
+  problemsArea.querySelectorAll('.opt').forEach(function(opt){
+    opt.addEventListener('click',function(){
+      var card = this.closest('.problem');
+      card.querySelectorAll('.opt').forEach(function(o){ o.classList.remove('chosen'); });
+      this.classList.add('chosen');
+    });
+  });
+}
+
+function check(){
+  if(!state.problems.length) return;
+  var correct=0;
+  var cards = problemsArea.querySelectorAll('.problem');
+  state.problems.forEach(function(p,i){
+    var card=cards[i];
+    var fb=card.querySelector('.feedback');
+    card.classList.remove('correct','wrong');
+
+    var userAnswer;
+    if(p.inputType==='choice'){
+      var chosen=card.querySelector('.opt.chosen');
+      userAnswer = chosen?chosen.dataset.ans:'';
+    }else if(p.inputType==='multi'){
+      var inputs = card.querySelectorAll('input');
+      userAnswer = Array.from(inputs).map(function(inp){ return inp.value.trim(); }).join(',');
+    }else{
+      var input = card.querySelector('input');
+      userAnswer = (input?input.value:'').trim();
+    }
+
+    var normUser = userAnswer.replace(/\s+/g,'').toLowerCase();
+    var normRight = String(p.answer).replace(/\s+/g,'').toLowerCase();
+
+    if(!userAnswer){
+      fb.textContent='未作答';fb.style.color='var(--warn)';card.classList.add('wrong');
+    }else if(normUser===normRight){
+      fb.textContent='✓ 正确';fb.style.color='var(--ok)';card.classList.add('correct');correct++;
+    }else{
+      fb.textContent='✗ 正确答案：'+(p.answerDisplay || p.answer);
+      fb.style.color='var(--bad)';card.classList.add('wrong');
+    }
+  });
+  var total=state.problems.length;
+  var pct=Math.round(correct/total*100);
+  var tips = correct===total?'太棒了，全部答对！👏':correct>=total*0.8?'表现很好，再练练就满分啦！💪':'别灰心，把错题弄懂，下次一定行！🌟';
+  resultArea.innerHTML='<div class="result">'+
+    '<div class="score">'+correct+' / '+total+'</div>'+
+    '<div class="detail">正确率 '+pct+'% &nbsp;·&nbsp; '+tips+'</div>'+
+    '</div>';
+}
+
+function toggleReveal(){
+  state.revealed=!state.revealed;
+  problemsArea.querySelectorAll('.reveal').forEach(function(r){ r.classList.toggle('hide',!state.revealed); });
+  document.getElementById('revealBtn').textContent = state.revealed?'🙈 隐藏答案':'👀 显示答案';
+}
+
+function printFile(){
+  if(!state.problems.length){alert('请先生成练习题！');return;}
+  Print.open('#problemsArea','二年级数学·图形的认识',{pageType:'geometry'});
+}
+
+// ========== 初始化 ==========
+var problemsArea = document.getElementById('problemsArea');
+var resultArea = document.getElementById('resultArea');
+var grade = App.getGradeParam();
+document.getElementById('gradeTitle').textContent = App.getGradeName(grade);
+document.getElementById('backLink').href = App.buildLink('math-types.html');
+
+document.querySelectorAll('[data-count]').forEach(function(chip){
+  chip.addEventListener('click',function(){
+    document.querySelectorAll('[data-count]').forEach(function(c){ c.classList.remove('active'); });
+    this.classList.add('active');
+    state.count = +this.dataset.count;
+  });
+});
+document.querySelectorAll('[data-type]').forEach(function(chip){
+  chip.addEventListener('click',function(){
+    document.querySelectorAll('[data-type]').forEach(function(c){ c.classList.remove('active'); });
+    this.classList.add('active');
+    state.type = this.dataset.type;
+    if(state.problems.length) generate();
+  });
+});
+document.getElementById('genBtn').addEventListener('click',generate);
+document.getElementById('checkBtn').addEventListener('click',check);
+document.getElementById('revealBtn').addEventListener('click',toggleReveal);
+document.getElementById('printBtn').addEventListener('click',printFile);
+App.initPageController('mathGeometry', 'math');
+</script>
+</body>
+</html>

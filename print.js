@@ -35,6 +35,46 @@
     makeTen: {
       label: '凑十法·平十法·破十法',
       pageMargin: '8mm 8mm'
+    },
+    pinyinToChar: {
+      label: '看拼音写字',
+      pageMargin: '12mm 10mm',
+      beforeClone: function(clone, cols) {
+        var grid = clone.querySelector('.questions-grid');
+        if (grid) grid.style.gridTemplateColumns = 'repeat(' + (cols || 3) + ', 1fr)';
+      }
+    },
+    comprehensive: {
+      label: '综合练习',
+      pageMargin: '12mm 10mm',
+      beforeClone: function(clone, cols) {
+        var grid = clone.querySelector('.questions-grid');
+        if (grid) grid.style.gridTemplateColumns = 'repeat(' + (cols || 3) + ', 1fr)';
+      }
+    },
+    numberSense: {
+      label: '数的认识',
+      pageMargin: '12mm 10mm'
+    },
+    measurement: {
+      label: '常见量换算与测量',
+      pageMargin: '12mm 10mm'
+    },
+    geometry: {
+      label: '图形的认识',
+      pageMargin: '12mm 10mm'
+    },
+    shapes: {
+      label: '图形练习',
+      pageMargin: '12mm 10mm'
+    },
+    unitConvert: {
+      label: '单位换算练习',
+      pageMargin: '12mm 10mm'
+    },
+    alphabet: {
+      label: '英语字母跟读练习',
+      pageMargin: '10mm 10mm'
     }
   };
 
@@ -74,7 +114,7 @@
       '.back-home', '.grade-badge', '.settings-card', '.panel.controls',
       '.actions', '.meta', '.result', '.wrong-section', '.history-box',
       '.mark-icon', '.correct-answer', '.feedback', '.reveal', '.step-hint',
-      '.badge', '.timer-bar', '.controls', 'footer'
+      '.badge', '.formula-placeholder', '.timer-bar', '.controls', 'footer'
     ];
     removeSelectors.forEach(function(sel) {
       var els = clone.querySelectorAll(sel);
@@ -122,7 +162,7 @@
       '  .back-home, .grade-badge, .settings-card, .panel.controls,\n' +
       '  .actions, .meta, .result, .wrong-section, .history-box,\n' +
       '  .mark-icon, .correct-answer, .feedback, .reveal, .step-hint,\n' +
-      '  .badge, .tb-feedback, .tb-think, .tb-num, .timer-bar, .controls, footer { display: none !important; }\n' +
+      '  .badge, .formula-placeholder, .tb-feedback, .tb-think, .tb-num, .timer-bar, .controls, footer { display: none !important; }\n' +
       '  /* 避免题目跨页截断 */\n' +
       '  .question-item, .tb-item, .problem { page-break-inside: avoid; }\n' +
       '  /* 颜色保真 */\n' +

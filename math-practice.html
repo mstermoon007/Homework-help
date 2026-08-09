@@ -373,6 +373,7 @@
 
 <script src="common.js"></script>
 <script src="print.js"></script>
+<script src="math-oral-agent.js"></script>
 <script>
 let currentQuestions = [];   // { text, answer, userAnswer:null, correct:null }
 let wrongIndices = [];       // 当前错题索引
@@ -381,74 +382,13 @@ let mode = 'full';           // full: 全题; wrong: 错题模式
 let timer = null;
 let timerStart = 0;
 
-function getRandomInt(min, max) { return App.randInt(min, max); }
-
-function shuffleArray(arr) { return App.shuffle(arr); }
-
-function generateOneQuestion(operators, maxNum, noNegative, exactDiv) {
-    const op = operators[getRandomInt(0, operators.length - 1)];
-    let a, b, answer, qText;
-
-    switch(op) {
-        case '+':
-            // 扩大取数范围：a 和 b 都在 1~maxNum 内独立随机
-            a = getRandomInt(1, maxNum);
-            b = getRandomInt(1, maxNum);
-            answer = a + b;
-            if (answer > maxNum) {
-                // 如果超范围，等比例缩小
-                const scale = maxNum / answer;
-                a = Math.max(1, Math.floor(a * scale));
-                b = Math.max(1, Math.floor(b * scale));
-                answer = a + b;
-            }
-            qText = `${a} + ${b} =`;
-            break;
-        case '-':
-            a = getRandomInt(2, maxNum);
-            b = getRandomInt(1, maxNum);
-            if (noNegative) {
-                // 确保 a >= b，同时让数值分布更均匀
-                if (b > a) [a, b] = [b, a];
-                if (a === b) a = getRandomInt(b + 1, maxNum);
-            }
-            answer = a - b;
-            qText = `${a} − ${b} =`;
-            break;
-        case '×':
-            // 扩大乘法范围：一个因子取 2~sqrt(maxNum)，另一个取 2~maxNum/第一个因子
-            const maxFactor1 = Math.max(9, Math.floor(Math.sqrt(maxNum)) * 2);
-            a = getRandomInt(2, Math.min(maxFactor1, maxNum));
-            const maxB = Math.floor(maxNum / a);
-            b = getRandomInt(2, Math.max(2, maxB));
-            answer = a * b;
-            qText = `${a} × ${b} =`;
-            break;
-        case '÷':
-            // 扩大除法范围：除数 2~sqrt(maxNum)*2，被除数=除数*商
-            const maxDiv = Math.max(9, Math.floor(Math.sqrt(maxNum)) * 2);
-            b = getRandomInt(2, Math.min(maxDiv, maxNum));
-            if (exactDiv) {
-                const maxQ = Math.floor(maxNum / b);
-                const q = getRandomInt(1, Math.max(1, maxQ));
-                a = b * q;
-                answer = q;
-            } else {
-                a = getRandomInt(b, maxNum);
-                answer = parseFloat((a / b).toFixed(2));
-            }
-            qText = `${a} ÷ ${b} =`;
-            break;
-    }
-    return { text: qText, answer: answer, userAnswer: null, correct: null };
-}
-
 function generateQuestions() {
     const count = parseInt(document.getElementById('count').value) || 60;
     const maxNum = parseInt(document.getElementById('maxNum').value) || 100;
     const columns = parseInt(document.querySelector('input[name="columns"]:checked').value) || 3;
     const noNegative = document.getElementById('noNegative').checked;
     const exactDiv = document.getElementById('exactDiv').checked;
+    const grade = getGradeParam();
 
     const operators = [];
     if (document.getElementById('opAdd').checked) operators.push('+');
@@ -461,28 +401,13 @@ function generateQuestions() {
         return;
     }
 
-    currentQuestions = [];
-    const seen = new Set();
-    const maxAttempts = Math.max(count * 3, 50);
-    let totalAttempts = 0;
+    const agent = new MathOralAgent({ grade, maxNum, count, operators, noNegative, exactDiv });
+    const result = agent.generate();
 
-    while (currentQuestions.length < count && totalAttempts < maxAttempts) {
-        const q = generateOneQuestion(operators, maxNum, noNegative, exactDiv);
-        totalAttempts++;
-        if (!seen.has(q.text)) {
-            seen.add(q.text);
-            currentQuestions.push(q);
-        }
-    }
-    // 如果还不够（极端情况），放宽去重再生成
-    if (currentQuestions.length < count) {
-        while (currentQuestions.length < count) {
-            currentQuestions.push(generateOneQuestion(operators, maxNum, noNegative, exactDiv));
-        }
-    }
-    // Fisher-Yates 洗牌，让题目顺序更随机
-    currentQuestions = shuffleArray(currentQuestions);
-    
+    currentQuestions = result.questions.map(function (q) {
+        return { text: q.text, answer: q.answer, userAnswer: null, correct: null };
+    });
+
     wrongIndices = [];
     reviewed = false;
     mode = 'full';
@@ -490,13 +415,11 @@ function generateQuestions() {
     renderQuestions(columns);
     startTimer();
 
-    const opNames = {'+':'加法','-':'减法','×':'乘法','÷':'除法'};
-    const opStr = operators.map(o => opNames[o]).join('、');
-    document.getElementById('sheetTitle').textContent = `${maxNum}以内${opStr}口算练习题`;
-    document.getElementById('questionCount').textContent = `共 ${count} 道题`;
+    document.getElementById('sheetTitle').textContent = result.meta.title;
+    document.getElementById('questionCount').textContent = '共 ' + count + ' 道题';
     const now = new Date();
-    document.getElementById('generateTime').textContent = 
-        `生成时间：${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    document.getElementById('generateTime').textContent =
+        '生成时间：' + now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
 
     document.getElementById('questionsCard').classList.add('show');
     document.getElementById('exportBtn').disabled = false;

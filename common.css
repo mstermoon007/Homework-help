@@ -1,4 +1,19 @@
 /* ============ 共享基础样式 ============ */
+:root {
+  --bg: #f3f7fb;
+  --card: #ffffff;
+  --ink: #27324a;
+  --muted: #7a879c;
+  --line: #e3e9f2;
+  --brand: #5b8def;
+  --brand-d: #3f6fd1;
+  --ok: #22a06b;
+  --ok-bg: #e7f7ee;
+  --bad: #e0556b;
+  --bad-bg: #fdeef0;
+  --warn: #e6a23c;
+  --shadow: 0 8px 24px rgba(40,70,120,.10);
+}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 /* 返回按钮 */
@@ -7,29 +22,21 @@
     align-items: center;
     gap: 6px;
     padding: 8px 18px;
-    background: rgba(255,255,255,0.2);
+    background: var(--brand);
     color: #fff;
-    border: 2px solid rgba(255,255,255,0.4);
+    border: none;
     border-radius: 22px;
     cursor: pointer;
     font-weight: 600;
     font-size: 0.9rem;
     transition: all 0.2s;
-    backdrop-filter: blur(10px);
     text-decoration: none;
-    margin-bottom: 20px;
 }
 .back-home:hover {
-    background: rgba(255,255,255,0.35);
+    background: var(--brand-d);
     transform: translateY(-1px);
     color: #fff;
 }
-.back-home.solid {
-    background: #fff;
-    border-color: #e2e8f0;
-    color: #4a6cf7;
-}
-.back-home.solid:hover { border-color: #4a6cf7; }
 
 /* 年级标签 */
 .grade-badge {
@@ -356,6 +363,32 @@
     .has-page-controller {
         padding-bottom: 0;
     }
+}
+
+/* 四线格拼音 */
+.pinyin-grid {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fffef9;
+    background-image:
+        linear-gradient(#e8a0a0 1px, transparent 1px),
+        linear-gradient(#e8a0a0 1px, transparent 1px),
+        linear-gradient(#e8a0a0 1px, transparent 1px),
+        linear-gradient(#e8a0a0 1px, transparent 1px);
+    background-size: 100% 9px;
+    background-position: 0 0, 0 8px, 0 16px, 0 24px;
+    background-repeat: no-repeat;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-family: "Times New Roman", "Georgia", serif;
+    color: #333;
+    letter-spacing: 1px;
+    line-height: 32px;
+    border: 1px solid #f0d0d0;
+    min-width: 50px;
 }
 
 /* 响应式 */

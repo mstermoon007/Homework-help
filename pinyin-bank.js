@@ -7,16 +7,6 @@
 (function (global) {
   'use strict';
 
-  // ============ 声调映射 ============
-  var TONE_MAP = {
-    'ā':'a','á':'a','ǎ':'a','à':'a',
-    'ō':'o','ó':'o','ǒ':'o','ò':'o',
-    'ē':'e','é':'e','ě':'e','è':'e',
-    'ī':'i','í':'i','ǐ':'i','ì':'i',
-    'ū':'u','ú':'u','ǔ':'u','ù':'u',
-    'ǖ':'ü','ǘ':'ü','ǚ':'ü','ǜ':'ü'
-  };
-
   // ============ 汉字库（按年级） ============
   var BANK = {
     // 一年级（约460字）：人教版一年级上下册生字
@@ -701,7 +691,6 @@
   global.PINYIN_BANK = {
     bank: BANK,
     wordLibrary: WORD_LIBRARY,
-    TONE_MAP: TONE_MAP,
     // 获取指定年级的汉字库
     getChars: function(grade) {
       return BANK[grade] || BANK[1] || [];

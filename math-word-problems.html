@@ -6,21 +6,6 @@
 <title>小学1-3年级数学应用题练习</title>
 <link rel="stylesheet" href="common.css">
 <style>
-  :root{
-    --bg:#f3f7fb;
-    --card:#ffffff;
-    --ink:#27324a;
-    --muted:#7a879c;
-    --line:#e3e9f2;
-    --brand:#5b8def;
-    --brand-d:#3f6fd1;
-    --ok:#22a06b;
-    --ok-bg:#e7f7ee;
-    --bad:#e0556b;
-    --bad-bg:#fdeef0;
-    --warn:#e6a23c;
-    --shadow:0 8px 24px rgba(40,70,120,.10);
-  }
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
     background:linear-gradient(180deg,#eaf2ff 0%,#f3f7fb 220px,#f3f7fb 100%);
@@ -29,13 +14,6 @@
     -webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:880px;margin:0 auto;padding:16px 16px 60px}
-
-  .back-home{
-    display:inline-flex;align-items:center;gap:6px;padding:8px 18px;
-    background:var(--brand);color:#fff;border-radius:22px;cursor:pointer;
-    font-weight:600;font-size:0.9rem;transition:all .2s;text-decoration:none;border:none;
-  }
-  .back-home:hover{background:var(--brand-d);transform:translateY(-1px);}
 
   header.hero{
     text-align:center;padding:18px 10px 10px;
@@ -110,7 +88,16 @@
   }
   .problem .q{font-size:16px;margin:0 0 10px;line-height:1.7}
   .problem .ans{
-    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  }
+  .problem .ans .formula-hint{
+    font-size:14px;font-weight:600;white-space:nowrap;
+  }
+  .problem .ans .formula-placeholder{
+    color:var(--muted);
+  }
+  .problem .ans .input-group{
+    display:flex;align-items:center;gap:8px;flex-shrink:0;
   }
   .problem input{
     width:120px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;
@@ -219,91 +206,12 @@
 
 <script src="common.js"></script>
 <script src="print.js"></script>
+<script src="math-word-problem-agent.js"></script>
 <script>
 // 使用 App.randInt, App.shuffle, App.rand（来自 common.js）
 function rnd(min,max){ return App.randInt(min,max); }
 function shuffleArr(arr) { return App.shuffle(arr); }
 function pick(arr){ return App.rand(arr); }
-
-/* ============ 一年级：20以内加减、100以内、人民币、钟表、排队、比多少、连加连减 ============ */
-const G1 = [
-  // 加法(20以内)
-  function(){let a=rnd(2,9),b=rnd(2,9);const n=pick(["小鸟","小兔","苹果","气球","花朵"]);
-    return {q:`树上有 ${a} 只${n}，又飞来 ${b} 只，现在一共有多少只${n}？`,a:a+b,unit:"只",hint:`把树上的 ${a} 只和飞来的 ${b} 只合起来：${a}+${b}=${a+b}`};},
-  // 减法(20以内)
-  function(){let a=rnd(6,18),b=rnd(1,Math.min(a-1,9));const it=pick(["糖","铅笔","草莓","饼干"]);
-    return {q:`小红有 ${a} 颗${it}，送给小明 ${b} 颗，小红还剩几颗${it}？`,a:a-b,unit:"颗",hint:`从 ${a} 颗里面去掉送出的 ${b} 颗：${a}-${b}=${a-b}`};},
-  // 两位数加法(100以内)
-  function(){let a=rnd(10,99),b=rnd(10,99-a);
-    return {q:`停车场原来有 ${a} 辆汽车，又开来了 ${b} 辆，现在一共有多少辆？`,a:a+b,unit:"辆",hint:`原有的加上新来的：${a}+${b}=${a+b}`};},
-  // 两位数减法(100以内)
-  function(){let a=rnd(20,99),b=rnd(5,a-1);
-    return {q:`书架上有 ${a} 本书，借走了 ${b} 本，还剩多少本？`,a:a-b,unit:"本",hint:`从总数 ${a} 本中去掉借走的 ${b} 本：${a}-${b}=${a-b}`};},
-  // 比多少(求较小数)
-  function(){let a=rnd(10,40),b=rnd(3,Math.min(a-1,15));
-    return {q:`小明有 ${a} 张贴画，小红比小明少 ${b} 张，小红有几张贴画？`,a:a-b,unit:"张",hint:`比 ${a} 少 ${b}，用减法：${a}-${b}=${a-b}`};},
-  // 比多少(求较大数)
-  function(){let a=rnd(3,15),b=rnd(5,30);
-    return {q:`小华有 ${a} 个气球，小丽比小华多 ${b} 个，小丽有多少个气球？`,a:a+b,unit:"个",hint:`比 ${a} 多 ${b}，用加法：${a}+${b}=${a+b}`};},
-  // 排队问题
-  function(){let a=rnd(2,8),b=rnd(2,8);
-    return {q:`小朋友们排成一队，从前面数乐乐排第 ${a} 个，从后面数排第 ${b} 个，这一队一共有多少个小朋友？`,a:a+b-1,unit:"个",hint:`乐乐被数了2次，要减去1次：${a}+${b}-1=${a+b-1}`};},
-  // 人民币
-  function(){let a=rnd(2,9),b=rnd(a+1,15);
-    return {q:`一个笔记本 ${a} 元，小明付给售货员 ${b} 元，应找回几元？`,a:b-a,unit:"元",hint:`付的钱减去商品价格：${b}-${a}=${b-a}`};},
-  // 人民币(元角)
-  function(){let a=rnd(1,9),b=rnd(1,9);
-    return {q:`一支铅笔 ${a} 元 ${b} 角，一个橡皮 ${a} 元，铅笔比橡皮贵多少钱？`,a:b,unit:"角",hint:`铅笔 ${a}元${b}角，橡皮 ${a}元，贵的部分是 ${b} 角`};},
-  // 钟表
-  function(){let a=rnd(1,9),b=rnd(1,Math.min(12-a,4));
-    return {q:`现在是 ${a} 时，过了 ${b} 小时后是几时？`,a:a+b,unit:"时",hint:`从 ${a} 时开始往后数 ${b} 小时：${a}+${b}=${a+b} 时`};},
-  // 连加
-  function(){let a=rnd(2,9),b=rnd(2,9),c=rnd(2,9);
-    return {q:`小华第一天看 ${a} 页书，第二天看 ${b} 页，第三天看 ${c} 页，三天一共看多少页？`,a:a+b+c,unit:"页",hint:`把三天看的页数加起来：${a}+${b}+${c}=${a+b+c}`};},
-  // 求部分数
-  function(){let a=rnd(10,30),b=rnd(3,Math.min(a-1,12));
-    return {q:`篮子里有 ${a} 个鸡蛋，打破了 ${b} 个，还剩几个好的？`,a:a-b,unit:"个",hint:`从总数中去掉打破的：${a}-${b}=${a-b}`};},
-];
-
-/* ============ 二年级：100以内加减、表内乘除、长度、加减混合、两步计算 ============ */
-const G2 = [
-  // 100以内进退位加法
-  function(){let a=rnd(10,90),b=rnd(5,99-a);
-    return {q:`水果店有 ${a} 个苹果，又运来 ${b} 个，现在一共有多少个？`,a:a+b,unit:"个",hint:`列竖式：${a}+${b}，个位和十位分别相加，注意进位`};},
-  // 100以内退位减法
-  function(){let a=rnd(20,99),b=rnd(5,a-1);
-    return {q:`花园里原来有 ${a} 朵花，凋谢了 ${b} 朵，还剩多少朵？`,a:a-b,unit:"朵",hint:`列竖式：${a}-${b}，个位不够减向十位借1`};},
-  // 表内乘法
-  function(){let a=rnd(2,9),b=rnd(2,9);const it=pick(["气球","糖果","草莓","本子"]);
-    return {q:`每盒有 ${a} 个${it}，一共有 ${b} 盒，一共有多少个${it}？`,a:a*b,unit:"个",hint:`${b} 个 ${a} 相加，用乘法：${a}×${b}=${a*b}`};},
-  // 平均分(除法)
-  function(){let b=rnd(2,9),a=b*rnd(2,9);
-    return {q:`老师把 ${a} 块糖平均分给 ${b} 个小朋友，每个小朋友分到几块？`,a:a/b,unit:"块",hint:`把 ${a} 平均分成 ${b} 份：${a}÷${b}=${a/b}`};},
-  // 包含除
-  function(){let a=rnd(2,9),b=a*rnd(2,9);
-    return {q:`每 ${a} 个装一袋，一共有 ${b} 个，可以装几袋？`,a:b/a,unit:"袋",hint:`求 ${b} 里面有几个 ${a}：${b}÷${a}=${b/a}`};},
-  // 长度(厘米)
-  function(){let a=rnd(20,90),b=rnd(5,a-1);
-    return {q:`一根绳子长 ${a} 厘米，用去了 ${b} 厘米，还剩多少厘米？`,a:a-b,unit:"厘米",hint:`总长度减去用去的：${a}-${b}=${a-b} 厘米`};},
-  // 比长短
-  function(){let a=rnd(30,90),b=rnd(10,a-1);
-    return {q:`铅笔长 ${a} 厘米，橡皮长 ${b} 厘米，铅笔比橡皮长多少厘米？`,a:a-b,unit:"厘米",hint:`求相差多少，用减法：${a}-${b}=${a-b} 厘米`};},
-  // 加减混合
-  function(){let a=rnd(20,60),b=rnd(5,Math.min(30,a-1)),c=rnd(5,Math.min(30,a-b));
-    return {q:`公交车上原有 ${a} 人，到站下去 ${b} 人，又上来 ${c} 人，现在车上有多少人？`,a:a-b+c,unit:"人",hint:`先下去再上来：${a}-${b}+${c}=${a-b+c}`};},
-  // 两步：先乘后加
-  function(){let a=rnd(2,8),b=rnd(2,9),c=rnd(3,15);
-    return {q:`一包铅笔有 ${a} 支，买 ${b} 包，又单独买 ${c} 支，一共有多少支？`,a:a*b+c,unit:"支",hint:`先算 ${b} 包有多少：${a}×${b}=${a*b}，再加 ${c}：${a*b}+${c}=${a*b+c}`};},
-  // 两步：先加后除
-  function(){let b=rnd(2,6),a=rnd(2,5),c=rnd(2,5),total=(a+c)*b;
-    return {q:`男生 ${a} 人、女生 ${c} 人，平均分成 ${b} 组，每组几人？`,a:(a+c),unit:"人",hint:`先算总人数：${a}+${c}=${a+c}，再除以 ${b} 组：${a+c}÷${b}=${(a+c)/b}`};},
-  // 价格比较
-  function(){let a=rnd(8,30),b=rnd(3,a-1);
-    return {q:`一个书包 ${a} 元，一个文具盒 ${b} 元，买一个书包比买一个文具盒多花多少元？`,a:a-b,unit:"元",hint:`求相差：${a}-${b}=${a-b} 元`};},
-  // 倍数关系
-  function(){let a=rnd(3,9),b=rnd(2,6);
-    return {q:`小明有 ${a} 本故事书，小红的故事书是小明的 ${b} 倍，小红有多少本？`,a:a*b,unit:"本",hint:`求 ${a} 的 ${b} 倍：${a}×${b}=${a*b}`};},
-];
 
 /* ============ 三年级：万以内加减、倍、多位数乘、周长、除法、时分秒、分数 ============ */
 const G3 = [
@@ -351,41 +259,7 @@ const G3 = [
     return {q:`买 ${a} 个同样的文具盒用了 ${b} 元，照这样计算，买 ${c} 个这样的文具盒要用多少元？`,a:b/a*c,unit:"元",hint:`先算1个的价格：${b}÷${a}=${b/a}，再算${c}个：${b/a}×${c}=${b/a*c} 元`};},
 ];
 
-/* ============ 进阶/深度题型（各年级混合） ============ */
-const ADV1 = [
-  function(){let a=rnd(12,22),b=rnd(2,6),c=rnd(1,Math.max(2,a-b-2));
-    return {q:`妈妈买了 ${a} 个橘子，第一天吃了 ${b} 个，第二天吃了 ${c} 个，还剩几个？`,a:a-b-c,unit:"个",depth:"adv",hint:`连减：${a}-${b}=${a-b}，${a-b}-${c}=${a-b-c}`};},
-  function(){let a=rnd(6,15),b=rnd(2,8);
-    return {q:`小明有 ${a} 张贴画，小红比小明多 ${b} 张，两人一共有多少张？`,a:a+(a+b),unit:"张",depth:"adv",hint:`先求小红：${a}+${b}=${a+b}，再求两人：${a}+${a+b}=${a+(a+b)}`};},
-  function(){let a=rnd(8,20),b=rnd(8,20);
-    return {q:`书架第一层有 ${a} 本书，第二层有 ${b} 本书，旁边还有 3 个文具盒，两层一共有多少本书？`,a:a+b,unit:"本",depth:"adv",hint:`3个文具盒是多余条件，忽略它。只算两层书：${a}+${b}=${a+b}`};},
-  function(){let a=rnd(15,30),b=rnd(2,8),c=rnd(2,8),d=rnd(2,Math.max(3,a-b+c-2));
-    return {q:`停车场原有 ${a} 辆车，上午开走 ${b} 辆又开来 ${c} 辆，下午又开走 ${d} 辆，现在有几辆？`,a:a-b+c-d,unit:"辆",depth:"adv",hint:`逐步计算：${a}-${b}=${a-b}，${a-b}+${c}=${a-b+c}，${a-b+c}-${d}=${a-b+c-d}`};},
-  function(){let a=rnd(10,30),b=rnd(3,10);
-    return {q:`小军有 ${a} 元钱，买书花了 ${b} 元，剩下的钱比花的钱多多少元？`,a:a-2*b,unit:"元",depth:"adv",hint:`剩下：${a}-${b}=${a-b}，多的：${a-b}-${b}=${a-2*b} 元`};},
-  function(){let a=rnd(2,8),b=rnd(1,a-1);
-    return {q:`从 ${a} 个苹果中吃掉了 ${b} 个，剩下的苹果和吃掉的相差几个？`,a:a-2*b,unit:"个",depth:"adv",hint:`剩下：${a}-${b}=${a-b}，相差：${a-b}-${b}=${a-2*b}`};},
-];
-
-const ADV2 = [
-  function(){let a=rnd(2,9),b=rnd(2,9),c=rnd(2,15);
-    return {q:`每盒有 ${a} 个糖果，有 ${b} 盒，又买来 ${c} 个，一共有多少个？`,a:a*b+c,unit:"个",depth:"adv",hint:`先乘后加：${a}×${b}=${a*b}，${a*b}+${c}=${a*b+c}`};},
-  function(){let b=rnd(2,9),c=rnd(2,6),rem=rnd(1,15),a=b*c+rem;
-    return {q:`有 ${a} 个橘子，每 ${b} 个装一袋，装了 ${c} 袋，还剩几个？`,a:a-b*c,unit:"个",depth:"adv",hint:`已装：${b}×${c}=${b*c}，剩余：${a}-${b*c}=${a-b*c}`};},
-  function(){let a=rnd(15,40),b=rnd(3,15);
-    return {q:`一班有 ${a} 人，二班比一班多 ${b} 人，两个班一共有多少人？`,a:a+(a+b),unit:"人",depth:"adv",hint:`二班：${a}+${b}=${a+b}，总人数：${a}+${a+b}=${a+(a+b)}`};},
-  function(){let b=rnd(2,5),segs=rnd(2,8),a=b*segs;
-    return {q:`一条长 ${a} 米的小路一边植树，每隔 ${b} 米种一棵，两端都种，一共种几棵？`,a:segs+1,unit:"棵",depth:"adv",hint:`段数：${a}÷${b}=${segs}，两端都种：棵数=段数+1=${segs+1}`};},
-  function(){let a=rnd(2,9),b=rnd(2,9);
-    return {q:`商店有 ${a} 盒皮球，每盒 ${b} 个，今天又进了 4 辆自行车，一共有多少个皮球？`,a:a*b,unit:"个",depth:"adv",hint:`4辆自行车是多余条件。只算皮球：${a}×${b}=${a*b} 个`};},
-  function(){let a=rnd(20,50),b=rnd(3,15),c=rnd(2,10),d=rnd(2,12);
-    return {q:`图书角有 ${a} 本书，借出 ${b} 本，还回 ${c} 本，又买来 ${d} 本，现在有多少本？`,a:a-b+c+d,unit:"本",depth:"adv",hint:`逐步：${a}-${b}=${a-b}，${a-b}+${c}=${a-b+c}，${a-b+c}+${d}=${a-b+c+d}`};},
-  function(){let a=rnd(2,6),b=rnd(2,8),c=rnd(2,5);
-    return {q:`每个小组有 ${a} 人，每组发 ${b} 本练习本，有 ${c} 个小组，一共发多少本？`,a:b*c,unit:"本",depth:"adv",hint:`每组人数是多余条件。只算练习本：${b}×${c}=${b*c} 本`};},
-  function(){let a=rnd(3,9),b=rnd(2,6);
-    return {q:`小明每天看 ${a} 页书，看了 ${b} 天后还剩 12 页没看，这本书一共有多少页？`,a:a*b+12,unit:"页",depth:"adv",hint:`已看：${a}×${b}=${a*b}，总页数：${a*b}+12=${a*b+12}`};},
-];
-
+/* ============ 进阶/深度题型（三年级） ============ */
 const ADV3 = [
   function(){let b=rnd(2,6),segs=rnd(3,12),a=b*segs;
     return {q:`一个圆形花坛周长 ${a} 米，每隔 ${b} 米放一盆花，一共放几盆？`,a:segs,unit:"盆",depth:"adv",hint:`圆形：段数=棵数。${a}÷${b}=${segs} 段，所以放 ${segs} 盆`};},
@@ -409,45 +283,7 @@ const ADV3 = [
     return {q:`一个工程队修一条 ${a} 米的路，已经修了 ${b} 天，每天修 40 米，还剩多少米？`,a:a-b*40,unit:"米",depth:"adv",hint:`已修：${b}×40=${b*40}米，剩余：${a}-${b*40}=${a-b*40}米`};},
 ];
 
-/* ============ 高阶题型（各年级混合，要求多步推理/逆向思维/复杂关系） ============ */
-const HIGH1 = [
-  function(){let a=rnd(3,8),b=rnd(2,5),c=rnd(2,4);
-    return {q:`小明有 ${a} 张5元和 ${b} 张2元，他一共有多少钱？`,a:a*5+b*2,unit:"元",depth:"high",hint:`5元：${a}×5=${a*5}元，2元：${b}×2=${b*2}元，合计：${a*5}+${b*2}=${a*5+b*2}元`};},
-  function(){let a=rnd(10,30),b=rnd(3,8),c=rnd(2,5);
-    return {q:`篮子里有 ${a} 个苹果，吃了 ${b} 个后又放入 ${c} 个，现在篮子里有多少个苹果？`,a:a-b+c,unit:"个",depth:"high",hint:`先减后加：${a}-${b}=${a-b}，${a-b}+${c}=${a-b+c}`};},
-  function(){let a=rnd(5,15),b=rnd(a+1,a+15);
-    return {q:`小明和小红一共有 ${a+b} 张贴画，小明有 ${a} 张，小红比小明多几张？`,a:b-a,unit:"张",depth:"high",hint:`小红：${a+b}-${a}=${b}张，多的：${b}-${a}=${b-a}张`};},
-  function(){let a=rnd(3,9),b=rnd(2,8),c=rnd(2,6);
-    return {q:`每盒有 ${a} 块巧克力，买了 ${b} 盒，吃了 ${c} 块，还剩多少块？`,a:a*b-c,unit:"块",depth:"high",hint:`先算总数：${a}×${b}=${a*b}，再减吃的：${a*b}-${c}=${a*b-c}`};},
-  function(){let a=rnd(3,8),b=rnd(2,6),c=rnd(2,5);
-    return {q:`一本书 ${a} 元，一支笔 ${b} 元，小明买书和笔各一样，付了 ${a+b+c} 元，应找回多少元？`,a:c,unit:"元",depth:"high",hint:`共花：${a}+${b}=${a+b}元，找回：${a+b+c}-${a+b}=${c}元`};},
-  function(){let a=rnd(10,25),b=rnd(3,Math.min(a-1,10));
-    return {q:`树上有 ${a} 只鸟，飞走一些后还剩 ${b} 只，飞走了几只？`,a:a-b,unit:"只",depth:"high",hint:`总数减去剩余：${a}-${b}=${a-b}只`};},
-  function(){let a=rnd(2,6),b=rnd(2,6),c=rnd(3,9);
-    return {q:`每行有 ${a} 棵树，种了 ${b} 行，又补种了 ${c} 棵，一共有多少棵树？`,a:a*b+c,unit:"棵",depth:"high",hint:`先算行数：${a}×${b}=${a*b}，再加补种：${a*b}+${c}=${a*b+c}`};},
-  function(){let a=rnd(2,5),b=rnd(2,5),c=rnd(2,5);
-    return {q:`三种水果：苹果 ${a} 个，梨 ${b} 个，桃子 ${c} 个，苹果和梨比桃子多几个？`,a:a+b-c,unit:"个",depth:"high",hint:`苹果+梨：${a}+${b}=${a+b}，比桃子多：${a+b}-${c}=${a+b-c}`};},
-];
-
-const HIGH2 = [
-  function(){let a=rnd(3,9),b=rnd(2,8),c=rnd(2,6);
-    return {q:`买 ${a} 个面包，每个 ${b} 元，付了 ${c*10} 元，应找回多少元？`,a:c*10-a*b,unit:"元",depth:"high",hint:`面包总价：${a}×${b}=${a*b}元，找回：${c*10}-${a*b}=${c*10-a*b}元`};},
-  function(){let a=rnd(20,60),b=rnd(5,15),c=rnd(2,5);
-    return {q:`一班有 ${a} 人，二班比一班少 ${b} 人，两个班平均分成 ${c} 组，每组几人？`,a:Math.floor((a+(a-b))/c),unit:"人",depth:"high",hint:`二班：${a}-${b}=${a-b}人，总人数：${a}+${a-b}=${a+(a-b)}，每组：${a+(a-b)}÷${c}=${Math.floor((a+(a-b))/c)}人`};},
-  function(){let a=rnd(2,7),b=a*rnd(2,8),c=rnd(2,6);
-    return {q:`买 ${a} 个同样的文具盒用了 ${b} 元，买 ${c} 个这样的文具盒，付了 ${Math.ceil(b/a*c/10)*10} 元，应找回多少元？`,a:Math.ceil(b/a*c/10)*10-b/a*c,unit:"元",depth:"high",hint:`单价：${b}÷${a}=${b/a}元，${c}个：${b/a}×${c}=${b/a*c}元，找回：${Math.ceil(b/a*c/10)*10}-${b/a*c}=${Math.ceil(b/a*c/10)*10-b/a*c}元`};},
-  function(){let a=rnd(3,8),b=rnd(2,6),c=rnd(2,5);
-    return {q:`小明有 ${a} 张5元，小红有 ${b} 张10元，谁的钱多？多多少？`,a:b*10-a*5,unit:"元",depth:"high",hint:`小明：${a}×5=${a*5}元，小红：${b}×10=${b*10}元，${b*10>a*5?'小红多':'小明多'}，相差：${Math.abs(b*10-a*5)}元`};},
-  function(){let a=rnd(2,6),b=rnd(2,6),c=rnd(2,5);
-    return {q:`每排有 ${a} 个座位，有 ${b} 排，坐了 ${c} 人后，还剩几个空座位？`,a:a*b-c,unit:"个",depth:"high",hint:`总座位：${a}×${b}=${a*b}个，空座：${a*b}-${c}=${a*b-c}个`};},
-  function(){let segs=rnd(3,8),a=rnd(2,5),len=segs*a;
-    return {q:`一根绳子长 ${len} 米，每 ${a} 米剪一段，可以剪几段？需要剪几次？`,a:segs,unit:"段",depth:"high",hint:`段数：${len}÷${a}=${segs}段，剪的次数=段数-1=${segs-1}次`};},
-  function(){let a=rnd(10,30),b=rnd(3,10),c=rnd(2,6);
-    return {q:`一箱苹果 ${a} 个，吃了 ${b} 个后，剩下的平均分给 ${c} 个小朋友，每人分几个？`,a:Math.floor((a-b)/c),unit:"个",depth:"high",hint:`剩下：${a}-${b}=${a-b}个，每人：${a-b}÷${c}=${Math.floor((a-b)/c)}个`};},
-  function(){let a=rnd(2,5),b=rnd(2,9),c=rnd(2,9);
-    return {q:`妈妈买了 ${a} 件上衣，每件 ${b} 元，又买了 ${a} 条裤子，每条 ${c} 元，一共花了多少元？`,a:a*(b+c),unit:"元",depth:"high",hint:`上衣：${a}×${b}=${a*b}元，裤子：${a}×${c}=${a*c}元，合计：${a*b}+${a*c}=${a*(b+c)}元`};},
-];
-
+/* ============ 高阶题型（三年级） ============ */
 const HIGH3 = [
   function(){let a=rnd(20,50),b=rnd(10,30),c=rnd(2,5);
     return {q:`仓库有 ${a} 吨粮食，运走 ${b} 吨后，剩下的分 ${c} 次运完，每次运多少吨？`,a:Math.floor((a-b)/c),unit:"吨",depth:"high",hint:`剩下：${a}-${b}=${a-b}吨，每次：${a-b}÷${c}=${Math.floor((a-b)/c)}吨`};},
@@ -468,10 +304,10 @@ const HIGH3 = [
 ];
 
 // 标记深度
-G1.forEach(f=>f.depth='basic'); G2.forEach(f=>f.depth='basic'); G3.forEach(f=>f.depth='basic');
-ADV1.forEach(f=>f.depth='adv'); ADV2.forEach(f=>f.depth='adv'); ADV3.forEach(f=>f.depth='adv');
-HIGH1.forEach(f=>f.depth='high'); HIGH2.forEach(f=>f.depth='high'); HIGH3.forEach(f=>f.depth='high');
-const GEN = {1:[...G1,...ADV1,...HIGH1], 2:[...G2,...ADV2,...HIGH2], 3:[...G3,...ADV3,...HIGH3]};
+G3.forEach(f=>f.depth='basic');
+ADV3.forEach(f=>f.depth='adv');
+HIGH3.forEach(f=>f.depth='high');
+const GEN = {3:[...G3,...ADV3,...HIGH3]};
 let state = {grade:1, count:5, difficulty:'mix', problems:[], revealed:false, hints:false, timer:null, start:0};
 let history = [];
 
@@ -518,20 +354,28 @@ function generate(){
   console.group('📝 应用题生成器 - 开始生成');
   console.log('年级:', state.grade, '| 数量:', state.count, '| 难度:', state.difficulty);
 
-  const list=[];
-  let pool = GEN[state.grade];
-  const poolTotal = pool.length;
-  if(state.difficulty!=='mix'){
-    pool = pool.filter(f=>f.depth===state.difficulty);
-    console.log(`难度筛选: ${state.difficulty}, 可用题型 ${pool.length}/${poolTotal}`);
+  let pool;
+  if (state.grade === 1 || state.grade === 2) {
+    // 一年级和二年级使用模板化 agent
+    var agent = new MathWordProblemAgent({ grade: state.grade, difficulty: state.difficulty });
+    pool = agent.getPool();
+    console.log(`${state.grade}年级模板化生成: ${pool.length} 种题型`);
   } else {
-    const basicCount = pool.filter(f=>f.depth==='basic').length;
-    const advCount = pool.filter(f=>f.depth==='adv').length;
-    const highCount = pool.filter(f=>f.depth==='high').length;
-    console.log(`混合模式: 基础 ${basicCount} 种 + 进阶 ${advCount} 种 + 高阶 ${highCount} 种 = 共 ${pool.length} 种题型`);
+    pool = GEN[state.grade];
+    const poolTotal = pool.length;
+    if(state.difficulty!=='mix'){
+      pool = pool.filter(f=>f.depth===state.difficulty);
+      console.log(`难度筛选: ${state.difficulty}, 可用题型 ${pool.length}/${poolTotal}`);
+    } else {
+      const basicCount = pool.filter(f=>f.depth==='basic').length;
+      const advCount = pool.filter(f=>f.depth==='adv').length;
+      const highCount = pool.filter(f=>f.depth==='high').length;
+      console.log(`混合模式: 基础 ${basicCount} 种 + 进阶 ${advCount} 种 + 高阶 ${highCount} 种 = 共 ${pool.length} 种题型`);
+    }
   }
 
   // 洗牌选型：Fisher-Yates 打乱后依次取用，保证不重复 + 高随机性
+  const list = [];
   let shuffledPool = shuffleArr(pool);
   let poolIdx = 0;
 
@@ -587,10 +431,13 @@ function renderProblems(){
       <span class="badge ${p.depth}">${p.depth==='high'?'高阶':p.depth==='adv'?'进阶':'基础'}</span>
       <p class="q">${p.q}</p>
       <div class="ans">
-        <input type="text" inputmode="text" placeholder="${fracHint}" autocomplete="off">
-        ${p.unit?`<span class="unit">${p.unit}</span>`:''}
-        <span class="feedback"></span>
-        <span class="reveal hide">正确答案：${p.a}${p.unit||''}</span>
+        <span class="formula-hint">答：<span class="formula-placeholder">写算式</span></span>
+        <div class="input-group">
+          <input type="text" inputmode="text" placeholder="${fracHint}" autocomplete="off">
+          ${p.unit?`<span class="unit">${p.unit}</span>`:''}
+          <span class="feedback"></span>
+          <span class="reveal hide">正确答案：${p.a}${p.unit||''}</span>
+        </div>
       </div>
       ${hintHtml}
     </div>`;

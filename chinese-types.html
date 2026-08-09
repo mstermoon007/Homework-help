@@ -33,12 +33,8 @@
 
     <div class="card">
         <div class="section-label">📚 选择题型</div>
-        <div class="type-grid">
-            <a href="pinyin-practice.html" class="type-card" id="pinyinLink">
-                <span class="t-icon">🔤</span>
-                <div class="t-name">拼音练习</div>
-                <div class="t-desc" id="pinyinDesc">拼音抄写 · 汉字注音 · 混合填空 · 词语注音</div>
-            </a>
+        <div class="type-grid" id="typeGrid">
+            <!-- 动态生成 -->
         </div>
     </div>
 
@@ -49,12 +45,32 @@
 <script>
 var grade = App.currentGrade();
 document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
-document.getElementById('pinyinLink').href = App.buildLink('pinyin-practice.html');
-// 一年级显示拼音抄写/注音/混合，二年级及以上显示词语注音
+
+var grid = document.getElementById('typeGrid');
 if (grade === 1) {
-    document.getElementById('pinyinDesc').textContent = '拼音抄写 · 汉字注音 · 拼音汉字混合填空';
+    grid.innerHTML =
+        '<a href="' + App.buildLink('pinyin-practice.html') + '" class="type-card">' +
+            '<span class="t-icon">🔤</span>' +
+            '<div class="t-name">拼音练习</div>' +
+            '<div class="t-desc">拼音抄写 · 汉字注音</div>' +
+        '</a>' +
+        '<a href="' + App.buildLink('pinyin-to-char.html') + '" class="type-card">' +
+            '<span class="t-icon">✏️</span>' +
+            '<div class="t-name">看拼音写字</div>' +
+            '<div class="t-desc">看拼音，写出对应汉字</div>' +
+        '</a>' +
+        '<a href="' + App.buildLink('comprehensive.html') + '" class="type-card">' +
+            '<span class="t-icon">🧩</span>' +
+            '<div class="t-name">综合练习</div>' +
+            '<div class="t-desc">拼音与汉字互相填空，综合练习</div>' +
+        '</a>';
 } else {
-    document.getElementById('pinyinDesc').textContent = '看两字词语写拼音，词库按年级分级，巩固字词基础';
+    grid.innerHTML =
+        '<a href="' + App.buildLink('pinyin-practice.html') + '" class="type-card">' +
+            '<span class="t-icon">🔤</span>' +
+            '<div class="t-name">拼音练习</div>' +
+            '<div class="t-desc">看两字词语写拼音，词库按年级分级，巩固字词基础</div>' +
+        '</a>';
 }
 </script>
 </body>

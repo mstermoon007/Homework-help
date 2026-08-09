@@ -59,6 +59,21 @@
                 <div class="t-name">单位换算</div>
                 <div class="t-desc">认读时钟 · 元角分<br>换算与简单计算</div>
             </a>
+            <a href="math-number-sense.html" class="type-card" id="numberSenseLink" style="border-color:#c87a16;">
+                <span class="t-icon">🔢</span>
+                <div class="t-name">数的认识</div>
+                <div class="t-desc">1000以内 · 万以内<br>组成·数位·读写·近似数</div>
+            </a>
+            <a href="math-measurement.html" class="type-card" id="measurementLink" style="border-color:#2e7d32;">
+                <span class="t-icon">📏</span>
+                <div class="t-name">常见量换算与测量</div>
+                <div class="t-desc">认识时间 · 质量单位<br>长度单位 · 厘米和米</div>
+            </a>
+            <a href="math-geometry.html" class="type-card" id="geometryLink" style="border-color:#c62828;">
+                <span class="t-icon">📐</span>
+                <div class="t-name">图形的认识</div>
+                <div class="t-desc">角的认识 · 直角锐角钝角<br>轴对称 · 平移与旋转</div>
+            </a>
         </div>
     </div>
 
@@ -74,10 +89,18 @@ document.getElementById('wordLink').href = App.buildLink('math-word-problems.htm
 document.getElementById('cushiLink').href = App.buildLink('math-make-ten.html');
 document.getElementById('shapesLink').href = App.buildLink('math-shapes.html');
 document.getElementById('unitLink').href = App.buildLink('math-unit-convert.html');
+document.getElementById('numberSenseLink').href = App.buildLink('math-number-sense.html');
+document.getElementById('measurementLink').href = App.buildLink('math-measurement.html');
+document.getElementById('geometryLink').href = App.buildLink('math-geometry.html');
 if (grade !== 1) {
   document.getElementById('cushiLink').style.display = 'none';
   document.getElementById('shapesLink').style.display = 'none';
   document.getElementById('unitLink').style.display = 'none';
+}
+if (grade !== 2) {
+  document.getElementById('numberSenseLink').style.display = 'none';
+  document.getElementById('measurementLink').style.display = 'none';
+  document.getElementById('geometryLink').style.display = 'none';
 }
 </script>
 </body>

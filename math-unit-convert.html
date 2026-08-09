@@ -6,24 +6,12 @@
 <title>一年级数学单位换算练习</title>
 <link rel="stylesheet" href="common.css">
 <style>
-  :root{
-    --bg:#f3f7fb; --card:#fff; --ink:#27324a; --muted:#7a879c;
-    --line:#e3e9f2; --brand:#5b8def; --brand-d:#3f6fd1;
-    --ok:#22a06b; --ok-bg:#e7f7ee; --bad:#e0556b; --bad-bg:#fdeef0;
-    --warn:#e6a23c; --shadow:0 8px 24px rgba(40,70,120,.10);
-  }
   body{
     font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
     background:linear-gradient(180deg,#eaf2ff 0%,#f3f7fb 220px,#f3f7fb 100%);
     color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:880px;margin:0 auto;padding:16px 16px 60px}
-  .back-home{
-    display:inline-flex;align-items:center;gap:6px;padding:8px 18px;
-    background:var(--brand);color:#fff;border-radius:22px;cursor:pointer;
-    font-weight:600;font-size:.9rem;transition:all .2s;text-decoration:none;border:none;
-  }
-  .back-home:hover{background:var(--brand-d);transform:translateY(-1px)}
   header.hero{text-align:center;padding:18px 10px 10px}
   header.hero h1{margin:0;font-size:26px;letter-spacing:1px;background:linear-gradient(90deg,#5b8def,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
   header.hero p{margin:8px 0 0;color:var(--muted);font-size:14px}
@@ -323,7 +311,7 @@ function toggleReveal(){
 
 function printFile(){
   if(!state.problems.length){alert('请先生成练习题！');return;}
-  Print.open('#problemsArea','一年级数学单位换算练习',{pageType:'word'});
+  Print.open('#problemsArea','一年级数学单位换算练习',{pageType:'unitConvert'});
 }
 
 // ========== 初始化 ==========
