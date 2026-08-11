@@ -205,8 +205,12 @@
 }
 .type-grid.two-col { grid-template-columns: repeat(2, 1fr); }
 .type-grid.three-col { grid-template-columns: repeat(3, 1fr); }
+.type-grid.four-col { grid-template-columns: repeat(4, 1fr); }
 .type-card {
     display: block;
+    max-width: 420px;
+    width: 100%;
+    justify-self: center;
     padding: 32px 18px;
     border: 2.5px solid #e0e0e0;
     border-radius: 16px;
@@ -268,7 +272,7 @@
 /* 包装器 */
 .wrapper {
     width: 100%;
-    max-width: 600px;
+    max-width: 1200px;
 }
 
 /* ============ 页面控制器 ============ */
@@ -324,7 +328,7 @@
         box-shadow: none;
         padding: 0;
         margin-bottom: 18px;
-        max-width: 1100px;
+        max-width: 1200px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -392,8 +396,14 @@
 }
 
 /* 响应式 */
+@media (max-width: 1024px) {
+    .type-grid.four-col { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+    .type-grid.three-col, .type-grid.four-col { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 480px) {
-    .type-grid { grid-template-columns: 1fr; }
+    .type-grid, .type-grid.two-col, .type-grid.three-col, .type-grid.four-col { grid-template-columns: 1fr; }
     .card { padding: 28px 18px; }
     .page-header h1 { font-size: 1.7rem; }
 }

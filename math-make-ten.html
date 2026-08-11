@@ -11,7 +11,7 @@
     background:linear-gradient(180deg,#eaf2ff 0%,#f3f7fb 220px,#f3f7fb 100%);
     color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:900px;margin:0 auto;padding:16px 16px 60px}
+  .wrap{max-width:1200px;margin:0 auto;padding:16px 16px 60px}
   header.hero{text-align:center;padding:18px 10px 10px}
   header.hero h1{margin:0;font-size:26px;letter-spacing:1px;background:linear-gradient(90deg,#5b8def,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}
   header.hero p{margin:8px 0 0;color:var(--muted);font-size:14px}
@@ -164,23 +164,36 @@ function svgInput(idx, field, w, h){
   </foreignObject>`;
 }
 
-// 凑十法：8+5=[__]，8→2，5→2+3
+// 凑十法：5+8=[__]，5分解为[__][__]，8的竖线连接到其中一个填空（8+?=10）
 function cushiFullSVG(big, small, need, rest, idx){
-  const w=220, h=100, x1=28, x2=84, x3=140, xAns=168;
+  const w=300, h=155;
+  const xSmall=30, xBig=92, xEq=140, xAns=174;
+  const xSplitL=xSmall-20, xSplitR=xSmall+20;
+  const inpW=34, inpH=26;
   return `<svg class="decomp-svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-    <text x="${x1}" y="22" class="num-big" text-anchor="middle">${big}</text>
-    <text x="${x1+28}" y="22" class="num-big" text-anchor="middle" fill="#5b8def">+</text>
-    <text x="${x2}" y="22" class="num-big" text-anchor="middle">${small}</text>
-    <text x="${x3}" y="22" class="num-big" text-anchor="middle" fill="#7a879c">=</text>
-    ${svgInput(idx, 'answer', 36, 26).replace(/x="0" y="0"/, `x="${xAns-4}" y="8"`)}
-    <line x1="${x1}" y1="32" x2="${x1}" y2="62" class="split-line"/>
-    <text x="${x1}" y="80" class="num-mid" text-anchor="middle">${need}</text>
-    <line x1="${x2}" y1="32" x2="${x2}" y2="50" class="split-line"/>
-    <line x1="${x2-26}" y1="50" x2="${x2+26}" y2="50" class="split-line"/>
-    <line x1="${x2-26}" y1="50" x2="${x2-26}" y2="62" class="split-line"/>
-    <line x1="${x2+26}" y1="50" x2="${x2+26}" y2="62" class="split-line"/>
-    <text x="${x2-26}" y="80" class="num-mid" text-anchor="middle">${need}</text>
-    <text x="${x2+26}" y="80" class="num-mid" text-anchor="middle">${rest}</text>
+    <!-- 题目行：5 + 8 = [answer] -->
+    <text x="${xSmall}" y="22" class="num-big" text-anchor="middle">${small}</text>
+    <text x="${xSmall+30}" y="22" class="num-big" text-anchor="middle" fill="#5b8def">+</text>
+    <text x="${xBig}" y="22" class="num-big" text-anchor="middle">${big}</text>
+    <text x="${xEq}" y="22" class="num-big" text-anchor="middle" fill="#7a879c">=</text>
+    ${svgInput(idx, 'answer', 36, 26).replace(/x="0" y="0"/, `x="${xAns}" y="8"`)}
+    <!-- 5的分解线 -->
+    <line x1="${xSmall}" y1="32" x2="${xSmall}" y2="58" class="split-line"/>
+    <line x1="${xSplitL}" y1="58" x2="${xSplitR}" y2="58" class="split-line"/>
+    <line x1="${xSplitL}" y1="58" x2="${xSplitL}" y2="82" class="split-line"/>
+    <line x1="${xSplitR}" y1="58" x2="${xSplitR}" y2="82" class="split-line"/>
+    <!-- 8的竖线 -->
+    <line x1="${xBig}" y1="32" x2="${xBig}" y2="82" class="split-line"/>
+    <!-- 8的横线连接到左填空（8+need=10） -->
+    <line x1="${xBig}" y1="72" x2="${xSplitL}" y2="72" class="split-line" stroke-dasharray="4,3"/>
+    <!-- 分解填空 -->
+    ${svgInput(idx, 'need', inpW, inpH).replace(/x="0" y="0"/, `x="${xSplitL-inpW/2}" y="64"`)}
+    ${svgInput(idx, 'rest', inpW, inpH).replace(/x="0" y="0"/, `x="${xSplitR-inpW/2}" y="64"`)}
+    <!-- 连接标注 -->
+    <text x="${(xBig+xSplitL)/2}" y="96" class="num-small" text-anchor="middle" fill="#5b8def">${big}+?=10</text>
+    <!-- 解题思路 -->
+    <text x="${w/2}" y="118" class="num-small" text-anchor="middle" fill="#7a879c">看大数${big}，${big}+?=10，将${small}分成${need}和${rest}</text>
+    <text x="${w/2}" y="136" class="num-small" text-anchor="middle" fill="#7a879c">${big}+${need}=10，10+${rest}=${big+small}</text>
   </svg>`;
 }
 
@@ -237,8 +250,7 @@ function buildCushi(){
     big, small, need, rest,
     answer: big+small,
     decompInputs: [
-      {id:'need8', expect:need},
-      {id:'need5', expect:need},
+      {id:'need', expect:need},
       {id:'rest', expect:rest}
     ],
     combineInputs: [
@@ -248,7 +260,7 @@ function buildCushi(){
     ],
     combinePrefix: `${big} + `,
     combineMid: ` = 10，10 + `,
-    hint: `凑十法：看大数，想大数加几等于10？把小数拆成两部分，先凑成10，再加剩下的数。`
+    hint: `看大数，想${big}加几为10？将${small}分成${need}和${rest}，${big}+${need}=10，10+${rest}=${big+small}`
   };
 }
 
@@ -372,10 +384,7 @@ function renderProblems(){
     else if(p.kind==='pingshi') svg = pingshiFullSVG(p.total, p.sub, p.to10, p.rest, i);
     else svg = poshiFullSVG(p.total, p.sub, p.to10, p.tenSub, i);
     
-    // 分解填空
-    const decompInputsHtml = p.decompInputs.map(inp=>
-      `<input type="text" class="decomp-inp" data-idx="${i}" data-field="${inp.id}" placeholder="?" autocomplete="off">`
-    ).join('');
+    // 分解填空（已在SVG内，不再单独渲染）
     // 组合行文本
     let combineHTML;
     if(p.kind==='poshi'){
@@ -386,7 +395,6 @@ function renderProblems(){
     return `<div class="problem" data-i="${i}">
       <div class="num">${i+1}</div>
       <div class="decomp-row">${svg}</div>
-      <div class="decomp-inputs">${decompInputsHtml}</div>
       <div class="combine-row">${combineHTML}</div>
       <div class="think-hint">${p.hint}</div>
       <div class="feedback"></div>
