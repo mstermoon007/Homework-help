@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>插件验证工具</title>
+<style>
+  body { font-family: sans-serif; max-width: 800px; margin: 20px auto; }
+  .pass { color: green; } .fail { color: red; }
+  pre { background: #f4f4f4; padding: 10px; }
+</style>
+</head>
+<body>
+<h1>插件验证</h1>
+<p>请选择要验证的插件文件：</p>
+<input type="file" id="fileInput" accept=".js">
+<button id="runBtn">运行验证</button>
+<div id="result"></div>
+
+<script src="../shared/common.js"></script>
+<script src="../pinyin-bank.js"></script>
+<script>
+  document.getElementById('runBtn').addEventListener('click', () => {
+    const file = document.getElementById('fileInput').files[0];
+    if (!file) { alert('请先选择一个插件 JS 文件'); return; }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const code = e.target.result;
+        // 简单执行获取插件对象，假设插件挂载到 window.__currentPlugin
+        window.__currentPlugin = undefined;
+        eval(code);
+        const plugin = window.__currentPlugin;
+        if (!plugin) {
+          throw new Error('插件未正确导出（需要设置 window.__currentPlugin）');
+        }
+
+        const results = [];
+        // 检查必备属性
+        ['id','name','grades','subject','generate','render','check'].forEach(key => {
+          results.push({
+            test: `属性 ${key} 存在`,
+            pass: !!plugin[key],
+            detail: plugin[key] ? `${typeof plugin[key]}` : '缺失'
+          });
+        });
+
+        // 测试 generate
+        if (plugin.generate) {
+          const set = plugin.generate({ count: 2 });
+          results.push({
+            test: 'generate 返回对象包含 questions 数组',
+            pass: set && Array.isArray(set.questions),
+            detail: `生成了 ${set?.questions?.length ?? 0} 题`
+          });
+          // 测试 render
+          if (plugin.render && set) {
+            const html = plugin.render(set);
+            results.push({
+              test: 'render 返回非空字符串',
+              pass: typeof html === 'string' && html.trim().length > 0,
+              detail: `HTML 长度: ${html.length}`
+            });
+          }
+          // 测试 check
+          if (plugin.check && set) {
+            const userAnswers = {};
+            set.questions.forEach((q, i) => userAnswers[i] = '0');
+            const checkResult = plugin.check(set, userAnswers);
+            results.push({
+              test: 'check 返回包含 score 和 results 的对象',
+              pass: checkResult && typeof checkResult.score === 'number' && Array.isArray(checkResult.results),
+              detail: `得分: ${checkResult.score}`
+            });
+          }
+        }
+
+        // 显示结果
+        document.getElementById('result').innerHTML = results.map(r => 
+          `<p class="${r.pass ? 'pass' : 'fail'}">${r.pass ? '✓' : '✗'} ${r.test} — ${r.detail}</p>`
+        ).join('');
+      } catch(err) {
+        document.getElementById('result').innerHTML = `<p class="fail">✗ 脚本执行错误: ${err.message}</p>`;
+      }
+    };
+    reader.readAsText(file);
+  });
+</script>
+</body>
+</html>

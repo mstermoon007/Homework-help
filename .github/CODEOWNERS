@@ -1,0 +1,7 @@
+# 核心保护层文件，任何修改需核心维护者审核
+practice.html
+shared/common.js
+shared/common.css
+shared/print.js
+shared/ui-framework.js
+plugins/registry.js

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>统一练习页 · Homework Help</title>
+<link rel="stylesheet" href="shared/common.css">
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(180deg, #eaf2ff 0%, #f3f7fb 220px, #f3f7fb 100%);
+    color: var(--ink); line-height: 1.6;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 16px 16px 60px; }
+
+  /* 顶部标题栏 */
+  header.hero { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 16px 4px 6px; }
+  header.hero .left h1 { margin: 0; font-size: 24px; letter-spacing: 1px;
+    background: linear-gradient(90deg, #5b8def, #7c5cff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  header.hero .left p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  header.hero .timer { font-size: 15px; font-weight: 800; color: var(--brand-d); background: #eef3fb;
+    border-radius: 12px; padding: 8px 14px; font-variant-numeric: tabular-nums; }
+
+  /* 左上角快速切换（醒目、悬浮常驻） */
+  .quick-switch { position: fixed; top: 14px; left: 14px; z-index: 1200; }
+  .qs-btn { cursor: pointer; border: none; border-radius: 12px; padding: 9px 16px; font-size: 14px;
+    font-weight: 800; color: #fff; letter-spacing: .5px;
+    background: linear-gradient(90deg, #ff8a5c, #ff5d8f);
+    box-shadow: 0 6px 18px rgba(255, 93, 143, .45); }
+  .qs-btn:hover { filter: brightness(1.07); }
+  .qs-btn:active { transform: scale(.97); }
+  .qs-menu { position: absolute; top: calc(100% + 8px); left: 0; width: 330px; max-width: 86vw;
+    background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: 0 14px 40px rgba(20, 40, 90, .2); padding: 12px 14px 14px; }
+  .qs-hd { font-size: 12px; color: var(--muted); margin: 10px 2px 6px; font-weight: 700; }
+  .qs-hd:first-child { margin-top: 2px; }
+  .qs-row { display: flex; flex-wrap: wrap; gap: 7px; }
+  .qs-link { flex: 1 1 100%; cursor: pointer; border: 1.5px solid var(--line); background: #fff;
+    color: var(--ink); border-radius: 10px; padding: 8px 12px; font-size: 13px; font-weight: 600;
+    text-align: center; text-decoration: none; transition: .15s; }
+  .qs-link:hover { border-color: var(--brand); }
+  .qs-subj, .qs-grade { cursor: pointer; border: 1.5px solid var(--line); background: #fff;
+    color: var(--ink); border-radius: 10px; padding: 7px 12px; font-size: 13px; font-weight: 600;
+    text-decoration: none; transition: .15s; }
+  .qs-subj:hover, .qs-grade:hover { border-color: var(--brand); }
+  .qs-subj.active, .qs-grade.active { background: var(--brand-d); border-color: var(--brand-d); color: #fff; }
+  @media (max-width: 760px) {
+    header.hero .left { padding-left: 108px; }
+    .qs-btn { padding: 8px 13px; font-size: 13px; }
+  }
+
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow); padding: 18px; margin: 14px 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 12px; }
+  .group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .group .lbl { font-size: 14px; color: var(--muted); margin-right: 2px; }
+  .chip { cursor: pointer; border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+    border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: 600; transition: .15s; }
+  .chip:hover { border-color: var(--brand); }
+  .chip.active { background: var(--brand-d); border-color: var(--brand-d); color: #fff; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .btn { cursor: pointer; border: none; border-radius: 12px; padding: 12px 20px; font-size: 15px;
+    font-weight: 700; transition: .15s; }
+  .btn-primary { background: linear-gradient(90deg, #5b8def, #6f6bff); color: #fff;
+    box-shadow: 0 6px 16px rgba(91,141,239,.35); }
+  .btn-primary:hover { filter: brightness(1.05); }
+  .btn-ghost { background: #eef3fb; color: var(--brand-d); }
+  .btn-ghost:hover { background: #e2ebf9; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; filter: grayscale(.3); }
+
+  .meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 13px;
+    color: var(--muted); margin-bottom: 12px; }
+  .meta .pill { background: #eef3fb; color: var(--brand-d); border-radius: 999px; padding: 4px 12px; font-weight: 600; }
+
+  /* 题目区域 */
+  #problemsArea .empty { text-align: center; color: var(--muted); padding: 46px 10px; font-size: 14px; }
+  .q-grid { display: grid; gap: 14px; }
+  .q-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .q-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .q-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 640px) { .q-grid.cols-2, .q-grid.cols-3, .q-grid.cols-4 { grid-template-columns: 1fr; } }
+
+  /* 屏幕端：卡片/文字网格按 A4 竖版思路自适应（打印端由 JS 按题目长度设定列数） */
+  @media (max-width: 720px) {
+    #problemsArea .questions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  }
+  @media (max-width: 480px) {
+    #problemsArea .questions-grid { grid-template-columns: 1fr !important; }
+    #problemsArea .q-badge { position: static; display: inline-block; margin: 2px 0 6px; }
+  }
+
+  .question-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow); padding: 14px 12px; position: relative; text-align: center; transition: .2s; }
+  .question-card .num { position: absolute; left: 8px; top: 8px; width: 20px; height: 20px;
+    border-radius: 50%; background: #eef3fb; color: var(--brand-d); font-weight: 800; font-size: 11px;
+    display: flex; align-items: center; justify-content: center; }
+  .question-card.correct { border-color: var(--ok); background: var(--ok-bg); }
+  .question-card.wrong   { border-color: var(--bad); background: var(--bad-bg); }
+  .question-card .q-text { font-size: 17px; font-weight: 800; color: var(--ink); display: block; margin: 4px 0 8px; }
+  .question-card .feedback { font-size: 12px; font-weight: 700; min-height: 16px; margin-top: 6px; }
+  .correct-answer { font-size: 12px; color: var(--bad); font-weight: 700; margin-top: 6px; }
+  .answer-inp { width: 64px; height: 32px; border: 2px dashed #ccc; border-radius: 7px; font-size: 15px;
+    font-weight: 700; text-align: center; color: var(--brand-d); background: #fafafa; outline: none; transition: .15s; }
+  .answer-inp:focus { border-color: var(--brand); background: #fff; }
+  .answer-inp.correct { border-color: var(--ok); background: var(--ok-bg); }
+  .answer-inp.wrong   { border-color: var(--bad); background: var(--bad-bg); }
+
+  /* 结果面板 */
+  .result-panel { display: none; }
+  .result-panel.show { display: block; }
+  .result { background: linear-gradient(135deg, #eef4ff, #f6efff); border: 1px solid var(--line);
+    border-radius: 16px; padding: 20px; margin: 16px 0; text-align: center; box-shadow: var(--shadow); }
+  .result .score { font-size: 36px; font-weight: 800; color: var(--brand-d); }
+  .result .detail { font-size: 14px; color: var(--ink); margin-top: 6px; }
+  .result .tips { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .result .redo-wrap { margin-top: 14px; }
+
+  /* 错误提示 */
+  .notice { text-align: center; padding: 40px 10px; font-size: 15px; color: var(--muted); }
+  .notice .big { font-size: 18px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- 左上角快速切换（学科 + 年级，醒目便利） -->
+  <div class="quick-switch" id="quickSwitch">
+    <button class="qs-btn" id="qsBtn" title="快速切换学科 / 年级 / 返回首页">⚡ 快速切换</button>
+    <div class="qs-menu" id="qsMenu" style="display:none;">
+      <div class="qs-hd">切换学科</div>
+      <div class="qs-row" id="qsSubject"></div>
+      <div class="qs-hd">切换年级</div>
+      <div class="qs-row" id="qsGrade"></div>
+      <div class="qs-hd">其他</div>
+      <div class="qs-row"><a class="qs-link" href="index.html">🏠 返回首页</a></div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="left">
+      <h1 id="sheetTitle">统一练习页</h1>
+      <p id="headerDesc">正在加载练习插件…</p>
+    </div>
+    <div class="timer" id="timerDisplay">⏱ 00:00</div>
+  </header>
+
+  <section class="panel controls" id="controlsPanel" style="display:none;">
+    <div class="row">
+      <div class="group" id="countGroup">
+        <span class="lbl">题量：</span>
+        <button class="chip active" data-count="10">10题</button>
+        <button class="chip" data-count="20">20题</button>
+        <button class="chip" data-count="custom">自定义</button>
+        <input type="number" id="customCount" min="1" max="50" step="1" placeholder="填写 1~50 题"
+               autocomplete="off"
+               style="width:110px;height:32px;border:2px solid #d5dff0;border-radius:8px;font-size:14px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafbff;outline:none;display:none;">
+      </div>
+      <div class="group" id="difficultyGroup">
+        <span class="lbl">难度：</span>
+        <input type="number" id="difficultyInput" min="1" max="10" step="1" value="3"
+               title="填写 1-10 的整数，数字越大难度越高（数值更大、逻辑更深）"
+               style="width:64px;height:32px;border:2px solid #d5dff0;border-radius:8px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafbff;outline:none;">
+        <span class="lbl" style="color:#7a879c;font-weight:500;">1~10</span>
+      </div>
+      <div class="group" id="typeGroup" style="display:none;">
+        <span class="lbl">题型：</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="genBtn">🎲 生成练习题</button>
+      <button class="btn btn-primary" id="checkBtn" disabled>✅ 检查答案</button>
+      <button class="btn btn-ghost" id="revealBtn" disabled>👁 显示答案</button>
+      <button class="btn btn-ghost" id="printBtn" disabled>🖨 打印</button>
+    </div>
+  </section>
+
+  <section id="problemsArea">
+    <div class="empty">正在加载练习插件…</div>
+  </section>
+
+  <section class="result-panel" id="resultArea"></section>
+
+  <footer>Homework Help · 插件化练习框架 · practice.html</footer>
+</div>
+
+<script src="shared/common.js"></script>
+<script src="shared/print.js"></script>
+<script src="plugins/registry.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ============ 全局状态 ============
+  var state = {
+    plugin: null,        // 当前插件对象
+    grade: 1,            // 当前年级
+    exerciseSet: null,   // 当前题目集
+    checkResult: null,   // 当前批改结果
+    count: 10,           // 题量
+    type: null,          // 题型子类别（可选）
+    difficulty: 3,       // 难度（1-10，用户填写，默认 3）
+    timerId: null,       // setInterval 句柄
+    startTime: 0,        // 开始时间戳
+    answered: false      // 是否已提交
+  };
+
+  var registry = (typeof window.PLUGIN_REGISTRY !== 'undefined') ? window.PLUGIN_REGISTRY : [];
+
+  // ============ URL 参数解析 ============
+  function parseUrlParams() {
+    var p = new URLSearchParams(window.location.search);
+    var grade = Number(p.get('grade'));
+    if (!(grade >= 1 && grade <= 6)) grade = 1;
+    var count = Number(p.get('count'));
+    if (!(count >= 1 && count <= 50)) count = 10;
+    var difficulty = Number(p.get('difficulty'));
+    if (!(difficulty >= 1 && difficulty <= 10)) difficulty = 3;
+    return {
+      plugin: (p.get('plugin') || '').trim(),
+      grade: grade,
+      count: count,
+      type: (p.get('type') || '').trim() || null,
+      difficulty: difficulty
+    };
+  }
+
+  var urlParams = parseUrlParams();
+
+  // ============ 通用 DOM 工具 ============
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, html) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  }
+
+  function showNotice(title, sub, retry) {
+    $('controlsPanel').style.display = 'none';
+    $('timerDisplay').textContent = '⏱ 00:00';
+    var area = $('problemsArea');
+    var div = el('div', 'notice');
+    div.innerHTML = '<div class="big">' + title + '</div>' + (sub ? '<div>' + sub + '</div>' : '');
+    if (retry) {
+      var btn = el('button', 'btn btn-primary', '🔄 重新加载');
+      btn.style.marginTop = '14px';
+      btn.onclick = function () { location.reload(); };
+      div.appendChild(btn);
+    }
+    area.innerHTML = '';
+    area.appendChild(div);
+    $('resultArea').classList.remove('show');
+  }
+
+  // ============ 动态插件加载（统一走 App.PluginLoader） ============
+  // 脚本去重、5 秒超时、deps 依赖、插件对象缓存、竞态安全，全部由
+  // shared/common.js 的 App.PluginLoader 提供；此处仅保留 registry 查询与综合插件预加载逻辑。
+
+  function findRegistryRecord(id) {
+    for (var i = 0; i < registry.length; i++) {
+      if (registry[i].id === id) return registry[i];
+    }
+    return null;
+  }
+
+  // ============ 综合插件特殊处理：预加载数学子插件 ============
+  // 当请求 math-comprehensive 时，先加载当前年级所有数学插件脚本，
+  // 将适用的插件对象暂存到 window.__mathSubPlugins，再加载综合插件本身，
+  // 确保综合插件能直接调用各子插件生成题目（详见 plugins/math-comprehensive.js 的 ensureSubPlugins）。
+  function preloadMathSubPlugins(grade) {
+    var records = registry.filter(function (rec) {
+      return rec.id.indexOf('math-') === 0 && rec.id !== 'math-comprehensive';
+    });
+    var plugins = [];
+    var chain = Promise.resolve();
+    records.forEach(function (rec) {
+      chain = chain.then(function () {
+        return App.PluginLoader.loadPlugin(rec).then(function (p) {
+          if (p && p.grades && p.grades.indexOf(grade) !== -1) plugins.push(p);
+          return p;
+        });
+      });
+    });
+    return chain.then(function () {
+      window.__mathSubPlugins = plugins;
+      return plugins;
+    });
+  }
+
+  // ============ 设置面板 ============
+  function initSettings(plugin, grade) {
+    $('sheetTitle').textContent = plugin.name;
+    $('headerDesc').textContent = '小学' + App.getGradeName(grade) + ' · ' +
+      (plugin.grades && plugin.grades.indexOf(grade) !== -1 ? '' : '⚠ 该插件建议年级：' + plugin.grades.join('/')) ;
+    $('controlsPanel').style.display = '';
+
+    // 题量（保留 URL 默认；10/20/自定义）
+    syncCountUI();
+
+    // 难度（保留 URL 默认；仅数学插件显示）
+    var diffGroup = $('difficultyGroup');
+    if (diffGroup) diffGroup.style.display = (plugin.subject === 'math') ? '' : 'none';
+    var diffInput = $('difficultyInput');
+    if (diffInput) diffInput.value = state.difficulty;
+
+    // 题型筛选（若有 settings 元数据）
+    var tg = $('typeGroup');
+    tg.innerHTML = '';
+    tg.style.display = 'none';
+    if (Array.isArray(plugin.settings) && plugin.settings.length) {
+      tg.style.display = '';
+      var lbl = el('span', 'lbl', '题型：');
+      tg.appendChild(lbl);
+      plugin.settings.forEach(function (s, si) {
+        if (!s.key || !Array.isArray(s.options) || !s.options.length) return;
+        var selected = state.type || s.default || s.options[0].value;
+        if (si === 0) state.type = selected;
+        s.options.forEach(function (o) {
+          var c = el('button', 'chip' + (o.value === selected ? ' active' : ''), o.label);
+          c.dataset.skey = s.key;
+          c.dataset.svalue = o.value;
+          c.onclick = function () {
+            document.querySelectorAll('#typeGroup .chip').forEach(function (x) {
+              x.classList.remove('active');
+            });
+            c.classList.add('active');
+            state.type = o.value;
+            if (state.exerciseSet) generate();
+          };
+          tg.appendChild(c);
+        });
+      });
+    }
+
+    // 按钮状态
+    $('checkBtn').disabled = true;
+    $('revealBtn').disabled = true;
+    $('printBtn').disabled = true;
+
+    // 页面控制器（底部导航）
+    if (typeof App.initPageController === 'function' && plugin.subject) {
+      App.initPageController(plugin.id, plugin.subject);
+    }
+  }
+
+  // ============ 计时器 ============
+  function fmtTime(t) {
+    return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+  }
+  function startTimer() {
+    stopTimer();
+    state.startTime = Date.now();
+    state.timerId = setInterval(function () {
+      $('timerDisplay').textContent = '⏱ ' + fmtTime(Math.floor((Date.now() - state.startTime) / 1000));
+    }, 500);
+  }
+  function stopTimer() {
+    if (state.timerId) { clearInterval(state.timerId); state.timerId = null; }
+  }
+  function getElapsed() {
+    return Math.floor((Date.now() - state.startTime) / 1000);
+  }
+  function elapsedText(sec) {
+    var m = Math.floor(sec / 60);
+    return m > 0 ? (m + '分' + (sec % 60) + '秒') : (sec + '秒');
+  }
+
+  // ============ 生成 + 渲染 ============
+  function generate() {
+    if (!state.plugin) return;
+    try {
+      var options = { grade: state.grade, count: state.count };
+      if (state.type) options.type = state.type;
+      if (state.difficulty) options.difficulty = state.difficulty;
+      var result = state.plugin.generate(options);
+      if (result && typeof result.then === 'function') {
+        // 异步插件（如 math-comprehensive：需先加载子插件）
+        $('genBtn').disabled = true;
+        $('genBtn').textContent = '⏳ 正在生成…';
+        result.then(function (set) {
+          $('genBtn').disabled = false;
+          $('genBtn').textContent = '🎲 生成练习题';
+          applyExerciseSet(set);
+        }).catch(function (err) {
+          $('genBtn').disabled = false;
+          $('genBtn').textContent = '🎲 生成练习题';
+          stopTimer();
+          $('checkBtn').disabled = true;
+          $('revealBtn').disabled = true;
+          $('printBtn').disabled = true;
+          showNotice('生成失败，请重试', err && err.message);
+        });
+        return;
+      }
+      applyExerciseSet(result);
+    } catch (err) {
+      stopTimer();
+      $('checkBtn').disabled = true;
+      $('revealBtn').disabled = true;
+      $('printBtn').disabled = true;
+      showNotice('生成失败，请重试', err.message);
+    }
+  }
+
+  function applyExerciseSet(set) {
+    if (!set || !Array.isArray(set.questions)) throw new Error('generate 必须返回 { questions: [] }');
+    state.exerciseSet = set;
+    state.checkResult = null;
+    state.answered = false;
+    render(set);
+    $('checkBtn').disabled = false;
+    $('revealBtn').disabled = false;
+    $('printBtn').disabled = false;
+  }
+
+  function render(set) {
+    var area = $('problemsArea');
+    var html = '';
+    var meta = set.meta || {};
+    if (meta.title) html += '<div class="meta"><span class="pill">' + meta.title + '</span>' +
+      '<span class="pill">' + set.questions.length + ' 题</span></div>';
+    // 题目区域由插件完全控制；仅当插件未提供 render 时使用壳的通用降级渲染
+    html += (typeof state.plugin.render === 'function' ? state.plugin.render(set) : renderGeneric(set));
+    area.innerHTML = html;
+
+    // 卡片式/文字式网格按题目长度自适应列数（适配 A4 竖版宽度）
+    fitColumns(area, set);
+
+    // 回车快捷批改
+    area.querySelectorAll('input[data-index], input[data-idx]').forEach(function (inp) {
+      inp.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); if (!state.answered) check(); }
+      });
+    });
+    $('resultArea').classList.remove('show');
+    $('resultArea').innerHTML = '';
+    startTimer();
+  }
+
+  // ============ A4 竖版宽度自适应 ============
+  // 基础列数按题目长度中位数确定（口算多列、应用题少列）；
+  // 再对每道题按其实际渲染长度跨列：长题整行（grid-column 1/-1），中题跨 2 列，
+  // 短题 1 列——卡片式/文字式都按长度贴合 A4 竖版宽度，避免溢出或浪费。
+  function renderLen(q, i) {
+    var h = '';
+    try {
+      h = (typeof q.render === 'function') ? q.render(i) : String(q.question || q.text || q.q || '');
+    } catch (e) { h = ''; }
+    h = String(h);
+    var txt = h.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+    var score = txt.length;
+    if (h.indexOf('<svg') !== -1) score += 8;             // 图形/SVG 占宽
+    if (h.indexOf('combine-inp') !== -1) score += 8;      // 凑十/破十多输入
+    return score;
+  }
+
+  function adaptiveColumns(set) {
+    var qs = set.questions;
+    if (!qs || !qs.length) return 4;
+    var lens = qs.map(function (q, i) { return renderLen(q, i); });
+    lens.sort(function (a, b) { return a - b; });
+    var med = lens[Math.floor(lens.length / 2)] || 0;
+    if (med >= 45) return 2;
+    if (med >= 30) return 3;
+    return 4;
+  }
+
+  function fitColumns(container, set) {
+    var qs = set.questions || [];
+    var base = adaptiveColumns(set);
+    container.querySelectorAll('.questions-grid, .q-grid').forEach(function (grid) {
+      grid.style.gridTemplateColumns = 'repeat(' + base + ', minmax(0, 1fr))';
+      grid.style.gridAutoFlow = 'row dense';
+      var kids = grid.children;
+      for (var i = 0; i < kids.length; i++) {
+        var item = kids[i];
+        var idx = item.getAttribute('data-index');
+        var L = 0;
+        if (idx !== null && qs[+idx]) {
+          L = renderLen(qs[+idx], +idx);
+        } else {
+          // 综合练习：题目套在 .q-wrap 里，取内部卡片长度
+          var inner = item.querySelector('[data-index]');
+          if (inner && qs[+inner.getAttribute('data-index')]) {
+            L = renderLen(qs[+inner.getAttribute('data-index')], +inner.getAttribute('data-index'));
+            if (item.querySelector('.q-badge')) L += 12;
+          }
+        }
+        if (L >= 60) item.style.gridColumn = '1 / -1';          // 长题（应用题等）：整行
+        else if (L >= 34) item.style.gridColumn = 'span ' + Math.min(2, base); // 中题：跨 2 列
+        else item.style.gridColumn = 'span 1';                  // 短题：1 列
+      }
+    });
+  }
+
+  // 插件无 render 时的通用降级渲染
+  function renderGeneric(set) {
+    var cols = adaptiveColumns(set);
+    var html = '<div class="q-grid cols-' + cols + '">';
+    set.questions.forEach(function (q, i) {
+      html += '<div class="question-card" data-index="' + i + '">' +
+        '<span class="num">' + (i + 1) + '</span>' +
+        '<span class="q-text">' + (q.question || q.text || q.q || '') + '</span>' +
+        (q.hint ? '<div style="font-size:11px;color:var(--muted)">💡 ' + q.hint + '</div>' : '') +
+        '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off">' +
+        '<div class="feedback"></div>' +
+        '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  // ============ 收集答案 ============
+  function collectAnswers() {
+    var answers = {};
+    document.querySelectorAll('#problemsArea input[data-index], #problemsArea input[data-idx]').forEach(function (inp) {
+      if (inp.hasAttribute('data-index')) {
+        answers[inp.getAttribute('data-index')] = inp.value.trim();
+      } else if (inp.hasAttribute('data-idx') && inp.hasAttribute('data-field')) {
+        answers[inp.getAttribute('data-idx') + ':' + inp.getAttribute('data-field')] = inp.value.trim();
+      }
+    });
+    return answers;
+  }
+
+  // ============ 批改 ============
+  function check() {
+    if (!state.plugin || !state.exerciseSet) return;
+    stopTimer();
+    var result;
+    try {
+      result = state.plugin.check(state.exerciseSet, collectAnswers());
+    } catch (err) {
+      showNotice('批改出错', err.message);
+      return;
+    }
+    if (!result || typeof result.score !== 'number' || !Array.isArray(result.results)) {
+      showNotice('批改结果不兼容', 'check 必须返回 { score, total, correct, results, correctAnswers }');
+      return;
+    }
+    state.checkResult = result;
+    state.answered = true;
+    markQuestions(result);
+    showResult(result);
+  }
+
+  function markQuestions(result) {
+    var area = $('problemsArea');
+    result.results.forEach(function (isRight, i) {
+      var card = area.querySelector('.question-card[data-index="' + i + '"], .problem[data-i="' + i + '"]');
+      if (!card) return;
+      card.classList.remove('correct', 'wrong');
+      card.classList.add(isRight ? 'correct' : 'wrong');
+      var inp = card.querySelector('input[data-index="' + i + '"]');
+      if (inp) {
+        inp.classList.remove('correct', 'wrong');
+        inp.classList.add(isRight ? 'correct' : 'wrong');
+      }
+      if (!isRight) {
+        var fb = card.querySelector('.feedback');
+        var tip = '✗ 正确答案：' + (result.correctAnswers && result.correctAnswers[i]);
+        if (fb) { fb.textContent = tip; fb.style.color = 'var(--bad)'; }
+      }
+    });
+  }
+
+  function showResult(result) {
+    var total = result.total || (state.exerciseSet && state.exerciseSet.questions.length) || 0;
+    var wrong = total - result.correct;
+    var tips = result.message || '';
+    if (total) tips += ' · 用时 ' + elapsedText(getElapsed());
+    var html = '<div class="result">' +
+      '<div class="score">' + result.score + ' 分</div>' +
+      '<div class="detail">答对 ' + result.correct + ' / ' + total + ' 题 · 正确率 ' + (total ? Math.round(result.correct / total * 100) : 0) + '%</div>' +
+      '<div class="tips">' + tips + '</div>' +
+      '<div class="redo-wrap">' +
+      (wrong > 0 ? '<button class="btn btn-ghost" id="redoBtn">🔁 错题重做（' + wrong + '）</button>' : '') +
+      '<button class="btn btn-ghost" id="redoAllBtn" style="margin-left:8px;">🎲 重新生成</button>' +
+      '</div></div>';
+    var ra = $('resultArea');
+    ra.innerHTML = html;
+    ra.classList.add('show');
+    ra.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    var redoBtn = $('redoBtn');
+    if (redoBtn) redoBtn.onclick = redoWrong;
+    $('redoAllBtn').onclick = generate;
+  }
+
+  // ============ 错题重做 ============
+  function redoWrong() {
+    if (!state.exerciseSet || !state.checkResult) return;
+    var wrongIdx = [];
+    state.checkResult.results.forEach(function (ok, i) { if (!ok) wrongIdx.push(i); });
+    if (!wrongIdx.length) return;
+    var wrongQuestions = state.exerciseSet.questions.filter(function (_, i) { return wrongIdx.indexOf(i) !== -1; });
+    var set = {
+      questions: wrongQuestions,
+      meta: (state.exerciseSet.meta || {})
+    };
+    state.exerciseSet = set;
+    state.checkResult = null;
+    state.answered = false;
+    state.count = wrongQuestions.length;
+    render(set);
+    $('checkBtn').disabled = false;
+    $('revealBtn').disabled = false;
+    $('printBtn').disabled = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ============ 显示/隐藏答案 ============
+  function toggleReveal() {
+    if (!state.plugin || !state.exerciseSet) return;
+    var ra = $('resultArea');
+    if (ra.dataset.revealed === '1') {
+      ra.dataset.revealed = '0';
+      $('revealBtn').textContent = '👁 显示答案';
+      $('problemsArea').querySelectorAll('.revealed-answer').forEach(function (n) { n.remove(); });
+      return;
+    }
+    ra.dataset.revealed = '1';
+    $('revealBtn').textContent = '🙈 隐藏答案';
+    var result = state.plugin.check(state.exerciseSet, collectAnswers());
+    var cards = $('problemsArea').querySelectorAll('.question-card, .problem');
+    result.results.forEach(function (ok, i) {
+      var card = cards[i];
+      if (!card) return;
+      var old = card.querySelector('.revealed-answer');
+      if (old) old.remove();
+      var ans = result.correctAnswers && result.correctAnswers[i];
+      var d = el('div', 'revealed-answer');
+      d.style.cssText = 'font-size:12px;color:var(--brand-d);font-weight:700;margin-top:6px';
+      d.textContent = '✔ 答案：' + (ans != null ? ans : '—');
+      card.appendChild(d);
+    });
+  }
+
+  // ============ 打印 ============
+  function printFile() {
+    if (!state.plugin || !state.exerciseSet || !state.exerciseSet.questions.length) {
+      alert('请先生成练习题！');
+      return;
+    }
+    var cfg = state.plugin.printConfig || {};
+    var title = state.plugin.name + '（' + App.getGradeName(state.grade) + '）';
+    // 列数按题目长度自适应（A4 竖版宽度内排版），与屏幕端一致
+    var opts = { pageType: cfg.pageType || 'math', columns: adaptiveColumns(state.exerciseSet) };
+    var area = $('problemsArea');
+    try {
+      Print.open(area, title, opts);
+    } catch (err) {
+      alert('打印失败：' + err.message);
+    }
+  }
+
+  // ============ 题量（10 / 20 / 自定义） ============
+  function setCount(n) {
+    n = Math.round(Number(n));
+    if (!(n >= 1 && n <= 50)) { showNotice('题量无效', '自定义题量请填写 1~50 之间的整数。'); return; }
+    state.count = n;
+    syncCountUI();
+    if (state.exerciseSet) generate();
+  }
+
+  function syncCountUI() {
+    var chips = document.querySelectorAll('#countGroup .chip');
+    chips.forEach(function (c) { c.classList.remove('active'); });
+    var customInp = $('customCount');
+    if (state.count === 10 || state.count === 20) {
+      document.querySelectorAll('#countGroup .chip[data-count="' + state.count + '"]').forEach(function (c) {
+        c.classList.add('active');
+      });
+      if (customInp) customInp.style.display = 'none';
+    } else {
+      document.querySelectorAll('#countGroup .chip[data-count="custom"]').forEach(function (c) {
+        c.classList.add('active');
+      });
+      if (customInp) {
+        customInp.style.display = '';
+        customInp.value = state.count;
+      }
+    }
+  }
+
+  // ============ 左上角快速切换（学科 / 年级） ============
+  function buildQuickSwitch() {
+    var subjectRow = $('qsSubject');
+    var gradeRow = $('qsGrade');
+    if (!subjectRow || !gradeRow) return;
+    subjectRow.innerHTML = '';
+    gradeRow.innerHTML = '';
+    var current = state.plugin && state.plugin.subject;
+
+    var subjMap = {
+      math: App.ROUTES.mathTypes,
+      chinese: App.ROUTES.chineseTypes,
+      english: App.ROUTES.englishTypes
+    };
+    Object.keys(subjMap).forEach(function (s) {
+      var a = el('a', 'qs-subj' + (s === current ? ' active' : ''),
+        App.SUBJECT_NAMES[s] || s);
+      a.href = App.buildLink(subjMap[s], state.grade);
+      subjectRow.appendChild(a);
+    });
+
+    var target = subjMap[current] || subjMap.math;
+    for (var g = 1; g <= 6; g++) {
+      var b = el('a', 'qs-grade' + (g === state.grade ? ' active' : ''),
+        App.getGradeName(g));
+      b.href = App.buildLink(target, g);
+      gradeRow.appendChild(b);
+    }
+  }
+
+  function bindQuickSwitch() {
+    var btn = $('qsBtn');
+    var menu = $('qsMenu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menu.style.display = (menu.style.display === 'none') ? '' : 'none';
+    });
+    document.addEventListener('click', function (e) {
+      if (!menu.contains(e.target) && e.target !== btn) menu.style.display = 'none';
+    });
+  }
+
+  // ============ 按钮绑定 ============
+  function bindEvents() {
+    document.querySelectorAll('#countGroup .chip').forEach(function (c) {
+      c.addEventListener('click', function () {
+        if (c.dataset.count === 'custom') {
+          var customInp = $('customCount');
+          document.querySelectorAll('#countGroup .chip').forEach(function (x) { x.classList.remove('active'); });
+          c.classList.add('active');
+          if (customInp) { customInp.style.display = ''; customInp.focus(); }
+          return;
+        }
+        setCount(+c.dataset.count);
+      });
+    });
+    var customInp = $('customCount');
+    if (customInp) {
+      customInp.addEventListener('change', function () {
+        if (customInp.value === '') { syncCountUI(); return; }
+        setCount(customInp.value);
+      });
+      customInp.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); customInp.blur(); }
+      });
+    }
+    $('genBtn').addEventListener('click', generate);
+    $('checkBtn').addEventListener('click', check);
+    $('revealBtn').addEventListener('click', toggleReveal);
+    $('printBtn').addEventListener('click', printFile);
+
+    // 难度数值输入：填写后立即应用（已生成题目则重新生成）
+    var diffInput = $('difficultyInput');
+    if (diffInput) {
+      diffInput.addEventListener('change', function () {
+        state.difficulty = App.diffLevel(diffInput.value);
+        diffInput.value = state.difficulty;
+        if (state.exerciseSet) generate();
+      });
+    }
+
+    bindQuickSwitch();
+  }
+
+  // ============ 启动 ============
+  function boot() {
+    var pluginId = urlParams.plugin;
+    var record = pluginId ? findRegistryRecord(pluginId) : null;
+    if (!pluginId || !record) {
+      showNotice('题型不存在', 'URL 中的 plugin 参数「' + (pluginId || '(空)') + '」未在 plugins/registry.js 注册，请返回首页选择。', true);
+      return;
+    }
+    state.grade = urlParams.grade;
+    state.count = urlParams.count;
+    state.type = urlParams.type;
+    state.difficulty = urlParams.difficulty;
+    buildQuickSwitch(); // 提前构建，加载失败时菜单也可用
+
+    // 综合插件：先预加载数学子插件，再加载综合插件本身
+    var loadPromise = (record.id === 'math-comprehensive')
+      ? preloadMathSubPlugins(state.grade).then(function () { return App.PluginLoader.loadPlugin(record); })
+      : App.PluginLoader.loadPlugin(record);
+
+    loadPromise
+      .then(function (plugin) {
+        state.plugin = plugin;
+        if (plugin.grades && plugin.grades.indexOf(state.grade) === -1) {
+          // 年级不适用：仍加载，但给出提示并自动使用最近可用年级
+          var nearest = plugin.grades.slice().sort(function (a, b) {
+            return Math.abs(a - state.grade) - Math.abs(b - state.grade);
+          })[0];
+          showNotice('该插件不适用于 ' + App.getGradeName(state.grade),
+            '建议使用 ' + App.getGradeName(nearest) + '。已自动切换到 ' + App.getGradeName(nearest) + '。');
+          state.grade = nearest;
+        }
+        initSettings(plugin, state.grade);
+        buildQuickSwitch();
+        $('problemsArea').innerHTML = '<div class="empty">点击「生成练习题」开始吧～</div>';
+        generate();
+      })
+      .catch(function (err) {
+        showNotice('加载失败', err.message, true);
+      });
+  }
+
+  bindEvents();
+  boot();
+})();
+</script>
+</body>
+</html>

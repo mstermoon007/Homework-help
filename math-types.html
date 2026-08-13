@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数学题型选择</title>
+<link rel="stylesheet" href="shared/common.css">
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        min-height: 100vh;
+    }
+    .type-card:hover { border-color: #667eea; }
+    .type-card:hover .t-name { color: #667eea; }
+    .type-card.comprehensive { background: linear-gradient(135deg, #667eea, #764ba2); border: 2.5px solid transparent; color: #fff; }
+    .type-card.comprehensive .t-desc { color: #e8eafd; }
+    .type-card.comprehensive:hover { color: #fff; opacity: 0.92; }
+    .section-label { border-left-color: #667eea; }
+    .grade-badge { color: #667eea; }
+    .load-hint { text-align: center; color: #999; padding: 24px 0; font-size: 0.9rem; }
+</style>
+</head>
+<body class="type-page">
+<div class="wrapper">
+    <a href="index.html" class="back-home">← 返回首页</a>
+
+    <div class="page-header">
+        <div class="logo">🧮</div>
+        <h1>数学练习<span class="grade-badge" id="gradeBadge">一年级</span></h1>
+        <p>请选择要练习的题型</p>
+    </div>
+
+    <div class="card">
+        <div class="section-label">📐 选择题型</div>
+        <div class="type-grid" id="typeGrid">
+            <div class="load-hint">正在加载题型…</div>
+        </div>
+    </div>
+
+    <div class="foot-tip">💡 选择题型后进入对应练习页面，每个题型独立生成题目</div>
+</div>
+
+<script src="shared/common.js"></script>
+<script src="shared/knowledge-bank.js"></script>
+<script src="plugins/registry.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var grade = App.currentGrade();
+  document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
+
+  // 领域内部顺序（分组不显示标题，仅用于排序）
+  var CATEGORY_ORDER = ['number', 'geometry', 'statistics'];
+
+  var COMPREHENSIVE = {
+    id: 'math-comprehensive',
+    name: '综合练习'
+  };
+
+  // 题型图标：优先按插件 ID，缺省回退到领域图标
+  var PLUGIN_ICONS = {
+    'math-oral': '⚡', 'math-word-problems': '📝', 'math-make-ten': '🧮',
+    'math-number-sense': '🔢', 'math-clock': '🕐', 'math-patterns': '🔁',
+    'math-picture-equations': '🖼️', 'math-shapes': '🔷', 'math-statistics': '📊',
+    'math-money': '💰', 'math-unit-convert': '📏', 'math-geometry': '📐',
+    'math-data-stats': '🗳️', 'math-logic-reasoning': '🧠',
+    'math-fraction': '🍕', 'math-decimal': '🔢', 'math-area': '📐'
+  };
+  var CATEGORY_ICONS = { number: '🔢', geometry: '📐', statistics: '📊', mixed: '🌟' };
+  function iconOf(p) {
+    return PLUGIN_ICONS[p.id] || CATEGORY_ICONS[p.category] || '📘';
+  }
+
+  var registry = (typeof window.PLUGIN_REGISTRY !== 'undefined') ? window.PLUGIN_REGISTRY : [];
+
+  // 从知识库读取显示名称与描述（面向学生/家长，直观易懂），缺省回退插件自身元数据
+  var kb = (typeof window.KnowledgeBank !== 'undefined') ? window.KnowledgeBank.getGrade(grade) : null;
+  function lookup(pluginId) {
+    if (!kb || !kb.plugins) return null;
+    for (var i = 0; i < kb.plugins.length; i++) {
+      if (kb.plugins[i].id === pluginId) return kb.plugins[i];
+    }
+    return null;
+  }
+
+  // 统一走 App.PluginLoader：按年级加载本学科全部插件并读取其元数据（含竞态安全与缓存）
+  App.PluginLoader.loadSubjectPlugins('math', grade).then(function (plugins) {
+    // 普通题型（排除综合插件，单独渲染其专属样式）
+    var applicable = plugins.filter(function (p) {
+      return p.id !== COMPREHENSIVE.id && p.grades && p.grades.indexOf(grade) !== -1;
+    });
+
+    // 按领域内部顺序排序（number → geometry → statistics），同领域保持注册表顺序
+    applicable.sort(function (a, b) {
+      var ca = CATEGORY_ORDER.indexOf(a.category);
+      var cb = CATEGORY_ORDER.indexOf(b.category);
+      if (ca === -1) ca = 99;
+      if (cb === -1) cb = 99;
+      return ca - cb;
+    });
+
+    var html = '';
+    applicable.forEach(function (p) {
+      var kp = lookup(p.id);
+      var name = (kp && kp.name) || p.name;
+      var desc = (kp && kp.desc) || '';
+      html += '<a href="' + App.buildPluginLink(p.id) + '" class="type-card" title="' + desc + '">' +
+        '<span class="t-icon">' + iconOf(p) + '</span>' +
+        '<span class="t-name">' + name + '</span>' +
+        (desc ? '<span class="t-desc">' + desc + '</span>' : '') +
+        '</a>';
+    });
+
+    // 追加综合练习按钮（从知识库读取名称/描述）
+    var kc = lookup(COMPREHENSIVE.id);
+    html += '<a href="' + App.buildPluginLink(COMPREHENSIVE.id) + '" class="type-card comprehensive">' +
+      '<span class="t-icon">🌟</span>' +
+      '<span class="t-name">' + ((kc && kc.name) || COMPREHENSIVE.name) + '</span>' +
+      (kc && kc.desc ? '<span class="t-desc">' + kc.desc + '</span>' : '') +
+      '</a>';
+
+    document.getElementById('typeGrid').innerHTML = html;
+
+    // 预热：当前年级插件已加载并缓存，配合 Service Worker 让点击进入练习页更快
+    App.PluginLoader.prefetch(plugins);
+  }).catch(function (err) {
+    document.getElementById('typeGrid').innerHTML =
+      '<div class="load-hint">题型加载失败：' + (err && err.message) + '</div>';
+  });
+})();
+</script>
+</body>
+</html>
