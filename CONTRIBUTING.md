@@ -9,6 +9,7 @@
 - 根目录**不再存在**公共版 `common.js` / `common.css` / `print.js`（已于架构统一时删除并迁移到 `shared/`）。**禁止**新建根目录级别的公共脚本或样式文件。
 - 新增跨插件复用的工具 / 常量 / 类型：一律放进 `shared/`（通用随机与标准化工具通过 `shared/common.js` 的 `PluginUtil` 暴露，类型定义在 `shared/plugin-types.js`）。
 - **禁止**插件之间互相 `import` / `require` 对方内部实现；公共能力只能通过 `shared/` 共享。
+- **清理保护（防误删）**：`dev/cleanup-scan.js` 的 `keepDirs` / `keepFiles` 白名单已保护 `shared/`、`docs/`、`plugins/`、`agents/`、`dev/`、`archive/` 目录与根级文档（`*.html` / `*.md` / `banner.jpg` / `pinyin-bank.js` 等），不会误删有效代码与文档。新增公共能力务必放进 `shared/`，否则可能被清理工具误判为可删除。
 
 ---
 
@@ -92,9 +93,16 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 - 在 `plugins/registry.js` 的 `PLUGIN_REGISTRY` 追加一条：`{ id, file, name, subject, category, grades, deps? }`。
 - 需要预置大体积数据（如拼音词库 `pinyin-bank.js`）时，用 `deps` 声明前置脚本，由加载器按顺序预加载；**不要在插件文件内硬编码此类数据**。
 
-### 5. 打印
+### 5. 打印约定
 
-提供 `printConfig: { pageType, title? }`，`pageType` 用于打印模板分支（缺失回退 `'math'`），`title` 仅部分插件使用。
+打印能力统一由 `shared/print.js` 提供（全局 `Print`），**仅 `practice.html` 加载该脚本**（首页 / 题型选择页不需要打印，不引用）。
+
+- **插件声明**：在插件对象上提供 `printConfig: { pageType: string, title?: string }`。
+  - `pageType`：选择打印模板分支（A4 边距、列数等），取值见 `shared/print.js` 的 `PRINT_ROUTES`：`math` / `pinyin` / `word` / `makeTen` / `pinyinToChar` / `comprehensive` / `numberSense` / `measurement` / `geometry` / `shapes` / `unitConvert` / `alphabet`。**缺失时容器回退 `'math'`**。
+  - `title`：可选；容器实际打印标题由 `plugin.name + 年级` 生成，此字段一般留空。
+- **打印触发**：容器（`practice.html` 的 `printFile()`）读取当前插件的 `printConfig`，再调用 `Print.open(area, title, { pageType, columns })`——`pageType` 取自 `printConfig.pageType`（回退 `'math'`），`columns` 由容器按题目长度自适应（A4 竖版宽度内排版）。`Print.open` 会克隆 `#problemsArea` 实时 DOM、复制原页 `<link>`/`<style>`、套用 A4 竖版、移除按钮 / 控制面板等交互元素，保证打印排版与屏幕预览一致。
+- **插件禁止自行打印**：插件只产出数据 + HTML，不得直接调用 `window.print()` 或操作打印窗口。所有打印逻辑集中在 `shared/print.js` + 容器。
+- **复合答案展示**：有余数（`q……余 r`）、多空数组等标准答案的打印展示由 `print.js` 的 `formatAnswer` 统一处理，插件无需关心。
 
 ---
 

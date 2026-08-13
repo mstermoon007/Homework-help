@@ -72,67 +72,78 @@
   var GRADE1_ENTRIES = [
     // ---- 数与代数 ----
     {
-      id: 'count', name: '数数与顺序', category: 'number', pluginId: 'math-number-sense', type: 'count',
+      id: 'count',
+      importance: 3, name: '数数与顺序', category: 'number', pluginId: 'math-number-sense', type: 'count',
       defaults: { count: 8 },
       desc: '数一数圆点、写出前后数、数列填空',
       points: ['数数', '顺序']
     },
     {
-      id: 'compose-digit', name: '数的组成与数位', category: 'number', pluginId: 'math-number-sense', type: 'compose',
+      id: 'compose-digit',
+      importance: 3, name: '数的组成与数位', category: 'number', pluginId: 'math-number-sense', type: 'compose',
       defaults: { count: 8 },
       desc: '几个十几个一组成几、十位个位辨析',
       points: ['组成', '数位']
     },
     {
-      id: 'compare', name: '比大小', category: 'number', pluginId: 'math-number-sense', type: 'compare',
+      id: 'compare',
+      importance: 3, name: '比大小', category: 'number', pluginId: 'math-number-sense', type: 'compare',
       defaults: { count: 8 },
       desc: '20 以内数比较大小，填写 > < =',
       points: ['比大小']
     },
     {
-      id: 'addsub-20', name: '20 以内加减法', category: 'number', pluginId: 'math-oral', type: 'addsub',
+      id: 'addsub-20',
+      importance: 5, name: '20 以内加减法', category: 'number', pluginId: 'math-oral', type: 'addsub',
       defaults: { count: 10, maxNum: 20, noNegative: true },
       desc: '20 以内加法与减法口算',
       points: ['20 以内加减法']
     },
     {
-      id: 'chain-mixed', name: '连加连减与加减混合', category: 'number', pluginId: 'math-word-problems',
+      id: 'chain-mixed',
+      importance: 3, name: '连加连减与加减混合', category: 'number', pluginId: 'math-word-problems',
       defaults: { count: 5, difficulty: 'basic' },
       desc: '连加、连减、加减混合文字题',
       points: ['连加连减', '加减混合']
     },
     {
-      id: 'make-ten', name: '凑十法', category: 'number', pluginId: 'math-make-ten',
+      id: 'make-ten',
+      importance: 4, name: '凑十法', category: 'number', pluginId: 'math-make-ten',
       defaults: { count: 5, type: 'mix' },
       desc: '凑十 / 平十 / 破十拆分计算技巧',
       points: ['凑十法', '平十法', '破十法']
     },
     {
-      id: 'clock-hour', name: '认识钟表（整时）', category: 'number', pluginId: 'math-clock',
+      id: 'clock-hour',
+      importance: 3, name: '认识钟表（整时）', category: 'number', pluginId: 'math-clock',
       defaults: { count: 8 },
       desc: '读钟面说出整时、判断时针指向',
       points: ['整时']
     },
     {
-      id: 'patterns', name: '找规律', category: 'number', pluginId: 'math-patterns',
+      id: 'patterns',
+      importance: 3, name: '找规律', category: 'number', pluginId: 'math-patterns',
       defaults: { count: 8 },
       desc: '数字等差规律与图形循环规律填空',
       points: ['数字规律', '图形规律']
     },
     {
-      id: 'picture-equations', name: '看图列式', category: 'number', pluginId: 'math-picture-equations',
+      id: 'picture-equations',
+      importance: 3, name: '看图列式', category: 'number', pluginId: 'math-picture-equations',
       defaults: { count: 8 },
       desc: '根据图示列出加法或减法算式',
       points: ['看图列式']
     },
     {
-      id: 'money', name: '认识人民币', category: 'number', pluginId: 'math-money', type: 'mix',
+      id: 'money',
+      importance: 3, name: '认识人民币', category: 'number', pluginId: 'math-money', type: 'mix',
       defaults: { count: 8 },
       desc: '认识元、角、分，掌握 1 元 = 10 角、1 角 = 10 分 的换算与同单位加减',
       points: ['认识面值', '元角分换算', '简单计算']
     },
     {
-      id: 'solve-problems', name: '解决问题', category: 'number', pluginId: 'math-word-problems',
+      id: 'solve-problems',
+      importance: 4, name: '解决问题', category: 'number', pluginId: 'math-word-problems',
       defaults: { count: 5, difficulty: 'mix' },
       desc: '加法、减法、相差、连加连减、多余条件等实际问题',
       points: ['加法', '减法', '相差', '连加连减', '多余条件']
@@ -140,25 +151,29 @@
 
     // ---- 图形与几何 ----
     {
-      id: 'solid-shapes', name: '认识立体图形', category: 'geometry', pluginId: 'math-shapes', type: 'solid',
+      id: 'solid-shapes',
+      importance: 3, name: '认识立体图形', category: 'geometry', pluginId: 'math-shapes', type: 'solid',
       defaults: { count: 8 },
       desc: '辨认长方体、正方体、圆柱、球',
       points: ['长方体', '正方体', '圆柱', '球']
     },
     {
-      id: 'flat-shapes', name: '认识平面图形', category: 'geometry', pluginId: 'math-shapes', type: 'flat',
+      id: 'flat-shapes',
+      importance: 3, name: '认识平面图形', category: 'geometry', pluginId: 'math-shapes', type: 'flat',
       defaults: { count: 8 },
       desc: '辨认三角形、正方形、长方形、圆等平面图形',
       points: ['三角形', '正方形', '长方形', '圆形', '梯形']
     },
     {
-      id: 'shape-compose', name: '图形拼组', category: 'geometry', pluginId: 'math-shapes', type: 'count',
+      id: 'shape-compose',
+      importance: 2, name: '图形拼组', category: 'geometry', pluginId: 'math-shapes', type: 'count',
       defaults: { count: 8 },
       desc: '数一数组合图形中各种图形的个数',
       points: ['图形拼组']
     },
     {
-      id: 'position', name: '上下左右位置', category: 'geometry', pluginId: 'math-shapes', type: 'position',
+      id: 'position',
+      importance: 2, name: '上下左右位置', category: 'geometry', pluginId: 'math-shapes', type: 'position',
       defaults: { count: 8 },
       desc: '辨认图形的上、下、左、右方位关系',
       points: ['上下左右位置']
@@ -166,19 +181,22 @@
 
     // ---- 统计与概率 ----
     {
-      id: 'classify', name: '分类与整理', category: 'statistics', pluginId: 'math-statistics', type: 'classify',
+      id: 'classify',
+      importance: 2, name: '分类与整理', category: 'statistics', pluginId: 'math-statistics', type: 'classify',
       defaults: { count: 6 },
       desc: '按形状 / 颜色对图形分类并数出数量',
       points: ['按形状分类', '按颜色分类', '按用途分类']
     },
     {
-      id: 'stats-table', name: '填写简单统计表', category: 'statistics', pluginId: 'math-statistics', type: 'table',
+      id: 'stats-table',
+      importance: 2, name: '填写简单统计表', category: 'statistics', pluginId: 'math-statistics', type: 'table',
       defaults: { count: 6 },
       desc: '把整理结果填入统计表',
       points: ['填写简单统计表']
     },
     {
-      id: 'pictograph', name: '象形统计图', category: 'statistics', pluginId: 'math-statistics', type: 'picto',
+      id: 'pictograph',
+      importance: 2, name: '象形统计图', category: 'statistics', pluginId: 'math-statistics', type: 'picto',
       defaults: { count: 6 },
       desc: '用涂色方块表示数量并比较多少',
       points: ['涂色制作象形统计图']
@@ -219,61 +237,71 @@
   var GRADE2_ENTRIES = [
     // ---- 数与代数 ----
     {
-      id: 'addsub-100', name: '100 以内加减法', category: 'number', pluginId: 'math-oral', type: 'addsub',
+      id: 'addsub-100',
+      importance: 4, name: '100 以内加减法', category: 'number', pluginId: 'math-oral', type: 'addsub',
       defaults: { count: 10, maxNum: 100, noNegative: true },
       desc: '100 以内进位加法与退位减法口算',
       points: ['100 以内加减法', '进位加法', '退位减法', '竖式计算']
     },
     {
-      id: 'muldiv', name: '表内乘除法', category: 'number', pluginId: 'math-oral', type: 'muldiv',
+      id: 'muldiv',
+      importance: 5, name: '表内乘除法', category: 'number', pluginId: 'math-oral', type: 'muldiv',
       defaults: { count: 10, maxNum: 50 },
       desc: '表内乘法与表内除法口算',
       points: ['乘法口诀', '表内乘法', '表内除法']
     },
     {
-      id: 'remainder', name: '有余数除法', category: 'number', pluginId: 'math-oral', type: 'remainder',
+      id: 'remainder',
+      importance: 4, name: '有余数除法', category: 'number', pluginId: 'math-oral', type: 'remainder',
       defaults: { count: 10, maxNum: 50 },
       desc: '有余数除法（商……余数）口算',
       points: ['有余数的除法', '余数与除数的关系']
     },
     {
-      id: 'mixed', name: '混合运算', category: 'number', pluginId: 'math-oral', type: 'mixed',
+      id: 'mixed',
+      importance: 4, name: '混合运算', category: 'number', pluginId: 'math-oral', type: 'mixed',
       defaults: { count: 10, maxNum: 50 },
       desc: '乘加、乘减、除加、除减两级混合运算',
       points: ['乘加乘减', '两步运算']
     },
     {
-      id: 'wp-solve', name: '解决问题', category: 'number', pluginId: 'math-word-problems',
+      id: 'wp-solve',
+      importance: 4, name: '解决问题', category: 'number', pluginId: 'math-word-problems',
       defaults: { count: 5, difficulty: 'mix' },
       desc: '乘除、两步、进一去尾、周期、估算、质量等实际问题',
       points: ['乘法', '除法', '两步运算', '进一法', '去尾法', '周期问题', '估算', '质量计算']
     },
     {
-      id: 'readwrite', name: '万以内数的读写', category: 'number', pluginId: 'math-number-sense', type: 'readwrite',
+      id: 'readwrite',
+      importance: 3, name: '万以内数的读写', category: 'number', pluginId: 'math-number-sense', type: 'readwrite',
       defaults: { count: 8 },
       desc: '万以内数的读作与写作',
       points: ['读写', '万以内数的认识']
     },
     {
-      id: 'compose-4', name: '数的组成与数位', category: 'number', pluginId: 'math-number-sense', type: 'compose',
+      id: 'compose-4',
+      importance: 3, name: '数的组成与数位', category: 'number', pluginId: 'math-number-sense', type: 'compose',
       defaults: { count: 8 },
       desc: '几个千/百/十/一组成几，数位辨析',
       points: ['组成', '数位顺序']
     },
     {
-      id: 'approx', name: '近似数', category: 'number', pluginId: 'math-number-sense', type: 'approx',
+      id: 'approx',
+      importance: 2, name: '近似数', category: 'number', pluginId: 'math-number-sense', type: 'approx',
       defaults: { count: 8 },
       desc: '把数估成整十、整百或整千',
       points: ['近似数']
     },
     {
-      id: 'unit-convert', name: '单位换算', category: 'number', pluginId: 'math-unit-convert', type: 'convert',
+      id: 'unit-convert',
+      importance: 3, name: '单位换算', category: 'number', pluginId: 'math-unit-convert', type: 'convert',
       defaults: { count: 8 },
       desc: '长度（米/厘米/毫米/千米）与质量（克/千克）单位互化',
       points: ['长度单位', '单位换算', '厘米', '米', '毫米', '千米', '克与千克换算']
     },
     {
-      id: 'fill-unit', name: '填合适单位', category: 'number', pluginId: 'math-unit-convert', type: 'fillUnit',
+      id: 'fill-unit',
+      importance: 3, name: '填合适单位', category: 'number', pluginId: 'math-unit-convert', type: 'fillUnit',
       defaults: { count: 8 },
       desc: '根据生活常识为数量选择正确的长度/质量单位',
       points: ['认识质量单位', '长度单位应用', '常见的量', '克与千克']
@@ -281,25 +309,29 @@
 
     // ---- 图形与几何 ----
     {
-      id: 'angles', name: '角的初步认识', category: 'geometry', pluginId: 'math-geometry', type: 'angleClass',
+      id: 'angles',
+      importance: 3, name: '角的初步认识', category: 'geometry', pluginId: 'math-geometry', type: 'angleClass',
       defaults: { count: 8 },
       desc: '数角、识别锐角/直角/钝角',
       points: ['锐角', '直角', '钝角']
     },
     {
-      id: 'motion', name: '图形的运动', category: 'geometry', pluginId: 'math-geometry', type: 'motion',
+      id: 'motion',
+      importance: 2, name: '图形的运动', category: 'geometry', pluginId: 'math-geometry', type: 'motion',
       defaults: { count: 8 },
       desc: '判断平移与旋转',
       points: ['平移', '旋转']
     },
     {
-      id: 'grid', name: '方格纸', category: 'geometry', pluginId: 'math-geometry', type: 'grid',
+      id: 'grid',
+      importance: 2, name: '方格纸', category: 'geometry', pluginId: 'math-geometry', type: 'grid',
       defaults: { count: 8 },
       desc: '数一数图形向右平移了几格',
       points: ['在方格纸上画简单图形']
     },
     {
-      id: 'shapes-2', name: '认识图形', category: 'geometry', pluginId: 'math-shapes', type: 'mix',
+      id: 'shapes-2',
+      importance: 3, name: '认识图形', category: 'geometry', pluginId: 'math-shapes', type: 'mix',
       defaults: { count: 8 },
       desc: '辨认立体与平面图形、方位辨别、拼组数图形',
       points: ['立体图形', '平面图形', '上下左右位置', '图形拼组']
@@ -307,25 +339,29 @@
 
     // ---- 统计与概率 ----
     {
-      id: 'data-tally', name: '数据收集与整理', category: 'statistics', pluginId: 'math-data-stats', type: 'tally',
+      id: 'data-tally',
+      importance: 3, name: '数据收集与整理', category: 'statistics', pluginId: 'math-data-stats', type: 'tally',
       defaults: { count: 6 },
       desc: '用正字法统计投票结果并填写统计表',
       points: ['正字统计法', '简单统计表']
     },
     {
-      id: 'data-question', name: '根据统计结果回答问题', category: 'statistics', pluginId: 'math-data-stats', type: 'result',
+      id: 'data-question',
+      importance: 2, name: '根据统计结果回答问题', category: 'statistics', pluginId: 'math-data-stats', type: 'result',
       defaults: { count: 6 },
       desc: '根据统计表回答谁最多、谁最少、多几票等问题',
       points: ['根据统计结果提出建议']
     },
     {
-      id: 'logic-reasoning', name: '简单逻辑推理', category: 'statistics', pluginId: 'math-logic-reasoning', type: 'bookGuess',
+      id: 'logic-reasoning',
+      importance: 2, name: '简单逻辑推理', category: 'statistics', pluginId: 'math-logic-reasoning', type: 'bookGuess',
       defaults: { count: 6 },
       desc: '根据线索推理判断谁拿什么',
       points: ['简单逻辑推理']
     },
     {
-      id: 'sudoku3', name: '3×3 数独', category: 'statistics', pluginId: 'math-logic-reasoning', type: 'sudoku3',
+      id: 'sudoku3',
+      importance: 1, name: '3×3 数独', category: 'statistics', pluginId: 'math-logic-reasoning', type: 'sudoku3',
       defaults: { count: 6 },
       desc: '每行每列都有 1/2/3 的数独启蒙',
       points: ['数独启蒙']
@@ -333,9 +369,7 @@
   ];
 
   // ---------------- 三年级 ----------------
-  // 真实插件来自 plugins/registry.js 中 grades 含 3 的条目；
-  // 另含 3 个「待开发」知识点（pluginId 指向尚未实现的插件），
-  // 用于让覆盖统计产生真实缺口、驱动「建议下一个开发 Z」。
+  // 插件清单与 plugins/registry.js 中 grades 含 3 的数学条目一一对应。
   var GRADE3_PLUGINS = [
     { id: 'math-oral',              name: '口算练习',         category: 'number',     desc: '万以内加减、多位数乘一位数、两位数乘两位数、除数是一位数除法等' },
     { id: 'math-word-problems',     name: '应用题',           category: 'number',     desc: '倍数、两步计算、搭配等实际问题' },
@@ -344,7 +378,9 @@
     { id: 'math-unit-convert',      name: '单位换算',         category: 'number',     desc: '长度（毫米/分米/千米/吨）与质量单位换算' },
     { id: 'math-geometry',          name: '图形与几何',       category: 'geometry',   desc: '周长与面积计算、位置与方向' },
     { id: 'math-data-stats',        name: '数据收集与整理',   category: 'statistics', desc: '复式统计表阅读与填写' },
-    { id: 'math-logic-reasoning',   name: '简单推理与集合',   category: 'statistics', desc: '简单逻辑推理与集合重叠问题' },
+    { id: 'math-fraction',          name: '分数的初步认识',   category: 'number',     desc: '认识几分之一/几分之几、分数比大小、同分母分数加减' },
+    { id: 'math-decimal',           name: '小数的初步认识',   category: 'number',     desc: '读写小数、比较大小、简单加减' },
+    { id: 'math-area',              name: '面积',             category: 'geometry',   desc: '面积单位、长方形正方形面积计算' },
     { id: 'math-time-date',         name: '时间与日期',       category: 'number',     desc: '时、分、秒与年、月、日' },
     { id: 'math-position-direction',name: '方向与位置',       category: 'geometry',   desc: '东、南、西、北及东北、西南等八个方向' },
     { id: 'math-combination-set',   name: '搭配与集合',       category: 'statistics', desc: '排列组合与集合重叠' },
@@ -354,61 +390,71 @@
   var GRADE3_ENTRIES = [
     // ---- 数与代数 ----
     {
-      id: 'g3-time', name: '时、分、秒', category: 'number', pluginId: 'math-time-date', type: 'clock',
+      id: 'g3-time',
+      importance: 3, name: '时、分、秒', category: 'number', pluginId: 'math-time-date', type: 'clock',
       defaults: { count: 8 },
       desc: '时间单位换算、经过时间计算',
       points: ['时间单位', '经过时间计算']
     },
     {
-      id: 'g3-add-sub-wan', name: '万以内的加减法', category: 'number', pluginId: 'math-oral', type: 'addsub',
+      id: 'g3-add-sub-wan',
+      importance: 5, name: '万以内的加减法', category: 'number', pluginId: 'math-oral', type: 'addsub',
       defaults: { count: 10, maxNum: 10000 },
       desc: '不进位/进位加法、不退位/退位减法、验算',
       points: ['万以内加减', '验算']
     },
     {
-      id: 'g3-times', name: '倍的认识', category: 'number', pluginId: 'math-word-problems', type: 'times',
+      id: 'g3-times',
+      importance: 3, name: '倍的认识', category: 'number', pluginId: 'math-word-problems', type: 'times',
       defaults: { count: 6 },
       desc: '求一个数是另一个数的几倍、求一个数的几倍是多少',
       points: ['倍数']
     },
     {
-      id: 'g3-mul-multi1', name: '多位数乘一位数', category: 'number', pluginId: 'math-oral', type: 'multi1',
+      id: 'g3-mul-multi1',
+      importance: 4, name: '多位数乘一位数', category: 'number', pluginId: 'math-oral', type: 'multi1',
       defaults: { count: 10 },
       desc: '口算、笔算、估算多位数乘一位数',
       points: ['多位数乘一位数']
     },
     {
-      id: 'g3-fraction', name: '分数的初步认识', category: 'number', pluginId: 'math-fraction', type: 'fraction',
+      id: 'g3-fraction',
+      importance: 4, name: '分数的初步认识', category: 'number', pluginId: 'math-fraction', type: 'fraction',
       defaults: { count: 8 },
-      desc: '认识几分之一/几分之几、分数比大小、同分母分数加减（待开发插件 math-fraction）',
+      desc: '认识几分之一/几分之几、分数比大小、同分母分数加减',
       points: ['认识分数', '分数比大小', '同分母分数加减']
     },
     {
-      id: 'g3-div1', name: '除数是一位数的除法', category: 'number', pluginId: 'math-oral', type: 'div1',
+      id: 'g3-div1',
+      importance: 4, name: '除数是一位数的除法', category: 'number', pluginId: 'math-oral', type: 'div1',
       defaults: { count: 10 },
       desc: '口算与笔算除法、商中间/末尾有 0',
       points: ['除数是一位数']
     },
     {
-      id: 'g3-mul-2digit', name: '两位数乘两位数', category: 'number', pluginId: 'math-oral', type: 'twodigit',
+      id: 'g3-mul-2digit',
+      importance: 4, name: '两位数乘两位数', category: 'number', pluginId: 'math-oral', type: 'twodigit',
       defaults: { count: 10 },
       desc: '口算与笔算两位数乘两位数',
       points: ['两位数乘两位数']
     },
     {
-      id: 'g3-decimal', name: '小数的初步认识', category: 'number', pluginId: 'math-decimal', type: 'decimal',
+      id: 'g3-decimal',
+      importance: 4, name: '小数的初步认识', category: 'number', pluginId: 'math-decimal', type: 'decimal',
       defaults: { count: 8 },
-      desc: '读写小数、比较大小、简单加减（待开发插件 math-decimal）',
+      desc: '读写小数、比较大小、简单加减',
       points: ['读写小数', '小数比大小', '简单加减']
     },
     {
-      id: 'g3-year-month', name: '年、月、日', category: 'number', pluginId: 'math-time-date', type: 'calendar',
+      id: 'g3-year-month',
+      importance: 3, name: '年、月、日', category: 'number', pluginId: 'math-time-date', type: 'calendar',
       defaults: { count: 8 },
       desc: '大月小月、平年闰年、日历阅读、经过天数计算',
       points: ['年月日', '平年闰年', '经过天数']
     },
     {
-      id: 'g3-combination', name: '搭配问题', category: 'number', pluginId: 'math-combination-set', type: 'combo',
+      id: 'g3-combination',
+      importance: 2, name: '搭配问题', category: 'number', pluginId: 'math-combination-set', type: 'combo',
       defaults: { count: 6 },
       desc: '数学广角：排列组合',
       points: ['排列组合']
@@ -416,25 +462,29 @@
 
     // ---- 图形与几何 ----
     {
-      id: 'g3-measure', name: '测量', category: 'geometry', pluginId: 'math-unit-convert', type: 'measure',
+      id: 'g3-measure',
+      importance: 3, name: '测量', category: 'geometry', pluginId: 'math-unit-convert', type: 'measure',
       defaults: { count: 8 },
       desc: '长度单位（毫米、分米、千米）与质量单位（吨）换算、填合适单位',
       points: ['毫米分米千米', '吨', '填合适单位']
     },
     {
-      id: 'g3-perimeter', name: '长方形正方形的周长', category: 'geometry', pluginId: 'math-geometry', type: 'perimeter',
+      id: 'g3-perimeter',
+      importance: 3, name: '长方形正方形的周长', category: 'geometry', pluginId: 'math-geometry', type: 'perimeter',
       defaults: { count: 8 },
       desc: '周长含义、周长计算、靠墙围栏等实际问题',
       points: ['周长含义', '周长计算']
     },
     {
-      id: 'g3-area', name: '面积', category: 'geometry', pluginId: 'math-area', type: 'area',
+      id: 'g3-area',
+      importance: 4, name: '面积', category: 'geometry', pluginId: 'math-area', type: 'area',
       defaults: { count: 8 },
-      desc: '面积单位、长方形正方形面积计算（待开发插件 math-area）',
+      desc: '面积单位、长方形正方形面积计算',
       points: ['面积单位', '面积计算']
     },
     {
-      id: 'g3-position', name: '位置与方向', category: 'geometry', pluginId: 'math-position-direction', type: 'direction',
+      id: 'g3-position',
+      importance: 2, name: '位置与方向', category: 'geometry', pluginId: 'math-position-direction', type: 'direction',
       defaults: { count: 8 },
       desc: '东、南、西、北及东北、西南等八个方向',
       points: ['八个方向']
@@ -442,13 +492,15 @@
 
     // ---- 统计与概率 ----
     {
-      id: 'g3-stats-table', name: '复式统计表', category: 'statistics', pluginId: 'math-data-stats', type: 'multiTable',
+      id: 'g3-stats-table',
+      importance: 3, name: '复式统计表', category: 'statistics', pluginId: 'math-data-stats', type: 'multiTable',
       defaults: { count: 6 },
       desc: '阅读与填写复式统计表',
       points: ['复式统计表']
     },
     {
-      id: 'g3-set', name: '集合思想', category: 'statistics', pluginId: 'math-combination-set', type: 'set',
+      id: 'g3-set',
+      importance: 2, name: '集合思想', category: 'statistics', pluginId: 'math-combination-set', type: 'set',
       defaults: { count: 6 },
       desc: '数学广角：集合重叠问题',
       points: ['集合重叠']

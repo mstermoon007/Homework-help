@@ -191,6 +191,49 @@
       return plugins.map(function (p, idx) { return per + (idx < extra ? 1 : 0); });
     }
 
+    // ============ 知识点重要度权重（来自 knowledge-bank.js） ============
+    // 每个插件的重要度 = 其名下所有知识点 importance 之和（importance 代表课时占比/重要度）。
+    // 若知识库不可用或某条目缺字段，按领域默认值兜底（数与代数4 / 图形几何3 / 统计推理2）。
+    var CATEGORY_IMPORTANCE = { number: 4, geometry: 3, statistics: 2, mixed: 3 };
+    function entryImportance(e) {
+      return (typeof e.importance === 'number') ? e.importance
+        : (CATEGORY_IMPORTANCE[e.category] || 3);
+    }
+    function kbPluginWeights(grade, plugins) {
+      var g = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.getGrade)
+        ? KnowledgeBank.getGrade(grade) : null;
+      var byPlugin = {};
+      if (g && g.entries) {
+        g.entries.forEach(function (e) {
+          if (!e.pluginId) return;
+          byPlugin[e.pluginId] = (byPlugin[e.pluginId] || 0) + entryImportance(e);
+        });
+      }
+      return plugins.map(function (p) { return byPlugin[p.id] || 0; });
+    }
+
+    // 按权重分配题量（最大余数法）：重要度高的插件抽到更多题
+    function allocateByWeight(count, plugins, weights) {
+      var total = 0;
+      weights.forEach(function (w) { total += (w || 0); });
+      if (!total) { // 全部无权重：退化为均分
+        var per = Math.floor(count / plugins.length);
+        var extra = count % plugins.length;
+        return plugins.map(function (p, idx) { return per + (idx < extra ? 1 : 0); });
+      }
+      var shares = plugins.map(function (p, i) {
+        return Math.floor(count * (weights[i] || 0) / total);
+      });
+      var assigned = 0;
+      shares.forEach(function (s) { assigned += s; });
+      var fracs = plugins.map(function (p, i) {
+        return { i: i, f: count * (weights[i] || 0) / total - shares[i] };
+      }).sort(function (a, b) { return b.f - a.f; });
+      var k = 0;
+      while (assigned < count) { shares[fracs[k % fracs.length].i]++; assigned++; k++; }
+      return shares;
+    }
+
     // 答案展示格式化：支持数字/字符串/多空数组/有余数除法对象
     function formatAnswer(ans) {
       if (ans == null) return '';
@@ -215,12 +258,13 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
 
-settings: [
+      settings: [
         {
           key: 'type',
           label: '组卷方式',
-          default: 'weighted',
+          default: 'kb',
           options: [
+            { value: 'kb',       label: '按知识点重要度（课时占比，表内乘法等核心题型更多）' },
             { value: 'weighted', label: '领域配比（数与代数60%·图形几何30%·统计推理10%）' },
             { value: 'average',  label: '均衡分配' },
             { value: 'domain',   label: '按领域分布' }
@@ -232,8 +276,9 @@ settings: [
         var opts = options || {};
         var grade = opts.grade || 1;
         var count = opts.count || 10;
-        // 默认领域配比（保证数与代数/图形几何/统计推理均有题目）
-        var mode = (opts.type === 'average' || opts.type === 'domain') ? opts.type : 'weighted';
+        // 默认按知识点重要度分配（kb）；兼容旧 average/domain/weighted
+        var mode = opts.type;
+        if (mode !== 'kb' && mode !== 'average' && mode !== 'domain' && mode !== 'weighted') mode = 'kb';
 
         return ensureSubPlugins().then(function (subs) {
           var applicable = subs.filter(function (p) {
@@ -243,7 +288,13 @@ settings: [
             throw new Error('当前年级没有可用的数学练习，请返回选择其他年级');
           }
 
-          var counts = allocateCounts(count, applicable, mode);
+          var counts, kbWeights = null;
+          if (mode === 'kb') {
+            kbWeights = kbPluginWeights(grade, applicable);
+            counts = allocateByWeight(count, applicable, kbWeights);
+          } else {
+            counts = allocateCounts(count, applicable, mode);
+          }
           var questions = [];
           var weightInfo = [];
           var categoryCounts = {}; // 各领域实际题数（用于 meta 展示）
@@ -273,7 +324,7 @@ settings: [
               count: questions.length,
               title: '小学' + gradeName(grade) + '数学综合练习',
               distribution: mode,
-              weights: DOMAIN_WEIGHTS,
+              weights: (mode === 'kb' && kbWeights) ? kbWeights : DOMAIN_WEIGHTS,
               categoryCounts: categoryCounts,
               weight: weightInfo
             }

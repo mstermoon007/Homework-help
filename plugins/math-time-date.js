@@ -195,35 +195,7 @@
     var minute = pick([0, 15, 30, 45]);
     if (minute === 0 && rnd(1, 2) === 1) minute = pick([10, 20, 40, 50]);
 
-    function clockSVG(h, m) {
-      var cx = 60, cy = 60, R = 52;
-      var hourAngle = ((h % 12) + m / 60) * 30 - 90;
-      var minAngle = m * 6 - 90;
-      var hourRad = hourAngle * Math.PI / 180;
-      var minRad = minAngle * Math.PI / 180;
-      var hx = cx + 28 * Math.cos(hourRad);
-      var hy = cy + 28 * Math.sin(hourRad);
-      var mx = cx + 42 * Math.cos(minRad);
-      var my = cy + 42 * Math.sin(minRad);
-      // 刻度
-      var ticks = '';
-      for (var i = 0; i < 12; i++) {
-        var ang = (i * 30 - 90) * Math.PI / 180;
-        var x1 = cx + 46 * Math.cos(ang);
-        var y1 = cy + 46 * Math.sin(ang);
-        var x2 = cx + 50 * Math.cos(ang);
-        var y2 = cy + 50 * Math.sin(ang);
-        ticks += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="#2b3a55" stroke-width="2"/>';
-      }
-      return '<svg width="130" height="130" viewBox="0 0 130 130">' +
-        '<circle cx="60" cy="60" r="54" fill="#fafbff" stroke="#c9d4e6" stroke-width="2"/>' +
-        ticks +
-        '<line x1="60" y1="60" x2="' + hx.toFixed(1) + '" y2="' + hy.toFixed(1) + '" stroke="#2b3a55" stroke-width="3.5" stroke-linecap="round"/>' +
-        '<line x1="60" y1="60" x2="' + mx.toFixed(1) + '" y2="' + my.toFixed(1) + '" stroke="#e8870a" stroke-width="2.5" stroke-linecap="round"/>' +
-        '<circle cx="60" cy="60" r="4" fill="#2b3a55"/>' +
-        '</svg>';
-    }
-
+    // 钟面 SVG 统一由 shared/common.js 的全局 clockSVG(h, m) 生成，此处不再重复定义。
     if (variant === 1) {
       // 看钟面写时间
       return {

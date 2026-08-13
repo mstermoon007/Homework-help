@@ -51,29 +51,30 @@
         return list.slice(0, n);
       }
 
+      // 题目统一为 renderCard / computeResult 兼容形状：{ q, answer, inputType }
       if (type === 'copy' && grade === 1) {
-        // 拼音抄写：取单个汉字及其拼音，让学生抄写拼音
+        // 拼音抄写：显示汉字与拼音，学生抄写拼音
         take(bank.getChars(grade), count).forEach(ch => {
-          questions.push({ type: 'copy', char: ch.hz, pinyin: ch.py });
+          questions.push({ type: 'copy', q: ch.hz + ' → ' + ch.py, answer: ch.py, inputType: 'text' });
         });
       } else if (type === 'char' && grade === 1) {
         // 汉字注音：显示汉字，学生写拼音
         take(bank.getChars(grade), count).forEach(ch => {
-          questions.push({ type: 'char', char: ch.hz, pinyin: ch.py });
+          questions.push({ type: 'char', q: ch.hz, answer: ch.py, inputType: 'text' });
         });
       } else if (type === 'mix' && grade === 1) {
         // 混合：抄写 + 注音各半
         const half = Math.ceil(count / 2);
         take(bank.getChars(grade), half).forEach(ch => {
-          questions.push({ type: 'copy', char: ch.hz, pinyin: ch.py });
+          questions.push({ type: 'copy', q: ch.hz + ' → ' + ch.py, answer: ch.py, inputType: 'text' });
         });
         take(bank.getChars(grade), count - half).forEach(ch => {
-          questions.push({ type: 'char', char: ch.hz, pinyin: ch.py });
+          questions.push({ type: 'char', q: ch.hz, answer: ch.py, inputType: 'text' });
         });
       } else {
         // 词语注音（二年级+ 或通用）
         take(bank.getWords(grade), count).forEach(w => {
-          questions.push({ type: 'word', word: w.w, pinyin: w.py });
+          questions.push({ type: 'word', q: w.w, answer: w.py, inputType: 'text' });
         });
       }
 
@@ -84,52 +85,18 @@
     },
 
     render(exerciseSet) {
-      const { questions } = exerciseSet;
-      let html = '<div class="pinyin-exercise">';
-      questions.forEach((q, idx) => {
-        html += `<div class="pinyin-row" data-index="${idx}" style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">`;
-        html += `<span class="q-num">${idx + 1}.</span>`;
-        if (q.type === 'copy') {
-          html += `<span style="font-size:1.2em;">${q.char}</span>`;
-          html += `<span style="color:#888;">${q.pinyin}</span>`;
-          html += `<input type="text" class="answer-input pinyin-input" data-index="${idx}" placeholder="抄写拼音" style="width:150px;font-family:'Segoe UI',Arial,sans-serif;">`;
-        } else if (q.type === 'char') {
-          html += `<span style="font-size:1.2em;">${q.char}</span>`;
-          html += `<input type="text" class="answer-input pinyin-input" data-index="${idx}" placeholder="输入拼音" style="width:150px;font-family:'Segoe UI',Arial,sans-serif;">`;
-        } else {
-          html += `<span style="font-size:1.1em;">${q.word}</span>`;
-          html += `<input type="text" class="answer-input pinyin-input" data-index="${idx}" placeholder="输入拼音" style="width:300px;font-family:'Segoe UI',Arial,sans-serif;">`;
-        }
-        html += '</div>';
-      });
-      html += '</div>';
-      return html;
+      // 统一使用 PluginUtil.renderGrid（renderCard），全站卡片风格一致
+      return _PU.renderGrid(exerciseSet.questions, { columns: 1, inputWidth: 220 });
     },
 
     check(exerciseSet, userAnswers) {
-      const questions = exerciseSet.questions;
-      let correct = 0;
-      const results = [];
-      const correctAnswers = [];
-
-      questions.forEach((q, idx) => {
-        const userAns = (userAnswers[idx] || '').trim();
-        const realAns = q.pinyin.trim();
-        // 声调容错：normPY 去除声调与空格，用户无需输入声调符号
-        const isRight = _PU.normPY(userAns) === _PU.normPY(realAns);
-        if (isRight) correct++;
-        results.push(isRight);
-        correctAnswers.push(realAns);
+      // 复用 PluginUtil.computeResult，自定义 checkFn 保留原「声调容错」判定
+      return _PU.computeResult(exerciseSet.questions, userAnswers, {
+        checkFn: function (q, ua, i) {
+          var userAns = (ua[i] || '').trim();
+          return _PU.normPY(userAns) === _PU.normPY(q.answer);
+        }
       });
-
-      const total = questions.length;
-      const score = total === 0 ? 0 : Math.round((correct / total) * 100);
-      let message = '还需要练习哦！';
-      if (score === 100) message = '太棒了！全部正确！';
-      else if (score >= 80) message = '很不错，继续加油！';
-      else if (score >= 60) message = '还可以，再练练吧！';
-
-      return { score, total, correct, message, results, correctAnswers };
     }
   };
 

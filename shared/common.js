@@ -254,6 +254,52 @@
   }
   global.__pickOpt = pickOpt;
 
+  // ============ 通用时钟 SVG（插件统一调用，避免各插件重复定义） ============
+  /**
+   * 统一的时钟 SVG（12 小时制，支持任意分钟；整时传 minute=0）。
+   * 供 math-clock / math-time-date 等插件统一调用，单一来源、避免漂移。
+   * @param {number} hour   小时（0~12，自动取模）
+   * @param {number} [minute=0] 分钟
+   * @returns {string} SVG 字符串
+   */
+  function clockSVG(hour, minute) {
+    hour = ((hour % 12) + 12) % 12;
+    minute = minute || 0;
+    var cx = 60, cy = 60, r = 54;
+    var hAngle = (hour % 12) * 30 + minute * 0.5;  // 12 点为 0°
+    var mAngle = minute * 6;
+    var hRad = (hAngle - 90) * Math.PI / 180;
+    var mRad = (mAngle - 90) * Math.PI / 180;
+    var hx = cx + 26 * Math.cos(hRad);
+    var hy = cy + 26 * Math.sin(hRad);
+    var mx = cx + 42 * Math.cos(mRad);
+    var my = cy + 42 * Math.sin(mRad);
+    var ticks = '';
+    for (var i = 0; i < 12; i++) {
+      var a = (i * 30 - 90) * Math.PI / 180;
+      var r1 = (i % 3 === 0) ? 46 : 49;
+      ticks += '<line x1="' + (cx + r1 * Math.cos(a)).toFixed(1) + '" y1="' + (cy + r1 * Math.sin(a)).toFixed(1) +
+        '" x2="' + (cx + r * Math.cos(a)).toFixed(1) + '" y2="' + (cy + r * Math.sin(a)).toFixed(1) +
+        '" stroke="#9aa6bd" stroke-width="' + (i % 3 === 0 ? 2 : 1) + '"/>';
+    }
+    var nums = [[12, 50, 17], [3, 92, 58], [6, 50, 100], [9, 14, 58]];
+    var numHtml = '';
+    nums.forEach(function (n) {
+      var a = n[1] * Math.PI / 180;
+      var nx = cx + 38 * Math.cos(a);
+      var ny = cy + 38 * Math.sin(a);
+      numHtml += '<text x="' + nx.toFixed(1) + '" y="' + ny.toFixed(1) + '" text-anchor="middle" font-size="12" fill="#5b6b85" font-weight="700">' + n[0] + '</text>';
+    });
+    return '<svg width="120" height="120" viewBox="0 0 120 120" style="background:#fff;border-radius:50%;">' +
+      '<circle cx="60" cy="60" r="54" fill="#fafbff" stroke="#5b8def" stroke-width="3"/>' +
+      ticks + numHtml +
+      '<line x1="60" y1="60" x2="' + hx.toFixed(1) + '" y2="' + hy.toFixed(1) + '" stroke="#27324a" stroke-width="4" stroke-linecap="round"/>' +
+      '<line x1="60" y1="60" x2="' + mx.toFixed(1) + '" y2="' + my.toFixed(1) + '" stroke="#e8870a" stroke-width="3" stroke-linecap="round"/>' +
+      '<circle cx="60" cy="60" r="4" fill="#27324a"/>' +
+      '</svg>';
+  }
+  global.clockSVG = clockSVG;
+
   // ============ 插件工厂 createPlugin ============
   /**
    * 插件工厂：开发者只需提供 generateQuestions(opts)，自动生成标准 generate/render/check。
@@ -576,6 +622,109 @@
     } catch (e) { /* 忽略 */ }
   }
 
+  // ============ 自适应难度（基于 localStorage 历史） ============
+  // 记录每次练习的 (subject,grade,plugin) 正确率滚动统计，动态调整后续生成的难度与题型：
+  //   - 连续表现好（近 5 次正确率 ≥0.9 且最近一次全对）→ 难度 +2 并偏向更难子题型
+  //   - 表现弱（正确率 ≤0.5）→ 难度 -2 并偏向更基础子题型
+  //   - 中间段 ±1；无历史则不作调整。localStorage 不可用时退化为内存存储。
+  var Adaptive = (function () {
+    var KEY = 'hw_adaptive_v1';
+    var WINDOW = 5;       // 取最近 N 次练习计算
+    var MEMORY_CAP = 10;  // 每键最多保留 N 次历史
+    var memStore = {};    // localStorage 不可用或不持久时的内存兜底
+    // 探测 localStorage 是否真正可用（能写入并读回），否则退化为内存存储
+    var store = null;
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('__hw_probe__', '1');
+        var ok = localStorage.getItem('__hw_probe__') === '1';
+        localStorage.removeItem('__hw_probe__');
+        if (ok) store = localStorage;
+      }
+    } catch (e) { store = null; }
+
+    function load() {
+      try {
+        if (store) { var raw = store.getItem(KEY); return raw ? JSON.parse(raw) : {}; }
+      } catch (e) {}
+      return memStore;
+    }
+    function save(data) {
+      try { if (store) { store.setItem(KEY, JSON.stringify(data)); return; } } catch (e) {}
+      memStore = data;
+    }
+    function keyOf(subject, grade, pluginId) {
+      return [subject, grade, pluginId].join(':');
+    }
+
+    /** 记录一次练习结果（correct/total 为该次练习的答对题数与总题数） */
+    function record(subject, grade, pluginId, correct, total) {
+      if (!(total > 0)) return;
+      var data = load();
+      var k = keyOf(subject, grade, pluginId);
+      var arr = data[k] || [];
+      arr.push({ c: correct, t: total, ts: Date.now() });
+      if (arr.length > MEMORY_CAP) arr = arr.slice(arr.length - MEMORY_CAP);
+      data[k] = arr;
+      save(data);
+    }
+
+    /** 计算调整量：{ difficultyDelta:-2..+2, typeBias:'hard'|'easy'|null, rate, sessions } */
+    function computeAdjustment(subject, grade, pluginId) {
+      var data = load();
+      var arr = data[keyOf(subject, grade, pluginId)] || [];
+      if (!arr.length) return { difficultyDelta: 0, typeBias: null, rate: null, sessions: 0 };
+      var recent = arr.slice(-WINDOW);
+      var c = 0, t = 0;
+      recent.forEach(function (s) { c += s.c; t += s.t; });
+      var rate = t ? c / t : 0;
+      var last = arr[arr.length - 1];
+      var lastRate = last.t ? last.c / last.t : 0;
+
+      var delta = 0, bias = null;
+      if (rate >= 0.9 && lastRate >= 0.999) { delta = 2; bias = 'hard'; }
+      else if (rate >= 0.8) { delta = 1; bias = 'hard'; }
+      else if (rate <= 0.5) { delta = -2; bias = 'easy'; }
+      else if (rate <= 0.7) { delta = -1; bias = 'easy'; }
+      return { difficultyDelta: delta, typeBias: bias, rate: rate, sessions: arr.length };
+    }
+
+    /** 把基础难度叠加调整量并钳制到 1..10 */
+    function adjustedDifficulty(base, delta) {
+      var n = (Number(base) || 3) + (delta || 0);
+      if (!isFinite(n)) n = 3;
+      if (n < 1) n = 1;
+      if (n > 10) n = 10;
+      return Math.round(n);
+    }
+
+    /** 人类可读提示文案（用于练习页提示条） */
+    function hint(subject, grade, pluginId) {
+      var a = computeAdjustment(subject, grade, pluginId);
+      if (a.difficultyDelta > 0) return '已根据你的表现提升难度（' + (a.rate != null ? Math.round(a.rate * 100) + '% 正确率' : '自适应') + '）';
+      if (a.difficultyDelta < 0) return '已降低难度，多练基础（' + (a.rate != null ? Math.round(a.rate * 100) + '% 正确率' : '自适应') + '）';
+      return '';
+    }
+
+    /** 清除记忆：给定 subject/grade/pluginId 清单项；全空则清空全部 */
+    function reset(subject, grade, pluginId) {
+      var data = load();
+      if (subject || grade || pluginId) delete data[keyOf(subject, grade, pluginId)];
+      else return save({});
+      save(data);
+    }
+    function resetAll() { save({}); }
+
+    return {
+      record: record,
+      computeAdjustment: computeAdjustment,
+      adjustedDifficulty: adjustedDifficulty,
+      hint: hint,
+      reset: reset,
+      resetAll: resetAll
+    };
+  })();
+
   // ============ 导出：App（站点） ============
   global.App = {
     GRADE_NAMES: GRADE_NAMES,
@@ -598,7 +747,8 @@
     diffMax: diffMax,
     initPageController: initPageController,
     PluginLoader: PluginLoader,
-    registerServiceWorker: registerServiceWorker
+    registerServiceWorker: registerServiceWorker,
+    Adaptive: Adaptive
   };
 
   // 浏览器环境下自动注册 Service Worker（离线可用 + 跨页复用插件缓存，减少点击延迟）
@@ -617,6 +767,13 @@
     diffLevel: diffLevel,
     diffScale: diffScale,
     diffMax: diffMax,
+    // 插件渲染/批改辅助（供 plugins/*.js 复用，降低重复代码）
+    renderCard: renderCard,
+    renderGrid: renderGrid,
+    computeResult: computeResult,
+    normalizeAns: normalizeAns,
+    pickOpt: pickOpt,
+    clockSVG: clockSVG,
     // 插件工厂与开发期覆盖提示
     createPlugin: createPlugin,
     reportCoverage: reportCoverage

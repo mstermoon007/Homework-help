@@ -19,36 +19,7 @@
   function rnd(min, max) { return _PU.randInt(min, max); }
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
 
-  // ============ 钟表 SVG ============
-  /** 整时钟面：时针指向 hour，分针指向 12 */
-  function clockSVG(hour) {
-    var cx = 60, cy = 60, r = 52;
-    var hourAngle = ((hour % 12) * 30) * Math.PI / 180; // 12 点方向为 0°
-    var hx = cx + 24 * Math.sin(hourAngle);
-    var hy = cy - 24 * Math.cos(hourAngle);
-
-    var ticks = '';
-    for (var h = 1; h <= 12; h++) {
-      var a = h * 30 * Math.PI / 180;
-      var x1 = cx + (r - 4) * Math.sin(a), y1 = cy - (r - 4) * Math.cos(a);
-      var x2 = cx + (r - 10) * Math.sin(a), y2 = cy - (r - 10) * Math.cos(a);
-      ticks += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="#2b3a55" stroke-width="' + (h % 3 === 0 ? 2.5 : 1.5) + '"/>';
-    }
-    var numbers = '';
-    [[12, 0], [3, 90], [6, 180], [9, 270]].forEach(function (d) {
-      var a = d[1] * Math.PI / 180;
-      var nx = cx + (r - 17) * Math.sin(a), ny = cy - (r - 17) * Math.cos(a);
-      numbers += '<text x="' + nx.toFixed(1) + '" y="' + (ny + 5).toFixed(1) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#2b3a55">' + d[0] + '</text>';
-    });
-
-    return '<svg width="120" height="120" viewBox="0 0 120 120" style="background:#fff;border-radius:50%;">' +
-      '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="#fdfbf4" stroke="#2b3a55" stroke-width="3"/>' +
-      ticks + numbers +
-      '<line x1="' + cx + '" y1="' + cy + '" x2="' + hx.toFixed(1) + '" y2="' + hy.toFixed(1) + '" stroke="#2b3a55" stroke-width="5" stroke-linecap="round"/>' +
-      '<line x1="' + cx + '" y1="' + cy + '" x2="' + cx + '" y2="' + (cy - 34) + '" stroke="#e8870a" stroke-width="3" stroke-linecap="round"/>' +
-      '<circle cx="' + cx + '" cy="' + cy + '" r="4" fill="#2b3a55"/>' +
-      '</svg>';
-  }
+  // 钟表 SVG 统一由 shared/common.js 的全局 clockSVG(hour, minute) 提供，此处不再重复定义。
 
   // ============ 题目生成 ============
   // 读钟面：说出钟面表示的整时（1~12 时）
@@ -57,7 +28,7 @@
     return {
       kind: 'read',
       hour: hour,
-      svg: clockSVG(hour),
+      svg: clockSVG(hour, 0),
       question: '钟面上是几时？',
       answer: String(hour),
       options: (function () {

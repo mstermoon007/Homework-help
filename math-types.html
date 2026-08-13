@@ -7,17 +7,35 @@
 <link rel="stylesheet" href="shared/common.css">
 <style>
     body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        background: linear-gradient(160deg, #d6e8fa 0%, #4A90D9 45%, #F5A623 110%);
         min-height: 100vh;
     }
-    .type-card:hover { border-color: #667eea; }
+    .type-card:hover { border-color: rgba(255,255,255,0.9); }
     .type-card:hover .t-name { color: #667eea; }
-    .type-card.comprehensive { background: linear-gradient(135deg, #667eea, #764ba2); border: 2.5px solid transparent; color: #fff; }
+    .type-card.comprehensive {
+        background: linear-gradient(160deg, rgba(102,126,234,0.55), rgba(118,75,162,0.55));
+        border: 1.5px solid rgba(255,255,255,0.7);
+        color: #fff;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 6px 18px rgba(90,80,180,0.25), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .type-card.comprehensive .t-name { color: #fff; }
     .type-card.comprehensive .t-desc { color: #e8eafd; }
-    .type-card.comprehensive:hover { color: #fff; opacity: 0.92; }
+    .type-card.comprehensive:hover {
+        background: linear-gradient(160deg, rgba(102,126,234,0.75), rgba(118,75,162,0.75));
+        color: #fff;
+        opacity: 0.92;
+    }
     .section-label { border-left-color: #667eea; }
     .grade-badge { color: #667eea; }
     .load-hint { text-align: center; color: #999; padding: 24px 0; font-size: 0.9rem; }
+    /* 知识点标签：来自 knowledge-bank.js，按教材单元标注 */
+    .t-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .kb-tag { font-size: 11px; line-height: 1.4; padding: 1px 7px; border-radius: 999px;
+        background: rgba(255,255,255,0.85); color: #4A6fa5; border: 1px solid rgba(102,126,234,0.35); }
+    .kb-tag.more { background: rgba(102,126,234,0.15); color: #667eea; }
+    .type-card.comprehensive .kb-tag { background: rgba(255,255,255,0.22); color: #fff; border-color: rgba(255,255,255,0.5); }
 </style>
 </head>
 <body class="type-page">
@@ -84,6 +102,16 @@
     return null;
   }
 
+  // 教材单元顺序 + 知识点标签：直接由 knowledge-bank.js 驱动（数据驱动，新增题型自动可见）
+  var kEntries = (kb && kb.entries) ? kb.entries : [];
+  var unitOrder = {};   // pluginId -> 知识点在教材中首次出现的单元序号
+  var kTags = {};       // pluginId -> [知识点名称, ...]
+  kEntries.forEach(function (e, idx) {
+    if (!unitOrder[e.pluginId]) unitOrder[e.pluginId] = idx + 1;
+    if (!kTags[e.pluginId]) kTags[e.pluginId] = [];
+    if (e && e.name) kTags[e.pluginId].push(e.name);
+  });
+
   // 统一走 App.PluginLoader：按年级加载本学科全部插件并读取其元数据（含竞态安全与缓存）
   App.PluginLoader.loadSubjectPlugins('math', grade).then(function (plugins) {
     // 普通题型（排除综合插件，单独渲染其专属样式）
@@ -91,13 +119,11 @@
       return p.id !== COMPREHENSIVE.id && p.grades && p.grades.indexOf(grade) !== -1;
     });
 
-    // 按领域内部顺序排序（number → geometry → statistics），同领域保持注册表顺序
+    // 按教材单元顺序（知识点在知识库中出现的先后）排列题型，而非仅按领域
     applicable.sort(function (a, b) {
-      var ca = CATEGORY_ORDER.indexOf(a.category);
-      var cb = CATEGORY_ORDER.indexOf(b.category);
-      if (ca === -1) ca = 99;
-      if (cb === -1) cb = 99;
-      return ca - cb;
+      var oa = unitOrder[a.id] || 9999;
+      var ob = unitOrder[b.id] || 9999;
+      return oa - ob;
     });
 
     var html = '';
@@ -105,10 +131,21 @@
       var kp = lookup(p.id);
       var name = (kp && kp.name) || p.name;
       var desc = (kp && kp.desc) || '';
+      // 知识点标签（来自知识库该插件覆盖的知识点，最多展示 3 个 +「+N」）
+      var tags = kTags[p.id] || [];
+      var tagHtml = '';
+      if (tags.length) {
+        var shown = tags.slice(0, 3);
+        tagHtml = '<span class="t-tags">' +
+          shown.map(function (t) { return '<span class="kb-tag">' + t + '</span>'; }).join('') +
+          (tags.length > shown.length ? '<span class="kb-tag more">+' + (tags.length - shown.length) + '</span>' : '') +
+          '</span>';
+      }
       html += '<a href="' + App.buildPluginLink(p.id) + '" class="type-card" title="' + desc + '">' +
         '<span class="t-icon">' + iconOf(p) + '</span>' +
         '<span class="t-name">' + name + '</span>' +
         (desc ? '<span class="t-desc">' + desc + '</span>' : '') +
+        tagHtml +
         '</a>';
     });
 

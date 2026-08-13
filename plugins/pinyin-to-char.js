@@ -30,22 +30,12 @@
       var grade = options.grade || 1;
       var count = options.count || 10;
       var words = PINYIN_BANK.getWords(grade).slice(0, count);
+      // 直接返回 renderCard / computeResult 兼容的题目形状，无需自定义 render/check
       return words.map(function (w) {
         return {
-          word: w.w,
-          pinyin: w.py,
-          answer: w.w,
-          render: function (idx) {
-            return '<div class="question-card ptc-card" data-index="' + idx + '" style="border:1px solid #ddd;border-radius:6px;padding:12px;background:#fff;position:relative;text-align:center;">' +
-              '<div class="pinyin-display" style="font-size:1.3em;color:#f5576c;margin-bottom:6px;font-family:\'Times New Roman\',Georgia,serif;font-weight:800;letter-spacing:1px;">' + this.pinyin + '</div>' +
-              '<input type="text" class="answer-input" data-index="' + idx + '" placeholder="写汉字" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:100%;padding:4px;font-size:1em;font-family:\'KaiTi\',\'STKaiti\',\'楷体\',serif;text-align:center;border:2px dashed #ccc;border-radius:7px;color:#10ac84;">' +
-              '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:6px;"></div>' +
-              '</div>';
-          },
-          check: function (userAnswers, idx) {
-            var userAns = (userAnswers[idx] || '').trim();
-            return _PU.normHZ(userAns) === _PU.normHZ(this.answer);
-          }
+          q: w.py,            // 显示拼音，学生写出对应汉字
+          answer: w.w,        // 答案（汉字）
+          inputType: 'text'
         };
       });
     },

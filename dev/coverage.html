@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识点覆盖分析 · Homework Help</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f3f6fb; color: #2b3245; line-height: 1.6; padding: 24px 16px 60px; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; color: #2b3245; }
+  .sub { color: #6b7488; font-size: 13px; margin-bottom: 18px; }
+  .back { display: inline-block; margin-bottom: 14px; color: #3f6fd1; text-decoration: none; font-size: 13px; }
+
+  .grade-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .grade-btn { cursor: pointer; border: 1.5px solid #c6dcf2; background: #eef4fc; color: #3f6fd1;
+    border-radius: 10px; padding: 8px 16px; font-size: 14px; font-weight: 700; transition: .15s; }
+  .grade-btn:hover { border-color: #7ea8e0; }
+  .grade-btn.active { background: #3f6fd1; border-color: #3f6fd1; color: #fff; }
+
+  .summary { background: #fff; border: 1px solid #e3e8f0; border-radius: 16px; padding: 18px;
+    box-shadow: 0 4px 14px rgba(40,70,130,.06); margin-bottom: 18px; }
+  .summary .row { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+  .summary .big { font-size: 30px; font-weight: 800; color: #2b6cb0; }
+  .summary .big small { font-size: 14px; color: #6b7488; font-weight: 500; }
+  .bar { flex: 1; min-width: 200px; height: 14px; background: #eef1f6; border-radius: 999px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: linear-gradient(90deg, #5b8def, #7c5cff); }
+  .next { margin-top: 12px; font-size: 13px; color: #b06a10; background: #fff3e0; border: 1px solid #f0d3a8;
+    border-radius: 10px; padding: 8px 12px; }
+  .next b { color: #854f0b; }
+
+  .cat { margin: 18px 0 8px; font-size: 15px; font-weight: 800; border-left: 4px solid #7c5cff;
+    padding-left: 10px; color: #4a4a8a; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+
+  .card { background: #fff; border: 1px solid #e3e8f0; border-radius: 12px; padding: 12px 14px; position: relative; }
+  .card .name { font-size: 14px; font-weight: 700; color: #2b3245; }
+  .card .plugin { font-size: 12px; color: #6b7488; margin-top: 2px; }
+  .card .tag { display: inline-block; font-size: 11px; margin-top: 8px; padding: 2px 9px; border-radius: 999px; font-weight: 700; }
+  .tag.green  { background: #e3f6ea; color: #1f8a4d; border: 1px solid #aee3c2; }
+  .tag.yellow { background: #fff6e0; color: #b06a10; border: 1px solid #f5d99a; }
+  .tag.red    { background: #fdeaea; color: #c0392b; border: 1px solid #f3b6b0; }
+  .card .imp { position: absolute; top: 10px; right: 12px; font-size: 11px; color: #8a92a8;
+    background: #f1f3f8; border-radius: 999px; padding: 1px 8px; }
+  .card .pts { margin-top: 6px; font-size: 11px; color: #98a0b3; }
+  .legend { display: flex; gap: 16px; font-size: 12px; color: #6b7488; margin: 6px 0 0; }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot.green { background: #2ecc71; } .dot.yellow { background: #f1c40f; } .dot.red { background: #e74c3c; }
+  .foot { margin-top: 24px; font-size: 12px; color: #98a0b3; }
+  .err { color: #c0392b; background: #fdeaea; border: 1px solid #f3b6b0; border-radius: 10px; padding: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../index.html">← 返回首页</a>
+  <h1>知识点覆盖分析</h1>
+  <div class="sub">按年级展示每个知识点对应插件的覆盖情况，辅助规划题型开发（绿=已覆盖且年级匹配，黄=插件已注册但年级不匹配，红=插件待开发）。</div>
+
+  <div class="grade-bar" id="gradeBar"></div>
+  <div id="content"></div>
+
+  <div class="foot">
+    数据来源：plugins/registry.js（已注册插件） + shared/knowledge-bank.js（知识点清单与重要度）。
+    本页为开发期规划工具，可直接以 file:// 打开，或经本地静态服务器访问。
+  </div>
+</div>
+
+<script src="../plugins/registry.js"></script>
+<script src="../shared/knowledge-bank.js"></script>
+<script>
+(function () {
+  'use strict';
+  var content = document.getElementById('content');
+  var gradeBar = document.getElementById('gradeBar');
+
+  if (typeof KnowledgeBank === 'undefined' || typeof PLUGIN_REGISTRY === 'undefined') {
+    content.innerHTML = '<div class="err">未能加载知识库或注册表，请确认 registry.js / knowledge-bank.js 路径正确。</div>';
+    return;
+  }
+
+  var registry = PLUGIN_REGISTRY;
+  var regById = {};
+  registry.forEach(function (p) { regById[p.id] = p; });
+
+  var grades = Object.keys(KnowledgeBank.grades).map(Number).sort(function (a, b) { return a - b; });
+  var current = grades[0];
+
+  function statusOf(entry, grade) {
+    var reg = regById[entry.pluginId];
+    if (!reg) return 'red';
+    if (reg.grades && reg.grades.indexOf(grade) !== -1) return 'green';
+    return 'yellow';
+  }
+
+  function renderGrades() {
+    gradeBar.innerHTML = '';
+    grades.forEach(function (g) {
+      var btn = document.createElement('button');
+      btn.className = 'grade-btn' + (g === current ? ' active' : '');
+      btn.textContent = KnowledgeBank.getGrade(g).meta.gradeName || (g + '年级');
+      btn.onclick = function () { current = g; renderGrades(); render(); };
+      gradeBar.appendChild(btn);
+    });
+  }
+
+  function render() {
+    var g = KnowledgeBank.getGrade(current);
+    if (!g) { content.innerHTML = '<div class="err">未找到 ' + current + ' 年级知识库。</div>'; return; }
+    var entries = g.entries || [];
+
+    var counts = { green: 0, yellow: 0, red: 0 };
+    entries.forEach(function (e) { counts[statusOf(e, current)]++; });
+    var total = entries.length;
+    var covered = counts.green;
+    var ratio = total ? Math.round(covered / total * 100) : 0;
+
+    var html = '';
+    // 汇总
+    html += '<div class="summary"><div class="row">' +
+      '<div class="big">' + covered + '<small> / ' + total + ' 已覆盖</small></div>' +
+      '<div class="bar"><span style="width:' + ratio + '%"></span></div>' +
+      '<div class="big" style="font-size:18px;color:#6b7488;">' + ratio + '%</div>' +
+      '</div>';
+
+    // 建议下一个开发（第一个红 / 第一个黄）
+    var firstRed = entries.filter(function (e) { return statusOf(e, current) === 'red'; })[0];
+    var firstYellow = entries.filter(function (e) { return statusOf(e, current) === 'yellow'; })[0];
+    if (firstRed) {
+      html += '<div class="next">建议下一个开发：<b>' + firstRed.name + '</b>（插件 <b>' + firstRed.pluginId +
+        '</b> 尚未注册）→ 运行 <code>node scripts/new-plugin.js ' + firstRed.pluginId + ' "' + firstRed.name +
+        '" ' + current + '</code></div>';
+    } else if (firstYellow) {
+      html += '<div class="next">⚠ 存在年级不匹配：<b>' + firstYellow.name + '</b>（插件 <b>' + firstYellow.pluginId +
+        '</b> 已注册但未包含 ' + current + ' 年级，请核对 registry 的 grades 或知识库 pluginId）</div>';
+    } else {
+      html += '<div class="next" style="color:#1f8a4d;background:#e3f6ea;border-color:#aee3c2;">🎉 本年级知识点已 100% 覆盖且年级匹配。</div>';
+    }
+    html += '</div>';
+
+    // 图例
+    html += '<div class="legend"><span><i class="dot green"></i>已覆盖</span>' +
+      '<span><i class="dot yellow"></i>年级不匹配</span>' +
+      '<span><i class="dot red"></i>待开发</span></div>';
+
+    // 按领域分组
+    var order = KnowledgeBank.categoryOrder || ['number', 'geometry', 'statistics'];
+    var names = KnowledgeBank.categoryNames || {};
+    order.forEach(function (cat) {
+      var list = entries.filter(function (e) { return e.category === cat; });
+      if (!list.length) return;
+      html += '<div class="cat">' + (names[cat] || cat) + '（' +
+        list.filter(function (e) { return statusOf(e, current) === 'green'; }).length + '/' + list.length + '）</div>';
+      html += '<div class="grid">';
+      list.forEach(function (e) {
+        var st = statusOf(e, current);
+        var label = st === 'green' ? '已覆盖' : (st === 'yellow' ? '年级不匹配' : '待开发');
+        var pluginName = (regById[e.pluginId] && regById[e.pluginId].name) || e.pluginId;
+        html += '<div class="card">' +
+          (typeof e.importance === 'number' ? '<span class="imp">权重 ' + e.importance + '</span>' : '') +
+          '<div class="name">' + e.name + '</div>' +
+          '<div class="plugin">插件：' + pluginName + '</div>' +
+          '<span class="tag ' + st + '">' + label + '</span>' +
+          (e.points && e.points.length ? '<div class="pts">细分：' + e.points.join('、') + '</div>' : '') +
+          '</div>';
+      });
+      html += '</div>';
+    });
+
+    content.innerHTML = html;
+  }
+
+  renderGrades();
+  render();
+})();
+</script>
+</body>
+</html>

@@ -16,26 +16,33 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* 返回按钮 */
+/* 返回按钮（固定在左上角，淡蓝透明玻璃效果） */
 .back-home {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 999;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 8px 18px;
-    background: var(--brand);
-    color: #fff;
-    border: none;
+    background: linear-gradient(160deg, rgba(255,255,255,0.7), rgba(173,216,255,0.45));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #2b5cbf;
+    border: 1.5px solid rgba(255,255,255,0.75);
     border-radius: 22px;
     cursor: pointer;
     font-weight: 600;
     font-size: 0.9rem;
     transition: all 0.2s;
     text-decoration: none;
+    box-shadow: 0 4px 16px rgba(40,90,160,0.2);
 }
 .back-home:hover {
-    background: var(--brand-d);
+    background: rgba(255,255,255,0.9);
     transform: translateY(-1px);
-    color: #fff;
+    color: #1f4c9f;
 }
 
 /* 年级标签 */
@@ -69,12 +76,15 @@
 .page-header p { font-size: 1rem; opacity: 0.95; }
 .page-header .logo { font-size: 3rem; margin-bottom: 10px; display: inline-block; }
 
-/* 卡片 */
+/* 卡片：淡蓝透明玻璃效果 */
 .card {
-    background: #fff;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1.5px solid rgba(255,255,255,0.6);
     border-radius: 24px;
     padding: 40px 36px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
 }
 
 /* 设置面板 */
@@ -200,33 +210,36 @@
 /* 题型选择卡片 */
 .type-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
 }
 .type-grid.two-col { grid-template-columns: repeat(2, 1fr); }
 .type-grid.three-col { grid-template-columns: repeat(3, 1fr); }
 .type-grid.four-col { grid-template-columns: repeat(4, 1fr); }
 .type-card {
     display: block;
-    max-width: 420px;
     width: 100%;
-    justify-self: center;
-    padding: 32px 18px;
-    border: 2.5px solid #e0e0e0;
-    border-radius: 16px;
+    padding: 26px 14px;
+    border: 1.5px solid rgba(255,255,255,0.65);
+    border-radius: 20px;
     cursor: pointer;
     text-align: center;
     transition: all 0.25s;
     user-select: none;
     text-decoration: none;
     color: inherit;
+    background: linear-gradient(160deg, rgba(255,255,255,0.6), rgba(173,216,255,0.3));
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 6px 18px rgba(40,90,160,0.14), inset 0 1px 0 rgba(255,255,255,0.6);
 }
-.type-card .t-icon { font-size: 3rem; display: block; margin-bottom: 10px; }
-.type-card .t-name { font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
-.type-card .t-desc { font-size: 0.85rem; color: #888; line-height: 1.5; }
+.type-card .t-icon { display: none; }
+.type-card .t-name { font-size: 1.2rem; font-weight: 800; display: inline-block; vertical-align: middle; }
+.type-card .t-desc { display: block; margin-top: 8px; font-size: 0.8rem; color: #5a6b8c; line-height: 1.5; }
 .type-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    background: linear-gradient(160deg, rgba(255,255,255,0.85), rgba(173,216,255,0.45));
+    box-shadow: 0 12px 28px rgba(40,90,160,0.22), inset 0 1px 0 rgba(255,255,255,0.8);
 }
 .type-card.coming-soon {
     opacity: 0.6;
@@ -236,14 +249,14 @@
 .type-card.coming-soon:hover {
     transform: none;
     box-shadow: none;
-    border-color: #e0e0e0;
+    border-color: rgba(255,255,255,0.65);
 }
 .type-card.coming-soon .t-name { color: #999; }
 .type-card .t-badge {
     display: inline-block;
     margin-top: 8px;
     padding: 2px 10px;
-    background: #fdeccd;
+    background: rgba(255,255,255,0.85);
     color: #c87a16;
     border-radius: 10px;
     font-size: 0.75rem;
@@ -269,10 +282,13 @@
     font-size: 0.9rem;
 }
 
-/* 包装器 */
+/* 包装器：内容整体居中 */
 .wrapper {
     width: 100%;
     max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 70px;
 }
 
 /* ============ 页面控制器 ============ */
@@ -396,10 +412,15 @@
 }
 
 /* 响应式 */
+@media (max-width: 1200px) {
+    .type-grid { grid-template-columns: repeat(4, 1fr); }
+}
 @media (max-width: 1024px) {
+    .type-grid { grid-template-columns: repeat(3, 1fr); }
     .type-grid.four-col { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 768px) {
+    .type-grid { grid-template-columns: repeat(2, 1fr); }
     .type-grid.three-col, .type-grid.four-col { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 480px) {

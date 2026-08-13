@@ -24,30 +24,29 @@
 
   /* 左上角快速切换（醒目、悬浮常驻） */
   .quick-switch { position: fixed; top: 14px; left: 14px; z-index: 1200; }
-  .qs-btn { cursor: pointer; border: none; border-radius: 12px; padding: 9px 16px; font-size: 14px;
+  .qs-btn { cursor: pointer; border: none; border-radius: 999px; padding: 9px 20px; font-size: 14px;
     font-weight: 800; color: #fff; letter-spacing: .5px;
-    background: linear-gradient(90deg, #ff8a5c, #ff5d8f);
-    box-shadow: 0 6px 18px rgba(255, 93, 143, .45); }
+    background: linear-gradient(120deg, #ffb347 0%, #ff8a5c 55%, #ff6b6b 100%);
+    box-shadow: 0 4px 14px rgba(255, 130, 90, .35); }
   .qs-btn:hover { filter: brightness(1.07); }
   .qs-btn:active { transform: scale(.97); }
-  .qs-menu { position: absolute; top: calc(100% + 8px); left: 0; width: 330px; max-width: 86vw;
+  .qs-menu { position: absolute; top: calc(100% + 8px); left: 0; width: 420px; max-width: 86vw;
     background: #fff; border: 1px solid var(--line); border-radius: 16px;
     box-shadow: 0 14px 40px rgba(20, 40, 90, .2); padding: 12px 14px 14px; }
   .qs-hd { font-size: 12px; color: var(--muted); margin: 10px 2px 6px; font-weight: 700; }
   .qs-hd:first-child { margin-top: 2px; }
   .qs-row { display: flex; flex-wrap: wrap; gap: 7px; }
-  .qs-link { flex: 1 1 100%; cursor: pointer; border: 1.5px solid var(--line); background: #fff;
-    color: var(--ink); border-radius: 10px; padding: 8px 12px; font-size: 13px; font-weight: 600;
+  .qs-link { flex: 1 1 100%; cursor: pointer; border: 1.5px solid #f0d3a8; background: #fff3e0;
+    color: #b06a10; border-radius: 10px; padding: 8px 12px; font-size: 13px; font-weight: 600;
     text-align: center; text-decoration: none; transition: .15s; }
-  .qs-link:hover { border-color: var(--brand); }
-  .qs-subj, .qs-grade { cursor: pointer; border: 1.5px solid var(--line); background: #fff;
-    color: var(--ink); border-radius: 10px; padding: 7px 12px; font-size: 13px; font-weight: 600;
+  .qs-link:hover { border-color: #e39a3f; }
+  .qs-subj, .qs-grade { cursor: pointer; border: 1.5px solid #f0d3a8; background: #fff3e0;
+    color: #b06a10; border-radius: 10px; padding: 7px 12px; font-size: 13px; font-weight: 600;
     text-decoration: none; transition: .15s; }
-  .qs-subj:hover, .qs-grade:hover { border-color: var(--brand); }
-  .qs-subj.active, .qs-grade.active { background: var(--brand-d); border-color: var(--brand-d); color: #fff; }
+  .qs-subj:hover, .qs-grade:hover { border-color: #e39a3f; }
+  .qs-subj.active, .qs-grade.active { background: #e8890c; border-color: #e8890c; color: #fff; }
   @media (max-width: 760px) {
     header.hero .left { padding-left: 108px; }
-    .qs-btn { padding: 8px 13px; font-size: 13px; }
   }
 
   .panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px;
@@ -55,23 +54,32 @@
   .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 12px; }
   .group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .group .lbl { font-size: 14px; color: var(--muted); margin-right: 2px; }
-  .chip { cursor: pointer; border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+  .chip { cursor: pointer; border: 1.5px solid #c6dcf2; background: #eef4fc; color: #3f6fd1;
     border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: 600; transition: .15s; }
-  .chip:hover { border-color: var(--brand); }
-  .chip.active { background: var(--brand-d); border-color: var(--brand-d); color: #fff; }
+  .chip:hover { border-color: #7ea8e0; }
+  .chip.active { background: #3f6fd1; border-color: #3f6fd1; color: #fff; }
   .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
   .btn { cursor: pointer; border: none; border-radius: 12px; padding: 12px 20px; font-size: 15px;
     font-weight: 700; transition: .15s; }
-  .btn-primary { background: linear-gradient(90deg, #5b8def, #6f6bff); color: #fff;
-    box-shadow: 0 6px 16px rgba(91,141,239,.35); }
-  .btn-primary:hover { filter: brightness(1.05); }
-  .btn-ghost { background: #eef3fb; color: var(--brand-d); }
-  .btn-ghost:hover { background: #e2ebf9; }
+  .btn-primary { background: #e3effc; color: #2b6cb0; border: 1.5px solid #b8d4f0;
+    box-shadow: 0 4px 12px rgba(91, 141, 239, .18); }
+  .btn-primary:hover { background: #cfe4f8; color: #1f4f8f; }
+  .btn-ghost { background: #eef4fc; color: #3f6fd1; border: 1.5px solid #c6dcf2; }
+  .btn-ghost:hover { background: #dcebfa; color: #2b5cbf; }
   .btn:disabled { opacity: .45; cursor: not-allowed; filter: grayscale(.3); }
 
+  .sheet-title { text-align: center; margin-bottom: 14px; padding: 4px 0; }
+  .sheet-title .sheet-title-text {
+    font-size: 28px; font-weight: 900; letter-spacing: 2px; margin: 0 0 4px;
+    background: linear-gradient(90deg, #4A90D9, #F5A623);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 2px 10px rgba(90,140,220,.18);
+  }
+  .sheet-title .sheet-title-meta { font-size: 14px; color: var(--muted); font-weight: 600; }
   .meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 13px;
     color: var(--muted); margin-bottom: 12px; }
   .meta .pill { background: #eef3fb; color: var(--brand-d); border-radius: 999px; padding: 4px 12px; font-weight: 600; }
+  .meta .title-pill { background: #dcebfa; color: #2b5cbf; font-weight: 800; }
 
   /* 题目区域 */
   #problemsArea .empty { text-align: center; color: var(--muted); padding: 46px 10px; font-size: 14px; }
@@ -127,14 +135,14 @@
 <div class="wrap">
   <!-- 左上角快速切换（学科 + 年级，醒目便利） -->
   <div class="quick-switch" id="quickSwitch">
-    <button class="qs-btn" id="qsBtn" title="快速切换学科 / 年级 / 返回首页">⚡ 快速切换</button>
+    <button class="qs-btn" id="qsBtn" title="快速切换学科 / 年级 / 返回首页">快速切换</button>
     <div class="qs-menu" id="qsMenu" style="display:none;">
       <div class="qs-hd">切换学科</div>
       <div class="qs-row" id="qsSubject"></div>
       <div class="qs-hd">切换年级</div>
       <div class="qs-row" id="qsGrade"></div>
       <div class="qs-hd">其他</div>
-      <div class="qs-row"><a class="qs-link" href="index.html">🏠 返回首页</a></div>
+      <div class="qs-row"><a class="qs-link" href="index.html">返回首页</a></div>
     </div>
   </div>
 
@@ -147,15 +155,17 @@
   </header>
 
   <section class="panel controls" id="controlsPanel" style="display:none;">
+    <div class="adaptive-hint" id="adaptiveHint" style="display:none;"></div>
     <div class="row">
       <div class="group" id="countGroup">
         <span class="lbl">题量：</span>
         <button class="chip active" data-count="10">10题</button>
         <button class="chip" data-count="20">20题</button>
         <button class="chip" data-count="custom">自定义</button>
-        <input type="number" id="customCount" min="1" max="50" step="1" placeholder="填写 1~50 题"
+        <input type="number" id="customCount" min="1" max="50" step="1" placeholder="直接填写 1~50 题"
                autocomplete="off"
                style="width:110px;height:32px;border:2px solid #d5dff0;border-radius:8px;font-size:14px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafbff;outline:none;display:none;">
+        <style>#customCount::placeholder, #difficultyInput::placeholder { color: #b0b8c6; font-weight: 400; font-size: 13px; }</style>
       </div>
       <div class="group" id="difficultyGroup">
         <span class="lbl">难度：</span>
@@ -169,10 +179,11 @@
       </div>
     </div>
     <div class="actions">
-      <button class="btn btn-primary" id="genBtn">🎲 生成练习题</button>
-      <button class="btn btn-primary" id="checkBtn" disabled>✅ 检查答案</button>
-      <button class="btn btn-ghost" id="revealBtn" disabled>👁 显示答案</button>
-      <button class="btn btn-ghost" id="printBtn" disabled>🖨 打印</button>
+      <button class="btn btn-primary" id="genBtn">生成练习题</button>
+      <button class="btn btn-primary" id="checkBtn" disabled>检查答案</button>
+      <button class="btn btn-ghost" id="revealBtn" disabled>显示答案</button>
+      <button class="btn btn-ghost" id="printBtn" disabled>打印</button>
+      <button class="btn btn-ghost" id="resetAdaptiveBtn" title="清除本题型的难度记忆">重置难度记忆</button>
     </div>
   </section>
 
@@ -187,6 +198,7 @@
 
 <script src="shared/common.js"></script>
 <script src="shared/print.js"></script>
+<script src="shared/knowledge-bank.js"></script>
 <script src="plugins/registry.js"></script>
 <script>
 (function () {
@@ -244,7 +256,7 @@
     var div = el('div', 'notice');
     div.innerHTML = '<div class="big">' + title + '</div>' + (sub ? '<div>' + sub + '</div>' : '');
     if (retry) {
-      var btn = el('button', 'btn btn-primary', '🔄 重新加载');
+      var btn = el('button', 'btn btn-primary', '重新加载');
       btn.style.marginTop = '14px';
       btn.onclick = function () { location.reload(); };
       div.appendChild(btn);
@@ -339,10 +351,7 @@
     $('revealBtn').disabled = true;
     $('printBtn').disabled = true;
 
-    // 页面控制器（底部导航）
-    if (typeof App.initPageController === 'function' && plugin.subject) {
-      App.initPageController(plugin.id, plugin.subject);
-    }
+    // 页面控制器已禁用（不再显示顶部题型导航栏）
   }
 
   // ============ 计时器 ============
@@ -371,21 +380,53 @@
   function generate() {
     if (!state.plugin) return;
     try {
+      // 自适应难度：基于该 (subject,grade,plugin) 的历史正确率调整难度/题型
+      var adjSubj = state.plugin.subject, adjPid = state.plugin.id;
+      var adj = (App.Adaptive && App.Adaptive.computeAdjustment)
+        ? App.Adaptive.computeAdjustment(adjSubj, state.grade, adjPid)
+        : { difficultyDelta: 0, typeBias: null };
+
       var options = { grade: state.grade, count: state.count };
       if (state.type) options.type = state.type;
-      if (state.difficulty) options.difficulty = state.difficulty;
+      // 自适应难度仅对数学有效（难度数值/题型分布为数学概念，非数学科目隐藏难度控件）
+      if (adjSubj === 'math') {
+        // 难度：在用户所选基础难度上叠加自适应调整量（连续表现好↑ / 弱↓）
+        options.difficulty = App.Adaptive.adjustedDifficulty(state.difficulty || 3, adj.difficultyDelta);
+        // 题型微调：仅当用户未显式选择题型时，按表现偏向更难/更基础子类型
+        if (!state.type && adj.typeBias && Array.isArray(state.plugin.settings)) {
+          var typeSetting = null;
+          state.plugin.settings.forEach(function (s) { if (s.key === 'type') typeSetting = s; });
+          if (typeSetting && Array.isArray(typeSetting.options) && typeSetting.options.length) {
+            var opt = adj.typeBias === 'hard'
+              ? typeSetting.options[typeSetting.options.length - 1]
+              : typeSetting.options[0];
+            if (opt && opt.value != null) options.type = opt.value;
+          }
+        }
+        // 提示条：告诉用户难度被自动调整了
+        var hintEl = $('adaptiveHint');
+        if (hintEl) {
+          var h = (App.Adaptive && App.Adaptive.hint) ? App.Adaptive.hint(adjSubj, state.grade, adjPid) : '';
+          hintEl.textContent = h;
+          hintEl.style.display = h ? '' : 'none';
+        }
+      } else {
+        if (state.difficulty) options.difficulty = state.difficulty;
+        var hintEl2 = $('adaptiveHint');
+        if (hintEl2) hintEl2.style.display = 'none';
+      }
       var result = state.plugin.generate(options);
       if (result && typeof result.then === 'function') {
         // 异步插件（如 math-comprehensive：需先加载子插件）
         $('genBtn').disabled = true;
-        $('genBtn').textContent = '⏳ 正在生成…';
+        $('genBtn').textContent = '正在生成…';
         result.then(function (set) {
           $('genBtn').disabled = false;
-          $('genBtn').textContent = '🎲 生成练习题';
+          $('genBtn').textContent = '生成练习题';
           applyExerciseSet(set);
         }).catch(function (err) {
           $('genBtn').disabled = false;
-          $('genBtn').textContent = '🎲 生成练习题';
+          $('genBtn').textContent = '生成练习题';
           stopTimer();
           $('checkBtn').disabled = true;
           $('revealBtn').disabled = true;
@@ -419,8 +460,11 @@
     var area = $('problemsArea');
     var html = '';
     var meta = set.meta || {};
-    if (meta.title) html += '<div class="meta"><span class="pill">' + meta.title + '</span>' +
-      '<span class="pill">' + set.questions.length + ' 题</span></div>';
+    var typeTitle = meta.title || (state.plugin && state.plugin.name) || '练习题';
+    html += '<div class="sheet-title">' +
+      '<h2 class="sheet-title-text">' + typeTitle + '</h2>' +
+      '<div class="sheet-title-meta">共 ' + set.questions.length + ' 题</div>' +
+      '</div>';
     // 题目区域由插件完全控制；仅当插件未提供 render 时使用壳的通用降级渲染
     html += (typeof state.plugin.render === 'function' ? state.plugin.render(set) : renderGeneric(set));
     area.innerHTML = html;
@@ -542,6 +586,10 @@
     }
     state.checkResult = result;
     state.answered = true;
+    // 记录本次练习结果，供自适应难度后续调整使用
+    if (App.Adaptive && App.Adaptive.record && typeof result.total === 'number') {
+      App.Adaptive.record(state.plugin.subject, state.grade, state.plugin.id, result.correct, result.total);
+    }
     markQuestions(result);
     showResult(result);
   }
@@ -576,8 +624,8 @@
       '<div class="detail">答对 ' + result.correct + ' / ' + total + ' 题 · 正确率 ' + (total ? Math.round(result.correct / total * 100) : 0) + '%</div>' +
       '<div class="tips">' + tips + '</div>' +
       '<div class="redo-wrap">' +
-      (wrong > 0 ? '<button class="btn btn-ghost" id="redoBtn">🔁 错题重做（' + wrong + '）</button>' : '') +
-      '<button class="btn btn-ghost" id="redoAllBtn" style="margin-left:8px;">🎲 重新生成</button>' +
+      (wrong > 0 ? '<button class="btn btn-ghost" id="redoBtn">错题重做（' + wrong + '）</button>' : '') +
+      '<button class="btn btn-ghost" id="redoAllBtn" style="margin-left:8px;">重新生成</button>' +
       '</div></div>';
     var ra = $('resultArea');
     ra.innerHTML = html;
@@ -616,12 +664,12 @@
     var ra = $('resultArea');
     if (ra.dataset.revealed === '1') {
       ra.dataset.revealed = '0';
-      $('revealBtn').textContent = '👁 显示答案';
+      $('revealBtn').textContent = '显示答案';
       $('problemsArea').querySelectorAll('.revealed-answer').forEach(function (n) { n.remove(); });
       return;
     }
     ra.dataset.revealed = '1';
-    $('revealBtn').textContent = '🙈 隐藏答案';
+    $('revealBtn').textContent = '隐藏答案';
     var result = state.plugin.check(state.exerciseSet, collectAnswers());
     var cards = $('problemsArea').querySelectorAll('.question-card, .problem');
     result.results.forEach(function (ok, i) {
@@ -767,6 +815,18 @@
     }
 
     bindQuickSwitch();
+
+    // 自适应难度记忆重置（仅清除当前题型）
+    var resetAdp = $('resetAdaptiveBtn');
+    if (resetAdp) {
+      resetAdp.addEventListener('click', function () {
+        if (App.Adaptive && App.Adaptive.reset) {
+          App.Adaptive.reset(state.plugin.subject, state.grade, state.plugin.id);
+          var h = $('adaptiveHint');
+          if (h) { h.textContent = '已清除本题型的难度记忆'; h.style.display = ''; }
+        }
+      });
+    }
   }
 
   // ============ 启动 ============

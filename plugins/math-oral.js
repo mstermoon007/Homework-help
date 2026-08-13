@@ -359,30 +359,8 @@
     };
   };
 
-  // ============ 标准题目对象：渲染 / 判定 ============
-  var INPUT_STYLE = 'width:52px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;';
-
-  /** 渲染单题卡片（标准 Question.render） */
-  function renderOralCard(question, idx) {
-    var inputHTML;
-    if (question.answer && typeof question.answer === 'object' && question.answer.q != null) {
-      // 有余数除法：商……余数 两个输入框（data-idx + data-field）
-      inputHTML = '<span style="display:inline-flex;align-items:center;gap:4px;">' +
-        '<input type="text" class="answer-input" data-idx="' + idx + '" data-field="q" placeholder="商" autocomplete="off" style="' + INPUT_STYLE + '">' +
-        '<span style="color:#7a879c;font-weight:800;">…</span>' +
-        '<input type="text" class="answer-input" data-idx="' + idx + '" data-field="r" placeholder="余" autocomplete="off" style="' + INPUT_STYLE + '">' +
-        '</span>';
-    } else {
-      inputHTML = '<input type="text" class="answer-input" data-index="' + idx + '" autocomplete="off" style="' + INPUT_STYLE + '">';
-    }
-    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid #e3e9f2;border-radius:12px;padding:14px 12px;text-align:center;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<span class="num" style="position:absolute;left:8px;top:8px;width:20px;height:20px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">' + (idx + 1) + '</span>' +
-      '<span style="font-size:17px;font-weight:800;color:#27324a;display:block;margin:4px 0 8px;">' + question.question + '</span>' +
-      inputHTML +
-      '</div>';
-  }
-
-  /** 单题判定（标准 Question.check） */
+  // ============ 批改（复用 PluginUtil.computeResult，自定义 checkFn 保持原判定） ============
+  /** 数值容错比较（与原 isOralRight 一致：允许 0.005 内误差，兼容小数除法） */
   function isOralRight(user, real) {
     if (user == null || user === '') return false;
     var u = parseFloat(user);
@@ -390,15 +368,13 @@
     if (isNaN(u) || isNaN(t)) return String(user).trim() === String(real).trim();
     return Math.abs(u - t) < 0.005;
   }
-  function checkOralQuestion(question, userAnswers, idx) {
-    var ans = question.answer;
+  /** computeResult 的 checkFn：普通题比对单值，有余数除法比对 商/余 两框 */
+  function oralCheckFn(q, ua, i) {
+    var ans = q.answer;
     if (ans && typeof ans === 'object' && ans.q != null) {
-      // 有余数除法：分别读 商/余 两个输入
-      var uq = userAnswers && userAnswers[idx + ':q'] != null ? userAnswers[idx + ':q'] : '';
-      var ur = userAnswers && userAnswers[idx + ':r'] != null ? userAnswers[idx + ':r'] : '';
-      return isOralRight(uq, ans.q) && isOralRight(ur, ans.r);
+      return isOralRight(ua[i + ':0'], ans.q) && isOralRight(ua[i + ':1'], ans.r);
     }
-    return isOralRight(userAnswers[idx] == null ? '' : userAnswers[idx], ans);
+    return isOralRight(ua[i], ans);
   }
 
   // ============ ExercisePlugin ============
@@ -469,12 +445,15 @@ settings: [
       });
       var result = agent.generate();
       var questions = result.questions.map(function (q) {
+        var isRem = q.answer && typeof q.answer === 'object' && q.answer.q != null;
         return {
           type: 'oral',
-          question: q.text,
+          q: q.text,
           answer: q.answer,
-          render: function (idx, ctx) { return renderOralCard(this, idx); },
-          check: function (userAnswers, idx) { return checkOralQuestion(this, userAnswers, idx); }
+          inputType: isRem ? 'multi' : 'text',
+          inputCount: isRem ? 2 : 1,
+          answerParts: isRem ? [q.answer.q + '……' + q.answer.r] : undefined,
+          hint: isRem ? '前框填商，后框填余数' : undefined
         };
       });
       return { questions: questions, meta: result.meta };
@@ -482,33 +461,13 @@ settings: [
 
     render(exerciseSet) {
       var cols = (exerciseSet.meta && exerciseSet.meta.columns) || 4;
-      var html = '<div class="questions-grid" style="display:grid;grid-template-columns:repeat(' + cols + ',1fr);gap:14px;">';
-      exerciseSet.questions.forEach(function (q, idx) {
-        html += q.render(idx);
-      });
-      html += '</div>';
-      return html;
+      // 统一使用 PluginUtil.renderGrid（renderCard），减少自定义渲染代码
+      return _PU.renderGrid(exerciseSet.questions, { columns: cols });
     },
 
     check(exerciseSet, userAnswers) {
-      var correct = 0;
-      var results = [];
-      var correctAnswers = [];
-      exerciseSet.questions.forEach(function (q, idx) {
-        var ok = q.check ? q.check(userAnswers, idx) : checkOralQuestion(q, userAnswers, idx);
-        if (ok) correct++;
-        results.push(ok);
-        correctAnswers.push(q.answer && typeof q.answer === 'object' && q.answer.q != null
-          ? (q.answer.q + '……' + q.answer.r)
-          : String(q.answer));
-      });
-      var total = exerciseSet.questions.length;
-      var score = Math.round((correct / total) * 100);
-      var message = '还需要练习哦！';
-      if (score === 100) message = '太棒了！全对！';
-      else if (score >= 80) message = '很不错！';
-      else if (score >= 60) message = '继续加油！';
-      return { score: score, total: total, correct: correct, message: message, results: results, correctAnswers: correctAnswers };
+      // 复用 PluginUtil.computeResult，自定义 oralCheckFn 保持原判定（含小数容差与有余数双框）
+      return _PU.computeResult(exerciseSet.questions, userAnswers, { checkFn: oralCheckFn });
     }
   };
 
