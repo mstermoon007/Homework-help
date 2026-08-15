@@ -315,6 +315,7 @@
   // ============ ExercisePlugin ============
   var mathUnitConvertPlugin = {
     id: 'math-unit-convert',
+    moduleId: 'M4',
     name: '单位换算',
     grades: [2, 3],
     subject: 'math',

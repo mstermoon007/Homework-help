@@ -1,604 +1,584 @@
 /**
- * shared/knowledge-bank.js — 数学知识库配置文件（开发/维护参考）
- *
- * 以结构化方式描述各年级数学知识点：名称、所属领域、对应插件 ID、推荐默认参数等，
- * 供动态页面（math-types.html）与综合练习（math-comprehensive）作为「题型与参数清单」参考。
- *
- * 【多年级复用】本文件采用按年级分节的格式，所有年级共用同一套字段结构：
- *   KnowledgeBank.grades[n] -> { meta, plugins, entries, byPlugin(), byCategory(), entry() }
- * 新增二年级时，只需在 grades 中追加一个 2: {...} 节点（结构照抄一年级），
- * 无需改动查询 API 与任何调用方。见 docs/knowledge-base.md。
- *
- * 注意：本文件【不参与运行逻辑】，仅作为开发和维护的静态清单。
- * 插件元数据以各插件自身（plugins/*.js）与 plugins/registry.js 为准；
- * 本清单用于——确认覆盖是否完整、编排综合练习的题型配比、以及让 math-types.html 快速获取
- * 题型名称/描述（无需逐个加载插件脚本）。
+ * shared/knowledge-bank.js — 数学知识库（统一结构，1-6 年级）
  *
  * 数据结构：
- *   KnowledgeBank.subject        —— 科目（'math'）
- *   KnowledgeBank.categoryOrder  —— 领域展示顺序
- *   KnowledgeBank.categoryNames  —— 领域中文名
- *   KnowledgeBank.grades         —— { 年级号: 该年级知识库 }，可无限追加年级
- *   KnowledgeBank.getGrade(g)    —— 取指定年级知识库，不存在返回 null
- *   兼容别名：KnowledgeBankGrade1 = KnowledgeBank.grades[1]
+ *   KnowledgeBank = [
+ *     {
+ *       grade: 1,
+ *       modules: [
+ *         {
+ *           moduleId: 'M0',                 // 对应 shared/module-catalog.js 中的题型模块 ID
+ *           knowledgePoints: [
+ *             { id, name, pluginId, weight, type }
+ *             // weight：抽题比例权重（综合练习按此分配题量），也用于题型选择页排序
+ *             // type：推荐传给插件 generate 的 opts.type（细分子题型），省略则用插件默认
+ *           ]
+ *         }
+ *       ]
+ *     },
+ *     // grade 2, 3, ... 后续自动追加
+ *   ]
  *
- * category 取值（与插件 metadata.category、shared/math-knowledge.js 领域 id 对齐）：
- *   number（数与代数） / geometry（图形与几何） / statistics（统计与概率） / mixed（跨领域综合）
- *
- * 【高年级扩展预留】statistics（统计与概率）领域当前仅一年级「分类整理」；
- * 高年级将出现条形统计图、平均数、折线统计图等，新增时在对应年级下以
- * category: 'statistics' 追加 entries 即可，插件与类型体系无需改动。
- *
- * 浏览器：<script src="shared/knowledge-bank.js"></script> -> 全局 KnowledgeBank
+ * 浏览器：<script src="shared/knowledge-bank.js"></script> -> 全局 KnowledgeBank（数组）
  * Node：  const KnowledgeBank = require('./shared/knowledge-bank.js')
+ *
+ * 便捷查询（挂在数组对象上）：
+ *   KnowledgeBank.findGrade(g)                    -> 该年级对象（{grade, modules}）或 null
+ *   KnowledgeBank.getEntries(subject, grade)      -> 扁平知识点数组 [{id,name,pluginId,moduleId,weight,type}]
+ *   KnowledgeBank.getCoverage(subject, grade, ids)-> 覆盖统计（ids 为已注册且适用该年级的插件 id 集合）
+ *   KnowledgeBank.coverageFromRegistry(...)       -> 同上，但自动从注册表提取覆盖插件 id
+ *
+ * weight 由旧数据结构中的 importance 映射得到：
+ *   importance 5 / 4 -> weight 3，3 / 2 -> weight 2，1 -> weight 1
+ *   （importance 代表课时占比/重要度，weight 用于抽题比例，取小量级便于展示与排序）
  */
-
-/**
- * @typedef {Object} KnowledgeEntry
- * @property {string} id           - 知识点唯一标识（年级内唯一）
- * @property {string} name         - 知识点名称（中文）
- * @property {'number'|'geometry'|'statistics'} category - 所属领域
- * @property {string} pluginId     - 对应插件 ID（plugins/registry.js 中的 id）
- * @property {string} [type]       - 推荐题型参数（传给 generate 的 opts.type，省略则用插件默认）
- * @property {Object} [defaults]   - 推荐默认参数（传给 generate 的 opts，如 count / maxNum / difficulty）
- * @property {string} desc         - 一句话描述（供 math-types.html 展示）
- * @property {string[]} points     - 知识点细分条目
- */
-
 (function (global) {
   'use strict';
 
-  var CATEGORY_ORDER = ['number', 'geometry', 'statistics'];
-  var CATEGORY_NAMES = { number: '数与代数', geometry: '图形与几何', statistics: '统计与概率' };
-
-  // ============ 各年级知识库 ============
-  // 每个年级结构一致：{ meta, plugins, entries }。新增年级照抄一年级结构追加即可。
-
-  // ---------------- 一年级 ----------------
-  var GRADE1_PLUGINS = [
-    { id: 'math-oral',              name: '口算练习',     category: 'number',     desc: '20 以内的加减法，每天练一练，算得又快又准' },
-    { id: 'math-word-problems',     name: '应用题',       category: 'number',     desc: '把生活小故事变成算式，学会自己读懂并解答' },
-    { id: 'math-make-ten',          name: '凑十法',       category: 'number',     desc: '用小棒和点子学会凑十、破十的巧算方法' },
-    { id: 'math-number-sense',      name: '数的认识',     category: 'number',     desc: '数数、数的顺序、组成、数位和比大小' },
-    { id: 'math-clock',             name: '认识钟表',     category: 'number',     desc: '认识钟面，学会看整点时间' },
-    { id: 'math-patterns',          name: '找规律',       category: 'number',     desc: '按数字或图形的排列顺序，猜出下一个' },
-    { id: 'math-picture-equations', name: '看图列式',     category: 'number',     desc: '看着图画列出加法或减法算式' },
-    { id: 'math-shapes',            name: '认识图形',     category: 'geometry',   desc: '认识长方体、正方体、圆柱、球等立体和平面图形' },
-    { id: 'math-statistics',        name: '分类整理',     category: 'statistics', desc: '把图形分分类、数一数，填进统计表' },
-    { id: 'math-money',             name: '认识人民币',   category: 'number',     desc: '认识元、角、分，学会单位换算与简单计算' },
-    { id: 'math-comprehensive',     name: '综合练习',     category: 'mixed',      desc: '把一年级的本领都混合起来，一套题全练到' }
-  ];
-
-  var GRADE1_ENTRIES = [
-    // ---- 数与代数 ----
+  var KnowledgeBank = [
+    // ==================================================================
+    //  一年级
+    // ==================================================================
     {
-      id: 'count',
-      importance: 3, name: '数数与顺序', category: 'number', pluginId: 'math-number-sense', type: 'count',
-      defaults: { count: 8 },
-      desc: '数一数圆点、写出前后数、数列填空',
-      points: ['数数', '顺序']
-    },
-    {
-      id: 'compose-digit',
-      importance: 3, name: '数的组成与数位', category: 'number', pluginId: 'math-number-sense', type: 'compose',
-      defaults: { count: 8 },
-      desc: '几个十几个一组成几、十位个位辨析',
-      points: ['组成', '数位']
-    },
-    {
-      id: 'compare',
-      importance: 3, name: '比大小', category: 'number', pluginId: 'math-number-sense', type: 'compare',
-      defaults: { count: 8 },
-      desc: '20 以内数比较大小，填写 > < =',
-      points: ['比大小']
-    },
-    {
-      id: 'addsub-20',
-      importance: 5, name: '20 以内加减法', category: 'number', pluginId: 'math-oral', type: 'addsub',
-      defaults: { count: 10, maxNum: 20, noNegative: true },
-      desc: '20 以内加法与减法口算',
-      points: ['20 以内加减法']
-    },
-    {
-      id: 'chain-mixed',
-      importance: 3, name: '连加连减与加减混合', category: 'number', pluginId: 'math-word-problems',
-      defaults: { count: 5, difficulty: 'basic' },
-      desc: '连加、连减、加减混合文字题',
-      points: ['连加连减', '加减混合']
-    },
-    {
-      id: 'make-ten',
-      importance: 4, name: '凑十法', category: 'number', pluginId: 'math-make-ten',
-      defaults: { count: 5, type: 'mix' },
-      desc: '凑十 / 平十 / 破十拆分计算技巧',
-      points: ['凑十法', '平十法', '破十法']
-    },
-    {
-      id: 'clock-hour',
-      importance: 3, name: '认识钟表（整时）', category: 'number', pluginId: 'math-clock',
-      defaults: { count: 8 },
-      desc: '读钟面说出整时、判断时针指向',
-      points: ['整时']
-    },
-    {
-      id: 'patterns',
-      importance: 3, name: '找规律', category: 'number', pluginId: 'math-patterns',
-      defaults: { count: 8 },
-      desc: '数字等差规律与图形循环规律填空',
-      points: ['数字规律', '图形规律']
-    },
-    {
-      id: 'picture-equations',
-      importance: 3, name: '看图列式', category: 'number', pluginId: 'math-picture-equations',
-      defaults: { count: 8 },
-      desc: '根据图示列出加法或减法算式',
-      points: ['看图列式']
-    },
-    {
-      id: 'money',
-      importance: 3, name: '认识人民币', category: 'number', pluginId: 'math-money', type: 'mix',
-      defaults: { count: 8 },
-      desc: '认识元、角、分，掌握 1 元 = 10 角、1 角 = 10 分 的换算与同单位加减',
-      points: ['认识面值', '元角分换算', '简单计算']
-    },
-    {
-      id: 'solve-problems',
-      importance: 4, name: '解决问题', category: 'number', pluginId: 'math-word-problems',
-      defaults: { count: 5, difficulty: 'mix' },
-      desc: '加法、减法、相差、连加连减、多余条件等实际问题',
-      points: ['加法', '减法', '相差', '连加连减', '多余条件']
+      grade: 1,
+      modules: [
+        {
+          moduleId: 'M0',
+          knowledgePoints: [
+            { id: 'make-ten', name: '凑十法', pluginId: 'math-make-ten', weight: 1, type: 'cushi' },
+            { id: 'make-ten-ping', name: '平十法', pluginId: 'math-make-ten', weight: 1, type: 'pingshi' },
+            { id: 'make-ten-po', name: '破十法', pluginId: 'math-make-ten', weight: 1, type: 'poshi' }
+          ]
+        },
+        {
+          moduleId: 'M1',
+          knowledgePoints: [
+            { id: 'addsub-20', name: '20 以内加减法', pluginId: 'math-oral', weight: 3, type: 'addsub' }
+          ]
+        },
+        {
+          moduleId: 'M4',
+          knowledgePoints: [
+            { id: 'count', name: '数数与顺序', pluginId: 'math-number-sense', weight: 2, type: 'count' },
+            { id: 'compose-digit', name: '数的组成与数位', pluginId: 'math-number-sense', weight: 2, type: 'compose' },
+            { id: 'compare', name: '比大小', pluginId: 'math-number-sense', weight: 2, type: 'compare' },
+            { id: 'clock-hour', name: '认识钟表（整时）', pluginId: 'math-clock', weight: 2, type: 'read' },
+            { id: 'patterns', name: '找规律', pluginId: 'math-patterns', weight: 2, type: 'mix' },
+            { id: 'money', name: '认识人民币', pluginId: 'math-money', weight: 2, type: 'mix' }
+          ]
+        },
+        {
+          moduleId: 'M6',
+          knowledgePoints: [
+            { id: 'solid-shapes', name: '认识立体图形', pluginId: 'math-shapes', weight: 2, type: 'solid' },
+            { id: 'flat-shapes', name: '认识平面图形', pluginId: 'math-shapes', weight: 2, type: 'flat' },
+            { id: 'shape-compose', name: '图形拼组', pluginId: 'math-shapes', weight: 2, type: 'count' },
+            { id: 'position', name: '上下左右位置', pluginId: 'math-shapes', weight: 2, type: 'position' }
+          ]
+        },
+        {
+          moduleId: 'M7',
+          knowledgePoints: [
+            { id: 'picture-equations', name: '看图列式', pluginId: 'math-picture-equations', weight: 2, type: 'mix' }
+          ]
+        },
+        {
+          moduleId: 'M8',
+          knowledgePoints: [
+            { id: 'chain-mixed', name: '连加连减与加减混合', pluginId: 'math-word-problems', weight: 2, type: 'mix' },
+            { id: 'solve-problems', name: '解决问题', pluginId: 'math-word-problems', weight: 3, type: 'mix' }
+          ]
+        },
+        {
+          moduleId: 'M9',
+          knowledgePoints: [
+            { id: 'classify', name: '分类与整理', pluginId: 'math-statistics', weight: 2, type: 'classify' },
+            { id: 'stats-table', name: '填写简单统计表', pluginId: 'math-statistics', weight: 2, type: 'table' },
+            { id: 'pictograph', name: '象形统计图', pluginId: 'math-statistics', weight: 2, type: 'picto' }
+          ]
+        }
+      ]
     },
 
-    // ---- 图形与几何 ----
+    // ==================================================================
+    //  二年级
+    // ==================================================================
     {
-      id: 'solid-shapes',
-      importance: 3, name: '认识立体图形', category: 'geometry', pluginId: 'math-shapes', type: 'solid',
-      defaults: { count: 8 },
-      desc: '辨认长方体、正方体、圆柱、球',
-      points: ['长方体', '正方体', '圆柱', '球']
-    },
-    {
-      id: 'flat-shapes',
-      importance: 3, name: '认识平面图形', category: 'geometry', pluginId: 'math-shapes', type: 'flat',
-      defaults: { count: 8 },
-      desc: '辨认三角形、正方形、长方形、圆等平面图形',
-      points: ['三角形', '正方形', '长方形', '圆形', '梯形']
-    },
-    {
-      id: 'shape-compose',
-      importance: 2, name: '图形拼组', category: 'geometry', pluginId: 'math-shapes', type: 'count',
-      defaults: { count: 8 },
-      desc: '数一数组合图形中各种图形的个数',
-      points: ['图形拼组']
-    },
-    {
-      id: 'position',
-      importance: 2, name: '上下左右位置', category: 'geometry', pluginId: 'math-shapes', type: 'position',
-      defaults: { count: 8 },
-      desc: '辨认图形的上、下、左、右方位关系',
-      points: ['上下左右位置']
+      grade: 2,
+      modules: [
+        {
+          moduleId: 'M1',
+          knowledgePoints: [
+            { id: 'addsub-100', name: '100 以内加减法', pluginId: 'math-oral', weight: 3, type: 'addsub' },
+            { id: 'muldiv', name: '表内乘除法', pluginId: 'math-oral', weight: 3, type: 'muldiv' },
+            { id: 'remainder', name: '有余数除法', pluginId: 'math-oral', weight: 3, type: 'remainder' },
+            { id: 'mixed', name: '混合运算', pluginId: 'math-oral', weight: 3, type: 'mixed' }
+          ]
+        },
+        {
+          moduleId: 'M4',
+          knowledgePoints: [
+            { id: 'readwrite', name: '万以内数的读写', pluginId: 'math-number-sense', weight: 2, type: 'readwrite' },
+            { id: 'compose-4', name: '数的组成与数位', pluginId: 'math-number-sense', weight: 2, type: 'compose' },
+            { id: 'approx', name: '近似数', pluginId: 'math-number-sense', weight: 2, type: 'approx' },
+            { id: 'unit-convert', name: '单位换算', pluginId: 'math-unit-convert', weight: 2, type: 'convert' },
+            { id: 'fill-unit', name: '填合适单位', pluginId: 'math-unit-convert', weight: 2, type: 'fillUnit' }
+          ]
+        },
+        {
+          moduleId: 'M6',
+          knowledgePoints: [
+            { id: 'shapes-2', name: '认识图形', pluginId: 'math-shapes', weight: 2, type: 'mix' },
+            { id: 'angles', name: '角的初步认识', pluginId: 'math-geometry', weight: 2, type: 'angleClass' },
+            { id: 'motion', name: '图形的运动', pluginId: 'math-geometry', weight: 2, type: 'motion' },
+            { id: 'grid', name: '方格纸', pluginId: 'math-geometry', weight: 2, type: 'grid' }
+          ]
+        },
+        {
+          moduleId: 'M8',
+          knowledgePoints: [
+            { id: 'wp-solve', name: '解决问题', pluginId: 'math-word-problems', weight: 3, type: 'mix' }
+          ]
+        },
+        {
+          moduleId: 'M9',
+          knowledgePoints: [
+            { id: 'data-tally', name: '数据收集与整理', pluginId: 'math-data-stats', weight: 2, type: 'tally' },
+            { id: 'data-question', name: '根据统计结果回答问题', pluginId: 'math-data-stats', weight: 2, type: 'result' }
+          ]
+        },
+        {
+          moduleId: 'M10',
+          knowledgePoints: [
+            { id: 'logic-reasoning', name: '简单逻辑推理', pluginId: 'math-logic-reasoning', weight: 2, type: 'bookGuess' },
+            { id: 'sudoku3', name: '3×3 数独', pluginId: 'math-logic-reasoning', weight: 1, type: 'sudoku3' }
+          ]
+        }
+      ]
     },
 
-    // ---- 统计与概率 ----
+    // ==================================================================
+    //  三年级
+    // ==================================================================
     {
-      id: 'classify',
-      importance: 2, name: '分类与整理', category: 'statistics', pluginId: 'math-statistics', type: 'classify',
-      defaults: { count: 6 },
-      desc: '按形状 / 颜色对图形分类并数出数量',
-      points: ['按形状分类', '按颜色分类', '按用途分类']
+      grade: 3,
+      modules: [
+        {
+          moduleId: 'M1',
+          knowledgePoints: [
+            { id: 'g3-add-sub-wan', name: '万以内的加减法', pluginId: 'math-oral', weight: 3, type: 'addsub' },
+            { id: 'g3-mul-multi1', name: '多位数乘一位数', pluginId: 'math-oral', weight: 3, type: 'multi1' },
+            { id: 'g3-div1', name: '除数是一位数的除法', pluginId: 'math-oral', weight: 3, type: 'div1' },
+            { id: 'g3-mul-2digit', name: '两位数乘两位数', pluginId: 'math-oral', weight: 3, type: 'twodigit' }
+          ]
+        },
+        {
+          moduleId: 'M4',
+          knowledgePoints: [
+            { id: 'g3-fraction', name: '分数的初步认识', pluginId: 'math-fraction', weight: 3, type: 'shard' },
+            { id: 'g3-decimal', name: '小数的初步认识', pluginId: 'math-decimal', weight: 3, type: 'read' },
+            { id: 'g3-time', name: '时、分、秒', pluginId: 'math-time-date', weight: 2, type: 'clockFace' },
+            { id: 'g3-year-month', name: '年、月、日', pluginId: 'math-time-date', weight: 2, type: 'ym' },
+            { id: 'g3-measure', name: '测量', pluginId: 'math-unit-convert', weight: 2, type: 'mix' }
+          ]
+        },
+        {
+          moduleId: 'M6',
+          knowledgePoints: [
+            { id: 'g3-perimeter', name: '长方形正方形的周长', pluginId: 'math-geometry', weight: 2, type: 'perimeter' },
+            { id: 'g3-area', name: '面积', pluginId: 'math-area', weight: 3, type: 'rect' },
+            { id: 'g3-position', name: '位置与方向', pluginId: 'math-position-direction', weight: 2, type: 'compass' }
+          ]
+        },
+        {
+          moduleId: 'M8',
+          knowledgePoints: [
+            { id: 'g3-times', name: '倍的认识', pluginId: 'math-word-problems', weight: 2, type: 'mix' }
+          ]
+        },
+        {
+          moduleId: 'M9',
+          knowledgePoints: [
+            { id: 'g3-stats-table', name: '复式统计表', pluginId: 'math-data-stats', weight: 2, type: 'multiTable' }
+          ]
+        },
+        {
+          moduleId: 'M10',
+          knowledgePoints: [
+            { id: 'g3-combination', name: '搭配问题', pluginId: 'math-combination-set', weight: 2, type: 'dress' },
+            { id: 'g3-set', name: '集合思想', pluginId: 'math-combination-set', weight: 2, type: 'set' }
+          ]
+        }
+      ]
     },
+
+    // ==================================================================
+    //  四年级（全年级题型模块目录重构版，M1-M12 全覆盖）
+    //  pluginId 为预留新插件 id，已由 registry 占位注册，后续逐模块实现
+    // ==================================================================
     {
-      id: 'stats-table',
-      importance: 2, name: '填写简单统计表', category: 'statistics', pluginId: 'math-statistics', type: 'table',
-      defaults: { count: 6 },
-      desc: '把整理结果填入统计表',
-      points: ['填写简单统计表']
+      grade: 4,
+      modules: [
+        {
+          moduleId: 'M1',
+          knowledgePoints: [
+            { id: 'g4-oral-big', name: '大数加减口算', pluginId: 'math-g4-oral', weight: 3, type: 'big-addsub' },
+            { id: 'g4-oral-mul3x1', name: '三位数乘一位数口算', pluginId: 'math-g4-oral', weight: 3, type: 'mul3x1' },
+            { id: 'g4-oral-mul2t', name: '两位数乘整十数口算', pluginId: 'math-g4-oral', weight: 3, type: 'mul2tens' },
+            { id: 'g4-oral-divt', name: '除数是整十数的口算', pluginId: 'math-g4-oral', weight: 3, type: 'div-tens' },
+            { id: 'g4-oral-dec', name: '小数加减法口算', pluginId: 'math-g4-oral', weight: 3, type: 'dec-addsub' },
+            { id: 'g4-oral-law', name: '运用运算律简便口算', pluginId: 'math-g4-oral', weight: 2, type: 'law-oral' }
+          ]
+        },
+        {
+          moduleId: 'M2',
+          knowledgePoints: [
+            { id: 'g4-v-mul3x2', name: '三位数乘两位数', pluginId: 'math-g4-vertical', weight: 3, type: 'mul3x2' },
+            { id: 'g4-v-mulzero', name: '因数中间或末尾有 0 的乘法', pluginId: 'math-g4-vertical', weight: 3, type: 'mul-zero' },
+            { id: 'g4-v-div2', name: '除数是两位数的除法', pluginId: 'math-g4-vertical', weight: 3, type: 'div-2digit' },
+            { id: 'g4-v-div2q', name: '商是两位数的除法', pluginId: 'math-g4-vertical', weight: 3, type: 'div-2quotient' },
+            { id: 'g4-v-dec', name: '小数加减法竖式', pluginId: 'math-g4-vertical', weight: 3, type: 'dec-vertical' }
+          ]
+        },
+        {
+          moduleId: 'M3',
+          knowledgePoints: [
+            { id: 'g4-mix-order', name: '四则混合运算顺序', pluginId: 'math-g4-mixed', weight: 3, type: 'order' },
+            { id: 'g4-mix-addlaw', name: '加法运算律简便计算', pluginId: 'math-g4-mixed', weight: 3, type: 'add-law' },
+            { id: 'g4-mix-mullaw', name: '乘法运算律简便计算', pluginId: 'math-g4-mixed', weight: 3, type: 'mul-law' },
+            { id: 'g4-mix-dist', name: '乘法分配律简便计算', pluginId: 'math-g4-mixed', weight: 3, type: 'dist-law' },
+            { id: 'g4-mix-dec', name: '小数加减简便计算', pluginId: 'math-g4-mixed', weight: 2, type: 'dec-simple' }
+          ]
+        },
+        {
+          moduleId: 'M4',
+          knowledgePoints: [
+            { id: 'g4-fill-bignum', name: '大数的认识', pluginId: 'math-g4-fill', weight: 3, type: 'big-num' },
+            { id: 'g4-fill-hectare', name: '公顷和平方千米', pluginId: 'math-g4-fill', weight: 2, type: 'hectare' },
+            { id: 'g4-fill-line', name: '线段、射线、直线', pluginId: 'math-g4-fill', weight: 2, type: 'line-ray' },
+            { id: 'g4-fill-angle', name: '角的度量与分类', pluginId: 'math-g4-fill', weight: 3, type: 'angle-metric' },
+            { id: 'g4-fill-quad', name: '平行四边形和梯形', pluginId: 'math-g4-fill', weight: 2, type: 'quad' },
+            { id: 'g4-fill-op', name: '四则运算的意义与关系、0 的运算', pluginId: 'math-g4-fill', weight: 2, type: 'op-meaning' },
+            { id: 'g4-fill-quotient', name: '商不变规律', pluginId: 'math-g4-fill', weight: 2, type: 'quotient-law' },
+            { id: 'g4-fill-dec', name: '小数', pluginId: 'math-g4-fill', weight: 3, type: 'decimal' },
+            { id: 'g4-fill-tri', name: '三角形', pluginId: 'math-g4-fill', weight: 3, type: 'triangle' },
+            { id: 'g4-fill-avg', name: '平均数', pluginId: 'math-g4-fill', weight: 2, type: 'average' }
+          ]
+        },
+        {
+          moduleId: 'M5',
+          knowledgePoints: [
+            { id: 'g4-match-read', name: '大数与读法连线', pluginId: 'math-g4-match', weight: 2, type: 'read' },
+            { id: 'g4-match-angle', name: '角与度数连线', pluginId: 'math-g4-match', weight: 2, type: 'angle-degree' },
+            { id: 'g4-match-shape', name: '图形与特征连线', pluginId: 'math-g4-match', weight: 2, type: 'shape-feature' },
+            { id: 'g4-match-law', name: '运算律与字母表达式连线', pluginId: 'math-g4-match', weight: 2, type: 'law-formula' },
+            { id: 'g4-match-decfrac', name: '小数与分数连线', pluginId: 'math-g4-match', weight: 2, type: 'dec-frac' }
+          ]
+        },
+        {
+          moduleId: 'M6',
+          knowledgePoints: [
+            { id: 'g4-draw-protractor', name: '用量角器量角、画角', pluginId: 'math-g4-draw', weight: 3, type: 'protractor' },
+            { id: 'g4-draw-para', name: '画平行线、垂线', pluginId: 'math-g4-draw', weight: 3, type: 'parallel-perp' },
+            { id: 'g4-draw-grid', name: '在方格纸上画平行四边形、梯形', pluginId: 'math-g4-draw', weight: 2, type: 'grid-quad' },
+            { id: 'g4-draw-view', name: '观察物体', pluginId: 'math-g4-draw', weight: 2, type: 'observe' },
+            { id: 'g4-draw-sym', name: '画轴对称图形', pluginId: 'math-g4-draw', weight: 2, type: 'symmetry' },
+            { id: 'g4-draw-move', name: '图形平移', pluginId: 'math-g4-draw', weight: 2, type: 'translate' }
+          ]
+        },
+        {
+          moduleId: 'M7',
+          knowledgePoints: [
+            { id: 'g4-pic-segment', name: '线段图列式（倍数问题）', pluginId: 'math-g4-picture', weight: 3, type: 'segment-multiple' },
+            { id: 'g4-pic-brace', name: '大括号图列式（加减）', pluginId: 'math-g4-picture', weight: 2, type: 'brace-addsub' },
+            { id: 'g4-pic-speed', name: '速度时间路程图', pluginId: 'math-g4-picture', weight: 2, type: 'speed-distance' },
+            { id: 'g4-pic-dec', name: '小数加减情境图', pluginId: 'math-g4-picture', weight: 2, type: 'dec-scene' }
+          ]
+        },
+        {
+          moduleId: 'M8',
+          knowledgePoints: [
+            { id: 'g4-word-big', name: '大数应用', pluginId: 'math-g4-word', weight: 2, type: 'big-app' },
+            { id: 'g4-word-speed', name: '乘法问题（速度×时间=路程）', pluginId: 'math-g4-word', weight: 3, type: 'mul-travel' },
+            { id: 'g4-word-div', name: '除法问题（总量÷份数=每份数）', pluginId: 'math-g4-word', weight: 3, type: 'div-share' },
+            { id: 'g4-word-price', name: '单价、数量、总价问题', pluginId: 'math-g4-word', weight: 3, type: 'price-qty' },
+            { id: 'g4-word-area', name: '面积问题（公顷/平方千米）', pluginId: 'math-g4-word', weight: 2, type: 'area-hectare' },
+            { id: 'g4-word-opt', name: '优化问题', pluginId: 'math-g4-word', weight: 2, type: 'optimize' },
+            { id: 'g4-word-cr', name: '鸡兔同笼', pluginId: 'math-g4-word', weight: 2, type: 'chicken-rabbit' },
+            { id: 'g4-word-dec', name: '小数加减问题', pluginId: 'math-g4-word', weight: 3, type: 'dec-pay' },
+            { id: 'g4-word-avg', name: '平均数问题', pluginId: 'math-g4-word', weight: 2, type: 'avg-score' }
+          ]
+        },
+        {
+          moduleId: 'M9',
+          knowledgePoints: [
+            { id: 'g4-stats-bar', name: '条形统计图（1 格表示多个单位）', pluginId: 'math-g4-stats', weight: 3, type: 'bar-chart' },
+            { id: 'g4-stats-double', name: '复式条形统计图', pluginId: 'math-g4-stats', weight: 2, type: 'double-bar' },
+            { id: 'g4-stats-avg', name: '平均数与统计', pluginId: 'math-g4-stats', weight: 2, type: 'avg-stats' }
+          ]
+        },
+        {
+          moduleId: 'M10',
+          knowledgePoints: [
+            { id: 'g4-reason-opt', name: '优化问题（沏茶、烙饼）', pluginId: 'math-g4-reason', weight: 3, type: 'pancake' },
+            { id: 'g4-reason-cr', name: '鸡兔同笼（假设法）', pluginId: 'math-g4-reason', weight: 3, type: 'assume' },
+            { id: 'g4-reason-logic', name: '简单逻辑推理', pluginId: 'math-g4-reason', weight: 2, type: 'logic' }
+          ]
+        },
+        {
+          moduleId: 'M11',
+          knowledgePoints: [
+            { id: 'g4-judge-read', name: '大数读写', pluginId: 'math-g4-judge', weight: 2, type: 'read' },
+            { id: 'g4-judge-law', name: '运算律', pluginId: 'math-g4-judge', weight: 2, type: 'law' },
+            { id: 'g4-judge-angle', name: '几何概念', pluginId: 'math-g4-judge', weight: 2, type: 'angle' },
+            { id: 'g4-judge-line', name: '线段、射线、直线', pluginId: 'math-g4-judge', weight: 2, type: 'line-ray' },
+            { id: 'g4-judge-quotient', name: '商不变规律', pluginId: 'math-g4-judge', weight: 2, type: 'quotient' },
+            { id: 'g4-judge-dec', name: '小数性质', pluginId: 'math-g4-judge', weight: 2, type: 'dec' },
+            { id: 'g4-judge-tri', name: '三角形', pluginId: 'math-g4-judge', weight: 2, type: 'triangle' },
+            { id: 'g4-judge-stats', name: '统计', pluginId: 'math-g4-judge', weight: 2, type: 'stats' }
+          ]
+        },
+        {
+          moduleId: 'M12',
+          knowledgePoints: [
+            { id: 'g4-choice-big', name: '大数比较', pluginId: 'math-g4-choice', weight: 3, type: 'big-compare' },
+            { id: 'g4-choice-est', name: '乘除法估算', pluginId: 'math-g4-choice', weight: 2, type: 'est-muldiv' },
+            { id: 'g4-choice-angle', name: '角的认识', pluginId: 'math-g4-choice', weight: 2, type: 'angle' },
+            { id: 'g4-choice-shape', name: '图形特征', pluginId: 'math-g4-choice', weight: 2, type: 'shape' },
+            { id: 'g4-choice-dec', name: '小数意义', pluginId: 'math-g4-choice', weight: 2, type: 'dec-meaning' },
+            { id: 'g4-choice-law', name: '运算律应用', pluginId: 'math-g4-choice', weight: 2, type: 'law' }
+          ]
+        }
+      ]
     },
+    // ==================================================================
+    //  五年级（全年级题型模块目录重构版，M1-M12 全覆盖）
+    //  pluginId 为预留新插件 id，已由 registry 占位注册，后续逐模块实现
+    // ==================================================================
     {
-      id: 'pictograph',
-      importance: 2, name: '象形统计图', category: 'statistics', pluginId: 'math-statistics', type: 'picto',
-      defaults: { count: 6 },
-      desc: '用涂色方块表示数量并比较多少',
-      points: ['涂色制作象形统计图']
+      grade: 5,
+      modules: [
+        {
+          moduleId: 'M1',
+          knowledgePoints: [
+            { id: 'g5-oral-decmul', name: '小数乘法口算', pluginId: 'math-g5-oral', weight: 3, type: 'dec-mul-oral' },
+            { id: 'g5-oral-decdiv', name: '小数除法口算', pluginId: 'math-g5-oral', weight: 3, type: 'dec-div-oral' },
+            { id: 'g5-oral-fracadd', name: '同分母分数加减法口算', pluginId: 'math-g5-oral', weight: 3, type: 'frac-addsub-oral' },
+            { id: 'g5-oral-equ', name: '简易方程口算', pluginId: 'math-g5-oral', weight: 2, type: 'equation-oral' },
+            { id: 'g5-oral-fm', name: '因数倍数特征快速判断', pluginId: 'math-g5-oral', weight: 2, type: 'factor-multiple' }
+          ]
+        },
+        {
+          moduleId: 'M2',
+          knowledgePoints: [
+            { id: 'g5-v-decmul', name: '小数乘法竖式', pluginId: 'math-g5-vertical', weight: 3, type: 'dec-mul-vertical' },
+            { id: 'g5-v-divint', name: '除数是整数的小数除法竖式', pluginId: 'math-g5-vertical', weight: 3, type: 'dec-div-int' },
+            { id: 'g5-v-ddivdec', name: '除数是小数的小数除法竖式', pluginId: 'math-g5-vertical', weight: 3, type: 'dec-div-dec' },
+            { id: 'g5-v-repeating', name: '循环小数竖式表示', pluginId: 'math-g5-vertical', weight: 2, type: 'repeating-dec' }
+          ]
+        },
+        {
+          moduleId: 'M3',
+          knowledgePoints: [
+            { id: 'g5-mix-decmixed', name: '小数四则混合运算', pluginId: 'math-g5-mixed', weight: 3, type: 'dec-mixed' },
+            { id: 'g5-mix-fracmixed', name: '分数加减混合运算', pluginId: 'math-g5-mixed', weight: 3, type: 'frac-mixed' },
+            { id: 'g5-mix-decsimple', name: '运算律推广到小数简便计算', pluginId: 'math-g5-mixed', weight: 3, type: 'dec-simple' },
+            { id: 'g5-mix-fracsimple', name: '运算律推广到分数简便计算', pluginId: 'math-g5-mixed', weight: 3, type: 'frac-simple' }
+          ]
+        },
+        {
+          moduleId: 'M4',
+          knowledgePoints: [
+            { id: 'g5-fill-decloc', name: '小数的计数单位与数位', pluginId: 'math-g5-fill', weight: 3, type: 'dec-place' },
+            { id: 'g5-fill-deccmp', name: '小数大小比较', pluginId: 'math-g5-fill', weight: 2, type: 'dec-compare' },
+            { id: 'g5-fill-prodrule', name: '积的变化规律', pluginId: 'math-g5-fill', weight: 3, type: 'product-rule' },
+            { id: 'g5-fill-repeating', name: '循环小数与简便记法', pluginId: 'math-g5-fill', weight: 2, type: 'repeating-note' },
+            { id: 'g5-fill-equation', name: '方程概念与等式的性质', pluginId: 'math-g5-fill', weight: 3, type: 'equation-prop' },
+            { id: 'g5-fill-fm', name: '因数与倍数的概念', pluginId: 'math-g5-fill', weight: 3, type: 'factor-multiple' },
+            { id: 'g5-fill-prime', name: '质数与合数', pluginId: 'math-g5-fill', weight: 3, type: 'prime-composite' },
+            { id: 'g5-fill-fracmean', name: '分数的意义与分数单位', pluginId: 'math-g5-fill', weight: 3, type: 'frac-meaning' },
+            { id: 'g5-fill-fracprop', name: '分数的基本性质（约分、通分）', pluginId: 'math-g5-fill', weight: 3, type: 'frac-property' },
+            { id: 'g5-fill-fracdec', name: '分数与小数的互化', pluginId: 'math-g5-fill', weight: 2, type: 'frac-decimal' },
+            { id: 'g5-fill-coord', name: '数对的含义', pluginId: 'math-g5-fill', weight: 2, type: 'coordinate' },
+            { id: 'g5-fill-area', name: '多边形面积公式', pluginId: 'math-g5-fill', weight: 3, type: 'area-formula' },
+            { id: 'g5-fill-solid', name: '长方体正方体特征与公式', pluginId: 'math-g5-fill', weight: 3, type: 'solid-formula' },
+            { id: 'g5-fill-rotate', name: '旋转三要素', pluginId: 'math-g5-fill', weight: 2, type: 'rotation-elem' },
+            { id: 'g5-fill-possible', name: '可能性描述', pluginId: 'math-g5-fill', weight: 2, type: 'possibility' },
+            { id: 'g5-fill-linechart', name: '折线统计图特点', pluginId: 'math-g5-fill', weight: 2, type: 'linechart-feature' }
+          ]
+        },
+        {
+          moduleId: 'M5',
+          knowledgePoints: [
+            { id: 'g5-match-areaf', name: '图形与面积公式连线', pluginId: 'math-g5-match', weight: 3, type: 'area-formula' },
+            { id: 'g5-match-solid', name: '立体图形特征连线', pluginId: 'math-g5-match', weight: 2, type: 'solid-feature' },
+            { id: 'g5-match-possib', name: '事件与可能性描述连线', pluginId: 'math-g5-match', weight: 2, type: 'possibility-desc' },
+            { id: 'g5-match-equ', name: '方程与解连线', pluginId: 'math-g5-match', weight: 3, type: 'equation-solve' },
+            { id: 'g5-match-fracdec', name: '分数与小数连线', pluginId: 'math-g5-match', weight: 2, type: 'frac-decimal' }
+          ]
+        },
+        {
+          moduleId: 'M6',
+          knowledgePoints: [
+            { id: 'g5-draw-rotate', name: '画旋转后的图形', pluginId: 'math-g5-draw', weight: 3, type: 'rotation-draw' },
+            { id: 'g5-draw-observe', name: '观察物体（三）', pluginId: 'math-g5-draw', weight: 3, type: 'observe-3d' },
+            { id: 'g5-draw-height', name: '画多边形的高', pluginId: 'math-g5-draw', weight: 2, type: 'polygon-height' },
+            { id: 'g5-draw-sym', name: '补全轴对称图形', pluginId: 'math-g5-draw', weight: 2, type: 'symmetry' },
+            { id: 'g5-draw-coord', name: '用数对表示位置', pluginId: 'math-g5-draw', weight: 2, type: 'coordinate-plot' },
+            { id: 'g5-draw-net', name: '长方体展开图', pluginId: 'math-g5-draw', weight: 2, type: 'solid-net' }
+          ]
+        },
+        {
+          moduleId: 'M7',
+          knowledgePoints: [
+            { id: 'g5-pic-balance', name: '天平平衡图（列方程）', pluginId: 'math-g5-picture', weight: 3, type: 'balance-equation' },
+            { id: 'g5-pic-area', name: '多边形面积图', pluginId: 'math-g5-picture', weight: 3, type: 'area-picture' },
+            { id: 'g5-pic-segment', name: '线段图（小数倍数）', pluginId: 'math-g5-picture', weight: 3, type: 'segment-multiple' },
+            { id: 'g5-pic-tree', name: '植树问题示意图', pluginId: 'math-g5-picture', weight: 2, type: 'tree-planting' }
+          ]
+        },
+        {
+          moduleId: 'M8',
+          knowledgePoints: [
+            { id: 'g5-word-decmul', name: '小数乘法应用题', pluginId: 'math-g5-word', weight: 3, type: 'dec-mul-app' },
+            { id: 'g5-word-decdiv', name: '小数除法应用题（进一法、去尾法）', pluginId: 'math-g5-word', weight: 3, type: 'dec-div-app' },
+            { id: 'g5-word-equ', name: '列方程解决问题', pluginId: 'math-g5-word', weight: 3, type: 'equation-app' },
+            { id: 'g5-word-fm', name: '因数与倍数简单应用', pluginId: 'math-g5-word', weight: 2, type: 'factor-app' },
+            { id: 'g5-word-frac', name: '分数加减法应用题', pluginId: 'math-g5-word', weight: 3, type: 'frac-app' },
+            { id: 'g5-word-area', name: '多边形面积应用题', pluginId: 'math-g5-word', weight: 3, type: 'area-app' },
+            { id: 'g5-word-solid', name: '长方体正方体应用题', pluginId: 'math-g5-word', weight: 3, type: 'solid-app' },
+            { id: 'g5-word-possib', name: '可能性问题', pluginId: 'math-g5-word', weight: 2, type: 'possibility-app' },
+            { id: 'g5-word-linechart', name: '折线统计图分析', pluginId: 'math-g5-word', weight: 2, type: 'linechart-app' },
+            { id: 'g5-word-tree', name: '植树问题', pluginId: 'math-g5-word', weight: 3, type: 'tree-app' },
+            { id: 'g5-word-defect', name: '找次品', pluginId: 'math-g5-word', weight: 2, type: 'defective' }
+          ]
+        },
+        {
+          moduleId: 'M9',
+          knowledgePoints: [
+            { id: 'g5-stats-possib', name: '可能性大小比较', pluginId: 'math-g5-stats', weight: 3, type: 'possibility-compare' },
+            { id: 'g5-stats-line1', name: '单式折线统计图', pluginId: 'math-g5-stats', weight: 3, type: 'linechart-single' },
+            { id: 'g5-stats-line2', name: '复式折线统计图', pluginId: 'math-g5-stats', weight: 3, type: 'linechart-double' }
+          ]
+        },
+        {
+          moduleId: 'M10',
+          knowledgePoints: [
+            { id: 'g5-reason-tree3', name: '植树问题（三种情况）', pluginId: 'math-g5-reason', weight: 3, type: 'tree-three' },
+            { id: 'g5-reason-defect', name: '找次品（天平称量）', pluginId: 'math-g5-reason', weight: 3, type: 'defective-scale' },
+            { id: 'g5-reason-logic', name: '逻辑推理', pluginId: 'math-g5-reason', weight: 2, type: 'logic' },
+            { id: 'g5-reason-seq', name: '数字推理', pluginId: 'math-g5-reason', weight: 2, type: 'sequence' }
+          ]
+        },
+        {
+          moduleId: 'M11',
+          knowledgePoints: [
+            { id: 'g5-judge-decmul', name: '小数乘除法', pluginId: 'math-g5-judge', weight: 3, type: 'dec' },
+            { id: 'g5-judge-equ', name: '方程概念', pluginId: 'math-g5-judge', weight: 2, type: 'equation' },
+            { id: 'g5-judge-fm', name: '因数与倍数', pluginId: 'math-g5-judge', weight: 3, type: 'factor-multiple' },
+            { id: 'g5-judge-frac', name: '分数的意义与性质', pluginId: 'math-g5-judge', weight: 3, type: 'fraction' },
+            { id: 'g5-judge-area', name: '多边形面积', pluginId: 'math-g5-judge', weight: 3, type: 'area' },
+            { id: 'g5-judge-solid', name: '长方体正方体', pluginId: 'math-g5-judge', weight: 3, type: 'solid' },
+            { id: 'g5-judge-rotate', name: '图形的运动', pluginId: 'math-g5-judge', weight: 2, type: 'rotation' },
+            { id: 'g5-judge-possib', name: '可能性', pluginId: 'math-g5-judge', weight: 2, type: 'possibility' },
+            { id: 'g5-judge-stats', name: '统计', pluginId: 'math-g5-judge', weight: 2, type: 'stats' }
+          ]
+        },
+        {
+          moduleId: 'M12',
+          knowledgePoints: [
+            { id: 'g5-choice-decmul', name: '小数乘除法', pluginId: 'math-g5-choice', weight: 3, type: 'dec' },
+            { id: 'g5-choice-equ', name: '方程', pluginId: 'math-g5-choice', weight: 3, type: 'equation' },
+            { id: 'g5-choice-fm', name: '因数与倍数', pluginId: 'math-g5-choice', weight: 3, type: 'factor-multiple' },
+            { id: 'g5-choice-frac', name: '分数的意义与性质', pluginId: 'math-g5-choice', weight: 3, type: 'fraction' },
+            { id: 'g5-choice-area', name: '多边形的面积', pluginId: 'math-g5-choice', weight: 3, type: 'area' },
+            { id: 'g5-choice-solid', name: '长方体正方体容积', pluginId: 'math-g5-choice', weight: 3, type: 'solid' },
+            { id: 'g5-choice-rotate', name: '图形的运动', pluginId: 'math-g5-choice', weight: 2, type: 'rotation' },
+            { id: 'g5-choice-possib', name: '可能性', pluginId: 'math-g5-choice', weight: 2, type: 'possibility' },
+            { id: 'g5-choice-stats', name: '统计', pluginId: 'math-g5-choice', weight: 2, type: 'stats' }
+          ]
+        }
+      ]
     }
   ];
 
-  function buildGrade(meta, plugins, entries) {
-    return {
-      meta: meta,
-      plugins: plugins,
-      entries: entries,
-      byPlugin: function (pluginId) {
-        return entries.filter(function (e) { return e.pluginId === pluginId; });
-      },
-      byCategory: function (category) {
-        return entries.filter(function (e) { return e.category === category; });
-      },
-      entry: function (id) {
-        return entries.filter(function (e) { return e.id === id; })[0] || null;
-      }
-    };
-  }
+  // ============ 便捷查询（挂在数组对象上） ============
 
-  // ---------------- 二年级 ----------------
-  var GRADE2_PLUGINS = [
-    { id: 'math-oral',              name: '表内乘除法口算', category: 'number',     desc: '表内乘除法、有余数除法、加减混合口算' },
-    { id: 'math-word-problems',     name: '应用题',       category: 'number',     desc: '乘除、两步计算、进一去尾、周期、估算等实际问题' },
-    { id: 'math-make-ten',          name: '凑十法',       category: 'number',     desc: '凑十、平十、破十拆分计算技巧' },
-    { id: 'math-shapes',            name: '认识图形',     category: 'geometry',   desc: '辨认立体与平面图形、方位辨别、拼组数图形' },
-    { id: 'math-number-sense',      name: '万以内数的认识', category: 'number',   desc: '万以内数的读写、组成、数位、比大小与近似数' },
-    { id: 'math-unit-convert',      name: '单位换算',     category: 'number',     desc: '长度（米/厘米/毫米/千米）与质量（克/千克）单位换算' },
-    { id: 'math-geometry',          name: '角的初步认识', category: 'geometry',   desc: '角的认识、图形的平移旋转、方格纸数格' },
-    { id: 'math-data-stats',        name: '数据收集与整理', category: 'statistics', desc: '投票情境下用正字法统计、填写统计表、回答问题' },
-    { id: 'math-logic-reasoning',   name: '简单推理与数独', category: 'statistics', desc: '简单逻辑推理与 3×3 数独启蒙' },
-    { id: 'math-comprehensive',     name: '综合练习',     category: 'mixed',      desc: '把二年级的本领都混合起来，一套题全练到' }
-  ];
-
-  var GRADE2_ENTRIES = [
-    // ---- 数与代数 ----
-    {
-      id: 'addsub-100',
-      importance: 4, name: '100 以内加减法', category: 'number', pluginId: 'math-oral', type: 'addsub',
-      defaults: { count: 10, maxNum: 100, noNegative: true },
-      desc: '100 以内进位加法与退位减法口算',
-      points: ['100 以内加减法', '进位加法', '退位减法', '竖式计算']
-    },
-    {
-      id: 'muldiv',
-      importance: 5, name: '表内乘除法', category: 'number', pluginId: 'math-oral', type: 'muldiv',
-      defaults: { count: 10, maxNum: 50 },
-      desc: '表内乘法与表内除法口算',
-      points: ['乘法口诀', '表内乘法', '表内除法']
-    },
-    {
-      id: 'remainder',
-      importance: 4, name: '有余数除法', category: 'number', pluginId: 'math-oral', type: 'remainder',
-      defaults: { count: 10, maxNum: 50 },
-      desc: '有余数除法（商……余数）口算',
-      points: ['有余数的除法', '余数与除数的关系']
-    },
-    {
-      id: 'mixed',
-      importance: 4, name: '混合运算', category: 'number', pluginId: 'math-oral', type: 'mixed',
-      defaults: { count: 10, maxNum: 50 },
-      desc: '乘加、乘减、除加、除减两级混合运算',
-      points: ['乘加乘减', '两步运算']
-    },
-    {
-      id: 'wp-solve',
-      importance: 4, name: '解决问题', category: 'number', pluginId: 'math-word-problems',
-      defaults: { count: 5, difficulty: 'mix' },
-      desc: '乘除、两步、进一去尾、周期、估算、质量等实际问题',
-      points: ['乘法', '除法', '两步运算', '进一法', '去尾法', '周期问题', '估算', '质量计算']
-    },
-    {
-      id: 'readwrite',
-      importance: 3, name: '万以内数的读写', category: 'number', pluginId: 'math-number-sense', type: 'readwrite',
-      defaults: { count: 8 },
-      desc: '万以内数的读作与写作',
-      points: ['读写', '万以内数的认识']
-    },
-    {
-      id: 'compose-4',
-      importance: 3, name: '数的组成与数位', category: 'number', pluginId: 'math-number-sense', type: 'compose',
-      defaults: { count: 8 },
-      desc: '几个千/百/十/一组成几，数位辨析',
-      points: ['组成', '数位顺序']
-    },
-    {
-      id: 'approx',
-      importance: 2, name: '近似数', category: 'number', pluginId: 'math-number-sense', type: 'approx',
-      defaults: { count: 8 },
-      desc: '把数估成整十、整百或整千',
-      points: ['近似数']
-    },
-    {
-      id: 'unit-convert',
-      importance: 3, name: '单位换算', category: 'number', pluginId: 'math-unit-convert', type: 'convert',
-      defaults: { count: 8 },
-      desc: '长度（米/厘米/毫米/千米）与质量（克/千克）单位互化',
-      points: ['长度单位', '单位换算', '厘米', '米', '毫米', '千米', '克与千克换算']
-    },
-    {
-      id: 'fill-unit',
-      importance: 3, name: '填合适单位', category: 'number', pluginId: 'math-unit-convert', type: 'fillUnit',
-      defaults: { count: 8 },
-      desc: '根据生活常识为数量选择正确的长度/质量单位',
-      points: ['认识质量单位', '长度单位应用', '常见的量', '克与千克']
-    },
-
-    // ---- 图形与几何 ----
-    {
-      id: 'angles',
-      importance: 3, name: '角的初步认识', category: 'geometry', pluginId: 'math-geometry', type: 'angleClass',
-      defaults: { count: 8 },
-      desc: '数角、识别锐角/直角/钝角',
-      points: ['锐角', '直角', '钝角']
-    },
-    {
-      id: 'motion',
-      importance: 2, name: '图形的运动', category: 'geometry', pluginId: 'math-geometry', type: 'motion',
-      defaults: { count: 8 },
-      desc: '判断平移与旋转',
-      points: ['平移', '旋转']
-    },
-    {
-      id: 'grid',
-      importance: 2, name: '方格纸', category: 'geometry', pluginId: 'math-geometry', type: 'grid',
-      defaults: { count: 8 },
-      desc: '数一数图形向右平移了几格',
-      points: ['在方格纸上画简单图形']
-    },
-    {
-      id: 'shapes-2',
-      importance: 3, name: '认识图形', category: 'geometry', pluginId: 'math-shapes', type: 'mix',
-      defaults: { count: 8 },
-      desc: '辨认立体与平面图形、方位辨别、拼组数图形',
-      points: ['立体图形', '平面图形', '上下左右位置', '图形拼组']
-    },
-
-    // ---- 统计与概率 ----
-    {
-      id: 'data-tally',
-      importance: 3, name: '数据收集与整理', category: 'statistics', pluginId: 'math-data-stats', type: 'tally',
-      defaults: { count: 6 },
-      desc: '用正字法统计投票结果并填写统计表',
-      points: ['正字统计法', '简单统计表']
-    },
-    {
-      id: 'data-question',
-      importance: 2, name: '根据统计结果回答问题', category: 'statistics', pluginId: 'math-data-stats', type: 'result',
-      defaults: { count: 6 },
-      desc: '根据统计表回答谁最多、谁最少、多几票等问题',
-      points: ['根据统计结果提出建议']
-    },
-    {
-      id: 'logic-reasoning',
-      importance: 2, name: '简单逻辑推理', category: 'statistics', pluginId: 'math-logic-reasoning', type: 'bookGuess',
-      defaults: { count: 6 },
-      desc: '根据线索推理判断谁拿什么',
-      points: ['简单逻辑推理']
-    },
-    {
-      id: 'sudoku3',
-      importance: 1, name: '3×3 数独', category: 'statistics', pluginId: 'math-logic-reasoning', type: 'sudoku3',
-      defaults: { count: 6 },
-      desc: '每行每列都有 1/2/3 的数独启蒙',
-      points: ['数独启蒙']
+  /** 取某年级对象（{grade, modules}），不存在返回 null */
+  KnowledgeBank.findGrade = function (grade) {
+    for (var i = 0; i < this.length; i++) {
+      if (this[i].grade === grade) return this[i];
     }
-  ];
-
-  // ---------------- 三年级 ----------------
-  // 插件清单与 plugins/registry.js 中 grades 含 3 的数学条目一一对应。
-  var GRADE3_PLUGINS = [
-    { id: 'math-oral',              name: '口算练习',         category: 'number',     desc: '万以内加减、多位数乘一位数、两位数乘两位数、除数是一位数除法等' },
-    { id: 'math-word-problems',     name: '应用题',           category: 'number',     desc: '倍数、两步计算、搭配等实际问题' },
-    { id: 'math-shapes',            name: '认识图形',         category: 'geometry',   desc: '辨认立体与平面图形、方位辨别、拼组数图形' },
-    { id: 'math-number-sense',      name: '数的认识',         category: 'number',     desc: '万以内数的读写、组成、数位、近似数' },
-    { id: 'math-unit-convert',      name: '单位换算',         category: 'number',     desc: '长度（毫米/分米/千米/吨）与质量单位换算' },
-    { id: 'math-geometry',          name: '图形与几何',       category: 'geometry',   desc: '周长与面积计算、位置与方向' },
-    { id: 'math-data-stats',        name: '数据收集与整理',   category: 'statistics', desc: '复式统计表阅读与填写' },
-    { id: 'math-fraction',          name: '分数的初步认识',   category: 'number',     desc: '认识几分之一/几分之几、分数比大小、同分母分数加减' },
-    { id: 'math-decimal',           name: '小数的初步认识',   category: 'number',     desc: '读写小数、比较大小、简单加减' },
-    { id: 'math-area',              name: '面积',             category: 'geometry',   desc: '面积单位、长方形正方形面积计算' },
-    { id: 'math-time-date',         name: '时间与日期',       category: 'number',     desc: '时、分、秒与年、月、日' },
-    { id: 'math-position-direction',name: '方向与位置',       category: 'geometry',   desc: '东、南、西、北及东北、西南等八个方向' },
-    { id: 'math-combination-set',   name: '搭配与集合',       category: 'statistics', desc: '排列组合与集合重叠' },
-    { id: 'math-comprehensive',     name: '综合练习',         category: 'mixed',      desc: '把三年级的本领都混合起来，一套题全练到' }
-  ];
-
-  var GRADE3_ENTRIES = [
-    // ---- 数与代数 ----
-    {
-      id: 'g3-time',
-      importance: 3, name: '时、分、秒', category: 'number', pluginId: 'math-time-date', type: 'clock',
-      defaults: { count: 8 },
-      desc: '时间单位换算、经过时间计算',
-      points: ['时间单位', '经过时间计算']
-    },
-    {
-      id: 'g3-add-sub-wan',
-      importance: 5, name: '万以内的加减法', category: 'number', pluginId: 'math-oral', type: 'addsub',
-      defaults: { count: 10, maxNum: 10000 },
-      desc: '不进位/进位加法、不退位/退位减法、验算',
-      points: ['万以内加减', '验算']
-    },
-    {
-      id: 'g3-times',
-      importance: 3, name: '倍的认识', category: 'number', pluginId: 'math-word-problems', type: 'times',
-      defaults: { count: 6 },
-      desc: '求一个数是另一个数的几倍、求一个数的几倍是多少',
-      points: ['倍数']
-    },
-    {
-      id: 'g3-mul-multi1',
-      importance: 4, name: '多位数乘一位数', category: 'number', pluginId: 'math-oral', type: 'multi1',
-      defaults: { count: 10 },
-      desc: '口算、笔算、估算多位数乘一位数',
-      points: ['多位数乘一位数']
-    },
-    {
-      id: 'g3-fraction',
-      importance: 4, name: '分数的初步认识', category: 'number', pluginId: 'math-fraction', type: 'fraction',
-      defaults: { count: 8 },
-      desc: '认识几分之一/几分之几、分数比大小、同分母分数加减',
-      points: ['认识分数', '分数比大小', '同分母分数加减']
-    },
-    {
-      id: 'g3-div1',
-      importance: 4, name: '除数是一位数的除法', category: 'number', pluginId: 'math-oral', type: 'div1',
-      defaults: { count: 10 },
-      desc: '口算与笔算除法、商中间/末尾有 0',
-      points: ['除数是一位数']
-    },
-    {
-      id: 'g3-mul-2digit',
-      importance: 4, name: '两位数乘两位数', category: 'number', pluginId: 'math-oral', type: 'twodigit',
-      defaults: { count: 10 },
-      desc: '口算与笔算两位数乘两位数',
-      points: ['两位数乘两位数']
-    },
-    {
-      id: 'g3-decimal',
-      importance: 4, name: '小数的初步认识', category: 'number', pluginId: 'math-decimal', type: 'decimal',
-      defaults: { count: 8 },
-      desc: '读写小数、比较大小、简单加减',
-      points: ['读写小数', '小数比大小', '简单加减']
-    },
-    {
-      id: 'g3-year-month',
-      importance: 3, name: '年、月、日', category: 'number', pluginId: 'math-time-date', type: 'calendar',
-      defaults: { count: 8 },
-      desc: '大月小月、平年闰年、日历阅读、经过天数计算',
-      points: ['年月日', '平年闰年', '经过天数']
-    },
-    {
-      id: 'g3-combination',
-      importance: 2, name: '搭配问题', category: 'number', pluginId: 'math-combination-set', type: 'combo',
-      defaults: { count: 6 },
-      desc: '数学广角：排列组合',
-      points: ['排列组合']
-    },
-
-    // ---- 图形与几何 ----
-    {
-      id: 'g3-measure',
-      importance: 3, name: '测量', category: 'geometry', pluginId: 'math-unit-convert', type: 'measure',
-      defaults: { count: 8 },
-      desc: '长度单位（毫米、分米、千米）与质量单位（吨）换算、填合适单位',
-      points: ['毫米分米千米', '吨', '填合适单位']
-    },
-    {
-      id: 'g3-perimeter',
-      importance: 3, name: '长方形正方形的周长', category: 'geometry', pluginId: 'math-geometry', type: 'perimeter',
-      defaults: { count: 8 },
-      desc: '周长含义、周长计算、靠墙围栏等实际问题',
-      points: ['周长含义', '周长计算']
-    },
-    {
-      id: 'g3-area',
-      importance: 4, name: '面积', category: 'geometry', pluginId: 'math-area', type: 'area',
-      defaults: { count: 8 },
-      desc: '面积单位、长方形正方形面积计算',
-      points: ['面积单位', '面积计算']
-    },
-    {
-      id: 'g3-position',
-      importance: 2, name: '位置与方向', category: 'geometry', pluginId: 'math-position-direction', type: 'direction',
-      defaults: { count: 8 },
-      desc: '东、南、西、北及东北、西南等八个方向',
-      points: ['八个方向']
-    },
-
-    // ---- 统计与概率 ----
-    {
-      id: 'g3-stats-table',
-      importance: 3, name: '复式统计表', category: 'statistics', pluginId: 'math-data-stats', type: 'multiTable',
-      defaults: { count: 6 },
-      desc: '阅读与填写复式统计表',
-      points: ['复式统计表']
-    },
-    {
-      id: 'g3-set',
-      importance: 2, name: '集合思想', category: 'statistics', pluginId: 'math-combination-set', type: 'set',
-      defaults: { count: 6 },
-      desc: '数学广角：集合重叠问题',
-      points: ['集合重叠']
-    }
-  ];
-
-  var GRADES = {
-    1: buildGrade(
-      { grade: 1, gradeName: '一年级', subject: 'math', version: '1.0.0', maintained: '随 plugins/ 变化同步更新' },
-      GRADE1_PLUGINS,
-      GRADE1_ENTRIES
-    ),
-
-    // ---------------- 二年级 ----------------
-    2: buildGrade(
-      { grade: 2, gradeName: '二年级', subject: 'math', version: '1.0.0', maintained: '随 plugins/ 变化同步更新' },
-      GRADE2_PLUGINS,
-      GRADE2_ENTRIES
-    ),
-
-    // ---------------- 三年级 ----------------
-    3: buildGrade(
-      { grade: 3, gradeName: '三年级', subject: 'math', version: '1.0.0', maintained: '随 plugins/ 变化同步更新' },
-      GRADE3_PLUGINS,
-      GRADE3_ENTRIES
-    )
-    // ============ 后续年级：在下方追加（结构照抄一年级） ============
-    // 4: buildGrade({ grade: 4, gradeName: '四年级', subject: 'math', version: '1.0.0', ... }, PLUGINS_4, ENTRIES_4),
+    return null;
   };
 
-  global.KnowledgeBank = {
-    subject: 'math',
-    categoryOrder: CATEGORY_ORDER,
-    categoryNames: CATEGORY_NAMES,
-    grades: GRADES,
-    getGrade: function (g) { return GRADES[g] || null; },
+  /** 兼容旧名 getGrade（返回与 findGrade 相同的年级对象），便于旧代码/文档过渡 */
+  KnowledgeBank.getGrade = function (grade) {
+    return this.findGrade(grade);
+  };
 
-    /**
-     * 取某年级知识点条目（开发期覆盖统计用）。
-     * 非数学科目暂无知识库，返回空数组。
-     * @returns {Array} 条目数组（{id,name,category,pluginId,points,...}）
-     */
-    getEntries: function (subject, grade) {
-      if (subject && subject !== 'math') return [];
-      var g = GRADES[grade];
-      return g ? g.entries : [];
-    },
-
-    /**
-     * 项目级覆盖统计：基于「已存在的插件集合」计算某年级知识点覆盖情况。
-     * @param {string} subject 科目（当前仅 'math' 有数据）
-     * @param {number} grade 年级
-     * @param {string[]} coveredPluginIds 当前已注册且适用该年级的插件 id 集合
-     * @returns {{total:number,covered:number,ratio:number,missing:Array,next:Object|null}}
-     *   next 为第一个未覆盖条目（按 领域顺序），可用于「建议下一个开发 Z」
-     */
-    getCoverage: function (subject, grade, coveredPluginIds) {
-      var g = GRADES[grade];
-      if (!g || (subject && subject !== 'math')) {
-        return { total: 0, covered: 0, ratio: 0, missing: [], next: null };
-      }
-      var set = {};
-      (coveredPluginIds || []).forEach(function (id) { set[id] = true; });
-      var entries = g.entries || [];
-      var covered = 0, missing = [];
-      CATEGORY_ORDER.forEach(function (cat) {
-        entries.filter(function (e) { return e.category === cat; }).forEach(function (e) {
-          if (set[e.pluginId]) covered++; else missing.push(e);
+  /** 扁平化某年级全部知识点：[{id,name,pluginId,moduleId,weight,type}]；非数学科目返回空数组 */
+  KnowledgeBank.getEntries = function (subject, grade) {
+    if (subject && subject !== 'math') return [];
+    var g = this.findGrade(grade);
+    if (!g) return [];
+    var out = [];
+    (g.modules || []).forEach(function (m) {
+      (m.knowledgePoints || []).forEach(function (kp) {
+        out.push({
+          id: kp.id,
+          name: kp.name,
+          pluginId: kp.pluginId,
+          moduleId: m.moduleId,
+          weight: kp.weight,
+          type: kp.type
         });
       });
-      var total = entries.length;
-      return {
-        total: total,
-        covered: covered,
-        ratio: total ? Math.round(covered / total * 100) : 0,
-        missing: missing,
-        next: missing.length ? missing[0] : null
-      };
-    },
-
-    /** 从注册表（[{id,subject,grades}]）计算覆盖（自动提取适用该年级的插件 id） */
-    coverageFromRegistry: function (subject, grade, registry) {
-      var ids = [];
-      (registry || []).forEach(function (p) {
-        if (p.subject === subject && p.grades && p.grades.indexOf(grade) !== -1) ids.push(p.id);
-      });
-      return this.getCoverage(subject, grade, ids);
-    },
-
-    /** 建议下一个应开发的插件：{pluginId,name} 或 null（已全部覆盖） */
-    suggestNext: function (subject, grade, coveredPluginIds) {
-      var cov = this.getCoverage(subject, grade, coveredPluginIds);
-      return cov.next ? { pluginId: cov.next.pluginId, name: cov.next.name } : null;
-    }
+    });
+    return out;
   };
 
-  // 兼容别名：旧页面/脚本仍可直接读取 KnowledgeBankGrade1
-  global.KnowledgeBankGrade1 = GRADES[1];
+  /**
+   * 知识点覆盖统计。
+   * @param {string} subject 科目（仅 'math' 有数据）
+   * @param {number} grade 年级
+   * @param {string[]} coveredPluginIds 已注册且适用该年级的插件 id 集合
+   * @returns {{total:number,covered:number,ratio:number,missing:Array,next:Object|null}}
+   */
+  KnowledgeBank.getCoverage = function (subject, grade, coveredPluginIds) {
+    var entries = this.getEntries(subject, grade);
+    if (!entries.length) {
+      return { total: 0, covered: 0, ratio: 0, missing: [], next: null };
+    }
+    var set = {};
+    (coveredPluginIds || []).forEach(function (id) { set[id] = true; });
+    var missing = entries.filter(function (e) { return !set[e.pluginId]; });
+    var covered = entries.length - missing.length;
+    return {
+      total: entries.length,
+      covered: covered,
+      ratio: entries.length ? Math.round(covered / entries.length * 100) : 0,
+      missing: missing,
+      next: missing.length ? missing[0] : null
+    };
+  };
+
+  /** 从注册表（[{id,subject,grades}]）计算覆盖（自动提取适用该年级的插件 id；排除占位插件） */
+  KnowledgeBank.coverageFromRegistry = function (subject, grade, registry) {
+    var ids = [];
+    (registry || []).forEach(function (p) {
+      if (p.subject === subject && p.grades && p.grades.indexOf(grade) !== -1 && !p.isPlaceholder) ids.push(p.id);
+    });
+    return this.getCoverage(subject, grade, ids);
+  };
+
+  /** 建议下一个应开发的插件：{pluginId,name} 或 null（已全部覆盖） */
+  KnowledgeBank.suggestNext = function (subject, grade, coveredPluginIds) {
+    var cov = this.getCoverage(subject, grade, coveredPluginIds);
+    return cov.next ? { pluginId: cov.next.pluginId, name: cov.next.name } : null;
+  };
+
+  global.KnowledgeBank = KnowledgeBank;
 
   if (typeof module !== 'undefined' && module.exports) module.exports = global.KnowledgeBank;
 

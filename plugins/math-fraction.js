@@ -262,6 +262,7 @@
   // ============ 用工厂创建插件 ============
   var plugin = _PU.createPlugin({
     id: 'math-fraction',
+    moduleId: 'M4',
     name: '分数的初步认识',
     grades: [3],
     subject: 'math',

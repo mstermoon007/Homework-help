@@ -7,7 +7,7 @@
  * 【跨年级并集（union）】汇总：把某科目全部年级的知识点求并集，统计总体覆盖与缺失，
  * 按 pluginId 归组给出「建议优先开发哪些插件」。
  *
- * 所有年级/知识点均从 KnowledgeBank.grades 动态读取（数据驱动），
+ * 所有年级/知识点均从 KnowledgeBank 数组动态读取（数据驱动），
  * 随 knowledge-bank.js 增加年级与知识点自动扩展，本脚本无需改动。
  *
  * 用法：
@@ -27,23 +27,18 @@ global.PluginUtil = PluginUtil;
 global.KnowledgeBank = KnowledgeBank;
 global.PLUGIN_REGISTRY = registry;
 
-// 跨年级并集：从 KnowledgeBank.grades 动态读取某科目涉及的年级
+// 跨年级并集：从 KnowledgeBank 数组动态读取某科目涉及的年级
 // （数据驱动，随 knowledge-bank.js 增加年级/知识点自动扩展，无需改本脚本）
 function gradesForSubject(subject) {
-  return Object.keys(KnowledgeBank.grades || {})
-    .map(Number)
-    .filter(function (g) {
-      const grade = KnowledgeBank.getGrade(g);
-      if (!grade) return false;
-      return subject === 'math' ? (grade.meta && grade.meta.subject === 'math') : true;
-    })
+  if (subject !== 'math') return [];
+  return KnowledgeBank.map(function (g) { return g.grade; })
     .sort(function (a, b) { return a - b; });
 }
 
-// 全局已注册插件 id 集合（跨年级并集）
+// 全局已注册插件 id 集合（跨年级并集；排除占位插件，占位不算真覆盖）
 function allRegisteredIds(subject) {
   return new Set((registry || []).filter(function (p) {
-    return !subject || p.subject === subject;
+    return (!subject || p.subject === subject) && !p.isPlaceholder;
   }).map(function (p) { return p.id; }));
 }
 
@@ -81,8 +76,7 @@ function runUnion(subject) {
   // 知识点并集：按 id 去重，记录每个 KP 出现在哪些年级
   const unionMap = new Map();
   grades.forEach(function (g) {
-    const grade = KnowledgeBank.getGrade(g);
-    (grade.entries || []).forEach(function (e) {
+    KnowledgeBank.getEntries('math', g).forEach(function (e) {
       if (!unionMap.has(e.id)) unionMap.set(e.id, { entry: e, grades: new Set() });
       unionMap.get(e.id).grades.add(g);
     });

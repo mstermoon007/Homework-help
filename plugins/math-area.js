@@ -219,6 +219,7 @@
   // ============ 用工厂创建插件 ============
   var plugin = _PU.createPlugin({
     id: 'math-area',
+    moduleId: 'M6',
     name: '面积',
     grades: [3],
     subject: 'math',

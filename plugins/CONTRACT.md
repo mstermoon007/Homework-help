@@ -29,6 +29,12 @@
 
 > **重复声明约定**：`id` / `name` / `subject` / `grades` / `category` 需同时在**插件对象**和 `registry.js` 条目中各写一份。原因：综合插件（`math-comprehensive`）运行时直接读取子插件对象的 `category`、`grades` 做配比与过滤，而 `registry.js` 另作加载索引。两者必须保持一致。
 
+### 模块归属字段（数学插件必填）
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `moduleId` | string | 本插件归属的题型模块 ID，取值见 `shared/module-catalog.js`(`MODULE_CATALOG`)：基础模块 `M0`–`M12`（如 `math-make-ten` → `'M0'`）、竞赛模块 `C1`–`C9`。由 `dev/verify-setup.js` 校验「注册插件均有合法 moduleId 且存在于模块目录」。**占位插件豁免**该约束（仅需 `isPlaceholder` 标记） |
+
 ### 可选字段
 
 | 字段 | 类型 | 说明 |
@@ -37,6 +43,7 @@
 | `printConfig` | `{ pageType: string, title?: string }` | 打印配置，见 CONTRIBUTING.md「打印约定」。`pageType` 缺失时容器回退 `'math'` |
 | `settings` | `array` | 题型子类别筛选 UI：`[{ key, label?, options: [{label, value}], default? }]`，`practice.html` 据此渲染题型切换 chip（综合插件用它切换组卷方式） |
 | `deps` | — | **不写在插件对象上**，而在 `registry.js` 条目中声明，见第三节 |
+| `isPlaceholder` | boolean | 占位标记：`generate` 返回空题目集、`render` 返回「题目开发中」提示。综合练习按此过滤，占位插件不参与抽题；覆盖统计排除占位插件（占位不算已实现） |
 
 ---
 
@@ -83,6 +90,8 @@
 | `category` | 否 | 同插件对象 `category` |
 | `grades` | 是 | 同插件对象 `grades` |
 | `deps` | 否 | 前置依赖脚本数组（如 `['pinyin-bank.js']`），加载器在加载插件前**按顺序**加载 |
+| `moduleIds` | 否 | 占位插件声明的模块 ID 数组（竞赛占位如 `['C1',…,'C9']`，四/五年级占位各一条如 `['M1']`），供 `math-types.html` 展开为多个卡片；配合 `isPlaceholder` 使用 |
+| `isPlaceholder` | 否 | `true` 表示该插件无实际题目，综合练习与抽题会过滤 |
 
 > `deps` 用于把插件与公共数据（拼音词库等）解耦：插件文件内不硬编码大体积数据，改用 `deps` 由加载器预加载，插件内再引用全局数据即可。
 
@@ -117,7 +126,7 @@
 2. **异步加载**：`generate()` 返回 `Promise`。子插件脚本经 `document.createElement('script')` + `document.head.appendChild` 动态注入（**5 秒超时保护**），Node 自检环境走 `require`。加载后从 `window.__currentPlugin` 取出实例并恢复综合插件自身。
 3. **年级过滤**：仅保留 `grades` 含当前年级的子插件。
 4. **题量分配**（四种模式，经 `settings` 的 `type` 切换）：
-   - `kb`（默认）：按 `shared/knowledge-bank.js` 中知识点 `importance` 加权分配，核心题型（如乘法）题更多；
+   - `kb`（默认）：按 `shared/knowledge-bank.js` 中知识点 `weight` 加权分配，核心题型（如乘法）题更多；
    - `weighted`：按领域权重 数与代数 60% / 图形几何 30% / 统计推理 10%（保证三领域均出现）；
    - `average`：每插件均分；
    - `domain`：按领域均分。
@@ -134,6 +143,42 @@
 - 异步加载用约定的动态 `<script>` 注入（**唯一允许触碰 DOM 的例外**，见 CONTRIBUTING.md「全局 DOM 禁止操作」），并设置 5 秒超时。
 - 复合 / 多空答案交给各题自身的 `check` 处理，综合层只负责汇总与统计。
 - 交互题（如图形选项按钮）的 `__choose` 等方法可原样挂在插件对象上，由容器调用。
+
+---
+
+## 五点五、模块目录与竞赛占位（全年级题型模块化）
+
+### 模块目录（唯一权威数据源）
+
+`shared/module-catalog.js` 导出 `MODULE_CATALOG`（含 `BASIC_MODULES` 与 `COMPETITION_MODULES`，`MODULE_CATALOG = BASIC.concat(COMPETITION)`），每项 `{ id, name, grades, category, level }`：
+
+- 基础模块 `M0`–`M12`（`level: 'basic'`）：`M0` 巧算专项（仅一年级）、`M1` 口算、`M2` 竖式、`M3` 脱式、`M4` 填空、`M5` 连线、`M6` 操作、`M7` 看图列式、`M8` 解决问题、`M9` 分类整理、`M10` 推理广角、`M11` 判断、`M12` 选择。
+- 竞赛模块 `C1`–`C9`（`level: 'competition'`，高年级 4–6）：数字谜数阵、数论、组合计数、几何模型、行程、工程浓度、分数巧算、最值与逻辑推理、竞赛综合。
+
+用途：题型选择页（`math-types.html`）按模块顺序渲染卡片、主标题显示模块名；知识库按「年级 → 模块 → 知识点」挂接 `moduleId`；综合练习按知识点 `weight` 抽题。
+
+### 竞赛占位（C1–C9 未实现阶段）
+
+竞赛模块暂未实现具体题目生成逻辑，用**单一占位插件**兜底，避免题型选择页空白或「插件不存在」：
+
+- 插件文件：`plugins/math-competition-placeholder.js`（`id: 'math-competition-placeholder'`，`isPlaceholder: true`，`competitionModuleIds: ['C1'…'C9']`，`grades: [4,5,6]`，`category: 'competition'`）。
+- `generate()` 返回**空题目集** `{ questions: [], meta: { placeholder: true } }`；`render()` 返回「🚧 题目开发中，敬请期待」提示（支持 URL `module=Cx` 显示对应模块名）；`check()` 返回空结果。
+- `registry.js` 条目以 `moduleIds: ['C1',…,'C9']` + `isPlaceholder: true` 声明，`math-types.html` 据此把占位插件**展开为 9 张竞赛卡片**（灰色 + 「即将上线」角标，点击进入占位提示页）。
+- **综合练习过滤**：`math-comprehensive.js` 通过 `isPlaceholderPlugin(p)`（占位标记 + `category === 'competition'` 能力兜底）在加载与抽题阶段剔除占位插件，且对产出空题的插件跳过、整体空集抛错——确保综合练习只有已实现题型、无空白题目。
+- `dev/verify-setup.js` 自动校验：竞赛模块 C1–C9 齐全、占位插件已注册且带占位标记、占位插件豁免 `moduleId` 强校验。
+- **新增真实竞赛插件**：实现标准接口（含合法 `moduleId`，如 `'C1'`）、在 `registry.js` 注册并去掉占位标记即可自动生效。
+
+### 四、五年级占位（M1–M12 知识库已建、题型待实现）
+
+四年级（70 个）与五年级（80 个）知识点已按全年级题型模块目录完整写入知识库（各 M1–M12 全覆盖，含 weight/type），但各模块题目生成逻辑尚未实现，采用**模块级占位**：
+
+- 知识库：`shared/knowledge-bank.js` 的 `grade: 4 / 5` 条目，知识点 `pluginId` 为预留 id——四年级 `math-g4-oral/vertical/mixed/fill/match/draw/picture/word/stats/reason/judge/choice`、五年级 `math-g5-*` 同名序列，各对应一个模块。
+- 占位文件：`plugins/math-g4-placeholder.js`、`plugins/math-g5-placeholder.js`（统一占位实现，`isPlaceholder: true`，与竞赛占位同构，支持 URL `module=Mx` 显示模块名）。
+- `registry.js`：各 12 条占位条目，带 `runtimeId`（如 `'math-g5-placeholder'`）+ `moduleIds: ['Mx']` + `isPlaceholder: true`，`file` 均指向各自占位文件；`math-types.html` 依 registry 条目把占位展开为基础模块卡片（M 系列在前、竞赛 C 系列在后）。
+- `dev/verify-setup.js` 校验：四/五年级知识库覆盖 M1–M12 全部模块且无空模块、知识点 pluginId 均已注册。（`dev/verify-knowledge-bank.js --g4 --g5`）
+- 覆盖统计（`dev/coverage.js`、`PluginUtil.reportCoverage`）**排除占位插件**——四/五年级显示 0/70、0/80（待开发），并给出按插件归组的开发清单。
+- **四/五年级不建议参与综合练习**：`math-comprehensive` 的 grades 仍为 `[1,2,3]`，同时占位插件被 `isPlaceholderPlugin` 过滤，双重保证不抽取空题。
+- **新增真实四/五年级插件**：实现标准接口 + 合法 `moduleId`（如 `'M2'`）→ 在 `registry.js` 把对应占位条目替换为真实实现（去掉 `isPlaceholder`）→ `node dev/coverage.js` 确认该模块知识点转覆盖。
 
 ---
 

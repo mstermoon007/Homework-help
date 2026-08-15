@@ -538,6 +538,7 @@
   // ============ ExercisePlugin ============
   var mathNumberSensePlugin = {
     id: 'math-number-sense',
+    moduleId: 'M4',
     name: '数的认识',
     grades: [1, 2, 3],
     subject: 'math',

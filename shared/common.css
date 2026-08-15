@@ -64,17 +64,30 @@
 
 /* 页面头部 */
 .page-header {
+    --header-title-size: 2.2rem;
     text-align: center;
     color: #fff;
     margin-bottom: 20px;
 }
 .page-header h1 {
-    font-size: 2.2rem;
-    margin-bottom: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: var(--header-title-size);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 .page-header p { font-size: 1rem; opacity: 0.95; }
-.page-header .logo { font-size: 3rem; margin-bottom: 10px; display: inline-block; }
+.page-header .logo {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.page-header .logo img {
+    height: calc(var(--header-title-size) * 2);
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
 
 /* 卡片：淡蓝透明玻璃效果 */
 .card {
@@ -426,7 +439,7 @@
 @media (max-width: 480px) {
     .type-grid, .type-grid.two-col, .type-grid.three-col, .type-grid.four-col { grid-template-columns: 1fr; }
     .card { padding: 28px 18px; }
-    .page-header h1 { font-size: 1.7rem; }
+    .page-header { --header-title-size: 1.7rem; }
 }
 
 /* ============ 语文练习共享样式 ============ */

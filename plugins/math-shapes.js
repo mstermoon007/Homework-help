@@ -365,6 +365,7 @@
   // ============ ExercisePlugin ============
   var mathShapesPlugin = {
     id: 'math-shapes',
+    moduleId: 'M6',
     name: '认识图形',
     grades: [1, 2, 3],
     subject: 'math',

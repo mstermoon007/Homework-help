@@ -16,6 +16,7 @@
  *   --desc <文本>                       一句话描述
  *   --deps <a.js,b.js>                  前置依赖脚本（如中文拼音 pinyin-bank.js）
  *   --kp <id1,id2>                      声明覆盖的知识点 id（对应 knowledge-bank 条目）
+ *   --module <Mx>                       知识点所属模块 ID（M0-M12，如 M8 解决问题）
  *   --no-kb                             不写入知识库（跳过覆盖统计登记）
  *   --dry-run                           仅打印将要生成的内容，不写盘
  *   --help                              显示帮助
@@ -25,7 +26,7 @@
  * 产物：
  *   1) plugins/<id>.js            插件骨架（基于 createPlugin 工厂，开发者只填 generateQuestions）
  *   2) plugins/registry.js        追加一条注册表记录
- *   3) shared/knowledge-bank.js   数学插件：追加题型展示条目（及可选的知识点条目，驱动覆盖统计）
+ *   3) shared/knowledge-bank.js   数学插件：在指定年级的指定模块（--module）下追加知识点条目
  */
 'use strict';
 
@@ -68,13 +69,17 @@ function inferSubject(id) {
 
 // ============ 代码生成 ============
 function generateSkeleton(cfg) {
-  const { id, name, subject, grades, category, desc, knowledgePoints } = cfg;
+  const { id, name, subject, grades, category, desc, knowledgePoints, moduleId } = cfg;
   const gradeArr = JSON.stringify(grades);
   const kpArr =
     knowledgePoints && knowledgePoints.length
       ? JSON.stringify(knowledgePoints)
       : '[ /* 对应 knowledge-bank 条目 id，可选 */ ]';
   const catLiteral = subject === 'math' ? `'${category}'` : 'null';
+  // 数学插件必须声明归属模块（verify-setup 9.1 从插件源文件强校验 moduleId 且须存在于模块目录）
+  const moduleLine = subject === 'math'
+    ? (moduleId ? `moduleId: '${moduleId}',\n` : `// TODO: 声明模块归属 moduleId（如 'M8'），取值见 shared/module-catalog.js\n`)
+    : '';
   return `// plugins/${id}.js
 // ${name} —— 科目：${subject}，适用年级：${grades.join('/')}
 // 生成逻辑见 generateQuestions；generate/render/check 由 shared/common.js 的
@@ -112,7 +117,7 @@ function generateSkeleton(cfg) {
     subject: '${subject}',
     grades: ${gradeArr},
     category: ${catLiteral},
-    description: '${desc}',
+    ${moduleLine}    description: '${desc}',
     knowledgePoints: ${kpArr},
     generateQuestions: generateQuestions
   });
@@ -131,20 +136,10 @@ function registryEntry(cfg) {
   return `{ id: '${id}', file: 'plugins/${id}.js', name: '${name}', subject: '${subject}', category: ${catLiteral}, grades: ${gradeArr}${depLiteral} }`;
 }
 
-function kbPluginEntry(cfg) {
-  const { id, name, category, desc } = cfg;
-  const catLiteral = `'${category}'`;
-  return `{ id: '${id}', name: '${name}', category: ${catLiteral}, desc: '${desc}' }`;
-}
-
-function kbKnowledgeEntry(cfg, kp) {
-  const { id, category } = cfg;
-  return `    {
-      id: '${kp}', name: '${kp}', category: '${category}', pluginId: '${id}', type: null,
-      defaults: { count: 8 },
-      desc: '${kp}',
-      points: ['${kp}']
-    }`;
+function kbKnowledgeEntry(cfg, kp, weight) {
+  const { id } = cfg;
+  const w = weight || 2;
+  return `            { id: '${kp}', name: '${kp}', pluginId: '${id}', weight: ${w} }`;
 }
 
 // ============ 文本插入 ============
@@ -153,12 +148,19 @@ function insertBefore(text, anchor, insertion) {
   if (idx === -1) throw new Error('未找到插入锚点：' + anchor);
   return text.slice(0, idx) + insertion + text.slice(idx);
 }
-function appendToGradeArray(text, decl, entryBlock) {
-  const di = text.indexOf(decl);
-  if (di === -1) throw new Error('knowledge-bank.js 中未找到 ' + decl);
-  const closeIdx = text.indexOf('\n  ];', di);
-  if (closeIdx === -1) throw new Error('未找到 ' + decl + ' 的闭合 ]');
-  return text.slice(0, closeIdx) + ',\n' + entryBlock + text.slice(closeIdx);
+// 新结构插入：在指定年级的指定模块（moduleId）下追加一条知识点
+function appendKnowledgePoint(text, grade, moduleId, entryBlock) {
+  const gIdx = text.indexOf('      grade: ' + grade + ',');
+  if (gIdx === -1) throw new Error('knowledge-bank.js 中未找到 grade: ' + grade);
+  const mIdx = text.indexOf("          moduleId: '" + moduleId + "',", gIdx);
+  if (mIdx === -1) throw new Error('grade ' + grade + ' 中未找到模块 ' + moduleId + '（请确认 knowledge-bank.js 中该年级存在该模块）');
+  const kIdx = text.indexOf('          knowledgePoints: [', mIdx);
+  if (kIdx === -1) throw new Error('模块 ' + moduleId + ' 未找到 knowledgePoints 数组');
+  const cIdx = text.indexOf('\n          ]', kIdx);
+  if (cIdx === -1) throw new Error('模块 ' + moduleId + ' knowledgePoints 数组未闭合');
+  const body = text.slice(kIdx + '          knowledgePoints: ['.length, cIdx);
+  const isEmpty = body.trim().length === 0;
+  return text.slice(0, cIdx) + (isEmpty ? '\n' : ',\n') + entryBlock + text.slice(cIdx);
 }
 
 // 注册表插入：在锚点前插入新条目，并给锚点前一行（数组元素）补逗号。
@@ -206,7 +208,7 @@ async function main() {
   };
 
   // 已知需要带值的选项：解析时将其值从位置参数中排除，避免污染 id/name/grades
-  const FLAG_WITH_VAL = { '--subject': 1, '--category': 1, '--desc': 1, '--deps': 1, '--kp': 1 };
+  const FLAG_WITH_VAL = { '--subject': 1, '--category': 1, '--desc': 1, '--deps': 1, '--kp': 1, '--module': 1, '--weight': 1 };
   const skipIdx = new Set();
   args.forEach((a, i) => {
     if (FLAG_WITH_VAL[a] && args[i + 1] && !args[i + 1].startsWith('--')) skipIdx.add(i + 1);
@@ -221,6 +223,8 @@ async function main() {
   const desc = getFlag('--desc');
   const depsRaw = getFlag('--deps');
   const kpRaw = getFlag('--kp');
+  const moduleId = getFlag('--module');
+  const weightRaw = getFlag('--weight');
 
   // 交互模式：仅在显式 --interactive，或 TTY 且缺省必填项时进入。
   // 否则（即使 isTTY 为真但只是管道/CI 环境）全程不阻塞终端，直接用默认值。
@@ -283,22 +287,27 @@ async function main() {
 
   const cfg = {
     id: cfgId, name: cfgName, subject: cfgSubject, grades: cfgGrades,
-    category: cfgCategory, desc: cfgDesc, deps: cfgDeps, knowledgePoints
+    category: cfgCategory, desc: cfgDesc, deps: cfgDeps, knowledgePoints,
+    moduleId, weight: weightRaw ? parseInt(weightRaw, 10) : null
   };
+
+  // 数学科目写知识库时必须提供模块 ID（知识点需归属到题型模块）
+  if (cfgSubject === 'math' && !noKb && cfgGrades.length && knowledgePoints.length && !moduleId) {
+    console.error('数学插件写知识库需指定 --module <Mx>（知识点要归属到题型模块，如 M8 解决问题）');
+    process.exit(1);
+  }
 
   // ---- 生成产物 ----
   const skeleton = generateSkeleton(cfg);
   const regEntry = registryEntry(cfg);
-  const kbPlugin = kbPluginEntry(cfg);
-  const kbEntries = knowledgePoints.map((kp) => kbKnowledgeEntry(cfg, kp));
+  const kbEntries = knowledgePoints.map((kp) => kbKnowledgeEntry(cfg, kp, cfg.weight));
 
   console.log('\n========== 将生成以下内容 ==========');
   console.log('【插件骨架】 plugins/' + cfgId + '.js');
   console.log('【注册表】 plugins/registry.js 追加：' + regEntry);
   if (cfgSubject === 'math' && !noKb) {
     cfgGrades.forEach((g) => {
-      console.log('【知识库 G' + g + ' 题型】 ' + kbPlugin);
-      kbEntries.forEach((e) => console.log('【知识库 G' + g + ' 知识点】\n' + e));
+      kbEntries.forEach((e) => console.log('【知识库 G' + g + ' · 模块 ' + cfg.moduleId + ' 知识点】\n' + e));
     });
   } else if (noKb) {
     console.log('【知识库】 已跳过（--no-kb）');
@@ -321,13 +330,12 @@ async function main() {
   regText = insertRegistryEntry(regText, '    // ... 更多插件将在后续逐步添加', regEntry);
   fs.writeFileSync(REGISTRY, regText, 'utf8');
 
-  // 知识库（仅数学）
+  // 知识库（仅数学）：按年级定位，在指定模块下追加知识点
   if (cfgSubject === 'math' && !noKb) {
     let kbText = fs.readFileSync(KB, 'utf8');
     cfgGrades.forEach((g) => {
-      kbText = appendToGradeArray(kbText, `var GRADE${g}_PLUGINS = [`, '    ' + kbPlugin);
       kbEntries.forEach((e) => {
-        kbText = appendToGradeArray(kbText, `var GRADE${g}_ENTRIES = [`, e);
+        kbText = appendKnowledgePoint(kbText, g, cfg.moduleId, e);
       });
     });
     fs.writeFileSync(KB, kbText, 'utf8');

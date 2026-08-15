@@ -106,6 +106,32 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 
 ---
 
+## 三点五、模块目录与知识库维护
+
+### 模块目录 `shared/module-catalog.js`（唯一权威数据源）
+
+- 题型模块统一登记在 `MODULE_CATALOG`：基础 `M0`–`M12`（`level: 'basic'`，`M0` 巧算专项仅一年级）+ 竞赛 `C1`–`C9`（`level: 'competition'`，高年级 4–6）。
+- 新增题型模块：在 `BASIC_MODULES` / `COMPETITION_MODULES` 数组中追加 `{ id, name, grades, category, level }`，保持 `id` 唯一、`grades` 与 `level` 与现有风格一致。
+- 该文件由 `dev/cleanup-scan.js` 白名单保护（`shared/module-catalog.js`），不会误删。
+- 竞赛模块在未实现具体题型前使用占位插件 `plugins/math-competition-placeholder.js`（`isPlaceholder: true`，见 `plugins/CONTRACT.md` 五点五节）。
+
+### 知识库 `shared/knowledge-bank.js`
+
+- 组织方式：`[{ grade, modules: [{ moduleId, knowledgePoints: [{ id, name, pluginId, weight, type }] }] }]`。
+- 每个 `moduleId` 必须存在于 `shared/module-catalog.js`；`knowledgePoints` 可为空数组（如高年级竞赛模块占位阶段）。
+- `weight` 用于综合练习 `kb` 模式的抽题配比（也驱动题型选择页排序）；新增 / 调整知识点请同步 `weight`。
+- 修改知识库后运行 `node dev/coverage.js` 确认各年级覆盖基线（1–3 年级 100%）。
+- **占位插件**：知识库已建但题型未实现时，用占位插件兜底（`isPlaceholder: true`，见 `plugins/CONTRACT.md`）。当前四年级 M1–M12（`math-g4-*` 预留 id，统一 `plugins/math-g4-placeholder.js`）、五年级 M1–M12（`math-g5-*` 预留 id，统一 `plugins/math-g5-placeholder.js`）与竞赛 C1–C9（`math-competition-placeholder.js`）处于占位阶段。覆盖率统计会自动排除占位插件。
+
+### 新增数学插件的固定步骤
+
+1. 从 `plugins/_template.js` 复制，实现 `generate` / `render` / `check`（推荐 `PluginUtil.createPlugin`）。
+2. 在插件对象上声明合法 `moduleId`（对应模块目录中的一个 `Mx` 或竞赛模块 `Cx`；占位阶段竞赛插件不加）。
+3. 在 `plugins/registry.js` 追加条目（含 `moduleIds` / `isPlaceholder` 字段视情况）。
+4. 运行 `node dev/verify-setup.js` 与 `node dev/coverage.js` 校验通过。
+
+---
+
 ## 四、提交前检查
 
 - 在浏览器中打开 `dev/plugin-check.html`，加载你的插件文件，确保所有结构与接口测试通过。

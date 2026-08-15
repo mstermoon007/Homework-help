@@ -1,0 +1,63 @@
+/* ============ 练习页工具栏（controls 面板）布局 ============
+ * 仅定义布局骨架与视觉样式，所有视觉原子属性引用 shared/tokens.css 中的变量。
+ * 左（题型/题量/难度设置）右（操作按钮）排布，chip 分段控件、蓝紫实色选中态。
+ * 依赖：shared/tokens.css 须先于本文件加载。
+ */
+
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow); padding: 18px; margin: 14px 0; }
+.row { display: flex; flex-wrap: wrap; gap: var(--toolbar-row-gap); align-items: center; margin-top: 12px; }
+.group { display: flex; flex-wrap: wrap; gap: var(--toolbar-group-gap); align-items: center; }
+.group .lbl { font-size: var(--toolbar-font-size); color: var(--muted); margin-right: 2px; }
+/* 题型/题量选项：字号缩小，默认玻璃质感，选中/点击后变为蓝紫实色 */
+.chip { cursor: pointer; font-size: var(--toolbar-font-size); font-weight: 600; color: var(--toolbar-chip-ink);
+    border: 1px solid var(--toolbar-chip-border); background: var(--toolbar-chip-bg);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    border-radius: var(--toolbar-chip-radius); padding: var(--toolbar-chip-pad); transition: .18s; }
+.chip:hover { border-color: var(--toolbar-chip-hover-border); background: var(--toolbar-chip-hover-bg); }
+.chip.active { background: var(--toolbar-chip-grad); border-color: var(--toolbar-chip-active-border);
+    color: var(--toolbar-chip-active-ink); box-shadow: var(--toolbar-chip-active-shadow); }
+/* 题型行统一分割（分段控件：无缝相连、内部竖线分隔） */
+#typeGroup { gap: 0; }
+#typeGroup .lbl { margin-right: var(--toolbar-lbl-margin); }
+/* 附加设置组（如应用题「难度」分档）：独立成行，样式与题型行一致 */
+.type-sub-group { gap: 0; }
+.type-sub-group .lbl { margin-right: var(--toolbar-lbl-margin); }
+/* 题型按钮独立容器：换行时新行从第一个按钮的下一行开始，并与上一行第一个按钮左对齐 */
+.type-chips { display: flex; flex-wrap: wrap; gap: 0; }
+.type-chips .chip { border-radius: 0; }
+.type-chips .chip:first-of-type { border-radius: var(--toolbar-chip-radius) 0 0 var(--toolbar-chip-radius); }
+.type-chips .chip:last-of-type { border-radius: 0 var(--toolbar-chip-radius) var(--toolbar-chip-radius) 0; }
+.type-chips .chip + .chip { border-left: 0; }
+/* 换行后的行首/行尾按钮：补齐左竖线边框与两侧圆角 */
+.type-chips .chip.line-start { border-left: 1px solid var(--toolbar-chip-border) !important;
+    border-radius: var(--toolbar-chip-radius) 0 0 var(--toolbar-chip-radius) !important; }
+.type-chips .chip.line-end { border-radius: 0 var(--toolbar-chip-radius) var(--toolbar-chip-radius) 0 !important; }
+.type-chips .chip.line-start.line-end { border-radius: var(--toolbar-chip-radius) !important; }
+.actions { display: flex; flex-wrap: wrap; gap: var(--toolbar-actions-gap); margin-top: var(--toolbar-actions-margin-top); }
+/* 右侧操作工具：字号缩小、蓝紫色系、默认玻璃质感、点击后变实色 */
+.btn { cursor: pointer; border: none; border-radius: var(--toolbar-btn-radius); padding: var(--toolbar-btn-pad);
+    font-size: var(--toolbar-btn-font-size); font-weight: 700; transition: .18s; }
+.btn-primary { background: var(--toolbar-btn-grad); color: #fff;
+    box-shadow: var(--toolbar-btn-primary-shadow); }
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-primary:active { background: var(--toolbar-btn-grad-active);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, .18); }
+.btn-ghost { background: var(--toolbar-btn-ghost-bg); color: var(--toolbar-btn-ghost-ink);
+    border: 1px solid var(--toolbar-btn-ghost-border);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.btn-ghost:hover { background: var(--toolbar-btn-ghost-hover-bg); }
+.btn-ghost:active { background: var(--toolbar-btn-grad); color: #fff; border-color: transparent; }
+.btn:disabled { opacity: .4; cursor: not-allowed; filter: grayscale(.3); }
+.btn-sm { padding: var(--toolbar-btn-sm-pad); font-size: var(--toolbar-btn-sm-font-size);
+    border-radius: var(--toolbar-btn-sm-radius); }
+
+/* 工具卡片：左（题型/题量/难度设置）右（操作按钮）排布 */
+.controls-grid { display: flex; flex-wrap: wrap; gap: var(--toolbar-grid-gap); align-items: flex-start; }
+.controls-settings { flex: var(--toolbar-settings-flex); min-width: 0; }
+.controls-actions { flex: var(--toolbar-actions-flex); display: flex; flex-wrap: wrap; gap: var(--toolbar-actions-gap);
+    justify-content: flex-end; align-content: flex-start; }
+@media (max-width: 760px) {
+    .controls-grid { flex-direction: column; }
+    .controls-actions { justify-content: flex-start; }
+}

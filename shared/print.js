@@ -34,7 +34,12 @@
     },
     makeTen: {
       label: '凑十法·平十法·破十法',
-      pageMargin: '8mm 8mm'
+      pageMargin: '8mm 8mm',
+      beforeClone: function(clone, cols) {
+        // 巧算专项固定一行三题（屏幕与 A4 竖版打印一致），保证每行等宽排列
+        var grid = clone.querySelector('.questions-grid');
+        if (grid) grid.style.gridTemplateColumns = 'repeat(' + (cols || 3) + ', minmax(0, 1fr))';
+      }
     },
     pinyinToChar: {
       label: '看拼音写字',
@@ -147,6 +152,8 @@
     }
 
     // 构建打印页 HTML：原始样式 + 仅必要的打印覆盖
+    // 使用 outerHTML 保留 #problemsArea 容器 id，使原页面对其下卡片的样式作用域
+    // （如 .questions-grid .question-card 左对齐）在打印页同样生效，保证排版一致。
     var printHtml = '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n' +
       '<meta charset="UTF-8">\n' +
       '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
@@ -168,7 +175,7 @@
       '  /* 颜色保真 */\n' +
       '  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }\n' +
       '</style>\n</head>\n<body>\n' +
-      '<div class="print-shell">' + clone.innerHTML + '</div>\n' +
+      '<div class="print-shell">' + clone.outerHTML + '</div>\n' +
       '</body>\n</html>';
 
     // 打开新窗口

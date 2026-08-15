@@ -523,6 +523,7 @@
   // ============ ExercisePlugin ============
   var mathGeometryPlugin = {
     id: 'math-geometry',
+    moduleId: 'M6',
     name: '图形与几何',
     grades: [2, 3],
     subject: 'math',

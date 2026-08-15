@@ -100,9 +100,23 @@
     return String(v) === String(q.answer);
   }
 
+  /** 钟表题目对象（标准 Question 接口：render/check） */
+  function toClockQuestion(p) {
+    return {
+      type: 'clock',
+      kind: p.kind,
+      data: p,
+      answer: String(p.answer),
+      hint: p.kind === 'read' ? '分针指向 12，时针指向几就是几时。' : '分针指向 12 时，时针指向几就是几时。',
+      render: function (idx, ctx) { return renderCard(this.data, idx); },
+      check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
+    };
+  }
+
   // ============ ExercisePlugin ============
   var mathClockPlugin = {
     id: 'math-clock',
+    moduleId: 'M4',
     name: '认识钟表',
     grades: [1],
     subject: 'math',
@@ -113,36 +127,66 @@
       {
         key: 'type',
         label: '题型',
-        default: 'mix',
+        default: 'clock',
         options: [
-          { value: 'mix',   label: '混合' },
-          { value: 'read',  label: '读钟面' },
-          { value: 'point', label: '时针指向' }
+          { value: 'clock',         label: '钟表练习' },
+          { value: 'money',         label: '认识人民币' },
+          { value: 'comprehensive', label: '综合练习' }
         ]
       }
     ],
 
+    // 动态加载认识人民币插件（money / comprehensive 题型复用其出题逻辑，单一来源）
+    loadMoney: function () {
+      var loader = (typeof App !== 'undefined' && App.PluginLoader) ? App.PluginLoader : null;
+      if (loader && typeof loader.loadPlugin === 'function') {
+        return loader.loadPlugin({ id: 'math-money', file: 'plugins/math-money.js' }).then(function (p) {
+          global.__currentPlugin = mathClockPlugin; // 恢复当前插件，保证选项按钮 __choose 正确
+          return p;
+        });
+      }
+      return Promise.resolve(null);
+    },
+
     generate: function (options) {
       var opts = options || {};
-      var type = opts.type || 'mix';
+      var type = opts.type || 'clock';
       var count = opts.count || 8;
-      var list = generateProblems(type, count);
+      var grade = opts.grade || 1;
+
+      // 认识人民币 / 综合练习：异步加载 math-money 复用其生成逻辑
+      if (type === 'money' || type === 'comprehensive') {
+        return mathClockPlugin.loadMoney().then(function (moneyPlugin) {
+          if (!moneyPlugin) throw new Error('加载认识人民币插件失败');
+          // 认识人民币出满题量；综合练习时钟表与人民币各占一半
+          var moneyCount = (type === 'money') ? count : Math.ceil(count / 2);
+          var moneySet = moneyPlugin.generate({ grade: grade, count: moneyCount, difficulty: opts.difficulty });
+          var moneyQs = (moneySet && moneySet.questions) || [];
+          if (type === 'money') {
+            return {
+              questions: moneyQs,
+              meta: { type: 'money', count: moneyQs.length, title: '小学一年级认识人民币' }
+            };
+          }
+          // 综合练习：钟表 + 人民币 各占一半，混合打乱
+          var clockQs = generateProblems('mix', count - moneyQs.length).map(toClockQuestion);
+          var all = _PU.shuffle(clockQs.concat(moneyQs));
+          return {
+            questions: all,
+            meta: { type: 'comprehensive', count: all.length, title: '小学一年级单位认识综合练习' }
+          };
+        });
+      }
+
+      // 兼容旧类型（math-comprehensive 按知识库 type 调用 read/mix）
+      var clockType = (type === 'clock' || type === 'mix') ? 'mix' : type;
+      var list = generateProblems(clockType, count);
       var typeNames = { mix: '混合练习', read: '读钟面', point: '时针指向' };
-      var label = typeNames[type] || '混合';
-      var questions = list.map(function (p) {
-        return {
-          type: 'clock',
-          kind: p.kind,
-          data: p,
-          answer: String(p.answer),
-          hint: p.kind === 'read' ? '分针指向 12，时针指向几就是几时。' : '分针指向 12 时，时针指向几就是几时。',
-          render: function (idx, ctx) { return renderCard(this.data, idx); },
-          check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
-        };
-      });
+      var label = typeNames[clockType] || '混合';
+      var questions = list.map(toClockQuestion);
       return {
         questions: questions,
-        meta: { type: type, count: questions.length, title: '小学一年级认识钟表（' + label + '）' }
+        meta: { type: clockType, count: questions.length, title: '小学一年级认识钟表（' + label + '）' }
       };
     },
 

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>数学题型选择</title>
 <link rel="stylesheet" href="shared/common.css">
+<link rel="stylesheet" href="shared/tokens.css">
 <style>
     body {
         background: linear-gradient(160deg, #d6e8fa 0%, #4A90D9 45%, #F5A623 110%);
@@ -27,6 +28,24 @@
         color: #fff;
         opacity: 0.92;
     }
+    /* 竞赛模块占位卡片：灰色置灰 + 「即将上线」角标（点击进入占位提示页） */
+    .type-card.competition {
+        position: relative;
+        background: rgba(255,255,255,0.45);
+        border: 1.5px dashed rgba(120,130,150,0.55);
+        color: #6b7686;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+    .type-card.competition .t-name { color: #6b7686; }
+    .type-card.competition:hover { border-color: rgba(120,130,150,0.9); opacity: 0.9; }
+    .type-card.competition .t-soon {
+        position: absolute; right: 8px; top: 8px;
+        font-size: 10px; font-weight: 700;
+        padding: 2px 8px; border-radius: 999px;
+        background: rgba(120,130,150,0.18); color: #7a8494;
+        border: 1px solid rgba(120,130,150,0.35);
+    }
     .section-label { border-left-color: #667eea; }
     .grade-badge { color: #667eea; }
     .load-hint { text-align: center; color: #999; padding: 24px 0; font-size: 0.9rem; }
@@ -43,9 +62,8 @@
     <a href="index.html" class="back-home">← 返回首页</a>
 
     <div class="page-header">
-        <div class="logo">🧮</div>
+        <div class="logo"><img src="assets/logo-math.png" alt="数学"></div>
         <h1>数学练习<span class="grade-badge" id="gradeBadge">一年级</span></h1>
-        <p>请选择要练习的题型</p>
     </div>
 
     <div class="card">
@@ -60,6 +78,7 @@
 
 <script src="shared/common.js"></script>
 <script src="shared/knowledge-bank.js"></script>
+<script src="shared/module-catalog.js"></script>
 <script src="plugins/registry.js"></script>
 <script>
 (function () {
@@ -91,48 +110,144 @@
   }
 
   var registry = (typeof window.PLUGIN_REGISTRY !== 'undefined') ? window.PLUGIN_REGISTRY : [];
+  var regById = {};
+  registry.forEach(function (p) { regById[p.id] = p; });
 
-  // 从知识库读取显示名称与描述（面向学生/家长，直观易懂），缺省回退插件自身元数据
-  var kb = (typeof window.KnowledgeBank !== 'undefined') ? window.KnowledgeBank.getGrade(grade) : null;
-  function lookup(pluginId) {
-    if (!kb || !kb.plugins) return null;
-    for (var i = 0; i < kb.plugins.length; i++) {
-      if (kb.plugins[i].id === pluginId) return kb.plugins[i];
-    }
-    return null;
-  }
-
-  // 教材单元顺序 + 知识点标签：直接由 knowledge-bank.js 驱动（数据驱动，新增题型自动可见）
-  var kEntries = (kb && kb.entries) ? kb.entries : [];
-  var unitOrder = {};   // pluginId -> 知识点在教材中首次出现的单元序号
+  // 知识点数据来自统一知识库（数组 + getEntries 扁平化），驱动排序与标签
+  var kEntries = (typeof window.KnowledgeBank !== 'undefined')
+    ? window.KnowledgeBank.getEntries('math', grade) : [];
+  var unitOrder = {};   // pluginId -> 知识点在知识库中首次出现的位置（模块序 + 模块内序）
   var kTags = {};       // pluginId -> [知识点名称, ...]
+  var kWeight = {};     // pluginId -> 知识点 weight 之和（用于排序）
+  var kModule = {};     // pluginId -> 所属模块 ID（取首个知识点）
   kEntries.forEach(function (e, idx) {
     if (!unitOrder[e.pluginId]) unitOrder[e.pluginId] = idx + 1;
     if (!kTags[e.pluginId]) kTags[e.pluginId] = [];
     if (e && e.name) kTags[e.pluginId].push(e.name);
+    kWeight[e.pluginId] = (kWeight[e.pluginId] || 0) + (e.weight || 0);
+    if (e && e.moduleId && !kModule[e.pluginId]) kModule[e.pluginId] = e.moduleId;
   });
+
+  // 模块目录（moduleId -> 名称），用于卡片主标题；插件名/描述作辅助
+  var MODULE_NAMES = {};
+  if (typeof window.MODULE_CATALOG !== 'undefined') {
+    window.MODULE_CATALOG.forEach(function (m) { MODULE_NAMES[m.id] = m.name; });
+  }
+  function moduleNameOf(p) {
+    var mid = kModule[p.id] || p.moduleId;
+    return (mid && MODULE_NAMES[mid]) ? MODULE_NAMES[mid] : null;
+  }
 
   // 统一走 App.PluginLoader：按年级加载本学科全部插件并读取其元数据（含竞态安全与缓存）
   App.PluginLoader.loadSubjectPlugins('math', grade).then(function (plugins) {
-    // 普通题型（排除综合插件，单独渲染其专属样式）
+    // 普通题型（排除综合插件、已并入「单位的认识」的 math-money、
+    // 已并入「看图列式」的 math-patterns，单独渲染其专属样式）
     var applicable = plugins.filter(function (p) {
-      return p.id !== COMPREHENSIVE.id && p.grades && p.grades.indexOf(grade) !== -1;
+      return p.id !== COMPREHENSIVE.id && p.id !== 'math-money' && p.id !== 'math-patterns'
+        && p.grades && p.grades.indexOf(grade) !== -1;
     });
 
-    // 按教材单元顺序（知识点在知识库中出现的先后）排列题型，而非仅按领域
+    // 按知识库出现顺序（模块 + 模块内知识点顺序）排列题型；同级内按 weight 降序
+    // 竞赛占位插件无知识库条目，按模块目录 C 系列顺序排在基础题型之后
+    var compModules = (typeof window.COMPETITION_MODULES !== 'undefined') ? window.COMPETITION_MODULES : [];
+    var compOrder = {};
+    compModules.forEach(function (m, i) { compOrder[m.id] = i; });
     applicable.sort(function (a, b) {
       var oa = unitOrder[a.id] || 9999;
       var ob = unitOrder[b.id] || 9999;
-      return oa - ob;
+      if (oa !== ob) return oa - ob;
+      return (kWeight[b.id] || 0) - (kWeight[a.id] || 0);
+    });
+
+    // 渲染项展开：普通插件 1:1；占位插件按 registry 条目声明的 moduleIds 展开为多个卡片
+    // （四年级基础占位 math-g4-* 与竞赛占位共享同一运行时文件，身份区分须以 registry 为准）
+    var moduleById = {};
+    var moduleOrder = {};
+    if (typeof window.MODULE_CATALOG !== 'undefined') {
+      window.MODULE_CATALOG.forEach(function (m, mi) {
+        moduleById[m.id] = m;
+        moduleOrder[m.id] = mi;
+      });
+    }
+    // 占位运行时对象按加载到的插件（文件相同则共享同一对象，取其一即可作渲染模板）
+    var placeholderByFile = {};
+    plugins.forEach(function (p) {
+      if (p.isPlaceholder) {
+        var rec = regById[p.id] || {};
+        placeholderByFile[rec.file || p.id] = p;
+      }
+    });
+    var items = [];
+    // 非占位插件直接追加
+    applicable.forEach(function (p) {
+      if (!p.isPlaceholder) items.push({ p: p, mod: null });
+    });
+    // 占位插件按 registry 条目逐个展开
+    registry.forEach(function (rec) {
+      if (!rec.isPlaceholder) return;
+      if (rec.grades && rec.grades.indexOf(grade) === -1) return;
+      var obj = placeholderByFile[rec.file] || placeholderByFile[rec.id] || placeholderByFile[rec.runtimeId];
+      if (!obj) return;
+      var pMods = (rec.moduleIds || []).map(function (mid) { return moduleById[mid]; }).filter(Boolean);
+      if (!pMods.length) pMods = compModules; // 无 moduleIds 时回退竞赛模块（兼容旧占位）
+      pMods.forEach(function (m) {
+        items.push({ p: obj, mod: m });
+      });
+    });
+    // 占位卡片按模块目录顺序排序（基础 M 系列在前，竞赛 C 系列在后）
+    items.sort(function (a, b) {
+      if (a.mod && b.mod) {
+        var oa = moduleOrder[a.mod.id], ob = moduleOrder[b.mod.id];
+        if (oa !== ob) return oa - ob;
+      }
+      return 0;
     });
 
     var html = '';
-    applicable.forEach(function (p) {
-      var kp = lookup(p.id);
-      var name = (kp && kp.name) || p.name;
+    // 指定题型的显示覆盖：仅调整题型卡片的主标题/标签，不改知识库与注册表。
+    // 「数的认识」主标题由模块名「填空题」改为知识点名，知识点以标签展示。
+    // 「单位的认识」合并认识钟表与认识人民币两张卡片，主标题/标签按指定文案展示。
+    var DISPLAY_OVERRIDES = {
+      'math-number-sense': {
+        name: '数的认识'
+      },
+      'math-clock': {
+        name: '单位的认识',
+        tags: ['认识钟表（整时）', '认识人民币']
+      },
+      // 操作题卡片主标题改为知识点名，原标签完整保留（含并入的「认识图形」）
+      'math-shapes': {
+        name: '认识图形',
+        tags: ['认识立体图形', '认识平面图形', '图形拼组', '上下左右位置', '认识图形']
+      },
+      // 应用题卡片主标题由模块名「解决问题」改为「应用题」，标签按三大题型展示
+      'math-word-problems': {
+        name: '应用题',
+        tags: ['解决问题', '连加连减题', '混合练习']
+      }
+    };
+    items.forEach(function (it) {
+      var p = it.p, m = it.mod;
+      var kp = (regById[p.id] && regById[p.id].name) ? regById[p.id] : null;
+      var ov = DISPLAY_OVERRIDES[p.id] || null;
+      var modName = m ? m.name : moduleNameOf(p);
+      var name = ov ? ov.name : (modName || (kp && kp.name) || p.name);
       var desc = (kp && kp.desc) || '';
-      // 知识点标签（来自知识库该插件覆盖的知识点，最多展示 3 个 +「+N」）
-      var tags = kTags[p.id] || [];
+      var href = m ? (App.buildPluginLink(p.id) + '&module=' + m.id) : App.buildPluginLink(p.id);
+      // 知识点标签统一展示（卡片不再显示副标题）：标签来自知识库该插件覆盖的知识点（最多展示 3 个 +「+N」），
+      // 原副标题中的说明并入标签并去重；被覆盖的题型优先使用其指定标签
+      var tags = ov ? (ov.tags || (kTags[p.id] || [])).slice() : (kTags[p.id] || []).slice();
+      if (!ov) {
+        var subText = (modName && kp && kp.name && kp.name !== name)
+          ? kp.name + (desc ? ' · ' + desc : '')
+          : (desc || '');
+        if (subText) {
+          subText.split('、').forEach(function (t) {
+            t = t.trim();
+            if (t && tags.indexOf(t) === -1) tags.push(t);
+          });
+        }
+      }
       var tagHtml = '';
       if (tags.length) {
         var shown = tags.slice(0, 3);
@@ -141,16 +256,16 @@
           (tags.length > shown.length ? '<span class="kb-tag more">+' + (tags.length - shown.length) + '</span>' : '') +
           '</span>';
       }
-      html += '<a href="' + App.buildPluginLink(p.id) + '" class="type-card" title="' + desc + '">' +
+      html += '<a href="' + href + '" class="type-card' + (p.isPlaceholder ? ' competition' : '') + '" title="' + desc + '">' +
         '<span class="t-icon">' + iconOf(p) + '</span>' +
         '<span class="t-name">' + name + '</span>' +
-        (desc ? '<span class="t-desc">' + desc + '</span>' : '') +
+        (p.isPlaceholder ? '<span class="t-soon">即将上线</span>' : '') +
         tagHtml +
         '</a>';
     });
 
-    // 追加综合练习按钮（从知识库读取名称/描述）
-    var kc = lookup(COMPREHENSIVE.id);
+    // 追加综合练习按钮（名称/描述回退到插件元数据或注册表）
+    var kc = (regById[COMPREHENSIVE.id]) ? regById[COMPREHENSIVE.id] : null;
     html += '<a href="' + App.buildPluginLink(COMPREHENSIVE.id) + '" class="type-card comprehensive">' +
       '<span class="t-icon">🌟</span>' +
       '<span class="t-name">' + ((kc && kc.name) || COMPREHENSIVE.name) + '</span>' +

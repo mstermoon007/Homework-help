@@ -171,6 +171,7 @@
   // ============ ExercisePlugin ============
   var mathLogicReasoningPlugin = {
     id: 'math-logic-reasoning',
+    moduleId: 'M10',
     name: '简单推理与数独',
     grades: [2],
     subject: 'math',

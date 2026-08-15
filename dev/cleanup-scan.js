@@ -19,12 +19,18 @@ const keepFiles = [
   /^\.gitignore$/,
   /^banner\.jpg$/,
   /^pinyin-bank\.js$/,
+  /^sw\.js$/,
+  // 模块目录与占位插件：核心数据源与兜底插件，永不清理
+  /^shared\/module-catalog\.js$/,
+  /^plugins\/math-competition-placeholder\.js$/,
+  /^plugins\/math-g4-placeholder\.js$/,
+  /^plugins\/math-g5-placeholder\.js$/,
   // 已完成插件化迁移的旧练习页不再保留
   // （comprehensive/english-alphabet/math-shapes 已迁移为 plugins/ 对应插件）
 ];
 
 // 应保留的目录前缀
-const keepDirs = [/^\.github\//, /^shared\//, /^plugins\//, /^agents\//, /^dev\//, /^docs\//, /^archive\//];
+const keepDirs = [/^\.github\//, /^assets\//, /^shared\//, /^plugins\//, /^agents\//, /^dev\//, /^docs\//, /^archive\//, /^scripts\//];
 
 function shouldKeep(filePath) {
   const relative = path.relative(ROOT, filePath);

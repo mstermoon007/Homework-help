@@ -74,13 +74,26 @@
 
   var subPlugins = null;
   var subPluginMap = {};
+  // 综合练习仅纳入「已实现题型」的插件：
+  //   1. 占位插件（竞赛专题 C1-C9 未实现，isPlaceholder / competitionModule* 标记）一律剔除；
+  //   2. 能力检测兜底：竞赛模块（category === 'competition'）且 generate 产出空题的插件剔除。
+  //   （针对可能未打标记的占位实现；真实竞赛插件若已实现出题则自动放行）
+  function isPlaceholderPlugin(p) {
+    if (!p) return true;
+    if (p.isPlaceholder || p.competitionModuleIds || p.competitionModuleId) return true;
+    return p.category === 'competition';
+  }
   function ensureSubPlugins() {
     if (subPlugins) return Promise.resolve(subPlugins);
 
     // 优先使用 practice.html 预加载的子插件（window.__mathSubPlugins）
+    // 占位插件（竞赛专题）无实际题目，一律剔除，避免参与综合抽题
+    var placeholderFilter = function (p) {
+      return !isPlaceholderPlugin(p);
+    };
     var preloaded = (typeof global !== 'undefined') ? global.__mathSubPlugins : null;
     if (Array.isArray(preloaded) && preloaded.length) {
-      subPlugins = preloaded.slice();
+      subPlugins = preloaded.filter(placeholderFilter);
       subPlugins.forEach(function (p) {
         if (p && p.id) subPluginMap[p.id] = p;
       });
@@ -91,7 +104,7 @@
     // 动态选取注册表中全部数学插件（新增插件自动纳入，无需改此清单）
     var registry = (typeof global.PLUGIN_REGISTRY !== 'undefined') ? global.PLUGIN_REGISTRY : [];
     var mathRecs = registry.filter(function (r) {
-      return r && r.id && r.id.indexOf('math-') === 0 && r.id !== 'math-comprehensive';
+      return r && r.id && r.id.indexOf('math-') === 0 && r.id !== 'math-comprehensive' && !r.isPlaceholder;
     });
     var records = mathRecs.length ? mathRecs : MATH_SUB_IDS.map(function (id) {
       return { id: id, file: 'plugins/' + id + '.js' };
@@ -191,25 +204,68 @@
       return plugins.map(function (p, idx) { return per + (idx < extra ? 1 : 0); });
     }
 
-    // ============ 知识点重要度权重（来自 knowledge-bank.js） ============
-    // 每个插件的重要度 = 其名下所有知识点 importance 之和（importance 代表课时占比/重要度）。
+    // ============ 知识点权重（来自 knowledge-bank.js 统一结构） ============
+    // 每个插件的权重 = 其名下所有知识点 weight 之和（weight 代表抽题比例/重要度）。
     // 若知识库不可用或某条目缺字段，按领域默认值兜底（数与代数4 / 图形几何3 / 统计推理2）。
     var CATEGORY_IMPORTANCE = { number: 4, geometry: 3, statistics: 2, mixed: 3 };
     function entryImportance(e) {
-      return (typeof e.importance === 'number') ? e.importance
+      return (typeof e.weight === 'number') ? e.weight
         : (CATEGORY_IMPORTANCE[e.category] || 3);
     }
     function kbPluginWeights(grade, plugins) {
-      var g = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.getGrade)
-        ? KnowledgeBank.getGrade(grade) : null;
+      var entries = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.getEntries)
+        ? KnowledgeBank.getEntries('math', grade) : [];
       var byPlugin = {};
-      if (g && g.entries) {
-        g.entries.forEach(function (e) {
+      if (entries.length) {
+        entries.forEach(function (e) {
           if (!e.pluginId) return;
           byPlugin[e.pluginId] = (byPlugin[e.pluginId] || 0) + entryImportance(e);
         });
       }
       return plugins.map(function (p) { return byPlugin[p.id] || 0; });
+    }
+
+    // 知识点级抽题计划：读取当前年级知识库知识点（含 weight 与推荐 type），
+    // 按知识点 weight 比例分配题量，返回按插件聚合的分配计划：
+    //   [{ plugin, count, points: [{ id, name, type, count }] }]
+    // 若某插件在知识库无条目（兜底），则按领域默认 weight 参与分配。
+    function kbEntryPlan(grade, plugins, count) {
+      var entries = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.getEntries)
+        ? KnowledgeBank.getEntries('math', grade) : [];
+      var byPlugin = {}; // pluginId -> { plugin, points: [], total: 0 }
+      plugins.forEach(function (p) {
+        byPlugin[p.id] = { plugin: p, points: [], total: 0 };
+      });
+      if (entries.length) {
+        entries.forEach(function (e) {
+          if (!e.pluginId || !byPlugin[e.pluginId]) return;
+          byPlugin[e.pluginId].points.push({
+            id: e.id, name: e.name, type: e.type || null, weight: entryImportance(e)
+          });
+          byPlugin[e.pluginId].total += entryImportance(e);
+        });
+      }
+      // 无知识库条目（或条目缺失）的插件：按领域默认 weight 兜底，保证不遗漏题型
+      plugins.forEach(function (p) {
+        if (byPlugin[p.id].total === 0) byPlugin[p.id].total = CATEGORY_IMPORTANCE[p.category] || 3;
+      });
+      // 归一化：总题数按各插件权重比例分配到插件
+      var plan = plugins.map(function (p) { return byPlugin[p.id]; });
+      var total = 0;
+      plan.forEach(function (item) { total += item.total; });
+      var perPlugin = allocateByWeight(count, plugins, plan.map(function (item) { return item.total; }));
+      // 插件内部：若含多个知识点，按知识点 weight 比例细分到各点
+      plan.forEach(function (item, idx) {
+        var n = perPlugin[idx];
+        item.count = n;
+        if (!item.points.length) return;
+        var pTotal = 0;
+        item.points.forEach(function (pt) { pTotal += pt.weight; });
+        if (pTotal <= 0) { item.points[0].count = n; return; }
+        var perPt = allocateByWeight(n, item.points, item.points.map(function (pt) { return pt.weight; }));
+        item.points.forEach(function (pt, i) { pt.count = perPt[i]; });
+      });
+      return plan;
     }
 
     // 按权重分配题量（最大余数法）：重要度高的插件抽到更多题
@@ -252,6 +308,7 @@
   /** @type {ExercisePlugin} */
   var mathComprehensivePlugin = {
     id: 'math-comprehensive',
+    moduleId: 'M8',
     name: '综合练习',
     grades: [1, 2, 3],
     subject: 'math',
@@ -282,40 +339,85 @@
 
         return ensureSubPlugins().then(function (subs) {
           var applicable = subs.filter(function (p) {
-            return p.grades && p.grades.indexOf(grade) !== -1;
+            return !isPlaceholderPlugin(p) &&
+              p.grades && p.grades.indexOf(grade) !== -1;
           });
           if (!applicable.length) {
             throw new Error('当前年级没有可用的数学练习，请返回选择其他年级');
           }
 
-          var counts, kbWeights = null;
-          if (mode === 'kb') {
-            kbWeights = kbPluginWeights(grade, applicable);
-            counts = allocateByWeight(count, applicable, kbWeights);
-          } else {
-            counts = allocateCounts(count, applicable, mode);
-          }
           var questions = [];
           var weightInfo = [];
           var categoryCounts = {}; // 各领域实际题数（用于 meta 展示）
-          applicable.forEach(function (p, idx) {
-            var n = counts[idx];
-            if (n <= 0) return;
-            var subOpts = { grade: grade, count: n, type: 'mix' };
-            if (opts.difficulty) subOpts.difficulty = opts.difficulty;
-            var set = p.generate(subOpts);
-            var qs = (set && set.questions) || [];
-            qs.forEach(function (q) {
-              q.__src = p; // 记录来源插件（仅作元信息，渲染/判定一律走标准 Question 接口）
-              questions.push(q);
+          var kbWeights = null;
+
+          if (mode === 'kb') {
+            // 知识点级抽题：按当前年级知识库各知识点 weight 分配题量
+            var plan = kbEntryPlan(grade, applicable, count);
+            kbWeights = plan.map(function (item) { return item.total; });
+            plan.forEach(function (item) {
+              var p = item.plugin;
+              if (item.count <= 0) return;
+              if (item.points && item.points.length) {
+                // 细分：同一插件的多个知识点按各自 weight/type 分别出题
+                item.points.forEach(function (pt) {
+                  if (!pt.count || pt.count <= 0) return;
+                  var subOpts = { grade: grade, count: pt.count, type: pt.type || 'mix' };
+                  if (opts.difficulty) subOpts.difficulty = opts.difficulty;
+                  var set = p.generate(subOpts);
+                  var qs = (set && set.questions) || [];
+                  if (!qs.length) return; // 插件未产出题目（占位/异常）→ 忽略该知识点，不占权重
+                  qs.forEach(function (q) {
+                    q.__src = p; // 记录来源插件（仅作元信息，渲染/判定一律走标准 Question 接口）
+                    q.__kp = pt; // 记录来源知识点
+                    questions.push(q);
+                  });
+                  weightInfo.push(p.id + '·' + (pt.name || pt.type || 'mix') + '×' + qs.length);
+                  var cat = p.category || 'number';
+                  categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
+                });
+              } else {
+                var subOpts = { grade: grade, count: item.count, type: 'mix' };
+                if (opts.difficulty) subOpts.difficulty = opts.difficulty;
+                var set = p.generate(subOpts);
+                var qs = (set && set.questions) || [];
+                if (!qs.length) return; // 插件未产出题目（占位/异常）→ 忽略
+                qs.forEach(function (q) {
+                  q.__src = p;
+                  questions.push(q);
+                });
+                weightInfo.push(p.id + '×' + qs.length);
+                var cat = p.category || 'number';
+                categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
+              }
             });
-            weightInfo.push(p.id + '×' + qs.length);
-            var cat = p.category || 'number';
-            categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
-          });
+          } else {
+            var counts = allocateCounts(count, applicable, mode);
+            applicable.forEach(function (p, idx) {
+              var n = counts[idx];
+              if (n <= 0) return;
+              var subOpts = { grade: grade, count: n, type: 'mix' };
+              if (opts.difficulty) subOpts.difficulty = opts.difficulty;
+              var set = p.generate(subOpts);
+              var qs = (set && set.questions) || [];
+              if (!qs.length) return; // 插件未产出题目（占位/异常）→ 忽略，避免空条目
+              qs.forEach(function (q) {
+                q.__src = p; // 记录来源插件（仅作元信息，渲染/判定一律走标准 Question 接口）
+                questions.push(q);
+              });
+              weightInfo.push(p.id + '×' + qs.length);
+              var cat = p.category || 'number';
+              categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
+            });
+          }
 
           // 混合后打乱顺序，形成完整综合试卷
           questions = _PU.shuffle(questions);
+
+          // 空集保护：综合练习不能为空（理论上 applicable 已排除占位，双保险）
+          if (!questions.length) {
+            throw new Error('当前年级数学综合练习暂无可用的已实现题型，请返回选择其他题型');
+          }
 
           return {
             questions: questions,

@@ -1,0 +1,46 @@
+/* ============ 设计令牌：工具栏（练习页 controls 面板） ============
+ * 集中管理工具栏的视觉原子属性，供 shared/toolbar.css 引用。
+ * 调整 :root 中的变量即可全局同步工具栏样式，无需改动业务文件。
+ */
+:root {
+  /* 颜色：chip 分段控件（蓝紫系） */
+  --toolbar-chip-ink: #4a5a8a;                      /* chip 文字 */
+  --toolbar-chip-border: rgba(123, 97, 255, .28);   /* chip 边框 */
+  --toolbar-chip-bg: rgba(255, 255, 255, .55);      /* chip 玻璃背景 */
+  --toolbar-chip-hover-border: rgba(123, 97, 255, .55);
+  --toolbar-chip-hover-bg: rgba(123, 97, 255, .10);
+  --toolbar-chip-grad: linear-gradient(135deg, #5b8def, #7c5cff); /* 选中/主按钮 */
+  --toolbar-chip-active-border: #6a66e8;
+  --toolbar-chip-active-ink: #ffffff;
+  --toolbar-chip-active-shadow: 0 3px 10px rgba(110, 100, 240, .35);
+
+  /* 颜色：操作按钮 */
+  --toolbar-btn-grad: linear-gradient(135deg, #5b8def, #7c5cff);
+  --toolbar-btn-grad-active: linear-gradient(135deg, #4a76e0, #6a48ef);
+  --toolbar-btn-primary-shadow: 0 4px 12px rgba(110, 100, 240, .28);
+  --toolbar-btn-ghost-bg: rgba(123, 97, 255, .12);
+  --toolbar-btn-ghost-ink: #5a5adf;
+  --toolbar-btn-ghost-border: rgba(123, 97, 255, .30);
+  --toolbar-btn-ghost-hover-bg: rgba(123, 97, 255, .20);
+
+  /* 尺寸 */
+  --toolbar-font-size: 12px;                        /* chip / 标签 字号 */
+  --toolbar-chip-radius: 8px;
+  --toolbar-chip-pad: 6px 12px;
+  --toolbar-btn-radius: 10px;
+  --toolbar-btn-pad: 9px 16px;
+  --toolbar-btn-font-size: 13px;
+  --toolbar-btn-sm-pad: 5px 12px;
+  --toolbar-btn-sm-font-size: 12px;
+  --toolbar-btn-sm-radius: 8px;
+
+  /* 布局间距 */
+  --toolbar-row-gap: 12px;
+  --toolbar-group-gap: 8px;
+  --toolbar-lbl-margin: 8px;
+  --toolbar-actions-gap: 10px;
+  --toolbar-actions-margin-top: 16px;
+  --toolbar-grid-gap: 18px;
+  --toolbar-settings-flex: 1 1 360px;
+  --toolbar-actions-flex: 1 1 260px;
+}

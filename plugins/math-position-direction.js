@@ -158,6 +158,7 @@
   // ============ ExercisePlugin ============
   var mathPosDirPlugin = {
     id: 'math-position-direction',
+    moduleId: 'M6',
     name: '方向与位置',
     grades: [3],
     subject: 'math',

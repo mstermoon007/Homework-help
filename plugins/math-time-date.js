@@ -320,6 +320,7 @@
   // ============ ExercisePlugin ============
   var mathTimeDatePlugin = {
     id: 'math-time-date',
+    moduleId: 'M4',
     name: '时间与日期',
     grades: [3],
     subject: 'math',

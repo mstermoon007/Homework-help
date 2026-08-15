@@ -1,9 +1,10 @@
 /**
  * plugins/math-picture-equations.js — 看图列式插件（一年级：看图写加法/减法算式）
  *
- * 提供 ExercisePlugin 接口（id/name/grades/subject/category/generate/render/check），
- * 供 practice.html / dev/plugin-check.html 使用。
- * 随机数统一使用 shared/common.js 的 PluginUtil；图示全部为动态 SVG。
+ * 使用 shared/common.js 的 PluginUtil.createPlugin 工厂（标准契约）：
+ * 通过 generateQuestions + meta 实现 generate/render/check；题型「找规律」
+ * 复用 math-patterns 插件（异步加载，单一来源）。
+ * 随机数统一使用 PluginUtil；图示全部为动态 SVG。
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -13,7 +14,7 @@
 
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
-  if (!_PU) throw new Error('plugins/math-picture-equations.js 依赖 shared/common.js（PluginUtil），请先加载');
+  if (!_PU || !_PU.createPlugin) throw new Error('plugins/math-picture-equations.js 依赖 shared/common.js（PluginUtil.createPlugin），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -39,9 +40,16 @@
   function sumMax() { return Math.min(50, _PU.diffMax(20, _DIFF)); }
 
   // ============ 题目生成 ============
+  // 难度越高 → 每堆图形的个数越大（数值增大，与 sumMax 上限同步缩放）
+  function operandMax() {
+    var m = Math.round(9 * _PU.diffScale(_DIFF));
+    return Math.max(9, Math.min(20, m));
+  }
+
   // 加法：左边 a 个 + 右边 b 个 = a+b
   function buildAdd() {
-    var a = rnd(2, 9), b = rnd(1, 9);
+    var hi = operandMax();
+    var a = rnd(2, hi), b = rnd(1, hi);
     var sum = a + b;
     if (sum > sumMax()) return buildAdd();
     var c1 = pick(COLORS), c2 = pick(COLORS);
@@ -58,7 +66,8 @@
 
   // 减法：总数 a+b 个，圈走 b 个，剩 a 个
   function buildSub() {
-    var a = rnd(2, 9), b = rnd(1, 9);
+    var hi = operandMax();
+    var a = rnd(2, hi), b = rnd(1, hi);
     var total = a + b;
     if (total > sumMax()) return buildSub();
     var color = pick(COLORS);
@@ -126,14 +135,51 @@
     return v === String(q.answer);
   }
 
-  // ============ ExercisePlugin ============
-  var mathPictureEquationsPlugin = {
+  // ============ 题型元数据 ============
+  var TYPE_NAMES = { mix: '混合练习', add: '看图列加法', sub: '看图列减法' };
+
+  // meta 为 createPlugin 保留字段，不挂载到插件对象；这里单独定义，供 generate / meta 复用
+  function buildMeta(opts) {
+    var type = (opts && opts.type) || 'mix';
+    var label = (type === 'pattern') ? '找规律' : (TYPE_NAMES[type] || '混合练习');
+    return { type: type, count: (opts && opts.count) || 8, title: '小学一年级看图列式（' + label + '）' };
+  }
+
+  function buildQuestions(options) {
+    var opts = options || {};
+    _DIFF = _PU.diffLevel(opts.difficulty);
+    var type = opts.type || 'mix';
+    var count = opts.count || 8;
+    var list = generateProblems(type, count);
+    var label = TYPE_NAMES[type] || '混合练习';
+    var questions = list.map(function (p) {
+      return {
+        type: 'picture-eq',
+        kind: p.kind,
+        data: p,
+        answer: String(p.answer),
+        hint: p.kind === 'add' ? '左边有几个，右边有几个，合起来一共有几个？' : '一共有几个，划去几个，还剩几个？',
+        render: function (idx) { return renderCard(this.data, idx); },
+        check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
+      };
+    });
+    plugin._lastLabel = label;
+    return questions;
+  }
+
+  // ============ 用工厂创建插件（标准契约） ============
+  var plugin = _PU.createPlugin({
     id: 'math-picture-equations',
+    moduleId: 'M7',
     name: '看图列式',
+    pageTitle: '看图列式',
+    pageSubtitle: '看图写加法、减法算式',
     grades: [1],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'pictureEq' },
+    // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
+    knowledgePoints: ['picture-equations'],
 
     settings: [
       {
@@ -141,65 +187,52 @@
         label: '题型',
         default: 'mix',
         options: [
-          { value: 'mix', label: '混合' },
-          { value: 'add', label: '加法' },
-          { value: 'sub', label: '减法' }
+          { value: 'mix',     label: '混合' },
+          { value: 'add',     label: '加法' },
+          { value: 'sub',     label: '减法' },
+          { value: 'pattern', label: '找规律' }
         ]
       }
     ],
 
+    // 标准同步生成（混合/加法/减法）
+    generateQuestions: function (options) {
+      var type = (options && options.type) || 'mix';
+      if (type === 'pattern') {
+        // 找规律由自定义 generate 异步委托 math-patterns，不应走到这里
+        throw new Error('找规律需经异步加载 math-patterns 插件，请使用 generate()');
+      }
+      return buildQuestions(options);
+    },
+
+    // 自定义 generate：找规律（异步委托 math-patterns，单一来源）；其余走标准同步路径
     generate: function (options) {
       var opts = options || {};
-      _DIFF = _PU.diffLevel(opts.difficulty);
       var type = opts.type || 'mix';
-      var count = opts.count || 8;
-      var list = generateProblems(type, count);
-      var typeNames = { mix: '混合练习', add: '看图列加法', sub: '看图列减法' };
-      var label = typeNames[type] || '混合';
-      var questions = list.map(function (p) {
-        return {
-          type: 'picture-eq',
-          kind: p.kind,
-          data: p,
-          answer: String(p.answer),
-          hint: p.kind === 'add' ? '左边有几个，右边有几个，合起来一共有几个？' : '一共有几个，划去几个，还剩几个？',
-          render: function (idx, ctx) { return renderCard(this.data, idx); },
-          check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
-        };
-      });
-      return {
-        questions: questions,
-        meta: { type: type, count: questions.length, title: '小学一年级看图列式（' + label + '）' }
-      };
+
+      if (type === 'pattern') {
+        var loader = (typeof App !== 'undefined' && App.PluginLoader) ? App.PluginLoader : null;
+        if (loader && typeof loader.loadPlugin === 'function') {
+          return loader.loadPlugin({ id: 'math-patterns', file: 'plugins/math-patterns.js' }).then(function (patternPlugin) {
+            if (!patternPlugin) throw new Error('加载找规律插件失败');
+            global.__currentPlugin = plugin; // 恢复当前插件，保证选项按钮 __choose 正确
+            return patternPlugin.generate({ grade: 1, count: opts.count, type: 'mix', difficulty: opts.difficulty });
+          });
+        }
+        throw new Error('当前环境不支持动态加载找规律插件');
+      }
+
+      var questions = buildQuestions(opts);
+      return { questions: questions, meta: buildMeta(opts) };
     },
 
-    render: function (exerciseSet) {
-      var html = '';
-      exerciseSet.questions.forEach(function (q, i) { html += q.render(i); });
-      return html;
-    },
-
-    check: function (exerciseSet, userAnswers) {
-      var correct = 0;
-      var results = [];
-      var correctAnswers = [];
-      exerciseSet.questions.forEach(function (q, i) {
-        var isRight = q.check ? q.check(userAnswers, i) : checkQuestion(q, userAnswers, i);
-        if (isRight) correct++;
-        results.push(isRight);
-        correctAnswers.push(String(q.answer));
-      });
-      var total = exerciseSet.questions.length;
-      var score = total === 0 ? 0 : Math.round((correct / total) * 100);
-      var message = '继续加油！';
-      if (score === 100) message = '太棒了！全对！';
-      else if (score >= 80) message = '很不错！';
-      return { score: score, total: total, correct: correct, message: message, results: results, correctAnswers: correctAnswers };
+    meta: function (opts) {
+      return buildMeta(opts);
     }
-  };
+  });
 
   // ============ 导出 ============
-  global.__currentPlugin = mathPictureEquationsPlugin;  // practice.html / dev/plugin-check.html
-  if (typeof module !== 'undefined' && module.exports) module.exports = mathPictureEquationsPlugin;
+  global.__currentPlugin = plugin;  // practice.html / dev/plugin-check.html
+  if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 
 })(typeof window !== 'undefined' ? window : globalThis);

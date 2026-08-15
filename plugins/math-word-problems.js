@@ -1,12 +1,14 @@
 /**
- * plugins/math-word-problems.js — 数学应用题插件（迁移自根目录 math-word-problem-agent.js）
+ * plugins/math-word-problems.js — 数学应用题插件（一年级：解决问题/连加连减与加减混合）
  *
- * 同时提供：
- *   1) 兼容旧页面：全局 MathWordProblemAgent（math-word-problems.html 仍直接 new）
- *   2) ExercisePlugin 接口（id/name/grades/subject/generate/render/check），
- *      供 practice.html / dev/plugin-check.html 使用
- *
- * 随机数统一使用 shared/common.js 的 PluginUtil。
+ * 使用 shared/common.js 的 PluginUtil.createPlugin 工厂（标准契约）：
+ * 通过 generateQuestions + meta 实现 generate/render/check。
+ * 设置项：
+ *   · 题型（type）：解决问题 / 连加连减题 / 混合练习（一年级模板按 cat 分桶）
+ *   · 难度（level）：初级 / 中级 / 高级 / 综合（对应 basic/adv/high/mix 模板桶）
+ * 一年级新增 T15-T20 模板：连加三数、连减、先加后减混合、比一个数少几、排队从前后数、逆向求部分。
+ * 解题思路（hint）只描述方法，不给出答案或中间计算结果。
+ * 随机数统一使用 PluginUtil。
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -16,25 +18,11 @@
 
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
-  if (!_PU) throw new Error('plugins/math-word-problems.js 依赖 shared/common.js（PluginUtil），请先加载');
+  if (!_PU || !_PU.createPlugin) throw new Error('plugins/math-word-problems.js 依赖 shared/common.js（PluginUtil.createPlugin），请先加载');
 
-  // ============ MathWordProblemAgent 引擎（原 math-word-problem-agent.js） ============
-/**
- * MathWordProblemAgent — 小学1-2年级数学应用题模板化生成器
- *
- * 基于结构化模板，支持变量约束解析、难度分级、特殊答案格式。
- * 无状态设计：每个实例仅通过 generate() 返回数据。
- *
- * 用法：
- *   const agent = new MathWordProblemAgent({ grade: 1, difficulty: 'mix' });
- *   const pool = agent.getPool(); // 返回生成器函数数组，兼容现有 generate()
- */
-var MathWordProblemAgent = (function () {
-  'use strict';
-
-  // ── 随机工具 ──
-  function randInt(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[randInt(0, arr.length - 1)]; }
+  // ============ 随机工具（统一走 PluginUtil） ============
+  function rnd(min, max) { return _PU.randInt(min, max); }
+  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
 
   // ── 表达式标准化：×→*  ÷→/ ──
   function normalizeExpr(expr) {
@@ -100,8 +88,8 @@ var MathWordProblemAgent = (function () {
     if (constraint.indexOf('结果') !== -1 && answerExpr) {
       resultVal = evalExpr(answerExpr, vars);
     }
-    // 分割
-    var parts = constraint.split(/[，,]/);
+    // 分割（支持逗号与 and 两种连接符）
+    var parts = constraint.split(/\s+and\s+|[，,]/);
     for (var i = 0; i < parts.length; i++) {
       var part = parts[i].trim();
       if (!part) continue;
@@ -193,16 +181,16 @@ var MathWordProblemAgent = (function () {
     'G2A01': function (resolved) {
       // c = a*b + 1 到 100
       var ab = resolved.a * resolved.b;
-      resolved.c = randInt(ab + 1, Math.max(ab + 1, 100));
+      resolved.c = rnd(ab + 1, Math.max(ab + 1, 100));
     },
     'G2H02': function (resolved) {
       // total = b * k + c, k ∈ [1, 20]，total > c
-      var k = randInt(1, 20);
+      var k = rnd(1, 20);
       resolved.total = resolved.b * k + resolved.c;
     },
     'G2H04': function (resolved) {
       // b = a + (c-1) * k, k > a（使 years = k - a > 0）
-      var k = resolved.a + randInt(1, 5);
+      var k = resolved.a + rnd(1, 5);
       resolved.b = resolved.a + (resolved.c - 1) * k;
     },
     'G2B07': function (resolved) {
@@ -224,116 +212,158 @@ var MathWordProblemAgent = (function () {
     }
   };
 
-  // ── 一年级14个模板 ──
+  // ── 一年级 20 个模板（cat: solve=解决问题 / chain=连加连减与加减混合） ──
   var G1_TEMPLATES = [
     {
-      id: 'T01', difficulty: 'basic', name: '求总数（合并）',
+      id: 'T01', difficulty: 'basic', cat: 'solve', name: '求总数（合并）',
       template: '小明有{a}个{obj}，小华有{b}个{obj}，他们一共有多少个{obj}？',
       vars: { a: '1-19', b: '1-{20-a}', obj: ['苹果','铅笔','气球','糖果','橡皮','尺子','本子','贴纸','花朵','星星'] },
-      answer: '{a}+{b}', hint: '把两部分合起来，用加法：{a}+{b}={ans}',
+      answer: '{a}+{b}', hint: '把两部分合起来，用加法：{a}+{b}=（  ）',
       unit: '个', constraint: 'a+b<=20'
     },
     {
-      id: 'T02', difficulty: 'basic', name: '求剩余',
+      id: 'T02', difficulty: 'basic', cat: 'solve', name: '求剩余',
       template: '{place}原来有{total}个{obj}，{person}拿走了{take}个，还剩几个？',
       vars: { total: '2-20', take: '1-{total-1}', obj: ['积木','饼干','本子','糖果','鸡蛋','橘子'], place: ['桌子上','篮子里','盒子里','盘子里'], person: ['妈妈','爸爸','老师','小明','小红'] },
-      answer: '{total}-{take}', hint: '从总数里去掉拿走的，用减法：{total}-{take}={ans}',
+      answer: '{total}-{take}', hint: '从总数里去掉拿走的，用减法：{total}-{take}=（  ）',
       unit: '个', constraint: 'total>take'
     },
     {
-      id: 'T03', difficulty: 'basic', name: '求相差数（比多少）',
+      id: 'T03', difficulty: 'basic', cat: 'solve', name: '求相差数（比多少）',
       template: '{A}有{a}个{obj}，{B}有{b}个{obj}，{A}比{B}多几个？',
       vars: { A: ['哥哥','小明','小华','小红'], B: ['弟弟','小丽','小刚','小美'], a: '2-20', b: '1-{a-1}', obj: ['糖','卡片','花','气球','铅笔','贴纸'] },
-      answer: '{a}-{b}', hint: '求谁比谁多，用减法：{a}-{b}={ans}',
+      answer: '{a}-{b}', hint: '求谁比谁多，用减法：{a}-{b}=（  ）',
       unit: '个', constraint: 'a>b'
     },
     {
-      id: 'T04', difficulty: 'basic', name: '求比一个数多几的数',
+      id: 'T04', difficulty: 'basic', cat: 'solve', name: '求比一个数多几的数',
       template: '小红做了{a}朵花，小丽比小红多做了{b}朵，小丽做了多少朵？',
       vars: { a: '1-18', b: '1-{20-a}' },
-      answer: '{a}+{b}', hint: '比{a}多{b}，用加法：{a}+{b}={ans}',
+      answer: '{a}+{b}', hint: '比{a}多{b}，用加法：{a}+{b}=（  ）',
       unit: '朵', constraint: 'a+b<=20'
     },
     {
-      id: 'T05', difficulty: 'basic', name: '加减混合',
+      id: 'T05', difficulty: 'basic', cat: 'chain', name: '加减混合',
       template: '树上有{a}只鸟，飞走了{b}只，又飞来{c}只，现在树上有多少只鸟？',
       vars: { a: '2-20', b: '1-{a-1}', c: '1-{20-a+b}' },
-      answer: '{a}-{b}+{c}', hint: '先减去飞走的，再加上飞来的：{a}-{b}+{c}={ans}',
+      answer: '{a}-{b}+{c}', hint: '先减去飞走的，再加上飞来的：{a}-{b}+{c}=（  ）',
       unit: '只', constraint: 'a-b>=0 and a-b+c<=20'
     },
     {
-      id: 'T06', difficulty: 'adv', name: '逆向求原来（反向加法）',
+      id: 'T06', difficulty: 'adv', cat: 'solve', name: '逆向求原来（反向加法）',
       template: '妈妈买来一些{obj}，吃了{a}个，还剩{b}个，妈妈原来买了多少个{obj}？',
       vars: { a: '1-19', b: '1-{20-a}', obj: ['苹果','橘子','草莓','饼干','糖'] },
-      answer: '{a}+{b}', hint: '吃了的加上剩下的就是原来的：{a}+{b}={ans}',
+      answer: '{a}+{b}', hint: '吃了的加上剩下的就是原来的：{a}+{b}=（  ）',
       unit: '个', constraint: 'a+b<=20'
     },
     {
-      id: 'T07', difficulty: 'adv', name: '连加',
+      id: 'T07', difficulty: 'adv', cat: 'chain', name: '连加',
       template: '{place}原来有{a}辆{obj}，先开来{b}辆，又开来{c}辆，现在有多少辆{obj}？',
       vars: { a: '1-18', b: '1-{20-a}', c: '1-{20-a-b}', obj: ['车'], place: ['停车场','车库'] },
-      answer: '{a}+{b}+{c}', hint: '把三部分加起来：{a}+{b}+{c}={ans}',
+      answer: '{a}+{b}+{c}', hint: '把三部分加起来：{a}+{b}+{c}=（  ）',
       unit: '辆', constraint: 'a+b+c<=20'
     },
     {
-      id: 'T08', difficulty: 'adv', name: '连减',
+      id: 'T08', difficulty: 'adv', cat: 'chain', name: '连减',
       template: '篮子里有{total}个{obj}，奶奶做菜用了{a}个，妈妈又用了{b}个，还剩几个？',
       vars: { total: '3-20', a: '1-{total-2}', b: '1-{total-a-1}', obj: ['鸡蛋','土豆','番茄','苹果'] },
-      answer: '{total}-{a}-{b}', hint: '连减两次：{total}-{a}-{b}={ans}',
+      answer: '{total}-{a}-{b}', hint: '连减两次：{total}-{a}-{b}=（  ）',
       unit: '个', constraint: 'total-a-b>=0'
     },
     {
-      id: 'T09', difficulty: 'adv', name: '排队问题（含自己）',
+      id: 'T09', difficulty: 'adv', cat: 'solve', name: '排队问题（含自己）',
       template: '同学们排队，小明前面有{a}人，后面有{b}人，这一队一共有多少人？',
       vars: { a: '1-18', b: '1-{19-a}' },
-      answer: '{a}+{b}+1', hint: '前面{a}人+小明自己+后面{b}人：{a}+1+{b}={ans}',
+      answer: '{a}+{b}+1', hint: '前面的人加上小明自己，再加上后面的人：{a}+1+{b}=（  ）',
       unit: '人', constraint: 'a+b+1<=20'
     },
     {
-      id: 'T10', difficulty: 'adv', name: '同数连加（乘法雏形）',
+      id: 'T10', difficulty: 'adv', cat: 'chain', name: '同数连加（乘法雏形）',
       template: '每个小朋友折了{a}只纸鹤，{n}个小朋友一共折了多少只纸鹤？',
       vars: { a: '2-9', n: '2-5' },
-      answer: '{a}*{n}', hint: '{n}个{a}相加：{a}出现了{n}次，一共{ans}只',
+      answer: '{a}*{n}', hint: '每个小朋友折{a}只，{n}个小朋友一共是{n}个{a}相加。',
       unit: '只', constraint: 'a*n<=100'
     },
     {
-      id: 'T11', difficulty: 'adv', name: '人民币简单计算',
+      id: 'T11', difficulty: 'high', cat: 'solve', name: '人民币简单计算',
       template: '一个{goods}的价格是{price}元，小明付了{pay}元，应找回多少元？',
       vars: { goods: ['文具盒','橡皮','尺子','笔记本','铅笔刀'], price: '1-49', pay: '{price+1}-50' },
-      answer: '{pay}-{price}', hint: '付的钱减去商品价格：{pay}-{price}={ans}',
+      answer: '{pay}-{price}', hint: '付的钱减去商品价格：{pay}-{price}=（  ）',
       unit: '元', constraint: 'pay>price'
     },
     {
-      id: 'T12', difficulty: 'high', name: '含多余条件',
+      id: 'T12', difficulty: 'high', cat: 'solve', name: '含多余条件',
       template: '小明养了{pet1}{a}条，{pet2}{b}只，死了{c}条{pet1}，还剩几条{pet1}？',
       vars: { pet1: ['金鱼','蚕'], pet2: ['乌龟','小鸡','兔子'], a: '5-20', b: '1-10', c: '1-{a-1}' },
-      answer: '{a}-{c}', hint: '注意！{pet2}的数量是多余条件。只算{pet1}：{a}-{c}={ans}',
+      answer: '{a}-{c}', hint: '注意！{pet2}的数量是多余条件，只算{pet1}：{a}-{c}=（  ）',
       unit: '条', constraint: 'a>c'
     },
     {
-      id: 'T13', difficulty: 'high', name: '两步计算（先求部分再求总数）',
+      id: 'T13', difficulty: 'high', cat: 'solve', name: '两步计算（先求部分再求总数）',
       template: '小红有{a}本故事书，小丽比小红多{b}本，两人一共有多少本书？',
       vars: { a: '1-48', b: '1-{50-a}' },
-      answer: '{a}+({a}+{b})', hint: '先求小丽：{a}+{b}={a+b}，再求两人：{a}+{a+b}={ans}',
+      answer: '{a}+({a}+{b})', hint: '先求小丽有多少本：{a}+{b}=（  ）；再把两人的本数合起来。',
       unit: '本', constraint: 'a+b<=50'
     },
     {
-      id: 'T14', difficulty: 'high', name: '移多补少问题',
+      id: 'T14', difficulty: 'high', cat: 'solve', name: '移多补少问题',
       template: '哥哥有{a}块糖，弟弟有{b}块糖，哥哥给弟弟几块后两人同样多？',
       vars: { a: '2-20', b: '1-{a-2}' },
-      answer: '({a}-{b})/2', hint: '先求相差：{a}-{b}={a-b}，再平分：{a-b}÷2={ans}',
+      answer: '({a}-{b})/2', hint: '先求相差几块：{a}-{b}=（  ）；再把这相差的块数平均分成两份，给弟弟一份。',
       unit: '块', constraint: 'a>b and (a-b)%2==0'
+    },
+    {
+      id: 'T15', difficulty: 'adv', cat: 'chain', name: '连加三数',
+      template: '小明第一天看{a}页书，第二天看{b}页，第三天看{c}页，三天一共看了多少页？',
+      vars: { a: '1-6', b: '1-6', c: '1-{20-a-b}' },
+      answer: '{a}+{b}+{c}', hint: '三天看的页数合起来，用连加：{a}+{b}+{c}=（  ）',
+      unit: '页', constraint: 'a+b+c<=20'
+    },
+    {
+      id: 'T16', difficulty: 'adv', cat: 'chain', name: '连减（连续分两次）',
+      template: '小红有{a}颗糖，分给弟弟{b}颗，又分给妹妹{c}颗，还剩多少颗？',
+      vars: { a: '5-20', b: '1-{a-2}', c: '1-{a-b-1}' },
+      answer: '{a}-{b}-{c}', hint: '连续减去两次：{a}-{b}-{c}=（  ）',
+      unit: '颗', constraint: 'a-b-c>=0'
+    },
+    {
+      id: 'T17', difficulty: 'adv', cat: 'chain', name: '先加后减（进出混合）',
+      template: '停车场原来有{a}辆车，又开来{b}辆，开走{c}辆，现在有多少辆车？',
+      vars: { a: '1-10', b: '1-{20-a}', c: '1-{a+b-1}' },
+      answer: '{a}+{b}-{c}', hint: '先加上开来的，再减去开走的：{a}+{b}-{c}=（  ）',
+      unit: '辆', constraint: 'a+b-c>=0'
+    },
+    {
+      id: 'T18', difficulty: 'basic', cat: 'solve', name: '求比一个数少几的数',
+      template: '小华有{a}朵花，小丽比小华少{b}朵，小丽有多少朵花？',
+      vars: { a: '2-20', b: '1-{a-1}' },
+      answer: '{a}-{b}', hint: '比{a}少{b}，用减法：{a}-{b}=（  ）',
+      unit: '朵', constraint: 'a>b'
+    },
+    {
+      id: 'T19', difficulty: 'adv', cat: 'solve', name: '排队（从前后数第几个）',
+      template: '从前往后数，小明排在第{a}个；从后往前数，小明也排在第{b}个。这一队一共有多少人？',
+      vars: { a: '2-10', b: '2-10' },
+      answer: '{a}+{b}-1', hint: '前后两个数相加，小明被数了两次，要减去1：{a}+{b}-1=（  ）',
+      unit: '人', constraint: 'a+b-1<=20'
+    },
+    {
+      id: 'T20', difficulty: 'high', cat: 'solve', name: '逆向求部分（已知总数与一部分）',
+      template: '小明和小红一共有{a}本书，小明有{b}本，小红有多少本书？',
+      vars: { a: '2-20', b: '1-{a-1}' },
+      answer: '{a}-{b}', hint: '总本数减去小明的那部分，就是小红的：{a}-{b}=（  ）',
+      unit: '本', constraint: 'a>b'
     }
   ];
 
-  // ── 二年级19个模板 ──
+  // ── 二年级 24 个模板（hint 已去除答案） ──
   var G2_TEMPLATES = [
     {
       id: 'G2B01', difficulty: 'basic', name: '乘法求总数',
       template: '每组有{a}个{object}，有{b}组，一共有多少个{object}？',
       vars: { a: '2-9', b: '2-9', object: ['同学','气球','铅笔','橡皮','本子','草莓','糖果'] },
       answer: '{a}×{b}',
-      hint: '{b}个{a}相加，用乘法：{a}×{b}={ans}',
+      hint: '{b}个{a}相加，用乘法：{a}×{b}=（  ）',
       unit: '个', constraint: 'a×b<=81'
     },
     {
@@ -341,7 +371,7 @@ var MathWordProblemAgent = (function () {
       template: '有{total}个{object}，平均分成{groups}份，每份几个？',
       vars: { total: '2-81', groups: '2-9', object: ['糖果','本子','苹果','橘子','饼干','铅笔'] },
       answer: '{total}÷{groups}',
-      hint: '把{total}平均分成{groups}份：{total}÷{groups}={ans}',
+      hint: '把{total}平均分成{groups}份：{total}÷{groups}=（  ）',
       unit: '个', constraint: 'total能被groups整除，total÷groups<=9'
     },
     {
@@ -349,7 +379,7 @@ var MathWordProblemAgent = (function () {
       template: '有{total}个{object}，每{per}个放一盘，可以放几盘？',
       vars: { total: '2-81', per: '2-9', object: ['草莓','积木','苹果','橘子','鸡蛋','糖果'] },
       answer: '{total}÷{per}',
-      hint: '求{total}里面有几个{per}：{total}÷{per}={ans}',
+      hint: '求{total}里面有几个{per}：{total}÷{per}=（  ）',
       unit: '盘', constraint: 'total能被per整除，total÷per<=9'
     },
     {
@@ -357,7 +387,7 @@ var MathWordProblemAgent = (function () {
       template: '{A}有{a}{unit}，{B}有{b}{unit}，{A}的{unit}是{B}的几倍？',
       vars: { a: '2-81', b: '1-9', unit: ['朵','张','元','本','只','个'], A: ['小丽','小红','小明','小华','小军'], B: ['小刚','小美','小杰','小芳','小涛'] },
       answer: '{a}÷{b}',
-      hint: '求{a}是{b}的几倍：{a}÷{b}={ans}',
+      hint: '求{a}是{b}的几倍：{a}÷{b}=（  ）',
       unit: '倍', constraint: 'a是b的整数倍，a÷b<=9'
     },
     {
@@ -365,7 +395,7 @@ var MathWordProblemAgent = (function () {
       template: '{A}有{a}{unit}，{B}的{unit}是{A}的{b}倍，{B}有多少{unit}？',
       vars: { a: '1-9', b: '2-9', unit: ['本','只','张','朵','个'], A: ['小华','小明','小红','小丽'], B: ['小芳','小刚','小杰','小美'] },
       answer: '{a}×{b}',
-      hint: '求{a}的{b}倍：{a}×{b}={ans}',
+      hint: '求{a}的{b}倍：{a}×{b}=（  ）',
       unit: '', constraint: 'a×b<=81'
     },
     {
@@ -374,7 +404,7 @@ var MathWordProblemAgent = (function () {
       vars: { total: '10-81', per: '2-9', object: ['纽扣','羽毛球','苹果','糖果','积木','鸡蛋'] },
       answer: '{total}÷{per}',
       answer_format: 'remainder',
-      hint: '商={q}，余数={r}：{total}÷{per}={q}...{r}',
+      hint: '{total}÷{per}，商和余数各是几：填「商...余数」。',
       unit: '', constraint: 'total不能被per整除，total÷per<=9'
     },
     {
@@ -382,7 +412,7 @@ var MathWordProblemAgent = (function () {
       template: '笔记本每本{a}元，买了{b}本，付了{c}元，应找回多少元？',
       vars: { a: '2-9', b: '2-9' },
       answer: '{c} - {a}×{b}',
-      hint: '总价：{a}×{b}={a*b}，找回：{c}-{a*b}={ans}',
+      hint: '先算总价：{a}×{b}=（  ）；再用付的{c}元减去总价。',
       unit: '元', constraint: 'c>a×b, c<=100'
     },
     {
@@ -390,7 +420,7 @@ var MathWordProblemAgent = (function () {
       template: '每个{object}{a}元，买了{b}个，又买了1个{object2}花{c}元，一共花了多少钱？',
       vars: { object: ['羽毛球','贴纸','本子','橡皮'], a: '2-9', b: '2-9', c: '1-20', object2: ['球拍','彩笔','书包','文具盒'] },
       answer: '{a}×{b} + {c}',
-      hint: '先算买{b}个{object}：{a}×{b}={a*b}，再加{object2}：{a*b}+{c}={ans}',
+      hint: '先算买{b}个要花多少：{a}×{b}=（  ）；再加上{object2}的{c}元。',
       unit: '元', constraint: 'a×b+c<=100'
     },
     {
@@ -398,7 +428,7 @@ var MathWordProblemAgent = (function () {
       template: '果园里有{a}行桃树，每行{b}棵，梨树比桃树少{c}棵，梨树有多少棵？',
       vars: { a: '2-9', b: '2-9', c: '1-{a*b-1}' },
       answer: '{a}×{b} - {c}',
-      hint: '桃树共{a}×{b}={a*b}棵，梨树少{c}棵：{a*b}-{c}={ans}',
+      hint: '先算桃树总数：{a}×{b}=（  ）；梨树比桃树少{c}棵，再减去{c}。',
       unit: '棵', constraint: 'c<a×b, a×b-c>=0'
     },
     {
@@ -406,7 +436,7 @@ var MathWordProblemAgent = (function () {
       template: '{A}有{a}张贴纸，{B}的贴纸张数是{A}的{b}倍多{c}张，{B}有多少张贴纸？',
       vars: { a: '1-9', b: '2-9', c: '1-20', A: ['小军','小明','小红','小华'], B: ['小杰','小刚','小美','小芳'] },
       answer: '{a}×{b} + {c}',
-      hint: '{a}的{b}倍是{a}×{b}={a*b}，再多{c}：{a*b}+{c}={ans}',
+      hint: '先算{a}的{b}倍：{a}×{b}=（  ）；再多{c}张，再加{c}。',
       unit: '张', constraint: 'a×b+c<=100'
     },
     {
@@ -414,7 +444,7 @@ var MathWordProblemAgent = (function () {
       template: '有{total}个{object}，每个盒子最多装{per}个，至少需要几个盒子才能全部装下？',
       vars: { total: '10-81', per: '2-9', object: ['苹果','橘子','积木','糖果'] },
       answer: 'Math.ceil({total}/{per})',
-      hint: '{total}÷{per}={Math.floor(total/per)}...{total%per}，余下的也需要1个盒子，所以至少需要{ans}个',
+      hint: '先算能装几盒：{total}÷{per}=（  ）；余下的也需要1个盒子，所以商再加1。',
       unit: '个', constraint: '通常total不能被per整除'
     },
     {
@@ -422,7 +452,7 @@ var MathWordProblemAgent = (function () {
       template: '每个{object}{price}元，小明有{money}元，最多能买几个？',
       vars: { object: ['面包','玩具','本子','橡皮','铅笔'], price: '3-9', money: '10-50' },
       answer: 'Math.floor({money}/{price})',
-      hint: '{money}÷{price}={Math.floor(money/price)}...{money%price}，剩下的钱不够买1个，所以最多买{ans}个',
+      hint: '先算能买几个：{money}÷{price}=（  ）；剩下的钱不够再买1个，商就是最多能买的个数。',
       unit: '个', constraint: '通常money不能被price整除'
     },
     {
@@ -430,7 +460,7 @@ var MathWordProblemAgent = (function () {
       template: '一班有{a}人，二班有{b}人，做操时每{per}人站一排，一共要站几排？',
       vars: { a: '10-45', b: '10-45', per: '3-9' },
       answer: '({a}+{b})÷{per}',
-      hint: '总人数：{a}+{b}={a+b}，每{per}人一排：{a+b}÷{per}={ans}',
+      hint: '先算总人数：{a}+{b}=（  ）；再算每{per}人一排能站几排。',
       unit: '排', constraint: 'a+b能被per整除，(a+b)÷per<=10'
     },
     {
@@ -438,7 +468,7 @@ var MathWordProblemAgent = (function () {
       template: '花园里有{a}行郁金香，每行{b}株，还有{c}株百合，一共有多少株花？',
       vars: { a: '2-9', b: '2-9', c: '1-50' },
       answer: '{a}×{b}+{c}',
-      hint: '郁金香：{a}×{b}={a*b}株，加百合：{a*b}+{c}={ans}',
+      hint: '先算郁金香：{a}×{b}=（  ）株；再加百合{c}株。',
       unit: '株', constraint: 'a×b+c<=200'
     },
     {
@@ -446,7 +476,7 @@ var MathWordProblemAgent = (function () {
       template: '文具店里的书包价格是一个文具盒的{b}倍还多{c}元，书包{total}元，文具盒多少元？',
       vars: { b: '2-6', c: '1-20' },
       answer: '({total}-{c})÷{b}',
-      hint: '先减去多的{c}元：{total}-{c}={total-c}，再除以{b}倍：{total-c}÷{b}={ans}',
+      hint: '先减去多的{c}元：{total}-{c}=（  ）；再除以{b}倍。',
       unit: '元', constraint: 'total>c, (total-c)能被b整除'
     },
     {
@@ -454,7 +484,7 @@ var MathWordProblemAgent = (function () {
       template: '有{a}件上衣，{b}条裤子，每次穿1件上衣和1条裤子，有几种不同的穿法？',
       vars: { a: '2-6', b: '2-6' },
       answer: '{a}×{b}',
-      hint: '每件上衣可以搭配{b}条裤子，共{a}×{b}={ans}种穿法',
+      hint: '每件上衣可以搭配{b}条裤子：{a}×{b}=（  ）种穿法',
       unit: '种', constraint: 'a×b<=36'
     },
     {
@@ -462,7 +492,7 @@ var MathWordProblemAgent = (function () {
       template: '小明今年{a}岁，爸爸今年{b}岁，几年后爸爸的年龄是小明的{c}倍？',
       vars: { a: '5-8', c: '2-5' },
       answer: '({b}-{a})÷({c}-1) - {a}',
-      hint: '年龄差{b}-{a}={b-a}岁不变，{c}倍时分母为{c}-1={c-1}，{b-a}÷{c-1}={(b-a)/(c-1)}，再减{a}得{ans}年',
+      hint: '年龄差不变：{b}-{a}=（  ）；爸爸是小明的{c}倍时，年龄差除以（{c}-1）就是几年后的岁数，再减小明今年岁数。',
       unit: '年', constraint: '答案为正整数'
     },
     {
@@ -471,7 +501,7 @@ var MathWordProblemAgent = (function () {
       vars: { n: '10-50' },
       answer: '{n}%4',
       answer_format: 'periodic',
-      hint: '周期是4个图形：△△□○。{n}÷4={q}...{r}，余数{r}对应第{r}个图形，即{ans}',
+      hint: '周期是4个图形：△△□○。看{n}÷4余几，余几就是第几个图形。',
       unit: ''
     },
     {
@@ -479,7 +509,7 @@ var MathWordProblemAgent = (function () {
       template: '哥哥有{a}块糖，弟弟有{b}块糖，哥哥给弟弟几块后，两人的糖同样多？',
       vars: { a: '10-50', b: '2-{a-2}' },
       answer: '({a}-{b})÷2',
-      hint: '先求相差：{a}-{b}={a-b}，再平分：{a-b}÷2={ans}',
+      hint: '先求相差：{a}-{b}=（  ）；再平分，÷2。',
       unit: '块', constraint: 'a>b, 差为偶数'
     },
     {
@@ -487,7 +517,7 @@ var MathWordProblemAgent = (function () {
       template: '文具店里，一个书包约{a}元，一个文具盒约{b}元，买这两样大约需要多少元？',
       vars: { a: '10-90 (整十)', b: '10-{100-a} (整十)' },
       answer: '{a}+{b}',
-      hint: '价格都是大约的整十数，直接相加估算：{a}+{b}={ans}',
+      hint: '价格都是大约的整十数，直接相加估算：{a}+{b}=（  ）',
       unit: '元', constraint: 'a+b<=100'
     },
     {
@@ -495,7 +525,7 @@ var MathWordProblemAgent = (function () {
       template: '一箱苹果重{a}千克，{n}箱这样的苹果一共重多少千克？',
       vars: { a: '2-9', n: '2-9' },
       answer: '{a}×{n}',
-      hint: '{n}箱就是{n}个{a}千克：{a}×{n}={ans}',
+      hint: '{n}箱就是{n}个{a}千克：{a}×{n}=（  ）',
       unit: '千克', constraint: 'a×n<=81'
     },
     {
@@ -503,12 +533,12 @@ var MathWordProblemAgent = (function () {
       template: '一只兔子重{a}千克，一只小羊比兔子重{b}千克，小羊重多少千克？',
       vars: { a: '5-20', b: '1-30' },
       answer: '{a}+{b}',
-      hint: '小羊比兔子重{b}千克，用加法：{a}+{b}={ans}',
+      hint: '小羊比兔子重{b}千克，用加法：{a}+{b}=（  ）',
       unit: '千克', constraint: 'a+b<=50'
     }
   ];
 
-  // ── 三年级模板 ──
+  // ── 三年级模板（hint 已去除答案；年月日事实类保留知识点） ──
   var G3_TEMPLATES = [
     // ---- 倍的认识 ----
     {
@@ -516,7 +546,7 @@ var MathWordProblemAgent = (function () {
       template: '书店有故事书{a}本，科技书的本数是故事书的{b}倍，科技书有多少本？',
       vars: { a: '3-15', b: '2-6' },
       answer: '{a}×{b}',
-      hint: '求{a}的{b}倍，用乘法：{a}×{b}={ans}',
+      hint: '求{a}的{b}倍，用乘法：{a}×{b}=（  ）',
       unit: '本', constraint: 'a×b<=100'
     },
     {
@@ -524,7 +554,7 @@ var MathWordProblemAgent = (function () {
       template: '三(1)班男生有{a}人，女生有{b}人，男生人数是女生的几倍？',
       vars: { a: '8-48', b: '2-8' },
       answer: '{a}÷{b}',
-      hint: '求{a}是{b}的几倍：{a}÷{b}={ans}',
+      hint: '求{a}是{b}的几倍：{a}÷{b}=（  ）',
       unit: '倍', constraint: 'a能被b整除，a÷b<=8'
     },
     {
@@ -532,7 +562,7 @@ var MathWordProblemAgent = (function () {
       template: '合唱队有{a}人，体操队人数是合唱队的{b}倍少{c}人，体操队有多少人？',
       vars: { a: '3-12', b: '2-5', c: '1-{a*b-1}' },
       answer: '{a}×{b}-{c}',
-      hint: '合唱队的{b}倍是{a}×{b}={a*b}人，再少{c}人：{a*b}-{c}={ans}',
+      hint: '先算合唱队的{b}倍：{a}×{b}=（  ）；再少{c}人，减去{c}。',
       unit: '人', constraint: 'c<a×b'
     },
     // ---- 周长（长方形/正方形/靠墙/拼图） ----
@@ -541,7 +571,7 @@ var MathWordProblemAgent = (function () {
       template: '一根铁丝长{perim}厘米，正好围成一个正方形，正方形的边长是多少厘米？',
       vars: { perim: '20-80' },
       answer: '{perim}÷4',
-      hint: '正方形的四条边一样长：{perim}÷4={ans}',
+      hint: '正方形的四条边一样长：{perim}÷4=（  ）',
       unit: '厘米', constraint: 'perim÷4<=20'
     },
     {
@@ -549,7 +579,7 @@ var MathWordProblemAgent = (function () {
       template: '一个长方形篮球场，长{l}米，宽{w}米，沿着它的边跑一圈是多少米？',
       vars: { l: '20-50', w: '10-25' },
       answer: '({l}+{w})×2',
-      hint: '长方形周长=（长+宽）×2：({l}+{w})×2={ans}',
+      hint: '长方形周长=（长+宽）×2：({l}+{w})×2=（  ）',
       unit: '米', constraint: '({l}+{w})×2<=200'
     },
     {
@@ -557,7 +587,7 @@ var MathWordProblemAgent = (function () {
       template: '正方形毛巾的边长是{d}厘米，它的周长是多少厘米？',
       vars: { d: '5-40' },
       answer: '{d}×4',
-      hint: '正方形周长=边长×4：{d}×4={ans}',
+      hint: '正方形周长=边长×4：{d}×4=（  ）',
       unit: '厘米', constraint: 'd×4<=160'
     },
     {
@@ -565,7 +595,7 @@ var MathWordProblemAgent = (function () {
       template: '靠墙围一块长方形菜地，长{l}米，宽{w}米，长边靠墙（靠墙的一边长边不围篱笆），需要篱笆多少米？',
       vars: { l: '8-20', w: '4-10' },
       answer: '{l}+{w}×2',
-      hint: '长边靠墙不用围，只需要围 1 条长边和 2 条宽边：{l}+{w}×2={ans}',
+      hint: '长边靠墙不用围，只需要围 1 条长边和 2 条宽边：{l}+{w}×2=（  ）',
       unit: '米', constraint: 'l>w'
     },
     {
@@ -573,7 +603,7 @@ var MathWordProblemAgent = (function () {
       template: '两个边长{d}厘米的正方形拼成一个长方形，这个长方形的周长是多少厘米？',
       vars: { d: '3-10' },
       answer: '{d}×6',
-      hint: '拼在一起的两条边重合不露在外面，周长=6 条边长：{d}×6={ans}',
+      hint: '拼在一起的两条边重合不露在外面，周长=6 条边长：{d}×6=（  ）',
       unit: '厘米', constraint: 'd×6<=80'
     },
     {
@@ -581,7 +611,7 @@ var MathWordProblemAgent = (function () {
       template: '一根{perim}厘米长的铁丝，可以围成一个长方形的框架，已知长是{l}厘米，宽是多少厘米？',
       vars: { perim: '30-90', l: '10-20' },
       answer: '{perim}÷2-{l}',
-      hint: '周长÷2=长+宽：{perim}÷2={perim/2}，再减长：{perim/2}-{l}={ans}',
+      hint: '周长÷2=长+宽：{perim}÷2=（  ）；再减去长{l}就是宽。',
       unit: '厘米', constraint: 'perim÷2>l'
     },
     // ---- 面积（铺地砖/求长宽） ----
@@ -590,7 +620,7 @@ var MathWordProblemAgent = (function () {
       template: '一间长方形教室长{l}米，宽{w}米，用边长 1 米的正方形地砖铺地（1 块地砖的面积是 1 平方米），一共需要多少块地砖？',
       vars: { l: '5-12', w: '3-8' },
       answer: '{l}×{w}',
-      hint: '教室面积=长×宽={l}×{w}={ans}平方米，每块地砖 1 平方米，所以需要 {ans} 块。',
+      hint: '教室面积=长×宽：{l}×{w}=（  ）平方米；每块地砖 1 平方米，需要几块就填几。',
       unit: '块', constraint: 'l×w<=100'
     },
     {
@@ -598,7 +628,7 @@ var MathWordProblemAgent = (function () {
       template: '正方形手帕的边长是{d}厘米，它的面积是多少平方厘米？',
       vars: { d: '4-20' },
       answer: '{d}×{d}',
-      hint: '正方形面积=边长×边长：{d}×{d}={ans}',
+      hint: '正方形面积=边长×边长：{d}×{d}=（  ）',
       unit: '平方厘米', constraint: 'd×d<=400'
     },
     {
@@ -606,7 +636,7 @@ var MathWordProblemAgent = (function () {
       template: '长方形菜地的面积是{area}平方米，长是{l}米，宽是多少米？',
       vars: { area: '18-90', l: '3-9' },
       answer: '{area}÷{l}',
-      hint: '宽=面积÷长：{area}÷{l}={ans}',
+      hint: '宽=面积÷长：{area}÷{l}=（  ）',
       unit: '米', constraint: 'area能被l整除，area÷l<=15'
     },
     {
@@ -614,7 +644,7 @@ var MathWordProblemAgent = (function () {
       template: '客厅长{l}米、宽{w}米，用边长 1 分米、面积 1 平方分米的小方砖把地面铺满，一共需要多少块小方砖？',
       vars: { l: '3-6', w: '2-4' },
       answer: '{l}×{w}×100',
-      hint: '先算客厅面积：{l}×{w}={lw}平方米；1 平方米=100 平方分米，共 {lw}×100={ans} 平方分米，所以需要 {ans} 块小方砖。',
+      hint: '先算客厅面积：{l}×{w}=（  ）平方米；1 平方米=100 平方分米，再乘 100。',
       unit: '块', constraint: 'l×w<=20'
     },
     // ---- 年月日 ----
@@ -647,7 +677,7 @@ var MathWordProblemAgent = (function () {
       template: '一个星期有 7 天，{n} 个星期合起来有多少天？',
       vars: { n: '2-6' },
       answer: '{n}×7',
-      hint: '{n}个 7 天：{n}×7={ans}',
+      hint: '{n}个 7 天：{n}×7=（  ）',
       unit: '天', constraint: 'n×7<=42'
     },
     {
@@ -655,7 +685,7 @@ var MathWordProblemAgent = (function () {
       template: '小明 7 月{a}日去外婆家，7 月{b}日回家，他这趟一共住了几天？',
       vars: { a: '5-18', b: '{a+2}-28' },
       answer: '{b}-{a}+1',
-      hint: '起止两天都算：{b}-{a}+1={ans}天。',
+      hint: '起止两天都算：{b}-{a}+1=（  ）天。',
       unit: '天', constraint: 'b>a'
     },
     // ---- 小数购物（角作单位，答为元） ----
@@ -664,7 +694,7 @@ var MathWordProblemAgent = (function () {
       template: '一支铅笔{a}角，一块橡皮{b}角，买这两样一共要多少元？',
       vars: { a: '3-9', b: '3-9' },
       answer: '({a}+{b})/10',
-      hint: '{a}角+{b}角={a+b}角；1 元=10 角，{a+b}÷10={ans}元。',
+      hint: '先把角加起来：{a}角+{b}角=（  ）角；1 元=10 角，再除以 10 换成元。',
       unit: '元', constraint: 'a+b<=18'
     },
     {
@@ -672,7 +702,7 @@ var MathWordProblemAgent = (function () {
       template: '一本本子{c}元，一支钢笔{b}元5角，一共要付多少元？',
       vars: { c: '1-8', b: '5-9' },
       answer: '{c}+{b}+5/10',
-      hint: '5 角=0.5 元，共 {c}+{b}+0.5={ans}元。',
+      hint: '5 角=0.5 元：{c}+{b}+0.5=（  ）',
       unit: '元', constraint: 'c+b+0.5<=20'
     },
     {
@@ -680,7 +710,7 @@ var MathWordProblemAgent = (function () {
       template: '一个文具盒{price}元，一支钢笔{pen}元5角，文具盒比钢笔贵多少元？',
       vars: { price: '6-12', pen: '3-8' },
       answer: '{price}-{pen}-5/10',
-      hint: '先把钢笔价换成小数：{pen}+0.5={pen5}元，再求差：{price}-{pen5}={ans}元。',
+      hint: '先把钢笔价换成小数：{pen}元5角={pen}+0.5=（  ）元；再求差。',
       unit: '元', constraint: 'price>pen+5/10'
     },
     // ---- 搭配与集合 ----
@@ -689,7 +719,7 @@ var MathWordProblemAgent = (function () {
       template: '早餐店有{a}种饮品、{b}种主食，选 1 种饮品和 1 种主食，一共有几种不同的搭配？',
       vars: { a: '2-5', b: '2-5' },
       answer: '{a}×{b}',
-      hint: '每种饮品可配 {b} 种主食：{a}×{b}={ans}种。',
+      hint: '每种饮品可配 {b} 种主食：{a}×{b}=（  ）种。',
       unit: '种', constraint: 'a×b<=25'
     },
     {
@@ -697,23 +727,29 @@ var MathWordProblemAgent = (function () {
       template: '三(2)班有{a}人喜欢苹果，{c}人喜欢香蕉，其中有{b}人两种都喜欢。只喜欢苹果的有多少人？',
       vars: { a: '15-40', b: '3-12', c: '10-30' },
       answer: '{a}-{b}',
-      hint: '喜欢苹果的 {a} 人中，去掉两种都喜欢的 {b} 人：{a}-{b}={ans}。',
+      hint: '喜欢苹果的 {a} 人中，去掉两种都喜欢的 {b} 人：{a}-{b}=（  ）',
       unit: '人', constraint: 'b<a, b<=c'
     }
   ];
 
-  // ── 构造函数 ──
+  // ── 引擎（模板解析 / 生成器池） ──
   function MathWordProblemAgent(options) {
     options = options || {};
     this.grade = options.grade || 1;
-    // 难度：支持字符串桶（basic/adv/high/mix，兼容旧页面）与数值 1-10
-    if (typeof options.difficulty === 'string') {
+    // 题型分桶：solve / chain / null（null=不限，混合练习）
+    this.cat = options.cat || null;
+    // 难度：支持字符串桶（basic/adv/high/mix）与数值 1-10
+    if (typeof options.level === 'string') {
+      this.difficulty = options.level;
+      this._numScale = 1;
+    } else if (typeof options.difficulty === 'string') {
       this.difficulty = options.difficulty;
       this._numScale = 1;
     } else {
       var diff = _PU.diffLevel(options.difficulty);
       this._numScale = _PU.diffScale(diff);
-      this.difficulty = diff <= 3 ? 'basic' : (diff <= 6 ? 'mix' : (diff <= 8 ? 'adv' : 'high'));
+      // 难度越高 → 题型逻辑越复杂：basic < adv < high 单调递进（数值由 _numScale 同步放大）
+      this.difficulty = diff <= 3 ? 'basic' : (diff <= 6 ? 'adv' : 'high');
     }
     var templatesByGrade = { 1: G1_TEMPLATES, 2: G2_TEMPLATES, 3: G3_TEMPLATES };
     this._templates = templatesByGrade[this.grade] || G1_TEMPLATES;
@@ -748,7 +784,7 @@ var MathWordProblemAgent = (function () {
         var range = parseRange(def, resolved, this._numScale);
         var min = Math.max(0, range.min);
         var max = Math.max(min, range.max);
-        resolved[k] = randInt(min, max);
+        resolved[k] = rnd(min, max);
       }
 
       // 特殊变量解析（如 G2A01 的 c、G2H02 的 total、G2H04 的 b）
@@ -831,13 +867,19 @@ var MathWordProblemAgent = (function () {
     };
   };
 
-  // ── 获取生成器函数池 ──
+  // ── 获取生成器函数池（按难度桶 + cat 分桶；cat 过滤为空时回退全量） ──
   MathWordProblemAgent.prototype.getPool = function () {
     var self = this;
     var templates = this._templates;
 
+    // 难度桶过滤
     if (this.difficulty !== 'mix') {
       templates = templates.filter(function (t) { return t.difficulty === self.difficulty; });
+    }
+    // cat 分桶（一年级模板带 cat；2/3 年级无 cat，过滤为空则回退全量）
+    if (this.cat) {
+      var catTpl = templates.filter(function (t) { return t.cat === self.cat; });
+      if (catTpl.length) templates = catTpl;
     }
 
     return templates.map(function (tpl) {
@@ -858,7 +900,7 @@ var MathWordProblemAgent = (function () {
     var attempts = 0;
 
     while (questions.length < count && attempts < maxAttempts) {
-      var fn = pool[randInt(0, pool.length - 1)];
+      var fn = pool[rnd(0, pool.length - 1)];
       var q = fn();
       attempts++;
       if (!seen[q.q]) {
@@ -868,15 +910,12 @@ var MathWordProblemAgent = (function () {
     }
 
     while (questions.length < count) {
-      var fn2 = pool[randInt(0, pool.length - 1)];
+      var fn2 = pool[rnd(0, pool.length - 1)];
       questions.push(fn2());
     }
 
     return questions;
   };
-
-  return MathWordProblemAgent;
-})();
 
   // ============ 标准题目对象：渲染 / 判定 ============
   /** 渲染单题卡片（标准 Question.render） */
@@ -898,74 +937,107 @@ var MathWordProblemAgent = (function () {
     return user === String(question.answer).trim();
   }
 
-  // ============ ExercisePlugin ============
+  // ============ 题型/难度元数据 ============
+  var TYPE_NAMES = { solve: '解决问题', chain: '连加连减题', mix: '混合练习' };
+  var LEVEL_NAMES = { basic: '初级', adv: '中级', high: '高级', mix: '综合' };
+
   function gradeName(g) {
     return (typeof App !== 'undefined' && App.getGradeName) ? App.getGradeName(g) : (g + '年级');
   }
 
-  /** @type {ExercisePlugin} */
-  var mathWordPlugin = {
+  // meta 为 createPlugin 保留字段，不挂载到插件对象；这里单独定义，供 generate / meta 复用
+  function buildMeta(opts) {
+    var grade = (opts && opts.grade) || 1;
+    var type = (opts && opts.type) || 'solve';
+    var level = (opts && opts.level) || 'basic';
+    var typeLabel = TYPE_NAMES[type] || '混合练习';
+    var levelLabel = LEVEL_NAMES[level] || '';
+    return {
+      type: type,
+      level: level,
+      count: (opts && opts.count) || 8,
+      columns: 2,
+      title: '小学' + gradeName(grade) + '数学应用题（' + typeLabel + (levelLabel ? ' · ' + levelLabel : '') + '）'
+    };
+  }
+
+  function buildQuestions(options) {
+    var opts = options || {};
+    var grade = opts.grade || 1;
+    var count = opts.count || 8;
+    // 题型分桶：mix → null（不限）；solve/chain 按 cat 过滤
+    var cat = (opts.type && opts.type !== 'mix') ? opts.type : null;
+    var agent = new MathWordProblemAgent({ grade: grade, cat: cat, level: opts.level || 'basic' });
+    var list = agent.generate(count);
+    var questions = list.map(function (q) {
+      return {
+        type: 'word',
+        question: q.q,
+        answer: String(q.a),
+        unit: q.unit || '',
+        hint: q.hint || '',
+        render: function (idx) { return renderWordCard(this, idx); },
+        check: function (userAnswers, idx) { return checkWordQuestion(this, userAnswers, idx); }
+      };
+    });
+    plugin._lastType = TYPE_NAMES[opts.type || 'solve'] || '混合练习';
+    plugin._lastLevel = LEVEL_NAMES[opts.level || 'basic'] || '';
+    return questions;
+  }
+
+  // ============ 用工厂创建插件（标准契约） ============
+  var plugin = _PU.createPlugin({
     id: 'math-word-problems',
+    moduleId: 'M8',
     name: '应用题',
+    pageTitle: '应用题',
+    pageSubtitle: '解决实际问题：解决问题、连加连减与加减混合',
     grades: [1, 2, 3],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'word' },
+    // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示；2/3 年级仅覆盖其对应知识点）
+    knowledgePoints: ['solve-problems', 'chain-mixed'],
+    columns: 2,
 
-    generate(options) {
-      var opts = options || {};
-      var grade = opts.grade || 1;
-      var count = opts.count || 5;
-      var agent = new MathWordProblemAgent({ grade: grade, difficulty: opts.difficulty || 'mix' });      var list = agent.generate(count);
-      var questions = list.map(function (q) {
-        return {
-          type: 'word',
-          question: q.q,
-          answer: q.a,
-          unit: q.unit || '',
-          hint: q.hint || '',
-          render: function (idx, ctx) { return renderWordCard(this, idx); },
-          check: function (userAnswers, idx) { return checkWordQuestion(this, userAnswers, idx); }
-        };
-      });
-      return {
-        questions: questions,
-        meta: { grade: grade, count: questions.length, title: '小学' + gradeName(grade) + '数学应用题' }
-      };
+    settings: [
+      {
+        key: 'type',
+        label: '题型',
+        default: 'solve',
+        options: [
+          { value: 'solve', label: '解决问题' },
+          { value: 'chain', label: '连加连减题' },
+          { value: 'mix',   label: '混合练习' }
+        ]
+      },
+      {
+        key: 'level',
+        label: '难度',
+        default: 'basic',
+        options: [
+          { value: 'basic', label: '初级' },
+          { value: 'adv',   label: '中级' },
+          { value: 'high',  label: '高级' },
+          { value: 'mix',   label: '综合' }
+        ]
+      }
+    ],
+
+    // 标准同步生成
+    generateQuestions: function (options) {
+      return buildQuestions(options);
     },
 
-    render(exerciseSet) {
-      var html = '<div class="questions-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;">';
-      exerciseSet.questions.forEach(function (q, idx) {
-        html += q.render(idx);
-      });
-      html += '</div>';
-      return html;
-    },
-
-    check(exerciseSet, userAnswers) {
-      var correct = 0;
-      var results = [];
-      var correctAnswers = [];
-      exerciseSet.questions.forEach(function (q, idx) {
-        var ok = q.check ? q.check(userAnswers, idx) : checkWordQuestion(q, userAnswers, idx);
-        if (ok) correct++;
-        results.push(ok);
-        correctAnswers.push(String(q.answer));
-      });
-      var total = exerciseSet.questions.length;
-      var score = Math.round((correct / total) * 100);
-      var message = '继续加油！';
-      if (score === 100) message = '太棒了！全对！';
-      else if (score >= 80) message = '很不错！';
-      return { score: score, total: total, correct: correct, message: message, results: results, correctAnswers: correctAnswers };
+    meta: function (opts) {
+      return buildMeta(opts);
     }
-  };
+  });
 
   // ============ 导出 ============
-  global.MathWordProblemAgent = MathWordProblemAgent;  // 兼容旧页面 math-word-problems.html
-  global.__currentPlugin = mathWordPlugin;             // practice.html / dev/plugin-check.html
+  global.MathWordProblemAgent = MathWordProblemAgent;  // 引擎（供 Node 测试 / 复用）
+  global.__currentPlugin = plugin;             // practice.html / dev/plugin-check.html
 
-  if (typeof module !== 'undefined' && module.exports) module.exports = mathWordPlugin;
+  if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 
 })(typeof window !== 'undefined' ? window : globalThis);

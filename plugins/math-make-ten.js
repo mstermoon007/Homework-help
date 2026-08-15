@@ -25,80 +25,9 @@
   // 被减数上限：难度 3 基准 19（一年级 20 以内），难度越高数值越大
   function totalMax() { return Math.min(99, _PU.diffMax(19, _DIFF)); }
 
-  // ============ SVG 分解图生成 ============
-  function svgInput(idx, field, w, h) {
-    return '<foreignObject x="0" y="0" width="' + w + '" height="' + h + '">' +
-      '<div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">' +
-      '<input type="text" data-idx="' + idx + '" data-field="' + field + '" placeholder="?" autocomplete="off"' +
-      ' style="width:' + (w - 4) + 'px;height:' + (h - 4) + 'px;border:2px dashed #ccc;border-radius:5px;font-size:14px;font-weight:700;text-align:center;color:#5b8def;background:#fafafa;outline:none;font-family:inherit;box-sizing:border-box;"/>' +
-      '</div></foreignObject>';
-  }
-
-  // 凑十法：5+8=[__]，5分解为[__][__]
-  function cushiFullSVG(big, small, need, rest, idx) {
-    var w = 300, h = 155;
-    var xSmall = 30, xBig = 92, xEq = 140, xAns = 174;
-    var xSplitL = xSmall - 20, xSplitR = xSmall + 20;
-    var inpW = 34, inpH = 26;
-    return '<svg class="decomp-svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
-      '<text x="' + xSmall + '" y="22" class="num-big" text-anchor="middle">' + small + '</text>' +
-      '<text x="' + (xSmall + 30) + '" y="22" class="num-big" text-anchor="middle" fill="#5b8def">+</text>' +
-      '<text x="' + xBig + '" y="22" class="num-big" text-anchor="middle">' + big + '</text>' +
-      '<text x="' + xEq + '" y="22" class="num-big" text-anchor="middle" fill="#7a879c">=</text>' +
-      svgInput(idx, 'answer', 36, 26).replace(/x="0" y="0"/, 'x="' + xAns + '" y="8"') +
-      '<line x1="' + xSmall + '" y1="32" x2="' + xSmall + '" y2="58" class="split-line"/>' +
-      '<line x1="' + xSplitL + '" y1="58" x2="' + xSplitR + '" y2="58" class="split-line"/>' +
-      '<line x1="' + xSplitL + '" y1="58" x2="' + xSplitL + '" y2="82" class="split-line"/>' +
-      '<line x1="' + xSplitR + '" y1="58" x2="' + xSplitR + '" y2="82" class="split-line"/>' +
-      '<line x1="' + xBig + '" y1="32" x2="' + xBig + '" y2="82" class="split-line"/>' +
-      '<line x1="' + xBig + '" y1="72" x2="' + xSplitL + '" y2="72" class="split-line" stroke-dasharray="4,3"/>' +
-      svgInput(idx, 'need', inpW, inpH).replace(/x="0" y="0"/, 'x="' + (xSplitL - inpW / 2) + '" y="64"') +
-      svgInput(idx, 'rest', inpW, inpH).replace(/x="0" y="0"/, 'x="' + (xSplitR - inpW / 2) + '" y="64"') +
-      '<text x="' + ((xBig + xSplitL) / 2) + '" y="96" class="num-small" text-anchor="middle" fill="#5b8def">' + big + '+?=10</text>' +
-      '<text x="' + (w / 2) + '" y="118" class="num-small" text-anchor="middle" fill="#7a879c">看大数' + big + '，' + big + '+?=10，将' + small + '分成' + need + '和' + rest + '</text>' +
-      '<text x="' + (w / 2) + '" y="136" class="num-small" text-anchor="middle" fill="#7a879c">' + big + '+' + need + '=10，10+' + rest + '=' + (big + small) + '</text>' +
-      '</svg>';
-  }
-
-  // 平十法：15−7=[__]，15→5，7→5+2
-  function pingshiFullSVG(total, sub, to10, rest, idx) {
-    var w = 220, h = 100, x1 = 28, x2 = 84, x3 = 140, xAns = 168;
-    return '<svg class="decomp-svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
-      '<text x="' + x1 + '" y="22" class="num-big" text-anchor="middle">' + total + '</text>' +
-      '<text x="' + (x1 + 28) + '" y="22" class="num-big" text-anchor="middle" fill="#5b8def">−</text>' +
-      '<text x="' + x2 + '" y="22" class="num-big" text-anchor="middle">' + sub + '</text>' +
-      '<text x="' + x3 + '" y="22" class="num-big" text-anchor="middle" fill="#7a879c">=</text>' +
-      svgInput(idx, 'answer', 36, 26).replace(/x="0" y="0"/, 'x="' + (xAns - 4) + '" y="8"') +
-      '<line x1="' + x1 + '" y1="32" x2="' + x1 + '" y2="62" class="split-line"/>' +
-      '<text x="' + x1 + '" y="80" class="num-mid" text-anchor="middle">' + to10 + '</text>' +
-      '<line x1="' + x2 + '" y1="32" x2="' + x2 + '" y2="50" class="split-line"/>' +
-      '<line x1="' + (x2 - 26) + '" y1="50" x2="' + (x2 + 26) + '" y2="50" class="split-line"/>' +
-      '<line x1="' + (x2 - 26) + '" y1="50" x2="' + (x2 - 26) + '" y2="62" class="split-line"/>' +
-      '<line x1="' + (x2 + 26) + '" y1="50" x2="' + (x2 + 26) + '" y2="62" class="split-line"/>' +
-      '<text x="' + (x2 - 26) + '" y="80" class="num-mid" text-anchor="middle">' + to10 + '</text>' +
-      '<text x="' + (x2 + 26) + '" y="80" class="num-mid" text-anchor="middle">' + rest + '</text>' +
-      '</svg>';
-  }
-
-  // 破十法：13−5=[__]，13→10+3
-  function poshiFullSVG(total, sub, to10, tenSub, idx) {
-    var w = 220, h = 100, x1 = 28, x2 = 84, x3 = 140, xAns = 168;
-    return '<svg class="decomp-svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
-      '<text x="' + x1 + '" y="22" class="num-big" text-anchor="middle">' + total + '</text>' +
-      '<text x="' + (x1 + 28) + '" y="22" class="num-big" text-anchor="middle" fill="#5b8def">−</text>' +
-      '<text x="' + x2 + '" y="22" class="num-big" text-anchor="middle">' + sub + '</text>' +
-      '<text x="' + x3 + '" y="22" class="num-big" text-anchor="middle" fill="#7a879c">=</text>' +
-      svgInput(idx, 'answer', 36, 26).replace(/x="0" y="0"/, 'x="' + (xAns - 4) + '" y="8"') +
-      '<line x1="' + x1 + '" y1="32" x2="' + x1 + '" y2="50" class="split-line"/>' +
-      '<line x1="' + (x1 - 26) + '" y1="50" x2="' + (x1 + 26) + '" y2="50" class="split-line"/>' +
-      '<line x1="' + (x1 - 26) + '" y1="50" x2="' + (x1 - 26) + '" y2="62" class="split-line"/>' +
-      '<line x1="' + (x1 + 26) + '" y1="50" x2="' + (x1 + 26) + '" y2="62" class="split-line"/>' +
-      '<text x="' + (x1 - 26) + '" y="80" class="num-mid" text-anchor="middle">10</text>' +
-      '<text x="' + (x1 + 26) + '" y="80" class="num-mid" text-anchor="middle">' + to10 + '</text>' +
-      '<line x1="' + x2 + '" y1="32" x2="' + x2 + '" y2="62" class="split-line"/>' +
-      '<text x="' + x2 + '" y="80" class="num-mid" text-anchor="middle">' + tenSub + '</text>' +
-      '</svg>';
-  }
+  // ============ 卡片式渲染（固定版式，数字随机生成） ============
+  // 三种题型统一使用共享 common.js 的 renderGrid 标准 question-card 卡片：
+  // 卡片内展示算式 + 拆分解法提示 + 单个答案输入框；版式固定，仅数字随机变化。
 
   // ============ 题目生成 ============
   function buildCushi() {
@@ -110,9 +39,6 @@
       kind: 'cushi', label: '凑十法',
       big: big, small: small, need: need, rest: rest,
       answer: big + small,
-      decompInputs: [{ id: 'need', expect: need }, { id: 'rest', expect: rest }],
-      combineInputs: [{ id: 'c_need', expect: need }, { id: 'c_rest', expect: rest }, { id: 'c_answer', expect: big + small }],
-      combinePrefix: big + ' + ', combineMid: ' = 10，10 + ',
       hint: '看大数，想' + big + '加几为10？将' + small + '分成' + need + '和' + rest + '，' + big + '+' + need + '=10，10+' + rest + '=' + (big + small)
     };
   }
@@ -126,9 +52,6 @@
       kind: 'pingshi', label: '平十法',
       total: total, sub: sub, to10: to10, rest: rest,
       answer: total - sub,
-      decompInputs: [{ id: 'to10_left', expect: to10 }, { id: 'to10_right', expect: to10 }, { id: 'rest', expect: rest }],
-      combineInputs: [{ id: 'c_to10', expect: to10 }, { id: 'c_rest', expect: rest }, { id: 'c_answer', expect: total - sub }],
-      combinePrefix: total + ' − ', combineMid: ' = 10，10 − ',
       hint: '平十法：看减数，把减数拆成两部分，先减到10，再减去剩下的数。'
     };
   }
@@ -142,9 +65,6 @@
       kind: 'poshi', label: '破十法',
       total: total, sub: sub, to10: to10, tenSub: tenSub,
       answer: total - sub,
-      decompInputs: [{ id: 'ten', expect: 10 }, { id: 'to10', expect: to10 }, { id: 'tenSub', expect: tenSub }],
-      combineInputs: [{ id: 'c_tenSub', expect: tenSub }, { id: 'c_answer', expect: total - sub }],
-      combinePrefix: '10 − ' + sub + ' = ', combineMid: '，', combineSuffix: ' + ' + to10 + ' = ',
       hint: '破十法：把被减数拆成10和几，先用10去减，再把剩下的数加回来。'
     };
   }
@@ -172,53 +92,36 @@
   }
 
   // ============ 标准题目对象：渲染 / 判定 ============
-  /** 渲染单题卡片（拆解 SVG + 组合行，标准 Question.render） */
-  function renderCard(p, i) {
-    var svg;
-    if (p.kind === 'cushi') svg = cushiFullSVG(p.big, p.small, p.need, p.rest, i);
-    else if (p.kind === 'pingshi') svg = pingshiFullSVG(p.total, p.sub, p.to10, p.rest, i);
-    else svg = poshiFullSVG(p.total, p.sub, p.to10, p.tenSub, i);
-
-    var combineHTML;
-    if (p.kind === 'poshi') {
-      combineHTML = p.combinePrefix + '<input type="text" class="combine-inp" data-idx="' + i + '" data-field="c_tenSub" placeholder="?" autocomplete="off">' +
-        p.combineMid + '<input type="text" class="combine-inp" data-idx="' + i + '" data-field="c_answer" placeholder="?" autocomplete="off">' + p.combineSuffix;
-    } else {
-      combineHTML = p.combinePrefix +
-        '<input type="text" class="combine-inp" data-idx="' + i + '" data-field="' + p.combineInputs[0].id + '" placeholder="?" autocomplete="off">' + p.combineMid +
-        '<input type="text" class="combine-inp" data-idx="' + i + '" data-field="' + p.combineInputs[1].id + '" placeholder="?" autocomplete="off"> = <input type="text" class="combine-inp" data-idx="' + i + '" data-field="' + p.combineInputs[2].id + '" placeholder="?" autocomplete="off">';
-    }
-
-    return '<div class="problem" data-i="' + i + '">' +
-      '<div class="num">' + (i + 1) + '</div>' +
-      '<div class="decomp-row">' + svg + '</div>' +
-      '<div class="combine-row">' + combineHTML + '</div>' +
-      '<div class="think-hint">' + p.hint + '</div>' +
-      '<div class="feedback"></div>' +
-      '</div>';
-  }
-
-  /** 单题判定（多输入：answer + decompInputs + combineInputs，标准 Question.check） */
+  /** 单题判定（标准 Question.card：仅校验主答案，统一 data-index 输入） */
   function checkMakeTenQuestion(question, userAnswers, idx) {
-    var data = question.data;
-    var allInputs = [{ id: 'answer', expect: data.answer }]
-      .concat(data.decompInputs || [], data.combineInputs || []);
-    for (var j = 0; j < allInputs.length; j++) {
-      var key = idx + ':' + allInputs[j].id;
-      var v = userAnswers && userAnswers[key] != null ? userAnswers[key] : '';
-      if (String(v).trim() !== String(allInputs[j].expect)) return false;
-    }
-    return true;
+    var v = userAnswers && userAnswers[idx] != null ? userAnswers[idx] : '';
+    return String(v).trim() === String(question.answer);
   }
 
   // ============ ExercisePlugin ============
   var mathMakeTenPlugin = {
     id: 'math-make-ten',
+    moduleId: 'M0',
     name: '凑十法',
-    grades: [1, 2],
+    pageTitle: '巧算专项',
+    pageSubtitle: '凑十法、平十法、破十法',
+    grades: [1],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'makeTen' },
+    settings: [
+      {
+        key: 'type',
+        label: '题型',
+        default: 'mix',
+        options: [
+          { value: 'mix', label: '混合' },
+          { value: 'cushi', label: '凑十法' },
+          { value: 'pingshi', label: '平十法' },
+          { value: 'poshi', label: '破十法' }
+        ]
+      }
+    ],
 
     generate: function (options) {
       var opts = options || {};
@@ -226,31 +129,39 @@
       var type = opts.type || 'cushi';
       var count = opts.count || 5;
       var list = generateProblems(type, count);
-      var typeNames = { cushi: '凑十法', pingshi: '平十法', poshi: '破十法', mix: '混合练习' };
+      var typeNames = { cushi: '凑十法', pingshi: '平十法', poshi: '破十法', mix: '混合' };
       var label = opts.label || typeNames[type] || type;
       var questions = list.map(function (p) {
+        var qText = (p.kind === 'cushi')
+          ? p.big + ' + ' + p.small + ' = ?'
+          : p.total + ' − ' + p.sub + ' = ?';
         return {
           type: 'make-ten',
           kind: p.kind,
-          data: p,
+          q: qText,
           answer: String(p.answer),
           hint: p.hint,
-          render: function (idx, ctx) { return renderCard(this.data, idx); },
+          render: function (idx, ctx) {
+            // 统一卡片式渲染（固定版式、数字随机）：复用共享 renderGrid 的单题卡片结构
+            return _PU.renderCard(this, idx, (ctx && ctx.renderOpts) || {});
+          },
           check: function (userAnswers, idx) { return checkMakeTenQuestion(this, userAnswers, idx); }
         };
       });
       return {
         questions: questions,
-        meta: { type: type, count: questions.length, title: '小学一年级' + label + '练习' }
+        meta: {
+          type: type,
+          count: questions.length,
+          title: '小学一年级' + label + '练习',
+          // 固定列数（卡片式·一行三题）：屏幕与 A4 竖版打印均按 3 列等宽排版，题目不自动跨列
+          columns: 3
+        }
       };
     },
 
     render: function (exerciseSet) {
-      var html = '';
-      exerciseSet.questions.forEach(function (q, i) {
-        html += q.render(i);
-      });
-      return html;
+      return _PU.renderGrid(exerciseSet.questions, { columns: 3 });
     },
 
     check: function (exerciseSet, userAnswers) {

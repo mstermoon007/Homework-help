@@ -451,6 +451,7 @@
   // ============ ExercisePlugin ============
   var mathDataStatsPlugin = {
     id: 'math-data-stats',
+    moduleId: 'M9',
     name: '数据收集与整理',
     grades: [2, 3],
     subject: 'math',

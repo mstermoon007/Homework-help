@@ -375,12 +375,12 @@
         }
         return q;
       });
-      // 知识点声明校验：声明的知识点需在知识库中登记
+      // 知识点声明校验：声明的知识点需在知识库中登记（统一结构：getEntries 扁平化）
       if (config.knowledgePoints && _kb && subject === 'math' && opts.grade) {
-        var g = _kb.getGrade(opts.grade);
-        if (g) {
+        var entries = _kb.getEntries ? _kb.getEntries('math', opts.grade) : [];
+        if (entries.length) {
           var entryById = {};
-          g.entries.forEach(function (e) { entryById[e.id] = true; entryById[e.name] = true; });
+          entries.forEach(function (e) { entryById[e.id] = true; entryById[e.name] = true; });
           var missing = (config.knowledgePoints || []).filter(function (kp) { return !entryById[kp]; });
           if (missing.length) {
             console.warn('[createPlugin:' + id + '] 在 ' + opts.grade + ' 年级声明覆盖的知识点未在知识库登记：' +
@@ -440,7 +440,7 @@
       if (global.console) console.info('[coverage] ' + subject + ' 科目暂无知识点库，跳过覆盖统计');
       return;
     }
-    var g = KB.getGrade(grade);
+    var g = KB.findGrade ? KB.findGrade(grade) : null;
     if (!g) { if (global.console) console.warn('[coverage] 无 ' + grade + ' 年级知识库数据'); return; }
     var reg = registry || (typeof global.PLUGIN_REGISTRY !== 'undefined' ? global.PLUGIN_REGISTRY : null);
     var cov = KB.coverageFromRegistry('math', grade, reg);

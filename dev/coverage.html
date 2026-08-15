@@ -84,7 +84,7 @@
   var regById = {};
   registry.forEach(function (p) { regById[p.id] = p; });
 
-  var grades = Object.keys(KnowledgeBank.grades).map(Number).sort(function (a, b) { return a - b; });
+  var grades = KnowledgeBank.map(function (g) { return g.grade; }).sort(function (a, b) { return a - b; });
   var current = grades[0];
 
   function statusOf(entry, grade) {
@@ -99,16 +99,24 @@
     grades.forEach(function (g) {
       var btn = document.createElement('button');
       btn.className = 'grade-btn' + (g === current ? ' active' : '');
-      btn.textContent = KnowledgeBank.getGrade(g).meta.gradeName || (g + '年级');
+      var GN = ['', '一年级', '二年级', '三年级', '四年级', '五年级', '六年级'];
+      btn.textContent = GN[g] || (g + '年级');
       btn.onclick = function () { current = g; renderGrades(); render(); };
       gradeBar.appendChild(btn);
     });
   }
 
   function render() {
-    var g = KnowledgeBank.getGrade(current);
-    if (!g) { content.innerHTML = '<div class="err">未找到 ' + current + ' 年级知识库。</div>'; return; }
-    var entries = g.entries || [];
+    var gObj = KnowledgeBank.findGrade(current);
+    if (!gObj) { content.innerHTML = '<div class="err">未找到 ' + current + ' 年级知识库。</div>'; return; }
+    var entries = KnowledgeBank.getEntries('math', current);
+    // 按模块分组（moduleId 顺序），组内按知识点顺序
+    var byModule = [];
+    gObj.modules.forEach(function (m) {
+      var kps = entries.filter(function (e) { return e.moduleId === m.moduleId; });
+      if (!kps.length) return;
+      byModule.push({ moduleId: m.moduleId, kps: kps });
+    });
 
     var counts = { green: 0, yellow: 0, red: 0 };
     entries.forEach(function (e) { counts[statusOf(e, current)]++; });
@@ -144,13 +152,10 @@
       '<span><i class="dot yellow"></i>年级不匹配</span>' +
       '<span><i class="dot red"></i>待开发</span></div>';
 
-    // 按领域分组
-    var order = KnowledgeBank.categoryOrder || ['number', 'geometry', 'statistics'];
-    var names = KnowledgeBank.categoryNames || {};
-    order.forEach(function (cat) {
-      var list = entries.filter(function (e) { return e.category === cat; });
-      if (!list.length) return;
-      html += '<div class="cat">' + (names[cat] || cat) + '（' +
+    // 按模块分组展示
+    byModule.forEach(function (mod) {
+      var list = mod.kps;
+      html += '<div class="cat">' + mod.moduleId + '（' +
         list.filter(function (e) { return statusOf(e, current) === 'green'; }).length + '/' + list.length + '）</div>';
       html += '<div class="grid">';
       list.forEach(function (e) {
@@ -158,11 +163,10 @@
         var label = st === 'green' ? '已覆盖' : (st === 'yellow' ? '年级不匹配' : '待开发');
         var pluginName = (regById[e.pluginId] && regById[e.pluginId].name) || e.pluginId;
         html += '<div class="card">' +
-          (typeof e.importance === 'number' ? '<span class="imp">权重 ' + e.importance + '</span>' : '') +
+          (typeof e.weight === 'number' ? '<span class="imp">权重 ' + e.weight + '</span>' : '') +
           '<div class="name">' + e.name + '</div>' +
           '<div class="plugin">插件：' + pluginName + '</div>' +
           '<span class="tag ' + st + '">' + label + '</span>' +
-          (e.points && e.points.length ? '<div class="pts">细分：' + e.points.join('、') + '</div>' : '') +
           '</div>';
       });
       html += '</div>';

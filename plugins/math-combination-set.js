@@ -199,6 +199,7 @@
   // ============ ExercisePlugin ============
   var mathCombinationSetPlugin = {
     id: 'math-combination-set',
+    moduleId: 'M10',
     name: '搭配与集合',
     grades: [3],
     subject: 'math',

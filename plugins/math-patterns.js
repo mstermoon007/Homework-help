@@ -121,6 +121,7 @@
   // ============ 用工厂创建插件 ============
   var plugin = _PU.createPlugin({
     id: 'math-patterns',
+    moduleId: 'M4',
     name: '找规律',
     grades: [1],
     subject: 'math',

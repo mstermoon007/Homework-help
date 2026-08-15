@@ -41,18 +41,22 @@
   function MathOralAgent(options) {
     options = options || {};
     var cfg = GRADE_CONFIG[options.grade] || GRADE_CONFIG[1];
-    // 难度（1-10）→ 最大值缩放：level 3 用基准，更高难度数值增大
-    var baseMax = options.maxNum != null ? options.maxNum : cfg.defaultMax;
+    // 难度（1-10）→ 最大值缩放：level 3 用基准，更高难度数值增大。
+    // 显式传入 maxNum（如口算面板「难度＝最大数」用户自行填充）时即填即得，不再被难度缩放放大。
     var diff = _PU.diffLevel(options.difficulty);
     this.grade      = options.grade;
     this.difficulty = diff;
-    this.maxNum     = Math.round(baseMax * _PU.diffScale(diff));
+    this.maxNum     = options.maxNum != null
+      ? Math.round(options.maxNum)
+      : Math.round(cfg.defaultMax * _PU.diffScale(diff));
     this.count      = options.count  != null ? options.count  : cfg.defaultCount;
     this.noNegative = options.noNegative !== false;
     // 二年级：默认表内乘除法（乘法口诀表范围内，÷ 必整除）；
     // 开启 remainder 后生成有余数除法（商……余数 两个输入框）
     this.remainder  = options.remainder === true && this.grade >= 2;
     this.operators  = options.operators || (cfg.allowMulDiv ? ['+', '-', '×', '÷'] : ['+', '-']);
+    // 通用题型模式（连加 / 连减 / 进退位加减），由 _generateOne 分支处理
+    this.type       = options.type || null;
     // 混合运算：一个算式含两级运算（如 3×4+5），二年级可选
     this.mixed      = options.mixed === true && this.grade >= 2;
     this._factor    = cfg.factor;
@@ -124,6 +128,66 @@
     total = op2 === '+' ? part + c : part - c;
     if (total < 0) return this._generateMixed();
     return { text: expr + ' =', answer: total };
+  };
+
+  // 连加：三个加数连续相加，和不超过 maxNum
+  MathOralAgent.prototype._generateAddChain = function () {
+    var min = this.operandMin;
+    var maxNum = this.maxNum;
+    var a = this._randInt(min, Math.max(min, maxNum - 2 * min));
+    var b = this._randInt(min, Math.max(min, maxNum - min - a));
+    var c = this._randInt(min, Math.max(min, maxNum - a - b));
+    var answer = a + b + c;
+    return { text: a + ' + ' + b + ' + ' + c + ' =', answer: answer };
+  };
+
+  // 连减：三个数连续相减，差为正（≥2）
+  MathOralAgent.prototype._generateSubChain = function () {
+    var min = this.operandMin;
+    var maxNum = this.maxNum;
+    var a = this._randInt(Math.max(min + 2, 2 * min + 2), maxNum);
+    var maxB = Math.max(min, a - min - 2);
+    var b = this._randInt(min, maxB);
+    var maxC = Math.max(min, a - b - 2);
+    var c = this._randInt(min, maxC);
+    var answer = a - b - c;
+    return { text: a + ' − ' + b + ' − ' + c + ' =', answer: answer };
+  };
+
+  // 进退位加减：一年级为 20 以内进位加法 / 退位减法；
+  // 二年级起且 maxNum ≥ 38 时生成两位数进退位，否则回退 20 以内（保证范围恒有效）
+  MathOralAgent.prototype._generateCarry = function () {
+    var op = this._pick(['+', '-']);
+    if (this.grade >= 2 && this.maxNum >= 38) {
+      if (op === '+') {
+        // 两位数进位加法：个位和 ≥ 10，结果 ≤ maxNum
+        // aT 上界保证 a2 ≤ maxNum-19，使 b2 至少可取到十位数（bT ≥ 1 且总和不越界）
+        var aT = this._randInt(1, Math.floor((this.maxNum - 28) / 10));
+        var aO = this._randInt(1, 9);
+        var a2 = aT * 10 + aO;
+        var bO = this._randInt(Math.max(10 - aO, 1), 9);
+        var bT = this._randInt(1, Math.floor((this.maxNum - a2 - bO) / 10));
+        var b2 = bT * 10 + bO;
+        return { text: a2 + ' + ' + b2 + ' =', answer: a2 + b2 };
+      }
+      // 两位数退位减法：被减数各位小于减数各位（需借位），差为正，被减数 ≤ maxNum
+      var aT2 = this._randInt(2, Math.floor((this.maxNum - 8) / 10));
+      var aO2 = this._randInt(1, 8);
+      var a3 = aT2 * 10 + aO2;
+      var bO2 = this._randInt(aO2 + 1, 9);
+      var bT2 = this._randInt(1, aT2 - 1);
+      var b3 = bT2 * 10 + bO2;
+      return { text: a3 + ' − ' + b3 + ' =', answer: a3 - b3 };
+    }
+    // 一年级 / 小范围：20 以内进位加 / 退位减（一位数）
+    if (op === '+') {
+      var a = this._randInt(2, 9);
+      var b = this._randInt(Math.max(10 - a, 2), 9);
+      return { text: a + ' + ' + b + ' =', answer: a + b };
+    }
+    var t = this._randInt(11, 18);          // 个位 1~8，保证有可借的减数
+    var b = this._randInt((t % 10) + 1, 9);
+    return { text: t + ' − ' + b + ' =', answer: t - b };
   };
 
   // ---- 三年级专项：多位数乘一位数 ----
@@ -224,6 +288,11 @@
     // 混合运算模式：整卷都用混合运算
     if (this.mixed) return this._generateMixed();
 
+    // 通用题型模式：连加 / 连减 / 进退位加减
+    if (this.type === 'addchain') return this._generateAddChain();
+    if (this.type === 'subchain') return this._generateSubChain();
+    if (this.type === 'carry') return this._generateCarry();
+
     // ===== 三年级专项题型（subType）=====
     if (this.subType) {
       switch (this.subType) {
@@ -284,7 +353,8 @@
         b = this._randInt(min, maxNum);
         if (this.noNegative) {
           if (b > a) { var t = a; a = b; b = t; }
-          if (a === b) a = this._randInt(Math.max(b + 1, min + 1), maxNum);
+          // a、b 相等时重掷使 a > b；b 已是最大值时保持 0 差（避免范围无效产生 NaN）
+          if (a === b && b < maxNum) a = this._randInt(Math.max(b + 1, min + 1), maxNum);
         }
         answer = a - b;
         text = a + ' \u2212 ' + b + ' =';
@@ -338,11 +408,19 @@
     }
 
     var shuffled = this._shuffle(questions);
-    var opStr = this.operators.map(function (o) { return OP_NAMES[o]; }).join('\u3001');
+    var opStr = (this.operators || []).map(function (o) { return OP_NAMES[o]; }).join('\u3001');
     var hasRemainder = shuffled.some(function (q) { return q.multi; });
-    var title = this.subType
-      ? ((SUB_TYPE_NAMES[this.subType] || '三年级') + '口算练习题' + (hasRemainder ? '（含有余数除法）' : ''))
-      : (this.maxNum + '以内' + (this.mixed ? '混合运算' : opStr) + '口算练习题' + (hasRemainder ? '（含有余数除法）' : ''));
+    var TYPE_TITLES = { addchain: '连加', subchain: '连减', carry: '进退位加减' };
+    var title;
+    if (this.subType) {
+      title = ((SUB_TYPE_NAMES[this.subType] || '三年级') + '口算练习题' + (hasRemainder ? '（含有余数除法）' : ''));
+    } else if (this.type && TYPE_TITLES[this.type]) {
+      // 一年级进退位为 20 以内，其余类型按 maxNum 标注范围
+      var tName = TYPE_TITLES[this.type];
+      title = ((this.type === 'carry' && this.grade < 2) ? '20以内' : this.maxNum + '以内') + tName + '口算练习题';
+    } else {
+      title = (this.maxNum + '以内' + (this.mixed ? '混合运算' : opStr) + '口算练习题' + (hasRemainder ? '（含有余数除法）' : ''));
+    }
 
     return {
       questions: shuffled,
@@ -381,30 +459,40 @@
   /** @type {ExercisePlugin} */
   var mathOralPlugin = {
     id: 'math-oral',
-    name: '表内乘除法口算',
+    moduleId: 'M1',
+    name: '口算练习',
+    pageTitle: '口算练习专项',
+    pageSubtitle: '50以内加减法计算',
     grades: [1, 2, 3],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
 
     // 设置面板元数据（practice.html 据此动态生成控件）
-settings: [
+    //  - type：六个题型（混合/加法/减法/连加/连减/进退位加减）
+    //  - maxNum：难度＝最大数取值，用户自行填写（默认 50）
+    settings: [
       {
         key: 'type',
-        label: '运算类型',
+        label: '题型',
         default: 'mix',
         options: [
-          { value: 'mix',    label: '混合' },
-          { value: 'addsub', label: '加减法' },
-          { value: 'muldiv', label: '乘除法' },
-          { value: 'remainder', label: '有余数除法' },
-          { value: 'mixed', label: '混合运算' },
-          { value: 'multi1', label: '多位数乘一位数' },
-          { value: 'twodigit', label: '两位数乘两位数' },
-          { value: 'div1', label: '除数是一位数的除法' },
-          { value: 'fraction', label: '同分母分数加减' },
-          { value: 'decimal', label: '一位小数加减' }
+          { value: 'mix',      label: '混合' },
+          { value: 'add',      label: '加法' },
+          { value: 'sub',      label: '减法' },
+          { value: 'addchain', label: '连加' },
+          { value: 'subchain', label: '连减' },
+          { value: 'carry',    label: '进退位加减' }
         ]
+      },
+      {
+        key: 'maxNum',
+        label: '难度（最大数）',
+        type: 'number',
+        default: 50,
+        min: 10,
+        max: 100,
+        hint: '如 50 = 50 以内'
       }
     ],
 
@@ -424,11 +512,17 @@ settings: [
         subType = 'md'; // 三年级「乘除法」＝多位数乘一位数/两位数乘两位数/除数是一位数
       }
       if (!operators && opts.type) {
-        // 有余数除法/混合运行为二年级特性，一年级不可用
-        if (opts.type === 'addsub') operators = ['+', '-'];
+        // 六个题型：混合（年级默认）/ 加法 / 减法 / 连加 / 连减 / 进退位加减
+        // 连加/连减/进退位走 agent 的 type 分支，不设置 operators
+        if (opts.type === 'add') operators = ['+'];
+        else if (opts.type === 'sub') operators = ['-'];
+        else if (opts.type === 'addsub') operators = ['+', '-'];
         else if (opts.type === 'muldiv') { if (grade < 3) operators = ['×', '÷']; }
         else if (opts.type === 'remainder') { operators = grade >= 2 ? ['÷'] : null; remainder = grade >= 2; }
         else if (opts.type === 'mixed') { operators = grade >= 2 ? ['+', '-', '×', '÷'] : null; mixed = grade >= 2; }
+        else if (opts.type === 'addchain' || opts.type === 'subchain' || opts.type === 'carry') {
+          operators = null;
+        }
         else operators = null; // mix → 使用年级默认
       }
       var agent = new MathOralAgent({
@@ -436,6 +530,7 @@ settings: [
         maxNum: opts.maxNum,
         count: opts.count || 10,
         operators: operators,
+        type: opts.type,
         subType: subType,
         noNegative: opts.noNegative,
         exactDiv: opts.exactDiv,
@@ -453,7 +548,20 @@ settings: [
           inputType: isRem ? 'multi' : 'text',
           inputCount: isRem ? 2 : 1,
           answerParts: isRem ? [q.answer.q + '……' + q.answer.r] : undefined,
-          hint: isRem ? '前框填商，后框填余数' : undefined
+          hint: isRem ? '前框填商，后框填余数' : undefined,
+          render: function (idx, ctx) {
+            return _PU.renderCard(this, idx, (ctx && ctx.renderOpts) || {});
+          },
+          check: function (userAnswers, idx) {
+            var ua = userAnswers || {};
+            if (this.inputType === 'multi' && this.answer && typeof this.answer === 'object') {
+              var vq = ua[idx + ':0'], vr = ua[idx + ':1'];
+              return String(vq == null ? '' : vq).trim() === String(this.answer.q) &&
+                     String(vr == null ? '' : vr).trim() === String(this.answer.r);
+            }
+            var v = ua[idx];
+            return String(v == null ? '' : v).trim() === String(this.answer);
+          }
         };
       });
       return { questions: questions, meta: result.meta };

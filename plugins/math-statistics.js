@@ -220,6 +220,7 @@
   // ============ ExercisePlugin ============
   var mathStatisticsPlugin = {
     id: 'math-statistics',
+    moduleId: 'M9',
     name: '分类与统计',
     grades: [1],
     subject: 'math',

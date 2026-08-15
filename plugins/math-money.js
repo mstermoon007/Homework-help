@@ -210,6 +210,7 @@
   // ============ ExercisePlugin ============
   var mathMoneyPlugin = {
     id: 'math-money',
+    moduleId: 'M4',
     name: '认识人民币',
     grades: [1],
     subject: 'math',

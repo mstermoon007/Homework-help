@@ -59,6 +59,13 @@
         font-size: 1.3rem;
         color: #fff;
     }
+    .top-nav .nav-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        display: block;
+    }
 
     /* ============ 主视觉区 ============ */
     .hero {
@@ -205,6 +212,13 @@
         font-size: 2.4rem;
         margin-bottom: 8px;
         line-height: 1;
+    }
+    .subject-card .s-icon img {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
     }
     .subject-card .s-name {
         font-size: 1.1rem;
@@ -375,7 +389,7 @@
 <!-- 顶部导航栏 -->
 <nav class="top-nav">
     <div class="nav-brand">
-        <div class="nav-logo">📓</div>
+        <div class="nav-logo"><img src="assets/logo.png" alt="小学练习本"></div>
         <span>小学练习本</span>
     </div>
 </nav>
@@ -411,19 +425,19 @@
                     <div class="subject-grid">
                         <input type="radio" name="subject" id="sMath" class="subject-radio" value="math" checked>
                         <label for="sMath" class="subject-card math">
-                            <span class="s-icon">🧮</span>
+                            <span class="s-icon"><img src="assets/logo-math.png" alt="数学"></span>
                             <span class="s-name">数学</span>
                             <span class="s-desc">口算·应用题·凑十法</span>
                         </label>
                         <input type="radio" name="subject" id="sChinese" class="subject-radio" value="chinese">
                         <label for="sChinese" class="subject-card chinese">
-                            <span class="s-icon">📖</span>
+                            <span class="s-icon"><img src="assets/logo-chinese.png" alt="语文"></span>
                             <span class="s-name">语文</span>
                             <span class="s-desc">拼音·字词练习</span>
                         </label>
                         <input type="radio" name="subject" id="sEnglish" class="subject-radio" value="english">
                         <label for="sEnglish" class="subject-card english">
-                            <span class="s-icon">🔤</span>
+                            <span class="s-icon"><img src="assets/logo-english.png" alt="英语"></span>
                             <span class="s-name">英语</span>
                             <span class="s-desc">字母·单词·启蒙</span>
                         </label>
