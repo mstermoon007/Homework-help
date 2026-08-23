@@ -6,6 +6,8 @@
 
 | 文件 | 内容 |
 |------|------|
+| [CONTRIBUTING.md](CONTRIBUTING.md) | 贡献指南入口（权威版本在仓库根目录）+ 核心规范章节导航 |
+| [API.md](API.md) | PluginUtil / App 工具 API 速查（随机数、难度系统、renderCard、createPlugin） |
 | [knowledge-base.md](knowledge-base.md) | 数学知识库结构、插件↔知识点映射、高年级扩展方式与 AI 生成检查清单 |
 | [seo-monitoring.md](seo-monitoring.md) | 机器可见性与 AI 引用监测配置、本地验证命令、Search Console 提交清单 |
 

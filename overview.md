@@ -108,3 +108,23 @@
 4. **docs/ 和页面**：index.html、math-types.html、subject-types.html 等页面更新
 5. **sw.js**：升版本号 + 补充 CORE
 6. **清理**：删除 .DS_Store、移除死代码文件
+
+---
+
+## 五、开发规范速查（详情见根目录 CONTRIBUTING.md）
+
+**随机数**：运行时禁止直接 `Math.random()`；整数用 `PluginUtil.randInt(min, max)`（crypto 优先），
+乱序用 `shuffle(arr)`，取元素用 `rand(arr)`；禁止 `sort(() => Math.random()-0.5)` 偏偏差洗牌。
+
+**样式令牌**：颜色/圆角/阴影/渐变一律用 `shared/tokens.css` 变量（`--brand/--ink/--muted/--line/
+--math/--chinese/--english/--ok/--bad` 等）；插件优先 `renderCard()` + 类名，内联样式必须写
+`var(--xxx)`；SVG 表现属性（fill/stroke）不支持 var()，保留字面量。
+
+**知识库同步**：插件声明 `knowledgePoints` 必须在 `knowledge-bank.js` 有对应年级条目，
+反向 pluginId 必须已注册；ID 三段式 `g{grade}-{module}-{slug}`；
+slug 字典已归档（`archive/dead-code-20260823/`），无需登记。违规由
+`dev/verify-knowledge-bank.js` 第 8 条非零退出拦截。
+
+**提交门禁**：pre-commit 钩子自动跑 `npm test`（verify-setup + verify-knowledge-bank +
+regression-check）；启用方式 `git config core.hooksPath scripts/githooks`；
+CI（`.github/workflows/ci.yml`）在 push/PR 重跑同一门禁，重复率报告非阻断。
