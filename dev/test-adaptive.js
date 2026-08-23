@@ -107,11 +107,10 @@ function simulate(tag, base, perSessionC, total, extraLastPerfect) {
 console.log('\n===== 知识点粒度门控 =====');
 (function () {
   A.reset();
-  // 非综合/竞赛插件：kpid 被忽略
+  // 步骤5 起：任意插件提供 kpid 即建立 KP 桶（膨胀由 MAX_KEYS 保护）
   A.record('math', 6, 'math-g6-calc', 18, 20, { knowledgePointId: 'g6-m1-x' });
   var raw1 = JSON.parse(global.localStorage.getItem('hw_adaptive_v2'));
-  ok(!Object.keys(raw1).some(function (k) { return k.indexOf(':g6-m1-x') >= 0; }),
-    '普通插件不接受知识点级记录');
+  ok(!!raw1['math:6:math-g6-calc:g6-m1-x'], '普通插件提供 kpid 时 KP 桶正常建立');
   // 竞赛插件：kpid 生效，且与插件级摘要互不干扰
   A.record('math', 6, 'math-competition-g6-c2', 19, 20, { knowledgePointId: 'g6-c2-divisibility' });
   var raw2 = JSON.parse(global.localStorage.getItem('hw_adaptive_v2'));
