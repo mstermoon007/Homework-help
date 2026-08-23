@@ -35,6 +35,16 @@ check('dev/ 目录存在', fileExists('dev/'));
 check('shared/plugin-types.js 存在', fileExists('shared/plugin-types.js'));
 check('plugin-types.js 包含 ExercisePlugin 类型', fileContains('shared/plugin-types.js', 'ExercisePlugin'));
 
+// 2.5 难度系统模块（v2）
+check('shared/difficulty.js 存在', fileExists('shared/difficulty.js'));
+check('difficulty.js 挂载 App.Difficulty', fileContains('shared/difficulty.js', 'App.Difficulty'));
+check('difficulty.js 暴露 consume/createProfile/consumeProfile/difficultyToStructure',
+  ['consume', 'createProfile', 'consumeProfile', 'difficultyToStructure'].every(function (k) {
+    return fileContains('shared/difficulty.js', k);
+  }));
+check('common.js 集成 Adaptive v2（hw_adaptive_v2 + recordSession）',
+  fileContains('shared/common.js', 'hw_adaptive_v2') && fileContains('shared/common.js', 'recordSession'));
+
 // 3. 样板插件
 check('plugins/_template.js 存在', fileExists('plugins/_template.js'));
 check('_template.js 包含 plugin 对象', fileContains('plugins/_template.js', 'var plugin'));
