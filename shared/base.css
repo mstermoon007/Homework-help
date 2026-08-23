@@ -1,0 +1,16 @@
+/* ============ 基础重置（Layer 1 · base） ============
+ * 全局重置与极简布局工具。仅放「跨页面通用、无业务语义」的规则。
+ * 依赖：tokens（变量由 tokens 层提供，本层只设 reset 与容器）。
+ */
+@layer base {
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* 通用内容容器（题型选择页等使用，padding-top 为避开固定返回按钮） */
+  .wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 70px;
+  }
+}

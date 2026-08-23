@@ -1,0 +1,142 @@
+/* ============ 页面专属（Layer 4 · pages） ============
+ * 仅容纳「练习页(practice.html)专用、不被其他页面复用」的布局与必要覆写。
+ * 共享组件(题目卡片/按钮/题型卡片等)一律在 components 层；本层只做页面级布局与覆写。
+ * 依赖顺序：tokens → base → components → toolbar → pages（本层优先级最高，可安全覆写下层）。
+ *
+ * 注：旧版「语文练习页」样式(.cn-page/.question-item/.user-ans-input/.score-panel/.wrong-section/.mark-icon 等)
+ *     已由 renderCard 类化方案替代，属死代码，未搬入本层。当前仅保留综合练习仍在用的
+ *     .questions-grid / .q-wrap / .q-badge 容器类。
+ */
+@layer pages {
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(180deg, #eaf2ff 0%, #f3f7fb 220px, #f3f7fb 100%);
+    color: var(--ink); line-height: 1.6;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 16px 16px 60px; }
+
+  /* ===== 三级页面布局（practice.html）=====
+   * Layer 1: .quick-switch  顶部悬浮快速切换（fixed，见下方）
+   * Layer 2: .panel.controls 工具栏（题型/题量/难度 + 操作按钮，@layer toolbar）
+   * Layer 3: .exercise-content 正式内容区
+   *          ├─ .exercise-header  第一行：主题标题（年级+题型+题量）+ 计时器
+   *          └─ #problemsArea     第二行起：序号题目卡网格
+   */
+
+  /* 正式内容区容器 */
+  .exercise-content { margin-top: 8px; }
+
+  /* 第一行：主题标题 + 计时器 */
+  .exercise-header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 10px 4px 14px;
+  }
+  .exercise-header h1 { margin: 0; font-size: 24px; letter-spacing: 1px;
+    background: linear-gradient(90deg, #5b8def, #7c5cff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .exercise-header .timer { font-size: 15px; font-weight: 800; color: var(--brand-d); background: #eef3fb;
+    border-radius: 12px; padding: 8px 14px; font-variant-numeric: tabular-nums;
+    white-space: nowrap; flex-shrink: 0; }
+
+  /* 左上角快速切换（醒目、悬浮常驻） */
+  .quick-switch { position: fixed; top: 14px; left: 14px; z-index: 1200; }
+  .qs-btn { cursor: pointer; border: none; border-radius: 999px; padding: 9px 20px; font-size: 14px;
+    font-weight: 800; color: #fff; letter-spacing: .5px;
+    background: linear-gradient(120deg, #ffb347 0%, #ff8a5c 55%, #ff6b6b 100%);
+    box-shadow: 0 4px 14px rgba(255, 130, 90, .35); }
+  .qs-btn:hover { filter: brightness(1.07); }
+  .qs-btn:active { transform: scale(.97); }
+  .qs-menu { position: absolute; top: calc(100% + 8px); left: 0; width: 420px; max-width: 86vw;
+    background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: 0 14px 40px rgba(20, 40, 90, .2); padding: 12px 14px 14px; }
+  .qs-hd { font-size: 12px; color: var(--muted); margin: 10px 2px 6px; font-weight: 700; }
+  .qs-hd:first-child { margin-top: 2px; }
+  .qs-row { display: flex; flex-wrap: wrap; gap: 7px; }
+  .qs-link { flex: 1 1 100%; cursor: pointer; border: 1.5px solid #f0d3a8; background: #fff3e0;
+    color: #b06a10; border-radius: 10px; padding: 8px 12px; font-size: 13px; font-weight: 600;
+    text-align: center; text-decoration: none; transition: .15s; }
+  .qs-link:hover { border-color: #e39a3f; }
+  .qs-subj, .qs-grade { cursor: pointer; border: 1.5px solid #f0d3a8; background: #fff3e0;
+    color: #b06a10; border-radius: 10px; padding: 7px 12px; font-size: 13px; font-weight: 600;
+    text-decoration: none; transition: .15s; }
+  .qs-subj:hover, .qs-grade:hover { border-color: #e39a3f; }
+  .qs-subj.active, .qs-grade.active { background: #e8890c; border-color: #e8890c; color: #fff; }
+  @media (max-width: 760px) {
+    .exercise-header { padding-left: 108px; flex-wrap: wrap; }
+    .exercise-header .timer { order: -1; margin-left: auto; }
+  }
+
+  .sheet-title {
+    display: flex; align-items: baseline; justify-content: center;
+    gap: 10px; margin-bottom: 14px; padding: 4px 0;
+  }
+  .sheet-title .sheet-title-text {
+    font-size: 28px; font-weight: 900; letter-spacing: 2px; margin: 0;
+    background: linear-gradient(90deg, #4A90D9, #F5A623);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 2px 10px rgba(90,140,220,.18);
+  }
+  .meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 13px;
+    color: var(--muted); margin-bottom: 12px; }
+  .meta .pill { background: #eef3fb; color: var(--brand-d); border-radius: 999px; padding: 4px 12px; font-weight: 600; }
+  .meta .title-pill { background: #dcebfa; color: #2b5cbf; font-weight: 800; }
+
+  /* 题目区域 */
+  #problemsArea .empty { text-align: center; color: var(--muted); padding: 46px 10px; font-size: 14px; }
+  .q-grid { display: grid; gap: 14px; }
+  .q-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .q-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .q-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 640px) { .q-grid.cols-2, .q-grid.cols-3, .q-grid.cols-4 { grid-template-columns: 1fr; } }
+
+  /* 屏幕端：卡片/文字网格按 A4 竖版思路自适应（打印端由 JS 按题目长度设定列数） */
+  @media (max-width: 720px) {
+    #problemsArea .questions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  }
+  @media (max-width: 480px) {
+    #problemsArea .questions-grid { grid-template-columns: 1fr !important; }
+    #problemsArea .q-badge { position: static; display: inline-block; margin: 2px 0 6px; }
+  }
+
+  /* 练习页题目卡片覆写：强制左对齐（覆盖部分插件内联 text-align:center）+ 紧凑内边距 */
+  #problemsArea .questions-grid .question-card,
+  #problemsArea .q-grid .question-card { text-align: left !important; padding: 10px 12px !important; }
+  /* 批改反馈：空时不占高（基础字号/字重由 components 层 .question-card .feedback 提供） */
+  .question-card .feedback { min-height: 0; margin-top: 4px; }
+  .question-card .feedback:empty { display: none; }
+
+  .correct-answer { font-size: 12px; color: var(--bad); font-weight: 700; margin-top: 6px; }
+  /* 答案输入框状态（基础宽高在 components 层 .answer-inp） */
+  .answer-inp:focus { border-color: var(--brand); background: #fff; }
+  .answer-inp.correct { border-color: var(--ok); background: var(--ok-bg); }
+  .answer-inp.wrong   { border-color: var(--bad); background: var(--bad-bg); }
+
+  /* 结果面板 */
+  .result-panel { display: none; }
+  .result-panel.show { display: block; }
+  .result { background: linear-gradient(135deg, #eef4ff, #f6efff); border: 1px solid var(--line);
+    border-radius: 16px; padding: 20px; margin: 16px 0; text-align: center; box-shadow: var(--shadow); }
+  .result .score { font-size: 36px; font-weight: 800; color: var(--brand-d); }
+  .result .detail { font-size: 14px; color: var(--ink); margin-top: 6px; }
+  .result .tips { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .result .redo-wrap { margin-top: 14px; }
+
+  /* 错误提示 */
+  .notice { text-align: center; padding: 40px 10px; font-size: 15px; color: var(--muted); }
+
+  /* 综合练习：来源题型徽标容器（math-comprehensive 实时渲染） */
+  .questions-grid { display: grid; gap: 18px 25px; margin: 15px 0; }
+  .q-wrap { position: relative; display: flex; flex-direction: column; }
+  .q-badge {
+    position: absolute; top: 8px; right: 10px; z-index: 3;
+    font-size: 11px; color: #5a6b8c; background: #f0f4fb;
+    border: 1px solid #e0e7f3; border-radius: 10px; padding: 1px 9px;
+  }
+
+  /* 自定义数量/难度输入框占位符（原 practice.html body 内联 style 迁移） */
+  #customCount::placeholder, #difficultyInput::placeholder { color: #b0b8c6; font-weight: 400; font-size: 12px; }
+
+  .notice .big { font-size: 18px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 12px; }
+
+} /* /@layer pages */

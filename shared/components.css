@@ -1,20 +1,11 @@
-/* ============ 共享基础样式 ============ */
-:root {
-  --bg: #f3f7fb;
-  --card: #ffffff;
-  --ink: #27324a;
-  --muted: #7a879c;
-  --line: #e3e9f2;
-  --brand: #5b8def;
-  --brand-d: #3f6fd1;
-  --ok: #22a06b;
-  --ok-bg: #e7f7ee;
-  --bad: #e0556b;
-  --bad-bg: #fdeef0;
-  --warn: #e6a23c;
-  --shadow: 0 8px 24px rgba(40,70,120,.10);
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ============ 共享组件（Layer 2 · components） ============
+ * 跨页面可复用的 UI 原子/组件：返回按钮、页头、卡片、按钮、题型卡片、题目卡片(renderCard)、
+ * 页面控制器、四线格等。所有视觉原子属性引用 shared/tokens.css 的变量。
+ * 依赖：tokens（变量） → base（reset）。
+ * 注意：题目卡片(.question-card 家族)由 PluginUtil.renderCard 类化输出，样式统一在此维护，
+ *       插件自定义卡片请复用这些类，不要内联重复样式。
+ */
+@layer components {
 
 /* 返回按钮（固定在左上角，淡蓝透明玻璃效果） */
 .back-home {
@@ -45,49 +36,58 @@
     color: #1f4c9f;
 }
 
-/* 年级标签 */
-.grade-badge {
-    display: inline-block;
-    margin-left: 10px;
-    padding: 4px 14px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    vertical-align: middle;
-}
-.grade-badge.block {
-    display: block;
-    margin: 10px auto 0;
-    width: fit-content;
+/* 年级文字（纯文字，无胶囊/背景，字号与科目一致 2.0rem） */
+.page-title .pt-grade {
+    font-size: 2.0rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    opacity: 0.9;
 }
 
-/* 页面头部 */
+/* 二级页面主标题统一标准：logo + 年级 + 科目，左右/上下居中，大小协调。
+   用法：<div class="page-header"><div class="page-title">
+          <span class="pt-logo"><img src="assets/logo-*.png" alt="科目"></span>
+          <span class="pt-grade" id="gradeBadge">一年级</span>
+          <h1 class="pt-subject">数学</h1></div>
+        <p>副标题（可选）</p></div>
+   logo 高度随 --header-title-size 协调缩放；年级与科目均为纯文字、大小递减、三者 flex 垂直居中。 */
 .page-header {
-    --header-title-size: 2.2rem;
+    --header-title-size: 2.0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;       /* 左右居中 */
+    justify-content: center;   /* 上下居中 */
+    gap: 8px;
     text-align: center;
     color: #fff;
     margin-bottom: 20px;
 }
-.page-header h1 {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: var(--header-title-size);
+.page-title {
+    display: flex;
+    align-items: center;       /* 上下居中：logo / 年级 / 科目 垂直对齐 */
+    justify-content: center;   /* 左右居中 */
+    gap: 14px;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
-.page-header p { font-size: 1rem; opacity: 0.95; }
-.page-header .logo {
+.page-title .pt-logo {
     display: inline-flex;
     align-items: center;
-    vertical-align: middle;
-    margin-right: 10px;
 }
-.page-header .logo img {
-    height: calc(var(--header-title-size) * 2);
+/* logo 高度随标题字号协调缩放（约 1.7 倍），保证图文大小比例一致 */
+.page-title .pt-logo img {
+    height: calc(var(--header-title-size) * 1.7);
     width: auto;
     object-fit: contain;
     display: block;
 }
+.page-title .pt-subject {
+    margin: 0;
+    font-size: var(--header-title-size);
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 1.15;
+}
+.page-header p { margin: 0; font-size: 1rem; opacity: 0.95; }
 
 /* 卡片：淡蓝透明玻璃效果 */
 .card {
@@ -295,15 +295,6 @@
     font-size: 0.9rem;
 }
 
-/* 包装器：内容整体居中 */
-.wrapper {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    padding-top: 70px;
-}
-
 /* ============ 页面控制器 ============ */
 .page-controller {
     position: fixed;
@@ -424,6 +415,131 @@
     min-width: 50px;
 }
 
+/* ============ 题目卡片（PluginUtil.renderCard 类化输出，勿删——插件渲染依赖） ============
+ * renderCard 只输出 class，样式统一在此维护。 */
+.question-card {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 16px;
+    position: relative;
+    text-align: left;
+    background: var(--card);
+    box-shadow: 0 8px 24px rgba(40,70,120,.08);
+    align-self: start;
+    justify-self: start;
+}
+.question-card .q-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    margin: 2px 0 6px;
+}
+.question-card .num {
+    flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    vertical-align: middle; flex-shrink: 0;
+    background: #eef3fb; color: var(--brand-d);
+    font-weight: 800; font-size: 12px;
+}
+.question-card .q-text {
+    display: inline;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--ink);
+    vertical-align: middle;
+}
+.question-card .badge {
+    position: absolute; right: 10px; top: 10px;
+    font-size: 11px; font-weight: 700; padding: 2px 9px;
+    border-radius: 999px; background: #eef3fb; color: var(--brand);
+}
+.question-card .scene-box {
+    display: flex; align-items: center; justify-content: flex-start;
+    gap: 16px; padding: 10px 12px; background: #f8fafd;
+    border-radius: 10px; margin: 6px 0; flex-wrap: wrap;
+}
+/* 共享 SVG 生成器（svg-core/svg-geometry/svg-calculation/svg-make-ten）输出：
+   带 viewBox 的完整 <svg>。窄屏等比收缩、打印按容器宽度缩放。 */
+.question-card .scene-box svg {
+    max-width: 100%; height: auto;
+}
+.question-card .q-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.question-card .options {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: flex-start; margin-top: 6px;
+}
+.question-card .opt {
+    cursor: pointer;
+    border: 1.5px solid var(--line);
+    background: #fff; color: var(--ink);
+    border-radius: 10px; padding: 10px 18px;
+    font-size: 16px; font-weight: 700;
+    transition: .15s;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.question-card .opt.chosen { border-color: var(--brand); background: var(--brand); color: #fff; }
+.question-card .input-group {
+    display: flex; align-items: center; justify-content: flex-start;
+    gap: 6px; flex-wrap: wrap;
+}
+.question-card .unit { font-size: 13px; color: var(--muted); font-weight: 600; }
+/* 第二行：算式留白 + 答案输入，整体左对齐 */
+.question-card .qa-row {
+    display: flex; align-items: center; justify-content: flex-start;
+    gap: 6px; flex-wrap: wrap; margin: 6px 0;
+}
+.question-card .qa-label { font-size: 12px; font-weight: 700; color: var(--muted); }
+.question-card .formula-inp {
+    width: 120px; height: 32px;
+    border: 2px dashed #ccc; border-radius: 7px;
+    font-size: 15px; font-weight: 700; text-align: center;
+    color: var(--brand-d); background: #fafafa; outline: none;
+}
+/* 答案输入框：默认宽 96px；调用方传 opts.inputWidth 时由内联 style 覆盖 */
+.answer-inp {
+    width: 96px; height: 32px;
+    border: 2px dashed #ccc; border-radius: 7px;
+    font-size: 15px; font-weight: 700; text-align: center;
+    color: var(--brand-d); background: #fafafa; outline: none;
+}
+.question-card .feedback { font-size: 12px; font-weight: 700; min-height: 16px; margin-top: 6px; }
+
+/* 题目卡片批改态（正确/错误） */
+.question-card.correct { border-color: var(--ok); background: var(--ok-bg); }
+.question-card.wrong   { border-color: var(--bad); background: var(--bad-bg); }
+
+/* ============ 竞赛题面图形（走 renderCard 的 q.svg 槽位，渲染进 .scene-box） ============
+ * C1 数字谜与数阵图使用：竖式(.vert-eq) / 横式与符号式(.puzzle-expr) /
+ * 数阵图(.array-lines) / 幻方(.magic-tbl)。插件只输出 class，样式在此维护。 */
+.vert-eq {
+    display: inline-block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 20px; font-weight: 800; color: var(--ink);
+    line-height: 1.3; letter-spacing: 3px;
+}
+.vert-eq .ve-row { text-align: right; }
+.vert-eq .ve-op { display: inline-block; width: 1.1em; text-align: left; letter-spacing: 0; }
+.vert-eq .ve-rule { border-top: 2px solid var(--ink); margin: 4px 0; }
+
+.puzzle-expr {
+    font-size: 19px; font-weight: 800; color: var(--ink);
+    line-height: 1.55; letter-spacing: 1px; text-align: left;
+}
+
+.array-lines { font-size: 16px; font-weight: 700; color: var(--ink); text-align: left; }
+.array-lines .al-row { line-height: 1.7; }
+.array-lines .al-blank { color: var(--bad); font-weight: 800; }
+
+.magic-tbl { border-collapse: collapse; }
+.magic-tbl td {
+    width: 40px; height: 40px; text-align: center;
+    border: 1.5px solid var(--line); background: #fff;
+    font-size: 18px; font-weight: 800; color: var(--ink);
+}
+.magic-tbl td.mg-blank { color: var(--bad); background: var(--bad-bg); }
+
 /* 响应式 */
 @media (max-width: 1200px) {
     .type-grid { grid-template-columns: repeat(4, 1fr); }
@@ -442,180 +558,12 @@
     .page-header { --header-title-size: 1.7rem; }
 }
 
-/* ============ 语文练习共享样式 ============ */
+} /* /@layer components */
 
-/* 页面背景 */
-.cn-page {
-    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    min-height: 100vh;
-    padding: 20px;
-    position: relative;
-    overflow-x: hidden;
-}
-.cn-page::before, .cn-page::after {
-    content: '';
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.25;
-    pointer-events: none;
-    z-index: 0;
-}
-.cn-page::before { width: 320px; height: 320px; background: #ffd166; top: -100px; right: -70px; }
-.cn-page::after  { width: 280px; height: 280px; background: #6ec5ff; bottom: -90px; left: -60px; }
-.cn-page .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
-
-/* 页面头部 */
-.cn-page .header { text-align: center; color: #fff; margin-bottom: 20px; }
-.cn-page .header h1 { font-size: 2.2rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,.2); }
-.cn-page .header p { font-size: 1rem; opacity: .95; max-width: 800px; margin: 0 auto; line-height: 1.8; }
-
-/* 题目卡片 */
-.questions-card {
-    background: rgba(255,255,255,.98);
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 16px 45px rgba(0,0,0,.14);
-    display: none;
-    max-width: 210mm;
-    width: 100%;
-    margin: 0 auto;
-    box-sizing: border-box;
-    border: 1px solid rgba(245,87,108,.12);
-}
-.questions-card.show { display: block; }
-.sheet-title { text-align: center; margin-bottom: 25px; }
-.sheet-title h2 { font-size: 1.8rem; color: #333; margin-bottom: 10px; }
-.sheet-title .info-line {
-    display: flex; justify-content: center; gap: 25px;
-    color: #666; font-size: .95rem; flex-wrap: wrap;
-}
-
-/* 题目网格 */
-.questions-grid { display: grid; gap: 18px 25px; margin: 15px 0; }
-
-/* 综合练习：来源题型徽标 */
-.q-wrap { position: relative; display: flex; flex-direction: column; }
-.q-badge {
-    position: absolute; top: 8px; right: 10px; z-index: 3;
-    font-size: 11px; color: #5a6b8c; background: #f0f4fb;
-    border: 1px solid #e0e7f3; border-radius: 10px; padding: 1px 9px;
-}
-
-/* 题目项 */
-.question-item {
-    font-size: 1.1rem; padding: 12px;
-    border: 1px solid #f0e7ff; border-radius: 16px;
-    line-height: 1.6; transition: all .2s;
-    background: linear-gradient(135deg, #fff 0%, #fdf7ff 100%);
-    box-shadow: 0 6px 16px rgba(0,0,0,.05);
-    display: flex; flex-direction: column; gap: 10px;
-}
-.question-item.correct { background: rgba(56,239,125,.1); border: 1px solid #38ef7d; }
-.question-item.wrong   { background: rgba(235,51,73,.08); border: 1px solid #eb3349; }
-.question-item .num {
-    display: inline-block; min-width: 28px;
-    color: #888; font-size: .95rem; font-weight: 600;
-}
-
-/* 题目可视化区域 */
-.question-visual {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    min-height: 110px; padding: 16px 14px; border-radius: 14px;
-    background: linear-gradient(135deg, #fef3ff 0%, #eef7ff 100%);
-    border: 1px solid #f2d6ff; text-align: center;
-}
-.question-content { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
-.question-input-wrap { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
-
-/* 字体 */
-.hanzi { font-size: 1.2rem; font-family: "KaiTi","STKaiti","楷体",serif; letter-spacing: 2px; }
-.pinyin-text { font-family: "Times New Roman","SimSun",serif; font-size: 1.15rem; color: #d63031; letter-spacing: 1px; }
-
-/* 输入框 */
-.user-ans-input {
-    padding: 3px 8px; border: 1.5px solid #bbb; border-radius: 5px;
-    font-size: 1rem; font-family: inherit; text-align: center;
-    width: 110px; transition: all .2s; margin: 0 3px;
-}
-.user-ans-input.small { width: 60px; }
-.user-ans-input.wide  { width: 140px; }
-.user-ans-input:focus {
-    outline: none; border-color: #f5576c;
-    box-shadow: 0 0 0 3px rgba(245,87,108,.12);
-}
-.question-item.correct .user-ans-input { border-color: #10ac84; background: #e8fff3; color: #10ac84; }
-.question-item.wrong .user-ans-input   { border-color: #ee5253; background: #fff0ef; color: #ee5253; }
-
-/* 混合填空 */
-.mixed-blank {
-    display: inline-block; min-width: 50px;
-    border-bottom: 2px dashed #f5576c; margin: 0 4px;
-    padding: 2px 4px; color: #f5576c; font-weight: 600;
-}
-.mixed-hint { font-size: .8rem; color: #888; display: block; margin-top: 2px; }
-
-/* 打分标记 */
-.mark-icon { font-size: 1rem; font-weight: 800; display: inline-block; margin-left: 4px; }
-.mark-icon.ok  { color: #10ac84; }
-.mark-icon.bad { color: #ee5253; }
-.correct-answer {
-    font-size: .85rem; color: #10ac84; font-weight: 600;
-    background: #e8fff3; padding: 2px 7px; border-radius: 4px; margin-left: 4px;
-}
-
-/* 评分面板 */
-.score-panel {
-    display: none;
-    background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
-    border-radius: 18px; padding: 22px 28px; margin: 0 0 25px 0;
-    border: 2px solid #ffd27a;
-    box-shadow: 0 10px 26px rgba(255,193,7,.18);
-}
-.score-panel.show { display: block; }
-.score-top {
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 15px; margin-bottom: 16px;
-}
-.score-big {
-    font-size: 2.4rem; font-weight: 800;
-    background: linear-gradient(135deg, #f7971e, #eb3349);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.score-big.excellent { background: linear-gradient(135deg,#11998e,#38ef7d); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-.score-big.good      { background: linear-gradient(135deg,#4facfe,#00c6fb); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-.score-big.pass      { background: linear-gradient(135deg,#f7971e,#ffd200); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-.score-big.fail      { background: linear-gradient(135deg,#eb3349,#f45c43); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-.score-detail { display: flex; gap: 25px; flex-wrap: wrap; color: #555; font-size: .95rem; }
-.score-detail .item span:first-child { font-weight: 600; color: #333; margin-right: 6px; }
-.score-detail .ok    { color: #10ac84; font-weight: 700; }
-.score-detail .bad   { color: #ee5253; font-weight: 700; }
-.score-detail .total { color: #2e86de; font-weight: 700; }
-.score-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-
-/* 错题区 */
-.wrong-section {
-    display: none; margin-top: 30px; padding: 22px;
-    background: linear-gradient(135deg, #fff5f5, #fff);
-    border-radius: 12px; border: 2px solid #fecaca;
-}
-.wrong-section.show { display: block; }
-.wrong-section h3 { color: #eb3349; font-size: 1.2rem; margin-bottom: 15px; }
-.wrong-grid { display: grid; gap: 15px 25px; }
-
-/* 列数选择器 */
-.columns-select { display: flex; gap: 10px; flex-wrap: wrap; }
-.col-radio { display: none; }
-.col-label {
-    padding: 8px 16px; border: 2px solid #e0e0e0; border-radius: 8px;
-    cursor: pointer; font-weight: 500; transition: all .2s;
-}
-.col-radio:checked + .col-label { background: #f5576c; color: #fff; border-color: #f5576c; }
-
-/* 页脚 */
-.footer-note {
-    margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;
-    display: flex; justify-content: space-between; color: #666;
-    font-size: .9rem; flex-wrap: wrap; gap: 10px;
+/* 兼容性回退（修复 P3 7.1）：不支持 backdrop-filter 的浏览器（Firefox<103 / IE 等）
+   用更不透明的纯色背景兜底，保证卡片/面板文字清晰可读。 */
+@supports not (backdrop-filter: blur(12px)) {
+  .card, .type-card, .pc-item {
+    background: rgba(255, 255, 255, 0.92) !important;
+  }
 }

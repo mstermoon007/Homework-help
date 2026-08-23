@@ -2251,7 +2251,7 @@
             {
               id: "g4-c9-c9-integrated",
               name: "综合应用题",
-              pluginId: "math-competition-g4-c9",
+              pluginId: "math-competition-placeholder",
               weight: 3,
               type: "integrated",
               description: "综合多个知识点解决较复杂的应用题。",
@@ -2259,12 +2259,12 @@
               prerequisites: [],
               related: [],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g4-c9-c9-misc",
               name: "杂题选讲（统筹/操作）",
-              pluginId: "math-competition-g4-c9",
+              pluginId: "math-competition-placeholder",
               weight: 2,
               type: "misc",
               description: "统筹优化与操作类趣味题选讲。",
@@ -2272,12 +2272,12 @@
               prerequisites: [],
               related: [],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g4-c9-c9-mock",
               name: "模拟竞赛卷",
-              pluginId: "math-competition-g4-c9",
+              pluginId: "math-competition-placeholder",
               weight: 2,
               type: "mock",
               description: "按竞赛风格组卷进行模拟练习。",
@@ -2285,7 +2285,7 @@
               prerequisites: [],
               related: [],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             }
           ]
         }
@@ -3466,7 +3466,7 @@
             {
               id: "g5-c1-number-array-composite",
               name: "复合型数阵",
-              pluginId: "math-competition-g5-c1",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "array-composite",
               description: "综合封闭型与辐射型的复合数阵，多条件约束下填数求最优解。",
@@ -3474,7 +3474,7 @@
               prerequisites: ["g4-c1-c1-array"],
               related: ["g5-c1-number-array-closed","g5-c1-magic-square-3"],
               difficulty: 5,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c1-magic-square-3",
@@ -3523,7 +3523,7 @@
             {
               id: "g5-c2-parity-analysis",
               name: "奇偶分析",
-              pluginId: "math-competition-g5-c2",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "parity",
               description: "利用奇偶性（奇＋奇＝偶等）推理运算结果或锁定答案范围。",
@@ -3531,7 +3531,7 @@
               prerequisites: ["g4-c2-c2-parity"],
               related: ["g5-c2-remainder-congruence"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c2-prime-composite",
@@ -3562,7 +3562,7 @@
             {
               id: "g5-c2-factor-count-sum",
               name: "因数个数与因数和",
-              pluginId: "math-competition-g5-c2",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "factor-count",
               description: "由标准分解式求因数个数（指数＋1 连乘）与因数和公式。",
@@ -3570,7 +3570,7 @@
               prerequisites: ["g4-c2-c2-factor"],
               related: ["g5-c2-perfect-square","g5-c2-number-theory-extreme"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c2-gcd-lcm",
@@ -3601,7 +3601,7 @@
             {
               id: "g5-c2-place-value",
               name: "位值原理",
-              pluginId: "math-competition-g5-c2",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "place",
               description: "利用数字所在数位的值（位值）进行推理与代换。",
@@ -3609,7 +3609,7 @@
               prerequisites: ["g4-c2-c2-place"],
               related: ["g5-c1-digit-puzzle-symbol"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c2-perfect-square",
@@ -3627,7 +3627,7 @@
             {
               id: "g5-c2-number-theory-extreme",
               name: "数论最值",
-              pluginId: "math-competition-g5-c2",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "nt-extreme",
               description: "综合数论知识求最大 / 最小值（如因数个数、和一定积最大等）。",
@@ -3635,7 +3635,7 @@
               prerequisites: ["g4-c2-c2-factor"],
               related: ["g5-c2-perfect-square","g5-c9-diophantine-equation"],
               difficulty: 5,
-              status: "active"
+              status: "placeholder"
             }
           ]
         },
@@ -3710,7 +3710,7 @@
             {
               id: "g5-c3-bundling-method",
               name: "捆绑法",
-              pluginId: "math-competition-g5-c3",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "bundling",
               description: "要求某些元素相邻时，把它们看作一个整体（捆绑）再排列。",
@@ -3718,12 +3718,12 @@
               prerequisites: ["g4-c3-c3-perm"],
               related: ["g5-c3-insertion-method"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c3-insertion-method",
               name: "插空法",
-              pluginId: "math-competition-g5-c3",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "insertion",
               description: "要求某些元素不相邻时，先排其余元素再用空位插空。",
@@ -3731,12 +3731,12 @@
               prerequisites: ["g4-c3-c3-perm"],
               related: ["g5-c3-bundling-method"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c3-stars-bars",
               name: "隔板法",
-              pluginId: "math-competition-g5-c3",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "stars-bars",
               description: "将 n 个相同物品分给 k 个不同对象（每份至少一个），用隔板隔开计数。",
@@ -3744,7 +3744,7 @@
               prerequisites: ["g4-c3-c3-perm"],
               related: ["g5-c3-combination","g5-c9-diophantine-equation"],
               difficulty: 5,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c3-pigeonhole-principle",
@@ -3780,7 +3780,7 @@
             {
               id: "g5-c4-area-basic",
               name: "基本面积公式",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "area-basic",
               description: "熟练三角形、平行四边形、梯形等基本面积公式与底高对应。",
@@ -3788,12 +3788,12 @@
               prerequisites: ["g4-c4-c4-pa"],
               related: ["g5-c4-equal-area-transform"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c4-equal-area-transform",
               name: "等积变形",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "equal-area",
               description: "利用同底等高（等底等高）变换面积关系解题。",
@@ -3801,7 +3801,7 @@
               prerequisites: ["g4-c4-c4-cutfill"],
               related: ["g5-c4-half-model","g5-c4-bird-head-model"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c4-bird-head-model",
@@ -4006,7 +4006,7 @@
             {
               id: "g5-c5-circular-track",
               name: "环形跑道",
-              pluginId: "math-competition-g5-c5",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "circular",
               description: "环形跑道相遇 / 追及，考虑同向与反向。",
@@ -4014,12 +4014,12 @@
               prerequisites: ["g4-c5-c5-meet"],
               related: ["g5-c5-meet-problem","g5-c5-ratio-motion"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c5-clock-problem",
               name: "时钟问题",
-              pluginId: "math-competition-g5-c5",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "clock",
               description: "时针分针视为追及运动（分针 6°/分，时针 0.5°/分）。",
@@ -4027,7 +4027,7 @@
               prerequisites: ["g4-c5-c5-chase"],
               related: ["g5-c5-circular-track"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c5-average-speed",
@@ -4045,7 +4045,7 @@
             {
               id: "g5-c5-ratio-motion",
               name: "比例行程",
-              pluginId: "math-competition-g5-c5",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "ratio",
               description: "利用速度比＝时间反比等比例关系解行程。",
@@ -4053,7 +4053,7 @@
               prerequisites: ["g4-c5-c5-basic"],
               related: ["g5-c5-average-speed","g5-c9-fraction-percent-application"],
               difficulty: 5,
-              status: "active"
+              status: "placeholder"
             }
           ]
         },
@@ -4159,7 +4159,7 @@
             {
               id: "g5-c7-recurring-decimal-frac",
               name: "循环小数化分数",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "recurring",
               description: "循环小数化分数：纯循环 / 混循环的分子分母规则。",
@@ -4167,12 +4167,12 @@
               prerequisites: ["g3-m4-g3-decimal"],
               related: ["g5-c7-complex-fraction"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c7-define-operation",
               name: "定义新运算",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "define-op",
               description: "按新定义运算规则代入计算（如 a*b＝a×b−a＋b）。",
@@ -4180,7 +4180,7 @@
               prerequisites: ["g4-m3-g4-mix-order"],
               related: ["g5-c7-estimate-bounds"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c7-compare-size",
@@ -4198,7 +4198,7 @@
             {
               id: "g5-c7-estimate-bounds",
               name: "估算与放缩",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "estimate",
               description: "用估值与放缩确定范围，用于比较与证明。",
@@ -4206,12 +4206,12 @@
               prerequisites: ["g4-m12-g4-choice-est"],
               related: ["g5-c7-complex-fraction","g5-c7-compare-size"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c7-complex-fraction",
               name: "繁分数化简",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "complex-frac",
               description: "多层分数的化简：从最内层逐层通分，除以分数乘其倒数。",
@@ -4219,7 +4219,7 @@
               prerequisites: ["g3-m4-g3-fraction"],
               related: ["g5-c7-fraction-splitting","g5-c7-recurring-decimal-frac"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             }
           ]
         },
@@ -4338,7 +4338,7 @@
             {
               id: "g5-c9-planting-problem",
               name: "植树问题",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "planting",
               description: "两端都栽 / 只栽一端 / 两端不栽时棵数与间隔数关系。",
@@ -4346,12 +4346,12 @@
               prerequisites: ["g1-m4-patterns"],
               related: ["g5-c9-phalanx-problem"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c9-phalanx-problem",
               name: "方阵问题",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "phalanx",
               description: "实心 / 空心方阵：每层边数差 2，实心总数＝边数²。",
@@ -4359,7 +4359,7 @@
               prerequisites: ["g4-m8-g4-word-div"],
               related: ["g5-c9-planting-problem"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c9-periodic-problem",
@@ -4390,7 +4390,7 @@
             {
               id: "g5-c9-fraction-percent-application",
               name: "分数百分数应用题",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "frac-percent",
               description: "求一个数的几分之几 / 百分之几，已知部分求整体，及增减变化。",
@@ -4398,7 +4398,7 @@
               prerequisites: ["g3-m4-g3-fraction"],
               related: ["g5-c6-work-problem","g5-c6-concentration-problem","g5-c5-ratio-motion"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g5-c9-economics-problem",
@@ -5672,7 +5672,7 @@
             {
               id: "g6-c4-area-basic",
               name: "基本面积（组合图形）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "area-basic",
               description: "组合图形分割/添补求面积。",
@@ -5680,12 +5680,12 @@
               prerequisites: ["g5-c4-area-basic"],
               related: ["g6-c4-equal-area-transform"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-equal-area-transform",
               name: "等积变形（复杂平行线）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "equal-area",
               description: "借助平行线多次转换三角形面积。",
@@ -5693,12 +5693,12 @@
               prerequisites: ["g5-c4-equal-area-transform"],
               related: ["g6-c4-half-model"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-bird-head-model",
               name: "鸟头模型（多比例）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "bird-head",
               description: "多个鸟头模型串联的比例传递。",
@@ -5706,12 +5706,12 @@
               prerequisites: ["g5-c4-bird-head-model"],
               related: ["g6-c4-butterfly-model"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-butterfly-model",
               name: "蝴蝶模型（任意四边形与梯形）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "butterfly",
               description: "任意四边形与梯形中蝴蝶定理综合运用。",
@@ -5719,12 +5719,12 @@
               prerequisites: ["g5-c4-butterfly-model"],
               related: ["g6-c4-swallow-tail-model"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-swallow-tail-model",
               name: "燕尾模型（多组比例）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "swallow-tail",
               description: "多组燕尾比例联立解面积比。",
@@ -5732,12 +5732,12 @@
               prerequisites: ["g5-c4-swallow-tail-model"],
               related: ["g6-c4-half-model"],
               difficulty: 5,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-half-model",
               name: "一半模型（复杂分割）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "half",
               description: "复杂分割下一半模型的识别与叠加。",
@@ -5745,7 +5745,7 @@
               prerequisites: ["g5-c4-half-model"],
               related: ["g6-c4-bird-head-model"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-circle-sector",
@@ -5776,7 +5776,7 @@
             {
               id: "g6-c4-painted-cube",
               name: "表面涂色问题（非正方体）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "painted-cube",
               description: "长方体涂色切割的分类计数。",
@@ -5784,12 +5784,12 @@
               prerequisites: ["g5-c4-painted-cube"],
               related: ["g6-c4-solid-geometry"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-pythagorean-theorem",
               name: "勾股定理（逆定理与应用）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "pythagorean",
               description: "勾股定理及其逆定理判定直角、折线最短。",
@@ -5797,12 +5797,12 @@
               prerequisites: ["g5-c4-pythagorean-theorem"],
               related: ["g6-c4-lattice-area"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-lattice-area",
               name: "格点面积（皮克定理应用）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "lattice",
               description: "皮克定理在复杂格点多边形中的应用。",
@@ -5810,12 +5810,12 @@
               prerequisites: ["g5-c4-lattice-area"],
               related: ["g6-c4-angle-calculation"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-angle-calculation",
               name: "角度计算（多边形、平行线）",
-              pluginId: "math-competition-g5-c4",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "angle",
               description: "多边形内角外角与平行线角度综合。",
@@ -5823,7 +5823,7 @@
               prerequisites: ["g5-c4-angle-calculation"],
               related: ["g6-c4-circle-angle"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c4-circle-angle",
@@ -5857,121 +5857,121 @@
           moduleId: "C5",
           knowledgePoints: [
             {
-              id: "g6-c5-basic",
-              name: "基本行程",
-              pluginId: "math-competition-g6-c5",
+              id: "g6-c5-basic-motion",
+              name: "基本行程（比例关系）",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "basic",
-              description: "路程=速度×时间三者互求，比例关系熟练运用。",
-              example: "速度比 3:2 同时间路程比也是 3:2。",
+              description: "s=vt 三量比例关系的熟练运用。",
+              example: "速度比不变时路程比的计算。",
               prerequisites: ["g5-c5-basic-motion"],
-              related: ["g6-c5-meet"],
+              related: ["g6-c5-meet-problem"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
-              id: "g6-c5-meet",
-              name: "相遇问题进阶",
-              pluginId: "math-competition-g6-c5",
+              id: "g6-c5-meet-problem",
+              name: "相遇问题（多次相遇）",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "meet",
-              description: "多次相遇共行 n 个全程的规律应用。",
-              example: "两端出发第二次相遇共行 3 个全程。",
+              description: "两端出发多次相遇的路程倍数规律。",
+              example: "第二次相遇共行三个全程的应用。",
               prerequisites: ["g5-c5-meet-problem"],
-              related: ["g6-c5-chase"],
-              difficulty: 5,
-              status: "active"
+              related: ["g6-c5-chase-problem"],
+              difficulty: 4,
+              status: "placeholder"
             },
             {
-              id: "g6-c5-chase",
-              name: "追及问题进阶",
-              pluginId: "math-competition-g6-c5",
+              id: "g6-c5-chase-problem",
+              name: "追及问题（复杂追及）",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "chase",
-              description: "含初始距离或变速情形下的追及分析。",
-              example: "后车速度较快追及初始距离。",
+              description: "多人/变速情形下的追及分析。",
+              example: "环形道上三人追逐的相遇次数。",
               prerequisites: ["g5-c5-chase-problem"],
-              related: ["g6-c5-train-bridge"],
-              difficulty: 5,
-              status: "active"
+              related: ["g6-c5-interval-departure"],
+              difficulty: 4,
+              status: "placeholder"
             },
             {
               id: "g6-c5-train-bridge",
-              name: "火车过桥",
-              pluginId: "math-competition-g6-c5",
+              name: "火车过桥（错车、超车）",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "train",
-              description: "完全过桥路程＝桥长＋车长；错车与超车的路程合成。",
-              example: "车长 200 米过 800 米桥需考虑车长。",
+              description: "火车过桥、两车错车超车的路程合成。",
+              example: "两列车错车所需时间。",
               prerequisites: ["g5-c5-train-bridge"],
               related: ["g6-c5-boat-stream"],
-              difficulty: 5,
-              status: "active"
+              difficulty: 4,
+              status: "placeholder"
             },
             {
               id: "g6-c5-boat-stream",
-              name: "流水行船",
-              pluginId: "math-competition-g6-c5",
+              name: "流水行船（往返、水速变化）",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "boat",
-              description: "顺水逆水速度与水速关系，往返平均速度。",
-              example: "顺水速度－逆水速度＝2×水速。",
+              description: "顺逆水往返与平均速度、水速影响。",
+              example: "往返全程平均速度与静水速度的关系。",
               prerequisites: ["g5-c5-boat-stream"],
-              related: ["g6-c5-ring-runway"],
-              difficulty: 5,
-              status: "active"
+              related: ["g6-c5-ratio-motion"],
+              difficulty: 4,
+              status: "placeholder"
             },
             {
-              id: "g6-c5-ring-runway",
-              name: "环形跑道",
-              pluginId: "math-competition-g6-c5",
+              id: "g6-c5-circular-track",
+              name: "环形跑道（多次相遇与追及）",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "circular",
-              description: "同向追及（路程差=周长）与反向相遇（路程和=周长）。",
-              example: "同地同向出发再次相遇差一个周长。",
+              description: "环形多次相遇追及的圈数差分析。",
+              example: "同地反向出发第 n 次相遇的路程。",
               prerequisites: ["g5-c5-circular-track"],
-              related: ["g6-c5-clock"],
-              difficulty: 5,
-              status: "active"
+              related: ["g6-c5-clock-problem"],
+              difficulty: 4,
+              status: "placeholder"
             },
             {
-              id: "g6-c5-clock",
-              name: "时钟问题",
-              pluginId: "math-competition-g6-c5",
+              id: "g6-c5-clock-problem",
+              name: "时钟问题（夹角、重合、对称）",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "clock",
-              description: "分针 6°/分、时针 0.5°/分的夹角与重合计算。",
-              example: "3 点到 4 点之间时针分针重合时刻。",
+              description: "时针分针夹角、重合与成直线时刻。",
+              example: "2 点到 3 点之间时针分针重合时刻。",
               prerequisites: ["g5-c5-clock-problem"],
-              related: ["g6-c5-journey-complex"],
-              difficulty: 5,
-              status: "active"
+              related: ["g6-c5-average-speed"],
+              difficulty: 4,
+              status: "placeholder"
             },
             {
-              id: "g6-c5-journey-complex",
-              name: "行程综合",
-              pluginId: "math-competition-g6-c5",
+              id: "g6-c5-average-speed",
+              name: "平均速度（分段与全程）",
+              pluginId: "math-competition-placeholder",
               weight: 1,
-              type: "journey-complex",
-              description: "多阶段行程的平均速度与分段计算。",
+              type: "avg-speed",
+              description: "分段行程的平均速度（调和平均思想）。",
               example: "前半程 v1 后半程 v2 的全程平均速度。",
               prerequisites: ["g5-c5-average-speed"],
-              related: ["g6-c5-competition"],
-              difficulty: 5,
-              status: "active"
+              related: ["g6-c5-ratio-motion"],
+              difficulty: 4,
+              status: "placeholder"
             },
             {
-              id: "g6-c5-competition",
-              name: "竞赛行程综合",
-              pluginId: "math-competition-g6-c5",
+              id: "g6-c5-ratio-motion",
+              name: "比例行程（正反比综合）",
+              pluginId: "math-competition-placeholder",
               weight: 1,
-              type: "competition",
-              description: "复杂条件行程，需画图辅助分析的综合题。",
-              example: "多人多段或变速场景综合。",
+              type: "ratio",
+              description: "时间一定路程比＝速度比等比例推演。",
+              example: "按速度比分程距离。",
               prerequisites: ["g5-c5-ratio-motion"],
-              related: ["g6-c5-journey-complex"],
+              related: ["g6-c5-interval-departure"],
               difficulty: 5,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c5-interval-departure",
@@ -6038,7 +6038,7 @@
             {
               id: "g6-c7-extract-common-factor",
               name: "提取公因数（复杂式子）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "extract-factor",
               description: "复杂结构中的公因数提取与合并。",
@@ -6046,12 +6046,12 @@
               prerequisites: ["g5-c7-extract-common-factor"],
               related: ["g6-c7-rounding-calc"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-rounding-calc",
               name: "凑整巧算（分数小数）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "rounding",
               description: "分数小数混合凑整。",
@@ -6059,12 +6059,12 @@
               prerequisites: ["g5-c7-rounding-calc"],
               related: ["g6-c7-extract-common-factor"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-fraction-splitting",
               name: "分数裂项（多级裂项）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "frac-split",
               description: "多级/变式裂项相消求和。",
@@ -6072,12 +6072,12 @@
               prerequisites: ["g5-c7-fraction-splitting"],
               related: ["g6-c7-integer-splitting"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-integer-splitting",
               name: "整数裂项（高阶）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "int-split",
               description: "高阶乘积和的裂项（平方差结构）。",
@@ -6085,12 +6085,12 @@
               prerequisites: ["g5-c7-integer-splitting"],
               related: ["g6-c7-fraction-splitting"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-arithmetic-series",
               name: "等差数列（求和与项数应用）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "series",
               description: "项数、公差、和之间的互求应用。",
@@ -6098,12 +6098,12 @@
               prerequisites: ["g5-c7-arithmetic-series"],
               related: ["g6-c7-sequence-sum"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-recurring-decimal-frac",
               name: "循环小数化分数（混循环）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "recurring",
               description: "混循环小数化分数的分子分母规则。",
@@ -6111,12 +6111,12 @@
               prerequisites: ["g5-c7-recurring-decimal-frac"],
               related: ["g6-c7-compare-size"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-define-operation",
               name: "定义新运算（复杂规则）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "define-op",
               description: "嵌套/复合的新运算求值与解方程。",
@@ -6124,12 +6124,12 @@
               prerequisites: ["g5-c7-define-operation"],
               related: ["g6-c7-compare-size"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-compare-size",
               name: "比较大小（放缩法）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "compare",
               description: "放缩与中介基准比较复杂式子大小。",
@@ -6137,12 +6137,12 @@
               prerequisites: ["g5-c7-compare-size"],
               related: ["g6-c7-estimate-bounds"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-estimate-bounds",
               name: "估算与放缩（精确整数部分）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "estimate",
               description: "确定繁杂算式的整数部分。",
@@ -6150,12 +6150,12 @@
               prerequisites: ["g5-c7-estimate-bounds"],
               related: ["g6-c7-complex-fraction"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-complex-fraction",
               name: "繁分数化简（多层）",
-              pluginId: "math-competition-g5-c7",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "complex-frac",
               description: "多层繁分数逐层化简。",
@@ -6163,7 +6163,7 @@
               prerequisites: ["g5-c7-complex-fraction"],
               related: ["g6-c7-fraction-splitting"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c7-sequence-sum",
@@ -6243,7 +6243,7 @@
             {
               id: "g6-c9-sum-diff-problem",
               name: "和差倍问题（复杂线段图）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "sum-diff",
               description: "多对象和差倍的线段图分析。",
@@ -6251,12 +6251,12 @@
               prerequisites: ["g5-c9-sum-diff-problem"],
               related: ["g6-c9-age-problem"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-age-problem",
               name: "年龄问题（列表方程）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "age",
               description: "列表追踪多年份年龄倍数关系。",
@@ -6264,12 +6264,12 @@
               prerequisites: ["g5-c9-age-problem"],
               related: ["g6-c9-sum-diff-problem"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-profit-loss-problem",
               name: "盈亏问题（复杂分配）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "profit-loss",
               description: "两种方案盈亏相抵的推广形式。",
@@ -6277,12 +6277,12 @@
               prerequisites: ["g5-c9-profit-loss-problem"],
               related: ["g6-c9-average-problem"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-chicken-rabbit",
               name: "鸡兔同笼（变形：倒扣、得分）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "chicken-rabbit",
               description: "倒扣得分、答对答错等变形假设法。",
@@ -6290,12 +6290,12 @@
               prerequisites: ["g5-c9-chicken-rabbit"],
               related: ["g6-c9-average-problem"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-average-problem",
               name: "平均数（移多补少、加权）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "average",
               description: "加权平均与移多补少思想。",
@@ -6303,12 +6303,12 @@
               prerequisites: ["g5-c9-average-problem"],
               related: ["g6-c9-periodic-problem"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-planting-problem",
               name: "植树问题（封闭与不封闭综合）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "planting",
               description: "封闭/单侧/双侧栽树的综合应用。",
@@ -6316,12 +6316,12 @@
               prerequisites: ["g5-c9-planting-problem"],
               related: ["g6-c9-phalanx-problem"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-phalanx-problem",
               name: "方阵问题（空心、实心）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "phalanx",
               description: "空心方阵层数与总数的换算。",
@@ -6329,12 +6329,12 @@
               prerequisites: ["g5-c9-phalanx-problem"],
               related: ["g6-c9-planting-problem"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-periodic-problem",
               name: "周期问题（复杂周期）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "periodic",
               description: "多事物交错的大周期分析。",
@@ -6342,7 +6342,7 @@
               prerequisites: ["g5-c9-periodic-problem"],
               related: ["g6-c9-grass-problem"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-grass-problem",
@@ -6360,7 +6360,7 @@
             {
               id: "g6-c9-fraction-percent-application",
               name: "分数百分数应用题（综合）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "frac-percent",
               description: "多步分数百分数的综合应用。",
@@ -6368,12 +6368,12 @@
               prerequisites: ["g5-c9-fraction-percent-application"],
               related: ["g6-c9-economics-problem"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-economics-problem",
               name: "经济问题（折扣、利润最大化）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "economics",
               description: "折扣利润综合与最优定价初步。",
@@ -6381,12 +6381,12 @@
               prerequisites: ["g5-c9-economics-problem"],
               related: ["g6-c9-fraction-percent-application"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-equation-linear-1",
               name: "一元一次方程（应用题）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "eq1",
               description: "设未知数列方程解应用题。",
@@ -6394,12 +6394,12 @@
               prerequisites: ["g5-c9-equation-linear-1"],
               related: ["g6-c9-equation-linear-2"],
               difficulty: 3,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-equation-linear-2",
               name: "二元一次方程组（应用题）",
-              pluginId: "math-competition-g5-c9",
+              pluginId: "math-competition-placeholder",
               weight: 1,
               type: "eq2",
               description: "设两个未知数列方程组解应用题。",
@@ -6407,7 +6407,7 @@
               prerequisites: ["g5-c9-equation-linear-2"],
               related: ["g6-c2-diophantine-equation"],
               difficulty: 4,
-              status: "active"
+              status: "placeholder"
             },
             {
               id: "g6-c9-ratio-application",
