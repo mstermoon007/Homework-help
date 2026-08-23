@@ -2,8 +2,10 @@
  * 仅定义布局骨架与视觉样式，所有视觉原子属性引用 shared/tokens.css 中的变量。
  * 左（题型/题量/难度设置）右（操作按钮）排布，chip 分段控件、蓝紫实色选中态。
  * 依赖：shared/tokens.css 须先于本文件加载。
+ * 本文件内容包在 @layer toolbar 内，参与全局层叠顺序（tokens→base→components→toolbar→pages）。
  */
 
+@layer toolbar {
 .panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px;
     box-shadow: var(--shadow); padding: 18px; margin: 14px 0; }
 .row { display: flex; flex-wrap: wrap; gap: var(--toolbar-row-gap); align-items: center; margin-top: 12px; }
@@ -61,3 +63,4 @@
     .controls-grid { flex-direction: column; }
     .controls-actions { justify-content: flex-start; }
 }
+} /* /@layer toolbar */

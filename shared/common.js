@@ -12,6 +12,10 @@
 (function (global) {
   'use strict';
 
+  // ============ [L0 运行时核心 · Runtime Core] ============
+  // 站点常量 / 路由 / 页面控制器 / PluginLoader / ServiceWorker / 自适应难度。
+  // 仅依赖全局，不依赖插件渲染细节；统一在文件末尾导出到 window.App。
+
   // ============ 站点常量 ============
   var GRADE_NAMES = { '1':'一年级','2':'二年级','3':'三年级','4':'四年级','5':'五年级','6':'六年级' };
   var SUBJECT_NAMES = { 'math':'数学', 'chinese':'语文', 'english':'英语' };
@@ -64,13 +68,6 @@
     return buildLink('practice.html?plugin=' + encodeURIComponent(pluginId), g);
   }
 
-  /** 根据路由名跳转页面（自动带年级参数） */
-  function navigateTo(routeName, g) {
-    var path = ROUTES[routeName];
-    if (!path) return;
-    var grade = g !== undefined ? g : currentGrade();
-    global.location.href = path + (path.indexOf('?') !== -1 ? '&' : '?') + 'grade=' + encodeURIComponent(grade);
-  }
 
   // ============ 声调映射（站点 + 插件共用） ============
   var TONE_MAP = {
@@ -142,6 +139,10 @@
     return s.replace(/\s+/g, '').trim();
   }
 
+  // ============ [L1 共享渲染与插件工具 · Shared Render & Utils] ============
+  // renderCard/renderGrid/computeResult/defaultQCheck/normalizeAns/pickOpt/clockSVG/createPlugin。
+  // 供 plugins/*.js 复用，与随机/标准化工具同属「共享能力层」。
+
   // ============ 插件渲染/批改辅助（供 plugins/*.js 复用） ============
 
   /** 标准化答案比较（去空格、小写） */
@@ -149,49 +150,92 @@
     return String(v == null ? '' : v).trim().replace(/\s+/g, '').toLowerCase();
   }
 
-  /** 渲染单题卡片。q 形状：{ q, svg, hint, unit, inputType, options, inputCount, answer } */
+  /** 渲染单题卡片。q 形状：{ q, svg, hint, unit, inputType, options, inputCount, answer }
+   *
+   * 样式类化：默认只输出 class，样式统一在 shared/components.css 的
+   * 「题目卡片」段维护（打印/自定义覆盖无需 !important）。
+   * opts.inputWidth 显式传入时仍以内联 style 输出宽度（动态值）。
+   */
+
+  /** 小题池去重生成：先穷举 builder 产出全量题池，shuffle 后取前 count 题。
+   *  池不足 count 时循环取用（允许重复但不连续）。 */
+  function poolFill(builder, count) {
+    var pool = [], seen = {};
+    var maxEnum = 2000;
+    for (var i = 0; i < maxEnum; i++) {
+      var q = builder();
+      if (!q) break;
+      var key = (q.q || '') + '|' + JSON.stringify(q.answer || '');
+      if (!seen[key]) { seen[key] = 1; pool.push(q); }
+    }
+    // Fisher-Yates shuffle
+    for (var j = pool.length - 1; j > 0; j--) {
+      var k2 = Math.floor(Math.random() * (j + 1));
+      var tmp = pool[j]; pool[j] = pool[k2]; pool[k2] = tmp;
+    }
+    var out = [];
+    while (out.length < count && pool.length) {
+      out.push(pool[out.length % pool.length]);
+    }
+    return out;
+  }
+
   function renderCard(q, idx, opts) {
     opts = opts || {};
+    var st = function (key, extra) {
+      var s = (extra || '');
+      return s ? ' style="' + s + '"' : '';
+    };
     var inpW = opts.inputWidth || 96;
+    // 宽度为动态值：显式 inputWidth 时内联输出，否则走 CSS 类默认 96px
+    var inpWStyle = opts.inputWidth ? 'width:' + inpW + 'px;' : '';
     var svgHtml = '';
     if (q.svg) {
-      svgHtml = '<div class="scene-box" style="display:flex;align-items:center;justify-content:center;gap:20px;padding:16px;background:#f8fafd;border-radius:12px;margin:8px 0;flex-wrap:wrap;">' + q.svg + '</div>';
+      svgHtml = '<div class="scene-box"' + st('scene-box') + '>' + q.svg + '</div>';
     }
-    var hintHtml = q.hint ? '<div style="font-size:11px;color:#7a879c;margin-bottom:6px;">💡 ' + q.hint + '</div>' : '';
+    var hintHtml = q.hint ? '<div class="q-hint"' + st('q-hint') + '>💡 ' + q.hint + '</div>' : '';
     var badgeHtml = '';
     if (opts.badgeLabels && q.type && opts.badgeLabels[q.type]) {
-      badgeHtml = '<span class="badge" style="position:absolute;right:10px;top:10px;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:#eef3fb;color:#5b8def;">' + opts.badgeLabels[q.type] + '</span>';
+      badgeHtml = '<span class="badge"' + st('badge') + '>' + opts.badgeLabels[q.type] + '</span>';
     }
+    var formulaHtml = '<span class="qa-label"' + st('qa-label') + '>算式</span>' +
+      '<input type="text" class="formula-inp" data-formula="' + idx + '" placeholder="列式" autocomplete="off"' + st('formula-inp', 'width:120px;') + '>' +
+      '<span class="qa-label"' + st('qa-label') + '>答案</span>';
     var inputHtml = '';
     if (q.inputType === 'choice') {
       var optsHtml = '';
       (q.options || []).forEach(function (o) {
-        optsHtml += '<span class="opt" data-val="' + String(o).replace(/"/g, '&quot;') + '" onclick="window.__pickOpt(this)" style="cursor:pointer;border:1.5px solid #e3e9f2;background:#fff;color:#27324a;border-radius:10px;padding:8px 16px;font-size:14px;font-weight:600;transition:.15s;display:inline-flex;align-items:center;gap:6px;">' + o + '</span>';
+        optsHtml += '<span class="opt" data-val="' + String(o).replace(/"/g, '&quot;') + '" onclick="window.__pickOpt(this)"' + st('opt') + '>' + o + '</span>';
       });
-      inputHtml = '<div class="options" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px;">' + optsHtml + '</div>' +
+      inputHtml = '<div class="options"' + st('options') + '>' + optsHtml + '</div>' +
         '<input type="hidden" data-index="' + idx + '">';
     } else if (q.inputType === 'multi') {
       var count = q.inputCount || (Array.isArray(q.answer) ? q.answer.length : 1);
       var inputs = '';
       for (var j = 0; j < count; j++) {
-        inputs += '<input type="text" class="answer-inp" data-idx="' + idx + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:' + inpW + 'px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;">';
+        inputs += '<input type="text" class="answer-inp" data-idx="' + idx + '" data-field="' + j + '" placeholder="?" autocomplete="off"' + st('answer-inp', inpWStyle) + '>';
       }
-      inputHtml = '<div class="input-group" style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;">' + inputs + '</div>';
+      inputHtml = '<div class="input-group"' + st('input-group') + '>' + inputs + '</div>';
     } else {
-      inputHtml = '<div class="input-group" style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;">' +
-        '<input type="text" class="answer-inp" data-index="' + idx + '" placeholder="?" autocomplete="off" style="width:' + inpW + 'px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;">' +
-        (q.unit ? '<span style="font-size:13px;color:#7a879c;font-weight:600;">' + q.unit + '</span>' : '') +
+      inputHtml = '<div class="input-group"' + st('input-group') + '>' +
+        '<input type="text" class="answer-inp" data-index="' + idx + '" placeholder="?" autocomplete="off"' + st('answer-inp', inpWStyle) + '>' +
+        (q.unit ? '<span class="unit"' + st('unit') + '>' + q.unit + '</span>' : '') +
         '</div>';
     }
+    var qaRowHtml = '<div class="qa-row"' + st('qa-row') + '>' + formulaHtml + inputHtml + '</div>';
     var qTextHtml = q.rawHtml ? (q.q || '') : '<span class="q-text">' + (q.q || q.text || '') + '</span>';
-    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<span class="num" style="position:absolute;left:8px;top:8px;width:20px;height:20px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">' + (idx + 1) + '</span>' +
-      badgeHtml +
+    var qHeaderHtml = '<div class="q-header"' + st('q-header') + '>' +
+      '<span class="num"' + st('num') + '>' + (idx + 1) + '</span>' +
+      '&nbsp;&nbsp;&nbsp;&nbsp;' +
       qTextHtml +
+      '</div>';
+    return '<div class="question-card" data-index="' + idx + '"' + st('question-card') + '>' +
+      qHeaderHtml +
+      badgeHtml +
       svgHtml +
+      qaRowHtml +
       hintHtml +
-      inputHtml +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:6px;"></div>' +
+      '<div class="feedback"' + st('feedback') + '></div>' +
       '</div>';
   }
 
@@ -204,22 +248,176 @@
     return html + '</div>';
   }
 
+  // ============ [L1 布局 · 灵活列数计算] ============
+  // 预览(practice.html)与打印(print.js)共用的唯一列数算法来源，避免双份代码漂移。
+  // 原则：仅用「题目本身」(算式/问句)决定布局，hint 是辅助信息、自动换行不撑宽。
+  //   ① calcOptimalCols → estimateCardWidth 算每张卡最小宽度 → 决定网格几列
+  //   ② fitColumns      → renderLen 度题目文本长度       → 决定单题跨几列
+  //   ③ 预览用 set 直接计算；打印端无 set，改用 gridColumnsFromDom / applySpanning 从 DOM 估算（同算法）
+  var Layout = (function () {
+    var GAP = 12;             // 网格列间隙(px)
+    var CN_W = 14, EN_W = 9;  // 中文字宽 / 英文数字字宽(px @96dpi)
+
+    /** 取题目核心文本（仅算式/问句，不含 hint/input/序号） */
+    function coreText(q) {
+      return String(q.q || q.text || q.question || '').trim();
+    }
+
+    /** 度量题目核心文本长度（用于跨列判定；图形/多输入额外占宽） */
+    function renderLen(q, i) {
+      var txt = coreText(q);
+      var score = txt.length;
+      try {
+        var h = (typeof q.render === 'function') ? q.render(i) : '';
+        if (h.indexOf('<svg') !== -1) score += 8;
+        if (h.indexOf('combine-inp') !== -1) score += 8;
+        if (h.indexOf('scene-box') !== -1) score += 10;
+      } catch (e) { /* ignore */ }
+      return score;
+    }
+
+    /** 估算单卡最小渲染宽度(px)：仅核心文本 + 输入框 + 图形；hint 不参与宽度决策 */
+    function estimateCardWidth(q, idx) {
+      var w = 0;
+      var txt = coreText(q);
+      var cn = (txt.match(/[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/g) || []).length;
+      var en = txt.length - cn;
+      w += cn * CN_W + en * EN_W;
+      try {
+        var h = (typeof q.render === 'function') ? q.render(idx) : '';
+        if (h.indexOf('combine-inp') !== -1) w += 96 * 3;
+        else if (q.inputCount && q.inputCount > 1) w += 96 * q.inputCount;
+        else if (q.type === 'multi' || (q.answer && Array.isArray(q.answer))) w += 96 * 2;
+        else w += 96;
+        if (h.indexOf('<svg') !== -1 || h.indexOf('<canvas') !== -1 || h.indexOf('scene-box') !== -1) w += 120;
+      } catch (e) { w += 96; }
+      w += 32 + 16; // 卡片内边距 + 安全边距
+      return Math.max(w, 140);
+    }
+
+    /** 动态最优列数：set.meta.columns 优先(固定模式)，否则按中位数卡宽计算 [1,4] */
+    function calcOptimalCols(set, availWidth) {
+      var qs = set.questions;
+      if (!qs || !qs.length) return 3;
+      if (set.meta && set.meta.columns) return set.meta.columns;
+      var widths = qs.map(function (q, i) { return estimateCardWidth(q, i); });
+      widths.sort(function (a, b) { return a - b; });
+      var medianW = widths[Math.floor(widths.length / 2)];
+      var colNeed = medianW + GAP;
+      var rawCols = Math.floor((availWidth + GAP) / colNeed);
+      return Math.max(1, Math.min(4, rawCols));
+    }
+
+    /** 预览/打印通用：设网格列数 + 按长度跨列 + 卡片撑满列宽。匹配所有网格容器类名。 */
+    function fitColumns(container, set) {
+      var qs = set.questions || [];
+      var fixed = set.meta && set.meta.columns;
+      var base = fixed || calcOptimalCols(set, (container && container.offsetWidth) || (typeof window !== 'undefined' ? window.innerWidth - 40 : 1000));
+      container.querySelectorAll('.questions-grid, .q-grid, .comprehensive-grid').forEach(function (grid) {
+        grid.style.gridTemplateColumns = 'repeat(' + base + ', minmax(0, 1fr))';
+        grid.style.gridAutoFlow = 'row dense';
+        var kids = grid.children;
+        for (var i = 0; i < kids.length; i++) {
+          var item = kids[i];
+          if (fixed) { item.style.gridColumn = 'span 1'; item.style.justifySelf = 'stretch'; continue; }
+          var idx = item.getAttribute('data-index');
+          var L = 0;
+          if (idx !== null && qs[+idx]) {
+            L = renderLen(qs[+idx], +idx);
+          } else {
+            var inner = item.querySelector('[data-index]');
+            if (inner && qs[+inner.getAttribute('data-index')]) {
+              L = renderLen(qs[+inner.getAttribute('data-index')], +inner.getAttribute('data-index'));
+              if (item.querySelector('.q-badge')) L += 12;
+            }
+          }
+          if (L >= 50) item.style.gridColumn = '1 / -1';
+          else if (L >= 26) item.style.gridColumn = 'span ' + Math.min(2, base);
+          else item.style.gridColumn = 'span 1';
+          item.style.justifySelf = 'stretch';
+        }
+      });
+    }
+
+    /** 打印端：克隆 DOM 无 question 对象，改从 .question-card 文本估算列数（与 estimateCardWidth 同算法） */
+    function gridColumnsFromDom(clone, availWidth) {
+      var cards = clone.querySelectorAll('.question-card');
+      if (!cards.length) return 3;
+      var widths = [];
+      for (var wi = 0; wi < cards.length; wi++) {
+        var c = cards[wi];
+        var t = (c.querySelector('.q-text') ? (c.querySelector('.q-text').textContent || '') : (c.textContent || '')).trim();
+        var hintEl = c.querySelector('.q-hint');
+        if (hintEl) t = t.replace(hintEl.textContent, '');
+        t = t.trim();
+        var cn = (t.match(/[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/g) || []).length;
+        var en = t.length - cn;
+        var cw = cn * CN_W + en * EN_W;
+        var inputs = c.querySelectorAll('input:not(.formula-inp)');
+        cw += Math.max(inputs.length, 1) * 96;
+        if (c.querySelector('.scene-box, svg, canvas, img')) cw += 120;
+        cw += 32 + 16;
+        widths.push(Math.max(cw, 140));
+      }
+      widths.sort(function (a, b) { return a - b; });
+      var medianW = widths[Math.floor(widths.length / 2)];
+      var rawCols = Math.floor((availWidth + GAP) / (medianW + GAP));
+      return Math.max(1, Math.min(4, rawCols));
+    }
+
+    /** 打印端：对克隆 DOM 应用与预览一致的 per-card 跨列（从 DOM 文本度量，保证打印/预览排版一致） */
+    function applySpanning(clone, base) {
+      var cards = clone.querySelectorAll('.question-card');
+      for (var i = 0; i < cards.length; i++) {
+        var card = cards[i];
+        var t = (card.querySelector('.q-text') ? (card.querySelector('.q-text').textContent || '') : (card.textContent || '')).trim();
+        var hintEl = card.querySelector('.q-hint');
+        if (hintEl) t = t.replace(hintEl.textContent, '');
+        t = t.trim();
+        var L = t.length;
+        if (card.querySelector('svg')) L += 8;
+        if (card.querySelector('.combine-inp')) L += 8;
+        if (card.querySelector('.scene-box')) L += 10;
+        if (L >= 50) card.style.gridColumn = '1 / -1';
+        else if (L >= 26) card.style.gridColumn = 'span ' + Math.min(2, base);
+        else card.style.gridColumn = 'span 1';
+        card.style.justifySelf = 'stretch';
+      }
+    }
+
+    return {
+      GAP: GAP,
+      coreText: coreText,
+      renderLen: renderLen,
+      estimateCardWidth: estimateCardWidth,
+      calcOptimalCols: calcOptimalCols,
+      fitColumns: fitColumns,
+      gridColumnsFromDom: gridColumnsFromDom,
+      applySpanning: applySpanning
+    };
+  })();
+
+  /** 缺省单题判定（createPlugin 与综合练习共用）：
+   *  - inputType 'multi'：按 answers['i:j'] 分字段比较（数组答案；字符串答案按 、/，/, 拆分）
+   *  - 其余（text/choice）：整串比较（数组答案拼接后比较） */
+  function defaultQCheck(q, answers, i) {
+    if (q.inputType === 'multi') {
+      var parts = Array.isArray(q.answer) ? q.answer : String(q.answer).split(/[、,，]/);
+      for (var j = 0; j < parts.length; j++) {
+        var uv = answers ? answers[i + ':' + j] : undefined;
+        if (normalizeAns(uv) !== normalizeAns(parts[j])) return false;
+      }
+      return true;
+    }
+    var ua = answers ? answers[i] : undefined;
+    var ans = Array.isArray(q.answer) ? q.answer.join('') : q.answer;
+    return normalizeAns(ua) === normalizeAns(ans);
+  }
+
   /** 通用批改：返回 { score,total,correct,message,results,correctAnswers } */
   function computeResult(questions, userAnswers, opts) {
     opts = opts || {};
-    var checkFn = opts.checkFn || function (q, ua, i) {
-      if (q.inputType === 'choice' || q.inputType === 'text') {
-        return normalizeAns(ua[i]) === normalizeAns(Array.isArray(q.answer) ? q.answer.join('') : q.answer);
-      }
-      if (q.inputType === 'multi') {
-        var parts = Array.isArray(q.answer) ? q.answer : String(q.answer).split(',');
-        for (var j = 0; j < parts.length; j++) {
-          if (normalizeAns(ua[i + ':' + j]) !== normalizeAns(parts[j])) return false;
-        }
-        return true;
-      }
-      return false;
-    };
+    var checkFn = opts.checkFn || defaultQCheck;
     var correct = 0, results = [], correctAnswers = [];
     questions.forEach(function (q, i) {
       var ok = checkFn(q, userAnswers, i);
@@ -234,21 +432,15 @@
     return { score: score, total: total, correct: correct, message: message, results: results, correctAnswers: correctAnswers };
   }
 
-  /** 选项点击处理（choice 题型，写入隐藏 input） */
+  /** 选项点击处理（choice 题型，写入隐藏 input）。选中态由 components.css 的 .opt.chosen 呈现 */
   function pickOpt(el) {
     var card = el.parentNode && el.parentNode.parentNode;
     if (!card) return;
     var opts = card.querySelectorAll('.opt');
     for (var i = 0; i < opts.length; i++) {
       opts[i].classList.remove('chosen');
-      opts[i].style.borderColor = '#e3e9f2';
-      opts[i].style.background = '#fff';
-      opts[i].style.color = '#27324a';
     }
     el.classList.add('chosen');
-    el.style.borderColor = '#5b8def';
-    el.style.background = '#5b8def';
-    el.style.color = '#fff';
     var inp = card.querySelector('input[data-index]');
     if (inp) inp.value = el.getAttribute('data-val') || el.textContent;
   }
@@ -282,13 +474,14 @@
         '" x2="' + (cx + r * Math.cos(a)).toFixed(1) + '" y2="' + (cy + r * Math.sin(a)).toFixed(1) +
         '" stroke="#9aa6bd" stroke-width="' + (i % 3 === 0 ? 2 : 1) + '"/>';
     }
-    var nums = [[12, 50, 17], [3, 92, 58], [6, 50, 100], [9, 14, 58]];
+    // 钟面数字：0° 为 12 点方向，顺时针 90°/180°/270° 分别对应 3/6/9 点
+    var nums = [[12, 0], [3, 90], [6, 180], [9, 270]];
     var numHtml = '';
     nums.forEach(function (n) {
-      var a = n[1] * Math.PI / 180;
-      var nx = cx + 38 * Math.cos(a);
-      var ny = cy + 38 * Math.sin(a);
-      numHtml += '<text x="' + nx.toFixed(1) + '" y="' + ny.toFixed(1) + '" text-anchor="middle" font-size="12" fill="#5b6b85" font-weight="700">' + n[0] + '</text>';
+      var a = (n[1] - 90) * Math.PI / 180;
+      var nx = cx + 40 * Math.cos(a);
+      var ny = cy + 40 * Math.sin(a) + 4;
+      numHtml += '<text x="' + nx.toFixed(1) + '" y="' + ny.toFixed(1) + '" text-anchor="middle" font-size="14" fill="#5b6b85" font-weight="700">' + n[0] + '</text>';
     });
     return '<svg width="120" height="120" viewBox="0 0 120 120" style="background:#fff;border-radius:50%;">' +
       '<circle cx="60" cy="60" r="54" fill="#fafbff" stroke="#5b8def" stroke-width="3"/>' +
@@ -340,11 +533,7 @@
       set.questions.forEach(function (q, i) {
         var ok;
         if (typeof q.check === 'function') ok = !!q.check(answers, i);
-        else {
-          var ua = answers ? answers[i] : undefined;
-          var ans = Array.isArray(q.answer) ? q.answer.join('') : q.answer;
-          ok = normalizeAns(ua) === normalizeAns(ans);
-        }
+        else ok = defaultQCheck(q, answers, i); // 缺省判定：multi 分字段 / 其余整串比较
         if (ok) correct++;
         results.push(ok);
         correctAnswers.push(Array.isArray(q.answer) ? q.answer.join('、') : String(q.answer));
@@ -366,22 +555,28 @@
         questions = config.generateQuestions.call(plugin, opts) || [];
       } catch (e) {
         console.error('[createPlugin:' + id + '] generateQuestions 执行出错：', e);
-        throw e;
+        throw new Error('题型「' + name + '」生成题目时出错：' + (e && e.message ? e.message : e));
       }
-      // 规范化：缺 render 的题用通用卡片兜底
+      // 规范化：缺 render 的题用通用卡片兜底；缺 check 的题挂默认单题判定
       questions = questions.map(function (q, i) {
         if (q && typeof q.render !== 'function' && q.answer != null) {
           q.render = function (idx) { return renderCard(q, idx); };
         }
+        if (q && typeof q.check !== 'function') {
+          q.check = function (answers, idx) { return defaultQCheck(q, answers, idx); };
+        }
         return q;
       });
       // 知识点声明校验：声明的知识点需在知识库中登记（统一结构：getEntries 扁平化）
+      // 支持两种格式：① string[]（对所有 grades 统一校验）② { [grade]: string[] }（按年级分别校验）
       if (config.knowledgePoints && _kb && subject === 'math' && opts.grade) {
         var entries = _kb.getEntries ? _kb.getEntries('math', opts.grade) : [];
         if (entries.length) {
           var entryById = {};
           entries.forEach(function (e) { entryById[e.id] = true; entryById[e.name] = true; });
-          var missing = (config.knowledgePoints || []).filter(function (kp) { return !entryById[kp]; });
+          var kpRaw = config.knowledgePoints;
+          var kpList = Array.isArray(kpRaw) ? kpRaw : (kpRaw && kpRaw[opts.grade]) || [];
+          var missing = kpList.filter(function (kp) { return !entryById[kp]; });
           if (missing.length) {
             console.warn('[createPlugin:' + id + '] 在 ' + opts.grade + ' 年级声明覆盖的知识点未在知识库登记：' +
               missing.join('、') + '（请补充 shared/knowledge-bank.js 或修正 knowledgePoints）');
@@ -453,53 +648,6 @@
     return cov;
   }
 
-  // ============ 页面控制器 ============
-
-  var PAGE_CONTROLLER = {
-    math: [
-      { id: 'mathPractice', route: 'mathPractice', icon: '🔢', label: '口算练习' },
-      { id: 'mathWord', route: 'mathWord', icon: '📝', label: '应用题' },
-      { id: 'mathMakeTen', route: 'mathMakeTen', icon: '🧩', label: '凑十法', grades: [1] },
-      { id: 'mathShapes', route: 'mathShapes', icon: '🔷', label: '图形练习', grades: [1] },
-      { id: 'mathComprehensive', route: 'mathComprehensive', icon: '🧩', label: '综合练习' }
-    ],
-    chinese: [
-      { id: 'pinyinPractice', route: 'pinyinPractice', icon: '🔤', label: '拼音练习' },
-      { id: 'pinyinToChar', route: 'pinyinToChar', icon: '✏️', label: '看拼音写字', grades: [1] },
-      { id: 'comprehensive', route: 'comprehensive', icon: '🧩', label: '综合练习', grades: [1] }
-    ],
-    english: [
-      { id: 'englishAlphabet', route: 'englishAlphabet', icon: '🔠', label: '字母练习' }
-    ]
-  };
-
-  /** 初始化页面控制器 */
-  function initPageController(pageId, subject) {
-    var items = PAGE_CONTROLLER[subject];
-    if (!items || items.length <= 1) return;
-
-    var grade = currentGrade();
-    items = items.filter(function(item) {
-      if (!item.grades) return true;
-      return item.grades.indexOf(grade) !== -1;
-    });
-    if (items.length <= 1) return;
-
-    var html = '<nav class="page-controller"><div class="pc-inner">';
-    items.forEach(function(item) {
-      var isActive = item.id === pageId ? ' active' : '';
-      var href = buildLink(ROUTES[item.route]);
-      html += '<a href="' + href + '" class="pc-item' + isActive + '">';
-      html += '<span class="pc-icon">' + item.icon + '</span>';
-      html += '<span class="pc-label">' + item.label + '</span>';
-      html += '</a>';
-    });
-    html += '</div></nav>';
-
-    var container = global.document.querySelector('.container') || global.document.querySelector('.wrapper') || global.document.querySelector('.wrap') || global.document.body;
-    container.insertAdjacentHTML('afterbegin', html);
-    global.document.body.classList.add('has-page-controller');
-  }
 
   // ============ 插件脚本加载器 PluginLoader ============
   // 统一所有页面/插件的脚本加载，提供：
@@ -524,26 +672,48 @@
 
     function loadScript(src) {
       if (scriptCache[src]) return scriptCache[src];
-      var p = new Promise(function (resolve, reject) {
-        if (typeof global.document === 'undefined') { resolve(null); return; } // Node 环境（CLI/测试）
-        var s = global.document.createElement('script');
-        s.src = src;
-        s.async = false; // 保证按追加顺序执行，配合 onload 抓取 __currentPlugin 无竞态
-        var done = false;
-        var timer = setTimeout(function () {
-          if (done) return; done = true;
-          reject(new Error('脚本加载超时（5 秒）：' + src));
-        }, TIMEOUT);
-        s.onload = function () {
-          if (done) return; done = true; clearTimeout(timer);
-          resolve(capture(src));
-        };
-        s.onerror = function () {
-          if (done) return; done = true; clearTimeout(timer);
-          reject(new Error('脚本加载失败：' + src));
-        };
-        global.document.head.appendChild(s);
-      });
+      var p;
+      if (typeof global.document === 'undefined') {
+        // Node 环境（CLI/测试）：同步 require 回退。
+        // 本模块位于 shared/，站点根相对路径（plugins/xxx.js、根级文件）需回退一级。
+        if (typeof require === 'undefined') {
+          p = Promise.resolve(null);
+        } else {
+          p = new Promise(function (resolve, reject) {
+            try {
+              var rel = String(src).replace(/^\.\//, '');
+              if (rel.indexOf('../') !== 0) rel = '../' + rel; // 站点根相对 → shared/ 的上一级
+              var mod = require(rel);
+              var meta = (mod && mod.generate) ? mod : (global.__currentPlugin || null);
+              if (meta) global.__currentPlugin = meta;
+              META[src] = meta;
+              resolve(meta);
+            } catch (e) {
+              reject(e);
+            }
+          });
+        }
+      } else {
+        p = new Promise(function (resolve, reject) {
+          var s = global.document.createElement('script');
+          s.src = src;
+          s.async = false; // 保证按追加顺序执行，配合 onload 抓取 __currentPlugin 无竞态
+          var done = false;
+          var timer = setTimeout(function () {
+            if (done) return; done = true;
+            reject(new Error('脚本加载超时（5 秒）：' + src));
+          }, TIMEOUT);
+          s.onload = function () {
+            if (done) return; done = true; clearTimeout(timer);
+            resolve(capture(src));
+          };
+          s.onerror = function () {
+            if (done) return; done = true; clearTimeout(timer);
+            reject(new Error('脚本加载失败：' + src));
+          };
+          global.document.head.appendChild(s);
+        });
+      }
       scriptCache[src] = p;
       return p;
     }
@@ -591,12 +761,6 @@
       });
     }
 
-    function getCached(id) { return pluginCache[id] || null; }
-    function getSubjectCached(subject) {
-      var reg = (typeof global.PLUGIN_REGISTRY !== 'undefined') ? global.PLUGIN_REGISTRY : [];
-      return reg.filter(function (r) { return r.subject === subject && pluginCache[r.id]; })
-                .map(function (r) { return pluginCache[r.id]; });
-    }
     function reset() { scriptCache = {}; pluginCache = {}; META = {}; }
 
     return {
@@ -605,8 +769,6 @@
       loadPlugin: loadPlugin,
       loadSubjectPlugins: loadSubjectPlugins,
       prefetch: prefetch,
-      getCached: getCached,
-      getSubjectCached: getSubjectCached,
       reset: reset
     };
   })();
@@ -713,21 +875,21 @@
       else return save({});
       save(data);
     }
-    function resetAll() { save({}); }
 
     return {
       record: record,
       computeAdjustment: computeAdjustment,
       adjustedDifficulty: adjustedDifficulty,
       hint: hint,
-      reset: reset,
-      resetAll: resetAll
+      reset: reset
     };
   })();
 
+  // ============ [L2 数据与导出 · Exports] ============
+  // 将运行时核心(L0)与共享渲染/工具(L1)分别挂到 window.App 与 window.PluginUtil。
+
   // ============ 导出：App（站点） ============
   global.App = {
-    GRADE_NAMES: GRADE_NAMES,
     SUBJECT_NAMES: SUBJECT_NAMES,
     ROUTES: ROUTES,
     getGradeParam: getGradeParam,
@@ -735,17 +897,14 @@
     currentGrade: currentGrade,
     buildLink: buildLink,
     buildPluginLink: buildPluginLink,
-    navigateTo: navigateTo,
     randInt: randInt,
     shuffle: shuffle,
     normPY: normPY,
     normHZ: normHZ,
     rand: rand,
-    TONE_MAP: TONE_MAP,
     diffLevel: diffLevel,
     diffScale: diffScale,
     diffMax: diffMax,
-    initPageController: initPageController,
     PluginLoader: PluginLoader,
     registerServiceWorker: registerServiceWorker,
     Adaptive: Adaptive
@@ -763,7 +922,6 @@
     rand: rand,
     normPY: normPY,
     normHZ: normHZ,
-    TONE_MAP: TONE_MAP,
     diffLevel: diffLevel,
     diffScale: diffScale,
     diffMax: diffMax,
@@ -771,12 +929,16 @@
     renderCard: renderCard,
     renderGrid: renderGrid,
     computeResult: computeResult,
+    defaultQCheck: defaultQCheck,
+    poolFill: poolFill,
     normalizeAns: normalizeAns,
     pickOpt: pickOpt,
     clockSVG: clockSVG,
     // 插件工厂与开发期覆盖提示
     createPlugin: createPlugin,
-    reportCoverage: reportCoverage
+    reportCoverage: reportCoverage,
+    // 灵活列数计算（预览 + 打印共用单一来源）
+    layout: Layout
   };
   global.PluginUtil = util;
 

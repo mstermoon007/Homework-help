@@ -717,4 +717,8 @@
     }
   };
 
-})(typeof window !== 'undefined' ? window : this);
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+// Node（dev 脚本/测试）：同时挂到 module.exports，require 后也可直接取 .PINYIN_BANK
+if (typeof module !== 'undefined' && module.exports && typeof globalThis.PINYIN_BANK !== 'undefined') {
+  module.exports.PINYIN_BANK = globalThis.PINYIN_BANK;
+}
