@@ -791,7 +791,7 @@
   // 相对 v1 的升级：
   //   - 存储版本 hw_adaptive_v2：值由会话数组升级为 { ema, sessions }，首次读取自动迁移并清除 v1
   //   - 主键扩展为 (subject, grade, pluginId, knowledgePointId?)；
-  //     知识点级记录仅对 综合练习/竞赛 插件启用（防容量膨胀），其余插件忽略该上下文
+  //     凡携带 knowledgePointId 的会话均建立 KP 级桶（总量 MAX_KEYS 上限防膨胀），其余插件忽略该上下文
   //   - 会话可携带每题难度与对错标记 → 难度加权正确率 effectiveRate = Σ答对难度 / Σ全部难度
   //   - EMA 平滑：emaRate = 0.4 × 本次正确率 + 0.6 × 上次 emaRate
   //   - 调整规则基于 (emaRate, lastRate)：≥0.85且全对→+2；≥0.8→+1；≤0.5→−2；≤0.65→−1
@@ -801,7 +801,6 @@
     var WINDOW = 5;       // 取最近 N 次练习计算
     var MEMORY_CAP = 10;  // 每键最多保留 N 次历史
     var MAX_KEYS = 400;   // 全库键数上限（知识点级键的膨胀保护）
-    var KP_PLUGIN_RE = /competition|comprehensive/i; // 允许知识点级记录的插件
     var EMA_ALPHA = 0.4;
     var memStore = {};    // localStorage 不可用或不持久时的内存兜底
     // 探测 localStorage 是否真正可用（能写入并读回），否则退化为内存存储
@@ -878,8 +877,9 @@
       if (!(total > 0)) return;
       context = context || {};
       var data = load();
-      var wantKp = !!context.knowledgePointId && KP_PLUGIN_RE.test(String(pluginId || ''));
-      if (context.knowledgePointId && !wantKp) return; // 非综合/竞赛插件：不接受知识点级记录
+      // 知识点级记录：凡 context 提供 knowledgePointId 即记录（步骤5 起全插件启用，
+      // 综合练习需按知识点统计掌握度）；膨胀防护由 MAX_KEYS 总量上限承担
+      var wantKp = !!context.knowledgePointId;
       var k = keyOf(subject, grade, pluginId, wantKp ? context.knowledgePointId : undefined);
       if (!data[k] && Object.keys(data).length >= MAX_KEYS) return; // 容量保护
       var b = bucketOf(data, k);

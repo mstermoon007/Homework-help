@@ -201,10 +201,16 @@
       if (entries.length) {
         entries.forEach(function (e) {
           if (!e.pluginId || !byPlugin[e.pluginId]) return;
+          // 薄弱感知：历史加权正确率 <0.7 → 权重 ×1.5；<0.5 → 子插件难度降 1 档
+          var st = adaptiveStats('math', grade, e.pluginId, e.id);
+          var boost = (st && st.rate < WEAK_LINE) ? 1.5 : 1;
           byPlugin[e.pluginId].points.push({
-            id: e.id, name: e.name, type: e.type || null, weight: entryImportance(e)
+            id: e.id, name: e.name, type: e.type || null,
+            weight: entryImportance(e) * boost,
+            lowerDiff: !!(st && st.rate < VERY_WEAK_LINE),
+            _stats: st
           });
-          byPlugin[e.pluginId].total += entryImportance(e);
+          byPlugin[e.pluginId].total += entryImportance(e) * boost;
         });
       }
       // 无知识库条目（或条目缺失）的插件：按领域默认 weight 兜底，保证不遗漏题型
@@ -266,6 +272,34 @@
       return String(ans);
     }
 
+  // ============ 自适应知识点统计（步骤5：薄弱加权 + 前置优先） ============
+  var WEAK_LINE = 0.7;      // 加权正确率低于此线：抽题权重 ×1.5，并触发前置补强检查
+  var VERY_WEAK_LINE = 0.5; // 低于此线：子插件难度档位再降 1 级
+  /** 读取 (subject,grade,pluginId,kpId) 粒度的历史统计；无数据返回 null */
+  function adaptiveStats(subject, grade, pluginId, kpId) {
+    var A = global.App && global.App.Adaptive;
+    if (!A || !A.computeAdjustment) return null;
+    try {
+      var adj = A.computeAdjustment(subject, grade, pluginId, kpId);
+      return adj.sessions ? adj : null;
+    } catch (e) { return null; }
+  }
+
+  /** 全库知识点索引：id → { kp(含 prerequisites/type), grade } */
+  function bankKpIndex() {
+    var KB = global.KnowledgeBank;
+    var idx = {};
+    if (!KB || !KB.forEach) return idx;
+    KB.forEach(function (entry) {
+      (entry.modules || []).forEach(function (mod) {
+        (mod.knowledgePoints || []).forEach(function (kp) {
+          idx[kp.id] = { kp: kp, grade: entry.grade };
+        });
+      });
+    });
+    return idx;
+  }
+
   // ============ ExercisePlugin ============
   /** @type {ExercisePlugin} */
   var mathComprehensivePlugin = {
@@ -325,13 +359,20 @@
                 item.points.forEach(function (pt) {
                   if (!pt.count || pt.count <= 0) return;
                   var subOpts = { grade: grade, count: pt.count, type: pt.type || 'mix' };
+                  var usedDiff = (opts.difficulty != null) ? opts.difficulty : 3;
                   if (opts.difficulty) subOpts.difficulty = opts.difficulty;
+                  if (pt.lowerDiff && subOpts.difficulty != null) {
+                    subOpts.difficulty = Math.max(1, subOpts.difficulty - 1); // 极薄弱：难度降 1 档
+                  }
+                  usedDiff = (subOpts.difficulty != null) ? subOpts.difficulty : 3;
                   var set = p.generate(subOpts);
                   var qs = (set && set.questions) || [];
                   if (!qs.length) return; // 插件未产出题目（占位/异常）→ 忽略该知识点，不占权重
                   qs.forEach(function (q) {
                     q.__src = p; // 记录来源插件（仅作元信息，渲染/判定一律走标准 Question 接口）
                     q.__kp = pt; // 记录来源知识点
+                    q.knowledgePointId = pt.id;      // 供 Adaptive v2 知识点粒度统计
+                    q.difficulty = usedDiff;         // 供难度加权（含薄弱降档后的实际值）
                     questions.push(q);
                   });
                   weightInfo.push(p.id + '·' + (pt.name || pt.type || 'mix') + '×' + qs.length);
@@ -370,6 +411,50 @@
               weightInfo.push(p.id + '×' + qs.length);
               var cat = p.category || 'number';
               categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
+            });
+          }
+
+          // 前置优先（步骤5）：薄弱知识点的前置也薄弱时，额外注入前置基础题。
+          // 注入量上限 = ⌈count×30%⌉，每个薄弱前置注入 2 题（标准难度），防试卷膨胀。
+          if (mode === 'kb') {
+            var kpIndex = bankKpIndex();
+            var injectCap = Math.ceil(count * 0.3);
+            var injected = 0;
+            var PREREQ_EACH = 2;
+            plan.forEach(function (item) {
+              if (injected >= injectCap) return;
+              item.points.forEach(function (pt) {
+                if (injected >= injectCap) return;
+                var st = pt._stats;
+                if (!st || !(st.rate < WEAK_LINE)) return;      // 仅薄弱知识点触发
+                var info = kpIndex[pt.id];
+                if (!info) return;
+                var pres = Array.isArray(info.kp.prerequisites) ? info.kp.prerequisites : [];
+                pres.forEach(function (pid) {
+                  if (injected >= injectCap) return;
+                  var pinfo = kpIndex[pid];
+                  if (!pinfo) return;
+                  var preStats = adaptiveStats('math', pinfo.grade, pinfo.kp.pluginId, pid);
+                  if (!preStats || !(preStats.rate < WEAK_LINE)) return; // 前置同样薄弱才补强
+                  var plug = null;
+                  applicable.forEach(function (p2) { if (p2.id === pinfo.kp.pluginId) plug = p2; });
+                  if (!plug || typeof plug.generate !== 'function') return;
+                  var set;
+                  try {
+                    set = plug.generate({ grade: pinfo.grade, count: PREREQ_EACH, type: pinfo.kp.type || 'mix' });
+                  } catch (e) { return; }
+                  var qs = ((set && set.questions) || []).slice(0, PREREQ_EACH);
+                  qs.forEach(function (q) {
+                    q.__src = plug;
+                    q.knowledgePointId = pid;   // 记录前置自身 ID → 批改后更新其掌握度
+                    q.difficulty = 3;           // 巩固基础：标准档
+                    q.__prereqFor = pt.id;      // 补强目标（meta/测试用）
+                    questions.push(q);
+                    injected++;
+                  });
+                  weightInfo.push('前置·' + (pinfo.kp.name || pid) + '×' + qs.length);
+                });
+              });
             });
           }
 
@@ -478,6 +563,8 @@ render: function (exerciseSet) {
 
   // ============ 导出 ============
   global.__currentPlugin = mathComprehensivePlugin; // practice.html / dev/plugin-check.html
+  // 测试钩子（dev/test-comprehensive-adaptive.js）：暴露抽题计划函数做确定性断言
+  mathComprehensivePlugin.__debug_kbEntryPlan = kbEntryPlan;
   if (typeof module !== 'undefined' && module.exports) module.exports = mathComprehensivePlugin;
 
 })(typeof window !== 'undefined' ? window : globalThis);

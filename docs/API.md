@@ -20,7 +20,7 @@
 | `diffLevel` | `(d) → 1..10` | 归一化难度，非法回退 3 |
 | `diffScale` | `(level) → number` | 缩放系数 `1+(level−3)×0.2`（3→1.0、10→2.4） |
 | `diffMax` | `(base, level) → int` | 基准最大数 × scale |
-| `App.Adaptive.record` | `(subject, grade, pluginId, correct, total, context?)` | v2：context 支持 `knowledgePointId`（仅 competition/comprehensive 插件生效）与平行数组 `questionDifficulties`+`correctFlags`（齐备才启用难度加权） |
+| `App.Adaptive.record` | `(subject, grade, pluginId, correct, total, context?)` | v2：context 支持 `knowledgePointId`（任意插件生效；总量 MAX_KEYS=400 上限防膨胀）与平行数组 `questionDifficulties`+`correctFlags`（齐备才启用难度加权） |
 | `App.Adaptive.recordSession` | `(subject, grade, pluginId, questions, flags) → {total, correct, kpGroups}` | 批改后统一入口：读取题目可选字段 `knowledgePointId`/`difficulty`，产出插件级加权摘要 + KP 级分组记录；未标注难度按 3 计权，无 KP 字段的插件自动保持纯插件级记录 |
 | `App.Adaptive.computeAdjustment` | `(subject, grade, pluginId, kpId?) → {difficultyDelta, typeBias, rate, emaRate, lastRate, sessions}` | 基于 EMA 平滑率（`0.4×本次+0.6×上次`）+ lastRate：≥0.85且全对→+2；≥0.8→+1；≤0.5→−2；≤0.65→−1 |
 | `App.Adaptive.getPrerequisiteStatus` | `(knowledgePointId) → {ready, items[]}` | 前置知识点历史掌握情况（加权正确率，达标线 0.7）；无前置 ready=null |
