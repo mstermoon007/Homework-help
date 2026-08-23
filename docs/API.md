@@ -20,8 +20,13 @@
 | `diffLevel` | `(d) → 1..10` | 归一化难度，非法回退 3 |
 | `diffScale` | `(level) → number` | 缩放系数 `1+(level−3)×0.2`（3→1.0、10→2.4） |
 | `diffMax` | `(base, level) → int` | 基准最大数 × scale |
-| `App.Adaptive.computeAdjustment` | `(subject, grade, pluginId) → {difficultyDelta, typeBias, rate}` | 最近 5 次会话正确率 → −2..+2 调整量与题型偏向 |
+| `App.Adaptive.record` | `(subject, grade, pluginId, correct, total, context?)` | v2：context 支持 `knowledgePointId`（仅 competition/comprehensive 插件生效）与平行数组 `questionDifficulties`+`correctFlags`（齐备才启用难度加权） |
+| `App.Adaptive.computeAdjustment` | `(subject, grade, pluginId, kpId?) → {difficultyDelta, typeBias, rate, emaRate, lastRate, sessions}` | 基于 EMA 平滑率（`0.4×本次+0.6×上次`）+ lastRate：≥0.85且全对→+2；≥0.8→+1；≤0.5→−2；≤0.65→−1 |
+| `App.Adaptive.getPrerequisiteStatus` | `(knowledgePointId) → {ready, items[]}` | 前置知识点历史掌握情况（加权正确率，达标线 0.7）；无前置 ready=null |
 | `App.Adaptive.adjustedDifficulty` | `(base, delta) → 1..10` | 基础难度叠加调整量并钳制 |
+
+存储：`localStorage['hw_adaptive_v2']`，桶为 `{ ema, sessions[] }`；主键
+`(subject:grade:pluginId[:kpId])`；首次读取自动迁移 v1 并清除旧键。
 | `App.Difficulty.difficultyToStructure` | `(level) → {steps, allowBracket, allowMultDiv, complexityScore, …}` | 难度→结构五档映射；complexityScore 全档严格单调（测试 dev/test-difficulty-structure.js） |
 | `App.Difficulty.createProfile` | `(baseLevel, delta, opts?) → profile` | 合并用户选择/自适应/插件选项 → `{effectiveLevel, scale, structure, typePreference}` |
 | `App.Difficulty.consumeProfile` | `(profile, pluginType) → params` | 按插件类型（expression/geometry/application/oral/默认）翻译为生成参数 |

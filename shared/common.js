@@ -787,71 +787,159 @@
     } catch (e) { /* 忽略 */ }
   }
 
-  // ============ 自适应难度（基于 localStorage 历史） ============
-  // 记录每次练习的 (subject,grade,plugin) 正确率滚动统计，动态调整后续生成的难度与题型：
-  //   - 连续表现好（近 5 次正确率 ≥0.9 且最近一次全对）→ 难度 +2 并偏向更难子题型
-  //   - 表现弱（正确率 ≤0.5）→ 难度 -2 并偏向更基础子题型
-  //   - 中间段 ±1；无历史则不作调整。localStorage 不可用时退化为内存存储。
+  // ============ 自适应难度 v2（localStorage 历史：知识点粒度 + 难度加权 + EMA） ============
+  // 相对 v1 的升级：
+  //   - 存储版本 hw_adaptive_v2：值由会话数组升级为 { ema, sessions }，首次读取自动迁移并清除 v1
+  //   - 主键扩展为 (subject, grade, pluginId, knowledgePointId?)；
+  //     知识点级记录仅对 综合练习/竞赛 插件启用（防容量膨胀），其余插件忽略该上下文
+  //   - 会话可携带每题难度与对错标记 → 难度加权正确率 effectiveRate = Σ答对难度 / Σ全部难度
+  //   - EMA 平滑：emaRate = 0.4 × 本次正确率 + 0.6 × 上次 emaRate
+  //   - 调整规则基于 (emaRate, lastRate)：≥0.85且全对→+2；≥0.8→+1；≤0.5→−2；≤0.65→−1
   var Adaptive = (function () {
-    var KEY = 'hw_adaptive_v1';
+    var KEY = 'hw_adaptive_v2';
+    var OLD_KEY = 'hw_adaptive_v1';
     var WINDOW = 5;       // 取最近 N 次练习计算
     var MEMORY_CAP = 10;  // 每键最多保留 N 次历史
+    var MAX_KEYS = 400;   // 全库键数上限（知识点级键的膨胀保护）
+    var KP_PLUGIN_RE = /competition|comprehensive/i; // 允许知识点级记录的插件
+    var EMA_ALPHA = 0.4;
     var memStore = {};    // localStorage 不可用或不持久时的内存兜底
     // 探测 localStorage 是否真正可用（能写入并读回），否则退化为内存存储
     var store = null;
     try {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('__hw_probe__', '1');
-        var ok = localStorage.getItem('__hw_probe__') === '1';
+        var probeOk = localStorage.getItem('__hw_probe__') === '1';
         localStorage.removeItem('__hw_probe__');
-        if (ok) store = localStorage;
+        if (probeOk) store = localStorage;
       }
     } catch (e) { store = null; }
 
-    function load() {
+    var migrated = false;
+    /** v1 → v2 迁移：数组包装为 { ema:null, sessions }，先落盘 v2 再移除旧键（防中途丢历史） */
+    function migrate(data) {
+      if (migrated || !store || !data) return data;
+      migrated = true;
       try {
-        if (store) { var raw = store.getItem(KEY); return raw ? JSON.parse(raw) : {}; }
-      } catch (e) {}
-      return memStore;
-    }
-    function save(data) {
-      try { if (store) { store.setItem(KEY, JSON.stringify(data)); return; } } catch (e) {}
-      memStore = data;
-    }
-    function keyOf(subject, grade, pluginId) {
-      return [subject, grade, pluginId].join(':');
+        var oldRaw = store.getItem(OLD_KEY);
+        if (!oldRaw) return data;
+        var old = JSON.parse(oldRaw);
+        var converted = false;
+        for (var k in old) {
+          if (Object.prototype.hasOwnProperty.call(old, k) && !data[k]) {
+            var arr = Array.isArray(old[k]) ? old[k] : [];
+            data[k] = { ema: null, sessions: arr.slice(-MEMORY_CAP) };
+            converted = true;
+          }
+        }
+        if (converted) {
+          try { store.setItem(KEY, JSON.stringify(data)); } catch (e2) { /* 落盘失败则保留旧键兜底 */ return data; }
+          store.removeItem(OLD_KEY);
+        }
+      } catch (e) { /* 迁移失败不阻塞，按空库继续 */ }
+      return data;
     }
 
-    /** 记录一次练习结果（correct/total 为该次练习的答对题数与总题数） */
-    function record(subject, grade, pluginId, correct, total) {
+    function load() {
+      var d;
+      try {
+        if (store) { var raw = store.getItem(KEY); d = raw ? JSON.parse(raw) : {}; }
+        else d = memStore.data || {};
+      } catch (e) { d = memStore.data || {}; }
+      return migrate(d) || {};
+    }
+    function save(data) {
+      memStore.data = data;
+      try { if (store) store.setItem(KEY, JSON.stringify(data)); } catch (e) { /* 内存兜底 */ }
+    }
+
+    function keyOf(subject, grade, pluginId, kpId) {
+      return kpId ? [subject, grade, pluginId, kpId].join(':')
+                  : [subject, grade, pluginId].join(':');
+    }
+    /** 取规范桶：缺失/形状不符时返回空桶 */
+    function bucketOf(data, k) {
+      var b = data[k];
+      if (!b || typeof b !== 'object' || !Array.isArray(b.sessions)) b = { ema: null, sessions: [] };
+      return b;
+    }
+
+    /**
+     * 记录一次练习结果。
+     * @param {number} correct 答对题数
+     * @param {number} total   总题数
+     * @param {Object} [context] 可选上下文：
+     *   - knowledgePointId {string}  知识点粒度记录（仅 competition/comprehensive 插件生效）
+     *   - questionDifficulties {number[]} 每题难度（需与 total 等长）
+     *   - correctFlags {boolean[]}       每题对错（与 questionDifficulties 平行）
+     *   二者齐备才启用加权统计；否则退化为普通正确率（EMA 同样使用普通率）。
+     */
+    function record(subject, grade, pluginId, correct, total, context) {
       if (!(total > 0)) return;
+      context = context || {};
       var data = load();
-      var k = keyOf(subject, grade, pluginId);
-      var arr = data[k] || [];
-      arr.push({ c: correct, t: total, ts: Date.now() });
-      if (arr.length > MEMORY_CAP) arr = arr.slice(arr.length - MEMORY_CAP);
-      data[k] = arr;
+      var wantKp = !!context.knowledgePointId && KP_PLUGIN_RE.test(String(pluginId || ''));
+      if (context.knowledgePointId && !wantKp) return; // 非综合/竞赛插件：不接受知识点级记录
+      var k = keyOf(subject, grade, pluginId, wantKp ? context.knowledgePointId : undefined);
+      if (!data[k] && Object.keys(data).length >= MAX_KEYS) return; // 容量保护
+      var b = bucketOf(data, k);
+
+      var diffs = Array.isArray(context.questionDifficulties) ? context.questionDifficulties : null;
+      var flags = Array.isArray(context.correctFlags) ? context.correctFlags : null;
+      var rate = correct / total;
+      var sess = { c: correct, t: total, ts: Date.now() };
+
+      if (diffs && flags && diffs.length === total && flags.length === total) {
+        var wOk = 0, wAll = 0;
+        for (var i = 0; i < total; i++) {
+          var dv = Number(diffs[i]);
+          if (!isFinite(dv)) dv = 1;
+          wAll += dv;
+          if (flags[i]) wOk += dv;
+        }
+        if (wAll > 0) {
+          sess.diffs = diffs.map(function (x) { return Number(x); });
+          sess.flags = flags.map(function (f) { return f ? 1 : 0; });
+          sess.wOk = wOk;
+          sess.wAll = wAll;
+          rate = wOk / wAll;
+        }
+      }
+
+      b.ema = (b.ema == null) ? rate : (EMA_ALPHA * rate + 0.6 * b.ema);
+      b.sessions.push(sess);
+      if (b.sessions.length > MEMORY_CAP) b.sessions = b.sessions.slice(-MEMORY_CAP);
+      data[k] = b;
       save(data);
     }
 
-    /** 计算调整量：{ difficultyDelta:-2..+2, typeBias:'hard'|'easy'|null, rate, sessions } */
-    function computeAdjustment(subject, grade, pluginId) {
-      var data = load();
-      var arr = data[keyOf(subject, grade, pluginId)] || [];
-      if (!arr.length) return { difficultyDelta: 0, typeBias: null, rate: null, sessions: 0 };
+    /** 汇总一个桶：{rate(难度加权), emaRate, lastRate, sessions} */
+    function summarize(b) {
+      var arr = b.sessions;
+      if (!arr.length) return { rate: null, emaRate: null, lastRate: null, sessions: 0 };
       var recent = arr.slice(-WINDOW);
-      var c = 0, t = 0;
-      recent.forEach(function (s) { c += s.c; t += s.t; });
-      var rate = t ? c / t : 0;
+      var c = 0, t = 0, wOk = 0, wAll = 0, hasW = false;
+      recent.forEach(function (x) {
+        c += x.c; t += x.t;
+        if (x.wAll > 0) { hasW = true; wOk += x.wOk; wAll += x.wAll; }
+      });
+      var eff = (hasW && wAll > 0) ? (wOk / wAll) : (t ? c / t : 0);
       var last = arr[arr.length - 1];
-      var lastRate = last.t ? last.c / last.t : 0;
+      var lastRate = (last.wAll > 0) ? (last.wOk / last.wAll) : (last.t ? last.c / last.t : 0);
+      return { rate: eff, emaRate: (b.ema != null) ? b.ema : eff, lastRate: lastRate, sessions: arr.length };
+    }
 
+    /** 计算调整量：{ difficultyDelta:-2..+2, typeBias, rate, emaRate, lastRate, sessions } */
+    function computeAdjustment(subject, grade, pluginId, kpId) {
+      var b = bucketOf(load(), keyOf(subject, grade, pluginId, kpId));
+      var s = summarize(b);
+      if (!s.sessions) return { difficultyDelta: 0, typeBias: null, rate: null, emaRate: null, lastRate: null, sessions: 0 };
       var delta = 0, bias = null;
-      if (rate >= 0.9 && lastRate >= 0.999) { delta = 2; bias = 'hard'; }
-      else if (rate >= 0.8) { delta = 1; bias = 'hard'; }
-      else if (rate <= 0.5) { delta = -2; bias = 'easy'; }
-      else if (rate <= 0.7) { delta = -1; bias = 'easy'; }
-      return { difficultyDelta: delta, typeBias: bias, rate: rate, sessions: arr.length };
+      if (s.emaRate >= 0.85 && s.lastRate >= 0.999) { delta = 2; bias = 'hard'; }
+      else if (s.emaRate >= 0.8) { delta = 1; bias = 'hard'; }
+      else if (s.emaRate <= 0.5) { delta = -2; bias = 'easy'; }
+      else if (s.emaRate <= 0.65) { delta = -1; bias = 'easy'; }
+      return { difficultyDelta: delta, typeBias: bias, rate: s.rate, emaRate: s.emaRate, lastRate: s.lastRate, sessions: s.sessions };
     }
 
     /** 把基础难度叠加调整量并钳制到 1..10 */
@@ -871,6 +959,45 @@
       return '';
     }
 
+    /**
+     * 前置依赖感知（供后续步骤使用）：查询某知识点全部前置的历史掌握情况。
+     * @returns {{ready:boolean|null, items:Array}|null} 无知识库/无前置返回 null；
+     *   ready=true 表示所有前置均有练习数据且难度加权正确率 ≥0.7。
+     */
+    function getPrerequisiteStatus(knowledgePointId) {
+      var KB = global.KnowledgeBank;
+      if (!KB || !knowledgePointId || !KB.forEach) return null;
+      var READY_LINE = 0.7;
+      function findById(id) {
+        var hit = null;
+        KB.forEach(function (entry) {
+          (entry.modules || []).forEach(function (mod) {
+            (mod.knowledgePoints || []).forEach(function (kp) {
+              if (kp.id === id && !hit) hit = { kp: kp, grade: entry.grade };
+            });
+          });
+        });
+        return hit;
+      }
+      var self = findById(knowledgePointId);
+      if (!self) return null;
+      var pres = Array.isArray(self.kp.prerequisites) ? self.kp.prerequisites : [];
+      if (!pres.length) return { ready: null, items: [] };
+      var data = load();
+      var items = [], allReady = true;
+      pres.forEach(function (pid) {
+        var info = findById(pid);
+        if (!info) { allReady = false; return; }
+        var b = bucketOf(data, keyOf('math', info.grade, info.kp.pluginId));
+        var s = summarize(b);
+        var item = { id: pid, name: info.kp.name, grade: info.grade,
+                     sessions: s.sessions, rate: s.rate, emaRate: s.emaRate };
+        if (!s.sessions || !(s.rate >= READY_LINE)) allReady = false;
+        items.push(item);
+      });
+      return { ready: allReady, items: items };
+    }
+
     /** 清除记忆：给定 subject/grade/pluginId 清单项；全空则清空全部 */
     function reset(subject, grade, pluginId) {
       var data = load();
@@ -880,9 +1007,11 @@
     }
 
     return {
+      VERSION: 'hw_adaptive_v2',
       record: record,
       computeAdjustment: computeAdjustment,
       adjustedDifficulty: adjustedDifficulty,
+      getPrerequisiteStatus: getPrerequisiteStatus,
       hint: hint,
       reset: reset
     };
