@@ -19,6 +19,14 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g6-calc.js 依赖 shared/common.js（PluginUtil），请先加载');
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-g6-calc.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+
+  // 难度缩放旋钮：generateQuestions 每轮由 profile.scale 刷新；dmax 用于安全的整数上界放大
+  // （仅作用于因数/系数上界；除数位数、商位数字段等结构性约束保持原样）
+  var SCALE = 1;
+  function dmax(x) { return Math.max(1, Math.round(x * SCALE)); }
 
   function rnd(min, max) { return _PU.randInt(min, max); }
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
@@ -86,15 +94,15 @@
     var v = pick(['dd', 'di', 'dd2']);
     var a, b, ans, aText, bText;
     if (v === 'dd') {
-      var a1 = rnd(10, 99), b1 = rnd(10, 99);
+      var a1 = rnd(10, dmax(99)), b1 = rnd(10, dmax(99));
       a = a1 / 10; b = b1 / 10; aText = a.toFixed(1); bText = b.toFixed(1);
       ans = a * b;
     } else if (v === 'di') {
-      var a2 = rnd(10, 999) / 10, b2 = rnd(2, 99);
+      var a2 = rnd(10, dmax(999)) / 10, b2 = rnd(2, dmax(99));
       a = a2; b = b2; aText = a.toFixed(1); bText = String(b);
       ans = a * b;
     } else {
-      var a3 = rnd(11, 99), b3 = rnd(11, 99);
+      var a3 = rnd(11, dmax(99)), b3 = rnd(11, dmax(99));
       a = a3 / 100; b = b3 / 100; aText = a.toFixed(2); bText = b.toFixed(2);
       ans = a * b;
     }
@@ -166,11 +174,11 @@
       return { kind: 'text', q: '(' + fs(a, d) + ' + ' + fs(d - a, d) + ') × ' + e, answer: String(e), hint: '先算括号内：同分母分数相加，分子相加得分母，结果是 1；再用 1 乘括号外的整数。' };
     }
     if (v === 'muladd') {
-      var b = rnd(2, 9);
+      var b = rnd(2, dmax(9));
       return { kind: 'text', q: '(' + fs(a, d) + ' × ' + d + ') + ' + b, answer: String(a + b), hint: '先算括号里的分数乘整数（能约分的先约分），再加外面的整数。' };
     }
     if (v === 'sub') {
-      var b2 = rnd(2, 9), c2 = a + b2;
+      var b2 = rnd(2, dmax(9)), c2 = a + b2;
       return { kind: 'text', q: c2 + ' − (' + fs(a, d) + ' × ' + d + ')', answer: String(b2), hint: '先算括号里的分数乘整数（能约分的先约分），再用外面的数减去它。' };
     }
     var a3 = rnd(2, 8), b3 = rnd(2, 5);
@@ -316,6 +324,9 @@
 
     generateQuestions: function (options) {
       var opts = options || {};
+      var prof = _D.consume(opts);
+      SCALE = prof.hasOwnLevel ? 1 : prof.scale;
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 10;
       var builder = TYPE_BUILDERS[type] || buildMixed;
@@ -336,6 +347,7 @@
           render: function (idx) { return qRender(this.data, idx); },
           check: function (userAnswers, idx) { return qCheck(this.data, userAnswers, idx); }
         };
+        if (diffStamp != null) q.difficulty = diffStamp;
         return q;
       });
     },

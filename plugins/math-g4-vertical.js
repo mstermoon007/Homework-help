@@ -21,6 +21,11 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g4-vertical.js 依赖 shared/common.js（PluginUtil），请先加载');
+  // 竖式题受位数/整除等结构性约束，数值范围不随难度缩放；
+  // 仍统一消费 profile 以标注 q.difficulty（供 Adaptive v2 加权）。
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-g4-vertical.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -249,6 +254,8 @@
 
     generateQuestions: function (options) {
       var opts = options || {};
+      var prof = _D.consume(opts);
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 10;
       var builder = TYPE_BUILDERS[type] || buildMixed;
@@ -260,7 +267,7 @@
         attempts++;
       }
       return list.map(function (p) {
-        return {
+        var q = {
           type: 'vertical',
           kind: p.kind,
           data: p,
@@ -269,6 +276,8 @@
           render: function (idx) { return qRender(this.data, idx); },
           check: function (userAnswers, idx) { return qCheck(this.data, userAnswers, idx); }
         };
+        if (diffStamp != null) q.difficulty = diffStamp;
+        return q;
       });
     },
 

@@ -19,7 +19,13 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g6-oral.js 依赖 shared/common.js（PluginUtil），请先加载');
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-g6-oral.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
+  // 难度缩放旋钮：generateQuestions 每轮由 profile.scale 刷新；dmax 用于安全的整数上界放大
+  var SCALE = 1;
+  function dmax(x) { return Math.max(1, Math.round(x * SCALE)); }
   function rnd(min, max) { return _PU.randInt(min, max); }
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
   function gcd(a, b) { return b ? gcd(b, a % b) : a; }
@@ -57,7 +63,7 @@
   function buildFracDivInt() {
     var d = pick([3, 4, 5, 6, 8, 10]);
     var a = rnd(1, d - 1);
-    var c = rnd(2, 9);
+    var c = rnd(2, dmax(9));
     return { text: fs(a, d) + ' ÷ ' + c + ' =', answer: fracAns(a, d * c), hint: '分数除以整数：等于乘这个整数的倒数，能约分要约分。' };
   }
 
@@ -72,7 +78,7 @@
       var r = reduce(a * d2, d * a2);
       return { text: fs(a, d) + ' ÷ ' + fs(a2, d2) + ' =', answer: r[1] === 1 ? String(r[0]) : fs(r[0], r[1]), hint: '除以一个分数等于乘这个分数的倒数。' };
     }
-    var c = rnd(2, 9);
+    var c = rnd(2, dmax(9));
     var d2 = pick([2, 3, 4, 5]);
     var a2 = rnd(1, d2 - 1);
     return { text: c + ' ÷ ' + fs(a2, d2) + ' =', answer: fracAns(c * d2, a2), hint: '整数除以分数：等于乘这个分数的倒数。' };
@@ -99,7 +105,7 @@
       var k = rnd(2, 4);
       return { text: (x * k) + ' : ' + (y * k) + '，化成最简整数比 =', answer: x + ':' + y, hint: '比的前项和后项同时除以最大公因数 ' + k + '。' };
     }
-    var b = rnd(2, 9), q = rnd(2, 9);
+    var b = rnd(2, dmax(9)), q = rnd(2, dmax(9));
     return { text: (q * b) + ' : ' + b + '，求比值 =', answer: String(q), hint: '比值 = 前项 ÷ 后项 = ' + (q * b) + ' ÷ ' + b + '。' };
   }
 
@@ -107,7 +113,7 @@
   function buildNegAddSub() {
     var v = pick(['add', 'sub']);
     if (v === 'add') {
-      var a = rnd(2, 9), b = rnd(1, 9);
+      var a = rnd(2, dmax(9)), b = rnd(1, 9);
       var ans = b - a;
       return { text: '−' + a + ' + ' + b + ' =', answer: String(ans), hint: '异号两数相加：取绝对值较大的数的符号，再用较大的绝对值减去较小的绝对值。' };
     }
@@ -188,6 +194,9 @@
 
     generateQuestions: function (options) {
       var opts = options || {};
+      var prof = _D.consume(opts);
+      SCALE = prof.hasOwnLevel ? 1 : prof.scale;
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 10;
       var builder = TYPE_BUILDERS[type] || buildMixed;
@@ -198,7 +207,9 @@
         attempts++;
       }
       return list.map(function (p) {
-        return { type: 'oral', q: p.text, answer: String(p.answer), hint: p.hint, inputType: 'text' };
+        var q = { type: 'oral', q: p.text, answer: String(p.answer), hint: p.hint, inputType: 'text' };
+        if (diffStamp != null) q.difficulty = diffStamp;
+        return q;
       });
     },
 

@@ -145,13 +145,34 @@
     return extend({}, base);
   }
 
+  /**
+   * 插件统一消费入口（批次4）。
+   * @param {{difficulty?:number, adaptiveDelta?:number, typeBias?:string,
+   *           level?:*}} options 插件 generate(options) 原样传入即可：
+   *   - options.level 存在（插件自带难度分档 chip）→ hasOwnLevel=true，
+   *     通用难度不叠加（effectiveLevel 回落默认档），插件保持自身逻辑；
+   *   - 否则按 difficulty(+adaptiveDelta) 解析 profile。
+   * @returns {Object} createProfile 结果 + hasOwnLevel 标记
+   */
+  function consume(options) {
+    options = options || {};
+    var hasOwnLevel = options.level != null && options.level !== '';
+    var prof = hasOwnLevel
+      ? createProfile(undefined, 0)
+      : createProfile(options.difficulty, Number(options.adaptiveDelta) || 0,
+                      { typeBias: options.typeBias });
+    prof.hasOwnLevel = hasOwnLevel;
+    return prof;
+  }
+
   // ============ 导出：挂载 App.Difficulty（Node 端默认导出同一对象） ============
   global.App = global.App || {};
   var Difficulty = {
     TIERS: TIERS,
     difficultyToStructure: difficultyToStructure,
     createProfile: createProfile,
-    consumeProfile: consumeProfile
+    consumeProfile: consumeProfile,
+    consume: consume
   };
   global.App.Difficulty = Difficulty;
 

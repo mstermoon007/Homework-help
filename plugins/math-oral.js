@@ -17,6 +17,9 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-oral.js 依赖 shared/common.js（PluginUtil），请先加载');
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-oral.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ MathOralAgent 引擎（原 math-oral-agent.js） ============
   var GRADE_CONFIG = {
@@ -41,14 +44,15 @@
   function MathOralAgent(options) {
     options = options || {};
     var cfg = GRADE_CONFIG[options.grade] || GRADE_CONFIG[1];
-    // 难度（1-10）→ 最大值缩放：level 3 用基准，更高难度数值增大。
-    // 显式传入 maxNum（如口算面板「难度＝最大数」用户自行填充）时即填即得，不再被难度缩放放大。
-    var diff = _PU.diffLevel(options.difficulty);
+    // 难度统一经 App.Difficulty.consume 解析（批次4）：profile.scale 替代直调 diffScale。
+    // 显式传入 maxNum（口算面板「难度＝最大数」）时即填即得，等价自带分档，不再被难度缩放放大。
+    var prof = _D.consume(options);
     this.grade      = options.grade;
-    this.difficulty = diff;
+    this.difficulty = prof.effectiveLevel;
     this.maxNum     = options.maxNum != null
       ? Math.round(options.maxNum)
-      : Math.round(cfg.defaultMax * _PU.diffScale(diff));
+      : Math.round(cfg.defaultMax * prof.scale);
+    this.structure  = prof.structure; // steps/allowBracket 等结构参数（供连加/混合档位参考）
     this.count      = options.count  != null ? options.count  : cfg.defaultCount;
     this.noNegative = options.noNegative !== false;
     // 二年级：默认表内乘除法（乘法口诀表范围内，÷ 必整除）；
@@ -405,12 +409,15 @@
       var key = q.text + (q.multi ? '...' + q.answer.q + 'r' + q.answer.r : '');
       if (!seen[key]) {
         seen[key] = true;
+        q.difficulty = this.difficulty; // 供 App.Adaptive v2 难度加权
         questions.push(q);
       }
     }
 
     while (questions.length < this.count) {
-      questions.push(this._generateOne());
+      var fillQ = this._generateOne();
+      fillQ.difficulty = this.difficulty;
+      questions.push(fillQ);
     }
 
     var shuffled = this._shuffle(questions);
@@ -506,7 +513,7 @@
   /** MathOralAgent 题目 → 标准 Question（renderCard 渲染 + 自判定） */
   function toQuestion(q) {
     var isRem = q.answer && typeof q.answer === 'object' && q.answer.q != null;
-    return {
+    var out = {
       type: 'oral',
       q: q.text,
       answer: q.answer,
@@ -528,6 +535,8 @@
         return String(v == null ? '' : v).trim() === String(this.answer);
       }
     };
+    if (q.difficulty != null) out.difficulty = q.difficulty;
+    return out;
   }
 
   var _lastMeta = null; // generateQuestions 产出后供 meta() 读取（工厂保证先 questions 后 meta）
