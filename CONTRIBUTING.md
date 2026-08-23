@@ -116,6 +116,27 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
   需要主题色的 SVG 请改写在 `style="fill:var(--ink)"` 上。
 - 打印安全：打印窗口会复制原页 `<link>`/`<style>`（见 `shared/print.js`），令牌正常解析。
 
+### 3.6 难度系统使用规范（v2）
+
+难度解析统一走 `shared/difficulty.js`（`App.Difficulty`），禁止各插件自造难度逻辑：
+
+1. **插件必须用 `App.Difficulty.consume(options)` 解析难度**：在 `generateQuestions(opts)`
+   开头调用，取 `profile.effectiveLevel / scale / structure / typePreference` 消费；
+   数值范围缩放用 `profile.scale`（替代直调 `diffScale/diffMax`），运算步数/括号/乘除
+   用 `profile.structure.steps / allowBracket / allowMultDiv`。
+2. **题目对象需携带可选字段** `knowledgePointId`（对应 knowledge-bank.js 的知识点 ID）
+   与 `difficulty`（该题相对难度 1–10）；practice.html 批改后经
+   `App.Adaptive.recordSession` 采集——未标注难度的题按标准档 3 计权，
+   未提供 knowledgePointId 的插件保持纯插件级统计。
+3. **禁止直接使用 `Math.random()` 控制难度参数**（随机数规范见 §3）；
+   难度相关随机一律基于 `randInt` 系工具。
+4. **自带难度分档的插件**（settings 中存在 `level` 分档 chip）：跳过通用消费——
+   `consume()` 检测到 `options.level` 会置 `hasOwnLevel=true` 并回落默认档；
+   此类插件不要读取 `options.difficulty` 自行叠加。
+5. 结构分档参考：1–2 单步；3–4 两步连加连减；5–6 三步含括号乘除；
+   7–8 四步符号交替；9–10 五步多层括号（详见 `App.Difficulty.TIERS`，
+   断言见 `dev/test-difficulty-structure.js`）。
+
 ### 4. 注册与依赖
 
 - 新增插件：从 `plugins/_template.js` 复制开始编写，保留必需结构。

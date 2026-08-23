@@ -54,6 +54,24 @@ g{grade}-{moduleIdLower}-{baseSlug}
 - 输出即完整 `<svg>`（自带 viewBox），移动端/打印缩放由 `.scene-box svg { max-width:100% }` 规则兜底；
 - 测试义务：`node dev/verify-svg.js` + 对应 `dev/test-svg-*.js` 必须通过。
 
+## 难度系统 v2（2026-08-24 起启用）
+
+- **解析层**：`shared/difficulty.js`（`App.Difficulty`）——`consume(options)` 为插件唯一
+  难度入口（自带 `level` 分档时 hasOwnLevel=true，通用难度不叠加）；
+  `difficultyToStructure` 五档结构映射；`createProfile`/`consumeProfile` 供细分消费。
+- **Adaptive 存储 v2**：`localStorage['hw_adaptive_v2']`，桶 `{ ema, sessions }`；
+  主键 `(subject:grade:pluginId[:kpId])`，凡携带 kpid 的会话建 KP 桶（MAX_KEYS=400 保护）；
+  首次读取自动迁移并清除 `hw_adaptive_v1`。
+- **统计**：难度加权正确率 `Σ答对难度/Σ全部难度`（context 平行数组
+  `questionDifficulties`+`correctFlags`）；EMA 平滑 `emaRate=0.4×本次+0.6×上次`；
+  规则基于 (emaRate,lastRate)：≥0.85 且全对 +2 / ≥0.8 +1 / ≤0.5 −2 / ≤0.65 −1。
+- **采集**：Question 可选字段 `knowledgePointId/difficulty`；
+  practice.html 批改后走 `recordSession(questions, flags)`（插件级加权摘要 + KP 分组）。
+- **综合练习**：kb 组卷按 KP 统计薄弱加权（<0.7 ×1.5）、极薄弱（<0.5）降档、
+  薄弱前置注入 2 题/上限 ⌈count×30%⌉（`__prereqFor` 标记）。
+- 相关测试：`dev/test-difficulty.js`（含步骤6回归块）、`dev/test-difficulty-structure.js`、
+  `dev/test-adaptive.js`、`dev/test-adaptive-e2e.js`、`dev/test-comprehensive-adaptive.js`。
+
 ## 常用命令
 
 ```bash

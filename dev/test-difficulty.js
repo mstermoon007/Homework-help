@@ -6,6 +6,13 @@
 
 var path = require('path');
 var ROOT = path.join(__dirname, '..');
+// localStorage shim（步骤6：KP 级 Adaptive 存储断言需要）
+global.localStorage = {
+  _d: {},
+  getItem: function (k) { return Object.prototype.hasOwnProperty.call(this._d, k) ? this._d[k] : null; },
+  setItem: function (k, v) { this._d[k] = String(v); },
+  removeItem: function (k) { delete this._d[k]; }
+};
 var registry = require(path.join(ROOT, 'plugins/registry.js'));
 var common = require(path.join(ROOT, 'shared/common.js'));
 
@@ -249,6 +256,55 @@ Promise.all(promises).then(function () {
   var vert = loadP('math-g4-vertical').generate({ grade: 4, count: 10, difficulty: 9 });
   assert(vert.questions.every(function (q) { return q.difficulty === 9; }),
     'math-g4-vertical：标注型迁移生效（位数语义保持，仅标注）');
+
+  // ===== 步骤6 回归：结构单调 / 加权正确率 / KP 级 Adaptive =====
+  console.log('\n===== 步骤6 回归（结构单调 · 加权率 · KP 级存储） =====');
+  var A = global.App.Adaptive;
+  function approx(a, b) { return Math.abs(a - b) < 1e-9; }
+  // a) difficultyToStructure 单调性 + 分档边界抽查
+  var prevScore = -Infinity, monoOk = true;
+  [1,2,3,4,5,6,7,8,9,10].forEach(function (l) {
+    var sc = D.difficultyToStructure(l).complexityScore;
+    if (!(sc > prevScore)) monoOk = false;
+    prevScore = sc;
+  });
+  assert(monoOk, 'difficultyToStructure：1-10 complexityScore 严格单调递增');
+  assert(D.difficultyToStructure(3).steps === 2 && D.difficultyToStructure(3).allowBracket === false,
+    'structure lv3：steps=2 无括号');
+  assert(D.difficultyToStructure(9).steps === 5 && D.difficultyToStructure(9).nestedBrackets === true,
+    'structure lv9：steps=5 多层括号');
+
+  // b) 加权正确率计算（错易对难 → rate 偏向高难对题）
+  (function () {
+    A.reset('math', 4, 'math-weighted-check');
+    A.record('math', 4, 'math-weighted-check', 1, 2,
+      { questionDifficulties: [1, 9], correctFlags: [false, true] });
+    var adj = A.computeAdjustment('math', 4, 'math-weighted-check');
+    assert(approx(adj.rate, 0.9),
+      '加权正确率 = Σ答对难度/Σ全部难度 = 9/10 = 0.9（普通率 0.5）');
+    assert(adj.difficultyDelta === 1,
+      '加权率驱动调整：0.9 ≥0.8 且 lastRate=0.9<1 → +1');
+  })();
+
+  // c) 知识点级 Adaptive 存储与调整
+  (function () {
+    A.reset('math', 6, 'math-kp-store-check');
+    A.record('math', 6, 'math-kp-store-check', 19, 20,
+      { knowledgePointId: 'g6-m2-kp-store-test', questionDifficulties: [6,6,6,6],
+        correctFlags: [true,true,true,true] });
+    // 补一条普通会话确认插件级与 KP 级互不干扰
+    A.record('math', 6, 'math-kp-store-check', 10, 20);
+    var kpAdj = A.computeAdjustment('math', 6, 'math-kp-store-check', 'g6-m2-kp-store-test');
+    assert(kpAdj.sessions === 1 && approx(kpAdj.emaRate, 0.95),
+      'KP 桶独立存储：sessions=1，ema=0.95');
+    assert(kpAdj.difficultyDelta === 1, 'KP 级调整按自身历史计算（0.95≥0.8 → +1）');
+    var plugAdj = A.computeAdjustment('math', 6, 'math-kp-store-check');
+    assert(plugAdj.sessions === 1 && approx(plugAdj.rate, 0.5),
+      '插件级摘要不受 KP 记录影响（rate=0.5 → −2 easy）');
+    var raw = JSON.parse(global.localStorage.getItem('hw_adaptive_v2'));
+    assert(!!raw['math:6:math-kp-store-check:g6-m2-kp-store-test'],
+      'localStorage v2 含知识点级条目');
+  })();
 
   console.log('\n' + (fail === 0 ? '✅ 全部通过' : '❌ ' + fail + ' 项失败'));
   process.exit(fail === 0 ? 0 : 1);
