@@ -28,34 +28,34 @@
   // ============ 竖式渲染辅助 ============
   // 数字串：右对齐、等宽字体，保证数位/小数点对齐
   function vnum(s) {
-    return '<span style="display:inline-block;min-width:78px;text-align:right;font-family:Menlo,Consolas,monospace;font-size:16px;font-weight:800;color:#27324a;padding:1px 6px;">' + s + '</span>';
+    return '<span style="display:inline-block;min-width:78px;text-align:right;font-family:Menlo,Consolas,monospace;font-size:16px;font-weight:800;color:var(--ink);padding:1px 6px;">' + s + '</span>';
   }
   // 运算符号列（保持各行的符号列同宽）
   function vop(s) {
-    return '<span style="display:inline-block;width:20px;text-align:right;font-weight:800;color:#27324a;">' + (s || '&nbsp;') + '</span>';
+    return '<span style="display:inline-block;width:20px;text-align:right;font-weight:800;color:var(--ink);">' + (s || '&nbsp;') + '</span>';
   }
   // 横线
-  var vline = '<div style="border-top:2px solid #27324a;margin:2px 0 6px;width:118px;"></div>';
+  var vline = '<div style="border-top:2px solid var(--ink);margin:2px 0 6px;width:118px;"></div>';
 
   // 单空输入（乘法 / 整除除法 / 小数加减）
   function singleInp(idx) {
-    return '<input type="text" data-index="' + idx + '" placeholder="?" autocomplete="off" style="width:96px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:16px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;">';
+    return '<input type="text" data-index="' + idx + '" placeholder="?" autocomplete="off" style="width:96px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:16px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;">';
   }
   // 商 + 余数 两空输入（有余数除法）
   function remInp(idx) {
     return '<span style="display:inline-flex;align-items:center;gap:3px;">' +
-      '<input type="text" data-idx="' + idx + '" data-field="0" placeholder="商" autocomplete="off" style="width:52px;height:30px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;">' +
-      '<span style="font-size:14px;color:#7a879c;font-weight:700;">…</span>' +
-      '<input type="text" data-idx="' + idx + '" data-field="1" placeholder="余" autocomplete="off" style="width:52px;height:30px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;">' +
+      '<input type="text" data-idx="' + idx + '" data-field="0" placeholder="商" autocomplete="off" style="width:52px;height:30px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;">' +
+      '<span style="font-size:14px;color:var(--muted);font-weight:700;">…</span>' +
+      '<input type="text" data-idx="' + idx + '" data-field="1" placeholder="余" autocomplete="off" style="width:52px;height:30px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;">' +
       '</span>';
   }
 
   function cardHTML(idx, inner) {
-    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 0.5cm;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 0.5cm;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-      '<span class="num" style="flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
+      '<span class="num" style="flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand-d);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
       '&nbsp;&nbsp;&nbsp;&nbsp;' +
-      '<span class="q-text" style="font-size:12px;color:#7a879c;font-weight:700;display:inline;vertical-align:middle;">用竖式计算</span>' +
+      '<span class="q-text" style="font-size:12px;color:var(--muted);font-weight:700;display:inline;vertical-align:middle;">用竖式计算</span>' +
       '</div>' +
       inner +
       '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
@@ -79,9 +79,9 @@
       '<table style="border-collapse:collapse;font-family:Menlo,Consolas,monospace;margin:2px 0 0 8px;">' +
       '<tr><td style="width:44px;"></td><td style="width:16px;"></td><td style="text-align:left;">' + qInp + '</td></tr>' +
       '<tr>' +
-      '<td style="text-align:right;font-size:16px;font-weight:800;color:#27324a;padding:2px 0;">' + divisor + '</td>' +
-      '<td style="border-top:2px solid #27324a;border-left:2px solid #27324a;height:14px;"></td>' +
-      '<td style="text-align:right;font-size:16px;font-weight:800;color:#27324a;padding:2px 4px;">' + dividend + '</td>' +
+      '<td style="text-align:right;font-size:16px;font-weight:800;color:var(--ink);padding:2px 0;">' + divisor + '</td>' +
+      '<td style="border-top:2px solid var(--ink);border-left:2px solid var(--ink);height:14px;"></td>' +
+      '<td style="text-align:right;font-size:16px;font-weight:800;color:var(--ink);padding:2px 4px;">' + dividend + '</td>' +
       '</tr>' +
       '</table>';
     return cardHTML(idx, inner);

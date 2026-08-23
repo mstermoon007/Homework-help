@@ -151,16 +151,16 @@
         '<tr><td style="border:1px solid #c3ccd8;padding:4px 14px;font-weight:800;background:#eef3fb;">图形</td>' +
         p.rows.map(function (r) { return '<td style="border:1px solid #c3ccd8;padding:4px 14px;text-align:center;">' + SHAPES[r.shape](COLORS[0]) + '</td>'; }).join('') + '</tr>' +
         '<tr><td style="border:1px solid #c3ccd8;padding:4px 14px;font-weight:800;background:#eef3fb;">数量</td>' +
-        p.rows.map(function (r, j) { return '<td style="border:1px solid #c3ccd8;padding:4px 8px;text-align:center;"><input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:40px;height:28px;border:2px dashed #ccc;border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;"></td>'; }).join('') + '</tr>' +
+        p.rows.map(function (r, j) { return '<td style="border:1px solid #c3ccd8;padding:4px 8px;text-align:center;"><input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:40px;height:28px;border:2px dashed #ccc;border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;"></td>'; }).join('') + '</tr>' +
         '</table>';
       mid = renderGroup(p.group) + tableHTML;
     } else {
       var barHTML = '<div style="margin:6px auto;max-width:280px;">';
       p.rows.forEach(function (r) {
         barHTML += '<div style="display:flex;align-items:center;gap:6px;margin:4px 0;">' +
-          '<span style="width:56px;text-align:right;font-size:13px;font-weight:700;color:#27324a;">' + SHAPES[r.shape](COLORS[0]) + '</span>' +
+          '<span style="width:56px;text-align:right;font-size:13px;font-weight:700;color:var(--ink);">' + SHAPES[r.shape](COLORS[0]) + '</span>' +
           '<span style="display:flex;gap:2px;">';
-        for (var c = 0; c < r.count; c++) barHTML += '<span style="width:12px;height:16px;background:#5b8def;border:1px solid #3b5bdb;display:inline-block;"></span>';
+        for (var c = 0; c < r.count; c++) barHTML += '<span style="width:12px;height:16px;background:var(--brand);border:1px solid #3b5bdb;display:inline-block;"></span>';
         barHTML += '</span></div>';
       });
       barHTML += '</div>';
@@ -178,21 +178,21 @@
     if (p.inputType === 'text') {
       inputHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;">' +
         '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off">' +
-        '<span style="font-size:13px;color:#7a879c;font-weight:600;">个</span></div>';
+        '<span style="font-size:13px;color:var(--muted);font-weight:600;">个</span></div>';
     } else if (p.inputType === 'multi' && p.kind !== 'table') {
       var blanksHTML = '';
       p.blanks.forEach(function (label, j) {
-        blanksHTML += '<span style="margin:0 4px;font-size:14px;font-weight:700;color:#27324a;">' + label + '：</span>' +
-          '<input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:44px;height:30px;border:2px dashed #ccc;border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;margin:0 6px;">';
+        blanksHTML += '<span style="margin:0 4px;font-size:14px;font-weight:700;color:var(--ink);">' + label + '：</span>' +
+          '<input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:44px;height:30px;border:2px dashed #ccc;border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;margin:0 6px;">';
       });
       inputHTML = '<div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:6px;">' + blanksHTML + '</div>';
     }
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#5b8def;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
-        '<span class="q-text" style="font-size:15px;font-weight:800;color:#27324a;margin:4px 0 6px;">' + p.question + '</span>' +
+        '<span class="q-text" style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 6px;">' + p.question + '</span>' +
       '</div>' +
       mid +
       inputHTML +

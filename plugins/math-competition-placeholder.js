@@ -69,8 +69,8 @@
       var title = moduleName ? '「' + moduleName + '」' : '';
       return '<div class="placeholder-tip" style="padding:48px 24px;text-align:center;">' +
         '<div style="font-size:56px;line-height:1;margin-bottom:16px;">🚧</div>' +
-        '<div style="font-size:20px;font-weight:800;color:#3f6fd1;margin-bottom:8px;">' + title + '题目开发中，敬请期待</div>' +
-        '<div style="font-size:13px;color:#7a879c;">本模块为竞赛专题占位，具体题型正在建设中，请稍后再来。</div>' +
+        '<div style="font-size:20px;font-weight:800;color:var(--brand-d);margin-bottom:8px;">' + title + '题目开发中，敬请期待</div>' +
+        '<div style="font-size:13px;color:var(--muted);">本模块为竞赛专题占位，具体题型正在建设中，请稍后再来。</div>' +
         '</div>';
     },
 

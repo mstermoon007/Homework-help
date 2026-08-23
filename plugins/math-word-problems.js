@@ -920,16 +920,16 @@
   // ============ 标准题目对象：渲染 / 判定 ============
   /** 渲染单题卡片（标准 Question.render） */
   function renderWordCard(question, idx) {
-    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid #e3e9f2;border-radius:12px;padding:14px 12px;text-align:center;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid var(--line);border-radius:12px;padding:14px 12px;text-align:center;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand-d);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
-        '<span class="q-text" style="font-size:15px;font-weight:700;color:#27324a;display:inline;vertical-align:middle;margin:4px 0 6px;line-height:1.5;">' + question.question + '</span>' +
+        '<span class="q-text" style="font-size:15px;font-weight:700;color:var(--ink);display:inline;vertical-align:middle;margin:4px 0 6px;line-height:1.5;">' + question.question + '</span>' +
       '</div>' +
-      (question.hint ? '<div style="font-size:11px;color:#7a879c;margin-bottom:6px;">💡 ' + question.hint + '</div>' : '') +
+      (question.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + question.hint + '</div>' : '') +
       '<div style="display:flex;align-items:center;justify-content:center;gap:4px;">' +
-      '<input type="text" class="answer-input" data-index="' + idx + '" autocomplete="off" style="width:64px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;">' +
-      (question.unit ? '<span style="font-size:13px;color:#7a879c;font-weight:600;">' + question.unit + '</span>' : '') +
+      '<input type="text" class="answer-input" data-index="' + idx + '" autocomplete="off" style="width:64px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;">' +
+      (question.unit ? '<span style="font-size:13px;color:var(--muted);font-weight:600;">' + question.unit + '</span>' : '') +
       '</div>' +
       '</div>';
   }

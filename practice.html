@@ -43,15 +43,15 @@
             <button class="chip" data-count="custom" role="radio" aria-checked="false">自定义</button>
             <input type="number" id="customCount" min="1" max="50" step="1" placeholder="自定义"
                    autocomplete="off"
-                   style="width:70px;height:30px;border:1.5px solid #c9d4e6;border-radius:8px;font-size:13px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafbff;outline:none;display:none;">
+                   style="width:70px;height:30px;border:1.5px solid #c9d4e6;border-radius:8px;font-size:13px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafbff;outline:none;display:none;">
             <span class="count-tip" id="countTip" style="font-size:11px;color:#9aa5b5;font-weight:500;display:none;"></span>
           </div>
           <div class="group" id="difficultyGroup">
             <span class="lbl">难度：</span>
             <input type="number" id="difficultyInput" min="1" max="10" step="1" value="3"
                    title="填写 1-10 的整数，数字越大难度越高（数值更大、逻辑更深）"
-                   style="width:64px;height:32px;border:2px solid #d5dff0;border-radius:8px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafbff;outline:none;">
-            <span class="lbl" style="color:#7a879c;font-weight:500;">1~10</span>
+                   style="width:64px;height:32px;border:2px solid #d5dff0;border-radius:8px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafbff;outline:none;">
+            <span class="lbl" style="color:var(--muted);font-weight:500;">1~10</span>
           </div>
         </div>
       </div>
@@ -365,7 +365,7 @@
     box.appendChild(inp);
     if (s.hint) {
       var hh = el('span', 'lbl', s.hint);
-      hh.style.cssText = 'color:#7a879c;font-size:11px;';
+      hh.style.cssText = 'color:var(--muted);font-size:11px;';
       box.appendChild(hh);
     }
     container.appendChild(box);
