@@ -162,6 +162,19 @@ g{grade}-{moduleIdLower}-{baseSlug}
 **校验**：`node dev/verify-knowledge-bank.js` 自动检查 ID 格式、全局唯一、引用存在且前置不指向更高年级、
 竞赛难度跨年级不降、status 与插件占位一致、详情页文件一一对应。
 
+**知识库同步要求**（插件 ↔ knowledge-bank 双向对齐，校验脚本第 8 条强制）：
+
+1. **新增插件并声明 `knowledgePoints` 时，必须同步在 `shared/knowledge-bank.js` 中添加对应模块和知识点**；
+   反之，知识库条目的 `pluginId` 必须是注册表中的有效插件 ID。
+2. 知识点 ID 遵循 `g{grade}-{moduleId}-{slug}` 三段式规范；插件声明的知识点 ID 必须登记在
+   与声明年级键一致的年级下（如 `knowledgePoints: { 6: ['g6-c2-…'] }` 对应知识库六年级条目）。
+3. 知识库条目的 `pluginId` 必须与实现该知识点的插件 ID 一致；占位期指向
+   `math-competition-placeholder` 并将知识点 `status` 置为 `'placeholder'`。
+4. **修改或删除插件时同步维护**：插件收缩年级 / 退役时，移除其不再服务年级的
+   `knowledgePoints` 声明与对应知识库条目；改 ID 时同步更新知识库引用。
+5. 违反上述任一条，`node dev/verify-knowledge-bank.js` 将以非零退出并列出
+   插件名、年级与缺失/多余的知识点 ID。
+
 **迁移注意事项**（2026-08-23 已完成整体迁移）：
 - 旧 ID（如 `addsub-20`、`g4-fill-line`）已迁移为三段式；旧引用仅存于 `archive/migration-20260823/`。
 - 插件 `createPlugin` 的 `knowledgePoints`：单年级用数组、多年级用 `{ grade: [id...] }`（ID 含年级）。

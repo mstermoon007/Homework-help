@@ -606,6 +606,9 @@
     plugin.generate = config.generate ? config.generate : defaultGenerate;
     plugin.render = config.render ? config.render : defaultRender;
     plugin.check = config.check ? config.check : defaultCheck;
+    // 声明式知识点以独立字段暴露（RESERVED 不合并，避免与运行时方法混淆），
+    // 供 dev/verify-knowledge-bank.js 等工具静态校验「声明 ↔ 知识库」一致性
+    if (config.knowledgePoints) plugin.declaredKnowledgePoints = config.knowledgePoints;
 
     return plugin;
   }

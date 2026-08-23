@@ -11,6 +11,9 @@
  *      非占位插件指向占位插件时给出警告
  *   5. 四年级 M1-M12 全覆盖、无空模块（专项校验）
  *   6. 占位插件已标记 isPlaceholder
+ *   8. 插件 knowledgePoints 声明 ↔ 知识库双向对齐：
+ *      正向——插件声明覆盖的知识点必须登记在知识库对应年级；
+ *      反向——知识库条目的 pluginId 必须已在注册表（第 3 条）。
  *
  * 用法：
  *   node dev/verify-knowledge-bank.js          # 全年级校验
@@ -219,6 +222,60 @@ if (fs.existsSync(KNOW_DIR)) {
     errors.push(`多余 HTML 文件: knowledge/${f}`);
   });
 }
+
+// ============ 8. 插件 knowledgePoints 声明 ↔ 知识库双向对齐 ============
+// 正向：插件声明覆盖的每个知识点 ID 必须登记在知识库（且年级一致）
+// 反向：知识库 pluginId → 注册表（见第 3 条检查），此处补齐声明侧闭环
+const kpIdsByGrade = {};
+bank.forEach(e => {
+  const s = new Set();
+  (e.modules || []).forEach(mod => (mod.knowledgePoints || []).forEach(kp => s.add(kp.id)));
+  kpIdsByGrade[e.grade] = s;
+});
+const allBankIds = new Set(Object.values(kpIdsByGrade).flatMap(s => [...s]));
+
+// 加载共享运行时（PluginUtil）后逐个 require 插件模块，静态读取 knowledgePoints 声明
+require(path.join(ROOT, 'shared', 'common.js'));
+registry.forEach(rec => {
+  let mod = null;
+  try {
+    mod = require(path.join(ROOT, rec.file));
+  } catch (e) {
+    errors.push(`[声明→知识库] 插件 ${rec.id} 加载失败：${e.message}`);
+    return;
+  }
+  const plugin = (mod && (mod.declaredKnowledgePoints || mod.knowledgePoints)) ? mod
+    : ((mod && global.__currentPlugin && global.__currentPlugin.id === rec.id) ? global.__currentPlugin : null);
+  if (!plugin) return;
+  const decl = plugin.declaredKnowledgePoints || plugin.knowledgePoints;
+  if (!decl) return; // 未声明知识点，无需对齐
+
+  const label = rec.name ? `${rec.name}(${rec.id})` : rec.id;
+  if (Array.isArray(decl)) {
+    // 平铺格式：无法定位年级，仅校验 ID 全局存在
+    decl.forEach(id => {
+      if (!allBankIds.has(id)) {
+        errors.push(`[声明→知识库] 插件 ${label} 声明的知识点未在知识库登记: ${id}（请补充 knowledge-bank.js 或修正声明）`);
+      }
+    });
+    return;
+  }
+  Object.keys(decl).forEach(k => {
+    const g = Number(k);
+    const ids = Array.isArray(decl[k]) ? decl[k] : [];
+    if (Array.isArray(rec.grades) && !rec.grades.includes(g)) {
+      errors.push(`[声明年级] 插件 ${label} 的 grades=[${rec.grades}] 不含 knowledgePoints 声明的年级键 ${g}`);
+    }
+    const bankSet = kpIdsByGrade[g] || new Set();
+    ids.forEach(id => {
+      if (!allBankIds.has(id)) {
+        errors.push(`[声明→知识库] 插件 ${label} 在 ${g} 年级声明的知识点未在知识库登记: ${id}（请补充 knowledge-bank.js 或修正声明）`);
+      } else if (!bankSet.has(id)) {
+        errors.push(`[声明年级错位] 插件 ${label} 将 ${id} 声明在 ${g} 年级，但该知识点登记在其它年级`);
+      }
+    });
+  });
+});
 
 // 输出
 console.log('\n📋 知识库结构验证结果\n' + '='.repeat(40));

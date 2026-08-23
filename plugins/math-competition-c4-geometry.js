@@ -232,14 +232,6 @@
           'g4-c4-c4-count',
           'g4-c4-c4-transform',
           'g4-c4-c4-solid'
-      ],
-      6: [
-          'g6-c4-c4-pa',
-          'g6-c4-c4-cutfill',
-          'g6-c4-c4-angle',
-          'g6-c4-c4-count',
-          'g6-c4-c4-transform',
-          'g6-c4-c4-solid'
       ]
     },
     columns: 2,
