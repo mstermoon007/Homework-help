@@ -31,57 +31,60 @@
 
   // ============ 1. 工程问题 ============
 
-  /** 构造：甲 a 天、乙 b 天单独完成，合作天数 t=a*b/(a+b) 为整数 */
-  function pickCoopPair() {
-    for (var t = 4; t <= 15; t++) {
-      var cands = [];
-      for (var a = t + 1; a <= 4 * t; a++) {
-        var num = a * t, den = a - t;
-        if (num % den === 0) {
-          var b = num / den;
-          if (b > a && b <= 40) cands.push([a, b]);
+  /** 全量枚举「合作整数天」的可行 (甲天数, 乙天数, 合作天数)，随机均匀选取 */
+  var COOP_POOL = null;
+  function randCoop() {
+    if (!COOP_POOL) {
+      COOP_POOL = [];
+      for (var t = 4; t <= 20; t++) {
+        for (var a = t + 1; a <= 5 * t; a++) {
+          var num = a * t, den = a - t;
+          if (num % den === 0) {
+            var b = num / den;
+            if (b > a && b <= 60) COOP_POOL.push([a, b, t]);
+          }
         }
       }
-      if (cands.length) return cands[_PU.randInt(0, cands.length - 1)].concat([t]);
     }
-    return [6, 12, 4];
+    return COOP_POOL[_PU.randInt(0, COOP_POOL.length - 1)];
   }
 
   function genWork(sc) {
     var mode = _PU.randInt(0, 2);
-    var pair = pickCoopPair();
-    var a = pair[0], b = pair[1];
+    var pair = randCoop();
+    var a = pair[0], b = pair[1], W = a * b;
     if (mode === 0) {
-      var t = pair[2];
       return fillQ({
         type: 'work',
         text: '一项工程，甲队单独做需要 ' + a + ' 天完成，乙队单独做需要 ' + b + ' 天完成。两队合作，需要 ____ 天完成。',
         answer: [pair[2]],
-        hint: '设总量为 ' + (a * b) + '：甲每天 ' + (b) + '、乙每天 ' + (a) + '，合作每天 ' + (a + b) +
-          ' → ' + (a * b) + '÷' + (a + b) + ' = ' + t + ' 天'
+        hint: '设总量为 ' + W + '：甲每天 ' + b + '、乙每天 ' + a + '，合作每天 ' + (a + b) +
+          ' → ' + W + '÷' + (a + b) + ' = ' + pair[2] + ' 天'
       });
     }
     if (mode === 1) {
-      // 甲先做 m 天，再两队合作 d 天恰好完成：d = (1 - m/a) ÷ (1/a + 1/b)
-      var W = a * b;
+      // 甲先做 m 天，再两队合作恰好完成：收集所有可行 m 后随机取一个
+      var validM = [];
       for (var m = 1; m < a - 1; m++) {
-        var remain = W - m * b;               // 甲每天做 W/a=b 份
-        var rate = a + b;                      // 合作每天 a+b 份
-        if (remain > 0 && remain % rate === 0) {
-          var d = remain / rate;
-          if (d >= 2 && d <= 12) {
-            return fillQ({
-              type: 'work',
-              text: '一项工程，甲队单独做需要 ' + a + ' 天完成，乙队单独做需要 ' + b +
-                ' 天完成。甲队先单独做了 ' + m + ' 天后，乙队加入一起做。还需要 ____ 天才能完成。',
-              answer: [d],
-              hint: '设总量为 ' + W + '：甲每天做 ' + b + '，先做 ' + m + ' 天剩 ' + remain +
-                '；合作每天做 ' + rate + ' → 还需 ' + remain + '÷' + rate + '=' + d + ' 天'
-            });
-          }
+        var remain = W - m * b;
+        if (remain > 0 && remain % (a + b) === 0) {
+          var dd = remain / (a + b);
+          if (dd >= 2 && dd <= 12) validM.push(m);
         }
       }
-      // 未找到合适的 m 则退化为合作模式
+      if (validM.length) {
+        var mm = validM[_PU.randInt(0, validM.length - 1)];
+        var rem = W - mm * b, days = rem / (a + b);
+        return fillQ({
+          type: 'work',
+          text: '一项工程，甲队单独做需要 ' + a + ' 天完成，乙队单独做需要 ' + b +
+            ' 天完成。甲队先单独做了 ' + mm + ' 天后，乙队加入一起做。还需要 ____ 天才能完成。',
+          answer: [days],
+          hint: '设总量为 ' + W + '：甲每天做 ' + b + '，先做 ' + mm + ' 天剩 ' + rem +
+            '；合作每天做 ' + (a + b) + ' → 还需 ' + rem + '÷' + (a + b) + '=' + days + ' 天'
+        });
+      }
+      // 该组合无合适 m 则退化为合作模式
       return fillQ({
         type: 'work',
         text: '一项工程，甲队单独做需要 ' + a + ' 天完成，乙队单独做需要 ' + b + ' 天完成。两队合作，需要 ____ 天完成。',
@@ -89,31 +92,34 @@
         hint: '设总量为 ' + W + '：合作每天 ' + (a + b) + ' → ' + W + '÷' + (a + b) + ' = ' + pair[2] + ' 天'
       });
     }
-    // 中途休息：甲实际工作 T-k 天、乙全程 T 天完成
-    for (var T = Math.max(a, b) + 1; T <= 30; T++) {
-      var total = a * b;
-      var needA = total - T * (total / b);
-      if (needA > 0 && needA % (total / a) === 0) {
-        var daysA = needA / (total / a);
+    // 中途休息：收集所有可行总天数 T 后随机取一个（甲实际工作 T-rest 天）
+    var validT = [];
+    for (var T = Math.max(a, b) + 1; T <= Math.max(a, b) + 25; T++) {
+      var needA = W - T * (W / b);
+      if (needA > 0 && needA % (W / a) === 0) {
+        var daysA = needA / (W / a);
         var rest = T - daysA;
-        if (rest >= 1 && rest < T) {
-          return fillQ({
-            type: 'work',
-            text: '一项工程，甲队单独做需要 ' + a + ' 天完成，乙队单独做需要 ' + b +
-              ' 天完成。两队同时开工，中途甲队离开休息了几天，前后共用了 ' + T + ' 天完工。甲队休息了 ____ 天。',
-            answer: [rest],
-            hint: '设总量为 ' + total + '：乙全程做了 ' + T + '×' + (total / b) + '=' + (T * total / b) +
-              '，剩余由甲完成 → 甲实做 ' + daysA + ' 天 → 休息 ' + rest + ' 天'
-          });
-        }
+        if (rest >= 1 && rest < T) validT.push({ T: T, rest: rest });
       }
+    }
+    if (validT.length) {
+      var pick = validT[_PU.randInt(0, validT.length - 1)];
+      var daysA2 = pick.T - pick.rest;
+      return fillQ({
+        type: 'work',
+        text: '一项工程，甲队单独做需要 ' + a + ' 天完成，乙队单独做需要 ' + b +
+          ' 天完成。两队同时开工，中途甲队离开休息了几天，前后共用了 ' + pick.T + ' 天完工。甲队休息了 ____ 天。',
+        answer: [pick.rest],
+        hint: '设总量为 ' + W + '：乙全程做了 ' + pick.T + '×' + (W / b) + '=' + (pick.T * W / b) +
+          '，剩余由甲完成 → 甲实做 ' + daysA2 + ' 天 → 休息 ' + pick.rest + ' 天'
+      });
     }
     // 兜底：合作模式
     return fillQ({
       type: 'work',
       text: '一项工程，甲队单独做需要 ' + a + ' 天完成，乙队单独做需要 ' + b + ' 天完成。两队合作，需要 ____ 天完成。',
       answer: [pair[2]],
-      hint: '设总量为 ' + (a * b) + '：合作每天 ' + (a + b) + ' → ' + (a * b) + '÷' + (a + b) + ' = ' + pair[2] + ' 天'
+      hint: '设总量为 ' + W + '：合作每天 ' + (a + b) + ' → ' + W + '÷' + (a + b) + ' = ' + pair[2] + ' 天'
     });
   }
 
@@ -121,55 +127,57 @@
   function genConcentration() {
     var mode = _PU.randInt(0, 2);
     if (mode === 0) {
-      // 加水稀释
-      var sugar = _PU.randInt(10, 60);
-      var water0 = sugar * _PU.randInt(1, 3);
-      for (var add = 20; add <= 300; add += 5) {
+      // 加水稀释：糖量与原水量大范围随机，加入量扫描步长 10 提高组合多样性
+      var sugar = _PU.randInt(15, 120);
+      var water0 = sugar * _PU.randInt(1, 4);
+      for (var add = 10; add <= 600; add += 10) {
         var conc = sugar * 100 / (sugar + water0 + add);
         if (conc >= 1 && Number.isInteger(conc)) {
-          var c0 = sugar * 100 / (sugar + water0);
+          var c0 = Math.round(sugar * 100 / (sugar + water0));
           return fillQ({
             type: 'concentration',
             text: '一杯糖水 ' + (sugar + water0) + ' 克，含糖 ' + sugar + ' 克。向杯中加入 ' + add +
               ' 克水后，糖水的浓度是百分之几？（只填百分号前的数字）____',
             answer: [conc],
             hint: '糖不变仍为 ' + sugar + ' 克：浓度 = ' + sugar + '÷' + (sugar + water0 + add) +
-              ' ≈ ' + conc + '%（原浓度 ' + c0.toFixed(0) + '%）'
+              ' = ' + conc + '%（原浓度约 ' + c0 + '%）'
           });
         }
       }
     }
     if (mode === 1) {
       // 加糖变浓
-      var s2 = _PU.randInt(15, 50);
-      var w2 = s2 * _PU.randInt(2, 4);
-      for (var adds = 5; adds <= 100; adds += 5) {
+      var s2 = _PU.randInt(20, 95);
+      var w2 = s2 * _PU.randInt(2, 5);
+      for (var adds = 5; adds <= 160; adds += 5) {
         var conc2 = (s2 + adds) * 100 / (s2 + adds + w2);
         if (Number.isInteger(conc2) && conc2 <= 60) {
-          var c02 = s2 * 100 / (s2 + w2);
+          var c02 = Math.round(s2 * 100 / (s2 + w2));
           return fillQ({
             type: 'concentration',
             text: '一杯糖水 ' + (s2 + w2) + ' 克，含糖 ' + s2 + ' 克。加入 ' + adds +
               ' 克糖并全部溶解后，糖水的浓度是百分之几？（只填百分号前的数字）____',
             answer: [conc2],
             hint: '糖变为 ' + (s2 + adds) + ' 克，总重变为 ' + (s2 + adds + w2) + ' 克：' +
-              (s2 + adds) + '÷' + (s2 + adds + w2) + ' = ' + conc2 + '%（原浓度 ' + c02.toFixed(0) + '%）'
+              (s2 + adds) + '÷' + (s2 + adds + w2) + ' = ' + conc2 + '%（原浓度约 ' + c02 + '%）'
           });
         }
       }
     }
-    // 混合两种溶液
-    for (var tries = 0; tries < 200; tries++) {
-      var cA = _PU.randInt(10, 30), cB = _PU.randInt(45, 70);
-      var mA = _PU.randInt(2, 9) * 20, mB = _PU.randInt(2, 9) * 20;
-      var mixC = (cA * mA + cB * mB) * 100 / ((mA + mB) * 100);
+    // 混合两种溶液：重量细化到 10 克档、浓度档位加密，扩大整数解空间
+    for (var tries = 0; tries < 400; tries++) {
+      var cA = _PU.randInt(5, 35), cB = _PU.randInt(40, 80);
+      var mA = _PU.randInt(3, 30) * 10, mB = _PU.randInt(3, 30) * 10;
+      var salt = cA * mA / 100 + cB * mB / 100;
+      if (salt % 1 !== 0) continue;
+      var mixC = salt * 100 / (mA + mB);
       if (Number.isInteger(mixC)) {
         return fillQ({
           type: 'concentration',
           text: '有甲、乙两种盐水：甲种浓度 ' + cA + '%，重 ' + mA + ' 克；乙种浓度 ' + cB + '%，重 ' + mB +
             ' 克。把它们混合后，盐水的浓度是百分之几？（只填百分号前的数字）____',
           answer: [mixC],
-          hint: '盐量 = ' + cA + '%×' + mA + '+' + cB + '%×' + mB + '=' + (cA * mA / 100 + cB * mB / 100) +
+          hint: '盐量 = ' + cA + '%×' + mA + '+' + cB + '%×' + mB + '=' + salt +
             ' 克，总重 ' + (mA + mB) + ' 克 → 浓度 = ' + mixC + '%'
         });
       }
