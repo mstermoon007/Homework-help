@@ -56,6 +56,7 @@
     { id: 'math-competition-g6-c3', file: 'plugins/math-competition-g6-c3.js', name: '组合计数（六年级）', subject: 'math', category: 'number', grades: [6], moduleIds: ['C3'] },
     { id: 'math-competition-g6-c4', file: 'plugins/math-competition-g6-c4.js', name: '几何模型（六年级）', subject: 'math', category: 'geometry', grades: [6], moduleIds: ['C4'] },
     { id: 'math-competition-g6-c5', file: 'plugins/math-competition-g6-c5.js', name: '行程问题（六年级）', subject: 'math', category: 'number', grades: [6], moduleIds: ['C5'] },
+    { id: 'math-competition-g6-c6', file: 'plugins/math-competition-g6-c6.js', name: '工程与浓度（六年级）', subject: 'math', category: 'mixed', grades: [6], moduleIds: ['C6'] },
     { id: 'math-competition-g6-c7', file: 'plugins/math-competition-g6-c7.js', name: '分数与巧算（六年级）', subject: 'math', category: 'number', grades: [6], moduleIds: ['C7'] },
     { id: 'math-competition-g6-c8', file: 'plugins/math-competition-g6-c8.js', name: '最值与逻辑推理（六年级）', subject: 'math', category: 'statistics', grades: [6], moduleIds: ['C8'] },
     { id: 'math-competition-g6-c9', file: 'plugins/math-competition-g6-c9.js', name: '基础应用题（六年级）', subject: 'math', category: 'mixed', grades: [6], moduleIds: ['C9'] },

@@ -2,12 +2,23 @@
 /// <reference path="../shared/plugin-types.js" />
 
 // plugins/math-competition-g6-c3.js — 六年级竞赛 C3 组合计数深化（新语义题型）
-// 实现题型（本轮激活部分）：
+// 实现题型（type 与知识库一致）：
 //   inclusion-exclusion  容斥原理（三集合公式及变形）
 //   recursion            递推计数（爬楼梯 1~2 / 1~2~3 级、铺砖）
 //   derangement          错排问题（D(n)：0,1,2,9,44,265…）
 //   geometry-count       几何计数（网格长方形/正方形、凸多边形三角形、直线分平面）
-// 设计要点：公式型直接构造；容斥数据按「分块人数」构造保证自洽。
+//   add-principle        加法原理（分类直达/选购物）
+//   mult-principle       乘法原理（两步路径/三件套搭配）
+//   permutation          排列（全排/固定端点/有序选取 A(n,k)）
+//   combination          组合（无序选取/分组 C(n,k)）
+//   enumeration          枚举计数（和小于定值的取法分类枚举）
+//   bundling             捆绑法（相邻元素整体化）
+//   insertion            插空法（女生互不相邻）
+//   stars-bars           隔板法（允许空/不允许空）
+//   pigeonhole           抽屉原理（构造抽屉保证 m 个同类）
+//   worst-case           最不利原则（扑克点数/花色、袜子配双）
+// 设计要点：公式型直接构造；容斥数据按「分块人数」构造保证自洽；
+// 计数题答案均为正整数，抽屉/最不利题参数空间小但答案固定可校验。
 
 (function (global) {
   'use strict';
@@ -207,16 +218,237 @@
     });
   }
 
+  // ============ 计数工具 ============
+  function fact(n) { var r = 1; for (var i = 2; i <= n; i++) r *= i; return r; }
+  function C(n, k) {
+    if (k < 0 || k > n) return 0;
+    var r = 1;
+    for (var i = 0; i < k; i++) r = r * (n - i) / (i + 1);
+    return Math.round(r);
+  }
+  function P(n, k) { var r = 1; for (var i = 0; i < k; i++) r *= (n - i); return r; }
+
+  // ============ 5. 加法原理（复杂分类） ============
+  function genAddPrinciple() {
+    var m = _PU.randInt(3, 8), n = _PU.randInt(3, 9), k = _PU.randInt(2, 7);
+    var stories = [
+      { mk: '从甲城到乙城，乘高铁每天有 ' + m + ' 班，乘普通列车每天有 ' + n + ' 班，乘长途汽车每天有 ' + k + ' 班。一天之内从甲城到乙城（只乘坐一种交通工具、直达）共有 ____ 种不同的走法。', parts: [m, n, k] },
+      { mk: '文具店里的笔记本有三种包装：小包 ' + m + ' 种花色、中包 ' + n + ' 种花色、大包 ' + k + ' 种花色。买一本（一种包装选一种花色）共有 ____ 种不同的选法。', parts: [m, n, k] }
+    ];
+    var st = stories[_PU.randInt(0, stories.length - 1)];
+    return fillQ({
+      type: 'add-principle',
+      text: st.mk,
+      answer: [m + n + k],
+      hint: '三大类互不重叠、每一类都能独立完成任务 → 用加法原理：' + m + '+' + n + '+' + k + '=' + (m + n + k) + ' 种'
+    });
+  }
+
+  // ============ 6. 乘法原理（多步骤） ============
+  function genMultPrinciple() {
+    var mode = _PU.randInt(0, 1);
+    if (mode === 0) {
+      var m = _PU.randInt(3, 6), n = _PU.randInt(3, 7);
+      return fillQ({
+        type: 'mult-principle',
+        text: '从甲村到乙村有 ' + m + ' 条路，从乙村到丙村有 ' + n + ' 条路。从甲村经乙村到丙村，共有 ____ 种不同的走法。',
+        answer: [m * n],
+        hint: '分两步完成：第一步 ' + m + ' 种 × 第二步 ' + n + ' 种 = ' + (m * n) + ' 种（乘法原理）'
+      });
+    }
+    var tops = _PU.randInt(3, 6), pants = _PU.randInt(3, 6), hats = _PU.randInt(2, 4);
+    return fillQ({
+      type: 'mult-principle',
+      text: '衣柜里有 ' + tops + ' 件上衣、' + pants + ' 条裤子、' + hats + ' 顶帽子。一件上衣、一条裤子、一顶帽子各选一件穿在身上，共有 ____ 种不同的搭配方法。',
+      answer: [tops * pants * hats],
+      hint: '分三步：' + tops + '×' + pants + '×' + hats + ' = ' + (tops * pants * hats) + ' 种'
+    });
+  }
+
+  // ============ 7. 排列（含限制条件） ============
+  function genPermutation() {
+    var mode = _PU.randInt(0, 2);
+    if (mode === 0) {
+      var n = _PU.randInt(4, 6);
+      return fillQ({
+        type: 'permutation',
+        text: n + ' 名同学排成一排照相，一共有 ____ 种不同的排法。',
+        answer: [fact(n)],
+        hint: '全排列：' + n + '! = ' + Array.from({ length: n }, function (_, i) { return n - i; }).join('×') + ' = ' + fact(n)
+      });
+    }
+    if (mode === 1) {
+      var m = _PU.randInt(4, 6);
+      var who = ['小明', '小红', '小刚'][_PU.randInt(0, 2)];
+      var endName = _PU.randInt(0, 1) === 0 ? '排头' : '排尾';
+      return fillQ({
+        type: 'permutation',
+        text: m + ' 名同学排成一排，要求 ' + who + ' 必须站在' + endName + '，一共有 ____ 种不同的排法。',
+        answer: [fact(m - 1)],
+        hint: who + ' 的位置固定，其余 ' + (m - 1) + ' 人全排列：(' + (m - 1) + ')! = ' + fact(m - 1)
+      });
+    }
+    var nn = _PU.randInt(5, 7), kk = _PU.randInt(2, nn - 2);
+    return fillQ({
+      type: 'permutation',
+      text: '从 ' + nn + ' 名选手中选出 ' + kk + ' 人，分别授予冠、亚、季军等不同名次（每人一个名次），一共有 ____ 种不同的结果。',
+      answer: [P(nn, kk)],
+      hint: '有序选取用排列数：A(' + nn + ',' + kk + ') = ' + nn + '×' + (nn - 1) + '×…共 ' + kk + ' 个因数 = ' + P(nn, kk)
+    });
+  }
+
+  // ============ 8. 组合（含分组问题） ============
+  function genCombination() {
+    var mode = _PU.randInt(0, 1);
+    if (mode === 0) {
+      var n = _PU.randInt(6, 10), k = _PU.randInt(2, 3);
+      return fillQ({
+        type: 'combination',
+        text: '班里要从 ' + n + ' 名同学中选出 ' + k + ' 名参加大扫除（不分先后顺序），一共有 ____ 种不同的选法。',
+        answer: [C(n, k)],
+        hint: '无序选取用组合数：C(' + n + ',' + k + ') = ' + C(n, k) +
+          '（从 ' + n + ' 起连乘 ' + k + ' 个数再除以 ' + k + '!）'
+      });
+    }
+    var total = _PU.randInt(8, 10), g1 = _PU.randInt(3, Math.floor(total / 2));
+    var g2 = total - g1;
+    return fillQ({
+      type: 'combination',
+      text: '将 ' + total + ' 名同学分成两组，第一组 ' + g1 + ' 人、第二组 ' + g2 + ' 人（组内不分顺序），一共有 ____ 种不同的分组方法。',
+      answer: [C(total, g1)],
+      hint: '先选出第一组即可，剩下自动成为第二组：C(' + total + ',' + g1 + ') = ' + C(total, g1)
+    });
+  }
+
+  // ============ 9. 枚举计数（有序技巧） ============
+  function genEnumeration() {
+    var K = _PU.randInt(8, 13);
+    var cnt = 0;
+    for (var a = 1; a <= 9; a++) {
+      for (var b = a + 1; b <= 9; b++) {
+        if (a + b < K) cnt++;
+      }
+    }
+    return fillQ({
+      type: 'enumeration',
+      text: '从 1~9 这九个数字中取出两个不同的数字，使它们的和小于 ' + K + '，一共有 ____ 种取法（两种取法只要有一个数字不同就算不同）。',
+      answer: [cnt],
+      hint: '按较小数分类枚举：1 可配 2~' + Math.min(9, K - 2) + '……逐类相加得 ' + cnt + ' 种'
+    });
+  }
+
+  // ============ 10. 捆绑法（多组相邻） ============
+  function genBundling() {
+    var n = _PU.randInt(5, 6), m = _PU.randInt(2, 3);
+    if (m > n - 2) m = n - 2;
+    var ways = fact(n - m + 1) * fact(m);
+    var text;
+    if (_PU.randInt(0, 1) === 0) {
+      text = n + ' 个文艺节目陆续演出，其中 ' + m + ' 个舞蹈节目必须相邻出场。一共有 ____ 种不同的出场顺序。';
+    } else {
+      text = n + ' 位同学站成一排合影，其中 ' + m + ' 名好朋友必须相邻。一共有 ____ 种不同的站法。';
+    }
+    return fillQ({
+      type: 'bundling',
+      text: text,
+      answer: [ways],
+      hint: '捆绑法：把相邻的 ' + m + ' 个捆成一个整体，共 ' + (n - m + 1) + ' 个元素全排 (' + (n - m + 1) +
+        ')! = ' + fact(n - m + 1) + '，整体内部再排 ' + m + '! = ' + fact(m) + ' → 共 ' + ways + ' 种'
+    });
+  }
+
+  // ============ 11. 插空法（多组不相邻） ============
+  function genInsertion() {
+    var boys = _PU.randInt(4, 5), girls;
+    do { girls = _PU.randInt(2, 3); } while (girls > boys + 1);
+    var ways = fact(boys) * P(boys + 1, girls);
+    return fillQ({
+      type: 'insertion',
+      text: boys + ' 名男生和 ' + girls + ' 名女生站成一排，要求任何两名女生都不相邻（男生之间可以相邻）。一共有 ____ 种不同的站法。',
+      answer: [ways],
+      hint: '先排男生：' + boys + '! = ' + fact(boys) + '；形成 ' + (boys + 1) +
+        ' 个空位，选 ' + girls + ' 个插入女生（有序）：A(' + (boys + 1) + ',' + girls + ') = ' +
+        P(boys + 1, girls) + ' → 共 ' + ways + ' 种'
+    });
+  }
+
+  // ============ 12. 隔板法（允许空） ============
+  function genStarsBars() {
+    var mode = _PU.randInt(0, 1);
+    var k = _PU.randInt(3, 4);
+    if (mode === 0) {
+      var n = _PU.randInt(5, 9);
+      var ans = C(n + k - 1, k - 1);
+      return fillQ({
+        type: 'stars-bars',
+        text: '把 ' + n + ' 个完全相同的小球放进 ' + k + ' 个不同的盒子里，允许盒子空着，一共有 ____ 种放法。',
+        answer: [ans],
+        hint: '允许空盒：球与隔板同排，' + n + ' 球插 ' + (k - 1) +
+          ' 块隔板 → C(' + (n + k - 1) + ',' + (k - 1) + ') = ' + ans
+      });
+    }
+    var n2 = _PU.randInt(k + 2, 10);
+    var ans2 = C(n2 - 1, k - 1);
+    return fillQ({
+      type: 'stars-bars',
+      text: '把 ' + n2 + ' 个完全相同的小球放进 ' + k + ' 个不同的盒子里，要求每个盒子至少放一个球，一共有 ____ 种放法。',
+      answer: [ans2],
+      hint: '不允许空盒：' + n2 + ' 个球的 ' + (n2 - 1) + ' 个空隙中插 ' + (k - 1) +
+        ' 块隔板 → C(' + (n2 - 1) + ',' + (k - 1) + ') = ' + ans2
+    });
+  }
+
+  // ============ 13. 抽屉原理（构造抽屉） ============
+  function genPigeonhole() {
+    var setups = [
+      { kinds: 4, what: '一副去掉大小王的扑克牌按红桃、黑桃、梅花、方块分为 4 类', unit: '张', thing: '牌', want: _PU.randInt(3, 5), tail: '点数花色相同的牌（同一花色）' },
+      { kinds: 12, what: '全班同学按出生月份分为 12 类', unit: '人', thing: '同学', want: _PU.randInt(3, 4), tail: '生日在同一个月的同学' },
+      { kinds: 6, what: '箱子里有红、黄、蓝、绿、紫、白六种颜色的袜子（每色都足够多）', unit: '只', thing: '袜子', want: 2, tail: '颜色相同的一双袜子' }
+    ];
+    var st = setups[_PU.randInt(0, setups.length - 1)];
+    var ans = (st.want - 1) * st.kinds + 1;
+    return fillQ({
+      type: 'pigeonhole',
+      text: st.what + '。至少要取出多少 ' + st.unit + '，才能保证一定有 ' + st.want + ' ' + st.tail + '？答案：____ ' + st.unit + '。',
+      answer: [ans],
+      hint: '最不利时每类都取了 ' + (st.want - 1) + ' ' + st.unit + '：' + (st.want - 1) + '×' + st.kinds +
+        '+1 = ' + ans + ' ' + st.unit + '（再多取一个必然使某一类达到 ' + st.want + '）'
+    });
+  }
+
+  // ============ 14. 最不利原则（复杂保证） ============
+  function genWorstCase() {
+    var setups = [
+      { text: '一副扑克牌共 54 张（含大、小王）。至少要抽出 ____ 张，才能保证其中有 4 张牌的点数相同。（大小王不算任何点数）', ans: 42, hint: '13 种点数各抽 3 张 = 39，再加大小王 2 张仍不满足，41 张后任抽一张必有点数达 4 张 → 39+2+1 = 42' },
+      { text: '一副扑克牌共 54 张（含大、小王）。至少要抽出 ____ 张，才能保证一定能抽出一张红桃。', ans: 42, hint: '最不利：把非红桃的 41 张全部抽完还没抽到红桃，下一张必是红桃 → 41+1 = 42' },
+      { text: '抽屉里有黑、白、灰三种颜色的袜子（每色都足够多）。至少要取出 ____ 只，才能保证一定有两双颜色相同的袜子？（一双=同色两只）', ans: 6, hint: '最不利分配：5 只时可以是 3＋1＋1（只有一双）；而任意分 6 只给三只「抽屉」，必有某色达 2 只且另一色也达 2 只以上（逐类枚举验证）→ 6 只可保证两双' }
+    ];
+    var st = setups[_PU.randInt(0, setups.length - 1)];
+    return fillQ({
+      type: 'worst-case',
+      text: st.text,
+      answer: [st.ans],
+      hint: st.hint
+    });
+  }
+
   function generateQuestions(opts) {
     opts = opts || {};
     var type = opts.type || 'mix';
     var keys = type === 'mix'
-      ? ['inclusion-exclusion', 'recursion', 'derangement', 'geometry-count']
+      ? ['inclusion-exclusion', 'recursion', 'derangement', 'geometry-count',
+        'add-principle', 'mult-principle', 'permutation', 'combination',
+        'enumeration', 'bundling', 'insertion', 'stars-bars', 'pigeonhole', 'worst-case']
       : [type];
     var count = opts.count || 10;
     var genMap = {
       'inclusion-exclusion': genInclusion, recursion: genRecursion,
-      derangement: genDerangement, 'geometry-count': genGeometryCount
+      derangement: genDerangement, 'geometry-count': genGeometryCount,
+      'add-principle': genAddPrinciple, 'mult-principle': genMultPrinciple,
+      permutation: genPermutation, combination: genCombination,
+      enumeration: genEnumeration, bundling: genBundling,
+      insertion: genInsertion, 'stars-bars': genStarsBars,
+      pigeonhole: genPigeonhole, 'worst-case': genWorstCase
     };
     var questions = [], seen = {}, MAXTRY = count * 80;
     for (var i = 0; i < count; i++) {
@@ -239,7 +471,10 @@
     grades: [6],
     moduleId: 'C3',
     knowledgePoints: {
-      6: ['g6-c3-inclusion-exclusion', 'g6-c3-recursion-counting', 'g6-c3-derangement', 'g6-c3-geometry-counting']
+      6: ['g6-c3-inclusion-exclusion', 'g6-c3-recursion-counting', 'g6-c3-derangement', 'g6-c3-geometry-counting',
+        'g6-c3-addition-principle', 'g6-c3-multiplication-principle', 'g6-c3-permutation', 'g6-c3-combination',
+        'g6-c3-enumeration-counting', 'g6-c3-bundling-method', 'g6-c3-insertion-method', 'g6-c3-stars-bars',
+        'g6-c3-pigeonhole-principle', 'g6-c3-worst-case-principle']
     },
     columns: 2,
     settings: [
@@ -248,7 +483,17 @@
         { value: 'inclusion-exclusion', label: '容斥原理' },
         { value: 'recursion',          label: '递推计数' },
         { value: 'derangement',        label: '错排问题' },
-        { value: 'geometry-count',     label: '几何计数' }
+        { value: 'geometry-count',     label: '几何计数' },
+        { value: 'add-principle',      label: '加法原理' },
+        { value: 'mult-principle',     label: '乘法原理' },
+        { value: 'permutation',        label: '排列' },
+        { value: 'combination',        label: '组合与分组' },
+        { value: 'enumeration',        label: '枚举计数' },
+        { value: 'bundling',           label: '捆绑法' },
+        { value: 'insertion',          label: '插空法' },
+        { value: 'stars-bars',         label: '隔板法' },
+        { value: 'pigeonhole',         label: '抽屉原理' },
+        { value: 'worst-case',         label: '最不利原则' }
       ] }
     ],
     generateQuestions: generateQuestions,

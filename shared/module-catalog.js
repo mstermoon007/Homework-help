@@ -63,7 +63,7 @@
       gradeStatus: { 4: 'active', 5: 'active', 6: 'active' } },
     { id: 'C6', name: '工程与浓度', grades: [5,6], category: 'number', level: 'competition', icon: '🏗️',
       desc: '工程问题（工作量/工效/工时）、溶液浓度混合与配比问题',
-      gradeStatus: { 5: 'active', 6: 'placeholder' } },
+      gradeStatus: { 5: 'active', 6: 'active' } },
     { id: 'C7', name: '分数与巧算', grades: [5,6], category: 'number', level: 'competition', icon: '✨',
       desc: '分数与小数巧算、繁分数化简、换元与裂项等速算技巧',
       gradeStatus: { 5: 'active', 6: 'active' } },

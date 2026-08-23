@@ -5337,7 +5337,7 @@
             {
               id: "g6-c2-divisibility",
               name: "整除特征（7、11、13 综合）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c2",
               weight: 1,
               type: "divisibility",
               description: "掌握 7（截尾）、11（奇偶位差）、13 综合整除判定。",
@@ -5345,12 +5345,12 @@
               prerequisites: ["g5-c2-divisibility"],
               related: ["g6-c2-modulo-arithmetic"],
               difficulty: 3,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c2-parity-analysis",
               name: "奇偶分析（构造与证明）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c2",
               weight: 1,
               type: "parity",
               description: "利用奇偶性进行存在性论证与反证（如±号配平）。",
@@ -5358,12 +5358,12 @@
               prerequisites: ["g5-c2-parity-analysis"],
               related: ["g6-c2-divisibility"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c2-prime-factorization",
               name: "分解质因数（大数）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c2",
               weight: 1,
               type: "prime-factor",
               description: "较大合数的标准分解（短除 / 试除优化）。",
@@ -5371,12 +5371,12 @@
               prerequisites: ["g5-c2-prime-factorization"],
               related: ["g6-c2-factor-count-sum"],
               difficulty: 3,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c2-factor-count-sum",
               name: "因数个数与因数和（逆用）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c2",
               weight: 1,
               type: "factor-count",
               description: "逆用公式：由因数个数/和反推原数的结构。",
@@ -5384,12 +5384,12 @@
               prerequisites: ["g5-c2-factor-count-sum"],
               related: ["g6-c2-prime-factorization"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c2-gcd-lcm",
               name: "最大公因数与最小公倍数（应用）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c2",
               weight: 1,
               type: "gcd-lcm",
               description: "gcd/lcm 在周期重合、切割分组等场景的综合应用。",
@@ -5397,7 +5397,7 @@
               prerequisites: ["g5-c2-gcd-lcm"],
               related: ["g6-c2-prime-factorization"],
               difficulty: 3,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c2-remainder-congruence",
@@ -5415,7 +5415,7 @@
             {
               id: "g6-c2-place-value",
               name: "位值原理（多位数）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c2",
               weight: 1,
               type: "place",
               description: "多位数的位值拆分与数字调整（插入/交换/删除数字）。",
@@ -5423,7 +5423,7 @@
               prerequisites: ["g5-c2-place-value"],
               related: ["g6-c2-divisibility"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c2-perfect-square",
@@ -5441,7 +5441,7 @@
             {
               id: "g6-c2-number-theory-extreme",
               name: "数论最值（整除与余数）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c2",
               weight: 1,
               type: "nt-extreme",
               description: "带余除式 A=qa+r 结构下的最大最小与计数。",
@@ -5449,7 +5449,7 @@
               prerequisites: ["g5-c2-number-theory-extreme"],
               related: ["g6-c2-remainder-congruence"],
               difficulty: 5,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c2-diophantine-equation",
@@ -5485,7 +5485,7 @@
             {
               id: "g6-c3-addition-principle",
               name: "加法原理（复杂分类）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "add-principle",
               description: "多标准交叉分类时不重不漏地分类相加。",
@@ -5493,12 +5493,12 @@
               prerequisites: ["g5-c3-addition-principle"],
               related: ["g6-c3-multiplication-principle"],
               difficulty: 3,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-multiplication-principle",
               name: "乘法原理（多步骤）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "mult-principle",
               description: "多步骤、有依赖条件的分步计数。",
@@ -5506,12 +5506,12 @@
               prerequisites: ["g5-c3-multiplication-principle"],
               related: ["g6-c3-permutation"],
               difficulty: 3,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-permutation",
               name: "排列（含限制条件）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "permutation",
               description: "带限制（相邻/特定位置/数字约束）的排列。",
@@ -5519,12 +5519,12 @@
               prerequisites: ["g5-c3-permutation"],
               related: ["g6-c3-combination"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-combination",
               name: "组合（含分组问题）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "combination",
               description: "均匀/非均匀分组与分配的组合计算。",
@@ -5532,12 +5532,12 @@
               prerequisites: ["g5-c3-combination"],
               related: ["g6-c3-permutation"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-enumeration-counting",
               name: "枚举计数（有序技巧）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "enumeration",
               description: "有序枚举与树形图技巧，避免遗漏重复。",
@@ -5545,12 +5545,12 @@
               prerequisites: ["g5-c3-enumeration-counting"],
               related: ["g6-c3-recursion-counting"],
               difficulty: 3,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-bundling-method",
               name: "捆绑法（多组相邻）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "bundling",
               description: "多元素整体捆绑（内部再排列）的计数。",
@@ -5558,12 +5558,12 @@
               prerequisites: ["g5-c3-bundling-method"],
               related: ["g6-c3-insertion-method"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-insertion-method",
               name: "插空法（多组不相邻）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "insertion",
               description: "先排不受限元素再插空保证不相邻。",
@@ -5571,12 +5571,12 @@
               prerequisites: ["g5-c3-insertion-method"],
               related: ["g6-c3-bundling-method"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-stars-bars",
               name: "隔板法（允许空）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "stars-bars",
               description: "允许空盒时先借后还转化为正整数解。",
@@ -5584,12 +5584,12 @@
               prerequisites: ["g5-c3-stars-bars"],
               related: ["g6-c2-diophantine-equation"],
               difficulty: 5,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-pigeonhole-principle",
               name: "抽屉原理（构造抽屉）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "pigeonhole",
               description: "自造抽屉（按余数/状态分类）解决覆盖性问题。",
@@ -5597,12 +5597,12 @@
               prerequisites: ["g5-c3-pigeonhole-principle"],
               related: ["g6-c3-worst-case-principle"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-worst-case-principle",
               name: "最不利原则（复杂保证）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c3",
               weight: 1,
               type: "worst-case",
               description: "多层最不利叠加下保证结论的最少取数。",
@@ -5610,7 +5610,7 @@
               prerequisites: ["g5-c3-worst-case-principle"],
               related: ["g6-c3-pigeonhole-principle"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c3-inclusion-exclusion",
@@ -6007,7 +6007,7 @@
             {
               id: "g6-c6-work-problem",
               name: "工程问题（合作、休息、变速）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c6",
               weight: 1,
               type: "work",
               description: "合作中途休息、交替工作与效率变化的工程量核算。",
@@ -6015,12 +6015,12 @@
               prerequisites: ["g5-c6-work-problem"],
               related: ["g6-c6-concentration-problem"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c6-concentration-problem",
               name: "浓度问题（混合、十字交叉）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c6",
               weight: 1,
               type: "concentration",
               description: "多次混合与十字交叉法求浓度比。",
@@ -6028,7 +6028,7 @@
               prerequisites: ["g5-c6-concentration-problem"],
               related: ["g6-c6-work-problem"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             }
           ]
         },
@@ -6186,7 +6186,7 @@
             {
               id: "g6-c8-extremum-problem",
               name: "最值问题（均值、乘积最大）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c8",
               weight: 1,
               type: "extremum",
               description: "均值不等式思想与约束下的最值构造。",
@@ -6194,12 +6194,12 @@
               prerequisites: ["g5-c8-extremum-problem"],
               related: ["g6-c8-winning-strategy"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c8-logic-inference",
               name: "逻辑推理（多条件、表格法）",
-              pluginId: "math-competition-placeholder",
+              pluginId: "math-competition-g6-c8",
               weight: 1,
               type: "logic",
               description: "多条件组合的表格化排除推理。",
@@ -6207,7 +6207,7 @@
               prerequisites: ["g5-c8-logic-inference"],
               related: ["g6-c8-winning-strategy"],
               difficulty: 4,
-              status: "placeholder"
+              status: "active"
             },
             {
               id: "g6-c8-winning-strategy",
@@ -6433,6 +6433,19 @@
               prerequisites: ["g5-c6-concentration-problem"],
               related: ["g6-c9-ratio-application"],
               difficulty: 5,
+              status: "active"
+            },
+            {
+              id: "g6-c9-inclusion-exclusion",
+              name: "容斥原理（三集合深化）",
+              pluginId: "math-competition-g5-c9",
+              weight: 1,
+              type: "inclusion-exclusion",
+              description: "三集合容斥公式的变形应用：反解交集、求至少参加一项、恰好只参加一项。",
+              example: "三个社团人数与两两重合已知，求都参加的人数。",
+              prerequisites: ["g5-c9-inclusion-exclusion"],
+              related: ["g6-c3-inclusion-exclusion"],
+              difficulty: 4,
               status: "active"
             }
           ]
