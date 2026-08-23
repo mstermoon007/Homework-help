@@ -85,12 +85,12 @@
         return masked ? '<b style="color:#e05252;">□</b>' : ch;
       }).join('');
     }
-    return '<div style="font-family:Menlo,Consolas,monospace;font-size:17px;font-weight:800;color:#27324a;line-height:1.8;">' +
+    return '<div style="font-family:Menlo,Consolas,monospace;font-size:17px;font-weight:800;color:var(--ink);line-height:1.8;">' +
       '<div style="padding-left:26px;">' + row(0) + '</div>' +
       '<div><span style="display:inline-block;width:26px;text-align:center;">' + opCh + '</span>' + row(1) + '</div>' +
-      '<div style="border-top:2px solid #27324a;width:' + (26 + rows[2].length * 15) + 'px;margin:2px 0;"></div>' +
+      '<div style="border-top:2px solid var(--ink);width:' + (26 + rows[2].length * 15) + 'px;margin:2px 0;"></div>' +
       '<div style="padding-left:26px;">' + row(2) + '</div></div>' +
-      '<div style="font-size:12px;color:#7a879c;margin-top:4px;">请按从上到下、从左到右的顺序依次写出 □ 中的数字。</div>';
+      '<div style="font-size:12px;color:var(--muted);margin-top:4px;">请按从上到下、从左到右的顺序依次写出 □ 中的数字。</div>';
   }
   function genVerticalMulti() {
     for (var t = 0; t < 300; t++) {
@@ -272,7 +272,7 @@
         html += '<div style="display:flex;">';
         for (var cc2 = 0; cc2 < N; cc2++) {
           var p2 = rr * N + cc2;
-          html += '<span style="width:42px;height:38px;border:1px solid #d5dde9;display:flex;align-items:center;justify-content:center;font-family:Menlo,monospace;font-size:15px;font-weight:800;color:#27324a;">' +
+          html += '<span style="width:42px;height:38px;border:1px solid #d5dde9;display:flex;align-items:center;justify-content:center;font-family:Menlo,monospace;font-size:15px;font-weight:800;color:var(--ink);">' +
             (used[p2] ? '<b style="color:#e05252;">□</b>' : flat[p2]) + '</span>';
         }
         html += '</div>';
@@ -280,8 +280,8 @@
       return fillQ({
         type: 'magic-adv', text:
           '<div style="font-size:13px;color:#3f4c63;margin-bottom:4px;">四阶幻方（1~16），每行、每列、每条对角线之和均为 34：</div>' +
-          '<div style="display:inline-block;border:2px solid #27324a;margin-top:2px;">' + html + '</div>' +
-          '<div style="font-size:12px;color:#7a879c;margin-top:4px;">□ 处的数字按从上到下、从左到右的顺序填写。</div>',
+          '<div style="display:inline-block;border:2px solid var(--ink);margin-top:2px;">' + html + '</div>' +
+          '<div style="font-size:12px;color:var(--muted);margin-top:4px;">□ 处的数字按从上到下、从左到右的顺序填写。</div>',
         raw: true,
         answer: chosen.map(function (p) { return flat[p]; }),
         hint: '找穿过每个 □ 的完整行/列/对角线：34 − 另外三数之和 = 该格数字。'

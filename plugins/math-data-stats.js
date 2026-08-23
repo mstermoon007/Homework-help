@@ -232,7 +232,7 @@
     });
     html += '</tr><tr>';
     sc.cols.forEach(function (cn, c) {
-      html += '<th style="border:1px solid #c9d4e6;padding:2px 10px;color:#7a879c;font-weight:400;font-size:11px;">' + (c + 1) + '</th>';
+      html += '<th style="border:1px solid #c9d4e6;padding:2px 10px;color:var(--muted);font-weight:400;font-size:11px;">' + (c + 1) + '</th>';
     });
     html += '</tr>';
     // 数据行
@@ -398,7 +398,7 @@
     if (p.inputType === 'multi') {
       var blanksHTML = '';
       p.blanks.forEach(function (label, j) {
-        blanksHTML += '<input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:52px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;margin:0 4px;">' + '<span style="font-size:12px;color:#7a879c;">' + label + '</span>';
+        blanksHTML += '<input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:52px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;margin:0 4px;">' + '<span style="font-size:12px;color:var(--muted);">' + label + '</span>';
       });
       inputHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:6px;flex-wrap:wrap;">' + blanksHTML + '</div>';
     } else if (p.inputType === 'choice') {
@@ -412,19 +412,19 @@
     } else {
       inputHTML = '<div class="input-group" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;">' +
         '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off">' +
-        '<span style="font-size:13px;color:#7a879c;font-weight:600;">票</span>' +
+        '<span style="font-size:13px;color:var(--muted);font-weight:600;">票</span>' +
         '</div>';
     }
 
-    var hintHTML = p.hint ? '<div style="font-size:11px;color:#7a879c;margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
+    var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#5b8def;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         hintHTML +
       '</div>' +
-      '<div style="font-size:15px;font-weight:800;color:#27324a;margin:4px 0 6px;">' + p.question + '</div>' +
+      '<div style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 6px;">' + p.question + '</div>' +
       mid +
       inputHTML +
       '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +

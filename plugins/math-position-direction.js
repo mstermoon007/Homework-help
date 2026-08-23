@@ -39,11 +39,11 @@
       '<div>' + cell(60, 0, items.n, '#e8870a') + '</div>' +
       '<div style="display:flex;align-items:center;gap:10px;">' +
       '<div>' + cell(0, 60, items.w, '#e8870a') + '</div>' +
-      '<div style="width:60px;height:46px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#27324a;border:2px solid #5b8def;border-radius:10px;background:#eef3fb;">' + center + '</div>' +
+      '<div style="width:60px;height:46px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:var(--ink);border:2px solid var(--brand);border-radius:10px;background:#eef3fb;">' + center + '</div>' +
       '<div>' + cell(120, 60, items.e, '#e8870a') + '</div>' +
       '</div>' +
       '<div>' + cell(60, 120, items.s, '#e8870a') + '</div>' +
-      '<div style="font-size:11px;color:#7a879c;margin-top:2px;">上=北　右=东　下=南　左=西</div>' +
+      '<div style="font-size:11px;color:var(--muted);margin-top:2px;">上=北　右=东　下=南　左=西</div>' +
       '</div>';
   }
 
@@ -139,13 +139,13 @@
 
     var mid = p.svg ? '<div class="q-shape" style="margin:4px auto 6px;">' + p.svg + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#5b8def;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         mid +
       '</div>' +
-      '<div style="font-size:15px;font-weight:800;color:#27324a;margin:4px 0 8px;">' + p.question + '</div>' +
+      '<div style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 8px;">' + p.question + '</div>' +
       '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">' + optsHTML + '</div>' +
       '<input type="hidden" class="choice-inp" data-index="' + i + '" autocomplete="off">' +
       '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +

@@ -174,7 +174,7 @@
   function renderCard(p, i) {
     var num = '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#fdf3e3;color:#b8860b;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>';
 
-    var qText = '<span class="q-text" style="font-size:15px;font-weight:800;color:#27324a;display:inline;vertical-align:middle;margin:4px 0 8px;">' + (p.question || p.q) + '</span>';
+    var qText = '<span class="q-text" style="font-size:15px;font-weight:800;color:var(--ink);display:inline;vertical-align:middle;margin:4px 0 8px;">' + (p.question || p.q) + '</span>';
 
     var qHeader = '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' + num + '&nbsp;&nbsp;&nbsp;&nbsp;' + qText + '</div>';
 
@@ -190,11 +190,11 @@
     } else {
       inputHTML = '<div class="input-group" style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;">' +
         '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" style="width:96px;height:32px;border:2px dashed #e0c98f;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#b8860b;background:#fffdf6;outline:none;">' +
-        (p.unit ? '<span style="font-size:13px;color:#7a879c;font-weight:600;">' + p.unit + '</span>' : '') +
+        (p.unit ? '<span style="font-size:13px;color:var(--muted);font-weight:600;">' + p.unit + '</span>' : '') +
         '</div>';
     }
 
-    var hintHTML = p.hint ? '<div style="font-size:11px;color:#7a879c;margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
+    var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
 
     return '<div class="question-card" data-index="' + i + '" style="border:1px solid #f0e3c0;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(120,90,20,.08);">' +
       qHeader + hintHTML + inputHTML +

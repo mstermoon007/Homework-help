@@ -84,12 +84,12 @@
     var mid = '';
     if (p.kind === 'number') {
       var numHTML = p.seq.map(function (v, j) {
-        return '<span style="font-size:20px;font-weight:800;color:#27324a;">' + v + '</span>' +
+        return '<span style="font-size:20px;font-weight:800;color:var(--ink);">' + v + '</span>' +
           (j < p.seq.length - 1 ? '<span style="color:#c3ccd8;margin:0 4px;">、</span>' : '');
       }).join('');
       numHTML += '<span style="color:#c3ccd8;margin:0 4px;">、</span>';
       mid = '<div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin:8px 0;">' + numHTML +
-        '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" style="width:52px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:16px;font-weight:800;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;">' +
+        '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" style="width:52px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:16px;font-weight:800;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;">' +
         '</div>';
     } else {
       var shapeHTML = p.seq.map(function (k) { return '<span style="display:inline-block;">' + SHAPES[k]() + '</span>'; }).join('');
@@ -104,11 +104,11 @@
         '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">' + optHTML + '</div>' +
         '<input type="hidden" class="choice-inp" data-index="' + i + '" autocomplete="off">';
     }
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#5b8def;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
-        '<span class="q-text" style="font-size:15px;font-weight:800;color:#27324a;margin:4px 0 6px;">' + p.question + '</span>' +
+        '<span class="q-text" style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 6px;">' + p.question + '</span>' +
       '</div>' +
       mid +
       '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
