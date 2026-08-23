@@ -530,6 +530,20 @@
       place: genPlace,
       'nt-extreme': genNtExtreme
     };
+    // type → 知识点 ID（与知识库/声明一致），供自适应难度做知识点粒度统计
+    var TYPE_TO_KP = {
+      remainder: 'g6-c2-remainder-congruence',
+      modulo: 'g6-c2-modulo-arithmetic',
+      diophantine: 'g6-c2-diophantine-equation',
+      'perfect-square': 'g6-c2-perfect-square',
+      divisibility: 'g6-c2-divisibility',
+      parity: 'g6-c2-parity-analysis',
+      'prime-factor': 'g6-c2-prime-factorization',
+      'factor-count': 'g6-c2-factor-count-sum',
+      'gcd-lcm': 'g6-c2-gcd-lcm',
+      place: 'g6-c2-place-value',
+      'nt-extreme': 'g6-c2-number-theory-extreme'
+    };
     var questions = [], seen = {}, MAXTRY = count * 80;
     for (var i = 0; i < count; i++) {
       var key = keys[i % keys.length];
@@ -538,7 +552,12 @@
         q = genMap[key]();
         if (q && !seen[q.q]) break;
       }
-      if (q) { seen[q.q] = true; questions.push(q); }
+      if (q) {
+        seen[q.q] = true;
+        if (TYPE_TO_KP[key]) q.knowledgePointId = TYPE_TO_KP[key];
+        q.difficulty = lv;
+        questions.push(q);
+      }
     }
     return questions;
   }
