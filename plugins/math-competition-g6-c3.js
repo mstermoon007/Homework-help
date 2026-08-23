@@ -419,11 +419,73 @@
   // ============ 14. 最不利原则（复杂保证） ============
   function genWorstCase() {
     var setups = [
-      { text: '一副扑克牌共 54 张（含大、小王）。至少要抽出 ____ 张，才能保证其中有 4 张牌的点数相同。（大小王不算任何点数）', ans: 42, hint: '13 种点数各抽 3 张 = 39，再加大小王 2 张仍不满足，41 张后任抽一张必有点数达 4 张 → 39+2+1 = 42' },
-      { text: '一副扑克牌共 54 张（含大、小王）。至少要抽出 ____ 张，才能保证一定能抽出一张红桃。', ans: 42, hint: '最不利：把非红桃的 41 张全部抽完还没抽到红桃，下一张必是红桃 → 41+1 = 42' },
-      { text: '抽屉里有黑、白、灰三种颜色的袜子（每色都足够多）。至少要取出 ____ 只，才能保证一定有两双颜色相同的袜子？（一双=同色两只）', ans: 6, hint: '最不利分配：5 只时可以是 3＋1＋1（只有一双）；而任意分 6 只给三只「抽屉」，必有某色达 2 只且另一色也达 2 只以上（逐类枚举验证）→ 6 只可保证两双' }
+      // 扑克点数/花色：answer = 类别数×(K−1) + 干扰张 + 1
+      function () {
+        var K = _PU.randInt(3, 5);
+        var withJoker = _PU.randInt(0, 1) === 0;
+        var extra = withJoker ? 2 : 0;
+        var ans = 13 * (K - 1) + extra + 1;
+        return {
+          text: '一副扑克牌共 ' + (52 + extra) + ' 张' + (withJoker ? '（含大、小王，不算点数）' : '（去掉大小王）') +
+            '。至少要抽出 ____ 张，才能保证其中有 ' + K + ' 张牌的点数相同。',
+          ans: ans,
+          hint: '最不利：' + 13 + ' 种点数各抽 ' + (K - 1) + ' 张 = ' + (13 * (K - 1)) +
+            (extra ? '，再加大小王 ' + extra + ' 张' : '') + '，此时任抽一张必有某点数达 ' + K +
+            ' 张 → ' + (13 * (K - 1)) + (extra ? '+' + extra : '') + '+1 = ' + ans
+        };
+      },
+      function () {
+        var K = _PU.randInt(4, 6);
+        var ans = 4 * (K - 1) + 1;
+        return {
+          text: '一副扑克牌去掉大小王共 52 张。至少要抽出 ____ 张，才能保证其中有 ' + K + ' 张牌的花色相同。',
+          ans: ans,
+          hint: '按 4 种花色构造抽屉：最不利时每种花色各 ' + (K - 1) + ' 张共 ' + (4 * (K - 1)) +
+            ' 张，下一张必达 ' + K + ' 张同花色 → ' + (4 * (K - 1)) + '+1 = ' + ans
+        };
+      },
+      function () {
+        var withJoker = _PU.randInt(0, 1) === 0;
+        var suitName = ['黑桃', '红桃', '梅花', '方块'][_PU.randInt(0, 3)];
+        var total = withJoker ? 54 : 52;
+        var bad = total - 13;
+        return {
+          text: '一副扑克牌共 ' + total + ' 张' + (withJoker ? '（含大、小王）' : '') +
+            '。至少要抽出 ____ 张，才能保证一定能抽出一张' + suitName + '。',
+          ans: bad + 1,
+          hint: '最不利：把非' + suitName + '的 ' + bad + ' 张全部抽完仍未抽到，下一张必是' + suitName +
+            ' → ' + bad + '+1 = ' + (bad + 1)
+        };
+      },
+      // 袜子配双：k 色 P 双 → answer = 2P−1+k（预算全堆一种颜色）
+      function () {
+        var k = _PU.randInt(3, 6);
+        var pairs = _PU.randInt(1, 3);
+        var colors = ['黑', '白', '灰', '蓝', '红', '绿'];
+        var ans = 2 * pairs - 1 + k;
+        return {
+          text: '抽屉里有' + colors.slice(0, k).join('、') + '共 ' + k +
+            ' 种颜色的袜子（每色都足够多）。至少要取出 ____ 只，才能保证一定有 ' + pairs + ' 双颜色相同的袜子？（一双=同色两只）',
+          ans: ans,
+          hint: '最不利：让其中一色集中出现 ' + (2 * pairs - 1) + ' 只（仅 ' + (pairs - 1) + ' 双），其余每色各 1 只 → 共 ' +
+            ((2 * pairs - 1) + (k - 1)) + ' 只仍不达标，再取 1 只必成 ' + pairs + ' 双 → ' + ans
+        };
+      },
+      // 每类至少 m 个的一般形式
+      function () {
+        var kinds = [_PU.randInt(5, 9)][0];
+        var m = _PU.randInt(2, 4);
+        var items = ['弹珠', '积木', '卡片'][_PU.randInt(0, 2)];
+        var ans = kinds * (m - 1) + 1;
+        return {
+          text: '箱子里有 ' + kinds + ' 种不同样式的' + items + '（每种都足够多）。至少要取出 ____ 个，才能保证其中恰有同一款式的 ' + m + ' 个？',
+          ans: ans,
+          hint: '最不利：每种样式各取 ' + (m - 1) + ' 个共 ' + (kinds * (m - 1)) + ' 个仍不满足，再取 1 个必有某样式达 ' + m +
+            ' 个 → ' + (kinds * (m - 1)) + '+1 = ' + ans
+        };
+      }
     ];
-    var st = setups[_PU.randInt(0, setups.length - 1)];
+    var st = setups[_PU.randInt(0, setups.length - 1)]();
     return fillQ({
       type: 'worst-case',
       text: st.text,
