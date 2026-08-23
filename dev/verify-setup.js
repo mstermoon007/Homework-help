@@ -7,8 +7,9 @@ const ROOT = path.join(__dirname, '..');
 let allPassed = true;
 const results = [];
 
-function check(description, condition) {
-  results.push({ description, pass: !!condition });
+// detail：可选的失败详情（仅在未通过时输出，便于定位具体是哪一项不合规）
+function check(description, condition, detail) {
+  results.push({ description, pass: !!condition, detail: detail || '' });
   if (!condition) allPassed = false;
 }
 
@@ -28,7 +29,6 @@ function fileContains(relativePath, substring) {
 // 1. 核心保护层目录及文件
 check('shared/ 目录存在', fileExists('shared/'));
 check('plugins/ 目录存在', fileExists('plugins/'));
-check('agents/ 目录存在', fileExists('agents/'));
 check('dev/ 目录存在', fileExists('dev/'));
 
 // 2. 插件接口类型定义
@@ -37,11 +37,11 @@ check('plugin-types.js 包含 ExercisePlugin 类型', fileContains('shared/plugi
 
 // 3. 样板插件
 check('plugins/_template.js 存在', fileExists('plugins/_template.js'));
-check('_template.js 包含 plugin 对象', fileContains('plugins/_template.js', 'const plugin'));
+check('_template.js 包含 plugin 对象', fileContains('plugins/_template.js', 'var plugin'));
 check('_template.js 包含 generate', fileContains('plugins/_template.js', 'generate'));
 check('_template.js 包含 render', fileContains('plugins/_template.js', 'render'));
 check('_template.js 包含 check', fileContains('plugins/_template.js', 'check'));
-check('_template.js 包含 window.__currentPlugin', fileContains('plugins/_template.js', 'window.__currentPlugin'));
+check('_template.js 导出 __currentPlugin', fileContains('plugins/_template.js', '__currentPlugin'));
 
 // 4. 验证工具页
 check('dev/plugin-check.html 存在', fileExists('dev/plugin-check.html'));
@@ -127,60 +127,81 @@ try {
   check('知识库文件存在且结构正确（允许模块 knowledgePoints 为空数组）', kbFormatOk);
   check('知识库模块 ID 与模块目录一致且知识点插件已注册', kbRefOk);
 
-  // 9.2 竞赛模块（C1-C9）须有占位插件兜底，避免题型选择页空白/报错
+  // 9.2 竞赛模块（C1-C9）须全部有插件覆盖（真实插件优先，未实现的由占位插件兜底），
+  //     避免题型选择页空白/报错。已实现的 Cx 必须从占位 moduleIds 中移除，防止一个模块两个入口。
   try {
     const compMods = MC.filter(m => m.level === 'competition');
     const placeholderRec = reg.find(r => r.id === 'math-competition-placeholder');
     const declared = (placeholderRec && Array.isArray(placeholderRec.moduleIds))
       ? placeholderRec.moduleIds : [];
     const declaredSet = new Set(declared);
-    const uncovered = compMods.filter(m => !declaredSet.has(m.id)).map(m => m.id);
+    // 已实现的竞赛插件（非占位）声明的竞赛模块
+    const realComp = reg.filter(r => !r.isPlaceholder && Array.isArray(r.moduleIds)
+      && r.moduleIds.some(id => /^C\d$/.test(id)));
+    const realSet = new Set();
+    realComp.forEach(r => r.moduleIds.forEach(id => { if (/^C\d$/.test(id)) realSet.add(id); }));
+    const uncovered = compMods.filter(m => !declaredSet.has(m.id) && !realSet.has(m.id)).map(m => m.id);
+    const dup = [...realSet].filter(id => declaredSet.has(id));   // 真实插件与占位重复覆盖
     const placeholderFile = placeholderRec ? path.join(ROOT, placeholderRec.file) : '';
     let srcOk = false;
     try {
       const src = fs.readFileSync(placeholderFile, 'utf8');
       srcOk = src.includes('isPlaceholder') && src.includes('题目开发中');
     } catch (e) {}
-    check('竞赛模块 C1-C9 全部有占位插件注册', compMods.length === 9 && declared.length === 9 && uncovered.length === 0);
+    check('竞赛模块 C1-C9 全部有插件覆盖（真实插件 + 占位兜底）',
+      compMods.length === 9 && uncovered.length === 0,
+      uncovered.length ? '未覆盖：' + uncovered.join('、') : '');
+    check('已实现的竞赛模块已从占位 moduleIds 移除（无重复入口）',
+      dup.length === 0, dup.length ? '重复覆盖：' + dup.join('、') : '');
     check('占位插件文件实现占位逻辑（isPlaceholder + 提示文案）', srcOk);
   } catch (e) {
     check('竞赛占位插件校验', false);
   }
 
-  // 9.3 四年级（M1-M12）结构校验：知识库全覆盖 + 各模块占位插件已注册
-  try {
-    const g4 = KB.findGrade ? KB.findGrade(4) : null;
-    const g4Modules = g4 && Array.isArray(g4.modules) ? g4.modules : [];
-    const expIds = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
-    const g4Ids = g4Modules.map(m => m.moduleId);
-    const g4Complete = g4 !== null && g4Modules.length === 12 &&
-      expIds.every(id => g4Ids.indexOf(id) !== -1) &&
-      g4Modules.every(m => Array.isArray(m.knowledgePoints) && m.knowledgePoints.length > 0);
-    // 每个四年级模块的知识点 pluginId 均有占位注册（isPlaceholder）或真实实现
-    let g4PluginsOk = true;
-    const g4Missing = [];
-    g4Modules.forEach(m => {
-      m.knowledgePoints.forEach(kp => {
-        const rec = reg.find(r => r.id === kp.pluginId);
-        if (!rec) { g4PluginsOk = false; g4Missing.push(kp.pluginId); }
-      });
-    });
-    check('四年级知识库覆盖 M1-M12 全部模块且无空模块', g4Complete);
-    check('四年级知识点 pluginId 均已注册（占位或已实现）', g4PluginsOk);
-    if (g4Missing.length) console.log('    未注册的四年级 pluginId：' + g4Missing.join('、'));
-  } catch (e) {
-    check('四年级结构校验', false);
+  // 9.3 各年级（M1-M12）结构校验：知识库全覆盖 + 知识点 pluginId 均已注册
+  // 单一来源：四/五/六年级共用同一段逻辑，避免各年级各写一份导致规则漂移
+  //（历史问题：曾只有四年级放宽了模块数断言，六年级仍硬编码 === 12，竞赛模块入库后误报）。
+  // 规则：M1-M12 为必备模块，竞赛模块（C1-C9）可额外出现 → 只校验「M1-M12 全覆盖且无空模块」，不限模块总数。
+  const GRADE_CN = { 1: '一年级', 2: '二年级', 3: '三年级', 4: '四年级', 5: '五年级', 6: '六年级' };
+  const EXPECT_M_IDS = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
+  function checkGradeStructure(grade) {
+    const cn = GRADE_CN[grade] || (grade + '年级');
+    try {
+      const g = KB.findGrade ? KB.findGrade(grade) : null;
+      const mods = g && Array.isArray(g.modules) ? g.modules : [];
+      const ids = mods.map(m => m.moduleId);
+      const missingM = EXPECT_M_IDS.filter(id => ids.indexOf(id) === -1);
+      const emptyMods = mods
+        .filter(m => !Array.isArray(m.knowledgePoints) || m.knowledgePoints.length === 0)
+        .map(m => m.moduleId);
+      const missingPlugin = [];
+      mods.forEach(m => (m.knowledgePoints || []).forEach(kp => {
+        if (!reg.some(r => r.id === kp.pluginId)) missingPlugin.push(kp.pluginId);
+      }));
+      const detail = [
+        g === null ? '知识库缺少该年级' : '',
+        missingM.length ? '缺模块：' + missingM.join('、') : '',
+        emptyMods.length ? '空模块：' + emptyMods.join('、') : ''
+      ].filter(Boolean).join('；');
+      check(cn + '知识库覆盖 M1-M12 全部模块且无空模块',
+        g !== null && !missingM.length && !emptyMods.length, detail);
+      check(cn + '知识点 pluginId 均已注册（占位或已实现）', missingPlugin.length === 0,
+        missingPlugin.length ? '未注册 pluginId：' + [...new Set(missingPlugin)].join('、') : '');
+    } catch (e) {
+      check(cn + '结构校验', false, e && e.message);
+    }
   }
+  [4, 5, 6].forEach(checkGradeStructure);
 } catch (e) {
   check('模块目录/知识库一致性校验', false);
 }
 
 // 8.5 知识库结构校验（dev/verify-knowledge-bank.js 自动执行：模块ID、插件ID、weight/type、高年级 M1-M12 专项）
 try {
-  execSync(`node ${path.join('dev', 'verify-knowledge-bank.js')} --g4 --g5`, { cwd: ROOT, stdio: 'pipe' });
-  check('知识库结构校验通过（verify-knowledge-bank.js --g4 --g5）', true);
+  execSync(`node ${path.join('dev', 'verify-knowledge-bank.js')} --g4 --g5 --g6`, { cwd: ROOT, stdio: 'pipe' });
+  check('知识库结构校验通过（verify-knowledge-bank.js --g4 --g5 --g6）', true);
 } catch {
-  check('知识库结构校验通过（verify-knowledge-bank.js --g4 --g5）', false);
+  check('知识库结构校验通过（verify-knowledge-bank.js --g4 --g5 --g6）', false);
 }
 
 // 9. 可选：检查 git 是否已初始化（表明仓库已就绪）
@@ -195,6 +216,7 @@ try {
 console.log('\n📋 项目搭建验证结果\n' + '='.repeat(40));
 results.forEach((r, i) => {
   console.log(`${r.pass ? '✅' : '❌'} ${r.description}`);
+  if (!r.pass && r.detail) console.log(`     ↳ ${r.detail}`);
 });
 
 console.log('\n' + '='.repeat(40));

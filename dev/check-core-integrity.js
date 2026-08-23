@@ -4,7 +4,11 @@ const path = require('path');
 const coreFiles = [
   'practice.html',
   'shared/common.js',
-  'shared/common.css',
+  'shared/tokens.css',
+  'shared/base.css',
+  'shared/components.css',
+  'shared/toolbar.css',
+  'shared/pages.css',
   'shared/print.js',
   'plugins/registry.js'
 ];

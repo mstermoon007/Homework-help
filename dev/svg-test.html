@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG 生成器可视化测试页</title>
+<style>
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+         margin: 0; padding: 20px; background: #f4f6fa; color: #27324a; }
+  h1 { font-size: 20px; } h2 { font-size: 16px; margin: 24px 0 10px; border-left: 4px solid #3f6fd1; padding-left: 8px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 14px; }
+  .card { background: #fff; border: 1px solid #e3e9f2; border-radius: 12px; padding: 12px; }
+  .ctrl { margin: 10px 0; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .ctrl label { font-size: 13px; color: #7a879c; }
+  input { width: 70px; padding: 4px 6px; border: 1px solid #d5dde9; border-radius: 6px; font-size: 14px; }
+  .out { min-width: 240px; min-height: 120px; display: flex; align-items: center; justify-content: center; overflow: auto; }
+  code { background: #eef3fb; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+</style>
+</head>
+<body>
+<h1>SVG 生成器可视化测试页（dev/svg-test.html）</h1>
+<p>调整参数即时预览；所有输出均为带 viewBox 的完整 &lt;svg&gt;，可缩小窗口验证移动端等比缩放。</p>
+
+<h2>几何图形 SVGGeometry</h2>
+<div class="card">
+  <div class="ctrl">
+    <label>宽 <input id="gW" type="number" value="4" min="1"></label>
+    <label>高 <input id="gH" type="number" value="3" min="1"></label>
+    <label><input id="gLS" type="checkbox" checked> 标注边长</label>
+    <label><input id="gDashed" type="checkbox"> 虚线</label>
+    <button onclick="drawGeom()">重绘</button>
+  </div>
+  <div class="grid">
+    <div class="out" id="geomOut"></div>
+    <div class="out" id="triOut"></div>
+    <div class="out" id="sectorOut"></div>
+    <div class="out" id="cuboidOut"></div>
+  </div>
+</div>
+
+<h2>竖式计算 SVGCalculation</h2>
+<div class="card">
+  <div class="ctrl">
+    <label>加数A <input id="cA" type="number" value="456"></label>
+    <label>加数B <input id="cB" type="number" value="378"></label>
+    <label>错误模式
+      <select id="cErr"><option value="">无（正确）</option><option value="no-carry">no-carry 忘进位</option></select>
+    </label>
+    <button onclick="drawCalc()">重绘</button>
+  </div>
+  <div class="grid">
+    <div class="out" id="calcAdd"></div>
+    <div class="out" id="calcSub"></div>
+    <div class="out" id="calcMul"></div>
+    <div class="out" id="calcDiv"></div>
+  </div>
+</div>
+
+<h2>巧算图解 SVGMakeTen</h2>
+<div class="card">
+  <div class="ctrl">
+    <label>a <input id="mA" type="number" value="15" min="10" max="18"></label>
+    <label>b <input id="mB" type="number" value="8" min="2" max="9"></label>
+    <button onclick="drawTen()">重绘</button>
+  </div>
+  <div class="grid">
+    <div class="out" id="tenPing"></div>
+    <div class="out" id="tenPo"></div>
+  </div>
+</div>
+
+<h2>基础元素 SVGUtil（viewBox 自动计算）</h2>
+<div class="card"><div class="out" id="coreOut"></div></div>
+
+<script src="../shared/svg-core.js"></script>
+<script src="../shared/svg-geometry.js"></script>
+<script src="../shared/svg-calculation.js"></script>
+<script src="../shared/svg-make-ten.js"></script>
+<script>
+  function put(id, svg) {
+    document.getElementById(id).innerHTML = svg || '<span style="color:#e05252;">无法生成（返回 null）</span>';
+  }
+  function drawGeom() {
+    var w = +document.getElementById('gW').value || 4;
+    var h = +document.getElementById('gH').value || 3;
+    var o = { width: w, height: h, unit: '厘米',
+      labelSides: document.getElementById('gLS').checked,
+      dashed: document.getElementById('gDashed').checked };
+    put('geomOut', SVGGeometry.rectangle(o));
+    put('triOut', SVGGeometry.triangle({ p1: [0,0], p2:[w,0], p3:[w/2,h],
+      showHeight: true, angles: [60,60,60], labelVertices: true }));
+    put('sectorOut', SVGGeometry.sector({ r: Math.max(w,h), angle: 120, labelAngle: true }));
+    put('cuboidOut', SVGGeometry.cuboid({ length: w, width: h, height: Math.min(w,h) }));
+  }
+  function drawCalc() {
+    var a = +document.getElementById('cA').value || 0;
+    var b = +document.getElementById('cB').value || 0;
+    var err = document.getElementById('cErr').value || null;
+    try { put('calcAdd', SVGCalculation.add([a, b], { errorType: err })); } catch (e) { put('calcAdd', ''); }
+    try { if (a >= b) put('calcSub', SVGCalculation.sub(a, b)); else put('calcSub', ''); } catch (e) { put('calcSub', ''); }
+    try { put('calcMul', SVGCalculation.mul(Math.min(Math.max(a % 100, 12), 99), Math.min(Math.max(b % 100, 11), 99))); } catch (e) { put('calcMul', ''); }
+    try { put('calcDiv', b > 0 ? SVGCalculation.div(a, b % 10 || 3) : ''); } catch (e) { put('calcDiv', ''); }
+  }
+  function drawTen() {
+    var a = +document.getElementById('mA').value || 15;
+    var b = +document.getElementById('mB').value || 8;
+    put('tenPing', SVGMakeTen.pingTen(a, b));
+    put('tenPo', SVGMakeTen.poTen(a, b));
+  }
+  drawGeom(); drawCalc(); drawTen();
+  put('coreOut', SVGUtil.svgWrap(
+    SVGUtil.svgCircle(50, 50, 30) +
+    SVGUtil.svgLine(20, 80, 80, 20, { dasharray: '5 4' }) +
+    SVGUtil.svgText(50, 96, 'viewBox 自动计算')));
+</script>
+</body>
+</html>
