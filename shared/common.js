@@ -998,6 +998,46 @@
       return { ready: allReady, items: items };
     }
 
+    /**
+     * 批改后一次性记录（practice.html 调用；混合知识点数据统一入口）：
+     *  - 插件级摘要：全部题目聚合成一条会话（含难度加权；未标注难度的题按标准档 3 计权）
+     *  - 知识点级分组：按 q.knowledgePointId 分组逐桶记录
+     *    （仅 competition/comprehensive 插件会被 v2 门控接受，其余插件自动忽略 KP 部分，
+     *     即保持原有插件级记录方式）
+     * @param {Array} questions 题目对象数组（可含可选字段 knowledgePointId / difficulty）
+     * @param {Array} flags     与 questions 平行的每题对错布尔数组（check().results）
+     * @returns {{total:number, correct:number, kpGroups:number}} 实际记录汇总
+     */
+    function recordSession(subject, grade, pluginId, questions, flags) {
+      if (!Array.isArray(questions) || !Array.isArray(flags)) return { total: 0, correct: 0, kpGroups: 0 };
+      var n = Math.min(questions.length, flags.length);
+      if (!n) return { total: 0, correct: 0, kpGroups: 0 };
+      var correct = 0;
+      var allD = [], allF = [];
+      var groups = {}, kpCount = 0;
+      for (var i = 0; i < n; i++) {
+        var q = questions[i] || {};
+        var okFlag = !!flags[i];
+        if (okFlag) correct++;
+        var dv = Number(q.difficulty);
+        if (!isFinite(dv)) dv = 3;
+        allD.push(dv); allF.push(okFlag);
+        if (q.knowledgePointId) {
+          var g = groups[q.knowledgePointId];
+          if (!g) { g = groups[q.knowledgePointId] = { correct: 0, total: 0, diffs: [], flags: [] }; kpCount++; }
+          g.total++; g.diffs.push(dv); g.flags.push(okFlag);
+          if (okFlag) g.correct++;
+        }
+      }
+      record(subject, grade, pluginId, correct, n, { questionDifficulties: allD, correctFlags: allF });
+      Object.keys(groups).forEach(function (kp) {
+        var g = groups[kp];
+        record(subject, grade, pluginId, g.correct, g.total,
+               { knowledgePointId: kp, questionDifficulties: g.diffs, correctFlags: g.flags });
+      });
+      return { total: n, correct: correct, kpGroups: kpCount };
+    }
+
     /** 清除记忆：给定 subject/grade/pluginId 清单项；全空则清空全部 */
     function reset(subject, grade, pluginId) {
       var data = load();
@@ -1009,6 +1049,7 @@
     return {
       VERSION: 'hw_adaptive_v2',
       record: record,
+      recordSession: recordSession,
       computeAdjustment: computeAdjustment,
       adjustedDifficulty: adjustedDifficulty,
       getPrerequisiteStatus: getPrerequisiteStatus,

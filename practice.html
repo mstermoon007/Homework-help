@@ -617,9 +617,17 @@
     }
     state.checkResult = result;
     state.answered = true;
-    // 记录本次练习结果，供自适应难度后续调整使用
-    if (App.Adaptive && App.Adaptive.record && typeof result.total === 'number') {
-      App.Adaptive.record(state.plugin.subject, state.grade, state.plugin.id, result.correct, result.total);
+    // 记录本次练习结果，供自适应难度后续调整使用：
+    //  - recordSession：题目级采集（q.knowledgePointId / q.difficulty 可选字段），
+    //    自动产出 插件级加权摘要 + 知识点级分组记录（KP 仅对竞赛/综合插件生效）
+    //  - 兜底：旧式聚合记录（无题目数组/无 results 时）
+    if (App.Adaptive && typeof result.total === 'number') {
+      var exQs = (state.exerciseSet && Array.isArray(state.exerciseSet.questions)) ? state.exerciseSet.questions : null;
+      if (App.Adaptive.recordSession && exQs && Array.isArray(result.results)) {
+        App.Adaptive.recordSession(state.plugin.subject, state.grade, state.plugin.id, exQs, result.results);
+      } else if (App.Adaptive.record) {
+        App.Adaptive.record(state.plugin.subject, state.grade, state.plugin.id, result.correct, result.total);
+      }
     }
     markQuestions(result);
     showResult(result);
