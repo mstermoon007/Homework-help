@@ -170,7 +170,7 @@
     }
     // Fisher-Yates shuffle
     for (var j = pool.length - 1; j > 0; j--) {
-      var k2 = Math.floor(Math.random() * (j + 1));
+      var k2 = randInt(0, j);
       var tmp = pool[j]; pool[j] = pool[k2]; pool[k2] = tmp;
     }
     var out = [];
