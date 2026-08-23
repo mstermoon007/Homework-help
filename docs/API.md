@@ -22,6 +22,9 @@
 | `diffMax` | `(base, level) → int` | 基准最大数 × scale |
 | `App.Adaptive.computeAdjustment` | `(subject, grade, pluginId) → {difficultyDelta, typeBias, rate}` | 最近 5 次会话正确率 → −2..+2 调整量与题型偏向 |
 | `App.Adaptive.adjustedDifficulty` | `(base, delta) → 1..10` | 基础难度叠加调整量并钳制 |
+| `App.Difficulty.difficultyToStructure` | `(level) → {steps, allowBracket, allowMultDiv, complexityScore, …}` | 难度→结构五档映射；complexityScore 全档严格单调（测试 dev/test-difficulty-structure.js） |
+| `App.Difficulty.createProfile` | `(baseLevel, delta, opts?) → profile` | 合并用户选择/自适应/插件选项 → `{effectiveLevel, scale, structure, typePreference}` |
+| `App.Difficulty.consumeProfile` | `(profile, pluginType) → params` | 按插件类型（expression/geometry/application/oral/默认）翻译为生成参数 |
 
 ## 渲染与工厂
 
