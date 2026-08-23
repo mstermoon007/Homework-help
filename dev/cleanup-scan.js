@@ -19,6 +19,8 @@ const keepFiles = [
   /^README\.md$/,
   /^CONTRIBUTING\.md$/,
   /^MEMORY\.md$/,
+  /^overview\.md$/,
+  /^LICENSE$/,
   /^\.gitignore$/,
   /^banner\.jpg$/,
   /^pinyin-bank\.js$/,
@@ -27,11 +29,10 @@ const keepFiles = [
   /^llms\.txt$/,
   /^robots\.txt$/,
   /^sitemap\.xml$/,
-  // 模块目录与占位插件：核心数据源与兜底插件，永不清理
+  // 模块目录与竞赛占位插件：核心数据源与兜底插件，永不清理
+  // （g4/g5 基础占位插件已随全量真实插件落地而移除，不再入白名单）
   /^shared\/module-catalog\.js$/,
   /^plugins\/math-competition-placeholder\.js$/,
-  /^plugins\/math-g4-placeholder\.js$/,
-  /^plugins\/math-g5-placeholder\.js$/,
   // 已完成插件化迁移的旧练习页不再保留
   // （comprehensive/english-alphabet/math-shapes 已迁移为 plugins/ 对应插件）
 ];

@@ -145,8 +145,8 @@ g{grade}-{moduleIdLower}-{baseSlug}
 
 示例：`g1-m1-addsub-20`、`g4-c5-c5-meet`、`g6-m8-g6-app-frac-mult`。
 
-**slug 字典**：`shared/knowledge-slug-map.js`（`KNOWLEDGE_SLUGS`）以 `{grade}-{baseSlug}` 为键，
-记录全部知识点稳定 slug，新增 / 迁移知识点时同步维护。
+**slug 字典**：已归档至 `archive/dead-code-20260823/knowledge-slug-map.js`（`KNOWLEDGE_SLUGS`，
+以 `{grade}-{baseSlug}` 为键）。运行时零引用，仅作历史对照；新增知识点无需维护该文件。
 
 **知识点字段**（KnowledgePoint）：
 

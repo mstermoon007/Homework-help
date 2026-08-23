@@ -77,14 +77,13 @@
 - 路径：`./.DS_Store`、`./archive/.DS_Store`、`./docs/.DS_Store`、`./.venv/.DS_Store`、`./.workbuddy/.DS_Store`
 - **建议**：执行 `find . -name ".DS_Store" -not -path "./.git/*" -delete`
 
-#### 10. `check-duplicates.js` 变量遮蔽
-- **文件**：`dev/check-duplicates.js` 第 28 行和第 32 行
-- **现状**：第 28 行声明 `var grade`，第 32 行在循环内重新声明 `var grade`，遮蔽外层变量
-- **建议**：移除第 32 行的重复声明（外层 grade 已足够）
+#### 10. `check-duplicates.js` 变量遮蔽（已修复 2026-08-23）
+- **文件**：`dev/check-duplicates.js`
+- **处理**：已移除循环内重复声明的 `var grade`，统一使用外层声明
 
-#### 11. `cleanup-scan.js` 白名单引用了不在注册表中的占位文件
-- **现状**：白名单 keepFiles 引用 `plugins/math-g5-placeholder.js`，但 registry.js 未注册此插件
-- **建议**：确认 `math-g5-placeholder.js` 是否仍有存在价值；若无，从白名单和文件系统中移除
+#### 11. `cleanup-scan.js` 白名单引用了不在注册表中的占位文件（已修复 2026-08-23）
+- **处理**：`math-g4-placeholder.js`、`math-g5-placeholder.js` 经确认无任何注册/运行时引用，
+  已从白名单与文件系统中移除；仅保留注册表在用的 `math-competition-placeholder.js`
 
 ---
 
