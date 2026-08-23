@@ -5,7 +5,10 @@
 // 实现题型（type 与知识库一致）：
 //   optimization  统筹优化（烙饼、排队打水、三人/四人过桥）
 //   winning       必胜策略深化（单堆取最后胜/负、双堆对称博弈）
-// 设计要点：均为经典可解模型，答案为确定整数或固定字词。
+//   extremum      最值问题（和定积最大 / 三数积最大 / 周长定面积最大）
+//   logic         逻辑推理（名次列表排除 / 真话人数推盒 / 经典兜底题）
+// 设计要点：均为经典可解模型，答案为确定整数或固定字词；
+// 逻辑推理题在生成时暴力验证线索组合唯一确定答案。
 
 (function (global) {
   'use strict';
@@ -135,16 +138,139 @@
     });
   }
 
+  // ============ 最值问题（均值、乘积最大） ============
+  function genExtremum() {
+    var mode = _PU.randInt(0, 2);
+    if (mode === 0) {
+      // 和一定两数积最大：拆成最接近的两数
+      var S = _PU.randInt(10, 50);
+      var x = Math.floor(S / 2), y = S - x;
+      return fillQ({
+        type: 'extremum',
+        text: '两个自然数的和是 ' + S + '（都至少为 1）。当这两个数分别是多少时，它们的乘积最大？最大乘积是 ____。',
+        answer: [x * y],
+        hint: '和一定时，两数越接近乘积越大：拆成 ' + x + ' 和 ' + y + ' → 最大乘积 ' + x + '×' + y + '=' + (x * y)
+      });
+    }
+    if (mode === 1) {
+      // 三数和定积最大：相等时最大
+      var n = 3;
+      do { var S3 = _PU.randInt(15, 60); } while (S3 % n !== 0);
+      var v = S3 / n;
+      return fillQ({
+        type: 'extremum',
+        text: '三个自然数的和是 ' + S3 + '（都至少为 1）。当这三个数分别取多少时，它们的乘积最大？最大乘积是 ____。',
+        answer: [v * v * v],
+        hint: '和一定时，各数相等乘积最大：' + v + '+' + v + '+' + v + '=' + S3 + ' → 最大乘积 ' + v + '³=' + (v * v * v)
+      });
+    }
+    // 周长一定面积最大的长方形是正方形
+    var per = _PU.randInt(8, 30) * 4;
+    var side = per / 4;
+    return fillQ({
+      type: 'extremum',
+      text: '一个长方形的周长是 ' + per + ' 厘米。当它的长、宽分别取多少厘米时面积最大？最大面积是 ____ 平方厘米。',
+      answer: [side * side],
+      hint: '周长一定时长=宽的正方形面积最大：边长 ' + side + ' 厘米 → 面积 ' + side + '²=' + (side * side)
+    });
+  }
+
+  // ============ 逻辑推理（多条件、表格法） ============
+  function genLogic() {
+    if (_PU.randInt(0, 1) === 0) {
+      // 名次推断：枚举全部排列，验证线索组合恰好唯一确定目标名次
+      var names = ['甲', '乙', '丙'];
+      for (var t = 0; t < 300; t++) {
+        var target = [1, 2, 3].sort(function () { return Math.random() - 0.5; });
+        var clues = [];
+        var idxs = [0, 1, 2].sort(function () { return Math.random() - 0.5; }).slice(0, _PU.randInt(2, 3));
+        for (var ii = 0; ii < idxs.length; ii++) {
+          var p = idxs[ii];
+          if (_PU.randInt(0, 1) === 0) {
+            clues.push({ text: names[p] + ' 是第 ' + target[p] + ' 名', who: p, rank: target[p], neg: false });
+          } else {
+            var wrong = target[p] % 3 + 1;
+            clues.push({ text: names[p] + ' 不是第 ' + wrong + ' 名', who: p, rank: wrong, neg: true });
+          }
+        }
+        var match = [];
+        for (var a1 = 1; a1 <= 3 && match.length < 2; a1++) {
+          for (var a2 = 1; a2 <= 3 && match.length < 2; a2++) {
+            for (var a3 = 1; a3 <= 3 && match.length < 2; a3++) {
+              if (a1 === a2 || a1 === a3 || a2 === a3) continue;
+              var perm = [a1, a2, a3];
+              var ok = true;
+              for (var ci = 0; ci < clues.length; ci++) {
+                var cl = clues[ci];
+                if (cl.neg ? perm[cl.who] === cl.rank : perm[cl.who] !== cl.rank) { ok = false; break; }
+              }
+              if (ok) match.push(perm);
+            }
+          }
+        }
+        if (match.length === 1 && match[0].join(',') === target.join(',')) {
+          return fillQ({
+            type: 'logic',
+            text: '甲、乙、丙三人参加百米赛跑，成绩分别为第 1、2、3 名（无并列）。已知：「' +
+              clues.map(function (c) { return c.text; }).join('」，「') +
+              '」。那么乙是第几名？____',
+            answer: [target[1]],
+            hint: '列表排除法：由这几条线索逐一排除，只有一种分配成立——甲第 ' + target[0] +
+              '、乙第 ' + target[1] + '、丙第 ' + target[2]
+          });
+        }
+      }
+    }
+    // 硬币在哪号盒：构造后验证「指定真话人数」的盒子唯一
+    for (var s = 0; s < 500; s++) {
+      var claims = [_PU.randInt(1, 3), _PU.randInt(1, 3), _PU.randInt(1, 3)];
+      var wantTrues = _PU.randInt(0, 1) === 0 ? 1 : 2;
+      var goodBoxes = [];
+      for (var bx = 1; bx <= 3; bx++) {
+        var cnt = 0;
+        for (var pc = 0; pc < 3; pc++) { if (claims[pc] === bx) cnt++; }
+        if (cnt === wantTrues) goodBoxes.push(bx);
+      }
+      if (goodBoxes.length === 1) {
+        var truth = goodBoxes[0];
+        var stmts = ['甲', '乙', '丙'].map(function (nm, i) {
+          return nm + '说：「硬币在第 ' + claims[i] + ' 号盒子里」';
+        }).join('，');
+        return fillQ({
+          type: 'logic',
+          text: '一枚硬币藏在三个盒子之一中。' + stmts + '。已知这三人中恰好只有 ' + wantTrues +
+            ' 人说了真话。硬币在第 ____ 号盒子里。',
+          answer: [truth],
+          hint: '逐盒假设并统计说真话的人数：假设在第 1/2/3 号盒时真话人数分别为 ' +
+            [1, 2, 3].map(function (b) {
+              var c = 0;
+              for (var i2 = 0; i2 < 3; i2++) { if (claims[i2] === b) c++; }
+              return c;
+            }).join('、') + ' 人，只有第 ' + truth + ' 号符合「恰好 ' + wantTrues + ' 人真话」'
+        });
+      }
+    }
+    // 兜底（经典题，必然成立）
+    return fillQ({
+      type: 'logic',
+      text: '一枚硬币藏在三个盒子之一中。甲说：「在第 1 号盒子里」，乙说：「不在第 1 号盒子里」，丙说：「不在第 3 号盒子里」。已知三人中恰好只有一人说真话。硬币在第 ____ 号盒子里。',
+      answer: [3],
+      hint: '逐盒假设：在第 1 号 → 甲真丙真（两人）；在第 2 号 → 乙真丙真（两人）；在第 3 号 → 只有乙真，恰好一人 ✓'
+    });
+  }
+
   function generateQuestions(opts) {
     opts = opts || {};
     var lv = opts.difficulty || 6;
     var sc = { takeMax: lv >= 8 ? 7 : (lv >= 5 ? 5 : 4) };
     var type = opts.type || 'mix';
-    var keys = type === 'mix' ? ['optimization', 'winning'] : [type];
+    var keys = type === 'mix' ? ['optimization', 'winning', 'extremum', 'logic'] : [type];
     var count = opts.count || 10;
     var genMap = {
       optimization: genOptimization,
-      winning: function () { return genWinning(sc); }
+      winning: function () { return genWinning(sc); },
+      extremum: genExtremum,
+      logic: genLogic
     };
     var questions = [], seen = {}, MAXTRY = count * 80;
     for (var i = 0; i < count; i++) {
@@ -167,14 +293,16 @@
     grades: [6],
     moduleId: 'C8',
     knowledgePoints: {
-      6: ['g6-c8-optimization', 'g6-c8-winning-strategy']
+      6: ['g6-c8-optimization', 'g6-c8-winning-strategy', 'g6-c8-extremum-problem', 'g6-c8-logic-inference']
     },
     columns: 1,
     settings: [
       { key: 'type', label: '题型', options: [
         { value: 'mix',          label: '综合' },
         { value: 'optimization', label: '统筹优化' },
-        { value: 'winning',      label: '必胜策略' }
+        { value: 'winning',      label: '必胜策略' },
+        { value: 'extremum',     label: '最值问题' },
+        { value: 'logic',        label: '逻辑推理' }
       ] }
     ],
     generateQuestions: generateQuestions,
