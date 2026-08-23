@@ -55,6 +55,9 @@ g{grade}-{moduleIdLower}-{baseSlug}
 ## 常用命令
 
 ```bash
+npm test                                    # 硬门禁：verify-setup + verify-knowledge-bank + regression-check
+npm run check-duplicates                    # 重复率报告（非门禁，仅记录）
+bash scripts/pre-commit.sh                  # 与 pre-commit 钩子相同的本地手动校验
 node scripts/generate-knowledge-pages.js   # 再生成 knowledge/ 页面
 node dev/verify-knowledge-bank.js          # 知识库结构/编号/引用校验
 node dev/verify-setup.js                   # 项目搭建校验
@@ -62,6 +65,12 @@ node dev/check-core-integrity.js           # 核心文件完整性
 node dev/cleanup-scan.js --dry-run         # 清理扫描（仅垃圾文件被标记）
 node dev/prereq-review.js                  # 同年级前置依赖审查 CSV（建议每月）
 ```
+
+## 提交自动化（零依赖）
+
+- 版本化钩子：`scripts/githooks/pre-commit` → `scripts/pre-commit.sh`（跑 `npm test` 同一套）。
+- 启用：`git config core.hooksPath scripts/githooks`（本地一次性配置）。
+- CI：`.github/workflows/ci.yml` 在 push/PR 时运行 `npm test`，重复率报告非阻断。
 
 ## 竞赛模块实现状态（2026-08-23 更新）
 
