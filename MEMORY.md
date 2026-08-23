@@ -28,6 +28,8 @@ g{grade}-{moduleIdLower}-{baseSlug}
   - `shared/svg-geometry.js`（`SVGGeometry`：平面图形+标注、立体图、变换叠加演示）
   - `shared/svg-calculation.js`（`SVGCalculation`：四则竖式，进/借位点与错误模式）
   - `shared/svg-make-ten.js`（`SVGMakeTen`：凑十/平十/破十三行彩色图解，无效组合返回 null）
+- 难度解析层：`shared/difficulty.js`（`App.Difficulty`：difficultyToStructure/createProfile/
+  consumeProfile；结构五档映射与严格单调 complexityScore，测试 `dev/test-difficulty-structure.js`）
 - 验证：`dev/verify-knowledge-bank.js` / `dev/verify-setup.js` / `dev/check-core-integrity.js` / `dev/verify-svg.js`
 - 迁移审计：`docs/migration-report.md`
 
