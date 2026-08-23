@@ -61,7 +61,7 @@
       }
       return fillQ({
         type: 'optimization',
-        text: k + ' 个人到只有一个水龙头的排队处接水，接水时间分别为 ' + times.slice().sort(function () { return Math.random() - 0.5; }).join('、') +
+        text: k + ' 个人到只有一个水龙头的排队处接水，接水时间分别为 ' + _PU.shuffle(times).join('、') +
           ' 分钟。一人接水时其余人都要等待。接水顺序安排得当时，所有人「接水时间＋等待时间」的总和最少是 ____ 分钟。',
         answer: [total],
         hint: '用时少的人先接：升序 ' + chain.join('→') + '，总和 = ' + chain.join('＋') + ' 的前缀和相加 = ' + total + ' 分钟'
@@ -181,9 +181,9 @@
       // 名次推断：枚举全部排列，验证线索组合恰好唯一确定目标名次
       var names = ['甲', '乙', '丙'];
       for (var t = 0; t < 300; t++) {
-        var target = [1, 2, 3].sort(function () { return Math.random() - 0.5; });
+        var target = _PU.shuffle([1, 2, 3]);
         var clues = [];
-        var idxs = [0, 1, 2].sort(function () { return Math.random() - 0.5; }).slice(0, _PU.randInt(2, 3));
+        var idxs = _PU.shuffle([0, 1, 2]).slice(0, _PU.randInt(2, 3));
         for (var ii = 0; ii < idxs.length; ii++) {
           var p = idxs[ii];
           if (_PU.randInt(0, 1) === 0) {
