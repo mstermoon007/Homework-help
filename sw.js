@@ -10,7 +10,7 @@
  *
  * 注册点：shared/common.js 的 App.registerServiceWorker()（仅 http/https 协议生效）。
  */
-const CACHE = 'hw-help-v61';
+const CACHE = 'hw-help-v62';
 
 const CORE = [
   './',
@@ -27,6 +27,7 @@ const CORE = [
   'shared/toolbar.css',
   'shared/pages.css',
   'shared/common.js',
+  'shared/difficulty.js',
   'shared/print.js',
   'shared/knowledge-bank.js',
   'shared/module-catalog.js',

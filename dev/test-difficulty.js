@@ -200,6 +200,56 @@ Promise.all(promises).then(function () {
   assert(PU.diffMax(20, 3) === 20, 'diffMax(20,3)=20');
   assert(PU.diffMax(20, 8) === 40, 'diffMax(20,8)=40');
 
+  // ===== 统一难度消费（批次4：连续式插件迁移） =====
+  console.log('\n===== 统一难度消费（App.Difficulty.consume） =====');
+  var D = require(path.join(ROOT, 'shared/difficulty.js'));
+  function numsMean(qs) {
+    var all = [], re = /\d+(\.\d+)?/g;
+    qs.forEach(function (q) {
+      var text = typeof q.q === 'string' ? q.q : '';
+      var m = text.match(re);
+      if (m) all = all.concat(m.map(Number));
+    });
+    return all.length ? all.reduce(function (a, b) { return a + b; }, 0) / all.length : 0;
+  }
+  function loadP(id) { return require(path.join(ROOT, 'plugins', id + '.js')); }
+
+  // consume：自带分档 → 通用难度不叠加；无分档 → 正常解析
+  var c1 = D.consume({ difficulty: 9, level: 'advanced' });
+  assert(c1.hasOwnLevel === true && c1.effectiveLevel === 3,
+    'consume：level 存在 → hasOwnLevel=true，effectiveLevel 回落默认档（通用隐藏不叠加）');
+  var c2p = D.consume({ difficulty: 7 });
+  assert(c2p.hasOwnLevel === false && c2p.effectiveLevel === 7 && c2p.structure.allowBracket === true,
+    'consume：无 level → effectiveLevel=7，结构含括号');
+
+  // math-oral：scale 驱动数值范围，难度 3 vs 7 幅度明显不同 + 题目标注 difficulty
+  var oralMean = {};
+  [3, 7].forEach(function (lv) {
+    var p = loadP('math-oral');
+    var set = p.generate({ grade: 3, count: 30, difficulty: lv });
+    assert(set.questions.every(function (q) { return q.difficulty === lv; }),
+      'math-oral lv' + lv + '：全部题目标注 difficulty=' + lv);
+    oralMean[lv] = numsMean(set.questions);
+  });
+  assert(oralMean[7] > oralMean[3] * 1.5,
+    'math-oral 难度 7 数值幅度 > 难度 3 的 1.5 倍（' + oralMean[3].toFixed(1) + ' → ' + oralMean[7].toFixed(1) + '）');
+
+  // 三个迁移插件的标注与结构参数传递
+  ['math-g6-oral', 'math-g6-calc'].forEach(function (id) {
+    var mean = {};
+    [3, 7].forEach(function (lv) {
+      var set = loadP(id).generate({ grade: 6, count: 12, difficulty: lv });
+      assert(set.questions.every(function (q) { return q.difficulty === lv; }),
+        id + ' lv' + lv + '：题目标注 difficulty=' + lv);
+      mean[lv] = numsMean(set.questions);
+    });
+    // g6 两款为分数/小数域，整数旋钮放大后高难均值不应低于低难（宽松单调）
+    assert(mean[7] >= mean[3], id + '：难度 7 数值均值 ≥ 难度 3');
+  });
+  var vert = loadP('math-g4-vertical').generate({ grade: 4, count: 10, difficulty: 9 });
+  assert(vert.questions.every(function (q) { return q.difficulty === 9; }),
+    'math-g4-vertical：标注型迁移生效（位数语义保持，仅标注）');
+
   console.log('\n' + (fail === 0 ? '✅ 全部通过' : '❌ ' + fail + ' 项失败'));
   process.exit(fail === 0 ? 0 : 1);
 });
