@@ -29,7 +29,6 @@ reg.filter(function (r) { return !r.isPlaceholder && r.subject === 'math'; }).fo
   var sigs = {}, totalQ = 0, dupQ = 0;
   for (var round = 0; round < ROUNDS; round++) {
     try {
-      var grade = (p.grades && p.grades[0]) || 1;
       var qs = p.generate({ grade: grade, count: COUNT, type: 'mix', difficulty: 6 }).questions || [];
       qs.forEach(function (q) {
         totalQ++;
