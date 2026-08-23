@@ -4,21 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小学练习本</title>
+<link rel="stylesheet" href="shared/tokens.css">
+<link rel="stylesheet" href="shared/base.css">
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-        --brand-blue: #4A90D9;
-        --brand-orange: #F5A623;
-        --math-color: #4A90D9;
-        --math-light: #EBF3FD;
-        --chinese-color: #38A169;
-        --chinese-light: #E6F7EE;
-        --english-color: #F5A623;
-        --english-light: #FFF7EB;
-        --bg: #F0F4F8;
-        --card-shadow: 0 2px 16px rgba(0,0,0,0.06);
-        --card-radius: 16px;
-    }
     body {
         font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
         background: var(--bg);
@@ -29,7 +17,7 @@
 
     /* ============ 顶部导航栏 ============ */
     .top-nav {
-        background: #fff;
+        background: var(--card);
         height: 56px;
         display: flex;
         align-items: center;
@@ -45,12 +33,12 @@
         gap: 10px;
         font-size: 1.25rem;
         font-weight: 800;
-        color: var(--brand-blue);
+        color: var(--brand);
     }
     .top-nav .nav-logo {
         width: 36px;
         height: 36px;
-        background: linear-gradient(135deg, var(--brand-blue), #7EB6F0);
+        background: var(--grad-logo);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -68,7 +56,7 @@
 
     /* ============ 主视觉区 ============ */
     .hero {
-        background: linear-gradient(160deg, #4A90D9 0%, #6DB3F2 40%, #7EB6F0 100%);
+        background: var(--grad-hero);
         color: #fff;
         position: relative;
         overflow: hidden;
@@ -87,7 +75,7 @@
     .hero-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(160deg, rgba(74,144,217,0.55) 0%, rgba(109,179,242,0.4) 40%, rgba(126,182,240,0.35) 100%);
+        background: var(--grad-hero-overlay);
     }
     .hero-inner {
         max-width: 1200px;
@@ -159,11 +147,11 @@
 
     /* ============ 选择卡片（科目+年级左右两栏） ============ */
     .select-card {
-        background: #fff;
-        border-radius: var(--card-radius);
+        background: var(--card);
+        border-radius: var(--radius-card);
         padding: 28px 32px;
         margin-bottom: 20px;
-        box-shadow: var(--card-shadow);
+        box-shadow: var(--shadow);
     }
     .select-row {
         display: flex;
@@ -175,16 +163,16 @@
         min-width: 0;
     }
     .select-col + .select-col {
-        border-left: 1px solid #E8ECF1;
+        border-left: 1px solid var(--line);
         padding-left: 32px;
     }
     .col-title {
         font-size: 1.05rem;
         font-weight: 700;
-        color: #333;
+        color: var(--ink);
         margin-bottom: 18px;
         padding-left: 12px;
-        border-left: 4px solid var(--brand-blue);
+        border-left: 4px solid var(--brand);
     }
 
     /* 科目卡片 */
@@ -199,13 +187,13 @@
         flex-direction: column;
         align-items: center;
         padding: 20px 10px 16px;
-        border: 2px solid #E8ECF1;
+        border: 2px solid var(--line);
         border-radius: 14px;
         cursor: pointer;
         text-align: center;
         transition: all 0.2s;
         user-select: none;
-        background: #FAFBFC;
+        background: var(--bg);
     }
     .subject-card .s-icon {
         font-size: 2.4rem;
@@ -226,25 +214,25 @@
     }
     .subject-card .s-desc {
         font-size: 0.72rem;
-        color: #999;
+        color: var(--muted);
         line-height: 1.4;
     }
     .subject-card:hover { border-color: #C0C8D0; }
     .subject-radio:checked + .subject-card.math {
-        border-color: var(--math-color);
-        background: var(--math-light);
+        border-color: var(--math);
+        background: var(--math-bg);
     }
-    .subject-radio:checked + .subject-card.math .s-name { color: var(--math-color); }
+    .subject-radio:checked + .subject-card.math .s-name { color: var(--math); }
     .subject-radio:checked + .subject-card.chinese {
-        border-color: var(--chinese-color);
-        background: var(--chinese-light);
+        border-color: var(--chinese);
+        background: var(--chinese-bg);
     }
-    .subject-radio:checked + .subject-card.chinese .s-name { color: var(--chinese-color); }
+    .subject-radio:checked + .subject-card.chinese .s-name { color: var(--chinese); }
     .subject-radio:checked + .subject-card.english {
-        border-color: var(--english-color);
-        background: var(--english-light);
+        border-color: var(--english);
+        background: var(--english-bg);
     }
-    .subject-radio:checked + .subject-card.english .s-name { color: var(--english-color); }
+    .subject-radio:checked + .subject-card.english .s-name { color: var(--english); }
 
     /* 年级选择器 */
     .grade-grid {
@@ -259,12 +247,12 @@
         align-items: center;
         gap: 4px;
         padding: 14px 10px;
-        border: 2px solid #E8ECF1;
+        border: 2px solid var(--line);
         border-radius: 14px;
         cursor: pointer;
         transition: all 0.2s;
         user-select: none;
-        background: #FAFBFC;
+        background: var(--bg);
     }
     .grade-chip .g-icon {
         font-size: 1.5rem;
@@ -273,14 +261,14 @@
     .grade-chip .g-name {
         font-size: 0.95rem;
         font-weight: 700;
-        color: #666;
+        color: var(--muted);
     }
     .grade-chip:hover { border-color: #C0C8D0; }
     .grade-radio:checked + .grade-chip {
-        border-color: var(--brand-blue);
-        background: #EBF3FD;
+        border-color: var(--brand);
+        background: var(--math-bg);
     }
-    .grade-radio:checked + .grade-chip .g-name { color: var(--brand-blue); }
+    .grade-radio:checked + .grade-chip .g-name { color: var(--brand); }
 
     /* ============ 开始练习按钮 ============ */
     .action-area {
@@ -298,7 +286,7 @@
         font-size: 1.2rem;
         font-weight: 800;
         color: #fff;
-        background: linear-gradient(135deg, #F5A623, #F7B84E);
+        background: var(--grad-cta);
         border: none;
         border-radius: 24px;
         cursor: pointer;
@@ -330,15 +318,15 @@
     .site-footer {
         text-align: center;
         padding: 0 16px 24px;
-        color: #AAA;
+        color: var(--muted);
         font-size: 0.75rem;
         line-height: 1.8;
     }
     .site-footer a {
-        color: #999;
+        color: var(--muted);
         text-decoration: none;
     }
-    .site-footer a:hover { color: var(--brand-blue); }
+    .site-footer a:hover { color: var(--brand); }
 
     /* ============ 响应式 ============ */
     @media (max-width: 768px) {
@@ -353,7 +341,7 @@
         .select-col + .select-col {
             border-left: none;
             padding-left: 0;
-            border-top: 1px solid #E8ECF1;
+            border-top: 1px solid var(--line);
             padding-top: 24px;
         }
         .main-wrapper { padding: 20px 16px 32px; }

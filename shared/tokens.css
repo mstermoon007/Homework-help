@@ -23,6 +23,19 @@
     --warn: #e6a23c;
     --shadow: 0 8px 24px rgba(40, 70, 120, .10);
 
+    /* 科目强调色（首页科目卡等共用，单一来源） */
+    --math: #4a90d9;
+    --math-bg: #ebf3fd;
+    --chinese: #38a169;
+    --chinese-bg: #e6f7ee;
+    --english: #f5a623;
+    --english-bg: #fff7eb;
+    --radius-card: 16px;
+    --grad-hero: linear-gradient(160deg, #4a90d9 0%, #6db3f2 40%, #7eb6f0 100%);
+    --grad-hero-overlay: linear-gradient(160deg, rgba(74, 144, 217, .55) 0%, rgba(109, 179, 242, .40) 40%, rgba(126, 182, 240, .35) 100%);
+    --grad-logo: linear-gradient(135deg, var(--brand), #7eb6f0);
+    --grad-cta: linear-gradient(135deg, #f5a623, #f7b84e);
+
     /* 工具栏：chip 分段控件（蓝紫系） */
     --toolbar-chip-ink: #4a5a8a;
     --toolbar-chip-border: rgba(123, 97, 255, .28);
