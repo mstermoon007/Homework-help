@@ -1,0 +1,13 @@
+{
+  "name": "homework-help",
+  "version": "1.0.0",
+  "private": true,
+  "description": "小学练习本（Homework Help）— 免费无广告的小学 1-6 年级练习题生成与打印工具",
+  "scripts": {
+    "verify": "node dev/verify-setup.js",
+    "check-knowledge": "node dev/verify-knowledge-bank.js",
+    "check-regression": "node dev/regression-check.js",
+    "check-duplicates": "node dev/check-duplicates.js",
+    "test": "npm run verify && npm run check-knowledge && npm run check-regression"
+  }
+}

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# 版本化 pre-commit 钩子（启用：git config core.hooksPath scripts/githooks）
+exec "$(dirname "$0")/../pre-commit.sh"

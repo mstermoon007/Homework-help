@@ -1,0 +1,19 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # 零依赖项目：无需 npm install，直接运行校验脚本
+      - name: 核心校验（搭建 / 知识库对齐 / 满分回归）
+        run: npm test
+      - name: 题目重复率报告（非阻断）
+        run: npm run check-duplicates
+        continue-on-error: true

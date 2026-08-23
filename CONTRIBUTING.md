@@ -241,9 +241,20 @@ g{grade}-{moduleIdLower}-{baseSlug}
 
 ## 四、提交前检查
 
+**自动化**：启用版本化钩子后，`git commit` 会自动跑 `npm test`
+（verify-setup + verify-knowledge-bank + regression-check，任一失败即阻断提交）：
+
+```bash
+git config core.hooksPath scripts/githooks   # 本地一次性启用（零依赖，无需 Husky）
+```
+
+手动执行同一套：`bash scripts/pre-commit.sh` 或 `npm test`。
+GitHub Actions（`.github/workflows/ci.yml`）在每次 push / PR 重复上述门禁，
+并附「题目重复率报告」（非阻断）。
+
+人工检查项：
+
 - 在浏览器中打开 `dev/plugin-check.html`，加载你的插件文件，确保所有结构与接口测试通过。
-- 运行 `node dev/verify-setup.js`，确认注册表与骨架文件齐备。
 - 运行 `node dev/coverage.js`，确认知识点覆盖基线正常（数学 1–3 年级均有统计）。
-- 运行 `node dev/regression-check.js`，满分回填回归必须 100 分（验证题面空位数与答案结构一致）。
 - 确保你的插件在至少两个主流浏览器（Chrome、Firefox）中正常工作。
 - 确认没有违反「全局 DOM 禁止操作」「公共文件必须来自 shared/」两条硬性规则。
