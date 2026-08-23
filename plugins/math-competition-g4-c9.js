@@ -84,7 +84,7 @@
     for (var i = 0; i < k; i++) { prefix += times[i]; total += prefix; }
     return fillQ({
       type: 'misc',
-      text: k + ' 个人接水，每人接水时间分别为 ' + times.slice().sort(function () { return Math.random() - 0.5; }).join('、') +
+      text: k + ' 个人接水，每人接水时间分别为 ' + _PU.shuffle(times).join('、') +
         ' 分钟，只有一个水龙头。按最省时间的顺序接水，所有人的等待时间加接水时间总和最少是多少分钟？',
       answer: [total],
       hint: '按用时从短到长排：' + times.join('→') + '，前缀和相加 = ' + total + ' 分钟'
