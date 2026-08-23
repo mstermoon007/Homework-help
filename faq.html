@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>常见问题 · Homework Help 小学家庭作业生成器</title>
+<meta name="description" content="Homework Help 家长常见问题解答：是否收费、支持年级科目、打印方法、教材同步、注册登录、手机平板使用等。">
+<link rel="stylesheet" href="shared/tokens.css">
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;max-width:860px;margin:0 auto;padding:32px 20px;color:#27324a;line-height:1.75;background:#fafbff;}
+  .crumb{font-size:13px;color:#7a879c;margin-bottom:18px;}
+  .crumb a{color:#3f6fd1;text-decoration:none;}
+  h1{font-size:28px;margin:0 0 6px;}
+  .meta{font-size:13px;color:#9aa5b5;margin-bottom:26px;}
+  .faq{background:#fff;border:1px solid #e6ecf7;border-radius:14px;padding:18px 22px;margin:14px 0;box-shadow:0 2px 8px rgba(63,111,209,.06);}
+  .faq h2{font-size:17px;margin:0 0 8px;color:#1f2a44;}
+  .faq p{margin:0;color:#42506b;}
+  .btn{display:inline-block;margin-top:22px;background:#3f6fd1;color:#fff;text-decoration:none;padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px;}
+  footer{margin-top:40px;font-size:12px;color:#b3bccd;text-align:center;}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "这个网站收费吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "完全免费，无任何收费项目，也无需注册登录。所有题目生成、批改与打印功能都可免费使用。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "支持哪些年级和科目？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "覆盖小学一年级至六年级，科目包括数学、语文和英语。数学按年级细分了口算、应用题、竖式、图形、统计等丰富题型。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "如何打印练习题？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "在练习页点击“打印页面”按钮即可。打印时系统会自动隐藏所有按钮和无关元素，只保留题目，生成 A4 友好的练习卷。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "题目是教材同步的吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是的，题型基于人教版教材与主流练习册设计，数学、语文、英语均覆盖一至六年级，按知识点加权抽题，贴近教材结构。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "需要注册登录吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不需要。Homework Help 是纯前端网页工具，打开即可使用，不要求注册、登录或填写任何个人信息。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "手机/平板可以使用吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。页面采用响应式设计，适配手机、平板和电脑；安装在主屏后还支持离线访问。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "孩子的作答数据会被上传吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不会。所有题目生成与孩子作答都在本地浏览器中完成，纯前端运行，数据不上传任何服务器，保护隐私安全。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以离线使用吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。通过 Service Worker 缓存，安装后的网页支持离线访问，跨页面还会复用插件缓存，减少点击等待。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "题目是怎么生成的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "基于统一的随机熵源（优先使用 crypto）按规则随机生成题目，每次练习都不一样；综合练习按知识库权重抽题，重点知识出题更多。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "在哪里查看答案？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "练习页提供“显示答案”按钮，可随时显示或隐藏标准答案，方便自查或作为题卡使用；提交后也会逐题标对错并展示正确答案。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以自定义难度吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。练习页支持填写 1-10 的难度数值（1 最简单，10 最难），系统会按难度缩放数值范围与逻辑深度；系统还会根据历史正确率自适应调整难度。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "支持哪些题型？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "数学包含口算、应用题、凑十法、认识图形、认识钟表、单位换算、竖式、脱式、填空、连线、判断、选择、统计等；语文含拼音、看拼音写字、综合练习；英语含字母跟读。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "有竞赛或拔高内容吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "竞赛专题（C1 数字谜与数阵图、C2 数论初步、C3 组合计数、C5 行程问题等）已在部分年级实现，更多竞赛模块正在开发中。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "如何切换年级或科目？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "练习页左上角提供“快速切换”菜单，可随时切换学科与年级；也可通过首页或题型选择页重新进入。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "这个工具是给谁用的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "专为家长辅导孩子学习设计，帮助孩子在家练习小学 1-6 年级的数学、语文、英语。学习仍需父母陪伴与引导，工具只是辅助。"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<nav class="crumb"><a href="index.html">首页</a> › <span>常见问题</span></nav>
+<h1>常见问题（FAQ）</h1>
+<div class="meta">关于 Homework Help 小学家庭作业生成器的常见疑问</div>
+
+<div class="faq"><h2>这个网站收费吗？</h2><p>完全免费，无任何收费项目，也无需注册登录。所有题目生成、批改与打印功能都可免费使用。</p></div>
+<div class="faq"><h2>支持哪些年级和科目？</h2><p>覆盖小学一年级至六年级，科目包括数学、语文和英语。数学按年级细分了口算、应用题、竖式、图形、统计等丰富题型。</p></div>
+<div class="faq"><h2>如何打印练习题？</h2><p>在练习页点击“打印页面”按钮即可。打印时系统会自动隐藏所有按钮和无关元素，只保留题目，生成 A4 友好的练习卷。</p></div>
+<div class="faq"><h2>题目是教材同步的吗？</h2><p>是的，题型基于人教版教材与主流练习册设计，数学、语文、英语均覆盖一至六年级，按知识点加权抽题，贴近教材结构。</p></div>
+<div class="faq"><h2>需要注册登录吗？</h2><p>不需要。Homework Help 是纯前端网页工具，打开即可使用，不要求注册、登录或填写任何个人信息。</p></div>
+<div class="faq"><h2>手机/平板可以使用吗？</h2><p>可以。页面采用响应式设计，适配手机、平板和电脑；安装在主屏后还支持离线访问。</p></div>
+<div class="faq"><h2>孩子的作答数据会被上传吗？</h2><p>不会。所有题目生成与孩子作答都在本地浏览器中完成，纯前端运行，数据不上传任何服务器，保护隐私安全。</p></div>
+<div class="faq"><h2>可以离线使用吗？</h2><p>可以。通过 Service Worker 缓存，安装后的网页支持离线访问，跨页面还会复用插件缓存，减少点击等待。</p></div>
+<div class="faq"><h2>题目是怎么生成的？</h2><p>基于统一的随机熵源（优先使用 crypto）按规则随机生成题目，每次练习都不一样；综合练习按知识库权重抽题，重点知识出题更多。</p></div>
+<div class="faq"><h2>在哪里查看答案？</h2><p>练习页提供“显示答案”按钮，可随时显示或隐藏标准答案，方便自查或作为题卡使用；提交后也会逐题标对错并展示正确答案。</p></div>
+<div class="faq"><h2>可以自定义难度吗？</h2><p>可以。练习页支持填写 1-10 的难度数值（1 最简单，10 最难），系统会按难度缩放数值范围与逻辑深度；系统还会根据历史正确率自适应调整难度。</p></div>
+<div class="faq"><h2>支持哪些题型？</h2><p>数学包含口算、应用题、凑十法、认识图形、认识钟表、单位换算、竖式、脱式、填空、连线、判断、选择、统计等；语文含拼音、看拼音写字、综合练习；英语含字母跟读。</p></div>
+<div class="faq"><h2>有竞赛或拔高内容吗？</h2><p>竞赛专题（C1 数字谜与数阵图、C2 数论初步、C3 组合计数、C5 行程问题等）已在部分年级实现，更多竞赛模块正在开发中。</p></div>
+<div class="faq"><h2>如何切换年级或科目？</h2><p>练习页左上角提供“快速切换”菜单，可随时切换学科与年级；也可通过首页或题型选择页重新进入。</p></div>
+<div class="faq"><h2>这个工具是给谁用的？</h2><p>专为家长辅导孩子学习设计，帮助孩子在家练习小学 1-6 年级的数学、语文、英语。学习仍需父母陪伴与引导，工具只是辅助。</p></div>
+
+<a class="btn" href="index.html">返回首页</a>
+<footer>Homework Help · 免费无广告小学 1-6 年级家庭作业生成器 · 纯前端</footer>
+</body>
+</html>

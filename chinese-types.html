@@ -4,93 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>语文题型选择</title>
-<link rel="stylesheet" href="shared/common.css">
-<link rel="stylesheet" href="shared/tokens.css">
-<style>
-    body {
-        background: linear-gradient(160deg, #d6e8fa 0%, #4A90D9 45%, #F5A623 110%);
-        min-height: 100vh;
-    }
-    .type-card:hover { border-color: rgba(255,255,255,0.9); }
-    .type-card .t-name { color: #f5576c; }
-    .section-label { border-left-color: #f5576c; }
-    .grade-badge { color: #f5576c; }
-</style>
-</head>
-<body class="type-page">
-<div class="wrapper">
-    <a href="index.html" class="back-home">← 返回首页</a>
-
-    <div class="page-header">
-        <div class="logo"><img src="assets/logo-chinese.png" alt="语文"></div>
-        <h1>语文练习<span class="grade-badge" id="gradeBadge">一年级</span></h1>
-        <p>请选择要练习的题型</p>
-    </div>
-
-    <div class="card">
-        <div class="section-label">📚 选择题型</div>
-        <div class="type-grid" id="typeGrid">
-            <!-- 动态生成 -->
-        </div>
-    </div>
-
-    <div class="foot-tip">💡 更多题型持续更新中，敬请期待</div>
-</div>
-
-<script src="shared/common.js"></script>
-<script src="plugins/registry.js"></script>
 <script>
-(function () {
-  'use strict';
-
-  var SUBJECT = 'chinese';
-  var grade = App.currentGrade();
-  document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
-
-  // 学科题型图标（按插件 ID）；非数学学科无 category 图标，缺省回退
-  var PLUGIN_ICONS = {
-    'chinese-pinyin': '🔤',
-    'pinyin-to-char': '✏️',
-    'chinese-comprehensive': '🧩'
-  };
-  // 友好的题型描述（语文暂无知识库，作为回退展示）
-  var PLUGIN_DESC = {
-    'chinese-pinyin': '拼音抄写 · 汉字注音 · 词语注音',
-    'pinyin-to-char': '看拼音，写出对应汉字',
-    'chinese-comprehensive': '拼音与汉字互相填空，综合练习'
-  };
-  function iconOf(p) { return PLUGIN_ICONS[p.id] || '📘'; }
-  function descOf(p) { return PLUGIN_DESC[p.id] || ''; }
-
-  var registry = (typeof window.PLUGIN_REGISTRY !== 'undefined') ? window.PLUGIN_REGISTRY : [];
-
-  // 统一走 App.PluginLoader：按年级加载本学科全部插件并读取其元数据（含竞态安全与缓存）
-  App.PluginLoader.loadSubjectPlugins(SUBJECT, grade).then(function (plugins) {
-    var applicable = plugins.filter(function (p) {
-      return p.grades && p.grades.indexOf(grade) !== -1;
-    });
-
-    var html = '';
-    applicable.forEach(function (p) {
-      var name = p.name || p.id;
-      var desc = descOf(p);
-      html += '<a href="' + App.buildPluginLink(p.id) + '" class="type-card" title="' + desc + '">' +
-        '<span class="t-icon">' + iconOf(p) + '</span>' +
-        '<span class="t-name">' + name + '</span>' +
-        (desc ? '<span class="t-desc">' + desc + '</span>' : '') +
-        '</a>';
-    });
-
-    document.getElementById('typeGrid').innerHTML =
-      html || '<div class="load-hint">该年级暂无可用题型</div>';
-
-    // 预热缓存，配合 Service Worker 让点击进入练习页更快
-    App.PluginLoader.prefetch(applicable);
-  }).catch(function (err) {
-    document.getElementById('typeGrid').innerHTML =
-      '<div class="load-hint">题型加载失败：' + (err && err.message) + '</div>';
-  });
-})();
+// Redirect to unified subject-types.html with subject parameter
+var params = new URLSearchParams(window.location.search);
+params.set('subject', 'chinese');
+window.location.href = 'subject-types.html?' + params.toString();
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "语文题型选择 · Homework Help",
+  "url": "https://mstermoon007.github.io/Homework-help/chinese-types.html",
+  "description": "小学 1-6 年级语文题型目录：拼音练习、看拼音写字、综合练习。",
+  "hasPart": [
+    {
+      "@type": "WebPage",
+      "name": "拼音练习",
+      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=chinese-pinyin&grade=1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "看拼音写字",
+      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=pinyin-to-char&grade=1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "综合练习",
+      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=chinese-comprehensive&grade=1"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<noscript><div class="noscript-types" style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>语文题型</h2><ul><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=chinese-pinyin&grade=1">拼音练习</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=pinyin-to-char&grade=1">看拼音写字</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=chinese-comprehensive&grade=1">综合练习</a></li></ul></div></noscript>
+<p>正在跳转到语文题型选择页...</p>
 </body>
 </html>

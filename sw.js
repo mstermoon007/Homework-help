@@ -10,7 +10,7 @@
  *
  * 注册点：shared/common.js 的 App.registerServiceWorker()（仅 http/https 协议生效）。
  */
-const CACHE = 'hw-help-v26';
+const CACHE = 'hw-help-v60';
 
 const CORE = [
   './',
@@ -19,12 +19,15 @@ const CORE = [
   'chinese-types.html',
   'english-types.html',
   'practice.html',
-  'shared/common.css',
   'shared/tokens.css',
+  'shared/base.css',
+  'shared/components.css',
   'shared/toolbar.css',
+  'shared/pages.css',
   'shared/common.js',
   'shared/print.js',
   'shared/knowledge-bank.js',
+  'shared/module-catalog.js',
   'shared/plugin-types.js',
   'pinyin-bank.js',
   'banner.jpg',
@@ -86,6 +89,25 @@ self.addEventListener('fetch', function (e) {
   var url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // 仅缓存同源静态资源
 
+  // 导航请求（HTML）采用 network-first：保证代码更新后用户不长期滞留旧缓存，
+  // 离线或网络失败时回退到已缓存的同源页面（兜底首页）。其余静态资源保持 cache-first。
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      fetch(req).then(function (res) {
+        if (res && res.status === 200 && res.type === 'basic') {
+          var copy = res.clone();
+          caches.open(CACHE).then(function (c) { c.put(req, copy); });
+        }
+        return res;
+      }).catch(function () {
+        return caches.match(req).then(function (hit) {
+          return hit || caches.match('index.html');
+        });
+      })
+    );
+    return;
+  }
+
   e.respondWith(
     caches.match(req).then(function (hit) {
       if (hit) return hit;
@@ -96,8 +118,6 @@ self.addEventListener('fetch', function (e) {
         }
         return res;
       }).catch(function () {
-        // 离线且缓存未命中：导航请求回退首页，其余返回离线提示
-        if (req.mode === 'navigate') return caches.match('index.html');
         return new Response('', { status: 504, statusText: 'offline' });
       });
     })

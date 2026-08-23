@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小学练习本</title>
-<link rel="stylesheet" href="shared/common.css">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -383,6 +382,26 @@
         .btn-start { max-width: 100%; padding: 14px 24px; font-size: 1.1rem; border-radius: 22px; }
     }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Homework Help 小学家庭作业生成器",
+  "url": "https://mstermoon007.github.io/Homework-help/",
+  "description": "免费无广告的小学 1-6 年级数学、语文、英语练习题生成与打印工具。"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Homework Help",
+  "url": "https://mstermoon007.github.io/Homework-help/",
+  "logo": "https://mstermoon007.github.io/Homework-help/banner.jpg",
+  "sameAs": []
+}
+</script>
+<link rel="preload" href="banner.jpg" as="image">
 </head>
 <body>
 
@@ -513,10 +532,10 @@ function goTo(e) {
     var sel = getSelected();
     var target = {
         math: 'math-types.html',
-        chinese: 'chinese-types.html',
-        english: 'english-types.html'
+        chinese: 'subject-types.html?subject=chinese',
+        english: 'subject-types.html?subject=english'
     }[sel.subject];
-    window.location.href = target + '?grade=' + encodeURIComponent(sel.grade);
+    window.location.href = App.buildLink(target, sel.grade);
 }
 
 // 更换 Banner 图片（设为背景图，文字浮于图片上）
@@ -534,21 +553,7 @@ function setBanner(imgUrl) {
 // 设置 Banner 底图
 setBanner('banner.jpg');
 
-// 科目卡片点击切换选中
-document.querySelectorAll('.subject-card').forEach(function(card) {
-    card.addEventListener('click', function() {
-        var radio = document.getElementById(this.getAttribute('for'));
-        if (radio) radio.checked = true;
-    });
-});
-
-// 年级卡片点击切换选中
-document.querySelectorAll('.grade-chip').forEach(function(chip) {
-    chip.addEventListener('click', function() {
-        var radio = document.getElementById(this.getAttribute('for'));
-        if (radio) radio.checked = true;
-    });
-});
+// 科目/年级卡片为 <label for="...">，点击切换 radio 由浏览器原生行为完成，无需 JS
 </script>
 
 </body>
