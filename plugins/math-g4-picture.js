@@ -2,10 +2,10 @@
  * plugins/math-g4-picture.js — 四年级看图列式插件（M7 看图列式）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M7 模块）：
- *   g4-pic-segment  线段图列式（倍数问题）  （type: 'segment-multiple'）
- *   g4-pic-brace    大括号图列式（加减）    （type: 'brace-addsub'）
- *   g4-pic-speed    速度时间路程图          （type: 'speed-distance'）
- *   g4-pic-dec      小数加减情境图          （type: 'dec-scene'）
+ *   g4-m7-g4-pic-segment  线段图列式（倍数问题）  （type: 'segment-multiple'）
+ *   g4-m7-g4-pic-brace    大括号图列式（加减）    （type: 'brace-addsub'）
+ *   g4-m7-g4-pic-speed    速度时间路程图          （type: 'speed-distance'）
+ *   g4-m7-g4-pic-dec      小数加减情境图          （type: 'dec-scene'）
  *
  * 看图列式以 SVG 示意图 + 列式/填数实现，学生根据图示列算式并求出结果。
  * 提供标准 ExercisePlugin 接口。
@@ -22,31 +22,6 @@
 
   function rnd(min, max) { return _PU.randInt(min, max); }
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
-  // 从候选生成 n 个两两不同的数字选项（字符串）
-  function uniqueNums(cands, hi, lo, n) {
-    var pool = [];
-    cands.forEach(function (c) {
-      if (c >= lo && c < hi && pool.indexOf(c) === -1) pool.push(c);
-    });
-    var guard = 0;
-    while (pool.length < n && guard < 60) {
-      var extra = rnd(lo, hi - 1);
-      if (pool.indexOf(extra) === -1) pool.push(extra);
-      guard++;
-    }
-    var shuffled = shuffle(pool);
-    var out = [];
-    for (var i = 0; i < n; i++) out.push(shuffled[i % shuffled.length]);
-    return shuffle(out);
-  }
 
   // ============ 线段图列式（倍数问题） ============
   // 甲线段 1 份，乙线段 k 份，问总和/差
@@ -227,13 +202,12 @@
     id: 'math-g4-picture',
     moduleId: 'M7',
     name: '看图列式',
-    pageTitle: '四年级看图列式练习',
     pageSubtitle: '线段图、大括号图、速度路程与小数情境',
     grades: [4],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-pic-segment', 'g4-pic-brace', 'g4-pic-speed', 'g4-pic-dec'],
+    knowledgePoints: ['g4-m7-g4-pic-segment', 'g4-m7-g4-pic-brace', 'g4-m7-g4-pic-speed', 'g4-m7-g4-pic-dec'],
 
     settings: [
       {

@@ -2,12 +2,12 @@
  * plugins/math-g5-draw.js — 五年级操作题插件（M6 操作）
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M6 模块）：
- *   g5-draw-rotate    画旋转后的图形      （type: 'rotation-draw'）
- *   g5-draw-observe   观察物体（三）      （type: 'observe-3d'）
- *   g5-draw-height    画多边形的高        （type: 'polygon-height'）
- *   g5-draw-sym       补全轴对称图形      （type: 'symmetry'）
- *   g5-draw-coord     用数对表示位置      （type: 'coordinate-plot'）
- *   g5-draw-net       长方体展开图        （type: 'solid-net'）
+ *   g5-m6-g5-draw-rotate    画旋转后的图形      （type: 'rotation-draw'）
+ *   g5-m6-g5-draw-observe   观察物体（三）      （type: 'observe-3d'）
+ *   g5-m6-g5-draw-height    画多边形的高        （type: 'polygon-height'）
+ *   g5-m6-g5-draw-sym       补全轴对称图形      （type: 'symmetry'）
+ *   g5-m6-g5-draw-coord     用数对表示位置      （type: 'coordinate-plot'）
+ *   g5-m6-g5-draw-net       长方体展开图        （type: 'solid-net'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -305,13 +305,19 @@
     id: 'math-g5-draw',
     moduleId: 'M6',
     name: '操作题',
-    pageTitle: '五年级操作练习',
     pageSubtitle: '旋转、观察物体、画高、对称、数对与展开图',
     grades: [5],
     subject: 'math',
     category: 'geometry',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-draw-rotate', 'g5-draw-observe', 'g5-draw-height', 'g5-draw-sym', 'g5-draw-coord', 'g5-draw-net'],
+    knowledgePoints: [
+        'g5-m6-g5-draw-rotate',
+        'g5-m6-g5-draw-observe',
+        'g5-m6-g5-draw-height',
+        'g5-m6-g5-draw-sym',
+        'g5-m6-g5-draw-coord',
+        'g5-m6-g5-draw-net'
+    ],
 
     settings: [
       {

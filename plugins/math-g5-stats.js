@@ -2,9 +2,9 @@
  * plugins/math-g5-stats.js — 五年级分类与整理插件（M9 分类与整理）
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M9 模块）：
- *   g5-stats-possib  可能性大小比较       （type: 'possibility-compare'）
- *   g5-stats-line1   单式折线统计图       （type: 'linechart-single'）
- *   g5-stats-line2   复式折线统计图       （type: 'linechart-double'）
+ *   g5-m9-g5-stats-possib  可能性大小比较       （type: 'possibility-compare'）
+ *   g5-m9-g5-stats-line1   单式折线统计图       （type: 'linechart-single'）
+ *   g5-m9-g5-stats-line2   复式折线统计图       （type: 'linechart-double'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -151,13 +151,12 @@
     id: 'math-g5-stats',
     moduleId: 'M9',
     name: '分类与整理',
-    pageTitle: '五年级分类与整理',
     pageSubtitle: '可能性比较与折线统计图',
     grades: [5],
     subject: 'math',
     category: 'statistics',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-stats-possib', 'g5-stats-line1', 'g5-stats-line2'],
+    knowledgePoints: ['g5-m9-g5-stats-possib', 'g5-m9-g5-stats-line1', 'g5-m9-g5-stats-line2'],
 
     settings: [
       {

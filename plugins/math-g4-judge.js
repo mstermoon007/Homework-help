@@ -2,14 +2,14 @@
  * plugins/math-g4-judge.js — 四年级判断题插件（M11 判断）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M11 模块）：
- *   g4-judge-read     大数读写      （type: 'read'）
- *   g4-judge-law      运算律        （type: 'law'）
- *   g4-judge-angle    几何概念      （type: 'angle'）
- *   g4-judge-line     线段射线直线  （type: 'line-ray'）
- *   g4-judge-quotient 商不变规律    （type: 'quotient'）
- *   g4-judge-dec      小数性质      （type: 'dec'）
- *   g4-judge-tri      三角形        （type: 'triangle'）
- *   g4-judge-stats    统计          （type: 'stats'）
+ *   g4-m11-g4-judge-read     大数读写      （type: 'read'）
+ *   g4-m11-g4-judge-law      运算律        （type: 'law'）
+ *   g4-m11-g4-judge-angle    几何概念      （type: 'angle'）
+ *   g4-m11-g4-judge-line     线段射线直线  （type: 'line-ray'）
+ *   g4-m11-g4-judge-quotient 商不变规律    （type: 'quotient'）
+ *   g4-m11-g4-judge-dec      小数性质      （type: 'dec'）
+ *   g4-m11-g4-judge-tri      三角形        （type: 'triangle'）
+ *   g4-m11-stats    统计          （type: 'stats'）
  *
  * 判断题以 choice 呈现（√ / ×）。提供标准 ExercisePlugin 接口。
  */
@@ -173,14 +173,21 @@
     id: 'math-g4-judge',
     moduleId: 'M11',
     name: '判断题',
-    pageTitle: '四年级判断练习',
     pageSubtitle: '大数、运算律、几何、小数、三角形与统计',
     grades: [4],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-judge-read', 'g4-judge-law', 'g4-judge-angle', 'g4-judge-line',
-      'g4-judge-quotient', 'g4-judge-dec', 'g4-judge-tri', 'g4-judge-stats'],
+    knowledgePoints: [
+        'g4-m11-g4-judge-read',
+        'g4-m11-g4-judge-law',
+        'g4-m11-g4-judge-angle',
+        'g4-m11-g4-judge-line',
+        'g4-m11-g4-judge-quotient',
+        'g4-m11-g4-judge-dec',
+        'g4-m11-g4-judge-tri',
+        'g4-m11-stats'
+    ],
 
     settings: [
       {

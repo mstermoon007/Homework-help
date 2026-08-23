@@ -2,10 +2,10 @@
  * plugins/math-g5-reason.js — 五年级推理与数学广角插件（M10 推理）
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M10 模块）：
- *   g5-reason-tree3   植树问题（三种情况）  （type: 'tree-three'）
- *   g5-reason-defect  找次品（天平称量）    （type: 'defective-scale'）
- *   g5-reason-logic   逻辑推理              （type: 'logic'）
- *   g5-reason-seq     数字推理              （type: 'sequence'）
+ *   g5-m10-g5-reason-tree3   植树问题（三种情况）  （type: 'tree-three'）
+ *   g5-m10-g5-reason-defect  找次品（天平称量）    （type: 'defective-scale'）
+ *   g5-m10-logic-reasoning   逻辑推理              （type: 'logic'）
+ *   g5-m10-g5-reason-seq     数字推理              （type: 'sequence'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -131,13 +131,17 @@
     id: 'math-g5-reason',
     moduleId: 'M10',
     name: '推理与数学广角',
-    pageTitle: '五年级推理与数学广角',
     pageSubtitle: '植树、找次品、逻辑与数字推理',
     grades: [5],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-reason-tree3', 'g5-reason-defect', 'g5-reason-logic', 'g5-reason-seq'],
+    knowledgePoints: [
+        'g5-m10-g5-reason-tree3',
+        'g5-m10-g5-reason-defect',
+        'g5-m10-logic-reasoning',
+        'g5-m10-g5-reason-seq'
+    ],
 
     settings: [
       {

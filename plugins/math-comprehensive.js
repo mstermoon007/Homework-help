@@ -24,54 +24,16 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-comprehensive.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  // 兜底清单：仅当 PLUGIN_REGISTRY 不可用时按约定路径加载（正常环境优先走注册表动态加载）
-  var MATH_SUB_IDS = [
-    'math-oral', 'math-word-problems', 'math-make-ten', 'math-shapes',
-    'math-number-sense', 'math-clock', 'math-patterns', 'math-picture-equations', 'math-statistics',
-    'math-money', 'math-unit-convert', 'math-geometry', 'math-data-stats', 'math-logic-reasoning'
-  ];
+  // 子插件来源：统一从 PLUGIN_REGISTRY 动态选取（新增/删除插件自动同步，无硬编码清单）。
+  // 仅在 PLUGIN_REGISTRY 不可用或当前无已注册数学插件时 reject，避免维护两份易漂移的数据。
 
   function gradeName(g) {
     return (typeof App !== 'undefined' && App.getGradeName) ? App.getGradeName(g) : (g + '年级');
   }
 
-  // ============ 子插件异步加载（动态加载注册表中对应的插件文件） ============
-  var scriptCache = {};
-  function loadScript(src) {
-    if (scriptCache[src]) return Promise.resolve();
-    // Node 环境：直接 require（插件均通过 module.exports 导出，且设置 global.__currentPlugin）
-    if (typeof document === 'undefined' && typeof require !== 'undefined') {
-      return Promise.resolve().then(function () {
-        var p = require('./' + src.replace(/^plugins\//, ''));
-        global.__currentPlugin = p;
-        scriptCache[src] = true;
-        return p;
-      });
-    }
-    return new Promise(function (resolve, reject) {
-      var s = document.createElement('script');
-      s.src = src;
-      var done = false;
-      var timer = setTimeout(function () {
-        if (!done) { done = true; reject(new Error('脚本加载超时（5 秒）：' + src)); }
-      }, 5000);
-      s.onload = function () {
-        if (done) return;
-        done = true;
-        clearTimeout(timer);
-        scriptCache[src] = true;
-        resolve();
-      };
-      s.onerror = function () {
-        if (done) return;
-        done = true;
-        clearTimeout(timer);
-        reject(new Error('脚本加载失败：' + src));
-      };
-      document.head.appendChild(s);
-    });
-  }
-
+  // ============ 子插件异步加载 ============
+  // 统一走 shared/common.js 的 App.PluginLoader（scriptCache / 5 秒超时 / deps 依赖链 /
+  // Node require 回退均由加载器提供），本插件不再自建加载逻辑。
   var subPlugins = null;
   var subPluginMap = {};
   // 综合练习仅纳入「已实现题型」的插件：
@@ -81,7 +43,16 @@
   function isPlaceholderPlugin(p) {
     if (!p) return true;
     if (p.isPlaceholder || p.competitionModuleIds || p.competitionModuleId) return true;
-    return p.category === 'competition';
+    if (p.category === 'competition') {
+      // 能力检测兜底：能真实出题的竞赛插件自动放行（占位实现 generate 产出空题）。
+      // 异步 generate（返回 Promise）视为已实现，避免误杀。
+      try {
+        var probe = p.generate({ grade: (p.grades || [4])[0], count: 1 });
+        if (probe && typeof probe.then === 'function') return false;
+        return !(probe && probe.questions && probe.questions.length);
+      } catch (e) { return true; }
+    }
+    return false;
   }
   function ensureSubPlugins() {
     if (subPlugins) return Promise.resolve(subPlugins);
@@ -106,23 +77,26 @@
     var mathRecs = registry.filter(function (r) {
       return r && r.id && r.id.indexOf('math-') === 0 && r.id !== 'math-comprehensive' && !r.isPlaceholder;
     });
-    var records = mathRecs.length ? mathRecs : MATH_SUB_IDS.map(function (id) {
-      return { id: id, file: 'plugins/' + id + '.js' };
-    });
+    if (!mathRecs.length) {
+      return Promise.reject(new Error('PLUGIN_REGISTRY 不可用或当前无已注册的数学插件，无法加载综合练习子插件'));
+    }
+    var loader = (typeof App !== 'undefined' && App.PluginLoader) ? App.PluginLoader : null;
+    if (!loader) {
+      return Promise.reject(new Error('math-comprehensive 依赖 App.PluginLoader（shared/common.js），请先加载'));
+    }
     subPlugins = [];
-    var chain = Promise.resolve();
-    records.forEach(function (rec) {
-      chain = chain.then(function () {
-        return loadScript(rec.file).then(function () {
-          var p = global.__currentPlugin;
-          if (p && p.id === rec.id) {
-            subPlugins.push(p);
-            subPluginMap[p.id] = p;
-          }
-        });
+    subPluginMap = {};
+    // 单个插件加载失败仅跳过（console.warn），不阻塞整份综合卷
+    return Promise.all(mathRecs.map(function (rec) {
+      return loader.loadPlugin(rec).then(function (p) {
+        if (p && p.id) {
+          subPlugins.push(p);
+          subPluginMap[p.id] = p;
+        }
+      }).catch(function (e) {
+        if (global.console) global.console.warn('[math-comprehensive] 跳过子插件 ' + rec.id + '：' + (e && e.message));
       });
-    });
-    return chain.then(function () {
+    })).then(function () {
       global.__currentPlugin = mathComprehensivePlugin; // 恢复当前插件，保证选项按钮 __choose 正确
       return subPlugins;
     });
@@ -212,18 +186,6 @@
       return (typeof e.weight === 'number') ? e.weight
         : (CATEGORY_IMPORTANCE[e.category] || 3);
     }
-    function kbPluginWeights(grade, plugins) {
-      var entries = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.getEntries)
-        ? KnowledgeBank.getEntries('math', grade) : [];
-      var byPlugin = {};
-      if (entries.length) {
-        entries.forEach(function (e) {
-          if (!e.pluginId) return;
-          byPlugin[e.pluginId] = (byPlugin[e.pluginId] || 0) + entryImportance(e);
-        });
-      }
-      return plugins.map(function (p) { return byPlugin[p.id] || 0; });
-    }
 
     // 知识点级抽题计划：读取当前年级知识库知识点（含 weight 与推荐 type），
     // 按知识点 weight 比例分配题量，返回按插件聚合的分配计划：
@@ -310,7 +272,7 @@
     id: 'math-comprehensive',
     moduleId: 'M8',
     name: '综合练习',
-    grades: [1, 2, 3],
+    grades: [1, 2, 3, 4, 5, 6],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
@@ -456,9 +418,13 @@ render: function (exerciseSet) {
         var domainStats = {}; // category -> { total, correct }
 
         exerciseSet.questions.forEach(function (q, i) {
-          var ok = (typeof q.check === 'function')
-            ? !!q.check(userAnswers, i) // 标准 Question.check：统一判定任意题型（含单位/多空/复合答案）
-            : false;
+          var ok;
+          if (typeof q.check === 'function') {
+            ok = !!q.check(userAnswers, i); // 标准 Question.check：统一判定任意题型（含单位/多空/复合答案）
+          } else {
+            // 缺省回退：与 createPlugin 的 defaultCheck 一致（multi 分字段 / 其余整串比较）
+            ok = !!_PU.defaultQCheck(q, userAnswers, i);
+          }
           results.push(ok);
           if (ok) correct++;
           correctAnswers.push(formatAnswer(q.answer));

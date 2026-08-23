@@ -40,10 +40,11 @@
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
 | `category` | string | 数学领域：`'number'` / `'geometry'` / `'statistics'` / `'mixed'`（跨领域综合）；非数学插件省略或写 `null`。用于 `math-types.html` 排序 / 图标、`math-comprehensive` 按领域配比 |
-| `printConfig` | `{ pageType: string, title?: string }` | 打印配置，见 CONTRIBUTING.md「打印约定」。`pageType` 缺失时容器回退 `'math'` |
+| `printConfig` | `{ pageType: string }` | 打印配置，见 CONTRIBUTING.md「打印约定」。`pageType` 缺失时容器回退 `'math'`。**不提供标题覆盖**——打印标题由容器统一按「年级 + 题型（+ 题量）」生成 |
 | `settings` | `array` | 题型子类别筛选 UI：`[{ key, label?, options: [{label, value}], default? }]`，`practice.html` 据此渲染题型切换 chip（综合插件用它切换组卷方式） |
 | `deps` | — | **不写在插件对象上**，而在 `registry.js` 条目中声明，见第三节 |
 | `isPlaceholder` | boolean | 占位标记：`generate` 返回空题目集、`render` 返回「题目开发中」提示。综合练习按此过滤，占位插件不参与抽题；覆盖统计排除占位插件（占位不算已实现） |
+| `noCheck` | boolean | 无书面批改标记：跟读/听力类插件（如 `english-alphabet`）声明 `true`，`practice.html` 据此隐藏「检查答案」按钮并拦截回车批改。`check` 仍需实现（供「显示答案」等入口兜底调用） |
 
 ---
 
@@ -90,7 +91,7 @@
 | `category` | 否 | 同插件对象 `category` |
 | `grades` | 是 | 同插件对象 `grades` |
 | `deps` | 否 | 前置依赖脚本数组（如 `['pinyin-bank.js']`），加载器在加载插件前**按顺序**加载 |
-| `moduleIds` | 否 | 占位插件声明的模块 ID 数组（竞赛占位如 `['C1',…,'C9']`，四/五年级占位各一条如 `['M1']`），供 `math-types.html` 展开为多个卡片；配合 `isPlaceholder` 使用 |
+| `moduleIds` | 否 | 插件归属的模块 ID 数组（正常插件单元素如 `['M2']`；占位插件可声明多个，竞赛占位为 `['C1',…,'C9']`），供 `math-types.html` 展开为模块卡片 |
 | `isPlaceholder` | 否 | `true` 表示该插件无实际题目，综合练习与抽题会过滤 |
 
 > `deps` 用于把插件与公共数据（拼音词库等）解耦：插件文件内不硬编码大体积数据，改用 `deps` 由加载器预加载，插件内再引用全局数据即可。
@@ -166,19 +167,16 @@
 - `registry.js` 条目以 `moduleIds: ['C1',…,'C9']` + `isPlaceholder: true` 声明，`math-types.html` 据此把占位插件**展开为 9 张竞赛卡片**（灰色 + 「即将上线」角标，点击进入占位提示页）。
 - **综合练习过滤**：`math-comprehensive.js` 通过 `isPlaceholderPlugin(p)`（占位标记 + `category === 'competition'` 能力兜底）在加载与抽题阶段剔除占位插件，且对产出空题的插件跳过、整体空集抛错——确保综合练习只有已实现题型、无空白题目。
 - `dev/verify-setup.js` 自动校验：竞赛模块 C1–C9 齐全、占位插件已注册且带占位标记、占位插件豁免 `moduleId` 强校验。
-- **新增真实竞赛插件**：实现标准接口（含合法 `moduleId`，如 `'C1'`）、在 `registry.js` 注册并去掉占位标记即可自动生效。
+- **新增真实竞赛插件**：实现标准接口（含合法 `moduleId`，如 `'C1'`）、在 `registry.js` 注册并去掉占位标记即可自动生效；详细规范（`category` 按领域填、数组答案 + multi、打印模板、占位替换流程）见根目录 `CONTRIBUTING.md`「三点六、竞赛插件开发指南」。
 
-### 四、五年级占位（M1–M12 知识库已建、题型待实现）
+### 四、五年级基础模块（M1–M12，已全部实现）
 
-四年级（70 个）与五年级（80 个）知识点已按全年级题型模块目录完整写入知识库（各 M1–M12 全覆盖，含 weight/type），但各模块题目生成逻辑尚未实现，采用**模块级占位**：
+四年级（70 个）与五年级（80 个）知识点已按全年级题型模块目录完整写入知识库（各 M1–M12 全覆盖，含 weight/type），且 24 个 `math-g4-*` / `math-g5-*` 插件（每年级 M1–M12 各 12 个）**均已实现并注册**，无占位条目：
 
-- 知识库：`shared/knowledge-bank.js` 的 `grade: 4 / 5` 条目，知识点 `pluginId` 为预留 id——四年级 `math-g4-oral/vertical/mixed/fill/match/draw/picture/word/stats/reason/judge/choice`、五年级 `math-g5-*` 同名序列，各对应一个模块。
-- 占位文件：`plugins/math-g4-placeholder.js`、`plugins/math-g5-placeholder.js`（统一占位实现，`isPlaceholder: true`，与竞赛占位同构，支持 URL `module=Mx` 显示模块名）。
-- `registry.js`：各 12 条占位条目，带 `runtimeId`（如 `'math-g5-placeholder'`）+ `moduleIds: ['Mx']` + `isPlaceholder: true`，`file` 均指向各自占位文件；`math-types.html` 依 registry 条目把占位展开为基础模块卡片（M 系列在前、竞赛 C 系列在后）。
-- `dev/verify-setup.js` 校验：四/五年级知识库覆盖 M1–M12 全部模块且无空模块、知识点 pluginId 均已注册。（`dev/verify-knowledge-bank.js --g4 --g5`）
-- 覆盖统计（`dev/coverage.js`、`PluginUtil.reportCoverage`）**排除占位插件**——四/五年级显示 0/70、0/80（待开发），并给出按插件归组的开发清单。
-- **四/五年级不建议参与综合练习**：`math-comprehensive` 的 grades 仍为 `[1,2,3]`，同时占位插件被 `isPlaceholderPlugin` 过滤，双重保证不抽取空题。
-- **新增真实四/五年级插件**：实现标准接口 + 合法 `moduleId`（如 `'M2'`）→ 在 `registry.js` 把对应占位条目替换为真实实现（去掉 `isPlaceholder`）→ `node dev/coverage.js` 确认该模块知识点转覆盖。
+- 知识库：`shared/knowledge-bank.js` 的 `grade: 4 / 5` 条目，知识点 `pluginId` 指向 `math-g4-*` / `math-g5-*` 系列，各对应一个模块。
+- `registry.js`：各 12 条真实条目（含 `runtimeId` + `moduleIds: ['Mx']`），`math-types.html` 依 registry 条目渲染基础模块卡片（M 系列在前、竞赛 C 系列在后），并展示知识库知识点标签（`.kb-tag`）。
+- `math-comprehensive` 的 grades 为 `[1,2,3,4,5]`，综合练习按知识点 `weight` 加权抽题，四/五年级正常参与。
+- 覆盖统计：`node dev/coverage.js` / `node dev/regression-check.js` 全量通过（1–5 年级数学 100% 覆盖、满分回填全 100）。
 
 ---
 
@@ -192,71 +190,55 @@
 
 ## 七、最小示例
 
+> 完整可运行样板见 `plugins/_template.js`（基于 createPlugin 工厂 + renderCard 渲染）。
+
 ```js
-// plugins/math-oral.js
-const plugin = {
-  id: 'math-oral',
-  name: '口算练习',
-  subject: 'math',
-  grades: [1, 2, 3],
-  category: 'number',
+// plugins/math-oral.js（节选，完整骨架见 plugins/_template.js）
+(function (global) {
+  'use strict';
 
-  generate(options = {}) {
-    const count = options.count || 10;
-    const questions = [];
-    for (let i = 0; i < count; i++) {
-      const a = PluginUtil.randInt(1, 10);
-      const b = PluginUtil.randInt(1, 10);
-      questions.push({
-        type: 'math-oral',
-        a, b,
-        answer: a + b,
-        render(idx) {
-          return `<div class="question-card" data-index="${idx}">
-            <span class="q-num">${idx + 1}.</span>
-            <span>${this.a} + ${this.b} = </span>
-            <input type="number" class="answer-input" data-index="${idx}">
-          </div>`;
-        },
-        check(userAnswers, idx) {
-          return Number(userAnswers[idx]) === this.a + this.b;
-        }
-      });
+  var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
+    : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
+  if (!_PU) throw new Error('依赖 shared/common.js（PluginUtil），请先加载');
+
+  const plugin = _PU.createPlugin({
+    id: 'math-oral',
+    name: '口算练习',
+    subject: 'math',
+    grades: [1, 2, 3],
+    category: 'number',
+    moduleId: 'M1',
+    printConfig: { pageType: 'math' },
+
+    generateQuestions(opts) {
+      const count = opts.count || 10;
+      const questions = [];
+      for (let i = 0; i < count; i++) {
+        const a = PluginUtil.randInt(1, 10);
+        const b = PluginUtil.randInt(1, 10);
+        questions.push({
+          type: 'math-oral',
+          q: `${a} + ${b} = `,
+          answer: a + b,
+          inputType: 'text',
+          // render 用 renderCard 生成标准卡片：类名（.question-card/.num/.answer-inp）
+          // 与 practice.html 样式、打印模块完全一致，禁止手写其他类名。
+          // renderCard 已样式类化：卡片样式统一在 shared/components.css「题目卡片」段；
+          // 显式 opts.inputWidth（动态宽度）仍内联输出
+          render(idx) { return PluginUtil.renderCard(this, idx); }
+          // check 可省略：工厂默认用 normalizeAns 比对 answer
+        });
+      }
+      return questions;
     }
-    return { questions, meta: { count } };
-  },
+  });
 
-  render(set) {
-    let html = '<div class="questions-grid">';
-    set.questions.forEach((q, i) => { html += q.render(i); });
-    html += '</div>';
-    return html;
-  },
-
-  check(set, userAnswers) {
-    let correct = 0;
-    const results = set.questions.map((q, i) => {
-      const ok = q.check ? q.check(userAnswers, i) : (Number(userAnswers[i]) === q.answer);
-      if (ok) correct++;
-      return ok;
-    });
-    return {
-      score: Math.round((correct / set.questions.length) * 100),
-      total: set.questions.length,
-      correct,
-      message: correct === set.questions.length ? '太棒了！全对！' : '继续加油！',
-      results,
-      correctAnswers: set.questions.map(q => String(q.answer))
-    };
+  // 浏览器环境：挂载到全局；Node 自检环境：导出
+  global.__currentPlugin = plugin;
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = plugin;
   }
-};
-
-// 浏览器环境：挂载到全局；Node 自检环境：导出
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = plugin;
-} else {
-  window.__currentPlugin = plugin;
-}
+})(typeof window !== 'undefined' ? window : globalThis);
 ```
 
 ```js
@@ -277,7 +259,7 @@ if (typeof module !== 'undefined' && module.exports) {
 | --- | --- | --- |
 | `id` / `name` / `subject` / `grades` | 是 | 同「插件对象」必填字段 |
 | `generateQuestions` | 是 | `function(opts) → Question[]`；工厂据此生成 `generate` |
-| `knowledgePoints` | 否 | `string[]`：声明本插件覆盖的知识点（id 或 name），开发期校验/提示用 |
+| `knowledgePoints` | 否 | `string[]` 或 `{ [grade]: string[] }`：声明本插件覆盖的知识点（id 或 name）。多年级插件若各年级覆盖的知识点不同，用按年级区分的对象格式 |
 | `category` / `description` / `printConfig` / `settings` / `meta` | 否 | 同「插件对象」对应字段 |
 | `columns` | 否 | `render` 网格列数（默认 3） |
 | `render` / `check` | 否 | 自定义整组渲染 / 批改，覆盖工厂默认实现 |

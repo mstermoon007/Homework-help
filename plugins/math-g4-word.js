@@ -2,15 +2,15 @@
  * plugins/math-g4-word.js — 四年级解决问题插件（M8 解决问题）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M8 模块）：
- *   g4-word-big      大数应用          （type: 'big-app'）
- *   g4-word-speed    乘法问题（行程）   （type: 'mul-travel'）
- *   g4-word-div      除法问题（分配）   （type: 'div-share'）
- *   g4-word-price    单价、数量、总价   （type: 'price-qty'）
- *   g4-word-area     面积问题（公顷）   （type: 'area-hectare'）
- *   g4-word-opt      优化问题          （type: 'optimize'）
- *   g4-word-cr       鸡兔同笼          （type: 'chicken-rabbit'）
- *   g4-word-dec      小数加减问题      （type: 'dec-pay'）
- *   g4-word-avg      平均数问题        （type: 'avg-score'）
+ *   g4-m8-g4-word-big      大数应用          （type: 'big-app'）
+ *   g4-m8-g4-word-speed    乘法问题（行程）   （type: 'mul-travel'）
+ *   g4-m8-g4-word-div      除法问题（分配）   （type: 'div-share'）
+ *   g4-m8-g4-word-price    单价、数量、总价   （type: 'price-qty'）
+ *   g4-m8-g4-word-area     面积问题（公顷）   （type: 'area-hectare'）
+ *   g4-m8-g4-word-opt      优化问题          （type: 'optimize'）
+ *   g4-m8-g4-word-cr       鸡兔同笼          （type: 'chicken-rabbit'）
+ *   g4-m8-g4-word-dec      小数加减问题      （type: 'dec-pay'）
+ *   g4-m8-g4-word-avg      平均数问题        （type: 'avg-score'）
  *
  * 提供标准 ExercisePlugin 接口。随机数统一使用 shared/common.js 的 PluginUtil。
  */
@@ -26,14 +26,6 @@
 
   function rnd(min, max) { return _PU.randInt(min, max); }
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
 
   // ============ 大数应用 ============
   function buildBigApp() {
@@ -114,7 +106,7 @@
       if (areaH < 1) { L = rnd(200, 500); W = rnd(100, 200); areaM = L * W; areaH = areaM / 10000; }
       var areaHs = (Math.round(areaH * 10) / 10).toFixed(areaH % 1 === 0 ? 0 : 1);
       return { q: '一块长方形地长 ' + L + ' 米、宽 ' + W + ' 米，面积是（  ）平方米，合（  ）公顷',
-        answer: areaM + '、' + areaHs,
+        answer: [areaM, areaHs],
         hint: '面积 = 长 × 宽 = ' + L + ' × ' + W + ' 平方米；10000 平方米 = 1 公顷。' };
     }
     if (v === 'square') {
@@ -122,7 +114,7 @@
       var areaS = side * side;
       var ha = areaS / 10000;
       return { q: '一块正方形地边长 ' + side + ' 米，面积是（  ）平方米，合（  ）公顷',
-        answer: areaS + '、' + ha,
+        answer: [areaS, ha],
         hint: '面积 = 边长 × 边长；10000 平方米 = 1 公顷。' };
     }
     var a = rnd(1, 99);
@@ -159,7 +151,7 @@
     var chicken = head - rabbit;
     var legs = rabbit * 4 + chicken * 2;
     var q = '鸡兔同笼，共有 ' + head + ' 个头、' + legs + ' 只脚。兔有（  ）只，鸡有（  ）只';
-    return { q: q, answer: rabbit + '、' + chicken,
+    return { q: q, answer: [rabbit, chicken],
       hint: '假设全是鸡：脚数 = ' + head + '×2 = ' + (head * 2) + '，多出 ' + (legs - head * 2) + ' 只脚，每把一只鸡换成兔多 2 只脚。' };
   }
 
@@ -251,14 +243,22 @@
     id: 'math-g4-word',
     moduleId: 'M8',
     name: '解决问题',
-    pageTitle: '四年级解决问题',
     pageSubtitle: '乘除应用、单价面积、优化、鸡兔同笼、小数与平均数',
     grades: [4],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-word-big', 'g4-word-speed', 'g4-word-div', 'g4-word-price',
-      'g4-word-area', 'g4-word-opt', 'g4-word-cr', 'g4-word-dec', 'g4-word-avg'],
+    knowledgePoints: [
+        'g4-m8-g4-word-big',
+        'g4-m8-g4-word-speed',
+        'g4-m8-g4-word-div',
+        'g4-m8-g4-word-price',
+        'g4-m8-g4-word-area',
+        'g4-m8-g4-word-opt',
+        'g4-m8-g4-word-cr',
+        'g4-m8-g4-word-dec',
+        'g4-m8-g4-word-avg'
+    ],
 
     settings: [
       {
@@ -293,6 +293,11 @@
         attempts++;
       }
       return list.map(function (p) {
+        // 多空答案（如“面积是（ ）平方米，合（ ）公顷”）→ multi 双输入框，分字段作答
+        if (Array.isArray(p.answer)) {
+          return { type: 'word', q: p.q, answer: p.answer, hint: p.hint,
+            inputType: 'multi', inputCount: p.answer.length };
+        }
         return { type: 'word', q: p.q, answer: String(p.answer), hint: p.hint, inputType: 'text' };
       });
     },

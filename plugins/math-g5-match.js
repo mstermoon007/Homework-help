@@ -2,11 +2,11 @@
  * plugins/math-g5-match.js — 五年级连线题插件（M5 连线）
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M5 模块）：
- *   g5-match-areaf    图形与面积公式连线    （type: 'area-formula'）
- *   g5-match-solid    立体图形特征连线      （type: 'solid-feature'）
- *   g5-match-possib   事件与可能性描述连线  （type: 'possibility-desc'）
- *   g5-match-equ      方程与解连线          （type: 'equation-solve'）
- *   g5-match-fracdec  分数与小数连线        （type: 'frac-decimal'）
+ *   g5-m5-g5-match-areaf    图形与面积公式连线    （type: 'area-formula'）
+ *   g5-m5-g5-match-solid    立体图形特征连线      （type: 'solid-feature'）
+ *   g5-m5-g5-match-possib   事件与可能性描述连线  （type: 'possibility-desc'）
+ *   g5-m5-g5-match-equ      方程与解连线          （type: 'equation-solve'）
+ *   g5-m5-g5-match-fracdec  分数与小数连线        （type: 'frac-decimal'）
  *
  * 连线题以「左项 → 选项」形式实现：题干展示左侧待连项，右侧为候选
  * （含干扰项），学生点击正确匹配项即可（choice 交互）。
@@ -164,13 +164,18 @@
     id: 'math-g5-match',
     moduleId: 'M5',
     name: '连线题',
-    pageTitle: '五年级连线练习',
     pageSubtitle: '面积公式、立体图形、可能性、方程与分数小数',
     grades: [5],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-match-areaf', 'g5-match-solid', 'g5-match-possib', 'g5-match-equ', 'g5-match-fracdec'],
+    knowledgePoints: [
+        'g5-m5-g5-match-areaf',
+        'g5-m5-g5-match-solid',
+        'g5-m5-g5-match-possib',
+        'g5-m5-g5-match-equ',
+        'g5-m5-g5-match-fracdec'
+    ],
 
     settings: [
       {

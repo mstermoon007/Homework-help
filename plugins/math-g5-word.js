@@ -2,17 +2,17 @@
  * plugins/math-g5-word.js — 五年级解决问题插件（M8 解决问题）
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M8 模块）：
- *   g5-word-decmul    小数乘法应用题       （type: 'dec-mul-app'）
- *   g5-word-decdiv    小数除法应用题       （type: 'dec-div-app'）
- *   g5-word-equ       列方程解决问题       （type: 'equation-app'）
- *   g5-word-fm        因数与倍数简单应用   （type: 'factor-app'）
- *   g5-word-frac      分数加减法应用题     （type: 'frac-app'）
- *   g5-word-area      多边形面积应用题     （type: 'area-app'）
- *   g5-word-solid     长方体正方体应用题   （type: 'solid-app'）
- *   g5-word-possib    可能性问题           （type: 'possibility-app'）
- *   g5-word-linechart 折线统计图分析       （type: 'linechart-app'）
- *   g5-word-tree      植树问题             （type: 'tree-app'）
- *   g5-word-defect    找次品               （type: 'defective'）
+ *   g5-m8-g5-word-decmul    小数乘法应用题       （type: 'dec-mul-app'）
+ *   g5-m8-g5-word-decdiv    小数除法应用题       （type: 'dec-div-app'）
+ *   g5-m8-g5-word-equ       列方程解决问题       （type: 'equation-app'）
+ *   g5-m8-g5-word-fm        因数与倍数简单应用   （type: 'factor-app'）
+ *   g5-m8-g5-word-frac      分数加减法应用题     （type: 'frac-app'）
+ *   g5-m8-g5-word-area      多边形面积应用题     （type: 'area-app'）
+ *   g5-m8-g5-word-solid     长方体正方体应用题   （type: 'solid-app'）
+ *   g5-m8-g5-word-possib    可能性问题           （type: 'possibility-app'）
+ *   g5-m8-g5-word-linechart 折线统计图分析       （type: 'linechart-app'）
+ *   g5-m8-g5-word-tree      植树问题             （type: 'tree-app'）
+ *   g5-m8-g5-word-defect    找次品               （type: 'defective'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -290,14 +290,24 @@
     id: 'math-g5-word',
     moduleId: 'M8',
     name: '解决问题',
-    pageTitle: '五年级解决问题',
     pageSubtitle: '小数、方程、因数倍数、分数、面积、体积、统计与植树',
     grades: [5],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-word-decmul', 'g5-word-decdiv', 'g5-word-equ', 'g5-word-fm', 'g5-word-frac',
-      'g5-word-area', 'g5-word-solid', 'g5-word-possib', 'g5-word-linechart', 'g5-word-tree', 'g5-word-defect'],
+    knowledgePoints: [
+        'g5-m8-g5-word-decmul',
+        'g5-m8-g5-word-decdiv',
+        'g5-m8-g5-word-equ',
+        'g5-m8-g5-word-fm',
+        'g5-m8-g5-word-frac',
+        'g5-m8-g5-word-area',
+        'g5-m8-g5-word-solid',
+        'g5-m8-g5-word-possib',
+        'g5-m8-g5-word-linechart',
+        'g5-m8-g5-word-tree',
+        'g5-m8-g5-word-defect'
+    ],
 
     settings: [
       {

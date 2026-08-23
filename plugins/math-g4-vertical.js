@@ -2,11 +2,11 @@
  * plugins/math-g4-vertical.js — 四年级竖式计算插件
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M2 模块）：
- *   g4-v-mul3x2  三位数乘两位数        （type: 'mul3x2'）
- *   g4-v-mulzero 因数中间或末尾有 0    （type: 'mul-zero'）
- *   g4-v-div2    除数是两位数的除法    （type: 'div-2digit'）
- *   g4-v-div2q   商是两位数的除法      （type: 'div-2quotient'）
- *   g4-v-dec     小数加减法竖式        （type: 'dec-vertical'）
+ *   g4-m2-g4-v-mul3x2  三位数乘两位数        （type: 'mul3x2'）
+ *   g4-m2-g4-v-mulzero 因数中间或末尾有 0    （type: 'mul-zero'）
+ *   g4-m2-g4-v-div2    除数是两位数的除法    （type: 'div-2digit'）
+ *   g4-m2-g4-v-div2q   商是两位数的除法      （type: 'div-2quotient'）
+ *   g4-m2-g4-v-dec     小数加减法竖式        （type: 'dec-vertical'）
  *
  * 提供标准 ExercisePlugin 接口（id/name/grades/subject/category/generate/render/check），
  * 供 practice.html / dev/plugin-check.html / math-comprehensive 使用。
@@ -24,7 +24,6 @@
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
 
   // ============ 竖式渲染辅助 ============
   // 数字串：右对齐、等宽字体，保证数位/小数点对齐
@@ -52,9 +51,12 @@
   }
 
   function cardHTML(idx, inner) {
-    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 12px;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<span class="num" style="position:absolute;left:8px;top:8px;width:20px;height:20px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">' + (idx + 1) + '</span>' +
-      '<div style="font-size:11px;color:#7a879c;margin:0 0 4px;">用竖式计算</div>' +
+    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 0.5cm;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
+      '<span class="num" style="flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
+      '&nbsp;&nbsp;&nbsp;&nbsp;' +
+      '<span class="q-text" style="font-size:12px;color:#7a879c;font-weight:700;display:inline;vertical-align:middle;">用竖式计算</span>' +
+      '</div>' +
       inner +
       '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
       '</div>';
@@ -131,7 +133,8 @@
     var q = hasRem ? rnd(2, 40) : rnd(11, 45);
     var r = hasRem ? rnd(1, divisor - 1) : 0;
     var dividend = divisor * q + r;
-    return { kind: 'div', divisor: divisor, dividend: dividend, q: q, r: r, answer: q + '……' + r, hint: '用两位数试商：把除数看作整十数，先试商再调商。' };
+    // 整除（r=0）渲染单输入框，答案只写商；有余数时双框（商……余数）
+    return { kind: 'div', divisor: divisor, dividend: dividend, q: q, r: r, answer: r > 0 ? q + '……' + r : String(q), hint: '用两位数试商：把除数看作整十数，先试商再调商。' };
   }
 
   // 商是两位数的除法（可有余数）
@@ -141,7 +144,8 @@
     var q = rnd(10, 99);
     var r = hasRem ? rnd(1, divisor - 1) : 0;
     var dividend = divisor * q + r;
-    return { kind: 'div', divisor: divisor, dividend: dividend, q: q, r: r, answer: q + '……' + r, hint: '被除数的前两位够除，商就是两位数，先除前两位再除个位。' };
+    // 整除（r=0）渲染单输入框，答案只写商；有余数时双框（商……余数）
+    return { kind: 'div', divisor: divisor, dividend: dividend, q: q, r: r, answer: r > 0 ? q + '……' + r : String(q), hint: '被除数的前两位够除，商就是两位数，先除前两位再除个位。' };
   }
 
   // 小数加减竖式：同位数对齐，1~2 位小数
@@ -213,14 +217,19 @@
     id: 'math-g4-vertical',
     moduleId: 'M2',
     name: '竖式计算',
-    pageTitle: '四年级竖式计算',
     pageSubtitle: '三位数乘两位数、除法竖式与小数加减',
     grades: [4],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
-    knowledgePoints: ['g4-v-mul3x2', 'g4-v-mulzero', 'g4-v-div2', 'g4-v-div2q', 'g4-v-dec'],
+    knowledgePoints: [
+        'g4-m2-g4-v-mul3x2',
+        'g4-m2-g4-v-mulzero',
+        'g4-m2-g4-v-div2',
+        'g4-m2-g4-v-div2q',
+        'g4-m2-g4-v-dec'
+    ],
 
     settings: [
       {

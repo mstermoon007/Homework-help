@@ -2,12 +2,12 @@
  * plugins/math-g4-draw.js — 四年级操作题插件（M6 操作）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M6 模块）：
- *   g4-draw-protractor   用量角器量角、画角    （type: 'protractor'）
- *   g4-draw-para         画平行线、垂线        （type: 'parallel-perp'）
- *   g4-draw-grid         在方格纸上画图形      （type: 'grid-quad'）
- *   g4-draw-view         观察物体              （type: 'observe'）
- *   g4-draw-sym          画轴对称图形          （type: 'symmetry'）
- *   g4-draw-move         图形平移              （type: 'translate'）
+ *   g4-m6-g4-draw-protractor   用量角器量角、画角    （type: 'protractor'）
+ *   g4-m6-g4-draw-para         画平行线、垂线        （type: 'parallel-perp'）
+ *   g4-m6-g4-draw-grid         在方格纸上画图形      （type: 'grid-quad'）
+ *   g4-m6-g4-draw-view         观察物体              （type: 'observe'）
+ *   g4-m6-g4-draw-sym          画轴对称图形          （type: 'symmetry'）
+ *   g4-m6-g4-draw-move         图形平移              （type: 'translate'）
  *
  * 操作题以「图形 + 结果判断」形式呈现：展示 SVG 操作示意图与操作过程，
  * 学生通过选择/填空确认操作结果，兼顾动手操作的知识点与机器判分。
@@ -347,13 +347,19 @@
     id: 'math-g4-draw',
     moduleId: 'M6',
     name: '操作题',
-    pageTitle: '四年级操作练习',
     pageSubtitle: '量角画角、平行垂直、方格画图、观察物体、对称与平移',
     grades: [4],
     subject: 'math',
     category: 'geometry',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-draw-protractor', 'g4-draw-para', 'g4-draw-grid', 'g4-draw-view', 'g4-draw-sym', 'g4-draw-move'],
+    knowledgePoints: [
+        'g4-m6-g4-draw-protractor',
+        'g4-m6-g4-draw-para',
+        'g4-m6-g4-draw-grid',
+        'g4-m6-g4-draw-view',
+        'g4-m6-g4-draw-sym',
+        'g4-m6-g4-draw-move'
+    ],
 
     settings: [
       {

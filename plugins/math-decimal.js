@@ -1,7 +1,7 @@
 /**
  * plugins/math-decimal.js — 小数的初步认识插件（三年级）
  *
- * 知识点覆盖：g3-decimal（小数的初步认识）
+ * 知识点覆盖：g3-m4-g3-decimal（小数的初步认识）
  * 题型：
  *   read   —— 小数读法→写法，写小数（text）；出示读法写数字
  *   compare—— 两个小数比大小，选择 > / < / =（choice）
@@ -24,7 +24,6 @@
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
   function shuffleArr(arr) { return _PU.shuffle(arr.slice()); }
 
   // ============ 难度（1-10，由 generate 设置） ============
@@ -211,8 +210,11 @@
     }
 
     return '<div class="question-card" data-index="' + i + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<span class="num" style="position:absolute;left:8px;top:8px;width:20px;height:20px;border-radius:50%;background:#eef3fb;color:#5b8def;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">' + (i + 1) + '</span>' +
-      hintHTML +
+      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#5b8def;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '&nbsp;&nbsp;&nbsp;&nbsp;' +
+        hintHTML +
+      '</div>' +
       '<div style="font-size:15px;font-weight:800;color:#27324a;margin:4px 0 6px;">' + p.question + '</div>' +
       inputHTML +
       '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
@@ -249,7 +251,7 @@
     category: 'number',
     printConfig: { pageType: 'decimal' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
-    knowledgePoints: ['g3-decimal'],
+    knowledgePoints: ['g3-m4-g3-decimal'],
 
     settings: [
       {

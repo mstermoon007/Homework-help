@@ -2,15 +2,15 @@
  * plugins/math-g5-judge.js — 五年级判断题插件（M11 判断）
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M11 模块）：
- *   g5-judge-decmul  小数乘除法      （type: 'dec'）
- *   g5-judge-equ     方程概念        （type: 'equation'）
- *   g5-judge-fm      因数与倍数      （type: 'factor-multiple'）
- *   g5-judge-frac    分数的意义与性质（type: 'fraction'）
- *   g5-judge-area    多边形面积      （type: 'area'）
- *   g5-judge-solid   长方体正方体    （type: 'solid'）
- *   g5-judge-rotate  图形的运动      （type: 'rotation'）
- *   g5-judge-possib  可能性          （type: 'possibility'）
- *   g5-judge-stats   统计            （type: 'stats'）
+ *   g5-m11-g5-judge-decmul  小数乘除法      （type: 'dec'）
+ *   g5-m11-g5-judge-equ     方程概念        （type: 'equation'）
+ *   g5-m11-g5-judge-fm      因数与倍数      （type: 'factor-multiple'）
+ *   g5-m11-g5-judge-frac    分数的意义与性质（type: 'fraction'）
+ *   g5-m11-g5-judge-area    多边形面积      （type: 'area'）
+ *   g5-m11-g5-judge-solid   长方体正方体    （type: 'solid'）
+ *   g5-m11-motion  图形的运动      （type: 'rotation'）
+ *   g5-m11-g5-judge-possib  可能性          （type: 'possibility'）
+ *   g5-m11-stats   统计            （type: 'stats'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -198,14 +198,22 @@
     id: 'math-g5-judge',
     moduleId: 'M11',
     name: '判断题',
-    pageTitle: '五年级判断练习',
     pageSubtitle: '小数、方程、因数倍数、分数、面积、立体图形、运动、可能性与统计',
     grades: [5],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-judge-decmul', 'g5-judge-equ', 'g5-judge-fm', 'g5-judge-frac',
-      'g5-judge-area', 'g5-judge-solid', 'g5-judge-rotate', 'g5-judge-possib', 'g5-judge-stats'],
+    knowledgePoints: [
+        'g5-m11-g5-judge-decmul',
+        'g5-m11-g5-judge-equ',
+        'g5-m11-g5-judge-fm',
+        'g5-m11-g5-judge-frac',
+        'g5-m11-g5-judge-area',
+        'g5-m11-g5-judge-solid',
+        'g5-m11-motion',
+        'g5-m11-g5-judge-possib',
+        'g5-m11-stats'
+    ],
 
     settings: [
       {

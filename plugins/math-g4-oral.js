@@ -2,12 +2,12 @@
  * plugins/math-g4-oral.js — 四年级口算插件
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M1 模块）：
- *   g4-oral-big   大数加减口算      （type: 'big-addsub'）
- *   g4-oral-mul3x1 三位数乘一位数口算（type: 'mul3x1'）
- *   g4-oral-mul2t  两位数乘整十数口算（type: 'mul2tens'）
- *   g4-oral-divt   除数是整十数的口算（type: 'div-tens'）
- *   g4-oral-dec    小数加减法口算    （type: 'dec-addsub'）
- *   g4-oral-law    运用运算律简便口算（type: 'law-oral'）
+ *   g4-m1-g4-oral-big   大数加减口算      （type: 'big-addsub'）
+ *   g4-m1-g4-oral-mul3x1 三位数乘一位数口算（type: 'mul3x1'）
+ *   g4-m1-g4-oral-mul2t  两位数乘整十数口算（type: 'mul2tens'）
+ *   g4-m1-g4-oral-divt   除数是整十数的口算（type: 'div-tens'）
+ *   g4-m1-g4-oral-dec    小数加减法口算    （type: 'dec-addsub'）
+ *   g4-m1-g4-oral-law    运用运算律简便口算（type: 'law-oral'）
  *
  * 提供标准 ExercisePlugin 接口（id/name/grades/subject/category/generate/render/check），
  * 供 practice.html / dev/plugin-check.html / math-comprehensive 使用。
@@ -185,14 +185,20 @@
     id: 'math-g4-oral',
     moduleId: 'M1',
     name: '口算',
-    pageTitle: '四年级口算练习',
     pageSubtitle: '大数加减、乘除口算、小数加减与简便运算',
     grades: [4],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
-    knowledgePoints: ['g4-oral-big', 'g4-oral-mul3x1', 'g4-oral-mul2t', 'g4-oral-divt', 'g4-oral-dec', 'g4-oral-law'],
+    knowledgePoints: [
+        'g4-m1-g4-oral-big',
+        'g4-m1-g4-oral-mul3x1',
+        'g4-m1-g4-oral-mul2t',
+        'g4-m1-g4-oral-divt',
+        'g4-m1-g4-oral-dec',
+        'g4-m1-g4-oral-law'
+    ],
 
     settings: [
       {

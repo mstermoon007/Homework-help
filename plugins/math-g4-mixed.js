@@ -2,11 +2,11 @@
  * plugins/math-g4-mixed.js — 四年级脱式计算插件（M3 脱式）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M3 模块）：
- *   g4-mix-order   四则混合运算顺序    （type: 'order'）
- *   g4-mix-addlaw  加法运算律简便计算  （type: 'add-law'）
- *   g4-mix-mullaw  乘法运算律简便计算  （type: 'mul-law'）
- *   g4-mix-dist    乘法分配律简便计算  （type: 'dist-law'）
- *   g4-mix-dec     小数加减简便计算    （type: 'dec-simple'）
+ *   g4-m3-g4-mix-order   四则混合运算顺序    （type: 'order'）
+ *   g4-m3-g4-mix-addlaw  加法运算律简便计算  （type: 'add-law'）
+ *   g4-m3-g4-mix-mullaw  乘法运算律简便计算  （type: 'mul-law'）
+ *   g4-m3-g4-mix-dist    乘法分配律简便计算  （type: 'dist-law'）
+ *   g4-m3-g4-mix-dec     小数加减简便计算    （type: 'dec-simple'）
  *
  * 提供标准 ExercisePlugin 接口。随机数统一使用 shared/common.js 的 PluginUtil。
  */
@@ -218,13 +218,18 @@
     id: 'math-g4-mixed',
     moduleId: 'M3',
     name: '脱式计算',
-    pageTitle: '四年级脱式计算',
     pageSubtitle: '四则混合运算顺序与简便计算',
     grades: [4],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-mix-order', 'g4-mix-addlaw', 'g4-mix-mullaw', 'g4-mix-dist', 'g4-mix-dec'],
+    knowledgePoints: [
+        'g4-m3-g4-mix-order',
+        'g4-m3-g4-mix-addlaw',
+        'g4-m3-g4-mix-mullaw',
+        'g4-m3-g4-mix-dist',
+        'g4-m3-g4-mix-dec'
+    ],
 
     settings: [
       {

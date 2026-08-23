@@ -2,10 +2,10 @@
  * plugins/math-g5-mixed.js — 五年级脱式计算插件
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M3 模块）：
- *   g5-mix-decmixed  小数四则混合运算      （type: 'dec-mixed'）
- *   g5-mix-fracmixed 分数加减混合运算      （type: 'frac-mixed'）
- *   g5-mix-decsimple 运算律推广到小数简便计算（type: 'dec-simple'）
- *   g5-mix-fracsimple 运算律推广到分数简便计算（type: 'frac-simple'）
+ *   g5-m3-g5-mix-decmixed  小数四则混合运算      （type: 'dec-mixed'）
+ *   g5-m3-g5-mix-fracmixed 分数加减混合运算      （type: 'frac-mixed'）
+ *   g5-m3-g5-mix-decsimple 运算律推广到小数简便计算（type: 'dec-simple'）
+ *   g5-m3-g5-mix-fracsimple 运算律推广到分数简便计算（type: 'frac-simple'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -200,13 +200,17 @@
     id: 'math-g5-mixed',
     moduleId: 'M3',
     name: '脱式计算',
-    pageTitle: '五年级脱式计算',
     pageSubtitle: '小数与分数混合、简便运算',
     grades: [5],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-mix-decmixed', 'g5-mix-fracmixed', 'g5-mix-decsimple', 'g5-mix-fracsimple'],
+    knowledgePoints: [
+        'g5-m3-g5-mix-decmixed',
+        'g5-m3-g5-mix-fracmixed',
+        'g5-m3-g5-mix-decsimple',
+        'g5-m3-g5-mix-fracsimple'
+    ],
 
     settings: [
       {

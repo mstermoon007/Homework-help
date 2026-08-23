@@ -2,10 +2,10 @@
  * plugins/math-g5-vertical.js — 五年级竖式计算插件
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M2 模块）：
- *   g5-v-decmul    小数乘法竖式       （type: 'dec-mul-vertical'）
- *   g5-v-divint    除数是整数的小数除法（type: 'dec-div-int'）
- *   g5-v-ddivdec   除数是小数的小数除法（type: 'dec-div-dec'）
- *   g5-v-repeating 循环小数竖式表示   （type: 'repeating-dec'）
+ *   g5-m2-g5-v-decmul    小数乘法竖式       （type: 'dec-mul-vertical'）
+ *   g5-m2-g5-v-divint    除数是整数的小数除法（type: 'dec-div-int'）
+ *   g5-m2-g5-v-ddivdec   除数是小数的小数除法（type: 'dec-div-dec'）
+ *   g5-m2-g5-v-repeating 循环小数竖式表示   （type: 'repeating-dec'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -34,9 +34,12 @@
   }
 
   function cardHTML(idx, inner) {
-    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 12px;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<span class="num" style="position:absolute;left:8px;top:8px;width:20px;height:20px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">' + (idx + 1) + '</span>' +
-      '<div style="font-size:11px;color:#7a879c;margin:0 0 4px;">用竖式计算</div>' +
+    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 0.5cm;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
+      '<span class="num" style="flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
+      '&nbsp;&nbsp;&nbsp;&nbsp;' +
+      '<span class="q-text" style="font-size:12px;color:#7a879c;font-weight:700;display:inline;vertical-align:middle;">用竖式计算</span>' +
+      '</div>' +
       inner +
       '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
       '</div>';
@@ -178,13 +181,12 @@
     id: 'math-g5-vertical',
     moduleId: 'M2',
     name: '竖式计算',
-    pageTitle: '五年级竖式计算',
     pageSubtitle: '小数乘法、小数除法与循环小数',
     grades: [5],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-v-decmul', 'g5-v-divint', 'g5-v-ddivdec', 'g5-v-repeating'],
+    knowledgePoints: ['g5-m2-g5-v-decmul', 'g5-m2-g5-v-divint', 'g5-m2-g5-v-ddivdec', 'g5-m2-g5-v-repeating'],
 
     settings: [
       {

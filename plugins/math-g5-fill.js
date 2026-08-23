@@ -2,22 +2,22 @@
  * plugins/math-g5-fill.js — 五年级填空题插件
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M4 模块）：
- *   g5-fill-decloc    小数的计数单位与数位  （type: 'dec-place'）
- *   g5-fill-deccmp    小数大小比较          （type: 'dec-compare'）
- *   g5-fill-prodrule  积的变化规律          （type: 'product-rule'）
- *   g5-fill-repeating 循环小数与简便记法    （type: 'repeating-note'）
- *   g5-fill-equation  方程概念与等式的性质  （type: 'equation-prop'）
- *   g5-fill-fm        因数与倍数的概念      （type: 'factor-multiple'）
- *   g5-fill-prime     质数与合数            （type: 'prime-composite'）
- *   g5-fill-fracmean  分数的意义与分数单位  （type: 'frac-meaning'）
- *   g5-fill-fracprop  分数的基本性质        （type: 'frac-property'）
- *   g5-fill-fracdec   分数与小数的互化      （type: 'frac-decimal'）
- *   g5-fill-coord     数对的含义            （type: 'coordinate'）
- *   g5-fill-area      多边形面积公式        （type: 'area-formula'）
- *   g5-fill-solid     长方体正方体特征与公式（type: 'solid-formula'）
- *   g5-fill-rotate    旋转三要素            （type: 'rotation-elem'）
- *   g5-fill-possible  可能性描述            （type: 'possibility'）
- *   g5-fill-linechart 折线统计图特点        （type: 'linechart-feature'）
+ *   g5-m4-g5-fill-decloc    小数的计数单位与数位  （type: 'dec-place'）
+ *   g5-m4-g5-fill-deccmp    小数大小比较          （type: 'dec-compare'）
+ *   g5-m4-g5-fill-prodrule  积的变化规律          （type: 'product-rule'）
+ *   g5-m4-g5-fill-repeating 循环小数与简便记法    （type: 'repeating-note'）
+ *   g5-m4-g5-fill-equation  方程概念与等式的性质  （type: 'equation-prop'）
+ *   g5-m4-g5-fill-fm        因数与倍数的概念      （type: 'factor-multiple'）
+ *   g5-m4-g5-fill-prime     质数与合数            （type: 'prime-composite'）
+ *   g5-m4-g5-fill-fracmean  分数的意义与分数单位  （type: 'frac-meaning'）
+ *   g5-m4-g5-fill-fracprop  分数的基本性质        （type: 'frac-property'）
+ *   g5-m4-g5-fill-fracdec   分数与小数的互化      （type: 'frac-decimal'）
+ *   g5-m4-g5-fill-coord     数对的含义            （type: 'coordinate'）
+ *   g5-m4-g5-fill-area      多边形面积公式        （type: 'area-formula'）
+ *   g5-m4-g5-fill-solid     长方体正方体特征与公式（type: 'solid-formula'）
+ *   g5-m4-g5-fill-rotate    旋转三要素            （type: 'rotation-elem'）
+ *   g5-m4-g5-fill-possible  可能性描述            （type: 'possibility'）
+ *   g5-m4-g5-fill-linechart 折线统计图特点        （type: 'linechart-feature'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -31,7 +31,6 @@
 
   function rnd(min, max) { return _PU.randInt(min, max); }
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) { var a = arr.slice(); for (var i = a.length - 1; i > 0; i--) { var j = rnd(0, i); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   function gcd(a, b) { return b ? gcd(b, a % b) : a; }
 
   // ============ 小数的计数单位与数位 ============
@@ -369,16 +368,29 @@
     id: 'math-g5-fill',
     moduleId: 'M4',
     name: '填空题',
-    pageTitle: '五年级填空练习',
     pageSubtitle: '小数、因数倍数、分数、图形与统计',
     grades: [5],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-fill-decloc', 'g5-fill-deccmp', 'g5-fill-prodrule', 'g5-fill-repeating',
-      'g5-fill-equation', 'g5-fill-fm', 'g5-fill-prime', 'g5-fill-fracmean', 'g5-fill-fracprop',
-      'g5-fill-fracdec', 'g5-fill-coord', 'g5-fill-area', 'g5-fill-solid', 'g5-fill-rotate',
-      'g5-fill-possible', 'g5-fill-linechart'],
+    knowledgePoints: [
+        'g5-m4-g5-fill-decloc',
+        'g5-m4-g5-fill-deccmp',
+        'g5-m4-g5-fill-prodrule',
+        'g5-m4-g5-fill-repeating',
+        'g5-m4-g5-fill-equation',
+        'g5-m4-g5-fill-fm',
+        'g5-m4-g5-fill-prime',
+        'g5-m4-g5-fill-fracmean',
+        'g5-m4-g5-fill-fracprop',
+        'g5-m4-g5-fill-fracdec',
+        'g5-m4-g5-fill-coord',
+        'g5-m4-g5-fill-area',
+        'g5-m4-g5-fill-solid',
+        'g5-m4-g5-fill-rotate',
+        'g5-m4-g5-fill-possible',
+        'g5-m4-g5-fill-linechart'
+    ],
 
     settings: [
       {

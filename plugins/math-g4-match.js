@@ -2,11 +2,11 @@
  * plugins/math-g4-match.js — 四年级连线题插件（M5 连线）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M5 模块）：
- *   g4-match-read     大数与读法连线      （type: 'read'）
- *   g4-match-angle    角与度数连线        （type: 'angle-degree'）
- *   g4-match-shape    图形与特征连线      （type: 'shape-feature'）
- *   g4-match-law      运算律与字母表达式  （type: 'law-formula'）
- *   g4-match-decfrac  小数与分数连线      （type: 'dec-frac'）
+ *   g4-m5-g4-match-read     大数与读法连线      （type: 'read'）
+ *   g4-m5-g4-match-angle    角与度数连线        （type: 'angle-degree'）
+ *   g4-m5-g4-match-shape    图形与特征连线      （type: 'shape-feature'）
+ *   g4-m5-g4-match-law      运算律与字母表达式  （type: 'law-formula'）
+ *   g4-m5-g4-match-decfrac  小数与分数连线      （type: 'dec-frac'）
  *
  * 连线题以「左项 → 选项」形式实现：题干展示左侧待连项，右侧为候选
  * （含干扰项），学生点击正确匹配项即可（choice 交互）。
@@ -205,13 +205,18 @@
     id: 'math-g4-match',
     moduleId: 'M5',
     name: '连线题',
-    pageTitle: '四年级连线练习',
     pageSubtitle: '大数读法、角、图形特征、运算律与小数分数',
     grades: [4],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-match-read', 'g4-match-angle', 'g4-match-shape', 'g4-match-law', 'g4-match-decfrac'],
+    knowledgePoints: [
+        'g4-m5-g4-match-read',
+        'g4-m5-g4-match-angle',
+        'g4-m5-g4-match-shape',
+        'g4-m5-g4-match-law',
+        'g4-m5-g4-match-decfrac'
+    ],
 
     settings: [
       {

@@ -2,9 +2,9 @@
  * plugins/math-g4-reason.js — 四年级推理与数学广角插件（M10 推理广角）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M10 模块）：
- *   g4-reason-opt   优化问题（沏茶、烙饼）  （type: 'pancake'）
- *   g4-reason-cr    鸡兔同笼（假设法）      （type: 'assume'）
- *   g4-reason-logic 简单逻辑推理            （type: 'logic'）
+ *   g4-m10-g4-reason-opt   优化问题（沏茶、烙饼）  （type: 'pancake'）
+ *   g4-m10-g4-reason-cr    鸡兔同笼（假设法）      （type: 'assume'）
+ *   g4-m10-logic-reasoning 简单逻辑推理            （type: 'logic'）
  *
  * 提供标准 ExercisePlugin 接口。随机数统一使用 shared/common.js 的 PluginUtil。
  */
@@ -160,13 +160,12 @@
     id: 'math-g4-reason',
     moduleId: 'M10',
     name: '推理与数学广角',
-    pageTitle: '四年级推理与数学广角',
     pageSubtitle: '优化问题、鸡兔同笼与逻辑推理',
     grades: [4],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-reason-opt', 'g4-reason-cr', 'g4-reason-logic'],
+    knowledgePoints: ['g4-m10-g4-reason-opt', 'g4-m10-g4-reason-cr', 'g4-m10-logic-reasoning'],
 
     settings: [
       {
