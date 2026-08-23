@@ -13,7 +13,7 @@ g{grade}-{moduleIdLower}-{baseSlug}
 - 示例：`g1-m1-addsub-20`、`g4-c5-c5-meet`、`g6-m8-g6-app-frac-mult`。
 - 全小写 + 数字 + 连字符；`moduleIdLower` 为模块小写（`m0`–`m12`、`c1`–`c9`）。
 - **同主题跨年级 baseSlug 保持一致**（如 `c1-vertical` → `g4-c1-c1-vertical` / `g5-...` / `g6-...`）。
-- slug 字典：`shared/knowledge-slug-map.js`（`KNOWLEDGE_SLUGS`）。
+- slug 字典已归档：`archive/dead-code-20260823/knowledge-slug-map.js`（2026-08-23 归档，运行时零引用）。
 
 **旧 ID（`addsub-20`、`g4-fill-line` 等）已废弃**，仅存于 `archive/migration-20260823/`。切勿再引入。
 
@@ -21,7 +21,7 @@ g{grade}-{moduleIdLower}-{baseSlug}
 
 - 知识库：`shared/knowledge-bank.js`（`[{grade, modules:[{moduleId, knowledgePoints}]}]`）
 - 模块目录：`shared/module-catalog.js`（`M0`–`M12` + `C1`–`C9`）
-- slug 字典：`shared/knowledge-slug-map.js`
+- slug 字典：已归档至 `archive/dead-code-20260823/`（无运行时引用）
 - 详情页：`knowledge/{id}.html`（生成脚本 `scripts/generate-knowledge-pages.js`）
 - SVG 生成器层：
   - `shared/svg-core.js`（`SVGUtil`：元素/viewBox/svgWrap 基础设施）
