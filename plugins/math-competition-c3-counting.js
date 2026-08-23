@@ -187,8 +187,7 @@
     ],
 
     knowledgePoints: {
-      4: ['g4-c3-c3-enum', 'g4-c3-c3-am', 'g4-c3-c3-perm', 'g4-c3-c3-geomcount', 'g4-c3-c3-worst'],
-      6: ['g6-c3-c3-enum', 'g6-c3-c3-am', 'g6-c3-c3-perm', 'g6-c3-c3-geomcount', 'g6-c3-c3-worst']
+      4: ['g4-c3-c3-enum', 'g4-c3-c3-am', 'g4-c3-c3-perm', 'g4-c3-c3-geomcount', 'g4-c3-c3-worst']
     },
 
     generateQuestions: function (opts) {

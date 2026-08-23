@@ -231,14 +231,6 @@
           'g4-c2-c2-factor',
           'g4-c2-c2-remainder',
           'g4-c2-c2-place'
-      ],
-      6: [
-          'g6-c2-c2-parity',
-          'g6-c2-c2-divisible',
-          'g6-c2-c2-prime',
-          'g6-c2-c2-factor',
-          'g6-c2-c2-remainder',
-          'g6-c2-c2-place'
       ]
     },
 
