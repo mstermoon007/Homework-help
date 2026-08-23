@@ -4,123 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>统一练习页 · Homework Help</title>
-<link rel="stylesheet" href="shared/common.css">
 <link rel="stylesheet" href="shared/tokens.css">
+<link rel="stylesheet" href="shared/base.css">
+<link rel="stylesheet" href="shared/components.css">
 <link rel="stylesheet" href="shared/toolbar.css">
-<style>
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: linear-gradient(180deg, #eaf2ff 0%, #f3f7fb 220px, #f3f7fb 100%);
-    color: var(--ink); line-height: 1.6;
-  }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 16px 16px 60px; }
-
-  /* 顶部标题栏 */
-  header.hero { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
-    padding: 16px 4px 6px; }
-  header.hero .left h1 { margin: 0; font-size: 24px; letter-spacing: 1px;
-    background: linear-gradient(90deg, #5b8def, #7c5cff); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  /* 副标题「小学一年级」以括号形式与主标题同行 */
-  header.hero .left h1 .title-sub { font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: 0;
-    -webkit-text-fill-color: currentColor; }
-  header.hero .left p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
-  header.hero .timer { font-size: 15px; font-weight: 800; color: var(--brand-d); background: #eef3fb;
-    border-radius: 12px; padding: 8px 14px; font-variant-numeric: tabular-nums; }
-
-  /* 左上角快速切换（醒目、悬浮常驻） */
-  .quick-switch { position: fixed; top: 14px; left: 14px; z-index: 1200; }
-  .qs-btn { cursor: pointer; border: none; border-radius: 999px; padding: 9px 20px; font-size: 14px;
-    font-weight: 800; color: #fff; letter-spacing: .5px;
-    background: linear-gradient(120deg, #ffb347 0%, #ff8a5c 55%, #ff6b6b 100%);
-    box-shadow: 0 4px 14px rgba(255, 130, 90, .35); }
-  .qs-btn:hover { filter: brightness(1.07); }
-  .qs-btn:active { transform: scale(.97); }
-  .qs-menu { position: absolute; top: calc(100% + 8px); left: 0; width: 420px; max-width: 86vw;
-    background: #fff; border: 1px solid var(--line); border-radius: 16px;
-    box-shadow: 0 14px 40px rgba(20, 40, 90, .2); padding: 12px 14px 14px; }
-  .qs-hd { font-size: 12px; color: var(--muted); margin: 10px 2px 6px; font-weight: 700; }
-  .qs-hd:first-child { margin-top: 2px; }
-  .qs-row { display: flex; flex-wrap: wrap; gap: 7px; }
-  .qs-link { flex: 1 1 100%; cursor: pointer; border: 1.5px solid #f0d3a8; background: #fff3e0;
-    color: #b06a10; border-radius: 10px; padding: 8px 12px; font-size: 13px; font-weight: 600;
-    text-align: center; text-decoration: none; transition: .15s; }
-  .qs-link:hover { border-color: #e39a3f; }
-  .qs-subj, .qs-grade { cursor: pointer; border: 1.5px solid #f0d3a8; background: #fff3e0;
-    color: #b06a10; border-radius: 10px; padding: 7px 12px; font-size: 13px; font-weight: 600;
-    text-decoration: none; transition: .15s; }
-  .qs-subj:hover, .qs-grade:hover { border-color: #e39a3f; }
-  .qs-subj.active, .qs-grade.active { background: #e8890c; border-color: #e8890c; color: #fff; }
-  @media (max-width: 760px) {
-    header.hero .left { padding-left: 108px; }
-  }
-
-  .sheet-title { text-align: center; margin-bottom: 14px; padding: 4px 0; }
-  .sheet-title .sheet-title-text {
-    font-size: 28px; font-weight: 900; letter-spacing: 2px; margin: 0 0 4px;
-    background: linear-gradient(90deg, #4A90D9, #F5A623);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    text-shadow: 0 2px 10px rgba(90,140,220,.18);
-  }
-  .sheet-title .sheet-title-meta { font-size: 14px; color: var(--muted); font-weight: 600; }
-  .meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 13px;
-    color: var(--muted); margin-bottom: 12px; }
-  .meta .pill { background: #eef3fb; color: var(--brand-d); border-radius: 999px; padding: 4px 12px; font-weight: 600; }
-  .meta .title-pill { background: #dcebfa; color: #2b5cbf; font-weight: 800; }
-
-  /* 题目区域 */
-  #problemsArea .empty { text-align: center; color: var(--muted); padding: 46px 10px; font-size: 14px; }
-  .q-grid { display: grid; gap: 14px; }
-  .q-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
-  .q-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .q-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
-  @media (max-width: 640px) { .q-grid.cols-2, .q-grid.cols-3, .q-grid.cols-4 { grid-template-columns: 1fr; } }
-
-  /* 屏幕端：卡片/文字网格按 A4 竖版思路自适应（打印端由 JS 按题目长度设定列数） */
-  @media (max-width: 720px) {
-    #problemsArea .questions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  }
-  @media (max-width: 480px) {
-    #problemsArea .questions-grid { grid-template-columns: 1fr !important; }
-    #problemsArea .q-badge { position: static; display: inline-block; margin: 2px 0 6px; }
-  }
-
-  .question-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
-    box-shadow: var(--shadow); padding: 10px 12px; position: relative; text-align: center; transition: .2s; }
-  /* 正式题目遵循中文左对齐（覆盖各插件卡片居中式排版；选项行等 flex 布局不受影响） */
-  /* 左侧预留 30px 给圆圈序号，避免序号与题干重叠（屏幕端与打印端共用同一样式，保持一致） */
-  #problemsArea .questions-grid .question-card,
-  #problemsArea .q-grid .question-card { text-align: left !important; padding: 10px 12px !important; padding-left: 30px !important; }
-  .question-card .num { position: absolute; left: 8px; top: 8px; width: 20px; height: 20px;
-    border-radius: 50%; background: #eef3fb; color: var(--brand-d); font-weight: 800; font-size: 11px;
-    display: flex; align-items: center; justify-content: center; }
-  .question-card.correct { border-color: var(--ok); background: var(--ok-bg); }
-  .question-card.wrong   { border-color: var(--bad); background: var(--bad-bg); }
-  .question-card .q-text { font-size: 17px; font-weight: 800; color: var(--ink); display: block; margin: 2px 0 6px; }
-  .question-card .feedback { font-size: 12px; font-weight: 700; min-height: 0; margin-top: 4px; }
-  .question-card .feedback:empty { display: none; }
-  .correct-answer { font-size: 12px; color: var(--bad); font-weight: 700; margin-top: 6px; }
-  .answer-inp { width: 64px; height: 32px; border: 2px dashed #ccc; border-radius: 7px; font-size: 15px;
-    font-weight: 700; text-align: center; color: var(--brand-d); background: #fafafa; outline: none; transition: .15s; }
-  .answer-inp:focus { border-color: var(--brand); background: #fff; }
-  .answer-inp.correct { border-color: var(--ok); background: var(--ok-bg); }
-  .answer-inp.wrong   { border-color: var(--bad); background: var(--bad-bg); }
-
-  /* 结果面板 */
-  .result-panel { display: none; }
-  .result-panel.show { display: block; }
-  .result { background: linear-gradient(135deg, #eef4ff, #f6efff); border: 1px solid var(--line);
-    border-radius: 16px; padding: 20px; margin: 16px 0; text-align: center; box-shadow: var(--shadow); }
-  .result .score { font-size: 36px; font-weight: 800; color: var(--brand-d); }
-  .result .detail { font-size: 14px; color: var(--ink); margin-top: 6px; }
-  .result .tips { font-size: 13px; color: var(--muted); margin-top: 4px; }
-  .result .redo-wrap { margin-top: 14px; }
-
-  /* 错误提示 */
-  .notice { text-align: center; padding: 40px 10px; font-size: 15px; color: var(--muted); }
-  .notice .big { font-size: 18px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
-
-  footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 12px; }
-</style>
+<link rel="stylesheet" href="shared/pages.css">
+<!-- 练习页专属样式见 shared/pages.css（@layer pages）；共享组件见 components.css，令牌见 tokens.css -->
 </head>
 <body>
 <div class="wrap">
@@ -137,33 +26,25 @@
     </div>
   </div>
 
-  <header class="hero">
-    <div class="left">
-      <h1 id="sheetTitle">统一练习页</h1>
-      <p id="headerDesc">正在加载练习插件…</p>
-    </div>
-    <div class="timer" id="timerDisplay">⏱ 00:00</div>
-  </header>
-
+  <!-- Layer 2: 工具栏（题型/题量/难度 + 操作按钮） -->
   <section class="panel controls" id="controlsPanel" style="display:none;">
     <div class="adaptive-hint" id="adaptiveHint" style="display:none;"></div>
     <div class="controls-grid">
       <div class="controls-settings">
         <div class="row" style="margin-top:0;">
-          <div class="group" id="typeGroup" style="display:none;">
+          <div class="group" id="typeGroup" role="radiogroup" aria-label="题型" style="display:none;">
             <span class="lbl">题型：</span>
           </div>
-          <div class="group" id="countGroup">
+          <div class="group" id="countGroup" role="radiogroup" aria-label="题量">
             <span class="lbl">题量：</span>
-            <button class="chip active" data-count="10">10题</button>
-            <button class="chip" data-count="20">20题</button>
-            <button class="chip" data-count="50">50题</button>
-            <button class="chip" data-count="custom">自定义</button>
+            <button class="chip active" data-count="10" role="radio" aria-checked="true">10题</button>
+            <button class="chip" data-count="20" role="radio" aria-checked="false">20题</button>
+            <button class="chip" data-count="50" role="radio" aria-checked="false">50题</button>
+            <button class="chip" data-count="custom" role="radio" aria-checked="false">自定义</button>
             <input type="number" id="customCount" min="1" max="50" step="1" placeholder="自定义"
                    autocomplete="off"
                    style="width:70px;height:30px;border:1.5px solid #c9d4e6;border-radius:8px;font-size:13px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafbff;outline:none;display:none;">
             <span class="count-tip" id="countTip" style="font-size:11px;color:#9aa5b5;font-weight:500;display:none;"></span>
-            <style>#customCount::placeholder, #difficultyInput::placeholder { color: #b0b8c6; font-weight: 400; font-size: 12px; }</style>
           </div>
           <div class="group" id="difficultyGroup">
             <span class="lbl">难度：</span>
@@ -184,15 +65,41 @@
     </div>
   </section>
 
-  <section id="problemsArea">
-    <div class="empty">正在加载练习插件…</div>
-  </section>
+  <!-- Layer 3: 正式内容区（第一行主题标题 + 第二行起题目卡） -->
+  <div class="exercise-content">
+    <p class="static-resource-note">本页面为练习生成工具，加载具体题型后可在线练习或打印。静态版本与知识点讲解请访问 <a href="knowledge/index.html">知识库页面</a>。</p>
+    <div class="exercise-header">
+      <h1 id="sheetTitle">统一练习页</h1>
+      <div class="timer" id="timerDisplay">⏱ 00:00</div>
+    </div>
+    <section id="problemsArea">
+      <div class="empty">正在加载练习插件…</div>
+    </section>
+  </div>
 
   <section class="result-panel" id="resultArea"></section>
 
   <footer>Homework Help · 插件化练习框架 · practice.html</footer>
 </div>
 
+<link rel="preload" href="shared/common.js" as="script">
+<link rel="preload" href="shared/tokens.css" as="style">
+<link rel="preload" href="shared/components.css" as="style">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LearningResource",
+  "name": "小学练习题",
+  "description": "自动生成的小学练习题，支持在线作答、批改与打印。",
+  "educationalLevel": "小学",
+  "learningResourceType": "Practice",
+  "audience": {
+    "@type": "EducationalAudience",
+    "educationalRole": "student"
+  },
+  "url": "https://mstermoon007.github.io/Homework-help/practice.html"
+}
+</script>
 <script src="shared/common.js"></script>
 <script src="shared/print.js"></script>
 <script src="shared/knowledge-bank.js"></script>
@@ -249,12 +156,22 @@
     return e;
   }
 
+  // HTML 转义：防止 URL 参数等不可信文本注入到 innerHTML 执行脚本（修复 P0 XSS）
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = (s == null) ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  // 数字补零（兼容旧浏览器：padStart 在 Safari<10 / Android WebView<50 不支持，见审查 7.2）
+  function pad2(n) { return (n < 10 ? '0' : '') + String(n); }
+
   function showNotice(title, sub, retry) {
     $('controlsPanel').style.display = 'none';
     $('timerDisplay').textContent = '⏱ 00:00';
     var area = $('problemsArea');
     var div = el('div', 'notice');
-    div.innerHTML = '<div class="big">' + title + '</div>' + (sub ? '<div>' + sub + '</div>' : '');
+    div.innerHTML = '<div class="big">' + esc(title) + '</div>' + (sub ? '<div>' + esc(sub) + '</div>' : '');
     if (retry) {
       var btn = el('button', 'btn btn-primary', '重新加载');
       btn.style.marginTop = '14px';
@@ -285,17 +202,15 @@
     var records = registry.filter(function (rec) {
       return rec.id.indexOf('math-') === 0 && rec.id !== 'math-comprehensive';
     });
-    var plugins = [];
-    var chain = Promise.resolve();
-    records.forEach(function (rec) {
-      chain = chain.then(function () {
-        return App.PluginLoader.loadPlugin(rec).then(function (p) {
-          if (p && p.grades && p.grades.indexOf(grade) !== -1) plugins.push(p);
-          return p;
-        });
-      });
-    });
-    return chain.then(function () {
+    // 并行加载所有数学子插件（修复 P1 串行加载）：脚本去重/竞态安全由 App.PluginLoader 的
+    // scriptCache（按 URL 复用 Promise）+ async=false 保证；__currentPlugin 竞态无碍，
+    // 因为综合插件 ensureSubPlugins 会显式恢复为自身对象。
+    return Promise.all(records.map(function (rec) {
+      return App.PluginLoader.loadPlugin(rec).then(function (p) {
+        return (p && p.grades && p.grades.indexOf(grade) !== -1) ? p : null;
+      }).catch(function () { return null; });
+    })).then(function (loaded) {
+      var plugins = loaded.filter(function (p) { return p; });
       window.__mathSubPlugins = plugins;
       return plugins;
     });
@@ -303,14 +218,8 @@
 
   // ============ 设置面板 ============
   function initSettings(plugin, grade) {
-    // 主标题优先用插件声明的 pageTitle（如巧算专项）；否则回退插件名。
-    // 副标题「小学一年级」以括号形式与主标题同行
-    var gradeName = '小学' + App.getGradeName(grade);
-    $('sheetTitle').innerHTML = (plugin.pageTitle || plugin.name) +
-      '<span class="title-sub">（' + gradeName + '）</span>';
-    // 小标题：插件声明的 pageSubtitle（如 凑十法、平十法、破十法）
-    var gradeNote = (plugin.grades && plugin.grades.indexOf(grade) !== -1) ? '' : '⚠ 该插件建议年级：' + plugin.grades.join('/');
-    $('headerDesc').textContent = (plugin.pageSubtitle ? plugin.pageSubtitle + ' · ' : '') + (gradeNote || '');
+    // 主标题统一为「年级 + 题型（+ 题量）」格式；题量在生成后由 render 补入
+    $('sheetTitle').textContent = buildTitle(grade, plugin.name, null);
     $('controlsPanel').style.display = '';
 
     // 题量（保留 URL 默认；10/20/自定义）
@@ -345,6 +254,8 @@
           container = tg;
         } else {
           var grp = el('div', 'group type-sub-group');
+          grp.setAttribute('role', 'radiogroup');
+          grp.setAttribute('aria-label', (s.label || '题型'));
           wrap.insertBefore(grp, $('countGroup'));
           container = grp;
         }
@@ -363,11 +274,15 @@
           var c = el('button', 'chip' + (o.value === selected ? ' active' : ''), o.label);
           c.dataset.skey = s.key;
           c.dataset.svalue = o.value;
+          c.setAttribute('role', 'radio');
+          c.setAttribute('aria-checked', o.value === selected ? 'true' : 'false');
           c.onclick = function () {
             chipsBox.querySelectorAll('.chip').forEach(function (x) {
               x.classList.remove('active');
+              x.setAttribute('aria-checked', 'false');
             });
             c.classList.add('active');
+            c.setAttribute('aria-checked', 'true');
             if (s.key === 'type') state.type = o.value;
             else state.settings[s.key] = o.value;
             if (state.exerciseSet) generate();
@@ -397,6 +312,9 @@
     $('checkBtn').disabled = true;
     $('revealBtn').disabled = true;
     $('printBtn').disabled = true;
+
+    // 跟读类插件（声明 noCheck: true，如 english-alphabet）：无书面答案可批改，隐藏「检查答案」
+    $('checkBtn').style.display = plugin.noCheck ? 'none' : '';
 
     // 页面控制器已禁用（不再显示顶部题型导航栏）
   }
@@ -455,7 +373,7 @@
 
   // ============ 计时器 ============
   function fmtTime(t) {
-    return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+    return pad2(Math.floor(t / 60)) + ':' + pad2(t % 60);
   }
   function startTimer() {
     stopTimer();
@@ -567,15 +485,47 @@
     $('printBtn').disabled = false;
   }
 
+  // 统一 Sheet 标题：剥离插件 meta.title 中可能自带的年级前缀，
+  // 再按「年级 + 题型 + (题量)」统一组装，确保所有生成页面标题格式一致。
+  function cleanTypeTitle(raw) {
+    if (!raw) return '练习题';
+    // 去掉开头的「小学X年级」/「X年级」等年级前缀（部分插件已在 title 内嵌年级）
+    return String(raw).replace(/^小学?[一二三四五六1-6]+年级\s*/, '');
+  }
+
+  // 统一标题组装：年级 + 题型（+ 题量）。题型名统一剥离自带的年级前缀（cleanTypeTitle），
+  // 年级来自 URL 参数，题量可选——屏显主标题与打印标题共用同一格式，保证「四年级 竖式计算（50题）」一致。
+  function buildTitle(grade, rawName, count) {
+    var g = App.getGradeName(grade);
+    var t = cleanTypeTitle(rawName);
+    return (count == null) ? (g + ' ' + t) : (g + ' ' + t + '（' + count + '题）');
+  }
+
+  // 插件加载后动态细化 LearningResource 的 name/description（不影响爬虫获取默认内容）
+  function updateResourceLD(name, grade) {
+    try {
+      var g = App.getGradeName(grade);
+      var nodes = document.querySelectorAll('script[type="application/ld+json"]');
+      for (var i = 0; i < nodes.length; i++) {
+        var obj = JSON.parse(nodes[i].textContent);
+        if (obj['@type'] === 'LearningResource') {
+          obj.name = g + ' ' + name + '练习题';
+          obj.description = '自动生成的' + g + name + '练习题，支持在线作答、批改与打印。';
+          nodes[i].textContent = JSON.stringify(obj);
+          break;
+        }
+      }
+    } catch (e) { /* 忽略，保留默认 schema */ }
+  }
+
   function render(set) {
     var area = $('problemsArea');
     var html = '';
     var meta = set.meta || {};
-    var typeTitle = meta.title || (state.plugin && state.plugin.name) || '练习题';
-    html += '<div class="sheet-title">' +
-      '<h2 class="sheet-title-text">' + typeTitle + '</h2>' +
-      '<div class="sheet-title-meta">共 ' + set.questions.length + ' 题</div>' +
-      '</div>';
+    // 统一主标题：年级 + 题型（题量），由 buildTitle 组装；屏显 exercise-header 与打印标题共用同一格式。
+    // 题目区不再重复渲染内层标题（避免与 exercise-header 重复），打印页由 shared/print.js 注入同样标题。
+    $('sheetTitle').textContent = buildTitle(state.grade, meta.title || (state.plugin && state.plugin.name), set.questions.length);
+    updateResourceLD((state.plugin && state.plugin.name) || '小学', state.grade);
     // 题目区域由插件完全控制；仅当插件未提供 render 时使用壳的通用降级渲染
     var body = (typeof state.plugin.render === 'function' ? state.plugin.render(set) : renderGeneric(set));
     // 插件未自带网格容器时统一套一层响应式网格，保证所有题目页都能按显示宽度 2/3 题一行排版
@@ -586,7 +536,7 @@
     area.innerHTML = html;
 
     // 卡片式/文字式网格按题目长度自适应列数（适配 A4 竖版宽度）
-    fitColumns(area, set);
+    PluginUtil.layout.fitColumns(area, set);
     // 按当前排版估算「填多少题可正好铺满 A4 整页」的推荐值
     updateCountTip();
 
@@ -599,73 +549,35 @@
     $('resultArea').classList.remove('show');
     $('resultArea').innerHTML = '';
     startTimer();
+    // 焦点管理（修复 P2 4.2）：生成后将焦点移到首个输入框，键盘用户无需多次 Tab
+    var firstInput = area.querySelector('input[data-index], input[data-idx]');
+    if (firstInput) firstInput.focus();
   }
 
   // ============ A4 竖版宽度自适应 ============
-  // 基础列数按题目长度中位数确定（口算多列、应用题少列）；
-  // 再对每道题按其实际渲染长度跨列：长题整行（grid-column 1/-1），中题跨 2 列，
-  // 短题 1 列——卡片式/文字式都按长度贴合 A4 竖版宽度，避免溢出或浪费。
-  function renderLen(q, i) {
-    var h = '';
-    try {
-      h = (typeof q.render === 'function') ? q.render(i) : String(q.question || q.text || q.q || '');
-    } catch (e) { h = ''; }
-    h = String(h);
-    var txt = h.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
-    var score = txt.length;
-    if (h.indexOf('<svg') !== -1) score += 8;             // 图形/SVG 占宽
-    if (h.indexOf('combine-inp') !== -1) score += 8;      // 凑十/破十多输入
-    return score;
-  }
+  // 列数算法已收敛为单一来源：shared/common.js 的 PluginUtil.layout
+  // （calcOptimalCols / fitColumns / estimateCardWidth / renderLen / gridColumnsFromDom / applySpanning）。
+  // 预览与打印共用同一套逻辑，避免双份代码再次漂移。本页仅保留需要 Print.ROUTES 的 A4 宽度换算。
 
-  function adaptiveColumns(set) {
-    var qs = set.questions;
-    if (!qs || !qs.length) return 3;
-    // 插件显式声明固定列数时优先（如巧算专项·一行三题）
-    if (set.meta && set.meta.columns) return set.meta.columns;
-    // 根据显示宽度自行调整：宽屏三题一行，窄屏两题一行
-    return (typeof window !== 'undefined' && window.innerWidth >= 820) ? 3 : 2;
-  }
-
-  function fitColumns(container, set) {
-    var qs = set.questions || [];
-    var fixed = set.meta && set.meta.columns; // 固定列数模式：等宽卡片，不做长度跨列
-    var base = fixed || adaptiveColumns(set);
-    container.querySelectorAll('.questions-grid, .q-grid').forEach(function (grid) {
-      grid.style.gridTemplateColumns = 'repeat(' + base + ', minmax(0, 1fr))';
-      grid.style.gridAutoFlow = 'row dense';
-      var kids = grid.children;
-      for (var i = 0; i < kids.length; i++) {
-        var item = kids[i];
-        if (fixed) { item.style.gridColumn = 'span 1'; continue; }
-        var idx = item.getAttribute('data-index');
-        var L = 0;
-        if (idx !== null && qs[+idx]) {
-          L = renderLen(qs[+idx], +idx);
-        } else {
-          // 综合练习：题目套在 .q-wrap 里，取内部卡片长度
-          var inner = item.querySelector('[data-index]');
-          if (inner && qs[+inner.getAttribute('data-index')]) {
-            L = renderLen(qs[+inner.getAttribute('data-index')], +inner.getAttribute('data-index'));
-            if (item.querySelector('.q-badge')) L += 12;
-          }
-        }
-        if (L >= 60) item.style.gridColumn = '1 / -1';          // 长题（应用题等）：整行
-        else if (L >= 34) item.style.gridColumn = 'span ' + Math.min(2, base); // 中题：跨 2 列
-        else item.style.gridColumn = 'span 1';                  // 短题：1 列
-      }
-    });
+  // A4 竖版可打印宽度（px），与 shared/print.js 的 @page 边距保持一致
+  // 不同题型路由边距不同（如 makeTen 8mm、其余 12mm/10mm），按路由取对应可打印宽
+  function a4PrintableWidthPx(pageType) {
+    var route = (window.Print && window.Print.ROUTES && window.Print.ROUTES[pageType]) || {};
+    var mm = (route.pageMargin || '12mm 10mm').match(/([\d.]+)mm\s+([\d.]+)mm/);
+    var h = mm ? parseFloat(mm[2]) : 10; // 左右边距（mm）
+    var MM = 96 / 25.4;
+    return Math.round((210 - 2 * h) * MM);
   }
 
   // 插件无 render 时的通用降级渲染
   function renderGeneric(set) {
-    var cols = adaptiveColumns(set);
+    var cols = PluginUtil.layout.calcOptimalCols(set, (document.getElementById('problemsArea') || {}).offsetWidth || 1000);
     var html = '<div class="q-grid cols-' + cols + '">';
     set.questions.forEach(function (q, i) {
       html += '<div class="question-card" data-index="' + i + '">' +
         '<span class="num">' + (i + 1) + '</span>' +
-        '<span class="q-text">' + (q.question || q.text || q.q || '') + '</span>' +
-        (q.hint ? '<div style="font-size:11px;color:var(--muted)">💡 ' + q.hint + '</div>' : '') +
+        '<span class="q-text">' + esc(q.question || q.text || q.q || '') + '</span>' +
+        (q.hint ? '<div style="font-size:11px;color:var(--muted)">💡 ' + esc(q.hint) + '</div>' : '') +
         '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off">' +
         '<div class="feedback"></div>' +
         '</div>';
@@ -690,6 +602,7 @@
   // ============ 批改 ============
   function check() {
     if (!state.plugin || !state.exerciseSet) return;
+    if (state.plugin.noCheck) return; // 跟读类插件无批改（按钮已隐藏，此处兜底拦回车等入口）
     stopTimer();
     var result;
     try {
@@ -810,9 +723,12 @@
       return;
     }
     var cfg = state.plugin.printConfig || {};
-    var title = state.plugin.name + '（' + App.getGradeName(state.grade) + '）';
-    // 列数按题目长度自适应（A4 竖版宽度内排版），与屏幕端一致
-    var opts = { pageType: cfg.pageType || 'math', columns: adaptiveColumns(state.exerciseSet) };
+    var pageType = cfg.pageType || 'math';
+    var title = buildTitle(state.grade, (state.exerciseSet.meta && state.exerciseSet.meta.title) || state.plugin.name || '练习题', state.exerciseSet.questions.length);
+    // 列数按题目内容在 A4 可打印宽度内动态计算（非屏幕列数），确保打印页填满 A4 不挤不空
+    var a4w = a4PrintableWidthPx(pageType);
+    var fixedCols = state.exerciseSet.meta && state.exerciseSet.meta.columns;
+    var opts = { pageType: pageType, columns: fixedCols ? fixedCols : PluginUtil.layout.calcOptimalCols(state.exerciseSet, a4w) };
     var area = $('problemsArea');
     // 移除离线测量容器，避免被克隆进打印页
     var measEl = $('printMeasure');
@@ -835,16 +751,16 @@
 
   function syncCountUI() {
     var chips = document.querySelectorAll('#countGroup .chip');
-    chips.forEach(function (c) { c.classList.remove('active'); });
+    chips.forEach(function (c) { c.classList.remove('active'); c.setAttribute('aria-checked', 'false'); });
     var customInp = $('customCount');
     if (state.count === 10 || state.count === 20 || state.count === 50) {
       document.querySelectorAll('#countGroup .chip[data-count="' + state.count + '"]').forEach(function (c) {
-        c.classList.add('active');
+        c.classList.add('active'); c.setAttribute('aria-checked', 'true');
       });
       if (customInp) customInp.style.display = 'none';
     } else {
       document.querySelectorAll('#countGroup .chip[data-count="custom"]').forEach(function (c) {
-        c.classList.add('active');
+        c.classList.add('active'); c.setAttribute('aria-checked', 'true');
       });
       if (customInp) {
         customInp.style.display = '';
@@ -867,16 +783,17 @@
     var area = $('problemsArea');
     var src = area.querySelector('.questions-grid, .q-grid');
     if (!src || !src.children.length) { tip.style.display = 'none'; return; }
-    var cols = adaptiveColumns(state.exerciseSet);
-    // 打印配置：与 shared/print.js 路由保持一致（A4 竖版 210×297mm）
+    // 打印/A4 端：按 A4 可打印宽度动态计算列数（与打印页完全一致，避免屏幕列数硬塞 A4）
     var cfg = (state.plugin && state.plugin.printConfig && state.plugin.printConfig.pageType) || 'math';
+    var printableW = a4PrintableWidthPx(cfg);
+    var fixedCols = state.exerciseSet.meta && state.exerciseSet.meta.columns;
+    var cols = fixedCols ? fixedCols : PluginUtil.layout.calcOptimalCols(state.exerciseSet, printableW);
+    // 上下边距用于后续高度测算（与 shared/print.js 的 @page 边距一致）
     var route = (window.Print && window.Print.ROUTES && window.Print.ROUTES[cfg]) || {};
     var m = (route.pageMargin || '12mm 10mm').match(/([\d.]+)mm\s+([\d.]+)mm/);
     var v = m ? parseFloat(m[1]) : 12;   // 上下边距
-    var h = m ? parseFloat(m[2]) : 10;   // 左右边距
     var MM = 96 / 25.4;
     var printableH = (297 - 2 * v) * MM;          // 一页内容高（px）
-    var printableW = Math.round((210 - 2 * h) * MM); // 一页内容宽（px）
 
     // 隐藏测量容器：与打印同宽、同列数、同间距，克隆当前卡片循环排布（保留打印端列跨），实测铺满高度
     var meas = $('printMeasure');
@@ -966,8 +883,9 @@
       c.addEventListener('click', function () {
         if (c.dataset.count === 'custom') {
           var customInp = $('customCount');
-          document.querySelectorAll('#countGroup .chip').forEach(function (x) { x.classList.remove('active'); });
+          document.querySelectorAll('#countGroup .chip').forEach(function (x) { x.classList.remove('active'); x.setAttribute('aria-checked', 'false'); });
           c.classList.add('active');
+          c.setAttribute('aria-checked', 'true');
           if (customInp) { customInp.style.display = ''; customInp.focus(); }
           updateCountTip();
           return;
