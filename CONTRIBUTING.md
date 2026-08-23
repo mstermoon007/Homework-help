@@ -86,9 +86,35 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 
 **唯一例外**：`math-comprehensive.js` 可用 `document.createElement('script')` + `document.head.appendChild` 动态预加载同仓兄弟插件脚本——这是综合练习架构的有意设计，不属于通用插件规则。
 
-### 3. 随机数生成
+### 3. 随机数使用规范
 
-必须使用 `shared/common.js` 提供的 `PluginUtil.randInt(min, max)` 与 `PluginUtil.shuffle(array)`，**禁止**直接使用 `Math.random()`（以保证可复现与统一熵源）。
+必须使用 `shared/common.js` 提供的统一随机工具，**禁止**在运行时代码中直接调用 `Math.random()`
+（以保证可复现与统一熵源；全仓审计已达成零直调，唯一豁免是 `randInt` 内部的 crypto 兜底）：
+
+| 需求 | 工具 |
+| --- | --- |
+| 整数随机 `[min, max]`（含两端，crypto 优先） | `PluginUtil.randInt(min, max)` |
+| 数组乱序（Fisher-Yates，返回新数组不改原数组） | `PluginUtil.shuffle(arr)` |
+| 从数组取一个元素 | `PluginUtil.rand(arr)` |
+| 概率判断（如 50% 走某分支） | `randInt(0, 1) === 0` 或 `randInt(1, 100) <= p` |
+
+- ⚠️ 禁止 `arr.sort(() => Math.random() - 0.5)`——该写法有统计偏差且违反规范。
+- dev/ 下 Node 脚本可直接 `require('../shared/common.js')` 复用同一套工具（regression-check 即如此）。
+- 唯一允许的字面量位置：`shared/common.js` 的 `randInt` 实现内部。
+
+### 3.5 样式与设计令牌
+
+所有颜色、圆角、阴影、渐变必须使用 `shared/tokens.css` 中定义的 CSS 变量（单一来源：
+`--brand/--brand-d/--ink/--muted/--line/--card/--bg/--ok/--bad/--warn/--math/--chinese/--english/…
+及对应浅底 `--*-bg`、`--radius-card`、`--grad-*`），修改令牌即全局生效：
+
+- 插件渲染题目优先用 `PluginUtil.renderCard()` / 类名（样式集中在 shared/components.css），
+  避免内联样式；确需内联时颜色写 `var(--xxx)`，禁止硬编码十六进制值。
+- 新增 UI 组件：样式提取到 `shared/components.css`（或页面级 `<style>` 仅限单页特有），
+  类名遵循现有简洁前缀风格（`.q-*` / `.toolbar-*` / `.sheet-*` 等），不引入新体系。
+- **SVG 表现属性例外**：`fill="#27324a"` 这类表现属性不支持 `var()`，保持字面量；
+  需要主题色的 SVG 请改写在 `style="fill:var(--ink)"` 上。
+- 打印安全：打印窗口会复制原页 `<link>`/`<style>`（见 `shared/print.js`），令牌正常解析。
 
 ### 4. 注册与依赖
 
