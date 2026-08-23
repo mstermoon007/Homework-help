@@ -14,12 +14,19 @@ const keepFiles = [
   /^math-types\.html$/,
   /^chinese-types\.html$/,
   /^english-types\.html$/,
+  /^subject-types\.html$/,
+  /^faq\.html$/,
   /^README\.md$/,
   /^CONTRIBUTING\.md$/,
+  /^MEMORY\.md$/,
   /^\.gitignore$/,
   /^banner\.jpg$/,
   /^pinyin-bank\.js$/,
   /^sw\.js$/,
+  /^CNAME$/, // GitHub Pages 自定义域名文件，合法保留
+  /^llms\.txt$/,
+  /^robots\.txt$/,
+  /^sitemap\.xml$/,
   // 模块目录与占位插件：核心数据源与兜底插件，永不清理
   /^shared\/module-catalog\.js$/,
   /^plugins\/math-competition-placeholder\.js$/,
@@ -30,7 +37,7 @@ const keepFiles = [
 ];
 
 // 应保留的目录前缀
-const keepDirs = [/^\.github\//, /^assets\//, /^shared\//, /^plugins\//, /^agents\//, /^dev\//, /^docs\//, /^archive\//, /^scripts\//];
+const keepDirs = [/^\.github\//, /^assets\//, /^shared\//, /^plugins\//, /^dev\//, /^docs\//, /^archive\//, /^scripts\//, /^knowledge\//, /^tests\//];
 
 function shouldKeep(filePath) {
   const relative = path.relative(ROOT, filePath);

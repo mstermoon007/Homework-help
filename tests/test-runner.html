@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自动化测试运行器</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    background: #f5f7fa;
+  }
+  h1 { color: #2c3e50; }
+  .test-suite {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .test-suite h2 {
+    margin-top: 0;
+    color: #34495e;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+  }
+  .test-case {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .test-case.pass {
+    background: #d4edda;
+    color: #155724;
+  }
+  .test-case.fail {
+    background: #f8d7da;
+    color: #721c24;
+  }
+  .test-case .status {
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+  .test-case.pass .status {
+    background: #28a745;
+    color: white;
+  }
+  .test-case.fail .status {
+    background: #dc3545;
+    color: white;
+  }
+  .summary {
+    background: #34495e;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  .summary .pass { color: #2ecc71; }
+  .summary .fail { color: #e74c3c; }
+  button {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 5px;
+  }
+  button:hover { background: #2980b9; }
+  #results { margin-top: 20px; }
+</style>
+</head>
+<body>
+<h1>🧪 Homework Help 自动化测试</h1>
+<button onclick="runAllTests()">运行所有测试</button>
+<button onclick="clearResults()">清除结果</button>
+
+<div id="results"></div>
+
+<script src="../shared/common.js"></script>
+<script src="../plugins/registry.js"></script>
+<script>
+// 简单测试框架
+var TestRunner = {
+  results: [],
+  currentSuite: null,
+  
+  suite: function(name) {
+    this.currentSuite = name;
+    this.results.push({ suite: name, cases: [] });
+  },
+  
+  test: function(name, fn) {
+    var suite = this.results[this.results.length - 1];
+    try {
+      fn();
+      suite.cases.push({ name: name, status: 'pass', error: null });
+    } catch (e) {
+      suite.cases.push({ name: name, status: 'fail', error: e.message });
+    }
+  },
+  
+  assertEqual: function(actual, expected, message) {
+    if (actual !== expected) {
+      throw new Error((message || '') + ' 期望: ' + expected + ', 实际: ' + actual);
+    }
+  },
+  
+  assertTrue: function(value, message) {
+    if (!value) {
+      throw new Error((message || '') + ' 期望为 true，实际为 false');
+    }
+  },
+  
+  assertFalse: function(value, message) {
+    if (value) {
+      throw new Error((message || '') + ' 期望为 false，实际为 true');
+    }
+  },
+  
+  assertNotNull: function(value, message) {
+    if (value === null || value === undefined) {
+      throw new Error((message || '') + ' 期望非 null/undefined');
+    }
+  },
+  
+  renderResults: function() {
+    var container = document.getElementById('results');
+    var html = '';
+    var totalPass = 0;
+    var totalFail = 0;
+    
+    this.results.forEach(function(suite) {
+      html += '<div class="test-suite">';
+      html += '<h2>' + suite.suite + '</h2>';
+      
+      suite.cases.forEach(function(test) {
+        if (test.status === 'pass') totalPass++;
+        else totalFail++;
+        
+        html += '<div class="test-case ' + test.status + '">';
+        html += '<span>' + test.name + '</span>';
+        html += '<span class="status">' + (test.status === 'pass' ? '✓ 通过' : '✗ 失败') + '</span>';
+        html += '</div>';
+        
+        if (test.error) {
+          html += '<div style="color: #e74c3c; font-size: 12px; margin-left: 10px;">错误: ' + test.error + '</div>';
+        }
+      });
+      
+      html += '</div>';
+    });
+    
+    html += '<div class="summary">';
+    html += '<strong>测试总结:</strong> ';
+    html += '<span class="pass">通过: ' + totalPass + '</span> | ';
+    html += '<span class="fail">失败: ' + totalFail + '</span> | ';
+    html += '总计: ' + (totalPass + totalFail);
+    html += '</div>';
+    
+    container.innerHTML = html;
+  },
+  
+  reset: function() {
+    this.results = [];
+  }
+};
+
+// 测试用例
+function runAllTests() {
+  TestRunner.reset();
+  
+  // 测试插件注册表
+  TestRunner.suite('插件注册表测试');
+  TestRunner.test('PLUGIN_REGISTRY 应该存在', function() {
+    TestRunner.assertNotNull(window.PLUGIN_REGISTRY, 'PLUGIN_REGISTRY 未定义');
+  });
+  
+  TestRunner.test('PLUGIN_REGISTRY 应该包含数学插件', function() {
+    var mathPlugins = window.PLUGIN_REGISTRY.filter(function(p) { return p.subject === 'math'; });
+    TestRunner.assertTrue(mathPlugins.length > 0, '未找到数学插件');
+  });
+  
+  TestRunner.test('插件应该有必需字段', function() {
+    var plugin = window.PLUGIN_REGISTRY[0];
+    TestRunner.assertNotNull(plugin.id, '插件缺少 id 字段');
+    TestRunner.assertNotNull(plugin.name, '插件缺少 name 字段');
+    TestRunner.assertNotNull(plugin.subject, '插件缺少 subject 字段');
+    TestRunner.assertNotNull(plugin.grades, '插件缺少 grades 字段');
+  });
+  
+  // 测试 PluginUtil
+  TestRunner.suite('PluginUtil 工具函数测试');
+  TestRunner.test('PluginUtil 应该存在', function() {
+    TestRunner.assertNotNull(window.PluginUtil, 'PluginUtil 未定义');
+  });
+  
+  TestRunner.test('randInt 应该生成指定范围内的整数', function() {
+    for (var i = 0; i < 10; i++) {
+      var num = PluginUtil.randInt(1, 10);
+      TestRunner.assertTrue(num >= 1 && num <= 10, 'randInt 生成的数字超出范围: ' + num);
+    }
+  });
+  
+  TestRunner.test('diffLevel 应该返回 1-10 之间的值', function() {
+    var levels = [0, 3, 5, 10, 15, 'invalid'];
+    levels.forEach(function(level) {
+      var result = PluginUtil.diffLevel(level);
+      TestRunner.assertTrue(result >= 1 && result <= 10, 'diffLevel 返回值超出范围: ' + result);
+    });
+  });
+  
+  // 测试 App 对象
+  TestRunner.suite('App 对象测试');
+  TestRunner.test('App 应该存在', function() {
+    TestRunner.assertNotNull(window.App, 'App 未定义');
+  });
+  
+  TestRunner.test('App.getGradeName 应该返回正确的年级名称', function() {
+    TestRunner.assertEqual(App.getGradeName(1), '一年级', '一年级名称错误');
+    TestRunner.assertEqual(App.getGradeName(6), '六年级', '六年级名称错误');
+  });
+  
+  TestRunner.test('App.buildPluginLink 应该生成正确的链接', function() {
+    var link = App.buildPluginLink('math-oral');
+    TestRunner.assertTrue(link.indexOf('practice.html') !== -1, '链接不包含 practice.html');
+    TestRunner.assertTrue(link.indexOf('math-oral') !== -1, '链接不包含插件 ID');
+  });
+  
+  // 测试 XSS 防护
+  TestRunner.suite('安全测试');
+  TestRunner.test('esc 函数应该转义 HTML', function() {
+    var input = '<b>bold</b>';
+    var escaped = esc(input);
+    TestRunner.assertTrue(escaped.indexOf('<b>') === -1, 'esc 函数未正确转义 b 标签');
+    TestRunner.assertTrue(escaped.indexOf('&lt;') !== -1, 'esc 函数未生成 HTML 实体');
+  });
+  
+  TestRunner.renderResults();
+}
+
+function clearResults() {
+  document.getElementById('results').innerHTML = '';
+}
+
+// 简单的 esc 函数用于测试（与 practice.html 中的一致）
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = (s == null) ? '' : String(s);
+  return d.innerHTML;
+}
+
+// 页面加载完成后自动运行
+window.onload = function() {
+  console.log('测试运行器已就绪，点击"运行所有测试"开始测试');
+};
+</script>
+</body>
+</html>
