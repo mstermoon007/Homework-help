@@ -2,10 +2,10 @@
  * plugins/math-g5-picture.js — 五年级看图列式插件（M7 看图列式）
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M7 模块）：
- *   g5-pic-balance  天平平衡图（列方程）（type: 'balance-equation'）
- *   g5-pic-area     多边形面积图          （type: 'area-picture'）
- *   g5-pic-segment  线段图（小数倍数）    （type: 'segment-multiple'）
- *   g5-pic-tree     植树问题示意图        （type: 'tree-planting'）
+ *   g5-m7-g5-pic-balance  天平平衡图（列方程）（type: 'balance-equation'）
+ *   g5-m7-g5-pic-area     多边形面积图          （type: 'area-picture'）
+ *   g5-m7-g5-pic-segment  线段图（小数倍数）    （type: 'segment-multiple'）
+ *   g5-m7-g5-pic-tree     植树问题示意图        （type: 'tree-planting'）
  *
  * 每题带 SVG 示意图，学生看图列式并填空（text 输入）。
  */
@@ -205,13 +205,12 @@
     id: 'math-g5-picture',
     moduleId: 'M7',
     name: '看图列式',
-    pageTitle: '五年级看图列式',
     pageSubtitle: '天平方程、面积图、线段图与植树问题',
     grades: [5],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-pic-balance', 'g5-pic-area', 'g5-pic-segment', 'g5-pic-tree'],
+    knowledgePoints: ['g5-m7-g5-pic-balance', 'g5-m7-g5-pic-area', 'g5-m7-g5-pic-segment', 'g5-m7-g5-pic-tree'],
 
     settings: [
       {

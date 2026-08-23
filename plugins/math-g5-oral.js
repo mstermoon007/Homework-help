@@ -2,11 +2,11 @@
  * plugins/math-g5-oral.js — 五年级口算插件
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M1 模块）：
- *   g5-oral-decmul   小数乘法口算       （type: 'dec-mul-oral'）
- *   g5-oral-decdiv   小数除法口算       （type: 'dec-div-oral'）
- *   g5-oral-fracadd  同分母分数加减口算（type: 'frac-addsub-oral'）
- *   g5-oral-equ      简易方程口算       （type: 'equation-oral'）
- *   g5-oral-fm       因数倍数特征判断   （type: 'factor-multiple'）
+ *   g5-m1-g5-oral-decmul   小数乘法口算       （type: 'dec-mul-oral'）
+ *   g5-m1-g5-oral-decdiv   小数除法口算       （type: 'dec-div-oral'）
+ *   g5-m1-g5-oral-fracadd  同分母分数加减口算（type: 'frac-addsub-oral'）
+ *   g5-m1-g5-oral-equ      简易方程口算       （type: 'equation-oral'）
+ *   g5-m1-g5-oral-fm       因数倍数特征判断   （type: 'factor-multiple'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -157,13 +157,18 @@
     id: 'math-g5-oral',
     moduleId: 'M1',
     name: '口算',
-    pageTitle: '五年级口算练习',
     pageSubtitle: '小数乘除、分数加减、简易方程与因数倍数',
     grades: [5],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-oral-decmul', 'g5-oral-decdiv', 'g5-oral-fracadd', 'g5-oral-equ', 'g5-oral-fm'],
+    knowledgePoints: [
+        'g5-m1-g5-oral-decmul',
+        'g5-m1-g5-oral-decdiv',
+        'g5-m1-g5-oral-fracadd',
+        'g5-m1-g5-oral-equ',
+        'g5-m1-g5-oral-fm'
+    ],
 
     settings: [
       {

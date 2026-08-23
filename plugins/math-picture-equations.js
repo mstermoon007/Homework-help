@@ -120,8 +120,11 @@
     }
 
     return '<div class="question-card" data-index="' + i + '" style="border:1px solid #e3e9f2;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<span class="num" style="position:absolute;left:8px;top:8px;width:20px;height:20px;border-radius:50%;background:#eef3fb;color:#5b8def;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">' + (i + 1) + '</span>' +
-      '<div style="font-size:15px;font-weight:800;color:#27324a;margin:4px 0 6px;">' + p.question + '</div>' +
+      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#5b8def;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '&nbsp;&nbsp;&nbsp;&nbsp;' +
+        '<span class="q-text" style="font-size:15px;font-weight:800;color:#27324a;margin:4px 0 6px;">' + p.question + '</span>' +
+      '</div>' +
       picHTML +
       '<div style="font-size:20px;font-weight:800;color:#27324a;margin:6px 0;">' + p.expr.replace('(  )', '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" style="width:52px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:16px;font-weight:800;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;">') + '</div>' +
       '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
@@ -172,14 +175,13 @@
     id: 'math-picture-equations',
     moduleId: 'M7',
     name: '看图列式',
-    pageTitle: '看图列式',
     pageSubtitle: '看图写加法、减法算式',
     grades: [1],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'pictureEq' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
-    knowledgePoints: ['picture-equations'],
+    knowledgePoints: ['g1-m7-picture-equations'],
 
     settings: [
       {

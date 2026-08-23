@@ -2,15 +2,15 @@
  * plugins/math-g5-choice.js — 五年级选择题插件（M12 选择）
  *
  * 知识点覆盖（shared/knowledge-bank.js 五年级 M12 模块）：
- *   g5-choice-decmul    小数乘除法        （type: 'dec'）
- *   g5-choice-equ       方程              （type: 'equation'）
- *   g5-choice-fm        因数与倍数        （type: 'factor-multiple'）
- *   g5-choice-frac      分数的意义与性质  （type: 'fraction'）
- *   g5-choice-area      多边形的面积      （type: 'area'）
- *   g5-choice-solid     长方体正方体容积  （type: 'solid'）
- *   g5-choice-rotate    图形的运动        （type: 'rotation'）
- *   g5-choice-possib    可能性            （type: 'possibility'）
- *   g5-choice-stats     统计              （type: 'stats'）
+ *   g5-m12-g5-choice-decmul    小数乘除法        （type: 'dec'）
+ *   g5-m12-g5-choice-equ       方程              （type: 'equation'）
+ *   g5-m12-g5-choice-fm        因数与倍数        （type: 'factor-multiple'）
+ *   g5-m12-g5-choice-frac      分数的意义与性质  （type: 'fraction'）
+ *   g5-m12-g5-choice-area      多边形的面积      （type: 'area'）
+ *   g5-m12-g5-choice-solid     长方体正方体容积  （type: 'solid'）
+ *   g5-m12-motion    图形的运动        （type: 'rotation'）
+ *   g5-m12-g5-choice-possib    可能性            （type: 'possibility'）
+ *   g5-m12-stats     统计              （type: 'stats'）
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -284,14 +284,22 @@
     id: 'math-g5-choice',
     moduleId: 'M12',
     name: '选择题',
-    pageTitle: '五年级选择练习',
     pageSubtitle: '小数、方程、因数倍数、分数、面积、立体图形、运动、可能性与统计',
     grades: [5],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-choice-decmul', 'g5-choice-equ', 'g5-choice-fm', 'g5-choice-frac',
-      'g5-choice-area', 'g5-choice-solid', 'g5-choice-rotate', 'g5-choice-possib', 'g5-choice-stats'],
+    knowledgePoints: [
+        'g5-m12-g5-choice-decmul',
+        'g5-m12-g5-choice-equ',
+        'g5-m12-g5-choice-fm',
+        'g5-m12-g5-choice-frac',
+        'g5-m12-g5-choice-area',
+        'g5-m12-g5-choice-solid',
+        'g5-m12-motion',
+        'g5-m12-g5-choice-possib',
+        'g5-m12-stats'
+    ],
 
     settings: [
       {

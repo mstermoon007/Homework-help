@@ -80,7 +80,7 @@
 
       return {
         questions,
-        meta: { grade, count: questions.length, type, title: '小学' + gradeName(grade) + '拼音练习' }
+        meta: { grade, count: questions.length, type, columns: 1, title: '小学' + gradeName(grade) + '拼音练习' }
       };
     },
 

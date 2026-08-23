@@ -17,7 +17,6 @@
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return _PU.rand(arr); }
   function shuffleArr(arr) { return _PU.shuffle(arr); }
 
   // ============ 难度（1-10，由 generate 设置） ============
@@ -39,7 +38,7 @@
       kind: 'cushi', label: '凑十法',
       big: big, small: small, need: need, rest: rest,
       answer: big + small,
-      hint: '看大数，想' + big + '加几为10？将' + small + '分成' + need + '和' + rest + '，' + big + '+' + need + '=10，10+' + rest + '=' + (big + small)
+      hint: '看大数，想' + big + '加几为10？将' + small + '分成' + need + '和' + rest + '，' + big + '+' + need + '=10，再算 10+' + rest + '。'
     };
   }
 
@@ -103,7 +102,6 @@
     id: 'math-make-ten',
     moduleId: 'M0',
     name: '凑十法',
-    pageTitle: '巧算专项',
     pageSubtitle: '凑十法、平十法、破十法',
     grades: [1],
     subject: 'math',

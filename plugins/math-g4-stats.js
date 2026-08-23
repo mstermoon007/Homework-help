@@ -2,9 +2,9 @@
  * plugins/math-g4-stats.js — 四年级分类与整理插件（M9 分类整理）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M9 模块）：
- *   g4-stats-bar     条形统计图（1 格表示多个单位）  （type: 'bar-chart'）
- *   g4-stats-double  复式条形统计图                （type: 'double-bar'）
- *   g4-stats-avg     平均数与统计                  （type: 'avg-stats'）
+ *   g4-m9-g4-stats-bar     条形统计图（1 格表示多个单位）  （type: 'bar-chart'）
+ *   g4-m9-g4-stats-double  复式条形统计图                （type: 'double-bar'）
+ *   g4-m9-g4-stats-avg     平均数与统计                  （type: 'avg-stats'）
  *
  * 提供标准 ExercisePlugin 接口。随机数统一使用 shared/common.js 的 PluginUtil。
  */
@@ -27,22 +27,6 @@
       var t = a[i]; a[i] = a[j]; a[j] = t;
     }
     return a;
-  }
-  function uniqueNums(cands, hi, lo, n) {
-    var pool = [];
-    cands.forEach(function (c) {
-      if (c >= lo && c < hi && pool.indexOf(c) === -1) pool.push(c);
-    });
-    var guard = 0;
-    while (pool.length < n && guard < 60) {
-      var extra = rnd(lo, hi - 1);
-      if (pool.indexOf(extra) === -1) pool.push(extra);
-      guard++;
-    }
-    var shuffled = shuffle(pool);
-    var out = [];
-    for (var i = 0; i < n; i++) out.push(shuffled[i % shuffled.length]);
-    return shuffle(out);
   }
 
   // 生成一组 3~5 个项目的统计值（条形图）
@@ -222,13 +206,12 @@
     id: 'math-g4-stats',
     moduleId: 'M9',
     name: '分类与整理',
-    pageTitle: '四年级统计练习',
     pageSubtitle: '条形统计图、复式条形统计图与平均数',
     grades: [4],
     subject: 'math',
     category: 'statistics',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-stats-bar', 'g4-stats-double', 'g4-stats-avg'],
+    knowledgePoints: ['g4-m9-g4-stats-bar', 'g4-m9-g4-stats-double', 'g4-m9-g4-stats-avg'],
 
     settings: [
       {

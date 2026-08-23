@@ -111,23 +111,29 @@
   };
 
   // 混合运算：两级运算（×÷ 优先），结果非负，二年级
+  // while + 最大尝试次数替代递归，消除极端情况下的栈溢出隐患
   MathOralAgent.prototype._generateMixed = function () {
     var t = this.tableMax;
-    var a = this._randInt(2, t), b = this._randInt(2, t), c = this._randInt(1, 9);
-    var op1 = this._pick(['×', '÷']);
-    var op2 = this._pick(['+', '-']);
-    var part, total, expr;
-    if (op1 === '×') {
-      part = a * b;
-      expr = a + ' × ' + b + ' ' + op2 + ' ' + c;
-    } else {
-      part = a * b;          // 用 a×b 作为被除数，保证整除
-      expr = part + ' ÷ ' + b + ' ' + op2 + ' ' + c;
-      part = a;
+    var MAX_TRIES = 50;
+    for (var tries = 0; tries < MAX_TRIES; tries++) {
+      var a = this._randInt(2, t), b = this._randInt(2, t), c = this._randInt(1, 9);
+      var op1 = this._pick(['×', '÷']);
+      var op2 = this._pick(['+', '-']);
+      var part, total, expr;
+      if (op1 === '×') {
+        part = a * b;
+        expr = a + ' × ' + b + ' ' + op2 + ' ' + c;
+      } else {
+        part = a * b;          // 用 a×b 作为被除数，保证整除
+        expr = part + ' ÷ ' + b + ' ' + op2 + ' ' + c;
+        part = a;
+      }
+      total = op2 === '+' ? part + c : part - c;
+      if (total >= 0) return { text: expr + ' =', answer: total };
     }
-    total = op2 === '+' ? part + c : part - c;
-    if (total < 0) return this._generateMixed();
-    return { text: expr + ' =', answer: total };
+    // 兜底：50 次未命中（概率极低）时强制加法，保证结果非负
+    var fa = this._randInt(2, t), fb = this._randInt(2, t), fc = this._randInt(1, 9);
+    return { text: fa + ' × ' + fb + ' + ' + fc + ' =', answer: fa * fb + fc };
   };
 
   // 连加：三个加数连续相加，和不超过 maxNum
@@ -455,18 +461,88 @@
     return isOralRight(ua[i], ans);
   }
 
-  // ============ ExercisePlugin ============
+  // ============ ExercisePlugin（PluginUtil.createPlugin 工厂生成） ============
+  /** settings 选项 → MathOralAgent 参数映射（题型/专项/运算集/混合/余数） */
+  function buildAgent(opts) {
+    var grade = opts.grade || 1;
+    var operators = opts.operators;
+    var remainder = opts.remainder;
+    var mixed = opts.mixed;
+    var subType = null;
+    // 三年级专项题型（仅三年级及以上可用）
+    var g3Types = { multi1: 1, twodigit: 1, div1: 1, fraction: 1, decimal: 1 };
+    if (opts.type && g3Types[opts.type]) {
+      if (grade >= 3) subType = opts.type;
+      else operators = null; // 低年级选择三年级题型时回退默认
+    } else if (opts.type === 'muldiv' && grade >= 3) {
+      subType = 'md'; // 三年级「乘除法」＝多位数乘一位数/两位数乘两位数/除数是一位数
+    }
+    if (!operators && opts.type) {
+      // 六个题型：混合（年级默认）/ 加法 / 减法 / 连加 / 连减 / 进退位加减
+      // 连加/连减/进退位走 agent 的 type 分支，不设置 operators
+      if (opts.type === 'add') operators = ['+'];
+      else if (opts.type === 'sub') operators = ['-'];
+      else if (opts.type === 'addsub') operators = ['+', '-'];
+      else if (opts.type === 'muldiv') { if (grade < 3) operators = ['×', '÷']; }
+      else if (opts.type === 'remainder') { operators = grade >= 2 ? ['÷'] : null; remainder = grade >= 2; }
+      else if (opts.type === 'mixed') { operators = grade >= 2 ? ['+', '-', '×', '÷'] : null; mixed = grade >= 2; }
+      else operators = null; // mix / addchain / subchain / carry → 使用年级默认
+    }
+    return new MathOralAgent({
+      grade: grade,
+      maxNum: opts.maxNum,
+      count: opts.count || 10,
+      operators: operators,
+      type: opts.type,
+      subType: subType,
+      noNegative: opts.noNegative,
+      exactDiv: opts.exactDiv,
+      remainder: remainder,
+      mixed: mixed,
+      difficulty: opts.difficulty
+    });
+  }
+
+  /** MathOralAgent 题目 → 标准 Question（renderCard 渲染 + 自判定） */
+  function toQuestion(q) {
+    var isRem = q.answer && typeof q.answer === 'object' && q.answer.q != null;
+    return {
+      type: 'oral',
+      q: q.text,
+      answer: q.answer,
+      inputType: isRem ? 'multi' : 'text',
+      inputCount: isRem ? 2 : 1,
+      answerParts: isRem ? [q.answer.q + '……' + q.answer.r] : undefined,
+      hint: isRem ? '前框填商，后框填余数' : undefined,
+      render: function (idx, ctx) {
+        return _PU.renderCard(this, idx, (ctx && ctx.renderOpts) || {});
+      },
+      check: function (userAnswers, idx) {
+        var ua = userAnswers || {};
+        if (this.inputType === 'multi' && this.answer && typeof this.answer === 'object') {
+          var vq = ua[idx + ':0'], vr = ua[idx + ':1'];
+          return String(vq == null ? '' : vq).trim() === String(this.answer.q) &&
+                 String(vr == null ? '' : vr).trim() === String(this.answer.r);
+        }
+        var v = ua[idx];
+        return String(v == null ? '' : v).trim() === String(this.answer);
+      }
+    };
+  }
+
+  var _lastMeta = null; // generateQuestions 产出后供 meta() 读取（工厂保证先 questions 后 meta）
+
   /** @type {ExercisePlugin} */
-  var mathOralPlugin = {
+  var mathOralPlugin = _PU.createPlugin({
     id: 'math-oral',
     moduleId: 'M1',
     name: '口算练习',
-    pageTitle: '口算练习专项',
     pageSubtitle: '50以内加减法计算',
     grades: [1, 2, 3],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
+    columns: 4, // 默认网格列数（meta.columns 未指定时生效，与旧版 render 行为一致）
 
     // 设置面板元数据（practice.html 据此动态生成控件）
     //  - type：六个题型（混合/加法/减法/连加/连减/进退位加减）
@@ -496,91 +572,23 @@
       }
     ],
 
-    generate(options) {
-      var opts = options || {};
-      var grade = opts.grade || 1;
-      var operators = opts.operators;
-      var remainder = opts.remainder;
-      var mixed = opts.mixed;
-      var subType = null;
-      // 三年级专项题型（仅三年级及以上可用）
-      var g3Types = { multi1: 1, twodigit: 1, div1: 1, fraction: 1, decimal: 1 };
-      if (opts.type && g3Types[opts.type]) {
-        if (grade >= 3) subType = opts.type;
-        else operators = null; // 低年级选择三年级题型时回退默认
-      } else if (opts.type === 'muldiv' && grade >= 3) {
-        subType = 'md'; // 三年级「乘除法」＝多位数乘一位数/两位数乘两位数/除数是一位数
-      }
-      if (!operators && opts.type) {
-        // 六个题型：混合（年级默认）/ 加法 / 减法 / 连加 / 连减 / 进退位加减
-        // 连加/连减/进退位走 agent 的 type 分支，不设置 operators
-        if (opts.type === 'add') operators = ['+'];
-        else if (opts.type === 'sub') operators = ['-'];
-        else if (opts.type === 'addsub') operators = ['+', '-'];
-        else if (opts.type === 'muldiv') { if (grade < 3) operators = ['×', '÷']; }
-        else if (opts.type === 'remainder') { operators = grade >= 2 ? ['÷'] : null; remainder = grade >= 2; }
-        else if (opts.type === 'mixed') { operators = grade >= 2 ? ['+', '-', '×', '÷'] : null; mixed = grade >= 2; }
-        else if (opts.type === 'addchain' || opts.type === 'subchain' || opts.type === 'carry') {
-          operators = null;
-        }
-        else operators = null; // mix → 使用年级默认
-      }
-      var agent = new MathOralAgent({
-        grade: opts.grade || 1,
-        maxNum: opts.maxNum,
-        count: opts.count || 10,
-        operators: operators,
-        type: opts.type,
-        subType: subType,
-        noNegative: opts.noNegative,
-        exactDiv: opts.exactDiv,
-        remainder: remainder,
-        mixed: mixed,
-        difficulty: opts.difficulty
-      });
-      var result = agent.generate();
-      var questions = result.questions.map(function (q) {
-        var isRem = q.answer && typeof q.answer === 'object' && q.answer.q != null;
-        return {
-          type: 'oral',
-          q: q.text,
-          answer: q.answer,
-          inputType: isRem ? 'multi' : 'text',
-          inputCount: isRem ? 2 : 1,
-          answerParts: isRem ? [q.answer.q + '……' + q.answer.r] : undefined,
-          hint: isRem ? '前框填商，后框填余数' : undefined,
-          render: function (idx, ctx) {
-            return _PU.renderCard(this, idx, (ctx && ctx.renderOpts) || {});
-          },
-          check: function (userAnswers, idx) {
-            var ua = userAnswers || {};
-            if (this.inputType === 'multi' && this.answer && typeof this.answer === 'object') {
-              var vq = ua[idx + ':0'], vr = ua[idx + ':1'];
-              return String(vq == null ? '' : vq).trim() === String(this.answer.q) &&
-                     String(vr == null ? '' : vr).trim() === String(this.answer.r);
-            }
-            var v = ua[idx];
-            return String(v == null ? '' : v).trim() === String(this.answer);
-          }
-        };
-      });
-      return { questions: questions, meta: result.meta };
+    generateQuestions: function (opts) {
+      var result = buildAgent(opts || {}).generate();
+      _lastMeta = result.meta;
+      return result.questions.map(toQuestion);
     },
 
-    render(exerciseSet) {
-      var cols = (exerciseSet.meta && exerciseSet.meta.columns) || 4;
-      // 统一使用 PluginUtil.renderGrid（renderCard），减少自定义渲染代码
-      return _PU.renderGrid(exerciseSet.questions, { columns: cols });
+    meta: function (opts) {
+      return _lastMeta || { grade: (opts || {}).grade || 1, count: 0 };
     },
 
-    check(exerciseSet, userAnswers) {
-      // 复用 PluginUtil.computeResult，自定义 oralCheckFn 保持原判定（含小数容差与有余数双框）
+    // 批改：复用 PluginUtil.computeResult，自定义 checkFn 保持原判定（含小数容差与有余数双框）
+    check: function (exerciseSet, userAnswers) {
       return _PU.computeResult(exerciseSet.questions, userAnswers, { checkFn: oralCheckFn });
     }
-  };
+  });
 
   // ============ 导出 ============
-  global.MathOralAgent = MathOralAgent;        // 兼容旧页面 math-practice.html
   global.__currentPlugin = mathOralPlugin;     // practice.html / dev/plugin-check.html
 
   if (typeof module !== 'undefined' && module.exports) module.exports = mathOralPlugin;

@@ -2,16 +2,16 @@
  * plugins/math-g4-fill.js — 四年级填空题插件（M4 填空）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M4 模块）：
- *   g4-fill-bignum    大数的认识            （type: 'big-num'）
- *   g4-fill-hectare   公顷和平方千米        （type: 'hectare'）
- *   g4-fill-line      线段、射线、直线      （type: 'line-ray'）
- *   g4-fill-angle     角的度量与分类        （type: 'angle-metric'）
- *   g4-fill-quad      平行四边形和梯形      （type: 'quad'）
- *   g4-fill-op        四则运算意义与0的运算 （type: 'op-meaning'）
- *   g4-fill-quotient  商不变规律            （type: 'quotient-law'）
- *   g4-fill-dec       小数                 （type: 'decimal'）
- *   g4-fill-tri       三角形               （type: 'triangle'）
- *   g4-fill-avg       平均数               （type: 'average'）
+ *   g4-m4-g4-fill-bignum    大数的认识            （type: 'big-num'）
+ *   g4-m4-g4-fill-hectare   公顷和平方千米        （type: 'hectare'）
+ *   g4-m4-g4-fill-line      线段、射线、直线      （type: 'line-ray'）
+ *   g4-m4-g4-fill-angle     角的度量与分类        （type: 'angle-metric'）
+ *   g4-m4-g4-fill-quad      平行四边形和梯形      （type: 'quad'）
+ *   g4-m4-g4-fill-op        四则运算意义与0的运算 （type: 'op-meaning'）
+ *   g4-m4-g4-fill-quotient  商不变规律            （type: 'quotient-law'）
+ *   g4-m4-g4-fill-dec       小数                 （type: 'decimal'）
+ *   g4-m4-g4-fill-tri       三角形               （type: 'triangle'）
+ *   g4-m4-g4-fill-avg       平均数               （type: 'average'）
  *
  * 提供标准 ExercisePlugin 接口。随机数统一使用 shared/common.js 的 PluginUtil。
  */
@@ -218,7 +218,7 @@
       return { q: '（  ）' + phrase + '。', answer: q2,
         hint: '根据端点个数和延伸方向判断。' };
     }
-    return { q: '线段是（  ）的一部分，射线是（  ）的一部分', answer: '直线',
+    return { q: '线段是（  ）的一部分，射线是（  ）的一部分', answer: ['直线', '直线'],
       hint: '线段、射线都是直线的一部分。' };
   }
 
@@ -289,7 +289,7 @@
   function buildQuad() {
     var v = pick(['para-feat', 'trap-feat', 'para-angle', 'trap-angle', 'height', 'parallel']);
     if (v === 'para-feat') {
-      return { q: '平行四边形的两组对边分别（  ）且（  ）', answer: '平行相等',
+      return { q: '平行四边形的两组对边分别（  ）且（  ）', answer: ['平行', '相等'],
         hint: '平行四边形对边平行且相等，对角相等。' };
     }
     if (v === 'trap-feat') {
@@ -300,7 +300,7 @@
       var a = pick([30, 45, 60, 70, 80, 100, 110, 120, 135]);
       var b = 180 - a;
       return { q: '平行四边形的一个角是 ' + a + '°，与它相邻的角是（  ）°，对角是（  ）°',
-        answer: b + '、' + a,
+        answer: [b, a],
         hint: '平行四边形相邻两角互补（和 180°），对角相等。' };
     }
     if (v === 'trap-angle') {
@@ -323,17 +323,17 @@
     var v = pick(['zero-add', 'zero-mul', 'zero-div', 'zero-nodiv', 'relation', 'bracket']);
     if (v === 'zero-add') {
       var a = rnd(25, 98);
-      return { q: a + ' + 0 =（  ），a + 0 =（  ）', answer: a + '、a',
+      return { q: a + ' + 0 =（  ），a + 0 =（  ）', answer: [a, 'a'],
         hint: '任何数加 0 还得原数。' };
     }
     if (v === 'zero-mul') {
       var b = rnd(25, 98);
-      return { q: b + ' × 0 =（  ），0 × a =（  ）', answer: '0、0',
+      return { q: b + ' × 0 =（  ），0 × a =（  ）', answer: ['0', '0'],
         hint: '0 乘任何数都得 0。' };
     }
     if (v === 'zero-div') {
       var c = rnd(25, 98);
-      return { q: '0 ÷ ' + c + ' =（  ），0 ÷ a（a≠0）=（  ）', answer: '0、0',
+      return { q: '0 ÷ ' + c + ' =（  ），0 ÷ a（a≠0）=（  ）', answer: ['0', '0'],
         hint: '0 除以任何非零数都得 0。' };
     }
     if (v === 'zero-nodiv') {
@@ -352,11 +352,11 @@
     var kind = pick(['zerom', 'onet']);
     if (kind === 'zerom') {
       var x = rnd(2, 9), y = rnd(2, 9);
-      return { q: x + ' ×（  ）= 0，括号里填（  ）', answer: '0、0',
+      return { q: x + ' ×（  ）= 0，括号里填（  ）', answer: ['0', '0'],
         hint: '0 乘任何数都得 0。' };
     }
     var x2 = rnd(2, 9);
-    return { q: x2 + ' ÷（  ）= ' + x2 + '，括号里填（  ）', answer: '1、1',
+    return { q: x2 + ' ÷（  ）= ' + x2 + '，括号里填（  ）', answer: ['1', '1'],
       hint: '一个数除以它本身（非零）等于 1。' };
   }
 
@@ -537,14 +537,23 @@
     id: 'math-g4-fill',
     moduleId: 'M4',
     name: '填空题',
-    pageTitle: '四年级填空练习',
     pageSubtitle: '大数、单位换算、几何概念、小数与平均数',
     grades: [4],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-fill-bignum', 'g4-fill-hectare', 'g4-fill-line', 'g4-fill-angle',
-      'g4-fill-quad', 'g4-fill-op', 'g4-fill-quotient', 'g4-fill-dec', 'g4-fill-tri', 'g4-fill-avg'],
+    knowledgePoints: [
+        'g4-m4-g4-fill-bignum',
+        'g4-m4-g4-fill-hectare',
+        'g4-m4-g4-fill-line',
+        'g4-m4-g4-fill-angle',
+        'g4-m4-g4-fill-quad',
+        'g4-m4-g4-fill-op',
+        'g4-m4-g4-fill-quotient',
+        'g4-m4-g4-fill-dec',
+        'g4-m4-g4-fill-tri',
+        'g4-m4-g4-fill-avg'
+    ],
 
     settings: [
       {
@@ -580,6 +589,11 @@
         attempts++;
       }
       return list.map(function (p) {
+        // 多空答案（如“相邻的角（ ）°，对角（ ）°”）→ multi 双输入框，分字段作答
+        if (Array.isArray(p.answer)) {
+          return { type: 'fill', q: p.q, answer: p.answer, hint: p.hint,
+            inputType: 'multi', inputCount: p.answer.length };
+        }
         return { type: 'fill', q: p.q, answer: String(p.answer), hint: p.hint, inputType: 'text' };
       });
     },

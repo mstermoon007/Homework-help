@@ -2,12 +2,12 @@
  * plugins/math-g4-choice.js — 四年级选择题插件（M12 选择）
  *
  * 知识点覆盖（shared/knowledge-bank.js 四年级 M12 模块）：
- *   g4-choice-big      大数比较      （type: 'big-compare'）
- *   g4-choice-est      乘除法估算    （type: 'est-muldiv'）
- *   g4-choice-angle    角的认识      （type: 'angle'）
- *   g4-choice-shape    图形特征      （type: 'shape'）
- *   g4-choice-dec      小数意义      （type: 'dec-meaning'）
- *   g4-choice-law      运算律应用    （type: 'law'）
+ *   g4-m12-g4-choice-big      大数比较      （type: 'big-compare'）
+ *   g4-m12-g4-choice-est      乘除法估算    （type: 'est-muldiv'）
+ *   g4-m12-g4-choice-angle    角的认识      （type: 'angle'）
+ *   g4-m12-g4-choice-shape    图形特征      （type: 'shape'）
+ *   g4-m12-g4-choice-dec      小数意义      （type: 'dec-meaning'）
+ *   g4-m12-g4-choice-law      运算律应用    （type: 'law'）
  *
  * 提供标准 ExercisePlugin 接口。随机数统一使用 shared/common.js 的 PluginUtil。
  */
@@ -261,14 +261,19 @@
     id: 'math-g4-choice',
     moduleId: 'M12',
     name: '选择题',
-    pageTitle: '四年级选择练习',
     pageSubtitle: '大数比较、估算、角、图形、小数与运算律',
     grades: [4],
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-choice-big', 'g4-choice-est', 'g4-choice-angle', 'g4-choice-shape',
-      'g4-choice-dec', 'g4-choice-law'],
+    knowledgePoints: [
+        'g4-m12-g4-choice-big',
+        'g4-m12-g4-choice-est',
+        'g4-m12-g4-choice-angle',
+        'g4-m12-g4-choice-shape',
+        'g4-m12-g4-choice-dec',
+        'g4-m12-g4-choice-law'
+    ],
 
     settings: [
       {

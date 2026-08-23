@@ -921,8 +921,11 @@
   /** 渲染单题卡片（标准 Question.render） */
   function renderWordCard(question, idx) {
     return '<div class="question-card" data-index="' + idx + '" style="border:1px solid #e3e9f2;border-radius:12px;padding:14px 12px;text-align:center;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<span class="num" style="position:absolute;left:8px;top:8px;width:20px;height:20px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">' + (idx + 1) + '</span>' +
-      '<span style="font-size:15px;font-weight:700;color:#27324a;display:block;margin:4px 0 6px;line-height:1.5;">' + question.question + '</span>' +
+      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:#3f6fd1;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
+        '&nbsp;&nbsp;&nbsp;&nbsp;' +
+        '<span class="q-text" style="font-size:15px;font-weight:700;color:#27324a;display:inline;vertical-align:middle;margin:4px 0 6px;line-height:1.5;">' + question.question + '</span>' +
+      '</div>' +
       (question.hint ? '<div style="font-size:11px;color:#7a879c;margin-bottom:6px;">💡 ' + question.hint + '</div>' : '') +
       '<div style="display:flex;align-items:center;justify-content:center;gap:4px;">' +
       '<input type="text" class="answer-input" data-index="' + idx + '" autocomplete="off" style="width:64px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#3f6fd1;background:#fafafa;outline:none;">' +
@@ -990,14 +993,17 @@
     id: 'math-word-problems',
     moduleId: 'M8',
     name: '应用题',
-    pageTitle: '应用题',
     pageSubtitle: '解决实际问题：解决问题、连加连减与加减混合',
     grades: [1, 2, 3],
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'word' },
-    // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示；2/3 年级仅覆盖其对应知识点）
-    knowledgePoints: ['solve-problems', 'chain-mixed'],
+    // 声明本插件覆盖的知识点（按年级区分：一年级用 solve-problems/chain-mixed，二年级用 wp-solve，三年级用 g3-m8-g3-times）
+    knowledgePoints: {
+      1: ['g1-m8-solve-problems', 'g1-m8-chain-mixed'],
+      2: ['g2-m8-solve-problems'],
+      3: ['g3-m8-g3-times']
+    },
     columns: 2,
 
     settings: [
