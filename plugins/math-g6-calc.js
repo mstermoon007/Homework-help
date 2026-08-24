@@ -50,13 +50,13 @@
   var vline = '<div style="border-top:2px solid var(--ink);margin:2px 0 6px;width:122px;"></div>';
 
   function singleInp(idx) {
-    return '<input type="text" data-index="' + idx + '" placeholder="?" autocomplete="off" style="width:104px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:16px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;">';
+    return '<input type="text" data-index="' + idx + '" placeholder="?" autocomplete="off" style="width:104px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:16px;font-weight:700;text-align:center;color:var(--brand-d);background:var(--soft-bg);outline:none;">';
   }
 
   function cardHTML(idx, inner, tag) {
-    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 0.5cm;position:relative;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 0.5cm;position:relative;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-      '<span class="num" style="flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand-d);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
+      '<span class="num" style="flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand-d);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
       '&nbsp;&nbsp;&nbsp;&nbsp;' +
       '<span class="q-text" style="font-size:12px;color:var(--muted);font-weight:700;display:inline;vertical-align:middle;">' + (tag || '计算下面各题') + '</span>' +
       '</div>' +

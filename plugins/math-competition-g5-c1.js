@@ -89,7 +89,7 @@
       var disp = rows.map(function (row, ri) {
         return row.split('').map(function (ch, ci) {
           return cells.some(function (cell) { return cell.r === ri && cell.c === ci; })
-            ? '<b style="color:#e05252;">□</b>' : ch;
+            ? '<b style="color:var(--bad);">□</b>' : ch;
         }).join('');
       });
       var html = '<div style="font-family:Menlo,Consolas,monospace;font-size:17px;font-weight:800;color:var(--ink);line-height:1.8;">' +
@@ -345,8 +345,8 @@
         rowsHtml += '<div style="display:flex;">';
         for (var cc = 0; cc < N; cc++) {
           var p2 = r * N + cc;
-          rowsHtml += '<span style="width:44px;height:40px;border:1px solid #d5dde9;display:flex;align-items:center;justify-content:center;font-family:Menlo,monospace;font-size:17px;font-weight:800;color:var(--ink);">' +
-            (used[p2] ? '<b style="color:#e05252;">□</b>' : flat[p2]) + '</span>';
+          rowsHtml += '<span style="width:44px;height:40px;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:Menlo,monospace;font-size:17px;font-weight:800;color:var(--ink);">' +
+            (used[p2] ? '<b style="color:var(--bad);">□</b>' : flat[p2]) + '</span>';
         }
         rowsHtml += '</div>';
       }
@@ -403,12 +403,12 @@
         rowsHtml += '<div style="display:flex;">';
         for (var cc2 = 0; cc2 < 4; cc2++) {
           var p2 = rr * 4 + cc2;
-          rowsHtml += '<span style="width:42px;height:38px;border:1px solid #d5dde9;display:flex;align-items:center;justify-content:center;font-family:Menlo,monospace;font-size:15px;font-weight:800;color:var(--ink);">' +
-            (used[p2] ? '<b style="color:#e05252;">□</b>' : flat[p2]) + '</span>';
+          rowsHtml += '<span style="width:42px;height:38px;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:Menlo,monospace;font-size:15px;font-weight:800;color:var(--ink);">' +
+            (used[p2] ? '<b style="color:var(--bad);">□</b>' : flat[p2]) + '</span>';
         }
         rowsHtml += '</div>';
       }
-      var html = '<div style="font-size:13px;color:#3f4c63;margin-bottom:4px;">下面是四阶幻方（1~16），每行、列、对角线之和均为 34：</div>' +
+      var html = '<div style="font-size:13px;color:var(--ink);margin-bottom:4px;">下面是四阶幻方（1~16），每行、列、对角线之和均为 34：</div>' +
         '<div style="display:inline-block;border:2px solid var(--ink);margin-top:2px;">' + rowsHtml + '</div>' +
         '<div style="font-size:12px;color:var(--muted);margin-top:4px;">□ 处的数字按从上到下、从左到右的顺序填写。</div>';
       return fillQ({

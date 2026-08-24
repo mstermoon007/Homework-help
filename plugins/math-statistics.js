@@ -14,6 +14,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-statistics.js 依赖 shared/common.js（PluginUtil），请先加载');
+  // 难度统一经 App.Difficulty.consume 解析（批次7）
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-statistics.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -55,7 +59,7 @@
   }
 
   function renderGroup(group) {
-    var html = '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:6px auto;max-width:300px;background:#f8fafd;border-radius:12px;padding:10px;">';
+    var html = '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:6px auto;max-width:300px;background:var(--soft-bg);border-radius:12px;padding:10px;">';
     group.items.forEach(function (it) {
       html += '<span style="display:inline-block;">' + SHAPES[it.k](it.c) + '</span>';
     });
@@ -148,10 +152,10 @@
       mid = renderGroup(p.group);
     } else if (p.kind === 'table') {
       var tableHTML = '<table style="border-collapse:collapse;margin:6px auto;font-size:14px;">' +
-        '<tr><td style="border:1px solid #c3ccd8;padding:4px 14px;font-weight:800;background:#eef3fb;">图形</td>' +
-        p.rows.map(function (r) { return '<td style="border:1px solid #c3ccd8;padding:4px 14px;text-align:center;">' + SHAPES[r.shape](COLORS[0]) + '</td>'; }).join('') + '</tr>' +
-        '<tr><td style="border:1px solid #c3ccd8;padding:4px 14px;font-weight:800;background:#eef3fb;">数量</td>' +
-        p.rows.map(function (r, j) { return '<td style="border:1px solid #c3ccd8;padding:4px 8px;text-align:center;"><input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:40px;height:28px;border:2px dashed #ccc;border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;"></td>'; }).join('') + '</tr>' +
+        '<tr><td style="border:1px solid var(--line-strong);padding:4px 14px;font-weight:800;background:var(--brand-bg);">图形</td>' +
+        p.rows.map(function (r) { return '<td style="border:1px solid var(--line-strong);padding:4px 14px;text-align:center;">' + SHAPES[r.shape](COLORS[0]) + '</td>'; }).join('') + '</tr>' +
+        '<tr><td style="border:1px solid var(--line-strong);padding:4px 14px;font-weight:800;background:var(--brand-bg);">数量</td>' +
+        p.rows.map(function (r, j) { return '<td style="border:1px solid var(--line-strong);padding:4px 8px;text-align:center;"><input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:40px;height:28px;border:2px dashed var(--line-strong);border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:var(--brand-d);background:var(--soft-bg);outline:none;"></td>'; }).join('') + '</tr>' +
         '</table>';
       mid = renderGroup(p.group) + tableHTML;
     } else {
@@ -160,14 +164,14 @@
         barHTML += '<div style="display:flex;align-items:center;gap:6px;margin:4px 0;">' +
           '<span style="width:56px;text-align:right;font-size:13px;font-weight:700;color:var(--ink);">' + SHAPES[r.shape](COLORS[0]) + '</span>' +
           '<span style="display:flex;gap:2px;">';
-        for (var c = 0; c < r.count; c++) barHTML += '<span style="width:12px;height:16px;background:var(--brand);border:1px solid #3b5bdb;display:inline-block;"></span>';
+        for (var c = 0; c < r.count; c++) barHTML += '<span style="width:12px;height:16px;background:var(--brand);border:1px solid var(--brand-d);display:inline-block;"></span>';
         barHTML += '</span></div>';
       });
       barHTML += '</div>';
       var optHTML = '';
       p.options.forEach(function (o) {
         optHTML += '<button type="button" class="opt-btn" data-val="' + o + '" onclick="window.__currentPlugin.__choose(this)" ' +
-          'style="cursor:pointer;border:1.5px solid #d5dff0;background:#fafbff;color:#2b3a55;border-radius:9px;padding:6px 14px;font-size:14px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
+          'style="cursor:pointer;border:1.5px solid var(--line-strong);background:var(--soft-bg);color:var(--ink);border-radius:9px;padding:6px 14px;font-size:14px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
       });
       mid = renderGroup(p.group) + barHTML +
         '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">' + optHTML + '</div>' +
@@ -183,14 +187,14 @@
       var blanksHTML = '';
       p.blanks.forEach(function (label, j) {
         blanksHTML += '<span style="margin:0 4px;font-size:14px;font-weight:700;color:var(--ink);">' + label + '：</span>' +
-          '<input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:44px;height:30px;border:2px dashed #ccc;border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;margin:0 6px;">';
+          '<input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:44px;height:30px;border:2px dashed var(--line-strong);border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:var(--brand-d);background:var(--soft-bg);outline:none;margin:0 6px;">';
       });
       inputHTML = '<div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:6px;">' + blanksHTML + '</div>';
     }
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         '<span class="q-text" style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 6px;">' + p.question + '</span>' +
       '</div>' +
@@ -246,24 +250,36 @@
 
     generate: function (options) {
       var opts = options || {};
-      _DIFF = _PU.diffLevel(opts.difficulty);
+      // 难度统一经 App.Difficulty.consume 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
+      var prof = _D.consume(opts);
+      _DIFF = prof.effectiveLevel;
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 子题型 → 知识点（供 Adaptive v2 KP 级统计）
+      var KP_BY_KIND = {
+        classify: 'g1-m9-classify',
+        table: 'g1-m9-stats-table',
+        picto: 'g1-m9-pictograph'
+      };
       var type = opts.type || 'mix';
       var count = opts.count || 8;
       var list = generateProblems(type, count);
       var typeNames = { mix: '混合练习', classify: '分类与整理', table: '填写统计表', picto: '象形统计图' };
       var label = typeNames[type] || '混合';
       var questions = list.map(function (p) {
-        return {
+        var q = {
           type: 'statistics',
           kind: p.kind,
           data: p,
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
+          knowledgePointId: KP_BY_KIND[p.kind],
           hint: p.kind === 'classify' ? '先数出每一种图形有几个，再回答。' :
                 p.kind === 'table' ? '按形状分别数一数，把数量填进统计表。' :
                 '数一数每种图形各有多少个，比较谁最多。',
           render: function (idx, ctx) { return renderCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
         };
+        if (diffStamp != null) q.difficulty = diffStamp;
+        return q;
       });
       return {
         questions: questions,

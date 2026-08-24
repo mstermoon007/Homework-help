@@ -18,6 +18,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-unit-convert.js 依赖 shared/common.js（PluginUtil），请先加载');
+  // 难度统一经 App.Difficulty.consume 解析（批次8）
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-unit-convert.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -278,7 +282,7 @@
       var optsHTML = '';
       p.options.forEach(function (o) {
         optsHTML += '<button type="button" class="opt-btn" data-val="' + o + '" onclick="window.__currentPlugin.__choose(this)" ' +
-          'style="cursor:pointer;border:1.5px solid #d5dff0;background:#fafbff;color:#2b3a55;border-radius:9px;padding:6px 14px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
+          'style="cursor:pointer;border:1.5px solid var(--line-strong);background:var(--soft-bg);color:var(--ink);border-radius:9px;padding:6px 14px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
       });
       inputHTML = '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">' + optsHTML + '</div>' +
         '<input type="hidden" class="choice-inp" data-index="' + i + '" autocomplete="off">';
@@ -291,9 +295,9 @@
 
     var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         hintHTML +
       '</div>' +
@@ -340,8 +344,17 @@
 
     generate: function (options) {
       var opts = options || {};
-      _DIFF = _PU.diffLevel(opts.difficulty);
+      // 难度统一经 App.Difficulty.consume 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
+      var prof = _D.consume(opts);
+      _DIFF = prof.effectiveLevel;
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
       _GRADE = opts.grade || 2;
+      // 子题型 → 知识点（按年级区分；未映射的组合不标注，保持纯插件级统计）
+      var KP_BY_GRADE_KIND = {
+        2: { convert: 'g2-m4-unit-convert', fillUnit: 'g2-m4-fill-unit' },
+        3: { convert: 'g3-m4-g3-measure', fillUnit: 'g3-m4-g3-measure' }
+      };
+      var kpMap = KP_BY_GRADE_KIND[_GRADE] || null;
       var type = opts.type || 'mix';
       var count = opts.count || 8;
       var list = generateProblems(type, count);
@@ -349,15 +362,18 @@
       var label = typeNames[type] || '混合';
       var gradeLabel = '小学' + (_GRADE >= 3 ? '三年级' : '二年级') + '单位换算（' + label + '）';
       var questions = list.map(function (p) {
-        return {
+        var q = {
           type: 'unit-convert',
           kind: p.kind,
           data: p,
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
+          knowledgePointId: kpMap ? (kpMap[p.kind] || undefined) : undefined,
           hint: p.hint,
           render: function (idx, ctx) { return renderUnitCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkUnitQuestion(this, userAnswers, idx); }
         };
+        if (diffStamp != null) q.difficulty = diffStamp;
+        return q;
       });
       return {
         questions: questions,

@@ -14,6 +14,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-number-sense.js 依赖 shared/common.js（PluginUtil），请先加载');
+  // 难度统一经 App.Difficulty.consume 解析（批次7）
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-number-sense.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -472,7 +476,7 @@
         p.seq.map(function (v) {
           if (v == null) return '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off">';
           return '<span>' + v + '</span>';
-        }).join('<span style="color:#c3ccd8;">、</span>') + '</div>';
+        }).join('<span style="color:var(--muted);">、</span>') + '</div>';
     } else if (p.kind === 'compare' || (p.kind === 'fraction' && p.variant === 'compare') || (p.kind === 'decimal' && p.variant === 'compare')) {
       mid = '<div style="font-size:26px;font-weight:800;color:var(--ink);margin:8px 0;">' +
         p.expr.replace('〇', '<span style="color:#e8870a;">〇</span>') + '</div>';
@@ -483,14 +487,14 @@
       var optsHTML = '';
       p.options.forEach(function (o) {
         optsHTML += '<button type="button" class="opt-btn" data-val="' + o + '" onclick="window.__currentPlugin.__choose(this)" ' +
-          'style="cursor:pointer;border:1.5px solid #d5dff0;background:#fafbff;color:#2b3a55;border-radius:9px;padding:6px 14px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
+          'style="cursor:pointer;border:1.5px solid var(--line-strong);background:var(--soft-bg);color:var(--ink);border-radius:9px;padding:6px 14px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
       });
       inputHTML = '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">' + optsHTML + '</div>' +
         '<input type="hidden" class="choice-inp" data-index="' + i + '" autocomplete="off">';
     } else if (p.inputType === 'multi') {
       var blanksHTML = '';
       p.blanks.forEach(function (label, j) {
-        blanksHTML += '<input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:48px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;margin:0 4px;">' + label;
+        blanksHTML += '<input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:48px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:var(--soft-bg);outline:none;margin:0 4px;">' + label;
       });
       inputHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:2px;margin-top:6px;">' + blanksHTML + '</div>';
     } else {
@@ -501,9 +505,9 @@
 
     var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         hintHTML +
       '</div>' +
@@ -566,8 +570,25 @@
 
     generate: function (options) {
       var opts = options || {};
-      _DIFF = _PU.diffLevel(opts.difficulty);
+      // 难度统一经 App.Difficulty.consume 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
+      var prof = _D.consume(opts);
+      _DIFF = prof.effectiveLevel;
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
       _GRADE = opts.grade || 1;
+      // 子题型 → 知识点（按年级区分；未映射的组合不标注，保持纯插件级统计）
+      var KP_BY_GRADE_KIND = {
+        1: {
+          count: 'g1-m4-count', order: 'g1-m4-count',
+          compose: 'g1-m4-compose-digit', digit: 'g1-m4-compose-digit',
+          compare: 'g1-m4-compare'
+        },
+        2: {
+          readwrite: 'g2-m4-readwrite',
+          compose: 'g2-m4-compose-digit', digit: 'g2-m4-compose-digit',
+          approx: 'g2-m4-approx'
+        }
+      };
+      var kpMap = KP_BY_GRADE_KIND[_GRADE] || null;
       var type = opts.type || 'mix';
       var count = opts.count || 8;
       var list = generateProblems(type, count);
@@ -575,11 +596,12 @@
       var label = typeNames[type] || '混合';
       var gradeName = { 1: '一', 2: '二', 3: '三' }[_GRADE] || '三';
       var questions = list.map(function (p) {
-        return {
+        var q = {
           type: 'number-sense',
           kind: p.kind,
           data: p,
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
+          knowledgePointId: kpMap ? (kpMap[p.kind] || undefined) : undefined,
           hint: p.kind === 'compare' ? '先比较两个数的大小，再选符号。' :
                 p.kind === 'fraction' ? (p.variant === 'compare' ? '分母相同，分子大的分数大。' : '把这个整体平均分成若干份，取其中的几份就是几分之几。') :
                 p.kind === 'decimal' ? (p.variant === 'compare' ? '先比较整数部分，再比较十分位。' : '十分位上的数表示几个 0.1。') :
@@ -589,6 +611,8 @@
           render: function (idx, ctx) { return renderCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
         };
+        if (diffStamp != null) q.difficulty = diffStamp;
+        return q;
       });
       return {
         questions: questions,

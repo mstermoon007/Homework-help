@@ -14,8 +14,11 @@
     --ink: #27324a;
     --muted: #7a879c;
     --line: #e3e9f2;
+    --line-strong: #c9d4e6;   /* 可交互元素边框：答案输入框虚线/选项按钮描边 */
+    --soft-bg: #fafbff;       /* 近白软底：答案输入框/选项按钮填充 */
     --brand: #5b8def;
     --brand-d: #3f6fd1;
+    --brand-bg: #eef3fb;      /* 品牌浅底：题号徽章/chip 未激活底 */
     --ok: #22a06b;
     --ok-bg: #e7f7ee;
     --bad: #e0556b;

@@ -1,6 +1,6 @@
 {
   "name": "homework-help",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "private": true,
   "description": "小学练习本（Homework Help）— 免费无广告的小学 1-6 年级练习题生成与打印工具",
   "scripts": {

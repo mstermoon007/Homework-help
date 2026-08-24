@@ -14,6 +14,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-make-ten.js 依赖 shared/common.js（PluginUtil），请先加载');
+  // 难度统一经 App.Difficulty.consume 解析（批次7）
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-make-ten.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -123,7 +127,16 @@
 
     generate: function (options) {
       var opts = options || {};
-      _DIFF = _PU.diffLevel(opts.difficulty);
+      // 难度统一经 App.Difficulty.consume 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
+      var prof = _D.consume(opts);
+      _DIFF = prof.effectiveLevel;
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 子题型 → 知识点（凑十/平十/破十，供 Adaptive v2 KP 级统计）
+      var KP_BY_KIND = {
+        cushi: 'g1-m0-make-ten',
+        pingshi: 'g1-m0-make-ten-ping',
+        poshi: 'g1-m0-make-ten-po'
+      };
       var type = opts.type || 'cushi';
       var count = opts.count || 5;
       var list = generateProblems(type, count);
@@ -133,11 +146,12 @@
         var qText = (p.kind === 'cushi')
           ? p.big + ' + ' + p.small + ' = ?'
           : p.total + ' − ' + p.sub + ' = ?';
-        return {
+        var q = {
           type: 'make-ten',
           kind: p.kind,
           q: qText,
           answer: String(p.answer),
+          knowledgePointId: KP_BY_KIND[p.kind],
           hint: p.hint,
           render: function (idx, ctx) {
             // 统一卡片式渲染（固定版式、数字随机）：复用共享 renderGrid 的单题卡片结构
@@ -145,6 +159,8 @@
           },
           check: function (userAnswers, idx) { return checkMakeTenQuestion(this, userAnswers, idx); }
         };
+        if (diffStamp != null) q.difficulty = diffStamp;
+        return q;
       });
       return {
         questions: questions,

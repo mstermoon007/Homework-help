@@ -82,7 +82,7 @@
     function row(r) {
       return rows[r].split('').map(function (ch, ci) {
         var masked = cells.some(function (c) { return c.r === r && c.c === ci; });
-        return masked ? '<b style="color:#e05252;">□</b>' : ch;
+        return masked ? '<b style="color:var(--bad);">□</b>' : ch;
       }).join('');
     }
     return '<div style="font-family:Menlo,Consolas,monospace;font-size:17px;font-weight:800;color:var(--ink);line-height:1.8;">' +
@@ -272,14 +272,14 @@
         html += '<div style="display:flex;">';
         for (var cc2 = 0; cc2 < N; cc2++) {
           var p2 = rr * N + cc2;
-          html += '<span style="width:42px;height:38px;border:1px solid #d5dde9;display:flex;align-items:center;justify-content:center;font-family:Menlo,monospace;font-size:15px;font-weight:800;color:var(--ink);">' +
-            (used[p2] ? '<b style="color:#e05252;">□</b>' : flat[p2]) + '</span>';
+          html += '<span style="width:42px;height:38px;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:Menlo,monospace;font-size:15px;font-weight:800;color:var(--ink);">' +
+            (used[p2] ? '<b style="color:var(--bad);">□</b>' : flat[p2]) + '</span>';
         }
         html += '</div>';
       }
       return fillQ({
         type: 'magic-adv', text:
-          '<div style="font-size:13px;color:#3f4c63;margin-bottom:4px;">四阶幻方（1~16），每行、每列、每条对角线之和均为 34：</div>' +
+          '<div style="font-size:13px;color:var(--ink);margin-bottom:4px;">四阶幻方（1~16），每行、每列、每条对角线之和均为 34：</div>' +
           '<div style="display:inline-block;border:2px solid var(--ink);margin-top:2px;">' + html + '</div>' +
           '<div style="font-size:12px;color:var(--muted);margin-top:4px;">□ 处的数字按从上到下、从左到右的顺序填写。</div>',
         raw: true,

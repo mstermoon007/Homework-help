@@ -71,9 +71,9 @@
       var self = this;
       exerciseSet.questions.forEach(function(q, idx) {
         html +=
-          '<div class="question-card letter-card" data-index="' + idx + '" style="border:2px solid #4CAF50;border-radius:12px;padding:15px;text-align:center;background:#fff;">' +
-          '<div class="big-letter" style="font-size:3em;font-weight:bold;color:#333;">' + q.letter + '</div>' +
-          '<div style="color:#666;font-size:0.9em;">' + q.sound + '</div>' +
+          '<div class="question-card letter-card" data-index="' + idx + '" style="border:2px solid #4CAF50;border-radius:12px;padding:15px;text-align:center;background:var(--card);">' +
+          '<div class="big-letter" style="font-size:3em;font-weight:bold;color:var(--ink);">' + q.letter + '</div>' +
+          '<div style="color:var(--muted);font-size:0.9em;">' + q.sound + '</div>' +
           '<div style="margin:8px 0;">例词: <strong>' + q.example + '</strong></div>' +
           '<button class="play-btn" data-letter="' + q.letter + '" data-example="' + q.example + '" onclick="window.__currentPlugin.__play(this)" style="padding:5px 10px;cursor:pointer;border:none;border-radius:8px;background:#4CAF50;color:#fff;">🔊 发音</button>' +
           '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:6px;"></div>' +
