@@ -18,6 +18,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-logic-reasoning.js 依赖 shared/common.js（PluginUtil），请先加载');
+  // 难度统一经 App.Difficulty.consume 解析（批次8）
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-logic-reasoning.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -136,7 +140,7 @@
   function renderLogicCard(p, i) {
     var mid = '';
     if (p.kind === 'bookGuess') {
-      mid = '<div style="background:#f8fafd;border-radius:10px;padding:8px 10px;margin:6px auto;max-width:260px;font-size:14px;color:#2b3a55;line-height:1.7;">' +
+      mid = '<div style="background:var(--soft-bg);border-radius:10px;padding:8px 10px;margin:6px auto;max-width:260px;font-size:14px;color:var(--ink);line-height:1.7;">' +
         '① ' + p.clue1 + '<br>② ' + p.clue2 + '</div>';
     } else {
       mid = '<div style="margin:4px 0;">' + p.svg + '</div>';
@@ -145,14 +149,14 @@
     var optsHTML = '';
     p.options.forEach(function (o) {
       optsHTML += '<button type="button" class="opt-btn" data-val="' + o + '" onclick="window.__currentPlugin.__choose(this)" ' +
-        'style="cursor:pointer;border:1.5px solid #d5dff0;background:#fafbff;color:#2b3a55;border-radius:9px;padding:6px 14px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
+        'style="cursor:pointer;border:1.5px solid var(--line-strong);background:var(--soft-bg);color:var(--ink);border-radius:9px;padding:6px 14px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
     });
 
     var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         hintHTML +
       '</div>' +
@@ -196,22 +200,33 @@
 
     generate: function (options) {
       var opts = options || {};
-      _DIFF = _PU.diffLevel(opts.difficulty);
+      // 难度统一经 App.Difficulty.consume 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
+      var prof = _D.consume(opts);
+      _DIFF = prof.effectiveLevel;
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 子题型 → 知识点（供 Adaptive v2 KP 级统计）
+      var KP_BY_KIND = {
+        bookGuess: 'g2-m10-logic-reasoning',
+        sudoku3: 'g2-m10-sudoku3'
+      };
       var type = opts.type || 'mix';
       var count = opts.count || 8;
       var list = generateProblems(type, count);
       var typeNames = { mix: '混合练习', bookGuess: '简单推理', sudoku3: '3×3 数独' };
       var label = typeNames[type] || '数学广角';
       var questions = list.map(function (p) {
-        return {
+        var q = {
           type: 'logic-reasoning',
           kind: p.kind,
           data: p,
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
+          knowledgePointId: KP_BY_KIND[p.kind],
           hint: p.hint,
           render: function (idx, ctx) { return renderLogicCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkLogicQuestion(this, userAnswers, idx); }
         };
+        if (diffStamp != null) q.difficulty = diffStamp;
+        return q;
       });
       return {
         questions: questions,

@@ -10,6 +10,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU || !_PU.createPlugin) throw new Error('plugins/math-patterns.js 依赖 shared/common.js（PluginUtil.createPlugin），请先加载');
+  // 难度统一经 App.Difficulty.consume 解析（批次7）
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-patterns.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -85,28 +89,28 @@
     if (p.kind === 'number') {
       var numHTML = p.seq.map(function (v, j) {
         return '<span style="font-size:20px;font-weight:800;color:var(--ink);">' + v + '</span>' +
-          (j < p.seq.length - 1 ? '<span style="color:#c3ccd8;margin:0 4px;">、</span>' : '');
+          (j < p.seq.length - 1 ? '<span style="color:var(--muted);margin:0 4px;">、</span>' : '');
       }).join('');
-      numHTML += '<span style="color:#c3ccd8;margin:0 4px;">、</span>';
+      numHTML += '<span style="color:var(--muted);margin:0 4px;">、</span>';
       mid = '<div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin:8px 0;">' + numHTML +
-        '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" style="width:52px;height:32px;border:2px dashed #ccc;border-radius:7px;font-size:16px;font-weight:800;text-align:center;color:var(--brand-d);background:#fafafa;outline:none;">' +
+        '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" style="width:52px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:16px;font-weight:800;text-align:center;color:var(--brand-d);background:var(--soft-bg);outline:none;">' +
         '</div>';
     } else {
       var shapeHTML = p.seq.map(function (k) { return '<span style="display:inline-block;">' + SHAPES[k]() + '</span>'; }).join('');
       var optHTML = '';
       p.options.forEach(function (o) {
         optHTML += '<button type="button" class="opt-btn" data-val="' + o + '" onclick="window.__currentPlugin.__choose(this)" ' +
-          'style="cursor:pointer;border:1.5px solid #d5dff0;background:#fafbff;color:#2b3a55;border-radius:9px;padding:4px 10px;margin:3px;transition:.15s;">' + SHAPES[o]() + '</button>';
+          'style="cursor:pointer;border:1.5px solid var(--line-strong);background:var(--soft-bg);color:var(--ink);border-radius:9px;padding:4px 10px;margin:3px;transition:.15s;">' + SHAPES[o]() + '</button>';
       });
       mid = '<div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;margin:8px 0;">' + shapeHTML +
-        '<span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:30px;border:2px dashed #ccc;border-radius:8px;background:#fafafa;margin:0 2px;">?</span>' +
+        '<span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:30px;border:2px dashed var(--line-strong);border-radius:8px;background:var(--soft-bg);margin:0 2px;">?</span>' +
         '</div>' +
         '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">' + optHTML + '</div>' +
         '<input type="hidden" class="choice-inp" data-index="' + i + '" autocomplete="off">';
     }
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         '<span class="q-text" style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 6px;">' + p.question + '</span>' +
       '</div>' +
@@ -148,22 +152,28 @@
 
     generateQuestions: function (options) {
       var opts = options || {};
-      var diff = _PU.diffLevel(opts.difficulty);
+      // 难度统一经 App.Difficulty.consume 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
+      var prof = _D.consume(opts);
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      var diff = prof.effectiveLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 8;
       var list = generateProblems(type, count, diff);
       var typeNames = { mix: '混合练习', number: '数字规律', shape: '图形规律' };
       var label = typeNames[type] || '混合';
       var questions = list.map(function (p) {
-        return {
+        var q = {
           type: 'patterns',
           kind: p.kind,
           data: p,
           answer: String(p.answer),
+          knowledgePointId: 'g1-m4-patterns',
           hint: p.kind === 'number' ? '先找相邻两个数相差几，再看下一个数。' : '图形是按照一定顺序重复出现的，先找出循环的一组。',
           render: function (idx) { return renderCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
         };
+        if (diffStamp != null) q.difficulty = diffStamp;
+        return q;
       });
       // 通过 meta 把题型标题带出去（工厂默认 meta 仅含 grade/count）
       plugin._lastLabel = label;

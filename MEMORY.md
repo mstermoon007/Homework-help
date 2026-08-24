@@ -48,6 +48,19 @@ g{grade}-{moduleIdLower}-{baseSlug}
 - 旧式四/六年级竞赛插件收缩到四年级（grades:[4]）；仅服务六年级的
   c6-engineering、c7-fraction 已归档 `archive/superseded-plugins/`。
 
+## CSS 令牌迁移（2026-08-24 完成）
+
+- 页面层与插件层内联样式主题色已全部迁移 tokens.css 变量（批次1/2 + 2026-08-24 批次3，
+  共替换约 340 处）。
+- 新增令牌：`--brand-bg`(#eef3fb 题号徽章浅底) / `--soft-bg`(#fafbff 输入框近白软底，
+  吸收 fafafa/f8fafd) / `--line-strong`(#c9d4e6 可交互边框，吸收 ccc/d5dff0/d5dde9/c3ccd8-border)。
+- 属性感知映射：同色值按属性分流（#c3ccd8 color→muted / border→line-strong；
+  #fff 仅 background→card，color:#fff 白字保留字面量）。
+- **保留字面量豁免清单**（内容插画/科目装饰色，非主题角色）：拼音红粉 #f5576c、
+  楷体绿 #10ac84、钱币金 #b8860b/#fdf3e3、数独空格底 #fffbe8、占位强调橙 #e8870a、
+  划去标记红 #e74c3c、英语字母卡绿 #4caf50、米黄底 #fffdf6/#fef0e8 及 SVG 表现属性
+  （fill=/stroke= 与纯 fill/stroke 内联样式）。新增装饰色请沿用此豁免口径。
+
 ## SVG 生成器约定（详见 CONTRIBUTING.md「三点六·4」）
 
 - 插件内禁止手写 `<svg>` 拼接，统一走 `SVGUtil/SVGGeometry/SVGCalculation/SVGMakeTen`；
@@ -69,7 +82,20 @@ g{grade}-{moduleIdLower}-{baseSlug}
   practice.html 批改后走 `recordSession(questions, flags)`（插件级加权摘要 + KP 分组）。
 - **综合练习**：kb 组卷按 KP 统计薄弱加权（<0.7 ×1.5）、极薄弱（<0.5）降档、
   薄弱前置注入 2 题/上限 ⌈count×30%⌉（`__prereqFor` 标记）。
-- 相关测试：`dev/test-difficulty.js`（含步骤6回归块）、`dev/test-difficulty-structure.js`、
+- **步骤7（2026-08-24）批次迁移 + KP 标注扩量**：
+  - 一~三年级基础插件全部迁移 `App.Difficulty.consume`（pattern/make-ten/picture-eq/
+    number-sense/money/statistics/area/decimal/fraction/geometry/shapes/unit-convert/
+    data-stats/logic-reasoning，共 14 个），统一 `_DIFF = prof.effectiveLevel` 保持内部
+    读法不变；题目标注 `q.difficulty`。
+  - KP 标注扩量至上述插件：子题型→知识点映射表（按年级区分），仅标注本插件在
+    knowledge-bank 中登记的 KP；无对应 KP 的组合不标注（保持纯插件级统计）。
+  - math-word-problems 为自带 level 分档插件，按规范跳过通用消费，仅补 KP 标注
+    （模板 `_resolveTemplate` 回传 `cat` 供分桶映射）。
+  - 迁移插件合计 18 个（含步骤4 的 4 个）；竞赛类插件保留自身难度基线，未迁移。
+  - `dev/test-difficulty.js` 增步骤7回归块（批次插件的难度透传/KP 合法性断言 +
+    word-problems 分档语义）；修复 dedupe 键漏 `q.q` 字段导致的重复误报
+    （g6-matching/g5-oral 曾被误判），均值断言大样本化抗抖动；sw.js 升 v63。
+- 相关测试：`dev/test-difficulty.js`（含步骤6/7回归块）、`dev/test-difficulty-structure.js`、
   `dev/test-adaptive.js`、`dev/test-adaptive-e2e.js`、`dev/test-comprehensive-adaptive.js`。
 
 ## 常用命令

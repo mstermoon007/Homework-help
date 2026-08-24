@@ -19,6 +19,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-money.js 依赖 shared/common.js（PluginUtil），请先加载');
+  // 难度统一经 App.Difficulty.consume 解析（批次7）
+  var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
+    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
+  if (!_D || !_D.consume) throw new Error('plugins/math-money.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -196,7 +200,7 @@
 
     var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid #f0e3c0;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(120,90,20,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid #f0e3c0;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(120,90,20,.08);">' +
       qHeader + hintHTML + inputHTML +
       '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
       '</div>';
@@ -235,22 +239,28 @@
 
     generate: function (options) {
       var opts = options || {};
-      _DIFF = _PU.diffLevel(opts.difficulty);
+      // 难度统一经 App.Difficulty.consume 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
+      var prof = _D.consume(opts);
+      _DIFF = prof.effectiveLevel;
+      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 8;
       var list = generateProblems(type, count);
       var typeNames = { mix: '混合练习', recognize: '认识面值', convert: '单位换算', calc: '简单计算' };
       var label = typeNames[type] || '混合';
       var questions = list.map(function (p) {
-        return {
+        var q = {
           type: 'money',
           kind: p.kind,
           data: p,
           answer: String(p.answer),
+          knowledgePointId: 'g1-m4-money',
           hint: p.hint,
           render: function (idx, ctx) { return renderCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
         };
+        if (diffStamp != null) q.difficulty = diffStamp;
+        return q;
       });
       return {
         questions: questions,

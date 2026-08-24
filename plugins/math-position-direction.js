@@ -33,13 +33,13 @@
   function relSVG(center, items) {
     // items: { n: 北边物体, s: 南边, w: 西边, e: 东边 }
     function cell(x, y, name, color) {
-      return '<div style="width:56px;height:40px;border:1.5px solid #c9d4e6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:' + color + ';background:#fafbff;">' + name + '</div>';
+      return '<div style="width:56px;height:40px;border:1.5px solid var(--line-strong);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:' + color + ';background:var(--soft-bg);">' + name + '</div>';
     }
     return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;">' +
       '<div>' + cell(60, 0, items.n, '#e8870a') + '</div>' +
       '<div style="display:flex;align-items:center;gap:10px;">' +
       '<div>' + cell(0, 60, items.w, '#e8870a') + '</div>' +
-      '<div style="width:60px;height:46px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:var(--ink);border:2px solid var(--brand);border-radius:10px;background:#eef3fb;">' + center + '</div>' +
+      '<div style="width:60px;height:46px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:var(--ink);border:2px solid var(--brand);border-radius:10px;background:var(--brand-bg);">' + center + '</div>' +
       '<div>' + cell(120, 60, items.e, '#e8870a') + '</div>' +
       '</div>' +
       '<div>' + cell(60, 120, items.s, '#e8870a') + '</div>' +
@@ -134,14 +134,14 @@
     var optsHTML = '';
     p.options.forEach(function (o) {
       optsHTML += '<button type="button" class="opt-btn" data-val="' + o + '" onclick="window.__currentPlugin.__choose(this)" ' +
-        'style="cursor:pointer;border:1.5px solid #d5dff0;background:#fafbff;color:#2b3a55;border-radius:9px;padding:6px 14px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
+        'style="cursor:pointer;border:1.5px solid var(--line-strong);background:var(--soft-bg);color:var(--ink);border-radius:9px;padding:6px 14px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
     });
 
     var mid = p.svg ? '<div class="q-shape" style="margin:4px auto 6px;">' + p.svg + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:#fff;box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
       '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#eef3fb;color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         mid +
       '</div>' +

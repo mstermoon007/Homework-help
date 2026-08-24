@@ -105,7 +105,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 ### 3.5 样式与设计令牌
 
 所有颜色、圆角、阴影、渐变必须使用 `shared/tokens.css` 中定义的 CSS 变量（单一来源：
-`--brand/--brand-d/--ink/--muted/--line/--card/--bg/--ok/--bad/--warn/--math/--chinese/--english/…
+`--brand/--brand-d/--brand-bg/--ink/--muted/--line/--line-strong/--card/--bg/--soft-bg/
+--ok/--bad/--warn/--math/--chinese/--english/…
 及对应浅底 `--*-bg`、`--radius-card`、`--grad-*`），修改令牌即全局生效：
 
 - 插件渲染题目优先用 `PluginUtil.renderCard()` / 类名（样式集中在 shared/components.css），
@@ -136,6 +137,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 5. 结构分档参考：1–2 单步；3–4 两步连加连减；5–6 三步含括号乘除；
    7–8 四步符号交替；9–10 五步多层括号（详见 `App.Difficulty.TIERS`，
    断言见 `dev/test-difficulty-structure.js`）。
+6. **迁移现状（步骤7，2026-08-24）**：一~三年级基础插件已全部走 `consume()`
+   并标注 `q.difficulty` 与 `knowledgePointId`（子题型→知识点映射，仅标注本插件
+   在知识库登记的 KP）；自带 `level` 分档插件（如 math-word-problems）跳过通用
+   消费、仅补 KP 标注；竞赛类保留自身难度基线（6–10）。新增基础插件须遵循同一模式。
 
 ### 4. 注册与依赖
 
