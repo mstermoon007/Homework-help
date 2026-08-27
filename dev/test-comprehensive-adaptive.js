@@ -35,11 +35,14 @@ function ok(cond, msg) {
 // 工具：在真实知识库中找某插件在六年级的一个知识点 ID
 function firstKpOf(pluginId, grade) {
   var hit = null;
-  KB.forEach(function (entry) {
-    if (entry.grade !== grade) return;
-    (entry.modules || []).forEach(function (mod) {
-      (mod.knowledgePoints || []).forEach(function (kp) {
-        if (!hit && kp.pluginId === pluginId) hit = kp.id;
+  Object.keys(KB).forEach(function (subject) {
+    if (!Array.isArray(KB[subject])) return;
+    KB[subject].forEach(function (entry) {
+      if (entry.grade !== grade) return;
+      (entry.modules || []).forEach(function (mod) {
+        (mod.knowledgePoints || []).forEach(function (kp) {
+          if (!hit && kp.pluginId === pluginId) hit = kp.id;
+        });
       });
     });
   });
@@ -89,8 +92,8 @@ console.log('\n===== kbEntryPlan：薄弱加权与降档标记 =====');
 // ============ 2. 端到端：降档 + 前置注入 + 全卷标注 ============
 console.log('\n===== 端到端生成（grade 6 · kb 模式 · difficulty 5） =====');
 (function () {
-  var TARGET = 'g6-c9-inclusion-exclusion';      // 六年级 C9 容斥（pluginId=g5-c9）
-  var PREREQ = 'g5-c9-inclusion-exclusion';      // 其前置（五年级容斥）
+  var TARGET = 'math-g6-c9-inclusion-exclusion';      // 六年级 C9 容斥（pluginId=g5-c9）
+  var PREREQ = 'math-g5-c9-inclusion-exclusion';      // 其前置（五年级容斥）
   // 双双置为薄弱
   A.record('math', 6, 'math-competition-g5-c9', 4, 10, { knowledgePointId: TARGET }); // 目标 rate=0.4 <0.5
   A.record('math', 5, 'math-competition-g5-c9', 4, 10, { knowledgePointId: PREREQ }); // 前置 rate=0.4 <0.7

@@ -56,7 +56,7 @@ console.log('\n===== A. 竞赛插件端到端（math-competition-g6-c2） ====='
   ok(raw[pluginKey].sessions[0].wAll > 0 && raw[pluginKey].sessions[0].wOk > 0,
     '插件级含难度加权字段（wOk/wAll）');
 
-  var kpKeys = Object.keys(raw).filter(function (k) { return k.indexOf(pluginKey + ':g6-c2-') === 0; });
+  var kpKeys = Object.keys(raw).filter(function (k) { return k.indexOf(pluginKey + ':math-g6-c2-') === 0; });
   ok(kpKeys.length >= 4 && kpKeys.length <= 11, '存在知识点级条目（' + kpKeys.length + ' 个 KP 桶）');
   var kpTotal = kpKeys.reduce(function (s, k) { return s + raw[k].sessions[0].t; }, 0);
   ok(kpTotal === 20, 'KP 桶题数之和 = 20（分组无遗漏无重复）');

@@ -112,10 +112,10 @@ console.log('\n===== 知识点粒度门控 =====');
   var raw1 = JSON.parse(global.localStorage.getItem('hw_adaptive_v2'));
   ok(!!raw1['math:6:math-g6-calc:g6-m1-x'], '普通插件提供 kpid 时 KP 桶正常建立');
   // 竞赛插件：kpid 生效，且与插件级摘要互不干扰
-  A.record('math', 6, 'math-competition-g6-c2', 19, 20, { knowledgePointId: 'g6-c2-divisibility' });
+  A.record('math', 6, 'math-competition-g6-c2', 19, 20, { knowledgePointId: 'math-g6-c2-divisibility' });
   var raw2 = JSON.parse(global.localStorage.getItem('hw_adaptive_v2'));
-  ok(!!raw2['math:6:math-competition-g6-c2:g6-c2-divisibility'], '竞赛插件的 KP 级键已建立');
-  var kpAdj = A.computeAdjustment('math', 6, 'math-competition-g6-c2', 'g6-c2-divisibility');
+  ok(!!raw2['math:6:math-competition-g6-c2:math-g6-c2-divisibility'], '竞赛插件的 KP 级键已建立');
+  var kpAdj = A.computeAdjustment('math', 6, 'math-competition-g6-c2', 'math-g6-c2-divisibility');
   ok(kpAdj.sessions === 1 && approx(kpAdj.emaRate, 0.95), 'KP 级独立统计可查（ema=0.95）');
   var plugAdj = A.computeAdjustment('math', 6, 'math-competition-g6-c2');
   ok(plugAdj.sessions === 0, '未传 kpid 时插件级摘要不受 KP 记录污染（会话数 0）');
@@ -124,17 +124,17 @@ console.log('\n===== 知识点粒度门控 =====');
 // ============ 6. getPrerequisiteStatus（真实知识库链路） ============
 console.log('\n===== getPrerequisiteStatus =====');
 (function () {
-  var st0 = A.getPrerequisiteStatus('g6-c9-inclusion-exclusion');
-  ok(st0 !== null && st0.items.length === 1 && st0.items[0].id === 'g5-c9-inclusion-exclusion',
+  var st0 = A.getPrerequisiteStatus('math-g6-c9-inclusion-exclusion');
+  ok(st0 !== null && st0.items.length === 1 && st0.items[0].id === 'math-g5-c9-inclusion-exclusion',
     '定位到唯一前置 g5-c9-inclusion-exclusion');
   ok(st0.ready === false, '无练习数据时 ready=false');
   // 为前置灌入高正确率历史
   A.record('math', 5, 'math-competition-g5-c9', 19, 20);
-  var st1 = A.getPrerequisiteStatus('g6-c9-inclusion-exclusion');
+  var st1 = A.getPrerequisiteStatus('math-g6-c9-inclusion-exclusion');
   ok(st1.items[0].sessions === 1 && approx(st1.items[0].rate, 0.95),
     '前置历史正确率 0.95');
   ok(st1.ready === true, '前置达标（≥0.7）→ ready=true');
-  var none = A.getPrerequisiteStatus('g1-m0-make-ten');
+  var none = A.getPrerequisiteStatus('math-g1-m0-make-ten');
   ok(none !== null && none.ready === null && none.items.length === 0,
     '无前置知识点 → ready=null');
 })();
