@@ -293,7 +293,7 @@
     grades: [6],
     moduleId: 'C8',
     knowledgePoints: {
-      6: ['g6-c8-optimization', 'g6-c8-winning-strategy', 'g6-c8-extremum-problem', 'g6-c8-logic-inference']
+      6: ['math-g6-c8-optimization', 'math-g6-c8-winning-strategy', 'math-g6-c8-extremum-problem', 'math-g6-c8-logic-inference']
     },
     columns: 1,
     settings: [

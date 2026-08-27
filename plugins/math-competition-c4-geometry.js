@@ -226,12 +226,12 @@
     moduleIds: ['C4'],
     knowledgePoints: {
       4: [
-          'g4-c4-c4-pa',
-          'g4-c4-c4-cutfill',
-          'g4-c4-c4-angle',
-          'g4-c4-c4-count',
-          'g4-c4-c4-transform',
-          'g4-c4-c4-solid'
+          'math-g4-c4-c4-pa',
+          'math-g4-c4-c4-cutfill',
+          'math-g4-c4-c4-angle',
+          'math-g4-c4-c4-count',
+          'math-g4-c4-c4-transform',
+          'math-g4-c4-c4-solid'
       ]
     },
     columns: 2,

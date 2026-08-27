@@ -267,7 +267,7 @@
     grades: [6],
     moduleId: 'C9',
     knowledgePoints: {
-      6: ['g6-c9-ratio-application', 'g6-c9-mixture-problem', 'g6-c9-grass-problem']
+      6: ['math-g6-c9-ratio-application', 'math-g6-c9-mixture-problem', 'math-g6-c9-grass-problem']
     },
     columns: 2,
     settings: [

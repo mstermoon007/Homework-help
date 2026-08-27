@@ -421,9 +421,9 @@
     return fillQ({
       type: 'gcd-lcm',
       text: '一张长 ' + L + ' 厘米、宽 ' + W + ' 厘米的长方形纸，要剪成同样大小的正方形小纸片且没有剩余，小纸片的边长最大是 ____ 厘米。',
-      answer: [g2],
-      hint: '最大边长 = 长、宽的最大公因数：(' + L + ', ' + W + ') = ' + g2 + ' 厘米，可剪 ' +
-        (L / g2) + '×' + (W / g2) + ' 张'
+      answer: [gcd(L, W)],
+      hint: '最大边长 = 长、宽的最大公因数：(' + L + ', ' + W + ') = ' + gcd(L, W) + ' 厘米，可剪 ' +
+        (L / gcd(L, W)) + '×' + (W / gcd(L, W)) + ' 张'
     });
   }
 
@@ -446,12 +446,13 @@
       var aa = _PU.randInt(3, 9), bb;
       do { bb = _PU.randInt(1, aa - 1); } while (aa - bb < 1);
       var S = 11 * (aa + bb);
+      var D = aa - bb;
       return fillQ({
         type: 'place',
-        text: '一个两位数与其反序数（数字交换后的数）相加，和是 ' + S + '；又知道它的十位数字比个位数字大。原来的两位数是 ____。',
+        text: '一个两位数与其反序数（数字交换后的数）相加，和是 ' + S + '；又知道它的十位数字比个位数字大 ' + D + '。原来的两位数是 ____。',
         answer: [aa * 10 + bb],
-        hint: '两数之和 = 11×数字和 → 数字和 = ' + (S / 11) + '；十位大于个位，只能拆成 ' + aa + '+' + bb +
-          ' → 原数为 ' + (aa * 10 + bb)
+        hint: '两数之和 = 11×数字和 → 数字和 = ' + (S / 11) + '；十位比个位大 ' + D +
+          ' → 十位 = (' + (S / 11) + '+' + D + ')/2 = ' + aa + '，个位 = ' + bb + ' → 原数为 ' + (aa * 10 + bb)
       });
     }
     var h = _PU.randInt(1, 9), t = _PU.randInt(0, 9), u = _PU.randInt(0, 9);
@@ -532,17 +533,17 @@
     };
     // type → 知识点 ID（与知识库/声明一致），供自适应难度做知识点粒度统计
     var TYPE_TO_KP = {
-      remainder: 'g6-c2-remainder-congruence',
-      modulo: 'g6-c2-modulo-arithmetic',
-      diophantine: 'g6-c2-diophantine-equation',
-      'perfect-square': 'g6-c2-perfect-square',
-      divisibility: 'g6-c2-divisibility',
-      parity: 'g6-c2-parity-analysis',
-      'prime-factor': 'g6-c2-prime-factorization',
-      'factor-count': 'g6-c2-factor-count-sum',
-      'gcd-lcm': 'g6-c2-gcd-lcm',
-      place: 'g6-c2-place-value',
-      'nt-extreme': 'g6-c2-number-theory-extreme'
+      remainder: 'math-g6-c2-remainder-congruence',
+      modulo: 'math-g6-c2-modulo-arithmetic',
+      diophantine: 'math-g6-c2-diophantine-equation',
+      'perfect-square': 'math-g6-c2-perfect-square',
+      divisibility: 'math-g6-c2-divisibility',
+      parity: 'math-g6-c2-parity-analysis',
+      'prime-factor': 'math-g6-c2-prime-factorization',
+      'factor-count': 'math-g6-c2-factor-count-sum',
+      'gcd-lcm': 'math-g6-c2-gcd-lcm',
+      place: 'math-g6-c2-place-value',
+      'nt-extreme': 'math-g6-c2-number-theory-extreme'
     };
     var questions = [], seen = {}, MAXTRY = count * 80;
     for (var i = 0; i < count; i++) {
@@ -570,9 +571,9 @@
     grades: [6],
     moduleId: 'C2',
     knowledgePoints: {
-      6: ['g6-c2-remainder-congruence', 'g6-c2-modulo-arithmetic', 'g6-c2-diophantine-equation', 'g6-c2-perfect-square',
-        'g6-c2-divisibility', 'g6-c2-parity-analysis', 'g6-c2-prime-factorization', 'g6-c2-factor-count-sum',
-        'g6-c2-gcd-lcm', 'g6-c2-place-value', 'g6-c2-number-theory-extreme']
+      6: ['math-g6-c2-remainder-congruence', 'math-g6-c2-modulo-arithmetic', 'math-g6-c2-diophantine-equation', 'math-g6-c2-perfect-square',
+        'math-g6-c2-divisibility', 'math-g6-c2-parity-analysis', 'math-g6-c2-prime-factorization', 'math-g6-c2-factor-count-sum',
+        'math-g6-c2-gcd-lcm', 'math-g6-c2-place-value', 'math-g6-c2-number-theory-extreme']
     },
     columns: 2,
     settings: [

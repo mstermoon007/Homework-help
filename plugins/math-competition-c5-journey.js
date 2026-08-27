@@ -247,7 +247,7 @@
     grades: [4],
     moduleIds: ['C5'],
     knowledgePoints: {
-      4: ['g4-c5-c5-basic', 'g4-c5-c5-meet', 'g4-c5-c5-chase', 'g4-c5-c5-train', 'g4-c5-c5-river']
+      4: ['math-g4-c5-c5-basic', 'math-g4-c5-c5-meet', 'math-g4-c5-c5-chase', 'math-g4-c5-c5-train', 'math-g4-c5-c5-river']
     },
     columns: 2,
     settings: [

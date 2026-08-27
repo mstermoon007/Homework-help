@@ -318,7 +318,7 @@
     grades: [5],
     moduleId: 'C8',
     knowledgePoints: {
-      5: ['g5-c8-extremum-problem', 'g5-c8-logic-inference', 'g5-c8-winning-strategy']
+      5: ['math-g5-c8-extremum-problem', 'math-g5-c8-logic-inference', 'math-g5-c8-winning-strategy']
     },
     columns: 1,
     settings: [

@@ -225,12 +225,12 @@
 
     knowledgePoints: {
       4: [
-          'g4-c2-c2-parity',
-          'g4-c2-c2-divisible',
-          'g4-c2-c2-prime',
-          'g4-c2-c2-factor',
-          'g4-c2-c2-remainder',
-          'g4-c2-c2-place'
+          'math-g4-c2-c2-parity',
+          'math-g4-c2-c2-divisible',
+          'math-g4-c2-c2-prime',
+          'math-g4-c2-c2-factor',
+          'math-g4-c2-c2-remainder',
+          'math-g4-c2-c2-place'
       ]
     },
 

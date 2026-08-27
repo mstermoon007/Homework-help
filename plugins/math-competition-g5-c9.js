@@ -500,16 +500,16 @@
     grades: [5, 6],
     moduleId: 'C9',
     knowledgePoints: {
-      6: ['g6-c9-sum-diff-problem','g6-c9-age-problem','g6-c9-profit-loss-problem',
-        'g6-c9-chicken-rabbit','g6-c9-average-problem','g6-c9-periodic-problem',
-        'g6-c9-grass-problem','g6-c9-economics-problem','g6-c9-inclusion-exclusion',
-        'g6-c9-equation-linear-1','g6-c9-equation-linear-2','g6-c9-fraction-percent-application',
-        'g6-c9-planting-problem','g6-c9-phalanx-problem'],
-      5: ['g5-c9-chicken-rabbit', 'g5-c9-profit-loss-problem', 'g5-c9-age-problem',
-          'g5-c9-average-problem', 'g5-c9-periodic-problem', 'g5-c9-sum-diff-problem',
-          'g5-c9-grass-problem', 'g5-c9-economics-problem', 'g5-c9-inclusion-exclusion',
-          'g5-c9-equation-linear-1', 'g5-c9-equation-linear-2', 'g5-c9-diophantine-equation',
-          'g5-c9-planting-problem', 'g5-c9-phalanx-problem', 'g5-c9-fraction-percent-application']
+      6: ['math-g6-c9-sum-diff-problem','math-g6-c9-age-problem','math-g6-c9-profit-loss-problem',
+        'math-g6-c9-chicken-rabbit','math-g6-c9-average-problem','math-g6-c9-periodic-problem',
+        'math-g6-c9-grass-problem','math-g6-c9-economics-problem','math-g6-c9-inclusion-exclusion',
+        'math-g6-c9-equation-linear-1','math-g6-c9-equation-linear-2','math-g6-c9-fraction-percent-application',
+        'math-g6-c9-planting-problem','math-g6-c9-phalanx-problem'],
+      5: ['math-g5-c9-chicken-rabbit', 'math-g5-c9-profit-loss-problem', 'math-g5-c9-age-problem',
+          'math-g5-c9-average-problem', 'math-g5-c9-periodic-problem', 'math-g5-c9-sum-diff-problem',
+          'math-g5-c9-grass-problem', 'math-g5-c9-economics-problem', 'math-g5-c9-inclusion-exclusion',
+          'math-g5-c9-equation-linear-1', 'math-g5-c9-equation-linear-2', 'math-g5-c9-diophantine-equation',
+          'math-g5-c9-planting-problem', 'math-g5-c9-phalanx-problem', 'math-g5-c9-fraction-percent-application']
     },
     columns: 2,
     settings: [

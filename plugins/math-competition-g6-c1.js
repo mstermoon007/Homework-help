@@ -446,9 +446,9 @@
     grades: [6],
     moduleId: 'C1',
     knowledgePoints: {
-      6: ['g6-c1-vertical-multidigit', 'g6-c1-vertical-carry-complex', 'g6-c1-horizontal-puzzle',
-        'g6-c1-symbol-number', 'g6-c1-magic-square-adv', 'g6-c1-number-array',
-        'g6-c1-digit-reasoning', 'g6-c1-number-puzzle-competition']
+      6: ['math-g6-c1-vertical-multidigit', 'math-g6-c1-vertical-carry-complex', 'math-g6-c1-horizontal-puzzle',
+        'math-g6-c1-symbol-number', 'math-g6-c1-magic-square-adv', 'math-g6-c1-number-array',
+        'math-g6-c1-digit-reasoning', 'math-g6-c1-number-puzzle-competition']
     },
     columns: 1,
     settings: [

@@ -271,9 +271,9 @@
     grades: [5],
     moduleId: 'C2',
     knowledgePoints: {
-      5: ['g5-c2-divisibility', 'g5-c2-gcd-lcm', 'g5-c2-prime-factorization',
-          'g5-c2-remainder-congruence', 'g5-c2-perfect-square', 'g5-c2-parity-analysis', 'g5-c2-factor-count-sum', 'g5-c2-place-value',
-        'g5-c2-number-theory-extreme', 'g5-c2-prime-composite']
+      5: ['math-g5-c2-divisibility', 'math-g5-c2-gcd-lcm', 'math-g5-c2-prime-factorization',
+          'math-g5-c2-remainder-congruence', 'math-g5-c2-perfect-square', 'math-g5-c2-parity-analysis', 'math-g5-c2-factor-count-sum', 'math-g5-c2-place-value',
+        'math-g5-c2-number-theory-extreme', 'math-g5-c2-prime-composite']
     },
     columns: 2,
     settings: [

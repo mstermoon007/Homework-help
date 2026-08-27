@@ -193,7 +193,7 @@
     grades: [5],
     moduleId: 'C6',
     knowledgePoints: {
-      5: ['g5-c6-work-problem', 'g5-c6-concentration-problem']
+      5: ['math-g5-c6-work-problem', 'math-g5-c6-concentration-problem']
     },
     columns: 1,
     settings: [

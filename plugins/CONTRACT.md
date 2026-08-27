@@ -290,3 +290,83 @@ const plugin = PluginUtil.createPlugin({
 global.__currentPlugin = plugin;
 if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 ```
+
+---
+
+## 八点五、N1 拼音 / N2 汉字模块（语文插件）
+
+### chinese-pinyin（N1 · 11 生成器）
+
+| 生成器 | 类型 | KP | 说明 |
+|---|---|---|---|
+| initials-pick | choice | pinyin-basic | 声母辨认 |
+| finals-pick | choice | pinyin-basic | 韵母辨认 |
+| whole-syllable-pick | choice | pinyin-basic | 整体认读音节辨认 |
+| tone-mark | choice | tone-marks | 标调位置选择（NFD 分解定位调号元音） |
+| judge-tone | 对/错 | tone-marks | 错位标调形式判断（misplacedVariant 换调/移位） |
+| fill-blank | text 双模式 | pinyin-to-char / basic | 看汉字写拼音 / 音节韵母补全 |
+| jqx-u | choice | syllable-spelling | j/q/x 与 ü 相拼省写规则 |
+| syllable-sort | choice | syllable-spelling | 双音节词排序 |
+| confusing-pick | choice | review / vowel-confusion | 易混音辨析（平翘舌/前后鼻音等，按 group 路由 KP） |
+| light-tone-judge | 对/错 | review | 轻声判断（叠词正例 + 组合反例） |
+| polyphone-note | choice | multi-pronunciation | 多音字语境注音 |
+
+### chinese-hanzi（N2 · 18 生成器）
+
+| 生成器 | 类型 | KP | 说明 |
+|---|---|---|---|
+| stroke-count | choice | stroke-order | 数笔画 |
+| stroke-name | choice | stroke-order | 第N笔笔画名称 |
+| stroke-order-sort | choice | stroke-order | 笔顺排序（正确+两种错序） |
+| stroke-order-which | choice | stroke-order | 某笔画名首次出现位置 |
+| radical-classify | choice | radical-grouping | 同部首归类 |
+| radical-meaning | choice | radical-grouping | 部首表义 |
+| phonetic-compound-judge | 对/错 | radical-grouping | 形声字形旁表意/声旁表音判断 |
+| structure-classify | choice | word-structure | 字形结构分类 |
+| context-meaning | choice | word-structure | 语境选字 |
+| write-from-pinyin | text | word-structure | 看拼音写汉字 |
+| homophone-pick | choice | homophone-chars | 同音字辨认 |
+| polyphone-pick | choice | homophone-chars | 多音字读音选择 |
+
+### 数据源
+
+| 库 | 全局 | 关键字段 |
+|---|---|---|
+| PinyinBank | PINYIN_BANK / PinyinBank | initials×23 / finals(4类) / wholeSyllables×16 / toneExamples×12 / jqxuWords×14 / lightToneWords×14 / confusingGroups×9 / polyphones×5 / syllables×240 |
+| HanziBank | HanziBank | characters×38(g1:21/g2:8/g3:9) / radicals×12 / polySemanticExamples / contextExamples / dictionaryRules / phoneticCompounds |
+
+
+## 九、科目化接口差异（任务10–13，2026-08-24）
+
+### 科目便捷工厂（推荐入口）
+
+| 工厂 | 预设 subject | 缺省批改（单输入题） | 网格/卡片类 | 难度消费 |
+| --- | --- | --- | --- | --- |
+| `PluginUtil.createMathPlugin(cfg)` | `'math'` | 数值比较（`'7'`≡7；非数值回退整串） | `math-grid` / `math-card` | math |
+| `PluginUtil.createChinesePlugin(cfg)` | `'chinese'` | 标准化比较（去空白、全角→半角、去尾部句读） | `cn-grid` / `cn-card` | cn |
+| `PluginUtil.createEnglishPlugin(cfg)` | `'english'` | 拼写比较（忽略大小写；`answer` 支持 `\|`、`/` 分隔多接受答案） | `en-grid` / `en-card` | en |
+
+- 工厂在调用 `generateQuestions(opts)` 前自动注入
+  **`opts.difficultyParams = App.Difficulty.paramsFor(难度科目, level)`**
+  （含 `level` 与科目映射参数：math 的 scale/steps/allowBracket…，cn 的 vocabTier/sentenceLength/charCountMax，
+  en 的 wordLengthMax/grammarTier/sentencePattern）。插件按需消费，未使用的键安全忽略。
+- 插件对象暴露 `plugin.cardClass / plugin.gridClass` 供页面与打印做科目差异化样式。
+- multi 输入或数组答案仍走通用 `defaultQCheck` 分字段判定；`check(userAnswers, idx)` 自定义优先级最高。
+
+### Question 可选字段（Adaptive v2 采集）
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `knowledgePointId?` | string | 科目前缀知识点 ID（如 `math-g1-m0-make-ten`）；practice.html 批改后经 `recordSession` 建 KP 级桶 |
+| `difficulty?` | number | 该题相对难度 1–10；缺省按标准档 3 计权 |
+
+### 难度消费的两种路径
+
+1. **工厂路径**（新插件）：什么都不写，`opts.difficultyParams` 已就位；
+2. **显式路径**（旧插件）：`App.Difficulty.consume(options)` → `profile.effectiveLevel/scale/structure`。
+   两路径可并存；自带 `level` 分档的插件按规范跳过通用难度叠加。
+
+### 科目工具归属
+
+拼音/汉字归一使用 `ChineseUtil.normPY/normHZ`（shared/subject-utils.js）；
+`PluginUtil.normPY/normHZ` 为 @deprecated 别名，保留至下一大版本。

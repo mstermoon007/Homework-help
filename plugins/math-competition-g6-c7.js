@@ -25,17 +25,17 @@
     };
   }
 
-  /** 难度 → 规模 */
+  /** 难度 → 规模（取值范围下探到 2，确保每档可产出 ≥25 道不重复题面） */
   function scale(lv) {
-    if (lv >= 8) return { sqMax: 25, cuMax: 14 };
-    if (lv >= 5) return { sqMax: 18, cuMax: 10 };
-    return { sqMax: 12, cuMax: 8 };
+    if (lv >= 8) return { sqMax: 40, cuMax: 16 };
+    if (lv >= 5) return { sqMax: 30, cuMax: 12 };
+    return { sqMax: 26, cuMax: 8 };
   }
 
   function genSequenceSum(sc) {
     var mode = _PU.randInt(0, 1);
     if (mode === 0) {
-      var n = _PU.randInt(8, sc.sqMax);
+      var n = _PU.randInt(2, sc.sqMax);
       var s2 = n * (n + 1) * (2 * n + 1) / 6;
       return fillQ({
         type: 'sequence-sum',
@@ -44,7 +44,7 @@
         hint: '平方和公式 S = n(n+1)(2n+1)÷6 = ' + n + '×' + (n + 1) + '×' + (2 * n + 1) + '÷6 = ' + s2
       });
     }
-    var m = _PU.randInt(4, sc.cuMax);
+    var m = _PU.randInt(2, sc.cuMax);
     var tri = m * (m + 1) / 2;
     var s3 = tri * tri;
     return fillQ({
@@ -80,7 +80,7 @@
     grades: [6],
     moduleId: 'C7',
     knowledgePoints: {
-      6: ['g6-c7-sequence-sum']
+      6: ['math-g6-c7-sequence-sum']
     },
     columns: 2,
     settings: [

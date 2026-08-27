@@ -406,11 +406,11 @@
     // 声明覆盖的知识点（须已在 shared/knowledge-bank.js 四年级 C1 下登记）
     knowledgePoints: {
       4: [
-          'g4-c1-c1-vertical',
-          'g4-c1-c1-horizontal',
-          'g4-c1-c1-symbol',
-          'g4-c1-c1-array',
-          'g4-c1-c1-magic'
+          'math-g4-c1-c1-vertical',
+          'math-g4-c1-c1-horizontal',
+          'math-g4-c1-c1-symbol',
+          'math-g4-c1-c1-array',
+          'math-g4-c1-c1-magic'
       ]
     },
 

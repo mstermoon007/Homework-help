@@ -201,11 +201,11 @@
     grades: [5, 6],
     moduleId: 'C7',
     knowledgePoints: {
-      6: ['g6-c7-extract-common-factor','g6-c7-rounding-calc','g6-c7-fraction-splitting','g6-c7-integer-splitting',
-        'g6-c7-arithmetic-series','g6-c7-recurring-decimal-frac','g6-c7-define-operation','g6-c7-compare-size',
-        'g6-c7-estimate-bounds','g6-c7-complex-fraction'],
-      5: ['g5-c7-fraction-splitting', 'g5-c7-integer-splitting', 'g5-c7-arithmetic-series',
-          'g5-c7-extract-common-factor', 'g5-c7-rounding-calc', 'g5-c7-compare-size']
+      6: ['math-g6-c7-extract-common-factor','math-g6-c7-rounding-calc','math-g6-c7-fraction-splitting','math-g6-c7-integer-splitting',
+        'math-g6-c7-arithmetic-series','math-g6-c7-recurring-decimal-frac','math-g6-c7-define-operation','math-g6-c7-compare-size',
+        'math-g6-c7-estimate-bounds','math-g6-c7-complex-fraction'],
+      5: ['math-g5-c7-fraction-splitting', 'math-g5-c7-integer-splitting', 'math-g5-c7-arithmetic-series',
+          'math-g5-c7-extract-common-factor', 'math-g5-c7-rounding-calc', 'math-g5-c7-compare-size']
     },
     columns: 2,
     settings: [

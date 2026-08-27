@@ -290,7 +290,7 @@
     grades: [6],
     moduleId: 'C4',
     knowledgePoints: {
-      6: ['g6-c4-circle-sector', 'g6-c4-solid-geometry', 'g6-c4-circle-angle', 'g6-c4-solid-rotation']
+      6: ['math-g6-c4-circle-sector', 'math-g6-c4-solid-geometry', 'math-g6-c4-circle-angle', 'math-g6-c4-solid-rotation']
     },
     columns: 2,
     settings: [

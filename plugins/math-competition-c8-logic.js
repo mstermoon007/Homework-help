@@ -189,7 +189,7 @@
     grades: [4],
     moduleIds: ['C8'],
     knowledgePoints: {
-      4: ['g4-c8-c8-extreme', 'g4-c8-c8-drawer', 'g4-c8-c8-logic']
+      4: ['math-g4-c8-c8-extreme', 'math-g4-c8-c8-drawer', 'math-g4-c8-c8-logic']
     },
     columns: 2,
     settings: [

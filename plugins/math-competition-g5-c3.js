@@ -226,8 +226,8 @@
     grades: [5],
     moduleId: 'C3',
     knowledgePoints: {
-      5: ['g5-c3-addition-principle', 'g5-c3-multiplication-principle', 'g5-c3-permutation',
-          'g5-c3-combination', 'g5-c3-enumeration-counting', 'g5-c3-pigeonhole-principle', 'g5-c3-bundling-method', 'g5-c3-insertion-method', 'g5-c3-stars-bars', 'g5-c3-worst-case-principle']
+      5: ['math-g5-c3-addition-principle', 'math-g5-c3-multiplication-principle', 'math-g5-c3-permutation',
+          'math-g5-c3-combination', 'math-g5-c3-enumeration-counting', 'math-g5-c3-pigeonhole-principle', 'math-g5-c3-bundling-method', 'math-g5-c3-insertion-method', 'math-g5-c3-stars-bars', 'math-g5-c3-worst-case-principle']
     },
     columns: 2,
     settings: [

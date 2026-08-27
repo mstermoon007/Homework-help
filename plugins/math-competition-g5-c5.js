@@ -170,8 +170,8 @@
     grades: [5],
     moduleId: 'C5',
     knowledgePoints: {
-      5: ['g5-c5-basic-motion', 'g5-c5-meet-problem', 'g5-c5-chase-problem',
-          'g5-c5-train-bridge', 'g5-c5-boat-stream', 'g5-c5-average-speed']
+      5: ['math-g5-c5-basic-motion', 'math-g5-c5-meet-problem', 'math-g5-c5-chase-problem',
+          'math-g5-c5-train-bridge', 'math-g5-c5-boat-stream', 'math-g5-c5-average-speed']
     },
     columns: 2,
     settings: [

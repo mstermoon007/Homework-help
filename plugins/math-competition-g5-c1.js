@@ -489,8 +489,8 @@
     grades: [5],
     moduleId: 'C1',
     knowledgePoints: {
-      5: ['g5-c1-digit-puzzle-vertical', 'g5-c1-digit-puzzle-horizontal', 'g5-c1-digit-puzzle-symbol',
-        'g5-c1-number-array-closed', 'g5-c1-number-array-radial', 'g5-c1-magic-square-3', 'g5-c1-magic-square-4']
+      5: ['math-g5-c1-digit-puzzle-vertical', 'math-g5-c1-digit-puzzle-horizontal', 'math-g5-c1-digit-puzzle-symbol',
+        'math-g5-c1-number-array-closed', 'math-g5-c1-number-array-radial', 'math-g5-c1-magic-square-3', 'math-g5-c1-magic-square-4']
     },
     columns: 1,
     settings: [

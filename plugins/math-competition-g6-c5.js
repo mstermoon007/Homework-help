@@ -328,15 +328,15 @@
     }
     return fillQ({
       type: 'competition',
-      text: '一辆汽车从甲地到乙地的速度是每小时 ' + vGo + ' 千米，从乙地原路返回的速度是每小时 ' + vBack +
-        ' 千米。往返共用 ____ 小时。',
+      text: '一辆汽车从甲地到乙地的速度是每小时 ' + vGo + ' 千米，从乙地原路返回甲地的速度是每小时 ' + vBack +
+        ' 千米。已知甲、乙两地相距 ' + D + ' 千米。往返共用 ____ 小时。',
       answer: [totalT],
       hint: '去程时间 = ' + D + '/' + vGo + ' = ' + tGo + 'h，回程时间 = ' + D + '/' + vBack + ' = ' + tBack + 'h，合计 ' + totalT + 'h'
     });
   }
 
   // ============ 发车间隔（保留） ============
-  var GAP_PAIRS = [[4, 12], [5, 20], [6, 12], [8, 24], [9, 18], [10, 15], [10, 40], [12, 24], [15, 30]];
+  var GAP_PAIRS = [[3, 6], [3, 15], [4, 12], [4, 28], [5, 20], [5, 45], [6, 12], [6, 18], [6, 30], [6, 66], [7, 42], [8, 24], [8, 56], [9, 18], [9, 45], [10, 15], [10, 30], [10, 40], [12, 20], [12, 24], [12, 36], [12, 60], [14, 35], [14, 42], [15, 30], [15, 35], [15, 60], [16, 48], [18, 36], [18, 54], [18, 63], [20, 30], [20, 60], [21, 28]];
   function gapT(x, y) { return 2 * x * y / (x + y); }
   function genInterval() {
     var pr = GAP_PAIRS[_PU.randInt(0, GAP_PAIRS.length - 1)];
@@ -351,7 +351,7 @@
   }
 
   // ============ 接送问题（保留） ============
-  var PICK_PAIRS = [[5, 15], [5, 20], [10, 15], [10, 30], [10, 40], [15, 45], [20, 30]];
+  var PICK_PAIRS = [[3, 1], [3, 2], [4, 1], [6, 2], [6, 4], [7, 3], [8, 2], [9, 1], [9, 3], [9, 6], [11, 9], [12, 3], [12, 4], [12, 8], [13, 7], [13, 12], [14, 6], [14, 11], [15, 5], [15, 10], [16, 4], [16, 9], [17, 3], [17, 8], [18, 2], [18, 6], [18, 7], [18, 12], [19, 1], [19, 6], [20, 5], [21, 4], [21, 7], [21, 9]];
   function genPickUp() {
     var pr = PICK_PAIRS[_PU.randInt(0, PICK_PAIRS.length - 1)];
     var pw = pr[0], pc = pr[1];
@@ -409,10 +409,10 @@
     grades: [6],
     moduleId: 'C5',
     knowledgePoints: {
-      6: ['g6-c5-basic', 'g6-c5-meet', 'g6-c5-chase', 'g6-c5-train-bridge',
-        'g6-c5-boat-stream', 'g6-c5-ring-runway', 'g6-c5-clock',
-        'g6-c5-journey-complex', 'g6-c5-competition',
-        'g6-c5-interval-departure', 'g6-c5-pick-up-problem']
+      6: ['math-g6-c5-basic', 'math-g6-c5-meet', 'math-g6-c5-chase', 'math-g6-c5-train-bridge',
+        'math-g6-c5-boat-stream', 'math-g6-c5-ring-runway', 'math-g6-c5-clock',
+        'math-g6-c5-journey-complex', 'math-g6-c5-competition',
+        'math-g6-c5-interval-departure', 'math-g6-c5-pick-up-problem']
     },
     columns: 1,
     settings: [

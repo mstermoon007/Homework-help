@@ -456,12 +456,12 @@
     grades: [5, 6],
     moduleId: 'C4',
     knowledgePoints: {
-      6: ['g6-c4-area-basic','g6-c4-equal-area-transform','g6-c4-bird-head-model','g6-c4-butterfly-model',
-        'g6-c4-swallow-tail-model','g6-c4-half-model','g6-c4-circle-sector','g6-c4-solid-geometry',
-        'g6-c4-painted-cube','g6-c4-pythagorean-theorem'],
-      5: ['g5-c4-bird-head-model', 'g5-c4-butterfly-model', 'g5-c4-swallow-tail-model', 'g5-c4-half-model',
-        'g5-c4-circle-sector', 'g5-c4-solid-geometry', 'g5-c4-painted-cube', 'g5-c4-pythagorean-theorem',
-        'g5-c4-lattice-area', 'g5-c4-angle-calculation']
+      6: ['math-g6-c4-area-basic','math-g6-c4-equal-area-transform','math-g6-c4-bird-head-model','math-g6-c4-butterfly-model',
+        'math-g6-c4-swallow-tail-model','math-g6-c4-half-model','math-g6-c4-circle-sector','math-g6-c4-solid-geometry',
+        'math-g6-c4-painted-cube','math-g6-c4-pythagorean-theorem'],
+      5: ['math-g5-c4-bird-head-model', 'math-g5-c4-butterfly-model', 'math-g5-c4-swallow-tail-model', 'math-g5-c4-half-model',
+        'math-g5-c4-circle-sector', 'math-g5-c4-solid-geometry', 'math-g5-c4-painted-cube', 'math-g5-c4-pythagorean-theorem',
+        'math-g5-c4-lattice-area', 'math-g5-c4-angle-calculation']
     },
     columns: 2,
     settings: [

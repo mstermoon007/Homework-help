@@ -106,15 +106,14 @@
       });
     }
     if (mode === 1) {
-      // 数字谜风格
+      // 数字谜风格：第二个加数完整给出 → 第一个加数 = 和 − 第二个加数，解唯一且与已给首位互验
       var x = _PU.randInt(10, 50), y = _PU.randInt(10, 50), sum = x + y;
       var maskedA = String(x).replace(/./g, function (_, i) { return i === 0 ? String(x)[0] : '□'; });
-      var maskedB = String(y).replace(/./g, function (_, i) { return i === 0 ? String(y)[0] : '□'; });
       return fillQ({
         type: 'mock',
-        text: '在竖式中填入合适的数字：' + maskedA + ' + ' + maskedB + ' = ' + sum + '。第一个加数是多少？',
+        text: '在竖式中填入合适的数字：' + maskedA + ' + ' + y + ' = ' + sum + '。第一个加数是多少？',
         answer: [x],
-        hint: '首位已给出，其余位由和的唯一性确定 → 加数为 ' + x
+        hint: '第一个加数 = ' + sum + ' − ' + y + ' = ' + x + '，且与给出的首位 ' + String(x)[0] + ' 吻合'
       });
     }
     // 找规律
@@ -157,7 +156,7 @@
     grades: [4],
     moduleId: 'C9',
     knowledgePoints: {
-      4: ['g4-c9-c9-integrated', 'g4-c9-c9-misc', 'g4-c9-c9-mock']
+      4: ['math-g4-c9-c9-integrated', 'math-g4-c9-c9-misc', 'math-g4-c9-c9-mock']
     },
     columns: 1,
     settings: [

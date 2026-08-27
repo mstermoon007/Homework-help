@@ -55,9 +55,9 @@
     if (mode === 0) {
       return fillQ({
         type: 'inclusion-exclusion',
-        text: head + '三个社都参加的有 ____ 人。',
+        text: head + '（其中 ' + none + ' 人三个社都没有参加）。三个社都参加的有 ____ 人。',
         answer: [tri],
-        hint: '|A∪B∪C| = ' + union + '（总数减去没参加的），代入三集合容斥公式反解：都参加 = |A∪B∪C| − (' + aAll +
+        hint: '|A∪B∪C| = ' + union + ' = ' + total + ' − ' + none + '（总数减去没参加的）；代入三集合容斥反解：都参加 = |A∪B∪C| − (' + aAll +
           '＋' + bAll + '＋' + cAll + ') ＋ (' + (pAB + tri) + '＋' + (pBC + tri) + '＋' + (pAC + tri) + ') = ' + tri
       });
     }
@@ -152,8 +152,8 @@
   }
 
   // ============ 3. 错排问题 ============
-  var DERANGEMENTS = { 3: 2, 4: 9, 5: 44, 6: 265 };
-  var FACTS = { 3: 6, 4: 24, 5: 120, 6: 720 };
+  var DERANGEMENTS = { 3: 2, 4: 9, 5: 44, 6: 265, 7: 1854, 8: 14833 };
+  var FACTS = { 3: 6, 4: 24, 5: 120, 6: 720, 7: 5040, 8: 40320 };
   var DER_STORIES = [
     function (n) { return n + ' 位同学互赠礼物，每人准备一份礼物随机分配（每人拿到一份），恰好每个人都拿到别人的礼物（没有人拿对自己的礼物）的分法有'; },
     function (n) { return n + ' 封信与 ' + n + ' 个信封编号一一对应，把信全部装错信封（没有一封装对）的装法有'; },
@@ -161,7 +161,7 @@
     function (n) { return '把 ' + n + ' 把钥匙与 ' + n + ' 把锁一一配对打乱后随机试开，全部配错的分配方式有'; }
   ];
   function genDerangement() {
-    var n = _PU.randInt(3, 6);
+    var n = _PU.randInt(3, 8);
     var story = DER_STORIES[_PU.randInt(0, DER_STORIES.length - 1)](n);
     if (_PU.randInt(0, 1) === 0) {
       return fillQ({
@@ -301,7 +301,7 @@
   function genCombination() {
     var mode = _PU.randInt(0, 1);
     if (mode === 0) {
-      var n = _PU.randInt(6, 10), k = _PU.randInt(2, 3);
+      var n = _PU.randInt(6, 12), k = _PU.randInt(2, 4);
       return fillQ({
         type: 'combination',
         text: '班里要从 ' + n + ' 名同学中选出 ' + k + ' 名参加大扫除（不分先后顺序），一共有 ____ 种不同的选法。',
@@ -310,7 +310,7 @@
           '（从 ' + n + ' 起连乘 ' + k + ' 个数再除以 ' + k + '!）'
       });
     }
-    var total = _PU.randInt(8, 10), g1 = _PU.randInt(3, Math.floor(total / 2));
+    var total = _PU.randInt(8, 12), g1 = _PU.randInt(3, Math.floor(total / 2));
     var g2 = total - g1;
     return fillQ({
       type: 'combination',
@@ -322,24 +322,35 @@
 
   // ============ 9. 枚举计数（有序技巧） ============
   function genEnumeration() {
-    var K = _PU.randInt(8, 13);
+    // 多种枚举场景：变化数字范围(1~M)与比较关系(小于/大于)，保证题面多样性足以产出≥25道不重复题
+    var scen = _PU.randInt(0, 4);
+    var M, op, Klo, Khi;
+    if (scen === 0) { M = 9; op = '小于'; Klo = 8; Khi = 13; }
+    else if (scen === 1) { M = 9; op = '大于'; Klo = 11; Khi = 17; }
+    else if (scen === 2) { M = 10; op = '小于'; Klo = 9; Khi = 15; }
+    else if (scen === 3) { M = 8; op = '小于'; Klo = 7; Khi = 12; }
+    else { M = 10; op = '大于'; Klo = 13; Khi = 19; }
+    var K = _PU.randInt(Klo, Khi);
     var cnt = 0;
-    for (var a = 1; a <= 9; a++) {
-      for (var b = a + 1; b <= 9; b++) {
-        if (a + b < K) cnt++;
+    for (var a = 1; a <= M; a++) {
+      for (var b = a + 1; b <= M; b++) {
+        var s = a + b;
+        if (op === '小于' && s < K) cnt++;
+        else if (op === '大于' && s > K) cnt++;
+        else if (op === '不超过' && s <= K) cnt++;
       }
     }
     return fillQ({
       type: 'enumeration',
-      text: '从 1~9 这九个数字中取出两个不同的数字，使它们的和小于 ' + K + '，一共有 ____ 种取法（两种取法只要有一个数字不同就算不同）。',
+      text: '从 1~' + M + ' 这 ' + M + ' 个数字中取出两个不同的数字，使它们的和' + op + ' ' + K + '，一共有 ____ 种取法（两种取法只要有一个数字不同就算不同）。',
       answer: [cnt],
-      hint: '按较小数分类枚举：1 可配 2~' + Math.min(9, K - 2) + '……逐类相加得 ' + cnt + ' 种'
+      hint: '按较小数分类枚举：逐类相加得 ' + cnt + ' 种'
     });
   }
 
   // ============ 10. 捆绑法（多组相邻） ============
   function genBundling() {
-    var n = _PU.randInt(5, 6), m = _PU.randInt(2, 3);
+    var n = _PU.randInt(4, 8), m = _PU.randInt(2, 6);
     if (m > n - 2) m = n - 2;
     var ways = fact(n - m + 1) * fact(m);
     var text;
@@ -359,8 +370,8 @@
 
   // ============ 11. 插空法（多组不相邻） ============
   function genInsertion() {
-    var boys = _PU.randInt(4, 5), girls;
-    do { girls = _PU.randInt(2, 3); } while (girls > boys + 1);
+    var boys = _PU.randInt(3, 9), girls;
+    do { girls = _PU.randInt(2, 6); } while (girls > boys + 1);
     var ways = fact(boys) * P(boys + 1, girls);
     return fillQ({
       type: 'insertion',
@@ -377,7 +388,7 @@
     var mode = _PU.randInt(0, 1);
     var k = _PU.randInt(3, 4);
     if (mode === 0) {
-      var n = _PU.randInt(5, 9);
+      var n = _PU.randInt(5, 12);
       var ans = C(n + k - 1, k - 1);
       return fillQ({
         type: 'stars-bars',
@@ -387,7 +398,7 @@
           ' 块隔板 → C(' + (n + k - 1) + ',' + (k - 1) + ') = ' + ans
       });
     }
-    var n2 = _PU.randInt(k + 2, 10);
+    var n2 = _PU.randInt(k + 2, 14);
     var ans2 = C(n2 - 1, k - 1);
     return fillQ({
       type: 'stars-bars',
@@ -400,10 +411,18 @@
 
   // ============ 13. 抽屉原理（构造抽屉） ============
   function genPigeonhole() {
+    // 多种抽屉场景：变化类别数 kinds 与保证同类数 want，保证题面多样性足以产出≥25道不重复题
     var setups = [
-      { kinds: 4, what: '一副去掉大小王的扑克牌按红桃、黑桃、梅花、方块分为 4 类', unit: '张', thing: '牌', want: _PU.randInt(3, 5), tail: '点数花色相同的牌（同一花色）' },
-      { kinds: 12, what: '全班同学按出生月份分为 12 类', unit: '人', thing: '同学', want: _PU.randInt(3, 4), tail: '生日在同一个月的同学' },
-      { kinds: 6, what: '箱子里有红、黄、蓝、绿、紫、白六种颜色的袜子（每色都足够多）', unit: '只', thing: '袜子', want: 2, tail: '颜色相同的一双袜子' }
+      { what: '一副去掉大小王的扑克牌按红桃、黑桃、梅花、方块分为 4 类', kinds: 4, want: _PU.randInt(3, 6), tail: '张点数花色相同的牌（同一花色）', unit: '张' },
+      { what: '全班同学按出生月份分为 12 类', kinds: 12, want: _PU.randInt(3, 5), tail: '人生日在同一个月的同学', unit: '人' },
+      { what: '箱子里有黑、白、蓝、绿、紫、橙 6 种颜色的袜子（每色都足够多）', kinds: 6, want: _PU.randInt(2, 4), tail: '只颜色相同的袜子', unit: '只' },
+      { what: '盒子里有红、橙、黄、绿、蓝、靛、紫 7 种颜色的积木（每种都足够多）', kinds: 7, want: _PU.randInt(2, 4), tail: '块颜色相同的积木', unit: '块' },
+      { what: '信封里有 0~9 共 10 种数字卡片（每种都足够多）', kinds: 10, want: _PU.randInt(2, 4), tail: '张数字相同的卡片', unit: '张' },
+      { what: '篮子里有苹果、香蕉、橘子、葡萄、芒果 5 种水果（每种都足够多）', kinds: 5, want: _PU.randInt(3, 4), tail: '个相同的水果', unit: '个' },
+      { what: '衣柜里有春、夏、秋、冬 4 类衣物', kinds: 4, want: _PU.randInt(2, 3), tail: '件同一季节的衣物', unit: '件' },
+      { what: '挂钩上有红、黄、蓝 3 种颜色的帽子（每种都足够多）', kinds: 3, want: _PU.randInt(2, 3), tail: '顶颜色相同的帽子', unit: '顶' },
+      { what: '书架上摆着 8 种不同样式的书包（每种都足够多）', kinds: 8, want: _PU.randInt(2, 3), tail: '个同一款式的书包', unit: '个' },
+      { what: '调色盘里有 9 种颜色的颜料（每种都足够多）', kinds: 9, want: _PU.randInt(2, 3), tail: '支颜色相同的颜料', unit: '支' }
     ];
     var st = setups[_PU.randInt(0, setups.length - 1)];
     var ans = (st.want - 1) * st.kinds + 1;
@@ -533,10 +552,10 @@
     grades: [6],
     moduleId: 'C3',
     knowledgePoints: {
-      6: ['g6-c3-inclusion-exclusion', 'g6-c3-recursion-counting', 'g6-c3-derangement', 'g6-c3-geometry-counting',
-        'g6-c3-addition-principle', 'g6-c3-multiplication-principle', 'g6-c3-permutation', 'g6-c3-combination',
-        'g6-c3-enumeration-counting', 'g6-c3-bundling-method', 'g6-c3-insertion-method', 'g6-c3-stars-bars',
-        'g6-c3-pigeonhole-principle', 'g6-c3-worst-case-principle']
+      6: ['math-g6-c3-inclusion-exclusion', 'math-g6-c3-recursion-counting', 'math-g6-c3-derangement', 'math-g6-c3-geometry-counting',
+        'math-g6-c3-addition-principle', 'math-g6-c3-multiplication-principle', 'math-g6-c3-permutation', 'math-g6-c3-combination',
+        'math-g6-c3-enumeration-counting', 'math-g6-c3-bundling-method', 'math-g6-c3-insertion-method', 'math-g6-c3-stars-bars',
+        'math-g6-c3-pigeonhole-principle', 'math-g6-c3-worst-case-principle']
     },
     columns: 2,
     settings: [
