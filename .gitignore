@@ -30,3 +30,8 @@ dev/reports/
 archive/
 assets/*.webp
 competition-report.json
+*.png
+banner.jpg
+.github/workflows/ci.yml
+CNAME
+MEMORY.md
