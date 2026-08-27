@@ -1,0 +1,106 @@
+/* ============ 打印样式（Layer 4 · print） ============
+ * 打印时的统一页面样式，确保：
+ * - 无截断、无溢出
+ - SVG 完整渲染
+ - 答案位置正确
+ - A4 正常打印
+ * 所有插件应通过 printConfig 控制打印行为。
+ */
+
+@layer print {
+
+    /* 打印容器 - A4 尺寸与 margin */
+    .print-container {
+        width: 210mm;
+        height: 297mm;
+        margin: 15mm auto;
+        padding: 0;
+        box-sizing: border-box;
+        font-size: 12pt;
+    }
+
+    /* 打印页头 - 题目编号与题型标签 */
+    .print-header {
+        margin-bottom: 8mm;
+        padding-bottom: 4mm;
+        border-bottom: 1px solid var(--line-weak);
+    }
+
+    /* 打印题卡 - 核心容器 */
+    .print-question-card {
+        page-break-inside: avoid;
+        margin-bottom: 12mm;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10mm;
+        background: var(--card);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* 打印答案框 */
+    .print-answer-box {
+        border: 1px dashed var(--line-strong);
+        border-radius: 6px;
+        padding: 8px 12px;
+        margin-top: 6px;
+        min-height: 20px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12pt;
+    }
+
+    /* SVG 在打印中的完整渲染 */
+    .print-svg {
+        max-width: 100%;
+        height: auto;
+        page-break-inside: avoid;
+    }
+
+    .print-svg svg {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* 打印时隐藏非 essential 元素 */
+    .print-hide {
+        display: none !important;
+    }
+
+    /* 打印时的题目编号 */
+    .print-q-number {
+        float: left;
+        width: 20mm;
+        font-size: 11pt;
+        color: var(--muted);
+        margin-right: 8mm;
+    }
+
+    /* 打印时的题目内容 */
+    .print-q-content {
+        margin-left: 22mm;
+        min-height: 40px;
+    }
+
+    /* 打印时的答案区 */
+    .print-q-answer {
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid var(--line-weak);
+        clear: both;
+    }
+
+}
+
+/* 打印时的全局覆盖：确保所有字体可打印、SVG 可见 */
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .question-card .q-shape svg,
+    .question-card svg {
+        visibility: visible !important;
+        display: block !important;
+    }
+    .global-tip { display: none !important; }
+}
