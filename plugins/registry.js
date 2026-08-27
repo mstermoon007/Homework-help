@@ -17,6 +17,7 @@
     { id: 'math-picture-equations', file: 'plugins/math-picture-equations.js', name: '看图列式', subject: 'math', category: 'number', grades: [1] },
     { id: 'math-statistics', file: 'plugins/math-statistics.js', name: '分类与统计', subject: 'math', category: 'statistics', grades: [1] },
     { id: 'math-money', file: 'plugins/math-money.js', name: '认识人民币', subject: 'math', category: 'number', grades: [1] },
+    { id: 'math-g1-multiplication-table', file: 'plugins/math-g1-multiplication-table.js', name: '提前预习', desc: '乘法表·除法表·乘除法填空', subject: 'math', category: 'number', grades: [1] },
     // 数学（二年级）
     { id: 'math-unit-convert', file: 'plugins/math-unit-convert.js', name: '单位换算', subject: 'math', category: 'number', grades: [2, 3] },
     { id: 'math-geometry', file: 'plugins/math-geometry.js', name: '图形与几何', subject: 'math', category: 'geometry', grades: [2, 3] },
@@ -105,6 +106,7 @@
     { id: 'chinese-pinyin', file: 'plugins/chinese-pinyin.js', name: '拼音练习', subject: 'chinese', category: null, grades: [1, 2, 3, 4, 5, 6], deps: ['pinyin-bank.js'] },
     { id: 'pinyin-to-char', file: 'plugins/pinyin-to-char.js', name: '看拼音写字', subject: 'chinese', category: null, grades: [1, 2, 3, 4, 5, 6], deps: ['pinyin-bank.js'] },
     { id: 'chinese-comprehensive', file: 'plugins/chinese-comprehensive.js', name: '综合练习', subject: 'chinese', category: null, grades: [1, 2, 3, 4, 5, 6], deps: ['pinyin-bank.js'] },
+    { id: 'chinese-hanzi', file: 'plugins/chinese-hanzi.js', name: '汉字练习', subject: 'chinese', category: null, grades: [1, 2, 3], deps: ['pinyin-bank.js', 'shared/hanzi-bank.js'] },
     { id: 'english-alphabet', file: 'plugins/english-alphabet.js', name: '字母跟读', subject: 'english', category: null, grades: [1, 2, 3, 4, 5, 6] }
     // ... 更多插件将在后续逐步添加
   ];

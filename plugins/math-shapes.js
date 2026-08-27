@@ -333,7 +333,7 @@
     if (p.inputType === 'text') {
       inputHTML = '<div class="input-group" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;">' +
         '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off">' +
-        '<span style="font-size:13px;color:var(--muted);font-weight:600;">平方厘米</span>' +
+        '<span class="unit">平方厘米</span>' +
         '</div>';
     } else {
       var optsHTML = '';
@@ -345,18 +345,18 @@
         '<input type="hidden" class="choice-inp" data-index="' + i + '" autocomplete="off">';
     }
 
-    var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
+    var hintHTML = p.hint ? '<div class="q-hint">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+    return '<div class="question-card math-card math-card--geometry" data-index="' + i + '">' +
+      '<div class="q-header">' +
+        '<span class="num">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         hintHTML +
       '</div>' +
       '<div class="q-shape" style="margin:4px auto 6px;">' + p.svg + '</div>' +
       '<div style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 8px;">' + p.question + '</div>' +
       inputHTML +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
+      '<div class="feedback"></div>' +
       '</div>';
   }
 
@@ -405,12 +405,12 @@
       // 子题型 → 知识点（按年级区分；三年级无本插件知识点，不标注）
       var KP_BY_GRADE_KIND = {
         1: {
-          flat: 'g1-m6-flat-shapes', solid: 'g1-m6-solid-shapes',
-          position: 'g1-m6-position', count: 'g1-m6-shape-compose'
+          flat: 'math-g1-m6-flat-shapes', solid: 'math-g1-m6-solid-shapes',
+          position: 'math-g1-m6-position', count: 'math-g1-m6-shape-compose'
         },
         2: {
-          flat: 'g2-m6-shapes-2', solid: 'g2-m6-shapes-2',
-          position: 'g2-m6-shapes-2', count: 'g2-m6-shapes-2', areaGrid: 'g2-m6-shapes-2'
+          flat: 'math-g2-m6-shapes-2', solid: 'math-g2-m6-shapes-2',
+          position: 'math-g2-m6-shapes-2', count: 'math-g2-m6-shapes-2', areaGrid: 'math-g2-m6-shapes-2'
         }
       };
       var kpMap = KP_BY_GRADE_KIND[_GRADE] || null;

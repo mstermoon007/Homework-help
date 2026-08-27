@@ -290,15 +290,15 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g5-m12-g5-choice-decmul',
-        'g5-m12-g5-choice-equ',
-        'g5-m12-g5-choice-fm',
-        'g5-m12-g5-choice-frac',
-        'g5-m12-g5-choice-area',
-        'g5-m12-g5-choice-solid',
-        'g5-m12-motion',
-        'g5-m12-g5-choice-possib',
-        'g5-m12-stats'
+        'math-g5-m12-g5-choice-decmul',
+        'math-g5-m12-g5-choice-equ',
+        'math-g5-m12-g5-choice-fm',
+        'math-g5-m12-g5-choice-frac',
+        'math-g5-m12-g5-choice-area',
+        'math-g5-m12-g5-choice-solid',
+        'math-g5-m12-motion',
+        'math-g5-m12-g5-choice-possib',
+        'math-g5-m12-stats'
     ],
 
     settings: [

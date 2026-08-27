@@ -224,11 +224,11 @@
     category: 'number',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g4-m3-g4-mix-order',
-        'g4-m3-g4-mix-addlaw',
-        'g4-m3-g4-mix-mullaw',
-        'g4-m3-g4-mix-dist',
-        'g4-m3-g4-mix-dec'
+        'math-g4-m3-g4-mix-order',
+        'math-g4-m3-g4-mix-addlaw',
+        'math-g4-m3-g4-mix-mullaw',
+        'math-g4-m3-g4-mix-dist',
+        'math-g4-m3-g4-mix-dec'
     ],
 
     settings: [

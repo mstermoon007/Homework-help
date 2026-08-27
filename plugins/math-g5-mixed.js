@@ -206,10 +206,10 @@
     category: 'number',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g5-m3-g5-mix-decmixed',
-        'g5-m3-g5-mix-fracmixed',
-        'g5-m3-g5-mix-decsimple',
-        'g5-m3-g5-mix-fracsimple'
+        'math-g5-m3-g5-mix-decmixed',
+        'math-g5-m3-g5-mix-fracmixed',
+        'math-g5-m3-g5-mix-decsimple',
+        'math-g5-m3-g5-mix-fracsimple'
     ],
 
     settings: [

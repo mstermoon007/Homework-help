@@ -132,7 +132,7 @@
     subject: 'math',
     category: 'stats',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g6-m9-g6-stat-pie-chart', 'g6-m9-g6-stat-possibility'],
+    knowledgePoints: ['math-g6-m9-g6-stat-pie-chart', 'math-g6-m9-g6-stat-possibility'],
 
     settings: [
       {

@@ -180,7 +180,7 @@
 
     var qText = '<span class="q-text" style="font-size:15px;font-weight:800;color:var(--ink);display:inline;vertical-align:middle;margin:4px 0 8px;">' + (p.question || p.q) + '</span>';
 
-    var qHeader = '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' + num + '&nbsp;&nbsp;&nbsp;&nbsp;' + qText + '</div>';
+    var qHeader = '<div class="q-header">' + num + '&nbsp;&nbsp;&nbsp;&nbsp;' + qText + '</div>';
 
     var inputHTML = '';
     if (p.inputType === 'choice') {
@@ -194,15 +194,15 @@
     } else {
       inputHTML = '<div class="input-group" style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;">' +
         '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" style="width:96px;height:32px;border:2px dashed #e0c98f;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#b8860b;background:#fffdf6;outline:none;">' +
-        (p.unit ? '<span style="font-size:13px;color:var(--muted);font-weight:600;">' + p.unit + '</span>' : '') +
+        (p.unit ? '<span class="unit">' + p.unit + '</span>' : '') +
         '</div>';
     }
 
-    var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
+    var hintHTML = p.hint ? '<div class="q-hint">💡 ' + p.hint + '</div>' : '';
 
     return '<div class="question-card" data-index="' + i + '" style="border:1px solid #f0e3c0;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(120,90,20,.08);">' +
       qHeader + hintHTML + inputHTML +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
+      '<div class="feedback"></div>' +
       '</div>';
   }
 
@@ -254,7 +254,7 @@
           kind: p.kind,
           data: p,
           answer: String(p.answer),
-          knowledgePointId: 'g1-m4-money',
+          knowledgePointId: 'math-g1-m4-money',
           hint: p.hint,
           render: function (idx, ctx) { return renderCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }

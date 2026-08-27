@@ -192,12 +192,12 @@
     printConfig: { pageType: 'math' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
     knowledgePoints: [
-        'g4-m1-g4-oral-big',
-        'g4-m1-g4-oral-mul3x1',
-        'g4-m1-g4-oral-mul2t',
-        'g4-m1-g4-oral-divt',
-        'g4-m1-g4-oral-dec',
-        'g4-m1-g4-oral-law'
+        'math-g4-m1-g4-oral-big',
+        'math-g4-m1-g4-oral-mul3x1',
+        'math-g4-m1-g4-oral-mul2t',
+        'math-g4-m1-g4-oral-divt',
+        'math-g4-m1-g4-oral-dec',
+        'math-g4-m1-g4-oral-law'
     ],
 
     settings: [

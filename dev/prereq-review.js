@@ -21,16 +21,23 @@ var ROOT = path.join(__dirname, '..');
 
 var KB = require(path.join(ROOT, 'shared/knowledge-bank.js'));
 
+// 任务3：知识库为按科目分组对象；扁平化为带 subject 的年级条目数组
+var entries = [];
+Object.keys(KB).forEach(function (s) {
+  if (!Array.isArray(KB[s])) return;
+  KB[s].forEach(function (e) { e.subject = s; entries.push(e); });
+});
+
 // ============ 收集 ============
 var rows = [];
-KB.forEach(function (gradeEntry) {
+entries.forEach(function (gradeEntry) {
   var grade = gradeEntry.grade;
   gradeEntry.modules.forEach(function (mod) {
     (mod.knowledgePoints || []).forEach(function (p) {
       (p.prerequisites || []).forEach(function (preId) {
         // 仅同年级前置（跨年级前置由校验器保证方向合法，无需审查）
         var pre = null, preGrade = null;
-        KB.forEach(function (g2) {
+        entries.forEach(function (g2) {
           g2.modules.forEach(function (m2) {
             (m2.knowledgePoints || []).forEach(function (p2) {
               if (p2.id === preId) { pre = p2; preGrade = g2.grade; }

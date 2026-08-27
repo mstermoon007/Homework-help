@@ -190,15 +190,40 @@
   }
 
   // ============ 包裹为完整 SVG ============
+  /** 打印模式辅助：hex 颜色向白色混合（近似降饱和），f∈(0,1) 越大越浅 */
+  function hexLighten(hex, f) {
+    var m = /^#([0-9a-fA-F]{6})$/.exec(hex);
+    if (!m) return hex;
+    var n = parseInt(m[1], 16);
+    var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    function mix(c) { return Math.round(c + (255 - c) * f); }
+    return '#' + ((1 << 24) + (mix(r) << 16) + (mix(g) << 8) + mix(b)).toString(16).slice(1);
+  }
+  /** 打印模式内容变换：整体减饱和 + 辅助线/网格线变浅（虚线属性选择器 + .svg-grid-line 类） */
+  var PRINT_AUX_STYLE = '<style>' +
+    '[stroke-dasharray]{opacity:.42}' +
+    '.svg-grid-line{opacity:.38}' +
+    '</style>';
+  function printTransform(innerSvg) {
+    var out = String(innerSvg || '').replace(/#[0-9a-fA-F]{6}\b/g, function (hex) {
+      return hexLighten(hex, 0.22);
+    });
+    return PRINT_AUX_STYLE + out;
+  }
+
   /**
    * @param {string} innerSvg 片段（可含多个元素）
-   * @param {Object} [options] { width, height, viewBox, padding, className, background, style }
+   * @param {Object} [options] { width, height, viewBox, padding, className, background, style,
+   *   printMode } printMode=true 时输出打印优化版本：根节点挂 svg-print 类、hex 颜色向白
+   *   混合降饱和，且虚线辅助线（[stroke-dasharray]）与网格线（.svg-grid-line）透明度降低。
    * @returns {string} 完整 <svg>…</svg> 字符串
    */
   function svgWrap(innerSvg, options) {
     var o = options || {};
+    var body = (innerSvg || '');
+    if (o.printMode) body = printTransform(body);
     var vb = o.viewBox ||
-      (function () { var b = computeViewBox(innerSvg, { padding: o.padding }); return b.minX + ' ' + b.minY + ' ' + b.width + ' ' + b.height; })();
+      (function () { var b = computeViewBox(body, { padding: o.padding }); return b.minX + ' ' + b.minY + ' ' + b.width + ' ' + b.height; })();
     var parts = vb.split(/\s+/).map(Number);
     var w = o.width != null ? o.width : (parts[2] || SVG_DEFAULTS.width);
     var h = o.height != null ? o.height : (parts[3] || SVG_DEFAULTS.height);
@@ -208,9 +233,69 @@
       role: 'img', preserveAspectRatio: o.preserveAspectRatio || 'xMidYMid meet'
     };
     if (o.className) attrs.class = o.className;
+    if (o.printMode) attrs.class = attrs.class ? (attrs.class + ' svg-print') : 'svg-print';
     var bg = o.background ? svgElement('rect', { x: parts[0], y: parts[1], width: parts[2], height: parts[3], fill: o.background }) : '';
     var style = o.style ? ' style="' + escAttr(o.style) + '"' : '';
-    return '<svg' + attrsStr(attrs) + style + '>' + bg + (innerSvg || '') + '</svg>';
+    return '<svg' + attrsStr(attrs) + style + '>' + bg + body + '</svg>';
+  }
+
+  // ============ 书写格背景（任务：SVG 生成器细化） ============
+  /**
+   * 统一的格线背景片段生成器。所有线条带 class="svg-grid-line"，
+   * 打印模式（svgWrap printMode）下自动变浅。
+   * @param {string} kind 'tian' 田字 | 'mi' 米字 | 'cross' 十字（实线中线）| 'four-line' 四线三格
+   * @param {Object} [o] { x, y, size（田/米/十字边长）, topY, gap（四线格行距）, lines（四线格横线数）,
+   *   lineColor（覆盖默认 aux/line 色）, baselineColor }
+   * @returns {string} SVG 片段（非完整 <svg>）
+   */
+  function svgGrid(kind, o) {
+    o = o || {};
+    var x = o.x || 0, y = o.y || 0;
+    // 默认经 style 内联消费 tokens.css 书写格变量（与 svg-chinese/svg-english 约定一致），
+    // 可经 lineColor/baselineColor/frameColor 覆盖（四线格颜色可配置）。
+    var isFourLine = kind === 'four-line';
+    var frame = o.frameColor || 'var(--grid-tianzige-frame)';
+    var aux = o.lineColor || (isFourLine ? 'var(--grid-fourline-line)' : 'var(--grid-tianzige-aux)');
+    var baseline = o.baselineColor || 'var(--grid-fourline-baseline)';
+    var parts = [];
+    function rect(xx, yy, s) {
+      parts.push(svgElement('rect', { x: xx, y: yy, width: s, height: s,
+        fill: '#ffffff', class: 'svg-grid-frame',
+        style: 'stroke:' + frame + ';stroke-width:2' }));
+    }
+    function gLine(x1, y1, x2, y2, color, sw, dash) {
+      var style = 'stroke:' + color + ';stroke-width:' + sw + (dash ? ';stroke-dasharray:' + dash : '');
+      parts.push(svgElement('line', { x1: x1, y1: y1, x2: x2, y2: y2,
+        'class': 'svg-grid-line', style: style }));
+    }
+    if (kind === 'tian' || kind === 'mi' || kind === 'cross') {
+      var s = o.size || 100;
+      rect(x, y, s);
+      var mx = x + s / 2, my = y + s / 2;
+      if (kind === 'cross') {           // 十字格：实线中线
+        gLine(x, my, x + s, my, aux, 1.4);
+        gLine(mx, y, mx, y + s, aux, 1.4);
+      } else {                          // 田字/米字：虚线中线
+        gLine(x, my, x + s, my, aux, 1.5, '6 4');
+        gLine(mx, y, mx, y + s, aux, 1.5, '6 4');
+      }
+      if (kind === 'mi') {              // 米字对角线
+        gLine(x, y, x + s, y + s, aux, 1.2, '5 5');
+        gLine(x + s, y, x, y + s, aux, 1.2, '5 5');
+      }
+    } else if (kind === 'four-line') {
+      var topY = o.topY != null ? o.topY : 0;
+      var gap = o.gap || 22;
+      var lines = o.lines || 4;         // 四线三格默认 4 条横线
+      for (var i = 0; i < lines; i++) {
+        var isBase = i === lines - 1;
+        gLine(x, topY + i * gap, x + (o.width || 120), topY + i * gap,
+          isBase ? baseline : aux, isBase ? 1.8 : 1.3);
+      }
+    } else {
+      throw new Error('svgGrid: 未知格线类型 ' + kind);
+    }
+    return parts.join('');
   }
 
   // ============ 导出 ============
@@ -227,10 +312,18 @@
     svgRect: svgRect,
     svgPath: svgPath,
     computeViewBox: computeViewBox,
-    svgWrap: svgWrap
+    svgWrap: svgWrap,
+    svgGrid: svgGrid,
+    hexLighten: hexLighten
   };
 
   global.SVGUtil = SVGUtil;
   global.SVG_DEFAULTS = SVG_DEFAULTS;
+
+  // 任务7：科目化命名空间。核心工具挂载为 SVGGenerators.core（同一引用，非拷贝）；
+  // 各科目生成器由对应文件挂载到 SVGGenerators.math / cn / en，全局旧名保留兼容。
+  global.SVGGenerators = global.SVGGenerators || {};
+  global.SVGGenerators.core = SVGUtil;
+
   if (typeof module !== 'undefined') module.exports = SVGUtil;
 })(typeof window !== 'undefined' ? window : global);

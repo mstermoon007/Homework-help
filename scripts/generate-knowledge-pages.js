@@ -71,14 +71,17 @@ function pointExample(kp) {
 
 // ============ HTML 片段 ============
 
-function baseHead(title, desc) {
+function baseHead(title, desc, canonFile) {
+  const canon = canonFile
+    ? `\n<link rel="canonical" href="https://home.modouyu.top/knowledge/${canonFile}">`
+    : '';
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)} · Homework Help 知识库</title>
-<meta name="description" content="${esc(desc)}">
+<meta name="description" content="${esc(desc)}">${canon}
 <link rel="stylesheet" href="../shared/tokens.css">
 <style>
   body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;max-width:860px;margin:0 auto;padding:32px 20px;color:#27324a;line-height:1.7;background:#fafbff;}
@@ -116,11 +119,12 @@ function crumb(parts) {
 }
 
 // ============ 单知识点页 ============
-function renderPointPage(grade, moduleId, kp) {
+function renderPointPage(grade, moduleId, kp, sName, canonFile) {
   const gName = GRADE_NAMES[grade];
   const mName = moduleName(moduleId);
-  const title = `${gName}数学 · ${mName} · ${kp.name}`;
-  const desc = `${gName}数学知识点「${kp.name}」说明、典型例题与在线练习入口，来自 Homework Help 人教版同步知识库。`;
+  const subName = sName || '数学';
+  const title = `${gName}${subName} · ${mName} · ${kp.name}`;
+  const desc = `${gName}${subName}知识点「${kp.name}」说明、典型例题与在线练习入口，来自 Homework Help 人教版同步知识库。`;
 
   const ex = pointExample(kp);
   const exampleHtml = ex
@@ -129,7 +133,7 @@ function renderPointPage(grade, moduleId, kp) {
 
   const practiceHref = `../practice.html?plugin=${esc(kp.pluginId)}&grade=${grade}`;
 
-  return baseHead(title, desc) +
+  return baseHead(title, desc, canonFile) +
     crumb([
       '<a href="index.html">知识库首页</a>',
       `<a href="${modulePageFile(grade, moduleId)}">${gName} · ${esc(mName)}</a>`,
@@ -141,65 +145,83 @@ function renderPointPage(grade, moduleId, kp) {
       `<div>${kp.type ? `<span class="kw">子类型 ${esc(kp.type)}</span>` : ''}${kp.weight != null ? `<span class="kw">重要度权重 ${kp.weight}</span>` : ''}${kp.pluginId ? `<span class="kw">练习插件 ${esc(kp.pluginId)}</span>` : ''}</div>` +
     `</div>` +
     exampleHtml +
-    `<div class="card"><h2>在线练习</h2><p>点击下方按钮，在 Homework Help 练习页实时生成「${esc(kp.name)}」相关题目，支持在线作答与即时批改。</p>` +
-      `<a class="btn" href="${practiceHref}">去练习：${esc(kp.name)}</a>` +
-      `<a class="btn ghost" href="${modulePageFile(grade, moduleId)}">返回模块：${esc(mName)}</a>` +
-    `</div>` +
+    (kp.pluginId
+      ? `<div class="card"><h2>在线练习</h2><p>点击下方按钮，在 Homework Help 练习页实时生成「${esc(kp.name)}」相关题目，支持在线作答与即时批改。</p>` +
+        `<a class="btn" href="${practiceHref}">去练习：${esc(kp.name)}</a>` +
+        `<a class="btn ghost" href="${modulePageFile(grade, moduleId)}">返回模块：${esc(mName)}</a>` +
+        `</div>`
+      : `<div class="card"><h2>在线练习</h2><p class="note">该知识点的题型生成器正在开发中，敬请期待。</p></div>`) +
     baseFoot();
 }
 
 // ============ 模块聚合页 ============
-function renderModulePage(grade, module) {
+function renderModulePage(grade, moduleId, module, sName) {
+  const canonFile = modulePageFile(grade, moduleId);
   const gName = GRADE_NAMES[grade];
-  const mName = moduleName(module.moduleId);
-  const title = `${gName}数学 · ${mName}（模块 ${module.moduleId}）`;
-  const desc = `${gName}数学「${mName}」模块包含的全部知识点列表与练习入口。`;
+  const mName = moduleName(moduleId);
+  const subName = sName || '数学';
+  const title = `${gName}${subName} · ${mName}（模块 ${moduleId}）`;
+  const desc = `${gName}${subName}「${mName}」模块包含的全部知识点列表与练习入口。`;
 
   let items = '';
   module.knowledgePoints.forEach((kp) => {
     const href = `${kp.id}.html`;
-    items += `<li><a href="${href}">${esc(kp.name)}</a><span class="sub">${esc(module.moduleId)} · ${esc(kp.id)}</span></li>`;
+    items += `<li><a href="${href}">${esc(kp.name)}</a><span class="sub">${esc(moduleId)} · ${esc(kp.id)}</span></li>`;
   });
 
-  return baseHead(title, desc) +
+  return baseHead(title, desc, canonFile) +
     crumb([
       '<a href="index.html">知识库首页</a>',
       `<span>${gName} · ${esc(mName)}</span>`
     ]) +
     `<h1>${esc(mName)}</h1>` +
-    `<div class="meta">${gName} · 模块 ${esc(module.moduleId)} · 共 ${module.knowledgePoints.length} 个知识点</div>` +
-    (moduleDesc(module.moduleId) ? `<div class="card"><p>${esc(moduleDesc(module.moduleId))}</p></div>` : '') +
+    `<div class="meta">${gName} · 模块 ${esc(moduleId)} · 共 ${module.knowledgePoints.length} 个知识点</div>` +
+    (moduleDesc(moduleId) ? `<div class="card"><p>${esc(moduleDesc(moduleId))}</p></div>` : '') +
     `<div class="card"><h2>知识点列表</h2><ul class="list">${items}</ul></div>` +
     `<div class="card"><a class="btn" href="../math-types.html?grade=${grade}">前往 ${gName} 数学题型练习</a></div>` +
     baseFoot();
 }
 
-// ============ 全量索引页 ============
-function renderIndex(gradesData) {
-  const title = 'Homework Help 数学知识库索引';
-  const desc = '小学 1-6 年级数学全部知识点索引，按年级与模块组织，便于浏览与练习。';
+// ============ 全量索引页（按科目分节） ============
+function renderIndex(gradesData, SUBJECT_NAMES) {
+  const title = 'Homework Help 知识库索引';
+  const desc = '小学 1-6 年级全部科目知识点索引，按科目、年级与模块组织，便于浏览与练习。';
 
-  let body = '';
+  // 按科目分节（保持 math/cn/en 顺序；空科目自动不出现）
+  const bySubject = new Map();
   gradesData.forEach((g) => {
-    const gName = GRADE_NAMES[g.grade];
-    body += `<div class="card"><h2>${gName}（共 ${g.total} 个知识点）</h2>`;
-    g.modules.forEach((m) => {
-      const mName = moduleName(m.moduleId);
-      const href = modulePageFile(g.grade, m.moduleId);
-      body += `<p><a class="btn ghost" href="${href}" style="margin:4px 8px 4px 0;">${esc(mName)}（${m.knowledgePoints.length}）</a></p><ul class="list">`;
-      m.knowledgePoints.forEach((kp) => {
-        const phref = `${kp.id}.html`;
-        body += `<li style="display:inline-block;width:auto;padding:4px 10px;border:none;"><a href="${phref}">${esc(kp.name)}</a></li>`;
-      });
-      body += `</ul>`;
-    });
-    body += `</div>`;
+    if (!bySubject.has(g.subject)) bySubject.set(g.subject, []);
+    bySubject.get(g.subject).push(g);
   });
 
-  return baseHead(title, desc) +
+  let body = '';
+  bySubject.forEach((gradeList, subject) => {
+    const subName = (SUBJECT_NAMES && SUBJECT_NAMES[subject]) || subject;
+    const totalKp = gradeList.reduce((s, g) => s + g.total, 0);
+    body += `<h1 style="font-size:20px;margin:28px 0 4px;">${esc(subName)}知识库</h1>`;
+    body += `<div class="meta">${gradeList.length} 个年级 · 共 ${totalKp} 个知识点</div>`;
+    gradeList.forEach((g) => {
+      const gName = GRADE_NAMES[g.grade];
+      body += `<div class="card"><h2>${gName}（共 ${g.total} 个知识点）</h2>`;
+      g.modules.forEach((m) => {
+        const mName = moduleName(m.moduleId);
+        const href = modulePageFile(g.grade, m.moduleId);
+        body += `<p><a class="btn ghost" href="${href}" style="margin:4px 8px 4px 0;">${esc(mName)}（${m.knowledgePoints.length}）</a></p><ul class="list">`;
+        m.knowledgePoints.forEach((kp) => {
+          const phref = `${kp.id}.html`;
+          body += `<li style="display:inline-block;width:auto;padding:4px 10px;border:none;"><a href="${phref}">${esc(kp.name)}</a></li>`;
+        });
+        body += `</ul>`;
+      });
+      body += `</div>`;
+    });
+  });
+  const firstSub = gradesData.length ? (SUBJECT_NAMES && SUBJECT_NAMES[gradesData[0].subject]) || '数学' : '数学';
+
+  return baseHead(title, desc, 'index.html') +
     crumb(['<span>知识库首页</span>']) +
-    `<h1>小学数学知识库</h1>` +
-    `<div class="meta">覆盖 ${gradesData.length} 个年级 · 共 ${gradesData.reduce((s, g) => s + g.total, 0)} 个知识点</div>` +
+    `<h1>${esc(firstSub)}知识库</h1>` +
+    `<div class="meta">覆盖 ${bySubject.size} 个科目 · ${gradesData.length} 个年级 · 共 ${gradesData.reduce((s, g) => s + g.total, 0)} 个知识点</div>` +
     `<div class="card"><a class="btn" href="../index.html">返回 Homework Help 首页</a> <a class="btn ghost" href="../math-types.html">数学题型练习</a></div>` +
     body +
     baseFoot();
@@ -209,45 +231,54 @@ function renderIndex(gradesData) {
 function main() {
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
+  // 任务3：知识库为按科目分组对象 {math,cn,en}；逐科目生成（科目名用于页面文案）
+  const SUBJECT_NAMES = { math: '数学', cn: '语文', en: '英语' };
+  const subjectKeys = Object.keys(KnowledgeBank).filter(k => Array.isArray(KnowledgeBank[k]));
   const gradesData = [];
   let pointCount = 0;
   let moduleCount = 0;
 
-  KnowledgeBank.forEach((gradeObj) => {
-    const grade = gradeObj.grade;
-    const gradeEntry = { grade: grade, modules: [], total: 0 };
+  subjectKeys.forEach((subject) => {
+    const sName = SUBJECT_NAMES[subject] || subject;
 
-    (gradeObj.modules || []).forEach((module) => {
-      const moduleId = module.moduleId;
-      moduleCount++;
+    KnowledgeBank[subject].forEach((gradeObj) => {
+      const grade = gradeObj.grade;
+      const gradeEntry = { grade: grade, subject: subject, modules: [], total: 0 };
 
-      // ① 模块聚合页
-      const modHtml = renderModulePage(grade, module);
-      fs.writeFileSync(path.join(OUT_DIR, modulePageFile(grade, moduleId)), modHtml, 'utf8');
+      (gradeObj.modules || []).forEach((module) => {
+        const moduleId = module.moduleId;
+        // 空模块（占位阶段，如语文/英语未激活模块）跳过页面产出
+        if (!Array.isArray(module.knowledgePoints) || module.knowledgePoints.length === 0) return;
+        moduleCount++;
 
-      // ② 单知识点页（文件名直接用知识点 id）
-      (module.knowledgePoints || []).forEach((kp) => {
-        const html = renderPointPage(grade, moduleId, kp);
-        const filename = kp.id + '.html';
-        fs.writeFileSync(path.join(OUT_DIR, filename), html, 'utf8');
-        pointCount++;
-        gradeEntry.total++;
+        // ① 模块聚合页
+        const modHtml = renderModulePage(grade, moduleId, module, sName);
+        fs.writeFileSync(path.join(OUT_DIR, modulePageFile(grade, moduleId)), modHtml, 'utf8');
+
+        // ② 单知识点页（文件名直接用知识点 id）
+        (module.knowledgePoints || []).forEach((kp) => {
+          const html = renderPointPage(grade, moduleId, kp, sName, kp.id + '.html');
+          const filename = kp.id + '.html';
+          fs.writeFileSync(path.join(OUT_DIR, filename), html, 'utf8');
+          pointCount++;
+          gradeEntry.total++;
+        });
+
+        gradeEntry.modules.push(module);
       });
 
-      gradeEntry.modules.push(module);
+      if (gradeEntry.modules.length) gradesData.push(gradeEntry);
     });
-
-    gradesData.push(gradeEntry);
   });
 
-  // ③ 全量索引页
-  const indexHtml = renderIndex(gradesData);
+  // ③ 全量索引页（按科目分节）
+  const indexHtml = renderIndex(gradesData, SUBJECT_NAMES);
   fs.writeFileSync(path.join(OUT_DIR, 'index.html'), indexHtml, 'utf8');
 
   console.log(`✅ 已生成知识库静态页面：`);
   console.log(`   - 知识点页：${pointCount} 个`);
   console.log(`   - 模块聚合页：${moduleCount} 个`);
-  console.log(`   - 索引页：1 个（knowledge/index.html）`);
+  console.log(`   - 索引页：1 个（knowledge/index.html，按科目分节）`);
   console.log(`   输出目录：${OUT_DIR}`);
 }
 

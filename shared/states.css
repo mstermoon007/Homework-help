@@ -1,0 +1,159 @@
+/* ============ 通用状态组件（Layer · states） ============
+ * 加载指示 / 骨架屏 / 错误横幅 / 空状态——跨页面通用的应用完整性 UI。
+ * 所有颜色引用 shared/tokens.css 变量（暗色模式只需替换令牌值）。
+ * 配套 JS 辅助：App.UIState（shared/common.js）。
+ * 层叠顺序：tokens → base → components → states(本层) → toolbar → pages。
+ */
+@layer states {
+
+  /* ===== 加载指示器 ===== */
+  .loading-spinner {
+    display: inline-block;
+    width: 22px; height: 22px;
+    border: 3px solid var(--brand-bg);
+    border-top-color: var(--brand);
+    border-radius: 50%;
+    animation: spinner-rotate .8s linear infinite;
+    flex: 0 0 auto;
+  }
+  .loading-spinner--sm { width: 15px; height: 15px; border-width: 2px; }
+  @keyframes spinner-rotate { to { transform: rotate(360deg); } }
+
+  /* 居中加载块（题目生成/插件加载占位） */
+  .loading-block {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 46px 16px;
+    color: var(--muted); font-size: 14px; font-weight: 600;
+    text-align: center;
+  }
+  .loading-block .lb-spinner { width: 30px; height: 30px; border-width: 4px; }
+  .loading-block .lb-sub { font-size: 12px; font-weight: 500; opacity: .85; }
+
+  /* 顶部全局加载条：PluginLoader 工作期间显示（细渐变流动条，fixed 顶部） */
+  .app-loading-bar {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px;
+    z-index: 3000; pointer-events: none;
+    background: var(--toolbar-chip-grad);
+    background-size: 200% 100%;
+    opacity: 0; visibility: hidden;
+    transition: opacity .18s ease-out;
+    animation: loading-bar-flow 1.1s linear infinite;
+  }
+  .app-loading-bar.show { opacity: .95; visibility: visible; }
+  @keyframes loading-bar-flow {
+    0%   { background-position: 0% 0; }
+    100% { background-position: -200% 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .loading-spinner, .app-loading-bar { animation: none; }
+  }
+
+  /* ===== 骨架屏（通用原子；题型卡骨架 .skel-card 家族见 components.css） ===== */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--line);
+    border-radius: 8px;
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute; inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent);
+    animation: skeleton-shimmer 1.4s infinite;
+  }
+  @keyframes skeleton-shimmer { 100% { transform: translateX(100%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton::after { animation: none; }
+  }
+  /* 常用尺寸修饰 */
+  .skeleton-line        { height: 14px; margin: 8px 0; }
+  .skeleton-line--title { height: 20px; width: 56%; }
+  .skeleton-line--short { width: 40%; }
+
+  /* ===== 错误横幅（插件加载失败 / 生成异常 / 全局运行时错误） ===== */
+  .error-banner {
+    display: flex; align-items: flex-start; gap: 12px;
+    max-width: 720px;
+    margin: var(--spacing-md) auto;
+    padding: 14px 18px;
+    background: var(--bad-bg);
+    border: 1.5px solid var(--bad);
+    border-radius: 14px;
+    color: var(--ink);
+    font-size: 14px; line-height: 1.6;
+    box-shadow: var(--shadow);
+    word-break: break-all;
+  }
+  .error-banner .eb-icon { font-size: 20px; line-height: 1.4; flex: 0 0 auto; }
+  .error-banner .eb-body { flex: 1 1 auto; min-width: 0; }
+  .error-banner .eb-title { font-weight: 800; color: var(--ink); }
+  .error-banner .eb-desc { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .error-banner .eb-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .error-banner .eb-btn {
+    cursor: pointer; text-decoration: none;
+    border: none; border-radius: 9px;
+    padding: 7px 16px; font-size: 13px; font-weight: 700;
+    transition: .18s;
+  }
+  .error-banner .eb-btn--primary { background: var(--brand); color: #fff; box-shadow: 0 3px 10px rgba(91,141,239,.3); }
+  .error-banner .eb-btn--primary:hover { filter: brightness(1.07); }
+  .error-banner .eb-btn--ghost { background: transparent; color: var(--brand-d); border: 1.5px solid var(--line-strong); }
+  .error-banner .eb-btn--ghost:hover { border-color: var(--brand); background: var(--brand-bg); }
+  /* 页面内块状变体：占满内容区并居中（practice.html showNotice 等） */
+  .error-banner--block { max-width: 520px; margin: var(--spacing-lg) auto; text-align: left; }
+
+  /* 悬浮全局横幅：顶部居中下滑出现（配合 App.UIState.showBanner） */
+  .error-banner--floating {
+    position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+    z-index: 2600; width: min(92vw, 560px); margin: 0;
+    box-shadow: 0 10px 32px rgba(40, 70, 120, .22);
+    animation: banner-slide-in .28s ease-out both;
+  }
+  @keyframes banner-slide-in {
+    from { opacity: 0; transform: translate(-50%, -12px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .error-banner--floating { animation: none; }
+  }
+  .error-banner .eb-close {
+    cursor: pointer; border: none; background: transparent;
+    color: var(--muted); font-size: 16px; line-height: 1;
+    padding: 2px 4px; border-radius: 6px; flex: 0 0 auto;
+  }
+  .error-banner .eb-close:hover { color: var(--bad); background: rgba(224, 85, 107, .1); }
+
+  /* ===== 空状态（知识点暂无题目 / 年级暂无题型） ===== */
+  .empty-state {
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .empty-state .es-icon { font-size: 40px; line-height: 1; display: block; margin-bottom: 12px; }
+  .empty-state .est-title { font-size: 16px; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
+  .empty-state .est-desc { font-size: 13px; }
+  .empty-state .est-actions { margin-top: 14px; display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+  .empty-state .est-btn {
+    cursor: pointer; text-decoration: none;
+    border: none; border-radius: 999px;
+    padding: 9px 22px; font-size: 13.5px; font-weight: 700;
+    background: var(--grad-cta); color: #fff;
+    box-shadow: 0 4px 14px rgba(245, 166, 35, .35);
+    transition: .18s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .empty-state .est-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+  @media (prefers-reduced-motion: reduce) {
+    .empty-state .est-btn { transform: none; transition: none; }
+  }
+
+} /* /@layer states */
+
+/* 兼容性回退（与 components.css 同策略）：不支持 backdrop-filter 无碍本层；
+   打印端这些交互态组件不应出现（print.js 构建独立文档且已剔除按钮类）。 */
+@media print {
+  .app-loading-bar, .error-banner--floating { display: none !important; }
+}

@@ -83,15 +83,15 @@
     var svgHTML = p.svg ? '<div style="display:flex;justify-content:flex-start;margin:4px 0;">' + p.svg + '</div>' : '';
 
     return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 0.5cm;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-      '<span class="num" style="flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+      '<div class="q-header">' +
+      '<span class="num">' + (i + 1) + '</span>' +
       '&nbsp;&nbsp;&nbsp;&nbsp;' +
       '<span class="q-text" style="font-size:15px;font-weight:800;color:var(--ink);line-height:1.4;display:inline;vertical-align:middle;">' + p.question + '</span>' +
       '</div>' +
       svgHTML +
       '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:flex-start;gap:2px;">' + optsHTML + '</div>' +
       '<input type="hidden" class="choice-inp" data-index="' + i + '" autocomplete="off">' +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
+      '<div class="feedback"></div>' +
       '</div>';
   }
 

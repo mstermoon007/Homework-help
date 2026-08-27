@@ -165,13 +165,13 @@
     category: 'number',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g6-m1-g6-oral-frac-mult-int',
-        'g6-m1-g6-oral-frac-mult-frac',
-        'g6-m1-g6-oral-frac-div-int',
-        'g6-m1-g6-oral-frac-div-frac',
-        'g6-m1-g6-oral-dec-perc',
-        'g6-m1-g6-oral-ratio-simp',
-        'g6-m1-g6-oral-neg-add-sub'
+        'math-g6-m1-g6-oral-frac-mult-int',
+        'math-g6-m1-g6-oral-frac-mult-frac',
+        'math-g6-m1-g6-oral-frac-div-int',
+        'math-g6-m1-g6-oral-frac-div-frac',
+        'math-g6-m1-g6-oral-dec-perc',
+        'math-g6-m1-g6-oral-ratio-simp',
+        'math-g6-m1-g6-oral-neg-add-sub'
     ],
 
     settings: [

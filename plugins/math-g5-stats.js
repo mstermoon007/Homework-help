@@ -156,7 +156,7 @@
     subject: 'math',
     category: 'statistics',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-m9-g5-stats-possib', 'g5-m9-g5-stats-line1', 'g5-m9-g5-stats-line2'],
+    knowledgePoints: ['math-g5-m9-g5-stats-possib', 'math-g5-m9-g5-stats-line1', 'math-g5-m9-g5-stats-line2'],
 
     settings: [
       {

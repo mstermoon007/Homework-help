@@ -211,7 +211,7 @@
     subject: 'math',
     category: 'statistics',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-m9-g4-stats-bar', 'g4-m9-g4-stats-double', 'g4-m9-g4-stats-avg'],
+    knowledgePoints: ['math-g4-m9-g4-stats-bar', 'math-g4-m9-g4-stats-double', 'math-g4-m9-g4-stats-avg'],
 
     settings: [
       {

@@ -137,10 +137,10 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g5-m10-g5-reason-tree3',
-        'g5-m10-g5-reason-defect',
-        'g5-m10-logic-reasoning',
-        'g5-m10-g5-reason-seq'
+        'math-g5-m10-g5-reason-tree3',
+        'math-g5-m10-g5-reason-defect',
+        'math-g5-m10-logic-reasoning',
+        'math-g5-m10-g5-reason-seq'
     ],
 
     settings: [

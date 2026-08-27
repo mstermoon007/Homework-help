@@ -86,7 +86,7 @@
     });
     // 渲染成表格行
     var html = '<table style="border-collapse:collapse;margin:6px auto;font-size:14px;">';
-    html += '<tr><th style="border:1px solid var(--line-strong);padding:4px 10px;background:var(--brand-bg);">姓名</th><th style="border:1px solid var(--line-strong);padding:4px 10px;background:var(--brand-bg);">正字票数</th></tr>';
+    html += '<tr><th class="stat-th">姓名</th><th class="stat-th">正字票数</th></tr>';
     rows.forEach(function (r) {
       html += '<tr><td style="border:1px solid var(--line-strong);padding:4px 10px;">' + r.name + '</td><td style="border:1px solid var(--line-strong);padding:4px 10px;font-size:18px;letter-spacing:2px;">' + zhengMarks(r.count) + '</td></tr>';
     });
@@ -152,7 +152,7 @@
   // 投票表格渲染（用于 result 题型）
   function renderVoteTable(rows, total) {
     var html = '<table style="border-collapse:collapse;margin:6px auto;font-size:14px;">';
-    html += '<tr><th style="border:1px solid var(--line-strong);padding:4px 10px;background:var(--brand-bg);">选项</th><th style="border:1px solid var(--line-strong);padding:4px 10px;background:var(--brand-bg);">得票</th></tr>';
+    html += '<tr><th class="stat-th">选项</th><th class="stat-th">得票</th></tr>';
     rows.forEach(function (r) {
       html += '<tr><td style="border:1px solid var(--line-strong);padding:4px 10px;">' + r.name + '</td><td style="border:1px solid var(--line-strong);padding:4px 10px;">' + r.count + '</td></tr>';
     });
@@ -232,7 +232,7 @@
     html += '<th rowspan="2" style="border:1px solid var(--line-strong);padding:4px 8px;background:var(--brand-bg);">' + (sc.rows.length > 1 ? '类别' : '') + '</th>';
     html += '<th rowspan="2" style="border:1px solid var(--line-strong);padding:4px 8px;background:var(--brand-bg);">人数</th>';
     sc.cols.forEach(function (cn, c) {
-      html += '<th style="border:1px solid var(--line-strong);padding:4px 10px;background:var(--brand-bg);">' + cn + '</th>';
+      html += '<th class="stat-th">' + cn + '</th>';
     });
     html += '</tr><tr>';
     sc.cols.forEach(function (cn, c) {
@@ -416,22 +416,22 @@
     } else {
       inputHTML = '<div class="input-group" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;">' +
         '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off">' +
-        '<span style="font-size:13px;color:var(--muted);font-weight:600;">票</span>' +
+        '<span class="unit">票</span>' +
         '</div>';
     }
 
-    var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
+    var hintHTML = p.hint ? '<div class="q-hint">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+    return '<div class="question-card" data-index="' + i + '">' +
+      '<div class="q-header">' +
+        '<span class="num">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         hintHTML +
       '</div>' +
-      '<div style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 6px;">' + p.question + '</div>' +
+      '<div>' + p.question + '</div>' +
       mid +
       inputHTML +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
+      '<div class="feedback"></div>' +
       '</div>';
   }
 
@@ -489,8 +489,8 @@
       _GRADE = opts.grade || 2;
       // 子题型 → 知识点（按年级区分；未映射的组合不标注，保持纯插件级统计）
       var KP_BY_GRADE_KIND = {
-        2: { tally: 'g2-m9-data-tally', result: 'g2-m9-data-question', compare: 'g2-m9-data-question' },
-        3: { multiTable: 'g3-m9-g3-stats-table', result: 'g3-m9-g3-stats-table', compare: 'g3-m9-g3-stats-table' }
+        2: { tally: 'math-g2-m9-data-tally', result: 'math-g2-m9-data-question', compare: 'math-g2-m9-data-question' },
+        3: { multiTable: 'math-g3-m9-g3-stats-table', result: 'math-g3-m9-g3-stats-table', compare: 'math-g3-m9-g3-stats-table' }
       };
       var kpMap = KP_BY_GRADE_KIND[_GRADE] || null;
       var type = opts.type || 'mix';

@@ -152,11 +152,11 @@
         'style="cursor:pointer;border:1.5px solid var(--line-strong);background:var(--soft-bg);color:var(--ink);border-radius:9px;padding:6px 14px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
     });
 
-    var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
+    var hintHTML = p.hint ? '<div class="q-hint">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+    return '<div class="question-card" data-index="' + i + '">' +
+      '<div class="q-header">' +
+        '<span class="num">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         hintHTML +
       '</div>' +
@@ -164,7 +164,7 @@
       mid +
       '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">' + optsHTML + '</div>' +
       '<input type="hidden" class="choice-inp" data-index="' + i + '" autocomplete="off">' +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
+      '<div class="feedback"></div>' +
       '</div>';
   }
 
@@ -206,8 +206,8 @@
       var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
       // 子题型 → 知识点（供 Adaptive v2 KP 级统计）
       var KP_BY_KIND = {
-        bookGuess: 'g2-m10-logic-reasoning',
-        sudoku3: 'g2-m10-sudoku3'
+        bookGuess: 'math-g2-m10-logic-reasoning',
+        sudoku3: 'math-g2-m10-sudoku3'
       };
       var type = opts.type || 'mix';
       var count = opts.count || 8;

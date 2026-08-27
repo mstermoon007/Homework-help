@@ -179,14 +179,14 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g4-m11-g4-judge-read',
-        'g4-m11-g4-judge-law',
-        'g4-m11-g4-judge-angle',
-        'g4-m11-g4-judge-line',
-        'g4-m11-g4-judge-quotient',
-        'g4-m11-g4-judge-dec',
-        'g4-m11-g4-judge-tri',
-        'g4-m11-stats'
+        'math-g4-m11-g4-judge-read',
+        'math-g4-m11-g4-judge-law',
+        'math-g4-m11-g4-judge-angle',
+        'math-g4-m11-g4-judge-line',
+        'math-g4-m11-g4-judge-quotient',
+        'math-g4-m11-g4-judge-dec',
+        'math-g4-m11-g4-judge-tri',
+        'math-g4-m11-stats'
     ],
 
     settings: [

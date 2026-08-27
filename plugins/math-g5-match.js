@@ -170,11 +170,11 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g5-m5-g5-match-areaf',
-        'g5-m5-g5-match-solid',
-        'g5-m5-g5-match-possib',
-        'g5-m5-g5-match-equ',
-        'g5-m5-g5-match-fracdec'
+        'math-g5-m5-g5-match-areaf',
+        'math-g5-m5-g5-match-solid',
+        'math-g5-m5-g5-match-possib',
+        'math-g5-m5-g5-match-equ',
+        'math-g5-m5-g5-match-fracdec'
     ],
 
     settings: [

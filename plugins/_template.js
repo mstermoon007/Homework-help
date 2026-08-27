@@ -7,9 +7,17 @@
  *   1. 复制本文件为 plugins/<你的插件id>.js，修改 id/name/grades 等
  *   2. 在 plugins/registry.js 注册：{ id, name, subject, grade, file, deps }
  *   3. 在 shared/module-catalog.js 登记模块（如需新模块）
- *   4. 在 shared/knowledge-bank.js 登记知识点条目（pluginId 须与 id 一致）
+ *   4. 在 shared/knowledge-bank.js 登记知识点条目（pluginId 须与 id 一致，
+ *      ID 为科目前缀三段式：math-g1-m1-addsub-20 / cn-g1-n1-… / en-g3-e1-…）
  *      —— 以上三处必须同步更新，页面（HTML）零修改
  *   5. 用 dev/plugin-check.html 验证 generate/render/check
+ *
+ * 【工厂选型（任务11 起）】
+ *   - PluginUtil.createMathPlugin(cfg)     数值比较批改 + math-grid/math-card + 数学难度消费
+ *   - PluginUtil.createChinesePlugin(cfg)  字符串标准化批改 + cn-grid/cn-card    + 语文难度消费
+ *   - PluginUtil.createEnglishPlugin(cfg)  拼写检查批改   + en-grid/en-card    + 英语难度消费
+ *   - 三者自动注入：subject 预设、opts.difficultyParams（App.Difficulty.paramsFor 结果）、
+ *     plugin.cardClass/gridClass；旧 createPlugin(cfg) 完全兼容、行为不变。
  *
  * 【硬性约定】
  *   - 随机数只用 PluginUtil（crypto 优先），禁止 Math.random()
@@ -28,16 +36,17 @@
   if (!_PU) throw new Error('plugins/_template.js 依赖 shared/common.js（PluginUtil），请先加载');
 
   /**
-   * 用 PluginUtil.createPlugin 工厂创建标准插件：
-   * 只需实现 generateQuestions(opts)，generate/render/check 由工厂自动生成。
-   * 完整参数见 shared/common.js 的 createPlugin JSDoc。
+   * 科目化工厂示例（数学）：createMathPlugin 自动提供
+   *   ① subject: 'math' 预设          ② 数值比较缺省批改（'12' 与 12 等价）
+   *   ③ math-grid 网格修饰类           ④ opts.difficultyParams = App.Difficulty.paramsFor('math', 难度)
+   * 语文/英语插件把函数名换成 createChinesePlugin / createEnglishPlugin 即可。
    */
-  var plugin = _PU.createPlugin({
+  var plugin = _PU.createMathPlugin({
 
     // ---- 必填元数据 ----
     id: 'template-demo',            // 与文件名一致（template-demo.js → template-demo）
     name: '样板插件（5以内加法）',
-    subject: 'math',                // 'math' | 'chinese' | 'english'
+    // subject 由工厂预设为 'math'，无需手写
     grades: [1],                    // 适用年级（非空数组）
     category: 'number',             // number / geometry / statistics / mixed
     moduleId: 'M1',                 // 对应 shared/module-catalog.js 的模块 id（数学插件必填）
@@ -63,17 +72,19 @@
     ],
 
     // ---- 知识点声明（须已在 shared/knowledge-bank.js 登记，否则开发期告警） ----
-    // 格式①（各年级统一）：knowledgePoints: ['g1-m1-addsub-20']
-    // 格式②（按年级区分）：knowledgePoints: { 1: ['g1-m1-addsub-20'], 2: ['g2-m1-addsub-100'] }
-    // knowledgePoints: ['g1-m1-addsub-20'],
+    // 格式①（各年级统一）：knowledgePoints: ['math-g1-m1-addsub-20']
+    // 格式②（按年级区分）：knowledgePoints: { 1: ['math-g1-m1-addsub-20'], 2: ['math-g2-m1-addsub-100'] }
+    // knowledgePoints: ['math-g1-m1-addsub-20'],
 
     // ---- 核心：只实现题目生成，render/check 由工厂兜底 ----
     generateQuestions(opts) {
       var count = opts.count || 10;
       var grade = opts.grade || 1;
 
-      // 难度系统（必接）：归一化 1-10；显式 maxNum 即填即得（与 math-oral 约定一致），
-      // 未显式给值时用 diffMax 按难度缩放基准值
+      // 难度系统（必接）：归一化 1-10；显式 maxNum 即填即得（与 math-oral 约定一致）。
+      // 工厂已注入 opts.difficultyParams（level/scale/steps/allowBracket/allowMultDiv），
+      // 也可直接消费结构参数：
+      //   var steps = opts.difficultyParams && opts.difficultyParams.steps;
       var _DIFF = _PU.diffLevel(opts.difficulty);            // 非法值回退 3
       var maxNum = opts.maxNum != null
         ? Math.round(Number(opts.maxNum))                    // 设置面板显式值优先
@@ -93,8 +104,8 @@
           // render 用 renderCard 生成标准卡片：类名（.question-card/.num/.answer-inp）
           // 与 practice.html 样式、打印模块完全一致，不要手写其他类名
           render: function (idx) { return _PU.renderCard(this, idx); }
-          // check 省略：工厂默认用 normalizeAns 比对 answer；
-          // 特殊判定（如多框/容差）可提供 check(userAnswers, idx) 覆盖
+          // check 省略：createMathPlugin 默认走数值比较批改；
+          // multi/数组答案仍走 defaultQCheck 分字段判定；特殊判定可提供 check(userAnswers, idx)
         });
       }
       return questions;
@@ -106,8 +117,8 @@
     }
 
     // ---- 可选覆盖（一般无需提供，工厂默认已够用） ----
-    // render(set) {},               // 自定义整组渲染（默认 renderGrid 网格）
-    // check(set, userAnswers) {},   // 自定义整组批改（默认逐题 normalizeAns 比对）
+    // render(set) {},               // 自定义整组渲染（默认网格自动带科目修饰类）
+    // check(set, userAnswers) {},   // 自定义整组批改（默认逐题科目比较器）
   });
 
   // ============ 导出（与所有插件保持一致，勿改） ============

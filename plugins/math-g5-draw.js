@@ -311,12 +311,12 @@
     category: 'geometry',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g5-m6-g5-draw-rotate',
-        'g5-m6-g5-draw-observe',
-        'g5-m6-g5-draw-height',
-        'g5-m6-g5-draw-sym',
-        'g5-m6-g5-draw-coord',
-        'g5-m6-g5-draw-net'
+        'math-g5-m6-g5-draw-rotate',
+        'math-g5-m6-g5-draw-observe',
+        'math-g5-m6-g5-draw-height',
+        'math-g5-m6-g5-draw-sym',
+        'math-g5-m6-g5-draw-coord',
+        'math-g5-m6-g5-draw-net'
     ],
 
     settings: [

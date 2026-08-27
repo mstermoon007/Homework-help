@@ -922,15 +922,15 @@
   /** 渲染单题卡片（标准 Question.render） */
   function renderWordCard(question, idx) {
     return '<div class="question-card" data-index="' + idx + '" style="border:1px solid var(--line);border-radius:12px;padding:14px 12px;text-align:center;position:relative;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand-d);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
+      '<div class="q-header">' +
+        '<span class="num">' + (idx + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         '<span class="q-text" style="font-size:15px;font-weight:700;color:var(--ink);display:inline;vertical-align:middle;margin:4px 0 6px;line-height:1.5;">' + question.question + '</span>' +
       '</div>' +
-      (question.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + question.hint + '</div>' : '') +
+      (question.hint ? '<div class="q-hint">💡 ' + question.hint + '</div>' : '') +
       '<div style="display:flex;align-items:center;justify-content:center;gap:4px;">' +
       '<input type="text" class="answer-input" data-index="' + idx + '" autocomplete="off" style="width:64px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:var(--soft-bg);outline:none;">' +
-      (question.unit ? '<span style="font-size:13px;color:var(--muted);font-weight:600;">' + question.unit + '</span>' : '') +
+      (question.unit ? '<span class="unit">' + question.unit + '</span>' : '') +
       '</div>' +
       '</div>';
   }
@@ -976,9 +976,9 @@
     // 知识点标注（按年级 + 模板桶；本插件自带 level 分档，难度消费按规范跳过，
     // 未标注 q.difficulty 时 Adaptive 按标准档 3 计权）
     var KP_BY_GRADE_CAT = {
-      1: { solve: 'g1-m8-solve-problems', chain: 'g1-m8-chain-mixed' },
-      2: { solve: 'g2-m8-solve-problems', chain: 'g2-m8-solve-problems' },
-      3: { solve: 'g3-m8-g3-times', chain: 'g3-m8-g3-times' }
+      1: { solve: 'math-g1-m8-solve-problems', chain: 'math-g1-m8-chain-mixed' },
+      2: { solve: 'math-g2-m8-solve-problems', chain: 'math-g2-m8-solve-problems' },
+      3: { solve: 'math-g3-m8-g3-times', chain: 'math-g3-m8-g3-times' }
     };
     var kpMap = KP_BY_GRADE_CAT[grade] || null;
     var questions = list.map(function (q) {
@@ -1010,9 +1010,9 @@
     printConfig: { pageType: 'word' },
     // 声明本插件覆盖的知识点（按年级区分：一年级用 solve-problems/chain-mixed，二年级用 wp-solve，三年级用 g3-m8-g3-times）
     knowledgePoints: {
-      1: ['g1-m8-solve-problems', 'g1-m8-chain-mixed'],
-      2: ['g2-m8-solve-problems'],
-      3: ['g3-m8-g3-times']
+      1: ['math-g1-m8-solve-problems', 'math-g1-m8-chain-mixed'],
+      2: ['math-g2-m8-solve-problems'],
+      3: ['math-g3-m8-g3-times']
     },
     columns: 2,
 

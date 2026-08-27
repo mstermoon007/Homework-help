@@ -17,7 +17,7 @@ process.argv.slice(2).forEach(function (a, i) {
 });
 var SMALL_POOL = /judge|reasoning|oral|make-ten/;
 
-var totalPlugins = 0, failPlugins = 0;
+var totalPlugins = 0, failPlugins = 0, exemptPlugins = 0;
 reg.filter(function (r) { return !r.isPlaceholder && r.subject === 'math'; }).forEach(function (rec) {
   var p;
   try { p = require(path.join(ROOT, rec.file)); } catch (e) { return; }
@@ -39,14 +39,27 @@ reg.filter(function (r) { return !r.isPlaceholder && r.subject === 'math'; }).fo
   }
   var rate = totalQ > 0 ? (dupQ / totalQ) : 0;
   var pct = Math.round(rate * 1000) / 10;
+  // 池大小检测：插件暴露 poolCache 且池小于请求总量（ROUNDS×COUNT）时，
+  // 说明题目池有限、无法完全避免重复，自动豁免（不计入超限）并提示。
+  var poolSize = null;
+  try {
+    if (p.poolCache && typeof p.poolCache.size === 'function') poolSize = p.poolCache.size();
+  } catch (e) { /* 池大小不可知则不豁免 */ }
+  var need = ROUNDS * COUNT;
+  var limited = poolSize != null && poolSize < need;
   var tag = rate > threshold ? '✗' : '✓';
+  var extra = '';
+  if (limited) extra += ' [题目池有限（' + poolSize + ' < ' + need + '），无法完全避免重复，已豁免]';
+  else if (isSmall) extra += ' [小池]';
   console.log(tag + ' ' + rec.id + '  重复率 ' + pct + '% (' + dupQ + '/' + totalQ + ')' +
-    (isSmall ? ' [小池]' : '') + (rate > threshold ? ' ⚠️ 超过 ' + Math.round(threshold * 100) + '%' : ''));
-  // 报告模式：记录超限但不作为 CI 硬门禁
-  if (rate > threshold) failPlugins++;
+    (poolSize != null ? ' 池=' + poolSize : '') + extra + (rate > threshold && !limited ? ' ⚠️ 超过 ' + Math.round(threshold * 100) + '%' : ''));
+  if (rate > threshold && !limited) failPlugins++;
+  else if (limited) exemptPlugins++;
 });
 
-console.log('\n' + (failPlugins === 0
-  ? '✅ 全部 ' + totalPlugins + ' 个插件重复率在阈值内'
-  : '❌ ' + failPlugins + '/' + totalPlugins + ' 个插件重复率超限'));
+var summary = failPlugins === 0
+  ? '✅ ' + (totalPlugins - exemptPlugins) + '/' + totalPlugins + ' 个插件重复率在阈值内'
+  : '❌ ' + failPlugins + '/' + totalPlugins + ' 个插件重复率超限';
+if (exemptPlugins > 0) summary += '（另有 ' + exemptPlugins + ' 个因题目池有限被豁免）';
+console.log('\n' + summary);
 process.exit(failPlugins === 0 ? 0 : 1);

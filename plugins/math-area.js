@@ -179,7 +179,7 @@
   // ============ 标准题目对象：渲染 / 判定 ============
   /** 渲染单题卡片（标准 Question.render） */
   function renderAreaCard(p, i) {
-    var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
+    var hintHTML = p.hint ? '<div class="q-hint">💡 ' + p.hint + '</div>' : '';
     var svgHTML = p.svg ? '<div style="display:flex;justify-content:center;padding:8px 0;margin:4px 0;">' + p.svg + '</div>' : '';
 
     var inputHTML = '';
@@ -195,20 +195,20 @@
       inputHTML = '<div class="input-group" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;">' +
         '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" ' +
         'style="width:80px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:var(--soft-bg);outline:none;">' +
-        '<span style="font-size:13px;color:var(--muted);font-weight:600;">' + (p.unitLabel || '平方厘米') + '</span>' +
+        '<span class="unit">' + (p.unitLabel || '平方厘米') + '</span>' +
         '</div>';
     }
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+    return '<div class="question-card math-card math-card--geometry" data-index="' + i + '">' +
+      '<div class="q-header">' +
+        '<span class="num">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         hintHTML +
       '</div>' +
-      '<div style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 6px;">' + p.question + '</div>' +
+      '<div>' + p.question + '</div>' +
       svgHTML +
       inputHTML +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
+      '<div class="feedback"></div>' +
       '</div>';
   }
 
@@ -233,7 +233,7 @@
     category: 'geometry',
     printConfig: { pageType: 'area' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
-    knowledgePoints: ['g3-m6-g3-area'],
+    knowledgePoints: ['math-g3-m6-g3-area'],
 
     settings: [
       {
@@ -269,7 +269,7 @@
           kind: p.kind,
           data: p,
           answer: String(p.answer),
-          knowledgePointId: 'g3-m6-g3-area',
+          knowledgePointId: 'math-g3-m6-g3-area',
           hint: p.hint,
           render: function (idx) { return renderAreaCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkAreaQuestion(this, userAnswers, idx); }

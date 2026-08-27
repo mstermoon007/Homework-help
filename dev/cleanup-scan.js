@@ -22,7 +22,7 @@ const keepFiles = [
   /^overview\.md$/,
   /^LICENSE$/,
   /^\.gitignore$/,
-  /^banner\.jpg$/,
+  /^assets\/banner\.webp$/,
   /^pinyin-bank\.js$/,
   /^sw\.js$/,
   /^CNAME$/, // GitHub Pages 自定义域名文件，合法保留

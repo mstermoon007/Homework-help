@@ -204,15 +204,15 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g5-m11-g5-judge-decmul',
-        'g5-m11-g5-judge-equ',
-        'g5-m11-g5-judge-fm',
-        'g5-m11-g5-judge-frac',
-        'g5-m11-g5-judge-area',
-        'g5-m11-g5-judge-solid',
-        'g5-m11-motion',
-        'g5-m11-g5-judge-possib',
-        'g5-m11-stats'
+        'math-g5-m11-g5-judge-decmul',
+        'math-g5-m11-g5-judge-equ',
+        'math-g5-m11-g5-judge-fm',
+        'math-g5-m11-g5-judge-frac',
+        'math-g5-m11-g5-judge-area',
+        'math-g5-m11-g5-judge-solid',
+        'math-g5-m11-motion',
+        'math-g5-m11-g5-judge-possib',
+        'math-g5-m11-stats'
     ],
 
     settings: [

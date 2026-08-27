@@ -16,7 +16,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const BASE = 'https://mstermoon007.github.io/Homework-help/';
+const BASE = 'https://home.modouyu.top/';
 const reg = require(path.join(ROOT, 'plugins', 'registry.js'));
 
 function ld(obj) {
@@ -80,7 +80,7 @@ insertBeforeHeadEnd('index.html',
     '@type': 'Organization',
     'name': 'Homework Help',
     'url': BASE,
-    'logo': BASE + 'banner.jpg',
+    'logo': BASE + 'assets/banner.webp',
     'sameAs': []
   }));
 

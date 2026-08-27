@@ -133,9 +133,9 @@
       var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
       // 子题型 → 知识点（凑十/平十/破十，供 Adaptive v2 KP 级统计）
       var KP_BY_KIND = {
-        cushi: 'g1-m0-make-ten',
-        pingshi: 'g1-m0-make-ten-ping',
-        poshi: 'g1-m0-make-ten-po'
+        cushi: 'math-g1-m0-make-ten',
+        pingshi: 'math-g1-m0-make-ten-ping',
+        poshi: 'math-g1-m0-make-ten-po'
       };
       var type = opts.type || 'cushi';
       var count = opts.count || 5;

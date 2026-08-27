@@ -353,12 +353,12 @@
     category: 'geometry',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g4-m6-g4-draw-protractor',
-        'g4-m6-g4-draw-para',
-        'g4-m6-g4-draw-grid',
-        'g4-m6-g4-draw-view',
-        'g4-m6-g4-draw-sym',
-        'g4-m6-g4-draw-move'
+        'math-g4-m6-g4-draw-protractor',
+        'math-g4-m6-g4-draw-para',
+        'math-g4-m6-g4-draw-grid',
+        'math-g4-m6-g4-draw-view',
+        'math-g4-m6-g4-draw-sym',
+        'math-g4-m6-g4-draw-move'
     ],
 
     settings: [

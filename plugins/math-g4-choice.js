@@ -267,12 +267,12 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g4-m12-g4-choice-big',
-        'g4-m12-g4-choice-est',
-        'g4-m12-g4-choice-angle',
-        'g4-m12-g4-choice-shape',
-        'g4-m12-g4-choice-dec',
-        'g4-m12-g4-choice-law'
+        'math-g4-m12-g4-choice-big',
+        'math-g4-m12-g4-choice-est',
+        'math-g4-m12-g4-choice-angle',
+        'math-g4-m12-g4-choice-shape',
+        'math-g4-m12-g4-choice-dec',
+        'math-g4-m12-g4-choice-law'
     ],
 
     settings: [

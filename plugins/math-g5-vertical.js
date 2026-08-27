@@ -34,14 +34,14 @@
   }
 
   function cardHTML(idx, inner) {
-    return '<div class="question-card" data-index="' + idx + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 0.5cm;position:relative;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-      '<span class="num" style="flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand-d);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (idx + 1) + '</span>' +
+    return '<div class="question-card math-card math-card--column" data-index="' + idx + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 0.5cm;position:relative;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
+      '<div class="q-header">' +
+      '<span class="num">' + (idx + 1) + '</span>' +
       '&nbsp;&nbsp;&nbsp;&nbsp;' +
       '<span class="q-text" style="font-size:12px;color:var(--muted);font-weight:700;display:inline;vertical-align:middle;">用竖式计算</span>' +
       '</div>' +
       inner +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
+      '<div class="feedback"></div>' +
       '</div>';
   }
 
@@ -186,7 +186,7 @@
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-m2-g5-v-decmul', 'g5-m2-g5-v-divint', 'g5-m2-g5-v-ddivdec', 'g5-m2-g5-v-repeating'],
+    knowledgePoints: ['math-g5-m2-g5-v-decmul', 'math-g5-m2-g5-v-divint', 'math-g5-m2-g5-v-ddivdec', 'math-g5-m2-g5-v-repeating'],
 
     settings: [
       {

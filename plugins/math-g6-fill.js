@@ -204,13 +204,13 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g6-m4-g6-fill-negative',
-        'g6-m4-g6-fill-percent',
-        'g6-m4-g6-fill-ratio',
-        'g6-m4-g6-fill-circle',
-        'g6-m4-g6-fill-cylinder-cone',
-        'g6-m4-g6-fill-pie-chart',
-        'g6-m4-unit-convert'
+        'math-g6-m4-g6-fill-negative',
+        'math-g6-m4-g6-fill-percent',
+        'math-g6-m4-g6-fill-ratio',
+        'math-g6-m4-g6-fill-circle',
+        'math-g6-m4-g6-fill-cylinder-cone',
+        'math-g6-m4-g6-fill-pie-chart',
+        'math-g6-m4-unit-convert'
     ],
 
     settings: [

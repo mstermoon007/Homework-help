@@ -66,6 +66,27 @@
     }
     return arc + lab;
   }
+  /** 线段等分标记（任务：SVG 细化）：在线段 n 等分的各分点画垂直短刻线。
+   *  @param {number} x1,y1,x2,y2 线段端点
+   *  @param {number} n 等分数（≥2 才有分点）
+   *  @param {Object} [opts] { size 刻线半长(默认6), color } */
+  function tickMark(x1, y1, x2, y2, n, opts) {
+    opts = opts || {};
+    if (!(n >= 2)) return '';
+    var dx = x2 - x1, dy = y2 - y1;
+    var len = Math.sqrt(dx * dx + dy * dy) || 1;
+    var ux = dx / len, uy = dy / len;         // 线段方向
+    var nx = -uy, ny = ux;                    // 法向
+    var s = opts.size || 6;
+    var out = '';
+    for (var i = 1; i < n; i++) {
+      var t = i / n;
+      var cx = x1 + dx * t, cy = y1 + dy * t;
+      out += U.svgLine(cx - nx * s, cy - ny * s, cx + nx * s, cy + ny * s,
+        { strokeWidth: 1.4, stroke: opts.color || '#8a97ad' });
+    }
+    return out;
+  }
 
   function finish(inner, opt, extraW) {
     return U.svgWrap(inner, Object.assign({ padding: 12 }, opt && opt.wrap));
@@ -129,6 +150,14 @@
           inner += angleArc(V[0], V[1], A[0], A[1], B[0], B[1], 20, o.angles[v] + '°');
         }
       }
+    }
+    if (o.ticks) {
+      // 线段等分标记：o.ticks=[[边序号(0底边,1右边,2左边), 等分数],...]
+      var segs = [[P[1], P[2]], [P[0], P[2]], [P[0], P[1]]];
+      o.ticks.forEach(function (tk) {
+        var sg = segs[tk[0]];
+        if (sg) inner += tickMark(sg[0][0], sg[0][1], sg[1][0], sg[1][1], tk[1]);
+      });
     }
     return finish(inner, o);
   }
@@ -291,9 +320,16 @@
     circle: circle, sector: sector,
     cuboid: cuboid, cube: cube, cylinder: cylinder, cone: cone,
     translationDemo: translationDemo, rotationDemo: rotationDemo, reflectionDemo: reflectionDemo,
-    _helpers: { rightAngleMark: rightAngleMark, angleArc: angleArc }
+    tickMark: tickMark,
+    _helpers: { rightAngleMark: rightAngleMark, angleArc: angleArc, tickMark: tickMark }
   };
 
   global.SVGGeometry = SVGGeometry;
+
+  // 任务7：挂载到科目化命名空间（全局旧名 SVGGeometry 保留兼容既有插件/测试）
+  global.SVGGenerators = global.SVGGenerators || {};
+  global.SVGGenerators.math = global.SVGGenerators.math || {};
+  global.SVGGenerators.math.geometry = SVGGeometry;
+
   if (typeof module !== 'undefined') module.exports = SVGGeometry;
 })(typeof window !== 'undefined' ? window : global);

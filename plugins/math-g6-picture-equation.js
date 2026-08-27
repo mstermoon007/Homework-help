@@ -171,7 +171,7 @@
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g6-m7-g6-pic-frac-line', 'g6-m7-g6-pic-pie-chart', 'g6-m7-g6-pic-scale'],
+    knowledgePoints: ['math-g6-m7-g6-pic-frac-line', 'math-g6-m7-g6-pic-pie-chart', 'math-g6-m7-g6-pic-scale'],
 
     settings: [
       {

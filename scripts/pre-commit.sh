@@ -4,13 +4,19 @@
 set -e
 cd "$(dirname "$0")/.."
 
-echo "▶ [1/3] 项目搭建校验（verify-setup）"
+echo "▶ [1/5] 静态质量检查（lint-check）"
+npm run -s check-lint
+
+echo "▶ [2/5] 全插件接口合规性检查（check-plugin-interfaces）"
+node dev/check-plugin-interfaces.js || exit 1
+
+echo "▶ [3/5] 项目搭建校验（verify-setup）"
 npm run -s verify
 
-echo "▶ [2/3] 知识库 ↔ 插件对齐校验（verify-knowledge-bank）"
+echo "▶ [4/5] 知识库 ↔ 插件对齐校验（verify-knowledge-bank）"
 npm run -s check-knowledge
 
-echo "▶ [3/3] 全插件满分回归（regression-check）"
+echo "▶ [5/5] 全插件满分回归 + 边界用例（regression-check）"
 npm run -s check-regression
 
 echo "✅ 核心校验全部通过。"

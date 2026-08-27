@@ -165,7 +165,7 @@
     subject: 'math',
     category: 'mixed',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g4-m10-g4-reason-opt', 'g4-m10-g4-reason-cr', 'g4-m10-logic-reasoning'],
+    knowledgePoints: ['math-g4-m10-g4-reason-opt', 'math-g4-m10-g4-reason-cr', 'math-g4-m10-logic-reasoning'],
 
     settings: [
       {

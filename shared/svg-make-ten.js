@@ -82,6 +82,14 @@
   }
 
   // ============ 渲染 ============
+  // 步骤动画（任务：SVG 细化）：opts.animate=true 时逐行淡入（内嵌 <style> + 类延迟），
+  // 纯 CSS 实现、无 JS；printMode（打印/预览）强制静态；prefers-reduced-motion 自动关闭。
+  var MT_ANIM_STYLE = '<style>' +
+    '@keyframes mtFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}' +
+    '.mt-step{opacity:0;animation:mtFadeIn .5s ease-out forwards}' +
+    '@media (prefers-reduced-motion:reduce){.mt-step{animation:none;opacity:1}}' +
+    '</style>';
+
   function render(steps, opts) {
     if (!steps) return null;
     opts = opts || {};
@@ -92,11 +100,18 @@
         { fontSize: 15, fill: '#7a879c', 'text-anchor': 'middle', fontWeight: 700 }));
     }
     var y0 = steps.title === false ? 34 : 58;
+    var animate = !!opts.animate && !opts.printMode;
     steps.lines.forEach(function (segs, i) {
-      rows.push(segLine(segs, 150, y0 + i * lh, fs));
+      var lineSvg = segLine(segs, 150, y0 + i * lh, fs);
+      if (animate) {
+        lineSvg = U.svgElement('g', { 'class': 'mt-step',
+          style: 'animation-delay:' + (i * 0.45).toFixed(2) + 's' }, lineSvg);
+      }
+      rows.push(lineSvg);
     });
     var h = y0 + steps.lines.length * lh;
-    return U.svgWrap(rows.join(''), { viewBox: '0 0 300 ' + h, width: opts.width || 300, height: h });
+    return U.svgWrap((animate ? MT_ANIM_STYLE : '') + rows.join(''),
+      { viewBox: '0 0 300 ' + h, width: opts.width || 300, height: h, printMode: opts.printMode });
   }
 
   function makeTen(a, b, opts) { return render(makeTenSteps(a, b), opts); }
@@ -107,5 +122,11 @@
     makeTen: makeTen, pingTen: pingTen, poTen: poTen,
     makeTenSteps: makeTenSteps, pingTenSteps: pingTenSteps, poTenSteps: poTenSteps
   };
+
+  // 任务7：挂载到科目化命名空间（全局旧名 SVGMakeTen 保留兼容）
+  global.SVGGenerators = global.SVGGenerators || {};
+  global.SVGGenerators.math = global.SVGGenerators.math || {};
+  global.SVGGenerators.math.makeTen = global.SVGMakeTen;
+
   if (typeof module !== 'undefined') module.exports = global.SVGMakeTen;
 })(typeof window !== 'undefined' ? window : global);

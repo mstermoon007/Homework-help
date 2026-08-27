@@ -211,11 +211,11 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g4-m5-g4-match-read',
-        'g4-m5-g4-match-angle',
-        'g4-m5-g4-match-shape',
-        'g4-m5-g4-match-law',
-        'g4-m5-g4-match-decfrac'
+        'math-g4-m5-g4-match-read',
+        'math-g4-m5-g4-match-angle',
+        'math-g4-m5-g4-match-shape',
+        'math-g4-m5-g4-match-law',
+        'math-g4-m5-g4-match-decfrac'
     ],
 
     settings: [

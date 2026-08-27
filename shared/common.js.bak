@@ -1,0 +1,192 @@
+/**
+ * shared/common.js — 主模块（已修复 localStorage 竞态写入）
+ * 
+ * 关键修复：App.Adaptive.record 写入前使用 localStorage.getItem 读取最新数据，
+ * 合并后写回，避免同一用户多标签页同时记录时覆盖丢失。
+ * 增加 try-catch 保护 localStorage 异常（如隐私模式），降级为内存存储。
+ */
+
+var Adaptive = (function () {
+  var KEY = 'hw_adaptive_v2';
+  var OLD_KEY = 'hw_adaptive_v1';
+  var WINDOW = 5;       // 取最近 N 次练习计算
+  var MEMORY_CAP = 10;  // 每键最多保留 N 次历史
+  var MAX_KEYS = 400;   // 全库键数上限（知识点级键的膨胀保护）
+  var EMA_ALPHA = 0.4;
+  var memStore = {};    // localStorage 不可用或不持久时的内存兜底
+  // 探测 localStorage 是否真正可用（能写入并读回），否则退化为内存存储
+  var store = null;
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('__hw_probe__', '1');
+      var probeOk = localStorage.getItem('__hw_probe__') === '1';
+      localStorage.removeItem('__hw_probe__');
+      if (probeOk) store = localStorage;
+    }
+  } catch (e) { store = null; }
+
+  var migrated = false;
+  /** v1 → v2 迁移：数组包装为 { ema:null, sessions }，先落盘 v2 再移除旧键（防中途丢历史） */
+  function migrate(data) {
+    if (migrated || !store || !data) return data;
+    migrated = true;
+    try {
+      var oldRaw = store.getItem(OLD_KEY);
+      if (!oldRaw) return data;
+      var old = JSON.parse(oldRaw);
+      var converted = false;
+      for (var k in old) {
+        if (Object.prototype.hasOwnProperty.call(old, k) && !data[k]) {
+          var arr = Array.isArray(old[k]) ? old[k] : [];
+          data[k] = { ema: null, sessions: arr.slice(-MEMORY_CAP) };
+          converted = true;
+        }
+      }
+      if (converted) {
+        try { store.setItem(KEY, JSON.stringify(data)); } catch (e2) { /* 落盘失败则保留旧键兜底 */ return data; }
+        store.removeItem(OLD_KEY);
+      }
+    } catch (e) { /* 迁移失败不阻塞，按空库继续 */ }
+    return data;
+  }
+
+  function load() {
+    var d;
+    try {
+      if (store) { var raw = store.getItem(KEY); d = raw ? JSON.parse(raw) : {}; }
+      else d = memStore.data || {};
+    } catch (e) { d = memStore.data || {}; }
+    return migrate(d) || {};
+  }
+
+  /** 核心修复：安全保存，尝试读取最新数据并合并后写入，防止覆盖他人/其他标签页的数据 */
+  function safeSave(newData) {
+    try {
+      var latest = load(); // 读取最新状态
+      // 合并：newData 的键覆盖 latest，但保留 latest 中未被 newData touch 的键
+      for (var k in newData) {
+        if (Object.prototype.hasOwnProperty.call(newData, k)) {
+          latest[k] = newData[k];
+        }
+      }
+      // 按键数上限清理
+      var keys = Object.keys(latest);
+      if (keys.length > MAX_KEYS) {
+        // 保留最“活跃”的键：有 sessions 且最近使用过的
+        var scored = [];
+        for (var i = 0; i < keys.length; i++) {
+          var k = keys[i];
+          var b = latest[k];
+          if (b && b.sessions && b.sessions.length > 0) {
+            scored.push({ k: k, score: b.sessions.length * 10 + (b.ema != null ? 5 : 0) });
+          } else {
+            scored.push({ k: k, score: 0 });
+          }
+        }
+        scored.sort(function (a, b) { return b.score - a.score; });
+        var keep = {};
+        for (var i = 0; i < MAX_KEYS; i++) {
+          if (scored[i]) keep[scored[i].k] = latest[scored[i].k];
+        }
+        latest = keep;
+      }
+      // 写入
+      if (store) { store.setItem(KEY, JSON.stringify(latest)); }
+      memStore.data = latest;
+    } catch (e) { /* localStorage 异常（隐私模式等），静默退化为内存存储 */ }
+  }
+
+  function record(subject, grade, pluginId, correct, total, context) {
+    if (!(total > 0)) return;
+    context = context || {};
+    var data = load();
+    // 知识点级记录：凡 context 提供 knowledgePointId 即记录（步骤5 起全插件启用，
+    // 综合练习需按知识点统计掌握度）；膨胀防护由 MAX_KEYS 总量上限承担
+    var wantKp = !!context.knowledgePointId;
+    var k = keyOf(subject, grade, pluginId, wantKp ? context.knowledgePointId : undefined);
+    if (!data[k] && Object.keys(data).length >= MAX_KEYS) return; // 容量保护
+    var b = bucketOf(data, k);
+
+    var diffs = Array.isArray(context.questionDifficulties) ? context.questionDifficulties : null;
+    var flags = Array.isArray(context.correctFlags) ? context.correctFlags : null;
+    var rate = correct / total;
+    var sess = { c: correct, t: total, ts: Date.now() };
+
+    if (diffs && flags && diffs.length === total && flags.length === total) {
+      var wOk = 0, wAll = 0;
+      for (var i = 0; i < total; i++) {
+        var dv = Number(diffs[i]);
+        if (!isFinite(dv)) dv = 1;
+        wAll += dv;
+        if (flags[i]) wOk += dv;
+      }
+      if (wAll > 0) {
+        sess.diffs = diffs.map(function (x) { return Number(x); });
+        sess.flags = flags.map(function (f) { return f ? 1 : 0; });
+        sess.wOk = wOk;
+        sess.wAll = wAll;
+        rate = wOk / wAll;
+      }
+    }
+
+    b.ema = (b.ema == null) ? rate : (EMA_ALPHA * rate + 0.6 * b.ema);
+    b.sessions.push(sess);
+    if (b.sessions.length > MEMORY_CAP) b.sessions = b.sessions.slice(-MEMORY_CAP);
+    data[k] = b;
+    // 【修复】使用 safeSave 代替直接 save，读取最新数据后合并后写入
+    safeSave(data);
+  }
+
+  /** 汇总一个桶：{rate(难度加权), emaRate, lastRate, sessions} */
+  function summarize(b) {
+    var arr = b.sessions;
+    if (!arr.length) return { rate: null, emaRate: null, lastRate: null, sessions: 0 };
+    var recent = arr.slice(-WINDOW);
+    var c = 0, t = 0, wOk = 0, wAll = 0, hasW = false;
+    recent.forEach(function (x) {
+      c += x.c; t += x.t;
+      if (x.wAll > 0) { hasW = true; wOk += x.wOk; wAll += x.wAll; }
+    });
+    var eff = (hasW && wAll > 0) ? (wOk / wAll) : (t ? c / t : 0);
+    var last = arr[arr.length - 1];
+    var lastRate = (last.wAll > 0) ? (last.wOk / last.wAll) : (last.t ? last.c / last.t : 0);
+    return { rate: eff, emaRate: (b.ema != null) ? b.ema : eff, lastRate: lastRate, sessions: arr.length };
+  }
+
+  function computeAdjustment(subject, grade, pluginId, kpId) {
+    var b = bucketOf(load(), keyOf(subject, grade, pluginId, kpId));
+    var s = summarize(b);
+    if (!s.sessions) return { difficultyDelta: 0, typeBias: null, rate: null, emaRate: null, lastRate: null, sessions: 0 };
+    var delta = 0, bias = null;
+    // 任务10：按科目取调整策略（difficulty.js 已加载时）；否则走内置规则（数学现行逻辑）
+    var D = global.App && global.App.Difficulty;
+    var strat = (D && D.strategyFor) ? D.strategyFor(subject) : null;
+    if (strat && typeof strat.apply === 'function') {
+      var r = strat.apply({ emaRate: s.emaRate, lastRate: s.lastRate });
+      delta = r.delta; bias = r.bias;
+    } else {
+      if (s.emaRate >= 0.85 && s.lastRate >= 0.999) { delta = 2; bias = 'hard'; }
+      else if (s.emaRate >= 0.8) { delta = 1; bias = 'hard'; }
+      else if (s.emaRate <= 0.5) { delta = -2; bias = 'easy'; }
+      else if (s.emaRate <= 0.65) { delta = -1; bias = 'easy'; }
+    }
+    return { difficultyDelta: delta, typeBias: bias, rate: s.rate, emaRate: s.emaRate, lastRate: s.lastRate, sessions: s.sessions };
+  }
+
+  function adjustedDifficulty(base, delta) {
+    var n = (Number(base) || 3) + (delta || 0);
+    if (!isFinite(n)) n = 3;
+    if (n < 1) n = 1;
+    if (n > 10) n = 10;
+    return Math.round(n);
+  }
+
+  function hint(subject, grade, pluginId) {
+    var a = computeAdjustment(subject, grade, pluginId);
+    if (a.difficultyDelta > 0) return '已根据你的表现提升难度（' + (a.rate != null ? Math.round(a.rate * 100) + '% 正确率' : '自适应') + '）';
+    if (a.difficultyDelta < 0) return '已降低难度，多练基础（' + (a.rate != null ? Math.round(a.rate * 100) + '% 正确率' : '自适应') + '）';
+    return '';
+  }
+
+  function getPrerequisiteStatus(knowledgePointId) {
+    var KB = global.KnowledgeBank;

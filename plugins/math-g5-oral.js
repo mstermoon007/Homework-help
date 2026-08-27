@@ -163,11 +163,11 @@
     category: 'number',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g5-m1-g5-oral-decmul',
-        'g5-m1-g5-oral-decdiv',
-        'g5-m1-g5-oral-fracadd',
-        'g5-m1-g5-oral-equ',
-        'g5-m1-g5-oral-fm'
+        'math-g5-m1-g5-oral-decmul',
+        'math-g5-m1-g5-oral-decdiv',
+        'math-g5-m1-g5-oral-fracadd',
+        'math-g5-m1-g5-oral-equ',
+        'math-g5-m1-g5-oral-fm'
     ],
 
     settings: [

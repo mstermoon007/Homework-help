@@ -296,17 +296,17 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g5-m8-g5-word-decmul',
-        'g5-m8-g5-word-decdiv',
-        'g5-m8-g5-word-equ',
-        'g5-m8-g5-word-fm',
-        'g5-m8-g5-word-frac',
-        'g5-m8-g5-word-area',
-        'g5-m8-g5-word-solid',
-        'g5-m8-g5-word-possib',
-        'g5-m8-g5-word-linechart',
-        'g5-m8-g5-word-tree',
-        'g5-m8-g5-word-defect'
+        'math-g5-m8-g5-word-decmul',
+        'math-g5-m8-g5-word-decdiv',
+        'math-g5-m8-g5-word-equ',
+        'math-g5-m8-g5-word-fm',
+        'math-g5-m8-g5-word-frac',
+        'math-g5-m8-g5-word-area',
+        'math-g5-m8-g5-word-solid',
+        'math-g5-m8-g5-word-possib',
+        'math-g5-m8-g5-word-linechart',
+        'math-g5-m8-g5-word-tree',
+        'math-g5-m8-g5-word-defect'
     ],
 
     settings: [

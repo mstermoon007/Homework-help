@@ -318,9 +318,12 @@ Promise.all(promises).then(function () {
   var KB = require(path.join(ROOT, 'shared/knowledge-bank.js'));
   // 知识点索引：(pluginId|grade|kpId) → true，用于校验题目标注的 knowledgePointId 合法
   var kpIndex = {};
-  KB.forEach(function (g) {
-    g.modules.forEach(function (m) {
-      m.knowledgePoints.forEach(function (k) { kpIndex[k.pluginId + '|' + g.grade + '|' + k.id] = true; });
+  Object.keys(KB).forEach(function (subject) {
+    if (!Array.isArray(KB[subject])) return;
+    KB[subject].forEach(function (g) {
+      g.modules.forEach(function (m) {
+        m.knowledgePoints.forEach(function (k) { kpIndex[k.pluginId + '|' + g.grade + '|' + k.id] = true; });
+      });
     });
   });
 
@@ -377,6 +380,93 @@ Promise.all(promises).then(function () {
         'math-word-problems g' + grade + '：level 分档生效不叠加通用难度，KP 标注合法');
     });
   })();
+
+  // ===== 任务10 回归：难度系统按科目差异化 =====
+  console.log('\n===== 任务10 回归（DifficultyProfiles · 科目策略路由） =====');
+
+  // a) 档案存在 + 科目代号归一
+  assert(D.DifficultyProfiles && D.DifficultyProfiles.math && D.DifficultyProfiles.cn && D.DifficultyProfiles.en,
+    'DifficultyProfiles 含 math/cn/en 三科目档案');
+  assert(D.profileFor('chinese') === D.DifficultyProfiles.cn, 'profileFor(chinese) → cn 档案');
+  assert(D.profileFor('english') === D.DifficultyProfiles.en, 'profileFor(english) → en 档案');
+  assert(D.profileFor('math') === D.DifficultyProfiles.math, 'profileFor(math) → math 档案');
+  assert(D.profileFor('unknown-x') === D.DifficultyProfiles.math, '未知科目回落 math 档案');
+
+  // b) 数学行为不变：paramsFor 与既有 createProfile/diffScale 完全一致
+  var pm3 = D.paramsFor('math', 3);
+  assert(pm3.scale === PU.diffScale(3) && pm3.steps === D.difficultyToStructure(3).steps
+    && pm3.allowBracket === false && pm3.allowMultDiv === false,
+    'paramsFor(math,3)：scale=1、steps=2、无括号无乘除（现行行为）');
+  var pm8 = D.paramsFor('math', 8);
+  assert(pm8.allowBracket === true && pm8.allowMultDiv === true && pm8.scale === PU.diffScale(8),
+    'paramsFor(math,8)：scale 放大且结构含括号乘除');
+
+  // c) 语文映射：字词复杂度 + 句子长度（边界与单调）
+  var pc3 = D.DifficultyProfiles.cn.toParams(3), pc7 = D.DifficultyProfiles.cn.toParams(7),
+      pc10 = D.DifficultyProfiles.cn.toParams(10);
+  assert(pc3.vocabTier === 'basic' && pc3.sentenceLength === 12 && pc3.charCountMax === 8,
+    'cn lv3：vocabTier=basic，句长 12，字数上限 8');
+  assert(pc7.vocabTier === 'advanced' && pc7.sentenceLength === 20 && pc7.charCountMax === 16,
+    'cn lv7：vocabTier=advanced，句长 20，字数上限 16');
+  assert(pc10.vocabTier === 'extension' && pc10.sentenceLength === 26,
+    'cn lv10：vocabTier=extension，句长 26');
+  var monoCn = true, prevLen = -1;
+  for (var lv = 1; lv <= 10; lv++) {
+    var len = D.DifficultyProfiles.cn.toParams(lv).sentenceLength;
+    if (len < prevLen) monoCn = false;
+    prevLen = len;
+  }
+  assert(monoCn, 'cn 句长随难度单调不减');
+
+  // d) 英语映射：词汇长度 + 语法分档 + 句型层级
+  var pe3 = D.DifficultyProfiles.en.toParams(3), pe5 = D.DifficultyProfiles.en.toParams(5),
+      pe9 = D.DifficultyProfiles.en.toParams(9);
+  assert(pe3.grammarTier === 1 && pe3.sentencePattern === 'simple' && pe3.wordLengthMax === 4,
+    'en lv3：tier1/simple，词长上限 4');
+  assert(pe5.grammarTier === 2 && pe5.sentencePattern === 'compound' && pe5.wordLengthMax === 6,
+    'en lv5：tier2/compound，词长上限 6');
+  assert(pe9.grammarTier === 4 && pe9.sentencePattern === 'complex' && pe9.wordLengthMax === 10,
+    'en lv9：tier4/complex，词长上限 10');
+  var monoEn = true, prevW = -1;
+  for (var lv2 = 1; lv2 <= 10; lv2++) {
+    var wl = D.DifficultyProfiles.en.toParams(lv2).wordLengthMax;
+    if (wl < prevW) monoEn = false;
+    prevW = wl;
+  }
+  assert(monoEn, 'en 词长上限随难度单调不减');
+
+  // e) 策略路由：三科目策略可用且数学规则数值不变
+  [['math', 0.95, 1, 2], ['cn', 0.95, 1, 2], ['en', 0.95, 1, 2]].forEach(function (c) {
+    var r = D.strategyFor(c[0]).apply({ emaRate: c[1], lastRate: c[2] });
+    assert(r.delta === c[3] && r.bias === 'hard', 'strategyFor(' + c[0] + ')：ema .95/.last 1 → +' + c[3] + ' hard');
+  });
+  assert(D.strategyFor('math').apply({ emaRate: 0.4, lastRate: 0.3 }).delta === -2,
+    'strategyFor(math)：ema .4 → −2 easy（现行规则）');
+  assert(D.strategyFor('math').apply({ emaRate: 0.75, lastRate: 0.75 }).delta === 0,
+    'strategyFor(math)：ema .75 → 0（中间带）');
+
+  // f) Adaptive 存储键含 subject（cn/en 端到端）
+  A.reset('cn', 1, 'chinese-pinyin');
+  A.record('cn', 1, 'chinese-pinyin', 19, 20);
+  var rawCn = JSON.parse(global.localStorage.getItem('hw_adaptive_v2'));
+  assert(Object.keys(rawCn).some(function (k) { return k.indexOf('cn:1:chinese-pinyin') === 0; }),
+    'Adaptive 存储键以 cn: 开头（subject 已入键）');
+  var adjCn = A.computeAdjustment('cn', 1, 'chinese-pinyin');
+  assert(adjCn.difficultyDelta === 1 && adjCn.typeBias === 'hard',
+    'computeAdjustment(cn)：19/20 → +1 hard（正确率反馈沿用到语文）');
+  A.reset('en', 3, 'english-alphabet');
+  A.record('en', 3, 'english-alphabet', 4, 20);
+  var adjEn = A.computeAdjustment('en', 3, 'english-alphabet');
+  assert(adjEn.difficultyDelta === -2 && adjEn.typeBias === 'easy',
+    'computeAdjustment(en)：4/20 → −2 easy');
+
+  // g) paramsFor 叠加自适应 delta
+  var pd = D.paramsFor('cn', 5, 2);
+  assert(pd.sentenceLength === D.DifficultyProfiles.cn.toParams(7).sentenceLength,
+    'paramsFor(cn,5,+2) 等价 toParams(7)');
+  var pme = D.paramsFor('en', 3, -2);
+  assert(pme.wordLengthMax === D.DifficultyProfiles.en.toParams(1).wordLengthMax,
+    'paramsFor(en,3,-2) 等价 toParams(1)');
 
   console.log('\n' + (fail === 0 ? '✅ 全部通过' : '❌ ' + fail + ' 项失败'));
   process.exit(fail === 0 ? 0 : 1);

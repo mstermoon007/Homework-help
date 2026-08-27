@@ -67,16 +67,25 @@
 
     // 无书面输入，跟读型：自定义渲染（每题一卡，发音按钮走内联 onclick，practice.html 不会调用 bindEvents）
     render: function(exerciseSet) {
-      var html = '<div class="alphabet-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;">';
+      // 科目化书写格：SVGEnglish.letterWriting 生成四线三格小写示范（浏览器端；Node 环境安全降级）
+      var _EG = (typeof SVGEnglish !== 'undefined') ? SVGEnglish
+        : ((typeof SVGGenerators !== 'undefined' && SVGGenerators.en) ? SVGGenerators.en : null);
+      var hasWriter = !!(_EG && typeof _EG.letterWriting === 'function');
+      var html = '<div class="alphabet-grid en-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;">';
       var self = this;
       exerciseSet.questions.forEach(function(q, idx) {
+        var writeSvg = '';
+        if (hasWriter) {
+          try { writeSvg = _EG.letterWriting(q.letter.toLowerCase(), 'lower') || ''; } catch (e) { writeSvg = ''; }
+        }
         html +=
-          '<div class="question-card letter-card" data-index="' + idx + '" style="border:2px solid #4CAF50;border-radius:12px;padding:15px;text-align:center;background:var(--card);">' +
+          '<div class="question-card letter-card en-card" data-index="' + idx + '" style="border-width:2px;border-left-width:3px;border-style:solid;border-color:var(--en-primary);border-radius:12px;padding:15px;text-align:center;background:var(--card);">' +
           '<div class="big-letter" style="font-size:3em;font-weight:bold;color:var(--ink);">' + q.letter + '</div>' +
+          (writeSvg ? '<div class="scene-box" style="justify-content:center;">' + writeSvg + '</div>' : '') +
           '<div style="color:var(--muted);font-size:0.9em;">' + q.sound + '</div>' +
           '<div style="margin:8px 0;">例词: <strong>' + q.example + '</strong></div>' +
-          '<button class="play-btn" data-letter="' + q.letter + '" data-example="' + q.example + '" onclick="window.__currentPlugin.__play(this)" style="padding:5px 10px;cursor:pointer;border:none;border-radius:8px;background:#4CAF50;color:#fff;">🔊 发音</button>' +
-          '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:6px;"></div>' +
+          '<button class="play-btn" data-letter="' + q.letter + '" data-example="' + q.example + '" onclick="window.__currentPlugin.__play(this)" style="padding:5px 10px;cursor:pointer;border:none;border-radius:8px;background:var(--en-primary);color:#fff;">🔊 发音</button>' +
+          '<div class="feedback"></div>' +
           '</div>';
       });
       html += '</div>';

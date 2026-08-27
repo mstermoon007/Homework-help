@@ -503,18 +503,18 @@
         '</div>';
     }
 
-    var hintHTML = p.hint ? '<div style="font-size:11px;color:var(--muted);margin-bottom:6px;">💡 ' + p.hint + '</div>' : '';
+    var hintHTML = p.hint ? '<div class="q-hint">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+    return '<div class="question-card" data-index="' + i + '">' +
+      '<div class="q-header">' +
+        '<span class="num">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
         hintHTML +
       '</div>' +
-      '<div style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 6px;">' + (p.question || '') + '</div>' +
+      '<div>' + (p.question || '') + '</div>' +
       mid +
       inputHTML +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
+      '<div class="feedback"></div>' +
       '</div>';
   }
 
@@ -578,14 +578,14 @@
       // 子题型 → 知识点（按年级区分；未映射的组合不标注，保持纯插件级统计）
       var KP_BY_GRADE_KIND = {
         1: {
-          count: 'g1-m4-count', order: 'g1-m4-count',
-          compose: 'g1-m4-compose-digit', digit: 'g1-m4-compose-digit',
-          compare: 'g1-m4-compare'
+          count: 'math-g1-m4-count', order: 'math-g1-m4-count',
+          compose: 'math-g1-m4-compose-digit', digit: 'math-g1-m4-compose-digit',
+          compare: 'math-g1-m4-compare'
         },
         2: {
-          readwrite: 'g2-m4-readwrite',
-          compose: 'g2-m4-compose-digit', digit: 'g2-m4-compose-digit',
-          approx: 'g2-m4-approx'
+          readwrite: 'math-g2-m4-readwrite',
+          compose: 'math-g2-m4-compose-digit', digit: 'math-g2-m4-compose-digit',
+          approx: 'math-g2-m4-approx'
         }
       };
       var kpMap = KP_BY_GRADE_KIND[_GRADE] || null;

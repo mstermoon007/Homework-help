@@ -152,10 +152,10 @@
       mid = renderGroup(p.group);
     } else if (p.kind === 'table') {
       var tableHTML = '<table style="border-collapse:collapse;margin:6px auto;font-size:14px;">' +
-        '<tr><td style="border:1px solid var(--line-strong);padding:4px 14px;font-weight:800;background:var(--brand-bg);">图形</td>' +
-        p.rows.map(function (r) { return '<td style="border:1px solid var(--line-strong);padding:4px 14px;text-align:center;">' + SHAPES[r.shape](COLORS[0]) + '</td>'; }).join('') + '</tr>' +
-        '<tr><td style="border:1px solid var(--line-strong);padding:4px 14px;font-weight:800;background:var(--brand-bg);">数量</td>' +
-        p.rows.map(function (r, j) { return '<td style="border:1px solid var(--line-strong);padding:4px 8px;text-align:center;"><input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:40px;height:28px;border:2px dashed var(--line-strong);border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:var(--brand-d);background:var(--soft-bg);outline:none;"></td>'; }).join('') + '</tr>' +
+        '<tr><td class="stat-th">图形</td>' +
+        p.rows.map(function (r) { return '<td class="stat-td">' + SHAPES[r.shape](COLORS[0]) + '</td>'; }).join('') + '</tr>' +
+        '<tr><td class="stat-th">数量</td>' +
+        p.rows.map(function (r, j) { return '<td class="stat-td" style="padding:4px 8px;"><input type="text" class="answer-inp" data-idx="' + i + '" data-field="' + j + '" placeholder="?" autocomplete="off" style="width:40px;height:28px;border:2px dashed var(--line-strong);border-radius:6px;font-size:14px;font-weight:800;text-align:center;color:var(--brand-d);background:var(--soft-bg);outline:none;"></td>'; }).join('') + '</tr>' +
         '</table>';
       mid = renderGroup(p.group) + tableHTML;
     } else {
@@ -171,7 +171,7 @@
       var optHTML = '';
       p.options.forEach(function (o) {
         optHTML += '<button type="button" class="opt-btn" data-val="' + o + '" onclick="window.__currentPlugin.__choose(this)" ' +
-          'style="cursor:pointer;border:1.5px solid var(--line-strong);background:var(--soft-bg);color:var(--ink);border-radius:9px;padding:6px 14px;font-size:14px;font-weight:800;margin:3px;transition:.15s;">' + o + '</button>';
+          '>' + o + '</button>';
       });
       mid = renderGroup(p.group) + barHTML +
         '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">' + optHTML + '</div>' +
@@ -182,7 +182,7 @@
     if (p.inputType === 'text') {
       inputHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;">' +
         '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off">' +
-        '<span style="font-size:13px;color:var(--muted);font-weight:600;">个</span></div>';
+        '<span class="unit">个</span></div>';
     } else if (p.inputType === 'multi' && p.kind !== 'table') {
       var blanksHTML = '';
       p.blanks.forEach(function (label, j) {
@@ -192,15 +192,15 @@
       inputHTML = '<div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:6px;">' + blanksHTML + '</div>';
     }
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid var(--line);border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(40,70,120,.08);">' +
-      '<div class="q-header" style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:6px;">' +
-        '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:var(--brand-bg);color:var(--brand);font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>' +
+    return '<div class="question-card" data-index="' + i + '">' +
+      '<div class="q-header">' +
+        '<span class="num">' + (i + 1) + '</span>' +
         '&nbsp;&nbsp;&nbsp;&nbsp;' +
-        '<span class="q-text" style="font-size:15px;font-weight:800;color:var(--ink);margin:4px 0 6px;">' + p.question + '</span>' +
+        '<span class="q-text">' + p.question + '</span>' +
       '</div>' +
       mid +
       inputHTML +
-      '<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:8px;"></div>' +
+      '<div class="feedback"></div>' +
       '</div>';
   }
 
@@ -256,9 +256,9 @@
       var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
       // 子题型 → 知识点（供 Adaptive v2 KP 级统计）
       var KP_BY_KIND = {
-        classify: 'g1-m9-classify',
-        table: 'g1-m9-stats-table',
-        picto: 'g1-m9-pictograph'
+        classify: 'math-g1-m9-classify',
+        table: 'math-g1-m9-stats-table',
+        picto: 'math-g1-m9-pictograph'
       };
       var type = opts.type || 'mix';
       var count = opts.count || 8;

@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const BASE = 'https://mstermoon007.github.io/Homework-help/';
+const BASE = 'https://home.modouyu.top/';
 
 // 需纳入 sitemap 的静态页面（相对站点根）
 const STATIC_PAGES = [

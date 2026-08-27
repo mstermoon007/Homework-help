@@ -543,16 +543,16 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g4-m4-g4-fill-bignum',
-        'g4-m4-g4-fill-hectare',
-        'g4-m4-g4-fill-line',
-        'g4-m4-g4-fill-angle',
-        'g4-m4-g4-fill-quad',
-        'g4-m4-g4-fill-op',
-        'g4-m4-g4-fill-quotient',
-        'g4-m4-g4-fill-dec',
-        'g4-m4-g4-fill-tri',
-        'g4-m4-g4-fill-avg'
+        'math-g4-m4-g4-fill-bignum',
+        'math-g4-m4-g4-fill-hectare',
+        'math-g4-m4-g4-fill-line',
+        'math-g4-m4-g4-fill-angle',
+        'math-g4-m4-g4-fill-quad',
+        'math-g4-m4-g4-fill-op',
+        'math-g4-m4-g4-fill-quotient',
+        'math-g4-m4-g4-fill-dec',
+        'math-g4-m4-g4-fill-tri',
+        'math-g4-m4-g4-fill-avg'
     ],
 
     settings: [

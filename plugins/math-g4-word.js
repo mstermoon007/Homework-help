@@ -249,15 +249,15 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g4-m8-g4-word-big',
-        'g4-m8-g4-word-speed',
-        'g4-m8-g4-word-div',
-        'g4-m8-g4-word-price',
-        'g4-m8-g4-word-area',
-        'g4-m8-g4-word-opt',
-        'g4-m8-g4-word-cr',
-        'g4-m8-g4-word-dec',
-        'g4-m8-g4-word-avg'
+        'math-g4-m8-g4-word-big',
+        'math-g4-m8-g4-word-speed',
+        'math-g4-m8-g4-word-div',
+        'math-g4-m8-g4-word-price',
+        'math-g4-m8-g4-word-area',
+        'math-g4-m8-g4-word-opt',
+        'math-g4-m8-g4-word-cr',
+        'math-g4-m8-g4-word-dec',
+        'math-g4-m8-g4-word-avg'
     ],
 
     settings: [

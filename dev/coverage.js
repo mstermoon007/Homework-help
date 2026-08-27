@@ -27,18 +27,23 @@ global.PluginUtil = PluginUtil;
 global.KnowledgeBank = KnowledgeBank;
 global.PLUGIN_REGISTRY = registry;
 
-// 跨年级并集：从 KnowledgeBank 数组动态读取某科目涉及的年级
+// 科目代号规范：注册表全称（chinese/english）↔ 知识库前缀（cn/en）
+const SUBJECT_CANON = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+
+// 跨年级并集：从 KnowledgeBank 对象动态读取某科目涉及的年级
 // （数据驱动，随 knowledge-bank.js 增加年级/知识点自动扩展，无需改本脚本）
 function gradesForSubject(subject) {
-  if (subject !== 'math') return [];
-  return KnowledgeBank.map(function (g) { return g.grade; })
+  const arr = KnowledgeBank[subject];
+  if (!Array.isArray(arr)) return [];
+  return arr.map(function (g) { return g.grade; })
     .sort(function (a, b) { return a - b; });
 }
 
 // 全局已注册插件 id 集合（跨年级并集；排除占位插件，占位不算真覆盖）
 function allRegisteredIds(subject) {
+  const cs = SUBJECT_CANON[subject] || subject;
   return new Set((registry || []).filter(function (p) {
-    return (!subject || p.subject === subject) && !p.isPlaceholder;
+    return (!subject || (SUBJECT_CANON[p.subject] || p.subject) === cs) && !p.isPlaceholder;
   }).map(function (p) { return p.id; }));
 }
 
@@ -54,7 +59,7 @@ function runPerGrade(subject, grades) {
     hasData = true;
     const next = cov.next
       ? `${cov.next.name}（建议开发插件：${cov.next.pluginId}）`
-      : '已全部覆盖 🎉';
+      : (cov.missing.length ? `缺失 ${cov.missing.length} 项均为占位（无插件归属），待对应插件落地` : '已全部覆盖 🎉');
     const miss = cov.missing.map(function (e) { return e.name; }).join('、') || '无';
     console.log(`\n【${grade}年级·${subject}】覆盖 ${cov.covered}/${cov.total}（${cov.ratio}%）`);
     console.log(`   缺失知识点：${miss}`);
@@ -76,7 +81,7 @@ function runUnion(subject) {
   // 知识点并集：按 id 去重，记录每个 KP 出现在哪些年级
   const unionMap = new Map();
   grades.forEach(function (g) {
-    KnowledgeBank.getEntries('math', g).forEach(function (e) {
+    KnowledgeBank.getEntries(subject, g).forEach(function (e) {
       if (!unionMap.has(e.id)) unionMap.set(e.id, { entry: e, grades: new Set() });
       unionMap.get(e.id).grades.add(g);
     });
@@ -95,9 +100,12 @@ function runUnion(subject) {
   console.log(`   缺失（并集）：${missing.length}`);
 
   if (missing.length) {
-    // 按 pluginId 归组：缺失的 KP 大多因对应插件尚未开发，给出「建议开发清单」
+    // 按 pluginId 归组：缺失的 KP 大多因对应插件尚未开发，给出「建议开发清单」；
+    // 无 pluginId 的占位条目（如 en-g3-e2-word-spelling）单独提示，避免归组到 undefined
+    const withPlugin = missing.filter(x => x.entry.pluginId);
+    const placeholderOnly = missing.length - withPlugin.length;
     const byPlugin = {};
-    missing.forEach(function (x) {
+    withPlugin.forEach(function (x) {
       const pid = x.entry.pluginId;
       if (!byPlugin[pid]) byPlugin[pid] = { pluginId: pid, count: 0, points: [], grades: new Set() };
       byPlugin[pid].count++;
@@ -106,11 +114,16 @@ function runUnion(subject) {
     });
     const list = Object.keys(byPlugin).map(function (k) { return byPlugin[k]; })
       .sort(function (a, b) { return b.count - a.count; });
-    console.log('\n   建议优先开发的插件（按待覆盖知识点数排序）：');
-    list.forEach(function (item) {
-      const gspan = Array.from(item.grades).sort(function (a, b) { return a - b; }).join('/');
-      console.log(`   • ${item.pluginId}  ——  ${item.count} 个知识点（涉及 ${gspan} 年级）：${item.points.join('、')}`);
-    });
+    if (list.length) {
+      console.log('\n   建议优先开发的插件（按待覆盖知识点数排序）：');
+      list.forEach(function (item) {
+        const gspan = Array.from(item.grades).sort(function (a, b) { return a - b; }).join('/');
+        console.log(`   • ${item.pluginId}  ——  ${item.count} 个知识点（涉及 ${gspan} 年级）：${item.points.join('、')}`);
+      });
+    }
+    if (placeholderOnly > 0) {
+      console.log(`\n   另有 ${placeholderOnly} 个占位知识点无插件归属（status='placeholder'），待对应模块开发后激活。`);
+    }
   } else {
     console.log('   🎉 全部知识点均已有对应插件覆盖！');
   }
@@ -118,7 +131,8 @@ function runUnion(subject) {
 
 // ============ 主流程 ============
 function run(subjectArg, gradeArg) {
-  const subjects = subjectArg ? [subjectArg] : ['math'];
+  // 缺省输出全部已有基线的科目；cn/en 填充后自动纳入报告
+  const subjects = subjectArg ? [subjectArg] : ['math', 'cn', 'en'];
 
   console.log('\n📊 知识点覆盖报告（数据源：plugins/registry.js + shared/knowledge-bank.js，数据驱动自动扩展）');
   console.log('='.repeat(62));

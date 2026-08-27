@@ -289,11 +289,15 @@
   function bankKpIndex() {
     var KB = global.KnowledgeBank;
     var idx = {};
-    if (!KB || !KB.forEach) return idx;
-    KB.forEach(function (entry) {
-      (entry.modules || []).forEach(function (mod) {
-        (mod.knowledgePoints || []).forEach(function (kp) {
-          idx[kp.id] = { kp: kp, grade: entry.grade };
+    if (!KB || typeof KB !== 'object') return idx;
+    // 科目分组对象：遍历全部科目数组
+    Object.keys(KB).forEach(function (subject) {
+      if (!Array.isArray(KB[subject])) return;
+      KB[subject].forEach(function (entry) {
+        (entry.modules || []).forEach(function (mod) {
+          (mod.knowledgePoints || []).forEach(function (kp) {
+            idx[kp.id] = { kp: kp, grade: entry.grade };
+          });
         });
       });
     });

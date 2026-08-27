@@ -255,14 +255,14 @@
     category: 'mixed',
     printConfig: { pageType: 'math' },
     knowledgePoints: [
-        'g6-m8-g6-app-frac-mult',
-        'g6-m8-g6-app-frac-div',
-        'g6-m8-g6-app-percent-discount',
-        'g6-m8-g6-app-ratio-prop',
-        'g6-m8-g6-app-circle',
-        'g6-m8-g6-app-cyl-cone',
-        'g6-m8-g6-app-travel-work',
-        'g6-m8-g6-app-pigeonhole'
+        'math-g6-m8-g6-app-frac-mult',
+        'math-g6-m8-g6-app-frac-div',
+        'math-g6-m8-g6-app-percent-discount',
+        'math-g6-m8-g6-app-ratio-prop',
+        'math-g6-m8-g6-app-circle',
+        'math-g6-m8-g6-app-cyl-cone',
+        'math-g6-m8-g6-app-travel-work',
+        'math-g6-m8-g6-app-pigeonhole'
     ],
 
     settings: [

@@ -210,7 +210,7 @@
     subject: 'math',
     category: 'number',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g5-m7-g5-pic-balance', 'g5-m7-g5-pic-area', 'g5-m7-g5-pic-segment', 'g5-m7-g5-pic-tree'],
+    knowledgePoints: ['math-g5-m7-g5-pic-balance', 'math-g5-m7-g5-pic-area', 'math-g5-m7-g5-pic-segment', 'math-g5-m7-g5-pic-tree'],
 
     settings: [
       {

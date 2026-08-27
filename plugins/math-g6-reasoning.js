@@ -101,7 +101,7 @@
     subject: 'math',
     category: 'reasoning',
     printConfig: { pageType: 'math' },
-    knowledgePoints: ['g6-m10-g6-reason-number-shape', 'g6-m10-g6-reason-pigeonhole'],
+    knowledgePoints: ['math-g6-m10-g6-reason-number-shape', 'math-g6-m10-g6-reason-pigeonhole'],
 
     settings: [
       {

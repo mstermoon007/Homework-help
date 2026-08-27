@@ -7,6 +7,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/chinese-comprehensive.js 依赖 shared/common.js（PluginUtil），请先加载');
+  // 任务12：拼音/汉字归一走 ChineseUtil（shared/subject-utils.js）
+  var _CU = typeof ChineseUtil !== 'undefined' ? ChineseUtil
+    : (typeof require !== 'undefined' ? require('../shared/subject-utils.js').ChineseUtil : null);
+  if (!_CU) throw new Error('plugins/chinese-comprehensive.js 依赖 shared/subject-utils.js（ChineseUtil），请先加载');
 
   function gradeName(g) {
     return (typeof App !== 'undefined' && App.getGradeName) ? App.getGradeName(g) : (g + '年级');
@@ -36,7 +40,7 @@
       var questions = [];
       var wi = 0, ci = 0;
       for (var i = 0; i < count; i++) {
-        if (_PU.rand(1, 100) <= 50 && wi < words.length) {
+        if (_PU.randInt(1, 100) <= 50 && wi < words.length) {
           questions.push({ type: 'pinyin-to-char', pinyin: words[wi].py, answer: words[wi].w, answerType: 'char' });
           wi++;
         } else if (ci < chars.length) {
@@ -69,7 +73,7 @@
           html += `<div style="font-size:11px;color:var(--muted);margin:2px 0 8px;">请写出拼音</div>`;
           html += `<input type="text" class="answer-input pinyin-input" data-index="${idx}" placeholder="写拼音" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:110px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#f5576c;background:var(--soft-bg);outline:none;font-family:'Times New Roman',Georgia,serif;">`;
         }
-        html += `<div class="feedback" style="font-size:12px;font-weight:700;min-height:16px;margin-top:6px;"></div>`;
+        html += `<div class="feedback"></div>`;
         html += '</div>';
       });
       html += '</div>';
@@ -87,8 +91,8 @@
         var realAns = q.answer.trim();
         // 拼音题用 normPY（声调容错），汉字题用 normHZ（去空格）
         var isRight = q.answerType === 'pinyin'
-          ? _PU.normPY(userAns) === _PU.normPY(realAns)
-          : _PU.normHZ(userAns) === _PU.normHZ(realAns);
+          ? _CU.normPY(userAns) === _CU.normPY(realAns)
+          : _CU.normHZ(userAns) === _CU.normHZ(realAns);
         if (isRight) correct++;
         results.push(isRight);
         correctAnswers.push(realAns);
