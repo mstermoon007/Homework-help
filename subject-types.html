@@ -4,16 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>题型选择</title>
+<meta name="description" content="小学 1-6 年级语文与英语题型目录：拼音练习、看拼音写字、汉字笔顺、字母跟读，按年级选择题型在线练习或打印。">
 <link rel="stylesheet" href="shared/tokens.css">
 <link rel="stylesheet" href="shared/base.css">
 <link rel="stylesheet" href="shared/components.css">
+<link rel="stylesheet" href="shared/states.css">
 <style>
+    /* 默认底色（数学科目兜底）；语文/英语由脚本按科目令牌覆盖，保证「数学蓝、语文绿、英语橙」 */
     body {
-        background: linear-gradient(160deg, #d6e8fa 0%, var(--math) 45%, var(--english) 110%);
+        background: linear-gradient(160deg, #d6e8fa 0%, var(--math) 45%, #F5A623 110%);
         min-height: 100vh;
     }
-    .type-card:hover { border-color: rgba(255,255,255,0.9); }
-    .load-hint { text-align: center; color: #999; padding: 24px 0; font-size: 0.9rem; }
+    /* 具体题型标签：卡片名称下方的胶囊（如 声母韵母/标调/整体认读） */
+    .t-tags { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 8px; }
+    .t-type { font-size: 11px; line-height: 1.4; padding: 1px 7px; border-radius: 999px;
+        background: rgba(255,255,255,0.85); color: #5a6b8c; border: 1px solid rgba(102,126,234,0.35); }
 </style>
 <style id="subjectStyles"></style>
 <script type="application/ld+json">
@@ -21,41 +26,42 @@
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": "题型选择 · Homework Help",
-  "url": "https://mstermoon007.github.io/Homework-help/subject-types.html",
+  "url": "https://home.modouyu.top/subject-types.html",
   "description": "小学 1-6 年级语文与英语题型选择页，包含拼音、看拼音写字、综合练习与字母跟读。",
   "hasPart": [
     {
       "@type": "WebPage",
       "name": "拼音练习",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=chinese-pinyin&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=chinese-pinyin&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "看拼音写字",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=pinyin-to-char&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=pinyin-to-char&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "综合练习",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=chinese-comprehensive&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=chinese-comprehensive&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "字母跟读",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=english-alphabet&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=english-alphabet&grade=1"
     }
   ]
 }
 </script>
+<link rel="canonical" href="https://home.modouyu.top/subject-types.html">
 </head>
 <body class="type-page">
-<noscript><div class="noscript-types" style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>语文题型</h2><ul><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=chinese-pinyin&grade=1">拼音练习</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=pinyin-to-char&grade=1">看拼音写字</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=chinese-comprehensive&grade=1">综合练习</a></li></ul><h2>英语题型</h2><ul><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=english-alphabet&grade=1">字母跟读</a></li></ul></div></noscript>
+<noscript><div class="noscript-types" style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>语文题型</h2><ul><li><a href="https://home.modouyu.top/practice.html?plugin=chinese-pinyin&grade=1">拼音练习</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=pinyin-to-char&grade=1">看拼音写字</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=chinese-comprehensive&grade=1">综合练习</a></li></ul><h2>英语题型</h2><ul><li><a href="https://home.modouyu.top/practice.html?plugin=english-alphabet&grade=1">字母跟读</a></li></ul></div></noscript>
 <div class="wrapper">
     <a href="index.html" class="back-home">← 返回首页</a>
 
     <div class="page-header">
         <div class="page-title">
-            <span class="pt-logo"><img id="subjectLogo" src="" alt=""></span>
+            <span class="pt-logo"><img id="subjectLogo" src="" alt="" width="56" height="56"></span>
             <span class="pt-grade" id="gradeBadge">一年级</span>
             <h1 class="pt-subject" id="subjectTitle"></h1>
         </div>
@@ -65,7 +71,15 @@
     <div class="card">
         <div class="section-label" id="sectionLabel">📚 选择题型</div>
         <div class="type-grid" id="typeGrid">
-            <div class="load-hint">正在加载题型…</div>
+            <!-- 骨架屏：注册表/插件加载期间的占位，避免内容跳动 -->
+            <div class="skel-grid" aria-hidden="true">
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+            </div>
         </div>
     </div>
 
@@ -73,61 +87,74 @@
 </div>
 
 <script src="shared/common.js"></script>
+<script src="shared/subject-utils.js"></script>
+<script src="shared/difficulty.js"></script>
+<script src="shared/knowledge-bank.js"></script>
+<script src="shared/module-catalog.js"></script>
 <script src="plugins/registry.js"></script>
 <script>
 (function () {
   'use strict';
 
-  // 学科配置
+  // HTML 转义：URL 参数等不可信文本不得直插 innerHTML（防脚本注入）
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = (s == null) ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  // 友好错误页：复用 components.css 的 .error-state 组件，提供返回首页入口，不再白屏/纯文字
+  function renderErrorState(icon, errTitle, desc) {
+    document.getElementById('typeGrid').innerHTML =
+      '<div class="error-state">' +
+      '  <div class="es-icon">' + icon + '</div>' +
+      '  <div class="es-title">' + errTitle + '</div>' +
+      '  <div class="es-desc">' + desc + '</div>' +
+      '  <div class="es-actions">' +
+      '    <a class="es-btn primary" href="index.html">返回首页</a>' +
+      '    <a class="es-btn ghost" href="?grade=1&subject=' + encodeURIComponent(subject || '') + '">从一年级开始</a>' +
+      '  </div>' +
+      '</div>';
+  }
+
+  // 学科配置：颜色一律引用 tokens.css 科目令牌（数学蓝 --math / 语文绿 --chinese / 英语橙 --english）
   var SUBJECT_CONFIG = {
     math: {
       name: '数学',
-      logo: 'assets/logo-math.png',
+      logo: 'assets/logo-math.webp',
       desc: '请选择要练习的题型',
       sectionLabel: '📐 选择题型',
       footTip: '💡 选择题型后进入对应练习页面，每个题型独立生成题目',
-      color: '#667eea',
-      icons: {
-        'math-oral': '⚡', 'math-word-problems': '📝', 'math-make-ten': '🧮',
-        'math-number-sense': '🔢', 'math-clock': '🕐', 'math-patterns': '🔁',
-        'math-picture-equations': '🖼️', 'math-shapes': '🔷', 'math-statistics': '📊',
-        'math-money': '💰', 'math-unit-convert': '📏', 'math-geometry': '📐',
-        'math-data-stats': '🗳️', 'math-logic-reasoning': '🧠',
-        'math-fraction': '🍕', 'math-decimal': '🔢', 'math-area': '📐'
-      },
-      desc: {},
+      color: 'var(--math)',
+      grad: 'linear-gradient(160deg, #d9e9fb 0%, var(--math) 45%, var(--math-accent) 115%)',
+      descMap: {},
       hasKnowledgeBank: true
     },
     chinese: {
       name: '语文',
-      logo: 'assets/logo-chinese.png',
-      desc: '请选择要练习的题型',
+      logo: 'assets/logo-chinese.webp',
+      desc: '拼音、写字与综合练习',
       sectionLabel: '📚 选择题型',
       footTip: '💡 更多题型持续更新中，敬请期待',
-      color: '#f5576c',
-      icons: {
-        'chinese-pinyin': '🔤',
-        'pinyin-to-char': '✏️',
-        'chinese-comprehensive': '🧩'
-      },
-      desc: {
-        'chinese-pinyin': '拼音抄写 · 汉字注音 · 词语注音',
+      color: 'var(--chinese)',
+      grad: 'linear-gradient(160deg, #ddf3e7 0%, var(--chinese) 45%, var(--cn-accent) 115%)',
+      descMap: {
+        'chinese-pinyin': '声母韵母 · 标调 · 整体认读 · 易混音辨析',
         'pinyin-to-char': '看拼音，写出对应汉字',
+        'chinese-hanzi': '笔顺笔画 · 部首归类 · 形近字辨析',
         'chinese-comprehensive': '拼音与汉字互相填空，综合练习'
       },
-      hasKnowledgeBank: false
+      hasKnowledgeBank: true
     },
     english: {
       name: '英语',
-      logo: 'assets/logo-english.png',
-      desc: '请选择要练习的题型',
-      sectionLabel: '📚 选择题型',
+      logo: 'assets/logo-english.webp',
+      desc: '字母与单词启蒙练习',
+      sectionLabel: '🔠 选择题型',
       footTip: '💡 更多英语题型持续开发中，敬请期待',
-      color: '#38a169',
-      icons: {
-        'english-alphabet': '🔠'
-      },
-      desc: {
+      color: 'var(--english)',
+      grad: 'linear-gradient(160deg, #fff3df 0%, var(--english) 45%, var(--en-accent) 115%)',
+      descMap: {
         'english-alphabet': '26个字母名与字母音 · 例词跟读 · 发音提示'
       },
       hasKnowledgeBank: false
@@ -140,16 +167,30 @@
   var config = SUBJECT_CONFIG[subject];
 
   if (!config) {
-    document.getElementById('typeGrid').innerHTML =
-      '<div class="load-hint">无效的学科参数</div>';
+    document.title = '学科参数有误';
+    renderErrorState('🧭', '学科参数好像不对',
+      '收到的学科参数是「' + esc(String(subject).slice(0, 20)) + '」，目前支持 数学 / 语文 / 英语。<br>请从首页重新选择科目。');
     return;
   }
 
-  // 应用学科特定样式
+  // ---- 年级参数校验：显式传入但非法（如 grade=99/abc）→ 友好错误页，不再静默回退 ----
+  var rawGrade = params.get('grade');
+  var GRADE_VALID = ['1', '2', '3', '4', '5', '6'];
+  if (rawGrade !== null && GRADE_VALID.indexOf(rawGrade) === -1) {
+    document.title = '年级参数有误 · ' + config.name + '练习';
+    renderErrorState('🧭', '年级参数好像不对',
+      '收到的年级参数是「' + esc(String(rawGrade).slice(0, 20)) + '」，有效范围为 1~6。<br>请从首页重新选择年级。');
+    return;
+  }
+
+  // 应用学科特定样式：主题色引用科目令牌；页面背景随科目切换（蓝/绿/橙区分明显）
   var styleEl = document.getElementById('subjectStyles');
-  styleEl.textContent = 
+  styleEl.textContent =
+    'body { background: ' + config.grad + '; }\n' +
     '.type-card .t-name { color: ' + config.color + '; }\n' +
     '.section-label { border-left-color: ' + config.color + '; }';
+
+  var grade = App.currentGrade();
 
   // 设置页面内容
   document.getElementById('subjectLogo').src = config.logo;
@@ -158,12 +199,11 @@
   document.getElementById('subjectDesc').textContent = config.desc;
   document.getElementById('sectionLabel').textContent = config.sectionLabel;
   document.getElementById('footTip').textContent = config.footTip;
-
-  var grade = App.currentGrade();
   document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
+  // 页面标题动态更新：「{年级}{学科}练习」（如「一年级语文练习」）
+  document.title = App.getGradeName(grade) + config.name + '练习';
 
-  function iconOf(p) { return config.icons[p.id] || '📘'; }
-  function descOf(p) { return config.desc[p.id] || ''; }
+  function descOf(p) { return config.descMap[p.id] || ''; }
 
   var registry = (typeof window.PLUGIN_REGISTRY !== 'undefined') ? window.PLUGIN_REGISTRY : [];
 
@@ -177,21 +217,28 @@
     applicable.forEach(function (p) {
       var name = p.name || p.id;
       var desc = descOf(p);
-      html += '<a href="' + App.buildPluginLink(p.id) + '" class="type-card" title="' + desc + '">' +
-        '<span class="t-icon">' + iconOf(p) + '</span>' +
-        '<span class="t-name">' + name + '</span>' +
-        (desc ? '<span class="t-desc">' + desc + '</span>' : '') +
+      // 具体题型标签：描述按「·」「、」拆分为胶囊（如 声母韵母/标调/整体认读）
+      var tagParts = desc ? desc.split(/[·、]/).map(function (t) { return t.trim(); }).filter(Boolean) : [];
+      var tagHtml = tagParts.length
+        ? '<span class="t-tags">' + tagParts.map(function (t) { return '<span class="t-type">' + esc(t) + '</span>'; }).join('') + '</span>'
+        : '';
+      html += '<a href="' + App.buildPluginLink(p.id) + '" class="type-card" title="' + esc(desc) + '">' +
+        '<span class="t-name">' + esc(name) + '</span>' +
+        tagHtml +
         '</a>';
     });
 
     document.getElementById('typeGrid').innerHTML =
-      html || '<div class="load-hint">该年级暂无可用题型</div>';
+      html || App.UIState.emptyHtml('📭', '该年级暂无可用题型',
+        '这个年级的' + config.name + '题型还在准备中，试试切换其他年级。',
+        '<a class="est-btn" href="?grade=1&subject=' + encodeURIComponent(subject) + '">🌱 从一年级开始</a>');
 
     // 预热缓存，配合 Service Worker 让点击进入练习页更快
     App.PluginLoader.prefetch(applicable);
   }).catch(function (err) {
     document.getElementById('typeGrid').innerHTML =
-      '<div class="load-hint">题型加载失败：' + (err && err.message) + '</div>';
+      App.UIState.bannerHtml('⚠️', '题型加载失败', (err && err.message) || '未知错误',
+        '<button type="button" class="eb-btn eb-btn--primary" onclick="location.reload()">重试</button>');
   });
 })();
 </script>

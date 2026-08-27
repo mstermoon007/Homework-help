@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>数学题型选择</title>
+<meta name="description" content="小学 1-6 年级数学题型目录：口算、竖式、应用题、图形、统计、竞赛拓展，按年级选择题型在线练习或打印。">
 <link rel="stylesheet" href="shared/tokens.css">
 <link rel="stylesheet" href="shared/base.css">
 <link rel="stylesheet" href="shared/components.css">
+<link rel="stylesheet" href="shared/states.css">
 <style>
     body {
         background: linear-gradient(160deg, #d6e8fa 0%, #4A90D9 45%, #F5A623 110%);
@@ -29,33 +31,29 @@
         color: #fff;
         opacity: 0.92;
     }
-    /* 竞赛模块占位卡片：灰色置灰 + 「即将上线」角标（点击进入占位提示页） */
-    .type-card.competition {
-        position: relative;
-        background: rgba(255,255,255,0.45);
-        border: 1.5px dashed rgba(120,130,150,0.55);
-        color: #6b7686;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-    }
-    .type-card.competition .t-name { color: #6b7686; }
-    .type-card.competition:hover { border-color: rgba(120,130,150,0.9); opacity: 0.9; }
-    .type-card.competition .t-soon {
-        position: absolute; right: 8px; top: 8px;
-        font-size: 10px; font-weight: 700;
-        padding: 2px 8px; border-radius: 999px;
-        background: rgba(120,130,150,0.18); color: #7a8494;
-        border: 1px solid rgba(120,130,150,0.35);
-    }
+    /* 竞赛占位卡片视觉统一由 components.css 的 .type-card.competition 提供（灰底/虚线/t-soon 角标） */
     .section-label { border-left-color: #667eea; }
-    .load-hint { text-align: center; color: #999; padding: 24px 0; font-size: 0.9rem; }
-    /* 知识点标签：来自 knowledge-bank.js，按教材单元标注 */
+    /* 具体题型标签：来自 knowledge-bank.js，按教材单元标注 */
     .t-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
     .kb-tag { font-size: 11px; line-height: 1.4; padding: 1px 7px; border-radius: 999px;
         background: rgba(255,255,255,0.85); color: #4A6fa5; border: 1px solid rgba(102,126,234,0.35); }
     .kb-tag.more { background: rgba(102,126,234,0.15); color: #667eea; }
     .type-card.comprehensive .kb-tag { background: rgba(255,255,255,0.22); color: #fff; border-color: rgba(255,255,255,0.5); }
-    /* 竞赛模块知识点级展示：active 可选，placeholder 灰色不可选 */
+    /* M13 提前预习：草绿色特殊模块卡（颜色来自 module-catalog display.color #7cb342） */
+    .type-card.preview-card {
+        background: linear-gradient(160deg, rgba(124,179,66,0.30), rgba(124,179,66,0.60));
+        border: 1.5px solid rgba(124,179,66,0.70);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 6px 18px rgba(90,140,60,0.22), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .type-card.preview-card .t-name { color: #33691e; }
+    .type-card.preview-card .kb-tag { background: rgba(255,255,255,0.88); color: #33691e; border-color: rgba(51,105,30,0.40); }
+    .type-card.preview-card:hover {
+        background: linear-gradient(160deg, rgba(124,179,66,0.48), rgba(124,179,66,0.75));
+        opacity: 0.95;
+    }
+    /* 竞赛模块卡片：纵向单元（卡片 + 知识点标签） */
     .type-cell { display: flex; flex-direction: column; gap: 6px; }
     .kp-chips { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 2px; }
     .kp-chip { font-size: 11px; padding: 2px 8px; border-radius: 999px; text-decoration: none;
@@ -68,221 +66,222 @@
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": "数学题型选择 · Homework Help",
-  "url": "https://mstermoon007.github.io/Homework-help/math-types.html",
+  "url": "https://home.modouyu.top/math-types.html",
   "description": "小学 1-6 年级数学题型目录，按年级提供口算、应用题、图形、统计、竖式、竞赛等练习。",
   "hasPart": [
     {
       "@type": "WebPage",
       "name": "口算练习",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-oral&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-oral&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "应用题",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-word-problems&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-word-problems&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "凑十法",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-make-ten&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-make-ten&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "认识图形",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-shapes&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-shapes&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "数的认识",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-number-sense&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-number-sense&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "认识钟表",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-clock&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-clock&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "找规律",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-patterns&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-patterns&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "看图列式",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-picture-equations&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-picture-equations&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "分类与统计",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-statistics&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-statistics&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "认识人民币",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-money&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-money&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "单位换算",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-unit-convert&grade=2"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-unit-convert&grade=2"
     },
     {
       "@type": "WebPage",
       "name": "图形与几何",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-geometry&grade=2"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-geometry&grade=2"
     },
     {
       "@type": "WebPage",
       "name": "数据收集与整理",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-data-stats&grade=2"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-data-stats&grade=2"
     },
     {
       "@type": "WebPage",
       "name": "简单推理与数独",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-logic-reasoning&grade=2"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-logic-reasoning&grade=2"
     },
     {
       "@type": "WebPage",
       "name": "分数的初步认识",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-fraction&grade=3"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-fraction&grade=3"
     },
     {
       "@type": "WebPage",
       "name": "小数的初步认识",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-decimal&grade=3"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-decimal&grade=3"
     },
     {
       "@type": "WebPage",
       "name": "面积",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-area&grade=3"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-area&grade=3"
     },
     {
       "@type": "WebPage",
       "name": "时间与日期",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-time-date&grade=3"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-time-date&grade=3"
     },
     {
       "@type": "WebPage",
       "name": "方向与位置",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-position-direction&grade=3"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-position-direction&grade=3"
     },
     {
       "@type": "WebPage",
       "name": "搭配与集合",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-combination-set&grade=3"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-combination-set&grade=3"
     },
     {
       "@type": "WebPage",
       "name": "综合练习",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-comprehensive&grade=1"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-comprehensive&grade=1"
     },
     {
       "@type": "WebPage",
       "name": "数字谜与数阵图",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-c1-numberpuzzle&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-competition-c1-numberpuzzle&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "数论初步",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-c2-numbertheory&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-competition-c2-numbertheory&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "组合计数",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-c3-counting&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-competition-c3-counting&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "行程问题",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-c5-journey&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-competition-c5-journey&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "竞赛专题",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-placeholder&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-competition-placeholder&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "口算",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-oral&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-oral&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "竖式计算",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-vertical&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-vertical&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "脱式计算",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-mixed&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-mixed&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "填空题",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-fill&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-fill&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "连线题",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-match&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-match&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "操作题",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-draw&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-draw&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "解决问题",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-word&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-word&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "分类与整理",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-stats&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-stats&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "推理与数学广角",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-reason&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-reason&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "判断题",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-judge&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-judge&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "选择题",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-choice&grade=4"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g4-choice&grade=4"
     },
     {
       "@type": "WebPage",
       "name": "笔算",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g6-calc&grade=6"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g6-calc&grade=6"
     },
     {
       "@type": "WebPage",
       "name": "统计",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g6-stats&grade=6"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g6-stats&grade=6"
     },
     {
       "@type": "WebPage",
       "name": "推理",
-      "url": "https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g6-reasoning&grade=6"
+      "url": "https://home.modouyu.top/practice.html?plugin=math-g6-reasoning&grade=6"
     }
   ]
 }
 </script>
+<link rel="canonical" href="https://home.modouyu.top/math-types.html">
 </head>
 <body class="type-page">
-<noscript><div class="noscript-types" style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>数学题型（按年级）</h2><ul><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-oral&grade=1">口算练习</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-word-problems&grade=1">应用题</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-make-ten&grade=1">凑十法</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-shapes&grade=1">认识图形</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-number-sense&grade=1">数的认识</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-clock&grade=1">认识钟表</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-patterns&grade=1">找规律</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-picture-equations&grade=1">看图列式</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-statistics&grade=1">分类与统计</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-money&grade=1">认识人民币</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-unit-convert&grade=2">单位换算</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-geometry&grade=2">图形与几何</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-data-stats&grade=2">数据收集与整理</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-logic-reasoning&grade=2">简单推理与数独</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-fraction&grade=3">分数的初步认识</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-decimal&grade=3">小数的初步认识</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-area&grade=3">面积</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-time-date&grade=3">时间与日期</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-position-direction&grade=3">方向与位置</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-combination-set&grade=3">搭配与集合</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-comprehensive&grade=1">综合练习</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-c1-numberpuzzle&grade=4">数字谜与数阵图</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-c2-numbertheory&grade=4">数论初步</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-c3-counting&grade=4">组合计数</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-c5-journey&grade=4">行程问题</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-competition-placeholder&grade=4">竞赛专题</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-oral&grade=4">口算</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-vertical&grade=4">竖式计算</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-mixed&grade=4">脱式计算</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-fill&grade=4">填空题</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-match&grade=4">连线题</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-draw&grade=4">操作题</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-word&grade=4">解决问题</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-stats&grade=4">分类与整理</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-reason&grade=4">推理与数学广角</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-judge&grade=4">判断题</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g4-choice&grade=4">选择题</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g6-calc&grade=6">笔算</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g6-stats&grade=6">统计</a></li><li><a href="https://mstermoon007.github.io/Homework-help/practice.html?plugin=math-g6-reasoning&grade=6">推理</a></li></ul></div></noscript>
+<noscript><div class="noscript-types" style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>数学题型（按年级）</h2><ul><li><a href="https://home.modouyu.top/practice.html?plugin=math-oral&grade=1">口算练习</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-word-problems&grade=1">应用题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-make-ten&grade=1">凑十法</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-shapes&grade=1">认识图形</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-number-sense&grade=1">数的认识</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-clock&grade=1">认识钟表</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-patterns&grade=1">找规律</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-picture-equations&grade=1">看图列式</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-statistics&grade=1">分类与统计</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-money&grade=1">认识人民币</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-unit-convert&grade=2">单位换算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-geometry&grade=2">图形与几何</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-data-stats&grade=2">数据收集与整理</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-logic-reasoning&grade=2">简单推理与数独</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-fraction&grade=3">分数的初步认识</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-decimal&grade=3">小数的初步认识</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-area&grade=3">面积</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-time-date&grade=3">时间与日期</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-position-direction&grade=3">方向与位置</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-combination-set&grade=3">搭配与集合</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-comprehensive&grade=1">综合练习</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-c1-numberpuzzle&grade=4">数字谜与数阵图</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-c2-numbertheory&grade=4">数论初步</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-c3-counting&grade=4">组合计数</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-c5-journey&grade=4">行程问题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-placeholder&grade=4">竞赛专题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-oral&grade=4">口算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-vertical&grade=4">竖式计算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-mixed&grade=4">脱式计算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-fill&grade=4">填空题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-match&grade=4">连线题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-draw&grade=4">操作题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-word&grade=4">解决问题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-stats&grade=4">分类与整理</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-reason&grade=4">推理与数学广角</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-judge&grade=4">判断题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-choice&grade=4">选择题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g6-calc&grade=6">笔算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g6-stats&grade=6">统计</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g6-reasoning&grade=6">推理</a></li></ul></div></noscript>
 <div class="wrapper">
     <a href="index.html" class="back-home">← 返回首页</a>
 
     <div class="page-header">
         <div class="page-title">
-            <span class="pt-logo"><img src="assets/logo-math.png" alt="数学"></span>
+            <span class="pt-logo"><img src="assets/logo-math.webp" alt="数学" width="56" height="56" loading="lazy"></span>
             <span class="pt-grade" id="gradeBadge">一年级</span>
             <h1 class="pt-subject">数学</h1>
         </div>
@@ -291,7 +290,14 @@
     <div class="card">
         <div class="section-label">📐 选择题型</div>
         <div class="type-grid" id="typeGrid">
-            <div class="load-hint">正在加载题型…</div>
+            <div class="skel-grid" aria-hidden="true">
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
+            </div>
         </div>
     </div>
 
@@ -299,6 +305,8 @@
 </div>
 
 <script src="shared/common.js"></script>
+<script src="shared/subject-utils.js"></script>
+<script src="shared/difficulty.js"></script>
 <script src="shared/knowledge-bank.js"></script>
 <script src="shared/module-catalog.js"></script>
 <script src="plugins/registry.js"></script>
@@ -306,8 +314,39 @@
 (function () {
   'use strict';
 
+  // ---- 年级参数校验：显式传入但非法（如 grade=99/abc）→ 友好错误页，不再静默回退 ----
+  var rawGrade = new URLSearchParams(location.search).get('grade');
+  var GRADE_VALID = ['1', '2', '3', '4', '5', '6'];
+  // HTML 转义：URL 参数等不可信文本不得直插 innerHTML（防脚本注入）
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = (s == null) ? '' : String(s);
+    return d.innerHTML;
+  }
+  function renderErrorState(icon, errTitle, desc) {
+    document.getElementById('typeGrid').innerHTML =
+      '<div class="error-state">' +
+      '  <div class="es-icon">' + icon + '</div>' +
+      '  <div class="es-title">' + errTitle + '</div>' +
+      '  <div class="es-desc">' + desc + '</div>' +
+      '  <div class="es-actions">' +
+      '    <a class="es-btn primary" href="index.html">返回首页</a>' +
+      '    <a class="es-btn ghost" href="?grade=1">从一年级开始</a>' +
+      '  </div>' +
+      '</div>';
+  }
+
+  if (rawGrade !== null && GRADE_VALID.indexOf(rawGrade) === -1) {
+    document.title = '年级参数有误 · 数学练习';
+    renderErrorState('🧭', '年级参数好像不对',
+      '收到的年级参数是「' + esc(String(rawGrade).slice(0, 20)) + '」，有效范围为 1~6。<br>请从首页重新选择年级。');
+    return;
+  }
+
   var grade = App.currentGrade();
   document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
+  // 页面标题动态更新：「{年级}年级{学科}练习」
+  document.title = App.getGradeName(grade) + '数学练习';
 
   // 领域内部顺序（分组不显示标题，仅用于排序）
   var CATEGORY_ORDER = ['number', 'geometry', 'statistics'];
@@ -317,38 +356,28 @@
     name: '综合练习'
   };
 
-  // 题型图标：优先按插件 ID，缺省回退到领域图标
-  var PLUGIN_ICONS = {
-    'math-oral': '⚡', 'math-word-problems': '📝', 'math-make-ten': '🧮',
-    'math-number-sense': '🔢', 'math-clock': '🕐', 'math-patterns': '🔁',
-    'math-picture-equations': '🖼️', 'math-shapes': '🔷', 'math-statistics': '📊',
-    'math-money': '💰', 'math-unit-convert': '📏', 'math-geometry': '📐',
-    'math-data-stats': '🗳️', 'math-logic-reasoning': '🧠',
-    'math-fraction': '🍕', 'math-decimal': '🔢', 'math-area': '📐'
-  };
-  var CATEGORY_ICONS = { number: '🔢', geometry: '📐', statistics: '📊', mixed: '🌟' };
-  function iconOf(p) {
-    return PLUGIN_ICONS[p.id] || CATEGORY_ICONS[p.category] || '📘';
-  }
-
   var registry = (typeof window.PLUGIN_REGISTRY !== 'undefined') ? window.PLUGIN_REGISTRY : [];
   var regById = {};
   registry.forEach(function (p) { regById[p.id] = p; });
 
-  // 知识点数据来自统一知识库（数组 + getEntries 扁平化），驱动排序与标签
-  var kEntries = (typeof window.KnowledgeBank !== 'undefined')
-    ? window.KnowledgeBank.getEntries('math', grade) : [];
+  // 知识点数据来自统一知识库（按科目分片动态加载，任务：知识库拆分）。
+  // 分片在下方 loadSubjectPlugins 内部经 ensureKnowledgeData 就绪后，
+  // 由 ingestKEntries() 统一摄取，驱动排序。
   var unitOrder = {};   // pluginId -> 知识点在知识库中首次出现的位置（模块序 + 模块内序）
-  var kTags = {};       // pluginId -> [知识点名称, ...]
+  var kTags = {};       // pluginId -> [具体题型名称, ...]（卡片标签展示）
   var kWeight = {};     // pluginId -> 知识点 weight 之和（用于排序）
   var kModule = {};     // pluginId -> 所属模块 ID（取首个知识点）
-  kEntries.forEach(function (e, idx) {
-    if (!unitOrder[e.pluginId]) unitOrder[e.pluginId] = idx + 1;
-    if (!kTags[e.pluginId]) kTags[e.pluginId] = [];
-    if (e && e.name) kTags[e.pluginId].push(e.name);
-    kWeight[e.pluginId] = (kWeight[e.pluginId] || 0) + (e.weight || 0);
-    if (e && e.moduleId && !kModule[e.pluginId]) kModule[e.pluginId] = e.moduleId;
-  });
+  function ingestKEntries() {
+    var kEntries = (typeof window.KnowledgeBank !== 'undefined')
+      ? window.KnowledgeBank.getEntries('math', grade) : [];
+    kEntries.forEach(function (e, idx) {
+      if (!unitOrder[e.pluginId]) unitOrder[e.pluginId] = idx + 1;
+      if (!kTags[e.pluginId]) kTags[e.pluginId] = [];
+      if (e && e.name) kTags[e.pluginId].push(e.name);
+      kWeight[e.pluginId] = (kWeight[e.pluginId] || 0) + (e.weight || 0);
+      if (e && e.moduleId && !kModule[e.pluginId]) kModule[e.pluginId] = e.moduleId;
+    });
+  }
 
   // 模块目录（moduleId -> 名称），用于卡片主标题；插件名/描述作辅助
   var MODULE_NAMES = {};
@@ -362,6 +391,8 @@
 
   // 统一走 App.PluginLoader：按年级加载本学科全部插件并读取其元数据（含竞态安全与缓存）
   App.PluginLoader.loadSubjectPlugins('math', grade).then(function (plugins) {
+    // 分片已就绪：摄取知识点元数据（排序权重/模块归属）
+    ingestKEntries();
     // 普通题型（排除综合插件、已并入「单位的认识」的 math-money、
     // 已并入「看图列式」的 math-patterns，单独渲染其专属样式）
     var applicable = plugins.filter(function (p) {
@@ -400,9 +431,9 @@
       }
     });
     var items = [];
-    // 非占位插件直接追加
+    // 非占位插件直接追加（math-preview 例外：特殊模块卡，在综合练习之后单独渲染）
     applicable.forEach(function (p) {
-      if (!p.isPlaceholder) items.push({ p: p, mod: null });
+      if (!p.isPlaceholder && p.id !== 'math-g1-multiplication-table') items.push({ p: p, mod: null });
     });
     // 占位插件按「当前年级该模块仍为 placeholder」展开为卡片（grade 感知）：
     // 五年级 C1/C4/C6/C8 等未实现模块以占位卡片展示；四年级已实现模块不重复出现占位卡。
@@ -414,7 +445,7 @@
       var pMods = compModules.filter(function (m) {
         if (!m.gradeStatus || m.gradeStatus[grade] !== 'placeholder') return false;
         // 仅展示该年级确实登记了知识点的模块（避免空模块占位卡）
-        var gb = (typeof window.KnowledgeBank !== 'undefined' && window.KnowledgeBank.findGrade) ? window.KnowledgeBank.findGrade(grade) : null;
+        var gb = (typeof window.KnowledgeBank !== 'undefined' && window.KnowledgeBank.findGrade) ? window.KnowledgeBank.findGrade("math", grade) : null;
         var hasKp = gb && gb.modules.some(function (bm) { return bm.moduleId === m.id && bm.knowledgePoints.length > 0; });
         return hasKp;
       });
@@ -434,8 +465,8 @@
 
     var html = '';
     var compHeaderInserted = false;   // 竞赛分组标题仅注入一次
-    // 指定题型的显示覆盖：仅调整题型卡片的主标题/标签，不改知识库与注册表。
-    // 「数的认识」主标题由模块名「填空题」改为知识点名，知识点以标签展示。
+    // 指定题型的显示覆盖：仅调整题型卡片的主标题，不改知识库与注册表。
+    // 「数的认识」主标题由模块名「填空题」改为知识点名，具体题型以标签展示。
     // 「单位的认识」合并认识钟表与认识人民币两张卡片，主标题/标签按指定文案展示。
     var DISPLAY_OVERRIDES = {
       'math-number-sense': {
@@ -445,7 +476,7 @@
         name: '单位的认识',
         tags: ['认识钟表（整时）', '认识人民币']
       },
-      // 操作题卡片主标题改为知识点名，原标签完整保留（含并入的「认识图形」）
+      // 操作题卡片主标题改为知识点名，具体题型标签完整保留（含并入的「认识图形」）
       'math-shapes': {
         name: '认识图形',
         tags: ['认识立体图形', '认识平面图形', '图形拼组', '上下左右位置', '认识图形']
@@ -469,8 +500,8 @@
       var name = ov ? ov.name : (modName || (kp && kp.name) || p.name);
       var desc = (kp && kp.desc) || '';
       var href = m ? (App.buildPluginLink(p.id) + '&module=' + m.id) : App.buildPluginLink(p.id);
-      // 知识点标签统一展示（卡片不再显示副标题）：标签来自知识库该插件覆盖的知识点（最多展示 3 个 +「+N」），
-      // 原副标题中的说明并入标签并去重；被覆盖的题型优先使用其指定标签
+      // 具体题型标签：来自知识库该插件覆盖的知识点（最多展示 3 个 +「+N」），
+      // 副标题中的说明并入标签并去重；被覆盖的题型优先使用其指定标签
       var tags = ov ? (ov.tags || (kTags[p.id] || [])).slice() : (kTags[p.id] || []).slice();
       if (!ov) {
         var subText = (modName && kp && kp.name && kp.name !== name)
@@ -491,31 +522,30 @@
           (tags.length > shown.length ? '<span class="kb-tag more">+' + (tags.length - shown.length) + '</span>' : '') +
           '</span>';
       }
+      var isComp = m && m.id && m.id.charAt(0) === 'C';
       var cardHtml = (p.isPlaceholder
         ? '<div class="type-card competition" title="' + desc + '">'
         : '<a href="' + href + '" class="type-card' + (p.isPlaceholder ? ' competition' : '') + '" title="' + desc + '">') +
-        '<span class="t-icon">' + iconOf(p) + '</span>' +
         '<span class="t-name">' + name + '</span>' +
         (p.isPlaceholder ? '<span class="t-soon">即将上线</span>' : '') +
         tagHtml +
         (p.isPlaceholder ? '</div>' : '</a>');
       // 竞赛模块：追加知识点级展示（active 可选链接，placeholder 灰色不可选）
-      var isComp = m && m.id && m.id.charAt(0) === 'C';
       var kpChips = '';
       if (isComp && typeof window.KnowledgeBank !== 'undefined' && window.KnowledgeBank.findGrade) {
         var gKp = [];
-        var gBank = window.KnowledgeBank.findGrade(grade);
+        var gBank = window.KnowledgeBank.findGrade('math', grade);
         if (gBank) {
           gBank.modules.forEach(function (bm) {
-            (bm.knowledgePoints || []).forEach(function (kp) {
-              if (kp.pluginId === p.id) gKp.push(kp);
+            (bm.knowledgePoints || []).forEach(function (k) {
+              if (k.pluginId === p.id) gKp.push(k);
             });
           });
         }
-        kpChips = '<div class="kp-chips">' + gKp.map(function (kp) {
-          return kp.status === 'active'
-            ? '<a class="kp-chip" href="knowledge/' + kp.id + '.html">' + kp.name + '</a>'
-            : '<span class="kp-chip kp-ph" title="即将上线">' + kp.name + '</span>';
+        kpChips = '<div class="kp-chips">' + gKp.map(function (k) {
+          return k.status === 'active'
+            ? '<a class="kp-chip" href="knowledge/' + k.id + '.html">' + k.name + '</a>'
+            : '<span class="kp-chip kp-ph" title="即将上线">' + k.name + '</span>';
         }).join('') + '</div>';
       }
       html += isComp ? '<div class="type-cell">' + cardHtml + kpChips + '</div>' : cardHtml;
@@ -524,10 +554,22 @@
     // 追加综合练习按钮（名称/描述回退到插件元数据或注册表）
     var kc = (regById[COMPREHENSIVE.id]) ? regById[COMPREHENSIVE.id] : null;
     html += '<a href="' + App.buildPluginLink(COMPREHENSIVE.id) + '" class="type-card comprehensive">' +
-      '<span class="t-icon">🌟</span>' +
       '<span class="t-name">' + ((kc && kc.name) || COMPREHENSIVE.name) + '</span>' +
       (kc && kc.desc ? '<span class="t-desc">' + kc.desc + '</span>' : '') +
       '</a>';
+
+    // 追加 M13「提前预习」特殊模块卡片（草绿色 + display.tags 胶囊），仅一年级、置于综合练习之后
+    var m13 = (grade === 1) ? moduleById['M13'] : null;
+    if (m13 && m13.display) {
+      var pvTags = (m13.display.tags || []).map(function (t) {
+        return '<span class="kb-tag">' + t + '</span>';
+      }).join('');
+      html += '<a href="' + App.buildPluginLink('math-g1-multiplication-table') + '" class="type-card preview-card"' +
+        ' title="乘法表 · 除法表 · 乘除法填空（二年级上册预习）">' +
+        '<span class="t-name">' + m13.name + '</span>' +
+        (pvTags ? '<span class="t-tags">' + pvTags + '</span>' : '') +
+        '</a>';
+    }
 
     document.getElementById('typeGrid').innerHTML = html;
 
@@ -535,7 +577,8 @@
     App.PluginLoader.prefetch(plugins);
   }).catch(function (err) {
     document.getElementById('typeGrid').innerHTML =
-      '<div class="load-hint">题型加载失败：' + (err && err.message) + '</div>';
+      App.UIState.bannerHtml('⚠️', '题型加载失败', (err && err.message) || '未知错误',
+        '<button type="button" class="eb-btn eb-btn--primary" onclick="location.reload()">重试</button>');
   });
 })();
 </script>

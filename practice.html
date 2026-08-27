@@ -7,12 +7,131 @@
 <link rel="stylesheet" href="shared/tokens.css">
 <link rel="stylesheet" href="shared/base.css">
 <link rel="stylesheet" href="shared/components.css">
+<link rel="stylesheet" href="shared/states.css">
 <link rel="stylesheet" href="shared/toolbar.css">
 <link rel="stylesheet" href="shared/pages.css">
 <!-- 练习页专属样式见 shared/pages.css（@layer pages）；共享组件见 components.css，令牌见 tokens.css -->
+<script>
+  // 全局错误捕获与自动恢复（任务：错误处理升级）——运行时异常 / 资源加载失败 / 未处理的 Promise 拒绝
+    window.addEventListener('error', function (e) {
+      // 资源加载失败（img/script/link）在捕获阶段上报，e.message 为空——仅记录，不打扰用户
+      if (!e.message && e.target && e.target !== window) {
+        console.error('资源加载失败:', e.target.src || e.target.href || e.target.tagName);
+        return;
+      }
+      console.error('全局错误:', e.error || e.message);
+      showGlobalError(e.error || e.message);
+    }, true);
+    window.addEventListener('unhandledrejection', function (e) {
+      console.error('未处理的Promise拒绝:', e.reason);
+      showGlobalError(e.reason);
+    });
+
+    // 记录最近一次插件加载错误，供错误横幅重试使用
+    window.__lastPluginError = null;
+
+    function showGlobalError(reason) {
+      var box = document.getElementById('global-error');
+      if (!box) return;
+      // 显示错误信息
+      var detailEl = document.getElementById('global-error-detail');
+      if (detailEl) {
+        detailEl.textContent = String((reason && (reason.message || reason)) || '未知错误').slice(0, 300);
+      }
+      // 如果是插件加载错误，显示重试插件按钮；否则显示页面重载
+      var actionsEl = document.getElementById('global-error-actions');
+      if (actionsEl) {
+        if (window.__lastPluginError && window.__lastPluginError.pluginId) {
+          // 显示重试插件按钮
+          actionsEl.innerHTML = '<button onclick="tryRetryPlugin()" class="eb-btn eb-btn--primary">重试插件</button>' +
+            '<button onclick="location.reload()" class="eb-btn eb-btn--ghost">重新加载页面</button>';
+          // 显示插件信息
+          var infoEl = document.getElementById('global-error-plugin-info');
+          if (infoEl) {
+            infoEl.textContent = '插件: ' + window.__lastPluginError.pluginId + ' (' + window.__lastPluginError.reason + ')';
+          }
+        } else {
+          // 普通错误：显示页面重载按钮
+          actionsEl.innerHTML = '<button onclick="location.reload()" class="eb-btn eb-btn--primary">重新加载页面</button>';
+        }
+      }
+      box.style.display = 'block';
+    }
+
+    // 尝试重新加载最后一个出错的插件
+    function tryRetryPlugin() {
+      if (!window.__lastPluginError) return;
+      console.log('尝试重新加载插件:', window.__lastPluginError.pluginId);
+      // 清除错误横幅
+      hideGlobalError();
+      // 这里可以触发插件重新加载逻辑
+      // 由于 PluginLoader 已内置重试机制，主要是重新导航到对应页面
+      var pluginId = window.__lastPluginError.pluginId;
+      // 尝试重新获取对应插件的脚本
+      if (window.App && window.App.PluginLoader && window.App.PluginLoader.loadPlugin) {
+        // 从 registry 中查找插件条目
+        var entries = window.App.PluginLoader.loadPlugin ? null : [];
+        // 简化处理：直接重新加载对应类型的页面
+        console.log('插件重试机制触发，将重新加载页面');
+      }
+      location.reload();
+    }
+
+    function hideGlobalError() {
+      var box = document.getElementById('global-error');
+      if (box) box.style.display = 'none';
+    }
+
+    // 全局提示注入（任务6：避免卡片重复提示）
+    // 如果插件通过 meta.tip 定义了提示，则在页面顶部插入一次性提示块
+    function injectGlobalTip() {
+      if (!window.__currentPlugin) return;
+      var meta = window.__currentPlugin.meta || {};
+      var tip = meta.tip;
+      if (!tip) return;
+
+      // 防止重复注入
+      if (document.getElementById('global-tip')) return;
+
+      // 创建提示块
+      var tipEl = document.createElement('div');
+      tipEl.id = 'global-tip';
+      tipEl.className = 'global-tip';
+      tipEl.innerHTML = '<div class="tip-inner">' + tip + '</div>';
+
+      // 插入到题目区域顶部（exercise-content 的第一个子元素之前）
+      var root = document.querySelector('.exercise-content') || document.body;
+      if (root && root.firstChild) {
+        root.insertBefore(tipEl, root.firstChild);
+      } else if (root) {
+        root.appendChild(tipEl);
+      }
+    }
+
+    // 在页面加载后延迟执行，确保插件已加载
+    if (window.addEventListener) {
+      window.addEventListener('load', injectGlobalTip);
+    } else if (window.attachEvent) {
+      window.attachEvent('onload', injectGlobalTip);
+    }
+
+</script>
+<link rel="canonical" href="https://home.modouyu.top/practice.html">
 </head>
 <body>
 <div class="wrap">
+  <!-- 全局错误横幅（错误处理升级：脚本加载失败 / 运行时异常时显示） -->
+  <div id="global-error" class="error-banner" role="alert"
+       style="display:none;max-width:720px;margin:12px auto 0;">
+    <span class="eb-icon" aria-hidden="true">⚠️</span>
+    <div class="eb-body">
+      <div class="eb-title">页面加载出现问题</div>
+      <div class="eb-desc">部分功能可能不可用。请点击下方按钮重新加载；若反复出现，请检查网络后稍后再试。</div>
+      <div id="global-error-plugin-info" class="eb-desc"></div>
+      <div id="global-error-actions" class="eb-actions"></div>
+    </div>
+  </div>
+
   <!-- 左上角快速切换（学科 + 年级，醒目便利） -->
   <div class="quick-switch" id="quickSwitch">
     <button class="qs-btn" id="qsBtn" title="快速切换学科 / 年级 / 返回首页">快速切换</button>
@@ -97,13 +216,16 @@
     "@type": "EducationalAudience",
     "educationalRole": "student"
   },
-  "url": "https://mstermoon007.github.io/Homework-help/practice.html"
+  "url": "https://home.modouyu.top/practice.html"
 }
 </script>
 <script src="shared/common.js"></script>
 <script src="shared/difficulty.js"></script>
 <script src="shared/print.js"></script>
 <script src="shared/knowledge-bank.js"></script>
+<script src="shared/knowledge-math.js"></script>
+<script src="shared/knowledge-cn.js"></script>
+<script src="shared/knowledge-en.js"></script>
 <script src="plugins/registry.js"></script>
 <script>
 (function () {
@@ -692,6 +814,12 @@
     state.answered = false;
     state.count = wrongQuestions.length;
     render(set);
+    // 重做即新一轮作答：隐藏上一轮批改结果，并复位「显示答案」状态，
+    // 避免陈旧分数误导、以及 revealed 标记与已重渲染 DOM 的状态错位（E2E C1 捕获）。
+    var ra = $('resultArea');
+    ra.classList.remove('show');
+    ra.dataset.revealed = '0';
+    $('revealBtn').textContent = '显示答案';
     $('checkBtn').disabled = false;
     $('revealBtn').disabled = false;
     $('printBtn').disabled = false;
