@@ -29,7 +29,8 @@
 // === 版本配置 ===
 // 请在部署新版本时将本常量自增（v1 → v2 → v3 ...），
 // 并在对应的 HTML 文件中注入对应版本号（见下文「前端版本注入」一节）。
-const CACHE_VERSION = 'v1'; // 当前缓存版本号
+/** Shared version module — imported from shared/version.js */
+import { CACHE_VERSION } from './shared/version.js';
 // 缓存名 = 固定前缀 + 版本号。activate 按此名清理一切非当前版本缓存（含旧 hw-help-v64）。
 // ⚠️ 本常量缺失曾导致 fetch/install 内 5 处 caches.open(CACHE) 抛 ReferenceError，
 //    SW 激活后第二次导航即 net::ERR_FAILED（E2E C1 用例捕获的 P0）。
