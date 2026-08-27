@@ -11,10 +11,10 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: linear-gradient(180deg, #eaf2ff 0%, #f3f7fb 220px, #f3f7fb 100%);
+    background: linear-gradient(180deg, #eaf2ff 0%, var(--bg) 220px, var(--bg) 100%);
     color: var(--ink); line-height: 1.6;
   }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 16px 16px 60px; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: var(--spacing-md) var(--spacing-md) 60px; }
 
   /* ===== 三级页面布局（practice.html）=====
    * Layer 1: .quick-switch  顶部悬浮快速切换（fixed，见下方）
@@ -25,7 +25,7 @@
    */
 
   /* 正式内容区容器 */
-  .exercise-content { margin-top: 8px; }
+  .exercise-content { margin-top: var(--spacing-sm); }
 
   /* 第一行：主题标题 + 计时器 */
   .exercise-header {
@@ -34,7 +34,7 @@
   }
   .exercise-header h1 { margin: 0; font-size: 24px; letter-spacing: 1px;
     background: linear-gradient(90deg, #5b8def, #7c5cff); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .exercise-header .timer { font-size: 15px; font-weight: 800; color: var(--brand-d); background: #eef3fb;
+  .exercise-header .timer { font-size: 15px; font-weight: 800; color: var(--brand-d); background: var(--brand-bg);
     border-radius: 12px; padding: 8px 14px; font-variant-numeric: tabular-nums;
     white-space: nowrap; flex-shrink: 0; }
 
@@ -47,7 +47,7 @@
   .qs-btn:hover { filter: brightness(1.07); }
   .qs-btn:active { transform: scale(.97); }
   .qs-menu { position: absolute; top: calc(100% + 8px); left: 0; width: 420px; max-width: 86vw;
-    background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
     box-shadow: 0 14px 40px rgba(20, 40, 90, .2); padding: 12px 14px 14px; }
   .qs-hd { font-size: 12px; color: var(--muted); margin: 10px 2px 6px; font-weight: 700; }
   .qs-hd:first-child { margin-top: 2px; }
@@ -78,21 +78,39 @@
   }
   .meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 13px;
     color: var(--muted); margin-bottom: 12px; }
-  .meta .pill { background: #eef3fb; color: var(--brand-d); border-radius: 999px; padding: 4px 12px; font-weight: 600; }
+  .meta .pill { background: var(--brand-bg); color: var(--brand-d); border-radius: 999px; padding: 4px 12px; font-weight: 600; }
   .meta .title-pill { background: #dcebfa; color: #2b5cbf; font-weight: 800; }
 
   /* 题目区域 */
   #problemsArea .empty { text-align: center; color: var(--muted); padding: 46px 10px; font-size: 14px; }
-  .q-grid { display: grid; gap: 14px; }
-  .q-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
-  .q-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-  .q-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
-  @media (max-width: 640px) { .q-grid.cols-2, .q-grid.cols-3, .q-grid.cols-4 { grid-template-columns: 1fr; } }
+  .q-grid { display: grid; gap: 14px; grid-template-columns: repeat(var(--grid-cols, 1), 1fr); }
+  /* 响应式断点：<480px 强制单列，其他由 JS 通过 --grid-cols 设定 */
+  @media (max-width: 480px) { .q-grid { grid-template-columns: 1fr !important; } }
+
+  /* ===== 响应式布局（断点令牌见 tokens.css：--bp-sm=640 / --bp-md=768 / --bp-lg=1024；
+     @media 条件无法引用 var()，此处硬编码同值）===== */
+
+  /* ≤ --bp-sm（手机）：标题缩放；2+1 分栏工具栏（见 toolbar.css ≤760 断点），
+     按钮不挤压换行文字，状态条提示允许折行 */
+  @media (max-width: 640px) {
+    .exercise-header { padding-left: 108px; }
+    .exercise-header h1 { font-size: 19px; letter-spacing: 0; }
+    .control-row { gap: 6px; }
+    .right-group .btn { white-space: nowrap; }
+  }
+
+  /* --bp-md ~ --bp-lg（平板）：中档标题 */
+  @media (min-width: 641px) and (max-width: 1023px) {
+    .exercise-header h1 { font-size: 22px; }
+  }
+
+  /* ≥ --bp-lg（桌面）：标题放大，内容区留白加宽 */
+  @media (min-width: 1024px) {
+    .exercise-header { padding-top: var(--spacing-md); }
+    .exercise-header h1 { font-size: 26px; }
+  }
 
   /* 屏幕端：卡片/文字网格按 A4 竖版思路自适应（打印端由 JS 按题目长度设定列数） */
-  @media (max-width: 720px) {
-    #problemsArea .questions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  }
   @media (max-width: 480px) {
     #problemsArea .questions-grid { grid-template-columns: 1fr !important; }
     #problemsArea .q-badge { position: static; display: inline-block; margin: 2px 0 6px; }
@@ -100,14 +118,24 @@
 
   /* 练习页题目卡片覆写：强制左对齐（覆盖部分插件内联 text-align:center）+ 紧凑内边距 */
   #problemsArea .questions-grid .question-card,
-  #problemsArea .q-grid .question-card { text-align: left !important; padding: 10px 12px !important; }
+  #problemsArea .q-grid .question-card { text-align: left !important; padding: var(--card-padding-screen) !important; }
+  @media print {
+    #problemsArea .questions-grid .question-card,
+    #problemsArea .q-grid .question-card { padding: var(--card-padding-print) !important; }
+    #problemsArea .questions-grid .question-card,
+    #problemsArea .q-grid .question-card { text-align: left !important; }
+  /* M13 提前预习：乘除法表静态卡片（单卡通栏 + 表格边框） */
+  #problemsArea .preview-table-card { grid-column: 1 / -1; text-align: center !important; }
+  .preview-table { border-collapse: collapse; margin: 10px auto 2px; font-size: 13px; }
+  .preview-table caption { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .preview-table td { border: 1px solid var(--line); padding: 4px 8px; white-space: nowrap; }
   /* 批改反馈：空时不占高（基础字号/字重由 components 层 .question-card .feedback 提供） */
   .question-card .feedback { min-height: 0; margin-top: 4px; }
   .question-card .feedback:empty { display: none; }
 
   .correct-answer { font-size: 12px; color: var(--bad); font-weight: 700; margin-top: 6px; }
   /* 答案输入框状态（基础宽高在 components 层 .answer-inp） */
-  .answer-inp:focus { border-color: var(--brand); background: #fff; }
+  .answer-inp:focus { border-color: var(--brand); background: var(--card); }
   .answer-inp.correct { border-color: var(--ok); background: var(--ok-bg); }
   .answer-inp.wrong   { border-color: var(--bad); background: var(--bad-bg); }
 
@@ -115,14 +143,11 @@
   .result-panel { display: none; }
   .result-panel.show { display: block; }
   .result { background: linear-gradient(135deg, #eef4ff, #f6efff); border: 1px solid var(--line);
-    border-radius: 16px; padding: 20px; margin: 16px 0; text-align: center; box-shadow: var(--shadow); }
+    border-radius: 16px; padding: var(--spacing-lg); margin: var(--spacing-md) 0; text-align: center; box-shadow: var(--shadow); }
   .result .score { font-size: 36px; font-weight: 800; color: var(--brand-d); }
   .result .detail { font-size: 14px; color: var(--ink); margin-top: 6px; }
   .result .tips { font-size: 13px; color: var(--muted); margin-top: 4px; }
   .result .redo-wrap { margin-top: 14px; }
-
-  /* 错误提示 */
-  .notice { text-align: center; padding: 40px 10px; font-size: 15px; color: var(--muted); }
 
   /* 综合练习：来源题型徽标容器（math-comprehensive 实时渲染） */
   .questions-grid { display: grid; gap: 18px 25px; margin: 15px 0; }
@@ -136,7 +161,6 @@
   /* 自定义数量/难度输入框占位符（原 practice.html body 内联 style 迁移） */
   #customCount::placeholder, #difficultyInput::placeholder { color: #b0b8c6; font-weight: 400; font-size: 12px; }
 
-  .notice .big { font-size: 18px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 12px; }
 
 } /* /@layer pages */

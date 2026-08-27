@@ -102,7 +102,7 @@
 
 /* 设置面板 */
 .settings-card {
-    background: #fff;
+    background: var(--card);
     border-radius: 16px;
     padding: 28px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.15);
@@ -121,7 +121,7 @@
 .setting-group label {
     display: block;
     font-weight: 600;
-    color: #333;
+    color: var(--ink);
     margin-bottom: 10px;
     font-size: 0.95rem;
 }
@@ -134,11 +134,11 @@
     border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.2s;
-    background: #fff;
+    background: var(--card);
 }
 .number-input:focus, .select-input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: var(--brand);
 }
 
 /* 按钮 */
@@ -167,7 +167,7 @@
     margin-top: 8px;
 }
 .btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: var(--toolbar-btn-grad);
     color: #fff;
     box-shadow: 0 4px 14px rgba(102,126,234,0.4);
 }
@@ -185,7 +185,7 @@
     box-shadow: 0 6px 20px rgba(56,239,125,0.5);
 }
 .btn-warning {
-    background: linear-gradient(135deg, #f7971e, #ffd200);
+    background: var(--grad-cta);
     color: #fff;
     box-shadow: 0 4px 14px rgba(247,151,30,0.4);
 }
@@ -241,12 +241,14 @@
     user-select: none;
     text-decoration: none;
     color: inherit;
+    position: relative;
     background: linear-gradient(160deg, rgba(255,255,255,0.6), rgba(173,216,255,0.3));
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     box-shadow: 0 6px 18px rgba(40,90,160,0.14), inset 0 1px 0 rgba(255,255,255,0.6);
 }
-.type-card .t-icon { display: none; }
+/* 图标 / 标题 / 描述三段式卡片结构（一级、二级页面通用） */
+.type-card .t-icon { display: block; font-size: 2rem; line-height: 1.2; margin-bottom: 6px; }
 .type-card .t-name { font-size: 1.2rem; font-weight: 800; display: inline-block; vertical-align: middle; }
 .type-card .t-desc { display: block; margin-top: 8px; font-size: 0.8rem; color: #5a6b8c; line-height: 1.5; }
 .type-card:hover {
@@ -254,9 +256,40 @@
     background: linear-gradient(160deg, rgba(255,255,255,0.85), rgba(173,216,255,0.45));
     box-shadow: 0 12px 28px rgba(40,90,160,0.22), inset 0 1px 0 rgba(255,255,255,0.8);
 }
+/* 键盘可达性：Tab 聚焦时与 hover 同等反馈 */
+.type-card:focus-visible {
+    outline: 3px solid rgba(91,141,239,.55); outline-offset: 2px;
+    transform: translateY(-4px);
+}
+/* 入场过渡：卡片列表淡入上浮，轻微错峰（prefers-reduced-motion 时关闭） */
+@keyframes type-card-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: none; }
+}
+.type-grid > .type-card, .type-grid > .type-cell, .type-grid > .section-label {
+    animation: type-card-in .32s ease-out both;
+}
+.type-grid > :nth-child(2)  { animation-delay: .03s; }
+.type-grid > :nth-child(3)  { animation-delay: .06s; }
+.type-grid > :nth-child(4)  { animation-delay: .09s; }
+.type-grid > :nth-child(5)  { animation-delay: .12s; }
+.type-grid > :nth-child(6)  { animation-delay: .15s; }
+.type-grid > :nth-child(n+7) { animation-delay: .18s; }
+@media (prefers-reduced-motion: reduce) {
+    .type-grid > .type-card, .type-grid > .type-cell, .type-grid > .section-label { animation: none; }
+    .type-card, .type-card:hover, .type-card:focus-visible { transform: none; transition: none; }
+}
+
+/* 禁用/占位态统一语义：不可点击、灰色 --muted 视觉 */
+.type-card[aria-disabled='true'] { cursor: default; }
+.type-card.coming-soon,
+.type-card.competition {
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
 .type-card.coming-soon {
     opacity: 0.6;
-    cursor: default;
     border-style: dashed;
 }
 .type-card.coming-soon:hover {
@@ -264,26 +297,92 @@
     box-shadow: none;
     border-color: rgba(255,255,255,0.65);
 }
-.type-card.coming-soon .t-name { color: #999; }
-.type-card .t-badge {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 2px 10px;
-    background: rgba(255,255,255,0.85);
-    color: #c87a16;
-    border-radius: 10px;
-    font-size: 0.75rem;
-    font-weight: 600;
+.type-card.coming-soon .t-name { color: var(--muted); }
+/* 竞赛等未上线模块：灰底置灰、虚线边框、悬停无位移（点击行为由各页面以占位提示承接） */
+.type-card.competition {
+    background: linear-gradient(160deg, rgba(230,236,244,.75), rgba(206,215,230,.55));
+    border: 1.5px dashed rgba(122,135,156,.55);
+    color: var(--muted);
+    box-shadow: none;
 }
+.type-card.competition:hover {
+    transform: none;
+    background: linear-gradient(160deg, rgba(230,236,244,.9), rgba(206,215,230,.7));
+    box-shadow: none;
+    border-color: rgba(122,135,156,.8);
+}
+.type-card.competition .t-name { color: var(--muted); }
+.type-card.competition .t-icon { filter: grayscale(.75); opacity: .8; }
+.type-card.competition .t-desc { color: var(--muted); }
+/* 「即将上线」角标：竞赛占位卡共享 */
+.type-card .t-soon {
+    position: absolute; right: 10px; top: 10px;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 999px;
+    background: rgba(122,135,156,.16); color: var(--muted);
+    border: 1px solid rgba(122,135,156,.35);
+}
+
+/* ============ 加载骨架屏（题型卡片占位，避免内容跳动） ============ */
+.skel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+}
+.type-card.skel-card {
+    pointer-events: none;
+    min-height: 118px;
+    position: relative;
+    overflow: hidden;
+}
+.skel-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent);
+    animation: skel-shimmer 1.4s infinite;
+}
+@keyframes skel-shimmer { 100% { transform: translateX(100%); } }
+.skel-card .skel-line { height: 14px; border-radius: 7px; background: rgba(120,140,170,.22); margin: 9px auto 0; }
+.skel-card .skel-line.i { width: 34px; height: 34px; border-radius: 10px; margin-top: 4px; }
+.skel-card .skel-line.t { width: 56%; height: 17px; }
+.skel-card .skel-line.s { width: 78%; }
+@media (prefers-reduced-motion: reduce) {
+    .skel-card::after { animation: none; }
+}
+
+/* ============ 错误状态组件（无效参数 / 加载失败友好提示） ============ */
+.error-state {
+    max-width: 520px;
+    margin: var(--spacing-lg) auto;
+    padding: var(--spacing-lg);
+    text-align: center;
+    background: rgba(255,255,255,.92);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+.error-state .es-icon { font-size: 3rem; line-height: 1; }
+.error-state .es-title { font-size: 1.15rem; font-weight: 800; color: var(--ink); margin: 12px 0 6px; }
+.error-state .es-desc { font-size: .86rem; color: var(--muted); line-height: 1.7; margin-bottom: var(--spacing-md); word-break: break-all; }
+.error-state .es-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.es-btn {
+    display: inline-block; cursor: pointer; text-decoration: none;
+    border-radius: 12px; padding: 10px 22px; font-size: .9rem; font-weight: 700; transition: .18s;
+}
+.es-btn.primary { background: var(--grad-cta); color: #fff; box-shadow: 0 4px 14px rgba(245,166,35,.35); }
+.es-btn.primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.es-btn.ghost { border: 1.5px solid var(--line-strong); color: var(--brand-d); background: #fff; }
+.es-btn.ghost:hover { border-color: var(--brand); background: var(--brand-bg); }
 
 /* 段落标签 */
 .section-label {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #333;
+    color: var(--ink);
     margin-bottom: 20px;
     padding-left: 12px;
-    border-left: 5px solid #667eea;
+    border-left: 5px solid var(--brand);
 }
 
 /* 底部提示 */
@@ -301,7 +400,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: #fff;
+    background: var(--card);
     box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
     z-index: 1000;
     padding: 6px 0;
@@ -326,7 +425,7 @@
     min-width: 56px;
     border-radius: 10px;
     text-decoration: none;
-    color: #999;
+    color: var(--muted);
     font-size: 0.68rem;
     font-weight: 500;
     transition: all 0.2s;
@@ -335,8 +434,8 @@
 }
 .pc-item .pc-icon { font-size: 1.2rem; line-height: 1; }
 .pc-item.active {
-    color: #667eea;
-    background: #eef2ff;
+    color: var(--brand);
+    background: var(--brand-bg);
 }
 .pc-item:active { transform: scale(0.95); }
 
@@ -371,7 +470,7 @@
     }
     .pc-item.active {
         background: rgba(255,255,255,0.95);
-        color: #667eea;
+        color: var(--brand);
         box-shadow: 0 2px 12px rgba(0,0,0,0.1);
     }
     .pc-item:hover:not(.active) {
@@ -394,12 +493,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: #fffef9;
+    background-color: var(--paper-fourline-bg);
     background-image:
-        linear-gradient(#e8a0a0 1px, transparent 1px),
-        linear-gradient(#e8a0a0 1px, transparent 1px),
-        linear-gradient(#e8a0a0 1px, transparent 1px),
-        linear-gradient(#e8a0a0 1px, transparent 1px);
+        linear-gradient(var(--paper-fourline-rule) 1px, transparent 1px),
+        linear-gradient(var(--paper-fourline-rule) 1px, transparent 1px),
+        linear-gradient(var(--paper-fourline-rule) 1px, transparent 1px),
+        linear-gradient(var(--paper-fourline-rule) 1px, transparent 1px);
     background-size: 100% 9px;
     background-position: 0 0, 0 8px, 0 16px, 0 24px;
     background-repeat: no-repeat;
@@ -408,7 +507,7 @@
     border-radius: 4px;
     font-size: 1.1rem;
     font-family: "Times New Roman", "Georgia", serif;
-    color: #333;
+    color: var(--ink);
     letter-spacing: 1px;
     line-height: 32px;
     border: 1px solid #f0d0d0;
@@ -418,9 +517,14 @@
 /* ============ 题目卡片（PluginUtil.renderCard 类化输出，勿删——插件渲染依赖） ============
  * renderCard 只输出 class，样式统一在此维护。 */
 .question-card {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: var(--q-header-gap) var(--q-grid-gap);
+    overflow: hidden;
+    /* 保留原有样式属性 */
     border: 1px solid var(--line);
     border-radius: 14px;
-    padding: 12px 16px;
+    padding: var(--card-padding-screen);
     position: relative;
     text-align: left;
     background: var(--card);
@@ -429,18 +533,18 @@
     justify-self: start;
 }
 .question-card .q-header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--q-header-gap);
     margin: 2px 0 6px;
+
 }
 .question-card .num {
     flex: 0 0 auto;
     display: inline-flex; align-items: center; justify-content: center;
     width: 22px; height: 22px; border-radius: 50%;
     vertical-align: middle; flex-shrink: 0;
-    background: #eef3fb; color: var(--brand-d);
+    background: var(--brand-bg); color: var(--brand-d);
     font-weight: 800; font-size: 12px;
 }
 .question-card .q-text {
@@ -453,12 +557,17 @@
 .question-card .badge {
     position: absolute; right: 10px; top: 10px;
     font-size: 11px; font-weight: 700; padding: 2px 9px;
-    border-radius: 999px; background: #eef3fb; color: var(--brand);
+    border-radius: 999px; background: var(--brand-bg); color: var(--brand);
 }
 .question-card .scene-box {
-    display: flex; align-items: center; justify-content: flex-start;
-    gap: 16px; padding: 10px 12px; background: #f8fafd;
-    border-radius: 10px; margin: 6px 0; flex-wrap: wrap;
+    grid-row: 2;
+    max-width: var(--q-scene-max-width);
+    max-height: var(--q-scene-max-height);
+    margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; padding: 8px; background: var(--soft-bg);
+    border-radius: 8px;
+
 }
 /* 共享 SVG 生成器（svg-core/svg-geometry/svg-calculation/svg-make-ten）输出：
    带 viewBox 的完整 <svg>。窄屏等比收缩、打印按容器宽度缩放。 */
@@ -467,103 +576,85 @@
 }
 .question-card .q-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
 .question-card .options {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    justify-content: flex-start; margin-top: 6px;
-}
-.question-card .opt {
-    cursor: pointer;
-    border: 1.5px solid var(--line);
-    background: #fff; color: var(--ink);
-    border-radius: 10px; padding: 10px 18px;
-    font-size: 16px; font-weight: 700;
-    transition: .15s;
-    display: inline-flex; align-items: center; gap: 6px;
-}
-.question-card .opt.chosen { border-color: var(--brand); background: var(--brand); color: #fff; }
+    grid-row: 4;
+    display: flex; flex-wrap: wrap;
+    justify-content: flex-start; gap: var(--q-grid-gap);
+    margin: 4px 0 0;}
+
 .question-card .input-group {
-    display: flex; align-items: center; justify-content: flex-start;
-    gap: 6px; flex-wrap: wrap;
+    grid-row: 4;
+    display: flex; align-items: center; gap: var(--q-grid-gap);
+    margin-top: 4px;
 }
+
 .question-card .unit { font-size: 13px; color: var(--muted); font-weight: 600; }
-/* 第二行：算式留白 + 答案输入，整体左对齐 */
+
 .question-card .qa-row {
     display: flex; align-items: center; justify-content: flex-start;
     gap: 6px; flex-wrap: wrap; margin: 6px 0;
 }
+
 .question-card .qa-label { font-size: 12px; font-weight: 700; color: var(--muted); }
+
 .question-card .formula-inp {
     width: 120px; height: 32px;
-    border: 2px dashed #ccc; border-radius: 7px;
+    border: 2px dashed var(--line-strong); border-radius: 7px;
     font-size: 15px; font-weight: 700; text-align: center;
-    color: var(--brand-d); background: #fafafa; outline: none;
+    color: var(--brand-d); background: var(--soft-bg); outline: none;
 }
+
 /* 答案输入框：默认宽 96px；调用方传 opts.inputWidth 时由内联 style 覆盖 */
 .answer-inp {
     width: 96px; height: 32px;
-    border: 2px dashed #ccc; border-radius: 7px;
+    border: 2px dashed var(--line-strong); border-radius: 7px;
     font-size: 15px; font-weight: 700; text-align: center;
-    color: var(--brand-d); background: #fafafa; outline: none;
+    color: var(--brand-d); background: var(--soft-bg); outline: none;
 }
+
 .question-card .feedback { font-size: 12px; font-weight: 700; min-height: 16px; margin-top: 6px; }
 
-/* 题目卡片批改态（正确/错误） */
-.question-card.correct { border-color: var(--ok); background: var(--ok-bg); }
-.question-card.wrong   { border-color: var(--bad); background: var(--bad-bg); }
-
-/* ============ 竞赛题面图形（走 renderCard 的 q.svg 槽位，渲染进 .scene-box） ============
- * C1 数字谜与数阵图使用：竖式(.vert-eq) / 横式与符号式(.puzzle-expr) /
- * 数阵图(.array-lines) / 幻方(.magic-tbl)。插件只输出 class，样式在此维护。 */
-.vert-eq {
-    display: inline-block;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 20px; font-weight: 800; color: var(--ink);
-    line-height: 1.3; letter-spacing: 3px;
-}
-.vert-eq .ve-row { text-align: right; }
-.vert-eq .ve-op { display: inline-block; width: 1.1em; text-align: left; letter-spacing: 0; }
-.vert-eq .ve-rule { border-top: 2px solid var(--ink); margin: 4px 0; }
-
-.puzzle-expr {
-    font-size: 19px; font-weight: 800; color: var(--ink);
-    line-height: 1.55; letter-spacing: 1px; text-align: left;
+/* 紧凑模式：用于口算、填空题等 */
+.question-card.compact {
+  --q-card-padding: 8px 10px;
+  --q-text-size: 14px;
+  --q-scene-max-width: 120px;
+  --q-scene-max-height: 80px;
+  --q-grid-gap: 8px;
 }
 
-.array-lines { font-size: 16px; font-weight: 700; color: var(--ink); text-align: left; }
-.array-lines .al-row { line-height: 1.7; }
-.array-lines .al-blank { color: var(--bad); font-weight: 800; }
-
-.magic-tbl { border-collapse: collapse; }
-.magic-tbl td {
-    width: 40px; height: 40px; text-align: center;
-    border: 1.5px solid var(--line); background: #fff;
-    font-size: 18px; font-weight: 800; color: var(--ink);
-}
-.magic-tbl td.mg-blank { color: var(--bad); background: var(--bad-bg); }
-
-/* 响应式 */
-@media (max-width: 1200px) {
-    .type-grid { grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 1024px) {
-    .type-grid { grid-template-columns: repeat(3, 1fr); }
-    .type-grid.four-col { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 768px) {
-    .type-grid { grid-template-columns: repeat(2, 1fr); }
-    .type-grid.three-col, .type-grid.four-col { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 480px) {
-    .type-grid, .type-grid.two-col, .type-grid.three-col, .type-grid.four-col { grid-template-columns: 1fr; }
-    .card { padding: 28px 18px; }
-    .page-header { --header-title-size: 1.7rem; }
+.question-card.compact .q-header {
+    grid-template-columns: auto 1fr;
+    gap: var(--q-header-gap);
 }
 
-} /* /@layer components */
+.question-card.compact .scene-box {
+    max-width: 120px;
+    max-height: 80px;
+    margin: 0 auto;
+}
 
-/* 兼容性回退（修复 P3 7.1）：不支持 backdrop-filter 的浏览器（Firefox<103 / IE 等）
-   用更不透明的纯色背景兜底，保证卡片/面板文字清晰可读。 */
-@supports not (backdrop-filter: blur(12px)) {
-  .card, .type-card, .pc-item {
-    background: rgba(255, 255, 255, 0.92) !important;
-  }
+.question-card.compact .options {
+    grid-row: auto;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.question-card.compact .input-group {
+    margin-top: 2px;
+}
+
+/* 全局提示（任务6：插件 meta.tip，仅显示一次） */
+.global-tip {
+  background: var(--soft-bg);
+  border-left: 4px solid var(--brand-d);
+  margin: 12px 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.global-tip .tip-inner {
+  max-width: 100%;
 }

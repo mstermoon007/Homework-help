@@ -613,6 +613,141 @@
     return plugin;
   }
 
+  // ============ 科目化插件工厂（数学/语文/英语，自动注入 subject + difficultyParams + 修饰类） ============
+
+  /** 科目化辅助：包装 generate，调用前自动注入 opts.difficultyParams（App.Difficulty.paramsFor 结果）。 */
+  function _wrapDifficultyParams(plugin, subject) {
+    var _orig = plugin.generate;
+    plugin.generate = function (opts) {
+      opts = opts || {};
+      if (opts.difficultyParams == null) {
+        var _D = (typeof global !== 'undefined') ? (global.App && global.App.Difficulty) : null;
+        if (_D && typeof _D.paramsFor === 'function') {
+          var lv = (opts.difficulty != null) ? opts.difficulty : (opts.level || 3);
+          try { opts.difficultyParams = _D.paramsFor(subject, lv); } catch (e) { /* 安全跳过 */ }
+        }
+      }
+      return _orig.call(plugin, opts);
+    };
+  }
+
+  /** 科目化辅助：包装 render，在网格容器追加科目修饰类（math-grid / cn-grid / en-grid）。 */
+  function _wrapGridClass(plugin) {
+    if (!plugin.gridClass) return;
+    var _orig = plugin.render;
+    plugin.render = function (set) {
+      var html = _orig.call(plugin, set);
+      if (html.indexOf(plugin.gridClass) === -1) {
+        html = html.replace('class="questions-grid"', 'class="questions-grid ' + plugin.gridClass + '"');
+      }
+      return html;
+    };
+  }
+
+  /** 数值等价比较：'12' ≡ 12；非数值回退字符串比较 */
+  function _numEq(a, b) {
+    var na = Number(normalizeAns(a));
+    var nb = Number(normalizeAns(b));
+    if (!isNaN(na) && !isNaN(nb)) return na === nb;
+    return normalizeAns(a) === normalizeAns(b);
+  }
+
+  /** 数值版 defaultQCheck：multi 分字段数值比较 / 其余整串数值比较 */
+  function _mathQCheck(q, answers, i) {
+    if (q.inputType === 'multi') {
+      var parts = Array.isArray(q.answer) ? q.answer : String(q.answer).split(/[、,，]/);
+      for (var j = 0; j < parts.length; j++) {
+        var uv = answers ? answers[i + ':' + j] : undefined;
+        if (!_numEq(uv, parts[j])) return false;
+      }
+      return true;
+    }
+    var ua = answers ? answers[i] : undefined;
+    var ans = Array.isArray(q.answer) ? q.answer.join('') : q.answer;
+    return _numEq(ua, ans);
+  }
+
+  /**
+   * 数学插件工厂：预设 subject='math'、数值比较批改（'12'≡12）、math-grid/math-card 修饰类、
+   * 自动注入 opts.difficultyParams。旧 createPlugin(cfg) 完全兼容、行为不变。
+   */
+  function createMathPlugin(config) {
+    config = config || {};
+    config.subject = 'math';
+    var _origGQ = config.generateQuestions;
+    if (typeof _origGQ === 'function') {
+      config.generateQuestions = function (opts) {
+        var qs = _origGQ.call(this, opts) || [];
+        qs.forEach(function (q) {
+          if (q && typeof q.check !== 'function' && q.answer != null) {
+            q.check = function (answers, idx) { return _mathQCheck(q, answers, idx); };
+          }
+        });
+        return qs;
+      };
+    }
+    var plugin = createPlugin(config);
+    plugin.cardClass = 'math-card';
+    plugin.gridClass = 'math-grid';
+    _wrapDifficultyParams(plugin, 'math');
+    _wrapGridClass(plugin);
+    return plugin;
+  }
+
+  /** 语文插件工厂：预设 subject='chinese'、字符串标准化批改、cn-grid/cn-card 修饰类。 */
+  function createChinesePlugin(config) {
+    config = config || {};
+    config.subject = 'chinese';
+    var plugin = createPlugin(config);
+    plugin.cardClass = 'cn-card';
+    plugin.gridClass = 'cn-grid';
+    _wrapDifficultyParams(plugin, 'cn');
+    _wrapGridClass(plugin);
+    return plugin;
+  }
+
+  /** 英语插件工厂：预设 subject='english'、拼写检查批改、en-grid/en-card 修饰类。 */
+  function createEnglishPlugin(config) {
+    config = config || {};
+    config.subject = 'english';
+    var plugin = createPlugin(config);
+    plugin.cardClass = 'en-card';
+    plugin.gridClass = 'en-grid';
+    _wrapDifficultyParams(plugin, 'en');
+    _wrapGridClass(plugin);
+    return plugin;
+  }
+
+  // ============ 公共题目池（PoolCache：跨调用连续发牌、Fisher-Yates 洗牌、不重复直至穷举） ============
+
+  /** 全局池缓存：key → pool 对象 */
+  var _poolRegistry = {};
+
+  /**
+   * 创建/获取公共题目池。
+   * @param {string} key 唯一键（如 'plugin-id:type'）
+   * @param {Function} buildFn 构建函数，返回完整题目数组（仅首次调用）
+   * @returns {{take: function(number):Array, size: function():number}} 池对象
+   */
+  function createPoolCache(key, buildFn) {
+    if (_poolRegistry[key]) return _poolRegistry[key];
+    var pool = (typeof buildFn === 'function') ? (buildFn() || []) : [];
+    var cursor = 0;
+    var shuffled = shuffle(pool);
+    return _poolRegistry[key] = {
+      take: function (n) {
+        var out = [];
+        n = n || 1;
+        while (out.length < n) {
+          if (cursor >= shuffled.length) { shuffled = shuffle(pool); cursor = 0; }
+          out.push(shuffled[cursor++]);
+        }
+        return out;
+      },
+      size: function () { return pool.length; }
+    };
+  }
+
   /** 浏览器内加载插件后，自动输出一次当前年级知识点覆盖提示（每页仅一次） */
   function _maybeReportCoverage(cfg) {
     if (typeof global === 'undefined' || !global.window) return; // 仅浏览器
@@ -638,7 +773,8 @@
       if (global.console) console.info('[coverage] ' + subject + ' 科目暂无知识点库，跳过覆盖统计');
       return;
     }
-    var g = KB.findGrade ? KB.findGrade(grade) : null;
+    // findGrade(subject, grade) 双参；subject 在本函数入口已确认是 'math'
+    var g = KB.findGrade ? KB.findGrade('math', grade) : null;
     if (!g) { if (global.console) console.warn('[coverage] 无 ' + grade + ' 年级知识库数据'); return; }
     var reg = registry || (typeof global.PLUGIN_REGISTRY !== 'undefined' ? global.PLUGIN_REGISTRY : null);
     var cov = KB.coverageFromRegistry('math', grade, reg);
@@ -1109,11 +1245,47 @@
     clockSVG: clockSVG,
     // 插件工厂与开发期覆盖提示
     createPlugin: createPlugin,
+    createMathPlugin: createMathPlugin,
+    createChinesePlugin: createChinesePlugin,
+    createEnglishPlugin: createEnglishPlugin,
+    createPoolCache: createPoolCache,
     reportCoverage: reportCoverage,
     // 灵活列数计算（预览 + 打印共用单一来源）
     layout: Layout
   };
   global.PluginUtil = util;
+
+  // ============ 科目工具按需加载（shared/subject-utils.js） ============
+  // Node：同步 require 并挂全局；浏览器：异步注入脚本（失败仅告警，
+  // normPY/normHZ 等废弃别名走内置兜底实现，功能不受影响）。
+  // 说明：subject-utils.js 为「任务12 科目工具抽离」新增文件（工作区未跟踪），
+  // 从 archive/pre-language-module-20260824/shared/common.js 恢复本段逻辑，
+  // 否则 chinese-pinyin / chinese-comprehensive / chinese-hanzi 等语文插件
+  // 在浏览器端加载时因全局无 ChineseUtil 而抛错。
+  (function ensureSubjectUtils() {
+    if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
+      try {
+        var su = require('./subject-utils.js');
+        global.SubjectUtils = su;
+        global.MathUtil = su.MathUtil;
+        global.ChineseUtil = su.ChineseUtil;
+        global.EnglishUtil = su.EnglishUtil;
+      } catch (e) { /* 静默：别名兜底 */ }
+      return;
+    }
+    var doc = (typeof document !== 'undefined') ? document : null;
+    if (doc && !global.SubjectUtils) {
+      var s = doc.createElement('script');
+      s.src = 'shared/subject-utils.js';
+      s.async = true;
+      s.onerror = function () {
+        if (global.console && global.console.warn) {
+          console.warn('[common] subject-utils.js 加载失败，normPY/normHZ 走内置兼容实现');
+        }
+      };
+      doc.head.appendChild(s);
+    }
+  })();
 
   if (typeof module !== 'undefined' && module.exports) module.exports = util;
 

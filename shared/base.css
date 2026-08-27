@@ -5,12 +5,20 @@
 @layer base {
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  /* 通用内容容器（题型选择页等使用，padding-top 为避开固定返回按钮） */
+  /* 通用内容容器（题型选择页等使用，padding-top 为避开固定返回按钮）。
+     max-width 挂断点令牌 --bp-xl；内边距随宽度三档递增
+     （媒体查询无法用 var() 作条件，断点值与 tokens.css 的 --bp-md/--bp-lg 保持一致）。 */
   .wrapper {
     width: 100%;
-    max-width: 1200px;
+    max-width: var(--bp-xl);
     margin: 0 auto;
-    padding: 20px;
+    padding: var(--spacing-md);
     padding-top: 70px;
+  }
+  @media (min-width: 768px) { /* --bp-md */
+    .wrapper { padding: var(--spacing-lg); padding-top: 70px; }
+  }
+  @media (min-width: 1024px) { /* --bp-lg */
+    .wrapper { padding: var(--spacing-xl) var(--spacing-lg); padding-top: 70px; }
   }
 }

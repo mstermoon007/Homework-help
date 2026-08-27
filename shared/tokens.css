@@ -2,9 +2,9 @@
  * 全站唯一令牌来源：所有 CSS 自定义属性集中于此，供 base/components/toolbar/pages 引用。
  * 调整 :root 变量即可全局同步视觉，无需改动业务文件。
  * 依赖：无（必须最先加载）。
- * 层叠顺序由本文件顶部 @layer 声明锁定：tokens → base → components → toolbar → pages。
+ * 层叠顺序由本文件顶部 @layer 声明锁定：tokens → base → components → states → toolbar → pages。
  */
-@layer tokens, base, components, toolbar, pages;
+@layer tokens, base, components, states, toolbar, pages;
 
 @layer tokens {
   :root {
@@ -26,12 +26,35 @@
     --warn: #e6a23c;
     --shadow: 0 8px 24px rgba(40, 70, 120, .10);
 
-    /* 科目强调色（首页科目卡等共用，单一来源） */
-    --math: #4a90d9;
+    /* 科目三色令牌（任务13）：primary 主色 / secondary 浅底 / accent 强调（深）。
+       旧名 --math/--chinese/--english 已别名化指向对应 primary，
+       修改 primary 即全站数学/语文/英语相关元素同步变化。 */
+    --math-primary: #4a90d9;
+    --math-secondary: #ebf3fd;
+    --math-accent: #2f6ea8;
+
+    --cn-primary: #38a169;
+    --cn-secondary: #e6f7ee;
+    --cn-accent: #27795a;
+
+    --en-primary: #f5a623;
+    --en-secondary: #fff7eb;
+    --en-accent: #c77e12;
+
+    /* 书写格颜色：田字格/米字格与四线三格（供 svg-chinese/svg-english 及练字组件使用） */
+    --grid-tianzige-frame: #5a6f94;     /* 田字格外框 */
+    --grid-tianzige-aux: #9fb3d1;       /* 田字格中十字虚线 */
+    --grid-fourline-line: #9fb3d1;      /* 四线三格横线 */
+    --grid-fourline-baseline: #5a6f94;  /* 四线三格基线（第三线，略粗） */
+    --paper-fourline-bg: #fffef9;       /* 拼音四线纸底色（.pinyin-grid 组件） */
+    --paper-fourline-rule: #e8a0a0;     /* 拼音四线纸红线 */
+
+    /* 科目强调色（首页科目卡等共用，单一来源；已别名化至上方 primary） */
+    --math: var(--math-primary);
     --math-bg: #ebf3fd;
-    --chinese: #38a169;
+    --chinese: var(--cn-primary);
     --chinese-bg: #e6f7ee;
-    --english: #f5a623;
+    --english: var(--en-primary);
     --english-bg: #fff7eb;
     --radius-card: 16px;
     --grad-hero: linear-gradient(160deg, #4a90d9 0%, #6db3f2 40%, #7eb6f0 100%);
@@ -59,25 +82,68 @@
     --toolbar-btn-ghost-border: rgba(123, 97, 255, .30);
     --toolbar-btn-ghost-hover-bg: rgba(123, 97, 255, .20);
 
-    /* 工具栏：尺寸 */
-    --toolbar-font-size: 12px;
-    --toolbar-chip-radius: 8px;
-    --toolbar-chip-pad: 6px 12px;
-    --toolbar-btn-radius: 10px;
-    --toolbar-btn-pad: 9px 16px;
+    /* 工具栏：尺寸（紧凑档：chip 26px / 主按钮 28px / 辅助按钮 24px） */
+    --toolbar-font-size: 13px;
+    --toolbar-chip-radius: 6px;
+    --toolbar-chip-pad: 0 12px;
+    --toolbar-btn-radius: 6px;
+    --toolbar-btn-pad: 0 16px;
     --toolbar-btn-font-size: 13px;
-    --toolbar-btn-sm-pad: 5px 12px;
-    --toolbar-btn-sm-font-size: 12px;
-    --toolbar-btn-sm-radius: 8px;
+    --toolbar-btn-sm-pad: 0 10px;
+    --toolbar-btn-sm-radius: 6px;
 
     /* 工具栏：布局间距 */
-    --toolbar-row-gap: 12px;
-    --toolbar-group-gap: 8px;
+    --toolbar-group-gap: 6px;
     --toolbar-lbl-margin: 8px;
-    --toolbar-actions-gap: 10px;
-    --toolbar-actions-margin-top: 16px;
-    --toolbar-grid-gap: 18px;
-    --toolbar-settings-flex: 1 1 360px;
-    --toolbar-actions-flex: 1 1 260px;
+
+    /* 工具栏：粘性面板（滚动时常驻可见） */
+    --toolbar-sticky-top: 0px;
+    --toolbar-sticky-z: 10;
+    --toolbar-sticky-bg: rgba(255, 255, 255, .82);
+    --toolbar-sticky-bg-fallback: rgba(255, 255, 255, .96);
+    --toolbar-sticky-border: rgba(91, 141, 239, .18);
+    --toolbar-sticky-blur: 14px;
+
+    /* 工具栏：触控目标与分组分隔 */
+    --toolbar-touch-min: 26px;      /* chip 紧凑高度 */
+    --toolbar-btn-min-height: 28px; /* 主操作按钮高度 */
+
+    /* 工具栏：进度条（已答题数）与分数徽标 */
+    --toolbar-progress-track: var(--line);
+    --toolbar-progress-fill: var(--toolbar-chip-grad);
+    --toolbar-progress-h: 3px;
+
+    /* 响应式断点令牌（命名常量）。
+       注意：@media 条件无法引用 var()，各媒体查询须硬编码同值并注释对应令牌名。 */
+    --bp-sm: 640px;
+    --bp-md: 768px;
+    --bp-lg: 1024px;
+    --bp-xl: 1280px;
+
+    /* 间距令牌（页面 section / .card / 面板外边距统一来源） */
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --card-padding-screen: 12px 16px;
+    --card-padding-print: 10px 12px;
+    --grid-gap-screen: 14px;
+    --grid-gap-print: 14px 12px;
+    --spacing-xl: 32px;
+  --q-num-size: 12px;
+  --q-text-size: 15px;
+  --q-text-line-height: 1.4;
+  --q-unit-size: 12px;
+  --q-input-size: 14px;
+  --q-input-height: 30px;
+  --q-option-size: 14px;
+  --q-hint-size: 12px;
+  --q-feedback-size: 12px;
+  --q-scene-max-width: 200px;
+  --q-scene-max-height: 140px;
+  --q-card-padding: 12px 14px;
+  --q-header-gap: 8px;
+  --q-section-gap: 8px;
+  --q-grid-gap: 14px;
   }
 }

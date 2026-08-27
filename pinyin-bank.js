@@ -691,6 +691,112 @@
   global.PINYIN_BANK = {
     bank: BANK,
     wordLibrary: WORD_LIBRARY,
+
+    // ============ 任务（拼音库扩展）：结构化语音数据 ============
+
+    /** 23 个声母 */
+    initials: ['b','p','m','f','d','t','n','l','g','k','h','j','q','x',
+               'zh','ch','sh','r','z','c','s','y','w'],
+
+    /** 韵母分组：单韵母 6 / 复韵母 8 / 前鼻韵母 5 / 后鼻韵母 4 */
+    finals: {
+      simple:     ['a','o','e','i','u','ü'],
+      compound:   ['ai','ei','ui','ao','ou','iu','ie','üe'],
+      nasalFront: ['an','en','in','un','ün'],
+      nasalBack:  ['ang','eng','ing','ong']
+    },
+
+    /** 16 个整体认读音节 */
+    wholeSyllables: ['zhi','chi','shi','ri','zi','ci','si',
+                     'yi','wu','yu','ye','yue','yuan','yin','yun','ying'],
+
+    /** 标调规则示例（含口诀对照） */
+    toneExamples: [
+      { syllable: 'hǎo', rule: 'a 母出现不放过', note: '调号标在主要元音 a 上' },
+      { syllable: 'guī', rule: 'i、u 并排标后边', note: 'iu 组合标在后面的 u 上' },
+      { syllable: 'liú', rule: 'i、u 并排标后边', note: 'iu 组合标在后面的 u 上' },
+      { syllable: 'nǚ',  rule: 'ü 见 j q x 去两点', note: 'n 后保留两点，与 u 区分' },
+      { syllable: 'quē', rule: 'ü 见 q 去两点', note: '书写为 ue，读仍为 üe' },
+      { syllable: 'bà',  rule: 'a 母出现不放过', note: '标在 a 上' },
+      { syllable: 'dì',  rule: 'i 自身承载调号', note: '单韵母 i 直接标写' },
+      { syllable: 'xué', rule: 'üe 省写为 ue',   note: '调号落在 e 上' },
+      { syllable: 'shǒu',rule: 'ou 组合标 o',    note: 'o 承载调号' },
+      { syllable: 'niú', rule: 'iu 组合标 u',    note: 'u 承载调号' },
+      { syllable: 'mài', rule: 'ai 组合标 a',    note: 'a 承载调号' },
+      { syllable: 'zhuāng', rule: 'ang 组合标 a', note: 'a 承载调号' }
+    ],
+
+    /** j/q/x 与 ü 相拼词例（书写去两点，读音仍为 ü） */
+    jqxuWords: [
+      { word: '句子', py: 'jù zi' },   { word: '菊花', py: 'jú huā' },
+      { word: '需要', py: 'xū yào' },  { word: '雪花', py: 'xuě huā' },
+      { word: '语句', py: 'yǔ jù' },   { word: '去路', py: 'qù lù' },
+      { word: '居住', py: 'jū zhù' },  { word: '有趣', py: 'yǒu qù' },
+      { word: '举重', py: 'jǔ zhòng' }, { word: '需求', py: 'xū qiú' },
+      { word: '序言', py: 'xù yán' },   { word: '聚会', py: 'jù huì' },
+      { word: '继续', py: 'jì xù' },    { word: '宣布', py: 'xuān bù' }
+    ],
+
+    /** 常见轻声词（第二音节读轻声） */
+    lightToneWords: [
+      { word: '妈妈', py: 'mā ma' },   { word: '爸爸', py: 'bà ba' },
+      { word: '我们', py: 'wǒ men' },  { word: '先生', py: 'xiān sheng' },
+      { word: '东西', py: 'dōng xi' }, { word: '衣服', py: 'yī fu' },
+      { word: '太阳', py: 'tài yang' },{ word: '漂亮', py: 'piào liang' },
+      { word: '爷爷', py: 'yé ye' },   { word: '奶奶', py: 'nǎi nai' },
+      { word: '尾巴', py: 'wěi ba' },  { word: '鞋子', py: 'xié zi' },
+      { word: '朋友', py: 'péng you' },{ word: '客气', py: 'kè qi' }
+    ],
+
+    /** 易混音组（供辨析题与干扰项设计） */
+    confusingGroups: [
+      { group: '平翘舌', pair: ['s','sh'], words: [{ w: '四', py: 'sì' }, { w: '是', py: 'shì' }] },
+      { group: '平翘舌', pair: ['c','ch'], words: [{ w: '从', py: 'cóng' }, { w: '虫', py: 'chóng' }] },
+      { group: '平翘舌', pair: ['z','zh'], words: [{ w: '坐', py: 'zuò' }, { w: '桌', py: 'zhuō' }] },
+      { group: '鼻音边音', pair: ['l','n'], words: [{ w: '乐', py: 'lè' }, { w: '呢', py: 'ne' }] },
+      { group: '前后鼻音', pair: ['in','ing'], words: [{ w: '金', py: 'jīn' }, { w: '京', py: 'jīng' }] },
+      { group: '前后鼻音', pair: ['en','eng'], words: [{ w: '真', py: 'zhēn' }, { w: '争', py: 'zhēng' }] },
+      { group: '唇齿喉音', pair: ['f','h'], words: [{ w: '飞', py: 'fēi' }, { w: '灰', py: 'huī' }] },
+      { group: '前后鼻音', pair: ['an','ang'], words: [{ w: '安', py: 'ān' }, { w: '昂', py: 'áng' }] },
+      { group: '送气不送气', pair: ['b','p'], words: [{ w: '白', py: 'bái' }, { w: '拍', py: 'pāi' }] }
+    ],
+
+    /** 多音字注音及语境示例 */
+    polyphones: [
+      { char: '乐', readings: [
+        { py: 'lè',  ctx: '快乐（lè）' }, { py: 'yuè', ctx: '音乐（yuè）' } ] },
+      { char: '长', readings: [
+        { py: 'cháng', ctx: '很长（cháng）' }, { py: 'zhǎng', ctx: '长大（zhǎng）' } ] },
+      { char: '着', readings: [
+        { py: 'zhe', ctx: '看着（zhe）' }, { py: 'zháo', ctx: '着急（zháo）' } ] },
+      { char: '地', readings: [
+        { py: 'dì',  ctx: '土地（dì）' },  { py: 'de',  ctx: '慢慢地走（de）' } ] },
+      { char: '行', readings: [
+        { py: 'xíng', ctx: '行走（xíng）' }, { py: 'háng', ctx: '银行（háng）' } ] }
+    ],
+
+    /** 常用带调音节选题池（initial+final+tone 结构化，便于按条件抽题） */
+    syllables: (function () {
+      var out = [];
+      var fam = {
+        b: ['a','o','i','u'],  p: ['a','o','i','u'],  m: ['a','o','i','u'],
+        d: ['a','e','i','u'],  t: ['a','e','i','u'],  n: ['a','e','i','u'],
+        l: ['a','e','i','u'],  g: ['a','e','u'],       k: ['a','e','u'],
+        h: ['a','e','u'],      x: ['i','ue'],          j: ['i','ue'],
+        q: ['i','ue'],         zh: ['a','en','ang'],   ch: ['a','en','ang'],
+        sh: ['a','en','ang'],  r: ['e','en'],           z: ['a','en'],
+        c: ['a','en'],         s: ['a','en']
+      };
+      Object.keys(fam).forEach(function (ini) {
+        fam[ini].forEach(function (fin) {
+          [1,2,3,4].forEach(function (tone) {
+            out.push({ initial: ini, final: fin, tone: tone,
+              key: ini + fin + String(tone) });
+          });
+        });
+      });
+      return out;
+    })(),
     // 获取指定年级的汉字库
     getChars: function(grade) {
       return BANK[grade] || BANK[1] || [];
@@ -717,8 +823,12 @@
     }
   };
 
+  // 任务（拼音库扩展）：语义化别名，浏览器可直接访问 window.PinyinBank
+  global.PinyinBank = global.PINYIN_BANK;
+
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
 // Node（dev 脚本/测试）：同时挂到 module.exports，require 后也可直接取 .PINYIN_BANK
 if (typeof module !== 'undefined' && module.exports && typeof globalThis.PINYIN_BANK !== 'undefined') {
   module.exports.PINYIN_BANK = globalThis.PINYIN_BANK;
+  module.exports.PinyinBank = globalThis.PinyinBank;
 }

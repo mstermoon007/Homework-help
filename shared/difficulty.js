@@ -165,6 +165,103 @@
     return prof;
   }
 
+  // ============ 任务10：按科目差异化策略 ============
+
+  /** 科目代号规范化：兼容注册表全称（chinese/english）与前缀缩写（cn/en） */
+  function canonSubject(subject) {
+    var m = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+    return m[subject] || subject;
+  }
+
+  /**
+   * 正确率反馈调整规则（数学现行规则的显式化；cn/en 暂沿用同一反馈框架）。
+   * @param {{emaRate:number, lastRate:number}} s
+   * @returns {{delta:number, bias:string|null}}
+   */
+  function applyDeltaRule(s) {
+    if (s.emaRate >= 0.85 && s.lastRate >= 0.999) return { delta: 2, bias: 'hard' };
+    if (s.emaRate >= 0.8) return { delta: 1, bias: 'hard' };
+    if (s.emaRate <= 0.5) return { delta: -2, bias: 'easy' };
+    if (s.emaRate <= 0.65) return { delta: -1, bias: 'easy' };
+    return { delta: 0, bias: null };
+  }
+
+  var DELTA_RULES = { apply: applyDeltaRule };
+
+  /**
+   * 科目难度档案：toParams 把 1–10 难度映射为该科目的生成参数，
+   * 插件在 generateQuestions 中按需消费（未消费的键被安全忽略）。
+   */
+  var DifficultyProfiles = {
+    math: {
+      subject: 'math',
+      label: '数学',
+      defaultLevel: 3,
+      /** 现有能力：diffScale 数值缩放 + 五档结构映射 */
+      createProfile: function (base, delta, opts) { return createProfile(base, delta, opts); },
+      toParams: function (level) {
+        var p = createProfile(level);
+        return {
+          level: p.effectiveLevel,
+          scale: p.scale,
+          steps: p.structure.steps,
+          allowBracket: p.structure.allowBracket,
+          allowMultDiv: p.structure.allowMultDiv
+        };
+      }
+    },
+    cn: {
+      subject: 'cn',
+      label: '语文',
+      defaultLevel: 3,
+      /** 语文映射：字词复杂度（字数上限/词档）与句子长度 */
+      toParams: function (level) {
+        var l = clamp10(level);
+        return {
+          level: l,
+          charCountMax: l <= 3 ? 8 : (l <= 6 ? 12 : 16),   // 字词复杂度：字数上限
+          sentenceLength: 6 + l * 2,                        // 句子长度（字）
+          vocabTier: l <= 3 ? 'basic' : (l <= 6 ? 'common' : (l <= 8 ? 'advanced' : 'extension'))
+        };
+      }
+    },
+    en: {
+      subject: 'en',
+      label: '英语',
+      defaultLevel: 3,
+      /** 英语映射：词汇长度、语法复杂度、句型层级 */
+      toParams: function (level) {
+        var l = clamp10(level);
+        return {
+          level: l,
+          wordLengthMax: l <= 3 ? 4 : (l <= 6 ? 6 : (l <= 8 ? 8 : 10)),  // 词汇长度上限（字母）
+          grammarTier: l <= 3 ? 1 : (l <= 6 ? 2 : (l <= 8 ? 3 : 4)),     // 语法复杂度分档
+          sentencePattern: l <= 3 ? 'simple' : (l <= 6 ? 'compound' : 'complex')
+        };
+      }
+    }
+  };
+
+  /** 取科目档案：chinese/english 归一为 cn/en；未知科目回落 math（安全默认） */
+  function profileFor(subject) {
+    return DifficultyProfiles[canonSubject(subject)] || DifficultyProfiles.math;
+  }
+
+  /** 按科目把难度（可叠加 delta）翻译成生成参数 */
+  function paramsFor(subject, level, delta) {
+    var prof = profileFor(subject);
+    var base = (Number(level) || prof.defaultLevel) + (Number(delta) || 0);
+    return prof.toParams(base);
+  }
+
+  /** 取科目调整策略（正确率反馈规则）；未知科目返回 null，调用方回退内置逻辑 */
+  function strategyFor(subject) {
+    var prof = profileFor(subject);
+    return prof === DifficultyProfiles.math ? DELTA_RULES
+      : (prof.subject === 'cn' || prof.subject === 'en') ? DELTA_RULES
+      : null;
+  }
+
   // ============ 导出：挂载 App.Difficulty（Node 端默认导出同一对象） ============
   global.App = global.App || {};
   var Difficulty = {
@@ -172,7 +269,11 @@
     difficultyToStructure: difficultyToStructure,
     createProfile: createProfile,
     consumeProfile: consumeProfile,
-    consume: consume
+    consume: consume,
+    DifficultyProfiles: DifficultyProfiles,
+    profileFor: profileFor,
+    paramsFor: paramsFor,
+    strategyFor: strategyFor
   };
   global.App.Difficulty = Difficulty;
 
