@@ -42,7 +42,18 @@ const gFlags = args.filter(a => /^--g\d+$/.test(a)).map(a => Number(a.replace(/^
 
 const G_MODULES = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'];
 
-bank.forEach(entry => {
+// 任务3：知识库为按科目分组对象 {math:[...],cn:[...],en:[...]}。
+// 扁平化为带 subject 的条目数组，后续检查统一走 entries（科目维度随条目携带）。
+const SUBJECT_KEYS = Object.keys(bank).filter(k => Array.isArray(bank[k]));
+const entries = [];
+SUBJECT_KEYS.forEach(s => {
+  bank[s].forEach(e => {
+    if (!e.subject) e.subject = s; // 条目补记所属科目（供输出与后续任务6校验）
+    entries.push(e);
+  });
+});
+
+entries.forEach(entry => {
   if (gradeOnly && entry.grade !== gradeOnly) return;
   const g = entry.grade;
 
@@ -87,7 +98,7 @@ bank.forEach(entry => {
 // 5. 高年级专项校验（--g4/--g5 等：M1-M12 全覆盖、无空模块）
 const specialGrades = (gradeOnly >= 4) ? [gradeOnly] : gFlags;
 specialGrades.forEach(grade => {
-  const entry = bank.find(e => e.grade === grade);
+  const entry = entries.find(e => e.grade === grade && e.subject === 'math');
   if (!entry) {
     errors.push(`(年级${grade}) 不存在该年级知识库条目`);
   } else {
@@ -106,48 +117,77 @@ registry.filter(r => r.isPlaceholder).forEach(r => {
   }
 });
 
-// ============ 7. 编号体系校验 ============
-// ID 格式：g{grade}-{m0-m12|c1-c9}-{base}（moduleId 小写；注意 M10/M11/M12）
-const ID_RE = /^g[1-6]-(m(?:[0-9]|1[0-2])|c[1-9])-([a-z0-9-]+)$/;
+// ============ 7. 编号体系校验（任务4：科目前缀强制） ============
+// ID 格式：{subject}-g{grade}-{module}-{base}，科目前缀必带；
+// 模块段按科目限定：math→m0-m13/c1-c9，cn→n1-n8，en→e1-e6
+const ID_RE = /^(math|cn|en)-g[1-6]-(m[0-9]|m1[0-3]|c[1-9]|n[1-8]|e[1-6])-([a-z0-9-]+)$/;
+// 科目前缀 ↔ 模块段 允许的组合（与 shared/module-catalog.js 的 subject 字段同源）
+const SUBJECT_MODULE_OK = {
+  math: id => /^m(?:[0-9]|1[0-3])$/.test(id) || /^c[1-9]$/.test(id),
+  cn: id => /^n[1-8]$/.test(id),
+  en: id => /^e[1-6]$/.test(id)
+};
 const allIds = new Set();
 const idGrade = new Map();
-bank.forEach(e => {
+const idSubject = new Map();
+entries.forEach(e => {
   e.modules.forEach(mod => {
-    (mod.knowledgePoints || []).forEach(kp => { allIds.add(kp.id); idGrade.set(kp.id, e.grade); });
+    (mod.knowledgePoints || []).forEach(kp => {
+      allIds.add(kp.id);
+      idGrade.set(kp.id, e.grade);
+      idSubject.set(kp.id, e.subject);
+    });
   });
 });
 const seenIds = new Set();
 const sameGradePre = [];
 
-bank.forEach(entry => {
+entries.forEach(entry => {
   if (gradeOnly && entry.grade !== gradeOnly) return;
   const g = entry.grade;
   (entry.modules || []).forEach(mod => {
     (mod.knowledgePoints || []).forEach(kp => {
       const loc = `(年级${g}/${mod.moduleId}/${kp.id})`;
 
-      // 7.1 ID 格式 + 年级/模块段一致
+      // 7.1 ID 格式 + 科目/年级/模块段一致
       const m = ID_RE.exec(kp.id);
       if (!m) {
-        errors.push(`${loc} ID 格式不符（应 ^g[1-6]-(m0-m12|c1-c9)-[a-z0-9-]+$）: ${kp.id}`);
+        errors.push(`${loc} ID 格式不符（应 ^(${['math','cn','en'].join('|')})-g[1-6]-(模块段)-[a-z0-9-]+$）: ${kp.id}`);
       } else {
-        if (kp.id.indexOf('g' + g + '-') !== 0) errors.push(`${loc} ID 年级段与所在年级不符: ${kp.id}`);
-        if (kp.id.indexOf('-' + mod.moduleId.toLowerCase() + '-') === -1) errors.push(`${loc} ID 模块段与所在模块不符: ${kp.id}`);
+        const [, subj, modSeg, baseSeg] = m;
+        const bare = kp.id.slice(subj.length + 1);
+        if (subj !== entry.subject) errors.push(`${loc} ID 科目前缀(${subj}) 与所在科目组(${entry.subject}) 不符`);
+        if (bare.indexOf('g' + g + '-') !== 0) errors.push(`${loc} ID 年级段与所在年级不符: ${kp.id}`);
+        if (bare.indexOf('-' + mod.moduleId.toLowerCase() + '-') === -1) errors.push(`${loc} ID 模块段与所在模块不符: ${kp.id}`);
+        // 7.1b 模块的 catalog subject 与 ID 前缀匹配
+        const catMod = validModuleIds.has(mod.moduleId) ? catalog.find(x => x.id === mod.moduleId) : null;
+        if (catMod && catMod.subject !== subj) {
+          errors.push(`${loc} 模块目录 subject=${catMod.subject} 与 ID 科目前缀(${subj}) 不一致`);
+        }
+        void baseSeg; void SUBJECT_MODULE_OK; // 结构性校验已由上方正则字符集+模块段检查覆盖
       }
 
       // 7.2 全局唯一
       if (seenIds.has(kp.id)) errors.push(`${loc} ID 全局重复: ${kp.id}`);
       seenIds.add(kp.id);
 
-      // 7.3 prerequisites / related 引用存在 + 前置年级
+      // 7.3 prerequisites / related 引用存在 + 前置年级 + 跨科目拦截
+      const selfSubject = m ? m[1] : null;
       (Array.isArray(kp.prerequisites) ? kp.prerequisites : []).forEach(ref => {
         if (!allIds.has(ref)) { errors.push(`${loc} prerequisites 引用不存在: ${ref}`); return; }
+        if (selfSubject && idSubject.get(ref) !== selfSubject) {
+          errors.push(`${loc} prerequisites 跨科目引用非法: ${ref}（${idSubject.get(ref)} → 不得被 ${selfSubject} 知识点引用）`);
+          return;
+        }
         const rg = idGrade.get(ref);
         if (rg > g) errors.push(`${loc} prerequisites 指向更高年级: ${ref}（年级 ${rg}）`);
         else if (rg === g) sameGradePre.push(kp.id + ' -> ' + ref);
       });
       (Array.isArray(kp.related) ? kp.related : []).forEach(ref => {
-        if (!allIds.has(ref)) errors.push(`${loc} related 引用不存在: ${ref}`);
+        if (!allIds.has(ref)) { errors.push(`${loc} related 引用不存在: ${ref}`); return; }
+        if (selfSubject && idSubject.get(ref) !== selfSubject) {
+          errors.push(`${loc} related 跨科目引用非法: ${ref}（${idSubject.get(ref)} → 不得被 ${selfSubject} 知识点引用）`);
+        }
       });
 
       // 7.4 竞赛模块 difficulty 非空
@@ -170,12 +210,12 @@ bank.forEach(entry => {
 
 // 7.6 竞赛模块同 base slug 跨年级难度不降
 const cByBase = {};
-bank.forEach(e => {
+entries.forEach(e => {
   (e.modules || []).forEach(mod => {
     if (!/^C/i.test(mod.moduleId)) return;
     (mod.knowledgePoints || []).forEach(kp => {
       const mm = ID_RE.exec(kp.id);
-      const base = mm ? mm[2] : kp.id;
+      const base = mm ? mm[3] : kp.id;
       (cByBase[base] = cByBase[base] || []).push({ g: e.grade, d: kp.difficulty });
     });
   });
@@ -190,7 +230,7 @@ Object.keys(cByBase).forEach(base => {
 });
 
 // 7.7 status 与模块状态一致：active 知识点所在模块（该年级）不得为 placeholder
-bank.forEach(e => {
+entries.forEach(e => {
   const g = e.grade;
   (e.modules || []).forEach(mod => {
     if (!/^C/i.test(mod.moduleId)) return;
@@ -211,7 +251,7 @@ const warnSameGradePre = sameGradePre.length;
 const KNOW_DIR = path.join(ROOT, 'knowledge');
 if (fs.existsSync(KNOW_DIR)) {
   const moduleFiles = new Set();
-  bank.forEach(e => (e.modules || []).forEach(mod => moduleFiles.add('g' + e.grade + '-' + mod.moduleId.toLowerCase() + '.html')));
+  entries.forEach(e => (e.modules || []).forEach(mod => moduleFiles.add('g' + e.grade + '-' + mod.moduleId.toLowerCase() + '.html')));
   allIds.forEach(id => {
     if (!fs.existsSync(path.join(KNOW_DIR, id + '.html'))) errors.push(`缺少详情页: knowledge/${id}.html`);
   });
@@ -224,15 +264,18 @@ if (fs.existsSync(KNOW_DIR)) {
 }
 
 // ============ 8. 插件 knowledgePoints 声明 ↔ 知识库双向对齐 ============
-// 正向：插件声明覆盖的每个知识点 ID 必须登记在知识库（且年级一致）
+// 正向：插件声明覆盖的每个知识点 ID 必须登记在知识库（年级一致 + 科目一致）
 // 反向：知识库 pluginId → 注册表（见第 3 条检查），此处补齐声明侧闭环
-const kpIdsByGrade = {};
-bank.forEach(e => {
+const kpIdsBySubjectGrade = {};
+entries.forEach(e => {
   const s = new Set();
   (e.modules || []).forEach(mod => (mod.knowledgePoints || []).forEach(kp => s.add(kp.id)));
-  kpIdsByGrade[e.grade] = s;
+  kpIdsBySubjectGrade[e.subject + '|' + e.grade] = s;
 });
-const allBankIds = new Set(Object.values(kpIdsByGrade).flatMap(s => [...s]));
+const allBankIds = new Set(Object.values(kpIdsBySubjectGrade).flatMap(s => [...s]));
+// 注册表 subject 值 → 知识库科目前缀（registry 用 chinese/english 全称，ID 用 cn/en 缩写）
+const PLUGIN_SUBJECT_TO_KB = { math: 'math', chinese: 'cn', english: 'en' };
+const idSubjectOf = id => (ID_RE.exec(id) || [])[1] || null;
 
 // 加载共享运行时（PluginUtil）后逐个 require 插件模块，静态读取 knowledgePoints 声明
 require(path.join(ROOT, 'shared', 'common.js'));
@@ -251,11 +294,14 @@ registry.forEach(rec => {
   if (!decl) return; // 未声明知识点，无需对齐
 
   const label = rec.name ? `${rec.name}(${rec.id})` : rec.id;
+  const wantSubject = PLUGIN_SUBJECT_TO_KB[rec.subject] || null;
   if (Array.isArray(decl)) {
-    // 平铺格式：无法定位年级，仅校验 ID 全局存在
+    // 平铺格式：无法定位年级，校验 ID 全局存在 + 科目一致
     decl.forEach(id => {
       if (!allBankIds.has(id)) {
         errors.push(`[声明→知识库] 插件 ${label} 声明的知识点未在知识库登记: ${id}（请补充 knowledge-bank.js 或修正声明）`);
+      } else if (wantSubject && idSubjectOf(id) !== wantSubject) {
+        errors.push(`[声明科目错位] 插件 ${label}(subject=${rec.subject}) 声明了 ${idSubjectOf(id)} 科目知识点: ${id}`);
       }
     });
     return;
@@ -266,12 +312,14 @@ registry.forEach(rec => {
     if (Array.isArray(rec.grades) && !rec.grades.includes(g)) {
       errors.push(`[声明年级] 插件 ${label} 的 grades=[${rec.grades}] 不含 knowledgePoints 声明的年级键 ${g}`);
     }
-    const bankSet = kpIdsByGrade[g] || new Set();
+    const bankSet = kpIdsBySubjectGrade[(wantSubject || '') + '|' + g] || new Set();
     ids.forEach(id => {
       if (!allBankIds.has(id)) {
         errors.push(`[声明→知识库] 插件 ${label} 在 ${g} 年级声明的知识点未在知识库登记: ${id}（请补充 knowledge-bank.js 或修正声明）`);
       } else if (!bankSet.has(id)) {
-        errors.push(`[声明年级错位] 插件 ${label} 将 ${id} 声明在 ${g} 年级，但该知识点登记在其它年级`);
+        errors.push(`[声明年级错位] 插件 ${label} 将 ${id} 声明在 ${g} 年级，但该知识点登记在其它科目/年级`);
+      } else if (wantSubject && idSubjectOf(id) !== wantSubject) {
+        errors.push(`[声明科目错位] 插件 ${label}(subject=${rec.subject}) 声明了 ${idSubjectOf(id)} 科目知识点: ${id}`);
       }
     });
   });
@@ -280,10 +328,10 @@ registry.forEach(rec => {
 // 输出
 console.log('\n📋 知识库结构验证结果\n' + '='.repeat(40));
 console.log(`校验范围：${gradeOnly ? `年级 ${gradeOnly}` : '全年级'}${specialGrades.length ? `（含 ${specialGrades.join('/')} 年级 M1-M12 专项）` : ''}`);
-console.log(`知识库条目数：${bank.length} 个年级`);
-bank.forEach(e => {
+console.log(`知识库科目数：${SUBJECT_KEYS.length}（${SUBJECT_KEYS.join(' / ')}），条目数：${entries.length} 个年级`);
+entries.forEach(e => {
   const n = e.modules.reduce((s, m) => s + (m.knowledgePoints || []).length, 0);
-  console.log(`  · 年级 ${e.grade}：${e.modules.length} 模块 / ${n} 知识点`);
+  console.log(`  · [${e.subject}] 年级 ${e.grade}：${e.modules.length} 模块 / ${n} 知识点`);
 });
 
 if (warnPlaceholder.length || warnSameGradePre > 0 || warnings.length) {

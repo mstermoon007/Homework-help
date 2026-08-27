@@ -45,6 +45,37 @@ check('difficulty.js 暴露 consume/createProfile/consumeProfile/difficultyToStr
 check('common.js 集成 Adaptive v2（hw_adaptive_v2 + recordSession）',
   fileContains('shared/common.js', 'hw_adaptive_v2') && fileContains('shared/common.js', 'recordSession'));
 
+// 2.6 科目化模块（任务12/13：工具归类 + 科目 SVG 生成器）
+check('shared/subject-utils.js 存在', fileExists('shared/subject-utils.js'));
+check('shared/svg-chinese.js 存在', fileExists('shared/svg-chinese.js'));
+check('shared/svg-english.js 存在', fileExists('shared/svg-english.js'));
+check('subject-utils 暴露 MathUtil/ChineseUtil/EnglishUtil',
+  ['MathUtil', 'ChineseUtil', 'EnglishUtil'].every(function (k) {
+    return fileContains('shared/subject-utils.js', k);
+  }));
+check('svg-chinese 挂载 SVGGenerators.cn（田字格/拼音四线格/笔顺/书写格）',
+  ['SVGGenerators.cn', 'hanziGrid', 'pinyinGrid', 'strokeOrder', 'sentenceLine'].every(function (k) {
+    return fileContains('shared/svg-chinese.js', k);
+  }));
+check('svg-english 挂载 SVGGenerators.en（字母书写/单词卡/句子抄写）',
+  ['SVGGenerators.en', 'letterWriting', 'wordCard', 'fourLineWriting'].every(function (k) {
+    return fileContains('shared/svg-english.js', k);
+  }));
+// 可加载性冒烟：require 后断言真实挂载（而非仅文本存在）
+try {
+  const su = require(path.join(ROOT, 'shared', 'subject-utils.js'));
+  const okSU = !!(su.MathUtil && su.ChineseUtil && su.EnglishUtil
+    && typeof su.MathUtil.rangeByLevel === 'function'
+    && typeof su.ChineseUtil.normPY === 'function'
+    && typeof su.EnglishUtil.normalizePhonetic === 'function');
+  const dfy = require(path.join(ROOT, 'shared', 'difficulty.js'));
+  const okD = !!(dfy.DifficultyProfiles && dfy.DifficultyProfiles.math && dfy.DifficultyProfiles.cn
+    && dfy.DifficultyProfiles.en && dfy.paramsFor && dfy.profileFor && dfy.strategyFor);
+  check('subject-utils/difficulty 可加载且暴露科目能力（Profiles×3 / paramsFor / strategyFor）', okSU && okD);
+} catch (e) {
+  check('subject-utils/difficulty 可加载且暴露科目能力', false, e && e.message);
+}
+
 // 3. 样板插件
 check('plugins/_template.js 存在', fileExists('plugins/_template.js'));
 check('_template.js 包含 plugin 对象', fileContains('plugins/_template.js', 'var plugin'));
@@ -70,6 +101,20 @@ check('CONTRIBUTING.md 提及禁止操作 DOM', fileContains('CONTRIBUTING.md', 
 check('plugins/registry.js 存在', fileExists('plugins/registry.js'));
 check('registry.js 包含 PLUGIN_REGISTRY', fileContains('plugins/registry.js', 'PLUGIN_REGISTRY'));
 
+// 7.1 动态题型页脚本依赖：走 App.PluginLoader.loadSubjectPlugins 的页面，
+//     必须静态引入全部共享层（插件顶层硬性依赖 App.Difficulty / ChineseUtil 等，
+//     缺引会导致「插件接口不兼容」误报——历史事故：math-types 缺 difficulty.js）
+const DYNAMIC_TYPE_PAGES = ['math-types.html', 'subject-types.html'];
+const REQUIRED_SHARED = [
+  'shared/common.js', 'shared/subject-utils.js', 'shared/difficulty.js',
+  'shared/knowledge-bank.js', 'shared/module-catalog.js', 'plugins/registry.js'
+];
+DYNAMIC_TYPE_PAGES.forEach(page => {
+  const missing = REQUIRED_SHARED.filter(s => !fileContains(page, `<script src="${s}"`));
+  check(`${page} 引入全部共享层脚本（${REQUIRED_SHARED.length} 个）`, missing.length === 0,
+    missing.length ? '缺少：' + missing.join('、') : '');
+});
+
 // 8. 核心完整性检查脚本
 check('dev/check-core-integrity.js 存在', fileExists('dev/check-core-integrity.js'));
 
@@ -94,15 +139,35 @@ try {
   const reg = require(path.join(ROOT, 'plugins', 'registry.js'));
   const validModules = new Set(MC.map(m => m.id));
 
-  // 模块目录完整性：基础 M0-M12 + 竞赛 C1-C9 齐全、ID 唯一、无缺失
+  // 模块目录完整性：数学 M0-M13 + C1-C9、语文 N1-N8、英语 E1-E6 齐全、ID 唯一
   const compMods = MC.filter(m => m.level === 'competition');
   const compIds = compMods.map(m => m.id).sort();
   const expectComp = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'];
   const uniqueIds = new Set(MC.map(m => m.id));
-  check('MODULE_CATALOG 包含全部竞赛模块（C1-C9）且无缺失',
-    MC.length === 22 && compMods.length === 9 &&
+  // 科目维度：subject 字段齐全且取值合法；前缀与科目对应（M/C→math，N→cn，E→en）
+  const SUBJECT_SET = new Set(['math', 'cn', 'en']);
+  const subjectOk = MC.every(m => SUBJECT_SET.has(m.subject));
+  const prefixOk = MC.every(m => {
+    const p = m.id[0];
+    if (p === 'N') return m.subject === 'cn';
+    if (p === 'E') return m.subject === 'en';
+    return m.subject === 'math'; // M/C 系列
+  });
+  const cnMods = MC.filter(m => m.subject === 'cn');
+  const enMods = MC.filter(m => m.subject === 'en');
+  check('MODULE_CATALOG 含全部模块（数学23+语文8+英语6）、科目字段齐全、ID 唯一',
+    mathModsOk() && compMods.length === 9 &&
     JSON.stringify(compIds) === JSON.stringify(expectComp) &&
-    uniqueIds.size === MC.length);
+    uniqueIds.size === MC.length &&
+    subjectOk && prefixOk && cnMods.length === 8 && enMods.length === 6);
+
+  function mathModsOk() {
+    const ids = new Set(MC.map(m => m.id));
+    let ok = MC.filter(m => m.subject === 'math').length === 23;
+    ['M0','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13']
+      .forEach(id => { if (!ids.has(id)) ok = false; });
+    return ok;
+  }
 
   // 每个注册数学插件必须有 moduleId，且存在于模块目录（从插件源文件提取）；
   // 占位插件（isPlaceholder）豁免该约束——允许存在，仅要求带占位标记
@@ -120,21 +185,28 @@ try {
   check('竞赛占位插件已注册且带占位标记', reg.some(r => r.id === 'math-competition-placeholder' && r.isPlaceholder));
   if (missingModule.length) console.log('    缺少/非法 moduleId 的插件：' + missingModule.join('、'));
 
-  // 知识库：结构正确（数组 + grade/modules/knowledgePoints），模块 knowledgePoints 允许为空数组；
-  // 模块 ID 须存在，知识点 pluginId 须已注册
-  let kbFormatOk = Array.isArray(KB) && KB.length > 0;
+  // 知识库：结构正确（按科目分组对象 {math,cn,en} + grade/modules/knowledgePoints），
+  // 模块 knowledgePoints 允许为空数组；模块 ID 须存在，知识点 pluginId 须已注册
+  const kbGroups = KB && typeof KB === 'object' && !Array.isArray(KB)
+    ? Object.keys(KB).filter(k => Array.isArray(KB[k])) : [];
+  let kbFormatOk = kbGroups.length > 0;
   let kbRefOk = true;
-  KB.forEach(g => {
-    if (!g || typeof g.grade !== 'number' || !Array.isArray(g.modules)) { kbFormatOk = false; return; }
-    g.modules.forEach(m => {
-      if (!m || !m.moduleId || !validModules.has(m.moduleId)) kbRefOk = false;
-      if (!Array.isArray(m.knowledgePoints)) { kbFormatOk = false; return; }
-      m.knowledgePoints.forEach(kp => {
-        if (!reg.some(r => r.id === kp.pluginId)) kbRefOk = false;
+  kbGroups.forEach(s => {
+    KB[s].forEach(g => {
+      if (!g || typeof g.grade !== 'number' || !Array.isArray(g.modules)) { kbFormatOk = false; return; }
+      g.modules.forEach(m => {
+        if (!m || !m.moduleId || !validModules.has(m.moduleId)) kbRefOk = false;
+        if (!Array.isArray(m.knowledgePoints)) { kbFormatOk = false; return; }
+        m.knowledgePoints.forEach(kp => {
+          // 无 pluginId 的占位条目（status='placeholder'，如 en-g3-e2-word-spelling）合法
+          if (kp.pluginId != null && !reg.some(r => r.id === kp.pluginId)) kbRefOk = false;
+        });
       });
     });
   });
   check('知识库文件存在且结构正确（允许模块 knowledgePoints 为空数组）', kbFormatOk);
+  check('知识库按科目分组为 {math, cn, en}',
+    kbGroups.includes('math') && kbGroups.includes('cn') && kbGroups.includes('en'));
   check('知识库模块 ID 与模块目录一致且知识点插件已注册', kbRefOk);
 
   // 9.2 竞赛模块（C1-C9）须全部有插件覆盖（真实插件优先，未实现的由占位插件兜底），
@@ -177,7 +249,7 @@ try {
   function checkGradeStructure(grade) {
     const cn = GRADE_CN[grade] || (grade + '年级');
     try {
-      const g = KB.findGrade ? KB.findGrade(grade) : null;
+      const g = KB.findGrade ? KB.findGrade('math', grade) : null;
       const mods = g && Array.isArray(g.modules) ? g.modules : [];
       const ids = mods.map(m => m.moduleId);
       const missingM = EXPECT_M_IDS.filter(id => ids.indexOf(id) === -1);
@@ -212,6 +284,26 @@ try {
   check('知识库结构校验通过（verify-knowledge-bank.js --g4 --g5 --g6）', true);
 } catch {
   check('知识库结构校验通过（verify-knowledge-bank.js --g4 --g5 --g6）', false);
+}
+
+// 10. 全插件接口合规性检查（沙箱逐个加载插件并实调 generate/render/check）
+//     单一来源：dev/check-plugin-interfaces.js；此处只消费其 --report 输出与退出码。
+try {
+  const out = execSync('node dev/check-plugin-interfaces.js --report', { cwd: ROOT, stdio: 'pipe' }).toString();
+  const m = out.match(/== 汇总：共 (\d+)，通过 (\d+)，失败 (\d+)/);
+  const failed = m ? Number(m[3]) : -1;
+  const failLines = out.split('\n').filter(l => l.startsWith('[FAIL]'));
+  check(`全插件接口检查通过（generate/render/check 实调合规，${m ? m[2] : '?'}/${m ? m[1] : '?'}）`,
+    failed === 0,
+    failLines.length ? failLines.slice(0, 8).join('\n     ') : (failed === -1 ? '无法解析检查器输出' : ''));
+} catch (e) {
+  // 检查器发现失败时以非零码退出 → execSync 抛错，stdout 附着在 error.stdout
+  const out = e && e.stdout ? e.stdout.toString() : '';
+  const failLines = out.split('\n').filter(l => l.startsWith('[FAIL]'));
+  check('全插件接口检查通过（generate/render/check 实调合规）', false,
+    failLines.length
+      ? failLines.slice(0, 8).join('\n     ')
+      : `检查器异常：${(e && e.message) || '未知错误'}（可单独运行 node dev/check-plugin-interfaces.js 定位）`);
 }
 
 // 9. 可选：检查 git 是否已初始化（表明仓库已就绪）

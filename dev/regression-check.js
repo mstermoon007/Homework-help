@@ -162,6 +162,58 @@ function inScope(rec) {
 
 // 2) 主流程：逐插件回归（跳过占位；综合练习最后跑）
 var failures = 0, totalGrades = 0;
+var allResults = [];
+var edgeTotal = 0, edgePass = 0;
+
+/** 任务12：边界值用例——count=0 / count=-1 / grade=99，要求不崩溃且返回合理结构 */
+function runEdgeCases(rec) {
+  var mod;
+  try { mod = require(path.join(ROOT, rec.file)); } catch (e) { return Promise.resolve({ pass: 0, total: 0 }); }
+  var plugin = (mod && mod.generate) ? mod : global.__currentPlugin;
+  if (!plugin || !plugin.generate) return Promise.resolve({ pass: 0, total: 0 });
+  var base = { grade: (Array.isArray(plugin.grades) && plugin.grades[0]) || 1, type: 'mix' };
+  var CASES = [
+    ['count=0', { count: 0 }],
+    ['count=-1', { count: -1 }],
+    ['grade=99', { grade: 99 }]
+  ];
+  // 降噪：工厂的「count 应为正整数」提醒在边界用例中属预期输出
+  var origWarn = console.warn;
+  console.warn = function () {
+    var m = arguments[0] || '';
+    if (String(m).indexOf('应为正整数') !== -1) return;
+    return origWarn.apply(console, arguments);
+  };
+  var pass = 0, total = 0;
+  var chain = Promise.resolve();
+  CASES.forEach(function (c) {
+    chain = chain.then(function () {
+      total++;
+      var opts = Object.assign({}, base, c[1]);
+      return Promise.resolve().then(function () { return plugin.generate(opts); }).then(function (r) {
+        if (r && typeof r === 'object' && Array.isArray(r.questions)) { pass++; return; }
+        console.log('  ✗ [边界] ' + rec.id + ' ' + c[0] + '：返回结构不合理');
+      }, function (e) {
+        // 语义分级：TypeError/undefined 类 = 真崩溃（判失败）；
+        // 带友好文案的业务拒绝（如「该年级暂无可用题型」）视为优雅降级（判通过）
+        var msg = String((e && e.message) || e);
+        if (/Cannot read|of (undefined|null)|is not a function|TypeError|ReferenceError/i.test(msg)) {
+          console.log('  ✗ [边界] ' + rec.id + ' ' + c[0] + '：' + msg);
+          return;
+        }
+        pass++;
+      });
+    });
+  });
+  return chain.then(function () {
+    console.warn = origWarn;
+    return { pass: pass, total: total };
+  }, function (e) {
+    console.warn = origWarn;
+    console.log('  ✗ [边界] ' + rec.id + '：' + (e.message || e));
+    return { pass: pass, total: total };
+  });
+}
 var queue = PLUGIN_REGISTRY.filter(function (rec) {
   if (!inScope(rec)) return false;
   if (rec.isPlaceholder) { console.log('跳过占位插件: ' + rec.id); return false; }
@@ -174,12 +226,19 @@ var main = Promise.resolve();
 queue.forEach(function (rec) {
   main = main.then(function () {
     return runPlugin(rec).then(function (r) {
-      if (r.error) { console.log('✗ ' + rec.id + '：' + r.error); failures++; return; }
+      if (r.error) { console.log('✗ ' + rec.id + '：' + r.error); failures++; return null; }
+      allResults.push(r);
       r.grades.forEach(function (g) {
         totalGrades++;
         if (g.score !== 100) failures++;
       });
       report(r);
+      // 任务12：逐插件边界值用例（含语文/英语插件）
+      return runEdgeCases(rec);
+    }).then(function (er) {
+      if (!er) return;
+      edgeTotal += er.total; edgePass += er.pass;
+      if (er.total !== er.pass) failures++;
     });
   });
 });
@@ -187,5 +246,20 @@ queue.forEach(function (rec) {
 main.then(function () {
   console.log('\n========== 回归结果：' + (failures ? '✗ ' + failures + ' 项失败' : '✓ 全部通过') +
     '（共 ' + totalGrades + ' 个插件·年级组合，每组合 ' + COUNT + ' 题）==========');
+  console.log('边界用例：' + edgePass + '/' + edgeTotal + ' 通过（count=0 / count=-1 / grade=99）');
+  // 任务14：分科目回归统计（语文/英语插件已随 registry 全量纳入，此处显式汇报）
+  var bySubject = {};
+  allResults.forEach(function (r) {
+    var s = r.rec.subject || 'unknown';
+    bySubject[s] = bySubject[s] || { pass: 0, total: 0 };
+    r.grades.forEach(function (g) {
+      bySubject[s].total++;
+      if (g.score === 100) bySubject[s].pass++;
+    });
+  });
+  Object.keys(bySubject).sort().forEach(function (s) {
+    var b = bySubject[s];
+    console.log('  · ' + s + '：' + b.pass + '/' + b.total + ' 组合满分');
+  });
   process.exit(failures ? 1 : 0);
 });
