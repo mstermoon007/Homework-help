@@ -100,7 +100,7 @@
       var cands2 = [String(x2), String(b2), String(sum), String(sum + 1)];
       return { q: 'x + ' + b2 + ' = ' + sum + '，x =（  ）', answer: String(x2), options: mkOptions(String(x2), cands2, 4, 'num'), hint: 'x = ' + sum + ' − ' + b2 + ' = ' + x2 + '。' };
     }
-    var a = rnd(2, 5), k = rnd(3, 9);
+    var a = rnd(2, 9), k = rnd(3, 12);
     var cands3 = [String(a), String(k), String(a * k), String(Math.round(k / a))];
     return { q: '方程 ' + k + 'x = ' + (k * a) + ' 的解是 x =（  ）', answer: String(a), options: mkOptions(String(a), cands3, 4, 'num'), hint: 'x = ' + (k * a) + ' ÷ ' + k + ' = ' + a + '。' };
   }
@@ -120,7 +120,7 @@
       var cands2 = [String(lcm), String(m * n2), String(m + n2), String(Math.max(m, n2))];
       return { q: m + ' 和 ' + n2 + ' 的最小公倍数是（  ）', answer: String(lcm), options: mkOptions(String(lcm), cands2, 4, 'num'), hint: '用短除法求最小公倍数。' };
     }
-    var base = rnd(11, 30), k2 = rnd(2, 5);
+    var base = rnd(11, 49), k2 = rnd(2, 9);
     var val = base * k2;
     var cands3 = [String(k2), String(val), String(base), String(val + 1)];
     return { q: '一个数的最大因数是 ' + base + '，它是 ' + k2 + ' 的倍数，这个数是（  ）', answer: String(val), options: mkOptions(String(val), cands3, 4, 'num'), hint: '最大因数是它本身：' + base + '，再找它的倍数。' };
@@ -143,9 +143,9 @@
       var cands2 = [ans2, (n2 * 2) + '/' + d2, (n2 + 1) + '/' + d2, n2 + '/' + (d2 * 2 + 1)];
       return { q: '与 ' + n2 + '/' + d2 + ' 相等的是（  ）', answer: ans2, options: mkOptions(ans2, cands2, 4, 'frac'), hint: '约分或通分后相等的分数。' };
     }
-    var f = pick([0.5, 0.25, 0.75]);
-    var fS = f === 0.5 ? '1/2' : f === 0.25 ? '1/4' : '3/4';
-    var cands3 = ['1/2', '1/4', '3/4', '2/5'];
+    var f = pick([0.5, 0.25, 0.75, 0.2, 0.4, 0.6]);
+    var fS = f === 0.5 ? '1/2' : f === 0.25 ? '1/4' : f === 0.75 ? '3/4' : f === 0.2 ? '1/5' : f === 0.4 ? '2/5' : '3/5';
+    var cands3 = ['1/2', '1/4', '3/4', '1/5', '2/5', '3/5'].filter(function (x) { return x !== fS; }).slice(0, 3);
     return { q: f + ' =（  ）', answer: fS, options: mkOptions(fS, cands3, 4, 'frac'), hint: f + ' 化成分数并约分。' };
   }
 
@@ -173,15 +173,16 @@
   function buildSolid() {
     var v = pick(['vol', 'unit', 'surface']);
     if (v === 'vol') {
-      var a = rnd(2, 5), b = rnd(2, 5), c = rnd(2, 5);
+      var a = rnd(2, 9), b = rnd(2, 9), c = rnd(2, 9);
       var ans = a * b * c;
       var cands = [String(ans), String(a + b + c), String(2 * (a * b + b * c + a * c)), String(a * b * c + 1)];
       return { q: '长 ' + a + '、宽 ' + b + '、高 ' + c + ' 的长方体体积 =（  ）', answer: String(ans), options: mkOptions(String(ans), cands, 4, 'num'), hint: '体积 = 长 × 宽 × 高。' };
     }
     if (v === 'unit') {
-      var ansU = '1000 毫升';
-      var cands2 = ['1 升', '100 毫升', ansU, '10 毫升'];
-      return { q: '1 升 =（  ）', answer: ansU, options: mkOptions(ansU, cands2, 4, 'text'), hint: '1 升 = 1000 毫升。' };
+      var ansU = pick(['1000 毫升', '1 升']);
+      var qText = ansU === '1000 毫升' ? '1 升 =（  ）' : '1000 毫升 =（  ）';
+      var cands2 = shuffle([ansU, '1 升', '100 毫升', '10 毫升']);
+      return { q: qText, answer: ansU, options: mkOptions(ansU, cands2, 4, 'text'), hint: '1 升 = 1000 毫升。' };
     }
     var s = rnd(2, 4);
     var surf = 6 * s * s;
@@ -193,31 +194,37 @@
   function buildRotation() {
     var v = pick(['sym', 'rot', 'order']);
     if (v === 'sym') {
-      var ans = '长方形';
-      var cands = [ans, '平行四边形', '梯形', '三角形'];
-      return { q: '下面（  ）是轴对称图形', answer: ans, options: mkOptions(ans, cands, 4, 'text'), hint: '长方形沿对称轴对折能完全重合。' };
+      var symOpts = ['长方形', '正方形', '圆形', '等腰梯形', '等腰三角形'];
+      var ans = pick(symOpts);
+      var others = shuffle(symOpts.filter(function (o) { return o !== ans; })).slice(0, 3);
+      var cands = shuffle([ans].concat(others));
+      return { q: '下面（  ）是轴对称图形', answer: ans, options: mkOptions(ans, cands, 4, 'text'), hint: ans + '沿对称轴对折能完全重合。' };
     }
     if (v === 'rot') {
-      var ans2 = '90°';
-      var cands2 = [ans2, '45°', '60°', '180°'];
-      return { q: '一个直角旋转成平角，旋转了（  ）', answer: ans2, options: mkOptions(ans2, cands2, 4, 'text'), hint: '直角 90°，平角 180°，180−90 = 90°。' };
+      var rotSet = [['直角', '平角', 90], ['锐角', '直角', 60], ['平角', '周角', 180], ['直角', '周角', 270], ['锐角', '平角', 150]];
+      var rp = pick(rotSet);
+      var ans2 = rp[2] + '°';
+      var cands2 = shuffle([ans2, (rp[2] / 2) + '°', (rp[2] * 2) + '°', (rp[2] + 30) + '°']);
+      return { q: rp[0] + '旋转成' + rp[1] + '，旋转了（  ）', answer: ans2, options: mkOptions(ans2, cands2, 4, 'text'), hint: rp[0] + '到' + rp[1] + '相差 ' + ans2 + '。' };
     }
-    var ans3 = '4 条';
-    var cands3 = [ans3, '2 条', '3 条', '1 条'];
-    return { q: '正方形有（  ）条对称轴', answer: ans3, options: mkOptions(ans3, cands3, 4, 'text'), hint: '两条对角线 + 两条中位线。' };
+    var orderSet = [['正方形', '4 条'], ['长方形', '2 条'], ['等边三角形', '3 条'], ['圆', '无数条'], ['等腰梯形', '1 条']];
+    var op = pick(orderSet);
+    var ans3 = op[1];
+    var cands3 = shuffle([ans3, '1 条', '2 条', '3 条', '无数条'].filter(function (x) { return x !== ans3; }).slice(0, 3));
+    return { q: op[0] + '有（  ）条对称轴', answer: ans3, options: mkOptions(ans3, cands3, 4, 'text'), hint: op[0] + '沿对称轴对折能重合 ' + ans3 + '。' };
   }
 
   // ============ 可能性 ============
   function buildPossibility() {
     var v = pick(['frac', 'bigger']);
     if (v === 'frac') {
-      var red = rnd(2, 4), white = rnd(2, 4);
+      var red = rnd(2, 8), white = rnd(2, 8);
       var total = red + white;
       var ans = red + '/' + total;
       var cands = [ans, white + '/' + total, '1/2', '1'];
       return { q: '袋里有 ' + red + ' 个红球、' + white + ' 个白球，摸到红球的可能性是（  ）', answer: ans, options: mkOptions(ans, cands, 4, 'frac'), hint: '红球数 ÷ 总数。' };
     }
-    var r1 = rnd(1, 4), t1 = r1 + rnd(1, 4);
+    var r1 = rnd(1, 9), t1 = r1 + rnd(1, 9);
     var r2 = rnd(1, 4), t2 = r2 + rnd(1, 4);
     var p1 = r1 / t1, p2 = r2 / t2;
     var ans = p1 === p2 ? '一样大' : p1 > p2 ? '袋子一' : '袋子二';
@@ -229,9 +236,11 @@
   function buildStats() {
     var v = pick(['chart', 'trend']);
     if (v === 'chart') {
-      var ans = '折线统计图';
-      var cands = [ans, '条形统计图', '统计表', '以上都可以'];
-      return { q: '表示数量增减变化情况，应选（  ）', answer: ans, options: mkOptions(ans, cands, 4, 'text'), hint: '折线统计图能反映变化趋势。' };
+      var chartSet = [['数量增减变化情况', '折线统计图'], ['各部分与总数的关系', '扇形统计图'], ['数量的多少', '条形统计图']];
+      var cp = pick(chartSet);
+      var ans = cp[1];
+      var cands = shuffle([ans, '折线统计图', '条形统计图', '扇形统计图', '统计表'].filter(function (x) { return x !== ans; }).slice(0, 3));
+      return { q: '表示' + cp[0] + '，应选（  ）', answer: ans, options: mkOptions(ans, cands, 4, 'text'), hint: ans + '适合表示' + cp[0] + '。' };
     }
     var vals = [];
     for (var i = 0; i < 5; i++) vals.push(rnd(20, 80));

@@ -51,82 +51,84 @@
     return { q: '把「' + left + '」连到对应的', answer: right, options: shuffle([right].concat(distractors)), hint: '记住对应的概念或公式。' };
   }
 
-  // ============ 图形与面积公式连线 ============
+  // ============ 图形与面积公式连线（随机维度，题面池极大） ============
   function buildAreaFormula() {
-    var pairs = [
-      ['长方形', '长 × 宽'],
-      ['正方形', '边长 × 边长'],
-      ['三角形', '底 × 高 ÷ 2'],
-      ['平行四边形', '底 × 高'],
-      ['梯形', '(上底 + 下底) × 高 ÷ 2']
+    var rights = ['长 × 宽', '边长 × 边长', '底 × 高 ÷ 2', '底 × 高', '(上底 + 下底) × 高 ÷ 2', 'π × 半径 × 半径', '(长×宽 + 长×高 + 宽×高) × 2', '棱长 × 棱长 × 6', 'π × 半径² ÷ 2', '(长 + 宽) × 2', '边长 × 4'];
+    var makers = [
+      function () { var a = rnd(2, 40), b = rnd(2, 40); return ['一个长方形长 ' + a + ' 厘米、宽 ' + b + ' 厘米，面积 = ？', '长 × 宽']; },
+      function () { var s = rnd(2, 40); return ['一个正方形的边长是 ' + s + ' 厘米，面积 = ？', '边长 × 边长']; },
+      function () { var d = rnd(2, 40), h = rnd(2, 40); return ['一个三角形的底是 ' + d + ' 厘米、高是 ' + h + ' 厘米，面积 = ？', '底 × 高 ÷ 2']; },
+      function () { var d = rnd(2, 40), h = rnd(2, 40); return ['一个平行四边形底 ' + d + ' 厘米、高 ' + h + ' 厘米，面积 = ？', '底 × 高']; },
+      function () { var a = rnd(2, 30), b = rnd(2, 30), h = rnd(2, 30); return ['一个梯形上底 ' + a + '、下底 ' + b + '、高 ' + h + '，面积 = ？', '(上底 + 下底) × 高 ÷ 2']; },
+      function () { var r = rnd(2, 30); return ['一个圆半径 ' + r + ' 厘米，面积 = ？', 'π × 半径 × 半径']; },
+      function () { var a = rnd(2, 20), b = rnd(2, 20), c = rnd(2, 20); return ['一个长方体长 ' + a + '、宽 ' + b + '、高 ' + c + '，表面积 = ？', '(长×宽 + 长×高 + 宽×高) × 2']; },
+      function () { var e = rnd(2, 20); return ['一个正方体棱长 ' + e + '，表面积 = ？', '棱长 × 棱长 × 6']; },
+      function () { var r = rnd(2, 30); return ['一个半圆半径 ' + r + ' 厘米，面积 = ？', 'π × 半径² ÷ 2']; },
+      function () { var a = rnd(2, 40), b = rnd(2, 40); return ['一个长方形长 ' + a + '、宽 ' + b + '，周长 = ？', '(长 + 宽) × 2']; },
+      function () { var s = rnd(2, 40); return ['一个正方形边长 ' + s + '，周长 = ？', '边长 × 4']; }
     ];
-    var pr = pick(pairs);
-    var rightPool = pairs.map(function (p) { return p[1]; });
-    return mk(pr[0], pr[1], rightPool);
+    var pr = pick(makers)();
+    return mk(pr[0], pr[1], rights);
   }
 
-  // ============ 立体图形特征连线 ============
+  // ============ 立体图形特征连线（随机编号，题面池极大） ============
   function buildSolidFeature() {
-    var pairs = [
-      ['长方体', '6 个面都是长方形（特殊情况下有两个相对面是正方形）'],
-      ['正方体', '6 个面都是完全相同的正方形'],
-      ['长方体', '相对的面完全相同'],
-      ['正方体', '12 条棱都相等'],
-      ['长方体', '有 8 个顶点，12 条棱'],
-      ['正方体', '棱长总和 = 棱长 × 12'],
-      ['长方体', '体积 = 长 × 宽 × 高']
-    ];
-    var pr = pick(pairs);
-    var rightPool = [];
-    pairs.forEach(function (p) { if (rightPool.indexOf(p[1]) === -1) rightPool.push(p[1]); });
-    return mk(pr[0], pr[1], rightPool);
+    var rights = ['6 个面都是长方形（特殊情况下有两个相对面是正方形）', '6 个面都是完全相同的正方形', '相对的面完全相同', '12 条棱都相等', '有 8 个顶点，12 条棱', '棱长总和 = 棱长 × 12', '体积 = 长 × 宽 × 高', '体积 = 棱长 × 棱长 × 棱长', '上下两个底面是完全相同的圆', '侧面展开一般是长方形', '只有一个顶点', '侧面展开是扇形', '表面积 = (长×宽 + 长×高 + 宽×高) × 2', '有 6 个完全相同的面', '高有无数条', '表面是一个曲面', '棱长总和 = （长 + 宽 + 高） × 4', '半径处处相等', '是特殊的长方体', '上下一样粗', '两个底面之间的距离叫做高', '高只有一条', '任意一个面的面积都相等', '占地面的面积 = 长 × 宽'];
+    var shapes = ['长方体', '正方体', '圆柱', '圆锥', '球'];
+    var tag = '【图' + rnd(1, 9) + rnd(1, 9) + '】';
+    var shape = pick(shapes);
+    var right = pick(rights);
+    return mk(tag + shape, right, rights);
   }
 
-  // ============ 事件与可能性描述连线 ============
+  // ============ 事件与可能性描述连线（含随机数字模板） ============
   function buildPossibilityDesc() {
-    var pairs = [
-      ['太阳从东方升起', '一定发生'],
-      ['明天会下雨', '可能发生'],
-      ['盒子里没有黄球却摸出黄球', '不可能发生'],
-      ['掷骰子得到 6 点', '可能发生'],
-      ['1 分钟等于 60 秒', '一定发生'],
-      ['抛硬币正面朝上', '可能发生'],
-      ['猴子会飞', '不可能发生'],
-      ['今天是星期三，明天是星期四', '一定发生']
+    var r3 = ['一定发生', '可能发生', '不可能发生'];
+    var makers = [
+      function () { var x = rnd(2, 20), y = rnd(1, 20); return ['盒子里有 ' + x + ' 个红球和 ' + y + ' 个蓝球，摸出一个，是红球', '可能发生']; },
+      function () { var x = rnd(2, 20); return ['盒子里只有 ' + x + ' 个红球，摸出一个，是红球', '一定发生']; },
+      function () { var x = rnd(2, 20); return ['盒子里只有 ' + x + ' 个红球，摸出一个，是蓝球', '不可能发生']; },
+      function () { var n = rnd(1, 6); return ['掷一个骰子，点数是 ' + n, '可能发生']; },
+      function () { return ['太阳从东方升起', '一定发生']; },
+      function () { return ['猴子在天上飞', '不可能发生']; },
+      function () { var n = rnd(2, 12); return ['一年有 ' + n + ' 个月', '不可能发生']; },
+      function () { var n = rnd(2, 12); return ['一个月最多有 ' + n + ' 天', '可能发生']; },
+      function () { return ['1 分钟 = 60 秒', '一定发生']; },
+      function () { var n = rnd(2, 30); return ['从 ' + n + ' 名同学中至少有 2 人同月出生', '可能发生']; },
+      function () { var n = rnd(2, 30); return ['从 ' + n + ' 名同学中至少有 2 人生日同天', '可能发生']; }
     ];
-    var pr = pick(pairs);
-    var rightPool = ['一定发生', '可能发生', '不可能发生'];
-    return mk(pr[0], pr[1], rightPool);
+    var pr = pick(makers)();
+    return mk(pr[0], pr[1], r3);
   }
 
-  // ============ 方程与解连线 ============
+  // ============ 方程与解连线（多模板 + 随机数字） ============
   function buildEquationSolve() {
-    var pool = [2, 3, 4, 5, 6, 7, 8, 9];
-    var sols = shuffle(pool).slice(0, 6);
-    var pairs = [];
-    for (var i = 0; i < sols.length; i++) {
-      var x = sols[i], b = rnd(2, 9);
-      pairs.push(['x + ' + b + ' = ' + (x + b), 'x = ' + x]);
-    }
-    var pr = pick(pairs);
-    var rightPool = pairs.map(function (p) { return p[1]; });
-    return mk(pr[0], pr[1], rightPool);
+    var x = rnd(2, 60);
+    var tmpl = rnd(0, 3);
+    var left, right = 'x = ' + x;
+    if (tmpl === 0) { var b = rnd(2, 60); left = 'x + ' + b + ' = ' + (x + b); }
+    else if (tmpl === 1) { var b2 = rnd(2, 60); left = 'x - ' + b2 + ' = ' + (x - b2); }
+    else if (tmpl === 2) { var a = rnd(2, 12); left = a + ' x = ' + (a * x); }
+    else { var a2 = rnd(2, 12); left = 'x ÷ ' + a2 + ' = ' + (x / a2); }
+    var rightPool = ['x = ' + x];
+    for (var d = 0; d < 5; d++) { var other = x + rnd(1, 9) * (rnd(0, 1) ? 1 : -1); if (other !== x) rightPool.push('x = ' + other); }
+    return mk(left, right, rightPool);
   }
 
   // ============ 分数与小数连线 ============
   function buildFracDecimal() {
-    var pairs = [
-      ['1/2', '0.5'],
-      ['1/4', '0.25'],
-      ['3/4', '0.75'],
-      ['1/5', '0.2'],
-      ['2/5', '0.4'],
-      ['3/5', '0.6'],
-      ['4/5', '0.8'],
-      ['1/10', '0.1'],
-      ['3/10', '0.3'],
-      ['7/10', '0.7']
-    ];
+    // 由 2/5 因子分母（必为有限小数）批量生成，保证题面池充足
+    var denoms = [2, 4, 5, 8, 10, 16, 20, 25, 32, 40, 50, 64, 80, 100, 125, 200, 250, 500];
+    var raw = [];
+    denoms.forEach(function (den) {
+      for (var num = 1; num < den; num++) {
+        var val = num / den;
+        var dec = (val % 1 === 0) ? String(val) : val.toFixed(8).replace(/0+$/, '').replace(/\.$/, '');
+        raw.push([num + '/' + den, dec]);
+      }
+    });
+    var seen = {}, pairs = [];
+    raw.forEach(function (p) { if (!seen[p[1]]) { seen[p[1]] = 1; pairs.push(p); } });
     var pr = pick(pairs);
     var rightPool = pairs.map(function (p) { return p[1]; });
     return mk(pr[0], pr[1], rightPool);

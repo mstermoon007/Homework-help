@@ -150,16 +150,16 @@
   function buildSolveProportion() {
     var v = pick(['end', 'mid', 'frac1']);
     if (v === 'end') {
-      var a = rnd(2, 6), b = rnd(2, 6), k = rnd(2, 5);
+      var a = rnd(2, 9), b = rnd(2, 9), k = rnd(2, 9);
       var x = a * k, c = b * k;
       return { kind: 'text', q: a + ' : ' + b + ' = x : ' + c, answer: String(x), hint: '比例的基本性质：内项积 = 外项积，即 b × x = a × ' + c + '，x = 外项积 ÷ 已知内项。' };
     }
     if (v === 'mid') {
-      var a2 = rnd(2, 6), b2 = rnd(2, 6), k2 = rnd(2, 5);
+      var a2 = rnd(2, 9), b2 = rnd(2, 9), k2 = rnd(2, 9);
       var c2 = b2 * k2, x2 = a2 * k2;
       return { kind: 'text', q: a2 + ' : ' + b2 + ' = ' + c2 + ' : x', answer: String(x2), hint: '比例的基本性质：内项积 = 外项积，即 ' + b2 + ' × ' + c2 + ' = ' + a2 + ' × x，x = 外项积 ÷ 已知内项。' };
     }
-    var a3 = rnd(2, 6), b3 = rnd(2, 6), k3 = rnd(2, 5);
+    var a3 = rnd(2, 9), b3 = rnd(2, 9), k3 = rnd(2, 9);
     var c3 = a3 * k3, x3 = b3 * k3;
     return { kind: 'text', q: 'x / ' + a3 + ' = ' + b3 + ' / ' + c3, answer: String(x3), hint: '用交叉相乘：x × ' + c3 + ' = ' + a3 + ' × ' + b3 + '，x = 积 ÷ 已知因数。' };
   }
@@ -167,18 +167,18 @@
   // ============ 分数四则混合运算 ============
   function buildFracOrder() {
     var v = pick(['sum1', 'muladd', 'sub', 'div']);
-    var d = pick([3, 4, 5, 6, 8, 10]);
+    var d = pick([3, 4, 5, 6, 8, 10, 12]);
     var a = rnd(1, d - 1);
     if (v === 'sum1') {
-      var e = rnd(2, 6);
+      var e = rnd(2, 9);
       return { kind: 'text', q: '(' + fs(a, d) + ' + ' + fs(d - a, d) + ') × ' + e, answer: String(e), hint: '先算括号内：同分母分数相加，分子相加得分母，结果是 1；再用 1 乘括号外的整数。' };
     }
     if (v === 'muladd') {
-      var b = rnd(2, dmax(9));
+      var b = rnd(2, dmax(12));
       return { kind: 'text', q: '(' + fs(a, d) + ' × ' + d + ') + ' + b, answer: String(a + b), hint: '先算括号里的分数乘整数（能约分的先约分），再加外面的整数。' };
     }
     if (v === 'sub') {
-      var b2 = rnd(2, dmax(9)), c2 = a + b2;
+      var b2 = rnd(2, dmax(12)), c2 = a + b2;
       return { kind: 'text', q: c2 + ' − (' + fs(a, d) + ' × ' + d + ')', answer: String(b2), hint: '先算括号里的分数乘整数（能约分的先约分），再用外面的数减去它。' };
     }
     var a3 = rnd(2, 8), b3 = rnd(2, 5);
@@ -215,7 +215,7 @@
   function buildSolveEquation() {
     var v = pick(['xfrac', 'fracx', 'addfrac']);
     if (v === 'xfrac') {
-      var d = pick([3, 4, 5, 6]), a = rnd(1, d - 1);
+      var d = pick([3, 4, 5, 6, 8]), a = rnd(1, d - 1);
       var rest = d - a;
       var k = rnd(1, 5) * rest;
       var x = k * d / rest;
@@ -223,12 +223,12 @@
       return { kind: 'text', q: 'x − ' + fs(a, d) + 'x = ' + k, answer: String(x), hint: '先把左边的同类项合并：1 − ' + fs(a, d) + ' = ' + fs(rest, d) + '，得到 ' + fs(rest, d) + 'x = ' + k + '，再用等式性质除以系数。' };
     }
     if (v === 'fracx') {
-      var d2 = pick([3, 4, 5, 6]), a2 = rnd(1, d2 - 1);
+      var d2 = pick([3, 4, 5, 6, 8]), a2 = rnd(1, d2 - 1);
       var k2 = rnd(2, 5) * a2;
       var x2 = k2 * d2 / a2;
       return { kind: 'text', q: fs(a2, d2) + 'x = ' + k2, answer: String(x2), hint: '等式两边同时除以 ' + fs(a2, d2) + '（即乘它的倒数），就得到 x。' };
     }
-    var d3 = pick([3, 4, 5, 6, 8]), a3 = rnd(1, d3 - 1);
+    var d3 = pick([3, 4, 5, 6, 8, 10]), a3 = rnd(1, d3 - 1);
     var k3 = rnd(1, 5) * d3 + a3;
     return { kind: 'text', q: 'x + ' + fs(a3, d3) + ' = ' + k3, answer: fracAns(k3 * d3 - a3, d3), hint: '等式两边同时减去 ' + fs(a3, d3) + '，把 ' + k3 + ' 写成同分母分数再相减。' };
   }
@@ -338,10 +338,14 @@
         attempts++;
       }
       return list.map(function (p) {
+        var qText = p.q ||
+          (p.kind === 'mul' ? p.aText + ' × ' + p.bText :
+           p.kind === 'div' ? p.divisor + ' ⟮ ' + p.dividend : '');
         var q = {
           type: 'calc',
           kind: p.kind,
           data: p,
+          q: qText,
           answer: String(p.answer),
           hint: p.hint,
           render: function (idx) { return qRender(this.data, idx); },

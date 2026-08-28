@@ -22,15 +22,35 @@
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
   function trimD(x) { return String(Number(x.toFixed(3))); }
 
+  var NAME_POOL = ['篮球', '足球', '乒乓球', '其他', '羽毛球', '跳绳', '游泳', '跑步'];
+  function pickNames() {
+    var s = [NAME_POOL[rnd(0, NAME_POOL.length - 1)], NAME_POOL[rnd(0, NAME_POOL.length - 1)], NAME_POOL[rnd(0, NAME_POOL.length - 1)], NAME_POOL[rnd(0, NAME_POOL.length - 1)]];
+    // 保证 4 个互不相同
+    for (var t = 1; t < 4; t++) {
+      while (s.slice(0, t).indexOf(s[t]) >= 0) s[t] = NAME_POOL[rnd(0, NAME_POOL.length - 1)];
+    }
+    return s;
+  }
+  function genParts() {
+    var raw = [rnd(1, 40), rnd(1, 40), rnd(1, 40), rnd(1, 40)];
+    var sum = raw[0] + raw[1] + raw[2] + raw[3];
+    var parts = raw.map(function (x) { return Math.max(3, Math.round(x * 100 / sum)); });
+    var diff = 100 - (parts[0] + parts[1] + parts[2] + parts[3]);
+    parts[rnd(0, 3)] += diff;
+    if (parts[0] < 1) parts[0] = 1;
+    return parts;
+  }
+
   // ============ 线段图（分数应用题） ============
   function buildFracLine() {
     var v = pick(['part', 'total']);
-    var d = pick([3, 4, 5, 6, 8]);
+    var d = pick([3, 4, 5, 6, 7, 8, 9]);
     var a = rnd(1, d - 1);
-    var unit = rnd(3, 9) * d;
+    var unit = rnd(3, 12) * d;
+    var noun = pick(['一袋大米', '一桶油', '一段绳子', '一堆煤', '一瓶果汁']);
     if (v === 'part') {
       var part = unit * a / d;
-      return { q: '看图列式：一袋大米 ' + unit + ' 千克，吃去它的 ' + a + '/' + d + '，吃去（  ）千克', answer: part, svg: segSVG(a, d), hint: '求一个数的几分之几用乘法：总量 × 对应的分数，自己算一算。' };
+      return { q: '看图列式：' + noun + ' ' + unit + ' 千克，用去了它的 ' + a + '/' + d + '，用去了（  ）千克', answer: part, svg: segSVG(a, d), hint: '求一个数的几分之几用乘法：总量 × 对应的分数，自己算一算。' };
     }
     var given = unit * a / d;
     return { q: '看图列式：一段路行了全长的 ' + a + '/' + d + '，正好 ' + given + ' 千米，全长（  ）千米', answer: unit, svg: segSVG(a, d), hint: '已知一个数的几分之几是多少，求这个数用除法：用已知数量除以对应的分数。' };
@@ -60,9 +80,9 @@
   // ============ 扇形统计图读图 ============
   function buildPieChart() {
     var v = pick(['count', 'pct', 'diff']);
-    var parts = pick([[40, 30, 20, 10], [45, 25, 20, 10], [35, 25, 25, 15], [50, 25, 15, 10]]);
-    var names = ['篮球', '足球', '乒乓球', '其他'];
-    var total = rnd(2, 8) * 10;
+    var parts = genParts();
+    var names = pickNames();
+    var total = rnd(2, 12) * 20;
     if (v === 'count') {
       var idx = rnd(0, 3);
       return { q: '看图列式：全班 ' + total + ' 人，根据扇形统计图，喜欢' + names[idx] + '的有（  ）人', answer: total * parts[idx] / 100, svg: pieReadSVG(parts, names), hint: '求一个数的百分之几用乘法：总数 × 对应的百分比，自己算一算。' };
@@ -103,25 +123,30 @@
 
   // ============ 比例尺与正比例图象 ============
   function buildScale() {
-    var v = pick(['map', 'map2', 'read', 'line', 'slope']);
+    var v = pick(['map', 'map2', 'read', 'line', 'slope', 'read2']);
     if (v === 'map') {
-      var km = rnd(2, 6), cm = 3;
-      return { q: '看图列式：地图比例尺 1:50000，图上 ' + cm + ' 厘米表示实际（  ）千米', answer: cm * 50000 / 100000, hint: '图上距离 × 比例尺的分母得实际厘米数，再把厘米换算成千米。' };
+      var km = rnd(2, 9), cm = rnd(2, 6);
+      var denom = 50000;
+      return { q: '看图列式：地图比例尺 1:' + denom + '，图上 ' + cm + ' 厘米表示实际（  ）千米', answer: cm * denom / 100000, hint: '图上距离 × 比例尺的分母得实际厘米数，再把厘米换算成千米。' };
     }
     if (v === 'map2') {
-      var km2 = rnd(2, 6) * 10, cm2 = km2 * 100000 / 100000;
+      var km2 = rnd(2, 9) * 10, cm2 = km2 * 100000 / 100000;
       var scale = 100000;
       return { q: '实际距离 ' + km2 + ' 千米，比例尺 1:' + scale + '，图上距离是（  ）厘米', answer: km2 * 100000 / scale, hint: '图上距离 = 实际距离 × 比例尺，先把实际距离换算成厘米再除以比例尺的分母。' };
     }
-    var k = rnd(2, 4);
+    var k = rnd(2, 6);
     if (v === 'read') {
-      var x = rnd(2, 5);
+      var x = rnd(2, 6);
       return { q: '看图列式：正比例图象（y = ' + k + 'x），当 x = ' + x + ' 时，y =（  ）', answer: k * x, svg: lineSVG(k), hint: '把 x 的值代入关系式 y = ' + k + 'x，自己算一算。' };
     }
-    if (v === 'line') {
-      return { q: '看图列式：正比例图象是一条经过原点的（  ）', options: ['直线', '曲线', '折线'], answer: '直线', svg: lineSVG(2), hint: '正比例图象是过原点的一条直线。' };
+    if (v === 'read2') {
+      var x2 = rnd(2, 6);
+      return { q: '看图列式：正比例图象（y = ' + k + 'x），当 y = ' + (k * x2) + ' 时，x =（  ）', answer: x2, svg: lineSVG(k), hint: '由 ' + k + 'x = ' + (k * x2) + ' 得 x = ' + x2 + '。' };
     }
-    return { q: '看图列式：图象是一条过原点的直线，说明 y ÷ x = k（一定），y 和 x 成（  ）比例', options: ['正', '反', '不成'], answer: '正', svg: lineSVG(3), hint: '比值一定，成正比例。' };
+    if (v === 'line') {
+      return { q: '看图列式：正比例图象 y = ' + k + 'x 是一条经过原点的（  ）', options: ['直线', '曲线', '折线'], answer: '直线', svg: lineSVG(k), hint: '正比例图象是过原点的一条直线。' };
+    }
+    return { q: '看图列式：图象是一条过原点的直线 y = ' + k + 'x，说明 y ÷ x = k（一定），y 和 x 成（  ）比例', options: ['正', '反', '不成'], answer: '正', svg: lineSVG(k), hint: '比值一定，成正比例。' };
   }
   function lineSVG(k) {
     var W = 140, H = 120;

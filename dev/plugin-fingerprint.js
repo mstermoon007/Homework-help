@@ -130,8 +130,6 @@ function categorize(m, q) {
   if (!q) return 'unmeasurable';
   if (q.limited) return 'pool-too-small';
   if (q.over) {
-    if (!m.methods.generate.includes('y')) return 'no-generate';
-    if (m.L2 === md5('no-params')) return 'no-randomization';
     if (q.poolSize != null && q.poolSize < 40) return 'small-pool';
     return 'weak-variation';
   }

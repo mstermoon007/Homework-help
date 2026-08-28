@@ -39,7 +39,9 @@
       { items: ['语文书', '数学书', '英语书'], people: ['小明', '小红', '小刚'] },
       { items: ['故事书', '漫画书', '科技书'], people: ['小丽', '小军', '小美'] },
       { items: ['足球', '篮球', '排球'], people: ['小华', '小强', '小芳'] },
-      { items: ['苹果', '香蕉', '桃子'], people: ['哥哥', '弟弟', '妹妹'] }
+      { items: ['苹果', '香蕉', '桃子'], people: ['哥哥', '弟弟', '妹妹'] },
+      { items: ['红色笔', '蓝色笔', '绿色笔'], people: ['小光', '小叶', '小云'] },
+      { items: ['草莓', '西瓜', '葡萄'], people: ['大宝', '二宝', '三宝'] }
     ];
     var set = pick(sets);
     var items = shuffleArr(set.items.slice());
@@ -219,6 +221,8 @@
           type: 'logic-reasoning',
           kind: p.kind,
           data: p,
+          q: p.question,
+          svg: p.svg,
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
           knowledgePointId: KP_BY_KIND[p.kind],
           hint: p.hint,

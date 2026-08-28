@@ -53,10 +53,10 @@
 
   // ============ 2. 最大公因数与最小公倍数 ============
   function genGcdLcm() {
-    var g = _PU.randInt(2, 8);
-    var x = _PU.randInt(2, 6), y = _PU.randInt(2, 6);
-    if (x === y) y = y === 6 ? 5 : y + 1;
-    if (gcd(x, y) !== 1) { x = x === 5 ? 3 : 5; if (gcd(x, y) !== 1) y = y === 4 ? 7 : 3; }
+    var g = _PU.randInt(2, 12);
+    var x = _PU.randInt(2, 9), y = _PU.randInt(2, 9);
+    if (x === y) y = y === 9 ? 8 : y + 1;
+    if (gcd(x, y) !== 1) { x = x === 7 ? 3 : 7; if (gcd(x, y) !== 1) y = y === 5 ? 9 : 5; }
     var a = g * x, b = g * y;
     return fillQ({
       type: 'gcd-lcm',
@@ -68,7 +68,7 @@
 
   // ============ 3. 分解质因数（2^□ × 3^□） ============
   function genPrimeFactorization() {
-    var e1 = _PU.randInt(2, 4), e2 = _PU.randInt(1, 4);
+    var e1 = _PU.randInt(2, 6), e2 = _PU.randInt(1, 5);
     var n = Math.pow(2, e1) * Math.pow(3, e2);
     return fillQ({
       type: 'prime-factor',
@@ -80,8 +80,8 @@
 
   // ============ 4. 余数与同余 ============
   function genRemainderCongruence() {
-    var m1 = _PU.randInt(4, 8), m2 = _PU.randInt(4, 8);
-    if (m1 === m2) m2 = m2 === 8 ? 5 : m2 + 1;
+    var m1 = _PU.randInt(4, 12), m2 = _PU.randInt(4, 12);
+    if (m1 === m2) m2 = m2 === 12 ? 5 : m2 + 1;
     var r = _PU.randInt(1, Math.min(m1, m2) - 1);
     var ans = lcm(m1, m2) + r;
     return fillQ({
@@ -96,10 +96,12 @@
   function genPerfectSquare() {
     // 构造 m = p^odd × q^even，使补乘 n 恰为奇指数质因数之积
     var primes = [2, 3, 5, 7];
-    var p = primes[_PU.randInt(0, 1)];          // 奇指数质数
-    var q = primes[_PU.randInt(2, 3)];          // 偶指数质数
+    var p = primes[_PU.randInt(0, 3)];          // 奇指数质数
+    var q = primes[_PU.randInt(0, 3)];          // 偶指数质数
+    if (q === p) q = primes[(primes.indexOf(p) + 1) % primes.length];
     var eOdd = _PU.randInt(0, 1) ? 3 : 1;        // p 的奇指数
-    var eEven = _PU.randInt(0, 2) * 2 + 2;       // q 的偶指数（≥2）
+    var eEven = _PU.randInt(1, 3) * 2;           // q 的偶指数（≥2）
+    if (eEven < 2) eEven = 2;
     var m = Math.pow(p, eOdd) * Math.pow(q, eEven);
     var n = p;                                   // 只需补 p（奇指数补成偶）
     return fillQ({
@@ -111,8 +113,8 @@
   }
 
   // ============ 6. 质数与合数判断 ============
-  var PRIMES = [47, 53, 59, 61, 67, 71];
-  var COMPOSITES = [77, 91, 119, 121, 143, 169];
+  var PRIMES = [47, 53, 59, 61, 67, 71, 73, 79, 83];
+  var COMPOSITES = [77, 91, 119, 121, 143, 169, 187, 209, 221];
   function genPrimeComposite() {
     var isPrime = _PU.randInt(0, 1) === 1;
     var n = isPrime ? PRIMES[_PU.randInt(0, PRIMES.length - 1)] : COMPOSITES[_PU.randInt(0, COMPOSITES.length - 1)];
@@ -140,20 +142,23 @@
         hint: '奇偶加法：同奇同偶相加得偶，一奇一偶相加得奇。' + a + ' 和 ' + b + ' ' + (a % 2 === b % 2 ? '同为' + (a % 2 === 0 ? '偶' : '奇') : '一奇一偶') + ' → 和是' + (sumIsEven ? '偶' : '奇') + '数'
       });
     }
-    // 偶数个奇数相加
-    var n = _PU.randInt(2, 6);
-    if (n % 2 !== 0) n++;
+    // 多个奇数 / 偶数相加的奇偶性
+    var n = _PU.randInt(1, 9);
+    var kind = _PU.randInt(0, 1) ? '奇数' : '偶数';
+    var sumIsEven = (kind === '奇数') ? (n % 2 === 0) : true;
     return fillQ({
       type: 'parity',
-      text: n + ' 个奇数的和是奇数还是偶数？（填"奇"或"偶"）',
-      answer: [n % 4 === 0 ? '偶' : '偶'],
-      hint: '偶数个奇数相加，结果一定是偶数（每两个奇数的和是偶数）。' + n + ' 是偶数 → 和为偶数'
+      text: n + ' 个' + kind + '相加，和是奇数还是偶数？（填"奇"或"偶"）',
+      answer: [sumIsEven ? '偶' : '奇'],
+      hint: (kind === '奇数')
+        ? (n % 2 === 0 ? '偶数个奇数相加得偶数。' : '奇数个奇数相加得奇数。') + n + ' 个 → 和为' + (sumIsEven ? '偶' : '奇') + '数'
+        : '任意个偶数相加都得偶数。' + n + ' 个偶数相加 → 和为偶数'
     });
   }
 
   // ============ 因数个数与因数和 ============
   function genFactorCount() {
-    var n = [12, 18, 24, 36, 48][ _PU.randInt(0, 4)];
+    var n = [12, 16, 18, 20, 21, 24, 28, 30, 32, 36, 40, 42, 44, 45, 48, 54, 56, 60, 63, 66, 70, 72, 80, 84, 90, 96][ _PU.randInt(0, 25)];
     var cnt = 0;
     for (var i = 1; i <= n; i++) { if (n % i === 0) cnt++; }
     var mode = _PU.randInt(0, 1);
@@ -226,13 +231,14 @@
       });
     }
     // 因数个数最值
-    var target = 6;
-    var smallestN = 12; // 12 有 6 个因数且是最小的
+    var targets = [[4, 6], [6, 12], [8, 24], [9, 36], [10, 48], [12, 60], [16, 120], [18, 180], [20, 240]];
+    var pick = targets[_PU.randInt(0, targets.length - 1)];
+    var target = pick[0], smallestN = pick[1];
     return fillQ({
       type: 'nt-extreme',
       text: '恰好有 ' + target + ' 个因数的最小自然数是多少？',
       answer: [smallestN],
-      hint: smallestN + ' = 2²×3，因数个数 = (2+1)×(1+1) = 6；逐一验证更小的数都不满足'
+      hint: smallestN + ' 的因数个数为 ' + target + '，且是满足条件的最小自然数'
     });
   }
 
@@ -252,12 +258,13 @@
     };
     var questions = [], seen = {}, MAXTRY = count * 80;
     for (var i = 0; i < count; i++) {
-      var key = keys[i % keys.length];
+      var key = keys[_PU.randInt(0, keys.length - 1)];
       var q = null;
       for (var tries = 0; tries < MAXTRY; tries++) {
         q = genMap[key]();
         if (q && !seen[q.q]) break;
       }
+      if (!q) q = genMap[key]();
       if (q) { seen[q.q] = true; questions.push(q); }
     }
     return questions;

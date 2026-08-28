@@ -112,22 +112,27 @@
     };
   }
 
-  // 排队：n个小朋友站成一排的种数（2~3人）
+  // 排队：n个小朋友站成一排的种数（2~4人）
   function buildQueue() {
-    var n = rnd(2, 3);
-    var total = n === 2 ? 2 : 6;
-    var kids = pick([['小明', '小红', '小刚'], ['小华', '小丽', '小美'], ['小强', '小芳', '小军']]);
-    var question = n === 2
-      ? kids[0] + '和' + kids[1] + '两人站成一排合影，有几种不同的站法？'
-      : kids[0] + '、' + kids[1] + '、' + kids[2] + '三人站成一排合影，有几种不同的站法？';
+    var n = rnd(2, 4);
+    var names = shuffleArr(['小明', '小红', '小刚', '小丽', '小美', '小强', '小芳', '小军']);
+    var kids = names.slice(0, n);
+    var total = 1;
+    for (var f = 2; f <= n; f++) total *= f; // n!
+    var label = n === 2 ? '两人' : (n === 3 ? '三人' : '四人');
+    var question = kids.join('、') + ' ' + label + '站成一排合影，有几种不同的站法？';
     return {
       kind: 'queue',
       n: n,
       question: question,
       answer: String(total),
-      options: shuffleArr([String(total), String(total + 1), String(n)]) ,
+      options: shuffleArr([String(total), String(total + 1), String(n)]),
       inputType: 'choice',
-      hint: n === 2 ? '先站一个人，另一个人有 2 种站法。' : '可以这样想：先把' + kids[0] + '固定，另外两人有 2 种站法；' + kids[0] + '换 3 个位置，就有 3×2=6 种。',
+      hint: n === 2
+        ? '先站一个人，另一个人有 2 种站法。'
+        : (n === 3
+          ? '可以先固定一个人，另外两人有 2 种站法；固定的人换 3 个位置，就有 3×2=6 种。'
+          : '可以先固定一个人，剩下 3 人轮流排，共有 4×3×2=24 种站法。'),
       kids: kids
     };
   }
@@ -236,6 +241,7 @@
           type: 'combination-set',
           kind: p.kind,
           data: p,
+          q: p.question,
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
           hint: p.kind === 'dress' ? '把选上衣、选裤子、选鞋的种数乘起来。' :
                 p.kind === 'menu' ? '用乘法算搭配种数。' :

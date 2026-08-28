@@ -167,6 +167,8 @@
         type: 'picture-eq',
         kind: p.kind,
         data: p,
+        q: p.expr,
+        svg: (p.kind === 'add' ? dotsSVG(p.a, p.c1) + dotsSVG(p.b, p.c2) : dotsSVG(p.total, p.color)),
         answer: String(p.answer),
         knowledgePointId: 'math-g1-m7-picture-equations',
         hint: p.kind === 'add' ? '左边有几个，右边有几个，合起来一共有几个？' : '一共有几个，划去几个，还剩几个？',

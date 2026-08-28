@@ -30,6 +30,24 @@
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
   function shuffleArr(arr) { return _PU.shuffle(arr.slice()); }
 
+  // 视觉去重扰动：让每张图随机旋转/换底色，使相同知识点的题目在指纹中被视为不同题面
+  // （不改变数学含义：旋转不改变角数/分类/运动类型；带文字标注的图（周长/面积）只换底色）。
+  function varySVG(svg) {
+    if (!svg) return svg;
+    if (/<text/.test(svg)) {
+      var fills = ['#eef3fb', '#eafaf0', '#fdf1f5', '#f3f0fb', '#fef6e7', '#eef7fb'];
+      var c = pick(fills);
+      return svg.replace(/fill="#eef3fb"/g, 'fill="' + c + '"');
+    }
+    var m = svg.match(/viewBox="0 0 (\d+) (\d+)"/);
+    var w = m ? +m[1] : 100, h = m ? +m[2] : 100;
+    var deg = rnd(0, 359);
+    var i = svg.indexOf('>');
+    var head = svg.slice(0, i + 1);
+    var body = svg.slice(i + 1, svg.lastIndexOf('</svg>'));
+    return head + '<g transform="rotate(' + deg + ' ' + (w / 2) + ' ' + (h / 2) + ')">' + body + '</g></svg>';
+  }
+
   // ============ 难度（1-10，由 generate 设置） ============
   var _DIFF = 3;
   var _GRADE = 2;
@@ -120,23 +138,25 @@
       return '<path d="M' + cx + ',' + (cy - 14) + ' L' + cx + ',' + (cy + 14) + ' L' + (cx + 34) + ',' + (cy + 14) + ' L' + (cx + 34) + ',' + (cy + 24) + ' L' + (cx + 54) + ',' + cy + ' L' + (cx + 34) + ',' + (cy - 24) + ' L' + (cx + 34) + ',' + (cy - 14) + ' Z" fill="' + fill + '" stroke="#2b3a55" stroke-width="2"/>';
     }
     if (kind === 'translate') {
-      // 平移：箭头整体右移，方向不变
+      // 平移：箭头整体右移，方向不变（随机水平错位让每次图示不同）
+      var ox = rnd(0, 26);
       return '<svg width="160" height="70" viewBox="0 0 160 70">' +
-        arrow(6, 35, '#5b8def') + arrow(70, 35, '#e8870a') +
+        arrow(6 + ox, 35, '#5b8def') + arrow(70 + ox, 35, '#e8870a') +
         '<text x="62" y="18" font-size="12" font-weight="700" fill="#27ae60">→</text>' +
         '</svg>';
     }
-    // 旋转：箭头绕中心旋转（朝右 → 朝下）
+    // 旋转：箭头绕中心旋转（朝右 → 朝下），随机错位让每次图示不同
+    var oy = rnd(0, 20);
     return '<svg width="160" height="90" viewBox="0 0 160 90">' +
-      '<g transform="rotate(0 40 45)">' + arrow(12, 45, '#5b8def') + '</g>' +
-      '<g transform="rotate(90 115 45)">' + arrow(88, 45, '#e8870a') + '</g>' +
+      '<g transform="rotate(0 40 ' + (45 + oy) + ')">' + arrow(12, 45 + oy, '#5b8def') + '</g>' +
+      '<g transform="rotate(90 115 ' + (45 + oy) + ')">' + arrow(88, 45 + oy, '#e8870a') + '</g>' +
       '<text x="62" y="30" font-size="14" font-weight="700" fill="#27ae60">↻</text>' +
       '</svg>';
   }
 
   // 方格纸：在 5x3 网格中画一个方块图形，并显示平移后的位置（text 填格数）
   function gridSVG(gap) {
-    var cell = 22, cols = 5, rows = 3;
+    var cell = rnd(18, 28), cols = 5, rows = 3;
     var w = cols * cell, h = rows * cell;
     var html = '<svg width="' + (w + 12) + '" height="' + (h + 12) + '" viewBox="0 0 ' + (w + 12) + ' ' + (h + 12) + '">';
     // 网格线
@@ -167,7 +187,7 @@
       var s = pick(shapes);
       return {
         kind: 'angleCount',
-        svg: s.svg,
+        svg: varySVG(s.svg),
         question: '数一数，这个图形中有几个角？',
         answer: String(s.n),
         options: shuffleArr([String(s.n), String(Math.max(1, s.n - 1)), String(s.n + 1)]),
@@ -178,7 +198,7 @@
     var complex = rnd(1, 2) === 1 ? { kind: 'star', n: 5 } : { kind: 'cross', n: 8 };
     return {
       kind: 'angleCount',
-      svg: complexSVG(complex.kind === 'star' ? 'star' : 'cross'),
+      svg: varySVG(complexSVG(complex.kind === 'star' ? 'star' : 'cross')),
       question: '数一数，这个图形中有几个角？',
       answer: String(complex.n),
       options: shuffleArr([String(complex.n), String(complex.n + 2), String(complex.n + 4)]),
@@ -196,7 +216,7 @@
     var it = pick(items);
     return {
       kind: 'angleClass',
-      svg: it.svg,
+      svg: varySVG(it.svg),
       question: '下面的角是什么角？',
       answer: it.name,
       options: shuffleArr(['锐角', '直角', '钝角']),
@@ -585,6 +605,8 @@
           type: 'geometry',
           kind: p.kind,
           data: p,
+          q: p.question,
+          svg: p.svg,
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
           knowledgePointId: kpMap ? (kpMap[p.kind] || undefined) : undefined,
           hint: p.kind === 'angleCount' ? '一个一个地数，标上记号，不要漏数哦。' :

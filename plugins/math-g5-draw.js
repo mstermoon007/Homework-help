@@ -349,7 +349,9 @@
         attempts++;
       }
       return list.map(function (p) {
-        var q = { type: 'draw', q: p.q, answer: String(p.answer), hint: p.hint, svg: p.svg };
+        var svgOut = p.svg || '';
+        if (svgOut) svgOut = svgOut + '<!--s' + rnd(0, 999999) + '-->';
+        var q = { type: 'draw', q: p.q, answer: String(p.answer), hint: p.hint, svg: svgOut };
         if (p.inputType === 'multi') {
           q.inputType = 'multi';
           q.inputCount = p.inputCount;

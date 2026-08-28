@@ -82,7 +82,7 @@
       });
     }
     // 三人过桥：a≤b≤c → a+b+c（最快的往返护送）
-    var e1 = _PU.randInt(1, 3), e2 = e1 + _PU.randInt(0, 2), e3 = e2 + _PU.randInt(1, 4);
+    var e1 = _PU.randInt(1, 6), e2 = e1 + _PU.randInt(0, 3), e3 = e2 + _PU.randInt(1, 6);
     return fillQ({
       type: 'optimization',
       text: '甲、乙、丙三人夜里过一座桥，过桥分别需要 ' + e3 + '、' + e2 + '、' + e1 +
@@ -115,8 +115,8 @@
     }
     if (mode === 2) {
       // 双堆不等：先手取差值造对称
-      var x = _PU.randInt(2, 9), y;
-      do { y = _PU.randInt(1, 8); } while (y === x);
+      var x = _PU.randInt(2, 15), y;
+      do { y = _PU.randInt(1, 14); } while (y === x);
       var big = Math.max(x, y), small = Math.min(x, y);
       return fillQ({
         type: 'winning',
@@ -127,7 +127,7 @@
       });
     }
     // 双堆相等：对称局面，后手必胜
-    var eq = _PU.randInt(2, 9);
+    var eq = _PU.randInt(2, 15);
     return fillQ({
       type: 'winning',
       text: '桌上有两堆棋子，每堆各有 ' + eq +
@@ -155,7 +155,7 @@
     if (mode === 1) {
       // 三数和定积最大：相等时最大
       var n = 3;
-      do { var S3 = _PU.randInt(15, 60); } while (S3 % n !== 0);
+      do { var S3 = _PU.randInt(15, 90); } while (S3 % n !== 0);
       var v = S3 / n;
       return fillQ({
         type: 'extremum',

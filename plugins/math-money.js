@@ -253,6 +253,8 @@
           type: 'money',
           kind: p.kind,
           data: p,
+          q: p.question || p.q || '',
+          svg: p.svg || '',
           answer: String(p.answer),
           knowledgePointId: 'math-g1-m4-money',
           hint: p.hint,

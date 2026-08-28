@@ -26,14 +26,12 @@
   // ============ 天平平衡图（列方程） ============
   // 天平左边：x + a；右边：b。问 x 的值
   function buildBalanceEquation() {
-    var a = rnd(1, 5), x = rnd(2, 9);
+    var a = rnd(1, 9), x = rnd(2, 18);
     var b = x + a;
     var v = pick(['leftx', 'rightx']);
     var svg = balanceSVG(a, b, v);
-    if (v === 'leftx') {
-      return { q: '天平平衡，x =（  ）', answer: x, svg: svg, hint: b + ' − ' + a + ' = ' + x + '，或 x + ' + a + ' = ' + b + '。' };
-    }
-    return { q: '天平平衡，x =（  ）', answer: x, svg: svg, hint: b + ' − ' + a + ' = ' + x + '。' };
+    var eq = v === 'leftx' ? ('x ＋ ' + a + ' = ' + b) : (b + ' = x ＋ ' + a);
+    return { q: '天平平衡：' + eq + '，x =（  ）', answer: x, svg: svg, hint: b + ' − ' + a + ' = ' + x + '，即 ' + eq + '。' };
   }
   function balanceSVG(a, b, v) {
     var W = 220, H = 110;
@@ -120,8 +118,8 @@
   // ============ 线段图（小数倍数） ============
   // 甲是小数 a，乙是甲的 k 倍，线段图，问甲+乙 或 乙-甲
   function buildSegmentMultiple() {
-    var base = rnd(2, 9) / 10;
-    var k = rnd(2, 4);
+    var base = rnd(1, 19) / 10;
+    var k = rnd(2, 6);
     var total = base * k + base;
     var diff = base * k - base;
     var svg = segmentPicSVG(base, k);
@@ -152,12 +150,13 @@
   // 两端都栽 / 只栽一端 / 两端都不栽
   function buildTreePlanting() {
     var v = pick(['both', 'one', 'none']);
-    var n = rnd(3, 8); // 段数
+    var n = rnd(3, 15); // 段数
     var trees = v === 'both' ? n + 1 : v === 'one' ? n : n - 1;
     if (trees < 2) return buildTreePlanting();
     var svg = treeSVG(n, v);
     var label = v === 'both' ? '两端都栽' : v === 'one' ? '只栽一端' : '两端都不栽';
-    return { q: '植树问题（' + label + '）：' + n + ' 段路，需要种（  ）棵树', answer: trees, svg: svg,
+    var scene = pick(['一条', '一段', '河边', '校园里']);
+    return { q: '植树问题（' + label + '）：' + scene + ' ' + n + ' 段路，需要种（  ）棵树', answer: trees, svg: svg,
       hint: v === 'both' ? '棵数 = 段数 + 1' : v === 'one' ? '棵数 = 段数' : '棵数 = 段数 − 1' };
   }
   function treeSVG(n, v) {

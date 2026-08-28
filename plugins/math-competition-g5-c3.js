@@ -36,10 +36,13 @@
 
   // ============ 1. 加法原理 ============
   function genAddPrinciple() {
-    var a = _PU.randInt(3, 12), b = _PU.randInt(3, 12);
+    var a = _PU.randInt(3, 20), b = _PU.randInt(3, 20);
+    var scene = pick2(['书架上有', '文具盒里有', '盒子里有', '书包里有']);
+    var s1 = pick2(['语文书', '故事书', '科技书']);
+    var s2 = pick2(['数学书', '英语书', '美术书']);
     return fillQ({
       type: 'add-principle',
-      text: '书架上有 ' + a + ' 本语文书和 ' + b + ' 本数学书，从中任取 1 本，一共有 ____ 种取法。',
+      text: scene + ' ' + a + ' 本' + s1 + '和 ' + b + ' 本' + s2 + '，从中任取 1 本，一共有 ____ 种取法。',
       answer: [a + b],
       hint: '分类用加法原理：' + a + '＋' + b + ' = ' + (a + b)
     });
@@ -47,10 +50,12 @@
 
   // ============ 2. 乘法原理 ============
   function genMultPrinciple() {
-    var a = _PU.randInt(3, 6), b = _PU.randInt(3, 6);
+    var a = _PU.randInt(2, 9), b = _PU.randInt(2, 9);
+    var s1 = pick2(['上衣', '衬衫', '外套']);
+    var s2 = pick2(['裤子', '裙子', '短裤']);
     return fillQ({
       type: 'mult-principle',
-      text: '有 ' + a + ' 件上衣和 ' + b + ' 条裤子，每件上衣都能和每条裤子搭配，一共有 ____ 种不同的穿法。',
+      text: '有 ' + a + ' 件' + s1 + '和 ' + b + ' 条' + s2 + '，每件' + s1 + '都能和每条' + s2 + '搭配，一共有 ____ 种不同的穿法。',
       answer: [a * b],
       hint: '分步用乘法原理：' + a + '×' + b + ' = ' + (a * b)
     });
@@ -60,11 +65,12 @@
   function genPermutation() {
     var mode = _PU.randInt(0, 1);
     if (mode === 0) {
-      var n = _PU.randInt(4, 9), k = _PU.randInt(2, Math.min(4, n - 1));
+      var n = _PU.randInt(4, 12), k = _PU.randInt(2, Math.min(5, n - 1));
       var ans = fact(n) / fact(n - k);
+      var obj = pick2(['同学', '数字', '棋子', '颜色']);
       return fillQ({
         type: 'permutation',
-        text: '从 ' + n + ' 个不同的同学中选出 ' + k + ' 个，排成一排（顺序不同算不同排法），一共有 ____ 种排法。',
+        text: '从 ' + n + ' 个不同的' + obj + '中选出 ' + k + ' 个，排成一排（顺序不同算不同排法），一共有 ____ 种排法。',
         answer: [ans],
         hint: '选排列 P(' + n + ',' + k + ') = ' + Array.from({ length: k }, function (_, i) { return n - i; }).join('×') + ' = ' + ans
       });
@@ -80,11 +86,12 @@
 
   // ============ 4. 组合数 ============
   function genCombination() {
-    var n = _PU.randInt(4, 8), k = _PU.randInt(2, 3);
+    var n = _PU.randInt(5, 14), k = _PU.randInt(2, 4);
     if (k >= n) k = 2;
+    var obj = pick2(['同学', '书', '球', '糖果']);
     return fillQ({
       type: 'combination',
-      text: '从 ' + n + ' 个不同的同学中选出 ' + k + ' 个组成一组（不考虑顺序），一共有 ____ 种不同的选法。',
+      text: '从 ' + n + ' 个不同的' + obj + '中选出 ' + k + ' 个组成一组（不考虑顺序），一共有 ____ 种不同的选法。',
       answer: [comb(n, k)],
       hint: '组合数 C(' + n + ',' + k + ') = ' + n + '!÷(' + k + '!×(' + (n - k) + ')!) = ' + comb(n, k)
     });
@@ -94,34 +101,34 @@
   function genEnumeration() {
     var mode = _PU.randInt(0, 1);
     if (mode === 1) {
-      var m = _PU.randInt(4, 7);
-      var arr3 = [];
-      for (var i = 1; i <= m; i++) arr3.push(i);
+      var m = _PU.randInt(3, 6);
+      var arr3 = distinctDigits(m);
       return fillQ({
         type: 'enumeration',
         text: '用数字 ' + arr3.join('、') + ' 各一次，能组成 ____ 个无重复数字的三位数。',
-        answer: [m * (m - 1) * (m - 2)],
-        hint: '百位 ' + m + ' 种、十位 ' + (m - 1) + ' 种、个位 ' + (m - 2) + ' 种：' + m + '×' + (m - 1) + '×' + (m - 2) + ' = ' + (m * (m - 1) * (m - 2))
+        answer: [fact(m) / fact(m - 3)],
+        hint: '百位 ' + m + ' 种、十位 ' + (m - 1) + ' 种、个位 ' + (m - 2) + ' 种：' + m + '×' + (m - 1) + '×' + (m - 2) + ' = ' + (fact(m) / fact(m - 3))
       });
     }
-    var n = _PU.randInt(3, 9);
-    var arr = [];
-    for (var j = 1; j <= n; j++) arr.push(j);
+    var n = _PU.randInt(2, 7);
+    var arr = distinctDigits(n);
     return fillQ({
       type: 'enumeration',
       text: '用数字 ' + arr.join('、') + ' 各一次，能组成 ____ 个无重复数字的两位数。',
-      answer: [n * (n - 1)],
-      hint: '十位 ' + n + ' 种选法，个位剩 ' + (n - 1) + ' 种：' + n + '×' + (n - 1) + ' = ' + (n * (n - 1))
+      answer: [fact(n) / fact(n - 2)],
+      hint: '十位 ' + n + ' 种选法，个位剩 ' + (n - 1) + ' 种：' + n + '×' + (n - 1) + ' = ' + (fact(n) / fact(n - 2))
     });
   }
 
   // ============ 6. 抽屉原理 ============
   function genPigeonhole() {
-    var n = _PU.randInt(3, 5), m = _PU.randInt(n + 1, n + 10);
+    var n = _PU.randInt(3, 8), m = _PU.randInt(n + 1, n + 30);
     var ans = Math.ceil(m / n);
+    var obj = pick2(['苹果', '铅笔', '小球', '卡片']);
+    var box = pick2(['抽屉', '盒子', '书包']);
     return fillQ({
       type: 'pigeonhole',
-      text: '把 ' + m + ' 个苹果放进 ' + n + ' 个抽屉，无论怎么放，至少有一个抽屉里有 ____ 个或更多苹果。',
+      text: '把 ' + m + ' 个' + obj + '放进 ' + n + ' 个' + box + '，无论怎么放，至少有一个' + box + '里有 ____ 个或更多' + obj + '。',
       answer: [ans],
       hint: '尽量平均：' + m + '÷' + n + ' = ' + Math.floor(m / n) + '……' + (m % n) + '，商加 1 → 至少 ' + ans + ' 个'
     });
@@ -129,12 +136,15 @@
 
   // ============ 7. 最不利原则 ============
   function genWorstCase() {
-    var c = _PU.randInt(3, 6), k = _PU.randInt(2, 4);
+    var c = _PU.randInt(3, 8), k = _PU.randInt(2, 5);
     var ans = c * (k - 1) + 1;
-    var colors = ['红、黄、蓝', '红、黄、蓝、绿', '红、黄、蓝、绿、紫', '红、黄、蓝、绿、紫、橙'][c - 3];
+    var palette = [['红', '黄', '蓝'], ['红', '黄', '蓝', '绿'], ['红', '黄', '蓝', '绿', '紫'], ['红', '黄', '蓝', '绿', '紫', '橙'], ['红', '黄', '蓝', '绿', '紫', '橙', '白'], ['红', '黄', '蓝', '绿', '紫', '橙', '白', '黑']];
+    var colors = palette[c - 3] || palette[palette.length - 1];
+    var clist = colors.slice(0, c).join('、');
+    var noun = pick2(['球', '袜子', '弹珠', '积木']);
     return fillQ({
       type: 'worst-case',
-      text: '袋中有' + colors + '这 ' + c + ' 种颜色的球各若干个（只看颜色），闭着眼睛至少取出 ____ 个，才能保证其中有 ' + k + ' 个颜色相同。',
+      text: '袋中有' + clist + '这 ' + c + ' 种颜色的' + noun + '各若干个（只看颜色），闭着眼睛至少取出 ____ 个，才能保证其中有 ' + k + ' 个颜色相同。',
       answer: [ans],
       hint: '最不利情况：每种颜色都先取 ' + (k - 1) + ' 个（共 ' + (c * (k - 1)) + ' 个），再多取 1 个 → ' + ans + ' 个'
     });
@@ -143,14 +153,14 @@
 
   // ============ 捆绑法 ============
   function genBundling() {
-    var n = _PU.randInt(4, 6), pairs = _PU.randInt(1, Math.floor(n / 2));
+    var n = _PU.randInt(4, 15), pairs = _PU.randInt(1, Math.floor(n / 2));
     var totalPeople = n, bundles = n - pairs; // 捆绑后元素数
     var fact = function (k) { var r = 1; for (var i = 2; i <= k; i++) r *= i; return r; };
     var ans = fact(bundles) * Math.pow(2, pairs); // 捆绑排列 × 内部排列
     if (pairs > 1) ans = fact(bundles) * Math.pow(2, pairs); // 简化模型
     return fillQ({
       type: 'bundling',
-      text: n + ' 名同学排成一排，其中 ' + (pairs * 2) + ' 名同学两两相邻（形成 ' + pairs +
+      text: n + ' 名' + pick2(['同学', '小朋友', '运动员', '士兵']) + '排成一排，其中 ' + (pairs * 2) + ' 名两两相邻（形成 ' + pairs +
         ' 对），一共有多少种不同的排法？',
       answer: [ans],
       hint: '捆绑法：先把每对看作一个整体，共 ' + bundles + ' 个元素排列 = ' + fact(bundles) +
@@ -160,7 +170,7 @@
 
   // ============ 插空法 ============
   function genInsertion() {
-    var boys = _PU.randInt(4, 6), girls = _PU.randInt(2, 3);
+    var boys = _PU.randInt(4, 14), girls = _PU.randInt(2, 6);
     var fact = function (k) { var r = 1; for (var i = 2; i <= k; i++) r *= i; return r; };
     var slots = boys + 1;
     var permGirls = fact(girls), permBoys = fact(boys);
@@ -170,7 +180,7 @@
     var ans = permBoys * pick;
     return fillQ({
       type: 'insertion',
-      text: boys + ' 名男生和 ' + girls + ' 名女生排成一排，要求女生互不相邻，有多少种排法？',
+      text: boys + ' 名' + pick2(['男生', '男孩']) + '和 ' + girls + ' 名' + pick2(['女生', '女孩']) + '排成一排，要求女生互不相邻，有多少种排法？',
       answer: [ans],
       hint: '先排男生 ' + permBoys + ' 种，产生 ' + slots + ' 个空位；从空位中选 ' + girls + ' 个排女生 = ' + pick + ' → 合计 ' + ans
     });
@@ -178,7 +188,7 @@
 
   // ============ 隔板法 ============
   function genStarsBars() {
-    var items = _PU.randInt(8, 15), people = _PU.randInt(2, 4);
+    var items = _PU.randInt(8, 22), people = _PU.randInt(2, 6);
     // 正整数解：C(items-1, people-1)
     var nk1 = items - 1, nr = people - 1;
     var result = 1;
@@ -190,6 +200,13 @@
       answer: [result],
       hint: '隔板法：在 ' + (items - 1) + ' 个空隙中插 ' + (people - 1) + ' 块板 = C(' + (items - 1) + ',' + (people - 1) + ') = ' + result
     });
+  }
+
+  function pick2(arr) { return arr[_PU.randInt(0, arr.length - 1)]; }
+  function distinctDigits(m) {
+    var all = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    for (var i = all.length - 1; i > 0; i--) { var j = _PU.randInt(0, i); var t = all[i]; all[i] = all[j]; all[j] = t; }
+    return all.slice(0, m);
   }
 
   // ============ 生成调度 ============
@@ -207,12 +224,13 @@
     };
     var questions = [], seen = {}, MAXTRY = count * 80;
     for (var i = 0; i < count; i++) {
-      var key = keys[i % keys.length];
+      var key = keys[_PU.randInt(0, keys.length - 1)];
       var q = null;
       for (var tries = 0; tries < MAXTRY; tries++) {
         q = genMap[key]();
         if (q && !seen[q.q]) break;
       }
+      if (!q) q = genMap[key]();
       if (q) { seen[q.q] = true; questions.push(q); }
     }
     return questions;

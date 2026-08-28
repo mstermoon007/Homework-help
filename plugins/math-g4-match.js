@@ -92,31 +92,36 @@
 
   // ============ 角与度数连线 ============
   function buildAngleDegree() {
-    var pairs = [
-      ['锐角', '小于 90°'],
-      ['直角', '等于 90°'],
-      ['钝角', '大于 90°且小于 180°'],
-      ['平角', '等于 180°'],
-      ['周角', '等于 360°'],
-      ['30° 的角', '锐角'],
-      ['90° 的角', '直角'],
-      ['120° 的角', '钝角'],
-      ['180° 的角', '平角'],
-      ['360° 的角', '周角']
+    var classes = [
+      { name: '锐角', lo: 10, hi: 89 },
+      { name: '直角', val: 90 },
+      { name: '钝角', lo: 91, hi: 179 },
+      { name: '平角', val: 180 },
+      { name: '周角', val: 360 }
     ];
-    var pr = pick(pairs);
-    var left = pr[0], right = pr[1];
-    // 干扰项：同类别其他右项
-    var distractors = [];
-    pairs.forEach(function (p) { if (p[1] !== right && distractors.length < 3) distractors.push(p[1]); });
-    var options = shuffle([right].concat(distractors));
-    return { q: '把「' + left + '」连到对应的', answer: right, options: options,
+    var cls = pick(classes);
+    var deg = cls.val != null ? cls.val : rnd(cls.lo, cls.hi);
+    var options = shuffle(['锐角', '直角', '钝角', '平角', '周角']);
+    return { q: '把「' + deg + '° 的角」连到对应的分类', answer: cls.name, options: options,
       hint: '记住角的分类与度数范围。' };
   }
 
   // ============ 图形与特征连线 ============
   function buildShapeFeature() {
-    var pairs = [
+    var mode = rnd(1, 3);
+    if (mode === 1) {
+      var n = rnd(3, 8);
+      return { q: n + ' 边形有（  ）条边', answer: String(n),
+        options: shuffle([String(n), String(n + 1), String(n - 1), String(n + 2)]),
+        hint: '多边形有几条边就叫几边形。' };
+    }
+    if (mode === 2) {
+      var n2 = rnd(3, 8);
+      return { q: n2 + ' 边形有（  ）个角', answer: String(n2),
+        options: shuffle([String(n2), String(n2 + 1), String(n2 - 1), String(n2 + 2)]),
+        hint: '多边形的边数和角数相同。' };
+    }
+    var table = [
       ['长方形', '对边平行且相等，四个角都是直角'],
       ['正方形', '四条边相等，四个角都是直角'],
       ['平行四边形', '对边平行且相等'],
@@ -124,54 +129,46 @@
       ['三角形', '由三条线段围成'],
       ['等腰三角形', '两条边相等'],
       ['等边三角形', '三条边都相等'],
-      ['直角梯形', '有一个角是直角的梯形']
+      ['五边形', '五条边'],
+      ['六边形', '六条边']
     ];
-    var pr = pick(pairs);
-    var left = pr[0], right = pr[1];
+    var pr = pick(table);
     var distractors = [];
-    pairs.forEach(function (p) { if (p[0] !== left && distractors.length < 3) distractors.push(p[1]); });
-    var options = shuffle([right].concat(distractors));
-    return { q: '把「' + left + '」连到对应的特征', answer: right, options: options,
+    table.forEach(function (p) { if (p[0] !== pr[0] && distractors.length < 3) distractors.push(p[1]); });
+    var options = shuffle([pr[1]].concat(distractors));
+    return { q: '把「' + pr[0] + '」连到对应的特征', answer: pr[1], options: options,
       hint: '根据图形的边、角特征判断。' };
   }
 
   // ============ 运算律与字母表达式连线 ============
   function buildLawFormula() {
-    var pairs = [
-      ['加法交换律', 'a + b = b + a'],
-      ['加法结合律', '(a + b) + c = a + (b + c)'],
-      ['乘法交换律', 'a × b = b × a'],
-      ['乘法结合律', '(a × b) × c = a × (b × c)'],
-      ['乘法分配律', '(a + b) × c = a × c + b × c']
+    var a = rnd(2, 9), b = rnd(2, 9), c = rnd(2, 9);
+    var laws = [
+      { n: '加法交换律', e: a + ' + ' + b + ' = ' + b + ' + ' + a },
+      { n: '加法结合律', e: '(' + a + ' + ' + b + ') + ' + c + ' = ' + a + ' + (' + b + ' + ' + c + ')' },
+      { n: '乘法交换律', e: a + ' × ' + b + ' = ' + b + ' × ' + a },
+      { n: '乘法结合律', e: '(' + a + ' × ' + b + ') × ' + c + ' = ' + a + ' × (' + b + ' × ' + c + ')' },
+      { n: '乘法分配律', e: '(' + a + ' + ' + b + ') × ' + c + ' = ' + a + ' × ' + c + ' + ' + b + ' × ' + c }
     ];
-    var pr = pick(pairs);
-    var left = pr[0], right = pr[1];
-    var distractors = [];
-    pairs.forEach(function (p) { if (p[0] !== left && distractors.length < 4) distractors.push(p[1]); });
-    var options = shuffle([right].concat(distractors));
-    return { q: '把「' + left + '」连到对应的字母表达式', answer: right, options: options,
+    var lw = pick(laws);
+    var options = shuffle(laws.map(function (x) { return x.n; }));
+    return { q: '等式「' + lw.e + '」应用了（  ）', answer: lw.n, options: options,
       hint: '运算律的字母公式要牢记。' };
   }
 
   // ============ 小数与分数连线 ============
   function buildDecFrac() {
-    var pairs = [
-      ['0.1', '1/10'],
-      ['0.3', '3/10'],
-      ['0.5', '5/10'],
-      ['0.01', '1/100'],
-      ['0.07', '7/100'],
-      ['0.25', '25/100'],
-      ['0.9', '9/10'],
-      ['0.6', '6/10']
-    ];
-    var pr = pick(pairs);
-    var left = pr[0], right = pr[1];
-    var distractors = [];
-    pairs.forEach(function (p) { if (p[1] !== right && distractors.length < 3) distractors.push(p[1]); });
-    var options = shuffle([right].concat(distractors));
-    return { q: '把「' + left + '」连到相等的分数', answer: right, options: options,
-      hint: '一位小数是几分之几，两位小数是百分之几。' };
+    if (rnd(1, 2) === 1) {
+      var t = rnd(1, 9);
+      return { q: '把「0.' + t + '」连到相等的分数', answer: t + '/10',
+        options: shuffle([t + '/10', (t + 1) + '/10', (10 - t) + '/10', t + '/100']),
+        hint: '一位小数是十分之几。' };
+    }
+    var h = rnd(1, 99);
+    var hs = h < 10 ? '0' + h : String(h);
+    return { q: '把「0.' + hs + '」连到相等的分数', answer: h + '/100',
+      options: shuffle([h + '/100', (h + 1) + '/100', (100 - h) + '/100', (h % 10) + '/10']),
+      hint: '两位小数是百分之几。' };
   }
 
   // ============ 综合连线（按知识点权重混合） ============

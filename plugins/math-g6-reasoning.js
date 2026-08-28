@@ -22,18 +22,18 @@
   function buildNumberShape() {
     var v = pick(['tri', 'sq', 'oddsum', 'sum']);
     if (v === 'tri') {
-      var n = rnd(4, 8);
+      var n = rnd(4, 20);
       return { q: '用小圆点摆三角形，第 1 个用 1 个，第 2 个用 3 个，第 3 个用 6 个……第 ' + n + ' 个需要（  ）个圆点', answer: n * (n + 1) / 2, svg: triangleSVG(n), hint: '第 n 个 = n × (n+1) ÷ 2 = ' + n + ' × ' + (n + 1) + ' ÷ 2。' };
     }
     if (v === 'sq') {
-      var n2 = rnd(4, 8);
+      var n2 = rnd(4, 20);
       return { q: '按规律摆正方形：1、4、9、16……第 ' + n2 + ' 个图形需要（  ）个小正方形', answer: n2 * n2, hint: '想一想：从 1、4、9、16 的规律，第几个图形与数字几有什么关系。' };
     }
     if (v === 'oddsum') {
-      var n3 = rnd(3, 6);
+      var n3 = rnd(3, 20);
       return { q: '1 + 3 + 5 + ……（连续 ' + n3 + ' 个奇数）= （  ）²', answer: n3, hint: '想一想：连续几个奇数的和，与奇数的个数有什么关系。' };
     }
-    var n4 = rnd(4, 12);
+    var n4 = rnd(4, 40);
     return { q: '1 + 2 + 3 + …… + ' + n4 + ' =（  ）', answer: n4 * (n4 + 1) / 2, hint: '配对求和：(' + n4 + ' + 1) × ' + n4 + ' ÷ 2。' };
   }
   function triangleSVG(n) {
@@ -58,18 +58,18 @@
   function buildPigeonhole() {
     var v = pick(['parity', 'month', 'color', 'cards']);
     if (v === 'parity') {
-      var n = rnd(5, 9);
+      var n = rnd(5, 30);
       return { q: '任意 ' + n + ' 个自然数中，至少有（  ）个数的奇偶性相同', answer: Math.ceil(n / 2), hint: '自然数只有奇、偶 2 种情况，把这 ' + n + ' 个数平均分到 2 组里，用进一法。' };
     }
     if (v === 'month') {
-      var n2 = rnd(25, 40);
+      var n2 = rnd(25, 80);
       return { q: n2 + ' 名同学中，至少有（  ）人是同一月份出生的（一年 12 个月）', answer: Math.ceil(n2 / 12), hint: '一年只有 12 个月，把 ' + n2 + ' 名同学平均分到 12 个月里，用进一法。' };
     }
     if (v === 'color') {
-      var c = rnd(3, 5);
+      var c = rnd(3, 10);
       return { q: '布袋里有 ' + c + ' 种不同颜色的球，一次至少摸（  ）个，才能保证有 2 个同色', answer: c + 1, hint: '最不利时先每种颜色各摸 1 个，再多摸 1 个就一定有两只同色。' };
     }
-    var d = rnd(2, 4);
+    var d = rnd(2, 8);
     return { q: '一个盒子里有 ' + d + ' 种不同花色（每种花色足够多）的扑克牌，至少摸（  ）张，才能保证有 2 张同花色', answer: d + 1, hint: '最不利时先每种花色摸 1 张，再多摸 1 张就一定有两只同花色。' };
   }
 

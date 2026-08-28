@@ -35,7 +35,7 @@
 
   // ============ 1. 分数裂项 ============
   function genFractionSplitting() {
-    var n = _PU.randInt(2, 14);
+    var n = _PU.randInt(2, 30);
     var terms = [];
     for (var k = 1; k <= n; k++) terms.push('1/(' + k + '×' + (k + 1) + ')');
     var ans = n + '/' + (n + 1);
@@ -49,7 +49,7 @@
 
   // ============ 2. 整数裂项 ============
   function genIntegerSplitting() {
-    var n = _PU.randInt(2, 12);
+    var n = _PU.randInt(2, 25);
     var terms = [];
     for (var k = 1; k <= n; k++) terms.push(k + '×' + (k + 1));
     var ans = n * (n + 1) * (n + 2) / 3;
@@ -94,11 +94,10 @@
 
   // ============ 5. 凑整巧算 ============
   function genRoundingCalc() {
-    var r = _PU.randInt(0, 2);
-    var n1 = [97, 98, 99][r];
-    var n2 = _PU.randInt(24, 89);
+    var near = _PU.randInt(0, 1) ? 100 : 1000;
+    var n1 = near - _PU.randInt(1, 4);
+    var n2 = _PU.randInt(24, 989);
     var ans = n1 + n2;
-    var near = [100, 100, 100][r];
     var adj = near - n1;
     return fillQ({
       type: 'rounding',
@@ -110,18 +109,25 @@
 
   // ============ 6. 分数比较大小 ============
   function genCompareSize() {
-    var a = _PU.randInt(2, 7), b = _PU.randInt(a + 1, 11);
-    var c = _PU.randInt(2, 7), d = _PU.randInt(c + 1, 11);
-    // 避免分子相同、分母相同或相等
-    if (a === c || b === d) return null;
-    var l = a * d, r = c * b;
-    if (l === r) return null;
-    var op = l > r ? '>' : '<';
+    for (var attempt = 0; attempt < 40; attempt++) {
+      var a = _PU.randInt(2, 7), b = _PU.randInt(a + 1, 11);
+      var c = _PU.randInt(2, 7), d = _PU.randInt(c + 1, 11);
+      if (a === c || b === d) continue;
+      var l = a * d, r = c * b;
+      if (l === r) continue;
+      var op = l > r ? '>' : '<';
+      return fillQ({
+        type: 'compare',
+        text: '在 ○ 里填上 "＞"、"＜" 或 "＝"：' + a + '/' + b + ' ○ ' + c + '/' + d,
+        answer: [op],
+        hint: '交叉相乘：' + a + '×' + d + ' 与 ' + c + '×' + b + ' 比较（' + l + ' ' + op + ' ' + r + '）'
+      });
+    }
     return fillQ({
       type: 'compare',
-      text: '在 ○ 里填上 "＞"、"＜" 或 "＝"：' + a + '/' + b + ' ○ ' + c + '/' + d,
-      answer: [op],
-      hint: '交叉相乘：' + a + '×' + d + ' 与 ' + c + '×' + b + ' 比较（' + l + ' ' + op + ' ' + r + '）'
+      text: '在 ○ 里填上 "＞"、"＜" 或 "＝"：3/4 ○ 5/8',
+      answer: ['>'],
+      hint: '交叉相乘：3×8 = 24 与 5×4 = 20 比较（24 > 20）'
     });
   }
 
@@ -149,7 +155,7 @@
     });
   }
   function genEstimate() {
-    var n = _PU.randInt(5, 12);
+    var n = _PU.randInt(5, 30);
     var sum = 0; for (var i = 1; i <= n; i++) sum += 1;
     return fillQ({ type: 'estimate',
       text: '估算：1 + 2 + 3 + … + ' + n + ' = ____。',
@@ -182,12 +188,13 @@
     };
     var questions = [], seen = {}, MAXTRY = count * 80;
     for (var i = 0; i < count; i++) {
-      var key = keys[i % keys.length];
+      var key = keys[_PU.randInt(0, keys.length - 1)];
       var q = null;
       for (var tries = 0; tries < MAXTRY; tries++) {
         q = genMap[key]();
         if (q && !seen[q.q]) break;
       }
+      if (!q) q = genMap[key]();
       if (q) { seen[q.q] = true; questions.push(q); }
     }
     return questions;

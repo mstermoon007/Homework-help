@@ -32,12 +32,12 @@
   // ============ 难度（1-10，由 generate 设置） ============
   var _DIFF = 3;
 
-  // 分母范围：难度越高允许更大的分母
+  // 分母范围：难度越高允许更大的分母（扩大范围以降低重复率）
   function denRange() {
-    if (_DIFF <= 4) return [2, 6];
-    if (_DIFF <= 6) return [2, 8];
-    if (_DIFF <= 8) return [2, 10];
-    return [2, 12];
+    if (_DIFF <= 4) return [2, 8];
+    if (_DIFF <= 6) return [2, 12];
+    if (_DIFF <= 8) return [2, 16];
+    return [2, 20];
   }
 
   // ============ 分数图形 SVG（块状条等分 n 份，涂色 m 份） ============
@@ -63,6 +63,27 @@
       '<span style="padding:0 5px;font-size:1.15em;font-weight:800;color:var(--brand-d);">' + den + '</span></span>';
   }
 
+  // 分数圆形（饼图）SVG：等分 n 份，涂色 m 份
+  function pieFracSVG(n, m) {
+    var R = 52, cx = 60, cy = 60;
+    var html = '<svg width="120" height="120" viewBox="0 0 ' + (cx * 2) + ' ' + (cy * 2) + '" style="vertical-align:middle;">';
+    html += '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="#e8eef7" stroke="#3b5bdb" stroke-width="1.5"/>';
+    for (var i = 0; i < m; i++) {
+      var a0 = (i / n) * 2 * Math.PI - Math.PI / 2;
+      var a1 = ((i + 1) / n) * 2 * Math.PI - Math.PI / 2;
+      var x0 = cx + R * Math.cos(a0), y0 = cy + R * Math.sin(a0);
+      var x1 = cx + R * Math.cos(a1), y1 = cy + R * Math.sin(a1);
+      var large = (a1 - a0) > Math.PI ? 1 : 0;
+      html += '<path d="M' + cx + ',' + cy + ' L' + x0.toFixed(2) + ',' + y0.toFixed(2) + ' A' + R + ',' + R + ' 0 ' + large + ' 1 ' + x1.toFixed(2) + ',' + y1.toFixed(2) + ' Z" fill="#5b8def" stroke="#3b5bdb" stroke-width="1"/>';
+    }
+    // 分隔线
+    for (var k = 0; k < n; k++) {
+      var a = (k / n) * 2 * Math.PI - Math.PI / 2;
+      html += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + R * Math.cos(a)).toFixed(2) + '" y2="' + (cy + R * Math.sin(a)).toFixed(2) + '" stroke="#3b5bdb" stroke-width="0.8"/>';
+    }
+    return html + '</svg>';
+  }
+
   // ============ 题目生成 ============
   // 图形分块涂色，写出几分之几
   function buildShard() {
@@ -71,15 +92,21 @@
     // 避免等于 1；涂色份数 1 ~ den-1（保证分数 < 1）
     var num = den === 2 ? rnd(1, 1) : rnd(1, den - 1);
     var unitLike = (num === 1); // 几分之一
+    var shape = rnd(1, 2) === 1 ? 'bar' : 'pie';
+    var orient = rnd(1, 2) === 1 ? '横' : '竖';
 
     // 约分显示（三年级可约分如 2/4=1/2，但初识阶段显示原样更直观）
-    var svg = barFracSVG(den, num);
+    var svg = shape === 'bar'
+      ? (orient === '横' ? barFracSVG(den, num) : barFracSVG(den, num, 26))
+      : pieFracSVG(den, num);
     var display = fracHTML(num, den);
     var q = (unitLike ? '下面图形被分成' + den + '等份，涂色部分是其中的1份。请写出涂色部分占整个图形的几分之几：'
       : '下面图形被分成' + den + '等份，涂色了' + num + '份。请写出涂色部分占整个图形的几分之几：');
 
     return {
       kind: 'shard',
+      shape: shape,
+      orient: orient,
       svg: svg,
       question: q,
       expectNum: num,
@@ -309,6 +336,8 @@
           type: 'fraction',
           kind: p.kind,
           data: p,
+          q: p.question,
+          svg: p.svg,
           answer: String(p.answer),
           knowledgePointId: 'math-g3-m4-g3-fraction',
           hint: p.hint,

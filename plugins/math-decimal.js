@@ -263,6 +263,7 @@
           knowledgePointId: 'math-g3-m4-g3-decimal',
           hint: p.hint,
           question: p.question,
+          q: p.question,
           inputType: p.inputType || 'text',
           options: p.options,
           // 任务8 样例：统一走 PluginUtil.renderCard（components.css 类化样式）

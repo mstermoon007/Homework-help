@@ -34,15 +34,15 @@
   // ============ 难度（1-10，由 generate 设置） ============
   var _DIFF = 3;
 
-  // 难度 → 边长取值范围
+  // 难度 → 边长取值范围（扩大以降低重复率）
   function sideRange() {
-    if (_DIFF <= 4) return [1, 9];
-    if (_DIFF <= 6) return [3, 12];
-    if (_DIFF <= 8) return [5, 18];
-    return [8, 25];
+    if (_DIFF <= 4) return [1, 12];
+    if (_DIFF <= 6) return [3, 16];
+    if (_DIFF <= 8) return [5, 24];
+    return [8, 32];
   }
 
-  // 面积单位选择情境
+  // 面积单位选择情境（扩展条目以降低重复率）
   var UNIT_ITEMS = [
     { obj: '一枚邮票', unit: '平方厘米', distractor: ['平方分米', '平方米'] },
     { obj: '数学书封面', unit: '平方分米', distractor: ['平方厘米', '平方米'] },
@@ -50,7 +50,24 @@
     { obj: '课桌面', unit: '平方分米', distractor: ['平方厘米', '平方米'] },
     { obj: '大拇指指甲', unit: '平方厘米', distractor: ['平方分米', '平方米'] },
     { obj: '游泳池水面', unit: '平方米', distractor: ['平方分米', '平方厘米'] },
-    { obj: '手掌面积', unit: '平方分米', distractor: ['平方厘米', '平方米'] }
+    { obj: '手掌面积', unit: '平方分米', distractor: ['平方厘米', '平方米'] },
+    { obj: '一块橡皮', unit: '平方厘米', distractor: ['平方分米', '平方米'] },
+    { obj: '一张身份证', unit: '平方厘米', distractor: ['平方分米', '平方米'] },
+    { obj: '黑板表面', unit: '平方米', distractor: ['平方厘米', '平方分米'] },
+    { obj: '一张课桌的桌面', unit: '平方分米', distractor: ['平方厘米', '平方米'] },
+    { obj: '操场的面积', unit: '平方米', distractor: ['平方厘米', '平方分米'] },
+    { obj: '一块手帕', unit: '平方分米', distractor: ['平方厘米', '平方米'] },
+    { obj: '一张银行卡', unit: '平方厘米', distractor: ['平方分米', '平方米'] },
+    { obj: '一间卧室地面', unit: '平方米', distractor: ['平方厘米', '平方分米'] },
+    { obj: '一本练习本封面', unit: '平方分米', distractor: ['平方厘米', '平方米'] },
+    { obj: '电脑屏幕', unit: '平方分米', distractor: ['平方厘米', '平方米'] },
+    { obj: '一块地砖', unit: '平方分米', distractor: ['平方厘米', '平方米'] },
+    { obj: '一张邮票的面积', unit: '平方厘米', distractor: ['平方分米', '平方米'] },
+    { obj: '校园的占地面积', unit: '平方米', distractor: ['平方厘米', '平方分米'] },
+    { obj: '一支铅笔的侧面', unit: '平方厘米', distractor: ['平方分米', '平方米'] },
+    { obj: '电视屏幕', unit: '平方分米', distractor: ['平方厘米', '平方米'] },
+    { obj: '一张餐巾纸', unit: '平方厘米', distractor: ['平方分米', '平方米'] },
+    { obj: '篮球场', unit: '平方米', distractor: ['平方厘米', '平方分米'] }
   ];
 
   // ============ 图形渲染 ============
@@ -140,12 +157,12 @@
 
   // 数方格：给定网格图形，求面积（直接数格子）
   function buildGrid() {
-    var rows = rnd(2, 6), cols = rnd(2, 6);
+    var rows = rnd(2, 10), cols = rnd(2, 10);
     var area = rows * cols;
     return {
       kind: 'grid',
       svg: gridSVG(rows, cols),
-      question: '下面每个小方格代表 1 平方厘米，这个长方形的面积是多少平方厘米？',
+      question: '下面每个小方格代表 1 平方厘米，这个长方形的长是 ' + cols + ' 格、宽是 ' + rows + ' 格。它的面积是多少平方厘米？',
       answer: String(area),
       hint: '数一数长边有几个格子，宽边有几个格子，长 × 宽。',
       unitLabel: '平方厘米',
@@ -268,6 +285,8 @@
           type: 'area',
           kind: p.kind,
           data: p,
+          q: p.question,
+          svg: p.svg,
           answer: String(p.answer),
           knowledgePointId: 'math-g3-m6-g3-area',
           hint: p.hint,

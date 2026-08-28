@@ -356,6 +356,8 @@
           type: 'time-date',
           kind: p.kind,
           data: p,
+          q: p.question || '',
+          svg: p.svg || '',
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
           hint: p.kind === 'cal' && p.variant === 'time' ? '都用分钟来算就方便啦。' :
                 p.kind === 'cal' ? '同月内经过天数 = 后日期 − 前日期（开头那天不算）。' :

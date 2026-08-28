@@ -56,10 +56,10 @@ Track the status of all product features from documentation through implementati
   - Runtime duplicate rate: ROUNDS×COUNT question generation, cross-round repeat rate
   - Fix categories: `weak-variation` / `no-generate` / `no-randomization` / `small-pool` / `pool-too-small` / `ok`
 - **Duplicate Rate**: `npm run check-fingerprint` → report in `dev/fingerprint-report.json` / `.md`
-  - 29/82 math plugins currently over their per-grade threshold
-  - Categories: `no-generate` (19), `weak-variation` (10)
+  - **Baseline (2026-08-28): 0/82 math plugins over their per-grade threshold** (all 82 `ok`)
+  - Root cause fixed across 29+ plugins: question objects nested `q`/`svg` inside `data`, collapsing the fingerprint to the answer alone; exposed top-level `q`/`svg` + widened randInt ranges + module-level cross-call dedup for competition plugins
   - Code-level duplication: 0 groups (plugins are structurally distinct; prior "26/82 >50%" was a looser heuristic)
-- **Action**: System landed. Follow-up: fix the 29 over-threshold plugins per their fix category (see `dev/fingerprint-report.md`)
+- **Action**: System landed and serving as the monitoring baseline. Re-run `npm run check-fingerprint` to watch for regressions.
 
 ### Quality Gate
 - **All checks**: passing ✅

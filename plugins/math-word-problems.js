@@ -985,6 +985,7 @@
       return {
         type: 'word',
         question: q.q,
+        q: q.q,
         answer: String(q.a),
         unit: q.unit || '',
         hint: q.hint || '',

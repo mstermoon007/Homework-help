@@ -50,10 +50,96 @@
     };
   }
 
+  // 过1小时：给出整时，问过1小时是几时（choice）
+  function buildNextHour() {
+    var hour = rnd(1, 12);
+    var next = (hour % 12) + 1;
+    var pool = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter(function (x) { return x !== next; });
+    var w1 = pool[rnd(0, pool.length - 1)];
+    var pool2 = pool.filter(function (x) { return x !== w1; });
+    var w2 = pool2[rnd(0, pool2.length - 1)];
+    return {
+      kind: 'next',
+      hour: hour,
+      svg: clockSVG(hour, 0),
+      question: hour + '时过1小时是几时？',
+      answer: String(next),
+      options: _PU.shuffle([String(next), String(w1), String(w2)]),
+      hint: '时针走一大格是1小时，' + hour + '时再过1小时就是' + next + '时。'
+    };
+  }
+
+  // 1小时前：给出整时，问1小时前是几时（choice）
+  function buildPrevHour() {
+    var hour = rnd(1, 12);
+    var prev = ((hour - 2 + 12) % 12) + 1;
+    var pool = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter(function (x) { return x !== prev; });
+    var w1 = pool[rnd(0, pool.length - 1)];
+    var pool2 = pool.filter(function (x) { return x !== w1; });
+    var w2 = pool2[rnd(0, pool2.length - 1)];
+    return {
+      kind: 'prev',
+      hour: hour,
+      svg: clockSVG(hour, 0),
+      question: hour + '时，1小时前是几时？',
+      answer: String(prev),
+      options: _PU.shuffle([String(prev), String(w1), String(w2)]),
+      hint: '时针往回走一大格是1小时，' + hour + '时的1小时前就是' + prev + '时。'
+    };
+  }
+
+  // 电子表：给出 X:00，问是几时（choice）
+  function digitalSVG(hour) {
+    var txt = hour + ':00';
+    return '<svg width="120" height="60" viewBox="0 0 120 60">' +
+      '<rect x="6" y="8" width="108" height="44" rx="8" fill="#27324a" stroke="#5b8def" stroke-width="3"/>' +
+      '<text x="60" y="40" font-size="30" font-weight="800" fill="#7CFC00" text-anchor="middle" font-family="monospace">' + txt + '</text>' +
+      '</svg>';
+  }
+
+  function buildDigital() {
+    var hour = rnd(1, 12);
+    var pool = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter(function (x) { return x !== hour; });
+    var w1 = pool[rnd(0, pool.length - 1)];
+    var pool2 = pool.filter(function (x) { return x !== w1; });
+    var w2 = pool2[rnd(0, pool2.length - 1)];
+    return {
+      kind: 'digital',
+      hour: hour,
+      svg: digitalSVG(hour),
+      question: '电子表上显示 ' + hour + ':00，现在是几时？',
+      answer: String(hour),
+      options: _PU.shuffle([String(hour), String(w1), String(w2)]),
+      hint: '电子表“' + hour + ':00”表示' + hour + '时整。'
+    };
+  }
+
+  // 看指针：时针指向X、分针指向12，问是几时（choice）
+  function buildHands() {
+    var hour = rnd(1, 12);
+    var pool = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter(function (x) { return x !== hour; });
+    var w1 = pool[rnd(0, pool.length - 1)];
+    var pool2 = pool.filter(function (x) { return x !== w1; });
+    var w2 = pool2[rnd(0, pool2.length - 1)];
+    return {
+      kind: 'hands',
+      hour: hour,
+      svg: clockSVG(hour, 0),
+      question: '时针指向' + hour + '，分针指向12，钟面上是几时？',
+      answer: String(hour),
+      options: _PU.shuffle([String(hour), String(w1), String(w2)]),
+      hint: '分针指向12就是整时，时针指向几就是几时。'
+    };
+  }
+
   function buildMixed() {
     var r = rnd(1, 100);
-    if (r <= 60) return buildRead();
-    return buildPoint();
+    if (r <= 38) return buildRead();
+    if (r <= 64) return buildPoint();
+    if (r <= 76) return buildNextHour();
+    if (r <= 88) return buildPrevHour();
+    if (r <= 94) return buildDigital();
+    return buildHands();
   }
 
   function generateProblems(type, count) {
@@ -108,6 +194,8 @@
       type: 'clock',
       kind: p.kind,
       data: p,
+      q: p.question,
+      svg: p.svg,
       answer: String(p.answer),
       hint: p.kind === 'read' ? '分针指向 12，时针指向几就是几时。' : '分针指向 12 时，时针指向几就是几时。',
       render: function (idx, ctx) { return renderCard(this.data, idx); },

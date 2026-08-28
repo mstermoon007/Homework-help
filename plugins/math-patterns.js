@@ -40,10 +40,10 @@
   // ============ 题目生成（diff 为 1-10 难度） ============
   function buildNumber(diff) {
     var up = rnd(0, 1) === 1;
-    var steps = diff <= 3 ? [1, 2, 3, 5, 10] : (diff <= 6 ? [1, 2, 3, 4, 5, 6, 10] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15]);
+    var steps = diff <= 3 ? [1, 2, 3, 5, 10] : (diff <= 6 ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20]);
     var step = pick(steps);
-    var start = rnd(1, _PU.diffMax(20, diff));
-    var count = diff <= 4 ? rnd(3, 4) : (diff <= 7 ? rnd(4, 5) : rnd(5, 6));
+    var start = rnd(1, diff <= 4 ? 20 : (diff <= 7 ? 40 : 60));
+    var count = diff <= 4 ? rnd(3, 5) : (diff <= 7 ? rnd(4, 6) : rnd(5, 7));
     var seq = [];
     for (var i = 0; i < count; i++) {
       seq.push(up ? start + i * step : start - i * step);
@@ -54,10 +54,10 @@
   }
 
   function buildShape(diff) {
-    var cycleLen = pick([2, 3, 4]);
+    var cycleLen = pick([2, 3, 4, 5]);
     var keys = shuffleArr(SHAPE_KEYS);
     var cycle = keys.slice(0, cycleLen);
-    var showCount = diff <= 4 ? rnd(6, 8) : rnd(8, 10);
+    var showCount = diff <= 4 ? rnd(6, 9) : rnd(8, 12);
     var seq = [];
     for (var i = 0; i < showCount; i++) seq.push(cycle[i % cycle.length]);
     var next = cycle[showCount % cycle.length];
@@ -162,10 +162,17 @@
       var typeNames = { mix: '混合练习', number: '数字规律', shape: '图形规律' };
       var label = typeNames[type] || '混合';
       var questions = list.map(function (p) {
+        var seqText = p.seq.map(function (k) {
+          return (typeof k === 'string' && SHAPES[k]) ? k : String(k);
+        }).join(p.kind === 'number' ? '、' : ' ');
+        var fullQ = p.kind === 'number'
+          ? (p.question + seqText + '、')
+          : (p.question + seqText + ' ');
         var q = {
           type: 'patterns',
           kind: p.kind,
           data: p,
+          q: fullQ,
           answer: String(p.answer),
           knowledgePointId: 'math-g1-m4-patterns',
           hint: p.kind === 'number' ? '先找相邻两个数相差几，再看下一个数。' : '图形是按照一定顺序重复出现的，先找出循环的一组。',

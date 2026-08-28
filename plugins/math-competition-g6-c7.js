@@ -25,11 +25,11 @@
     };
   }
 
-  /** 难度 → 规模（取值范围下探到 2，确保每档可产出 ≥25 道不重复题面） */
+  /** 难度 → 规模（取值范围下探到 2，确保每档可产出足够多的不重复题面） */
   function scale(lv) {
-    if (lv >= 8) return { sqMax: 40, cuMax: 16 };
-    if (lv >= 5) return { sqMax: 30, cuMax: 12 };
-    return { sqMax: 26, cuMax: 8 };
+    if (lv >= 8) return { sqMax: 400, cuMax: 250 };
+    if (lv >= 5) return { sqMax: 320, cuMax: 200 };
+    return { sqMax: 240, cuMax: 160 };
   }
 
   function genSequenceSum(sc) {

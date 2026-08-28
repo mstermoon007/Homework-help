@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Column Consistency Test</title>
+</head>
+<body>
+  <h1>Column Consistency Tests</h1>
+  <div id="results"></div>
+
+  <script src="shared/common.js"></script>
+  <script>
+    // Wait for common.js to load
+    setTimeout(function() {
+      const PluginUtil = global.PluginUtil;
+      const { calcOptimalCols, fitColumns, gridColumnsFromDom, applySpanning, estimateCardWidth } = PluginUtil.layout;
+      
+      const resultsDiv = document.getElementById('results');
+      let passed = 0;
+      let failed = 0;
+      
+      function test(name, condition, msg) {
+        if (condition) {
+          const p = document.createElement('p');
+          p.style.color = 'green';
+          p.textContent = '✓ ' + name + ': ' + msg;
+          resultsDiv.appendChild(p);
+          passed++;
+        } else {
+          const p = document.createElement('p');
+          p.style.color = 'red';
+          p.textContent = '✗ ' + name + ': ' + msg;
+          resultsDiv.appendChild(p);
+          failed++;
+        }
+      }
+      
+      // Test 1: calcOptimalCols with same questions should give same result
+      const q1 = [{ q: '1+1', type: 'add', inputCount: 0 }, { q: '2+3', type: 'add', inputCount: 0 }];
+      const c1 = calcOptimalCols({ questions: q1 }, 800);
+      const c2 = calcOptimalCols({ questions: q1 }, 800);
+      test('calcOptimalCols consistency', c1 === c2, 'returns ' + c1 + ' both times');
+      
+      // Test 2: Different width should give different results
+      const cNarrow = calcOptimalCols({ questions: q1 }, 400);
+      const cWide = calcOptimalCols({ questions: q1 }, 800);
+      test('width affects columns', cNarrow <= cWide, 'narrow=' + cNarrow + ' <= wide=' + cWide);
+      
+      // Test 3: Empty questions
+      const cEmpty = calcOptimalCols({ questions: [] }, 800);
+      test('empty questions', cEmpty === 3, 'returns default 3');
+      
+      // Test 4: meta.columns override
+      const cMeta = calcOptimalCols({ questions: q1, meta: { columns: 3 } }, 800);
+      test('meta.columns override', cMeta === 3, 'returns 3');
+      
+      // Test 5: gridColumnsFromDom consistency
+      const template = '<div class="questions-grid"><div class="question-card" data-index="0"><div class="q-text">1+1</div></div><div class="question-card" data-index="1"><div class="q-text">2+3</div></div></div>';
+      const parser = new DOMParser();
+      const doc1 = parser.parseFromString(template, 'text/html');
+      const doc2 = parser.parseFromString(template, 'text/html');
+      const gd1 = gridColumnsFromDom(doc1.body, 800);
+      const gd2 = gridColumnsFromDom(doc2.body, 800);
+      test('gridColumnsFromDom consistency', gd1 === gd2, 'returns ' + gd1);
+      
+      // Test 6: Both methods return valid values
+      test('valid column range', c1 >= 1 && c1 <= 4 && gd1 >= 1 && gd1 <= 4, 'calc=' + c1 + ' grid=' + gd1);
+      
+      document.getElementById('results').innerHTML += '<p><strong>Total: ' + passed + ' passed, ' + failed + ' failed</strong></p>';
+    }, 100);
+  </script>
+</body>
+</html>

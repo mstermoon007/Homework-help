@@ -31,6 +31,9 @@
 
   // ============ 1. 工程问题 ============
 
+  /** 跨调用去重：同一会话内生成的题目尽量不重复（池耗尽时自动回退允许重复） */
+  var _seen = {};
+
   /** 全量枚举「合作整数天」的可行 (甲天数, 乙天数, 合作天数)，随机均匀选取 */
   var COOP_POOL = null;
   function randCoop() {
@@ -202,15 +205,16 @@
       work: function () { return genWork(sc); },
       concentration: genConcentration
     };
-    var questions = [], seen = {}, MAXTRY = count * 80;
+    var questions = [], MAXTRY = count * 80;
+    if (Object.keys(_seen).length > 500) _seen = {};
     for (var i = 0; i < count; i++) {
       var key = keys[i % keys.length];
       var q = null;
-      for (var tries = 0; tries < MAXTRY; tries++) {
+       for (var tries = 0; tries < MAXTRY; tries++) {
         q = genMap[key]();
-        if (q && !seen[q.q]) break;
+        if (q && !_seen[q.q]) break;
       }
-      if (q) { seen[q.q] = true; questions.push(q); }
+      if (q) { _seen[q.q] = true; questions.push(q); }
     }
     return questions;
   }

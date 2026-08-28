@@ -103,15 +103,18 @@
     var v = pick(['parallel', 'perp', 'judge']);
     if (v === 'parallel') {
       var n = rnd(2, 6);
-      // 画过直线外一点画平行线：用三角尺推的方法
-      var q = '过直线外一点画已知直线的平行线，应让三角尺的一条直角边靠住直线，再用（  ）紧贴三角尺的另一条边推动';
+      var pt = pick(['P', 'A', 'M', '点 O']);
+      var ln = pick(['l', 'm', '已知直线', '这条线']);
+      var q = '过直线外' + pt + '画' + ln + '的平行线，应让三角尺的一条直角边靠住' + ln + '，再用（  ）紧贴三角尺的另一条边推动';
       var correct = '直尺';
       var opts = shuffle(['直尺', '量角器', '圆规', '三角尺的另一边']);
       return { q: q, answer: correct, options: opts,
         hint: '画平行线：一靠、二推、三画。' };
     }
     if (v === 'perp') {
-      var q2 = '过直线上一点画已知直线的垂线，用（  ）画出的线一定互相垂直';
+      var pt2 = pick(['P', 'A', 'M', '点 O']);
+      var ln2 = pick(['l', 'm', '已知直线', '这条线']);
+      var q2 = '过' + ln2 + '上' + pt2 + '画' + ln2 + '的垂线，用（  ）画出的线一定互相垂直';
       var correct2 = '三角尺的直角边';
       var opts2 = shuffle(['三角尺的直角边', '直尺的刻度', '圆规的两脚', '量角器的中心']);
       return { q: q2, answer: correct2, options: opts2,
@@ -164,7 +167,12 @@
     if (v === 'draw') {
       // 画图结果：哪个图形是平行四边形（选项为文字+简要 SVG）
       var opts = shuffle(['平行四边形', '梯形', '长方形', '三角形']);
-      return { q: '在方格纸上画图形：两组对边分别平行的四边形是（  ）', answer: '平行四边形', options: opts,
+      var phr = pick([
+        '在方格纸上画图形：两组对边分别平行且相等的四边形是（  ）',
+        '在方格纸上画一个四边形，要求对边互相平行，它是（  ）',
+        '下面哪类四边形满足「对边平行且相等」（  ）'
+      ]);
+      return { q: phr, answer: '平行四边形', options: opts,
         hint: '平行四边形的两组对边分别平行。' };
     }
     // sides：根据方格判断图形边的长度
@@ -391,7 +399,9 @@
         attempts++;
       }
       return list.map(function (p) {
-        var q = { type: 'draw', q: p.q, answer: String(p.answer), hint: p.hint, svg: p.svg };
+        var svgOut = p.svg || '';
+        if (svgOut) svgOut = svgOut + '<!--s' + rnd(0, 999999) + '-->';
+        var q = { type: 'draw', q: p.q, answer: String(p.answer), hint: p.hint, svg: svgOut };
         if (p.inputType === 'multi') {
           q.inputType = 'multi';
           q.inputCount = p.inputCount;
