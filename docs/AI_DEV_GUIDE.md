@@ -15,7 +15,7 @@
 页面层    index.html · {math,cn,chinese,english}-types.html · subject-types.html
           practice.html（统一练习宿主）· faq.html
             │ 按需加载
-共享层    shared/common.js（PluginUtil + App.PluginLoader + App.Adaptive v2）
+共享层    shared/common.js（PluginUtil + App.PluginLoader）
           shared/difficulty.js（App.Difficulty：Profiles×3 / paramsFor / strategyFor）
           shared/knowledge-bank.js（{ math:[年级…], cn:[…], en:[] } 按科目分组）
           shared/module-catalog.js（SUBJECTS；M0–M12/C1–C9=math，N1–N8=cn，E1–E6=en）
@@ -36,8 +36,7 @@
 - 知识点 ID：`{subject}-g{grade}-{module}-{slug}`，如 `math-g1-m1-addsub-20`、
   `cn-g1-n1-pinyin-basic`、`en-g3-e1-letter-recognition`。**前缀强制**，
   跨科目引用（prerequisites/related）会被 verify-knowledge-bank 报错拦截。
-- Adaptive 存储键：`(subject:grade:pluginId[:kpId])`，难度加权正确率 + EMA 平滑；
-  难度调整策略经 `App.Difficulty.strategyFor(subject)` 路由。
+- 难度调整策略经 `App.Difficulty.strategyFor(subject)` 路由（按科目取调整规则）。
 
 ### 插件接口（三大件不可变）
 
@@ -47,7 +46,7 @@ render(exerciseSet) → html 字符串          // 只拼字符串，禁止碰 D
 check(exerciseSet, userAnswers) → CheckResult
 ```
 
-Question 可选字段：`knowledgePointId`、`difficulty`（Adaptive v2 采集用）。
+Question 可选字段：`knowledgePointId`、`difficulty`（用于知识点关联与难度说明）。
 
 ---
 
@@ -58,7 +57,7 @@ Question 可选字段：`knowledgePointId`、`difficulty`（Adaptive v2 采集�
 2. **不要引入构建工具/框架/npm 运行时依赖/后端**。所有脚本零依赖双环境
    （浏览器 `<script>` + Node `require`）。
 3. **不要破坏纯前端与隐私原则**：不引入账号体系、不上传用户数据、
-   插件不读写 localStorage（Adaptive 由 common.js 统一管理）。
+   插件不读写 localStorage（状态/难度由 common.js 统一管理）。
 4. **不要绕过统一随机**：运行时禁止 `Math.random()` 直调，一律 `PluginUtil.randInt/shuffle/rand`。
 5. **不要手写 SVG 拼接**：图形一律走 SVGGenerators 各科目生成器；颜色常量见
    SVG_DEFAULTS 与各文件头；书写格辅助线消费 tokens.css 变量。

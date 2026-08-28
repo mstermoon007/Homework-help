@@ -304,19 +304,15 @@ async function case3_refresh(BASE) {
 
   await open(BASE + '/practice.html?subject=math&grade=1&plugin=math-oral');
   await waitForEval('document.querySelectorAll("' + CARD_SEL + '").length >= 10', 15000, '首次生成');
-  // 做一次批改，写入自适应记录
+  // 做一次批改，验证结果区正常出现（自适应难度记录功能已移除，不再断言 hw_adaptive_v2）
   await evalJs('document.querySelectorAll("' + INPUT_SEL + '").forEach(function (i) { i.value = "999"; }); true');
   await click('#checkBtn');
   await waitForEval("document.getElementById('resultArea').classList.contains('show')", 8000, '批改写入');
-  const saved = await evalJs("localStorage.getItem('hw_adaptive_v2')");
-  check('批改后自适应记录已写入', !!saved && saved.indexOf('math') !== -1, saved ? saved.slice(0, 60) : '(空)');
 
   // 刷新（reload 内部已等 load 完成；下方 waitForEval 轮询就绪）
   await ab(['reload']);
   const regen = await waitForEval('document.querySelectorAll("' + CARD_SEL + '").length >= 10', 15000, '刷新后重新生成');
   check('刷新后题目重新生成', regen, await getCount(CARD_SEL) + ' 题');
-  const kept = await evalJs("localStorage.getItem('hw_adaptive_v2')");
-  check('刷新后自适应记录保留', !!kept, '');
   check('刷新后无全局错误',
     (await evalJs("!document.getElementById('global-error') || getComputedStyle(document.getElementById('global-error')).display === 'none'")) === true, '');
 }

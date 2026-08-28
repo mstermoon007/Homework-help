@@ -1,7 +1,8 @@
 /* ============ 页面专属（Layer 4 · pages） ============
  * 仅容纳「练习页(practice.html)专用、不被其他页面复用」的布局与必要覆写。
  * 共享组件(题目卡片/按钮/题型卡片等)一律在 components 层；本层只做页面级布局与覆写。
- * 依赖顺序：tokens → base → components → toolbar → pages（本层优先级最高，可安全覆写下层）。
+ * 依赖顺序：tokens → base → components → states → toolbar → pages → subjects
+ * （本层高于 toolbar，可安全覆写练习页工具栏样式；subjects 层仅在二级题型页启用，为本层序最高）。
  *
  * 注：旧版「语文练习页」样式(.cn-page/.question-item/.user-ans-input/.score-panel/.wrong-section/.mark-icon 等)
  *     已由 renderCard 类化方案替代，属死代码，未搬入本层。当前仅保留综合练习仍在用的
@@ -37,6 +38,34 @@
   .exercise-header .timer { font-size: 15px; font-weight: 800; color: var(--brand-d); background: var(--brand-bg);
     border-radius: 12px; padding: 8px 14px; font-variant-numeric: tabular-nums;
     white-space: nowrap; flex-shrink: 0; }
+
+  /* ===== 三级工具栏视觉精炼（覆写 @layer toolbar，不改色系）=====
+   * 仅强化 间距 / 层级 / 圆角 / 阴影 / 对比 与 键盘可达性；
+   * 所有颜色沿用 --toolbar-* 与既有令牌，不引入新色。 */
+  .panel.controls {
+    border-radius: 20px;
+    box-shadow: 0 12px 32px rgba(20, 40, 90, .12), var(--shadow);
+    padding: calc(var(--spacing-md) + 2px) var(--spacing-md);
+  }
+  .controls-grid { gap: calc(var(--spacing-lg) + 4px); }
+  .controls-settings .row { gap: 14px; }
+  /* 设置标签胶囊化：抬升从属层级、增强与内容的对比（颜色沿用 --ink / --soft-bg / --line） */
+  .group .lbl {
+    background: var(--soft-bg);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 13px;
+  }
+  /* chip：更顺滑过渡 + 键盘焦点环；激活态加深投影，强化“选中”层级 */
+  .chip { transition: .2s ease; }
+  .chip:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .chip.active { box-shadow: var(--toolbar-chip-active-shadow), 0 2px 8px rgba(20, 40, 90, .12); }
+  /* 按钮：统一过渡 + 键盘焦点环 + 轻微字距 */
+  .btn { transition: .2s ease; }
+  .btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .btn-primary { letter-spacing: .3px; }
+  .controls-actions { gap: 14px; }
 
   /* 左上角快速切换（醒目、悬浮常驻） */
   .quick-switch { position: fixed; top: 14px; left: 14px; z-index: 1200; }
@@ -132,6 +161,7 @@
   /* 批改反馈：空时不占高（基础字号/字重由 components 层 .question-card .feedback 提供） */
   .question-card .feedback { min-height: 0; margin-top: 4px; }
   .question-card .feedback:empty { display: none; }
+} /* /@media print */
 
   .correct-answer { font-size: 12px; color: var(--bad); font-weight: 700; margin-top: 6px; }
   /* 答案输入框状态（基础宽高在 components 层 .answer-inp） */

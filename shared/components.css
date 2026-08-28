@@ -233,29 +233,20 @@
     display: block;
     width: 100%;
     padding: 26px 14px;
-    border: 1.5px solid rgba(255,255,255,0.65);
+    border: 1px solid rgba(0,0,0,0.08);
     border-radius: 20px;
     cursor: pointer;
     text-align: center;
-    transition: all 0.25s;
     user-select: none;
     text-decoration: none;
     color: inherit;
     position: relative;
-    background: linear-gradient(160deg, rgba(255,255,255,0.6), rgba(173,216,255,0.3));
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 6px 18px rgba(40,90,160,0.14), inset 0 1px 0 rgba(255,255,255,0.6);
+    overflow: hidden;
 }
 /* 图标 / 标题 / 描述三段式卡片结构（一级、二级页面通用） */
 .type-card .t-icon { display: block; font-size: 2rem; line-height: 1.2; margin-bottom: 6px; }
-.type-card .t-name { font-size: 1.2rem; font-weight: 800; display: inline-block; vertical-align: middle; }
+.type-card .t-name, .type-card .t-title { font-size: 1.02rem; font-weight: 800; display: inline-block; vertical-align: middle; max-width: 100%; overflow-wrap: anywhere; }
 .type-card .t-desc { display: block; margin-top: 8px; font-size: 0.8rem; color: #5a6b8c; line-height: 1.5; }
-.type-card:hover {
-    transform: translateY(-4px);
-    background: linear-gradient(160deg, rgba(255,255,255,0.85), rgba(173,216,255,0.45));
-    box-shadow: 0 12px 28px rgba(40,90,160,0.22), inset 0 1px 0 rgba(255,255,255,0.8);
-}
 /* 键盘可达性：Tab 聚焦时与 hover 同等反馈 */
 .type-card:focus-visible {
     outline: 3px solid rgba(91,141,239,.55); outline-offset: 2px;
@@ -314,14 +305,6 @@
 .type-card.competition .t-name { color: var(--muted); }
 .type-card.competition .t-icon { filter: grayscale(.75); opacity: .8; }
 .type-card.competition .t-desc { color: var(--muted); }
-/* 「即将上线」角标：竞赛占位卡共享 */
-.type-card .t-soon {
-    position: absolute; right: 10px; top: 10px;
-    font-size: 10px; font-weight: 700;
-    padding: 2px 8px; border-radius: 999px;
-    background: rgba(122,135,156,.16); color: var(--muted);
-    border: 1px solid rgba(122,135,156,.35);
-}
 
 /* ============ 加载骨架屏（题型卡片占位，避免内容跳动） ============ */
 .skel-grid {

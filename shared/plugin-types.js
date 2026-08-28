@@ -10,8 +10,8 @@
  * @property {function(number, Object=): string} render - 渲染单题 HTML；参数：序号 idx、可选上下文 ctx
  * @property {function(Object, number): boolean} [check] - 单题判定（可选）；参数：userAnswers 全量映射、序号 idx
  * @property {string} [type] - 题型标识（如 'oral' / 'make-ten' / 'shapes' / 'word'）
- * @property {string} [knowledgePointId] - 知识点 ID（对应 knowledge-bank.js；供 App.Adaptive v2 做知识点粒度统计）
- * @property {number} [difficulty] - 相对难度 1-10（缺省按 3 计权；用于难度加权正确率）
+ * @property {string} [knowledgePointId] - 知识点 ID（对应 knowledge-bank.js，用于知识点关联）
+ * @property {number} [difficulty] - 相对难度 1-10（可选，便于难度说明与排序）
  * @property {string} [question] - 题干文本（展示用）
  * @property {string} [unit] - 单位（展示用）
  * @property {string} [hint] - 提示（展示用）

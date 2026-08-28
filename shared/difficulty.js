@@ -79,7 +79,7 @@
   /**
    * 合并「用户选择 + 自适应 delta + 插件选项」生成难度档案。
    * @param {number} baseLevel 用户选择的基础难度（默认 3）
-   * @param {number} delta     自适应调整量（-2..+2，见 App.Adaptive.computeAdjustment）
+   * @param {number} delta     额外难度调整量（-2..+2，叠加在 baseLevel 上；由调用方显式传入，无历史表现自动调整）
    * @param {{typeBias?:('hard'|'easy'|null), preferredType?:string}|undefined} [opts]
    * @returns {{effectiveLevel:number, scale:number, structure:Object, typePreference:*}}
    */

@@ -1,0 +1,168 @@
+/* ============ 二级题型页样式（subjects） ============
+ * 归并两处题型页样式：
+ *   - subject-types.html：body 底色、.t-title/.t-tags/.t-tag；配色由 JS 按科目写入 :root 的 --subject-* 变量
+ *   - math-types.html：body 底色、.type-card.comprehensive/.preview-card、.t-tag（走下方默认值·数学浅蓝渐变）
+ * 本文件只负责“样式”，JS 只负责设置 CSS 变量，职责清晰。
+ *
+ * 本文件为 @layer subjects（层序末尾、优先级最高），可安全覆写 components/toolbar/pages 同名规则；
+ * 链接顺序不再影响优先级（同层内靠后的规则才生效，跨层以本层序为准）。
+ * 通用 .type-card 主题规则以 :not(.competition):not(.coming-soon) 收敛，避免覆盖
+ * components.css 中「占位/未上线」卡片（灰底虚线）的语义；数学综合/预习等特殊卡提高选择器优先级。
+ */
+
+@layer subjects {
+
+:root {
+  --subject-primary: var(--math-primary);
+  --subject-primary-soft: rgba(74, 144, 217, 0.12);
+  --subject-body-bg: linear-gradient(160deg, #eaf3ff 0%, #dbeafe 48%, #cfe6ff 100%);
+  --type-card-bg: linear-gradient(135deg, rgba(74, 144, 217, 0.15), rgba(74, 144, 217, 0.05));
+  --type-card-border: rgba(74, 144, 217, 0.2);
+  --type-card-hover-border: rgba(74, 144, 217, 0.5);
+}
+
+/* 页面专属：正文底色（随科目变量变化；默认数学浅蓝渐变，math-types.html 走此默认值） */
+body {
+  background: var(--subject-body-bg);
+  min-height: 100vh;
+}
+
+/* 题型卡片：背景 / 边框随科目变量变化；过渡仅针对必要属性。
+   排除 competition / coming-soon，保留 components.css 中「占位卡」的灰底虚线语义。 */
+.type-card:not(.competition):not(.coming-soon) {
+  background: var(--type-card-bg);
+  border: 1px solid var(--type-card-border);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+.type-card:not(.competition):not(.coming-soon):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: var(--type-card-hover-border);
+}
+/* 卡片标题随科目主色（低优先级，可被 .comprehensive 等覆盖）；
+   加白色描边光晕提升在半透明渐变卡面上的对比度，确保清晰可见 */
+.type-card .t-title,
+.type-card .t-name {
+  color: var(--subject-primary);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.65);
+}
+/* 占位 / 未上线卡标题保持置灰，不被科目主色覆盖 */
+.type-card.competition .t-title,
+.type-card.competition .t-name,
+.type-card.coming-soon .t-title,
+.type-card.coming-soon .t-name { color: var(--muted); }
+/* 分区标题左侧色条随科目主色（subject-types.html 等复用） */
+.section-label {
+  border-left-color: var(--subject-primary);
+}
+/* 4-6 年级两大板块标题（常规 / 竞赛）：占满整行、左色条、随科目主色 */
+.type-grid .section-heading {
+  grid-column: 1 / -1;
+  margin: 20px 0 12px;
+  padding: 6px 0 6px 12px;
+  border-left: 4px solid var(--subject-primary);
+  border-radius: 4px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--subject-primary);
+  text-align: left;
+  background: linear-gradient(90deg, var(--subject-primary-soft), rgba(255, 255, 255, 0) 70%);
+}
+.type-grid .section-heading:first-child { margin-top: 4px; }
+
+/* 题型标签（统一 .t-tag，标题 .t-title）配色 */
+.t-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 8px;
+  max-width: 100%;
+}
+.t-tag {
+  font-size: 11px;
+  line-height: 1.4;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--subject-primary-soft);
+  color: var(--subject-primary);
+  border: 1px solid var(--type-card-border);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.t-tag.more {
+  font-weight: 600;
+}
+
+/* 数学综合练习卡（紫）：保留原配色，不随科目变量；提高优先级以胜过通用主题规则 */
+.type-card.comprehensive:not(.competition):not(.coming-soon) {
+  background: linear-gradient(160deg, rgba(102, 126, 234, 0.55), rgba(118, 75, 162, 0.55));
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  color: #fff;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 6px 18px rgba(90, 80, 180, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.type-card.comprehensive .t-title,
+.type-card.comprehensive .t-name { color: #fff; }
+.type-card.comprehensive:not(.competition):not(.coming-soon):hover {
+  background: linear-gradient(160deg, rgba(102, 126, 234, 0.75), rgba(118, 75, 162, 0.75));
+  color: #fff;
+  opacity: 0.92;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+.type-card.comprehensive .t-tag {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* M13 提前预习卡（草绿，颜色来自 module-catalog display.color #7cb342） */
+.type-card.preview-card:not(.competition):not(.coming-soon) {
+  background: linear-gradient(160deg, rgba(124, 179, 66, 0.30), rgba(124, 179, 66, 0.60));
+  border: 1.5px solid rgba(124, 179, 66, 0.70);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 6px 18px rgba(90, 140, 60, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.type-card.preview-card .t-title,
+.type-card.preview-card .t-name { color: #33691e; }
+.type-card.preview-card .t-tag {
+  background: rgba(255, 255, 255, 0.88);
+  color: #33691e;
+  border-color: rgba(51, 105, 30, 0.40);
+}
+.type-card.preview-card:not(.competition):not(.coming-soon):hover {
+  background: linear-gradient(160deg, rgba(124, 179, 66, 0.48), rgba(124, 179, 66, 0.75));
+  opacity: 0.95;
+  border-color: rgba(124, 179, 66, 0.70);
+}
+
+/* 题型卡片网格响应式（补充 components.css 固定 5 列；显式 .two/.three/.four-col 修饰类仍优先） */
+@media (max-width: 1100px) {
+  .type-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 900px) {
+  .type-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .type-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 不支持 backdrop-filter 的兜底：提升卡片背景不透明度，避免透出底层底色 */
+@supports not ((backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px))) {
+  .type-card:not(.competition):not(.coming-soon) {
+    --type-card-bg: linear-gradient(135deg, rgba(74, 144, 217, 0.30), rgba(74, 144, 217, 0.10));
+    background: var(--type-card-bg);
+  }
+}
+
+/* 尊重用户的减少动态偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .type-card:not(.competition):not(.coming-soon) { transition: none; }
+  .type-card:not(.competition):not(.coming-soon):hover { transform: none; }
+}
+
+} /* /@layer subjects */

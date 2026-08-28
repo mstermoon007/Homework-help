@@ -6,7 +6,7 @@
 
 var path = require('path');
 var ROOT = path.join(__dirname, '..');
-// localStorage shim（步骤6：KP 级 Adaptive 存储断言需要）
+// localStorage shim（供难度相关断言使用）
 global.localStorage = {
   _d: {},
   getItem: function (k) { return Object.prototype.hasOwnProperty.call(this._d, k) ? this._d[k] : null; },
@@ -264,9 +264,9 @@ Promise.all(promises).then(function () {
   assert(vert.questions.every(function (q) { return q.difficulty === 9; }),
     'math-g4-vertical：标注型迁移生效（位数语义保持，仅标注）');
 
-  // ===== 步骤6 回归：结构单调 / 加权正确率 / KP 级 Adaptive =====
+  // ===== 步骤6 回归：结构单调 / 难度档案 =====
   console.log('\n===== 步骤6 回归（结构单调 · 加权率 · KP 级存储） =====');
-  var A = global.App.Adaptive;
+  // App.Adaptive 模块已移除：步骤6b/6c 与语文/英语自适应断言一并删除
   function approx(a, b) { return Math.abs(a - b) < 1e-9; }
   // a) difficultyToStructure 单调性 + 分档边界抽查
   var prevScore = -Infinity, monoOk = true;
@@ -281,37 +281,7 @@ Promise.all(promises).then(function () {
   assert(D.difficultyToStructure(9).steps === 5 && D.difficultyToStructure(9).nestedBrackets === true,
     'structure lv9：steps=5 多层括号');
 
-  // b) 加权正确率计算（错易对难 → rate 偏向高难对题）
-  (function () {
-    A.reset('math', 4, 'math-weighted-check');
-    A.record('math', 4, 'math-weighted-check', 1, 2,
-      { questionDifficulties: [1, 9], correctFlags: [false, true] });
-    var adj = A.computeAdjustment('math', 4, 'math-weighted-check');
-    assert(approx(adj.rate, 0.9),
-      '加权正确率 = Σ答对难度/Σ全部难度 = 9/10 = 0.9（普通率 0.5）');
-    assert(adj.difficultyDelta === 1,
-      '加权率驱动调整：0.9 ≥0.8 且 lastRate=0.9<1 → +1');
-  })();
-
-  // c) 知识点级 Adaptive 存储与调整
-  (function () {
-    A.reset('math', 6, 'math-kp-store-check');
-    A.record('math', 6, 'math-kp-store-check', 19, 20,
-      { knowledgePointId: 'g6-m2-kp-store-test', questionDifficulties: [6,6,6,6],
-        correctFlags: [true,true,true,true] });
-    // 补一条普通会话确认插件级与 KP 级互不干扰
-    A.record('math', 6, 'math-kp-store-check', 10, 20);
-    var kpAdj = A.computeAdjustment('math', 6, 'math-kp-store-check', 'g6-m2-kp-store-test');
-    assert(kpAdj.sessions === 1 && approx(kpAdj.emaRate, 0.95),
-      'KP 桶独立存储：sessions=1，ema=0.95');
-    assert(kpAdj.difficultyDelta === 1, 'KP 级调整按自身历史计算（0.95≥0.8 → +1）');
-    var plugAdj = A.computeAdjustment('math', 6, 'math-kp-store-check');
-    assert(plugAdj.sessions === 1 && approx(plugAdj.rate, 0.5),
-      '插件级摘要不受 KP 记录影响（rate=0.5 → −2 easy）');
-    var raw = JSON.parse(global.localStorage.getItem('hw_adaptive_v2'));
-    assert(!!raw['math:6:math-kp-store-check:g6-m2-kp-store-test'],
-      'localStorage v2 含知识点级条目');
-  })();
+  // b/c) 加权正确率 / KP 级自适应断言已移除（App.Adaptive 模块已删除）
 
   // ===== 步骤7 回归：批次迁移 + KP 标注扩量 =====
   console.log('\n===== 步骤7 回归（consume 迁移批次7/8 · KP 标注有效性） =====');
@@ -445,20 +415,7 @@ Promise.all(promises).then(function () {
   assert(D.strategyFor('math').apply({ emaRate: 0.75, lastRate: 0.75 }).delta === 0,
     'strategyFor(math)：ema .75 → 0（中间带）');
 
-  // f) Adaptive 存储键含 subject（cn/en 端到端）
-  A.reset('cn', 1, 'chinese-pinyin');
-  A.record('cn', 1, 'chinese-pinyin', 19, 20);
-  var rawCn = JSON.parse(global.localStorage.getItem('hw_adaptive_v2'));
-  assert(Object.keys(rawCn).some(function (k) { return k.indexOf('cn:1:chinese-pinyin') === 0; }),
-    'Adaptive 存储键以 cn: 开头（subject 已入键）');
-  var adjCn = A.computeAdjustment('cn', 1, 'chinese-pinyin');
-  assert(adjCn.difficultyDelta === 1 && adjCn.typeBias === 'hard',
-    'computeAdjustment(cn)：19/20 → +1 hard（正确率反馈沿用到语文）');
-  A.reset('en', 3, 'english-alphabet');
-  A.record('en', 3, 'english-alphabet', 4, 20);
-  var adjEn = A.computeAdjustment('en', 3, 'english-alphabet');
-  assert(adjEn.difficultyDelta === -2 && adjEn.typeBias === 'easy',
-    'computeAdjustment(en)：4/20 → −2 easy');
+  // f) 语文/英语自适应存储断言已移除（App.Adaptive 模块已删除）
 
   // g) paramsFor 叠加自适应 delta
   var pd = D.paramsFor('cn', 5, 2);

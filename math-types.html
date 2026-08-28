@@ -8,59 +8,8 @@
 <link rel="stylesheet" href="shared/tokens.css">
 <link rel="stylesheet" href="shared/base.css">
 <link rel="stylesheet" href="shared/components.css">
-<link rel="stylesheet" href="shared/states.css">
-<style>
-    body {
-        background: linear-gradient(160deg, #d6e8fa 0%, #4A90D9 45%, #F5A623 110%);
-        min-height: 100vh;
-    }
-    .type-card:hover { border-color: rgba(255,255,255,0.9); }
-    .type-card:hover .t-name { color: #667eea; }
-    .type-card.comprehensive {
-        background: linear-gradient(160deg, rgba(102,126,234,0.55), rgba(118,75,162,0.55));
-        border: 1.5px solid rgba(255,255,255,0.7);
-        color: #fff;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        box-shadow: 0 6px 18px rgba(90,80,180,0.25), inset 0 1px 0 rgba(255,255,255,0.5);
-    }
-    .type-card.comprehensive .t-name { color: #fff; }
-    .type-card.comprehensive .t-desc { color: #e8eafd; }
-    .type-card.comprehensive:hover {
-        background: linear-gradient(160deg, rgba(102,126,234,0.75), rgba(118,75,162,0.75));
-        color: #fff;
-        opacity: 0.92;
-    }
-    /* 竞赛占位卡片视觉统一由 components.css 的 .type-card.competition 提供（灰底/虚线/t-soon 角标） */
-    .section-label { border-left-color: #667eea; }
-    /* 具体题型标签：来自 knowledge-bank.js，按教材单元标注 */
-    .t-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-    .kb-tag { font-size: 11px; line-height: 1.4; padding: 1px 7px; border-radius: 999px;
-        background: rgba(255,255,255,0.85); color: #4A6fa5; border: 1px solid rgba(102,126,234,0.35); }
-    .kb-tag.more { background: rgba(102,126,234,0.15); color: #667eea; }
-    .type-card.comprehensive .kb-tag { background: rgba(255,255,255,0.22); color: #fff; border-color: rgba(255,255,255,0.5); }
-    /* M13 提前预习：草绿色特殊模块卡（颜色来自 module-catalog display.color #7cb342） */
-    .type-card.preview-card {
-        background: linear-gradient(160deg, rgba(124,179,66,0.30), rgba(124,179,66,0.60));
-        border: 1.5px solid rgba(124,179,66,0.70);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        box-shadow: 0 6px 18px rgba(90,140,60,0.22), inset 0 1px 0 rgba(255,255,255,0.5);
-    }
-    .type-card.preview-card .t-name { color: #33691e; }
-    .type-card.preview-card .kb-tag { background: rgba(255,255,255,0.88); color: #33691e; border-color: rgba(51,105,30,0.40); }
-    .type-card.preview-card:hover {
-        background: linear-gradient(160deg, rgba(124,179,66,0.48), rgba(124,179,66,0.75));
-        opacity: 0.95;
-    }
-    /* 竞赛模块卡片：纵向单元（卡片 + 知识点标签） */
-    .type-cell { display: flex; flex-direction: column; gap: 6px; }
-    .kp-chips { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 2px; }
-    .kp-chip { font-size: 11px; padding: 2px 8px; border-radius: 999px; text-decoration: none;
-        background: rgba(255,255,255,0.9); color: var(--brand-d); border: 1px solid rgba(102,126,234,0.4); }
-    .kp-chip:hover { background: #eef3ff; }
-    .kp-chip.kp-ph { background: rgba(200,206,218,0.28); color: #9aa5b5; border: 1px dashed rgba(160,170,190,0.6); cursor: not-allowed; }
-</style>
+    <link rel="stylesheet" href="shared/states.css">
+    <link rel="stylesheet" href="shared/subjects.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -288,7 +237,6 @@
     </div>
 
     <div class="card">
-        <div class="section-label">📐 选择题型</div>
         <div class="type-grid" id="typeGrid">
             <div class="skel-grid" aria-hidden="true">
                 <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
@@ -301,13 +249,14 @@
         </div>
     </div>
 
-    <div class="foot-tip">💡 选择题型后进入对应练习页面，每个题型独立生成题目</div>
+    <div class="foot-tip">💡 点击题型卡片进入对应练习页面，每个题型独立生成题目</div>
 </div>
 
 <script src="shared/common.js"></script>
 <script src="shared/subject-utils.js"></script>
 <script src="shared/difficulty.js"></script>
 <script src="shared/knowledge-bank.js"></script>
+<script src="shared/knowledge-math.js"></script>
 <script src="shared/module-catalog.js"></script>
 <script src="plugins/registry.js"></script>
 <script>
@@ -351,6 +300,14 @@
   // 领域内部顺序（分组不显示标题，仅用于排序）
   var CATEGORY_ORDER = ['number', 'geometry', 'statistics'];
 
+  // 难度近似（MODULE_CATALOG 无 difficulty 字段）：基础=1 / 进阶=2 / 竞赛=3
+  function diffProxy(p) {
+    var mid = p.moduleId;
+    var mod = mid && window.MODULE_CATALOG && window.MODULE_CATALOG.byId ? window.MODULE_CATALOG.byId(mid) : null;
+    if (!mod) return 5;
+    return mod.level === 'competition' ? 3 : (mod.level === 'advanced' ? 2 : 1);
+  }
+
   var COMPREHENSIVE = {
     id: 'math-comprehensive',
     name: '综合练习'
@@ -360,9 +317,8 @@
   var regById = {};
   registry.forEach(function (p) { regById[p.id] = p; });
 
-  // 知识点数据来自统一知识库（按科目分片动态加载，任务：知识库拆分）。
-  // 分片在下方 loadSubjectPlugins 内部经 ensureKnowledgeData 就绪后，
-  // 由 ingestKEntries() 统一摄取，驱动排序。
+  // 知识点数据来自统一知识库（按科目分片）。math 分片已由 <script src="shared/knowledge-math.js">
+  // 在文档头部同步注入（global.KnowledgeBank.math），故此处可直接摄取，驱动排序与标签。
   var unitOrder = {};   // pluginId -> 知识点在知识库中首次出现的位置（模块序 + 模块内序）
   var kTags = {};       // pluginId -> [具体题型名称, ...]（卡片标签展示）
   var kWeight = {};     // pluginId -> 知识点 weight 之和（用于排序）
@@ -400,12 +356,14 @@
         && p.grades && p.grades.indexOf(grade) !== -1;
     });
 
-    // 按知识库出现顺序（模块 + 模块内知识点顺序）排列题型；同级内按 weight 降序
+    // 排序：难度近似升序（基础→进阶→竞赛）优先，其次按知识库出现顺序，同级按 weight 降序
     // 竞赛占位插件无知识库条目，按模块目录 C 系列顺序排在基础题型之后
     var compModules = (typeof window.COMPETITION_MODULES !== 'undefined') ? window.COMPETITION_MODULES : [];
     var compOrder = {};
     compModules.forEach(function (m, i) { compOrder[m.id] = i; });
     applicable.sort(function (a, b) {
+      var da = diffProxy(a), db = diffProxy(b);
+      if (da !== db) return da - db;
       var oa = unitOrder[a.id] || 9999;
       var ob = unitOrder[b.id] || 9999;
       if (oa !== ob) return oa - ob;
@@ -464,111 +422,85 @@
     });
 
     var html = '';
-    var compHeaderInserted = false;   // 竞赛分组标题仅注入一次
     // 指定题型的显示覆盖：仅调整题型卡片的主标题，不改知识库与注册表。
     // 「数的认识」主标题由模块名「填空题」改为知识点名，具体题型以标签展示。
     // 「单位的认识」合并认识钟表与认识人民币两张卡片，主标题/标签按指定文案展示。
     var DISPLAY_OVERRIDES = {
-      'math-number-sense': {
-        name: '数的认识'
-      },
-      'math-clock': {
-        name: '单位的认识',
-        tags: ['认识钟表（整时）', '认识人民币']
-      },
+      'math-number-sense': { name: '数的认识' },
+      'math-clock': { name: '单位的认识', tags: ['认识钟表（整时）', '认识人民币'] },
       // 操作题卡片主标题改为知识点名，具体题型标签完整保留（含并入的「认识图形」）
-      'math-shapes': {
-        name: '认识图形',
-        tags: ['认识立体图形', '认识平面图形', '图形拼组', '上下左右位置', '认识图形']
-      },
+      'math-shapes': { name: '认识图形', tags: ['认识立体图形', '认识平面图形', '图形拼组', '上下左右位置', '认识图形'] },
       // 应用题卡片主标题由模块名「解决问题」改为「应用题」，标签按三大题型展示
-      'math-word-problems': {
-        name: '应用题',
-        tags: ['解决问题', '连加连减题', '混合练习']
-      }
+      'math-word-problems': { name: '应用题', tags: ['解决问题', '连加连减题', '混合练习'] }
     };
-    items.forEach(function (it) {
+
+    // 是否为竞赛题型：C 系列模块占位卡，或 math-competition-* 插件
+    function isCompetitionItem(it) {
+      if (it.m && it.m.id && it.m.id.charAt(0) === 'C') return true;
+      var pid = it.p && it.p.id;
+      return typeof pid === 'string' && pid.indexOf('math-competition') === 0;
+    }
+    // 单张卡片 HTML（不含分区标题）
+    function renderCard(it) {
       var p = it.p, m = it.mod;
-      // 竞赛分组标题：首个竞赛模块（C 系列）卡片出现前插入「竞赛拓展」分隔
-      if (m && m.id && m.id.charAt(0) === 'C' && !compHeaderInserted) {
-        html += '<div class="section-label" style="flex-basis:100%;margin:18px 0 6px;">🏆 竞赛拓展</div>';
-        compHeaderInserted = true;
-      }
       var kp = (regById[p.id] && regById[p.id].name) ? regById[p.id] : null;
       var ov = DISPLAY_OVERRIDES[p.id] || null;
       var modName = m ? m.name : moduleNameOf(p);
       var name = ov ? ov.name : (modName || (kp && kp.name) || p.name);
       var desc = (kp && kp.desc) || '';
       var href = m ? (App.buildPluginLink(p.id) + '&module=' + m.id) : App.buildPluginLink(p.id);
-      // 具体题型标签：来自知识库该插件覆盖的知识点（最多展示 3 个 +「+N」），
-      // 副标题中的说明并入标签并去重；被覆盖的题型优先使用其指定标签
+      // 具体题型标签：严格只来自知识库该插件覆盖的知识点（最多展示 3 个 +「+N」）
       var tags = ov ? (ov.tags || (kTags[p.id] || [])).slice() : (kTags[p.id] || []).slice();
-      if (!ov) {
-        var subText = (modName && kp && kp.name && kp.name !== name)
-          ? kp.name + (desc ? ' · ' + desc : '')
-          : (desc || '');
-        if (subText) {
-          subText.split('、').forEach(function (t) {
-            t = t.trim();
-            if (t && tags.indexOf(t) === -1) tags.push(t);
-          });
-        }
-      }
       var tagHtml = '';
       if (tags.length) {
         var shown = tags.slice(0, 3);
         tagHtml = '<span class="t-tags">' +
-          shown.map(function (t) { return '<span class="kb-tag">' + t + '</span>'; }).join('') +
-          (tags.length > shown.length ? '<span class="kb-tag more">+' + (tags.length - shown.length) + '</span>' : '') +
+          shown.map(function (t) { return '<span class="t-tag" title="' + t.replace(/"/g, '&quot;') + '">' + t + '</span>'; }).join('') +
+          (tags.length > shown.length ? '<span class="t-tag more" title="还有 ' + (tags.length - shown.length) + ' 个知识点">+' + (tags.length - shown.length) + '</span>' : '') +
           '</span>';
       }
-      var isComp = m && m.id && m.id.charAt(0) === 'C';
-      var cardHtml = (p.isPlaceholder
+      return (p.isPlaceholder
         ? '<div class="type-card competition" title="' + desc + '">'
         : '<a href="' + href + '" class="type-card' + (p.isPlaceholder ? ' competition' : '') + '" title="' + desc + '">') +
-        '<span class="t-name">' + name + '</span>' +
-        (p.isPlaceholder ? '<span class="t-soon">即将上线</span>' : '') +
-        tagHtml +
+        '<span class="t-title">' + name + '</span>' + tagHtml +
         (p.isPlaceholder ? '</div>' : '</a>');
-      // 竞赛模块：追加知识点级展示（active 可选链接，placeholder 灰色不可选）
-      var kpChips = '';
-      if (isComp && typeof window.KnowledgeBank !== 'undefined' && window.KnowledgeBank.findGrade) {
-        var gKp = [];
-        var gBank = window.KnowledgeBank.findGrade('math', grade);
-        if (gBank) {
-          gBank.modules.forEach(function (bm) {
-            (bm.knowledgePoints || []).forEach(function (k) {
-              if (k.pluginId === p.id) gKp.push(k);
-            });
-          });
-        }
-        kpChips = '<div class="kp-chips">' + gKp.map(function (k) {
-          return k.status === 'active'
-            ? '<a class="kp-chip" href="knowledge/' + k.id + '.html">' + k.name + '</a>'
-            : '<span class="kp-chip kp-ph" title="即将上线">' + k.name + '</span>';
-        }).join('') + '</div>';
-      }
-      html += isComp ? '<div class="type-cell">' + cardHtml + kpChips + '</div>' : cardHtml;
-    });
-
-    // 追加综合练习按钮（名称/描述回退到插件元数据或注册表）
-    var kc = (regById[COMPREHENSIVE.id]) ? regById[COMPREHENSIVE.id] : null;
-    html += '<a href="' + App.buildPluginLink(COMPREHENSIVE.id) + '" class="type-card comprehensive">' +
-      '<span class="t-name">' + ((kc && kc.name) || COMPREHENSIVE.name) + '</span>' +
-      (kc && kc.desc ? '<span class="t-desc">' + kc.desc + '</span>' : '') +
-      '</a>';
-
-    // 追加 M13「提前预习」特殊模块卡片（草绿色 + display.tags 胶囊），仅一年级、置于综合练习之后
-    var m13 = (grade === 1) ? moduleById['M13'] : null;
-    if (m13 && m13.display) {
-      var pvTags = (m13.display.tags || []).map(function (t) {
-        return '<span class="kb-tag">' + t + '</span>';
-      }).join('');
-      html += '<a href="' + App.buildPluginLink('math-g1-multiplication-table') + '" class="type-card preview-card"' +
+    }
+    // 综合练习按钮（随注册表/插件元数据命名）
+    function renderComprehensive() {
+      var kc = (regById[COMPREHENSIVE.id]) ? regById[COMPREHENSIVE.id] : null;
+      return '<a href="' + App.buildPluginLink(COMPREHENSIVE.id) + '" class="type-card comprehensive">' +
+        '<span class="t-title">' + ((kc && kc.name) || COMPREHENSIVE.name) + '</span></a>';
+    }
+    // M13 提前预习特殊卡（草绿，仅一年级）
+    function renderPreview() {
+      var m13 = (grade === 1) ? moduleById['M13'] : null;
+      if (!m13 || !m13.display) return '';
+      var pvTags = (m13.display.tags || []).map(function (t) { return '<span class="t-tag">' + t + '</span>'; }).join('');
+      return '<a href="' + App.buildPluginLink('math-g1-multiplication-table') + '" class="type-card preview-card"' +
         ' title="乘法表 · 除法表 · 乘除法填空（二年级上册预习）">' +
-        '<span class="t-name">' + m13.name + '</span>' +
-        (pvTags ? '<span class="t-tags">' + pvTags + '</span>' : '') +
-        '</a>';
+        '<span class="t-title">' + m13.name + '</span>' + (pvTags ? '<span class="t-tags">' + pvTags + '</span>' : '') + '</a>';
+    }
+
+    // 1-3 年级：无竞赛题型，统一归入「选择常规题型」单板块；4-6 年级：拆为「选择常规题型 / 竞赛题型」两大板块
+    // 每个板块末尾均置「综合练习」卡（样式一致，紫色 .type-card.comprehensive）；竞赛板块的综合为板块末卡
+    if (grade >= 4) {
+      html += '<div class="section-heading">常规题型</div>';
+      html += items.filter(function (it) { return !isCompetitionItem(it); }).map(renderCard).join('');
+      html += renderComprehensive();
+      html += '<div class="section-heading">竞赛题型</div>';
+      // 竞赛综合（C9 模块）固定为板块末卡；其余竞赛题按原序
+      var compItems = items.filter(isCompetitionItem);
+      compItems.sort(function (a, b) {
+        var aC9 = (a.mod && a.mod.id === 'C9') ? 1 : 0;
+        var bC9 = (b.mod && b.mod.id === 'C9') ? 1 : 0;
+        return aC9 - bC9;
+      });
+      html += compItems.map(renderCard).join('');
+    } else {
+      html += '<div class="section-heading">常规题型</div>';
+      html += items.map(renderCard).join('');
+      html += renderPreview();
+      html += renderComprehensive();
     }
 
     document.getElementById('typeGrid').innerHTML = html;

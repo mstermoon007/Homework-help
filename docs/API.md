@@ -20,19 +20,11 @@
 | `diffLevel` | `(d) → 1..10` | 归一化难度，非法回退 3 |
 | `diffScale` | `(level) → number` | 缩放系数 `1+(level−3)×0.2`（3→1.0、10→2.4） |
 | `diffMax` | `(base, level) → int` | 基准最大数 × scale |
-| `App.Adaptive.record` | `(subject, grade, pluginId, correct, total, context?)` | v2：context 支持 `knowledgePointId`（任意插件生效；总量 MAX_KEYS=400 上限防膨胀）与平行数组 `questionDifficulties`+`correctFlags`（齐备才启用难度加权） |
-| `App.Adaptive.recordSession` | `(subject, grade, pluginId, questions, flags) → {total, correct, kpGroups}` | 批改后统一入口：读取题目可选字段 `knowledgePointId`/`difficulty`，产出插件级加权摘要 + KP 级分组记录；未标注难度按 3 计权，无 KP 字段的插件自动保持纯插件级记录 |
-| `App.Adaptive.computeAdjustment` | `(subject, grade, pluginId, kpId?) → {difficultyDelta, typeBias, rate, emaRate, lastRate, sessions}` | 基于 EMA 平滑率（`0.4×本次+0.6×上次`）+ lastRate：≥0.85且全对→+2；≥0.8→+1；≤0.5→−2；≤0.65→−1 |
-| `App.Adaptive.getPrerequisiteStatus` | `(knowledgePointId) → {ready, items[]}` | 前置知识点历史掌握情况（加权正确率，达标线 0.7）；无前置 ready=null |
-| `App.Adaptive.adjustedDifficulty` | `(base, delta) → 1..10` | 基础难度叠加调整量并钳制 |
-
-存储：`localStorage['hw_adaptive_v2']`，桶为 `{ ema, sessions[] }`；主键
-`(subject:grade:pluginId[:kpId])`；首次读取自动迁移 v1 并清除旧键。
 | `App.Difficulty.difficultyToStructure` | `(level) → {steps, allowBracket, allowMultDiv, complexityScore, …}` | 难度→结构五档映射；complexityScore 全档严格单调（测试 dev/test-difficulty-structure.js） |
 | `App.Difficulty.createProfile` | `(baseLevel, delta, opts?) → profile` | 合并用户选择/自适应/插件选项 → `{effectiveLevel, scale, structure, typePreference}` |
 | `App.Difficulty.consumeProfile` | `(profile, pluginType) → params` | 按插件类型（expression/geometry/application/oral/默认）翻译为生成参数 |
 | `App.Difficulty.consume` | `(options) → profile + hasOwnLevel` | 插件统一难度入口（任务4）：自带 level 分档时 hasOwnLevel=true，通用难度不叠加 |
-| `App.Difficulty.profileFor / paramsFor / strategyFor` | `(subject[, level, delta]) → …`（任务10） | 科目档案路由（chinese/english 归一 cn/en，未知回落 math）；paramsFor 输出科目生成参数（cn：vocabTier/sentenceLength…，en：wordLengthMax/grammarTier…）；strategyFor 供 Adaptive 按科目取调整规则 |
+| `App.Difficulty.profileFor / paramsFor / strategyFor` | `(subject[, level, delta]) → …`（任务10） | 科目档案路由（chinese/english 归一 cn/en，未知回落 math）；paramsFor 输出科目生成参数（cn：vocabTier/sentenceLength…，en：wordLengthMax/grammarTier…）；strategyFor 供按科目取难度调整规则 |
 
 ## 渲染与工厂
 

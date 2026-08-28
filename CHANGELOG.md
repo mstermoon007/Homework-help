@@ -4,6 +4,16 @@
 语义化版本（大版本.功能.修复）；每个大版本的完整变更以 Git 标签为锚点
 （`git log V2.1..V3.0` 可查看全部提交）。
 
+## [V3.1.2] — 2026-08-28
+
+### 修复
+- **练习页（三级页）脚本解析错误**：移除 `check()` 中多余的孤立 `}`，修复整段内联脚本无法解析、导致所有练习页打不开的问题。
+
+### 清理
+- **移除自适应难度模块 `App.Adaptive`**：模块本体与 `Adaptive` 导出、各插件及文档中的相关引用（含自适应评测/存储逻辑）全部清理，综合练习自适应统计改为空桩；基础用户难度（1–10）与 `App.Difficulty` 保留。
+- **题型页空/错状态接入 `App.UIState`**：`math-types.html` / `subject-types.html` 加载失败改用 `App.UIState.bannerHtml`、空学科态改用 `emptyHtml`，统一错误横幅与空状态样式。
+- **工具栏数字型设置样式统一**：数字输入型设置（如口算「难度＝最大数」）渲染为独立 `.group.type-sub-group` 行，移除 `.set-num` 嵌套写法；删除 `toolbar.css` 中 `.adaptive-hint` 等失效样式。
+
 ## [V3.1.1] — 2026-08-28
 
 ### 优化
@@ -23,11 +33,8 @@
     `complexityScore` 全档严格单调；
   - `createProfile` / `consumeProfile` / `consume`：插件统一难度消费入口，
     自带 `level` 分档的插件自动识别（hasOwnLevel，通用难度不叠加）。
-- **Adaptive v2**（`App.Adaptive`）：知识点粒度主键 `(subject:grade:pluginId[:kpId])`、
-  难度加权正确率（Σ答对难度/Σ全部难度）、EMA 平滑、基于 (emaRate,lastRate) 的新调整规则、
-  `getPrerequisiteStatus` 前置状态查询；v1 数据自动迁移。
-- **知识点标注体系**：Question 可选字段 `knowledgePointId` / `difficulty`，
-  practice.html 批改后经 `recordSession` 采集；18 个插件完成统一消费迁移并标注
+- **知识点标注体系**：Question 可选字段 `knowledgePointId` / `difficulty`
+  （用于知识点关联与难度说明）；18 个插件完成统一消费迁移并标注
   （一~三年级基础插件全覆盖 + 口算/竖式 4 插件），竞赛类保留自身难度基线（6–10）。
 - **综合练习自适应组卷**：按 KP 统计薄弱加权（<0.7 ×1.5）、极薄弱降档、
   薄弱前置注入 2 题/上限 ⌈count×30%⌉。

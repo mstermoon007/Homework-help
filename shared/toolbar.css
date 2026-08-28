@@ -1,6 +1,5 @@
 /* ============ 练习页工具栏（controls 面板）布局 ============
- * 2+1 分栏结构：上栏（左 题型 / 右 主操作）+ 下栏（左 题量难度 / 右 辅助打印）
- * + 底部状态条（左 灰色小提示 / 右 进度文字+进度条+分数徽标）。
+ * 2+1 分栏结构：上栏（左 题型 / 右 主操作）+ 下栏（左 题量难度 / 右 辅助打印）。
  * 仅定义布局骨架与视觉样式，所有视觉原子属性引用 shared/tokens.css 中的变量；
  * 颜色色调全部沿用原有令牌，仅调整尺寸、间距与对齐。
  * 面板粘性置顶（sticky + 半透明模糊），滚动长题目时始终可见。
@@ -69,6 +68,21 @@
     .panel.controls { background: var(--toolbar-sticky-bg-fallback); }
 }
 
+/* ===== 工具栏数字输入框（题量自定义 / 难度 / 专项「最大数」等）=====
+ * 统一令牌着色，去除历史内联硬编码色；聚焦环用 --brand，与 chip/btn 一致 */
+.tb-num-input {
+    height: 34px; padding: 0 8px;
+    border: 1.5px solid var(--line-strong); border-radius: 9px;
+    background: var(--soft-bg); color: var(--ink);
+    font-size: 14px; font-weight: 700; text-align: center; outline: none;
+    transition: border-color .18s, box-shadow .18s;
+}
+.tb-num-input:focus, .tb-num-input:focus-visible {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(91, 141, 239, .22);
+}
+.count-tip { font-size: 11px; font-weight: 500; color: var(--muted); }
+
 /* ===== chip 分段控件：紧凑 26px 胶囊，颜色沿用原令牌 ===== */
 .chip { cursor: pointer; font-size: var(--toolbar-font-size); font-weight: 500; line-height: 1.2;
     color: var(--toolbar-chip-ink);
@@ -117,30 +131,11 @@
 .btn-ghost:active { background: var(--toolbar-btn-grad); color: #fff; border-color: transparent; }
 .btn:disabled { opacity: .4; cursor: not-allowed; filter: grayscale(.3); }
 
-/* ===== 状态条（极致压缩单行）：左 灰色小提示 / 右 进度 ===== */
-.status-bar { display: flex; justify-content: space-between; align-items: center;
-    gap: 12px; min-height: 22px; margin-top: 2px; padding: 0 2px; }
-.hint-text { font-size: 12px; font-weight: 400; line-height: 1.2; color: #999999;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.progress-wrapper { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-.tp-track { flex: 0 0 auto; width: 100px; height: var(--toolbar-progress-h); border-radius: 2px;
-    background: var(--toolbar-progress-track); overflow: hidden; }
-.tp-fill { height: 100%; width: 0%; border-radius: 2px;
-    background: var(--toolbar-progress-fill); transition: width .25s ease-out; }
-.tp-text { flex: 0 0 auto; font-size: 13px; font-weight: 500; line-height: 1.2; color: var(--muted);
-    white-space: nowrap; font-variant-numeric: tabular-nums; }
-.score-badge { flex: 0 0 auto; font-size: 12px; font-weight: 800; color: #fff;
-    background: var(--toolbar-chip-grad); border-radius: 999px; padding: 1px 10px;
-    white-space: nowrap; box-shadow: var(--toolbar-chip-active-shadow);
-    font-variant-numeric: tabular-nums; }
-
 @media (max-width: 760px) {
     /* 窄屏：左栏继续自动换行；右栏 6 个功能按键位置不变，仅允许横向滚动（不换行） */
     .control-row { gap: 6px; }
     .right-group { overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
     .right-group::-webkit-scrollbar { display: none; }
-    .status-bar { flex-wrap: wrap; }
-    .hint-text { white-space: normal; }
     /* 窄屏：左设置 / 右操作 改为上下堆叠，操作区占满宽度 */
     .controls-grid { grid-template-columns: 1fr; }
     .controls-actions { min-width: 0; }

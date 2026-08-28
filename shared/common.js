@@ -13,7 +13,7 @@
   'use strict';
 
   // ============ [L0 运行时核心 · Runtime Core] ============
-  // 站点常量 / 路由 / 页面控制器 / PluginLoader / ServiceWorker / 自适应难度。
+  // 站点常量 / 路由 / 页面控制器 / PluginLoader / ServiceWorker。
   // 仅依赖全局，不依赖插件渲染细节；统一在文件末尾导出到 window.App。
 
   // ============ 站点常量 ============
@@ -923,283 +923,43 @@
     } catch (e) { /* 忽略 */ }
   }
 
-  // ============ 自适应难度 v2（localStorage 历史：知识点粒度 + 难度加权 + EMA） ============
-  // 相对 v1 的升级：
-  //   - 存储版本 hw_adaptive_v2：值由会话数组升级为 { ema, sessions }，首次读取自动迁移并清除 v1
-  //   - 主键扩展为 (subject, grade, pluginId, knowledgePointId?)；
-  //     凡携带 knowledgePointId 的会话均建立 KP 级桶（总量 MAX_KEYS 上限防膨胀），其余插件忽略该上下文
-  //   - 会话可携带每题难度与对错标记 → 难度加权正确率 effectiveRate = Σ答对难度 / Σ全部难度
-  //   - EMA 平滑：emaRate = 0.4 × 本次正确率 + 0.6 × 上次 emaRate
-  //   - 调整规则基于 (emaRate, lastRate)：≥0.85且全对→+2；≥0.8→+1；≤0.5→−2；≤0.65→−1
-  var Adaptive = (function () {
-    var KEY = 'hw_adaptive_v2';
-    var OLD_KEY = 'hw_adaptive_v1';
-    var WINDOW = 5;       // 取最近 N 次练习计算
-    var MEMORY_CAP = 10;  // 每键最多保留 N 次历史
-    var MAX_KEYS = 400;   // 全库键数上限（知识点级键的膨胀保护）
-    var EMA_ALPHA = 0.4;
-    var memStore = {};    // localStorage 不可用或不持久时的内存兜底
-    // 探测 localStorage 是否真正可用（能写入并读回），否则退化为内存存储
-    var store = null;
-    try {
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('__hw_probe__', '1');
-        var probeOk = localStorage.getItem('__hw_probe__') === '1';
-        localStorage.removeItem('__hw_probe__');
-        if (probeOk) store = localStorage;
-      }
-    } catch (e) { store = null; }
-
-    var migrated = false;
-    /** v1 → v2 迁移：数组包装为 { ema:null, sessions }，先落盘 v2 再移除旧键（防中途丢历史） */
-    function migrate(data) {
-      if (migrated || !store || !data) return data;
-      migrated = true;
-      try {
-        var oldRaw = store.getItem(OLD_KEY);
-        if (!oldRaw) return data;
-        var old = JSON.parse(oldRaw);
-        var converted = false;
-        for (var k in old) {
-          if (Object.prototype.hasOwnProperty.call(old, k) && !data[k]) {
-            var arr = Array.isArray(old[k]) ? old[k] : [];
-            data[k] = { ema: null, sessions: arr.slice(-MEMORY_CAP) };
-            converted = true;
-          }
-        }
-        if (converted) {
-          try { store.setItem(KEY, JSON.stringify(data)); } catch (e2) { /* 落盘失败则保留旧键兜底 */ return data; }
-          store.removeItem(OLD_KEY);
-        }
-      } catch (e) { /* 迁移失败不阻塞，按空库继续 */ }
-      return data;
-    }
-
-    function load() {
-      var d;
-      try {
-        if (store) { var raw = store.getItem(KEY); d = raw ? JSON.parse(raw) : {}; }
-        else d = memStore.data || {};
-      } catch (e) { d = memStore.data || {}; }
-      return migrate(d) || {};
-    }
-    function save(data) {
-      memStore.data = data;
-      try { if (store) store.setItem(KEY, JSON.stringify(data)); } catch (e) { /* 内存兜底 */ }
-    }
-
-    function keyOf(subject, grade, pluginId, kpId) {
-      return kpId ? [subject, grade, pluginId, kpId].join(':')
-                  : [subject, grade, pluginId].join(':');
-    }
-    /** 取规范桶：缺失/形状不符时返回空桶 */
-    function bucketOf(data, k) {
-      var b = data[k];
-      if (!b || typeof b !== 'object' || !Array.isArray(b.sessions)) b = { ema: null, sessions: [] };
-      return b;
-    }
-
-    /**
-     * 记录一次练习结果。
-     * @param {number} correct 答对题数
-     * @param {number} total   总题数
-     * @param {Object} [context] 可选上下文：
-     *   - knowledgePointId {string}  知识点粒度记录（仅 competition/comprehensive 插件生效）
-     *   - questionDifficulties {number[]} 每题难度（需与 total 等长）
-     *   - correctFlags {boolean[]}       每题对错（与 questionDifficulties 平行）
-     *   二者齐备才启用加权统计；否则退化为普通正确率（EMA 同样使用普通率）。
-     */
-    function record(subject, grade, pluginId, correct, total, context) {
-      if (!(total > 0)) return;
-      context = context || {};
-      var data = load();
-      // 知识点级记录：凡 context 提供 knowledgePointId 即记录（步骤5 起全插件启用，
-      // 综合练习需按知识点统计掌握度）；膨胀防护由 MAX_KEYS 总量上限承担
-      var wantKp = !!context.knowledgePointId;
-      var k = keyOf(subject, grade, pluginId, wantKp ? context.knowledgePointId : undefined);
-      if (!data[k] && Object.keys(data).length >= MAX_KEYS) return; // 容量保护
-      var b = bucketOf(data, k);
-
-      var diffs = Array.isArray(context.questionDifficulties) ? context.questionDifficulties : null;
-      var flags = Array.isArray(context.correctFlags) ? context.correctFlags : null;
-      var rate = correct / total;
-      var sess = { c: correct, t: total, ts: Date.now() };
-
-      if (diffs && flags && diffs.length === total && flags.length === total) {
-        var wOk = 0, wAll = 0;
-        for (var i = 0; i < total; i++) {
-          var dv = Number(diffs[i]);
-          if (!isFinite(dv)) dv = 1;
-          wAll += dv;
-          if (flags[i]) wOk += dv;
-        }
-        if (wAll > 0) {
-          sess.diffs = diffs.map(function (x) { return Number(x); });
-          sess.flags = flags.map(function (f) { return f ? 1 : 0; });
-          sess.wOk = wOk;
-          sess.wAll = wAll;
-          rate = wOk / wAll;
-        }
-      }
-
-      b.ema = (b.ema == null) ? rate : (EMA_ALPHA * rate + 0.6 * b.ema);
-      b.sessions.push(sess);
-      if (b.sessions.length > MEMORY_CAP) b.sessions = b.sessions.slice(-MEMORY_CAP);
-      data[k] = b;
-      save(data);
-    }
-
-    /** 汇总一个桶：{rate(难度加权), emaRate, lastRate, sessions} */
-    function summarize(b) {
-      var arr = b.sessions;
-      if (!arr.length) return { rate: null, emaRate: null, lastRate: null, sessions: 0 };
-      var recent = arr.slice(-WINDOW);
-      var c = 0, t = 0, wOk = 0, wAll = 0, hasW = false;
-      recent.forEach(function (x) {
-        c += x.c; t += x.t;
-        if (x.wAll > 0) { hasW = true; wOk += x.wOk; wAll += x.wAll; }
-      });
-      var eff = (hasW && wAll > 0) ? (wOk / wAll) : (t ? c / t : 0);
-      var last = arr[arr.length - 1];
-      var lastRate = (last.wAll > 0) ? (last.wOk / last.wAll) : (last.t ? last.c / last.t : 0);
-      return { rate: eff, emaRate: (b.ema != null) ? b.ema : eff, lastRate: lastRate, sessions: arr.length };
-    }
-
-    /** 计算调整量：{ difficultyDelta:-2..+2, typeBias, rate, emaRate, lastRate, sessions } */
-    function computeAdjustment(subject, grade, pluginId, kpId) {
-      var b = bucketOf(load(), keyOf(subject, grade, pluginId, kpId));
-      var s = summarize(b);
-      if (!s.sessions) return { difficultyDelta: 0, typeBias: null, rate: null, emaRate: null, lastRate: null, sessions: 0 };
-      var delta = 0, bias = null;
-      if (s.emaRate >= 0.85 && s.lastRate >= 0.999) { delta = 2; bias = 'hard'; }
-      else if (s.emaRate >= 0.8) { delta = 1; bias = 'hard'; }
-      else if (s.emaRate <= 0.5) { delta = -2; bias = 'easy'; }
-      else if (s.emaRate <= 0.65) { delta = -1; bias = 'easy'; }
-      return { difficultyDelta: delta, typeBias: bias, rate: s.rate, emaRate: s.emaRate, lastRate: s.lastRate, sessions: s.sessions };
-    }
-
-    /** 把基础难度叠加调整量并钳制到 1..10 */
-    function adjustedDifficulty(base, delta) {
-      var n = (Number(base) || 3) + (delta || 0);
-      if (!isFinite(n)) n = 3;
-      if (n < 1) n = 1;
-      if (n > 10) n = 10;
-      return Math.round(n);
-    }
-
-    /** 人类可读提示文案（用于练习页提示条） */
-    function hint(subject, grade, pluginId) {
-      var a = computeAdjustment(subject, grade, pluginId);
-      if (a.difficultyDelta > 0) return '已根据你的表现提升难度（' + (a.rate != null ? Math.round(a.rate * 100) + '% 正确率' : '自适应') + '）';
-      if (a.difficultyDelta < 0) return '已降低难度，多练基础（' + (a.rate != null ? Math.round(a.rate * 100) + '% 正确率' : '自适应') + '）';
-      return '';
-    }
-
-    /**
-     * 前置依赖感知（供后续步骤使用）：查询某知识点全部前置的历史掌握情况。
-     * @returns {{ready:boolean|null, items:Array}|null} 无知识库/无前置返回 null；
-     *   ready=true 表示所有前置均有练习数据且难度加权正确率 ≥0.7。
-     */
-    function getPrerequisiteStatus(knowledgePointId) {
-      var KB = global.KnowledgeBank;
-      if (!KB || !knowledgePointId || !KB.forEach) return null;
-      var READY_LINE = 0.7;
-      function findById(id) {
-        var hit = null;
-        KB.forEach(function (entry) {
-          (entry.modules || []).forEach(function (mod) {
-            (mod.knowledgePoints || []).forEach(function (kp) {
-              if (kp.id === id && !hit) hit = { kp: kp, grade: entry.grade };
-            });
-          });
-        });
-        return hit;
-      }
-      var self = findById(knowledgePointId);
-      if (!self) return null;
-      var pres = Array.isArray(self.kp.prerequisites) ? self.kp.prerequisites : [];
-      if (!pres.length) return { ready: null, items: [] };
-      var data = load();
-      var items = [], allReady = true;
-      pres.forEach(function (pid) {
-        var info = findById(pid);
-        if (!info) { allReady = false; return; }
-        var b = bucketOf(data, keyOf('math', info.grade, info.kp.pluginId));
-        var s = summarize(b);
-        var item = { id: pid, name: info.kp.name, grade: info.grade,
-                     sessions: s.sessions, rate: s.rate, emaRate: s.emaRate };
-        if (!s.sessions || !(s.rate >= READY_LINE)) allReady = false;
-        items.push(item);
-      });
-      return { ready: allReady, items: items };
-    }
-
-    /**
-     * 批改后一次性记录（practice.html 调用；混合知识点数据统一入口）：
-     *  - 插件级摘要：全部题目聚合成一条会话（含难度加权；未标注难度的题按标准档 3 计权）
-     *  - 知识点级分组：按 q.knowledgePointId 分组逐桶记录
-     *    （仅 competition/comprehensive 插件会被 v2 门控接受，其余插件自动忽略 KP 部分，
-     *     即保持原有插件级记录方式）
-     * @param {Array} questions 题目对象数组（可含可选字段 knowledgePointId / difficulty）
-     * @param {Array} flags     与 questions 平行的每题对错布尔数组（check().results）
-     * @returns {{total:number, correct:number, kpGroups:number}} 实际记录汇总
-     */
-    function recordSession(subject, grade, pluginId, questions, flags) {
-      if (!Array.isArray(questions) || !Array.isArray(flags)) return { total: 0, correct: 0, kpGroups: 0 };
-      var n = Math.min(questions.length, flags.length);
-      if (!n) return { total: 0, correct: 0, kpGroups: 0 };
-      var correct = 0;
-      var allD = [], allF = [];
-      var groups = {}, kpCount = 0;
-      for (var i = 0; i < n; i++) {
-        var q = questions[i] || {};
-        var okFlag = !!flags[i];
-        if (okFlag) correct++;
-        var dv = Number(q.difficulty);
-        if (!isFinite(dv)) dv = 3;
-        allD.push(dv); allF.push(okFlag);
-        if (q.knowledgePointId) {
-          var g = groups[q.knowledgePointId];
-          if (!g) { g = groups[q.knowledgePointId] = { correct: 0, total: 0, diffs: [], flags: [] }; kpCount++; }
-          g.total++; g.diffs.push(dv); g.flags.push(okFlag);
-          if (okFlag) g.correct++;
-        }
-      }
-      record(subject, grade, pluginId, correct, n, { questionDifficulties: allD, correctFlags: allF });
-      Object.keys(groups).forEach(function (kp) {
-        var g = groups[kp];
-        record(subject, grade, pluginId, g.correct, g.total,
-               { knowledgePointId: kp, questionDifficulties: g.diffs, correctFlags: g.flags });
-      });
-      return { total: n, correct: correct, kpGroups: kpCount };
-    }
-
-    /** 清除记忆：给定 subject/grade/pluginId 清单项；全空则清空全部 */
-    function reset(subject, grade, pluginId) {
-      var data = load();
-      if (subject || grade || pluginId) delete data[keyOf(subject, grade, pluginId)];
-      else return save({});
-      save(data);
-    }
-
-    return {
-      VERSION: 'hw_adaptive_v2',
-      record: record,
-      recordSession: recordSession,
-      computeAdjustment: computeAdjustment,
-      adjustedDifficulty: adjustedDifficulty,
-      getPrerequisiteStatus: getPrerequisiteStatus,
-      hint: hint,
-      reset: reset
-    };
-  })();
 
   // ============ [L2 数据与导出 · Exports] ============
   // 将运行时核心(L0)与共享渲染/工具(L1)分别挂到 window.App 与 window.PluginUtil。
 
   // ============ 导出：App（站点） ============
+  // ============ 通用状态 UI 辅助（配套 shared/states.css） ============
+  // 题型页（math-types.html / subject-types.html）渲染空状态 / 错误横幅时调用；
+  // 仅返回 HTML 字符串，不触碰 DOM，色彩全部走令牌。
+  function escHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+  var UIState = {
+    emptyHtml: function (icon, title, desc, actionHtml) {
+      return '<div class="empty-state">' +
+        '<span class="es-icon">' + escHtml(icon || '') + '</span>' +
+        '<div class="est-title">' + escHtml(title || '') + '</div>' +
+        (desc ? '<div class="est-desc">' + escHtml(desc) + '</div>' : '') +
+        (actionHtml ? '<div class="est-actions">' + actionHtml + '</div>' : '') +
+        '</div>';
+    },
+    bannerHtml: function (icon, title, desc, actionHtml) {
+      return '<div class="error-banner">' +
+        '<span class="eb-icon">' + escHtml(icon || '') + '</span>' +
+        '<div class="eb-body">' +
+          '<div class="eb-title">' + escHtml(title || '') + '</div>' +
+          (desc ? '<div class="eb-desc">' + escHtml(desc) + '</div>' : '') +
+        '</div>' +
+        (actionHtml ? '<div class="eb-actions">' + actionHtml + '</div>' : '') +
+        '</div>';
+    }
+  };
+
   global.App = {
     SUBJECT_NAMES: SUBJECT_NAMES,
+    UIState: UIState,
     ROUTES: ROUTES,
     getGradeParam: getGradeParam,
     getGradeName: getGradeName,
@@ -1216,7 +976,6 @@
     diffMax: diffMax,
     PluginLoader: PluginLoader,
     registerServiceWorker: registerServiceWorker,
-    Adaptive: Adaptive
   };
 
   // 浏览器环境下自动注册 Service Worker（离线可用 + 跨页复用插件缓存，减少点击延迟）

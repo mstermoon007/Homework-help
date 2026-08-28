@@ -531,7 +531,7 @@
       place: genPlace,
       'nt-extreme': genNtExtreme
     };
-    // type → 知识点 ID（与知识库/声明一致），供自适应难度做知识点粒度统计
+    // type → 知识点 ID（与知识库/声明一致），用于知识点关联
     var TYPE_TO_KP = {
       remainder: 'math-g6-c2-remainder-congruence',
       modulo: 'math-g6-c2-modulo-arithmetic',

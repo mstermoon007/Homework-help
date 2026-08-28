@@ -353,7 +353,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 - 插件对象暴露 `plugin.cardClass / plugin.gridClass` 供页面与打印做科目差异化样式。
 - multi 输入或数组答案仍走通用 `defaultQCheck` 分字段判定；`check(userAnswers, idx)` 自定义优先级最高。
 
-### Question 可选字段（Adaptive v2 采集）
+### Question 可选字段
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |

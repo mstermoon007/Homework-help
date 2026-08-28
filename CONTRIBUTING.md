@@ -169,10 +169,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
    开头调用，取 `profile.effectiveLevel / scale / structure / typePreference` 消费；
    数值范围缩放用 `profile.scale`（替代直调 `diffScale/diffMax`），运算步数/括号/乘除
    用 `profile.structure.steps / allowBracket / allowMultDiv`。
-2. **题目对象需携带可选字段** `knowledgePointId`（对应 knowledge-bank.js 的知识点 ID）
-   与 `difficulty`（该题相对难度 1–10）；practice.html 批改后经
-   `App.Adaptive.recordSession` 采集——未标注难度的题按标准档 3 计权，
-   未提供 knowledgePointId 的插件保持纯插件级统计。
+2. **题目对象可携带可选字段** `knowledgePointId`（对应 knowledge-bank.js 的知识点 ID）
+   与 `difficulty`（该题相对难度 1–10），便于知识点关联与难度说明；两者均为可选，
+   不提供时不影响练习生成与批改。
 3. **禁止直接使用 `Math.random()` 控制难度参数**（随机数规范见 §3）；
    难度相关随机一律基于 `randInt` 系工具。
 4. **自带难度分档的插件**（settings 中存在 `level` 分档 chip）：跳过通用消费——
@@ -379,7 +378,7 @@ math → core+geometry+calculation+makeTen；cn → core+svg-chinese；en → co
 1. **数据驱动**：从 Bank 结构化字段出题（如 strokeOrder 数组→笔顺排序），禁止硬编码题目文本。
 2. **choice 题选项约束**：≥2 个、无重复、**必须包含 answer**（由 verify-language-banks 与单元测试双重把关）。
 3. **对/错判断题**：options 必须经 `_PU.shuffle(['对','错'])` 打乱，防止首项恒为「对」的规律泄露。
-4. **KP 标注**：每题携带 `knowledgePointId`（cn-g{grade}-n{module}-{slug}），供 Adaptive v2 建 KP 级桶。
+4. **KP 标注**：每题携带 `knowledgePointId`（cn-g{grade}-n{module}-{slug}），用于知识库知识点关联。
 5. **难度参数消费**：从 `opts.difficultyParams` 取科目映射参数控制干扰项数量/题干长度。
 
 ### 专项验证

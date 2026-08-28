@@ -409,7 +409,7 @@
       var key = q.text + (q.multi ? '...' + q.answer.q + 'r' + q.answer.r : '');
       if (!seen[key]) {
         seen[key] = true;
-        q.difficulty = this.difficulty; // 供 App.Adaptive v2 难度加权
+        q.difficulty = this.difficulty; // 标注基础难度（自适应难度加权功能已移除）
         questions.push(q);
       }
     }

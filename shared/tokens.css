@@ -2,9 +2,11 @@
  * 全站唯一令牌来源：所有 CSS 自定义属性集中于此，供 base/components/toolbar/pages 引用。
  * 调整 :root 变量即可全局同步视觉，无需改动业务文件。
  * 依赖：无（必须最先加载）。
- * 层叠顺序由本文件顶部 @layer 声明锁定：tokens → base → components → states → toolbar → pages。
+ * 层叠顺序由本文件顶部 @layer 声明锁定：tokens → base → components → states → toolbar → pages → subjects。
+ * （subjects 为层序末尾、优先级最高；仅二级题型页启用，可覆写 components/toolbar/pages 同名规则）
  */
-@layer tokens, base, components, states, toolbar, pages;
+
+@layer tokens, base, components, states, toolbar, pages, subjects;
 
 @layer tokens {
   :root {

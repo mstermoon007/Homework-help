@@ -8,19 +8,8 @@
 <link rel="stylesheet" href="shared/tokens.css">
 <link rel="stylesheet" href="shared/base.css">
 <link rel="stylesheet" href="shared/components.css">
-<link rel="stylesheet" href="shared/states.css">
-<style>
-    /* 默认底色（数学科目兜底）；语文/英语由脚本按科目令牌覆盖，保证「数学蓝、语文绿、英语橙」 */
-    body {
-        background: linear-gradient(160deg, #d6e8fa 0%, var(--math) 45%, #F5A623 110%);
-        min-height: 100vh;
-    }
-    /* 具体题型标签：卡片名称下方的胶囊（如 声母韵母/标调/整体认读） */
-    .t-tags { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 8px; }
-    .t-type { font-size: 11px; line-height: 1.4; padding: 1px 7px; border-radius: 999px;
-        background: rgba(255,255,255,0.85); color: #5a6b8c; border: 1px solid rgba(102,126,234,0.35); }
-</style>
-<style id="subjectStyles"></style>
+    <link rel="stylesheet" href="shared/states.css">
+    <link rel="stylesheet" href="shared/subjects.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -125,8 +114,6 @@
       desc: '请选择要练习的题型',
       sectionLabel: '📐 选择题型',
       footTip: '💡 选择题型后进入对应练习页面，每个题型独立生成题目',
-      color: 'var(--math)',
-      grad: 'linear-gradient(160deg, #d9e9fb 0%, var(--math) 45%, var(--math-accent) 115%)',
       descMap: {},
       hasKnowledgeBank: true
     },
@@ -136,8 +123,6 @@
       desc: '拼音、写字与综合练习',
       sectionLabel: '📚 选择题型',
       footTip: '💡 更多题型持续更新中，敬请期待',
-      color: 'var(--chinese)',
-      grad: 'linear-gradient(160deg, #ddf3e7 0%, var(--chinese) 45%, var(--cn-accent) 115%)',
       descMap: {
         'chinese-pinyin': '声母韵母 · 标调 · 整体认读 · 易混音辨析',
         'pinyin-to-char': '看拼音，写出对应汉字',
@@ -152,8 +137,6 @@
       desc: '字母与单词启蒙练习',
       sectionLabel: '🔠 选择题型',
       footTip: '💡 更多英语题型持续开发中，敬请期待',
-      color: 'var(--english)',
-      grad: 'linear-gradient(160deg, #fff3df 0%, var(--english) 45%, var(--en-accent) 115%)',
       descMap: {
         'english-alphabet': '26个字母名与字母音 · 例词跟读 · 发音提示'
       },
@@ -183,12 +166,37 @@
     return;
   }
 
-  // 应用学科特定样式：主题色引用科目令牌；页面背景随科目切换（蓝/绿/橙区分明显）
-  var styleEl = document.getElementById('subjectStyles');
-  styleEl.textContent =
-    'body { background: ' + config.grad + '; }\n' +
-    '.type-card .t-name { color: ' + config.color + '; }\n' +
-    '.section-label { border-left-color: ' + config.color + '; }';
+  // 学科主题：JS 只负责把科目配色写入 CSS 变量，具体配色规则集中在 shared/subjects.css。
+  // 难度排序用「模块 level + 知识库知识点数量」近似（MODULE_CATALOG 无 difficulty 字段）。
+  var subjectTheme = {
+    math: {
+      primary: 'var(--math-primary)',
+      primarySoft: 'rgba(74,144,217,0.12)',
+      cardBg: 'linear-gradient(135deg, rgba(74,144,217,0.15), rgba(74,144,217,0.05))',
+      cardBorder: 'rgba(74,144,217,0.2)',
+      bodyBg: 'linear-gradient(160deg, #eaf3ff 0%, #dbeafe 48%, #cfe6ff 100%)'
+    },
+    chinese: {
+      primary: 'var(--cn-primary)',
+      primarySoft: 'rgba(56,161,105,0.12)',
+      cardBg: 'linear-gradient(135deg, rgba(56,161,105,0.15), rgba(56,161,105,0.05))',
+      cardBorder: 'rgba(56,161,105,0.2)',
+      bodyBg: 'linear-gradient(160deg, #eafaf1 0%, #d6f2e3 48%, #c8ecd8 100%)'
+    },
+    english: {
+      primary: 'var(--en-primary)',
+      primarySoft: 'rgba(245,166,35,0.12)',
+      cardBg: 'linear-gradient(135deg, rgba(245,166,35,0.15), rgba(245,166,35,0.05))',
+      cardBorder: 'rgba(245,166,35,0.2)',
+      bodyBg: 'linear-gradient(160deg, #fff6e8 0%, #ffeccb 48%, #ffe2bb 100%)'
+    }
+  };
+  var theme = subjectTheme[subject] || subjectTheme.math;
+  document.documentElement.style.setProperty('--subject-primary', theme.primary);
+  document.documentElement.style.setProperty('--subject-primary-soft', theme.primarySoft);
+  document.documentElement.style.setProperty('--type-card-bg', theme.cardBg);
+  document.documentElement.style.setProperty('--type-card-border', theme.cardBorder);
+  document.documentElement.style.setProperty('--subject-body-bg', theme.bodyBg);
 
   var grade = App.currentGrade();
 
@@ -208,9 +216,31 @@
   var registry = (typeof window.PLUGIN_REGISTRY !== 'undefined') ? window.PLUGIN_REGISTRY : [];
 
   // 统一走 App.PluginLoader：按年级加载本学科全部插件并读取其元数据（含竞态安全与缓存）
+  // 难度近似：模块 level（basic<advanced<competition）+ 知识库知识点数量
+  function diffProxy(p) {
+    var mid = p.moduleId;
+    var mod = mid && window.MODULE_CATALOG && window.MODULE_CATALOG.byId ? window.MODULE_CATALOG.byId(mid) : null;
+    if (!mod) return 5;
+    return mod.level === 'competition' ? 3 : (mod.level === 'advanced' ? 2 : 1);
+  }
+  function kpCount(p) {
+    if (typeof window.KnowledgeBank === 'undefined') return 0;
+    var entries = window.KnowledgeBank.getEntries(subject, grade) || [];
+    var n = 0;
+    for (var i = 0; i < entries.length; i++) if (entries[i].pluginId === p.id) n++;
+    return n;
+  }
+
   App.PluginLoader.loadSubjectPlugins(subject, grade).then(function (plugins) {
     var applicable = plugins.filter(function (p) {
       return p.grades && p.grades.indexOf(grade) !== -1;
+    });
+
+    // 排序：难度近似升序（基础→进阶→竞赛），同级按知识点数量升序
+    applicable.sort(function (a, b) {
+      var da = diffProxy(a), db = diffProxy(b);
+      if (da !== db) return da - db;
+      return kpCount(a) - kpCount(b);
     });
 
     var html = '';
@@ -220,10 +250,10 @@
       // 具体题型标签：描述按「·」「、」拆分为胶囊（如 声母韵母/标调/整体认读）
       var tagParts = desc ? desc.split(/[·、]/).map(function (t) { return t.trim(); }).filter(Boolean) : [];
       var tagHtml = tagParts.length
-        ? '<span class="t-tags">' + tagParts.map(function (t) { return '<span class="t-type">' + esc(t) + '</span>'; }).join('') + '</span>'
+        ? '<span class="t-tags">' + tagParts.map(function (t) { return '<span class="t-tag">' + esc(t) + '</span>'; }).join('') + '</span>'
         : '';
       html += '<a href="' + App.buildPluginLink(p.id) + '" class="type-card" title="' + esc(desc) + '">' +
-        '<span class="t-name">' + esc(name) + '</span>' +
+        '<span class="t-title">' + esc(name) + '</span>' +
         tagHtml +
         '</a>';
     });

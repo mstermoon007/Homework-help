@@ -206,7 +206,7 @@
       var prof = _D.consume(opts);
       _DIFF = prof.effectiveLevel;
       var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
-      // 子题型 → 知识点（供 Adaptive v2 KP 级统计）
+      // 子题型 → 知识点（用于知识点关联）
       var KP_BY_KIND = {
         bookGuess: 'math-g2-m10-logic-reasoning',
         sudoku3: 'math-g2-m10-sudoku3'

@@ -42,8 +42,6 @@ check('difficulty.js 暴露 consume/createProfile/consumeProfile/difficultyToStr
   ['consume', 'createProfile', 'consumeProfile', 'difficultyToStructure'].every(function (k) {
     return fileContains('shared/difficulty.js', k);
   }));
-check('common.js 集成 Adaptive v2（hw_adaptive_v2 + recordSession）',
-  fileContains('shared/common.js', 'hw_adaptive_v2') && fileContains('shared/common.js', 'recordSession'));
 
 // 2.6 科目化模块（任务12/13：工具归类 + 科目 SVG 生成器）
 check('shared/subject-utils.js 存在', fileExists('shared/subject-utils.js'));

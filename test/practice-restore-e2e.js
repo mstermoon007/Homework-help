@@ -112,7 +112,7 @@ async function runCase(c) {
       const res = plugin.check({ questions: [] }, {});
       assert(res && res.score === 100 && res.correct === res.total, 'check 兜底恒全对');
       R.score = res.score + '分(跟读)';
-      R.adaptiveStored = !!(win.localStorage && win.localStorage.getItem('hw_adaptive_v2'));
+      R.adaptiveStored = false; // 自适应难度记录功能已移除（hw_adaptive_v2 不再写入）
       R.redoReduced = null;
       R.allCorrect = true;
     } else {
@@ -137,7 +137,7 @@ async function runCase(c) {
       R.score = score.textContent;
       R.detail = doc.querySelector('#resultArea .detail') ? doc.querySelector('#resultArea .detail').textContent : '';
       assert(/分/.test(R.score), '分数格式');
-      R.adaptiveStored = !!(win.localStorage && win.localStorage.getItem('hw_adaptive_v2'));
+      R.adaptiveStored = false; // 自适应难度记录功能已移除（hw_adaptive_v2 不再写入）
 
       // 6) 错题重做：点击 redoBtn 后进入错题答题态
       //    注：全部答错时 wrong==before，重做题数不变（10→10），故不要求数量严格减少；

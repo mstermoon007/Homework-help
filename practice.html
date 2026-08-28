@@ -147,7 +147,6 @@
 
   <!-- Layer 2: 工具栏（题型/题量/难度 + 操作按钮） -->
   <section class="panel controls" id="controlsPanel" style="display:none;">
-    <div class="adaptive-hint" id="adaptiveHint" style="display:none;"></div>
     <div class="controls-grid">
       <div class="controls-settings">
         <div class="row" style="margin-top:0;">
@@ -160,9 +159,9 @@
               <button class="chip" data-count="50" role="radio" aria-checked="false">50题</button>
               <button class="chip" data-count="custom" role="radio" aria-checked="false">自定义</button>
               <input type="number" id="customCount" min="1" max="50" step="1" placeholder="自定义"
-                     autocomplete="off"
-                     style="width:70px;height:30px;border:1.5px solid #c9d4e6;border-radius:8px;font-size:13px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafbff;outline:none;display:none;">
-              <span class="count-tip" id="countTip" style="font-size:11px;color:#9aa5b5;font-weight:500;display:none;"></span>
+                     autocomplete="off" class="tb-num-input"
+                     style="width:70px;display:none;">
+              <span class="count-tip" id="countTip" style="display:none;"></span>
             </div>
           </div>
           <div class="group" id="difficultyGroup">
@@ -170,7 +169,7 @@
             <div class="setting-content">
               <input type="number" id="difficultyInput" min="1" max="10" step="1" value="3"
                      title="填写 1-10 的整数，数字越大难度越高（数值更大、逻辑更深）"
-                     style="width:64px;height:32px;border:2px solid #d5dff0;border-radius:8px;font-size:13px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafbff;outline:none;">
+                     class="tb-num-input" style="width:64px;">
               <span class="range-hint">1~10</span>
             </div>
           </div>
@@ -372,10 +371,16 @@
       tg.style.display = '';
       var chipShown = false;
       plugin.settings.forEach(function (s, si) {
-        // 数字输入型设置（如口算「难度＝最大数」）：渲染填写框，不用 chip
+        // 数字输入型设置（如口算「难度＝最大数」）：渲染为独立难度行，
+        // 与 chip 难度子组一致——作为 .row 的兄弟 .group 插入 #countGroup 之前，
+        // 不再嵌套进 #typeGroup，保证与题型/题量行对齐（标准 12px 行距、左对齐）。
         if (s.type === 'number') {
           hasNumSetting = true;
-          renderNumberSetting(tg, s, si);
+          var numGrp = el('div', 'group type-sub-group');
+          numGrp.setAttribute('role', 'group');
+          numGrp.setAttribute('aria-label', (s.label || s.key));
+          wrap.insertBefore(numGrp, $('countGroup'));
+          renderNumberSetting(numGrp, s, si);
           return;
         }
         if (!s.key || !Array.isArray(s.options) || !s.options.length) return;
@@ -474,32 +479,30 @@
   }
 
   // 数字输入型设置控件（如口算「难度：最大数」，用户自行填写）
-  function renderNumberSetting(container, s, si) {
-    var box = el('div', 'set-num');
-    box.style.cssText = 'display:flex;align-items:center;gap:8px;margin:6px 0 2px 4px;';
+  // 渲染为统一 .group 行：.lbl（与题型/题量同款）+ .setting-content（输入框 + 提示），
+  // 由调用方插入到 .row 作为独立难度行（见 renderSettings 中 type==='number' 分支）。
+  function renderNumberSetting(group, s, si) {
     var nl = el('span', 'lbl', (s.label || s.key) + '：');
+    var content = el('div', 'setting-content');
     var inp = document.createElement('input');
     inp.type = 'number';
+    inp.className = 'tb-num-input';
+    inp.style.width = '92px';
     inp.min = s.min != null ? s.min : 1;
     inp.max = s.max != null ? s.max : 100;
     inp.step = s.step || 1;
     if (!(s.key in state.settingNums)) state.settingNums[s.key] = s.default != null ? s.default : '';
     inp.value = state.settingNums[s.key];
-    inp.style.cssText = 'width:92px;height:34px;border:1.5px solid #d5dff0;border-radius:9px;font-size:15px;font-weight:700;text-align:center;color:#27324a;outline:none;background:#fff;';
     inp.onchange = function () {
       var v = inp.value === '' ? '' : Number(inp.value);
       if (v === '' && s.default != null) v = s.default;
       state.settingNums[s.key] = v;
       if (state.exerciseSet) generate();
     };
-    box.appendChild(nl);
-    box.appendChild(inp);
-    if (s.hint) {
-      var hh = el('span', 'lbl', s.hint);
-      hh.style.cssText = 'color:var(--muted);font-size:11px;';
-      box.appendChild(hh);
-    }
-    container.appendChild(box);
+    content.appendChild(inp);
+    if (s.hint) content.appendChild(el('span', 'count-tip', s.hint));
+    group.appendChild(nl);
+    group.appendChild(content);
   }
 
   // ============ 计时器 ============
@@ -528,12 +531,6 @@
   function generate() {
     if (!state.plugin) return;
     try {
-      // 自适应难度：基于该 (subject,grade,plugin) 的历史正确率调整难度/题型
-      var adjSubj = state.plugin.subject, adjPid = state.plugin.id;
-      var adj = (App.Adaptive && App.Adaptive.computeAdjustment)
-        ? App.Adaptive.computeAdjustment(adjSubj, state.grade, adjPid)
-        : { difficultyDelta: 0, typeBias: null };
-
       var options = { grade: state.grade, count: state.count };
       if (state.type) options.type = state.type;
       // chip 型设置（如难度分档 level）除 type 外原样传给插件 generate
@@ -547,34 +544,8 @@
         var v = state.settingNums[k];
         if (v !== '' && v != null) options[k] = v;
       });
-      // 自适应难度仅对数学有效（难度数值/题型分布为数学概念，非数学科目隐藏难度控件）
-      if (adjSubj === 'math' && !state.hasLevelSetting) {
-        // 难度：在用户所选基础难度上叠加自适应调整量（连续表现好↑ / 弱↓）
-        options.difficulty = App.Adaptive.adjustedDifficulty(state.difficulty || 3, adj.difficultyDelta);
-        // 题型微调：仅当用户未显式选择题型时，按表现偏向更难/更基础子类型
-        if (!state.type && adj.typeBias && Array.isArray(state.plugin.settings)) {
-          var typeSetting = null;
-          state.plugin.settings.forEach(function (s) { if (s.key === 'type') typeSetting = s; });
-          if (typeSetting && Array.isArray(typeSetting.options) && typeSetting.options.length) {
-            var opt = adj.typeBias === 'hard'
-              ? typeSetting.options[typeSetting.options.length - 1]
-              : typeSetting.options[0];
-            if (opt && opt.value != null) options.type = opt.value;
-          }
-        }
-        // 提示条：告诉用户难度被自动调整了
-        var hintEl = $('adaptiveHint');
-        if (hintEl) {
-          var h = (App.Adaptive && App.Adaptive.hint) ? App.Adaptive.hint(adjSubj, state.grade, adjPid) : '';
-          hintEl.textContent = h;
-          hintEl.style.display = h ? '' : 'none';
-        }
-      } else {
-        // 插件自带难度分档（如应用题初级/中级/高级/综合）：难度由分档 chip 决定，不叠加自适应
-        if (!state.hasLevelSetting && state.difficulty) options.difficulty = state.difficulty;
-        var hintEl2 = $('adaptiveHint');
-        if (hintEl2) hintEl2.style.display = 'none';
-      }
+      // 难度：仅数学且无自带分档时，使用用户所选基础难度（不再叠加自适应调整）
+      if (!state.hasLevelSetting && state.difficulty) options.difficulty = state.difficulty;
       var result = state.plugin.generate(options);
       if (result && typeof result.then === 'function') {
         // 异步插件（如 math-comprehensive：需先加载子插件）
@@ -748,18 +719,6 @@
     }
     state.checkResult = result;
     state.answered = true;
-    // 记录本次练习结果，供自适应难度后续调整使用：
-    //  - recordSession：题目级采集（q.knowledgePointId / q.difficulty 可选字段），
-    //    自动产出 插件级加权摘要 + 知识点级分组记录（KP 仅对竞赛/综合插件生效）
-    //  - 兜底：旧式聚合记录（无题目数组/无 results 时）
-    if (App.Adaptive && typeof result.total === 'number') {
-      var exQs = (state.exerciseSet && Array.isArray(state.exerciseSet.questions)) ? state.exerciseSet.questions : null;
-      if (App.Adaptive.recordSession && exQs && Array.isArray(result.results)) {
-        App.Adaptive.recordSession(state.plugin.subject, state.grade, state.plugin.id, exQs, result.results);
-      } else if (App.Adaptive.record) {
-        App.Adaptive.record(state.plugin.subject, state.grade, state.plugin.id, result.correct, result.total);
-      }
-    }
     markQuestions(result);
     showResult(result);
   }
@@ -1058,12 +1017,9 @@
       clearTimeout(rt);
       rt = setTimeout(refreshTypeChips, 120);
     });
-    // 刷新重置：先清除本题型的难度记忆，再刷新页面（功能合并为一个按钮）
+    // 刷新重置：重新加载页面（原自适应难度记忆功能已移除）
     var refreshResetBtn = $('refreshResetBtn');
     if (refreshResetBtn) refreshResetBtn.addEventListener('click', function () {
-      if (App.Adaptive && App.Adaptive.reset) {
-        App.Adaptive.reset(state.plugin.subject, state.grade, state.plugin.id);
-      }
       location.reload();
     });
 

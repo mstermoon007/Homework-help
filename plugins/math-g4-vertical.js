@@ -22,7 +22,7 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g4-vertical.js 依赖 shared/common.js（PluginUtil），请先加载');
   // 竖式题受位数/整除等结构性约束，数值范围不随难度缩放；
-  // 仍统一消费 profile 以标注 q.difficulty（供 Adaptive v2 加权）。
+  // 仍统一消费 profile 以标注 q.difficulty（用于难度标注）。
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
   if (!_D || !_D.consume) throw new Error('plugins/math-g4-vertical.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');

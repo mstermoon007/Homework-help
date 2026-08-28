@@ -974,7 +974,7 @@
     var agent = new MathWordProblemAgent({ grade: grade, cat: cat, level: opts.level || 'basic' });
     var list = agent.generate(count);
     // 知识点标注（按年级 + 模板桶；本插件自带 level 分档，难度消费按规范跳过，
-    // 未标注 q.difficulty 时 Adaptive 按标准档 3 计权）
+    // 未标注 q.difficulty 时按标准档 3 计权）
     var KP_BY_GRADE_CAT = {
       1: { solve: 'math-g1-m8-solve-problems', chain: 'math-g1-m8-chain-mixed' },
       2: { solve: 'math-g2-m8-solve-problems', chain: 'math-g2-m8-solve-problems' },
