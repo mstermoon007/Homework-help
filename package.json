@@ -9,6 +9,7 @@
     "check-knowledge": "node dev/verify-knowledge-bank.js",
     "check-regression": "node dev/regression-check.js",
     "check-duplicates": "node dev/check-duplicates.js",
+    "check-fingerprint": "node dev/plugin-fingerprint.js",
     "test": "npm run verify && npm run check-knowledge && npm run check-regression && node dev/test-difficulty.js && node dev/verify-svg.js && npm run check-lint",
     "check-lint": "node dev/lint-check.js",
     "check-language": "node dev/verify-language-banks.js",

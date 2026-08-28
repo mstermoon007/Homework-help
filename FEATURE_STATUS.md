@@ -47,11 +47,19 @@ Track the status of all product features from documentation through implementati
 - **Code Status**: subject-types.html with SUBJECT_CONFIG (Task 13)
 - **Action**: Verified and complete
 
-### Plugin Fingerprint System
-- **Doc Status**: designed in Task 12 analysis
-- **Code Status**: 3-level fingerprint system implemented (analysis complete)
-- **Duplicate Rate**: 26/82 plugins above 50% duplicate threshold (needs ongoing monitoring)
-- **Action**: Framework complete, monitor going forward
+### Plugin Fingerprint System (Task 12)
+- **Doc Status**: RELEASED — implemented and wired into the quality gate
+- **Code Status**: `dev/plugin-fingerprint.js` — unified 3-level fingerprint + runtime question-duplicate measurement + fix-category attribution
+  - L1 content hash (MD5 of normalized source)
+  - L2 parameter signature (randInt/shuffle argument shapes)
+  - L3 structure fingerprint (subject:title:kp-set:methods)
+  - Runtime duplicate rate: ROUNDS×COUNT question generation, cross-round repeat rate
+  - Fix categories: `weak-variation` / `no-generate` / `no-randomization` / `small-pool` / `pool-too-small` / `ok`
+- **Duplicate Rate**: `npm run check-fingerprint` → report in `dev/fingerprint-report.json` / `.md`
+  - 29/82 math plugins currently over their per-grade threshold
+  - Categories: `no-generate` (19), `weak-variation` (10)
+  - Code-level duplication: 0 groups (plugins are structurally distinct; prior "26/82 >50%" was a looser heuristic)
+- **Action**: System landed. Follow-up: fix the 29 over-threshold plugins per their fix category (see `dev/fingerprint-report.md`)
 
 ### Quality Gate
 - **All checks**: passing ✅
