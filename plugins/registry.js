@@ -7,17 +7,17 @@
 (function(global) {
   var PLUGIN_REGISTRY = [
     // 数学（一年级）
-    { id: 'math-oral', file: 'plugins/math-oral.js', name: '口算练习', desc: '50以内加减法计算', subject: 'math', category: 'number', grades: [1, 2, 3] },
-    { id: 'math-word-problems', file: 'plugins/math-word-problems.js', name: '应用题', subject: 'math', category: 'number', grades: [1, 2, 3] },
-    { id: 'math-make-ten', file: 'plugins/math-make-ten.js', name: '凑十法', subject: 'math', category: 'number', grades: [1] },
-    { id: 'math-shapes', file: 'plugins/math-shapes.js', name: '认识图形', subject: 'math', category: 'geometry', grades: [1, 2, 3] },
-    { id: 'math-number-sense', file: 'plugins/math-number-sense.js', name: '数的认识', subject: 'math', category: 'number', grades: [1, 2, 3] },
-    { id: 'math-clock', file: 'plugins/math-clock.js', name: '认识钟表', subject: 'math', category: 'number', grades: [1] },
-    { id: 'math-patterns', file: 'plugins/math-patterns.js', name: '找规律', subject: 'math', category: 'number', grades: [1] },
-    { id: 'math-picture-equations', file: 'plugins/math-picture-equations.js', name: '看图列式', subject: 'math', category: 'number', grades: [1] },
-    { id: 'math-statistics', file: 'plugins/math-statistics.js', name: '分类与统计', subject: 'math', category: 'statistics', grades: [1] },
-    { id: 'math-money', file: 'plugins/math-money.js', name: '认识人民币', subject: 'math', category: 'number', grades: [1] },
-    { id: 'math-g1-multiplication-table', file: 'plugins/math-g1-multiplication-table.js', name: '提前预习', desc: '乘法表·除法表·乘除法填空', subject: 'math', category: 'number', grades: [1] },
+    { id: 'math-oral', file: 'plugins/math-oral.js', name: '口算练习', desc: '50以内加减法计算', subject: 'math', category: 'number', grades: [1, 2, 3], moduleIds: ['M1'] },
+    { id: 'math-word-problems', file: 'plugins/math-word-problems.js', name: '应用题', subject: 'math', category: 'number', grades: [1, 2, 3], moduleIds: ['M8'] },
+    { id: 'math-make-ten', file: 'plugins/math-make-ten.js', name: '凑十法', subject: 'math', category: 'number', grades: [1], moduleIds: ['M0'] },
+    { id: 'math-shapes', file: 'plugins/math-shapes.js', name: '认识图形', subject: 'math', category: 'geometry', grades: [1, 2, 3], moduleIds: ['M6'] },
+    { id: 'math-number-sense', file: 'plugins/math-number-sense.js', name: '数的认识', subject: 'math', category: 'number', grades: [1, 2, 3], moduleIds: ['M4'] },
+    { id: 'math-clock', file: 'plugins/math-clock.js', name: '认识钟表', subject: 'math', category: 'number', grades: [1], moduleIds: ['M4'] },
+    { id: 'math-patterns', file: 'plugins/math-patterns.js', name: '找规律', subject: 'math', category: 'number', grades: [1], moduleIds: ['M4'] },
+    { id: 'math-picture-equations', file: 'plugins/math-picture-equations.js', name: '看图列式', subject: 'math', category: 'number', grades: [1], moduleIds: ['M7'] },
+    { id: 'math-statistics', file: 'plugins/math-statistics.js', name: '分类与统计', subject: 'math', category: 'statistics', grades: [1], moduleIds: ['M9'] },
+    { id: 'math-money', file: 'plugins/math-money.js', name: '认识人民币', subject: 'math', category: 'number', grades: [1], moduleIds: ['M4'] },
+    { id: 'math-g1-multiplication-table', file: 'plugins/math-g1-multiplication-table.js', name: '提前预习', desc: '乘法表·除法表·乘除法填空', subject: 'math', category: 'number', grades: [1], moduleIds: ['M13'] },
     // 数学（二年级）
     { id: 'math-unit-convert', file: 'plugins/math-unit-convert.js', name: '单位换算', subject: 'math', category: 'number', grades: [2, 3] },
     { id: 'math-geometry', file: 'plugins/math-geometry.js', name: '图形与几何', subject: 'math', category: 'geometry', grades: [2, 3] },

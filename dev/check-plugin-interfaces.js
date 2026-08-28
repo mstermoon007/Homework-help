@@ -39,6 +39,14 @@ var ROOT = path.join(__dirname, '..');
 var registryMod = require('./plugin-registry.js');
 var loader = require('./plugin-loader.js');
 
+// 加载知识库（顺序与浏览器 production 一致：先 bank，后各科目）。
+// 否则插件自检调用 reportCoverage 时 KnowledgeBank 缺一年级数据，会误报「无 X 年级知识库数据」。
+global.window = global.window || global;
+require('../shared/knowledge-bank.js');
+require('../shared/knowledge-math.js');
+require('../shared/knowledge-cn.js');
+require('../shared/knowledge-en.js');
+
 var CHECK_COUNT = 5; // 接口一致性探测用题量（小样本即可）
 
 /** 登记一条检查结果 */
