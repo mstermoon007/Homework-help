@@ -12,8 +12,19 @@
         font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
         background: var(--bg);
         min-height: 100vh;
-        font-size: 16px;
+        font-size: 14px;
         -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ============ 2.0 (V2.1) 风格对齐（自包含，避免依赖 token 漂移） ============ */
+    .hero {
+        background: linear-gradient(160deg, #4A90D9 0%, #6DB3F2 40%, #7EB6F0 100%);
+    }
+    .hero-overlay {
+        background: linear-gradient(160deg, rgba(74,144,217,0.55) 0%, rgba(109,179,242,0.40) 40%, rgba(126,182,240,0.35) 100%);
+    }
+    .top-nav .nav-logo {
+        background: linear-gradient(135deg, #4A90D9, #7EB6F0);
     }
 
     /* ============ 顶部导航栏 ============ */
@@ -32,7 +43,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         font-weight: 800;
         color: var(--brand);
     }
@@ -89,13 +100,13 @@
         text-align: left;
     }
     .hero-text h1 {
-        font-size: 2.2rem;
+        font-size: 1.9rem;
         font-weight: 900;
         margin-bottom: 8px;
         text-shadow: 0 2px 12px rgba(0,0,0,0.35), 0 0 40px rgba(0,0,0,0.2);
     }
     .hero-text .hero-desc {
-        font-size: 0.95rem;
+        font-size: 0.86rem;
         opacity: 0.95;
         margin-bottom: 16px;
         line-height: 1.6;
@@ -111,7 +122,7 @@
         backdrop-filter: blur(6px);
         padding: 5px 14px;
         border-radius: 20px;
-        font-size: 0.82rem;
+        font-size: 0.76rem;
         font-weight: 600;
         white-space: nowrap;
         text-shadow: 0 1px 3px rgba(0,0,0,0.2);
@@ -168,7 +179,7 @@
         padding-left: 32px;
     }
     .col-title {
-        font-size: 1.05rem;
+        font-size: 1rem;
         font-weight: 700;
         color: var(--ink);
         margin-bottom: 18px;
@@ -209,12 +220,12 @@
         margin: 0 auto;
     }
     .subject-card .s-name {
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 800;
         margin-bottom: 4px;
     }
     .subject-card .s-desc {
-        font-size: 0.72rem;
+        font-size: 0.68rem;
         color: var(--muted);
         line-height: 1.4;
     }
@@ -260,7 +271,7 @@
         line-height: 1;
     }
     .grade-chip .g-name {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         font-weight: 700;
         color: var(--muted);
     }
@@ -284,7 +295,7 @@
         max-width: 320px;
         margin: 0 auto;
         padding: 16px 32px;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 800;
         color: #fff;
         background: var(--grad-cta);
@@ -315,26 +326,45 @@
         transform: translateX(3px);
     }
 
-    /* ============ 底部版权 ============ */
+    /* ============ 页脚（纯文本，统一字号，无玻璃效果） ============ */
     .site-footer {
+        max-width: 1200px;
+        margin: 24px auto 0;
+        padding: 16px;
         text-align: center;
-        padding: 0 16px 24px;
         color: var(--muted);
-        font-size: 0.75rem;
+        font-size: 0.78rem;
         line-height: 1.8;
     }
-    .site-footer a {
-        color: var(--muted);
-        text-decoration: none;
+    .site-footer .footer-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: center;
     }
-    .site-footer a:hover { color: var(--brand); }
+    .site-footer .footer-copy { font-weight: 700; }
+    .site-footer .footer-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        justify-content: center;
+    }
+    .site-footer a { color: var(--muted); text-decoration: none; }
+    .site-footer a:hover { color: var(--brand); text-decoration: underline; }
+    .site-footer .footer-sep { opacity: 0.5; }
+    .site-footer .footer-version,
+    .site-footer .footer-time { font-variant-numeric: tabular-nums; }
+    @media (max-width: 640px) {
+        .site-footer { margin: 18px 12px 0; padding: 12px; }
+    }
 
     /* ============ 响应式 ============ */
     @media (max-width: 768px) {
         .hero-inner {
             padding: 28px 20px 24px;
         }
-        .hero-text h1 { font-size: 1.8rem; }
+        .hero-text h1 { font-size: 1.6rem; }
         .select-row {
             flex-direction: column;
             gap: 24px;
@@ -351,24 +381,53 @@
 
     @media (max-width: 480px) {
         .hero-inner { padding: 24px 16px 20px; }
-        .hero-text h1 { font-size: 1.6rem; }
-        .hero-text .hero-desc { font-size: 0.85rem; }
-        .hero-text .tag { font-size: 0.72rem; padding: 4px 10px; }
+        .hero-text h1 { font-size: 1.4rem; }
+        .hero-text .hero-desc { font-size: 0.8rem; }
+        .hero-text .tag { font-size: 0.7rem; padding: 4px 10px; }
         .main-wrapper { padding: 16px 12px 28px; }
         .select-card { padding: 16px 14px; border-radius: 12px; }
         .select-row { gap: 18px; }
         .select-col + .select-col { padding-top: 18px; }
-        .col-title { font-size: 0.95rem; margin-bottom: 14px; }
+        .col-title { font-size: 0.92rem; margin-bottom: 14px; }
         .subject-grid { gap: 8px; }
         .subject-card { padding: 14px 6px 12px; border-radius: 12px; }
         .subject-card .s-icon { font-size: 2rem; }
-        .subject-card .s-name { font-size: 1rem; }
-        .subject-card .s-desc { font-size: 0.68rem; }
+        .subject-card .s-name { font-size: 0.95rem; }
+        .subject-card .s-desc { font-size: 0.66rem; }
         .grade-grid { gap: 8px; }
         .grade-chip { padding: 12px 8px; border-radius: 12px; }
         .grade-chip .g-icon { font-size: 1.3rem; }
-        .grade-chip .g-name { font-size: 0.82rem; }
-        .btn-start { max-width: 100%; padding: 14px 24px; font-size: 1.1rem; border-radius: 22px; }
+        .grade-chip .g-name { font-size: 0.8rem; }
+        .btn-start { max-width: 100%; padding: 14px 24px; font-size: 1rem; border-radius: 22px; }
+    }
+
+    /* ============ 问题反馈按钮（胶囊玻璃半透明） ============ */
+    .feedback-entry-btn {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 1000;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        color: #808080;
+        background: rgba(74, 144, 217, 0.28);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+        transition: background 0.2s, border-color 0.2s, transform 0.2s;
+        cursor: pointer;
+    }
+    .feedback-entry-btn:hover {
+        background: rgba(74, 144, 217, 0.45);
+        border-color: rgba(255, 255, 255, 0.85);
+        transform: translateY(-1px);
     }
 </style>
 <script type="application/ld+json">
@@ -386,18 +445,21 @@
   "@type": "Organization",
   "name": "Homework Help",
   "url": "https://mstermoon007.github.io/Homework-help/",
-  "logo": "https://mstermoon007.github.io/Homework-help/banner.jpg",
+  "logo": "https://mstermoon007.github.io/Homework-help/assets/banner.webp",
   "sameAs": []
 }
 </script>
-<link rel="preload" href="banner.jpg" as="image">
+<link rel="preload" href="assets/banner.webp" as="image">
 </head>
 <body>
+
+<!-- 问题反馈按钮 -->
+<a href="feedback/feedback.html" class="feedback-entry-btn">问题反馈</a>
 
 <!-- 顶部导航栏 -->
 <nav class="top-nav">
     <div class="nav-brand">
-        <div class="nav-logo"><img src="assets/logo.png" alt="小学练习本"></div>
+        <div class="nav-logo"><img src="assets/logo.webp" alt="小学练习本"></div>
         <span>小学练习本</span>
     </div>
 </nav>
@@ -433,19 +495,19 @@
                     <div class="subject-grid">
                         <input type="radio" name="subject" id="sMath" class="subject-radio" value="math" checked>
                         <label for="sMath" class="subject-card math">
-                            <span class="s-icon"><img src="assets/logo-math.png" alt="数学"></span>
+                            <span class="s-icon"><img src="assets/logo-math.webp" alt="数学"></span>
                             <span class="s-name">数学</span>
                             <span class="s-desc">口算·应用题·凑十法</span>
                         </label>
                         <input type="radio" name="subject" id="sChinese" class="subject-radio" value="chinese">
                         <label for="sChinese" class="subject-card chinese">
-                            <span class="s-icon"><img src="assets/logo-chinese.png" alt="语文"></span>
+                            <span class="s-icon"><img src="assets/logo-chinese.webp" alt="语文"></span>
                             <span class="s-name">语文</span>
                             <span class="s-desc">拼音·字词练习</span>
                         </label>
                         <input type="radio" name="subject" id="sEnglish" class="subject-radio" value="english">
                         <label for="sEnglish" class="subject-card english">
-                            <span class="s-icon"><img src="assets/logo-english.png" alt="英语"></span>
+                            <span class="s-icon"><img src="assets/logo-english.webp" alt="英语"></span>
                             <span class="s-name">英语</span>
                             <span class="s-desc">字母·单词·启蒙</span>
                         </label>
@@ -498,18 +560,45 @@
     </form>
 </div>
 
-<!-- 底部版权 -->
+<!-- 底部版权（玻璃效果，动态时间 + 版本号 + 备案信息） -->
 <footer class="site-footer">
-    <div>© 2024 小学练习本 版权所有</div>
-    <div>
-        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">粤ICP备XXXXXXXX号</a>
-        &nbsp;|&nbsp;
-        <a href="http://www.beian.gov.cn/" target="_blank" rel="noopener">粤公网安备 XXXXXXXXXXXX号</a>
+    <div class="footer-inner">
+        <div class="footer-copy">© <span id="footYear"></span> 甘肃源始人广告传媒有限公司 版权所有</div>
+        <div class="footer-meta">
+            <span class="footer-beian">
+                <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">粤ICP备XXXXXXXX号</a>
+                <span class="footer-sep">|</span>
+                <a href="http://www.beian.gov.cn/" target="_blank" rel="noopener">粤公网安备 XXXXXXXXXXXX号</a>
+            </span>
+            <span class="footer-sep">|</span>
+            <span class="footer-version">版本 <span id="footVersion"></span></span>
+            <span class="footer-sep">|</span>
+            <span class="footer-time" id="footTime"></span>
+        </div>
     </div>
 </footer>
 
+<script src="shared/version.js"></script>
 <script src="shared/common.js"></script>
 <script>
+(function () {
+    // 动态年份 + 实时时间
+    var yEl = document.getElementById('footYear');
+    var tEl = document.getElementById('footTime');
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    function tick() {
+        var d = new Date();
+        if (yEl) yEl.textContent = d.getFullYear();
+        if (tEl) tEl.textContent = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+            ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+    tick();
+    setInterval(tick, 1000);
+    // 版本号（统一从 shared/version.js 读取）
+    var vEl = document.getElementById('footVersion');
+    if (vEl) vEl.textContent = (typeof APP_VERSION !== 'undefined') ? APP_VERSION : '3.1.0';
+})();
+
 function getSelected() {
     var grade = document.querySelector('input[name="grade"]:checked').value;
     var subject = document.querySelector('input[name="subject"]:checked').value;
@@ -540,7 +629,7 @@ function setBanner(imgUrl) {
 }
 
 // 设置 Banner 底图
-setBanner('banner.jpg');
+setBanner('assets/banner.webp');
 
 // 科目/年级卡片为 <label for="...">，点击切换 radio 由浏览器原生行为完成，无需 JS
 </script>

@@ -13,9 +13,10 @@ Track the status of all product features from documentation through implementati
 ## Feature Status List
 
 ### Feedback System
-- **Doc Status**: none (no feedback.html/feedback.js/feedback.css found)
-- **Code Status**: none (no feedback implementation exists)
-- **Action**: Delete documentation references or implement feedback system
+- **Doc Status**: implemented
+- **Code Status**: released (standalone `feedback/feedback.html` + `feedback/feedback.css` + `feedback/feedback.js`)
+- **Backend**: GitHub Pages 兼容——`feedback.js` 提交到可配置 `FEEDBACK_ENDPOINT`（Formspree/Getform 等静态表单服务，原生支持截图附件邮件）；留空时自动降级为 `mailto:317411213@qq.com` 兜底
+- **Entry**: `index.html` 悬浮胶囊玻璃按钮 `.feedback-entry-btn` → `feedback/feedback.html`
 
 ### SEO & Metadata
 - **Doc Status**: documented in docs/seo-monitoring.md

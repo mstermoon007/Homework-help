@@ -12,4 +12,6 @@ const APP_VERSION = '3.1.0';
 const CACHE_VERSION = 'homework-help-' + APP_VERSION;
 const BUILD_DATE = new Date().toISOString();
 
-module.exports = { APP_VERSION, CACHE_VERSION, BUILD_DATE };
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { APP_VERSION, CACHE_VERSION, BUILD_DATE };
+}

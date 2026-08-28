@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>问题反馈 - Homework Help</title>
+  <link rel="stylesheet" href="feedback.css">
+</head>
+<body>
+  <div class="feedback-container">
+    <header class="feedback-header">
+      <a href="../index.html" class="back-link">← 返回首页</a>
+      <h1>问题反馈</h1>
+      <span class="header-note">您的反馈将帮助我们改进</span>
+    </header>
+
+    <form id="feedback-form" class="feedback-form">
+      <!-- 主题 -->
+      <div class="form-group">
+        <label for="subject">主题 <span class="required">*</span></label>
+        <input type="text" id="subject" name="subject" placeholder="请简要描述问题类型，如：口算题生成失败" required maxlength="100">
+      </div>
+
+      <!-- 问题描述 -->
+      <div class="form-group">
+        <label for="description">问题描述</label>
+        <textarea id="description" name="description" rows="6" placeholder="请详细描述您遇到的问题（可选）"></textarea>
+      </div>
+
+      <!-- 截图/图片区域 -->
+      <div class="form-group">
+        <label>截图/图片</label>
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-zone-inner">
+            <span class="drop-icon">📎</span>
+            <p>支持 <strong>Ctrl+V 粘贴截图</strong> 或点击上传</p>
+            <p class="drop-hint">最多 5 张，每张不超过 2MB</p>
+          </div>
+          <input type="file" id="file-input" accept="image/*" multiple hidden>
+        </div>
+
+        <!-- 图片预览区 -->
+        <div class="preview-container" id="preview-container"></div>
+      </div>
+
+      <!-- 提交按钮 -->
+      <div class="form-actions">
+        <button type="submit" class="submit-btn" id="submit-btn">提交反馈</button>
+        <span class="submit-status" id="submit-status"></span>
+      </div>
+    </form>
+  </div>
+
+  <script src="feedback.js"></script>
+</body>
+</html>
