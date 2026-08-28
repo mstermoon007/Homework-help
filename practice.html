@@ -151,35 +151,43 @@
     <div class="controls-grid">
       <div class="controls-settings">
         <div class="row" style="margin-top:0;">
-          <div class="group" id="typeGroup" role="radiogroup" aria-label="题型" style="display:none;">
-            <span class="lbl">题型：</span>
-          </div>
+          <div class="group" id="typeGroup" role="radiogroup" aria-label="题型" style="display:none;"></div>
           <div class="group" id="countGroup" role="radiogroup" aria-label="题量">
             <span class="lbl">题量：</span>
-            <button class="chip active" data-count="10" role="radio" aria-checked="true">10题</button>
-            <button class="chip" data-count="20" role="radio" aria-checked="false">20题</button>
-            <button class="chip" data-count="50" role="radio" aria-checked="false">50题</button>
-            <button class="chip" data-count="custom" role="radio" aria-checked="false">自定义</button>
-            <input type="number" id="customCount" min="1" max="50" step="1" placeholder="自定义"
-                   autocomplete="off"
-                   style="width:70px;height:30px;border:1.5px solid #c9d4e6;border-radius:8px;font-size:13px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafbff;outline:none;display:none;">
-            <span class="count-tip" id="countTip" style="font-size:11px;color:#9aa5b5;font-weight:500;display:none;"></span>
+            <div class="setting-content">
+              <button class="chip active" data-count="10" role="radio" aria-checked="true">10题</button>
+              <button class="chip" data-count="20" role="radio" aria-checked="false">20题</button>
+              <button class="chip" data-count="50" role="radio" aria-checked="false">50题</button>
+              <button class="chip" data-count="custom" role="radio" aria-checked="false">自定义</button>
+              <input type="number" id="customCount" min="1" max="50" step="1" placeholder="自定义"
+                     autocomplete="off"
+                     style="width:70px;height:30px;border:1.5px solid #c9d4e6;border-radius:8px;font-size:13px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafbff;outline:none;display:none;">
+              <span class="count-tip" id="countTip" style="font-size:11px;color:#9aa5b5;font-weight:500;display:none;"></span>
+            </div>
           </div>
           <div class="group" id="difficultyGroup">
             <span class="lbl">难度：</span>
-            <input type="number" id="difficultyInput" min="1" max="10" step="1" value="3"
-                   title="填写 1-10 的整数，数字越大难度越高（数值更大、逻辑更深）"
-                   style="width:64px;height:32px;border:2px solid #d5dff0;border-radius:8px;font-size:15px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafbff;outline:none;">
-            <span class="lbl" style="color:var(--muted);font-weight:500;">1~10</span>
+            <div class="setting-content">
+              <input type="number" id="difficultyInput" min="1" max="10" step="1" value="3"
+                     title="填写 1-10 的整数，数字越大难度越高（数值更大、逻辑更深）"
+                     style="width:64px;height:32px;border:2px solid #d5dff0;border-radius:8px;font-size:13px;font-weight:700;text-align:center;color:var(--brand-d);background:#fafbff;outline:none;">
+              <span class="range-hint">1~10</span>
+            </div>
           </div>
         </div>
       </div>
       <div class="controls-actions">
-        <button class="btn btn-primary" id="genBtn">生成练习题</button>
-        <button class="btn btn-primary" id="checkBtn" disabled>检查答案</button>
-        <button class="btn btn-ghost" id="revealBtn" disabled>显示答案</button>
-        <button class="btn btn-ghost" id="printBtn" disabled>打印页面</button>
-        <button class="btn btn-ghost btn-sm" id="refreshResetBtn" title="清除本题型的难度记忆并刷新页面">刷新重置</button>
+        <div class="controls-row row-single">
+          <button class="btn btn-primary" id="genBtn">生成练习题</button>
+        </div>
+        <div class="controls-row row-pair">
+          <button class="btn btn-primary" id="checkBtn" disabled>检查答案</button>
+          <button class="btn btn-ghost" id="revealBtn" disabled>显示答案</button>
+        </div>
+        <div class="controls-row row-pair">
+          <button class="btn btn-ghost" id="printBtn" disabled>打印页面</button>
+          <button class="btn btn-ghost" id="refreshResetBtn" title="清除本题型的难度记忆并刷新页面">刷新重置</button>
+        </div>
       </div>
     </div>
   </section>
