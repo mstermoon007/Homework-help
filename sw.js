@@ -9,16 +9,8 @@
  *   配合 HTML 注入的 ?v=<版本号> 与完整 URL 缓存键，每个版本形成独立缓存条目，
  *   版本升级即令旧缓存失效，彻底避免新旧样式混排。导航请求保留 network-first。
  *   
- *   **请求去重**：在短时间内（默认 2s），同一资源的多个并发请求只触发一次网络更新。
- *    通过 tracking 映射和 setTimeout 计时器实现：第一个请求发起网络请求，
- *    后续请求等待同一计时器的结果，避免重复下载同一资源。
- *    计时器完成后条目从 tracking 中移除，允许下一轮去重。
- *   
- * - 版本管理：维护 CACHE_VERSION，当有更新时版本号 +1 并清理旧缓存。
- *    通过 cache key 的版本前缀配合 query 参数实现：开发者在部署新版本时，
- *    仅需将 CACHE_VERSION 从 'v1' 改为 'v2'，并在 HTML 中注入对应版本号，
- *    即可让浏览器/CDN 通过 ?v= 参数感知资源更新并生效，避免清理所有可能仍被引用的缓存键。
- *    activate 事件中仅清理比当前版本旧的缓存键。
+ * - 版本管理：缓存名 CACHE = 'hw-help-' + APP_VERSION；部署新版本时 APP_VERSION 自增，
+ *    activate 清理一切非当前版本缓存，使全部静态资源（含样式）整体失效并回填。
  * - activate：清理旧版本缓存（保留当前版本及更旧），立即接管页面。
  * - 离线兜底：导航请求缓存未命中时回退到 index.html。
  *
@@ -26,23 +18,18 @@
  */
 
 // === 版本配置 ===
-// 请在部署新版本时将本常量自增（v1 → v2 → v3 ...），
-// 并在对应的 HTML 文件中注入对应版本号（见下文「前端版本注入」一节）。
 // 版本来源：经典 Service Worker 不支持顶层 ESM import，故用 importScripts 引入 version.js，
-// 其会把 APP_VERSION / CACHE_VERSION 挂到 self 上（见 shared/version.js）。
+// 其会把 APP_VERSION 挂到 self 上（见 shared/version.js）。CACHE 名必须与 APP_VERSION 同步。
 importScripts('./shared/version.js');
-var CACHE_VERSION = self.CACHE_VERSION; // 'homework-help-<APP_VERSION>'
 // 缓存名 = 固定前缀 + 版本号。activate 按此名清理一切非当前版本缓存（含旧 hw-help-v64）。
 // ⚠️ 本常量缺失曾导致 fetch/install 内 5 处 caches.open(CACHE) 抛 ReferenceError，
 //    SW 激活后第二次导航即 net::ERR_FAILED（E2E C1 用例捕获的 P0）。
 const CACHE = 'hw-help-3.3.0';  // 必须与 shared/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
 
 // === 核心资源列表 ===
-// 所有路径相对于站点根。CORE 保持「无 ?v=」字面量：fetch 处理以 url.pathname（忽略查询串）作为缓存键，
-// 若此处对资源加 ?v=CACHE_VERSION，则真实请求（HTML 未注入 ?v）将按 pathname 命中不到预缓存键，
-// 反而会丢失离线预缓存命中。因此版本失效不依赖 ?v，而由下方 CACHE 名随 APP_VERSION 自增 +
-// activate 清理一切非当前版本缓存实现（部署新版本即全量失效回填）。
-// withVersion() 仍保留，供前端确有需要时手动注入版本查询；当前 SW 离线策略不依赖它。
+// 所有路径相对于站点根。CORE 保持「无 ?v=」字面量：运行时 HTML 已由 scripts/add-asset-version.js
+// 注入 ?v=APP_VERSION，fetch 以完整 URL（含 ?v）为缓存键，故版本升级后旧 ?v URL 不再命中 →
+// 走网络取新资源；旧缓存随 activate 清理整体失效。
 const CORE = [
   './',
   'index.html',
@@ -52,9 +39,7 @@ const CORE = [
   'subject-types.html',
   'practice.html',
   'faq.html',
-  // 下面这些资源建议在 front-end HTML 模板中注入 ?v=CACHE_VERSION
-  // 示例：shared/tokens.css?v=__VERSION__, shared/common.js?v=__VERSION__
-  // 由于本 SW 不会自动修改 HTML 内容，故仅在此列出路径，实际版本控制见前端模板。
+  // 这些静态资源在部署时由 scripts/add-asset-version.js 自动注入 ?v=APP_VERSION（见 HTML 产物）。
   'shared/tokens.css',
   'shared/base.css',
   'shared/components.css',
@@ -86,16 +71,7 @@ const CORE = [
   'plugins/registry.js'
 ];
 
-/**
- * 为资源 URL 添加版本查询参数（由前端模板在构建时或运行时注入）
- * @param {string} path - 资源相对路径
- * @returns {string} - 包含版本参数的 URL
- */
-function withVersion(path) {
-  var hasQuery = path.indexOf('?') !== -1;
-  var separator = hasQuery ? '&' : '?';
-  return path + separator + 'v=' + CACHE_VERSION;
-}
+// （版本查询参数由 front-end 构建：scripts/add-asset-version.js 注入 ?v=APP_VERSION）
 
 /**
  * 从 registry.js 文本提取插件文件路径：file: 'plugins/xxx.js'
@@ -118,8 +94,7 @@ function cacheAll(cache, list) {
   }));
 }
 
-// 注：CACHE 名随 APP_VERSION 变化即触发 activate 清理旧缓存，资源失效无需前端注入 ?v。
-// withVersion() 保留供手动版本化，但 fetch 以 pathname 为缓存键，故注入 ?v 不改变失效语义。
+// 注：CACHE 名随 APP_VERSION 变化即触发 activate 清理旧缓存，全部静态资源整体失效并回填。
 
 self.addEventListener('install', function (e) {
   e.waitUntil(
