@@ -5,10 +5,9 @@
  * - install：预缓存核心壳页（各 HTML、shared/、pinyin-bank.js、assets、registry.js、插件文件），
  *    并从 registry.js 解析出全部插件文件路径一并预缓存，实现「缓存所有插件和共享文件」。
  *    **版本控制**：在 CORE 数组中通过 `?v=` 查询参数维护版本号，便于在插件/共享文件更新时强制浏览器/CDN 回填新缓存。
- * - fetch（任务：SWR 升级 + 请求去重）：
- *   同源静态 GET 采用 stale-while-revalidate：
- *   缓存命中立即返回（x-sw-strategy: swr-cache），同时后台拉取最新并回写缓存。
- *   未命中则走网络、回填后首响。导航请求保留 network-first（无哈希文件名下防止新旧 HTML/JS 错配）。
+ * - fetch：同源静态资源采用 Cache-First（命中即返回，未命中走网络并回填），
+ *   配合 HTML 注入的 ?v=<版本号> 与完整 URL 缓存键，每个版本形成独立缓存条目，
+ *   版本升级即令旧缓存失效，彻底避免新旧样式混排。导航请求保留 network-first。
  *   
  *   **请求去重**：在短时间内（默认 2s），同一资源的多个并发请求只触发一次网络更新。
  *    通过 tracking 映射和 setTimeout 计时器实现：第一个请求发起网络请求，
@@ -87,40 +86,6 @@ const CORE = [
   'plugins/registry.js'
 ];
 
-// === 请求去重调度：key -> { promise, timer }
-var requestQueue = {};
-
-/** 发起（或等待）一次去重的网络请求 */
-function makeRequest(key, url) {
-  // 若已有进行中的请求，直接返回相同的 Promise，避免重复下载
-  if (requestQueue[key]) {
-    return requestQueue[key];
-  }
-
-  // 首次请求：创建计时器并发起网络请求
-  var timer = setTimeout(function () {
-    // 计时器完成：从 tracking 中移除，允许下一轮去重
-    delete requestQueue[key];
-  }, 2000); // 2秒去重窗口
-
-  var promise = fetch(url).then(function (res) {
-    // 成功后回写缓存（静默，不影响响应）
-    var cacheName = CACHE;
-    caches.open(cacheName).then(function (cache) {
-      try { cache.put(key, res.clone()); } catch (_) {}
-    });
-    return res;
-  }).catch(function () {
-    // 网络失败：不改变缓存状态，让调用端得到 undefined / 错误响应
-    return null;
-  });
-
-  // 记入调度，等待中的请求将拿到同一 promise
-  requestQueue[key] = promise;
-
-  return promise;
-}
-
 /**
  * 为资源 URL 添加版本查询参数（由前端模板在构建时或运行时注入）
  * @param {string} path - 资源相对路径
@@ -176,19 +141,11 @@ self.addEventListener('install', function (e) {
 self.addEventListener('activate', function (e) {
   e.waitUntil(
     caches.keys().then(function (keys) {
-      // 删除一切非当前版本的缓存（旧版本号前缀匹配 '/NaN' 的写法永远匹配不到，已废弃）
-      var stale = keys.filter(function (k) { return k !== CACHE; });
-      return Promise.all(stale.map(function (k) { return caches.delete(k); }))
-        .then(function () { return { claimed: self.clients.claim(), hadStale: stale.length > 0 }; });
-    }).then(function (info) {
-      // 版本切换（清过旧缓存）后主动重载受控页面，避免首帧新旧样式混排；首次安装不重载
-      return info.claimed.then(function () {
-        if (!info.hadStale) return;
-        return self.clients.matchAll({ type: 'window' }).then(function (cls) {
-          cls.forEach(function (c) { if (c.url && c.navigate) c.navigate(c.url); });
-        });
-      });
-    })
+      // 清理旧版本缓存，保留当前 CACHE
+      return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) {
+        return caches.delete(k);
+      }));
+    }).then(function () { return self.clients.claim(); }) // 立即控制所有页面
   );
 });
 
@@ -217,45 +174,23 @@ self.addEventListener('fetch', function (e) {
     return;
   }
 
-  // 同源静态资源：stale-while-revalidate + 请求去重
-  // 缓存键使用完整 URL（含查询串），使 HTML 中注入的 ?v=<版本号> 能形成独立缓存条目，
-  // 版本升级后旧 URL 不再命中 → 走网络取新资源，避免新旧样式混排。
-  var cacheKey = request.url; // 完整 URL（含 ?v=...），不再忽略查询串
-
-  e.respondWith(
-    caches.open(CACHE).then(function (cache) {
-      return cache.match(cacheKey).then(function (hit) {
-        // 后台再验证：无论是否命中都发起网络请求刷新缓存（失败静默，不影响响应）
-        var network = makeRequest(cacheKey, req).then(function (res) {
-          // 成功回写缓存（静默）
-          if (res) {
-            try { cache.put(cacheKey, res.clone()); } catch (_) {}
-          }
-          return res;
-        }).catch(function () { return null; });
-        if (e.waitUntil) e.waitUntil(network);
-
-        if (hit) {
-          // 命中：立即以缓存响应，标记策略
-          try {
-            var served = hit.clone();
-            var h = new Headers(served.headers);
-            h.set('x-sw-strategy', 'swr-cache');
-            return new Response(served.body, { status: served.status, statusText: served.statusText, headers: h });
-          } catch (_) { return hit; }
-        }
-        // 未命中：等待网络请求（去重调度），成功则已回填缓存
-        return network.then(function (res) {
-          if (res) {
-            try {
-              var h2 = new Headers(res.headers);
-              h2.set('x-sw-strategy', 'swr-network');
-              return new Response(res.body, { status: res.status, statusText: res.statusText, headers: h2 });
-            } catch (_) { return res; }
-          }
-          return new Response('', { status: 504, statusText: 'offline' });
-        });
-      });
-    })
-  );
+  // 同源静态资源（CSS/JS/图片等）：Cache-First。
+  // 配合 HTML 注入的 ?v=<版本号> 与完整 URL 缓存键，每个版本形成独立缓存条目；
+  // 版本升级后旧 ?v URL 不再被请求 → 直接取新资源，彻底避免新旧样式混排。
+  e.respondWith(cacheFirst(req));
 });
+
+// 缓存优先：命中即返回，未命中走网络并回填缓存
+function cacheFirst(request) {
+  return caches.open(CACHE).then(function (cache) {
+    return cache.match(request).then(function (cached) {
+      if (cached) return cached;
+      return fetch(request).then(function (response) {
+        if (response && response.ok) {
+          try { cache.put(request, response.clone()); } catch (_) {}
+        }
+        return response;
+      });
+    });
+  });
+}
