@@ -23,7 +23,7 @@
  * - activate：清理旧版本缓存（保留当前版本及更旧），立即接管页面。
  * - 离线兜底：导航请求缓存未命中时回退到 index.html。
  *
- * 注册点：shared/common.js 的 App.registerServiceWorker()（仅 http/https 协议生效）。
+ * 注册点：shared/plugin-loader.js 的 App.registerServiceWorker()（仅 http/https 协议生效）。
  */
 
 // === 版本配置 ===
@@ -218,9 +218,9 @@ self.addEventListener('fetch', function (e) {
   }
 
   // 同源静态资源：stale-while-revalidate + 请求去重
-  // 关键：用路径名作为去重 Key，避免同一 CSS/JS 文件的并发请求导致多次下载
-  // 注意：若资源已在 HTML 中注入 ?v=CACHE_VERSION，则 Key 应包含该参数以保证版本有效性
-  var cacheKey = url.pathname; // 仅路径，忽略查询串/哈希，保证去重有效
+  // 缓存键使用完整 URL（含查询串），使 HTML 中注入的 ?v=<版本号> 能形成独立缓存条目，
+  // 版本升级后旧 URL 不再命中 → 走网络取新资源，避免新旧样式混排。
+  var cacheKey = request.url; // 完整 URL（含 ?v=...），不再忽略查询串
 
   e.respondWith(
     caches.open(CACHE).then(function (cache) {

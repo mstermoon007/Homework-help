@@ -137,10 +137,11 @@
     try {
       if (typeof global.navigator === 'undefined' || !('serviceWorker' in global.navigator)) return;
       if (!global.location || global.location.protocol.indexOf('http') !== 0) return; // file:// 不支持 SW
+      // 开发/预览环境（localhost/127.0.0.1）跳过 SW 注册，保证本地预览无缓存干扰
       var host = global.location.hostname;
-      // 本地预览（localhost/127.0.0.1）直连网络，不注册 SW；并主动注销/清理已存在的旧 SW 与旧缓存，
-      // 避免上一版本残留的 SW 继续用旧缓存控制页面（新旧样式混排）。无需手动到 DevTools 清除。
       if (host === 'localhost' || host === '127.0.0.1' || host === '::1') {
+        console.log('[SW] Skipped on localhost');
+        // 同时清理上一版本可能残留的旧 SW 与旧缓存，避免旧 SW 继续用旧缓存控制页面（新旧样式混排）
         if (global.navigator.serviceWorker && global.navigator.serviceWorker.getRegistrations) {
           global.navigator.serviceWorker.getRegistrations().then(function (regs) {
             regs.forEach(function (r) { r.unregister(); });
@@ -153,9 +154,11 @@
         }
         return;
       }
-      global.addEventListener('load', function () {
-        global.navigator.serviceWorker.register('./sw.js').catch(function () { /* 忽略注册失败 */ });
-      });
+      if (global.navigator.serviceWorker) {
+        global.navigator.serviceWorker.register('/sw.js')
+          .then(function (reg) { console.log('[SW] Registered:', reg.scope); })
+          .catch(function (err) { console.warn('[SW] Registration failed:', err); });
+      }
     } catch (e) { /* 忽略 */ }
   }
 
