@@ -550,6 +550,20 @@
     grades: [1, 2, 3],
     subject: 'math',
     category: 'number',
+    knowledgePoints: {
+      2: [
+        'math-g2-m1-add-100',
+        'math-g2-m1-sub-100',
+        'math-g2-m1-mult-table',
+        'math-g2-m1-div-table',
+        'math-g2-m1-remainder-oral',
+        'math-g2-m1-mixed-addsub',
+        'math-g2-m1-mixed-multdiv',
+        'math-g2-m1-mixed-two-step',
+        'math-g2-m1-addsub-1000',
+        'math-g2-m1-muldiv-relation'
+      ]
+    },
     printConfig: { pageType: 'math' },
     columns: 4, // 默认网格列数（meta.columns 未指定时生效，与旧版 render 行为一致）
 

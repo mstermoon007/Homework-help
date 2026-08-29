@@ -122,8 +122,67 @@
     return buildSudoku();
   }
 
+  // 搭配（组合）：上衣×裤子，乘法原理启蒙
+  function buildCombination() {
+    var tops = rnd(2, 4), pants = rnd(2, 4);
+    var ans = tops * pants;
+    var opts = shuffleArr([ans, ans - 1, ans + 1].filter(function (n) { return n > 0; }));
+    if (opts.length < 3) opts = shuffleArr([ans, ans + 2, Math.max(1, ans - 2)]);
+    return {
+      kind: 'combination',
+      question: '有 ' + tops + ' 件上衣和 ' + pants + ' 条裤子，每次上衣和裤子各选 1 件，一共有几种不同的搭配？',
+      answer: String(ans),
+      options: opts,
+      inputType: 'choice',
+      hint: '每件上衣都能和每条裤子搭配，用乘法：' + tops + ' × ' + pants + '。'
+    };
+  }
+
+  // 握手问题：每两人握一次手
+  function buildHandshake() {
+    var n = rnd(3, 5);
+    var ans = n * (n - 1) / 2;
+    var opts = shuffleArr([ans, ans - 1, ans + 1]);
+    return {
+      kind: 'handshake',
+      question: n + ' 个小朋友，每两人握一次手，一共要握几次手？',
+      answer: String(ans),
+      options: opts,
+      inputType: 'choice',
+      hint: '第 1 个小朋友握 ' + (n - 1) + ' 次，第 2 个握 ' + (n - 2) + ' 次……依次减少再相加。'
+    };
+  }
+
+  // 排序：按大小顺序排列
+  function buildOrder() {
+    var a = rnd(1, 9), b = rnd(1, 9), c = rnd(1, 9);
+    while (a === b || b === c || a === c) { b = rnd(1, 9); c = rnd(1, 9); }
+    var nums = [a, b, c];
+    var asc = nums.slice().sort(function (x, y) { return x - y; }).join('、');
+    var desc = nums.slice().sort(function (x, y) { return y - x; }).join('、');
+    var opts = shuffleArr([asc, desc, a + '、' + c + '、' + b]);
+    return {
+      kind: 'order',
+      question: '把 ' + nums.join('、') + ' 按从小到大的顺序排列，结果是？',
+      answer: asc,
+      options: opts,
+      inputType: 'choice',
+      hint: '先找最小的，再找中间的，最后最大的。'
+    };
+  }
+
   function generateProblems(type, count) {
-    var builder = { bookGuess: buildBookGuess, sudoku3: buildSudoku, mix: buildMixed }[type];
+    var BUILDERS = {
+      logic: buildBookGuess,
+      bookGuess: buildBookGuess,
+      sudoku: buildSudoku,
+      sudoku3: buildSudoku,
+      combination: buildCombination,
+      handshake: buildHandshake,
+      order: buildOrder,
+      mix: buildMixed
+    };
+    var builder = BUILDERS[type] || buildMixed;
     var seen = {};
     var list = [];
     var attempts = 0;
@@ -185,6 +244,15 @@
     grades: [2],
     subject: 'math',
     category: 'statistics',
+    knowledgePoints: {
+      2: [
+        'math-g2-m10-logic-reasoning',
+        'math-g2-m10-sudoku3',
+        'math-g2-m10-combination',
+        'math-g2-m10-handshake',
+        'math-g2-m10-order'
+      ]
+    },
     printConfig: { pageType: 'logicReasoning' },
 
     settings: [
@@ -209,7 +277,12 @@
       // 子题型 → 知识点（用于知识点关联）
       var KP_BY_KIND = {
         bookGuess: 'math-g2-m10-logic-reasoning',
-        sudoku3: 'math-g2-m10-sudoku3'
+        sudoku3: 'math-g2-m10-sudoku3',
+        logic: 'math-g2-m10-logic-reasoning',
+        sudoku: 'math-g2-m10-sudoku3',
+        combination: 'math-g2-m10-combination',
+        handshake: 'math-g2-m10-handshake',
+        order: 'math-g2-m10-order'
       };
       var type = opts.type || 'mix';
       var count = opts.count || 8;

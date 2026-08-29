@@ -211,6 +211,9 @@
     grades: [1],
     subject: 'math',
     category: 'number',
+    knowledgePoints: {
+      2: ['math-g2-m4-clock-read']
+    },
     printConfig: { pageType: 'clock' },
 
     settings: [

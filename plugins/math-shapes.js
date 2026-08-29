@@ -377,6 +377,9 @@
     grades: [1, 2, 3],
     subject: 'math',
     category: 'geometry',
+    knowledgePoints: {
+      2: ['math-g2-m6-solid-shape']
+    },
     printConfig: { pageType: 'shapes' },
 
     settings: [

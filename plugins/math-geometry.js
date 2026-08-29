@@ -472,7 +472,7 @@
   }
 
   function generateProblems(type, count) {
-    var builder = { angleCount: buildAngleCount, angleClass: buildAngleClass, motion: buildMotion, grid: buildGrid, perimeter: buildPerimeter, area: buildArea, drawPerimeter: buildDrawPerimeter, drawArea: buildDrawArea, mix: buildMixed }[type];
+    var builder = { angle: buildAngleClass, angleCount: buildAngleCount, angleClass: buildAngleClass, motion: buildMotion, grid: buildGrid, perimeter: buildPerimeter, area: buildArea, drawPerimeter: buildDrawPerimeter, drawArea: buildDrawArea, mix: buildMixed }[type] || buildMixed;
     var seen = {};
     var list = [];
     var attempts = 0;
@@ -555,6 +555,14 @@
     grades: [2, 3],
     subject: 'math',
     category: 'geometry',
+    knowledgePoints: {
+      2: [
+        'math-g2-m4-angle-basic',
+        'math-g2-m6-angle-recognize',
+        'math-g2-m6-motion',
+        'math-g2-m6-grid-draw'
+      ]
+    },
     printConfig: { pageType: 'geometry' },
 
     settings: [

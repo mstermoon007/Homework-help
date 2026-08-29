@@ -123,123 +123,93 @@
 
   // ============ 题目生成 ============
   // 单位换算：长度/质量单位互化（text 单输入）
+  function mkConvert(q, answer, unit, tip) {
+    return { kind: 'convert', inputType: 'text', q: q, answer: answer, unit: unit, hint: '想想 ' + tip + '。' };
+  }
+
+  function buildConvertMass() {
+    var maxN = bigNum();
+    var arr = [
+      function () { var n = rnd(1, maxN); return mkConvert(n + ' 千克 = ? 克', String(n * 1000), '克', '1 千克 = 1000 克'); },
+      function () { var n = rnd(1, Math.max(2, maxN)) * 1000; return mkConvert(n + ' 克 = ? 千克', String(n / 1000), '千克', '1000 克 = 1 千克'); }
+    ];
+    return pick(arr)();
+  }
+
+  function buildConvertLength() {
+    var maxN = bigNum();
+    var arr = [
+      function () { var n = rnd(1, maxN); return mkConvert(n + ' 米 = ? 厘米', String(n * 100), '厘米', '1 米 = 100 厘米'); },
+      function () { var n = rnd(1, Math.max(2, maxN)) * 100; return mkConvert(n + ' 厘米 = ? 米', String(n / 100), '米', '100 厘米 = 1 米'); },
+      function () { var n = rnd(1, maxN); return mkConvert(n + ' 厘米 = ? 毫米', String(n * 10), '毫米', '1 厘米 = 10 毫米'); },
+      function () { var n = rnd(1, Math.max(2, maxN)) * 10; return mkConvert(n + ' 毫米 = ? 厘米', String(n / 10), '厘米', '10 毫米 = 1 厘米'); }
+    ];
+    if (_DIFF >= 6) {
+      arr.push(
+        function () { var n = rnd(1, Math.max(9, maxN)); return mkConvert(n + ' 千米 = ? 米', String(n * 1000), '米', '1 千米 = 1000 米'); },
+        function () { var n = rnd(1, Math.max(9, maxN)) * 1000; return mkConvert(n + ' 米 = ? 千米', String(n / 1000), '千米', '1000 米 = 1 千米'); },
+        function () { var n = rnd(1, Math.max(5, maxN)); return mkConvert(n + ' 米 = ? 分米', String(n * 10), '分米', '1 米 = 10 分米'); },
+        function () { var n = rnd(1, Math.max(5, maxN)) * 10; return mkConvert(n + ' 分米 = ? 米', String(n / 10), '米', '10 分米 = 1 米'); }
+      );
+    }
+    return pick(arr)();
+  }
+
+  function buildConvertTime() {
+    var arr = [
+      function () { var n = rnd(1, 12); return mkConvert(n + ' 时 = ? 分', String(n * 60), '分', '1 时 = 60 分'); },
+      function () { var n = rnd(1, 11) * 60; return mkConvert(n + ' 分 = ? 时', String(n / 60), '时', '60 分 = 1 时'); },
+      function () { var n = rnd(1, 12); return mkConvert(n + ' 分 = ? 秒', String(n * 60), '秒', '1 分 = 60 秒'); },
+      function () { var n = rnd(1, 11) * 60; return mkConvert(n + ' 秒 = ? 分', String(n / 60), '分', '60 秒 = 1 分'); }
+    ];
+    return pick(arr)();
+  }
+
+  // 综合换算构造器：按年级选用题池（二年级需覆盖长度/质量/时间三类）
   function buildConvert() {
+    if (_GRADE <= 2) {
+      return pick([buildConvertMass, buildConvertLength, buildConvertTime])();
+    }
     var maxN = bigNum();
     var builders = [
-      // 米 → 厘米
-      function () {
-        var n = rnd(1, maxN);
-        return { q: n + ' 米 = ? 厘米', answer: String(n * 100), unit: '厘米', tip: '1 米 = 100 厘米' };
-      },
-      // 厘米 → 米
-      function () {
-        var n = rnd(1, Math.max(2, maxN)) * 100;
-        return { q: n + ' 厘米 = ? 米', answer: String(n / 100), unit: '米', tip: '100 厘米 = 1 米' };
-      },
-      // 厘米 → 毫米
-      function () {
-        var n = rnd(1, maxN);
-        return { q: n + ' 厘米 = ? 毫米', answer: String(n * 10), unit: '毫米', tip: '1 厘米 = 10 毫米' };
-      },
-      // 毫米 → 厘米
-      function () {
-        var n = rnd(1, Math.max(2, maxN)) * 10;
-        return { q: n + ' 毫米 = ? 厘米', answer: String(n / 10), unit: '厘米', tip: '10 毫米 = 1 厘米' };
-      },
-      // 千克 → 克
-      function () {
-        var n = rnd(1, maxN);
-        return { q: n + ' 千克 = ? 克', answer: String(n * 1000), unit: '克', tip: '1 千克 = 1000 克' };
-      },
-      // 克 → 千克
-      function () {
-        var n = rnd(1, Math.max(2, maxN)) * 1000;
-        return { q: n + ' 克 = ? 千克', answer: String(n / 1000), unit: '千克', tip: '1000 克 = 1 千克' };
-      }
+      function () { var n = rnd(1, maxN); return mkConvert(n + ' 米 = ? 厘米', String(n * 100), '厘米', '1 米 = 100 厘米'); },
+      function () { var n = rnd(1, Math.max(2, maxN)) * 100; return mkConvert(n + ' 厘米 = ? 米', String(n / 100), '米', '100 厘米 = 1 米'); },
+      function () { var n = rnd(1, maxN); return mkConvert(n + ' 厘米 = ? 毫米', String(n * 10), '毫米', '1 厘米 = 10 毫米'); },
+      function () { var n = rnd(1, Math.max(2, maxN)) * 10; return mkConvert(n + ' 毫米 = ? 厘米', String(n / 10), '厘米', '10 毫米 = 1 厘米'); },
+      function () { var n = rnd(1, maxN); return mkConvert(n + ' 千克 = ? 克', String(n * 1000), '克', '1 千克 = 1000 克'); },
+      function () { var n = rnd(1, Math.max(2, maxN)) * 1000; return mkConvert(n + ' 克 = ? 千克', String(n / 1000), '千克', '1000 克 = 1 千克'); }
     ];
-    // 难度高时追加：千米 ↔ 米
+    // 难度高时追加：千米 ↔ 米、米 ↔ 分米
     if (_DIFF >= 6) {
       builders.push(
-        function () {
-          var n = rnd(1, Math.max(9, maxN));
-          return { q: n + ' 千米 = ? 米', answer: String(n * 1000), unit: '米', tip: '1 千米 = 1000 米' };
-        },
-        function () {
-          var n = rnd(1, Math.max(9, maxN)) * 1000;
-          return { q: n + ' 米 = ? 千米', answer: String(n / 1000), unit: '千米', tip: '1000 米 = 1 千米' };
-        },
-        // 米 ↔ 分米
-        function () {
-          var n = rnd(1, Math.max(5, maxN));
-          return { q: n + ' 米 = ? 分米', answer: String(n * 10), unit: '分米', tip: '1 米 = 10 分米' };
-        },
-        function () {
-          var n = rnd(1, Math.max(5, maxN)) * 10;
-          return { q: n + ' 分米 = ? 米', answer: String(n / 10), unit: '米', tip: '10 分米 = 1 米' };
-        }
+        function () { var n = rnd(1, Math.max(9, maxN)); return mkConvert(n + ' 千米 = ? 米', String(n * 1000), '米', '1 千米 = 1000 米'); },
+        function () { var n = rnd(1, Math.max(9, maxN)) * 1000; return mkConvert(n + ' 米 = ? 千米', String(n / 1000), '千米', '1000 米 = 1 千米'); },
+        function () { var n = rnd(1, Math.max(5, maxN)); return mkConvert(n + ' 米 = ? 分米', String(n * 10), '分米', '1 米 = 10 分米'); },
+        function () { var n = rnd(1, Math.max(5, maxN)) * 10; return mkConvert(n + ' 分米 = ? 米', String(n / 10), '米', '10 分米 = 1 米'); }
       );
     }
     // 三年级追加：时间、吨、面积换算
     if (_GRADE >= 3) {
       builders.push(
-        // 时 ↔ 分
-        function () {
-          var n = rnd(1, 12);
-          return { q: n + ' 时 = ? 分', answer: String(n * 60), unit: '分', tip: '1 时 = 60 分' };
-        },
-        function () {
-          var n = rnd(1, 11) * 60;
-          return { q: n + ' 分 = ? 时', answer: String(n / 60), unit: '时', tip: '60 分 = 1 时' };
-        },
-        // 分 ↔ 秒
-        function () {
-          var n = rnd(1, 12);
-          return { q: n + ' 分 = ? 秒', answer: String(n * 60), unit: '秒', tip: '1 分 = 60 秒' };
-        },
-        function () {
-          var n = rnd(1, 11) * 60;
-          return { q: n + ' 秒 = ? 分', answer: String(n / 60), unit: '分', tip: '60 秒 = 1 分' };
-        },
-        // 吨 ↔ 千克
-        function () {
-          var n = rnd(2, 20);
-          return { q: n + ' 吨 = ? 千克', answer: String(n * 1000), unit: '千克', tip: '1 吨 = 1000 千克' };
-        },
-        function () {
-          var n = rnd(2, 15) * 1000;
-          return { q: n + ' 千克 = ? 吨', answer: String(n / 1000), unit: '吨', tip: '1000 千克 = 1 吨' };
-        },
-        // 平方米 ↔ 平方分米
-        function () {
-          var n = rnd(2, 50);
-          return { q: n + ' 平方米 = ? 平方分米', answer: String(n * 100), unit: '平方分米', tip: '1 平方米 = 100 平方分米' };
-        },
-        function () {
-          var n = rnd(1, 40) * 100;
-          return { q: n + ' 平方分米 = ? 平方米', answer: String(n / 100), unit: '平方米', tip: '100 平方分米 = 1 平方米' };
-        },
-        // 平方分米 ↔ 平方厘米
-        function () {
-          var n = rnd(2, 60);
-          return { q: n + ' 平方分米 = ? 平方厘米', answer: String(n * 100), unit: '平方厘米', tip: '1 平方分米 = 100 平方厘米' };
-        },
-        function () {
-          var n = rnd(1, 50) * 100;
-          return { q: n + ' 平方厘米 = ? 平方分米', answer: String(n / 100), unit: '平方分米', tip: '100 平方厘米 = 1 平方分米' };
-        }
+        function () { var n = rnd(1, 12); return mkConvert(n + ' 时 = ? 分', String(n * 60), '分', '1 时 = 60 分'); },
+        function () { var n = rnd(1, 11) * 60; return mkConvert(n + ' 分 = ? 时', String(n / 60), '时', '60 分 = 1 时'); },
+        function () { var n = rnd(1, 12); return mkConvert(n + ' 分 = ? 秒', String(n * 60), '秒', '1 分 = 60 秒'); },
+        function () { var n = rnd(1, 11) * 60; return mkConvert(n + ' 秒 = ? 分', String(n / 60), '分', '60 秒 = 1 分'); },
+        function () { var n = rnd(2, 20); return mkConvert(n + ' 吨 = ? 千克', String(n * 1000), '千克', '1 吨 = 1000 千克'); },
+        function () { var n = rnd(2, 15) * 1000; return mkConvert(n + ' 千克 = ? 吨', String(n / 1000), '吨', '1000 千克 = 1 吨'); },
+        function () { var n = rnd(2, 50); return mkConvert(n + ' 平方米 = ? 平方分米', String(n * 100), '平方分米', '1 平方米 = 100 平方分米'); },
+        function () { var n = rnd(1, 40) * 100; return mkConvert(n + ' 平方分米 = ? 平方米', String(n / 100), '平方米', '100 平方分米 = 1 平方米'); },
+        function () { var n = rnd(2, 60); return mkConvert(n + ' 平方分米 = ? 平方厘米', String(n * 100), '平方厘米', '1 平方分米 = 100 平方厘米'); },
+        function () { var n = rnd(1, 50) * 100; return mkConvert(n + ' 平方厘米 = ? 平方分米', String(n / 100), '平方分米', '100 平方厘米 = 1 平方分米'); }
       );
     }
-    // 最高难度追加：米 ↔ 分米、复合换算（千米 → 厘米）
+    // 最高难度追加：复合换算（千米 → 厘米）
     if (_DIFF >= 9) {
       builders.push(
-        function () {
-          var n = rnd(1, 9);
-          return { q: n + ' 米 = ? 厘米 = ? 毫米', answer: String(n * 10000), unit: '毫米', tip: '1 米 = 100 厘米 = 1000 毫米' };
-        }
+        function () { var n = rnd(1, 9); return mkConvert(n + ' 米 = ? 厘米 = ? 毫米', String(n * 10000), '毫米', '1 米 = 100 厘米 = 1000 毫米'); }
       );
     }
-    var b = pick(builders)();
-    return { kind: 'convert', inputType: 'text', q: b.q, answer: b.answer, unit: b.unit, hint: '想想 ' + b.tip + '。' };
+    return pick(builders)();
   }
 
   // 填合适单位：根据生活常识选正确单位（choice）
@@ -269,7 +239,18 @@
   }
 
   function generateProblems(type, count) {
-    var builder = { convert: buildConvert, fillUnit: buildFillUnit, mix: buildMixed }[type];
+    var BUILDERS = {
+      convert: buildConvert,
+      fillUnit: buildFillUnit,
+      mix: buildMixed,
+      length: buildConvertLength,
+      mass: buildConvertMass,
+      time: buildConvertTime,
+      'fill-length': buildFillUnit,
+      'fill-mass': buildFillUnit,
+      'fill-time': buildFillUnit
+    };
+    var builder = BUILDERS[type] || buildMixed;
     var seen = {};
     var list = [];
     var attempts = 0;
@@ -341,6 +322,16 @@
     grades: [2, 3],
     subject: 'math',
     category: 'number',
+    knowledgePoints: {
+      2: [
+        'math-g2-m4-length-unit',
+        'math-g2-m4-mass-unit',
+        'math-g2-m4-time-unit',
+        'math-g2-m4-fill-length',
+        'math-g2-m4-fill-mass',
+        'math-g2-m4-fill-time'
+      ]
+    },
     printConfig: { pageType: 'unitConvert' },
 
     settings: [

@@ -458,9 +458,14 @@
     // 期末模拟试卷（type==='exam'）是「组卷方式」中的第 5 个选项（带分隔线，独立于原 4 个题型）：
     // 选中时「只适应难度、不适应题量」——隐藏题量控件，保留题型（用于切回原 4 种）与难度控件。
     function applyExamVisibility() {
-      var isExam = (state.type === 'exam');
+      var isExam = (state.type === 'exam' || state.subtype === 'exam');
       var cg = $('countGroup');
       if (cg) cg.style.display = isExam ? 'none' : '';
+      // 期末模拟卷走固定模板，题量/难度均不适用，隐藏难度设置
+      if (isExam) {
+        var dg = $('difficultyGroup');
+        if (dg) dg.style.display = 'none';
+      }
     }
     applyExamVisibility();
     refreshTypeChips();

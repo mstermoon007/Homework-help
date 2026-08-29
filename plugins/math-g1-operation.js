@@ -135,16 +135,24 @@
     moduleId: 'M6',
     name: '操作题',
     pageSubtitle: '画图形、钟面画指针、圈出数量、涂色分类',
-    grades: [1],
+    grades: [1, 2],
     subject: 'math',
     category: 'geometry',
     printConfig: { pageType: 'math' },
-    knowledgePoints: [
-      'math-g1-m6-draw-shape',
-      'math-g1-m4-clock-read',
-      'math-g1-m6-count-graph',
-      'math-g1-m9-classify'
-    ],
+    knowledgePoints: {
+      1: [
+        'math-g1-m6-draw-shape',
+        'math-g1-m4-clock-read',
+        'math-g1-m6-count-graph',
+        'math-g1-m9-classify'
+      ],
+      2: [
+        'math-g2-m6-draw-line',
+        'math-g2-m6-draw-angle',
+        'math-g2-m6-clock-draw',
+        'math-g2-m6-measure'
+      ]
+    },
 
     settings: [
       {

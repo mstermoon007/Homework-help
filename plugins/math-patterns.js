@@ -135,7 +135,10 @@
     category: 'number',
     printConfig: { pageType: 'patterns' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
-    knowledgePoints: ['math-g1-m4-number-pattern'],
+    knowledgePoints: {
+      1: ['math-g1-m4-number-pattern'],
+      2: ['math-g2-m4-number-pattern']
+    },
 
     settings: [
       {

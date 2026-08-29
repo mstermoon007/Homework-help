@@ -1012,7 +1012,20 @@
     // 声明本插件覆盖的知识点（按年级区分：一年级用 solve-problems/chain-mixed，二年级用 wp-solve，三年级用 g3-m8-g3-times）
     knowledgePoints: {
       1: ['math-g1-m8-add-total', 'math-g1-m8-sub-remain', 'math-g1-m8-sub-part', 'math-g1-m8-compare-more', 'math-g1-m8-compare-less', 'math-g1-m8-two-step', 'math-g1-m8-rmb-shopping', 'math-g1-m8-exclude-extra'],
-      2: ['math-g2-m8-solve-problems'],
+       2: [
+        'math-g2-m8-add-total',
+        'math-g2-m8-sub-remain',
+        'math-g2-m8-mult-total',
+        'math-g2-m8-div-partitive',
+        'math-g2-m8-div-quotative',
+        'math-g2-m8-remainder-apply',
+        'math-g2-m8-compare-diff',
+        'math-g2-m8-two-step',
+        'math-g2-m8-money',
+        'math-g2-m8-length-app',
+        'math-g2-m8-mass-app',
+        'math-g2-m8-extra-condition'
+      ],
       3: ['math-g3-m8-g3-times']
     },
     columns: 2,

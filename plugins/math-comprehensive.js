@@ -298,15 +298,18 @@
   // 各模块知识点来源（knowledge-math.js 一年级模块）：
   //   一 口算(M1) / 二 填空(M4) / 三 判断(M11+M4/M6) / 四 选择(M12+M1/M4/M6)
   //   五 连线(M5) / 六 看图列式(M7) / 七 解决问题(M8) / 八 操作题(M6)
+  // 二年级期末模拟卷模板（满分按各题分值累加，详见下方 score）
   var EXAM_TEMPLATE = [
-    { title: '一、口算',     modules: ['M1'],                    qCount: 20, score: 1 },
-    { title: '二、填空',     modules: ['M4'],                    qCount: 11, score: 2 },
-    { title: '三、判断',     modules: ['M11', 'M4', 'M6'],       qCount: 5,  score: 2, wantType: 'judge' },
-    { title: '四、选择',     modules: ['M12', 'M1', 'M4', 'M6'], qCount: 5,  score: 2, wantType: 'choice' },
-    { title: '五、连线',     modules: ['M5'],                    qCount: 2,  score: 5 },
-    { title: '六、看图列式', modules: ['M7'],                    qCount: 4,  score: 3 },
-    { title: '七、解决问题', modules: ['M8'],                    qCount: 5,  score: 4 },
-    { title: '八、操作题',   modules: ['M6'],                    qCount: 2,  score: 4, wantTag: 'operation' }
+    { title: '一、口算',     modules: ['M1'],                        qCount: 20, score: 1 },
+    { title: '二、填空',     modules: ['M4'],                        qCount: 10, score: 2 },
+    { title: '三、判断',     modules: ['M11', 'M4', 'M6'],           qCount: 5,  score: 2, wantType: 'judge' },
+    { title: '四、选择',     modules: ['M12', 'M1', 'M4', 'M6'],     qCount: 5,  score: 2, wantType: 'choice' },
+    { title: '五、竖式计算', modules: ['M2'],                        qCount: 4,  score: 3 },
+    { title: '六、脱式计算', modules: ['M3'],                        qCount: 4,  score: 3 },
+    { title: '七、看图列式', modules: ['M7'],                        qCount: 4,  score: 3 },
+    { title: '八、解决问题', modules: ['M8'],                        qCount: 6,  score: 4 },
+    { title: '九、操作题',   modules: ['M6'],                        qCount: 2,  score: 4, wantTag: 'operation' },
+    { title: '十、统计与推理', modules: ['M9', 'M10'],               qCount: 2,  score: 5 }
   ];
 
   // 按模块聚合当前年级知识点（moduleId -> [{id,name,type,weight,pluginId}]）
@@ -336,6 +339,20 @@
     return cands[cands.length - 1];
   }
 
+  // 单次抽题：优先使用知识点声明的 type；若子插件不支持该子题型（抛错或无产出），回退 'mix'
+  function examGenOne(plugin, grade, cnt, type, difficulty) {
+    var tries = [type, 'mix'];
+    for (var t = 0; t < tries.length; t++) {
+      if (!tries[t]) continue;
+      try {
+        var set = plugin.generate({ grade: grade, count: cnt, type: tries[t], difficulty: difficulty });
+        if (set && typeof set.then === 'function') return set; // 异步插件原样返回
+        if (set && set.questions && set.questions.length) return set;
+      } catch (e) { /* 该子题型不支持，尝试回退 */ }
+    }
+    return null;
+  }
+
   // 从候选知识点（已绑定插件对象）抽取 n 道题目，池不足时按权重补足至目标题量
   // difficulty 透传给各子插件，使期末试卷随难度档位自适应出题（题量固定，不随 count 变化）
   function examDrawQuestions(cands, grade, n, difficulty) {
@@ -346,7 +363,7 @@
     cands.forEach(function (c, i) {
       var cnt = alloc[i];
       if (cnt <= 0) return;
-      var set = c.plugin.generate({ grade: grade, count: cnt, type: c.type || 'mix', difficulty: difficulty });
+      var set = examGenOne(c.plugin, grade, cnt, c.type || 'mix', difficulty);
       (set && set.questions || []).forEach(function (q) {
         q.__src = c.plugin; q.__kp = c; q.knowledgePointId = c.id;
         qs.push(q);
@@ -357,7 +374,7 @@
       guard++;
       var c2 = examWeightedPick(cands);
       if (!c2) break;
-      var s2 = c2.plugin.generate({ grade: grade, count: 1, type: c2.type || 'mix', difficulty: difficulty });
+      var s2 = examGenOne(c2.plugin, grade, 1, c2.type || 'mix', difficulty);
       var q2 = s2 && s2.questions && s2.questions[0];
       if (!q2) break;
       q2.__src = c2.plugin; q2.__kp = c2; q2.knowledgePointId = c2.id;
@@ -395,6 +412,7 @@
         qs.forEach(function (q, j) {
           q._section = sections.length;
           q._examNo = j + 1;
+          q._examScore = sec.score;   // 期末卷按题给分，check 依此累计总分
           questions.push(q);
         });
         sections.push({ title: sec.title, count: qs.length, score: sec.score, start: start });
@@ -603,6 +621,29 @@
       },
 
       check: function (exerciseSet, userAnswers) {
+        // 期末模拟卷：按各题分值累计得分（满分 = Σ 分值），而非百分比
+        if (exerciseSet && exerciseSet.meta && exerciseSet.meta.exam) {
+          var eRes = [], earned = 0, totalPts = 0, correctAnswers = [];
+          exerciseSet.questions.forEach(function (q, i) {
+            var ok = (typeof q.check === 'function')
+              ? !!q.check(userAnswers, i)
+              : !!_PU.defaultQCheck(q, userAnswers, i);
+            eRes.push(ok);
+            var pt = (typeof q._examScore === 'number') ? q._examScore : 1;
+            totalPts += pt;
+            if (ok) earned += pt;
+            correctAnswers.push(formatAnswer(q.answer));
+          });
+          var eScore = totalPts === 0 ? 0 : Math.round(earned / totalPts * 100);
+          var msg = (eScore === 100) ? '太棒了！全对！'
+            : (eScore >= 60) ? '及格啦，继续加油！' : '继续加油！';
+          return {
+            score: eScore, total: totalPts, correct: earned, message: msg,
+            results: eRes, correctAnswers: correctAnswers,
+            examPoints: { earned: earned, total: totalPts }
+          };
+        }
+
         var correct = 0;
         var results = [];
         var correctAnswers = [];

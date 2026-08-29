@@ -546,6 +546,17 @@
     grades: [1, 2, 3],
     subject: 'math',
     category: 'number',
+    knowledgePoints: {
+      2: [
+        'math-g2-m4-read-10000',
+        'math-g2-m4-compose-10000',
+        'math-g2-m4-digit-order',
+        'math-g2-m4-approx-number',
+        'math-g2-m4-compare-10000',
+        'math-g2-m4-multiplication-meaning',
+        'math-g2-m4-division-meaning'
+      ]
+    },
     printConfig: { pageType: 'numberSense' },
 
     settings: [

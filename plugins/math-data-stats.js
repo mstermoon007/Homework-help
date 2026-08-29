@@ -463,6 +463,12 @@
     grades: [2, 3],
     subject: 'math',
     category: 'statistics',
+    knowledgePoints: {
+      2: [
+        'math-g2-m9-data-tally',
+        'math-g2-m9-data-question'
+      ]
+    },
     printConfig: { pageType: 'dataStats' },
 
     settings: [
