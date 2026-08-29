@@ -323,30 +323,6 @@
     return plugin;
   }
 
-  /** 语文插件工厂：预设 subject='chinese'、字符串标准化批改、cn-grid/cn-card 修饰类。 */
-  function createChinesePlugin(config) {
-    config = config || {};
-    config.subject = 'chinese';
-    var plugin = createPlugin(config);
-    plugin.cardClass = 'cn-card';
-    plugin.gridClass = 'cn-grid';
-    _wrapDifficultyParams(plugin, 'cn');
-    _wrapGridClass(plugin);
-    return plugin;
-  }
-
-  /** 英语插件工厂：预设 subject='english'、拼写检查批改、en-grid/en-card 修饰类。 */
-  function createEnglishPlugin(config) {
-    config = config || {};
-    config.subject = 'english';
-    var plugin = createPlugin(config);
-    plugin.cardClass = 'en-card';
-    plugin.gridClass = 'en-grid';
-    _wrapDifficultyParams(plugin, 'en');
-    _wrapGridClass(plugin);
-    return plugin;
-  }
-
   // ============ 增量挂载 ============
   global.PluginUtil = global.PluginUtil || {};
   global.PluginUtil.renderCard = renderCard;
@@ -354,8 +330,6 @@
   global.PluginUtil.clockSVG = clockSVG;
   global.PluginUtil.createPlugin = createPlugin;
   global.PluginUtil.createMathPlugin = createMathPlugin;
-  global.PluginUtil.createChinesePlugin = createChinesePlugin;
-  global.PluginUtil.createEnglishPlugin = createEnglishPlugin;
   global.renderCard = renderCard;       // 跨模块裸调用兼容
   global.clockSVG = clockSVG;           // 插件直接调用兼容
 
@@ -363,7 +337,6 @@
     module.exports = {
       renderCard: renderCard, renderGrid: renderGrid, clockSVG: clockSVG,
       createPlugin: createPlugin, createMathPlugin: createMathPlugin,
-      createChinesePlugin: createChinesePlugin, createEnglishPlugin: createEnglishPlugin,
       _wrapDifficultyParams: _wrapDifficultyParams, _wrapGridClass: _wrapGridClass,
       _numEq: _numEq, _mathQCheck: _mathQCheck
     };

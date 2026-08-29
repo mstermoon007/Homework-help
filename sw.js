@@ -36,7 +36,7 @@ var CACHE_VERSION = self.CACHE_VERSION; // 'homework-help-<APP_VERSION>'
 // 缓存名 = 固定前缀 + 版本号。activate 按此名清理一切非当前版本缓存（含旧 hw-help-v64）。
 // ⚠️ 本常量缺失曾导致 fetch/install 内 5 处 caches.open(CACHE) 抛 ReferenceError，
 //    SW 激活后第二次导航即 net::ERR_FAILED（E2E C1 用例捕获的 P0）。
-const CACHE = 'hw-help-3.1.2';  // 必须与 shared/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
+const CACHE = 'hw-help-3.2.0';  // 必须与 shared/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
 
 // === 核心资源列表 ===
 // 所有路径相对于站点根。CORE 保持「无 ?v=」字面量：fetch 处理以 url.pathname（忽略查询串）作为缓存键，
@@ -177,12 +177,18 @@ self.addEventListener('activate', function (e) {
   e.waitUntil(
     caches.keys().then(function (keys) {
       // 删除一切非当前版本的缓存（旧版本号前缀匹配 '/NaN' 的写法永远匹配不到，已废弃）
-      return Promise.all(keys.filter(function (k) {
-        return k !== CACHE;
-      }).map(function (k) {
-        return caches.delete(k);
-      }));
-    }).then(function () { return self.clients.claim(); })
+      var stale = keys.filter(function (k) { return k !== CACHE; });
+      return Promise.all(stale.map(function (k) { return caches.delete(k); }))
+        .then(function () { return { claimed: self.clients.claim(), hadStale: stale.length > 0 }; });
+    }).then(function (info) {
+      // 版本切换（清过旧缓存）后主动重载受控页面，避免首帧新旧样式混排；首次安装不重载
+      return info.claimed.then(function () {
+        if (!info.hadStale) return;
+        return self.clients.matchAll({ type: 'window' }).then(function (cls) {
+          cls.forEach(function (c) { if (c.url && c.navigate) c.navigate(c.url); });
+        });
+      });
+    })
   );
 });
 

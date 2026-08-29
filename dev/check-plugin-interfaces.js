@@ -216,7 +216,7 @@ module.exports = { checkPlugin: checkPlugin, checkAll: checkAll, formatReport: f
 // 各检查项对应的建议修复操作
 var FIX_SUGGESTIONS = {
   '1.存在性': '确认插件文件存在且无语法错误（可先 node --check <文件> 排查），并已复制 _template.js 骨架',
-  '2.方法完整性': '补齐缺失方法，或改用 PluginUtil.createMathPlugin / createChinesePlugin / createEnglishPlugin 工厂自动生成三大接口',
+  '2.方法完整性': '补齐缺失方法，或改用 PluginUtil.createMathPlugin 工厂自动生成三大接口（语文/英语插件当前直接构建对象，可后续迁移）',
   '3.导出正确性': '在插件文件末尾双环境导出：global.__currentPlugin = plugin; 且 if (typeof module !== \'undefined\') module.exports = plugin;',
   '4.接口一致性': 'generate(options) 须返回 { questions: Question[], meta }，questions 为数组；异步插件返回 Promise<ExerciseSet>',
   '5.渲染检查': 'render(exerciseSet) 必须同步返回 HTML 字符串（推荐 PluginUtil.renderGrid / renderCard）',

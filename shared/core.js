@@ -162,29 +162,6 @@
     return String(v == null ? '' : v).trim().replace(/\s+/g, '').toLowerCase();
   }
 
-  /** 小题池去重生成：先穷举 builder 产出全量题池，shuffle 后取前 count 题。
-   *  池不足 count 时循环取用（允许重复但不连续）。 */
-  function poolFill(builder, count) {
-    var pool = [], seen = {};
-    var maxEnum = 2000;
-    for (var i = 0; i < maxEnum; i++) {
-      var q = builder();
-      if (!q) break;
-      var key = (q.q || '') + '|' + JSON.stringify(q.answer || '');
-      if (!seen[key]) { seen[key] = 1; pool.push(q); }
-    }
-    // Fisher-Yates shuffle
-    for (var j = pool.length - 1; j > 0; j--) {
-      var k2 = randInt(0, j);
-      var tmp = pool[j]; pool[j] = pool[k2]; pool[k2] = tmp;
-    }
-    var out = [];
-    while (out.length < count && pool.length) {
-      out.push(pool[out.length % pool.length]);
-    }
-    return out;
-  }
-
   // ============ 公共题目池（PoolCache：跨调用连续发牌、Fisher-Yates 洗牌、不重复直至穷举） ============
 
   /** 全局池缓存：key → pool 对象 */
@@ -411,9 +388,7 @@
       try {
         var su = require('./subject-utils.js');
         global.SubjectUtils = su;
-        global.MathUtil = su.MathUtil;
         global.ChineseUtil = su.ChineseUtil;
-        global.EnglishUtil = su.EnglishUtil;
       } catch (e) { /* 静默：别名兜底 */ }
       return;
     }
@@ -446,7 +421,6 @@
   global.PluginUtil.diffLevel = diffLevel;
   global.PluginUtil.diffScale = diffScale;
   global.PluginUtil.diffMax = diffMax;
-  global.PluginUtil.poolFill = poolFill;
   global.PluginUtil.normalizeAns = normalizeAns;
   global.PluginUtil.createPoolCache = createPoolCache;
   global.PluginUtil.reportCoverage = reportCoverage;
@@ -479,7 +453,7 @@
       randInt: randInt, shuffle: shuffle, rand: rand,
       diffLevel: diffLevel, diffScale: diffScale, diffMax: diffMax,
       normPY: normPY, normHZ: normHZ, normalizeAns: normalizeAns,
-      poolFill: poolFill, createPoolCache: createPoolCache, _maybeReportCoverage: _maybeReportCoverage,
+      createPoolCache: createPoolCache, _maybeReportCoverage: _maybeReportCoverage,
       reportCoverage: reportCoverage, Layout: Layout
     };
   }

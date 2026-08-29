@@ -92,11 +92,6 @@
     return null;
   };
 
-  /** 兼容旧名 getGrade（返回与 findGrade 相同的年级对象） */
-  KnowledgeBank.getGrade = function (subject, grade) {
-    return this.findGrade(subject, grade);
-  };
-
   /** 扁平化某年级全部知识点：[{id,name,pluginId,moduleId,weight,type}]；无数据科目返回空数组 */
   KnowledgeBank.getEntries = function (subject, grade) {
     var g = this.findGrade(subject, grade);
@@ -170,12 +165,6 @@
       if (grade == null || p.grades.indexOf(grade) !== -1) ids.push(p.id);
     });
     return this.getCoverage(subject, grade, ids);
-  };
-
-  /** 建议下一个应开发的插件：{pluginId,name} 或 null（已全部覆盖） */
-  KnowledgeBank.suggestNext = function (subject, grade, coveredPluginIds) {
-    var cov = this.getCoverage(subject, grade, coveredPluginIds);
-    return cov.next ? { pluginId: cov.next.pluginId, name: cov.next.name } : null;
   };
 
   /**

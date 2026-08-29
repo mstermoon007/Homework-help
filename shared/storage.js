@@ -9,7 +9,7 @@
 
   var StorageManager = (function () {
     var KEY = 'hw-help-state';
-    var VERSION = 1;
+    var VERSION = 2;
     var WRONG_CAP = 50;
 
     function defaults() {
@@ -29,7 +29,8 @@
         if (!raw) return defaults();
         var obj = JSON.parse(raw);
         if (!obj || typeof obj !== 'object') return defaults();
-        obj.version = VERSION;
+        // 版本不符：旧 schema 的错题本/难度状态已失效，整体作废重建，避免脏缓存累积
+        if (obj.version !== VERSION) return defaults();
         if (!Array.isArray(obj.wrongList)) obj.wrongList = [];
         if (!obj.difficultyState || typeof obj.difficultyState !== 'object') obj.difficultyState = {};
         return obj;

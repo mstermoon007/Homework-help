@@ -309,17 +309,54 @@ function build(opts) {
   return { written: written, skipped: skipped };
 }
 
+// ============ 孤立页清理（--clean） ============
+// 删除 knowledge/ 下由本生成器产出（含 kbgen:hash 标记）、但已无对应知识点的 .html，
+// 避免重命名/删除知识点后残留过期页面（无效缓存）。非本生成器产出的文件受 HASH_RE 保护、不会被误删。
+function expectedFilenames() {
+  const set = new Set(['knowledge-index.html']);
+  const subjectKeys = Object.keys(KnowledgeBank).filter(k => Array.isArray(KnowledgeBank[k]));
+  subjectKeys.forEach((subject) => {
+    KnowledgeBank[subject].forEach((gradeObj) => {
+      (gradeObj.modules || []).forEach((module) => {
+        if (!Array.isArray(module.knowledgePoints) || module.knowledgePoints.length === 0) return;
+        set.add(modulePageFile(gradeObj.grade, module.moduleId));
+        (module.knowledgePoints || []).forEach((kp) => set.add(kp.id + '.html'));
+      });
+    });
+  });
+  return set;
+}
+function cleanOrphans() {
+  if (!fs.existsSync(OUT_DIR)) return { removed: 0 };
+  const expected = expectedFilenames();
+  let removed = 0;
+  fs.readdirSync(OUT_DIR).forEach((f) => {
+    if (!f.endsWith('.html')) return;
+    const fp = path.join(OUT_DIR, f);
+    let txt;
+    try { txt = fs.readFileSync(fp, 'utf8'); } catch (e) { return; }
+    if (!HASH_RE.test(txt)) return; // 非本生成器产出，跳过（不误删）
+    if (!expected.has(f)) { try { fs.unlinkSync(fp); removed++; } catch (e) { /* ignore */ } }
+  });
+  console.log('🧹 已清理孤立知识页：' + removed + ' 个');
+  return { removed: removed };
+}
+
 function parseArgs() {
   const args = process.argv.slice(2);
   return {
     incremental: args.indexOf('--incremental') !== -1 || args.indexOf('-i') !== -1,
-    watch: args.indexOf('--watch') !== -1 || args.indexOf('-w') !== -1
+    watch: args.indexOf('--watch') !== -1 || args.indexOf('-w') !== -1,
+    clean: args.indexOf('--clean') !== -1 || args.indexOf('-c') !== -1
   };
 }
 
 const opts = parseArgs();
 
-if (opts.watch) {
+if (opts.clean) {
+  // 仅清理孤立页（重命名/删除知识点后残留的过期页面），不重新生成
+  cleanOrphans();
+} else if (opts.watch) {
   // 首次全量，之后监听数据源增量重生成
   build({ incremental: false });
   const sharedDir = path.join(ROOT, 'shared');

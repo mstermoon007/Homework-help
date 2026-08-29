@@ -14,10 +14,9 @@
  *
  * 【工厂选型（任务11 起）】
  *   - PluginUtil.createMathPlugin(cfg)     数值比较批改 + math-grid/math-card + 数学难度消费
- *   - PluginUtil.createChinesePlugin(cfg)  字符串标准化批改 + cn-grid/cn-card    + 语文难度消费
- *   - PluginUtil.createEnglishPlugin(cfg)  拼写检查批改   + en-grid/en-card    + 英语难度消费
- *   - 三者自动注入：subject 预设、opts.difficultyParams（App.Difficulty.paramsFor 结果）、
- *     plugin.cardClass/gridClass；旧 createPlugin(cfg) 完全兼容、行为不变。
+ *   - 仅数学工厂已提供；语文/英语插件当前直接构建插件对象（可自行补 createChinesePlugin /
+ *     createEnglishPlugin 工厂）。所有工厂自动注入：subject 预设、opts.difficultyParams
+ *     （App.Difficulty.paramsFor 结果）、plugin.cardClass/gridClass；旧 createPlugin(cfg) 完全兼容。
  *
  * 【硬性约定】
  *   - 随机数只用 PluginUtil（crypto 优先），禁止 Math.random()
@@ -39,7 +38,7 @@
    * 科目化工厂示例（数学）：createMathPlugin 自动提供
    *   ① subject: 'math' 预设          ② 数值比较缺省批改（'12' 与 12 等价）
    *   ③ math-grid 网格修饰类           ④ opts.difficultyParams = App.Difficulty.paramsFor('math', 难度)
-   * 语文/英语插件把函数名换成 createChinesePlugin / createEnglishPlugin 即可。
+   * 语文/英语插件当前直接构建插件对象（未提供对应工厂）。
    */
   var plugin = _PU.createMathPlugin({
 

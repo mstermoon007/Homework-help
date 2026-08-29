@@ -141,43 +141,7 @@
     normHZ: function (s) {
       if (!s) return '';
       return String(s).replace(/\s+/g, '').trim();
-    },
-
-    /** 汉字标准化别名（语义化导出） */
-    normalizeHanzi: function (s) { return this.normHZ(s); },
-
-    /**
-     * 字形比较：先标准化，相等即同字；
-     * 不等时查易混字形组（如 己/已、未/末），供识字题干扰项设计参考。
-     * @returns {{same:boolean, confusable:boolean}}
-     */
-    compareGlyph: function (a, b) {
-      var ha = this.normHZ(a), hb = this.normHZ(b);
-      if (ha.length === 1 && hb.length === 1) {
-        if (ha === hb) return { same: true, confusable: false };
-        var groups = this.CONFUSABLE_GROUPS;
-        for (var i = 0; i < groups.length; i++) {
-          if (groups[i].indexOf(ha) !== -1 && groups[i].indexOf(hb) !== -1) {
-            return { same: false, confusable: true };
-          }
-        }
-        return { same: false, confusable: false };
-      }
-      return { same: ha === hb, confusable: false };
-    },
-
-    /** 易混字形组（常用示例，可随识字题扩充） */
-    CONFUSABLE_GROUPS: [
-      ['己', '已', '巳'],
-      ['未', '末'],
-      ['土', '士'],
-      ['千', '干', '于'],
-      ['刀', '力'],
-      ['目', '日'],
-      ['人', '入'],
-      ['天', '夫'],
-      ['午', '牛']
-    ]
+    }
   };
 
   // ============ EnglishUtil：英语 ============

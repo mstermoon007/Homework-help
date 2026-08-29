@@ -137,6 +137,9 @@
     try {
       if (typeof global.navigator === 'undefined' || !('serviceWorker' in global.navigator)) return;
       if (!global.location || global.location.protocol.indexOf('http') !== 0) return; // file:// 不支持 SW
+      var host = global.location.hostname;
+      // 本地预览（localhost/127.0.0.1）直连网络，不注册 SW，避免旧缓存导致新旧样式混排
+      if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return;
       global.addEventListener('load', function () {
         global.navigator.serviceWorker.register('./sw.js').catch(function () { /* 忽略注册失败 */ });
       });
