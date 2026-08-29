@@ -223,7 +223,7 @@
 </script>
 <link rel="canonical" href="https://home.modouyu.top/math-types.html">
 </head>
-<body class="type-page">
+<body class="type-page math-types">
 <noscript><div class="noscript-types" style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>数学题型（按年级）</h2><ul><li><a href="https://home.modouyu.top/practice.html?plugin=math-oral&grade=1">口算练习</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-word-problems&grade=1">应用题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-make-ten&grade=1">凑十法</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-shapes&grade=1">认识图形</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-number-sense&grade=1">数的认识</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-clock&grade=1">认识钟表</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-patterns&grade=1">找规律</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-picture-equations&grade=1">看图列式</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-statistics&grade=1">分类与统计</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-money&grade=1">认识人民币</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-unit-convert&grade=2">单位换算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-geometry&grade=2">图形与几何</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-data-stats&grade=2">数据收集与整理</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-logic-reasoning&grade=2">简单推理与数独</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-fraction&grade=3">分数的初步认识</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-decimal&grade=3">小数的初步认识</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-area&grade=3">面积</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-time-date&grade=3">时间与日期</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-position-direction&grade=3">方向与位置</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-combination-set&grade=3">搭配与集合</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-comprehensive&grade=1">综合练习</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-c1-numberpuzzle&grade=4">数字谜与数阵图</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-c2-numbertheory&grade=4">数论初步</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-c3-counting&grade=4">组合计数</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-c5-journey&grade=4">行程问题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-competition-placeholder&grade=4">竞赛专题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-oral&grade=4">口算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-vertical&grade=4">竖式计算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-mixed&grade=4">脱式计算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-fill&grade=4">填空题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-match&grade=4">连线题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-draw&grade=4">操作题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-word&grade=4">解决问题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-stats&grade=4">分类与整理</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-reason&grade=4">推理与数学广角</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-judge&grade=4">判断题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g4-choice&grade=4">选择题</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g6-calc&grade=6">笔算</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g6-stats&grade=6">统计</a></li><li><a href="https://home.modouyu.top/practice.html?plugin=math-g6-reasoning&grade=6">推理</a></li></ul></div></noscript>
 <div class="wrapper">
     <a href="index.html" class="back-home">← 返回首页</a>
@@ -427,11 +427,9 @@
     // 「单位的认识」合并认识钟表与认识人民币两张卡片，主标题/标签按指定文案展示。
     var DISPLAY_OVERRIDES = {
       'math-number-sense': { name: '数的认识' },
-      'math-clock': { name: '单位的认识', tags: ['认识钟表（整时）', '认识人民币'] },
-      // 操作题卡片主标题改为知识点名，具体题型标签完整保留（含并入的「认识图形」）
-      'math-shapes': { name: '认识图形', tags: ['认识立体图形', '认识平面图形', '图形拼组', '上下左右位置', '认识图形'] },
-      // 应用题卡片主标题由模块名「解决问题」改为「应用题」，标签按三大题型展示
-      'math-word-problems': { name: '应用题', tags: ['解决问题', '连加连减题', '混合练习'] }
+      'math-clock': { name: '单位的认识' },
+      'math-shapes': { name: '认识图形' },
+      'math-word-problems': { name: '应用题' }
     };
 
     // 是否为竞赛题型：C 系列模块占位卡，或 math-competition-* 插件
@@ -465,7 +463,8 @@
         '<span class="t-title">' + name + '</span>' + tagHtml +
         (p.isPlaceholder ? '</div>' : '</a>');
     }
-    // 综合练习按钮（随注册表/插件元数据命名）
+    // 综合练习按钮（随注册表/插件元数据命名）；点击进入综合练习页，
+    // 「期末模拟卷」作为综合练习内的一种试卷模式（练习页内可选，不单独占卡片）
     function renderComprehensive() {
       var kc = (regById[COMPREHENSIVE.id]) ? regById[COMPREHENSIVE.id] : null;
       return '<a href="' + App.buildPluginLink(COMPREHENSIVE.id) + '" class="type-card comprehensive">' +

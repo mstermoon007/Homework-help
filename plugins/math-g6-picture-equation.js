@@ -67,8 +67,8 @@
       out += '<line x1="' + px + '" y1="8" x2="' + px + '" y2="12" stroke="#27324a" stroke-width="1"/>';
     }
     for (var j = 0; j < d; j++) {
-      var fill = j < a ? 'rgba(242,169,59,.45)' : 'rgba(63,111,209,.15)';
-      var stroke = j < a ? 'rgba(242,169,59,.7)' : 'rgba(63,111,209,.4)';
+      var fill = j < a ? 'rgba(242,169,59,.45)' : 'rgba(63,111,209,.15)'; /* allow-color */
+      var stroke = j < a ? 'rgba(242,169,59,.7)' : 'rgba(63,111,209,.4)'; /* allow-color */
       out += '<rect x="' + (x + w * j / d) + '" y="16" width="' + (w / d) + '" height="14" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1"/>';
     }
     out += '<text x="' + (x + w * a / d + 3) + '" y="44" font-size="10" fill="#f2a93b">' + a + '/' + d + '</text>';
@@ -101,7 +101,7 @@
     var W = 150, H = 110;
     var out = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">';
     var start = -90;
-    var colors = ['#3f6fd1', '#f2a93b', '#59b88f', '#c7d0dd'];
+    var colors = ['#3f6fd1', '#f2a93b', '#59b88f', '#c7d0dd']; /* allow-color */
     for (var i = 0; i < parts.length; i++) {
       var ang = parts[i] * 360 / 100;
       var a1 = start * Math.PI / 180, a2 = (start + ang) * Math.PI / 180;

@@ -135,7 +135,7 @@
     category: 'number',
     printConfig: { pageType: 'patterns' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
-    knowledgePoints: ['math-g1-m4-patterns'],
+    knowledgePoints: ['math-g1-m4-number-pattern'],
 
     settings: [
       {
@@ -174,7 +174,7 @@
           data: p,
           q: fullQ,
           answer: String(p.answer),
-          knowledgePointId: 'math-g1-m4-patterns',
+          knowledgePointId: 'math-g1-m4-number-pattern',
           hint: p.kind === 'number' ? '先找相邻两个数相差几，再看下一个数。' : '图形是按照一定顺序重复出现的，先找出循环的一组。',
           render: function (idx) { return renderCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
@@ -202,12 +202,12 @@
       if (inp) inp.value = btn.getAttribute('data-val');
       var btns = card.querySelectorAll('.opt-btn');
       for (var i = 0; i < btns.length; i++) {
-        btns[i].style.background = '#fafbff';
-        btns[i].style.borderColor = '#d5dff0';
+        btns[i].style.background = 'var(--soft-bg)';
+        btns[i].style.borderColor = 'var(--line-strong)';
       }
-      btn.style.background = '#5b8def';
-      btn.style.borderColor = '#3b5bdb';
-      btn.style.color = '#fff';
+      btn.style.background = 'var(--brand)';
+      btn.style.borderColor = 'var(--brand-d)';
+      btn.style.color = 'var(--card)';
     }
   });
 

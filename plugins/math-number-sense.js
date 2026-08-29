@@ -479,7 +479,7 @@
         }).join('<span style="color:var(--muted);">、</span>') + '</div>';
     } else if (p.kind === 'compare' || (p.kind === 'fraction' && p.variant === 'compare') || (p.kind === 'decimal' && p.variant === 'compare')) {
       mid = '<div style="font-size:26px;font-weight:800;color:var(--ink);margin:8px 0;">' +
-        p.expr.replace('〇', '<span style="color:#e8870a;">〇</span>') + '</div>';
+        p.expr.replace('〇', '<span style="color:var(--en-primary);">〇</span>') + '</div>';
     }
 
     var inputHTML = '';
@@ -578,9 +578,9 @@
       // 子题型 → 知识点（按年级区分；未映射的组合不标注，保持纯插件级统计）
       var KP_BY_GRADE_KIND = {
         1: {
-          count: 'math-g1-m4-count', order: 'math-g1-m4-count',
-          compose: 'math-g1-m4-compose-digit', digit: 'math-g1-m4-compose-digit',
-          compare: 'math-g1-m4-compare'
+          count: 'math-g1-m4-compose-number', order: 'math-g1-m4-compose-number',
+          compose: 'math-g1-m4-compose-number', digit: 'math-g1-m4-digit-place',
+          compare: 'math-g1-m4-compare-number'
         },
         2: {
           readwrite: 'math-g2-m4-readwrite',
@@ -653,12 +653,12 @@
       if (inp) inp.value = btn.getAttribute('data-val');
       var btns = card.querySelectorAll('.opt-btn');
       for (var i = 0; i < btns.length; i++) {
-        btns[i].style.background = '#fafbff';
-        btns[i].style.borderColor = '#d5dff0';
+        btns[i].style.background = 'var(--soft-bg)';
+        btns[i].style.borderColor = 'var(--line-strong)';
       }
-      btn.style.background = '#5b8def';
-      btn.style.borderColor = '#3b5bdb';
-      btn.style.color = '#fff';
+      btn.style.background = 'var(--brand)';
+      btn.style.borderColor = 'var(--brand-d)';
+      btn.style.color = 'var(--card)';
     }
   };
 

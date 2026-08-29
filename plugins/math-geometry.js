@@ -35,7 +35,7 @@
   function varySVG(svg) {
     if (!svg) return svg;
     if (/<text/.test(svg)) {
-      var fills = ['#eef3fb', '#eafaf0', '#fdf1f5', '#f3f0fb', '#fef6e7', '#eef7fb'];
+      var fills = ['#eef3fb', '#eafaf0', '#fdf1f5', '#f3f0fb', '#fef6e7', '#eef7fb']; /* allow-color */
       var c = pick(fills);
       return svg.replace(/fill="#eef3fb"/g, 'fill="' + c + '"');
     }
@@ -141,15 +141,15 @@
       // 平移：箭头整体右移，方向不变（随机水平错位让每次图示不同）
       var ox = rnd(0, 26);
       return '<svg width="160" height="70" viewBox="0 0 160 70">' +
-        arrow(6 + ox, 35, '#5b8def') + arrow(70 + ox, 35, '#e8870a') +
+        arrow(6 + ox, 35, '#5b8def') + arrow(70 + ox, 35, '#e8870a') + /* allow-color */
         '<text x="62" y="18" font-size="12" font-weight="700" fill="#27ae60">→</text>' +
         '</svg>';
     }
     // 旋转：箭头绕中心旋转（朝右 → 朝下），随机错位让每次图示不同
     var oy = rnd(0, 20);
     return '<svg width="160" height="90" viewBox="0 0 160 90">' +
-      '<g transform="rotate(0 40 ' + (45 + oy) + ')">' + arrow(12, 45 + oy, '#5b8def') + '</g>' +
-      '<g transform="rotate(90 115 ' + (45 + oy) + ')">' + arrow(88, 45 + oy, '#e8870a') + '</g>' +
+      '<g transform="rotate(0 40 ' + (45 + oy) + ')">' + arrow(12, 45 + oy, '#5b8def') + '</g>' + /* allow-color */
+      '<g transform="rotate(90 115 ' + (45 + oy) + ')">' + arrow(88, 45 + oy, '#e8870a') + '</g>' + /* allow-color */
       '<text x="62" y="30" font-size="14" font-weight="700" fill="#27ae60">↻</text>' +
       '</svg>';
   }
@@ -662,12 +662,12 @@
       if (inp) inp.value = btn.getAttribute('data-val');
       var btns = card.querySelectorAll('.opt-btn');
       for (var i = 0; i < btns.length; i++) {
-        btns[i].style.background = '#fafbff';
-        btns[i].style.borderColor = '#d5dff0';
+        btns[i].style.background = 'var(--soft-bg)';
+        btns[i].style.borderColor = 'var(--line-strong)';
       }
-      btn.style.background = '#5b8def';
-      btn.style.borderColor = '#3b5bdb';
-      btn.style.color = '#fff';
+      btn.style.background = 'var(--brand)';
+      btn.style.borderColor = 'var(--brand-d)';
+      btn.style.color = 'var(--card)';
     }
   };
 

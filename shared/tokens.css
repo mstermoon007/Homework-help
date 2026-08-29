@@ -14,34 +14,34 @@
     --bg: #f3f7fb;
     --card: #ffffff;
     --ink: #27324a;
-    --muted: #7a879c;
+    --muted: #5f6b80;
     --line: #e3e9f2;
     --line-strong: #c9d4e6;   /* 可交互元素边框：答案输入框虚线/选项按钮描边 */
     --soft-bg: #fafbff;       /* 近白软底：答案输入框/选项按钮填充 */
-    --brand: #5b8def;
+    --brand: #335fb5;
     --brand-d: #3f6fd1;
     --brand-bg: #eef3fb;      /* 品牌浅底：题号徽章/chip 未激活底 */
-    --ok: #22a06b;
+    --ok: #1c7d52;
     --ok-bg: #e7f7ee;
-    --bad: #e0556b;
+    --bad: #c23a52;
     --bad-bg: #fdeef0;
-    --warn: #e6a23c;
+    --warn: #9a6b0a;
     --shadow: 0 8px 24px rgba(40, 70, 120, .10);
 
     /* 科目三色令牌（任务13）：primary 主色 / secondary 浅底 / accent 强调（深）。
        旧名 --math/--chinese/--english 已别名化指向对应 primary，
        修改 primary 即全站数学/语文/英语相关元素同步变化。 */
-    --math-primary: #4a90d9;
+    --math-primary: #356fb2;
     --math-secondary: #ebf3fd;
     --math-accent: #2f6ea8;
 
-    --cn-primary: #38a169;
+    --cn-primary: #247a52;
     --cn-secondary: #e6f7ee;
     --cn-accent: #27795a;
 
-    --en-primary: #f5a623;
+    --en-primary: #a8650b;
     --en-secondary: #fff7eb;
-    --en-accent: #c77e12;
+    --en-accent: #8f5608;
 
     /* 书写格颜色：田字格/米字格与四线三格（供 svg-chinese/svg-english 及练字组件使用） */
     --grid-tianzige-frame: #5a6f94;     /* 田字格外框 */
@@ -62,7 +62,7 @@
     --grad-hero: linear-gradient(160deg, #4a90d9 0%, #6db3f2 40%, #7eb6f0 100%);
     --grad-hero-overlay: linear-gradient(160deg, rgba(74, 144, 217, .55) 0%, rgba(109, 179, 242, .40) 40%, rgba(126, 182, 240, .35) 100%);
     --grad-logo: linear-gradient(135deg, var(--brand), #7eb6f0);
-    --grad-cta: linear-gradient(135deg, #f5a623, #f7b84e);
+    --grad-cta: linear-gradient(135deg, #8f5608, #a8650b);
 
     /* 工具栏：chip 分段控件（蓝紫系） */
     --toolbar-chip-ink: #4a5a8a;
@@ -70,13 +70,13 @@
     --toolbar-chip-bg: rgba(255, 255, 255, .55);
     --toolbar-chip-hover-border: rgba(123, 97, 255, .55);
     --toolbar-chip-hover-bg: rgba(123, 97, 255, .10);
-    --toolbar-chip-grad: linear-gradient(135deg, #5b8def, #7c5cff);
+    --toolbar-chip-grad: linear-gradient(135deg, #3a66c8, #4a3fb8);
     --toolbar-chip-active-border: #6a66e8;
     --toolbar-chip-active-ink: #ffffff;
     --toolbar-chip-active-shadow: 0 3px 10px rgba(110, 100, 240, .35);
 
     /* 工具栏：操作按钮 */
-    --toolbar-btn-grad: linear-gradient(135deg, #5b8def, #7c5cff);
+    --toolbar-btn-grad: linear-gradient(135deg, #3a66c8, #4a3fb8);
     --toolbar-btn-grad-active: linear-gradient(135deg, #4a76e0, #6a48ef);
     --toolbar-btn-primary-shadow: 0 4px 12px rgba(110, 100, 240, .28);
     --toolbar-btn-ghost-bg: rgba(123, 97, 255, .12);

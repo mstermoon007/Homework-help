@@ -405,8 +405,8 @@
       // 子题型 → 知识点（按年级区分；三年级无本插件知识点，不标注）
       var KP_BY_GRADE_KIND = {
         1: {
-          flat: 'math-g1-m6-flat-shapes', solid: 'math-g1-m6-solid-shapes',
-          position: 'math-g1-m6-position', count: 'math-g1-m6-shape-compose'
+          flat: 'math-g1-m6-flat-shape', solid: 'math-g1-m6-solid-shape',
+          position: 'math-g1-m6-position', count: 'math-g1-m6-shape-combine'
         },
         2: {
           flat: 'math-g2-m6-shapes-2', solid: 'math-g2-m6-shapes-2',
@@ -479,12 +479,12 @@
       if (inp) inp.value = btn.getAttribute('data-val');
       var btns = card.querySelectorAll('.opt-btn');
       for (var i = 0; i < btns.length; i++) {
-        btns[i].style.background = '#fafbff';
-        btns[i].style.borderColor = '#d5dff0';
+        btns[i].style.background = 'var(--soft-bg)';
+        btns[i].style.borderColor = 'var(--line-strong)';
       }
-      btn.style.background = '#5b8def';
-      btn.style.borderColor = '#3b5bdb';
-      btn.style.color = '#fff';
+      btn.style.background = 'var(--brand)';
+      btn.style.borderColor = 'var(--brand-d)';
+      btn.style.color = 'var(--card)';
     }
   };
 

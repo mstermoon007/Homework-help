@@ -113,6 +113,9 @@
     border-radius: var(--toolbar-chip-radius) 0 0 var(--toolbar-chip-radius) !important; }
 .type-chips .chip.line-end { border-radius: 0 var(--toolbar-chip-radius) var(--toolbar-chip-radius) 0 !important; }
 .type-chips .chip.line-start.line-end { border-radius: var(--toolbar-chip-radius) !important; }
+/* 组卷方式中第 5 个选项（期末模拟试卷）前的分隔线，使其在视觉上独立于原 4 个题型 */
+.type-chips .chip-divider { display: inline-block; width: 1px; height: 22px; margin: 4px 10px;
+    background: var(--toolbar-chip-border); align-self: center; }
 
 /* ===== 操作按钮：主操作 28px/14px/600，辅助 24px/12px/400，颜色沿用原令牌 ===== */
 .btn { cursor: pointer; border: none; border-radius: var(--toolbar-btn-radius); padding: var(--toolbar-btn-pad);

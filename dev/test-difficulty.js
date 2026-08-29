@@ -72,17 +72,29 @@ function checkLevels(plugin, grade, diffs) {
     var qs = (set && set.questions) || [];
     results[d] = qs;
     if (!qs.length) { fail++; console.log('  FAIL: ' + plugin.id + ' diff=' + d + ' 生成 0 题'); return; }
+    // 家长批改题型（plugin.check 返回 parentCheck：单题 check 恒为真，不显示数字得分）
+    // —— 此类题型无自动判定，跳过「错误答案判定」断言（见 math-g1-operation：画图形/钟面/圈数/分类）
+    var parentCheck = false;
+    try {
+      var pc = plugin.check && plugin.check(set);
+      parentCheck = !!(pc && pc.parentCheck);
+    } catch (e) { parentCheck = false; }
     var amap = answersFor(qs);
     qs.forEach(function (q, idx) {
       var html = q.render(idx);
       assert(html.indexOf('question-card') !== -1 || html.indexOf('class="problem"') !== -1, plugin.id + ' d' + d + ' #' + idx + ' 渲染含卡片');
       var ok = q.check(amap, idx);
       assert(ok === true, plugin.id + ' d' + d + ' #' + idx + ' 正确答案判定');
-      var badMap = {};
-      badMap[idx] = '__wrong__';
-      if (effInputType(q) === 'multi') (Array.isArray(q.answer) ? q.answer : [q.answer]).forEach(function (_, j) { badMap[idx + ':' + j] = '__wrong__'; });
-      var bad = q.check(badMap, idx);
-      assert(bad === false, plugin.id + ' d' + d + ' #' + idx + ' 错误答案判定');
+      if (parentCheck) {
+        // 家长批改：单题判定恒为真，错误答案判定不适用（已通过 plugin.check 返回 parentCheck 识别）
+        console.log('  SKIP: ' + plugin.id + ' d' + d + ' #' + idx + ' 错误答案判定（家长批改题型，单题 check 恒为真）');
+      } else {
+        var badMap = {};
+        badMap[idx] = '__wrong__';
+        if (effInputType(q) === 'multi') (Array.isArray(q.answer) ? q.answer : [q.answer]).forEach(function (_, j) { badMap[idx + ':' + j] = '__wrong__'; });
+        var bad = q.check(badMap, idx);
+        assert(bad === false, plugin.id + ' d' + d + ' #' + idx + ' 错误答案判定');
+      }
     });
   });
   return results;
@@ -117,6 +129,14 @@ mathPlugins.forEach(function (rec) {
     var diffs = isComp ? [1, 6, 10] : [1, 3, 5, 8, 10];
     var perLevel = isComp ? 6 : 8;
     var all = {};
+    // 家长批改题型（plugin.check 返回 parentCheck）：单题 check 恒为真，无自动判定，
+    // 跳过「错误答案判定」断言（见 math-g1-operation：画图形/钟面/圈数/分类）
+    var parentCheck = false;
+    try {
+      var _pcSet = p.generate({ grade: p.grades[0] || 1, count: 1, type: 'mix', difficulty: 1 });
+      var _pc = p.check && p.check(_pcSet);
+      parentCheck = !!(_pc && _pc.parentCheck);
+    } catch (e) { parentCheck = false; }
     diffs.forEach(function (d) {
       var set = p.generate({ grade: p.grades[0] || 1, count: perLevel, type: 'mix', difficulty: d });
       var qs = (set && set.questions) || [];
@@ -128,11 +148,15 @@ mathPlugins.forEach(function (rec) {
         assert(html.indexOf('question-card') !== -1 || html.indexOf('class="problem"') !== -1, p.id + ' d' + d + ' #' + idx + ' 渲染含卡片');
         var ok = q.check(amap, idx);
         assert(ok === true, p.id + ' d' + d + ' #' + idx + ' 正确答案判定');
-        var badMap = {};
-        badMap[idx] = '__wrong__';
-        if (effInputType(q) === 'multi') (Array.isArray(q.answer) ? q.answer : [q.answer]).forEach(function (_, j) { badMap[idx + ':' + j] = '__wrong__'; });
-        var bad = q.check(badMap, idx);
-        assert(bad === false, p.id + ' d' + d + ' #' + idx + ' 错误答案判定');
+        if (parentCheck) {
+          console.log('  SKIP: ' + p.id + ' d' + d + ' #' + idx + ' 错误答案判定（家长批改题型，单题 check 恒为真）');
+        } else {
+          var badMap = {};
+          badMap[idx] = '__wrong__';
+          if (effInputType(q) === 'multi') (Array.isArray(q.answer) ? q.answer : [q.answer]).forEach(function (_, j) { badMap[idx + ':' + j] = '__wrong__'; });
+          var bad = q.check(badMap, idx);
+          assert(bad === false, p.id + ' d' + d + ' #' + idx + ' 错误答案判定');
+        }
       });
     });
     // 无重复断言（容错）：小参数空间题型允许少量随机碰撞，
@@ -253,8 +277,8 @@ Promise.all(promises).then(function () {
       var set = loadP(id).generate({ grade: 6, count: 12, difficulty: lv });
       assert(set.questions.every(function (q) { return q.difficulty === lv; }),
         id + ' lv' + lv + '：题目标注 difficulty=' + lv);
-      // 分数/小数域整数旋钮放大有限，用大样本+5% 容差抗抖动
-      var big = loadP(id).generate({ grade: 6, count: 120, difficulty: lv }).questions;
+      // 分数/小数域整数旋钮放大有限，用大样本+5% 容差抗抖动（放大样本进一步压低方差，避免偶发抖动）
+      var big = loadP(id).generate({ grade: 6, count: 400, difficulty: lv }).questions;
       mean[lv] = numsMean(big);
     });
     // g6 两款为分数/小数域，整数旋钮放大后高难均值不应低于低难（宽松单调）
@@ -288,11 +312,17 @@ Promise.all(promises).then(function () {
   var KB = require(path.join(ROOT, 'shared/knowledge-bank.js'));
   // 知识点索引：(pluginId|grade|kpId) → true，用于校验题目标注的 knowledgePointId 合法
   var kpIndex = {};
+  // 同年级知识点索引：(grade|kpId) → true，用于支持「跨插件共享」的知识点
+  // （如 math-g1-m9-classify 登记在 math-g1-operation 下，但 math-statistics 也会标注使用）
+  var kpByGrade = {};
   Object.keys(KB).forEach(function (subject) {
     if (!Array.isArray(KB[subject])) return;
     KB[subject].forEach(function (g) {
       g.modules.forEach(function (m) {
-        m.knowledgePoints.forEach(function (k) { kpIndex[k.pluginId + '|' + g.grade + '|' + k.id] = true; });
+        m.knowledgePoints.forEach(function (k) {
+          kpIndex[k.pluginId + '|' + g.grade + '|' + k.id] = true;
+          kpByGrade[g.grade + '|' + k.id] = true;
+        });
       });
     });
   });
@@ -326,11 +356,12 @@ Promise.all(promises).then(function () {
       var qs = set.questions || set;
       var stamped = qs.filter(function (q) { return q.knowledgePointId; });
       if (stamped.length) {
+        // 校验标注的 knowledgePointId 在同年级知识库中已登记（允许跨插件共享同一知识点）
         var allValid = stamped.every(function (q) {
-          return kpIndex[rec.id + '|' + grade + '|' + q.knowledgePointId] === true;
+          return kpByGrade[grade + '|' + q.knowledgePointId] === true;
         });
         assert(allValid,
-          rec.id + ' g' + grade + '：KP 标注均登记于知识库且归属一致（' + stamped.length + '/' + qs.length + ' 题标注）');
+          rec.id + ' g' + grade + '：KP 标注均登记于知识库（同年级有效，支持跨插件共享）（' + stamped.length + '/' + qs.length + ' 题标注）');
       } else {
         assert(true, rec.id + ' g' + grade + '：无本插件知识点，保持纯插件级统计（不标注）');
       }

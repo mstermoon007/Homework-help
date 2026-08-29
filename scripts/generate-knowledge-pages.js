@@ -6,7 +6,7 @@
  * 为每个「年级 × 模块 × 知识点」生成静态 HTML 页面，输出到 knowledge/ 目录。
  *
  * 产出：
- *   knowledge/index.html                          —— 全量索引（年级/模块/知识点链接）
+ *   knowledge/knowledge-index.html                —— 全量索引（年级/模块/知识点链接）
  *   knowledge/g{grade}-{moduleId}.html            —— 模块聚合页（列出模块下所有知识点）
  *   knowledge/{newId}.html                        —— 单知识点页（文件名 = 知识点 id）
  *
@@ -135,7 +135,7 @@ function renderPointPage(grade, moduleId, kp, sName, canonFile) {
 
   return baseHead(title, desc, canonFile) +
     crumb([
-      '<a href="index.html">知识库首页</a>',
+      '<a href="knowledge-index.html">知识库首页</a>',
       `<a href="${modulePageFile(grade, moduleId)}">${gName} · ${esc(mName)}</a>`,
       `<span>${esc(kp.name)}</span>`
     ]) +
@@ -171,7 +171,7 @@ function renderModulePage(grade, moduleId, module, sName) {
 
   return baseHead(title, desc, canonFile) +
     crumb([
-      '<a href="index.html">知识库首页</a>',
+      '<a href="knowledge-index.html">知识库首页</a>',
       `<span>${gName} · ${esc(mName)}</span>`
     ]) +
     `<h1>${esc(mName)}</h1>` +
@@ -218,7 +218,7 @@ function renderIndex(gradesData, SUBJECT_NAMES) {
   });
   const firstSub = gradesData.length ? (SUBJECT_NAMES && SUBJECT_NAMES[gradesData[0].subject]) || '数学' : '数学';
 
-  return baseHead(title, desc, 'index.html') +
+  return baseHead(title, desc, 'knowledge-index.html') +
     crumb(['<span>知识库首页</span>']) +
     `<h1>${esc(firstSub)}知识库</h1>` +
     `<div class="meta">覆盖 ${bySubject.size} 个科目 · ${gradesData.length} 个年级 · 共 ${gradesData.reduce((s, g) => s + g.total, 0)} 个知识点</div>` +
@@ -227,16 +227,43 @@ function renderIndex(gradesData, SUBJECT_NAMES) {
     baseFoot();
 }
 
+// ============ 增量生成支持 ============
+// 对已渲染页面按「源数据」求 sha256，写入 HTML 尾部注释；下次增量运行时比对，
+// 一致则跳过写盘。仅依赖源数据（不依赖渲染产物），避免自身注释导致的自循环哈希。
+const crypto = require('crypto');
+const HASH_RE = /<!--\s*kbgen:hash=([0-9a-f]{64})\s*-->/;
+
+function hashOf(data) {
+  return crypto.createHash('sha256').update(JSON.stringify(data)).digest('hex');
+}
+function readStoredHash(filePath) {
+  try {
+    const txt = fs.readFileSync(filePath, 'utf8');
+    const m = HASH_RE.exec(txt);
+    return m ? m[1] : null;
+  } catch (e) { return null; }
+}
+function withHash(html, hash) {
+  return html + '\n<!-- kbgen:hash=' + hash + ' -->';
+}
+// 增量模式：已存在且哈希一致则跳过；返回 'written' | 'skipped'
+function writePage(filename, html, hash, incremental) {
+  const filePath = path.join(OUT_DIR, filename);
+  if (incremental && readStoredHash(filePath) === hash) return 'skipped';
+  fs.writeFileSync(filePath, withHash(html, hash), 'utf8');
+  return 'written';
+}
+
 // ============ 主流程 ============
-function main() {
+function build(opts) {
+  const incremental = !!opts.incremental;
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
   // 任务3：知识库为按科目分组对象 {math,cn,en}；逐科目生成（科目名用于页面文案）
   const SUBJECT_NAMES = { math: '数学', cn: '语文', en: '英语' };
   const subjectKeys = Object.keys(KnowledgeBank).filter(k => Array.isArray(KnowledgeBank[k]));
   const gradesData = [];
-  let pointCount = 0;
-  let moduleCount = 0;
+  let written = 0, skipped = 0;
 
   subjectKeys.forEach((subject) => {
     const sName = SUBJECT_NAMES[subject] || subject;
@@ -249,18 +276,17 @@ function main() {
         const moduleId = module.moduleId;
         // 空模块（占位阶段，如语文/英语未激活模块）跳过页面产出
         if (!Array.isArray(module.knowledgePoints) || module.knowledgePoints.length === 0) return;
-        moduleCount++;
 
-        // ① 模块聚合页
+        // ① 模块聚合页（哈希覆盖模块本身 + 年级 + 科目名，模块内容变即重生成）
         const modHtml = renderModulePage(grade, moduleId, module, sName);
-        fs.writeFileSync(path.join(OUT_DIR, modulePageFile(grade, moduleId)), modHtml, 'utf8');
+        const modHash = hashOf({ kind: 'module', grade: grade, moduleId: moduleId, sName: sName, module: module });
+        (writePage(modulePageFile(grade, moduleId), modHtml, modHash, incremental) === 'written' ? written++ : skipped++);
 
         // ② 单知识点页（文件名直接用知识点 id）
         (module.knowledgePoints || []).forEach((kp) => {
           const html = renderPointPage(grade, moduleId, kp, sName, kp.id + '.html');
-          const filename = kp.id + '.html';
-          fs.writeFileSync(path.join(OUT_DIR, filename), html, 'utf8');
-          pointCount++;
+          const kh = hashOf({ kind: 'point', grade: grade, moduleId: moduleId, sName: sName, kp: kp });
+          (writePage(kp.id + '.html', html, kh, incremental) === 'written' ? written++ : skipped++);
           gradeEntry.total++;
         });
 
@@ -273,13 +299,41 @@ function main() {
 
   // ③ 全量索引页（按科目分节）
   const indexHtml = renderIndex(gradesData, SUBJECT_NAMES);
-  fs.writeFileSync(path.join(OUT_DIR, 'index.html'), indexHtml, 'utf8');
+  const indexHash = hashOf({ kind: 'index', gradesData: gradesData, SUBJECT_NAMES: SUBJECT_NAMES });
+  (writePage('knowledge-index.html', indexHtml, indexHash, incremental) === 'written' ? written++ : skipped++);
 
-  console.log(`✅ 已生成知识库静态页面：`);
-  console.log(`   - 知识点页：${pointCount} 个`);
-  console.log(`   - 模块聚合页：${moduleCount} 个`);
-  console.log(`   - 索引页：1 个（knowledge/index.html，按科目分节）`);
+  console.log(`✅ 已生成知识库静态页面（${incremental ? '增量' : '全量'}）：`);
+  console.log(`   - 本次写入：${written} 个`);
+  if (incremental) console.log(`   - 跳过未变：${skipped} 个`);
   console.log(`   输出目录：${OUT_DIR}`);
+  return { written: written, skipped: skipped };
 }
 
-main();
+function parseArgs() {
+  const args = process.argv.slice(2);
+  return {
+    incremental: args.indexOf('--incremental') !== -1 || args.indexOf('-i') !== -1,
+    watch: args.indexOf('--watch') !== -1 || args.indexOf('-w') !== -1
+  };
+}
+
+const opts = parseArgs();
+
+if (opts.watch) {
+  // 首次全量，之后监听数据源增量重生成
+  build({ incremental: false });
+  const sharedDir = path.join(ROOT, 'shared');
+  console.log('👀 watch 模式：监听 ' + sharedDir + ' 下 knowledge-*.js / module-catalog.js 的变化...');
+  let timer = null;
+  fs.watch(sharedDir, function (event, filename) {
+    if (!filename || !/^(knowledge-.*\.js|module-catalog\.js)$/.test(filename)) return;
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(function () {
+      console.log('\n🔄 检测到数据源变化（' + filename + '），重新生成...');
+      build({ incremental: true });
+    }, 200);
+  });
+} else {
+  build(opts);
+}
+

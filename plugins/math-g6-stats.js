@@ -87,7 +87,7 @@
     var W = 145, H = 110;
     var out = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">';
     var start = -90;
-    var colors = ['#3f6fd1', '#f2a93b', '#59b88f', '#c7d0dd'];
+    var colors = ['#3f6fd1', '#f2a93b', '#59b88f', '#c7d0dd']; /* allow-color */
     for (var i = 0; i < parts.length; i++) {
       var ang = parts[i] * 360 / 100;
       var a1 = start * Math.PI / 180, a2 = (start + ang) * Math.PI / 180;

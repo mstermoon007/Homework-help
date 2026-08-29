@@ -5,9 +5,11 @@
  * 规则（违规即 errors，警告不计入退出码）：
  *   R1  运行时代码直接调用 Math.random() —— 应使用 PluginUtil.randInt / shuffle
  *       （注释中的提及不算；shared/common.js randInt 内部兜底为唯一豁免，不在扫描范围）
- *   R2  插件内联样式出现硬编码颜色（#hex / rgb()/rgba()）
- *       —— SVG 表现属性（fill=/stroke=）与 MEMORY 记录的内容插画豁免清单除外；
- *          color:#fff（彩色底上的白字）亦豁免
+ *   R2  硬编码颜色字面量（任务1.1 扩展）：遍历 plugins/ 下全部 .js，匹配
+ *       #hex / rgb()/rgba()/hsl()/hsla()，要求一律使用 tokens.css 的 var(--*) 令牌。
+ *       自动豁免：SVG 表现属性（fill/stroke，属性不支持 var()）、纯白字 #fff、
+ *       box-shadow 阴影色；并在颜色所在行末尾加 allow-color 行内标记可整行白名单豁免
+ *       （用于确实无法令牌化的动态/主题色，如 SVG 数据调色板、渐变；标记写法为斜杠星 allow-color 星斜杠）。
  *   R3  插件对象缺 subject 字段；math 科目插件缺 moduleId
  *       （语文/英语历史插件无 moduleId，降级为警告）
  *   R4  知识点 ID 不符合科目前缀四段式 {subject}-g{grade}-{module}-{slug}
@@ -39,21 +41,52 @@ const EXEMPT_HEX = new Set(['#f5576c', '#10ac84', '#b8860b', '#fdf3e3', '#fffbe8
   '#fef0e8', '#e8870a', '#e74c3c', '#4caf50', '#fffdf6', '#6b5310', '#e8d9b8',
   '#e0c98f', '#f0e3c0']);
 
-function scanSourceFile(rel) {
+// R2 行内白名单标记：在颜色字面量所在行末尾加「/* allow-color */」可整行豁免
+const COLOR_ALLOW = /allow-color/;
+
+// R2（任务1.1）：遍历插件源文件逐行扫描硬编码颜色字面量
+//   豁免：SVG 表现属性 fill/stroke、纯白 #fff、box-shadow 阴影 rgba、整行 allow-color 标记
+//   其余颜色必须改用 tokens.css 的 var(--*) 令牌。
+function scanColors(rel) {
+  const base = path.basename(rel);
+  if (base === '_template.js' || base === 'registry.js') return;
+  const fp = path.join(ROOT, rel);
+  if (!fs.existsSync(fp)) return;
+  const src = fs.readFileSync(fp, 'utf8');
+  const reColor = /#[0-9a-fA-F]{3,8}\b|\brgba?\s*\(|\bhsla?\s*\(/g;
+  const lines = src.split('\n');
+  lines.forEach((line, i) => {
+    const lineNo = i + 1;
+    if (COLOR_ALLOW.test(line)) return;                 // 整行白名单豁免
+    let m;
+    reColor.lastIndex = 0;
+    while ((m = reColor.exec(line)) !== null) {
+      const tok = m[0];
+      const before = line.slice(Math.max(0, m.index - 36)).toLowerCase();
+      if (/^#fff(?:fff)?$/.test(tok)) continue;          // 纯白字/白底（彩底上的颜色无法令牌化）
+      if (/(fill|stroke)/.test(before)) continue;        // SVG 表现属性（属性不支持 var()）
+      if (/box-shadow/.test(before)) continue;           // 阴影色（历史量大，且 rgba 阴影难令牌化）
+      errors.push(`${rel}:${lineNo} R2 硬编码颜色字面量「${tok}」（必须使用 tokens.css 的 var(--*) 令牌，或在该行末尾加 /* allow-color */ 白名单）`);
+    }
+  });
+}
+
+function scanSourceFile(rel, doColor) {
   const fp = path.join(ROOT, rel);
   if (!fs.existsSync(fp)) return;
   const src = fs.readFileSync(fp, 'utf8');
   const clean = stripComments(src);
 
   // R1: Math.random 直调（去注释后仍存在即违规）
-  if (rel === 'shared/common.js') return; // R1 豁免：randInt 内部 Math.random 兜底是规范唯一允许位置
+  if (rel === 'shared/common.js' || rel === 'shared/core.js') return; // R1 豁免：随机源统一由 core.js 的 randInt/randFloat 经 crypto 提供，运行时代码不应直调 Math.random
   const reRandom = /Math\.random\s*\(\s*\)/g;
   let m;
   while ((m = reRandom.exec(clean)) !== null) {
     errors.push(`${rel}:${lineOf(clean, m.index)} R1 直接调用 Math.random()（应使用 PluginUtil.randInt/shuffle）`);
   }
 
-  // R2: 内联样式硬编码颜色
+  // R2（旧内联样式检查，仅 shared 层保留；plugins 由 scanColors 统一覆盖）
+  if (!doColor) return;
   const reStyle = /style="([^"]*)"/g;
   while ((m = reStyle.exec(src)) !== null) {
     const line = lineOf(src, m.index);
@@ -157,9 +190,9 @@ loadPlugins().forEach(({ rec, plugin }) => {
   checkPluginFields(rec, plugin);
 });
 
-listDir('plugins').forEach(scanSourceFile);
+listDir('plugins').forEach(rel => { scanSourceFile(rel, false); scanColors(rel); });
 listDir('plugins').forEach(scanKpIdsInSource); // 任务11：插件源码内旧式无前缀 ID 同样拦截
-listDir('shared').forEach(scanSourceFile);
+listDir('shared').forEach(rel => scanSourceFile(rel, true));
 
 scanKnowledgeShards();
 

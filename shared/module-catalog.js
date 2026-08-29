@@ -56,8 +56,8 @@
     { id: 'M8', name: '解决问题', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'mixed', level: 'basic' },
     { id: 'M9', name: '分类与整理', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'statistics', level: 'basic' },
     { id: 'M10', name: '推理与数学广角', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'statistics', level: 'basic' },
-    { id: 'M11', name: '判断题', subject: SUBJECTS.MATH, grades: [2,3,4,5,6], category: 'mixed', level: 'basic' },
-    { id: 'M12', name: '选择题', subject: SUBJECTS.MATH, grades: [2,3,4,5,6], category: 'mixed', level: 'basic' },
+   { id: 'M11', name: '判断题', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'mixed', level: 'basic' },
+   { id: 'M12', name: '选择题', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'mixed', level: 'basic' },
     // M13 提前预习：一年级乘除法启蒙（乘法表/除法表静态展示 + 乘除填空随机练习），
     // 携带自定义显示属性（卡片草绿色 + 胶囊标签），知识点 ID 对应小写 m13
     {

@@ -98,8 +98,8 @@
       for (var c = 0; c < 3; c++) {
         var val = grid[r][c];
         var isBlank = (r === blankR && c === blankC);
-        html += '<td style="border:2px solid var(--brand);width:44px;height:44px;text-align:center;font-size:22px;font-weight:800;color:var(--ink);background:' + (isBlank ? '#fffbe8' : '#eef3fb') + ';">' +
-          (isBlank ? '<span style="color:#e8870a;">?</span>' : val) +
+        html += '<td style="border:2px solid var(--brand);width:44px;height:44px;text-align:center;font-size:22px;font-weight:800;color:var(--ink);background:' + (isBlank ? 'var(--en-secondary)' : 'var(--brand-bg)') + ';">' +
+          (isBlank ? '<span style="color:var(--en-primary);">?</span>' : val) +
           '</td>';
       }
       html += '</tr>';
@@ -271,12 +271,12 @@
       if (inp) inp.value = btn.getAttribute('data-val');
       var btns = card.querySelectorAll('.opt-btn');
       for (var i = 0; i < btns.length; i++) {
-        btns[i].style.background = '#fafbff';
-        btns[i].style.borderColor = '#d5dff0';
+        btns[i].style.background = 'var(--soft-bg)';
+        btns[i].style.borderColor = 'var(--line-strong)';
       }
-      btn.style.background = '#5b8def';
-      btn.style.borderColor = '#3b5bdb';
-      btn.style.color = '#fff';
+      btn.style.background = 'var(--brand)';
+      btn.style.borderColor = 'var(--brand-d)';
+      btn.style.color = 'var(--card)';
     }
   };
 

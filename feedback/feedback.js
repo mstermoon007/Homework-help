@@ -7,6 +7,8 @@
   const fileInput = document.getElementById('file-input');
   const previewContainer = document.getElementById('preview-container');
   const submitBtn = document.getElementById('submit-btn');
+  const copyBtn = document.getElementById('copy-btn');
+  const shareBtn = document.getElementById('share-btn');
   const submitStatus = document.getElementById('submit-status');
 
   // GitHub 兼容配置：
@@ -119,9 +121,12 @@
     return formData;
   }
 
-  // ========== mailto 兜底 ==========
+  // ========== mailto 兜底（预填主题 + 正文框架：UA / 页面 URL / 错误模板） ==========
   function mailtoFallback(subject, description, page, timestamp) {
+    const ua = navigator.userAgent || '';
+    const screenInfo = window.screen ? (window.screen.width + 'x' + window.screen.height) : '?';
     const body = [
+      '【问题反馈】',
       '主题：' + subject,
       '页面：' + page,
       '时间：' + timestamp,
@@ -129,12 +134,57 @@
       '问题描述：',
       description || '(无)',
       '',
+      '—— 以下信息有助于排查，请随信附上 ——',
+      '浏览器 / 系统：' + ua,
+      '当前地址：' + location.href,
+      '屏幕：' + screenInfo,
+      '语言：' + (navigator.language || '?'),
+      '',
       '（如已在上方粘贴截图，请将其手动粘贴到本邮件中作为附件发送）'
     ].join('\n');
     const mail = 'mailto:' + FALLBACK_EMAIL +
-      '?subject=' + encodeURIComponent('[问题反馈] ' + subject) +
+      '?subject=' + encodeURIComponent('[Homework Help 反馈] ' + subject) +
       '&body=' + encodeURIComponent(body);
     window.location.href = mail;
+  }
+
+  // ========== 复制反馈 JSON（navigator.clipboard，降级 execCommand） ==========
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.top = '-9999px';
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        ok ? resolve() : reject(new Error('copy failed'));
+      } catch (e) { reject(e); }
+    });
+  }
+
+  // ========== 组装反馈载荷（练习状态 + 浏览器信息） ==========
+  function buildFeedbackPayload(subject, description) {
+    const payload = {
+      app: 'Homework Help',
+      subject: subject,
+      description: description,
+      page: location.href,
+      timestamp: new Date().toISOString(),
+      browser: {
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        screen: window.screen ? (window.screen.width + 'x' + window.screen.height) : null,
+        viewport: (window.innerWidth || 0) + 'x' + (window.innerHeight || 0)
+      }
+    };
+    try { if (window.StorageManager) payload.practiceState = window.StorageManager.loadState(); } catch (e) { /* ignore */ }
+    return payload;
   }
 
   // ========== 表单提交 ==========
@@ -197,6 +247,38 @@
     submitBtn.disabled = false;
     submitBtn.textContent = '提交反馈';
   });
+
+  // ========== 复制反馈数据 ==========
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function () {
+      const subject = subjectInput.value.trim();
+      const description = descInput.value.trim();
+      const payload = buildFeedbackPayload(subject, description);
+      copyText(JSON.stringify(payload, null, 2)).then(function () {
+        showStatus('✅ 反馈数据已复制到剪贴板', 'success');
+      }).catch(function () {
+        showStatus('复制失败，请手动选择文本复制', 'error');
+      });
+    });
+  }
+
+  // ========== Web Share API（移动端条件显示） ==========
+  if (shareBtn) {
+    if (navigator.share) {
+      shareBtn.style.display = '';
+      shareBtn.addEventListener('click', function () {
+        const subject = subjectInput.value.trim() || '问题反馈';
+        const description = descInput.value.trim();
+        navigator.share({
+          title: '[Homework Help 反馈] ' + subject,
+          text: (description || '我在使用 Homework Help 时遇到问题：') + '\n' + location.href,
+          url: location.href
+        }).catch(function () { /* 用户取消，忽略 */ });
+      });
+    } else {
+      shareBtn.style.display = 'none';
+    }
+  }
 
   // ========== 状态显示 ==========
   function showStatus(message, type) {

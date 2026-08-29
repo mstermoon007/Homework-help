@@ -178,6 +178,48 @@
     return cov.next ? { pluginId: cov.next.pluginId, name: cov.next.name } : null;
   };
 
+  /**
+   * 按科目懒加载知识库分片（任务 3.1）。
+   *  - 浏览器：动态注入对应分片 <script>（路径见 SHARDS），缓存 Promise 防止重复加载；
+   *    分片脚本执行后会自挂载到 KnowledgeBank[subject]，onload 时即视为就绪并 resolve(KnowledgeBank[subject])。
+   *  - Node：入口在被 require 时已同步装配分片，直接 resolve 已装配数组（工具链零感知）。
+   *  - 网络/404 失败不抛错，resolve(null) 让调用方降级（不影响做题）。
+   *  - 未选择科目（subject 为空/未知）时 resolve(null)，不发起任何请求。
+   * @param {string} subject 'math' | 'cn' | 'en'（兼容 chinese/english 全称）
+   * @returns {Promise<Array|null>}
+   */
+  KnowledgeBank.ensureKnowledgeData = function (subject) {
+    var cs = canonSubject(subject);
+    if (!cs || !KnowledgeBank.SHARDS || !KnowledgeBank.SHARDS[cs]) {
+      return Promise.resolve(null);
+    }
+    // Node：分片已在入口 require 时同步装配
+    if (typeof window === 'undefined') {
+      return Promise.resolve(KnowledgeBank[cs]);
+    }
+    if (!KnowledgeBank.__pendingShards) KnowledgeBank.__pendingShards = {};
+    // 正在加载或已加载：复用同一 Promise，杜绝重复请求
+    if (KnowledgeBank.__pendingShards[cs]) return KnowledgeBank.__pendingShards[cs];
+    // 已挂载数据（如被静态引入过）直接返回
+    if (Array.isArray(KnowledgeBank[cs]) && KnowledgeBank[cs].length) {
+      return Promise.resolve(KnowledgeBank[cs]);
+    }
+    var url = KnowledgeBank.SHARDS[cs];
+    var p = new Promise(function (resolve) {
+      var s = document.createElement('script');
+      s.src = url;
+      s.async = false; // 保持顺序，确保分片在后续知识库查询前就绪
+      s.onload = function () { resolve(KnowledgeBank[cs]); };
+      s.onerror = function () {
+        console.error('[knowledge-bank] 分片加载失败:', url);
+        resolve(null); // 降级：不因知识库缺失阻塞做题
+      };
+      (document.head || document.documentElement).appendChild(s);
+    });
+    KnowledgeBank.__pendingShards[cs] = p;
+    return p;
+  };
+
   global.KnowledgeBank = KnowledgeBank;
 
   // ============ 分片自动装配（Node）：入口被 require 时同步并入三科目数据 ============

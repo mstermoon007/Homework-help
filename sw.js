@@ -29,18 +29,21 @@
 // === 版本配置 ===
 // 请在部署新版本时将本常量自增（v1 → v2 → v3 ...），
 // 并在对应的 HTML 文件中注入对应版本号（见下文「前端版本注入」一节）。
-/** Shared version module — imported from shared/version.js */
-import { CACHE_VERSION } from './shared/version.js';
+// 版本来源：经典 Service Worker 不支持顶层 ESM import，故用 importScripts 引入 version.js，
+// 其会把 APP_VERSION / CACHE_VERSION 挂到 self 上（见 shared/version.js）。
+importScripts('./shared/version.js');
+var CACHE_VERSION = self.CACHE_VERSION; // 'homework-help-<APP_VERSION>'
 // 缓存名 = 固定前缀 + 版本号。activate 按此名清理一切非当前版本缓存（含旧 hw-help-v64）。
 // ⚠️ 本常量缺失曾导致 fetch/install 内 5 处 caches.open(CACHE) 抛 ReferenceError，
 //    SW 激活后第二次导航即 net::ERR_FAILED（E2E C1 用例捕获的 P0）。
-const CACHE = 'hw-help-' + CACHE_VERSION;
+const CACHE = 'hw-help-3.1.2';  // 必须与 shared/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
 
 // === 核心资源列表 ===
-// 所有路径相对于站点根（home.modouyu.top），CDN 会根据 CACHE_VERSION 自动补全缓存键策略。
-// 笔记：HTML 入口页（index.html、math-types.html 等）不添加 ?v=，保持 no-cache；
-// 非入口页资源（shared/、插件、SVG 生成器等）请在前端 index.html 中通过模板注入 ?v=CACHE_VERSION，
-// 以实现「HTML 即时生效 + 资源长缓存 + 更新时自动回填」的混合策略。
+// 所有路径相对于站点根。CORE 保持「无 ?v=」字面量：fetch 处理以 url.pathname（忽略查询串）作为缓存键，
+// 若此处对资源加 ?v=CACHE_VERSION，则真实请求（HTML 未注入 ?v）将按 pathname 命中不到预缓存键，
+// 反而会丢失离线预缓存命中。因此版本失效不依赖 ?v，而由下方 CACHE 名随 APP_VERSION 自增 +
+// activate 清理一切非当前版本缓存实现（部署新版本即全量失效回填）。
+// withVersion() 仍保留，供前端确有需要时手动注入版本查询；当前 SW 离线策略不依赖它。
 const CORE = [
   './',
   'index.html',
@@ -150,10 +153,8 @@ function cacheAll(cache, list) {
   }));
 }
 
-// 注入版本参数到 CORE 中需要长缓存的资源
-// 仅在前端 HTML 模板中使用：document.write('<script src="shared/common.js?v=' + CACHE_VERSION + '"></script>')
-// 这些路径在 SW 层仅作逻辑 reference，实际版本控制由前端模板注入决定。
-// 入口页 HTML 不应添加 v 参数，以保持 no-cache 行为；非入口资源建议在 HTML 中注入 v=版本号。
+// 注：CACHE 名随 APP_VERSION 变化即触发 activate 清理旧缓存，资源失效无需前端注入 ?v。
+// withVersion() 保留供手动版本化，但 fetch 以 pathname 为缓存键，故注入 ?v 不改变失效语义。
 
 self.addEventListener('install', function (e) {
   e.waitUntil(

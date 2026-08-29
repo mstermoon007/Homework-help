@@ -256,7 +256,7 @@ if (fs.existsSync(KNOW_DIR)) {
     if (!fs.existsSync(path.join(KNOW_DIR, id + '.html'))) errors.push(`缺少详情页: knowledge/${id}.html`);
   });
   fs.readdirSync(KNOW_DIR).filter(f => f.endsWith('.html')).forEach(f => {
-    if (f === 'index.html') return;
+    if (f === 'index.html' || f === 'knowledge-index.html') return;
     if (moduleFiles.has(f)) return;
     if (allIds.has(f.replace(/\.html$/, ''))) return;
     errors.push(`多余 HTML 文件: knowledge/${f}`);
@@ -325,6 +325,51 @@ registry.forEach(rec => {
   });
 });
 
+// ============ 9. 字段级深度校验（任务1.4） ============
+// 必填字段「存在且非空」：
+//   通用规则——非空字符串（trim 后长度 > 0）或正数（> 0）均视为已填；
+//   据此 id / name / description / pluginId（字符串）与 weight / type（weight 为数字、type 为子题型枚举字符串）
+//   均被统一校验「存在且非空」。
+// 规则：pluginId 对 status==='placeholder' 的占位条目豁免（已知待补缺口，仅提示不阻断），
+//       其余字段对所有条目强制。收集缺失项生成格式化报告（科目/年级/模块/知识点ID/缺失字段）。
+function isFilled(v) {
+  return (typeof v === 'string' && v.trim().length > 0) || (typeof v === 'number' && v > 0);
+}
+const REQ_FIELDS = ['id', 'name', 'weight', 'type', 'description', 'pluginId'];
+const fieldMissing = []; // {subject, grade, module, id, miss:[field,...]}
+entries.forEach(e => {
+  if (gradeOnly && e.grade !== gradeOnly) return;
+  (e.modules || []).forEach(mod => {
+    (mod.knowledgePoints || []).forEach(kp => {
+      const miss = REQ_FIELDS.filter(f => !isFilled(kp[f]));
+      // 占位条目豁免 pluginId（已知缺口，仅警告）
+      if (kp.status === 'placeholder' && miss.indexOf('pluginId') !== -1) {
+        miss.splice(miss.indexOf('pluginId'), 1);
+        warnings.push(`[字段缺失] 科目=${e.subject} 年级=${e.grade} 模块=${mod.moduleId} 知识点=${kp.id}：占位条目未声明 pluginId（已知缺口，待补）`);
+      }
+      if (miss.length) fieldMissing.push({ subject: e.subject, grade: e.grade, module: mod.moduleId, id: kp.id, miss });
+    });
+  });
+});
+fieldMissing.forEach(r => {
+  errors.push(`[字段缺失] 科目=${r.subject} 年级=${r.grade} 模块=${r.module} 知识点=${r.id} 缺失字段: ${r.miss.join(', ')}`);
+});
+
+// 9.1 HTML 一致性（非强制，仅警告）：对应详情页存在时，应至少包含知识点名或 ID 文本
+if (fs.existsSync(KNOW_DIR)) {
+  allIds.forEach(id => {
+    const f = path.join(KNOW_DIR, id + '.html');
+    if (!fs.existsSync(f)) return; // 缺失页由第 7.7 条报错
+    const html = fs.readFileSync(f, 'utf8');
+    let name = '';
+    entries.forEach(e => (e.modules || []).forEach(m => (m.knowledgePoints || []).forEach(kp => { if (kp.id === id) name = kp.name || ''; })));
+    const hay = html.toLowerCase();
+    if ((name && hay.indexOf(name.toLowerCase()) === -1) && hay.indexOf(id.toLowerCase()) === -1) {
+      warnings.push(`[HTML一致性] knowledge/${id}.html 未包含知识点名称「${name}」或 ID 文本（请确认静态页与数据同步）`);
+    }
+  });
+}
+
 // 输出
 console.log('\n📋 知识库结构验证结果\n' + '='.repeat(40));
 console.log(`校验范围：${gradeOnly ? `年级 ${gradeOnly}` : '全年级'}${specialGrades.length ? `（含 ${specialGrades.join('/')} 年级 M1-M12 专项）` : ''}`);
@@ -347,6 +392,12 @@ if (warnPlaceholder.length || warnSameGradePre > 0 || warnings.length) {
     console.log(' [其他]');
     warnings.forEach(w => console.log('  - ' + w));
   }
+}
+if (fieldMissing.length) {
+  console.log('\n❌ [字段缺失] 必填字段缺失报告：');
+  console.log('   ' + '科目'.padEnd(7) + ' | ' + '年级'.padEnd(4) + ' | ' + '模块'.padEnd(8) + ' | ' + '知识点ID'.padEnd(28) + ' | 缺失字段');
+  console.log('   ' + '-'.repeat(7) + '-+-' + '-'.repeat(4) + '-+-' + '-'.repeat(8) + '-+-' + '-'.repeat(28) + '-+----------');
+  fieldMissing.forEach(r => console.log('   ' + String(r.subject).padEnd(7) + ' | ' + String(r.grade).padEnd(4) + ' | ' + String(r.module).padEnd(8) + ' | ' + String(r.id).padEnd(28) + ' | ' + r.miss.join(', ')));
 }
 if (errors.length) {
   console.log('\n❌ 知识库验证失败：');

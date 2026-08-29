@@ -54,7 +54,7 @@
   function polySvg(pts, fill, stroke) {
     return '<polygon points="' + polyAttr(pts) + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="2" stroke-linejoin="round"/>';
   }
-  var BLUE = '#3f6fd1', ORANGE = '#f2a93b', GHOST = '#8a97ad';
+  var BLUE = '#3f6fd1', ORANGE = '#f2a93b', GHOST = '#8a97ad'; /* allow-color */
 
   // 三种可操作图形（单位格）
   var OP_SHAPES = [
@@ -73,7 +73,7 @@
     svg += '<g transform="translate(' + pad + ',10)">';
     svg += '<rect x="0" y="0" width="' + panel + '" height="' + panel + '" fill="rgba(63,111,209,.04)" stroke="#d9e2f0" rx="8"/>';
     svg += '<text x="' + (panel / 2 - 22) + '" y="' + (panel + 16) + '" font-size="13" fill="#27324a" font-weight="700">原图</text>';
-    svg += polySvg(shapePts.map(function (p) { return [p[0] * 22 + 11, p[1] * 22 + 11]; }), 'rgba(63,111,209,.15)', BLUE);
+    svg += polySvg(shapePts.map(function (p) { return [p[0] * 22 + 11, p[1] * 22 + 11]; }), 'rgba(63,111,209,.15)', BLUE); /* allow-color */
     svg += '<circle cx="' + (1 * 22 + 11) + '" cy="' + (1 * 22 + 11) + '" r="3" fill="#27324a"/>';
     svg += '<text x="' + (1 * 22 + 15) + '" y="' + (1 * 22 + 6) + '" font-size="11" fill="#27324a">O</text>';
     svg += '</g>';
@@ -110,7 +110,7 @@
     out += '<circle cx="55" cy="55" r="44" fill="rgba(63,111,209,.06)" stroke="#d9e2f0" stroke-width="1"/>';
     var pos = { '北': [55, 8], '东': [102, 55], '南': [55, 102], '西': [8, 55] };
     dirs.forEach(function (d) {
-      var fill = d === highlight ? '#f2a93b' : '#3f6fd1';
+      var fill = d === highlight ? '#f2a93b' : '#3f6fd1'; /* allow-color */
       out += '<text x="' + (pos[d][0] - 6) + '" y="' + (pos[d][1] + 5) + '" font-size="15" fill="' + fill + '" font-weight="700">' + d + '</text>';
     });
     out += '<line x1="55" y1="55" x2="55" y2="12" stroke="#27324a" stroke-width="2"/>';

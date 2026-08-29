@@ -47,6 +47,11 @@ require('../shared/knowledge-math.js');
 require('../shared/knowledge-cn.js');
 require('../shared/knowledge-en.js');
 
+// 加载共享工具层（common.js 会按序注入 core/render/check 等子模块并挂到 global.PluginUtil）。
+// 插件构造期依赖 PluginUtil.createPlugin / randInt / createPoolCache 等，必须先行加载，
+// 否则 dev/plugin-loader 沙箱中 PluginUtil 为 undefined，全部插件「存在性/接口调用」误报失败。
+require('../shared/common.js');
+
 var CHECK_COUNT = 5; // 接口一致性探测用题量（小样本即可）
 
 /** 登记一条检查结果 */

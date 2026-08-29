@@ -564,6 +564,21 @@
     justify-content: flex-start; gap: var(--q-grid-gap);
     margin: 4px 0 0;}
 
+/* 选项（choice 题型）：原生 <button role=radio>，键盘可达 + 可见焦点环 */
+.question-card .opt {
+    appearance: none; -webkit-appearance: none;
+    font: inherit; font-size: var(--q-option-size); font-weight: 600; line-height: 1.2;
+    color: var(--ink); background: var(--soft-bg);
+    border: 2px solid var(--line-strong); border-radius: 8px;
+    padding: 6px 14px; cursor: pointer; margin: 0;
+}
+.question-card .opt:hover { border-color: var(--brand); }
+.question-card .opt:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.question-card .opt.chosen {
+    background: var(--brand-bg); border-color: var(--brand); color: var(--brand-d);
+    box-shadow: 0 2px 8px rgba(51, 95, 181, .18);
+}
+
 .question-card .input-group {
     grid-row: 4;
     display: flex; align-items: center; gap: var(--q-grid-gap);

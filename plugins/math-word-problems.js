@@ -976,7 +976,7 @@
     // 知识点标注（按年级 + 模板桶；本插件自带 level 分档，难度消费按规范跳过，
     // 未标注 q.difficulty 时按标准档 3 计权）
     var KP_BY_GRADE_CAT = {
-      1: { solve: 'math-g1-m8-solve-problems', chain: 'math-g1-m8-chain-mixed' },
+      1: { solve: 'math-g1-m8-add-total', chain: 'math-g1-m8-two-step' },
       2: { solve: 'math-g2-m8-solve-problems', chain: 'math-g2-m8-solve-problems' },
       3: { solve: 'math-g3-m8-g3-times', chain: 'math-g3-m8-g3-times' }
     };
@@ -1011,7 +1011,7 @@
     printConfig: { pageType: 'word' },
     // 声明本插件覆盖的知识点（按年级区分：一年级用 solve-problems/chain-mixed，二年级用 wp-solve，三年级用 g3-m8-g3-times）
     knowledgePoints: {
-      1: ['math-g1-m8-solve-problems', 'math-g1-m8-chain-mixed'],
+      1: ['math-g1-m8-add-total', 'math-g1-m8-sub-remain', 'math-g1-m8-sub-part', 'math-g1-m8-compare-more', 'math-g1-m8-compare-less', 'math-g1-m8-two-step', 'math-g1-m8-rmb-shopping', 'math-g1-m8-exclude-extra'],
       2: ['math-g2-m8-solve-problems'],
       3: ['math-g3-m8-g3-times']
     },

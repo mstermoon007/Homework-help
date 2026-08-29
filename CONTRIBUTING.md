@@ -24,6 +24,9 @@
 
 ## 三、插件开发规则
 
+> 🚀 **第一次写插件？** 先看 [docs/PLUGIN_QUICKSTART.md](docs/PLUGIN_QUICKSTART.md)——
+> 从脚手架到提交前检查清单的 10 分钟最小路径，命令均可直接复制。
+
 ### 0. 推荐：用科目化工厂（减少样板）
 
 `shared/common.js` 提供四级工厂，按需选用：
@@ -159,6 +162,12 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
   类名遵循现有简洁前缀风格（`.q-*` / `.toolbar-*` / `.sheet-*` 等），不引入新体系。
 - **SVG 表现属性例外**：`fill="#27324a"` 这类表现属性不支持 `var()`，保持字面量；
   需要主题色的 SVG 请改写在 `style="fill:var(--ink)"` 上。
+- **行内白名单（任务1.1）**：`dev/lint-check.js` 的 R2 规则会扫描 `plugins/` 全部 .js，
+  凡 `#hex` / `rgb()` / `rgba()` / `hsl()` / `hsla()` 字面量一律要求改用 `var(--*)` 令牌；
+  仅以下场景可豁免——SVG `fill`/`stroke` 表现属性、纯白字 `#fff`、box-shadow 阴影色，
+  以及**确无法令牌化的动态/主题色**（如 SVG 数据调色板、渐变）：在该颜色所在行末尾加
+  `/* allow-color */` 即整行白名单豁免。新增硬编码色前请优先复用/新增令牌，确须白名单时
+  务必加注释说明原因，禁止为规避检查随意添加。
 - 打印安全：打印窗口会复制原页 `<link>`/`<style>`（见 `shared/print.js`），令牌正常解析。
 
 ### 3.6 难度系统使用规范（v2）
@@ -190,6 +199,19 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 - 新增插件：从 `plugins/_template.js` 复制开始编写，保留必需结构。
 - 在 `plugins/registry.js` 的 `PLUGIN_REGISTRY` 追加一条：`{ id, file, name, subject, category, grades, deps? }`。
 - 需要预置大体积数据（如拼音词库 `pinyin-bank.js`）时，用 `deps` 声明前置脚本，由加载器按顺序预加载；**不要在插件文件内硬编码此类数据**。
+- **注册表一致性（任务1.3）**：`plugins/registry.js` 与实际插件文件必须一一对应，由 `scripts/verify-registry.js`
+  自动校验。新增/改名/删除插件后必须同步 registry：① 每个插件文件都要有注册条目且 `file` 路径一致；
+  ② 文件声明的 `id` / `subject` / `grades` 须与 registry 条目一致；③ 未注册的插件文件会导致
+  `npm run check:registry` 失败。提交前请运行该脚本（已纳入 `npm test` 与 CI）。
+
+### 4.1 版本与 Service Worker 缓存名（任务1.2）
+
+- `shared/version.js` 的 `APP_VERSION` 是版本号唯一来源；`sw.js` 的 `const CACHE = 'hw-help-<APP_VERSION>'`
+  必须手动与之保持一致（零构建方案，不依赖运行时 import）。
+- **禁止**把 `sw.js` 的 `CACHE` 改回 `'hw-help-' + CACHE_VERSION` 等动态拼接（会拼出双重前缀且无法被脚本校验）。
+- 修改 `APP_VERSION` 后必须同步把 `sw.js` 的 `CACHE` 改为 `'hw-help-<新版本>'`，否则
+  `scripts/sync-sw-version.js`（已纳入 `npm test` 与 CI）会报错阻断。
+
 
 ### 5. 打印约定
 
@@ -447,9 +469,19 @@ git config core.hooksPath scripts/githooks   # 本地一次性启用（零依赖
 - GitHub Actions（`.github/workflows/ci.yml`）在每次 push / PR 重复上述门禁，
   并附「题目重复率报告」（非阻断）。
 
-**lint-check 规则速览**（详见 `dev/lint-check.js` 头注）：运行时直调 `Math.random()`、
-内联样式硬编码颜色（SVG 表现属性与 MEMORY 记录的插画豁免清单除外）、math 插件缺
-moduleId、知识点 ID 缺科目前缀——均报错阻断；新增公共样式请先入 components.css/tokens.css。
+**lint-check 规则速览**（详见 `dev/lint-check.js` 头注）：运行时直调 `Math.random()`（R1）；
+硬编码颜色字面量（R2，任务1.1 扩展：遍历 `plugins/` 全部 .js 匹配 `#hex`/`rgb()`/`hsl()`，
+要求一律用 `var(--*)` 令牌，SVG `fill`/`stroke`、纯白 `#fff`、box-shadow 阴影色及
+`/* allow-color */` 行内白名单除外）、math 插件缺 moduleId（R3）、知识点 ID 缺科目前缀（R4）
+——均报错阻断；新增公共样式请先入 components.css/tokens.css。
+
+**额外门禁（纳入 `npm test` 与 CI）**：
+- `scripts/sync-sw-version.js`（任务1.2）：校验 `sw.js` 的 `CACHE` 与 `shared/version.js` 的
+  `APP_VERSION` 一致，防止离线缓存版本未失效 / 缓存键错乱。
+- `scripts/verify-registry.js`（任务1.3）：校验 `plugins/registry.js` 注册条目与实际插件文件
+  一一对应（路径 / id / subject / grades），防止漏注册或字段错配。
+- `dev/check-contrast.js`（任务2.1）：校验 `shared/tokens.css` 核心文本/背景组合满足 WCAG AA
+  （正文 ≥ 4.5:1）。调色板改动后须保证 CORE 组合仍达标，否则 `npm run check:contrast` 失败。
 
 人工检查项：
 

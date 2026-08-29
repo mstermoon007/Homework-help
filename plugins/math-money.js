@@ -176,7 +176,7 @@
   // ============ 标准题目对象：渲染 / 判定 ============
   /** 渲染单题卡片（标准 Question.render） */
   function renderCard(p, i) {
-    var num = '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#fdf3e3;color:#b8860b;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>';
+    var num = '<span class="num" style="position:static;width:22px;height:22px;border-radius:50%;background:#fdf3e3;color:#b8860b;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;">' + (i + 1) + '</span>'; /* allow-color */
 
     var qText = '<span class="q-text" style="font-size:15px;font-weight:800;color:var(--ink);display:inline;vertical-align:middle;margin:4px 0 8px;">' + (p.question || p.q) + '</span>';
 
@@ -187,20 +187,20 @@
       var optsHTML = '';
       p.options.forEach(function (o) {
         optsHTML += '<button type="button" class="opt-btn" data-val="' + o + '" onclick="window.__currentPlugin.__choose(this)" ' +
-          'style="cursor:pointer;border:1.5px solid #e8d9b8;background:#fffdf6;color:#6b5310;border-radius:9px;padding:6px 16px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + (p.unit ? ' ' + p.unit : '') + '</button>';
+          'style="cursor:pointer;border:1.5px solid #e8d9b8;background:#fffdf6;color:#6b5310;border-radius:9px;padding:6px 16px;font-size:16px;font-weight:800;margin:3px;transition:.15s;">' + o + (p.unit ? ' ' + p.unit : '') + '</button>'; /* allow-color */
       });
       inputHTML = '<div class="opt-row" style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px;">' + optsHTML + '</div>' +
         '<input type="hidden" class="choice-inp" data-index="' + i + '" autocomplete="off">';
     } else {
       inputHTML = '<div class="input-group" style="display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;">' +
-        '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" style="width:96px;height:32px;border:2px dashed #e0c98f;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#b8860b;background:#fffdf6;outline:none;">' +
+        '<input type="text" class="answer-inp" data-index="' + i + '" placeholder="?" autocomplete="off" style="width:96px;height:32px;border:2px dashed #e0c98f;border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#b8860b;background:#fffdf6;outline:none;">' + /* allow-color */
         (p.unit ? '<span class="unit">' + p.unit + '</span>' : '') +
         '</div>';
     }
 
     var hintHTML = p.hint ? '<div class="q-hint">💡 ' + p.hint + '</div>' : '';
 
-    return '<div class="question-card" data-index="' + i + '" style="border:1px solid #f0e3c0;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(120,90,20,.08);">' +
+    return '<div class="question-card" data-index="' + i + '" style="border:1px solid #f0e3c0;border-radius:14px;padding:14px 12px;position:relative;text-align:center;background:var(--card);box-shadow:0 8px 24px rgba(120,90,20,.08);">' + /* allow-color */
       qHeader + hintHTML + inputHTML +
       '<div class="feedback"></div>' +
       '</div>';
@@ -256,7 +256,7 @@
           q: p.question || p.q || '',
           svg: p.svg || '',
           answer: String(p.answer),
-          knowledgePointId: 'math-g1-m4-money',
+          knowledgePointId: 'math-g1-m4-rmb-unit',
           hint: p.hint,
           render: function (idx, ctx) { return renderCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
@@ -303,12 +303,12 @@
       if (inp) inp.value = btn.getAttribute('data-val');
       var btns = card.querySelectorAll('.opt-btn');
       for (var i = 0; i < btns.length; i++) {
-        btns[i].style.background = '#fffdf6';
-        btns[i].style.borderColor = '#e8d9b8';
+        btns[i].style.background = '#fffdf6'; /* allow-color */
+        btns[i].style.borderColor = '#e8d9b8'; /* allow-color */
       }
-      btn.style.background = '#b8860b';
-      btn.style.borderColor = '#8a6508';
-      btn.style.color = '#fff';
+      btn.style.background = '#b8860b'; /* allow-color */
+      btn.style.borderColor = '#8a6508'; /* allow-color */
+      btn.style.color = 'var(--card)'; /* allow-color */
     }
   };
 

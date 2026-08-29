@@ -293,6 +293,147 @@
     return idx;
   }
 
+  // ============ 期末模拟卷（exam 子类型） ============
+  // 固定结构试卷模板：按知识库模块分配题量，从对应注册插件抽题。
+  // 各模块知识点来源（knowledge-math.js 一年级模块）：
+  //   一 口算(M1) / 二 填空(M4) / 三 判断(M11+M4/M6) / 四 选择(M12+M1/M4/M6)
+  //   五 连线(M5) / 六 看图列式(M7) / 七 解决问题(M8) / 八 操作题(M6)
+  var EXAM_TEMPLATE = [
+    { title: '一、口算',     modules: ['M1'],                    qCount: 20, score: 1 },
+    { title: '二、填空',     modules: ['M4'],                    qCount: 11, score: 2 },
+    { title: '三、判断',     modules: ['M11', 'M4', 'M6'],       qCount: 5,  score: 2, wantType: 'judge' },
+    { title: '四、选择',     modules: ['M12', 'M1', 'M4', 'M6'], qCount: 5,  score: 2, wantType: 'choice' },
+    { title: '五、连线',     modules: ['M5'],                    qCount: 2,  score: 5 },
+    { title: '六、看图列式', modules: ['M7'],                    qCount: 4,  score: 3 },
+    { title: '七、解决问题', modules: ['M8'],                    qCount: 5,  score: 4 },
+    { title: '八、操作题',   modules: ['M6'],                    qCount: 2,  score: 4, wantTag: 'operation' }
+  ];
+
+  // 按模块聚合当前年级知识点（moduleId -> [{id,name,type,weight,pluginId}]）
+  function examKpByModule(grade) {
+    var entries = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.getEntries)
+      ? KnowledgeBank.getEntries('math', grade) : [];
+    var map = {};
+    entries.forEach(function (e) {
+      var mid = e.moduleId;
+      if (!mid) return;
+      if (!map[mid]) map[mid] = [];
+      map[mid].push(e);
+    });
+    return map;
+  }
+
+  // 按权重抽取单个候选知识点
+  function examWeightedPick(cands) {
+    var total = 0;
+    cands.forEach(function (c) { total += (c.weight || 1); });
+    if (!total) return cands[_PU.randInt(0, cands.length - 1)] || null;
+    var r = _PU.randInt(0, 999999999) / 1e9 * total;
+    for (var i = 0; i < cands.length; i++) {
+      r -= (cands[i].weight || 1);
+      if (r <= 0) return cands[i];
+    }
+    return cands[cands.length - 1];
+  }
+
+  // 从候选知识点（已绑定插件对象）抽取 n 道题目，池不足时按权重补足至目标题量
+  // difficulty 透传给各子插件，使期末试卷随难度档位自适应出题（题量固定，不随 count 变化）
+  function examDrawQuestions(cands, grade, n, difficulty) {
+    if (!cands.length) return [];
+    var weights = cands.map(function (c) { return c.weight || 1; });
+    var alloc = allocateByWeight(n, cands, weights);
+    var qs = [];
+    cands.forEach(function (c, i) {
+      var cnt = alloc[i];
+      if (cnt <= 0) return;
+      var set = c.plugin.generate({ grade: grade, count: cnt, type: c.type || 'mix', difficulty: difficulty });
+      (set && set.questions || []).forEach(function (q) {
+        q.__src = c.plugin; q.__kp = c; q.knowledgePointId = c.id;
+        qs.push(q);
+      });
+    });
+    var guard = 0;
+    while (qs.length < n && guard < n * 4) {
+      guard++;
+      var c2 = examWeightedPick(cands);
+      if (!c2) break;
+      var s2 = c2.plugin.generate({ grade: grade, count: 1, type: c2.type || 'mix', difficulty: difficulty });
+      var q2 = s2 && s2.questions && s2.questions[0];
+      if (!q2) break;
+      q2.__src = c2.plugin; q2.__kp = c2; q2.knowledgePointId = c2.id;
+      qs.push(q2);
+    }
+    return qs.slice(0, n);
+  }
+
+  // 组装期末模拟卷：返回标准 ExerciseSet（Promise，需先加载子插件）
+  // difficulty 透传至子插件以实现「只适应难度」；题量由模板固定（count 仅占位）
+  function buildExamPaper(grade, count, difficulty) {
+    return ensureSubPlugins().then(function () {
+      var byMod = examKpByModule(grade);
+      var questions = [];
+      var sections = [];
+      EXAM_TEMPLATE.forEach(function (sec) {
+        var cands = [];
+        sec.modules.forEach(function (mid) {
+          (byMod[mid] || []).forEach(function (kp) {
+            var p = subPluginMap[kp.pluginId];
+            if (!p) return;                                   // 该知识点无对应插件 → 跳过
+            if (!p.grades || p.grades.indexOf(grade) === -1) return;
+            if (sec.wantType && kp.type !== sec.wantType) return; // 仅取目标题型知识点
+            if (sec.wantTag === 'operation' && kp.pluginId !== 'math-g1-operation') return;
+            cands.push({
+              id: kp.id, name: kp.name, type: kp.type,
+              weight: (typeof kp.weight === 'number' ? kp.weight : 3), plugin: p
+            });
+          });
+        });
+        if (!cands.length) return;                           // 该部分无可用插件 → 跳过整段
+        var qs = examDrawQuestions(cands, grade, sec.qCount, difficulty);
+        if (!qs.length) return;
+        var start = questions.length;
+        qs.forEach(function (q, j) {
+          q._section = sections.length;
+          q._examNo = j + 1;
+          questions.push(q);
+        });
+        sections.push({ title: sec.title, count: qs.length, score: sec.score, start: start });
+      });
+      if (!questions.length) {
+        throw new Error('期末模拟卷暂无可用的已实现题型，请返回选择其他题型');
+      }
+      return {
+        questions: questions,
+        meta: {
+          grade: grade,
+          count: questions.length,
+          title: '期末模拟卷',
+          exam: true,
+          sections: sections
+        }
+      };
+    });
+  }
+
+  // 试卷渲染：各大部分独立区块标题，不显示来源徽章（无括号注释）
+  function renderExam(set) {
+    var meta = set.meta || {};
+    var html = '<div class="exam-paper">';
+    (meta.sections || []).forEach(function (sec) {
+      html += '<section class="exam-part">';
+      html += '<h3 class="exam-part-title">' + sec.title + '</h3>';
+      html += '<div class="exam-part-items">';
+      for (var i = sec.start; i < sec.start + sec.count; i++) {
+        var q = set.questions[i];
+        if (!q || typeof q.render !== 'function') continue;
+        html += '<div class="q-wrap">' + q.render(i) + '</div>';
+      }
+      html += '</div></section>';
+    });
+    html += '</div>';
+    return html;
+  }
+
   // ============ ExercisePlugin ============
   /** @type {ExercisePlugin} */
   var mathComprehensivePlugin = {
@@ -313,12 +454,25 @@
             { value: 'kb',       label: '按知识点重要度（课时占比，表内乘法等核心题型更多）' },
             { value: 'weighted', label: '领域配比（数与代数60%·图形几何30%·统计推理10%）' },
             { value: 'average',  label: '均衡分配' },
-            { value: 'domain',   label: '按领域分布' }
+            { value: 'domain',   label: '按领域分布' },
+            { value: 'exam',     label: '期末模拟试卷', divider: true }
           ]
         }
       ],
 
+      // 期末模拟卷子类型：题型选择页卡片链接携带 &subtype=exam 即走固定模板生成
+      subtypes: [{ id: 'exam', label: '期末模拟卷' }],
+
+      // 对外方法：生成期末模拟卷（grade 年级；count 仅占位，题量由模板固定）
+      generateExamPaper: function (grade, count) {
+        return buildExamPaper(grade || 1, count || 54);
+      },
+
       generate: function (options) {
+        var opts = options || {};
+        if (opts.subtype === 'exam' || opts.type === 'exam') {
+          return buildExamPaper(opts.grade || 1, opts.count || 54, opts.difficulty);
+        }
         var opts = options || {};
         var grade = opts.grade || 1;
         var count = opts.count || 10;
@@ -432,7 +586,8 @@
         });
       },
 
-render: function (exerciseSet) {
+  render: function (exerciseSet) {
+        if (exerciseSet && exerciseSet.meta && exerciseSet.meta.exam) return renderExam(exerciseSet);
         var html = '';
         exerciseSet.questions.forEach(function (q, i) {
           if (typeof q.render !== 'function') return;
@@ -503,12 +658,12 @@ render: function (exerciseSet) {
       if (inp) inp.value = btn.getAttribute('data-val');
       var btns = card.querySelectorAll('.opt-btn');
       for (var i = 0; i < btns.length; i++) {
-        btns[i].style.background = '#fafbff';
-        btns[i].style.borderColor = '#d5dff0';
+        btns[i].style.background = 'var(--soft-bg)';
+        btns[i].style.borderColor = 'var(--line-strong)';
       }
-      btn.style.background = '#5b8def';
-      btn.style.borderColor = '#3b5bdb';
-      btn.style.color = '#fff';
+      btn.style.background = 'var(--brand)';
+      btn.style.borderColor = 'var(--brand-d)';
+      btn.style.color = 'var(--card)';
     }
   };
 
@@ -516,6 +671,8 @@ render: function (exerciseSet) {
   global.__currentPlugin = mathComprehensivePlugin; // practice.html / dev/plugin-check.html
   // 测试钩子（dev/test-comprehensive-adaptive.js）：暴露抽题计划函数做确定性断言
   mathComprehensivePlugin.__debug_kbEntryPlan = kbEntryPlan;
+  // 测试钩子：暴露权重分配函数（allocateByWeight）供 task 4.2 确定性断言
+  mathComprehensivePlugin.__debug_allocateByWeight = allocateByWeight;
   if (typeof module !== 'undefined' && module.exports) module.exports = mathComprehensivePlugin;
 
 })(typeof window !== 'undefined' ? window : globalThis);

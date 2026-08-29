@@ -30,11 +30,25 @@ var Module = require('module');
 var ROOT = path.join(__dirname, '..');
 var registryMod = require('./plugin-registry.js');
 
-// 浏览器端共享层加载顺序（与 practice.html 静态 <script> 一致：
-// common/subject-utils/difficulty/print/knowledge-bank/module-catalog/registry 先于一切插件）
+// 浏览器端共享层加载顺序（与各类页面静态 <script> 一致）：
+// common/difficulty/subject-utils/print/knowledge-bank/module-catalog/svg-*/registry 先于一切插件。
+// 必须与实际页面加载的共享脚本对齐，否则插件在沙箱中找不到 App.Difficulty / ChineseUtil / SVGUtil 等会误报失败。
 var SHARED_SCRIPTS = [
   'shared/common.js',
+  'shared/difficulty.js',
+  'shared/subject-utils.js',
+  'shared/print.js',
   'shared/knowledge-bank.js',
+  'shared/knowledge-math.js',
+  'shared/knowledge-cn.js',
+  'shared/knowledge-en.js',
+  'shared/module-catalog.js',
+  'shared/svg-core.js',
+  'shared/svg-calculation.js',
+  'shared/svg-geometry.js',
+  'shared/svg-make-ten.js',
+  'shared/svg-chinese.js',
+  'shared/svg-english.js',
   'plugins/registry.js'
 ];
 
@@ -136,10 +150,26 @@ function createSession(entry) {
     // 每个脚本一份新的 module/exports，其余全局全部共享
     win.module = { exports: {} };
     win.exports = win.module.exports;
-    win.require = makeRequire(absPath);
+    win.require = makeVmRequire(absPath);
     var result = win.module.exports;
     vm.runInContext(code, context, { filename: absPath, timeout: 15000 });
     return result;
+  }
+
+  /**
+   * 沙箱感知的 require：相对路径（./ ../）在【同一 vm 上下文】内执行，
+   * 使子模块（core.js / render.js 等）对 global.PluginUtil 的赋值落到沙箱 win 上，
+   * 而非 Node 全局——否则插件在沙箱中看不到 PluginUtil.createPlugin / randInt 等。
+   * 内置模块（fs/path/crypto…）回退到 Node require。
+   */
+  function makeVmRequire(absPath) {
+    return function (spec) {
+      if (typeof spec === 'string' && spec.charAt(0) === '.') {
+        var resolved = path.resolve(path.dirname(absPath), spec);
+        return exec(resolved); // 递归走同一沙箱；子模块重新挂到 win 全局
+      }
+      return require(spec);
+    };
   }
 
   win.document = makeDocument(exec);

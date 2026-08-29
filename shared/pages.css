@@ -193,4 +193,18 @@
 
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 12px; }
 
+  /* 期末模拟卷（exam 子类型）：分部分区块，打印时各大部分间合理分页 */
+  .exam-paper { display: block; }
+  .exam-part {
+    break-inside: avoid; page-break-inside: avoid;
+    margin: 6px 0 14px;
+  }
+  .exam-part-title {
+    font-size: 16px; line-height: 1.5; margin: 8px 0 6px;
+    padding-left: 9px; border-left: 4px solid var(--brand, #3b5bdb);
+    font-weight: 700;
+  }
+  .exam-part-items { display: block; }
+  .exam-part-items .q-wrap { margin: 4px 0; }
+
 } /* /@layer pages */

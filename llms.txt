@@ -12,7 +12,7 @@
 - [统一练习页](practice.html)：加载具体题型插件
 
 ## 知识点资源
-- [知识点索引（全年级）](knowledge/index.html)
+- [知识点索引（全年级）](knowledge/knowledge-index.html)
 - [一年级数学口算练习](knowledge/g1-m1.html)
 - [二年级数学口算练习](knowledge/g2-m1.html)
 - [三年级数学口算练习](knowledge/g3-m1.html)

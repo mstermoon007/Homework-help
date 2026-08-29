@@ -31,7 +31,7 @@
     '正方形': function (c) { return '<svg width="26" height="26" viewBox="0 0 26 26"><rect x="2" y="2" width="22" height="22" fill="' + c + '" stroke="#2b3a55" stroke-width="1.5"/></svg>'; }
   };
   var SHAPE_KEYS = Object.keys(SHAPES);
-  var COLORS = ['#5b8def', '#e8870a', '#27ae60'];
+  var COLORS = ['#5b8def', '#e8870a', '#27ae60']; /* allow-color */
   var COLOR_NAMES = ['蓝色', '橙色', '绿色'];
 
   // ============ 难度（1-10，由 generate 设置） ============
@@ -42,7 +42,7 @@
   function makeGroup() {
     var items = [];
     var counts = { '三角形': 0, '圆形': 0, '正方形': 0 };
-    var colorCounts = { '#5b8def': 0, '#e8870a': 0, '#27ae60': 0 };
+    var colorCounts = { '#5b8def': 0, '#e8870a': 0, '#27ae60': 0 }; /* allow-color */
     var total = rnd(Math.min(8, Math.max(5, diffMax(12))), Math.max(8, diffMax(12)));
     for (var i = 0; i < total; i++) {
       var k = pick(SHAPE_KEYS);
@@ -320,12 +320,12 @@
       if (inp) inp.value = btn.getAttribute('data-val');
       var btns = card.querySelectorAll('.opt-btn');
       for (var i = 0; i < btns.length; i++) {
-        btns[i].style.background = '#fafbff';
-        btns[i].style.borderColor = '#d5dff0';
+        btns[i].style.background = 'var(--soft-bg)';
+        btns[i].style.borderColor = 'var(--line-strong)';
       }
-      btn.style.background = '#5b8def';
-      btn.style.borderColor = '#3b5bdb';
-      btn.style.color = '#fff';
+      btn.style.background = 'var(--brand)';
+      btn.style.borderColor = 'var(--brand-d)';
+      btn.style.color = 'var(--card)';
     }
   };
 

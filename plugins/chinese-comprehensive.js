@@ -63,15 +63,15 @@
       var html = '<div class="comprehensive-grid" style="display:grid;gap:15px;">';
       exerciseSet.questions.forEach((q, idx) => {
         html += `<div class="question-card comp-card" data-index="${idx}" style="border:1px solid var(--line);border-radius:14px;padding:14px 0.5cm;background:var(--card);position:relative;text-align:center;box-shadow:0 8px 24px rgba(40,70,120,.08);">`;
-        html += `<span class="q-num" style="position:absolute;left:8px;top:8px;width:20px;height:20px;border-radius:50%;background:#fef0e8;color:#f5576c;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">${idx + 1}</span>`;
+        html += `<span class="q-num" style="position:absolute;left:8px;top:8px;width:20px;height:20px;border-radius:50%;background:#fef0e8;color:#f5576c;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;">${idx + 1}</span>`; /* allow-color */
         if (q.type === 'pinyin-to-char') {
-          html += `<div class="pinyin-hint" style="font-size:1.2em;color:#f5576c;font-family:'Times New Roman',Georgia,serif;font-weight:800;letter-spacing:1px;">${q.pinyin}</div>`;
+          html += `<div class="pinyin-hint" style="font-size:1.2em;color:#f5576c;font-family:'Times New Roman',Georgia,serif;font-weight:800;letter-spacing:1px;">${q.pinyin}</div>`; /* allow-color */
           html += `<div style="font-size:11px;color:var(--muted);margin:2px 0 8px;">请写出汉字</div>`;
-          html += `<input type="text" class="answer-input" data-index="${idx}" placeholder="写汉字" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:110px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#10ac84;background:var(--soft-bg);outline:none;font-family:'KaiTi','STKaiti','楷体',serif;">`;
+          html += `<input type="text" class="answer-input" data-index="${idx}" placeholder="写汉字" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:110px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#10ac84;background:var(--soft-bg);outline:none;font-family:'KaiTi','STKaiti','楷体',serif;">`; /* allow-color */
         } else {
           html += `<div class="char-hint" style="font-size:1.3em;font-weight:800;color:var(--ink);">${q.char}</div>`;
           html += `<div style="font-size:11px;color:var(--muted);margin:2px 0 8px;">请写出拼音</div>`;
-          html += `<input type="text" class="answer-input pinyin-input" data-index="${idx}" placeholder="写拼音" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:110px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#f5576c;background:var(--soft-bg);outline:none;font-family:'Times New Roman',Georgia,serif;">`;
+          html += `<input type="text" class="answer-input pinyin-input" data-index="${idx}" placeholder="写拼音" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:110px;height:32px;border:2px dashed var(--line-strong);border-radius:7px;font-size:15px;font-weight:700;text-align:center;color:#f5576c;background:var(--soft-bg);outline:none;font-family:'Times New Roman',Georgia,serif;">`; /* allow-color */
         }
         html += `<div class="feedback"></div>`;
         html += '</div>';

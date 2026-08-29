@@ -134,14 +134,15 @@
 
   <!-- 左上角快速切换（学科 + 年级，醒目便利） -->
   <div class="quick-switch" id="quickSwitch">
-    <button class="qs-btn" id="qsBtn" title="快速切换学科 / 年级 / 返回首页">快速切换</button>
+    <button class="qs-btn" id="qsBtn" title="快速切换学科 / 年级 / 返回首页" aria-expanded="false" aria-controls="qsMenu">快速切换</button>
     <div class="qs-menu" id="qsMenu" style="display:none;">
       <div class="qs-hd">切换学科</div>
       <div class="qs-row" id="qsSubject"></div>
       <div class="qs-hd">切换年级</div>
       <div class="qs-row" id="qsGrade"></div>
-      <div class="qs-hd">其他</div>
-      <div class="qs-row"><a class="qs-link" href="index.html">返回首页</a></div>
+        <div class="qs-hd">其他</div>
+        <div class="qs-row"><a class="qs-link" href="index.html">返回首页</a></div>
+        <div class="qs-row"><a class="qs-link" href="feedback/feedback.html">问题反馈</a></div>
     </div>
   </div>
 
@@ -159,7 +160,7 @@
               <button class="chip" data-count="50" role="radio" aria-checked="false">50题</button>
               <button class="chip" data-count="custom" role="radio" aria-checked="false">自定义</button>
               <input type="number" id="customCount" min="1" max="50" step="1" placeholder="自定义"
-                     autocomplete="off" class="tb-num-input"
+                     autocomplete="off" class="tb-num-input" aria-label="自定义题量"
                      style="width:70px;display:none;">
               <span class="count-tip" id="countTip" style="display:none;"></span>
             </div>
@@ -169,6 +170,7 @@
             <div class="setting-content">
               <input type="number" id="difficultyInput" min="1" max="10" step="1" value="3"
                      title="填写 1-10 的整数，数字越大难度越高（数值更大、逻辑更深）"
+                     aria-label="难度（1-10，数字越大越难）"
                      class="tb-num-input" style="width:64px;">
               <span class="range-hint">1~10</span>
             </div>
@@ -187,13 +189,17 @@
           <button class="btn btn-ghost" id="printBtn" disabled>打印页面</button>
           <button class="btn btn-ghost" id="refreshResetBtn" title="清除本题型的难度记忆并刷新页面">刷新重置</button>
         </div>
+        <div class="controls-row row-pair">
+          <button class="btn btn-ghost" id="wrongBookBtn" disabled title="重做之前答错的题目（本地保存）">错题本</button>
+          <button class="btn btn-ghost" id="clearStateBtn" disabled title="清除本地练习记录（设置/错题/难度）">清除记录</button>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Layer 3: 正式内容区（第一行主题标题 + 第二行起题目卡） -->
   <div class="exercise-content">
-    <p class="static-resource-note">本页面为练习生成工具，加载具体题型后可在线练习或打印。静态版本与知识点讲解请访问 <a href="knowledge/index.html">知识库页面</a>。</p>
+    <p class="static-resource-note">本页面为练习生成工具，加载具体题型后可在线练习或打印。静态版本与知识点讲解请访问 <a href="knowledge/knowledge-index.html">知识库页面</a>。</p>
     <div class="exercise-header">
       <h1 id="sheetTitle">统一练习页</h1>
       <div class="timer" id="timerDisplay">⏱ 00:00</div>
@@ -203,7 +209,7 @@
     </section>
   </div>
 
-  <section class="result-panel" id="resultArea"></section>
+  <section class="result-panel" id="resultArea" aria-live="polite" aria-atomic="true"></section>
 
   <footer>Homework Help · 插件化练习框架 · practice.html</footer>
 </div>
@@ -230,9 +236,9 @@
 <script src="shared/difficulty.js"></script>
 <script src="shared/print.js"></script>
 <script src="shared/knowledge-bank.js"></script>
-<script src="shared/knowledge-math.js"></script>
-<script src="shared/knowledge-cn.js"></script>
-<script src="shared/knowledge-en.js"></script>
+<!-- 知识库分片（knowledge-math/cn/en.js）不再静态引入，改为按需懒加载（任务 3.1）：
+     由 boot() 在确认科目后调用 KnowledgeBank.ensureKnowledgeData(subject) 动态注入，
+     首屏仅加载当前科目，未使用的科目（语文/英语）不会被请求。 -->
 <script src="plugins/registry.js"></script>
 <script>
 (function () {
@@ -246,6 +252,7 @@
     checkResult: null,   // 当前批改结果
     count: 10,           // 题量
     type: null,          // 题型子类别（可选）
+    subtype: null,       // 综合练习子类型（如 'exam' 期末模拟卷）
     difficulty: 3,       // 难度（1-10，用户填写，默认 3）
     settings: {},        // chip 型设置的当前值（key → 选中值，如 level:「basic」）
     settingNums: {},     // 数字输入型设置的当前值（如口算 maxNum「最大数」）
@@ -271,7 +278,8 @@
       grade: grade,
       count: count,
       type: (p.get('type') || '').trim() || null,
-      difficulty: difficulty
+      difficulty: difficulty,
+      subtype: (p.get('subtype') || '').trim() || null
     };
   }
 
@@ -407,7 +415,9 @@
         if (s.key === 'type') state.type = selected;
         else state.settings[s.key] = selected;
         s.options.forEach(function (o) {
-          var c = el('button', 'chip' + (o.value === selected ? ' active' : ''), o.label);
+          if (o.divider) chipsBox.appendChild(el('span', 'chip-divider'));
+          var cls = 'chip' + (o.value === selected ? ' active' : '') + (o.divider ? ' line-start' : '');
+          var c = el('button', cls, o.label);
           c.dataset.skey = s.key;
           c.dataset.svalue = o.value;
           c.setAttribute('role', 'radio');
@@ -421,6 +431,7 @@
             c.setAttribute('aria-checked', 'true');
             if (s.key === 'type') state.type = o.value;
             else state.settings[s.key] = o.value;
+            applyExamVisibility();
             if (state.exerciseSet) generate();
           };
           chipsBox.appendChild(c);
@@ -444,10 +455,22 @@
     if ((hasNumSetting || hasLevelSetting) && diffGroup) diffGroup.style.display = 'none';
     else if (diffGroup) diffGroup.style.display = (plugin.subject === 'math') ? '' : 'none';
 
+    // 期末模拟试卷（type==='exam'）是「组卷方式」中的第 5 个选项（带分隔线，独立于原 4 个题型）：
+    // 选中时「只适应难度、不适应题量」——隐藏题量控件，保留题型（用于切回原 4 种）与难度控件。
+    function applyExamVisibility() {
+      var isExam = (state.type === 'exam');
+      var cg = $('countGroup');
+      if (cg) cg.style.display = isExam ? 'none' : '';
+    }
+    applyExamVisibility();
+    refreshTypeChips();
+
     // 按钮状态
     $('checkBtn').disabled = true;
     $('revealBtn').disabled = true;
     $('printBtn').disabled = true;
+    $('wrongBookBtn').disabled = false;
+    $('clearStateBtn').disabled = false;
 
     // 跟读类插件（声明 noCheck: true，如 english-alphabet）：无书面答案可批改，隐藏「检查答案」
     $('checkBtn').style.display = plugin.noCheck ? 'none' : '';
@@ -533,6 +556,7 @@
     try {
       var options = { grade: state.grade, count: state.count };
       if (state.type) options.type = state.type;
+      if (state.subtype) options.subtype = state.subtype;
       // chip 型设置（如难度分档 level）除 type 外原样传给插件 generate
       Object.keys(state.settings || {}).forEach(function (k) {
         if (k === 'type') return;
@@ -546,6 +570,16 @@
       });
       // 难度：仅数学且无自带分档时，使用用户所选基础难度（不再叠加自适应调整）
       if (!state.hasLevelSetting && state.difficulty) options.difficulty = state.difficulty;
+      // 难度自适应：应用上次 EMA 调整量（跨会话保持，任务2.2）
+      var diffState = StorageManager.getDifficulty(state.plugin.id);
+      options.adaptiveDelta = (state.hasLevelSetting ? 0 : (diffState.currentDelta || 0));
+      // 保存本次练习设置（任务2.2）
+      StorageManager.saveLastPractice({
+        pluginId: state.plugin.id,
+        grade: state.grade,
+        settings: { count: state.count, difficulty: state.difficulty, type: state.type, subtype: state.subtype, settings: state.settings, settingNums: state.settingNums },
+        timestamp: Date.now()
+      });
       var result = state.plugin.generate(options);
       if (result && typeof result.then === 'function') {
         // 异步插件（如 math-comprehensive：需先加载子插件）
@@ -622,7 +656,6 @@
 
   function render(set) {
     var area = $('problemsArea');
-    var html = '';
     var meta = set.meta || {};
     // 统一主标题：年级 + 题型（题量），由 buildTitle 组装；屏显 exercise-header 与打印标题共用同一格式。
     // 题目区不再重复渲染内层标题（避免与 exercise-header 重复），打印页由 shared/print.js 注入同样标题。
@@ -631,29 +664,77 @@
     // 题目区域由插件完全控制；仅当插件未提供 render 时使用壳的通用降级渲染
     var body = (typeof state.plugin.render === 'function' ? state.plugin.render(set) : renderGeneric(set));
     // 插件未自带网格容器时统一套一层响应式网格，保证所有题目页都能按显示宽度 2/3 题一行排版
-    if (!/class="[^"]*(questions-grid|q-grid)/.test(body)) {
+    // 期末模拟卷（exam）为分部分区块结构，跳过自动网格包裹与列自适应
+    if (!meta.exam && !/class="[^"]*(questions-grid|q-grid)/.test(body)) {
       body = '<div class="questions-grid">' + body + '</div>';
     }
-    html += body;
-    area.innerHTML = html;
-
-    // 卡片式/文字式网格按题目长度自适应列数（适配 A4 竖版宽度）
-    PluginUtil.layout.fitColumns(area, set);
-    // 按当前排版估算「填多少题可正好铺满 A4 整页」的推荐值
-    updateCountTip();
-
-    // 回车快捷批改
-    area.querySelectorAll('input[data-index], input[data-idx]').forEach(function (inp) {
-      inp.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { e.preventDefault(); if (!state.answered) check(); }
-      });
-    });
+    // 渲染策略（任务 3.3）：先快速拼好整段 HTML（SVG 已在 generate 阶段生成），
+    // 解析为离线 DOM 树后分块（每块 8 个）插入文档，避免一次性大量节点插入导致主线程长阻塞；
+    // 卡片随插入渐进可见，交互在全部插入完成后再统一绑定（与旧逻辑一致）。
+    var tmp = document.createElement('div');
+    tmp.innerHTML = body;
+    area.innerHTML = '';
     $('resultArea').classList.remove('show');
     $('resultArea').innerHTML = '';
-    startTimer();
-    // 焦点管理（修复 P2 4.2）：生成后将焦点移到首个输入框，键盘用户无需多次 Tab
-    var firstInput = area.querySelector('input[data-index], input[data-idx]');
-    if (firstInput) firstInput.focus();
+
+    var target, nodes;
+    if (!meta.exam && tmp.firstElementChild &&
+        /questions-grid|q-grid/.test(tmp.firstElementChild.className || '')) {
+      // 已含网格容器：抽空后分批回填其卡片（保持顺序）
+      target = tmp.firstElementChild;
+      nodes = Array.prototype.slice.call(target.children);
+      while (target.firstChild) target.removeChild(target.firstChild);
+    } else if (!meta.exam) {
+      // 兜底：原始顶层节点作为卡片，包一层网格容器
+      target = document.createElement('div');
+      target.className = 'questions-grid';
+      nodes = Array.prototype.slice.call(tmp.children);
+    } else {
+      // 期末模拟卷等：顶层区块直接分批追加
+      target = area;
+      nodes = Array.prototype.slice.call(tmp.children);
+    }
+    if (target !== area) area.appendChild(target);
+
+    var CHUNK = 8;
+    var ri = 0;
+    var schedule = (typeof requestIdleCallback === 'function')
+      ? function (fn) { return requestIdleCallback(fn, { timeout: 80 }); }
+      : function (fn) { return setTimeout(fn, 16); };
+
+    function finalizeRender() {
+      // a11y：为题目卡补齐分组角色与题号标签（与 renderCard 一致）
+      area.querySelectorAll('.question-card, .problem').forEach(function (card, ci) {
+        if (!card.getAttribute('role')) card.setAttribute('role', 'group');
+        if (!card.getAttribute('aria-label')) {
+          var nd = card.getAttribute('data-index');
+          card.setAttribute('aria-label', '第 ' + ((nd != null ? Number(nd) + 1 : ci + 1)) + ' 题');
+        }
+      });
+      // 卡片式/文字式网格按题目长度自适应列数（适配 A4 竖版宽度）
+      if (!meta.exam) PluginUtil.layout.fitColumns(area, set);
+      // 按当前排版估算「填多少题可正好铺满 A4 整页」的推荐值
+      updateCountTip();
+      // 回车快捷批改
+      area.querySelectorAll('input[data-index], input[data-idx]').forEach(function (inp) {
+        inp.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') { e.preventDefault(); if (!state.answered) check(); }
+        });
+      });
+      startTimer();
+      // 焦点管理（修复 P2 4.2）：生成后将焦点移到首个输入框，键盘用户无需多次 Tab
+      var firstInput = area.querySelector('input[data-index], input[data-idx]');
+      if (firstInput) firstInput.focus();
+    }
+
+    function step() {
+      var end = Math.min(ri + CHUNK, nodes.length);
+      for (; ri < end; ri++) target.appendChild(nodes[ri]);
+      if (ri < nodes.length) schedule(step);
+      else finalizeRender();
+    }
+    if (!nodes.length) finalizeRender();
+    else step();
   }
 
   // ============ A4 竖版宽度自适应 ============
@@ -680,7 +761,7 @@
         '<span class="num">' + (i + 1) + '</span>' +
         '<span class="q-text">' + esc(q.question || q.text || q.q || '') + '</span>' +
         (q.hint ? '<div style="font-size:11px;color:var(--muted)">💡 ' + esc(q.hint) + '</div>' : '') +
-        '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off">' +
+        '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案">' +
         '<div class="feedback"></div>' +
         '</div>';
     });
@@ -721,6 +802,51 @@
     state.answered = true;
     markQuestions(result);
     showResult(result);
+    recordWrongAndDifficulty(result);
+  }
+
+  // 持久化：记录错题到错题本 + 更新难度自适应 EMA（任务2.2）
+  function recordWrongAndDifficulty(result) {
+    if (!state.plugin) return;
+    var pid = state.plugin.id;
+    var answers = collectAnswers();
+    result.results.forEach(function (ok, i) {
+      if (ok) return;
+      var q = state.exerciseSet.questions[i];
+      var key = String(i);
+      StorageManager.addWrong({
+        pluginId: pid,
+        questionIndex: i,
+        signature: (q && (q.q || q.text || q.rawHtml)) || '',
+        questionData: q,
+        userAnswer: (answers && answers[key] != null) ? answers[key] : '',
+        timestamp: Date.now()
+      });
+    });
+    var rate = result.total ? (result.correct / result.total) : 0;
+    StorageManager.updateDifficulty(pid, rate);
+  }
+
+  // 打开错题本：渲染本地保存的错题供重做（任务2.2）
+  function openWrongBook() {
+    if (!state.plugin) return;
+    var wrongs = StorageManager.getWrongList(state.plugin.id);
+    var questions = [];
+    wrongs.forEach(function (w) { if (w.questionData) questions.push(w.questionData); });
+    if (!questions.length) {
+      showNotice('暂无错题', '先完成一次练习，答错的题目会自动收录到错题本，可在此重做。');
+      return;
+    }
+    try {
+      var set = { questions: questions, meta: { title: '错题本 · ' + (state.plugin.name || '练习') } };
+      state.exerciseSet = set;
+      state.checkResult = null;
+      state.answered = false;
+      render(set);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {
+      showNotice('错题本打开失败', e && e.message);
+    }
   }
 
   function markQuestions(result) {
@@ -748,6 +874,19 @@
     var wrong = total - result.correct;
     var tips = result.message || '';
     if (total) tips += ' · 用时 ' + elapsedText(getElapsed());
+    if (result.parentCheck) {
+      var phHtml = '<div class="result parent-check">' +
+        '<div class="score parent">✅ 请家长检查</div>' +
+        '<div class="detail">操作题由家长核对完成情况（' + total + ' 题）</div>' +
+        '<div class="tips">' + (tips || '请家长检查书写与画图是否正确') + '</div>' +
+        '<div class="redo-wrap"><button class="btn btn-ghost" id="redoAllBtn" style="margin-left:0;">重新生成</button></div></div>';
+      var phRa = $('resultArea');
+      phRa.innerHTML = phHtml;
+      phRa.classList.add('show');
+      phRa.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      $('redoAllBtn').onclick = generate;
+      return;
+    }
     var html = '<div class="result">' +
       '<div class="score">' + result.score + ' 分</div>' +
       '<div class="detail">答对 ' + result.correct + ' / ' + total + ' 题 · 正确率 ' + (total ? Math.round(result.correct / total * 100) : 0) + '%</div>' +
@@ -974,10 +1113,15 @@
     if (!btn || !menu) return;
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
-      menu.style.display = (menu.style.display === 'none') ? '' : 'none';
+      var open = (menu.style.display === 'none');
+      menu.style.display = open ? '' : 'none';
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
     document.addEventListener('click', function (e) {
-      if (!menu.contains(e.target) && e.target !== btn) menu.style.display = 'none';
+      if (!menu.contains(e.target) && e.target !== btn) {
+        menu.style.display = 'none';
+        btn.setAttribute('aria-expanded', 'false');
+      }
     });
   }
 
@@ -1011,6 +1155,14 @@
     $('checkBtn').addEventListener('click', check);
     $('revealBtn').addEventListener('click', toggleReveal);
     $('printBtn').addEventListener('click', printFile);
+    var wrongBookBtn = $('wrongBookBtn');
+    if (wrongBookBtn) wrongBookBtn.addEventListener('click', openWrongBook);
+    var clearStateBtn = $('clearStateBtn');
+    if (clearStateBtn) clearStateBtn.addEventListener('click', function () {
+      if (!window.confirm('确定清除本地练习记录吗？\n将清空：上次练习设置、错题本、难度自适应参数（已生成的题目不受影响）。')) return;
+      StorageManager.clearState();
+      showNotice('已清除', '本地练习记录已清空，下次练习将从默认设置开始。');
+    });
     // 窗口尺寸变化时重新计算题型按钮换行行首/行尾
     var rt;
     window.addEventListener('resize', function () {
@@ -1038,7 +1190,21 @@
 
   // ============ 启动 ============
   function boot() {
+    var rawParams = new URLSearchParams(window.location.search);
+    var savedState = StorageManager.loadState();
     var pluginId = urlParams.plugin;
+
+    // 跨会话恢复：无 URL 参数但存在上次练习记录，则自动继续上次题型（任务2.2）
+    if (!pluginId && savedState.lastPractice && savedState.lastPractice.pluginId) {
+      var rec0 = findRegistryRecord(savedState.lastPractice.pluginId);
+      if (rec0) {
+        var q = '?plugin=' + encodeURIComponent(savedState.lastPractice.pluginId) +
+          '&grade=' + (savedState.lastPractice.grade || urlParams.grade);
+        window.location.replace(window.location.pathname + q);
+        return;
+      }
+    }
+
     var record = pluginId ? findRegistryRecord(pluginId) : null;
     if (!pluginId || !record) {
       showNotice('题型不存在', 'URL 中的 plugin 参数「' + (pluginId || '(空)') + '」未在 plugins/registry.js 注册，请返回首页选择。', true);
@@ -1048,7 +1214,22 @@
     state.count = urlParams.count;
     state.type = urlParams.type;
     state.difficulty = urlParams.difficulty;
+    state.subtype = urlParams.subtype;
+
+    // 恢复上次设置（仅当 URL 未显式覆盖，且为同一插件）
+    if (savedState.lastPractice && savedState.lastPractice.pluginId === pluginId) {
+      var ls = savedState.lastPractice.settings || {};
+      if (!rawParams.has('count') && ls.count) state.count = ls.count;
+      if (!rawParams.has('difficulty') && ls.difficulty) state.difficulty = ls.difficulty;
+      if (!rawParams.has('type') && ls.type) state.type = ls.type;
+      if (!rawParams.has('subtype') && ls.subtype) state.subtype = ls.subtype;
+      if (ls.settings) { for (var rk in ls.settings) { if (Object.prototype.hasOwnProperty.call(ls.settings, rk)) state.settings[rk] = ls.settings[rk]; } }
+      if (ls.settingNums) { for (var rj in ls.settingNums) { if (Object.prototype.hasOwnProperty.call(ls.settingNums, rj)) state.settingNums[rj] = ls.settingNums[rj]; } }
+    }
     buildQuickSwitch(); // 提前构建，加载失败时菜单也可用
+
+    // 会话切换：清空 SVG 渲染缓存，避免长会话内存只增不减（svg-core.clearCache）
+    if (window.SVGUtil && window.SVGUtil.clearCache) window.SVGUtil.clearCache();
 
     // 综合插件：先预加载数学子插件，再加载综合插件本身
     var loadPromise = (record.id === 'math-comprehensive')
@@ -1070,10 +1251,14 @@
         initSettings(plugin, state.grade);
         buildQuickSwitch();
         $('problemsArea').innerHTML = '<div class="empty">点击「生成练习题」开始吧～</div>';
-        generate();
+        // 知识库分片懒加载（任务 3.1）：确认科目后按需注入，首屏只拉当前科目，缓存防重复
+        var ensureKB = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.ensureKnowledgeData)
+          ? KnowledgeBank.ensureKnowledgeData(plugin.subject)
+          : Promise.resolve(null);
+        return ensureKB.then(function () { generate(); });
       })
       .catch(function (err) {
-        showNotice('加载失败', err.message, true);
+        showNotice('加载失败', err && err.message, true);
       });
   }
 

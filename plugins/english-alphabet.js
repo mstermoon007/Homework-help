@@ -84,7 +84,7 @@
           (writeSvg ? '<div class="scene-box" style="justify-content:center;">' + writeSvg + '</div>' : '') +
           '<div style="color:var(--muted);font-size:0.9em;">' + q.sound + '</div>' +
           '<div style="margin:8px 0;">例词: <strong>' + q.example + '</strong></div>' +
-          '<button class="play-btn" data-letter="' + q.letter + '" data-example="' + q.example + '" onclick="window.__currentPlugin.__play(this)" style="padding:5px 10px;cursor:pointer;border:none;border-radius:8px;background:var(--en-primary);color:#fff;">🔊 发音</button>' +
+          '<button class="play-btn" data-letter="' + q.letter + '" data-example="' + q.example + '" onclick="window.__currentPlugin.__play(this)" style="padding:5px 10px;cursor:pointer;border:none;border-radius:8px;background:var(--en-primary);color:var(--card);">🔊 发音</button>' +
           '<div class="feedback"></div>' +
           '</div>';
       });

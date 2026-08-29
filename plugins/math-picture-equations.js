@@ -25,7 +25,7 @@
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
 
   // ============ 图形 SVG（小动物/水果用彩色圆点示意） ============
-  var COLORS = ['#5b8def', '#e8870a', '#27ae60', '#9b59b6', '#e74c3c'];
+  var COLORS = ['#5b8def', '#e8870a', '#27ae60', '#9b59b6', '#e74c3c']; /* allow-color */
   function dotsSVG(n, color) {
     var rows = Math.ceil(n / 5);
     var width = rows > 1 ? 120 : Math.max(40, n * 24);
@@ -119,7 +119,7 @@
       // 圈出后 b 个：在下方用斜线覆盖示意“去掉”
       picHTML = '<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin:6px 0;">' +
         '<div style="display:flex;flex-direction:column;align-items:center;border:1.5px dashed var(--line-strong);border-radius:10px;padding:6px 8px;">' + totalSVG +
-        '<div style="font-size:11px;color:#e74c3c;font-weight:800;margin-top:2px;">划去 ' + p.b + ' 个</div></div>' +
+        '<div style="font-size:11px;color:var(--bad);font-weight:800;margin-top:2px;">划去 ' + p.b + ' 个</div></div>' +
         '</div>';
     }
 
@@ -170,7 +170,7 @@
         q: p.expr,
         svg: (p.kind === 'add' ? dotsSVG(p.a, p.c1) + dotsSVG(p.b, p.c2) : dotsSVG(p.total, p.color)),
         answer: String(p.answer),
-        knowledgePointId: 'math-g1-m7-picture-equations',
+        knowledgePointId: p.kind === 'sub' ? 'math-g1-m7-picture-sub' : 'math-g1-m7-picture-add',
         hint: p.kind === 'add' ? '左边有几个，右边有几个，合起来一共有几个？' : '一共有几个，划去几个，还剩几个？',
         render: function (idx) { return renderCard(this.data, idx); },
         check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }
@@ -193,7 +193,7 @@
     category: 'number',
     printConfig: { pageType: 'pictureEq' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
-    knowledgePoints: ['math-g1-m7-picture-equations'],
+    knowledgePoints: ['math-g1-m7-picture-add', 'math-g1-m7-picture-sub', 'math-g1-m7-picture-mixed', 'math-g1-m7-brace-question'],
 
     settings: [
       {

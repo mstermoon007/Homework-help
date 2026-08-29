@@ -259,8 +259,8 @@
       for (var ci = 0; ci < cells.length; ci++) {
         var col = ci % 3, row = Math.floor(ci / 3);
         if (cells[ci] === '1') {
-          var fill = g === 0 ? 'rgba(63,111,209,.15)' : g === 1 ? 'rgba(170,170,170,.25)' : 'rgba(242,169,59,.2)';
-          var stroke = g === 0 ? '#3f6fd1' : g === 1 ? '#aaa' : '#f2a93b';
+          var fill = g === 0 ? 'rgba(63,111,209,.15)' : g === 1 ? 'rgba(170,170,170,.25)' : 'rgba(242,169,59,.2)'; /* allow-color */
+          var stroke = g === 0 ? '#3f6fd1' : g === 1 ? '#aaa' : '#f2a93b'; /* allow-color */
           out += '<rect x="' + (gx + col * cell) + '" y="' + (8 + row * cell) + '" width="' + cell + '" height="' + cell + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1.5"/>';
         }
       }

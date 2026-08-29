@@ -224,6 +224,22 @@ body {
   color: #e74c3c;
 }
 
+.submit-btn--ghost {
+  background: #fff;
+  color: #4a90d9;
+  border: 1px solid #4a90d9;
+}
+
+.submit-btn--ghost:hover {
+  background: #eef3fb;
+}
+
+.submit-btn--ghost:disabled {
+  background: #fff;
+  color: #a0b8d0;
+  border-color: #a0b8d0;
+}
+
 /* 响应式 */
 @media (max-width: 480px) {
   body {

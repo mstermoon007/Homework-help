@@ -36,13 +36,13 @@
       return '<div style="width:56px;height:40px;border:1.5px solid var(--line-strong);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:' + color + ';background:var(--soft-bg);">' + name + '</div>';
     }
     return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;">' +
-      '<div>' + cell(60, 0, items.n, '#e8870a') + '</div>' +
+      '<div>' + cell(60, 0, items.n, 'var(--en-primary)') + '</div>' +
       '<div style="display:flex;align-items:center;gap:10px;">' +
-      '<div>' + cell(0, 60, items.w, '#e8870a') + '</div>' +
+      '<div>' + cell(0, 60, items.w, 'var(--en-primary)') + '</div>' +
       '<div style="width:60px;height:46px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:var(--ink);border:2px solid var(--brand);border-radius:10px;background:var(--brand-bg);">' + center + '</div>' +
-      '<div>' + cell(120, 60, items.e, '#e8870a') + '</div>' +
+      '<div>' + cell(120, 60, items.e, 'var(--en-primary)') + '</div>' +
       '</div>' +
-      '<div>' + cell(60, 120, items.s, '#e8870a') + '</div>' +
+      '<div>' + cell(60, 120, items.s, 'var(--en-primary)') + '</div>' +
       '<div style="font-size:11px;color:var(--muted);margin-top:2px;">上=北　右=东　下=南　左=西</div>' +
       '</div>';
   }
@@ -261,12 +261,12 @@
       if (inp) inp.value = btn.getAttribute('data-val');
       var btns = card.querySelectorAll('.opt-btn');
       for (var i = 0; i < btns.length; i++) {
-        btns[i].style.background = '#fafbff';
-        btns[i].style.borderColor = '#d5dff0';
+        btns[i].style.background = 'var(--soft-bg)';
+        btns[i].style.borderColor = 'var(--line-strong)';
       }
-      btn.style.background = '#5b8def';
-      btn.style.borderColor = '#3b5bdb';
-      btn.style.color = '#fff';
+      btn.style.background = 'var(--brand)';
+      btn.style.borderColor = 'var(--brand-d)';
+      btn.style.color = 'var(--card)';
     }
   };
 

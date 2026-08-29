@@ -165,4 +165,37 @@ body {
   .type-card:not(.competition):not(.coming-soon):hover { transform: none; }
 }
 
+/* ============ 一年级数学题型页：视觉规范统一 ============
+ * 将卡片 / 容器 / 网格的圆角、阴影、间距统一到设计令牌（tokens.css），
+ * 消除 components.css 中对本页的硬编码值（卡片 20px 圆角、容器 24px 圆角、
+ * 0 20px 60px 重阴影、18px 间距），仅作用于 math-types.html（body.math-types），
+ * 不影响 subject-types.html。综合 / 预习特殊卡保留各自配色，仅对齐圆角与阴影，
+ * 使整页视觉语言一致。 */
+body.math-types .card {
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  padding: var(--spacing-xl) var(--spacing-lg);
+}
+body.math-types .type-grid { gap: var(--grid-gap-screen); }
+body.math-types .type-card:not(.competition):not(.coming-soon) {
+  border-radius: var(--radius-card);
+}
+body.math-types .type-card:not(.competition):not(.coming-soon):hover {
+  box-shadow: var(--shadow);
+}
+/* 综合 / 预习特殊卡：保留配色，仅对齐圆角与阴影，并让描述文字在彩色卡面上清晰可读 */
+body.math-types .type-card.comprehensive:not(.competition):not(.coming-soon),
+body.math-types .type-card.preview-card:not(.competition):not(.coming-soon) {
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+}
+body.math-types .type-card.comprehensive .t-desc,
+body.math-types .type-card.preview-card .t-desc {
+  color: rgba(255, 255, 255, 0.92);
+  margin-top: 6px;
+}
+body.math-types .type-grid .section-heading {
+  border-radius: 6px;
+}
+
 } /* /@layer subjects */

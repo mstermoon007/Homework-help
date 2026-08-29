@@ -342,7 +342,9 @@ async function main() {
   }
 
   console.log('\n✅ 已完成：plugins/' + cfgId + '.js 已生成并注册。');
-  console.log('   下一步：实现 generateQuestions 里的题目逻辑，然后运行 dev/coverage.js 查看覆盖。');
+  console.log('   下一步：实现 generateQuestions 里的题目逻辑（可参考 docs/PLUGIN_QUICKSTART.md）。');
+  console.log('   完成后运行 npm test / dev/plugin-check.html 校验，' +
+    'dev/coverage.js 查看分科目覆盖。');
   if (rl) rl.close();
 }
 

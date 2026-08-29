@@ -101,7 +101,7 @@ g{grade}-{moduleIdLower}-{baseSlug}
 
 - 知识点详情页：`knowledge/{id}.html`（如 `knowledge/g4-c5-c5-meet.html`）。
 - 模块聚合页：`knowledge/g{grade}-{moduleId}.html`（如 `knowledge/g4-m5.html`）。
-- 全量索引页：`knowledge/index.html`。
+- 全量索引页：`knowledge/knowledge-index.html`。
 
 修改知识库后运行：
 
@@ -163,7 +163,7 @@ node dev/verify-knowledge-bank.js          # 校验结构 / ID / 引用 / 难度
 | M10 | `g2-m10-sudoku3` | 3×3 数独 | math-logic-reasoning |
 
 > 3–6 年级结构一致，可在 `shared/knowledge-bank.js` 中查看；完整清单亦见
-> `knowledge/index.html` 与 `knowledge/{id}.html`。
+> `knowledge/knowledge-index.html` 与 `knowledge/{id}.html`。
 
 ## 九、前置 / 关联引用规则（prerequisites / related）
 

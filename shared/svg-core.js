@@ -126,9 +126,35 @@
    * @returns {{minX:number,minY:number,width:number,height:number}}
    * 说明：path 仅粗略提取坐标数字（控制点按在曲线上近似），文本按字号×0.62 估宽。
    */
+  // ============ 性能缓存（任务 3.3） ============
+  // computeViewBox / svgWrap 均为确定性纯函数，相同输入必得相同输出。一次性生成大量题目
+  // （如 50 道几何/竖式）时缓存可避免重复的字符串正则解析与拼接，降低主线程阻塞。
+  var __vbCache = (typeof Map !== 'undefined') ? new Map() : null;
+  var __wrapCache = (typeof Map !== 'undefined') ? new Map() : null;
+  var EMPTY_BOX = { minX: 0, minY: 0, width: SVG_DEFAULTS.width, height: SVG_DEFAULTS.height };
+  /** 通用纯函数记忆化工具：resolver 生成缓存键；供各 SVG 生成器缓存重复参数化模板 */
+  function memoize(fn, resolver) {
+    var cache = (typeof Map !== 'undefined') ? new Map() : {};
+    return function () {
+      var key = resolver ? resolver.apply(this, arguments) : arguments[0];
+      var hit = (cache instanceof Map) ? cache.has(key) : Object.prototype.hasOwnProperty.call(cache, key);
+      if (hit) return (cache instanceof Map) ? cache.get(key) : cache[key];
+      var val = fn.apply(this, arguments);
+      if (cache instanceof Map) cache.set(key, val); else cache[key] = val;
+      return val;
+    };
+  }
+  /** 清空 SVG 缓存（调试 / 长会话内存保护用） */
+  function clearCache() {
+    if (__vbCache) __vbCache.clear();
+    if (__wrapCache) __wrapCache.clear();
+  }
+
   function computeViewBox(elements, options) {
     var pad = options && options.padding != null ? options.padding : SVG_DEFAULTS.padding;
     var src = Array.isArray(elements) ? elements.join('') : String(elements || '');
+    var cacheKey = src + '|' + pad;
+    if (__vbCache && __vbCache.has(cacheKey)) return __vbCache.get(cacheKey);
     var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     function grow(x1, y1, x2, y2) {
       if (!isFinite(x1) || !isFinite(y1) || !isFinite(x2) || !isFinite(y2)) return;
@@ -183,10 +209,12 @@
         }
       }
     }
-    if (!isFinite(minX)) return { minX: 0, minY: 0, width: SVG_DEFAULTS.width, height: SVG_DEFAULTS.height };
+    if (!isFinite(minX)) return EMPTY_BOX;
     minX -= pad; minY -= pad; maxX += pad; maxY += pad;
-    return { minX: Math.floor(minX), minY: Math.floor(minY),
+    var vbResult = { minX: Math.floor(minX), minY: Math.floor(minY),
       width: Math.ceil(maxX - minX), height: Math.ceil(maxY - minY) };
+    if (__vbCache) __vbCache.set(cacheKey, vbResult);
+    return vbResult;
   }
 
   // ============ 包裹为完整 SVG ============
@@ -222,6 +250,9 @@
     var o = options || {};
     var body = (innerSvg || '');
     if (o.printMode) body = printTransform(body);
+    // 缓存：相同内容 + 相同选项必得相同输出（任务 3.3）
+    var wrapKey = body + '|' + JSON.stringify(o);
+    if (__wrapCache && __wrapCache.has(wrapKey)) return __wrapCache.get(wrapKey);
     var vb = o.viewBox ||
       (function () { var b = computeViewBox(body, { padding: o.padding }); return b.minX + ' ' + b.minY + ' ' + b.width + ' ' + b.height; })();
     var parts = vb.split(/\s+/).map(Number);
@@ -236,7 +267,9 @@
     if (o.printMode) attrs.class = attrs.class ? (attrs.class + ' svg-print') : 'svg-print';
     var bg = o.background ? svgElement('rect', { x: parts[0], y: parts[1], width: parts[2], height: parts[3], fill: o.background }) : '';
     var style = o.style ? ' style="' + escAttr(o.style) + '"' : '';
-    return '<svg' + attrsStr(attrs) + style + '>' + bg + body + '</svg>';
+    var out = '<svg' + attrsStr(attrs) + style + '>' + bg + body + '</svg>';
+    if (__wrapCache) __wrapCache.set(wrapKey, out);
+    return out;
   }
 
   // ============ 书写格背景（任务：SVG 生成器细化） ============
@@ -314,7 +347,9 @@
     computeViewBox: computeViewBox,
     svgWrap: svgWrap,
     svgGrid: svgGrid,
-    hexLighten: hexLighten
+    hexLighten: hexLighten,
+    memo: memoize,
+    clearCache: clearCache
   };
 
   global.SVGUtil = SVGUtil;

@@ -18,6 +18,11 @@
     { id: 'math-statistics', file: 'plugins/math-statistics.js', name: '分类与统计', subject: 'math', category: 'statistics', grades: [1], moduleIds: ['M9'] },
     { id: 'math-money', file: 'plugins/math-money.js', name: '认识人民币', subject: 'math', category: 'number', grades: [1], moduleIds: ['M4'] },
     { id: 'math-g1-multiplication-table', file: 'plugins/math-g1-multiplication-table.js', name: '提前预习', desc: '乘法表·除法表·乘除法填空', subject: 'math', category: 'number', grades: [1], moduleIds: ['M13'] },
+    { id: 'math-g1-judge', file: 'plugins/math-g1-judge.js', name: '判断题', subject: 'math', category: 'mixed', grades: [1], moduleIds: ['M11'] },
+    { id: 'math-g1-choice', file: 'plugins/math-g1-choice.js', name: '选择题', subject: 'math', category: 'mixed', grades: [1], moduleIds: ['M12'] },
+    { id: 'math-g1-matching', file: 'plugins/math-g1-matching.js', name: '连线题', subject: 'math', category: 'mixed', grades: [1], moduleIds: ['M5'] },
+    { id: 'math-g1-operation', file: 'plugins/math-g1-operation.js', name: '操作题', subject: 'math', category: 'geometry', grades: [1], moduleIds: ['M6', 'M9'] },
+    { id: 'math-g1-patterns', file: 'plugins/math-g1-patterns.js', name: '找规律', subject: 'math', category: 'number', grades: [1], moduleIds: ['M4'] },
     // 数学（二年级）
     { id: 'math-unit-convert', file: 'plugins/math-unit-convert.js', name: '单位换算', subject: 'math', category: 'number', grades: [2, 3] },
     { id: 'math-geometry', file: 'plugins/math-geometry.js', name: '图形与几何', subject: 'math', category: 'geometry', grades: [2, 3] },
