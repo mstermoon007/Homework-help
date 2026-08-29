@@ -52,7 +52,7 @@
         <p>副标题（可选）</p></div>
    logo 高度随 --header-title-size 协调缩放；年级与科目均为纯文字、大小递减、三者 flex 垂直居中。 */
 .page-header {
-    --header-title-size: 2.0rem;
+    /* --header-title-size 已在 tokens.css（:root）统一定义 */
     display: flex;
     flex-direction: column;
     align-items: center;       /* 左右居中 */

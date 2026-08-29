@@ -12,14 +12,7 @@
 
 @layer subjects {
 
-:root {
-  --subject-primary: var(--math-primary);
-  --subject-primary-soft: rgba(74, 144, 217, 0.12);
-  --subject-body-bg: linear-gradient(160deg, #eaf3ff 0%, #dbeafe 48%, #cfe6ff 100%);
-  --type-card-bg: linear-gradient(135deg, rgba(74, 144, 217, 0.15), rgba(74, 144, 217, 0.05));
-  --type-card-border: rgba(74, 144, 217, 0.2);
-  --type-card-hover-border: rgba(74, 144, 217, 0.5);
-}
+  /* 科目/题型卡默认令牌已上移至 tokens.css（:root）；运行时仍由 JS 按科目覆写 --subject-* */
 
 /* 页面专属：正文底色（随科目变量变化；默认数学浅蓝渐变，math-types.html 走此默认值） */
 body {

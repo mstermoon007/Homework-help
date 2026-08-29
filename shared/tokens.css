@@ -43,6 +43,14 @@
     --en-secondary: #fff7eb;
     --en-accent: #8f5608;
 
+    /* 二级题型页 / 科目主题令牌（默认数学浅蓝渐变；运行时由 JS 按科目覆写 --subject-*） */
+    --subject-primary: var(--math-primary);
+    --subject-primary-soft: rgba(74, 144, 217, 0.12);
+    --subject-body-bg: linear-gradient(160deg, #eaf3ff 0%, #dbeafe 48%, #cfe6ff 100%);
+    --type-card-bg: linear-gradient(135deg, rgba(74, 144, 217, 0.15), rgba(74, 144, 217, 0.05));
+    --type-card-border: rgba(74, 144, 217, 0.2);
+    --type-card-hover-border: rgba(74, 144, 217, 0.5);
+
     /* 书写格颜色：田字格/米字格与四线三格（供 svg-chinese/svg-english 及练字组件使用） */
     --grid-tianzige-frame: #5a6f94;     /* 田字格外框 */
     --grid-tianzige-aux: #9fb3d1;       /* 田字格中十字虚线 */
@@ -132,6 +140,7 @@
     --grid-gap-screen: 14px;
     --grid-gap-print: 14px 12px;
     --spacing-xl: 32px;
+    --header-title-size: 2.0rem; /* 页面标题（.page-header）字号基准 */
   --q-num-size: 12px;
   --q-text-size: 15px;
   --q-text-line-height: 1.4;
