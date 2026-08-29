@@ -244,17 +244,41 @@
 
   // ============ 科目化插件工厂（数学/语文/英语，自动注入 subject + difficultyParams + 修饰类） ============
 
-  /** 科目化辅助：包装 generate，调用前自动注入 opts.difficultyParams（App.Difficulty.paramsFor 结果）。 */
+  /** 科目化辅助：包装 generate，调用前自动注入 opts.difficultyParams。
+   *  优先级：
+   *   1) opts.knowledgePointMeta 存在（插件按知识点设置）→ 静态多维计算优先
+   *      （调用 App.DifficultyStatic.paramsForKnowledgePoint，不再使用 opts.difficulty / opts.adaptiveDelta）；
+   *      若插件同时提供 opts.level（自带难度 chip，hasOwnLevel）→ 仍用插件 level 解析，
+   *      静态结果仅作参考写入 staticMeta，不覆盖难度。
+   *   2) 否则回退现有「档位 + delta」逻辑（行为不变）。 */
   function _wrapDifficultyParams(plugin, subject) {
     var _orig = plugin.generate;
     plugin.generate = function (opts) {
       opts = opts || {};
       if (opts.difficultyParams == null) {
         var _D = (typeof global !== 'undefined') ? (global.App && global.App.Difficulty) : null;
-        if (_D && typeof _D.paramsFor === 'function') {
-          var lv = (opts.difficulty != null) ? opts.difficulty : (opts.level || 3);
-          try { opts.difficultyParams = _D.paramsFor(subject, lv); } catch (e) { /* 安全跳过 */ }
+        var _DS = (typeof global !== 'undefined') ? (global.App && global.App.DifficultyStatic) : null;
+        var hasOwnLevel = opts.level != null && opts.level !== '';
+
+        if (opts.knowledgePointMeta && _DS && typeof _DS.paramsForKnowledgePoint === 'function') {
+          // 静态多维计算优先（ignore opts.difficulty / opts.adaptiveDelta；createProfile delta 恒为 0）
+          var staticOut = _DS.paramsForKnowledgePoint(opts.knowledgePointMeta, opts.questionType, opts.customParams);
+          if (hasOwnLevel) {
+            // 插件自带难度 chip：保留插件 level（createProfile delta 恒为 0），静态仅作参考
+            var lv = opts.level;
+            var prof = (_D && typeof _D.paramsFor === 'function')
+              ? _D.paramsFor(subject, lv) : { level: lv, difficulty: lv };
+            prof.staticMeta = staticOut.staticMeta;
+            opts.difficultyParams = prof;
+          } else {
+            opts.difficultyParams = staticOut;
+          }
+        } else if (_D && typeof _D.paramsFor === 'function') {
+          // 回退：现有「档位 + delta」逻辑（无知识点元数据时与历史行为一致）
+          var lv2 = (opts.difficulty != null) ? opts.difficulty : (opts.level || 3);
+          try { opts.difficultyParams = _D.paramsFor(subject, lv2); } catch (e) { /* 安全跳过 */ }
         }
+        opts.hasOwnLevel = hasOwnLevel;
       }
       return _orig.call(plugin, opts);
     };

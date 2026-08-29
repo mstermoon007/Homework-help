@@ -14,19 +14,18 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-make-ten.js 依赖 shared/common.js（PluginUtil），请先加载');
-  // 难度统一经 App.Difficulty.consume 解析（批次7）
+  // 难度统一经 App.Difficulty.paramsFor 解析（批次7）
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-make-ten.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-make-ten.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
   function shuffleArr(arr) { return _PU.shuffle(arr); }
 
   // ============ 难度（1-10，由 generate 设置） ============
-  var _DIFF = 3;
   // 被减数上限：难度 3 基准 19（一年级 20 以内），难度越高数值越大
-  function totalMax() { return Math.min(99, _PU.diffMax(19, _DIFF)); }
+  function totalMax(level) { return Math.min(99, _PU.diffMax(19, level)); }
 
   // ============ 卡片式渲染（固定版式，数字随机生成） ============
   // 三种题型统一使用共享 common.js 的 renderGrid 标准 question-card 卡片：
@@ -46,8 +45,8 @@
     };
   }
 
-  function buildPingshi() {
-    var total = rnd(11, totalMax());
+  function buildPingshi(level) {
+    var total = rnd(11, totalMax(level));
     var to10 = total - 10;
     var sub = rnd(Math.max(2, to10 + 1), Math.min(9, total - 1));
     var rest = sub - to10;
@@ -59,8 +58,8 @@
     };
   }
 
-  function buildPoshi() {
-    var total = rnd(11, totalMax());
+  function buildPoshi(level) {
+    var total = rnd(11, totalMax(level));
     var to10 = total - 10;
     var sub = rnd(2, 9);
     var tenSub = 10 - sub;
@@ -72,21 +71,21 @@
     };
   }
 
-  function buildMixed() {
+  function buildMixed(level) {
     var r = _PU.randInt(1, 100);
     if (r <= 35) return buildCushi();
-    if (r <= 65) return buildPingshi();
-    return buildPoshi();
+    if (r <= 65) return buildPingshi(level);
+    return buildPoshi(level);
   }
 
-  function generateProblems(type, count) {
+  function generateProblems(type, count, level) {
     var builder = { cushi: buildCushi, pingshi: buildPingshi, poshi: buildPoshi, mix: buildMixed }[type];
     var seen = {};
     var list = [];
     var attempts = 0;
     var maxAttempts = Math.max(count * 10, 200);
     while (list.length < count && attempts < maxAttempts) {
-      var q = builder();
+      var q = builder(level);
       var key = q.kind === 'cushi' ? (q.kind + '|' + q.big + '+' + q.small) : (q.kind + '|' + q.total + '−' + q.sub);
       if (!seen[key]) { seen[key] = true; list.push(q); }
       attempts++;
@@ -127,10 +126,11 @@
 
     generate: function (options) {
       var opts = options || {};
-      // 难度统一经 App.Difficulty.consume 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
-      var prof = _D.consume(opts);
-      _DIFF = prof.effectiveLevel;
-      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 难度统一经 App.Difficulty.paramsFor 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
+      var dp = opts.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (opts.difficulty != null ? opts.difficulty : (opts.level || 3))) : { level: opts.difficulty != null ? opts.difficulty : (opts.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (opts.level != null && opts.level !== '');
+
+      var diffStamp = dpHasOwnLevel ? null : dpLevel;
       // 子题型 → 知识点（凑十/平十/破十，用于知识点关联）
       var KP_BY_KIND = {
         cushi: 'math-g1-m0-make-ten',
@@ -139,7 +139,7 @@
       };
       var type = opts.type || 'cushi';
       var count = opts.count || 5;
-      var list = generateProblems(type, count);
+      var list = generateProblems(type, count, dpLevel);
       var typeNames = { cushi: '凑十法', pingshi: '平十法', poshi: '破十法', mix: '混合' };
       var label = opts.label || typeNames[type] || type;
       var questions = list.map(function (p) {

@@ -24,6 +24,13 @@
                 prerequisites: [],
                 related: ["en-g3-e1-letter-sound"],
                 difficulty: 1,
+                spiral_level: 1,
+                max_spiral_level: 1,
+                cognitive_level: "掌握",
+                applicable_question_types: [ { type: "all", coefficient: 1 } ],
+                number_range_default: { min: 1, max: 1 },
+                max_steps_default: 2,
+                context_default: "standard",
                 status: "active"
               },
               {
@@ -37,6 +44,13 @@
                 prerequisites: [],
                 related: ["en-g3-e1-letter-recognition"],
                 difficulty: 1,
+                spiral_level: 1,
+                max_spiral_level: 1,
+                cognitive_level: "掌握",
+                applicable_question_types: [ { type: "all", coefficient: 1 } ],
+                number_range_default: { min: 1, max: 1 },
+                max_steps_default: 2,
+                context_default: "standard",
                 status: "active"
               }
             ]
@@ -54,6 +68,13 @@
                 prerequisites: ["en-g3-e1-letter-recognition"],
                 related: [],
                 difficulty: 1,
+                spiral_level: 1,
+                max_spiral_level: 1,
+                cognitive_level: "掌握",
+                applicable_question_types: [ { type: "mix", coefficient: 1 } ],
+                number_range_default: { min: 1, max: 1 },
+                max_steps_default: 2,
+                context_default: "standard",
                 status: "placeholder"
               }
             ]

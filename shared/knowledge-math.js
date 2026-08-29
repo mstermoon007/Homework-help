@@ -25,6 +25,13 @@
               prerequisites: [],
               related: ["math-g1-m0-make-ten-ping","math-g1-m0-make-ten-po","math-g1-m1-addsub-10","math-g1-m4-compose-number"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "cushi", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -38,6 +45,13 @@
               prerequisites: ["math-g1-m0-make-ten"],
               related: ["math-g1-m0-make-ten","math-g1-m0-make-ten-po"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pingshi", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -51,6 +65,13 @@
               prerequisites: ["math-g1-m0-make-ten"],
               related: ["math-g1-m0-make-ten","math-g1-m0-make-ten-ping"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "poshi", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -64,6 +85,13 @@
               prerequisites: ["math-g1-m0-make-ten"],
               related: ["math-g1-m0-make-ten","math-g1-m1-addsub-10"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "cushi", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -82,6 +110,13 @@
               prerequisites: ["math-g1-m4-compose-number","math-g1-m4-digit-place"],
               related: ["math-g1-m1-addsub-10","math-g1-m0-make-ten"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 6,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -95,6 +130,13 @@
               prerequisites: ["math-g1-m1-addsub-5"],
               related: ["math-g1-m1-carry-add-20","math-g1-m0-make-ten"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 6,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -108,6 +150,13 @@
               prerequisites: ["math-g1-m1-addsub-10","math-g1-m0-make-ten"],
               related: ["math-g1-m1-retreat-sub-20","math-g1-m4-compose-number"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -121,6 +170,13 @@
               prerequisites: ["math-g1-m1-addsub-10","math-g1-m0-make-ten-po","math-g1-m0-make-ten-ping"],
               related: ["math-g1-m1-carry-add-20"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -134,6 +190,13 @@
               prerequisites: ["math-g1-m1-addsub-10","math-g1-m4-compose-number"],
               related: ["math-g1-m1-two-digit-add"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 6,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -147,6 +210,13 @@
               prerequisites: ["math-g1-m1-addsub-100","math-g1-m4-digit-place"],
               related: ["math-g1-m1-addsub-100"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -160,6 +230,13 @@
               prerequisites: ["math-g1-m1-addsub-10"],
               related: ["math-g1-m7-picture-mixed","math-g1-m8-add-total","math-g1-m8-sub-remain"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -178,6 +255,13 @@
               prerequisites: [],
               related: ["math-g1-m4-digit-place","math-g1-m4-split-number"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compose", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -191,6 +275,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g1-m4-compose-number","math-g1-m4-adjacent-number"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "digit", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -204,6 +295,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g1-m4-compare-number"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "order", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -217,6 +315,13 @@
               prerequisites: ["math-g1-m4-compose-number","math-g1-m4-digit-place"],
               related: ["math-g1-m4-adjacent-number","math-g1-m1-addsub-10"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -230,6 +335,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g1-m4-compose-number","math-g1-m0-make-ten"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compose", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -243,6 +355,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g1-m7-picture-mixed"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "number", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -256,6 +375,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g1-m4-clock-approx"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "clock-read", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -269,6 +395,13 @@
               prerequisites: ["math-g1-m4-clock-read"],
               related: ["math-g1-m4-clock-read"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "read", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -282,6 +415,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g1-m4-rmb-calc","math-g1-m8-rmb-shopping"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "convert", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -295,6 +435,13 @@
               prerequisites: ["math-g1-m4-rmb-unit","math-g1-m1-addsub-10"],
               related: ["math-g1-m4-rmb-unit","math-g1-m8-rmb-shopping"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "calc", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -308,6 +455,13 @@
               prerequisites: ["math-g1-m4-compose-number","math-g1-m4-digit-place"],
               related: ["math-g1-m4-adjacent-number","math-g1-m4-compare-number"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mix", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -321,6 +475,13 @@
               prerequisites: ["math-g1-m1-addsub-10","math-g1-m4-compose-number"],
               related: ["math-g1-m4-split-number","math-g1-m1-addsub-10"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mix", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -339,6 +500,13 @@
               prerequisites: [],
               related: ["math-g1-m6-flat-shape","math-g1-m6-position"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -352,6 +520,13 @@
               prerequisites: ["math-g1-m6-solid-shape"],
               related: ["math-g1-m6-solid-shape","math-g1-m6-shape-combine"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "flat", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -365,6 +540,13 @@
               prerequisites: ["math-g1-m6-flat-shape"],
               related: ["math-g1-m6-shape-combine"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "count-graph", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -378,6 +560,13 @@
               prerequisites: [],
               related: ["math-g1-m6-flat-shape"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "position", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -391,6 +580,13 @@
               prerequisites: ["math-g1-m6-flat-shape"],
               related: ["math-g1-m6-flat-shape","math-g1-m6-solid-shape"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mix", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -404,6 +600,13 @@
               prerequisites: ["math-g1-m6-flat-shape"],
               related: ["math-g1-m6-flat-shape","math-g1-m6-shape-combine"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "draw-shape", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -422,6 +625,13 @@
               prerequisites: ["math-g1-m1-addsub-10"],
               related: ["math-g1-m7-picture-sub","math-g1-m8-add-total"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "add", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -435,6 +645,13 @@
               prerequisites: ["math-g1-m1-addsub-10"],
               related: ["math-g1-m7-picture-add","math-g1-m8-sub-remain"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -448,6 +665,13 @@
               prerequisites: ["math-g1-m1-mixed-chain"],
               related: ["math-g1-m7-picture-add","math-g1-m7-picture-sub"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mix", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -461,6 +685,13 @@
               prerequisites: ["math-g1-m7-picture-add"],
               related: ["math-g1-m8-add-total"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mix", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -479,6 +710,13 @@
               prerequisites: ["math-g1-m1-addsub-10"],
               related: ["math-g1-m8-sub-remain","math-g1-m7-brace-question"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "add", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -492,6 +730,13 @@
               prerequisites: ["math-g1-m1-addsub-10"],
               related: ["math-g1-m8-sub-part","math-g1-m8-add-total"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -505,6 +750,13 @@
               prerequisites: ["math-g1-m8-sub-remain"],
               related: ["math-g1-m8-sub-remain"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -518,6 +770,13 @@
               prerequisites: ["math-g1-m4-compare-number","math-g1-m8-sub-remain"],
               related: ["math-g1-m8-compare-less"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -531,6 +790,13 @@
               prerequisites: ["math-g1-m4-compare-number","math-g1-m8-sub-remain"],
               related: ["math-g1-m8-compare-more"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -544,6 +810,13 @@
               prerequisites: ["math-g1-m1-mixed-chain","math-g1-m8-add-total"],
               related: ["math-g1-m8-add-total","math-g1-m8-sub-remain"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -557,6 +830,13 @@
               prerequisites: ["math-g1-m4-rmb-calc","math-g1-m8-add-total"],
               related: ["math-g1-m4-rmb-calc","math-g1-m8-sub-remain"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "rmb", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -570,6 +850,13 @@
               prerequisites: ["math-g1-m8-add-total","math-g1-m8-sub-remain"],
               related: ["math-g1-m8-add-total","math-g1-m8-sub-remain"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "extra", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -588,6 +875,13 @@
               prerequisites: [],
               related: ["math-g1-m9-stats-table","math-g1-m9-pictograph"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "classify", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -601,6 +895,13 @@
               prerequisites: ["math-g1-m9-classify"],
               related: ["math-g1-m9-classify","math-g1-m9-pictograph"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "table", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -614,6 +915,13 @@
               prerequisites: ["math-g1-m9-classify","math-g1-m9-stats-table"],
               related: ["math-g1-m9-stats-table","math-g2-m9-data-tally"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "picto", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -632,6 +940,13 @@
               prerequisites: [],
               related: ["math-g1-m13-division-table","math-g1-m13-fill-blank"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mul-table", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -645,6 +960,13 @@
               prerequisites: ["math-g1-m13-multiplication-table"],
               related: ["math-g1-m13-multiplication-table","math-g1-m13-fill-blank"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-table", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -658,6 +980,13 @@
               prerequisites: ["math-g1-m13-multiplication-table"],
               related: ["math-g1-m13-multiplication-table","math-g1-m13-division-table"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "fill", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -676,6 +1005,13 @@
               prerequisites: ["math-g1-m1-addsub-10"],
               related: ["math-g1-m1-addsub-10","math-g1-m1-carry-add-20"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "match-calc", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -689,6 +1025,13 @@
               prerequisites: ["math-g1-m6-solid-shape","math-g1-m6-flat-shape"],
               related: ["math-g1-m6-solid-shape","math-g1-m6-flat-shape"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "match-shape", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -702,6 +1045,13 @@
               prerequisites: ["math-g1-m4-clock-read"],
               related: ["math-g1-m4-clock-read"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "match-clock", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -715,6 +1065,13 @@
               prerequisites: ["math-g1-m4-rmb-unit"],
               related: ["math-g1-m4-rmb-unit"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "match-rmb", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -733,6 +1090,13 @@
               prerequisites: ["math-g1-m4-compare-number","math-g1-m6-solid-shape","math-g1-m6-flat-shape","math-g1-m4-clock-read","math-g1-m4-rmb-unit"],
               related: ["math-g1-m0-make-ten-cushi","math-g1-m1-addsub-10"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "judge", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -751,6 +1115,13 @@
               prerequisites: ["math-g1-m1-addsub-10","math-g1-m1-carry-add-20","math-g1-m1-retreat-sub-20","math-g1-m4-adjacent-number","math-g1-m4-clock-read","math-g1-m4-rmb-unit","math-g1-m6-solid-shape"],
               related: ["math-g1-m1-addsub-10","math-g1-m4-adjacent-number"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "choice", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -775,6 +1146,13 @@
               prerequisites: ["math-g1-m1-addsub-10"],
               related: ["math-g2-m1-sub-100","math-g2-m1-mixed-addsub"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "add", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -788,6 +1166,13 @@
               prerequisites: ["math-g1-m1-addsub-10"],
               related: ["math-g2-m1-add-100","math-g2-m1-mixed-addsub"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -801,6 +1186,13 @@
               prerequisites: ["math-g1-m1-addsub-10"],
               related: ["math-g2-m1-div-table","math-g2-m1-muldiv-relation"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mult", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -814,6 +1206,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g2-m1-remainder-oral","math-g2-m1-muldiv-relation"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -827,6 +1226,13 @@
               prerequisites: ["math-g2-m1-div-table"],
               related: ["math-g2-m1-mixed-two-step","math-g2-m8-remainder-apply"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "remainder", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -840,6 +1246,13 @@
               prerequisites: ["math-g2-m1-add-100","math-g2-m1-sub-100"],
               related: ["math-g2-m1-mixed-multdiv"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 6,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -853,6 +1266,13 @@
               prerequisites: ["math-g2-m1-mult-table","math-g2-m1-div-table"],
               related: ["math-g2-m1-mixed-two-step"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -866,6 +1286,13 @@
               prerequisites: ["math-g2-m1-mixed-addsub","math-g2-m1-mixed-multdiv"],
               related: ["math-g2-m3-mixed-bracket"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -879,6 +1306,13 @@
               prerequisites: ["math-g2-m1-add-100"],
               related: ["math-g2-m4-compose-10000"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 6,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -892,6 +1326,13 @@
               prerequisites: ["math-g2-m1-mult-table","math-g2-m1-div-table"],
               related: ["math-g2-m4-multiplication-meaning","math-g2-m4-division-meaning"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "relation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -910,6 +1351,13 @@
               prerequisites: ["math-g2-m1-add-100"],
               related: ["math-g2-m2-sub-col","math-g2-m2-chain-add-col"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "add", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -923,6 +1371,13 @@
               prerequisites: ["math-g2-m1-sub-100"],
               related: ["math-g2-m2-add-col","math-g2-m2-chain-sub-col"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -936,6 +1391,13 @@
               prerequisites: ["math-g2-m2-add-col"],
               related: ["math-g2-m2-mixed-col"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chain-add", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -949,6 +1411,13 @@
               prerequisites: ["math-g2-m2-sub-col"],
               related: ["math-g2-m2-mixed-col"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chain-sub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -962,6 +1431,13 @@
               prerequisites: ["math-g2-m2-add-col","math-g2-m2-sub-col"],
               related: ["math-g2-m3-mixed-no-bracket"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -975,6 +1451,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g2-m2-div-col"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mult", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -988,6 +1471,13 @@
               prerequisites: ["math-g2-m1-div-table"],
               related: ["math-g2-m2-remainder-col"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1001,6 +1491,13 @@
               prerequisites: ["math-g2-m1-remainder-oral","math-g2-m2-div-col"],
               related: ["math-g2-m8-remainder-apply"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "remainder", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1019,6 +1516,13 @@
               prerequisites: ["math-g2-m1-mixed-two-step"],
               related: ["math-g2-m3-mixed-bracket"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1032,6 +1536,13 @@
               prerequisites: ["math-g2-m1-mixed-two-step","math-g2-m3-mixed-no-bracket"],
               related: ["math-g2-m8-two-step"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "bracket", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1045,6 +1556,13 @@
               prerequisites: ["math-g2-m2-chain-add-col"],
               related: ["math-g2-m3-multdiv-mixed"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 6,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chain", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1058,6 +1576,13 @@
               prerequisites: ["math-g2-m2-mult-col"],
               related: ["math-g2-m3-compare-simple"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "multdiv", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1071,6 +1596,13 @@
               prerequisites: ["math-g2-m3-mixed-no-bracket"],
               related: ["math-g2-m4-compare-10000"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1084,6 +1616,13 @@
               prerequisites: ["math-g2-m3-mixed-no-bracket"],
               related: ["math-g2-m4-fill-length"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "operator", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1102,6 +1641,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g2-m4-compose-10000","math-g2-m4-digit-order"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "readwrite", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1115,6 +1661,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g2-m4-read-10000","math-g2-m4-digit-order"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compose", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1128,6 +1681,13 @@
               prerequisites: ["math-g2-m4-compose-10000"],
               related: ["math-g2-m4-compare-10000"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "digit", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1141,6 +1701,13 @@
               prerequisites: ["math-g2-m4-read-10000"],
               related: ["math-g2-m4-compare-10000"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "approx", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1154,6 +1721,13 @@
               prerequisites: ["math-g2-m4-digit-order"],
               related: ["math-g2-m3-compare-simple"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1167,6 +1741,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g2-m4-fill-length","math-g2-m8-length-app"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "length", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1180,6 +1761,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g2-m4-fill-mass","math-g2-m8-mass-app"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mass", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1193,6 +1781,13 @@
               prerequisites: ["math-g1-m4-clock-read"],
               related: ["math-g2-m4-fill-time","math-g2-m6-clock-draw"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "time", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1206,6 +1801,13 @@
               prerequisites: ["math-g2-m4-length-unit"],
               related: ["math-g2-m6-measure"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "fill-length", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1219,6 +1821,13 @@
               prerequisites: ["math-g2-m4-mass-unit"],
               related: ["math-g2-m8-money"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "fill-mass", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1232,6 +1841,13 @@
               prerequisites: ["math-g2-m4-time-unit"],
               related: ["math-g2-m6-clock-draw"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "fill-time", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1245,6 +1861,13 @@
               prerequisites: ["math-g1-m4-number-pattern"],
               related: ["math-g2-m10-logic-reasoning"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pattern", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1258,6 +1881,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g2-m4-division-meaning"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mult-meaning", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1271,6 +1901,13 @@
               prerequisites: ["math-g2-m1-div-table"],
               related: ["math-g2-m4-multiplication-meaning"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-meaning", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1284,6 +1921,13 @@
               prerequisites: ["math-g1-m4-compose-number"],
               related: ["math-g2-m6-angle-recognize","math-g2-m5-match-angle"],
               difficulty: 2,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1297,6 +1941,13 @@
               prerequisites: ["math-g1-m4-clock-read"],
               related: ["math-g2-m6-clock-draw","math-g2-m5-match-clock"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "clock", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1315,6 +1966,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g2-m5-match-multdiv"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "calc", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1328,6 +1986,13 @@
               prerequisites: ["math-g2-m6-solid-shape"],
               related: ["math-g2-m5-match-unit"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "shape", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1341,6 +2006,13 @@
               prerequisites: ["math-g2-m4-angle-basic"],
               related: ["math-g2-m6-angle-recognize"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1354,6 +2026,13 @@
               prerequisites: ["math-g2-m4-clock-read"],
               related: ["math-g2-m6-clock-draw"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "clock", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1367,6 +2046,13 @@
               prerequisites: ["math-g2-m4-length-unit"],
               related: ["math-g2-m4-mass-unit"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "unit", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1380,6 +2066,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g2-m5-match-calc"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "multdiv", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1398,6 +2091,13 @@
               prerequisites: ["math-g1-m6-solid-shape"],
               related: ["math-g2-m6-angle-recognize"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1411,6 +2111,13 @@
               prerequisites: ["math-g2-m4-angle-basic"],
               related: ["math-g2-m6-motion"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1424,6 +2131,13 @@
               prerequisites: ["math-g2-m6-angle-recognize"],
               related: ["math-g2-m6-grid-draw"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "motion", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1437,6 +2151,13 @@
               prerequisites: ["math-g2-m6-motion"],
               related: ["math-g2-m6-draw-line"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "grid", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1450,6 +2171,13 @@
               prerequisites: ["math-g2-m4-length-unit"],
               related: ["math-g2-m6-measure"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "draw-line", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1463,6 +2191,13 @@
               prerequisites: ["math-g2-m6-angle-recognize"],
               related: ["math-g2-m6-draw-line"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "draw-angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1476,6 +2211,13 @@
               prerequisites: ["math-g2-m4-clock-read"],
               related: ["math-g2-m6-draw-line"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "clock-draw", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1489,6 +2231,13 @@
               prerequisites: ["math-g2-m4-length-unit"],
               related: ["math-g2-m6-draw-line"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "measure", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1507,6 +2256,13 @@
               prerequisites: ["math-g2-m1-add-100"],
               related: ["math-g2-m7-pic-mixed"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "add", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1520,6 +2276,13 @@
               prerequisites: ["math-g2-m1-sub-100"],
               related: ["math-g2-m7-pic-mixed"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1533,6 +2296,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g2-m7-pic-div"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mult", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1546,6 +2316,13 @@
               prerequisites: ["math-g2-m1-div-table"],
               related: ["math-g2-m7-pic-div-include"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-partitive", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1559,6 +2336,13 @@
               prerequisites: ["math-g2-m7-pic-div"],
               related: ["math-g2-m8-div-partitive"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-quotative", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1572,6 +2356,13 @@
               prerequisites: ["math-g2-m7-pic-add","math-g2-m7-pic-mult"],
               related: ["math-g2-m8-two-step"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1590,6 +2381,13 @@
               prerequisites: ["math-g2-m1-add-100"],
               related: ["math-g2-m8-sub-remain"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "add", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1603,6 +2401,13 @@
               prerequisites: ["math-g2-m1-sub-100"],
               related: ["math-g2-m8-compare-diff"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1616,6 +2421,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g2-m8-div-partitive"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mult", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1629,6 +2441,13 @@
               prerequisites: ["math-g2-m1-div-table"],
               related: ["math-g2-m8-div-quotative"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-partitive", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1642,6 +2461,13 @@
               prerequisites: ["math-g2-m8-div-partitive"],
               related: ["math-g2-m8-remainder-apply"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-quotative", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1655,6 +2481,13 @@
               prerequisites: ["math-g2-m1-remainder-oral"],
               related: ["math-g2-m8-extra-condition"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "remainder", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1668,6 +2501,13 @@
               prerequisites: ["math-g2-m8-sub-remain"],
               related: ["math-g2-m8-two-step"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1681,6 +2521,13 @@
               prerequisites: ["math-g2-m3-mixed-no-bracket"],
               related: ["math-g2-m8-extra-condition"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "two-step", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1694,6 +2541,13 @@
               prerequisites: ["math-g2-m4-fill-mass"],
               related: ["math-g2-m8-mass-app"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "money", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1707,6 +2561,13 @@
               prerequisites: ["math-g2-m4-length-unit"],
               related: ["math-g2-m8-mass-app"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "length", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1720,6 +2581,13 @@
               prerequisites: ["math-g2-m4-mass-unit"],
               related: ["math-g2-m8-money"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mass", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1733,6 +2601,13 @@
               prerequisites: ["math-g2-m8-two-step"],
               related: ["math-g2-m8-compare-diff"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "extra", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1751,6 +2626,13 @@
               prerequisites: ["math-g1-m9-pictograph"],
               related: ["math-g2-m9-data-question"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "tally", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1764,6 +2646,13 @@
               prerequisites: ["math-g2-m9-data-tally"],
               related: ["math-g2-m10-logic-reasoning"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "question", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1782,6 +2671,13 @@
               prerequisites: ["math-g2-m9-data-question"],
               related: ["math-g2-m10-order"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "logic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1795,6 +2691,13 @@
               prerequisites: ["math-g2-m4-number-pattern"],
               related: ["math-g2-m10-combination"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sudoku", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1808,6 +2711,13 @@
               prerequisites: ["math-g2-m10-sudoku3"],
               related: ["math-g2-m10-handshake"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "combination", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1821,6 +2731,13 @@
               prerequisites: ["math-g2-m10-combination"],
               related: ["math-g2-m10-order"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "handshake", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1834,6 +2751,13 @@
               prerequisites: ["math-g2-m10-logic-reasoning"],
               related: ["math-g2-m10-handshake"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "order", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1852,6 +2776,13 @@
               prerequisites: ["math-g2-m1-mult-table","math-g2-m3-mixed-no-bracket"],
               related: ["math-g2-m12-choice-mixed"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "judge", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1870,6 +2801,13 @@
               prerequisites: ["math-g2-m1-mult-table","math-g2-m3-mixed-bracket"],
               related: ["math-g2-m11-judge-mixed"],
               difficulty: 2,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "choice", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1894,6 +2832,13 @@
               prerequisites: ["math-g2-m1-add-100"],
               related: ["math-g3-m1-g3-mul-multi1","math-g3-m1-g3-mul-2digit","math-g4-m1-g4-oral-big"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 6,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1907,6 +2852,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g3-m1-g3-mul-2digit","math-g3-m1-g3-div1"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "multi1", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1920,6 +2872,13 @@
               prerequisites: ["math-g2-m1-mult-table","math-g2-m1-remainder-oral"],
               related: ["math-g3-m1-g3-mul-multi1","math-g4-m2-g4-v-div2"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div1", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1933,6 +2892,13 @@
               prerequisites: ["math-g3-m1-g3-mul-multi1"],
               related: ["math-g3-m1-g3-mul-multi1","math-g4-m2-g4-v-mul3x2"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "twodigit", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -1951,6 +2917,13 @@
               prerequisites: ["math-g2-m1-mult-table","math-g2-m1-remainder-oral"],
               related: ["math-g3-m4-g3-decimal","math-g5-m4-g5-fill-fracmean","math-g4-m5-g4-match-decfrac"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "shard", coefficient: 1 } ],
+              number_range_default: { min: 0, max: 1 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1964,6 +2937,13 @@
               prerequisites: ["math-g2-m1-add-100"],
               related: ["math-g3-m4-g3-fraction","math-g4-m4-g4-fill-dec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "read", coefficient: 1 } ],
+              number_range_default: { min: 0, max: 10 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1977,6 +2957,13 @@
               prerequisites: ["math-g1-m4-clock-read"],
               related: ["math-g3-m4-g3-year-month"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "clockFace", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -1990,6 +2977,13 @@
               prerequisites: ["math-g3-m4-g3-time"],
               related: ["math-g3-m4-g3-time"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "ym", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2003,6 +2997,13 @@
               prerequisites: ["math-g2-m4-length-unit"],
               related: ["math-g2-m4-fill-length","math-g4-m4-g4-fill-hectare"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mix", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2021,6 +3022,13 @@
               prerequisites: ["math-g2-m6-solid-shape"],
               related: ["math-g3-m6-g3-area","math-g4-c4-c4-pa"],
               difficulty: 1,
+              spiral_level: 2,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "perimeter", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2034,6 +3042,13 @@
               prerequisites: ["math-g3-m6-g3-perimeter"],
               related: ["math-g3-m6-g3-perimeter","math-g5-m4-g5-fill-area"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "rect", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2047,6 +3062,13 @@
               prerequisites: ["math-g1-m6-position"],
               related: ["math-g6-m6-g6-op-position"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compass", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2065,6 +3087,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g3-m1-g3-mul-multi1","math-g4-m7-g4-pic-segment"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mix", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2083,6 +3112,13 @@
               prerequisites: ["math-g2-m9-data-tally"],
               related: ["math-g4-m9-g4-stats-bar","math-g4-m9-g4-stats-double"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "multiTable", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2101,6 +3137,13 @@
               prerequisites: ["math-g2-m10-logic-reasoning"],
               related: ["math-g3-m10-g3-set","math-g4-c3-c3-am"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dress", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2114,6 +3157,13 @@
               prerequisites: ["math-g3-m10-g3-combination"],
               related: ["math-g3-m10-g3-combination"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "set", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2138,6 +3188,13 @@
               prerequisites: ["math-g3-m1-g3-add-sub-wan"],
               related: ["math-g4-m1-g4-oral-mul3x1","math-g4-m1-g4-oral-divt","math-g4-m4-g4-fill-bignum"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "big-addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2151,6 +3208,13 @@
               prerequisites: ["math-g3-m1-g3-mul-multi1"],
               related: ["math-g4-m1-g4-oral-mul2t","math-g4-m2-g4-v-mul3x2"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mul3x1", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2164,6 +3228,13 @@
               prerequisites: ["math-g3-m1-g3-mul-2digit"],
               related: ["math-g4-m1-g4-oral-mul3x1","math-g4-m1-g4-oral-mul3x1"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mul2tens", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2177,6 +3248,13 @@
               prerequisites: ["math-g3-m1-g3-div1"],
               related: ["math-g4-m2-g4-v-div2","math-g4-m1-g4-oral-mul2t"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-tens", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2190,6 +3268,13 @@
               prerequisites: ["math-g3-m4-g3-decimal"],
               related: ["math-g4-m2-g4-v-dec","math-g4-m3-g4-mix-dec","math-g4-m4-g4-fill-dec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2203,6 +3288,13 @@
               prerequisites: ["math-g3-m1-g3-add-sub-wan"],
               related: ["math-g4-m3-g4-mix-addlaw","math-g4-m3-g4-mix-mullaw","math-g4-m3-g4-mix-dist"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "law-oral", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2221,6 +3313,13 @@
               prerequisites: ["math-g3-m1-g3-mul-2digit"],
               related: ["math-g4-m2-g4-v-mulzero","math-g4-m8-g4-word-speed","math-g4-m12-g4-choice-est"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mul3x2", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2234,6 +3333,13 @@
               prerequisites: ["math-g4-m2-g4-v-mul3x2"],
               related: ["math-g4-m2-g4-v-mul3x2","math-g4-m4-g4-fill-quotient"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mul-zero", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2247,6 +3353,13 @@
               prerequisites: ["math-g3-m1-g3-div1"],
               related: ["math-g4-m2-g4-v-div2q","math-g4-m8-g4-word-div"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-2digit", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2260,6 +3373,13 @@
               prerequisites: ["math-g4-m2-g4-v-div2"],
               related: ["math-g4-m2-g4-v-div2"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-2quotient", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2273,6 +3393,13 @@
               prerequisites: ["math-g4-m1-g4-oral-dec"],
               related: ["math-g4-m1-g4-oral-dec","math-g4-m3-g4-mix-dec","math-g4-m8-g4-word-dec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-vertical", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2291,6 +3418,13 @@
               prerequisites: ["math-g2-m1-mixed-addsub"],
               related: ["math-g4-m3-g4-mix-addlaw","math-g4-m3-g4-mix-mullaw","math-g4-m4-g4-fill-op"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "order", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2304,6 +3438,13 @@
               prerequisites: ["math-g4-m3-g4-mix-order"],
               related: ["math-g4-m3-g4-mix-mullaw","math-g4-m5-g4-match-law","math-g4-m11-g4-judge-law"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "add-law", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2317,6 +3458,13 @@
               prerequisites: ["math-g4-m3-g4-mix-order"],
               related: ["math-g4-m3-g4-mix-dist","math-g4-m5-g4-match-law"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mul-law", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2330,6 +3478,13 @@
               prerequisites: ["math-g4-m3-g4-mix-mullaw"],
               related: ["math-g4-m3-g4-mix-mullaw","math-g4-m12-g4-choice-law"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dist-law", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2343,6 +3498,13 @@
               prerequisites: ["math-g4-m1-g4-oral-dec"],
               related: ["math-g4-m2-g4-v-dec","math-g4-m8-g4-word-dec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-simple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2361,6 +3523,13 @@
               prerequisites: ["math-g2-m4-read-10000","math-g2-m4-compose-10000"],
               related: ["math-g4-m5-g4-match-read","math-g4-m11-g4-judge-read","math-g4-m12-g4-choice-big","math-g4-m8-g4-word-big"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "big-num", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2374,6 +3543,13 @@
               prerequisites: ["math-g3-m6-g3-area","math-g3-m4-g3-measure"],
               related: ["math-g4-m8-g4-word-area","math-g3-m6-g3-area"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "hectare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2387,6 +3563,13 @@
               prerequisites: ["math-g2-m6-solid-shape"],
               related: ["math-g4-m6-g4-draw-para","math-g4-m11-g4-judge-line","math-g4-m6-g4-draw-grid"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "line-ray", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2400,6 +3583,13 @@
               prerequisites: ["math-g2-m6-angle-recognize"],
               related: ["math-g4-m6-g4-draw-protractor","math-g4-m5-g4-match-angle","math-g4-m12-g4-choice-angle","math-g4-m11-g4-judge-angle"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle-metric", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2413,6 +3603,13 @@
               prerequisites: ["math-g4-m4-g4-fill-line","math-g4-m4-g4-fill-angle"],
               related: ["math-g4-m6-g4-draw-grid","math-g4-m5-g4-match-shape","math-g4-m12-g4-choice-shape"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "quad", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2426,6 +3623,13 @@
               prerequisites: ["math-g2-m1-mixed-addsub"],
               related: ["math-g4-m3-g4-mix-order","math-g4-m1-g4-oral-law"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "op-meaning", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2439,6 +3643,13 @@
               prerequisites: ["math-g4-m2-g4-v-div2"],
               related: ["math-g4-m11-g4-judge-quotient","math-g4-m2-g4-v-div2q"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "quotient-law", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2452,6 +3663,13 @@
               prerequisites: ["math-g3-m4-g3-decimal"],
               related: ["math-g4-m2-g4-v-dec","math-g4-m12-g4-choice-dec","math-g4-m11-g4-judge-dec","math-g4-m5-g4-match-decfrac"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "decimal", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2465,6 +3683,13 @@
               prerequisites: ["math-g4-m4-g4-fill-line","math-g4-m4-g4-fill-angle"],
               related: ["math-g4-m11-g4-judge-tri","math-g4-m12-g4-choice-shape","math-g4-m5-g4-match-shape"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "triangle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2478,6 +3703,13 @@
               prerequisites: ["math-g4-m2-g4-v-div2","math-g3-m9-g3-stats-table"],
               related: ["math-g4-m9-g4-stats-avg","math-g4-m8-g4-word-avg","math-g4-m9-g4-stats-bar"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "average", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2496,6 +3728,13 @@
               prerequisites: ["math-g4-m4-g4-fill-bignum"],
               related: ["math-g4-m4-g4-fill-bignum","math-g4-m11-g4-judge-read"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "read", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2509,6 +3748,13 @@
               prerequisites: ["math-g4-m4-g4-fill-angle"],
               related: ["math-g4-m4-g4-fill-angle","math-g4-m6-g4-draw-protractor"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle-degree", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2522,6 +3768,13 @@
               prerequisites: ["math-g4-m4-g4-fill-quad"],
               related: ["math-g4-m4-g4-fill-quad","math-g4-m4-g4-fill-tri","math-g4-m12-g4-choice-shape"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "shape-feature", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2535,6 +3788,13 @@
               prerequisites: ["math-g4-m3-g4-mix-addlaw"],
               related: ["math-g4-m3-g4-mix-addlaw","math-g4-m3-g4-mix-mullaw","math-g4-m11-g4-judge-law"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "law-formula", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2548,6 +3808,13 @@
               prerequisites: ["math-g3-m4-g3-fraction","math-g3-m4-g3-decimal"],
               related: ["math-g4-m4-g4-fill-dec","math-g5-m5-g5-match-fracdec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-frac", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2566,6 +3833,13 @@
               prerequisites: ["math-g4-m4-g4-fill-angle"],
               related: ["math-g4-m4-g4-fill-angle","math-g4-m5-g4-match-angle"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "protractor", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2579,6 +3853,13 @@
               prerequisites: ["math-g4-m4-g4-fill-line"],
               related: ["math-g4-m4-g4-fill-line","math-g4-m6-g4-draw-grid"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "parallel-perp", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2592,6 +3873,13 @@
               prerequisites: ["math-g4-m4-g4-fill-quad"],
               related: ["math-g4-m4-g4-fill-quad","math-g4-m6-g4-draw-para"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "grid-quad", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2605,6 +3893,13 @@
               prerequisites: ["math-g2-m6-solid-shape"],
               related: ["math-g5-m6-g5-draw-observe","math-g6-m6-g6-op-position"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "observe", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2618,6 +3913,13 @@
               prerequisites: ["math-g2-m6-motion"],
               related: ["math-g5-m6-g5-draw-sym","math-g4-m6-g4-draw-move"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "symmetry", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2631,6 +3933,13 @@
               prerequisites: ["math-g2-m6-motion"],
               related: ["math-g5-m6-g5-draw-rotate","math-g4-m6-g4-draw-sym"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "translate", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2649,6 +3958,13 @@
               prerequisites: ["math-g3-m8-g3-times"],
               related: ["math-g4-m8-g4-word-big","math-g4-m7-g4-pic-brace","math-g5-m7-g5-pic-segment"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "segment-multiple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2662,6 +3978,13 @@
               prerequisites: ["math-g1-m7-picture-add"],
               related: ["math-g4-m8-g4-word-div","math-g4-m7-g4-pic-segment"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "brace-addsub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2675,6 +3998,13 @@
               prerequisites: ["math-g4-m1-g4-oral-mul3x1"],
               related: ["math-g4-m8-g4-word-speed","math-g4-c5-c5-basic"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "speed-distance", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2688,6 +4018,13 @@
               prerequisites: ["math-g4-m1-g4-oral-dec"],
               related: ["math-g4-m8-g4-word-dec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-scene", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2706,6 +4043,13 @@
               prerequisites: ["math-g4-m4-g4-fill-bignum"],
               related: ["math-g4-m4-g4-fill-bignum","math-g4-m7-g4-pic-segment"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "big-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2719,6 +4063,13 @@
               prerequisites: ["math-g4-m2-g4-v-mul3x2"],
               related: ["math-g4-m7-g4-pic-speed","math-g4-c5-c5-basic","math-g4-c5-c5-meet"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mul-travel", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2732,6 +4083,13 @@
               prerequisites: ["math-g4-m2-g4-v-div2"],
               related: ["math-g4-m8-g4-word-price","math-g4-m8-g4-word-speed","math-g4-m7-g4-pic-brace"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "div-share", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2745,6 +4103,13 @@
               prerequisites: ["math-g4-m2-g4-v-mul3x2"],
               related: ["math-g4-m8-g4-word-div","math-g4-m8-g4-word-speed"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "price-qty", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2758,6 +4123,13 @@
               prerequisites: ["math-g4-m4-g4-fill-hectare"],
               related: ["math-g4-m4-g4-fill-hectare"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "area-hectare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2771,6 +4143,13 @@
               prerequisites: ["math-g4-m8-g4-word-div"],
               related: ["math-g4-m10-g4-reason-opt","math-g4-m8-g4-word-cr","math-g4-c8-c8-extreme"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "optimize", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2784,6 +4163,13 @@
               prerequisites: ["math-g4-m2-g4-v-mul3x2"],
               related: ["math-g4-m10-g4-reason-cr","math-g4-m8-g4-word-opt"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chicken-rabbit", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2797,6 +4183,13 @@
               prerequisites: ["math-g4-m2-g4-v-dec"],
               related: ["math-g4-m7-g4-pic-dec","math-g4-m2-g4-v-dec","math-g4-m3-g4-mix-dec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-pay", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2810,6 +4203,13 @@
               prerequisites: ["math-g4-m4-g4-fill-avg"],
               related: ["math-g4-m9-g4-stats-avg","math-g4-m4-g4-fill-avg"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "avg-score", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2828,6 +4228,13 @@
               prerequisites: ["math-g3-m9-g3-stats-table"],
               related: ["math-g4-m9-g4-stats-double","math-g4-m8-g4-word-avg","math-g5-m9-g5-stats-line1"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "bar-chart", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2841,6 +4248,13 @@
               prerequisites: ["math-g4-m9-g4-stats-bar"],
               related: ["math-g4-m9-g4-stats-bar","math-g5-m9-g5-stats-line2"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "double-bar", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2854,6 +4268,13 @@
               prerequisites: ["math-g4-m4-g4-fill-avg"],
               related: ["math-g4-m8-g4-word-avg","math-g4-m4-g4-fill-avg","math-g4-m9-g4-stats-bar"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "avg-stats", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2872,6 +4293,13 @@
               prerequisites: ["math-g4-m8-g4-word-opt"],
               related: ["math-g4-m8-g4-word-opt","math-g4-c8-c8-extreme","math-g4-m10-g4-reason-cr"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pancake", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2885,6 +4313,13 @@
               prerequisites: ["math-g4-m8-g4-word-cr"],
               related: ["math-g4-m8-g4-word-cr","math-g4-m10-g4-reason-opt"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "assume", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2898,6 +4333,13 @@
               prerequisites: ["math-g2-m10-logic-reasoning"],
               related: ["math-g5-m10-logic-reasoning","math-g5-m10-g5-reason-seq","math-g2-m10-logic-reasoning"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "logic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -2916,6 +4358,13 @@
               prerequisites: ["math-g4-m4-g4-fill-bignum"],
               related: ["math-g4-m4-g4-fill-bignum","math-g4-m5-g4-match-read","math-g4-m12-g4-choice-big"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "read", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2929,6 +4378,13 @@
               prerequisites: ["math-g4-m3-g4-mix-addlaw"],
               related: ["math-g4-m3-g4-mix-addlaw","math-g4-m5-g4-match-law","math-g4-m12-g4-choice-law"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "law", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2942,6 +4398,13 @@
               prerequisites: ["math-g4-m4-g4-fill-angle"],
               related: ["math-g4-m4-g4-fill-angle","math-g4-m12-g4-choice-angle"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2955,6 +4418,13 @@
               prerequisites: ["math-g4-m4-g4-fill-line"],
               related: ["math-g4-m4-g4-fill-line","math-g4-m6-g4-draw-para"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "line-ray", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2968,6 +4438,13 @@
               prerequisites: ["math-g4-m4-g4-fill-quotient"],
               related: ["math-g4-m4-g4-fill-quotient","math-g4-m2-g4-v-div2q"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "quotient", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2981,6 +4458,13 @@
               prerequisites: ["math-g4-m4-g4-fill-dec"],
               related: ["math-g4-m4-g4-fill-dec","math-g4-m12-g4-choice-dec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -2994,6 +4478,13 @@
               prerequisites: ["math-g4-m4-g4-fill-tri"],
               related: ["math-g4-m4-g4-fill-tri","math-g4-m12-g4-choice-shape"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "triangle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3007,6 +4498,13 @@
               prerequisites: ["math-g4-m9-g4-stats-bar"],
               related: ["math-g4-m9-g4-stats-bar","math-g4-m9-g4-stats-avg","math-g5-m11-stats"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "stats", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3025,6 +4523,13 @@
               prerequisites: ["math-g4-m4-g4-fill-bignum"],
               related: ["math-g4-m4-g4-fill-bignum","math-g4-m11-g4-judge-read"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "big-compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3038,6 +4543,13 @@
               prerequisites: ["math-g4-m2-g4-v-mul3x2"],
               related: ["math-g4-m2-g4-v-mul3x2","math-g4-m2-g4-v-div2"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "est-muldiv", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3051,6 +4563,13 @@
               prerequisites: ["math-g4-m4-g4-fill-angle"],
               related: ["math-g4-m4-g4-fill-angle","math-g4-m11-g4-judge-angle"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3064,6 +4583,13 @@
               prerequisites: ["math-g4-m4-g4-fill-quad"],
               related: ["math-g4-m4-g4-fill-quad","math-g4-m4-g4-fill-tri","math-g4-m5-g4-match-shape"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "shape", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3077,6 +4603,13 @@
               prerequisites: ["math-g4-m4-g4-fill-dec"],
               related: ["math-g4-m4-g4-fill-dec","math-g4-m11-g4-judge-dec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-meaning", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3090,6 +4623,13 @@
               prerequisites: ["math-g4-m3-g4-mix-addlaw"],
               related: ["math-g4-m3-g4-mix-addlaw","math-g4-m3-g4-mix-dist","math-g4-m11-g4-judge-law"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "law", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3108,6 +4648,13 @@
               prerequisites: ["math-g4-m2-g4-v-mul3x2","math-g4-m2-g4-v-div2"],
               related: ["math-g4-c1-c1-horizontal","math-g4-c2-c2-place","math-g4-m2-g4-v-mul3x2"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "vertical", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3121,6 +4668,13 @@
               prerequisites: ["math-g4-m3-g4-mix-order"],
               related: ["math-g4-c1-c1-vertical","math-g4-c1-c1-symbol","math-g4-m3-g4-mix-order"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "horizontal", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3134,6 +4688,13 @@
               prerequisites: ["math-g4-m4-g4-fill-op"],
               related: ["math-g4-c2-c2-place","math-g4-c1-c1-horizontal","math-g2-m10-logic-reasoning"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "symbol", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3147,6 +4708,13 @@
               prerequisites: ["math-g4-m3-g4-mix-addlaw"],
               related: ["math-g4-c1-c1-magic","math-g4-c1-c1-symbol"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "array", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3160,6 +4728,13 @@
               prerequisites: ["math-g4-c1-c1-array"],
               related: ["math-g4-c1-c1-array"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "magic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3178,6 +4753,13 @@
               prerequisites: ["math-g2-m1-add-100"],
               related: ["math-g4-c2-c2-divisible","math-g4-c2-c2-remainder","math-g4-m3-g4-mix-order"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "parity", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3191,6 +4773,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g4-c2-c2-factor","math-g4-c2-c2-prime"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "divisible", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3204,6 +4793,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g4-c2-c2-factor","math-g4-c2-c2-divisible","math-g5-m4-g5-fill-prime"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "prime", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3217,6 +4813,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g4-c2-c2-prime","math-g4-c2-c2-divisible"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "factor", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3230,6 +4833,13 @@
               prerequisites: ["math-g3-m1-g3-div1"],
               related: ["math-g4-c2-c2-divisible","math-g4-c2-c2-factor","math-g3-m1-g3-div1"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "remainder", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3243,6 +4853,13 @@
               prerequisites: ["math-g2-m4-read-10000"],
               related: ["math-g4-c1-c1-symbol","math-g2-m4-read-10000","math-g4-m4-g4-fill-bignum"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "place", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3261,6 +4878,13 @@
               prerequisites: ["math-g2-m10-logic-reasoning"],
               related: ["math-g4-c3-c3-am","math-g4-c3-c3-worst","math-g2-m10-logic-reasoning"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "enum", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3274,6 +4898,13 @@
               prerequisites: ["math-g3-m10-g3-combination"],
               related: ["math-g4-c3-c3-perm","math-g4-c3-c3-enum","math-g3-m10-g3-combination"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "am", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3287,6 +4918,13 @@
               prerequisites: ["math-g4-c3-c3-am"],
               related: ["math-g4-c3-c3-am","math-g4-c3-c3-worst"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "perm", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3300,6 +4938,13 @@
               prerequisites: ["math-g2-m6-solid-shape"],
               related: ["math-g4-c4-c4-count","math-g4-c3-c3-enum","math-g2-m6-solid-shape"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "geomcount", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3313,6 +4958,13 @@
               prerequisites: ["math-g4-c3-c3-enum"],
               related: ["math-g4-c3-c3-enum","math-g4-c8-c8-drawer"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "worst", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3331,6 +4983,13 @@
               prerequisites: ["math-g3-m6-g3-area"],
               related: ["math-g4-c4-c4-cutfill","math-g3-m6-g3-area","math-g3-m6-g3-perimeter"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pa", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3344,6 +5003,13 @@
               prerequisites: ["math-g4-c4-c4-pa"],
               related: ["math-g4-c4-c4-pa","math-g5-m4-g5-fill-area"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "cutfill", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3357,6 +5023,13 @@
               prerequisites: ["math-g4-m4-g4-fill-angle"],
               related: ["math-g4-c4-c4-pa","math-g4-c4-c4-count","math-g4-m4-g4-fill-angle"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3370,6 +5043,13 @@
               prerequisites: ["math-g2-m6-solid-shape"],
               related: ["math-g4-c3-c3-geomcount","math-g4-c4-c4-angle"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "count", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3383,6 +5063,13 @@
               prerequisites: ["math-g2-m6-motion"],
               related: ["math-g4-m6-g4-draw-sym","math-g4-m6-g4-draw-move","math-g5-m6-g5-draw-rotate"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "transform", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3396,6 +5083,13 @@
               prerequisites: ["math-g2-m6-solid-shape"],
               related: ["math-g5-m4-g5-fill-solid","math-g5-m6-g5-draw-net"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 12 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3414,6 +5108,13 @@
               prerequisites: ["math-g4-m8-g4-word-speed"],
               related: ["math-g4-c5-c5-meet","math-g4-c5-c5-chase","math-g4-m8-g4-word-speed"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "basic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3427,6 +5128,13 @@
               prerequisites: ["math-g4-c5-c5-basic"],
               related: ["math-g4-c5-c5-chase","math-g4-c5-c5-train","math-g4-c5-c5-basic"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "meet", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3440,6 +5148,13 @@
               prerequisites: ["math-g4-c5-c5-basic"],
               related: ["math-g4-c5-c5-meet","math-g4-c5-c5-train","math-g4-c5-c5-basic"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chase", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3453,6 +5168,13 @@
               prerequisites: ["math-g4-c5-c5-basic"],
               related: ["math-g4-c5-c5-meet","math-g4-c5-c5-river","math-g4-c5-c5-basic"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "train", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3466,6 +5188,13 @@
               prerequisites: ["math-g4-c5-c5-basic"],
               related: ["math-g4-c5-c5-meet","math-g4-c5-c5-basic"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "river", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3484,6 +5213,13 @@
               prerequisites: ["math-g4-m10-logic-reasoning"],
               related: ["math-g4-c8-c8-drawer","math-g4-m10-g4-reason-opt","math-g4-c3-c3-worst"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "extreme", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3497,6 +5233,13 @@
               prerequisites: ["math-g4-m10-logic-reasoning"],
               related: ["math-g4-c8-c8-logic","math-g4-c3-c3-worst","math-g4-m10-logic-reasoning"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "drawer", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3510,6 +5253,13 @@
               prerequisites: ["math-g4-m10-logic-reasoning"],
               related: ["math-g4-c8-c8-drawer","math-g5-m10-logic-reasoning","math-g4-m10-logic-reasoning"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "logic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3528,6 +5278,13 @@
               prerequisites: [],
               related: [],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "integrated", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3541,6 +5298,13 @@
               prerequisites: [],
               related: [],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "misc", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3554,6 +5318,13 @@
               prerequisites: [],
               related: [],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mock", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 1000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3578,6 +5349,13 @@
               prerequisites: ["math-g4-m1-g4-oral-dec"],
               related: ["math-g5-m2-g5-v-decmul","math-g5-m8-g5-word-decmul"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-mul-oral", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3591,6 +5369,13 @@
               prerequisites: ["math-g4-m2-g4-v-div2"],
               related: ["math-g5-m2-g5-v-divint","math-g5-m8-g5-word-decdiv"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-div-oral", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3604,6 +5389,13 @@
               prerequisites: ["math-g3-m4-g3-fraction"],
               related: ["math-g5-m3-g5-mix-fracmixed","math-g5-m8-g5-word-frac"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-addsub-oral", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3617,6 +5409,13 @@
               prerequisites: ["math-g4-m4-g4-fill-op"],
               related: ["math-g5-m4-g5-fill-equation","math-g5-m8-g5-word-equ"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "equation-oral", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3630,6 +5429,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g5-m4-g5-fill-fm","math-g5-m4-g5-fill-prime"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "factor-multiple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3648,6 +5454,13 @@
               prerequisites: ["math-g4-m2-g4-v-mul3x2"],
               related: ["math-g5-m1-g5-oral-decmul","math-g5-m8-g5-word-decmul","math-g5-m11-g5-judge-decmul"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-mul-vertical", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3661,6 +5474,13 @@
               prerequisites: ["math-g4-m2-g4-v-div2"],
               related: ["math-g5-m1-g5-oral-decdiv","math-g5-m2-g5-v-ddivdec","math-g5-m8-g5-word-decdiv"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-div-int", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3674,6 +5494,13 @@
               prerequisites: ["math-g5-m2-g5-v-divint"],
               related: ["math-g5-m2-g5-v-divint","math-g5-m4-g5-fill-repeating"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-div-dec", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3687,6 +5514,13 @@
               prerequisites: ["math-g5-m2-g5-v-ddivdec"],
               related: ["math-g5-m4-g5-fill-repeating","math-g5-m2-g5-v-ddivdec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "repeating-dec", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3705,6 +5539,13 @@
               prerequisites: ["math-g4-m3-g4-mix-order"],
               related: ["math-g5-m3-g5-mix-decsimple","math-g5-m1-g5-oral-decmul"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3718,6 +5559,13 @@
               prerequisites: ["math-g5-m1-g5-oral-fracadd"],
               related: ["math-g5-m3-g5-mix-fracsimple","math-g5-m1-g5-oral-fracadd"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-mixed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3731,6 +5579,13 @@
               prerequisites: ["math-g4-m3-g4-mix-addlaw"],
               related: ["math-g5-m3-g5-mix-fracsimple","math-g5-m3-g5-mix-decmixed"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-simple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3744,6 +5599,13 @@
               prerequisites: ["math-g5-m3-g5-mix-fracmixed"],
               related: ["math-g5-m3-g5-mix-fracmixed","math-g5-m3-g5-mix-decsimple"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-simple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3762,6 +5624,13 @@
               prerequisites: ["math-g4-m4-g4-fill-dec"],
               related: ["math-g5-m4-g5-fill-deccmp","math-g5-m1-g5-oral-decmul"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-place", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3775,6 +5644,13 @@
               prerequisites: ["math-g5-m4-g5-fill-decloc"],
               related: ["math-g5-m4-g5-fill-decloc"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3788,6 +5664,13 @@
               prerequisites: ["math-g4-m2-g4-v-mul3x2"],
               related: ["math-g5-m4-g5-fill-fm","math-g5-m2-g5-v-decmul"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "product-rule", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3801,6 +5684,13 @@
               prerequisites: ["math-g5-m2-g5-v-repeating"],
               related: ["math-g5-m2-g5-v-repeating","math-g5-m2-g5-v-ddivdec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "repeating-note", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3814,6 +5704,13 @@
               prerequisites: ["math-g4-m4-g4-fill-op"],
               related: ["math-g5-m8-g5-word-equ","math-g5-m5-g5-match-equ","math-g5-m7-g5-pic-balance"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "equation-prop", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3827,6 +5724,13 @@
               prerequisites: ["math-g2-m1-mult-table"],
               related: ["math-g5-m4-g5-fill-prime","math-g5-m11-g5-judge-fm","math-g5-m8-g5-word-fm","math-g5-m1-g5-oral-fm"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "factor-multiple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3840,6 +5744,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fm"],
               related: ["math-g5-m4-g5-fill-fm","math-g4-c2-c2-prime","math-g5-m11-g5-judge-fm"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "prime-composite", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3853,6 +5764,13 @@
               prerequisites: ["math-g3-m4-g3-fraction"],
               related: ["math-g5-m4-g5-fill-fracprop","math-g5-m8-g5-word-frac","math-g3-m4-g3-fraction"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-meaning", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3866,6 +5784,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fracmean"],
               related: ["math-g5-m4-g5-fill-fracmean","math-g5-m4-g5-fill-fracdec"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-property", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3879,6 +5804,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fracprop"],
               related: ["math-g5-m5-g5-match-fracdec","math-g5-m4-g5-fill-fracprop"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-decimal", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3892,6 +5824,13 @@
               prerequisites: ["math-g2-m6-grid-draw"],
               related: ["math-g5-m6-g5-draw-coord","math-g6-m6-g6-op-position"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "coordinate", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3905,6 +5844,13 @@
               prerequisites: ["math-g3-m6-g3-area"],
               related: ["math-g5-m5-g5-match-areaf","math-g5-m6-g5-draw-height","math-g5-m8-g5-word-area"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "area-formula", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3918,6 +5864,13 @@
               prerequisites: ["math-g2-m6-solid-shape"],
               related: ["math-g5-m5-g5-match-solid","math-g5-m6-g5-draw-net","math-g5-m8-g5-word-solid","math-g6-m4-g6-fill-cylinder-cone"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid-formula", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3931,6 +5884,13 @@
               prerequisites: ["math-g2-m6-motion"],
               related: ["math-g5-m6-g5-draw-rotate","math-g5-m11-motion","math-g5-m12-motion"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "rotation-elem", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3944,6 +5904,13 @@
               prerequisites: ["math-g2-m10-logic-reasoning"],
               related: ["math-g5-m9-g5-stats-possib","math-g5-m8-g5-word-possib","math-g5-m5-g5-match-possib"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "possibility", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3957,6 +5924,13 @@
               prerequisites: ["math-g4-m9-g4-stats-bar"],
               related: ["math-g5-m9-g5-stats-line1","math-g5-m8-g5-word-linechart","math-g5-m9-g5-stats-line2"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "linechart-feature", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -3975,6 +5949,13 @@
               prerequisites: ["math-g5-m4-g5-fill-area"],
               related: ["math-g5-m4-g5-fill-area","math-g5-m6-g5-draw-height"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "area-formula", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -3988,6 +5969,13 @@
               prerequisites: ["math-g5-m4-g5-fill-solid"],
               related: ["math-g5-m4-g5-fill-solid","math-g5-m6-g5-draw-net"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid-feature", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4001,6 +5989,13 @@
               prerequisites: ["math-g5-m4-g5-fill-possible"],
               related: ["math-g5-m4-g5-fill-possible","math-g5-m9-g5-stats-possib"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "possibility-desc", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4014,6 +6009,13 @@
               prerequisites: ["math-g5-m4-g5-fill-equation"],
               related: ["math-g5-m4-g5-fill-equation","math-g5-m8-g5-word-equ"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "equation-solve", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4027,6 +6029,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fracdec"],
               related: ["math-g5-m4-g5-fill-fracdec","math-g4-m5-g4-match-decfrac"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-decimal", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4045,6 +6054,13 @@
               prerequisites: ["math-g5-m4-g5-fill-rotate"],
               related: ["math-g5-m4-g5-fill-rotate","math-g5-m6-g5-draw-sym","math-g5-m11-motion"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "rotation-draw", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4058,6 +6074,13 @@
               prerequisites: ["math-g4-m6-g4-draw-view"],
               related: ["math-g4-m6-g4-draw-view","math-g5-m6-g5-draw-net"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "observe-3d", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4071,6 +6094,13 @@
               prerequisites: ["math-g5-m4-g5-fill-area"],
               related: ["math-g5-m4-g5-fill-area","math-g5-m5-g5-match-areaf","math-g5-m8-g5-word-area"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "polygon-height", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4084,6 +6114,13 @@
               prerequisites: ["math-g4-m6-g4-draw-sym"],
               related: ["math-g5-m6-g5-draw-rotate","math-g4-m6-g4-draw-sym"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "symmetry", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4097,6 +6134,13 @@
               prerequisites: ["math-g5-m4-g5-fill-coord"],
               related: ["math-g5-m4-g5-fill-coord","math-g6-m6-g6-op-position"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "coordinate-plot", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4110,6 +6154,13 @@
               prerequisites: ["math-g5-m4-g5-fill-solid"],
               related: ["math-g5-m4-g5-fill-solid","math-g5-m5-g5-match-solid","math-g6-m4-g6-fill-cylinder-cone"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid-net", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4128,6 +6179,13 @@
               prerequisites: ["math-g5-m4-g5-fill-equation"],
               related: ["math-g5-m8-g5-word-equ","math-g5-m4-g5-fill-equation"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "balance-equation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4141,6 +6199,13 @@
               prerequisites: ["math-g5-m4-g5-fill-area"],
               related: ["math-g5-m8-g5-word-area","math-g5-m4-g5-fill-area"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "area-picture", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4154,6 +6219,13 @@
               prerequisites: ["math-g4-m7-g4-pic-segment"],
               related: ["math-g5-m8-g5-word-decmul","math-g4-m7-g4-pic-segment"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "segment-multiple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4167,6 +6239,13 @@
               prerequisites: ["math-g3-m8-g3-times"],
               related: ["math-g5-m8-g5-word-tree","math-g5-m10-g5-reason-tree3"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "tree-planting", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4185,6 +6264,13 @@
               prerequisites: ["math-g5-m2-g5-v-decmul"],
               related: ["math-g5-m2-g5-v-decmul","math-g5-m8-g5-word-decdiv","math-g5-m1-g5-oral-decmul"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-mul-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4198,6 +6284,13 @@
               prerequisites: ["math-g5-m2-g5-v-divint"],
               related: ["math-g5-m8-g5-word-decmul","math-g5-m2-g5-v-divint"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-div-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4211,6 +6304,13 @@
               prerequisites: ["math-g5-m4-g5-fill-equation"],
               related: ["math-g5-m4-g5-fill-equation","math-g5-m7-g5-pic-balance","math-g6-m3-g6-mixed-solve-equation"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "equation-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4224,6 +6324,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fm"],
               related: ["math-g5-m4-g5-fill-fm","math-g5-m8-g5-word-frac"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "factor-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4237,6 +6344,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fracmean"],
               related: ["math-g5-m4-g5-fill-fracmean","math-g5-m8-g5-word-fm","math-g5-m1-g5-oral-fracadd"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4250,6 +6364,13 @@
               prerequisites: ["math-g5-m4-g5-fill-area"],
               related: ["math-g5-m4-g5-fill-area","math-g5-m7-g5-pic-area","math-g5-m8-g5-word-solid"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "area-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4263,6 +6384,13 @@
               prerequisites: ["math-g5-m4-g5-fill-solid"],
               related: ["math-g5-m4-g5-fill-solid","math-g5-m8-g5-word-area","math-g6-m8-g6-app-cyl-cone"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4276,6 +6404,13 @@
               prerequisites: ["math-g5-m4-g5-fill-possible"],
               related: ["math-g5-m4-g5-fill-possible","math-g5-m9-g5-stats-possib"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "possibility-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4289,6 +6424,13 @@
               prerequisites: ["math-g5-m4-g5-fill-linechart"],
               related: ["math-g5-m4-g5-fill-linechart","math-g5-m9-g5-stats-line1"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "linechart-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4302,6 +6444,13 @@
               prerequisites: ["math-g5-m7-g5-pic-tree"],
               related: ["math-g5-m7-g5-pic-tree","math-g5-m10-g5-reason-tree3","math-g5-m8-g5-word-fm"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "tree-app", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4315,6 +6464,13 @@
               prerequisites: ["math-g5-m8-g5-word-decdiv"],
               related: ["math-g5-m10-g5-reason-defect","math-g5-m8-g5-word-decdiv"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "defective", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4333,6 +6489,13 @@
               prerequisites: ["math-g5-m4-g5-fill-possible"],
               related: ["math-g5-m8-g5-word-possib","math-g6-m9-g6-stat-possibility","math-g5-m4-g5-fill-possible"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "possibility-compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4346,6 +6509,13 @@
               prerequisites: ["math-g5-m4-g5-fill-linechart"],
               related: ["math-g5-m9-g5-stats-line2","math-g5-m8-g5-word-linechart","math-g5-m4-g5-fill-linechart"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "linechart-single", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4359,6 +6529,13 @@
               prerequisites: ["math-g5-m9-g5-stats-line1"],
               related: ["math-g5-m9-g5-stats-line1","math-g6-m9-g6-stat-pie-chart"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "linechart-double", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4377,6 +6554,13 @@
               prerequisites: ["math-g5-m8-g5-word-tree"],
               related: ["math-g5-m8-g5-word-tree","math-g5-m10-g5-reason-seq","math-g5-m7-g5-pic-tree"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "tree-three", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4390,6 +6574,13 @@
               prerequisites: ["math-g5-m8-g5-word-defect"],
               related: ["math-g5-m8-g5-word-defect","math-g5-m10-g5-reason-seq"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "defective-scale", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4403,6 +6594,13 @@
               prerequisites: ["math-g4-m10-logic-reasoning"],
               related: ["math-g4-m10-logic-reasoning","math-g5-m10-g5-reason-seq","math-g5-m10-g5-reason-tree3"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "logic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4416,6 +6614,13 @@
               prerequisites: ["math-g1-m4-number-pattern"],
               related: ["math-g5-m10-logic-reasoning","math-g6-m10-g6-reason-number-shape"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sequence", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4434,6 +6639,13 @@
               prerequisites: ["math-g5-m2-g5-v-decmul"],
               related: ["math-g5-m12-g5-choice-decmul","math-g5-m2-g5-v-decmul"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4447,6 +6659,13 @@
               prerequisites: ["math-g5-m4-g5-fill-equation"],
               related: ["math-g5-m12-g5-choice-equ","math-g5-m4-g5-fill-equation"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "equation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4460,6 +6679,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fm"],
               related: ["math-g5-m12-g5-choice-fm","math-g5-m4-g5-fill-fm"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "factor-multiple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4473,6 +6699,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fracmean"],
               related: ["math-g5-m12-g5-choice-frac","math-g5-m4-g5-fill-fracmean"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "fraction", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4486,6 +6719,13 @@
               prerequisites: ["math-g5-m4-g5-fill-area"],
               related: ["math-g5-m12-g5-choice-area","math-g5-m4-g5-fill-area"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "area", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4499,6 +6739,13 @@
               prerequisites: ["math-g5-m4-g5-fill-solid"],
               related: ["math-g5-m12-g5-choice-solid","math-g5-m4-g5-fill-solid"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4512,6 +6759,13 @@
               prerequisites: ["math-g5-m4-g5-fill-rotate"],
               related: ["math-g5-m12-motion","math-g5-m6-g5-draw-rotate","math-g5-m4-g5-fill-rotate"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "rotation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4525,6 +6779,13 @@
               prerequisites: ["math-g5-m4-g5-fill-possible"],
               related: ["math-g5-m12-g5-choice-possib","math-g5-m4-g5-fill-possible"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "possibility", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4538,6 +6799,13 @@
               prerequisites: ["math-g5-m4-g5-fill-linechart"],
               related: ["math-g5-m12-stats","math-g4-m11-stats"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "stats", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4556,6 +6824,13 @@
               prerequisites: ["math-g5-m2-g5-v-decmul"],
               related: ["math-g5-m11-g5-judge-decmul","math-g5-m2-g5-v-decmul"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4569,6 +6844,13 @@
               prerequisites: ["math-g5-m4-g5-fill-equation"],
               related: ["math-g5-m11-g5-judge-equ","math-g5-m4-g5-fill-equation"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "equation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4582,6 +6864,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fm"],
               related: ["math-g5-m11-g5-judge-fm","math-g5-m4-g5-fill-fm"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "factor-multiple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4595,6 +6884,13 @@
               prerequisites: ["math-g5-m4-g5-fill-fracmean"],
               related: ["math-g5-m11-g5-judge-frac","math-g5-m4-g5-fill-fracmean"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "fraction", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4608,6 +6904,13 @@
               prerequisites: ["math-g5-m4-g5-fill-area"],
               related: ["math-g5-m11-g5-judge-area","math-g5-m4-g5-fill-area"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "area", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4621,6 +6924,13 @@
               prerequisites: ["math-g5-m4-g5-fill-solid"],
               related: ["math-g5-m11-g5-judge-solid","math-g5-m4-g5-fill-solid"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4634,6 +6944,13 @@
               prerequisites: ["math-g5-m4-g5-fill-rotate"],
               related: ["math-g5-m11-motion","math-g5-m6-g5-draw-rotate","math-g5-m4-g5-fill-rotate"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "rotation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4647,6 +6964,13 @@
               prerequisites: ["math-g5-m4-g5-fill-possible"],
               related: ["math-g5-m11-g5-judge-possib","math-g5-m4-g5-fill-possible"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "possibility", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4660,6 +6984,13 @@
               prerequisites: ["math-g5-m4-g5-fill-linechart"],
               related: ["math-g5-m11-stats","math-g4-m11-stats"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "stats", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4678,6 +7009,13 @@
               prerequisites: ["math-g4-c1-c1-vertical"],
               related: ["math-g5-c1-digit-puzzle-horizontal"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "vertical", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4691,6 +7029,13 @@
               prerequisites: ["math-g4-c1-c1-horizontal"],
               related: ["math-g5-c1-digit-puzzle-vertical","math-g5-c1-digit-puzzle-symbol"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "horizontal", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4704,6 +7049,13 @@
               prerequisites: ["math-g4-c1-c1-symbol"],
               related: ["math-g5-c1-digit-puzzle-vertical","math-g5-c2-place-value"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "symbol", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4717,6 +7069,13 @@
               prerequisites: ["math-g4-c1-c1-array"],
               related: ["math-g5-c1-number-array-radial"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "array-closed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4730,6 +7089,13 @@
               prerequisites: ["math-g4-c1-c1-array"],
               related: ["math-g5-c1-number-array-closed","math-g5-c1-number-array-composite"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "array-radial", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4743,6 +7109,13 @@
               prerequisites: ["math-g4-c1-c1-array"],
               related: ["math-g5-c1-number-array-closed","math-g5-c1-magic-square-3"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "array-composite", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4756,6 +7129,13 @@
               prerequisites: ["math-g4-c1-c1-magic"],
               related: ["math-g5-c1-number-array-composite","math-g5-c1-magic-square-4"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "magic3", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4769,6 +7149,13 @@
               prerequisites: ["math-g4-c1-c1-magic"],
               related: ["math-g5-c1-magic-square-3"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "magic4", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4787,6 +7174,13 @@
               prerequisites: ["math-g4-c2-c2-divisible"],
               related: ["math-g5-c2-gcd-lcm","math-g5-c2-factor-count-sum"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "divisibility", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4800,6 +7194,13 @@
               prerequisites: ["math-g4-c2-c2-parity"],
               related: ["math-g5-c2-remainder-congruence"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "parity", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4813,6 +7214,13 @@
               prerequisites: ["math-g4-c2-c2-prime"],
               related: ["math-g5-c2-prime-factorization"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "prime", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4826,6 +7234,13 @@
               prerequisites: ["math-g4-c2-c2-prime"],
               related: ["math-g5-c2-factor-count-sum","math-g5-c2-gcd-lcm","math-g5-c2-perfect-square"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "prime-factor", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4839,6 +7254,13 @@
               prerequisites: ["math-g4-c2-c2-factor"],
               related: ["math-g5-c2-perfect-square","math-g5-c2-number-theory-extreme"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "factor-count", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4852,6 +7274,13 @@
               prerequisites: ["math-g4-c2-c2-factor"],
               related: ["math-g5-c2-divisibility"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "gcd-lcm", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4865,6 +7294,13 @@
               prerequisites: ["math-g4-c2-c2-remainder"],
               related: ["math-g5-c2-parity-analysis","math-g5-c2-number-theory-extreme"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "remainder", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4878,6 +7314,13 @@
               prerequisites: ["math-g4-c2-c2-place"],
               related: ["math-g5-c1-digit-puzzle-symbol"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "place", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4891,6 +7334,13 @@
               prerequisites: ["math-g4-c2-c2-factor"],
               related: ["math-g5-c2-prime-factorization","math-g5-c2-number-theory-extreme"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "perfect-square", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4904,6 +7354,13 @@
               prerequisites: ["math-g4-c2-c2-factor"],
               related: ["math-g5-c2-perfect-square","math-g5-c9-diophantine-equation"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "nt-extreme", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -4922,6 +7379,13 @@
               prerequisites: ["math-g4-c3-c3-am"],
               related: ["math-g5-c3-multiplication-principle"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "add-principle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4935,6 +7399,13 @@
               prerequisites: ["math-g4-c3-c3-am"],
               related: ["math-g5-c3-addition-principle","math-g5-c3-permutation"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mult-principle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4948,6 +7419,13 @@
               prerequisites: ["math-g4-c3-c3-perm"],
               related: ["math-g5-c3-combination","math-g5-c3-bundling-method"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "permutation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4961,6 +7439,13 @@
               prerequisites: ["math-g4-c3-c3-perm"],
               related: ["math-g5-c3-permutation","math-g5-c3-stars-bars"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "combination", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4974,6 +7459,13 @@
               prerequisites: ["math-g4-c3-c3-enum"],
               related: ["math-g5-c9-chicken-rabbit"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "enumeration", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -4987,6 +7479,13 @@
               prerequisites: ["math-g4-c3-c3-perm"],
               related: ["math-g5-c3-insertion-method"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "bundling", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5000,6 +7499,13 @@
               prerequisites: ["math-g4-c3-c3-perm"],
               related: ["math-g5-c3-bundling-method"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "insertion", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5013,6 +7519,13 @@
               prerequisites: ["math-g4-c3-c3-perm"],
               related: ["math-g5-c3-combination","math-g5-c9-diophantine-equation"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "stars-bars", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5026,6 +7539,13 @@
               prerequisites: ["math-g4-c3-c3-worst"],
               related: ["math-g5-c3-worst-case-principle"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pigeonhole", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5039,6 +7559,13 @@
               prerequisites: ["math-g4-c3-c3-worst"],
               related: ["math-g5-c3-pigeonhole-principle"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "worst-case", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5057,6 +7584,13 @@
               prerequisites: ["math-g4-c4-c4-pa"],
               related: ["math-g5-c4-equal-area-transform"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "area-basic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5070,6 +7604,13 @@
               prerequisites: ["math-g4-c4-c4-cutfill"],
               related: ["math-g5-c4-half-model","math-g5-c4-bird-head-model"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "equal-area", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5083,6 +7624,13 @@
               prerequisites: ["math-g4-c4-c4-pa"],
               related: ["math-g5-c4-butterfly-model","math-g5-c4-half-model"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "bird-head", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5096,6 +7644,13 @@
               prerequisites: ["math-g4-c4-c4-pa"],
               related: ["math-g5-c4-swallow-tail-model","math-g5-c4-bird-head-model"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "butterfly", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5109,6 +7664,13 @@
               prerequisites: ["math-g4-c4-c4-pa"],
               related: ["math-g5-c4-butterfly-model","math-g5-c4-half-model"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "swallow-tail", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5122,6 +7684,13 @@
               prerequisites: ["math-g4-c4-c4-pa"],
               related: ["math-g5-c4-bird-head-model"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "half", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5135,6 +7704,13 @@
               prerequisites: ["math-g4-c4-c4-pa"],
               related: ["math-g5-c4-angle-calculation"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5148,6 +7724,13 @@
               prerequisites: ["math-g4-c4-c4-solid"],
               related: ["math-g5-c4-painted-cube"],
               difficulty: 4,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5161,6 +7744,13 @@
               prerequisites: ["math-g4-c4-c4-solid"],
               related: ["math-g5-c4-solid-geometry"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "painted-cube", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5174,6 +7764,13 @@
               prerequisites: ["math-g4-c4-c4-pa"],
               related: ["math-g5-c4-lattice-area","math-g5-c4-angle-calculation"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pythagorean", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5187,6 +7784,13 @@
               prerequisites: ["math-g4-c4-c4-pa"],
               related: ["math-g5-c4-pythagorean-theorem"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "lattice", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5200,6 +7804,13 @@
               prerequisites: ["math-g4-c4-c4-angle"],
               related: ["math-g5-c4-circle-sector"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5218,6 +7829,13 @@
               prerequisites: ["math-g4-c5-c5-basic"],
               related: ["math-g5-c5-meet-problem","math-g5-c5-chase-problem"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "basic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5231,6 +7849,13 @@
               prerequisites: ["math-g4-c5-c5-meet"],
               related: ["math-g5-c5-chase-problem","math-g5-c5-circular-track"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "meet", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5244,6 +7869,13 @@
               prerequisites: ["math-g4-c5-c5-chase"],
               related: ["math-g5-c5-meet-problem","math-g5-c5-clock-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chase", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5257,6 +7889,13 @@
               prerequisites: ["math-g4-c5-c5-train"],
               related: ["math-g5-c5-boat-stream"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "train", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5270,6 +7909,13 @@
               prerequisites: ["math-g4-c5-c5-river"],
               related: ["math-g5-c5-circular-track"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "boat", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5283,6 +7929,13 @@
               prerequisites: ["math-g4-c5-c5-meet"],
               related: ["math-g5-c5-meet-problem","math-g5-c5-ratio-motion"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circular", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5296,6 +7949,13 @@
               prerequisites: ["math-g4-c5-c5-chase"],
               related: ["math-g5-c5-circular-track"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "clock", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5309,6 +7969,13 @@
               prerequisites: ["math-g4-c5-c5-basic"],
               related: ["math-g5-c5-ratio-motion"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "avg-speed", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5322,6 +7989,13 @@
               prerequisites: ["math-g4-c5-c5-basic"],
               related: ["math-g5-c5-average-speed","math-g5-c9-fraction-percent-application"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "ratio", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5340,6 +8014,13 @@
               prerequisites: ["math-g3-m4-g3-fraction"],
               related: ["math-g5-c6-concentration-problem","math-g5-c5-basic-motion"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "work", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5353,6 +8034,13 @@
               prerequisites: ["math-g3-m4-g3-fraction"],
               related: ["math-g5-c6-work-problem","math-g5-c9-fraction-percent-application"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "concentration", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5371,6 +8059,13 @@
               prerequisites: ["math-g4-m3-g4-mix-dist"],
               related: ["math-g5-c7-rounding-calc","math-g5-c7-fraction-splitting"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "extract-factor", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5384,6 +8079,13 @@
               prerequisites: ["math-g4-m3-g4-mix-order"],
               related: ["math-g5-c7-extract-common-factor"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "rounding", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5397,6 +8099,13 @@
               prerequisites: ["math-g3-m4-g3-fraction"],
               related: ["math-g5-c7-integer-splitting","math-g5-c7-complex-fraction"],
               difficulty: 4,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-split", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5410,6 +8119,13 @@
               prerequisites: ["math-g4-m3-g4-mix-dist"],
               related: ["math-g5-c7-fraction-splitting"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "int-split", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5423,6 +8139,13 @@
               prerequisites: ["math-g1-m4-number-pattern"],
               related: ["math-g5-c9-periodic-problem"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "series", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5436,6 +8159,13 @@
               prerequisites: ["math-g3-m4-g3-decimal"],
               related: ["math-g5-c7-complex-fraction"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "recurring", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5449,6 +8179,13 @@
               prerequisites: ["math-g4-m3-g4-mix-order"],
               related: ["math-g5-c7-estimate-bounds"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "define-op", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5462,6 +8199,13 @@
               prerequisites: ["math-g3-m4-g3-fraction"],
               related: ["math-g5-c7-estimate-bounds"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5475,6 +8219,13 @@
               prerequisites: ["math-g4-m12-g4-choice-est"],
               related: ["math-g5-c7-complex-fraction","math-g5-c7-compare-size"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "estimate", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5488,6 +8239,13 @@
               prerequisites: ["math-g3-m4-g3-fraction"],
               related: ["math-g5-c7-fraction-splitting","math-g5-c7-recurring-decimal-frac"],
               difficulty: 4,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "complex-frac", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5506,6 +8264,13 @@
               prerequisites: ["math-g4-c8-c8-extreme"],
               related: ["math-g5-c2-number-theory-extreme","math-g5-c3-worst-case-principle"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "extremum", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5519,6 +8284,13 @@
               prerequisites: ["math-g4-c8-c8-logic"],
               related: ["math-g5-c9-inclusion-exclusion"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "logic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5532,6 +8304,13 @@
               prerequisites: ["math-g4-c8-c8-logic"],
               related: ["math-g5-c3-pigeonhole-principle","math-g5-c8-extremum-problem"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "winning", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5550,6 +8329,13 @@
               prerequisites: ["math-g4-m8-g4-word-div"],
               related: ["math-g5-c9-age-problem","math-g5-c9-chicken-rabbit"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sum-diff", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5563,6 +8349,13 @@
               prerequisites: ["math-g4-m8-g4-word-div"],
               related: ["math-g5-c9-sum-diff-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "age", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5576,6 +8369,13 @@
               prerequisites: ["math-g4-m8-g4-word-div"],
               related: ["math-g5-c9-chicken-rabbit","math-g5-c9-average-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "profit-loss", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5589,6 +8389,13 @@
               prerequisites: ["math-g4-m8-g4-word-cr"],
               related: ["math-g5-c9-sum-diff-problem","math-g5-c9-profit-loss-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chicken-rabbit", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5602,6 +8409,13 @@
               prerequisites: ["math-g4-m8-g4-word-avg"],
               related: ["math-g5-c9-profit-loss-problem"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "average", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5615,6 +8429,13 @@
               prerequisites: ["math-g1-m4-number-pattern"],
               related: ["math-g5-c9-phalanx-problem"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "planting", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5628,6 +8449,13 @@
               prerequisites: ["math-g4-m8-g4-word-div"],
               related: ["math-g5-c9-planting-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "phalanx", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5641,6 +8469,13 @@
               prerequisites: ["math-g1-m4-number-pattern"],
               related: ["math-g5-c7-arithmetic-series"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "periodic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5654,6 +8489,13 @@
               prerequisites: [],
               related: ["math-g5-c6-work-problem","math-g5-c9-fraction-percent-application"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "grass", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5667,6 +8509,13 @@
               prerequisites: ["math-g3-m4-g3-fraction"],
               related: ["math-g5-c6-work-problem","math-g5-c6-concentration-problem","math-g5-c5-ratio-motion"],
               difficulty: 4,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-percent", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5680,6 +8529,13 @@
               prerequisites: ["math-g3-m4-g3-fraction"],
               related: ["math-g5-c9-fraction-percent-application","math-g5-c9-equation-linear-1"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "economics", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5693,6 +8549,13 @@
               prerequisites: ["math-g4-c3-c3-enum"],
               related: ["math-g5-c3-addition-principle","math-g5-c8-logic-inference"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "inclusion-exclusion", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5706,6 +8569,13 @@
               prerequisites: ["math-g4-m4-g4-fill-op"],
               related: ["math-g5-c9-equation-linear-2","math-g5-c5-ratio-motion"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "eq1", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5719,6 +8589,13 @@
               prerequisites: ["math-g4-m4-g4-fill-op"],
               related: ["math-g5-c9-diophantine-equation"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "eq2", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5732,6 +8609,13 @@
               prerequisites: ["math-g4-m4-g4-fill-op"],
               related: ["math-g5-c2-number-theory-extreme","math-g5-c3-stars-bars"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "diophantine", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5756,6 +8640,13 @@
               prerequisites: ["math-g5-m1-g5-oral-fracadd"],
               related: ["math-g6-m1-g6-oral-frac-mult-frac","math-g6-m8-g6-app-frac-mult"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-mult-int", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5769,6 +8660,13 @@
               prerequisites: ["math-g6-m1-g6-oral-frac-mult-int"],
               related: ["math-g6-m1-g6-oral-frac-mult-int","math-g6-m2-g6-calc-frac-mult-div"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-mult-frac", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5782,6 +8680,13 @@
               prerequisites: ["math-g5-m1-g5-oral-fracadd"],
               related: ["math-g6-m1-g6-oral-frac-div-frac","math-g6-m8-g6-app-frac-div"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-div-int", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5795,6 +8700,13 @@
               prerequisites: ["math-g6-m1-g6-oral-frac-div-int"],
               related: ["math-g6-m1-g6-oral-frac-div-int","math-g6-m8-g6-app-frac-div"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-div-frac", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5808,6 +8720,13 @@
               prerequisites: ["math-g5-m4-g5-fill-decloc"],
               related: ["math-g6-m4-g6-fill-percent","math-g6-m12-g6-choice-percent"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-perc", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5821,6 +8740,13 @@
               prerequisites: ["math-g5-m2-g5-v-divint"],
               related: ["math-g6-m4-g6-fill-ratio","math-g6-m5-g6-match-proportion"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "ratio-simp", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5834,6 +8760,13 @@
               prerequisites: ["math-g6-m4-g6-fill-negative"],
               related: ["math-g6-m4-g6-fill-negative","math-g6-m11-g6-judge-negative"],
               difficulty: 1,
+              spiral_level: 6,
+              max_spiral_level: 6,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "neg-add-sub", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 20 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5852,6 +8785,13 @@
               prerequisites: ["math-g5-m2-g5-v-decmul"],
               related: ["math-g6-m2-g6-calc-dec-div","math-g5-m2-g5-v-decmul"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-mult", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5865,6 +8805,13 @@
               prerequisites: ["math-g5-m2-g5-v-ddivdec"],
               related: ["math-g6-m2-g6-calc-dec-mult","math-g5-m2-g5-v-ddivdec"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "dec-div", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5878,6 +8825,13 @@
               prerequisites: ["math-g6-m1-g6-oral-frac-mult-frac"],
               related: ["math-g6-m3-g6-mixed-frac-order","math-g6-m1-g6-oral-frac-mult-frac"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-mult-div", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5891,6 +8845,13 @@
               prerequisites: ["math-g6-m4-g6-fill-ratio"],
               related: ["math-g6-m8-g6-app-ratio-prop","math-g6-m4-g6-fill-ratio"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solve-proportion", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5909,6 +8870,13 @@
               prerequisites: ["math-g6-m2-g6-calc-frac-mult-div"],
               related: ["math-g6-m3-g6-mixed-frac-simple","math-g6-m2-g6-calc-frac-mult-div"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-order", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5922,6 +8890,13 @@
               prerequisites: ["math-g5-m3-g5-mix-fracsimple"],
               related: ["math-g6-m3-g6-mixed-frac-order","math-g5-m3-g5-mix-fracsimple"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-simple", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5935,6 +8910,13 @@
               prerequisites: ["math-g5-m8-g5-word-equ"],
               related: ["math-g6-m2-g6-calc-solve-proportion","math-g5-m8-g5-word-equ"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solve-equation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -5953,6 +8935,13 @@
               prerequisites: ["math-g5-m4-g5-fill-decloc"],
               related: ["math-g6-m1-g6-oral-neg-add-sub","math-g6-m11-g6-judge-negative","math-g6-m12-g6-choice-negative"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "negative", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5966,6 +8955,13 @@
               prerequisites: ["math-g6-m1-g6-oral-dec-perc"],
               related: ["math-g6-m8-g6-app-percent-discount","math-g6-m12-g6-choice-percent","math-g6-m11-g6-judge-percent-ratio"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "percent", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5979,6 +8975,13 @@
               prerequisites: ["math-g6-m1-g6-oral-ratio-simp"],
               related: ["math-g6-m8-g6-app-ratio-prop","math-g6-m5-g6-match-proportion","math-g6-m2-g6-calc-solve-proportion"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "ratio", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -5992,6 +8995,13 @@
               prerequisites: ["math-g5-m4-g5-fill-area"],
               related: ["math-g6-m6-g6-op-circle","math-g6-m8-g6-app-circle","math-g6-m11-g6-judge-circle"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6005,6 +9015,13 @@
               prerequisites: ["math-g5-m4-g5-fill-solid"],
               related: ["math-g6-m8-g6-app-cyl-cone","math-g6-m11-g6-judge-cyl-cone","math-g6-m12-g6-choice-cyl-cone"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "cylinder-cone", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6018,6 +9035,13 @@
               prerequisites: ["math-g5-m9-g5-stats-line1"],
               related: ["math-g6-m9-g6-stat-pie-chart","math-g6-m7-g6-pic-pie-chart","math-g6-m5-g6-match-chart"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pie-chart", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6031,6 +9055,13 @@
               prerequisites: ["math-g2-m4-length-unit"],
               related: ["math-g2-m4-length-unit","math-g6-m8-g6-app-ratio-prop"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "unit-convert", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6049,6 +9080,13 @@
               prerequisites: ["math-g6-m4-g6-fill-ratio"],
               related: ["math-g6-m4-g6-fill-ratio","math-g6-m8-g6-app-ratio-prop"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "proportion", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6062,6 +9100,13 @@
               prerequisites: ["math-g6-m4-g6-fill-circle"],
               related: ["math-g6-m4-g6-fill-circle","math-g6-m4-g6-fill-cylinder-cone"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "formula", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6075,6 +9120,13 @@
               prerequisites: ["math-g6-m4-g6-fill-pie-chart"],
               related: ["math-g6-m4-g6-fill-pie-chart","math-g6-m9-g6-stat-pie-chart"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chart", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6093,6 +9145,13 @@
               prerequisites: ["math-g6-m4-g6-fill-circle"],
               related: ["math-g6-m4-g6-fill-circle","math-g6-m6-g6-op-rotate-scale"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6106,6 +9165,13 @@
               prerequisites: ["math-g5-m6-g5-draw-sym"],
               related: ["math-g6-m6-g6-op-rotate-scale","math-g5-m6-g5-draw-sym"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "symmetry", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6119,6 +9185,13 @@
               prerequisites: ["math-g5-m6-g5-draw-rotate"],
               related: ["math-g6-m6-g6-op-circle","math-g6-m6-g6-op-position"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "rotate-scale", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6132,6 +9205,13 @@
               prerequisites: ["math-g5-m4-g5-fill-coord"],
               related: ["math-g6-m7-g6-pic-scale","math-g5-m4-g5-fill-coord"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "position", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6150,6 +9230,13 @@
               prerequisites: ["math-g6-m8-g6-app-frac-mult"],
               related: ["math-g6-m8-g6-app-frac-mult","math-g6-m8-g6-app-frac-div"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-line", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6163,6 +9250,13 @@
               prerequisites: ["math-g6-m4-g6-fill-pie-chart"],
               related: ["math-g6-m9-g6-stat-pie-chart","math-g6-m4-g6-fill-pie-chart"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pie-chart", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6176,6 +9270,13 @@
               prerequisites: ["math-g6-m4-g6-fill-ratio"],
               related: ["math-g6-m8-g6-app-ratio-prop","math-g6-m6-g6-op-position"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "scale", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6194,6 +9295,13 @@
               prerequisites: ["math-g6-m1-g6-oral-frac-mult-frac"],
               related: ["math-g6-m8-g6-app-frac-div","math-g6-m7-g6-pic-frac-line","math-g6-m1-g6-oral-frac-mult-frac"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-mult", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6207,6 +9315,13 @@
               prerequisites: ["math-g6-m1-g6-oral-frac-div-frac"],
               related: ["math-g6-m8-g6-app-frac-mult","math-g6-m7-g6-pic-frac-line","math-g6-m8-g6-app-travel-work"],
               difficulty: 1,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-div", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6220,6 +9335,13 @@
               prerequisites: ["math-g6-m4-g6-fill-percent"],
               related: ["math-g6-m4-g6-fill-percent","math-g6-m12-g6-choice-percent"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "percent-discount", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6233,6 +9355,13 @@
               prerequisites: ["math-g6-m4-g6-fill-ratio"],
               related: ["math-g6-m4-g6-fill-ratio","math-g6-m7-g6-pic-scale","math-g6-m5-g6-match-proportion"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "ratio-prop", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6246,6 +9375,13 @@
               prerequisites: ["math-g6-m4-g6-fill-circle"],
               related: ["math-g6-m4-g6-fill-circle","math-g6-m6-g6-op-circle","math-g6-m12-g6-choice-circle"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6259,6 +9395,13 @@
               prerequisites: ["math-g6-m4-g6-fill-cylinder-cone"],
               related: ["math-g6-m4-g6-fill-cylinder-cone","math-g6-m12-g6-choice-cyl-cone","math-g5-m8-g5-word-solid"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "cyl-cone", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6272,6 +9415,13 @@
               prerequisites: ["math-g6-m8-g6-app-frac-div"],
               related: ["math-g4-c5-c5-meet","math-g3-m4-g3-fraction","math-g6-m8-g6-app-frac-div"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "travel-work", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6285,6 +9435,13 @@
               prerequisites: ["math-g5-m10-g5-reason-tree3"],
               related: ["math-g6-m10-g6-reason-pigeonhole","math-g5-m10-g5-reason-tree3"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pigeonhole", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6303,6 +9460,13 @@
               prerequisites: ["math-g6-m4-g6-fill-pie-chart"],
               related: ["math-g6-m7-g6-pic-pie-chart","math-g6-m5-g6-match-chart","math-g6-m4-g6-fill-pie-chart"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pie-chart", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6316,6 +9480,13 @@
               prerequisites: ["math-g5-m9-g5-stats-possib"],
               related: ["math-g5-m9-g5-stats-possib","math-g5-m8-g5-word-possib"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "possibility", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6334,6 +9505,13 @@
               prerequisites: ["math-g5-m10-g5-reason-seq"],
               related: ["math-g6-m10-g6-reason-pigeonhole","math-g5-m10-g5-reason-seq"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "number-shape", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6347,6 +9525,13 @@
               prerequisites: ["math-g6-m8-g6-app-pigeonhole"],
               related: ["math-g6-m8-g6-app-pigeonhole","math-g6-c3-worst-case-principle"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pigeonhole", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6365,6 +9550,13 @@
               prerequisites: ["math-g6-m4-g6-fill-circle"],
               related: ["math-g6-m12-g6-choice-circle","math-g6-m4-g6-fill-circle"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6378,6 +9570,13 @@
               prerequisites: ["math-g6-m4-g6-fill-cylinder-cone"],
               related: ["math-g6-m12-g6-choice-cyl-cone","math-g6-m4-g6-fill-cylinder-cone"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "cyl-cone", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6391,6 +9590,13 @@
               prerequisites: ["math-g6-m4-g6-fill-negative"],
               related: ["math-g6-m12-g6-choice-negative","math-g6-m4-g6-fill-negative"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "negative", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6404,6 +9610,13 @@
               prerequisites: ["math-g6-m4-g6-fill-percent"],
               related: ["math-g6-m12-g6-choice-percent","math-g6-m4-g6-fill-percent"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "percent-ratio", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6417,6 +9630,13 @@
               prerequisites: ["math-g6-m4-g6-fill-pie-chart"],
               related: ["math-g6-m12-g6-choice-chart","math-g6-m4-g6-fill-pie-chart"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chart", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6435,6 +9655,13 @@
               prerequisites: ["math-g6-m4-g6-fill-negative"],
               related: ["math-g6-m11-g6-judge-negative","math-g6-m4-g6-fill-negative"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "negative", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6448,6 +9675,13 @@
               prerequisites: ["math-g6-m4-g6-fill-percent"],
               related: ["math-g6-m11-g6-judge-percent-ratio","math-g6-m4-g6-fill-percent"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "percent", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6461,6 +9695,13 @@
               prerequisites: ["math-g6-m4-g6-fill-circle"],
               related: ["math-g6-m11-g6-judge-circle","math-g6-m4-g6-fill-circle"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6474,6 +9715,13 @@
               prerequisites: ["math-g6-m4-g6-fill-cylinder-cone"],
               related: ["math-g6-m11-g6-judge-cyl-cone","math-g6-m4-g6-fill-cylinder-cone"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "cyl-cone", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6487,6 +9735,13 @@
               prerequisites: ["math-g6-m4-g6-fill-pie-chart"],
               related: ["math-g6-m11-g6-judge-chart","math-g6-m4-g6-fill-pie-chart"],
               difficulty: 1,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chart", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6505,6 +9760,13 @@
               prerequisites: ["math-g5-c1-digit-puzzle-vertical"],
               related: ["math-g6-c1-vertical-carry-complex"],
               difficulty: 5,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "vertical-multi", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6518,6 +9780,13 @@
               prerequisites: ["math-g5-c1-digit-puzzle-vertical"],
               related: ["math-g6-c1-vertical-multidigit"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "carry-complex", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6531,6 +9800,13 @@
               prerequisites: ["math-g5-c1-digit-puzzle-horizontal"],
               related: ["math-g6-c1-symbol-number"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "horizontal", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6544,6 +9820,13 @@
               prerequisites: ["math-g5-c1-digit-puzzle-symbol"],
               related: ["math-g6-c1-horizontal-puzzle"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "symbol", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6557,6 +9840,13 @@
               prerequisites: ["math-g5-c1-magic-square-4"],
               related: ["math-g6-c1-number-array"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "magic-adv", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6570,6 +9860,13 @@
               prerequisites: ["math-g5-c1-number-array-radial"],
               related: ["math-g6-c1-magic-square-adv"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "array-adv", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6583,6 +9880,13 @@
               prerequisites: ["math-g5-c2-place-value"],
               related: ["math-g6-c1-number-puzzle-competition"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "digit-reason", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6596,6 +9900,13 @@
               prerequisites: ["math-g5-c2-place-value"],
               related: ["math-g6-c1-digit-reasoning"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "competition", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6614,6 +9925,13 @@
               prerequisites: ["math-g5-c2-divisibility"],
               related: ["math-g6-c2-modulo-arithmetic"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "divisibility", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6627,6 +9945,13 @@
               prerequisites: ["math-g5-c2-parity-analysis"],
               related: ["math-g6-c2-divisibility"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "parity", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6640,6 +9965,13 @@
               prerequisites: ["math-g5-c2-prime-factorization"],
               related: ["math-g6-c2-factor-count-sum"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "prime-factor", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6653,6 +9985,13 @@
               prerequisites: ["math-g5-c2-factor-count-sum"],
               related: ["math-g6-c2-prime-factorization"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "factor-count", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6666,6 +10005,13 @@
               prerequisites: ["math-g5-c2-gcd-lcm"],
               related: ["math-g6-c2-prime-factorization"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "gcd-lcm", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6679,6 +10025,13 @@
               prerequisites: ["math-g5-c2-remainder-congruence"],
               related: ["math-g6-c2-modulo-arithmetic"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "remainder", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6692,6 +10045,13 @@
               prerequisites: ["math-g5-c2-place-value"],
               related: ["math-g6-c2-divisibility"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "place", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6705,6 +10065,13 @@
               prerequisites: ["math-g5-c2-perfect-square"],
               related: ["math-g6-c2-prime-factorization"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "perfect-square", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6718,6 +10085,13 @@
               prerequisites: ["math-g5-c2-number-theory-extreme"],
               related: ["math-g6-c2-remainder-congruence"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "nt-extreme", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6731,6 +10105,13 @@
               prerequisites: ["math-g5-c9-diophantine-equation"],
               related: ["math-g6-c2-remainder-congruence"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "diophantine", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6744,6 +10125,13 @@
               prerequisites: ["math-g5-c2-remainder-congruence"],
               related: ["math-g6-c2-remainder-congruence"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "modulo", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6762,6 +10150,13 @@
               prerequisites: ["math-g5-c3-addition-principle"],
               related: ["math-g6-c3-multiplication-principle"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "add-principle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6775,6 +10170,13 @@
               prerequisites: ["math-g5-c3-multiplication-principle"],
               related: ["math-g6-c3-permutation"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mult-principle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6788,6 +10190,13 @@
               prerequisites: ["math-g5-c3-permutation"],
               related: ["math-g6-c3-combination"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "permutation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6801,6 +10210,13 @@
               prerequisites: ["math-g5-c3-combination"],
               related: ["math-g6-c3-permutation"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "combination", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6814,6 +10230,13 @@
               prerequisites: ["math-g5-c3-enumeration-counting"],
               related: ["math-g6-c3-recursion-counting"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "enumeration", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6827,6 +10250,13 @@
               prerequisites: ["math-g5-c3-bundling-method"],
               related: ["math-g6-c3-insertion-method"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "bundling", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6840,6 +10270,13 @@
               prerequisites: ["math-g5-c3-insertion-method"],
               related: ["math-g6-c3-bundling-method"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "insertion", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6853,6 +10290,13 @@
               prerequisites: ["math-g5-c3-stars-bars"],
               related: ["math-g6-c2-diophantine-equation"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "stars-bars", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6866,6 +10310,13 @@
               prerequisites: ["math-g5-c3-pigeonhole-principle"],
               related: ["math-g6-c3-worst-case-principle"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pigeonhole", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6879,6 +10330,13 @@
               prerequisites: ["math-g5-c3-worst-case-principle"],
               related: ["math-g6-c3-pigeonhole-principle"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "worst-case", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6892,6 +10350,13 @@
               prerequisites: ["math-g5-c9-inclusion-exclusion"],
               related: ["math-g6-c3-recursion-counting"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "inclusion-exclusion", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6905,6 +10370,13 @@
               prerequisites: ["math-g5-c3-enumeration-counting"],
               related: ["math-g6-c3-enumeration-counting"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "recursion", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6918,6 +10390,13 @@
               prerequisites: ["math-g5-c3-permutation"],
               related: ["math-g6-c3-inclusion-exclusion"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "derangement", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6931,6 +10410,13 @@
               prerequisites: ["math-g5-c3-enumeration-counting"],
               related: ["math-g6-c3-recursion-counting"],
               difficulty: 5,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "geometry-count", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -6949,6 +10435,13 @@
               prerequisites: ["math-g5-c4-area-basic"],
               related: ["math-g6-c4-equal-area-transform"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "area-basic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6962,6 +10455,13 @@
               prerequisites: ["math-g5-c4-equal-area-transform"],
               related: ["math-g6-c4-half-model"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "equal-area", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6975,6 +10475,13 @@
               prerequisites: ["math-g5-c4-bird-head-model"],
               related: ["math-g6-c4-butterfly-model"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "bird-head", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -6988,6 +10495,13 @@
               prerequisites: ["math-g5-c4-butterfly-model"],
               related: ["math-g6-c4-swallow-tail-model"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "butterfly", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7001,6 +10515,13 @@
               prerequisites: ["math-g5-c4-swallow-tail-model"],
               related: ["math-g6-c4-half-model"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "swallow-tail", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7014,6 +10535,13 @@
               prerequisites: ["math-g5-c4-half-model"],
               related: ["math-g6-c4-bird-head-model"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "half", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7027,6 +10555,13 @@
               prerequisites: ["math-g5-c4-circle-sector"],
               related: ["math-g6-c4-circle-angle"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7040,6 +10575,13 @@
               prerequisites: ["math-g5-c4-solid-geometry"],
               related: ["math-g6-c4-solid-rotation"],
               difficulty: 4,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7053,6 +10595,13 @@
               prerequisites: ["math-g5-c4-painted-cube"],
               related: ["math-g6-c4-solid-geometry"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "painted-cube", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7066,6 +10615,13 @@
               prerequisites: ["math-g5-c4-pythagorean-theorem"],
               related: ["math-g6-c4-lattice-area"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pythagorean", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7079,6 +10635,13 @@
               prerequisites: ["math-g5-c4-lattice-area"],
               related: ["math-g6-c4-angle-calculation"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "lattice", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7092,6 +10655,13 @@
               prerequisites: ["math-g5-c4-angle-calculation"],
               related: ["math-g6-c4-circle-angle"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7105,6 +10675,13 @@
               prerequisites: ["math-g5-c4-circle-sector"],
               related: ["math-g6-c4-solid-rotation"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circle-angle", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7118,6 +10695,13 @@
               prerequisites: ["math-g5-c4-solid-geometry"],
               related: ["math-g6-c4-circle-angle"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "solid-rotation", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -7136,6 +10720,13 @@
               prerequisites: ["math-g5-c5-basic-motion"],
               related: ["math-g6-c5-meet"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "basic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7149,6 +10740,13 @@
               prerequisites: ["math-g5-c5-meet-problem"],
               related: ["math-g6-c5-chase"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "meet", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7162,6 +10760,13 @@
               prerequisites: ["math-g5-c5-chase-problem"],
               related: ["math-g6-c5-train-bridge"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chase", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7175,6 +10780,13 @@
               prerequisites: ["math-g5-c5-train-bridge"],
               related: ["math-g6-c5-boat-stream"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "train", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7188,6 +10800,13 @@
               prerequisites: ["math-g5-c5-boat-stream"],
               related: ["math-g6-c5-ring-runway"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "boat", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7201,6 +10820,13 @@
               prerequisites: ["math-g5-c5-circular-track"],
               related: ["math-g6-c5-clock"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "circular", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7214,6 +10840,13 @@
               prerequisites: ["math-g5-c5-clock-problem"],
               related: ["math-g6-c5-journey-complex"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "clock", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7227,6 +10860,13 @@
               prerequisites: ["math-g5-c5-average-speed"],
               related: ["math-g6-c5-competition"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "journey-complex", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7240,6 +10880,13 @@
               prerequisites: ["math-g5-c5-ratio-motion"],
               related: ["math-g6-c5-journey-complex"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "competition", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7253,6 +10900,13 @@
               prerequisites: ["math-g5-c5-meet-problem"],
               related: ["math-g6-c5-pick-up-problem"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "interval-departure", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7266,6 +10920,13 @@
               prerequisites: ["math-g5-c5-meet-problem"],
               related: ["math-g6-c5-interval-departure"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "pick-up", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -7284,6 +10945,13 @@
               prerequisites: ["math-g5-c6-work-problem"],
               related: ["math-g6-c6-concentration-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "work", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7297,6 +10965,13 @@
               prerequisites: ["math-g5-c6-concentration-problem"],
               related: ["math-g6-c6-work-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "concentration", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -7315,6 +10990,13 @@
               prerequisites: ["math-g5-c7-extract-common-factor"],
               related: ["math-g6-c7-rounding-calc"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "extract-factor", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7328,6 +11010,13 @@
               prerequisites: ["math-g5-c7-rounding-calc"],
               related: ["math-g6-c7-extract-common-factor"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "rounding", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7341,6 +11030,13 @@
               prerequisites: ["math-g5-c7-fraction-splitting"],
               related: ["math-g6-c7-integer-splitting"],
               difficulty: 4,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-split", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7354,6 +11050,13 @@
               prerequisites: ["math-g5-c7-integer-splitting"],
               related: ["math-g6-c7-fraction-splitting"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "int-split", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7367,6 +11070,13 @@
               prerequisites: ["math-g5-c7-arithmetic-series"],
               related: ["math-g6-c7-sequence-sum"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "series", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7380,6 +11090,13 @@
               prerequisites: ["math-g5-c7-recurring-decimal-frac"],
               related: ["math-g6-c7-compare-size"],
               difficulty: 3,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "recurring", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7393,6 +11110,13 @@
               prerequisites: ["math-g5-c7-define-operation"],
               related: ["math-g6-c7-compare-size"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "define-op", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7406,6 +11130,13 @@
               prerequisites: ["math-g5-c7-compare-size"],
               related: ["math-g6-c7-estimate-bounds"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "compare", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7419,6 +11150,13 @@
               prerequisites: ["math-g5-c7-estimate-bounds"],
               related: ["math-g6-c7-complex-fraction"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "estimate", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7432,6 +11170,13 @@
               prerequisites: ["math-g5-c7-complex-fraction"],
               related: ["math-g6-c7-fraction-splitting"],
               difficulty: 4,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "complex-frac", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7445,6 +11190,13 @@
               prerequisites: ["math-g5-c7-arithmetic-series"],
               related: ["math-g6-c7-integer-splitting"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sequence-sum", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -7463,6 +11215,13 @@
               prerequisites: ["math-g5-c8-extremum-problem"],
               related: ["math-g6-c8-winning-strategy"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "extremum", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7476,6 +11235,13 @@
               prerequisites: ["math-g5-c8-logic-inference"],
               related: ["math-g6-c8-winning-strategy"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "logic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7489,6 +11255,13 @@
               prerequisites: ["math-g5-c8-winning-strategy"],
               related: ["math-g6-c8-optimization"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "winning", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7502,6 +11275,13 @@
               prerequisites: ["math-g5-c8-extremum-problem"],
               related: ["math-g6-c8-extremum-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "optimization", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]
@@ -7520,6 +11300,13 @@
               prerequisites: ["math-g5-c9-sum-diff-problem"],
               related: ["math-g6-c9-age-problem"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "sum-diff", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7533,6 +11320,13 @@
               prerequisites: ["math-g5-c9-age-problem"],
               related: ["math-g6-c9-sum-diff-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "age", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7546,6 +11340,13 @@
               prerequisites: ["math-g5-c9-profit-loss-problem"],
               related: ["math-g6-c9-average-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "profit-loss", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7559,6 +11360,13 @@
               prerequisites: ["math-g5-c9-chicken-rabbit"],
               related: ["math-g6-c9-average-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "chicken-rabbit", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7572,6 +11380,13 @@
               prerequisites: ["math-g5-c9-average-problem"],
               related: ["math-g6-c9-periodic-problem"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "average", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7585,6 +11400,13 @@
               prerequisites: ["math-g5-c9-planting-problem"],
               related: ["math-g6-c9-phalanx-problem"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "planting", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7598,6 +11420,13 @@
               prerequisites: ["math-g5-c9-phalanx-problem"],
               related: ["math-g6-c9-planting-problem"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "phalanx", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7611,6 +11440,13 @@
               prerequisites: ["math-g5-c9-periodic-problem"],
               related: ["math-g6-c9-grass-problem"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "periodic", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7624,6 +11460,13 @@
               prerequisites: ["math-g5-c9-grass-problem"],
               related: ["math-g6-c9-fraction-percent-application"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "grass", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7637,6 +11480,13 @@
               prerequisites: ["math-g5-c9-fraction-percent-application"],
               related: ["math-g6-c9-economics-problem"],
               difficulty: 4,
+              spiral_level: 3,
+              max_spiral_level: 3,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "frac-percent", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7650,6 +11500,13 @@
               prerequisites: ["math-g5-c9-economics-problem"],
               related: ["math-g6-c9-fraction-percent-application"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "economics", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7663,6 +11520,13 @@
               prerequisites: ["math-g5-c9-equation-linear-1"],
               related: ["math-g6-c9-equation-linear-2"],
               difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "eq1", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7676,6 +11540,13 @@
               prerequisites: ["math-g5-c9-equation-linear-2"],
               related: ["math-g6-c2-diophantine-equation"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "eq2", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7689,6 +11560,13 @@
               prerequisites: ["math-g5-c5-ratio-motion"],
               related: ["math-g6-c9-mixture-problem"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "ratio", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7702,6 +11580,13 @@
               prerequisites: ["math-g5-c6-concentration-problem"],
               related: ["math-g6-c9-ratio-application"],
               difficulty: 5,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "mixture", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             },
             {
@@ -7715,6 +11600,13 @@
               prerequisites: ["math-g5-c9-inclusion-exclusion"],
               related: ["math-g6-c3-inclusion-exclusion"],
               difficulty: 4,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "掌握",
+              applicable_question_types: [ { type: "inclusion-exclusion", coefficient: 1 } ],
+              number_range_default: { min: 1, max: 10000 },
+              max_steps_default: 2,
+              context_default: "standard",
               status: "active"
             }
           ]

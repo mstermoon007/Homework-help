@@ -21,22 +21,22 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-decimal.js 依赖 shared/common.js（PluginUtil），请先加载');
-  // 难度统一经 App.Difficulty.consume 解析（批次8）
+  // 难度统一经 App.Difficulty.paramsFor 解析（批次8）
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-decimal.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-decimal.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
   function shuffleArr(arr) { return _PU.shuffle(arr.slice()); }
 
   // ============ 难度（1-10，由 generate 设置） ============
-  var _DIFF = 3;
+  var dpLevel = 3;
 
   // 生成一个小数（不超过 1 / 一位或两位小数）；maxInt 是整数部分上限
   function genDecimal(maxInt, allowTwoDigits) {
     var intPart = rnd(0, maxInt);
-    if (allowTwoDigits && _DIFF >= 6) {
+    if (allowTwoDigits && dpLevel >= 6) {
       // 两位小数（明显难度更高）
       var tenths = rnd(1, 9), hund = rnd(0, 9);
       if (hund === 0 && rnd(1, 2) !== 1) hund = rnd(1, 9);
@@ -70,7 +70,7 @@
   // ============ 题目生成 ============
   // 读法→写法：出示中文读法，写出小数
   function buildRead() {
-    var allowTwo = _DIFF >= 6;
+    var allowTwo = dpLevel >= 6;
     var d = genDecimal(9, allowTwo);
     var chinese = decToChinese(d);
     return {
@@ -84,7 +84,7 @@
 
   // 两个小数比大小
   function buildCompare() {
-    var allowTwo = _DIFF >= 6;
+    var allowTwo = dpLevel >= 6;
     var a = genDecimal(9, allowTwo);
     var b = genDecimal(9, allowTwo);
     // 规避完全相等
@@ -245,10 +245,11 @@
 
     generateQuestions: function (options) {
       var opts = options || {};
-      // 难度统一经 App.Difficulty.consume 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
-      var prof = _D.consume(opts);
-      _DIFF = prof.effectiveLevel;
-      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 难度统一经 App.Difficulty.paramsFor 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
+      var dp = opts.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (opts.difficulty != null ? opts.difficulty : (opts.level || 3))) : { level: opts.difficulty != null ? opts.difficulty : (opts.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (opts.level != null && opts.level !== '');
+
+      var diffStamp = dpHasOwnLevel ? null : dpLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 8;
       var list = generateProblems(type, count);

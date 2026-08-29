@@ -19,19 +19,18 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-money.js 依赖 shared/common.js（PluginUtil），请先加载');
-  // 难度统一经 App.Difficulty.consume 解析（批次7）
+  // 难度统一经 App.Difficulty.paramsFor 解析（批次7）
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-money.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-money.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
   function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
 
   // ============ 难度（1-10，由 generate 设置） ============
-  var _DIFF = 3;
   // 换算题最大值（元/角的数值范围，难度越高数值越大）
-  function convertMax() { return _PU.diffMax(9, _DIFF); }
+  function convertMax(level) { return _PU.diffMax(9, level); }
 
   // ============ 题目生成 ============
   // 认识面值：给定面值，问换算关系（choice）
@@ -60,8 +59,8 @@
   }
 
   // 单位换算：元↔角↔分 互化（text 单输入）
-  function buildConvert() {
-    var M = convertMax();
+  function buildConvert(level) {
+    var M = convertMax(level);
     var builders = [
       // 元 → 角
       function () {
@@ -85,7 +84,7 @@
       }
     ];
     // 难度高时追加复合换算：元 ↔ 分（需先经过角）
-    if (_DIFF >= 6) {
+    if (level >= 6) {
       builders.push(
         // 元 → 分
         function () {
@@ -104,9 +103,9 @@
   }
 
   // 简单计算：同单位加减（text 单输入，答案不带单位，纯数字）
-  function buildCalc() {
-    var M = convertMax();
-    var sumCap = _DIFF <= 4 ? 20 : (_DIFF <= 7 ? 50 : 100);
+  function buildCalc(level) {
+    var M = convertMax(level);
+    var sumCap = level <= 4 ? 20 : (level <= 7 ? 50 : 100);
     var builders = [
       // 元 + 元
       function () {
@@ -134,7 +133,7 @@
       },
       // 元 + 角 → 元角复合（高难度：跨单位求和，如 2 元 5 角 + 1 元 3 角 = 3 元 8 角）
       function () {
-        if (_DIFF < 6) return null;
+        if (level < 6) return null;
         var aY = rnd(1, Math.min(M, 9)), aJ = rnd(1, 9), bY = rnd(1, Math.min(M, 9)), bJ = rnd(1, 9);
         var rY = aY + bY, rJ = aJ + bJ;
         if (rJ >= 10) { rY += 1; rJ -= 10; }
@@ -151,21 +150,21 @@
     return { kind: 'calc', inputType: 'text', q: item.q, answer: item.answer, unit: item.unit, hint: item.sign === '+' ? '同单位直接相加，满 10 角就换成 1 元。' : '同单位直接相减。' };
   }
 
-  function buildMixed() {
+  function buildMixed(level) {
     var r = rnd(1, 100);
     if (r <= 30) return buildRecognize();
-    if (r <= 65) return buildConvert();
-    return buildCalc();
+    if (r <= 65) return buildConvert(level);
+    return buildCalc(level);
   }
 
-  function generateProblems(type, count) {
+  function generateProblems(type, count, level) {
     var builder = { recognize: buildRecognize, convert: buildConvert, calc: buildCalc, mix: buildMixed }[type];
     var seen = {};
     var list = [];
     var attempts = 0;
     var maxAttempts = Math.max(count * 30, 400);
     while (list.length < count && attempts < maxAttempts) {
-      var q = builder();
+      var q = builder(level);
       var key = q.kind + '|' + q.q + '|' + q.answer;
       if (!seen[key]) { seen[key] = true; list.push(q); }
       attempts++;
@@ -239,13 +238,14 @@
 
     generate: function (options) {
       var opts = options || {};
-      // 难度统一经 App.Difficulty.consume 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
-      var prof = _D.consume(opts);
-      _DIFF = prof.effectiveLevel;
-      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 难度统一经 App.Difficulty.paramsFor 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
+      var dp = opts.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (opts.difficulty != null ? opts.difficulty : (opts.level || 3))) : { level: opts.difficulty != null ? opts.difficulty : (opts.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (opts.level != null && opts.level !== '');
+
+      var diffStamp = dpHasOwnLevel ? null : dpLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 8;
-      var list = generateProblems(type, count);
+      var list = generateProblems(type, count, dpLevel);
       var typeNames = { mix: '混合练习', recognize: '认识面值', convert: '单位换算', calc: '简单计算' };
       var label = typeNames[type] || '混合';
       var questions = list.map(function (p) {

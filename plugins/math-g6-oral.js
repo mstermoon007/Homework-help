@@ -21,7 +21,7 @@
   if (!_PU) throw new Error('plugins/math-g6-oral.js 依赖 shared/common.js（PluginUtil），请先加载');
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-g6-oral.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-g6-oral.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // 难度缩放旋钮：generateQuestions 每轮由 profile.scale 刷新；dmax 用于安全的整数上界放大
   var SCALE = 1;
@@ -194,9 +194,10 @@
 
     generateQuestions: function (options) {
       var opts = options || {};
-      var prof = _D.consume(opts);
-      SCALE = prof.hasOwnLevel ? 1 : prof.scale;
-      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      var dp = opts.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (opts.difficulty != null ? opts.difficulty : (opts.level || 3))) : { level: opts.difficulty != null ? opts.difficulty : (opts.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (opts.level != null && opts.level !== '');
+      SCALE = dpHasOwnLevel ? 1 : dpScale;
+      var diffStamp = dpHasOwnLevel ? null : dpLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 10;
       var builder = TYPE_BUILDERS[type] || buildMixed;

@@ -14,10 +14,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-statistics.js 依赖 shared/common.js（PluginUtil），请先加载');
-  // 难度统一经 App.Difficulty.consume 解析（批次7）
+  // 难度统一经 App.Difficulty.paramsFor 解析（批次7）
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-statistics.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-statistics.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -35,15 +35,14 @@
   var COLOR_NAMES = ['蓝色', '橙色', '绿色'];
 
   // ============ 难度（1-10，由 generate 设置） ============
-  var _DIFF = 3;
-  function diffMax(base) { return _PU.diffMax(base, _DIFF); }
+  function diffMax(base, level) { return _PU.diffMax(base, level); }
 
   /** 生成一组混排图形：{ shapes: [{k, c}], counts: {k: n}, colorCounts: {c: n} } */
-  function makeGroup() {
+  function makeGroup(level) {
     var items = [];
     var counts = { '三角形': 0, '圆形': 0, '正方形': 0 };
     var colorCounts = { '#5b8def': 0, '#e8870a': 0, '#27ae60': 0 }; /* allow-color */
-    var total = rnd(Math.min(8, Math.max(5, diffMax(12))), Math.max(8, diffMax(12)));
+    var total = rnd(Math.min(8, Math.max(5, diffMax(12, level))), Math.max(8, diffMax(12, level)));
     for (var i = 0; i < total; i++) {
       var k = pick(SHAPE_KEYS);
       var c = pick(COLORS);
@@ -54,7 +53,7 @@
     // 保证至少两种形状、两种颜色，且数量不完全相同
     var distinctShape = Object.keys(counts).filter(function (k) { return counts[k] > 0; }).length;
     var distinctColor = Object.keys(colorCounts).filter(function (c) { return colorCounts[c] > 0; }).length;
-    if (distinctShape < 2 || distinctColor < 2) return makeGroup();
+    if (distinctShape < 2 || distinctColor < 2) return makeGroup(level);
     return { items: items, counts: counts, colorCounts: colorCounts };
   }
 
@@ -68,8 +67,8 @@
 
   // ============ 题目生成 ============
   // 分类与整理：按形状数出数量
-  function buildClassify() {
-    var group = makeGroup();
+  function buildClassify(level) {
+    var group = makeGroup(level);
     var targets = SHAPE_KEYS.filter(function (k) { return group.counts[k] > 0; });
     var target = pick(targets);
     return {
@@ -83,8 +82,8 @@
   }
 
   // 填写统计表：按形状整理并填写三种数量
-  function buildTable() {
-    var group = makeGroup();
+  function buildTable(level) {
+    var group = makeGroup(level);
     var active = SHAPE_KEYS.filter(function (k) { return group.counts[k] > 0; });
     var activeCount = active.length;
     var per = Math.max(3, activeCount); // 显示 3 行，不足补齐为 0
@@ -103,8 +102,8 @@
   }
 
   // 象形统计图：用涂色方块表示数量，比较谁最多
-  function buildPicto() {
-    var group = makeGroup();
+  function buildPicto(level) {
+    var group = makeGroup(level);
     var active = SHAPE_KEYS.filter(function (k) { return group.counts[k] > 0; });
     var maxK = active[0];
     active.forEach(function (k) { if (group.counts[k] > group.counts[maxK]) maxK = k; });
@@ -121,21 +120,21 @@
     };
   }
 
-  function buildMixed() {
+  function buildMixed(level) {
     var r = rnd(1, 100);
-    if (r <= 45) return buildClassify();
-    if (r <= 75) return buildTable();
-    return buildPicto();
+    if (r <= 45) return buildClassify(level);
+    if (r <= 75) return buildTable(level);
+    return buildPicto(level);
   }
 
-  function generateProblems(type, count) {
+  function generateProblems(type, count, level) {
     var builder = { classify: buildClassify, table: buildTable, picto: buildPicto, mix: buildMixed }[type];
     var seen = {};
     var list = [];
     var attempts = 0;
     var maxAttempts = Math.max(count * 20, 300);
     while (list.length < count && attempts < maxAttempts) {
-      var q = builder();
+      var q = builder(level);
       var key = q.kind + '|' + (q.target || '') + '|' + (Array.isArray(q.answer) ? q.answer.join(',') : String(q.answer)) + '|' +
         (q.rows ? q.rows.map(function (r) { return r.shape + ':' + r.count; }).join(',') : '') + '|' + q.question;
       if (!seen[key]) { seen[key] = true; list.push(q); }
@@ -250,10 +249,11 @@
 
     generate: function (options) {
       var opts = options || {};
-      // 难度统一经 App.Difficulty.consume 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
-      var prof = _D.consume(opts);
-      _DIFF = prof.effectiveLevel;
-      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 难度统一经 App.Difficulty.paramsFor 解析（批次7）：profile.effectiveLevel 替代直调 diffLevel
+      var dp = opts.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (opts.difficulty != null ? opts.difficulty : (opts.level || 3))) : { level: opts.difficulty != null ? opts.difficulty : (opts.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (opts.level != null && opts.level !== '');
+
+      var diffStamp = dpHasOwnLevel ? null : dpLevel;
       // 子题型 → 知识点（用于知识点关联）
       var KP_BY_KIND = {
         classify: 'math-g1-m9-classify',
@@ -262,7 +262,7 @@
       };
       var type = opts.type || 'mix';
       var count = opts.count || 8;
-      var list = generateProblems(type, count);
+      var list = generateProblems(type, count, dpLevel);
       var typeNames = { mix: '混合练习', classify: '分类与整理', table: '填写统计表', picto: '象形统计图' };
       var label = typeNames[type] || '混合';
       var questions = list.map(function (p) {

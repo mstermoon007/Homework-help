@@ -80,14 +80,13 @@
       var count = opts.count || 10;
       var grade = opts.grade || 1;
 
-      // 难度系统（必接）：归一化 1-10；显式 maxNum 即填即得（与 math-oral 约定一致）。
-      // 工厂已注入 opts.difficultyParams（level/scale/steps/allowBracket/allowMultDiv），
-      // 也可直接消费结构参数：
+      // 难度系统（必接）：工厂已注入 opts.difficultyParams（level/scale/steps/allowBracket/allowMultDiv），
+      // 直接消费结构参数，不再自行计算/缓存难度（消除模块级难度状态）：
       //   var steps = opts.difficultyParams && opts.difficultyParams.steps;
-      var _DIFF = _PU.diffLevel(opts.difficulty);            // 非法值回退 3
+      var dp = opts.difficultyParams || { level: _PU.diffLevel(opts.difficulty), scale: 1 };
       var maxNum = opts.maxNum != null
         ? Math.round(Number(opts.maxNum))                    // 设置面板显式值优先
-        : _PU.diffMax(5, _DIFF);                             // 难度缩放：level 3 → 5，10 → 12
+        : _PU.diffMax(5, dp.level);                          // 难度缩放：level 3 → 5，10 → 12
 
       var questions = [];
       for (var i = 0; i < count; i++) {

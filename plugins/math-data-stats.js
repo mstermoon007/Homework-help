@@ -21,10 +21,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-data-stats.js 依赖 shared/common.js（PluginUtil），请先加载');
-  // 难度统一经 App.Difficulty.consume 解析（批次8）
+  // 难度统一经 App.Difficulty.paramsFor 解析（批次8）
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-data-stats.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-data-stats.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -32,7 +32,7 @@
   function shuffleArr(arr) { return _PU.shuffle(arr.slice()); }
 
   // ============ 难度（1-10，由 generate 设置） ============
-  var _DIFF = 3;
+  var dpLevel = 3;
   var _GRADE = 2;
 
   // 投票情境：候选人/选项 + 投票主题
@@ -58,9 +58,9 @@
 
   // 难度越高，投票人数越多
   function totalVoters() {
-    if (_DIFF <= 4) return rnd(12, 18);
-    if (_DIFF <= 6) return rnd(18, 26);
-    if (_DIFF <= 8) return rnd(24, 32);
+    if (dpLevel <= 4) return rnd(12, 18);
+    if (dpLevel <= 6) return rnd(18, 26);
+    if (dpLevel <= 8) return rnd(24, 32);
     return rnd(30, 40);
   }
 
@@ -488,10 +488,11 @@
 
     generate: function (options) {
       var opts = options || {};
-      // 难度统一经 App.Difficulty.consume 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
-      var prof = _D.consume(opts);
-      _DIFF = prof.effectiveLevel;
-      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 难度统一经 App.Difficulty.paramsFor 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
+      var dp = opts.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (opts.difficulty != null ? opts.difficulty : (opts.level || 3))) : { level: opts.difficulty != null ? opts.difficulty : (opts.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (opts.level != null && opts.level !== '');
+
+      var diffStamp = dpHasOwnLevel ? null : dpLevel;
       _GRADE = opts.grade || 2;
       // 子题型 → 知识点（按年级区分；未映射的组合不标注，保持纯插件级统计）
       var KP_BY_GRADE_KIND = {

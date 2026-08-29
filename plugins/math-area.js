@@ -21,10 +21,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-area.js 依赖 shared/common.js（PluginUtil），请先加载');
-  // 难度统一经 App.Difficulty.consume 解析（批次8）
+  // 难度统一经 App.Difficulty.paramsFor 解析（批次8）
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-area.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-area.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -32,13 +32,11 @@
   function shuffleArr(arr) { return _PU.shuffle(arr.slice()); }
 
   // ============ 难度（1-10，由 generate 设置） ============
-  var _DIFF = 3;
-
   // 难度 → 边长取值范围（扩大以降低重复率）
-  function sideRange() {
-    if (_DIFF <= 4) return [1, 12];
-    if (_DIFF <= 6) return [3, 16];
-    if (_DIFF <= 8) return [5, 24];
+  function sideRange(level) {
+    if (level <= 4) return [1, 12];
+    if (level <= 6) return [3, 16];
+    if (level <= 8) return [5, 24];
     return [8, 32];
   }
 
@@ -123,8 +121,8 @@
   }
 
   // 长方形面积
-  function buildRect() {
-    var r = sideRange();
+  function buildRect(level) {
+    var r = sideRange(level);
     var len = rnd(r[0], r[1]);
     var wid = rnd(r[0], r[1]);
     var area = len * wid;
@@ -140,8 +138,8 @@
   }
 
   // 正方形面积
-  function buildSquare() {
-    var r = sideRange();
+  function buildSquare(level) {
+    var r = sideRange(level);
     var side = rnd(r[0], r[1]);
     var area = side * side;
     return {
@@ -170,22 +168,22 @@
     };
   }
 
-  function buildMixed() {
+  function buildMixed(level) {
     var r = rnd(1, 100);
     if (r <= 25) return buildUnit();
-    if (r <= 55) return buildRect();
-    if (r <= 75) return buildSquare();
+    if (r <= 55) return buildRect(level);
+    if (r <= 75) return buildSquare(level);
     return buildGrid();
   }
 
-  function generateProblems(type, count) {
+  function generateProblems(type, count, level) {
     var builder = { unit: buildUnit, rect: buildRect, square: buildSquare, grid: buildGrid, mix: buildMixed }[type];
     var seen = {};
     var list = [];
     var attempts = 0;
     var maxAttempts = Math.max(count * 40, 300);
     while (list.length < count && attempts < maxAttempts) {
-      var q = builder();
+      var q = builder(level);
       var key = q.kind + '|' + q.answer + '|' + (q.question || '');
       if (!seen[key]) { seen[key] = true; list.push(q); }
       attempts++;
@@ -271,13 +269,14 @@
 
     generateQuestions: function (options) {
       var opts = options || {};
-      // 难度统一经 App.Difficulty.consume 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
-      var prof = _D.consume(opts);
-      _DIFF = prof.effectiveLevel;
-      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 难度统一经 App.Difficulty.paramsFor 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
+      var dp = opts.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (opts.difficulty != null ? opts.difficulty : (opts.level || 3))) : { level: opts.difficulty != null ? opts.difficulty : (opts.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (opts.level != null && opts.level !== '');
+
+      var diffStamp = dpHasOwnLevel ? null : dpLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 8;
-      var list = generateProblems(type, count);
+      var list = generateProblems(type, count, dpLevel);
       var typeNames = { mix: '混合练习', unit: '面积单位', rect: '长方形面积', square: '正方形面积', grid: '数方格' };
       var label = typeNames[type] || '混合';
       var questions = list.map(function (p) {

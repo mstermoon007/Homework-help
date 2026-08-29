@@ -363,8 +363,11 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 ### 难度消费的两种路径
 
 1. **工厂路径**（新插件）：什么都不写，`opts.difficultyParams` 已就位；
-2. **显式路径**（旧插件）：`App.Difficulty.consume(options)` → `profile.effectiveLevel/scale/structure`。
-   两路径可并存；自带 `level` 分档的插件按规范跳过通用难度叠加。
+2. **静态优先路径**（知识点驱动）：插件在 `opts` 中提供 `knowledgePointMeta`，工厂调用
+   `App.DifficultyStatic.paramsForKnowledgePoint` 计算静态多维难度并注入 `opts.difficultyParams`
+   （兼容 profile 含 `level/scale/steps/allowBracket/allowMultDiv` 及 `staticMeta` 维度评分，供题型细控）。
+   插件直接消费 `opts.difficultyParams` 字段即可，**不得再调用 `App.Difficulty` 的 `consume` 方法，也不得自行维护模块级难度变量**。
+   自带 `level` 分档的插件按规范跳过通用难度叠加（`opts.hasOwnLevel`）。
 
 ### 科目工具归属
 

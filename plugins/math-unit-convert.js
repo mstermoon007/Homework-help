@@ -18,10 +18,10 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-unit-convert.js 依赖 shared/common.js（PluginUtil），请先加载');
-  // 难度统一经 App.Difficulty.consume 解析（批次8）
+  // 难度统一经 App.Difficulty.paramsFor 解析（批次8）
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-unit-convert.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-unit-convert.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
@@ -29,7 +29,6 @@
   function shuffleArr(arr) { return _PU.shuffle(arr.slice()); }
 
   // ============ 难度/年级（generate 时设置） ============
-  var _DIFF = 3;
   var _GRADE = 2;
 
   // ============ 单位定义 ============
@@ -114,10 +113,10 @@
   ];
 
   // 难度越高，允许更大的数值
-  function bigNum() {
-    if (_DIFF <= 4) return 5;
-    if (_DIFF <= 6) return 20;
-    if (_DIFF <= 8) return 50;
+  function bigNum(level) {
+    if (level <= 4) return 5;
+    if (level <= 6) return 20;
+    if (level <= 8) return 50;
     return 100;
   }
 
@@ -127,8 +126,8 @@
     return { kind: 'convert', inputType: 'text', q: q, answer: answer, unit: unit, hint: '想想 ' + tip + '。' };
   }
 
-  function buildConvertMass() {
-    var maxN = bigNum();
+  function buildConvertMass(level) {
+    var maxN = bigNum(level);
     var arr = [
       function () { var n = rnd(1, maxN); return mkConvert(n + ' 千克 = ? 克', String(n * 1000), '克', '1 千克 = 1000 克'); },
       function () { var n = rnd(1, Math.max(2, maxN)) * 1000; return mkConvert(n + ' 克 = ? 千克', String(n / 1000), '千克', '1000 克 = 1 千克'); }
@@ -136,15 +135,15 @@
     return pick(arr)();
   }
 
-  function buildConvertLength() {
-    var maxN = bigNum();
+  function buildConvertLength(level) {
+    var maxN = bigNum(level);
     var arr = [
       function () { var n = rnd(1, maxN); return mkConvert(n + ' 米 = ? 厘米', String(n * 100), '厘米', '1 米 = 100 厘米'); },
       function () { var n = rnd(1, Math.max(2, maxN)) * 100; return mkConvert(n + ' 厘米 = ? 米', String(n / 100), '米', '100 厘米 = 1 米'); },
       function () { var n = rnd(1, maxN); return mkConvert(n + ' 厘米 = ? 毫米', String(n * 10), '毫米', '1 厘米 = 10 毫米'); },
       function () { var n = rnd(1, Math.max(2, maxN)) * 10; return mkConvert(n + ' 毫米 = ? 厘米', String(n / 10), '厘米', '10 毫米 = 1 厘米'); }
     ];
-    if (_DIFF >= 6) {
+    if (level >= 6) {
       arr.push(
         function () { var n = rnd(1, Math.max(9, maxN)); return mkConvert(n + ' 千米 = ? 米', String(n * 1000), '米', '1 千米 = 1000 米'); },
         function () { var n = rnd(1, Math.max(9, maxN)) * 1000; return mkConvert(n + ' 米 = ? 千米', String(n / 1000), '千米', '1000 米 = 1 千米'); },
@@ -166,11 +165,11 @@
   }
 
   // 综合换算构造器：按年级选用题池（二年级需覆盖长度/质量/时间三类）
-  function buildConvert() {
+  function buildConvert(level) {
     if (_GRADE <= 2) {
-      return pick([buildConvertMass, buildConvertLength, buildConvertTime])();
+      return pick([buildConvertMass, buildConvertLength, buildConvertTime])(level);
     }
-    var maxN = bigNum();
+    var maxN = bigNum(level);
     var builders = [
       function () { var n = rnd(1, maxN); return mkConvert(n + ' 米 = ? 厘米', String(n * 100), '厘米', '1 米 = 100 厘米'); },
       function () { var n = rnd(1, Math.max(2, maxN)) * 100; return mkConvert(n + ' 厘米 = ? 米', String(n / 100), '米', '100 厘米 = 1 米'); },
@@ -180,7 +179,7 @@
       function () { var n = rnd(1, Math.max(2, maxN)) * 1000; return mkConvert(n + ' 克 = ? 千克', String(n / 1000), '千克', '1000 克 = 1 千克'); }
     ];
     // 难度高时追加：千米 ↔ 米、米 ↔ 分米
-    if (_DIFF >= 6) {
+    if (level >= 6) {
       builders.push(
         function () { var n = rnd(1, Math.max(9, maxN)); return mkConvert(n + ' 千米 = ? 米', String(n * 1000), '米', '1 千米 = 1000 米'); },
         function () { var n = rnd(1, Math.max(9, maxN)) * 1000; return mkConvert(n + ' 米 = ? 千米', String(n / 1000), '千米', '1000 米 = 1 千米'); },
@@ -204,7 +203,7 @@
       );
     }
     // 最高难度追加：复合换算（千米 → 厘米）
-    if (_DIFF >= 9) {
+    if (level >= 9) {
       builders.push(
         function () { var n = rnd(1, 9); return mkConvert(n + ' 米 = ? 厘米 = ? 毫米', String(n * 10000), '毫米', '1 米 = 100 厘米 = 1000 毫米'); }
       );
@@ -232,13 +231,13 @@
     };
   }
 
-  function buildMixed() {
+  function buildMixed(level) {
     var r = rnd(1, 100);
-    if (r <= 60) return buildConvert();
+    if (r <= 60) return buildConvert(level);
     return buildFillUnit();
   }
 
-  function generateProblems(type, count) {
+  function generateProblems(type, count, level) {
     var BUILDERS = {
       convert: buildConvert,
       fillUnit: buildFillUnit,
@@ -256,7 +255,7 @@
     var attempts = 0;
     var maxAttempts = Math.max(count * 20, 300);
     while (list.length < count && attempts < maxAttempts) {
-      var q = builder();
+      var q = builder(level);
       var key = q.kind + '|' + (q.q || q.sentence) + '|' + q.answer;
       if (!seen[key]) { seen[key] = true; list.push(q); }
       attempts++;
@@ -349,10 +348,11 @@
 
     generate: function (options) {
       var opts = options || {};
-      // 难度统一经 App.Difficulty.consume 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
-      var prof = _D.consume(opts);
-      _DIFF = prof.effectiveLevel;
-      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 难度统一经 App.Difficulty.paramsFor 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
+      var dp = opts.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (opts.difficulty != null ? opts.difficulty : (opts.level || 3))) : { level: opts.difficulty != null ? opts.difficulty : (opts.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (opts.level != null && opts.level !== '');
+
+      var diffStamp = dpHasOwnLevel ? null : dpLevel;
       _GRADE = opts.grade || 2;
       // 子题型 → 知识点（按年级区分；未映射的组合不标注，保持纯插件级统计）
       var KP_BY_GRADE_KIND = {
@@ -362,7 +362,7 @@
       var kpMap = KP_BY_GRADE_KIND[_GRADE] || null;
       var type = opts.type || 'mix';
       var count = opts.count || 8;
-      var list = generateProblems(type, count);
+      var list = generateProblems(type, count, dpLevel);
       var typeNames = { mix: '混合练习', convert: '单位换算', fillUnit: '填合适单位' };
       var label = typeNames[type] || '混合';
       var gradeLabel = '小学' + (_GRADE >= 3 ? '三年级' : '二年级') + '单位换算（' + label + '）';

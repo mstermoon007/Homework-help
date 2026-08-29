@@ -20,23 +20,21 @@
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-fraction.js 依赖 shared/common.js（PluginUtil），请先加载');
-  // 难度统一经 App.Difficulty.consume 解析（批次8）
+  // 难度统一经 App.Difficulty.paramsFor 解析（批次8）
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-fraction.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-fraction.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }
   function shuffleArr(arr) { return _PU.shuffle(arr.slice()); }
 
   // ============ 难度（1-10，由 generate 设置） ============
-  var _DIFF = 3;
-
   // 分母范围：难度越高允许更大的分母（扩大范围以降低重复率）
-  function denRange() {
-    if (_DIFF <= 4) return [2, 8];
-    if (_DIFF <= 6) return [2, 12];
-    if (_DIFF <= 8) return [2, 16];
+  function denRange(level) {
+    if (level <= 4) return [2, 8];
+    if (level <= 6) return [2, 12];
+    if (level <= 8) return [2, 16];
     return [2, 20];
   }
 
@@ -86,8 +84,8 @@
 
   // ============ 题目生成 ============
   // 图形分块涂色，写出几分之几
-  function buildShard() {
-    var r = denRange();
+  function buildShard(level) {
+    var r = denRange(level);
     var den = rnd(r[0], r[1]);
     // 避免等于 1；涂色份数 1 ~ den-1（保证分数 < 1）
     var num = den === 2 ? rnd(1, 1) : rnd(1, den - 1);
@@ -120,8 +118,8 @@
   }
 
   // 两个分数比大小，选择 > / < / =
-  function buildCompare() {
-    var r = denRange();
+  function buildCompare(level) {
+    var r = denRange(level);
     var variant = rnd(1, 3);
     var aNum, aDen, bNum, bDen;
     var question, answer, hint, operand;
@@ -179,8 +177,8 @@
   }
 
   // 同分母分数加减
-  function buildAddsub() {
-    var r = denRange();
+  function buildAddsub(level) {
+    var r = denRange(level);
     var den = rnd(4, r[1] > 4 ? r[1] : 6);
     var maxNum = den - 1;
     var isAdd = rnd(1, 2) === 1;
@@ -216,21 +214,21 @@
     };
   }
 
-  function buildMixed() {
+  function buildMixed(level) {
     var r = rnd(1, 100);
-    if (r <= 45) return buildShard();
-    if (r <= 72) return buildCompare();
-    return buildAddsub();
+    if (r <= 45) return buildShard(level);
+    if (r <= 72) return buildCompare(level);
+    return buildAddsub(level);
   }
 
-  function generateProblems(type, count) {
+  function generateProblems(type, count, level) {
     var builder = { shard: buildShard, compare: buildCompare, addsub: buildAddsub, mix: buildMixed }[type];
     var seen = {};
     var list = [];
     var attempts = 0;
     var maxAttempts = Math.max(count * 40, 300);
     while (list.length < count && attempts < maxAttempts) {
-      var q = builder();
+      var q = builder(level);
       var key = q.kind + '|' + q.answer + '|' + (q.question || '');
       if (!seen[key]) { seen[key] = true; list.push(q); }
       attempts++;
@@ -322,13 +320,14 @@
 
     generateQuestions: function (options) {
       var opts = options || {};
-      // 难度统一经 App.Difficulty.consume 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
-      var prof = _D.consume(opts);
-      _DIFF = prof.effectiveLevel;
-      var diffStamp = prof.hasOwnLevel ? null : prof.effectiveLevel;
+      // 难度统一经 App.Difficulty.paramsFor 解析（批次8）：profile.effectiveLevel 替代直调 diffLevel
+      var dp = opts.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (opts.difficulty != null ? opts.difficulty : (opts.level || 3))) : { level: opts.difficulty != null ? opts.difficulty : (opts.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (opts.level != null && opts.level !== '');
+
+      var diffStamp = dpHasOwnLevel ? null : dpLevel;
       var type = opts.type || 'mix';
       var count = opts.count || 8;
-      var list = generateProblems(type, count);
+      var list = generateProblems(type, count, dpLevel);
       var typeNames = { mix: '混合练习', shard: '几分之几', compare: '分数比大小', addsub: '同分母加减' };
       var label = typeNames[type] || '混合';
       var questions = list.map(function (p) {

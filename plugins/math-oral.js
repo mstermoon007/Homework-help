@@ -19,7 +19,7 @@
   if (!_PU) throw new Error('plugins/math-oral.js 依赖 shared/common.js（PluginUtil），请先加载');
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
     : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.consume) throw new Error('plugins/math-oral.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-oral.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
 
   // ============ MathOralAgent 引擎（原 math-oral-agent.js） ============
   var GRADE_CONFIG = {
@@ -44,15 +44,16 @@
   function MathOralAgent(options) {
     options = options || {};
     var cfg = GRADE_CONFIG[options.grade] || GRADE_CONFIG[1];
-    // 难度统一经 App.Difficulty.consume 解析（批次4）：profile.scale 替代直调 diffScale。
+    // 难度统一经 App.Difficulty.paramsFor 解析（批次4）：profile.scale 替代直调 diffScale。
     // 显式传入 maxNum（口算面板「难度＝最大数」）时即填即得，等价自带分档，不再被难度缩放放大。
-    var prof = _D.consume(options);
+    var dp = options.difficultyParams || (_D && _D.paramsFor ? _D.paramsFor('math', (options.difficulty != null ? options.difficulty : (options.level || 3))) : { level: options.difficulty != null ? options.difficulty : (options.level || 3) });
+      var dpLevel = dp.level, dpScale = dp.scale, dpSteps = dp.steps, dpAllowBracket = dp.allowBracket, dpAllowMultDiv = dp.allowMultDiv, dpHasOwnLevel = (options.level != null && options.level !== '');
     this.grade      = options.grade;
-    this.difficulty = prof.effectiveLevel;
+    this.difficulty = dpLevel;
     this.maxNum     = options.maxNum != null
       ? Math.round(options.maxNum)
-      : Math.round(cfg.defaultMax * prof.scale);
-    this.structure  = prof.structure; // steps/allowBracket 等结构参数（供连加/混合档位参考）
+      : Math.round(cfg.defaultMax * dpScale);
+    this.structure  = dp; // steps/allowBracket 等结构参数（供连加/混合档位参考）
     this.count      = options.count  != null ? options.count  : cfg.defaultCount;
     this.noNegative = options.noNegative !== false;
     // 二年级：默认表内乘除法（乘法口诀表范围内，÷ 必整除）；

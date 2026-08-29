@@ -29,6 +29,13 @@
                 "cn-g1-n1-char-to-pinyin"
               ],
               "difficulty": 1,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active",
               "moduleId": "n1",
               "category": "pinyin",
@@ -53,6 +60,13 @@
                 "cn-g1-n1-char-to-pinyin"
               ],
               "difficulty": 1,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active",
               "moduleId": "n1",
               "category": "pinyin",
@@ -74,6 +88,13 @@
               ],
               "related": [],
               "difficulty": 1,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active",
               "moduleId": "n1",
               "category": "pinyin",
@@ -103,6 +124,13 @@
                 "cn-g1-n1-syllable-spelling"
               ],
               "difficulty": 2,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active"
             },
             {
@@ -124,6 +152,13 @@
               ],
               "related": [],
               "difficulty": 2,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active"
             }
           ]
@@ -144,6 +179,13 @@
                 "cn-g1-n2-word-structure"
               ],
               "difficulty": 1,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active",
               "moduleId": "n2",
               "category": "hanzi",
@@ -163,6 +205,13 @@
                 "cn-g1-n2-stroke-order"
               ],
               "difficulty": 1,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active",
               "moduleId": "n2",
               "category": "hanzi",
@@ -200,6 +249,13 @@
                 "cn-g3-n2-dictionary-lookup"
               ],
               "difficulty": 3,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "placeholder"
             },
             {
@@ -224,6 +280,13 @@
                 "cn-g3-n1-vowel-confusion"
               ],
               "difficulty": 3,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "placeholder"
             }
           ]
@@ -250,6 +313,13 @@
                 "cn-g3-n2-dictionary-lookup"
               ],
               "difficulty": 3,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active"
             },
             {
@@ -269,6 +339,13 @@
               ],
               "related": [],
               "difficulty": 4,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active"
             }
           ]
@@ -302,6 +379,13 @@
                 "cn-g3-n2-homophone-chars"
               ],
               "difficulty": 5,
+              "spiral_level": 2,
+              "max_spiral_level": 3,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active"
             },
             {
@@ -323,6 +407,13 @@
               ],
               "related": [],
               "difficulty": 5,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active"
             }
           ]
@@ -348,6 +439,13 @@
               ],
               "related": [],
               "difficulty": 5,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active"
             },
             {
@@ -367,6 +465,13 @@
               ],
               "related": [],
               "difficulty": 5,
+              "spiral_level": 1,
+              "max_spiral_level": 1,
+              "cognitive_level": "掌握",
+              "applicable_question_types": [ { "type": "mix", "coefficient": 1 } ],
+              "number_range_default": { "min": 1, "max": 1 },
+              "max_steps_default": 2,
+              "context_default": "standard",
               "status": "active"
             }
           ]

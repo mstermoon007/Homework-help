@@ -53,6 +53,10 @@ SUBJECT_KEYS.forEach(s => {
   });
 });
 
+// 阶段1：难度元数据新字段枚举常量（validateDifficultyFields 使用）
+const COGNITIVE_LEVELS = ['了解', '理解', '掌握', '运用'];
+const CONTEXT_LEVELS = ['pure', 'simple', 'standard', 'complex'];
+
 entries.forEach(entry => {
   if (gradeOnly && entry.grade !== gradeOnly) return;
   const g = entry.grade;
@@ -91,6 +95,9 @@ entries.forEach(entry => {
       }
       if (kp.weight == null) warnings.push(`(年级${g}/${mod.moduleId}) 知识点 ${kp.name} 缺 weight`);
       if (kp.type == null) warnings.push(`(年级${g}/${mod.moduleId}) 知识点 ${kp.name} 缺 type`);
+
+      // 7.6 难度元数据新字段（阶段1）：存在性/类型/范围校验
+      validateDifficultyFields(kp, `(年级${g}/${mod.moduleId}/${kp.id})`, errors);
     });
   });
 });
@@ -334,6 +341,43 @@ registry.forEach(rec => {
 //       其余字段对所有条目强制。收集缺失项生成格式化报告（科目/年级/模块/知识点ID/缺失字段）。
 function isFilled(v) {
   return (typeof v === 'string' && v.trim().length > 0) || (typeof v === 'number' && v > 0);
+}
+
+// 阶段1：难度元数据新字段（spiral_level / max_spiral_level / cognitive_level /
+// applicable_question_types / number_range_default / max_steps_default / context_default）
+// 存在性 + 类型 + 范围 校验
+function validateDifficultyFields(kp, loc, errors) {
+  if (!Number.isInteger(kp.spiral_level) || kp.spiral_level < 1) {
+    errors.push(`${loc} spiral_level 必须为 >=1 整数，实际: ${JSON.stringify(kp.spiral_level)}`);
+  }
+  if (!Number.isInteger(kp.max_spiral_level) || kp.max_spiral_level < 1) {
+    errors.push(`${loc} max_spiral_level 必须为 >=1 整数，实际: ${JSON.stringify(kp.max_spiral_level)}`);
+  } else if (Number.isInteger(kp.spiral_level) && kp.max_spiral_level < kp.spiral_level) {
+    errors.push(`${loc} max_spiral_level(${kp.max_spiral_level}) 须 >= spiral_level(${kp.spiral_level})`);
+  }
+  if (COGNITIVE_LEVELS.indexOf(kp.cognitive_level) === -1) {
+    errors.push(`${loc} cognitive_level 非法值: ${JSON.stringify(kp.cognitive_level)}（应 ${COGNITIVE_LEVELS.join('/')}）`);
+  }
+  if (!Array.isArray(kp.applicable_question_types)) {
+    errors.push(`${loc} applicable_question_types 必须为数组，实际: ${JSON.stringify(kp.applicable_question_types)}`);
+  } else {
+    kp.applicable_question_types.forEach((a, i) => {
+      if (!a || typeof a.type !== 'string') errors.push(`${loc} applicable_question_types[${i}].type 必须为字符串`);
+      if (typeof a.coefficient !== 'number' || !isFinite(a.coefficient)) errors.push(`${loc} applicable_question_types[${i}].coefficient 必须为有限数字`);
+    });
+  }
+  const nr = kp.number_range_default;
+  if (!nr || typeof nr !== 'object' || typeof nr.min !== 'number' || typeof nr.max !== 'number' || !isFinite(nr.min) || !isFinite(nr.max)) {
+    errors.push(`${loc} number_range_default 必须为 {min,max} 有限数字，实际: ${JSON.stringify(nr)}`);
+  } else if (nr.min > nr.max) {
+    errors.push(`${loc} number_range_default.min(${nr.min}) > max(${nr.max})`);
+  }
+  if (!Number.isInteger(kp.max_steps_default) || kp.max_steps_default < 1) {
+    errors.push(`${loc} max_steps_default 必须为 >=1 整数，实际: ${JSON.stringify(kp.max_steps_default)}`);
+  }
+  if (CONTEXT_LEVELS.indexOf(kp.context_default) === -1) {
+    errors.push(`${loc} context_default 非法值: ${JSON.stringify(kp.context_default)}（应 ${CONTEXT_LEVELS.join('/')}）`);
+  }
 }
 const REQ_FIELDS = ['id', 'name', 'weight', 'type', 'description', 'pluginId'];
 const fieldMissing = []; // {subject, grade, module, id, miss:[field,...]}
