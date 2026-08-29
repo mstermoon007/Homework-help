@@ -28,9 +28,7 @@ build/
 # 本地生成的检查报告（可随时再生：node dev/check-plugin-interfaces.js --report / --fix-json）
 dev/reports/
 archive/
-assets/*.webp
 competition-report.json
 *.png
 banner.jpg
-CNAME
 MEMORY.md
