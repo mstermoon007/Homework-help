@@ -21,15 +21,6 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g1-matching.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
   function esc(s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -57,9 +48,9 @@
 
   function buildOf(cat) {
     var pool = PAIRS.filter(function (s) { return s.cat === cat; });
-    return pool[rnd(0, pool.length - 1)];
+    return pool[_PU.randInt(0, pool.length - 1)];
   }
-  function buildMixed() { return PAIRS[rnd(0, PAIRS.length - 1)]; }
+  function buildMixed() { return PAIRS[_PU.randInt(0, PAIRS.length - 1)]; }
 
   var TYPE_BUILDERS = {
     'mix': buildMixed,
@@ -138,7 +129,7 @@
         attempts++;
       }
       return list.map(function (p) {
-        var data = { left: p.left, options: shuffle([p.right].concat(p.wrong)) };
+        var data = { left: p.left, options: _PU.shuffle([p.right].concat(p.wrong)) };
         return {
           type: 'match',
           data: data,

@@ -378,11 +378,111 @@ var A4_PRINTABLE_PX = 718;
     global.document.body.style.overflow = '';
   }
 
+  // ============ M7-R06：SemanticQuestion[] → PresentationRenderer → 打印 ============
+  // 新链路不再依赖页面 DOM 克隆：题目数组直接经统一 PresentationRenderer
+  // 渲染后套打印外壳，与「生成 → 渲染」主链零重渲染、零漂移。
+  // 旧 Print.open / Print.preview（DOM 克隆）保留兼容既有页面。
+
+  /** 解析 PresentationRenderer / RenderOptions（浏览器全局 → Node require 回退） */
+  function resolveNS(name, relPath) {
+    try {
+      if (typeof window !== 'undefined' && window[name]) return window[name];
+    } catch (e) { /* ignore */ }
+    if (typeof require === 'function') {
+      try { return require(relPath); } catch (e) { /* ignore */ }
+    }
+    return null;
+  }
+
+  // A4 竖版打印专用 CSS（不依赖页面自带样式，独立自足）
+  var PRINT_QCSS =
+    '@page { size: A4 portrait; margin: 12mm 10mm; }' +
+    'html { width: 210mm; } body { margin:0; padding:0; background:#fff; color:#27324a; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }' +
+    '.print-sheet { width:100%; max-width:190mm; margin:0 auto; box-sizing:border-box; }' +
+    '.ps-title { font-size:20px; font-weight:800; text-align:center; margin:0 0 14px; }' +
+    '.questions-grid { display:grid; gap:12px 10px; grid-template-columns:repeat(var(--grid-cols,3), minmax(0,1fr)); }' +
+    '.question-card { position:relative; border:1px solid #dbe3f0; border-radius:10px; padding:14px 14px 10px; background:#fff; page-break-inside:avoid; break-inside:avoid; box-sizing:border-box; }' +
+    '.question-stem { font-size:16px; line-height:1.7; font-weight:600; }' +
+    '.question-stem .num { display:inline-block; min-width:20px; font-weight:800; color:#5b8def; }' +
+    '.question-graphic { margin:8px 0 6px; text-align:center; }' +
+    '.question-graphic svg { max-width:100%; height:auto; }' +
+    '.question-options { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:8px; font-size:15px; }' +
+    '.question-options .option-letter { display:inline-block; min-width:20px; font-weight:700; color:#7c5cff; margin-right:4px; }' +
+    '.question-answer { margin-top:10px; min-height:24px; border-bottom:1px dashed #b9c6de; }' +
+    '.question-answer-print { min-height:28px; }' +
+    '.feedback { display:none; }' +
+    '@media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }';
+
+  /**
+   * 直接由 SemanticQuestion[]（或兼容 Legacy Question）构建打印页完整 HTML。
+   * @param {Array<Object>} questions
+   * @param {Object} [options] { title, columns, renderOptions }
+   * @returns {string|null} 完整 HTML
+   */
+  function buildFromQuestions(questions, options) {
+    options = options || {};
+    var title = options.title || '练习题';
+    var PR = resolveNS('PresentationRenderer', './presentation/renderer.js');
+    if (!PR || !Array.isArray(questions) || !questions.length) return null;
+    var RO = resolveNS('RenderOptions', './presentation/render-options.js');
+    var ro = RO ? RO.normalize(options.renderOptions, 'print')
+      : Object.assign({ mode: 'print', paper: 'A4', density: 'compact' }, options.renderOptions || {});
+    var columns = options.columns || 3;
+    var all;
+    try {
+      all = PR.renderAll(questions, ro, { columns: columns });
+    } catch (e) {
+      return null;
+    }
+    return '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n' +
+      '<meta charset="UTF-8">\n' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+      '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src \'self\' data:;">\n' +
+      '<title>' + escForPrint(title) + '</title>\n' +
+      '<style>\n' + PRINT_QCSS + '\n</style>\n</head>\n<body>\n' +
+      '<div class="print-sheet">\n' +
+      '<div class="ps-title">' + escForPrint(title) + '</div>\n' +
+      all.html +
+      '\n</div>\n</body>\n</html>';
+  }
+
+  /** 打开新窗口直接打印 SemanticQuestion 数组 */
+  function openFromQuestions(questions, options) {
+    var html = buildFromQuestions(questions, options);
+    if (!html) {
+      global.alert('无法构建打印内容（空题或渲染器不可用）。');
+      return;
+    }
+    popupAndPrint(html, (options && options.title) || '练习题');
+  }
+
+  /** 页内 A4 预览 SemanticQuestion 数组（与 openFromQuestions 同一份 HTML） */
+  function previewFromQuestions(questions, options) {
+    var doc = global.document;
+    var html = buildFromQuestions(questions, options);
+    if (!html) {
+      global.alert('无法构建打印内容（空题或渲染器不可用）。');
+      return;
+    }
+    var title = (options && options.title) || '练习题';
+    lastHtml = html;
+    lastTitle = title;
+    var dom = ensurePreviewDom(doc);
+    dom.overlay.hidden = false;
+    doc.body.style.overflow = 'hidden';
+    dom.overlay.querySelector('.pv-title').textContent = '打印预览 · ' + title;
+    pvFrame.onload = function () { fitSheetScale(); };
+    pvFrame.srcdoc = html;
+  }
+
   // ============ 导出 ============
   global.Print = {
     ROUTES: PRINT_ROUTES,
     open: open,
-    preview: preview
+    preview: preview,
+    buildFromQuestions: buildFromQuestions,
+    openFromQuestions: openFromQuestions,
+    previewFromQuestions: previewFromQuestions
   };
 
 })(typeof window !== 'undefined' ? window : this);

@@ -19,16 +19,6 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g5-draw.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
   function uniqueNums(cands, hi, lo, n) {
     var ans = String(cands[0]);
     var pool = [ans];
@@ -38,24 +28,24 @@
     });
     var guard = 0;
     while (pool.length < n && guard < 80) {
-      var x = String(rnd(lo, hi));
+      var x = String(_PU.randInt(lo, hi));
       if (pool.indexOf(x) === -1) pool.push(x);
       guard++;
     }
-    var rest = shuffle(pool.slice(1));
+    var rest = _PU.shuffle(pool.slice(1));
     var out = [ans];
     for (var i = 0; i < n - 1; i++) out.push(rest[i % rest.length]);
-    return shuffle(out);
+    return _PU.shuffle(out);
   }
 
   // ============ 画旋转后的图形 ============
   // 直角三角形绕某顶点旋转 90°，问旋转后的位置/方向
   function buildRotationDraw() {
-    var deg = pick([90, 180]);
-    var dir = pick(['顺时针', '逆时针']);
+    var deg = _PU.rand([90, 180]);
+    var dir = _PU.rand(['顺时针', '逆时针']);
     // 旋转前后的图形：画一个三角，旋转后位置变化
-    var shape = pick(['三角', '三角']);
-    var from = pick(['左上', '右上', '左下', '右下']);
+    var shape = _PU.rand(['三角', '三角']);
+    var from = _PU.rand(['左上', '右上', '左下', '右下']);
     var toMap = {
       '左上': deg === 90 ? (dir === '顺时针' ? '右上' : '左下') : '右下',
       '右上': deg === 90 ? (dir === '顺时针' ? '右下' : '左上') : '左下',
@@ -91,9 +81,9 @@
   // ============ 观察物体（三） ============
   // 给出小正方体堆的长宽高，问从正面/上面看到的面
   function buildObserve3d() {
-    var w = rnd(2, 4), d = rnd(2, 4), h = rnd(2, 3);
+    var w = _PU.randInt(2, 4), d = _PU.randInt(2, 4), h = _PU.randInt(2, 3);
     var total = w * d * h;
-    var view = pick(['正面', '上面', '侧面']);
+    var view = _PU.rand(['正面', '上面', '侧面']);
     var ans;
     if (view === '正面') ans = w * h;
     else if (view === '上面') ans = w * d;
@@ -129,22 +119,22 @@
   // ============ 画多边形的高 ============
   // 给出三角形/平行四边形/梯形，问底边对应的高
   function buildPolygonHeight() {
-    var shape = pick(['三角形', '平行四边形', '梯形']);
+    var shape = _PU.rand(['三角形', '平行四边形', '梯形']);
     var q, ans, svg;
     if (shape === '三角形') {
-      var b = rnd(3, 6), h = rnd(2, 5);
+      var b = _PU.randInt(3, 6), h = _PU.randInt(2, 5);
       var opts = uniqueNums([h, h + 1, h - 1, b], 10, 1, 4);
       q = '三角形的高是（  ）格';
       ans = String(h);
       svg = triSVG(b, h);
     } else if (shape === '平行四边形') {
-      var b2 = rnd(3, 6), h2 = rnd(2, 5);
+      var b2 = _PU.randInt(3, 6), h2 = _PU.randInt(2, 5);
       q = '平行四边形的高是（  ）格';
       ans = String(h2);
       opts = uniqueNums([h2, h2 + 1, h2 - 1, b2], 10, 1, 4);
       svg = paraSVG(b2, h2);
     } else {
-      var up = rnd(2, 4), down = rnd(4, 7), h3 = rnd(2, 5);
+      var up = _PU.randInt(2, 4), down = _PU.randInt(4, 7), h3 = _PU.randInt(2, 5);
       q = '梯形的高是（  ）格';
       ans = String(h3);
       opts = uniqueNums([h3, h3 + 1, h3 - 1, down], 10, 1, 4);
@@ -189,9 +179,9 @@
       ['等边三角形', '3', 'eqTriSym'],
       ['圆', '无数条', 'circSym']
     ];
-    var pr = pick(pairs);
+    var pr = _PU.rand(pairs);
     var opts;
-    if (pr[1] === '无数条') opts = shuffle(['无数条', '1', '2', '4']);
+    if (pr[1] === '无数条') opts = _PU.shuffle(['无数条', '1', '2', '4']);
     else opts = uniqueNums([Number(pr[1]), Number(pr[1]) + 1, Number(pr[1]) + 2, 1], 8, 1, 4);
     return { q: pr[0] + '有（  ）条对称轴', options: opts, answer: pr[1], hint: '对折后两边完全重合的折痕是它的对称轴。', svg: symSVG(pr[2]) };
   }
@@ -205,9 +195,9 @@
 
   // ============ 用数对表示位置 ============
   function buildCoordinatePlot() {
-    var x = rnd(1, 5), y = rnd(1, 5);
+    var x = _PU.randInt(1, 5), y = _PU.randInt(1, 5);
     var xChar = String.fromCharCode(64 + x);
-    var dir = pick(['row', 'col']);
+    var dir = _PU.rand(['row', 'col']);
     if (dir === 'row') {
       return { q: '点在第 ' + x + ' 列第 ' + y + ' 行，用数对表示是（  ）', answer: '(' + x + ', ' + y + ')', hint: '先列后行。', svg: coordSVG(x, y) };
     }
@@ -230,16 +220,16 @@
   // ============ 长方体展开图 ============
   function buildSolidNet() {
     var q, ans, opts, svg;
-    var shape = pick(['长方体', '正方体']);
+    var shape = _PU.rand(['长方体', '正方体']);
     if (shape === '正方体') {
       q = '下面哪个图形能围成正方体？';
       ans = '中间图';
-      opts = shuffle(['左图', '中间图', '右图']);
+      opts = _PU.shuffle(['左图', '中间图', '右图']);
       svg = netSVG(shape);
     } else {
       q = '下面哪个图形能围成长方体？';
       ans = '右图';
-      opts = shuffle(['左图', '中间图', '右图']);
+      opts = _PU.shuffle(['左图', '中间图', '右图']);
       svg = netSVG(shape);
     }
     return { q: q, options: opts, answer: ans, hint: '展开图沿虚线折叠后能围成立体图形的是正确的展开图。', svg: svg };
@@ -272,7 +262,7 @@
 
   // ============ 综合操作 ============
   function buildMixed() {
-    var r = rnd(1, 100);
+    var r = _PU.randInt(1, 100);
     if (r <= 20) return buildRotationDraw();
     if (r <= 40) return buildObserve3d();
     if (r <= 60) return buildPolygonHeight();
@@ -350,7 +340,7 @@
       }
       return list.map(function (p) {
         var svgOut = p.svg || '';
-        if (svgOut) svgOut = svgOut + '<!--s' + rnd(0, 999999) + '-->';
+        if (svgOut) svgOut = svgOut + '<!--s' + _PU.randInt(0, 999999) + '-->';
         var q = { type: 'draw', q: p.q, answer: String(p.answer), hint: p.hint, svg: svgOut };
         if (p.inputType === 'multi') {
           q.inputType = 'multi';

@@ -21,6 +21,9 @@
         return localStorage;
       } catch (e) { return null; } // 隐私模式 / 禁用时返回 null
     }
+    function isAvailable() {
+      return storage() != null;
+    }
     function load() {
       var s = storage();
       if (!s) return defaults();
@@ -106,6 +109,7 @@
 
     return {
       KEY: KEY, VERSION: VERSION, WRONG_CAP: WRONG_CAP,
+      isAvailable: isAvailable,
       load: load, loadState: load, save: save, clear: clear, clearState: clear,
       saveLastPractice: saveLastPractice,
       addWrong: addWrong, getWrongList: getWrongList,

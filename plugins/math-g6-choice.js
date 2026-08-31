@@ -25,15 +25,6 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g6-choice.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
   function trimD(x) { return String(Number(x.toFixed(3))); }
 
   /** 四选项：答案 + 3 个错误来源干扰项，洗牌输出（碰撞时数值变体兜底） */
@@ -47,7 +38,7 @@
         guard++;
       }
     }
-    return shuffle(opts);
+    return _PU.shuffle(opts);
   }
 
   // ============ 负数（确定性枚举 ~250 签名） ============

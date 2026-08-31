@@ -1,0 +1,356 @@
+{
+  "generatedAt": "2026-08-31T16:55:51.138Z",
+  "version": "1.0",
+  "files": {
+    "shared/common.js": {
+      "hash": "1a7b1532748b10de",
+      "size": 2890,
+      "mtime": 1787973668114.6597
+    },
+    "shared/version.js": {
+      "hash": "1f5cee3311216c14",
+      "size": 1051,
+      "mtime": 1787994776193.7153
+    },
+    "shared/tokens.css": {
+      "hash": "5b4816ddb53f3529",
+      "size": 6727,
+      "mtime": 1788013435123.2544
+    },
+    "shared/base.css": {
+      "hash": "964d4f072087ebc6",
+      "size": 987,
+      "mtime": 1787846118469.634
+    },
+    "shared/states.css": {
+      "hash": "052dfef7faa054dc",
+      "size": 6831,
+      "mtime": 1787846119108.3567
+    },
+    "shared/components.css": {
+      "hash": "dc775d1fd827c2c5",
+      "size": 21194,
+      "mtime": 1788193911124.962
+    },
+    "shared/pages.css": {
+      "hash": "a2fb5f82732036c8",
+      "size": 11478,
+      "mtime": 1787931948164.7483
+    },
+    "shared/toolbar.css": {
+      "hash": "73bfb988db174e5b",
+      "size": 9473,
+      "mtime": 1787933271547.0583
+    },
+    "shared/subjects.css": {
+      "hash": "e5dbd4fe88d8b57c",
+      "size": 7965,
+      "mtime": 1788013436971.3398
+    },
+    "shared/knowledge-bank.js": {
+      "hash": "ce0cf8af58f67e6d",
+      "size": 10656,
+      "mtime": 1788067280594.5122
+    },
+    "shared/knowledge-math.js": {
+      "hash": "66afc6876898f0e5",
+      "size": 509481,
+      "mtime": 1788104490059.635
+    },
+    "shared/knowledge-cn.js": {
+      "hash": "1daacda73babc441",
+      "size": 18260,
+      "mtime": 1788020537802.9683
+    },
+    "shared/knowledge-en.js": {
+      "hash": "526955ab6ec82035",
+      "size": 3573,
+      "mtime": 1788020537803.442
+    },
+    "shared/knowledge-ontology.js": {
+      "hash": "93355475abfc07d4",
+      "size": 4265,
+      "mtime": 1788062378207.3506
+    },
+    "shared/module-catalog.js": {
+      "hash": "89dfe6520c8e6435",
+      "size": 11327,
+      "mtime": 1787930521049.1396
+    },
+    "shared/capability-model.js": {
+      "hash": "1f62b085ede8f377",
+      "size": 3728,
+      "mtime": 1788071825736.5842
+    },
+    "shared/capability-matrix.js": {
+      "hash": "8a832d6651ef9848",
+      "size": 2761,
+      "mtime": 1788079869434.817
+    },
+    "shared/capability-resolver.js": {
+      "hash": "1e3834ce37f8c732",
+      "size": 4933,
+      "mtime": 1788079590233.2776
+    },
+    "shared/question-type-registry.js": {
+      "hash": "c04de365226cf707",
+      "size": 15042,
+      "mtime": 1788151817378.8115
+    },
+    "shared/generator/generator-contract.js": {
+      "hash": "f99a5574dbca9f05",
+      "size": 14474,
+      "mtime": 1788150923822.1445
+    },
+    "shared/generator/generator-registry.js": {
+      "hash": "49543c11be592437",
+      "size": 8099,
+      "mtime": 1788186921580.7668
+    },
+    "shared/generator/generator-selector.js": {
+      "hash": "a5a02fe7eb1ffdc7",
+      "size": 6613,
+      "mtime": 1788163042580.6455
+    },
+    "shared/generator/generator-mode.js": {
+      "hash": "2b92c67840720dc4",
+      "size": 7582,
+      "mtime": 1788187115159.7195
+    },
+    "shared/generator/retry-loop.js": {
+      "hash": "f3ae8c9488391adf",
+      "size": 8849,
+      "mtime": 1788159936603.809
+    },
+    "shared/generator/legacy-plugin-adapter.js": {
+      "hash": "77103fd81285e733",
+      "size": 9188,
+      "mtime": 1788178095406.3228
+    },
+    "shared/generator/generators/arithmetic.js": {
+      "hash": "7c27e5c377c64834",
+      "size": 4394,
+      "mtime": 1788095826611.49
+    },
+    "shared/generator/generators/selection.js": {
+      "hash": "c93825ba7ed6666f",
+      "size": 5060,
+      "mtime": 1788090743358.4827
+    },
+    "shared/generator/generators/complex.js": {
+      "hash": "e9230fe77f784cc5",
+      "size": 8529,
+      "mtime": 1788098748612.5752
+    },
+    "shared/generator/generators/index.js": {
+      "hash": "575e1571a6cfbdef",
+      "size": 651,
+      "mtime": 1788098629735.06
+    },
+    "shared/generator/core/kp-arithmetic-semantics.js": {
+      "hash": "eea44b9bf0c105ad",
+      "size": 2497,
+      "mtime": 1788095783095.607
+    },
+    "shared/strategy/strategy-engine.js": {
+      "hash": "a0412126a26ec3c1",
+      "size": 12665,
+      "mtime": 1788153679844.7222
+    },
+    "shared/strategy/comprehensive-strategy.js": {
+      "hash": "54a9b81f0f0eefcb",
+      "size": 10370,
+      "mtime": 1788161059773.207
+    },
+    "shared/strategy/legacy-adapter.js": {
+      "hash": "ce1d713ee9ae2617",
+      "size": 3441,
+      "mtime": 1788096451947.2761
+    },
+    "shared/strategy/strategy-error.js": {
+      "hash": "242c4e5ae33412e0",
+      "size": 857,
+      "mtime": 1788075216131.3135
+    },
+    "shared/validator/validation-pipeline.js": {
+      "hash": "c52f25faed3e8998",
+      "size": 4482,
+      "mtime": 1788109109726.429
+    },
+    "shared/validator/question-validator.js": {
+      "hash": "e57abf0e44047f5a",
+      "size": 4269,
+      "mtime": 1788108432197.7527
+    },
+    "shared/validator/answer-validator.js": {
+      "hash": "7072376451a36690",
+      "size": 9130,
+      "mtime": 1788108543813.5352
+    },
+    "shared/validator/distractor-validator.js": {
+      "hash": "484a1e704f9f170c",
+      "size": 3489,
+      "mtime": 1788108582788.4011
+    },
+    "shared/validator/structure-validator.js": {
+      "hash": "5983d8939b11d600",
+      "size": 4572,
+      "mtime": 1788108625399.4507
+    },
+    "shared/validator/difficulty-validator.js": {
+      "hash": "c31fb53070e097e4",
+      "size": 4458,
+      "mtime": 1788151649749.0671
+    },
+    "shared/validator/duplicate-validator.js": {
+      "hash": "f38f0d45b74c2e4a",
+      "size": 3011,
+      "mtime": 1788108887170.0967
+    },
+    "shared/validator/graphic-validator.js": {
+      "hash": "140eae607d75afc7",
+      "size": 2947,
+      "mtime": 1788108954036.7861
+    },
+    "shared/validator/render-preflight.js": {
+      "hash": "e0f4c2940258c29f",
+      "size": 2814,
+      "mtime": 1788109032394.7559
+    },
+    "shared/validator/batch-validator.js": {
+      "hash": "7b469a0c970d98fe",
+      "size": 6362,
+      "mtime": 1788109498923.976
+    },
+    "shared/validator/quality-scorer.js": {
+      "hash": "3851d521183883c9",
+      "size": 6127,
+      "mtime": 1788110091699.3967
+    },
+    "shared/learner/learner-model.js": {
+      "hash": "dae266713aec6fe2",
+      "size": 13444,
+      "mtime": 1788153469111.7024
+    },
+    "shared/learner/learner-storage.js": {
+      "hash": "fa2012b1e8c7a920",
+      "size": 4215,
+      "mtime": 1788153508742.1208
+    },
+    "shared/learner/practice-result.js": {
+      "hash": "2c713399d7fe628b",
+      "size": 5856,
+      "mtime": 1788153136539.6418
+    },
+    "shared/learner/result-collector.js": {
+      "hash": "70392e81be108ca8",
+      "size": 3496,
+      "mtime": 1788153218716.7852
+    },
+    "shared/learner/error-model.js": {
+      "hash": "a2ce5f6099a68dd0",
+      "size": 6195,
+      "mtime": 1788153106366.4775
+    },
+    "shared/storage.js": {
+      "hash": "35813ccad6c77d37",
+      "size": 5160,
+      "mtime": 1788153505982.3408
+    },
+    "shared/difficulty.js": {
+      "hash": "94f3b4b82046cbd6",
+      "size": 11073,
+      "mtime": 1787923388806.1956
+    },
+    "shared/difficulty-static.js": {
+      "hash": "ae4467e16e53c925",
+      "size": 7392,
+      "mtime": 1788020537850.282
+    },
+    "shared/presentation/renderer.js": {
+      "hash": "b70dba78aa742746",
+      "size": 4322,
+      "mtime": 1788159053070.6223
+    },
+    "shared/presentation/html-renderer.js": {
+      "hash": "a57f9c27095e3e26",
+      "size": 6222,
+      "mtime": 1788168723216.9407
+    },
+    "shared/presentation/render-options.js": {
+      "hash": "38ffee901bd7c3a7",
+      "size": 3226,
+      "mtime": 1788160904065.5789
+    },
+    "shared/presentation/render-result.js": {
+      "hash": "57682a660fda024b",
+      "size": 2720,
+      "mtime": 1788158885946.4795
+    },
+    "shared/presentation/legacy-svg-adapter.js": {
+      "hash": "a5100e5d926471ec",
+      "size": 2269,
+      "mtime": 1788158900473.1636
+    },
+    "shared/presentation/svg-registry.js": {
+      "hash": "a7021b5f82d46102",
+      "size": 10779,
+      "mtime": 1788190235405.2598
+    },
+    "shared/generation-engine.js": {
+      "hash": "4eeb7c499b447884",
+      "size": 14991,
+      "mtime": 1788165833171.8267
+    },
+    "shared/presentation-engine.js": {
+      "hash": "0f805b70e7d5e840",
+      "size": 9811,
+      "mtime": 1788188394154.4207
+    },
+    "shared/print.js": {
+      "hash": "2ea66b6a27c87043",
+      "size": 22195,
+      "mtime": 1788159277657.3152
+    },
+    "shared/practice-session.js": {
+      "hash": "df448c4ac47fd014",
+      "size": 13400,
+      "mtime": 1788191506855.6514
+    },
+    "shared/check.js": {
+      "hash": "fb37a44749114d74",
+      "size": 3388,
+      "mtime": 1787973587585.8472
+    },
+    "shared/svg-core.js": {
+      "hash": "573aa670c7469e2e",
+      "size": 17436,
+      "mtime": 1787972991852.563
+    },
+    "shared/svg-geometry.js": {
+      "hash": "18816c2e6e422085",
+      "size": 15881,
+      "mtime": 1787846119113.3123
+    },
+    "shared/svg-calculation.js": {
+      "hash": "c46b59286fbf2cb3",
+      "size": 18112,
+      "mtime": 1787846119110.2126
+    },
+    "shared/svg-chinese.js": {
+      "hash": "dffe16ee8d092153",
+      "size": 9172,
+      "mtime": 1787846119110.9573
+    },
+    "shared/svg-english.js": {
+      "hash": "661fcc4f360993e5",
+      "size": 10549,
+      "mtime": 1787846119112.4846
+    },
+    "shared/svg-make-ten.js": {
+      "hash": "54232568b3bd6e5b",
+      "size": 5522,
+      "mtime": 1787846119113.8362
+    }
+  }
+}

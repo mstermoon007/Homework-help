@@ -16,23 +16,13 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g5-stats.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
 
   // ============ 可能性大小比较 ============
   // 比较从不同袋子里摸到红球的可能性
   function buildPossibilityCompare() {
-    var v = pick(['bigger', 'frac']);
-    var red1 = rnd(1, 5), total1 = red1 + rnd(1, 5);
-    var red2 = rnd(1, 5), total2 = red2 + rnd(1, 5);
+    var v = _PU.rand(['bigger', 'frac']);
+    var red1 = _PU.randInt(1, 5), total1 = red1 + _PU.randInt(1, 5);
+    var red2 = _PU.randInt(1, 5), total2 = red2 + _PU.randInt(1, 5);
     if (v === 'bigger') {
       var p1 = red1 / total1, p2 = red2 / total2;
       var ans = Math.abs(p1 - p2) < 1e-9 ? '一样大' : p1 > p2 ? '袋子一' : '袋子二';
@@ -83,19 +73,19 @@
 
   // ============ 单式折线统计图 ============
   function buildLinechartSingle() {
-    var v = pick(['value', 'max', 'trend']);
+    var v = _PU.rand(['value', 'max', 'trend']);
     var vals = [];
-    for (var i = 0; i < 5; i++) vals.push(rnd(10, 90));
+    for (var i = 0; i < 5; i++) vals.push(_PU.randInt(10, 90));
     var labels = ['周一', '周二', '周三', '周四', '周五'];
     var svg = lineSVG(vals, labels);
     var maxIdx = 0, minIdx = 0;
     for (var j = 1; j < 5; j++) { if (vals[j] > vals[maxIdx]) maxIdx = j; if (vals[j] < vals[minIdx]) minIdx = j; }
     if (v === 'value') {
-      var idx = rnd(0, 4);
+      var idx = _PU.randInt(0, 4);
       return { q: '根据折线统计图，' + labels[idx] + ' 的气温是（  ）℃', answer: vals[idx], svg: svg, hint: '看' + labels[idx] + '对应的点的高度。' };
     }
     if (v === 'max') {
-      return { q: '根据折线统计图，气温最高的一天是（  ）', answer: labels[maxIdx], options: shuffle(labels.slice()), svg: svg, hint: '找折线最高点对应的日期。' };
+      return { q: '根据折线统计图，气温最高的一天是（  ）', answer: labels[maxIdx], options: _PU.shuffle(labels.slice()), svg: svg, hint: '找折线最高点对应的日期。' };
     }
     var trend = vals[4] > vals[0] ? '上升' : vals[4] < vals[0] ? '下降' : '不变';
     return { q: '根据折线统计图，这周气温整体呈（填：上升/下降/不变）趋势', answer: trend, svg: svg, hint: '比较第一天与最后一天。' };
@@ -103,20 +93,20 @@
 
   // ============ 复式折线统计图 ============
   function buildLinechartDouble() {
-    var v = pick(['value', 'diff', 'trend']);
+    var v = _PU.rand(['value', 'diff', 'trend']);
     var vals1 = [], vals2 = [];
-    for (var i = 0; i < 5; i++) { vals1.push(rnd(20, 80)); vals2.push(rnd(10, 70)); }
+    for (var i = 0; i < 5; i++) { vals1.push(_PU.randInt(20, 80)); vals2.push(_PU.randInt(10, 70)); }
     var labels = ['一', '二', '三', '四', '五'];
     var svg = lineSVG(vals1, labels, vals2);
     if (v === 'value') {
-      var idx = rnd(0, 4);
-      var which = pick([0, 1]);
+      var idx = _PU.randInt(0, 4);
+      var which = _PU.rand([0, 1]);
       var arr = which === 0 ? vals1 : vals2;
       var col = which === 0 ? '蓝色' : '橙色';
       return { q: '根据复式折线统计图，' + labels[idx] + '（' + col + '线）销售量是（  ）件', answer: arr[idx], svg: svg, hint: '看' + labels[idx] + '对应的' + col + '线的点。' };
     }
     if (v === 'diff') {
-      var idx2 = rnd(0, 4);
+      var idx2 = _PU.randInt(0, 4);
       var d = Math.abs(vals1[idx2] - vals2[idx2]);
       return { q: '根据复式折线统计图，' + labels[idx2] + ' 两条线相差（  ）件', answer: d, svg: svg, hint: '两条线高度差。' };
     }
@@ -127,7 +117,7 @@
 
   // ============ 综合分类与整理 ============
   function buildMixed() {
-    var r = rnd(1, 100);
+    var r = _PU.randInt(1, 100);
     if (r <= 35) return buildPossibilityCompare();
     if (r <= 70) return buildLinechartSingle();
     return buildLinechartDouble();

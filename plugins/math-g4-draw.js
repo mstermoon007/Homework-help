@@ -23,16 +23,6 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g4-draw.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
   // 从候选数字中生成 n 个两两不同的选项（均限制在 [lo, hi)，字符串形式）
   function uniqueNums(cands, hi, lo, n) {
     var out = [];
@@ -42,23 +32,23 @@
     });
     var guard = 0;
     while (pool.length < n && guard < 60) {
-      var extra = rnd(lo, hi - 1);
+      var extra = _PU.randInt(lo, hi - 1);
       if (pool.indexOf(extra) === -1) pool.push(extra);
       guard++;
     }
     // 打乱取前 n 个（不足则用重复补足，保证数量）
-    var shuffled = shuffle(pool);
+    var shuffled = _PU.shuffle(pool);
     for (var i = 0; i < n; i++) out.push(shuffled[i % shuffled.length]);
-    return shuffle(out);
+    return _PU.shuffle(out);
   }
 
   // ============ 量角器量角、画角 ============
   // 画角结果判断：给定角，选择正确的度数 / 画法
   function buildProtractor() {
-    var v = pick(['measure', 'draw', 'read']);
+    var v = _PU.rand(['measure', 'draw', 'read']);
     if (v === 'measure') {
       // 量角：给出角度 SVG（用弧线标注），选择度数
-      var degs = pick([[30, 0], [45, 0], [60, 0], [90, 0], [120, 0], [135, 0], [150, 0]]);
+      var degs = _PU.rand([[30, 0], [45, 0], [60, 0], [90, 0], [120, 0], [135, 0], [150, 0]]);
       var deg = degs[0];
       var svg = angleSVG(deg);
       var opts = uniqueNums([deg, deg + 10, deg - 10, deg + 20], 180, 1, 4);
@@ -67,18 +57,18 @@
     }
     if (v === 'draw') {
       // 画角：给出要画的度数，选择正确的画法步骤
-      var deg2 = pick([30, 45, 60, 90, 120, 135]);
+      var deg2 = _PU.rand([30, 45, 60, 90, 120, 135]);
       var step = deg2 + '° 角的画法：①画一条射线；②用（  ）量出 ' + deg2 + '°；③连接并标出度数';
       var correct = '量角器';
-      var opts2 = shuffle(['量角器', '直尺', '三角尺', '圆规']);
+      var opts2 = _PU.shuffle(['量角器', '直尺', '三角尺', '圆规']);
       return { q: step + '。②中应用到的工具是（  ）', answer: correct, options: opts2,
         hint: '画指定度数的角用量角器。' };
     }
     // 读：判断角是锐/直/钝/平
-    var d3 = pick([35, 60, 90, 120, 150, 180]);
+    var d3 = _PU.rand([35, 60, 90, 120, 150, 180]);
     var svg3 = angleSVG(d3);
     var cls = d3 < 90 ? '锐角' : d3 === 90 ? '直角' : d3 === 180 ? '平角' : '钝角';
-    var opts3 = shuffle(['锐角', '直角', '钝角', '平角']);
+    var opts3 = _PU.shuffle(['锐角', '直角', '钝角', '平角']);
     return { q: '下面的角是（  ）', answer: cls, options: opts3,
       svg: svg3, hint: '小于 90° 是锐角，等于 90° 是直角，大于 90° 小于 180° 是钝角，180° 是平角。' };
   }
@@ -100,34 +90,34 @@
 
   // ============ 画平行线、垂线 ============
   function buildParallelPerp() {
-    var v = pick(['parallel', 'perp', 'judge']);
+    var v = _PU.rand(['parallel', 'perp', 'judge']);
     if (v === 'parallel') {
-      var n = rnd(2, 6);
-      var pt = pick(['P', 'A', 'M', '点 O']);
-      var ln = pick(['l', 'm', '已知直线', '这条线']);
+      var n = _PU.randInt(2, 6);
+      var pt = _PU.rand(['P', 'A', 'M', '点 O']);
+      var ln = _PU.rand(['l', 'm', '已知直线', '这条线']);
       var q = '过直线外' + pt + '画' + ln + '的平行线，应让三角尺的一条直角边靠住' + ln + '，再用（  ）紧贴三角尺的另一条边推动';
       var correct = '直尺';
-      var opts = shuffle(['直尺', '量角器', '圆规', '三角尺的另一边']);
+      var opts = _PU.shuffle(['直尺', '量角器', '圆规', '三角尺的另一边']);
       return { q: q, answer: correct, options: opts,
         hint: '画平行线：一靠、二推、三画。' };
     }
     if (v === 'perp') {
-      var pt2 = pick(['P', 'A', 'M', '点 O']);
-      var ln2 = pick(['l', 'm', '已知直线', '这条线']);
+      var pt2 = _PU.rand(['P', 'A', 'M', '点 O']);
+      var ln2 = _PU.rand(['l', 'm', '已知直线', '这条线']);
       var q2 = '过' + ln2 + '上' + pt2 + '画' + ln2 + '的垂线，用（  ）画出的线一定互相垂直';
       var correct2 = '三角尺的直角边';
-      var opts2 = shuffle(['三角尺的直角边', '直尺的刻度', '圆规的两脚', '量角器的中心']);
+      var opts2 = _PU.shuffle(['三角尺的直角边', '直尺的刻度', '圆规的两脚', '量角器的中心']);
       return { q: q2, answer: correct2, options: opts2,
         hint: '两条直线相交成直角，就说这两条直线互相垂直。' };
     }
     // 判断：两条线的位置关系
-    var pair = pick([
+    var pair = _PU.rand([
       ['互相平行', '两条直线不相交'],
       ['互相垂直', '两条直线相交成直角'],
       ['相交', '两条直线有一个交点但不垂直']
     ]);
     var svg = linePairSVG(pair[0]);
-    var opts3 = shuffle(['互相平行', '互相垂直', '相交']);
+    var opts3 = _PU.shuffle(['互相平行', '互相垂直', '相交']);
     return { q: '下面两条直线的位置关系是（  ）', answer: pair[0], options: opts3,
       svg: svg, hint: '不相交的两条直线互相平行；相交成直角的两条直线互相垂直。' };
   }
@@ -154,11 +144,11 @@
 
   // ============ 在方格纸上画平行四边形、梯形 ============
   function buildGridQuad() {
-    var v = pick(['count', 'draw', 'sides']);
+    var v = _PU.rand(['count', 'draw', 'sides']);
     if (v === 'count') {
       // 数格子：给出方格图，数图形的底/高
-      var kind = pick(['平行四边形', '梯形']);
-      var b = rnd(2, 6), h = rnd(2, 4);
+      var kind = _PU.rand(['平行四边形', '梯形']);
+      var b = _PU.randInt(2, 6), h = _PU.randInt(2, 4);
       var svg = gridQuadSVG(kind, b, h);
       return { q: '下面' + kind + '的底是（  ）格，高是（  ）格', answer: b + '、' + h,
         inputCount: 2, inputType: 'multi', svg: svg,
@@ -166,8 +156,8 @@
     }
     if (v === 'draw') {
       // 画图结果：哪个图形是平行四边形（选项为文字+简要 SVG）
-      var opts = shuffle(['平行四边形', '梯形', '长方形', '三角形']);
-      var phr = pick([
+      var opts = _PU.shuffle(['平行四边形', '梯形', '长方形', '三角形']);
+      var phr = _PU.rand([
         '在方格纸上画图形：两组对边分别平行且相等的四边形是（  ）',
         '在方格纸上画一个四边形，要求对边互相平行，它是（  ）',
         '下面哪类四边形满足「对边平行且相等」（  ）'
@@ -176,7 +166,7 @@
         hint: '平行四边形的两组对边分别平行。' };
     }
     // sides：根据方格判断图形边的长度
-    var w = rnd(2, 5), h2 = rnd(2, 4);
+    var w = _PU.randInt(2, 5), h2 = _PU.randInt(2, 4);
     var svg2 = gridQuadSVG('长方形', w, h2);
     return { q: '下面长方形长（  ）格、宽（  ）格', answer: w + '、' + h2,
       inputCount: 2, inputType: 'multi', svg: svg2,
@@ -207,10 +197,10 @@
 
   // ============ 观察物体 ============
   function buildObserve() {
-    var v = pick(['front', 'cubes']);
+    var v = _PU.rand(['front', 'cubes']);
     // 立体图形三视图/小方块数量
-    var n = rnd(2, 5);
-    var w = rnd(2, 4), d = rnd(2, 3), hgt = rnd(2, 3);
+    var n = _PU.randInt(2, 5);
+    var w = _PU.randInt(2, 4), d = _PU.randInt(2, 3), hgt = _PU.randInt(2, 3);
     var svg = cubeViewSVG(w, d, hgt);
     var total = w * d * hgt;
     if (v === 'front') {
@@ -240,7 +230,7 @@
 
   // ============ 画轴对称图形 ============
   function buildSymmetry() {
-    var v = pick(['axis-count', 'sym', 'not-sym']);
+    var v = _PU.rand(['axis-count', 'sym', 'not-sym']);
     if (v === 'axis-count') {
       var shapes = [
         ['正方形', 4, squareSVG()],
@@ -249,23 +239,23 @@
         ['等腰三角形', 1, triIsosSVG()],
         ['圆', '无数', circleSVG()]
       ];
-      var pr = pick(shapes);
+      var pr = _PU.rand(shapes);
       var ansS = String(pr[1]);
       var optPool = ['无数', '1', '2', '3', '4'].filter(function (o) { return o !== ansS; });
-      var shuffled = shuffle(optPool).slice(0, 3);
-      var opts = shuffle([ansS].concat(shuffled));
+      var shuffled = _PU.shuffle(optPool).slice(0, 3);
+      var opts = _PU.shuffle([ansS].concat(shuffled));
       return { q: '「' + pr[0] + '」有（  ）条对称轴', answer: ansS, options: opts,
         svg: pr[2], hint: '对折后两边完全重合的折痕就是对称轴。' };
     }
     if (v === 'sym') {
       var letters = ['A', 'B', 'C', 'D', 'E', 'H', 'M', 'O', 'T', 'U', 'V', 'W', 'X', 'Y'];
-      var c = pick(letters);
-      return { q: '大写字母「' + c + '」是轴对称图形吗？', answer: '是', options: shuffle(['是', '不是']),
+      var c = _PU.rand(letters);
+      return { q: '大写字母「' + c + '」是轴对称图形吗？', answer: '是', options: _PU.shuffle(['是', '不是']),
         hint: '看沿某条直线对折能否完全重合。' };
     }
     var notSym = ['F', 'G', 'J', 'L', 'N', 'P', 'Q', 'R', 'S', 'Z'];
-    var c2 = pick(notSym);
-    return { q: '大写字母「' + c2 + '」是轴对称图形吗？', answer: '不是', options: shuffle(['是', '不是']),
+    var c2 = _PU.rand(notSym);
+    return { q: '大写字母「' + c2 + '」是轴对称图形吗？', answer: '不是', options: _PU.shuffle(['是', '不是']),
       hint: '沿任何直线对折都不能完全重合，就不是轴对称图形。' };
   }
 
@@ -287,17 +277,17 @@
 
   // ============ 图形平移 ============
   function buildTranslate() {
-    var v = pick(['dx', 'dy', 'both']);
-    var dx = rnd(2, 5), dy = rnd(1, 3);
+    var v = _PU.rand(['dx', 'dy', 'both']);
+    var dx = _PU.randInt(2, 5), dy = _PU.randInt(1, 3);
     var svg = translateSVG(dx, dy);
     if (v === 'dx') {
       return { q: '下图中图形向（  ）平移了 ' + dx + ' 格', answer: '右',
-        options: shuffle(['右', '左']), svg: svg,
+        options: _PU.shuffle(['右', '左']), svg: svg,
         hint: '看对应顶点移动的方向与格数。' };
     }
     if (v === 'dy') {
       return { q: '下图中图形向（  ）平移了 ' + dy + ' 格', answer: '下',
-        options: shuffle(['上', '下']), svg: svg,
+        options: _PU.shuffle(['上', '下']), svg: svg,
         hint: '看对应顶点移动的方向与格数。' };
     }
     var steps = dx + ' 格、再向下 ' + dy + ' 格';
@@ -323,7 +313,7 @@
 
   // ============ 综合操作题（按知识点权重混合） ============
   function buildMixed() {
-    var r = rnd(1, 100);
+    var r = _PU.randInt(1, 100);
     if (r <= 18) return buildProtractor();
     if (r <= 36) return buildParallelPerp();
     if (r <= 52) return buildGridQuad();
@@ -400,7 +390,7 @@
       }
       return list.map(function (p) {
         var svgOut = p.svg || '';
-        if (svgOut) svgOut = svgOut + '<!--s' + rnd(0, 999999) + '-->';
+        if (svgOut) svgOut = svgOut + '<!--s' + _PU.randInt(0, 999999) + '-->';
         var q = { type: 'draw', q: p.q, answer: String(p.answer), hint: p.hint, svg: svgOut };
         if (p.inputType === 'multi') {
           q.inputType = 'multi';

@@ -3720,7 +3720,7 @@
             {
               id: "math-g4-m5-g4-match-read",
               name: "大数与读法连线",
-              pluginId: "math-g4-match",
+              pluginId: "math-match",
               weight: 2,
               type: "read",
               description: "把大数与正确的读法连线。",
@@ -3740,7 +3740,7 @@
             {
               id: "math-g4-m5-g4-match-angle",
               name: "角与度数连线",
-              pluginId: "math-g4-match",
+              pluginId: "math-match",
               weight: 2,
               type: "angle-degree",
               description: "把角与其度数或名称连线。",
@@ -3760,7 +3760,7 @@
             {
               id: "math-g4-m5-g4-match-shape",
               name: "图形与特征连线",
-              pluginId: "math-g4-match",
+              pluginId: "math-match",
               weight: 2,
               type: "shape-feature",
               description: "把图形与其特征描述连线。",
@@ -3780,7 +3780,7 @@
             {
               id: "math-g4-m5-g4-match-law",
               name: "运算律与字母表达式连线",
-              pluginId: "math-g4-match",
+              pluginId: "math-match",
               weight: 2,
               type: "law-formula",
               description: "把运算律与其字母表达式连线。",
@@ -3800,7 +3800,7 @@
             {
               id: "math-g4-m5-g4-match-decfrac",
               name: "小数与分数连线",
-              pluginId: "math-g4-match",
+              pluginId: "math-match",
               weight: 2,
               type: "dec-frac",
               description: "把小数与相等的分数连线。",
@@ -5941,7 +5941,7 @@
             {
               id: "math-g5-m5-g5-match-areaf",
               name: "图形与面积公式连线",
-              pluginId: "math-g5-match",
+              pluginId: "math-match",
               weight: 3,
               type: "area-formula",
               description: "把图形与面积公式连线。",
@@ -5961,7 +5961,7 @@
             {
               id: "math-g5-m5-g5-match-solid",
               name: "立体图形特征连线",
-              pluginId: "math-g5-match",
+              pluginId: "math-match",
               weight: 2,
               type: "solid-feature",
               description: "把立体图形与特征连线。",
@@ -5981,7 +5981,7 @@
             {
               id: "math-g5-m5-g5-match-possib",
               name: "事件与可能性描述连线",
-              pluginId: "math-g5-match",
+              pluginId: "math-match",
               weight: 2,
               type: "possibility-desc",
               description: "把事件与可能性词语连线。",
@@ -6001,7 +6001,7 @@
             {
               id: "math-g5-m5-g5-match-equ",
               name: "方程与解连线",
-              pluginId: "math-g5-match",
+              pluginId: "math-match",
               weight: 3,
               type: "equation-solve",
               description: "把方程与它的解连线。",
@@ -6021,7 +6021,7 @@
             {
               id: "math-g5-m5-g5-match-fracdec",
               name: "分数与小数连线",
-              pluginId: "math-g5-match",
+              pluginId: "math-match",
               weight: 2,
               type: "frac-decimal",
               description: "把分数与相等的小数连线。",
@@ -9072,7 +9072,7 @@
             {
               id: "math-g6-m5-g6-match-proportion",
               name: "正比例与反比例判断",
-              pluginId: "math-g6-matching",
+              pluginId: "math-match",
               weight: 2,
               type: "proportion",
               description: "比值一定为正比例，乘积一定为反比例。",
@@ -9092,7 +9092,7 @@
             {
               id: "math-g6-m5-g6-match-formula",
               name: "图形与公式配对",
-              pluginId: "math-g6-matching",
+              pluginId: "math-match",
               weight: 2,
               type: "formula",
               description: "把图形与面积公式配对。",
@@ -9112,7 +9112,7 @@
             {
               id: "math-g6-m5-g6-match-chart",
               name: "统计图类型与特点配对",
-              pluginId: "math-g6-matching",
+              pluginId: "math-match",
               weight: 1,
               type: "chart",
               description: "把统计图与特点配对。",

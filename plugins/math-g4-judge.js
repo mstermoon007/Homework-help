@@ -23,20 +23,10 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g4-judge.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
 
   // 每条：{ q: 题干, right: boolean, hint: 解析 }
   function buildRead() {
-    return pick([
+    return _PU.rand([
       { q: '读多位数时，每级末尾不管有几个 0，都不读。', right: true, hint: '末尾的 0 不读，中间连续的 0 只读一个。' },
       { q: '五位数一定比四位数大。', right: true, hint: '数位多的数大。' },
       { q: '6006000 读作六百万六千。', right: true, hint: '中间两个 0 只读一个零，末尾三个 0 不读。' },
@@ -50,7 +40,7 @@
   }
 
   function buildLaw() {
-    return pick([
+    return _PU.rand([
       { q: '25×4×8 = 25×8×4 运用了乘法交换律。', right: true, hint: '交换两个因数的位置，积不变。' },
       { q: '(a+b)+c = a+(b+c) 是加法结合律。', right: true, hint: '三个数相加，先加前两个或后两个，和不变。' },
       { q: '125×(8+4) = 125×8+125×4 是乘法分配律。', right: true, hint: '乘法分配律：(a+b)×c = a×c+b×c。' },
@@ -62,7 +52,7 @@
   }
 
   function buildAngle() {
-    return pick([
+    return _PU.rand([
       { q: '大于 90° 的角都是钝角。', right: false, hint: '大于 90° 且小于 180° 才是钝角，平角 180° 不是。' },
       { q: '一个平角等于两个直角。', right: true, hint: '180° = 2×90°。' },
       { q: '一个周角等于四个直角。', right: true, hint: '360° = 4×90°。' },
@@ -75,7 +65,7 @@
   }
 
   function buildLineRay() {
-    return pick([
+    return _PU.rand([
       { q: '线段有两个端点，可以量出长度。', right: true, hint: '线段有限长。' },
       { q: '射线只有一个端点。', right: true, hint: '射线向一端无限延伸。' },
       { q: '直线可以向两端无限延伸，不能量出长度。', right: true, hint: '直线没有端点。' },
@@ -88,7 +78,7 @@
   }
 
   function buildQuotient() {
-    return pick([
+    return _PU.rand([
       { q: '被除数和除数同时乘 5，商不变。', right: true, hint: '商不变规律。' },
       { q: '被除数和除数同时除以 10，商不变。', right: true, hint: '商不变规律。' },
       { q: '被除数乘 3，除数不变，商乘 3。', right: true, hint: '除数不变，被除数扩大几倍商也扩大几倍。' },
@@ -99,7 +89,7 @@
   }
 
   function buildDec() {
-    return pick([
+    return _PU.rand([
       { q: '小数的末尾添上 0 或去掉 0，小数的大小不变。', right: true, hint: '小数的性质。' },
       { q: '0.5 和 0.50 大小相等。', right: true, hint: '末尾添 0，大小不变。' },
       { q: '小数点右边的第一位是百分位。', right: false, hint: '右边第一位是十分位。' },
@@ -111,7 +101,7 @@
   }
 
   function buildTriangle() {
-    return pick([
+    return _PU.rand([
       { q: '三角形内角和是 180°。', right: true, hint: '任意三角形内角和 180°。' },
       { q: '三角形按角分可分为锐角三角形、直角三角形和钝角三角形。', right: true, hint: '按角分类。' },
       { q: '等边三角形一定是锐角三角形。', right: true, hint: '三个角都是 60°。' },
@@ -124,7 +114,7 @@
   }
 
   function buildStats() {
-    return pick([
+    return _PU.rand([
       { q: '条形统计图能直观地看出数量的多少。', right: true, hint: '条形越高数量越多。' },
       { q: '平均数是反映一组数据总体水平的数。', right: true, hint: '平均数的意义。' },
       { q: '一组数据的平均数一定比这组数据的最大值大。', right: false, hint: '平均数介于最小值和最大值之间。' },
@@ -135,7 +125,7 @@
   }
 
   function buildMixed() {
-    var r = rnd(1, 100);
+    var r = _PU.randInt(1, 100);
     if (r <= 14) return buildRead();
     if (r <= 28) return buildLaw();
     if (r <= 42) return buildAngle();
@@ -222,7 +212,7 @@
       }
       return list.map(function (p) {
         return { type: 'judge', q: p.q, answer: p.right ? '√' : '×',
-          options: shuffle(['√', '×']), inputType: 'choice', hint: p.hint };
+          options: _PU.shuffle(['√', '×']), inputType: 'choice', hint: p.hint };
       });
     },
 

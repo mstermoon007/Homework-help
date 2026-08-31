@@ -471,78 +471,39 @@
 
 <!-- 主内容区 -->
 <div class="main-wrapper">
-    <form id="homeForm" onsubmit="goTo(event)">
-        <!-- 科目 + 年级 左右两栏 -->
-        <div class="select-card">
-            <div class="select-row">
-                <div class="select-col">
-                    <div class="col-title">📚 选择科目</div>
-                    <div class="subject-grid">
-                        <input type="radio" name="subject" id="sMath" class="subject-radio" value="math" checked>
-                        <label for="sMath" class="subject-card math">
-                            <span class="s-icon"><img src="assets/logo-math.webp" alt="数学"></span>
-                            <span class="s-name">数学</span>
-                            <span class="s-desc">口算·应用题·凑十法</span>
-                        </label>
-                        <input type="radio" name="subject" id="sChinese" class="subject-radio" value="chinese">
-                        <label for="sChinese" class="subject-card chinese">
-                            <span class="s-icon"><img src="assets/logo-chinese.webp" alt="语文"></span>
-                            <span class="s-name">语文</span>
-                            <span class="s-desc">拼音·字词练习</span>
-                        </label>
-                        <input type="radio" name="subject" id="sEnglish" class="subject-radio" value="english">
-                        <label for="sEnglish" class="subject-card english">
-                            <span class="s-icon"><img src="assets/logo-english.webp" alt="英语"></span>
-                            <span class="s-name">英语</span>
-                            <span class="s-desc">字母·单词·启蒙</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="select-col">
-                    <div class="col-title">🎓 选择年级</div>
-                    <div class="grade-grid">
-                        <input type="radio" name="grade" id="g1" class="grade-radio" value="1" checked>
-                        <label for="g1" class="grade-chip">
-                            <span class="g-icon">🌱</span>
-                            <span class="g-name">一年级</span>
-                        </label>
-                        <input type="radio" name="grade" id="g2" class="grade-radio" value="2">
-                        <label for="g2" class="grade-chip">
-                            <span class="g-icon">🌿</span>
-                            <span class="g-name">二年级</span>
-                        </label>
-                        <input type="radio" name="grade" id="g3" class="grade-radio" value="3">
-                        <label for="g3" class="grade-chip">
-                            <span class="g-icon">🌳</span>
-                            <span class="g-name">三年级</span>
-                        </label>
-                        <input type="radio" name="grade" id="g4" class="grade-radio" value="4">
-                        <label for="g4" class="grade-chip">
-                            <span class="g-icon">🌲</span>
-                            <span class="g-name">四年级</span>
-                        </label>
-                        <input type="radio" name="grade" id="g5" class="grade-radio" value="5">
-                        <label for="g5" class="grade-chip">
-                            <span class="g-icon">🍀</span>
-                            <span class="g-name">五年级</span>
-                        </label>
-                        <input type="radio" name="grade" id="g6" class="grade-radio" value="6">
-                        <label for="g6" class="grade-chip">
-                            <span class="g-icon">🌾</span>
-                            <span class="g-name">六年级</span>
-                        </label>
-                    </div>
+<form id="homeForm" onsubmit="goTo(event)">
+            <!-- 科目选择（仅科目） -->
+            <div class="select-card">
+                <div class="col-title">📚 选择科目</div>
+                <div class="subject-grid">
+                    <input type="radio" name="subject" id="sMath" class="subject-radio" value="math" checked>
+                    <label for="sMath" class="subject-card math">
+                        <span class="s-icon"><img src="assets/logo-math.webp" alt="数学"></span>
+                        <span class="s-name">数学</span>
+                        <span class="s-desc">口算·应用题·凑十法</span>
+                    </label>
+                    <input type="radio" name="subject" id="sChinese" class="subject-radio" value="chinese">
+                    <label for="sChinese" class="subject-card chinese">
+                        <span class="s-icon"><img src="assets/logo-chinese.webp" alt="语文"></span>
+                        <span class="s-name">语文</span>
+                        <span class="s-desc">拼音·字词练习</span>
+                    </label>
+                    <input type="radio" name="subject" id="sEnglish" class="subject-radio" value="english">
+                    <label for="sEnglish" class="subject-card english">
+                        <span class="s-icon"><img src="assets/logo-english.webp" alt="英语"></span>
+                        <span class="s-name">英语</span>
+                        <span class="s-desc">字母·单词·启蒙</span>
+                    </label>
                 </div>
             </div>
-        </div>
 
-        <!-- 开始练习按钮 -->
-        <div class="action-area">
-            <button type="submit" class="btn-start" id="startBtn">
-                开始练习 <span class="arrow">→</span>
-            </button>
-        </div>
-    </form>
+            <!-- 开始练习按钮 -->
+            <div class="action-area">
+                <button type="submit" class="btn-start" id="startBtn">
+                    选择年级 <span class="arrow">→</span>
+                </button>
+            </div>
+        </form>
 </div>
 
 <!-- 底部版权（玻璃效果，动态时间 + 版本号 + 备案信息） -->
@@ -582,60 +543,23 @@
     // 版本号（统一从 shared/version.js 读取）
     var vEl = document.getElementById('footVersion');
     if (vEl) vEl.textContent = (typeof APP_VERSION !== 'undefined') ? APP_VERSION : '3.1.0';
-})();
-
-function getSelected() {
-    var grade = document.querySelector('input[name="grade"]:checked').value;
-    var subject = document.querySelector('input[name="subject"]:checked').value;
-    return { grade: grade, subject: subject };
-}
-
-function startPractice() {
-    var sel = getSelected();
-    var target = {
-        math: 'math-types.html',
-        chinese: 'subject-types.html?subject=chinese',
-        english: 'subject-types.html?subject=english'
-    }[sel.subject];
-    window.location.href = App.buildLink(target, sel.grade);
-}
-
-function goTo(e) {
-    if (e) e.preventDefault();
-    startPractice();
-}
-
-// 更换 Banner 图片（设为背景图，文字浮于图片上）
-function setBanner(imgUrl) {
-    var bg = document.getElementById('heroBg');
-    if (imgUrl) {
-        bg.style.backgroundImage = 'url(' + imgUrl + ')';
-        bg.classList.add('active');
-    } else {
-        bg.style.backgroundImage = '';
-        bg.classList.remove('active');
+    // 科目选择 → grade.html
+    function getSelectedSubject() {
+        return document.querySelector('input[name="subject"]:checked').value;
     }
-}
-
-// 设置 Banner 底图
-setBanner('assets/banner.webp');
-
-// 科目 / 年级卡片：点击即等同于「开始练习」直接跳转；双击年级同样跳转
-function startFromControl(input) {
-    if (input) input.checked = true;
-    startPractice();
-}
-document.querySelectorAll('.subject-card').forEach(function (card) {
-    card.addEventListener('click', function () {
-        startFromControl(document.getElementById(card.getAttribute('for')));
+    function goTo(e) {
+        if (e) e.preventDefault();
+        var subject = getSelectedSubject();
+        window.location.href = 'grade.html?subject=' + subject;
+    }
+    // 科目卡片点击直接跳转
+    document.querySelectorAll('.subject-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+            var input = document.getElementById(card.getAttribute('for'));
+            if (input) { input.checked = true; goTo(); }
+        });
     });
-});
-document.querySelectorAll('.grade-chip').forEach(function (chip) {
-    var input = document.getElementById(chip.getAttribute('for'));
-    chip.addEventListener('click', function () { startFromControl(input); });
-    chip.addEventListener('dblclick', function () { startFromControl(input); });
-});
-// 注：radio 选中状态仍由 <label for> 原生行为维护
+})();
 </script>
 
 </body>

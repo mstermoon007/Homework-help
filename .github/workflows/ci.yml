@@ -39,6 +39,18 @@ jobs:
       - name: check:contrast
         run: npm run check:contrast
 
+      # ---- P1-R01：UI→Engine 边界（唯一生成入口 = GenerationEngine.generate）----
+      - name: check:ui-boundary
+        run: node dev/check-ui-boundary.js
+
+      # ---- P4-R05：Legacy 下线条件门禁（生产调用=0/Adapter调用=0/R30通过）----
+      - name: check:p4-legacy-gate
+        run: node dev/check-p4-legacy-gate.js
+
+      # ---- P3-R04：Practice 页面职责（无 Plugin/Strategy/Generator/Legacy/难度/SVG 判断）----
+      - name: check:practice-page
+        run: node dev/check-practice-page.js
+
       - name: verify-knowledge-bank
         run: node dev/verify-knowledge-bank.js
 
@@ -51,6 +63,10 @@ jobs:
 
       - name: performance-budget
         run: node dev/performance-budget.js
+
+      # ---- P9：Frozen Core 保护门禁（核心文件完整性校验）----
+      - name: check:frozen-core
+        run: node dev/check-frozen-core.js --check
 
       # ---- 插件接口合规性 ----
       - name: check-plugin-interfaces

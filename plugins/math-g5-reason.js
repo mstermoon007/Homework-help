@@ -17,23 +17,13 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g5-reason.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
 
   // ============ 植树问题（三种情况） ============
   function buildTreeThree() {
-    var v = pick(['both', 'one', 'none', 'ring']);
-    var interval = pick([2, 3, 4, 5, 6, 10]);
-    var n = rnd(4, 12); // 段数
-    var scene = pick(['小路', '街道', '河堤', '走廊', '操场']);
+    var v = _PU.rand(['both', 'one', 'none', 'ring']);
+    var interval = _PU.rand([2, 3, 4, 5, 6, 10]);
+    var n = _PU.randInt(4, 12); // 段数
+    var scene = _PU.rand(['小路', '街道', '河堤', '走廊', '操场']);
     var q, ans;
     var dist = n * interval;
     if (v === 'both') {
@@ -56,22 +46,22 @@
 
   // ============ 找次品（天平称量） ============
   function buildDefectiveScale() {
-    var n = rnd(8, 400);
+    var n = _PU.randInt(8, 400);
     var ans = Math.ceil(Math.log(n) / Math.log(3));
     return { q: '有 ' + n + ' 个零件，其中 1 个是次品（稍轻），用天平至少称（  ）次保证找出次品', answer: ans, hint: '每次尽量平均分成 3 份，需要称 ' + ans + ' 次（3^' + ans + ' = ' + Math.pow(3, ans) + ' ≥ ' + n + '）。' };
   }
 
   // ============ 逻辑推理 ============
   function buildLogic() {
-    var v = pick(['truth', 'job', 'order']);
+    var v = _PU.rand(['truth', 'job', 'order']);
     if (v === 'order') {
-      var nums = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, rnd(3, 4));
+      var nums = _PU.shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]).slice(0, _PU.randInt(3, 4));
       var sorted = nums.slice().sort(function (x, y) { return x - y; });
       return { q: '把 ' + nums.join('、') + ' 按从小到大排列是（  ）', answer: sorted.join('<'), hint: '按大小排序。' };
     }
     if (v === 'job') {
-      var jobs = shuffle(['老师', '医生', '警察']);
-      var t = rnd(0, 2);
+      var jobs = _PU.shuffle(['老师', '医生', '警察']);
+      var t = _PU.randInt(0, 2);
       var others = jobs.filter(function (j) { return j !== jobs[t]; });
       var kids = ['甲', '乙', '丙'];
       var ok = kids.filter(function (k) { return k !== kids[t]; });
@@ -82,9 +72,9 @@
     }
     // 真话推理（颜色）
     var kids2 = ['甲', '乙', '丙'];
-    var t2 = rnd(0, 2);
-    var cols = shuffle(['红', '黄', '蓝']);
-    var tc = cols[rnd(0, 2)];
+    var t2 = _PU.randInt(0, 2);
+    var cols = _PU.shuffle(['红', '黄', '蓝']);
+    var tc = cols[_PU.randInt(0, 2)];
     var rest = cols.filter(function (c) { return c !== tc; });
     var ok2 = kids2.filter(function (k) { return k !== kids2[t2]; });
     var st1 = kids2[t2] + '说：我穿的是' + tc + '色的。';
@@ -95,29 +85,29 @@
 
   // ============ 数字推理 ============
   function buildSequence() {
-    var v = pick(['add', 'mul', 'pattern', 'fib']);
+    var v = _PU.rand(['add', 'mul', 'pattern', 'fib']);
     var seq = [];
     if (v === 'add') {
-      var start = rnd(1, 15), step = rnd(2, 9);
+      var start = _PU.randInt(1, 15), step = _PU.randInt(2, 9);
       for (var i = 0; i < 5; i++) seq.push(start + i * step);
       var next = seq[4] + step;
       return { q: '找规律填数：' + seq.join('、') + '、（  ）', answer: next, hint: '每次增加 ' + step + '。' };
     }
     if (v === 'mul') {
-      var start2 = rnd(2, 7), factor = rnd(2, 4);
+      var start2 = _PU.randInt(2, 7), factor = _PU.randInt(2, 4);
       for (var j = 0; j < 5; j++) seq.push(start2 * Math.pow(factor, j));
       var next2 = seq[4] * factor;
       return { q: '找规律填数：' + seq.join('、') + '、（  ）', answer: next2, hint: '每次乘 ' + factor + '。' };
     }
     if (v === 'fib') {
-      var f1 = rnd(1, 6), f2 = rnd(1, 6);
+      var f1 = _PU.randInt(1, 6), f2 = _PU.randInt(1, 6);
       var fa = f1, fb = f2;
       var arr = [fa, fb];
       for (var fi = 0; fi < 3; fi++) { var fn = fa + fb; arr.push(fn); fa = fb; fb = fn; }
       return { q: '找规律填数：' + arr.join('、') + '、（  ）', answer: fa + fb, hint: '从第三项起，每项等于前两项之和。' };
     }
     // 间隔规律：奇数项、偶数项分别成等差
-    var start3 = rnd(1, 9), step3 = rnd(3, 7);
+    var start3 = _PU.randInt(1, 9), step3 = _PU.randInt(3, 7);
     for (var k = 0; k < 5; k++) seq.push(start3 + k * step3);
     var next3 = seq[4] + step3;
     return { q: '找规律填数：' + seq.join('、') + '、（  ）', answer: next3, hint: '每次增加 ' + step3 + '。' };
@@ -125,7 +115,7 @@
 
   // ============ 综合推理 ============
   function buildMixed() {
-    var r = rnd(1, 100);
+    var r = _PU.randInt(1, 100);
     if (r <= 28) return buildTreeThree();
     if (r <= 52) return buildDefectiveScale();
     if (r <= 76) return buildLogic();

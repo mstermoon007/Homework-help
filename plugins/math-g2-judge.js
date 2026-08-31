@@ -16,16 +16,6 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g2-judge.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
 
   // 每条：{ q: 题干, right: boolean, hint: 解析, cat: 类别 }
   var STATEMENTS = [
@@ -77,9 +67,9 @@
 
   function buildOf(cat) {
     var pool = STATEMENTS.filter(function (s) { return s.cat === cat; });
-    return pool[rnd(0, pool.length - 1)];
+    return pool[_PU.randInt(0, pool.length - 1)];
   }
-  function buildMixed() { return STATEMENTS[rnd(0, STATEMENTS.length - 1)]; }
+  function buildMixed() { return STATEMENTS[_PU.randInt(0, STATEMENTS.length - 1)]; }
 
   var TYPE_BUILDERS = {
     'mix': buildMixed,
@@ -142,7 +132,7 @@
           type: 'judge',
           q: p.q,
           answer: p.right ? '√' : '×',
-          options: shuffle(['√', '×']),
+          options: _PU.shuffle(['√', '×']),
           inputType: 'choice',
           hint: p.hint
         };

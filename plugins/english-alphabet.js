@@ -113,6 +113,7 @@
 
     // 额外的方法，壳页面可在渲染后绑定事件（practice.html 未调用，保留兼容）
     bindEvents: function(container) {
+      // TODO(M4): 音频播放绑定属交互层，迁移到 render/app 层
       var self = this;
       var buttons = container.querySelectorAll('.play-btn');
       buttons.forEach(function(btn) {

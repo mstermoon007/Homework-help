@@ -658,6 +658,7 @@
 
     // 选项按钮点击（choice 题型）
     __choose: function (btn) {
+    // TODO(M4): 选项高亮属交互层，迁移到 check/render 层
       var card = btn;
       while (card && card.className.indexOf('question-card') === -1) card = card.parentElement;
       if (!card) return;

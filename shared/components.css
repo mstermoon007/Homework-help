@@ -306,6 +306,49 @@
 .type-card.competition .t-icon { filter: grayscale(.75); opacity: .8; }
 .type-card.competition .t-desc { color: var(--muted); }
 
+/* ============ 卡片操作按钮 (P7: 练习 + 打印) ============ */
+.type-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    justify-content: center;
+}
+.type-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background .15s, border-color .15s, color .15s;
+    white-space: nowrap;
+}
+.type-btn.practice {
+    background: var(--grad-cta);
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(245,166,35,.3);
+}
+.type-btn.practice:hover {
+    filter: brightness(1.05);
+}
+.type-btn.print {
+    background: #fff;
+    color: var(--brand);
+    border: 2px solid var(--brand);
+}
+.type-btn.print:hover {
+    background: var(--brand);
+    color: #fff;
+}
+.type-card.disabled .type-btn {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 /* ============ 加载骨架屏（题型卡片占位，避免内容跳动） ============ */
 .skel-grid {
     display: grid;

@@ -209,6 +209,13 @@
     return p;
   };
 
+  // ============ M2-09: getCapabilities (只读，不修改查询语义) ============
+  KnowledgeBank.getCapabilities = function (kpId) {
+    var CapabilityResolver = require('./capability-resolver.js');
+    var kp = KnowledgeBank.findLegacy(kpId);
+    if (!kp) return null;
+    return CapabilityResolver.resolve(kp);
+  };
   global.KnowledgeBank = KnowledgeBank;
 
   // ============ 分片自动装配（Node）：入口被 require 时同步并入三科目数据 ============

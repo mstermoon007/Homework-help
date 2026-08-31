@@ -79,23 +79,20 @@
     }
   });
 
-  MathOralAgent.prototype._randInt = function (min, max) { return _PU.randInt(min, max); };
-  MathOralAgent.prototype._pick = function (arr) { return arr[this._randInt(0, arr.length - 1)]; };
-  MathOralAgent.prototype._shuffle = function (arr) { return _PU.shuffle(arr); };
 
   // 表内乘法：两个因数 1~9（二年级乘法口诀表）
   MathOralAgent.prototype._mulTable = function () {
     var t = this.tableMax;
-    var a = this._randInt(2, t);
-    var b = this._randInt(2, t);
+    var a = _PU.randInt(2, t);
+    var b = _PU.randInt(2, t);
     return { text: a + ' × ' + b + ' =', answer: a * b };
   };
 
   // 表内除法：被除数 = 因数×因数，恰好整除（二年级除法口诀）
   MathOralAgent.prototype._divTable = function () {
     var t = this.tableMax;
-    var a = this._randInt(2, t);
-    var b = this._randInt(2, t);
+    var a = _PU.randInt(2, t);
+    var b = _PU.randInt(2, t);
     var dividend = a * b;
     return { text: dividend + ' ÷ ' + b + ' =', answer: a };
   };
@@ -103,10 +100,10 @@
   // 有余数除法：商……余数（两个输入框）
   MathOralAgent.prototype._divRemainder = function () {
     var t = Math.min(this.tableMax, 9);
-    var divisor = this._randInt(2, t);
+    var divisor = _PU.randInt(2, t);
     var maxQ = Math.floor(this.maxNum / divisor);
-    var q = this._randInt(2, Math.max(2, maxQ));
-    var r = this._randInt(1, divisor - 1);
+    var q = _PU.randInt(2, Math.max(2, maxQ));
+    var r = _PU.randInt(1, divisor - 1);
     var dividend = divisor * q + r;
     return {
       text: dividend + ' ÷ ' + divisor + ' =',
@@ -121,9 +118,9 @@
     var t = this.tableMax;
     var MAX_TRIES = 50;
     for (var tries = 0; tries < MAX_TRIES; tries++) {
-      var a = this._randInt(2, t), b = this._randInt(2, t), c = this._randInt(1, 9);
-      var op1 = this._pick(['×', '÷']);
-      var op2 = this._pick(['+', '-']);
+      var a = _PU.randInt(2, t), b = _PU.randInt(2, t), c = _PU.randInt(1, 9);
+      var op1 = _PU.rand(['×', '÷']);
+      var op2 = _PU.rand(['+', '-']);
       var part, total, expr;
       if (op1 === '×') {
         part = a * b;
@@ -137,7 +134,7 @@
       if (total >= 0) return { text: expr + ' =', answer: total };
     }
     // 兜底：50 次未命中（概率极低）时强制加法，保证结果非负
-    var fa = this._randInt(2, t), fb = this._randInt(2, t), fc = this._randInt(1, 9);
+    var fa = _PU.randInt(2, t), fb = _PU.randInt(2, t), fc = _PU.randInt(1, 9);
     return { text: fa + ' × ' + fb + ' + ' + fc + ' =', answer: fa * fb + fc };
   };
 
@@ -145,9 +142,9 @@
   MathOralAgent.prototype._generateAddChain = function () {
     var min = this.operandMin;
     var maxNum = this.maxNum;
-    var a = this._randInt(min, Math.max(min, maxNum - 2 * min));
-    var b = this._randInt(min, Math.max(min, maxNum - min - a));
-    var c = this._randInt(min, Math.max(min, maxNum - a - b));
+    var a = _PU.randInt(min, Math.max(min, maxNum - 2 * min));
+    var b = _PU.randInt(min, Math.max(min, maxNum - min - a));
+    var c = _PU.randInt(min, Math.max(min, maxNum - a - b));
     var answer = a + b + c;
     return { text: a + ' + ' + b + ' + ' + c + ' =', answer: answer };
   };
@@ -156,11 +153,11 @@
   MathOralAgent.prototype._generateSubChain = function () {
     var min = this.operandMin;
     var maxNum = this.maxNum;
-    var a = this._randInt(Math.max(min + 2, 2 * min + 2), maxNum);
+    var a = _PU.randInt(Math.max(min + 2, 2 * min + 2), maxNum);
     var maxB = Math.max(min, a - min - 2);
-    var b = this._randInt(min, maxB);
+    var b = _PU.randInt(min, maxB);
     var maxC = Math.max(min, a - b - 2);
-    var c = this._randInt(min, maxC);
+    var c = _PU.randInt(min, maxC);
     var answer = a - b - c;
     return { text: a + ' − ' + b + ' − ' + c + ' =', answer: answer };
   };
@@ -168,53 +165,53 @@
   // 进退位加减：一年级为 20 以内进位加法 / 退位减法；
   // 二年级起且 maxNum ≥ 38 时生成两位数进退位，否则回退 20 以内（保证范围恒有效）
   MathOralAgent.prototype._generateCarry = function () {
-    var op = this._pick(['+', '-']);
+    var op = _PU.rand(['+', '-']);
     if (this.grade >= 2 && this.maxNum >= 38) {
       if (op === '+') {
         // 两位数进位加法：个位和 ≥ 10，结果 ≤ maxNum
         // aT 上界保证 a2 ≤ maxNum-19，使 b2 至少可取到十位数（bT ≥ 1 且总和不越界）
-        var aT = this._randInt(1, Math.floor((this.maxNum - 28) / 10));
-        var aO = this._randInt(1, 9);
+        var aT = _PU.randInt(1, Math.floor((this.maxNum - 28) / 10));
+        var aO = _PU.randInt(1, 9);
         var a2 = aT * 10 + aO;
-        var bO = this._randInt(Math.max(10 - aO, 1), 9);
-        var bT = this._randInt(1, Math.floor((this.maxNum - a2 - bO) / 10));
+        var bO = _PU.randInt(Math.max(10 - aO, 1), 9);
+        var bT = _PU.randInt(1, Math.floor((this.maxNum - a2 - bO) / 10));
         var b2 = bT * 10 + bO;
         return { text: a2 + ' + ' + b2 + ' =', answer: a2 + b2 };
       }
       // 两位数退位减法：被减数各位小于减数各位（需借位），差为正，被减数 ≤ maxNum
-      var aT2 = this._randInt(2, Math.floor((this.maxNum - 8) / 10));
-      var aO2 = this._randInt(1, 8);
+      var aT2 = _PU.randInt(2, Math.floor((this.maxNum - 8) / 10));
+      var aO2 = _PU.randInt(1, 8);
       var a3 = aT2 * 10 + aO2;
-      var bO2 = this._randInt(aO2 + 1, 9);
-      var bT2 = this._randInt(1, aT2 - 1);
+      var bO2 = _PU.randInt(aO2 + 1, 9);
+      var bT2 = _PU.randInt(1, aT2 - 1);
       var b3 = bT2 * 10 + bO2;
       return { text: a3 + ' − ' + b3 + ' =', answer: a3 - b3 };
     }
     // 一年级 / 小范围：20 以内进位加 / 退位减（一位数）
     if (op === '+') {
-      var a = this._randInt(2, 9);
-      var b = this._randInt(Math.max(10 - a, 2), 9);
+      var a = _PU.randInt(2, 9);
+      var b = _PU.randInt(Math.max(10 - a, 2), 9);
       return { text: a + ' + ' + b + ' =', answer: a + b };
     }
-    var t = this._randInt(11, 18);          // 个位 1~8，保证有可借的减数
-    var b = this._randInt((t % 10) + 1, 9);
+    var t = _PU.randInt(11, 18);          // 个位 1~8，保证有可借的减数
+    var b = _PU.randInt((t % 10) + 1, 9);
     return { text: t + ' − ' + b + ' =', answer: t - b };
   };
 
   // ---- 三年级专项：多位数乘一位数 ----
   MathOralAgent.prototype._genMulti1 = function () {
-    var f = this._randInt(2, 9);
-    var k = this._randInt(1, 6);
+    var f = _PU.randInt(2, 9);
+    var k = _PU.randInt(1, 6);
     var num;
     if (k <= 2) {                 // 整十整百口算（如 30×4、600×5）
-      num = this._pick([20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 800]);
+      num = _PU.rand([20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 800]);
     } else if (k <= 4) {          // 两位数乘一位数
-      num = this._randInt(12, 98);
+      num = _PU.randInt(12, 98);
     } else {                      // 三位数乘一位数（含十位为 0，如 204×3）
-      var h = this._randInt(1, 4);
-      var tens = this._pick([0, this._randInt(1, 9)]);
-      num = h * 100 + tens * 10 + this._randInt(1, 9);
-      if (tens === 0 && this._randInt(1, 3) === 1) num = h * 100 + this._randInt(1, 9);
+      var h = _PU.randInt(1, 4);
+      var tens = _PU.rand([0, _PU.randInt(1, 9)]);
+      num = h * 100 + tens * 10 + _PU.randInt(1, 9);
+      if (tens === 0 && _PU.randInt(1, 3) === 1) num = h * 100 + _PU.randInt(1, 9);
     }
     var answer = num * f;
     return { text: num + ' × ' + f + ' =', answer: answer };
@@ -222,28 +219,28 @@
 
   // ---- 三年级专项：两位数乘两位数 ----
   MathOralAgent.prototype._genTwoDigit = function () {
-    var a = this._randInt(12, 29);
-    if (this._randInt(1, 3) === 1) a = this._randInt(21, 49);
-    var b = this._randInt(12, 29);
+    var a = _PU.randInt(12, 29);
+    if (_PU.randInt(1, 3) === 1) a = _PU.randInt(21, 49);
+    var b = _PU.randInt(12, 29);
     return { text: a + ' × ' + b + ' =', answer: a * b };
   };
 
   // ---- 三年级专项：除数是一位数的除法 ----
   MathOralAgent.prototype._genDiv1 = function () {
-    var d = this._randInt(2, 9);
-    var k = this._randInt(1, 5);
+    var d = _PU.randInt(2, 9);
+    var k = _PU.randInt(1, 5);
     var q, a, text;
     if (k <= 2) {                 // 整十整百口算（如 420÷6、800÷4）
-      q = this._pick([30, 40, 50, 60, 70, 80, 90, 100, 120, 200, 240, 300, 360, 400, 500, 600, 800]);
+      q = _PU.rand([30, 40, 50, 60, 70, 80, 90, 100, 120, 200, 240, 300, 360, 400, 500, 600, 800]);
       a = d * q;
     } else if (k === 3) {         // 商为两位数
-      q = this._randInt(11, 99);
+      q = _PU.randInt(11, 99);
       a = d * q;
     } else {                      // 商为三位数（含商中间/末尾有 0，如 408÷4=102）
-      var type = this._randInt(1, 3);
-      if (type === 1) q = this._randInt(101, 199);          // 中间百位后随机
-      else if (type === 2) q = this._randInt(100, 190) - (this._randInt(100, 190) % 10); // 末尾为 0
-      else q = Math.floor(this._randInt(101, 399) / 10) * 10;
+      var type = _PU.randInt(1, 3);
+      if (type === 1) q = _PU.randInt(101, 199);          // 中间百位后随机
+      else if (type === 2) q = _PU.randInt(100, 190) - (_PU.randInt(100, 190) % 10); // 末尾为 0
+      else q = Math.floor(_PU.randInt(101, 399) / 10) * 10;
       a = d * q;
     }
     text = a + ' ÷ ' + d + ' =';
@@ -252,24 +249,24 @@
 
   // ---- 三年级专项：同分母分数加减（答为 a/b 形式） ----
   MathOralAgent.prototype._genFraction = function () {
-    var op = this._pick(['+', '-']);
+    var op = _PU.rand(['+', '-']);
     var ansText, text;
     if (op === '+') {
       // 加法结果须为真分数：分母从 3 起，分子 ≤ d-2，保证 a+c < d
-      var d = this._pick([3, 4, 5, 6, 8, 10]);
-      var a = this._randInt(1, d - 2);
-      var c = this._randInt(1, d - 1 - a);
+      var d = _PU.rand([3, 4, 5, 6, 8, 10]);
+      var a = _PU.randInt(1, d - 2);
+      var c = _PU.randInt(1, d - 1 - a);
       ansText = (a + c) + '/' + d;
       text = a + '/' + d + ' + ' + c + '/' + d + ' =';
     } else {
-      var d2 = this._pick([2, 3, 4, 5, 6, 8, 10]);
-      if (this._randInt(1, 2) === 1 || d2 === 2) {  // 1 - b/d = (d-b)/d（d=2 时只能走此分支）
-        var b = this._randInt(1, d2 - 1);
+      var d2 = _PU.rand([2, 3, 4, 5, 6, 8, 10]);
+      if (_PU.randInt(1, 2) === 1 || d2 === 2) {  // 1 - b/d = (d-b)/d（d=2 时只能走此分支）
+        var b = _PU.randInt(1, d2 - 1);
         ansText = (d2 - b) + '/' + d2;
         text = '1 - ' + b + '/' + d2 + ' =';
       } else {                                    // 同分母相减 a/d - c/d（a≥2 保证差为正）
-        var a2 = this._randInt(2, d2 - 1);
-        var c2 = this._randInt(1, Math.min(a2 - 1, d2 - 1));
+        var a2 = _PU.randInt(2, d2 - 1);
+        var c2 = _PU.randInt(1, Math.min(a2 - 1, d2 - 1));
         ansText = (a2 - c2) + '/' + d2;
         text = a2 + '/' + d2 + ' - ' + c2 + '/' + d2 + ' =';
       }
@@ -279,10 +276,10 @@
 
   // ---- 三年级专项：一位小数加减 ----
   MathOralAgent.prototype._genDecimal = function () {
-    var aT = this._randInt(0, 9), bT = this._randInt(0, 9);
-    if (aT === 0 && bT === 0) { aT = this._randInt(1, 9); }
-    var aW = this._randInt(0, 9), bW = this._randInt(0, 9);
-    var op = this._pick(['+', '-']);
+    var aT = _PU.randInt(0, 9), bT = _PU.randInt(0, 9);
+    if (aT === 0 && bT === 0) { aT = _PU.randInt(1, 9); }
+    var aW = _PU.randInt(0, 9), bW = _PU.randInt(0, 9);
+    var op = _PU.rand(['+', '-']);
     var af = aW * 10 + aT, bf = bW * 10 + bT, answer, text;
     if (op === '+') {
       answer = (af + bf) / 10;
@@ -313,28 +310,28 @@
         case 'fraction': return this._genFraction();
         case 'decimal': return this._genDecimal();
         case 'md': {
-          var mk = this._randInt(1, 5);
+          var mk = _PU.randInt(1, 5);
           if (mk <= 2) return this._genMulti1();
           if (mk <= 3) return this._genTwoDigit();
           return this._genDiv1();
         }
       }
-      var k = this._randInt(1, 10);
+      var k = _PU.randInt(1, 10);
       if (k <= 2) return this._genDecimal();
       if (k <= 3) return this._genFraction();
       if (k <= 6) return this._genMulti1();
       if (k <= 8) return this._genDiv1();
       // 剩余为万以内加减法
-      var op = this._pick(['+', '-']);
+      var op = _PU.rand(['+', '-']);
       if (op === '+') {
-        var a2 = this._randInt(100, 900), b2 = this._randInt(100, 900);
+        var a2 = _PU.randInt(100, 900), b2 = _PU.randInt(100, 900);
         return { text: a2 + ' + ' + b2 + ' =', answer: a2 + b2 };
       }
-      var m1 = this._randInt(200, 999), m2 = this._randInt(100, m1 - 100);
+      var m1 = _PU.randInt(200, 999), m2 = _PU.randInt(100, m1 - 100);
       return { text: m1 + ' - ' + m2 + ' =', answer: m1 - m2 };
     }
 
-    var op = this._pick(this.operators);
+    var op = _PU.rand(this.operators);
     var min = this.operandMin;
     var maxNum = this.maxNum;
     var a, b, answer, text;
@@ -347,8 +344,8 @@
 
     switch (op) {
       case '+':
-        a = this._randInt(min, maxNum);
-        b = this._randInt(min, maxNum);
+        a = _PU.randInt(min, maxNum);
+        b = _PU.randInt(min, maxNum);
         answer = a + b;
         if (answer > maxNum) {
           var scale = maxNum / answer;
@@ -360,12 +357,12 @@
         break;
 
       case '-':
-        a = this._randInt(Math.max(2, min), maxNum);
-        b = this._randInt(min, maxNum);
+        a = _PU.randInt(Math.max(2, min), maxNum);
+        b = _PU.randInt(min, maxNum);
         if (this.noNegative) {
           if (b > a) { var t = a; a = b; b = t; }
           // a、b 相等时重掷使 a > b；b 已是最大值时保持 0 差（避免范围无效产生 NaN）
-          if (a === b && b < maxNum) a = this._randInt(Math.max(b + 1, min + 1), maxNum);
+          if (a === b && b < maxNum) a = _PU.randInt(Math.max(b + 1, min + 1), maxNum);
         }
         answer = a - b;
         text = a + ' \u2212 ' + b + ' =';
@@ -373,23 +370,23 @@
 
       case '\u00d7': // ×（三年级以上非表内，仍走原逻辑）
         var maxF1 = Math.max(min, Math.floor(maxNum / min));
-        a = this._randInt(min, maxF1);
+        a = _PU.randInt(min, maxF1);
         var maxF2 = Math.floor(maxNum / a);
-        b = this._randInt(min, Math.max(min, maxF2));
+        b = _PU.randInt(min, Math.max(min, maxF2));
         answer = a * b;
         text = a + ' \u00d7 ' + b + ' =';
         break;
 
       case '\u00f7': // ÷（三年级以上非表内）
         var maxDiv = Math.max(min, Math.floor(maxNum / min));
-        b = this._randInt(min, Math.min(maxDiv, maxNum));
+        b = _PU.randInt(min, Math.min(maxDiv, maxNum));
         if (this.exactDiv) {
           var maxQ = Math.floor(maxNum / b);
-          var q = this._randInt(Math.max(1, min), Math.max(min, maxQ));
+          var q = _PU.randInt(Math.max(1, min), Math.max(min, maxQ));
           a = b * q;
           answer = q;
         } else {
-          a = this._randInt(Math.max(b, min * b), maxNum);
+          a = _PU.randInt(Math.max(b, min * b), maxNum);
           answer = parseFloat((a / b).toFixed(2));
         }
         text = a + ' \u00f7 ' + b + ' =';
@@ -421,7 +418,7 @@
       questions.push(fillQ);
     }
 
-    var shuffled = this._shuffle(questions);
+    var shuffled = _PU.shuffle(questions);
     var opStr = (this.operators || []).map(function (o) { return OP_NAMES[o]; }).join('\u3001');
     var hasRemainder = shuffled.some(function (q) { return q.multi; });
     var TYPE_TITLES = { addchain: '连加', subchain: '连减', carry: '进退位加减' };

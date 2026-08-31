@@ -25,15 +25,6 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g6-judge.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
   function J(q, right, hint) { return { q: q, right: right, hint: hint }; }
 
   // ============ 圆（静态 9 + 参数化 16 = 25） ============
@@ -269,7 +260,7 @@
         attempts++;
       }
       return list.map(function (p) {
-        return { type: 'judge', q: p.q, answer: p.right ? '√' : '×', options: shuffle(['√', '×']), hint: p.hint, inputType: 'choice' };
+        return { type: 'judge', q: p.q, answer: p.right ? '√' : '×', options: _PU.shuffle(['√', '×']), hint: p.hint, inputType: 'choice' };
       });
     },
 

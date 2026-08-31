@@ -25,16 +25,6 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g6-operation.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
 
   // ============ SVG 基础工具（内联，Node/浏览器通用） ============
   function rotPts(pts, deg, cx, cy) {
@@ -359,7 +349,7 @@
       }
       return list.map(function (p) {
         var q = { type: 'draw', q: p.q, answer: String(p.answer), hint: p.hint, svg: p.svg };
-        if (p.options) { q.inputType = 'choice'; q.options = shuffle(p.options.slice()); }
+        if (p.options) { q.inputType = 'choice'; q.options = _PU.shuffle(p.options.slice()); }
         else q.inputType = 'text';
         return q;
       });

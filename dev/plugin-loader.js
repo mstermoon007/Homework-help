@@ -36,6 +36,7 @@ var registryMod = require('./plugin-registry.js');
 var SHARED_SCRIPTS = [
   'shared/common.js',
   'shared/difficulty.js',
+  'shared/difficulty-static.js',
   'shared/subject-utils.js',
   'shared/print.js',
   'shared/knowledge-bank.js',
@@ -43,13 +44,16 @@ var SHARED_SCRIPTS = [
   'shared/knowledge-cn.js',
   'shared/knowledge-en.js',
   'shared/module-catalog.js',
+  'shared/plugin-loader.js',
   'shared/svg-core.js',
   'shared/svg-calculation.js',
   'shared/svg-geometry.js',
   'shared/svg-make-ten.js',
   'shared/svg-chinese.js',
   'shared/svg-english.js',
-  'plugins/registry.js'
+  'plugins/registry.js',
+  // M4-19：Strategy + Generator Runtime bundle（挂在 sandbox 全局，供 comprehensive 等插件无 require 使用）
+  'shared/strategy-engine.bundle.js'
 ];
 
 /**

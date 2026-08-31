@@ -160,13 +160,6 @@
     return out;
   }
 
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = _PU.randInt(0, i), tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-    }
-    return a;
-  }
 
   function genMatchJob(n) {
     var JOBS = ['教师', '医生', '司机', '工程师'];
@@ -178,7 +171,7 @@
       for (var i = 0; i < n; i++) for (var j = 0; j < n; j++) {
         candidates.push({ pos: truth[i] === jobs[j], txt: people[i] + (truth[i] === jobs[j] ? '是' : '不是') + jobs[j], key: 'd' + i + '-' + j });
       }
-      candidates = shuffle(candidates);
+      candidates = _PU.shuffle(candidates);
       var countSolutions = function (clueList) {
         return allAsgs.filter(function (asg) {
           return clueList.every(function (c) {
@@ -214,7 +207,7 @@
     var people = NAMES4.slice(0, n);
     var perms = permute(people); // 每种排列 asg[r]=第 r+1 名的人
     for (var t = 0; t < 200; t++) {
-      var order = shuffle(people); // order[r]=第 r+1 名
+      var order = _PU.shuffle(people); // order[r]=第 r+1 名
       var rankOf = {};
       order.forEach(function (nm, i) { rankOf[nm] = i + 1; });
       var cluePool = [];
@@ -224,7 +217,7 @@
           cluePool.push({ ok: true, txt: people[i] + '的名次比' + people[j] + '靠前', key: 'c' + i + j });
         cluePool.push({ ok: rankOf[people[i]] !== j + 1, txt: people[i] + '不是第' + (j + 1) + '名', key: 'n' + i + j });
       }
-      cluePool = shuffle(cluePool);
+      cluePool = _PU.shuffle(cluePool);
       var test = function (clues) {
         return perms.filter(function (asg) {
           var rk = {};

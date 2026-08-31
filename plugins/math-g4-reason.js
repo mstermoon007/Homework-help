@@ -18,16 +18,6 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g4-reason.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
   function uniqueNums(cands, hi, lo, n) {
     var pool = [];
     cands.forEach(function (c) {
@@ -35,23 +25,23 @@
     });
     var guard = 0;
     while (pool.length < n && guard < 60) {
-      var extra = rnd(lo, hi - 1);
+      var extra = _PU.randInt(lo, hi - 1);
       if (pool.indexOf(extra) === -1) pool.push(extra);
       guard++;
     }
-    var shuffled = shuffle(pool);
+    var shuffled = _PU.shuffle(pool);
     var out = [];
     for (var i = 0; i < n; i++) out.push(shuffled[i % shuffled.length]);
-    return shuffle(out);
+    return _PU.shuffle(out);
   }
 
   // ============ 优化问题（沏茶、烙饼） ============
   function buildOptimize() {
-    var v = pick(['tea', 'pancake']);
+    var v = _PU.rand(['tea', 'pancake']);
     if (v === 'tea') {
-      var wash = rnd(1, 2);
-      var boil = rnd(6, 9);
-      var prepare = rnd(2, 4);
+      var wash = _PU.randInt(1, 2);
+      var boil = _PU.randInt(6, 9);
+      var prepare = _PU.randInt(2, 4);
       var total = wash + boil;
       var q = '妈妈沏茶：洗水壶 ' + wash + ' 分钟、烧水 ' + boil + ' 分钟、洗茶杯 ' + prepare + ' 分钟。她最快（  ）分钟能沏好茶';
       var opts = uniqueNums([total, wash + boil + prepare, boil + prepare, boil], 40, 1, 4);
@@ -59,8 +49,8 @@
         hint: '烧水的同时洗茶杯，总时间 = 洗水壶 + 烧水 = ' + wash + ' + ' + boil + '。' };
     }
     // 烙饼
-    var min = pick([2, 3]);
-    var n = pick([3, 4, 5, 6]);
+    var min = _PU.rand([2, 3]);
+    var n = _PU.rand([3, 4, 5, 6]);
     var totalT = n * min;
     var wrong1 = n * min * 2;
     var wrong2 = (n + 1) * min;
@@ -72,9 +62,9 @@
 
   // ============ 鸡兔同笼（假设法） ============
   function buildAssume() {
-    var v = pick(['solve', 'step']);
-    var head = pick([10, 12, 14, 15, 16, 18, 20]);
-    var rabbit = rnd(2, head - 2);
+    var v = _PU.rand(['solve', 'step']);
+    var head = _PU.rand([10, 12, 14, 15, 16, 18, 20]);
+    var rabbit = _PU.randInt(2, head - 2);
     var chicken = head - rabbit;
     var legs = rabbit * 4 + chicken * 2;
     if (v === 'solve') {
@@ -95,11 +85,11 @@
 
   // ============ 简单逻辑推理 ============
   function buildLogic() {
-    var v = pick(['three', 'not', 'who']);
+    var v = _PU.rand(['three', 'not', 'who']);
     if (v === 'three') {
       // 三人各拿一样东西
-      var names = shuffle(['小明', '小红', '小刚']);
-      var things = shuffle(['语文书', '数学书', '英语书']);
+      var names = _PU.shuffle(['小明', '小红', '小刚']);
+      var things = _PU.shuffle(['语文书', '数学书', '英语书']);
       // 线索：A 拿 X，B 不拿 Y
       var aName = names[0], bName = names[1], cName = names[2];
       var aThing = things[0];
@@ -107,14 +97,14 @@
       var bThing = things[1];
       var cThing = things[2];
       var q = aName + '拿的是' + aThing + '，' + bName + '拿的不是' + bNotThing + '。' + cName + '拿的是（  ）';
-      var opts = shuffle(things.slice());
+      var opts = _PU.shuffle(things.slice());
       return { q: q, answer: cThing, options: opts,
         hint: aName + '拿' + aThing + '，' + bName + '不是' + bNotThing + '，剩下那个就是' + cName + '的。' };
     }
     if (v === 'not') {
       // 三句话推理谁在说谎
       var persons = ['甲', '乙', '丙'];
-      var liar = pick(persons);
+      var liar = _PU.rand(persons);
       var truth = [];
       persons.forEach(function (p) {
         if (p === liar) truth.push('说谎');
@@ -122,7 +112,7 @@
       });
       var q = '甲、乙、丙三人中只有一人说真话。甲说：「乙说谎」，乙说：「丙说谎」，丙说：「甲说谎」。说真话的是（  ）';
       // 实际推理较复杂，简化：直接问说谎的是谁（由题目设计决定）
-      return { q: q, answer: liar, options: shuffle(persons.slice()),
+      return { q: q, answer: liar, options: _PU.shuffle(persons.slice()),
         hint: '用排除法：假设某人说真话，检查是否矛盾。' };
     }
     // who：四人座位推理
@@ -130,14 +120,14 @@
     var sA = seats[0], sB = seats[1];
     var q = '小红面向北，小华面向南，小明面向西。面向（  ）的同学在小明对面';
     var opposite = '东';
-    var opts = shuffle(['东', '南', '西', '北']);
+    var opts = _PU.shuffle(['东', '南', '西', '北']);
     return { q: q, answer: opposite, options: opts,
       hint: '南与北相对，东与西相对。' };
   }
 
   // ============ 综合推理 ============
   function buildMixed() {
-    var r = rnd(1, 100);
+    var r = _PU.randInt(1, 100);
     if (r <= 40) return buildOptimize();
     if (r <= 75) return buildAssume();
     return buildLogic();

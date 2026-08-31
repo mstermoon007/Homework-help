@@ -1,0 +1,83 @@
+{
+  "math-oral|1|add|3": {
+    "qCount": 6,
+    "allHaveAnswer": true,
+    "allHaveRender": true,
+    "allHaveCheck": true,
+    "allHaveType": true,
+    "anySvg": false,
+    "anyKpId": false
+  },
+  "math-oral|2|muldiv|5": {
+    "qCount": 6,
+    "allHaveAnswer": true,
+    "allHaveRender": true,
+    "allHaveCheck": true,
+    "allHaveType": true,
+    "anySvg": false,
+    "anyKpId": false
+  },
+  "math-oral|3|add|7": {
+    "qCount": 6,
+    "allHaveAnswer": true,
+    "allHaveRender": true,
+    "allHaveCheck": true,
+    "allHaveType": true,
+    "anySvg": false,
+    "anyKpId": false
+  },
+  "math-make-ten|1||3": {
+    "qCount": 6,
+    "allHaveAnswer": true,
+    "allHaveRender": true,
+    "allHaveCheck": true,
+    "allHaveType": true,
+    "anySvg": false,
+    "anyKpId": true
+  },
+  "math-shapes|1||3": {
+    "qCount": 5,
+    "allHaveAnswer": true,
+    "allHaveRender": true,
+    "allHaveCheck": true,
+    "allHaveType": true,
+    "anySvg": true,
+    "anyKpId": true
+  },
+  "math-g2-column|2||5": {
+    "qCount": 6,
+    "allHaveAnswer": true,
+    "allHaveRender": true,
+    "allHaveCheck": true,
+    "allHaveType": true,
+    "anySvg": false,
+    "anyKpId": false
+  },
+  "math-fraction|3||6": {
+    "qCount": 5,
+    "allHaveAnswer": true,
+    "allHaveRender": true,
+    "allHaveCheck": true,
+    "allHaveType": true,
+    "anySvg": true,
+    "anyKpId": true
+  },
+  "math-comprehensive|2||4": {
+    "qCount": 10,
+    "allHaveAnswer": true,
+    "allHaveRender": true,
+    "allHaveCheck": true,
+    "allHaveType": true,
+    "anySvg": true,
+    "anyKpId": true
+  },
+  "chinese-pinyin|1||3": {
+    "qCount": 5,
+    "allHaveAnswer": true,
+    "allHaveRender": true,
+    "allHaveCheck": false,
+    "allHaveType": true,
+    "anySvg": false,
+    "anyKpId": true
+  }
+}

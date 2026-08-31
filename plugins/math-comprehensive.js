@@ -326,110 +326,127 @@
     return map;
   }
 
-  // 按权重抽取单个候选知识点
-  function examWeightedPick(cands) {
-    var total = 0;
-    cands.forEach(function (c) { total += (c.weight || 1); });
-    if (!total) return cands[_PU.randInt(0, cands.length - 1)] || null;
-    var r = _PU.randInt(0, 999999999) / 1e9 * total;
-    for (var i = 0; i < cands.length; i++) {
-      r -= (cands[i].weight || 1);
-      if (r <= 0) return cands[i];
-    }
-    return cands[cands.length - 1];
-  }
+  // M4-R19：以下 抽题/生成 已统一改走 Strategy→Generator（见 examDrawQuestions 与 generateForKp），
+  // 原 examWeightedPick/examGenOne（直接 plugin.generate）已移除，不再使用子插件 generate 方法出题。
 
-  // 单次抽题：优先使用知识点声明的 type；若子插件不支持该子题型（抛错或无产出），回退 'mix'
-  function examGenOne(plugin, grade, cnt, type, difficulty) {
-    var tries = [type, 'mix'];
-    for (var t = 0; t < tries.length; t++) {
-      if (!tries[t]) continue;
-      try {
-        var set = plugin.generate({ grade: grade, count: cnt, type: tries[t], difficulty: difficulty });
-        if (set && typeof set.then === 'function') return set; // 异步插件原样返回
-        if (set && set.questions && set.questions.length) return set;
-      } catch (e) { /* 该子题型不支持，尝试回退 */ }
-    }
-    return null;
-  }
-
-  // 从候选知识点（已绑定插件对象）抽取 n 道题目，池不足时按权重补足至目标题量
+  // 从候选知识点抽取 n 道题目，池不足时按权重补足至目标题量
   // difficulty 透传给各子插件，使期末试卷随难度档位自适应出题（题量固定，不随 count 变化）
+  // M4-R19：期末卷逐知识点走 Strategy → Generator（不再直接调 plugin.generate）
+  // cands 为 [{ id, name, type, category, weight, pluginId }]；返回 Promise<Question[]>
   function examDrawQuestions(cands, grade, n, difficulty) {
-    if (!cands.length) return [];
+    if (!cands.length) return Promise.resolve([]);
     var weights = cands.map(function (c) { return c.weight || 1; });
     var alloc = allocateByWeight(n, cands, weights);
-    var qs = [];
+    var tasks = [];
     cands.forEach(function (c, i) {
       var cnt = alloc[i];
       if (cnt <= 0) return;
-      var set = examGenOne(c.plugin, grade, cnt, c.type || 'mix', difficulty);
-      (set && set.questions || []).forEach(function (q) {
-        q.__src = c.plugin; q.__kp = c; q.knowledgePointId = c.id;
-        qs.push(q);
-      });
+      tasks.push(migrateSwitchReady().then(function () {
+        return generateForKp({
+          id: c.id, name: c.name, type: c.type, category: c.category, weight: c.weight, pluginId: c.pluginId
+        }, cnt, grade, difficulty).then(function (qs) {
+          qs.forEach(function (q) { q.__kp = c; q.knowledgePointId = c.id; });
+          return qs;
+        });
+      }));
     });
-    var guard = 0;
-    while (qs.length < n && guard < n * 4) {
-      guard++;
-      var c2 = examWeightedPick(cands);
-      if (!c2) break;
-      var s2 = examGenOne(c2.plugin, grade, 1, c2.type || 'mix', difficulty);
-      var q2 = s2 && s2.questions && s2.questions[0];
-      if (!q2) break;
-      q2.__src = c2.plugin; q2.__kp = c2; q2.knowledgePointId = c2.id;
-      qs.push(q2);
-    }
-    return qs.slice(0, n);
+    return Promise.all(tasks).then(function (groups) {
+      var qs = [];
+      groups.forEach(function (g) { qs = qs.concat(g); });
+      // 池不足目标题量时按权重补足
+      var guard = 0;
+      return (function fill(cur) {
+        if (cur.length >= n || guard >= n * 4) return cur.slice(0, n);
+        guard++;
+        var c2 = examWeightedPickSilent(cands);
+        if (!c2) return cur.slice(0, n);
+        return generateForKp({
+          id: c2.id, name: c2.name, type: c2.type, category: c2.category, weight: c2.weight, pluginId: c2.pluginId
+        }, 1, grade, difficulty).then(function (g) {
+          var q2 = g && g[0];
+          if (!q2) return cur.slice(0, n);
+          q2.__kp = c2; q2.knowledgePointId = c2.id;
+          cur.push(q2);
+          return fill(cur);
+        }).catch(function () { return cur.slice(0, n); });
+      })(qs);
+    });
+  }
+
+  function migrateSwitchReady() {
+    var Sw = (typeof MigrationSwitch !== 'undefined')
+      ? MigrationSwitch
+      : ((typeof global !== 'undefined' && global.MigrationSwitch) ? global.MigrationSwitch : null);
+    if (Sw && Sw.apply) Sw.apply();
+    return Promise.resolve();
+  }
+
+  // 与 examWeightedPick 相同，但返回 cand 本身而非再次构造（避免依赖 plugin 对象）
+  function examWeightedPickSilent(cands) {
+    var wsum = 0;
+    cands.forEach(function (c) { wsum += (c.weight || 1); });
+    if (!wsum) return cands[0] || null;
+    var r = _PU.randInt(0, 999999999) / 1e9 * wsum, acc = 0;
+    for (var i = 0; i < cands.length; i++) { acc += (cands[i].weight || 1); if (r < acc) return cands[i]; }
+    return cands[cands.length - 1] || null;
   }
 
   // 组装期末模拟卷：返回标准 ExerciseSet（Promise，需先加载子插件）
   // difficulty 透传至子插件以实现「只适应难度」；题量由模板固定（count 仅占位）
   function buildExamPaper(grade, count, difficulty) {
     return ensureSubPlugins().then(function () {
+      migrateSwitchReady();
       var byMod = examKpByModule(grade);
       var questions = [];
       var sections = [];
+      var tasks = [];
       EXAM_TEMPLATE.forEach(function (sec) {
-        var cands = [];
-        sec.modules.forEach(function (mid) {
-          (byMod[mid] || []).forEach(function (kp) {
-            var p = subPluginMap[kp.pluginId];
-            if (!p) return;                                   // 该知识点无对应插件 → 跳过
-            if (!p.grades || p.grades.indexOf(grade) === -1) return;
-            if (sec.wantType && kp.type !== sec.wantType) return; // 仅取目标题型知识点
-            if (sec.wantTag === 'operation' && kp.pluginId !== 'math-g1-operation') return;
-            cands.push({
-              id: kp.id, name: kp.name, type: kp.type,
-              weight: (typeof kp.weight === 'number' ? kp.weight : 3), plugin: p
+        tasks.push(migrateSwitchReady().then(function () {
+          var cands = [];
+          sec.modules.forEach(function (mid) {
+            (byMod[mid] || []).forEach(function (kp) {
+              var p = subPluginMap[kp.pluginId];
+              if (!p) return;                                   // 该知识点无对应插件 → 跳过
+              if (!p.grades || p.grades.indexOf(grade) === -1) return;
+              if (sec.wantType && kp.type !== sec.wantType) return; // 仅取目标题型知识点
+              if (sec.wantTag === 'operation' && kp.pluginId !== 'math-g1-operation') return;
+              cands.push({
+                id: kp.id, name: kp.name, type: kp.type,
+                category: p.category || kp.category || 'number',
+                weight: (typeof kp.weight === 'number' ? kp.weight : 3),
+                pluginId: kp.pluginId
+              });
             });
           });
-        });
-        if (!cands.length) return;                           // 该部分无可用插件 → 跳过整段
-        var qs = examDrawQuestions(cands, grade, sec.qCount, difficulty);
-        if (!qs.length) return;
-        var start = questions.length;
-        qs.forEach(function (q, j) {
-          q._section = sections.length;
-          q._examNo = j + 1;
-          q._examScore = sec.score;   // 期末卷按题给分，check 依此累计总分
-          questions.push(q);
-        });
-        sections.push({ title: sec.title, count: qs.length, score: sec.score, start: start });
+          if (!cands.length) return;                           // 该部分无可用插件 → 跳过整段
+          return examDrawQuestions(cands, grade, sec.qCount, difficulty).then(function (qs) {
+            if (!qs.length) return;
+            var start = questions.length;
+            qs.forEach(function (q, j) {
+              q._section = sections.length;
+              q._examNo = j + 1;
+              q._examScore = sec.score;   // 期末卷按题给分，check 依此累计总分
+              questions.push(q);
+            });
+            sections.push({ title: sec.title, count: qs.length, score: sec.score, start: start });
+          });
+        }));
       });
-      if (!questions.length) {
-        throw new Error('期末模拟卷暂无可用的已实现题型，请返回选择其他题型');
-      }
-      return {
-        questions: questions,
-        meta: {
-          grade: grade,
-          count: questions.length,
-          title: '期末模拟卷',
-          exam: true,
-          sections: sections
+      return Promise.all(tasks).then(function () {
+        if (!questions.length) {
+          throw new Error('期末模拟卷暂无可用的已实现题型，请返回选择其他题型');
         }
-      };
+        return {
+          questions: questions,
+          meta: {
+            grade: grade,
+            count: questions.length,
+            title: '期末模拟卷',
+            exam: true,
+            sections: sections
+          }
+        };
+      });
     });
   }
 
@@ -450,6 +467,224 @@
     });
     html += '</div>';
     return html;
+  }
+
+  // ============ M4-R19 Strategy → Generator 管线 ============
+  //
+  // 变更：不再由本插件直接调子插件 plugin.generate(subOpts) 出题，
+  // 而是逐知识点走统一管线：
+  //   KnowledgeBank → knowledgePoint(weight 只分配题量) → StrategyEngine.plan
+  //   → GeneratorSelector.selectGenerator → instantiate → Generator.generate
+  //   → SemanticQuestion → 语义渲染桥(toQuestion) → 标准 Question。
+  // weight 仅用于「知识点题量分配」，不参与生成逻辑。
+
+  // 年级可用子插件集合（剔除占位、年级不符）
+  function applicablePlugins(subs, grade) {
+    return subs.filter(function (p) {
+      return !isPlaceholderPlugin(p) && p.grades && p.grades.indexOf(grade) !== -1;
+    });
+  }
+
+  // 年级知识点清单（扁平：取自知识库 getEntries，附加 category/weight/pluginId）
+  function gradeKps(grade) {
+    var entries = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.getEntries)
+      ? KnowledgeBank.getEntries('math', grade) : [];
+    var pluginIds = {};
+    (subPluginMap && Object.keys(subPluginMap)).forEach(function (id) { pluginIds[id] = 1; });
+    return entries.map(function (e) {
+      return {
+        id: e.id,
+        name: e.name,
+        type: e.type || null,
+        category: e.category || 'number',
+        weight: entryImportance(e),
+        pluginId: e.pluginId,
+        _usable: !!e.pluginId && !!pluginIds[e.pluginId]
+      };
+    }).filter(function (k) { return k._usable; });
+  }
+
+  // 领域内按权重或均分分配（保证权重仅做数量分配）
+  function allocateKps(count, kps, perDomain, weights) {
+    // 无领域分组：整体按权重/均分
+    if (!perDomain) {
+      var ws = weights || kps.map(function (k) { return k.weight; });
+      return allocateByWeight(count, kps, ws);
+    }
+    // 按领域分组
+    var groups = {};
+    kps.forEach(function (k, i) { (groups[k.category] = groups[k.category] || []).push(i); });
+    var cats = Object.keys(groups);
+    var wsum = 0;
+    cats.forEach(function (c) { wsum += (weights[c] || 0); });
+    if (!wsum) cats.forEach(function (c) { wsum += 1; });
+    var shares = {};
+    var fracs = [];
+    var total = 0;
+    cats.forEach(function (c) {
+      var ideal = count * (weights[c] || 0) / wsum;
+      shares[c] = Math.floor(ideal); total += Math.floor(ideal);
+      fracs.push({ c: c, f: ideal - Math.floor(ideal) });
+    });
+    fracs.sort(function (a, b) { return b.f - a.f; });
+    var k = 0;
+    while (total < count) { shares[fracs[k % fracs.length].c]++; total++; k++; }
+    // 领域内均分（或按权重）
+    var out = kps.map(function () { return 0; });
+    cats.forEach(function (c) {
+      var idxs = groups[c];
+      var catN = shares[c] || 0;
+      if (!catN) return;
+      var per = Math.floor(catN / idxs.length);
+      var extra = catN % idxs.length;
+      idxs.forEach(function (ai, j) { out[ai] = per + (j < extra ? 1 : 0); });
+    });
+    return out;
+  }
+
+  /**
+   * 逐知识点 → Strategy → Generator → 语义题 → 标准题。
+   * @param {Object} kp 知识点 { id, name, type, category, weight }
+   * @param {number} n  题量
+   * @returns {Promise<Array<Object>>} 标准 Question[]（Promise，因 legacy generate 可异步）
+   */
+  function generateForKp(kp, n, grade, difficulty, existingPlan) {
+    // M4-19：Generator Runtime 统一来自 shared/strategy-engine.bundle.js 挂载的全局。
+    // 不再运行时 require（消灭 require 链）；缺失即显式抛错，方便定位加载顺序问题。
+    // Node 直接 require 本插件（仅测试 allocateByWeight 等纯函数）时不会走到此处生题，
+    // 故无需 require fallback —— 保持与浏览器一致的全链路由全局注入。
+    var g = (typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
+    var Engine = g.StrategyEngine;
+    var Selector = g.GeneratorSelector;
+    var Bridge = g.SemanticQuestionBridge;
+    if (!Engine || !Selector || !Bridge) {
+      throw new Error('M4-19: Generator Runtime 未加载（需先加载 shared/strategy-engine.bundle.js）');
+    }
+
+    var diff = (difficulty != null) ? difficulty : 3;
+    // M7-R11：优先复用 ComprehensiveStrategy 已决策的 QuestionPlan（避免二次规划），
+    // 无则回退单点规划。子插件对象仅经 LegacyAdapter.instantiate 注入，不再直接调用其 generate。
+    var plan = existingPlan || Engine.plan({ knowledgePointId: kp.id, count: n, difficulty: diff }).plans[0];
+    var selection = Selector.selectGenerator(plan);
+    var plugin = null;
+    if (selection.record && selection.record.scope === 'legacy') {
+      var pid = selection.record.id.replace('legacy:', '');
+      plugin = subPluginMap[pid] || null;
+    }
+    var inst = Selector.instantiate(selection, plugin);
+    if (!inst) return Promise.resolve([]); // 无生成器（KP 无插件/无实现）→ 跳过该知识点
+
+    var genResult = inst.generate(plan, { grade: grade, count: n });
+    var unwrap = function (sems) {
+      var qs = Bridge.toQuestions(sems || []);
+      qs.forEach(function (q) {
+        q.__src = subPluginMap[kp.pluginId] || null;
+        q.__kp = kp;
+        q.knowledgePointId = kp.id;
+        q.difficulty = diff;
+      });
+      return qs;
+    };
+    if (genResult && typeof genResult.then === 'function') return genResult.then(unwrap);
+    return Promise.resolve(unwrap(genResult));
+  }
+
+  // M7-R11：综合练习分配/规划统一交给 ComprehensiveStrategy（Resource 覆盖、题量分配、
+  // 难度分布、跨知识点混合、coveragePolicy），本插件不再手写子插件抽题流程。
+  // policy 映射：kb→weighted（知识点 weight），average→balanced，domain/weighted→weighted，
+  // 另透传 weak-first / recent-first（依赖 learnerProfile）。
+  // 返回 { questions, categoryCounts, weightInfo, coverage }。
+  function comprehensiveStrategyGenerate(grade, count, difficulty, policy, learnerProfile) {
+    var g = (typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
+    var CS = g.ComprehensiveStrategy;
+    if (!CS) {
+      throw new Error('M7-R11: ComprehensiveStrategy 未加载（需先加载 shared/strategy/comprehensive-strategy.js）');
+    }
+    var diff = (difficulty != null) ? difficulty : undefined;
+    return CS.build({
+      subject: 'math',
+      grade: grade,
+      count: count,
+      difficulty: diff,
+      coveragePolicy: policy,
+      learnerProfile: learnerProfile || null
+    }).then(function (res) {
+      var categoryCounts = {};
+      var weightInfo = [];
+      var proms = (res.plans || []).map(function (plan) {
+        var entry = plan.__comprehensive || {};
+        var kp = { id: entry.kpId, name: entry.kpId, type: plan.questionTypeId || null, pluginId: entry.pluginId };
+        return generateForKp(kp, plan.count, grade, plan.difficulty, plan).then(function (qs) {
+          if (!qs.length) return [];
+          weightInfo.push((entry.kpId || '') + '×' + qs.length + (plan.difficulty ? '(D' + plan.difficulty + ')' : ''));
+          var cat = (subPluginMap[entry.pluginId] && subPluginMap[entry.pluginId].category) || 'number';
+          categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
+          return qs;
+        }).catch(function () { return []; });
+      });
+      return Promise.all(proms).then(function (groups) {
+        var questions = [];
+        groups.forEach(function (gq) { questions = questions.concat(gq); });
+        return {
+          questions: questions,
+          categoryCounts: categoryCounts,
+          weightInfo: weightInfo,
+          coverage: (res.trace && res.trace.coverage) || null,
+          failedPlans: (res.trace && res.trace.failedPlans) || []
+        };
+      });
+    });
+  }
+
+  // 按模式产出 flat [{ kp, count }] 分配计划；weight 仅用于题量分配
+  function kpAllocation(grade, plugs, count, mode) {
+    var kps = gradeKps(grade);
+    var valid = [], perPlugin = {};
+    plugs.forEach(function (p) { perPlugin[p.id] = 1; });
+    kps.forEach(function (k) { if (perPlugin[k.pluginId]) valid.push(k); });
+    if (!valid.length) return [];
+
+    var counts;
+    if (mode === 'kb') {
+      counts = allocateByWeight(count, valid, valid.map(function (k) { return k.weight; }));
+    } else if (mode === 'average') {
+      counts = allocateKps(count, valid, false, valid.map(function () { return 1; }));
+    } else if (mode === 'domain') {
+      counts = allocateKps(count, valid, true, { number: 1, geometry: 1, statistics: 1 });
+    } else { // weighted(default)
+      counts = allocateKps(count, valid, true, DOMAIN_WEIGHTS);
+    }
+    return valid.map(function (k, i) { return { kp: k, count: counts[i] }; })
+      .filter(function (item) { return item.count > 0; });
+  }
+
+  // 旧分配兜底（ComprehensiveStrategy 不可用时的纯子插件路径，保证 Node/验收/降级可用）：
+  // 按 mode 用 kpAllocation 分配，再逐知识点 generateForKp。返回 { questions, weightInfo, categoryCounts }。
+  function legacyStrategyGenerate(grade, count, difficulty, mode) {
+    var legacyMode = mode;
+    if (legacyMode === 'weak-first' || legacyMode === 'recent-first') legacyMode = 'weighted';
+    var plan = kpAllocation(grade, applicablePlugins(subPluginMap ? Object.keys(subPluginMap).map(function (id) { return subPluginMap[id]; }) : [], grade), count, legacyMode);
+    var weightInfo = [];
+    var categoryCounts = {};
+    return Promise.all(plan.map(function (item) {
+      return generateForKp(item.kp, item.count, grade, difficulty).then(function (qs) {
+        if (!qs.length) return [];
+        weightInfo.push(item.kp.id + '×' + qs.length);
+        var cat = item.kp.category || 'number';
+        categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
+        return qs;
+      }).catch(function () { return []; });
+    })).then(function (groups) {
+      var questions = [];
+      groups.forEach(function (gq) { questions = questions.concat(gq); });
+      return { questions: questions, weightInfo: weightInfo, categoryCounts: categoryCounts, coverage: null, failedPlans: [] };
+    });
+  }
+
+  // 避免重复模块加载标识冲突时覆盖子插件：提供安全的全局读取
+  var gvar = (typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
+  function hasComprehensiveStrategy() {
+    return !!gvar.ComprehensiveStrategy;
   }
 
   // ============ ExercisePlugin ============
@@ -488,120 +723,89 @@
 
       generate: function (options) {
         var opts = options || {};
+        // 期末模拟卷：同样走 Strategy → Generator 逐知识点管线（EXAM_TEMPLATE 只定题量/配比）
         if (opts.subtype === 'exam' || opts.type === 'exam') {
           return buildExamPaper(opts.grade || 1, opts.count || 54, opts.difficulty);
         }
-        var opts = options || {};
         var grade = opts.grade || 1;
         var count = opts.count || 10;
-        // 默认按知识点重要度分配（kb）；兼容旧 average/domain/weighted
-        var mode = opts.type;
-        if (mode !== 'kb' && mode !== 'average' && mode !== 'domain' && mode !== 'weighted') mode = 'kb';
+        // M7-R11：分配/规划统一交给 ComprehensiveStrategy。
+        // 旧 mode 映射：kb→weighted；average→balanced；domain/weighted→weighted；另透传 weak-first / recent-first。
+        var mode = opts.type || 'kb';
+        var policy = mode;
+        if (mode === 'kb') policy = 'weighted';
+        else if (mode === 'average') policy = 'balanced';
+        else if (mode === 'domain' || mode === 'weighted') policy = 'weighted';
+        else if (mode !== 'weak-first' && mode !== 'recent-first') policy = 'weighted';
 
-        return ensureSubPlugins().then(function (subs) {
-          var applicable = subs.filter(function (p) {
-            return !isPlaceholderPlugin(p) &&
-              p.grades && p.grades.indexOf(grade) !== -1;
-          });
-          if (!applicable.length) {
-            throw new Error('当前年级没有可用的数学练习，请返回选择其他年级');
-          }
+        return ensureSubPlugins().then(function () {
+          // 迁移开关：已迁移知识点（R17+R18）走原生 core 生成器，
+          // 其余仍经 legacy 适配器（instantiate 时注入子插件）。全局可重复调用，幂等。
+          if (typeof MigrationSwitch !== 'undefined' && MigrationSwitch.apply) MigrationSwitch.apply();
 
-          var questions = [];
-          var weightInfo = [];
-          var categoryCounts = {}; // 各领域实际题数（用于 meta 展示）
-          var kbWeights = null;
-
-          if (mode === 'kb') {
-            // 知识点级抽题：按当前年级知识库各知识点 weight 分配题量
-            var plan = kbEntryPlan(grade, applicable, count);
-            kbWeights = plan.map(function (item) { return item.total; });
-            plan.forEach(function (item) {
-              var p = item.plugin;
-              if (item.count <= 0) return;
-              if (item.points && item.points.length) {
-                // 细分：同一插件的多个知识点按各自 weight/type 分别出题
-                item.points.forEach(function (pt) {
-                  if (!pt.count || pt.count <= 0) return;
-                  var subOpts = { grade: grade, count: pt.count, type: pt.type || 'mix' };
-                  var usedDiff = (opts.difficulty != null) ? opts.difficulty : 3;
-                  if (opts.difficulty) subOpts.difficulty = opts.difficulty;
-                  if (pt.lowerDiff && subOpts.difficulty != null) {
-                    subOpts.difficulty = Math.max(1, subOpts.difficulty - 1); // 极薄弱：难度降 1 档
-                  }
-                  usedDiff = (subOpts.difficulty != null) ? subOpts.difficulty : 3;
-                  var set = p.generate(subOpts);
-                  var qs = (set && set.questions) || [];
-                  if (!qs.length) return; // 插件未产出题目（占位/异常）→ 忽略该知识点，不占权重
-                  qs.forEach(function (q) {
-                    q.__src = p; // 记录来源插件（仅作元信息，渲染/判定一律走标准 Question 接口）
-                    q.__kp = pt; // 记录来源知识点
-                    q.knowledgePointId = pt.id;      // 用于知识点关联
-                    q.difficulty = usedDiff;         // 标注实际使用的难度
-                    questions.push(q);
-                  });
-                  weightInfo.push(p.id + '·' + (pt.name || pt.type || 'mix') + '×' + qs.length);
-                  var cat = p.category || 'number';
-                  categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
-                });
-              } else {
-                var subOpts = { grade: grade, count: item.count, type: 'mix' };
-                if (opts.difficulty) subOpts.difficulty = opts.difficulty;
-                var set = p.generate(subOpts);
-                var qs = (set && set.questions) || [];
-                if (!qs.length) return; // 插件未产出题目（占位/异常）→ 忽略
-                qs.forEach(function (q) {
-                  q.__src = p;
-                  questions.push(q);
-                });
-                weightInfo.push(p.id + '×' + qs.length);
-                var cat = p.category || 'number';
-                categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
-              }
-            });
+          var runner;
+          if (hasComprehensiveStrategy()) {
+            // M7-R11 主径：ComprehensiveStrategy 分配/规划 → 逐知识点 Strategy → Generator
+            runner = comprehensiveStrategyGenerate(grade, count, opts.difficulty, policy, opts.learnerProfile);
           } else {
-            var counts = allocateCounts(count, applicable, mode);
-            applicable.forEach(function (p, idx) {
-              var n = counts[idx];
-              if (n <= 0) return;
-              var subOpts = { grade: grade, count: n, type: 'mix' };
-              if (opts.difficulty) subOpts.difficulty = opts.difficulty;
-              var set = p.generate(subOpts);
-              var qs = (set && set.questions) || [];
-              if (!qs.length) return; // 插件未产出题目（占位/异常）→ 忽略，避免空条目
-              qs.forEach(function (q) {
-                q.__src = p; // 记录来源插件（仅作元信息，渲染/判定一律走标准 Question 接口）
-                questions.push(q);
-              });
-              weightInfo.push(p.id + '×' + qs.length);
-              var cat = p.category || 'number';
-              categoryCounts[cat] = (categoryCounts[cat] || 0) + qs.length;
-            });
+            // 兜底：旧 kpAllocation 分配（浏览器由 practice.html 保证加载 CS；Node/离线验收走此路径）
+            runner = legacyStrategyGenerate(grade, count, opts.difficulty, mode);
           }
+          return runner.then(function (res) {
+            var questions = _PU.shuffle(res.questions);
 
-          // 前置补强（原步骤5）已随自适应难度功能一并移除：不再按薄弱度注入额外前置基础题。
-
-          // 混合后打乱顺序，形成完整综合试卷
-          questions = _PU.shuffle(questions);
-
-          // 空集保护：综合练习不能为空（理论上 applicable 已排除占位，双保险）
-          if (!questions.length) {
-            throw new Error('当前年级数学综合练习暂无可用的已实现题型，请返回选择其他题型');
-          }
-
-          return {
-            questions: questions,
-            meta: {
-              grade: grade,
-              count: questions.length,
-              title: '小学' + gradeName(grade) + '数学综合练习',
-              distribution: mode,
-              weights: (mode === 'kb' && kbWeights) ? kbWeights : DOMAIN_WEIGHTS,
-              categoryCounts: categoryCounts,
-              weight: weightInfo
+            // 空集保护：综合练习不能为空
+            if (!questions.length) {
+              throw new Error('当前年级数学综合练习暂无可用的已实现题型，请返回选择其他题型');
             }
-          };
+
+            return {
+              questions: questions,
+              meta: {
+                grade: grade,
+                count: questions.length,
+                title: '小学' + gradeName(grade) + '数学综合练习',
+                distribution: mode,
+                distributionPolicy: policy,
+                weights: res.weightInfo,
+                categoryCounts: res.categoryCounts,
+                weight: res.weightInfo,
+                coverage: res.coverage,
+                failedPlans: res.failedPlans
+              }
+            };
+          });
         });
+      },
+
+      // M7-R08/R14：综合练习新出口 —— 直接产出 SemanticQuestion[]（经 GenerationEngine 全链：
+      // ComprehensiveStrategy → StrategyEngine → Generator → Validator → Regenerate → Render）。
+      // 与生成本身解耦：结果交由 PresentationRenderer 渲染。
+      generateSemantic: function (options) {
+        var opts = options || {};
+        var g = (typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
+        var GE = g.GenerationEngine;
+        if (!GE) {
+          return Promise.reject(new Error('M7-R08: GenerationEngine 未加载（需先加载 shared/generation-engine.js）'));
+        }
+        var grade = opts.grade || 1;
+        var count = opts.count || 10;
+        var mode = opts.type || 'kb';
+        var policy = mode;
+        if (mode === 'kb' || mode === 'weighted' || mode === 'domain') policy = 'weighted';
+        else if (mode === 'average') policy = 'balanced';
+        if (mode === 'exam' || opts.type === 'exam') {
+          return Promise.reject(new Error('期末模拟卷请使用 generate(生成 legacy 题面)'));
+        }
+        return GE.generate({
+          model: 'comprehensive',
+          subject: 'math',
+          grade: grade,
+          count: count,
+          difficulty: opts.difficulty,
+          coveragePolicy: policy,
+          learnerProfile: opts.learnerProfile || null
+        }, { renderOptions: opts.renderOptions });
       },
 
   render: function (exerciseSet) {
@@ -692,6 +896,7 @@
 
     // 图形题选项按钮点击（与 math-shapes 一致）：写入隐藏输入 + 高亮
     __choose: function (btn) {
+    // TODO(M4): 选项高亮属交互层，迁移到 check/render 层
       var card = btn;
       while (card && card.className.indexOf('question-card') === -1) card = card.parentElement;
       if (!card) return;

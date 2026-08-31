@@ -22,20 +22,10 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g5-judge.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
 
   // ============ 小数乘除法 ============
   function buildDec() {
-    return pick([
+    return _PU.rand([
       { q: '小数乘小数，积的小数位数等于两个因数小数位数之和。', right: true, hint: '0.3×0.2 = 0.06，两位小数。' },
       { q: '一个数（0 除外）乘小于 1 的小数，积比这个数小。', right: true, hint: '如 5×0.8 = 4 < 5。' },
       { q: '两个数相乘，积一定大于这两个数。', right: false, hint: '如 0.5×0.5 = 0.25，比两个数都小。' },
@@ -49,7 +39,7 @@
 
   // ============ 方程概念 ============
   function buildEquation() {
-    return pick([
+    return _PU.rand([
       { q: '含有未知数的式子叫方程。', right: false, hint: '必须是等式：含有未知数的等式才叫方程。' },
       { q: '方程一定是等式，等式不一定是方程。', right: true, hint: '方程是特殊的等式。' },
       { q: 'x + 3 = 8 是方程。', right: true, hint: '含有未知数的等式。' },
@@ -63,7 +53,7 @@
 
   // ============ 因数与倍数 ============
   function buildFactorMultiple() {
-    return pick([
+    return _PU.rand([
       { q: '一个数的因数的个数是有限的，倍数的个数是无限的。', right: true, hint: '因数有限，倍数无限。' },
       { q: '一个数的最小倍数是 1。', right: false, hint: '一个数的最小倍数是它本身。' },
       { q: '2 的倍数都是偶数。', right: true, hint: '偶数是 2 的倍数。' },
@@ -77,7 +67,7 @@
 
   // ============ 分数的意义与性质 ============
   function buildFraction() {
-    return pick([
+    return _PU.rand([
       { q: '把单位「1」平均分成 5 份，取其中的 3 份是 3/5。', right: true, hint: '分数意义。' },
       { q: '分数的分子和分母同时乘同一个数，分数大小不变。', right: false, hint: '要同时乘或除以相同的数（0 除外）。' },
       { q: '约分和通分都是运用分数的基本性质。', right: true, hint: '分数基本性质的应用。' },
@@ -91,7 +81,7 @@
 
   // ============ 多边形面积 ============
   function buildArea() {
-    return pick([
+    return _PU.rand([
       { q: '两个完全一样的三角形可以拼成一个平行四边形。', right: true, hint: '三角形面积推导。' },
       { q: '三角形的面积等于平行四边形面积的一半。', right: false, hint: '必须等底等高时才成立。' },
       { q: '平行四边形面积 = 底 × 高。', right: true, hint: '面积公式。' },
@@ -105,7 +95,7 @@
 
   // ============ 长方体正方体 ============
   function buildSolid() {
-    return pick([
+    return _PU.rand([
       { q: '长方体有 6 个面、12 条棱、8 个顶点。', right: true, hint: '长方体特征。' },
       { q: '正方体是特殊的长方体。', right: true, hint: '正方体是长宽高都相等的长方体。' },
       { q: '长方体 6 个面都是长方形。', right: false, hint: '可能有两个相对的面是正方形。' },
@@ -119,7 +109,7 @@
 
   // ============ 图形的运动 ============
   function buildRotation() {
-    return pick([
+    return _PU.rand([
       { q: '旋转后图形的大小和形状不变，只是位置方向改变。', right: true, hint: '旋转的性质。' },
       { q: '平移和旋转都不会改变图形的大小。', right: true, hint: '都是全等变换。' },
       { q: '轴对称图形沿对称轴对折后，两边完全重合。', right: true, hint: '轴对称定义。' },
@@ -133,7 +123,7 @@
 
   // ============ 可能性 ============
   function buildPossibility() {
-    return pick([
+    return _PU.rand([
       { q: '掷一枚硬币，正面朝上的可能性是 1/2。', right: true, hint: '两种等可能结果。' },
       { q: '事件发生的可能性一定可以用分数表示。', right: false, hint: '可能性大小时常用分数，但不是所有情况都能精确表示。' },
       { q: '袋子里红球比白球多，摸到红球的可能性大。', right: true, hint: '数量多的可能性大。' },
@@ -145,7 +135,7 @@
 
   // ============ 统计 ============
   function buildStats() {
-    return pick([
+    return _PU.rand([
       { q: '折线统计图能清楚地反映数量的增减变化情况。', right: true, hint: '折线统计图的特点。' },
       { q: '条形统计图适合表示数量变化趋势。', right: false, hint: '条形图适合比较数量多少，折线图适合变化趋势。' },
       { q: '复式折线统计图可以比较两组数据的变化。', right: true, hint: '复式图便于比较。' },
@@ -156,7 +146,7 @@
 
   // ============ 综合判断 ============
   function buildMixed() {
-    var r = rnd(1, 100);
+    var r = _PU.randInt(1, 100);
     if (r <= 13) return buildDec();
     if (r <= 26) return buildEquation();
     if (r <= 39) return buildFactorMultiple();
@@ -247,7 +237,7 @@
         attempts++;
       }
       return list.map(function (p) {
-        return { type: 'judge', q: p.q, answer: p.right ? '√' : '×', options: shuffle(['√', '×']), hint: p.hint, inputType: 'choice' };
+        return { type: 'judge', q: p.q, answer: p.right ? '√' : '×', options: _PU.shuffle(['√', '×']), hint: p.hint, inputType: 'choice' };
       });
     },
 

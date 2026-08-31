@@ -18,28 +18,18 @@
     : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
   if (!_PU) throw new Error('plugins/math-g4-stats.js 依赖 shared/common.js（PluginUtil），请先加载');
 
-  function rnd(min, max) { return _PU.randInt(min, max); }
-  function pick(arr) { return arr[rnd(0, arr.length - 1)]; }
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = rnd(0, i);
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
 
   // 生成一组 3~5 个项目的统计值（条形图）
   function genData(items, unit) {
     var vals = [];
-    for (var i = 0; i < items.length; i++) vals.push(rnd(2, 9));
+    for (var i = 0; i < items.length; i++) vals.push(_PU.randInt(2, 9));
     return { items: items, vals: vals, unit: unit };
   }
 
   // ============ 条形统计图（1 格表示多个单位） ============
   function buildBarChart() {
-    var v = pick(['read', 'max', 'total', 'scale']);
-    var fruits = pick([
+    var v = _PU.rand(['read', 'max', 'total', 'scale']);
+    var fruits = _PU.rand([
       ['苹果', '香蕉', '梨', '橘子'],
       ['语文', '数学', '英语', '科学'],
       ['周一', '周二', '周三', '周四'],
@@ -49,11 +39,11 @@
     var unit = fruits[0] === '语文' ? '人' : (fruits[0] === '周一' ? '本' : '个');
     if (fruits[0] === '篮球') unit = '人';
     var data = genData(fruits, unit);
-    var per = pick([1, 2, 5]); // 1 格表示 per 个单位
+    var per = _PU.rand([1, 2, 5]); // 1 格表示 per 个单位
     var scaleVals = data.vals.map(function (x) { return x * per; });
     var svg = barChartSVG(fruits, scaleVals, per, unit);
     if (v === 'read') {
-      var idx = rnd(0, fruits.length - 1);
+      var idx = _PU.randInt(0, fruits.length - 1);
       return { q: '根据统计图，' + fruits[idx] + ' 有（  ）' + unit,
         answer: scaleVals[idx], svg: svg,
         hint: '看 ' + fruits[idx] + ' 对应的条形占几格，乘以 1 格代表的数。' };
@@ -61,7 +51,7 @@
     if (v === 'max') {
       var mi = 0;
       for (var i = 1; i < scaleVals.length; i++) if (scaleVals[i] > scaleVals[mi]) mi = i;
-      return { q: '根据统计图，数量最多的是（  ）', answer: fruits[mi], options: shuffle(fruits.slice()),
+      return { q: '根据统计图，数量最多的是（  ）', answer: fruits[mi], options: _PU.shuffle(fruits.slice()),
         svg: svg, hint: '找条形最高的那个项目。' };
     }
     if (v === 'total') {
@@ -96,26 +86,26 @@
 
   // ============ 复式条形统计图 ============
   function buildDoubleBar() {
-    var v = pick(['read', 'compare', 'total']);
-    var cats = pick([
+    var v = _PU.rand(['read', 'compare', 'total']);
+    var cats = _PU.rand([
       ['一班', '二班', '三班'],
       ['周一', '周二', '周三'],
       ['第一组', '第二组', '第三组']
     ]);
-    var units = pick(['男生', '女生']);
+    var units = _PU.rand(['男生', '女生']);
     var vals1 = [], vals2 = [];
-    for (var i = 0; i < cats.length; i++) { vals1.push(rnd(2, 9)); vals2.push(rnd(2, 9)); }
+    for (var i = 0; i < cats.length; i++) { vals1.push(_PU.randInt(2, 9)); vals2.push(_PU.randInt(2, 9)); }
     var svg = doubleBarSVG(cats, units, vals1, vals2);
     if (v === 'read') {
-      var ci = rnd(0, cats.length - 1);
-      var ui = rnd(0, 1);
+      var ci = _PU.randInt(0, cats.length - 1);
+      var ui = _PU.randInt(0, 1);
       var val = ui === 0 ? vals1[ci] : vals2[ci];
       return { q: '根据统计图，' + cats[ci] + ' 的' + units[ui] + '有（  ）人',
         answer: val, svg: svg, hint: '看 ' + cats[ci] + ' 下面' + (ui === 0 ? '蓝色' : '橙色') + '条形的高度。' };
     }
     if (v === 'compare') {
       // 找某类男女差
-      var ci2 = rnd(0, cats.length - 1);
+      var ci2 = _PU.randInt(0, cats.length - 1);
       var diff = Math.abs(vals1[ci2] - vals2[ci2]);
       return { q: '根据统计图，' + cats[ci2] + ' 男生比女生多（  ）人', answer: diff,
         svg: svg, hint: '男生人数 − 女生人数 = ？' };
@@ -149,13 +139,13 @@
 
   // ============ 平均数与统计 ============
   function buildAvgStats() {
-    var v = pick(['avg', 'recover']);
-    var names = pick([
+    var v = _PU.rand(['avg', 'recover']);
+    var names = _PU.rand([
       ['小红', '小明', '小刚', '小丽'],
       ['第一组', '第二组', '第三组', '第四组']
     ]);
     var vals = [];
-    for (var i = 0; i < 4; i++) vals.push(rnd(10, 30));
+    for (var i = 0; i < 4; i++) vals.push(_PU.randInt(10, 30));
     var avg = Math.round(vals.reduce(function (a, b) { return a + b; }, 0) / 4);
     var svg = listSVG(names, vals);
     if (v === 'avg') {
@@ -183,7 +173,7 @@
 
   // ============ 综合统计 ============
   function buildMixed() {
-    var r = rnd(1, 100);
+    var r = _PU.randInt(1, 100);
     if (r <= 40) return buildBarChart();
     if (r <= 75) return buildDoubleBar();
     return buildAvgStats();
