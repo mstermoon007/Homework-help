@@ -196,7 +196,7 @@ function generateQuestions(plan, options) {
  * @returns {string} HTML
  */
 function renderQuestions(questions, options) {
-  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require("render.js");
+  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require("shared/render.js");
   try {
     var html;
     if (PU && PU.renderGrid) {
@@ -220,7 +220,7 @@ function renderQuestions(questions, options) {
  * @returns {Object} { score, total, correct, results }
  */
 function checkAnswers(questions, userAnswers, options) {
-  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require("render.js");
+  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require("shared/render.js");
   if (PU && PU.defaultCheck) {
     return PU.defaultCheck(questions, userAnswers, options);
   }
@@ -988,9 +988,6 @@ __defs["shared/metrics.js"] = function (module, exports, require) {
     global.Metrics = API;
   }
 })(typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
-};
-__defs["render.js"] = function (module, exports, require) {
-  module.exports = null;
 };
 global.PresentationEngine = __req("shared/presentation-engine.js");
 global.PresentationBundle = __req("shared/presentation-engine.js");

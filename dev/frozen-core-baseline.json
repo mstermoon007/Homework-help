@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T10:48:12.201Z",
+  "generatedAt": "2026-09-01T11:20:15.594Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -418,9 +418,9 @@
       "mtime": 1788244510561.7878
     },
     "shared/presentation-engine.js": {
-      "hash": "0f805b70e7d5e840",
-      "size": 9811,
-      "mtime": 1788188394154.4207
+      "hash": "36ff467c72c269bf",
+      "size": 9809,
+      "mtime": 1788261460573.576
     },
     "shared/print.js": {
       "hash": "2ea66b6a27c87043",

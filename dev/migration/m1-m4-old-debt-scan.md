@@ -179,3 +179,15 @@ native 化会破坏「题面-算式」语义，应保留 legacy。其余 ~96 个
 - **回归真实变绿**：1806（PASS 1032 / PLAN_ERROR 774）→ **1074（PASS 1074 / FAIL 0 / PLAN_ERROR 0）**。
 - 全量验证 PASS：`npm test`（含 219 SVG）、`verify`、`verify:m4`（60 pass/0 fail）、frozen-core 93/93 无变更。
 
+### 5.7 C06 — 无效代码清理（物理删除）
+
+- **practice.html 死代码块物理删除**：`buildGenerationRequest`/`generateViaEngine`/`doGenerate`/`sqToLegacyQuestion`
+  （never invoked，live 入口统一为 `practiceSession.start()` → `GenerationEngine.generate`）。
+- **P-010 幻影 require 修复**：`presentation-engine.js:180,204` `require('../render.js')` → `require('./render.js')`
+  （`shared/render.js` 实际存在；原路径在 Node 直调 renderQuestions/checkAnswers 时 MODULE_NOT_FOUND）。已重建 presentation bundle。
+- **P-011 文档幻影删除**：`docs/seo-monitoring.md:21` 移除对不存在 `scripts/enrich-knowledge-bank.js` 的引用。
+- **门禁对齐**（断言改为 live 入口）：`check-m7-final.js` R16、`check-practice-page.js`、`check-ui-boundary.js`、`check-p6-render-print.js` 改断言 `practiceSession.start()`。
+- **冻结变更**：`shared/presentation-engine.js`（1 文件）已授权修复 + 重锚（见 `frozen-core-change-m4-c06-dead-code.md`）。
+- 全量验证 PASS：`npm test`、`verify`、`verify:m4`、`test:regression`（PASS 1074 / FAIL 0 / PLAN_ERROR 0）、presentation-runtime PASS、各 M7 手工门禁 PASS。
+- 既有失败（非本次引入）：`check-architecture-final.js` R36「Generator has no Renderer dependency (graphic-renderer.js)」。
+

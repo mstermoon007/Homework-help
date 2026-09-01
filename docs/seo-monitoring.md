@@ -18,7 +18,6 @@
 生成/更新命令：
 
     node scripts/generate-knowledge-pages.js   # 知识库静态页
-    node scripts/enrich-knowledge-bank.js      # 知识点 description/example（数据来源）
     node scripts/inject-schema.js              # 核心页 JSON-LD
     node scripts/generate-sitemap.js          # sitemap.xml
 

@@ -177,7 +177,7 @@ function generateQuestions(plan, options) {
  * @returns {string} HTML
  */
 function renderQuestions(questions, options) {
-  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require('../render.js');
+  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require('./render.js');
   try {
     var html;
     if (PU && PU.renderGrid) {
@@ -201,7 +201,7 @@ function renderQuestions(questions, options) {
  * @returns {Object} { score, total, correct, results }
  */
 function checkAnswers(questions, userAnswers, options) {
-  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require('../render.js');
+  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require('./render.js');
   if (PU && PU.defaultCheck) {
     return PU.defaultCheck(questions, userAnswers, options);
   }

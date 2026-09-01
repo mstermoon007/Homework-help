@@ -66,9 +66,9 @@ function scan(re) {
   return hits;
 }
 
-// [A] 页面生成必须存在统一入口 GenerationEngine.generate
-add('UI 存在统一生成入口 GenerationEngine.generate', (function () {
-  var hits = scan(/GenerationEngine\.generate\s*\(/);
+// [A] 页面生成必须存在统一入口 practiceSession.start()（内部经 GenerationEngine.generate）
+add('UI 存在统一生成入口 practiceSession.start()', (function () {
+  var hits = scan(/practiceSession\.start\s*\(/);
   return hits.length >= 1;
 })());
 

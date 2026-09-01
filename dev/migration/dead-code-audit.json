@@ -34,6 +34,15 @@
       "status": "DEAD/VESTIGIAL - never invoked"
     }
   ],
+  "resolved": {
+    "ref": "C06 dead-code cleanup",
+    "committed": true,
+    "items": [
+      { "id": "P-010", "action": "fixed", "detail": "presentation-engine.js:180,204 require('../render.js') -> require('./render.js'); Node renderQuestions/checkAnswers now resolve shared/render.js" },
+      { "id": "P-011", "action": "removed", "detail": "docs/seo-monitoring.md:21 removed reference to non-existent scripts/enrich-knowledge-bank.js" },
+      { "id": "DEAD-001", "action": "deleted", "detail": "practice.html: removed buildGenerationRequest/generateViaEngine/doGenerate/sqToLegacyQuestion (never invoked); live entry = practiceSession.start()" }
+    ]
+  },
   "findings": {
     "status": "recorded",
     "detail": "DEAD/ARCHIVE file lists and package.json script audit (scripts/) captured by R-A11; full enumeration pending final merge. No runtime phantom registry refs."

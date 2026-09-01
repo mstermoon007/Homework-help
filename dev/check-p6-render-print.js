@@ -43,9 +43,9 @@ function add(name, ok, extra) {
 // [1] Renderer 唯一出口
 add('Renderer 唯一出口', (function () {
   var html = fs.readFileSync(path.join(ROOT, 'practice.html'), 'utf8');
-  var hasGenerate = /GenerationEngine\.generate\(/.test(html);
+  var hasGenerate = /practiceSession\.start\(/.test(html);
   var noPluginRender = !/plugin\.render\(/.test(html);
-  // renderAll 在 GenerationEngine 内部调用，页面只调用 GenerationEngine.generate
+  // renderAll 在 GenerationEngine 内部调用，页面只经 practiceSession.start() 生成
   return hasGenerate && noPluginRender;
 })());
 

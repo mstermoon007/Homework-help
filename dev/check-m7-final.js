@@ -194,15 +194,15 @@ checks.push(check('R11 math-comprehensive 集成（R11 入口存在）', functio
     src.indexOf('existingPlan') !== -1;
 }));
 
-// R16 / P1-R01：practice.html 已接入 M7 脚本且唯一经 GenerationEngine.generate 生成。
-// P1：UI 生成唯一入口 = App.GenerationEngine.generate；不再直连 StrategyEngine.plan /
+// R16 / P1-R01：practice.html 已接入 M7 脚本且唯一经 PracticeSession.start() 生成。
+// P1：UI 生成唯一入口 = practiceSession.start()（内部经 GenerationEngine.generate）；不再直连 StrategyEngine.plan /
 // StrategyLegacyAdapter / generateLegacy / plugin.generate。渲染统一消费 html / questions。
 checks.push(check('R16 practice.html 接入统一生成主链', function () {
   var html = fs.readFileSync(path.join(ROOT, 'practice.html'), 'utf8');
   var hasScripts = ['presentation/renderer.js', 'generation-engine.js', 'comprehensive-strategy.js']
     .every(function (s) { return html.indexOf(s) !== -1; });
   var hasUnifiedEntry = html.indexOf('practiceSession.start()') !== -1 &&
-    html.indexOf('buildGenerationRequest()') !== -1;
+    html.indexOf('practice-session.js') !== -1;
   var printUnified = html.indexOf('practiceSession.print()') !== -1;
   // P1：UI 不得再出现直连 Strategy / Legacy 生成分支
   var noBypass = html.indexOf('StrategyEngine.plan(') === -1 &&

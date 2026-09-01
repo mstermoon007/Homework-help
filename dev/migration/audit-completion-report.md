@@ -99,9 +99,9 @@
 - 难度决策双居（策略主 + 遗留静态）。
 
 ### 低危 / 误报（LOW / FALSE_POSITIVE）
-- P-010 幻影 `require('../render.js')`（PRESENTATION-ENGINE 180/204，被 PluginUtil 守卫遮蔽）。
-- P-011 `docs/seo-monitoring.md:21` 指向不存在的 `scripts/enrich-knowledge-bank.js`。
-- `generateViaEngine()`（practice.html:376/388/403）为死代码/遗留代码。
+- ~~P-010 幻影 `require('../render.js')`（PRESENTATION-ENGINE 180/204，被 PluginUtil 守卫遮蔽）~~ → **已修复**（C06 清理：改为 `./render.js`，Node 直调 renderQuestions/checkAnswers 恢复可用）。
+- ~~P-011 `docs/seo-monitoring.md:21` 指向不存在的 `scripts/enrich-knowledge-bank.js`~~ → **已删除**（C06 清理）。
+- ~~`generateViaEngine()`（practice.html:376/388/403）为死代码/遗留代码~~ → **已物理删除**（C06 清理：连同 `buildGenerationRequest`/`doGenerate`/`sqToLegacyQuestion`，live 入口统一为 `practiceSession.start()`）。
 
 ---
 
