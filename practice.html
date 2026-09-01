@@ -166,9 +166,17 @@
 <!-- 知识库分片（knowledge-math/cn/en.js）不再静态引入，改为按需懒加载（任务 3.1）：
      由 boot() 在确认科目后调用 KnowledgeBank.ensureKnowledgeData(subject) 动态注入，
      首屏仅加载当前科目，未使用的科目（语文/英语）不会被请求。 -->
-<!-- P3-R04：不再加载 plugins/registry.js（页面不依赖 Plugin 注册表）；
-     StrategyEngine 由 GenerationEngine 内部依赖，经浏览器 bundle 静态提供。 -->
+<!-- C01：restore plugins/registry.js —— strategy-engine.bundle.js 经 capability-resolver →
+     generator-capability-registry 会【急切】读取 global.PLUGIN_REGISTRY（浏览器 shim）。
+     此前 P3-R04 移除导致浏览器加载 bundle 时抛「缺少全局 PLUGIN_REGISTRY」，
+     实时生成链路在 strategy bundle 初始化阶段即中断（P0-001 上游根因）。 -->
+<script src="plugins/registry.js"></script>
 <script src="shared/strategy-engine.bundle.js"></script>
+<!-- C01：presentation-engine.bundle.js 提供 global.PresentationEngine（其 __req 委托
+     strategy-engine.bundle.js 的 require 命名空间）。generation-engine 的
+     getPresentationEngine()→ensure() 在浏览器读取 global.PresentationEngine，
+     缺省时 runPlans 会静默跳过全部 plan（P0-001）。必须先于 generation-engine.js 加载。 -->
+<script src="shared/presentation-engine.bundle.js"></script>
 <!-- M6：Learner Model + 自适应（R01-R30）。storage.js 提供跨会话持久化；learner 模块
      挂在 window.LearnerModel / LearnerStorage / ResultCollector 下，供下方主流程使用。 -->
 <script src="shared/storage.js"></script>

@@ -27,6 +27,8 @@
     "verify:m2:resolver": "node dev/check-capability-resolver.js",
     "verify:m3:config": "node dev/check-strategy-config.js",
     "build:strategy": "node dev/build-strategy-bundle.js",
+    "build:presentation": "node dev/build-presentation-bundle.js",
+    "verify:presentation-runtime": "node dev/check-presentation-runtime.js",
     "verify:m3": "node --test tests/strategy/*.test.js && node dev/check-strategy-config.js && node dev/build-strategy-bundle.js && node dev/check-strategy-plumbing.js",
     "verify:m4": "node --test tests/generator/*.test.js && node dev/check-generator-contract.js && node dev/check-generator-adapter.js && node dev/check-generator-registry.js && node dev/check-generator-inventory.js && node dev/check-generator-clusters.js && node dev/check-core-generators.js && node dev/check-generator-mode.js && node dev/check-generator-migration.js math-oral && node dev/check-generator-migration-switch.js && node dev/check-generator-migration-r18.js && node dev/check-strategy-bundle.js && node dev/check-comprehensive-pipeline.js && node dev/check-plugin-responsibility.js && node dev/check-migration-status.js",
     "test:equivalence": "node dev/test-generator-equivalence.js",
