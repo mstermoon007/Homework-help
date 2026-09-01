@@ -49,6 +49,14 @@ C05 深挖出该根因的**真实机制**：
 PASS 数上升 42（native 轨道原先的 42 个伪 PLAN_ERROR 因样本校正转为真实 PASS）；
 legacy 原 1032 PASS 全部保留（仅剔除不可构造用例），FAIL 保持 0。
 
+> **C05 后续（全量枚举升级）**：删除 `MAX_KP_SAMPLE=2`/`MAX_QT_SAMPLE=2` 采样上限，
+> legacy 全量枚举 556 KP × per-KP QT × 难度 × seed，native 全量枚举 9 生成器 × 注册 KP × per-KP QT。
+> 矩阵 **3738 cases（PASS 3738 / FAIL 0 / PLAN_ERROR 0）**。
+> 全量覆盖暴露 1 个真实校验缺口：`math-g1-m4-num-fill-unknown` 逆向填空
+> （`a + □ = total` / `□ − b = r` 等）在 SP.answerIsCorrect 下误判 false → 已扩展
+> `semantic-parse.fillOperandUnknown` 解方程校验（a/□ op b/□ = total），非跳过/白名单。
+> 详见 `m1-m4-old-debt-scan.md` 5.8。
+
 ## C05-04：禁止方式核验
 
 - ❌ 未降低 threshold / 未增加 skip / 未增加 whitelist / 未增加 expected failure

@@ -191,3 +191,18 @@ native 化会破坏「题面-算式」语义，应保留 legacy。其余 ~96 个
 - 全量验证 PASS：`npm test`、`verify`、`verify:m4`、`test:regression`（PASS 1074 / FAIL 0 / PLAN_ERROR 0）、presentation-runtime PASS、各 M7 手工门禁 PASS。
 - 既有失败（非本次引入）：`check-architecture-final.js` R36「Generator has no Renderer dependency (graphic-renderer.js)」。
 
+### 5.8 回归矩阵全量枚举升级（C05 后续）
+
+- **RC-PLAN-01 根治完成**：删除 `test-generator-regression.js` 的 `MAX_KP_SAMPLE=2`/`MAX_QT_SAMPLE=2` 采样上限，
+  回归矩阵改为**全量枚举**——legacy 轨道遍历全部 556 KP × per-KP 实际支持 QT × 难度 × seed；
+  native 轨道遍历 9 个核心生成器 × 注册 KP × per-KP QT。彻底消除「采样漏测」。
+- 矩阵规模：1074（采样）→ **3738（PASS 3738 / FAIL 0 / PLAN_ERROR 0）**。
+- **全量覆盖暴露 1 个真实校验缺口**（采样期被隐藏）：`math-g1-m4-num-fill-unknown`
+  逆向填空题（`a + □ = total` / `□ + b = total` / `a − □ = r` / `□ − b = r`）在
+  `SP.answerIsCorrect` 下因 `□` 无法按普通表达式求值而被误判 false。
+  - 修复：`dev/semantic-parse.js` 新增 `fillOperandUnknown()`（解方程还原未知数，
+    正确 +/− 字形 `+`/`−` 均识别），在 `answerIsCorrect` 中优先于普通求值路径。
+  - 属**校验能力扩展**（非跳过/白名单/阈值）；错误答案仍正确判 false。
+- 全量验证 PASS：`npm test`、`verify`、`verify:m4`（60 pass/0 fail）、`test:regression`（3738 全绿）、
+  frozen-core 93/93 无变更、R18 复杂迁移门禁 PASS。
+

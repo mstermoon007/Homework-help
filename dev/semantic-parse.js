@@ -89,6 +89,24 @@ function evaluate(operands, operators) {
   return acc;
 }
 
+/**
+ * 逆向填空（fill-operand）题干自洽校验：a/□ op b/□ = total 还原未知数使等式成立。
+ * 形式（complex-calc inverse 构造，见 arithmetic-core buildFillOperand）：
+ *   □ + b = total   → unknown = total − b
+ *   a + □ = total   → unknown = total − a
+ *   □ − b = r       → unknown = r + b
+ *   a − □ = r       → unknown = a − r
+ * 返回解析出的未知数值；无法识别返回 null。
+ */
+function fillOperandUnknown(prompt) {
+  if (typeof prompt !== 'string' || prompt.indexOf('□') === -1) return null;
+  var m = prompt.match(/^□\s*([+\−-])\s*(-?\d+(?:\.\d+)?)\s*=\s*(-?\d+(?:\.\d+)?)$/);
+  if (m) return m[1] === '-' || m[1] === '−' ? Number(m[3]) + Number(m[2]) : Number(m[3]) - Number(m[2]);
+  m = prompt.match(/^(-?\d+(?:\.\d+)?)\s*([+\−-])\s*□\s*=\s*(-?\d+(?:\.\d+)?)$/);
+  if (m) return m[2] === '-' || m[2] === '−' ? Number(m[1]) - Number(m[3]) : Number(m[3]) - Number(m[1]);
+  return null;
+}
+
 function shownValue(prompt) {
   var m = prompt.match(/=\s*(-?\d+(?:\.\d+)?)\s*[（(]/);
   if (m) return parseFloat(m[1]);
@@ -105,6 +123,17 @@ var TRUTH_MAP = { '√': true, '对': true, '正确': true, 'true': true, '×': 
  *   'n/a' —— 无法验证（分数/方程/叙述/判断命题无法自动求值）。
  */
 function answerIsCorrect(q) {
+  // 逆向填空（fill-operand）优先：□ 非普通表达式操作数，需解方程而非普通求值
+  var fill = q && q.prompt ? fillOperandUnknown(q.prompt) : null;
+  if (fill != null) {
+    var ansV = q.answer && typeof q.answer === 'object'
+      ? (q.answer.value != null ? q.answer.value : '')
+      : q.answer;
+    var nv = Number(ansV);
+    if (typeof ansV !== 'number' && !(typeof ansV === 'string' && ansV.trim() !== '')) return 'n/a';
+    if (!isFinite(nv)) return 'n/a';
+    return Math.abs(fill - nv) < 1e-9;
+  }
   var parsed = parseExpression(q.prompt);
   if (!parsed || parsed.operators.length === 0) return 'n/a';
   var computed = evaluate(parsed.operands, parsed.operators);
@@ -134,5 +163,6 @@ module.exports = {
   parseExpression: parseExpression,
   evaluate: evaluate,
   shownValue: shownValue,
+  fillOperandUnknown: fillOperandUnknown,
   answerIsCorrect: answerIsCorrect
 };

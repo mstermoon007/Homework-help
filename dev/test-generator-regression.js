@@ -52,8 +52,6 @@ function kpQuestionTypes(kpId) {
 var DIFFICULTIES = [2, 5, 8];
 var SEEDS = ['regr-a', 'regr-b'];
 var BATCH = 4;
-var MAX_KP_SAMPLE = 2;
-var MAX_QT_SAMPLE = 2;
 
 /* ---------- 单 case 校验 ---------- */
 
@@ -149,15 +147,17 @@ async function main() {
     }
 
     var gen = Adapter.createLegacyGenerator(entry.plugin, { capabilities: rec.questionTypes, knowledgePoints: rec.knowledgePoints });
-    var kps = rec.knowledgePoints.slice(0, MAX_KP_SAMPLE);
+    var kps = rec.knowledgePoints;
 
     for (var k = 0; k < kps.length; k++) {
-      // per-KP 能力交集：插件声明 ∪ 该 KP 实际支持 —— 只测可构造的 KP×QT 组合
+      // per-KP 能力交集：插件声明 ∪ 该 KP 实际支持 —— 只测可构造的 KP×QT 组合。
+      // 全量枚举（不做采样）：每个 KP 只与它自己实际支持的 QT 配对，杜绝 RC-PLAN-01
+      // （插件级能力并集逐 KP 规划 → 伪 PLAN_ERROR）再次出现。
       var kpQts = kpQuestionTypes(kps[k]).filter(function (q) {
         return (rec.questionTypes || []).indexOf(q) !== -1 && gen.supports({ questionTypeId: q });
       });
-      var qts = kpQts.slice(0, MAX_QT_SAMPLE);
-      if (!qts.length) qts = (rec.questionTypes || []).slice(0, 1);
+      var qts = kpQts;
+      if (!qts.length) continue;
       for (var q = 0; q < qts.length; q++) {
         for (var d = 0; d < DIFFICULTIES.length; d++) {
           for (var s = 0; s < SEEDS.length; s++) {
@@ -185,51 +185,55 @@ async function main() {
   }
 
   // —— native 轨道 ——
-  // 每个能力挑一个【真实支持该能力】的 KP 作为样本（per-KP 校验，与 plan 第 4 步一致）
-  var sampleKpByCap = {};
-  genRecords.forEach(function (r) {
-    (r.capabilities || []).forEach(function (cap) {
-      if (sampleKpByCap[cap]) return;
-      for (var i = 0; i < r.knowledgePoints.length; i++) {
-        var kpId = r.knowledgePoints[i];
-        if (kpQuestionTypes(kpId).indexOf(cap) !== -1) { sampleKpByCap[cap] = kpId; break; }
-      }
-    });
-  });
-  // calc/oral → 用加法/混合算数 KP 样本；确保 native 各能力都有真实 KP
-  if (!sampleKpByCap.calc) sampleKpByCap.calc = 'math-g1-m1-addsub-10';
-  if (!sampleKpByCap.oral) sampleKpByCap.oral = 'math-g1-m1-addsub-10';
-  ['fill', 'choice', 'judge'].forEach(function (cap) {
-    if (!sampleKpByCap[cap]) {
-      ['math-g2-m11-judge-mixed', 'math-g2-m12-choice-mixed'].forEach(function (kpid) {
-        if (kpQuestionTypes(kpid).indexOf(cap) !== -1) sampleKpByCap[cap] = kpid;
-      });
-    }
+  // 全量枚举：每个核心 Generator 遍历其注册的全部 KP × 该 KP 实际支持的 QT
+  // （per-KP 校验，与 plan 第 4 步一致；杜绝 RC-PLAN-01 伪用例）。
+  var registry = require(path.join(ROOT, 'shared', 'generator', 'generator-registry.js'));
+  var coreRecByGen = {};
+  registry.records().forEach(function (r) {
+    if (r.scope === 'core' && r.id) coreRecByGen[r.id] = r;
   });
 
+  // calc/oral → 加法/混合算数 KP 样本，仅作为无注册 KP 的兜底（如 arithmetic-mixed-calculation）
+  function fallbackKp(cap) {
+    var candidates = cap === 'calc' ? ['math-g1-m1-addsub-10', 'math-g2-m1-addsub-1000'] : ['math-g1-m1-addsub-10'];
+    for (var i = 0; i < candidates.length; i++) {
+      if (kpQuestionTypes(candidates[i]).indexOf(cap) !== -1) return candidates[i];
+    }
+    return 'math-g1-m1-addsub-10';
+  }
+
   CoreGen.ALL.forEach(async function (g) {
-    var cap = (g.capabilities || [])[0];
-    var kps = [sampleKpByCap[cap] || 'math-g1-m1-addsub-10'];
+    var caps = (g.capabilities || []);
+    var rec = coreRecByGen[g.id];
+    var kps = (rec && rec.knowledgePoints && rec.knowledgePoints.length) ? rec.knowledgePoints : [fallbackKp(caps[0] || 'calc')];
     for (var k = 0; k < kps.length; k++) {
-      for (var d = 0; d < DIFFICULTIES.length; d++) {
-        for (var s = 0; s < SEEDS.length; s++) {
-          var plan;
-          try {
-            plan = Engine.plan({ knowledgePointId: kps[k], questionType: cap, count: BATCH, difficulty: DIFFICULTIES[d] }).plans[0];
-          } catch (e) {
-            cases.push({ generatorId: g.id, kpId: kps[k], questionTypeId: cap, difficulty: DIFFICULTIES[d], seed: SEEDS[s], status: 'PLAN_ERROR', failReasons: [e.message] });
-            continue;
+      // per-KP 能力交集：生成器能力 ∩ 该 KP 实际支持 —— 只测可构造的 KP×QT 组合
+      var kpQts = kpQuestionTypes(kps[k]).filter(function (q) {
+        return caps.indexOf(q) !== -1;
+      });
+      var qts = kpQts;
+      if (!qts.length) continue;
+      for (var q = 0; q < qts.length; q++) {
+        for (var d = 0; d < DIFFICULTIES.length; d++) {
+          for (var s = 0; s < SEEDS.length; s++) {
+            var plan;
+            try {
+              plan = Engine.plan({ knowledgePointId: kps[k], questionType: qts[q], count: BATCH, difficulty: DIFFICULTIES[d] }).plans[0];
+            } catch (e) {
+              cases.push({ generatorId: g.id, kpId: kps[k], questionTypeId: qts[q], difficulty: DIFFICULTIES[d], seed: SEEDS[s], status: 'PLAN_ERROR', failReasons: [e.message] });
+              continue;
+            }
+            var check = { generated: false, crash: false, outOfBounds: 0, answerWrong: 0, answerNA: 0, duplicates: 0, renderable: false, satisfiesPlan: true, failReasons: [] };
+            try {
+              var outN = g.generate(plan, { seed: SEEDS[s] });
+              if (outN && typeof outN.then === 'function') outN = await outN;
+              check = checkBatch(outN, null, plan);
+            } catch (e) {
+              check.crash = true;
+              check.failReasons.push('崩溃: ' + e.message);
+            }
+            cases.push({ generatorId: g.id, kpId: kps[k], questionTypeId: qts[q], difficulty: DIFFICULTIES[d], seed: SEEDS[s], status: caseStatus(check), checks: check });
           }
-          var check = { generated: false, crash: false, outOfBounds: 0, answerWrong: 0, answerNA: 0, duplicates: 0, renderable: false, satisfiesPlan: true, failReasons: [] };
-          try {
-            var outN = g.generate(plan, { seed: SEEDS[s] });
-            if (outN && typeof outN.then === 'function') outN = await outN;
-            check = checkBatch(outN, null, plan);
-          } catch (e) {
-            check.crash = true;
-            check.failReasons.push('崩溃: ' + e.message);
-          }
-          cases.push({ generatorId: g.id, kpId: kps[k], questionTypeId: cap, difficulty: DIFFICULTIES[d], seed: SEEDS[s], status: caseStatus(check), checks: check });
         }
       }
     }
