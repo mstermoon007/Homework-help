@@ -190,12 +190,14 @@
   /** 依序执行各 QuestionPlan → SemanticQuestion[]（每计划内 Retry/Validator/Regenerate） */
   function runPlans(plans, options) {
     var PE = getPresentationEngine();
+    // C02-05 无静默失败：PresentationEngine 缺失（P0-001 回归防护）时拒绝，
+    // 不得静默返回空 questions（原先 `if (!PE) return null` 会吞掉全部计划）。
+    if (!PE) return Promise.reject(new Error('PresentationEngine 不可用：generateQuestions 无法执行（P0-001 回归防护）'));
     var results = [];
     var failedPlans = [];
     var seq = Promise.resolve();
     plans.forEach(function (plan) {
       seq = seq.then(function () {
-        if (!PE) return null;
         try {
           return PE.generateQuestions(plan, {
             legacyOutput: options.legacyOutput === true,

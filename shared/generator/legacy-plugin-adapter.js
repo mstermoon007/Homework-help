@@ -66,17 +66,13 @@ function createLegacyGenerator(plugin, meta) {
   return generator;
 }
 
-/** 输入类型 → SemanticQuestion.answerMode 映射 */
+/** 输入类型 → SemanticQuestion.answerMode 映射（M4 严格契约） */
 function mapInputType(inputType) {
-  var map = {
-    'text': 'input',
-    'input': 'input',
-    'choice': 'choice',
-    'multi': 'multi',
-    'none': 'none',
-    'read-aloud': 'read-aloud'
-  };
-  return map[inputType] || 'input';
+  // M4 Generator Contract 仅区分 'read-aloud' 与 'input'（书面作答）。
+  // choice/multi/none 仍属书面作答（学生选择/填写/无需文字），统一映射为 'input'，
+  // 具体差异由 questionType / options / distractors 表达，避免非法 answerMode。
+  if (inputType === 'read-aloud') return 'read-aloud';
+  return 'input';
 }
 
 /** 标量化（数组/对象 → 可比较字符串；对象优先取其 value） */
@@ -186,7 +182,6 @@ function toSemanticQuestions(set, plan, context) {
       options: allOptions.length ? allOptions : undefined,
       graphic: q.graphic != null ? q.graphic
         : (svgRaw ? { type: 'custom', subtype: null, params: { rawSvg: svgRaw }, renderHints: {} } : null),
-      svg: svgRaw,
       hint: q.hint != null ? q.hint : null,
       data: {
         kind: q.kind != null ? q.kind : null,
