@@ -2662,14 +2662,14 @@ var GenCap = require("shared/generator-capability-registry.js");
 
 // M4-R06 核心 Generator 声明（纯数据；执行实现位于 shared/generator/generators/）
 var CORE_RECORDS = [
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: [], scope: 'core', version: 1 },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: [], scope: 'core', version: 1 },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: [], scope: 'core', version: 1 },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: [], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g2-m1-mult-table', 'math-g2-m2-mult-col', 'math-g2-m4-multiplication-meaning', 'math-g2-m7-pic-mult', 'math-g2-m8-mult-total', 'math-g2-m5-match-multdiv', 'math-g3-m1-g3-mul-multi1', 'math-g6-c1-vertical-multidigit', 'math-g6-c3-multiplication-principle'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-division-table', 'math-g2-m1-div-table', 'math-g2-m1-muldiv-relation', 'math-g2-m2-div-col', 'math-g2-m4-division-meaning', 'math-g2-m7-pic-div', 'math-g2-m7-pic-div-include', 'math-g2-m8-div-partitive', 'math-g2-m8-div-quotative', 'math-g3-m1-g3-div1', 'math-g4-c2-c2-divisible', 'math-g4-m1-g4-oral-divt', 'math-g4-m2-g4-v-div2', 'math-g4-m2-g4-v-div2q', 'math-g4-m8-g4-word-div', 'math-g5-c2-divisibility', 'math-g6-c2-divisibility'], scope: 'core', version: 1 },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: [], scope: 'core', version: 1 },
-  { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill'], questionTypes: ['fill'], knowledgePoints: [], scope: 'core', version: 1 },
-  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice'], questionTypes: ['choice'], knowledgePoints: [], scope: 'core', version: 1 },
-  { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge'], questionTypes: ['judge'], knowledgePoints: [], scope: 'core', version: 1 },
+  { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill'], questionTypes: ['fill'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g1-m13-division-table', 'math-g1-m13-fill-blank', 'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-cutfill', 'math-g4-c4-c4-pa', 'math-g4-c4-c4-solid', 'math-g4-c4-c4-count'], scope: 'core', version: 1 },
+  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice'], questionTypes: ['choice'], knowledgePoints: ['math-g1-m12-choice-mixed', 'math-g1-m5-match-calc', 'math-g1-m5-match-shape', 'math-g1-m5-match-clock', 'math-g1-m5-match-rmb', 'math-g2-m12-choice-mixed'], scope: 'core', version: 1 },
+  { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge'], questionTypes: ['judge'], knowledgePoints: ['math-g1-m0-make-ten-cushi', 'math-g1-m11-judge-mixed', 'math-g2-m11-judge-mixed'], scope: 'core', version: 1 },
   { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill', 'oral'], questionTypes: ['calc', 'fill', 'oral'],
     knowledgePoints: ['math-g1-m1-mixed-chain', 'math-g2-m1-mixed-addsub', 'math-g2-m1-mixed-multdiv', 'math-g2-m3-chain-addsub', 'math-g2-m3-multdiv-mixed', 'math-g2-m3-mixed-no-bracket', 'math-g2-m3-mixed-bracket', 'math-g1-m4-num-fill-unknown', 'math-g2-m3-fill-operator'],
     scope: 'core', version: 1 }
@@ -3915,7 +3915,70 @@ function canonicalSubject(subject) {
 var globalMode = 'hybrid';      // 默认双轨并行
 var overrides = {               // scope → key → mode
   plugin: {},
-  knowledgePoint: {},
+  knowledgePoint: {
+    // P4-R04: Hybrid KP 切换到 Native 模式（62 个 Hybrid KP，排除 judge 类）
+    'math-g1-m1-addsub-10': 'native',
+    'math-g1-m1-addsub-100': 'native',
+    'math-g1-m1-addsub-5': 'native',
+    'math-g1-m1-carry-add-20': 'native',
+    'math-g1-m1-mixed-chain': 'native',
+    'math-g1-m1-retreat-sub-20': 'native',
+    'math-g1-m1-two-digit-add': 'native',
+    'math-g1-m12-choice-mixed': 'native',
+    'math-g1-m13-division-table': 'native',
+    'math-g1-m13-fill-blank': 'native',
+    
+    'math-g1-m4-num-fill-unknown': 'native',
+    'math-g1-m5-match-calc': 'native',
+    'math-g1-m5-match-clock': 'native',
+    'math-g1-m5-match-rmb': 'native',
+    'math-g1-m5-match-shape': 'native',
+    'math-g2-m1-addsub-1000': 'native',
+    'math-g2-m1-div-table': 'native',
+    'math-g2-m1-mixed-addsub': 'native',
+    'math-g2-m1-mixed-multdiv': 'native',
+    'math-g2-m1-muldiv-relation': 'native',
+    'math-g2-m1-mult-table': 'native',
+    'math-g2-m12-choice-mixed': 'native',
+    'math-g2-m2-div-col': 'native',
+    'math-g2-m2-mult-col': 'native',
+    'math-g2-m3-chain-addsub': 'native',
+    'math-g2-m3-fill-operator': 'native',
+    'math-g2-m3-mixed-bracket': 'native',
+    'math-g2-m3-mixed-no-bracket': 'native',
+    'math-g2-m3-multdiv-mixed': 'native',
+    'math-g2-m4-division-meaning': 'native',
+    'math-g2-m4-fill-length': 'native',
+    'math-g2-m4-fill-mass': 'native',
+    'math-g2-m4-fill-time': 'native',
+    'math-g2-m4-length-unit': 'native',
+    'math-g2-m4-mass-unit': 'native',
+    'math-g2-m4-multiplication-meaning': 'native',
+    'math-g2-m4-time-unit': 'native',
+    'math-g2-m5-match-multdiv': 'native',
+    'math-g2-m7-pic-div': 'native',
+    'math-g2-m7-pic-div-include': 'native',
+    'math-g2-m7-pic-mult': 'native',
+    'math-g2-m8-div-partitive': 'native',
+    'math-g2-m8-div-quotative': 'native',
+    'math-g2-m8-mult-total': 'native',
+    'math-g3-m1-g3-div1': 'native',
+    'math-g3-m1-g3-mul-multi1': 'native',
+    'math-g3-m4-g3-measure': 'native',
+    'math-g4-c2-c2-divisible': 'native',
+    'math-g4-c4-c4-count': 'native',
+    'math-g4-c4-c4-cutfill': 'native',
+    'math-g4-c4-c4-pa': 'native',
+    'math-g4-c4-c4-solid': 'native',
+    'math-g4-m1-g4-oral-divt': 'native',
+    'math-g4-m2-g4-v-div2': 'native',
+    'math-g4-m2-g4-v-div2q': 'native',
+    'math-g4-m8-g4-word-div': 'native',
+    'math-g5-c2-divisibility': 'native',
+    'math-g6-c1-vertical-multidigit': 'native',
+    'math-g6-c2-divisibility': 'native',
+    'math-g6-c3-multiplication-principle': 'native'
+  },
   questionType: {},
   subject: {}
 };
@@ -6108,17 +6171,13 @@ function createLegacyGenerator(plugin, meta) {
   return generator;
 }
 
-/** 输入类型 → SemanticQuestion.answerMode 映射 */
+/** 输入类型 → SemanticQuestion.answerMode 映射（M4 严格契约） */
 function mapInputType(inputType) {
-  var map = {
-    'text': 'input',
-    'input': 'input',
-    'choice': 'choice',
-    'multi': 'multi',
-    'none': 'none',
-    'read-aloud': 'read-aloud'
-  };
-  return map[inputType] || 'input';
+  // M4 Generator Contract 仅区分 'read-aloud' 与 'input'（书面作答）。
+  // choice/multi/none 仍属书面作答（学生选择/填写/无需文字），统一映射为 'input'，
+  // 具体差异由 questionType / options / distractors 表达，避免非法 answerMode。
+  if (inputType === 'read-aloud') return 'read-aloud';
+  return 'input';
 }
 
 /** 标量化（数组/对象 → 可比较字符串；对象优先取其 value） */
@@ -6184,12 +6243,18 @@ function toSemanticQuestions(set, plan, context) {
 
     // distractors：choice 题由 options（剔除正确答案）构建
     var distractors = [];
+    var allOptions = [];
     if (!isReadAloud && (q.inputType === 'choice' || q.type === 'choice') && Array.isArray(q.options)) {
       var correct = rawAnswer != null ? coerceScalar(rawAnswer) : null;
+      allOptions = q.options.slice(); // 完整选项（含正确答案），用于渲染
       q.options.forEach(function (opt) {
         var val = coerceScalar(opt);
         if (val && val !== correct) distractors.push({ value: val, errorType: '概念混淆', weight: 1 });
       });
+    } else if (distractors.length > 0) {
+      // 回退：从 answer + distractors 重建完整选项
+      var correct = answerObj && answerObj.value != null ? coerceScalar(answerObj.value) : null;
+      if (correct) allOptions = [correct].concat(distractors.map(function (d) { return d.value; }));
     }
 
     // graphic：携带 legacy svg / graphic / drawing / illustration，
@@ -6219,9 +6284,9 @@ function toSemanticQuestions(set, plan, context) {
       question: { prompt: prompt, answerMode: answerMode },
       answer: answerObj,
       distractors: distractors,
+      options: allOptions.length ? allOptions : undefined,
       graphic: q.graphic != null ? q.graphic
         : (svgRaw ? { type: 'custom', subtype: null, params: { rawSvg: svgRaw }, renderHints: {} } : null),
-      svg: svgRaw,
       hint: q.hint != null ? q.hint : null,
       data: {
         kind: q.kind != null ? q.kind : null,
@@ -8051,6 +8116,7 @@ function createSemanticQuestion(raw) {
   if (raw.render != null) sq.render = raw.render;
   if (raw.check != null) sq.check = raw.check;
   if (raw.svg != null) sq.svg = raw.svg;
+  if (raw.options != null) sq.options = raw.options;
 
   // 扁平化常用字段（便捷访问，不破坏标准结构）
   sq.prompt = sq.content && sq.content.prompt ? sq.content.prompt : (sq.question && sq.question.prompt ? sq.question.prompt : '');

@@ -236,6 +236,7 @@ async function runTool() {
   console.log('');
   Object.keys(out.candidates).forEach(function (pid) {
     var c = out.candidates[pid];
+    if (!c.kps) return; // NO_NATIVE_QT（无算术可服务 QT）无逐 KP 对照
     console.log('=== ' + pid + ' [' + c.verdict + ']  FULL-EQ:' + c.fullKps + '/' + c.kps.length + (c.noParseKps ? ' NO_PARSE:' + c.noParseKps : '') + (c.differsKps ? ' DIFFERS:' + c.differsKps : ''));
     c.kps.forEach(function (k) {
       var qs = Object.keys(k.qts).map(function (qt) {

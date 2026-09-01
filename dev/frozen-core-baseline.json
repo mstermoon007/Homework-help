@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T06:35:11.223Z",
+  "generatedAt": "2026-09-01T07:01:59.005Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -103,9 +103,9 @@
       "mtime": 1788150923822.1445
     },
     "shared/generator/generator-registry.js": {
-      "hash": "49543c11be592437",
-      "size": 8099,
-      "mtime": 1788186921580.7668
+      "hash": "0a0bcd1913084eca",
+      "size": 7710,
+      "mtime": 1788246098713.9683
     },
     "shared/generator/generator-selector.js": {
       "hash": "a5a02fe7eb1ffdc7",
