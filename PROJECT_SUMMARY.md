@@ -94,7 +94,7 @@ Homework Help 是一个**零依赖、无构建步骤的纯静态站点**：面�
 
 ## 九、其他辅助系统
 
-- `version.js`：单一版本源（`APP_VERSION='3.1.2'`、`CACHE_VERSION='homework-help-3.1.2'`），既 `module.exports`（Node）也挂 `self.*`（浏览器 / SW，见第十节 P0）。
+- `version.js`：单一版本源（`APP_VERSION='4.0.0'`、`CACHE_VERSION='homework-help-4.0.0'`），既 `module.exports`（Node）也挂 `self.*`（浏览器 / SW，见第十节 P0）。
 - `scripts/sync-sw-version.js`：校验 `sw.js` 的 `CACHE` 字面量 == `'hw-help-'+APP_VERSION`（CI / `npm test` 中校验）。
 - `feedback/` 独立反馈（mailto 兜底）；`assets/` 图片；`subject-utils.js`（MathUtil / ChineseUtil / EnglishUtil）；`hanzi-bank.js` / `pinyin-bank.js`；`plugin-types.js`（仅 JSDoc 类型）。
 
@@ -107,7 +107,7 @@ Homework Help 是一个**零依赖、无构建步骤的纯静态站点**：面�
 ### 🔴 P0（功能失效，已修复）
 1. **Service Worker 完全失效（离线 / 缓存机制报废）**
    - 原因：`sw.js:33` 原用顶层 ESM `import { CACHE_VERSION } from './shared/version.js';`，但注册点为 `navigator.serviceWorker.register('./sw.js')` 且**不带** `{type:'module'}`（`shared/plugin-loader.js:141`）→ 经典 SW 解析 `import` 抛 `SyntaxError`，`.catch` 静默吞掉；且 `version.js` 仅有 `module.exports`、无 ESM `export`，即便改为 module 注册也会失败。
-   - 修复：`sw.js` 改为 `importScripts('./shared/version.js')`（`sw.js:34`）；`shared/version.js` 末尾将 `APP_VERSION/CACHE_VERSION/BUILD_DATE` 挂到 `self`（浏览器 `self===window`、SW 同作用域均可读，`version.js:18-23`）。保留 `const CACHE = 'hw-help-3.1.2';` 字面量以通过 `sync-sw-version.js`。
+   - 修复：`sw.js` 改为 `importScripts('./shared/version.js')`（`sw.js:34`）；`shared/version.js` 末尾将 `APP_VERSION/CACHE_VERSION/BUILD_DATE` 挂到 `self`（浏览器 `self===window`、SW 同作用域均可读，`version.js:18-23`）。保留 `const CACHE = 'hw-help-<APP_VERSION>';` 字面量（当前 `hw-help-4.0.0`）以通过 `sync-sw-version.js`。
    - 验证：`node --check sw.js` 通过；`sync-sw-version.js` 通过；`version.js` 在 `self` 存在时正确暴露全局。
 
 ### 🟠 P1（设计 / 一致性，已修复或说明）
@@ -122,7 +122,7 @@ Homework Help 是一个**零依赖、无构建步骤的纯静态站点**：面�
 
 ### 🟡 P2（卫生 / 隐患，已修复或说明）
 5. **SVG 缓存会话内不释放（已修复）**：`practice.html` 在每次加载新插件前调用 `window.SVGUtil.clearCache()`（`practice.html:1231-1233`），避免长会话内存只增不减。
-6. **`package.json` 版本与 `APP_VERSION` 不一致（已修复）**：`package.json` `"version"` 由 `3.0.0` 改为 `3.1.2`，与 `version.js` 一致。
+6. **`package.json` 版本与 `APP_VERSION` 不一致（已修复）**：`package.json` `"version"` 与 `shared/version.js` 的 `APP_VERSION` 保持一致（当前 `4.0.0`）。
 7. **遗留 `tests/test-runner.html`（保留）**：被 `README.md:114` 记录为 HTML 测试运行器，非真正孤立，予以保留。
 8. **统计测试偶发飘红（已缓解）**：`random-distribution.test.js` 卡方检验已降至 α=0.01（临界 21.666 / 134.642），误报率约 1%；且 `test:node` 未进 CI，本地 `npm test` 偶发飘红概率已极低。
 9. **工作树大规模未提交改动（说明）**：`git status` 显示约 600+ 个 `knowledge/*.html` 被修改，源于上一轮 `generate-knowledge-pages.js` 全量重生成。属生成产物，建议提交或 `git checkout` 还原，不在本次改动范围。
@@ -130,7 +130,7 @@ Homework Help 是一个**零依赖、无构建步骤的纯静态站点**：面�
 11. **难度 `strategyFor(pluginId)` 契约脆弱（说明）**：见第八节末，当前无害，列为后续加固项。
 
 ### ✅ 核实无问题的项
-- 缓存版本号一致：`sw.js` `CACHE='hw-help-3.1.2'` == `version.js` `APP_VERSION` → `sync-sw-version.js` 通过。
+- 缓存版本号一致：`sw.js` `CACHE='hw-help-4.0.0'` == `version.js` `APP_VERSION` → `sync-sw-version.js` 通过。
 - registry↔文件一致：93 条注册文件均存在，`_template.js` 正确排除。
 - 运行时代码零 `Math.random`（R1 满足）。
 - 全仓无 `TODO/FIXME/known-broken` 标记。

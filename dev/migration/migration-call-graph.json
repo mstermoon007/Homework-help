@@ -1,0 +1,40 @@
+{
+  "audit": "MIGRATION_CALL_GRAPH",
+  "ref": "R-A07..R-A11 consolidated",
+  "read_only": true,
+  "purpose": "Map the live runtime generation chain and its dependencies for migration closure decisioning.",
+  "live_runtime_chain": {
+    "entry": {
+      "file": "practice.html",
+      "line": "461",
+      "fn": "PracticeSession.start()"
+    },
+    "nodes": [
+      { "module": "shared/practice-session.js", "fn": "_buildGenerationRequest()", "status": "ACTIVE_RUNTIME" },
+      { "module": "shared/generation-engine.js", "fn": "generate()/build()", "status": "ACTIVE_RUNTIME", "line": "164/109" },
+      { "module": "shared/strategy/strategy-engine.js", "fn": "plan()", "status": "ACTIVE_RUNTIME (bundle: strategy-engine.bundle.js)" },
+      { "module": "shared/strategy/comprehensive-strategy.js", "fn": "build()", "status": "ACTIVE_RUNTIME (loaded line 201)" },
+      { "module": "capability-resolver", "status": "DEV_ONLY (module.exports, no window global)" },
+      { "module": "question-type router", "status": "ACTIVE_RUNTIME" },
+      { "module": "difficulty routing (strategy)", "status": "ACTIVE_RUNTIME (primary)" },
+      { "module": "shared/difficulty.js / difficulty-static.js", "status": "LEGACY_DORMANT (secondary center, guarded difficultyParams == null)" },
+      { "module": "spiral", "status": "ACTIVE_RUNTIME" },
+      { "module": "generator-selector", "status": "ACTIVE_RUNTIME" },
+      { "module": "presentation-engine", "status": "NOT_LOADED_IN_BROWSER -> P0-001" }
+    ],
+    "gap_edge": [
+      "generation-engine.getPresentationEngine() -> global.PresentationEngine undefined and require unavailable in browser -> returns null",
+      "runPlans() line 198 'if (!PE) return null' -> all plans silently skipped -> live generate() resolves empty (P0-001)"
+    ]
+  },
+  "legacy_edges": {
+    "shared/legacy/plugin-adapter.js": "ACTIVE_RUNTIME (generateLegacy/renderLegacySet bridge)",
+    "shared/legacy/legacy-plugin-adapter.js": "DEV_GATE_ONLY",
+    "shared/generator/legacy-plugin-adapter.js": "ACTIVE_RUNTIME (bundle re-export)"
+  },
+  "dead_edges": {
+    "practice.html generateViaEngine -> window.GenerationEngine.generate": "DEAD/VESTIGIAL"
+  },
+  "verdict": "NOT_READY",
+  "blocker": "P0-001 browser runtime gap breaks the live generation chain (empty output silently)."
+}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31T16:55:51.138Z",
+  "generatedAt": "2026-09-01T02:51:05.112Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -8,9 +8,9 @@
       "mtime": 1787973668114.6597
     },
     "shared/version.js": {
-      "hash": "1f5cee3311216c14",
+      "hash": "3d37d10df1445adc",
       "size": 1051,
-      "mtime": 1787994776193.7153
+      "mtime": 1788230052273.883
     },
     "shared/tokens.css": {
       "hash": "5b4816ddb53f3529",
@@ -147,10 +147,30 @@
       "size": 651,
       "mtime": 1788098629735.06
     },
-    "shared/generator/core/kp-arithmetic-semantics.js": {
-      "hash": "eea44b9bf0c105ad",
-      "size": 2497,
-      "mtime": 1788095783095.607
+    "shared/generator/core/rng.js": {
+      "hash": "7535e7ddf5358b90",
+      "size": 1421,
+      "mtime": 1788090526795.4841
+    },
+    "shared/generator/core/arithmetic-core.js": {
+      "hash": "2a0e30d7c315eded",
+      "size": 13250,
+      "mtime": 1788098674192.8926
+    },
+    "shared/generator/core/kp-complex-semantics.js": {
+      "hash": "98d8216541f5f69f",
+      "size": 5125,
+      "mtime": 1788098497992.467
+    },
+    "shared/generator/migration-switch.js": {
+      "hash": "9f88325c2f40e670",
+      "size": 2182,
+      "mtime": 1788098772438.9644
+    },
+    "shared/generator/semantic-question-bridge.js": {
+      "hash": "1de689fa215174e6",
+      "size": 4802,
+      "mtime": 1788101424599.7878
     },
     "shared/strategy/strategy-engine.js": {
       "hash": "a0412126a26ec3c1",
@@ -171,6 +191,96 @@
       "hash": "242c4e5ae33412e0",
       "size": 857,
       "mtime": 1788075216131.3135
+    },
+    "shared/strategy/strategy-request.js": {
+      "hash": "ed51d41fed2e8a02",
+      "size": 4221,
+      "mtime": 1788074234674.8105
+    },
+    "shared/strategy/strategy-resolver.js": {
+      "hash": "0f5ac503ce7f4112",
+      "size": 1363,
+      "mtime": 1788075283632.779
+    },
+    "shared/strategy/strategy-result.js": {
+      "hash": "0430156de62a88b3",
+      "size": 2313,
+      "mtime": 1788091504364.5505
+    },
+    "shared/strategy/strategy-validator.js": {
+      "hash": "1d8d6dd7cf22c9bb",
+      "size": 4138,
+      "mtime": 1788084352646.8535
+    },
+    "shared/strategy/adaptive-strategy.js": {
+      "hash": "efe3b684f6a30715",
+      "size": 9109,
+      "mtime": 1788153627696.4768
+    },
+    "shared/strategy/cognitive-strategy.js": {
+      "hash": "5ac6536bbe85fab7",
+      "size": 4625,
+      "mtime": 1788083882034.1677
+    },
+    "shared/strategy/context-strategy.js": {
+      "hash": "e76a155f6a5a635f",
+      "size": 2755,
+      "mtime": 1788083898867.7537
+    },
+    "shared/strategy/difficulty-strategy.js": {
+      "hash": "239accc8bffe99e3",
+      "size": 3094,
+      "mtime": 1788083512021.6907
+    },
+    "shared/strategy/static-difficulty.js": {
+      "hash": "a798dc8d878378da",
+      "size": 3014,
+      "mtime": 1788083638425.4033
+    },
+    "shared/strategy/number-range-strategy.js": {
+      "hash": "8aa618dda1d06b34",
+      "size": 2997,
+      "mtime": 1788083665114.493
+    },
+    "shared/strategy/target-difficulty.js": {
+      "hash": "756fef06161d3600",
+      "size": 4132,
+      "mtime": 1788083523317.1423
+    },
+    "shared/strategy/spiral-strategy.js": {
+      "hash": "1228db0aafd3dbeb",
+      "size": 2262,
+      "mtime": 1788083890111.172
+    },
+    "shared/strategy/constraint-builder.js": {
+      "hash": "d8e34a9cc7a6143d",
+      "size": 2992,
+      "mtime": 1788084339795.1362
+    },
+    "shared/strategy/structure-constraints.js": {
+      "hash": "4e05a5d7d3340b27",
+      "size": 3620,
+      "mtime": 1788083676146.8467
+    },
+    "shared/strategy/question-plan.js": {
+      "hash": "9405198dd85c018d",
+      "size": 4126,
+      "mtime": 1788074457506.3035
+    },
+    "shared/strategy/question-type-strategy.js": {
+      "hash": "f481d6a275233eca",
+      "size": 3829,
+      "mtime": 1788083042801.1003
+    },
+    "shared/strategy/question-type-allocation.js": {
+      "hash": "fdc2e9315baf614e",
+      "size": 4941,
+      "mtime": 1788083085867.727
+    },
+    "shared/generator/core/kp-arithmetic-semantics.js": {
+      "hash": "eea44b9bf0c105ad",
+      "size": 2497,
+      "mtime": 1788095783095.607
     },
     "shared/validator/validation-pipeline.js": {
       "hash": "c52f25faed3e8998",
@@ -227,6 +337,11 @@
       "size": 6127,
       "mtime": 1788110091699.3967
     },
+    "shared/validator/kp-validator.js": {
+      "hash": "55e9abd7900b5120",
+      "size": 6175,
+      "mtime": 1788108492645.1812
+    },
     "shared/learner/learner-model.js": {
       "hash": "dae266713aec6fe2",
       "size": 13444,
@@ -268,9 +383,9 @@
       "mtime": 1788020537850.282
     },
     "shared/presentation/renderer.js": {
-      "hash": "b70dba78aa742746",
-      "size": 4322,
-      "mtime": 1788159053070.6223
+      "hash": "b846d232dadb72db",
+      "size": 4721,
+      "mtime": 1788231045068.722
     },
     "shared/presentation/html-renderer.js": {
       "hash": "a57f9c27095e3e26",

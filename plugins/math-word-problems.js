@@ -973,14 +973,10 @@
     var cat = (opts.type && opts.type !== 'mix') ? opts.type : null;
     var agent = new MathWordProblemAgent({ grade: grade, cat: cat, level: opts.level || 'basic' });
     var list = agent.generate(count);
-    // 知识点标注（按年级 + 模板桶；本插件自带 level 分档，难度消费按规范跳过，
-    // 未标注 q.difficulty 时按标准档 3 计权）
-    var KP_BY_GRADE_CAT = {
-      1: { solve: 'math-g1-m8-add-total', chain: 'math-g1-m8-two-step' },
-      2: { solve: 'math-g2-m8-solve-problems', chain: 'math-g2-m8-solve-problems' },
-      3: { solve: 'math-g3-m8-g3-times', chain: 'math-g3-m8-g3-times' }
-    };
-    var kpMap = KP_BY_GRADE_CAT[grade] || null;
+    // 知识点标注：由 Unified/Legacy 适配层在 assemble 阶段按计划 knowledgePointId 回填
+    // （q.knowledgePointId || plan.knowledgePointId），本插件不再用粗粒度 cat 桶硬标，
+    // 以免把声明的多个知识点（g1 共 8 个）错误坍缩成 add-total/two-step 两个。
+    // 本插件自带 level 分档，难度消费按规范跳过，未标注 q.difficulty 时按标准档 3 计权。
     var questions = list.map(function (q) {
       return {
         type: 'word',
@@ -989,7 +985,6 @@
         answer: String(q.a),
         unit: q.unit || '',
         hint: q.hint || '',
-        knowledgePointId: (kpMap && q.cat) ? (kpMap[q.cat] || undefined) : undefined,
         render: function (idx) { return renderWordCard(this, idx); },
         check: function (userAnswers, idx) { return checkWordQuestion(this, userAnswers, idx); }
       };

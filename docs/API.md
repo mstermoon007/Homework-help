@@ -46,8 +46,10 @@
 | `SVGGenerators.cn` | `hanziGrid(char,'tian'\|'mi')` · `pinyinGrid(syllable)` · `strokeOrder(char)` · `sentenceLine(text)` | 田/米字格汉字、四线三格拼音、内置10字笔顺演示、书写格；格线颜色消费 tokens 的 --grid-tianzige-* 与 --grid-fourline-* 变量；非法输入返回 null |
 | `SVGGenerators.en` | `letterWriting(letter,'upper'\|'lower')` · `wordCard(word, phonetic?)` · `fourLineWriting(text)` | 单字母四线三格（case 可省略推断）、单词卡（词+音标+抄写区）、句子抄写条（≤28 字符）；格线消费 --grid-fourline-* |
 
-按科目预载：`App.PluginLoader.ensureSubjectSvg(subject)`（math→core+三生成器；
-chinese/english→core+对应文件），`loadSubjectPlugins` 已自动前置调用。
+SVG 统一出口：`App.SVGRenderer.render(graphic, options)`（见 shared/presentation/svg-registry.js），
+`graphic` 为结构化描述 `{ type, subtype, params }`；SVG 生成器模块（shared/svg-core / svg-geometry /
+svg-calculation / svg-make-ten / svg-chinese / svg-english）在页面 boot 阶段挂载到 `SVGGenerators` 命名空间，
+并注入 `SVGRenderer`。插件脚本加载用 `App.PluginLoader.loadSubjectPlugins(subject, grade)`。
 
 ## SubjectUtils（shared/subject-utils.js，任务12）
 

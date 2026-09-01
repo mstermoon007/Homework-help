@@ -204,7 +204,9 @@ mathPlugins.forEach(function (rec) {
 Promise.all(promises).then(function () {
   console.log('\n===== math-comprehensive 难度透传 =====');
   return new Promise(function (resolve) {
-    var comp = require(path.join(ROOT, 'plugins/math-comprehensive.js'));
+    // 综合练习依赖 Generator Runtime（M4-19），须经 dev/plugin-loader 在浏览器等效
+    // 沙箱内装配 strategy-engine.bundle.js，而非裸 require（否则报「当前年级无可用的已实现题型」）。
+    var comp = require(path.join(ROOT, 'dev/plugin-loader.js')).loadPlugin('math-comprehensive').plugin;
     comp.generate({ grade: 1, count: 20, type: 'average', difficulty: 8 }).then(function (set) {
       assert(set.questions.length > 0, 'comprehensive diff=8 生成 ' + set.questions.length + ' 题');
       var dup = dedupe(set.questions);

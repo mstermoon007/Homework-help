@@ -93,15 +93,33 @@ function loadDeps(rec) {
   return missing;
 }
 
+/** 需要完整 Generator Runtime（strategy-engine.bundle.js）的插件 id 集 */
+var RUNTIME_PLUGIN_IDS = {
+  'math-comprehensive': true
+};
+
 /** 跑单个插件：逐年级生成 → 渲染 → 满分回填 → 批改（generate 可能返回 Promise） */
 function runPlugin(rec) {
   var depErr = loadDeps(rec);
   if (depErr) return Promise.resolve({ rec: rec, grades: [{ grade: '-', score: -1, detail: depErr }] });
 
-  var mod = require(path.join(ROOT, rec.file));
-  var plugin = (mod && mod.generate) ? mod : global.__currentPlugin;
-  if (!plugin || !plugin.generate) {
-    return Promise.resolve({ rec: rec, grades: [{ grade: '-', score: -1, detail: '无法加载插件对象' }] });
+  var plugin;
+  if (RUNTIME_PLUGIN_IDS[rec.id]) {
+    // 综合练习类依赖 Generator Runtime（M4-19），需经 dev/plugin-loader 在浏览器等效
+    // 沙箱内装配 strategy-engine.bundle.js 等共享层，而非裸 require（否则会抛
+    // 「Generator Runtime 未加载」）。加载器与 regression-check 同样兼容
+    // module.exports 与 window.__currentPlugin 两种导出。
+    var loaded = require(path.join(ROOT, 'dev/plugin-loader.js')).loadPlugin(rec.id);
+    if (loaded.error) {
+      return Promise.resolve({ rec: rec, grades: [{ grade: '-', score: -1, detail: loaded.error }] });
+    }
+    plugin = loaded.plugin;
+  } else {
+    var mod = require(path.join(ROOT, rec.file));
+    plugin = (mod && mod.generate) ? mod : global.__currentPlugin;
+    if (!plugin || !plugin.generate) {
+      return Promise.resolve({ rec: rec, grades: [{ grade: '-', score: -1, detail: '无法加载插件对象' }] });
+    }
   }
 
   var grades = plugin.grades || rec.grades || [1];

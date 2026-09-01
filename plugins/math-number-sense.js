@@ -595,9 +595,9 @@
           compare: 'math-g1-m4-compare-number'
         },
         2: {
-          readwrite: 'math-g2-m4-readwrite',
-          compose: 'math-g2-m4-compose-digit', digit: 'math-g2-m4-compose-digit',
-          approx: 'math-g2-m4-approx'
+          readwrite: 'math-g2-m4-read-10000',
+          compose: 'math-g2-m4-compose-10000', digit: 'math-g2-m4-digit-order',
+          approx: 'math-g2-m4-approx-number'
         }
       };
       var kpMap = KP_BY_GRADE_KIND[_GRADE] || null;
@@ -612,6 +612,7 @@
           type: 'number-sense',
           kind: p.kind,
           data: p,
+          q: p.question,
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
           knowledgePointId: kpMap ? (kpMap[p.kind] || undefined) : undefined,
           hint: p.kind === 'compare' ? '先比较两个数的大小，再选符号。' :

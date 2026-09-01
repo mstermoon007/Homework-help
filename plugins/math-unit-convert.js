@@ -356,10 +356,25 @@
       _GRADE = opts.grade || 2;
       // 子题型 → 知识点（按年级区分；未映射的组合不标注，保持纯插件级统计）
       var KP_BY_GRADE_KIND = {
-        2: { convert: 'math-g2-m4-unit-convert', fillUnit: 'math-g2-m4-fill-unit' },
         3: { convert: 'math-g3-m4-g3-measure', fillUnit: 'math-g3-m4-g3-measure' }
       };
       var kpMap = KP_BY_GRADE_KIND[_GRADE] || null;
+      // 二年级知识点按实际单位细分（换算/填单位各分长度/质量/时间三类，均已在知识库登记）。
+      function unitTypeOf(p) {
+        var u = p.unit || p.answer || '';
+        if (/米|厘米|毫米|千米|分米|dm|mm|cm|km/.test(u)) return 'length';
+        if (/克|千克|吨|g|kg/.test(u)) return 'mass';
+        if (/秒|分|时|h|min|s/.test(u)) return 'time';
+        return '';
+      }
+      function resolveG2kp(p) {
+        var t = unitTypeOf(p);
+        if (!t) return undefined;
+        if (p.kind === 'fillUnit') {
+          return { length: 'math-g2-m4-fill-length', mass: 'math-g2-m4-fill-mass', time: 'math-g2-m4-fill-time' }[t];
+        }
+        return { length: 'math-g2-m4-length-unit', mass: 'math-g2-m4-mass-unit', time: 'math-g2-m4-time-unit' }[t];
+      }
       var type = opts.type || 'mix';
       var count = opts.count || 8;
       var list = generateProblems(type, count, dpLevel);
@@ -374,7 +389,7 @@
           q: p.q || p.sentence || '',
           svg: p.svg || '',
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
-          knowledgePointId: kpMap ? (kpMap[p.kind] || undefined) : undefined,
+          knowledgePointId: _GRADE === 2 ? resolveG2kp(p) : (kpMap ? (kpMap[p.kind] || undefined) : undefined),
           hint: p.hint,
           render: function (idx, ctx) { return renderUnitCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkUnitQuestion(this, userAnswers, idx); }

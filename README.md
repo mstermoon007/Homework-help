@@ -123,7 +123,7 @@ Homework-help/
 详见 [CONTRIBUTING.md](CONTRIBUTING.md)（公共文件来源、插件开发规则、代码规范）。
 新手插件开发请先看 [docs/PLUGIN_QUICKSTART.md](docs/PLUGIN_QUICKSTART.md)（10 分钟上手教程）。
 
-- 新增题型：复制 `plugins/_template.js` 样板 → 实现 `generateQuestions` → 在 `plugins/registry.js` 注册 → 运行 `node dev/plugin-check` 验证。
+- 新增题型：复制 `plugins/_template.js` 样板 → 实现 `generateQuestions` → 在 `plugins/registry.js` 注册 → 运行 `npm run check:registry` 与 `npm run check-plugin-interfaces` 验证。
 - 知识库静态页：`npm run generate:knowledge`（按源数据哈希增量生成，未变页面自动跳过）/ `npm run watch:knowledge`（监听 `shared/knowledge-*.js` 变化自动重建）。
 - 覆盖率统计：`node dev/coverage.js`
 - 环境验证：`node dev/verify-setup.js`

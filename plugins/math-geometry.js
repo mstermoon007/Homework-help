@@ -595,8 +595,8 @@
       // 子题型 → 知识点（按年级区分；未映射的组合不标注，保持纯插件级统计）
       var KP_BY_GRADE_KIND = {
         2: {
-          angleCount: 'math-g2-m6-angles', angleClass: 'math-g2-m6-angles',
-          motion: 'math-g2-m6-motion', grid: 'math-g2-m6-grid'
+          angleCount: 'math-g2-m6-angle-recognize', angleClass: 'math-g2-m6-angle-recognize',
+          motion: 'math-g2-m6-motion', grid: 'math-g2-m6-grid-draw'
         },
         3: {
           perimeter: 'math-g3-m6-g3-perimeter', drawPerimeter: 'math-g3-m6-g3-perimeter'

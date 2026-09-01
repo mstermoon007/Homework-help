@@ -184,6 +184,17 @@
 <script src="shared/presentation/render-result.js"></script>
 <script src="shared/presentation/legacy-svg-adapter.js"></script>
 <script src="shared/presentation/svg-registry.js"></script>
+<script src="shared/generator/graphic-renderer.js"></script>
+<!-- R-A04：SVG 语义生成器运行时挂载（须先于首次渲染，svg-registry 的懒种子扫描才能捕获）。
+     shared/svg-core.js 提供 SVGUtil；plugins/svg-*.js 挂载 SVGGenerators.math.{clock,area,fraction,
+     dataStats,draw,competition}，经 graphic-renderer → SVGRenderer 派发链产出 <svg>。 -->
+<script src="shared/svg-core.js"></script>
+<script src="plugins/svg-clock.js"></script>
+<script src="plugins/svg-area.js"></script>
+<script src="plugins/svg-fraction.js"></script>
+<script src="plugins/svg-data-stats.js"></script>
+<script src="plugins/svg-draw.js"></script>
+<script src="plugins/svg-competition.js"></script>
 <script src="shared/presentation/html-renderer.js"></script>
 <script src="shared/presentation/renderer.js"></script>
 <script src="shared/generation-engine.js"></script>

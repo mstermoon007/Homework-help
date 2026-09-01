@@ -348,6 +348,42 @@ cnOk((fl.match(/<line/g) || []).length === 4, 'svgGrid-four-line 含 4 条横线
   cnOk(EN.letterStroke('A', 'middle') === null, 'letterStroke 非法 case → null');
 })();
 
+// ============ R-A04：六个语义 SVG 插件运行时挂载与派发校验 ============
+// plugins/svg-{clock,area,fraction,data-stats,draw,competition}.js 挂载
+// SVGGenerators.math.*，经 graphic-renderer → SVGRenderer 派发链产出 <svg>。
+(function () {
+  var pFiles = {
+    clock: 'svg-clock', area: 'svg-area', fraction: 'svg-fraction',
+    dataStats: 'svg-data-stats', draw: 'svg-draw', competition: 'svg-competition'
+  };
+  var mount = {};
+  Object.keys(pFiles).forEach(function (ns) {
+    mount[ns] = require(path.join(ROOT, 'plugins', pFiles[ns] + '.js'));
+  });
+  cnOk(Object.keys(mount).every(function (ns) {
+    return global.SVGGenerators.math && global.SVGGenerators.math[ns] === mount[ns];
+  }), '六个 svg 插件已挂载 SVGGenerators.math.*');
+
+  var registry = require(path.join(ROOT, 'shared', 'presentation', 'svg-registry.js'));
+  var seeded = registry.seedFromGlobal().seeded;
+  cnOk(seeded >= 100, 'seedFromGlobal 注册数 >= 100（含六个语义类型）');
+
+  // 派发注册校验：语义类型+子类型均在 SVGRenderer 派发注册表中可解析
+  // （即已接入 graphic-renderer → SVGRenderer 派发链；各子生成器保持原位置参数契约）
+  var dispatchCases = {
+    clock: { type: 'clock', subtype: 'clockSVG' },
+    area: { type: 'area', subtype: 'gridSVG' },
+    fraction: { type: 'fraction', subtype: 'fractionCircle' },
+    dataStats: { type: 'dataStats', subtype: 'barChart' },
+    draw: { type: 'draw', subtype: 'protractorSVG' },
+    competition: { type: 'competition', subtype: 'logicGrid' }
+  };
+  Object.keys(dispatchCases).forEach(function (t) {
+    cnOk(typeof global.SVGRenderer.resolve(dispatchCases[t]) === 'function',
+      'R-A04 派发可解析: ' + t + '.' + dispatchCases[t].subtype);
+  });
+})();
+
 console.log('\n' + (fail === 0
   ? ('✅ verify-svg 通过：共生成并校验 ' + total + ' 个 SVG')
   : ('❌ ' + fail + ' / ' + total + ' 个 SVG 结构异常')));

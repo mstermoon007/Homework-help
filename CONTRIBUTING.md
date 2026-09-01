@@ -360,8 +360,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = plugin;
 **科目化命名空间（任务7 起）**：所有生成器同时挂载到 `SVGGenerators` 命名空间——
 `core`（=SVGUtil）、`math.geometry / math.calculation / math.makeTen`、
 `cn`（svg-chinese）、`en`（svg-english）。全局旧名保留兼容。
-practice.html 经 `App.PluginLoader.ensureSubjectSvg(subject)` 按科目预载：
-math → core+geometry+calculation+makeTen；cn → core+svg-chinese；en → core+svg-english。
+SVG 渲染统一经 `App.SVGRenderer.render(graphic, options)`（shared/presentation/svg-registry.js）；
+SVG 生成器模块在页面 boot 阶段挂载到 `SVGGenerators` 命名空间并注入 `SVGRenderer`。
+插件脚本加载用 `App.PluginLoader.loadSubjectPlugins(subject, grade)`。
 
 | 全局对象 | 文件 | 用途 |
 | --- | --- | --- |

@@ -4,6 +4,29 @@
 语义化版本（大版本.功能.修复）；每个大版本的完整变更以 Git 标签为锚点
 （`git log V2.1..V3.0` 可查看全部提交）。
 
+## [V4.0.0] — 2026-09-01
+
+大版本主题：**V1 引擎治理确认 + 版本体系全面对齐**。
+
+本版本为「V1 引擎」（知识点驱动的 M0–M7 分层架构：Ontology → Capability →
+Strategy → Generator/Selector → Validator → Learner → Presentation）的治理里程碑，
+确认以当前 Frozen Core 双引擎架构为唯一生成主链，不再引入 V2 引擎。
+
+### 冻结核心覆盖补全
+- **冻结基线 70 → 93 个文件**：将已打包进 `shared/strategy-engine.bundle.js` 的
+  V1 引擎运行时文件全部纳入 `FROZEN_CORE` 保护门禁，含 `shared/strategy/*` 全部策略文件、
+  `shared/generator/core/rng.js`、`core/arithmetic-core.js`、`core/kp-complex-semantics.js`、
+  `migration-switch.js`、`semantic-question-bridge.js`、`shared/validator/kp-validator.js`。
+- **清除 FROZEN_CORE 清单重复条目**，使基线「当前文件数 == 基线文件数」（此前因
+  M2/M4、M3/M7 重叠列项造成计数虚高，现一一对应）。
+
+### 版本对齐（全面提升至 4.0.0）
+- `shared/version.js` `APP_VERSION`、`package.json` `version`、`sw.js` `CACHE`
+  统一升至 `4.0.0`（`scripts/sync-sw-version.js` 校验通过）。
+- `index.html` / `grade.html` 版本回退常量 `'3.1.0'` → `'4.0.0'`；
+  `dev/test-sw-cache-upgrade.js` 测试回退默认值同步。
+- `CHANGELOG.md` 补记 V4.0.0 条目。
+
 ## [V3.3.0] — 2026-08-29
 
 本版本主题：**二年级数学体系重做**（知识库 + 专项插件 + 期末模拟卷）。

@@ -413,8 +413,8 @@
           position: 'math-g1-m6-position', count: 'math-g1-m6-shape-combine'
         },
         2: {
-          flat: 'math-g2-m6-shapes-2', solid: 'math-g2-m6-shapes-2',
-          position: 'math-g2-m6-shapes-2', count: 'math-g2-m6-shapes-2', areaGrid: 'math-g2-m6-shapes-2'
+          flat: 'math-g2-m6-solid-shape', solid: 'math-g2-m6-solid-shape',
+          position: 'math-g2-m6-solid-shape', count: 'math-g2-m6-solid-shape', areaGrid: 'math-g2-m6-measure'
         }
       };
       var kpMap = KP_BY_GRADE_KIND[_GRADE] || null;

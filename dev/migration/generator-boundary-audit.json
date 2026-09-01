@@ -1,0 +1,31 @@
+{
+  "audit": "GENERATOR_BOUNDARY_AUDIT",
+  "ref": "R-A09",
+  "read_only": true,
+  "scope": "Verify generators honor the plan (KP/questionType/difficulty/spiral) boundary and detect boundary violations.",
+  "generator_compliance": {
+    "summary": "Most generators PASS boundary check (honor plan KP/questionType/difficulty/spiral).",
+    "finding": {
+      "file": "shared/generator/generators/arithmetic.js",
+      "lines": "63-65",
+      "severity": "LOW",
+      "detail": "Partial backup operation-subtype re-decide occurs ONLY when the plan omits operation; treats as acceptable fallback, not a boundary violation on normal path."
+    },
+    "passing_groups": ["complex", "selection", "others"]
+  },
+  "cyclic_chain": {
+    "id": "P-006",
+    "status": "recorded",
+    "detail": "CYCLIC_GENERATION_CHAIN finding captured by R-A09; needs regression-gate triage (see test:regression failures)."
+  },
+  "numeric_boundary": {
+    "status": "recorded",
+    "detail": "Numeric-boundary findings present in M4-R16 regression FAIL population (818 FAIL / 774 PLAN_ERROR)."
+  },
+  "relation_to_gates": [
+    "M4-R02 (check-generator-adapter.js): FORBIDDEN_KEYS 'svg' + answerMode:'choice' mismatch -> affects math-shapes/clock/patterns/number-sense/picture-equations. PRE-EXISTING at HEAD (verified).",
+    "M4-R16 (test-generator-regression.js:267): requires failures.length===0. Current PASS 214/FAIL 818/PLAN_ERROR 774; HEAD PASS 197/FAIL 835/PLAN_ERROR 774. NEVER green."
+  ],
+  "verdict": "NOT_READY",
+  "blocker_relation": "Generator boundary mostly compliant; pre-existing adapter/regression gate failures remain (P0 blockers for freeze readiness)."
+}

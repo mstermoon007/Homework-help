@@ -1,0 +1,69 @@
+{
+  "audit": "MIGRATION_CLOSURE_AUDIT_SUMMARY",
+  "ref": "R-A07..R-A11 + session-verified evidence",
+  "read_only": true,
+  "scope_path": "/Users/zhanggaozhang/Code/Homework Help",
+  "session": "2026-09-01",
+  "head_commit": "135ca55 chore: release v4.0.0 - Frozen Core architecture complete",
+  "verdict": "NOT_READY",
+  "verdict_reasons": [
+    "P0-001 browser runtime gap (PresentationEngine not loaded)",
+    "M4-R02 adapter/contract gate failure (pre-existing at HEAD)",
+    "M4-R16 regression never green (pre-existing at HEAD)",
+    "P-012 frozen baseline anchored to dirty working tree, not HEAD"
+  ],
+  "gate_matrix": {
+    "npm test": { "exit": 0 },
+    "npm run verify": { "exit": 0, "detail": "7/7" },
+    "npm run verify:m4": { "exit": 1, "pre_existing_at_HEAD": true },
+    "npm run verify-svg": { "exit": 0 },
+    "npm run test:regression": { "exit": 1, "pre_existing_at_HEAD": true, "detail": "PASS 214/FAIL 818/PLAN_ERROR 774; HEAD PASS 197/FAIL 835/PLAN_ERROR 774; never green" },
+    "npm run check-duplicates": { "exit": 0 },
+    "npm run check-frozen-core": { "exit": 0, "detail": "93/93 no change (but vs dirty-worktree baseline)" }
+  },
+  "problems": {
+    "P0": [
+      { "id": "P0-001", "title": "PresentationEngine not loaded in browser; live generate() silently returns empty", "evidence": ["practice.html scripts 161-203 lack presentation-engine.js", "presentation-engine.js uses module.exports, never window.PresentationEngine", "generation-engine.js:198 'if (!PE) return null' skips all plans"] },
+      { "id": "M4-R02", "title": "Frozen legacy-plugin-adapter.js:189 contract mismatch (svg FORBIDDEN key + answerMode:'choice')", "files": "math-shapes/clock/patterns/number-sense/picture-equations", "pre_existing_at_HEAD": true },
+      { "id": "M4-R16", "title": "test:regression never green (requires failures.length===0)", "pre_existing_at_HEAD": true }
+    ],
+    "KEEP_OPEN": [
+      { "id": "P-012", "title": "Frozen baseline regenerated from dirty working tree; renderer.js (frozen) uncommitted-modified; not anchored to HEAD" }
+    ],
+    "NON_BLOCKER": [
+      { "id": "P-006", "title": "CYCLIC_GENERATION_CHAIN (generator boundary, recorded)" },
+      { "title": "Numeric-boundary findings within regression FAIL population" },
+      { "title": "arithmetic.js:63-65 low-severity fallback operation re-decide when plan omits operation" }
+    ],
+    "KNOWN_DEBT": [
+      { "title": "Secondary/dormant legacy difficulty center (difficulty.js/difficulty-static.js) still loaded by practice.html:162-163" },
+      { "title": "capability-resolver bundled (functional) but no standalone window.CapabilityResolver global" },
+      { "title": "Dual-homed difficulty decision authority (strategy primary + legacy static)" }
+    ],
+    "LOW_FALSE_POSITIVE": [
+      { "id": "P-010", "title": "Phantom require('../render.js') at presentation-engine.js:180,204 (masked by PluginUtil guard)" },
+      { "id": "P-011", "title": "docs/seo-monitoring.md:21 documents missing scripts/enrich-knowledge-bank.js" },
+      { "title": "practice.html:376/388/403 generateViaEngine() is dead/vestigial (never invoked)" }
+    ]
+  },
+  "verified_classifications": {
+    "capability-resolver": "ACTIVE_RUNTIME (bundled via strategy-engine.bundle.js; no standalone global)",
+    "presentation-engine": "NOT_LOADED_IN_BROWSER (P0-001)",
+    "shared/legacy/plugin-adapter.js": "ACTIVE_RUNTIME",
+    "shared/legacy/legacy-plugin-adapter.js": "DEV_GATE_ONLY",
+    "shared/generator/legacy-plugin-adapter.js": "ACTIVE_RUNTIME",
+    "randomness": "arithmetic.js deterministic via context.seed (lines 29,91)",
+    "validator": "delegate PE.generateQuestions(plan, {skipValidation}) in presentation-engine.js (ties to P0-001)"
+  },
+  "artifacts": [
+    "migration-closure-report.md",
+    "migration-call-graph.json",
+    "runtime-entry-audit.json",
+    "decision-authority-audit.json",
+    "generator-boundary-audit.json",
+    "legacy-lifecycle-audit.json",
+    "dead-code-audit.json",
+    "migration-closure-summary.json"
+  ],
+  "note": "Read-only audit. No fixes applied. STOP."
+}

@@ -99,13 +99,14 @@ check('CONTRIBUTING.md 提及禁止操作 DOM', fileContains('CONTRIBUTING.md', 
 check('plugins/registry.js 存在', fileExists('plugins/registry.js'));
 check('registry.js 包含 PLUGIN_REGISTRY', fileContains('plugins/registry.js', 'PLUGIN_REGISTRY'));
 
-// 7.1 动态题型页脚本依赖：走 App.PluginLoader.loadSubjectPlugins 的页面，
-//     必须静态引入全部共享层（插件顶层硬性依赖 App.Difficulty / ChineseUtil 等，
-//     缺引会导致「插件接口不兼容」误报——历史事故：math-types 缺 difficulty.js）
+// 7.1 题型目录页脚本依赖：math-types/subject-types 仅渲染静态题型目录
+//     （经 CatalogUtils/capability-resolver，不直接加载插件、不消费 App.Difficulty），
+//     因此只要求引入其渲染所需的共享层。插件加载类页面（如 practice.html）另行以
+//     各自 <script> 清单自证（历史事故：缺引导致插件接口误报，故此处仍做共享层完整性门禁）。
 const DYNAMIC_TYPE_PAGES = ['math-types.html', 'subject-types.html'];
 const REQUIRED_SHARED = [
-  'shared/common.js', 'shared/subject-utils.js', 'shared/difficulty.js',
-  'shared/knowledge-bank.js', 'shared/module-catalog.js', 'plugins/registry.js'
+  'shared/common.js', 'shared/knowledge-bank.js', 'shared/module-catalog.js',
+  'shared/capability-resolver.js', 'shared/catalog-utils.js'
 ];
 DYNAMIC_TYPE_PAGES.forEach(page => {
   const missing = REQUIRED_SHARED.filter(s => !fileContains(page, `<script src="${s}"`));

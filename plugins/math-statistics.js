@@ -270,6 +270,7 @@
           type: 'statistics',
           kind: p.kind,
           data: p,
+          q: p.question,
           answer: Array.isArray(p.answer) ? p.answer.join('、') : String(p.answer),
           knowledgePointId: KP_BY_KIND[p.kind],
           hint: p.kind === 'classify' ? '先数出每一种图形有几个，再回答。' :

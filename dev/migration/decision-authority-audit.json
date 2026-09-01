@@ -1,0 +1,38 @@
+{
+  "audit": "DECISION_AUTHORITY_AUDIT",
+  "ref": "R-A08",
+  "read_only": true,
+  "scope": "Trace decision authority (KP / questionType / difficulty) for the LIVE runtime path vs secondary/legacy centers.",
+  "verified_runtime_route": {
+    "entry": "PracticeSession.start()",
+    "path": [
+      "PracticeSession.start() -> _buildGenerationRequest() (practice-session.js)",
+      "-> GenerationEngine.generate(request) (generation-engine.js:164)",
+      "-> build(request) (line 109) [StrategyEngine.plan / ComprehensiveStrategy.build]",
+      "-> StrategyEngine.plan() -> capability-resolver -> question-type -> difficulty routing",
+      "-> spiral -> generator-selector"
+    ],
+    "network_authority": "questionType/difficulty/spiral all flow through strategy layer (StrategyEngine/ComprehensiveStrategy) on the live path."
+  },
+  "decision_authority_table": {
+    "knowledge_point": { "authority": "StrategyEngine.plan / ComprehensiveStrategy.build (request.knowledgePointId / subject+grade mode)", "legacy_center": false },
+    "question_type": { "authority": "question-type router (strategy layer)", "legacy_center": false },
+    "difficulty": {
+      "authority": "difficulty via strategy (spiral / difficulty routing on live path)",
+      "secondary_legacy_center": "shared/difficulty.js + shared/difficulty-static.js",
+      "secondary_guard": "legacy difficulty re-decision center is DORMANT on live Strategy path (guarded by difficultyParams == null)",
+      "legacy_caller_classification": {
+        "RUNTIME": "present on non-live/legacy entry points",
+        "DEV": "dev/ scripts only",
+        "TEST": "dev/ tests only",
+        "DEAD": "no callers"
+      }
+    }
+  },
+  "detail_notes": [
+    "Second legacy difficulty center (shared/difficulty.js / difficulty-static.js) is loaded in practice.html (162,163) but the live Strategy path routes difficulty through the strategy layer.",
+    "Classification of legacy difficulty callers as RUNTIME/DEV/TEST/DEAD is captured but mixed-mode; must be finalized against call-graph for verdict."
+  ],
+  "verdict": "NOT_READY",
+  "blocker_relation": "Difficulty/decision authority is dual-homed (strategy primary + legacy static center). Depends on P0-001 resolution for end-to-end confidence."
+}

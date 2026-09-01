@@ -6,7 +6,7 @@
  *       否则会出现「部署了新版本但离线缓存未失效 / 或缓存键错乱」。为防止手动改版本号却漏改
  *       sw.js 的遗漏，本脚本在 CI / npm test 中自动比对二者。
  *
- * 策略（零构建）：sw.js 中 CACHE 使用字面量（如 'hw-help-3.1.2'），本脚本读取 version.js 的
+ * 策略（零构建）：sw.js 中 CACHE 使用字面量（如 'hw-help-4.0.0'），本脚本读取 version.js 的
  *       APP_VERSION 拼出期望缓存名 'hw-help-<APP_VERSION>'，与 sw.js 的实际字面量比对。
  *
  * 用法：node scripts/sync-sw-version.js   （不一致时退出码 1）

@@ -29,6 +29,11 @@
   var SVGRenderer = (typeof global !== 'undefined' && global.SVGRenderer)
     ? global.SVGRenderer
     : require('./svg-registry.js');
+  // M7-R01/M4-R11：SVG 经 GraphicRenderer 门面统一派发；缺门面时直连 SVGRenderer（兼容旧加载顺序）。
+  var GraphicRenderer = (typeof global !== 'undefined' && global.GraphicRenderer &&
+      typeof global.GraphicRenderer.render === 'function')
+    ? global.GraphicRenderer
+    : (typeof global !== 'undefined' && global.SVGRenderer ? global.SVGRenderer : SVGRenderer);
   var HTMLRenderer = (typeof global !== 'undefined' && global.HTMLRenderer)
     ? global.HTMLRenderer
     : require('./html-renderer.js');
@@ -53,7 +58,7 @@
     var ro = RenderOptions.normalize(options);
     var i = typeof index === 'number' ? index : 0;
     var graphicDesc = graphicOf(sq);
-    var svg = graphicDesc ? SVGRenderer.render(graphicDesc, ro) : '';
+    var svg = graphicDesc ? GraphicRenderer.render(graphicDesc, ro) : '';
     var html = HTMLRenderer.render(sq, i, { mode: ro.mode, graphic: svg });
     return RenderResult.create(sq, html, svg);
   }
