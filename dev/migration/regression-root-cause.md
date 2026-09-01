@@ -48,4 +48,8 @@
 | 哪些是级联失败？ | **0**（PLAN_ERROR 独立、无级联；FAIL=0） |
 | 哪些属于真实 Generator Bug？ | 历史：decimal 减法答案错（`2.2-1.5=0.7` 误出 `2.7`）——已在 `6277176` 修复 |
 | 哪些属于 Contract / Capability Bug？ | 774 PLAN_ERROR 全部属于 capability-registry 过度声明（Contract/Capability 层），非 generator 执行层 |
+
+> **C05 更新**：C05 深挖确认 RC-PLAN-01 的真实机制是「回归矩阵用插件级能力并集构造逐 KP 规划」
+> （测试矩阵构造缺陷，非产品缺陷）。最小补丁：`dev/test-generator-regression.js` 改为 per-KP
+> 能力解析后，矩阵为 **PASS 1074 / FAIL 0 / PLAN_ERROR 0**。详见 `regression-root-cause-fix-c05.md`。
 | 哪些属于 Legacy 已知行为？ | 旧版插件擅长的视觉/排版型无文本 prompt（曾被误判为重复）——属 legacy 已知行为，回归矩阵已对其跳过越界/重复检查 |

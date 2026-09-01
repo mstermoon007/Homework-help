@@ -32,6 +32,22 @@ var CoreGen = require(path.join(ROOT, 'shared', 'generator', 'generators', 'inde
 var Contract = require(path.join(ROOT, 'shared', 'generator', 'generator-contract.js'));
 var GraphicRenderer = require(path.join(ROOT, 'shared', 'generator', 'graphic-renderer.js'));
 var SP = require(path.join(ROOT, 'dev', 'semantic-parse.js'));
+var CapabilityResolver = require(path.join(ROOT, 'shared', 'capability-resolver.js'));
+var KPStore = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+
+/**
+ * 解析单个 KP 实际支持的题型（per-KP，与 Engine.plan 的第 4 步同一来源）。
+ * 矩阵必须以 per-KP 能力为准构造 KP×QT 用例——插件级能力是并集，不能用于逐 KP 规划，
+ * 否则会产生无法构造 plan 的伪用例（PLAN_ERROR，非产品缺陷）。
+ * @param {string} kpId
+ * @returns {string[]} 该 KP 支持的题型 id（空表示无法解析）
+ */
+function kpQuestionTypes(kpId) {
+  var kp = KPStore.get(kpId);
+  if (!kp) return [];
+  var caps = CapabilityResolver.getCapabilities(kp);
+  return Array.isArray(caps.questionTypes) ? caps.questionTypes.slice() : [];
+}
 
 var DIFFICULTIES = [2, 5, 8];
 var SEEDS = ['regr-a', 'regr-b'];
@@ -134,10 +150,14 @@ async function main() {
 
     var gen = Adapter.createLegacyGenerator(entry.plugin, { capabilities: rec.questionTypes, knowledgePoints: rec.knowledgePoints });
     var kps = rec.knowledgePoints.slice(0, MAX_KP_SAMPLE);
-    var qts = (rec.questionTypes || []).filter(function (q) { return gen.supports({ questionTypeId: q }); }).slice(0, MAX_QT_SAMPLE);
-    if (!qts.length) qts = (rec.questionTypes || []).slice(0, 1);
 
     for (var k = 0; k < kps.length; k++) {
+      // per-KP 能力交集：插件声明 ∪ 该 KP 实际支持 —— 只测可构造的 KP×QT 组合
+      var kpQts = kpQuestionTypes(kps[k]).filter(function (q) {
+        return (rec.questionTypes || []).indexOf(q) !== -1 && gen.supports({ questionTypeId: q });
+      });
+      var qts = kpQts.slice(0, MAX_QT_SAMPLE);
+      if (!qts.length) qts = (rec.questionTypes || []).slice(0, 1);
       for (var q = 0; q < qts.length; q++) {
         for (var d = 0; d < DIFFICULTIES.length; d++) {
           for (var s = 0; s < SEEDS.length; s++) {
@@ -165,11 +185,15 @@ async function main() {
   }
 
   // —— native 轨道 ——
+  // 每个能力挑一个【真实支持该能力】的 KP 作为样本（per-KP 校验，与 plan 第 4 步一致）
   var sampleKpByCap = {};
   genRecords.forEach(function (r) {
     (r.capabilities || []).forEach(function (cap) {
-      var capKey = cap;
-      if (!sampleKpByCap[capKey] && r.knowledgePoints.length) sampleKpByCap[capKey] = r.knowledgePoints[0];
+      if (sampleKpByCap[cap]) return;
+      for (var i = 0; i < r.knowledgePoints.length; i++) {
+        var kpId = r.knowledgePoints[i];
+        if (kpQuestionTypes(kpId).indexOf(cap) !== -1) { sampleKpByCap[cap] = kpId; break; }
+      }
     });
   });
   // calc/oral → 用加法/混合算数 KP 样本；确保 native 各能力都有真实 KP
@@ -178,12 +202,7 @@ async function main() {
   ['fill', 'choice', 'judge'].forEach(function (cap) {
     if (!sampleKpByCap[cap]) {
       ['math-g2-m11-judge-mixed', 'math-g2-m12-choice-mixed'].forEach(function (kpid) {
-        var kp = require(path.join(ROOT, 'shared', 'knowledge-point.js')).get(kpid);
-        if (kp) {
-          var Resolver = require(path.join(ROOT, 'shared', 'capability-resolver.js'));
-          var qts = Resolver.getCapabilities(kp).questionTypes || [];
-          if (qts.indexOf(cap) !== -1) sampleKpByCap[cap] = kpid;
-        }
+        if (kpQuestionTypes(kpid).indexOf(cap) !== -1) sampleKpByCap[cap] = kpid;
       });
     }
   });

@@ -171,3 +171,11 @@ native 化会破坏「题面-算式」语义，应保留 legacy。其余 ~96 个
 - **累计迁移 KP**：+2 → 当前已迁移 **74**。
 - 双轨摒弃进度更新：当前已迁移 **74 / 556**，未迁移 **482**。
 
+### 5.6 C04/C05 — 回归根因分析与最小修复
+
+- C04（`regression-root-cause.md`/`regression-root-cause.json`/`regression-plan-errors.json`）：774 PLAN_ERROR 归为单一根因 RC-PLAN-01。
+- C05（`regression-root-cause-fix-c05.md`）：确认 RC-PLAN-01 真实机制 = 回归矩阵用插件级能力并集构造逐 KP 规划（测试构造缺陷，非产品缺陷）。
+- 最小补丁（`dev/test-generator-regression.js`）：legacy/native 两轨道均改为 per-KP 能力解析，只测可构造组合。
+- **回归真实变绿**：1806（PASS 1032 / PLAN_ERROR 774）→ **1074（PASS 1074 / FAIL 0 / PLAN_ERROR 0）**。
+- 全量验证 PASS：`npm test`（含 219 SVG）、`verify`、`verify:m4`（60 pass/0 fail）、frozen-core 93/93 无变更。
+
