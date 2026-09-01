@@ -1,7 +1,7 @@
 # M4-R26 FROZEN_CORE_CHANGE 报告 — 简便计算（凑整）家族迁移
 
 > 授权变更类型：M4 迁移批次（逐步摒弃双轨）。
-> 生效提交：31fe0e7
+> 生效提交：0f88072
 > 门禁证据：FULL-EQ math-g4-mixed add-law/mul-law 9/9；verify:m4 全 PASS；
 > test:regression PASS 1032 / FAIL 0；frozen-core 93/93 重锚。
 

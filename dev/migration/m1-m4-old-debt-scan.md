@@ -149,7 +149,7 @@ M1-M4 的**阻塞型债务已全部关闭**（冻结层无 P0；npm test / verif
 native 化会破坏「题面-算式」语义，应保留 legacy。其余 ~96 个纯 calc/oral 为 小数/分数/竖式/方程/逻辑等，
 需 **multi-step complex 或专项模板生成器**（非单步白名单），属下一阶段"摒弃双轨"的主战场。
 
-### 5.4 M4-R26（提交 `31fe0e7`）— 简便计算（凑整）多步族
+### 5.4 M4-R26（提交 `0f88072`）— 简便计算（凑整）多步族
 
 - 新增 2 个 `SPECIAL_ORAL_PROFILE` kind（`add-law`/`mul-law`，steps=2）+ `buildAddLaw`/`buildMulLaw` 构造。
 - **单步 → 多步扩界**：`test-migration-equiv` 步数门禁支持 `exactSteps>=2`（多步 kind 不因低难度 maxSteps=1 误伤）。
