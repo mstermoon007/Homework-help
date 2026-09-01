@@ -14,9 +14,9 @@
 (function (global) {
   'use strict';
 
-  var LearnerModel = (typeof LearnerModel !== 'undefined' && global.LearnerModel) ? global.LearnerModel
+  var LearnerModel = (typeof global.LearnerModel !== 'undefined' && global.LearnerModel) ? global.LearnerModel
     : (typeof require !== 'undefined' ? require('./learner-model.js') : null);
-  var PracticeResultModule = (typeof PracticeResult !== 'undefined' && global.PracticeResult) ? global.PracticeResult
+  var PracticeResultModule = (typeof global.PracticeResult !== 'undefined' && global.PracticeResult) ? global.PracticeResult
     : (typeof require !== 'undefined' ? require('./practice-result.js') : null);
   if (!LearnerModel || !PracticeResultModule) {
     throw new Error('result-collector.js 依赖 learner-model.js 与 practice-result.js');

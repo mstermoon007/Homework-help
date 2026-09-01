@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN" data-page-node-id="fzC0uqdemUEr3weFiWkJNJ">
+<head data-page-node-id="zyrAheGcFVVRWhe3ANgo4T">
+<meta charset="UTF-8" data-page-node-id="tEIUv8XlQ7mcgVVnfA7C92">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="8P5KrhJC4TNH76LOkqyoJ1">
 <title>统一练习页 · Homework Help</title>
-<link rel="stylesheet" href="shared/tokens.css">
-<link rel="stylesheet" href="shared/base.css">
-<link rel="stylesheet" href="shared/components.css">
-<link rel="stylesheet" href="shared/states.css">
-<link rel="stylesheet" href="shared/toolbar.css">
-<link rel="stylesheet" href="shared/pages.css">
+<link rel="stylesheet" href="shared/tokens.css" data-page-node-id="2ypnXNyOxt1diYakQM86iQ">
+<link rel="stylesheet" href="shared/base.css" data-page-node-id="4EHc04FKAzveRwkShKj10T">
+<link rel="stylesheet" href="shared/components.css" data-page-node-id="GEZ7JnBLRCd7Rh4njw8qre">
+<link rel="stylesheet" href="shared/states.css" data-page-node-id="pZK3TMq4HVgAjN2yAwY70Z">
+<link rel="stylesheet" href="shared/toolbar.css" data-page-node-id="jbV9XJKs7Mv2iaZ77c9nKT">
+<link rel="stylesheet" href="shared/pages.css" data-page-node-id="DAic6DWvP493DPa6AL9OyZ">
 <!-- 练习页专属样式见 shared/pages.css（@layer pages）；共享组件见 components.css，令牌见 tokens.css -->
 <script>
   // 全局错误捕获与自动恢复（任务：错误处理升级）——运行时异常 / 资源加载失败 / 未处理的 Promise 拒绝
@@ -30,7 +30,7 @@
     function showGlobalError(reason) {
       var box = document.getElementById('global-error');
       if (!box) return;
-      var detailEl = document.getElementById('global-error-detail');
+      var detailEl = document.getElementById('global-error-plugin-info');
       if (detailEl) {
         detailEl.textContent = String((reason && (reason.message || reason)) || '未知错误').slice(0, 300);
       }
@@ -42,107 +42,233 @@
     }
 
 </script>
-<link rel="canonical" href="https://home.modouyu.top/practice.html">
+<link rel="canonical" href="https://home.modouyu.top/practice.html" data-page-node-id="WYxD0ucBxFAbaiHuzPq3BA">
+<style>
+/* 优化点3：生成进度（乐观 UI，非阻塞渐进揭示） */
+.gen-progress {
+  max-width: 860px; margin: 0 auto 12px; padding: 10px 14px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+.gen-progress[hidden] { display: none; }
+.gen-progress-track { height: 6px; border-radius: 999px; background: var(--soft-bg); overflow: hidden; }
+.gen-progress-fill {
+  display: block; height: 100%; width: 0; border-radius: 999px;
+  background: linear-gradient(90deg, #2bb6a3, #4A90D9); transition: width .12s ease;
+}
+.gen-progress-text { margin-top: 6px; font-size: 12.5px; font-weight: 700; color: var(--muted); text-align: center; }
+
+/* 优化点4：生成后闭环引导 Toast */
+.loop-toast {
+  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px);
+  z-index: 200; max-width: 420px; width: calc(100% - 32px);
+  background: var(--card); border: 1px solid var(--type-card-border, var(--line));
+  border-radius: 14px; box-shadow: 0 12px 36px rgba(40, 70, 120, .22);
+  padding: 14px 16px; opacity: 0; transition: opacity .25s, transform .25s; pointer-events: none;
+}
+.loop-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+.loop-toast[hidden] { display: none; }
+.loop-toast-body { display: flex; align-items: flex-start; gap: 10px; }
+.loop-toast-ico { font-size: 20px; line-height: 1.2; }
+.loop-toast-txt { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.5; }
+.loop-toast-txt b { color: var(--subject-primary, #4A90D9); }
+.loop-toast-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
+.loop-toast-btn {
+  border: 1px solid var(--line); background: var(--subject-primary-soft, #eaf3ff);
+  color: var(--subject-primary, #4A90D9);
+  border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer;
+}
+  .loop-toast-btn.ghost { background: var(--soft-bg); color: var(--muted); border-color: var(--line); }
+
+  /* ============ 合并：二级页装配区（科目/年级/题型选择，选完就地生成） ============ */
+  .asm {
+    max-width: 860px; margin: 12px auto 0; padding: 14px 16px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow);
+  }
+  .asm[hidden] { display: none; }
+  .asm-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .asm-label { flex: 0 0 auto; width: 40px; font-size: 12px; font-weight: 700; color: var(--muted); }
+  .asm-sw-row { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+  .asm-sw-btn {
+    border: 1px solid var(--line); background: var(--soft-bg); color: var(--muted);
+    border-radius: 8px; padding: 6px 12px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .asm-sw-btn.on { border-color: var(--subject-primary); color: var(--subject-primary); background: var(--subject-primary-soft); }
+  .asm-body {
+    border-top: 1px solid var(--line); padding-top: 10px; margin-top: 2px;
+    display: flex; flex-direction: column; gap: 10px; max-height: 46vh; overflow-y: auto;
+  }
+  .asm-group { background: var(--soft-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .asm-group.collapsed .asm-group-body { display: none; }
+  .asm-group-hd { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; user-select: none; }
+  .asm-group-title { font-size: 14px; font-weight: 800; }
+  .asm-group-id { font-size: 11px; font-weight: 800; color: var(--muted); background: var(--brand-bg); border-radius: 6px; padding: 2px 6px; }
+  .asm-group-meta { margin-left: auto; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .asm-caret { margin-left: 6px; font-size: 11px; color: var(--muted); transition: transform .2s; }
+  .asm-group-hd[aria-expanded="true"] .asm-caret { transform: rotate(180deg); }
+  .asm-group-body { padding: 0 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+  .asm-kp {
+    display: flex; align-items: flex-start; gap: 8px; border: 1px solid var(--line); border-radius: 10px;
+    padding: 8px 10px; background: var(--card); cursor: pointer;
+  }
+  .asm-kp.on { border-color: var(--subject-primary); background: var(--subject-primary-soft); }
+  .asm-kp.disabled { opacity: .55; cursor: not-allowed; }
+  .asm-check { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; accent-color: var(--subject-primary); }
+  .asm-kp-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .asm-line1 { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .asm-lv { flex: 0 0 auto; font-size: 11px; font-weight: 800; color: #fff; background: var(--subject-primary); border-radius: 6px; padding: 1px 6px; }
+  .asm-name { font-size: 13px; font-weight: 700; }
+  .asm-line2 { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .asm-acc { flex: 0 0 auto; font-size: 11px; font-weight: 800; color: #fff; border-radius: 6px; padding: 1px 6px; background: var(--muted); }
+  .asm-acc.hi { background: #1f9d6b; }
+  .asm-acc.mid { background: #e8a23a; }
+  .asm-acc.lo { background: #e0532f; }
+  .asm-acc.na { background: var(--soft-bg); color: var(--muted); border: 1px solid var(--line); }
+  .asm-flag { font-size: 11px; font-weight: 800; color: var(--warn); }
+  .asm-na { font-size: 11px; font-weight: 700; color: var(--bad); }
+  .asm-actions { display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
+  .asm-actions .btn { flex: 0 0 auto; }
+  .asm-hint { flex: 1 1 auto; min-width: 200px; font-size: 12.5px; font-weight: 600; color: var(--ink); }
+  @media (max-width: 640px) {
+    .asm { padding: 12px; }
+    .asm-label { width: 36px; }
+  }
+</style>
 </head>
-<body>
-<div class="wrap">
+<body data-page-node-id="rwBtS9BmX4E1JY5ZLzQA2D">
+<div class="wrap" data-page-node-id="hdIOncrc0MIDE8guTxiE0d">
   <!-- 全局错误横幅（错误处理升级：脚本加载失败 / 运行时异常时显示） -->
   <div id="global-error" class="error-banner" role="alert"
-       style="display:none;max-width:720px;margin:12px auto 0;">
-    <span class="eb-icon" aria-hidden="true">⚠️</span>
-    <div class="eb-body">
-      <div class="eb-title">页面加载出现问题</div>
-      <div class="eb-desc">部分功能可能不可用。请点击下方按钮重新加载；若反复出现，请检查网络后稍后再试。</div>
-      <div id="global-error-plugin-info" class="eb-desc"></div>
-      <div id="global-error-actions" class="eb-actions"></div>
+       style="display:none;max-width:720px;margin:12px auto 0;" data-page-node-id="OED7EtLg7Df88RYWhqR1qf">
+    <span class="eb-icon" aria-hidden="true" data-page-node-id="0qMbVQACCno9Zn2sv018aG">⚠️</span>
+    <div class="eb-body" data-page-node-id="IRVH17vliUJulAjv8crgyj">
+      <div class="eb-title" data-page-node-id="19r40U7jo6rJikxRdUarE0">页面加载出现问题</div>
+      <div class="eb-desc" data-page-node-id="DUvmkHkrPJJLrS2DL7PV8B">部分功能可能不可用。请点击下方按钮重新加载；若反复出现，请检查网络后稍后再试。</div>
+      <div id="global-error-plugin-info" class="eb-desc" data-page-node-id="NBEm22YoSHDiaKVQ3d5cjO"></div>
+      <div id="global-error-actions" class="eb-actions" data-page-node-id="8leC2LHgNyQmChvVowWBTM"></div>
     </div>
   </div>
 
   <!-- 左上角快速切换（学科 + 年级，醒目便利） -->
-  <div class="quick-switch" id="quickSwitch">
-    <button class="qs-btn" id="qsBtn" title="快速切换学科 / 年级 / 返回首页" aria-expanded="false" aria-controls="qsMenu">快速切换</button>
-    <div class="qs-menu" id="qsMenu" style="display:none;">
-      <div class="qs-hd">切换学科</div>
-      <div class="qs-row" id="qsSubject"></div>
-      <div class="qs-hd">切换年级</div>
-      <div class="qs-row" id="qsGrade"></div>
-        <div class="qs-hd">其他</div>
-        <div class="qs-row"><a class="qs-link" href="index.html">返回首页</a></div>
-        <div class="qs-row"><a class="qs-link" href="feedback/feedback.html">问题反馈</a></div>
+  <div class="quick-switch" id="quickSwitch" data-page-node-id="hxQuUFj9t5JiYWECbzsGpX">
+    <button class="qs-btn" id="qsBtn" title="快速切换学科 / 年级 / 返回首页" aria-expanded="false" aria-controls="qsMenu" data-page-node-id="Dl2W9TACXOBxhR0NzViBtX">快速切换</button>
+    <div class="qs-menu" id="qsMenu" style="display:none;" data-page-node-id="nrjRnVpaU1kfTaT9ioHky0">
+      <div class="qs-hd" data-page-node-id="h8CJsuVQlblsKztsyw7yeW">切换学科</div>
+      <div class="qs-row" id="qsSubject" data-page-node-id="NXATh61MXSoqyADv54Eq5y"></div>
+      <div class="qs-hd" data-page-node-id="89mkmUpnNUYAvGYsGj7u67">切换年级</div>
+      <div class="qs-row" id="qsGrade" data-page-node-id="5CjsylNsAPajBGpAsRBiRK"></div>
+        <div class="qs-hd" data-page-node-id="v2FgVBlHH9VY9GcuFK4wGS">其他</div>
+        <div class="qs-row" data-page-node-id="KQuZZIINWPcRjBHc8HiDRO"><a class="qs-link" href="index.html" data-page-node-id="TDDbeJoWad9qE5tEOt7k79">返回首页</a></div>
+        <div class="qs-row" data-page-node-id="h1LwH9kRmgpz9aOKEute7M"><a class="qs-link" href="feedback/feedback.html" data-page-node-id="fw4tQI3jme6aiG993FTKBY">问题反馈</a></div>
     </div>
   </div>
 
+  <!-- 合并：二级页装配区（科目/年级/题型选择，选完就地生成，不再跳转到单独页面） -->
+  <section class="asm" id="assemblyPanel" hidden data-page-node-id="mQLhQm9FJ4X2bNED3oBdkI">
+    <div class="asm-row" data-page-node-id="FFNAVMuEaZeBqhnJ5hw3Xl">
+      <span class="asm-label" data-page-node-id="hsd3LgpED1Uh5ojOAJ2i1M">科目</span>
+      <div class="asm-sw-row" id="asmSubject" data-page-node-id="fdP6Aj0I2g9Hgpi9SVglMx"></div>
+    </div>
+    <div class="asm-row" data-page-node-id="grrSfvu58OgACEQwNPt9qo">
+      <span class="asm-label" data-page-node-id="S5JEpGYbi9Ob0BmfwoSsnP">年级</span>
+      <div class="asm-sw-row" id="asmGrade" data-page-node-id="H4PLyZBPFi77ftH8GdHfCs"></div>
+    </div>
+    <div class="asm-body" id="asmList" data-page-node-id="ChpYYPGUiTkF1bjxkkikGn"></div>
+    <div class="asm-actions" data-page-node-id="aktG27JBmBRGI5W8vA6FmP">
+      <button class="btn btn-primary" id="asmSmartBtn" type="button" data-page-node-id="SH64PRNdFM4oZbA9DY5bKB">智能推荐</button>
+      <button class="btn btn-primary" id="asmGenBtn" type="button" data-page-node-id="dBCvoUVJ5RjiHkzJasPF9H">生成所选题目</button>
+      <span class="asm-hint" id="asmHint" data-page-node-id="BOyVAMVDr5m7ts2K3XuEVq"></span>
+    </div>
+  </section>
+
   <!-- Layer 2: 工具栏（题型/题量/难度 + 操作按钮） -->
-  <section class="panel controls" id="controlsPanel" style="display:none;">
-    <div class="controls-grid">
-      <div class="controls-settings">
-        <div class="row" style="margin-top:0;">
-          <div class="group" id="typeGroup" role="radiogroup" aria-label="题型" style="display:none;"></div>
-          <div class="group" id="countGroup" role="radiogroup" aria-label="题量">
-            <span class="lbl">题量：</span>
-            <div class="setting-content">
-              <button class="chip active" data-count="10" role="radio" aria-checked="true">10题</button>
-              <button class="chip" data-count="20" role="radio" aria-checked="false">20题</button>
-              <button class="chip" data-count="50" role="radio" aria-checked="false">50题</button>
-              <button class="chip" data-count="custom" role="radio" aria-checked="false">自定义</button>
+  <section class="panel controls" id="controlsPanel" style="display:none;" data-page-node-id="YsKfmcheLy420A6evi3t4q">
+    <div class="controls-grid" data-page-node-id="yyWAl0RoadRa66kO1dvC8H">
+      <div class="controls-settings" data-page-node-id="4FzieHDQOrp4FwsjoTRNBr">
+        <div class="row" style="margin-top:0;" data-page-node-id="euDtlctXgaofzOZpoHkfjg">
+          <div class="group" id="typeGroup" role="radiogroup" aria-label="题型" style="display:none;" data-page-node-id="hKZTDAIemquqbaT2YFVlo7"></div>
+          <div class="group" id="countGroup" role="radiogroup" aria-label="题量" data-page-node-id="TyWIsgDnSL7FGOv7CKzylm">
+            <span class="lbl" data-page-node-id="5A6amBLnxVYEVmaBsIN0uZ">题量：</span>
+            <div class="setting-content" data-page-node-id="0iAO0b1yUqLAbSlMgM4WkI">
+              <button class="chip active" data-count="10" role="radio" aria-checked="true" data-page-node-id="WHp4lBHDdNeg0eO9yrp893">10题</button>
+              <button class="chip" data-count="20" role="radio" aria-checked="false" data-page-node-id="RKvLa5sIAKWA8Kl0zVqAWg">20题</button>
+              <button class="chip" data-count="50" role="radio" aria-checked="false" data-page-node-id="rwNR5cQwAkrGKJTJAv7fZh">50题</button>
+              <button class="chip" data-count="custom" role="radio" aria-checked="false" data-page-node-id="SrpxBdzNoIGCdVQ9kcvhtx">自定义</button>
               <input type="number" id="customCount" min="1" max="50" step="1" placeholder="自定义"
                      autocomplete="off" class="tb-num-input" aria-label="自定义题量"
-                     style="width:70px;display:none;">
-              <span class="count-tip" id="countTip" style="display:none;"></span>
+                     style="width:70px;display:none;" data-page-node-id="25dYRnSXOdwHBkYYwXOxwN">
+              <span class="count-tip" id="countTip" style="display:none;" data-page-node-id="QvKB1cjrG9Wg4P3fzkLjYY"></span>
             </div>
           </div>
-          <div class="group" id="difficultyGroup">
-            <span class="lbl">难度：</span>
-            <div class="setting-content">
+          <div class="group" id="difficultyGroup" data-page-node-id="Ny2RI5gGl6dHd0nF5sGaOP">
+            <span class="lbl" data-page-node-id="htyDRVieIetZ8HRIYAsEOv">难度：</span>
+            <div class="setting-content" data-page-node-id="qB82oJntXBYsgbCUC5hz9n">
               <input type="number" id="difficultyInput" min="1" max="10" step="1" value="3"
                      title="填写 1-10 的整数，数字越大难度越高（数值更大、逻辑更深）"
                      aria-label="难度（1-10，数字越大越难）"
-                     class="tb-num-input" style="width:64px;">
-              <span class="range-hint">1~10</span>
+                     class="tb-num-input" style="width:64px;" data-page-node-id="2bONAniEKDC8jH8pTudcRo">
+              <span class="range-hint" data-page-node-id="cV3pG0G1cBoDfmCMCVB60y">1~10</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="controls-actions">
-        <div class="controls-row row-single">
-          <button class="btn btn-primary" id="genBtn">生成练习题</button>
+      <div class="controls-actions" data-page-node-id="D0d9gaJ9cDIrigmevJ9ogv">
+        <div class="controls-row row-single" data-page-node-id="BXAWlJ7RQ9Evl4nLvFAOHQ">
+          <button class="btn btn-primary" id="genBtn" data-page-node-id="MEssgmJfDy15m54Yulf4N8">生成练习题</button>
         </div>
-        <div class="controls-row row-pair">
-          <button class="btn btn-primary" id="checkBtn" disabled>检查答案</button>
-          <button class="btn btn-ghost" id="revealBtn" disabled>显示答案</button>
+        <div class="controls-row row-pair" data-page-node-id="a0x48ho8f5raJSHhLkHB8v">
+          <button class="btn btn-primary" id="checkBtn" disabled data-page-node-id="VPdjxzxLhCD3WGjInqdfix">检查答案</button>
+          <button class="btn btn-ghost" id="revealBtn" disabled data-page-node-id="umGRrQTKojW2UKcgSC4d3h">显示答案</button>
         </div>
-        <div class="controls-row row-pair">
-          <button class="btn btn-ghost" id="printBtn" disabled>打印页面</button>
-          <button class="btn btn-ghost" id="refreshResetBtn" title="清除本题型的难度记忆并刷新页面">刷新重置</button>
+        <div class="controls-row row-pair" data-page-node-id="umDVdRBGwrJ2MZQChOkagU">
+          <button class="btn btn-ghost" id="printBtn" disabled data-page-node-id="FJT3oKFyUd7UeMEP1THpNJ">打印页面</button>
+          <button class="btn btn-ghost" id="refreshResetBtn" title="清除本题型的难度记忆并刷新页面" data-page-node-id="9Wa7dcZoe0u78daUsnX975">刷新重置</button>
         </div>
-        <div class="controls-row row-pair">
-          <button class="btn btn-ghost" id="wrongBookBtn" disabled title="重做之前答错的题目（本地保存）">错题本</button>
-          <button class="btn btn-ghost" id="clearStateBtn" disabled title="清除本地练习记录（设置/错题/难度）">清除记录</button>
+        <div class="controls-row row-pair" data-page-node-id="pkCX44LZqZEam8FEiAVJgn">
+          <button class="btn btn-ghost" id="wrongBookBtn" disabled title="重做之前答错的题目（本地保存）" data-page-node-id="2nDPVHafphnAGAjwCXPHdV">错题本</button>
+          <button class="btn btn-ghost" id="clearStateBtn" disabled title="清除本地练习记录（设置/错题/难度）" data-page-node-id="ipJRFHuTv8PdSLWdRh1QED">清除记录</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Layer 3: 正式内容区（第一行主题标题 + 第二行起题目卡） -->
-  <div class="exercise-content">
-    <p class="static-resource-note">本页面为练习生成工具，加载具体题型后可在线练习或打印。静态版本与知识点讲解请访问 <a href="knowledge/knowledge-index.html">知识库页面</a>。</p>
-    <div class="exercise-header">
-      <h1 id="sheetTitle">统一练习页</h1>
-      <div class="timer" id="timerDisplay">⏱ 00:00</div>
+  <div class="exercise-content" data-page-node-id="ZVT5Z2uHXe7PG9AoYzwTkr">
+    <p class="static-resource-note" data-page-node-id="LJM4YvoR1SdmU2s1iRPMoy">本页面为练习生成工具，加载具体题型后可在线练习或打印。静态版本与知识点讲解请访问 <a href="knowledge/knowledge-index.html" data-page-node-id="Y8imrBn7EsqxqjETOCEPCk">知识库页面</a>。</p>
+    <div class="exercise-header" data-page-node-id="MGSjcA8KObmDezePnsFilB">
+      <h1 id="sheetTitle" data-page-node-id="HpyihXREs7FXk7wuYbo1DU">统一练习页</h1>
+      <div class="timer" id="timerDisplay" data-page-node-id="8squxq4jNAWoFC1rFkQLQF">⏱ 00:00</div>
     </div>
-    <section id="problemsArea">
-      <div class="empty">正在加载练习插件…</div>
+    <div class="gen-progress" id="genProgress" hidden data-page-node-id="Oh5WLXaIT7ydBX1q5TBQCr">
+      <div class="gen-progress-track" data-page-node-id="NiMRA7hOzD7jXuQSqZAvx7"><span class="gen-progress-fill" id="genProgressBar" data-page-node-id="ZjvVkq0LEebQ52cduhmGfi"></span></div>
+      <div class="gen-progress-text" id="genProgressText" data-page-node-id="eWvoWBsP3rNPAAAYxcEwED">生成中…</div>
+    </div>
+    <section id="problemsArea" data-page-node-id="gvwGqGYcAKlbAnHRcgwiZV">
+      <div class="empty" data-page-node-id="brnKUKTuvYV5WyYFseRJD5">正在加载练习插件…</div>
     </section>
   </div>
 
-  <section class="result-panel" id="resultArea" aria-live="polite" aria-atomic="true"></section>
+  <section class="result-panel" id="resultArea" aria-live="polite" aria-atomic="true" data-page-node-id="er9vcm4Jhm4Bc46IF5HcZs"></section>
 
-  <footer>Homework Help · 插件化练习框架 · practice.html</footer>
+  <!-- 优化点4：生成后闭环引导 Toast（打印→拍照批改→薄弱点） -->
+  <div class="loop-toast" id="loopToast" hidden role="status" data-page-node-id="KSY9um62LEr8rfLABpquGP">
+    <div class="loop-toast-body" data-page-node-id="HVF6aWFn1LmAWV8xGllyUu">
+      <span class="loop-toast-ico" data-page-node-id="QZkhOV60PJmDwHg5BtsA52">📘</span>
+      <div class="loop-toast-txt" data-page-node-id="qNuWYVkAQAJqtYkV34c2fJ">已生成 <b id="loopToastCount" data-page-node-id="RiI3qjIYXsH0kl1I2IDRHK">0</b> 题 ✓ 打印后让孩子试试，完成后可拍照上传批改 →</div>
+    </div>
+    <div class="loop-toast-actions" data-page-node-id="47cq6bKvhWCfN1i5b8Tv1a">
+      <a class="loop-toast-btn" id="loopToastPractice" href="subject-types.html" data-page-node-id="CKljX4E6oj518w0eH0anfA">继续练习</a>
+      <button class="loop-toast-btn ghost" id="loopToastClose" type="button" data-page-node-id="sw5FXKDFqtzi9Y9DovpEUb">知道了</button>
+    </div>
+  </div>
+
+  <footer data-page-node-id="JBkxZwGDuvcOmEu1e7cFfF">Homework Help · 插件化练习框架 · practice.html</footer>
 </div>
 
-<link rel="preload" href="shared/common.js" as="script">
-<link rel="preload" href="shared/tokens.css" as="style">
-<link rel="preload" href="shared/components.css" as="style">
+<link rel="preload" href="shared/common.js" as="script" data-page-node-id="EAHopeTzYkanaX0UmPSDEk">
+<link rel="preload" href="shared/tokens.css" as="style" data-page-node-id="N9JBsS39DITBCU5e4INnHZ">
+<link rel="preload" href="shared/components.css" as="style" data-page-node-id="JXAl91j7FpGRXH9xNg5fpv">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -163,6 +289,9 @@
 <script src="shared/difficulty-static.js"></script>
 <script src="shared/print.js"></script>
 <script src="shared/knowledge-bank.js"></script>
+<!-- 合并二级页装配能力：模块目录 + 题型目录工具（只读数据，浏览器安全，无顶层 require） -->
+<script src="shared/module-catalog.js"></script>
+<script src="shared/catalog-utils.js"></script>
 <!-- 知识库分片（knowledge-math/cn/en.js）不再静态引入，改为按需懒加载（任务 3.1）：
      由 boot() 在确认科目后调用 KnowledgeBank.ensureKnowledgeData(subject) 动态注入，
      首屏仅加载当前科目，未使用的科目（语文/英语）不会被请求。 -->
@@ -224,7 +353,8 @@
     difficulty: 3,         // 难度（1-10，用户填写，默认 3）
     timerId: null,         // setInterval 句柄
     startTime: 0,          // 开始时间戳
-    answered: false        // 是否已提交
+    answered: false,       // 是否已提交
+    knowledgePointIds: null // 合并后：交互选择的 KP id 列表（供错题本 / 难度 EMA；深链时回退 urlParams）
   };
 
   // ============ URL 参数解析 ============
@@ -360,10 +490,26 @@
     state.exerciseSet = set;
     state.checkResult = null;
     state.answered = false;
+    showGenProgress(set.questions.length); // 优化点3：先展示进度骨架
     render(set);
     $('checkBtn').disabled = false;
     $('revealBtn').disabled = false;
     $('printBtn').disabled = false;
+  }
+
+  // 优化点3：乐观 UI 进度（非阻塞，逐块填充时更新计数）
+  function showGenProgress(total) {
+    var p = $('genProgress'); if (!p) return;
+    p.hidden = false;
+    updateGenProgress(0, total);
+  }
+  function updateGenProgress(done, total) {
+    var bar = $('genProgressBar'); var txt = $('genProgressText');
+    if (bar) bar.style.width = (total ? Math.round(done / total * 100) : 0) + '%';
+    if (txt) txt.textContent = '已生成 ' + done + ' / ' + total + ' 题';
+  }
+  function hideGenProgress() {
+    var p = $('genProgress'); if (p) p.hidden = true;
   }
 
   // 统一 Sheet 标题：剥离插件 meta.title 中可能自带的年级前缀，
@@ -449,6 +595,7 @@
       : function (fn) { return setTimeout(fn, 16); };
 
     function finalizeRender() {
+      hideGenProgress(); // 优化点3：揭示完成，收起进度
       // a11y：为题目卡补齐分组角色与题号标签（与 renderCard 一致）
       area.querySelectorAll('.question-card, .problem').forEach(function (card, ci) {
         if (!card.getAttribute('role')) card.setAttribute('role', 'group');
@@ -476,6 +623,7 @@
     function step() {
       var end = Math.min(ri + CHUNK, nodes.length);
       for (; ri < end; ri++) target.appendChild(nodes[ri]);
+      updateGenProgress(ri, nodes.length); // 优化点3：实时「已生成 X/总」
       if (ri < nodes.length) schedule(step);
       else finalizeRender();
     }
@@ -555,7 +703,8 @@
   // 练习上下文 id（用于错题本 / 难度 EMA 持久化，替代原 plugin.id）
   function practiceContextId() {
     var parts = [state.subject, 'g' + state.grade];
-    if (urlParams.kp) parts.push(urlParams.kp);
+    if (state.knowledgePointIds && state.knowledgePointIds.length) parts.push(state.knowledgePointIds[0]);
+    else if (urlParams.kp) parts.push(urlParams.kp);
     else if (urlParams.kps) parts.push(urlParams.kps.split(',')[0]);
     else parts.push('all');
     return parts.join('-');
@@ -589,7 +738,8 @@
     if (typeof window.ResultCollector === 'undefined' || typeof window.LearnerStorage === 'undefined' ||
         typeof window.PracticeResult === 'undefined') return;
     try {
-      var kpId = urlParams.kp || (urlParams.kps ? urlParams.kps.split(',')[0] : null);
+      var kpId = (state.knowledgePointIds && state.knowledgePointIds.length) ? state.knowledgePointIds[0]
+        : (urlParams.kp || (urlParams.kps ? urlParams.kps.split(',')[0] : null));
       if (!kpId) return;
       var questions = state.exerciseSet.questions || [];
       if (!questions.length) return;
@@ -767,9 +917,28 @@
   // P6-R04: 打印统一经 Engine 产物（state.lastSemantic）或 DOM 克隆，无 Plugin 依赖。
   function printFile() {
     if (!practiceSession) return;
+    showLoopToast(state.exerciseSet ? state.exerciseSet.questions.length : 0); // 优化点4：闭环引导
     practiceSession.print().catch(function (err) {
       alert('打印失败：' + err.message);
     });
+  }
+
+  // 优化点4：生成后闭环引导 Toast（打印→拍照批改→薄弱点追踪）
+  function showLoopToast(n) {
+    var t = $('loopToast'); if (!t) return;
+    var c = $('loopToastCount'); if (c) c.textContent = (n || 0);
+    t.hidden = false;
+    // 强制 reflow 以便过渡动画生效
+    void t.offsetWidth;
+    t.classList.add('show');
+    clearTimeout(t._hideTimer);
+    t._hideTimer = setTimeout(hideLoopToast, 7000);
+  }
+  function hideLoopToast() {
+    var t = $('loopToast'); if (!t) return;
+    t.classList.remove('show');
+    clearTimeout(t._hideTimer);
+    setTimeout(function () { if (!t.classList.contains('show')) t.hidden = true; }, 280);
   }
 
   // ============ 题量（10 / 20 / 自定义） ============
@@ -914,6 +1083,239 @@
     });
   }
 
+  // ============ 合并：二级页装配区（科目/年级/题型选择） ============
+  // 仅 UI 层：复用 KnowledgeBank（catalog-utils.getKPEntries）、MODULE_CATALOG、已加载的 PLUGIN_REGISTRY，
+  // 与 practice.html 既有的 PracticeSession / generate()；不新增任何引擎依赖。
+  function clampNum(n, lo, hi, dft) { n = Number(n); if (!isFinite(n)) return dft; return Math.min(hi, Math.max(lo, Math.round(n))); }
+
+  var asmState = {
+    subject: urlParams.subject || 'math',
+    grade: urlParams.grade,
+    selected: {},
+    collapsed: {},
+    smartSeeded: false
+  };
+  var asmKpById = {};
+  var ASM_LEVEL_TAGS = ['基础', '变式', '综合', '拓展'];
+  var ASM_SUBJECT_CONFIG = {
+    math: { name: '数学', moduleOrder: ['M0','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','C1','C2','C3','C4','C5','C6','C7','C8','C9'] },
+    chinese: { name: '语文', moduleOrder: ['N1','N2','N3','N4','N5','N6','N7','N8'] },
+    english: { name: '英语', moduleOrder: ['E1','E2','E3','E4','E5','E6'] }
+  };
+  var ASM_SMART = {
+    math: { modules: ['C1','C2','C3','C4','C5','C6','C7','C8','C9'], highLevelBias: true,
+      hint: '🎯 优先补薄弱 / 易错点，并侧重竞赛与变式题（按知识点 weight 加权抽题）。' },
+    chinese: { modules: ['N6','N7','N4','N5'], highLevelBias: false,
+      hint: '🎯 优先补薄弱 / 易错点，并侧重阅读理解与写作训练。' },
+    english: { modules: ['E4','E1','E3'], highLevelBias: false,
+      hint: '🎯 优先补薄弱 / 易错点，并侧重情景对话与听说训练。' }
+  };
+
+  function asmPluginIndex() {
+    var idx = {}; var reg = window.PLUGIN_REGISTRY || [];
+    reg.forEach(function (p) { idx[p.id] = p; }); return idx;
+  }
+  function asmReadStat(kpId) {
+    var stat = { attempts: 0, mastery: null, recentAccuracy: null, weak: false, errorProne: false };
+    try {
+      if (!window.LearnerStorage || !window.LearnerModel) return stat;
+      var ls = window.LearnerStorage.load(); if (!ls) return stat;
+      var st = window.LearnerModel.getState(ls, kpId);
+      stat.attempts = st.attempts || 0;
+      stat.mastery = stat.attempts ? (st.mastery || 0) : null;
+      stat.recentAccuracy = (typeof st.recentAccuracy === 'number') ? st.recentAccuracy : null;
+      stat.errorProne = (window.LearnerModel.getErrors(ls, kpId) || []).length > 0;
+      stat.weak = stat.attempts > 0 && (st.mastery < 0.5 || st.recentAccuracy < 0.6);
+    } catch (e) {}
+    return stat;
+  }
+  function asmBuildData() {
+    var subj = asmState.subject, grade = asmState.grade;
+    var entries = (window.CatalogUtils && window.CatalogUtils.getKPEntries)
+      ? window.CatalogUtils.getKPEntries(subj, grade) : [];
+    var pIdx = asmPluginIndex();
+    var catalog = window.MODULE_CATALOG || [];
+    var modName = function (mid) {
+      for (var i = 0; i < catalog.length; i++) if (catalog[i] && catalog[i].id === mid) return catalog[i].name || mid;
+      return mid;
+    };
+    var kps = [];
+    asmKpById = {};
+    entries.forEach(function (e) {
+      if (!e || !e.id) return;
+      var level = clampNum(e.weight, 1, 4, 1);
+      var plugin = e.pluginId ? pIdx[e.pluginId] : null;
+      // 「可练」判定：注册表存在 + 非占位插件 + 年级在插件 grades 内（与二级页契约一致）
+      var avail = !!(plugin && !plugin.isPlaceholder && (!plugin.grades || plugin.grades.indexOf(grade) >= 0));
+      var k = { id: e.id, name: e.name || e.id, moduleId: e.moduleId || '', type: e.type || '',
+        level: level, tag: ASM_LEVEL_TAGS[level - 1], avail: avail, stat: asmReadStat(e.id) };
+      kps.push(k); asmKpById[k.id] = k;
+    });
+    var buckets = {};
+    kps.forEach(function (k) { (buckets[k.moduleId] = buckets[k.moduleId] || []).push(k); });
+    var order = (ASM_SUBJECT_CONFIG[subj].moduleOrder || []).slice();
+    Object.keys(buckets).forEach(function (mid) { if (order.indexOf(mid) === -1) order.push(mid); });
+    var groups = [];
+    order.forEach(function (mid) {
+      if (!buckets[mid] || !buckets[mid].length) return;
+      groups.push({ id: mid, name: modName(mid), kps: buckets[mid] });
+    });
+    return groups;
+  }
+  function asmKpHtml(k) {
+    var cls = 'asm-kp' + (asmState.selected[k.id] ? ' on' : '') + (k.avail ? '' : ' disabled');
+    var acc = '';
+    if (k.stat.mastery != null) {
+      var pct = Math.round(k.stat.mastery * 100);
+      var a = pct >= 70 ? 'hi' : (pct >= 50 ? 'mid' : 'lo');
+      acc = '<span class="asm-acc ' + a + '">预计正确率 ' + pct + '%</span>';
+    } else { acc = '<span class="asm-acc na">预计正确率 —</span>'; }
+    var flags = '';
+    if (k.stat.weak || k.stat.errorProne) {
+      if (k.stat.errorProne) flags += '<span class="asm-flag">易错</span>';
+      if (k.stat.weak) flags += '<span class="asm-flag">薄弱</span>';
+    }
+    if (!k.avail) flags += '<span class="asm-na">暂不可练</span>';
+    return '<div class="' + cls + '" data-kp="' + esc(k.id) + '">' +
+      '<input type="checkbox" class="asm-check" data-kp="' + esc(k.id) + '"' + (asmState.selected[k.id] ? ' checked' : '') + (k.avail ? '' : ' disabled') + '>' +
+      '<div class="asm-kp-body">' +
+        '<div class="asm-line1"><span class="asm-lv">L' + k.level + '</span><span class="asm-name">' + esc(k.name) + '</span></div>' +
+        '<div class="asm-line2">' + acc + flags + '</div>' +
+      '</div></div>';
+  }
+  function asmGroupHtml(g) {
+    var collapsed = !!asmState.collapsed[g.id];
+    return '<div class="asm-group' + (collapsed ? ' collapsed' : '') + '" data-mid="' + esc(g.id) + '">' +
+      '<div class="asm-group-hd" role="button" tabindex="0" aria-expanded="' + (!collapsed) + '">' +
+        '<span class="asm-group-title">📚 ' + esc(g.name) + '</span>' +
+        '<span class="asm-group-id">' + esc(g.id) + '</span>' +
+        '<span class="asm-group-meta">' + g.kps.length + ' 个知识点</span>' +
+        '<span class="asm-caret">▼</span>' +
+      '</div>' +
+      '<div class="asm-group-body">' + g.kps.map(asmKpHtml).join('') + '</div>' +
+    '</div>';
+  }
+  function asmRenderSwitches() {
+    var sb = $('asmSubject');
+    if (sb) {
+      sb.innerHTML = '';
+      [['math', '数学'], ['chinese', '语文'], ['english', '英语']].forEach(function (s) {
+        var b = el('button', 'asm-sw-btn' + (s[0] === asmState.subject ? ' on' : ''), s[1]);
+        b.type = 'button'; b.setAttribute('data-subject', s[0]); sb.appendChild(b);
+      });
+    }
+    var gb = $('asmGrade');
+    if (gb) {
+      gb.innerHTML = '';
+      for (var g = 1; g <= 6; g++) {
+        var b = el('button', 'asm-sw-btn' + (g === asmState.grade ? ' on' : ''), App.getGradeName(g));
+        b.type = 'button'; b.setAttribute('data-grade', g); gb.appendChild(b);
+      }
+    }
+  }
+  function asmRender() {
+    var list = $('asmList'); if (!list) return;
+    var groups = asmBuildData();
+    if (!groups.length) { list.innerHTML = '<div class="asm-hint">该年级暂无可用知识点，试试切换其他年级。</div>'; }
+    else { list.innerHTML = groups.map(asmGroupHtml).join(''); }
+    asmRenderSwitches();
+    var h = $('asmHint');
+    if (h) h.textContent = (ASM_SMART[asmState.subject] || {}).hint || '🎯 依据练习记录推荐：优先补薄弱 / 易错点。';
+  }
+  function asmSmartKps() {
+    var rule = ASM_SMART[asmState.subject] || { modules: [], highLevelBias: false };
+    var prio = {}; (rule.modules || []).forEach(function (m, i) { prio[m] = rule.modules.length - i; });
+    var all = []; asmBuildData().forEach(function (g) { all = all.concat(g.kps); });
+    var practiced = all.filter(function (k) { return k.stat.attempts > 0; });
+    var fix = practiced.filter(function (k) { return k.stat.weak || k.stat.errorProne; })
+      .sort(function (a, b) { return (a.stat.mastery || 0) - (b.stat.mastery || 0); }).slice(0, 3);
+    var picked = {}; fix.forEach(function (k) { picked[k.id] = true; });
+    var fresh = all.filter(function (k) { return k.stat.attempts === 0 && !picked[k.id] && k.avail; });
+    fresh.sort(function (a, b) {
+      var pa = prio[a.moduleId] || 0, pb = prio[b.moduleId] || 0;
+      if (pa !== pb) return pb - pa;
+      if (rule.highLevelBias && a.level !== b.level) return b.level - a.level;
+      if (a.level !== b.level) return a.level - b.level;
+      return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0);
+    });
+    return fix.concat(fresh.slice(0, 5));
+  }
+  function asmToggle(id, on) {
+    var k = asmKpById[id]; if (!k || !k.avail) return;
+    if (on) asmState.selected[id] = true; else delete asmState.selected[id];
+    var node = $('asmList').querySelector('.asm-kp[data-kp="' + id + '"]');
+    if (node) node.classList.toggle('on', !!on);
+  }
+  function asmResetPreview() {
+    var area = $('problemsArea');
+    if (area) area.innerHTML = '<div class="empty">已切换科目 / 年级，请重新选择题型并点击「生成所选题目」。</div>';
+    var ra = $('resultArea'); if (ra) { ra.classList.remove('show'); ra.innerHTML = ''; }
+    if ($('checkBtn')) $('checkBtn').disabled = true;
+    if ($('revealBtn')) $('revealBtn').disabled = true;
+    if ($('printBtn')) $('printBtn').disabled = true;
+  }
+  function asmGenerateFromSelection() {
+    var ids = Object.keys(asmState.selected);
+    if (!ids.length) { showNotice('请先选择题型', '在上方按模块勾选至少一个知识点（标注「暂不可练」的无法生成）。'); return; }
+    state.subject = asmState.subject;
+    state.grade = asmState.grade;
+    state.knowledgePointIds = ids;   // 供错题本 / 难度 EMA 使用（practiceContextId / feedLearnerModel 优先读取）
+    state.kp = null; state.kps = null;
+    practiceSession = new PracticeSession({
+      subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
+      knowledgePointIds: ids, adaptive: false, learnerProfile: null
+    });
+    generate();
+  }
+  function asmBind() {
+    var sb = $('asmSubject');
+    if (sb) sb.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.asm-sw-btn') : null; if (!b) return;
+      var s = b.getAttribute('data-subject'); if (!s || s === asmState.subject) return;
+      asmState.subject = s; asmState.selected = {}; asmState.smartSeeded = false;
+      state.subject = s; asmRender(); asmResetPreview();
+    });
+    var gb = $('asmGrade');
+    if (gb) gb.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.asm-sw-btn') : null; if (!b) return;
+      var g = Number(b.getAttribute('data-grade')); if (!g || g === asmState.grade) return;
+      asmState.grade = g; asmState.selected = {}; asmState.smartSeeded = false;
+      state.grade = g; asmRender(); asmResetPreview();
+    });
+    var list = $('asmList');
+    if (list) {
+      list.addEventListener('change', function (e) {
+        var cb = e.target.closest ? e.target.closest('.asm-check') : null; if (!cb) return;
+        asmToggle(cb.getAttribute('data-kp'), cb.checked);
+      });
+      list.addEventListener('click', function (e) {
+        if (e.target.closest && e.target.closest('.asm-check')) return;
+        var hd = e.target.closest ? e.target.closest('.asm-group-hd') : null;
+        if (hd) {
+          var grp = hd.parentNode; var mid = grp.getAttribute('data-mid');
+          grp.classList.toggle('collapsed'); asmState.collapsed[mid] = grp.classList.contains('collapsed');
+          hd.setAttribute('aria-expanded', grp.classList.contains('collapsed') ? 'false' : 'true'); return;
+        }
+        var kp = e.target.closest ? e.target.closest('.asm-kp') : null;
+        if (!kp || kp.classList.contains('disabled')) return;
+        var id = kp.getAttribute('data-kp'); var next = !asmState.selected[id];
+        asmToggle(id, next); var cb = kp.querySelector('.asm-check'); if (cb) cb.checked = next;
+      });
+      list.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        var hd = e.target.closest ? e.target.closest('.asm-group-hd') : null; if (hd) { e.preventDefault(); hd.click(); }
+      });
+    }
+    var smartBtn = $('asmSmartBtn');
+    if (smartBtn) smartBtn.addEventListener('click', function () {
+      asmState.selected = {};
+      asmSmartKps().forEach(function (k) { if (k.avail) asmState.selected[k.id] = true; });
+      asmState.smartSeeded = true; asmRender();
+    });
+    var genBtn = $('asmGenBtn');
+    if (genBtn) genBtn.addEventListener('click', asmGenerateFromSelection);
+  }
+
   // ============ 按钮绑定 ============
   function bindEvents() {
     document.querySelectorAll('#countGroup .chip').forEach(function (c) {
@@ -944,6 +1346,9 @@
     $('checkBtn').addEventListener('click', check);
     $('revealBtn').addEventListener('click', toggleReveal);
     $('printBtn').addEventListener('click', printFile);
+    // 优化点4：闭环引导 Toast 关闭
+    var loopClose = $('loopToastClose');
+    if (loopClose) loopClose.addEventListener('click', hideLoopToast);
     var wrongBookBtn = $('wrongBookBtn');
     if (wrongBookBtn) wrongBookBtn.addEventListener('click', openWrongBook);
     var clearStateBtn = $('clearStateBtn');
@@ -1012,6 +1417,17 @@
 
     buildQuickSwitch();
 
+    // 合并：渲染二级页装配区（科目/年级/题型选择），深链带 kp/kps 时预先勾选
+    asmBind();
+    if (urlParams.kp) asmState.selected[urlParams.kp] = true;
+    if (urlParams.kps) urlParams.kps.split(',').forEach(function (x) { if (x) asmState.selected[x] = true; });
+    asmRender();
+    // 装配区列表依赖知识库分片，须待加载完成后重渲染（否则首屏列表为空）
+    if (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.ensureKnowledgeData) {
+      KnowledgeBank.ensureKnowledgeData(state.subject).then(function () { asmRender(); }).catch(function () { asmRender(); });
+    }
+    var asmPanel = $('assemblyPanel'); if (asmPanel) asmPanel.hidden = false;
+
     // 会话切换：清空 SVG 渲染缓存，避免长会话内存只增不减（svg-core.clearCache）
     if (window.SVGUtil && window.SVGUtil.clearCache) window.SVGUtil.clearCache();
 
@@ -1051,9 +1467,7 @@
 
     // 有知识点参数（题型卡片直达）：待分片就绪后自动生成
     if (urlParams.kp || urlParams.kps) {
-      ensureKB.then(function () { practiceSession.start().catch(function (err) {
-        showNotice('生成失败', err && err.message);
-      }); });
+      ensureKB.then(function () { generate(); });
     }
   }
 

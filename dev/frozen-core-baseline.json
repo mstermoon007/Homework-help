@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T11:20:15.594Z",
+  "generatedAt": "2026-09-01T15:52:19.028Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -348,9 +348,9 @@
       "mtime": 1788153469111.7024
     },
     "shared/learner/learner-storage.js": {
-      "hash": "fa2012b1e8c7a920",
-      "size": 4215,
-      "mtime": 1788153508742.1208
+      "hash": "09ed81d371bb166f",
+      "size": 4222,
+      "mtime": 1788277448553.9895
     },
     "shared/learner/practice-result.js": {
       "hash": "2c713399d7fe628b",
@@ -358,9 +358,9 @@
       "mtime": 1788153136539.6418
     },
     "shared/learner/result-collector.js": {
-      "hash": "70392e81be108ca8",
-      "size": 3496,
-      "mtime": 1788153218716.7852
+      "hash": "1ecac6fe333c3e32",
+      "size": 3510,
+      "mtime": 1788277448558.0251
     },
     "shared/learner/error-model.js": {
       "hash": "a2ce5f6099a68dd0",
@@ -388,9 +388,9 @@
       "mtime": 1788233244738.5454
     },
     "shared/presentation/html-renderer.js": {
-      "hash": "a57f9c27095e3e26",
-      "size": 6222,
-      "mtime": 1788168723216.9407
+      "hash": "eafc2902240caaa5",
+      "size": 6279,
+      "mtime": 1788263072714.705
     },
     "shared/presentation/render-options.js": {
       "hash": "38ffee901bd7c3a7",

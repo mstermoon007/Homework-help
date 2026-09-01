@@ -11,7 +11,7 @@
 (function (global) {
   'use strict';
 
-  var LearnerModel = (typeof LearnerModel !== 'undefined' && global.LearnerModel) ? global.LearnerModel
+  var LearnerModel = (typeof global.LearnerModel !== 'undefined' && global.LearnerModel) ? global.LearnerModel
     : (typeof require !== 'undefined' ? require('./learner-model.js') : null);
   if (!LearnerModel) throw new Error('learner-storage.js 依赖 learner-model.js');
 
