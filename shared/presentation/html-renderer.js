@@ -40,7 +40,7 @@
   }
 
   function optionsOf(sq) {
-    var opts = (sq && (sq.options || sq.distractors)) || null;
+    var opts = (sq && (sq.options || sq.distractors || (sq.data && (sq.data.options || sq.data.distractors)))) || null;
     if (Array.isArray(opts) && opts.length >= 2) return opts.map(function (o) {
       return (o && typeof o === 'object') ? (o.label != null ? o.label : o.value) : o;
     });
