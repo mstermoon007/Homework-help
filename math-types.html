@@ -47,114 +47,102 @@
         </div>
     </div>
 
-    <div class="foot-tip">💡 点击题型卡片进入对应练习页面，每个题型按知识点生成题目</div>
-</div>
+<div class="foot-tip">💡 点击题型卡片进入对应练习页面，每个题型按知识点生成题目</div>
+  </div>
 
-<script src="shared/common.js"></script>
-<script src="shared/knowledge-bank.js"></script>
-<script src="shared/module-catalog.js"></script>
-<script src="shared/capability-resolver.js"></script>
-<script src="shared/catalog-utils.js"></script>
-<script>
-(function () {
-  'use strict';
+  <script src="shared/common.js"></script>
+  <script src="shared/knowledge-bank.js"></script>
+  <script src="shared/module-catalog.js"></script>
+  <script src="shared/capability-resolver.js"></script>
+  <script src="shared/catalog-utils.js"></script>
+  <script>
+  (function () {
+    'use strict';
 
-  // HTML 转义
-  function esc(s) {
-    var d = document.createElement('div');
-    d.textContent = (s == null) ? '' : String(s);
-    return d.innerHTML;
-  }
+    // HTML 转义
+    function esc(s) {
+      var d = document.createElement('div');
+      d.textContent = (s == null) ? '' : String(s);
+      return d.innerHTML;
+    }
 
-  // 友好错误页
-  function renderErrorState(icon, errTitle, desc) {
-    document.getElementById('typeGrid').innerHTML =
-      '<div class="error-state">' +
-      '  <div class="es-icon">' + icon + '</div>' +
-      '  <div class="es-title">' + errTitle + '</div>' +
-      '  <div class="es-desc">' + desc + '</div>' +
-      '  <div class="es-actions">' +
-      '    <a class="es-btn primary" href="index.html">返回首页</a>' +
-      '    <a class="es-btn ghost" href="?grade=1">从一年级开始</a>' +
-      '  </div>' +
-      '</div>';
-  }
-
-  // 年级参数校验
-  var rawGrade = new URLSearchParams(location.search).get('grade');
-  var GRADE_VALID = ['1', '2', '3', '4', '5', '6'];
-  if (rawGrade !== null && GRADE_VALID.indexOf(rawGrade) === -1) {
-    document.title = '年级参数有误 · 数学练习';
-    renderErrorState('🧭', '年级参数好像不对',
-      '收到的年级参数是「' + esc(String(rawGrade).slice(0, 20)) + '」，有效范围为 1~6。<br>请从首页重新选择年级。');
-    return;
-  }
-
-  var grade = App.currentGrade();
-  document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
-  document.title = App.getGradeName(grade) + '数学练习';
-
-  // 模块顺序（与 module-catalog 一致）
-  var MODULE_ORDER = ['M0','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13',
-    'C1','C2','C3','C4','C5','C6','C7','C8','C9'];
-
-  // 题型显示名称映射
-  var QT_LABELS = {
-    'calc': '计算', 'oral': '口算', 'vertical': '竖式', 'mixed': '混合',
-    'judge': '判断', 'choice': '选择', 'fill': '填空', 'cushi': '凑十法',
-    'word': '应用题', 'geometry': '几何', 'stats': '统计', 'clock': '钟表',
-    'money': '人民币', 'unit': '单位换算', 'pattern': '找规律'
-  };
-
-  // 主渲染
-  function renderCatalog() {
-    var grouped = window.CatalogUtils.groupKPsByModule('math', grade);
-    if (!grouped || Object.keys(grouped).length === 0) {
+    // 友好错误页
+    function renderErrorState(icon, errTitle, desc) {
       document.getElementById('typeGrid').innerHTML =
-        window.App.UIState.emptyHtml('📭', '该年级暂无可用题型',
-          '这个年级的数学题型还在准备中，试试切换其他年级。',
-          '<a class="est-btn" href="?grade=1">🌱 从一年级开始</a>');
+        '<div class="error-state">' +
+        '  <div class="es-icon">' + icon + '</div>' +
+        '  <div class="es-title">' + errTitle + '</div>' +
+        '  <div class="es-desc">' + desc + '</div>' +
+        '  <div class="es-actions">' +
+        '    <a class="es-btn primary" href="index.html">返回首页</a>' +
+        '    <a class="es-btn ghost" href="?grade=1">从一年级开始</a>' +
+        '  </div>' +
+        '</div>';
+    }
+
+    // 年级参数校验
+    var rawGrade = new URLSearchParams(location.search).get('grade');
+    var GRADE_VALID = ['1', '2', '3', '4', '5', '6'];
+    if (rawGrade !== null && GRADE_VALID.indexOf(rawGrade) === -1) {
+      document.title = '年级参数有误 · 数学练习';
+      renderErrorState('🧭', '年级参数好像不对',
+        '收到的年级参数是「' + esc(String(rawGrade).slice(0, 20)) + '」，有效范围为 1~6。<br>请从首页重新选择年级。');
       return;
     }
 
-    var html = '';
-    var isUpperGrade = grade >= 4;
+    var grade = App.currentGrade();
+    document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
+    document.title = App.getGradeName(grade) + '数学练习';
 
-    // 常规题型板块
-    if (isUpperGrade) {
-      html += '<div class="section-heading">常规题型</div>';
+    // 模块顺序（与 module-catalog 一致）
+    var MODULE_ORDER = ['M0','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13',
+      'C1','C2','C3','C4','C5','C6','C7','C8','C9'];
+
+    // 题型显示名称映射
+    var QT_LABELS = {
+      'calc': '计算', 'oral': '口算', 'vertical': '竖式', 'mixed': '混合',
+      'judge': '判断', 'choice': '选择', 'fill': '填空', 'cushi': '凑十法',
+      'word': '应用题', 'geometry': '几何', 'stats': '统计', 'clock': '钟表',
+      'money': '人民币', 'unit': '单位换算', 'pattern': '找规律'
+    };
+
+    // 知识库懒加载：按需注入 knowledge-math.js（任务 3.1）
+    function ensureMathKnowledge() {
+      if (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.ensureKnowledgeData) {
+        return KnowledgeBank.ensureKnowledgeData('math');
+      }
+      return Promise.resolve();
     }
 
-    MODULE_ORDER.forEach(function (mid) {
-      var g = grouped[mid];
-      if (!g) return;
-      var isComp = mid.charAt(0) === 'C';
-      if (isUpperGrade && isComp) return; // 竞赛题型单独板块
-      if (!isUpperGrade && isComp) return; // 低年级不显示竞赛
+    // 主渲染
+    function renderCatalog() {
+      var grouped = window.CatalogUtils.groupKPsByModule('math', grade);
+      if (!grouped || Object.keys(grouped).length === 0) {
+        document.getElementById('typeGrid').innerHTML =
+          window.App.UIState.emptyHtml('📭', '该年级暂无可用题型',
+            '这个年级的数学题型还在准备中，试试切换其他年级。',
+            '<a class="est-btn" href="?grade=1">🌱 从一年级开始</a>');
+        return;
+      }
 
-      var qts = window.CatalogUtils.getModuleQuestionTypes('math', grade, mid);
-      if (!qts.length) return;
+      var html = '';
+      var isUpperGrade = grade >= 4;
 
-      html += window.CatalogUtils.renderModuleCard({
-        subject: 'math',
-        grade: grade,
-        module: g.module,
-        questionTypes: qts
-      });
-    });
+      // 常规题型板块
+      if (isUpperGrade) {
+        html += '<div class="section-heading">常规题型</div>';
+      }
 
-    // 综合练习卡（始终显示）
-    html += '<a href="' + window.App.buildPluginLink('math-comprehensive') + '" class="type-card comprehensive">' +
-      '<span class="t-title">综合练习</span></a>';
-
-    // 高年级竞赛板块
-    if (isUpperGrade) {
-      html += '<div class="section-heading">竞赛题型</div>';
       MODULE_ORDER.forEach(function (mid) {
         var g = grouped[mid];
-        if (!g || mid.charAt(0) !== 'C') return;
+        if (!g) return;
+        var isComp = mid.charAt(0) === 'C';
+        if (isUpperGrade && isComp) return; // 竞赛题型单独板块
+        if (!isUpperGrade && isComp) return; // 低年级不显示竞赛
+
         var qts = window.CatalogUtils.getModuleQuestionTypes('math', grade, mid);
         if (!qts.length) return;
+
         html += window.CatalogUtils.renderModuleCard({
           subject: 'math',
           grade: grade,
@@ -162,24 +150,47 @@
           questionTypes: qts
         });
       });
+
+      // 综合练习卡（始终显示）
+      html += '<a href="' + window.App.buildPluginLink('math-comprehensive') + '" class="type-card comprehensive">' +
+        '<span class="t-title">综合练习</span></a>';
+
+      // 高年级竞赛板块
+      if (isUpperGrade) {
+        html += '<div class="section-heading">竞赛题型</div>';
+        MODULE_ORDER.forEach(function (mid) {
+          var g = grouped[mid];
+          if (!g || mid.charAt(0) !== 'C') return;
+          var qts = window.CatalogUtils.getModuleQuestionTypes('math', grade, mid);
+          if (!qts.length) return;
+          html += window.CatalogUtils.renderModuleCard({
+            subject: 'math',
+            grade: grade,
+            module: g.module,
+            questionTypes: qts
+          });
+        });
+      }
+
+      document.getElementById('typeGrid').innerHTML = html;
     }
 
-    document.getElementById('typeGrid').innerHTML = html;
-  }
-
-  // 等待 knowledge-bank 分片加载（动态注入机制）
-  function waitForKnowledgeBank(cb) {
-    if (typeof window.KnowledgeBank !== 'undefined' &&
-        window.KnowledgeBank.math &&
-        window.KnowledgeBank.math.length > 0) {
-      cb();
-    } else {
-      setTimeout(function () { waitForKnowledgeBank(cb); }, 50);
+    // 等待知识库分片加载（动态注入机制，任务 3.1）
+    function waitForKnowledgeBank(cb) {
+      if (typeof window.KnowledgeBank !== 'undefined' &&
+          window.KnowledgeBank.math &&
+          window.KnowledgeBank.math.length > 0) {
+        cb();
+      } else {
+        setTimeout(function () { waitForKnowledgeBank(cb); }, 50);
+      }
     }
-  }
 
-  waitForKnowledgeBank(renderCatalog);
-})();
+    // 启动：先确保知识库数据就绪，再渲染
+    ensureMathKnowledge().then(function () {
+      waitForKnowledgeBank(renderCatalog);
+    });
+  })();
 </script>
 </body>
 </html>

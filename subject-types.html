@@ -182,18 +182,69 @@
     document.getElementById('typeGrid').innerHTML = html;
   }
 
+  // 知识库懒加载：按需注入 knowledge-cn.js / knowledge-en.js / knowledge-math.js（任务 3.1）
+  function getKBSKey(subject) {
+    return subject === 'chinese' ? 'cn' : (subject === 'english' ? 'en' : 'math');
+  }
+
+  function ensureSubjectKnowledge() {
+    if (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.ensureKnowledgeData) {
+      return KnowledgeBank.ensureKnowledgeData(getKBSKey(subject));
+    }
+    return Promise.resolve();
+  }
+
+  // 主渲染
+  function renderCatalog() {
+    var grouped = window.CatalogUtils.groupKPsByModule(subject, grade);
+    if (!grouped || Object.keys(grouped).length === 0) {
+      document.getElementById('typeGrid').innerHTML =
+        window.App.UIState.emptyHtml('📭', '该年级暂无可用题型',
+          '这个年级的' + config.name + '题型还在准备中，试试切换其他年级。',
+          '<a class="est-btn" href="?grade=1&subject=' + encodeURIComponent(subject) + '">🌱 从一年级开始</a>');
+      return;
+    }
+
+    var html = '';
+    config.moduleOrder.forEach(function (mid) {
+      var g = grouped[mid];
+      if (!g) return;
+      var qts = window.CatalogUtils.getModuleQuestionTypes(subject, grade, mid);
+      if (!qts.length) return;
+
+      html += window.CatalogUtils.renderModuleCard({
+        subject: subject,
+        grade: grade,
+        module: g.module,
+        questionTypes: qts
+      });
+    });
+
+    // 综合练习卡（若有对应插件）
+    var compId = subject === 'chinese' ? 'chinese-comprehensive' : (subject === 'english' ? 'english-comprehensive' : 'math-comprehensive');
+    html += '<a href="' + window.App.buildPluginLink(compId) + '" class="type-card comprehensive">' +
+      '<span class="t-title">综合练习</span></a>';
+
+    document.getElementById('typeGrid').innerHTML = html;
+  }
+
+  // 等待知识库分片加载（动态注入机制，任务 3.1）
   function waitForKnowledgeBank(cb) {
+    var kbKey = getKBSKey(subject);
     if (typeof window.KnowledgeBank !== 'undefined' &&
-        window.KnowledgeBank[subject === 'math' ? 'math' : subject] &&
-        window.KnowledgeBank[subject === 'math' ? 'math' : subject].length > 0) {
+        window.KnowledgeBank[kbKey] &&
+        window.KnowledgeBank[kbKey].length > 0) {
       cb();
     } else {
       setTimeout(function () { waitForKnowledgeBank(cb); }, 50);
     }
   }
 
-  waitForKnowledgeBank(renderCatalog);
-})();
+  // 启动：先确保知识库数据就绪，再渲染
+  ensureSubjectKnowledge().then(function () {
+    waitForKnowledgeBank(renderCatalog);
+  });
+  })();
 </script>
 </body>
 </html>
