@@ -8764,7 +8764,7 @@
               max_spiral_level: 6,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "neg-add-sub", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 20 },
+              number_range_default: { min: -20, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"
@@ -8789,7 +8789,7 @@
               max_spiral_level: 3,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "dec-mult", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 10000 },
+              number_range_default: { min: 0.1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"

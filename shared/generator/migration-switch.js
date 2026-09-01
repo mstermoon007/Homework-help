@@ -53,7 +53,15 @@ var R26_LAW_KPS = [
   'math-g4-m3-g4-mix-mullaw'
 ];
 
-var ALL_MIGRATED = MIGRATED_KPS.concat(COMPLEX_KPS, R26_LAW_KPS);
+// M4-R27 迁移批次：六上小数/负数家族——math-g6-oral 负数加减口算 + math-g6-calc 小数乘法笔算。
+// 由 arithmetic 生成器经 SPECIAL_ORAL_PROFILE kind 分派（neg-add-sub/dec-mult）。
+// 前提：KB numberRange 需放开（neg-add-sub 允许负值；dec-mult 允许 <1 因数）。
+var R27_KPS = [
+  'math-g6-m1-g6-oral-neg-add-sub',
+  'math-g6-m2-g6-calc-dec-mult'
+];
+
+var ALL_MIGRATED = MIGRATED_KPS.concat(COMPLEX_KPS, R26_LAW_KPS, R27_KPS);
 
 function isMigrated(kpId) {
   return ALL_MIGRATED.indexOf(kpId) !== -1;
@@ -70,6 +78,7 @@ module.exports = {
   MIGRATED_KPS: MIGRATED_KPS,
   COMPLEX_KPS: COMPLEX_KPS,
   R26_LAW_KPS: R26_LAW_KPS,
+  R27_KPS: R27_KPS,
   ALL_MIGRATED: ALL_MIGRATED,
   isMigrated: isMigrated,
   apply: apply

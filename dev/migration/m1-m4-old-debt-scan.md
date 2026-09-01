@@ -159,3 +159,15 @@ native 化会破坏「题面-算式」语义，应保留 legacy。其余 ~96 个
 - **累计迁移 KP**：+2 → 当前已迁移 **72**。
 - 双轨摒弃进度更新：当前已迁移 **72 / 556**，未迁移 **484**。
 
+### 5.5 M4-R27 — 六上负数/小数家族
+
+- 新增 2 个 `SPECIAL_ORAL_PROFILE` kind（`neg-add-sub`/`dec-mult`，steps=1）+ `buildNegAddsub`/`buildDecMult` 构造。
+- **KB 表示范围修正**（R24 同款冻结改动 + 重锚）：neg-add-sub {1,20}→{−20,20}（legacy 首操作数恒负）；
+  dec-mult {1,10000}→{0.1,10000}（legacy 因数可 <1，对齐 g5-oral-decmul {0.1,1000} 下界约定）。
+- FULL-EQ：math-g6-oral **1/7 可迁移（neg-add-sub 9/9）**、math-g6-calc **1/7 可迁移（dec-mult 9/9）**；
+  dec-div（⟮ 竖式占位，无 SP 算术语义）与全部 apply-only KP 保持 legacy（设计外）。
+- 迁移门禁 PASS：`math-oral,math-g4-oral,math-g5-oral,math-g4-mixed,math-g6-oral,math-g6-calc` 全部可迁移 KP FULL-EQ。
+- 基线重锚 93/93；回归 FAIL=0；verify:m4 全 PASS。
+- **累计迁移 KP**：+2 → 当前已迁移 **74**。
+- 双轨摒弃进度更新：当前已迁移 **74 / 556**，未迁移 **482**。
+

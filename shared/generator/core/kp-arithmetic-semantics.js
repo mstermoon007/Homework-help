@@ -41,7 +41,10 @@ var SPECIAL_ORAL_PROFILE = {
   'dec-div-oral': { operators: [OP_DIV], steps: 1, kind: 'dec-div-oral' },
   // M4-R26 简便计算（多步凑整）族
   'add-law':    { operators: [OP_ADD], steps: 2, kind: 'add-law' },
-  'mul-law':    { operators: [OP_MUL], steps: 2, kind: 'mul-law' }
+  'mul-law':    { operators: [OP_MUL], steps: 2, kind: 'mul-law' },
+  // M4-R27 六上小数/负数族：负数加减口算（操作数含负）、小数乘法笔算（含 <1 因数）
+  'neg-add-sub': { operators: [OP_ADD, OP_SUB], steps: 1, kind: 'neg-add-sub' },
+  'dec-mult':   { operators: [OP_MUL], steps: 1, kind: 'dec-mult' }
 };
 
 var NON_MIGRATABLE = ['remainder', 'mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];

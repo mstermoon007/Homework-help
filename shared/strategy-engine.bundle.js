@@ -2114,7 +2114,15 @@ var R26_LAW_KPS = [
   'math-g4-m3-g4-mix-mullaw'
 ];
 
-var ALL_MIGRATED = MIGRATED_KPS.concat(COMPLEX_KPS, R26_LAW_KPS);
+// M4-R27 迁移批次：六上小数/负数家族——math-g6-oral 负数加减口算 + math-g6-calc 小数乘法笔算。
+// 由 arithmetic 生成器经 SPECIAL_ORAL_PROFILE kind 分派（neg-add-sub/dec-mult）。
+// 前提：KB numberRange 需放开（neg-add-sub 允许负值；dec-mult 允许 <1 因数）。
+var R27_KPS = [
+  'math-g6-m1-g6-oral-neg-add-sub',
+  'math-g6-m2-g6-calc-dec-mult'
+];
+
+var ALL_MIGRATED = MIGRATED_KPS.concat(COMPLEX_KPS, R26_LAW_KPS, R27_KPS);
 
 function isMigrated(kpId) {
   return ALL_MIGRATED.indexOf(kpId) !== -1;
@@ -2131,6 +2139,7 @@ module.exports = {
   MIGRATED_KPS: MIGRATED_KPS,
   COMPLEX_KPS: COMPLEX_KPS,
   R26_LAW_KPS: R26_LAW_KPS,
+  R27_KPS: R27_KPS,
   ALL_MIGRATED: ALL_MIGRATED,
   isMigrated: isMigrated,
   apply: apply
@@ -2671,9 +2680,9 @@ var GenCap = require("shared/generator-capability-registry.js");
 
 // M4-R06 核心 Generator 声明（纯数据；执行实现位于 shared/generator/generators/）
 var CORE_RECORDS = [
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec', 'math-g4-m3-g4-mix-addlaw'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec', 'math-g4-m3-g4-mix-addlaw', 'math-g6-m1-g6-oral-neg-add-sub'], scope: 'core', version: 1 },
   { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec'], scope: 'core', version: 1 },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g2-m1-mult-table', 'math-g2-m2-mult-col', 'math-g2-m4-multiplication-meaning', 'math-g2-m7-pic-mult', 'math-g2-m8-mult-total', 'math-g2-m5-match-multdiv', 'math-g3-m1-g3-mul-multi1', 'math-g4-m1-g4-oral-mul3x1', 'math-g4-m1-g4-oral-mul2t', 'math-g4-m1-g4-oral-law', 'math-g4-m3-g4-mix-mullaw', 'math-g5-m1-g5-oral-decmul', 'math-g6-c1-vertical-multidigit', 'math-g6-c3-multiplication-principle'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g2-m1-mult-table', 'math-g2-m2-mult-col', 'math-g2-m4-multiplication-meaning', 'math-g2-m7-pic-mult', 'math-g2-m8-mult-total', 'math-g2-m5-match-multdiv', 'math-g3-m1-g3-mul-multi1', 'math-g4-m1-g4-oral-mul3x1', 'math-g4-m1-g4-oral-mul2t', 'math-g4-m1-g4-oral-law', 'math-g4-m3-g4-mix-mullaw', 'math-g5-m1-g5-oral-decmul', 'math-g6-c1-vertical-multidigit', 'math-g6-c3-multiplication-principle', 'math-g6-m2-g6-calc-dec-mult'], scope: 'core', version: 1 },
   { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-division-table', 'math-g2-m1-div-table', 'math-g2-m1-muldiv-relation', 'math-g2-m2-div-col', 'math-g2-m4-division-meaning', 'math-g2-m7-pic-div', 'math-g2-m7-pic-div-include', 'math-g2-m8-div-partitive', 'math-g2-m8-div-quotative', 'math-g3-m1-g3-div1', 'math-g4-c2-c2-divisible', 'math-g4-m1-g4-oral-divt', 'math-g5-m1-g5-oral-decdiv', 'math-g4-m2-g4-v-div2', 'math-g4-m2-g4-v-div2q', 'math-g4-m8-g4-word-div', 'math-g5-c2-divisibility', 'math-g6-c2-divisibility'], scope: 'core', version: 1 },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: [], scope: 'core', version: 1 },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill'], questionTypes: ['fill'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g1-m13-division-table', 'math-g1-m13-fill-blank', 'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-cutfill', 'math-g4-c4-c4-pa', 'math-g4-c4-c4-solid', 'math-g4-c4-c4-count'], scope: 'core', version: 1 },
@@ -3190,7 +3199,10 @@ var SPECIAL_ORAL_PROFILE = {
   'dec-div-oral': { operators: [OP_DIV], steps: 1, kind: 'dec-div-oral' },
   // M4-R26 简便计算（多步凑整）族
   'add-law':    { operators: [OP_ADD], steps: 2, kind: 'add-law' },
-  'mul-law':    { operators: [OP_MUL], steps: 2, kind: 'mul-law' }
+  'mul-law':    { operators: [OP_MUL], steps: 2, kind: 'mul-law' },
+  // M4-R27 六上小数/负数族：负数加减口算（操作数含负）、小数乘法笔算（含 <1 因数）
+  'neg-add-sub': { operators: [OP_ADD, OP_SUB], steps: 1, kind: 'neg-add-sub' },
+  'dec-mult':   { operators: [OP_MUL], steps: 1, kind: 'dec-mult' }
 };
 
 var NON_MIGRATABLE = ['remainder', 'mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];
@@ -4015,7 +4027,10 @@ var overrides = {               // scope → key → mode
     'math-g6-c3-multiplication-principle': 'native',
     // M4-R26: 简便计算（凑整）家族 native 切换
     'math-g4-m3-g4-mix-addlaw': 'native',
-    'math-g4-m3-g4-mix-mullaw': 'native'
+    'math-g4-m3-g4-mix-mullaw': 'native',
+    // M4-R27: 六上小数/负数家族 native 切换
+    'math-g6-m1-g6-oral-neg-add-sub': 'native',
+    'math-g6-m2-g6-calc-dec-mult': 'native'
   },
   questionType: {},
   subject: {}
@@ -8987,6 +9002,46 @@ function buildDecDivOral(rng, range) {
 }
 
 /**
+ * 负数加减口算（neg-add-sub，镜像 legacy math-g6-oral）：−a + b / −a − b。
+ *   add：−a + b = b − a（异号相加，结果可正可负）
+ *   sub：−a − b = −(a + b)（负号相减）
+ * 操作数含负数，需配合 KP numberRange 允许负值（如 {min:-20, max:20}）。
+ * @returns {{ operands:[-a,b], operators:[+|−], steps:1, answer:number }}
+ */
+function buildNegAddsub(rng) {
+  if (Rng.pick(rng, ['add', 'sub']) === 'add') {
+    var a = Rng.randInt(rng, 2, 9), b = Rng.randInt(rng, 1, 9);
+    return { operands: [-a, b], operators: [OP_ADD], steps: 1, answer: b - a };
+  }
+  var a2 = Rng.randInt(rng, 1, 9), b2 = Rng.randInt(rng, 1, 9);
+  return { operands: [-a2, b2], operators: [OP_SUB], steps: 1, answer: -(a2 + b2) };
+}
+
+/**
+ * 小数乘法笔算（dec-mult，镜像 legacy math-g6-calc）：一位/两位小数因数 × 整数或小数。
+ *   dd  —— a.b × c.d（一位小数 × 一位小数）
+ *   di  —— a.b × 整数
+ *   dd2 —— 0.ab × 0.cd（两位小数 × 两位小数）
+ * 答案用 toFixed(6) 清理浮点噪声（legacy trimD 同款），保留小数点位数。
+ * @returns {{ operands:[a,b], operators:[×], steps:1, answer:number }}
+ */
+function buildDecMult(rng) {
+  var v = Rng.pick(rng, ['dd', 'di', 'dd2']);
+  var a, b;
+  if (v === 'dd') {
+    a = Rng.randInt(rng, 10, 99) / 10;
+    b = Rng.randInt(rng, 10, 99) / 10;
+  } else if (v === 'di') {
+    a = Rng.randInt(rng, 10, 999) / 10;
+    b = Rng.randInt(rng, 2, 99);
+  } else {
+    a = Rng.randInt(rng, 11, 99) / 100;
+    b = Rng.randInt(rng, 11, 99) / 100;
+  }
+  return { operands: [a, b], operators: [OP_MUL], steps: 1, answer: Number(String(Number((a * b).toFixed(6)))) };
+}
+
+/**
  * 加法运算律简便计算（add-law）：a+b+c，其中 a+c 或 b+c 凑整十/百（镜像 legacy）。
  * @returns {{ operands:[a,b,c], operators:[+,+], steps:2, answer:number }}
  */
@@ -9031,6 +9086,8 @@ function buildSpecialKind(rng, cfg) {
   if (kind === 'dec-div-oral') return buildDecDivOral(rng, cfg.numberRange);
   if (kind === 'add-law') return buildAddLaw(rng);
   if (kind === 'mul-law') return buildMulLaw(rng);
+  if (kind === 'neg-add-sub') return buildNegAddsub(rng);
+  if (kind === 'dec-mult') return buildDecMult(rng);
   return null;
 }
 
@@ -9057,6 +9114,8 @@ module.exports = {
   buildDecDivOral: buildDecDivOral,
   buildAddLaw: buildAddLaw,
   buildMulLaw: buildMulLaw,
+  buildNegAddsub: buildNegAddsub,
+  buildDecMult: buildDecMult,
   trimDec: trimDec,
   buildSpecialKind: buildSpecialKind
 };

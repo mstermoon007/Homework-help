@@ -106,7 +106,10 @@ var overrides = {               // scope → key → mode
     'math-g6-c3-multiplication-principle': 'native',
     // M4-R26: 简便计算（凑整）家族 native 切换
     'math-g4-m3-g4-mix-addlaw': 'native',
-    'math-g4-m3-g4-mix-mullaw': 'native'
+    'math-g4-m3-g4-mix-mullaw': 'native',
+    // M4-R27: 六上小数/负数家族 native 切换
+    'math-g6-m1-g6-oral-neg-add-sub': 'native',
+    'math-g6-m2-g6-calc-dec-mult': 'native'
   },
   questionType: {},
   subject: {}

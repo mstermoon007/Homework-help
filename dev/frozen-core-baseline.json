@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T09:57:51.962Z",
+  "generatedAt": "2026-09-01T10:48:12.201Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -53,9 +53,9 @@
       "mtime": 1788067280594.5122
     },
     "shared/knowledge-math.js": {
-      "hash": "3c4fc3e54216baf8",
-      "size": 509500,
-      "mtime": 1788255038426.044
+      "hash": "fedfbf1975ff194e",
+      "size": 509504,
+      "mtime": 1788259225113.5664
     },
     "shared/knowledge-cn.js": {
       "hash": "1daacda73babc441",
@@ -103,9 +103,9 @@
       "mtime": 1788150923822.1445
     },
     "shared/generator/generator-registry.js": {
-      "hash": "ad04a9f9668024c7",
-      "size": 8011,
-      "mtime": 1788256558971.811
+      "hash": "6a9887bc48c2d641",
+      "size": 8076,
+      "mtime": 1788259317907.4556
     },
     "shared/generator/generator-selector.js": {
       "hash": "a5a02fe7eb1ffdc7",
@@ -113,9 +113,9 @@
       "mtime": 1788163042580.6455
     },
     "shared/generator/generator-mode.js": {
-      "hash": "598c7dae8d69cf47",
-      "size": 8017,
-      "mtime": 1788256189115.1611
+      "hash": "be932b941636d15f",
+      "size": 8165,
+      "mtime": 1788259231653.68
     },
     "shared/generator/retry-loop.js": {
       "hash": "f3ae8c9488391adf",
@@ -153,9 +153,9 @@
       "mtime": 1788090526795.4841
     },
     "shared/generator/core/arithmetic-core.js": {
-      "hash": "34eaa8cac60e73d3",
-      "size": 22394,
-      "mtime": 1788256019679.9353
+      "hash": "f2a22efa658b70a2",
+      "size": 24285,
+      "mtime": 1788259157507.007
     },
     "shared/generator/core/kp-complex-semantics.js": {
       "hash": "98d8216541f5f69f",
@@ -163,9 +163,9 @@
       "mtime": 1788098497992.467
     },
     "shared/generator/migration-switch.js": {
-      "hash": "ac8b3230fb2d37fe",
-      "size": 2523,
-      "mtime": 1788256186930.1143
+      "hash": "5e7abe8bc8931bd8",
+      "size": 2956,
+      "mtime": 1788259195918.8076
     },
     "shared/generator/semantic-question-bridge.js": {
       "hash": "1de689fa215174e6",
@@ -278,9 +278,9 @@
       "mtime": 1788083085867.727
     },
     "shared/generator/core/kp-arithmetic-semantics.js": {
-      "hash": "aba5e53ffb43bb0e",
-      "size": 3807,
-      "mtime": 1788256061013.035
+      "hash": "8c61f4769f81c8bc",
+      "size": 4074,
+      "mtime": 1788259172111.6465
     },
     "shared/validator/validation-pipeline.js": {
       "hash": "c52f25faed3e8998",

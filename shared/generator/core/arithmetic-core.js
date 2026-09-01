@@ -467,6 +467,46 @@ function buildDecDivOral(rng, range) {
 }
 
 /**
+ * 负数加减口算（neg-add-sub，镜像 legacy math-g6-oral）：−a + b / −a − b。
+ *   add：−a + b = b − a（异号相加，结果可正可负）
+ *   sub：−a − b = −(a + b)（负号相减）
+ * 操作数含负数，需配合 KP numberRange 允许负值（如 {min:-20, max:20}）。
+ * @returns {{ operands:[-a,b], operators:[+|−], steps:1, answer:number }}
+ */
+function buildNegAddsub(rng) {
+  if (Rng.pick(rng, ['add', 'sub']) === 'add') {
+    var a = Rng.randInt(rng, 2, 9), b = Rng.randInt(rng, 1, 9);
+    return { operands: [-a, b], operators: [OP_ADD], steps: 1, answer: b - a };
+  }
+  var a2 = Rng.randInt(rng, 1, 9), b2 = Rng.randInt(rng, 1, 9);
+  return { operands: [-a2, b2], operators: [OP_SUB], steps: 1, answer: -(a2 + b2) };
+}
+
+/**
+ * 小数乘法笔算（dec-mult，镜像 legacy math-g6-calc）：一位/两位小数因数 × 整数或小数。
+ *   dd  —— a.b × c.d（一位小数 × 一位小数）
+ *   di  —— a.b × 整数
+ *   dd2 —— 0.ab × 0.cd（两位小数 × 两位小数）
+ * 答案用 toFixed(6) 清理浮点噪声（legacy trimD 同款），保留小数点位数。
+ * @returns {{ operands:[a,b], operators:[×], steps:1, answer:number }}
+ */
+function buildDecMult(rng) {
+  var v = Rng.pick(rng, ['dd', 'di', 'dd2']);
+  var a, b;
+  if (v === 'dd') {
+    a = Rng.randInt(rng, 10, 99) / 10;
+    b = Rng.randInt(rng, 10, 99) / 10;
+  } else if (v === 'di') {
+    a = Rng.randInt(rng, 10, 999) / 10;
+    b = Rng.randInt(rng, 2, 99);
+  } else {
+    a = Rng.randInt(rng, 11, 99) / 100;
+    b = Rng.randInt(rng, 11, 99) / 100;
+  }
+  return { operands: [a, b], operators: [OP_MUL], steps: 1, answer: Number(String(Number((a * b).toFixed(6)))) };
+}
+
+/**
  * 加法运算律简便计算（add-law）：a+b+c，其中 a+c 或 b+c 凑整十/百（镜像 legacy）。
  * @returns {{ operands:[a,b,c], operators:[+,+], steps:2, answer:number }}
  */
@@ -511,6 +551,8 @@ function buildSpecialKind(rng, cfg) {
   if (kind === 'dec-div-oral') return buildDecDivOral(rng, cfg.numberRange);
   if (kind === 'add-law') return buildAddLaw(rng);
   if (kind === 'mul-law') return buildMulLaw(rng);
+  if (kind === 'neg-add-sub') return buildNegAddsub(rng);
+  if (kind === 'dec-mult') return buildDecMult(rng);
   return null;
 }
 
@@ -537,6 +579,8 @@ module.exports = {
   buildDecDivOral: buildDecDivOral,
   buildAddLaw: buildAddLaw,
   buildMulLaw: buildMulLaw,
+  buildNegAddsub: buildNegAddsub,
+  buildDecMult: buildDecMult,
   trimDec: trimDec,
   buildSpecialKind: buildSpecialKind
 };
