@@ -41,7 +41,7 @@
 |---|------|--------|------|------|
 | M4-A1 | **Generator 自判全局难度**（difficulty-decision 命中 CORE 职责） | 19 插件 | math-area/data-stats/decimal/fraction/g4-vertical/g6-calc/g6-oral/geometry/logic-reasoning/make-ten/money/number-sense/oral/patterns/picture-equations/shapes/statistics/unit-convert/word-problems | Contract/Capability 违规（legacy 已知行为） |
 | M4-A2 | **Generator 读取全局自适应**（global-adaptive） | 1 插件 | math-comprehensive | Contract/Capability 违规 |
-| M4-A3 | **KP 强依赖具体 Plugin（未迁移 KP）** | **550 KP / 94 插件** | 数学为主 | 迁移剩余（核心债务源） |
+| M4-A3 | **KP 强依赖具体 Plugin（未迁移 KP）** | **486 KP**（扫描初 550，R24/R25 后） | 数学为主 | 迁移剩余（核心债务源） |
 | M4-A4 | **SemanticQuestion Validator 未接入**（`dev/validate-question.js` 缺失） | 1 缺口 | M4-R21 | 基础设施缺口 |
 
 ### B. M4-R20 职责盘点 `needs-fix`（25 插件）
@@ -50,7 +50,7 @@
 > legacy 插件自带 DOM/SVG 渲染契约，属已知 legacy 行为；native 化后应由 generator 数据 + 渲染层接管。
 
 ### C. 迁移剩余（R21 状态机）
-- **未迁移 KP = 550**（强依赖具体插件）→ 全部 legacy；仅 21 个 KP（ALL_MIGRATED）走 native。
+- **未迁移 KP = 486（R24/R25 后）**（扫描初 550，强依赖具体插件）→ 部分走 legacy；21+ 个 KP（ALL_MIGRATED + R24/R25 白名单）走 native。
 - 状态机：analyzed 65 / candidate-generator 15 / verified 14 / adapter 3 / removed 3；**已可下线 0**。
 - 15 个 needsRegression 插件（visual/geometry/apply）无 native 覆盖，为已知边界外限制。
 - decommission-log：`math-oral` blocked（safetyPassed=false，即无法安全下线）→ **未下线**。
@@ -85,7 +85,7 @@
 |------|--------|--------|
 | 冻结层/运行时 P0 | 0 | — |
 | Contract/Capability 违规（A1+A2） | 20 插件 | 中（legacy 已知） |
-| 未迁移 KP（A3） | 550 KP / 94 插件 | **高（长期）** |
+| 未迁移 KP（A3） | 486 KP（扫描初 550） | **高（长期）** |
 | Validator 缺口（A4） | 1 | 中 |
 | R20 needs-fix 插件 | 25 | 中 |
 | 未下线插件 | 100 中 0 可下线（math-oral blocked） | 低 |
@@ -100,10 +100,51 @@
 M1-M4 的**阻塞型债务已全部关闭**（冻结层无 P0；npm test / verify:m1..m4 / 回归 / frozen-core 全绿）。
 
 存留债务以**迁移剩余 + 职责合规**为主，均非阻塞、属已知 legacy 行为或长期技术债：
-1. **550 未迁移 KP** 是核心债务源（需 native 生成器覆盖，visual/geometry/apply 15 插件为边界外）。
+1. **486 未迁移 KP**（R24/R25 后由 550 降下）是核心债务源（需 native 生成器覆盖，visual/geometry/apply 15 插件为边界外）；单步口算白名单已近耗尽，后续主战场为 multi-step complex / 专项模板。
 2. **20 插件 Contract/Capability 违规**（自判难度/全局自适应）——legacy 已知，native 化后收敛。
 3. **Validator 未接入** + **R20 25 个 needs-fix 插件** 为待整改基础设施/职责项。
-4. **产物同步漂移（KD-4）**：提交态 `strategy-engine.bundle.js` 陈旧，浏览器会跑旧 adapter——发布前需重建产物，属高优先。
+4. **产物同步漂移（KD-4）**：提交态 `strategy-engine.bundle.js` 陈旧，浏览器会跑旧 adapter——发布前需重建产物，属高优先。**已随 R24/R25 提交重建后的 bundle（含 M4-R16 adapter 修复 + 白名单）关闭。**
 5. 运行时 KNOWN_DEBT（双轨难度/cap-resolver global/Math.random）+ 低危幽灵引用为低优先。
 
 > 注：此处仅扫描记录，未做任何修改（read-only）。
+
+---
+
+## 5. 迁移进展（R24 / R25 批次 — 逐步摒弃双轨）
+
+> 在 initial scan 之后，基于「扩展算术语义白名单 → 先修先例」路线新增两个迁移批次，均经
+> FULL-EQ 门禁、回归、verify:m4、冻结基线重锚后提交。原始扫描为 read-only，本小节为**增量记录**。
+
+### 5.1 M4-R24（提交 `5017468`）— 整数域口算白名单
+
+- 新增 `SPECIAL_ORAL_PROFILE` 4 kind：`div-tens`/`big-addsub`/`mul3x1`/`mul2tens`。
+- 修复先例 **oral-divt 语义错误**（旧 native 输出小除法 `16÷2=8`，改为整十除法 `240÷60`）。
+- 新增 4 个 native 结构构造 `buildBigAddsub/buildMul3x1/buildMul2tens/buildDivTens` + `buildSpecialKind` 分派。
+- 路由：`oral-big`/`oral-mul3x1`/`oral-mul2t` → native；`oral-divt`（已在 mode）纳入语义解析。
+- 基线重锚 93/93；回归 FAIL=0；verify:m4 全 PASS。
+- **累计迁移 KP**：+3（native 语义）→ 当前已迁移 70 中的一部分。
+
+### 5.2 M4-R25（提交 `6f1bd8a`）— 小数/运算律口算扩展
+
+- 扩展 `SPECIAL_ORAL_PROFILE` +4 kind：`dec-addsub`/`law-oral`/`dec-mul-oral`/`dec-div-oral`。
+- 新增 4 个 native 小数/运算律构造（`buildDecAddsub`/`buildLawOral`/`buildDecMulOral`/`buildDecDivOral`）+ `trimDec`。
+- **`apply()` 的 OP_DIV 由 `Math.floor` 改为精确除法**（支持小数除法；整数构造均严格整除，无破坏面）。
+- 修复 M4-R06 语义不变量对小数除法浮点噪声的误报（gate 改 1e-6 数值容差）。
+- FULL-EQ：**math-g4-oral 6/6 MIGRATABLE [PASS]**；math-g5-oral 2/2；math-oral 12/21 不变。
+- 基线重锚 93/93；回归 FAIL=0；verify:m4 全 PASS。
+- **累计迁移 KP**：+4 → 当前已迁移 70。
+
+### 5.3 双轨摒弃进度（当前态，HEAD=`6f1bd8a`）
+
+| 指标 | 扫描初（6277176） | 当前 |
+|------|------|------|
+| 已迁移/走了 native 的 KP | — | **70 / 556** |
+| 未迁移 KP | 550 | **486** |
+| 未迁移纯 calc/oral | 31 | **107**（其中可算术语义解析 11，均为图/文/列式 add-sub） |
+| math-g4-oral 可迁移 | — | **6/6** |
+| 下线插件数 | 0 | 0（math-oral 仍 blocked） |
+
+**单步口算白名单已近耗尽**：剩余 11 个可解析 KP 均来自呈现解耦插件（picture/word/column 的 add-sub），
+native 化会破坏「题面-算式」语义，应保留 legacy。其余 ~96 个纯 calc/oral 为 小数/分数/竖式/方程/逻辑等，
+需 **multi-step complex 或专项模板生成器**（非单步白名单），属下一阶段"摒弃双轨"的主战场。
+
