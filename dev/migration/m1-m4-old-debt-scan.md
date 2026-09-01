@@ -138,13 +138,24 @@ M1-M4 的**阻塞型债务已全部关闭**（冻结层无 P0；npm test / verif
 
 | 指标 | 扫描初（6277176） | 当前 |
 |------|------|------|
-| 已迁移/走了 native 的 KP | — | **70 / 556** |
-| 未迁移 KP | 550 | **486** |
-| 未迁移纯 calc/oral | 31 | **107**（其中可算术语义解析 11，均为图/文/列式 add-sub） |
+| 已迁移/走了 native 的 KP | — | **72 / 556** |
+| 未迁移 KP | 550 | **484** |
+| 未迁移纯 calc/oral | 31 | **105**（其中可算术语义解析 11，均为图/文/列式 add-sub） |
 | math-g4-oral 可迁移 | — | **6/6** |
+| math-g4-mixed 可迁移 | — | **2/2（add-law/mul-law）** |
 | 下线插件数 | 0 | 0（math-oral 仍 blocked） |
 
 **单步口算白名单已近耗尽**：剩余 11 个可解析 KP 均来自呈现解耦插件（picture/word/column 的 add-sub），
 native 化会破坏「题面-算式」语义，应保留 legacy。其余 ~96 个纯 calc/oral 为 小数/分数/竖式/方程/逻辑等，
 需 **multi-step complex 或专项模板生成器**（非单步白名单），属下一阶段"摒弃双轨"的主战场。
+
+### 5.4 M4-R26（提交 `31fe0e7`）— 简便计算（凑整）多步族
+
+- 新增 2 个 `SPECIAL_ORAL_PROFILE` kind（`add-law`/`mul-law`，steps=2）+ `buildAddLaw`/`buildMulLaw` 构造。
+- **单步 → 多步扩界**：`test-migration-equiv` 步数门禁支持 `exactSteps>=2`（多步 kind 不因低难度 maxSteps=1 误伤）。
+- FULL-EQ：math-g4-mixed **2/2 可迁移（add-law/mul-law 9/9）**；dist-law/dec-simple 保持 legacy（设计外）。
+- 迁移门禁 PASS：`math-oral,math-g4-oral,math-g5-oral,math-g4-mixed` 全部可迁移 KP FULL-EQ。
+- 基线重锚 93/93；回归 FAIL=0；verify:m4 全 PASS。
+- **累计迁移 KP**：+2 → 当前已迁移 **72**。
+- 双轨摒弃进度更新：当前已迁移 **72 / 556**，未迁移 **484**。
 

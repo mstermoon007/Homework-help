@@ -150,9 +150,14 @@ async function runQTCase(entry, rec, kpId, qt, difficulty, seed) {
   var nr = (plan.constraints && plan.constraints.numberRange) || {};
   var lIn = pL.operandRange.min >= nr.min && pL.operandRange.max <= nr.max;
   var nIn = pN.operandRange.min >= nr.min && pN.operandRange.max <= nr.max;
-  // 步数不超 maxSteps
-  var lSteps = pL.steps.max <= (plan.constraints.maxSteps != null ? plan.constraints.maxSteps : Infinity);
-  var nSteps = pN.steps.max <= (plan.constraints.maxSteps != null ? plan.constraints.maxSteps : Infinity);
+  // M4-R26：多步 kind（steps>=2）时按精确步数 exactSteps 约束（plan.maxSteps 在低难度仍为单步档
+  // 艺 =1，会误伤多步 KP 的 legacy 与 native 两侧）；单步 kind 沿用 maxSteps 约束。
+  var stepBound = (plan.constraints && plan.constraints.exactSteps != null && plan.constraints.exactSteps >= 2)
+    ? plan.constraints.exactSteps
+    : (plan.constraints && plan.constraints.maxSteps != null ? plan.constraints.maxSteps : Infinity);
+  // 步数不超 stepBound
+  var lSteps = pL.steps.max <= stepBound;
+  var nSteps = pN.steps.max <= stepBound;
   // 两边答案都自洽
   var lAns = pL.answersDeterminable && pL.allAnswersCorrect;
   var nAns = pN.answersDeterminable && pN.allAnswersCorrect;
@@ -168,7 +173,7 @@ async function runQTCase(entry, rec, kpId, qt, difficulty, seed) {
     r.verdict = 'DIFFERS'; r.note = '操作数出界 legacy=' + JSON.stringify(pL.operandRange) + ' native=' + JSON.stringify(pN.operandRange) + ' range=' + JSON.stringify(nr); return r;
   }
   if (!nIn) { r.verdict = 'DIFFERS'; r.note = '操作数出界 native=' + JSON.stringify(pN.operandRange) + ' range=' + JSON.stringify(nr); return r; }
-  if (!lSteps || !nSteps) { r.verdict = 'DIFFERS'; r.note = '步数超限 legacy=' + JSON.stringify(pL.steps) + ' native=' + JSON.stringify(pN.steps) + ' max=' + plan.constraints.maxSteps; return r; }
+  if (!lSteps || !nSteps) { r.verdict = 'DIFFERS'; r.note = '步数超限 legacy=' + JSON.stringify(pL.steps) + ' native=' + JSON.stringify(pN.steps) + ' bound=' + stepBound; return r; }
   if (!lAns || !nAns) { r.verdict = 'DIFFERS'; r.note = '答案不自洽 legacy=' + lAns + ' native=' + nAns; return r; }
 
   r.verdict = 'EQUIVALENT';

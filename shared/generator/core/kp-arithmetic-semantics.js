@@ -38,7 +38,10 @@ var SPECIAL_ORAL_PROFILE = {
   'dec-addsub': { operators: [OP_ADD, OP_SUB], steps: 1, kind: 'dec-addsub' },
   'law-oral':   { operators: [OP_MUL], steps: 1, kind: 'law-oral' },
   'dec-mul-oral': { operators: [OP_MUL], steps: 1, kind: 'dec-mul-oral' },
-  'dec-div-oral': { operators: [OP_DIV], steps: 1, kind: 'dec-div-oral' }
+  'dec-div-oral': { operators: [OP_DIV], steps: 1, kind: 'dec-div-oral' },
+  // M4-R26 简便计算（多步凑整）族
+  'add-law':    { operators: [OP_ADD], steps: 2, kind: 'add-law' },
+  'mul-law':    { operators: [OP_MUL], steps: 2, kind: 'mul-law' }
 };
 
 var NON_MIGRATABLE = ['remainder', 'mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T09:36:50.432Z",
+  "generatedAt": "2026-09-01T09:57:51.962Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -103,9 +103,9 @@
       "mtime": 1788150923822.1445
     },
     "shared/generator/generator-registry.js": {
-      "hash": "969eb1edfc343cf0",
-      "size": 7955,
-      "mtime": 1788254911715.0002
+      "hash": "ad04a9f9668024c7",
+      "size": 8011,
+      "mtime": 1788256558971.811
     },
     "shared/generator/generator-selector.js": {
       "hash": "a5a02fe7eb1ffdc7",
@@ -113,9 +113,9 @@
       "mtime": 1788163042580.6455
     },
     "shared/generator/generator-mode.js": {
-      "hash": "a4b57e6a70556321",
-      "size": 7873,
-      "mtime": 1788254920274.2283
+      "hash": "598c7dae8d69cf47",
+      "size": 8017,
+      "mtime": 1788256189115.1611
     },
     "shared/generator/retry-loop.js": {
       "hash": "f3ae8c9488391adf",
@@ -153,9 +153,9 @@
       "mtime": 1788090526795.4841
     },
     "shared/generator/core/arithmetic-core.js": {
-      "hash": "4fa3d01a274b3547",
-      "size": 20999,
-      "mtime": 1788255354038.8042
+      "hash": "34eaa8cac60e73d3",
+      "size": 22394,
+      "mtime": 1788256019679.9353
     },
     "shared/generator/core/kp-complex-semantics.js": {
       "hash": "98d8216541f5f69f",
@@ -163,9 +163,9 @@
       "mtime": 1788098497992.467
     },
     "shared/generator/migration-switch.js": {
-      "hash": "9f88325c2f40e670",
-      "size": 2182,
-      "mtime": 1788098772438.9644
+      "hash": "ac8b3230fb2d37fe",
+      "size": 2523,
+      "mtime": 1788256186930.1143
     },
     "shared/generator/semantic-question-bridge.js": {
       "hash": "1de689fa215174e6",
@@ -278,9 +278,9 @@
       "mtime": 1788083085867.727
     },
     "shared/generator/core/kp-arithmetic-semantics.js": {
-      "hash": "341827122395e61d",
-      "size": 3625,
-      "mtime": 1788254672937.043
+      "hash": "aba5e53ffb43bb0e",
+      "size": 3807,
+      "mtime": 1788256061013.035
     },
     "shared/validator/validation-pipeline.js": {
       "hash": "c52f25faed3e8998",

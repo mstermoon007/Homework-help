@@ -103,7 +103,10 @@ var overrides = {               // scope → key → mode
     'math-g5-c2-divisibility': 'native',
     'math-g6-c1-vertical-multidigit': 'native',
     'math-g6-c2-divisibility': 'native',
-    'math-g6-c3-multiplication-principle': 'native'
+    'math-g6-c3-multiplication-principle': 'native',
+    // M4-R26: 简便计算（凑整）家族 native 切换
+    'math-g4-m3-g4-mix-addlaw': 'native',
+    'math-g4-m3-g4-mix-mullaw': 'native'
   },
   questionType: {},
   subject: {}

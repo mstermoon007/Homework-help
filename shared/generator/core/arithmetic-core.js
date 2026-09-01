@@ -467,7 +467,33 @@ function buildDecDivOral(rng, range) {
 }
 
 /**
- * M4-R24/M4-R25 特殊口算结构入口：按 kind 分派到专用构造（整数域 + 小数/运算律）。
+ * 加法运算律简便计算（add-law）：a+b+c，其中 a+c 或 b+c 凑整十/百（镜像 legacy）。
+ * @returns {{ operands:[a,b,c], operators:[+,+], steps:2, answer:number }}
+ */
+function buildAddLaw(rng) {
+  var a = Rng.randInt(rng, 11, 99), b = Rng.randInt(rng, 11, 99);
+  var t = Rng.pick(rng, [10, 100]);
+  var ac = t - (a % t); if (ac <= 0) ac = t;
+  var c = ac;
+  return { operands: [a, b, c], operators: [OP_ADD, OP_ADD], steps: 2, answer: a + b + c };
+}
+
+/**
+ * 乘法运算律简便计算（mul-law）：p1×p2×rest，p1×p2 为凑整积（25×4/125×8…），因子打乱（镜像 legacy）。
+ * @returns {{ operands:[p1,p2,rest], operators:[×,×], steps:2, answer:number }}
+ */
+function buildMulLaw(rng) {
+  var pairs = [[25, 4], [125, 8], [25, 8], [125, 4], [50, 2], [20, 5]];
+  var idx = Rng.randInt(rng, 0, pairs.length - 1);
+  var p1 = pairs[idx][0], p2 = pairs[idx][1];
+  var rest = Rng.randInt(rng, 3, 9);
+  var factors = [p1, p2, rest];
+  for (var i = factors.length - 1; i > 0; i--) { var j = Rng.randInt(rng, 0, i); var t = factors[i]; factors[i] = factors[j]; factors[j] = t; }
+  return { operands: factors, operators: [OP_MUL, OP_MUL], steps: 2, answer: p1 * p2 * rest };
+}
+
+/**
+ * M4-R24/M4-R25/M4-R26 特殊口算结构入口：按 kind 分派到专用构造（整数域 + 小数/运算律 + 简易凑整）。
  * 其余 kind 返回 null（由调用方回退通用 generateStructure）。
  * @param {function} rng 种子随机源
  * @param {Object} cfg { kind, numberRange }
@@ -483,6 +509,8 @@ function buildSpecialKind(rng, cfg) {
   if (kind === 'law-oral') return buildLawOral(rng);
   if (kind === 'dec-mul-oral') return buildDecMulOral(rng, cfg.numberRange);
   if (kind === 'dec-div-oral') return buildDecDivOral(rng, cfg.numberRange);
+  if (kind === 'add-law') return buildAddLaw(rng);
+  if (kind === 'mul-law') return buildMulLaw(rng);
   return null;
 }
 
@@ -507,6 +535,8 @@ module.exports = {
   buildLawOral: buildLawOral,
   buildDecMulOral: buildDecMulOral,
   buildDecDivOral: buildDecDivOral,
+  buildAddLaw: buildAddLaw,
+  buildMulLaw: buildMulLaw,
   trimDec: trimDec,
   buildSpecialKind: buildSpecialKind
 };

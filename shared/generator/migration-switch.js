@@ -46,7 +46,14 @@ var COMPLEX_KPS = [
   'math-g2-m3-fill-operator'
 ];
 
-var ALL_MIGRATED = MIGRATED_KPS.concat(COMPLEX_KPS);
+// M4-R26 迁移批次：简便计算（凑整）家族——math-g4-mixed 2 个 KP（add-law/mul-law）。
+// 由 arithmetic 生成器经 SPECIAL_ORAL_PROFILE kind 分派（step=2 多步凑整），FULL-EQ 全绿。
+var R26_LAW_KPS = [
+  'math-g4-m3-g4-mix-addlaw',
+  'math-g4-m3-g4-mix-mullaw'
+];
+
+var ALL_MIGRATED = MIGRATED_KPS.concat(COMPLEX_KPS, R26_LAW_KPS);
 
 function isMigrated(kpId) {
   return ALL_MIGRATED.indexOf(kpId) !== -1;
@@ -62,6 +69,7 @@ function apply() {
 module.exports = {
   MIGRATED_KPS: MIGRATED_KPS,
   COMPLEX_KPS: COMPLEX_KPS,
+  R26_LAW_KPS: R26_LAW_KPS,
   ALL_MIGRATED: ALL_MIGRATED,
   isMigrated: isMigrated,
   apply: apply
