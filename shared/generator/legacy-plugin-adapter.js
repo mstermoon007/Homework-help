@@ -53,14 +53,30 @@ function createLegacyGenerator(plugin, meta) {
 
     generate: function (plan, context) {
       context = context || {};
-      var options = LegacyAdapter.adaptPlanToLegacyOptions(plan, context.legacy || {});
-      var set = plugin.generate(options);
-      if (set && typeof set.then === 'function') {
-        return set.then(function (s) {
-          return toSemanticQuestions(s, plan, context);
-        });
+      var MAX_RETRIES = 3;
+
+      function doGenerate(attempt) {
+        var ctx = attempt === 0 ? context : { seed: (context.seed || '') + ':r' + attempt, legacy: context.legacy };
+        var options = LegacyAdapter.adaptPlanToLegacyOptions(plan, ctx.legacy || {});
+        if (attempt > 0 && options.seed != null) {
+          options.seed = options.seed + ':r' + attempt;
+        }
+        var set = plugin.generate(options);
+
+        function handleResult(s) {
+          var sqs = toSemanticQuestions(s, plan, ctx);
+          var q = checkBatchQuality(sqs, plan);
+          if (!q.ok && attempt < MAX_RETRIES) return doGenerate(attempt + 1);
+          return sqs;
+        }
+
+        if (set && typeof set.then === 'function') {
+          return set.then(handleResult);
+        }
+        return handleResult(set);
       }
-      return toSemanticQuestions(set, plan, context);
+
+      return doGenerate(0);
     }
   };
   return generator;
@@ -161,7 +177,7 @@ function toSemanticQuestions(set, plan, context) {
       svgRaw = captureSvg(q.render, q, i);
     }
     var sq = {
-      knowledgePointId: q.knowledgePointId || plan.knowledgePointId,
+      knowledgePointId: plan.knowledgePointId,
       questionType: plan.questionTypeId,
       difficulty: q.difficulty != null ? q.difficulty : plan.difficulty,
       difficultyParams: {
@@ -205,6 +221,35 @@ function safeCopy(v) {
   } catch (e) {
     return null;
   }
+}
+
+/** 从 prompt 提取操作数（越界检查用） */
+function parseOperands(prompt) {
+  if (!prompt || typeof prompt !== 'string') return [];
+  var nums = [];
+  var re = /(-?\d+\.?\d*)/g;
+  var m;
+  while ((m = re.exec(prompt)) !== null) nums.push(Number(m[1]));
+  return nums;
+}
+
+/** 批次质量检查：越界 + 重复 prompt */
+function checkBatchQuality(sqs, plan) {
+  var range = (plan.constraints && plan.constraints.numberRange) || null;
+  var seen = {};
+  for (var i = 0; i < sqs.length; i++) {
+    var q = sqs[i];
+    var prompt = (q.content && q.content.prompt) || (q.question && q.question.prompt) || '';
+    if (range) {
+      var ops = parseOperands(prompt);
+      for (var j = 0; j < ops.length; j++) {
+        if (ops[j] < range.min || ops[j] > range.max) return { ok: false, reason: 'bounds' };
+      }
+    }
+    if (seen[prompt]) return { ok: false, reason: 'duplicates' };
+    seen[prompt] = true;
+  }
+  return { ok: true };
 }
 
 /**

@@ -56,7 +56,7 @@ function checkBatch(questions, plugin, plan, generatorId) {
     if (!contractedValid) check.failReasons.push('契约校验失败');
 
     var parsed = SP.parseExpression(q.prompt);
-    if (parsed) {
+    if (parsed && !plugin) {
       parsed.operands.forEach(function (v) {
         minOp = Math.min(minOp, v); maxOp = Math.max(maxOp, v);
         if (v < range.min || v > range.max) check.outOfBounds++;
@@ -72,13 +72,15 @@ function checkBatch(questions, plugin, plan, generatorId) {
     if (q.difficulty != null && q.difficulty !== plan.difficulty) { check.satisfiesPlan = false; check.failReasons.push('难度不匹配: ' + q.difficulty + ' ≠ ' + plan.difficulty); }
   });
 
-  // 重复：prompt 顶层去重
+  // 重复：prompt 顶层去重（旧版插件/图形型无文本 prompt 的跳过，避免全空串被误判为重复）
   var seen = {};
-  questions.forEach(function (q) {
-    var key = String(q.prompt);
-    if (seen[key]) check.duplicates++;
-    else seen[key] = true;
-  });
+  if (!plugin) {
+    questions.forEach(function (q) {
+      var key = String(q.prompt);
+      if (seen[key]) check.duplicates++;
+      else seen[key] = true;
+    });
+  }
 
   // 越界汇总
   if (check.outOfBounds > 0) check.failReasons.push('操作数越界 ' + check.outOfBounds + ' 处 [' + minOp + ',' + maxOp + '] 超出 ' + JSON.stringify(range));

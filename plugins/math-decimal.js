@@ -123,13 +123,13 @@
     }
     // 减法：保证 a > b（整数部分>，或相等时分位大）
     if (aI < bI || (aI === bI && aT <= bT)) { var t = aI; aI = bI; bI = t; var t2 = aT; aT = bT; bT = t2; }
+    var resI = aI - bI;
     var resT2 = aT - bT;
-    if (resT2 < 0) { aI--; resT2 += 10; }
-    if (aI < 0) { aI = 0; resT2 = aT - bT; }
+    if (resT2 < 0) { resI--; resT2 += 10; }
     return {
       kind: 'addsub',
       question: aI + '.' + aT + ' - ' + bI + '.' + bT + ' = ？',
-      answer: String(aI) + '.' + resT2,
+      answer: String(resI) + '.' + resT2,
       hint: '小数点对齐，先减小数部分，再减整数部分。',
       inputType: 'text'
     };

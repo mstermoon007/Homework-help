@@ -57,9 +57,18 @@ function parseExpression(prompt) {
   var tokens = expr.match(/\d+(?:\.\d+)?|[\+\−\-\×x\*/÷\/]/g);
   if (!tokens || tokens.length === 0) return null;
   var operands = [], operators = [], numeric = 0;
-  tokens.forEach(function (t) {
-    if (/^-?\d+(\.\d+)?$/.test(t)) { operands.push(parseFloat(t)); numeric++; }
-    else if (OP_SYMBOLS[t]) operators.push(OP_SYMBOLS[t]);
+  // 前导一元负号：把紧跟首操作数之前的单个 −/- 视作首操作数的负号（如 "−9 − 9" → 首操作数 −9）
+  var negateFirst = tokens.length >= 2 &&
+    OP_SYMBOLS[tokens[0]] === '-' && /^-?\d+(\.\d+)?$/.test(tokens[1]);
+  var start = 0;
+  if (negateFirst) { start = 1; }
+  tokens.forEach(function (t, idx) {
+    if (/^-?\d+(\.\d+)?$/.test(t)) {
+      var val = parseFloat(t);
+      if (negateFirst && idx === start) val = -val;
+      operands.push(val); numeric++;
+    }
+    else if (OP_SYMBOLS[t] && !(negateFirst && idx === 0)) operators.push(OP_SYMBOLS[t]);
   });
   if (numeric === 0) return null;
   return { operands: operands, operators: operators, expr: expr };

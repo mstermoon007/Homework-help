@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T07:01:59.005Z",
+  "generatedAt": "2026-09-01T07:44:51.854Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -123,9 +123,9 @@
       "mtime": 1788159936603.809
     },
     "shared/generator/legacy-plugin-adapter.js": {
-      "hash": "b94db332721d5305",
-      "size": 9354,
-      "mtime": 1788244426698.432
+      "hash": "59f31d189d309938",
+      "size": 10785,
+      "mtime": 1788246770000.5752
     },
     "shared/generator/generators/arithmetic.js": {
       "hash": "7c27e5c377c64834",
