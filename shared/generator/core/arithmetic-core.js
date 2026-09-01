@@ -330,6 +330,88 @@ function buildFillOperator(rng, cfg) {
   return { prompt: a + ' □ ' + b + ' =', answer: op, operator: op, operands: [a, b] };
 }
 
+// ─── M4-R24 特殊口算结构（镜像 legacy plugins/math-g4-oral.js 的粒度）───────────
+
+/**
+ * 大数加减口算（big-addsub，万以内）：整百/整千/千+百/两个三位数，差为正。
+ * @returns {{ operands:[a,b], operators:[+|−], steps:1, answer:number }}
+ */
+function buildBigAddsub(rng) {
+  function mul100(lo, hi) { return Rng.randInt(rng, lo, hi) * 100; }
+  if (Rng.pick(rng, [1, 2]) === 1) {
+    var kind = Rng.pick(rng, ['hh', 'kk', 'hk', 'dd']);
+    var a, b;
+    if (kind === 'hh') { a = mul100(1, 9); b = mul100(1, 90 - a / 100); }
+    else if (kind === 'kk') { a = Rng.randInt(rng, 1, 8) * 1000; b = Rng.randInt(rng, 1, Math.max(1, Math.floor((10000 - a) / 1000))) * 1000; }
+    else if (kind === 'hk') { a = Rng.randInt(rng, 1, 8) * 1000; b = mul100(1, 90 - a / 100); }
+    else { a = Rng.randInt(rng, 100, 499); b = Rng.randInt(rng, 100, 499); }
+    return { operands: [a, b], operators: [OP_ADD], steps: 1, answer: a + b };
+  }
+  var kind2 = Rng.pick(rng, ['hh', 'kk', 'hk', 'dd']);
+  var a2, b2;
+  if (kind2 === 'hh') { a2 = mul100(2, 90); b2 = mul100(1, a2 / 100 - 1); }
+  else if (kind2 === 'kk') { a2 = Rng.randInt(rng, 2, 9) * 1000; b2 = Rng.randInt(rng, 1, a2 / 1000 - 1) * 1000; }
+  else if (kind2 === 'hk') { a2 = Rng.randInt(rng, 2, 9) * 1000; b2 = mul100(1, a2 / 100 - 1); }
+  else { a2 = Rng.randInt(rng, 300, 900); b2 = Rng.randInt(rng, 100, a2 - 100); }
+  return { operands: [a2, b2], operators: [OP_SUB], steps: 1, answer: a2 - b2 };
+}
+
+/**
+ * 三位数乘一位数口算（mul3x1）：40% 整十三位数，60% 一般三位数 × 一位数。
+ * @returns {{ operands:[a,f], operators:[×], steps:1, answer:number }}
+ */
+function buildMul3x1(rng) {
+  var a = (Rng.pick(rng, [1, 2, 3]) === 1) ? Rng.randInt(rng, 10, 99) * 10 : Rng.randInt(rng, 100, 999);
+  var f = Rng.randInt(rng, 2, 9);
+  return { operands: [a, f], operators: [OP_MUL], steps: 1, answer: a * f };
+}
+
+/**
+ * 两位数乘整十数口算（mul2tens）：2 位数 × 整十数（20/30/…/90）。
+ * @returns {{ operands:[a,t*10], operators:[×], steps:1, answer:number }}
+ */
+function buildMul2tens(rng) {
+  var a = Rng.randInt(rng, 11, 99);
+  var t = Rng.randInt(rng, 2, 9);
+  var b = t * 10;
+  return { operands: [a, b], operators: [OP_MUL], steps: 1, answer: a * b };
+}
+
+/**
+ * 除数是整十数口算（div-tens）：被除数 = (整十除数) × 商，商为一位/两位/整十数。
+ * @returns {{ operands:[a,t*10], operators:[÷], steps:1, answer:number }}
+ */
+function buildDivTens(rng, range) {
+  var max = Math.max(20, (range && range.max) || 5000);
+  var t = Rng.randInt(rng, 2, 9);
+  var b = t * 10;
+  // 被除数 a = b*q 不得超过 range.max（整十除数的语义范围）
+  var qMax = Math.max(2, Math.floor(max / b));
+  var v = qMax < 11 ? 's' : Rng.pick(rng, ['s', 'd', 'tens']);
+  var q;
+  if (v === 's') q = Rng.randInt(rng, 2, Math.min(9, qMax));
+  else if (v === 'd') q = Rng.randInt(rng, 11, Math.min(49, qMax));
+  else q = Rng.randInt(rng, 2, Math.max(2, Math.min(9, Math.floor(qMax / 10)))) * 10;
+  var a = b * q;
+  return { operands: [a, b], operators: [OP_DIV], steps: 1, answer: q };
+}
+
+/**
+ * M4-R24 特殊口算结构入口：按 kind 分派到专用构造（big-addsub/mul3x1/mul2tens/div-tens）。
+ * 其余 kind 返回 null（由调用方回退通用 generateStructure）。
+ * @param {function} rng 种子随机源
+ * @param {Object} cfg { kind }
+ */
+function buildSpecialKind(rng, cfg) {
+  cfg = cfg || {};
+  var kind = cfg.kind;
+  if (kind === 'big-addsub') return buildBigAddsub(rng);
+  if (kind === 'mul3x1') return buildMul3x1(rng);
+  if (kind === 'mul2tens') return buildMul2tens(rng);
+  if (kind === 'div-tens') return buildDivTens(rng, cfg.numberRange);
+  return null;
+}
+
 module.exports = {
   OP_ADD: OP_ADD, OP_SUB: OP_SUB, OP_MUL: OP_MUL, OP_DIV: OP_DIV,
   normalizeOperation: normalizeOperation,
@@ -342,5 +424,10 @@ module.exports = {
   buildBracket: buildBracket,
   formatBracketExpression: formatBracketExpression,
   buildFillOperand: buildFillOperand,
-  buildFillOperator: buildFillOperator
+  buildFillOperator: buildFillOperator,
+  buildBigAddsub: buildBigAddsub,
+  buildMul3x1: buildMul3x1,
+  buildMul2tens: buildMul2tens,
+  buildDivTens: buildDivTens,
+  buildSpecialKind: buildSpecialKind
 };

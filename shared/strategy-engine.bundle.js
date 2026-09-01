@@ -260,6 +260,7 @@ function plan(request) {
   if (arithSem) {
     constraints.operation = arithSem.operators;
     constraints.exactSteps = arithSem.steps;
+    if (arithSem.kind) constraints.kind = arithSem.kind;
     questionPlan.operation = arithSem.operators;
   }
   if (complexSem) {
@@ -2662,9 +2663,9 @@ var GenCap = require("shared/generator-capability-registry.js");
 
 // M4-R06 核心 Generator 声明（纯数据；执行实现位于 shared/generator/generators/）
 var CORE_RECORDS = [
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000'], scope: 'core', version: 1 },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000'], scope: 'core', version: 1 },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g2-m1-mult-table', 'math-g2-m2-mult-col', 'math-g2-m4-multiplication-meaning', 'math-g2-m7-pic-mult', 'math-g2-m8-mult-total', 'math-g2-m5-match-multdiv', 'math-g3-m1-g3-mul-multi1', 'math-g6-c1-vertical-multidigit', 'math-g6-c3-multiplication-principle'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g4-m1-g4-oral-big'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g4-m1-g4-oral-big'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g2-m1-mult-table', 'math-g2-m2-mult-col', 'math-g2-m4-multiplication-meaning', 'math-g2-m7-pic-mult', 'math-g2-m8-mult-total', 'math-g2-m5-match-multdiv', 'math-g3-m1-g3-mul-multi1', 'math-g4-m1-g4-oral-mul3x1', 'math-g4-m1-g4-oral-mul2t', 'math-g6-c1-vertical-multidigit', 'math-g6-c3-multiplication-principle'], scope: 'core', version: 1 },
   { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-division-table', 'math-g2-m1-div-table', 'math-g2-m1-muldiv-relation', 'math-g2-m2-div-col', 'math-g2-m4-division-meaning', 'math-g2-m7-pic-div', 'math-g2-m7-pic-div-include', 'math-g2-m8-div-partitive', 'math-g2-m8-div-quotative', 'math-g3-m1-g3-div1', 'math-g4-c2-c2-divisible', 'math-g4-m1-g4-oral-divt', 'math-g4-m2-g4-v-div2', 'math-g4-m2-g4-v-div2q', 'math-g4-m8-g4-word-div', 'math-g5-c2-divisibility', 'math-g6-c2-divisibility'], scope: 'core', version: 1 },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: [], scope: 'core', version: 1 },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill'], questionTypes: ['fill'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g1-m13-division-table', 'math-g1-m13-fill-blank', 'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-cutfill', 'math-g4-c4-c4-pa', 'math-g4-c4-c4-solid', 'math-g4-c4-c4-count'], scope: 'core', version: 1 },
@@ -3167,6 +3168,15 @@ var SINGLE_STEP_PROFILE = {
   div: { operators: [OP_DIV], steps: 1 }
 };
 
+// M4-R24 特殊口算族：legacy g4-oral 的整数域口算（除数是整十数/大数加减/三位乘一位/乘整十）。
+// kind 供 native 生成器分派到对应的专用结构构造（镜像 legacy 粒度），不落入通用 generateStructure。
+var SPECIAL_ORAL_PROFILE = {
+  'div-tens':   { operators: [OP_DIV], steps: 1, kind: 'div-tens' },
+  'big-addsub': { operators: [OP_ADD, OP_SUB], steps: 1, kind: 'big-addsub' },
+  'mul3x1':     { operators: [OP_MUL], steps: 1, kind: 'mul3x1' },
+  'mul2tens':   { operators: [OP_MUL], steps: 1, kind: 'mul2tens' }
+};
+
 var NON_MIGRATABLE = ['remainder', 'mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];
 
 /**
@@ -3181,7 +3191,7 @@ function resolveArithmeticSemantics(kp, options) {
 
   if (NON_MIGRATABLE.indexOf(lt) !== -1) return null;
 
-  var profile = SINGLE_STEP_PROFILE[lt];
+  var profile = SPECIAL_ORAL_PROFILE[lt] || SINGLE_STEP_PROFILE[lt];
   if (!profile) return null;
 
   var out = {
@@ -3190,6 +3200,7 @@ function resolveArithmeticSemantics(kp, options) {
     legacyType: lt,
     migratable: true
   };
+  if (profile.kind) out.kind = profile.kind;
   return out;
 }
 
@@ -3201,6 +3212,7 @@ function isArithmeticMigratable(kp) {
 module.exports = {
   OP_ADD: OP_ADD, OP_SUB: OP_SUB, OP_MUL: OP_MUL, OP_DIV: OP_DIV,
   SINGLE_STEP_PROFILE: SINGLE_STEP_PROFILE,
+  SPECIAL_ORAL_PROFILE: SPECIAL_ORAL_PROFILE,
   NON_MIGRATABLE: NON_MIGRATABLE,
   resolveArithmeticSemantics: resolveArithmeticSemantics,
   isArithmeticMigratable: isArithmeticMigratable
@@ -3970,7 +3982,10 @@ var overrides = {               // scope → key → mode
     'math-g4-c4-c4-cutfill': 'native',
     'math-g4-c4-c4-pa': 'native',
     'math-g4-c4-c4-solid': 'native',
+    'math-g4-m1-g4-oral-big': 'native',
     'math-g4-m1-g4-oral-divt': 'native',
+    'math-g4-m1-g4-oral-mul2t': 'native',
+    'math-g4-m1-g4-oral-mul3x1': 'native',
     'math-g4-m2-g4-v-div2': 'native',
     'math-g4-m2-g4-v-div2q': 'native',
     'math-g4-m8-g4-word-div': 'native',
@@ -6158,14 +6173,30 @@ function createLegacyGenerator(plugin, meta) {
 
     generate: function (plan, context) {
       context = context || {};
-      var options = LegacyAdapter.adaptPlanToLegacyOptions(plan, context.legacy || {});
-      var set = plugin.generate(options);
-      if (set && typeof set.then === 'function') {
-        return set.then(function (s) {
-          return toSemanticQuestions(s, plan, context);
-        });
+      var MAX_RETRIES = 3;
+
+      function doGenerate(attempt) {
+        var ctx = attempt === 0 ? context : { seed: (context.seed || '') + ':r' + attempt, legacy: context.legacy };
+        var options = LegacyAdapter.adaptPlanToLegacyOptions(plan, ctx.legacy || {});
+        if (attempt > 0 && options.seed != null) {
+          options.seed = options.seed + ':r' + attempt;
+        }
+        var set = plugin.generate(options);
+
+        function handleResult(s) {
+          var sqs = toSemanticQuestions(s, plan, ctx);
+          var q = checkBatchQuality(sqs, plan);
+          if (!q.ok && attempt < MAX_RETRIES) return doGenerate(attempt + 1);
+          return sqs;
+        }
+
+        if (set && typeof set.then === 'function') {
+          return set.then(handleResult);
+        }
+        return handleResult(set);
       }
-      return toSemanticQuestions(set, plan, context);
+
+      return doGenerate(0);
     }
   };
   return generator;
@@ -6266,7 +6297,7 @@ function toSemanticQuestions(set, plan, context) {
       svgRaw = captureSvg(q.render, q, i);
     }
     var sq = {
-      knowledgePointId: q.knowledgePointId || plan.knowledgePointId,
+      knowledgePointId: plan.knowledgePointId,
       questionType: plan.questionTypeId,
       difficulty: q.difficulty != null ? q.difficulty : plan.difficulty,
       difficultyParams: {
@@ -6310,6 +6341,35 @@ function safeCopy(v) {
   } catch (e) {
     return null;
   }
+}
+
+/** 从 prompt 提取操作数（越界检查用） */
+function parseOperands(prompt) {
+  if (!prompt || typeof prompt !== 'string') return [];
+  var nums = [];
+  var re = /(-?\d+\.?\d*)/g;
+  var m;
+  while ((m = re.exec(prompt)) !== null) nums.push(Number(m[1]));
+  return nums;
+}
+
+/** 批次质量检查：越界 + 重复 prompt */
+function checkBatchQuality(sqs, plan) {
+  var range = (plan.constraints && plan.constraints.numberRange) || null;
+  var seen = {};
+  for (var i = 0; i < sqs.length; i++) {
+    var q = sqs[i];
+    var prompt = (q.content && q.content.prompt) || (q.question && q.question.prompt) || '';
+    if (range) {
+      var ops = parseOperands(prompt);
+      for (var j = 0; j < ops.length; j++) {
+        if (ops[j] < range.min || ops[j] > range.max) return { ok: false, reason: 'bounds' };
+      }
+    }
+    if (seen[prompt]) return { ok: false, reason: 'duplicates' };
+    seen[prompt] = true;
+  }
+  return { ok: true };
 }
 
 /**
@@ -6392,17 +6452,22 @@ function createArithmeticGenerator(spec) {
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
-        var structure = Arith.generateStructure(rng, {
-          operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
-          operationSet: opSet,
-          exactSteps: constraints.exactSteps,
-          numberRange: constraints.numberRange,
-          maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
-          allowBracket: constraints.allowBracket,
-          allowMultDiv: constraints.allowMultDiv,
-          noNegative: true
-        });
-        var answer = Arith.calculateAnswer(structure.operands, structure.operators);
+        var kind = constraints.kind ||
+          ((plan.constraints && plan.constraints.kind) || (plan.kind || null));
+        var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: constraints.numberRange });
+        if (!structure) {
+          structure = Arith.generateStructure(rng, {
+            operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
+            operationSet: opSet,
+            exactSteps: constraints.exactSteps,
+            numberRange: constraints.numberRange,
+            maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
+            allowBracket: constraints.allowBracket,
+            allowMultDiv: constraints.allowMultDiv,
+            noNegative: true
+          });
+        }
+        var answer = structure.answer != null ? structure.answer : Arith.calculateAnswer(structure.operands, structure.operators);
         var prompt = Arith.formatExpression(structure.operands, structure.operators) + ' = ?';
 
         questions.push({
@@ -8762,6 +8827,88 @@ function buildFillOperator(rng, cfg) {
   return { prompt: a + ' □ ' + b + ' =', answer: op, operator: op, operands: [a, b] };
 }
 
+// ─── M4-R24 特殊口算结构（镜像 legacy plugins/math-g4-oral.js 的粒度）───────────
+
+/**
+ * 大数加减口算（big-addsub，万以内）：整百/整千/千+百/两个三位数，差为正。
+ * @returns {{ operands:[a,b], operators:[+|−], steps:1, answer:number }}
+ */
+function buildBigAddsub(rng) {
+  function mul100(lo, hi) { return Rng.randInt(rng, lo, hi) * 100; }
+  if (Rng.pick(rng, [1, 2]) === 1) {
+    var kind = Rng.pick(rng, ['hh', 'kk', 'hk', 'dd']);
+    var a, b;
+    if (kind === 'hh') { a = mul100(1, 9); b = mul100(1, 90 - a / 100); }
+    else if (kind === 'kk') { a = Rng.randInt(rng, 1, 8) * 1000; b = Rng.randInt(rng, 1, Math.max(1, Math.floor((10000 - a) / 1000))) * 1000; }
+    else if (kind === 'hk') { a = Rng.randInt(rng, 1, 8) * 1000; b = mul100(1, 90 - a / 100); }
+    else { a = Rng.randInt(rng, 100, 499); b = Rng.randInt(rng, 100, 499); }
+    return { operands: [a, b], operators: [OP_ADD], steps: 1, answer: a + b };
+  }
+  var kind2 = Rng.pick(rng, ['hh', 'kk', 'hk', 'dd']);
+  var a2, b2;
+  if (kind2 === 'hh') { a2 = mul100(2, 90); b2 = mul100(1, a2 / 100 - 1); }
+  else if (kind2 === 'kk') { a2 = Rng.randInt(rng, 2, 9) * 1000; b2 = Rng.randInt(rng, 1, a2 / 1000 - 1) * 1000; }
+  else if (kind2 === 'hk') { a2 = Rng.randInt(rng, 2, 9) * 1000; b2 = mul100(1, a2 / 100 - 1); }
+  else { a2 = Rng.randInt(rng, 300, 900); b2 = Rng.randInt(rng, 100, a2 - 100); }
+  return { operands: [a2, b2], operators: [OP_SUB], steps: 1, answer: a2 - b2 };
+}
+
+/**
+ * 三位数乘一位数口算（mul3x1）：40% 整十三位数，60% 一般三位数 × 一位数。
+ * @returns {{ operands:[a,f], operators:[×], steps:1, answer:number }}
+ */
+function buildMul3x1(rng) {
+  var a = (Rng.pick(rng, [1, 2, 3]) === 1) ? Rng.randInt(rng, 10, 99) * 10 : Rng.randInt(rng, 100, 999);
+  var f = Rng.randInt(rng, 2, 9);
+  return { operands: [a, f], operators: [OP_MUL], steps: 1, answer: a * f };
+}
+
+/**
+ * 两位数乘整十数口算（mul2tens）：2 位数 × 整十数（20/30/…/90）。
+ * @returns {{ operands:[a,t*10], operators:[×], steps:1, answer:number }}
+ */
+function buildMul2tens(rng) {
+  var a = Rng.randInt(rng, 11, 99);
+  var t = Rng.randInt(rng, 2, 9);
+  var b = t * 10;
+  return { operands: [a, b], operators: [OP_MUL], steps: 1, answer: a * b };
+}
+
+/**
+ * 除数是整十数口算（div-tens）：被除数 = (整十除数) × 商，商为一位/两位/整十数。
+ * @returns {{ operands:[a,t*10], operators:[÷], steps:1, answer:number }}
+ */
+function buildDivTens(rng, range) {
+  var max = Math.max(20, (range && range.max) || 5000);
+  var t = Rng.randInt(rng, 2, 9);
+  var b = t * 10;
+  // 被除数 a = b*q 不得超过 range.max（整十除数的语义范围）
+  var qMax = Math.max(2, Math.floor(max / b));
+  var v = qMax < 11 ? 's' : Rng.pick(rng, ['s', 'd', 'tens']);
+  var q;
+  if (v === 's') q = Rng.randInt(rng, 2, Math.min(9, qMax));
+  else if (v === 'd') q = Rng.randInt(rng, 11, Math.min(49, qMax));
+  else q = Rng.randInt(rng, 2, Math.max(2, Math.min(9, Math.floor(qMax / 10)))) * 10;
+  var a = b * q;
+  return { operands: [a, b], operators: [OP_DIV], steps: 1, answer: q };
+}
+
+/**
+ * M4-R24 特殊口算结构入口：按 kind 分派到专用构造（big-addsub/mul3x1/mul2tens/div-tens）。
+ * 其余 kind 返回 null（由调用方回退通用 generateStructure）。
+ * @param {function} rng 种子随机源
+ * @param {Object} cfg { kind }
+ */
+function buildSpecialKind(rng, cfg) {
+  cfg = cfg || {};
+  var kind = cfg.kind;
+  if (kind === 'big-addsub') return buildBigAddsub(rng);
+  if (kind === 'mul3x1') return buildMul3x1(rng);
+  if (kind === 'mul2tens') return buildMul2tens(rng);
+  if (kind === 'div-tens') return buildDivTens(rng, cfg.numberRange);
+  return null;
+}
+
 module.exports = {
   OP_ADD: OP_ADD, OP_SUB: OP_SUB, OP_MUL: OP_MUL, OP_DIV: OP_DIV,
   normalizeOperation: normalizeOperation,
@@ -8774,7 +8921,12 @@ module.exports = {
   buildBracket: buildBracket,
   formatBracketExpression: formatBracketExpression,
   buildFillOperand: buildFillOperand,
-  buildFillOperator: buildFillOperator
+  buildFillOperator: buildFillOperator,
+  buildBigAddsub: buildBigAddsub,
+  buildMul3x1: buildMul3x1,
+  buildMul2tens: buildMul2tens,
+  buildDivTens: buildDivTens,
+  buildSpecialKind: buildSpecialKind
 };
 
 };

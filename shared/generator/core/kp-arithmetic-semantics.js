@@ -27,6 +27,15 @@ var SINGLE_STEP_PROFILE = {
   div: { operators: [OP_DIV], steps: 1 }
 };
 
+// M4-R24 特殊口算族：legacy g4-oral 的整数域口算（除数是整十数/大数加减/三位乘一位/乘整十）。
+// kind 供 native 生成器分派到对应的专用结构构造（镜像 legacy 粒度），不落入通用 generateStructure。
+var SPECIAL_ORAL_PROFILE = {
+  'div-tens':   { operators: [OP_DIV], steps: 1, kind: 'div-tens' },
+  'big-addsub': { operators: [OP_ADD, OP_SUB], steps: 1, kind: 'big-addsub' },
+  'mul3x1':     { operators: [OP_MUL], steps: 1, kind: 'mul3x1' },
+  'mul2tens':   { operators: [OP_MUL], steps: 1, kind: 'mul2tens' }
+};
+
 var NON_MIGRATABLE = ['remainder', 'mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];
 
 /**
@@ -41,7 +50,7 @@ function resolveArithmeticSemantics(kp, options) {
 
   if (NON_MIGRATABLE.indexOf(lt) !== -1) return null;
 
-  var profile = SINGLE_STEP_PROFILE[lt];
+  var profile = SPECIAL_ORAL_PROFILE[lt] || SINGLE_STEP_PROFILE[lt];
   if (!profile) return null;
 
   var out = {
@@ -50,6 +59,7 @@ function resolveArithmeticSemantics(kp, options) {
     legacyType: lt,
     migratable: true
   };
+  if (profile.kind) out.kind = profile.kind;
   return out;
 }
 
@@ -61,6 +71,7 @@ function isArithmeticMigratable(kp) {
 module.exports = {
   OP_ADD: OP_ADD, OP_SUB: OP_SUB, OP_MUL: OP_MUL, OP_DIV: OP_DIV,
   SINGLE_STEP_PROFILE: SINGLE_STEP_PROFILE,
+  SPECIAL_ORAL_PROFILE: SPECIAL_ORAL_PROFILE,
   NON_MIGRATABLE: NON_MIGRATABLE,
   resolveArithmeticSemantics: resolveArithmeticSemantics,
   isArithmeticMigratable: isArithmeticMigratable

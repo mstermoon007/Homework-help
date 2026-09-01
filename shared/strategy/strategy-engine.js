@@ -211,6 +211,7 @@ function plan(request) {
   if (arithSem) {
     constraints.operation = arithSem.operators;
     constraints.exactSteps = arithSem.steps;
+    if (arithSem.kind) constraints.kind = arithSem.kind;
     questionPlan.operation = arithSem.operators;
   }
   if (complexSem) {

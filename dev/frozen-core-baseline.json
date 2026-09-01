@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T07:44:51.854Z",
+  "generatedAt": "2026-09-01T09:05:54.730Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -53,9 +53,9 @@
       "mtime": 1788067280594.5122
     },
     "shared/knowledge-math.js": {
-      "hash": "66afc6876898f0e5",
-      "size": 509481,
-      "mtime": 1788104490059.635
+      "hash": "76da4b686c491193",
+      "size": 509489,
+      "mtime": 1788252739722.6138
     },
     "shared/knowledge-cn.js": {
       "hash": "1daacda73babc441",
@@ -103,9 +103,9 @@
       "mtime": 1788150923822.1445
     },
     "shared/generator/generator-registry.js": {
-      "hash": "0a0bcd1913084eca",
-      "size": 7710,
-      "mtime": 1788246098713.9683
+      "hash": "735a242ba1d9b494",
+      "size": 7819,
+      "mtime": 1788252703311.5933
     },
     "shared/generator/generator-selector.js": {
       "hash": "a5a02fe7eb1ffdc7",
@@ -113,9 +113,9 @@
       "mtime": 1788163042580.6455
     },
     "shared/generator/generator-mode.js": {
-      "hash": "2b92c67840720dc4",
-      "size": 7582,
-      "mtime": 1788187115159.7195
+      "hash": "b39dc06fe7717502",
+      "size": 7707,
+      "mtime": 1788252709189.5398
     },
     "shared/generator/retry-loop.js": {
       "hash": "f3ae8c9488391adf",
@@ -128,9 +128,9 @@
       "mtime": 1788246770000.5752
     },
     "shared/generator/generators/arithmetic.js": {
-      "hash": "7c27e5c377c64834",
-      "size": 4394,
-      "mtime": 1788095826611.49
+      "hash": "c40ca911a560482f",
+      "size": 4718,
+      "mtime": 1788253388560.5427
     },
     "shared/generator/generators/selection.js": {
       "hash": "c93825ba7ed6666f",
@@ -153,9 +153,9 @@
       "mtime": 1788090526795.4841
     },
     "shared/generator/core/arithmetic-core.js": {
-      "hash": "2a0e30d7c315eded",
-      "size": 13250,
-      "mtime": 1788098674192.8926
+      "hash": "92e41103e2180f19",
+      "size": 17181,
+      "mtime": 1788253385064.2742
     },
     "shared/generator/core/kp-complex-semantics.js": {
       "hash": "98d8216541f5f69f",
@@ -173,9 +173,9 @@
       "mtime": 1788101424599.7878
     },
     "shared/strategy/strategy-engine.js": {
-      "hash": "a0412126a26ec3c1",
-      "size": 12665,
-      "mtime": 1788153679844.7222
+      "hash": "fa0ffc80e7e5bd6c",
+      "size": 12722,
+      "mtime": 1788252674431.5908
     },
     "shared/strategy/comprehensive-strategy.js": {
       "hash": "54a9b81f0f0eefcb",
@@ -278,9 +278,9 @@
       "mtime": 1788083085867.727
     },
     "shared/generator/core/kp-arithmetic-semantics.js": {
-      "hash": "eea44b9bf0c105ad",
-      "size": 2497,
-      "mtime": 1788095783095.607
+      "hash": "0ccc9c7c10604b33",
+      "size": 3190,
+      "mtime": 1788252629736.6997
     },
     "shared/validator/validation-pipeline.js": {
       "hash": "c52f25faed3e8998",

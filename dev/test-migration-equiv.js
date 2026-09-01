@@ -90,7 +90,12 @@ async function runQTCase(entry, rec, kpId, qt, difficulty, seed) {
   var plan;
   try {
     plan = Engine.plan({ knowledgePointId: kpId, questionType: qt, count: BATCH, difficulty: difficulty }).plans[0];
-  } catch (e) { r.verdict = 'PLAN_ERROR'; r.note = e.message; return r; }
+  } catch (e) {
+    // M4-R24：KP 不支持该题型（如 g4-oral 的 4 个整数域 KP 只支持 calc，不支持 oral）
+    // 属插件级能力并集与单 KP 能力之差，非迁移失败 → 标记 N/A 跳过该 QT。
+    if (/不支持该题型/.test(e.message)) { r.verdict = 'N/A'; r.note = 'KP 不支持该题型: ' + qt; return r; }
+    r.verdict = 'PLAN_ERROR'; r.note = e.message; return r;
+  }
 
   var gen = Adapter.createLegacyGenerator(entry.plugin, { capabilities: rec.questionTypes, knowledgePoints: rec.knowledgePoints });
   var legacyQs, nativeQs;
@@ -98,6 +103,7 @@ async function runQTCase(entry, rec, kpId, qt, difficulty, seed) {
     // M4-R17：legacy 侧以与 native 相同的 KP 语义驱动（operators），对照才公平
     var legacyExtra = {};
     if (kpCanon && kpCanon.grade != null) legacyExtra.grade = kpCanon.grade;
+    if (kpCanon && kpCanon.source && kpCanon.source.legacyType) legacyExtra.type = kpCanon.source.legacyType;
     if (sem && (qt === 'calc' || qt === 'oral')) {
       // M4-R17：legacy 以与 native 相同的语义算符集驱动（operators 直传），对照一致
       legacyExtra.operators = sem.operators.slice();
@@ -210,12 +216,15 @@ async function runTool() {
       // KP 级判定
       var all = [];
       Object.keys(kpRow.qts).forEach(function (qt) { all = all.concat(kpRow.qts[qt].detail); });
+      // M4-R24：N/A（KP 不支持该题型 / 无纯算术语义）不计入等价判定基数。
+      // 仅当存在真实可比 case 时，FULL-EQ 要求全部可比 case 均 EQUIVALENT。
+      var comparable = all.filter(function (cc) { return cc.verdict !== 'N/A'; });
       var combined = {};
-      all.forEach(function (cc) { combined[cc.verdict] = (combined[cc.verdict] || 0) + 1; });
+      comparable.forEach(function (cc) { combined[cc.verdict] = (combined[cc.verdict] || 0) + 1; });
       var eqCount = combined.EQUIVALENT || 0;
-      if (eqCount === all.length && all.length > 0) kpRow.verdict = 'FULL-EQ';
-      else if (eqCount === 0 && all.length > 0 && Object.keys(combined).every(function (v) { return v === 'NOT_MIGRATABLE'; })) kpRow.verdict = 'N/A';
-      else if (eqCount === 0 && all.length > 0 && Object.keys(combined).every(function (v) { return v === 'PLAN_ERROR'; })) kpRow.verdict = 'PLAN-ERR';
+      if (eqCount === comparable.length && comparable.length > 0) kpRow.verdict = 'FULL-EQ';
+      else if (eqCount === 0 && comparable.length > 0 && Object.keys(combined).every(function (v) { return v === 'NOT_MIGRATABLE'; })) kpRow.verdict = 'N/A';
+      else if (eqCount === 0 && comparable.length > 0 && Object.keys(combined).every(function (v) { return v === 'PLAN_ERROR'; })) kpRow.verdict = 'PLAN-ERR';
       else if (combined.NO_PARSE > 0) kpRow.verdict = 'NO_PARSE';
       else if (eqCount > 0) kpRow.verdict = 'PARTIAL';
       else if (eqCount === 0 && combined.PLAN_ERROR > 0) kpRow.verdict = 'PLAN-ERR';

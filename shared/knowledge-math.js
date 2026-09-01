@@ -3192,7 +3192,7 @@
               max_spiral_level: 1,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "big-addsub", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 20 },
+              number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"
@@ -3212,7 +3212,7 @@
               max_spiral_level: 3,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "mul3x1", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 20 },
+              number_range_default: { min: 1, max: 1000 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"
@@ -3232,7 +3232,7 @@
               max_spiral_level: 3,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "mul2tens", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 20 },
+              number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"
@@ -3252,7 +3252,7 @@
               max_spiral_level: 3,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "div-tens", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 20 },
+              number_range_default: { min: 1, max: 5000 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"

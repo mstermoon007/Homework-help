@@ -61,17 +61,22 @@ function createArithmeticGenerator(spec) {
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
-        var structure = Arith.generateStructure(rng, {
-          operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
-          operationSet: opSet,
-          exactSteps: constraints.exactSteps,
-          numberRange: constraints.numberRange,
-          maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
-          allowBracket: constraints.allowBracket,
-          allowMultDiv: constraints.allowMultDiv,
-          noNegative: true
-        });
-        var answer = Arith.calculateAnswer(structure.operands, structure.operators);
+        var kind = constraints.kind ||
+          ((plan.constraints && plan.constraints.kind) || (plan.kind || null));
+        var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: constraints.numberRange });
+        if (!structure) {
+          structure = Arith.generateStructure(rng, {
+            operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
+            operationSet: opSet,
+            exactSteps: constraints.exactSteps,
+            numberRange: constraints.numberRange,
+            maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
+            allowBracket: constraints.allowBracket,
+            allowMultDiv: constraints.allowMultDiv,
+            noNegative: true
+          });
+        }
+        var answer = structure.answer != null ? structure.answer : Arith.calculateAnswer(structure.operands, structure.operators);
         var prompt = Arith.formatExpression(structure.operands, structure.operators) + ' = ?';
 
         questions.push({

@@ -1,0 +1,42 @@
+{
+  "audit": "C04-02/03/04 REGRESSION_ROOT_CAUSE",
+  "ref": "C04",
+  "read_only": true,
+  "generated_from": "dev/reports/generator-regression-report.json (current matrix)",
+  "totals": {
+    "PLAN_ERROR": 774,
+    "FAIL": 0,
+    "PASS": 1032
+  },
+  "answers": {
+    "plan_error_root_causes": 129,
+    "fail_root_causes": 0,
+    "note": "PLAN_ERROR = 129 overclaim combos (+ 0 missing-KP, + 0 inconsistent-plan combos) -> 1 unified ROOT CAUSE (CAPABILITY_OVERCLAIM). FAIL=0 in current matrix (all prior FAILs resolved under M4-R16 closure commits 866c9a1/6277176)."
+  },
+  "root_vs_cascade": {
+    "methodology": "A ROOT failure is the first cause that makes a case fail. A CASCADE failure is a downstream consequence of a ROOT failure (e.g., Plan-failed -> Generator-skipped -> Regression-FAIL). In the current matrix every PLAN_ERROR is a standalone ROOT failure of the same class; there are no cascade FAILs because FAIL=0.",
+    "counts": {
+      "root_failures_plan_error": 129,
+      "cascade_failures": 0,
+      "note_cascade": "No Plan->Generator->Validator cascade is present: any such cascade would surface as FAIL, and current FAIL=0."
+    }
+  },
+  "clusters": {
+    "PLAN_ERROR": [
+      {
+        "ROOT_CAUSE_ID": "RC-PLAN-01",
+        "ERROR_SIGNATURE": "KP 不支持该题型: <QT> (code NO_CAPABILITY)",
+        "AFFECTED_COUNT": 774,
+        "AFFECTED_KP": "122 distinct KPs",
+        "AFFECTED_GENERATOR": "68 generators",
+        "AFFECTED_CAPABILITY": "recognize, calc, geometry, fill, judge, choice, apply, oral",
+        "AFFECTED_TYPE": "plan-build (StrategyEngine.plan step 4)",
+        "FIRST_FAILURE": "legacy track, plan construction",
+        "CASCADE_FAILURE_COUNT": 0,
+        "LIKELY_SOURCE": "shared/generator-capability-registry.js — legacy generators declare questionTypes their KPs do not support (capability drift); the plan builder correctly rejects.",
+        "SEVERITY": "LOW-MEDIUM (coverage completeness of regression matrix, not a product defect — plan builder enforces the invariant)"
+      }
+    ],
+    "FAIL": []
+  }
+}
