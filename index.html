@@ -77,13 +77,12 @@
     .hero-bg {
         position: absolute;
         inset: 0;
+        background-image: url('assets/banner.webp');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        opacity: 0;
-        transition: opacity 0.5s;
+        opacity: 1;
     }
-    .hero-bg.active { opacity: 1; }
     .hero-overlay {
         position: absolute;
         inset: 0;
@@ -157,130 +156,7 @@
         padding: 24px 24px 40px;
     }
 
-    /* ============ 选择卡片（科目+年级左右两栏） ============ */
-    .select-card {
-        background: var(--card);
-        border-radius: var(--radius-card);
-        padding: 28px 32px;
-        margin-bottom: 20px;
-        box-shadow: var(--shadow);
-    }
-    .select-row {
-        display: flex;
-        gap: 32px;
-        align-items: flex-start;
-    }
-    .select-col {
-        flex: 1;
-        min-width: 0;
-    }
-    .select-col + .select-col {
-        border-left: 1px solid var(--line);
-        padding-left: 32px;
-    }
-    .col-title {
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--ink);
-        margin-bottom: 18px;
-        padding-left: 12px;
-        border-left: 4px solid var(--brand);
-    }
-
-    /* 科目卡片 */
-    .subject-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-    }
-    .subject-radio { display: none; }
-    .subject-card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px 10px 16px;
-        border: 2px solid var(--line);
-        border-radius: 14px;
-        cursor: pointer;
-        text-align: center;
-        transition: all 0.2s;
-        user-select: none;
-        background: var(--bg);
-    }
-    .subject-card .s-icon {
-        font-size: 2.4rem;
-        margin-bottom: 8px;
-        line-height: 1;
-    }
-    .subject-card .s-icon img {
-        width: 56px;
-        height: 56px;
-        object-fit: contain;
-        display: block;
-        margin: 0 auto;
-    }
-    .subject-card .s-name {
-        font-size: 1rem;
-        font-weight: 800;
-        margin-bottom: 4px;
-    }
-    .subject-card .s-desc {
-        font-size: 0.68rem;
-        color: var(--muted);
-        line-height: 1.4;
-    }
-    .subject-card:hover { border-color: #C0C8D0; }
-    .subject-radio:checked + .subject-card.math {
-        border-color: var(--math);
-        background: var(--math-bg);
-    }
-    .subject-radio:checked + .subject-card.math .s-name { color: var(--math); }
-    .subject-radio:checked + .subject-card.chinese {
-        border-color: var(--chinese);
-        background: var(--chinese-bg);
-    }
-    .subject-radio:checked + .subject-card.chinese .s-name { color: var(--chinese); }
-    .subject-radio:checked + .subject-card.english {
-        border-color: var(--english);
-        background: var(--english-bg);
-    }
-    .subject-radio:checked + .subject-card.english .s-name { color: var(--english); }
-
-    /* 年级选择器 */
-    .grade-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-    }
-    .grade-radio { display: none; }
-    .grade-chip {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 4px;
-        padding: 14px 10px;
-        border: 2px solid var(--line);
-        border-radius: 14px;
-        cursor: pointer;
-        transition: all 0.2s;
-        user-select: none;
-        background: var(--bg);
-    }
-    .grade-chip .g-icon {
-        font-size: 1.5rem;
-        line-height: 1;
-    }
-    .grade-chip .g-name {
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: var(--muted);
-    }
-    .grade-chip:hover { border-color: #C0C8D0; }
-    .grade-radio:checked + .grade-chip {
-        border-color: var(--brand);
-        background: var(--math-bg);
-    }
-    .grade-radio:checked + .grade-chip .g-name { color: var(--brand); }
+    /* 科目/年级选择框已改为海报（见 .poster-*），原选择卡片样式已移除 */
 
     /* ============ 开始练习按钮 ============ */
     .action-area {
@@ -305,6 +181,7 @@
         box-shadow: 0 6px 20px rgba(245,166,35,0.35);
         transition: all 0.2s;
         letter-spacing: 1px;
+        text-decoration: none;
     }
     .btn-start:hover:not(:disabled) {
         transform: translateY(-2px);
@@ -317,13 +194,6 @@
     .btn-start:disabled {
         opacity: 0.5;
         cursor: not-allowed;
-    }
-    .btn-start .arrow {
-        font-size: 1.3rem;
-        transition: transform 0.2s;
-    }
-    .btn-start:hover:not(:disabled) .arrow {
-        transform: translateX(3px);
     }
 
     /* ============ 页脚（纯文本，统一字号，无玻璃效果） ============ */
@@ -365,18 +235,7 @@
             padding: 28px 20px 24px;
         }
         .hero-text h1 { font-size: 1.6rem; }
-        .select-row {
-            flex-direction: column;
-            gap: 24px;
-        }
-        .select-col + .select-col {
-            border-left: none;
-            padding-left: 0;
-            border-top: 1px solid var(--line);
-            padding-top: 24px;
-        }
         .main-wrapper { padding: 20px 16px 32px; }
-        .select-card { padding: 20px 18px; }
     }
 
     @media (max-width: 480px) {
@@ -385,19 +244,6 @@
         .hero-text .hero-desc { font-size: 0.8rem; }
         .hero-text .tag { font-size: 0.7rem; padding: 4px 10px; }
         .main-wrapper { padding: 16px 12px 28px; }
-        .select-card { padding: 16px 14px; border-radius: 12px; }
-        .select-row { gap: 18px; }
-        .select-col + .select-col { padding-top: 18px; }
-        .col-title { font-size: 0.92rem; margin-bottom: 14px; }
-        .subject-grid { gap: 8px; }
-        .subject-card { padding: 14px 6px 12px; border-radius: 12px; }
-        .subject-card .s-icon { font-size: 2rem; }
-        .subject-card .s-name { font-size: 0.95rem; }
-        .subject-card .s-desc { font-size: 0.66rem; }
-        .grade-grid { gap: 8px; }
-        .grade-chip { padding: 12px 8px; border-radius: 12px; }
-        .grade-chip .g-icon { font-size: 1.3rem; }
-        .grade-chip .g-name { font-size: 0.8rem; }
         .btn-start { max-width: 100%; padding: 14px 24px; font-size: 1rem; border-radius: 22px; }
     }
 
@@ -413,6 +259,87 @@
     }
     .feedback-entry-btn:hover {
         color: #333;
+    }
+
+    /* ============ 海报区（科目/年级选择框 → 海报1/海报2） ============ */
+    .poster-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 22px;
+    }
+    .poster {
+        position: relative;
+        display: block;
+        min-height: 300px;
+        border-radius: var(--radius-card);
+        background-size: cover;
+        background-position: center;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        text-decoration: none;
+        color: #fff;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .poster:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(40, 70, 120, 0.18);
+    }
+    .poster-overlay {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        padding: 18px 18px 20px;
+        background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(20,40,70,0.55) 100%);
+    }
+    .poster-title {
+        font-size: 1.15rem;
+        font-weight: 900;
+        margin-bottom: 12px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+    .poster-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .ptag {
+        background: rgba(56, 178, 116, 0.92);
+        color: #fff;
+        font-size: 0.8rem; font-weight: 700;
+        padding: 5px 12px; border-radius: 999px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .poster-loop {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+        font-size: 0.92rem; font-weight: 800; margin-bottom: 12px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+    }
+    .poster-loop i { font-style: normal; opacity: 0.85; }
+    .poster-loop .loop-back { font-size: 1.1rem; }
+    .poster-hint {
+        font-size: 0.84rem; font-weight: 600; line-height: 1.5;
+        color: rgba(255,255,255,0.95);
+        text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    /* 海报一数据可视化高亮标签（预计正确率 / 易错点） */
+    .poster-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .stat-hl {
+        background: #fff; color: #1f9d6b;
+        font-size: 0.8rem; font-weight: 800; padding: 5px 12px;
+        border-radius: 999px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .stat-flag {
+        background: rgba(245,166,35,0.95); color: #fff;
+        font-size: 0.8rem; font-weight: 800; padding: 5px 12px;
+        border-radius: 999px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    /* 三科目通道已移除：科目/年级选择改为双海报（海报1/海报2），详见 .poster-* */
+    /* 开始按钮：蓝绿渐变，圆角，核心行动号召 */
+    .btn-start {
+        background: linear-gradient(135deg, #2bb6a3 0%, #4A90D9 100%);
+        box-shadow: 0 8px 24px rgba(43, 182, 163, 0.35);
+    }
+    .btn-start:hover:not(:disabled) {
+        box-shadow: 0 10px 30px rgba(43, 182, 163, 0.45);
+    }
+    @media (max-width: 768px) {
+        .poster { min-height: 240px; }
     }
 </style>
 <script type="application/ld+json">
@@ -451,7 +378,7 @@
 
 <!-- 主视觉区 -->
 <section class="hero">
-    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-inner">
         <div class="hero-text">
@@ -471,39 +398,40 @@
 
 <!-- 主内容区 -->
 <div class="main-wrapper">
-<form id="homeForm" onsubmit="goTo(event)">
-            <!-- 科目选择（仅科目） -->
-            <div class="select-card">
-                <div class="col-title">📚 选择科目</div>
-                <div class="subject-grid">
-                    <input type="radio" name="subject" id="sMath" class="subject-radio" value="math" checked>
-                    <label for="sMath" class="subject-card math">
-                        <span class="s-icon"><img src="assets/logo-math.webp" alt="数学"></span>
-                        <span class="s-name">数学</span>
-                        <span class="s-desc">口算·应用题·凑十法</span>
-                    </label>
-                    <input type="radio" name="subject" id="sChinese" class="subject-radio" value="chinese">
-                    <label for="sChinese" class="subject-card chinese">
-                        <span class="s-icon"><img src="assets/logo-chinese.webp" alt="语文"></span>
-                        <span class="s-name">语文</span>
-                        <span class="s-desc">拼音·字词练习</span>
-                    </label>
-                    <input type="radio" name="subject" id="sEnglish" class="subject-radio" value="english">
-                    <label for="sEnglish" class="subject-card english">
-                        <span class="s-icon"><img src="assets/logo-english.webp" alt="英语"></span>
-                        <span class="s-name">英语</span>
-                        <span class="s-desc">字母·单词·启蒙</span>
-                    </label>
+        <!-- 海报区：科目选择框→海报1（速度与智能）；年级选择框→海报2（学习闭环） -->
+        <div class="poster-grid">
+            <!-- 海报一：速度与智能 -->
+            <a class="poster" href="subject-types.html?subject=math" style="background-image:url('assets/poster-subject.png')">
+                <div class="poster-overlay">
+                    <div class="poster-title">速度与智能</div>
+                    <div class="poster-tags">
+                        <span class="ptag">自动带入</span>
+                        <span class="ptag">知识卡片</span>
+                        <span class="ptag">流式生成</span>
+                    </div>
+                    <div class="poster-stats">
+                        <span class="stat-hl">预计正确率 72%</span>
+                        <span class="stat-flag">⚠ 易错点</span>
+                    </div>
+                    <div class="poster-hint">扫一眼即决策：自动带入知识、卡片一读即懂、内容即时生成</div>
                 </div>
-            </div>
+            </a>
+            <!-- 海报二：学习闭环 -->
+            <a class="poster" href="subject-types.html?subject=math" style="background-image:url('assets/poster-grade.png')">
+                <div class="poster-overlay">
+                    <div class="poster-title">学习闭环</div>
+                    <div class="poster-loop">
+                        <span>下载</span><i>→</i><span>拍照批改</span><i>→</i><span>错题归档</span><i>→</i><span>薄弱点追踪</span><i class="loop-back">↺</i>
+                    </div>
+                    <div class="poster-hint">打印后让孩子试试，拍张照就能批改 ✨</div>
+                </div>
+            </a>
+        </div>
 
-            <!-- 开始练习按钮 -->
-            <div class="action-area">
-                <button type="submit" class="btn-start" id="startBtn">
-                    选择年级 <span class="arrow">→</span>
-                </button>
-            </div>
-        </form>
+        <!-- 开始按钮（蓝绿渐变，核心行动号召） -->
+        <div class="action-area">
+            <a class="btn-start" id="startBtn" href="subject-types.html?subject=math">✨ 一键开始智能练习</a>
+        </div>
 </div>
 
 <!-- 底部版权（玻璃效果，动态时间 + 版本号 + 备案信息） -->
@@ -543,22 +471,7 @@
     // 版本号（统一从 shared/version.js 读取）
     var vEl = document.getElementById('footVersion');
     if (vEl) vEl.textContent = (typeof APP_VERSION !== 'undefined') ? APP_VERSION : '4.0.0';
-    // 科目选择 → grade.html
-    function getSelectedSubject() {
-        return document.querySelector('input[name="subject"]:checked').value;
-    }
-    function goTo(e) {
-        if (e) e.preventDefault();
-        var subject = getSelectedSubject();
-        window.location.href = 'grade.html?subject=' + subject;
-    }
-    // 科目卡片点击直接跳转
-    document.querySelectorAll('.subject-card').forEach(function (card) {
-        card.addEventListener('click', function () {
-            var input = document.getElementById(card.getAttribute('for'));
-            if (input) { input.checked = true; goTo(); }
-        });
-    });
+    // 开始按钮为静态链接，文案固定为「✨ 一键开始智能练习」，不在前端动态改写
 })();
 </script>
 
