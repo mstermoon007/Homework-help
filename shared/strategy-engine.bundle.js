@@ -2663,10 +2663,10 @@ var GenCap = require("shared/generator-capability-registry.js");
 
 // M4-R06 核心 Generator 声明（纯数据；执行实现位于 shared/generator/generators/）
 var CORE_RECORDS = [
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g4-m1-g4-oral-big'], scope: 'core', version: 1 },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g4-m1-g4-oral-big'], scope: 'core', version: 1 },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g2-m1-mult-table', 'math-g2-m2-mult-col', 'math-g2-m4-multiplication-meaning', 'math-g2-m7-pic-mult', 'math-g2-m8-mult-total', 'math-g2-m5-match-multdiv', 'math-g3-m1-g3-mul-multi1', 'math-g4-m1-g4-oral-mul3x1', 'math-g4-m1-g4-oral-mul2t', 'math-g6-c1-vertical-multidigit', 'math-g6-c3-multiplication-principle'], scope: 'core', version: 1 },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-division-table', 'math-g2-m1-div-table', 'math-g2-m1-muldiv-relation', 'math-g2-m2-div-col', 'math-g2-m4-division-meaning', 'math-g2-m7-pic-div', 'math-g2-m7-pic-div-include', 'math-g2-m8-div-partitive', 'math-g2-m8-div-quotative', 'math-g3-m1-g3-div1', 'math-g4-c2-c2-divisible', 'math-g4-m1-g4-oral-divt', 'math-g4-m2-g4-v-div2', 'math-g4-m2-g4-v-div2q', 'math-g4-m8-g4-word-div', 'math-g5-c2-divisibility', 'math-g6-c2-divisibility'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g2-m1-mult-table', 'math-g2-m2-mult-col', 'math-g2-m4-multiplication-meaning', 'math-g2-m7-pic-mult', 'math-g2-m8-mult-total', 'math-g2-m5-match-multdiv', 'math-g3-m1-g3-mul-multi1', 'math-g4-m1-g4-oral-mul3x1', 'math-g4-m1-g4-oral-mul2t', 'math-g4-m1-g4-oral-law', 'math-g5-m1-g5-oral-decmul', 'math-g6-c1-vertical-multidigit', 'math-g6-c3-multiplication-principle'], scope: 'core', version: 1 },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-division-table', 'math-g2-m1-div-table', 'math-g2-m1-muldiv-relation', 'math-g2-m2-div-col', 'math-g2-m4-division-meaning', 'math-g2-m7-pic-div', 'math-g2-m7-pic-div-include', 'math-g2-m8-div-partitive', 'math-g2-m8-div-quotative', 'math-g3-m1-g3-div1', 'math-g4-c2-c2-divisible', 'math-g4-m1-g4-oral-divt', 'math-g5-m1-g5-oral-decdiv', 'math-g4-m2-g4-v-div2', 'math-g4-m2-g4-v-div2q', 'math-g4-m8-g4-word-div', 'math-g5-c2-divisibility', 'math-g6-c2-divisibility'], scope: 'core', version: 1 },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: [], scope: 'core', version: 1 },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill'], questionTypes: ['fill'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g1-m13-division-table', 'math-g1-m13-fill-blank', 'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-cutfill', 'math-g4-c4-c4-pa', 'math-g4-c4-c4-solid', 'math-g4-c4-c4-count'], scope: 'core', version: 1 },
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice'], questionTypes: ['choice'], knowledgePoints: ['math-g1-m12-choice-mixed', 'math-g1-m5-match-calc', 'math-g1-m5-match-shape', 'math-g1-m5-match-clock', 'math-g1-m5-match-rmb', 'math-g2-m12-choice-mixed'], scope: 'core', version: 1 },
@@ -3170,11 +3170,16 @@ var SINGLE_STEP_PROFILE = {
 
 // M4-R24 特殊口算族：legacy g4-oral 的整数域口算（除数是整十数/大数加减/三位乘一位/乘整十）。
 // kind 供 native 生成器分派到对应的专用结构构造（镜像 legacy 粒度），不落入通用 generateStructure。
+// M4-R25 扩展：g4/g5 口算的小数加减/小数乘除与运算律简便（见 dev/migration 对应 FROZEN_CORE_CHANGE 报告）。
 var SPECIAL_ORAL_PROFILE = {
   'div-tens':   { operators: [OP_DIV], steps: 1, kind: 'div-tens' },
   'big-addsub': { operators: [OP_ADD, OP_SUB], steps: 1, kind: 'big-addsub' },
   'mul3x1':     { operators: [OP_MUL], steps: 1, kind: 'mul3x1' },
-  'mul2tens':   { operators: [OP_MUL], steps: 1, kind: 'mul2tens' }
+  'mul2tens':   { operators: [OP_MUL], steps: 1, kind: 'mul2tens' },
+  'dec-addsub': { operators: [OP_ADD, OP_SUB], steps: 1, kind: 'dec-addsub' },
+  'law-oral':   { operators: [OP_MUL], steps: 1, kind: 'law-oral' },
+  'dec-mul-oral': { operators: [OP_MUL], steps: 1, kind: 'dec-mul-oral' },
+  'dec-div-oral': { operators: [OP_DIV], steps: 1, kind: 'dec-div-oral' }
 };
 
 var NON_MIGRATABLE = ['remainder', 'mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];
@@ -3983,9 +3988,13 @@ var overrides = {               // scope → key → mode
     'math-g4-c4-c4-pa': 'native',
     'math-g4-c4-c4-solid': 'native',
     'math-g4-m1-g4-oral-big': 'native',
+    'math-g4-m1-g4-oral-dec': 'native',
     'math-g4-m1-g4-oral-divt': 'native',
+    'math-g4-m1-g4-oral-law': 'native',
     'math-g4-m1-g4-oral-mul2t': 'native',
     'math-g4-m1-g4-oral-mul3x1': 'native',
+    'math-g5-m1-g5-oral-decmul': 'native',
+    'math-g5-m1-g5-oral-decdiv': 'native',
     'math-g4-m2-g4-v-div2': 'native',
     'math-g4-m2-g4-v-div2q': 'native',
     'math-g4-m8-g4-word-div': 'native',
@@ -8635,7 +8644,7 @@ function apply(op, a, b) {
   if (op === OP_ADD) return a + b;
   if (op === OP_SUB) return a - b;
   if (op === OP_MUL) return a * b;
-  if (op === OP_DIV) return b === 0 ? a : Math.floor(a / b);
+  if (op === OP_DIV) return b === 0 ? a : a / b;
   return a;
 }
 
@@ -8894,10 +8903,80 @@ function buildDivTens(rng, range) {
 }
 
 /**
- * M4-R24 特殊口算结构入口：按 kind 分派到专用构造（big-addsub/mul3x1/mul2tens/div-tens）。
+ * M4-R25 小数点清理：去掉浮点噪声（0.1+0.2 → 0.3），并去除多余尾 0（6.90 → 6.9）。
+ */
+function trimDec(x) {
+  return String(Number(Number(x).toFixed(2)));
+}
+
+/**
+ * 小数加减法口算（dec-addsub，一位小数）：a=aW.aT ± bW.bT，被减数不小于减数。
+ * @returns {{ operands:[a,b], operators:[+|−], steps:1, answer:number }}
+ */
+function buildDecAddsub(rng) {
+  var fmt = function (w, t) { return w + '.' + t; };
+  var aW = Rng.randInt(rng, 0, 6), aT = Rng.randInt(rng, 1, 9);
+  var bW = Rng.randInt(rng, 0, 6), bT = Rng.randInt(rng, 1, 9);
+  var a = aW * 10 + aT, b = bW * 10 + bT;
+  if (Rng.pick(rng, [1, 2]) === 1) {
+    return { operands: [a / 10, b / 10], operators: [OP_ADD], steps: 1, answer: (a + b) / 10 };
+  }
+  if (a < b) { var tw = aW; aW = bW; bW = tw; var tt = aT; aT = bT; bT = tt; a = aW * 10 + aT; b = bW * 10 + bT; }
+  return { operands: [a / 10, b / 10], operators: [OP_SUB], steps: 1, answer: (a - b) / 10 };
+}
+
+/**
+ * 运用运算律简便口算（law-oral）：25/125/99/101 × n，镜像 legacy 的凑整结构。
+ * @returns {{ operands:[a,n], operators:[×], steps:1, answer:number }}
+ */
+function buildLawOral(rng) {
+  var v = Rng.pick(rng, ['25', '125', '99', '101']);
+  var a, n;
+  if (v === '25') { a = 25; n = Rng.pick(rng, [4, 8, 12, 16, 24, 28, 32, 36, 40]); }
+  else if (v === '125') { a = 125; n = Rng.pick(rng, [8, 16, 24, 32, 40, 48, 56, 64, 72, 80]); }
+  else if (v === '99') { a = 99; n = Rng.randInt(rng, 2, 9); }
+  else { a = 101; n = Rng.randInt(rng, 2, 9); }
+  return { operands: [a, n], operators: [OP_MUL], steps: 1, answer: a * n };
+}
+
+/**
+ * 小数乘法口算（dec-mul-oral）：一位小数×整数 / 一位小数×一位小数 / 整十、整百×一位小数。
+ * @returns {{ operands:[a,b], operators:[×], steps:1, answer:number }}
+ */
+function buildDecMulOral(rng, range) {
+  var max = Math.max(10, (range && range.max) || 1000);
+  var v = Rng.pick(rng, ['i', 'ii', 'tens', 'zero']);
+  var a, b;
+  if (v === 'i') { a = Rng.randInt(rng, 1, 9) / 10; b = Rng.randInt(rng, 2, 99); }
+  else if (v === 'ii') { a = Rng.randInt(rng, 1, 9) / 10; b = Rng.randInt(rng, 1, 9) / 10; }
+  else if (v === 'tens') { a = Rng.randInt(rng, 2, 9) * 10; b = Rng.randInt(rng, 1, 9) / 10; }
+  else { a = Rng.randInt(rng, 2, 9) * 100; b = Rng.randInt(rng, 1, 9) / 10; }
+  if (a > max) a = Rng.randInt(rng, 2, Math.max(2, Math.floor(max / 100))) * 100;
+  return { operands: [a, b], operators: [OP_MUL], steps: 1, answer: Number(trimDec(a * b)) };
+}
+
+/**
+ * 小数除法口算（dec-div-oral）：被除数 = 除数 × 商（除数一位小数），商为整数或一位小数。
+ * @returns {{ operands:[a,divisor], operators:[÷], steps:1, answer:number }}
+ */
+function buildDecDivOral(rng, range) {
+  var min = Math.max(0.1, (range && range.min != null) ? range.min : 0.1);
+  var v = Rng.pick(rng, ['int', 'dec']);
+  var divisor = Rng.randInt(rng, 2, 9) / 10;
+  var q;
+  if (v === 'int') q = Rng.randInt(rng, 2, 9);
+  else q = Rng.randInt(rng, 1, 9) / 10;
+  // 保证被除数 a = divisor × q 不低于 range.min（整十除数语义最低单位）
+  var a = divisor * q;
+  if (a < min) { q = Math.max(v === 'int' ? 2 : 1, Math.ceil(min / divisor / 0.1) * 0.1); a = divisor * q; }
+  return { operands: [Number(trimDec(a)), Number(trimDec(divisor))], operators: [OP_DIV], steps: 1, answer: Number(trimDec(q)) };
+}
+
+/**
+ * M4-R24/M4-R25 特殊口算结构入口：按 kind 分派到专用构造（整数域 + 小数/运算律）。
  * 其余 kind 返回 null（由调用方回退通用 generateStructure）。
  * @param {function} rng 种子随机源
- * @param {Object} cfg { kind }
+ * @param {Object} cfg { kind, numberRange }
  */
 function buildSpecialKind(rng, cfg) {
   cfg = cfg || {};
@@ -8906,6 +8985,10 @@ function buildSpecialKind(rng, cfg) {
   if (kind === 'mul3x1') return buildMul3x1(rng);
   if (kind === 'mul2tens') return buildMul2tens(rng);
   if (kind === 'div-tens') return buildDivTens(rng, cfg.numberRange);
+  if (kind === 'dec-addsub') return buildDecAddsub(rng);
+  if (kind === 'law-oral') return buildLawOral(rng);
+  if (kind === 'dec-mul-oral') return buildDecMulOral(rng, cfg.numberRange);
+  if (kind === 'dec-div-oral') return buildDecDivOral(rng, cfg.numberRange);
   return null;
 }
 
@@ -8926,6 +9009,11 @@ module.exports = {
   buildMul3x1: buildMul3x1,
   buildMul2tens: buildMul2tens,
   buildDivTens: buildDivTens,
+  buildDecAddsub: buildDecAddsub,
+  buildLawOral: buildLawOral,
+  buildDecMulOral: buildDecMulOral,
+  buildDecDivOral: buildDecDivOral,
+  trimDec: trimDec,
   buildSpecialKind: buildSpecialKind
 };
 

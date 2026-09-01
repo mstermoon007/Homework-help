@@ -33,7 +33,12 @@ function checkArithmeticInvariant(q, range) {
   var parsed = Arith.parseExpression(q.prompt);
   if (!parsed) return '题干不可解析: ' + q.prompt;
   var expected = Arith.calculateAnswer(parsed.operands, parsed.operators);
-  if (String(expected) !== String(q.answer)) {
+  // M4-R25：小数口算（dec-div-oral）允许 1e-6 数值容差，消除浮点噪声（answer 为字符串）
+  var aNum = Number(q.answer);
+  var ok = (isFinite(aNum) && typeof expected === 'number')
+    ? Math.abs(aNum - expected) < 1e-6
+    : String(q.answer) === String(expected);
+  if (!ok) {
     return '答案错误: prompt=' + q.prompt + ' answer=' + q.answer + ' expected=' + expected;
   }
   if (range) {

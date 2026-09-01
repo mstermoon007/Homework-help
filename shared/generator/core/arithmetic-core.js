@@ -138,7 +138,7 @@ function apply(op, a, b) {
   if (op === OP_ADD) return a + b;
   if (op === OP_SUB) return a - b;
   if (op === OP_MUL) return a * b;
-  if (op === OP_DIV) return b === 0 ? a : Math.floor(a / b);
+  if (op === OP_DIV) return b === 0 ? a : a / b;
   return a;
 }
 
@@ -397,10 +397,80 @@ function buildDivTens(rng, range) {
 }
 
 /**
- * M4-R24 特殊口算结构入口：按 kind 分派到专用构造（big-addsub/mul3x1/mul2tens/div-tens）。
+ * M4-R25 小数点清理：去掉浮点噪声（0.1+0.2 → 0.3），并去除多余尾 0（6.90 → 6.9）。
+ */
+function trimDec(x) {
+  return String(Number(Number(x).toFixed(2)));
+}
+
+/**
+ * 小数加减法口算（dec-addsub，一位小数）：a=aW.aT ± bW.bT，被减数不小于减数。
+ * @returns {{ operands:[a,b], operators:[+|−], steps:1, answer:number }}
+ */
+function buildDecAddsub(rng) {
+  var fmt = function (w, t) { return w + '.' + t; };
+  var aW = Rng.randInt(rng, 0, 6), aT = Rng.randInt(rng, 1, 9);
+  var bW = Rng.randInt(rng, 0, 6), bT = Rng.randInt(rng, 1, 9);
+  var a = aW * 10 + aT, b = bW * 10 + bT;
+  if (Rng.pick(rng, [1, 2]) === 1) {
+    return { operands: [a / 10, b / 10], operators: [OP_ADD], steps: 1, answer: (a + b) / 10 };
+  }
+  if (a < b) { var tw = aW; aW = bW; bW = tw; var tt = aT; aT = bT; bT = tt; a = aW * 10 + aT; b = bW * 10 + bT; }
+  return { operands: [a / 10, b / 10], operators: [OP_SUB], steps: 1, answer: (a - b) / 10 };
+}
+
+/**
+ * 运用运算律简便口算（law-oral）：25/125/99/101 × n，镜像 legacy 的凑整结构。
+ * @returns {{ operands:[a,n], operators:[×], steps:1, answer:number }}
+ */
+function buildLawOral(rng) {
+  var v = Rng.pick(rng, ['25', '125', '99', '101']);
+  var a, n;
+  if (v === '25') { a = 25; n = Rng.pick(rng, [4, 8, 12, 16, 24, 28, 32, 36, 40]); }
+  else if (v === '125') { a = 125; n = Rng.pick(rng, [8, 16, 24, 32, 40, 48, 56, 64, 72, 80]); }
+  else if (v === '99') { a = 99; n = Rng.randInt(rng, 2, 9); }
+  else { a = 101; n = Rng.randInt(rng, 2, 9); }
+  return { operands: [a, n], operators: [OP_MUL], steps: 1, answer: a * n };
+}
+
+/**
+ * 小数乘法口算（dec-mul-oral）：一位小数×整数 / 一位小数×一位小数 / 整十、整百×一位小数。
+ * @returns {{ operands:[a,b], operators:[×], steps:1, answer:number }}
+ */
+function buildDecMulOral(rng, range) {
+  var max = Math.max(10, (range && range.max) || 1000);
+  var v = Rng.pick(rng, ['i', 'ii', 'tens', 'zero']);
+  var a, b;
+  if (v === 'i') { a = Rng.randInt(rng, 1, 9) / 10; b = Rng.randInt(rng, 2, 99); }
+  else if (v === 'ii') { a = Rng.randInt(rng, 1, 9) / 10; b = Rng.randInt(rng, 1, 9) / 10; }
+  else if (v === 'tens') { a = Rng.randInt(rng, 2, 9) * 10; b = Rng.randInt(rng, 1, 9) / 10; }
+  else { a = Rng.randInt(rng, 2, 9) * 100; b = Rng.randInt(rng, 1, 9) / 10; }
+  if (a > max) a = Rng.randInt(rng, 2, Math.max(2, Math.floor(max / 100))) * 100;
+  return { operands: [a, b], operators: [OP_MUL], steps: 1, answer: Number(trimDec(a * b)) };
+}
+
+/**
+ * 小数除法口算（dec-div-oral）：被除数 = 除数 × 商（除数一位小数），商为整数或一位小数。
+ * @returns {{ operands:[a,divisor], operators:[÷], steps:1, answer:number }}
+ */
+function buildDecDivOral(rng, range) {
+  var min = Math.max(0.1, (range && range.min != null) ? range.min : 0.1);
+  var v = Rng.pick(rng, ['int', 'dec']);
+  var divisor = Rng.randInt(rng, 2, 9) / 10;
+  var q;
+  if (v === 'int') q = Rng.randInt(rng, 2, 9);
+  else q = Rng.randInt(rng, 1, 9) / 10;
+  // 保证被除数 a = divisor × q 不低于 range.min（整十除数语义最低单位）
+  var a = divisor * q;
+  if (a < min) { q = Math.max(v === 'int' ? 2 : 1, Math.ceil(min / divisor / 0.1) * 0.1); a = divisor * q; }
+  return { operands: [Number(trimDec(a)), Number(trimDec(divisor))], operators: [OP_DIV], steps: 1, answer: Number(trimDec(q)) };
+}
+
+/**
+ * M4-R24/M4-R25 特殊口算结构入口：按 kind 分派到专用构造（整数域 + 小数/运算律）。
  * 其余 kind 返回 null（由调用方回退通用 generateStructure）。
  * @param {function} rng 种子随机源
- * @param {Object} cfg { kind }
+ * @param {Object} cfg { kind, numberRange }
  */
 function buildSpecialKind(rng, cfg) {
   cfg = cfg || {};
@@ -409,6 +479,10 @@ function buildSpecialKind(rng, cfg) {
   if (kind === 'mul3x1') return buildMul3x1(rng);
   if (kind === 'mul2tens') return buildMul2tens(rng);
   if (kind === 'div-tens') return buildDivTens(rng, cfg.numberRange);
+  if (kind === 'dec-addsub') return buildDecAddsub(rng);
+  if (kind === 'law-oral') return buildLawOral(rng);
+  if (kind === 'dec-mul-oral') return buildDecMulOral(rng, cfg.numberRange);
+  if (kind === 'dec-div-oral') return buildDecDivOral(rng, cfg.numberRange);
   return null;
 }
 
@@ -429,5 +503,10 @@ module.exports = {
   buildMul3x1: buildMul3x1,
   buildMul2tens: buildMul2tens,
   buildDivTens: buildDivTens,
+  buildDecAddsub: buildDecAddsub,
+  buildLawOral: buildLawOral,
+  buildDecMulOral: buildDecMulOral,
+  buildDecDivOral: buildDecDivOral,
+  trimDec: trimDec,
   buildSpecialKind: buildSpecialKind
 };

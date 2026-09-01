@@ -3272,7 +3272,7 @@
               max_spiral_level: 1,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "dec-addsub", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 20 },
+              number_range_default: { min: 0.1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"
@@ -3292,7 +3292,7 @@
               max_spiral_level: 1,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "law-oral", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 20 },
+              number_range_default: { min: 1, max: 1000 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"
@@ -5353,7 +5353,7 @@
               max_spiral_level: 3,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "dec-mul-oral", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 20 },
+              number_range_default: { min: 0.1, max: 1000 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"
@@ -5373,7 +5373,7 @@
               max_spiral_level: 3,
               cognitive_level: "掌握",
               applicable_question_types: [ { type: "dec-div-oral", coefficient: 1 } ],
-              number_range_default: { min: 1, max: 20 },
+              number_range_default: { min: 0.1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
               status: "active"

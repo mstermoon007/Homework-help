@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T09:05:54.730Z",
+  "generatedAt": "2026-09-01T09:36:50.432Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -53,9 +53,9 @@
       "mtime": 1788067280594.5122
     },
     "shared/knowledge-math.js": {
-      "hash": "76da4b686c491193",
-      "size": 509489,
-      "mtime": 1788252739722.6138
+      "hash": "3c4fc3e54216baf8",
+      "size": 509500,
+      "mtime": 1788255038426.044
     },
     "shared/knowledge-cn.js": {
       "hash": "1daacda73babc441",
@@ -103,9 +103,9 @@
       "mtime": 1788150923822.1445
     },
     "shared/generator/generator-registry.js": {
-      "hash": "735a242ba1d9b494",
-      "size": 7819,
-      "mtime": 1788252703311.5933
+      "hash": "969eb1edfc343cf0",
+      "size": 7955,
+      "mtime": 1788254911715.0002
     },
     "shared/generator/generator-selector.js": {
       "hash": "a5a02fe7eb1ffdc7",
@@ -113,9 +113,9 @@
       "mtime": 1788163042580.6455
     },
     "shared/generator/generator-mode.js": {
-      "hash": "b39dc06fe7717502",
-      "size": 7707,
-      "mtime": 1788252709189.5398
+      "hash": "a4b57e6a70556321",
+      "size": 7873,
+      "mtime": 1788254920274.2283
     },
     "shared/generator/retry-loop.js": {
       "hash": "f3ae8c9488391adf",
@@ -153,9 +153,9 @@
       "mtime": 1788090526795.4841
     },
     "shared/generator/core/arithmetic-core.js": {
-      "hash": "92e41103e2180f19",
-      "size": 17181,
-      "mtime": 1788253385064.2742
+      "hash": "4fa3d01a274b3547",
+      "size": 20999,
+      "mtime": 1788255354038.8042
     },
     "shared/generator/core/kp-complex-semantics.js": {
       "hash": "98d8216541f5f69f",
@@ -278,9 +278,9 @@
       "mtime": 1788083085867.727
     },
     "shared/generator/core/kp-arithmetic-semantics.js": {
-      "hash": "0ccc9c7c10604b33",
-      "size": 3190,
-      "mtime": 1788252629736.6997
+      "hash": "341827122395e61d",
+      "size": 3625,
+      "mtime": 1788254672937.043
     },
     "shared/validator/validation-pipeline.js": {
       "hash": "c52f25faed3e8998",
