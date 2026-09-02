@@ -24,7 +24,7 @@
  *   - desc     模块描述（可选）
  *   - gradeStatus  按年级就绪状态（仅数学竞赛模块）：{ [grade]: 'active' | 'placeholder' }
  *       与 shared/knowledge-bank.js 对应年级知识点 status 保持一致。
- *       五年级竞赛处于重新开发阶段（见 docs/g5-competition-knowledge-map.md），
+ *       五年级竞赛处于重新开发阶段（见 docs/DEV_LOG.md 附录 D，原 g5-competition-knowledge-map），
  *       四年级/六年级沿用既有实现；基础模块 M0-M12 全年级 active。
  *   - status   模块整体就绪状态（仅语文/英语模块）：'active' | 'placeholder'
  *       placeholder 表示目录已建、插件与知识点待逐轮激活（如 N8/E6 综合卷）。

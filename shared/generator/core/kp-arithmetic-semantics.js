@@ -29,7 +29,7 @@ var SINGLE_STEP_PROFILE = {
 
 // M4-R24 特殊口算族：legacy g4-oral 的整数域口算（除数是整十数/大数加减/三位乘一位/乘整十）。
 // kind 供 native 生成器分派到对应的专用结构构造（镜像 legacy 粒度），不落入通用 generateStructure。
-// M4-R25 扩展：g4/g5 口算的小数加减/小数乘除与运算律简便（见 dev/migration 对应 FROZEN_CORE_CHANGE 报告）。
+// M4-R25 扩展：g4/g5 口算的小数加减/小数乘除与运算律简便（见 docs/DEV_LOG.md 附录 C）。
 var SPECIAL_ORAL_PROFILE = {
   'div-tens':   { operators: [OP_DIV], steps: 1, kind: 'div-tens' },
   'big-addsub': { operators: [OP_ADD, OP_SUB], steps: 1, kind: 'big-addsub' },

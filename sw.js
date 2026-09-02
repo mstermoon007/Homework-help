@@ -24,7 +24,7 @@ importScripts('./shared/version.js');
 // 缓存名 = 固定前缀 + 版本号。activate 按此名清理一切非当前版本缓存（含旧 hw-help-v64）。
 // ⚠️ 本常量缺失曾导致 fetch/install 内 5 处 caches.open(CACHE) 抛 ReferenceError，
 //    SW 激活后第二次导航即 net::ERR_FAILED（E2E C1 用例捕获的 P0）。
-const CACHE = 'hw-help-4.0.1';  // 必须与 shared/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
+const CACHE = 'hw-help-4.0.2';  // 必须与 shared/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
 
 // === 核心资源列表 ===
 // 所有路径相对于站点根。CORE 保持「无 ?v=」字面量：运行时 HTML 已由 scripts/add-asset-version.js

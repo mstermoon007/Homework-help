@@ -2,7 +2,61 @@
 
 > 版本演进完整记录。格式参照 Keep a Changelog，版本号遵循语义化版本（大版本.功能.修复）。
 > 每个大版本的完整变更以 Git 标签为锚点（`git log V2.1..V3.0` 可查看全部提交）。
-> 当前文档是整理后的统一开发日志，替代根目录 `CHANGELOG.md` 与各内存/总结文档中的历史记录部分。
+> 当前文档是整理后的统一开发日志，替代根目录 `CHANGELOG.md`、各内存/总结文档中的历史记录部分，
+> 以及 V4.0.2 起并入的各一次性工作报告（架构里程碑 / 迁移审计 / 债务扫描）。
+
+---
+
+## [V4.0.2] — 2026-09-02
+
+本版本主题：**文档二次整合——参考文档与工作报告全部并入三份核心文档**。
+
+### 文档体系最终形态（docs/ 仅保留三份）
+- `docs/DEV_LOG.md`（本文件，开发日志 + 历史报告归档索引）
+- `docs/DEVELOPMENT.md`（最新开发状态，已并入 API 速查/知识库结构/插件上手/冻结红线/SEO）
+- `README.md`（功能说明，已并入文档导航）
+
+### 并入 DEVELOPMENT.md 的内容
+- **工具 API 速查**（原 `docs/API.md`）：PluginUtil 随机数/难度/工厂、SVGGenerators、SubjectUtils、令牌要点 → §10。
+- **知识库结构**（原 `docs/knowledge-base.md`）：ID 四段式规范、模块目录 M0–M12/C1–C9/N1–N8/E1–E6、
+  prerequisites/related 规则、插件↔KP 声明、覆盖校验 → §4.2。
+- **插件快速上手**（原 `docs/PLUGIN_QUICKSTART.md`）：new-plugin 脚手架参数、generateQuestions 最小实现、
+  difficultyParams 消费、本地预览、linter R1–R4 → §5.7。
+- **AI 开发红线**（原 `docs/AI_DEV_GUIDE.md`）：架构 30 秒版、修改禁区 8 条、标准开发流程 → §5/§4。
+- **Frozen Core 保护规范**（原 `docs/FROZEN_CORE.md`）：冻结范围 M0–M7 全文件清单、禁止事项、
+  唯一例外（Bug Fix）条件、变更申请流程、扩展机制、基线重锚 → §6。
+- **机器可见性与 SEO 运维**（原 `docs/seo-monitoring.md`）：robots/llms/sitemap/JSON-LD 配置与复核 → §11。
+- **M1–M4 债务扫描结论**（原 `dev/migration/m1-m4-old-debt-scan.md`）：P0 关闭确认、
+  74/482 迁移进度、契约合规问题清单 → §8。
+
+### 并入 DEV_LOG.md 的内容（历史摘要）
+- **知识库 ID 迁移审计**（原 `docs/migration-report.md`，2026-08-23）：356 KP 三段式迁移，见 §附录 A。
+- **M0–M3 架构里程碑**（原 `docs/architecture/*.md`）：M0 只读审计/架构规则、M1 本体 schema、
+  M2 能力契约、M3 策略引擎 final 报告，见 §附录 B。
+- **M4 迁移与回归治理**（原 `dev/migration/*.md`）：closure 审计 NOT_READY → C04/C05 回归根因修复
+  （3738 全量矩阵）/ C06 死代码清理 / R24–R27 native 迁移批次，见 §附录 C。
+- **五年级竞赛映射设计依据**（原 `docs/g5-competition-knowledge-map.md`）：79 知识点设计表已写入知识库，见 §附录 D。
+
+### 删除文件
+- `docs/API.md`、`docs/knowledge-base.md`、`docs/PLUGIN_QUICKSTART.md`、`docs/AI_DEV_GUIDE.md`、
+  `docs/FROZEN_CORE.md`、`docs/seo-monitoring.md`、`docs/migration-report.md`、
+  `docs/g5-competition-knowledge-map.md`、`docs/CONTRIBUTING.md`、`docs/README.md`。
+- `docs/architecture/`（9 个里程碑报告）与 `dev/migration/`（14 个审计/报告文件 + 9 个审计 JSON）。
+- `dev/fingerprint-report.md`（`dev/plugin-fingerprint.js` 可再生成）。
+- 保留：`plugins/CONTRACT.md`（插件核心契约，运行时不依赖文档体系）。
+
+### 参考更新与基线重锚
+- `scripts/new-plugin.js`、`scripts/add-g5-competition-entries.js`、`shared/module-catalog.js`、
+  `shared/generator/core/kp-arithmetic-semantics.js` 中对已删文档的引用全部改指 DEV_LOG/DEVELOPMENT。
+- Frozen Core 变更（2 处，均为注释级文档引用更新，无行为变化）：`shared/module-catalog.js`、
+  `shared/generator/core/kp-arithmetic-semantics.js` → `node dev/check-frozen-core.js --baseline` 重锚基线。
+
+### 文档体系最终形态
+- `docs/` 仅保留三份核心文档：`DEV_LOG.md`（开发日志 + 历史报告索引）、`DEVELOPMENT.md`（最新开发状态），
+  根目录 `README.md`（功能说明）。
+
+### 版本
+- 版本号统一由 `4.0.1` 提升至 `4.0.2`（`shared/version.js`、`package.json`、`sw.js`、`index.html` 回退常量、`dev/test-sw-cache-upgrade.js` 同步）。
 
 ---
 
@@ -133,7 +187,7 @@ Strategy → Generator/Selector → Validator → Learner → Presentation）的
 
 ## 附录：历史文档索引
 
-本次文档整合（V4.0.1）归档的旧文档（`archive/docs-2026-09/`）：
+本次文档整合（V4.0.1/V4.0.2）归档的旧文档（`archive/docs-2026-09/`）：
 
 | 原文件 | 类型 | 归档去向 / 去向说明 |
 |--------|------|---------------------|
@@ -143,4 +197,61 @@ Strategy → Generator/Selector → Validator → Learner → Presentation）的
 | 根 `overview.md` | 审查报告 | 归档保留（一次性审查历史） |
 | 根 `FEATURE_STATUS.md` | 功能状态 | 状态并入 DEVELOPMENT.md |
 | 根 `CONTRIBUTING.md` | 贡献指南 | 规范并入 DEVELOPMENT.md |
-| `docs/` 各参考文档 | 参考/报告 | 保留于 docs/ 或归档 |
+| `docs/API.md` | API 参考 | 并入 DEVELOPMENT.md §10 |
+| `docs/knowledge-base.md` | 知识库参考 | 并入 DEVELOPMENT.md §4.2 |
+| `docs/PLUGIN_QUICKSTART.md` | 插件上手 | 并入 DEVELOPMENT.md §5.7 |
+| `docs/AI_DEV_GUIDE.md` | AI 红线 | 并入 DEVELOPMENT.md §5 |
+| `docs/FROZEN_CORE.md` | 冻结规范 | 并入 DEVELOPMENT.md §6 |
+| `docs/seo-monitoring.md` | SEO 运维 | 并入 DEVELOPMENT.md §11 |
+| `docs/migration-report.md` | 迁移审计 | 摘要见下附录 A |
+| `docs/g5-competition-knowledge-map.md` | 设计依据 | 摘要见下附录 D |
+| `docs/architecture/*.md` | M0–M3 里程碑报告 | 摘要见下附录 B |
+| `dev/migration/*.md` | M4 审计/债务报告 | 摘要见下附录 C |
+| `dev/fingerprint-report.md` | 生成产物 | 由 dev/plugin-fingerprint.js 再生成 |
+
+---
+
+## 附录 A：知识库 ID 迁移审计摘要（2026-08-23）
+
+- 356 个知识点 ID 从旧命名统一迁移为三段式 `g{grade}-{moduleIdLower}-{baseSlug}`；
+  旧 ID 跨年级重复（竞赛如 `c1-vertical`）、不带模块信息，无法全局唯一。
+- 迁移范围：知识库本体、`knowledge/` 详情页（356 详情+76 模块+1 索引）、49 个插件 knowledgePoints、
+  207 处头部注释、文档与 llms.txt。
+- 验证：ID 格式 0 违规 / 全局唯一 0 重复 / 悬空引用 0 / 高年级前置 0 / 详情页 433 文件 0 断链；
+  回归 118 组合满分、综合练习无占位内容。完整映射表归档 `archive/migration-20260823/`。
+
+## 附录 B：M0–M3 架构里程碑摘要
+
+- **M0（只读审计 + 架构护栏）**：确认纯前端无构建形态；建立职责边界规则（UI 不决策题目结构、
+  KB 不生成、Strategy 不渲染、Generator 不碰 DOM、Renderer 不评难度、Learner 不回写 KB、
+  禁新增 Math.random）；静态检查 `dev/check-architecture-rules.js`（R1–R5）。
+- **M1（本体/KB schema）**：Legacy KP → Canonical Knowledge Ontology 统一 schema
+  （identity/source/semantics/structure/cognition/presentation/numeric/context/errors）+ Normalizer/Validator/覆盖报告。
+- **M2（能力/生成器契约）**：generator-contract/registry/selector/mode + retry-loop + legacy-plugin-adapter，
+  六类生成器契约与能力模型（`capability-*.js`）。
+- **M3（策略引擎）**：`StrategyEngine.plan(request)` 唯一入口，7 步固定顺序
+  （QuestionType → CognitiveLevel → Difficulty → Structure → SpiralLevel → Context → Count）、
+  11 项 StrategyValidator、LegacyAdapter 纯映射到旧插件。M3 结束标志 M0–M3 Gate 全冻结。
+
+> 各阶段详情曾存 `docs/architecture/*.md`；当前唯一权威架构描述为 DEVELOPMENT.md §1/§4/§6。
+
+## 附录 C：M4 迁移与回归治理摘要
+
+- **Closure 审计（2026-09-01）**：A07–A11 只读审计结论 `NOT_READY`——P0-001（浏览器链路静默空集）、
+  M4-R02（adapter 契约失配）、M4-R16（回归从未绿）、P-012（基线锚脏工作树）。
+- **C04/C05 回归根因**：774 个 PLAN_ERROR 归因 RC-PLAN-01 =「矩阵用插件级能力并集构造逐 KP 用例」的测试构造缺陷；
+  最小补丁改为 per-KP 能力解析 → 回归从采样 1074 升级全量枚举 **3738 cases（FAIL 0 / PLAN_ERROR 0）**，
+  并补 `fillOperandUnknown` 逆向填空校验缺口。
+- **C06 死代码清理**：删除 `generateViaEngine`/`buildGenerationRequest`/`doGenerate`/`sqToLegacyQuestion`，
+  修复 phantom `require('../render.js')`，live 入口统一 `practiceSession.start()`。
+- **R24–R27 native 迁移批次**：扩展 `SPECIAL_ORAL_PROFILE` 至 12 kind（整十除法/小数/运算律/负数），
+  迁移 KP 70→74（全库 556），每批 FULL-EQ + 回归 + verify:m4 + 基线重锚。
+- **债务现状**：阻塞型债务全部关闭；存留为迁移剩余（482 KP legacy）+ 契约合规观察项，见 DEVELOPMENT.md §8。
+
+## 附录 D：五年级竞赛知识点映射摘要（设计依据，2026-08-23）
+
+- 79 个 C1–C9 知识点（全部 `status:'placeholder'` 指向 `math-competition-placeholder`）已写入知识库；
+  33 个旧 slug 删除，六年级竞赛前置改指四年级同主题点。
+- 命名：同主题跨年级共用 slug（`g5-c1-digit-puzzle-vertical`）；难度 基础 3 / 模型 4 / 综合 5。
+- 后续遗留：四年级 C1–C9 slug 仍为旧语义（`c1-vertical`），需统一迁移后「共用 slug」口径才完全一致。
+- 完整 79 项映射表曾存 `docs/g5-competition-knowledge-map.md`（现归入本附录引用）。

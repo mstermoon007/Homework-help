@@ -118,7 +118,7 @@ Homework-help/
 ├── pinyin-bank.js          # 拼音词库
 ├── sw.js                   # Service Worker 离线缓存
 ├── tests/                  # 自动化测试
-├── docs/                   # 文档（DEV_LOG / DEVELOPMENT / 参考）
+├── docs/                   # 文档（仅三份核心文档：DEV_LOG / DEVELOPMENT / README）
 └── dev/                    # 开发校验脚本（coverage/verify/test）
 ```
 
@@ -127,7 +127,7 @@ Homework-help/
 ## 🧑‍💻 开发与贡献
 
 详见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)（最新开发状态、规范、技术栈、Frozen Core 保护）。
-开发日志见 [docs/DEV_LOG.md](docs/DEV_LOG.md)，贡献规范见归档版 `archive/docs-2026-09/CONTRIBUTING.md`。
+开发日志见 [docs/DEV_LOG.md](docs/DEV_LOG.md)。
 
 - 新增题型：复制 `plugins/_template.js` 样板 → 实现 `generateQuestions` → 在 `plugins/registry.js` 注册 → 运行 `npm run check:registry` 与 `npm run check-plugin-interfaces` 验证。
 - 知识库静态页：`npm run generate:knowledge`（按源数据哈希增量生成，未变页面自动跳过）/ `npm run watch:knowledge`（监听 `shared/knowledge-*.js` 变化自动重建）。

@@ -1,6 +1,6 @@
 // scripts/add-g5-competition-entries.js
 // 将五年级竞赛模块 C1~C9 重建为 79 个新语义 slug 条目（全部 status:'placeholder'，指向通用占位插件）。
-// 依据：docs/g5-competition-knowledge-map.md。替换原有 33 个旧 slug 条目（删旧留新）。
+// 依据：docs/DEV_LOG.md 附录 D（原 docs/g5-competition-knowledge-map.md 设计依据，V4.0.2 并入）。替换原有 33 个旧 slug 条目（删旧留新）。
 // 用法：node scripts/add-g5-competition-entries.js
 'use strict';
 

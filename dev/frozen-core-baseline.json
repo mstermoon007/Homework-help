@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T02:25:06.221Z",
+  "generatedAt": "2026-09-02T02:58:07.238Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -8,9 +8,9 @@
       "mtime": 1787973668114.6597
     },
     "shared/version.js": {
-      "hash": "5eabc663f5f9830c",
+      "hash": "02cfa1ea28dc95d3",
       "size": 1051,
-      "mtime": 1788315767797.081
+      "mtime": 1788317853689.4153
     },
     "shared/tokens.css": {
       "hash": "5b4816ddb53f3529",
@@ -73,9 +73,9 @@
       "mtime": 1788062378207.3506
     },
     "shared/module-catalog.js": {
-      "hash": "89dfe6520c8e6435",
-      "size": 11327,
-      "mtime": 1787930521049.1396
+      "hash": "c7be3e075c17558b",
+      "size": 11350,
+      "mtime": 1788317651695.975
     },
     "shared/capability-model.js": {
       "hash": "1f62b085ede8f377",
@@ -278,9 +278,9 @@
       "mtime": 1788083085867.727
     },
     "shared/generator/core/kp-arithmetic-semantics.js": {
-      "hash": "8c61f4769f81c8bc",
-      "size": 4074,
-      "mtime": 1788259172111.6465
+      "hash": "7d3ce8b2e09987cd",
+      "size": 4052,
+      "mtime": 1788317738272.3894
     },
     "shared/validator/validation-pipeline.js": {
       "hash": "c52f25faed3e8998",
