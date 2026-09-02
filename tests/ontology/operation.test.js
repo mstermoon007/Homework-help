@@ -52,5 +52,6 @@ test('plugin 映射全部 canonical', () => {
 
 test('comprehensive 插件 unresolved（不猜测）', () => {
   assert.deepStrictEqual(OpsMap.operationsForPlugin('math-comprehensive'), []);
-  assert.deepStrictEqual(OpsMap.operationsForPlugin('chinese-comprehensive'), []);
+  // chinese-comprehensive 现在有 factual operations (identify, reason)，不再为空
+  assert.deepStrictEqual(OpsMap.operationsForPlugin('chinese-comprehensive'), ['identify', 'reason']);
 });
