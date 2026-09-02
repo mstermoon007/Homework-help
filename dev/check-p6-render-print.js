@@ -31,7 +31,7 @@ function countInFile(file, re) {
   return m ? m.length : 0;
 }
 
-var htmlPages = ['practice.html', 'math-types.html', 'subject-types.html', 'chinese-types.html', 'english-types.html', 'faq.html', 'index.html', 'grade.html'];
+var htmlPages = ['practice.html', 'math-types.html', 'subject-types.html', 'chinese-types.html', 'english-types.html', 'faq.html', 'index.html'];
 
 var pass = [];
 var fail = [];
@@ -93,7 +93,7 @@ add('无页面直接拼装题目 HTML', (function () {
 
 // [5] SVG 无内联生成器
 add('SVG 无内联生成器', (function () {
-  var htmlPages = ['practice.html', 'math-types.html', 'subject-types.html', 'chinese-types.html', 'english-types.html', 'faq.html', 'index.html', 'grade.html'];
+  var htmlPages = ['practice.html', 'math-types.html', 'subject-types.html', 'chinese-types.html', 'english-types.html', 'faq.html', 'index.html'];
   var svgInlineRe = /svg\s*:\s*[^}]*<svg|svg\s*:\s*[^}]*svg\(/;
   var violations = [];
   htmlPages.forEach(function (f) {

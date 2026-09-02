@@ -36,7 +36,7 @@ function stripComments(src) {
 }
 
 // ============ R1/R2/R4：源码静态扫描 ============
-// 豁免：MEMORY.md「保留字面量豁免清单」+ 白字约定（color:#fff）
+// 豁免：DEVELOPMENT.md「已知技术债」提及的保留字面量豁免清单 + 白字约定（color:#fff）
 const EXEMPT_HEX = new Set(['#f5576c', '#10ac84', '#b8860b', '#fdf3e3', '#fffbe8',
   '#fef0e8', '#e8870a', '#e74c3c', '#4caf50', '#fffdf6', '#6b5310', '#e8d9b8',
   '#e0c98f', '#f0e3c0']);

@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>语文题型选择</title>
 <script>
-// Redirect to unified grade selection with subject parameter
+// Redirect to question-card page (grade.html deleted; home jumps here directly)
 var params = new URLSearchParams(window.location.search);
 params.set('subject', 'chinese');
-window.location.href = 'grade.html?' + params.toString();
+window.location.href = 'subject-types.html?' + params.toString();
 </script>
 <script type="application/ld+json">
 {

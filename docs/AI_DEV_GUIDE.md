@@ -1,8 +1,9 @@
 # AI 开发指南（AI_DEV_GUIDE）
 
 > 面向 AI 助手与新接入开发者的速查手册：项目是什么、哪些不能碰、怎么按规矩加东西。
-> 规范细节以 `CONTRIBUTING.md`（贡献指南）与 `plugins/CONTRACT.md`(插件契约) 为准，
-> 本文件只做导航与红线汇总。**任何与本文件冲突的旧约定，以 CONTRIBUTING/CONTRACT 为准。**
+> 规范细节以 `DEVELOPMENT.md`（开发文档，V4.0.1 起替代根级 CONTRIBUTING.md）与
+> `plugins/CONTRACT.md`（插件契约）为准，
+> 本文件只做导航与红线汇总。**任何与本文件冲突的旧约定，以 DEVELOPMENT/CONTRACT 为准。**
 
 ---
 
@@ -119,8 +120,8 @@ bash scripts/pre-commit.sh                # 手动执行与钩子相同的校验
 
 ## 六、文档地图
 
-- 贡献规范（单一来源）：根目录 `CONTRIBUTING.md`（docs/ 下是指针页）
+- 贡献规范（单一来源）：`DEVELOPMENT.md`「开发与贡献规范」（docs/ 下 `CONTRIBUTING.md` 是指针页）
 - 插件契约：`plugins/CONTRACT.md`
 - API 速查：`docs/API.md`
 - 知识库背景：`docs/knowledge-base.md` · 迁移史：`archive/` 与 `docs/migration-report.md`
-- 关键状态备忘：`MEMORY.md`（每次大改造后更新）
+- 关键状态备忘：`DEVELOPMENT.md`（最新开发状态；历史 MEMORY 已归档 archive/）

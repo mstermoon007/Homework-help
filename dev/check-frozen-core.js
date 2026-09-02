@@ -144,7 +144,6 @@ var ALLOWLIST = [
   'tests/',
   'plugins/',
   'practice.html',
-  'grade.html',
   'math-types.html',
   'subject-types.html',
   'chinese-types.html',
@@ -155,7 +154,8 @@ var ALLOWLIST = [
   'package.json',
   'package-lock.json',
   'README.md',
-  'CHANGELOG.md',
+  'docs/DEV_LOG.md',
+  'docs/DEVELOPMENT.md',
   'docs/',
 ];
 

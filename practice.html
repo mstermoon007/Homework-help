@@ -1460,11 +1460,6 @@
       return; // 直接打印模式不进入常规流程
     }
 
-    // 知识库分片懒加载：确认科目后按需注入，供 Engine 解析知识点
-    var ensureKB = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.ensureKnowledgeData)
-      ? KnowledgeBank.ensureKnowledgeData(state.subject)
-      : Promise.resolve(null);
-
     // 有知识点参数（题型卡片直达）：待分片就绪后自动生成
     if (urlParams.kp || urlParams.kps) {
       ensureKB.then(function () { generate(); });

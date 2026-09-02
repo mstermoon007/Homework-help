@@ -91,9 +91,9 @@ check('.github/CODEOWNERS 存在', fileExists('.github/CODEOWNERS'));
 check('CODEOWNERS 包含 practice.html', fileContains('.github/CODEOWNERS', 'practice.html'));
 check('CODEOWNERS 包含 shared/common.js', fileContains('.github/CODEOWNERS', 'shared/common.js'));
 
-// 6. 贡献指南
-check('CONTRIBUTING.md 存在', fileExists('CONTRIBUTING.md'));
-check('CONTRIBUTING.md 提及禁止操作 DOM', fileContains('CONTRIBUTING.md', '禁止操作 DOM'));
+// 6. 贡献指南（V4.0.1 起统一维护于 docs/DEVELOPMENT.md）
+check('docs/DEVELOPMENT.md 存在', fileExists('docs/DEVELOPMENT.md'));
+check('docs/DEVELOPMENT.md 提及禁止操作 DOM', fileContains('docs/DEVELOPMENT.md', '禁止操作 DOM'));
 
 // 7. 插件注册表
 check('plugins/registry.js 存在', fileExists('plugins/registry.js'));
@@ -340,7 +340,7 @@ console.log('- 核心文件保护机制已建立（CODEOWNERS）');
 console.log('- 插件接口规范已定义（plugin-types.js）');
 console.log('- 标准样板插件可复用（_template.js）');
 console.log('- 本地插件验证工具可用（plugin-check.html）');
-console.log('- 贡献指南与编码规范已文档化（CONTRIBUTING.md）');
+console.log('- 贡献指南与编码规范已文档化（docs/DEVELOPMENT.md）');
 console.log('- 插件注册表骨架已创建（registry.js）');
 console.log('- 后续新增题型只需：复制样板 → 实现方法 → 注册 → 验证');
 console.log('- 防代码漂移的架构基础已具备，可持续迭代1-6年级全科目练习');

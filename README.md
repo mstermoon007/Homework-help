@@ -21,7 +21,7 @@
 
 ---
 
-## 🧩 内容覆盖（V2.0）
+## 🧩 内容覆盖
 
 ### 数学（1-6 年级 · 知识点覆盖率 100%，竞赛模块开发中）
 
@@ -87,8 +87,8 @@ python3 -m http.server 8080
 ```
 Homework-help/
 ├── index.html              # 首页：选择科目 / 年级
+├── subject-types.html      # 统一题型选择入口（语文/英语通过 URL 参数区分）
 ├── math-types.html         # 数学题型选择
-├── subject-types.html      # 统一题型选择页（语文/英语通过 URL 参数区分）
 ├── chinese-types.html      # 语文题型选择（重定向到 subject-types.html）
 ├── english-types.html      # 英语题型选择（重定向到 subject-types.html）
 ├── practice.html           # 统一练习页（生成/批改/打印）
@@ -100,6 +100,11 @@ Homework-help/
 │   └── english-*.js        # 英语插件
 ├── shared/                 # 唯一公共来源（single source of truth）
 │   ├── common.js           # [L0 运行时核心] App 全局 + [L1 共享渲染/工具] PluginUtil（随机/标准化/工厂/renderCard）
+│   ├── core.js             # 运行时核心（crypto 随机 / 布局 / 路由）
+│   ├── render.js           # 渲染工厂（createPlugin/createMathPlugin/renderCard）
+│   ├── plugin-loader.js    # 插件加载器 + SW 注册
+│   ├── check.js/ui-state.js/storage.js  # 批改 / 状态 / 持久化
+│   ├── difficulty.js       # 难度系统（1–10 → 结构分档 + 自适应）
 │   ├── tokens.css          # [层0] 设计令牌（唯一变量来源）
 │   ├── base.css            # [层1] 全局重置
 │   ├── components.css      # [层2] 共享组件（题目卡片/按钮/题型卡片/页面控制器…）
@@ -107,21 +112,22 @@ Homework-help/
 │   ├── pages.css           # [层4] 练习页专属样式
 │   ├── knowledge-bank.js   # 知识点库（年级 → 知识点 → 插件映射）
 │   ├── plugin-types.js     # 插件接口类型定义
+│   ├── svg-*.js            # SVG 生成器（几何/竖式/凑十/田字格/字母）
+│   ├── generation-engine.js# 统一生成入口（M4–M7 引擎）
 │   └── print.js            # 打印逻辑
 ├── pinyin-bank.js          # 拼音词库
 ├── sw.js                   # Service Worker 离线缓存
 ├── tests/                  # 自动化测试
-│   └── test-runner.html    # 基于 HTML 的测试运行器
-├── dev/                    # 开发校验脚本（coverage/verify/test）
-└── docs/                   # 文档：参考文档 + reports/ 历史报告（详见 docs/README.md）
+├── docs/                   # 文档（DEV_LOG / DEVELOPMENT / 参考）
+└── dev/                    # 开发校验脚本（coverage/verify/test）
 ```
 
 ---
 
 ## 🧑‍💻 开发与贡献
 
-详见 [CONTRIBUTING.md](CONTRIBUTING.md)（公共文件来源、插件开发规则、代码规范）。
-新手插件开发请先看 [docs/PLUGIN_QUICKSTART.md](docs/PLUGIN_QUICKSTART.md)（10 分钟上手教程）。
+详见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)（最新开发状态、规范、技术栈、Frozen Core 保护）。
+开发日志见 [docs/DEV_LOG.md](docs/DEV_LOG.md)，贡献规范见归档版 `archive/docs-2026-09/CONTRIBUTING.md`。
 
 - 新增题型：复制 `plugins/_template.js` 样板 → 实现 `generateQuestions` → 在 `plugins/registry.js` 注册 → 运行 `npm run check:registry` 与 `npm run check-plugin-interfaces` 验证。
 - 知识库静态页：`npm run generate:knowledge`（按源数据哈希增量生成，未变页面自动跳过）/ `npm run watch:knowledge`（监听 `shared/knowledge-*.js` 变化自动重建）。
