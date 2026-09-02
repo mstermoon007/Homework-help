@@ -134,6 +134,32 @@
     .asm { padding: 12px; }
     .asm-label { width: 36px; }
   }
+
+  /* ============ 任务3：固定通用工具栏（题量/难度/打印/刷新/清除记录，滚动吸顶） ============ */
+  .panel.controls {
+    position: sticky; top: 8px; z-index: 60;
+    background: var(--card, #fff); border: 1px solid var(--line, #e3e8f0); border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(40, 70, 120, .10);
+  }
+  @media print { .panel.controls { position: static; box-shadow: none; } }
+
+  /* ============ 任务3：底部知识页入口（当前知识点 → knowledge/{kpId}.html） ============ */
+  .kp-links {
+    max-width: 860px; margin: 12px auto 0; padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    background: var(--soft-bg, #f4f6fb); border: 1px dashed var(--line, #e3e8f0); border-radius: 12px;
+    font-size: 12.5px; color: var(--muted);
+  }
+  .kp-links[hidden] { display: none; }
+  .kp-links-label { font-weight: 800; color: var(--ink); }
+  .kp-links-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .kp-link {
+    color: var(--subject-primary, #4A90D9); font-weight: 700; text-decoration: none;
+    border: 1px solid var(--line, #e3e8f0); background: var(--card, #fff); border-radius: 999px; padding: 3px 10px;
+  }
+  .kp-link:hover { text-decoration: underline; }
+  .kp-links-all { margin-left: auto; color: var(--muted, #667); font-weight: 700; text-decoration: none; }
+  .kp-links-all:hover { text-decoration: underline; }
 </style>
 </head>
 <body data-page-node-id="rwBtS9BmX4E1JY5ZLzQA2D">
@@ -176,6 +202,8 @@
     </div>
     <div class="asm-body" id="asmList" data-page-node-id="ChpYYPGUiTkF1bjxkkikGn"></div>
     <div class="asm-actions" data-page-node-id="aktG27JBmBRGI5W8vA6FmP">
+      <button class="btn btn-ghost" id="asmSelectAllBtn" type="button" data-page-node-id="TbsAbX7sSeN4wmAvKfBq9W">全选</button>
+      <button class="btn btn-ghost" id="asmClearBtn" type="button" data-page-node-id="SgeWTAQm1y1Lm5txbS4ZM2">清空</button>
       <button class="btn btn-primary" id="asmSmartBtn" type="button" data-page-node-id="SH64PRNdFM4oZbA9DY5bKB">智能推荐</button>
       <button class="btn btn-primary" id="asmGenBtn" type="button" data-page-node-id="dBCvoUVJ5RjiHkzJasPF9H">生成所选题目</button>
       <span class="asm-hint" id="asmHint" data-page-node-id="BOyVAMVDr5m7ts2K3XuEVq"></span>
@@ -263,6 +291,13 @@
     </div>
   </div>
 
+  <!-- 任务3：底部知识页入口（当前知识点 → knowledge/{kpId}.html） -->
+  <div class="kp-links" id="kpLinksBar" hidden data-page-node-id="AygW7RhOx1BVxQ2jyP4EGm">
+    <span class="kp-links-label" data-page-node-id="Lzk5nO6bIEsP4TVCt49DIp">📖 当前知识点：</span>
+    <div class="kp-links-list" id="kpLinksList" data-page-node-id="ecUXeF2kHt0SZx7oT8QZ7"></div>
+    <a class="kp-links-all" id="kpLinksIndex" href="knowledge/knowledge-index.html" data-page-node-id="MLy6J5dDEtU4W1M8b319Dq">知识库全部 →</a>
+  </div>
+
   <footer data-page-node-id="JBkxZwGDuvcOmEu1e7cFfF">Homework Help · 插件化练习框架 · practice.html</footer>
 </div>
 
@@ -300,6 +335,9 @@
      此前 P3-R04 移除导致浏览器加载 bundle 时抛「缺少全局 PLUGIN_REGISTRY」，
      实时生成链路在 strategy bundle 初始化阶段即中断（P0-001 上游根因）。 -->
 <script src="plugins/registry.js"></script>
+<!-- 任务3：浏览器插件脚本加载器（App.PluginLoader），用于装载旧插件（legacy 轨
+     Generator 需对应插件实例，见 shared/legacy/plugin-adapter.js 的 loadPlugin）。 -->
+<script src="shared/plugin-loader.js"></script>
 <script src="shared/strategy-engine.bundle.js"></script>
 <!-- C01：presentation-engine.bundle.js 提供 global.PresentationEngine（其 __req 委托
      strategy-engine.bundle.js 的 require 命名空间）。generation-engine 的
@@ -358,6 +396,13 @@
   };
 
   // ============ URL 参数解析 ============
+  // 任务3：URL 科目别名归一化（select.html 用 cn/en，旧二级页用 chinese/english）
+  function canonSubjectForUI(raw) {
+    var m = { math: 'math', chinese: 'chinese', english: 'english', cn: 'chinese', en: 'english' };
+    var r = String(raw || '').toLowerCase();
+    return m[r] || 'math';
+  }
+
   function parseUrlParams() {
     var p = new URLSearchParams(window.location.search);
     var grade = Number(p.get('grade'));
@@ -367,7 +412,7 @@
     var difficulty = Number(p.get('difficulty'));
     if (!(difficulty >= 1 && difficulty <= 10)) difficulty = 3;
     return {
-      subject: (p.get('subject') || 'math').trim(),
+      subject: canonSubjectForUI(p.get('subject')),
       grade: grade,
       count: count,
       difficulty: difficulty,
@@ -378,7 +423,9 @@
       // P7: 直接打印参数
       print: p.get('print') === '1',
       // M6-R22：自适应模式（legacy|new|shadow），缺省由是否有学习数据决定
-      adaptiveMode: (p.get('adaptiveMode') || '').trim() || null
+      adaptiveMode: (p.get('adaptiveMode') || '').trim() || null,
+      // 任务3：兼容旧 host 插件参数（自动反查知识点）
+      plugin: (p.get('plugin') || '').trim() || null
     };
   }
 
@@ -472,17 +519,25 @@
   // P7-R01: 统一练习入口 —— 经 PracticeSession 生成
   function generate() {
     if (!practiceSession) return;
-    practiceSession.start().then(function (result) {
-      if (result && result.html) {
-        applyExerciseSet({ questions: result.questions, meta: result.meta });
-      }
-    }).catch(function (err) {
-      stopTimer();
-      $('checkBtn').disabled = true;
-      $('revealBtn').disabled = true;
-      $('printBtn').disabled = true;
-      showNotice('生成失败，请重试', err.message);
-    });
+    var run = function () {
+      practiceSession.start().then(function (result) {
+        if (result && result.html) {
+          applyExerciseSet({ questions: result.questions, meta: result.meta });
+        }
+      }).catch(function (err) {
+        stopTimer();
+        $('checkBtn').disabled = true;
+        $('revealBtn').disabled = true;
+        $('printBtn').disabled = true;
+        showNotice('生成失败，请重试', err.message);
+      });
+    };
+    // 任务3：装载当前科目/年级旧插件（幂等），兜底不阻断
+    if (ensureLegacyPlugins) {
+      ensureLegacyPlugins(state.subject, state.grade).then(run).catch(run);
+    } else {
+      run();
+    }
   }
 
   function applyExerciseSet(set) {
@@ -520,12 +575,14 @@
     return String(raw).replace(/^小学?[一二三四五六1-6]+年级\s*/, '');
   }
 
-  // 统一标题组装：年级 + 题型（+ 题量）。题型名统一剥离自带的年级前缀（cleanTypeTitle），
-  // 年级来自 URL 参数，题量可选——屏显主标题与打印标题共用同一格式，保证「四年级 竖式计算（50题）」一致。
+  // 统一标题组装（任务3：年级 + 科目 + 题型 [+ 题量]）。
+  // 例：「二年级数学 · 口算练习（20题）」；题型名剥离自带年级前缀（cleanTypeTitle），
+  // 屏显主标题与打印标题共用该格式，保证「二年级数学 · 竖式计算（50题）」一致。
   function buildTitle(grade, rawName, count) {
     var g = App.getGradeName(grade);
+    var s = (App.SUBJECT_NAMES && App.SUBJECT_NAMES[state.subject]) ? App.SUBJECT_NAMES[state.subject] : '';
     var t = cleanTypeTitle(rawName);
-    return (count == null) ? (g + ' ' + t) : (g + ' ' + t + '（' + count + '题）');
+    return (count == null) ? (g + s + ' · ' + t) : (g + s + ' · ' + t + '（' + count + '题）');
   }
 
   // 插件加载后动态细化 LearningResource 的 name/description（不影响爬虫获取默认内容）
@@ -548,9 +605,11 @@
   function render(set) {
     var area = $('problemsArea');
     var meta = set.meta || {};
-    // 统一主标题：年级 + 题型（题量），由 buildTitle 组装。
-    $('sheetTitle').textContent = buildTitle(state.grade, meta.title || '练习题', set.questions.length);
-    updateResourceLD(meta.title || '小学', state.grade);
+    // 统一主标题：年级 + 科目 + 题型（题量），由 buildTitle 组装。
+    var isWrongBook = /错题本/.test(String(meta.title || ''));
+    var typeName = isWrongBook ? '错题本 · 练习' : deriveTypeName();
+    $('sheetTitle').textContent = buildTitle(state.grade, typeName, set.questions.length);
+    updateResourceLD(typeName, state.grade);
     // P3-R04：题目区域统一使用 Engine 渲染成品（state.lastSemantic.html），
     // 不再回退 legacy renderLegacySet / renderGeneric / plugin.render。
     var body;
@@ -1093,7 +1152,9 @@
     grade: urlParams.grade,
     selected: {},
     collapsed: {},
-    smartSeeded: false
+    smartSeeded: false,
+    qt: null,                // 任务3：URL qt 题型过滤（模块id / 细粒度type / 标准题型 / 特殊题型）
+    recommendType: null      // 任务3：入口（kps/plugin）推荐题型名（标题 / 提示）
   };
   var asmKpById = {};
   var ASM_LEVEL_TAGS = ['基础', '变式', '综合', '拓展'];
@@ -1110,6 +1171,184 @@
     english: { modules: ['E4','E1','E3'], highLevelBias: false,
       hint: '🎯 优先补薄弱 / 易错点，并侧重情景对话与听说训练。' }
   };
+
+  // ============ 任务3：URL 入口解析（qt / kps / plugin）与知识点过滤 ============
+  // 特殊题型（select.html 的 qtype 语义，同时兼容历史 qt 传参）
+  var QT_SPECIAL = { comprehensive: '综合练习', exam: '考试', competition: '竞赛' };
+  // 标准 questionTypeId → 模块（用于 qt=标准题型 时过滤支撑该题型的模块）
+  var QT_STD_MODULES = {
+    oral: ['M1'], calc: ['M2', 'M3'], vertical: ['M2'], mixed: ['M3'],
+    fill: ['M4'], match: ['M5'], operation: ['M6', 'M9'], draw: ['M6', 'M9'],
+    picture: ['M7'], apply: ['M8'], word: ['M8'], stats: ['M9'], reason: ['M10'],
+    judge: ['M11'], choice: ['M12'], open: ['M6', 'M8'], geometry: ['M6']
+  };
+  // 细粒度 type → 展示名（qt=addsub/cushi 等历史深链）
+  var TYPE_PRETTY = {
+    addsub: '加减法', muldiv: '乘除法', cushi: '凑十法', pingshi: '平十法', poshi: '破十法',
+    mix: '混合', pattern: '找规律', clock: '钟表', money: '人民币'
+  };
+
+  function asmModuleCatalog() { return window.MODULE_CATALOG || []; }
+  function moduleNameOf(mid) {
+    var catalog = asmModuleCatalog();
+    for (var i = 0; i < catalog.length; i++) if (catalog[i] && catalog[i].id === mid) return catalog[i].name || mid;
+    return mid;
+  }
+  function moduleNameForIds(ids) {
+    var mids = {};
+    ids.forEach(function (id) { var k = asmKpById[id]; if (k && k.moduleId) mids[k.moduleId] = 1; });
+    var keys = Object.keys(mids);
+    if (keys.length === 1) return moduleNameOf(keys[0]);
+    return keys.length ? '综合练习' : null;
+  }
+  // 知识点是否落在 qt 过滤范围内（无 qt 视为全部可见）
+  function kpVisibleInQT(k, qt) {
+    var q = String(qt || '').toLowerCase().trim();
+    if (!q) return true;
+    if (q === 'competition') return (k.moduleId || '').toUpperCase().charAt(0) === 'C';
+    if (k.moduleId && k.moduleId.toLowerCase() === q) return true;
+    if (k.type && String(k.type).toLowerCase() === q) return true;
+    var mods = QT_STD_MODULES[q];
+    if (mods && k.moduleId && mods.indexOf(k.moduleId) !== -1) return true;
+    return false;
+  }
+  // qt → 展示名（标题 / 提示用）
+  function qtName(qt) {
+    var q = String(qt || '').trim();
+    if (QT_SPECIAL[q]) return QT_SPECIAL[q];
+    if (/^[MCEN]\d+$/i.test(q)) return moduleNameOf(q.toUpperCase());
+    var mods = QT_STD_MODULES[q.toLowerCase()];
+    if (mods && mods.length) return moduleNameOf(mods[0]);
+    return TYPE_PRETTY[q] || null;
+  }
+  function asmPluginById() {
+    var p = {}; (window.PLUGIN_REGISTRY || []).forEach(function (r) { p[r.id] = r; });
+    return p;
+  }
+  // 旧 plugin= 参数反查知识点：优先按 KB.pluginId 直配 → 其次按注册表 moduleIds → 兜底该科目年级全部可用
+  function asmResolvePlugin(plugin, all) {
+    var p = asmPluginById()[plugin] || null;
+    var ids = [];
+    var direct = all.filter(function (k) { return k.pluginId === plugin; });
+    if (direct.length) {
+      var avail = direct.filter(function (k) { return k.avail; });
+      ids = (avail.length ? avail : direct).map(function (k) { return k.id; });
+    } else if (p && p.moduleIds && p.moduleIds.length) {
+      ids = all.filter(function (k) { return k.avail && p.moduleIds.indexOf(k.moduleId) !== -1; }).map(function (k) { return k.id; });
+    } else if (p && p.grades && p.grades.indexOf(asmState.grade) >= 0) {
+      ids = all.filter(function (k) { return k.avail; }).map(function (k) { return k.id; });
+    } else {
+      ids = all.filter(function (k) { return k.avail; }).map(function (k) { return k.id; });
+    }
+    return { ids: ids, name: (p && p.name) || null };
+  }
+  // 当前过滤范围下的可见知识点
+  function asmVisibleKps() {
+    var all = [];
+    asmBuildData().forEach(function (g) { all = all.concat(g.kps); });
+    return all;
+  }
+  // 当前可选题型名（标题用）：入口推荐 > qt 语义 > 当前勾选模块 > 综合练习
+  function deriveTypeName() {
+    if (asmState.recommendType) return asmState.recommendType;
+    var fromQt = urlParams.qt ? qtName(urlParams.qt) : null;
+    if (fromQt) return fromQt;
+    var ids = Object.keys(asmState.selected).filter(function (id) { var k = asmKpById[id]; return k && k.avail; });
+    if (ids.length) { var m = moduleNameForIds(ids); if (m) return m; }
+    return '综合练习';
+  }
+  // 根据 URL 入参（kps / kp / qt / plugin）统一勾选 + 推荐题型；返回是否触发自动生成
+  function asmSeedFromUrl() {
+    asmState.selected = {};
+    asmState.qt = null;
+    asmState.recommendType = null;
+    var all = [];
+    asmBuildData().forEach(function (g) { all = all.concat(g.kps); });
+    if (urlParams.kps) {
+      urlParams.kps.split(',').forEach(function (x) { if (x && asmKpById[x]) asmState.selected[x] = true; });
+      asmState.recommendType = moduleNameForIds(Object.keys(asmState.selected)) || null;
+    } else if (urlParams.kp) {
+      if (asmKpById[urlParams.kp]) asmState.selected[urlParams.kp] = true;
+      asmState.recommendType = (asmKpById[urlParams.kp] ? moduleNameOf(asmKpById[urlParams.kp].moduleId) : null) || null;
+    } else if (urlParams.qt) {
+      asmState.qt = urlParams.qt;
+      asmVisibleKps().forEach(function (k) { if (k.avail) asmState.selected[k.id] = true; });
+    } else if (urlParams.plugin) {
+      var r = asmResolvePlugin(urlParams.plugin, all);
+      r.ids.forEach(function (id) { if (asmKpById[id]) asmState.selected[id] = true; });
+      asmState.recommendType = r.name || null;
+    }
+    return { auto: !!(urlParams.kp || urlParams.kps || urlParams.qt || urlParams.plugin) };
+  }
+  function asmSelectAll() {
+    asmVisibleKps().forEach(function (k) { if (k.avail) asmState.selected[k.id] = true; });
+    asmRender();
+  }
+  function asmClearAll() {
+    asmState.selected = {};
+    asmRender();
+  }
+  // 任务3：装载当前科目/年级的旧插件（legacy 轨 Generator 依赖插件实例）。
+  //   装载后登记到 window.__mathSubPlugins 与 window.App.plugins（shared/legacy/plugin-adapter.js
+  //   的 loadPlugin 优先读这两个全局；综合插件 math-comprehensive 亦读 __mathSubPlugins）。
+  //   幂等：已装载的插件直接复用。返回 Promise。
+  var asmPluginReady = null;
+  function ensureLegacyPlugins(subject, grade) {
+    if (asmPluginReady) return asmPluginReady;
+    asmPluginReady = (function () {
+      var loadScript = function (src) {
+        return new Promise(function (resolve, reject) {
+          if (typeof window.App === 'object' && window.App.PluginLoader && window.App.PluginLoader.loadScript) {
+            window.App.PluginLoader.loadScript(src).then(resolve, reject);
+            return;
+          }
+          var s = document.createElement('script'); s.async = false; s.src = src;
+          var done = false; var timer = setTimeout(function () { if (done) return; done = true; reject(new Error('插件加载超时: ' + src)); }, 8000);
+          s.onload = function () { if (done) return; done = true; clearTimeout(timer); resolve(); };
+          s.onerror = function () { if (done) return; done = true; clearTimeout(timer); reject(new Error('插件加载失败: ' + src)); };
+          document.head.appendChild(s);
+        });
+      };
+      var canon = { math: 'math', chinese: 'chinese', cn: 'chinese', english: 'english', en: 'english' }[subject] || subject;
+      // 兼容 select（cn/en）→ registry 用 chinese/english
+      var registryKey = canon === 'chinese' ? 'chinese' : (canon === 'english' ? 'english' : 'math');
+      var records = ((window.PLUGIN_REGISTRY) || []).filter(function (r) {
+        return r.subject === registryKey && !r.isPlaceholder;
+      });
+      var depSet = {};
+      records.forEach(function (r) { (r.deps || []).forEach(function (d) { depSet[d] = true; }); });
+      var seq = Promise.resolve();
+      Object.keys(depSet).forEach(function (d) { seq = seq.then(function () { return loadScript(d); }); });
+      // 依次装载各插件，onload 后抓取 window.__currentPlugin 登记
+      records.forEach(function (r) {
+        seq = seq.then(function () { return loadScript(r.file); }).then(function () {
+          var p = window.__currentPlugin || null;
+          if (p && (grade == null || !p.grades || p.grades.indexOf(grade) >= 0)) {
+            (window.__mathSubPlugins = window.__mathSubPlugins || {})[r.id] = p;
+            window.App = window.App || {}; window.App.plugins = window.App.plugins || {}; window.App.plugins[r.id] = p;
+          }
+        }).catch(function (e) { console.warn('[plugin] 装载失败(忽略): ' + r.id, e && e.message); });
+      });
+      return seq;
+    })();
+    return asmPluginReady;
+  }
+  // 底部知识页入口：当前知识点 → knowledge/{kpId}.html
+  function renderKpLinks() {
+    var bar = $('kpLinksBar'); if (!bar) return;
+    var ids = Object.keys(asmState.selected).filter(function (id) { return asmKpById[id] && asmKpById[id].avail; });
+    if (!ids.length) ids = (state.knowledgePointIds || []).filter(function (id) { return asmKpById[id]; });
+    if (!ids.length) { bar.hidden = true; return; }
+    var list = $('kpLinksList');
+    list.innerHTML = ids.slice(0, 14).map(function (id) {
+      var k = asmKpById[id];
+      return '<a class="kp-link" href="knowledge/' + esc(id) + '.html" title="' + esc(k && k.name ? k.name : id) + '">'
+        + esc(k && k.name ? k.name : id) + '</a>';
+    }).join('');
+    var canon = { math: 'math', chinese: 'cn', english: 'en' }[state.subject] || state.subject;
+    $('kpLinksIndex').href = 'knowledge/knowledge-index.html?subject=' + encodeURIComponent(canon) + '&grade=' + state.grade;
+    bar.hidden = false;
+  }
 
   function asmPluginIndex() {
     var idx = {}; var reg = window.PLUGIN_REGISTRY || [];
@@ -1148,7 +1387,10 @@
       // 「可练」判定：注册表存在 + 非占位插件 + 年级在插件 grades 内（与二级页契约一致）
       var avail = !!(plugin && !plugin.isPlaceholder && (!plugin.grades || plugin.grades.indexOf(grade) >= 0));
       var k = { id: e.id, name: e.name || e.id, moduleId: e.moduleId || '', type: e.type || '',
-        level: level, tag: ASM_LEVEL_TAGS[level - 1], avail: avail, stat: asmReadStat(e.id) };
+        level: level, tag: ASM_LEVEL_TAGS[level - 1], avail: avail, stat: asmReadStat(e.id),
+        pluginId: e.pluginId || '' };
+      // 任务3：qt 题型过滤（comprehensive/exam 为全量覆盖，不做视图过滤）
+      if (asmState.qt && asmState.qt !== 'comprehensive' && asmState.qt !== 'exam' && !kpVisibleInQT(k, asmState.qt)) return;
       kps.push(k); asmKpById[k.id] = k;
     });
     var buckets = {};
@@ -1213,14 +1455,32 @@
       }
     }
   }
-  function asmRender() {
+function asmRender() {
     var list = $('asmList'); if (!list) return;
     var groups = asmBuildData();
-    if (!groups.length) { list.innerHTML = '<div class="asm-hint">该年级暂无可用知识点，试试切换其他年级。</div>'; }
-    else { list.innerHTML = groups.map(asmGroupHtml).join(''); }
+    if (!groups.length) {
+      list.innerHTML = asmState.qt
+        ? '<div class="asm-hint">按当前题型过滤后暂无可用知识点，试试切换其他年级 / 清除题型筛选。</div>'
+        : '<div class="asm-hint">该年级暂无可用知识点，试试切换其他年级。</div>';
+    } else {
+      list.innerHTML = groups.map(asmGroupHtml).join('');
+    }
     asmRenderSwitches();
     var h = $('asmHint');
-    if (h) h.textContent = (ASM_SMART[asmState.subject] || {}).hint || '🎯 依据练习记录推荐：优先补薄弱 / 易错点。';
+    if (h) {
+      if (asmState.qt) {
+        var qtn = qtName(asmState.qt) || asmState.qt;
+        h.textContent = (asmState.qt === 'comprehensive' || asmState.qt === 'exam')
+          ? '已进入「' + qtn + '」，覆盖该年级全部可用知识点，可按需勾选后生成。'
+          : '已按题型「' + qtn + '」过滤知识点，全选 / 清空作用于当前范围。';
+      } else if (asmState.recommendType) {
+        h.textContent = '已按入口参数勾选知识点，推荐题型：' + asmState.recommendType + '。';
+      } else {
+        h.textContent = (ASM_SMART[asmState.subject] || {}).hint || '🎯 依据练习记录推荐：优先补薄弱 / 易错点。';
+      }
+    }
+    $('sheetTitle').textContent = buildTitle(state.grade, deriveTypeName(), null);
+    renderKpLinks();
   }
   function asmSmartKps() {
     var rule = ASM_SMART[asmState.subject] || { modules: [], highLevelBias: false };
@@ -1243,6 +1503,7 @@
   function asmToggle(id, on) {
     var k = asmKpById[id]; if (!k || !k.avail) return;
     if (on) asmState.selected[id] = true; else delete asmState.selected[id];
+    asmState.recommendType = null; // 用户手动勾选后，标题/推荐让位给当前选择
     var node = $('asmList').querySelector('.asm-kp[data-kp="' + id + '"]');
     if (node) node.classList.toggle('on', !!on);
   }
@@ -1261,11 +1522,29 @@
     state.grade = asmState.grade;
     state.knowledgePointIds = ids;   // 供错题本 / 难度 EMA 使用（practiceContextId / feedLearnerModel 优先读取）
     state.kp = null; state.kps = null;
-    practiceSession = new PracticeSession({
-      subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
-      knowledgePointIds: ids, adaptive: false, learnerProfile: null
-    });
-    generate();
+    if (ensureLegacyPlugins) {
+      // 任务3：legacy/综合轨依赖插件实例，先装载再生成
+      ensureLegacyPlugins(state.subject, state.grade).then(function () {
+        practiceSession = new PracticeSession({
+          subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
+          knowledgePointIds: ids, adaptive: false, learnerProfile: null, titleType: deriveTypeName()
+        });
+        generate();
+      }).catch(function (e) {
+        // 插件装载失败不阻断核心（native 轨仍可用），照常生成
+        practiceSession = new PracticeSession({
+          subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
+          knowledgePointIds: ids, adaptive: false, learnerProfile: null, titleType: deriveTypeName()
+        });
+        generate();
+      });
+    } else {
+      practiceSession = new PracticeSession({
+        subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
+        knowledgePointIds: ids, adaptive: false, learnerProfile: null, titleType: deriveTypeName()
+      });
+      generate();
+    }
   }
   function asmBind() {
     var sb = $('asmSubject');
@@ -1312,6 +1591,10 @@
       asmSmartKps().forEach(function (k) { if (k.avail) asmState.selected[k.id] = true; });
       asmState.smartSeeded = true; asmRender();
     });
+    var selAllBtn = $('asmSelectAllBtn');
+    if (selAllBtn) selAllBtn.addEventListener('click', asmSelectAll);
+    var clrBtn = $('asmClearBtn');
+    if (clrBtn) clrBtn.addEventListener('click', asmClearAll);
     var genBtn = $('asmGenBtn');
     if (genBtn) genBtn.addEventListener('click', asmGenerateFromSelection);
   }
@@ -1404,7 +1687,7 @@
     }
 
     // 标题与参数面板
-    $('sheetTitle').textContent = buildTitle(state.grade, '练习题', null);
+    $('sheetTitle').textContent = buildTitle(state.grade, deriveTypeName(), null);
     $('controlsPanel').style.display = '';
     syncCountUI();
     var diffInput = $('difficultyInput');
@@ -1417,16 +1700,11 @@
 
     buildQuickSwitch();
 
-    // 合并：渲染二级页装配区（科目/年级/题型选择），深链带 kp/kps 时预先勾选
+    // 合并：渲染二级页装配区（科目/年级/题型选择），入参（kp/kps/qt/plugin）在分片就绪后统一勾选
     asmBind();
-    if (urlParams.kp) asmState.selected[urlParams.kp] = true;
-    if (urlParams.kps) urlParams.kps.split(',').forEach(function (x) { if (x) asmState.selected[x] = true; });
     asmRender();
-    // 装配区列表依赖知识库分片，须待加载完成后重渲染（否则首屏列表为空）
-    if (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.ensureKnowledgeData) {
-      KnowledgeBank.ensureKnowledgeData(state.subject).then(function () { asmRender(); }).catch(function () { asmRender(); });
-    }
     var asmPanel = $('assemblyPanel'); if (asmPanel) asmPanel.hidden = false;
+    $('sheetTitle').textContent = buildTitle(state.grade, deriveTypeName(), null);
 
     // 会话切换：清空 SVG 渲染缓存，避免长会话内存只增不减（svg-core.clearCache）
     if (window.SVGUtil && window.SVGUtil.clearCache) window.SVGUtil.clearCache();
@@ -1439,31 +1717,46 @@
       area.innerHTML = '<div class="empty">选择参数后点击「生成练习题」开始～</div>';
     }
 
-    // 知识库分片懒加载：确认科目后按需注入，供 Engine 解析知识点
+    // 知识库分片懒加载：确认科目后按需注入 → 统一解析 URL 入参 → 需要时自动生成
     var ensureKB = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.ensureKnowledgeData)
       ? KnowledgeBank.ensureKnowledgeData(state.subject)
       : Promise.resolve(null);
 
-    // P7: 直接打印参数
-    if (urlParams.print && (urlParams.kp || urlParams.kps)) {
-      ensureKB.then(function () {
-        practiceSession.start().then(function (result) {
-          if (result && result.html) {
-            applyExerciseSet({ questions: result.questions, meta: result.meta });
-            // 生成完成后直接打印
-            setTimeout(function () { practiceSession.print(); }, 300);
-          }
-        }).catch(function (err) {
-          showNotice('生成失败', err && err.message);
-        });
-      });
-      return; // 直接打印模式不进入常规流程
+    // 任务3：入参归一（kp/kps/qt/plugin）勾选 + 自动生成 + 打印参数支持
+    function initFromUrlSeed() {
+      var seed = asmSeedFromUrl();
+      asmRender();
+      $('sheetTitle').textContent = buildTitle(state.grade, deriveTypeName(), null);
+      if (!seed.auto) return;
+      // P7: 直接打印参数（生成完成后立即打印）
+      if (urlParams.print) {
+        state.subject = asmState.subject;
+        state.grade = asmState.grade;
+        state.knowledgePointIds = Object.keys(asmState.selected);
+        var buildAndPrint = function () {
+          practiceSession = new PracticeSession({
+            subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
+            knowledgePointIds: state.knowledgePointIds, adaptive: false, learnerProfile: null,
+            titleType: deriveTypeName()
+          });
+          practiceSession.start().then(function (result) {
+            if (result && result.html) {
+              applyExerciseSet({ questions: result.questions, meta: result.meta });
+              setTimeout(function () { practiceSession.print(); }, 300);
+            }
+          }).catch(function (err) {
+            showNotice('生成失败', err && err.message);
+          });
+        };
+        if (ensureLegacyPlugins) { ensureLegacyPlugins(state.subject, state.grade).then(buildAndPrint).catch(buildAndPrint); }
+        else buildAndPrint();
+        return; // 直接打印模式不进入常规流程
+      }
+      // 题型卡片 / 深链直达：待分片就绪后自动生成
+      asmGenerateFromSelection();
     }
 
-    // 有知识点参数（题型卡片直达）：待分片就绪后自动生成
-    if (urlParams.kp || urlParams.kps) {
-      ensureKB.then(function () { generate(); });
-    }
+    ensureKB.then(initFromUrlSeed).catch(initFromUrlSeed);
   }
 
   bindEvents();

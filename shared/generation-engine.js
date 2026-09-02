@@ -47,6 +47,9 @@
     return null;
   }
 
+  // Phase 0: 委托给 GenerationAPI（冻结门面）
+  var GenerationAPI = ensure(null, 'GenerationAPI', './generation/api.js');
+
   function getStrategyEngine() {
     return ensure(null, 'StrategyEngine', './strategy/strategy-engine.js');
   }
@@ -155,13 +158,25 @@
     }
   }
 
+  function requireOrGlobal(key, rel) {
+    if (isBrowser && global[key]) return global[key];
+    if (typeof require === 'function') {
+      try { return require(rel); } catch (e) { /* ignore */ }
+    }
+    return null;
+  }
+
   /**
-   * 生成 + 渲染（主链出口）。
+   * 生成 + 渲染（主链出口）—— 委托 GenerationAPI.generate
    * @param {Object} request GenerationRequest
    * @param {Object} [options] { renderOptions, columns, legacyOutput, skipValidation }
    * @returns {Promise<{ questions, items, html, plans, trace, renderOptions }>}
    */
   function generate(request, options) {
+    if (GenerationAPI && typeof GenerationAPI.generate === 'function') {
+      return GenerationAPI.generate(request, options);
+    }
+    // 回退：原内联实现（兼容性）
     options = options || {};
     var RO = getRenderOptions();
     var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop', density: 'normal' };
@@ -185,6 +200,37 @@
         };
       });
     });
+  }
+
+  /**
+   * 同步生成 (Phase 0 Task 0.1) —— 委托 GenerationAPI.generateSync
+   * @param {Object} request
+   * @param {Object} [options]
+   * @returns {Object} GenerateResult
+   */
+  function generateSync(request, options) {
+    if (GenerationAPI && typeof GenerationAPI.generateSync === 'function') {
+      return GenerationAPI.generateSync(request, options);
+    }
+    throw new Error('GenerationAPI.generateSync 不可用');
+  }
+
+  /**
+   * 计划校验 (Phase 0 Task 0.1) —— 委托 GenerationAPI.validatePlan
+   * @param {Object} plan QuestionPlan
+   * @returns {string[]} 错误信息数组
+   */
+  function validatePlan(plan) {
+    if (GenerationAPI && typeof GenerationAPI.validatePlan === 'function') {
+      return GenerationAPI.validatePlan(plan);
+    }
+    // 回退：直接调用 StrategyValidator
+    var validator = requireOrGlobal(null, './strategy/strategy-validator.js');
+    if (validator && typeof validator.validatePlan === 'function') {
+      var r = validator.validatePlan(plan);
+      return r.valid ? [] : (r.errors || ['未知校验错误']);
+    }
+    return ['Validator 不可用'];
   }
 
   /** 依序执行各 QuestionPlan → SemanticQuestion[]（每计划内 Retry/Validator/Regenerate） */
@@ -340,6 +386,8 @@
   var API = {
     build: build,
     generate: generate,
+    generateSync: generateSync,
+    validatePlan: validatePlan,
     render: render,
     generateAndRender: generateAndRender,
     isComprehensive: isComprehensive,

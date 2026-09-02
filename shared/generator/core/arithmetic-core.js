@@ -1,8 +1,11 @@
 /**
- * shared/generator/core/arithmetic-core.js — M4-R06 核心算术抽取件
+ * shared/generator/core/arithmetic-core.js — M4-R06 核心算术抽取件 (P7 Task 4.3 配置化)
  *
  * 抽离核心随机数生成 / 操作数生成 / 结构生成 / 答案计算 / 干扰项生成。
  * 纯函数，不读 DOM、不生成 HTML/SVG、不解释全局难度（全部来自约束参数）。
+ *
+ * 特殊口算结构（SPECIAL_KINDS）：15 种 kind 映射到独立构造函数，
+ * buildSpecialKind 查表调用，新增 kind 只需在配置表添加一行。
  */
 'use strict';
 
@@ -533,27 +536,47 @@ function buildMulLaw(rng) {
 }
 
 /**
- * M4-R24/M4-R25/M4-R26 特殊口算结构入口：按 kind 分派到专用构造（整数域 + 小数/运算律 + 简易凑整）。
+ * 特殊口算结构配置表（15 种 kind → 独立构造函数）
+ * 新增 kind 只需在此表添加一行：{ kind: 'xxx', build: buildXxx, needsRange: true/false }
+ * needsRange: true 表示需要传递 cfg.numberRange 作为第二个参数
+ * @type {Object}
+ */
+var SPECIAL_KINDS = {
+  // 整数域口算
+  'big-addsub':    { build: buildBigAddsub,    needsRange: false }, // 大数加减
+  'mul3x1':        { build: buildMul3x1,       needsRange: false }, // 三位数乘一位数
+  'mul2tens':      { build: buildMul2tens,     needsRange: false }, // 两位数乘整十数
+  'div-tens':      { build: buildDivTens,      needsRange: true  }, // 除数是整十数
+  'add-law':       { build: buildAddLaw,       needsRange: false }, // 加法运算律
+  'mul-law':       { build: buildMulLaw,       needsRange: false }, // 乘法运算律
+  'neg-add-sub':   { build: buildNegAddsub,    needsRange: false }, // 负数加减
+
+  // 小数口算
+  'dec-addsub':    { build: buildDecAddsub,    needsRange: false }, // 小数加减
+  'law-oral':      { build: buildLawOral,      needsRange: false }, // 运算律简便口算
+  'dec-mul-oral':  { build: buildDecMulOral,   needsRange: true  }, // 小数乘法口算
+  'dec-div-oral':  { build: buildDecDivOral,   needsRange: true  }, // 小数除法口算
+  'dec-mult':      { build: buildDecMult,      needsRange: true  }, // 小数乘法笔算
+
+  // 括号/填空/填运算符结构
+  'bracket':       { build: buildBracket,      needsRange: true  }, // 括号两步运算
+  'fill-operand':  { build: buildFillOperand,  needsRange: true  }, // 填未知数
+  'fill-operator': { build: buildFillOperator, needsRange: true  }  // 填运算符
+};
+
+/**
+ * 特殊口算结构入口：查表调用（P7 Task 4.3 配置化）
  * 其余 kind 返回 null（由调用方回退通用 generateStructure）。
  * @param {function} rng 种子随机源
  * @param {Object} cfg { kind, numberRange }
+ * @returns {Object|null}
  */
 function buildSpecialKind(rng, cfg) {
   cfg = cfg || {};
   var kind = cfg.kind;
-  if (kind === 'big-addsub') return buildBigAddsub(rng);
-  if (kind === 'mul3x1') return buildMul3x1(rng);
-  if (kind === 'mul2tens') return buildMul2tens(rng);
-  if (kind === 'div-tens') return buildDivTens(rng, cfg.numberRange);
-  if (kind === 'dec-addsub') return buildDecAddsub(rng);
-  if (kind === 'law-oral') return buildLawOral(rng);
-  if (kind === 'dec-mul-oral') return buildDecMulOral(rng, cfg.numberRange);
-  if (kind === 'dec-div-oral') return buildDecDivOral(rng, cfg.numberRange);
-  if (kind === 'add-law') return buildAddLaw(rng);
-  if (kind === 'mul-law') return buildMulLaw(rng);
-  if (kind === 'neg-add-sub') return buildNegAddsub(rng);
-  if (kind === 'dec-mult') return buildDecMult(rng);
-  return null;
+  var entry = SPECIAL_KINDS[kind];
+  if (!entry) return null;
+  return entry.needsRange ? entry.build(rng, cfg.numberRange) : entry.build(rng);
 }
 
 module.exports = {
@@ -582,5 +605,6 @@ module.exports = {
   buildNegAddsub: buildNegAddsub,
   buildDecMult: buildDecMult,
   trimDec: trimDec,
-  buildSpecialKind: buildSpecialKind
+  buildSpecialKind: buildSpecialKind,
+  SPECIAL_KINDS: SPECIAL_KINDS
 };

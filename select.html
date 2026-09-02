@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>选择练习 · 小学练习本</title>
+<link rel="stylesheet" href="shared/tokens.css">
+<link rel="stylesheet" href="shared/base.css">
+<link rel="stylesheet" href="shared/components.css">
+<link rel="stylesheet" href="shared/states.css">
+<style>
+  body {
+    font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    font-size: 14px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ============ 顶部导航 ============ */
+  .top-nav {
+    background: var(--card);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-nav .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--brand);
+  }
+  .top-nav .nav-logo {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #4A90D9, #7EB6F0);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #fff;
+  }
+  .back-home {
+    color: var(--brand);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+  .back-home:hover { background: var(--math-bg, #eef5ff); }
+
+  /* ============ 主视觉区（小型横幅） ============ */
+  .page-hero {
+    background: linear-gradient(160deg, #4A90D9 0%, #6DB3F2 40%, #7EB6F0 100%);
+    color: #fff;
+    padding: 28px 24px;
+  }
+  .page-hero .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .page-hero h1 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .page-hero .hero-desc {
+    font-size: 0.85rem;
+    opacity: 0.95;
+    line-height: 1.6;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+
+  /* ============ 选择区 ============ */
+  .select-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 24px 40px;
+  }
+  .sel-block {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  .sel-block .blk-title {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sel-opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .opt-btn {
+    border: 1.5px solid var(--line-strong, #d6e2f2);
+    background: #fff;
+    color: var(--ink);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+  .opt-btn.on {
+    background: var(--grad-cta);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(245,166,35,0.35);
+  }
+  .opt-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .opt-btn .opt-ico { margin-right: 6px; }
+
+  /* 题型网格 */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .type-card {
+    border: 1.5px solid var(--line-strong, #d6e2f2);
+    background: #fff;
+    color: var(--ink);
+    border-radius: 12px;
+    padding: 14px 12px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    position: relative;
+  }
+  .type-card .tc-tag {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .type-card:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+  .type-card.on {
+    background: var(--grad-cta);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(245,166,35,0.35);
+  }
+  .type-card.on .tc-tag { color: rgba(255,255,255,0.9); }
+  .type-card:disabled { opacity: 0.35; cursor: not-allowed; }
+  .type-grid .type-card .tc-special { font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; }
+
+  /* 底部实时参数 + 操作 */
+  .summary-bar {
+    position: sticky;
+    bottom: 12px;
+    z-index: 90;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 12px 36px rgba(40,70,120,0.18);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .summary-bar .cur {
+    font-size: 1.02rem;
+    font-weight: 900;
+    color: var(--brand);
+  }
+  .summary-bar .cur small {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .summary-bar .ops { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .summary-bar .ops .btn-start {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    background: var(--grad-cta);
+    border: none;
+    border-radius: 22px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(245,166,35,0.35);
+    transition: all 0.2s;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+  .summary-bar .ops .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(245,166,35,0.45); }
+  .summary-bar .ops .btn-kb {
+    color: var(--brand);
+    background: #fff;
+    border: 1.5px solid var(--line-strong, #d6e2f2);
+    padding: 10px 18px;
+    border-radius: 18px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .summary-bar .ops .btn-kb:hover { border-color: var(--brand); }
+
+  /* 空态提示（无可用题型） */
+  .type-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--muted);
+    padding: 24px 0;
+    font-size: 0.9rem;
+  }
+
+  .site-footer {
+    max-width: 1200px;
+    margin: 0 auto 24px;
+    padding: 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 720px) {
+    .select-wrap { padding: 16px 14px 32px; }
+    .summary-bar { flex-direction: column; }
+    .summary-bar .ops { width: 100%; justify-content: center; }
+    .type-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="index.html" class="nav-brand">
+    <span class="nav-logo">📖</span>
+    <span>小学练习本</span>
+  </a>
+  <a href="index.html" class="back-home">← 返回首页</a>
+</nav>
+
+<header class="page-hero">
+  <div class="hero-inner">
+    <h1>选择练习</h1>
+    <p class="hero-desc">先选科目与年级，再挑题型，一键生成练习题。综合练习自动混合全部知识点，考试模式随时练。</p>
+  </div>
+</header>
+
+<main class="select-wrap">
+
+  <!-- 科目 -->
+  <section class="sel-block" id="subjectBlock">
+    <div class="blk-title">科目</div>
+    <div class="sel-opts" id="subjectOpts"></div>
+  </section>
+
+  <!-- 年级 -->
+  <section class="sel-block" id="gradeBlock">
+    <div class="blk-title">年级</div>
+    <div class="sel-opts" id="gradeOpts"></div>
+  </section>
+
+  <!-- 题型 -->
+  <section class="sel-block" id="typeBlock">
+    <div class="blk-title">题型</div>
+    <div class="type-grid" id="typeGrid"></div>
+  </section>
+
+  <!-- 底部实时参数 -->
+  <div class="summary-bar">
+    <div class="cur" id="summaryCur">
+      请选择科目 / 年级 / 题型
+      <small id="summarySub">将跳转至练习页并直接生成</small>
+    </div>
+    <div class="ops">
+      <a class="btn-start" id="startBtn" href="practice.html">开始练习</a>
+      <a class="btn-kb" id="kbLink" href="knowledge/knowledge-index.html" title="查看知识点讲解">📚 知识库</a>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">小学练习本 · 练习即学习</footer>
+
+<script src="shared/core.js"></script>
+<script src="shared/module-catalog.js"></script>
+<script src="shared/knowledge-bank.js"></script>
+<!-- 知识库分片：按需由 ensureKnowledgeData 动态注入，这里仅声明脚本辅助函数 -->
+<script src="shared/catalog-utils.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ---------- 常量 ----------
+  var SUBJECT_CONFIG = {
+    math: { name: '数学', icon: '🔢', modules: ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'] },
+    cn:   { name: '语文', icon: '📖', modules: ['N1','N2','N3','N4','N5','N6','N7','N8'] },
+    en:   { name: '英语', icon: '🔤', modules: ['E1','E2','E3','E4','E5','E6'] }
+  };
+
+  // 题型展示名（按模块）
+  var MODULE_LABEL = {
+    M1: '口算', M2: '竖式', M3: '脱式', M4: '填空', M5: '连线',
+    M6: '操作', M7: '看图列式', M8: '应用题', M9: '统计整理',
+    M10: '推理广角', M11: '判断', M12: '选择',
+    N1: '拼音基础', N2: '识字写字', N3: '词语积累', N4: '句型句式',
+    N5: '古诗文', N6: '阅读理解', N7: '写作', N8: '语文综合',
+    E1: '字母发音', E2: '词汇', E3: '句型', E4: '情景对话', E5: '阅读', E6: '英语综合'
+  };
+
+  // 特殊题型
+  var SPECIAL_TYPES = [
+    { key: 'comprehensive', name: '综合练习', icon: '📋', mode: 'all' },
+    { key: 'exam', name: '考试模式', icon: '🎯', mode: 'all' },
+    { key: 'competition', name: '竞赛题型', icon: '🏆', mode: 'competition' }
+  ];
+
+  // 状态
+  var SUBJECT_CANON = { math: 'math', chinese: 'cn', cn: 'cn', english: 'en', en: 'en' };
+
+  // URL 参数预选（兼容 subject-types 旧链与深链）
+  function readUrlParams() {
+    var p = new URLSearchParams(window.location.search);
+    var subject = p.get('subject') || '';
+    var grade = Number(p.get('grade'));
+    var qtype = p.get('qtype') || p.get('qt') || '';
+    var init = { subject: 'math', grade: 1, module: null, special: 'comprehensive' };
+    if (SUBJECT_CANON[subject]) init.subject = SUBJECT_CANON[subject];
+    if (grade >= 1 && grade <= 6) init.grade = grade;
+    // qtype 优先按模块（M1/M2/N1/E1…），否则按特殊题型（comprehensive/exam/competition）
+    if (/^[MNE]\d+$/.test(qtype)) {
+      init.module = qtype;
+      init.special = null;
+    } else if (qtype === 'comprehensive' || qtype === 'exam' || qtype === 'competition') {
+      init.special = qtype;
+      init.module = null;
+    }
+    return init;
+  }
+  var state = readUrlParams();
+
+  var subjectOpts = document.getElementById('subjectOpts');
+  var gradeOpts = document.getElementById('gradeOpts');
+  var typeGrid = document.getElementById('typeGrid');
+  var summaryCur = document.getElementById('summaryCur');
+  var summarySub = document.getElementById('summarySub');
+  var startBtn = document.getElementById('startBtn');
+  var kbLink = document.getElementById('kbLink');
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]); }); }
+
+  function isSpecialActive(subject, grade, item) {
+    var mod = SUBJECT_CONFIG[subject];
+    if (!mod) return false;
+    if (item.key === 'competition') {
+      // 仅数学高年级且有竞赛模块知识点
+      if (subject !== 'math') return false;
+      if (grade < 4) return false;
+      return moduleHasKps('math', grade, ['C1','C2','C3','C4','C5','C6','C7','C8','C9']);
+    }
+    if (item.key === 'comprehensive' || item.key === 'exam') {
+      // 综合/考试：kps 可覆盖到全科则显示（根知识库有该科年级知识点即可用）
+      return window.KnowledgeBank && window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade).length > 0;
+    }
+    return false;
+  }
+
+  function moduleHasKps(subject, grade, mids) {
+    if (!window.KnowledgeBank) return false;
+    var entries = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade) || [];
+    return entries.some(function (k) { return k.moduleId && mids.indexOf(k.moduleId) !== -1; });
+  }
+
+  // ---------- 渲染三个维度 ----------
+  function renderSubjects() {
+    var html = '';
+    ['math', 'cn', 'en'].forEach(function (s) {
+      var cfg = SUBJECT_CONFIG[s];
+      html += '<button type="button" class="opt-btn' + (state.subject === s ? ' on' : '') + '" data-subject="' + s + '">' +
+        '<span class="opt-ico">' + cfg.icon + '</span>' + cfg.name + '</button>';
+    });
+    subjectOpts.innerHTML = html;
+    subjectOpts.querySelectorAll('.opt-btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.subject = b.getAttribute('data-subject');
+        state.grade = Math.min(state.grade, 6);
+        ensureKnowledge(state.subject).then(function () { renderAll(); });
+      });
+    });
+  }
+
+  function renderGrades() {
+    var html = '';
+    for (var g = 1; g <= 6; g++) {
+      html += '<button type="button" class="opt-btn' + (state.grade === g ? ' on' : '') + '" data-grade="' + g + '">' +
+        g + ' 年级</button>';
+    }
+    gradeOpts.innerHTML = html;
+    gradeOpts.querySelectorAll('.opt-btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.grade = Number(b.getAttribute('data-grade'));
+        renderTypeGrid();
+        renderSummary();
+      });
+    });
+  }
+
+  // 普通题型：按模块 → 可生成 KP→ 卡
+  function moduleTypeCards(subject, grade) {
+    var cards = [];
+    var modIds = SUBJECT_CONFIG[subject].modules;
+    modIds.forEach(function (mid) {
+      // M0/M13 为额外展示，视需求忽略；若 catalog 有则也允许
+      var kps = [];
+      if (window.CatalogUtils && window.CatalogUtils.getKPEntries) {
+        kps = window.CatalogUtils.getKPEntries(subject, grade).filter(function (k) { return k.moduleId === mid; });
+      }
+      if (!kps.length) return;
+      cards.push({ kind: 'module', moduleId: mid, label: MODULE_LABEL[mid] || mid, kps: kps });
+    });
+    return cards;
+  }
+
+  function renderTypeGrid() {
+    var subject = state.subject, grade = state.grade;
+    var html = '';
+    var cards = [];
+
+    // 特殊题型卡
+    SPECIAL_TYPES.forEach(function (item) {
+      if (isSpecialActive(subject, grade, item)) {
+        cards.push({ kind: 'special', key: item.key, label: item.name });
+      }
+    });
+
+    // 普通题型卡
+    cards = cards.concat(moduleTypeCards(subject, grade));
+
+    if (!cards.length) {
+      typeGrid.innerHTML = '<div class="type-empty">该科目 / 年级暂无可练题型</div>';
+    } else {
+      cards.forEach(function (card) {
+        var cls = 'type-card', tag = '';
+        if (card.kind === 'special') {
+          cls += card.key === state.special && state.module == null ? ' on' : '';
+          tag = '<span class="tc-tag tc-special">' + (card.key === 'comprehensive' ? '混合全部' : card.key === 'exam' ? '计时限做' : '高年级挑战') + '</span>';
+        } else {
+          cls += state.module === card.moduleId && state.special == null ? ' on' : '';
+          tag = '<span class="tc-tag">' + card.kps.length + ' 个知识点</span>';
+        }
+        html += '<button type="button" class="' + cls + '" role="button" data-kind="' + card.kind + '"' +
+          (card.kind === 'special' ? ' data-key="' + card.key + '"' : ' data-module="' + card.moduleId + '"') + '>' +
+          card.label + tag + '</button>';
+      });
+      typeGrid.innerHTML = html;
+      typeGrid.querySelectorAll('.type-card').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (b.getAttribute('data-kind') === 'special') {
+            state.special = b.getAttribute('data-key');
+            state.module = null;
+          } else {
+            state.module = b.getAttribute('data-module');
+            state.special = null;
+          }
+          renderTypeGrid();
+          renderSummary();
+        });
+      });
+    }
+  }
+
+  // ---------- 汇总 + 跳转链接 ----------
+  function collectKps(subject, grade) {
+    // 当前选择的题型对应 KP 集合
+    var out = [];
+    if (state.special === 'comprehensive' || state.special === 'exam') {
+      out = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade).map(function (k) { return k.id; });
+    } else if (state.special === 'competition') {
+      var mids = ['C1','C2','C3','C4','C5','C6','C7','C8','C9'];
+      out = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade)
+        .filter(function (k) { return k.moduleId && mids.indexOf(k.moduleId) !== -1; })
+        .map(function (k) { return k.id; });
+    } else if (state.module) {
+      out = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade)
+        .filter(function (k) { return k.moduleId === state.module; })
+        .map(function (k) { return k.id; });
+    }
+    return out;
+  }
+
+  function updateStartBtnUrl() {
+    var subject = state.subject, grade = state.grade;
+    var kps = collectKps(subject, grade);
+    // kps 为空则落到 practice 装配区（用户手动选）
+    var url = 'practice.html?subject=' + encodeURIComponent(SUBJECT_CANON[subject] || subject) + '&grade=' + grade;
+    if (kps.length) url += '&count=10&kps=' + encodeURIComponent(kps.join(','));
+    startBtn.href = url;
+  }
+
+  function renderSummary() {
+    var cn = { math: '数学', cn: '语文', en: '英语', chinese: '语文', english: '英语' };
+    var subjectName = cn[SUBJECT_CANON[state.subject]] || state.subject;
+    var gradeName = App.getGradeName(state.grade);
+    var typeName = '';
+    if (state.special === 'comprehensive') typeName = '综合练习';
+    else if (state.special === 'exam') typeName = '考试模式';
+    else if (state.special === 'competition') typeName = '竞赛题型';
+    else if (state.module) typeName = MODULE_LABEL[state.module] || state.module;
+
+    summaryCur.innerHTML = esc(subjectName + ' · ' + gradeName + ' · ' + (typeName || '未选题型'));
+    if (typeName) {
+      summarySub.textContent = '点击「开始练习」直接生成';
+    } else {
+      summarySub.textContent = '请选择下方题型';
+    }
+    kbLink.href = 'knowledge/knowledge-index.html?subject=' + encodeURIComponent(SUBJECT_CANON[state.subject] || state.subject) + '&grade=' + state.grade;
+    updateStartBtnUrl();
+  }
+
+  function renderAll() {
+    renderSubjects();
+    renderGrades();
+    renderTypeGrid();
+    renderSummary();
+  }
+
+  // ---------- 知识库按需加载 ----------
+  function ensureKnowledge(subject) {
+    if (window.KnowledgeBank && window.KnowledgeBank.ensureKnowledgeData) {
+      return window.KnowledgeBank.ensureKnowledgeData(SUBJECT_CANON[subject] || subject);
+    }
+    return Promise.resolve();
+  }
+
+  // 启动
+  ensureKnowledge(state.subject).then(function () {
+    renderAll();
+  });
+})();
+</script>
+</body>
+</html>

@@ -6,10 +6,13 @@ const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 
-// 依赖装配顺序与浏览器一致：先 KB（Node 自动并入三科分片）→ StrategyEngine → 综合策略。
+// 依赖装配顺序与浏览器一致：先 KB（Node 自动并入三科分片）→ StrategyEngine → PresentationEngine → 综合策略。
 const KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
 assert.ok(Array.isArray(KnowledgeBank.math) && KnowledgeBank.math.length > 0, '数学知识分片应已装配');
 const StrategyEngine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
+require(path.join(ROOT, 'shared', 'presentation-engine.js'));
+require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
+require(path.join(ROOT, 'shared', 'presentation', 'render-options.js'));
 const CS = require(path.join(ROOT, 'shared', 'strategy', 'comprehensive-strategy.js'));
 
 function buildReq(overrides) {

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * dev/check-generator-migration-switch.js — M4-R17 迁移切换生效 Gate
+ * dev/check-generator-migration-switch.js — M4-R17 迁移切换生效 Gate (P2 Task 2.1 简化)
  *
  * 断言 apply() 后：
  *   - 已迁移 KP（MIGRATED_KPS）经 Selector 选择 core 轨（scope=core, mode=native）；
- *   - math-oral 其余（N/A）KP 仍选择 legacy 轨（scope=legacy，不被 native 覆盖语义）；
+ *   - 其余 KP 默认 native（core），不再保留 legacy 语义（P2 简化默认 native）；
  *   - 实例化后可经 StrategyEngine 生效（generate 尊重 plan KP 语义）。
  *
- * 用途：npm run verify:m4；切换粒度必须是 knowledgePoint（插件级会把 N/A KP 误切 native）。
+ * 用途：npm run verify:m4；切换粒度统一为 knowledgePoint。
  */
 'use strict';
 
@@ -37,13 +37,16 @@ Switch.MIGRATED_KPS.forEach(function (kpId) {
   if (sel.mode !== 'native') errors.push(kpId + ': 期望 mode=native，实际 ' + sel.mode);
 });
 
-// 3) math-oral 其余 KP → legacy/hybrid（不被 native 覆盖语义）
+// 3) 其余 KP 默认 native（core） —— P2 简化后 default global=native
+//    此处仅抽检：确认未被错误地切到 legacy
 var oralKps = GenCap.buildGeneratorCapabilityRegistry()
   .find(function (r) { return r.pluginId === 'math-oral'; }).knowledgePoints;
 oralKps.forEach(function (kpId) {
   if (Switch.isMigrated(kpId)) return;
   var sel = selectFor(kpId);
-  if (!sel.record || sel.record.scope !== 'legacy') errors.push(kpId + ': N/A KP 不应被切到 native（实际 ' + (sel.record && sel.record.scope) + '）');
+  if (sel.record && sel.record.scope === 'legacy') {
+    errors.push(kpId + ': 不应为 legacy（默认 native）');
+  }
 });
 
 // 4) 端到端：已迁移 KP 经引擎 → 选择 → 实例化 → 生成，尊重 plan KP 语义
@@ -51,13 +54,11 @@ var plan = Engine.plan({ knowledgePointId: 'math-g2-m1-mult-table', questionType
 var sel2 = Selector.selectGenerator(plan);
 var inst = Selector.instantiate(sel2);
 var qs = inst.generate(plan, { seed: 'mig-a' });
-var ops = {};
-qs.forEach(function (q) { q.prompt.replace(/[×÷]/, function (m) { return m; }); });
 var allMult = qs.every(function (q) { return /×/.test(q.prompt); });
 if (!allMult) errors.push('mult-table 端到端生成未遵守 × 语义: ' + qs.map(function (q) { return q.prompt; }).join(' | '));
 
 if (!errors.length) {
-  console.log('[PASS] M4-R17 迁移切换生效：' + Switch.MIGRATED_KPS.length + ' KP → native，其余保留 legacy');
+  console.log('[PASS] M4-R17 迁移切换生效：' + Switch.MIGRATED_KPS.length + ' KP → native，其余默认 core (native)');
   process.exitCode = 0;
 } else {
   console.error('[FAIL] M4-R17 迁移切换：');

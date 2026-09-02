@@ -142,10 +142,10 @@ check('StrategyEngine.plan 产出 plan（决策链可用）', !!plan);
 
 if (!plan) { finish(); return; }
 
-PresentationEngine.generateQuestions(plan, { skipValidation: true, legacyOutput: true })
+PresentationEngine.generateQuestions(plan, { skipValidation: true })
   .then(function (result) {
-    var sqs = result.semanticQuestions || [];
-    var legacyQs = result.questions || [];
+    var sqs = result.semanticQuestions || result.questions || [];
+    var legacyQs = sqs.length ? PresentationEngine.LegacyAdapter.toLegacyQuestions(sqs) : [];
     check('generateQuestions 正常返回（不抛错）', true);
     check('生成题目数量 > 0（P0-001 消除，无静默空结果）', legacyQs.length > 0);
     check('题目具备内容字段', (sqs[0] && (!!sqs[0].prompt || !!sqs[0].stem)) || (legacyQs[0] && !!legacyQs[0].q));

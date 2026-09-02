@@ -253,17 +253,19 @@ async function case1_normalFlow(BASE) {
 async function case2_badParams(BASE) {
   section('C2 错误参数：题型页错误 grade / subject-types 转发 / 无效 kps / 无参数');
 
-  // 2a. 题型页错误 grade
+  // 2a. 旧目录页（math-types）即纯重定向 → select.html（不保留原有目录功能）
   await open(BASE + '/math-types.html?grade=99');
-  const e1 = await getText('.error-state');
-  check('错误 grade：题型页显示友好错误', e1.indexOf('年级参数好像不对') !== -1, e1.slice(0, 40));
-  check('错误页提供「返回首页」入口', (await getText('.error-state')).indexOf('返回首页') !== -1, '');
+  const u1 = await getUrl();
+  check('旧目录页：math-types 重定向至 select.html',
+    u1.indexOf('select.html') !== -1 && u1.indexOf('subject=math') !== -1, u1);
+  const selOk = await waitForEval('document.querySelectorAll("#typeGrid .type-card").length >= 1', 8000, 'select 渲染');
+  check('重定向后 select.html 正常渲染题目卡', selOk, '');
 
-  // 2b. subject-types 转发桩：错误 subject 仍正确透传至 practice.html（合并收口）
+  // 2b. subject-types 转发桩：错误 subject 仍正确透传至 select.html（合并收口）
   await open(BASE + '/subject-types.html?subject=bad');
   const u2 = await getUrl();
-  check('subject-types 转发桩：透传至 practice.html',
-    u2.indexOf('practice.html') !== -1 && u2.indexOf('subject=bad') !== -1, u2);
+  check('subject-types 转发桩：透传至 select.html',
+    u2.indexOf('select.html') !== -1 && u2.indexOf('subject=bad') !== -1, u2);
 
   // 2c. 练习页无效 kps：未知知识点被容错（回退生成 / 提示，不崩溃、无全局错误）
   await open(BASE + '/practice.html?subject=math&grade=1&kps=__not_a_real_kp__');
@@ -298,18 +300,16 @@ async function case3_refresh(BASE) {
 }
 
 async function case4_back(BASE) {
-  section('C4 返回：浏览器后退回到题型页');
+  section('C4 返回：浏览器后退回到题型选择页');
 
   await open(BASE + '/math-types.html?grade=1');
-  await waitForEval('document.querySelectorAll("a.type-card").length >= 5', 10000, '题型页渲染');
+  await waitForEval('document.querySelectorAll("#typeGrid .type-card").length >= 1', 10000, '题型选择页渲染');
   await open(BASE + '/practice.html?subject=math&grade=1&kps=' + kps(KPS.math1) + '&count=10');
   await waitForEval('document.querySelectorAll("' + CARD_SEL + '").length >= 5', 15000, '练习页生成');
   await ab(['back']); // back 内部已等导航完成；下方轮询题型卡渲染以保证稳健
-  check('返回：回到题型页', (await getUrl()).indexOf('math-types') !== -1, await getUrl());
-  // 备注：math-types.html 存在预存渲染缺陷（grade1 仅渲染 1 张题型卡），非本次合并引入；
-  // 此处仅验证「返回后可渲染、不崩溃」，真实题型卡数量修复属 math-types 独立任务。
-  const backOk = await waitForEval('document.querySelectorAll("a.type-card").length >= 1', 10000, '返回后题型页渲染');
-  check('返回后题型页可渲染（已知 math-types 渲染缺陷，见备注）', backOk && (await getCount('a.type-card')) >= 1, await getCount('a.type-card') + ' 张');
+  check('返回：回到题型选择页', (await getUrl()).indexOf('select.html') !== -1, await getUrl());
+  const backOk = await waitForEval('document.querySelectorAll("#typeGrid .type-card").length >= 1', 10000, '返回后题型选择页渲染');
+  check('返回后题型选择页可渲染', backOk, await getCount('#typeGrid .type-card') + ' 张');
 }
 
 async function case5_directAccess(BASE) {

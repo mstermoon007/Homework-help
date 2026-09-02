@@ -1,26 +1,19 @@
 /**
- * shared/strategy/comprehensive-strategy.js — M7-R09…R13 综合练习策略
+ * shared/strategy/comprehensive-strategy.js — M7-R09…R13 综合练习策略 (P5 Task 4.1 统一分配器)
  *
  * 职责：把「年级全部知识点」按策略分配题量，产出 QuestionPlan[]，
  * 每个计划再经 StrategyEngine 决策 → Generator → Validator → Regenerate（R14）。
  *
- * 输入（R10）：
- *   { subject, grade, count, difficulty, questionTypes?, coveragePolicy?, learnerProfile? }
+ * 统一分配器：allocate(weights, total) 最大余数法
+ * 策略对象：weighted / balanced / weak-first / recent-first → weight 函数
+ * 保持四种现有策略输出不变。
  *
- * coveragePolicy（R13）：
- *   weighted     按知识库 weight 配比（默认）
- *   balanced     每题均分
- *   weak-first   薄弱优先：mastery 低 → 权重高（依赖 learnerProfile）
- *   recent-first 近期优先：曝光少/recent 少 → 权重高（依赖 learnerProfile）
- *
- * 输出：{ plans: QuestionPlan[]（已混排）,
- *         allocation: [{kpId,name,pluginId,moduleId,count,weight,policyScore}],
- *         trace: { policy, coverage, entries, failedPlans, mixing } }
+ * @module shared/strategy/comprehensive-strategy
  */
 (function (global) {
   'use strict';
 
-  var DEFAULT_DIFFICULTY = 2; // 中等（同时符合静态难度 1..5 约束并留出 learner 调节空间）
+  var DEFAULT_DIFFICULTY = 2;
 
   function getKB() {
     if (typeof global !== 'undefined' && global.KnowledgeBank) return global.KnowledgeBank;
@@ -38,39 +31,52 @@
     return null;
   }
 
-  // ============ 题量按权重分配（最大余数法，稳定保序） ============
-  function allocateByWeight(weights, total) {
+  // ============ 通用分配器：最大余数法 (Largest Remainder / Hamilton) ============
+  /**
+   * 最大余数法分配整数
+   * @param {number[]} weights - 权重数组 (非负数)
+   * @param {number} total - 总分配量 (正整数)
+   * @returns {number[]} 分配结果，和为 total
+   */
+  function allocate(weights, total) {
     var n = weights.length;
     var out = new Array(n).fill(0);
     var wsum = 0;
-    var fracs = [];
+    var remainders = [];
+
     for (var i = 0; i < n; i++) {
       var w = (typeof weights[i] === 'number' && weights[i] > 0) ? weights[i] : 0;
       wsum += w;
-      fracs.push({ i: i, w: w });
+      remainders.push({ i: i, w: w });
     }
     if (wsum <= 0) return out;
-    var shares = new Array(n).fill(0);
+
     var assigned = 0;
     for (var j = 0; j < n; j++) {
-      shares[j] = Math.floor(total * weights[j] / wsum);
-      assigned += shares[j];
+      out[j] = Math.floor(total * weights[j] / wsum);
+      assigned += out[j];
     }
     var leftover = total - assigned;
     if (leftover > 0) {
-      fracs.sort(function (a, b) {
+      remainders.sort(function (a, b) {
         var fa = total * a.w / wsum - Math.floor(total * a.w / wsum);
         var fb = total * b.w / wsum - Math.floor(total * b.w / wsum);
         return fb - fa || b.w - a.w;
       });
-      for (var k = 0; k < leftover; k++) {
-        if (k < n) shares[fracs[k].i] += 1;
+      for (var k = 0; k < leftover && k < n; k++) {
+        out[remainders[k].i] += 1;
       }
     }
-    return shares;
+    return out;
   }
 
-  /** 读取某知识点在 learnerProfile 中的状态（无则返回 null） */
+  // ============ 策略对象：四种策略各自的 weight 函数 ============
+  /**
+   * 读取某知识点在 learnerProfile 中的状态
+   * @param {Object} profile
+   * @param {string} kpId
+   * @returns {Object|null}
+   */
   function kpLearnerState(profile, kpId) {
     if (!profile || typeof profile !== 'object') return null;
     if (profile.knowledgePoints && profile.knowledgePoints[kpId] && typeof profile.knowledgePoints[kpId] === 'object') {
@@ -79,33 +85,44 @@
     return null;
   }
 
-  /**
-   * 计算各条目 policy 权重。
-   * 返回 [{ index, base, policyScore }]（policyScore 归一化到总和=条目数）。
-   */
-  function scoreEntries(entries, policy, profile) {
-    return entries.map(function (e, idx) {
-      var base = (typeof e.weight === 'number' && e.weight > 0) ? e.weight : 1;
-      var raw = base;
-      var ls = kpLearnerState(profile, e.id);
-      if (policy === 'balanced') {
-        raw = 1;
-      } else if (policy === 'weak-first') {
+  var STRATEGIES = {
+    weighted: {
+      name: 'weighted',
+      weight: function (entry) {
+        return (typeof entry.weight === 'number' && entry.weight > 0) ? entry.weight : 1;
+      }
+    },
+    balanced: {
+      name: 'balanced',
+      weight: function (entry) {
+        return 1;
+      }
+    },
+    'weak-first': {
+      name: 'weak-first',
+      weight: function (entry, policy, profile) {
+        var base = (typeof entry.weight === 'number' && entry.weight > 0) ? entry.weight : 1;
+        var ls = kpLearnerState(profile, entry.id);
         if (ls && typeof ls.mastery === 'number') {
-          raw = base * (1 + Math.pow(1 - Math.min(Math.max(ls.mastery, 0), 1), 1.5));
-        } else {
-          raw = base * 2; // 从未见过 → 视为最薄弱
+          return base * (1 + Math.pow(1 - Math.min(Math.max(ls.mastery, 0), 1), 1.5));
         }
-      } else if (policy === 'recent-first') {
+        return base * 2; // 未见过视为最薄弱
+      }
+    },
+    'recent-first': {
+      name: 'recent-first',
+      weight: function (entry, policy, profile) {
+        var base = (typeof entry.weight === 'number' && entry.weight > 0) ? entry.weight : 1;
+        var ls = kpLearnerState(profile, entry.id);
         var exposure = ls && typeof ls.exposure === 'number' ? Math.max(ls.exposure, 0) : 0;
-        raw = base * (1 + 1 / (1 + exposure));
-      } // weighted: raw = base
-      return { index: idx, base: base, policyScore: raw };
-    });
-  }
+        return base * (1 + 1 / (1 + exposure));
+      }
+    }
+  };
 
+  // ============ 综合练习计划生成 ============
   /**
-   * 综合练习计划生成。
+   * 生成综合练习计划
    * @param {Object} request { subject, grade, count, difficulty, questionTypes?, coveragePolicy?, learnerProfile?, debug? }
    * @returns {Promise<{ plans:Array, allocation:Array, trace:Object }>}
    */
@@ -119,9 +136,11 @@
     if (typeof targetCount !== 'number' || !isFinite(targetCount) || targetCount < 1 || Math.floor(targetCount) !== targetCount) {
       return Promise.reject(new Error('count 必须是 >=1 的整数: ' + targetCount));
     }
-    var policy = ['weighted', 'balanced', 'weak-first', 'recent-first'].indexOf(request.coveragePolicy) !== -1
+    var policyName = ['weighted', 'balanced', 'weak-first', 'recent-first'].indexOf(request.coveragePolicy) !== -1
       ? request.coveragePolicy
       : 'weighted';
+    var strategy = STRATEGIES[policyName];
+
     var KB = getKB();
     var engine = getStrategyEngine();
     var deps = [];
@@ -137,12 +156,12 @@
       });
     }
     if (!entries.length) {
-      return Promise.resolve({ plans: [], allocation: [], trace: { policy: policy, coverage: { total: 0, covered: 0, ratio: 0 }, entries: [], fromEntries: false, message: '该年级无可用知识点' } });
+      return Promise.resolve({ plans: [], allocation: [], trace: { policy: policyName, coverage: { total: 0, covered: 0, ratio: 0 }, entries: [], fromEntries: false, message: '该年级无可用知识点' } });
     }
 
-    var scored = scoreEntries(entries, policy, request.learnerProfile);
-    var weights = scored.map(function (s) { return s.policyScore; });
-    var shares = allocateByWeight(weights, targetCount);
+    // 计算策略权重
+    var weights = entries.map(function (e) { return strategy.weight(e, policyName, request.learnerProfile); });
+    var shares = allocate(weights, targetCount);
 
     var allocation = [];
     var planTasks = [];
@@ -155,14 +174,14 @@
         moduleId: e.moduleId,
         type: e.type || null,
         count: cnt,
-        weight: scored[i].base,
-        policyScore: Math.round(scored[i].policyScore * 100) / 100
+        weight: (typeof e.weight === 'number' && e.weight > 0) ? e.weight : 1,
+        policyScore: Math.round(weights[i] * 100) / 100
       });
       if (cnt < 1) return;
-      planTasks.push({ entry: e, count: cnt, baseWeight: scored[i].base });
+      planTasks.push({ entry: e, count: cnt, baseWeight: (typeof e.weight === 'number' && e.weight > 0) ? e.weight : 1 });
     });
 
-    // ============ 逐知识点走 StrategyEngine → QuestionPlan（R11 集成） ============
+    // 逐知识点走 StrategyEngine → QuestionPlan
     var plans = [];
     var failedPlans = [];
     var difficulty = request.difficulty != null ? request.difficulty : DEFAULT_DIFFICULTY;
@@ -193,11 +212,11 @@
       }
     });
 
-    // ============ 跨知识点混合（R12）：相邻计划尽量不同 plugin，避免同类扎堆 ============
+    // 跨知识点混合：相邻计划尽量不同 plugin
     var mixed = interleaveByPlugin(plans);
     var mixing = { reordered: mixed.length > 0, original: plans.length };
 
-    // ============ 覆盖统计（R13 trace） ============
+    // 覆盖统计
     var coveredIds = {};
     allocation.forEach(function (a) { if (a.count > 0) coveredIds[a.pluginId] = true; });
     var totalPlugins = {};
@@ -207,7 +226,7 @@
       plans: mixed,
       allocation: allocation,
       trace: {
-        policy: policy,
+        policy: policyName,
         coverage: {
           total: Object.keys(totalPlugins).length,
           plugins: Object.keys(coveredIds).length,
@@ -252,9 +271,17 @@
 
   var API = {
     build: build,
-    allocateByWeight: allocateByWeight,
-    scoreEntries: scoreEntries,
+    allocate: allocate,
+    allocateByWeight: allocate, // 兼容旧 API
+    scoreEntries: function (entries, policy, profile) {
+      var strat = STRATEGIES[policy] || STRATEGIES.weighted;
+      return entries.map(function (e, idx) {
+        var base = (typeof e.weight === 'number' && e.weight > 0) ? e.weight : 1;
+        return { index: idx, base: base, policyScore: strat.weight(e, policy, profile) };
+      });
+    },
     interleaveByPlugin: interleaveByPlugin,
+    STRATEGIES: STRATEGIES,
     DEFAULT_DIFFICULTY: DEFAULT_DIFFICULTY
   };
 

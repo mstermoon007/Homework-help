@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-02T02:58:07.238Z",
+  "generatedAt": "2026-09-02T03:48:07.153Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -118,9 +118,9 @@
       "mtime": 1788259231653.68
     },
     "shared/generator/retry-loop.js": {
-      "hash": "f3ae8c9488391adf",
-      "size": 8849,
-      "mtime": 1788159936603.809
+      "hash": "31dd38af9ecf2c1e",
+      "size": 9346,
+      "mtime": 1788320658200.6191
     },
     "shared/generator/legacy-plugin-adapter.js": {
       "hash": "59f31d189d309938",
@@ -418,9 +418,9 @@
       "mtime": 1788244510561.7878
     },
     "shared/presentation-engine.js": {
-      "hash": "36ff467c72c269bf",
-      "size": 9809,
-      "mtime": 1788261460573.576
+      "hash": "88f4f8b74300a7f7",
+      "size": 9728,
+      "mtime": 1788320382783.2974
     },
     "shared/print.js": {
       "hash": "2ea66b6a27c87043",

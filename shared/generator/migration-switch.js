@@ -8,9 +8,8 @@
  * 运行时 apply() 一次性生效；其余 KP（mixed/remainder/relation/多位数）
  * 无纯算术语义，保持 hybrid → legacy 优先，不做 native 切换。
  *
- * 注意：切换粒度必须是「知识点」，不能是「插件」——
- * 若 override('plugin','math-oral','native') 会把 N/A KP 也甩给 native
- * 的默认混合生成器，破坏 remainder/mixed/subType 语义。
+ * 注意（P2 Task 2.1）：切屏粒度统一为 knowledgePoint；generator-mode.js 已移除
+ * plugin/questionType/subject 粒度，只保留 knowledgePoint 覆盖。
  */
 'use strict';
 

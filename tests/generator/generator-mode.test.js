@@ -6,54 +6,49 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Mode = require(path.join(ROOT, 'shared', 'generator', 'generator-mode.js'));
 
-test('M4-R14：默认 global = hybrid', () => {
+test('M4-R14 P2：默认 global = native', () => {
   Mode.clearAll();
-  assert.strictEqual(Mode.getGlobal(), 'hybrid');
-  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5' }), 'hybrid');
+  assert.strictEqual(Mode.getGlobal(), 'native');
+  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5' }), 'native');
 });
 
-test('M4-R14：非法 mode/scope 抛错', () => {
+test('M4-R14 P2：非法 mode/scope 抛错', () => {
   Mode.clearAll();
   assert.throws(() => Mode.setGlobal('turbo'), /generatorMode/);
   assert.throws(() => Mode.override('badScope', 'x', 'native'), /scope/);
-  assert.throws(() => Mode.override('plugin', 'math-oral', 'turbo'), /mode/);
+  assert.throws(() => Mode.override('knowledgePoint', 'math-g1-m1-addsub-5', 'turbo'), /mode/);
 });
 
-test('M4-R14：四级覆盖优先级 plugin > KP > questionType > subject > global', () => {
+test('M4-R14 P2：两级覆盖优先级 KP > global', () => {
   Mode.clearAll();
   Mode.setGlobal('hybrid');
-  Mode.override('subject', 'math', 'legacy');
-  Mode.override('questionType', 'calc', 'native');
-  Mode.override('knowledgePoint', 'math-g1-m1-addsub-5', 'hybrid');
-  Mode.override('plugin', 'math-oral', 'legacy');
-  // plugin 最具体 → legacy
-  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5', questionTypeId: 'calc', subject: 'math' }), 'legacy');
-  // 去掉 plugin 覆盖 → KP 覆盖 hybrid
-  Mode.clearOverride('plugin', 'math-oral');
-  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5', questionTypeId: 'calc', subject: 'math' }), 'hybrid');
-  // 去掉 KP 覆盖（换一个无覆盖的 KP）→ questionType 覆盖 native
-  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-10', questionTypeId: 'calc', subject: 'math' }), 'native');
-  // 去掉 questionType 覆盖 → subject 覆盖 legacy
-  Mode.clearOverride('questionType');
-  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-10', questionTypeId: 'calc', subject: 'math' }), 'legacy');
-  // 去掉 subject → 全局 hybrid
-  Mode.clearOverride('subject');
-  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-10', questionTypeId: 'calc', subject: 'math' }), 'hybrid');
+  Mode.override('knowledgePoint', 'math-g1-m1-addsub-5', 'native');
+  // KP 精确匹配优先
+  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5' }), 'native');
+  // 无 KP 覆盖 → global
+  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-10' }), 'hybrid');
+  // 无 KP 且无 subject → global (default native 清除后)
+  Mode.clearOverride('knowledgePoint');
+  assert.strictEqual(Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-10' }), 'hybrid');
 });
 
-test('M4-R14：无 knowledgePointId 也能按 subject/questionType 解析', () => {
-  Mode.clearAll();
-  Mode.setGlobal('hybrid');
-  Mode.override('subject', 'chinese', 'native');
-  assert.strictEqual(Mode.resolve({ subject: 'chinese' }), 'native');
-  assert.strictEqual(Mode.resolve({ subject: 'english' }), 'hybrid');
-});
-
-test('M4-R14：dump 输出全局模式与各级覆盖', () => {
+test('M4-R14 P2：仅 knowledgePoint scope 合法', () => {
   Mode.clearAll();
   Mode.setGlobal('native');
-  Mode.override('plugin', 'math-make-ten', 'legacy');
+  // plugin/subject/questionType scope 均抛错
+  assert.throws(() => Mode.override('plugin', 'math-oral', 'legacy'), /scope/);
+  assert.throws(() => Mode.override('subject', 'math', 'legacy'), /scope/);
+  assert.throws(() => Mode.override('questionType', 'calc', 'legacy'), /scope/);
+});
+
+test('M4-R14 P2：dump 输出全局模式与 knowledgePointOverrides', () => {
+  Mode.clearAll();
+  Mode.setGlobal('native');
+  Mode.override('knowledgePoint', 'math-g1-m1-addsub-5', 'hybrid');
   const d = Mode.dump();
   assert.strictEqual(d.generatorMode, 'native');
-  assert.strictEqual(d.pluginOverrides['math-make-ten'], 'legacy');
+  assert.strictEqual(d.knowledgePointOverrides['math-g1-m1-addsub-5'], 'hybrid');
+  assert.ok(!('pluginOverrides' in d));
+  assert.ok(!('questionTypeOverrides' in d));
+  assert.ok(!('subjectOverrides' in d));
 });

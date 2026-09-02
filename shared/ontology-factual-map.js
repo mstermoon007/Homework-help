@@ -46,6 +46,30 @@
     'math-decimal': {
       factualContent: { notation: '十进制小数' },
       confidence: 'low', evidence: 'standard-curriculum'
+    },
+    'math-clock': {
+      factualContent: { unit: '小时', subUnits: ['分', '秒'], notation: 'hh:mm' },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-time-date': {
+      factualContent: { units: ['年', '月', '日', '时', '分', '秒'], dayHours: 24, weekDays: 7 },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-shapes': {
+      factualContent: { categories: ['平面图形', '立体图形'] },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-geometry': {
+      factualContent: { categories: ['点', '线', '角', '面', '体'] },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-area': {
+      factualContent: { formulas: { rectangle: '长×宽', square: '边长×边长' } },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-combination-set': {
+      factualContent: { concept: '排列与组合' },
+      confidence: 'low', evidence: 'standard-curriculum'
     }
   };
 

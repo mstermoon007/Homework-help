@@ -12,12 +12,11 @@
  *   ⑤ 版本        —— version 更高者优先
  *   ⑥ fallback    —— legacyPluginId 对应的 legacy Generator（无类型绑定）
  *
- * 双轨（M4-R14，Feature Flag generatorMode）：
- *   legacy  —— 只看旧插件轨道（scope=legacy）
- *   native  —— 只看核心 Generator 轨道（scope=core）；无候选时回退旧插件
+ * 双轨（M4-R14，P2 Task 2.1 简化为 2 级覆盖）：
+ *   native  —— 只看核心 Generator 轨道；无候选时回退旧插件
  *   hybrid  —— 双轨并轨，按优先级选优
  *
- * 轨道的有效模式由 generator-mode.js 按 插件/知识点/题型/科目 覆盖解析。
+ * 轨道的有效模式由 generator-mode.js 按 knowledgePoint/global 解析。
  * 禁止 UI 直接选择 Generator：必须经本选择器（或 StrategyEngine）决策。
  */
 'use strict';
@@ -25,8 +24,8 @@
 var GenRegistry = require('./generator-registry.js');
 var KnowledgePoint = require('../knowledge-point.js');
 var Mode = require('./generator-mode.js');
-// M7-R18：旧插件边界收敛到 shared/legacy/plugin-adapter.js
-var LegacyBridge = require('../legacy/plugin-adapter.js');
+// M7-R18：旧插件边界收敛到 shared/generator/legacy-adapter.js (P5 Task 5.1 统一)
+var LegacyAdapter = require('./legacy-adapter.js');
 
 function trackOf(record) {
   return record.scope === 'core' ? 'native' : 'legacy';
@@ -45,9 +44,8 @@ function selectGenerator(plan, options) {
   var candidates = [];
 
   all.forEach(function (g) {
-    // 双轨过滤：根据有效模式决定本记录是否可达
+    // 双轨过滤：native 只看 core；hybrid 双轨都可达
     var track = trackOf(g);
-    if (mode === 'legacy' && track !== 'legacy') return;
     if (mode === 'native' && track !== 'native') return;
     // hybrid：双轨都可达
 
@@ -80,14 +78,12 @@ function selectGenerator(plan, options) {
   });
 
   if (candidates.length === 0) {
-    // ⑥ fallback：legacyPluginId → legacy Generator（native 轨无匹配时保留旧插件）
-    if (mode !== 'legacy') {
-      var legacyPluginId = kp && (kp.legacyPluginId || (kp.source && kp.source.pluginId));
-      if (legacyPluginId) {
-        var legacy = GenRegistry.get('legacy:' + legacyPluginId);
-        if (legacy) {
-          return { generatorId: legacy.id, source: 'fallback:legacy', record: legacy, mode: mode };
-        }
+    // ⑥ fallback：legacyPluginId → legacy Generator（无匹配时保留旧插件）
+    var legacyPluginId = kp && (kp.legacyPluginId || (kp.source && kp.source.pluginId));
+    if (legacyPluginId) {
+      var legacy = GenRegistry.get('legacy:' + legacyPluginId);
+      if (legacy) {
+        return { generatorId: legacy.id, source: 'fallback:legacy', record: legacy, mode: mode };
       }
     }
     return { generatorId: null, source: 'none', record: null, mode: mode };
@@ -118,8 +114,8 @@ function instantiate(selection, plugin) {
     var Generators = require('./generators/index.js');
     gen = Generators.get(selection.record.id);
   } else {
-    // M7-R18：legacy 实例化统一经 shared/legacy/plugin-adapter.js（唯一旧插件边界）。
-    gen = LegacyBridge.hydrateLegacyGenerator(selection, plugin);
+    // M7-R18：legacy 实例化统一经 shared/generator/legacy-adapter.js（唯一旧插件边界）。
+    gen = LegacyAdapter.hydrateLegacyGenerator(selection, plugin);
     if (!gen) return null;
   }
 

@@ -46,8 +46,8 @@ checks.push(c1);
 
 // 2. Legacy Plugin 可适配
 checks.push(check('Legacy Plugin 可适配', function () {
-  var LQA = require(path.join(ROOT, 'shared', 'question', 'legacy-question-adapter.js'));
-  var test = LQA.adaptQuestion({ q: '1+1', answer: '2', inputType: 'text', questionType: 'calc', knowledgePointId: 'test' });
+  var LegacyAdapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-adapter.js'));
+  var test = LegacyAdapter.adaptQuestion({ q: '1+1', answer: '2', inputType: 'text', questionType: 'calc', knowledgePointId: 'test' });
   return test && test.id && test.metadata && test.metadata.generator;
 }));
 
@@ -136,7 +136,7 @@ checks.push(check('RenderPreflight 通过', function () {
 // 12. Retry 机制正常
 checks.push(check('Retry 机制正常', function () {
   var retry = require(path.join(ROOT, 'shared', 'generator', 'retry-loop.js'));
-  return retry && typeof retry.generateWithRetrySync === 'function' && retry.RETRYABLE_CODES && retry.FATAL_CODES;
+  return retry && typeof retry.generateWithRetry === 'function' && retry.RETRYABLE_CODES && retry.FATAL_CODES;
 }));
 
 // 13. BatchValidator 正常

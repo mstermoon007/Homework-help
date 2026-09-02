@@ -8,7 +8,7 @@
  *   R3  Feature Flag 默认 legacy：shared/generation-config.js 的 getMode() === 'legacy'。（校验）
  *   R4  新代码禁止新增 Math.random：扫描 shared/ plugins/ 直调 Math.random，
  *       豁免 core.js/common.js（唯一随机源）。存在即记录 WARNING（既有技术债，不阻断）。
- *   R5  Legacy 适配层存在：shared/legacy/legacy-plugin-adapter.js 可导。（校验）
+ *   R5  Legacy 适配层存在：shared/generator/legacy-adapter.js 可导。（校验）
  */
 'use strict';
 const fs = require('fs');
@@ -73,9 +73,9 @@ function run() {
 
   // R5
   try {
-    const ad = require(path.join(ROOT, 'shared', 'legacy', 'legacy-plugin-adapter.js'));
-    if (typeof ad.toLegacyOptions !== 'function' || typeof ad.runPlan !== 'function')
-      errors.push('R5 违规：LegacyPluginAdapter 接口不完整');
+    const ad = require(path.join(ROOT, 'shared', 'generator', 'legacy-adapter.js'));
+    if (typeof ad.adaptPlanToLegacyOptions !== 'function' || typeof ad.generateByPluginId !== 'function')
+      errors.push('R5 违规：LegacyAdapter 接口不完整');
   } catch (e) { errors.push('R5 校验失败：' + e.message); }
 
   // R4

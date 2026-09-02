@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>语文题型选择</title>
 <script>
-// Redirect to question-card page (grade.html deleted; home jumps here directly)
-var params = new URLSearchParams(window.location.search);
-params.set('subject', 'chinese');
-window.location.href = 'subject-types.html?' + params.toString();
+// 任务5：旧目录页改为纯重定向 → select.html（保留极简 subject 解析并透传 grade 等参数）
+(function () {
+  'use strict';
+  var params = new URLSearchParams(window.location.search);
+  params.set('subject', 'chinese');
+  window.location.replace('select.html?' + params.toString());
+})();
 </script>
 <script type="application/ld+json">
 {
@@ -22,7 +25,7 @@ window.location.href = 'subject-types.html?' + params.toString();
 <link rel="canonical" href="https://home.modouyu.top/chinese-types.html">
 </head>
 <body>
-<noscript><div class="noscript-types" style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>语文题型</h2><p>正在跳转到语文题型选择页...</p></div></noscript>
-<p>正在跳转到语文年级选择页...</p>
+<noscript><div class="noscript-types" style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>语文题型</h2><p>正在跳转到统一的题型选择页。如未自动跳转，请点击：</p><p><a href="select.html?subject=chinese">前往选择页</a></p></div></noscript>
+<p>正在跳转到题型选择页...</p>
 </body>
 </html>

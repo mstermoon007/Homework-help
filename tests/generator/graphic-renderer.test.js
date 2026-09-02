@@ -62,21 +62,3 @@ test('M4-R11：GraphicRenderer 解析 graphic → SVG 渲染器', () => {
   assert.strictEqual(GraphicRenderer.isSupported('unknown-type'), false);
   assert.strictEqual(GraphicRenderer.resolveGraphicRenderer({ type: 'nope' }), null);
 });
-
-test('M4-R11：契约禁止 SVG 字符串 / DOM / innerHTML 渲染代码', () => {
-  const g = {
-    id: 'g', subject: 'math', capabilities: ['calc'], knowledgePoints: [],
-    supports: function () { return true; }, generate: function () { return []; }
-  };
-  const cases = [
-    ['var s = "<svg><rect></rect></svg>";', ['SVG']],
-    ['el.innerHTML = "<div>x</div>";', ['HTML']],
-    ['document.getElementById("x").style.color = "red";', ['DOM']],
-    ['var svg = "<svg></svg>";', ['SVG']]
-  ];
-  cases.forEach(([src, labels]) => {
-    const errs = Contract.validateGeneratorContract(g, src).errors;
-    assert.ok(errs.length > 0, '源码未被拦截: ' + src);
-    assert.ok(labels.some(l => errs.some(e => e.includes(l))), '缺少 ' + labels.join('/') + ' 违规标记: ' + errs.join('; '));
-  });
-});

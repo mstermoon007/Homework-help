@@ -14,13 +14,13 @@
 </style>
 </head>
 <body>
-<p>正在进入练习页…</p>
+<p>正在进入题型选择…</p>
 <script>
-  // 合并二级页与三级页：题目生成功能统一收口到 practice.html。
-  // 本页仅作转发桩，原样透传 query（subject / grade / kp / kps / count / difficulty / print），
-  // 以保住 index.html 及 chinese/english-types.html、practice.html loopToast 的既有链接。
+  // 选择流程已收口到 select.html（科目/年级/题型三维选择）。
+  // 本页保留为转发桩，透传 query（subject / grade / kp / kps / count / difficulty / print），
+  // 以保住 chinese/english-types.html、practice.html loopToast 的既有链接。
   var q = window.location.search || '';
-  window.location.replace('practice.html' + q);
+  window.location.replace('select.html' + q);
 </script>
 </body>
 </html>

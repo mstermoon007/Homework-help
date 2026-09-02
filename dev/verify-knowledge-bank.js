@@ -37,6 +37,13 @@ function checkOne(kp) {
   if (!kp.name) warnings.push('name 缺失');
   if (!kp.pluginId) warnings.push('pluginId 缺失');
 
+  // 语义字段（operations / factualContent）按 canonical 归一结果判定：
+  // Normalizer 负责从扁平字段 + 治理映射（ontology-operation-map / ontology-factual-map）推导，
+  // 与 check-factual-content / check-operation-ontology 同口径（M1：Normalizer 是唯一权威归一层）。
+  var canon = Ontology.normalize(kp);
+  var canonOps = canon.knowledge.operations || [];
+  var canonFact = canon.knowledge.factualContent || {};
+
   var sl = kp.spiral_level, msl = kp.max_spiral_level;
   if (sl == null) warnings.push('spiral_level 缺失');
   if (msl == null) warnings.push('max_spiral_level 缺失');
@@ -65,8 +72,12 @@ function checkOne(kp) {
 
   if (kp.context_default == null) warnings.push('context_default 缺失');
 
-  if (!Array.isArray(kp.operations) || kp.operations.length === 0) warnings.push('operations 缺失');
-  if (!kp.factualContent || Object.keys(kp.factualContent).length === 0) warnings.push('factualContent 缺失');
+  if (!Array.isArray(kp.operations) || kp.operations.length === 0) {
+    if (canonOps.length === 0) warnings.push('operations 缺失');
+  }
+  if (!kp.factualContent || Object.keys(kp.factualContent).length === 0) {
+    if (Object.keys(canonFact).length === 0) warnings.push('factualContent 缺失');
+  }
 
   return { errors: errors, warnings: warnings };
 }

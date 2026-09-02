@@ -15,8 +15,8 @@
   'use strict';
 
   // 依赖加载
-  var GenerationEngine = (typeof global.GenerationEngine !== 'undefined') ? global.GenerationEngine
-    : (typeof require !== 'undefined' ? require('./generation-engine.js') : null);
+  var GenerationAPI = (typeof global.GenerationAPI !== 'undefined') ? global.GenerationAPI
+    : (typeof require !== 'undefined' ? require('./generation/api.js') : null);
   var StorageManager = (typeof global.StorageManager !== 'undefined') ? global.StorageManager
     : (typeof require !== 'undefined' ? require('./storage.js') : null);
   var ResultCollector = (typeof global.ResultCollector !== 'undefined') ? global.ResultCollector
@@ -60,7 +60,8 @@
       knowledgePointIds: options.knowledgePointIds || null,
       questionType: options.questionType || null,
       adaptive: options.adaptive || false,
-      learnerProfile: options.learnerProfile || null
+      learnerProfile: options.learnerProfile || null,
+      titleType: options.titleType || null
     };
     this.state = STATE.IDLE;
     this.exerciseSet = null;      // { questions: LegacyQuestion[], meta }
@@ -89,8 +90,8 @@
     // 1. 构建生成请求
     var req = this._buildGenerationRequest();
 
-    // 2. 调用统一生成引擎
-    return GenerationEngine.generate(req, { renderOptions: { mode: 'screen' } })
+    // 2. 调用统一生成 API (GenerationAPI)
+    return GenerationAPI.generate(req, { renderOptions: { mode: 'screen' } })
       .then(function (g) {
         if (!g.questions || !g.questions.length) {
           throw new Error('该配置下没有可生成的题目');
@@ -318,6 +319,8 @@
   PracticeSession.prototype._buildTitle = function () {
     var subjectName = { math: '数学', chinese: '语文', english: '英语' }[this.config.subject] || this.config.subject;
     var gradeName = '一二三四五六'.charAt(this.config.grade - 1) + '年级';
+    // 任务3：传入 titleType 时输出「X年级数学 · 题型」，与屏显标题格式一致；否则保持原「X年级 数学练习」
+    if (this.config.titleType) return gradeName + subjectName + ' · ' + this.config.titleType;
     return gradeName + ' ' + subjectName + '练习';
   };
 

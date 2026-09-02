@@ -19,6 +19,10 @@
  *   ① 知识点自身 description 字段
  *   ② 模块级 desc（module-catalog 中竞赛模块提供）
  *   ③ 均由知识库缺失时，回退为「仅展示名称 + 模块 + 练习入口」
+ *
+ * 练习回链：单知识点页的「去练习」按钮使用
+ *   practice.html?kps={知识点ID}&qt={推荐题型}&grade={年级}
+ *   （推荐题型 = applicable_question_types 第一个 type，缺省 comprehensive 综合练习）。
  */
 
 'use strict';
@@ -67,6 +71,14 @@ function pointDescription(grade, moduleId, kp) {
 function pointExample(kp) {
   if (kp.example) return kp.example;
   return '';
+}
+
+/** 推荐题型：优先 applicable_question_types 第一个 type，缺省「综合练习」(comprehensive) */
+function recommendQuestionType(kp) {
+  const aqt = Array.isArray(kp.applicable_question_types) ? kp.applicable_question_types : [];
+  const first = aqt[0];
+  if (first && typeof first.type === 'string' && first.type) return first.type;
+  return 'comprehensive';
 }
 
 // ============ HTML 片段 ============
@@ -119,7 +131,7 @@ function crumb(parts) {
 }
 
 // ============ 单知识点页 ============
-function renderPointPage(grade, moduleId, kp, sName, canonFile) {
+function renderPointPage(grade, moduleId, kp, sName, canonFile, subjectKey) {
   const gName = GRADE_NAMES[grade];
   const mName = moduleName(moduleId);
   const subName = sName || '数学';
@@ -131,7 +143,9 @@ function renderPointPage(grade, moduleId, kp, sName, canonFile) {
     ? `<div class="card"><h2>典型例题</h2><p>${esc(ex)}</p></div>`
     : `<div class="card"><h2>典型例题</h2><p class="note">该知识点暂未内置例题，可前往练习页实时生成题目。</p></div>`;
 
-  const practiceHref = `../practice.html?plugin=${esc(kp.pluginId)}&grade=${grade}`;
+  // 练习回链：由旧 ?plugin= 改为主推 ?kps={知识点ID}&qt={推荐题型}
+  // （kps 精确勾选该知识点；qt 为推荐题型用于标题展示；subject 与 grade 让 practice.html 正确定位科目年级）
+  const practiceHref = `../practice.html?subject=${esc(subjectKey)}&kps=${esc(kp.id)}&qt=${esc(recommendQuestionType(kp))}&grade=${grade}`;
 
   return baseHead(title, desc, canonFile) +
     crumb([
@@ -284,7 +298,7 @@ function build(opts) {
 
         // ② 单知识点页（文件名直接用知识点 id）
         (module.knowledgePoints || []).forEach((kp) => {
-          const html = renderPointPage(grade, moduleId, kp, sName, kp.id + '.html');
+          const html = renderPointPage(grade, moduleId, kp, sName, kp.id + '.html', subject);
           const kh = hashOf({ kind: 'point', grade: grade, moduleId: moduleId, sName: sName, kp: kp });
           (writePage(kp.id + '.html', html, kh, incremental) === 'written' ? written++ : skipped++);
           gradeEntry.total++;

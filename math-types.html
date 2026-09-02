@@ -4,193 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>数学题型选择</title>
-<meta name="description" content="小学 1-6 年级数学题型目录：按知识点分组的口算、竖式、应用题、图形、统计、竞赛拓展，支持在线练习与打印。">
-<link rel="stylesheet" href="shared/tokens.css">
-<link rel="stylesheet" href="shared/base.css">
-<link rel="stylesheet" href="shared/components.css">
-<link rel="stylesheet" href="shared/states.css">
-<link rel="stylesheet" href="shared/subjects.css">
+<meta name="description" content="小学 1-6 年级数学题型：按科目、年级与知识点选择口算、竖式、应用题、图形、统计、竞赛等练习，支持在线作答与打印。">
+<script>
+// 任务5：旧目录页改为纯重定向 → select.html（保留极简 subject 解析并透传 grade 等参数）
+(function () {
+  'use strict';
+  var params = new URLSearchParams(window.location.search);
+  params.set('subject', 'math');
+  window.location.replace('select.html?' + params.toString());
+})();
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": "数学题型选择 · Homework Help",
   "url": "https://home.modouyu.top/math-types.html",
-  "description": "小学 1-6 年级数学题型目录，按知识点分组提供口算、应用题、图形、统计、竖式、竞赛等练习。"
+  "description": "小学 1-6 年级数学题型目录，按科目、年级与知识点提供口算、应用题、图形、统计、竖式、竞赛等练习。"
 }
 </script>
 <link rel="canonical" href="https://home.modouyu.top/math-types.html">
 </head>
-<body class="type-page math-types">
-<noscript><div class="noscript-types" style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>数学题型（按年级）</h2><p>请启用 JavaScript 查看完整题型列表。</p></div></noscript>
-<div class="wrapper">
-    <a href="index.html" class="back-home">← 返回首页</a>
-
-    <div class="page-header">
-        <div class="page-title">
-            <span class="pt-logo"><img src="assets/logo-math.webp" alt="数学" width="56" height="56" loading="lazy"></span>
-            <span class="pt-grade" id="gradeBadge">一年级</span>
-            <h1 class="pt-subject">数学</h1>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="type-grid" id="typeGrid">
-            <div class="skel-grid" aria-hidden="true">
-                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
-                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
-                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
-                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
-                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
-                <div class="type-card skel-card"><div class="skel-line i"></div><div class="skel-line t"></div><div class="skel-line s"></div></div>
-            </div>
-        </div>
-    </div>
-
-<div class="foot-tip">💡 点击题型卡片进入对应练习页面，每个题型按知识点生成题目</div>
-  </div>
-
-  <script src="shared/common.js"></script>
-  <script src="shared/knowledge-bank.js"></script>
-  <script src="shared/module-catalog.js"></script>
-  <script src="shared/capability-resolver.js"></script>
-  <script src="shared/catalog-utils.js"></script>
-  <script>
-  (function () {
-    'use strict';
-
-    // HTML 转义
-    function esc(s) {
-      var d = document.createElement('div');
-      d.textContent = (s == null) ? '' : String(s);
-      return d.innerHTML;
-    }
-
-    // 友好错误页
-    function renderErrorState(icon, errTitle, desc) {
-      document.getElementById('typeGrid').innerHTML =
-        '<div class="error-state">' +
-        '  <div class="es-icon">' + icon + '</div>' +
-        '  <div class="es-title">' + errTitle + '</div>' +
-        '  <div class="es-desc">' + desc + '</div>' +
-        '  <div class="es-actions">' +
-        '    <a class="es-btn primary" href="index.html">返回首页</a>' +
-        '    <a class="es-btn ghost" href="?grade=1">从一年级开始</a>' +
-        '  </div>' +
-        '</div>';
-    }
-
-    // 年级参数校验
-    var rawGrade = new URLSearchParams(location.search).get('grade');
-    var GRADE_VALID = ['1', '2', '3', '4', '5', '6'];
-    if (rawGrade !== null && GRADE_VALID.indexOf(rawGrade) === -1) {
-      document.title = '年级参数有误 · 数学练习';
-      renderErrorState('🧭', '年级参数好像不对',
-        '收到的年级参数是「' + esc(String(rawGrade).slice(0, 20)) + '」，有效范围为 1~6。<br>请从首页重新选择年级。');
-      return;
-    }
-
-    var grade = App.currentGrade();
-    document.getElementById('gradeBadge').textContent = App.getGradeName(grade);
-    document.title = App.getGradeName(grade) + '数学练习';
-
-    // 模块顺序（与 module-catalog 一致）
-    var MODULE_ORDER = ['M0','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13',
-      'C1','C2','C3','C4','C5','C6','C7','C8','C9'];
-
-    // 题型显示名称映射
-    var QT_LABELS = {
-      'calc': '计算', 'oral': '口算', 'vertical': '竖式', 'mixed': '混合',
-      'judge': '判断', 'choice': '选择', 'fill': '填空', 'cushi': '凑十法',
-      'word': '应用题', 'geometry': '几何', 'stats': '统计', 'clock': '钟表',
-      'money': '人民币', 'unit': '单位换算', 'pattern': '找规律'
-    };
-
-    // 知识库懒加载：按需注入 knowledge-math.js（任务 3.1）
-    function ensureMathKnowledge() {
-      if (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.ensureKnowledgeData) {
-        return KnowledgeBank.ensureKnowledgeData('math');
-      }
-      return Promise.resolve();
-    }
-
-    // 主渲染
-    function renderCatalog() {
-      var grouped = window.CatalogUtils.groupKPsByModule('math', grade);
-      if (!grouped || Object.keys(grouped).length === 0) {
-        document.getElementById('typeGrid').innerHTML =
-          window.App.UIState.emptyHtml('📭', '该年级暂无可用题型',
-            '这个年级的数学题型还在准备中，试试切换其他年级。',
-            '<a class="est-btn" href="?grade=1">🌱 从一年级开始</a>');
-        return;
-      }
-
-      var html = '';
-      var isUpperGrade = grade >= 4;
-
-      // 常规题型板块
-      if (isUpperGrade) {
-        html += '<div class="section-heading">常规题型</div>';
-      }
-
-      MODULE_ORDER.forEach(function (mid) {
-        var g = grouped[mid];
-        if (!g) return;
-        var isComp = mid.charAt(0) === 'C';
-        if (isUpperGrade && isComp) return; // 竞赛题型单独板块
-        if (!isUpperGrade && isComp) return; // 低年级不显示竞赛
-
-        var qts = window.CatalogUtils.getModuleQuestionTypes('math', grade, mid);
-        if (!qts.length) return;
-
-        html += window.CatalogUtils.renderModuleCard({
-          subject: 'math',
-          grade: grade,
-          module: g.module,
-          questionTypes: qts
-        });
-      });
-
-      // 综合练习卡（始终显示）
-      html += '<a href="' + window.App.buildPluginLink('math-comprehensive') + '" class="type-card comprehensive">' +
-        '<span class="t-title">综合练习</span></a>';
-
-      // 高年级竞赛板块
-      if (isUpperGrade) {
-        html += '<div class="section-heading">竞赛题型</div>';
-        MODULE_ORDER.forEach(function (mid) {
-          var g = grouped[mid];
-          if (!g || mid.charAt(0) !== 'C') return;
-          var qts = window.CatalogUtils.getModuleQuestionTypes('math', grade, mid);
-          if (!qts.length) return;
-          html += window.CatalogUtils.renderModuleCard({
-            subject: 'math',
-            grade: grade,
-            module: g.module,
-            questionTypes: qts
-          });
-        });
-      }
-
-      document.getElementById('typeGrid').innerHTML = html;
-    }
-
-    // 等待知识库分片加载（动态注入机制，任务 3.1）
-    function waitForKnowledgeBank(cb) {
-      if (typeof window.KnowledgeBank !== 'undefined' &&
-          window.KnowledgeBank.math &&
-          window.KnowledgeBank.math.length > 0) {
-        cb();
-      } else {
-        setTimeout(function () { waitForKnowledgeBank(cb); }, 50);
-      }
-    }
-
-    // 启动：先确保知识库数据就绪，再渲染
-    ensureMathKnowledge().then(function () {
-      waitForKnowledgeBank(renderCatalog);
-    });
-  })();
-</script>
+<body>
+<noscript><div style="max-width:860px;margin:24px auto;padding:0 20px;font-family:sans-serif;line-height:1.8;"><h2>数学题型</h2><p>正在跳转到统一的题型选择页。如未自动跳转，请点击：</p><p><a href="select.html?subject=math">前往选择页</a></p></div></noscript>
+<p>正在跳转到题型选择页...</p>
 </body>
 </html>

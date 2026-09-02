@@ -28,7 +28,7 @@ var BatchValidator = require(path.join(ROOT, 'shared', 'validator', 'batch-valid
 var Quality = require(path.join(ROOT, 'shared', 'validator', 'quality-scorer.js'));
 var QID = require(path.join(ROOT, 'shared', 'question-id.js'));
 var RetryLoop = require(path.join(ROOT, 'shared', 'generator', 'retry-loop.js'));
-var LQA = require(path.join(ROOT, 'shared', 'question', 'legacy-question-adapter.js'));
+var LegacyAdapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-adapter.js'));
 var Repo = require(path.join(ROOT, 'dev', 'plugin-registry.js'));
 
 var args = process.argv.slice(2);
@@ -125,7 +125,7 @@ function main() {
           var rawResult = generator.generate(plan);
           var questions = Array.isArray(rawResult) ? rawResult : (rawResult && rawResult.questions) || [];
           var semanticQuestions = questions.map(function (q) {
-            return require(path.join(ROOT, 'shared', 'question', 'legacy-question-adapter.js')).adaptQuestion(q, {
+            return LegacyAdapter.adaptQuestion(q, {
               generatorId: selection.record.id,
               generatorVersion: '1.0.0',
               seed: plan.seed,

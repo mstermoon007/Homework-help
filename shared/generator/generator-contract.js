@@ -12,7 +12,7 @@
 'use strict';
 
 var SQ = require('../semantic-question.js');
-var LQA = require('../question/legacy-question-adapter.js');
+var LegacyAdapter = require('./legacy-adapter.js');
 var Pipeline = require('../validator/validation-pipeline.js');
 var BatchValidator = require('../validator/batch-validator.js');
 var RetryLoop = require('./retry-loop.js');
@@ -176,7 +176,7 @@ function createLegacyGenerator(legacyPlugin, meta) {
 
       // 转换为 SemanticQuestion
       return rawQuestions.map(function (q, i) {
-        return require('../question/legacy-question-adapter.js').adaptQuestion(q, {
+        return LegacyAdapter.toLegacyQuestion(q, {
           generatorId: 'legacy:' + legacyId,
           generatorVersion: meta.version || '1.0.0',
           seed: plan.seed,
@@ -220,12 +220,12 @@ function isEmptyGraphic(g) {
 }
 
 /**
- * 校验 Generator 实例是否符合新契约，并可对 Generator 源码做禁止项扫描。
+ * 运行时轻量校验：仅检查必要接口存在性。
+ * 正则扫描移至 dev/check-generator-contract.js (CI/开发时运行)。
  * @param {Object} gen
- * @param {string|null} [sourceText] Generator 源码（可选，用于禁止项扫描）
  * @returns {Object} { valid, errors: string[], warnings }
  */
-function validateGeneratorContract(g, sourceText) {
+function validateGeneratorContract(g) {
   var errors = [];
   var warnings = [];
 
@@ -233,25 +233,8 @@ function validateGeneratorContract(g, sourceText) {
     return { valid: false, errors: ['GeneratorContract 必须是对象'], warnings: warnings };
   }
 
-  if (!g.id || typeof g.id !== 'string') errors.push('id 必填（字符串）');
-  if (!g.subject || SUBJECTS[g.subject] == null) errors.push('subject 非法: ' + g.subject + '（math/cn/en）');
-  if (!Array.isArray(g.capabilities) || g.capabilities.length === 0) {
-    errors.push('capabilities 必须是非空数组');
-  } else {
-    var QTR = require('../question-type-registry.js');
-    (g.capabilities || []).forEach(function (c) {
-      if (!QTR.has(c)) errors.push('capability 非法: ' + c + '（不在 QuestionType Registry）');
-    });
-  }
-  if (!Array.isArray(g.knowledgePoints)) errors.push('knowledgePoints 必须是数组');
+  if (typeof g.generate !== 'function') errors.push('generate(plan) 必须是函数');
   if (typeof g.supports !== 'function') errors.push('supports(plan) 必须是函数');
-  if (typeof g.generate !== 'function') errors.push('generate(plan, context) 必须是函数');
-
-  if (sourceText != null) {
-    FORBIDDEN_PATTERNS.forEach(function (f) {
-      if (f.pattern.test(sourceText)) errors.push('源码违规：' + f.label);
-    });
-  }
 
   return { valid: errors.length === 0, errors: errors, warnings: warnings };
 }

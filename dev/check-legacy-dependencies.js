@@ -34,11 +34,9 @@ var PAGES = [
 
 // 允许的桥接实现（含内部实现），其余一律不得出现 legacy 执行/渲染引用
 var WHITELIST = [
-  'shared/legacy/plugin-adapter.js',
-  'shared/generator/legacy-plugin-adapter.js',
-  'shared/generator/generator-selector.js', // 合法消费 shared/legacy/plugin-adapter.js（M7-R18）
-  'shared/strategy/legacy-adapter.js',
-  'shared/generation-engine.js' // R28 boundary 检测桩 + R18 统一桥（经 LegacyPluginAdapter，非直连插件）
+  'shared/generator/legacy-adapter.js',
+  'shared/generator/generator-selector.js', // 合法消费 shared/generator/legacy-adapter.js (P5 Task 5.1)
+  'shared/generation-engine.js' // R28 boundary 检测桩 + R18 统一桥（经 LegacyAdapter，非直连插件）
 ];
 
 // 核心管线 + 共享层（页面之外的所有审查对象；白名单外出现即失败）

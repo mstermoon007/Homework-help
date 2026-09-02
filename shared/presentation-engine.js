@@ -1,5 +1,5 @@
 /**
- * shared/presentation-engine.js — M5-R24 Full Chain Wire-up
+ * shared/presentation-engine.js — M5-R24 Full Chain Wire-up (P5 Task 5.2 更新渲染层适配)
  *
  * 统一主链路：
  *   UI
@@ -24,6 +24,11 @@
  *   generateQuestions(plan, options)
  *   renderQuestions(questions, options)
  *   checkAnswers(questions, userAnswers, options)
+ *
+ * 渲染层适配：
+ *   - 生成核心仅输出 SemanticQuestion[]
+ *   - 如需 Legacy Question 格式，由渲染层自行转换（LegacyAdapter.toLegacyQuestions）
+ *   - SVG 统一经 LegacySvgAdapter 适配至 graphic 描述符
  */
 'use strict';
 
@@ -34,25 +39,23 @@ var RetryLoop = require('./generator/retry-loop.js');
 var BatchValidator = require('./validator/batch-validator.js');
 var Quality = require('./validator/quality-scorer.js');
 var SQ = require('./semantic-question.js');
-var LQA = require('./question/legacy-question-adapter.js');
-var LegacyRenderer = require('./question/legacy-renderer-adapter.js');
+var LegacyAdapter = require('./generator/legacy-adapter.js');
 var FeatureFlags = require('./feature-flags.js');
 var Logger = require('./logger.js');
 var QID = require('./question-id.js');
 var Metrics = require('./metrics.js');
 
 /**
- * 核心生成入口：Plan → Generator → SemanticQuestion → Validator → Retry → Batch → Legacy Questions
+ * 核心生成入口：Plan → Generator → SemanticQuestion → Validator → Retry → Batch
  * @param {Object} plan QuestionPlan
- * @param {Object} options { featureFlags, logger, skipValidation, legacyOutput }
- * @returns {Promise<{ questions: LegacyQuestion[], semanticQuestions, validationResults, batchResult, qualitySummary }>}
+ * @param {Object} options { featureFlags, logger, skipValidation }
+ * @returns {Promise<{ questions: SemanticQuestion[], semanticQuestions, validationResults, batchResult, qualitySummary }>}
  */
 function generateQuestions(plan, options) {
   options = options || {};
   var ff = options.featureFlags || FeatureFlags;
   var logger = options.logger || Logger;
   var skipValidation = options.skipValidation || !ff.isValidationEnabled();
-  var legacyOutput = options.legacyOutput !== false;
   var validatorMode = ff.getValidationMode();
 
   // P5-R03: 记录生成开始
@@ -100,9 +103,10 @@ function generateQuestions(plan, options) {
 
     // 4. 批量验证
     var batchResult = { valid: true, errors: [] };
+    var validationResults = [];
     if (!skipValidation) {
       var valContext = { generatorId: selection.record.id, seed: plan.seed, planId: plan.planId };
-      var validationResults = Pipeline.runPipelineBatch(semanticQuestions, valContext);
+      validationResults = Pipeline.runPipelineBatch(semanticQuestions, valContext);
       batchResult = BatchValidator.validateBatch(semanticQuestions, plan);
 
       // P5-R03: 记录验证指标
@@ -126,19 +130,15 @@ function generateQuestions(plan, options) {
       }
     }
 
-    // 5. 质量评分
+    // 5. 质量评分（复用第 4 步的 validationResults，避免重复验证同一批题目）
     var qualitySummary = { average: 1 };
     if (!skipValidation) {
-      var valContext = { generatorId: selection.record.id, seed: plan.seed, planId: plan.planId };
-      var validationResults = Pipeline.runPipelineBatch(semanticQuestions, valContext);
       var qScores = Quality.scoreBatch(semanticQuestions, validationResults, {});
       qualitySummary = qScores.summary;
     }
 
-    // 6. 输出格式
-    var outputQuestions = legacyOutput
-      ? LegacyRenderer.adaptBatchForLegacyRenderer(semanticQuestions)
-      : semanticQuestions;
+    // 6. 输出格式：仅输出 SemanticQuestion[]；如需 Legacy Question 由渲染层转换
+    var outputQuestions = semanticQuestions;
 
     // 记录每题日志
     semanticQuestions.forEach(function (sq, i) {
@@ -171,19 +171,27 @@ function generateQuestions(plan, options) {
 }
 
 /**
- * 渲染入口：Legacy Questions → HTML/SVG
- * @param {Array<Object>} questions (Legacy Question 格式)
+ * 渲染入口：SemanticQuestion[] 或 Legacy Questions → HTML/SVG
+ * 内部自动将 SemanticQuestion 转换为 Legacy Question（含 render/check/svg）
+ * @param {Array<Object>} questions (SemanticQuestion[] 或 Legacy Question[])
  * @param {Object} options { columns, renderOpts }
  * @returns {string} HTML
  */
 function renderQuestions(questions, options) {
+  if (!Array.isArray(questions) || !questions.length) return '';
+  // 判断是否为 SemanticQuestion（有 metadata/generator 字段）
+  var isSemantic = questions[0] && questions[0].metadata && questions[0].metadata.generator;
+  var legacyQuestions = isSemantic
+    ? LegacyAdapter.toLegacyQuestions(questions)
+    : questions;
+
   var PU = (typeof global !== 'undefined' && global.PluginUtil) || require('./render.js');
   try {
     var html;
     if (PU && PU.renderGrid) {
-      html = PU.renderGrid(questions, options);
+      html = PU.renderGrid(legacyQuestions, options);
     } else {
-      html = questions.map(function (q, i) { return PU.renderCard ? PU.renderCard(q, i, options) : ('<div>Q' + (i+1) + ': ' + (q.q||'') + '</div>'); }).join('');
+      html = legacyQuestions.map(function (q, i) { return PU.renderCard ? PU.renderCard(q, i, options) : ('<div>Q' + (i+1) + ': ' + (q.q||'') + '</div>'); }).join('');
     }
     Metrics.recordRenderResult({ success: true });
     return html;
@@ -241,5 +249,10 @@ module.exports = {
   generateQuestions: generateQuestions,
   renderQuestions: renderQuestions,
   checkAnswers: checkAnswers,
-  generateAndRender: generateAndRender
+  generateAndRender: generateAndRender,
+  LegacyAdapter: LegacyAdapter
 };
+
+// 浏览器全局挂载
+if (typeof window !== 'undefined') window.PresentationEngine = module.exports;
+if (typeof global !== 'undefined') global.PresentationEngine = module.exports;

@@ -7,6 +7,44 @@
 
 ---
 
+## [V4.0.3] — 2026-09-02
+
+本版本主题：**知识库语义字段补填 + 生成管线体检修复**。
+
+### 背景
+污染扫描发现全库 574 KP 的语义字段（operations / factualContent）缺失：
+canonical 层 operations 仅 221/574 覆盖、factualContent 仅 22/574；
+`verify-knowledge-bank.js` 直接检测扁平 KP 字段，报 574×2 条「缺失」WARNING。
+
+### 变更
+- **`shared/ontology-operation-map.js`**：为 51 个缺口插件新增 operations 映射
+  （题型类：fill/judge/choice/matching/operation/reason/calc 按生成行为归 canonical 操作；
+  竞赛类：C1 数字谜/C2 数论/C3 计数/C4 几何/C5 行程/C7 组合/C8 逻辑/C9 综合按主题归类；
+  全部 `confidence:'medium'`、`evidence:'plugin-name'`，遵循既有治理规范）。
+- **`shared/ontology-factual-map.js`**：扩充 7 个主题的教学事实
+  （math-clock 时间单位、math-time-date 年月日、math-shapes/math-geometry 图形分类、
+  math-area 面积公式、math-combination-set 排列组合；含 evidence/confidence 分级）。
+- **`dev/verify-knowledge-bank.js`**：`operations`/`factualContent` 判定改为走 canonical
+  归一结果（`Ontology.normalize`），与 `check-factual-content` / `check-operation-ontology`
+  同口径（Normalizer 为唯一权威归一层），消除对扁平字段缺失的重复误报。
+
+### 结果
+- canonical operations 覆盖 **571/574（99.5%）**，剩余 3 个为 cn/en 无插件占位
+  （`alphabet-order`/`pinyin-review`/`word-spelling`，`status:'placeholder'`，诚实留空不伪造）。
+- canonical factualContent 覆盖 22→**39**，其余按治理规范留空（低置信不伪造）。
+- `verify-knowledge-bank` WARNING **1685→1075**（-610 条 operations/factualContent 误报）。
+- 全量 `npm test` 通过；Frozen Core 基线无变更（3 个改动文件均非冻结文件）。
+
+### 生成管线体检修复（2026-09-02）
+对题目生成链（practice.html → PracticeSession → GenerationEngine → Strategy/Comprehensive → Generator → Retry → Validator → Renderer）扫描后修复两处：
+
+- **#1 冗余验证**：`presentation-engine.js` 对同一批 SemanticQuestion 在 RetryLoop 验证后，又重复执行 `runPipelineBatch` 两次（第 105 与 133 行、结果恒同）。已改为在批量验证步骤一次性产出结果，第 5 步质量评分直接复用，消除整批重复验证开销。
+- **#2 seed 缺失告警**：legacy 生成器（94 个插件）产出的题目不带 `seed`，导致 `attachMeta`（`if sq.seed != null` 跳过）与 `normalizeSemanticQuestion` 幂等短路（因 `metadata.generator` 已存在）双重失效，`metadata.seed` 恒为 null，运行时持续输出 `[Logger] questionValidation 缺少字段: seed`。已在 `retry-loop.js` 两处 normalize 前补 `metadata.seed = seed`（Promise 与同步双分支），`sq.seed` 与 `metadata.seed` 现保持一致。
+- **核验 #3 metrics.js 非死代码**：为「生产埋点 + 开发诊断」设计（浏览器随 presentation-engine.bundle.js 运行、仅内存计数、经 `dev/check-metrics.js` 手动查看），确认保留。
+- 全量 `npm test` EXIT=0；两处改动文件属 Frozen Core 范围，按 Bug Fix 流程**重锚基线至 93/93 一致**；`strategy-engine.bundle.js` / `presentation-engine.bundle.js` 已用官方构建脚本重建（`build:strategy` / `build:presentation`）。
+
+---
+
 ## [V4.0.2] — 2026-09-02
 
 本版本主题：**文档二次整合——参考文档与工作报告全部并入三份核心文档**。

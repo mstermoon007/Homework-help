@@ -55,7 +55,7 @@ var BATCH = 4;
 
 /* ---------- 单 case 校验 ---------- */
 
-function checkBatch(questions, plugin, plan, generatorId) {
+async function checkBatch(questions, plugin, plan, generatorId) {
   var check = { generated: false, crash: false, outOfBounds: 0, answerWrong: 0, answerNA: 0, duplicates: 0, renderable: false, satisfiesPlan: true, failReasons: [] };
 
   if (!Array.isArray(questions) || questions.length === 0) return check;
@@ -103,7 +103,7 @@ function checkBatch(questions, plugin, plan, generatorId) {
   // renderable
   if (plugin) {
     try {
-      var set = Adapter.runLegacyFallback(plugin, plan);
+      var set = await Adapter.runLegacyFallback(plugin, plan);
       check.renderable = !!(set && Array.isArray(set.questions) && set.questions.length === count && typeof plugin.render === 'function');
     } catch (e) { check.renderable = false; }
   } else {
@@ -172,7 +172,7 @@ async function main() {
             try {
               var outL = gen.generate(plan, { seed: SEEDS[s] });
               if (outL && typeof outL.then === 'function') outL = await outL;
-              check = checkBatch(outL, entry.plugin, plan);
+              check = await checkBatch(outL, entry.plugin, plan);
             } catch (e) {
               check.crash = true;
               check.failReasons.push('崩溃: ' + e.message);
@@ -227,7 +227,7 @@ async function main() {
             try {
               var outN = g.generate(plan, { seed: SEEDS[s] });
               if (outN && typeof outN.then === 'function') outN = await outN;
-              check = checkBatch(outN, null, plan);
+              check = await checkBatch(outN, null, plan);
             } catch (e) {
               check.crash = true;
               check.failReasons.push('崩溃: ' + e.message);

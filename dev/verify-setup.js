@@ -99,27 +99,18 @@ check('docs/DEVELOPMENT.md 提及禁止操作 DOM', fileContains('docs/DEVELOPME
 check('plugins/registry.js 存在', fileExists('plugins/registry.js'));
 check('registry.js 包含 PLUGIN_REGISTRY', fileContains('plugins/registry.js', 'PLUGIN_REGISTRY'));
 
-// 7.1 题型目录页脚本依赖：math-types 仅渲染静态题型目录
-//     （经 CatalogUtils/capability-resolver，不直接加载插件、不消费 App.Difficulty），
-//     因此只要求引入其渲染所需的共享层。插件加载类页面（如 practice.html）另行以
-//     各自 <script> 清单自证（历史事故：缺引导致插件接口误报，故此处仍做共享层完整性门禁）。
-//     注：subject-types.html 已于「二级页/三级页合并」中改为转发桩（透传 query 到 practice.html），
-//     不再承载题型渲染，故移出本清单，改用 7.2 的转发桩校验。
-const DYNAMIC_TYPE_PAGES = ['math-types.html'];
-const REQUIRED_SHARED = [
-  'shared/common.js', 'shared/knowledge-bank.js', 'shared/module-catalog.js',
-  'shared/capability-resolver.js', 'shared/catalog-utils.js'
-];
-DYNAMIC_TYPE_PAGES.forEach(page => {
-  const missing = REQUIRED_SHARED.filter(s => !fileContains(page, `<script src="${s}"`));
-  check(`${page} 引入全部共享层脚本（${REQUIRED_SHARED.length} 个）`, missing.length === 0,
-    missing.length ? '缺少：' + missing.join('、') : '');
-});
+// 7.1 题型目录页已收口：math-types.html 于「目录页合并」中改为纯重定向桩，
+//     不再承载题型渲染，故不再要求引入共享层脚本，改而校验其重定向目标
+//     （收口到 select.html，保留极简 subject 解析并透传 grade 等参数）。
+const mathTypesRedirect =
+  fileContains('math-types.html', "location.replace('select.html") &&
+  fileContains('math-types.html', "params.set('subject', 'math')");
+check('math-types.html 为重定向桩（→ select.html，subject=math）', mathTypesRedirect);
 
-// 7.2 subject-types.html 合并为转发桩：仅原样透传 query 到 practice.html，
-//     真正的选题/生成/预览/控制统一在 practice.html 完成（二级页与三级页合并）。
-check('subject-types.html 为转发桩（重定向到 practice.html）',
-  fileContains('subject-types.html', "location.replace('practice.html'"));
+// 7.2 旧目录页合并为重定向/转发桩：统一收口到 select.html（科目/年级/题型三维选择）。
+//     subject-types.html 原样透传 query 到 select.html，不再重定向 practice.html。
+check('subject-types.html 为转发桩（重定向到 select.html）',
+  fileContains('subject-types.html', "location.replace('select.html'"));
 
 // 8. 核心完整性检查脚本
 check('dev/check-core-integrity.js 存在', fileExists('dev/check-core-integrity.js'));

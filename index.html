@@ -162,6 +162,12 @@
     .action-area {
         margin-bottom: 0;
     }
+    .action-btns {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+    }
     .btn-start {
         display: flex;
         align-items: center;
@@ -182,6 +188,15 @@
         transition: all 0.2s;
         letter-spacing: 1px;
         text-decoration: none;
+    }
+    .btn-start.btn-ghost {
+        background: var(--card);
+        color: var(--brand);
+        border: 2px solid var(--line-strong, #d6e2f2);
+        box-shadow: 0 6px 20px rgba(74, 144, 217, 0.14);
+    }
+    .btn-start.btn-ghost:hover:not(:disabled) {
+        box-shadow: 0 8px 26px rgba(74, 144, 217, 0.24);
     }
     .btn-start:hover:not(:disabled) {
         transform: translateY(-2px);
@@ -401,7 +416,7 @@
         <!-- 海报区：科目选择框→海报1（速度与智能）；年级选择框→海报2（学习闭环） -->
         <div class="poster-grid">
             <!-- 海报一：速度与智能 -->
-            <a class="poster" href="subject-types.html?subject=math" style="background-image:url('assets/poster-subject.png')">
+            <a class="poster" href="select.html" style="background-image:url('assets/poster-subject.png')">
                 <div class="poster-overlay">
                     <div class="poster-title">速度与智能</div>
                     <div class="poster-tags">
@@ -417,7 +432,7 @@
                 </div>
             </a>
             <!-- 海报二：学习闭环 -->
-            <a class="poster" href="subject-types.html?subject=math" style="background-image:url('assets/poster-grade.png')">
+            <a class="poster" href="select.html" style="background-image:url('assets/poster-grade.png')">
                 <div class="poster-overlay">
                     <div class="poster-title">学习闭环</div>
                     <div class="poster-loop">
@@ -428,9 +443,12 @@
             </a>
         </div>
 
-        <!-- 开始按钮（蓝绿渐变，核心行动号召） -->
+        <!-- 主按钮区：开始练习 + 问题反馈（核心行动号召） -->
         <div class="action-area">
-            <a class="btn-start" id="startBtn" href="subject-types.html?subject=math">✨ 一键开始智能练习</a>
+            <div class="action-btns">
+                <a class="btn-start" id="startBtn" href="select.html">开始练习</a>
+                <a class="btn-start btn-ghost" id="feedbackBtn" href="feedback/feedback.html">问题反馈</a>
+            </div>
         </div>
 </div>
 

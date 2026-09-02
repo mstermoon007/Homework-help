@@ -7116,6 +7116,64 @@ __defs["shared/ontology-operation-map.js"] = function (module, exports, require)
     'math-g4-draw': { ops: ['represent'], confidence: 'low', evidence: 'plugin-name' },
     'math-g5-draw': { ops: ['represent'], confidence: 'low', evidence: 'plugin-name' },
 
+    // ---------- V4.0.3 语义补填批次（模块/子题型语义推导） ----------
+    // 题型类插件：按生成行为（计算/填空/判断/选择/匹配/操作/推理）归类 canonical 操作
+    'math-g1-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g1-operation': { ops: ['represent', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g1-matching': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g1-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g2-mixed': { ops: ['calculate'], confidence: 'high', evidence: 'plugin-name' },
+    'math-g2-matching': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g2-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g2-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g4-mixed': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g4-fill': { ops: ['identify', 'write', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-match': { ops: ['classify', 'identify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g4-reason': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g4-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g4-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g5-mixed': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g5-fill': { ops: ['identify', 'write', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g5-reason': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g5-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g5-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g6-calc': { ops: ['calculate'], confidence: 'high', evidence: 'plugin-name' },
+    'math-g6-fill': { ops: ['identify', 'write', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g6-operation': { ops: ['represent', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g6-stats': { ops: ['identify', 'classify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g6-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-g6-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
+
+    // 竞赛插件：C1 数字谜/C2 数论/C3 计数/C4 几何/C5 行程/C7 组合/C8 逻辑/C9 综合应用
+    'math-competition-c1-numberpuzzle': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-c2-numbertheory': { ops: ['reason', 'calculate', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-c3-counting': { ops: ['reason', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-c4-geometry': { ops: ['identify', 'measure', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-c5-journey': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-c8-logic': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g4-c9': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g5-c1': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g5-c2': { ops: ['reason', 'calculate', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g5-c3': { ops: ['reason', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g5-c4': { ops: ['identify', 'measure', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g5-c5': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g5-c6': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g5-c7': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g5-c8': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g5-c9': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g6-c1': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g6-c2': { ops: ['reason', 'calculate', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g6-c3': { ops: ['reason', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g6-c4': { ops: ['identify', 'measure', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g6-c5': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g6-c6': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g6-c7': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g6-c8': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
+    'math-competition-g6-c9': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
+
+    // 其他（cn 综合、无插件占位）
+    'chinese-comprehensive': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
+
     'chinese-pinyin': { ops: ['read', 'write', 'identify'], confidence: 'high', evidence: 'documented' },
     'chinese-hanzi': { ops: ['read', 'write', 'identify', 'compose'], confidence: 'high', evidence: 'documented' },
     'pinyin-to-char': { ops: ['read', 'write', 'identify'], confidence: 'high', evidence: 'documented' },
@@ -7252,6 +7310,30 @@ __defs["shared/ontology-factual-map.js"] = function (module, exports, require) {
     },
     'math-decimal': {
       factualContent: { notation: '十进制小数' },
+      confidence: 'low', evidence: 'standard-curriculum'
+    },
+    'math-clock': {
+      factualContent: { unit: '小时', subUnits: ['分', '秒'], notation: 'hh:mm' },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-time-date': {
+      factualContent: { units: ['年', '月', '日', '时', '分', '秒'], dayHours: 24, weekDays: 7 },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-shapes': {
+      factualContent: { categories: ['平面图形', '立体图形'] },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-geometry': {
+      factualContent: { categories: ['点', '线', '角', '面', '体'] },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-area': {
+      factualContent: { formulas: { rectangle: '长×宽', square: '边长×边长' } },
+      confidence: 'medium', evidence: 'standard-curriculum'
+    },
+    'math-combination-set': {
+      factualContent: { concept: '排列与组合' },
       confidence: 'low', evidence: 'standard-curriculum'
     }
   };
@@ -7438,7 +7520,7 @@ __defs["shared/module-catalog.js"] = function (module, exports, require) {
  *   - desc     模块描述（可选）
  *   - gradeStatus  按年级就绪状态（仅数学竞赛模块）：{ [grade]: 'active' | 'placeholder' }
  *       与 shared/knowledge-bank.js 对应年级知识点 status 保持一致。
- *       五年级竞赛处于重新开发阶段（见 docs/g5-competition-knowledge-map.md），
+ *       五年级竞赛处于重新开发阶段（见 docs/DEV_LOG.md 附录 D，原 g5-competition-knowledge-map），
  *       四年级/六年级沿用既有实现；基础模块 M0-M12 全年级 active。
  *   - status   模块整体就绪状态（仅语文/英语模块）：'active' | 'placeholder'
  *       placeholder 表示目录已建、插件与知识点待逐轮激活（如 N8/E6 综合卷）。
@@ -9698,6 +9780,10 @@ function generateWithRetry(generatorFn, plan, context) {
       if (!Array.isArray(questions)) questions = questions.questions || [];
       // 标准化为 SemanticQuestion
       questions = questions.map(function (q, i) {
+        // legacy 生成器可能不产 seed：幂等短路前先补 metadata.seed，保证 seed 可追溯
+        if (q && q.seed == null) {
+          q = Object.assign({}, q, { metadata: Object.assign({}, q.metadata, { seed: seed }) });
+        }
         return require("shared/semantic-question.js").normalizeSemanticQuestion(Object.assign({}, q, {
           generator: generatorId,
           generatorVersion: generatorVersion,
@@ -9807,6 +9893,10 @@ function generateWithRetrySync(generatorFn, plan, context) {
     if (!Array.isArray(questions)) questions = questions.questions || [];
 
     questions = questions.map(function (q, i) {
+      // legacy 生成器可能不产 seed：幂等短路前先补 metadata.seed，保证 seed 可追溯
+      if (q && q.seed == null) {
+        q = Object.assign({}, q, { metadata: Object.assign({}, q.metadata, { seed: currentSeed }) });
+      }
       return require("shared/semantic-question.js").normalizeSemanticQuestion(Object.assign({}, q, {
         generator: generatorId,
         generatorVersion: generatorVersion,

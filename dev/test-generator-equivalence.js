@@ -52,7 +52,7 @@ var BATCH = 4;
 
 /* ---------- 批次 profile 工具 ---------- */
 
-function profile(questions, plugin, plan) {
+async function profile(questions, plugin, plan) {
   var first = questions[0] || {};
   var parsedAll = questions.map(function (q) { return SP.parseExpression(q.prompt); });
   var ops = {}, opsCount = 0, minOp = Infinity, maxOp = -Infinity, minSteps = Infinity, maxSteps = -Infinity, answers = [];
@@ -78,7 +78,7 @@ function profile(questions, plugin, plan) {
   var renderable = true;
   if (plugin) {
     try {
-      var set = Adapter.runLegacyFallback(plugin, plan);
+      var set = await Adapter.runLegacyFallback(plugin, plan);
       renderable = !!(set && Array.isArray(set.questions) && set.questions.length > 0);
     } catch (e) { renderable = false; }
   } else {
@@ -229,8 +229,8 @@ async function runCase(entry, rec, kpId, qt, difficulty, seed) {
     return result;
   }
 
-  var pL = profile(legacyQs, entry.plugin, plan);
-  var pN = profile(nativeQs, null, plan);
+  var pL = await profile(legacyQs, entry.plugin, plan);
+  var pN = await profile(nativeQs, null, plan);
   var compared = compareProfiles(pL, pN, plan);
 
   result.fields = compared.fields;

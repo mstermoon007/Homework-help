@@ -6,6 +6,8 @@
  *   - 可重试错误：ANSWER_MISMATCH, DUPLICATE, DIFFICULTY_MISMATCH, GRAPHIC_INVALID 等
  *   - 不可重试错误：SCHEMA_INVALID, KP_MISSING, KP_MISMATCH, GENERATOR_NOT_FOUND 等
  *   - 超过重试次数返回明确失败信息
+ *
+ * 统一 async (P3 Task 1.2)：已移除 generateWithRetrySync。
  */
 'use strict';
 
@@ -79,6 +81,10 @@ function generateWithRetry(generatorFn, plan, context) {
       if (!Array.isArray(questions)) questions = questions.questions || [];
       // 标准化为 SemanticQuestion
       questions = questions.map(function (q, i) {
+        // legacy 生成器可能不产 seed：幂等短路前先补 metadata.seed，保证 seed 可追溯
+        if (q && q.seed == null) {
+          q = Object.assign({}, q, { metadata: Object.assign({}, q.metadata, { seed: seed }) });
+        }
         return require('../semantic-question.js').normalizeSemanticQuestion(Object.assign({}, q, {
           generator: generatorId,
           generatorVersion: generatorVersion,
@@ -167,104 +173,8 @@ function generateWithRetry(generatorFn, plan, context) {
   });
 }
 
-/**
- * 同步版本（用于同步生成器）
- */
-function generateWithRetrySync(generatorFn, plan, context) {
-  context = context || {};
-  var maxRetries = context.maxRetries != null ? context.maxRetries : DEFAULT_MAX_RETRIES;
-  var generatorId = context.generatorId || 'unknown';
-  var generatorVersion = context.generatorVersion || '1.0.0';
-  var baseSeed = context.seed || QID.generateBaseSeed();
-  var validatorContext = context.validatorContext || {};
-
-  var retries = 0;
-  var allResults = [];
-  var currentSeed = baseSeed;
-
-  while (true) {
-    var attemptContext = Object.assign({}, plan, { seed: currentSeed, _retryAttempt: retries });
-    var questions = generatorFn(attemptContext);
-    if (!Array.isArray(questions)) questions = questions.questions || [];
-
-    questions = questions.map(function (q, i) {
-      return require('../semantic-question.js').normalizeSemanticQuestion(Object.assign({}, q, {
-        generator: generatorId,
-        generatorVersion: generatorVersion,
-        seed: currentSeed,
-        index: i,
-        _retryAttempt: retries
-      }));
-    });
-
-    var valContext = Object.assign({}, validatorContext, { generatorId: generatorId, seed: currentSeed, planId: plan.planId });
-    var validationResults = Pipeline.runPipelineBatch(questions, valContext);
-
-    var allValid = validationResults.every(function (r) { return r.valid; });
-    var allErrors = validationResults.flatMap(function (r) { return r.errors || []; });
-
-    allResults.push({
-      attempt: retries,
-      seed: currentSeed,
-      valid: allValid,
-      errors: allErrors,
-      questionCount: questions.length
-    });
-
-    if (allValid) {
-      return {
-        questions: questions,
-        validationResults: validationResults,
-        retries: retries,
-        success: true,
-        attempts: allResults
-      };
-    }
-
-    if (hasFatal(allErrors)) {
-      return {
-        questions: questions,
-        validationResults: validationResults,
-        retries: retries,
-        success: false,
-        error: 'FATAL_ERROR',
-        message: '遇到不可恢复错误，停止重试',
-        attempts: allResults
-      };
-    }
-
-    if (!hasRetryable(allErrors)) {
-      return {
-        questions: questions,
-        validationResults: validationResults,
-        retries: retries,
-        success: false,
-        error: 'NON_RETRYABLE',
-        message: '错误不可重试，停止重试',
-        attempts: allResults
-      };
-    }
-
-    retries++;
-    if (retries > maxRetries) {
-      return {
-        questions: questions,
-        validationResults: validationResults,
-        retries: retries,
-        success: false,
-        error: 'MAX_RETRIES_EXCEEDED',
-        message: '超过最大重试次数 (' + maxRetries + ')',
-        attempts: allResults
-      };
-    }
-
-    currentSeed = QID.deriveSeed(baseSeed, generatorId, retries);
-  }
-}
-
 module.exports = {
   generateWithRetry: generateWithRetry,
-  generateWithRetrySync: generateWithRetrySync,
   DEFAULT_MAX_RETRIES: DEFAULT_MAX_RETRIES,
   RETRYABLE_CODES: RETRYABLE_CODES,
   FATAL_CODES: FATAL_CODES,

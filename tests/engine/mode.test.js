@@ -16,6 +16,9 @@ const ROOT = path.resolve(__dirname, '..', '..');
 require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'comprehensive-strategy.js'));
+require(path.join(ROOT, 'shared', 'presentation-engine.js'));
+require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
+require(path.join(ROOT, 'shared', 'presentation', 'render-options.js'));
 
 const GE = require(path.join(ROOT, 'shared', 'generation-engine.js'));
 

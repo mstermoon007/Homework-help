@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * dev/check-generator-mode.js — M4-R14 Generator 双轨许可 Gate
+ * dev/check-generator-mode.js — M4-R14 Generator 双轨许可 Gate (P2 Task 2.1 简化)
  *
  * 验收：
- *   - generatorMode（legacy/hybrid/native）默认 hybrid；
- *   - 四级覆盖（plugin/knowledgePoint/questionType/subject）解析链正确；
- *   - GeneratorSelector 双轨过滤：legacy 只产出旧插件轨道，native 只产出核心轨道（无匹配回退），
+ *   - generatorMode（hybrid/native）默认 native；
+ *   - 两级覆盖（global/knowledgePoint）解析链正确；
+ *   - GeneratorSelector 双轨过滤：native 只产出核心轨道（无匹配回退），
  *     hybrid 双轨并轨按优先级选优；选择结果携带 mode；
  *   - instantiate 可实例化 core 生成器。
  */
@@ -26,33 +26,24 @@ function assertEq(label, actual, expected) {
 function run() {
   // 1) 默认值与合法性
   Mode.clearAll();
-  assertEq('默认 generatorMode', Mode.getGlobal(), 'hybrid');
-  assertEq('默认解析', Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5' }), 'hybrid');
+  assertEq('默认 generatorMode', Mode.getGlobal(), 'native');
+  assertEq('默认解析', Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5' }), 'native');
   try { Mode.setGlobal('turbo'); errors.push('非法 mode 未被拦截'); } catch (e) { /* ok */ }
   try { Mode.override('badScope', 'x', 'native'); errors.push('非法 scope 未被拦截'); } catch (e) { /* ok */ }
+  try { Mode.override('plugin', 'x', 'native'); errors.push('已移除 plugin scope 未拦截'); } catch (e) { /* ok */ }
 
-  // 2) 解析链：plugin > knowledgePoint > questionType > subject > global
-  Mode.setGlobal('native');
-  Mode.override('subject', 'math', 'legacy');
-  Mode.override('questionType', 'calc', 'hybrid');
-  Mode.override('knowledgePoint', 'math-g1-m1-addsub-5', 'native');
-  Mode.override('plugin', 'math-oral', 'legacy');
-  assertEq('plugin 覆盖优先', Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5', questionTypeId: 'calc' }), 'legacy');
-  Mode.clearOverride('plugin');
-  assertEq('KP 覆盖优先于 questionType', Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5', questionTypeId: 'calc' }), 'native');
-  assertEq('questionType 覆盖优先于 subject', Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-10', questionTypeId: 'calc' }), 'hybrid');
+  // 2) 解析链：knowledgePoint > global
   Mode.setGlobal('hybrid');
-  assertEq('subject 覆盖优先于 global', Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-10' }), 'legacy');
+  Mode.override('knowledgePoint', 'math-g1-m1-addsub-5', 'native');
+  assertEq('KP 覆盖优先', Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-5' }), 'native');
+  Mode.clearOverride('knowledgePoint');
+  assertEq('无 KP 覆盖 → global', Mode.resolve({ knowledgePointId: 'math-g1-m1-addsub-10' }), 'hybrid');
 
   // 3) 双轨选择
   Mode.clearAll();
-  Mode.setGlobal('legacy');
-  var l = Selector.selectGenerator({ knowledgePointId: 'math-g1-m1-addsub-5', questionTypeId: 'calc', difficulty: 3 });
-  assertEq('legacy 模式选中 old track', l.record.scope, 'legacy');
-
   Mode.setGlobal('native');
   var n = Selector.selectGenerator({ knowledgePointId: 'math-g1-m1-addsub-5', questionTypeId: 'calc', difficulty: 3 });
-  assertEq('native 模式选中 core track', n.record.scope, 'core');
+  assertEq('native 模式选中 core track', n.record && n.record.scope, 'core');
 
   var f = Selector.selectGenerator({ knowledgePointId: 'math-g1-m0-make-ten', questionTypeId: 'review', difficulty: 3 });
   assertEq('native 无候选回退 legacy', f.source, 'fallback:legacy');
@@ -67,11 +58,11 @@ function run() {
   var qs = inst.generate({ knowledgePointId: 'math-g1-m1-addsub-5', questionTypeId: 'calc', difficulty: 3, count: 2 }, { seed: 'gate' });
   assertEq('instantiate 生成题量', qs.length, 2);
 
-  console.log('M4-R14 Generator 双轨许可 Gate');
+  console.log('M4-R14 Generator 双轨许可 Gate (P2 简化)');
   console.log('');
   console.log('默认 mode:     ' + Mode.getGlobal());
-  console.log('覆盖层级:      plugin/knowledgePoint/questionType/subject（更具体优先）');
-  console.log('双轨选择:      legacy→旧插件 / native→核心(无匹配回退) / hybrid→并轨');
+  console.log('覆盖层级:      knowledgePoint > global（仅两级）');
+  console.log('双轨选择:      native→核心(无匹配回退) / hybrid→并轨');
   console.log('Errors: ' + errors.length);
   errors.forEach(function (e) { console.log('  ✖ ' + e); });
   console.log('');

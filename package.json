@@ -53,6 +53,7 @@
     "test:unit": "node --test test/unit/*.test.js",
     "test:node": "node --test test/*.test.js test/plugins/*.test.js test/unit/*.test.js",
     "generate:knowledge": "node scripts/generate-knowledge-pages.js --incremental",
-    "watch:knowledge": "node scripts/generate-knowledge-pages.js --watch"
+    "watch:knowledge": "node scripts/generate-knowledge-pages.js --watch",
+    "check-contracts": "node dev/check-generator-contract.js"
   }
 }
