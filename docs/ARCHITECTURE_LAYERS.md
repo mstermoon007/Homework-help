@@ -92,6 +92,21 @@
 3. **知识库不生成题面、不参与 UI 决策**（`dev/check-architecture-rules.js` R1–R5）。
 4. **大服务层只做信息传递 / 控制 / 外围**，不侵入生成算法；批改经 `plugin-loader.js`→`PluginUtil.computeResult`。
 
+## 3.1 职责收敛（2026-09 精简）
+生成链路按四层精简后的职责边界：
+
+| 关注点 | 归属层 | 实现 |
+|--------|--------|------|
+| 题型/难度/复杂度核心策略 | **生成层** | `shared/strategy/strategy-engine.js`（plan：题型白名单∩能力、难度、复杂度档注入） |
+| 题量配额（kpAllocation / 均分） | **生成层** | `generation-engine.js` / `generation/api.js` multi-kp 分支按配额规划 |
+| SVG 调度（固定样式 → 模板族） | **生成层** | `strategy/question-style-strategy.js` + `shared/svg-templates.js`；`api.runPlans` 注入每题 `style/svgTemplate/complexity`；`html-renderer` 题卡输出 `style-*` 类 |
+| 去重 + 刷新随机 | **生成层** | validator 管线 `duplicate-validator`（seenKeys 去重）；插件随机源 `PluginUtil.randInt`（crypto 优先） |
+| 参数归一 / 信息流转 | **大服务层** | `practice-bridge.js` `ControlService.plan`（只组装 profile，不再自行分区/编排） |
+| 页面样式 / 标题 / 打印 | **大服务层** | `mergedTitle`、`*.css`、`shared/print.js` |
+| 题目卡渲染呈现 | **UI 层** | `practice.html` 直接采用 Engine 成品 HTML（`state.lastSemantic.html`），不自行拼卡 |
+
+已清理的冗余配套：`runOrchestrated` / `aggregateSession` / `kpAllocationPartitions` / `hasPerKpAllocation`（编排死路径，配额下沉生成层）；`MODE_ALIAS` 重复键；`kpAllocation` 死字段（practice-session 原忽略，现透传生成层）。
+
 ## 4. 清单维护
 - 新增 `shared/`（或顶层 js/css）文件：**必须**在 `architecture/layers.json` 对应 `sub` 列表登记一次，否则视为未归类。
 - 移动/重命名文件：同步更新 `architecture/layers.json` + 所有硬编码路径（见 §0）——建议优先保持 `shared/` 稳定。

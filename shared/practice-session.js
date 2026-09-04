@@ -67,6 +67,7 @@
       knowledgePointIds: options.knowledgePointIds || null,
       questionType: options.questionType || null,
       questionTypes: Array.isArray(options.questionTypes) ? options.questionTypes : (options.questionTypes ? [options.questionTypes] : null),
+      kpAllocation: options.kpAllocation || null,
       adaptive: options.adaptive || false,
       learnerProfile: options.learnerProfile || null,
       titleType: options.titleType || null
@@ -304,6 +305,10 @@
     if (this.config.knowledgePointIds && this.config.knowledgePointIds.length) {
       req.knowledgePoints = this.config.knowledgePointIds;
       req.mode = 'multi-kp';
+      // 知识点配额（生成层 multi-kp 按配额分配题量；无配额时生成层均分）
+      if (this.config.kpAllocation && Array.isArray(this.config.kpAllocation.kps)) {
+        req.kpAllocation = this.config.kpAllocation;
+      }
     } else if (this.config.knowledgePointId) {
       req.knowledgePointId = this.config.knowledgePointId;
       req.mode = 'single-kp';

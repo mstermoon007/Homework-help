@@ -119,6 +119,8 @@
 
     // P2.2（Issue #1 延伸）：density=compact 追加 compact 类（仅 class，卡内结构不变，Node/浏览器输出一致）
     var cardCls = 'question-card' + (options.density === 'compact' ? ' compact' : '');
+    // 生成层统筹：固定样式类（style-{calc|fill|choice|judge|story|shape|open}），供页面固定样式呈现
+    if (sq && typeof sq.style === 'string' && sq.style) cardCls += ' style-' + sq.style;
     var html = '<div class="' + cardCls + '" data-index="' + index + '" role="group" aria-label="第 ' + (index + 1) + ' 题">';
     html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>' + esc(prompt) + '</div>';
     if (graphic) {

@@ -103,7 +103,7 @@
   // R26：统一 mode 归一（single-kp / multi-kp / comprehensive / adaptive）
   var MODE_ALIAS = {
     'single': 'single-kp', 'single-kp': 'single-kp', 'kp': 'single-kp',
-    'multi': 'multi-kp', 'multi-kp': 'multi-kp', 'multi-kp': 'multi-kp',
+    'multi': 'multi-kp', 'multi-kp': 'multi-kp',
     'comprehensive': 'comprehensive', 'zonghe': 'comprehensive',
     'adaptive': 'adaptive', 'adaptive-kp': 'adaptive'
   };
@@ -132,17 +132,25 @@
     }
 
     // multi-kp：对每个显式 knowledgePoints 独立规划并合并 plans
+    // 配额：request.kpAllocation {kps:[{id,count}]} 存在时按各 KP 配额；否则 count 均分（余数归前）
     if (mode === 'multi-kp' || (request.knowledgePoints && Array.isArray(request.knowledgePoints) && request.knowledgePoints.length)) {
       if (!engine) return Promise.reject(new Error('StrategyEngine 不可用，请先加载 shared/strategy-engine.bundle.js'));
       var kpList = request.knowledgePoints;
+      var alloc = (request.kpAllocation && Array.isArray(request.kpAllocation.kps)) ? request.kpAllocation.kps : null;
+      var allocMap = {};
+      if (alloc) alloc.forEach(function (p) { if (p && p.id) allocMap[p.id] = p.count; });
+      var perKp = Math.floor(request.count / kpList.length);
+      var remainder = request.count % kpList.length;
       var plans = [];
-      var trace = { mode: 'multi-kp', kps: kpList.length };
+      var trace = { mode: 'multi-kp', kps: kpList.length, allocated: !!alloc };
       var seq = Promise.resolve();
-      kpList.forEach(function (kpId) {
+      kpList.forEach(function (kpId, i) {
         seq = seq.then(function () {
+          var kpCount = allocMap[kpId] != null ? allocMap[kpId] : (perKp + (i < remainder ? 1 : 0));
+          if (kpCount <= 0) return null;
           var single = {
             knowledgePointId: kpId, grade: request.grade,
-            count: request.count, difficulty: request.difficulty,
+            count: kpCount, difficulty: request.difficulty,
             questionType: request.questionType, questionTypes: request.questionTypes,
             subtype: request.subtype,
             learnerProfile: request.learnerProfile

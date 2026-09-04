@@ -516,6 +516,9 @@
       return;
     }
     if (fb.html) {
+      // 生成层统筹：直接采用 Engine 成品 HTML（含 SVG 图形与固定样式类 style-*），
+      // 大服务层不再自行拼题卡，仅做信息流转与页面样式挂载。
+      state.lastSemantic = { html: fb.html, questions: fb.questions || [] };
       applyExerciseSet({ questions: fb.questions || [], meta: fb.meta });
     }
     // B5 关联层唯一入口收敛：bridge 经反馈回传真实会话；保存供 printFile() 打印

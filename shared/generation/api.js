@@ -123,15 +123,23 @@
     if (mode === 'multi-kp' || (request.knowledgePoints && Array.isArray(request.knowledgePoints) && request.knowledgePoints.length)) {
       if (!StrategyEngine) return Promise.reject(new Error('StrategyEngine 不可用'));
       var kpList = request.knowledgePoints;
+      var alloc = (request.kpAllocation && Array.isArray(request.kpAllocation.kps)) ? request.kpAllocation.kps : null;
+      var allocMap = {};
+      if (alloc) alloc.forEach(function (p) { if (p && p.id) allocMap[p.id] = p.count; });
+      var perKp = Math.floor(request.count / kpList.length);
+      var remainder = request.count % kpList.length;
       var plans = [];
-      var trace = { mode: 'multi-kp', kps: kpList.length };
+      var trace = { mode: 'multi-kp', kps: kpList.length, allocated: !!alloc };
       var seq = Promise.resolve();
-      kpList.forEach(function (kpId) {
+      kpList.forEach(function (kpId, i) {
         seq = seq.then(function () {
+          var kpCount = allocMap[kpId] != null ? allocMap[kpId] : (perKp + (i < remainder ? 1 : 0));
+          if (kpCount <= 0) return null;
           var single = {
             knowledgePointId: kpId, grade: request.grade,
-            count: request.count, difficulty: request.difficulty,
-            questionType: request.questionType, subtype: request.subtype,
+            count: kpCount, difficulty: request.difficulty,
+            questionType: request.questionType, questionTypes: request.questionTypes,
+            subtype: request.subtype,
             learnerProfile: request.learnerProfile
           };
           var r = StrategyEngine.plan(single);
@@ -178,6 +186,12 @@
       }).then(function (res) {
         if (!res) return;
         var sqs = res.semanticQuestions || res.questions || [];
+        // 生成层统筹：把计划级固定样式 / SVG 模板族 / 复杂度档注入每题（SVG 调度落地到题）
+        sqs.forEach(function (q) {
+          if (plan.style) q.style = plan.style;
+          if (plan.svgTemplate) q.svgTemplate = plan.svgTemplate;
+          if (plan.complexity) q.complexity = plan.complexity;
+        });
         results.push.apply(results, sqs);
       }).catch(function (err) {
         failedPlans.push({ planId: plan.planId || plan.knowledgePointId, error: String(err && err.message || err) });

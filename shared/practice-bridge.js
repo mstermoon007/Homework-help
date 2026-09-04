@@ -10,10 +10,8 @@
  *     - 数量 count（预置 20/30/50 / 自定义 1~50，默认 20）
  *     - 难度 difficulty（1~10，默认 1）
  *     - 知识点 knowledgePoints / knowledgePointId
- *     - 知识点驱动生成（per-KP 配额 kpAllocation）
- *   若生成层本身不支持 per-KP 配额（当前 PracticeSession 只收单个 count +
- *   knowledgePoints[]，忽略 kpAllocation），控制层以「编排器」角色运行时：
- *   按每个知识点的配额逐个调用生成层 start()，再把各结果合并为一个题目集交回 UI。
+ *     - 知识点驱动生成（per-KP 配额 kpAllocation —— 配额编排由生成层引擎 multi-kp 统一处理，
+ *       本层不再自行分区/合并，仅透传配额）
  *
  * 分层约束：
  *   - 本文件不修改、不侵入题目生成层（shared/practice-session.js / generation-*）。
@@ -89,37 +87,11 @@
       return { knowledgePoints: kps || null, knowledgePointId: kp || null, kpAllocation: allocation || null };
     }
 
-    // 是否为「每知识点有明确配额」的多知识点分配（触发编排式知识点驱动生成）
-    function hasPerKpAllocation(kpState) {
-      var a = kpState && kpState.kpAllocation;
-      if (!a || !Array.isArray(a.kps) || !a.kps.length) return false;
-      // 需多知识点，且每个都有整数配额
-      var list = a.kps;
-      if (list.length < 2) return false;
-      for (var i = 0; i < list.length; i++) {
-        var c = list[i].count;
-        if (!(c >= 0) || Math.floor(Number(c)) !== Number(c)) return false;
-      }
-      return true;
-    }
-
-    // 把 per-KP 配额解析为 Partition 列表：[{ kp, count, name, weight }]
-    function kpAllocationPartitions(kpState) {
-      var a = kpState.kpAllocation;
-      var out = [];
-      (a.kps || []).forEach(function (p) {
-        if (p.count <= 0) return;
-        out.push({ kp: p.id || p.knowledgePointId, name: p.name || '', count: p.count, weight: p.weight || 1 });
-      });
-      return out;
-    }
-
     /**
-     * 生成完整执行计划。
+     * 生成执行计划（大服务层只做信息流转：参数归一 → profile；不做编排运算）。
+     * 题量分配（kpAllocation 配额 / 均分）由生成层引擎 multi-kp 统一处理。
      * @param {Object} ui - UI 注入的业务状态（含 state 与命令字段）。
-     * @returns {{ profile:{...}, mode:'single'|'orchestrated', partitions:Array }}
-     *   - mode='single'      单次直发生成层（不经 per-KP 配额，按单 count+knowledgePoints[]）。
-     *   - mode='orchestrated' 有 per-KP 配额 → 按知识点逐个生成并合并（知识点驱动生成）。
+     * @returns {{ profile:Object }}
      */
     function plan(ui) {
       ui = ui || {};
@@ -150,14 +122,9 @@
         raw: ui.raw || null
       };
 
-      var orchestrated = hasPerKpAllocation(kp) && !profile.adaptive;
-      var partitions = orchestrated ? kpAllocationPartitions(kp) : [];
-
-      return {
-        profile: profile,
-        mode: orchestrated ? 'orchestrated' : 'single',
-        partitions: partitions
-      };
+      // 编排（多知识点配额/分区）已下沉生成层：大服务层不再自行分区，
+      // 统一由 PracticeSession 携带 knowledgePoints+kpAllocation 直发生成层引擎。
+      return { profile: profile };
     }
 
     // 把单次指令翻译为生成层构造函数可消费的 options（只构造，不改生成层）
@@ -180,11 +147,11 @@
     }
 
     // 合并标题（沿用生成层同款格式）
-    function mergedTitle(profile, partitions) {
+    function mergedTitle(profile) {
       var subjectName = { math: '数学', chinese: '语文', english: '英语' }[profile.subject] || profile.subject;
       var gradeName = '一二三四五六'.charAt(Math.max(0, profile.grade - 1)) + '年级';
-      var total = partitions.reduce(function (a, p) { return a + p.count; }, 0);
-      var t = profile.titleType || (partitions.map(function (p) { return p.name; }).filter(Boolean).join('+') || '综合练习');
+      var total = profile.count || 0;
+      var t = profile.titleType || '综合练习';
       return gradeName + subjectName + ' · ' + t + '（' + total + '题）';
     }
 
@@ -195,8 +162,6 @@
       resolveDifficulty: resolveDifficulty,
       countProfile: countProfile,
       extractKnowledgePoints: extractKnowledgePoints,
-      hasPerKpAllocation: hasPerKpAllocation,
-      kpAllocationPartitions: kpAllocationPartitions,
       plan: plan,
       sessionConfig: sessionConfig,
       mergedTitle: mergedTitle
@@ -226,21 +191,15 @@
   }
 
   // ============================================
-  // 知识点驱动生成：编排器（按 per-KP 配额逐个调用生成层并合并）
+  // 知识点驱动生成：统一直发单个 PracticeSession（配额编排由生成层引擎 multi-kp 处理）
   // ============================================
   /**
-   * 依计划 mode 选择执行路径：
-   *   - 'single'      直发单个 PracticeSession.start()；
-   *   - 'orchestrated' 按每知识点配额逐个生成并合并 → 聚合会话。
-   * @returns {Object} 会话（单个 session 或聚合 shim），或 null。
+   * 依计划执行：恒为单个 PracticeSession.start()（多知识点/配额由生成层引擎统一规划）。
+   * @returns {Object} 会话（单个 session），或 null。
    */
   function runPlan(plan, handlers) {
     var profile = plan.profile;
     var run = function () {
-      if (plan.mode === 'orchestrated') {
-        runOrchestrated(plan, handlers);
-        return;
-      }
       runSingle(profile, handlers);
     };
     ensurePlugins({ ensureLegacyPlugins: handlers && handlers.ensureLegacyPlugins, subject: profile.subject, grade: profile.grade }, run);
@@ -270,98 +229,6 @@
         session: _session,
         instruction: profile,
         error: { code: 'E_GENERATE', message: (err && err.message) || '生成失败' }
-      });
-    });
-  }
-
-  // 聚合会话 shim：合并题集后让 submit() 依然可按 DOM 作答走统一批改
-  function aggregateSession(profile, merged, sessions) {
-    var shim = {
-      config: ControlService.sessionConfig(profile),
-      exerciseSet: { questions: merged.questions, meta: merged.meta },
-      sessions: sessions,
-      submit: function () {
-        var answers = collectAnswers(merged.questions);
-        var result = computeResult(merged.questions, answers);
-        shim.checkResult = result;
-        return Promise.resolve(result);
-      }
-    };
-    return shim;
-  }
-
-  function collectAnswers(questions) {
-    var answers = {};
-    questions.forEach(function (q, i) {
-      var v = '';
-      var inp = null;
-      var slots = document.querySelectorAll('#problemsArea input[data-index="' + i + '"], #problemsArea input[data-idx="' + i + '"], #problemsArea input[data-i="' + i + '"]');
-      if (slots && slots.length) {
-        for (var k = 0; k < slots.length; k++) { if (slots[k].value) { v = slots[k].value; break; } }
-      }
-      if (v !== '') answers[i] = v;
-    });
-    return answers;
-  }
-
-  function computeResult(questions, answers) {
-    // B3 修正：无条件委托 PluginUtil.computeResult（统一 { score:百分比, results:boolean[] } 语义）。
-    // 历史本地 fallback 返回的结构（score=正确数 / results=[{index,...}] / correctAnswers=对象）
-    // 与 UI 消费方 applySessionSubmitFeedback→markQuestions 期望的布尔数组不一致，
-    // 若被触发会把所有题误标为正确。故移除嵌套降级：PluginUtil 缺失即显式报错，不静默返回坏结构。
-    if (global.PluginUtil && typeof global.PluginUtil.computeResult === 'function') {
-      return global.PluginUtil.computeResult(questions, answers);
-    }
-    throw new Error('PluginUtil.computeResult 不可用（请先加载 shared/check.js）');
-  }
-
-  function runOrchestrated(plan, handlers) {
-    var Ctor = sessionCtor();
-    if (!Ctor) { emitStart({ ok: false, error: { code: 'E_GEN_LAYER', message: '题目生成层（PracticeSession）未加载' } }); return; }
-    var profile = plan.profile;
-    var partitions = plan.partitions;
-
-    Promise.all(partitions.map(function (part) {
-      var sub = {
-        subject: profile.subject,
-        grade: profile.grade,
-        count: part.count,
-        difficulty: profile.difficulty,
-        mode: 'multi-kp',
-        knowledgePointId: part.kp,
-        knowledgePoints: [part.kp],
-        kpAllocation: null,
-        questionType: profile.questionType,
-        questionTypes: profile.questionTypes,
-        subtype: profile.subtype,
-        adaptive: false,
-        learnerProfile: null,
-        titleType: profile.titleType
-      };
-      var s = new Ctor(ControlService.sessionConfig(sub));
-      return s.start().then(function (r) {
-        return { session: s, questions: r && r.questions || [] };
-      });
-    })).then(function (results) {
-      var merged = [];
-      results.forEach(function (r) { merged = merged.concat(r.questions); });
-      var meta = { title: ControlService.mergedTitle(profile, partitions) };
-      var agg = aggregateSession(profile, { questions: merged, meta: meta }, results.map(function (r) { return r.session; }));
-      _session = agg;
-      emitStart({
-        ok: true,
-        session: agg,
-        instruction: profile,
-        questions: merged,
-        html: '1',
-        meta: meta
-      });
-    }).catch(function (err) {
-      emitStart({
-        ok: false,
-        session: _session,
-        instruction: profile,
-        error: { code: 'E_GENERATE', message: (err && err.message) || '知识点驱动生成失败' }
       });
     });
   }
