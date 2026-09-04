@@ -381,6 +381,44 @@
     return _session;
   }
 
+  // ============================================
+  // R4：大服务层查询（决策上收）
+  //  - 可见性查询：知识点/模块在题型过滤范围内的可见性（源自 module-catalog.kpVisibleInType）
+  //  - 题型→可见模块：标准题型支撑的模块 id 列表（源自 module-catalog.visibleModulesForType）
+  //  - 题量规划：按知识点权重分配总题量（源自 question-type-allocation.allocateKpRatio）
+  // UI 只读查询结果，不做推导 / 不持有静态过滤表。
+  // ============================================
+  // 访问大服务层 module-catalog（浏览器 / CommonJS 边界）
+  function moduleCatalog() {
+    return (typeof global !== 'undefined' && global.MODULE_CATALOG)
+      ? global.MODULE_CATALOG
+      : (typeof require !== 'undefined' ? require('./module-catalog.js') : null);
+  }
+  // 访问大服务层 question-type-allocation（浏览器经 strategy-engine.bundle 暴露的全局 / CommonJS）
+  function typeAllocation() {
+    return (typeof global !== 'undefined' && global.QuestionTypeAllocation)
+      ? global.QuestionTypeAllocation
+      : (typeof require !== 'undefined' ? require('./strategy/question-type-allocation.js') : null);
+  }
+  // 可见性查询：知识点是否落在题型过滤范围内（无 qt 视为全部可见）
+  function kpVisibleInType(kp, type) {
+    var mc = moduleCatalog();
+    if (mc && typeof mc.kpVisibleInType === 'function') return mc.kpVisibleInType(kp, type);
+    return true; // 大服务层不可用时保守放行（不阻断 UI）
+  }
+  // 题型→可见模块：返回支撑该题型的模块 id 数组（未知题型返回 null）
+  function visibleModulesForType(type) {
+    var mc = moduleCatalog();
+    if (mc && typeof mc.visibleModulesForType === 'function') return mc.visibleModulesForType(type);
+    return null;
+  }
+  // 题量规划：按知识点权重分配总题量（最大剩余法，sum(count) === total）
+  function allocateKpRatio(kps, total) {
+    var ta = typeAllocation();
+    if (ta && typeof ta.allocateKpRatio === 'function') return ta.allocateKpRatio(kps, total);
+    return null;
+  }
+
   // 提交批改：调用生成层 submit()（编排路径走聚合会话 shim），归一化反馈后交回 UI。
   function submit() {
     if (!_session) { emitSubmit({ ok: false, error: { code: 'E_NO_SESSION', message: '尚未生成练习会话' } }); return null; }
@@ -426,7 +464,11 @@
     submit: submit,
     newSession: newSession,
     onStartFeedback: onStartFeedback,
-    onSubmitFeedback: onSubmitFeedback
+    onSubmitFeedback: onSubmitFeedback,
+    // R4 大服务层查询（决策上收，UI 只读）
+    kpVisibleInType: kpVisibleInType,
+    visibleModulesForType: visibleModulesForType,
+    allocateKpRatio: allocateKpRatio
   });
 
   global.PracticeBridge = bridge;

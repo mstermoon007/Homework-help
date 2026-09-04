@@ -148,6 +148,45 @@
   MODULE_CATALOG.byId = function (id) { return MODULE_BY_ID[id] || null; };
   MODULE_CATALOG.SUBJECTS = SUBJECTS;
 
+  // ---- R4：题型→可见模块（决策上收，源自 practice.html QT_STD_MODULES）----
+  // 标准题型 → 支撑该题型的模块 id 列表（用于 qt=标准题型 时过滤可见模块）。
+  // 修复 calc 不含 M1 漂移：M1 口算知识点 applicable_question_types 含 calc，
+  //   calc 应能过滤出 M1（口算）模块，故 calc: ['M1','M2','M3']。
+  const TYPE_MODULES = {
+    oral: ['M1'], calc: ['M1', 'M2', 'M3'], vertical: ['M2'], mixed: ['M3'],
+    fill: ['M4'], match: ['M5'], operation: ['M6', 'M9'], draw: ['M6', 'M9'],
+    picture: ['M7'], apply: ['M8'], word: ['M8'], stats: ['M9'], reason: ['M10'],
+    judge: ['M11'], choice: ['M12'], open: ['M6', 'M8'], geometry: ['M6']
+  };
+
+  // 「题型→可见模块」查询：返回支撑该题型的模块 id 数组；未知题型返回 null。
+  // 规范入口：先按原始值查，未命中再小写归一查（兼容 URL 参数大小写漂移）。
+  function visibleModulesForType(type) {
+    var t = String(type == null ? '' : type).toLowerCase().trim();
+    if (!t) return null;
+    var mods = TYPE_MODULES[t];
+    return mods ? mods.slice() : null;
+  }
+
+  // 知识点在题型过滤范围内的可见性查询（大服务层可见性查询服务，源自 practice.html kpVisibleInQT）。
+  //   - 无 qt 视为全部可见
+  //   - competition 仅看 C 模块
+  //   - 模块 id / 知识点类型 / 题型→可见模块 三向匹配
+  function kpVisibleInType(kp, type) {
+    var q = String(type == null ? '' : type).toLowerCase().trim();
+    if (!q) return true;
+    if (q === 'competition') return String((kp && kp.moduleId) || '').toUpperCase().charAt(0) === 'C';
+    if (kp && kp.moduleId && String(kp.moduleId).toLowerCase() === q) return true;
+    if (kp && kp.type && String(kp.type).toLowerCase() === q) return true;
+    var mods = TYPE_MODULES[q];
+    if (mods && kp && kp.moduleId && mods.indexOf(kp.moduleId) !== -1) return true;
+    return false;
+  }
+
+  MODULE_CATALOG.TYPE_MODULES = TYPE_MODULES;
+  MODULE_CATALOG.visibleModulesForType = visibleModulesForType;
+  MODULE_CATALOG.kpVisibleInType = kpVisibleInType;
+
   global.MODULE_CATALOG = MODULE_CATALOG;
   global.SUBJECTS = SUBJECTS;
   global.BASIC_MODULES = BASIC_MODULES;

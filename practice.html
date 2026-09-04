@@ -1097,13 +1097,8 @@
   // ============ 任务3：URL 入口解析（qt / kps / plugin）与知识点过滤 ============
   // 特殊题型（select.html 的 qtype 语义，同时兼容历史 qt 传参）
   var QT_SPECIAL = { comprehensive: '综合练习', exam: '考试', competition: '竞赛' };
-  // 标准 questionTypeId → 模块（用于 qt=标准题型 时过滤支撑该题型的模块）
-  var QT_STD_MODULES = {
-    oral: ['M1'], calc: ['M2', 'M3'], vertical: ['M2'], mixed: ['M3'],
-    fill: ['M4'], match: ['M5'], operation: ['M6', 'M9'], draw: ['M6', 'M9'],
-    picture: ['M7'], apply: ['M8'], word: ['M8'], stats: ['M9'], reason: ['M10'],
-    judge: ['M11'], choice: ['M12'], open: ['M6', 'M8'], geometry: ['M6']
-  };
+  // R4 决策上收：QT_STD_MODULES 静态过滤表已移除，改由大服务层 module-catalog.js
+  // 提供「题型→可见模块」查询（PracticeBridge.visibleModulesForType），UI 只读结果。
   // 细粒度 type → 展示名（qt=addsub/cushi 等历史深链）
   var TYPE_PRETTY = {
     addsub: '加减法', muldiv: '乘除法', cushi: '凑十法', pingshi: '平十法', poshi: '破十法',
@@ -1123,23 +1118,30 @@
     if (keys.length === 1) return moduleNameOf(keys[0]);
     return keys.length ? '综合练习' : null;
   }
-  // 知识点是否落在 qt 过滤范围内（无 qt 视为全部可见）
+  // 知识点是否落在 qt 过滤范围内（无 qt 视为全部可见）。
+  // R4 上收：能力判断委托大服务层可见性查询服务 PracticeBridge.kpVisibleInType，
+  // UI 不再持有静态过滤表 / 不做推导，只读查询结果。
   function kpVisibleInQT(k, qt) {
+    if (window.PracticeBridge && typeof window.PracticeBridge.kpVisibleInType === 'function') {
+      return window.PracticeBridge.kpVisibleInType(k, qt);
+    }
     var q = String(qt || '').toLowerCase().trim();
     if (!q) return true;
     if (q === 'competition') return (k.moduleId || '').toUpperCase().charAt(0) === 'C';
     if (k.moduleId && k.moduleId.toLowerCase() === q) return true;
     if (k.type && String(k.type).toLowerCase() === q) return true;
-    var mods = QT_STD_MODULES[q];
-    if (mods && k.moduleId && mods.indexOf(k.moduleId) !== -1) return true;
     return false;
   }
-  // qt → 展示名（标题 / 提示用）
+  // qt → 展示名（标题 / 提示用）。
+  // R4：QT_STD_MODULES 已移除，可见模块查询走大服务层 PracticeBridge.visibleModulesForType；
+  // 取首个可见模块名作展示名；bridge 不可用时按模块 id / 细粒度名兜底。
   function qtName(qt) {
     var q = String(qt || '').trim();
     if (QT_SPECIAL[q]) return QT_SPECIAL[q];
     if (/^[MCEN]\d+$/i.test(q)) return moduleNameOf(q.toUpperCase());
-    var mods = QT_STD_MODULES[q.toLowerCase()];
+    var mods = (window.PracticeBridge && typeof window.PracticeBridge.visibleModulesForType === 'function')
+      ? window.PracticeBridge.visibleModulesForType(q)
+      : null;
     if (mods && mods.length) return moduleNameOf(mods[0]);
     return TYPE_PRETTY[q] || null;
   }
@@ -1406,19 +1408,31 @@
     if (reuse) {
       alloc = state.kpRatio;
     } else {
-      // 权重占比分配（最大剩余法）
+      // R4 决策上收：权重占比分配（最大剩余法）收敛到大服务层
+      // shared/strategy/question-type-allocation.js 的 allocateKpRatio，经 PracticeBridge 获取规划结果；
+      // UI 只发「知识点 + 题量」指令，不再自实现分配算法。
+      var plan = (window.PracticeBridge && typeof window.PracticeBridge.allocateKpRatio === 'function')
+        ? window.PracticeBridge.allocateKpRatio(
+            ids.map(function (id) { return { id: id, weight: asmKpById[id].weight || 1 }; }),
+            total
+          )
+        : null;
       alloc = {};
-      var rem = [];
-      ids.forEach(function (id) {
-        var w = asmKpById[id].weight || 1;
-        var exact = total * w / wSum;
-        alloc[id] = Math.floor(exact);
-        rem.push({ id: id, frac: exact - Math.floor(exact), w: w });
-      });
-      // 将余数按小数部分从大到小分配，补足到 total，保证各卡之和 == total
-      var sum = Object.keys(alloc).reduce(function (a, id) { return a + alloc[id]; }, 0);
-      rem.sort(function (a, b) { return b.frac - a.frac || b.w - a.w; });
-      for (var r = 0; r < total - sum && r < rem.length; r++) alloc[rem[r].id] += 1;
+      if (plan && Array.isArray(plan.kps)) {
+        plan.kps.forEach(function (p) { if (p && p.id != null) alloc[p.id] = p.count; });
+      } else {
+        // 兜底：大服务层不可用时退回本地权重占比（最大剩余法）
+        var rem = [];
+        ids.forEach(function (id) {
+          var w = asmKpById[id].weight || 1;
+          var exact = total * w / wSum;
+          alloc[id] = Math.floor(exact);
+          rem.push({ id: id, frac: exact - Math.floor(exact), w: w });
+        });
+        var sum = Object.keys(alloc).reduce(function (a, id) { return a + alloc[id]; }, 0);
+        rem.sort(function (a, b) { return b.frac - a.frac || b.w - a.w; });
+        for (var r = 0; r < total - sum && r < rem.length; r++) alloc[rem[r].id] += 1;
+      }
       state.kpRatio = alloc;
     }
 
