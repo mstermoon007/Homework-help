@@ -34,8 +34,13 @@
   }
 
   var TYPE_ALIAS = {
-    cushi: 'calc', mixed: 'apply', mix: 'apply', word: 'apply',
-    oral: 'operate', recognize: 'operate', picture: 'operate',
+    cushi: 'calc',
+    // mixed/mix 由 registry CANONICAL_ALIASES → calc 解析（SSOT：registry 为真源，避免方向冲突的两跳）
+    word: 'apply',
+    // 注：oral / recognize 已是 canonical 9 类（registry SSOT），不再映射到 operate（消除两跳漂移）；
+    // operate 由 registry CANONICAL_ALIASES → oral 解析（单跳）。
+    // picture（看图列式 M7）→ calc（Q4 决策：看图列式属计算类）
+    picture: 'calc',
     matching: 'choice', column: 'fill', comparison: 'judge'
   };
   function canonQuestionType(t) {

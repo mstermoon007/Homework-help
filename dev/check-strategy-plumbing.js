@@ -21,7 +21,7 @@ var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
 var Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
-var Adapter = require(path.join(ROOT, 'shared', 'strategy', 'legacy-adapter.js'));
+var Adapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-adapter.js'));
 var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
 var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
 

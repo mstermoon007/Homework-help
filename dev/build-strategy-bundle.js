@@ -18,7 +18,7 @@ var ROOT = path.join(__dirname, '..');
 
 var ENTRIES = [
   'shared/strategy/strategy-engine.js',
-  'shared/strategy/legacy-adapter.js',
+  'shared/generator/legacy-adapter.js',
   'shared/strategy/strategy-config.js',
   'shared/strategy/question-type-strategy.js',
   'shared/strategy/question-type-allocation.js',
@@ -163,7 +163,7 @@ Object.keys(modules).forEach(function (id) {
 
 // 浏览器全局挂载
 lines.push('global.StrategyEngine = __req(\'shared/strategy/strategy-engine.js\');');
-lines.push('global.StrategyLegacyAdapter = __req(\'shared/strategy/legacy-adapter.js\');');
+lines.push('global.StrategyLegacyAdapter = __req(\'shared/generator/legacy-adapter.js\');');
 lines.push('global.StrategyConfig = __req(\'shared/strategy/strategy-config.js\');');
 lines.push('global.StrategyValidator = __req(\'shared/strategy/strategy-validator.js\');');
 lines.push('global.QuestionTypeStrategy = __req(\'shared/strategy/question-type-strategy.js\');');
@@ -184,7 +184,7 @@ lines.push('global.GeneratorSelector = __req(\'shared/generator/generator-select
 lines.push('global.GeneratorMode = __req(\'shared/generator/generator-mode.js\');');
 lines.push('global.GeneratorRegistry = __req(\'shared/generator/generator-registry.js\');');
 lines.push('global.MigrationSwitch = __req(\'shared/generator/migration-switch.js\');');
-lines.push('global.LegacyPluginAdapter = __req(\'shared/generator/legacy-plugin-adapter.js\');');
+lines.push('global.LegacyPluginAdapter = __req(\'shared/generator/legacy-adapter.js\');');
 lines.push('global.SemanticQuestionBridge = __req(\'shared/generator/semantic-question-bridge.js\');');
 lines.push('global.ComplexGen = __req(\'shared/generator/generators/complex.js\');');
 lines.push('global.StrategyBundle = { req: __req, modules: __defs };');

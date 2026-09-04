@@ -35,6 +35,7 @@
           "desc": "语义结构：Schema / semantic-question 归一与构造",
           "files": [
             "shared/semantic-question.js",
+            "shared/generator/semantic-question-bridge.js",
             "shared/schemas/semantic-question.schema.js", "shared/schemas/knowledge-point.schema.js"
           ]
         },

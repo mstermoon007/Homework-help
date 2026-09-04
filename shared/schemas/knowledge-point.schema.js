@@ -12,6 +12,9 @@
  *   ⑤ Generation    : capabilities（仅能力声明，不含生成器）
  *
  * 本文件纯数据/纯函数，不依赖 DOM / window / 插件 / KB / 生成器。
+ * 题型枚举（KNOWN_QUESTION_TYPES）以 question-type-registry.js 为唯一真源（SSOT）：
+ * 引用知识点库题型注册表的 canonical 9 类（oral/calc/fill/choice/judge/apply/open/geometry/recognize），
+ * 消除 operate/oral 割裂；operate 等 legacy 别名经 registry.normalizeQuestionType 解析兼容。
  */
 (function (global) {
   'use strict';
@@ -19,6 +22,11 @@
   var VERSION = 1;
 
   var SUBJECTS = ['math', 'cn', 'en'];
+
+  // 题型 SSOT：引用知识点库题型注册表（同为纯数据层），双环境兼容（Node require / 浏览器全局）。
+  var QuestionTypeRegistry = (typeof require === 'function')
+    ? (function () { try { return require('../question-type-registry.js'); } catch (e) { return null; } })()
+    : (global.QuestionTypeRegistry || null);
 
   var KNOWN_OPERATIONS = [
     'add', 'subtract', 'multiply', 'divide',
@@ -31,7 +39,11 @@
     'represent', 'model'
   ];
 
-  var KNOWN_QUESTION_TYPES = ['calc', 'fill', 'judge', 'choice', 'operate', 'apply', 'open'];
+  // 题型 canonical 全集 = question-type-registry 的 9 类（SSOT）。
+  // 环境缺 registry（异常/旧打包）时回退到历史 7 类数组，保证不崩。
+  var KNOWN_QUESTION_TYPES = QuestionTypeRegistry && QuestionTypeRegistry.all
+    ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
+    : ['calc', 'fill', 'judge', 'choice', 'operate', 'apply', 'open'];
 
   var KNOWN_CONTEXTS = ['pure', 'simple', 'standard', 'complex'];
 
@@ -70,7 +82,15 @@
 
   function isKnownCapability(id) { return CAPABILITIES[id] != null; }
   function isValidCognitiveRaw(v) { return COGNITIVE_MAP[v] != null; }
-  function isValidQuestionType(t) { return KNOWN_QUESTION_TYPES.indexOf(t) !== -1; }
+  // 题型合法性：canonical 9 类直判；legacy 别名（operate/mix/…）经 registry 归一后判定，保持兼容。
+  function isValidQuestionType(t) {
+    if (KNOWN_QUESTION_TYPES.indexOf(t) !== -1) return true;
+    if (QuestionTypeRegistry && typeof QuestionTypeRegistry.normalizeQuestionType === 'function') {
+      var n = QuestionTypeRegistry.normalizeQuestionType(t);
+      return n && KNOWN_QUESTION_TYPES.indexOf(n.id) !== -1;
+    }
+    return false;
+  }
 
   /**
    * 字段级合法性（格式非法 = ERROR）。供 Validator 与 KB Verifier 共用。
