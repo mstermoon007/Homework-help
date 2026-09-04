@@ -70,6 +70,22 @@
 - **目录/工具**：`catalog-utils.js`、`module-catalog.js`、`version.js`、`feature-flags.js`、`subject-utils.js`、`difficulty.js`(+`-static`)、`generation-config.js`
 - **外围样式**：`base.css`、`tokens.css`、`components.css`、`pages.css`、`states.css`、`subjects.css`、`toolbar.css`
 
+#### 三维螺旋·自适应预留契约（R5）
+
+大服务层按「三维螺旋」落地难度 / 深度 / 自适应：
+
+| 维度 | 落点 | 状态 |
+|------|------|------|
+| **难度** | 年级难度锚点表 `strategy-config.GRADE_DIFFICULTY_ANCHORS`（G1 1-2 … G6 6-10，与 `dev/difficulty-anchor-table.js` 同源）；`difficulty-strategy` / `target-difficulty` 已 clamp 1-10 | ✅ 已落库 |
+| **深度转折** | `spiral-strategy`（S1-S6）已接入；深度度量 = `complexityScore(difficulty) + spiral_level + 前置链深度`，随年级严格递增，由 `dev/check-spiral-consistency.js` 门禁守护 | ✅ 已校验 |
+| **自适应（预留）** | `adaptive-strategy`（R13-R22）已实现、**默认关闭**。预留契约：`request.adaptive`（开关）/ `learnerProfile`（学习者状态）/ `adaptiveDelta`（难度调整量，±2）。**不做新开发**，仅固化契约供后续接入 | 🔒 预留（默认关） |
+
+**自适应预留契约（固化，不开发）**：
+- 开关：`GenerateInstruction.adaptive = true|false`（`practice-bridge.js` 透传，`ControlService.plan` 保留 `adaptive` 字段）。
+- 学习者状态：`learnerProfile`（`learner/**` 模型，含最近正确率 / 连续正确错误 / 掌握度）。
+- 调整量：`adaptiveDelta`（-2..+2），叠加在用户难度上，`target-difficulty.js` 已 clamp 1-10。
+- 接入点预留：`strategy-request.js` / `practice-bridge.js` / `target-difficulty.js` 均已识别上述字段，未消费时安全忽略（默认关）。
+
 ## 3. 分层约束（硬红线）
 1. **生成层 = Frozen Core**：禁止修改，仅授权 Bug Fix（编号见 DEVELOPMENT.md §6）。
 2. **UI 层唯一生成入口 = `PracticeBridge.start`**（`dev/check-ui-boundary.js`、`dev/check-practice-page.js` 门禁锚定）。

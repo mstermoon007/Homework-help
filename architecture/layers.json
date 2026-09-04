@@ -116,7 +116,7 @@
           "files": ["shared/practice-bridge.js"]
         },
         "STRATEGY": {
-          "desc": "策略(计划/难度/结构编排)",
+          "desc": "策略(计划/难度/结构编排)；三维螺旋·自适应预留契约：adaptive/learnerProfile/adaptiveDelta 默认关，见 docs/ARCHITECTURE_LAYERS.md R5",
           "files": [
             "shared/strategy/adaptive-strategy.js", "shared/strategy/cognitive-strategy.js",
             "shared/strategy/comprehensive-strategy.js", "shared/strategy/constraint-builder.js",

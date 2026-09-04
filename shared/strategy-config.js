@@ -9,6 +9,24 @@
 var STRATEGY_VERSION = '1.0.0';
 var DEFAULT_STRATEGY = 'legacy'; // 'legacy' | 'strategy-v1'
 
+// ---- R5：年级难度锚点表（三维螺旋-难度维度，衔接 R2-b 的 KP 难度标定）----
+// 依据 docs/AI_REFACTOR_PLAN.html R5 与用户确认的 Q6 锚点表：
+//   G1 1-2 / G2 2-4 / G3 3-5 / G4 4-7 / G5 5-8 / G6 6-10
+// 语义：该年级 KP 的基础难度应落在锚点区间 [min,max]；区间随年级螺旋上升（相邻年级区间有重叠）。
+// 与 dev/difficulty-anchor-table.js（R2-b 门禁用）保持一致，这里作为大服务层可读常量落库。
+var GRADE_DIFFICULTY_ANCHORS = {
+  1: [1, 2],
+  2: [2, 4],
+  3: [3, 5],
+  4: [4, 7],
+  5: [5, 8],
+  6: [6, 10]
+};
+// 查询：年级 → 难度锚点区间 [min,max]；年级非法时返回 null
+function difficultyAnchorOf(grade) {
+  return GRADE_DIFFICULTY_ANCHORS[Number(grade)] || null;
+}
+
 // 内部状态（运行时仅读，启动时确定）
 var _currentStrategy = null;
 var _configOverrides = {};
@@ -67,6 +85,8 @@ function reset() {
 module.exports = {
   STRATEGY_VERSION: STRATEGY_VERSION,
   DEFAULT_STRATEGY: DEFAULT_STRATEGY,
+  GRADE_DIFFICULTY_ANCHORS: GRADE_DIFFICULTY_ANCHORS,
+  difficultyAnchorOf: difficultyAnchorOf,
   getStrategy: getStrategy,
   setStrategy: setStrategy,
   isLegacy: isLegacy,
