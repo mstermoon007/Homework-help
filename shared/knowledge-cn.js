@@ -123,7 +123,7 @@
               "related": [
                 "cn-g1-n1-syllable-spelling"
               ],
-              "difficulty": 2,
+              "difficulty": 1,
               "spiral_level": 1,
               "max_spiral_level": 1,
               "cognitive_level": "掌握",
@@ -151,7 +151,7 @@
                 "cn-g1-n1-pinyin-basic"
               ],
               "related": [],
-              "difficulty": 2,
+              "difficulty": 1,
               "spiral_level": 1,
               "max_spiral_level": 1,
               "cognitive_level": "掌握",
