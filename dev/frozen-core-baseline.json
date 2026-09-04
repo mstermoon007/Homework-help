@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T13:02:40.493Z",
+  "generatedAt": "2026-09-04T13:27:01.899Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -95,7 +95,7 @@
     "shared/question-type-registry.js": {
       "hash": "5c75a5b9ad460ead",
       "size": 15964,
-      "mtime": 1788526750500.9778
+      "mtime": 1788527095299.4895
     },
     "shared/generator/generator-contract.js": {
       "hash": "42c846d95f7033fb",
@@ -403,9 +403,9 @@
       "mtime": 1788190235405.2598
     },
     "shared/generation-engine.js": {
-      "hash": "6b3fc90114b08658",
-      "size": 17054,
-      "mtime": 1788337818592.0845
+      "hash": "d1aaa59966a5e797",
+      "size": 17531,
+      "mtime": 1788528297010.042
     },
     "shared/presentation-engine.js": {
       "hash": "2a80390b9432d824",

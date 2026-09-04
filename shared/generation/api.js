@@ -78,6 +78,13 @@
   function isComprehensive(request) {
     if (!request) return false;
     if (request.mode === 'comprehensive') return true;
+    // 显式多知识点驱动（mode='multi-kp' 或 knowledgePoints 非空）不属综合练习：
+    // 由 multi-kp 分支按知识点逐个规划，避免被「无单点 KP + subject/grade」兜底误判为综合，
+    // 导致深链题型（?qt=）请求走 ComprehensiveStrategy 后按 kp.type 粗过滤出 0 题。
+    if (request.mode === 'multi-kp' ||
+        (Array.isArray(request.knowledgePoints) && request.knowledgePoints.length)) {
+      return false;
+    }
     return request.model === 'comprehensive' ||
       request.comprehensive === true ||
       (!request.knowledgePointId && request.subject && request.grade != null);

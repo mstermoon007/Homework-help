@@ -487,7 +487,10 @@
         state: state,
         knowledgePoints: state.knowledgePointIds || (urlParams.kps ? urlParams.kps.split(',').filter(Boolean) : null),
         knowledgePointId: state.kp || urlParams.kp || null,
-        questionType: state.questionType || urlParams.qt || null,
+        // 深链 qt 仅作「题型→可见知识点」的勾选过滤器（asmSeedFromUrl 已按 kpVisibleInQT 过滤勾选集合），
+        // 不作为强制题型传给生成层：生成层按勾选知识点各自受支持题型生成（知识点驱动），
+        // 避免 qt 的模块口径与 canonical 硬匹配口径冲突导致 0 题（深链 ?qt= 生成失败根因之一）。
+        questionType: state.questionType || null,
         titleType: deriveTypeName(),
         kpAllocation: state.kpAllocation || null,
         raw: { levels: state }
@@ -1787,7 +1790,7 @@
               state: state,
               knowledgePoints: state.knowledgePointIds,
               knowledgePointId: state.kp || null,
-              qType: null, questionType: state.questionType || urlParams.qt || null,
+              qType: null, questionType: state.questionType || null,
               titleType: deriveTypeName(),
               kpAllocation: state.kpAllocation || null,
               raw: { levels: state }
