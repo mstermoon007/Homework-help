@@ -1205,6 +1205,58 @@ function distribute(count, types) {
   return plans;
 }
 
+/**
+ * R4：按知识点权重分配总题量（决策上收自 practice.html 的 kpRatio 权重占比分配）。
+ *
+ * 分配策略（快速模式）：每张知识点卡的题量 = 该知识点 weight ÷ 所选全部知识点 weight 之和 × 总题量，
+ * 用「最大剩余法」取整，保证各卡题量之和恰好等于总题量。
+ *
+ * @param {Array} kps    知识点列表，每项至少含 { id, weight }（weight 缺省按 1）。
+ * @param {number} total 目标总题量（>=1 的整数）。
+ * @returns {{ total:number, kps:Array<{id, weight, count}> }}
+ *   返回与请求 kps 同序的分配结果，sum(count) === total。
+ * @throws {StrategyError} 入参非法（非数组 / 空 / 非法 total / 缺少 id）时抛出。
+ */
+function allocateKpRatio(kps, total) {
+  if (!Array.isArray(kps) || !kps.length) {
+    throw new StrategyError('kps 必须是包含至少一个知识点的数组', CODES.INVALID_REQUEST, { kps: kps });
+  }
+  var n = Number(total);
+  if (typeof n !== 'number' || !isFinite(n) || n < 1 || Math.floor(n) !== n) {
+    throw new StrategyError('total 必须是 >=1 的整数: ' + total, CODES.INVALID_REQUEST, { total: total });
+  }
+  kps.forEach(function (k, i) {
+    if (!k || typeof k !== 'object' || !k.id) {
+      throw new StrategyError('kp[' + i + '] 缺少 id', CODES.INVALID_REQUEST, { index: i });
+    }
+  });
+
+  var wSum = 0;
+  kps.forEach(function (k) { wSum += Number(k.weight) || 1; });
+
+  // 权重占比 + 最大剩余法：base = floor(total * w / wSum)，余数按小数部分从大到小补足
+  var alloc = {}, rem = [];
+  kps.forEach(function (k) {
+    var w = Number(k.weight) || 1;
+    var exact = n * w / wSum;
+    alloc[k.id] = Math.floor(exact);
+    rem.push({ id: k.id, frac: exact - Math.floor(exact), w: w });
+  });
+  var sum = Object.keys(alloc).reduce(function (a, id) { return a + alloc[id]; }, 0);
+  rem.sort(function (a, b) { return (b.frac - a.frac) || (b.w - a.w); });
+  for (var r = 0; r < n - sum && r < rem.length; r++) alloc[rem[r].id] += 1;
+
+  // 不变式：sum(count) === total
+  var out = kps.map(function (k) {
+    return { id: k.id, weight: Number(k.weight) || 1, count: alloc[k.id] };
+  });
+  var totalOut = out.reduce(function (a, p) { return a + p.count; }, 0);
+  if (totalOut !== n) {
+    throw new StrategyError('kpRatio 分配不变式被破坏: sum=' + totalOut + ' !== total=' + n, CODES.INVALID_PLAN, { totalOut: totalOut, total: n });
+  }
+  return { total: n, kps: out };
+}
+
 function validateAllocation(plans, requestCount) {
   var errors = [];
   if (!Array.isArray(plans)) {
@@ -1228,6 +1280,7 @@ function validateAllocation(plans, requestCount) {
 
 module.exports = {
   allocateQuestionTypes: allocateQuestionTypes,
+  allocateKpRatio: allocateKpRatio,
   distribute: distribute,
   validateAllocation: validateAllocation
 };
@@ -5463,6 +5516,24 @@ __defs["shared/strategy-config.js"] = function (module, exports, require) {
 var STRATEGY_VERSION = '1.0.0';
 var DEFAULT_STRATEGY = 'legacy'; // 'legacy' | 'strategy-v1'
 
+// ---- R5：年级难度锚点表（三维螺旋-难度维度，衔接 R2-b 的 KP 难度标定）----
+// 依据 docs/AI_REFACTOR_PLAN.html R5 与用户确认的 Q6 锚点表：
+//   G1 1-2 / G2 2-4 / G3 3-5 / G4 4-7 / G5 5-8 / G6 6-10
+// 语义：该年级 KP 的基础难度应落在锚点区间 [min,max]；区间随年级螺旋上升（相邻年级区间有重叠）。
+// 与 dev/difficulty-anchor-table.js（R2-b 门禁用）保持一致，这里作为大服务层可读常量落库。
+var GRADE_DIFFICULTY_ANCHORS = {
+  1: [1, 2],
+  2: [2, 4],
+  3: [3, 5],
+  4: [4, 7],
+  5: [5, 8],
+  6: [6, 10]
+};
+// 查询：年级 → 难度锚点区间 [min,max]；年级非法时返回 null
+function difficultyAnchorOf(grade) {
+  return GRADE_DIFFICULTY_ANCHORS[Number(grade)] || null;
+}
+
 // 内部状态（运行时仅读，启动时确定）
 var _currentStrategy = null;
 var _configOverrides = {};
@@ -5521,6 +5592,8 @@ function reset() {
 module.exports = {
   STRATEGY_VERSION: STRATEGY_VERSION,
   DEFAULT_STRATEGY: DEFAULT_STRATEGY,
+  GRADE_DIFFICULTY_ANCHORS: GRADE_DIFFICULTY_ANCHORS,
+  difficultyAnchorOf: difficultyAnchorOf,
   getStrategy: getStrategy,
   setStrategy: setStrategy,
   isLegacy: isLegacy,
@@ -9844,6 +9917,45 @@ __defs["shared/module-catalog.js"] = function (module, exports, require) {
   });
   MODULE_CATALOG.byId = function (id) { return MODULE_BY_ID[id] || null; };
   MODULE_CATALOG.SUBJECTS = SUBJECTS;
+
+  // ---- R4：题型→可见模块（决策上收，源自 practice.html QT_STD_MODULES）----
+  // 标准题型 → 支撑该题型的模块 id 列表（用于 qt=标准题型 时过滤可见模块）。
+  // 修复 calc 不含 M1 漂移：M1 口算知识点 applicable_question_types 含 calc，
+  //   calc 应能过滤出 M1（口算）模块，故 calc: ['M1','M2','M3']。
+  const TYPE_MODULES = {
+    oral: ['M1'], calc: ['M1', 'M2', 'M3'], vertical: ['M2'], mixed: ['M3'],
+    fill: ['M4'], match: ['M5'], operation: ['M6', 'M9'], draw: ['M6', 'M9'],
+    picture: ['M7'], apply: ['M8'], word: ['M8'], stats: ['M9'], reason: ['M10'],
+    judge: ['M11'], choice: ['M12'], open: ['M6', 'M8'], geometry: ['M6']
+  };
+
+  // 「题型→可见模块」查询：返回支撑该题型的模块 id 数组；未知题型返回 null。
+  // 规范入口：先按原始值查，未命中再小写归一查（兼容 URL 参数大小写漂移）。
+  function visibleModulesForType(type) {
+    var t = String(type == null ? '' : type).toLowerCase().trim();
+    if (!t) return null;
+    var mods = TYPE_MODULES[t];
+    return mods ? mods.slice() : null;
+  }
+
+  // 知识点在题型过滤范围内的可见性查询（大服务层可见性查询服务，源自 practice.html kpVisibleInQT）。
+  //   - 无 qt 视为全部可见
+  //   - competition 仅看 C 模块
+  //   - 模块 id / 知识点类型 / 题型→可见模块 三向匹配
+  function kpVisibleInType(kp, type) {
+    var q = String(type == null ? '' : type).toLowerCase().trim();
+    if (!q) return true;
+    if (q === 'competition') return String((kp && kp.moduleId) || '').toUpperCase().charAt(0) === 'C';
+    if (kp && kp.moduleId && String(kp.moduleId).toLowerCase() === q) return true;
+    if (kp && kp.type && String(kp.type).toLowerCase() === q) return true;
+    var mods = TYPE_MODULES[q];
+    if (mods && kp && kp.moduleId && mods.indexOf(kp.moduleId) !== -1) return true;
+    return false;
+  }
+
+  MODULE_CATALOG.TYPE_MODULES = TYPE_MODULES;
+  MODULE_CATALOG.visibleModulesForType = visibleModulesForType;
+  MODULE_CATALOG.kpVisibleInType = kpVisibleInType;
 
   global.MODULE_CATALOG = MODULE_CATALOG;
   global.SUBJECTS = SUBJECTS;

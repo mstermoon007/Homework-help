@@ -289,6 +289,664 @@ module.exports = {
 if (typeof window !== 'undefined') window.PresentationEngine = module.exports;
 if (typeof global !== 'undefined') global.PresentationEngine = module.exports;
 };
+__defs["shared/generator/generator-contract.js"] = function (module, exports, require) {
+/**
+ * shared/generator/generator-contract.js — M5-R17 Generator 契约升级
+ *
+ * 新契约：
+ *   generate(plan) → Promise<SemanticQuestion[]> | SemanticQuestion[]
+ *
+ * 旧插件通过 LegacyAdapter 桥接：
+ *   Legacy Plugin (generateQuestions)
+ *         ↓ LegacyPluginAdapter
+ *         ↓ SemanticQuestion[]
+ */
+'use strict';
+
+var SQ = require("shared/semantic-question.js");
+var LegacyAdapter = require("shared/generator/legacy-adapter.js");
+var Pipeline = require("shared/validator/validation-pipeline.js");
+var BatchValidator = require("shared/validator/batch-validator.js");
+var RetryLoop = require("shared/generator/retry-loop.js");
+var QID = require("shared/question-id.js");
+
+// ====== 新契约接口定义 ======
+var GENERATOR_CONTRACT = {
+  // 必填字段
+  REQUIRED_FIELDS: ['id', 'generate'],
+
+  // 标准 plan 结构
+  PLAN_SCHEMA: {
+    knowledgePointId: { required: true, type: 'string' },
+    questionTypeId: { required: true, type: 'string' },
+    difficulty: { required: true, type: 'number', min: 1, max: 10 },
+    count: { required: true, type: 'number', min: 1 },
+    seed: { required: false, type: 'string' },
+    constraints: { required: false, type: 'object' },
+    planId: { required: false, type: 'string' }
+  },
+
+  // 输出结构
+  OUTPUT_SCHEMA: {
+    // 必须是 SemanticQuestion[]
+    items: {
+      id: { type: 'string', required: true },
+      version: { type: 'number', required: true },
+      knowledgePoint: { type: 'string', required: true },
+      difficulty: { type: 'number', required: true },
+      question: { type: 'object', required: true },
+      answer: { type: 'object', required: true },
+      metadata: { type: 'object', required: true }
+    }
+  }
+};
+
+/**
+ * 创建新契约 Generator（标准化接口）
+ * @param {Object} impl { generate(plan): SemanticQuestion[], capabilities?, knowledgePoints?, version? }
+ * @returns {Object} 符合新契约的 Generator 实例
+ */
+function createGenerator(impl) {
+  impl = impl || {};
+  if (typeof impl.generate !== 'function') {
+    throw new Error('Generator 必须实现 generate(plan) 方法');
+  }
+
+  var generatorId = impl.id || 'generator:unknown';
+  var generatorVersion = impl.version || '1.0.0';
+  var capabilities = impl.capabilities || [];
+  var knowledgePoints = impl.knowledgePoints || [];
+
+  var gen = {
+    id: generatorId,
+    version: generatorVersion,
+    capabilities: capabilities,
+    knowledgePoints: knowledgePoints,
+
+    /**
+     * 核心生成方法（新契约）
+     * @param {Object} plan QuestionPlan
+     * @returns {Promise<SemanticQuestion[]> | SemanticQuestion[]}
+     */
+    generate: function (plan) {
+      // 1. 验证 plan
+      if (!plan || !plan.knowledgePointId || !plan.questionTypeId || plan.difficulty == null) {
+        throw new Error('Plan 缺少必填字段: knowledgePointId, questionTypeId, difficulty');
+      }
+
+      // 2. 派生 seed
+      var baseSeed = plan.seed || require("shared/question-id.js").generateBaseSeed();
+      var seeds = require("shared/question-id.js").generateSeedsForPlan({
+        seed: baseSeed,
+        generatorId: impl.id || 'unknown',
+        count: plan.count || 1
+      });
+
+      // 3. 逐题生成
+      var questions = [];
+      for (var i = 0; i < (plan.count || 1); i++) {
+        var itemPlan = Object.assign({}, plan, { seed: seeds[i], index: i });
+        var sq = impl.generateItem ? impl.generateItem(itemPlan) : impl.generate(itemPlan);
+        // 支持单题或批量返回
+        var arr = Array.isArray(sq) ? sq : [sq];
+        arr.forEach(function (item) {
+          questions.push(normalizeOutput(item, itemPlan, i));
+        });
+      }
+
+      // 限制数量
+      if (questions.length > (plan.count || 1)) {
+        questions = questions.slice(0, plan.count || 1);
+      }
+
+      return questions.length === 1 ? questions[0] : questions;
+    },
+
+    // 批量生成（兼容旧计划接口）
+    generateBatch: function (plan) {
+      var result = this.generate(plan);
+      return Array.isArray(result) ? result : [result];
+    }
+  };
+
+  return gen;
+}
+
+/**
+ * 标准化输出为 SemanticQuestion
+ */
+function normalizeOutput(item, plan, index) {
+  if (item && item.id && item.metadata && item.metadata.generator) {
+    return item; // 已是标准格式
+  }
+  // 兜底：创建标准结构
+  return require("shared/semantic-question.js").createSemanticQuestion(Object.assign({}, item, {
+    generator: item.generator || 'generator:' + (item.id || 'unknown'),
+    generatorVersion: item.generatorVersion || '1.0.0',
+    seed: plan.seed,
+    index: index,
+    knowledgePoint: plan.knowledgePointId,
+    difficulty: plan.difficulty,
+    questionType: plan.questionTypeId
+  }));
+}
+
+/**
+ * Legacy Plugin Adapter（旧插件 → 新契约）
+ * 将旧插件的 generateQuestions(opts) 包装为新契约 generate(plan)
+ */
+function createLegacyGenerator(legacyPlugin, meta) {
+  meta = meta || {};
+  var legacyId = meta.id || legacyPlugin.id || 'legacy:unknown';
+  var capabilities = meta.capabilities || [];
+  var knowledgePoints = meta.knowledgePoints || [];
+
+  return {
+    id: 'legacy:' + legacyId,
+    version: meta.version || '1.0.0',
+    capabilities: capabilities,
+    knowledgePoints: knowledgePoints,
+
+    generate: function (plan) {
+      // 将 Plan 转换为 Legacy opts
+      var opts = {
+        count: plan.count || 10,
+        grade: plan.grade,
+        difficulty: plan.difficulty,
+        knowledgePointId: plan.knowledgePointId,
+        questionType: plan.questionTypeId,
+        seed: plan.seed,
+        // 透传约束
+        difficultyParams: plan.constraints
+      };
+
+      // 调用旧插件
+      var legacyResult = legacyPlugin.generateQuestions ? legacyPlugin.generateQuestions(opts) :
+                         legacyPlugin.generate ? legacyPlugin.generate(opts) : { questions: [] };
+
+      var rawQuestions = legacyResult.questions || legacyResult || [];
+
+      // 转换为 SemanticQuestion
+      return rawQuestions.map(function (q, i) {
+        return LegacyAdapter.toLegacyQuestion(q, {
+          generatorId: 'legacy:' + legacyId,
+          generatorVersion: meta.version || '1.0.0',
+          seed: plan.seed,
+          planId: plan.planId,
+          index: i,
+          knowledgePointId: plan.knowledgePointId,
+          difficulty: plan.difficulty
+        });
+      });
+    }
+  };
+}
+
+// ====== 源码禁止项（Generator 实现不得包含渲染/随机/自行决定难度代码） ======
+var FORBIDDEN_PATTERNS = [
+  { pattern: /\bMath\.random\b/, label: 'Math.random（随机数必须由注入的随机源提供）' },
+  { pattern: /\bdocument\.(getElementById|querySelector|querySelectorAll|createElement|write|body|head)\b/, label: 'DOM 读取/操作' },
+  { pattern: /\bwindow\.(document|location|alert|confirm|prompt)\b/, label: 'window UI 操作' },
+  { pattern: /\.innerHTML\b|\.outerHTML\b|\.insertAdjacentHTML\b/, label: '直接生成 HTML' },
+  { pattern: /<svg\b|createElementNS\s*\(\s*['"`]http:\/\/www\.w3\.org\/2000\/svg|\.setAttributeNS\s*\(/, label: '直接生成 SVG' },
+  { pattern: /\bsvg\s*[:=]\s*['"`]/, label: 'SVG 字符串字面量（必须剥离至 GraphicRenderer）' },
+  { pattern: /\bg\.appendChild\b|\bdocument\.createElementNS\b|\btextContent\s*=\s*['"`]/, label: 'DOM 渲染代码' },
+  { pattern: /\bparamsFor\s*\(|\bdiffLevel\s*\(|\bcreateProfile\s*\(|\bconsume\s*\(/, label: '自行决定全局难度（必须消费 plan.difficulty/constraints）' }
+];
+
+// Generator 实现专用的难度/年级硬编码禁止（选择器/策略层可合法解释难度）
+var GENERATOR_DIFFICULTY_PATTERNS = [
+  { pattern: /\bif\s*\([^)]*\bdifficulty\b[^)]*(===|==|!==|!=|<|>|<=|>=)/, label: '难度硬编码条件（if difficulty === …，规则必须迁移至 Strategy）' },
+  { pattern: /\bif\s*\([^)]*\bgrade\b[^)]*(===|==|!==|!=|<|>|<=|>=)/, label: '年级硬编码条件（if grade === …，规则必须迁移至 Strategy）' }
+];
+
+// SemanticQuestion 禁止字段（渲染/执行契约不得进入语义层）
+var FORBIDDEN_KEYS = ['render', 'check', 'html', 'svg', 'generate', 'generator', 'template', 'execute'];
+
+var SUBJECTS = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+
+function isEmptyGraphic(g) {
+  if (g == null || typeof g !== 'object') return false;
+  return (g.type == null) && (g.subtype == null) && (g.svg == null) &&
+    (g.params == null || Object.keys(g.params).length === 0);
+}
+
+/**
+ * 运行时轻量校验：仅检查必要接口存在性。
+ * 正则扫描移至 dev/check-generator-contract.js (CI/开发时运行)。
+ * @param {Object} gen
+ * @returns {Object} { valid, errors: string[], warnings }
+ */
+function validateGeneratorContract(g) {
+  var errors = [];
+  var warnings = [];
+
+  if (!g || typeof g !== 'object') {
+    return { valid: false, errors: ['GeneratorContract 必须是对象'], warnings: warnings };
+  }
+
+  if (typeof g.generate !== 'function') errors.push('generate(plan) 必须是函数');
+  if (typeof g.supports !== 'function') errors.push('supports(plan) 必须是函数');
+
+  return { valid: errors.length === 0, errors: errors, warnings: warnings };
+}
+
+/**
+ * 运行新契约 Generator + Validator（内置重试）
+ * @param {Object} gen 新契约 Generator
+ * @param {Object} plan QuestionPlan
+ * @param {Object} context { validatorEnabled, maxRetries, validatorMode }
+ * @returns {Promise<{ questions, validationResults, retries, success }>}
+ */
+function runGeneratorWithValidation(gen, plan, context) {
+  context = context || {};
+  var validatorEnabled = context.validatorEnabled !== false;
+  var maxRetries = context.maxRetries || 3;
+
+  if (!validatorEnabled) {
+    return Promise.resolve(gen.generate(plan)).then(function (questions) {
+      return { questions: Array.isArray(questions) ? questions : [questions], validationResults: [], retries: 0, success: true };
+    });
+  }
+
+  return require("shared/generator/retry-loop.js").generateWithRetry(
+    function (p) { return gen.generate(p); },
+    plan,
+    { generatorId: gen.id, generatorVersion: gen.version, maxRetries: maxRetries, validatorEnabled: true }
+  );
+}
+
+/**
+ * 校验 SemanticQuestion（string-error 契约校验，兼容 flat/legacy 输入）。
+ * @param {Object} q
+ * @returns {Object} { valid, errors: string[] }
+ */
+function validateSemanticQuestion(q) {
+  var errors = [];
+
+  if (!q || typeof q !== 'object') {
+    return { valid: false, errors: ['SemanticQuestion 必须是对象'] };
+  }
+
+  if (!q.knowledgePointId || typeof q.knowledgePointId !== 'string') errors.push('knowledgePointId 必填');
+  var QTR = require("shared/question-type-registry.js");
+  var qTypeValid = QTR.has(q.questionType) || SQ.Schema.isValidQuestionType(q.questionType) || q.questionType === 'read-aloud';
+  if (!q.questionType || !qTypeValid) errors.push('questionType 非法: ' + q.questionType);
+  if (q.difficulty == null || typeof q.difficulty !== 'number') errors.push('difficulty 必填（数字）');
+  if (q.difficultyParams == null || typeof q.difficultyParams !== 'object') {
+    errors.push('difficultyParams 必填');
+  } else {
+    ['level', 'scale', 'steps'].forEach(function (k) {
+      if (typeof q.difficultyParams[k] !== 'number') errors.push('difficultyParams.' + k + ' 必填（数字）');
+    });
+  }
+  if (q.numberRange == null || typeof q.numberRange.min !== 'number' || typeof q.numberRange.max !== 'number' || q.numberRange.min > q.numberRange.max) {
+    errors.push('numberRange 非法: ' + JSON.stringify(q.numberRange));
+  }
+  // answerMode: 'input'（书面作答，answer 必填）| 'read-aloud'（跟读类，answer 可空）
+  var answerMode = q.answerMode || 'input';
+  if (answerMode !== 'input' && answerMode !== 'read-aloud') {
+    errors.push('answerMode 非法: ' + answerMode);
+  }
+  if (answerMode === 'input' && q.answer == null) errors.push('answer 必填（input 模式）');
+  if (q.prompt == null || typeof q.prompt !== 'string') errors.push('prompt 必填（字符串）');
+
+  // M4-R11：graphic 必须是结构化描述（{ type, subtype, params }），不允许内嵌 SVG 字符串
+  if (q.graphic != null && !isEmptyGraphic(q.graphic)) {
+    if (typeof q.graphic !== 'object' || q.graphic === null) {
+      errors.push('graphic 必须是 { type, subtype, params } 对象');
+    } else {
+      if (typeof q.graphic.type !== 'string' || q.graphic.type.length === 0) {
+        errors.push('graphic.type 必填（字符串）');
+      }
+      if (q.graphic.subtype != null && typeof q.graphic.subtype !== 'string') {
+        errors.push('graphic.subtype 必须是字符串');
+      }
+      if (q.graphic.params != null && typeof q.graphic.params !== 'object') {
+        errors.push('graphic.params 必须是对象');
+      }
+      if (typeof q.graphic.svg === 'string') {
+        errors.push('graphic 禁止内嵌 SVG 字符串（必须剥离至 GraphicRenderer）');
+      }
+    }
+  }
+
+  FORBIDDEN_KEYS.forEach(function (k) {
+    if (q[k] !== undefined) errors.push('SemanticQuestion 禁止字段: ' + k + '（渲染/执行契约不得进入语义层）');
+  });
+
+  return { valid: errors.length === 0, errors: errors };
+}
+
+module.exports = {
+  SUBJECTS: SUBJECTS,
+  FORBIDDEN_PATTERNS: FORBIDDEN_PATTERNS,
+  GENERATOR_DIFFICULTY_PATTERNS: GENERATOR_DIFFICULTY_PATTERNS,
+  FORBIDDEN_KEYS: FORBIDDEN_KEYS,
+  GENERATOR_CONTRACT: GENERATOR_CONTRACT,
+  createGenerator: createGenerator,
+  createLegacyGenerator: createLegacyGenerator,
+  validateGeneratorContract: validateGeneratorContract,
+  runGeneratorWithValidation: runGeneratorWithValidation,
+  canonSubject: function (s) { return (s || 'math').toLowerCase(); },
+  validateSemanticQuestion: validateSemanticQuestion
+};
+};
+__defs["shared/generator/retry-loop.js"] = function (module, exports, require) {
+/**
+ * shared/generator/retry-loop.js — M5-R14 Generation Retry Loop
+ *
+ * 生成失败自动重试：
+ *   - maxRetries = 3
+ *   - 可重试错误：ANSWER_MISMATCH, DUPLICATE, DIFFICULTY_MISMATCH, GRAPHIC_INVALID 等
+ *   - 不可重试错误：SCHEMA_INVALID, KP_MISSING, KP_MISMATCH, GENERATOR_NOT_FOUND 等
+ *   - 超过重试次数返回明确失败信息
+ *
+ * 统一 async (P3 Task 1.2)：已移除 generateWithRetrySync。
+ */
+'use strict';
+
+var Validator = require("shared/validator/question-validator.js");
+var Pipeline = require("shared/validator/validation-pipeline.js");
+var QID = require("shared/question-id.js");
+
+var DEFAULT_MAX_RETRIES = 3;
+var RETRYABLE_CODES = [
+  Validator.ERROR_CODES.ANSWER_MISMATCH,
+  Validator.ERROR_CODES.DUPLICATE_QUESTION,
+  Validator.ERROR_CODES.DIFFICULTY_MISMATCH,
+  Validator.ERROR_CODES.GRAPHIC_INVALID,
+  Validator.ERROR_CODES.DISTRACTOR_DUPLICATE,
+  Validator.ERROR_CODES.DISTRACTOR_EQUALS_ANSWER,
+  Validator.ERROR_CODES.DISTRACTOR_OUT_OF_DOMAIN,
+  Validator.ERROR_CODES.STRUCTURE_INVALID,
+  Validator.ERROR_CODES.STEPS_EXCEED,
+  Validator.ERROR_CODES.OPERATIONS_VIOLATION
+];
+var FATAL_CODES = [
+  Validator.ERROR_CODES.SCHEMA_INVALID,
+  Validator.ERROR_CODES.REQUIRED_FIELD_MISSING,
+  Validator.ERROR_CODES.KP_MISSING,
+  Validator.ERROR_CODES.KP_MISMATCH,
+  Validator.ERROR_CODES.GENERATOR_NOT_FOUND
+];
+
+function isRetryable(errors) {
+  if (!errors || !errors.length) return false;
+  return errors.some(function (e) { return RETRYABLE_CODES.indexOf(e.code) !== -1; });
+}
+
+function isFatal(errors) {
+  if (!errors || !errors.length) return false;
+  return errors.some(function (e) { return FATAL_CODES.indexOf(e.code) !== -1; });
+}
+
+function hasFatal(errors) {
+  return isFatal(errors);
+}
+
+function hasRetryable(errors) {
+  return isRetryable(errors);
+}
+
+/**
+ * 带重试的生成执行器
+ * @param {Function} generatorFn 签名: (plan, context) → Promise<SemanticQuestion[]> 或 SemanticQuestion[]
+ * @param {Object} plan QuestionPlan
+ * @param {Object} context { maxRetries, generatorId, generatorVersion, seed, validatorContext }
+ * @returns {Promise<{ questions, validationResults, retries, success }>}
+ */
+function generateWithRetry(generatorFn, plan, context) {
+  context = context || {};
+  var maxRetries = context.maxRetries != null ? context.maxRetries : DEFAULT_MAX_RETRIES;
+  var generatorId = context.generatorId || 'unknown';
+  var generatorVersion = context.generatorVersion || '1.0.0';
+  var baseSeed = context.seed || QID.generateBaseSeed();
+  var validatorContext = context.validatorContext || {};
+
+  var retries = 0;
+  var allResults = [];
+  var lastQuestions = null;
+  var lastValidation = null;
+
+  function attempt(attemptIndex, seed) {
+    var attemptContext = Object.assign({}, plan, { seed: seed, _retryAttempt: attemptIndex });
+    // 兼容同步/异步 generator：契约允许 generatorFn 直接返回数组（见 JSDoc），统一归一化为 Promise
+    return Promise.resolve(generatorFn(attemptContext)).then(function (questions) {
+      if (!Array.isArray(questions)) questions = questions.questions || [];
+      // 标准化为 SemanticQuestion
+      questions = questions.map(function (q, i) {
+        // legacy 生成器可能不产 seed：幂等短路前先补 metadata.seed，保证 seed 可追溯
+        if (q && q.seed == null) {
+          q = Object.assign({}, q, { metadata: Object.assign({}, q.metadata, { seed: seed }) });
+        }
+        return require("shared/semantic-question.js").normalizeSemanticQuestion(Object.assign({}, q, {
+          generator: generatorId,
+          generatorVersion: generatorVersion,
+          seed: seed,
+          index: i,
+          _retryAttempt: attemptIndex
+        }));
+      });
+
+      // 运行验证管道
+      var valContext = Object.assign({}, validatorContext, { generatorId: generatorId, seed: seed, planId: plan.planId });
+      var validationResults = Pipeline.runPipelineBatch(questions, valContext);
+
+      var allValid = validationResults.every(function (r) { return r.valid; });
+      var allErrors = validationResults.flatMap(function (r) { return r.errors || []; });
+
+      return { questions: questions, validationResults: validationResults, allValid: allValid, allErrors: allErrors, seed: seed };
+    });
+  }
+
+  // 首次尝试
+  var currentSeed = baseSeed;
+  return attempt(0, currentSeed).then(function loop(result) {
+    allResults.push({
+      attempt: retries,
+      seed: result.seed,
+      valid: result.allValid,
+      errors: result.allErrors,
+      questionCount: result.questions.length
+    });
+
+    if (result.allValid) {
+      // 成功
+      return {
+        questions: result.questions,
+        validationResults: result.validationResults,
+        retries: retries,
+        success: true,
+        attempts: allResults
+      };
+    }
+
+    // 检查是否有致命错误
+    if (hasFatal(result.allErrors)) {
+      return {
+        questions: result.questions,
+        validationResults: result.validationResults,
+        retries: retries,
+        success: false,
+        error: 'FATAL_ERROR',
+        message: '遇到不可恢复错误，停止重试',
+        attempts: allResults
+      };
+    }
+
+    // 检查是否有可重试错误
+    if (!hasRetryable(result.allErrors)) {
+      return {
+        questions: result.questions,
+        validationResults: result.validationResults,
+        retries: retries,
+        success: false,
+        error: 'NON_RETRYABLE',
+        message: '错误不可重试，停止重试',
+        attempts: allResults
+      };
+    }
+
+    // 重试
+    retries++;
+    if (retries > maxRetries) {
+      return {
+        questions: result.questions,
+        validationResults: result.validationResults,
+        retries: retries,
+        success: false,
+        error: 'MAX_RETRIES_EXCEEDED',
+        message: '超过最大重试次数 (' + maxRetries + ')',
+        attempts: allResults
+      };
+    }
+
+    // 派生新 seed 重试
+    currentSeed = QID.deriveSeed(baseSeed, generatorId, retries);
+    return attempt(retries, currentSeed).then(loop);
+  });
+}
+
+module.exports = {
+  generateWithRetry: generateWithRetry,
+  DEFAULT_MAX_RETRIES: DEFAULT_MAX_RETRIES,
+  RETRYABLE_CODES: RETRYABLE_CODES,
+  FATAL_CODES: FATAL_CODES,
+  isRetryable: isRetryable,
+  isFatal: isFatal
+};
+};
+__defs["shared/validator/batch-validator.js"] = function (module, exports, require) {
+/**
+ * shared/validator/batch-validator.js — M5-R15 Batch Question Validator
+ *
+ * 整套练习级验证：
+ *   - 总数量
+ *   - 知识点覆盖
+ *   - 题型比例
+ *   - 难度分布
+ *   - 重复率
+ *   - 答案完整率
+ *   - 图形完整率
+ *   - 题型分布是否符合 QuestionPlan
+ */
+'use strict';
+
+var Validator = require("shared/validator/question-validator.js");
+var ERROR_CODES = Validator.ERROR_CODES;
+var SEVERITY = Validator.SEVERITY;
+var createError = Validator.createError;
+
+function coerceInteger(v) { var n = Number(v); return isNaN(n) ? null : Math.floor(n); }
+function coerceString(v) { return v == null ? '' : String(v); }
+
+function countBy(arr, keyFn) {
+  var out = {};
+  arr.forEach(function (x) { var k = keyFn(x); out[k] = (out[k] || 0) + 1; });
+  return out;
+}
+
+function validateBatch(questions, plan) {
+  var errors = [];
+  var warnings = [];
+  var info = [];
+
+  if (!Array.isArray(questions) || questions.length === 0) {
+    errors.push(createError(ERROR_CODES.SCHEMA_INVALID, 'questions', '题目数组为空', SEVERITY.ERROR));
+    return { valid: false, errors: errors, warnings: warnings, info: info, score: 0, checks: {} };
+  }
+
+  plan = plan || {};
+  var total = questions.length;
+
+  // ① 总数量
+  var expectedCount = plan.count || total;
+  if (total !== expectedCount) {
+    warnings.push(createError('COUNT_MISMATCH', 'count', '实际题目数(' + total + ') 与计划(' + expectedCount + ') 不符', SEVERITY.WARNING, { actual: total, expected: expectedCount }));
+  } else {
+    info.push({ code: 'COUNT_OK', field: 'count', message: '题目数量达标: ' + total, severity: 'INFO' });
+  }
+
+  // ② 知识点覆盖
+  var kpCounts = countBy(questions, function (q) { return q.knowledgePoint || 'unknown'; });
+  var kpCovered = Object.keys(kpCounts).filter(function (k) { return k !== 'unknown'; }).length;
+  var plannedKPs = plan.knowledgePoints || [];
+  if (plannedKPs.length) {
+    var missingKPs = plannedKPs.filter(function (kp) { return !kpCounts[kp]; });
+    if (missingKPs.length) {
+      errors.push(createError('KP_COVERAGE_INCOMPLETE', 'knowledgePoints', '缺失知识点覆盖: ' + missingKPs.join(', '), SEVERITY.ERROR, { missing: missingKPs, covered: Object.keys(kpCounts) }));
+    }
+  }
+  info.push({ code: 'KP_COVERAGE', field: 'knowledgePoints', message: '覆盖知识点: ' + kpCovered + ' 个', severity: 'INFO' });
+
+  // ③ 题型比例
+  var typeCounts = countBy(questions, function (q) { return q.questionType || q.type || 'unknown'; });
+  var plannedTypes = plan.questionTypes || {};
+  Object.keys(plannedTypes).forEach(function (type) {
+    var expected = plannedTypes[type];
+    var actual = typeCounts[type] || 0;
+    if (actual < expected) {
+      warnings.push(createError('TYPE_RATIO_LOW', 'questionType.' + type, '题型 ' + type + ' 数量(' + actual + ') 少于计划(' + expected + ')', SEVERITY.WARNING, { type: type, actual: actual, expected: expected }));
+    }
+  });
+  info.push({ code: 'TYPE_DIST', field: 'questionTypes', message: '题型分布: ' + JSON.stringify(typeCounts), severity: 'INFO' });
+
+  // ④ 难度分布
+  var diffCounts = countBy(questions, function (q) { return q.difficulty || 0; });
+  var avgDiff = questions.reduce(function (s, q) { return s + (q.difficulty || 0); }, 0) / total;
+  var targetDiff = plan.difficulty;
+  if (targetDiff != null && Math.abs(avgDiff - targetDiff) > 1) {
+    warnings.push(createError('DIFFICULTY_DIST_OFF', 'difficulty', '平均难度(' + avgDiff.toFixed(1) + ') 偏离目标(' + targetDiff + ')', SEVERITY.WARNING, { avg: avgDiff, target: targetDiff }));
+  }
+  info.push({ code: 'DIFF_DIST', field: 'difficulty', message: '难度分布: ' + JSON.stringify(diffCounts) + ', 平均: ' + avgDiff.toFixed(1), severity: 'INFO' });
+
+  // ⑤ 重复率
+  var keys = questions.map(function (q) { return require("shared/validator/duplicate-validator.js").buildCanonicalKey(q); });
+  var uniqueKeys = new Set(keys);
+  var dupRate = (keys.length - uniqueKeys.size) / keys.length;
+  if (dupRate > 0.1) {
+    errors.push(createError('DUPLICATE_RATE_HIGH', 'duplicate', '重复率 ' + (dupRate * 100).toFixed(1) + '% 超过 10%', SEVERITY.ERROR, { rate: dupRate, total: keys.length, unique: uniqueKeys.size }));
+  } else if (dupRate > 0) {
+    warnings.push(createError('DUPLICATE_RATE_WARN', 'duplicate', '存在重复题目，重复率 ' + (dupRate * 100).toFixed(1) + '%', SEVERITY.WARNING, { rate: dupRate }));
+  }
+  info.push({ code: 'DUP_RATE', field: 'duplicate', message: '重复率: ' + (dupRate * 100).toFixed(1) + '%', severity: 'INFO' });
+
+  // ⑥ 答案完整率
+  var answered = questions.filter(function (q) { return q.answer && q.answer.value != null; }).length;
+  var answerRate = answered / total;
+  if (answerRate < 1) {
+    errors.push(createError('ANSWER_INCOMPLETE', 'answer', '答案完整率 ' + (answerRate * 100).toFixed(1) + '% (< 100%)', SEVERITY.ERROR, { answered: answered, total: total }));
+  }
+  info.push({ code: 'ANSWER_RATE', field: 'answer', message: '答案完整率: ' + (answerRate * 100).toFixed(1) + '%', severity: 'INFO' });
+
+  // ⑦ 图形完整率（有 graphic 的题目）
+  var withGraphic = questions.filter(function (q) { return q.graphic && q.graphic.type; }).length;
+  if (plan.graphicRequired && withGraphic < plan.graphicRequired) {
+    warnings.push(createError('GRAPHIC_INSUFFICIENT', 'graphic', '含图形题目(' + withGraphic + ') 少于要求(' + plan.graphicRequired + ')', SEVERITY.WARNING));
+  }
+  info.push({ code: 'GRAPHIC_COUNT', field: 'graphic', message: '含图形题目: ' + withGraphic, severity: 'INFO' });
+
+  // ⑧ 题型分布符合 QuestionPlan 细节
+  if (plan.typeRatio) {
+    Object.keys(plan.typeRatio).forEach(function (type) {
+      var ratio = plan.typeRatio[type];
+      var expected = Math.round(total * ratio);
+      var actual = typeCounts[type] || 0;
+      if (Math.abs(actual - expected) > Math.max(1, total * 0.1)) {
+        warnings.push(createError('TYPE_RATIO_DEVIATION', 'questionType.' + type, '题型 ' + type + ' 比例偏离计划', SEVERITY.WARNING, { actual: actual, expected: expected, ratio: ratio }));
+      }
+    });
+  }
+
+  var valid = errors.length === 0;
+  return { valid: valid, errors: errors, warnings: warnings, info: info, score: valid ? 1 : 0.5, checks: { batch: valid ? 'pass' : 'fail' } };
+}
+
+module.exports = {
+  validateBatch: validateBatch
+};
+};
 __defs["shared/validator/quality-scorer.js"] = function (module, exports, require) {
 /**
  * shared/validator/quality-scorer.js — M5-R18 Question Quality Score
@@ -486,625 +1144,6 @@ module.exports = {
   generatorProfile: generatorProfile,
   WEIGHTS: WEIGHTS
 };
-};
-__defs["shared/generator/legacy-adapter.js"] = function (module, exports, require) {
-/**
- * shared/generator/legacy-adapter.js — M7-R18/P5 Task 5.1 统一 Legacy 适配层
- *
- * 合并自：
- *   - shared/legacy/plugin-adapter.js
- *   - shared/generator/legacy-plugin-adapter.js
- *   - shared/question/legacy-question-adapter.js
- *   - shared/question/legacy-renderer-adapter.js
- *   - shared/strategy/legacy-adapter.js
- *   - shared/generator/semantic-question-bridge.js
- *
- * 职责：
- *   1. adaptPlanToLegacyOptions(plan, extra) —— Plan → Legacy options
- *   2. generateByPluginId(pluginId, options) —— 加载并调用 legacy 插件
- *   3. toSemanticQuestions(exerciseSet, plan) —— Legacy exerciseSet → SemanticQuestion[]
- *   4. toLegacyQuestion(sq) —— SemanticQuestion → Legacy Question (含 render/check/svg，供旧渲染)
- *   5. hydrateLegacyGenerator(selection, plugin) —— Selector 实例化 legacy 生成器
- *   6. renderSet(set, pluginId) —— plugin.render 桥
- *   7. createLegacyGenerator(plugin, meta) —— Legacy GeneratorContract
- *   8. runLegacyFallback(plugin, plan) —— 兼容旧调用路径
- *
- * 删除：SemanticQuestion → Legacy Question 的反向转换（生成核心不再需要）。
- * 遗留插件输出直接转换为 SemanticQuestion 进入 Pipeline。
- */
-(function (global) {
-  'use strict';
-
-  var isBrowser = typeof window !== 'undefined';
-  var pluginCache = {};
-
-  // ============================================================
-  // 内部依赖（懒加载）
-  // ============================================================
-  function getSQ() {
-    if (isBrowser && global.SemanticQuestion) return global.SemanticQuestion;
-    if (typeof require === 'function') {
-      try { return require("shared/semantic-question.js"); } catch (e) { /* ignore */ }
-    }
-    return null;
-  }
-  function getQTR() {
-    if (isBrowser && global.QuestionTypeRegistry) return global.QuestionTypeRegistry;
-    if (typeof require === 'function') {
-      try { return require("shared/question-type-registry.js"); } catch (e) { /* ignore */ }
-    }
-    return null;
-  }
-  function getQID() {
-    if (isBrowser && global.QuestionID) return global.QuestionID;
-    if (typeof require === 'function') {
-      try { return require("shared/question-id.js"); } catch (e) { /* ignore */ }
-    }
-    return null;
-  }
-  function getPipeline() {
-    if (isBrowser && global.ValidationPipeline) return global.ValidationPipeline;
-    if (typeof require === 'function') {
-      try { return require("shared/validator/validation-pipeline.js"); } catch (e) { /* ignore */ }
-    }
-    return null;
-  }
-  function getPluginLoader() {
-    if (isBrowser) return global.PluginLoader || null;
-    if (typeof require === 'function') {
-      try { return require("dev/plugin-loader.js"); } catch (e) { /* ignore */ }
-    }
-    return null;
-  }
-
-  // ============================================================
-  // 1. adaptPlanToLegacyOptions —— Plan → Legacy options
-  // (原 shared/strategy/legacy-adapter.js)
-  // ============================================================
-  function adaptPlanToLegacyOptions(plan, extra) {
-    plan = plan || {};
-    extra = extra || {};
-
-    if (!plan.difficulty) {
-      throw new Error('LegacyAdapter: plan 缺少 difficulty');
-    }
-    if (!plan.questionTypeId) {
-      throw new Error('LegacyAdapter: plan 缺少 questionTypeId');
-    }
-    var constraints = plan.constraints || {};
-
-    var options = {};
-
-    options.difficulty = plan.difficulty;
-
-    options.difficultyParams = {
-      level: plan.difficulty,
-      scale: constraints.scale != null ? constraints.scale : 1,
-      steps: constraints.maxSteps != null ? constraints.maxSteps : 1,
-      allowBracket: !!constraints.allowBracket,
-      allowMultDiv: !!constraints.allowMultDiv
-    };
-
-    if (constraints.numberRange && constraints.numberRange.max != null) {
-      options.maxNum = constraints.numberRange.max;
-    }
-
-    options.questionType = plan.questionTypeId;
-
-    if (plan.subtype != null && plan.subtype !== '') options.subtype = plan.subtype;
-
-    if (plan.cognitiveLevel != null) options.cognitiveLevel = plan.cognitiveLevel;
-    if (plan.spiralLevel != null) options.spiralLevel = plan.spiralLevel;
-    if (plan.contextType != null) options.contextType = plan.contextType;
-
-    if (extra.grade != null) options.grade = extra.grade;
-    if (plan.count != null) options.count = plan.count;
-    else if (extra.count != null) options.count = extra.count;
-    if (extra.type != null && extra.type !== '') options.type = extra.type;
-
-    if (Array.isArray(extra.operators) && extra.operators.length) {
-      options.operators = extra.operators.map(function (op) {
-        if (op === '\u2212' || op === '\u2013' || op === '\uff0d') return '-';
-        return op;
-      });
-    }
-    Object.keys(extra.settings || {}).forEach(function (k) {
-      if (k === 'type') return;
-      var v = extra.settings[k];
-      if (v !== '' && v != null) options[k] = v;
-    });
-    Object.keys(extra.settingNums || {}).forEach(function (k) {
-      var v = extra.settingNums[k];
-      if (v !== '' && v != null) options[k] = v;
-    });
-
-    return options;
-  }
-
-  // ============================================================
-  // 2. Plugin 加载与生成
-  // (原 shared/legacy/plugin-adapter.js + shared/generator/legacy-plugin-adapter.js)
-  // ============================================================
-  function loadPlugin(id) {
-    if (!id) return null;
-    if (pluginCache[id]) return pluginCache[id];
-
-    var found = null;
-    if (isBrowser) {
-      if (global.__mathSubPlugins && global.__mathSubPlugins[id]) found = global.__mathSubPlugins[id];
-      else if (global.__currentPlugin && global.__currentPlugin.id === id) found = global.__currentPlugin;
-      else if (global.App && global.App.plugins && global.App.plugins[id]) found = global.App.plugins[id];
-    } else {
-      try {
-        var loader = getPluginLoader();
-        if (loader) {
-          var entry = loader.loadPlugin(id);
-          found = entry && !entry.error ? entry.plugin : null;
-        }
-      } catch (e) { /* ignore */ }
-    }
-    if (found) pluginCache[id] = found;
-    return found || null;
-  }
-
-  function setPlugin(id, plugin) {
-    if (id && plugin) pluginCache[id] = plugin;
-    return plugin;
-  }
-
-  function generateByPluginId(pluginId, options) {
-    return Promise.resolve().then(function () {
-      var plugin = loadPlugin(pluginId);
-      if (!plugin || typeof plugin.generate !== 'function') {
-        throw new Error('Legacy 插件不可用或未装载: ' + pluginId);
-      }
-      var set = plugin.generate(options || {});
-      return (set && typeof set.then === 'function') ? set : Promise.resolve(set);
-    });
-  }
-
-  function renderSet(set, pluginId) {
-    var plugin = loadPlugin(pluginId);
-    if (!plugin || typeof plugin.render !== 'function') return null;
-    try { return plugin.render(set); } catch (e) { return null; }
-  }
-
-  // ============================================================
-  // 3. Legacy exerciseSet → SemanticQuestion[]
-  // (原 shared/generator/legacy-plugin-adapter.js::toSemanticQuestions)
-  // ============================================================
-  function toSemanticQuestions(set, plan, context) {
-    context = context || {};
-    var questions = (set && Array.isArray(set.questions)) ? set.questions : [];
-    var constraints = plan.constraints || {};
-    var seedBase = context.seed;
-    var SQ = getSQ();
-
-    return questions.map(function (q, i) {
-      var isReadAloud = q.answer == null && q.inputType == null && (q.letter != null || q.name != null);
-      var dataPrompt = q.data ? (q.data.question != null ? q.data.question
-        : (q.data.prompt != null ? q.data.prompt
-          : (q.data.text != null ? q.data.text : null))) : null;
-      var prompt = q.q != null ? q.q
-        : (q.question != null ? q.question
-          : (q.text != null ? q.text
-            : (q.stem != null ? q.stem
-              : (dataPrompt != null ? dataPrompt
-                : (q.name != null ? q.name
-                  : (q.char != null ? q.char
-                    : (q.pinyin != null ? q.pinyin
-                      : (q.letter != null ? q.letter : ''))))))));
-
-      var rawAnswer = q.answer != null ? q.answer : null;
-      var answerObj = (typeof rawAnswer === 'object' && rawAnswer !== null) ? rawAnswer : { value: rawAnswer, acceptable: [] };
-
-      var answerMode = isReadAloud ? 'read-aloud' : mapInputType(q.inputType || q.type);
-
-      var distractors = [];
-      var allOptions = [];
-      if (!isReadAloud && (q.inputType === 'choice' || q.type === 'choice') && Array.isArray(q.options)) {
-        var correct = rawAnswer != null ? coerceScalar(rawAnswer) : null;
-        allOptions = q.options.slice();
-        q.options.forEach(function (opt) {
-          var val = coerceScalar(opt);
-          if (val && val !== correct) distractors.push({ value: val, errorType: '概念混淆', weight: 1 });
-        });
-      } else if (distractors.length > 0) {
-        var correct = answerObj && answerObj.value != null ? coerceScalar(answerObj.value) : null;
-        if (correct) allOptions = [correct].concat(distractors.map(function (d) { return d.value; }));
-      }
-
-      var svgRaw = q.svg || q.illustration || null;
-      if (!svgRaw && typeof q.render === 'function') {
-        svgRaw = captureSvg(q.render, q, i);
-      }
-
-      var sq = {
-        knowledgePointId: plan.knowledgePointId,
-        questionType: plan.questionTypeId,
-        difficulty: q.difficulty != null ? q.difficulty : plan.difficulty,
-        difficultyParams: {
-          level: plan.difficulty,
-          scale: constraints.scale != null ? constraints.scale : 1,
-          steps: constraints.maxSteps != null ? constraints.maxSteps : 1,
-          allowBracket: !!constraints.allowBracket,
-          allowMultDiv: !!constraints.allowMultDiv
-        },
-        numberRange: constraints.numberRange || { min: 1, max: 1 },
-        spiralLevel: plan.spiralLevel != null ? plan.spiralLevel : 1,
-        context: plan.contextType != null ? plan.contextType : 'standard',
-        seed: seedBase != null ? seedBase + ':' + i : null,
-        content: { prompt: prompt },
-        question: { prompt: prompt, answerMode: answerMode },
-        answer: answerObj,
-        distractors: distractors,
-        options: allOptions.length ? allOptions : undefined,
-        graphic: q.graphic != null ? q.graphic
-          : (svgRaw ? { type: 'custom', subtype: null, params: { rawSvg: svgRaw }, renderHints: {} } : null),
-        hint: q.hint != null ? q.hint : null,
-        data: {
-          kind: q.kind != null ? q.kind : null,
-          type: q.type != null ? q.type : null,
-          letter: q.letter != null ? q.letter : null,
-          name: q.name != null ? q.name : null,
-          example: q.example != null ? q.example : null,
-          raw: (q.data != null && typeof q.data === 'object') ? safeCopy(q.data) : null,
-          meta: safeCopy(set.meta)
-        }
-      };
-      return SQ.createSemanticQuestion(sq);
-    });
-  }
-
-  // ============================================================
-  // 4. Legacy Question → SemanticQuestion
-  // (原 shared/question/legacy-question-adapter.js::adaptQuestion)
-  // ============================================================
-  function adaptQuestion(legacyQ, context) {
-    context = context || {};
-    legacyQ = legacyQ || {};
-    var SQ = getSQ();
-    var QTR = getQTR();
-    var QID = getQID();
-
-    // 基础字段提取
-    var prompt = coerceString(legacyQ.q || legacyQ.text || legacyQ.stem || legacyQ.question || '');
-    var answerVal = legacyQ.answer;
-    var answerObj = (typeof answerVal === 'object' && answerVal !== null) ? answerVal : { value: answerVal };
-
-    var answerModeMap = {
-      'text': 'input',
-      'input': 'input',
-      'choice': 'choice',
-      'multi': 'multi',
-      'none': 'none',
-      'read-aloud': 'read-aloud'
-    };
-    var inputType = legacyQ.inputType || legacyQ.type || 'text';
-    var answerMode = answerModeMap[inputType] || 'input';
-
-    var distractors = [];
-    if (inputType === 'choice' && Array.isArray(legacyQ.options)) {
-      var correct = coerceScalar(answerVal);
-      legacyQ.options.forEach(function (opt) {
-        var val = coerceScalar(opt);
-        if (val && val !== correct) {
-          distractors.push({ value: val, errorType: '概念混淆', weight: 1 });
-        }
-      });
-    }
-
-    var graphic = null;
-    if (legacyQ.svg || legacyQ.graphic || legacyQ.drawing) {
-      graphic = {
-        type: 'custom',
-        subtype: null,
-        params: { legacySvg: legacyQ.svg || legacyQ.graphic || legacyQ.drawing },
-        renderHints: {}
-      };
-    }
-
-    var knowledgePoint = context.knowledgePointId || legacyQ.knowledgePointId || legacyQ.kpId || '';
-    var questionType = legacyQ.questionType || legacyQ.type || legacyQ.kind || 'calc';
-    var norm = QTR && typeof QTR.normalizeQuestionType === 'function' ? QTR.normalizeQuestionType(questionType, { allowHeuristic: true }) : null;
-    if (norm && norm.id) questionType = norm.id;
-    var skill = legacyQ.skill || legacyQ.ability || '';
-
-    var difficulty = context.difficulty != null ? context.difficulty : coerceInteger(legacyQ.difficulty);
-
-    var metadata = {
-      generator: context.generatorId || legacyQ.generator || legacyQ.pluginId || 'legacy:unknown',
-      generatorVersion: context.generatorVersion || legacyQ.generatorVersion || '1.0.0',
-      seed: context.seed || legacyQ.seed || legacyQ.randomSeed,
-      planId: context.planId || null,
-      timestamp: new Date().toISOString(),
-      retryCount: 0,
-      validationScore: null,
-      tags: ['legacy-adapted']
-    };
-
-    var sq = SQ.createSemanticQuestion({
-      id: legacyQ.id || legacyQ.questionId,
-      knowledgePoint: knowledgePoint,
-      skill: skill,
-      difficulty: difficulty,
-      difficultyParams: legacyQ.difficultyParams || null,
-      question: { prompt: prompt },
-      content: { prompt: prompt },
-      answer: { value: answerVal, acceptable: ensureArray(answerObj.acceptable) },
-      distractors: distractors,
-      graphic: graphic,
-      metadata: metadata,
-      render: legacyQ.render || null,
-      check: legacyQ.check || null,
-      svg: legacyQ.svg || null,
-      questionType: questionType,
-      answerMode: answerMode,
-      type: legacyQ.type || null,
-      hint: legacyQ.hint || null,
-      numberRange: legacyQ.numberRange || null,
-      difficultyParams: legacyQ.difficultyParams || null
-    });
-
-    return sq;
-  }
-
-  function coerceInteger(v) { var n = Number(v); return isNaN(n) ? null : Math.floor(n); }
-  function ensureArray(v) { return Array.isArray(v) ? v : (v == null ? [] : [v]); }
-  function seededIndex(seedStr) {
-    var h = 2166136261;
-    var s = String(seedStr);
-    for (var i = 0; i < s.length; i++) {
-      h ^= s.charCodeAt(i);
-      h = Math.imul(h, 16777619);
-    }
-    return (h >>> 0);
-  }
-
-  // ============================================================
-  // 5. SemanticQuestion → Legacy Question (含 render/check/svg)
-  // (原 shared/question/legacy-question-adapter.js::toLegacyQuestion)
-  // ============================================================
-  function toLegacyQuestion(sq) {
-    if (!sq) return null;
-
-    var answerMode = sq.answerMode || (sq.question && sq.question.answerMode) || 'input';
-    var inputTypeMap = {
-      'input': 'text',
-      'choice': 'choice',
-      'multi': 'multi',
-      'none': 'none',
-      'read-aloud': 'read-aloud'
-    };
-    var inputType = inputTypeMap[answerMode] || 'text';
-
-    var options = null;
-    if (inputType === 'choice' && Array.isArray(sq.distractors) && sq.distractors.length) {
-      options = sq.distractors.map(function (d) { return d.value; });
-      var correct = sq.answer && sq.answer.value != null ? coerceScalar(sq.answer.value) : '';
-      if (correct && options.indexOf(correct) === -1) {
-        var seedStr = (sq.seed != null ? String(sq.seed)
-          : (sq.metadata && sq.metadata.seed != null ? String(sq.metadata.seed)
-            : (sq.id || 'q')));
-        var pos = seededIndex(seedStr) % (options.length + 1);
-        options.splice(pos, 0, correct);
-      }
-    }
-
-    var legacyQ = {
-      id: sq.id,
-      q: sq.prompt || (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt) || '',
-      text: sq.prompt || (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt) || '',
-      answer: sq.answer && sq.answer.value != null ? sq.answer.value : (sq.answer ? sq.answer.value : null),
-      inputType: inputType,
-      options: options,
-      type: sq.questionType || sq.type || sq.skill || 'calc',
-      questionType: sq.questionType || sq.type || sq.skill || 'calc',
-      skill: sq.skill || '',
-      difficulty: sq.difficulty,
-      difficultyParams: sq.difficultyParams,
-      knowledgePointId: sq.knowledgePoint,
-      hint: sq.hint,
-      numberRange: sq.numberRange,
-      render: sq.render || null,
-      check: sq.check || null,
-      svg: sq.svg || (sq.graphic && sq.graphic.params && (sq.graphic.params.rawSvg || sq.graphic.params.legacySvg)) || null
-    };
-
-    return legacyQ;
-  }
-
-  function toLegacyQuestions(semanticQuestions) {
-    if (!Array.isArray(semanticQuestions)) return [];
-    return semanticQuestions.map(toLegacyQuestion);
-  }
-
-  // ============================================================
-  // 5. createLegacyGenerator —— Legacy GeneratorContract
-  // (原 shared/generator/legacy-plugin-adapter.js::createLegacyGenerator)
-  // ============================================================
-  function createLegacyGenerator(plugin, meta) {
-    meta = meta || {};
-    var capabilities = Array.isArray(meta.capabilities) ? meta.capabilities.slice() : [];
-    var knowledgePoints = Array.isArray(meta.knowledgePoints) ? meta.knowledgePoints.slice() : [];
-
-    var generator = {
-      id: 'legacy:' + (plugin.id || 'plugin'),
-      subject: canonSubject(plugin.subject || 'math'),
-      capabilities: capabilities,
-      knowledgePoints: knowledgePoints,
-      plugin: plugin,
-
-      supports: function (plan) {
-        if (!plan || !plan.questionTypeId) return false;
-        if (capabilities.length && capabilities.indexOf(plan.questionTypeId) === -1) return false;
-        if (knowledgePoints.length && plan.knowledgePointId &&
-            knowledgePoints.indexOf(plan.knowledgePointId) === -1) return false;
-        return true;
-      },
-
-      generate: function (plan, context) {
-        context = context || {};
-        var MAX_RETRIES = 3;
-
-        function doGenerate(attempt) {
-          var ctx = attempt === 0 ? context : { seed: (context.seed || '') + ':r' + attempt, legacy: context.legacy };
-          var options = adaptPlanToLegacyOptions(plan, ctx.legacy || {});
-          if (attempt > 0 && options.seed != null) {
-            options.seed = options.seed + ':r' + attempt;
-          }
-          var set = plugin.generate(options);
-
-          function handleResult(s) {
-            var sqs = toSemanticQuestions(s, plan, ctx);
-            var q = checkBatchQuality(sqs, plan);
-            if (!q.ok && attempt < MAX_RETRIES) return doGenerate(attempt + 1);
-            return sqs;
-          }
-
-          if (set && typeof set.then === 'function') {
-            return set.then(handleResult);
-          }
-          return handleResult(set);
-        }
-
-        return doGenerate(0);
-      }
-    };
-    return generator;
-  }
-
-  function hydrateLegacyGenerator(selection, plugin) {
-    if (!selection || !selection.record) return null;
-    if (!plugin) {
-      var pid = selection.record.pluginId;
-      if (!pid && typeof selection.record.id === 'string' && selection.record.id.indexOf('legacy:') === 0) {
-        pid = selection.record.id.slice('legacy:'.length);
-      }
-      plugin = loadPlugin(pid);
-    }
-    if (!plugin) return null;
-    return createLegacyGenerator(plugin, {
-      capabilities: selection.record.capabilities,
-      knowledgePoints: selection.record.knowledgePoints
-    });
-  }
-
-  // ============================================================
-  // 6. runLegacyFallback —— 兼容旧调用路径
-  // ============================================================
-  async function runLegacyFallback(plugin, plan, uiExtra) {
-    var options = adaptPlanToLegacyOptions(plan, uiExtra || {});
-    return Promise.resolve(plugin.generate(options));
-  }
-
-  // ============================================================
-  // 内部工具函数
-  // ============================================================
-  function mapInputType(inputType) {
-    if (inputType === 'read-aloud') return 'read-aloud';
-    return 'input';
-  }
-
-  function coerceScalar(v) {
-    if (v == null) return null;
-    if (typeof v === 'object') {
-      if (Array.isArray(v)) return v.length ? String(v[0]) : null;
-      return v.value != null ? String(v.value) : (v.correctAnswer != null ? String(v.correctAnswer) : null);
-    }
-    return String(v);
-  }
-
-  function coerceString(v) {
-    if (v == null) return '';
-    if (typeof v === 'boolean') return v ? 'true' : 'false';
-    return String(v);
-  }
-
-  function safeCopy(v) {
-    if (v == null) return null;
-    try { return JSON.parse(JSON.stringify(v)); } catch (e) { return null; }
-  }
-
-  function parseOperands(prompt) {
-    if (!prompt || typeof prompt !== 'string') return [];
-    var nums = [];
-    var re = /(-?\d+\.?\d*)/g;
-    var m;
-    while ((m = re.exec(prompt)) !== null) nums.push(Number(m[1]));
-    return nums;
-  }
-
-  function checkBatchQuality(sqs, plan) {
-    var range = (plan.constraints && plan.constraints.numberRange) || null;
-    var seen = {};
-    for (var i = 0; i < sqs.length; i++) {
-      var q = sqs[i];
-      var prompt = (q.content && q.content.prompt) || (q.question && q.question.prompt) || '';
-      if (range) {
-        var ops = parseOperands(prompt);
-        for (var j = 0; j < ops.length; j++) {
-          if (ops[j] < range.min || ops[j] > range.max) return { ok: false, reason: 'bounds' };
-        }
-      }
-      if (seen[prompt]) return { ok: false, reason: 'duplicates' };
-      seen[prompt] = true;
-    }
-    return { ok: true };
-  }
-
-  function captureSvg(renderFn, owner, index) {
-    if (typeof renderFn !== 'function') return null;
-    try {
-      var out = renderFn.call(owner, index);
-      if (out == null) return null;
-      var s = String(out);
-      var start = s.indexOf('<svg');
-      if (start === -1) return null;
-      var end = s.indexOf('</svg>', start);
-      if (end === -1) return null;
-      return s.slice(start, end + '</svg>'.length);
-    } catch (e) { return null; }
-  }
-
-  function seededIndex(seedStr) {
-    var h = 2166136261;
-    var s = String(seedStr);
-    for (var i = 0; i < s.length; i++) {
-      h ^= s.charCodeAt(i);
-      h = Math.imul(h, 16777619);
-    }
-    return (h >>> 0);
-  }
-
-  function canonSubject(s) { return (s || 'math').toLowerCase(); }
-
-  // ============================================================
-  // 暴露 API
-  // ============================================================
-  var API = {
-    adaptPlanToLegacyOptions: adaptPlanToLegacyOptions,
-    loadPlugin: loadPlugin,
-    setPlugin: setPlugin,
-    generateByPluginId: generateByPluginId,
-    renderSet: renderSet,
-    toSemanticQuestions: toSemanticQuestions,
-    adaptQuestion: adaptQuestion,
-    toLegacyQuestion: toLegacyQuestion,
-    toLegacyQuestions: toLegacyQuestions,
-    createLegacyGenerator: createLegacyGenerator,
-    hydrateLegacyGenerator: hydrateLegacyGenerator,
-    runLegacyFallback: runLegacyFallback,
-    coerceString: coerceString,
-    safeCopy: safeCopy
-  };
-
-  global.LegacyAdapter = API;
-  if (global.App && typeof global.App === 'object') global.App.LegacyAdapter = API;
-
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-  return API;
-})(typeof window !== 'undefined' ? window : global);
 };
 __defs["shared/feature-flags.js"] = function (module, exports, require) {
 /**
