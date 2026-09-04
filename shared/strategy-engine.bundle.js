@@ -283,6 +283,30 @@ function plan(request) {
   if (complexSem) {
     questionPlan.operation = complexSem.operators;
   }
+
+  // 9) 固定样式 + 复杂度统筹（M3-13/14）：样式管骨架（知识点类别×题型），复杂度管内容深度（难度×螺旋档）
+  var StyleStrategy = require("shared/strategy/question-style-strategy.js");
+  var ComplexityStrategy = require("shared/strategy/complexity-strategy.js");
+  var styleInfo = StyleStrategy.resolveQuestionStyle({
+    questionTypeId: questionType,
+    category: kp.category,
+    knowledgePointId: kp.id
+  });
+  var complexityInfo = ComplexityStrategy.resolveComplexity({
+    difficulty: effectiveDifficulty,
+    spiralLevel: spiral.spiralLevel,
+    knowledgePointId: kp.id
+  });
+  questionPlan.style = styleInfo.style;
+  questionPlan.svgTemplate = styleInfo.svgTemplate;
+  questionPlan.complexity = {
+    tier: complexityInfo.tier,
+    label: complexityInfo.label,
+    rangeBoost: complexityInfo.rangeBoost,
+    multiStep: complexityInfo.multiStep,
+    mixLevel: complexityInfo.mixLevel,
+    spiralAdjusted: complexityInfo.spiralAdjusted
+  };
   if (request.adaptive === true) {
     questionPlan.adaptiveDelta = difficulty.adaptiveDelta;
     questionPlan.targetDifficulty = difficulty.targetDifficulty;
@@ -2597,6 +2621,33 @@ function validateQuestionPlan(plan) {
     }
   }
 
+  // 固定样式 + 复杂度统筹（M3-13/14）
+  var VALID_STYLES = ['calc', 'fill', 'choice', 'judge', 'story', 'shape', 'open'];
+  if (plan.style != null) {
+    if (typeof plan.style !== 'string' || !VALID_STYLES.includes(plan.style)) {
+      errors.push('非法 style: ' + plan.style + '（应为 ' + VALID_STYLES.join('/') + '）');
+    }
+  }
+  if (plan.svgTemplate != null && typeof plan.svgTemplate !== 'string') {
+    errors.push('svgTemplate 必须是字符串');
+  }
+  if (plan.complexity != null) {
+    var cx = plan.complexity;
+    if (typeof cx !== 'object' || cx === null) {
+      errors.push('complexity 必须是对象');
+    } else {
+      if (!['simple', 'standard', 'complex'].includes(cx.tier)) {
+        errors.push('非法 complexity.tier: ' + cx.tier + '（应为 simple/standard/complex）');
+      }
+      if (cx.rangeBoost != null && (typeof cx.rangeBoost !== 'number' || cx.rangeBoost < 0 || cx.rangeBoost > 2)) {
+        errors.push('complexity.rangeBoost 必须是 0-2 的数字');
+      }
+      if (cx.mixLevel != null && (typeof cx.mixLevel !== 'number' || cx.mixLevel < 0 || cx.mixLevel > 2)) {
+        errors.push('complexity.mixLevel 必须是 0-2 的数字');
+      }
+    }
+  }
+
   // 禁止字段
   var forbidden = ['svg', 'html', 'generate', 'generator', 'render', 'template', 'execute', 'executeFunction'];
   forbidden.forEach(function (k) {
@@ -4161,6 +4212,190 @@ module.exports = {
   instantiate: instantiate,
   Mode: Mode
 };
+};
+__defs["shared/strategy/question-style-strategy.js"] = function (module, exports, require) {
+/**
+ * shared/strategy/question-style-strategy.js — M3-13 Question Style Strategy
+ *
+ * 题目固定样式统筹：根据「知识点类别 × 题型」决定题目的固定视觉样式（SVG 模板族）。
+ *
+ * 目标：每个知识点 + 题型都有确定性的固定样式，生成层据此渲染统一外观；
+ *       样式是「知识点与题目固定样式」的映射层，与难度（复杂度档）解耦——
+ *       复杂度影响题目内容（数值范围/步数/混合度），样式影响呈现骨架。
+ *
+ * 样式族（style）与 SVG 模板：
+ *   calc      → 计算式（横式/竖式，svg-calculation）
+ *   fill      → 填空格（算式留空 / 数轴填数）
+ *   choice    → 选项卡（A/B/C/D 单选）
+ *   judge     → 判断陈述（对/错）
+ *   apply     → 图文应用（生活场景 + 条件陈述）
+ *   shape     → 图形操作（立体/平面图形，svg-geometry）
+ *   link      → 连线配对（svg-geometry 连线）
+ *   open      → 开放表达（自由作答区）
+ */
+'use strict';
+
+var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
+var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
+
+// 固定样式注册表：questionTypeId → 样式族（含 SVG 模板族引用）
+var STYLE_REGISTRY = {
+  calc:     { style: 'calc',   svgTemplate: 'svg-calculation', label: '计算式' },
+  oral:     { style: 'calc',   svgTemplate: 'svg-calculation', label: '口算' },
+  fill:     { style: 'fill',   svgTemplate: 'svg-calculation', label: '填空格' },
+  choice:   { style: 'choice', svgTemplate: 'svg-choice',      label: '选项卡' },
+  judge:    { style: 'judge',  svgTemplate: 'svg-judge',       label: '判断陈述' },
+  apply:    { style: 'story',  svgTemplate: 'svg-story',       label: '图文应用' },
+  geometry: { style: 'shape',  svgTemplate: 'svg-geometry',    label: '图形操作' },
+  recognize: { style: 'choice', svgTemplate: 'svg-choice',     label: '认读识别' },
+  open:     { style: 'open',   svgTemplate: 'svg-open',        label: '开放表达' }
+};
+
+// 知识点类别对样式的修正（同一题型在不同类别下微调呈现骨架）
+var CATEGORY_STYLE_OVERRIDE = {
+  geometry: { calc: 'shape' },     // 几何类出计算 → 图形计算
+  measurement: { apply: 'story' }, // 度量类应用 → 图文应用（含单位）
+  synthesis: { choice: 'choice' }
+};
+
+/**
+ * 解析题目的固定样式。
+ * options: {
+ *   questionTypeId: string,   // canonical 题型
+ *   category: string,         // 知识点类别 algebra|geometry|measurement|synthesis
+ *   knowledgePointId: string  // 仅用于错误提示
+ * }
+ * 输出：{ style, svgTemplate, label }
+ */
+function resolveQuestionStyle(options) {
+  options = options || {};
+  var qt = options.questionTypeId;
+  if (typeof qt !== 'string' || !qt) {
+    throw new StrategyError('questionTypeId 必填字符串', CODES.INVALID_REQUEST, { questionTypeId: qt });
+  }
+  var base = STYLE_REGISTRY[qt];
+  if (!base) {
+    throw new StrategyError('未知题型，无法确定固定样式: ' + qt, CODES.INVALID_REQUEST, { questionTypeId: qt, knowledgePointId: options.knowledgePointId });
+  }
+  var style = base.style;
+  var category = options.category;
+  if (category && CATEGORY_STYLE_OVERRIDE[category] && CATEGORY_STYLE_OVERRIDE[category][qt]) {
+    style = CATEGORY_STYLE_OVERRIDE[category][qt];
+  }
+  return {
+    style: style,
+    svgTemplate: base.svgTemplate,
+    label: base.label
+  };
+}
+
+/** 列出全部固定样式族（供 SVG 整理/文档/校验使用） */
+function listStyles() {
+  var seen = {};
+  var out = [];
+  Object.keys(STYLE_REGISTRY).forEach(function (qt) {
+    var r = STYLE_REGISTRY[qt];
+    if (seen[r.style]) return;
+    seen[r.style] = true;
+    out.push({ style: r.style, svgTemplate: r.svgTemplate, label: r.label });
+  });
+  return out;
+}
+
+module.exports = {
+  resolveQuestionStyle: resolveQuestionStyle,
+  listStyles: listStyles,
+  STYLE_REGISTRY: STYLE_REGISTRY
+};
+
+};
+__defs["shared/strategy/complexity-strategy.js"] = function (module, exports, require) {
+/**
+ * shared/strategy/complexity-strategy.js — M3-14 Complexity Strategy
+ *
+ * 题目复杂度统筹：把「有效难度 + 知识点螺旋档」映射为 简单/标准/复杂 三档，
+ * 驱动题目内容在固定样式内「复杂化 / 简单化」：
+ *
+ *   tier=simple   → 数值范围小、单步运算、无干扰项（简单化）
+ *   tier=standard → 数值范围中、支持多步、进位退位（默认基准）
+ *   tier=complex  → 大范围、混合运算/多条件、多步嵌套（复杂化）
+ *
+ * 与 question-style-strategy 解耦：样式管骨架，复杂度管内容深度。
+ * 输出档位注入 QuestionPlan.complexity，供渲染层/生成器做内容增强。
+ */
+'use strict';
+
+var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
+var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
+
+var DIFFICULTY_MIN = 1;
+var DIFFICULTY_MAX = 10;
+var TIERS = ['simple', 'standard', 'complex'];
+
+/** 难度档 → 基础复杂度档（1-3 → simple；4-7 → standard；8-10 → complex） */
+function tierForDifficulty(difficulty) {
+  if (typeof difficulty !== 'number' || !isFinite(difficulty)) {
+    throw new StrategyError('difficulty 必须是有限数字: ' + difficulty, CODES.INVALID_REQUEST, { difficulty: difficulty });
+  }
+  var d = Math.max(DIFFICULTY_MIN, Math.min(DIFFICULTY_MAX, Math.floor(difficulty)));
+  if (d <= 3) return 'simple';
+  if (d <= 7) return 'standard';
+  return 'complex';
+}
+
+/**
+ * 解析复杂度档。
+ * options: {
+ *   difficulty: number,            // 有效难度 1-10（必填）
+ *   spiralLevel: number,           // 螺旋档 1-6（可选，用于微调）
+ *   maxSpiralLevel: number,        // 知识点最大螺旋档（可选）
+ *   knowledgePointId: string       // 错误提示用
+ * }
+ * 输出：{ tier, label, rangeBoost, multiStep, mixLevel, spiralAdjusted }
+ *   rangeBoost  难度对数值范围的增益（0/1/2，供数值范围叠加）
+ *   multiStep   是否允许多步运算
+ *   mixLevel    混合度 0-2（0 单一运算；1 加减少量混合；2 进位/退位+混合）
+ */
+function resolveComplexity(options) {
+  options = options || {};
+  if (options.difficulty == null) {
+    throw new StrategyError('difficulty 必填（1-10）', CODES.INVALID_REQUEST, { knowledgePointId: options.knowledgePointId });
+  }
+  var tier = tierForDifficulty(options.difficulty);
+  var spiral = options.spiralLevel != null ? options.spiralLevel : null;
+
+  // 螺旋微调：螺旋档高 + 难度中上 → 升一档；螺旋档低 + 难度低 → 保持简单
+  var spiralAdjusted = false;
+  if (spiral != null) {
+    if (tier === 'standard' && spiral >= 5 && options.difficulty >= 6) {
+      tier = 'complex'; spiralAdjusted = true;
+    } else if (tier === 'standard' && spiral <= 2 && options.difficulty <= 4) {
+      tier = 'simple'; spiralAdjusted = true;
+    }
+  }
+
+  var params = {
+    simple:   { rangeBoost: 0, multiStep: false, mixLevel: 0 },
+    standard: { rangeBoost: 1, multiStep: true,  mixLevel: 1 },
+    complex:  { rangeBoost: 2, multiStep: true,  mixLevel: 2 }
+  }[tier];
+
+  return {
+    tier: tier,
+    label: tier === 'simple' ? '基础' : tier === 'standard' ? '标准' : '进阶',
+    rangeBoost: params.rangeBoost,
+    multiStep: params.multiStep,
+    mixLevel: params.mixLevel,
+    spiralAdjusted: spiralAdjusted
+  };
+}
+
+module.exports = {
+  resolveComplexity: resolveComplexity,
+  tierForDifficulty: tierForDifficulty,
+  TIERS: TIERS
+};
+
 };
 __defs["shared/semantic-question.js"] = function (module, exports, require) {
 /**

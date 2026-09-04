@@ -234,6 +234,30 @@ function plan(request) {
   if (complexSem) {
     questionPlan.operation = complexSem.operators;
   }
+
+  // 9) 固定样式 + 复杂度统筹（M3-13/14）：样式管骨架（知识点类别×题型），复杂度管内容深度（难度×螺旋档）
+  var StyleStrategy = require('./question-style-strategy.js');
+  var ComplexityStrategy = require('./complexity-strategy.js');
+  var styleInfo = StyleStrategy.resolveQuestionStyle({
+    questionTypeId: questionType,
+    category: kp.category,
+    knowledgePointId: kp.id
+  });
+  var complexityInfo = ComplexityStrategy.resolveComplexity({
+    difficulty: effectiveDifficulty,
+    spiralLevel: spiral.spiralLevel,
+    knowledgePointId: kp.id
+  });
+  questionPlan.style = styleInfo.style;
+  questionPlan.svgTemplate = styleInfo.svgTemplate;
+  questionPlan.complexity = {
+    tier: complexityInfo.tier,
+    label: complexityInfo.label,
+    rangeBoost: complexityInfo.rangeBoost,
+    multiStep: complexityInfo.multiStep,
+    mixLevel: complexityInfo.mixLevel,
+    spiralAdjusted: complexityInfo.spiralAdjusted
+  };
   if (request.adaptive === true) {
     questionPlan.adaptiveDelta = difficulty.adaptiveDelta;
     questionPlan.targetDifficulty = difficulty.targetDifficulty;

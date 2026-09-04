@@ -105,6 +105,33 @@ function validateQuestionPlan(plan) {
     }
   }
 
+  // 固定样式 + 复杂度统筹（M3-13/14）
+  var VALID_STYLES = ['calc', 'fill', 'choice', 'judge', 'story', 'shape', 'open'];
+  if (plan.style != null) {
+    if (typeof plan.style !== 'string' || !VALID_STYLES.includes(plan.style)) {
+      errors.push('非法 style: ' + plan.style + '（应为 ' + VALID_STYLES.join('/') + '）');
+    }
+  }
+  if (plan.svgTemplate != null && typeof plan.svgTemplate !== 'string') {
+    errors.push('svgTemplate 必须是字符串');
+  }
+  if (plan.complexity != null) {
+    var cx = plan.complexity;
+    if (typeof cx !== 'object' || cx === null) {
+      errors.push('complexity 必须是对象');
+    } else {
+      if (!['simple', 'standard', 'complex'].includes(cx.tier)) {
+        errors.push('非法 complexity.tier: ' + cx.tier + '（应为 simple/standard/complex）');
+      }
+      if (cx.rangeBoost != null && (typeof cx.rangeBoost !== 'number' || cx.rangeBoost < 0 || cx.rangeBoost > 2)) {
+        errors.push('complexity.rangeBoost 必须是 0-2 的数字');
+      }
+      if (cx.mixLevel != null && (typeof cx.mixLevel !== 'number' || cx.mixLevel < 0 || cx.mixLevel > 2)) {
+        errors.push('complexity.mixLevel 必须是 0-2 的数字');
+      }
+    }
+  }
+
   // 禁止字段
   var forbidden = ['svg', 'html', 'generate', 'generator', 'render', 'template', 'execute', 'executeFunction'];
   forbidden.forEach(function (k) {

@@ -375,6 +375,8 @@
       qt: (p.get('qt') || '').trim() || null,
       // 快速模式题型策略白名单：7 类题型 key 列表（select 页传入，生成层规划期过滤用）
       types: (p.get('types') || '').trim() || null,
+      // 上下册过滤（select 页快速/教师模式透传：up 上册 / down 下册；缺省全部）
+      book: (p.get('book') || '').trim() || null,
       // 模式：quick（快速）/ teacher（教师/专业）等（select 页传入，用于知识点占比展示形态）
       mode: (p.get('mode') || '').trim() || null,
       // P7: 直接打印参数
@@ -563,7 +565,12 @@
     var g = App.getGradeName(grade);
     var s = (App.SUBJECT_NAMES && App.SUBJECT_NAMES[state.subject]) ? App.SUBJECT_NAMES[state.subject] : '';
     var t = cleanTypeTitle(rawName);
-    return (count == null) ? (g + s + ' · ' + t) : (g + s + ' · ' + t + '（' + count + '题）');
+    // 上下册标注（select 页 book 参数；仅数学生效）
+    var bookTag = '';
+    if (state.subject === 'math' && urlParams.book) {
+      bookTag = (urlParams.book === 'up') ? ' · 上册' : (urlParams.book === 'down') ? ' · 下册' : '';
+    }
+    return (count == null) ? (g + s + ' · ' + t + bookTag) : (g + s + ' · ' + t + bookTag + '（' + count + '题）');
   }
 
   // 插件加载后动态细化 LearningResource 的 name/description（不影响爬虫获取默认内容）
