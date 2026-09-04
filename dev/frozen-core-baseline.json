@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T08:22:31.887Z",
+  "generatedAt": "2026-09-04T10:13:08.709Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -53,19 +53,19 @@
       "mtime": 1788067280594.5122
     },
     "shared/knowledge-math.js": {
-      "hash": "7ec8906159d00d67",
-      "size": 539113,
-      "mtime": 1788508462914.3452
+      "hash": "efadf9185db375d3",
+      "size": 548443,
+      "mtime": 1788515997133.885
     },
     "shared/knowledge-cn.js": {
-      "hash": "1daacda73babc441",
-      "size": 18260,
-      "mtime": 1788020537802.9683
+      "hash": "d3f4e4474e102b72",
+      "size": 18545,
+      "mtime": 1788516674485.9573
     },
     "shared/knowledge-en.js": {
-      "hash": "526955ab6ec82035",
-      "size": 3573,
-      "mtime": 1788020537803.442
+      "hash": "75827fbe37be262e",
+      "size": 3634,
+      "mtime": 1788515997178.2715
     },
     "shared/knowledge-ontology.js": {
       "hash": "93355475abfc07d4",
@@ -161,6 +161,11 @@
       "hash": "6ed3b668d853b415",
       "size": 2899,
       "mtime": 1788344368439.2988
+    },
+    "shared/generator/semantic-question-bridge.js": {
+      "hash": "1de689fa215174e6",
+      "size": 4802,
+      "mtime": 1788514945150.9763
     },
     "shared/strategy/strategy-engine.js": {
       "hash": "14691be178fd7b73",
