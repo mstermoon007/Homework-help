@@ -30,5 +30,6 @@ dev/reports/
 archive/
 competition-report.json
 *.png
+!assets/poster-*.png
 banner.jpg
 MEMORY.md
