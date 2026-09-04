@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T11:32:31.400Z",
+  "generatedAt": "2026-09-04T11:36:57.143Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -53,9 +53,9 @@
       "mtime": 1788067280594.5122
     },
     "shared/knowledge-math.js": {
-      "hash": "7f9d3eee74811cee",
-      "size": 609612,
-      "mtime": 1788521489805.6929
+      "hash": "3ba8c7dd38b8db86",
+      "size": 667597,
+      "mtime": 1788521809680.1062
     },
     "shared/knowledge-cn.js": {
       "hash": "08f4df2e7f5416d6",

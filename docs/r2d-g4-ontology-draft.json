@@ -1,0 +1,2171 @@
+{
+  "batch": "R2D-G4",
+  "basedOn": "人教版四年级数学（上册/下册）知识点",
+  "scope": "math-g4 103 个 KP（主模块 M1-M12 + 竞赛 C1-C9）：concept/factualContent/graphicType/common_errors 全量补全",
+  "formatNote": "concept 字符串；factualContent 键∈FACT_TYPES；graphicType 按模块语义；errors 元素{id,category,description}，id 英文 kebab 禁 en-/cn-/question/ten，category∈10 类",
+  "entries": [
+    {
+      "kpId": "math-g4-m1-g4-oral-big",
+      "subject": "math",
+      "concept": "大数加减口算：对万以上的大数进行加减法口算，把整万、整亿数看作几个万、几个亿计算。",
+      "factualContent": {
+        "rule": "大数口算：把整万/整亿数看作计数单位的个数相加减（如 3 万+5 万=8 万），再还原成数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "oral-big-unit-err",
+          "category": "calculation",
+          "description": "整万/整亿口算时计数单位个数算错"
+        },
+        {
+          "id": "oral-big-zero-err",
+          "category": "calculation",
+          "description": "结果末尾 0 的个数写错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m1-g4-oral-mul3x1",
+      "subject": "math",
+      "concept": "三位数乘一位数口算：整百、整千数乘一位数，先乘最高位的计数单位再补 0。",
+      "factualContent": {
+        "rule": "整百/整千乘一位数：先算几×几，再在末尾补相应个数的 0（如 400×3=12 个百=1200）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "oral-mul3x1-zero-err",
+          "category": "calculation",
+          "description": "补 0 个数错误（漏 0 或多 0）"
+        },
+        {
+          "id": "oral-mul3x1-calc-err",
+          "category": "calculation",
+          "description": "一位数乘法口诀算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m1-g4-oral-mul2t",
+      "subject": "math",
+      "concept": "两位数乘整十数口算：先把整十数的 0 去掉相乘，再在积末尾补 0。",
+      "factualContent": {
+        "rule": "两位数乘整十数：先乘去掉末尾 0 的数，再在积末尾补 1 个 0（如 23×30=690）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "oral-mul2t-zero-err",
+          "category": "calculation",
+          "description": "积末尾漏补 0"
+        },
+        {
+          "id": "oral-mul2t-calc-err",
+          "category": "calculation",
+          "description": "前两位相乘算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m1-g4-oral-divt",
+      "subject": "math",
+      "concept": "除数是整十数的口算：几百几十除以整十数，看作几个十相除（或先去掉末尾的 0 再除）。",
+      "factualContent": {
+        "rule": "除整十数口算：被除数与除数同时去掉一个 0 再除（如 420÷60=42÷6=7）；商不变规律应用。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "oral-divt-zero-err",
+          "category": "calculation",
+          "description": "去 0 后未按商不变处理，商错"
+        },
+        {
+          "id": "oral-divt-calc-err",
+          "category": "calculation",
+          "description": "简化后的除法算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m1-g4-oral-dec",
+      "subject": "math",
+      "concept": "小数加减法口算：小数点对齐后按整数加减法口算，注意退位与小数位数。",
+      "factualContent": {
+        "rule": "小数加减口算：小数点对齐，从末位算起；整数部分与小数部分分别相加减。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "oral-dec-point-err",
+          "category": "notation",
+          "description": "小数点位置处理错误"
+        },
+        {
+          "id": "oral-dec-borrow-err",
+          "category": "calculation",
+          "description": "小数退位减法算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m1-g4-oral-law",
+      "subject": "math",
+      "concept": "运用运算律简便口算：用加法交换律、结合律把能凑整的数先加，使口算简便。",
+      "factualContent": {
+        "rule": "简便口算：观察哪些数能凑整（如 27+56+33 先算 27+33=60）；运用交换律、结合律调整顺序。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "oral-law-group-err",
+          "category": "reasoning",
+          "description": "凑整组合找错，未达到简便效果"
+        },
+        {
+          "id": "oral-law-calc-err",
+          "category": "calculation",
+          "description": "凑整后计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m2-g4-v-mul3x2",
+      "subject": "math",
+      "concept": "三位数乘两位数：先用两位数个位乘三位数，再用十位乘（积末位对齐十位），最后把两次积相加。",
+      "factualContent": {
+        "rule": "三位数乘两位数：个位乘的积对齐个位、十位乘的积末位对齐十位；两步积相加；注意进位。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "v-mul3x2-place-err",
+          "category": "operation",
+          "description": "十位乘的积数位未对齐"
+        },
+        {
+          "id": "v-mul3x2-carry-err",
+          "category": "calculation",
+          "description": "进位漏加或加错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m2-g4-v-mulzero",
+      "subject": "math",
+      "concept": "因数中间或末尾有 0 的乘法：末尾有 0 可先乘非 0 部分再补 0；中间有 0 要逐位相乘。",
+      "factualContent": {
+        "rule": "因数有 0 的乘法：末尾有 0 先去掉相乘再补 0；中间有 0 该位乘 0 得 0，注意进位；0 乘任何数得 0。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "v-mulzero-mid-err",
+          "category": "calculation",
+          "description": "中间有 0 的位漏乘或进位处理错误"
+        },
+        {
+          "id": "v-mulzero-tail-err",
+          "category": "operation",
+          "description": "末尾补 0 个数错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m2-g4-v-div2",
+      "subject": "math",
+      "concept": "除数是两位数的除法：从被除数高位除起，试商后逐位除，余数要比除数小。",
+      "factualContent": {
+        "rule": "两位数除法：先用除数试除被除数前两位，不够看前三位；每步余数小于除数；商写对应数位。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "v-div2-trial-err",
+          "category": "calculation",
+          "description": "试商偏大或偏小，需调商"
+        },
+        {
+          "id": "v-div2-remainder-err",
+          "category": "calculation",
+          "description": "余数不小于除数，或余数计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m2-g4-v-div2q",
+      "subject": "math",
+      "concept": "商是两位数的除法：被除数是三位数、除数是两位数，商是两位数时注意商的数位与 0 占位。",
+      "factualContent": {
+        "rule": "商两位数除法：被除数前两位够除商写十位；不够除看前三位商写个位；中间不够除商 0 占位。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "v-div2q-place-err",
+          "category": "operation",
+          "description": "商的数位或 0 占位错误"
+        },
+        {
+          "id": "v-div2q-calc-err",
+          "category": "calculation",
+          "description": "试商或余数计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m2-g4-v-dec",
+      "subject": "math",
+      "concept": "小数加减法竖式：小数点对齐，从末位算起，结果点上小数点。",
+      "factualContent": {
+        "rule": "小数竖式：小数点对齐（数位对齐）；从末位算起；结果与加数的小数点对齐；整数部分相加减。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "v-dec-align-err",
+          "category": "operation",
+          "description": "未按小数点对齐，数位错位"
+        },
+        {
+          "id": "v-dec-point-err",
+          "category": "notation",
+          "description": "结果小数点位置写错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m3-g4-mix-order",
+      "subject": "math",
+      "concept": "四则混合运算顺序：先算乘除后算加减，有括号先算括号内；同级从左到右。",
+      "factualContent": {
+        "rule": "四则混合顺序：有括号先括号内；无括号先乘除后加减；同级从左到右；括号可多层（小、中、大）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mix-order-priority-err",
+          "category": "operation",
+          "description": "未按先乘除后加减的顺序计算"
+        },
+        {
+          "id": "mix-order-bracket-err",
+          "category": "operation",
+          "description": "括号优先级处理错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m3-g4-mix-addlaw",
+      "subject": "math",
+      "concept": "加法运算律简便计算：运用加法交换律、结合律，把能凑整的数先相加。",
+      "factualContent": {
+        "formula": "加法运算律：a+b=b+a（交换律）；(a+b)+c=a+(b+c)（结合律）。凑整：如 47+58+53 先算 47+53=100。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mix-addlaw-pair-err",
+          "category": "reasoning",
+          "description": "凑整配对选错，简便无效"
+        },
+        {
+          "id": "mix-addlaw-calc-err",
+          "category": "calculation",
+          "description": "凑整后计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m3-g4-mix-mullaw",
+      "subject": "math",
+      "concept": "乘法运算律简便计算：运用乘法交换律、结合律，把能凑成整十整百的数先乘。",
+      "factualContent": {
+        "formula": "乘法运算律：a×b=b×a（交换律）；(a×b)×c=a×(b×c)（结合律）。凑整：如 25×4=100、125×8=1000。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mix-mullaw-pair-err",
+          "category": "reasoning",
+          "description": "凑整组合找错"
+        },
+        {
+          "id": "mix-mullaw-calc-err",
+          "category": "calculation",
+          "description": "乘法计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m3-g4-mix-dist",
+      "subject": "math",
+      "concept": "乘法分配律简便计算：运用 a×(b+c)=a×b+a×c（或逆用）进行简便计算。",
+      "factualContent": {
+        "formula": "乘法分配律：a×(b+c)=a×b+a×c；(a-b)×c=a×c-b×c。逆用：a×c+b×c=(a+b)×c。注意区分分配律与结合律。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mix-dist-forget-err",
+          "category": "operation",
+          "description": "分配时只乘其中一个加数，漏乘"
+        },
+        {
+          "id": "mix-dist-mix-law-err",
+          "category": "concept",
+          "description": "分配律与结合律混淆，拆括号错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m3-g4-mix-dec",
+      "subject": "math",
+      "concept": "小数加减简便计算：运用加法运算律对小数进行凑整简便计算（如 3.8+5.2=9 凑整）。",
+      "factualContent": {
+        "rule": "小数简便：找能凑成整数的小数组合（如 2.6+7.4=10）；运用交换律、结合律调整。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mix-dec-pair-err",
+          "category": "reasoning",
+          "description": "小数凑整组合找错"
+        },
+        {
+          "id": "mix-dec-calc-err",
+          "category": "calculation",
+          "description": "小数加减算错或小数点处理错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-bignum",
+      "subject": "math",
+      "concept": "大数的认识：认识亿以内的数，掌握数位顺序，会读、写、比较、改写大数（含近似数）。",
+      "factualContent": {
+        "table": "数位顺序：个、十、百、千、万、十万、百万、千万、亿；每级四个数位。读法：每级末尾 0 不读，中间连续 0 只读一个。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "fill-bignum-read-err",
+          "category": "notation",
+          "description": "大数读法错误（0 的处理、分级）"
+        },
+        {
+          "id": "fill-bignum-write-err",
+          "category": "notation",
+          "description": "大数写法错误（数位对应错）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-hectare",
+      "subject": "math",
+      "concept": "公顷和平方千米：认识土地面积单位公顷、平方千米，1 公顷=10000 平方米、1 平方千米=100 公顷。",
+      "factualContent": {
+        "unit": "土地面积：1 公顷=10000 平方米；1 平方千米=100 公顷=1000000 平方米。常用：学校操场约 1 公顷。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "fill-hectare-rate-err",
+          "category": "unit",
+          "description": "公顷与平方米、平方千米进率记错"
+        },
+        {
+          "id": "fill-hectare-convert-err",
+          "category": "calculation",
+          "description": "面积单位换算计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-line",
+      "subject": "math",
+      "concept": "线段、射线、直线：线段有两个端点有限长；射线有一个端点向一端无限延伸；直线无端点向两端无限延伸。",
+      "factualContent": {
+        "classification": "线的分类：线段（2 端点、可度量）；射线（1 端点、向一端无限延伸）；直线（无端点、向两端无限延伸）。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "fill-line-attr-err",
+          "category": "concept",
+          "description": "线段、射线、直线特征（端点/延伸）混淆"
+        },
+        {
+          "id": "fill-line-count-err",
+          "category": "reasoning",
+          "description": "点数与线段数对应关系理解错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-angle",
+      "subject": "math",
+      "concept": "角的度量与分类：用量角器量角，按大小区分锐角（＜90°）、直角（90°）、钝角（90°~180°）、平角（180°）、周角（360°）。",
+      "factualContent": {
+        "classification": "角的分类：锐角＜90°；直角=90°；钝角 90°＜×＜180°；平角=180°；周角=360°。1 周角=2 平角=4 直角。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "fill-angle-measure-err",
+          "category": "operation",
+          "description": "用量角器量角读数错误（内外圈读错）"
+        },
+        {
+          "id": "fill-angle-type-err",
+          "category": "concept",
+          "description": "角的类型与度数范围对应错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-quad",
+      "subject": "math",
+      "concept": "平行四边形和梯形：平行四边形两组对边分别平行；梯形只有一组对边平行。",
+      "factualContent": {
+        "classification": "四边形分类：平行四边形——两组对边平行且相等、对角相等；梯形——只有一组对边平行（一般、等腰、直角梯形）。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "fill-quad-feature-err",
+          "category": "concept",
+          "description": "平行四边形与梯形特征（对边平行）混淆"
+        },
+        {
+          "id": "fill-quad-special-err",
+          "category": "concept",
+          "description": "长方形、正方形与平行四边形的包含关系错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-op",
+      "subject": "math",
+      "concept": "四则运算的意义与关系、0 的运算：加减乘除互逆，0 加/减/乘任何数的运算性质。",
+      "factualContent": {
+        "relationship": "四则关系：加数+加数=和，和-加数=另一加数；因数×因数=积，积÷因数=另一因数；0 乘任何数=0、0 加任何数=原数、任何数减 0=原数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "fill-op-inverse-err",
+          "category": "concept",
+          "description": "加减/乘除互逆关系理解错误"
+        },
+        {
+          "id": "fill-op-zero-err",
+          "category": "concept",
+          "description": "0 的运算性质记错（如 0 不能作除数）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-quotient",
+      "subject": "math",
+      "concept": "商不变规律：被除数和除数同时乘或除以相同的数（0 除外），商不变。",
+      "factualContent": {
+        "rule": "商不变规律：被除数、除数同时乘或除以同一个数（0 除外），商不变；余数会同步变化。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "fill-quotient-cond-err",
+          "category": "concept",
+          "description": "忽略“0 除外”或只变一个数"
+        },
+        {
+          "id": "fill-quotient-rem-err",
+          "category": "reasoning",
+          "description": "被除数除数同时变化时余数处理错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-dec",
+      "subject": "math",
+      "concept": "小数：认识小数的意义、数位和读写，小数的性质（末尾添 0 或去 0 大小不变）。",
+      "factualContent": {
+        "notation": "小数：小数点左为整数部分、右为小数部分；十分位、百分位、千分位。性质：小数的末尾添 0 或去 0 大小不变。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "fill-dec-place-err",
+          "category": "concept",
+          "description": "小数数位及计数单位理解错误"
+        },
+        {
+          "id": "fill-dec-property-err",
+          "category": "concept",
+          "description": "小数性质应用错误（中间 0 不能去掉）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-tri",
+      "subject": "math",
+      "concept": "三角形：认识三角形特性（稳定、内角和 180°），按角（锐角/直角/钝角）或按边（等腰/等边）分类。",
+      "factualContent": {
+        "classification": "三角形分类：按角——锐角三角形、直角三角形、钝角三角形；按边——等腰、等边、不等边。内角和 180°；两边之和大于第三边。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "fill-tri-angle-err",
+          "category": "concept",
+          "description": "按角分类判断错误"
+        },
+        {
+          "id": "fill-tri-side-err",
+          "category": "concept",
+          "description": "等腰等边关系或三角形成立条件错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m4-g4-fill-avg",
+      "subject": "math",
+      "concept": "平均数：总数量÷总份数=平均数；平均数表示一组数据的平均水平。",
+      "factualContent": {
+        "formula": "平均数=总数量÷总份数。求总数时先求和；平均数介于最大与最小之间。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "fill-avg-total-err",
+          "category": "calculation",
+          "description": "总数量求和错误"
+        },
+        {
+          "id": "fill-avg-parts-err",
+          "category": "reasoning",
+          "description": "总份数确定错误（份数而非人数/次数）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m5-g4-match-read",
+      "subject": "math",
+      "concept": "大数与读法连线：把大数与其正确的读法文字连线，注意 0 的读法规则。",
+      "factualContent": {
+        "rule": "大数连线：按分级读法（每级末尾 0 不读、中间连续 0 只读一个）判断连线。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "match-read-zero-err",
+          "category": "notation",
+          "description": "0 的读法判断错误导致连线错"
+        },
+        {
+          "id": "match-read-digit-err",
+          "category": "reading",
+          "description": "数位读法混淆（万级亿级）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m5-g4-match-angle",
+      "subject": "math",
+      "concept": "角与度数连线：把角与其度数或类型（锐/直/钝/平/周）连线。",
+      "factualContent": {
+        "rule": "角与度数：按度数范围判断角类型并连线（锐＜90、直=90、钝 90-180、平=180、周=360）。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "match-angle-degree-err",
+          "category": "reasoning",
+          "description": "角类型与度数范围对应错误"
+        },
+        {
+          "id": "match-angle-mix-err",
+          "category": "concept",
+          "description": "不同角类型的度数混淆"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m5-g4-match-shape",
+      "subject": "math",
+      "concept": "图形与特征连线：把图形与其特征描述（边、角、对称性）连线。",
+      "factualContent": {
+        "classification": "图形特征：平行四边形（两组对边平行）、梯形（一组对边平行）、三角形（三边三角）、长方形（四直角对边等长）。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "match-shape-feature-err",
+          "category": "concept",
+          "description": "图形特征描述匹配错误"
+        },
+        {
+          "id": "match-shape-confuse-err",
+          "category": "concept",
+          "description": "相似图形（平行四边与梯形）特征混淆"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m5-g4-match-law",
+      "subject": "math",
+      "concept": "运算律与字母表达式连线：把运算律与其字母表达式连线。",
+      "factualContent": {
+        "formula": "运算律字母式：交换律 a+b=b+a、a×b=b×a；结合律 (a+b)+c=a+(b+c)、(a×b)×c=a×(b×c)；分配律 a×(b+c)=a×b+a×c。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "match-law-letter-err",
+          "category": "calculation",
+          "description": "运算律与字母表达式对应错误"
+        },
+        {
+          "id": "match-law-mix-err",
+          "category": "concept",
+          "description": "分配律与结合律混淆"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m5-g4-match-decfrac",
+      "subject": "math",
+      "concept": "小数与分数连线：把小数与相等的分数连线（如 0.5=1/2）。",
+      "factualContent": {
+        "relationship": "小数分数互化：十分之几=零点几、百分之几=零点几几（如 0.3=3/10、0.25=1/4）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "match-decfrac-place-err",
+          "category": "concept",
+          "description": "小数位数与分数分母对应错误"
+        },
+        {
+          "id": "match-decfrac-simplify-err",
+          "category": "calculation",
+          "description": "分数化简或等值判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m6-g4-draw-protractor",
+      "subject": "math",
+      "concept": "用量角器量角、画角：会用量角器正确量出角的度数，并画指定度数的角。",
+      "factualContent": {
+        "rule": "量角：量角器中心对顶点、0 刻度线对一边，读另一边对应刻度（分清内外圈）。画角：先画一条边，量角器定顶点与 0 刻度，标出度数点再连线。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "draw-protractor-ring-err",
+          "category": "operation",
+          "description": "量角内外圈读数读错"
+        },
+        {
+          "id": "draw-protractor-align-err",
+          "category": "operation",
+          "description": "量角器未对齐顶点或 0 刻度线"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m6-g4-draw-para",
+      "subject": "math",
+      "concept": "画平行线、垂线：用直尺和三角板过一点画已知直线的平行线或垂线。",
+      "factualContent": {
+        "rule": "画垂线：三角板直角边对齐已知线，另一直角边过点画线。画平行线：三角板一边贴已知线，直尺紧贴另一边平移后画线。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "draw-para-perp-err",
+          "category": "operation",
+          "description": "平行与垂直的画法混淆"
+        },
+        {
+          "id": "draw-para-position-err",
+          "category": "operation",
+          "description": "所画线未过指定点或位置偏移"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m6-g4-draw-grid",
+      "subject": "math",
+      "concept": "在方格纸上画平行四边形、梯形：按特征在方格纸上画出指定图形。",
+      "factualContent": {
+        "rule": "方格纸作图：按格数确定边长/高；平行四边形注意斜边错位，梯形按上底下底高作图。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "draw-grid-shape-err",
+          "category": "operation",
+          "description": "图形特征（对边/高低）画错"
+        },
+        {
+          "id": "draw-grid-position-err",
+          "category": "operation",
+          "description": "格数或位置画错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m6-g4-draw-view",
+      "subject": "math",
+      "concept": "观察物体：从不同方向（正面、侧面、上面）观察同一物体，画出或辨认对应视图。",
+      "factualContent": {
+        "rule": "观察物体：从不同方向看到的形状不同；先确定观察方向，再看遮挡关系画出视图。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "draw-view-direction-err",
+          "category": "reasoning",
+          "description": "不同方向视图混淆"
+        },
+        {
+          "id": "draw-view-occlusion-err",
+          "category": "reasoning",
+          "description": "遮挡关系判断错误，视图画错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m6-g4-draw-sym",
+      "subject": "math",
+      "concept": "画轴对称图形：沿对称轴对折能完全重合的图形，能补全或画出对称轴及对称图形。",
+      "factualContent": {
+        "rule": "轴对称：对称点到对称轴距离相等；补全时先找关键点的对称点再连线。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "draw-sym-axis-err",
+          "category": "operation",
+          "description": "对称轴找错或对称点画错"
+        },
+        {
+          "id": "draw-sym-distance-err",
+          "category": "operation",
+          "description": "对称点到轴距离不等，图形不对称"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m6-g4-draw-move",
+      "subject": "math",
+      "concept": "图形平移：按要求把图形沿水平或竖直方向平移若干格，形状大小不变。",
+      "factualContent": {
+        "rule": "图形平移：整体沿方向移动相同格数；用关键点平移后连线；形状大小方向不变。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "draw-move-grid-err",
+          "category": "operation",
+          "description": "平移格数或方向错误"
+        },
+        {
+          "id": "draw-move-part-err",
+          "category": "operation",
+          "description": "图形部分移动，未整体平移"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m7-g4-pic-segment",
+      "subject": "math",
+      "concept": "线段图列式（倍数问题）：画线段图表示倍数关系，根据图列出算式。",
+      "factualContent": {
+        "rule": "线段图：一倍量画一段，几倍画几段；根据图中数量关系列乘除算式。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-segment-unit-err",
+          "category": "reasoning",
+          "description": "一倍量/倍数线段画错"
+        },
+        {
+          "id": "pic-segment-formula-err",
+          "category": "reasoning",
+          "description": "根据线段图列式错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m7-g4-pic-brace",
+      "subject": "math",
+      "concept": "大括号图列式（加减）：用大括号图表示总数与部分的关系，求总数用加、求部分用减。",
+      "factualContent": {
+        "rule": "大括号图：大括号下为总数，两侧为部分；求总数（? 在总数位置）用加法，求部分用减法。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-brace-total-err",
+          "category": "reasoning",
+          "description": "总数与部分关系判断错误"
+        },
+        {
+          "id": "pic-brace-calc-err",
+          "category": "calculation",
+          "description": "加减计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m7-g4-pic-speed",
+      "subject": "math",
+      "concept": "速度时间路程图：用线段图表示速度×时间=路程，根据图列式。",
+      "factualContent": {
+        "formula": "行程关系：路程=速度×时间；速度=路程÷时间；时间=路程÷速度。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-speed-formula-err",
+          "category": "calculation",
+          "description": "路程/速度/时间关系式选错"
+        },
+        {
+          "id": "pic-speed-unit-err",
+          "category": "unit",
+          "description": "速度单位（千米/时）书写或换算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m7-g4-pic-dec",
+      "subject": "math",
+      "concept": "小数加减情境图：看图列出小数加减算式并计算。",
+      "factualContent": {
+        "rule": "小数情境图：看图中数量，求总用加、求差用减；小数点对齐计算。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-dec-count-err",
+          "category": "reading",
+          "description": "图中数量读错"
+        },
+        {
+          "id": "pic-dec-align-err",
+          "category": "operation",
+          "description": "小数加减未对齐小数点"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m8-g4-word-big",
+      "subject": "math",
+      "concept": "大数应用：对大数进行读写、比较、改写（改写成用“万”“亿”作单位的数）及实际应用。",
+      "factualContent": {
+        "rule": "大数改写：改写成万/亿作单位先分级；求近似数用四舍五入到指定数位。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "word-big-rewrite-err",
+          "category": "operation",
+          "description": "大数改写单位错误或漏补 0"
+        },
+        {
+          "id": "word-big-approx-err",
+          "category": "reasoning",
+          "description": "四舍五入求近似数错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m8-g4-word-speed",
+      "subject": "math",
+      "concept": "乘法问题（速度×时间=路程）：用速度×时间求路程等行程问题。",
+      "factualContent": {
+        "formula": "行程问题：路程=速度×时间；已知两个量求第三个量用相应关系式。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "word-speed-formula-err",
+          "category": "calculation",
+          "description": "速度时间路程关系式用错"
+        },
+        {
+          "id": "word-speed-calc-err",
+          "category": "calculation",
+          "description": "乘法计算或单位换算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m8-g4-word-div",
+      "subject": "math",
+      "concept": "除法问题（总量÷份数=每份数）：把总数平均分成几份，用除法求每份或求份数。",
+      "factualContent": {
+        "rule": "除法应用：总量÷份数=每份数；总量÷每份数=份数；判断是等分还是包含。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "word-div-relation-err",
+          "category": "reasoning",
+          "description": "求每份还是求份数判断错误"
+        },
+        {
+          "id": "word-div-calc-err",
+          "category": "calculation",
+          "description": "除法计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m8-g4-word-price",
+      "subject": "math",
+      "concept": "单价、数量、总价问题：单价×数量=总价，用乘除解决购物问题。",
+      "factualContent": {
+        "formula": "购物关系：单价×数量=总价；总价÷数量=单价；总价÷单价=数量。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "word-price-formula-err",
+          "category": "calculation",
+          "description": "单价数量总价关系式用错"
+        },
+        {
+          "id": "word-price-calc-err",
+          "category": "calculation",
+          "description": "乘除计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m8-g4-word-area",
+      "subject": "math",
+      "concept": "面积问题（公顷/平方千米）：用土地面积单位解决大面积问题，注意单位换算。",
+      "factualContent": {
+        "rule": "面积应用：1 公顷=10000 平方米、1 平方千米=100 公顷；大面积用公顷/平方千米；注意单位统一。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "word-area-unit-err",
+          "category": "unit",
+          "description": "面积单位换算或选择错误"
+        },
+        {
+          "id": "word-area-calc-err",
+          "category": "calculation",
+          "description": "面积计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m8-g4-word-opt",
+      "subject": "math",
+      "concept": "优化问题：合理安排工序（沏茶、烙饼），使总时间最少（统筹思想）。",
+      "factualContent": {
+        "rule": "统筹优化：找出可并行/串行的工序，合理安排顺序使等待最少；烙饼两面烙，利用空档。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "word-opt-order-err",
+          "category": "reasoning",
+          "description": "工序顺序安排不当，总时间非最少"
+        },
+        {
+          "id": "word-opt-parallel-err",
+          "category": "reasoning",
+          "description": "未利用可并行的空档时间"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m8-g4-word-cr",
+      "subject": "math",
+      "concept": "鸡兔同笼：用假设法（假设全是鸡或全是兔）解决鸡兔同笼及类似问题。",
+      "factualContent": {
+        "rule": "假设法：假设全是一种，算出差脚数；每把一只换成另一类脚数差变化固定，据此求数量。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "word-cr-assume-err",
+          "category": "reasoning",
+          "description": "假设后差脚数计算错误"
+        },
+        {
+          "id": "word-cr-replace-err",
+          "category": "reasoning",
+          "description": "换一只的脚数差判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m8-g4-word-dec",
+      "subject": "math",
+      "concept": "小数加减问题：解决小数加减法的实际问题（购物、测量等），注意小数点对齐。",
+      "factualContent": {
+        "rule": "小数应用：求总用加、求差用减；小数点对齐计算；结果注意单位与小数点。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "word-dec-align-err",
+          "category": "operation",
+          "description": "小数加减未对齐小数点"
+        },
+        {
+          "id": "word-dec-calc-err",
+          "category": "calculation",
+          "description": "小数计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m8-g4-word-avg",
+      "subject": "math",
+      "concept": "平均数问题：用平均数解决实际问题，总数量÷总份数=平均数。",
+      "factualContent": {
+        "formula": "平均数问题：平均数=总数量÷总份数；已知平均数求总数量用平均数×份数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "word-avg-total-err",
+          "category": "calculation",
+          "description": "总数量计算错误"
+        },
+        {
+          "id": "word-avg-parts-err",
+          "category": "reasoning",
+          "description": "总份数判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m9-g4-stats-bar",
+      "subject": "math",
+      "concept": "条形统计图（1 格表示多个单位）：绘制并读取一格代表多个单位的条形统计图。",
+      "factualContent": {
+        "rule": "条形统计图：一格可表示 2、5、10 等单位；读取时先看一格代表多少，再数格确定数据。"
+      },
+      "graphicType": "chart",
+      "errors": [
+        {
+          "id": "stats-bar-unit-err",
+          "category": "reading",
+          "description": "一格代表多少的单位看错"
+        },
+        {
+          "id": "stats-bar-draw-err",
+          "category": "operation",
+          "description": "条形高度/格数绘制错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m9-g4-stats-double",
+      "subject": "math",
+      "concept": "复式条形统计图：在同一图中用不同颜色表示两组数据的复式条形统计图。",
+      "factualContent": {
+        "rule": "复式条形统计图：图例区分两组数据；同一类别画两根条形对比；读图按图例定位。"
+      },
+      "graphicType": "chart",
+      "errors": [
+        {
+          "id": "stats-double-legend-err",
+          "category": "reading",
+          "description": "图例与数据对应错误"
+        },
+        {
+          "id": "stats-double-compare-err",
+          "category": "reasoning",
+          "description": "两组数据对比分析错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m9-g4-stats-avg",
+      "subject": "math",
+      "concept": "平均数与统计：结合统计数据求平均数，用平均数比较两组数据的整体水平。",
+      "factualContent": {
+        "rule": "统计平均：求平均数先求和再除以份数；用平均数比较整体水平。"
+      },
+      "graphicType": "chart",
+      "errors": [
+        {
+          "id": "stats-avg-sum-err",
+          "category": "calculation",
+          "description": "数据求和错误"
+        },
+        {
+          "id": "stats-avg-compare-err",
+          "category": "reasoning",
+          "description": "平均数比较判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m10-g4-reason-opt",
+      "subject": "math",
+      "concept": "优化问题（沏茶、烙饼）：用统筹方法安排工序使总时间最少（沏茶顺序、烙饼轮流）。",
+      "factualContent": {
+        "rule": "沏茶/烙饼优化：先列工序找可并行项；烙饼时锅可同时烙多张，尽量不空锅；总时间=饼数×每面时间÷锅容量取整。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "reason-opt-parallel-err",
+          "category": "reasoning",
+          "description": "未利用可同时进行的工序"
+        },
+        {
+          "id": "reason-opt-pancake-err",
+          "category": "reasoning",
+          "description": "烙饼时间计算错误（未考虑同时烙）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m10-g4-reason-cr",
+      "subject": "math",
+      "concept": "鸡兔同笼（假设法）：用假设法系统地解决鸡兔同笼及变式问题。",
+      "factualContent": {
+        "rule": "假设法步骤：假设全是鸡（或兔）→ 算脚数 → 与总脚数差 → 差÷每只脚数差=另一类数量。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "reason-cr-diff-err",
+          "category": "calculation",
+          "description": "假设后脚数差计算错误"
+        },
+        {
+          "id": "reason-cr-step-err",
+          "category": "reasoning",
+          "description": "假设法步骤混乱，结果错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m10-logic-reasoning",
+      "subject": "math",
+      "concept": "简单逻辑推理：用列表法、排除法根据多个条件进行逻辑推理判断。",
+      "factualContent": {
+        "rule": "逻辑推理：列表列出对象与属性，用条件逐步排除，确定每个对象的属性。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "logic-condition-err",
+          "category": "reading",
+          "description": "漏用或误读推理条件"
+        },
+        {
+          "id": "logic-deduce-err",
+          "category": "reasoning",
+          "description": "推理步骤错误，结论不合条件"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m11-g4-judge-read",
+      "subject": "math",
+      "concept": "大数读写判断：判断大数的读、写是否正确。",
+      "factualContent": {
+        "rule": "大数读写判断：检查分级、0 的读法（每级末尾 0 不读、中间连续 0 只读一个）与写法。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "judge-read-zero-err",
+          "category": "notation",
+          "description": "0 的读法规则判断错误"
+        },
+        {
+          "id": "judge-read-digit-err",
+          "category": "notation",
+          "description": "大数分级或数位判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m11-g4-judge-law",
+      "subject": "math",
+      "concept": "运算律判断：判断对运算律（交换、结合、分配）的应用是否正确。",
+      "factualContent": {
+        "rule": "运算律判断：核对字母/数字运算是否真正运用了对应运算律，尤其区分分配律与结合律。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "judge-law-type-err",
+          "category": "concept",
+          "description": "运算律类型（交换/结合/分配）判断错误"
+        },
+        {
+          "id": "judge-law-apply-err",
+          "category": "reasoning",
+          "description": "运算律应用是否正确判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m11-g4-judge-angle",
+      "subject": "math",
+      "concept": "几何概念判断：判断角的有关概念（类型、度量、组成）是否正确。",
+      "factualContent": {
+        "rule": "角的判断：角由顶点和两条边组成；按度数分型；角度与边长短无关。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "judge-angle-comp-err",
+          "category": "concept",
+          "description": "角的组成或类型判断错误"
+        },
+        {
+          "id": "judge-angle-size-err",
+          "category": "concept",
+          "description": "角的大小与边长短关系理解错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m11-g4-judge-line",
+      "subject": "math",
+      "concept": "线段、射线、直线判断：判断线段、射线、直线的特征表述是否正确。",
+      "factualContent": {
+        "rule": "线的判断：线段有限长可度量；射线/直线无限长；直线无端点、射线有一个端点。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "judge-line-attr-err",
+          "category": "concept",
+          "description": "线的端点/长度属性判断错误"
+        },
+        {
+          "id": "judge-line-extend-err",
+          "category": "concept",
+          "description": "射线的延伸方向判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m11-g4-judge-quotient",
+      "subject": "math",
+      "concept": "商不变规律判断：判断商不变规律的表述与应用是否正确。",
+      "factualContent": {
+        "rule": "商不变判断：被除数除数同时乘/除以相同数（0 除外）商不变；单独变一个数商变。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "judge-quotient-cond-err",
+          "category": "concept",
+          "description": "“同时、相同数、0 除外”条件判断错误"
+        },
+        {
+          "id": "judge-quotient-rem-err",
+          "category": "reasoning",
+          "description": "余数变化判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m11-g4-judge-dec",
+      "subject": "math",
+      "concept": "小数性质判断：判断小数的性质（末尾添 0 或去 0 大小不变）及相关说法。",
+      "factualContent": {
+        "rule": "小数性质判断：小数的末尾添 0 或去 0 大小不变；中间 0 不能去掉；小数末尾 0 的意义。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "judge-dec-tail-err",
+          "category": "concept",
+          "description": "末尾 0 与中间 0 处理混淆"
+        },
+        {
+          "id": "judge-dec-equal-err",
+          "category": "reasoning",
+          "description": "小数大小相等判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m11-g4-judge-tri",
+      "subject": "math",
+      "concept": "三角形判断：判断三角形的分类与性质（内角和、稳定性）是否正确。",
+      "factualContent": {
+        "rule": "三角形判断：内角和 180°；按角/边分类；两边之和大于第三边；具有稳定性。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "judge-tri-class-err",
+          "category": "concept",
+          "description": "三角形分类判断错误"
+        },
+        {
+          "id": "judge-tri-property-err",
+          "category": "concept",
+          "description": "内角和或三边关系判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m11-stats",
+      "subject": "math",
+      "concept": "统计判断：判断统计图（条形、复式）相关的说法是否正确。",
+      "factualContent": {
+        "rule": "统计判断：核对条形统计图单位、图例、数据读取及分析结论。"
+      },
+      "graphicType": "chart",
+      "errors": [
+        {
+          "id": "judge-stats-read-err",
+          "category": "reading",
+          "description": "统计图数据读取判断错误"
+        },
+        {
+          "id": "judge-stats-concl-err",
+          "category": "reasoning",
+          "description": "统计结论判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m12-g4-choice-big",
+      "subject": "math",
+      "concept": "大数比较：比较亿以内数的大小，先比位数再比高位。",
+      "factualContent": {
+        "rule": "大数比较：先比位数（多者大）；位数相同从最高位依次比较。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "choice-big-digit-err",
+          "category": "reasoning",
+          "description": "未先比位数直接比数字"
+        },
+        {
+          "id": "choice-big-place-err",
+          "category": "reasoning",
+          "description": "高位比较方向错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m12-g4-choice-est",
+      "subject": "math",
+      "concept": "乘除法估算：对乘除法进行估算，把数看成接近的整十整百数再计算。",
+      "factualContent": {
+        "rule": "估算：把因数/被除数看成接近的整十整百数（或同时估）再计算；注意估算结果的合理性。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "choice-est-round-err",
+          "category": "reasoning",
+          "description": "取近似数方向或精度错误"
+        },
+        {
+          "id": "choice-est-calc-err",
+          "category": "calculation",
+          "description": "估算后的计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m12-g4-choice-angle",
+      "subject": "math",
+      "concept": "角的认识选择：选择角的类型或度数。",
+      "factualContent": {
+        "rule": "角的选择：按度数范围判断角类型；平角 180°、周角 360°。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "choice-angle-type-err",
+          "category": "concept",
+          "description": "角类型判断错误"
+        },
+        {
+          "id": "choice-angle-degree-err",
+          "category": "concept",
+          "description": "特殊角（平角周角）度数错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m12-g4-choice-shape",
+      "subject": "math",
+      "concept": "图形特征选择：选择图形的特征描述（边、角、对称）。",
+      "factualContent": {
+        "rule": "图形特征选择：按图形定义与性质（对边、对角、对称轴）判断描述是否正确。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "choice-shape-feature-err",
+          "category": "concept",
+          "description": "图形特征描述选择错误"
+        },
+        {
+          "id": "choice-shape-relation-err",
+          "category": "concept",
+          "description": "图形包含关系（正方形是特殊长方形）判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m12-g4-choice-dec",
+      "subject": "math",
+      "concept": "小数意义选择：选择小数表示的意义（数位、大小、与分数关系）。",
+      "factualContent": {
+        "rule": "小数意义选择：理解小数数位含义、大小比较、与分数互化及生活应用。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "choice-dec-meaning-err",
+          "category": "concept",
+          "description": "小数意义理解错误"
+        },
+        {
+          "id": "choice-dec-convert-err",
+          "category": "concept",
+          "description": "小数与分数/单位互化错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-m12-g4-choice-law",
+      "subject": "math",
+      "concept": "运算律应用选择：选择运用运算律的简便算法。",
+      "factualContent": {
+        "rule": "运算律选择：判断哪种运算律使计算简便，选择正确应用方式。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "choice-law-select-err",
+          "category": "reasoning",
+          "description": "简便方法选择错误"
+        },
+        {
+          "id": "choice-law-apply-err",
+          "category": "operation",
+          "description": "运算律应用过程错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c1-c1-vertical",
+      "subject": "math",
+      "concept": "竖式数字谜：根据竖式中已知的部分数字，利用加减乘除运算法则推理填出完整竖式。",
+      "factualContent": {
+        "rule": "竖式数字谜：从个位逐步向前推理；考虑进位/借位对高位的影响；用“确定的数→试算→验证”推进。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c1-vertical-carry-err",
+          "category": "reasoning",
+          "description": "推理时漏考虑进位/借位"
+        },
+        {
+          "id": "c1-vertical-trial-err",
+          "category": "reasoning",
+          "description": "试算方向错误，数字填错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c1-c1-horizontal",
+      "subject": "math",
+      "concept": "横式数字谜：在横式中填入合适的数字，使等式成立。",
+      "factualContent": {
+        "rule": "横式数字谜：从已知部分与结果倒推未知数；注意运算顺序与括号。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c1-horizontal-trial-err",
+          "category": "reasoning",
+          "description": "倒推方向错误"
+        },
+        {
+          "id": "c1-horizontal-order-err",
+          "category": "operation",
+          "description": "未按运算顺序倒推"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c1-c1-symbol",
+      "subject": "math",
+      "concept": "符号代表数：用图形或符号代表未知数进行推理，同一符号表示同一数。",
+      "factualContent": {
+        "rule": "符号代表数：同符号同数；利用等式关系求出各符号代表的数，再代入验证。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c1-symbol-relation-err",
+          "category": "reasoning",
+          "description": "符号与数对应关系推理错误"
+        },
+        {
+          "id": "c1-symbol-calc-err",
+          "category": "calculation",
+          "description": "代入计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c1-c1-array",
+      "subject": "math",
+      "concept": "数阵图：把数填入图中，使每行、每列（及斜线）的和相等。",
+      "factualContent": {
+        "rule": "数阵图：先求总数与每条线和，确定公共格；从公共格入手推理填数。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "c1-array-sum-err",
+          "category": "calculation",
+          "description": "每条线的和计算错误"
+        },
+        {
+          "id": "c1-array-fill-err",
+          "category": "reasoning",
+          "description": "公共格取值推理错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c1-c1-magic",
+      "subject": "math",
+      "concept": "幻方：理解幻方的规律（每行、每列、对角线之和相等）并填数。",
+      "factualContent": {
+        "rule": "幻方：中心数=幻和÷3（三阶）；幻和=所有数和÷3；利用中心数与对称格填数。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "c1-magic-sum-err",
+          "category": "calculation",
+          "description": "幻和或中心数计算错误"
+        },
+        {
+          "id": "c1-magic-line-err",
+          "category": "reasoning",
+          "description": "某行/列/对角线和不相等"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c2-c2-parity",
+      "subject": "math",
+      "concept": "奇偶性与运算规律：利用奇偶性判断运算结果的奇偶（奇+奇=偶、奇×奇=奇等）。",
+      "factualContent": {
+        "rule": "奇偶运算规律：奇±奇=偶、偶±偶=偶、奇±偶=奇；奇×奇=奇、偶×任何=偶；奇数个奇数和为奇。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c2-parity-op-err",
+          "category": "concept",
+          "description": "奇偶运算结果判断错误"
+        },
+        {
+          "id": "c2-parity-count-err",
+          "category": "reasoning",
+          "description": "奇偶个数判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c2-c2-divisible",
+      "subject": "math",
+      "concept": "整除特征（2/3/5/9）：掌握能被 2、3、5、9 整除的数的特征并判断。",
+      "factualContent": {
+        "rule": "整除特征：2——个位偶；5——个位 0 或 5；3——各位数字和能被 3 整除；9——各位数字和能被 9 整除。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c2-divisible-feature-err",
+          "category": "concept",
+          "description": "整除特征记错（3 与 9 混淆）"
+        },
+        {
+          "id": "c2-divisible-digit-err",
+          "category": "calculation",
+          "description": "各位数字和计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c2-c2-prime",
+      "subject": "math",
+      "concept": "质数与合数：认识质数（只有 1 和本身两个因数）与合数，会判断。",
+      "factualContent": {
+        "rule": "质数合数：质数只有 1 和本身两个因数；合数至少三个因数；1 既不是质数也不是合数；最小的质数 2。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c2-prime-one-err",
+          "category": "concept",
+          "description": "把 1 当作质数或合数"
+        },
+        {
+          "id": "c2-prime-composite-mix",
+          "category": "concept",
+          "description": "质数与合数判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c2-c2-factor",
+      "subject": "math",
+      "concept": "因数与倍数：理解因数与倍数相互依存的关系，会求一个数的因数与倍数。",
+      "factualContent": {
+        "relationship": "因数倍数：a×b=c 时 a、b 是 c 的因数、c 是 a、b 的倍数；因数个数有限、倍数无限；0 除外。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c2-factor-relation-err",
+          "category": "concept",
+          "description": "因数倍数关系表述错误"
+        },
+        {
+          "id": "c2-factor-list-miss",
+          "category": "reasoning",
+          "description": "枚举因数时遗漏"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c2-c2-remainder",
+      "subject": "math",
+      "concept": "余数问题：解决带余除法的应用问题，利用余数的性质与周期。",
+      "factualContent": {
+        "rule": "带余除法：被除数=除数×商+余数（余数＜除数）；余数问题常用周期性（如找规律求余）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c2-remainder-calc-err",
+          "category": "calculation",
+          "description": "带余除法计算错误"
+        },
+        {
+          "id": "c2-remainder-divisor-err",
+          "category": "concept",
+          "description": "余数不小于除数"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c2-c2-place",
+      "subject": "math",
+      "concept": "位值原理：利用数字所在数位的值进行推理（如一个两位数=10×十位+个位）。",
+      "factualContent": {
+        "rule": "位值原理：两位数 ab=10a+b；三位数 abc=100a+10b+c；按数位拆开分析。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c2-place-value-err",
+          "category": "concept",
+          "description": "数位值与数字混淆"
+        },
+        {
+          "id": "c2-place-digit-err",
+          "category": "calculation",
+          "description": "位值展开计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c3-c3-enum",
+      "subject": "math",
+      "concept": "枚举法：有次序地一一列举出所有可能，做到不重不漏。",
+      "factualContent": {
+        "rule": "枚举法：按一定顺序（如从小到大、分类）列举；用表格/树形图辅助；最后数清总数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c3-enum-order-err",
+          "category": "reasoning",
+          "description": "枚举无顺序，导致重漏"
+        },
+        {
+          "id": "c3-enum-miss-err",
+          "category": "reasoning",
+          "description": "列举遗漏某些情况"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c3-c3-am",
+      "subject": "math",
+      "concept": "加法与乘法原理：分类完成用加法原理，分步完成用乘法原理计数。",
+      "factualContent": {
+        "rule": "计数原理：分类（或）用加法——各类之和；分步（且）用乘法——各步之积；判断分类还是分步。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c3-am-add-mult-mix",
+          "category": "concept",
+          "description": "加法与乘法原理使用场景混淆"
+        },
+        {
+          "id": "c3-am-count-err",
+          "category": "calculation",
+          "description": "分类分步数算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c3-c3-perm",
+      "subject": "math",
+      "concept": "排列组合初步：初步认识排列（有序）与组合（无序）的区别并计数。",
+      "factualContent": {
+        "rule": "排列与组合：排列讲究顺序（不同顺序算不同），组合不讲究顺序；用乘法原理或列举计数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c3-perm-order-err",
+          "category": "concept",
+          "description": "排列组合有序/无序判断错误"
+        },
+        {
+          "id": "c3-perm-dup-err",
+          "category": "reasoning",
+          "description": "组合计数重复或遗漏"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c3-c3-geomcount",
+      "subject": "math",
+      "concept": "几何计数：按一定次序数出图形中的线段、角、三角形等个数。",
+      "factualContent": {
+        "rule": "几何计数：按基本单元分类计数；数线段=基本线段累加；数角、三角形同理；注意组合图形。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "c3-geomcount-line-err",
+          "category": "reasoning",
+          "description": "数线段时遗漏较长线段"
+        },
+        {
+          "id": "c3-geomcount-shape-err",
+          "category": "reasoning",
+          "description": "组合图形计数遗漏或重复"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c3-c3-worst",
+      "subject": "math",
+      "concept": "最不利原则：考虑最坏情况，保证结论必然成立（抽屉原理的思想）。",
+      "factualContent": {
+        "rule": "最不利原则：从最不利的情况出发（每种先取到最多但不满足条件），再加 1 保证满足。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c3-worst-case-err",
+          "category": "reasoning",
+          "description": "最坏情况设想错误"
+        },
+        {
+          "id": "c3-worst-add-err",
+          "category": "reasoning",
+          "description": "最不利数量加 1 处理错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c4-c4-pa",
+      "subject": "math",
+      "concept": "周长与面积：理解周长与面积的区别与联系，正确运用公式。",
+      "factualContent": {
+        "formula": "周长面积：长方形周长=(长+宽)×2、面积=长×宽；正方形周长=边长×4、面积=边长×边长；周长是长度、面积是面的大小。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "c4-pa-peri-area-mix",
+          "category": "concept",
+          "description": "周长与面积概念或单位混淆"
+        },
+        {
+          "id": "c4-pa-formula-err",
+          "category": "calculation",
+          "description": "公式套用错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c4-c4-cutfill",
+      "subject": "math",
+      "concept": "割补法：用割补法把不规则图形转化为规则图形求面积。",
+      "factualContent": {
+        "rule": "割补法：把不规则图形分割或补成规则图形（长方形、正方形、三角形），面积不变或相减。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "c4-cutfill-equivalence-err",
+          "category": "reasoning",
+          "description": "割补前后面积关系判断错误"
+        },
+        {
+          "id": "c4-cutfill-calc-err",
+          "category": "calculation",
+          "description": "规则图形面积计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c4-c4-angle",
+      "subject": "math",
+      "concept": "角度初步：认识角度的计算与和差关系（如三角形内角和 180°）。",
+      "factualContent": {
+        "rule": "角度关系：三角形内角和 180°；平角 180°、周角 360°；对顶角相等；利用和差求未知角。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "c4-angle-sum-err",
+          "category": "calculation",
+          "description": "角度求和/差计算错误"
+        },
+        {
+          "id": "c4-angle-relation-err",
+          "category": "concept",
+          "description": "角的关系（内角和等）理解错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c4-c4-count",
+      "subject": "math",
+      "concept": "图形计数：有次序地数出图形的个数（线段、角、三角形、正方形等）。",
+      "factualContent": {
+        "rule": "图形计数：分类有序计数；单层图形数出基本单元，再数组合图形；避免遗漏。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "c4-count-order-err",
+          "category": "reasoning",
+          "description": "计数无顺序导致重漏"
+        },
+        {
+          "id": "c4-count-miss-err",
+          "category": "reasoning",
+          "description": "组合图形遗漏"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c4-c4-transform",
+      "subject": "math",
+      "concept": "平移旋转与对称：认识图形的对称、平移与旋转及其性质。",
+      "factualContent": {
+        "classification": "图形变换：平移（沿直线、形状大小不变）；旋转（绕点、角度）；对称（沿轴对折重合）。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "c4-transform-type-err",
+          "category": "concept",
+          "description": "三种变换类型判断错误"
+        },
+        {
+          "id": "c4-transform-axis-err",
+          "category": "reasoning",
+          "description": "对称轴或旋转中心判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c4-c4-solid",
+      "subject": "math",
+      "concept": "立体图形初步：认识常见立体图形的特征与展开图（长方体、正方体等）。",
+      "factualContent": {
+        "classification": "立体图形：长方体 6 面 12 棱 8 顶点；正方体 6 面全等；圆柱、圆锥的特征；正方体展开图有 11 种。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "c4-solid-face-err",
+          "category": "concept",
+          "description": "面/棱/顶点数量或特征错误"
+        },
+        {
+          "id": "c4-solid-net-err",
+          "category": "reasoning",
+          "description": "展开图与立体图形对应错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c5-c5-basic",
+      "subject": "math",
+      "concept": "基本行程：用路程=速度×时间解决基本行程问题。",
+      "factualContent": {
+        "formula": "行程三量：路程=速度×时间；速度=路程÷时间；时间=路程÷速度；注意单位（千米/时等）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c5-basic-formula-err",
+          "category": "calculation",
+          "description": "行程三量关系式用错"
+        },
+        {
+          "id": "c5-basic-unit-err",
+          "category": "unit",
+          "description": "速度/时间/路程单位不统一或换算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c5-c5-meet",
+      "subject": "math",
+      "concept": "相遇问题：两人相向而行，路程和=速度和×时间。",
+      "factualContent": {
+        "formula": "相遇问题：路程和=速度和×相遇时间；相遇时间=路程和÷速度和；速度和=路程和÷时间。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c5-meet-speed-sum-err",
+          "category": "calculation",
+          "description": "速度和计算错误"
+        },
+        {
+          "id": "c5-meet-time-err",
+          "category": "reasoning",
+          "description": "相遇时间与路程关系处理错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c5-c5-chase",
+      "subject": "math",
+      "concept": "追及问题：同向而行，追及时间=路程差÷速度差。",
+      "factualContent": {
+        "formula": "追及问题：路程差=速度差×追及时间；追及时间=路程差÷速度差；速度差=路程差÷时间。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c5-chase-speed-diff-err",
+          "category": "calculation",
+          "description": "速度差计算错误"
+        },
+        {
+          "id": "c5-chase-distance-err",
+          "category": "reasoning",
+          "description": "路程差确定错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c5-c5-train",
+      "subject": "math",
+      "concept": "火车过桥：考虑车长，路程=桥长+车长（过桥时间=总路程÷速度）。",
+      "factualContent": {
+        "formula": "火车过桥：总路程=桥长+车长；时间=总路程÷速度；火车完全在桥上路程=桥长-车长。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c5-train-length-err",
+          "category": "reasoning",
+          "description": "未加/减车长，路程错误"
+        },
+        {
+          "id": "c5-train-speed-err",
+          "category": "calculation",
+          "description": "速度或时间计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c5-c5-river",
+      "subject": "math",
+      "concept": "流水行船：顺速=静水速+水速，逆速=静水速-水速。",
+      "factualContent": {
+        "formula": "流水行船：顺水速度=静水速度+水流速度；逆水速度=静水速度-水流速度；静水速度=(顺+逆)÷2。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c5-river-speed-err",
+          "category": "calculation",
+          "description": "顺逆水速度计算错误"
+        },
+        {
+          "id": "c5-river-dir-err",
+          "category": "reasoning",
+          "description": "顺流逆流方向与加减关系错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c8-c8-extreme",
+      "subject": "math",
+      "concept": "最值问题：求某个量的最大值或最小值，利用极端情况与构造。",
+      "factualContent": {
+        "rule": "最值问题：通过极端构造（最大/最小取值）与不等式分析；注意整数约束与和一定时差小积大等。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c8-extreme-bound-err",
+          "category": "reasoning",
+          "description": "取值边界分析错误"
+        },
+        {
+          "id": "c8-extreme-calc-err",
+          "category": "calculation",
+          "description": "极值计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c8-c8-drawer",
+      "subject": "math",
+      "concept": "抽屉原理：物体数比抽屉数多时，必有至少一个抽屉含多个物体。",
+      "factualContent": {
+        "rule": "抽屉原理：把 n+1 个物体放入 n 个抽屉，至少一个抽屉有 2 个；推广：物体数÷抽屉数确定至少数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c8-drawer-drawer-err",
+          "category": "reasoning",
+          "description": "抽屉（分类）确定错误"
+        },
+        {
+          "id": "c8-drawer-object-err",
+          "category": "reasoning",
+          "description": "物体数与抽屉数关系判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c8-c8-logic",
+      "subject": "math",
+      "concept": "逻辑推理：综合多个条件进行逻辑推理，用列表、假设等方法确定结论。",
+      "factualContent": {
+        "rule": "逻辑推理：列表整理条件；用排除、假设、矛盾分析逐步确定；验证结论是否满足全部条件。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c8-logic-cond-err",
+          "category": "reading",
+          "description": "漏用或误读条件"
+        },
+        {
+          "id": "c8-logic-deduce-err",
+          "category": "reasoning",
+          "description": "推理或假设矛盾处理错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c9-c9-integrated",
+      "subject": "math",
+      "concept": "综合应用题：综合多个知识点解决较复杂的应用题。",
+      "factualContent": {
+        "rule": "综合应用：先读题分条件，确定各步求什么，选择对应知识点分步解决，最后检查。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c9-integrated-step-err",
+          "category": "reasoning",
+          "description": "分步逻辑错误或漏步"
+        },
+        {
+          "id": "c9-integrated-calc-err",
+          "category": "calculation",
+          "description": "某步计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c9-c9-misc",
+      "subject": "math",
+      "concept": "杂题选讲（统筹/操作）：统筹优化与操作类趣味题选讲。",
+      "factualContent": {
+        "rule": "统筹/操作题：分析可行策略，用优化思想（最少时间/步骤）或逆向操作求解。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c9-misc-opt-err",
+          "category": "reasoning",
+          "description": "优化策略选择错误"
+        },
+        {
+          "id": "c9-misc-operate-err",
+          "category": "reasoning",
+          "description": "操作步骤或逆向思维错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g4-c9-c9-mock",
+      "subject": "math",
+      "concept": "模拟竞赛卷：按竞赛风格组卷进行模拟练习，综合运用各知识点。",
+      "factualContent": {
+        "rule": "模拟卷：按竞赛题型（填空、解答）综合运用数论、计数、几何、行程等知识；注意时间分配与检查。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "c9-mock-time-err",
+          "category": "attention",
+          "description": "时间分配不当导致未完成"
+        },
+        {
+          "id": "c9-mock-calc-err",
+          "category": "calculation",
+          "description": "综合计算或步骤错误"
+        }
+      ]
+    }
+  ]
+}
