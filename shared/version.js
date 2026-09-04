@@ -8,7 +8,7 @@
  * - BUILD_DATE provides reproducible builds and deployment audit trails
  */
 
-const APP_VERSION = '4.0.2';
+const APP_VERSION = '4.1.0';
 const CACHE_VERSION = 'homework-help-' + APP_VERSION;
 const BUILD_DATE = new Date().toISOString();
 

@@ -1,0 +1,436 @@
+/**
+ * shared/practice-bridge.js — 关联层 (Bridge / Coordinator)
+ *
+ * 职责：位于 UI 层与题目生成层 (PracticeSession / GenerationAPI) 之间，
+ *   按 UI 层的功能与指令，翻译成题目生成层可理解的指令（GenerateInstruction），
+ *   并接受生成层的反馈（成功 / 失败 / 批改结果），归一化后交回 UI 层。
+ *
+ * 外围控制层 (ControlService)：
+ *   本文件内抽离为一个「服务模式」整块，集中解析并全面介入：
+ *     - 数量 count（预置 20/30/50 / 自定义 1~50，默认 20）
+ *     - 难度 difficulty（1~10，默认 1）
+ *     - 知识点 knowledgePoints / knowledgePointId
+ *     - 知识点驱动生成（per-KP 配额 kpAllocation）
+ *   若生成层本身不支持 per-KP 配额（当前 PracticeSession 只收单个 count +
+ *   knowledgePoints[]，忽略 kpAllocation），控制层以「编排器」角色运行时：
+ *   按每个知识点的配额逐个调用生成层 start()，再把各结果合并为一个题目集交回 UI。
+ *
+ * 分层约束：
+ *   - 本文件不修改、不侵入题目生成层（shared/practice-session.js / generation-*）。
+ *   - 本文件只“构造并调用”生成层，负责把 UI 意图翻译为生成层配置。
+ *   - UI 层只与本文件（PracticeBridge）交互，不再直接 new PracticeSession。
+ *
+ * 指令结构 (GenerateInstruction)：
+ *   {
+ *     subject, grade,            // 科目 / 年级
+ *     count,                     // 总题量
+ *     difficulty,                // 难度 1-10
+ *     mode,                      // quick / teacher / competition / adaptive / multi-kp
+ *     knowledgePointId,          // 单知识点（单选）
+ *     knowledgePoints,           // 多知识点（多选 / 快速模式）
+ *     kpAllocation,              // 知识点题量占比（关联层的知识点驱动配额）
+ *     questionType, subtype,     // 题型（可空）
+ *     adaptive,                  // 是否自适应
+ *     learnerProfile,            // 学习者画像（自适应反馈）
+ *     titleType                  // 标题规格
+ *   }
+ *
+ * 反馈结构 (反馈统一由生成层回执，经本层归一化)：
+ *   - start() 成功 → { ok:true, session, questions, html, meta }
+ *   - start() 失败 → { ok:false, session, error:{ code, message } }
+ *   - submit()     → { ok:true, session, score, total, correct, results, correctAnswers }
+ */
+(function (global) {
+  'use strict';
+
+  // ============================================================
+  // 外围控制层 (ControlService) —— 服务模式整块
+  // ============================================================
+  // 集中解析与校验 UI 驱动生成所需的全部维度（数量/难度/知识点/知识点驱动配额），
+  // 并给出生成「执行计划」：带 per-KP 配额时编排为按知识点逐个生成，否则单次直发。
+  var ControlService = (function () {
+    var DEFAULTS = { count: 20, difficulty: 1 };
+    var COUNT_MIN = 1, COUNT_MAX = 50;
+    var DIFF_MIN = 1, DIFF_MAX = 10;
+    var PRESET_COUNTS = { 20: true, 30: true, 50: true };
+
+    function normNumber(v, min, max, dft) {
+      var n = Number(v);
+      return (isNaN(n) || n < min || n > max) ? dft : Math.floor(n);
+    }
+
+    // ---- 数量 ----
+    function resolveCount(ui) {
+      var raw = (ui && ui.count != null)
+        ? ui.count
+        : (ui && ui.state && ui.state.count != null ? ui.state.count : null);
+      return normNumber(raw, COUNT_MIN, COUNT_MAX, DEFAULTS.count);
+    }
+    function countProfile(ui) {
+      var count = resolveCount(ui);
+      return { count: count, preset: !!PRESET_COUNTS[count], min: COUNT_MIN, max: COUNT_MAX };
+    }
+
+    // ---- 难度 ----
+    function resolveDifficulty(ui) {
+      var raw = (ui && ui.difficulty != null)
+        ? ui.difficulty
+        : (ui && ui.state && ui.state.difficulty != null ? ui.state.difficulty : null);
+      return normNumber(raw, DIFF_MIN, DIFF_MAX, DEFAULTS.difficulty);
+    }
+
+    // ---- 知识点 ----
+    function extractKnowledgePoints(ui) {
+      var st = (ui && ui.state) || {};
+      var kps = ui.knowledgePoints || (Array.isArray(st.knowledgePointIds) && st.knowledgePointIds.length ? st.knowledgePointIds.slice() : null);
+      var kp = ui.knowledgePointId || st.kp || null;
+      if (!kps && kp) kps = [kp];
+      var allocation = ui.kpAllocation || st.kpAllocation || null;
+      return { knowledgePoints: kps || null, knowledgePointId: kp || null, kpAllocation: allocation || null };
+    }
+
+    // 是否为「每知识点有明确配额」的多知识点分配（触发编排式知识点驱动生成）
+    function hasPerKpAllocation(kpState) {
+      var a = kpState && kpState.kpAllocation;
+      if (!a || !Array.isArray(a.kps) || !a.kps.length) return false;
+      // 需多知识点，且每个都有整数配额
+      var list = a.kps;
+      if (list.length < 2) return false;
+      for (var i = 0; i < list.length; i++) {
+        var c = list[i].count;
+        if (!(c >= 0) || Math.floor(Number(c)) !== Number(c)) return false;
+      }
+      return true;
+    }
+
+    // 把 per-KP 配额解析为 Partition 列表：[{ kp, count, name, weight }]
+    function kpAllocationPartitions(kpState) {
+      var a = kpState.kpAllocation;
+      var out = [];
+      (a.kps || []).forEach(function (p) {
+        if (p.count <= 0) return;
+        out.push({ kp: p.id || p.knowledgePointId, name: p.name || '', count: p.count, weight: p.weight || 1 });
+      });
+      return out;
+    }
+
+    /**
+     * 生成完整执行计划。
+     * @param {Object} ui - UI 注入的业务状态（含 state 与命令字段）。
+     * @returns {{ profile:{...}, mode:'single'|'orchestrated', partitions:Array }}
+     *   - mode='single'      单次直发生成层（不经 per-KP 配额，按单 count+knowledgePoints[]）。
+     *   - mode='orchestrated' 有 per-KP 配额 → 按知识点逐个生成并合并（知识点驱动生成）。
+     */
+    function plan(ui) {
+      ui = ui || {};
+      var st = ui.state || {};
+      var mode = ui.mode || st.mode || (ui.adaptive ? 'adaptive' : (ui.knowledgePoints && ui.knowledgePoints.length ? 'multi-kp' : 'native'));
+      var c = countProfile(ui);
+      var d = resolveDifficulty(ui);
+      var kp = extractKnowledgePoints(ui);
+      var subject = ui.subject || st.subject || 'math';
+      var grade = ui.grade != null ? ui.grade : (st.grade != null ? st.grade : 1);
+
+      var profile = {
+        subject: subject,
+        grade: grade,
+        count: c.count,
+        difficulty: d,
+        mode: mode,
+        knowledgePointId: kp.knowledgePointId,
+        knowledgePoints: kp.knowledgePoints,
+        kpAllocation: kp.kpAllocation,
+        questionType: ui.questionType || st.questionType || null,
+        subtype: ui.subtype || st.subtype || null,
+        adaptive: !!(ui.adaptive || st.adaptive),
+        learnerProfile: ui.learnerProfile || st.learnerProfile || null,
+        titleType: ui.titleType || st.titleType || null,
+        pluginIds: ui.pluginIds || st.pluginIds || null,
+        raw: ui.raw || null
+      };
+
+      var orchestrated = hasPerKpAllocation(kp) && !profile.adaptive;
+      var partitions = orchestrated ? kpAllocationPartitions(kp) : [];
+
+      return {
+        profile: profile,
+        mode: orchestrated ? 'orchestrated' : 'single',
+        partitions: partitions
+      };
+    }
+
+    // 把单次指令翻译为生成层构造函数可消费的 options（只构造，不改生成层）
+    function sessionConfig(profile) {
+      var config = {
+        subject: profile.subject,
+        grade: profile.grade,
+        count: profile.count,
+        difficulty: profile.difficulty,
+        knowledgePointId: profile.knowledgePointId || null,
+        knowledgePointIds: Array.isArray(profile.knowledgePoints) ? profile.knowledgePoints : (profile.knowledgePointId ? [profile.knowledgePointId] : null),
+        questionType: profile.questionType || null,
+        adaptive: !!profile.adaptive,
+        learnerProfile: profile.learnerProfile || null,
+        titleType: profile.titleType || null
+      };
+      if (profile.kpAllocation) config.kpAllocation = profile.kpAllocation;
+      return config;
+    }
+
+    // 合并标题（沿用生成层同款格式）
+    function mergedTitle(profile, partitions) {
+      var subjectName = { math: '数学', chinese: '语文', english: '英语' }[profile.subject] || profile.subject;
+      var gradeName = '一二三四五六'.charAt(Math.max(0, profile.grade - 1)) + '年级';
+      var total = partitions.reduce(function (a, p) { return a + p.count; }, 0);
+      var t = profile.titleType || (partitions.map(function (p) { return p.name; }).filter(Boolean).join('+') || '综合练习');
+      return gradeName + subjectName + ' · ' + t + '（' + total + '题）';
+    }
+
+    return Object.freeze({
+      DEFAULTS: DEFAULTS,
+      PRESET_COUNTS: PRESET_COUNTS,
+      resolveCount: resolveCount,
+      resolveDifficulty: resolveDifficulty,
+      countProfile: countProfile,
+      extractKnowledgePoints: extractKnowledgePoints,
+      hasPerKpAllocation: hasPerKpAllocation,
+      kpAllocationPartitions: kpAllocationPartitions,
+      plan: plan,
+      sessionConfig: sessionConfig,
+      mergedTitle: mergedTitle
+    });
+  })();
+
+  // ---------- 关联层服务实例 ----------
+  var _session = null;          // 当前持有的生成层会话（单次直发：单个会话；编排：聚合会话 shim）
+  var _onStartFeedback = null;  // UI 注册：接受生成层 start 反馈的钩子
+  var _onSubmitFeedback = null; // UI 注册：接受生成层 submit 反馈的钩子
+
+  // 读取生成层类型（浏览器 / CommonJS 边界，不修改生成层）
+  function sessionCtor() {
+    return (typeof global.PracticeSession !== 'undefined') ? global.PracticeSession
+      : (typeof require !== 'undefined' ? require('./practice-session.js') : null);
+  }
+
+  // 装载旧插件（关联层不承载该逻辑，仅委托 UI 传入的 ensureLegacyPlugins 能力）
+  function ensurePlugins(ui, run) {
+    var loader = ui && ui.ensureLegacyPlugins;
+    var subj = (ui && ui.subject) || (ui && ui.state && ui.state.subject) || 'math';
+    if (typeof loader === 'function') {
+      try { return loader(subj, ui && ui.grade).then(run).catch(run); } catch (e) { run(); return null; }
+    }
+    run();
+    return null;
+  }
+
+  // ============================================
+  // 知识点驱动生成：编排器（按 per-KP 配额逐个调用生成层并合并）
+  // ============================================
+  /**
+   * 依计划 mode 选择执行路径：
+   *   - 'single'      直发单个 PracticeSession.start()；
+   *   - 'orchestrated' 按每知识点配额逐个生成并合并 → 聚合会话。
+   * @returns {Object} 会话（单个 session 或聚合 shim），或 null。
+   */
+  function runPlan(plan, handlers) {
+    var profile = plan.profile;
+    var run = function () {
+      if (plan.mode === 'orchestrated') {
+        runOrchestrated(plan, handlers);
+        return;
+      }
+      runSingle(profile, handlers);
+    };
+    ensurePlugins({ ensureLegacyPlugins: handlers && handlers.ensureLegacyPlugins, subject: profile.subject, grade: profile.grade }, run);
+  }
+
+  function runSingle(profile, handlers) {
+    var Ctor = sessionCtor();
+    if (!Ctor) { emitStart({ ok: false, error: { code: 'E_GEN_LAYER', message: '题目生成层（PracticeSession）未加载' } }); return; }
+    try {
+      _session = new Ctor(ControlService.sessionConfig(profile));
+    } catch (e) {
+      emitStart({ ok: false, instruction: profile, error: { code: 'E_SESSION', message: '创建练习会话失败：' + (e && e.message || e) } });
+      return;
+    }
+    _session.start().then(function (result) {
+      emitStart({
+        ok: true,
+        session: _session,
+        instruction: profile,
+        questions: result && result.questions || [],
+        html: result && result.html || '',
+        meta: result && result.meta || null
+      });
+    }).catch(function (err) {
+      emitStart({
+        ok: false,
+        session: _session,
+        instruction: profile,
+        error: { code: 'E_GENERATE', message: (err && err.message) || '生成失败' }
+      });
+    });
+  }
+
+  // 聚合会话 shim：合并题集后让 submit() 依然可按 DOM 作答走统一批改
+  function aggregateSession(profile, merged, sessions) {
+    var shim = {
+      config: ControlService.sessionConfig(profile),
+      exerciseSet: { questions: merged.questions, meta: merged.meta },
+      sessions: sessions,
+      submit: function () {
+        var answers = collectAnswers(merged.questions);
+        var result = computeResult(merged.questions, answers);
+        shim.checkResult = result;
+        return Promise.resolve(result);
+      }
+    };
+    return shim;
+  }
+
+  function collectAnswers(questions) {
+    var answers = {};
+    questions.forEach(function (q, i) {
+      var v = '';
+      var inp = null;
+      var slots = document.querySelectorAll('#problemsArea input[data-index="' + i + '"], #problemsArea input[data-idx="' + i + '"], #problemsArea input[data-i="' + i + '"]');
+      if (slots && slots.length) {
+        for (var k = 0; k < slots.length; k++) { if (slots[k].value) { v = slots[k].value; break; } }
+      }
+      if (v !== '') answers[i] = v;
+    });
+    return answers;
+  }
+
+  function computeResult(questions, answers) {
+    // B3 修正：无条件委托 PluginUtil.computeResult（统一 { score:百分比, results:boolean[] } 语义）。
+    // 历史本地 fallback 返回的结构（score=正确数 / results=[{index,...}] / correctAnswers=对象）
+    // 与 UI 消费方 applySessionSubmitFeedback→markQuestions 期望的布尔数组不一致，
+    // 若被触发会把所有题误标为正确。故移除嵌套降级：PluginUtil 缺失即显式报错，不静默返回坏结构。
+    if (global.PluginUtil && typeof global.PluginUtil.computeResult === 'function') {
+      return global.PluginUtil.computeResult(questions, answers);
+    }
+    throw new Error('PluginUtil.computeResult 不可用（请先加载 shared/check.js）');
+  }
+
+  function runOrchestrated(plan, handlers) {
+    var Ctor = sessionCtor();
+    if (!Ctor) { emitStart({ ok: false, error: { code: 'E_GEN_LAYER', message: '题目生成层（PracticeSession）未加载' } }); return; }
+    var profile = plan.profile;
+    var partitions = plan.partitions;
+
+    Promise.all(partitions.map(function (part) {
+      var sub = {
+        subject: profile.subject,
+        grade: profile.grade,
+        count: part.count,
+        difficulty: profile.difficulty,
+        mode: 'multi-kp',
+        knowledgePointId: part.kp,
+        knowledgePoints: [part.kp],
+        kpAllocation: null,
+        questionType: profile.questionType,
+        subtype: profile.subtype,
+        adaptive: false,
+        learnerProfile: null,
+        titleType: profile.titleType
+      };
+      var s = new Ctor(ControlService.sessionConfig(sub));
+      return s.start().then(function (r) {
+        return { session: s, questions: r && r.questions || [] };
+      });
+    })).then(function (results) {
+      var merged = [];
+      results.forEach(function (r) { merged = merged.concat(r.questions); });
+      var meta = { title: ControlService.mergedTitle(profile, partitions) };
+      var agg = aggregateSession(profile, { questions: merged, meta: meta }, results.map(function (r) { return r.session; }));
+      _session = agg;
+      emitStart({
+        ok: true,
+        session: agg,
+        instruction: profile,
+        questions: merged,
+        html: '1',
+        meta: meta
+      });
+    }).catch(function (err) {
+      emitStart({
+        ok: false,
+        session: _session,
+        instruction: profile,
+        error: { code: 'E_GENERATE', message: (err && err.message) || '知识点驱动生成失败' }
+      });
+    });
+  }
+
+  // ============================================
+  // 生成层调用 + 反馈接收
+  // ============================================
+  /**
+   * 开始一次生成练习：经外围控制层解析执行计划 → 直发或按知识点编排生成。
+   * 反馈（成功 / 失败）归一化后回调 UI 注册的 _onStartFeedback。
+   * @param {Object} ui - UI 业务状态（或已有指令）
+   * @param {Object} [handlers] - { ensureLegacyPlugins }
+   * @returns {Object} 会话句柄（单个 session 或 null；编排路径异步完成后经反馈返回）
+   */
+  function start(ui, handlers) {
+    // B1 清理：__profile/__orchestrated/__partitions 为历史遗留死路径，全仓库无调用方，
+    // 统一经外围控制层 plan() 解析执行计划（与 resolve* 同源，保证 count/难度/kp 一致）。
+    var p = ControlService.plan(ui || {});
+    runPlan(p, handlers || {});
+    return _session;
+  }
+
+  // 提交批改：调用生成层 submit()（编排路径走聚合会话 shim），归一化反馈后交回 UI。
+  function submit() {
+    if (!_session) { emitSubmit({ ok: false, error: { code: 'E_NO_SESSION', message: '尚未生成练习会话' } }); return null; }
+    _session.submit().then(function (result) {
+      emitSubmit({
+        ok: true,
+        session: _session,
+        score: result && result.score,
+        total: result && result.total,
+        correct: result && result.correct,
+        results: result && result.results,
+        correctAnswers: result && result.correctAnswers
+      });
+    }).catch(function (err) {
+      emitSubmit({ ok: false, session: _session, error: { code: 'E_SUBMIT', message: (err && err.message) || '批改失败' } });
+    });
+    return _session;
+  }
+
+  // 组装配对新会话的会话（供错题本重做等复用）
+  function newSession(ins) {
+    var Ctor = sessionCtor();
+    if (!Ctor) return null;
+    var built = ControlService.plan(ins || {}).profile;
+    _session = new Ctor(ControlService.sessionConfig(built));
+    return _session;
+  }
+
+  // ---------- 反馈分发（归一化出口） ----------
+  function emitStart(fb) {
+    if (typeof _onStartFeedback === 'function') _onStartFeedback(fb);
+  }
+  function emitSubmit(fb) {
+    if (typeof _onSubmitFeedback === 'function') _onSubmitFeedback(fb);
+  }
+  function onStartFeedback(fn) { _onStartFeedback = fn; return bridge; }
+  function onSubmitFeedback(fn) { _onSubmitFeedback = fn; return bridge; }
+
+  // ---------- 冻结公开 API ----------
+  var bridge = Object.freeze({
+    control: ControlService,           // 外围控制层（服务模式整块）
+    start: start,
+    submit: submit,
+    newSession: newSession,
+    onStartFeedback: onStartFeedback,
+    onSubmitFeedback: onSubmitFeedback
+  });
+
+  global.PracticeBridge = bridge;
+  if (global.App && typeof global.App === 'object') global.App.PracticeBridge = bridge;
+  if (typeof module !== 'undefined' && module.exports) module.exports = bridge;
+
+})(typeof window !== 'undefined' ? window : global);

@@ -37,27 +37,43 @@
     font-size: 1.1rem;
     font-weight: 800;
     color: var(--brand);
+    text-decoration: none;
   }
   .top-nav .nav-logo {
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, #4A90D9, #7EB6F0);
-    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
-    color: #fff;
   }
-  .back-home {
-    color: var(--brand);
+  .top-nav .nav-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--muted);
     text-decoration: none;
-    font-weight: 700;
-    font-size: 0.92rem;
-    padding: 6px 10px;
+    padding: 6px 12px;
     border-radius: 8px;
+    transition: all 0.2s;
   }
-  .back-home:hover { background: var(--math-bg, #eef5ff); }
+  .nav-link:hover {
+    color: var(--brand);
+    background: var(--brand-bg, #eef5ff);
+  }
+  .nav-link.active {
+    color: var(--brand);
+    background: var(--brand-bg, #eef5ff);
+  }
 
   /* ============ 主视觉区（小型横幅） ============ */
   .page-hero {
@@ -88,6 +104,66 @@
     margin: 0 auto;
     padding: 24px 24px 40px;
   }
+
+  /* 上部筛选条（模式/科目/年级 下拉） */
+  .filter-bar {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 150px;
+    flex: 1 1 150px;
+  }
+  .filter-item .f-label {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-item select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    padding-right: 36px;
+    border: 1.5px solid var(--line-strong, #d6e2f2);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237a879c' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+  .filter-item select:focus {
+    outline: 2px solid rgba(74,144,217,0.35);
+    outline-offset: 1px;
+    border-color: var(--brand);
+  }
+
+  /* 中部主视觉区（题型展示） */
+  .stage {
+    display: none;
+  }
+  .stage.active { display: block; }
+
   .sel-block {
     background: var(--card);
     border: 1px solid var(--line);
@@ -104,35 +180,6 @@
     align-items: center;
     gap: 6px;
   }
-  .sel-opts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .opt-btn {
-    border: 1.5px solid var(--line-strong, #d6e2f2);
-    background: #fff;
-    color: var(--ink);
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .opt-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
-  .opt-btn.on {
-    background: var(--grad-cta);
-    color: #fff;
-    border-color: transparent;
-    box-shadow: 0 4px 14px rgba(245,166,35,0.35);
-  }
-  .opt-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-  .opt-btn .opt-ico { margin-right: 6px; }
 
   /* 题型网格 */
   .type-grid {
@@ -161,7 +208,7 @@
     color: var(--muted);
     margin-top: 4px;
   }
-  .type-card:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+  .type-card:hover { border-color: var(--brand); color: var(--brand); }
   .type-card.on {
     background: var(--grad-cta);
     color: #fff;
@@ -169,44 +216,35 @@
     box-shadow: 0 4px 14px rgba(245,166,35,0.35);
   }
   .type-card.on .tc-tag { color: rgba(255,255,255,0.9); }
-  .type-card:disabled { opacity: 0.35; cursor: not-allowed; }
-  .type-grid .type-card .tc-special { font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; }
-
-  /* 底部实时参数 + 操作 */
-  .summary-bar {
-    position: sticky;
-    bottom: 12px;
-    z-index: 90;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: 0 12px 36px rgba(40,70,120,0.18);
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .summary-bar .cur {
-    font-size: 1.02rem;
-    font-weight: 900;
-    color: var(--brand);
-  }
-  .summary-bar .cur small {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 600;
+  .type-empty {
+    grid-column: 1 / -1;
+    text-align: center;
     color: var(--muted);
-    margin-top: 2px;
+    padding: 24px 0;
+    font-size: 0.9rem;
   }
-  .summary-bar .ops { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .summary-bar .ops .btn-start {
+
+  /* 模式说明（选择器下沿，单行，与正文一致无特殊格式） */
+  .mode-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: -6px 0 16px;
+  }
+
+  /* 题型板块右下角操作 */
+  .sel-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    padding-top: 14px;
+  }
+  .sel-footer .btn-start {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 28px;
+    padding: 12px 30px;
     font-size: 1rem;
     font-weight: 800;
     color: #fff;
@@ -219,43 +257,105 @@
     text-decoration: none;
     letter-spacing: 1px;
   }
-  .summary-bar .ops .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(245,166,35,0.45); }
-  .summary-bar .ops .btn-kb {
-    color: var(--brand);
-    background: #fff;
-    border: 1.5px solid var(--line-strong, #d6e2f2);
-    padding: 10px 18px;
-    border-radius: 18px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.15s;
-  }
-  .summary-bar .ops .btn-kb:hover { border-color: var(--brand); }
+  .sel-footer .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(245,166,35,0.45); }
 
-  /* 空态提示（无可用题型） */
-  .type-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: var(--muted);
-    padding: 24px 0;
+  /* 教师模式：左栏题目模块 + 右栏知识点模块（两栏布局） */
+  .teacher-cols {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .teacher-col {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .teacher-col-right {
+    border-left: 1px solid var(--line-strong, #d6e2f2);
+    padding-left: 20px;
+  }
+  .teacher-col .type-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  /* 教师模式：知识点模块 */
+  .kp-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .kp-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1.5px solid var(--line-strong, #d6e2f2);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
     font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .kp-chip .meta { font-size: 0.7rem; font-weight: 600; color: var(--muted); }
+  .kp-chip:hover { border-color: var(--brand); color: var(--brand); }
+  .kp-chip.on {
+    background: var(--brand);
+    color: #fff;
+    border-color: var(--brand);
+  }
+  .kp-chip.on .meta { color: rgba(255,255,255,0.9); }
+  .kp-group { margin-bottom: 14px; }
+  .kp-group-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .kp-group-title.muted { font-weight: 600; }
+  .kp-group-title .mod-on {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    vertical-align: 1px;
   }
 
   .site-footer {
     max-width: 1200px;
     margin: 0 auto 24px;
-    padding: 16px;
+    padding: 20px 16px 16px;
     text-align: center;
     color: var(--muted);
     font-size: 0.8rem;
+    line-height: 1.9;
+    border-top: 1px solid var(--line-strong, #d6e2f2);
   }
+  .site-footer .footer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+  }
+  .site-footer a { color: var(--muted); text-decoration: none; }
+  .site-footer a:hover { color: var(--brand); text-decoration: underline; }
+  .site-footer .footer-sep { opacity: 0.5; }
+  .site-footer .footer-beian img { vertical-align: -2px; }
 
   @media (max-width: 720px) {
     .select-wrap { padding: 16px 14px 32px; }
-    .summary-bar { flex-direction: column; }
-    .summary-bar .ops { width: 100%; justify-content: center; }
+    .filter-bar { flex-direction: column; align-items: stretch; gap: 14px; }
+    .filter-item { min-width: 0; }
+    .sel-footer { justify-content: center; }
     .type-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    .teacher-cols { flex-direction: column; }
+    .teacher-col-right { border-left: none; padding-left: 0; }
   }
 </style>
 </head>
@@ -263,72 +363,132 @@
 
 <nav class="top-nav">
   <a href="index.html" class="nav-brand">
-    <span class="nav-logo">📖</span>
-    <span>小学练习本</span>
+    <span class="nav-logo"><img src="assets/logo.webp" alt="小学练习本"></span>
+    <span>首页</span>
   </a>
-  <a href="index.html" class="back-home">← 返回首页</a>
+  <div class="nav-links">
+    <a href="contact.html" class="nav-link">联系我们</a>
+    <a href="feedback/feedback.html" class="nav-link">问题反馈</a>
+  </div>
 </nav>
 
 <header class="page-hero">
   <div class="hero-inner">
     <h1>选择练习</h1>
-    <p class="hero-desc">先选科目与年级，再挑题型，一键生成练习题。综合练习自动混合全部知识点，考试模式随时练。</p>
+    <p class="hero-desc">选择练习模式与学科年级，系统将为您生成匹配的练习题。</p>
   </div>
 </header>
 
 <main class="select-wrap">
 
-  <!-- 科目 -->
-  <section class="sel-block" id="subjectBlock">
-    <div class="blk-title">科目</div>
-    <div class="sel-opts" id="subjectOpts"></div>
-  </section>
-
-  <!-- 年级 -->
-  <section class="sel-block" id="gradeBlock">
-    <div class="blk-title">年级</div>
-    <div class="sel-opts" id="gradeOpts"></div>
-  </section>
-
-  <!-- 题型 -->
-  <section class="sel-block" id="typeBlock">
-    <div class="blk-title">题型</div>
-    <div class="type-grid" id="typeGrid"></div>
-  </section>
-
-  <!-- 底部实时参数 -->
-  <div class="summary-bar">
-    <div class="cur" id="summaryCur">
-      请选择科目 / 年级 / 题型
-      <small id="summarySub">将跳转至练习页并直接生成</small>
+  <!-- 上部筛选区：模式 / 科目 / 年级 -->
+  <div class="filter-bar">
+    <div class="filter-item">
+      <label class="f-label" for="modeSelect">模式</label>
+      <select id="modeSelect">
+        <option value="quick">快速模式</option>
+        <option value="teacher">教师模式</option>
+        <option value="competition">竞赛模式</option>
+      </select>
     </div>
-    <div class="ops">
-      <a class="btn-start" id="startBtn" href="practice.html">开始练习</a>
-      <a class="btn-kb" id="kbLink" href="knowledge/knowledge-index.html" title="查看知识点讲解">📚 知识库</a>
+    <div class="filter-item">
+      <label class="f-label" for="subjectSelect">科目</label>
+      <select id="subjectSelect">
+        <option value="math">数学</option>
+        <option value="cn">语文</option>
+        <option value="en">英语</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label class="f-label" for="gradeSelect">年级</label>
+      <select id="gradeSelect">
+        <option value="1">一年级</option>
+        <option value="2">二年级</option>
+        <option value="3">三年级</option>
+        <option value="4">四年级</option>
+        <option value="5">五年级</option>
+        <option value="6">六年级</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 模式说明（选择器下沿，单行，无特殊格式） -->
+  <div class="mode-desc" id="modeDesc"></div>
+
+  <!-- 中部主视觉区 -->
+  <div class="stage" id="stageQuick">
+    <div class="sel-block">
+      <div class="blk-title">题型选择（可多选）</div>
+      <div class="type-grid" id="typeGridQuick"></div>
+      <div class="sel-footer">
+        <a class="btn-start" id="startBtnQuick" href="practice.html">开始练习</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage" id="stageTeacher">
+    <div class="sel-block">
+      <div class="teacher-cols">
+        <div class="teacher-col">
+          <div class="blk-title">题目模块（选中左侧题目，其知识点罗列右侧）</div>
+          <div class="type-grid" id="teacherModuleGrid"></div>
+        </div>
+        <div class="teacher-col teacher-col-right">
+          <div class="blk-title">知识点模块（多选知识点）</div>
+          <div class="chosen-empty" id="teacherKpHint">先在左侧选中一个或多个题目</div>
+          <div class="kp-grid" id="teacherKpGrid"></div>
+        </div>
+      </div>
+      <div class="sel-footer">
+        <a class="btn-start" id="startBtnTeacher" href="practice.html">开始练习</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage" id="stageCompetition">
+    <div class="sel-block">
+      <div class="blk-title">竞赛专题</div>
+      <div class="type-grid" id="typeGridCompetition"></div>
+      <div class="sel-footer">
+        <a class="btn-start" id="startBtnCompetition" href="practice.html">开始练习</a>
+      </div>
     </div>
   </div>
 
 </main>
 
-<footer class="site-footer">小学练习本 · 练习即学习</footer>
+<footer class="site-footer">
+    <div>© <span id="footYear"></span> 甘肃源始人广告传媒有限公司 版权所有</div>
+    <div class="footer-meta">
+        <span class="footer-beian">
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">陇ICP备2026008157号-1</a>
+            <span class="footer-sep">|</span>
+            <a href="http://www.beian.gov.cn/" target="_blank" rel="noopener">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%232b6cc0' d='M12 2l7 3v6c0 5-3.5 9.5-7 11-3.5-1.5-7-6-7-11V5l7-3z'/%3E%3Cpath fill='%234c8fd6' d='M12 4l5 2.2V11c0 3.6-2.3 6.7-5 7.9-2.7-1.2-5-4.3-5-7.9V6.2L12 4z'/%3E%3C/svg%3E" alt="" width="14" height="14"> 粤公网安备 XXXXXXXXXXXX号
+            </a>
+        </span>
+        <span class="footer-sep">|</span>
+        <a href="contact.html">联系我们</a>
+        <span class="footer-sep">|</span>
+        <a href="feedback/feedback.html">问题反馈</a>
+    </div>
+</footer>
 
 <script src="shared/core.js"></script>
 <script src="shared/module-catalog.js"></script>
 <script src="shared/knowledge-bank.js"></script>
-<!-- 知识库分片：按需由 ensureKnowledgeData 动态注入，这里仅声明脚本辅助函数 -->
 <script src="shared/catalog-utils.js"></script>
 <script>
 (function () {
   'use strict';
 
   // ---------- 常量 ----------
+  var SUBJECT_CANON = { math: 'math', chinese: 'cn', cn: 'cn', english: 'en', en: 'en' };
   var SUBJECT_CONFIG = {
-    math: { name: '数学', icon: '🔢', modules: ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'] },
-    cn:   { name: '语文', icon: '📖', modules: ['N1','N2','N3','N4','N5','N6','N7','N8'] },
-    en:   { name: '英语', icon: '🔤', modules: ['E1','E2','E3','E4','E5','E6'] }
+    math: { modules: ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'] },
+    cn:   { modules: ['N1','N2','N3','N4','N5','N6','N7','N8'] },
+    en:   { modules: ['E1','E2','E3','E4','E5','E6'] }
   };
-
-  // 题型展示名（按模块）
   var MODULE_LABEL = {
     M1: '口算', M2: '竖式', M3: '脱式', M4: '填空', M5: '连线',
     M6: '操作', M7: '看图列式', M8: '应用题', M9: '统计整理',
@@ -337,179 +497,221 @@
     N5: '古诗文', N6: '阅读理解', N7: '写作', N8: '语文综合',
     E1: '字母发音', E2: '词汇', E3: '句型', E4: '情景对话', E5: '阅读', E6: '英语综合'
   };
+  var MODE_DESC = {
+    quick: { title: '快速模式', desc: '当前科目与年级的所有题型，可多选后一键生成练习题。' },
+    teacher: { title: '教师模式', desc: '按知识点自由挑选题型，灵活组合，适合备课与针对性训练。' },
+    competition: { title: '竞赛模式', desc: '高年级数学竞赛专题：数字谜、数论、组合计数与行程问题等。' }
+  };
+  var COMPETITION_MIDS = ['C1','C2','C3','C4','C5','C6','C7','C8','C9'];
 
-  // 特殊题型
-  var SPECIAL_TYPES = [
-    { key: 'comprehensive', name: '综合练习', icon: '📋', mode: 'all' },
-    { key: 'exam', name: '考试模式', icon: '🎯', mode: 'all' },
-    { key: 'competition', name: '竞赛题型', icon: '🏆', mode: 'competition' }
-  ];
+  // ---------- 状态 ----------
+  var state = { mode: 'quick', subject: 'math', grade: 1, module: null, quickModules: [], teacherModules: [], teacherKps: [] };
 
-  // 状态
-  var SUBJECT_CANON = { math: 'math', chinese: 'cn', cn: 'cn', english: 'en', en: 'en' };
+  // 支持 URL 初态：?mode=quick|teacher|competition（深链/测试）
+  (function () {
+    var m = /[?&]mode=([^&]+)/.exec(location.search);
+    if (m && ['quick', 'teacher', 'competition'].indexOf(m[1]) !== -1) state.mode = m[1];
+  })();
 
-  // URL 参数预选（兼容 subject-types 旧链与深链）
-  function readUrlParams() {
-    var p = new URLSearchParams(window.location.search);
-    var subject = p.get('subject') || '';
-    var grade = Number(p.get('grade'));
-    var qtype = p.get('qtype') || p.get('qt') || '';
-    var init = { subject: 'math', grade: 1, module: null, special: 'comprehensive' };
-    if (SUBJECT_CANON[subject]) init.subject = SUBJECT_CANON[subject];
-    if (grade >= 1 && grade <= 6) init.grade = grade;
-    // qtype 优先按模块（M1/M2/N1/E1…），否则按特殊题型（comprehensive/exam/competition）
-    if (/^[MNE]\d+$/.test(qtype)) {
-      init.module = qtype;
-      init.special = null;
-    } else if (qtype === 'comprehensive' || qtype === 'exam' || qtype === 'competition') {
-      init.special = qtype;
-      init.module = null;
-    }
-    return init;
-  }
-  var state = readUrlParams();
+  // 元素
+  var modeSelect = document.getElementById('modeSelect');
+  var subjectSelect = document.getElementById('subjectSelect');
+  var gradeSelect = document.getElementById('gradeSelect');
+  var startBtns = {
+    quick: document.getElementById('startBtnQuick'),
+    teacher: document.getElementById('startBtnTeacher'),
+    competition: document.getElementById('startBtnCompetition')
+  };
+  var stageQuick = document.getElementById('stageQuick');
+  var stageTeacher = document.getElementById('stageTeacher');
+  var stageCompetition = document.getElementById('stageCompetition');
+  var gridQuick = document.getElementById('typeGridQuick');
+  var gridCompetition = document.getElementById('typeGridCompetition');
+  var teacherModuleGrid = document.getElementById('teacherModuleGrid');
+  var teacherKpGrid = document.getElementById('teacherKpGrid');
+  var teacherKpHint = document.getElementById('teacherKpHint');
+  var modeDesc = document.getElementById('modeDesc');
 
-  var subjectOpts = document.getElementById('subjectOpts');
-  var gradeOpts = document.getElementById('gradeOpts');
-  var typeGrid = document.getElementById('typeGrid');
-  var summaryCur = document.getElementById('summaryCur');
-  var summarySub = document.getElementById('summarySub');
-  var startBtn = document.getElementById('startBtn');
-  var kbLink = document.getElementById('kbLink');
-
-  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]); }); }
-
-  function isSpecialActive(subject, grade, item) {
-    var mod = SUBJECT_CONFIG[subject];
-    if (!mod) return false;
-    if (item.key === 'competition') {
-      // 仅数学高年级且有竞赛模块知识点
-      if (subject !== 'math') return false;
-      if (grade < 4) return false;
-      return moduleHasKps('math', grade, ['C1','C2','C3','C4','C5','C6','C7','C8','C9']);
-    }
-    if (item.key === 'comprehensive' || item.key === 'exam') {
-      // 综合/考试：kps 可覆盖到全科则显示（根知识库有该科年级知识点即可用）
-      return window.KnowledgeBank && window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade).length > 0;
-    }
-    return false;
-  }
-
-  function moduleHasKps(subject, grade, mids) {
-    if (!window.KnowledgeBank) return false;
-    var entries = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade) || [];
-    return entries.some(function (k) { return k.moduleId && mids.indexOf(k.moduleId) !== -1; });
-  }
-
-  // ---------- 渲染三个维度 ----------
-  function renderSubjects() {
-    var html = '';
-    ['math', 'cn', 'en'].forEach(function (s) {
-      var cfg = SUBJECT_CONFIG[s];
-      html += '<button type="button" class="opt-btn' + (state.subject === s ? ' on' : '') + '" data-subject="' + s + '">' +
-        '<span class="opt-ico">' + cfg.icon + '</span>' + cfg.name + '</button>';
-    });
-    subjectOpts.innerHTML = html;
-    subjectOpts.querySelectorAll('.opt-btn').forEach(function (b) {
-      b.addEventListener('click', function () {
-        state.subject = b.getAttribute('data-subject');
-        state.grade = Math.min(state.grade, 6);
-        ensureKnowledge(state.subject).then(function () { renderAll(); });
-      });
+  function moduleTypeCards(subject, grade) {
+    var entries = (window.CatalogUtils && window.CatalogUtils.getKPEntries)
+      ? window.CatalogUtils.getKPEntries(subject, grade) : [];
+    // 以实际数据为准：收集全部含知识点的模块（含 M0/M13 等不在白名单中的模块），
+    // 顺序优先沿用 SUBJECT_CONFIG.modules，出现过的模块追加在尾部，保证“全部展示”。
+    var order = (SUBJECT_CONFIG[subject] && SUBJECT_CONFIG[subject].modules) || [];
+    var buckets = {};
+    entries.forEach(function (k) { if (k.moduleId) (buckets[k.moduleId] = buckets[k.moduleId] || []).push(k); });
+    var mids = order.filter(function (mid) { return buckets[mid]; }).slice();
+    Object.keys(buckets).forEach(function (mid) { if (mids.indexOf(mid) === -1) mids.push(mid); });
+    return mids.map(function (mid) {
+      return { moduleId: mid, label: MODULE_LABEL[mid] || mid, kps: buckets[mid] };
     });
   }
 
-  function renderGrades() {
-    var html = '';
-    for (var g = 1; g <= 6; g++) {
-      html += '<button type="button" class="opt-btn' + (state.grade === g ? ' on' : '') + '" data-grade="' + g + '">' +
-        g + ' 年级</button>';
+  function competitionCards(subject, grade) {
+    if (subject !== 'math' || !window.CatalogUtils || !window.CatalogUtils.getKPEntries) return [];
+    return window.CatalogUtils.getKPEntries(subject, grade)
+      .filter(function (k) { return k.moduleId && COMPETITION_MIDS.indexOf(k.moduleId) !== -1; })
+      .map(function (k) { return { moduleId: k.moduleId, label: MODULE_LABEL[k.moduleId] || k.moduleId, kps: [k] }; })
+      .reduce(function (acc, c) {
+        var found = acc.find(function (a) { return a.moduleId === c.moduleId; });
+        if (found) { found.kps.push(c.kps[0]); } else { acc.push(c); }
+        return acc;
+      }, []);
+  }
+
+  // 快速模式：该年级科目的所有题型卡（含综合/考试/竞赛等上层归类，不含综合聚合卡），可多选
+  function renderQuick() {
+    gridQuick.innerHTML = '';
+    var hasKps = window.KnowledgeBank && window.KnowledgeBank.getEntries(SUBJECT_CANON[state.subject], state.grade).length > 0;
+    if (!hasKps) {
+      gridQuick.innerHTML = '<div class="type-empty">该科目 / 年级暂无可练内容</div>';
+      return;
     }
-    gradeOpts.innerHTML = html;
-    gradeOpts.querySelectorAll('.opt-btn').forEach(function (b) {
+    var html = '';
+    moduleTypeCards(state.subject, state.grade).forEach(function (c) {
+      var on = state.quickModules.indexOf(c.moduleId) !== -1 ? ' on' : '';
+      html += '<button type="button" class="type-card' + on + '" data-module="' + c.moduleId + '">' + c.label +
+        '<span class="tc-tag">' + c.kps.length + ' 个知识点</span></button>';
+    });
+    gridQuick.innerHTML = html;
+    gridQuick.querySelectorAll('.type-card').forEach(function (b) {
       b.addEventListener('click', function () {
-        state.grade = Number(b.getAttribute('data-grade'));
-        renderTypeGrid();
+        var mid = b.getAttribute('data-module');
+        var idx = state.quickModules.indexOf(mid);
+        if (idx === -1) { state.quickModules.push(mid); } else { state.quickModules.splice(idx, 1); }
+        renderQuick();
         renderSummary();
       });
     });
   }
 
-  // 普通题型：按模块 → 可生成 KP→ 卡
-  function moduleTypeCards(subject, grade) {
-    var cards = [];
-    var modIds = SUBJECT_CONFIG[subject].modules;
-    modIds.forEach(function (mid) {
-      // M0/M13 为额外展示，视需求忽略；若 catalog 有则也允许
-      var kps = [];
-      if (window.CatalogUtils && window.CatalogUtils.getKPEntries) {
-        kps = window.CatalogUtils.getKPEntries(subject, grade).filter(function (k) { return k.moduleId === mid; });
-      }
-      if (!kps.length) return;
-      cards.push({ kind: 'module', moduleId: mid, label: MODULE_LABEL[mid] || mid, kps: kps });
-    });
-    return cards;
+  // HTML 转义：防止知识库/模块名等不可信文本注入 innerHTML（XSS 防护）
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = (s == null) ? '' : String(s);
+    return d.innerHTML;
   }
 
-  function renderTypeGrid() {
-    var subject = state.subject, grade = state.grade;
-    var html = '';
-    var cards = [];
+  // 教师模式：左栏题目模块 + 右栏知识点模块（两栏布局，选中左边题目→其知识点罗列右边多选）
+  function renderTeacher() {
+    var cards = moduleTypeCards(state.subject, state.grade);
 
-    // 特殊题型卡
-    SPECIAL_TYPES.forEach(function (item) {
-      if (isSpecialActive(subject, grade, item)) {
-        cards.push({ kind: 'special', key: item.key, label: item.name });
-      }
-    });
-
-    // 普通题型卡
-    cards = cards.concat(moduleTypeCards(subject, grade));
-
+    // 左栏：题目模块（仅题卡标题，不显示知识点数量），选中高亮
     if (!cards.length) {
-      typeGrid.innerHTML = '<div class="type-empty">该科目 / 年级暂无可练题型</div>';
-    } else {
-      cards.forEach(function (card) {
-        var cls = 'type-card', tag = '';
-        if (card.kind === 'special') {
-          cls += card.key === state.special && state.module == null ? ' on' : '';
-          tag = '<span class="tc-tag tc-special">' + (card.key === 'comprehensive' ? '混合全部' : card.key === 'exam' ? '计时限做' : '高年级挑战') + '</span>';
-        } else {
-          cls += state.module === card.moduleId && state.special == null ? ' on' : '';
-          tag = '<span class="tc-tag">' + card.kps.length + ' 个知识点</span>';
-        }
-        html += '<button type="button" class="' + cls + '" role="button" data-kind="' + card.kind + '"' +
-          (card.kind === 'special' ? ' data-key="' + card.key + '"' : ' data-module="' + card.moduleId + '"') + '>' +
-          card.label + tag + '</button>';
+      teacherModuleGrid.innerHTML = '<div class="type-empty">该科目 / 年级暂无可选题型</div>';
+      teacherKpGrid.innerHTML = '';
+      if (teacherKpHint) teacherKpHint.style.display = '';
+      return;
+    }
+    var mHtml = '';
+    cards.forEach(function (c) {
+      var on = state.teacherModules.indexOf(c.moduleId) !== -1 ? ' on' : '';
+      mHtml += '<button type="button" class="type-card' + on + '" data-module="' + c.moduleId + '">' + esc(c.label) + '</button>';
+    });
+    teacherModuleGrid.innerHTML = mHtml;
+
+    // 右栏：知识点模块（罗列左栏已选题目所包含的知识点，多选高亮）
+    renderTeacherKpGrid();
+  }
+
+  function renderTeacherKpGrid() {
+    var cards = moduleTypeCards(state.subject, state.grade);
+    // 仅展示被选中题目的知识点（右栏内容随左栏选择联动）
+    var selected = cards.filter(function (c) { return state.teacherModules.indexOf(c.moduleId) !== -1; });
+    if (!selected.length) {
+      teacherKpGrid.innerHTML = '';
+      if (teacherKpHint) { teacherKpHint.style.display = ''; teacherKpHint.textContent = '先在左侧选中一个或多个题目'; }
+      return;
+    }
+    var totalKp = state.teacherKps.length;
+    var html = '';
+    selected.forEach(function (c) {
+      html += '<div class="kp-group"><div class="kp-group-title">' + esc(c.label) +
+        '（已选 ' + c.kps.filter(function (k) { return state.teacherKps.indexOf(k.id) !== -1; }).length + '/' + c.kps.length + '）</div><div class="kp-grid">';
+      c.kps.forEach(function (k) {
+        var on = state.teacherKps.indexOf(k.id) !== -1 ? ' on' : '';
+        html += '<button type="button" class="kp-chip' + on + '" data-kp="' + k.id + '">' + esc(k.name) + '</button>';
       });
-      typeGrid.innerHTML = html;
-      typeGrid.querySelectorAll('.type-card').forEach(function (b) {
-        b.addEventListener('click', function () {
-          if (b.getAttribute('data-kind') === 'special') {
-            state.special = b.getAttribute('data-key');
-            state.module = null;
-          } else {
-            state.module = b.getAttribute('data-module');
-            state.special = null;
-          }
-          renderTypeGrid();
-          renderSummary();
-        });
+      html += '</div></div>';
+    });
+    if (teacherKpHint) { teacherKpHint.style.display = totalKp ? 'none' : ''; teacherKpHint.textContent = totalKp ? ('已选 ' + totalKp + ' 个知识点') : '点击右侧知识点卡片多选（高亮）'; }
+    teacherKpGrid.innerHTML = html;
+  }
+
+  // 教师模式：左栏题目模块选中高亮 → 联动右栏知识点
+  teacherModuleGrid.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-module]') : null;
+    if (!b) return;
+    var mid = b.getAttribute('data-module');
+    var idx = state.teacherModules.indexOf(mid);
+    if (idx === -1) state.teacherModules.push(mid); else state.teacherModules.splice(idx, 1);
+    b.classList.toggle('on');
+    // 取消选中题目时，同步清除其下已多选的知识点（其知识点不再罗列右栏）
+    if (idx !== -1) {
+      var card = moduleTypeCards(state.subject, state.grade).filter(function (c) { return c.moduleId === mid; })[0];
+      if (card) card.kps.forEach(function (k) {
+        var ki = state.teacherKps.indexOf(k.id);
+        if (ki !== -1) state.teacherKps.splice(ki, 1);
       });
     }
+    renderTeacherKpGrid();
+    renderSummary();
+  });
+  teacherKpGrid.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('[data-kp]') : null;
+    if (!b) return;
+    var kid = b.getAttribute('data-kp');
+    var idx = state.teacherKps.indexOf(kid);
+    if (idx === -1) state.teacherKps.push(kid); else state.teacherKps.splice(idx, 1);
+    b.classList.toggle('on');
+    renderSummary();
+  });
+
+  // 竞赛模式：竞赛题型
+  function renderCompetition() {
+    var cards = competitionCards(state.subject, state.grade);
+    if (!cards.length) {
+      gridCompetition.innerHTML = '<div class="type-empty">当前组合无可练竞赛题型（竞赛题型目前仅支持数学高年级）</div>';
+      return;
+    }
+    var html = '';
+    cards.forEach(function (c) {
+      var on = state.module === c.moduleId ? ' on' : '';
+      html += '<button type="button" class="type-card' + on + '" data-module="' + c.moduleId + '">' + c.label +
+        '<span class="tc-tag">竞赛专题</span></button>';
+    });
+    gridCompetition.innerHTML = html;
+    gridCompetition.querySelectorAll('.type-card').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.module = b.getAttribute('data-module');
+        renderCompetition();
+        renderSummary();
+      });
+    });
   }
 
-  // ---------- 汇总 + 跳转链接 ----------
+  // ---------- 主视觉区切换 ----------
+  function showStage() {
+    stageQuick.classList.remove('active');
+    stageTeacher.classList.remove('active');
+    stageCompetition.classList.remove('active');
+    if (state.mode === 'quick') { stageQuick.classList.add('active'); renderQuick(); }
+    else if (state.mode === 'teacher') { stageTeacher.classList.add('active'); renderTeacher(); }
+    else { stageCompetition.classList.add('active'); renderCompetition(); }
+  }
+
+  // ---------- 汇总 + 跳转 ----------
   function collectKps(subject, grade) {
-    // 当前选择的题型对应 KP 集合
     var out = [];
-    if (state.special === 'comprehensive' || state.special === 'exam') {
-      out = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade).map(function (k) { return k.id; });
-    } else if (state.special === 'competition') {
-      var mids = ['C1','C2','C3','C4','C5','C6','C7','C8','C9'];
-      out = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade)
-        .filter(function (k) { return k.moduleId && mids.indexOf(k.moduleId) !== -1; })
-        .map(function (k) { return k.id; });
+    if (state.mode === 'quick') {
+      // 快速模式：多选模块 → 汇总这些模块的全部知识点
+      var entries = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade);
+      state.quickModules.forEach(function (mid) {
+        entries.filter(function (k) { return k.moduleId === mid; })
+          .forEach(function (k) { if (out.indexOf(k.id) === -1) out.push(k.id); });
+      });
+    } else if (state.mode === 'teacher') {
+      out = state.teacherKps.slice();
     } else if (state.module) {
       out = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade)
         .filter(function (k) { return k.moduleId === state.module; })
@@ -521,40 +723,53 @@
   function updateStartBtnUrl() {
     var subject = state.subject, grade = state.grade;
     var kps = collectKps(subject, grade);
-    // kps 为空则落到 practice 装配区（用户手动选）
-    var url = 'practice.html?subject=' + encodeURIComponent(SUBJECT_CANON[subject] || subject) + '&grade=' + grade;
-    if (kps.length) url += '&count=10&kps=' + encodeURIComponent(kps.join(','));
-    startBtn.href = url;
+    var url = 'practice.html?subject=' + encodeURIComponent(SUBJECT_CANON[subject] || subject) + '&grade=' + grade + '&mode=' + state.mode;
+    if (kps.length) url += '&count=20&kps=' + encodeURIComponent(kps.join(','));
+    var btn = startBtns[state.mode];
+    if (btn) btn.href = url;
   }
 
   function renderSummary() {
-    var cn = { math: '数学', cn: '语文', en: '英语', chinese: '语文', english: '英语' };
-    var subjectName = cn[SUBJECT_CANON[state.subject]] || state.subject;
-    var gradeName = App.getGradeName(state.grade);
-    var typeName = '';
-    if (state.special === 'comprehensive') typeName = '综合练习';
-    else if (state.special === 'exam') typeName = '考试模式';
-    else if (state.special === 'competition') typeName = '竞赛题型';
-    else if (state.module) typeName = MODULE_LABEL[state.module] || state.module;
-
-    summaryCur.innerHTML = esc(subjectName + ' · ' + gradeName + ' · ' + (typeName || '未选题型'));
-    if (typeName) {
-      summarySub.textContent = '点击「开始练习」直接生成';
-    } else {
-      summarySub.textContent = '请选择下方题型';
-    }
-    kbLink.href = 'knowledge/knowledge-index.html?subject=' + encodeURIComponent(SUBJECT_CANON[state.subject] || state.subject) + '&grade=' + state.grade;
     updateStartBtnUrl();
   }
 
   function renderAll() {
-    renderSubjects();
-    renderGrades();
-    renderTypeGrid();
+    var md = MODE_DESC[state.mode] || MODE_DESC.quick;
+    modeDesc.textContent = md.title + '：' + md.desc;
+    if (modeSelect.value !== state.mode) modeSelect.value = state.mode; // 同步 URL 初态
+    showStage();
     renderSummary();
   }
 
-  // ---------- 知识库按需加载 ----------
+  // 下拉事件
+  modeSelect.addEventListener('change', function () {
+    state.mode = modeSelect.value;
+    // 竞赛模式自动切到数学
+    if (state.mode === 'competition' && state.subject !== 'math') {
+      state.subject = 'math';
+      subjectSelect.value = 'math';
+    }
+    if (state.mode !== 'teacher') state.teacherKps = [];
+    ensureKnowledge(state.subject).then(renderAll);
+  });
+  subjectSelect.addEventListener('change', function () {
+    state.subject = subjectSelect.value;
+    state.module = null;
+    state.quickModules = [];
+    state.teacherModules = [];
+    state.teacherKps = [];
+    ensureKnowledge(state.subject).then(renderAll);
+  });
+  gradeSelect.addEventListener('change', function () {
+    state.grade = Number(gradeSelect.value);
+    state.module = null;
+    state.quickModules = [];
+    state.teacherModules = [];
+    state.teacherKps = [];
+    renderAll();
+  });
+
+  // 知识库按需加载
   function ensureKnowledge(subject) {
     if (window.KnowledgeBank && window.KnowledgeBank.ensureKnowledgeData) {
       return window.KnowledgeBank.ensureKnowledgeData(SUBJECT_CANON[subject] || subject);
@@ -563,9 +778,9 @@
   }
 
   // 启动
-  ensureKnowledge(state.subject).then(function () {
-    renderAll();
-  });
+  var footYear = document.getElementById('footYear');
+  if (footYear) footYear.textContent = new Date().getFullYear();
+  ensureKnowledge(state.subject).then(renderAll);
 })();
 </script>
 </body>

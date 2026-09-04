@@ -16,6 +16,10 @@ Homework Help（小学练习本）是一个**零依赖、无构建步骤的纯�
 （Ontology → Capability → Strategy → Generator/Selector → Validator → Learner → Presentation）。
 此为唯一生成主链，不再引入 V2 引擎。核心层已冻结，仅允许 Bug Fix（见 §6）。
 
+**当前发布版本：V4.1.0。** 项目按四层功能归类（UI 显示 / 生成引擎 / 知识库 / 大服务层），
+权威机器清单为 `architecture/layers.json`（门禁 `npm run verify:layers`），人类可读映射见
+[ARCHITECTURE_LAYERS.md](ARCHITECTURE_LAYERS.md)。
+
 ---
 
 ## 2. 技术栈
@@ -66,9 +70,16 @@ Homework Help/
 ├── scripts/                # 代码生成/同步脚本
 ├── test/ + tests/          # Node 测试 + 遗留 HTML 测试运行器
 ├── .github/workflows/ci.yml # CI 工作流
-├── docs/                   # 文档（本目录 + DEV_LOG.md + reports）
+├── docs/                   # 文档（本目录 + DEV_LOG.md + PROJECT_STRUCTURE.md + ARCHITECTURE_LAYERS.md）
+│── architecture/           # 权威四层机器清单（layers.json）
 └── archive/                # 历史归档（死代码/迁移备份）
 ```
+
+> 目录与关键文件布局详见 [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)。
+> **四层逻辑归类（UI 显示 / 生成引擎 / 知识库 / 大服务）见 [ARCHITECTURE_LAYERS.md](ARCHITECTURE_LAYERS.md)；机器清单 `architecture/layers.json`，门禁 `dev/check-architecture-layers.js`（`npm run verify:layers`）。**
+> 三层功能架构：UI 层（页面）→ 关联层（`shared/practice-bridge.js`：`PracticeBridge` + 外围控制层
+> `PracticeBridge.control`）→ 生成层（Frozen Core，M1–M7）。UI 不直连生成层，生成层不读
+> `kpAllocation/mode`，每-KP 配额由关联层控制层编排补偿（知识点驱动生成）。
 
 ---
 
@@ -116,10 +127,23 @@ Homework Help/
 - `print.js`：打印路由（`PRINT_ROUTES`），预览与打印共用同一 HTML。
 
 ### 4.6 用户页面
-- `practice.html`（~1474 行）：核心宿主，含快速切换、「装配区」（科目/年级/知识点选择就地生成）、
-  题量/难度/题型工具栏、批改/错题本/打印/显示答案、全局错误捕获、生成进度乐观 UI、闭环引导 Toast。
+- `practice.html`（~1780 行）：核心宿主，含快速切换、「装配区」（科目/年级/知识点选择就地生成）、
+  题量/难度/题型工具栏（题量 20/30/50/自定义、难度 1–10 默认 1、教师模式「每知识点数量填空」）、
+  批改/错题本/打印/显示答案、全局错误捕获、生成进度乐观 UI、闭环引导 Toast。
 - `math-types.html`：按知识模块分组的题型目录。
 - `index.html`：双海报营销首页 + JSON-LD SEO。
+
+### 4.7 关联层（UI ↔ 生成层）与外围控制层
+- **`shared/practice-bridge.js`**：UI 与题目生成层之间的唯一枢纽，公开 `PracticeBridge`：
+  `start / submit / newSession / onStartFeedback / onSubmitFeedback`——UI 只调这些入口，不直接 `new PracticeSession`。
+- **外围控制层 `PracticeBridge.control`（ControlService·服务模式）**：集中解析并全面介入
+  数量 `count`（1–50 默认 20）· 难度 `difficulty`（1–10 默认 1）· 知识点 `knowledgePointId/knowledgePoints` ·
+  每-KP 配额 `kpAllocation`，产出执行计划（`ControlService.plan`）：
+  - `single`：单次 `count`+`knowledgePoints[]` 直发生成层；
+  - `orchestrated`：多知识点且带每-KP 配额时按**知识点驱动生成**——按各知识点配额并发调生成层 `start()`、
+    合并为一个题目集，聚合会话统一批改；不改生成层即可兑现「每知识点数量」。
+- 分层约束：生成层忽略 `kpAllocation/mode`，故由关联层控制层编排补偿；`dev/check-ui-boundary.js` 门禁确保
+  UI 唯一生成入口 = `GenerationEngine.generate()`。
 
 ---
 

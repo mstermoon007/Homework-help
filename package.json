@@ -1,6 +1,6 @@
 {
   "name": "homework-help",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "private": true,
   "description": "小学练习本（Homework Help）— 免费无广告的小学 1-6 年级练习题生成与打印工具",
   "scripts": {
@@ -14,6 +14,7 @@
     "verify:golden": "node dev/check-golden.js",
     "verify:snapshot": "node dev/check-snapshot.js",
     "verify:rules": "node dev/check-architecture-rules.js",
+    "verify:layers": "node dev/check-architecture-layers.js",
     "verify:m1:ontology": "node dev/check-ontology-schema.js",
     "verify:m1:operation": "node dev/check-operation-ontology.js",
     "verify:m1:factual": "node dev/check-factual-content.js",

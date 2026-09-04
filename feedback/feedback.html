@@ -3,18 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>问题反馈 - Homework Help</title>
+  <title>问题反馈 - 小学练习本</title>
   <link rel="stylesheet" href="feedback.css">
+  <style>
+    body {
+      padding-top: 0;
+    }
+    .top-nav {
+      background: #ffffff;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      margin-bottom: 24px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #5b8def;
+      text-decoration: none;
+    }
+    .nav-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      object-fit: cover;
+      display: block;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-link {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #7a879c;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .nav-link:hover {
+      color: #5b8def;
+      background: #eef3fb;
+    }
+    .nav-link.active {
+      color: #5b8def;
+      background: #eef3fb;
+    }
+    .site-footer {
+      margin-top: 40px;
+      padding: 18px 16px 24px;
+      text-align: center;
+      color: #7a879c;
+      font-size: 0.75rem;
+      line-height: 1.9;
+      border-top: 1px solid #e3ecf7;
+    }
+    .site-footer a { color: #7a879c; text-decoration: none; }
+    .site-footer a:hover { color: #5b8def; text-decoration: underline; }
+    .site-footer .footer-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; margin-top: 4px; }
+    .site-footer .footer-sep { opacity: 0.5; }
+    .site-footer .footer-beian img { vertical-align: -2px; }
+  </style>
 </head>
 <body>
+  <!-- 顶部导航栏 -->
+  <nav class="top-nav">
+    <a class="nav-brand" href="../index.html">
+      <img src="../assets/logo.webp" alt="小学练习本" class="nav-logo">
+      <span>首页</span>
+    </a>
+    <div class="nav-links">
+      <a href="../contact.html" class="nav-link">联系我们</a>
+      <a href="feedback.html" class="nav-link active">问题反馈</a>
+    </div>
+  </nav>
+
   <div class="feedback-container">
     <header class="feedback-header">
-      <a href="../index.html" class="back-link">← 返回首页</a>
       <h1>问题反馈</h1>
       <span class="header-note">您的反馈将帮助我们改进</span>
     </header>
 
-    <form id="feedback-form" class="feedback-form">
+    <form id="feedback-form">
       <!-- 主题 -->
       <div class="form-group">
         <label for="subject">主题 <span class="required">*</span></label>
@@ -53,6 +134,24 @@
     </form>
   </div>
 
+  <footer class="site-footer">
+    <div>© <span id="footYear"></span> 甘肃源始人广告传媒有限公司 版权所有</div>
+    <div class="footer-meta">
+        <span class="footer-beian">
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">陇ICP备2026008157号-1</a>
+            <span class="footer-sep">|</span>
+            <a href="http://www.beian.gov.cn/" target="_blank" rel="noopener">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='%237a879c'%3E%3Cpath d='M12 2l7 3v6c0 5-3.5 9.5-7 11-3.5-1.5-7-6-7-11V5l7-3z'/%3E%3C/svg%3E" alt="" width="14" height="14"> 粤公网安备 XXXXXXXXXXXX号
+            </a>
+        </span>
+        <span class="footer-sep">|</span>
+        <a href="../contact.html">联系我们</a>
+        <span class="footer-sep">|</span>
+        <a href="feedback.html">问题反馈</a>
+    </div>
+  </footer>
+
+  <script>(function(){var e=document.getElementById('footYear');if(e)e.textContent=new Date().getFullYear();})();</script>
   <script src="feedback.js"></script>
 </body>
 </html>

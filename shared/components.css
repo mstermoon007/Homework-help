@@ -1,40 +1,11 @@
 /* ============ 共享组件（Layer 2 · components） ============
- * 跨页面可复用的 UI 原子/组件：返回按钮、页头、卡片、按钮、题型卡片、题目卡片(renderCard)、
+ * 跨页面可复用的 UI 原子/组件：页头、卡片、按钮、题型卡片、题目卡片(renderCard)、
  * 页面控制器、四线格等。所有视觉原子属性引用 shared/tokens.css 的变量。
  * 依赖：tokens（变量） → base（reset）。
  * 注意：题目卡片(.question-card 家族)由 PluginUtil.renderCard 类化输出，样式统一在此维护，
  *       插件自定义卡片请复用这些类，不要内联重复样式。
  */
 @layer components {
-
-/* 返回按钮（固定在左上角，淡蓝透明玻璃效果） */
-.back-home {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    z-index: 999;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 18px;
-    background: linear-gradient(160deg, rgba(255,255,255,0.7), rgba(173,216,255,0.45));
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    color: #2b5cbf;
-    border: 1.5px solid rgba(255,255,255,0.75);
-    border-radius: 22px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-    text-decoration: none;
-    box-shadow: 0 4px 16px rgba(40,90,160,0.2);
-}
-.back-home:hover {
-    background: rgba(255,255,255,0.9);
-    transform: translateY(-1px);
-    color: #1f4c9f;
-}
 
 /* 年级文字（纯文字，无胶囊/背景，字号与科目一致 2.0rem） */
 .page-title .pt-grade {

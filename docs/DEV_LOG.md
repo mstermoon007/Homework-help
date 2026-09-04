@@ -7,6 +7,136 @@
 
 ---
 
+## [V4.1.0] — 2026-09-04
+
+本版本主题：**四层架构归类整合（UI 显示 / 生成引擎 / 知识库 / 大服务）+ 关联层收敛与生产链路修复**。
+
+### 项目整理：四层架构归类（物理稳定 + 逻辑清单）
+- 采纳用户分层口径：**UI 层（显示）/ 生成层（题目生成核心引擎）/ 知识点库（基层数据核心）/ 大服务层（信息传递 · 项目控制 · 外围样式 · 打印等外围控制）**，除 UI/生成/知识外**全归大服务层**。
+- **`architecture/layers.json`**（新增）：权威四层机器清单，逐文件归类：
+  - `UI`：页面 + 渲染宿主 + `sw.js`;
+  - `GENERATION`：引擎壳 / 语义 / 生成器 / 服务接口 / 呈现渲染 / SVG / 题型插件（`sub` 7 组）;
+  - `KNOWLEDGE`：知识库 + 本体 + 字库 + 映射;
+  - `SERVICE`：关联/策略/校验/能力/学习者/基础/状态IO/目录/CSS（`sub` 9 组）。
+- **`dev/check-architecture-layers.js`**（新增）+ `npm run verify:layers`：校验 JSON 结构、登记文件存在性、**覆盖率**（`shared/`+`plugins/`+根 `.js/.css` 共 255 文件全部已归类）。
+- **`docs/ARCHITECTURE_LAYERS.md`**（新增）：人类可读四层映射 + 硬红线 + 物理不移动原因（`common.js` 自推导注入同目录 6 子模块、预编译 bundle 内嵌 `shared/` 模块 id、sw.js/门禁/测试硬编 `shared/` 路径）。
+- **为何不物理移动**：深度排查确认 `shared/` 为紧密耦合模块根，无安全孤立可移文件；采用「物理稳定 + 逻辑清单」。
+
+### 生产链路修复（P0）
+- **`shared/practice-session.js`**（冻结授权 Bug Fix P0-1）：`start()` 依赖加载改为回退 `global.GenerationEngine`，消除浏览器会话 `start()` 同步 TypeError（不再依赖未加载的 `generation/api.js`）。
+- **`practice.html`**（P0-2）：补 `checkBtn` 点击绑定（`bindEvents()` 内）。
+- **`shared/semantic-question.js`**（P0-3，非冻结）：答案映射 `hasOwnProperty + !=null` 保留 `false/0/''`；`normalizeSemanticQuestion` 补 `options`/`data` 映射与 `correctIndex` 推导。
+- **`shared/presentation-engine.js`**（冻结授权 Bug Fix P0-4）：`generateQuestions` 门禁改为「仅拦截零可用输出」，修复 R28-3 回归。
+- **图形校验误报修复（次级）**：`normalizeSemanticQuestion` 不再用空壳 `{type:null}` 兜底、不再把真实描述符洗成 `custom/rawSvg`——无图形→`null`（validator skip）、有描述符→保留、原始 svg→`custom`；4 场景探针全对，消除 `GRAPHIC_TYPE_UNREGISTERED` 误判。
+
+### 关联层收敛（B1–B5）
+- 删除死代码 `buildInstruction` / `sessionConfigFromInstruction` / `start()` 的 `__profile/__orchestrated/__partitions` 遗留路径（全仓零外部调用）。
+- **`computeResult`** 删除结构不一致的本地降级，无条件委托 `PluginUtil.computeResult`（统一 `{score:百分比, results:boolean[]}` 语义，杜绝「全部误判正确」）。
+- **`asmGenerateFromSelection`** 收敛冗余 `newSession`（其后 `start()` 会重建覆盖）。
+- **print 路径**改走关联层唯一入口 `PracticeBridge.start`（携带 `onStartFeedback`），`printFile()` 兼容聚合会话（无 `.print()` 时回退 DOM 整卷打印）；`applySessionFeedback` 回写真实 `practiceSession` 供打印。
+
+### UI 层清理（U1–U3）
+- 删 `ASM_SMART` / `asmState.smartSeeded`（死数据）、空 `resize` 监听、3 处恒真三元（`deriveTypeName()/state/ensureLegacyPlugins` 直接引用）。
+
+### 门禁重锚与清理
+- **`dev/check-ui-boundary.js`**：统一生成入口断言 `practiceSession.start(` → **`PracticeBridge.start(`**（B5 收敛后 UI 不再直调 `new PracticeSession().start()`）。
+- **`dev/check-practice-page.js`**：入口断言同步 `PracticeBridge.start(`；`PLUGIN_REGISTRY` 放宽为「URL `plugin=` 路由的索引读取，非出题」——清掉既有的 1 项假阳性（8/9→9/9）。
+- **删除冗余审计/一次性脚本**：`verify-competition.js`、`verify-g5-competition.js`、`competition-report.js`、`concurrency-check.js`、`performance-budget.js`（均未入 `package.json`、无实时入边，残留引用为注释/历史归档）。
+- **`dev/verify-pages.js`**：修正 `math/chinese/english/subject-types.html` 为纯重定向桩的陈旧期望（`PAGE_DEPS`/`CRITICAL_DOM`/`ENTRY_SCRIPTS`），并纳入 chinese/english → 123/123。
+- **`dev/frozen-core-baseline.json`**：按授权 Bug Fix 重锚基线（90 文件）；本会话仅含 P0-1/P0-4 两处冻结编辑，其余为基线(09-02)之后既存漂移。
+
+### 验证（全绿）
+- 四层架构门禁 PASS（255 文件全归类）· verify-pages 123/123 · UI-boundary 6/6 · practice-page 9/9 · presentation-runtime PASS ·
+  engine 测试 8/8 · frozen-core 完整 · syntax 418 文件 0 错 · lint 无违规 · architecture-rules ERROR 0/WARNING 8（既存）·
+  regression 137 组合/288 边界全满分 · verify:m2 PASS · sync-sw-version PASS。
+
+### 版本号
+- `4.0.4 → 4.1.0`（`package.json`、`shared/version.js`、`sw.js`、`index.html` 回退常量、`dev/test-sw-cache-upgrade.js` 同步）。
+
+---
+
+## [V4.0.4] — 2026-09-03
+
+本版本主题：**凑十法 SVG 升级为教材标准连线图（Frozen Core 授权优化）**。
+
+### 背景
+用户提供教材标准凑十法参考图（AI 导出 SVG）：顶行算式 + 答案框、拆分弧线 + 双拆分框、
+凑十折线 + "10" 标注、汇总括线 + 答案回连线。原实现（`shared/svg-make-ten.js`）为
+4 行文字算式逐步展示，与教材标准图式不符。
+
+### 变更
+- **`shared/svg-make-ten.js`**（M7 冻结文件，本次为授权优化）：
+  新增 `renderMakeTenFigure(a, b, opts)`，`makeTen()` 改为输出标准教材连线图——
+  ① 顶行 `a + b = [答案]`（答案红色填入答案框）；② b 经二次贝塞尔弧线下接两小框
+  （c1 凑整蓝 / c2 剩余橙）；③ a 折线下行接左框竖引线，线下标注 "10"（蓝）；
+  ④ 括线自 10 接入右框 + 底部 "+" + 答案框回连线（10+c2=答案）。
+  布局以 22px 字号为基准按 `k=fs/22` 缩放，`fontSize/width/animate/printMode/title`
+  选项与 `mt-step` 四步淡入动画、`prefers-reduced-motion` 降级、打印静态约定全部保留。
+  平十 `pingTen` / 破十 `poTen` 维持原步骤行式渲染，API 与无效输入返回 null 契约不变。
+- **`dev/test-svg-make-ten.js`**：凑十断言由文字算式内容（"5 = 1 + 4"）更新为
+  标准图结构断言（3 矩形 / 3 折线 / 1 弧线 / 顶行原式 / 拆分框数字 / 10 标注 / 答案填框）。
+- **`dev/frozen-core-baseline.json`**：仅外科式更新 `shared/svg-make-ten.js` 条目
+  （hash 54232568→872ead43）；其余 14 处既有漂移（生成层重构提交 df6b720 未重锚）保持可见，未被吞并。
+
+### 验证
+- `node dev/test-svg-make-ten.js`：30/30 断言通过（含无效输入 null、批量组合、NaN 泄漏检查）。
+- `node dev/verify-svg.js`：219 个 SVG 结构校验通过（含 animate/printMode 语义 6 项）。
+- `node dev/check-renderer-coverage.js`：0 missing renderers。
+- `node --test tests/presentation/renderer.test.js tests/generator/graphic-renderer.test.js`：29 pass / 0 fail。
+- `npm run check-lint`：无违规（颜色复用文件内既有令牌常量）。
+- 视觉验收：8+4 与参考图逐元素对齐（浏览器对比页核对）。
+- 影响面确认：golden/snapshot/renderer 测试仅断言结构（svg 存在性），knowledge 静态页
+  不内嵌该 SVG，`sw.js` 预缓存将于下次发版随 APP_VERSION 自增整体失效。
+
+---
+
+### 补记 · 关联层外围控制层 + 三级页 UI 统一（2026-09-03，首份结构文档并入）
+
+#### 背景
+用户要求以「只改关联层」落地一套**外围控制层**：在不改 UI 层、不改题目生成层的前提下，
+把「数量 count / 难度 difficulty / 知识点 knowledgePoints / 知识点驱动生成（每知识点题量）」全链路统一驱动。
+审计发现：`PracticeSession`（M7 冻结）构造函数与 `_buildGenerationRequest` 只消费单个 `count`+
+`difficulty`+`knowledgePointIds`+`questionType`+`adaptive`+`learnerProfile`+`titleType`，
+**忽略 `kpAllocation` / `mode` / `subtype` / `pluginIds`** —— 即此前「每知识点数量填空」只是 UI 建好、
+生成层却忽略的占位消息，并非实际生效。
+
+#### 变更（全部落在关联层 `shared/practice-bridge.js`，未触 UI 与生成层）
+- **新增外围控制层 `ControlService`**（`Object.freeze`，作为独立命名空间 **`PracticeBridge.control`**）：
+  - `resolveCount` / `countProfile`：数量裁剪 1–50，默认 **20**，预置 20/30/50/自定义；
+  - `resolveDifficulty`：难度裁剪 1–10，默认 **1**；
+  - `extractKnowledgePoints` / `hasPerKpAllocation` / `kpAllocationPartitions`：归一化
+    `knowledgePointId` / `knowledgePoints` / 每-KP 配额 `kpAllocation`；
+  - `plan(ui)`：产出一份**执行计划** `{ profile, mode, partitions }`：
+    - `mode='single'` → 单次 `count`+`knowledgePoints[]` 直发生成层；
+    - `mode='orchestrated'` → 有每-KP 配额（多个知识点）时按**知识点驱动生成**：
+      对每个知识点按其配额并发建 `PracticeSession.start()`（每 KP 单 `count`），再**合并为一个题目集**，
+      `submit()` 走聚合会话 shim 对合并题集统一批改——不改生成层即可兑现「每知识点数量」。
+  - `sessionConfig` / `mergedTitle`：指令→生成层配置翻译、合并标题（「二年级数学 · 口算+竖式（20题）」）。
+- **`start()` 接入控制层**：先 `ControlService.plan()` 决定 single 直发 / orchestrated 编排；反馈契约不变
+  （成功仍 `{ ok, questions, html, meta, session, instruction }`，失败 `{ ok:false, error:{code,message} }`）。
+- **UI 三级页统一（practice/select/index）**：题量 chip 改为 20/30/50/自定义（删 10、默认 20，自定义同框直填数字）；
+  难度初始 `3→1` 全链路（`state.difficulty`、HTML input、`parseUrlParams` 兜底）；教师模式
+  `mode=teacher` 渲染为「每知识点数量填空」（横向 flex-wrap `.kp-ratio-flow`/`.kp-blank`），quick 模式维持权重占比±按钮；
+  `parseUrlParams` 补 `mode` 字段、新增 `isTeacherMode`；删除死代码 `openWrongBook()`、
+  冗余 `state.kps`/`var ensureKB`、孤儿 `typeGroup/difficultyGroup/kpGroup` 等；页脚图标统一彩色双层蓝盾、
+  nav logo 统一透明图层（object-fit contain、去背景渐变/圆角、`select.html` 加 `text-decoration:none`）。
+
+#### 验证
+- 单元自测（node 伪层）：count 兜底20/自定义37/越界999→20、难度默认1/5→5；plan single 与 orchestrated 均正确；
+  编排建 2 个每-KP 会话（a=12, b=8）、合并 20 题、聚合 `submit()` 返回 score/total；单次直发 config 正确透传。
+- CI：`dev/check-ui-boundary.js` **6/6**、`dev/check-practice-page.js` **8/9**（唯 FAIL「无 Plugin 调用」为既有假阳性，
+  正则命中 `PLUGIN_REGISTRY`，本次未新增）；`node --check shared/practice-bridge.js` OK。
+- headless 冒烟：practice.html 正常加载 `PracticeBridge` 并渲染生成按钮。
+- **分层约束确认**：`shared/practice-session.js`（生成层）git diff 无改动；practice.html（UI）在本次外围控制层
+  工作**未修改**（UI 变更均在上一轮界面统一任务完成）。
+
+#### 文档
+- 新增 **`docs/PROJECT_STRUCTURE.md`**（项目结构文档）：目录 + 三层功能架构（UI→关联层→生成层）+ 各目录/文件速查。
+- `docs/DEVELOPMENT.md`：§3 目录结构补 `PROJECT_STRUCTURE.md` 与三层架构一行、新增 §4.7 关联层与外围控制层。
+- `README.md`：项目结构注释与文档导航补 `PROJECT_STRUCTURE.md` 引用。
+
+---
+
 ## [V4.0.3] — 2026-09-02
 
 本版本主题：**知识库语义字段补填 + 生成管线体检修复**。

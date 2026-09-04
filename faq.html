@@ -7,16 +7,66 @@
 <meta name="description" content="Homework Help 家长常见问题解答：是否收费、支持年级科目、打印方法、教材同步、注册登录、手机平板使用等。">
 <link rel="stylesheet" href="shared/tokens.css">
 <style>
-  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;max-width:860px;margin:0 auto;padding:32px 20px;color:#27324a;line-height:1.75;background:#fafbff;}
-  .crumb{font-size:13px;color:var(--muted);margin-bottom:18px;}
-  .crumb a{color:var(--brand-d);text-decoration:none;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;max-width:860px;margin:0 auto;padding:0 20px 32px;color:#27324a;line-height:1.75;background:#fafbff;}
+  .top-nav {
+    background: #ffffff;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    margin-bottom: 24px;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #5b8def;
+    text-decoration: none;
+  }
+  .nav-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    object-fit: cover;
+    display: block;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-link {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #7a879c;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .nav-link:hover {
+    color: #5b8def;
+    background: #eef3fb;
+  }
   h1{font-size:28px;margin:0 0 6px;}
   .meta{font-size:13px;color:#9aa5b5;margin-bottom:26px;}
   .faq{background:#fff;border:1px solid #e6ecf7;border-radius:14px;padding:18px 22px;margin:14px 0;box-shadow:0 2px 8px rgba(63,111,209,.06);}
   .faq h2{font-size:17px;margin:0 0 8px;color:#1f2a44;}
   .faq p{margin:0;color:#42506b;}
   .btn{display:inline-block;margin-top:22px;background:var(--brand-d);color:#fff;text-decoration:none;padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px;}
-  footer{margin-top:40px;font-size:12px;color:#b3bccd;text-align:center;}
+  footer{margin-top:40px;font-size:12px;color:#b3bccd;text-align:center;border-top:1px solid #e3ecf7;padding:20px 16px 16px;line-height:1.9;}
+  footer .footer-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;margin-top:4px;}
+  footer a{color:#b3bccd;text-decoration:none;}
+  footer a:hover{color:var(--brand);text-decoration:underline;}
+  footer .footer-sep{opacity:.5;}
+  footer .footer-beian img{vertical-align:-2px;}
 </style>
 <script type="application/ld+json">
 {
@@ -149,7 +199,16 @@
 <link rel="canonical" href="https://home.modouyu.top/faq.html">
 </head>
 <body>
-<nav class="crumb"><a href="index.html">首页</a> › <span>常见问题</span></nav>
+<nav class="top-nav">
+    <a class="nav-brand" href="index.html">
+        <img src="assets/logo.webp" alt="小学练习本" class="nav-logo">
+        <span>首页</span>
+    </a>
+    <div class="nav-links">
+        <a href="contact.html" class="nav-link">联系我们</a>
+        <a href="feedback/feedback.html" class="nav-link">问题反馈</a>
+    </div>
+</nav>
 <h1>常见问题（FAQ）</h1>
 <div class="meta">关于 Homework Help 小学家庭作业生成器的常见疑问</div>
 
@@ -170,6 +229,22 @@
 <div class="faq"><h2>这个工具是给谁用的？</h2><p>专为家长辅导孩子学习设计，帮助孩子在家练习小学 1-6 年级的数学、语文、英语。学习仍需父母陪伴与引导，工具只是辅助。</p></div>
 
 <a class="btn" href="index.html">返回首页</a>
-<footer>Homework Help · 免费无广告小学 1-6 年级家庭作业生成器 · 纯前端</footer>
+<footer>
+    <div>© <span id="footYear"></span> 甘肃源始人广告传媒有限公司 版权所有</div>
+    <div class="footer-meta">
+        <span class="footer-beian">
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">陇ICP备2026008157号-1</a>
+            <span class="footer-sep">|</span>
+            <a href="http://www.beian.gov.cn/" target="_blank" rel="noopener">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='%237a879c'%3E%3Cpath d='M12 2l7 3v6c0 5-3.5 9.5-7 11-3.5-1.5-7-6-7-11V5l7-3z'/%3E%3C/svg%3E" alt="" width="14" height="14"> 粤公网安备 XXXXXXXXXXXX号
+            </a>
+        </span>
+        <span class="footer-sep">|</span>
+        <a href="contact.html">联系我们</a>
+        <span class="footer-sep">|</span>
+        <a href="feedback/feedback.html">问题反馈</a>
+    </div>
+</footer>
+<script>(function(){var e=document.getElementById('footYear');if(e)e.textContent=new Date().getFullYear();})();</script>
 </body>
 </html>

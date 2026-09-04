@@ -14,7 +14,7 @@
  *   [F] 无 SVG 判断：svg-registry 直接调用 / SVGUtil 页面级调用 / state.presentationHtml
  *
  * 保留：
- *   - practiceSession.start()（统一生成入口，内部经 GenerationEngine.generate）
+ *   - PracticeBridge.start()（关联层唯一生成入口，内部经 PracticeSession → GenerationEngine.generate）
  *   - PluginUtil.computeResult（批改判定，无 Plugin 依赖）
  *   - UIState.generationHtml（P3-R03 生成状态）
  *
@@ -51,7 +51,8 @@ add('无 Strategy 判断', !/StrategyEngine\.plan\s*\(|StrategyConfig\.|tryGener
 add('无 Generator 判断', !/GeneratorRegistry\.|generator-selector\.|GeneratorSelector\./.test(code));
 
 // [C] Plugin 调用
-add('无 Plugin 调用', !/state\.plugin\b|plugin\.generate\s*\(|plugin\.render\s*\(|PluginLoader\.loadPlugin|PLUGIN_REGISTRY/.test(code));
+// 只禁止插件【生成/渲染】直连；window.PLUGIN_REGISTRY 仅作 URL plugin= 路由的索引读取（非出题），合法保留。
+add('无 Plugin 调用', !/state\.plugin\b|plugin\.generate\s*\(|plugin\.render\s*\(|PluginLoader\.loadPlugin/.test(code));
 
 // [D] Legacy 判断
 add('无 Legacy 判断', !/StrategyLegacyAdapter|GenerationEngine\.generateLegacy\s*\(|renderLegacySet\s*\(|tryGenerateViaPresentation/.test(code));
@@ -63,7 +64,7 @@ add('无难度计算', !/App\.diffLevel|hasLevelSetting|adaptiveDelta|declaredKn
 add('无 SVG 判断', !/SVGUtil\.(?:render|resolve|register|draw)\s*\(|svg-registry\.render\s*\(|state\.presentationHtml|presentationMode\s*\(/.test(code));
 
 // 保留：统一入口 + 批改 + 状态
-add('保留 practiceSession.start() 统一生成入口', /practiceSession\.start\s*\(/.test(code));
+add('保留 PracticeBridge.start() 统一生成入口', /PracticeBridge\.start\s*\(/.test(code));
 add('保留 UIState.generationHtml 生成状态', /generationHtml/.test(code));
 add('批改经 PluginUtil.computeResult（无 Plugin 依赖）', /PluginUtil\.computeResult/.test(code));
 

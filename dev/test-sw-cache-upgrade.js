@@ -50,10 +50,10 @@ try {
   versionMod = require(path.join(ROOT, 'shared/version.js'));
 } catch (e) {
   console.log('WARN: shared/version.js not found, using defaults for test');
-  versionMod = { CACHE_VERSION: 'homework-help-4.0.2' };
+  versionMod = { CACHE_VERSION: 'homework-help-4.1.0' };
 }
 
-var CACHE_VERSION = versionMod.CACHE_VERSION || 'homework-help-4.0.2';
+var CACHE_VERSION = versionMod.CACHE_VERSION || 'homework-help-4.1.0';
 var EXPECTED_OLD_CACHE = 'hw-help-v1';
 var EXPECTED_NEW_CACHE = 'hw-help-homework-help-v2';
 

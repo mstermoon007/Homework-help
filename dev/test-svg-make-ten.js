@@ -20,10 +20,17 @@ assert(/10 - 8/.test(poText) && poText.includes('2'), '展示 10-8=2');
 assert(/2 \+ 5/.test(poText) || /2 ＋ 5/.test(poText) || (poText.includes('2') && poText.includes('5')), '展示 2+5');
 assert(poText.includes('= 7'), '结果 7');
 
-console.log('===== 凑十 =====');
-var mk = plain(M.makeTen(9, 5));
-assert(mk.includes('5 = 1 + 4'), '拆第二加数：5=1+4');
-assert(mk.includes('9 + 1') && /= 14/.test(mk), '9+1=10，10+4=14');
+console.log('===== 凑十（标准教材连线图） =====');
+var mkSvg = M.makeTen(9, 5);
+var mk = plain(mkSvg);
+assert(typeof mkSvg === 'string' && mkSvg.startsWith('<svg'), '凑十输出完整 SVG');
+assert(mk.includes('9') && mk.includes('5') && mk.includes('='), '顶行原式 9 + 5 =');
+assert(mk.includes('1') && mk.includes('4'), '拆分框展示 1 与 4（5=1+4）');
+assert(mk.includes('10'), '凑十标注 10（9+1=10）');
+assert(mk.includes('14'), '答案框填入 14');
+assert((mkSvg.match(/<rect /g) || []).length === 3, '标准图含 3 个矩形（答案框+左右拆分框）');
+assert((mkSvg.match(/<polyline/g) || []).length === 3, '标准图含 3 条折线（凑十折线/答案回连线/汇总括线）');
+assert((mkSvg.match(/<path /g) || []).length === 1, '标准图含 1 条拆分弧线');
 assert(M.makeTenSteps(9, 5).answer === 14, 'steps.answer=14');
 
 console.log('===== 平十 =====');

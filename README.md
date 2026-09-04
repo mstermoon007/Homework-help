@@ -118,7 +118,8 @@ Homework-help/
 ├── pinyin-bank.js          # 拼音词库
 ├── sw.js                   # Service Worker 离线缓存
 ├── tests/                  # 自动化测试
-├── docs/                   # 文档（仅三份核心文档：DEV_LOG / DEVELOPMENT / README）
+├── docs/                   # 文档（DEV_LOG / DEVELOPMENT / PROJECT_STRUCTURE / ARCHITECTURE_LAYERS）
+├── architecture/           # 权威四层逻辑清单（layers.json，`npm run verify:layers` 校验）
 └── dev/                    # 开发校验脚本（coverage/verify/test）
 ```
 
@@ -128,6 +129,8 @@ Homework-help/
 
 详见 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)（最新开发状态、规范、技术栈、Frozen Core 保护）。
 开发日志见 [docs/DEV_LOG.md](docs/DEV_LOG.md)。
+目录与关键文件布局见 [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md)。
+四层逻辑归类（UI 显示 / 生成引擎 / 知识库 / 大服务层）见 [docs/ARCHITECTURE_LAYERS.md](docs/ARCHITECTURE_LAYERS.md)。
 
 - 新增题型：复制 `plugins/_template.js` 样板 → 实现 `generateQuestions` → 在 `plugins/registry.js` 注册 → 运行 `npm run check:registry` 与 `npm run check-plugin-interfaces` 验证。
 - 知识库静态页：`npm run generate:knowledge`（按源数据哈希增量生成，未变页面自动跳过）/ `npm run watch:knowledge`（监听 `shared/knowledge-*.js` 变化自动重建）。

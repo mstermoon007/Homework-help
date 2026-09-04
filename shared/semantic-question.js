@@ -143,7 +143,11 @@ function createSemanticQuestion(raw) {
     }),
 
     // ⑧ Graphic (描述性，非渲染)
-    graphic: deepClone(raw.graphic) || Schema.defaultGraphic(),
+    // 有真实 graphic 描述才构造成对象；否则置 null（而非空壳 {type:null}）。
+    // 修复：此前用 Schema.defaultGraphic()（{type:null,...}）作兜底，该真值空对象会让
+    // graphic-validator 的「缺少 graphic.type」分支误触发，把无图形题误判为 ERR
+    //（raw.svg 已由下方 sq.svg 单独保留，不走 graphic 描述符，避免触发「禁止原始 SVG」）。
+    graphic: deepClone(raw.graphic) || null,
 
     // ⑨ Metadata (可追溯)
     metadata: metadata
@@ -154,6 +158,19 @@ function createSemanticQuestion(raw) {
   if (raw.check != null) sq.check = raw.check;
   if (raw.svg != null) sq.svg = raw.svg;
   if (raw.options != null) sq.options = raw.options;
+
+  // P0-003：透传原始结构 data（choice 轨的 options/correctIndex 等渲染与校验依赖）与 hint
+  if (raw.data != null) sq.data = deepClone(raw.data);
+  if (raw.hint != null) sq.hint = raw.hint;
+
+  // 选择题兼容：sq.data.options 缺省时由 options 补全，并尽量反推 correctIndex
+  if (sq.data && !Array.isArray(sq.data.options) && Array.isArray(sq.options) && sq.options.length) {
+    sq.data.options = sq.options.slice();
+  }
+  if (sq.data && Array.isArray(sq.data.options) && sq.answer && sq.answer.value != null && sq.data.correctIndex == null) {
+    var ci = sq.data.options.indexOf(coerceString(sq.answer.value));
+    if (ci !== -1) sq.data.correctIndex = ci;
+  }
 
   // 扁平化常用字段（便捷访问，不破坏标准结构）
   sq.prompt = sq.content && sq.content.prompt ? sq.content.prompt : (sq.question && sq.question.prompt ? sq.question.prompt : '');
@@ -196,12 +213,50 @@ function normalizeSemanticQuestion(raw) {
       return q;
     })(),
     answerMode: raw.answerMode,
-    answer: raw.answer ? (typeof raw.answer === 'object' ? raw.answer : { value: raw.answer }) : { value: raw.answerValue || raw.correctAnswer },
+    // P0-003：判断题 answer=false / 数字 0 / 空串均为合法答案，不能按 truthy 丢弃。
+    // 仅当字段未提供（undefined/null）时才回退到 answerValue/correctAnswer。
+    answer: (function () {
+      var rawHasAnswer = (typeof raw !== 'undefined' && raw !== null) &&
+        Object.prototype.hasOwnProperty.call(raw, 'answer') && raw.answer != null;
+      if (rawHasAnswer) {
+        return typeof raw.answer === 'object' ? raw.answer : { value: raw.answer };
+      }
+      return { value: raw.answerValue != null ? raw.answerValue : (raw.correctAnswer != null ? raw.correctAnswer : undefined) };
+    })(),
     distractors: ensureArray(raw.distractors || raw.options || raw.choices).map(function (d) {
       if (typeof d === 'object') return d;
       return { value: d };
     }),
-    graphic: raw.graphic || raw.svg ? { type: 'custom', params: { rawSvg: raw.svg } } : null,
+    // P0-003：选择题保留平铺 options（渲染 html-renderer.js 读取 sq.options/distractors/data.options）
+    // 及 data.correctIndex（校验/反选使用），与 selection.js 生成的 choice 结构一致。
+    options: (function () {
+      var o = raw.options || raw.choices;
+      if (!Array.isArray(o)) return undefined;
+      return o.slice();
+    })(),
+    data: (function () {
+      var opts = raw.options || raw.choices;
+      if (!Array.isArray(opts) && !raw.data) return undefined;
+      var base = (raw.data && typeof raw.data === 'object') ? raw.data : {};
+      var out = {};
+      Object.keys(base).forEach(function (k) { out[k] = base[k]; });
+      if (Array.isArray(opts)) {
+        out.options = opts.slice();
+        if (out.correctIndex == null && typeof raw.answer !== 'object' && raw.answer != null) {
+          out.correctIndex = opts.indexOf(coerceString(raw.answer));
+        }
+      } else if (out.options == null && Array.isArray(out.distractors)) {
+        out.options = out.distractors;
+      }
+      return out;
+    })(),
+    // P0/GV 修复：优先保留真实 graphic 描述符（type/params 等），仅当无描述符但给了原始
+    // svg 时才包一层 custom/rawSvg；两者皆无为 null。旧逻辑 `raw.graphic||raw.svg ? {type:'custom',params:{rawSvg:raw.svg}} : null`
+    // 会把真实描述符（如 number-line）误洗成 custom/rawSvg 空壳，且 rawSvg=undefined 仍产生被
+    // graphic-validator 判 ERR 的非法描述。null 让 validator 走 skip（见 createSemanticQuestion ⑧）。
+    graphic: (raw.graphic && typeof raw.graphic === 'object')
+      ? deepClone(raw.graphic)
+      : (raw.svg ? { type: 'custom', params: { rawSvg: raw.svg } } : null),
     metadata: raw.metadata || {
       generator: raw.generator || raw.pluginId || raw.source,
       generatorVersion: raw.generatorVersion || raw.version,

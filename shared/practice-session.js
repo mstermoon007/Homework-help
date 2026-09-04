@@ -15,8 +15,15 @@
   'use strict';
 
   // 依赖加载
+  // P0-001 会话入口断裂修复：浏览器下既无 require 也无 global.GenerationAPI（api.js 不由
+  // 页面加载），导致 GenerationAPI 恒为 null、start() 同步抛 TypeError（原被
+  // dev/check-presentation-runtime.js 注入伪造 require 掩盖）。
+  // 收敛策略：取已加载的 GenerationEngine（页面已 <script> 引入 generation-engine.js，
+  // 其内部已可在浏览器内联回退生成）为兜底生成入口，保持 UI 仅经 session.start()。
+  var GenerationEngine = (typeof global.GenerationEngine !== 'undefined') ? global.GenerationEngine
+    : (typeof require !== 'undefined' ? require('./generation-engine.js') : null);
   var GenerationAPI = (typeof global.GenerationAPI !== 'undefined') ? global.GenerationAPI
-    : (typeof require !== 'undefined' ? require('./generation/api.js') : null);
+    : (GenerationEngine || (typeof require !== 'undefined' ? require('./generation/api.js') : null));
   var StorageManager = (typeof global.StorageManager !== 'undefined') ? global.StorageManager
     : (typeof require !== 'undefined' ? require('./storage.js') : null);
   var ResultCollector = (typeof global.ResultCollector !== 'undefined') ? global.ResultCollector

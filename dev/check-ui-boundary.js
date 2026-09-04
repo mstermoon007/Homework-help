@@ -66,9 +66,12 @@ function scan(re) {
   return hits;
 }
 
-// [A] 页面生成必须存在统一入口 practiceSession.start()（内部经 GenerationEngine.generate）
-add('UI 存在统一生成入口 practiceSession.start()', (function () {
-  var hits = scan(/practiceSession\.start\s*\(/);
+// [A] 页面生成必须存在统一入口 PracticeBridge.start()（关联层唯一生产入口，
+//     内部经 PracticeSession.start() → App.GenerationEngine.generate()）。
+//     历史门禁断言 practiceSession.start()，但生成主链已收敛为关联层 PracticeBridge.start
+//     （B5 收敛后 UI 不再直调 new PracticeSession().start()）。
+add('UI 存在统一生成入口 PracticeBridge.start()', (function () {
+  var hits = scan(/PracticeBridge\.start\s*\(/);
   return hits.length >= 1;
 })());
 

@@ -41,22 +41,10 @@ const PAGE_DEPS = {
     'shared/knowledge-bank.js',
     'plugins/registry.js',
   ],
-  'math-types.html': [
-    'shared/common.js',
-    'shared/subject-utils.js',
-    'shared/difficulty.js',
-    'shared/knowledge-bank.js',
-    'shared/module-catalog.js',
-    'plugins/registry.js',
-  ],
-  'subject-types.html': [
-    'shared/common.js',
-    'shared/subject-utils.js',
-    'shared/difficulty.js',
-    'shared/knowledge-bank.js',
-    'shared/module-catalog.js',
-    'plugins/registry.js',
-  ],
+  'math-types.html': [],
+  'subject-types.html': [],
+  'chinese-types.html': [],
+  'english-types.html': [],
   'faq.html': [
     'shared/tokens.css',
   ],
@@ -66,8 +54,10 @@ const PAGE_DEPS = {
 const CRITICAL_DOM = {
   'index.html': ['<!DOCTYPE html>', '<html', '</html>'],
   'practice.html': ['<!DOCTYPE html>', 'problemsArea', 'generate', 'check'],
-  'math-types.html': ['<!DOCTYPE html>', 'typeGrid', 'plugin'],
-  'subject-types.html': ['<!DOCTYPE html>', 'typeGrid', 'subject'],
+  'math-types.html': ['<!DOCTYPE html>', 'window.location'],
+  'subject-types.html': ['<!DOCTYPE html>', 'window.location'],
+  'chinese-types.html': ['<!DOCTYPE html>', 'window.location'],
+  'english-types.html': ['<!DOCTYPE html>', 'window.location'],
   'faq.html': ['<!DOCTYPE html>', 'FAQPage'],
 };
 
@@ -75,8 +65,8 @@ const CRITICAL_DOM = {
 const ENTRY_SCRIPTS = {
   'index.html': 'shared/common.js',
   'practice.html': 'shared/common.js',
-  'math-types.html': 'shared/common.js',
-  'subject-types.html': 'shared/common.js',
+  'math-types.html': null,  // 重定向桩，无外部 shared 脚本
+  'subject-types.html': null, // 重定向桩，无外部 shared 脚本
   'faq.html': null, // faq has inline scripts only, no external script src
 };
 

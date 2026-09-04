@@ -44,6 +44,54 @@
 </script>
 <link rel="canonical" href="https://home.modouyu.top/practice.html" data-page-node-id="WYxD0ucBxFAbaiHuzPq3BA">
 <style>
+/* 顶部导航栏 */
+.top-nav {
+  background: var(--card, #fff);
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin-bottom: 12px;
+}
+.top-nav .nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--brand, #5b8def);
+  text-decoration: none;
+}
+.top-nav .nav-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-link {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted, #7a879c);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.nav-link:hover {
+  color: var(--brand, #5b8def);
+  background: var(--soft-bg, #eef3fb);
+}
+
 /* 优化点3：生成进度（乐观 UI，非阻塞渐进揭示） */
 .gen-progress {
   max-width: 860px; margin: 0 auto 12px; padding: 10px 14px;
@@ -80,62 +128,7 @@
 }
   .loop-toast-btn.ghost { background: var(--soft-bg); color: var(--muted); border-color: var(--line); }
 
-  /* ============ 合并：二级页装配区（科目/年级/题型选择，选完就地生成） ============ */
-  .asm {
-    max-width: 860px; margin: 12px auto 0; padding: 14px 16px;
-    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
-    box-shadow: var(--shadow);
-  }
-  .asm[hidden] { display: none; }
-  .asm-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-  .asm-label { flex: 0 0 auto; width: 40px; font-size: 12px; font-weight: 700; color: var(--muted); }
-  .asm-sw-row { display: inline-flex; gap: 8px; flex-wrap: wrap; }
-  .asm-sw-btn {
-    border: 1px solid var(--line); background: var(--soft-bg); color: var(--muted);
-    border-radius: 8px; padding: 6px 12px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
-  }
-  .asm-sw-btn.on { border-color: var(--subject-primary); color: var(--subject-primary); background: var(--subject-primary-soft); }
-  .asm-body {
-    border-top: 1px solid var(--line); padding-top: 10px; margin-top: 2px;
-    display: flex; flex-direction: column; gap: 10px; max-height: 46vh; overflow-y: auto;
-  }
-  .asm-group { background: var(--soft-bg); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-  .asm-group.collapsed .asm-group-body { display: none; }
-  .asm-group-hd { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; user-select: none; }
-  .asm-group-title { font-size: 14px; font-weight: 800; }
-  .asm-group-id { font-size: 11px; font-weight: 800; color: var(--muted); background: var(--brand-bg); border-radius: 6px; padding: 2px 6px; }
-  .asm-group-meta { margin-left: auto; font-size: 12px; color: var(--muted); font-weight: 600; }
-  .asm-caret { margin-left: 6px; font-size: 11px; color: var(--muted); transition: transform .2s; }
-  .asm-group-hd[aria-expanded="true"] .asm-caret { transform: rotate(180deg); }
-  .asm-group-body { padding: 0 10px 10px; display: flex; flex-direction: column; gap: 6px; }
-  .asm-kp {
-    display: flex; align-items: flex-start; gap: 8px; border: 1px solid var(--line); border-radius: 10px;
-    padding: 8px 10px; background: var(--card); cursor: pointer;
-  }
-  .asm-kp.on { border-color: var(--subject-primary); background: var(--subject-primary-soft); }
-  .asm-kp.disabled { opacity: .55; cursor: not-allowed; }
-  .asm-check { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; accent-color: var(--subject-primary); }
-  .asm-kp-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-  .asm-line1 { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .asm-lv { flex: 0 0 auto; font-size: 11px; font-weight: 800; color: #fff; background: var(--subject-primary); border-radius: 6px; padding: 1px 6px; }
-  .asm-name { font-size: 13px; font-weight: 700; }
-  .asm-line2 { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .asm-acc { flex: 0 0 auto; font-size: 11px; font-weight: 800; color: #fff; border-radius: 6px; padding: 1px 6px; background: var(--muted); }
-  .asm-acc.hi { background: #1f9d6b; }
-  .asm-acc.mid { background: #e8a23a; }
-  .asm-acc.lo { background: #e0532f; }
-  .asm-acc.na { background: var(--soft-bg); color: var(--muted); border: 1px solid var(--line); }
-  .asm-flag { font-size: 11px; font-weight: 800; color: var(--warn); }
-  .asm-na { font-size: 11px; font-weight: 700; color: var(--bad); }
-  .asm-actions { display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
-  .asm-actions .btn { flex: 0 0 auto; }
-  .asm-hint { flex: 1 1 auto; min-width: 200px; font-size: 12.5px; font-weight: 600; color: var(--ink); }
-  @media (max-width: 640px) {
-    .asm { padding: 12px; }
-    .asm-label { width: 36px; }
-  }
-
-  /* ============ 任务3：固定通用工具栏（题量/难度/打印/刷新/清除记录，滚动吸顶） ============ */
+  /* ============ 任务3：固定通用工具栏（题量/难度/知识点占比/打印/刷新/显示答案，滚动吸顶） ============ */
   .panel.controls {
     position: sticky; top: 8px; z-index: 60;
     background: var(--card, #fff); border: 1px solid var(--line, #e3e8f0); border-radius: 14px;
@@ -145,7 +138,7 @@
 
   /* ============ 任务3：底部知识页入口（当前知识点 → knowledge/{kpId}.html） ============ */
   .kp-links {
-    max-width: 860px; margin: 12px auto 0; padding: 10px 14px;
+    max-width: 860px; margin: 12px 0 0; padding: 10px 14px;
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     background: var(--soft-bg, #f4f6fb); border: 1px dashed var(--line, #e3e8f0); border-radius: 12px;
     font-size: 12.5px; color: var(--muted);
@@ -158,12 +151,85 @@
     border: 1px solid var(--line, #e3e8f0); background: var(--card, #fff); border-radius: 999px; padding: 3px 10px;
   }
   .kp-link:hover { text-decoration: underline; }
-  .kp-links-all { margin-left: auto; color: var(--muted, #667); font-weight: 700; text-decoration: none; }
+  .kp-links-all { color: var(--muted, #667); font-weight: 700; text-decoration: none; }
   .kp-links-all:hover { text-decoration: underline; }
+  /* 底部版权 */
+  .site-footer {
+    margin-top: 40px; padding: 18px 16px 16px; text-align: center;
+    color: var(--muted, #667); font-size: 0.75rem; line-height: 1.9;
+    border-top: 1px solid var(--line-strong, #d6e2f2);
+  }
+  .site-footer .footer-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: center; margin-top: 4px; }
+  .site-footer a { color: var(--muted, #667); text-decoration: none; }
+  .site-footer a:hover { color: var(--brand, #4A90D9); text-decoration: underline; }
+  .site-footer .footer-sep { opacity: 0.5; }
+  .site-footer .footer-beian img { vertical-align: -2px; }
+
+  /* ===== 知识点卡片题量占比（可调整）===== */
+  .kp-ratio { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .kp-ratio-empty { font-size: 13px; font-weight: 600; color: var(--muted); padding: 4px 2px; }
+  .kp-ratio-list { display: flex; flex-direction: column; gap: 8px; }
+  .kp-ratio-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft-bg);
+  }
+  .kp-ratio-item .nm { flex: 1 1 auto; min-width: 0; font-size: 13px; font-weight: 700; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; }
+  .kp-ratio-item .bar { flex: 2 1 auto; min-width: 90px; height: 10px; border-radius: 999px;
+    background: var(--soft-bg); border: 1px solid var(--line); overflow: hidden; }
+  .kp-ratio-item .bar i { display: block; height: 100%; background: linear-gradient(90deg, #4A90D9, #2bb6a3); }
+  .kp-ratio-item .cnt { flex: 0 0 70px; font-size: 12px; font-weight: 800; color: var(--brand-d);
+    text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .kp-ratio-item.sep { display: flex; align-items: center; gap: 8px; border: none; background: none; padding: 2px 0; }
+  .kp-ratio-item.sep .acts { display: flex; gap: 6px; }
+  .kp-ratio-item .acts button {
+    border: 1px solid var(--line); background: var(--card); cursor: pointer; border-radius: 8px;
+    color: var(--brand-d); font-weight: 800; font-size: 14px; line-height: 1; padding: 6px 10px;
+  }
+  .kp-ratio-item .acts button:hover { border-color: var(--brand); background: var(--brand-bg); }
+  .kp-ratio-item .total { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--muted); }
+
+  /* ===== 自定义题量同框：chip 变输入框，占位灰字「自定义」，键入即消失 ===== */
+  .custom-chip { position: relative; padding: 0; }
+  .custom-chip .custom-label { padding: var(--toolbar-chip-pad); display: inline-flex; align-items: center; }
+  .custom-chip .custom-num {
+    border: none; background: transparent; outline: none; text-align: center; font: inherit;
+    color: var(--toolbar-chip-ink); font-weight: 700; width: 64px; min-height: 22px;
+    padding: var(--toolbar-chip-pad);
+  }
+  .custom-chip .custom-num::placeholder { color: var(--muted, #99a); opacity: 0.75; font-weight: 400; }
+  .custom-chip.custom-chip-input { padding: 0; }
+
+  /* ===== 专业（教师）模式：知识点题量填空，横向排列、自动换行、换行缩进 ===== */
+  .kp-ratio-flow { display: flex; flex-wrap: wrap; gap: 8px; padding-left: 12px; margin-bottom: 8px; }
+  .kp-blank {
+    display: inline-flex; align-items: center; gap: 4px; max-width: 100%;
+    padding: 4px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft-bg);
+    cursor: text;
+  }
+  .kp-blank-nm { font-size: 12px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; max-width: 200px; }
+  .kp-blank-num { width: 58px; border: 1px solid var(--line); border-radius: 8px; padding: 3px 6px;
+    text-align: center; font-size: 13px; font-weight: 800; color: var(--brand-d);
+    font-variant-numeric: tabular-nums; background: var(--card); }
+  .kp-blank-num:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+  .kp-blank-unit { font-size: 12px; font-weight: 700; color: var(--muted); }
 </style>
 </head>
 <body data-page-node-id="rwBtS9BmX4E1JY5ZLzQA2D">
 <div class="wrap" data-page-node-id="hdIOncrc0MIDE8guTxiE0d">
+  <!-- 顶部导航栏 -->
+  <nav class="top-nav">
+    <a class="nav-brand" href="javascript:void(0)" onclick="window.history.back()" title="返回上一页">
+      <img src="assets/logo.webp" alt="返回上页" class="nav-logo">
+      <span>返回上页</span>
+    </a>
+    <div class="nav-links">
+      <a href="contact.html" class="nav-link">联系我们</a>
+      <a href="feedback/feedback.html" class="nav-link">问题反馈</a>
+    </div>
+  </nav>
+
   <!-- 全局错误横幅（错误处理升级：脚本加载失败 / 运行时异常时显示） -->
   <div id="global-error" class="error-banner" role="alert"
        style="display:none;max-width:720px;margin:12px auto 0;" data-page-node-id="OED7EtLg7Df88RYWhqR1qf">
@@ -176,86 +242,57 @@
     </div>
   </div>
 
-  <!-- 左上角快速切换（学科 + 年级，醒目便利） -->
-  <div class="quick-switch" id="quickSwitch" data-page-node-id="hxQuUFj9t5JiYWECbzsGpX">
-    <button class="qs-btn" id="qsBtn" title="快速切换学科 / 年级 / 返回首页" aria-expanded="false" aria-controls="qsMenu" data-page-node-id="Dl2W9TACXOBxhR0NzViBtX">快速切换</button>
-    <div class="qs-menu" id="qsMenu" style="display:none;" data-page-node-id="nrjRnVpaU1kfTaT9ioHky0">
-      <div class="qs-hd" data-page-node-id="h8CJsuVQlblsKztsyw7yeW">切换学科</div>
-      <div class="qs-row" id="qsSubject" data-page-node-id="NXATh61MXSoqyADv54Eq5y"></div>
-      <div class="qs-hd" data-page-node-id="89mkmUpnNUYAvGYsGj7u67">切换年级</div>
-      <div class="qs-row" id="qsGrade" data-page-node-id="5CjsylNsAPajBGpAsRBiRK"></div>
-        <div class="qs-hd" data-page-node-id="v2FgVBlHH9VY9GcuFK4wGS">其他</div>
-        <div class="qs-row" data-page-node-id="KQuZZIINWPcRjBHc8HiDRO"><a class="qs-link" href="index.html" data-page-node-id="TDDbeJoWad9qE5tEOt7k79">返回首页</a></div>
-        <div class="qs-row" data-page-node-id="h1LwH9kRmgpz9aOKEute7M"><a class="qs-link" href="feedback/feedback.html" data-page-node-id="fw4tQI3jme6aiG993FTKBY">问题反馈</a></div>
-    </div>
-  </div>
-
-  <!-- 合并：二级页装配区（科目/年级/题型选择，选完就地生成，不再跳转到单独页面） -->
-  <section class="asm" id="assemblyPanel" hidden data-page-node-id="mQLhQm9FJ4X2bNED3oBdkI">
-    <div class="asm-row" data-page-node-id="FFNAVMuEaZeBqhnJ5hw3Xl">
-      <span class="asm-label" data-page-node-id="hsd3LgpED1Uh5ojOAJ2i1M">科目</span>
-      <div class="asm-sw-row" id="asmSubject" data-page-node-id="fdP6Aj0I2g9Hgpi9SVglMx"></div>
-    </div>
-    <div class="asm-row" data-page-node-id="grrSfvu58OgACEQwNPt9qo">
-      <span class="asm-label" data-page-node-id="S5JEpGYbi9Ob0BmfwoSsnP">年级</span>
-      <div class="asm-sw-row" id="asmGrade" data-page-node-id="H4PLyZBPFi77ftH8GdHfCs"></div>
-    </div>
-    <div class="asm-body" id="asmList" data-page-node-id="ChpYYPGUiTkF1bjxkkikGn"></div>
-    <div class="asm-actions" data-page-node-id="aktG27JBmBRGI5W8vA6FmP">
-      <button class="btn btn-ghost" id="asmSelectAllBtn" type="button" data-page-node-id="TbsAbX7sSeN4wmAvKfBq9W">全选</button>
-      <button class="btn btn-ghost" id="asmClearBtn" type="button" data-page-node-id="SgeWTAQm1y1Lm5txbS4ZM2">清空</button>
-      <button class="btn btn-primary" id="asmSmartBtn" type="button" data-page-node-id="SH64PRNdFM4oZbA9DY5bKB">智能推荐</button>
-      <button class="btn btn-primary" id="asmGenBtn" type="button" data-page-node-id="dBCvoUVJ5RjiHkzJasPF9H">生成所选题目</button>
-      <span class="asm-hint" id="asmHint" data-page-node-id="BOyVAMVDr5m7ts2K3XuEVq"></span>
-    </div>
-  </section>
-
   <!-- Layer 2: 工具栏（题型/题量/难度 + 操作按钮） -->
   <section class="panel controls" id="controlsPanel" style="display:none;" data-page-node-id="YsKfmcheLy420A6evi3t4q">
     <div class="controls-grid" data-page-node-id="yyWAl0RoadRa66kO1dvC8H">
       <div class="controls-settings" data-page-node-id="4FzieHDQOrp4FwsjoTRNBr">
         <div class="row" style="margin-top:0;" data-page-node-id="euDtlctXgaofzOZpoHkfjg">
-          <div class="group" id="typeGroup" role="radiogroup" aria-label="题型" style="display:none;" data-page-node-id="hKZTDAIemquqbaT2YFVlo7"></div>
           <div class="group" id="countGroup" role="radiogroup" aria-label="题量" data-page-node-id="TyWIsgDnSL7FGOv7CKzylm">
             <span class="lbl" data-page-node-id="5A6amBLnxVYEVmaBsIN0uZ">题量：</span>
             <div class="setting-content" data-page-node-id="0iAO0b1yUqLAbSlMgM4WkI">
-              <button class="chip active" data-count="10" role="radio" aria-checked="true" data-page-node-id="WHp4lBHDdNeg0eO9yrp893">10题</button>
-              <button class="chip" data-count="20" role="radio" aria-checked="false" data-page-node-id="RKvLa5sIAKWA8Kl0zVqAWg">20题</button>
+              <button class="chip active" data-count="20" role="radio" aria-checked="true" data-page-node-id="RKvLa5sIAKWA8Kl0zVqAWg">20题</button>
+              <button class="chip" data-count="30" role="radio" aria-checked="false" data-page-node-id="WHp4lBHDdNeg0eO9yrp893">30题</button>
               <button class="chip" data-count="50" role="radio" aria-checked="false" data-page-node-id="rwNR5cQwAkrGKJTJAv7fZh">50题</button>
-              <button class="chip" data-count="custom" role="radio" aria-checked="false" data-page-node-id="SrpxBdzNoIGCdVQ9kcvhtx">自定义</button>
-              <input type="number" id="customCount" min="1" max="50" step="1" placeholder="自定义"
-                     autocomplete="off" class="tb-num-input" aria-label="自定义题量"
-                     style="width:70px;display:none;" data-page-node-id="25dYRnSXOdwHBkYYwXOxwN">
+              <span class="chip custom-chip" data-count="custom" role="radio" aria-checked="false" data-page-node-id="SrpxBdzNoIGCdVQ9kcvhtx">
+                <span class="custom-label" data-page-node-id="25dYRnSXOdwHBkYYwXOxwN">自定义</span>
+                <input type="number" id="customCount" min="1" max="50" step="1" placeholder=""
+                       aria-label="自定义题量" autocomplete="off" class="custom-num"
+                       data-page-node-id="4ACPcfjCustomCount" style="display:none;">
+              </span>
               <span class="count-tip" id="countTip" style="display:none;" data-page-node-id="QvKB1cjrG9Wg4P3fzkLjYY"></span>
             </div>
           </div>
-          <div class="group" id="difficultyGroup" data-page-node-id="Ny2RI5gGl6dHd0nF5sGaOP">
+          <div class="group" data-page-node-id="Ny2RI5gGl6dHd0nF5sGaOP">
             <span class="lbl" data-page-node-id="htyDRVieIetZ8HRIYAsEOv">难度：</span>
             <div class="setting-content" data-page-node-id="qB82oJntXBYsgbCUC5hz9n">
-              <input type="number" id="difficultyInput" min="1" max="10" step="1" value="3"
+              <input type="number" id="difficultyInput" min="1" max="10" step="1" value="1"
                      title="填写 1-10 的整数，数字越大难度越高（数值更大、逻辑更深）"
                      aria-label="难度（1-10，数字越大越难）"
                      class="tb-num-input" style="width:64px;" data-page-node-id="2bONAniEKDC8jH8pTudcRo">
               <span class="range-hint" data-page-node-id="cV3pG0G1cBoDfmCMCVB60y">1~10</span>
             </div>
           </div>
+          <div class="group" data-page-node-id="kpGroup-001">
+            <span class="lbl" data-page-node-id="kpGroup-lbl-001">知识点占比：</span>
+            <div class="setting-content kp-ratio" id="kpRatio" data-page-node-id="kpRatio-001">
+              <div class="kp-ratio-empty" id="kpRatioEmpty">未指定知识点（经 select 页选择后显示各模式知识点卡片题量占比）</div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="controls-actions" data-page-node-id="D0d9gaJ9cDIrigmevJ9ogv">
         <div class="controls-row row-single" data-page-node-id="BXAWlJ7RQ9Evl4nLvFAOHQ">
-          <button class="btn btn-primary" id="genBtn" data-page-node-id="MEssgmJfDy15m54Yulf4N8">生成练习题</button>
+          <button class="btn btn-primary" id="genBtn" data-page-node-id="MEssgmJfDy15m54Yulf4N8">生成练习</button>
         </div>
-        <div class="controls-row row-pair" data-page-node-id="a0x48ho8f5raJSHhLkHB8v">
+        <div class="controls-row row-pair" data-page-node-id="a0x48ho8f5raJSHhLkHB8v" hidden>
           <button class="btn btn-primary" id="checkBtn" disabled data-page-node-id="VPdjxzxLhCD3WGjInqdfix">检查答案</button>
-          <button class="btn btn-ghost" id="revealBtn" disabled data-page-node-id="umGRrQTKojW2UKcgSC4d3h">显示答案</button>
         </div>
         <div class="controls-row row-pair" data-page-node-id="umDVdRBGwrJ2MZQChOkagU">
+          <button class="btn btn-ghost" id="revealBtn" disabled data-page-node-id="umGRrQTKojW2UKcgSC4d3h">显示答案</button>
           <button class="btn btn-ghost" id="printBtn" disabled data-page-node-id="FJT3oKFyUd7UeMEP1THpNJ">打印页面</button>
-          <button class="btn btn-ghost" id="refreshResetBtn" title="清除本题型的难度记忆并刷新页面" data-page-node-id="9Wa7dcZoe0u78daUsnX975">刷新重置</button>
         </div>
         <div class="controls-row row-pair" data-page-node-id="pkCX44LZqZEam8FEiAVJgn">
-          <button class="btn btn-ghost" id="wrongBookBtn" disabled title="重做之前答错的题目（本地保存）" data-page-node-id="2nDPVHafphnAGAjwCXPHdV">错题本</button>
-          <button class="btn btn-ghost" id="clearStateBtn" disabled title="清除本地练习记录（设置/错题/难度）" data-page-node-id="ipJRFHuTv8PdSLWdRh1QED">清除记录</button>
+          <button class="btn btn-ghost" id="refreshResetBtn" title="刷新充值" data-page-node-id="9Wa7dcZoe0u78daUsnX975">刷新充值</button>
         </div>
       </div>
     </div>
@@ -263,7 +300,6 @@
 
   <!-- Layer 3: 正式内容区（第一行主题标题 + 第二行起题目卡） -->
   <div class="exercise-content" data-page-node-id="ZVT5Z2uHXe7PG9AoYzwTkr">
-    <p class="static-resource-note" data-page-node-id="LJM4YvoR1SdmU2s1iRPMoy">本页面为练习生成工具，加载具体题型后可在线练习或打印。静态版本与知识点讲解请访问 <a href="knowledge/knowledge-index.html" data-page-node-id="Y8imrBn7EsqxqjETOCEPCk">知识库页面</a>。</p>
     <div class="exercise-header" data-page-node-id="MGSjcA8KObmDezePnsFilB">
       <h1 id="sheetTitle" data-page-node-id="HpyihXREs7FXk7wuYbo1DU">统一练习页</h1>
       <div class="timer" id="timerDisplay" data-page-node-id="8squxq4jNAWoFC1rFkQLQF">⏱ 00:00</div>
@@ -298,7 +334,22 @@
     <a class="kp-links-all" id="kpLinksIndex" href="knowledge/knowledge-index.html" data-page-node-id="MLy6J5dDEtU4W1M8b319Dq">知识库全部 →</a>
   </div>
 
-  <footer data-page-node-id="JBkxZwGDuvcOmEu1e7cFfF">Homework Help · 插件化练习框架 · practice.html</footer>
+  <footer class="site-footer" data-page-node-id="JBkxZwGDuvcOmEu1e7cFfF">
+    <div>© <span id="footYear">2019</span> 甘肃源始人广告传媒有限公司 版权所有</div>
+    <div class="footer-meta">
+        <span class="footer-beian">
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">陇ICP备2026008157号-1</a>
+            <span class="footer-sep">|</span>
+            <a href="http://www.beian.gov.cn/" target="_blank" rel="noopener">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%232b6cc0' d='M12 2l7 3v6c0 5-3.5 9.5-7 11-3.5-1.5-7-6-7-11V5l7-3z'/%3E%3Cpath fill='%234c8fd6' d='M12 4l5 2.2V11c0 3.6-2.3 6.7-5 7.9-2.7-1.2-5-4.3-5-7.9V6.2L12 4z'/%3E%3C/svg%3E" alt="" width="14" height="14"> 粤公网安备 XXXXXXXXXXXX号
+            </a>
+        </span>
+        <span class="footer-sep">|</span>
+        <a href="contact.html">联系我们</a>
+        <span class="footer-sep">|</span>
+        <a href="feedback/feedback.html">问题反馈</a>
+    </div>
+  </footer>
 </div>
 
 <link rel="preload" href="shared/common.js" as="script" data-page-node-id="EAHopeTzYkanaX0UmPSDEk">
@@ -376,6 +427,8 @@
 <script src="shared/strategy/comprehensive-strategy.js"></script>
 <!-- P7：统一练习会话（P7-R01~R04） -->
 <script src="shared/practice-session.js"></script>
+<!-- 关联层：UI 指令 → 生成层指令翻译与反馈接受（不改生成层） -->
+<script src="shared/practice-bridge.js"></script>
 <script>
 (function () {
   'use strict';
@@ -387,8 +440,8 @@
     grade: 1,              // 当前年级
     exerciseSet: null,     // 当前题目集（legacy 形状，供 check/redo/print 用）
     checkResult: null,     // 当前批改结果
-    count: 10,             // 题量
-    difficulty: 3,         // 难度（1-10，用户填写，默认 3）
+    count: 20,             // 题量
+    difficulty: 1,         // 难度（1-10，用户填写，默认 1）
     timerId: null,         // setInterval 句柄
     startTime: 0,          // 开始时间戳
     answered: false,       // 是否已提交
@@ -408,9 +461,9 @@
     var grade = Number(p.get('grade'));
     if (!(grade >= 1 && grade <= 6)) grade = 1;
     var count = Number(p.get('count'));
-    if (!(count >= 1 && count <= 50)) count = 10;
+    if (!(count >= 1 && count <= 50)) count = 20;
     var difficulty = Number(p.get('difficulty'));
-    if (!(difficulty >= 1 && difficulty <= 10)) difficulty = 3;
+    if (!(difficulty >= 1 && difficulty <= 10)) difficulty = 1;
     return {
       subject: canonSubjectForUI(p.get('subject')),
       grade: grade,
@@ -420,6 +473,8 @@
       kp: (p.get('kp') || '').trim() || null,
       kps: (p.get('kps') || '').trim() || null,
       qt: (p.get('qt') || '').trim() || null,
+      // 模式：quick（快速）/ teacher（教师/专业）等（select 页传入，用于知识点占比展示形态）
+      mode: (p.get('mode') || '').trim() || null,
       // P7: 直接打印参数
       print: p.get('print') === '1',
       // M6-R22：自适应模式（legacy|new|shadow），缺省由是否有学习数据决定
@@ -431,20 +486,23 @@
 
   var urlParams = parseUrlParams();
 
-  // ============ PracticeSession 实例 ============
+  // 专业（教师）模式：select 页 mode=teacher 进入时，知识点占比展示为「提醒 + 数量填空」
+  var isTeacherMode = urlParams.mode === 'teacher';
+
+  // ============ PracticeSession 实例（经关联层构造） ============
   var practiceSession = null;
 
+  // 关联层：把 URL 入参翻译成生成层指令并构造会话（不直接 new 生成层）
   function initPracticeSession() {
-    practiceSession = new PracticeSession({
+    if (!window.PracticeBridge) return;
+    practiceSession = window.PracticeBridge.newSession({
+      mode: urlParams.adaptiveMode === 'new' ? 'adaptive' : (urlParams.kps ? 'multi-kp' : 'native'),
       subject: urlParams.subject || 'math',
-      grade: urlParams.grade,
-      count: urlParams.count,
-      difficulty: urlParams.difficulty,
+      grade: urlParams.grade, count: urlParams.count, difficulty: urlParams.difficulty,
       knowledgePointId: urlParams.kp,
-      knowledgePointIds: urlParams.kps ? urlParams.kps.split(',').filter(Boolean) : null,
+      knowledgePoints: urlParams.kps ? urlParams.kps.split(',').filter(Boolean) : null,
       questionType: urlParams.qt,
-      adaptive: urlParams.adaptiveMode === 'new',
-      learnerProfile: null
+      adaptive: urlParams.adaptiveMode === 'new', learnerProfile: null, state: state
     });
   }
 
@@ -516,28 +574,45 @@
   // 页面不再判断 Strategy / Generator / Plugin / Legacy / 难度 / SVG。
 
   // P1-R01/R03 / P3：统一生成入口（唯一）。页面不再判断 Strategy / Generator / Plugin / Legacy。
-  // P7-R01: 统一练习入口 —— 经 PracticeSession 生成
+  // 关联层：经 PracticeBridge 把 UI 指令翻译给生成层（PracticeSession），并接受 start 反馈。
+  // P7-R01: 统一练习入口 —— 由关联层回调 applyExerciseSet 接住生成层反馈。
   function generate() {
-    if (!practiceSession) return;
-    var run = function () {
-      practiceSession.start().then(function (result) {
-        if (result && result.html) {
-          applyExerciseSet({ questions: result.questions, meta: result.meta });
-        }
-      }).catch(function (err) {
-        stopTimer();
-        $('checkBtn').disabled = true;
-        $('revealBtn').disabled = true;
-        $('printBtn').disabled = true;
-        showNotice('生成失败，请重试', err.message);
-      });
-    };
-    // 任务3：装载当前科目/年级旧插件（幂等），兜底不阻断
-    if (ensureLegacyPlugins) {
-      ensureLegacyPlugins(state.subject, state.grade).then(run).catch(run);
-    } else {
-      run();
+    if (!window.PracticeBridge) return;
+    state.count = Number(state.count) || 20;
+    window.PracticeBridge.onStartFeedback(applySessionFeedback);
+    // U3 清理：deriveTypeName/state/ensureLegacyPlugins 均在本 IIFE 作用域内定义，恒可用，
+    // 原「typeof x !== 'undefined' ? x : null」三元恒取真分支，直接简化为直接引用。
+    window.PracticeBridge.start(
+      {
+        state: state,
+        knowledgePoints: state.knowledgePointIds || (urlParams.kps ? urlParams.kps.split(',').filter(Boolean) : null),
+        knowledgePointId: state.kp || urlParams.kp || null,
+        questionType: state.questionType || urlParams.qt || null,
+        titleType: deriveTypeName(),
+        kpAllocation: state.kpAllocation || null,
+        raw: { levels: state }
+      },
+      { ensureLegacyPlugins: ensureLegacyPlugins }
+    );
+  }
+
+  // 接受生成层 start 的反馈（成功 → 渲染；失败 → 兜底提示）
+  function applySessionFeedback(fb) {
+    if (!fb || fb.ok !== true) {
+      stopTimer();
+      $('checkBtn').disabled = true;
+      $('revealBtn').disabled = true;
+      $('printBtn').disabled = true;
+      var msg = (fb && fb.error && fb.error.message) || '生成失败，请重试';
+      showNotice('生成失败，请重试', msg);
+      return;
     }
+    if (fb.html) {
+      applyExerciseSet({ questions: fb.questions || [], meta: fb.meta });
+    }
+    // B5 关联层唯一入口收敛：bridge 经反馈回传真实会话；保存供 printFile() 打印
+    //（此前 printFile 打印的是 initPracticeSession 预构造的空壳，无 exerciseSet 会报“请先生成练习题”）。
+    if (fb.session) practiceSession = fb.session;
   }
 
   function applyExerciseSet(set) {
@@ -738,25 +813,34 @@
   // ============ 批改 ============
   // P7-R02: 统一 Checker —— 所有题目通过 check() / AnswerValidator，禁止页面自行判断
   function check() {
-    if (!practiceSession) return;
+    if (!window.PracticeBridge) return;
     var isReadAloud = state.exerciseSet && state.exerciseSet.questions.some(function (q) {
       return q.__semantic && q.__semantic.answerMode === 'read-aloud';
     });
     if (isReadAloud) return; // 跟读类题目无书面批改（按钮已隐藏，此处兜底拦回车等入口）
     stopTimer();
-    practiceSession.submit().then(function (result) {
-      if (!result || typeof result.score !== 'number' || !Array.isArray(result.results)) {
-        showNotice('批改结果不兼容', 'check 必须返回 { score, total, correct, results, correctAnswers }');
-        return;
-      }
-      state.checkResult = result;
-      state.answered = true;
-      markQuestions(result);
-      showResult(result);
-      recordWrongAndDifficulty(result);
-    }).catch(function (err) {
-      showNotice('批改出错', err.message);
-    });
+    // 关联层：调用生成层 submit，接受批改反馈（score/results…）
+    window.PracticeBridge.onSubmitFeedback(applySessionSubmitFeedback);
+    window.PracticeBridge.submit();
+  }
+
+  // 接受生成层 submit 的反馈并应用到 UI
+  function applySessionSubmitFeedback(fb) {
+    if (!fb || fb.ok !== true) {
+      var msg = (fb && fb.error && fb.error.message) || '批改出错';
+      showNotice('批改出错', msg);
+      return;
+    }
+    if (typeof fb.score !== 'number' || !Array.isArray(fb.results)) {
+      showNotice('批改结果不兼容', 'check 必须返回 { score, total, correct, results, correctAnswers }');
+      return;
+    }
+    var result = { score: fb.score, total: fb.total, correct: fb.correct, results: fb.results, correctAnswers: fb.correctAnswers };
+    state.checkResult = result;
+    state.answered = true;
+    markQuestions(result);
+    showResult(result);
+    recordWrongAndDifficulty(result);
   }
 
   // 练习上下文 id（用于错题本 / 难度 EMA 持久化，替代原 plugin.id）
@@ -835,30 +919,7 @@
     }
   }
 
-  // 打开错题本：渲染本地保存的错题供重做（任务2.2）
-  // P3-R04：以练习上下文 id（subject+grade+kp）读取错题，不再依赖插件。
-  function openWrongBook() {
-    var pid = practiceContextId();
-    var wrongs = StorageManager.getWrongList(pid);
-    var questions = [];
-    wrongs.forEach(function (w) { if (w.questionData) questions.push(w.questionData); });
-    if (!questions.length) {
-      showNotice('暂无错题', '先完成一次练习，答错的题目会自动收录到错题本，可在此重做。');
-      return;
-    }
-    try {
-      var set = { questions: questions, meta: { title: '错题本 · 练习' } };
-      // P3-R04：错题本/重做重渲染原始题集，清除 Engine 渲染成品，回落通用降级渲染。
-      state.lastSemantic = null;
-      state.exerciseSet = set;
-      state.checkResult = null;
-      state.answered = false;
-      render(set);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (e) {
-      showNotice('错题本打开失败', e && e.message);
-    }
-  }
+  
 
   function markQuestions(result) {
     var area = $('problemsArea');
@@ -975,11 +1036,19 @@
   // ============ 打印 ============
   // P6-R04: 打印统一经 Engine 产物（state.lastSemantic）或 DOM 克隆，无 Plugin 依赖。
   function printFile() {
-    if (!practiceSession) return;
+    if (!practiceSession && !state.exerciseSet) return;
     showLoopToast(state.exerciseSet ? state.exerciseSet.questions.length : 0); // 优化点4：闭环引导
-    practiceSession.print().catch(function (err) {
-      alert('打印失败：' + err.message);
-    });
+    // 打印统一经 Engine 产物：单次会话优先 session.print()（走语义题）；
+    // 编排聚合会话（聚合 shim 无 print）回退到已渲染的 #problemsArea 整卷打印。
+    if (practiceSession && typeof practiceSession.print === 'function') {
+      practiceSession.print().catch(function (err) { alert('打印失败：' + err.message); });
+    } else if (window.Print && document) {
+      var area = document.getElementById('problemsArea');
+      var meta = state.exerciseSet && state.exerciseSet.meta;
+      window.Print.open(area, (meta && meta.title) || '练习题', { pageType: 'math' });
+    } else {
+      alert('打印失败：打印模块不可用');
+    }
   }
 
   // 优化点4：生成后闭环引导 Toast（打印→拍照批改→薄弱点追踪）
@@ -1000,7 +1069,7 @@
     setTimeout(function () { if (!t.classList.contains('show')) t.hidden = true; }, 280);
   }
 
-  // ============ 题量（10 / 20 / 自定义） ============
+  // ============ 题量（20 / 30 / 50 / 自定义） ============
   function setCount(n) {
     n = Math.round(Number(n));
     if (!(n >= 1 && n <= 50)) { showNotice('题量无效', '自定义题量请填写 1~50 之间的整数。'); return; }
@@ -1009,23 +1078,32 @@
     if (state.exerciseSet) generate();
   }
 
+  // 自定义同框：自定义模式时 chip 变为数字输入框（占位灰字「自定义」，键入即消失）
+  function setCustomBox(showInput, focus) {
+    var inp = $('customCount');
+    var lbl = document.querySelector('#countGroup .custom-chip .custom-label');
+    if (inp) {
+      inp.style.display = showInput ? '' : 'none';
+      if (showInput && focus) inp.focus();
+    }
+    if (lbl) lbl.style.display = showInput ? 'none' : '';
+  }
+
   function syncCountUI() {
     var chips = document.querySelectorAll('#countGroup .chip');
     chips.forEach(function (c) { c.classList.remove('active'); c.setAttribute('aria-checked', 'false'); });
     var customInp = $('customCount');
-    if (state.count === 10 || state.count === 20 || state.count === 50) {
+    if (state.count === 20 || state.count === 30 || state.count === 50) {
       document.querySelectorAll('#countGroup .chip[data-count="' + state.count + '"]').forEach(function (c) {
         c.classList.add('active'); c.setAttribute('aria-checked', 'true');
       });
-      if (customInp) customInp.style.display = 'none';
+      setCustomBox(false);
     } else {
       document.querySelectorAll('#countGroup .chip[data-count="custom"]').forEach(function (c) {
         c.classList.add('active'); c.setAttribute('aria-checked', 'true');
       });
-      if (customInp) {
-        customInp.style.display = '';
-        customInp.value = state.count;
-      }
+      if (customInp) customInp.value = state.count;
+      setCustomBox(true);
     }
     updateCountTip();
   }
@@ -1095,53 +1173,6 @@
   }
 
   // ============ 左上角快速切换（学科 / 年级） ============
-  function buildQuickSwitch() {
-    var subjectRow = $('qsSubject');
-    var gradeRow = $('qsGrade');
-    if (!subjectRow || !gradeRow) return;
-    subjectRow.innerHTML = '';
-    gradeRow.innerHTML = '';
-    var current = state.subject;
-
-    var subjMap = {
-      math: App.ROUTES.mathTypes,
-      chinese: App.ROUTES.chineseTypes,
-      english: App.ROUTES.englishTypes
-    };
-    Object.keys(subjMap).forEach(function (s) {
-      var a = el('a', 'qs-subj' + (s === current ? ' active' : ''),
-        App.SUBJECT_NAMES[s] || s);
-      a.href = App.buildLink(subjMap[s], state.grade);
-      subjectRow.appendChild(a);
-    });
-
-    var target = subjMap[current] || subjMap.math;
-    for (var g = 1; g <= 6; g++) {
-      var b = el('a', 'qs-grade' + (g === state.grade ? ' active' : ''),
-        App.getGradeName(g));
-      b.href = App.buildLink(target, g);
-      gradeRow.appendChild(b);
-    }
-  }
-
-  function bindQuickSwitch() {
-    var btn = $('qsBtn');
-    var menu = $('qsMenu');
-    if (!btn || !menu) return;
-    btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var open = (menu.style.display === 'none');
-      menu.style.display = open ? '' : 'none';
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    document.addEventListener('click', function (e) {
-      if (!menu.contains(e.target) && e.target !== btn) {
-        menu.style.display = 'none';
-        btn.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
-
   // ============ 合并：二级页装配区（科目/年级/题型选择） ============
   // 仅 UI 层：复用 KnowledgeBank（catalog-utils.getKPEntries）、MODULE_CATALOG、已加载的 PLUGIN_REGISTRY，
   // 与 practice.html 既有的 PracticeSession / generate()；不新增任何引擎依赖。
@@ -1152,7 +1183,6 @@
     grade: urlParams.grade,
     selected: {},
     collapsed: {},
-    smartSeeded: false,
     qt: null,                // 任务3：URL qt 题型过滤（模块id / 细粒度type / 标准题型 / 特殊题型）
     recommendType: null      // 任务3：入口（kps/plugin）推荐题型名（标题 / 提示）
   };
@@ -1162,14 +1192,6 @@
     math: { name: '数学', moduleOrder: ['M0','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','C1','C2','C3','C4','C5','C6','C7','C8','C9'] },
     chinese: { name: '语文', moduleOrder: ['N1','N2','N3','N4','N5','N6','N7','N8'] },
     english: { name: '英语', moduleOrder: ['E1','E2','E3','E4','E5','E6'] }
-  };
-  var ASM_SMART = {
-    math: { modules: ['C1','C2','C3','C4','C5','C6','C7','C8','C9'], highLevelBias: true,
-      hint: '🎯 优先补薄弱 / 易错点，并侧重竞赛与变式题（按知识点 weight 加权抽题）。' },
-    chinese: { modules: ['N6','N7','N4','N5'], highLevelBias: false,
-      hint: '🎯 优先补薄弱 / 易错点，并侧重阅读理解与写作训练。' },
-    english: { modules: ['E4','E1','E3'], highLevelBias: false,
-      hint: '🎯 优先补薄弱 / 易错点，并侧重情景对话与听说训练。' }
   };
 
   // ============ 任务3：URL 入口解析（qt / kps / plugin）与知识点过滤 ============
@@ -1280,14 +1302,6 @@
     }
     return { auto: !!(urlParams.kp || urlParams.kps || urlParams.qt || urlParams.plugin) };
   }
-  function asmSelectAll() {
-    asmVisibleKps().forEach(function (k) { if (k.avail) asmState.selected[k.id] = true; });
-    asmRender();
-  }
-  function asmClearAll() {
-    asmState.selected = {};
-    asmRender();
-  }
   // 任务3：装载当前科目/年级的旧插件（legacy 轨 Generator 依赖插件实例）。
   //   装载后登记到 window.__mathSubPlugins 与 window.App.plugins（shared/legacy/plugin-adapter.js
   //   的 loadPlugin 优先读这两个全局；综合插件 math-comprehensive 亦读 __mathSubPlugins）。
@@ -1387,7 +1401,7 @@
       // 「可练」判定：注册表存在 + 非占位插件 + 年级在插件 grades 内（与二级页契约一致）
       var avail = !!(plugin && !plugin.isPlaceholder && (!plugin.grades || plugin.grades.indexOf(grade) >= 0));
       var k = { id: e.id, name: e.name || e.id, moduleId: e.moduleId || '', type: e.type || '',
-        level: level, tag: ASM_LEVEL_TAGS[level - 1], avail: avail, stat: asmReadStat(e.id),
+        weight: Number(e.weight) || 1, level: level, tag: ASM_LEVEL_TAGS[level - 1], avail: avail, stat: asmReadStat(e.id),
         pluginId: e.pluginId || '' };
       // 任务3：qt 题型过滤（comprehensive/exam 为全量覆盖，不做视图过滤）
       if (asmState.qt && asmState.qt !== 'comprehensive' && asmState.qt !== 'exam' && !kpVisibleInQT(k, asmState.qt)) return;
@@ -1404,199 +1418,217 @@
     });
     return groups;
   }
-  function asmKpHtml(k) {
-    var cls = 'asm-kp' + (asmState.selected[k.id] ? ' on' : '') + (k.avail ? '' : ' disabled');
-    var acc = '';
-    if (k.stat.mastery != null) {
-      var pct = Math.round(k.stat.mastery * 100);
-      var a = pct >= 70 ? 'hi' : (pct >= 50 ? 'mid' : 'lo');
-      acc = '<span class="asm-acc ' + a + '">预计正确率 ' + pct + '%</span>';
-    } else { acc = '<span class="asm-acc na">预计正确率 —</span>'; }
-    var flags = '';
-    if (k.stat.weak || k.stat.errorProne) {
-      if (k.stat.errorProne) flags += '<span class="asm-flag">易错</span>';
-      if (k.stat.weak) flags += '<span class="asm-flag">薄弱</span>';
+  // ============ 知识点卡片题量占比（可调整，UI/状态层；生成层待接入） ============
+  // 分配策略（快速模式）：每张知识点卡的题量 = 该知识点 weight ÷ 所选全部知识点 weight 之和 × 总题量。
+  // 即：题量占比_k = weight_k / Σweight(选定卡)。用「最大剩余法」取整，保证各卡题量之和恰好等于总题量。
+  // 结果写入 state.kpRatio（面板展示、可手动微调）与 state.kpAllocation（发往题目生成层的结构化消息）。
+  function renderKpRatio() {
+    var wrap = $('kpRatio'); if (!wrap) return;
+    var ids = Object.keys(asmState.selected).filter(function (id) { return asmKpById[id]; });
+    if (!ids.length) {
+      if ((urlParams.kps && urlParams.kps.split(',').length) || urlParams.kp) {
+        wrap.innerHTML = '<div class="kp-ratio-list">' +
+          '<div class="kp-ratio-item sep"><span class="nm">已按 URL 入参选择知识点，待生成层接入占比后即可调整。</span>' +
+          '<span class="total">共 ' + state.count + ' 题</span></div></div>';
+      } else {
+        var e = $('kpRatioEmpty');
+        if (e) e.style.display = '';
+      }
+      state.kpRatio = null; state.kpAllocation = null;
+      return;
     }
-    if (!k.avail) flags += '<span class="asm-na">暂不可练</span>';
-    return '<div class="' + cls + '" data-kp="' + esc(k.id) + '">' +
-      '<input type="checkbox" class="asm-check" data-kp="' + esc(k.id) + '"' + (asmState.selected[k.id] ? ' checked' : '') + (k.avail ? '' : ' disabled') + '>' +
-      '<div class="asm-kp-body">' +
-        '<div class="asm-line1"><span class="asm-lv">L' + k.level + '</span><span class="asm-name">' + esc(k.name) + '</span></div>' +
-        '<div class="asm-line2">' + acc + flags + '</div>' +
-      '</div></div>';
+    var total = state.count || 20;
+    // 权重占比分配（最大剩余法）
+    var wSum = 0;
+    ids.forEach(function (id) { wSum += asmKpById[id].weight || 1; });
+    var alloc = {};
+    var rem = [];
+    ids.forEach(function (id) {
+      var w = asmKpById[id].weight || 1;
+      var exact = total * w / wSum;
+      alloc[id] = Math.floor(exact);
+      rem.push({ id: id, frac: exact - Math.floor(exact), w: w });
+    });
+    // 将余数按小数部分从大到小分配，补足到 total，保证各卡之和 == total
+    var sum = Object.keys(alloc).reduce(function (a, id) { return a + alloc[id]; }, 0);
+    rem.sort(function (a, b) { return b.frac - a.frac || b.w - a.w; });
+    for (var r = 0; r < total - sum && r < rem.length; r++) alloc[rem[r].id] += 1;
+    state.kpRatio = alloc;
+
+    // —— 发往题目生成层的结构化消息（当前仅到此处，生成层后续接入 consume 该字段）——
+    state.kpAllocation = {
+      mode: urlParams.mode || null,
+      subject: state.subject,
+      grade: state.grade,
+      total: total,
+      strategy: 'weight-ratio',
+      kps: ids.map(function (id) {
+        var k = asmKpById[id];
+        return {
+          id: id,
+          name: k.name,
+          moduleId: k.moduleId,
+          weight: k.weight || 1,
+          ratio: Math.round(k.weight / wSum * 1000) / 1000, // 占比（0~1，保留3位）
+          count: alloc[id]
+        };
+      })
+    };
+
+    if (isTeacherMode) {
+      // 专业（教师）模式：初始按权重占比分配，但仅罗列每知识点题量填空（可自由改）
+      // 横向排列，自动换行，换行缩进。填写后按 Enter 或点「生成练习」按已填数量出题。
+      var flow = document.createElement('div');
+      flow.className = 'kp-ratio-flow';
+      ids.forEach(function (id) {
+        var k = asmKpById[id]; var n = alloc[id];
+        var chip = document.createElement('label');
+        chip.className = 'kp-blank';
+        var identified = k && k.name ? k.name : id;
+        chip.innerHTML =
+          '<span class="kp-blank-nm" title="' + esc(identified) + '">' + esc(moduleNameOf(k && k.moduleId ? k.moduleId : '')) + '·' + esc(identified) + '</span>' +
+          '<input type="number" class="kp-blank-num" data-kp-id="' + esc(id) + '" min="0" max="' + total + '" value="' + n + '" aria-label="' + esc(identified) + ' 题量">' +
+          '<span class="kp-blank-unit">题</span>';
+        flow.appendChild(chip);
+      });
+      var totalLine = document.createElement('div');
+      totalLine.className = 'kp-ratio-item sep';
+      totalLine.innerHTML = '<span class="nm">总题量</span><span class="total" id="kpRatioTotal">' + total + ' 题</span>';
+      wrap.innerHTML = '';
+      wrap.appendChild(flow);
+      wrap.appendChild(totalLine);
+      var empty = $('kpRatioEmpty'); if (empty) empty.style.display = 'none';
+      return;
+    }
+
+    var list = document.createElement('div');
+    list.className = 'kp-ratio-list';
+    ids.forEach(function (id) {
+      var k = asmKpById[id]; var n = alloc[id];
+      var item = document.createElement('div');
+      item.className = 'kp-ratio-item';
+      var identified = k && k.name ? k.name : id;
+      var pct = Math.round(n / total * 100);
+      item.innerHTML =
+        '<span class="nm" title="' + esc(identified) + '">' + esc(moduleNameOf(k && k.moduleId ? k.moduleId : '')) + ' · ' + esc(identified) + (k && k.weight ? '（权重' + k.weight + '）' : '') + '</span>' +
+        '<span class="bar"><i style="width:' + pct + '%"></i></span>' +
+        '<span class="cnt" data-kp-id="' + esc(id) + '">' + n + ' 题</span>' +
+        '<span class="pct">' + pct + '%</span>' +
+        '<span class="acts"><button type="button" data-kp-id="' + esc(id) + '" data-d="-1" aria-label="减少">−</button>' +
+        '<button type="button" data-kp-id="' + esc(id) + '" data-d="1" aria-label="增加">＋</button></span>';
+      list.appendChild(item);
+    });
+    var sep = document.createElement('div');
+    sep.className = 'kp-ratio-item sep';
+    sep.innerHTML = '<span class="nm">总题量</span><span class="total" id="kpRatioTotal">' + total + ' 题</span>';
+    list.appendChild(sep);
+    wrap.innerHTML = '';
+    wrap.appendChild(list);
+    var empty = $('kpRatioEmpty'); if (empty) empty.style.display = 'none';
   }
-  function asmGroupHtml(g) {
-    var collapsed = !!asmState.collapsed[g.id];
-    return '<div class="asm-group' + (collapsed ? ' collapsed' : '') + '" data-mid="' + esc(g.id) + '">' +
-      '<div class="asm-group-hd" role="button" tabindex="0" aria-expanded="' + (!collapsed) + '">' +
-        '<span class="asm-group-title">📚 ' + esc(g.name) + '</span>' +
-        '<span class="asm-group-id">' + esc(g.id) + '</span>' +
-        '<span class="asm-group-meta">' + g.kps.length + ' 个知识点</span>' +
-        '<span class="asm-caret">▼</span>' +
-      '</div>' +
-      '<div class="asm-group-body">' + g.kps.map(asmKpHtml).join('') + '</div>' +
-    '</div>';
-  }
-  function asmRenderSwitches() {
-    var sb = $('asmSubject');
-    if (sb) {
-      sb.innerHTML = '';
-      [['math', '数学'], ['chinese', '语文'], ['english', '英语']].forEach(function (s) {
-        var b = el('button', 'asm-sw-btn' + (s[0] === asmState.subject ? ' on' : ''), s[1]);
-        b.type = 'button'; b.setAttribute('data-subject', s[0]); sb.appendChild(b);
+  function bindKpRatio() {
+    var wrap = $('kpRatio');
+    if (!wrap) return;
+    wrap.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('button[data-d]') : null;
+      if (!b) return;
+      var id = b.getAttribute('data-kp-id');
+      var step = Number(b.getAttribute('data-d'));
+      if (!id || !state.kpRatio || !(id in state.kpRatio)) return;
+      var total = state.count || 20;
+      var ids = Object.keys(state.kpRatio);
+      var n = state.kpRatio[id] + step;
+      if (n < 1 || n > total) return;
+      state.kpRatio[id] = n;
+      // 手动 ± 时，从其它卡匀出一/补进一题，保证总题量不变（权重的整数取整差异，交由手动微调覆盖）
+      if (step > 0) {
+        // 加一题：从题量最多的一张卡减一
+        var donor = null;
+        for (var i = 0; i < ids.length; i++) {
+          var oid = ids[i];
+          if (oid === id) continue;
+          if (!donor || state.kpRatio[oid] > state.kpRatio[donor]) donor = oid;
+        }
+        if (donor && state.kpRatio[donor] > 1) state.kpRatio[donor] -= 1;
+      } else {
+        // 减一题：把减掉的题补给题量最少的一张卡
+        var acceptor = null;
+        for (var j = 0; j < ids.length; j++) {
+          var aid = ids[j];
+          if (aid === id) continue;
+          if (!acceptor || state.kpRatio[aid] < state.kpRatio[acceptor]) acceptor = aid;
+        }
+        if (acceptor && state.kpRatio[acceptor] < total) state.kpRatio[acceptor] += 1;
+      }
+      refreshKpAllocation();
+      var cnt = document.querySelector('#kpRatio [data-kp-id="' + id + '"].cnt');
+      if (cnt) cnt.textContent = state.kpRatio[id] + ' 题';
+      var pct = Math.round(state.kpRatio[id] / total * 100);
+      var pctNode = cnt && cnt.nextElementSibling;
+      if (pctNode && pctNode.className === 'pct') pctNode.textContent = pct + '%';
+      var tl = $('kpRatioTotal'); if (tl) tl.textContent = total + ' 题';
+    });
+    // 专业模式：知识点题量数量填空（change 落盘，Enter 提交后按新数量生成）
+    if (isTeacherMode) {
+      wrap.addEventListener('change', function (e) {
+        var inp = e.target && e.target.closest ? e.target.closest('input.kp-blank-num') : null;
+        if (!inp) return;
+        var id = inp.getAttribute('data-kp-id');
+        if (!id || !state.kpRatio || !(id in state.kpRatio)) return;
+        var total = state.count || 20;
+        var v = Math.round(Number(inp.value));
+        if (!(v >= 0) || v > total || isNaN(v)) { inp.value = state.kpRatio[id]; return; }
+        state.kpRatio[id] = v;
+        // 其余卡不动，直接按所填数量出题（总题量取各卡之和）
+        refreshKpAllocation();
+        var tl2 = $('kpRatioTotal');
+        if (tl2) tl2.textContent = Object.keys(state.kpRatio).reduce(function (a, kp) { return a + state.kpRatio[kp]; }, 0) + ' 题';
+      });
+      wrap.addEventListener('keydown', function (e) {
+        var inp = e.target && e.target.closest ? e.target.closest('input.kp-blank-num') : null;
+        if (!inp) return;
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          inp.blur();
+          if (window.PracticeBridge) generate();
+        }
       });
     }
-    var gb = $('asmGrade');
-    if (gb) {
-      gb.innerHTML = '';
-      for (var g = 1; g <= 6; g++) {
-        var b = el('button', 'asm-sw-btn' + (g === asmState.grade ? ' on' : ''), App.getGradeName(g));
-        b.type = 'button'; b.setAttribute('data-grade', g); gb.appendChild(b);
-      }
-    }
   }
-function asmRender() {
-    var list = $('asmList'); if (!list) return;
-    var groups = asmBuildData();
-    if (!groups.length) {
-      list.innerHTML = asmState.qt
-        ? '<div class="asm-hint">按当前题型过滤后暂无可用知识点，试试切换其他年级 / 清除题型筛选。</div>'
-        : '<div class="asm-hint">该年级暂无可用知识点，试试切换其他年级。</div>';
-    } else {
-      list.innerHTML = groups.map(asmGroupHtml).join('');
-    }
-    asmRenderSwitches();
-    var h = $('asmHint');
-    if (h) {
-      if (asmState.qt) {
-        var qtn = qtName(asmState.qt) || asmState.qt;
-        h.textContent = (asmState.qt === 'comprehensive' || asmState.qt === 'exam')
-          ? '已进入「' + qtn + '」，覆盖该年级全部可用知识点，可按需勾选后生成。'
-          : '已按题型「' + qtn + '」过滤知识点，全选 / 清空作用于当前范围。';
-      } else if (asmState.recommendType) {
-        h.textContent = '已按入口参数勾选知识点，推荐题型：' + asmState.recommendType + '。';
-      } else {
-        h.textContent = (ASM_SMART[asmState.subject] || {}).hint || '🎯 依据练习记录推荐：优先补薄弱 / 易错点。';
-      }
-    }
-    $('sheetTitle').textContent = buildTitle(state.grade, deriveTypeName(), null);
-    renderKpLinks();
+
+  // 依据当前 state.kpRatio（可能被手动微调覆盖）重组发往生成层的结构化消息
+  function refreshKpAllocation() {
+    if (!state.kpRatio) { state.kpAllocation = null; return; }
+    var total = state.count || 20;
+    var ids = Object.keys(state.kpRatio);
+    var wSum = 0;
+    ids.forEach(function (id) { wSum += (asmKpById[id] && asmKpById[id].weight) || 1; });
+    state.kpAllocation = {
+      mode: urlParams.mode || null,
+      subject: state.subject,
+      grade: state.grade,
+      total: total,
+      strategy: 'weight-ratio',
+      kps: ids.map(function (id) {
+        var k = asmKpById[id];
+        return { id: id, name: k && k.name, moduleId: k && k.moduleId,
+          weight: (k && k.weight) || 1,
+          ratio: Math.round((k && k.weight || 1) / wSum * 1000) / 1000,
+          count: state.kpRatio[id] };
+      })
+    };
   }
-  function asmSmartKps() {
-    var rule = ASM_SMART[asmState.subject] || { modules: [], highLevelBias: false };
-    var prio = {}; (rule.modules || []).forEach(function (m, i) { prio[m] = rule.modules.length - i; });
-    var all = []; asmBuildData().forEach(function (g) { all = all.concat(g.kps); });
-    var practiced = all.filter(function (k) { return k.stat.attempts > 0; });
-    var fix = practiced.filter(function (k) { return k.stat.weak || k.stat.errorProne; })
-      .sort(function (a, b) { return (a.stat.mastery || 0) - (b.stat.mastery || 0); }).slice(0, 3);
-    var picked = {}; fix.forEach(function (k) { picked[k.id] = true; });
-    var fresh = all.filter(function (k) { return k.stat.attempts === 0 && !picked[k.id] && k.avail; });
-    fresh.sort(function (a, b) {
-      var pa = prio[a.moduleId] || 0, pb = prio[b.moduleId] || 0;
-      if (pa !== pb) return pb - pa;
-      if (rule.highLevelBias && a.level !== b.level) return b.level - a.level;
-      if (a.level !== b.level) return a.level - b.level;
-      return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0);
-    });
-    return fix.concat(fresh.slice(0, 5));
-  }
-  function asmToggle(id, on) {
-    var k = asmKpById[id]; if (!k || !k.avail) return;
-    if (on) asmState.selected[id] = true; else delete asmState.selected[id];
-    asmState.recommendType = null; // 用户手动勾选后，标题/推荐让位给当前选择
-    var node = $('asmList').querySelector('.asm-kp[data-kp="' + id + '"]');
-    if (node) node.classList.toggle('on', !!on);
-  }
-  function asmResetPreview() {
-    var area = $('problemsArea');
-    if (area) area.innerHTML = '<div class="empty">已切换科目 / 年级，请重新选择题型并点击「生成所选题目」。</div>';
-    var ra = $('resultArea'); if (ra) { ra.classList.remove('show'); ra.innerHTML = ''; }
-    if ($('checkBtn')) $('checkBtn').disabled = true;
-    if ($('revealBtn')) $('revealBtn').disabled = true;
-    if ($('printBtn')) $('printBtn').disabled = true;
-  }
+
   function asmGenerateFromSelection() {
     var ids = Object.keys(asmState.selected);
     if (!ids.length) { showNotice('请先选择题型', '在上方按模块勾选至少一个知识点（标注「暂不可练」的无法生成）。'); return; }
     state.subject = asmState.subject;
     state.grade = asmState.grade;
     state.knowledgePointIds = ids;   // 供错题本 / 难度 EMA 使用（practiceContextId / feedLearnerModel 优先读取）
-    state.kp = null; state.kps = null;
-    if (ensureLegacyPlugins) {
-      // 任务3：legacy/综合轨依赖插件实例，先装载再生成
-      ensureLegacyPlugins(state.subject, state.grade).then(function () {
-        practiceSession = new PracticeSession({
-          subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
-          knowledgePointIds: ids, adaptive: false, learnerProfile: null, titleType: deriveTypeName()
-        });
-        generate();
-      }).catch(function (e) {
-        // 插件装载失败不阻断核心（native 轨仍可用），照常生成
-        practiceSession = new PracticeSession({
-          subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
-          knowledgePointIds: ids, adaptive: false, learnerProfile: null, titleType: deriveTypeName()
-        });
-        generate();
-      });
-    } else {
-      practiceSession = new PracticeSession({
-        subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
-        knowledgePointIds: ids, adaptive: false, learnerProfile: null, titleType: deriveTypeName()
-      });
-      generate();
-    }
-  }
-  function asmBind() {
-    var sb = $('asmSubject');
-    if (sb) sb.addEventListener('click', function (e) {
-      var b = e.target.closest ? e.target.closest('.asm-sw-btn') : null; if (!b) return;
-      var s = b.getAttribute('data-subject'); if (!s || s === asmState.subject) return;
-      asmState.subject = s; asmState.selected = {}; asmState.smartSeeded = false;
-      state.subject = s; asmRender(); asmResetPreview();
-    });
-    var gb = $('asmGrade');
-    if (gb) gb.addEventListener('click', function (e) {
-      var b = e.target.closest ? e.target.closest('.asm-sw-btn') : null; if (!b) return;
-      var g = Number(b.getAttribute('data-grade')); if (!g || g === asmState.grade) return;
-      asmState.grade = g; asmState.selected = {}; asmState.smartSeeded = false;
-      state.grade = g; asmRender(); asmResetPreview();
-    });
-    var list = $('asmList');
-    if (list) {
-      list.addEventListener('change', function (e) {
-        var cb = e.target.closest ? e.target.closest('.asm-check') : null; if (!cb) return;
-        asmToggle(cb.getAttribute('data-kp'), cb.checked);
-      });
-      list.addEventListener('click', function (e) {
-        if (e.target.closest && e.target.closest('.asm-check')) return;
-        var hd = e.target.closest ? e.target.closest('.asm-group-hd') : null;
-        if (hd) {
-          var grp = hd.parentNode; var mid = grp.getAttribute('data-mid');
-          grp.classList.toggle('collapsed'); asmState.collapsed[mid] = grp.classList.contains('collapsed');
-          hd.setAttribute('aria-expanded', grp.classList.contains('collapsed') ? 'false' : 'true'); return;
-        }
-        var kp = e.target.closest ? e.target.closest('.asm-kp') : null;
-        if (!kp || kp.classList.contains('disabled')) return;
-        var id = kp.getAttribute('data-kp'); var next = !asmState.selected[id];
-        asmToggle(id, next); var cb = kp.querySelector('.asm-check'); if (cb) cb.checked = next;
-      });
-      list.addEventListener('keydown', function (e) {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        var hd = e.target.closest ? e.target.closest('.asm-group-hd') : null; if (hd) { e.preventDefault(); hd.click(); }
-      });
-    }
-    var smartBtn = $('asmSmartBtn');
-    if (smartBtn) smartBtn.addEventListener('click', function () {
-      asmState.selected = {};
-      asmSmartKps().forEach(function (k) { if (k.avail) asmState.selected[k.id] = true; });
-      asmState.smartSeeded = true; asmRender();
-    });
-    var selAllBtn = $('asmSelectAllBtn');
-    if (selAllBtn) selAllBtn.addEventListener('click', asmSelectAll);
-    var clrBtn = $('asmClearBtn');
-    if (clrBtn) clrBtn.addEventListener('click', asmClearAll);
-    var genBtn = $('asmGenBtn');
-    if (genBtn) genBtn.addEventListener('click', asmGenerateFromSelection);
+    // B4 收敛：此前在此 newSession 构造的会话会被 generate()→start() 内部重新构造并覆盖（孤儿），
+    // 直接移除。知识点题量占比（kpAllocation）已随 state 透传，generate()→start() 经
+    // state.knowledgePointIds=lambda 与 state.kpAllocation 拿到等价指令，mode 亦自动推导为 multi-kp。
+    generate();
   }
 
   // ============ 按钮绑定 ============
@@ -1604,11 +1636,10 @@ function asmRender() {
     document.querySelectorAll('#countGroup .chip').forEach(function (c) {
       c.addEventListener('click', function () {
         if (c.dataset.count === 'custom') {
-          var customInp = $('customCount');
           document.querySelectorAll('#countGroup .chip').forEach(function (x) { x.classList.remove('active'); x.setAttribute('aria-checked', 'false'); });
           c.classList.add('active');
           c.setAttribute('aria-checked', 'true');
-          if (customInp) { customInp.style.display = ''; customInp.focus(); }
+          setCustomBox(true, true);
           updateCountTip();
           return;
         }
@@ -1626,26 +1657,14 @@ function asmRender() {
       });
     }
     $('genBtn').addEventListener('click', generate);
+    // P0-002 修复：checkBtn「检查答案」此前仅能经输入框回车触发，按钮点击无绑定。
     $('checkBtn').addEventListener('click', check);
     $('revealBtn').addEventListener('click', toggleReveal);
     $('printBtn').addEventListener('click', printFile);
     // 优化点4：闭环引导 Toast 关闭
     var loopClose = $('loopToastClose');
     if (loopClose) loopClose.addEventListener('click', hideLoopToast);
-    var wrongBookBtn = $('wrongBookBtn');
-    if (wrongBookBtn) wrongBookBtn.addEventListener('click', openWrongBook);
-    var clearStateBtn = $('clearStateBtn');
-    if (clearStateBtn) clearStateBtn.addEventListener('click', function () {
-      if (!window.confirm('确定清除本地练习记录吗？\n将清空：上次练习设置、错题本、难度自适应参数（已生成的题目不受影响）。')) return;
-      StorageManager.clearState();
-      showNotice('已清除', '本地练习记录已清空，下次练习将从默认设置开始。');
-    });
-    // 窗口尺寸变化时重新计算题型按钮换行行首/行尾（无插件自定义题型，保留空操作以兼容）
-    var rt;
-    window.addEventListener('resize', function () {
-      clearTimeout(rt);
-      rt = setTimeout(function () {}, 120);
-    });
+    // U2 清理：原 resize 防抖回调体为空（自适应难度记忆已移除），为无操作死监听，直接删除。
     // 刷新重置：重新加载页面（原自适应难度记忆功能已移除）
     var refreshResetBtn = $('refreshResetBtn');
     if (refreshResetBtn) refreshResetBtn.addEventListener('click', function () {
@@ -1664,7 +1683,7 @@ function asmRender() {
       });
     }
 
-    bindQuickSwitch();
+    bindKpRatio();
   }
 
   // ============ 启动 ============
@@ -1695,16 +1714,6 @@ function asmRender() {
     $('checkBtn').disabled = true;
     $('revealBtn').disabled = true;
     $('printBtn').disabled = true;
-    $('wrongBookBtn').disabled = false;
-    $('clearStateBtn').disabled = false;
-
-    buildQuickSwitch();
-
-    // 合并：渲染二级页装配区（科目/年级/题型选择），入参（kp/kps/qt/plugin）在分片就绪后统一勾选
-    asmBind();
-    asmRender();
-    var asmPanel = $('assemblyPanel'); if (asmPanel) asmPanel.hidden = false;
-    $('sheetTitle').textContent = buildTitle(state.grade, deriveTypeName(), null);
 
     // 会话切换：清空 SVG 渲染缓存，避免长会话内存只增不减（svg-core.clearCache）
     if (window.SVGUtil && window.SVGUtil.clearCache) window.SVGUtil.clearCache();
@@ -1725,7 +1734,8 @@ function asmRender() {
     // 任务3：入参归一（kp/kps/qt/plugin）勾选 + 自动生成 + 打印参数支持
     function initFromUrlSeed() {
       var seed = asmSeedFromUrl();
-      asmRender();
+      renderKpRatio();
+      renderKpLinks();
       $('sheetTitle').textContent = buildTitle(state.grade, deriveTypeName(), null);
       if (!seed.auto) return;
       // P7: 直接打印参数（生成完成后立即打印）
@@ -1734,19 +1744,40 @@ function asmRender() {
         state.grade = asmState.grade;
         state.knowledgePointIds = Object.keys(asmState.selected);
         var buildAndPrint = function () {
-          practiceSession = new PracticeSession({
-            subject: state.subject, grade: state.grade, count: state.count, difficulty: state.difficulty,
-            knowledgePointIds: state.knowledgePointIds, adaptive: false, learnerProfile: null,
-            titleType: deriveTypeName()
-          });
-          practiceSession.start().then(function (result) {
-            if (result && result.html) {
-              applyExerciseSet({ questions: result.questions, meta: result.meta });
-              setTimeout(function () { practiceSession.print(); }, 300);
+          // B5 修正：直接打印也统一经关联层唯一入口 PracticeBridge.start()（保留编排 / kpAllocation），
+          // 不再绕过关联层直调 new PracticeSession().start()。
+          // 打印：单次会话经 session.print()（走语义题 print）；编排聚合会话（聚合 shim 无 print）
+          // 回退到已渲染的 #problemsArea 整卷打印。
+          window.PracticeBridge.onStartFeedback(function (fb) {
+            if (!fb || fb.ok !== true) {
+              showNotice('生成失败，请重试', (fb && fb.error && fb.error.message) || '生成失败');
+              return;
             }
-          }).catch(function (err) {
-            showNotice('生成失败', err && err.message);
+            applyExerciseSet({ questions: fb.questions || [], meta: fb.meta });
+            setTimeout(function () {
+              var s = fb.session;
+              if (s && typeof s.print === 'function') {
+                s.print().catch(function (err) { alert('打印失败：' + err.message); });
+              } else if (window.Print && document) {
+                var area = document.getElementById('problemsArea');
+                window.Print.open(area, (fb.meta && fb.meta.title) || '练习题', { pageType: 'math' });
+              } else {
+                alert('打印失败：打印模块不可用');
+              }
+            }, 300);
           });
+          window.PracticeBridge.start(
+            {
+              state: state,
+              knowledgePoints: state.knowledgePointIds,
+              knowledgePointId: state.kp || null,
+              qType: null, questionType: state.questionType || urlParams.qt || null,
+              titleType: deriveTypeName(),
+              kpAllocation: state.kpAllocation || null,
+              raw: { levels: state }
+            },
+            { ensureLegacyPlugins: (typeof ensureLegacyPlugins === 'function') ? ensureLegacyPlugins : null }
+          );
         };
         if (ensureLegacyPlugins) { ensureLegacyPlugins(state.subject, state.grade).then(buildAndPrint).catch(buildAndPrint); }
         else buildAndPrint();
@@ -1763,5 +1794,6 @@ function asmRender() {
   boot();
 })();
 </script>
+<script>(function(){var e=document.getElementById('footYear');if(e)e.textContent=new Date().getFullYear();})();</script>
 </body>
 </html>

@@ -1,0 +1,191 @@
+{
+  "_doc": "Homework Help 权威四层架构清单（物理文件仍驻留 shared/，此清单为逻辑归属分类）。",
+  "_boundary": "除 UI / 生成 / 知识库 三层以外，其余一律归入大服务层（信息传递 / 项目控制 / 外围样式 / 打印等外围控制）。",
+  "_note": "物理不移动原因见 docs/ARCHITECTURE_LAYERS.md：common.js 按自身路径注入同目录子模块、预编译 bundle 内嵌 shared/ 模块id、sw.js 与 dev 门禁与测试均硬编 shared/ 路径，shared/ 为稳定模块根，切勿拆分。",
+  "schema": {
+    "layer": { "description": "string, alias: string, sub?: { groupName: { desc, files[] } }" }
+  },
+
+  "layers": {
+    "UI": {
+      "description": "负责显示：页面壳、交互、渲染呈现入口，不决策题目结构、不直接调用生成引擎算法。",
+      "alias": "display",
+      "files": [
+        "index.html", "practice.html", "select.html", "faq.html", "contact.html",
+        "math-types.html", "chinese-types.html", "english-types.html", "subject-types.html",
+        "knowledge/*.html",
+        "feedback/feedback.html", "feedback/feedback.css", "feedback/feedback.js",
+        "sw.js"
+      ]
+    },
+
+    "GENERATION": {
+      "description": "题目生成核心引擎：题面/答案的算法生成、语义归一、渲染(HTML/SVG)输出。不含 UI 决策、不含服务控制。",
+      "alias": "engine",
+      "sub": {
+        "CORE_ENGINE": {
+          "desc": "共享入口：生成引擎 + 练习会话(核心引擎壳) + 预编译呈现 bundle",
+          "files": [
+            "shared/generation-engine.js", "shared/practice-session.js",
+            "shared/presentation-engine.js", "shared/presentation-engine.bundle.js",
+            "shared/strategy-engine.bundle.js"
+          ]
+        },
+        "SEMANTIC": {
+          "desc": "语义结构：Schema / semantic-question 归一与构造",
+          "files": [
+            "shared/semantic-question.js",
+            "shared/schemas/semantic-question.schema.js", "shared/schemas/knowledge-point.schema.js"
+          ]
+        },
+        "GENERATOR": {
+          "desc": "按知识点生成器：generator-registry/selector/contract/mode/retry/generators/core",
+          "files": [
+            "shared/generator/generator-contract.js", "shared/generator/generator-mode.js",
+            "shared/generator/generator-registry.js", "shared/generator/generator-selector.js",
+            "shared/generator/retry-loop.js", "shared/generator/migration-switch.js",
+            "shared/generator/legacy-adapter.js",
+            "shared/generator/graphic-renderer.js",
+            "shared/generator/generators/arithmetic.js", "shared/generator/generators/complex.js",
+            "shared/generator/generators/selection.js", "shared/generator/generators/index.js",
+            "shared/generator/core/arithmetic-core.js", "shared/generator/core/kp-arithmetic-semantics.js",
+            "shared/generator/core/kp-complex-semantics.js", "shared/generator/core/rng.js",
+            "shared/generator-capability-registry.js", "shared/generator-registry.js"
+          ]
+        },
+        "SERVICE_IFACE": {
+          "desc": "生成服务接口：generation/orchestrator + adapters + services + api/dto",
+          "files": [
+            "shared/generation/api.js", "shared/generation/dto.js", "shared/generation/orchestrator.js",
+            "shared/generation/adapters/capability-service.adapter.js",
+            "shared/generation/adapters/knowledge-graph-service.adapter.js",
+            "shared/generation/adapters/module-catalog-service.adapter.js",
+            "shared/generation/adapters/plugin-loader-service.adapter.js",
+            "shared/generation/services/capability-service.js",
+            "shared/generation/services/knowledge-graph-service.js",
+            "shared/generation/services/module-catalog-service.js",
+            "shared/generation/services/plugin-loader-service.js"
+          ]
+        },
+        "PRESENTATION": {
+          "desc": "呈现层：HTML 渲染 + SVG 渲染器 + factory",
+          "files": [
+            "shared/presentation/html-renderer.js", "shared/presentation/legacy-svg-adapter.js",
+            "shared/presentation/render-options.js", "shared/presentation/render-result.js",
+            "shared/presentation/renderer.js", "shared/presentation/svg-registry.js",
+            "shared/render.js", "shared/print.js"
+          ]
+        },
+        "GRAPHIC_RENDER": {
+          "desc": "图形描述渲染：graphic-renderer / svg-core",
+          "files": [
+            "shared/svg-core.js", "shared/svg-calculation.js", "shared/svg-chinese.js",
+            "shared/svg-english.js", "shared/svg-geometry.js", "shared/svg-make-ten.js"
+          ]
+        },
+        "PLUGINS": {
+          "desc": "题型插件：按知识点出题实现（生成层能力，含竞赛判题子模块）",
+          "files": ["plugins/**", "plugins/competition/**"]
+        }
+      }
+    },
+
+    "KNOWLEDGE": {
+      "description": "知识点库基层数据：唯一数据核心、schema、规范映射（不生成题面、不参与 UI 决策）。",
+      "alias": "base-data",
+      "files": [
+        "shared/knowledge-bank.js", "shared/knowledge-point.js",
+        "shared/knowledge-ontology.js", "shared/knowledge-ontology-normalizer.js",
+        "shared/knowledge-ontology-validator.js", "shared/schemas/knowledge-point.schema.js",
+        "shared/knowledge-cn.js", "shared/knowledge-en.js", "shared/knowledge-math.js",
+        "shared/knowledge-error.js", "shared/knowledge-factual.js", "shared/knowledge-operation.js",
+        "shared/hanzi-bank.js", "pinyin-bank.js",
+        "shared/question-id.js", "shared/question-type-registry.js",
+        "shared/ontology-error-map.js", "shared/ontology-factual-map.js", "shared/ontology-operation-map.js",
+        "knowledge/*.html"
+      ]
+    },
+
+    "SERVICE": {
+      "description": "大服务层：信息传递 / 项目控制 / 外围样式 / 打印等外围控制；以及工具与模型。除 UI/生成/知识外全部归此层。",
+      "alias": "service-orchestration",
+      "sub": {
+        "ASSOCIATION": {
+          "desc": "关联层(外围控制/编排)：唯一生成入口与批改分发",
+          "files": ["shared/practice-bridge.js"]
+        },
+        "STRATEGY": {
+          "desc": "策略(计划/难度/结构编排)",
+          "files": [
+            "shared/strategy/adaptive-strategy.js", "shared/strategy/cognitive-strategy.js",
+            "shared/strategy/comprehensive-strategy.js", "shared/strategy/constraint-builder.js",
+            "shared/strategy/context-strategy.js", "shared/strategy/difficulty-strategy.js",
+            "shared/strategy/number-range-strategy.js", "shared/strategy/question-plan.js",
+            "shared/strategy/question-type-allocation.js", "shared/strategy/question-type-strategy.js",
+            "shared/strategy/spiral-strategy.js", "shared/strategy/static-difficulty.js",
+            "shared/strategy/strategy-engine.js", "shared/strategy/strategy-error.js",
+            "shared/strategy/strategy-request.js", "shared/strategy/strategy-resolver.js",
+            "shared/strategy/strategy-result.js", "shared/strategy/strategy-validator.js",
+            "shared/strategy/structure-constraints.js", "shared/strategy/target-difficulty.js",
+            "shared/strategy-config.js"
+          ]
+        },
+        "VALIDATOR": {
+          "desc": "校验器(质量/结构/图形/难度)",
+          "files": [
+            "shared/validator/answer-validator.js", "shared/validator/batch-validator.js",
+            "shared/validator/difficulty-validator.js", "shared/validator/distractor-validator.js",
+            "shared/validator/duplicate-validator.js", "shared/validator/graphic-validator.js",
+            "shared/validator/kp-validator.js", "shared/validator/quality-scorer.js",
+            "shared/validator/question-validator.js", "shared/validator/render-preflight.js",
+            "shared/validator/structure-validator.js", "shared/validator/validation-pipeline.js"
+          ]
+        },
+        "CAPABILITY": {
+          "desc": "能力模型/矩阵/解析",
+          "files": [
+            "shared/capability-contract.js", "shared/capability-matrix.js",
+            "shared/capability-model.js", "shared/capability-resolver.js",
+            "shared/capability-scan-context.js"
+          ]
+        },
+        "LEARNER": {
+          "desc": "学习者模型/错题/结果收集",
+          "files": [
+            "shared/learner/error-model.js", "shared/learner/learner-model.js",
+            "shared/learner/learner-storage.js", "shared/learner/practice-result.js",
+            "shared/learner/result-collector.js"
+          ]
+        },
+        "CORE_UTIL": {
+          "desc": "共享基础(信息传递/注入入口)",
+          "files": [
+            "shared/common.js", "shared/core.js", "shared/check.js",
+            "shared/plugin-loader.js", "shared/plugin-types.js"
+          ]
+        },
+        "STATE_IO": {
+          "desc": "UI 状态 / 存储 / 日志 / 指标",
+          "files": [
+            "shared/ui-state.js", "shared/storage.js", "shared/logger.js", "shared/metrics.js"
+          ]
+        },
+        "CATALOG": {
+          "desc": "目录 / 版本 / 特性开关 / 科目工具",
+          "files": [
+            "shared/catalog-utils.js", "shared/module-catalog.js", "shared/version.js",
+            "shared/feature-flags.js", "shared/subject-utils.js", "shared/difficulty.js",
+            "shared/difficulty-static.js", "shared/generation-config.js"
+          ]
+        },
+        "CSS": {
+          "desc": "外围样式 tokens/components/pages/states/toolbar/subjects/base",
+          "files": [
+            "shared/base.css", "shared/tokens.css", "shared/components.css",
+            "shared/pages.css", "shared/states.css", "shared/subjects.css", "shared/toolbar.css"
+          ]
+        }
+      }
+    }
+  }
+}
