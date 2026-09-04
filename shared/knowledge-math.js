@@ -10348,7 +10348,11 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数乘整数口算：用分数的分子与整数相乘作分子，分母不变。",
+              "factualContent": {"rule":"分数乘整数：分子×整数作分子、分母不变；能约分的先约分再乘。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"fmint-mult-err","category":"calculation","description":"分子与整数相乘错误"},{"id":"fmint-simplify-err","category":"calculation","description":"结果未约分或约分错误"}],
             },
             {
               id: "math-g6-m1-g6-oral-frac-mult-frac",
@@ -10368,7 +10372,11 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数乘分数口算：分子乘分子、分母乘分母，先约分。",
+              "factualContent": {"rule":"分数乘分数：分子×分子、分母×分母；交叉约分后计算，结果最简。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"fmfrac-num-err","category":"calculation","description":"分子分母相乘错误"},{"id":"fmfrac-cross-err","category":"calculation","description":"交叉约分错误"}],
             },
             {
               id: "math-g6-m1-g6-oral-frac-div-int",
@@ -10388,7 +10396,11 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数除以整数口算：等于乘这个整数的倒数。",
+              "factualContent": {"rule":"分数除以整数：等于乘整数的倒数（整数除以本身可约分）；结果最简。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"fdivint-reciprocal-err","category":"calculation","description":"倒数转化错误"},{"id":"fdivint-calc-err","category":"calculation","description":"乘倒数后计算错误"}],
             },
             {
               id: "math-g6-m1-g6-oral-frac-div-frac",
@@ -10408,7 +10420,11 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数除以分数口算：等于乘除数的倒数。",
+              "factualContent": {"rule":"分数除以分数：被除数不变，除号变乘号，除数取倒数再乘。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"fdivfrac-turn-err","category":"operation","description":"除号变乘号或取倒数错误"},{"id":"fdivfrac-calc-err","category":"calculation","description":"乘倒数后计算错误"}],
             },
             {
               id: "math-g6-m1-g6-oral-dec-perc",
@@ -10428,7 +10444,11 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "百分数与小数互化口算：百分数化成小数（去掉%号小数点左移两位），反之右移。",
+              "factualContent": {"rule":"百分数与小数互化：小数→百分数小数点右移两位加%；百分数→小数去%小数点左移两位。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"decper-move-err","category":"calculation","description":"小数点移动方向或位数错误"},{"id":"decper-percent-err","category":"notation","description":"% 号添去错误"}],
             },
             {
               id: "math-g6-m1-g6-oral-ratio-simp",
@@ -10448,7 +10468,11 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "化简比口算：用比的前项后项同时除以最大公因数化成最简整数比。",
+              "factualContent": {"rule":"化简比：前项后项同除最大公因数；分数比先乘分母；小数比先化整数再化简。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"ratiosimp-gcd-err","category":"calculation","description":"最大公因数或化简计算错误"},{"id":"ratiosimp-form-err","category":"concept","description":"最简整数比形式理解错误"}],
             },
             {
               id: "math-g6-m1-g6-oral-neg-add-sub",
@@ -10468,7 +10492,11 @@
               number_range_default: { min: -20, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "负数加减口算：认识负数含义，进行简单的正负数加减。",
+              "factualContent": {"rule":"负数加减：0 为分界，负数为相反意义的量；异号相加看绝对值差，同号相加绝对值相加并取符号。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"negadd-sign-err","category":"calculation","description":"结果符号取错"},{"id":"negadd-value-err","category":"calculation","description":"绝对值加减计算错误"}],
             }
           ]
         },
@@ -10493,7 +10521,11 @@
               number_range_default: { min: 0.1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "小数乘法竖式：因数按整数相乘，按小数总位数点小数点。",
+              "factualContent": {"rule":"小数乘法：末位对齐相乘；因数共几位小数积点几位；末尾 0 去掉；可先估再算。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"calcdm-place-err","category":"operation","description":"竖式对位或进位错误"},{"id":"calcdm-dot-err","category":"notation","description":"积的小数位数点错"}],
             },
             {
               id: "math-g6-m2-g6-calc-dec-div",
@@ -10513,7 +10545,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "小数除法竖式：除数是小数先化整，商与被除数小数点对齐。",
+              "factualContent": {"rule":"小数除法：除数小数右移化整，被除数同步右移补 0；商小数点对齐被除数；余数补 0 继续。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"calcdd-move-err","category":"operation","description":"小数点未同步移动或补 0"},{"id":"calcdd-dot-err","category":"notation","description":"商的小数点位置错误"}],
             },
             {
               id: "math-g6-m2-g6-calc-frac-mult-div",
@@ -10533,7 +10569,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数乘除法计算：分数乘除混合运算，除转乘倒数，先约分再算。",
+              "factualContent": {"rule":"分数乘除混合：除以分数=乘倒数；先约分后相乘；结果最简或带分数。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"calcfmd-turn-err","category":"operation","description":"除转乘倒数处理错误"},{"id":"calcfmd-calc-err","category":"calculation","description":"约分或相乘错误"}],
             },
             {
               id: "math-g6-m2-g6-calc-solve-proportion",
@@ -10553,7 +10593,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "解比例：根据比例的基本性质（内项积=外项积）把比例化成方程求解。",
+              "factualContent": {"rule":"解比例：比例中两外项积=两内项积，化成方程；再用等式性质求解。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"solvprop-cross-err","category":"operation","description":"内外项相乘位置错误"},{"id":"solvprop-solve-err","category":"calculation","description":"方程求解错误"}],
             }
           ]
         },
@@ -10578,7 +10622,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数四则混合运算：按运算顺序进行分数加减乘除混合计算。",
+              "factualContent": {"rule":"分数混合：有括号先括号；先乘除后加减；同级从左到右；除转乘倒数。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"mf-order-err","category":"operation","description":"运算顺序错误"},{"id":"mf-calc-err","category":"calculation","description":"分数计算错误"}],
             },
             {
               id: "math-g6-m3-g6-mixed-frac-simple",
@@ -10598,7 +10646,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数简便运算：用运算律对分数进行凑整简便计算。",
+              "factualContent": {"rule":"分数简便：找能凑整的分数组合；运用交换、结合、分配律及减除的性质。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"mfs-pair-err","category":"reasoning","description":"凑整组合选错"},{"id":"mfs-calc-err","category":"calculation","description":"简便后计算错误"}],
             },
             {
               id: "math-g6-m3-g6-mixed-solve-equation",
@@ -10618,7 +10670,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "解方程（含比例）：解较复杂的方程，含分数系数或比例形式。",
+              "factualContent": {"rule":"解方程：利用等式性质去分母、移项、合并、系数化 1；比例用内项积外项积。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"mse-denominator-err","category":"operation","description":"去分母或移项错误"},{"id":"mse-solve-err","category":"calculation","description":"求解计算错误"}],
             }
           ]
         },
@@ -10643,7 +10699,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "负数：认识负数表示相反意义的量，会在数轴上表示、比较大小。",
+              "factualContent": {"rule":"负数：负数都小于 0；数轴上左小右大；负号读负；0 既非正也非负。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"fillneg-meaning-err","category":"concept","description":"负数意义（相反量）理解错误"},{"id":"fillneg-compare-err","category":"reasoning","description":"负数大小比较错误"}],
             },
             {
               id: "math-g6-m4-g6-fill-percent",
@@ -10663,7 +10723,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "百分数：百分数的意义、读写，与分数小数的互化及简单应用。",
+              "factualContent": {"rule":"百分数：表示一个数是另一个数的百分之几；读写加%；与分数小数互化；折扣成数含义。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"fillper-meaning-err","category":"concept","description":"百分数意义理解错误"},{"id":"fillper-convert-err","category":"calculation","description":"百分数与分数小数互化错误"}],
             },
             {
               id: "math-g6-m4-g6-fill-ratio",
@@ -10683,7 +10747,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "比与比例：比的意义、基本性质（化简比、求比值）与正反比例。",
+              "factualContent": {"rule":"比与比例：比的前项后项与比值关系；化简比求比值区分；比例基本性质内项积=外项积；正比商定反比积定。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"fillratio-simplify-err","category":"operation","description":"化简比与求比值混淆"},{"id":"fillratio-direct-err","category":"concept","description":"正反比例判断错误"}],
             },
             {
               id: "math-g6-m4-g6-fill-circle",
@@ -10703,7 +10771,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆：认识圆的各部分，周长与面积公式及其应用。",
+              "factualContent": {"formula":"圆：周长 C=πd=2πr；面积 S=πr²；r=d÷2；π≈3.14；圆是轴对称图形无数条对称轴。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"fillcircle-formula-err","category":"calculation","description":"周长面积公式混淆"},{"id":"fillcircle-radius-err","category":"reasoning","description":"半径直径关系用错"}],
             },
             {
               id: "math-g6-m4-g6-fill-cylinder-cone",
@@ -10723,7 +10795,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆柱圆锥：认识圆柱圆锥特征，表面积、体积及圆锥体积公式。",
+              "factualContent": {"formula":"圆柱圆锥：圆柱 V=πr²h、侧面积=2πrh、表面积=侧+2 底；圆锥 V=1/3πr²h；等底等高圆锥=1/3 圆柱。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"fillcc-formula-err","category":"calculation","description":"圆柱圆锥体积公式混淆"},{"id":"fillcc-third-err","category":"reasoning","description":"圆锥 1/3 关系用错"}],
             },
             {
               id: "math-g6-m4-g6-fill-pie-chart",
@@ -10743,7 +10819,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "扇形统计图：用扇形的面积（圆心角）表示各部分占总数的百分比。",
+              "factualContent": {"rule":"扇形统计图：整个圆表示总数；扇形面积占圆的比例=该部分占比；圆心角=占比×360°。"},
+              "graphicType": "chart",
+              "common_errors": [{"id":"fillpie-ratio-err","category":"reading","description":"扇形占比读取错误"},{"id":"fillpie-angle-err","category":"calculation","description":"圆心角计算错误"}],
             },
             {
               id: "math-g6-m4-unit-convert",
@@ -10763,7 +10843,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "单位换算：长度、面积、体积、质量、时间、人民币等单位换算。",
+              "factualContent": {"unit":"单位换算：长度 1km=1000m；面积 1m²=100dm²；体积 1m³=1000dm³、1L=1dm³；质量 1t=1000kg；时间 1h=60min。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"unitconv-rate-err","category":"unit","description":"进率记错"},{"id":"unitconv-dir-err","category":"unit","description":"大小单位换算方向错误"}],
             }
           ]
         },
@@ -10788,7 +10872,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "比例关系连线：把数量关系与正比例或反比例连线。",
+              "factualContent": {"rule":"正反比例连线：商一定成正比例；积一定成反比例；判断两量关系再连线。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"matchprop-direct-err","category":"concept","description":"正反比例判断错误"},{"id":"matchprop-relation-err","category":"reasoning","description":"数量关系识别错误"}],
             },
             {
               id: "math-g6-m5-g6-match-formula",
@@ -10808,7 +10896,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "公式连线：把图形与其周长、面积、体积公式连线。",
+              "factualContent": {"formula":"公式连线：圆周长 2πr、圆面积 πr²；圆柱侧 2πrh、圆柱体积 πr²h、圆锥 1/3πr²h。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"matchformula-mix-err","category":"concept","description":"公式与图形对应错误"},{"id":"matchformula-cyl-err","category":"concept","description":"圆柱圆锥公式混淆"}],
             },
             {
               id: "math-g6-m5-g6-match-chart",
@@ -10828,7 +10920,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "统计图特征连线：把统计图与适用场景或特点连线。",
+              "factualContent": {"rule":"统计图选择：条形比多少、折线看变化、扇形看占比；按目的连线。"},
+              "graphicType": "chart",
+              "common_errors": [{"id":"matchchart-type-err","category":"concept","description":"统计图适用场景判断错误"},{"id":"matchchart-feature-err","category":"concept","description":"统计图特点混淆"}],
             }
           ]
         },
@@ -10853,7 +10949,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "用圆规画圆：用圆规画指定半径或直径的圆，确定圆心。",
+              "factualContent": {"rule":"画圆：定圆心、张开圆规到半径长度、旋转一周；直径=2×半径。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"opcircle-radius-err","category":"operation","description":"圆规张开的长度（半径）错误"},{"id":"opcircle-center-err","category":"operation","description":"圆心定位错误"}],
             },
             {
               id: "math-g6-m6-g6-op-symmetry",
@@ -10873,7 +10973,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "对称与图形变换：识别轴对称图形，补全对称图形。",
+              "factualContent": {"rule":"轴对称：对称点到轴距离相等；圆有无数条对称轴；补全先找关键点的对称点。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"opsym-axis-err","category":"operation","description":"对称轴画错"},{"id":"opsym-distance-err","category":"operation","description":"对称点距离不等"}],
             },
             {
               id: "math-g6-m6-g6-op-rotate-scale",
@@ -10893,7 +10997,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "旋转与放大缩小：画图形旋转 90°、按比例放大缩小图形。",
+              "factualContent": {"rule":"旋转/缩放：旋转按中心、方向、角度；放大缩小按比例变化边长，形状不变。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"oprscale-angle-err","category":"operation","description":"旋转角度或方向错误"},{"id":"oprscale-ratio-err","category":"operation","description":"缩放比例应用错误"}],
             },
             {
               id: "math-g6-m6-g6-op-position",
@@ -10913,7 +11021,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "位置与方向：用方向、角度、距离描述物体位置，会画位置示意图。",
+              "factualContent": {"rule":"位置描述：方向（东偏北等）+角度+距离；画图按比例尺定距离。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"opposition-dir-err","category":"reading","description":"方向描述错误"},{"id":"opposition-angle-err","category":"reasoning","description":"角度或距离标注错误"}],
             }
           ]
         },
@@ -10938,7 +11050,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数线段图：画线段图表示分数关系，根据图列式。",
+              "factualContent": {"rule":"分数线段图：单位 1 画整段，分率对应部分；已知部分求整体用除法。"},
+              "graphicType": "diagram",
+              "common_errors": [{"id":"picfraction-unit1-err","category":"reasoning","description":"单位 1 画错"},{"id":"picfraction-column-err","category":"reasoning","description":"根据线段图列式错误"}],
             },
             {
               id: "math-g6-m7-g6-pic-pie-chart",
@@ -10958,7 +11074,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "扇形统计图读图：读取扇形统计图信息并计算。",
+              "factualContent": {"rule":"扇形统计图读图：某部分量=总数×占比；总数=部分÷占比；比较各占比。"},
+              "graphicType": "chart",
+              "common_errors": [{"id":"picpie-part-err","category":"calculation","description":"部分量计算错误"},{"id":"picpie-total-err","category":"reasoning","description":"总数推算错误"}],
             },
             {
               id: "math-g6-m7-g6-pic-scale",
@@ -10978,7 +11098,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "比例尺图：根据比例尺计算图上距离与实际距离。",
+              "factualContent": {"rule":"比例尺=图上距离÷实际距离；求实际=图上÷比例尺；求图上=实际×比例尺；单位统一。"},
+              "graphicType": "diagram",
+              "common_errors": [{"id":"picscale-formula-err","category":"calculation","description":"比例尺关系式用错"},{"id":"picscale-unit-err","category":"unit","description":"图上实际单位换算错误"}],
             }
           ]
         },
@@ -11003,7 +11127,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数乘法应用：求一个数的几分之几是多少（单位 1×分率）。",
+              "factualContent": {"rule":"分数乘法应用：求部分=单位 1×分率；连续分数相乘依次乘。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"appfm-unit1-err","category":"reasoning","description":"单位 1 识别错误"},{"id":"appfm-calc-err","category":"calculation","description":"分数计算错误"}],
             },
             {
               id: "math-g6-m8-g6-app-frac-div",
@@ -11023,7 +11151,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数除法应用：已知一个数的几分之几是多少求这个数（部分÷分率）。",
+              "factualContent": {"rule":"分数除法应用：求单位 1=部分÷分率；用方程或算术法；检验结果。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"appfd-method-err","category":"reasoning","description":"乘除方法选错"},{"id":"appfd-calc-err","category":"calculation","description":"计算错误"}],
             },
             {
               id: "math-g6-m8-g6-app-percent-discount",
@@ -11043,7 +11175,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "百分数折扣应用：折扣、成数、税率、利率与百分数问题的综合应用。",
+              "factualContent": {"rule":"折扣应用：现价=原价×折扣；原价=现价÷折扣；利率利息=本金×利率×时间；注意几折=百分之几十。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"appper-discount-err","category":"calculation","description":"折扣与现价关系错误"},{"id":"appper-interest-err","category":"calculation","description":"利息或税率计算错误"}],
             },
             {
               id: "math-g6-m8-g6-app-ratio-prop",
@@ -11063,7 +11199,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "比例应用：用比例（正反比例）解决实际问题。",
+              "factualContent": {"rule":"比例应用：先判断正反比例，再设未知数列比例式求解；按比分配。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"appratio-type-err","category":"reasoning","description":"正反比例判断错误"},{"id":"appratio-solve-err","category":"calculation","description":"比例式求解错误"}],
             },
             {
               id: "math-g6-m8-g6-app-circle",
@@ -11083,7 +11223,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆的应用：用圆的周长、面积解决实际问题（环形、组合图形等）。",
+              "factualContent": {"rule":"圆的应用：环形面积=大圆-小圆；半圆周长=πr+2r；组合图形分解求。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"appcircle-ring-err","category":"calculation","description":"环形面积计算错误"},{"id":"appcircle-comb-err","category":"reasoning","description":"组合图形分解错误"}],
             },
             {
               id: "math-g6-m8-g6-app-cyl-cone",
@@ -11103,7 +11247,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆柱圆锥应用：求圆柱表面积（无盖等）、体积与圆锥体积的实际问题。",
+              "factualContent": {"rule":"圆柱圆锥应用：无盖/无底去面；求容积用体积；圆锥体积×1/3；单位换算（L）。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"appcc-face-err","category":"reasoning","description":"需计算的面判断错误"},{"id":"appcc-third-err","category":"calculation","description":"圆锥 1/3 或体积计算错误"}],
             },
             {
               id: "math-g6-m8-g6-app-travel-work",
@@ -11123,7 +11271,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "行程与工程综合：用比例、方程等方法解决行程与工程综合问题。",
+              "factualContent": {"rule":"行程工程综合：路程=速度×时间、工作=效率×时间；用比例或方程建模。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"apptw-model-err","category":"reasoning","description":"数量关系建模错误"},{"id":"apptw-calc-err","category":"calculation","description":"计算错误"}],
             },
             {
               id: "math-g6-m8-g6-app-pigeonhole",
@@ -11143,7 +11295,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "抽屉原理应用：用抽屉原理解决“至少”类实际问题。",
+              "factualContent": {"rule":"抽屉原理应用：合理分组定抽屉；至少数=⌈物体数÷抽屉数⌉；最不利加 1。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"apppigeon-drawer-err","category":"reasoning","description":"抽屉分组错误"},{"id":"apppigeon-count-err","category":"calculation","description":"至少数计算错误"}],
             }
           ]
         },
@@ -11168,7 +11324,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "扇形统计图：绘制与读取扇形统计图，用占比计算数量。",
+              "factualContent": {"rule":"扇形统计图：各占比和为 100%；部分=总数×占比；圆心角=占比×360°。"},
+              "graphicType": "chart",
+              "common_errors": [{"id":"statpie-ratio-err","category":"reading","description":"占比读取错误"},{"id":"statpie-calc-err","category":"calculation","description":"数量或圆心角计算错误"}],
             },
             {
               id: "math-g6-m9-g6-stat-possibility",
@@ -11188,7 +11348,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "可能性：用分数表示可能性大小，判断游戏公平性。",
+              "factualContent": {"rule":"可能性：概率=有利情况÷总情况；公平=双方概率相等。"},
+              "graphicType": "chart",
+              "common_errors": [{"id":"statposs-frac-err","category":"calculation","description":"可能性分数计算错误"},{"id":"statposs-fair-err","category":"reasoning","description":"公平性判断错误"}],
             }
           ]
         },
@@ -11213,7 +11377,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "数与形：借助图形直观探索数与图形的规律（如平方数、三角形数）。",
+              "factualContent": {"rule":"数与形：n 个点排列成图形，点数规律如 1+3+5+…+(2n-1)=n²；用图形帮助发现规律。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"reasonns-pattern-err","category":"reasoning","description":"图形规律发现错误"},{"id":"reasonns-formula-err","category":"reasoning","description":"规律公式化错误"}],
             },
             {
               id: "math-g6-m10-g6-reason-pigeonhole",
@@ -11233,7 +11401,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "抽屉原理（六年级）：用抽屉原理证明“至少”结论。",
+              "factualContent": {"rule":"抽屉原理：把多于 n 个物体放入 n 个抽屉，至少一个抽屉有 2 个以上；构造抽屉是关键。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"reasonph-construct-err","category":"reasoning","description":"抽屉构造错误"},{"id":"reasonph-proof-err","category":"reasoning","description":"至少结论推理错误"}],
             }
           ]
         },
@@ -11258,7 +11430,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆的判断：判断关于圆、周长、面积相关说法的正误。",
+              "factualContent": {"rule":"圆判断：半径直径关系；周长面积随半径变化（半径×2 周长×2 面积×4）；π 是常数。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"judgecircle-change-err","category":"concept","description":"半径变化对周长面积影响判断错误"},{"id":"judgecircle-formula-err","category":"concept","description":"圆公式或概念判断错误"}],
             },
             {
               id: "math-g6-m11-g6-judge-cyl-cone",
@@ -11278,7 +11454,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆柱圆锥判断：判断圆柱圆锥特征、体积关系相关说法的正误。",
+              "factualContent": {"rule":"圆柱圆锥判断：等底等高圆锥=1/3 圆柱；圆柱侧面展开是长方形；体积与底面积高有关。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"judgecc-third-err","category":"concept","description":"圆锥 1/3 关系判断错误"},{"id":"judgecc-unfold-err","category":"concept","description":"侧面展开图形判断错误"}],
             },
             {
               id: "math-g6-m11-g6-judge-negative",
@@ -11298,7 +11478,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "负数判断：判断关于负数意义与大小相关说法的正误。",
+              "factualContent": {"rule":"负数判断：负数小于 0；数轴方向；相反意义的量；0 不是正数也不是负数。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"judgeneg-zero-err","category":"concept","description":"0 与负数关系判断错误"},{"id":"judgeneg-size-err","category":"reasoning","description":"负数大小判断错误"}],
             },
             {
               id: "math-g6-m11-g6-judge-percent-ratio",
@@ -11318,7 +11502,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "百分数与比判断：判断百分数意义、比与比例相关说法的正误。",
+              "factualContent": {"rule":"百分数比判断：百分数是相对量；比可化简；正反比例判断；比值与比区别。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"judgepr-percent-err","category":"concept","description":"百分数相对量概念判断错误"},{"id":"judgepr-ratio-err","category":"concept","description":"比与比值、正反比例判断错误"}],
             },
             {
               id: "math-g6-m11-g6-judge-chart",
@@ -11338,7 +11526,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "统计判断：判断统计图选择与数据分析相关说法的正误。",
+              "factualContent": {"rule":"统计判断：扇形图看占比、折线看趋势、条形比多少；读图数据准确。"},
+              "graphicType": "chart",
+              "common_errors": [{"id":"judgechart-type-err","category":"concept","description":"统计图选择判断错误"},{"id":"judgechart-read-err","category":"reading","description":"统计图数据读取判断错误"}],
             }
           ]
         },
@@ -11363,7 +11555,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "负数选择：选择负数的正确意义、读法或大小比较。",
+              "factualContent": {"rule":"负数选择：识别相反意义量；数轴比较大小；选择正确表述。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"choiceneg-meaning-err","category":"concept","description":"负数意义选择错误"},{"id":"choiceneg-compare-err","category":"reasoning","description":"负数大小比较选择错误"}],
             },
             {
               id: "math-g6-m12-g6-choice-percent",
@@ -11383,7 +11579,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "百分数选择：选择百分数的意义、互化或折扣应用的正确选项。",
+              "factualContent": {"rule":"百分数选择：互化方向、折扣换算（八折=80%）、成数理解。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"choiceper-convert-err","category":"calculation","description":"百分数互化选择错误"},{"id":"choiceper-discount-err","category":"concept","description":"折扣成数理解错误"}],
             },
             {
               id: "math-g6-m12-g6-choice-circle",
@@ -11403,7 +11603,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆的选择：选择圆的周长、面积计算或关系的正确选项。",
+              "factualContent": {"rule":"圆选择：周长面积公式选择；半径直径关系；组合图形求法。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"choicecircle-formula-err","category":"calculation","description":"周长面积计算选择错误"},{"id":"choicecircle-relation-err","category":"concept","description":"半径直径关系选择错误"}],
             },
             {
               id: "math-g6-m12-g6-choice-cyl-cone",
@@ -11423,7 +11627,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆柱圆锥选择：选择圆柱圆锥表面积体积或关系式。",
+              "factualContent": {"rule":"圆柱圆锥选择：体积公式选择；等底等高关系；单位换算。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"choicecc-formula-err","category":"concept","description":"圆柱圆锥公式选择错误"},{"id":"choicecc-relation-err","category":"reasoning","description":"体积关系选择错误"}],
             },
             {
               id: "math-g6-m12-g6-choice-chart",
@@ -11443,7 +11651,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "统计选择：选择扇形统计图分析或统计图选择的正确选项。",
+              "factualContent": {"rule":"统计选择：按目的选图；扇形图占比换算数量；趋势判断。"},
+              "graphicType": "chart",
+              "common_errors": [{"id":"choicechart-select-err","category":"concept","description":"统计图选择错误"},{"id":"choicechart-calc-err","category":"calculation","description":"扇形占比计算错误"}],
             }
           ]
         },
@@ -11468,7 +11680,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "多位数竖式谜：根据多位竖式推理填数，考虑进位借位。",
+              "factualContent": {"rule":"多位数竖式谜：从个位逐步推进，考虑每次进位/借位对高位影响，逐位确定。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6vm-carry-err","category":"reasoning","description":"多位数进位借位推理遗漏"},{"id":"g6vm-digit-err","category":"reasoning","description":"数位对应数字推理错误"}],
             },
             {
               id: "math-g6-c1-vertical-carry-complex",
@@ -11488,7 +11704,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "复杂进位竖式谜：含多次连续进位或借位的竖式推理。",
+              "factualContent": {"rule":"复杂进位谜：先确定个位，逐位分析进位链（如连续进位 9+1）；用试算与排除。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6vcc-chain-err","category":"reasoning","description":"连续进位链分析错误"},{"id":"g6vcc-trial-err","category":"reasoning","description":"试算验证不完整"}],
             },
             {
               id: "math-g6-c1-horizontal-puzzle",
@@ -11508,7 +11728,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "横式谜进阶：较复杂的横式数字谜，含四则混合。",
+              "factualContent": {"rule":"横式谜进阶：利用运算互逆与括号，从确定部分倒推；多重运算按顺序。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6hp-inverse-err","category":"reasoning","description":"逆运算倒推错误"},{"id":"g6hp-order-err","category":"operation","description":"运算顺序处理错误"}],
             },
             {
               id: "math-g6-c1-symbol-number",
@@ -11528,7 +11752,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "符号代表数进阶：多符号、多等式系统求解。",
+              "factualContent": {"rule":"符号系统：建立多个等式关系，用代入或比较逐符号求解，最后验证。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6sn-system-err","category":"reasoning","description":"符号间关系建立错误"},{"id":"g6sn-solve-err","category":"calculation","description":"求解或验证错误"}],
             },
             {
               id: "math-g6-c1-magic-square-adv",
@@ -11548,7 +11776,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "幻方进阶：高阶幻方或带约束幻方的构造与填数。",
+              "factualContent": {"rule":"幻方进阶：利用幻和与中心数关系；约束条件先确定某些格；逐步验证。"},
+              "graphicType": "diagram",
+              "common_errors": [{"id":"g6msa-sum-err","category":"calculation","description":"幻和或中心数计算错误"},{"id":"g6msa-fill-err","category":"reasoning","description":"约束条件利用错误"}],
             },
             {
               id: "math-g6-c1-number-array",
@@ -11568,7 +11800,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "数阵图进阶：复合与带条件数阵的填数推理。",
+              "factualContent": {"rule":"数阵进阶：分解结构找公共格，按约束逐层填数，最后整体验证。"},
+              "graphicType": "diagram",
+              "common_errors": [{"id":"g6na-decompose-err","category":"reasoning","description":"数阵结构分解错误"},{"id":"g6na-verify-err","category":"reasoning","description":"未逐行逐线验证"}],
             },
             {
               id: "math-g6-c1-digit-reasoning",
@@ -11588,7 +11824,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "数字推理综合：用位值原理与整除性综合推理数字谜。",
+              "factualContent": {"rule":"数字推理：结合位值展开与整除特征（如和整除 9）缩小范围，再验证。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6dr-place-err","category":"reasoning","description":"位值分析错误"},{"id":"g6dr-div-err","category":"reasoning","description":"整除特征应用错误"}],
             },
             {
               id: "math-g6-c1-number-puzzle-competition",
@@ -11608,7 +11848,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "竞赛数字谜：综合应用多种技巧的高难度数字谜。",
+              "factualContent": {"rule":"竞赛数字谜：多技巧综合（进位、位值、整除、奇偶）；分步缩小范围并严格验证。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6npc-combine-err","category":"reasoning","description":"技巧综合运用错误"},{"id":"g6npc-unique-err","category":"reasoning","description":"多解取舍或验证错误"}],
             }
           ]
         },
@@ -11633,7 +11877,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "整除特征进阶：多位整除特征与整除性综合应用。",
+              "factualContent": {"rule":"整除特征：2/5 看个位；4/25 看末两位；8/125 看末三位；3/9 看数字和；11 看奇偶位差。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6div-feature-err","category":"concept","description":"多位整除特征记错"},{"id":"g6div-combine-err","category":"reasoning","description":"多个整除条件综合应用错误"}],
             },
             {
               id: "math-g6-c2-parity-analysis",
@@ -11653,7 +11901,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "奇偶分析进阶：用奇偶性解决方程、染色、操作类问题。",
+              "factualContent": {"rule":"奇偶分析：和差奇偶、乘积奇偶；染色/操作问题用奇偶不变量判断。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6pa-invariant-err","category":"reasoning","description":"奇偶不变量找错"},{"id":"g6pa-conclusion-err","category":"reasoning","description":"奇偶结论判断错误"}],
             },
             {
               id: "math-g6-c2-prime-factorization",
@@ -11673,7 +11925,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分解质因数进阶：较大数分解与质因数应用。",
+              "factualContent": {"rule":"分解质因数：短除法从 2、3、5…依次试除；结果指数形式；用于因数、整除分析。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6pf-divide-err","category":"calculation","description":"短除法试除错误"},{"id":"g6pf-apply-err","category":"reasoning","description":"质因数应用（求因数等）错误"}],
             },
             {
               id: "math-g6-c2-factor-count-sum",
@@ -11693,7 +11949,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "因数个数与因数和：由质因数指数计算因数个数、因数和。",
+              "factualContent": {"formula":"因数个数=(a1+1)(a2+1)…；因数和=(1+p1+…+p1^a1)(1+p2+…)…；奇数因数个数的数必为完全平方数。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6fcs-count-err","category":"calculation","description":"因数个数公式计算错误"},{"id":"g6fcs-sum-err","category":"calculation","description":"因数和公式展开错误"}],
             },
             {
               id: "math-g6-c2-gcd-lcm",
@@ -11713,7 +11973,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "最大公因数最小公倍数：多种方法求最大公因数与最小公倍数及应用。",
+              "factualContent": {"rule":"最大公因数与最小公倍数：分解质因数取公共低次/全部高次；互质数；用于分组、约分、周期。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6gl-gcd-err","category":"calculation","description":"最大公因数计算错误"},{"id":"g6gl-lcm-err","category":"calculation","description":"最小公倍数计算错误"}],
             },
             {
               id: "math-g6-c2-remainder-congruence",
@@ -11733,7 +11997,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "余数与同余进阶：同余性质与带余除法应用。",
+              "factualContent": {"rule":"同余：两数同余当且仅当差被模整除；余数性质：和、差、积的余数可分别计算。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6rc-cond-err","category":"concept","description":"同余条件理解错误"},{"id":"g6rc-calc-err","category":"calculation","description":"余数计算错误"}],
             },
             {
               id: "math-g6-c2-place-value",
@@ -11753,7 +12021,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "位值原理进阶：用位值展开解决多位数拆拼问题。",
+              "factualContent": {"rule":"位值原理：多位数按位展开；数字交换、加数拼接问题用位值建立方程。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6pv-expand-err","category":"calculation","description":"位值展开错误"},{"id":"g6pv-eq-err","category":"reasoning","description":"位值方程建立错误"}],
             },
             {
               id: "math-g6-c2-perfect-square",
@@ -11773,7 +12045,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "完全平方数进阶：完全平方数的性质与判断。",
+              "factualContent": {"rule":"完全平方数：质因数指数全偶；个位 0/1/4/5/6/9；n² 与 (n+1)² 之间无平方数；判断用夹逼。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6ps-exponent-err","category":"concept","description":"指数全偶判断错误"},{"id":"g6ps-range-err","category":"reasoning","description":"夹逼判断平方数错误"}],
             },
             {
               id: "math-g6-c2-number-theory-extreme",
@@ -11793,7 +12069,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "数论最值进阶：数论约束下求极值的综合问题。",
+              "factualContent": {"rule":"数论最值：结合整除、因数、数字和等约束构造极值；验证可行性。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6nte-bound-err","category":"reasoning","description":"约束边界分析错误"},{"id":"g6nte-construct-err","category":"reasoning","description":"极值构造错误"}],
             },
             {
               id: "math-g6-c2-diophantine-equation",
@@ -11813,7 +12093,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "不定方程整数解：解含多变量的整数方程。",
+              "factualContent": {"rule":"不定方程：确定变量范围，枚举或整除分析；结合实际约束取舍正整数解。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6de-range-err","category":"reasoning","description":"变量范围确定错误"},{"id":"g6de-solve-err","category":"calculation","description":"枚举验证错误"}],
             },
             {
               id: "math-g6-c2-modulo-arithmetic",
@@ -11833,7 +12117,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "同余与模运算：模运算性质、余数问题综合（周期求余）。",
+              "factualContent": {"rule":"模运算：余数同加同乘；大数求余用分解与周期性（如 3 的幂循环余数）；中国剩余思想初步。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6mod-property-err","category":"concept","description":"模运算性质用错"},{"id":"g6mod-cycle-err","category":"reasoning","description":"幂余周期性分析错误"}],
             }
           ]
         },
@@ -11858,7 +12146,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "加法原理进阶：分类计数与多类组合。",
+              "factualContent": {"rule":"加法原理：分类不重不漏；每类方法数相加；分类标准要正确。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6ap-class-err","category":"reasoning","description":"分类重叠或遗漏"},{"id":"g6ap-sum-err","category":"calculation","description":"方法数求和错误"}],
             },
             {
               id: "math-g6-c3-multiplication-principle",
@@ -11878,7 +12170,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "乘法原理进阶：分步计数与多步约束。",
+              "factualContent": {"rule":"乘法原理：分步相乘；有约束（首位不能 0 等）先处理受限步。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6mp-restrict-err","category":"reasoning","description":"受限位（首位）处理错误"},{"id":"g6mp-product-err","category":"calculation","description":"分步相乘错误"}],
             },
             {
               id: "math-g6-c3-permutation",
@@ -11898,7 +12194,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "排列进阶：排列数与受限排列（数字不重复等）。",
+              "factualContent": {"formula":"排列 A(n,m)=n!/(n-m)!；受限排列先排受限位；数字不重复按位逐取。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6perm-restrict-err","category":"reasoning","description":"受限条件处理错误"},{"id":"g6perm-calc-err","category":"calculation","description":"排列数计算错误"}],
             },
             {
               id: "math-g6-c3-combination",
@@ -11918,7 +12218,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "组合进阶：组合数与组合性质（对称、加法恒等式）。",
+              "factualContent": {"formula":"组合 C(n,m)=n!/(m!(n-m)!)；C(n,m)=C(n,n-m)；C(n,m)+C(n,m-1)=C(n+1,m)。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6comb-formula-err","category":"calculation","description":"组合数计算错误"},{"id":"g6comb-identity-err","category":"concept","description":"组合恒等式应用错误"}],
             },
             {
               id: "math-g6-c3-enumeration-counting",
@@ -11938,7 +12242,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "枚举计数进阶：分类有序枚举复杂情况。",
+              "factualContent": {"rule":"枚举计数：按标准分类，用表格/树形图有序列举，不重不漏统计。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6ec-repeat-err","category":"reasoning","description":"枚举重复"},{"id":"g6ec-miss-err","category":"reasoning","description":"枚举遗漏"}],
             },
             {
               id: "math-g6-c3-bundling-method",
@@ -11958,7 +12266,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "捆绑法进阶：相邻元素捆绑整体与内部排列。",
+              "factualContent": {"rule":"捆绑法：相邻元素捆绑看作整体参与排列，再乘内部排列数；多组捆绑分别处理。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6bundle-inner-err","category":"calculation","description":"内部排列数漏乘"},{"id":"g6bundle-group-err","category":"reasoning","description":"多组捆绑整体处理错误"}],
             },
             {
               id: "math-g6-c3-insertion-method",
@@ -11978,7 +12290,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "插空法进阶：不相邻元素插入空档。",
+              "factualContent": {"rule":"插空法：先排可相邻元素，再在空档（含两端）插入受限元素；空档数=已排元素数+1。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6insert-slot-err","category":"reasoning","description":"空档数算错（漏两端）"},{"id":"g6insert-order-err","category":"calculation","description":"插入排列数计算错误"}],
             },
             {
               id: "math-g6-c3-stars-bars",
@@ -11998,7 +12314,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "隔板法进阶：允许为 0 的隔板与正整数解。",
+              "factualContent": {"rule":"隔板法：n 相同物分 k 组至少 1：C(n-1,k-1)；允许 0 先给每组 1 再隔板。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6sb-zero-err","category":"reasoning","description":"允许 0 与至少 1 转化错误"},{"id":"g6sb-comb-err","category":"calculation","description":"组合数计算错误"}],
             },
             {
               id: "math-g6-c3-pigeonhole-principle",
@@ -12018,7 +12338,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "抽屉原理进阶：构造抽屉与“至少”证明。",
+              "factualContent": {"rule":"抽屉原理：把物体按最不利分组构造抽屉；至少数=⌈物体数÷抽屉数⌉；证明需构造。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6pigeon-construct-err","category":"reasoning","description":"抽屉构造错误"},{"id":"g6pigeon-calc-err","category":"calculation","description":"至少数计算错误"}],
             },
             {
               id: "math-g6-c3-worst-case-principle",
@@ -12038,7 +12362,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "最不利原则进阶：从最坏情况出发的保证问题。",
+              "factualContent": {"rule":"最不利原则：设想每种都取到最多仍不满足的情况，再加 1 保证；用于“保证”类问题。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6worst-case-err","category":"reasoning","description":"最坏情况设想错误"},{"id":"g6worst-ensure-err","category":"reasoning","description":"保证数量加 1 处理错误"}],
             },
             {
               id: "math-g6-c3-inclusion-exclusion",
@@ -12058,7 +12386,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "容斥原理进阶：三集合与多集合容斥。",
+              "factualContent": {"formula":"容斥：三集合=A+B+C-AB-AC-BC+ABC；四集合逐层加减；用文氏图辅助。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6ie-sign-err","category":"reasoning","description":"容斥加减号处理错误"},{"id":"g6ie-calc-err","category":"calculation","description":"集合计数计算错误"}],
             },
             {
               id: "math-g6-c3-recursion-counting",
@@ -12078,7 +12410,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "递推计数：用递推关系求解计数问题（如斐波那契类）。",
+              "factualContent": {"rule":"递推计数：设 f(n) 为第 n 项；找 f(n) 与 f(n-1)、f(n-2) 关系；从初值递推。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6rc-recursion-err","category":"reasoning","description":"递推关系建立错误"},{"id":"g6rc-initial-err","category":"calculation","description":"初值或递推计算错误"}],
             },
             {
               id: "math-g6-c3-derangement",
@@ -12098,7 +12434,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "错位排列：n 个元素都不在原位的排列数。",
+              "factualContent": {"formula":"错位排列：D(n)=(n-1)[D(n-1)+D(n-2)]，D(1)=0、D(2)=1；D3=2、D4=9、D5=44。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6derr-formula-err","category":"calculation","description":"错位排列递推或数值错误"},{"id":"g6derr-scenario-err","category":"reasoning","description":"错位情景识别错误"}],
             },
             {
               id: "math-g6-c3-geometry-counting",
@@ -12118,7 +12458,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "几何计数进阶：复杂图形中数线段、角、三角形、正方形等。",
+              "factualContent": {"rule":"几何计数：分类有序；基本单元累加与组合；重叠图形用分层计数。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6gc-layer-err","category":"reasoning","description":"分层或组合图形计数错误"},{"id":"g6gc-miss-err","category":"reasoning","description":"计数遗漏"}],
             }
           ]
         },
@@ -12143,7 +12487,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "基本面积进阶：多边形与圆面积公式综合应用。",
+              "factualContent": {"formula":"面积公式：三角形 底×高÷2；圆 πr²；扇形 n/360×πr²；组合图形分割求和。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6areabasic-formula-err","category":"calculation","description":"面积公式用错"},{"id":"g6areabasic-combine-err","category":"reasoning","description":"组合图形分割错误"}],
             },
             {
               id: "math-g6-c4-equal-area-transform",
@@ -12163,7 +12511,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "等积变形进阶：用等积变形解决面积关系问题。",
+              "factualContent": {"rule":"等积变形：平行线间同底等高面积相等；顶点沿平行线移动面积不变。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6eat-equal-err","category":"concept","description":"等积条件判断错误"},{"id":"g6eat-move-err","category":"reasoning","description":"顶点移动等积变形方向错误"}],
             },
             {
               id: "math-g6-c4-bird-head-model",
@@ -12183,7 +12535,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "鸟头模型：共角两三角形面积比等于夹边乘积比。",
+              "factualContent": {"formula":"共角定理：S₁/S₂=(a₁b₁)/(a₂b₂)（a、b 为共角两边）；用于比例求面积。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6bh-ratio-err","category":"calculation","description":"面积比计算错误"},{"id":"g6bh-common-err","category":"concept","description":"共角识别错误"}],
             },
             {
               id: "math-g6-c4-butterfly-model",
@@ -12203,7 +12559,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "蝴蝶模型进阶：梯形与任意四边形蝴蝶模型。",
+              "factualContent": {"rule":"蝴蝶模型：对角线交点分四块，上下面积比=上底下底平方比（梯形）；左右面积积相等。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6butterfly-trap-err","category":"reasoning","description":"梯形蝴蝶面积比用错"},{"id":"g6butterfly-product-err","category":"calculation","description":"面积积相等关系用错"}],
             },
             {
               id: "math-g6-c4-swallow-tail-model",
@@ -12223,7 +12583,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "燕尾模型进阶：三角形内点与面积比边比。",
+              "factualContent": {"rule":"燕尾模型：三角形内 P 连三顶点，相邻小三角面积比=对应底边比；多次应用。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6swallow-ratio-err","category":"reasoning","description":"面积比与边比对应错误"},{"id":"g6swallow-nest-err","category":"reasoning","description":"嵌套燕尾应用错误"}],
             },
             {
               id: "math-g6-c4-half-model",
@@ -12243,7 +12607,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "一半模型进阶：平行四边形中一半面积关系综合。",
+              "factualContent": {"rule":"一半模型：平行四边形内取中点连线形成的三角形/四边形面积=整体一半；多构型识别。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6half-recognize-err","category":"concept","description":"一半构型识别错误"},{"id":"g6half-calc-err","category":"calculation","description":"面积一半计算错误"}],
             },
             {
               id: "math-g6-c4-circle-sector",
@@ -12263,7 +12631,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆与扇形进阶：扇形面积弧长与组合图形。",
+              "factualContent": {"formula":"扇形：弧长=n/360×2πr；面积=n/360×πr²；弓形、环形等组合图形分解。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6cs-arc-err","category":"calculation","description":"弧长或扇形面积计算错误"},{"id":"g6cs-comb-err","category":"reasoning","description":"扇形组合图形分解错误"}],
             },
             {
               id: "math-g6-c4-solid-geometry",
@@ -12283,7 +12655,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "立体图形进阶：圆柱圆锥表面积体积综合应用。",
+              "factualContent": {"formula":"立体：圆柱 V=πr²h、侧=2πrh；圆锥 V=1/3πr²h；切割、拼接改变表面积体积。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6solidgeo-formula-err","category":"calculation","description":"立体公式用错"},{"id":"g6solidgeo-cut-err","category":"reasoning","description":"切割拼接面积体积变化错误"}],
             },
             {
               id: "math-g6-c4-painted-cube",
@@ -12303,7 +12679,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "表面涂色进阶：非正方体或部分涂色问题。",
+              "factualContent": {"rule":"涂色问题：三面 8 角；两面棱上（去角）；一面面上；内部零面；长方体按长宽高分析。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6pc-formula-err","category":"calculation","description":"涂色分类计算错误"},{"id":"g6pc-cuboid-err","category":"reasoning","description":"长方体涂色分析错误"}],
             },
             {
               id: "math-g6-c4-pythagorean-theorem",
@@ -12323,7 +12703,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "勾股定理进阶：勾股定理计算与勾股数。",
+              "factualContent": {"formula":"勾股定理 a²+b²=c²；勾股数如 3-4-5、5-12-13、8-15-17；求直角边用开方或勾股数。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6pyth-square-err","category":"calculation","description":"平方或开方计算错误"},{"id":"g6pyth-number-err","category":"concept","description":"勾股数识别错误"}],
             },
             {
               id: "math-g6-c4-lattice-area",
@@ -12343,7 +12727,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "格点面积进阶：皮克定理与格点多边形。",
+              "factualContent": {"formula":"皮克定理 S=I+B/2-1（I 内点、B 边界点）；先数点再套公式；或割补法。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6lattice-count-err","category":"calculation","description":"格点数统计错误"},{"id":"g6lattice-pick-err","category":"calculation","description":"皮克定理应用错误"}],
             },
             {
               id: "math-g6-c4-angle-calculation",
@@ -12363,7 +12751,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "角度计算进阶：多边形内角和与角度关系。",
+              "factualContent": {"rule":"角度计算：n 边形内角和 (n-2)×180°；外角和 360°；对顶角、同位角、三角形内角和。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6angle-polygon-err","category":"calculation","description":"多边形内角和计算错误"},{"id":"g6angle-relation-err","category":"concept","description":"角的关系应用错误"}],
             },
             {
               id: "math-g6-c4-circle-angle",
@@ -12383,7 +12775,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "圆中角：圆心角与圆周角关系（初步）。",
+              "factualContent": {"rule":"圆中角：同弧圆周角=圆心角一半；直径所对圆周角 90°；同弧圆周角相等。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6ca-half-err","category":"concept","description":"圆周角与圆心角关系记错"},{"id":"g6ca-diameter-err","category":"concept","description":"直径所对圆周角 90° 应用错误"}],
             },
             {
               id: "math-g6-c4-solid-rotation",
@@ -12403,7 +12799,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "旋转体：平面图形旋转形成的立体（圆柱、圆锥）。",
+              "factualContent": {"rule":"旋转体：长方形绕边转成圆柱、直角三角形绕直角边转成圆锥；半径高对应旋转轴。"},
+              "graphicType": "geometry",
+              "common_errors": [{"id":"g6sr-shape-err","category":"reasoning","description":"旋转形成的立体判断错误"},{"id":"g6sr-rh-err","category":"concept","description":"旋转半径高确定错误"}],
             }
           ]
         },
@@ -12428,7 +12828,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "基本行程进阶：多段行程与往返问题。",
+              "factualContent": {"formula":"行程：路程=速度×时间；往返总路程=2×单程；分段行程分段计算再合并。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6motionbasic-formula-err","category":"calculation","description":"三量关系式用错"},{"id":"g6motionbasic-segment-err","category":"reasoning","description":"分段行程合并错误"}],
             },
             {
               id: "math-g6-c5-meet",
@@ -12448,7 +12852,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "相遇问题进阶：多次相遇与中点相遇。",
+              "factualContent": {"formula":"相遇：路程和=速度和×时间；多次相遇每多一次合跑 2 个全程；中点相遇速度比判断。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6meet-multiple-err","category":"reasoning","description":"多次相遇全程数判断错误"},{"id":"g6meet-speed-err","category":"calculation","description":"速度和或时间计算错误"}],
             },
             {
               id: "math-g6-c5-chase",
@@ -12468,7 +12876,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "追及问题进阶：环形追及与多段追及。",
+              "factualContent": {"formula":"追及：路程差=速度差×时间；环形同向每追上一次多一圈；出发时间不同的追及。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6chase-lap-err","category":"reasoning","description":"环形追及圈数处理错误"},{"id":"g6chase-delay-err","category":"reasoning","description":"先后出发时间差处理错误"}],
             },
             {
               id: "math-g6-c5-train-bridge",
@@ -12488,7 +12900,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "火车过桥进阶：错车与完全通过问题。",
+              "factualContent": {"formula":"火车过桥：路程=桥长+车长；错车：两车相对速度×时间=两车长和；超车：路程=两车长和。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6train-length-err","category":"reasoning","description":"车长漏加"},{"id":"g6train-pass-err","category":"reasoning","description":"错车超车路程处理错误"}],
             },
             {
               id: "math-g6-c5-boat-stream",
@@ -12508,7 +12924,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "流水行船进阶：往返与水中相遇追及。",
+              "factualContent": {"formula":"流水行船：顺速=静+水、逆速=静-水；往返时间不等；水中追及与地面追及不同。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6stream-round-err","category":"reasoning","description":"往返顺逆时间处理错误"},{"id":"g6stream-speed-err","category":"calculation","description":"顺逆水速计算错误"}],
             },
             {
               id: "math-g6-c5-ring-runway",
@@ -12528,7 +12948,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "环形跑道进阶：环形相遇与追及综合。",
+              "factualContent": {"rule":"环形跑道：同向追及每追一圈多跑一圈；相向相遇合跑一圈；反向每相遇合跑一圈。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6ring-mode-err","category":"reasoning","description":"相遇追及类型混淆"},{"id":"g6ring-count-err","category":"calculation","description":"圈数计算错误"}],
             },
             {
               id: "math-g6-c5-clock",
@@ -12548,7 +12972,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "时钟问题进阶：重合、垂直与夹角计算。",
+              "factualContent": {"rule":"时钟：分针 6°/分、时针 0.5°/分，相对 5.5°/分；重合/垂直用追及；夹角用两针位置差。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6clock-speed-err","category":"concept","description":"角速度记错"},{"id":"g6clock-angle-err","category":"calculation","description":"夹角计算错误"}],
             },
             {
               id: "math-g6-c5-journey-complex",
@@ -12568,7 +12996,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "行程综合：多对象、多阶段的综合行程问题。",
+              "factualContent": {"rule":"行程综合：分段拆解，用线段图辅助；设未知数列方程；多种情况分论。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6journey-model-err","category":"reasoning","description":"行程模型建立错误"},{"id":"g6journey-calc-err","category":"calculation","description":"分段计算错误"}],
             },
             {
               id: "math-g6-c5-competition",
@@ -12588,7 +13020,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "竞赛行程：高难度行程问题（多车、相遇追及混合）。",
+              "factualContent": {"rule":"竞赛行程：画图辅助、比例与方程结合；注意同时性；拆成基本模型逐个击破。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6comp-simult-err","category":"reasoning","description":"同时性处理错误"},{"id":"g6comp-model-err","category":"reasoning","description":"模型分解错误"}],
             },
             {
               id: "math-g6-c5-interval-departure",
@@ -12608,7 +13044,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "发车间隔：公共汽车发车与相遇追及问题。",
+              "factualContent": {"rule":"发车间隔：相邻两车距离=车间距；行人与同向/相向车相遇追及，用速度差和建立方程。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6interval-spacing-err","category":"reasoning","description":"车间距计算错误"},{"id":"g6interval-eq-err","category":"reasoning","description":"方程建立错误"}],
             },
             {
               id: "math-g6-c5-pick-up-problem",
@@ -12628,7 +13068,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "接送问题：多人接送、车队接送问题。",
+              "factualContent": {"rule":"接送问题：利用车子往返与步行同时进行，找等时关系；画行程图。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6pick-simult-err","category":"reasoning","description":"同时进行关系处理错误"},{"id":"g6pick-figure-err","category":"reasoning","description":"行程图理解错误"}],
             }
           ]
         },
@@ -12653,7 +13097,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "工程问题进阶：多工程队合作与轮流。",
+              "factualContent": {"rule":"工程问题：效率=1÷时间；合作效率相加；轮流工作按周期算；水管注水放水同型。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6work-cycle-err","category":"reasoning","description":"轮流周期处理错误"},{"id":"g6work-rate-err","category":"calculation","description":"效率计算错误"}],
             },
             {
               id: "math-g6-c6-concentration-problem",
@@ -12673,7 +13121,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "浓度问题进阶：混合、蒸发、加盐浓度变化。",
+              "factualContent": {"formula":"浓度=溶质÷溶液；混合浓度用加权平均或十字交叉；蒸发水溶质不变；加盐溶剂不变。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6concent-mix-err","category":"calculation","description":"混合浓度计算错误"},{"id":"g6concent-cross-err","category":"reasoning","description":"十字交叉法应用错误"}],
             }
           ]
         },
@@ -12698,7 +13150,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "提取公因数进阶：多步提取与整体提取。",
+              "factualContent": {"rule":"提取公因数：观察各积项公共因数，用分配律逆用整体提取；分数小数统一再提。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6extract-detect-err","category":"reasoning","description":"公因数识别错误"},{"id":"g6extract-unify-err","category":"calculation","description":"分数小数统一错误"}],
             },
             {
               id: "math-g6-c7-rounding-calc",
@@ -12718,7 +13174,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "凑整巧算进阶：补数、拆数综合巧算。",
+              "factualContent": {"rule":"凑整巧算：加减凑整补数；乘法找 25×4、125×8；拆数配凑。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6round-complement-err","category":"reasoning","description":"补数拆数错误"},{"id":"g6round-sign-err","category":"calculation","description":"拆数符号错误"}],
             },
             {
               id: "math-g6-c7-fraction-splitting",
@@ -12738,7 +13198,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数裂项进阶：不同分母乘积裂项与推广。",
+              "factualContent": {"rule":"裂项：1/(n(n+k))=(1/k)(1/n-1/(n+k))；分母三项或复合分母先转化再裂项相消。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6fracsplit-k-err","category":"calculation","description":"裂项系数 k 处理错误"},{"id":"g6fracsplit-cancel-err","category":"calculation","description":"相消剩余项错误"}],
             },
             {
               id: "math-g6-c7-integer-splitting",
@@ -12758,7 +13222,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "整数裂项进阶：连续整数积的裂项求和。",
+              "factualContent": {"rule":"整数裂项：n(n+1)=(1/3)[n(n+1)(n+2)-(n-1)n(n+1)]；逐项相消求和。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6intsplit-coeff-err","category":"calculation","description":"裂项系数错误"},{"id":"g6intsplit-sum-err","category":"calculation","description":"求和或相消错误"}],
             },
             {
               id: "math-g6-c7-arithmetic-series",
@@ -12778,7 +13246,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "等差数列进阶：通项、求和与中项性质。",
+              "factualContent": {"formula":"等差数列：末项=首项+(n-1)d；和=(首+末)n/2=中间项×n；奇数项中项=平均数。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6series-term-err","category":"calculation","description":"通项计算错误"},{"id":"g6series-middle-err","category":"reasoning","description":"中项平均数性质用错"}],
             },
             {
               id: "math-g6-c7-recurring-decimal-frac",
@@ -12798,7 +13270,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "循环小数化分数进阶：纯混循环统一方法。",
+              "factualContent": {"rule":"循环化分数：纯循环分母 99…（循环节位数）；混循环用移位相减或按位写。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6recurfrac-niner-err","category":"calculation","description":"分母 9 的个数错误"},{"id":"g6recurfrac-mixed-err","category":"reasoning","description":"混循环处理错误"}],
             },
             {
               id: "math-g6-c7-define-operation",
@@ -12818,7 +13294,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "定义新运算进阶：复合与含字母新运算。",
+              "factualContent": {"rule":"定义新运算：严格按新规则代入；含字母运算先按规则展开；注意新规则优先级。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6define-sub-err","category":"calculation","description":"代入展开错误"},{"id":"g6define-letter-err","category":"reasoning","description":"含字母新运算处理错误"}],
             },
             {
               id: "math-g6-c7-compare-size",
@@ -12838,7 +13318,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "比较大小进阶：分数小数百分数混合比较。",
+              "factualContent": {"rule":"比较大小：统一成小数或分数；与 1/2 中间值比较；作差作商；交叉相乘比较分数。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6compare-method-err","category":"reasoning","description":"比较方法选择不当"},{"id":"g6compare-calc-err","category":"calculation","description":"统一形式转换错误"}],
             },
             {
               id: "math-g6-c7-estimate-bounds",
@@ -12858,7 +13342,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "估算与放缩进阶：确定整数部分与范围。",
+              "factualContent": {"rule":"估算放缩：用放缩不等式夹逼确定整数部分；估算乘积商的范围。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6estimate-bound-err","category":"reasoning","description":"放缩范围错误"},{"id":"g6estimate-int-err","category":"reasoning","description":"整数部分确定错误"}],
             },
             {
               id: "math-g6-c7-complex-fraction",
@@ -12878,7 +13366,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "繁分数化简进阶：多层繁分数。",
+              "factualContent": {"rule":"繁分数：由内向外逐层化简；主分数线是除号；分子分母可先各自化简。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6complexfrac-layer-err","category":"operation","description":"由内向外层序错误"},{"id":"g6complexfrac-mainline-err","category":"concept","description":"主分数线识别错误"}],
             },
             {
               id: "math-g6-c7-sequence-sum",
@@ -12898,7 +13390,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "数列求和：等差、等比与常见数列求和公式。",
+              "factualContent": {"formula":"数列和：等差 (首+末)n/2；等比 a1(1-qⁿ)/(1-q)；常见 1+2+…+n=n(n+1)/2。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6seqsum-geometric-err","category":"calculation","description":"等比求和公式用错"},{"id":"g6seqsum-common-err","category":"calculation","description":"常见数列和公式记错"}],
             }
           ]
         },
@@ -12923,7 +13419,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "最值问题进阶：多约束最值与构造。",
+              "factualContent": {"rule":"最值：和定差小积大；用约束构造；多变量逐一优化；检验取等条件。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6extremum-equal-err","category":"reasoning","description":"取等条件判断错误"},{"id":"g6extremum-calc-err","category":"calculation","description":"最值计算错误"}],
             },
             {
               id: "math-g6-c8-logic-inference",
@@ -12943,7 +13443,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "逻辑推理进阶：复杂条件推理与矛盾法。",
+              "factualContent": {"rule":"逻辑推理：列表、假设、矛盾法；先找确定性条件，逐步推导并验证。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6logic-cond-err","category":"reading","description":"条件误读或遗漏"},{"id":"g6logic-contradict-err","category":"reasoning","description":"矛盾分析错误"}],
             },
             {
               id: "math-g6-c8-winning-strategy",
@@ -12963,7 +13467,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "必胜策略进阶：多对象博弈与状态控制。",
+              "factualContent": {"rule":"必胜策略：找周期控制数（合取固定值）；倒推必败态；先手后手策略。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6winning-cycle-err","category":"reasoning","description":"控制周期计算错误"},{"id":"g6winning-lose-err","category":"reasoning","description":"必败态判断错误"}],
             },
             {
               id: "math-g6-c8-optimization",
@@ -12983,7 +13491,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "统筹优化进阶：多工序、多资源最省安排。",
+              "factualContent": {"rule":"统筹优化：列工序找并行项；比较不同方案的耗时/成本；选择最优。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6optimize-parallel-err","category":"reasoning","description":"并行工序利用错误"},{"id":"g6optimize-compare-err","category":"reasoning","description":"方案比较遗漏"}],
             }
           ]
         },
@@ -13008,7 +13520,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "和差倍问题进阶：多量和差倍综合。",
+              "factualContent": {"formula":"和差倍：和差 (和±差)/2；和倍 和÷(倍数+1)；差倍 差÷(倍数-1)；画线段图。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6sumdiff-formula-err","category":"calculation","description":"公式用反"},{"id":"g6sumdiff-multi-err","category":"reasoning","description":"多量关系处理错误"}],
             },
             {
               id: "math-g6-c9-age-problem",
@@ -13028,7 +13544,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "年龄问题进阶：多人与过去未来年龄。",
+              "factualContent": {"rule":"年龄问题：年龄差不变；过去/未来加相同岁数；用差倍和倍列式。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6age-diff-err","category":"concept","description":"年龄差不变性质用错"},{"id":"g6age-time-err","category":"reasoning","description":"过去未来年份处理错误"}],
             },
             {
               id: "math-g6-c9-profit-loss-problem",
@@ -13048,7 +13568,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "盈亏问题进阶：双亏、双盈与差额。",
+              "factualContent": {"rule":"盈亏：份数=(盈+亏)/差；(大盈-小盈)/差；(大亏-小亏)/差；再求总数。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6pl-type-err","category":"reasoning","description":"盈亏类型判断错误"},{"id":"g6pl-calc-err","category":"calculation","description":"份数计算错误"}],
             },
             {
               id: "math-g6-c9-chicken-rabbit",
@@ -13068,7 +13592,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "鸡兔同笼进阶：变式与假设法推广。",
+              "factualContent": {"rule":"假设法：假设全一种算脚差；换一只脚数差固定；推广到三轮车、答题对错等。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6cr-diff-err","category":"calculation","description":"脚数差计算错误"},{"id":"g6cr-variant-err","category":"reasoning","description":"变式脚数单位处理错误"}],
             },
             {
               id: "math-g6-c9-average-problem",
@@ -13088,7 +13616,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "平均数问题进阶：移多补少与加权平均。",
+              "factualContent": {"formula":"平均数=总数÷份数；移多补少；加权平均=Σ(权重×值)/Σ权重。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6avg-total-err","category":"calculation","description":"总数量计算错误"},{"id":"g6avg-weight-err","category":"reasoning","description":"加权平均权重处理错误"}],
             },
             {
               id: "math-g6-c9-planting-problem",
@@ -13108,7 +13640,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "植树问题进阶：变形与环形综合。",
+              "factualContent": {"rule":"植树：棵数=间隔+1/-1/间隔（端与环形）；变形（敲钟、锯木、上楼梯）找间隔关系。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6planting-type-err","category":"reasoning","description":"变形类型判断错误"},{"id":"g6planting-calc-err","category":"calculation","description":"间隔计算错误"}],
             },
             {
               id: "math-g6-c9-phalanx-problem",
@@ -13128,7 +13664,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "方阵问题进阶：空心方阵与多层方阵。",
+              "factualContent": {"rule":"方阵：实心=边²；外层=4(边-1)；空心=外实心-内实心；相邻层差 8。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6phalanx-hollow-err","category":"reasoning","description":"空心方阵计算错误"},{"id":"g6phalanx-layer-err","category":"calculation","description":"层间差 8 处理错误"}],
             },
             {
               id: "math-g6-c9-periodic-problem",
@@ -13148,7 +13688,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "周期问题进阶：多周期与周期函数。",
+              "factualContent": {"rule":"周期：找最小正周期；多周期找公倍周期；用余数定位第 n 项。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6periodic-lcm-err","category":"reasoning","description":"多周期公倍周期处理错误"},{"id":"g6periodic-remainder-err","category":"calculation","description":"余数对应项错误"}],
             },
             {
               id: "math-g6-c9-grass-problem",
@@ -13168,7 +13712,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "牛吃草问题进阶：减少型与混合牛。",
+              "factualContent": {"rule":"牛吃草：设每天增长量；原有草=总量-增长×天数；混合牛按消耗与增长差值算。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6grass-growth-err","category":"calculation","description":"增长量计算错误"},{"id":"g6grass-consume-err","category":"reasoning","description":"消耗增长差值处理错误"}],
             },
             {
               id: "math-g6-c9-fraction-percent-application",
@@ -13188,7 +13736,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "分数百分数应用进阶：增减变化与单位 1 转换。",
+              "factualContent": {"rule":"分数百分数：单位 1 变化（涨价降价）；连续变化用乘法；找等量关系列方程。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6fp-unit1-err","category":"reasoning","description":"单位 1 转换错误"},{"id":"g6fp-continuous-err","category":"calculation","description":"连续增减计算错误"}],
             },
             {
               id: "math-g6-c9-economics-problem",
@@ -13208,7 +13760,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "经济问题进阶：成本利润折扣综合。",
+              "factualContent": {"formula":"经济：利润=售价-成本；利润率=利润/成本；售价=成本(1+利润率)；打折后利润变化。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6economics-cost-err","category":"calculation","description":"成本或利润计算错误"},{"id":"g6economics-discount-err","category":"reasoning","description":"折扣与利润关系错误"}],
             },
             {
               id: "math-g6-c9-equation-linear-1",
@@ -13228,7 +13784,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "一元一次方程（工具）进阶：含分数与括号方程。",
+              "factualContent": {"rule":"一元一次方程：去括号、去分母、移项、合并、系数化 1；检验。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6linear1-bracket-err","category":"operation","description":"去括号去分母错误"},{"id":"g6linear1-solve-err","category":"calculation","description":"移项合并错误"}],
             },
             {
               id: "math-g6-c9-equation-linear-2",
@@ -13248,7 +13808,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "二元一次方程组（工具）进阶：复杂消元与实际问题。",
+              "factualContent": {"rule":"二元方程组：加减消元或代入消元；含系数分数先整理；用于两未知量问题。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6linear2-eliminate-err","category":"calculation","description":"消元计算错误"},{"id":"g6linear2-model-err","category":"reasoning","description":"方程组建模错误"}],
             },
             {
               id: "math-g6-c9-ratio-application",
@@ -13268,7 +13832,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "比例应用进阶：按比分配与比例转化。",
+              "factualContent": {"rule":"比例应用：按比分配总数×各份占比；比例转化统一中间量；比例尺与图形放大缩小。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6ratio-apportion-err","category":"calculation","description":"按比分配计算错误"},{"id":"g6ratio-convert-err","category":"reasoning","description":"比例转化错误"}],
             },
             {
               id: "math-g6-c9-mixture-problem",
@@ -13288,7 +13856,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "混合问题：合金、浓度混合与平均混合。",
+              "factualContent": {"rule":"混合问题：总量与总成分分别求和再平均；用方程或十字交叉求混合比。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6mixture-total-err","category":"calculation","description":"总量成分求和错误"},{"id":"g6mixture-ratio-err","category":"reasoning","description":"混合比例求错"}],
             },
             {
               id: "math-g6-c9-inclusion-exclusion",
@@ -13308,7 +13880,11 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              "concept": "容斥应用：容斥原理在实际问题中的应用。",
+              "factualContent": {"formula":"容斥应用：两集合去重、三集合逐层；至少与都不的转化；文氏图辅助。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"g6ie2-overlap-err","category":"reasoning","description":"重叠处理错误"},{"id":"g6ie2-calc-err","category":"calculation","description":"集合数量计算错误"}],
             }
           ]
         }
