@@ -373,6 +373,8 @@
       kp: (p.get('kp') || '').trim() || null,
       kps: (p.get('kps') || '').trim() || null,
       qt: (p.get('qt') || '').trim() || null,
+      // 快速模式题型策略白名单：7 类题型 key 列表（select 页传入，生成层规划期过滤用）
+      types: (p.get('types') || '').trim() || null,
       // 模式：quick（快速）/ teacher（教师/专业）等（select 页传入，用于知识点占比展示形态）
       mode: (p.get('mode') || '').trim() || null,
       // P7: 直接打印参数
@@ -491,6 +493,7 @@
         // 不作为强制题型传给生成层：生成层按勾选知识点各自受支持题型生成（知识点驱动），
         // 避免 qt 的模块口径与 canonical 硬匹配口径冲突导致 0 题（深链 ?qt= 生成失败根因之一）。
         questionType: state.questionType || null,
+        questionTypes: state.questionTypes || null,
         titleType: deriveTypeName(),
         kpAllocation: state.kpAllocation || null,
         raw: { levels: state }
@@ -1188,6 +1191,9 @@
     asmState.selected = {};
     asmState.qt = null;
     asmState.recommendType = null;
+    // 快速模式题型策略白名单：types 与 kps 同源（select 页 QUICK_TYPE_MAP 映射），
+    // 传给生成层作为规划期题型过滤；无 types 时行为与原来完全一致。
+    asmState.questionTypes = urlParams.types ? urlParams.types.split(',').filter(Boolean) : null;
     var all = [];
     asmBuildData().forEach(function (g) { all = all.concat(g.kps); });
     if (urlParams.kps) {
@@ -1644,6 +1650,7 @@
     state.subject = asmState.subject;
     state.grade = asmState.grade;
     state.knowledgePointIds = ids;   // 供错题本 / 难度 EMA 使用（practiceContextId / feedLearnerModel 优先读取）
+    state.questionTypes = asmState.questionTypes || null; // 题型策略白名单（随请求传给生成层）
     // B4 收敛：此前在此 newSession 构造的会话会被 generate()→start() 内部重新构造并覆盖（孤儿），
     // 直接移除。知识点题量占比（kpAllocation）已随 state 透传，generate()→start() 经
     // state.knowledgePointIds=lambda 与 state.kpAllocation 拿到等价指令，mode 亦自动推导为 multi-kp。
@@ -1762,6 +1769,7 @@
         state.subject = asmState.subject;
         state.grade = asmState.grade;
         state.knowledgePointIds = Object.keys(asmState.selected);
+        state.questionTypes = asmState.questionTypes || null;
         var buildAndPrint = function () {
           // B5 修正：直接打印也统一经关联层唯一入口 PracticeBridge.start()（保留编排 / kpAllocation），
           // 不再绕过关联层直调 new PracticeSession().start()。
@@ -1791,6 +1799,7 @@
               knowledgePoints: state.knowledgePointIds,
               knowledgePointId: state.kp || null,
               qType: null, questionType: state.questionType || null,
+              questionTypes: state.questionTypes || null,
               titleType: deriveTypeName(),
               kpAllocation: state.kpAllocation || null,
               raw: { levels: state }

@@ -38,26 +38,37 @@ function selectQuestionType(kp, options) {
     return requested;
   }
 
+  // ①b 题型策略白名单（快速模式 7 类题型）：在「KP 能力 ∩ 白名单」内选择题型；
+  //     交集为空时不强制（回退默认路径），避免历史「qt 硬匹配致 0 题」问题。
+  var pool = supported;
+  if (Array.isArray(options.questionTypes) && options.questionTypes.length) {
+    var valid = [];
+    options.questionTypes.forEach(function (t) {
+      if (supported.indexOf(t) !== -1 && valid.indexOf(t) === -1) valid.push(t);
+    });
+    if (valid.length) pool = valid;
+  }
+
   // ② Capability 支持的指定 subtype
   if (options.subtype != null) {
     var normalized = Registry.normalizeQuestionType(options.subtype);
-    if (normalized && normalized.id && supported.indexOf(normalized.id) !== -1) {
+    if (normalized && normalized.id && pool.indexOf(normalized.id) !== -1) {
       return normalized.id;
     }
   }
 
   // ③ CognitiveLevel 匹配
   if (options.cognitiveLevel != null) {
-    var matched = matchByCognitiveLevel(supported, options.cognitiveLevel);
+    var matched = matchByCognitiveLevel(pool, options.cognitiveLevel);
     if (matched) return matched;
   }
 
   // ④ KP 默认题型
-  var defaultFromKP = getDefaultFromKP(kp, supported);
+  var defaultFromKP = getDefaultFromKP(kp, pool);
   if (defaultFromKP) return defaultFromKP;
 
   // ⑤ Registry 默认题型
-  return getRegistryDefault(kp, supported);
+  return getRegistryDefault(kp, pool);
 }
 
 function supportedTypes(kp) {

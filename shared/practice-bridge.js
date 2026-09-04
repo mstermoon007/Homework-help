@@ -141,6 +141,7 @@
         knowledgePoints: kp.knowledgePoints,
         kpAllocation: kp.kpAllocation,
         questionType: ui.questionType || st.questionType || null,
+        questionTypes: ui.questionTypes || st.questionTypes || null,
         subtype: ui.subtype || st.subtype || null,
         adaptive: !!(ui.adaptive || st.adaptive),
         learnerProfile: ui.learnerProfile || st.learnerProfile || null,
@@ -169,6 +170,7 @@
         knowledgePointId: profile.knowledgePointId || null,
         knowledgePointIds: Array.isArray(profile.knowledgePoints) ? profile.knowledgePoints : (profile.knowledgePointId ? [profile.knowledgePointId] : null),
         questionType: profile.questionType || null,
+        questionTypes: Array.isArray(profile.questionTypes) ? profile.questionTypes : (profile.questionTypes ? [profile.questionTypes] : null),
         adaptive: !!profile.adaptive,
         learnerProfile: profile.learnerProfile || null,
         titleType: profile.titleType || null
@@ -330,6 +332,7 @@
         knowledgePoints: [part.kp],
         kpAllocation: null,
         questionType: profile.questionType,
+        questionTypes: profile.questionTypes,
         subtype: profile.subtype,
         adaptive: false,
         learnerProfile: null,

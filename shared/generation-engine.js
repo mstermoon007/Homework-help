@@ -143,7 +143,8 @@
           var single = {
             knowledgePointId: kpId, grade: request.grade,
             count: request.count, difficulty: request.difficulty,
-            questionType: request.questionType, subtype: request.subtype,
+            questionType: request.questionType, questionTypes: request.questionTypes,
+            subtype: request.subtype,
             learnerProfile: request.learnerProfile
           };
           var r = engine.plan(single);

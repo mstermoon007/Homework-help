@@ -106,6 +106,7 @@ function plan(request) {
   // 3) QuestionType + Cognitive select (合并)
   var questionType = QuestionTypeStrategy.selectQuestionType(kp, {
     questionTypeId: request.questionType != null ? request.questionType : null,
+    questionTypes: request.questionTypes,
     subtype: request.subtype,
     cognitiveLevel: request.cognitiveLevel
   });
@@ -1025,26 +1026,37 @@ function selectQuestionType(kp, options) {
     return requested;
   }
 
+  // ①b 题型策略白名单（快速模式 7 类题型）：在「KP 能力 ∩ 白名单」内选择题型；
+  //     交集为空时不强制（回退默认路径），避免历史「qt 硬匹配致 0 题」问题。
+  var pool = supported;
+  if (Array.isArray(options.questionTypes) && options.questionTypes.length) {
+    var valid = [];
+    options.questionTypes.forEach(function (t) {
+      if (supported.indexOf(t) !== -1 && valid.indexOf(t) === -1) valid.push(t);
+    });
+    if (valid.length) pool = valid;
+  }
+
   // ② Capability 支持的指定 subtype
   if (options.subtype != null) {
     var normalized = Registry.normalizeQuestionType(options.subtype);
-    if (normalized && normalized.id && supported.indexOf(normalized.id) !== -1) {
+    if (normalized && normalized.id && pool.indexOf(normalized.id) !== -1) {
       return normalized.id;
     }
   }
 
   // ③ CognitiveLevel 匹配
   if (options.cognitiveLevel != null) {
-    var matched = matchByCognitiveLevel(supported, options.cognitiveLevel);
+    var matched = matchByCognitiveLevel(pool, options.cognitiveLevel);
     if (matched) return matched;
   }
 
   // ④ KP 默认题型
-  var defaultFromKP = getDefaultFromKP(kp, supported);
+  var defaultFromKP = getDefaultFromKP(kp, pool);
   if (defaultFromKP) return defaultFromKP;
 
   // ⑤ Registry 默认题型
-  return getRegistryDefault(kp, supported);
+  return getRegistryDefault(kp, pool);
 }
 
 function supportedTypes(kp) {
@@ -2322,6 +2334,11 @@ function validateRequest(req) {
     }
   }
 
+  // 题型策略白名单：可选，若提供必须是数组（元素合法性由题型选择池化逻辑容忍）
+  if (req.questionTypes != null && !Array.isArray(req.questionTypes)) {
+    errors.push('questionTypes 必须是数组');
+  }
+
   // targetDifficulty 必须在 1-10
   if (req.targetDifficulty != null) {
     var td = req.targetDifficulty;
@@ -3270,7 +3287,7 @@ var CORE_RECORDS = [
   { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: ['math-g1-m13-division-table', 'math-g2-m1-div-table', 'math-g2-m1-muldiv-relation', 'math-g2-m2-div-col', 'math-g2-m4-division-meaning', 'math-g2-m7-pic-div', 'math-g2-m7-pic-div-include', 'math-g2-m8-div-partitive', 'math-g2-m8-div-quotative', 'math-g3-m1-g3-div1', 'math-g4-c2-c2-divisible', 'math-g4-m1-g4-oral-divt', 'math-g5-m1-g5-oral-decdiv', 'math-g4-m2-g4-v-div2', 'math-g4-m2-g4-v-div2q', 'math-g4-m8-g4-word-div', 'math-g5-c2-divisibility', 'math-g6-c2-divisibility'], scope: 'core', version: 1 },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc'], questionTypes: ['oral', 'calc'], knowledgePoints: [], scope: 'core', version: 1 },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill'], questionTypes: ['fill'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g1-m13-division-table', 'math-g1-m13-fill-blank', 'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-cutfill', 'math-g4-c4-c4-pa', 'math-g4-c4-c4-solid', 'math-g4-c4-c4-count'], scope: 'core', version: 1 },
-  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice'], questionTypes: ['choice'], knowledgePoints: ['math-g1-m12-choice-mixed', 'math-g1-m5-match-calc', 'math-g1-m5-match-shape', 'math-g1-m5-match-clock', 'math-g1-m5-match-rmb', 'math-g2-m12-choice-mixed'], scope: 'core', version: 1 },
+  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice'], questionTypes: ['choice'], knowledgePoints: ['math-g1-m12-choice-mixed', 'math-g1-m5-match-calc', 'math-g1-m5-match-shape', 'math-g1-m5-match-rmb', 'math-g2-m12-choice-mixed'], scope: 'core', version: 1 },
   { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge'], questionTypes: ['judge'], knowledgePoints: ['math-g1-m0-make-ten-cushi', 'math-g1-m11-judge-mixed', 'math-g2-m11-judge-mixed'], scope: 'core', version: 1 },
   { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill', 'oral'], questionTypes: ['calc', 'fill', 'oral'],
     knowledgePoints: ['math-g1-m1-mixed-chain', 'math-g2-m1-mixed-addsub', 'math-g2-m1-mixed-multdiv', 'math-g2-m3-chain-addsub', 'math-g2-m3-multdiv-mixed', 'math-g2-m3-mixed-no-bracket', 'math-g2-m3-mixed-bracket', 'math-g1-m4-num-fill-unknown', 'math-g2-m3-fill-operator'],
@@ -9381,13 +9398,11 @@ __defs["shared/ontology-operation-map.js"] = function (module, exports, require)
     'math-time-date': { ops: ['read', 'measure'], confidence: 'medium', evidence: 'plugin-name' },
 
     'math-patterns': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'documented' },
-    'math-g1-patterns': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'documented' },
     'math-number-sense': { ops: ['identify', 'compare', 'classify'], confidence: 'medium', evidence: 'documented' },
     'math-position-direction': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
     'math-combination-set': { ops: ['classify', 'identify'], confidence: 'medium', evidence: 'plugin-name' },
 
     'math-data-stats': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-statistics': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
     'math-g4-stats': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
     'math-g5-stats': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
 

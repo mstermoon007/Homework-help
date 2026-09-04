@@ -48,13 +48,11 @@
     'math-time-date': { ops: ['read', 'measure'], confidence: 'medium', evidence: 'plugin-name' },
 
     'math-patterns': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'documented' },
-    'math-g1-patterns': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'documented' },
     'math-number-sense': { ops: ['identify', 'compare', 'classify'], confidence: 'medium', evidence: 'documented' },
     'math-position-direction': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
     'math-combination-set': { ops: ['classify', 'identify'], confidence: 'medium', evidence: 'plugin-name' },
 
     'math-data-stats': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-statistics': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
     'math-g4-stats': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
     'math-g5-stats': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
 

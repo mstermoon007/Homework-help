@@ -66,6 +66,7 @@
       knowledgePointId: options.knowledgePointId || null,
       knowledgePointIds: options.knowledgePointIds || null,
       questionType: options.questionType || null,
+      questionTypes: Array.isArray(options.questionTypes) ? options.questionTypes : (options.questionTypes ? [options.questionTypes] : null),
       adaptive: options.adaptive || false,
       learnerProfile: options.learnerProfile || null,
       titleType: options.titleType || null
@@ -311,6 +312,9 @@
     if (this.config.questionType) {
       req.questionType = this.config.questionType;
       req.questionTypes = [this.config.questionType];
+    } else if (this.config.questionTypes && this.config.questionTypes.length) {
+      // 快速模式题型策略白名单：随 multi-kp 请求传给生成层规划期过滤（不强制单题型）
+      req.questionTypes = this.config.questionTypes;
     }
 
     // 自适应

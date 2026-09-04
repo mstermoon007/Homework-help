@@ -96,7 +96,6 @@
       'math-g1-m1-carry-add-20',
       'math-g1-m1-retreat-sub-20',
       'math-g1-m4-adjacent-number',
-      'math-g1-m4-clock-read',
       'math-g1-m4-rmb-unit',
       'math-g1-m6-solid-shape',
       'math-g1-m12-choice-mixed'

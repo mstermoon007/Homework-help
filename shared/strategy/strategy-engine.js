@@ -57,6 +57,7 @@ function plan(request) {
   // 3) QuestionType + Cognitive select (合并)
   var questionType = QuestionTypeStrategy.selectQuestionType(kp, {
     questionTypeId: request.questionType != null ? request.questionType : null,
+    questionTypes: request.questionTypes,
     subtype: request.subtype,
     cognitiveLevel: request.cognitiveLevel
   });

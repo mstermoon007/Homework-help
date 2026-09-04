@@ -136,7 +136,6 @@
     printConfig: { pageType: 'patterns' },
     // 声明本插件覆盖的知识点（用于开发期覆盖校验与提示）
     knowledgePoints: {
-      1: ['math-g1-m4-number-pattern'],
       2: ['math-g2-m4-number-pattern']
     },
 
@@ -178,7 +177,7 @@
           data: p,
           q: fullQ,
           answer: String(p.answer),
-          knowledgePointId: 'math-g1-m4-number-pattern',
+          knowledgePointId: 'math-g2-m4-number-pattern',
           hint: p.kind === 'number' ? '先找相邻两个数相差几，再看下一个数。' : '图形是按照一定顺序重复出现的，先找出循环的一组。',
           render: function (idx) { return renderCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }

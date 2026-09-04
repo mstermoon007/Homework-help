@@ -506,8 +506,22 @@
   };
   var COMPETITION_MIDS = ['C1','C2','C3','C4','C5','C6','C7','C8','C9'];
 
+  // 快速模式（数学）：题型类别 → 模块集合（UI 层自包含映射，仅把选择题型翻译为知识点指令；
+  // 生成层 / 大服务层不感知。依据 docs/G1_MATH_QUESTION_TYPE_SCHEME.html 4.3 配比：
+  // 计算→M0+M1+M7（看图列式归计算）、填空→M4、解决问题→M8、图形统计→M6+M9、判断选择→M11+M12（连线 M5 归选择）；
+  // M13 提前预习（乘除法表）按计算类收纳。）
+  var QUICK_TYPE_MAP = [
+    { key: 'calc',    label: '计算题',          modules: ['M0', 'M1', 'M7', 'M13'] },
+    { key: 'fill',    label: '填空题',          modules: ['M4'] },
+    { key: 'choice',  label: '选择题',          modules: ['M12', 'M5'] },
+    { key: 'judge',   label: '判断题',          modules: ['M11'] },
+    { key: 'operate', label: '操作/作图题',     modules: ['M6'] },
+    { key: 'sort',    label: '分类整理题',      modules: ['M9'] },
+    { key: 'apply',   label: '解决问题/应用题', modules: ['M8'] }
+  ];
+
   // ---------- 状态 ----------
-  var state = { mode: 'quick', subject: 'math', grade: 1, module: null, quickModules: [], teacherModules: [], teacherKps: [] };
+  var state = { mode: 'quick', subject: 'math', grade: 1, module: null, quickModules: [], quickTypes: [], teacherModules: [], teacherKps: [] };
 
   // 支持 URL 初态：?mode=quick|teacher|competition（深链/测试）
   (function () {
@@ -603,7 +617,7 @@
       }, []);
   }
 
-  // 快速模式：该年级科目的所有题型卡（含综合/考试/竞赛等上层归类，不含综合聚合卡），可多选
+  // 快速模式：数学按 7 类题型卡（可多选）；语文/英语维持模块卡（可多选）
   function renderQuick() {
     gridQuick.innerHTML = '';
     var hasKps = window.KnowledgeBank && window.KnowledgeBank.getEntries(SUBJECT_CANON[state.subject], state.grade).length > 0;
@@ -612,17 +626,36 @@
       return;
     }
     var html = '';
-    moduleTypeCards(state.subject, state.grade).forEach(function (c) {
-      var on = state.quickModules.indexOf(c.moduleId) !== -1 ? ' on' : '';
-      html += '<button type="button" class="type-card' + on + '" data-module="' + c.moduleId + '">' + c.label +
-        '<span class="tc-tag">' + c.kps.length + ' 个知识点</span></button>';
-    });
+    if (state.subject === 'math') {
+      // 数学：7 类题型卡，副标显示该类别覆盖的知识点数
+      var mathCards = moduleTypeCards('math', state.grade);
+      QUICK_TYPE_MAP.forEach(function (t) {
+        var on = state.quickTypes.indexOf(t.key) !== -1 ? ' on' : '';
+        var cnt = mathCards
+          .filter(function (c) { return t.modules.indexOf(c.moduleId) !== -1; })
+          .reduce(function (n, c) { return n + c.kps.length; }, 0);
+        html += '<button type="button" class="type-card' + on + '" data-type="' + t.key + '">' + t.label +
+          '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
+      });
+    } else {
+      moduleTypeCards(state.subject, state.grade).forEach(function (c) {
+        var on = state.quickModules.indexOf(c.moduleId) !== -1 ? ' on' : '';
+        html += '<button type="button" class="type-card' + on + '" data-module="' + c.moduleId + '">' + c.label +
+          '<span class="tc-tag">' + c.kps.length + ' 个知识点</span></button>';
+      });
+    }
     gridQuick.innerHTML = html;
     gridQuick.querySelectorAll('.type-card').forEach(function (b) {
       b.addEventListener('click', function () {
-        var mid = b.getAttribute('data-module');
-        var idx = state.quickModules.indexOf(mid);
-        if (idx === -1) { state.quickModules.push(mid); } else { state.quickModules.splice(idx, 1); }
+        if (state.subject === 'math') {
+          var tk = b.getAttribute('data-type');
+          var idx = state.quickTypes.indexOf(tk);
+          if (idx === -1) { state.quickTypes.push(tk); } else { state.quickTypes.splice(idx, 1); }
+        } else {
+          var mid = b.getAttribute('data-module');
+          var mi = state.quickModules.indexOf(mid);
+          if (mi === -1) { state.quickModules.push(mid); } else { state.quickModules.splice(mi, 1); }
+        }
         renderQuick();
         renderSummary();
       });
@@ -751,9 +784,19 @@
   function collectKps(subject, grade) {
     var out = [];
     if (state.mode === 'quick') {
-      // 快速模式：多选模块 → 汇总这些模块的全部知识点
+      // 快速模式：数学按题型类别→模块映射汇总知识点；语文/英语按所选模块汇总
       var entries = window.KnowledgeBank.getEntries(SUBJECT_CANON[subject], grade);
-      state.quickModules.forEach(function (mid) {
+      var mids = [];
+      if (subject === 'math') {
+        state.quickTypes.forEach(function (tk) {
+          QUICK_TYPE_MAP.forEach(function (t) {
+            if (t.key === tk) t.modules.forEach(function (m) { if (mids.indexOf(m) === -1) mids.push(m); });
+          });
+        });
+      } else {
+        mids = state.quickModules.slice();
+      }
+      mids.forEach(function (mid) {
         entries.filter(function (k) { return k.moduleId === mid; })
           .forEach(function (k) { if (out.indexOf(k.id) === -1) out.push(k.id); });
       });
@@ -772,6 +815,11 @@
     var kps = collectKps(subject, grade);
     var url = 'practice.html?subject=' + encodeURIComponent(SUBJECT_CANON[subject] || subject) + '&grade=' + grade + '&mode=' + state.mode;
     if (kps.length) url += '&count=20&kps=' + encodeURIComponent(kps.join(','));
+    // 快速模式（数学）：把选中的 7 类题型随 URL 传给生成层，作为题型策略白名单
+    // （生成层仍以 kps 为驱动；题型类别用于规划期过滤与展示，防 0 题：白名单无交集时回退默认题型）
+    if (state.mode === 'quick' && subject === 'math' && state.quickTypes.length) {
+      url += '&types=' + encodeURIComponent(state.quickTypes.join(','));
+    }
     var btn = startBtns[state.mode];
     if (btn) btn.href = url;
   }
@@ -803,6 +851,7 @@
     state.subject = subjectSelect.value;
     state.module = null;
     state.quickModules = [];
+    state.quickTypes = [];
     state.teacherModules = [];
     state.teacherKps = [];
     ensureKnowledge(state.subject).then(renderAll);
@@ -811,6 +860,7 @@
     state.grade = Number(gradeSelect.value);
     state.module = null;
     state.quickModules = [];
+    state.quickTypes = [];
     state.teacherModules = [];
     state.teacherKps = [];
     renderAll();

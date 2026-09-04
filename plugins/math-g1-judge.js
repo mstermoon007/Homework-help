@@ -101,7 +101,6 @@
       'math-g1-m4-compare-number',
       'math-g1-m6-solid-shape',
       'math-g1-m6-flat-shape',
-      'math-g1-m4-clock-read',
       'math-g1-m4-rmb-unit',
       'math-g1-m0-make-ten-cushi',
       'math-g1-m11-judge-mixed'

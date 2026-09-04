@@ -133,9 +133,7 @@
     knowledgePoints: {
       1: [
         'math-g1-m6-draw-shape',
-        'math-g1-m4-clock-read',
-        'math-g1-m6-count-graph',
-        'math-g1-m9-classify'
+        'math-g1-m6-count-graph'
       ],
       2: [
         'math-g2-m6-draw-line',

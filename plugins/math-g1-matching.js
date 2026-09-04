@@ -94,11 +94,9 @@
     knowledgePoints: [
       'math-g1-m1-addsub-10',
       'math-g1-m6-solid-shape',
-      'math-g1-m4-clock-read',
       'math-g1-m4-rmb-unit',
       'math-g1-m5-match-calc',
       'math-g1-m5-match-shape',
-      'math-g1-m5-match-clock',
       'math-g1-m5-match-rmb'
     ],
 

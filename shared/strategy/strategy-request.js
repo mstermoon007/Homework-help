@@ -57,6 +57,11 @@ function validateRequest(req) {
     }
   }
 
+  // 题型策略白名单：可选，若提供必须是数组（元素合法性由题型选择池化逻辑容忍）
+  if (req.questionTypes != null && !Array.isArray(req.questionTypes)) {
+    errors.push('questionTypes 必须是数组');
+  }
+
   // targetDifficulty 必须在 1-10
   if (req.targetDifficulty != null) {
     var td = req.targetDifficulty;

@@ -37,7 +37,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第五单元 20以内的进位加法",
+              category: "algebra"
             },
             {
               id: "math-g1-m0-make-ten-ping",
@@ -62,7 +65,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第二单元 20以内的退位减法",
+              category: "algebra"
             },
             {
               id: "math-g1-m0-make-ten-po",
@@ -87,7 +93,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第二单元 20以内的退位减法",
+              category: "algebra"
             },
             {
               id: "math-g1-m0-make-ten-cushi",
@@ -112,7 +121,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第五单元 20以内的进位加法",
+              category: "algebra"
             }
           ]
         },
@@ -142,7 +154,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第一单元 5以内数的认识和加、减法",
+              category: "algebra"
             },
             {
               id: "math-g1-m1-addsub-10",
@@ -167,7 +182,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第二单元 6～10的认识和加、减法",
+              category: "algebra"
             },
             {
               id: "math-g1-m1-carry-add-20",
@@ -192,7 +210,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第五单元 20以内的进位加法",
+              category: "algebra"
             },
             {
               id: "math-g1-m1-retreat-sub-20",
@@ -217,7 +238,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第二单元 20以内的退位减法",
+              category: "algebra"
             },
             {
               id: "math-g1-m1-addsub-100",
@@ -242,7 +266,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第三单元 100以内数的认识",
+              category: "algebra"
             },
             {
               id: "math-g1-m1-two-digit-add",
@@ -267,7 +294,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第四单元 100以内的口算加、减法",
+              category: "algebra"
             },
             {
               id: "math-g1-m1-mixed-chain",
@@ -292,7 +322,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第二单元 6～10的认识和加、减法",
+              category: "algebra"
             }
           ]
         },
@@ -322,7 +355,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（一上 11~20 / 一下 100以内数的组成）",
+              category: "algebra"
             },
             {
               id: "math-g1-m4-digit-place",
@@ -347,7 +383,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（一上 11~20 数位建立 / 一下 100以内扩展）",
+              category: "algebra"
             },
             {
               id: "math-g1-m4-adjacent-number",
@@ -372,7 +411,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（一上 11~20 / 一下 100以内数的顺序）",
+              category: "algebra"
             },
             {
               id: "math-g1-m4-compare-number",
@@ -397,7 +439,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（一上 5~20以内 / 一下 100以内比大小）",
+              category: "algebra"
             },
             {
               id: "math-g1-m4-split-number",
@@ -422,82 +467,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
-            },
-            {
-              id: "math-g1-m4-number-pattern",
-              name: "数字规律",
-              pluginId: "math-patterns",
-              weight: 2,
-              type: "number",
-              description: "观察数字的排列，发现并接着填出规律。",
-              example: "1, 3, 5, 7, （  ）。（答案：9）",
-              concept: "找数字排列中的规律（等差、递增/递减、间隔等），并依规律填数。",
-              operations: ["reason","order"],
-              factualContent: {"rule":"常见规律：每次加/减同一个数、间隔规律、个位/十位规律"},
-              common_errors: [{"id":"pattern-step-error","category":"reasoning","description":"数字规律找错（步长判断错误）"},{"id":"pattern-continue-error","category":"calculation","description":"找到规律后继续填数计算错误"}],
-              graphicType: "number-line",
-              prerequisites: ["math-g1-m4-compose-number"],
-              related: ["math-g1-m7-picture-mixed"],
-              difficulty: 1,
-              spiral_level: 1,
-              max_spiral_level: 1,
-              cognitive_level: "掌握",
-              applicable_question_types: [{"type":"fill","coefficient":1},{"type":"choice","coefficient":0.6}],
-              number_range_default: { min: 1, max: 12 },
-              max_steps_default: 2,
-              context_default: "standard",
-              status: "active"
-            },
-            {
-              id: "math-g1-m4-clock-read",
-              name: "认识整时",
-              pluginId: "math-g1-operation",
-              weight: 2,
-              type: "clock-read",
-              description: "能认读钟表上的整时，知道时针、分针的指向。",
-              example: "分针指向12、时针指向3是几时？（答案：3时）",
-              concept: "认识钟面（时针、分针），会读整时和几时半，会用整时描述时间。",
-              operations: ["read","identify"],
-              factualContent: {"notation":"分针指向 12、时针指向几就是几时；分针指向 6、时针走过几就是几时半","unit":"小时"},
-              common_errors: [{"id":"clock-hand-confuse","category":"concept","description":"时针分针混淆（分针当时针读）"},{"id":"clock-half-confuse","category":"concept","description":"整时与半时混淆（分针指向 6 仍读整时）"}],
-              graphicType: "diagram",
-              prerequisites: ["math-g1-m4-compose-number"],
-              related: ["math-g1-m4-clock-approx"],
-              difficulty: 1,
-              spiral_level: 1,
-              max_spiral_level: 1,
-              cognitive_level: "掌握",
-              applicable_question_types: [{"type":"fill","coefficient":1},{"type":"choice","coefficient":0.6}],
-              number_range_default: { min: 1, max: 100 },
-              max_steps_default: 2,
-              context_default: "standard",
-              status: "active"
-            },
-            {
-              id: "math-g1-m4-clock-approx",
-              name: "快几时了/几时刚过",
-              pluginId: "math-clock",
-              weight: 1,
-              type: "read",
-              description: "能判断接近整时的时间，区分“快几时了”和“几时刚过”。",
-              example: "分针快到12、时针接近3，是快几时了？（答案：快3时了）",
-              concept: "会用\"快几时了\"\"几时刚过\"描述接近整时的时间，初步建立时间感知。",
-              operations: ["read","identify"],
-              factualContent: {"rule":"分针接近 12 且未到是\"快几时了\"；分针刚过 12 是\"几时刚过\""},
-              common_errors: [{"id":"clock-approx-dir-error","category":"concept","description":"快几时了/几时刚过方向判断相反"},{"id":"clock-approx-hand-error","category":"reading","description":"根据分针位置判断时间偏差（如刚过判成快）"}],
-              graphicType: "diagram",
-              prerequisites: ["math-g1-m4-clock-read"],
-              related: ["math-g1-m4-clock-read"],
-              difficulty: 1,
-              spiral_level: 1,
-              max_spiral_level: 1,
-              cognitive_level: "掌握",
-              applicable_question_types: [{"type":"choice","coefficient":1},{"type":"judge","coefficient":0.6}],
-              number_range_default: { min: 1, max: 12 },
-              max_steps_default: 2,
-              context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第一~二单元 数的分与合（5以内 / 6~10）",
+              category: "algebra"
             },
             {
               id: "math-g1-m4-rmb-unit",
@@ -522,7 +495,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "欢乐购物街（认识人民币）",
+              category: "measurement"
             },
             {
               id: "math-g1-m4-rmb-calc",
@@ -547,7 +523,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "欢乐购物街（认识人民币）",
+              category: "measurement"
             },
             {
               id: "math-g1-m4-number-chart",
@@ -572,7 +551,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第三单元 100以内数的认识",
+              category: "algebra"
             },
             {
               id: "math-g1-m4-num-fill-unknown",
@@ -597,7 +579,10 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第一~二单元 加减法（求未知数）",
+              category: "algebra"
             }
           ]
         },
@@ -627,7 +612,10 @@
               number_range_default: { min: 1, max: 12 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第三单元 认识立体图形",
+              category: "geometry"
             },
             {
               id: "math-g1-m6-flat-shape",
@@ -652,7 +640,10 @@
               number_range_default: { min: 1, max: 12 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第一单元 认识平面图形",
+              category: "geometry"
             },
             {
               id: "math-g1-m6-count-graph",
@@ -677,7 +668,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（立体 / 平面图形计数）",
+              category: "geometry"
             },
             {
               id: "math-g1-m6-position",
@@ -702,7 +696,10 @@
               number_range_default: { min: 1, max: 12 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "综合与实践 数学游戏（上下前后左右位置）",
+              category: "geometry"
             },
             {
               id: "math-g1-m6-shape-combine",
@@ -727,7 +724,10 @@
               number_range_default: { min: 1, max: 12 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第一单元 认识平面图形",
+              category: "geometry"
             },
             {
               id: "math-g1-m6-draw-shape",
@@ -752,7 +752,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第一单元 认识平面图形",
+              category: "geometry"
             }
           ]
         },
@@ -782,7 +785,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第二单元 6～10的认识和加、减法",
+              category: "algebra"
             },
             {
               id: "math-g1-m7-picture-sub",
@@ -807,7 +813,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第二单元 6～10的认识和加、减法",
+              category: "algebra"
             },
             {
               id: "math-g1-m7-picture-mixed",
@@ -832,7 +841,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第二单元 6～10的认识和加、减法",
+              category: "algebra"
             },
             {
               id: "math-g1-m7-brace-question",
@@ -857,7 +869,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第二单元 6～10的认识和加、减法",
+              category: "algebra"
             }
           ]
         },
@@ -887,7 +902,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第一~二单元 加减法应用（求总数）",
+              category: "algebra"
             },
             {
               id: "math-g1-m8-sub-remain",
@@ -912,7 +930,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第一~二单元 加减法应用（求剩余）",
+              category: "algebra"
             },
             {
               id: "math-g1-m8-sub-part",
@@ -937,7 +958,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "up",
+              unit: "第一~二单元 加减法应用（求部分）",
+              category: "algebra"
             },
             {
               id: "math-g1-m8-compare-more",
@@ -962,7 +986,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第六单元 数量间的加减关系",
+              category: "algebra"
             },
             {
               id: "math-g1-m8-compare-less",
@@ -987,7 +1014,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第六单元 数量间的加减关系",
+              category: "algebra"
             },
             {
               id: "math-g1-m8-two-step",
@@ -1012,7 +1042,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "第六单元 数量间的加减关系（连续两问）",
+              category: "algebra"
             },
             {
               id: "math-g1-m8-rmb-shopping",
@@ -1037,7 +1070,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "欢乐购物街（买卖我做主 · 综合实践）",
+              category: "synthesis"
             },
             {
               id: "math-g1-m8-exclude-extra",
@@ -1062,88 +1098,16 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（解决问题·含多余条件）",
+              category: "algebra"
             }
           ]
         },
         {
           moduleId: "M9",
           knowledgePoints: [
-            {
-              id: "math-g1-m9-classify",
-              name: "分类与整理",
-              pluginId: "math-g1-operation",
-              weight: 2,
-              type: "classify",
-              description: "按一定标准把物体分类并数出每类数量。",
-              example: "把下列图形按颜色分成两类并计数。",
-              concept: "按一定标准对事物分类，并用计数、记录等方法整理数据。",
-              operations: ["classify","identify"],
-              factualContent: {"rule":"分类标准一致，不重复不遗漏"},
-              common_errors: [{"id":"classify-criteria-error","category":"concept","description":"分类标准理解错误导致归类错误"},{"id":"classify-miss-item","category":"attention","description":"分类时遗漏个别物品"}],
-              graphicType: "chart",
-              prerequisites: [],
-              related: ["math-g1-m9-stats-table","math-g1-m9-pictograph"],
-              difficulty: 1,
-              spiral_level: 1,
-              max_spiral_level: 1,
-              cognitive_level: "掌握",
-              applicable_question_types: [{"type":"oral","rawType":"operate","coefficient":1},{"type":"fill","coefficient":0.6}],
-              number_range_default: { min: 1, max: 100 },
-              max_steps_default: 2,
-              context_default: "standard",
-              status: "active"
-            },
-            {
-              id: "math-g1-m9-stats-table",
-              name: "填写简单统计表",
-              pluginId: "math-statistics",
-              weight: 2,
-              type: "table",
-              description: "把分类的结果用简单的表格记录下来。",
-              example: "统计全班同学喜欢的水果并填入统计表。",
-              concept: "把分类整理的结果填入统计表，能读出表中信息并比较多少。",
-              operations: ["classify","identify"],
-              factualContent: {"rule":"统计表行/列对应分类，格内填计数结果"},
-              common_errors: [{"id":"stats-table-count-error","category":"calculation","description":"统计表中数量填写错误"},{"id":"stats-table-row-col","category":"attention","description":"统计表行列对应错位"}],
-              graphicType: "chart",
-              prerequisites: ["math-g1-m9-classify"],
-              related: ["math-g1-m9-classify","math-g1-m9-pictograph"],
-              difficulty: 1,
-              spiral_level: 1,
-              max_spiral_level: 1,
-              cognitive_level: "掌握",
-              applicable_question_types: [{"type":"fill","coefficient":1},{"type":"oral","rawType":"operate","coefficient":0.6}],
-              number_range_default: { min: 1, max: 100 },
-              max_steps_default: 2,
-              context_default: "standard",
-              status: "active"
-            },
-            {
-              id: "math-g1-m9-pictograph",
-              name: "象形统计图",
-              pluginId: "math-statistics",
-              weight: 2,
-              type: "picto",
-              description: "用一个图形代表一个数量，画出象形统计图。",
-              example: "用○表示人数，3个○表示3人。",
-              concept: "用象形图（一个图形代表一个或几个数量）表示数据，会读图并比较。",
-              operations: ["classify","identify"],
-              factualContent: {"rule":"象形统计图一个图形代表一定数量，读数时按图例换算"},
-              common_errors: [{"id":"pictograph-one-many","category":"concept","description":"象形统计图一个图形代表数量错误"},{"id":"pictograph-read-error","category":"reading","description":"读象形统计图信息错误"}],
-              graphicType: "chart",
-              prerequisites: ["math-g1-m9-classify","math-g1-m9-stats-table"],
-              related: ["math-g1-m9-stats-table","math-g2-m9-data-tally"],
-              difficulty: 1,
-              spiral_level: 1,
-              max_spiral_level: 1,
-              cognitive_level: "掌握",
-              applicable_question_types: [{"type":"fill","coefficient":1},{"type":"choice","coefficient":0.6}],
-              number_range_default: { min: 1, max: 100 },
-              max_steps_default: 2,
-              context_default: "standard",
-              status: "active"
-            }
           ]
         },
         {
@@ -1172,7 +1136,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "advance",
+              unit: "超前（二上 表内乘法）",
+              category: "algebra"
             },
             {
               id: "math-g1-m13-division-table",
@@ -1197,7 +1164,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "advance",
+              unit: "超前（二下 表内除法）",
+              category: "algebra"
             },
             {
               id: "math-g1-m13-fill-blank",
@@ -1222,7 +1192,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "advance",
+              unit: "超前（乘除逆运算）",
+              category: "algebra"
             }
           ]
         },
@@ -1252,7 +1225,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（口算算式与得数连线）",
+              category: "algebra"
             },
             {
               id: "math-g1-m5-match-shape",
@@ -1277,32 +1253,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
-            },
-            {
-              id: "math-g1-m5-match-clock",
-              name: "钟面与时间连线",
-              pluginId: "math-g1-matching",
-              weight: 1,
-              type: "match-clock",
-              description: "把钟面（整时）与对应的时间连起来，巩固钟表认读。",
-              example: "分针指向12、时针指向8 → 8时。",
-              concept: "把钟面所表示的时间与文字/数字时间连线。",
-              operations: ["read","identify"],
-              factualContent: {"notation":"整时（分针指 12）与几时半（分针指 6）的钟面特征"},
-              common_errors: [{"id":"match-clock-hand-error","category":"concept","description":"读钟面时间错误导致连线错误"},{"id":"match-clock-similar-time","category":"attention","description":"相近时间（整时/半时）连错"}],
-              graphicType: "diagram",
-              prerequisites: ["math-g1-m4-clock-read"],
-              related: ["math-g1-m4-clock-read"],
-              difficulty: 1,
-              spiral_level: 1,
-              max_spiral_level: 1,
-              cognitive_level: "掌握",
-              applicable_question_types: [{"type":"choice","coefficient":1}],
-              number_range_default: { min: 1, max: 100 },
-              max_steps_default: 2,
-              context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（立体 / 平面图形与名称连线）",
+              category: "geometry"
             },
             {
               id: "math-g1-m5-match-rmb",
@@ -1327,7 +1281,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "down",
+              unit: "欢乐购物街（认识人民币）",
+              category: "measurement"
             }
           ]
         },
@@ -1347,7 +1304,7 @@
               factualContent: {"range":"覆盖一年级全册知识：数与运算、图形、时间、人民币、分类统计"},
               common_errors: [{"id":"judge-mixed-concept-error","category":"concept","description":"判断对错时知识点概念掌握不准"},{"id":"judge-mixed-calc-error","category":"calculation","description":"判断算式对错时计算失误"}],
               graphicType: "custom",
-              prerequisites: ["math-g1-m4-compare-number","math-g1-m6-solid-shape","math-g1-m6-flat-shape","math-g1-m4-clock-read","math-g1-m4-rmb-unit"],
+              prerequisites: ["math-g1-m4-compare-number","math-g1-m6-solid-shape","math-g1-m6-flat-shape","math-g1-m4-rmb-unit"],
               related: ["math-g1-m0-make-ten-cushi","math-g1-m1-addsub-10"],
               difficulty: 1,
               spiral_level: 1,
@@ -1357,7 +1314,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（综合判断题练习）",
+              category: "synthesis"
             }
           ]
         },
@@ -1377,7 +1337,7 @@
               factualContent: {"range":"覆盖一年级全册知识：数与运算、图形、时间、人民币、分类统计"},
               common_errors: [{"id":"choice-mixed-distractor","category":"attention","description":"选择题被干扰项迷惑选错"},{"id":"choice-mixed-calculation","category":"calculation","description":"选择题中计算错误导致选错"}],
               graphicType: "custom",
-              prerequisites: ["math-g1-m1-addsub-10","math-g1-m1-carry-add-20","math-g1-m1-retreat-sub-20","math-g1-m4-adjacent-number","math-g1-m4-clock-read","math-g1-m4-rmb-unit","math-g1-m6-solid-shape"],
+              prerequisites: ["math-g1-m1-addsub-10","math-g1-m1-carry-add-20","math-g1-m1-retreat-sub-20","math-g1-m4-adjacent-number","math-g1-m4-rmb-unit","math-g1-m6-solid-shape"],
               related: ["math-g1-m1-addsub-10","math-g1-m4-adjacent-number"],
               difficulty: 1,
               spiral_level: 1,
@@ -1387,7 +1347,10 @@
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active"
+              status: "active",
+              book: "mixed",
+              unit: "跨册（综合选择题练习）",
+              category: "synthesis"
             }
           ]
         }
@@ -2167,7 +2130,7 @@
               type: "time",
               description: "进行时间单位换算（1时=60分，1分=60秒）。",
               example: "2时=120分；90秒=1分30秒。",
-              prerequisites: ["math-g1-m4-clock-read"],
+              prerequisites: [],
               related: ["math-g2-m4-fill-time","math-g2-m6-clock-draw"],
               difficulty: 3,
               spiral_level: 1,
@@ -2263,7 +2226,7 @@
               type: "pattern",
               description: "发现并续写数列或算式中的规律。",
               example: "1,3,5,7,(9)；+2递增。",
-              prerequisites: ["math-g1-m4-number-pattern"],
+              prerequisites: [],
               related: ["math-g2-m10-logic-reasoning"],
               difficulty: 2,
               spiral_level: 1,
@@ -2359,7 +2322,7 @@
               type: "clock",
               description: "认识钟面，读取几时几分（时针过几是几时，分针走小格）。",
               example: "3:45读作3时45分。",
-              prerequisites: ["math-g1-m4-clock-read"],
+              prerequisites: [],
               related: ["math-g2-m6-clock-draw","math-g2-m5-match-clock"],
               difficulty: 3,
               spiral_level: 1,
@@ -3176,7 +3139,7 @@
               type: "tally",
               description: "用“正”字法收集与整理数据。",
               example: "喜欢苹果：正；喜欢香蕉：正正。",
-              prerequisites: ["math-g1-m9-pictograph"],
+              prerequisites: [],
               related: ["math-g2-m9-data-question"],
               difficulty: 2,
               spiral_level: 1,
@@ -3567,7 +3530,7 @@
               type: "clockFace",
               description: "认识时间单位时、分、秒及其进率。",
               example: "1分 = ?秒（答案：60秒）",
-              prerequisites: ["math-g1-m4-clock-read"],
+              prerequisites: [],
               related: ["math-g3-m4-g3-year-month"],
               difficulty: 3,
               spiral_level: 1,
@@ -7920,7 +7883,7 @@
               type: "sequence",
               description: "寻找数列的规律并填数。",
               example: "2, 4, 8, 16, （  ）。（答案：32）",
-              prerequisites: ["math-g1-m4-number-pattern"],
+              prerequisites: [],
               related: ["math-g5-m10-logic-reasoning","math-g6-m10-g6-reason-number-shape"],
               difficulty: 5,
               spiral_level: 1,
@@ -9741,7 +9704,7 @@
               type: "series",
               description: "等差数列通项与求和：末项＝首项＋(n−1)d，和＝(首＋末)×n÷2。",
               example: "求 1＋3＋5＋…＋19。",
-              prerequisites: ["math-g1-m4-number-pattern"],
+              prerequisites: [],
               related: ["math-g5-c9-periodic-problem"],
               difficulty: 7,
               spiral_level: 1,
@@ -10087,7 +10050,7 @@
               type: "planting",
               description: "两端都栽 / 只栽一端 / 两端不栽时棵数与间隔数关系。",
               example: "100 米每隔 5 米种一棵（两端都栽），种几棵？",
-              prerequisites: ["math-g1-m4-number-pattern"],
+              prerequisites: [],
               related: ["math-g5-c9-phalanx-problem"],
               difficulty: 7,
               spiral_level: 1,
@@ -10135,7 +10098,7 @@
               type: "periodic",
               description: "找周期与余数，确定第 n 个 / 某位置的状态。",
               example: "红黄蓝循环排列，第 20 个是什么颜色？",
-              prerequisites: ["math-g1-m4-number-pattern"],
+              prerequisites: [],
               related: ["math-g5-c7-arithmetic-series"],
               difficulty: 7,
               spiral_level: 1,
