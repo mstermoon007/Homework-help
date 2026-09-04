@@ -400,6 +400,12 @@
       ? global.QuestionTypeAllocation
       : (typeof require !== 'undefined' ? require('./strategy/question-type-allocation.js') : null);
   }
+  // 访问题型注册表（全局唯一题型 SSOT；浏览器经 strategy-engine.bundle 暴露 / CommonJS）
+  function questionTypeRegistry() {
+    return (typeof global !== 'undefined' && global.QuestionTypeRegistry)
+      ? global.QuestionTypeRegistry
+      : (typeof require !== 'undefined' ? require('./question-type-registry.js') : null);
+  }
   // 可见性查询：知识点是否落在题型过滤范围内（无 qt 视为全部可见）
   function kpVisibleInType(kp, type) {
     var mc = moduleCatalog();
@@ -416,6 +422,12 @@
   function allocateKpRatio(kps, total) {
     var ta = typeAllocation();
     if (ta && typeof ta.allocateKpRatio === 'function') return ta.allocateKpRatio(kps, total);
+    return null;
+  }
+  // 题型展示名：canonical 题型 → 注册表 TYPES.name；历史细粒度 qt → LEGACY_DISPLAY_NAMES（R9 上收自 TYPE_PRETTY）。
+  function questionTypeDisplayName(value) {
+    var r = questionTypeRegistry();
+    if (r && typeof r.displayName === 'function') return r.displayName(value);
     return null;
   }
 
@@ -468,7 +480,8 @@
     // R4 大服务层查询（决策上收，UI 只读）
     kpVisibleInType: kpVisibleInType,
     visibleModulesForType: visibleModulesForType,
-    allocateKpRatio: allocateKpRatio
+    allocateKpRatio: allocateKpRatio,
+    questionTypeDisplayName: questionTypeDisplayName
   });
 
   global.PracticeBridge = bridge;

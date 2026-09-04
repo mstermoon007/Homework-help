@@ -4760,6 +4760,14 @@ __defs["shared/question-type-registry.js"] = function (module, exports, require)
   var BY_ID = {};
   TYPES.forEach(function (t) { BY_ID[t.id] = t; });
 
+  // 历史细粒度 qt 值 → 展示名（R9 上收自 practice.html TYPE_PRETTY）。
+  // canonical 题型展示名由 TYPES.name 提供；本表仅承载 canonical 之外的历史深链
+  // （qt=addsub / pingshi / money 等）在 UI 标题/提示中的中文展示名。UI 不再持有展示表。
+  var LEGACY_DISPLAY_NAMES = {
+    addsub: '加减法', muldiv: '乘除法', cushi: '凑十法', pingshi: '平十法', poshi: '破十法',
+    mix: '混合', pattern: '找规律', clock: '钟表', money: '人民币'
+  };
+
   function isCognitiveLevel(v) { return COGNITIVE_LEVELS.indexOf(v) !== -1; }
 
   function normalizeQuestionType(token, opts) {
@@ -4801,6 +4809,14 @@ __defs["shared/question-type-registry.js"] = function (module, exports, require)
     return errs;
   }
 
+  // 题型展示名：canonical 题型 → TYPES.name；历史细粒度 qt → LEGACY_DISPLAY_NAMES；未知 → null。
+  function displayName(value) {
+    if (!value || typeof value !== 'string') return null;
+    var t = BY_ID[value];
+    if (t) return t.name;
+    return LEGACY_DISPLAY_NAMES[value] || null;
+  }
+
   var validationErrors = [];
   var seen = {};
   TYPES.forEach(function (t) {
@@ -4813,9 +4829,11 @@ __defs["shared/question-type-registry.js"] = function (module, exports, require)
     COGNITIVE_LEVELS: COGNITIVE_LEVELS,
     TYPES: TYPES,
     canonicalAliases: CANONICAL_ALIASES,
+    LEGACY_DISPLAY_NAMES: LEGACY_DISPLAY_NAMES,
     get: function (id) { return BY_ID[id] || null; },
     has: function (id) { return !!BY_ID[id]; },
     all: function () { return TYPES.slice(); },
+    displayName: displayName,
     byCategory: function (category) { return TYPES.filter(function (t) { return t.category === category; }); },
     supports: function (id, capability) {
       var t = BY_ID[id];

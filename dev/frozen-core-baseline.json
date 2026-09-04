@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T12:22:54.944Z",
+  "generatedAt": "2026-09-04T13:02:40.493Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -93,9 +93,9 @@
       "mtime": 1788079590233.2776
     },
     "shared/question-type-registry.js": {
-      "hash": "c04de365226cf707",
-      "size": 15042,
-      "mtime": 1788151817378.8115
+      "hash": "5c75a5b9ad460ead",
+      "size": 15964,
+      "mtime": 1788526750500.9778
     },
     "shared/generator/generator-contract.js": {
       "hash": "42c846d95f7033fb",

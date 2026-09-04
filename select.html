@@ -187,37 +187,6 @@
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 10px;
   }
-  .quick-presets {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding: 10px 12px;
-    background: rgba(139, 187, 244, 0.08);
-    border: 1px dashed rgba(139, 187, 244, 0.45);
-    border-radius: 10px;
-  }
-  .quick-presets .qp-label {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--muted);
-    margin-right: 2px;
-  }
-  .quick-presets .qp-btn {
-    border: 1px solid var(--line-strong, #d6e2f2);
-    background: #fff;
-    color: var(--ink);
-    border-radius: 999px;
-    padding: 5px 12px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .quick-presets .qp-btn:hover { border-color: var(--brand); color: var(--brand); }
-  .quick-presets .qp-btn.on { background: var(--grad-cta); color: #fff; border-color: transparent; }
   .type-card {
     border: 1.5px solid var(--line-strong, #d6e2f2);
     background: #fff;
@@ -452,14 +421,6 @@
   <div class="stage" id="stageQuick">
     <div class="sel-block">
       <div class="blk-title">题型选择（可多选）</div>
-      <div class="quick-presets" id="quickPresets">
-        <span class="qp-label">快捷组合：</span>
-        <button type="button" class="qp-btn" data-preset="oral">口算热身</button>
-        <button type="button" class="qp-btn" data-preset="picture">看图列式专练</button>
-        <button type="button" class="qp-btn" data-preset="exam">期末套卷模拟</button>
-        <button type="button" class="qp-btn" data-preset="graph">图形统计</button>
-        <button type="button" class="qp-btn" data-preset="mistake">易错巩固</button>
-      </div>
       <div class="type-grid" id="typeGridQuick"></div>
       <div class="sel-footer">
         <a class="btn-start" id="startBtnQuick" href="practice.html">开始练习</a>
@@ -544,17 +505,6 @@
     competition: { title: '竞赛模式', desc: '高年级数学竞赛专题：数字谜、数论、组合计数与行程问题等。' }
   };
   var COMPETITION_MIDS = ['C1','C2','C3','C4','C5','C6','C7','C8','C9'];
-
-  // R9-① 快速模式快捷组合预设（衔接总体方案附录 B）：只组装指令（选定模块集），
-  // 题量分配走 R4 上收后的大服务层 question-type-allocation.allocateKpRatio。
-  // 预设仅对数学科目生效（cn/en 无对应模块集，点击提示）。
-  var QUICK_PRESETS = {
-    oral:    { label: '口算热身',     modules: ['M1'] },
-    picture: { label: '看图列式专练', modules: ['M7'] },
-    exam:    { label: '期末套卷模拟', modules: ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'] },
-    graph:   { label: '图形统计',     modules: ['M6','M9'] },
-    mistake: { label: '易错巩固',     modules: ['M4','M11','M12'] }
-  };
 
   // ---------- 状态 ----------
   var state = { mode: 'quick', subject: 'math', grade: 1, module: null, quickModules: [], teacherModules: [], teacherKps: [] };
@@ -676,37 +626,6 @@
         renderQuick();
         renderSummary();
       });
-    });
-    renderQuickPresets();
-  }
-
-  // R9-① 预设按钮高亮与点击：选中预设 = 一键填充对应模块集（与手选手卡联动）。
-  function renderQuickPresets() {
-    var wrap = document.getElementById('quickPresets');
-    if (!wrap) return;
-    wrap.querySelectorAll('.qp-btn').forEach(function (b) {
-      var pid = b.getAttribute('data-preset');
-      var p = QUICK_PRESETS[pid];
-      // 选中态：当前 quickModules 恰好等于该预设模块集
-      var on = p && state.quickModules.length === p.modules.length &&
-        p.modules.every(function (m) { return state.quickModules.indexOf(m) !== -1; });
-      b.classList.toggle('on', !!on);
-    });
-  }
-  var presetsWrap = document.getElementById('quickPresets');
-  if (presetsWrap) {
-    presetsWrap.addEventListener('click', function (e) {
-      var b = e.target.closest ? e.target.closest('.qp-btn') : null;
-      if (!b) return;
-      var pid = b.getAttribute('data-preset');
-      var p = QUICK_PRESETS[pid];
-      if (!p) return;
-      if (state.subject !== 'math') { return; }
-      // 点击已在选中态的预设 → 取消（清空）；否则填充该预设模块集
-      var isOn = b.classList.contains('on');
-      state.quickModules = isOn ? [] : p.modules.slice();
-      renderQuick();
-      renderSummary();
     });
   }
 
