@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一年级数学知识库 · 字段消费度审计报告</title>
+<style>
+  :root{--ink:#1a1b1c;--mut:#5a6a8a;--line:#e4e3dd;--core:#2e7d4f;--coreBg:#eaf7ef;--aux:#3b5bb8;--auxBg:#eef3ff;--unused:#8a8f98;--unusedBg:#f1f2f4;--warn:#b03a3c;--warnBg:#fdf3f3;}
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);line-height:1.7;background:#fafbfe;margin:0;padding:32px 16px;}
+  .wrap{max-width:960px;margin:0 auto;}
+  h1{font-size:24px;margin:0 0 4px;}
+  .sub{color:var(--mut);font-size:13px;margin-bottom:24px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;box-shadow:0 2px 8px rgba(63,111,209,.05);}
+  h2{font-size:17px;margin:0 0 10px;color:#1f2a44;}
+  h3{font-size:14px;margin:0 0 6px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{background:#f6f7fa;text-align:left;padding:7px 9px;border:1px solid var(--line);font-weight:600;white-space:nowrap;}
+  td{padding:6px 9px;border:1px solid var(--line);vertical-align:top;}
+  .tag{display:inline-block;padding:1px 8px;border-radius:20px;font-size:12px;font-weight:600;}
+  .t-core{background:var(--coreBg);color:var(--core);}
+  .t-aux{background:var(--auxBg);color:var(--aux);}
+  .t-unused{background:var(--unusedBg);color:var(--unused);}
+  .fill{color:var(--mut);font-size:12px;white-space:nowrap;}
+  .kpi{display:flex;flex-wrap:wrap;gap:10px;}
+  .kpi>div{flex:1 1 150px;min-width:0;border-radius:12px;padding:12px 14px;}
+  .kpi .n{font-size:24px;font-weight:700;}
+  .kpi .l{font-size:12px;color:var(--mut);}
+  .k-core{background:var(--coreBg);} .k-aux{background:var(--auxBg);} .k-unused{background:var(--unusedBg);}
+  .flow{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;font-size:12px;}
+  .flow .node{flex:1 1 150px;min-width:0;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;}
+  .flow .node b{display:block;font-size:12px;}
+  .flow .node span{color:var(--mut);font-size:11px;}
+  .flow .arrow{align-self:center;color:#9eacea;font-size:14px;}
+  .alert{background:var(--warnBg);border:1px solid rgba(176,58,60,.35);border-radius:12px;padding:10px 14px;font-size:13px;color:#7a3a3c;margin:10px 0;}
+  .ok{background:var(--coreBg);border:1px solid rgba(46,125,79,.35);border-radius:12px;padding:10px 14px;font-size:13px;color:#2e5d44;margin:10px 0;}
+  code{background:#f1f2f4;border-radius:5px;padding:1px 6px;font-size:12px;}
+  ul{margin:6px 0 6px 20px;padding:0;}
+  li{margin:3px 0;}
+  .small{font-size:12px;color:var(--mut);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>一年级数学知识库 · 字段消费度审计报告</h1>
+  <div class="sub">审计对象：Homework Help 项目 G1 数学知识库（53 知识点 · 11 模块 · 26 字段）· 审计时间：2026-09-04 · 方法：只读脚本 + 生成链路源码静态核验 + 全仓库交叉验证</div>
+
+  <div class="card">
+    <h2>结论先行</h2>
+    <p><b>「知识点驱动出题」的字段基础已经就位，但只消费了一半。</b>26 个字段中：<span class="tag t-core">core 11</span> 被生成链路强消费（题型/难度/数值范围/步数/情境/认知/题量全部可控）；<span class="tag t-aux">aux 7</span> 仅兜底/展示；<span class="tag t-unused">unused 8</span> 生成层完全不读——其中 <code>prerequisites</code>（89% 已填充）、<code>concept</code>、<code>factualContent</code>（100% 已填充）恰恰是「跨单元递进出题」「题面多样性」的关键数据，目前全是死字段；<code>book/unit/category</code> 三标注字段 0% 写入（草案未应用）。</p>
+    <p><b>对上一轮 4 个问题的直接回答：</b></p>
+    <ul>
+      <li><b>难度可控</b>：✅ 已成立。difficulty / spiral_level / max_spiral_level / cognitive_level / number_range_default / max_steps_default / context_default 全部 core。</li>
+      <li><b>跨单元</b>：🔴 未实现。prerequisites 有 47/53 条数据，但 strategy 全 8 步不读，无递进/衔接出题。</li>
+      <li><b>跨类别</b>：🔴 未实现。category 0% 写入、normalizer 仅预留 <code>legacy.category</code>，下游无人读。</li>
+      <li><b>扩题量/降重复</b>：◐ 有空间。type 已被消费（→算术语义→操作符），但更丰富的 <code>concept</code>/<code>factualContent</code> 语义数据（规则/数的组成/10 的分解）100% 填充却 0 消费，是题面多样性的最大闲置资产。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>审计结果总览</h2>
+    <div class="kpi">
+      <div class="k-core"><div class="n">11</div><div class="l">core · 生成链路强消费</div></div>
+      <div class="k-aux"><div class="n">7</div><div class="l">aux · 兜底/展示/校验</div></div>
+      <div class="k-unused"><div class="n">8</div><div class="l">unused · 生成层未消费</div></div>
+      <div style="flex:1 1 150px;min-width:0;border-radius:12px;padding:12px 14px;background:#fff7ec;border:1px solid rgba(225,185,143,.6);"><div class="n">23</div><div class="l">字段 100% 填充（数据完整）</div></div>
+      <div style="flex:1 1 150px;min-width:0;border-radius:12px;padding:12px 14px;background:#f6f7fa;border:1px solid var(--line);"><div class="n">3</div><div class="l">字段 0% 填充（草案未应用）</div></div>
+    </div>
+    <p class="small" style="margin-top:12px;">填充率口径：53 个知识点中该字段有有效值的比例。等级判定依据：字段是否被生成链路（normalizer → strategy → generator/plugins）实际读取，证据见下表明细。</p>
+  </div>
+
+  <div class="card">
+    <h2>26 字段明细（填充率 × 消费等级 × 证据）</h2>
+    <div style="overflow-x:auto;">
+    <table>
+      <tr><th>字段</th><th>填充</th><th>等级</th><th>生成链路消费证据（文件:行）</th></tr>
+      <tr><td><code>id</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">strategy-engine.js:51 kp.id；全链路知识点标识</td></tr>
+      <tr><td><code>weight</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">comprehensive-strategy.js:92/115 e.weight；question-type-allocation.js:141 题量分配</td></tr>
+      <tr><td><code>type</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">kp-arithmetic-semantics.js:60 source.legacyType→操作符；normalizer:81 capabilities</td></tr>
+      <tr><td><code>difficulty</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">static-difficulty.js:31 kp.legacy.difficulty（静态难度基线）</td></tr>
+      <tr><td><code>spiral_level</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">spiral-strategy.js:45；static-difficulty.js:33</td></tr>
+      <tr><td><code>max_spiral_level</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">strategy-engine.js:94 自适应上限；static-difficulty.js:35</td></tr>
+      <tr><td><code>cognitive_level</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">cognitive-strategy.js:55/61；static-difficulty.js:37</td></tr>
+      <tr><td><code>applicable_question_types</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">question-type-strategy.js:79 选择题型；deriveCapabilities</td></tr>
+      <tr><td><code>number_range_default</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">number-range-strategy.js:57 kp.numeric.range</td></tr>
+      <tr><td><code>max_steps_default</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">structure-constraints.js；static-difficulty.js:39</td></tr>
+      <tr><td><code>context_default</code></td><td class="fill">53/53 100%</td><td><span class="tag t-core">core</span></td><td class="small">context-strategy.js:50-52</td></tr>
+      <tr><td><code>name</code></td><td class="fill">53/53 100%</td><td><span class="tag t-aux">aux</span></td><td class="small">normalizer:111 identity.name；知识库页展示（生成不强依赖）</td></tr>
+      <tr><td><code>pluginId</code></td><td class="fill">53/53 100%</td><td><span class="tag t-aux">aux</span></td><td class="small">normalizer:121/130/205 兜底；generator-selector.js:82 legacy fallback</td></tr>
+      <tr><td><code>description</code></td><td class="fill">53/53 100%</td><td><span class="tag t-aux">aux</span></td><td class="small">normalizer:112；知识库页说明</td></tr>
+      <tr><td><code>example</code></td><td class="fill">53/53 100%</td><td><span class="tag t-aux">aux</span></td><td class="small">generate-knowledge-pages.js:72 知识库页典型例题（非生成）</td></tr>
+      <tr><td><code>operations</code></td><td class="fill">53/53 100%</td><td><span class="tag t-aux">aux</span></td><td class="small">normalizer:119 规范化；算术语义实际用 legacyType 而非 operations</td></tr>
+      <tr><td><code>common_errors</code></td><td class="fill">53/53 100%</td><td><span class="tag t-aux">aux</span></td><td class="small">normalizer:199 errors 保留；校验/未来干扰项生成，未见出题读取</td></tr>
+      <tr><td><code>graphicType</code></td><td class="fill">53/53 100%</td><td><span class="tag t-aux">aux</span></td><td class="small">validator/kp-validator.js:45 校验允许图形；渲染选图</td></tr>
+      <tr><td><code>concept</code></td><td class="fill">53/53 100%</td><td><span class="tag t-unused">unused</span></td><td class="small">normalizer:134 保留；strategy/generator/插件 0 引用</td></tr>
+      <tr><td><code>factualContent</code></td><td class="fill">53/53 100%</td><td><span class="tag t-unused">unused</span></td><td class="small">normalizer:129 保留；仅 validator 校验非空，出题不读</td></tr>
+      <tr><td><code>prerequisites</code></td><td class="fill">47/53 89%</td><td><span class="tag t-unused">unused</span></td><td class="small">normalizer:132 保留；strategy 8 步均不读 → 无跨单元递进出题</td></tr>
+      <tr><td><code>related</code></td><td class="fill">53/53 100%</td><td><span class="tag t-unused">unused</span></td><td class="small">normalizer:226 保留；无下游消费</td></tr>
+      <tr><td><code>status</code></td><td class="fill">53/53 100%</td><td><span class="tag t-unused">unused</span></td><td class="small">normalizer:227 保留；仅数据标记/覆盖统计</td></tr>
+      <tr><td><code>book</code></td><td class="fill">0/53 0%</td><td><span class="tag t-unused">unused</span></td><td class="small">草案字段，normalizer 未映射，未写回数据源</td></tr>
+      <tr><td><code>unit</code></td><td class="fill">0/53 0%</td><td><span class="tag t-unused">unused</span></td><td class="small">草案字段，normalizer 未映射，未写回数据源</td></tr>
+      <tr><td><code>category</code></td><td class="fill">0/53 0%</td><td><span class="tag t-unused">unused</span></td><td class="small">normalizer:228 legacy.category 已预留；下游无人读</td></tr>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>字段流向（生成链路）</h2>
+    <div class="flow">
+      <div class="node"><b>shared/knowledge-math.js</b><span>G1 扁平字段 · 53 KP</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>knowledge-ontology-normalizer.js</b><span>扁平 → canonical（26 字段映射）</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>shared/strategy/*</b><span>题型/难度/数值范围/结构/螺旋/情境/认知</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>generator-selector + kp-arithmetic-semantics</b><span>capability 解析 + legacyType→操作符</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>核心生成器 / 旧插件</b><span>只读 plan.constraints（不读扁平字段）</span></div>
+    </div>
+    <p class="small" style="margin-top:10px;">关键发现：生成器（generators/*.js 与 plugins/*.js）<b>只读策略层算出的约束</b>（operation / numberRange / exactSteps / difficulty），不直接读知识点的扁平字段。因此「字段是否被消费」取决于 normalizer 是否映射 + strategy 是否读取。</p>
+  </div>
+
+  <div class="card">
+    <h2>与「知识点驱动出题」目标的对齐分析</h2>
+    <div class="ok"><b>✅ 已经就位（无需改动）：</b>难度可控（difficulty/spiral/认知全 core）、题型可控（aqt）、数值范围与步数可控、题量按 weight 分配、情境可控。你上一轮设想的「难度可控出题」在数据与引擎层已成立。</div>
+    <div class="alert"><b>🔴 死字段 = 扩题与跨维度的最大闲置资产：</b>
+      <ul>
+        <li><code>prerequisites</code>（47/53 有数据）→ 实现「跨单元递进出题」的现成图谱，strategy 不读。</li>
+        <li><code>concept</code> + <code>factualContent</code>（100% 有数据，含凑十/破十规则、10 的组成、数位事实）→ 题面语义多样性的源头，0 消费。</li>
+        <li><code>category</code>（0% 写入）→ 「跨类别混排」需要先应用草案（book/unit/category 三字段写回数据源）。</li>
+        <li><code>common_errors</code> → 差异化干扰项/错误诊断的素材，目前仅保留。</li>
+      </ul>
+    </div>
+    <p><b>这修正了上一轮的一个判断</b>：不是「字段不全」，而是「数据很全（23/26 字段 100% 填充）、消费很窄（core 仅 11）」。扩题量/降重复的瓶颈在 <b>生成层对语义字段的消费</b>，不在数据。</p>
+  </div>
+
+  <div class="card">
+    <h2>行动建议（按性价比排序）</h2>
+    <table>
+      <tr><th>优先级</th><th>动作</th><th>收益</th><th>成本/风险</th></tr>
+      <tr><td>P0</td><td>应用草案：把 <code>book/unit/category</code> 三字段写回 <code>shared/knowledge-math.js</code> G1 条目（沿用 R2-d 幂等写入模式）</td><td>跨类别混排 / 进度维度的数据前提</td><td>低（normalizer 已预留 category）；需跑 verify:m1 + check-knowledge</td></tr>
+      <tr><td>P1</td><td>策略层消费 <code>prerequisites</code>：在 strategy 增加「前置知识点衔接/递进」步骤（如多知识点链式规划）</td><td>跨单元递进出题，直接对应你的目标</td><td>中（改 strategy-engine 8 步流程，需回归）</td></tr>
+      <tr><td>P1</td><td>生成器消费 <code>factualContent</code>/<code>concept</code>：将规则/数的组成注入题面与干扰项生成</td><td>题面多样性、降重复的最直接来源</td><td>中（语义生成，需设计注入协议）</td></tr>
+      <tr><td>P2</td><td><code>common_errors</code> → 干扰项/诊断消费</td><td>错误聚焦、差异化</td><td>低-中</td></tr>
+      <tr><td>P3</td><td>收敛中间层（删 type 冗余、模块降 UI、插件下沉 capability）——即上一轮讨论的方向</td><td>数据/架构简化</td><td>高（107 插件迁移）</td></tr>
+    </table>
+    <p class="small" style="margin-top:10px;">建议顺序：先 P0（应用三标注字段，低成本拿到跨类别/进度能力的数据前提）→ P1（消费 prerequisites 与 factualContent，直接产出跨单元递进 + 题面多样性）→ 最后才考虑 P3 架构收敛。P0+P1 完成后，「知识点驱动的跨单元、跨类别、难度可控出题」即可在现有引擎上成立。</p>
+  </div>
+
+  <div class="card">
+    <h2>复现方式</h2>
+    <p class="small" style="margin:0;">脚本：<code>scripts/audit-g1-field-consumption.js</code>（只读，不修改任何数据源）</p>
+    <p class="small" style="margin:0;">运行：<code>node scripts/audit-g1-field-consumption.js</code>（控制台 + 写 <code>audit-results/g1-field-consumption.json</code>）</p>
+    <p class="small" style="margin:0;">方法：填充率 = 逐字段统计 53 条 G1 知识点有效值；消费等级 = 生成链路源码静态核验（normalizer/strategy/generator/plugins）+ 全仓库交叉 grep 验证。</p>
+  </div>
+</div>
+</body>
+</html>

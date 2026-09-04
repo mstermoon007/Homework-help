@@ -1,0 +1,226 @@
+{
+  "grade": 1,
+  "subject": "math",
+  "kpCount": 53,
+  "moduleCount": 11,
+  "fieldsAudited": 26,
+  "byLevel": {
+    "core": 11,
+    "aux": 7,
+    "unused": 8
+  },
+  "fullFilled": [
+    "id",
+    "name",
+    "pluginId",
+    "weight",
+    "type",
+    "description",
+    "example",
+    "concept",
+    "operations",
+    "factualContent",
+    "common_errors",
+    "graphicType",
+    "related",
+    "difficulty",
+    "spiral_level",
+    "max_spiral_level",
+    "cognitive_level",
+    "applicable_question_types",
+    "number_range_default",
+    "max_steps_default",
+    "context_default",
+    "status"
+  ],
+  "zeroFilled": [
+    "book",
+    "unit",
+    "category"
+  ],
+  "fields": [
+    {
+      "field": "id",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "strategy-engine.js:51 kp.id；全链路知识点标识"
+    },
+    {
+      "field": "name",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "aux",
+      "evidence": "normalizer:111 identity.name；知识库页 generate-knowledge-pages.js:157 读 kp.name（展示）"
+    },
+    {
+      "field": "pluginId",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "aux",
+      "evidence": "normalizer:115 source.pluginId；:121/130/205 兜底 operations/factual/errors；generator-selector.js:82 legacyPluginId fallback"
+    },
+    {
+      "field": "weight",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "normalizer:218 metadata.weight；comprehensive-strategy.js:92/104/115 e.weight；question-type-allocation.js:141/146 k.weight（综合/多知识点题量分配）"
+    },
+    {
+      "field": "type",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "kp-arithmetic-semantics.js:60 kp.source.legacyType→operators；normalizer:81/164 capabilities+aqt 兜底；question-type-strategy.js:79"
+    },
+    {
+      "field": "description",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "aux",
+      "evidence": "normalizer:112 identity.description；知识库页说明（生成不强依赖）"
+    },
+    {
+      "field": "example",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "aux",
+      "evidence": "normalizer:224 legacy.example；generate-knowledge-pages.js:72 pointExample 读 kp.example（知识库页，非生成链路）"
+    },
+    {
+      "field": "concept",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "unused",
+      "evidence": "normalizer:131/134 knowledge.concept 保留；未见 strategy/generator 读取"
+    },
+    {
+      "field": "operations",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "aux",
+      "evidence": "normalizer:119-128 knowledge.operations 规范化；算术语义用 source.legacyType 而非 operations；未见下游读取"
+    },
+    {
+      "field": "factualContent",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "unused",
+      "evidence": "normalizer:129 knowledge.factualContent 保留；未见 strategy/generator 读取"
+    },
+    {
+      "field": "common_errors",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "aux",
+      "evidence": "normalizer:199-206 errors；legacy 干扰项/错误答案生成可能使用，未见生成链路直接读取"
+    },
+    {
+      "field": "graphicType",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "aux",
+      "evidence": "normalizer:175 presentation.graphicType；展示/渲染选图（renderer），生成不强依赖"
+    },
+    {
+      "field": "prerequisites",
+      "filled": 47,
+      "filledPct": 89,
+      "level": "unused",
+      "evidence": "normalizer:132/225 knowledge+legacy.prerequisites 保留；strategy-engine 全 8 步未读 → 无跨单元递进出题"
+    },
+    {
+      "field": "related",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "unused",
+      "evidence": "normalizer:226 legacy.related 保留；无下游消费"
+    },
+    {
+      "field": "difficulty",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "normalizer:223 legacy.difficulty；static-difficulty.js:31 kp.legacy.difficulty（静态难度基线）"
+    },
+    {
+      "field": "spiral_level",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "normalizer:211 spiral.level；static-difficulty.js:33、spiral-strategy.js:45"
+    },
+    {
+      "field": "max_spiral_level",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "normalizer:213 spiral.maxLevel；static-difficulty.js:35、strategy-engine.js:94（自适应上限）"
+    },
+    {
+      "field": "cognitive_level",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "normalizer:149/231 cognition.raw/legacy.cognitive_level；cognitive-strategy.js:55/61、static-difficulty.js:37"
+    },
+    {
+      "field": "applicable_question_types",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "normalizer:153 presentation.questionTypes；question-type-strategy.js:79 选择题型；deriveCapabilities"
+    },
+    {
+      "field": "number_range_default",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "normalizer:179 numeric.range；number-range-strategy.js:57 kp.numeric.range"
+    },
+    {
+      "field": "max_steps_default",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "normalizer:140 structure.maxSteps；structure-constraints.js + static-difficulty.js:39"
+    },
+    {
+      "field": "context_default",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "core",
+      "evidence": "normalizer:191 context.defaults；context-strategy.js:50-52"
+    },
+    {
+      "field": "status",
+      "filled": 53,
+      "filledPct": 100,
+      "level": "unused",
+      "evidence": "normalizer:227 legacy.status 保留；仅数据状态/覆盖统计，生成链路不读"
+    },
+    {
+      "field": "book",
+      "filled": 0,
+      "filledPct": 0,
+      "level": "unused",
+      "evidence": "草案字段（g1-math-knowledge-base-draft.json），normalizer 未映射，未写回数据源"
+    },
+    {
+      "field": "unit",
+      "filled": 0,
+      "filledPct": 0,
+      "level": "unused",
+      "evidence": "草案字段，normalizer 未映射，未写回数据源"
+    },
+    {
+      "field": "category",
+      "filled": 0,
+      "filledPct": 0,
+      "level": "unused",
+      "evidence": "normalizer:228 legacy.category 已预留；下游 strategy/生成器未读"
+    }
+  ],
+  "generatedAt": "2026-09-04T15:06:47.144Z"
+}
