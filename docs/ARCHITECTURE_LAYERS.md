@@ -46,6 +46,19 @@
 - `ontology-{error,factual,operation}-map.js`
 - `knowledge/` 数据静态页
 
+#### 知识库纯粹存放声明（R3）
+
+知识库文档/数据的「三类纯粹存放位」与守卫规则如下（依据 `docs/AI_REFACTOR_PLAN.html` 阶段 R3）：
+
+| 存放位 | 内容（纯知识库） | 动作 |
+|--------|------------------|------|
+| `knowledge/`（静态知识页） | 知识点库静态文档/展示页，由 `scripts/generate-knowledge-pages.js` **权威生成** | **守卫**：`dev/check-knowledge-dir.js`（已挂 `npm run verify:kb-dir` → `npm test` 链）。`knowledge/` 只允许 `.html` 且必须携带生成脚本写入的 `kbgen:hash` 标记；**禁止混入非 html / 手工散落文件**。 |
+| `shared/knowledge-*.js` + `shared/ontology-*` + `question-type-registry.js` + `schemas/` | 知识点库唯一数据源（逻辑 KNOWLEDGE） | **物理留 `shared/`（硬约束不可移动）**。该文件组为知识库边界：只承载知识库数据/规范/映射，**禁止 UI/服务逻辑混入**（见 §3 硬红线第 3 条）。 |
+| `docs/`（现行有效）+ `archive/`（已应用/已废弃） | 知识库文档草案 | 已应用草案 → `archive/`（迁移总表见 R9）。 |
+
+**根目录知识库数据例外 — `pinyin-bank.js`**：
+`pinyin-bank.js`（约 80KB）为知识库数据（拼音字库），但物理驻留根目录，被 8 处引用（`plugins/chinese-*`、`plugins/registry.js`、`test/helpers.js`、`shared/strategy-engine.bundle.js` 等）。**登记为「根目录知识库数据例外」：不物理迁移**（迁移需同步 8 处引用，风险>收益），已在 `architecture/layers.json` 的 KNOWLEDGE 层显式文档化。
+
 ### 2.4 大服务层（信息传递 / 控制 / 外围）
 - **关联/编排（外围控制核心）**：`practice-bridge.js`（`PracticeBridge.start/submit/control` 唯一生成入口）
 - **策略**：`strategy/**`、`strategy-config.js`

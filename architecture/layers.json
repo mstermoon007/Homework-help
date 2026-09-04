@@ -92,7 +92,7 @@
     },
 
     "KNOWLEDGE": {
-      "description": "知识点库基层数据：唯一数据核心、schema、规范映射（不生成题面、不参与 UI 决策）。",
+      "description": "知识点库基层数据：唯一数据核心、schema、规范映射（不生成题面、不参与 UI 决策）。pinyin-bank.js 为「根目录知识库数据例外」：属知识库数据但物理驻留根目录（8 处引用，迁移风险>收益），不物理迁移，详见 docs/ARCHITECTURE_LAYERS.md「知识库纯粹存放声明」。",
       "alias": "base-data",
       "files": [
         "shared/knowledge-bank.js", "shared/knowledge-point.js",
