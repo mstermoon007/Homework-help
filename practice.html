@@ -123,6 +123,26 @@
   .site-footer .footer-sep { opacity: 0.5; }
   .site-footer .footer-beian img { vertical-align: -2px; }
 
+  /* R9-② 题目→知识点标注（生成时）：教师模式常显标签 / 快速模式聚合清单 */
+  .kp-tag {
+    display: inline-block;
+    font-size: 0.72rem; font-weight: 700; color: var(--subject-primary, #4A90D9);
+    background: rgba(74, 144, 217, 0.08); border: 1px solid rgba(74, 144, 217, 0.22);
+    border-radius: 999px; padding: 2px 10px; margin-bottom: 6px;
+  }
+  .kp-agg {
+    margin-bottom: 14px; padding: 10px 14px;
+    background: rgba(74, 144, 217, 0.06); border: 1px dashed rgba(74, 144, 217, 0.35);
+    border-radius: 10px; font-size: 0.78rem;
+  }
+  .kp-agg summary { font-weight: 800; color: var(--ink); cursor: pointer; user-select: none; }
+  .kp-agg-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .kp-agg-chip {
+    color: var(--subject-primary, #4A90D9); font-weight: 700;
+    border: 1px solid var(--line, #e3e8f0); background: var(--card, #fff);
+    border-radius: 999px; padding: 3px 10px;
+  }
+
   /* 工具栏样式（panel.controls / 题量占比 / 自定义题量 / 教师填空）已集中至大服务层 shared/pages.css「工具栏集中管理」段 */
 </style>
 </head>
@@ -638,6 +658,9 @@
           card.setAttribute('aria-label', '第 ' + ((nd != null ? Number(nd) + 1 : ci + 1)) + ' 题');
         }
       });
+      // R9-② 生成时标注：题目 → 对应知识点（标注来自 kpAllocation / 每题 knowledgePointId）。
+      // 教师模式常显（每卡知识点标签）；快速模式默认聚合为卷首可展开的知识点清单。
+      annotateKpTags(area, set);
       // 卡片式/文字式网格按题目长度自适应列数（适配 A4 竖版宽度）
       if (!meta.exam) PluginUtil.layout.fitColumns(area, set);
       // 按当前排版估算「填多少题可正好铺满 A4 整页」的推荐值
@@ -663,6 +686,59 @@
     }
     if (!nodes.length) finalizeRender();
     else step();
+  }
+
+  // R9-② 题目→知识点标注（生成时）：
+  //   - 数据：set.questions[i].knowledgePointId → 知识点名（asmKpById 表）
+  //   - 教师模式（isTeacherMode）：每张题卡顶部常显知识点标签
+  //   - 快速模式（默认）：卷首聚合一个可展开的知识点清单（不逐卡标注，避免视觉噪音）
+  function annotateKpTags(area, set) {
+    if (!area || !set || !Array.isArray(set.questions) || !set.questions.length) return;
+    var byIndex = {};
+    set.questions.forEach(function (q, i) {
+      var kid = q && (q.knowledgePointId || (q.__semantic && q.__semantic.knowledgePoint) || (q.__semantic && q.__semantic.knowledgePointId));
+      var k = kid && asmKpById ? asmKpById[kid] : null;
+      byIndex[i] = { id: kid, name: (k && k.name) || kid || '' };
+    });
+    var names = {};
+    Object.keys(byIndex).forEach(function (i) { var n = byIndex[i].name; if (n) names[n] = true; });
+    var kpNames = Object.keys(names);
+    if (!kpNames.length) return;
+
+    // 教师模式：逐卡标注（插入卡片顶部，不覆盖题号/题目）
+    if (isTeacherMode) {
+      area.querySelectorAll('.question-card, .problem').forEach(function (card) {
+        var nd = card.getAttribute('data-index') || card.getAttribute('data-idx') || card.getAttribute('data-i');
+        if (nd == null) return;
+        var idx = Number(nd);
+        var name = byIndex[idx] && byIndex[idx].name;
+        if (!name) return;
+        var tag = document.createElement('div');
+        tag.className = 'kp-tag';
+        tag.textContent = '知识点：' + name;
+        var insert = card.querySelector('.q-text') || card.firstChild;
+        if (insert) card.insertBefore(tag, insert);
+        else card.appendChild(tag);
+      });
+      return;
+    }
+
+    // 快速模式：卷首聚合可展开知识点清单
+    var wrap = document.createElement('details');
+    wrap.className = 'kp-agg';
+    var sum = document.createElement('summary');
+    sum.textContent = '本卷知识点（' + kpNames.length + ' 个）';
+    var list = document.createElement('div');
+    list.className = 'kp-agg-list';
+    kpNames.forEach(function (n) {
+      var chip = document.createElement('span');
+      chip.className = 'kp-agg-chip';
+      chip.textContent = n;
+      list.appendChild(chip);
+    });
+    wrap.appendChild(sum);
+    wrap.appendChild(list);
+    area.insertBefore(wrap, area.firstChild);
   }
 
   // ============ A4 竖版宽度自适应 ============
