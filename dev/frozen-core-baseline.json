@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T11:47:54.858Z",
+  "generatedAt": "2026-09-04T12:22:54.944Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -73,9 +73,9 @@
       "mtime": 1788062378207.3506
     },
     "shared/module-catalog.js": {
-      "hash": "c7be3e075c17558b",
-      "size": 11350,
-      "mtime": 1788317651695.975
+      "hash": "5271ab6ae011d46f",
+      "size": 13479,
+      "mtime": 1788523690894.1787
     },
     "shared/capability-model.js": {
       "hash": "1f62b085ede8f377",
@@ -263,9 +263,9 @@
       "mtime": 1788083042801.1003
     },
     "shared/strategy/question-type-allocation.js": {
-      "hash": "fdc2e9315baf614e",
-      "size": 4941,
-      "mtime": 1788083085867.727
+      "hash": "2c51faff8ec3ec48",
+      "size": 7453,
+      "mtime": 1788523733801.939
     },
     "shared/generator/core/kp-arithmetic-semantics.js": {
       "hash": "7d3ce8b2e09987cd",
