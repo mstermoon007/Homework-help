@@ -7,6 +7,34 @@
 
 ---
 
+## [V4.2.1] — 2026-09-04
+
+本版本主题：**打印紧凑化 Bug Fix（Issue #1，Frozen Core 授权）+ 知识点契约对齐 + 工具栏大服务层集中管理随包**。
+
+### Bug Fix：打印排版浪费空间且存在多余卡片样式（双路径不一致）— Issue #1 `[Frozen Core Fix]`
+- **Bug 编号**：GitHub Issue #1（`[Bug Fix][Frozen Core]` → `[Frozen Core Fix]` 批准，§6.5 流程完整走完 P0–P4）。
+- **根因**：打印两路径（语义题 `PRINT_QCSS` / DOM 克隆 `buildPrintHtml`）各自硬编码卡片框（border/radius/background）、gap、padding，且数值漂移（12/10 vs 14/12）；「试卷纸」上呈现「屏幕卡片感」，版面浪费约 1/3；题号圆形徽标与作答虚线未按题型区分。
+- **修复点**：
+  - P1.1 `shared/print.js` `PRINT_QCSS`：去卡片化（删 border/radius/background）、@page 10mm 8mm、gap 8px 6px、题干 15px/1.5、题号回归正文色、作答区 20px——单卡高 89→60px（-32%）。
+  - P1.2 克隆路径网格 gap 与语义路径统一（8px 6px）。
+  - P1.3 令牌收敛：`--card-padding-print: 6px 8px`、`--grid-gap-print: 8px 6px`（tokens.css 单一来源）；`buildPrintQcss()` 构建时读令牌（打印自含文档带兜底），克隆路径内联 `var(--grid-gap-print,8px 6px)`——消除硬编码双源。
+  - P2.1/2.2 `presentation/renderer.js`+`html-renderer.js`：`density` 透传并落地为 `question-card compact` 类（仅 class，RenderResult 契约不变）——约定（print=compact）与实现自此一致。
+  - P2.3 `components.css`：`.question-card.compact` 用途注释校准（仅服务屏幕紧凑；打印不经本类）。
+  - P3.1 打印端题号去圆形徽标（克隆路径 `.print-shell .num` 覆盖；屏幕徽标保留）。
+  - P3.2 作答虚线题型自适应：纯口算/填空卷去线（间距分隔），含书写类（apply/word/open/draw…）保留；`options.answerRule` 可显式覆盖。
+  - P3.3 `:has` 短卡（无图）放行跨页拆分，提高页底密度；不支持 `:has` 环境自动退化为整卡 avoid。
+- **验证方式**：`node --test tests/presentation/renderer.test.js`（28 用例，含 P2 新增 3 断言）· `verify:presentation-runtime` · `verify:ui-boundary` · `verify:golden` 11/11 · `verify:snapshot` 漂移 0（屏幕 normal 零回归）· `npm test` 全绿 · `verify:m3` 168 全绿 · 无头 Chrome 打印样张（口算/应用题/凑十法/综合）目检。
+
+### 知识点驱动随包变更（项目所有者指示）
+- `shared/knowledge-math.js`：一年级 53 条补全 `concept / operations / factualContent / common_errors / graphicType`，并规范化 `applicable_question_types`（§6.4 数据扩展口径，零接口变更）。
+- **测试口径联动**：`tests/strategy/question-type-allocation.test.js` 中 make-ten 由单题型改为 calc+fill 双题型（均分+余数优先 calc），新增 count=11 用例；**已知边界**：分配步不消费 coefficient（均分），若需权重分配属后续能力项。
+- `practice.html` + `shared/pages.css`：工具栏样式集中管理（内联 → 大服务层 CSS，视觉等价）、快速模式占比分项胶囊换行流 + 可改填题量（守恒腾挪）；顶栏导航改左上角悬浮返回胶囊。
+- `assets/poster-*.png` 入库（.gitignore 例外），首页海报引用生效。
+- 冻结核心基线重锚（90 文件）：`dev/frozen-core-baseline.json`；重锚前备份 `.bak`（SHA1 7f48235…）。
+- 标签沿革：`v4.2.0`（已发布，指向 5c9637e）→ 本次修复发布为 **`v4.2.1`**。
+
+---
+
 ## [V4.1.0] — 2026-09-04
 
 本版本主题：**四层架构归类整合（UI 显示 / 生成引擎 / 知识库 / 大服务）+ 关联层收敛与生产链路修复**。

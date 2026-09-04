@@ -32,13 +32,24 @@ test('不变式：各种 count/题型数组合 sum(plan.count) === count', () =>
   }
 });
 
-test('KP 集成：count=10 单题型 KP -> 全部给该题型', () => {
+// G1 字段完善（知识点驱动专项）后，math-g1-m0-make-ten 支持 calc+fill 双题型；
+// 分配口径 = 均分 + 余数优先给首选题型（coefficient 不参与本步，属既定契约）。
+test('KP 集成：count=10 双题型 KP（calc 优先）-> 均分 calc 5 / fill 5', () => {
   const r = Allocation.allocateQuestionTypes({
     count: 10,
     knowledgePointId: 'math-g1-m0-make-ten'
   });
-  assert.deepStrictEqual(r.plans.map(p => [p.questionTypeId, p.count]), [['calc', 10]]);
+  assert.deepStrictEqual(r.plans.map(p => [p.questionTypeId, p.count]), [['calc', 5], ['fill', 5]]);
   assert.strictEqual(r.total, 10);
+});
+
+test('KP 集成：count=11 双题型 KP -> 余数给首选 calc（6/5）', () => {
+  const r = Allocation.allocateQuestionTypes({
+    count: 11,
+    knowledgePointId: 'math-g1-m0-make-ten'
+  });
+  assert.deepStrictEqual(r.plans.map(p => [p.questionTypeId, p.count]), [['calc', 6], ['fill', 5]]);
+  assert.strictEqual(r.total, 11);
 });
 
 test('KP 不支持的题型 -> 抛出错误', () => {
