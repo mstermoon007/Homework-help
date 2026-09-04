@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T10:29:09.759Z",
+  "generatedAt": "2026-09-04T11:20:49.616Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -53,14 +53,14 @@
       "mtime": 1788067280594.5122
     },
     "shared/knowledge-math.js": {
-      "hash": "28cc63118997f829",
-      "size": 548477,
-      "mtime": 1788517610640.8281
+      "hash": "e311e3a23ec25205",
+      "size": 551465,
+      "mtime": 1788520560904.5042
     },
     "shared/knowledge-cn.js": {
-      "hash": "ad8ec692511b133b",
-      "size": 18545,
-      "mtime": 1788517610654.9084
+      "hash": "08f4df2e7f5416d6",
+      "size": 23334,
+      "mtime": 1788520742603.9744
     },
     "shared/knowledge-en.js": {
       "hash": "85cdb6f9ce308f9c",
