@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T08:22:31.887Z",
+  "generatedAt": "2026-09-04T02:18:59.371Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -13,9 +13,9 @@
       "mtime": 1788488067331.1355
     },
     "shared/tokens.css": {
-      "hash": "f60099bc7a9356f9",
-      "size": 6723,
-      "mtime": 1788509198531.7434
+      "hash": "5b4816ddb53f3529",
+      "size": 6727,
+      "mtime": 1788013435123.2544
     },
     "shared/base.css": {
       "hash": "964d4f072087ebc6",
@@ -28,14 +28,14 @@
       "mtime": 1787846119108.3567
     },
     "shared/components.css": {
-      "hash": "569da33f9bc6a981",
-      "size": 20755,
-      "mtime": 1788509527183.1008
+      "hash": "7ac51285689ce5a3",
+      "size": 20400,
+      "mtime": 1788436802841.1409
     },
     "shared/pages.css": {
-      "hash": "05e76d4d35ee08f8",
-      "size": 16027,
-      "mtime": 1788508462915.895
+      "hash": "a2fb5f82732036c8",
+      "size": 11478,
+      "mtime": 1787931948164.7483
     },
     "shared/toolbar.css": {
       "hash": "73bfb988db174e5b",
@@ -53,9 +53,9 @@
       "mtime": 1788067280594.5122
     },
     "shared/knowledge-math.js": {
-      "hash": "7ec8906159d00d67",
-      "size": 539113,
-      "mtime": 1788508462914.3452
+      "hash": "fedfbf1975ff194e",
+      "size": 509504,
+      "mtime": 1788259225113.5664
     },
     "shared/knowledge-cn.js": {
       "hash": "1daacda73babc441",
@@ -368,14 +368,14 @@
       "mtime": 1788020537850.282
     },
     "shared/presentation/renderer.js": {
-      "hash": "f63d259fec28b6d2",
-      "size": 4869,
-      "mtime": 1788509496451.3833
+      "hash": "b846d232dadb72db",
+      "size": 4721,
+      "mtime": 1788233244738.5454
     },
     "shared/presentation/html-renderer.js": {
-      "hash": "812edaaefe2a48c6",
-      "size": 6546,
-      "mtime": 1788509514354.116
+      "hash": "eafc2902240caaa5",
+      "size": 6279,
+      "mtime": 1788263072714.705
     },
     "shared/presentation/render-options.js": {
       "hash": "38ffee901bd7c3a7",
@@ -408,9 +408,9 @@
       "mtime": 1788483549913.8074
     },
     "shared/print.js": {
-      "hash": "4c128ad1d9e66d09",
-      "size": 24375,
-      "mtime": 1788509985615.2605
+      "hash": "2ea66b6a27c87043",
+      "size": 22195,
+      "mtime": 1788159277657.3152
     },
     "shared/practice-session.js": {
       "hash": "b118f2a231a67b0f",

@@ -625,7 +625,9 @@
 
 .question-card .feedback { font-size: 12px; font-weight: 700; min-height: 16px; margin-top: 6px; }
 
-/* 紧凑模式：用于口算、填空题等 */
+/* 紧凑模式（P2.3）：仅服务「屏幕」紧凑场景（口算/填空卡片，density=compact 时由 html-renderer 挂类）。
+ * 打印试卷排版不经过本类——打印端为无框无底练习单，样式单一来源 shared/print.js PRINT_QCSS（P1.1/P1.3）。
+ * 两侧语义一致（紧凑=省版面），数值各自独立演进；compact 本类不新增卡片框/阴影/底色。 */
 .question-card.compact {
   --q-card-padding: 8px 10px;
   --q-text-size: 14px;

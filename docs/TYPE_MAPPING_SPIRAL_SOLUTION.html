@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题型·知识点映射与能力螺旋上升 · 总体解决方案（四层架构对齐版）</title>
+<style>
+  :root{--ink:#1a1b1c;--sub:#6b7280;--line:#e4e3dd;--card:#fff;--bg:#f4f3ee;
+        --ui:#eaa7b2;--gen:#9bbbf4;--kb:#a2ddaa;--svc:#e4d48f;
+        --p1:#e8616b;--p2:#f0a13d;--p3:#4c9fda;--p4:#8b8fa8;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'PingFang SC','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:var(--bg);line-height:1.7;padding:28px 16px 60px;}
+  .wrap{max-width:1020px;margin:0 auto;}
+  h1{font-size:25px;font-weight:700;line-height:1.4;margin-bottom:6px;}
+  .subtitle{color:var(--sub);font-size:14px;margin-bottom:20px;}
+  h2{font-size:20px;font-weight:700;margin:38px 0 14px;padding-left:12px;border-left:4px solid #3a5ca8;}
+  h3{font-size:16px;font-weight:600;margin:22px 0 8px;}
+  h4{font-size:14.5px;font-weight:600;margin:14px 0 6px;}
+  p{font-size:14.5px;margin:8px 0;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0;}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+  th{background:#f0efe9;font-weight:600;text-align:left;padding:7px 10px;border:1px solid var(--line);}
+  td{padding:6px 10px;border:1px solid var(--line);vertical-align:top;}
+  .note{font-size:12.5px;color:var(--sub);}
+  .badge{display:inline-block;padding:1px 10px;border-radius:999px;font-size:12px;font-weight:600;margin-right:6px;}
+  .b-ui{background:#fdf0f2;color:#b85a6a;}.b-gen{background:#eef3fc;color:#3a5ca8;}.b-kb{background:#e9f6ef;color:#2e7d5b;}.b-svc{background:#fbf7e6;color:#8a7620;}
+  .b-red{background:#fdecec;color:#c0392b;}.b-orange{background:#fdf3e3;color:#b2741a;}.b-blue{background:#eaf3fb;color:#2b6da8;}.b-green{background:#e9f6ef;color:#2e7d5b;}
+  .hl{background:#fff7e0;border-left:4px solid var(--p2);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;font-size:14px;}
+  .hl-blue{background:#eef3fc;border-left:4px solid #3a5ca8;padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;font-size:14px;}
+  ul,ol{margin:8px 0 8px 22px;font-size:14.5px;}
+  li{margin:4px 0;}
+  code{background:#f0efe9;border-radius:4px;padding:1px 5px;font-size:12.5px;font-family:'SF Mono',Menlo,monospace;}
+  .phase{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0;background:var(--card);}
+  .phase .tag{display:inline-block;background:#3a5ca8;color:#fff;border-radius:6px;padding:1px 10px;font-size:12px;font-weight:700;margin-right:8px;}
+  .layer-pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;border-radius:8px;padding:2px 9px;margin:2px 3px 2px 0;}
+  .kpi{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0;}
+  .kpi .k{flex:1 1 150px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;}
+  .kpi .k .num{font-size:22px;font-weight:700;color:#3a5ca8;}
+  .kpi .k .lbl{font-size:12px;color:var(--sub);}
+  .flow{border:1px solid var(--line);border-radius:10px;margin:8px 0;overflow:hidden;}
+  .flow .row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);}
+  .flow .row:last-child{border-bottom:none;}
+  .flow .lname{flex:0 0 96px;font-weight:700;font-size:13px;}
+  .flow .ldesc{flex:1;font-size:12.5px;color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>题型·知识点映射与能力螺旋上升 · 总体解决方案</h1>
+<div class="subtitle">四层架构对齐版 ｜ 解决「知识点与题型对应不准确」与「题型模块限制『知识点驱动习题生成』能力螺旋上升」 ｜ 依据项目权威四层架构（architecture/layers.json） ｜ 2026-09-04</div>
+
+<div class="hl"><b>一句话结论：</b>问题的本质是<b>「层职责错位」</b>——题型决策（选择、过滤、题量分配）散落在 UI 层、题型枚举在知识点库层内部多套割裂、校验无语义门槛。解决方案按<b>四层架构</b>收敛：<b>数据在知识点库、决策在大服务层、执行在生成层、展示在 UI 层</b>；题型枚举收敛为知识点库单一事实源（SSOT），过滤与分配决策上收大服务层、UI 只发指令收结果，生成层能力声明为唯一可信依据，配一致性门禁分 6 阶段落地，最终解锁能力螺旋上升。</div>
+
+<h2>零、项目四层架构（权威定义）</h2>
+<div class="card">
+  <p>本项目为「物理稳定 + 逻辑清单」架构：文件留驻 <code>shared/</code>，逻辑归属以 <code>architecture/layers.json</code> 为唯一权威分类（<code>npm run verify:layers</code> 校验覆盖率，未分类即 FAIL）。</p>
+  <div class="flow">
+    <div class="row" style="background:#fdf0f2;">
+      <div class="lname" style="color:#b85a6a;">UI 层</div>
+      <div class="ldesc">页面壳 / 交互 / 渲染呈现入口。典型：<code>*.html</code>、<code>feedback/</code>、<code>knowledge/*.html</code>、<code>sw.js</code>。<br><b>红线：</b>不决策题目结构；不直连生成引擎算法（唯一入口 <code>PracticeBridge.start</code>，<code>check-ui-boundary.js</code> 门禁锚定）；不得直调 Strategy/Generator/Plugin.generate。</div>
+    </div>
+    <div class="row" style="background:#fbf7e6;">
+      <div class="lname" style="color:#8a7620;">大服务层</div>
+      <div class="ldesc">信息传递 / 项目控制 / 外围样式 / 打印等外围控制；除 UI/生成/知识外全归此层。典型：<code>practice-bridge.js</code>（唯一生成入口）、<code>strategy/**</code>、<code>validator/**</code>、<code>capability-*.js</code>、<code>learner/**</code>、<code>module-catalog.js</code>、<code>*.css</code>。<br><b>红线：</b>只做信息传递/控制/编排，不侵入 Frozen Core 生成算法。</div>
+    </div>
+    <div class="row" style="background:#eef3fc;">
+      <div class="lname" style="color:#3a5ca8;">生成层</div>
+      <div class="ldesc">题目生成核心引擎：题面/答案算法生成、语义归一、渲染(HTML/SVG)输出。典型：<code>generation-engine.js</code>、<code>practice-session.js</code>、<code>generator/**</code>、<code>presentation/**</code>、<code>svg-*.js</code>、<code>plugins/**</code>。<br><b>红线：</b>Frozen Core，仅授权 Bug Fix(GEN)；只接受指令生成题目，不承载 UI 交互决策。</div>
+    </div>
+    <div class="row" style="background:#e9f6ef;">
+      <div class="lname" style="color:#2e7d5b;">知识点库</div>
+      <div class="ldesc">基层数据核心：唯一数据来源、schema、规范映射。典型：<code>knowledge-*.js</code>、<code>knowledge-ontology*.js</code>、<code>schemas/knowledge-point.schema.js</code>、<code>question-type-registry.js</code>、<code>ontology-*-map.js</code>。<br><b>红线：</b>不生成题面、不参与 UI 决策。</div>
+    </div>
+  </div>
+  <p class="note">注：layers.json 中 <code>shared/schemas/knowledge-point.schema.js</code> 同时在「GENERATION/SEMANTIC」与「KNOWLEDGE」两处登记，属<b>既有双归属待治理点</b>，本方案阶段 0 一并收敛。</p>
+</div>
+
+<h2>一、问题定位：层视角重述两条病根</h2>
+<div class="card">
+  <h3>1.1 病根 A：知识点与题型对应不准确 = 知识点库内题型枚举割裂 + UI 越层决策</h3>
+  <ul>
+    <li><b>知识点库层内部枚举割裂：</b>「题型」在知识点库内出现两套定义——<code>schemas/knowledge-point.schema.js</code> 的 KNOWN_QUESTION_TYPES（7 类，含 operate）与 <code>question-type-registry.js</code> 的 TYPES（9 类，含 oral/geometry/recognize），互不一致且无一致性门禁；normalizer 别名（TYPE_ALIAS）把 <code>oral/recognize/picture→operate</code>，registry 再 <code>operate→oral</code>，两跳漂移。</li>
+    <li><b>知识库数据依赖启发式兜底：</b>全库 574 知识点中 494 个（86%）的 <code>applicable_question_types</code> 用非 canonical 值；40 个题型值靠关键字启发式（<code>array-closed→geometry</code> 数阵图归几何、<code>pie-chart→calc</code> 扇形统计图归计算等），能力决策 614/614 假性全 ALLOW，题型区分度崩塌。</li>
+    <li><b>UI 层越层承担决策：</b><code>practice.html</code> 用 <code>QT_STD_MODULES</code> 静态表做题型→模块过滤（<code>kpVisibleInQT</code>）、自实现 <code>kpRatio</code> 最大剩余法分配——这些<b>题目结构决策应在大服务层</b>（strategy 的 <code>question-type-allocation.js</code> 已存在），UI 层本应只展示。越层使「页面过滤」与「生成层能力」脱节（<code>QT_STD_MODULES.calc=[M2,M3]</code> 不含 M1，深链 <code>?qt=calc</code> 过滤掉口算知识点，而生成层能力层明确支持）。</li>
+    <li><b>校验无语义门槛：</b>M1-R06 只统计不设 FAIL；无「题型合法性 / 三向一致性」门禁。</li>
+  </ul>
+  <h3>1.2 病根 B：题型模块限制螺旋上升 = 模块被当决策层 + 决策未收敛</h3>
+  <ul>
+    <li><b>模块（大服务层 module-catalog）被当作生成能力决策层：</b>出题入口 = 模块多选，知识点被锁死在模块内，无法跨模块按能力组合（「口算题型 × 数认识知识点」不可达）。</li>
+    <li><b>模块↔题型↔知识点三向关系无单一事实源：</b>页面用 <code>QT_STD_MODULES</code>（题型→模块）、知识库用 <code>moduleId</code>（知识点→模块）、生成层用归一化 capability（知识点→题型）——三张表手工维护、互不一致。</li>
+    <li><b>螺旋提升建立在失真的题型声明上：</b>题型声明被启发式抹平 → <code>spiral-strategy</code> 变体维度 / 前置门 / 难度自适应失真 → 能力无法真正螺旋上升。地基不牢，上层策略再精巧也失真。</li>
+  </ul>
+  <div class="hl-blue"><b>核心洞察：</b>两条病根同源——<b>「决策」没有收敛到它该在的层</b>（大服务层），而散落在 UI 层与知识点库的旁路里。因此方案主线是「层职责复位」：题型枚举收敛到知识点库 SSOT、过滤/分配/能力决策上收大服务层、生成层能力为唯一可信依据、UI 只展示。</div>
+</div>
+
+<h2>二、目标与设计原则（含层原则）</h2>
+<div class="card">
+  <table>
+    <tr><th>原则</th><th>含义</th><th>归属层</th></tr>
+    <tr><td><b>层职责复位</b></td><td>数据在知识点库、决策在大服务层、执行在生成层、展示在 UI 层；UI 不决策题目结构、知识库不参与 UI 决策。</td><td>全局</td></tr>
+    <tr><td><b>题型 SSOT</b></td><td>题型元数据唯一权威定义（question-type-registry，知识库层），schema 与页面引用之，消除 operate/oral 割裂与双归属。</td><td>知识点库</td></tr>
+    <tr><td><b>显式映射优先</b></td><td>知识库题型值必须 canonical / 显式别名，启发式归零并由门禁禁止。</td><td>知识点库</td></tr>
+    <tr><td><b>能力驱动</b></td><td>过滤/分配/可见性决策由大服务层基于知识点归一化能力给出，UI 只发指令收结果；模块回归展示分组。</td><td>大服务层</td></tr>
+    <tr><td><b>门禁护航</b></td><td>每阶段新增/收紧校验并纳入 CI；触碰 Frozen Core 前 GEN 授权 + 基线快照。</td><td>治理(dev)</td></tr>
+    <tr><td><b>分阶段可回滚</b></td><td>每阶段独立 commit、可单步 revert；先试点（G1）后铺开。</td><td>全局</td></tr>
+  </table>
+</div>
+
+<h2>三、目标架构：四层内的一条主链</h2>
+<div class="card">
+  <p>目标态：<b>UI 只发指令 → 大服务层规划（题型/过滤/分配/螺旋）→ 生成层执行 → 回 UI 展示</b>，知识点库供数，模块只做展示分组。</p>
+  <div class="flow">
+    <div class="row" style="background:#fdf0f2;">
+      <div class="lname" style="color:#b85a6a;">UI 层</div>
+      <div class="ldesc">发出「科目+年级+题型+题量」指令（PracticeBridge.start）；展示结果；不再持有题型过滤表、不再做能力判断、不再自实现分配。</div>
+    </div>
+    <div class="row" style="background:#fbf7e6;">
+      <div class="lname" style="color:#8a7620;">大服务层</div>
+      <div class="ldesc">接收指令 → 读知识点库能力 → 规划：题型可见性/题量分配（question-type-allocation）/难度/螺旋（strategy/**）→ 生成请求（含 kpAllocation）→ 派发到生成层；批改分发（practice-bridge）。</div>
+    </div>
+    <div class="row" style="background:#eef3fc;">
+      <div class="lname" style="color:#3a5ca8;">生成层</div>
+      <div class="ldesc">按请求（kp + questionType + 题量）经 generator/** 生成题面/答案并渲染输出；只执行指令，不决策选哪题、出几题。</div>
+    </div>
+    <div class="row" style="background:#e9f6ef;">
+      <div class="lname" style="color:#2e7d5b;">知识点库</div>
+      <div class="ldesc">提供知识点数据（含 canonical 题型声明、五类本体字段、考试地位元数据）；题型注册表为 SSOT；不生成题面。</div>
+    </div>
+  </div>
+</div>
+
+<h2>四、分阶段实施方案（每阶段标注：落层 / 改动文件 / Frozen Core / 门禁 / 验收）</h2>
+
+<div class="phase">
+  <span class="tag">阶段 0</span><b>题型单一事实源（SSOT）</b>
+  <div style="margin:6px 0;">
+    <span class="layer-pill" style="background:#e9f6ef;color:#2e7d5b;">落层：知识点库</span>
+    <span class="badge b-red">Frozen Core：是（M1 组）</span>
+    <span class="badge b-gray">风险：低-中</span>
+  </div>
+  <ul>
+    <li><b>改动：</b>以 <code>shared/question-type-registry.js</code>（知识点库层）为<b>唯一真源</b>，定稿 canonical 题型全集（在 9 类基础上补齐页面确有语义的 vertical/mixed/match/picture/stats 等，一次性定稿）；<code>shared/schemas/knowledge-point.schema.js</code> 的 KNOWN_QUESTION_TYPES 改为引用 registry，<b>消除 operate/oral 割裂与「SEMANTIC/KNOWLEDGE 双归属」</b>（归并到知识点库层）。</li>
+    <li><b>越层规避：</b>纯数据/纯函数，只动知识点库层；不触碰 UI/生成。</li>
+    <li><b>门禁：</b>新增 <code>dev/check-type-ssot.js</code>——schema 枚举 == registry 枚举、normalizer 别名闭环可解析；<code>verify:m1</code> + <code>check-regression</code> + <code>verify:layers</code>（改 layers.json 后）全过。</li>
+    <li><b>验收：</b>三套枚举归并声明；无 operate/oral 双跳；Frozen Core 变更走 GEN 授权 + 基线快照。</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <span class="tag">阶段 1</span><b>全库题型规范化（494 非 canonical → 显式映射）</b>
+  <div style="margin:6px 0;">
+    <span class="layer-pill" style="background:#e9f6ef;color:#2e7d5b;">落层：知识点库</span>
+    <span class="badge b-red">Frozen Core：是（M1 组）</span>
+    <span class="badge b-orange">风险：中</span>
+  </div>
+  <ul>
+    <li><b>改动：</b>按一年级方法论（草案→审→纯内容定位应用）把 G2-G6 + cn/en 的 494 个知识点 <code>applicable_question_types</code> 逐条改写为 canonical / 显式别名（知识库层数据）；竞赛模块 C1-C9 单独治理。保留 legacy rawType 审计。</li>
+    <li><b>越层规避：</b>只改知识点库数据与 normalizer 别名表；不改生成层、不改 UI。</li>
+    <li><b>门禁：</b>新增 <code>dev/check-type-legal.js</code>——题型值必须 canonical / 显式别名否则 <b>FAIL</b>；归一化 confidence 100% exact/explicit、0 heuristic/unmapped。</li>
+    <li><b>验收：</b>启发式归零；能力决策出现真实 DEGRADE/ALLOW 区分；<code>verify:m1</code> + <code>check-regression</code> 全过；GEN 授权 + 基线快照。</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <span class="tag">阶段 2</span><b>模块↔题型↔知识点三向关系 SSOT（决策上收大服务层）</b>
+  <div style="margin:6px 0;">
+    <span class="layer-pill" style="background:#fbf7e6;color:#8a7620;">落层：大服务层（module-catalog 能力元数据）</span>
+    <span class="layer-pill" style="background:#e9f6ef;color:#2e7d5b;">＋ 知识点库（能力声明）</span>
+    <span class="badge b-red">Frozen Core：是（module-catalog 在 M1 组）</span>
+    <span class="badge b-orange">风险：中</span>
+  </div>
+  <ul>
+    <li><b>改动：</b>① <code>shared/module-catalog.js</code>（大服务层）为模块增加「题型能力」元数据（该模块知识点支持的题型集合，由数据推导或声明）；② <b>把 <code>QT_STD_MODULES</code> 从 <code>practice.html</code>（UI 层）移除</b>，改为由大服务层提供「题型→可见模块」查询（经 capability/module-catalog 组合），UI 只调用展示；③ 修复 <code>calc</code> 不含 M1 等漂移。</li>
+    <li><b>越层规避（关键修正）：</b>原方案曾让 practice.html「推导生成 QT_STD_MODULES」——<b>这是 UI 越层</b>；现改为推导逻辑在<b>大服务层</b>，UI 只读查询结果。同理 <code>kpVisibleInQT</code> 的匹配逻辑迁移到大服务层查询服务。</li>
+    <li><b>门禁：</b>新增 <code>dev/check-type-module-consistency.js</code>——模块能力声明 ↔ 知识点归一化能力 ↔ 服务层可见性查询三者一致；<code>check-ui-boundary</code> / <code>check-practice-page</code> 通过（确认 UI 不再持有静态过滤表）。</li>
+    <li><b>验收：</b>深链 <code>?qt=calc</code> 能出 M1 口算；UI 层无题型→模块静态表；三向一致性门禁通过。</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <span class="tag">阶段 3</span><b>生成链路能力驱动：过滤/分配决策上收大服务层，UI 只发指令收结果</b>
+  <div style="margin:6px 0;">
+    <span class="layer-pill" style="background:#fbf7e6;color:#8a7620;">落层：大服务层（strategy / practice-bridge）</span>
+    <span class="layer-pill" style="background:#fdf0f2;color:#b85a6a;">＋ UI 层（仅展示）</span>
+    <span class="badge b-red">Frozen Core：是（strategy M3 组）</span>
+    <span class="badge b-blue">风险：中</span>
+  </div>
+  <ul>
+    <li><b>改动：</b>① <code>practice.html</code> 自实现的 <code>kpRatio</code> 最大剩余法分配<b>收敛到大服务层</b> <code>shared/strategy/question-type-allocation.js</code>（已存在，功能对齐）；UI 只携带「题型+题量」指令，经 <code>practice-bridge</code> 获取规划结果（kpAllocation）展示；② 可见性/过滤判断由大服务层查询服务给出，UI 不再预过滤；③ <code>select.html</code> 题型卡加考试地位徽标、知识点卡展示优先级/难度/错因（数据来自知识点库 exam_priority / exam_weight / common_errors，UI 只读展示，不做决策）。</li>
+    <li><b>越层规避（关键修正）：</b>原方案「practice.html 的 kpVisibleInQT 改为 capability 判断」——UI 直调 capability-resolver（大服务层）越层；改为 UI 通过 practice-bridge/查询服务获得结果。原方案「practice.html 自维护分配逻辑」——收敛到 question-type-allocation.js。</li>
+    <li><b>效果：</b>「口算题型 × 数认识知识点」等跨模块组合可达；模块回归展示分组本职；同一题型能力决策唯一（生成层 capability）。</li>
+    <li><b>门禁：</b><code>check-ui-boundary</code>（UI 无 Strategy/Generator 直连）、<code>check-practice-page</code>、<code>check-type-module-consistency</code>、<code>check-regression</code>。</li>
+    <li><b>验收：</b>页面展示与生成能力一致（抽样 50+ 组合）；三种模式全链路可用；UI 层代码不含分配/过滤算法。</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <span class="tag">阶段 4</span><b>知识库本体字段全库补齐（知识点驱动的地基）</b>
+  <div style="margin:6px 0;">
+    <span class="layer-pill" style="background:#e9f6ef;color:#2e7d5b;">落层：知识点库</span>
+    <span class="badge b-red">Frozen Core：是（M1 组）</span>
+    <span class="badge b-orange">风险：中</span>
+  </div>
+  <ul>
+    <li><b>改动：</b>按一年级补齐方法论铺开：521 个无 concept、492 个无 factualContent、481 个无 common_errors、521 个无 graphicType 逐个补齐（知识库层数据 + ontology map 草案源）。</li>
+    <li><b>越层规避：</b>纯数据/映射，只动知识点库层。</li>
+    <li><b>门禁：</b><code>verify:m1</code> 5 类统计全 governed、0 ERROR；<code>check-regression</code> 全过；GEN 授权 + 基线快照。</li>
+    <li><b>验收：</b>全库 concept/factual/errors/graphicType 覆盖率 &gt;95%。</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <span class="tag">阶段 5</span><b>能力螺旋上升解锁</b>
+  <div style="margin:6px 0;">
+    <span class="layer-pill" style="background:#fbf7e6;color:#8a7620;">落层：大服务层（strategy 螺旋/前置门）</span>
+    <span class="layer-pill" style="background:#eef3fc;color:#3a5ca8;">＋ 生成层（执行，仅授权改动）</span>
+    <span class="badge b-red">Frozen Core：是（strategy M3 / 生成层）</span>
+    <span class="badge b-green">风险：高</span>
+  </div>
+  <ul>
+    <li><b>前置：</b>阶段 1-4 完成后题型声明可信、能力决策真实，螺旋提升才有可靠输入。</li>
+    <li><b>改动：</b>衔接 <code>docs/SPIRAL_IMPROVEMENT_PLAN.md</code>（P0 螺旋链建模 → P1 CurriculumPlanner → P2 变体单源+前置门 → P3 提效 → P4 治理）；<code>spiral-strategy.js</code> 变体维度（S1-S6）与知识点题型/能力关联；跨模块组合出题由大服务层规划、生成层执行；learner 模型反馈闭环（弱项优先）。</li>
+    <li><b>越层规避：</b>螺旋/前置/分配全在大服务层 strategy/**；生成层只接收含 kpAllocation+spiral 的指令执行；UI 只展示。</li>
+    <li><b>门禁：</b><code>verify:m2/m3/m4</code>、<code>check-strategy</code> 系列、<code>check-regression</code>；生成层改动走 GEN 授权。</li>
+    <li><b>验收：</b>按知识点能力跨模块螺旋组卷；变体/前置门按知识点生效。</li>
+  </ul>
+</div>
+
+<h2>五、跨层数据流：每阶段四层流转</h2>
+<div class="card">
+  <table>
+    <tr><th>阶段</th><th>UI 层</th><th>大服务层</th><th>生成层</th><th>知识点库</th></tr>
+    <tr><td>0 题型 SSOT</td><td>—</td><td>—</td><td>—</td><td>registry 定稿 canonical；schema 引用收敛</td></tr>
+    <tr><td>1 全库规范化</td><td>—</td><td>—</td><td>—</td><td>494 非 canonical 改写为显式映射</td></tr>
+    <tr><td>2 三向一致</td><td>移除 QT_STD_MODULES / 自推导</td><td>模块能力元数据；「题型→模块」查询服务</td><td>（只读能力）</td><td>知识点能力声明（归一化）</td></tr>
+    <tr><td>3 能力驱动</td><td>只发指令、只展示；读 exam_priority 展示</td><td>kpRatio 分配收敛 question-type-allocation；可见性/过滤查询；practice-bridge 编排</td><td>接收 kpAllocation 执行</td><td>考试地位/错因元数据供展示</td></tr>
+    <tr><td>4 本体补齐</td><td>—</td><td>—</td><td>—</td><td>concept/factual/errors/graphicType 补全</td></tr>
+    <tr><td>5 螺旋解锁</td><td>展示规划结果</td><td>螺旋/前置门/跨模块规划</td><td>按指令（kp+spiral+题量）生成</td><td>螺旋链 prerequisites（P0）</td></tr>
+  </table>
+</div>
+
+<h2>六、门禁与治理体系</h2>
+<div class="card">
+  <table>
+    <tr><th>门禁</th><th>守什么</th><th>归属</th><th>纳入阶段</th></tr>
+    <tr><td><code>check-type-ssot.js</code>（新）</td><td>schema 枚举 == registry 枚举；别名闭环可解析；无双归属</td><td>治理(dev)</td><td>阶段 0</td></tr>
+    <tr><td><code>check-type-legal.js</code>（新）</td><td>题型值必须 canonical / 显式别名；启发式归零</td><td>治理(dev)</td><td>阶段 1</td></tr>
+    <tr><td><code>check-type-module-consistency.js</code>（新）</td><td>模块能力 ↔ 知识点能力 ↔ 服务层可见性一致</td><td>治理(dev)</td><td>阶段 2-3</td></tr>
+    <tr><td><code>check-ui-boundary.js</code>（既有，收紧）</td><td>UI 无 Strategy/Generator/Plugin 直连；无静态过滤表残留</td><td>治理(dev)</td><td>阶段 2-3</td></tr>
+    <tr><td><code>check-architecture-layers.js</code>（既有）</td><td>新增 shared 文件必须登记 layers.json</td><td>治理(dev)</td><td>全程</td></tr>
+    <tr><td><code>check-architecture-rules.js</code>（既有）</td><td>R1-R5 架构护栏（Static/随机源/适配层）</td><td>治理(dev)</td><td>全程</td></tr>
+    <tr><td><code>check-frozen-core</code>（既有）</td><td>改冻结文件前 GEN 授权 + 基线快照</td><td>治理(dev)</td><td>全程</td></tr>
+    <tr><td><code>check-regression</code>（既有）</td><td>137 组合全量回归</td><td>治理(dev)</td><td>全程</td></tr>
+  </table>
+  <p class="note">纪律沿用 <code>docs/SPIRAL_IMPROVEMENT_PLAN.md</code> §0：四大层边界、最小改动、只读增强=行为等价、GEN 授权、物理不移动、独立提交、命令真源。</p>
+</div>
+
+<h2>七、与既有方案/文档的衔接</h2>
+<div class="card">
+  <table>
+    <tr><th>既有产物</th><th>与本方案关系</th></tr>
+    <tr><td><code>docs/G1_MATH_QUESTION_TYPE_SCHEME.html</code>（一年级题型↔知识点方案）</td><td>阶段 1 的<b>先行试点</b>（已跑通流程）；其 exam_priority / exam_weight 元数据是阶段 3 UI 展示的输入；其「题型↔知识点映射」方法论铺开到全库。</td></tr>
+    <tr><td><code>docs/SPIRAL_IMPROVEMENT_PLAN.md</code>（螺旋链 P0-P4）</td><td>阶段 5 的<b>实施细则</b>；本方案是「前置螺旋链的题型地基」。其 §0 工作纪律（四层边界、GEN 授权）与本方案完全一致。</td></tr>
+    <tr><td><code>docs/ARCHITECTURE_LAYERS.md</code> + <code>architecture/layers.json</code></td><td>本方案的<b>架构依据</b>：所有阶段落层与红线均以之为准。</td></tr>
+    <tr><td><code>docs/G1_MATH_FILL_DRAFT.md</code> + <code>g1-knowledge-fill-draft.json</code>（G1 补全）</td><td>阶段 4 的<b>方法论模板</b>。</td></tr>
+  </table>
+</div>
+
+<h2>八、里程碑与验收清单</h2>
+<div class="card">
+  <table>
+    <tr><th>里程碑</th><th>完成标志（可验证）</th></tr>
+    <tr><td>M0 题型 SSOT</td><td>三套枚举归并、schema 引用 registry、无双归属；check-type-ssot 通过；verify:m1/layers/regression 全过</td></tr>
+    <tr><td>M1 全库规范化</td><td>494 非 canonical 归零；启发式归零；check-type-legal 通过</td></tr>
+    <tr><td>M2 三向一致</td><td>QT_STD_MODULES 移除出 UI、推导逻辑在大服务层；calc 含 M1；check-type-module-consistency 通过</td></tr>
+    <tr><td>M3 能力驱动</td><td>kpRatio 分配收敛 question-type-allocation；UI 无过滤/分配算法；考试地位元数据展示</td></tr>
+    <tr><td>M4 本体补齐</td><td>全库 concept/factual/errors/graphicType 覆盖率 &gt;95%；verify:m1 0 ERROR</td></tr>
+    <tr><td>M5 螺旋解锁</td><td>跨模块螺旋组卷；变体/前置门按知识点生效；check-strategy 全过</td></tr>
+  </table>
+  <p class="note">每个里程碑独立 commit、可单步 revert；改冻结核心文件前 GEN 授权 + 基线快照先行（沿用 <code>dev/frozen-core-baseline.json</code> 机制）。</p>
+</div>
+
+<h2>附录：全局体检原始数据（本次实测）</h2>
+<div class="card">
+  <p><b>全库规模：</b>574 知识点（math G1-G6 + cn + en）。</p>
+  <p><b>题型与本体缺口：</b>非 canonical 题型 KP 494（86%）、无 concept 521（91%）、无 factualContent 492（86%）、无 common_errors 481（84%）、无 graphicType 521（91%）；仅 math G1（上轮补齐）全字段达标。</p>
+  <p><b>归一化 confidence：</b>exact 89 / explicit 485 / heuristic 8 / unmapped 32（共 614 个 legacy 题型实例）。</p>
+  <p><b>能力决策：</b>614 项全 ALLOW、0 DEGRADE / 0 FORBID / 0 MISSING；canonical 题型覆盖 apply 239 / calc 151 / geometry 101 / recognize 49 / fill 34 / choice 24 / oral 12 / judge 4。</p>
+  <p class="note">以上数字为 dev/ 级脚本 node 直连 shared/knowledge-bank.js 实测输出（2026-09-04），口径一致、可复现。</p>
+</div>
+
+</div>
+</body>
+</html>

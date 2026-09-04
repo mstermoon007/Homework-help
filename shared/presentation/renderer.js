@@ -59,7 +59,8 @@
     var i = typeof index === 'number' ? index : 0;
     var graphicDesc = graphicOf(sq);
     var svg = graphicDesc ? GraphicRenderer.render(graphicDesc, ro) : '';
-    var html = HTMLRenderer.render(sq, i, { mode: ro.mode, graphic: svg });
+    // P2.1（Issue #1 延伸）：density 透传给 HTML 渲染器（仅影响 HTML 输出，不进 RenderResult 元数据）
+    var html = HTMLRenderer.render(sq, i, { mode: ro.mode, graphic: svg, density: ro.density });
     return RenderResult.create(sq, html, svg);
   }
 

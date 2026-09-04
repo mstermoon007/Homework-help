@@ -40,13 +40,7 @@
     white-space: nowrap; flex-shrink: 0; }
 
   /* ===== 三级工具栏视觉精炼（覆写 @layer toolbar，不改色系）=====
-   * 仅强化 间距 / 层级 / 圆角 / 阴影 / 对比 与 键盘可达性；
-   * 所有颜色沿用 --toolbar-* 与既有令牌，不引入新色。 */
-  .panel.controls {
-    border-radius: 20px;
-    box-shadow: 0 12px 32px rgba(20, 40, 90, .12), var(--shadow);
-    padding: calc(var(--spacing-md) + 2px) var(--spacing-md);
-  }
+   * 面板本体样式已集中到本文件底部「工具栏集中管理」段（自 practice.html 迁移）。 */
   .controls-grid { gap: calc(var(--spacing-lg) + 4px); }
   .controls-settings .row { gap: 14px; }
   /* 设置标签胶囊化：抬升从属层级、增强与内容的对比（颜色沿用 --ink / --soft-bg / --line） */
@@ -206,5 +200,77 @@
   }
   .exam-part-items { display: block; }
   .exam-part-items .q-wrap { margin: 4px 0; }
+
+  /* ============ 工具栏集中管理（自 practice.html 内联样式迁移，任务3） ============
+   * 练习页工具栏全部覆写样式统一维护于此；同层后置 → 覆盖上方精炼段与 @layer toolbar。 */
+
+  /* 面板本体：粘性置顶 + 卡片描边（合并原精炼段的 padding） */
+  .panel.controls {
+    position: sticky; top: 8px; z-index: 60;
+    background: var(--card, #fff); border: 1px solid var(--line, #e3e8f0); border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(40, 70, 120, .10);
+    padding: calc(var(--spacing-md) + 2px) var(--spacing-md);
+  }
+  @media print { .panel.controls { position: static; box-shadow: none; } }
+
+  /* ===== 知识点卡片题量占比（可调整）===== */
+  .kp-ratio { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .kp-ratio-empty { font-size: 13px; font-weight: 600; color: var(--muted); padding: 4px 2px; }
+  .kp-ratio-list { display: flex; flex-direction: column; gap: 8px; }
+  .kp-ratio-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft-bg);
+  }
+  .kp-ratio-item .nm { flex: 1 1 auto; min-width: 0; font-size: 13px; font-weight: 700; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; }
+  .kp-ratio-item .bar { flex: 2 1 auto; min-width: 90px; height: 10px; border-radius: 999px;
+    background: var(--soft-bg); border: 1px solid var(--line); overflow: hidden; }
+  .kp-ratio-item .bar i { display: block; height: 100%; background: linear-gradient(90deg, #4A90D9, #2bb6a3); }
+  .kp-ratio-item .cnt { flex: 0 0 70px; font-size: 12px; font-weight: 800; color: var(--brand-d);
+    text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .kp-ratio-item.sep { display: flex; align-items: center; gap: 8px; border: none; background: none; padding: 2px 0; }
+  .kp-ratio-item.sep .acts { display: flex; gap: 6px; }
+  .kp-ratio-item .acts button {
+    border: 1px solid var(--line); background: var(--card); cursor: pointer; border-radius: 8px;
+    color: var(--brand-d); font-weight: 800; font-size: 14px; line-height: 1; padding: 6px 10px;
+  }
+  .kp-ratio-item .acts button:hover { border-color: var(--brand); background: var(--brand-bg); }
+  .kp-ratio-item .total { margin-left: auto; font-size: 12px; font-weight: 700; color: var(--muted); }
+  /* 快速模式分项：仅「题型名称 + 题量」胶囊，靠左成流、排满一行自动换行，不居中 */
+  .kp-ratio-types { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-start; }
+  .kp-ratio-types .kp-ratio-item { width: auto; flex: 0 1 auto; }
+  .kp-ratio-types .kp-ratio-item .nm { flex: 0 1 auto; }
+  .kp-ratio-types .kp-ratio-item .cnt { flex: 0 0 auto; }
+
+  /* ===== 自定义题量同框：chip 变输入框，占位灰字「自定义」，键入即消失 ===== */
+  .custom-chip { position: relative; padding: 0; }
+  .custom-chip .custom-label { padding: var(--toolbar-chip-pad); display: inline-flex; align-items: center; }
+  .custom-chip .custom-num {
+    border: none; background: transparent; outline: none; text-align: center; font: inherit;
+    color: var(--toolbar-chip-ink); font-weight: 700; width: 64px; min-height: 22px;
+    padding: var(--toolbar-chip-pad);
+  }
+  .custom-chip .custom-num::placeholder { color: var(--muted, #99a); opacity: 0.75; font-weight: 400; }
+  .custom-chip.custom-chip-input { padding: 0; }
+  /* 自定义题量：激活后不显示蓝色高亮选中态（仅视觉中性化，active 类与交互逻辑保留） */
+  #countGroup .custom-chip.active {
+    background: var(--toolbar-chip-bg); color: var(--toolbar-chip-ink);
+    border-color: var(--toolbar-chip-border); box-shadow: none;
+  }
+
+  /* ===== 专业（教师）模式：知识点题量填空，横向排列、自动换行、换行缩进 ===== */
+  .kp-ratio-flow { display: flex; flex-wrap: wrap; gap: 8px; padding-left: 12px; margin-bottom: 8px; }
+  .kp-blank {
+    display: inline-flex; align-items: center; gap: 4px; max-width: 100%;
+    padding: 4px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft-bg);
+    cursor: text;
+  }
+  .kp-blank-nm { font-size: 12px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; max-width: 200px; }
+  .kp-blank-num { width: 58px; border: 1px solid var(--line); border-radius: 8px; padding: 3px 6px;
+    text-align: center; font-size: 13px; font-weight: 800; color: var(--brand-d);
+    font-variant-numeric: tabular-nums; background: var(--card); }
+  .kp-blank-num:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+  .kp-blank-unit { font-size: 12px; font-weight: 700; color: var(--muted); }
 
 } /* /@layer pages */

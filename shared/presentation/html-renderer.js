@@ -106,7 +106,7 @@
    * 渲染单题卡片。
    * @param {Object} sq SemanticQuestion
    * @param {number} index 题号（0 基）
-   * @param {Object} [options] { mode, graphic } —— graphic 为已生成的 <svg> 字符串
+   * @param {Object} [options] { mode, graphic, density } —— graphic 为已生成的 <svg> 字符串；density=compact 追加紧凑类
    * @returns {string} 卡片 HTML
    */
   function render(sq, index, options) {
@@ -117,7 +117,9 @@
     var answerText = sq && Array.isArray(sq.answerText) ? sq.answerText
       : (sq && sq.answer && Array.isArray(sq.answer.multiplier) ? sq.answer.multiplier : null);
 
-    var html = '<div class="question-card" data-index="' + index + '" role="group" aria-label="第 ' + (index + 1) + ' 题">';
+    // P2.2（Issue #1 延伸）：density=compact 追加 compact 类（仅 class，卡内结构不变，Node/浏览器输出一致）
+    var cardCls = 'question-card' + (options.density === 'compact' ? ' compact' : '');
+    var html = '<div class="' + cardCls + '" data-index="' + index + '" role="group" aria-label="第 ' + (index + 1) + ' 题">';
     html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>' + esc(prompt) + '</div>';
     if (graphic) {
       html += '<div class="question-graphic">' + graphic + '</div>';

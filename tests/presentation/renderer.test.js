@@ -129,6 +129,25 @@ test('M7-R02 卡片语义类名', () => {
   });
 });
 
+// ============ P2: density 契约生效（Issue #1 延伸） ============
+test('P2 density=compact → 卡片带 compact 类', () => {
+  const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', answer: { value: 8 } }, 0, { mode: 'screen', density: 'compact' });
+  assert.ok(/class="question-card compact"/.test(html), '应输出 class="question-card compact"');
+});
+
+test('P2 density 缺省/normal → 不输出 compact 类（屏幕回归）', () => {
+  const def = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', answer: { value: 8 } }, 0, { mode: 'screen' });
+  assert.ok(/class="question-card"/.test(def), '缺省应为纯 question-card');
+  const norm = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'screen', density: 'normal' });
+  assert.ok(/class="question-card"/.test(norm), 'normal 不应带 compact');
+});
+
+test('P2 Renderer.render 透传 normalize 后 density（print 默认 compact）', () => {
+  const r = Renderer.render({ prompt: '1 + 1 = 2', answer: { value: '2' } }, { mode: 'print' }, 0);
+  assert.ok(/class="question-card compact"/.test(r.html), 'print 模式 HTML 应含 compact 类');
+  assert.ok(!('density' in r) && !('density' in (r.metadata || {})), 'density 不得进入 RenderResult 元数据');
+});
+
 test('M7-R02 图形注入 .question-graphic；无图省略', () => {
   const withG = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'screen', graphic: '<svg/>' });
   assert.ok(withG.indexOf('question-graphic') !== -1);

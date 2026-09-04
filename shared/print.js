@@ -164,9 +164,10 @@ var A4_PRINTABLE_PX = 718;
       // 通过 CSS 变量设定列数，与屏幕端保持一致
       for (var gi = 0; gi < grids.length; gi++) {
         grids[gi].style.setProperty('--grid-cols', a4Cols);
+        // P1.3（Issue #1）：gap 单一来源 = tokens.css --grid-gap-print（内联 var() 带兜底，防样式链接失效）
         grids[gi].style.cssText =
           'display:grid;' +
-          'gap:14px 12px;' +
+          'gap:var(--grid-gap-print,8px 6px);' +
           'width:100%;';
       }
       // 每张卡片按长度跨列 + 撑满列宽（与预览 fitColumns 完全一致）
@@ -202,6 +203,8 @@ var A4_PRINTABLE_PX = 718;
       '  .print-shell { width: 100% !important; max-width: 190mm !important; margin: 0 auto !important; box-sizing: border-box !important; }\n' +
       '  /* 兜底：确保卡片撑满网格列（主力已在克隆 DOM 设内联 style） */\n' +
       '  .print-shell .question-card { justify-self: stretch !important; width: 100% !important; box-sizing: border-box !important; padding: var(--card-padding-print) !important; }\n' +
+      // P3.1（Issue #1）：打印端题号去圆形徽标（屏幕端 components.css 徽标保留）
+      '  .print-shell .question-card .num { width:auto; height:auto; border-radius:0; background:none; box-shadow:none; min-width:18px; display:inline-block; justify-content:flex-start; color:#1A1B1C !important; padding:0; }\n' +
       '  /* 隐藏交互元素（DOM已移除，CSS兜底） */\n' +
       '  .btn, button, .btn-row, .score-btns, .score-panel,\n' +
       '  .back-home, .settings-card, .panel.controls,\n' +
@@ -395,23 +398,40 @@ var A4_PRINTABLE_PX = 718;
   }
 
   // A4 竖版打印专用 CSS（不依赖页面自带样式，独立自足）
-  var PRINT_QCSS =
-    '@page { size: A4 portrait; margin: 12mm 10mm; }' +
+  // P1.1（Issue #1 [Frozen Core Fix]）：打印去卡片化 + 间距收紧——纸张上无框无底，靠间距分隔。
+  // P1.3（Issue #1）：gap/padding 单一来源 = tokens.css（打印文档自含无法带样式链接，构建时读取 + 兜底字面量）。
+  function cssTokenVal(name, fallback) {
+    try {
+      if (typeof document !== 'undefined' && document.documentElement) {
+        var v = window.getComputedStyle(document.documentElement).getPropertyValue(name);
+        if (v && v.trim()) return v.trim();
+      }
+    } catch (e) { /* Node 测试环境/无样式时回落字面量 */ }
+    return fallback;
+  }
+  function buildPrintQcss(opts) {
+    opts = opts || {};
+    // P3.2（Issue #1）：answerRule=false 时口算/填空卷去作答虚线，由网格间距分隔（默认保留）
+    var keepRule = opts.answerRule !== false;
+    return '@page { size: A4 portrait; margin: 10mm 8mm; }' +
     'html { width: 210mm; } body { margin:0; padding:0; background:#fff; color:#27324a; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }' +
     '.print-sheet { width:100%; max-width:190mm; margin:0 auto; box-sizing:border-box; }' +
-    '.ps-title { font-size:20px; font-weight:800; text-align:center; margin:0 0 14px; }' +
-    '.questions-grid { display:grid; gap:12px 10px; grid-template-columns:repeat(var(--grid-cols,3), minmax(0,1fr)); }' +
-    '.question-card { position:relative; border:1px solid #dbe3f0; border-radius:10px; padding:14px 14px 10px; background:#fff; page-break-inside:avoid; break-inside:avoid; box-sizing:border-box; }' +
-    '.question-stem { font-size:16px; line-height:1.7; font-weight:600; }' +
-    '.question-stem .num { display:inline-block; min-width:20px; font-weight:800; color:#5b8def; }' +
-    '.question-graphic { margin:8px 0 6px; text-align:center; }' +
+    '.ps-title { font-size:18px; font-weight:800; text-align:center; margin:0 0 8px; }' +
+    '.questions-grid { display:grid; gap:' + cssTokenVal('--grid-gap-print', '8px 6px') + '; grid-template-columns:repeat(var(--grid-cols,3), minmax(0,1fr)); }' +
+    '.question-card { position:relative; padding:' + cssTokenVal('--card-padding-print', '6px 8px') + '; page-break-inside:avoid; break-inside:avoid; box-sizing:border-box; }' +
+    // P3.3（Issue #1）：无图形短卡放行跨页拆分，提高页底密度（:has 不支持时自动退化为整卡 avoid）
+    '.question-card:not(:has(.question-graphic)) { page-break-inside:auto; break-inside:auto; }' +
+    '.question-stem { font-size:15px; line-height:1.5; font-weight:600; }' +
+    '.question-stem .num { display:inline-block; min-width:18px; font-weight:800; color:#1A1B1C; }' +
+    '.question-graphic { margin:6px 0 4px; text-align:center; }' +
     '.question-graphic svg { max-width:100%; height:auto; }' +
     '.question-options { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:8px; font-size:15px; }' +
     '.question-options .option-letter { display:inline-block; min-width:20px; font-weight:700; color:#7c5cff; margin-right:4px; }' +
-    '.question-answer { margin-top:10px; min-height:24px; border-bottom:1px dashed #b9c6de; }' +
-    '.question-answer-print { min-height:28px; }' +
+    '.question-answer { margin-top:6px; min-height:20px;' + (keepRule ? ' border-bottom:1px dashed #b9c6de;' : '') + ' }' +
+    '.question-answer-print { min-height:20px; }' +
     '.feedback { display:none; }' +
     '@media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }';
+  }
 
   /**
    * 直接由 SemanticQuestion[]（或兼容 Legacy Question）构建打印页完整 HTML。
@@ -434,12 +454,20 @@ var A4_PRINTABLE_PX = 718;
     } catch (e) {
       return null;
     }
+    // P3.2（Issue #1）：作答线按题型自适应——含书写类（应用/开放/作图/简答）保留虚线，纯口算/填空去掉；
+    // options.answerRule 可显式覆盖。
+    var hasWrite = false;
+    for (var wi = 0; wi < questions.length && !hasWrite; wi++) {
+      var wt = String(questions[wi].type || questions[wi].questionType || '');
+      if (/apply|word|open|draw|measure|answer|compose/.test(wt)) hasWrite = true;
+    }
+    var answerRule = options.answerRule != null ? !!options.answerRule : hasWrite;
     return '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n' +
       '<meta charset="UTF-8">\n' +
       '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
       '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src \'self\' data:;">\n' +
       '<title>' + escForPrint(title) + '</title>\n' +
-      '<style>\n' + PRINT_QCSS + '\n</style>\n</head>\n<body>\n' +
+      '<style>\n' + buildPrintQcss({ answerRule: answerRule }) + '\n</style>\n</head>\n<body>\n' +
       '<div class="print-sheet">\n' +
       '<div class="ps-title">' + escForPrint(title) + '</div>\n' +
       all.html +

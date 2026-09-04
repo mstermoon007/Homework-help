@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人教版一年级数学 · 可选题型 ↔ 知识点对应方案（专业/快速模式）</title>
+<style>
+  :root{--ink:#1a1b1c;--sub:#6b7280;--line:#e4e3dd;--card:#ffffff;--bg:#f4f3ee;
+        --p1:#e8616b;--p2:#f0a13d;--p3:#4c9fda;--p4:#8b8fa8;
+        --p1bg:#fdecec;--p2bg:#fdf3e3;--p3bg:#eaf3fb;--p4bg:#f0f0f5;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'PingFang SC','Microsoft YaHei',-apple-system,'Segoe UI',sans-serif;color:var(--ink);
+       background:var(--bg);line-height:1.7;padding:28px 16px 60px;}
+  .wrap{max-width:980px;margin:0 auto;}
+  h1{font-size:26px;font-weight:700;line-height:1.4;margin-bottom:6px;}
+  .subtitle{color:var(--sub);font-size:14px;margin-bottom:20px;}
+  .badge{display:inline-block;padding:1px 10px;border-radius:999px;font-size:12px;font-weight:600;margin-right:6px;}
+  .b-p1{background:var(--p1bg);color:var(--p1);}.b-p2{background:var(--p2bg);color:#d17f16;}.b-p3{background:var(--p3bg);color:#2e7cb3;}.b-p4{background:var(--p4bg);color:#6a6f8c;}
+  h2{font-size:20px;font-weight:700;margin:36px 0 14px;padding-left:12px;border-left:4px solid #4c9fda;}
+  h3{font-size:16px;font-weight:600;margin:20px 0 8px;}
+  p{font-size:14.5px;margin:8px 0;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0;}
+  th{background:#f0efe9;font-weight:600;text-align:left;padding:8px 10px;border:1px solid var(--line);}
+  td{padding:7px 10px;border:1px solid var(--line);vertical-align:top;}
+  .note{font-size:12.5px;color:var(--sub);}
+  .grid2{display:flex;flex-wrap:wrap;gap:14px;}
+  .grid2>.card{flex:1 1 300px;margin:0;}
+  .kp-chip{display:inline-block;background:#f5f4f0;border:1px solid var(--line);border-radius:8px;padding:2px 8px;font-size:12.5px;margin:3px 3px 0 0;}
+  .pri{font-weight:700;}
+  .mod-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .mod-tag{background:#eef1f8;color:#3a4a6b;border-radius:6px;padding:1px 8px;font-size:12px;font-weight:600;}
+  .src{font-size:12px;color:var(--sub);}
+  .hl{background:#fff7e0;border-left:4px solid #f0a13d;padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;font-size:14px;}
+  ul,ol{margin:8px 0 8px 22px;font-size:14.5px;}
+  li{margin:4px 0;}
+  .ratio{display:flex;height:26px;border-radius:8px;overflow:hidden;margin:10px 0;font-size:12px;color:#fff;font-weight:600;}
+  .ratio>div{display:flex;align-items:center;justify-content:center;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>人教版一年级数学 · 可选题型 ↔ 知识点对应方案</h1>
+<div class="subtitle">专业模式（教师）· 快速模式 双模式方案 ｜ 依据 2022 课标新教材（2024 秋一上 / 2025 春一下）与真实考卷题型分析 ｜ 2026-09-04</div>
+
+<div class="hl"><b>一句话结论：</b>考试导向下，一年级数学的题型选择应围绕「<b>口算（计算）+ 填空（数认识）+ 解决问题 + 看图列式</b>」四大必考板块组织；专业模式按「知识点 × 考试地位」精配，快速模式按「题型 × 权重」一键生成，两者共用同一套题型↔知识点映射。</div>
+
+<h2>一、研究依据：人教版一年级考试 / 练习常用题型总览</h2>
+<div class="card">
+  <h3>1.1 期末卷面结构（人教版 2024 / 2025 新教材，多份期末卷综合）</h3>
+  <table>
+    <tr><th>题型</th><th>常见分值占比</th><th>考查内容</th><th>对应题型模块</th></tr>
+    <tr><td><b>填空题</b></td><td>25–31 分（约 30%）</td><td>数的认识与组成（11~20 / 100以内）、数位读写、相邻数、比大小、找规律、钟表、人民币</td><td>M4</td></tr>
+    <tr><td><b>计算题</b></td><td>24–40 分（约 30%）</td><td>直接写得数（口算）、连加连减混合、看图列式、列式计算；下册含竖式</td><td>M1、M0、M7</td></tr>
+    <tr><td><b>解决问题</b></td><td>19–30 分（约 22%）</td><td>加减法应用题、比多比少、购物（欢乐购物街）、两步、多余条件</td><td>M8</td></tr>
+    <tr><td><b>图形与操作</b></td><td>约 10%</td><td>立体/平面图形识别、图形计数、位置（上下左右）、分类统计</td><td>M6、M9</td></tr>
+    <tr><td><b>判断 / 选择</b></td><td>5–15 分（约 8%）</td><td>概念辨析、易错点甄别；连线匹配常作辅助形式</td><td>M11、M12、M5</td></tr>
+  </table>
+  <p class="src">来源：2025-2026 学年人教版一年级上/下册期末卷与学情自测卷（21世纪教育网、学科网、豆丁网等）题型特征汇总。["https://mip.21cnjy.com/P/24731380.html","https://www.docin.com/touch_new/preview_new.do?id=4942225517","https://m.zxxk.com/soft/58355113.html","https://m.zxxk.com/soft/57947773.html"]</p>
+  <h3>1.2 常考 / 必考知识点（真实试卷知识点分布）</h3>
+  <p>以一份 2025-2026 一上期末卷填空题知识点分布为例（括号为难度系数，越高越基础）：11~20 的认识和读写与 20 以内组成（0.85）、不进位加法与进位加法（0.85）、比较多少与 5 以内比大小（0.75）、9 加几进位加法（0.75）、连加与加减混合（0.65）、20 以内组成与比大小（0.65）、立体图形的认识及分类（0.64）。["https://mip.21cnjy.com/P/24731380.html"]</p>
+  <p><b>高频考点归纳：</b>① 20 以内数的认识与组成（必考）；② 10 以内/20 以内加减口算（必考·基础盘）；③ 进位加法（凑十法）与退位减法（破十/平十）；④ 看图列式（必考题型）；⑤ 比大小与数的顺序；⑥ 认识钟表；⑦ 认识图形（立体+平面）；⑧ 人民币（下册欢乐购物街）；⑨ 找规律填数；⑩ 加减法解决问题。</p>
+  <p class="src">附注：上册另一份期末质量检测与下册素养测试卷均呈现「填空+计算+解决问题」为三大主项结构，本方案的分值配比即据此设计。</p>
+</div>
+
+<h2>二、现有选择机制盘点（select.html + practice.html）</h2>
+<div class="card">
+  <table>
+    <tr><th>环节</th><th>现状</th></tr>
+    <tr><td><b>快速模式</b>（select.html）</td><td>题型卡多选（模块级）→ 汇总该模块全部知识点 → practice.html?kps=…&mode=quick。按知识点 weight 用「最大剩余法」分配题量，界面按题型聚合显示。</td></tr>
+    <tr><td><b>专业/教师模式</b>（select.html）</td><td>左栏「题目模块」多选 → 右栏联动罗列其下知识点 → 多选知识点 → practice.html?kps=…&mode=teacher。适合备课与针对性训练。</td></tr>
+    <tr><td><b>题型模块</b></td><td>一年级数学共 11 个模块 53 个知识点：M0 巧算(4)、M1 口算(7)、M4 填空(12)、M5 连线(4)、M6 操作(6)、M7 看图列式(4)、M8 解决问题(8)、M9 分类统计(3)、M11 判断(1)、M12 选择(1)、M13 提前预习(3)。</td></tr>
+    <tr><td><b>缺口</b></td><td>题型与知识点之间缺少「考试地位 / 考频」元数据，选型时无法体现「哪些必考、哪些高分、哪些巩固」，教师模式知识点卡片信息密度低。</td></tr>
+  </table>
+</div>
+
+<h2>三、核心：题型 ↔ 知识点对应方案</h2>
+<div class="card">
+  <p>为每个知识点标注<b>考试优先级</b>（P1 必考 / P2 高频 / P3 基础巩固 / P4 拓展），题型选择时按优先级排序、按分值配比。下表为 53 个知识点的完整对应（优先级为基于真实考卷分析与教学常规的推荐值）。</p>
+
+  <h3>3.1 M0 巧算专项（算法支撑 · 必考）</h3>
+  <p><span class="mod-tag">P1</span> 凑十法 ｜ <span class="mod-tag">P1</span> 平十法 ｜ <span class="mod-tag">P1</span> 破十法 ｜ <span class="mod-tag">P3</span> 凑十法计算正误判断</p>
+  <p class="note">作用：为 20 以内进位加/退位减提供标准算法，快速模式常与 M1 并入口算练习。</p>
+
+  <h3>3.2 M1 口算练习（必考 · 分值最大）</h3>
+  <p><span class="mod-tag">P1</span> 5以内加减法 ｜ <span class="mod-tag">P1</span> 10以内加减法 ｜ <span class="mod-tag">P1</span> 20以内进位加法 ｜ <span class="mod-tag">P1</span> 20以内退位减法 ｜ <span class="mod-tag">P2</span> 100以内整十数加减 ｜ <span class="mod-tag">P2</span> 两位数加减一位数 ｜ <span class="mod-tag">P2</span> 连加连减与加减混合</p>
+  <p class="note">期末「直接写得数」主阵地，建议占练习总题量 30% 左右。</p>
+
+  <h3>3.3 M4 填空题（必考 · 卷面第一大项）</h3>
+  <p><span class="mod-tag">P1</span> 数的组成 ｜ <span class="mod-tag">P1</span> 数位概念 ｜ <span class="mod-tag">P1</span> 比大小 ｜ <span class="mod-tag">P1</span> 认识整时 ｜ <span class="mod-tag">P2</span> 相邻数 ｜ <span class="mod-tag">P2</span> 数字规律 ｜ <span class="mod-tag">P2</span> 人民币单位换算 ｜ <span class="mod-tag">P2</span> 人民币简单计算 ｜ <span class="mod-tag">P2</span> 填未知数 ｜ <span class="mod-tag">P3</span> 分与合 ｜ <span class="mod-tag">P3</span> 快几时了/几时刚过 ｜ <span class="mod-tag">P3</span> 百数表</p>
+  <p class="note">填空是「数认识 + 钟表 + 人民币 + 规律」的聚合题型，覆盖最广，建议占题量 25–30%。</p>
+
+  <h3>3.4 M5 连线题（基础巩固）</h3>
+  <p><span class="mod-tag">P3</span> 算式与得数连线 ｜ <span class="mod-tag">P3</span> 图形与名称连线 ｜ <span class="mod-tag">P3</span> 钟面与时间连线 ｜ <span class="mod-tag">P3</span> 人民币面值连线</p>
+
+  <h3>3.5 M6 操作题（图形必考）</h3>
+  <p><span class="mod-tag">P1</span> 立体图形特征 ｜ <span class="mod-tag">P1</span> 平面图形特征 ｜ <span class="mod-tag">P2</span> 图形计数 ｜ <span class="mod-tag">P2</span> 上下左右位置 ｜ <span class="mod-tag">P3</span> 图形拼组 ｜ <span class="mod-tag">P3</span> 画指定图形</p>
+
+  <h3>3.6 M7 看图列式（必考题型）</h3>
+  <p><span class="mod-tag">P1</span> 看图列加法 ｜ <span class="mod-tag">P1</span> 看图列减法 ｜ <span class="mod-tag">P1</span> 大括号问号问题 ｜ <span class="mod-tag">P2</span> 看图列连加连减</p>
+
+  <h3>3.7 M8 解决问题（必考 · 高分大项）</h3>
+  <p><span class="mod-tag">P1</span> 求总数 ｜ <span class="mod-tag">P1</span> 求剩余 ｜ <span class="mod-tag">P2</span> 求部分 ｜ <span class="mod-tag">P2</span> 比多 ｜ <span class="mod-tag">P2</span> 比少 ｜ <span class="mod-tag">P2</span> 人民币购物 ｜ <span class="mod-tag">P3</span> 两步计算 ｜ <span class="mod-tag">P3</span> 含多余条件问题</p>
+
+  <h3>3.8 M9 分类与整理（统计基础）</h3>
+  <p><span class="mod-tag">P2</span> 分类与整理 ｜ <span class="mod-tag">P3</span> 填写简单统计表 ｜ <span class="mod-tag">P3</span> 象形统计图</p>
+
+  <h3>3.9 M11 / M12 判断与选择（概念辨析）</h3>
+  <p><span class="mod-tag">P3</span> 判断题综合 ｜ <span class="mod-tag">P3</span> 选择题综合</p>
+
+  <h3>3.10 M13 提前预习（拓展）</h3>
+  <p><span class="mod-tag">P4</span> 九九乘法表 ｜ <span class="mod-tag">P4</span> 九九除法表 ｜ <span class="mod-tag">P4</span> 乘除法填空</p>
+  <p class="note">非教材课时内容，作为能力拓展，默认不进期末套卷。</p>
+</div>
+
+<h2>四、专业模式（教师模式）方案</h2>
+<div class="grid2">
+  <div class="card">
+    <h3>4.1 界面增强</h3>
+    <ul>
+      <li><b>左栏题型卡</b>：加「考试地位」徽标（必考/高频/基础/拓展）+ 预估分值权重，选型有据可依。</li>
+      <li><b>右栏知识点卡</b>：每张显示 <b>优先级</b>、<b>难度</b>、<b>常见错因数</b>、<b>建议题量</b>，支持按优先级排序。</li>
+      <li><b>批量操作</b>：「一键选必考」「一键选高频」按钮，按优先级整组勾选。</li>
+      <li><b>组合提示</b>：已选知识点自动汇总分值占比，超配时提示（如解决问题占比过高）。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>4.2 预设模板（考试对齐）</h3>
+    <table>
+      <tr><th>模板</th><th>构成</th><th>用途</th></tr>
+      <tr><td>单元过关</td><td>按单元聚合知识点（如「20以内进位加法」单元）</td><td>随堂/单元测</td></tr>
+      <tr><td>期末冲刺卷</td><td>按真实卷面配比（见右）</td><td>考前模拟</td></tr>
+      <tr><td>专项突破</td><td>选中高频易错知识点强化</td><td>查漏补缺</td></tr>
+    </table>
+    <h3 style="margin-top:14px;">4.3 期末冲刺卷配比（参考真实卷面）</h3>
+    <div class="ratio">
+      <div style="background:#e8616b;width:30%;">填空 30%</div>
+      <div style="background:#4c9fda;width:30%;">计算 30%</div>
+      <div style="background:#f0a13d;width:22%;">解决问题 22%</div>
+      <div style="background:#5bb98c;width:10%;">图形统计 10%</div>
+      <div style="background:#8b8fa8;width:8%;">判断选择 8%</div>
+    </div>
+    <p class="note">对应映射：填空→M4；计算→M1+M0+M7（看图列式归计算）；解决问题→M8；图形统计→M6+M9；判断选择→M11+M12+M5。</p>
+  </div>
+</div>
+
+<h2>五、快速模式方案</h2>
+<div class="card">
+  <h3>5.1 快捷组合预设（一键进入）</h3>
+  <table>
+    <tr><th>快捷组合</th><th>题型（模块）</th><th>说明</th></tr>
+    <tr><td>口算热身</td><td>M0 + M1</td><td>20 以内进位加/退位减 + 口算，每日 20 题</td></tr>
+    <tr><td>看图列式专练</td><td>M7 + M1</td><td>看图列式 + 基础口算支撑</td></tr>
+    <tr><td>期末套卷模拟</td><td>M4+M1+M7+M8+M6+M9+M11+M12</td><td>按 4.3 配比自动分配</td></tr>
+    <tr><td>图形统计</td><td>M6 + M9</td><td>图形识别、计数、分类整理</td></tr>
+    <tr><td>易错巩固</td><td>按 learner 错因回灌的知识点</td><td>结合 learner-model 定向强化</td></tr>
+  </table>
+  <h3>5.2 分配逻辑优化</h3>
+  <ul>
+    <li>沿用现有「权重 × 最大剩余法」分配，建议将 <b>weight</b> 与<b>考试优先级</b>挂钩：P1 知识点 weight 上调（如 3），P3/P4 下调，使自动分配天然偏向必考点。</li>
+    <li>快速模式展示仍按题型聚合（不暴露知识点），但分配落到每个知识点——维持现状即可，仅需同步 weight。</li>
+    <li>「期末套卷模拟」特殊模式：不走权重，按 4.3 的分值比例决定各题型题量。</li>
+  </ul>
+</div>
+
+<h2>六、落地实施建议</h2>
+<div class="card">
+  <table>
+    <tr><th>改动点</th><th>建议</th><th>文件</th></tr>
+    <tr><td>新增元数据</td><td>为 53 个一年级知识点补 <code>exam_priority</code>（P1-P4）与 <code>exam_weight</code>（参考分值占比）字段，按本方案 3.x 标注；同步调整 <code>weight</code> 使必考点自动加权。</td><td>shared/knowledge-math.js</td></tr>
+    <tr><td>选择页题型卡</td><td>题型卡显示考试地位徽标与知识点数；教师模式右栏知识点卡显示优先级/难度/错因；加「一键选必考/高频」。</td><td>select.html</td></tr>
+    <tr><td>练习页分配</td><td>接入 <code>kpAllocation</code>；「期末套卷」按分值配比分配；quick 模式权重与优先级联动。</td><td>practice.html</td></tr>
+    <tr><td>预设模板</td><td>select 页增加快捷组合（5.1），一键跳转 practice.html。</td><td>select.html</td></tr>
+    <tr><td>校验</td><td>扩展后跑 <code>npm run verify:m1</code>、<code>check-regression</code> 保证不回归。</td><td>—</td></tr>
+  </table>
+  <p class="src">数据口径：优先级与分值配比为基于 2025-2026 人教版期末卷题型统计的推荐设计值，落地前可在知识库中统一评审。</p>
+</div>
+
+<div class="note" style="margin-top:24px;">本方案基于对项目现有机制（select.html / practice.html / knowledge-math.js）的实测盘点，与对 2024-2025 人教版新教材期末卷、单元卷的题型与知识点分布分析形成；所引考卷数据来自公开资源，优先级标注为推荐性设计。</div>
+
+</div>
+</body>
+</html>
