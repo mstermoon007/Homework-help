@@ -18,7 +18,7 @@
 
 'use strict';
 
-// Some plugin modules throw asynchronously on load (e.g. math-comprehensive.js).
+// Some plugin modules throw asynchronously on load.
 // Those are already handled by per-plugin try/catch; suppress stray rejections
 // so the report is written and the process exits cleanly.
 process.on('unhandledRejection', () => {});

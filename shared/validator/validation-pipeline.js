@@ -11,29 +11,19 @@
 
 var Validator = require('./question-validator.js');
 var Schema = require('../schemas/semantic-question.schema.js');
-var kpValidator = require('./kp-validator.js');
 var answerValidator = require('./answer-validator.js');
-var distractorValidator = require('./distractor-validator.js');
-var structureValidator = require('./structure-validator.js');
 var difficultyValidator = require('./difficulty-validator.js');
 var duplicateValidator = require('./duplicate-validator.js');
-var graphicValidator = require('./graphic-validator.js');
-var renderPreflight = require('./render-preflight.js');
 
 var ERROR_CODES = Validator.ERROR_CODES;
 var SEVERITY = Validator.SEVERITY;
 
-// 验证器执行顺序（核心→业务→结构→质量→去重→渲染）
+// 验证器执行顺序（精简为核心四项：结构合法 / 答案可判 / 难度合规 / 不重复）
 var PIPELINE_STEPS = [
   { name: 'schema', fn: Validator.validateSchemaOnly, required: true },
-  { name: 'knowledgePoint', fn: kpValidator.validateKnowledgePoint, required: false },
   { name: 'answer', fn: answerValidator.validateAnswer, required: false },
-  { name: 'distractor', fn: distractorValidator.validateDistractors, required: false },
-  { name: 'structure', fn: structureValidator.validateStructure, required: false },
   { name: 'difficulty', fn: difficultyValidator.validateDifficulty, required: false },
-  { name: 'duplicate', fn: duplicateValidator.validateDuplicate, required: false },
-  { name: 'graphic', fn: graphicValidator.validateGraphic, required: false },
-  { name: 'renderPreflight', fn: renderPreflight.validateRenderPreflight, required: false }
+  { name: 'duplicate', fn: duplicateValidator.validateDuplicate, required: false }
 ];
 
 /**

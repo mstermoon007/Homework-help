@@ -93,10 +93,8 @@ function loadDeps(rec) {
   return missing;
 }
 
-/** 需要完整 Generator Runtime（strategy-engine.bundle.js）的插件 id 集 */
-var RUNTIME_PLUGIN_IDS = {
-  'math-comprehensive': true
-};
+/** 需要完整 Generator Runtime（strategy-engine.bundle.js）的插件 id 集（综合练习已由生成层承接） */
+var RUNTIME_PLUGIN_IDS = {};
 
 /** 跑单个插件：逐年级生成 → 渲染 → 满分回填 → 批改（generate 可能返回 Promise） */
 function runPlugin(rec) {
@@ -123,7 +121,7 @@ function runPlugin(rec) {
   }
 
   var grades = plugin.grades || rec.grades || [1];
-  // 串行处理各年级，兼容异步 generate（math-comprehensive 等）
+  // 串行处理各年级，兼容异步 generate
   var results = [];
   var chain = Promise.resolve();
   grades.forEach(function (g) {
@@ -237,8 +235,7 @@ var queue = PLUGIN_REGISTRY.filter(function (rec) {
   if (rec.isPlaceholder) { console.log('跳过占位插件: ' + rec.id); return false; }
   return true;
 });
-// 综合练习挪到队尾（确保其子插件已全部 require 缓存）
-queue.sort(function (a, b) { return (a.id === 'math-comprehensive' ? 1 : 0) - (b.id === 'math-comprehensive' ? 1 : 0); });
+// 队列保持注册顺序
 
 var main = Promise.resolve();
 queue.forEach(function (rec) {

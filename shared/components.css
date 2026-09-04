@@ -520,12 +520,11 @@
     overflow: hidden;
     /* 保留原有样式属性 */
     border: 1px solid var(--line);
-    border-radius: 14px;
+    border-radius: 10px;
     padding: var(--card-padding-screen);
     position: relative;
     text-align: left;
     background: var(--card);
-    box-shadow: 0 8px 24px rgba(40,70,120,.08);
     align-self: start;
     justify-self: start;
 }
@@ -550,11 +549,6 @@
     font-weight: 800;
     color: var(--ink);
     vertical-align: middle;
-}
-.question-card .badge {
-    position: absolute; right: 10px; top: 10px;
-    font-size: 11px; font-weight: 700; padding: 2px 9px;
-    border-radius: 999px; background: var(--brand-bg); color: var(--brand);
 }
 .question-card .scene-box {
     grid-row: 2;

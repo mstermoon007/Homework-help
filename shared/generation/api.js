@@ -1,14 +1,14 @@
 /**
- * shared/generation/api.js — 生成层冻结门面 API (Phase 0 Task 0.1)
+ * shared/generation/api.js — 生成层统一 API（生成/渲染/校验入口）
  *
- * 冻结方法：
+ * 方法：
  *   - generate(request): Promise<GenerateResult>
  *   - generateSync(request): GenerateResult
  *   - validatePlan(plan): string[]
  *
  * 依赖注入：通过 inject({...}) 注入 Orchestrator/Strategy/Renderer 等内部模块；
  * 不直接 require 任何内部模块路径，浏览器下走全局兜底。
- * 使用 Object.freeze 防止外部修改。
+ * 生成层引擎统一出口：build → runPlans（注入 style/complexity）→ render。
  *
  * @module shared/generation/api
  */
@@ -171,13 +171,16 @@
     if (!orch) return Promise.reject(new Error('PresentationEngine 不可用'));
     var results = [];
     var failedPlans = [];
+    // 生成层引擎统一去重：跨 plan 共享指纹集（同一套生成内不出现重复题）
+    var globalSeenKeys = new Set();
     var seq = Promise.resolve();
     plans.forEach(function (plan) {
       seq = seq.then(function () {
         try {
           return orch.generateQuestions(plan, {
             legacyOutput: options.legacyOutput === true,
-            skipValidation: options.skipValidation
+            skipValidation: options.skipValidation,
+            seenKeys: globalSeenKeys
           });
         } catch (e) {
           failedPlans.push({ planId: plan.planId || plan.knowledgePointId, error: String(e && e.message || e) });
@@ -358,8 +361,8 @@
     return (G && typeof G.resolve === 'function') ? G.resolve(query || {}) : null;
   }
 
-  // ---------- 冻结公开 API ----------
-  var API = Object.freeze({
+  // ---------- 公开 API ----------
+  var API = {
     /**
      * 异步生成主入口
      * @param {GenerateRequest} request
@@ -389,7 +392,7 @@
      * @returns {Object} API
      */
     inject: inject
-  });
+  };
 
   // 兼容：挂载到全局 App.GenerationAPI (不覆盖 GenerationEngine)
   global.GenerationAPI = API;

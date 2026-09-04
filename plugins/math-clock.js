@@ -271,7 +271,7 @@
         });
       }
 
-      // 兼容旧类型（math-comprehensive 按知识库 type 调用 read/mix）
+      // 兼容旧类型（按知识库 type 调用 read/mix）
       var clockType = (type === 'clock' || type === 'mix') ? 'mix' : type;
       var list = generateProblems(clockType, count);
       var typeNames = { mix: '混合练习', read: '读钟面', point: '时针指向' };

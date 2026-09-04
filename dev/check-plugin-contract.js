@@ -136,18 +136,7 @@ function run() {
     } catch (e) {
       rec = { id: entry.id, subject: entry.subject, errors: ['契约检查异常: ' + e.message], warnings: [] };
     }
-    // 异步插件单独跑一次 generate 验证（带超时）
-    if (!rec.errors.length && entry.id === 'math-comprehensive') {
-      try {
-        const r = loader.loadPlugin(entry);
-        if (r.plugin) {
-          const pr = r.plugin.generate({ grade: 2, count: SMOKE_COUNT, difficulty: 3 });
-          if (pr && typeof pr.then === 'function') {
-            // 仅确认不立即 reject；完整异步结果在 Golden Path 覆盖
-          }
-        }
-      } catch (e) { rec.errors.push('综合插件 generate 异常: ' + e.message); }
-    }
+    // 异步插件冒烟（如需要）在此扩展
     rec.errors.forEach(function (m) { errors.push('[' + rec.id + '] ' + m); });
     rec.warnings.forEach(function (m) { warnings.push('[' + rec.id + '] ' + m); });
     perPlugin.push(rec);

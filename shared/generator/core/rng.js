@@ -31,6 +31,21 @@ function randInt(rng, min, max) {
   return min + Math.floor(rng() * (max - min + 1));
 }
 
+/**
+ * 随机整数但避开 exclude（用于防相邻重复：同一范围内不立即重出同一值）。
+ * exclude 为 null/undefined 时等价 randInt；范围内仅剩被排除值时回退 randInt。
+ */
+function randIntExcluding(rng, min, max, exclude) {
+  var v = randInt(rng, min, max);
+  if (exclude == null || v !== exclude) return v;
+  // 范围内还有可选值时重抽（有界退避，避免极端死循环）
+  for (var i = 0; i < 8; i++) {
+    v = randInt(rng, min, max);
+    if (v !== exclude) return v;
+  }
+  return v;
+}
+
 function pick(rng, arr) {
   if (!arr || arr.length === 0) return undefined;
   return arr[randInt(rng, 0, arr.length - 1)];
@@ -49,6 +64,7 @@ module.exports = {
   hashSeed: hashSeed,
   createSeededRandom: createSeededRandom,
   randInt: randInt,
+  randIntExcluding: randIntExcluding,
   pick: pick,
   shuffle: shuffle
 };

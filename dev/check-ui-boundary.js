@@ -44,7 +44,7 @@ function stripComments(src) {
 }
 
 var htmlPages = walkHtml(ROOT, []).filter(function (f) {
-  return f.indexOf('node_modules') === -1 && f.indexOf('dev/') === -1;
+  return f.indexOf('node_modules') === -1 && f.indexOf('dev/') === -1 && f.indexOf('audit-results/') === -1;
 });
 
 var pass = [];

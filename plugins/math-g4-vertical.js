@@ -9,7 +9,7 @@
  *   g4-m2-g4-v-dec     小数加减法竖式        （type: 'dec-vertical'）
  *
  * 提供标准 ExercisePlugin 接口（id/name/grades/subject/category/generate/render/check），
- * 供 practice.html / dev/plugin-check.html / math-comprehensive 使用。
+ * 供 practice.html / dev/plugin-check.html 使用。
  * 随机数统一使用 shared/common.js 的 PluginUtil。
  */
 // @ts-check

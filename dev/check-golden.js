@@ -34,7 +34,7 @@ const CASES = [
   { subject: 'math', grade: 1, pluginId: 'math-shapes', type: '', subtype: '', count: 5, difficulty: 3, expectSvg: true },
   { subject: 'math', grade: 2, pluginId: 'math-g2-column', type: '', subtype: '', count: 5, difficulty: 5, expectSvg: false },
   { subject: 'math', grade: 3, pluginId: 'math-fraction', type: '', subtype: '', count: 5, difficulty: 6, expectSvg: false },
-  { subject: 'math', grade: 2, pluginId: 'math-comprehensive', type: '', subtype: '', count: 8, difficulty: 4, expectSvg: null },
+  { subject: 'math', grade: 2, pluginId: 'math-g2-mixed', type: '', subtype: '', count: 8, difficulty: 4, expectSvg: false },
   { subject: 'chinese', grade: 1, pluginId: 'chinese-pinyin', type: '', subtype: '', count: 5, difficulty: 3, expectSvg: false }
 ];
 

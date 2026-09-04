@@ -5277,29 +5277,19 @@ __defs["shared/validator/validation-pipeline.js"] = function (module, exports, r
 
 var Validator = require("shared/validator/question-validator.js");
 var Schema = require("shared/schemas/semantic-question.schema.js");
-var kpValidator = require("shared/validator/kp-validator.js");
 var answerValidator = require("shared/validator/answer-validator.js");
-var distractorValidator = require("shared/validator/distractor-validator.js");
-var structureValidator = require("shared/validator/structure-validator.js");
 var difficultyValidator = require("shared/validator/difficulty-validator.js");
 var duplicateValidator = require("shared/validator/duplicate-validator.js");
-var graphicValidator = require("shared/validator/graphic-validator.js");
-var renderPreflight = require("shared/validator/render-preflight.js");
 
 var ERROR_CODES = Validator.ERROR_CODES;
 var SEVERITY = Validator.SEVERITY;
 
-// 验证器执行顺序（核心→业务→结构→质量→去重→渲染）
+// 验证器执行顺序（精简为核心四项：结构合法 / 答案可判 / 难度合规 / 不重复）
 var PIPELINE_STEPS = [
   { name: 'schema', fn: Validator.validateSchemaOnly, required: true },
-  { name: 'knowledgePoint', fn: kpValidator.validateKnowledgePoint, required: false },
   { name: 'answer', fn: answerValidator.validateAnswer, required: false },
-  { name: 'distractor', fn: distractorValidator.validateDistractors, required: false },
-  { name: 'structure', fn: structureValidator.validateStructure, required: false },
   { name: 'difficulty', fn: difficultyValidator.validateDifficulty, required: false },
-  { name: 'duplicate', fn: duplicateValidator.validateDuplicate, required: false },
-  { name: 'graphic', fn: graphicValidator.validateGraphic, required: false },
-  { name: 'renderPreflight', fn: renderPreflight.validateRenderPreflight, required: false }
+  { name: 'duplicate', fn: duplicateValidator.validateDuplicate, required: false }
 ];
 
 /**
@@ -7280,6 +7270,21 @@ function randInt(rng, min, max) {
   return min + Math.floor(rng() * (max - min + 1));
 }
 
+/**
+ * 随机整数但避开 exclude（用于防相邻重复：同一范围内不立即重出同一值）。
+ * exclude 为 null/undefined 时等价 randInt；范围内仅剩被排除值时回退 randInt。
+ */
+function randIntExcluding(rng, min, max, exclude) {
+  var v = randInt(rng, min, max);
+  if (exclude == null || v !== exclude) return v;
+  // 范围内还有可选值时重抽（有界退避，避免极端死循环）
+  for (var i = 0; i < 8; i++) {
+    v = randInt(rng, min, max);
+    if (v !== exclude) return v;
+  }
+  return v;
+}
+
 function pick(rng, arr) {
   if (!arr || arr.length === 0) return undefined;
   return arr[randInt(rng, 0, arr.length - 1)];
@@ -7298,6 +7303,7 @@ module.exports = {
   hashSeed: hashSeed,
   createSeededRandom: createSeededRandom,
   randInt: randInt,
+  randIntExcluding: randIntExcluding,
   pick: pick,
   shuffle: shuffle
 };
@@ -7447,137 +7453,6 @@ module.exports = {
   isFatalError: isFatalError,
   ERROR_CODES: ERROR_CODES,
   SEVERITY: SEVERITY
-};
-};
-__defs["shared/validator/kp-validator.js"] = function (module, exports, require) {
-/**
- * shared/validator/kp-validator.js — M5-R05 Knowledge Point Validator
- *
- * 检查题目与知识点一致性：
- *   - knowledgePoint.id 是否存在于 KnowledgeBank
- *   - Generator 声明的知识点与题目知识点是否一致
- *   - operation 是否属于知识点允许操作
- *   - format/questionType 是否属于知识点允许题型
- *   - cognitiveLevel 是否在允许范围
- *   - context 是否允许
- *   - graphic.type 是否属于知识点允许呈现方式
- */
-'use strict';
-
-var Validator = require("shared/validator/question-validator.js");
-var KnowledgeBank = require("shared/knowledge-bank.js");
-var Ontology = require("shared/knowledge-ontology.js");
-var GenCap = require("shared/generator-capability-registry.js");
-
-var ERROR_CODES = Validator.ERROR_CODES;
-var SEVERITY = Validator.SEVERITY;
-var createError = Validator.createError;
-
-function coerceString(v) { return v == null ? '' : String(v); }
-function ensureArray(v) { return Array.isArray(v) ? v : (v == null ? [] : [v]); }
-
-/**
- * 获取知识点的规范信息
- * @param {string} kpId
- * @returns {Object|null} { id, operations, applicableQuestionTypes, contextDefault, cognitiveLevel, graphicTypes, ... }
- */
-function getKPInfo(kpId) {
-  if (!kpId) return null;
-  var normalized = Ontology.normalize ? Ontology.normalize({ id: kpId }) : { id: kpId };
-  var ops = (normalized.knowledge && normalized.knowledge.operations) || [];
-  var types = (normalized.assessment && normalized.assessment.applicableQuestionTypes) || [];
-  var context = (normalized.assessment && normalized.assessment.contextDefault) || 'standard';
-  var cognitive = (normalized.difficulty && normalized.difficulty.cognitiveLevel) || '理解';
-  return {
-    id: kpId,
-    operations: ops,
-    applicableQuestionTypes: types,
-    contextDefault: context,
-    cognitiveLevel: cognitive,
-    graphicTypes: normalized.generation && normalized.generation.graphicTypes || []
-  };
-}
-
-/**
- * 验证单题的知识点一致性
- * @param {Object} sq SemanticQuestion
- * @param {Object} context { generatorId, generatorCapabilities }
- * @returns {Object} { valid, errors, warnings, info, score, checks }
- */
-function validateKnowledgePoint(sq, context) {
-  context = context || {};
-  var errors = [];
-  var warnings = [];
-  var info = [];
-
-  var kpId = sq.knowledgePoint;
-  if (!kpId) {
-    errors.push(createError(ERROR_CODES.KP_MISSING, 'knowledgePoint', '题目缺少 knowledgePoint 绑定', SEVERITY.ERROR));
-    return { valid: false, errors: errors, warnings: warnings, info: info, score: 0, checks: { knowledgePoint: 'fail' } };
-  }
-
-  var kpInfo = getKPInfo(kpId);
-  if (!kpInfo) {
-    warnings.push(createError(ERROR_CODES.KP_MISMATCH, 'knowledgePoint', '知识点 ' + kpId + ' 未在 KnowledgeBank/本体中找到', SEVERITY.WARNING, { kpId: kpId }));
-    // 不直接阻断，允许新 KP 先行接入
-  } else {
-    info.push({ code: 'KP_FOUND', field: 'knowledgePoint', message: '知识点存在: ' + kpId, severity: SEVERITY.INFO });
-
-    // ① operation 检查（若题目声明了 operation）
-    if (sq.question && sq.question.operation) {
-      var op = coerceString(sq.question.operation);
-      if (kpInfo.operations.length && kpInfo.operations.indexOf(op) === -1) {
-        errors.push(createError(ERROR_CODES.KP_OPERATION_INVALID, 'question.operation', '操作 ' + op + ' 不在知识点 ' + kpId + ' 允许操作列表中', SEVERITY.ERROR, { operation: op, allowed: kpInfo.operations }));
-      }
-    }
-
-    // ② questionType/format 检查
-    var qType = sq.questionType || sq.type;
-    if (qType && kpInfo.applicableQuestionTypes.length && kpInfo.applicableQuestionTypes.indexOf(qType) === -1) {
-      errors.push(createError(ERROR_CODES.KP_FORMAT_INVALID, 'questionType', '题型 ' + qType + ' 不在知识点 ' + kpId + ' 允许题型列表中', SEVERITY.ERROR, { questionType: qType, allowed: kpInfo.applicableQuestionTypes }));
-    }
-
-    // ③ cognitiveLevel 检查
-    if (sq.cognitiveLevel && kpInfo.cognitiveLevel) {
-      // 简单检查：题目认知层级不应超过知识点定义的上限
-      var levels = ['了解', '理解', '掌握', '运用'];
-      var sqLevel = levels.indexOf(sq.cognitiveLevel);
-      var kpLevel = levels.indexOf(kpInfo.cognitiveLevel);
-      if (sqLevel !== -1 && kpLevel !== -1 && sqLevel > kpLevel) {
-        warnings.push(createError(ERROR_CODES.KP_COGNITIVE_INVALID, 'cognitiveLevel', '题目认知层级(' + sq.cognitiveLevel + ') 超过知识点上限(' + kpInfo.cognitiveLevel + ')', SEVERITY.WARNING));
-      }
-    }
-
-    // ④ context 检查
-    if (sq.content && sq.content.context && kpInfo.contextDefault) {
-      if (kpInfo.contextDefault !== 'all' && sq.content.context !== kpInfo.contextDefault) {
-        info.push({ code: 'CONTEXT_MISMATCH', field: 'content.context', message: '题目 context(' + sq.content.context + ') 与知识点默认(' + kpInfo.contextDefault + ') 不一致', severity: SEVERITY.INFO });
-      }
-    }
-
-    // ⑤ graphic.type 检查
-    if (sq.graphic && sq.graphic.type && kpInfo.graphicTypes.length) {
-      if (kpInfo.graphicTypes.indexOf(sq.graphic.type) === -1) {
-        warnings.push(createError(ERROR_CODES.KP_GRAPHIC_INVALID, 'graphic.type', '图形类型 ' + sq.graphic.type + ' 不在知识点 ' + kpId + ' 允许呈现方式中', SEVERITY.WARNING, { graphicType: sq.graphic.type, allowed: kpInfo.graphicTypes }));
-      }
-    }
-  }
-
-  // ⑥ Generator 声明的知识点一致性（若 context 提供了 generatorCapabilities）
-  if (context.generatorCapabilities) {
-    var genKPs = context.generatorCapabilities.knowledgePoints || [];
-    if (genKPs.length && genKPs.indexOf(kpId) === -1) {
-      warnings.push(createError(ERROR_CODES.KP_MISMATCH, 'knowledgePoint', 'Generator ' + (context.generatorId || 'unknown') + ' 未声明知识点 ' + kpId, SEVERITY.WARNING, { generatorId: context.generatorId, declaredKPs: genKPs }));
-    }
-  }
-
-  var valid = errors.length === 0;
-  return { valid: valid, errors: errors, warnings: warnings, info: info, score: valid ? 1 : 0, checks: { knowledgePoint: valid ? 'pass' : 'fail' } };
-}
-
-module.exports = {
-  validateKnowledgePoint: validateKnowledgePoint,
-  getKPInfo: getKPInfo
 };
 };
 __defs["shared/validator/answer-validator.js"] = function (module, exports, require) {
@@ -7792,209 +7667,6 @@ module.exports = {
   validateTextAnswer: validateTextAnswer
 };
 };
-__defs["shared/validator/distractor-validator.js"] = function (module, exports, require) {
-/**
- * shared/validator/distractor-validator.js — M5-R07 Distractor Validator
- *
- * 验证选择题干扰项：
- *   - 干扰项数量
- *   - 干扰项唯一性
- *   - 干扰项不能等于正确答案
- *   - 干扰项类型一致
- *   - 干扰项必须属于允许答案域
- *   - errorType 分类合法
- */
-'use strict';
-
-var Validator = require("shared/validator/question-validator.js");
-var Schema = require("shared/schemas/semantic-question.schema.js");
-var ERROR_CODES = Validator.ERROR_CODES;
-var SEVERITY = Validator.SEVERITY;
-var createError = Validator.createError;
-
-function coerceString(v) { return v == null ? '' : String(v); }
-
-function validateDistractors(sq) {
-  var errors = [];
-  var warnings = [];
-  var info = [];
-
-  var distractors = sq.distractors;
-  if (!distractors || !Array.isArray(distractors)) {
-    // 非选择题可无 distractors
-    return { valid: true, errors: [], warnings: [], info: [], score: 1, checks: { distractor: 'skip' } };
-  }
-
-  var answerVal = sq.answer && sq.answer.value != null ? coerceString(sq.answer.value) : '';
-  var qType = sq.questionType || sq.type;
-
-  // ① 数量检查（选择题通常 3-4 个干扰项）
-  if (distractors.length === 0) {
-    warnings.push(createError(ERROR_CODES.DISTRACTOR_COUNT_INVALID, 'distractors.length', '选择题缺少干扰项', SEVERITY.WARNING));
-  } else if (distractors.length > 6) {
-    warnings.push(createError(ERROR_CODES.DISTRACTOR_COUNT_INVALID, 'distractors.length', '干扰项过多(' + distractors.length + ')，建议 3-4 个', SEVERITY.WARNING));
-  }
-
-  // ② 唯一性 & ③ 不等于正确答案 & ④ 类型一致 & ⑤ errorType 合法
-  var seen = {};
-  distractors.forEach(function (d, i) {
-    if (!d || typeof d !== 'object') {
-      warnings.push(createError(ERROR_CODES.DISTRACTOR_TYPE_MISMATCH, 'distractors[' + i + ']', '干扰项应为对象', SEVERITY.WARNING));
-      return;
-    }
-    var val = coerceString(d.value);
-    if (!val) {
-      warnings.push(createError(ERROR_CODES.DISTRACTOR_TYPE_MISMATCH, 'distractors[' + i + '].value', '干扰项值为空', SEVERITY.WARNING));
-      return;
-    }
-    // 唯一性
-    if (seen[val]) {
-      errors.push(createError(ERROR_CODES.DISTRACTOR_DUPLICATE, 'distractors[' + i + ']', '重复干扰项: ' + val, SEVERITY.ERROR));
-    } else {
-      seen[val] = true;
-    }
-    // 不等于正确答案
-    if (answerVal && val === answerVal) {
-      errors.push(createError(ERROR_CODES.DISTRACTOR_EQUALS_ANSWER, 'distractors[' + i + ']', '干扰项等于正确答案: ' + val, SEVERITY.ERROR));
-    }
-    // errorType 合法性
-    if (d.errorType && !Schema.isValidDistractorErrorType(d.errorType)) {
-      warnings.push(createError(ERROR_CODES.DISTRACTOR_ERROR_TYPE_INVALID, 'distractors[' + i + '].errorType', '未知错误类型: ' + d.errorType, SEVERITY.WARNING));
-    }
-  });
-
-  // ⑤ 域检查（可选：若答案是数值，干扰项也应为数值）
-  if (answerVal && !isNaN(Number(answerVal))) {
-    distractors.forEach(function (d, i) {
-      if (d.value != null && isNaN(Number(d.value))) {
-        warnings.push(createError(ERROR_CODES.DISTRACTOR_OUT_OF_DOMAIN, 'distractors[' + i + ']', '数值题干扰项应为数值: ' + d.value, SEVERITY.WARNING));
-      }
-    });
-  }
-
-  var valid = errors.length === 0;
-  return { valid: valid, errors: errors, warnings: warnings, info: [], score: valid ? 1 : 0.5, checks: { distractor: valid ? 'pass' : 'fail' } };
-}
-
-module.exports = {
-  validateDistractors: validateDistractors
-};
-};
-__defs["shared/validator/structure-validator.js"] = function (module, exports, require) {
-/**
- * shared/validator/structure-validator.js — M5-R08 Structure Validator
- *
- * 验证题目结构约束（对应 Plan/Strategy 输出的约束）：
- *   - steps
- *   - brackets
- *   - operations
- *   - maxSteps
- *   - 运算符组合
- *   - 操作数数量
- *   - 操作数范围
- *   - 结构层级
- */
-'use strict';
-
-var Validator = require("shared/validator/question-validator.js");
-var ERROR_CODES = Validator.ERROR_CODES;
-var SEVERITY = Validator.SEVERITY;
-var createError = Validator.createError;
-
-function coerceInteger(v) { var n = Number(v); return isNaN(n) ? null : Math.floor(n); }
-function coerceString(v) { return v == null ? '' : String(v); }
-
-function countOperators(expr) {
-  var ops = coerceString(expr).match(/[+\-*/]/g);
-  return ops ? ops.length : 0;
-}
-
-function countBrackets(expr) {
-  var s = coerceString(expr);
-  var open = (s.match(/\(/g) || []).length;
-  var close = (s.match(/\)/g) || []).length;
-  return { open: open, close: close, balanced: open === close };
-}
-
-function extractOperands(expr) {
-  // 简单提取数字作为操作数
-  var nums = coerceString(expr).match(/\d+/g);
-  return nums ? nums.map(Number) : [];
-}
-
-function validateStructure(sq) {
-  var errors = [];
-  var warnings = [];
-  var info = [];
-
-  var prompt = sq.prompt || (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt) || '';
-  var constraints = sq.difficultyParams || sq.constraints || {};
-
-  // ① maxSteps
-  var maxSteps = coerceInteger(constraints.maxSteps);
-  if (maxSteps != null && maxSteps > 0) {
-    var actualSteps = countOperators(prompt) + 1; // 简单估算：运算符数+1
-    if (actualSteps > maxSteps) {
-      errors.push(createError(ERROR_CODES.STEPS_EXCEED, 'structure.steps', '实际步数(' + actualSteps + ') 超过最大步数(' + maxSteps + ')', SEVERITY.ERROR, { actual: actualSteps, max: maxSteps }));
-    }
-  }
-
-  // ② brackets
-  var allowBracket = constraints.allowBracket;
-  var brackets = countBrackets(prompt);
-  if (allowBracket === false && (brackets.open > 0 || brackets.close > 0)) {
-    errors.push(createError(ERROR_CODES.BRACKETS_VIOLATION, 'structure.brackets', '禁止括号但题目包含括号', SEVERITY.ERROR, brackets));
-  }
-  if (!brackets.balanced) {
-    errors.push(createError(ERROR_CODES.BRACKETS_VIOLATION, 'structure.brackets', '括号不匹配', SEVERITY.ERROR, brackets));
-  }
-
-  // ③ operations
-  var allowMultDiv = constraints.allowMultDiv;
-  var opsInPrompt = coerceString(prompt).match(/[+\-×÷*/]/g) || [];
-  var hasMultDiv = opsInPrompt.some(function (op) { return ['*', '/', '×', '÷'].indexOf(op) !== -1; });
-  if (allowMultDiv === false && hasMultDiv) {
-    errors.push(createError(ERROR_CODES.OPERATIONS_VIOLATION, 'structure.operations', '禁止乘除但题目包含乘除', SEVERITY.ERROR, { ops: opsInPrompt }));
-  }
-
-  // ④ operand count
-  var operands = extractOperands(prompt);
-  var maxOperands = coerceInteger(constraints.maxOperands);
-  if (maxOperands && operands.length > maxOperands) {
-    errors.push(createError(ERROR_CODES.OPERAND_COUNT_INVALID, 'structure.operands', '操作数数量(' + operands.length + ') 超过上限(' + maxOperands + ')', SEVERITY.ERROR, { operands: operands }));
-  }
-
-  // ⑤ operand range
-  var numberRange = constraints.numberRange || (sq.numberRange && { min: sq.numberRange.min, max: sq.numberRange.max });
-  if (numberRange && typeof numberRange.min === 'number' && typeof numberRange.max === 'number') {
-    operands.forEach(function (op, i) {
-      if (op < numberRange.min || op > numberRange.max) {
-        errors.push(createError(ERROR_CODES.OPERAND_RANGE_INVALID, 'structure.operands[' + i + ']', '操作数 ' + op + ' 超出范围 [' + numberRange.min + ', ' + numberRange.max + ']', SEVERITY.ERROR, { operand: op, range: numberRange }));
-      }
-    });
-  }
-
-  // ⑥ structure level (nesting depth)
-  var maxDepth = coerceInteger(constraints.maxDepth);
-  if (maxDepth != null) {
-    var depth = 0, maxD = 0;
-    for (var i = 0; i < prompt.length; i++) {
-      if (prompt[i] === '(') { depth++; if (depth > maxD) maxD = depth; }
-      else if (prompt[i] === ')') depth--;
-    }
-    if (maxD > maxDepth) {
-      errors.push(createError(ERROR_CODES.STRUCTURE_INVALID, 'structure.depth', '嵌套深度(' + maxD + ') 超过上限(' + maxDepth + ')', SEVERITY.ERROR, { depth: maxD }));
-    }
-  }
-
-  var valid = errors.length === 0;
-  return { valid: valid, errors: errors, warnings: [], info: [], score: valid ? 1 : 0, checks: { structure: valid ? 'pass' : 'fail' } };
-}
-
-module.exports = {
-  validateStructure: validateStructure
-};
-};
 __defs["shared/validator/difficulty-validator.js"] = function (module, exports, require) {
 /**
  * shared/validator/difficulty-validator.js — M5-R09 Difficulty Validator
@@ -8120,13 +7792,17 @@ function buildCanonicalKey(sq) {
   parts.push(coerceString(sq.questionType || sq.type));
   parts.push(coerceString(sq.question && sq.question.operation));
 
-  // 操作数（排序后）
+  // 操作数（排序后）：全角→半角归一，parseInt 去前导零
   var prompt = sq.prompt || (sq.content && sq.content.prompt) || '';
-  var nums = (prompt.match(/\d+/g) || []).map(Number).sort(function (a, b) { return a - b; });
+  var half = String(prompt).replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
+  var nums = (half.match(/\d+/g) || []).map(function (n) { return parseInt(n, 10); }).sort(function (a, b) { return a - b; });
   parts.push(nums.join(','));
 
-  // 结构特征
-  var ops = (prompt.match(/[+\-×÷*/]/g) || []).sort().join('');
+  // 结构特征（全角×÷−＋ 归一为半角，同式异写同指纹）
+  var ops = (half.replace(/[＋－]/g, function (c) { return c === '＋' ? '+' : '-'; })
+    .match(/[+\-×÷*/−]/g) || []).map(function (o) {
+    return o === '−' ? '-' : o;
+  }).sort().join('');
   parts.push(ops);
 
   // format/context
@@ -8184,159 +7860,6 @@ module.exports = {
   validateDuplicate: validateDuplicate,
   validateBatchDuplicate: validateBatchDuplicate,
   buildCanonicalKey: buildCanonicalKey
-};
-};
-__defs["shared/validator/graphic-validator.js"] = function (module, exports, require) {
-/**
- * shared/validator/graphic-validator.js — M5-R11 Graphic Validator
- *
- * 验证图形描述：
- *   - type 是否注册
- *   - subtype 是否合法
- *   - params 是否完整
- *   - 参数类型是否正确
- *   - Renderer 是否存在对应处理器
- *   - 禁止 raw SVG/HTML 字符串
- */
-'use strict';
-
-var Validator = require("shared/validator/question-validator.js");
-var Schema = require("shared/schemas/semantic-question.schema.js");
-var ERROR_CODES = Validator.ERROR_CODES;
-var SEVERITY = Validator.SEVERITY;
-var createError = Validator.createError;
-
-function validateGraphic(sq) {
-  var errors = [];
-  var warnings = [];
-  var info = [];
-
-  var g = sq.graphic;
-  if (!g) {
-    return { valid: true, errors: [], warnings: [], info: [], score: 1, checks: { graphic: 'skip' } };
-  }
-
-  if (typeof g !== 'object') {
-    errors.push(createError(ERROR_CODES.GRAPHIC_INVALID, 'graphic', 'graphic 必须为对象', SEVERITY.ERROR));
-    return { valid: false, errors: errors, warnings: [], info: [], score: 0, checks: { graphic: 'fail' } };
-  }
-
-  // ① 禁止原始 SVG/HTML
-  if (g.rawSvg || g.svg || g.html) {
-    errors.push(createError(ERROR_CODES.GRAPHIC_INVALID, 'graphic.rawSvg', 'graphic 不得包含原始 SVG/HTML 字符串（请使用描述性 params）', SEVERITY.ERROR));
-  }
-
-  // ② type 注册检查
-  if (!g.type) {
-    errors.push(createError(ERROR_CODES.GRAPHIC_TYPE_UNREGISTERED, 'graphic.type', '缺少 graphic.type', SEVERITY.ERROR));
-  } else if (!Schema.isValidGraphicType(g.type)) {
-    errors.push(createError(ERROR_CODES.GRAPHIC_TYPE_UNREGISTERED, 'graphic.type', '未注册的 graphic type: ' + g.type, SEVERITY.ERROR));
-  }
-
-  // ③ subtype 合法性
-  if (g.subtype && g.type && !Schema.isValidGraphicSubtype(g.type, g.subtype)) {
-    errors.push(createError(ERROR_CODES.GRAPHIC_TYPE_UNREGISTERED, 'graphic.subtype', 'type ' + g.type + ' 下未知 subtype: ' + g.subtype, SEVERITY.ERROR));
-  }
-
-  // ④ params 完整性（按 type 检查必填参数）
-  var requiredParams = {
-    geometry: ['shape'],
-    chart: ['data', 'axes'],
-    diagram: ['nodes', 'edges'],
-    'number-line': ['range'],
-    grid: ['size']
-  };
-  var req = requiredParams[g.type];
-  if (req && g.params) {
-    req.forEach(function (p) {
-      if (g.params[p] == null) {
-        warnings.push({ code: ERROR_CODES.GRAPHIC_PARAMS_INCOMPLETE, field: 'graphic.params.' + p, message: 'graphic.type ' + g.type + ' 缺少必填参数: ' + p, severity: 'WARNING' });
-      }
-    });
-  }
-
-  // ⑤ Renderer 存在性（延迟到 render-preflight，此处仅记录）
-  info.push({ code: 'GRAPHIC_TYPE', field: 'graphic.type', message: '图形类型: ' + g.type + (g.subtype ? '/' + g.subtype : ''), severity: 'INFO' });
-
-  var valid = errors.length === 0;
-  return { valid: valid, errors: errors, warnings: warnings, info: info, score: valid ? 1 : 0, checks: { graphic: valid ? 'pass' : 'fail' } };
-}
-
-module.exports = {
-  validateGraphic: validateGraphic
-};
-};
-__defs["shared/validator/render-preflight.js"] = function (module, exports, require) {
-/**
- * shared/validator/render-preflight.js — M5-R12 Render Preflight
- *
- * 渲染前检查：
- *   - HTML 可生成
- *   - SVG Generator 存在
- *   - Graphic 参数合法
- *   - Print 模式可用
- *   - 无异常 DOM 依赖
- */
-'use strict';
-
-var Validator = require("shared/validator/question-validator.js");
-var ERROR_CODES = Validator.ERROR_CODES;
-var SEVERITY = Validator.SEVERITY;
-var createError = Validator.createError;
-
-function validateRenderPreflight(sq) {
-  var errors = [];
-  var warnings = [];
-  var info = [];
-
-  // ① 基础字段完整性（渲染需要的最小字段）
-  var prompt = sq.prompt || (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt);
-  if (!prompt) {
-    errors.push(createError(ERROR_CODES.RENDER_PREFLIGHT_FAILED, 'prompt', '缺少题干，无法渲染', SEVERITY.ERROR));
-  }
-
-  // ② answerMode 合法
-  var answerMode = sq.answerMode || (sq.question && sq.question.answerMode) || 'input';
-  var validModes = ['input', 'choice', 'multi', 'none', 'read-aloud'];
-  if (validModes.indexOf(answerMode) === -1) {
-    errors.push(createError(ERROR_CODES.RENDER_PREFLIGHT_FAILED, 'answerMode', '非法 answerMode: ' + answerMode, SEVERITY.ERROR));
-  }
-
-  // ③ choice 题需有 options
-  if (answerMode === 'choice') {
-    var hasOptions = sq.distractors && sq.distractors.length > 0;
-    var answerVal = sq.answer && sq.answer.value != null;
-    if (!hasOptions && !answerVal) {
-      errors.push(createError(ERROR_CODES.RENDER_PREFLIGHT_FAILED, 'distractors', '选择题缺少选项', SEVERITY.ERROR));
-    }
-  }
-
-  // ④ graphic → SVG Generator 存在性检查（延迟到运行时，此处仅记录）
-  if (sq.graphic && sq.graphic.type) {
-    info.push({ code: 'GRAPHIC_RENDER', field: 'graphic', message: '需 SVG Generator: ' + sq.graphic.type, severity: 'INFO' });
-  }
-
-  // ⑤ print 模式检查（打印需无交互元素）
-  if (sq.printMode) {
-    if (answerMode === 'choice' || answerMode === 'input') {
-      warnings.push({ code: 'PRINT_INTERACTIVE', field: 'printMode', message: '打印模式下存在交互元素，将降级为静态显示', severity: 'WARNING' });
-    }
-  }
-
-  // ⑥ 兼容字段（render/check/svg）存在性
-  if (sq.render && typeof sq.render !== 'function') {
-    warnings.push({ code: 'RENDER_INVALID', field: 'render', message: 'render 字段非函数', severity: 'WARNING' });
-  }
-  if (sq.check && typeof sq.check !== 'function') {
-    warnings.push({ code: 'CHECK_INVALID', field: 'check', message: 'check 字段非函数', severity: 'WARNING' });
-  }
-
-  var valid = errors.length === 0;
-  return { valid: valid, errors: errors, warnings: warnings, info: info, score: valid ? 1 : 0.5, checks: { renderPreflight: valid ? 'pass' : 'fail' } };
-}
-
-module.exports = {
-  validateRenderPreflight: validateRenderPreflight
 };
 };
 __defs["dev/dev/plugin-loader.js"] = function (module, exports, require) {

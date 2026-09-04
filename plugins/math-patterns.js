@@ -177,7 +177,8 @@
           data: p,
           q: fullQ,
           answer: String(p.answer),
-          knowledgePointId: 'math-g2-m4-number-pattern',
+          // 知识库登记：G2「数字规律」由本插件承接；G1 无对应规律知识点 → 不标注（保持纯插件级统计）
+          knowledgePointId: (opts.grade === 2) ? 'math-g2-m4-number-pattern' : undefined,
           hint: p.kind === 'number' ? '先找相邻两个数相差几，再看下一个数。' : '图形是按照一定顺序重复出现的，先找出循环的一组。',
           render: function (idx) { return renderCard(this.data, idx); },
           check: function (userAnswers, idx) { return checkQuestion(this, userAnswers, idx); }

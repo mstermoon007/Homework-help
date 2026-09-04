@@ -1,32 +1,34 @@
 /**
- * shared/generation-engine.js — M7-R08/R15 Generation Engine（统一生成最终入口）
+ * shared/generation-engine.js — 生成层引擎（统一生成最终入口，M7-R08 主链精简版）
  *
- * 主链（R08）：
+ * 主链（R08 精简）：
  *   用户输入 → GenerationRequest → GenerationEngine.generate(request)
- *     → QuestionPlan[]（单点：StrategyEngine 决策；综合：ComprehensiveStrategy）
- *     → Generator / Retry / Validator（M5 管线，Regenerate 内建）
+ *     → QuestionPlan[]（StrategyEngine 决策：题型白名单∩能力、复杂度档、固定样式/SVG 模板）
+ *     → Generator / Retry / Validator（核心四项：schema / answer / difficulty / duplicate）
  *     → SemanticQuestion[]
  *     → PresentationRenderer.renderAll(questions, renderOptions) → RenderResult[] + HTML
  *
- * 内部构成（R15，唯一公开入口 App.GenerationEngine.generate）：
+ * 内部构成：
  *   GenerationEngine
  *    ├── KnowledgeResolver    → shared/generator-registry.js（capability 解析，不知具体插件）
- *    ├── StrategyEngine       → shared/strategy/strategy-engine.js（capability 语义规划）
+ *    ├── StrategyEngine       → shared/strategy/strategy-engine.js（capability 语义规划 + style/complexity）
  *    ├── QuestionPlanner      → shared/strategy/comprehensive-strategy.js（综合分配/混排）
  *    ├── GeneratorRegistry    → shared/generator-registry.js / generator/generator-registry.js
- *    ├── Validator            → shared/validator/validation-pipeline.js（Retry/Regenerate 内建）
+ *    ├── Validator            → shared/validator/validation-pipeline.js（核心四项，Retry/Regenerate 内建）
  *    └── SemanticQuestionNormalizer → shared/semantic-question.js（工厂规范化）
  *   Legacy 旧插件路径（R18，唯一边界）：
  *    GenerationEngine.generateLegacy → shared/legacy/plugin-adapter.js → 旧 Plugin
  *
  * API：
- *   GenerationEngine.build(request)              → { plans, trace }（只规划不生成）
+ *   GenerationEngine.build(request)              → { plans, trace }（只规划不生成；multi-kp 支持配额）
  *   GenerationEngine.generate(request, options) → Promise<{ questions, html, items, plans, trace, renderOptions }>
  *   GenerationEngine.generateLegacy(options)    → Promise<{ set, source:'legacy' }>（旧插件路径）
  *   GenerationEngine.render(questions, options) → { items, html, renderOptions }
  *   GenerationEngine.renderLegacySet(set, pluginId) → html（旧题组渲染桥）
  *   GenerationEngine.resolveGenerator(query)    → GeneratorRegistry.resolve（capability → 记录）
  *   GenerationEngine.pipeline                   → 内部构成说明（只读元数据）
+ *   GenerationEngine.rng                        → 数字随机统一入口（randInt / randIntExcluding 防相邻重复）
+ *   GenerationEngine.canonicalKey               → 语义去重指纹（同式异写判重，供生成前预判）
  *
  * 规则：
  *   - 单点生成（有 knowledgePointId）→ StrategyEngine.plan 单计划；
@@ -194,6 +196,8 @@
     }
     // 回退：原内联实现（兼容性）
     options = options || {};
+    // 生成层引擎统一去重：跨 plan 共享指纹集（与 api.js runPlans 一致）
+    if (!options.seenKeys) options.seenKeys = new Set();
     var RO = getRenderOptions();
     var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop', density: 'normal' };
     var PE = getPresentationEngine();
@@ -263,7 +267,8 @@
         try {
           return PE.generateQuestions(plan, {
             legacyOutput: options.legacyOutput === true,
-            skipValidation: options.skipValidation
+            skipValidation: options.skipValidation,
+            seenKeys: options.seenKeys || null
           });
         } catch (e) {
           failedPlans.push({ planId: plan.planId || plan.knowledgePointId, error: String(e && e.message || e) });
@@ -411,7 +416,19 @@
     generateLegacy: generateLegacy,
     renderLegacySet: renderLegacySet,
     pipeline: PIPELINE,
-    assertGenerationBoundary: assertGenerationBoundary
+    assertGenerationBoundary: assertGenerationBoundary,
+    // 生成层引擎统一管理数字随机（可复现种子 PRNG + 防相邻重复）与去重指纹：
+    rng: (function () {
+      var R = (isBrowser && global.RNG) ? global.RNG
+        : (typeof require === 'function' ? require('./generator/core/rng.js') : null);
+      return R ? { randInt: R.randInt, randIntExcluding: R.randIntExcluding, pick: R.pick, shuffle: R.shuffle, hashSeed: R.hashSeed, createSeededRandom: R.createSeededRandom } : null;
+    })(),
+    // 语义级去重指纹（同式异写算重复）：供生成器/引擎在抽题前预判
+    canonicalKey: (function () {
+      var D = (isBrowser && global.DuplicateValidator) ? global.DuplicateValidator
+        : (typeof require === 'function' ? require('./validator/duplicate-validator.js') : null);
+      return D && typeof D.buildCanonicalKey === 'function' ? D.buildCanonicalKey : null;
+    })()
   };
 
   global.GenerationEngine = API;

@@ -2,7 +2,7 @@
  * 标准题目对象（Question）
  *
  * 所有插件 generate() 产出的题目都必须符合本结构，
- * 使综合插件（math-comprehensive）及其他容器能以统一方式
+ * 使综合/容器类生成器能以统一方式
  * 处理任意题型（调用 q.render(idx) 渲染、q.check(...) 判定、q.answer 取标准答案）。
  *
  * @typedef {Object} Question

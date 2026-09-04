@@ -108,7 +108,7 @@ var DETECTORS = {
 };
 
 // ---------- 插件清单（有 KP 绑定、非占位、非 facade） ----------
-var FACADE = { 'math-comprehensive': 1, 'math-g1-patterns': 1 };
+var FACADE = { 'math-g1-patterns': 1 };
 
 function buildScope() {
   var recs = GenCap.buildGeneratorCapabilityRegistry();

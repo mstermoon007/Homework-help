@@ -23,7 +23,6 @@ function assert(cond, msg) {
 }
 
 function loadPlugin(rec) {
-  if (rec.id === 'math-comprehensive') return Promise.resolve(null);
   return Promise.resolve(require(path.join(ROOT, rec.file)));
 }
 
@@ -35,6 +34,12 @@ function effInputType(q) {
   var d = q.data || {};
   return q.inputType != null ? q.inputType : d.inputType;
 }
+function checkAnswer(q, amap, idx) {
+  var input = amap[idx];
+  var r = common.computeResult([q], { 0: input });
+  return r && Array.isArray(r.results) && r.results[0] === true;
+}
+
 function answersFor(questions) {
   var map = {};
   questions.forEach(function (q, idx) {
@@ -106,15 +111,16 @@ function dedupe(questions) {
   questions.forEach(function (q) {
     var d = q.data || {};
     var detail = JSON.stringify(d);
-    // 题干兼容两种字段：question（标准）与 q（口算/配对等简式插件）
-    var k = (q.__src ? q.__src.id + ':' : q.type + ':') + q.kind + '|' + (q.question || q.q || '') + '|' + detail + '|' + q.answer;
+    // 题干兼容三种字段：question（标准）、q（口算/配对等简式插件）、prompt（SemanticQuestion 新轨）
+    var ans = q.answer && typeof q.answer === 'object' ? JSON.stringify(q.answer) : q.answer;
+    var k = (q.__src ? q.__src.id + ':' : (q.type || '') + ':') + (q.kind || '') + '|' + (q.question || q.q || q.prompt || '') + '|' + detail + '|' + ans;
     if (keys[k]) dups++; else keys[k] = 1;
   });
   return dups;
 }
 
 var mathPlugins = registry.filter(function (r) {
-  return r.id.indexOf('math-') === 0 && r.id !== 'math-comprehensive';
+  return r.id.indexOf('math-') === 0;
 });
 
 var promises = [];
@@ -202,26 +208,36 @@ mathPlugins.forEach(function (rec) {
 });
 
 Promise.all(promises).then(function () {
-  console.log('\n===== math-comprehensive 难度透传 =====');
+  console.log('\n===== 综合练习（comprehensive 新轨）难度透传 =====');
   return new Promise(function (resolve) {
-    // 综合练习依赖 Generator Runtime（M4-19），须经 dev/plugin-loader 在浏览器等效
-    // 沙箱内装配 strategy-engine.bundle.js，而非裸 require（否则报「当前年级无可用的已实现题型」）。
-    var comp = require(path.join(ROOT, 'dev/plugin-loader.js')).loadPlugin('math-comprehensive').plugin;
-    comp.generate({ grade: 1, count: 20, type: 'average', difficulty: 8 }).then(function (set) {
-      assert(set.questions.length > 0, 'comprehensive diff=8 生成 ' + set.questions.length + ' 题');
-      var dup = dedupe(set.questions);
-      // 小题池年级存在随机碰撞：沿用全仓容忍线 min(max(2,20%),12)，仅拦系统性重复
-      var dupTol = Math.min(Math.max(2, Math.ceil(set.questions.length * 0.2)), 12);
-      assert(dup <= dupTol, 'comprehensive 混合重复 ≤ 容忍线 ' + dupTol + '（实际 ' + dup + '）');
-      var hasSrc = set.questions.filter(function (q) { return q.__src; }).length;
-      assert(hasSrc === set.questions.length, '全部题目带 __src 来源');
-      var amap = answersFor(set.questions);
-      set.questions.forEach(function (q, idx) {
-        var ok = q.check(amap, idx);
-        assert(ok === true, 'comp #' + idx + ' 正确答案判定');
-      });
-      resolve();
-    }).catch(function (e) { fail++; console.log('  FAIL: comprehensive 生成异常: ' + e.message); resolve(); });
+    // 综合练习经生成层 ComprehensiveStrategy：装配 strategy-engine.bundle + generation-engine。
+    require(path.join(ROOT, 'shared/difficulty-static.js'));
+    require(path.join(ROOT, 'shared/knowledge-bank.js'));
+    require(path.join(ROOT, 'plugins/registry.js'));
+    require(path.join(ROOT, 'shared/strategy-engine.bundle.js'));
+    require(path.join(ROOT, 'shared/presentation-engine.bundle.js'));
+    require(path.join(ROOT, 'shared/presentation/render-options.js'));
+    require(path.join(ROOT, 'shared/presentation/render-result.js'));
+    require(path.join(ROOT, 'shared/presentation/legacy-svg-adapter.js'));
+    require(path.join(ROOT, 'shared/presentation/svg-registry.js'));
+    require(path.join(ROOT, 'shared/presentation/html-renderer.js'));
+    require(path.join(ROOT, 'shared/presentation/renderer.js'));
+    require(path.join(ROOT, 'shared/generation-engine.js'));
+    require(path.join(ROOT, 'shared/strategy/comprehensive-strategy.js'));
+    var Engine = require(path.join(ROOT, 'shared/generation-engine.js'));
+    Engine.generate({ subject: 'math', grade: 1, count: 20, mode: 'comprehensive', difficulty: 8 })
+      .then(function (res) {
+        var set = { questions: res.questions || [] };
+        assert(set.questions.length > 0, 'comprehensive diff=8 生成 ' + set.questions.length + ' 题');
+        var dup = dedupe(set.questions);
+        // 小题池年级存在随机碰撞：沿用全仓容忍线 min(max(2,20%),12)，仅拦系统性重复
+        var dupTol = Math.min(Math.max(2, Math.ceil(set.questions.length * 0.2)), 12);
+        assert(dup <= dupTol, 'comprehensive 混合重复 ≤ 容忍线 ' + dupTol + '（实际 ' + dup + '）');
+        var amap = answersFor(set.questions);
+        var okAll = set.questions.every(function (q, idx) { return checkAnswer(q, amap, idx); });
+        assert(okAll, 'comp 全部正确答案判定');
+        resolve();
+      }).catch(function (e) { fail++; console.log('  FAIL: comprehensive 生成异常: ' + e.message); resolve(); });
   });
 }).then(function () {
   console.log('\n===== 难度工具单元测试 =====');
@@ -336,7 +352,6 @@ Promise.all(promises).then(function () {
     { id: 'math-picture-equations', grades: [1] },
     { id: 'math-number-sense',      grades: [1, 2, 3] },
     { id: 'math-money',             grades: [1] },
-    { id: 'math-statistics',        grades: [1] },
     { id: 'math-area',              grades: [3] },
     { id: 'math-decimal',           grades: [3] },
     { id: 'math-fraction',          grades: [3] },

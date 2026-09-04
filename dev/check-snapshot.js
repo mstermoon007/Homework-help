@@ -33,7 +33,7 @@ const SNAP_CASES = [
   { subject: 'math', grade: 1, pluginId: 'math-shapes', type: '', difficulty: 3, count: 5 },
   { subject: 'math', grade: 2, pluginId: 'math-g2-column', type: '', difficulty: 5, count: 6 },
   { subject: 'math', grade: 3, pluginId: 'math-fraction', type: '', difficulty: 6, count: 5 },
-  { subject: 'math', grade: 2, pluginId: 'math-comprehensive', type: '', difficulty: 4, count: 10 },
+  { subject: 'math', grade: 2, pluginId: 'math-g2-mixed', type: '', difficulty: 4, count: 10 },
   { subject: 'chinese', grade: 1, pluginId: 'chinese-pinyin', type: '', difficulty: 3, count: 5 }
 ];
 

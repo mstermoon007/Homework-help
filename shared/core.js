@@ -28,7 +28,6 @@
     mathWord:   'practice.html?plugin=math-word-problems',
     mathMakeTen: 'practice.html?plugin=math-make-ten',
     mathShapes: 'practice.html?plugin=math-shapes',
-    mathComprehensive: 'practice.html?plugin=math-comprehensive',
     pinyinPractice: 'practice.html?plugin=chinese-pinyin',
     pinyinToChar: 'practice.html?plugin=pinyin-to-char',
     comprehensive: 'practice.html?plugin=chinese-comprehensive',

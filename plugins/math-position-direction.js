@@ -7,7 +7,7 @@
  *   turn    —— 方向旋转：面向东，向右转90°面向哪？（choice）
  *
  * 提供 ExercisePlugin 接口（id/name/grades/subject/category/generate/render/check），
- * 供 practice.html / dev/plugin-check.html / math-comprehensive 使用。
+ * 供 practice.html / dev/plugin-check.html 使用。
  * 随机数统一使用 shared/common.js 的 PluginUtil。
  */
 // @ts-check

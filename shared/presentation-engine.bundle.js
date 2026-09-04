@@ -103,7 +103,7 @@ function generateQuestions(plan, options) {
       generatorVersion: selection.record.version || '1.0.0',
       maxRetries: ff.getMaxRetries(),
       validatorEnabled: !skipValidation,
-      validatorContext: { generatorId: selection.record.id }
+      validatorContext: { generatorId: selection.record.id, seenKeys: options.seenKeys || null }
     }
   );
 
@@ -137,7 +137,7 @@ function generateQuestions(plan, options) {
     var batchResult = { valid: true, errors: [] };
     var validationResults = [];
     if (!skipValidation) {
-      var valContext = { generatorId: selection.record.id, seed: plan.seed, planId: plan.planId };
+      var valContext = { generatorId: selection.record.id, seed: plan.seed, planId: plan.planId, seenKeys: options.seenKeys || null };
       validationResults = Pipeline.runPipelineBatch(semanticQuestions, valContext);
       batchResult = BatchValidator.validateBatch(semanticQuestions, plan);
 

@@ -23,13 +23,17 @@ function buildCanonicalKey(sq) {
   parts.push(coerceString(sq.questionType || sq.type));
   parts.push(coerceString(sq.question && sq.question.operation));
 
-  // 操作数（排序后）
+  // 操作数（排序后）：全角→半角归一，parseInt 去前导零
   var prompt = sq.prompt || (sq.content && sq.content.prompt) || '';
-  var nums = (prompt.match(/\d+/g) || []).map(Number).sort(function (a, b) { return a - b; });
+  var half = String(prompt).replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
+  var nums = (half.match(/\d+/g) || []).map(function (n) { return parseInt(n, 10); }).sort(function (a, b) { return a - b; });
   parts.push(nums.join(','));
 
-  // 结构特征
-  var ops = (prompt.match(/[+\-×÷*/]/g) || []).sort().join('');
+  // 结构特征（全角×÷−＋ 归一为半角，同式异写同指纹）
+  var ops = (half.replace(/[＋－]/g, function (c) { return c === '＋' ? '+' : '-'; })
+    .match(/[+\-×÷*/−]/g) || []).map(function (o) {
+    return o === '−' ? '-' : o;
+  }).sort().join('');
   parts.push(ops);
 
   // format/context

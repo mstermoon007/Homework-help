@@ -42,7 +42,6 @@
     { id: 'math-position-direction', file: 'plugins/math-position-direction.js', name: '方向与位置', subject: 'math', category: 'geometry', grades: [3] },
     { id: 'math-combination-set', file: 'plugins/math-combination-set.js', name: '搭配与集合', subject: 'math', category: 'statistics', grades: [3] },
     // 综合（grades 随各年级已实现插件同步：一至五年级均有可用题型）
-    { id: 'math-comprehensive', file: 'plugins/math-comprehensive.js', name: '综合练习', subject: 'math', category: 'mixed', grades: [1, 2, 3, 4, 5] },
     // 竞赛专题（已实现的 Cx 单独注册；占位插件只保留尚未实现的模块，实现一个就从 moduleIds 移除一个）
     { id: 'math-competition-c1-numberpuzzle', file: 'plugins/math-competition-c1-numberpuzzle.js', name: '数字谜与数阵图', subject: 'math', category: 'number', grades: [4], moduleIds: ['C1'] },
     { id: 'math-competition-c2-numbertheory', file: 'plugins/math-competition-c2-numbertheory.js', name: '数论初步', subject: 'math', category: 'number', grades: [4], moduleIds: ['C2'] },
@@ -50,7 +49,6 @@
     { id: 'math-competition-c5-journey', file: 'plugins/math-competition-c5-journey.js', name: '行程问题', subject: 'math', category: 'number', grades: [4], moduleIds: ['C5'] },
     { id: 'math-competition-c4-geometry', file: 'plugins/math-competition-c4-geometry.js', name: '几何模型', subject: 'math', category: 'geometry', grades: [4], moduleIds: ['C4'] },
     { id: 'math-competition-c8-logic', file: 'plugins/math-competition-c8-logic.js', name: '最值与逻辑推理', subject: 'math', category: 'statistics', grades: [4], moduleIds: ['C8'] },
-    { id: 'math-competition-placeholder', file: 'plugins/math-competition-placeholder.js', name: '竞赛专题', subject: 'math', category: 'competition', grades: [4, 5, 6], moduleIds: [], isPlaceholder: true },
     // 五年级竞赛（新语义题型，逐题型激活）
     { id: 'math-competition-g5-c1', file: 'plugins/math-competition-g5-c1.js', name: '数字谜与数阵图（五年级）', subject: 'math', category: 'number', grades: [5], moduleIds: ['C1'] },
     { id: 'math-competition-g5-c2', file: 'plugins/math-competition-g5-c2.js', name: '数论（五年级）', subject: 'math', category: 'number', grades: [5], moduleIds: ['C2'] },

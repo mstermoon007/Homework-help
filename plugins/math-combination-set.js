@@ -8,7 +8,7 @@
  *   queue  —— 排队：几个小朋友站成一排的种数（choice，枚举思想）
  *
  * 提供 ExercisePlugin 接口（id/name/grades/subject/category/generate/render/check），
- * 供 practice.html / dev/plugin-check.html / math-comprehensive 使用。
+ * 供 practice.html / dev/plugin-check.html 使用。
  * 随机数统一使用 shared/common.js 的 PluginUtil。
  */
 // @ts-check

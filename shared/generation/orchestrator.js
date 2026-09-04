@@ -186,7 +186,8 @@
         }
         var res = OrchestratorEngine.generateQuestions(plan, {
           legacyOutput: options.legacyOutput === true,
-          skipValidation: options.skipValidation
+          skipValidation: options.skipValidation,
+          seenKeys: options.seenKeys || null
         });
         var sqs = (res && (res.semanticQuestions || res.questions)) || [];
         questions.push.apply(questions, sqs);

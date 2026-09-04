@@ -24,12 +24,7 @@ function readJson(name) {
 }
 
 // R07.3 架构一致性：只读扫描插件源码，确认无反向依赖
-//
-// 说明（M4-19）：math-comprehensive 是「组合 / 编排层」ExercisePlugin，不属于单个 KP Generator。
-// 它按 M4-19 架构正向消费统一 Strategy + Generator Runtime（strategy-engine.bundle.js 的全局），
-// 是「ExerciseLayer → Runtime」的合法前向依赖，不构成 Generator → Strategy 反向依赖。
-// 其余插件（真正按 KP 出题的 Generator）仍强制禁止引用 Strategy。
-var ORCHESTRATION_PLUGIN_IDS = { 'math-comprehensive': true };
+// 综合练习已由生成层 ComprehensiveStrategy 承接（不再经编排插件）。
 function archCheck() {
   var errors = [];
   var checked = 0;
