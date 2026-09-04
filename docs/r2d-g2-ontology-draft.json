@@ -1,0 +1,1709 @@
+{
+  "batch": "R2D-G2",
+  "basedOn": "人教版二年级数学（上册/下册）知识点",
+  "scope": "math-g2 81 个 KP：concept/factualContent/graphicType/common_errors 全量补全",
+  "formatNote": "concept 字符串；factualContent 键∈FACT_TYPES；graphicType 按模块语义；errors 元素{id,category,description}，id 英文 kebab 禁 en-/cn-/question/ten，category∈10 类",
+  "entries": [
+    {
+      "kpId": "math-g2-m1-add-100",
+      "subject": "math",
+      "concept": "100 以内的加法：相同数位对齐，从个位加起，个位满十向十位进一，再算十位（含进上来的 1）。",
+      "factualContent": {
+        "rule": "100 以内加法：数位对齐，从个位算起；个位满十向十位进 1。不进位加直接相加；进位加先加个位再加十位（加进位 1）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "add-100-place-misalign",
+          "category": "operation",
+          "description": "列竖式时数位未对齐（个位对十位），导致计算错误"
+        },
+        {
+          "id": "add-100-carry-miss",
+          "category": "calculation",
+          "description": "个位满十未向十位进 1，或进位后十位忘加进位 1"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m1-sub-100",
+      "subject": "math",
+      "concept": "100 以内的减法：相同数位对齐，从个位减起，个位不够减向十位借一当十，再算十位（记得减去借走的 1）。",
+      "factualContent": {
+        "rule": "100 以内减法：数位对齐，从个位算起；个位不够减向十位借 1 当 10 再减；十位被借走 1 后要少算 1。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "sub-100-borrow-miss",
+          "category": "calculation",
+          "description": "个位不够减时忘记借位，或借位后十位未减 1"
+        },
+        {
+          "id": "sub-100-digit-borrow",
+          "category": "operation",
+          "description": "被减数十位借走后仍按原数相减，十位结果算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m1-mult-table",
+      "subject": "math",
+      "concept": "表内乘法：熟记 1~9 的乘法口诀，根据口诀求积；一句口诀通常可算两个乘法算式。",
+      "factualContent": {
+        "table": "乘法口诀表 1×1=1 … 9×9=81；每句口诀对应两个乘法算式（如“三六十八”→3×6=18、6×3=18）"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mult-table-recite-err",
+          "category": "calculation",
+          "description": "口诀记忆混淆（如六六三十六与六九五十四相邻口诀记错）"
+        },
+        {
+          "id": "mult-table-product-miss",
+          "category": "calculation",
+          "description": "乘数交换后积不变，但按错口诀算错积"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m1-div-table",
+      "subject": "math",
+      "concept": "表内除法：用乘法口诀求商，即“想乘法，算除法”；被除数÷除数=商。",
+      "factualContent": {
+        "rule": "表内除法求商：想除数和几相乘得被除数，商就是几（如 12÷3，想“三四十二”商 4）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "div-table-quotient-err",
+          "category": "calculation",
+          "description": "用错乘法口诀，商算错（如 24÷6 想成四六二十四算成 4 却写成 6）"
+        },
+        {
+          "id": "div-table-product-back",
+          "category": "calculation",
+          "description": "忘记“除法是乘法的逆运算”，直接用乘法口诀结果当商"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m1-remainder-oral",
+      "subject": "math",
+      "concept": "有余数除法：平均分后有剩余，剩余的数叫余数；余数必须比除数小。",
+      "factualContent": {
+        "rule": "有余数除法：被除数÷除数=商……余数，余数＜除数。余数表示平均分后剩下的数量。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "remainder-greater-divisor",
+          "category": "concept",
+          "description": "余数大于或等于除数，说明还能再分，商应增大"
+        },
+        {
+          "id": "remainder-leftover-miss",
+          "category": "calculation",
+          "description": "分完后忘记把剩余的数量写成余数，或余数算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m1-mixed-addsub",
+      "subject": "math",
+      "concept": "加减混合运算：没有括号时按从左到右的顺序依次计算，口算时注意进位与退位。",
+      "factualContent": {
+        "rule": "加减混合（无括号）：按从左到右顺序计算，把第一步结果作为下一步的被加数/被减数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mixed-addsub-order-miss",
+          "category": "operation",
+          "description": "未按从左到右顺序，先算后面再算前面导致错误"
+        },
+        {
+          "id": "mixed-addsub-mid-err",
+          "category": "calculation",
+          "description": "中间一步的进位/退位算错，导致最终结果错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m1-mixed-multdiv",
+      "subject": "math",
+      "concept": "乘除混合运算：没有括号时按从左到右的顺序依次计算，先算前两个数。",
+      "factualContent": {
+        "rule": "乘除混合（无括号）：按从左到右顺序计算，先算前两个数的结果再与第三个数运算。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "multdiv-order-miss",
+          "category": "operation",
+          "description": "未按从左到右顺序，先做后两步导致错误"
+        },
+        {
+          "id": "multdiv-mid-err",
+          "category": "calculation",
+          "description": "中间一步口诀用错，导致后续结果错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m1-mixed-two-step",
+      "subject": "math",
+      "concept": "含小括号的两步混合运算：先算小括号里面的，再算括号外面的。",
+      "factualContent": {
+        "rule": "混合运算顺序：有小括号先算括号内；无括号先乘除后加减；同级按从左到右。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "two-step-bracket-ignore",
+          "category": "operation",
+          "description": "忽略小括号，不先算括号内导致顺序错误"
+        },
+        {
+          "id": "two-step-bracket-inner-err",
+          "category": "calculation",
+          "description": "括号内计算错误，导致整个结果错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m1-addsub-1000",
+      "subject": "math",
+      "concept": "整百、整千数加减：看作几个百、几个千相加减（如 300+500 想 3+5 得 8 个百），口算凑整。",
+      "factualContent": {
+        "rule": "整百整千加减：把整百看作几个百、整千看作几个千进行口算（如 800-300 想 8-3=5，得 500）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "addsub-1000-zeros-err",
+          "category": "calculation",
+          "description": "结果末尾 0 的个数写错（如 300+500 得 800 写成 80）"
+        },
+        {
+          "id": "addsub-1000-carry-miss",
+          "category": "calculation",
+          "description": "整百整千相加减时进位/退位处理错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m1-muldiv-relation",
+      "subject": "math",
+      "concept": "乘除法关系：乘法和除法互为逆运算，利用“乘除互逆”求未知数（如□×3=12，□=12÷3）。",
+      "factualContent": {
+        "relationship": "乘除法互逆：因数×因数=积；积÷一个因数=另一个因数。据此用除法求未知因数、用乘法验算除法。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "muldiv-relation-inverse-err",
+          "category": "concept",
+          "description": "求未知因数时误用乘法，未理解乘除互逆关系"
+        },
+        {
+          "id": "muldiv-relation-calc-err",
+          "category": "calculation",
+          "description": "用口诀求商/求因数时算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m2-add-col",
+      "subject": "math",
+      "concept": "两位数加两位数竖式：相同数位对齐，从个位加起，个位满十向十位进一。",
+      "factualContent": {
+        "rule": "竖式加法：个位与个位对齐、十位与十位对齐；从个位加起，满十进 1 到十位；十位相加要加进位。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "col-add-align-err",
+          "category": "operation",
+          "description": "竖式书写时数位未对齐（个位对十位）"
+        },
+        {
+          "id": "col-add-carry-forget",
+          "category": "calculation",
+          "description": "个位满十进位后，十位相加漏加进位的 1"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m2-sub-col",
+      "subject": "math",
+      "concept": "两位数减两位数竖式：相同数位对齐，从个位减起，个位不够减向十位借一当十。",
+      "factualContent": {
+        "rule": "竖式减法：数位对齐从个位减起；个位不够减向十位借 1 当 10；十位被借走 1 后要减去 1 再算。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "col-sub-borrow-miss",
+          "category": "calculation",
+          "description": "个位不够减未借位，直接用小数减大数"
+        },
+        {
+          "id": "col-sub-borrow-deduct",
+          "category": "operation",
+          "description": "十位被借走 1 后未减 1，十位结果算多"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m2-chain-add-col",
+      "subject": "math",
+      "concept": "连加竖式：三个数连加，可先把前两个相加，再与第三个相加；注意连续进位。",
+      "factualContent": {
+        "rule": "连加竖式：先把前两个加数相加得中间和，再与第三个数相加；每步进位都要正确处理。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "chain-add-carry-err",
+          "category": "calculation",
+          "description": "第一步或第二步的进位漏加或加错"
+        },
+        {
+          "id": "chain-add-mid-forget",
+          "category": "operation",
+          "description": "漏算某一步（只加两个数），未完成三个数连加"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m2-chain-sub-col",
+      "subject": "math",
+      "concept": "连减竖式：三个数连减，先算前两个的差，再减第三个数；注意连续退位。",
+      "factualContent": {
+        "rule": "连减竖式：先求被减数减减数的差，再用差减第三个数；每步退位都要正确处理。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "chain-sub-borrow-err",
+          "category": "calculation",
+          "description": "某一步退位处理错误导致差错"
+        },
+        {
+          "id": "chain-sub-step-miss",
+          "category": "operation",
+          "description": "只减一次就结束，漏掉第三次减法"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m2-mixed-col",
+      "subject": "math",
+      "concept": "加减混合竖式：含加法和减法的竖式计算，按运算顺序逐步计算，同时处理进位与退位。",
+      "factualContent": {
+        "rule": "加减混合竖式：按从左到右顺序逐步竖式计算；加时注意进位、减时注意退位。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mixed-col-carry-borrow-err",
+          "category": "calculation",
+          "description": "进位/退位混用时处理错误"
+        },
+        {
+          "id": "mixed-col-order-err",
+          "category": "operation",
+          "description": "竖式计算顺序颠倒，未按算式从左到右"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m2-mult-col",
+      "subject": "math",
+      "concept": "表内乘法竖式：用竖式形式书写表内乘法，积的数位要与乘数对齐。",
+      "factualContent": {
+        "rule": "乘法竖式：乘数与乘数对齐，用口诀求积；积写在横线下方，数位与上方对齐。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mult-col-align-err",
+          "category": "operation",
+          "description": "竖式书写时数位不对齐"
+        },
+        {
+          "id": "mult-col-product-err",
+          "category": "calculation",
+          "description": "口诀背错导致积写错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m2-div-col",
+      "subject": "math",
+      "concept": "表内除法竖式：用竖式计算表内除法，商写在被除数上面，注意商的数位与余数。",
+      "factualContent": {
+        "rule": "除法竖式：被除数写在竖式内，除数在外；商写在个位上方；除到被除数末尾无余数则除尽。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "div-col-quotient-pos",
+          "category": "notation",
+          "description": "商写错位置（未写在被除数相应数位上方）"
+        },
+        {
+          "id": "div-col-remainder-err",
+          "category": "calculation",
+          "description": "余数比除数大或漏写余数"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m2-remainder-col",
+      "subject": "math",
+      "concept": "有余数除法竖式：竖式计算有余数除法，商与余数；余数必须比除数小。",
+      "factualContent": {
+        "rule": "有余数除法竖式：商写个位上方；余数写在横线下方；余数一定小于除数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "rem-col-remainder-big",
+          "category": "calculation",
+          "description": "余数不小于除数，商应再大 1"
+        },
+        {
+          "id": "rem-col-quotient-err",
+          "category": "calculation",
+          "description": "试商偏大或偏小，导致余数错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m3-mixed-no-bracket",
+      "subject": "math",
+      "concept": "无括号混合运算：没有括号时先算乘除、后算加减；同级运算按从左到右顺序计算。",
+      "factualContent": {
+        "rule": "混合运算顺序：无括号先乘除后加减；乘除同级或加减同级时从左到右依次计算。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mixed-order-priority-err",
+          "category": "operation",
+          "description": "未先算乘除后算加减，直接按从左到右全部算"
+        },
+        {
+          "id": "mixed-two-level-err",
+          "category": "calculation",
+          "description": "乘除或加减某一步计算错误，影响最终结果"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m3-mixed-bracket",
+      "subject": "math",
+      "concept": "带括号混合运算：先算小括号里面的，再算括号外面的，不受先乘除后加减限制。",
+      "factualContent": {
+        "rule": "带括号混合运算：小括号内优先计算，括号可改变运算顺序（先括号内，再按顺序）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "bracket-before-outside",
+          "category": "operation",
+          "description": "忽略括号优先级，先算括号外导致顺序错误"
+        },
+        {
+          "id": "bracket-inner-calc-err",
+          "category": "calculation",
+          "description": "括号内计算错误，导致整体结果错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m3-chain-addsub",
+      "subject": "math",
+      "concept": "连加连减脱式：用脱式（递等式）计算连加连减，每步写出计算结果，按从左到右进行。",
+      "factualContent": {
+        "rule": "脱式计算：每步写出中间结果（= 接续计算）；连加连减按从左到右顺序逐步写出。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "chain-defer-step-miss",
+          "category": "operation",
+          "description": "脱式漏写中间步骤，直接写出最后结果"
+        },
+        {
+          "id": "chain-addsub-calc-err",
+          "category": "calculation",
+          "description": "某一步进位/退位算错，导致最终结果错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m3-multdiv-mixed",
+      "subject": "math",
+      "concept": "乘除混合脱式：乘除同级运算按从左到右顺序脱式计算，逐步写出结果。",
+      "factualContent": {
+        "rule": "乘除混合脱式：乘除同级从左到右依次计算，每步脱式写出中间结果。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "multdiv-left-right-err",
+          "category": "operation",
+          "description": "乘除混合未按从左到右，先算后两步"
+        },
+        {
+          "id": "multdiv-mid-calc-err",
+          "category": "calculation",
+          "description": "中间一步口诀用错导致后续错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m3-compare-simple",
+      "subject": "math",
+      "concept": "比较算式大小：先算出两边算式结果，再比较大小，用 >、< 或 = 连接。",
+      "factualContent": {
+        "rule": "比较算式：先分别计算两边的结果，再比较数值大小，填入 >、< 或 =。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "compare-result-misjudge",
+          "category": "reasoning",
+          "description": "两边结果算对但大小判断方向反了"
+        },
+        {
+          "id": "compare-side-calc-err",
+          "category": "calculation",
+          "description": "某一边算式算错，导致比较结果错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m3-fill-operator",
+      "subject": "math",
+      "concept": "填运算符号：根据等式结果与运算顺序，判断方框里应填 +、-、× 或 ÷。",
+      "factualContent": {
+        "rule": "填运算符号：结合等式结果，用试算或逆运算判断应填的运算符号，注意运算顺序。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "fill-op-trial-err",
+          "category": "reasoning",
+          "description": "试算时未考虑运算顺序，符号判断错误"
+        },
+        {
+          "id": "fill-op-multidiv-mix",
+          "category": "concept",
+          "description": "加减与乘除符号混淆（如该填 × 填成 +）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-read-10000",
+      "subject": "math",
+      "concept": "万以内数的读写：从高位读起，中间有一个或连续两个 0 都只读一个零，末尾的 0 不读。",
+      "factualContent": {
+        "rule": "万以内数读法：从高位读起；中间有 0 读“零”，连续 0 只读一个；末尾 0 不读。写法按数位写。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "read-zero-mid-err",
+          "category": "notation",
+          "description": "中间有 0 未读“零”，或多个 0 读了多个零"
+        },
+        {
+          "id": "read-zero-tail-err",
+          "category": "notation",
+          "description": "末尾的 0 也读出来，读法错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-compose-10000",
+      "subject": "math",
+      "concept": "万以内数的组成：由几个千、几个百、几个十和几个一组成，各数位上的数表示相应计数单位的个数。",
+      "factualContent": {
+        "rule": "数的组成：千位表示几个千、百位表示几个百、十位表示几个十、个位表示几个一（如 3520=3 个千+5 个百+2 个十）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "compose-count-miss",
+          "category": "calculation",
+          "description": "某一位的计数单位个数数错（如 3020 认为有 2 个百）"
+        },
+        {
+          "id": "compose-place-err",
+          "category": "notation",
+          "description": "数位与计数单位对应错乱（把千位当百位）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-digit-order",
+      "subject": "math",
+      "concept": "数位顺序：从右往左依次是个位、十位、百位、千位、万位，相邻数位间进率是 10。",
+      "factualContent": {
+        "table": "数位顺序表（从右往左）：个位、十位、百位、千位、万位；相邻数位进率 10（10 个一是十、10 个十是百…）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "digit-order-misplace",
+          "category": "notation",
+          "description": "数位顺序记反（把十位当成百位）"
+        },
+        {
+          "id": "digit-order-value-err",
+          "category": "concept",
+          "description": "相同数字在不同数位上表示的数值混淆"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-approx-number",
+      "subject": "math",
+      "concept": "近似数：把一个数看成接近它的整十、整百、整千数，用“约、大概”表示。",
+      "factualContent": {
+        "rule": "近似数：看接近哪个整十/整百/整千数，用“≈”或“约”表示（如 498≈500）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "approx-nearest-err",
+          "category": "reasoning",
+          "description": "没有找最接近的整十/整百数，选错近似值"
+        },
+        {
+          "id": "approx-boundary-err",
+          "category": "concept",
+          "description": "正好在整百中间的数（如 450）近似方向判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-compare-10000",
+      "subject": "math",
+      "concept": "万以内数比大小：先看位数，位数多的数大；位数相同再从高位比起。",
+      "factualContent": {
+        "rule": "万以内数比较：先比位数（多者大）；位数相同比最高位，最高位相同依次比下一位。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "compare-digit-first-err",
+          "category": "reasoning",
+          "description": "未先比位数，直接比数字导致错误"
+        },
+        {
+          "id": "compare-same-place-err",
+          "category": "reasoning",
+          "description": "位数相同但从低位移比，比较方向错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-length-unit",
+      "subject": "math",
+      "concept": "长度单位换算：1 米=100 厘米、1 千米=1000 米、1 分米=10 厘米，按进率换算。",
+      "factualContent": {
+        "unit": "长度进率：1 千米=1000 米；1 米=10 分米=100 厘米；1 分米=10 厘米；1 厘米=10 毫米。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "length-rate-err",
+          "category": "unit",
+          "description": "长度单位间进率记错（如把 1 米当成 10 厘米）"
+        },
+        {
+          "id": "length-convert-dir-err",
+          "category": "unit",
+          "description": "高级单位换低级单位应乘进率、反向应除，方向搞反"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-mass-unit",
+      "subject": "math",
+      "concept": "质量单位换算：1 千克=1000 克，克与千克按进率 1000 换算。",
+      "factualContent": {
+        "unit": "质量进率：1 千克=1000 克；1 吨=1000 千克。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mass-rate-err",
+          "category": "unit",
+          "description": "千克与克进率记错（如当成 100）"
+        },
+        {
+          "id": "mass-convert-dir-err",
+          "category": "unit",
+          "description": "克与千克换算方向/数值错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-time-unit",
+      "subject": "math",
+      "concept": "时间单位换算：1 时=60 分、1 分=60 秒，按 60 进制换算。",
+      "factualContent": {
+        "unit": "时间进率：1 时=60 分；1 分=60 秒；1 日=24 时（时分秒按 60 进制）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "time-rate-err",
+          "category": "unit",
+          "description": "时间进率记成 100 或 10，误用十进制"
+        },
+        {
+          "id": "time-convert-calc-err",
+          "category": "calculation",
+          "description": "时分秒换算时计算错误（如 2 时换算成 120 分算错）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-fill-length",
+      "subject": "math",
+      "concept": "填合适长度单位：根据物体实际大小，选择厘米、米（或分米）等恰当单位。",
+      "factualContent": {
+        "rule": "选长度单位：较短物体用厘米、毫米，较长物体用米，远距离用千米；结合生活经验判断。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "length-unit-choice-err",
+          "category": "unit",
+          "description": "对物体长短判断失误，单位选得过大或过小"
+        },
+        {
+          "id": "length-object-scope",
+          "category": "concept",
+          "description": "混淆厘米与米的适用场景（如铅笔长度选米）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-fill-mass",
+      "subject": "math",
+      "concept": "填合适质量单位：根据物体轻重，选择克、千克（或吨）等恰当单位。",
+      "factualContent": {
+        "rule": "选质量单位：较轻物体用克，一般物品用千克，大量货物用吨；结合生活经验判断。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mass-unit-choice-err",
+          "category": "unit",
+          "description": "对物体轻重判断失误，单位选错"
+        },
+        {
+          "id": "mass-object-scope",
+          "category": "concept",
+          "description": "混淆克与千克的适用场景（如一袋大米选克）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-fill-time",
+      "subject": "math",
+      "concept": "填合适时间单位：根据事件时长，选择秒、分、时等恰当单位。",
+      "factualContent": {
+        "rule": "选时间单位：很短时间用秒，一般用分，较长用时；结合生活经验判断。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "time-unit-choice-err",
+          "category": "unit",
+          "description": "对事件时长判断失误，单位选错"
+        },
+        {
+          "id": "time-object-scope",
+          "category": "concept",
+          "description": "混淆秒、分、时的适用场景（如一节课选秒）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-number-pattern",
+      "subject": "math",
+      "concept": "数字规律：观察数列或算式中数与数之间的变化规律（加几、乘几、隔项等），续写下去。",
+      "factualContent": {
+        "rule": "找数列规律：先确定相邻项之间的差或倍关系，再按同一规律续写；注意等差、等比、隔项等模式。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "pattern-rule-miss",
+          "category": "reasoning",
+          "description": "规律找错或只观察部分项，未发现整体规律"
+        },
+        {
+          "id": "pattern-next-err",
+          "category": "calculation",
+          "description": "规律正确但续写下一项时计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-multiplication-meaning",
+      "subject": "math",
+      "concept": "乘法意义：求几个相同加数的和的简便运算，“几个几”用乘法表示。",
+      "factualContent": {
+        "rule": "乘法意义：n 个相同加数 a 相加，写成 a×n；乘法是加法的简便运算。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mult-meaning-groups-miss",
+          "category": "concept",
+          "description": "“几个几”中的份数与每份数混淆，写错算式"
+        },
+        {
+          "id": "mult-meaning-add-mix",
+          "category": "concept",
+          "description": "相同加数的加法未写成乘法，或把不同加数也写成乘法"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-division-meaning",
+      "subject": "math",
+      "concept": "除法意义：把一个数平均分成几份求每份（等分），或按每几个一份求能分几份（包含）。",
+      "factualContent": {
+        "rule": "除法意义：等分——总数÷份数=每份数；包含——总数÷每份数=份数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "div-meaning-part-include",
+          "category": "concept",
+          "description": "等分与包含两种分法混淆，除法算式含义理解错"
+        },
+        {
+          "id": "div-meaning-group-err",
+          "category": "concept",
+          "description": "被除数、除数、商对应关系写错（求每份还是求份数）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-angle-basic",
+      "subject": "math",
+      "concept": "角的基本组成：角由一个顶点和两条边组成；直角、锐角（比直角小）、钝角（比直角大）。",
+      "factualContent": {
+        "classification": "角的分类：锐角＜直角（90°）＜钝角；角由一个顶点、两条边组成，用三角板直角判断大小。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "angle-vertex-miss",
+          "category": "concept",
+          "description": "未理解角必须有顶点和两条边，把非角图形当角"
+        },
+        {
+          "id": "angle-type-judge-err",
+          "category": "reasoning",
+          "description": "直角、锐角、钝角大小判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m4-clock-read",
+      "subject": "math",
+      "concept": "时间认读：时针过几是几时，分针走 1 大格是 5 分、走 1 小格是 1 分，读几时几分。",
+      "factualContent": {
+        "rule": "钟面认读：时针指在几和几之间取前一个数；分针走 1 大格 5 分；先读时再读分（如 3:25）。"
+      },
+      "graphicType": "clock",
+      "errors": [
+        {
+          "id": "clock-hour-misread",
+          "category": "reading",
+          "description": "时针在两数之间时误读为后一个数（如 3:45 读成 4 时）"
+        },
+        {
+          "id": "clock-minute-count-err",
+          "category": "reading",
+          "description": "分针读数算错（大格×5 或小格数错）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m5-match-calc",
+      "subject": "math",
+      "concept": "算式与得数连线：先计算每个算式的结果，再与对应得数连线，注意区分相近结果。",
+      "factualContent": {
+        "rule": "连线题：先算左边算式得数，再与右边得数逐一匹配；注意同一得数可能有多个算式。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "match-calc-compute-err",
+          "category": "calculation",
+          "description": "算式结果算错，导致连错线"
+        },
+        {
+          "id": "match-calc-wrong-line",
+          "category": "reasoning",
+          "description": "得数相近的算式连线混淆"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m5-match-shape",
+      "subject": "math",
+      "concept": "图形与名称连线：根据图形特征（边、角、面）辨认平面图形与立体图形并连线。",
+      "factualContent": {
+        "classification": "图形分类：平面图形——长方形（4 直角对边等长）、正方形（4 边等长 4 直角）、三角形、圆；立体图形——长方体、正方体、圆柱、球。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "match-shape-name-confuse",
+          "category": "concept",
+          "description": "图形名称混淆（长方形与正方形、三角形与梯形）"
+        },
+        {
+          "id": "match-shape-feature",
+          "category": "reasoning",
+          "description": "按特征（边数、直角）判断图形时出错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m5-match-angle",
+      "subject": "math",
+      "concept": "角的类型连线：用三角板直角比较，判断角是直角、锐角还是钝角并连线。",
+      "factualContent": {
+        "rule": "判断角的类型：用三角板直角顶点对齐，比直角小是锐角、等于直角是直角、比直角大是钝角。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "match-angle-type-confuse",
+          "category": "reasoning",
+          "description": "锐角与钝角判断混淆"
+        },
+        {
+          "id": "match-angle-judge-err",
+          "category": "reasoning",
+          "description": "用三角板比较时顶点/边未对齐，误判类型"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m5-match-clock",
+      "subject": "math",
+      "concept": "钟面与时间连线：读钟面指针位置确定时刻，与对应时间文字连线。",
+      "factualContent": {
+        "rule": "钟面连线：时针定小时、分针定分钟，读出几时几分后与文字时间匹配。"
+      },
+      "graphicType": "clock",
+      "errors": [
+        {
+          "id": "match-clock-read-err",
+          "category": "reading",
+          "description": "钟面时刻读错（时针/分针读数错误）"
+        },
+        {
+          "id": "match-clock-time-confuse",
+          "category": "reading",
+          "description": "相近时刻（如 3:45 与 4:45）连线混淆"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m5-match-unit",
+      "subject": "math",
+      "concept": "单位与物品连线：根据物品特征选择恰当的长度、质量、时间单位并连线。",
+      "factualContent": {
+        "rule": "单位选择：结合生活经验，按物品大小/轻重/时长选择合适单位（米/厘米、千克/克、时/分/秒）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "match-unit-object-err",
+          "category": "unit",
+          "description": "物品对应的单位选择错误（如桌子高选厘米）"
+        },
+        {
+          "id": "match-unit-scope",
+          "category": "concept",
+          "description": "不同类别单位（长度/质量/时间）混淆"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m5-match-multdiv",
+      "subject": "math",
+      "concept": "口诀与算式连线：把乘法口诀与对应的乘法、除法算式连线，理解口诀的多种应用。",
+      "factualContent": {
+        "rule": "口诀应用：一句口诀对应两个乘法算式和对应的除法算式（如“四六二十四”→4×6、6×4、24÷4、24÷6）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "match-multdiv-recite-err",
+          "category": "calculation",
+          "description": "口诀记忆错误导致连线错误"
+        },
+        {
+          "id": "match-multdiv-line",
+          "category": "reasoning",
+          "description": "口诀与算式对应关系混淆"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m6-solid-shape",
+      "subject": "math",
+      "concept": "认识图形：辨认长方体、正方体、圆柱、球等立体图形，并能说出特征。",
+      "factualContent": {
+        "classification": "立体图形特征：长方体 6 面（相对面相同）、正方体 6 面全等、圆柱上下两个圆、球圆滑可滚。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "solid-shape-3d2d-confuse",
+          "category": "concept",
+          "description": "立体图形与平面图形混淆（圆柱面与圆）"
+        },
+        {
+          "id": "solid-shape-feature-err",
+          "category": "concept",
+          "description": "长方体与正方体特征区分不清"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m6-angle-recognize",
+      "subject": "math",
+      "concept": "角的认识：辨认生活中的角，用直角标准区分直角、锐角、钝角。",
+      "factualContent": {
+        "rule": "生活中的角：三角板、书本角是直角；比直角小为锐角（如扇形顶点角），比直角大为钝角。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "angle-life-confuse",
+          "category": "concept",
+          "description": "生活中的角辨认不出来或误认非角"
+        },
+        {
+          "id": "angle-type-misjudge",
+          "category": "reasoning",
+          "description": "角的大小类型判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m6-motion",
+      "subject": "math",
+      "concept": "图形运动：认识平移（沿直线移动）、旋转（绕点转动）和轴对称（对折重合）现象。",
+      "factualContent": {
+        "classification": "图形运动分类：平移——位置改变形状大小不变；旋转——绕某点转动；轴对称——沿对称轴对折两边完全重合。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "motion-type-confuse",
+          "category": "concept",
+          "description": "平移与旋转现象区分不清"
+        },
+        {
+          "id": "motion-axis-judge-err",
+          "category": "reasoning",
+          "description": "判断图形是否轴对称时出错（对称轴找错）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m6-grid-draw",
+      "subject": "math",
+      "concept": "方格纸画图：在方格纸上画简单图形，并按指定方向平移图形。",
+      "factualContent": {
+        "rule": "方格纸操作：画图按格数确定边长；平移时图形整体沿方向移动相同格数，形状大小不变。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "grid-draw-shape-err",
+          "category": "structure",
+          "description": "方格纸上图形边长/形状画错"
+        },
+        {
+          "id": "grid-draw-move-err",
+          "category": "operation",
+          "description": "平移方向或格数错误，图形位置不对"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m6-draw-line",
+      "subject": "math",
+      "concept": "画指定长度线段：用直尺从刻度 0 起画到指定刻度，画出规定长度的线段。",
+      "factualContent": {
+        "rule": "画线段：直尺对齐，从 0 刻度画到指定厘米刻度；画完标注长度。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "draw-line-length-err",
+          "category": "operation",
+          "description": "线段长度画错（起止刻度错误）"
+        },
+        {
+          "id": "draw-line-start-err",
+          "category": "operation",
+          "description": "未从 0 刻度起画，起点偏移导致长度不准"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m6-draw-angle",
+      "subject": "math",
+      "concept": "画指定角：用三角板画直角、锐角、钝角，先画顶点和一条边，再画另一条边。",
+      "factualContent": {
+        "rule": "画角：先画顶点和一条边，用三角板确定角的开口大小，再画出另一条边并标出顶点。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "draw-angle-vertex-err",
+          "category": "operation",
+          "description": "角的顶点或边的画法错误"
+        },
+        {
+          "id": "draw-angle-size-err",
+          "category": "operation",
+          "description": "角的开口大小画错（钝角画成锐角）"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m6-clock-draw",
+      "subject": "math",
+      "concept": "钟面画时间：在钟面上按指定时刻画出时针和分针的位置。",
+      "factualContent": {
+        "rule": "画钟面时刻：分针指分（如 5 分指 1 大格），时针在两数之间按分针位置确定（过几小于 30 读前数，大于 30 读后数附近）。"
+      },
+      "graphicType": "clock",
+      "errors": [
+        {
+          "id": "clock-draw-hand-err",
+          "category": "operation",
+          "description": "时针/分针位置画反或画错"
+        },
+        {
+          "id": "clock-draw-minute-err",
+          "category": "operation",
+          "description": "分针指向与分钟数不对应"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m6-measure",
+      "subject": "math",
+      "concept": "测量线段：用直尺测量线段长度，正确读数（从 0 到另一端刻度）。",
+      "factualContent": {
+        "rule": "测量：直尺 0 刻度对齐线段一端，另一端对应刻度即长度；读数含单位。"
+      },
+      "graphicType": "geometry",
+      "errors": [
+        {
+          "id": "measure-read-err",
+          "category": "reading",
+          "description": "刻度读数错误（看错大格小格）"
+        },
+        {
+          "id": "measure-start-align",
+          "category": "operation",
+          "description": "未从 0 刻度对齐线段端点，测出的长度偏大/偏小"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m7-pic-add",
+      "subject": "math",
+      "concept": "看图列加法：根据图中两部分数量求总数，列出加法算式。",
+      "factualContent": {
+        "rule": "看图列加法：看清图中两部分各有多少，求“一共”用加法（部分+部分=总数）。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-add-count-err",
+          "category": "reading",
+          "description": "图中数量数错，导致算式错误"
+        },
+        {
+          "id": "pic-add-part-merge",
+          "category": "reasoning",
+          "description": "未区分部分与整体，加法关系理解错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m7-pic-sub",
+      "subject": "math",
+      "concept": "看图列减法：根据图中总数去掉一部分求剩余，列出减法算式。",
+      "factualContent": {
+        "rule": "看图列减法：已知总数和去掉/剩下的一部分，求另一部分用减法（总数-部分=部分）。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-sub-total-miss",
+          "category": "reasoning",
+          "description": "未找准总数，减法算式列错"
+        },
+        {
+          "id": "pic-sub-part-err",
+          "category": "reading",
+          "description": "去掉或剩下的部分数数错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m7-pic-mult",
+      "subject": "math",
+      "concept": "看图列乘法：根据图中“几个几”的排列，列出乘法算式。",
+      "factualContent": {
+        "rule": "看图列乘法：数清有几份、每份几个，用“每份数×份数”列乘法算式。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-mult-groups-miss",
+          "category": "reading",
+          "description": "份数与每份数数错，乘法算式错误"
+        },
+        {
+          "id": "pic-mult-multadd-mix",
+          "category": "concept",
+          "description": "相同加数求和误用加法，未用乘法表示"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m7-pic-div",
+      "subject": "math",
+      "concept": "看图列除法（等分）：把总数平均分成几份求每份，列出除法算式。",
+      "factualContent": {
+        "rule": "看图列等分除法：总数÷份数=每份数；图中有总数和份数信息。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-div-total-err",
+          "category": "reading",
+          "description": "总数数错，除法算式错误"
+        },
+        {
+          "id": "pic-div-parts-err",
+          "category": "reading",
+          "description": "份数或每份数看错，商错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m7-pic-div-include",
+      "subject": "math",
+      "concept": "看图列除法（包含）：按每几个一份看能分几份，列出包含除法算式。",
+      "factualContent": {
+        "rule": "看图列包含除法：总数÷每份数=份数；图中明确“每几个一份”。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-div-include-confuse",
+          "category": "concept",
+          "description": "包含与等分除法意义混淆，算式列错"
+        },
+        {
+          "id": "pic-div-quotient-err",
+          "category": "calculation",
+          "description": "商（份数）算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m7-pic-mixed",
+      "subject": "math",
+      "concept": "看图列混合算式：根据图意列出含两步运算的算式，注意运算顺序。",
+      "factualContent": {
+        "rule": "看图列混合算式：先看图确定先算什么、再算什么，列出两步算式并按顺序计算。"
+      },
+      "graphicType": "diagram",
+      "errors": [
+        {
+          "id": "pic-mixed-step-err",
+          "category": "reasoning",
+          "description": "两步计算关系分析错误，算式列错"
+        },
+        {
+          "id": "pic-mixed-order-err",
+          "category": "operation",
+          "description": "列式或计算时运算顺序错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-add-total",
+      "subject": "math",
+      "concept": "加法求和：用加法解决“求两个部分合起来的总数”的实际问题。",
+      "factualContent": {
+        "rule": "求总数：把两部分数量相加，用加法；注意统一单位、分清条件和问题。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "add-total-part-err",
+          "category": "reading",
+          "description": "题目中两部分数量提取错误"
+        },
+        {
+          "id": "add-total-combine-err",
+          "category": "calculation",
+          "description": "两部分相加计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-sub-remain",
+      "subject": "math",
+      "concept": "减法求剩余：用减法解决“从总数里去掉一部分求剩下”的实际问题。",
+      "factualContent": {
+        "rule": "求剩余：总数-去掉的部分=剩余；分清总数与部分。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "sub-remain-which-sub",
+          "category": "reasoning",
+          "description": "未分清总数和部分，减法方向反了"
+        },
+        {
+          "id": "sub-remain-calc-err",
+          "category": "calculation",
+          "description": "减法计算（借位）错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-mult-total",
+      "subject": "math",
+      "concept": "乘法求总数：用乘法解决“几个几一共是多少”的实际问题。",
+      "factualContent": {
+        "rule": "乘法求总数：每份数×份数=总数；先判断是否“几个相同加数”。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mult-total-groups-err",
+          "category": "reading",
+          "description": "每份数与份数提取错误"
+        },
+        {
+          "id": "mult-total-calc-err",
+          "category": "calculation",
+          "description": "乘法口诀算错"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-div-partitive",
+      "subject": "math",
+      "concept": "等分除应用：把总数平均分成几份，求每份是多少（等分除法）。",
+      "factualContent": {
+        "rule": "等分除法应用：总数÷份数=每份数；题目出现“平均分成几份”即等分。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "div-part-total-err",
+          "category": "reading",
+          "description": "总数或份数提取错误"
+        },
+        {
+          "id": "div-part-average-err",
+          "category": "reasoning",
+          "description": "未识别“平均分”，除法列式错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-div-quotative",
+      "subject": "math",
+      "concept": "包含除应用：按每几个一份，求能分几份（包含除法）。",
+      "factualContent": {
+        "rule": "包含除法应用：总数÷每份数=份数；题目出现“每几个一份”即包含。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "div-quot-each-err",
+          "category": "reading",
+          "description": "每份数提取错误"
+        },
+        {
+          "id": "div-quot-parts-err",
+          "category": "reasoning",
+          "description": "包含与等分除法混淆，列式错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-remainder-apply",
+      "subject": "math",
+      "concept": "有余数除法应用：分物有余时用有余数除法，商表示能分几份，余数表示剩余。",
+      "factualContent": {
+        "rule": "有余数除法应用：能装几袋/分几份看商，还剩几个看余数；有时需要“商+1”（如装袋进位）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "rem-apply-answer-plusone",
+          "category": "reasoning",
+          "description": "需要“商+1”的情况（装袋/乘车）未进位，答案少 1"
+        },
+        {
+          "id": "rem-apply-remainder-ignore",
+          "category": "concept",
+          "description": "忽略余数，只答商导致答案不完整"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-compare-diff",
+      "subject": "math",
+      "concept": "比多比少问题：求“谁比谁多几/少几”用减法（大数-小数=相差数）。",
+      "factualContent": {
+        "rule": "比多比少：求相差数用减法（较大数-较小数=相差数）；先判断谁大谁小。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "compare-diff-direction",
+          "category": "reasoning",
+          "description": "被减数与减数方向弄反，差为负或错"
+        },
+        {
+          "id": "compare-diff-calc-err",
+          "category": "calculation",
+          "description": "减法计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-two-step",
+      "subject": "math",
+      "concept": "两步混合运算应用：解决需先算一步、再算一步的实际问题，正确分步或列综合算式。",
+      "factualContent": {
+        "rule": "两步应用：先分析先求什么、再求什么；可分部列式或列综合算式，注意运算顺序。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "two-step-first-err",
+          "category": "reasoning",
+          "description": "第一步求错量，导致第二步连带错误"
+        },
+        {
+          "id": "two-step-order-err",
+          "category": "operation",
+          "description": "综合算式运算顺序错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-money",
+      "subject": "math",
+      "concept": "人民币购物：用元角分解决购物付钱、找零、比价问题，1 元=10 角、1 角=10 分。",
+      "factualContent": {
+        "unit": "人民币进率：1 元=10 角；1 角=10 分；购物中付钱、找零用元角分计算。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "money-unit-convert-err",
+          "category": "unit",
+          "description": "元角分进率记错（如 1 元当 100 角）"
+        },
+        {
+          "id": "money-calc-change-err",
+          "category": "calculation",
+          "description": "付钱/找零计算错误，或单位未统一"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-length-app",
+      "subject": "math",
+      "concept": "长度单位应用：用长度单位解决比较、计算实际问题，注意统一单位。",
+      "factualContent": {
+        "rule": "长度应用：计算前统一单位；比较长短先换算成同一单位。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "length-app-unit-mix",
+          "category": "unit",
+          "description": "不同长度单位直接相加减，未换算"
+        },
+        {
+          "id": "length-app-calc-err",
+          "category": "calculation",
+          "description": "长度计算或换算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-mass-app",
+      "subject": "math",
+      "concept": "质量单位应用：用质量单位解决比较、计算实际问题，注意统一单位。",
+      "factualContent": {
+        "rule": "质量应用：比较与计算前统一单位（克/千克按 1000 进率换算）。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "mass-app-unit-mix",
+          "category": "unit",
+          "description": "克与千克未换算直接运算"
+        },
+        {
+          "id": "mass-app-calc-err",
+          "category": "calculation",
+          "description": "质量计算或换算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m8-extra-condition",
+      "subject": "math",
+      "concept": "含多余条件问题：识别题目中与求解无关的多余条件，剔除后再解答。",
+      "factualContent": {
+        "rule": "多余条件：先明确问题要求什么，再筛选相关条件，忽略无关数据。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "extra-use-irrelevant",
+          "category": "reasoning",
+          "description": "把多余条件也用于计算，结果错误"
+        },
+        {
+          "id": "extra-choose-right",
+          "category": "reading",
+          "description": "未识别出所需条件，漏用必要数据"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m9-data-tally",
+      "subject": "math",
+      "concept": "数据收集（正字法）：用画“正”字的方法收集整理数据，一个正字代表 5 个。",
+      "factualContent": {
+        "rule": "正字计数：每写一画记 1 个，写满一个“正”是 5 个；统计时数完整正字×5 加剩余笔画。"
+      },
+      "graphicType": "chart",
+      "errors": [
+        {
+          "id": "data-tally-count-err",
+          "category": "calculation",
+          "description": "正字笔画数错，计数错误（漏数/多数）"
+        },
+        {
+          "id": "data-tally-total-err",
+          "category": "calculation",
+          "description": "汇总各类数量时合计错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m9-data-question",
+      "subject": "math",
+      "concept": "统计回答问题：根据统计图表数据回答最多、最少、相差多少等问题。",
+      "factualContent": {
+        "rule": "统计读图：从统计表/图中读取各类数量，比较大小回答最多最少，求相差用减法。"
+      },
+      "graphicType": "chart",
+      "errors": [
+        {
+          "id": "data-query-read-err",
+          "category": "reading",
+          "description": "统计图表数据读错"
+        },
+        {
+          "id": "data-query-compare-err",
+          "category": "reasoning",
+          "description": "最多/最少判断错误或相差计算错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m10-logic-reasoning",
+      "subject": "math",
+      "concept": "简单逻辑推理：根据已知条件用排除法、假设法进行简单推理判断。",
+      "factualContent": {
+        "rule": "逻辑推理：先提取条件，用排除法缩小范围，逐一确定每个对象的属性；注意条件间的联系。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "logic-condition-miss",
+          "category": "reading",
+          "description": "漏看推理条件，结论错误"
+        },
+        {
+          "id": "logic-deduce-err",
+          "category": "reasoning",
+          "description": "推理过程跳跃或方向错误，结论不合条件"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m10-sudoku3",
+      "subject": "math",
+      "concept": "3×3 数独：在 3×3 方格中填入 1~3，使每行每列都不重复。",
+      "factualContent": {
+        "rule": "数独规则：每行、每列填入 1~3 各一次不重复；根据已填数逐格排除填空。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "sudoku-repeat-err",
+          "category": "reasoning",
+          "description": "同一行或同一列出现重复数字"
+        },
+        {
+          "id": "sudoku-miss-num",
+          "category": "reasoning",
+          "description": "某格候选数判断漏项，填错数字"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m10-combination",
+      "subject": "math",
+      "concept": "搭配问题：用连线法或列举法求出不同的搭配方案数（排列组合启蒙）。",
+      "factualContent": {
+        "rule": "搭配计数：每类各取一个的组合数=各类个数相乘（如 2 件上衣×3 条裤子=6 种）；用连线列举不重不漏。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "combination-miss-case",
+          "category": "reasoning",
+          "description": "列举搭配时漏掉某些方案，计数偏少"
+        },
+        {
+          "id": "combination-dup-case",
+          "category": "reasoning",
+          "description": "列举时重复计数同一方案"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m10-handshake",
+      "subject": "math",
+      "concept": "握手问题：n 个人两两握手，计算握手总次数（每两人只握一次）。",
+      "factualContent": {
+        "rule": "握手计数：第 1 人握 n-1 次，第 2 人握 n-2 次……总次数=(n-1)+(n-2)+…+1；也可用组合计数。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "handshake-pair-err",
+          "category": "reasoning",
+          "description": "重复计算两人之间的握手（如 3 人算 6 次）"
+        },
+        {
+          "id": "handshake-count-miss",
+          "category": "calculation",
+          "description": "累加握手次数时算错或漏算"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m10-order",
+      "subject": "math",
+      "concept": "排队问题：根据某人前后人数或位置，推理队列总人数或某人位置。",
+      "factualContent": {
+        "rule": "排队推理：某人前面有 a 人、后面有 b 人，总人数=a+b+1（含自己）；注意“从前往后数第几”与“后面有几人”的区别。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "order-position-err",
+          "category": "reasoning",
+          "description": "计算总人数时忘加自己（漏 +1）"
+        },
+        {
+          "id": "order-front-back",
+          "category": "reading",
+          "description": "前后方向或“第几/几人”理解混淆"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m11-judge-mixed",
+      "subject": "math",
+      "concept": "判断题综合：综合判断二年级数学概念与计算的正确与否。",
+      "factualContent": {
+        "rule": "判断题：逐句核对概念、运算顺序、单位换算等知识点，找出表述错误之处。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "judge-concept-err",
+          "category": "concept",
+          "description": "对概念表述（余数小于除数、数位顺序等）判断错误"
+        },
+        {
+          "id": "judge-calc-err",
+          "category": "calculation",
+          "description": "对算式结果或运算顺序的判断错误"
+        }
+      ]
+    },
+    {
+      "kpId": "math-g2-m12-choice-mixed",
+      "subject": "math",
+      "concept": "选择题综合：从选项中选出二年级综合题（计算、概念、应用）的正确答案。",
+      "factualContent": {
+        "rule": "选择题：先理解题意，计算或推理后与各选项比对，排除明显错误项。"
+      },
+      "graphicType": "text",
+      "errors": [
+        {
+          "id": "choice-option-err",
+          "category": "reasoning",
+          "description": "对选项筛选不严，选了相近但错误的项"
+        },
+        {
+          "id": "choice-calc-err",
+          "category": "calculation",
+          "description": "计算错误导致选错选项"
+        }
+      ]
+    }
+  ]
+}

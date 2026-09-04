@@ -1,13 +1,18 @@
 #!/usr/bin/env node
 /**
- * dev/r2d-ontology-apply.js — 应用 R2-d 五类本体补全批次 1（G1）到 knowledge-math/cn.js（Frozen Core 数据）
+ * dev/r2d-ontology-apply.js — 应用 R2-d 五类本体补全草案（分批次）到 knowledge-*.js（Frozen Core 数据）
  *
- * 依据 docs/r2d-g1-ontology-draft.json（已评审确认）。行为：
- *   1) 归档备份 knowledge-math/cn.js → archive/knowledge-<sub>-r2d-<ts>.js
- *   2) math G1（53 个）：common_errors 已有 → 替换为草案 errors（bundle 整数组消费、无按 id 引用，替换安全；草案为知识点级完整错题模式）
- *   3) cn G1（7 个）：插入 concept / factualContent / graphicType / common_errors（cn 原无这些字段）
- *   行级最小改写，保留原文件其余内容/格式
- *   4) 输出统计
+ * 用法：node dev/r2d-ontology-apply.js <draft-file>
+ *   - 默认 docs/r2d-g1-ontology-draft.json（G1）
+ *   - G2: docs/r2d-g2-ontology-draft.json
+ *
+ * 行为（按条目与 KP 现状自适应）：
+ *   1) 归档备份 knowledge-{math,cn}.js → archive/knowledge-<sub>-r2d-<ts>.js
+ *   2) math G1（已有 common_errors、仅 errors）→ 替换 common_errors
+ *   3) 其余（KP 无 concept/factual/graphic/common_errors）→ 在 status 行后插入缺失字段
+ *      - math 文件：无引号键（concept: "…"）
+ *      - cn 文件：引号键（"concept": "…"）
+ *   行级最小改写，保留原文件其余内容/格式；幂等（重复运行不重复插入）
  *
  * 改后验证：npm run verify:m1 && npm run verify:m2 && npm run check-regression && npm test
  */
@@ -15,7 +20,8 @@
 const path = require('path');
 const fs = require('fs');
 const ROOT = path.join(__dirname, '..');
-const DRAFT = JSON.parse(fs.readFileSync(path.join(ROOT, 'docs', 'r2d-g1-ontology-draft.json'), 'utf8'));
+const DRAFT_FILE = process.argv[2] || 'docs/r2d-g1-ontology-draft.json';
+const DRAFT = JSON.parse(fs.readFileSync(path.join(ROOT, DRAFT_FILE), 'utf8'));
 
 function ts() {
   const d = new Date();
@@ -31,77 +37,79 @@ function archive(fp, tag) {
 }
 
 // 只匹配行首的 KP id（避免 common_errors 内联 "id" 干扰 curId 跟踪）
-const ID_RE = /^(\s*)(?:["']?id["']?\s*:\s*")([^"]+)(")/;
-const COMMON_ERR_RE = /^(\s*common_errors\s*:\s*)(\[.*\])(,?\s*)$/;
-const STATUS_RE = /^(\s*"status"\s*:\s*"active")(,?\s*)$/;
+const ID_RE = /^(\s*)(["']?id["']?\s*:\s*")([^"]+)(")/;
+const COMMON_ERR_RE = /^(\s*["']?common_errors["']?\s*:\s*)(\[.*\])(,?\s*)$/;
+// status 行：math 无引号键（status: "active"）/ cn 引号键（"status": "active"）
+const STATUS_RE = /^(\s*["']?status["']?\s*:\s*"active")(,?\s*)$/;
 
-// 按 kpId 组织
 const byId = {};
 DRAFT.entries.forEach((en) => { byId[en.kpId] = en; });
 
-let mathReplaced = 0, cnInserted = 0;
-const pendingCns = DRAFT.entries.filter((e) => e.subject === 'cn').map((e) => e.kpId);
-
-// ---------- math：替换 common_errors ----------
-{
-  const fp = path.join(ROOT, 'shared', 'knowledge-math.js');
-  const lines = fs.readFileSync(fp, 'utf8').split('\n');
-  let curId = null;
-  const out = lines.map((line) => {
-    const im = ID_RE.exec(line);
-    if (im) curId = im[2];
-    const en = curId ? byId[curId] : null;
-    if (!en || en.subject !== 'math') return line;
-    const cm = COMMON_ERR_RE.exec(line);
-    if (!cm || !en.errors) return line;
-    mathReplaced++;
-    return cm[1] + JSON.stringify(en.errors) + cm[3];
-  });
-  const changed = out.join('\n');
-  if (changed !== lines.join('\n')) {
-    const bak = archive(fp, 'r2d');
-    fs.writeFileSync(fp, changed, 'utf8');
-    console.log('[math] 替换 common_errors ' + mathReplaced + ' 个 KP → 备份 ' + path.basename(bak));
-  } else {
-    console.log('[math] 无改动（应替换 ' + mathReplaced + ' 个）');
-  }
+function quoteKeys(text) {
+  // 判断文件书写风格：含 "id": 视为引号键（cn），含 id: 视为无引号键（math）
+  return /"id"\s*:/.test(text.slice(0, 4000));
 }
 
-// ---------- cn：插入 4 字段 ----------
-{
-  const fp = path.join(ROOT, 'shared', 'knowledge-cn.js');
+function processFile(fp, want) {
   const lines = fs.readFileSync(fp, 'utf8').split('\n');
-  let curId = null;
-  const done = {}; // 幂等：同一 KP 只插一次
+  const quoted = quoteKeys(lines.join('\n'));
   const indent = '              ';
+  let curId = null;
+  const done = {};
+  const kpHasField = {}; // 幂等：KP 已有 concept/common_errors 等 → 不再插入
+  const FIELD_RE = /^\s*["']?(concept|factualContent|graphicType|common_errors)["']?\s*:/;
+  let replaced = 0, inserted = 0;
   const out = lines.map((line) => {
     const im = ID_RE.exec(line);
-    if (im) curId = im[2];
-    if (!curId || pendingCns.indexOf(curId) === -1 || done[curId]) return line;
+    if (im) curId = im[3];
+    if (curId && FIELD_RE.test(line)) kpHasField[curId] = true;
+    const en = curId ? byId[curId] : null;
+    if (!en || en.subject !== want || done[curId]) return line;
+
+    // 情形 A：KP 已有 common_errors 且草案仅 errors → 替换
+    if (en.errors && !en.concept && !en.factualContent && !en.graphicType) {
+      const cm = COMMON_ERR_RE.exec(line);
+      if (!cm) return line;
+      done[curId] = true;
+      replaced++;
+      return cm[1] + JSON.stringify(en.errors) + cm[3];
+    }
+
+    // 情形 B：插入缺失字段（concept/factualContent/graphicType/common_errors）；已插过则跳过（幂等）
     const sm = STATUS_RE.exec(line);
     if (!sm) return line;
+    if (kpHasField[curId]) return line;
     done[curId] = true;
-    const en = byId[curId];
     const ins = [];
-    if (en.concept) ins.push(indent + '"concept": ' + JSON.stringify(en.concept) + ',');
-    if (en.factualContent) ins.push(indent + '"factualContent": ' + JSON.stringify(en.factualContent) + ',');
-    if (en.graphicType) ins.push(indent + '"graphicType": ' + JSON.stringify(en.graphicType) + ',');
-    if (en.errors && en.errors.length) ins.push(indent + '"common_errors": ' + JSON.stringify(en.errors) + ',');
-    cnInserted++;
-    // status 行若本身无逗号（对象末字段）需补逗号，否则紧跟插入字段会语法错误
-    const fixed = line.replace(/("status"\s*:\s*"active")(,?)(\s*)$/, '$1,$3');
+    const ser = (key, val) => (quoted ? indent + '"' + key + '": ' : indent + key + ': ') + JSON.stringify(val) + ',';
+    if (en.concept) ins.push(ser('concept', en.concept));
+    if (en.factualContent) ins.push(ser('factualContent', en.factualContent));
+    if (en.graphicType) ins.push(ser('graphicType', en.graphicType));
+    if (en.errors && en.errors.length) ins.push(ser('common_errors', en.errors));
+    if (!ins.length) return line;
+    inserted++;
+    const fixed = line.replace(/^(\s*["']?status["']?\s*:\s*"active")(,?)(\s*)$/, '$1,$3');
     return fixed + '\n' + ins.join('\n');
   });
   const changed = out.join('\n');
   if (changed !== lines.join('\n')) {
     const bak = archive(fp, 'r2d');
     fs.writeFileSync(fp, changed, 'utf8');
-    console.log('[cn] 插入字段 ' + cnInserted + ' 个 KP → 备份 ' + path.basename(bak));
-  } else {
-    console.log('[cn] 无改动');
+    return { changed: true, replaced, inserted, bak: path.basename(bak) };
   }
+  return { changed: false, replaced, inserted };
 }
 
+const stats = {};
+for (const sub of ['math', 'cn']) {
+  const entries = DRAFT.entries.filter((e) => e.subject === sub);
+  if (!entries.length) continue;
+  const fp = path.join(ROOT, 'shared', 'knowledge-' + sub + '.js');
+  const r = processFile(fp, sub);
+  stats[sub] = r;
+  if (r.changed) console.log('[' + sub + '] 替换 ' + r.replaced + ' / 插入 ' + r.inserted + ' → 备份 ' + r.bak);
+  else console.log('[' + sub + '] 无改动（替换 ' + r.replaced + ' / 插入 ' + r.inserted + '，幂等）');
+}
 console.log('---');
-console.log('math 替换：' + mathReplaced + '（期望 53）| cn 插入：' + cnInserted + '（期望 7）');
+console.log('批次文件：' + DRAFT_FILE + '，条目 ' + DRAFT.entries.length);
 console.log('下一步验证：npm run verify:m1 && npm run verify:m2 && npm run check-regression && npm test');
