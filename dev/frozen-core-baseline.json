@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04T13:27:01.899Z",
+  "generatedAt": "2026-09-06T13:28:44.991Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -28,9 +28,9 @@
       "mtime": 1787846119108.3567
     },
     "shared/components.css": {
-      "hash": "569da33f9bc6a981",
-      "size": 20755,
-      "mtime": 1788509527183.1008
+      "hash": "ebcedf6822127764",
+      "size": 20500,
+      "mtime": 1788541579298.94
     },
     "shared/pages.css": {
       "hash": "05e76d4d35ee08f8",
@@ -53,9 +53,9 @@
       "mtime": 1788067280594.5122
     },
     "shared/knowledge-math.js": {
-      "hash": "9e2f2383ef4bad64",
-      "size": 823467,
-      "mtime": 1788522468701.2222
+      "hash": "b512092abbc3aa01",
+      "size": 818718,
+      "mtime": 1788537989801.417
     },
     "shared/knowledge-cn.js": {
       "hash": "08f4df2e7f5416d6",
@@ -98,44 +98,49 @@
       "mtime": 1788527095299.4895
     },
     "shared/generator/generator-contract.js": {
-      "hash": "42c846d95f7033fb",
-      "size": 13553,
-      "mtime": 1788354779493.9224
+      "hash": "872a6b4a89eb1d59",
+      "size": 14029,
+      "mtime": 1788699991890.0774
     },
     "shared/generator/generator-registry.js": {
-      "hash": "6a9887bc48c2d641",
-      "size": 8076,
-      "mtime": 1788259317907.4556
+      "hash": "81ce95032de12d05",
+      "size": 8267,
+      "mtime": 1788697962608.629
     },
     "shared/generator/generator-selector.js": {
-      "hash": "0c2f3feb3f94d9bd",
-      "size": 6432,
-      "mtime": 1788355936971.367
+      "hash": "2c942ecf6314f82e",
+      "size": 6594,
+      "mtime": 1788699964238.1396
     },
     "shared/generator/generator-mode.js": {
-      "hash": "6b204a670054f1a8",
-      "size": 2376,
-      "mtime": 1788344285291.6924
+      "hash": "9ff51d4da2df90c7",
+      "size": 2541,
+      "mtime": 1788699978310.3325
     },
     "shared/generator/retry-loop.js": {
       "hash": "e2a7ead6dd202379",
       "size": 6261,
       "mtime": 1788344010494.206
     },
+    "shared/generator/legacy-adapter.js": {
+      "hash": "0ea5e8ebb1b7932d",
+      "size": 24361,
+      "mtime": 1788700018730.638
+    },
     "shared/generator/generators/arithmetic.js": {
-      "hash": "c40ca911a560482f",
-      "size": 4718,
-      "mtime": 1788253388560.5427
+      "hash": "145ed691c2244434",
+      "size": 5069,
+      "mtime": 1788700029463.9329
     },
     "shared/generator/generators/selection.js": {
-      "hash": "c93825ba7ed6666f",
-      "size": 5060,
-      "mtime": 1788090743358.4827
+      "hash": "6628571d27ad32a7",
+      "size": 5411,
+      "mtime": 1788700083775.1516
     },
     "shared/generator/generators/complex.js": {
-      "hash": "e9230fe77f784cc5",
-      "size": 8529,
-      "mtime": 1788098748612.5752
+      "hash": "f7fff315bd852bc3",
+      "size": 8868,
+      "mtime": 1788700073922.312
     },
     "shared/generator/generators/index.js": {
       "hash": "575e1571a6cfbdef",
@@ -143,9 +148,9 @@
       "mtime": 1788098629735.06
     },
     "shared/generator/core/rng.js": {
-      "hash": "7535e7ddf5358b90",
-      "size": 1421,
-      "mtime": 1788090526795.4841
+      "hash": "f51b0140c2e169ae",
+      "size": 2003,
+      "mtime": 1788541680216.4817
     },
     "shared/generator/core/arithmetic-core.js": {
       "hash": "ae9dcb1d0865ebcf",
@@ -168,24 +173,24 @@
       "mtime": 1788514945150.9763
     },
     "shared/strategy/strategy-engine.js": {
-      "hash": "14691be178fd7b73",
-      "size": 12435,
-      "mtime": 1788359466690.3513
+      "hash": "7febdfa9bc2c665a",
+      "size": 15990,
+      "mtime": 1788700164615.4836
     },
     "shared/strategy/comprehensive-strategy.js": {
-      "hash": "3626856a9716a429",
-      "size": 10858,
-      "mtime": 1788347386539.518
+      "hash": "807af549bd43da6c",
+      "size": 12169,
+      "mtime": 1788699584682.0625
     },
     "shared/strategy/strategy-error.js": {
-      "hash": "242c4e5ae33412e0",
-      "size": 857,
-      "mtime": 1788075216131.3135
+      "hash": "0115cec8a2f67d8a",
+      "size": 1078,
+      "mtime": 1788697899360.9739
     },
     "shared/strategy/strategy-request.js": {
-      "hash": "ed51d41fed2e8a02",
-      "size": 4221,
-      "mtime": 1788074234674.8105
+      "hash": "17ac2bbee6e8fc53",
+      "size": 9596,
+      "mtime": 1788699463415.7407
     },
     "shared/strategy/strategy-resolver.js": {
       "hash": "0f5ac503ce7f4112",
@@ -193,14 +198,14 @@
       "mtime": 1788075283632.779
     },
     "shared/strategy/strategy-result.js": {
-      "hash": "0430156de62a88b3",
-      "size": 2313,
-      "mtime": 1788091504364.5505
+      "hash": "d8392ba2eedcab29",
+      "size": 2795,
+      "mtime": 1788699565588.3406
     },
     "shared/strategy/strategy-validator.js": {
-      "hash": "1d8d6dd7cf22c9bb",
-      "size": 4138,
-      "mtime": 1788084352646.8535
+      "hash": "3ff1a39a9aa8f13c",
+      "size": 4466,
+      "mtime": 1788699560958.7244
     },
     "shared/strategy/adaptive-strategy.js": {
       "hash": "efe3b684f6a30715",
@@ -253,19 +258,19 @@
       "mtime": 1788083676146.8467
     },
     "shared/strategy/question-plan.js": {
-      "hash": "9405198dd85c018d",
-      "size": 4126,
-      "mtime": 1788074457506.3035
+      "hash": "15dc26f493f9bb62",
+      "size": 6588,
+      "mtime": 1788699473270.3948
     },
     "shared/strategy/question-type-strategy.js": {
-      "hash": "f481d6a275233eca",
-      "size": 3829,
-      "mtime": 1788083042801.1003
+      "hash": "ac50af4376c323cc",
+      "size": 4334,
+      "mtime": 1788538358097.6924
     },
     "shared/strategy/question-type-allocation.js": {
-      "hash": "2c51faff8ec3ec48",
-      "size": 7453,
-      "mtime": 1788523733801.939
+      "hash": "c7370e0954a64b80",
+      "size": 7491,
+      "mtime": 1788700098618.3071
     },
     "shared/generator/core/kp-arithmetic-semantics.js": {
       "hash": "7d3ce8b2e09987cd",
@@ -273,9 +278,9 @@
       "mtime": 1788317738272.3894
     },
     "shared/validator/validation-pipeline.js": {
-      "hash": "c52f25faed3e8998",
-      "size": 4482,
-      "mtime": 1788109109726.429
+      "hash": "16a6e0924163d969",
+      "size": 3791,
+      "mtime": 1788541593524.3037
     },
     "shared/validator/question-validator.js": {
       "hash": "e57abf0e44047f5a",
@@ -303,9 +308,9 @@
       "mtime": 1788151649749.0671
     },
     "shared/validator/duplicate-validator.js": {
-      "hash": "f38f0d45b74c2e4a",
-      "size": 3011,
-      "mtime": 1788108887170.0967
+      "hash": "efd610507e5a5d82",
+      "size": 3411,
+      "mtime": 1788542021596.9895
     },
     "shared/validator/graphic-validator.js": {
       "hash": "140eae607d75afc7",
@@ -318,9 +323,9 @@
       "mtime": 1788109032394.7559
     },
     "shared/validator/batch-validator.js": {
-      "hash": "7b469a0c970d98fe",
-      "size": 6362,
-      "mtime": 1788109498923.976
+      "hash": "3a4d679d2207890c",
+      "size": 6631,
+      "mtime": 1788700145977.4473
     },
     "shared/validator/quality-scorer.js": {
       "hash": "3851d521183883c9",
@@ -378,9 +383,9 @@
       "mtime": 1788509496451.3833
     },
     "shared/presentation/html-renderer.js": {
-      "hash": "812edaaefe2a48c6",
-      "size": 6546,
-      "mtime": 1788509514354.116
+      "hash": "88499bf6d01f662f",
+      "size": 6759,
+      "mtime": 1788540840602.081
     },
     "shared/presentation/render-options.js": {
       "hash": "38ffee901bd7c3a7",
@@ -403,14 +408,14 @@
       "mtime": 1788190235405.2598
     },
     "shared/generation-engine.js": {
-      "hash": "d1aaa59966a5e797",
-      "size": 17531,
-      "mtime": 1788528297010.042
+      "hash": "9d6e94fff0b68cae",
+      "size": 23131,
+      "mtime": 1788699926413.9438
     },
     "shared/presentation-engine.js": {
-      "hash": "2a80390b9432d824",
-      "size": 11383,
-      "mtime": 1788483549913.8074
+      "hash": "0b423ed05867fb66",
+      "size": 11703,
+      "mtime": 1788700112531.8525
     },
     "shared/print.js": {
       "hash": "4c128ad1d9e66d09",
@@ -418,9 +423,9 @@
       "mtime": 1788509985615.2605
     },
     "shared/practice-session.js": {
-      "hash": "b118f2a231a67b0f",
-      "size": 14387,
-      "mtime": 1788483042579.9604
+      "hash": "a070ce60720afca0",
+      "size": 15332,
+      "mtime": 1788700136830.4336
     },
     "shared/check.js": {
       "hash": "fb37a44749114d74",

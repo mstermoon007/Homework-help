@@ -30,7 +30,7 @@ var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
 var loader = require(path.join(ROOT, 'dev', 'plugin-loader.js'));
 var GenCap = require(path.join(ROOT, 'shared', 'generator-capability-registry.js'));
-var Adapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-plugin-adapter.js'));
+var Adapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-adapter.js'));
 var CoreGen = require(path.join(ROOT, 'shared', 'generator', 'generators', 'index.js'));
 var Contract = require(path.join(ROOT, 'shared', 'generator', 'generator-contract.js'));
 var GraphicRenderer = require(path.join(ROOT, 'shared', 'generator', 'graphic-renderer.js'));
@@ -111,7 +111,7 @@ function compareProfiles(legacy, native, plan) {
 
   fields.knowledgePoint = {
     legacy: legacy.kp, native: native.kp,
-    equal: legacy.kp === plan.knowledgePointId && native.kp === plan.knowledgePointId
+    equal: legacy.kp === (plan.knowledgePointIds && plan.knowledgePointIds[0]) && native.kp === (plan.knowledgePointIds && plan.knowledgePointIds[0])
   };
 
   fields.questionType = {

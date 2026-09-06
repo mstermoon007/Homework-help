@@ -35,11 +35,18 @@ function validatePlan(plan) {
 
   // ① KP 存在
   var kp = null;
-  if (!plan.knowledgePointId || typeof plan.knowledgePointId !== 'string') {
-    errors.push('① knowledgePointId 必填');
+  // Refactor Step 2：内部唯一语义 knowledgePointIds[]（边界兼容旧单数）
+  var kpIds = (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length)
+    ? plan.knowledgePointIds.slice()
+    : (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId ? [plan.knowledgePointId] : []);
+  if (!kpIds.length) {
+    errors.push('① knowledgePointIds 必填（数组）');
   } else {
-    kp = KnowledgePoint.get(plan.knowledgePointId);
-    if (!kp) errors.push('① 知识点不存在: ' + plan.knowledgePointId);
+    kpIds.forEach(function (id) {
+      var k = KnowledgePoint.get(id);
+      if (!k) errors.push('① 知识点不存在: ' + id);
+    });
+    kp = KnowledgePoint.get(kpIds[0]);
   }
 
   // ② questionType 合法

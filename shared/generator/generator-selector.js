@@ -26,6 +26,8 @@ var KnowledgePoint = require('../knowledge-point.js');
 var Mode = require('./generator-mode.js');
 // M7-R18：旧插件边界收敛到 shared/generator/legacy-adapter.js (P5 Task 5.1 统一)
 var LegacyAdapter = require('./legacy-adapter.js');
+// Refactor Step 2：QuestionPlan KP 数组唯一语义（边界兼容旧单数）
+var QuestionPlan = require('../strategy/question-plan.js');
 
 function trackOf(record) {
   return record.scope === 'core' ? 'native' : 'legacy';
@@ -34,12 +36,13 @@ function trackOf(record) {
 function selectGenerator(plan, options) {
   plan = plan || {};
   options = options || {};
-  if (!plan.knowledgePointId) {
-    throw new Error('GeneratorSelector: plan 缺少 knowledgePointId');
+  var primaryKp = QuestionPlan.planPrimaryKpId(plan);
+  if (!primaryKp) {
+    throw new Error('GeneratorSelector: plan 缺少 knowledgePointIds');
   }
 
   var mode = options.mode != null ? options.mode : Mode.resolve(plan);
-  var kp = KnowledgePoint.get(plan.knowledgePointId);
+  var kp = KnowledgePoint.get(primaryKp);
   var all = GenRegistry.all();
   var candidates = [];
 
@@ -52,7 +55,7 @@ function selectGenerator(plan, options) {
     var score = { record: g, kp: 0, capability: 0, qt: 0, diff: 0 };
 
     // ① 知识点匹配
-    if (g.knowledgePoints.indexOf(plan.knowledgePointId) !== -1) score.kp = 1;
+    if (g.knowledgePoints.indexOf(primaryKp) !== -1) score.kp = 1;
 
     // ② 能力匹配
     if (plan.questionTypeId && g.capabilities.indexOf(plan.questionTypeId) !== -1) score.capability = 1;

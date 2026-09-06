@@ -7,6 +7,80 @@
 
 ---
 
+## [Unreleased] — Refactor Step 1：Core Domain 收缩（核心生成链仅接受 math）
+
+**目标**：核心 Generation Engine 只保留数学（math）；语文(cn)/英语(en) 的生成责任从核心链删除，返回明确 `UNSUPPORTED_SUBJECT`，禁止 fallback。保留 UI、历史数据、兼容层。
+**对应重构基准确认**：见 `docs/REFACTOR_BASELINE.md`（重构前基线 + Step 1 复核记录）。
+
+### 业务改动（生成层，6 文件 + bundle 重建）
+- `shared/strategy/strategy-error.js`：新增错误码 `UNSUPPORTED_SUBJECT`。
+- `shared/strategy/strategy-engine.js`：`plan()` KP 解析+增强后按 `kp.subject`（兜底 kp id 前缀）门禁，非 math → 抛 `StrategyError('核心生成引擎仅支持数学（math）…', UNSUPPORTED_SUBJECT, {subject, knowledgePointId})`；同步 `npm run build:strategy` 重建 `shared/strategy-engine.bundle.js`（75 模块）。
+- `shared/strategy/comprehensive-strategy.js`：`build()` 拒绝非 math 综合练习（`Promise.reject` `UNSUPPORTED_SUBJECT`），cn/en 不再进 `KB.getEntries` 分配。
+- `shared/generation/api.js` + `shared/generation-engine.js`：`build`/`generateSync` 入口门禁——**kp id 前缀优先于 subject**（防止 `subject=math` 掩盖 multi-kp 中混入的 cn/en 知识点）；非 math → `GenerationUnsupportedError`（`code=UNSUPPORTED_SUBJECT`，`supportedSubjects=['math']`），不进 runPlans/渲染。
+- `shared/generation/orchestrator.js`：`orchestrate` 对非 math 请求返回 `trace{ code:'UNSUPPORTED_SUBJECT', subject, error }`。
+- `shared/generator/generator-registry.js`：`buildRecords` 仅收 `subject==='math'` 的 legacy 记录——cn/en 生成候选与「fallback:legacyPluginId」宿主一并根除。
+
+### 探针/测试随域收敛
+- `dev/check-strategy-plumbing.js`：只覆盖 math 域（口味 549/549），cn/en 不再进 StrategyEngine。
+- `dev/check-generator-registry.js`：kp pluginId 绑定校验限 math 域（cn/en 不再有 Generator 记录属预期）。
+- `tests/strategy/single-kp.test.js`：原「语文×5/英语×5 出计划」子测试 → 反转为「cn/en 抛 UNSUPPORTED_SUBJECT」回归（10 个 kp 全断言）。
+- `tests/strategy/spiral-context-regression.test.js`：en geometry KP 用例改 `math-g4-c4-c4-solid`（同为 geometry→context none）；全量回归限 math 域并去掉过时硬编码 574（改为按库统计 self-consistent）。
+- 未动：golden/snapshot 的 `chinese-pinyin` 用例（直连 legacy 插件 `plugin.generate`，属兼容层非核心链）；`verify:m2` 既有 `knowledge-capability.test.js` 567≠574 失败不受影响。
+
+### Gate（Step 1 执行后）
+- `npm run verify`：**PASS 7/7**（error 0；warning 22–25 随随机性波动，均为既有类型）。
+- `npm test`：**exit=0**。
+- `verify:presentation-runtime`：**PASS 16/16**（真实 `PracticeSession.start()` math 产 5 题 html=1654）。
+- `verify:layers` PASS；`verify:m1` PASS；`verify:m2` FAIL（既有 574≠567，与本步骤无关）。
+- 策略层：`tests/strategy` **168/168**、M3-21 plumbing **549/549 error 0**、M4-19 bundle PASS、M3-00 config PASS、综合练习管线 PASS、M4-R03 registry PASS（math 域绑定 549）。
+- 行为验证：math 单点/多点/综合/同步全正常；cn/en 全路径（subject 全称/缩写、kp 前缀、multi-kp 混入、comprehensive、generateSync）均返回 `UNSUPPORTED_SUBJECT`，无任何 fallback。
+- `verify:frozen-core`：漂移 **14→16**（新增 `shared/strategy/comprehensive-strategy.js`、`shared/strategy/strategy-error.js`；属授权 Refactor Step 1；`shared/generation/api.js`、`shared/generation/orchestrator.js`、`shared/strategy-engine.bundle.js` 不在 frozen 基线 91 文件集内，无新增漂移）。
+
+---
+
+## [Unreleased] — Refactor Step 2：Request / QuestionPlan 数组化（knowledgePointIds[] 唯一内部语义）
+
+**目标**：把「单一知识点」的内部语义统一为 `knowledgePointIds` 数组。所有生产端（策略层/api/orchestrator）只输出数组；旧调用方（`knowledgePointId` 字符串、`knowledgePoints` 数组）仅在边界 intake 归一一次，不维护第二套内部语义。同步确立 feature 字段（mode/grade/volume/unitId/questionType/count/difficulty/spiralLevel/combine/previousGenerationId）与别名（volume→count、spiral_level→spiralLevel、mode 中文别名）。
+**设计决策**：请求 KP 优先级 `knowledgePointIds > knowledgePoints > knowledgePointId > kp`；`normalizeRequest` 删除单数字段；`combine===true` 多 KP → 合并单计划（`knowledgePointIds` 全量，策略决策用 ISO 主 KP）；引擎拒绝「多 KP 且未 combine」（`INVALID_REQUEST`，防静默丢弃），api/orchestrator/镜像在拆单前先路由 combine。
+**对应重构基准确认**：见 `docs/REFACTOR_BASELINE.md` §8。
+
+### 业务改动（策略层）
+- `shared/strategy/strategy-request.js`：`resolveKnowledgePointIds`（四优先级）+ `normalizeRequest`（删单数字段、volume/spiral_level/mode 别名、新字段合法性校验）+ `validateRequest`/`canonRequest` 数组化。
+- `shared/strategy/question-plan.js`：新增 `planKnowledgePointIds`/`planPrimaryKpId` 消费端 helper；`validateQuestionPlan` 接受数组（权威）或旧单数（容忍），二者皆无才报错。
+- `shared/strategy/strategy-engine.js`：入口 `normalizeRequest`；`kpIds` 数组化解析；多 KP 未 combine → `INVALID_REQUEST`（报错含 merge 指引）；subject 门禁覆盖全部 kpIds（resolve-subject + 前缀）；`trace.knowledgePointIds`；QuestionPlan 输出 `knowledgePointIds`（combine 为全量、单点为 `[kp.id]`）+ `combine`/`previousGenerationId`/`unitId` 透传；spiral 取 `request.spiralLevel`；generator 候选计划 `knowledgePointIds:[kp.id]`。
+- `shared/strategy/strategy-validator.js` / `strategy-result.js`：数组容忍（取 `plan.knowledgePointIds`，缺省回退旧单数），主 KP = 首元素。
+- `shared/strategy/comprehensive-strategy.js`：`volume` 别名、`unitId` 按 moduleId 过滤、per-KP 请求 `knowledgePointIds:[entry.id]`。
+
+### 业务改动（生成/计划消费端）
+- `shared/generation/api.js`、`orchestrator.js`、`shared/generation-engine.js`（浏览器镜像）：`requestKpIds`/`requestCount`/`planKey` helper；`isComprehensive` 数组判定；`requestSubject` 遍历全部 kpIds；combine 路由；multi-kp 拆单（per-KP `knowledgePointIds:[kpId]`、spiralLevel 透传、`failedPlans` 以 planKey 标注）。
+- 消费端 helper 化：`generator-contract.js`/`generator-selector.js`/`generator-mode.js`/`legacy-adapter.js`/`presentation-engine.js`/`batch-validator.js`；`arithmetic`/`complex`/`selection` 本地 `pkp(plan)` 主 KP shim；`question-type-allocation.js` 输出 `knowledgePointIds`。
+- `shared/practice-session.js` `_buildGenerationRequest`：发送 `knowledgePointIds` 数组（单点 `[kp]`）+ `combine` 透传。
+
+### Bundle / 探针 / 测试
+- 重建 `shared/strategy-engine.bundle.js`（75 模块/5 shims）与 `shared/presentation-engine.bundle.js`（8 inlined/80 delegated）。
+- 探针收敛：`dev/check-presentation-runtime.js`、`dev/test-generator-regression.js`、`dev/test-generator-equivalence.js` 改读 `plan.knowledgePointIds[0]`。
+- 测试：`tests/strategy/strategy-engine.test.js`（断言 `plan.knowledgePointIds` 且 `knowledgePointId===undefined`）、`tests/comprehensive/comprehensive-strategy.test.js`（数组深比较）、`tests/strategy/strategy-request.test.js`（原「缺 KP 即非法」反转 subject+grade 合法；新增 S2-1..S2-4 归一/别名/校验/回退）、新增 `tests/strategy/kp-array-gate.test.js`（GATE-S2-1..9：combine、volume、数组删除单数、isComprehensive、subject 门禁、消费端读取器、端到端 generate、sync 归一）。
+
+### Gate（Step 2 执行后）
+- `npm test`：**exit=0**（全链 PASS，含 check-lint 0 违规）。
+- 策略层：`tests/strategy` glob 全量 **182/182**（168 旧 + 14 新增：S2-1..S2-4 归一 + GATE-S2-1..9）。
+- `verify:m3`：**PASS**（tests/strategy 182/182 + config + bundle 重建 + plumbing 549/549 error 0）。
+- `verify:presentation-runtime`：**PASS**（PracticeSession.start() 真实产题）。
+- `verify:layers` PASS；`verify:m1` PASS；`verify:m2` FAIL（既有 `check-m2-final.js:37 ORCHESTRATION_PLUGIN_IDS is not defined` 脚本缺陷 + `knowledge-capability.test.js` 567≠574，均非本步骤引入）。
+- `tests/generator` 71 项：70 pass、1 fail——`generator-registry.test.js`「KB pluginId→Generator」断言（Step 1 起既存：registry 仅收 math + cn/en 遗留 pluginId 属预期，m4 红灯）。
+- `verify:frozen-core`：执行后漂移 **16→26**（+10 属本步骤；精确归属见 REFACTOR_BASELINE §8）。随授权提交，已以 `--baseline` 重锚（92 files，含修正 frozen 清单陈旧路径 `legacy-plugin-adapter.js`→`legacy-adapter.js`），重锚后 **0 漂移**。
+
+---
+
+## [Unreleased] — 生成层三阶段适配检查 + 运行时探针加载器修复
+
+- **C01/C02 运行时探针加载器缺陷修复（`dev/check-presentation-runtime.js`）**：vm 加载器 `exec()` 嵌套加载后未恢复 `win.require`，导致子文件 require 基准泄漏——`generation-engine.js:423` 的 `require('./generator/core/rng.js')` 误以 `shared/generation/` 为基准解析出不存在的 `shared/generation/generator/core/rng.js`（真实文件在 `shared/generator/core/rng.js`），使 `verify:presentation-runtime` 必失败。修复：`exec()` 保存/恢复 `module/exports/require` 三态，子文件 exports 在恢复前捕获返回，父文件后续相对 require 回归正确基准。修复后探针 16 项全 PASS（含真实 `PracticeSession.start()` 端到端产题/渲染/判分与 C02-04 SVG 渲染链）。
+- **确认生成层三阶段适配完整且互不越层**：输入适配（`practice-bridge`→`practice-session`→`dto`/`strategy-request` 归一校验）、核心编排（`strategy-engine` 8 步计划 + `comprehensive-strategy` 配额 + `validation-pipeline`→`batch-validator`→`quality-scorer` 质量后处理）、输出适配（`PresentationRenderer.renderAll`→`RenderResult` 契约 → `html-renderer`/`svg-registry` + `legacy-adapter`/`semantic-question-bridge` 旧格式桥）完整闭环。
+
+## [Unreleased] — 四层架构归属一致性修复
+
+- **统一 `strategy-engine` 归属为生成层**：`generation-engine.js` PIPELINE 元数据、`ARCHITECTURE_LAYERS.md §3.1`（职责收敛）与 `DEVELOPMENT.md` 项目树均将核心策略规划归生成层，唯 `layers.json` 旧登记归大服务层。本次将 `strategy-engine.js`、`comprehensive-strategy.js`、`question-style-strategy.js`、`complexity-strategy.js` 移入 `GENERATION/STRATEGY` 新组；`svg-templates.js` 登记入 `GENERATION/PRESENTATION`；同步修正 `ARCHITECTURE_LAYERS.md` §1/§2.2/§2.4 表述。`npm run verify:layers` 由 FAIL → PASS。
+
 ## [V4.2.1] — 2026-09-04
 
 本版本主题：**打印紧凑化 Bug Fix（Issue #1，Frozen Core 授权）+ 知识点契约对齐 + 工具栏大服务层集中管理随包**。

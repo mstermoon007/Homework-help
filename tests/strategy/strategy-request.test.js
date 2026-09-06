@@ -12,11 +12,16 @@ test('合法 knowledgePointId 可创建 Request', () => {
   assert.strictEqual(v.valid, true);
 });
 
-test('缺少 knowledgePointId -> 非法', () => {
-  const req = Request.createRequest({ subject: 'math', grade: 1 });
+test('缺少 knowledgePointId（且无 subject+grade）-> 非法', () => {
+  const req = Request.createRequest({});
   const v = Request.validateRequest(req);
   assert.strictEqual(v.valid, false);
-  assert.ok(v.errors.some(e => e.includes('knowledgePointId')));
+  assert.ok(v.errors.some(e => e.includes('knowledgePointId')) || v.errors.some(e => e.includes('knowledgePointIds')));
+});
+
+test('subject+grade 兜底（综合模式）合法', () => {
+  const v = Request.validateRequest({ subject: 'math', grade: 1 });
+  assert.strictEqual(v.valid, true);
 });
 
 test('非法 questionType -> 非法', () => {
@@ -81,4 +86,55 @@ test('targetDifficulty 自动钳制在 1-10', () => {
 test('isLegacyRequest 识别旧 UI 参数', () => {
   assert.strictEqual(Request.isLegacyRequest(Request.createFromLegacyUI({})), true);
   assert.strictEqual(Request.isLegacyRequest(Request.createRequest({})), false);
+});
+
+// ===== Refactor Step 2：新字段 / 数组唯一语义 =====
+
+test('S2-1 normalizeRequest：旧 knowledgePointId/复数归一为 knowledgePointIds，删除单数', () => {
+  const n = Request.normalizeRequest({ knowledgePointId: 'math-g1-m0-make-ten', count: 3 });
+  assert.deepStrictEqual(n.knowledgePointIds, ['math-g1-m0-make-ten']);
+  assert.strictEqual(n.knowledgePointId, undefined);
+  assert.strictEqual(n.knowledgePoints, undefined);
+
+  const n2 = Request.normalizeRequest({ knowledgePoints: ['a', 'b'] });
+  assert.deepStrictEqual(n2.knowledgePointIds, ['a', 'b']);
+  assert.strictEqual(n2.knowledgePoints, undefined);
+
+  const n3 = Request.normalizeRequest({ knowledgePointIds: ['z'], knowledgePointId: 'legacy' });
+  assert.deepStrictEqual(n3.knowledgePointIds, ['z'], '数组为权威');
+});
+
+test('S2-2 normalizeRequest：volume→count 别名、spiral_level→spiralLevel、mode 归一', () => {
+  const n = Request.normalizeRequest({ knowledgePointIds: ['x'], volume: 5 });
+  assert.strictEqual(n.count, 5);
+
+  const n2 = Request.normalizeRequest({ knowledgePointIds: ['x'], spiral_level: 3 });
+  assert.strictEqual(n2.spiralLevel, 3);
+
+  const n3 = Request.normalizeRequest({ knowledgePointIds: ['x'], mode: 'kp' });
+  assert.strictEqual(n3.mode, 'single-kp');
+
+  const nalk = Request.normalizeRequest({ knowledgePointIds: ['x'], mode: 'zonghe' });
+  assert.strictEqual(nalk.mode, 'comprehensive');
+});
+
+test('S2-3 validateRequest：新字段校验', () => {
+  assert.strictEqual(Request.validateRequest({ knowledgePointIds: ['x'], difficulty: 0 }).valid, false);
+  assert.strictEqual(Request.validateRequest({ knowledgePointIds: ['x'], difficulty: 11 }).valid, false);
+  assert.strictEqual(Request.validateRequest({ knowledgePointIds: ['x'], spiralLevel: 7 }).valid, false);
+  assert.strictEqual(Request.validateRequest({ knowledgePointIds: ['x'], mode: 'bogus' }).valid, false);
+  assert.strictEqual(Request.validateRequest({ knowledgePointIds: ['x'], unitId: 123 }).valid, false);
+  assert.strictEqual(Request.validateRequest({ knowledgePointIds: ['x'], combine: 'yes' }).valid, false);
+  assert.strictEqual(Request.validateRequest({ knowledgePointIds: ['x'], previousGenerationId: 9 }).valid, false);
+  assert.strictEqual(Request.validateRequest({ knowledgePointIds: ['x'], questionTypes: 'calc' }).valid, false);
+
+  assert.strictEqual(Request.validateRequest({
+    knowledgePointIds: ['x'], mode: 'single-kp', grade: 2, count: 4,
+    difficulty: 3, spiralLevel: 2, unitId: 'u1', combine: false, previousGenerationId: 'g1'
+  }).valid, true);
+});
+
+test('S2-4 validateRequest：无 KP 但有 subject+grade 合法（综合兜底）', () => {
+  const v = Request.validateRequest({ subject: 'math', grade: 1 });
+  assert.strictEqual(v.valid, true);
 });

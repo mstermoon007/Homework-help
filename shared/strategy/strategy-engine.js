@@ -35,8 +35,22 @@ var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 var AdaptiveStrategy = require('./adaptive-strategy.js');
 
+// Core Domain 收缩（Refactor Step 1）：核心生成链仅接受 math 知识点。
+// 非 math（语文 cn / 英语 en）返回明确 unsupported，禁止 fallback。
+function subjectOfKpId(id) {
+  if (!id || typeof id !== 'string') return null;
+  if (id.indexOf('cn-') === 0) return 'cn';
+  if (id.indexOf('en-') === 0) return 'en';
+  if (id.indexOf('math-') === 0) return 'math';
+  return null;
+}
+
 function plan(request) {
   var trace = {};
+
+  // Refactor Step 2：请求归一。内部唯一 KP 语义 = knowledgePointIds 数组。
+  // 旧调用（knowledgePointId 字符串 / knowledgePoints 数组）在此归一为数组，之后不再有单数语义。
+  request = StrategyRequest.normalizeRequest(request);
 
   // 1) Request validate
   var reqCheck = StrategyRequest.validateRequest(request);
@@ -44,11 +58,43 @@ function plan(request) {
     throw new StrategyError('Request 非法: ' + reqCheck.errors.join('; '), CODES.INVALID_REQUEST, { errors: reqCheck.errors });
   }
 
+  var kpIds = request.knowledgePointIds;
+  // 引擎单次规划接受 1 个知识点；combine=true 时接受多个并把全量写入计划。
+  // 多个知识点且未 combine 属 multi-kp 编排（api/orchestrator 按知识点拆分），禁止在本层静默丢弃。
+  if (kpIds.length > 1 && request.combine !== true) {
+    throw new StrategyError('StrategyEngine 单次规划仅接受单一知识点或 combine=true：' + kpIds.join(','),
+      CODES.INVALID_REQUEST, { knowledgePointIds: kpIds });
+  }
+
   // 2) KP resolve + Capability inject
-  var kp = StrategyResolver.resolveKnowledgePoint(request.knowledgePointId);
+  var kp = StrategyResolver.resolveKnowledgePoint(kpIds[0]);
   var GenRegistry = require('../generator/generator-registry.js');
   kp = GenRegistry.enhanceKp(kp);
+
+  // Core Domain 收缩（Refactor Step 1）：核心生成链仅接受 math。
+  // 非 math 知识点 → UNSUPPORTED_SUBJECT，明确 unsupported，禁止任何 fallback 到 legacy。
+  var coreSubject = (kp && kp.subject) || subjectOfKpId(kp && kp.id);
+  if (coreSubject !== 'math') {
+    throw new StrategyError(
+      '核心生成引擎仅支持数学（math），暂不支持 ' + (coreSubject || '未知科目') + ' 知识点: ' + kp.id,
+      CODES.UNSUPPORTED_SUBJECT,
+      { subject: coreSubject, knowledgePointId: kp.id }
+    );
+  }
+  // 多 KP（combine）同样逐一校验学科：任一非 math → unsupported
+  for (var gi = 0; gi < kpIds.length; gi++) {
+    var s = subjectOfKpId(kpIds[gi]);
+    if (s && s !== 'math') {
+      throw new StrategyError(
+        '核心生成引擎仅支持数学（math），暂不支持 ' + s + ' 知识点: ' + kpIds[gi],
+        CODES.UNSUPPORTED_SUBJECT,
+        { subject: s, knowledgePointId: kpIds[gi] }
+      );
+    }
+  }
+
   trace.knowledgePoint = kp.id;
+  trace.knowledgePointIds = request.combine === true ? kpIds.slice() : [kp.id];
   trace.kpCapabilities = kp.capabilities;
 
   var capability = CapabilityResolver.getCapabilities(kp);
@@ -140,8 +186,8 @@ function plan(request) {
     settings: request.settings
   });
 
-  var spiralInputLevel = request.spiral_level;
-  if (learnerDecision && request.spiral_level == null) spiralInputLevel = learnerDecision.targetSpiralLevel;
+  var spiralInputLevel = request.spiralLevel;
+  if (learnerDecision && spiralInputLevel == null) spiralInputLevel = learnerDecision.targetSpiralLevel;
   var spiral = SpiralStrategy.resolveSpiral({
     knowledgePoint: kp,
     spiral_level: spiralInputLevel,
@@ -204,7 +250,7 @@ function plan(request) {
   // 7) Generator select（在校验前，供 Plan 携带 generator 信息）
   var GeneratorSelector = require('../generator/generator-selector.js');
   var selectedGenerator = GeneratorSelector.selectGenerator({
-    knowledgePointId: kp.id,
+    knowledgePointIds: [kp.id],
     questionTypeId: questionType,
     difficulty: effectiveDifficulty,
     cognitiveLevel: cognitiveLevel,
@@ -216,7 +262,7 @@ function plan(request) {
 
   // 8) QuestionPlan 构建
   var questionPlan = {
-    knowledgePointId: kp.id,
+    knowledgePointIds: request.combine === true ? kpIds.slice() : [kp.id],
     questionTypeId: questionType,
     subtype: request.subtype != null && request.subtype !== '' ? request.subtype : undefined,
     count: count,
@@ -228,6 +274,15 @@ function plan(request) {
     constraints: constraints,
     generator: selectedGenerator
   };
+  if (request.combine === true) {
+    questionPlan.combine = true;
+  }
+  if (request.previousGenerationId != null) {
+    questionPlan.previousGenerationId = request.previousGenerationId;
+  }
+  if (request.unitId != null) {
+    questionPlan.unitId = request.unitId;
+  }
   if (arithSem) {
     questionPlan.operation = arithSem.operators;
   }

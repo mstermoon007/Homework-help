@@ -58,11 +58,23 @@ win.exports = win.module.exports;
 var context = vm.createContext(win);
 
 function exec(absPath) {
+  // 嵌套加载必须保存/恢复 require 作用域：否则子文件的 win.require 会泄漏到父文件后续执行，
+  // 导致父文件相对 require 以子文件为基准解析（如 generation-engine.js 的
+  // require('./generator/core/rng.js') 误解析到 shared/generation/ 下，ENOENT）。
+  var prevModule = win.module;
+  var prevExports = win.exports;
+  var prevRequire = win.require;
   win.module = { exports: {} };
   win.exports = win.module.exports;
   win.require = makeVmRequire(absPath);
-  vm.runInContext(fs.readFileSync(absPath, 'utf8'), context, { filename: absPath, timeout: 30000 });
-  return win.module.exports;
+  try {
+    vm.runInContext(fs.readFileSync(absPath, 'utf8'), context, { filename: absPath, timeout: 30000 });
+    return win.module.exports;
+  } finally {
+    win.module = prevModule;
+    win.exports = prevExports;
+    win.require = prevRequire;
+  }
 }
 
 function makeVmRequire(absPath) {
@@ -174,7 +186,7 @@ PresentationEngine.generateQuestions(plan, { skipValidation: true })
 
     // C02：真实页面入口 —— GenerationEngine.generate（build → runPlans → render）
     try {
-      GenerationEngine.generate({ knowledgePointId: plan.knowledgePointId, count: 5, difficulty: 3, grade: 1 })
+      GenerationEngine.generate({ knowledgePointId: plan.knowledgePointIds[0], count: 5, difficulty: 3, grade: 1 })
         .then(function (out) {
           var okQ = (out.questions && out.questions.length > 0);
           var okHtml = typeof out.html === 'string' && out.html.length > 0;

@@ -22,7 +22,10 @@ StrategyError.CODES = {
   INVALID_REQUEST: 'INVALID_REQUEST',
   INVALID_PLAN: 'INVALID_PLAN',
   NO_CAPABILITY: 'NO_CAPABILITY',
-  GENERATOR_MISMATCH: 'GENERATOR_MISMATCH'
+  GENERATOR_MISMATCH: 'GENERATOR_MISMATCH',
+  // Core Domain 收缩（Refactor Step 1）：核心生成链仅接受 math。
+  // 语文(cn)/英语(en) 返回明确 unsupported，禁止 fallback，不进入 Generator。
+  UNSUPPORTED_SUBJECT: 'UNSUPPORTED_SUBJECT'
 };
 
 function isStrategyError(err) {

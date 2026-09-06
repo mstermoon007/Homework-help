@@ -7,6 +7,8 @@
  *   2) 无非法 capability（必须来自 QuestionType Registry）
  *   3) 无孤立 Generator（每记录须有 >=1 capability 且 >=1 存在知识点的 KP）
  *   4) 无知识点指向不存在 Generator（KB 中带 pluginId 的 KP 必须有对应 Generator 记录）
+ *      —— Core Domain 收缩（Refactor Step 1）：语文(cn)/英语(en) 已移出核心生成链，
+ *         其 legacy 插件不再登记 Generator；该绑定校验仅覆盖 math 域。
  *   5) 禁止保存执行函数源码（全部记录 JSON 可序列化）
  *   6) KnowledgePoint → Capability → Generator 查询关系可用
  */
@@ -85,6 +87,9 @@ function run() {
     (KnowledgeBank[s] || []).forEach(function (g) {
       (g.modules || []).forEach(function (m) {
         (m.knowledgePoints || []).forEach(function (kp) {
+          // Core Domain 收缩（Refactor Step 1）：语文(cn)/英语(en) 不登记 Generator，
+          // 其 legacy pluginId 绑定不再参与「不存在 Generator」校验。
+          if (kp.id.indexOf('cn-') === 0 || kp.id.indexOf('en-') === 0) return;
           if (!kp.pluginId) {
             kpWithoutPlugin++;
             return;

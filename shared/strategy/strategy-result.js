@@ -42,8 +42,17 @@ function validateStrategyResult(result) {
     if (!plan || typeof plan !== 'object') {
       return { valid: false, errors: ['plan[' + i + '] 必须是对象'] };
     }
-    if (!plan.knowledgePointId || typeof plan.knowledgePointId !== 'string') {
-      return { valid: false, errors: ['plan[' + i + '] 缺少 knowledgePointId'] };
+    // Refactor Step 2：内部唯一语义 knowledgePointIds[]（边界兼容旧单数）
+    var ids = (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length)
+      ? plan.knowledgePointIds
+      : (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId ? [plan.knowledgePointId] : []);
+    if (!ids.length) {
+      return { valid: false, errors: ['plan[' + i + '] 缺少 knowledgePointIds'] };
+    }
+    for (var j = 0; j < ids.length; j++) {
+      if (typeof ids[j] !== 'string' || !ids[j]) {
+        return { valid: false, errors: ['plan[' + i + '] knowledgePointIds 元素必须是非空字符串'] };
+      }
     }
     if (!plan.questionTypeId || typeof plan.questionTypeId !== 'string') {
       return { valid: false, errors: ['plan[' + i + '] 缺少 questionTypeId'] };

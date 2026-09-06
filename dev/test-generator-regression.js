@@ -27,7 +27,7 @@ var ROOT = path.join(__dirname, '..');
 var loader = require(path.join(ROOT, 'dev', 'plugin-loader.js'));
 var GenCap = require(path.join(ROOT, 'shared', 'generator-capability-registry.js'));
 var Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
-var Adapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-plugin-adapter.js'));
+var Adapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-adapter.js'));
 var CoreGen = require(path.join(ROOT, 'shared', 'generator', 'generators', 'index.js'));
 var Contract = require(path.join(ROOT, 'shared', 'generator', 'generator-contract.js'));
 var GraphicRenderer = require(path.join(ROOT, 'shared', 'generator', 'graphic-renderer.js'));
@@ -81,7 +81,8 @@ async function checkBatch(questions, plugin, plan, generatorId) {
     if (a === 'n/a') check.answerNA++;
 
     // satisfiesPlan
-    if (q.knowledgePointId != null && q.knowledgePointId !== plan.knowledgePointId) { check.satisfiesPlan = false; check.failReasons.push('kp 不匹配: ' + q.knowledgePointId); }
+    var planKp = (plan.knowledgePointIds && plan.knowledgePointIds[0]) || plan.knowledgePointId || null;
+    if (q.knowledgePointId != null && q.knowledgePointId !== planKp) { check.satisfiesPlan = false; check.failReasons.push('kp 不匹配: ' + q.knowledgePointId); }
     if (q.questionType != null && q.questionType !== plan.questionTypeId) { check.satisfiesPlan = false; check.failReasons.push('qt 不匹配: ' + q.questionType); }
     if (q.difficulty != null && q.difficulty !== plan.difficulty) { check.satisfiesPlan = false; check.failReasons.push('难度不匹配: ' + q.difficulty + ' ≠ ' + plan.difficulty); }
   });

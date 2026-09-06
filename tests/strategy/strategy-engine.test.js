@@ -12,7 +12,9 @@ test('plan：完整链（Request → … → Validator）', () => {
   assert.strictEqual(r.valid, true);
   assert.strictEqual(r.plans.length, 1);
   const plan = r.plans[0];
-  assert.strictEqual(plan.knowledgePointId, 'math-g1-m0-make-ten');
+  // Refactor Step 2：knowledgePointIds 为唯一内部语义
+  assert.deepStrictEqual(plan.knowledgePointIds, ['math-g1-m0-make-ten']);
+  assert.strictEqual(plan.knowledgePointId, undefined);
   assert.strictEqual(plan.questionTypeId, 'calc');
   assert.strictEqual(plan.count, 3);
   assert.strictEqual(plan.difficulty, 4);

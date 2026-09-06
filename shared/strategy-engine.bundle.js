@@ -84,8 +84,22 @@ var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
 var AdaptiveStrategy = require("shared/strategy/adaptive-strategy.js");
 
+// Core Domain 收缩（Refactor Step 1）：核心生成链仅接受 math 知识点。
+// 非 math（语文 cn / 英语 en）返回明确 unsupported，禁止 fallback。
+function subjectOfKpId(id) {
+  if (!id || typeof id !== 'string') return null;
+  if (id.indexOf('cn-') === 0) return 'cn';
+  if (id.indexOf('en-') === 0) return 'en';
+  if (id.indexOf('math-') === 0) return 'math';
+  return null;
+}
+
 function plan(request) {
   var trace = {};
+
+  // Refactor Step 2：请求归一。内部唯一 KP 语义 = knowledgePointIds 数组。
+  // 旧调用（knowledgePointId 字符串 / knowledgePoints 数组）在此归一为数组，之后不再有单数语义。
+  request = StrategyRequest.normalizeRequest(request);
 
   // 1) Request validate
   var reqCheck = StrategyRequest.validateRequest(request);
@@ -93,11 +107,43 @@ function plan(request) {
     throw new StrategyError('Request 非法: ' + reqCheck.errors.join('; '), CODES.INVALID_REQUEST, { errors: reqCheck.errors });
   }
 
+  var kpIds = request.knowledgePointIds;
+  // 引擎单次规划接受 1 个知识点；combine=true 时接受多个并把全量写入计划。
+  // 多个知识点且未 combine 属 multi-kp 编排（api/orchestrator 按知识点拆分），禁止在本层静默丢弃。
+  if (kpIds.length > 1 && request.combine !== true) {
+    throw new StrategyError('StrategyEngine 单次规划仅接受单一知识点或 combine=true：' + kpIds.join(','),
+      CODES.INVALID_REQUEST, { knowledgePointIds: kpIds });
+  }
+
   // 2) KP resolve + Capability inject
-  var kp = StrategyResolver.resolveKnowledgePoint(request.knowledgePointId);
+  var kp = StrategyResolver.resolveKnowledgePoint(kpIds[0]);
   var GenRegistry = require("shared/generator/generator-registry.js");
   kp = GenRegistry.enhanceKp(kp);
+
+  // Core Domain 收缩（Refactor Step 1）：核心生成链仅接受 math。
+  // 非 math 知识点 → UNSUPPORTED_SUBJECT，明确 unsupported，禁止任何 fallback 到 legacy。
+  var coreSubject = (kp && kp.subject) || subjectOfKpId(kp && kp.id);
+  if (coreSubject !== 'math') {
+    throw new StrategyError(
+      '核心生成引擎仅支持数学（math），暂不支持 ' + (coreSubject || '未知科目') + ' 知识点: ' + kp.id,
+      CODES.UNSUPPORTED_SUBJECT,
+      { subject: coreSubject, knowledgePointId: kp.id }
+    );
+  }
+  // 多 KP（combine）同样逐一校验学科：任一非 math → unsupported
+  for (var gi = 0; gi < kpIds.length; gi++) {
+    var s = subjectOfKpId(kpIds[gi]);
+    if (s && s !== 'math') {
+      throw new StrategyError(
+        '核心生成引擎仅支持数学（math），暂不支持 ' + s + ' 知识点: ' + kpIds[gi],
+        CODES.UNSUPPORTED_SUBJECT,
+        { subject: s, knowledgePointId: kpIds[gi] }
+      );
+    }
+  }
+
   trace.knowledgePoint = kp.id;
+  trace.knowledgePointIds = request.combine === true ? kpIds.slice() : [kp.id];
   trace.kpCapabilities = kp.capabilities;
 
   var capability = CapabilityResolver.getCapabilities(kp);
@@ -189,8 +235,8 @@ function plan(request) {
     settings: request.settings
   });
 
-  var spiralInputLevel = request.spiral_level;
-  if (learnerDecision && request.spiral_level == null) spiralInputLevel = learnerDecision.targetSpiralLevel;
+  var spiralInputLevel = request.spiralLevel;
+  if (learnerDecision && spiralInputLevel == null) spiralInputLevel = learnerDecision.targetSpiralLevel;
   var spiral = SpiralStrategy.resolveSpiral({
     knowledgePoint: kp,
     spiral_level: spiralInputLevel,
@@ -253,7 +299,7 @@ function plan(request) {
   // 7) Generator select（在校验前，供 Plan 携带 generator 信息）
   var GeneratorSelector = require("shared/generator/generator-selector.js");
   var selectedGenerator = GeneratorSelector.selectGenerator({
-    knowledgePointId: kp.id,
+    knowledgePointIds: [kp.id],
     questionTypeId: questionType,
     difficulty: effectiveDifficulty,
     cognitiveLevel: cognitiveLevel,
@@ -265,7 +311,7 @@ function plan(request) {
 
   // 8) QuestionPlan 构建
   var questionPlan = {
-    knowledgePointId: kp.id,
+    knowledgePointIds: request.combine === true ? kpIds.slice() : [kp.id],
     questionTypeId: questionType,
     subtype: request.subtype != null && request.subtype !== '' ? request.subtype : undefined,
     count: count,
@@ -277,6 +323,15 @@ function plan(request) {
     constraints: constraints,
     generator: selectedGenerator
   };
+  if (request.combine === true) {
+    questionPlan.combine = true;
+  }
+  if (request.previousGenerationId != null) {
+    questionPlan.previousGenerationId = request.previousGenerationId;
+  }
+  if (request.unitId != null) {
+    questionPlan.unitId = request.unitId;
+  }
   if (arithSem) {
     questionPlan.operation = arithSem.operators;
   }
@@ -407,16 +462,27 @@ __defs["shared/generator/legacy-adapter.js"] = function (module, exports, requir
  *   5. hydrateLegacyGenerator(selection, plugin) —— Selector 实例化 legacy 生成器
  *   6. renderSet(set, pluginId) —— plugin.render 桥
  *   7. createLegacyGenerator(plugin, meta) —— Legacy GeneratorContract
- *   8. runLegacyFallback(plugin, plan) —— 兼容旧调用路径
+* 8. runLegacyFallback(plugin, plan) —— 兼容旧调用路径
  *
  * 删除：SemanticQuestion → Legacy Question 的反向转换（生成核心不再需要）。
  * 遗留插件输出直接转换为 SemanticQuestion 进入 Pipeline。
+ *
+ * Refactor Step 2：QuestionPlan KP 数组唯一语义（knowledgePointIds[]），
+ * planPrimaryKp() 取主元素 [0]（边界兼容旧单数 knowledgePointId）。
  */
 (function (global) {
   'use strict';
 
   var isBrowser = typeof window !== 'undefined';
   var pluginCache = {};
+
+  // Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
+  function planPrimaryKp(plan) {
+    if (!plan) return null;
+    if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+    if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+    return null;
+  }
 
   // ============================================================
   // 内部依赖（懒加载）
@@ -620,7 +686,7 @@ __defs["shared/generator/legacy-adapter.js"] = function (module, exports, requir
       }
 
       var sq = {
-        knowledgePointId: plan.knowledgePointId,
+        knowledgePointId: planPrimaryKp(plan),
         questionType: plan.questionTypeId,
         difficulty: q.difficulty != null ? q.difficulty : plan.difficulty,
         difficultyParams: {
@@ -838,8 +904,8 @@ __defs["shared/generator/legacy-adapter.js"] = function (module, exports, requir
       supports: function (plan) {
         if (!plan || !plan.questionTypeId) return false;
         if (capabilities.length && capabilities.indexOf(plan.questionTypeId) === -1) return false;
-        if (knowledgePoints.length && plan.knowledgePointId &&
-            knowledgePoints.indexOf(plan.knowledgePointId) === -1) return false;
+        var kp = planPrimaryKp(plan);
+        if (knowledgePoints.length && kp && knowledgePoints.indexOf(kp) === -1) return false;
         return true;
       },
 
@@ -1221,7 +1287,7 @@ function allocateQuestionTypes(options) {
     total: total,
     plans: plans.map(function (p) {
       return {
-        knowledgePointId: kp ? kp.id : (options.knowledgePointId || null),
+        knowledgePointIds: [kp ? kp.id : (options.knowledgePointId || null)].filter(function (x) { return x; }),
         questionTypeId: p.questionTypeId,
         count: p.count
       };
@@ -2181,11 +2247,18 @@ function validatePlan(plan) {
 
   // ① KP 存在
   var kp = null;
-  if (!plan.knowledgePointId || typeof plan.knowledgePointId !== 'string') {
-    errors.push('① knowledgePointId 必填');
+  // Refactor Step 2：内部唯一语义 knowledgePointIds[]（边界兼容旧单数）
+  var kpIds = (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length)
+    ? plan.knowledgePointIds.slice()
+    : (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId ? [plan.knowledgePointId] : []);
+  if (!kpIds.length) {
+    errors.push('① knowledgePointIds 必填（数组）');
   } else {
-    kp = KnowledgePoint.get(plan.knowledgePointId);
-    if (!kp) errors.push('① 知识点不存在: ' + plan.knowledgePointId);
+    kpIds.forEach(function (id) {
+      var k = KnowledgePoint.get(id);
+      if (!k) errors.push('① 知识点不存在: ' + id);
+    });
+    kp = KnowledgePoint.get(kpIds[0]);
   }
 
   // ② questionType 合法
@@ -2286,7 +2359,10 @@ StrategyError.CODES = {
   INVALID_REQUEST: 'INVALID_REQUEST',
   INVALID_PLAN: 'INVALID_PLAN',
   NO_CAPABILITY: 'NO_CAPABILITY',
-  GENERATOR_MISMATCH: 'GENERATOR_MISMATCH'
+  GENERATOR_MISMATCH: 'GENERATOR_MISMATCH',
+  // Core Domain 收缩（Refactor Step 1）：核心生成链仅接受 math。
+  // 语文(cn)/英语(en) 返回明确 unsupported，禁止 fallback，不进入 Generator。
+  UNSUPPORTED_SUBJECT: 'UNSUPPORTED_SUBJECT'
 };
 
 function isStrategyError(err) {
@@ -2304,13 +2380,21 @@ __defs["shared/strategy/strategy-request.js"] = function (module, exports, requi
  *
  * 统一策略输入对象。
  * 只描述「要什么题」，不包含生成逻辑、SVG/HTML、执行函数。
- * 向后兼容旧 UI 参数（subject/grade/count/difficulty 等）。
+ * 向后兼容旧 UI 参数（subject/grade/count/difficulty/knowledgePointId 等）。
+ *
+ * Refactor Step 2（Request/QuestionPlan 重构）：
+ *   - 内部 KP 语义唯一为「数组」：knowledgePointIds[]。
+ *   - 旧调用（knowledgePointId 字符串 / knowledgePoints 数组）经 resolveKnowledgePointIds
+ *     归一为 knowledgePointIds[]；normalizeRequest 输出的规范请求不再携带单数 KP 字段，
+ *     内部流程只读取 knowledgePointIds（不维护两套语义）。
+ *   - 新增请求字段：mode / grade / volume(题量别名) / unitId / questionType / count /
+ *     difficulty / spiralLevel / knowledgePointIds / combine / previousGenerationId。
  */
 'use strict';
 
 var StrategyConfig = require("shared/strategy-config.js");
 
-var LEGACY_UI_KEYS = ['subject', 'grade', 'count', 'difficulty', 'subtype', 'questionType'];
+var LEGACY_UI_KEYS = ['subject', 'grade', 'count', 'difficulty', 'subtype', 'questionType', 'knowledgePointId', 'knowledgePoints'];
 
 // 标准题型枚举（来自 QuestionTypeRegistry）
 var VALID_QUESTION_TYPES = [
@@ -2321,12 +2405,69 @@ var VALID_QUESTION_TYPES = [
 var DIFFICULTY_MIN = 1;
 var DIFFICULTY_MAX = 10;
 
+// 螺旋层级范围
+var SPIRAL_MIN = 1;
+var SPIRAL_MAX = 6;
+
+// 生成模式（含兼容别名；归一后统一为 canonical 值）
+var VALID_MODES = ['single-kp', 'multi-kp', 'comprehensive', 'adaptive'];
+var MODE_ALIAS = {
+  'single': 'single-kp', 'single-kp': 'single-kp', 'kp': 'single-kp',
+  'multi': 'multi-kp', 'multi-kp': 'multi-kp',
+  'comprehensive': 'comprehensive', 'zonghe': 'comprehensive',
+  'adaptive': 'adaptive', 'adaptive-kp': 'adaptive'
+};
+
+/**
+ * 命中单数/复数/旧名/新名任一来源的知识点 ID 列表（唯一 KP 语义：数组）。
+ * 优先级：knowledgePointIds > knowledgePoints > knowledgePointId > kp。
+ * @param {Object} request
+ * @returns {string[]} 知识点 ID 数组（可为空，表示按 subject+grade 兜底/综合）
+ */
+function resolveKnowledgePointIds(request) {
+  if (!request || typeof request !== 'object') return [];
+  if (Array.isArray(request.knowledgePointIds) && request.knowledgePointIds.length) {
+    return request.knowledgePointIds.filter(function (x) { return typeof x === 'string' && x; });
+  }
+  if (Array.isArray(request.knowledgePoints) && request.knowledgePoints.length) {
+    return request.knowledgePoints.filter(function (x) { return typeof x === 'string' && x; });
+  }
+  if (typeof request.knowledgePointId === 'string' && request.knowledgePointId) return [request.knowledgePointId];
+  if (typeof request.kp === 'string' && request.kp) return [request.kp];
+  return [];
+}
+
+/**
+ * 归一化请求为规范形状（内部流程唯一语义）。
+ *  - knowledgePointIds 权威化（删除单数 knowledgePointId/knowledgePoints/kp，禁止双语义漂移）
+ *  - volume ↔ count：volume 为题量别名，count 缺省时由 volume 补足
+ *  - spiral_level → spiralLevel（旧参数兼容）
+ * 其余字段透传。
+ * @param {Object} request
+ * @returns {Object} 规范请求
+ */
+function normalizeRequest(request) {
+  request = request || {};
+  var out = Object.assign({}, request);
+  out.knowledgePointIds = resolveKnowledgePointIds(request);
+  delete out.knowledgePointId;
+  delete out.knowledgePoints;
+  delete out.kp;
+  if (out.count == null && typeof out.volume === 'number' && out.volume >= 1) {
+    out.count = Math.floor(out.volume);
+  }
+  if (out.spiralLevel == null && out.spiral_level != null) out.spiralLevel = out.spiral_level;
+  if (out.mode != null && MODE_ALIAS[String(out.mode)] != null) out.mode = MODE_ALIAS[String(out.mode)];
+  return out;
+}
+
 function normalizeLegacyParams(params) {
   var out = {};
   // 旧 UI 参数映射
   if (params.subject != null) out.subject = params.subject;
   if (params.grade != null) out.grade = params.grade;
   if (params.count != null) out.count = Math.max(1, Math.floor(params.count));
+  else if (params.volume != null) out.count = Math.max(1, Math.floor(params.volume));
   if (params.difficulty != null) {
     var d = Math.max(DIFFICULTY_MIN, Math.min(DIFFICULTY_MAX, Math.floor(params.difficulty)));
     out.targetDifficulty = d;
@@ -2344,10 +2485,15 @@ function validateRequest(req) {
     return { valid: false, errors: errors };
   }
 
-  // 核心输入：knowledgePointId 必填
-  if (!req.knowledgePointId || typeof req.knowledgePointId !== 'string') {
-    errors.push('knowledgePointId 是必填字符串');
+  // 核心输入：knowledgePointIds 数组（旧 knowledgePointId/knowledgePoints 自动归一）
+  var kpIds = resolveKnowledgePointIds(req);
+  var hasSubjectGrade = req.subject && req.grade != null;
+  if (!kpIds.length && !hasSubjectGrade) {
+    errors.push('缺少 knowledgePointIds（或旧 knowledgePointId / knowledgePoints / subject+grade）');
   }
+  if (kpIds.length) kpIds.forEach(function (id) {
+    if (typeof id !== 'string' || !id) errors.push('knowledgePointIds 元素必须是非空字符串');
+  });
 
   // 题型：若提供，必须在合法枚举中
   if (req.questionType != null) {
@@ -2363,7 +2509,20 @@ function validateRequest(req) {
     errors.push('questionTypes 必须是数组');
   }
 
-  // targetDifficulty 必须在 1-10
+  // mode：若提供必须合法（含别名）
+  if (req.mode != null && MODE_ALIAS[String(req.mode)] == null) {
+    errors.push('非法 mode: ' + req.mode + '（应为 ' + VALID_MODES.join('/') + '）');
+  }
+
+  // difficulty 必须在 1-10
+  if (req.difficulty != null) {
+    var df = req.difficulty;
+    if (typeof df !== 'number' || df < DIFFICULTY_MIN || df > DIFFICULTY_MAX || df % 1 !== 0) {
+      errors.push('difficulty 必须是 1-10 的整数');
+    }
+  }
+
+  // targetDifficulty 必须在 1-10（旧字段兼容）
   if (req.targetDifficulty != null) {
     var td = req.targetDifficulty;
     if (typeof td !== 'number' || td < DIFFICULTY_MIN || td > DIFFICULTY_MAX || td % 1 !== 0) {
@@ -2371,12 +2530,36 @@ function validateRequest(req) {
     }
   }
 
-  // count 必须 >=1
-  if (req.count != null) {
-    var c = req.count;
+  // count 必须 >=1（volume 为别名）
+  var cval = req.count != null ? req.count : req.volume;
+  if (cval != null) {
+    var c = cval;
     if (typeof c !== 'number' || c < 1 || c % 1 !== 0) {
       errors.push('count 必须是 >=1 的整数');
     }
+  }
+
+  // spiralLevel 必须在 1-6
+  if (req.spiralLevel != null || req.spiral_level != null) {
+    var sl = req.spiralLevel != null ? req.spiralLevel : req.spiral_level;
+    if (typeof sl !== 'number' || sl < SPIRAL_MIN || sl > SPIRAL_MAX || sl % 1 !== 0) {
+      errors.push('spiralLevel 必须是 1-6 的整数');
+    }
+  }
+
+  // unitId：可选，必须字符串
+  if (req.unitId != null && typeof req.unitId !== 'string') {
+    errors.push('unitId 必须是字符串');
+  }
+
+  // combine：可选，必须布尔
+  if (req.combine != null && typeof req.combine !== 'boolean') {
+    errors.push('combine 必须是布尔值');
+  }
+
+  // previousGenerationId：可选，必须字符串
+  if (req.previousGenerationId != null && typeof req.previousGenerationId !== 'string') {
+    errors.push('previousGenerationId 必须是字符串');
   }
 
   // subject/grade 若提供，需合法
@@ -2429,6 +2612,12 @@ module.exports = {
   VALID_QUESTION_TYPES: VALID_QUESTION_TYPES,
   DIFFICULTY_MIN: DIFFICULTY_MIN,
   DIFFICULTY_MAX: DIFFICULTY_MAX,
+  SPIRAL_MIN: SPIRAL_MIN,
+  SPIRAL_MAX: SPIRAL_MAX,
+  VALID_MODES: VALID_MODES,
+  MODE_ALIAS: MODE_ALIAS,
+  resolveKnowledgePointIds: resolveKnowledgePointIds,
+  normalizeRequest: normalizeRequest,
   normalizeLegacyParams: normalizeLegacyParams,
   validateRequest: validateRequest,
   createRequest: createRequest,
@@ -2481,8 +2670,17 @@ function validateStrategyResult(result) {
     if (!plan || typeof plan !== 'object') {
       return { valid: false, errors: ['plan[' + i + '] 必须是对象'] };
     }
-    if (!plan.knowledgePointId || typeof plan.knowledgePointId !== 'string') {
-      return { valid: false, errors: ['plan[' + i + '] 缺少 knowledgePointId'] };
+    // Refactor Step 2：内部唯一语义 knowledgePointIds[]（边界兼容旧单数）
+    var ids = (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length)
+      ? plan.knowledgePointIds
+      : (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId ? [plan.knowledgePointId] : []);
+    if (!ids.length) {
+      return { valid: false, errors: ['plan[' + i + '] 缺少 knowledgePointIds'] };
+    }
+    for (var j = 0; j < ids.length; j++) {
+      if (typeof ids[j] !== 'string' || !ids[j]) {
+        return { valid: false, errors: ['plan[' + i + '] knowledgePointIds 元素必须是非空字符串'] };
+      }
     }
     if (!plan.questionTypeId || typeof plan.questionTypeId !== 'string') {
       return { valid: false, errors: ['plan[' + i + '] 缺少 questionTypeId'] };
@@ -2534,6 +2732,32 @@ var VALID_COGNITIVE_LEVELS = ['recall', 'recognize', 'understand', 'apply', 'ana
 
 var VALID_CONTEXT_TYPES = ['pure', 'simple', 'standard', 'complex'];
 
+/**
+ * Refactor Step 2：QuestionPlan 内部 KP 语义唯一为数组 knowledgePointIds[]。
+ * 生产端一律输出数组；本读取器在边界对旧形状（knowledgePointId 单数字符串）做一次性归一，
+ * 保证旧调用（探针/测试/跨版本 plan）可用，内部核心逻辑只消费数组。
+ * @param {Object} plan
+ * @returns {string[]} 知识点 ID 数组（可为空）
+ */
+function planKnowledgePointIds(plan) {
+  if (!plan || typeof plan !== 'object') return [];
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length) {
+    return plan.knowledgePointIds.filter(function (x) { return typeof x === 'string' && x; });
+  }
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return [plan.knowledgePointId];
+  return [];
+}
+
+/**
+ * 主知识点 ID（数组首元素）。题级归属（question.knowledgePointId）使用该值。
+ * @param {Object} plan
+ * @returns {string|null}
+ */
+function planPrimaryKpId(plan) {
+  var ids = planKnowledgePointIds(plan);
+  return ids.length ? ids[0] : null;
+}
+
 function validateQuestionPlan(plan) {
   var errors = [];
 
@@ -2542,9 +2766,10 @@ function validateQuestionPlan(plan) {
     return { valid: false, errors: errors };
   }
 
-  // 核心必填字段
-  if (!plan.knowledgePointId || typeof plan.knowledgePointId !== 'string') {
-    errors.push('knowledgePointId 是必填字符串');
+  // 核心必填字段：knowledgePointIds（数组，唯一内部语义；兼容旧单数归一）
+  var kpIds = planKnowledgePointIds(plan);
+  if (!kpIds.length) {
+    errors.push('knowledgePointIds 是必填数组（元素为非空字符串）');
   }
 
   if (!plan.questionTypeId || typeof plan.questionTypeId !== 'string') {
@@ -2660,6 +2885,8 @@ function validateQuestionPlan(plan) {
 }
 
 module.exports = {
+  planKnowledgePointIds: planKnowledgePointIds,
+  planPrimaryKpId: planPrimaryKpId,
   validateQuestionPlan: validateQuestionPlan
 };
 };
@@ -3347,8 +3574,10 @@ var CORE_RECORDS = [
 
 function buildRecords() {
   // 数据来源：M2 Generator Capability Registry（只读）；无 KP 关联者不入册（非 Generator）
+  // Core Domain 收缩（Refactor Step 1）：注册表仅收录 math 记录，
+  // 语文(cn)/英语(en) 的 legacy 候选一并剔除（cn/en 不进生成链，禁止 fallback 宿主）。
   var legacy = GenCap.buildGeneratorCapabilityRegistry()
-    .filter(function (r) { return r.knowledgePoints.length > 0; })
+    .filter(function (r) { return r.subject === 'math' && r.knowledgePoints.length > 0; })
     .map(function (r) {
       return {
         id: 'legacy:' + r.pluginId,
@@ -4072,6 +4301,8 @@ var KnowledgePoint = require("shared/knowledge-point.js");
 var Mode = require("shared/generator/generator-mode.js");
 // M7-R18：旧插件边界收敛到 shared/generator/legacy-adapter.js (P5 Task 5.1 统一)
 var LegacyAdapter = require("shared/generator/legacy-adapter.js");
+// Refactor Step 2：QuestionPlan KP 数组唯一语义（边界兼容旧单数）
+var QuestionPlan = require("shared/strategy/question-plan.js");
 
 function trackOf(record) {
   return record.scope === 'core' ? 'native' : 'legacy';
@@ -4080,12 +4311,13 @@ function trackOf(record) {
 function selectGenerator(plan, options) {
   plan = plan || {};
   options = options || {};
-  if (!plan.knowledgePointId) {
-    throw new Error('GeneratorSelector: plan 缺少 knowledgePointId');
+  var primaryKp = QuestionPlan.planPrimaryKpId(plan);
+  if (!primaryKp) {
+    throw new Error('GeneratorSelector: plan 缺少 knowledgePointIds');
   }
 
   var mode = options.mode != null ? options.mode : Mode.resolve(plan);
-  var kp = KnowledgePoint.get(plan.knowledgePointId);
+  var kp = KnowledgePoint.get(primaryKp);
   var all = GenRegistry.all();
   var candidates = [];
 
@@ -4098,7 +4330,7 @@ function selectGenerator(plan, options) {
     var score = { record: g, kp: 0, capability: 0, qt: 0, diff: 0 };
 
     // ① 知识点匹配
-    if (g.knowledgePoints.indexOf(plan.knowledgePointId) !== -1) score.kp = 1;
+    if (g.knowledgePoints.indexOf(primaryKp) !== -1) score.kp = 1;
 
     // ② 能力匹配
     if (plan.questionTypeId && g.capabilities.indexOf(plan.questionTypeId) !== -1) score.capability = 1;
@@ -5921,7 +6153,10 @@ function dump() {
 
 function resolve(plan) {
   plan = plan || {};
-  if (plan.knowledgePointId && overrides.knowledgePoint[plan.knowledgePointId]) return overrides.knowledgePoint[plan.knowledgePointId];
+  var primaryKp = (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId)
+    ? plan.knowledgePointId
+    : ((Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) || null);
+  if (primaryKp && overrides.knowledgePoint[primaryKp]) return overrides.knowledgePoint[primaryKp];
   return globalMode;
 }
 
@@ -8504,6 +8739,14 @@ __defs["shared/generator/generators/arithmetic.js"] = function (module, exports,
 var Rng = require("shared/generator/core/rng.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
 
+// Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
+function pkp(plan) {
+  if (!plan) return null;
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+  return null;
+}
+
 var FAMILY = {
   addition: { op: 'add' },
   subtraction: { op: 'sub' },
@@ -8520,7 +8763,7 @@ function createArithmeticGenerator(spec) {
 
   function seedFor(plan, context, i) {
     if (context && context.seed != null) return context.seed + ':' + i;
-    return (plan.knowledgePointId + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
+    return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
   }
 
   // M4-R17：兼容 operation 为 字符串（旧）或 KP 语义数组（新）。
@@ -8573,7 +8816,7 @@ function createArithmeticGenerator(spec) {
         var prompt = Arith.formatExpression(structure.operands, structure.operators) + ' = ?';
 
         questions.push({
-          knowledgePointId: plan.knowledgePointId,
+          knowledgePointId: pkp(plan),
           questionType: plan.questionTypeId,
           difficulty: plan.difficulty,
           difficultyParams: {
@@ -8631,6 +8874,14 @@ __defs["shared/generator/generators/selection.js"] = function (module, exports, 
 var Rng = require("shared/generator/core/rng.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
 
+// Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
+function pkp(plan) {
+  if (!plan) return null;
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+  return null;
+}
+
 function createSelectionGenerator(spec) {
   spec = spec || {};
   var mode = spec.mode || 'fill'; // fill | choice | judge
@@ -8639,7 +8890,7 @@ function createSelectionGenerator(spec) {
 
   function seedFor(plan, context, i) {
     if (context && context.seed != null) return context.seed + ':' + i;
-    return (plan.knowledgePointId + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
+    return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
   }
 
   function baseArithmetic(plan, context, i) {
@@ -8660,7 +8911,7 @@ function createSelectionGenerator(spec) {
   function buildBase(plan, context, i, extra) {
     var constraints = plan.constraints || {};
     return {
-      knowledgePointId: plan.knowledgePointId,
+      knowledgePointId: pkp(plan),
       questionType: plan.questionTypeId,
       difficulty: plan.difficulty,
       difficultyParams: {
@@ -8774,15 +9025,23 @@ __defs["shared/generator/generators/complex.js"] = function (module, exports, re
 var Rng = require("shared/generator/core/rng.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
 
+// Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
+function pkp(plan) {
+  if (!plan) return null;
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+  return null;
+}
+
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':complex:' + i;
-  return (plan.knowledgePointId + '|' + plan.family + '|' + plan.difficulty + '|' + plan.count) + ':complex:' + i;
+  return (pkp(plan) + '|' + plan.family + '|' + plan.difficulty + '|' + plan.count) + ':complex:' + i;
 }
 
 function buildBase(plan, context, i, extra) {
   var constraints = plan.constraints || {};
   return {
-    knowledgePointId: plan.knowledgePointId,
+    knowledgePointId: pkp(plan),
     questionType: plan.questionTypeId,
     difficulty: plan.difficulty,
     difficultyParams: {
@@ -8943,7 +9202,7 @@ function createComplexGenerator(spec) {
     supports: function (plan) {
       if (!plan || !plan.constraints || !plan.constraints.structure) return false;
       // 仅服务于本生成器绑定的复杂 KP；family 必须可识别
-      return knowledgePoints.indexOf(plan.knowledgePointId) !== -1;
+      return knowledgePoints.indexOf(pkp(plan)) !== -1;
     },
 
     generate: function (plan, context) {

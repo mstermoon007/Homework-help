@@ -18,6 +18,32 @@ var VALID_COGNITIVE_LEVELS = ['recall', 'recognize', 'understand', 'apply', 'ana
 
 var VALID_CONTEXT_TYPES = ['pure', 'simple', 'standard', 'complex'];
 
+/**
+ * Refactor Step 2：QuestionPlan 内部 KP 语义唯一为数组 knowledgePointIds[]。
+ * 生产端一律输出数组；本读取器在边界对旧形状（knowledgePointId 单数字符串）做一次性归一，
+ * 保证旧调用（探针/测试/跨版本 plan）可用，内部核心逻辑只消费数组。
+ * @param {Object} plan
+ * @returns {string[]} 知识点 ID 数组（可为空）
+ */
+function planKnowledgePointIds(plan) {
+  if (!plan || typeof plan !== 'object') return [];
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length) {
+    return plan.knowledgePointIds.filter(function (x) { return typeof x === 'string' && x; });
+  }
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return [plan.knowledgePointId];
+  return [];
+}
+
+/**
+ * 主知识点 ID（数组首元素）。题级归属（question.knowledgePointId）使用该值。
+ * @param {Object} plan
+ * @returns {string|null}
+ */
+function planPrimaryKpId(plan) {
+  var ids = planKnowledgePointIds(plan);
+  return ids.length ? ids[0] : null;
+}
+
 function validateQuestionPlan(plan) {
   var errors = [];
 
@@ -26,9 +52,10 @@ function validateQuestionPlan(plan) {
     return { valid: false, errors: errors };
   }
 
-  // 核心必填字段
-  if (!plan.knowledgePointId || typeof plan.knowledgePointId !== 'string') {
-    errors.push('knowledgePointId 是必填字符串');
+  // 核心必填字段：knowledgePointIds（数组，唯一内部语义；兼容旧单数归一）
+  var kpIds = planKnowledgePointIds(plan);
+  if (!kpIds.length) {
+    errors.push('knowledgePointIds 是必填数组（元素为非空字符串）');
   }
 
   if (!plan.questionTypeId || typeof plan.questionTypeId !== 'string') {
@@ -144,5 +171,7 @@ function validateQuestionPlan(plan) {
 }
 
 module.exports = {
+  planKnowledgePointIds: planKnowledgePointIds,
+  planPrimaryKpId: planPrimaryKpId,
   validateQuestionPlan: validateQuestionPlan
 };

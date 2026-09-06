@@ -55,7 +55,7 @@ var FROZEN_CORE = {
     'shared/generator/generator-selector.js',
     'shared/generator/generator-mode.js',
     'shared/generator/retry-loop.js',
-    'shared/generator/legacy-plugin-adapter.js',
+    'shared/generator/legacy-adapter.js',
     'shared/generator/generators/arithmetic.js',
     'shared/generator/generators/selection.js',
     'shared/generator/generators/complex.js',

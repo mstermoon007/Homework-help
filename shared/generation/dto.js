@@ -10,12 +10,19 @@
 
 /**
  * @typedef {Object} GenerateRequest
- * @property {string} knowledgePointId - 知识点 ID (必填)，格式: subject-g{grade}-{module}-{slug}
- * @property {string} [questionType] - 题型: 'oral'|'calc'|'fill'|'choice'|'judge'|'apply'|'open'|'geometry'|'recognize'
- * @property {number} [targetDifficulty=3] - 目标难度 1-10
- * @property {number} [count=10] - 题量 >=1
- * @property {string} [subject] - 学科: 'math'|'cn'|'en'
+ * @property {string} [mode] - 生成模式 (canonical): 'single-kp'|'multi-kp'|'comprehensive'|'adaptive'（别名 single/kp/multi/zonghe 自动归一）
  * @property {number} [grade] - 年级 1-6
+ * @property {number} [count=10] - 题量 >=1
+ * @property {number} [volume] - 题量别名（与 count 等价；count 缺省时由 volume 补足）
+ * @property {string} [unitId] - 单元 ID（综合路径按 moduleId 过滤知识点；无匹配时不生效）
+ * @property {string} [questionType] - 题型: 'oral'|'calc'|'fill'|'choice'|'judge'|'apply'|'open'|'geometry'|'recognize'
+ * @property {number} [difficulty=3] - 目标难度 1-10
+ * @property {number} [spiralLevel=1] - 螺旋层级 1-6
+ * @property {string[]} knowledgePointIds - 知识点 ID 数组（内部唯一 KP 语义；旧 knowledgePointId 字符串 / knowledgePoints 数组自动归一为此数组）
+ * @property {boolean} [combine=false] - 多知识点合并为一计划（knowledgePointIds 保留全量，题级归属取主知识点首元素）
+ * @property {string} [previousGenerationId] - 前一次生成 ID（可追溯/复现上下文，透传至计划）
+ * @property {string} [subject] - 学科: 'math'|'cn'|'en'（Core Domain 收缩后仅 math 可入生成链）
+ * @property {string[]} [questionTypes] - 题型策略白名单（multi-kp/快速模式规划期过滤）
  * @property {string} [subtype] - 子题型标识
  * @property {string} [cognitiveLevel] - 认知层级: 'recognize'|'understand'|'apply'
  * @property {boolean} [adaptive=false] - 是否启用自适应难度
@@ -24,16 +31,16 @@
  * @property {Object} [learnerProfile] - 学习者画像 { knowledgePoints:{kpId:{mastery,confidence,recentAccuracy,...}}, ... }
  * @property {Object} [settings] - 题目生成设置 (难度/范围/算符等)
  * @property {Object} [customParams] - 自定义参数透传
- * @property {string} [mode] - 生成模式: 'single-kp'|'multi-kp'|'comprehensive'|'adaptive'
- * @property {string[]} [knowledgePoints] - multi-kp 模式下的知识点列表
+ * @property {Object} [kpAllocation] - multi-kp 配额 { kps:[{id,count}] }（无配额时均分）
  * @property {boolean} [legacyOutput=false] - 是否输出 Legacy Question 格式 (含 render/check)
  * @property {boolean} [skipValidation=false] - 是否跳过验证管道
+ * @deprecated 旧字段 knowledgePointId(object) / knowledgePoints(string[]) 仅作向下兼容输入，经归一化为 knowledgePointIds 后内部不再使用。
  */
 
 /**
  * @typedef {Object} QuestionPlan
  * @property {string} planId - 计划唯一标识
- * @property {string} knowledgePointId - 知识点 ID
+ * @property {string[]} knowledgePointIds - 知识点 ID 数组（内部唯一语义；题级归属取 [0]）
  * @property {string} questionTypeId - 题型 ID
  * @property {string} [subtype] - 子题型
  * @property {number} count - 本计划生成题量
@@ -41,6 +48,8 @@
  * @property {string} [cognitiveLevel] - 认知层级
  * @property {number} [spiralLevel=1] - 螺旋层级 1-6
  * @property {string} [contextType='standard'] - 情境类型: 'pure'|'simple'|'standard'|'complex'|'none'
+ * @property {boolean} [combine=false] - 是否合并多知识点（true 时 knowledgePointIds 为全量）
+ * @property {string} [previousGenerationId] - 前一次生成 ID（透传）
  * @property {Object} constraints - 结构约束
  * @property {number} constraints.scale - 难度缩放
  * @property {Object} constraints.numberRange - 数值范围 {min, max}

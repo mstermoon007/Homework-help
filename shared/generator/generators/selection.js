@@ -11,6 +11,14 @@
 var Rng = require('../core/rng.js');
 var Arith = require('../core/arithmetic-core.js');
 
+// Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
+function pkp(plan) {
+  if (!plan) return null;
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+  return null;
+}
+
 function createSelectionGenerator(spec) {
   spec = spec || {};
   var mode = spec.mode || 'fill'; // fill | choice | judge
@@ -19,7 +27,7 @@ function createSelectionGenerator(spec) {
 
   function seedFor(plan, context, i) {
     if (context && context.seed != null) return context.seed + ':' + i;
-    return (plan.knowledgePointId + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
+    return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
   }
 
   function baseArithmetic(plan, context, i) {
@@ -40,7 +48,7 @@ function createSelectionGenerator(spec) {
   function buildBase(plan, context, i, extra) {
     var constraints = plan.constraints || {};
     return {
-      knowledgePointId: plan.knowledgePointId,
+      knowledgePointId: pkp(plan),
       questionType: plan.questionTypeId,
       difficulty: plan.difficulty,
       difficultyParams: {

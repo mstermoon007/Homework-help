@@ -91,7 +91,7 @@ function allocateQuestionTypes(options) {
     total: total,
     plans: plans.map(function (p) {
       return {
-        knowledgePointId: kp ? kp.id : (options.knowledgePointId || null),
+        knowledgePointIds: [kp ? kp.id : (options.knowledgePointId || null)].filter(function (x) { return x; }),
         questionTypeId: p.questionTypeId,
         count: p.count
       };

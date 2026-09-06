@@ -33,8 +33,10 @@ var CORE_RECORDS = [
 
 function buildRecords() {
   // 数据来源：M2 Generator Capability Registry（只读）；无 KP 关联者不入册（非 Generator）
+  // Core Domain 收缩（Refactor Step 1）：注册表仅收录 math 记录，
+  // 语文(cn)/英语(en) 的 legacy 候选一并剔除（cn/en 不进生成链，禁止 fallback 宿主）。
   var legacy = GenCap.buildGeneratorCapabilityRegistry()
-    .filter(function (r) { return r.knowledgePoints.length > 0; })
+    .filter(function (r) { return r.subject === 'math' && r.knowledgePoints.length > 0; })
     .map(function (r) {
       return {
         id: 'legacy:' + r.pluginId,

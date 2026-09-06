@@ -16,15 +16,23 @@
 var Rng = require('../core/rng.js');
 var Arith = require('../core/arithmetic-core.js');
 
+// Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
+function pkp(plan) {
+  if (!plan) return null;
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+  return null;
+}
+
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':complex:' + i;
-  return (plan.knowledgePointId + '|' + plan.family + '|' + plan.difficulty + '|' + plan.count) + ':complex:' + i;
+  return (pkp(plan) + '|' + plan.family + '|' + plan.difficulty + '|' + plan.count) + ':complex:' + i;
 }
 
 function buildBase(plan, context, i, extra) {
   var constraints = plan.constraints || {};
   return {
-    knowledgePointId: plan.knowledgePointId,
+    knowledgePointId: pkp(plan),
     questionType: plan.questionTypeId,
     difficulty: plan.difficulty,
     difficultyParams: {
@@ -185,7 +193,7 @@ function createComplexGenerator(spec) {
     supports: function (plan) {
       if (!plan || !plan.constraints || !plan.constraints.structure) return false;
       // 仅服务于本生成器绑定的复杂 KP；family 必须可识别
-      return knowledgePoints.indexOf(plan.knowledgePointId) !== -1;
+      return knowledgePoints.indexOf(pkp(plan)) !== -1;
     },
 
     generate: function (plan, context) {

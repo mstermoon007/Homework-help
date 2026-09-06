@@ -54,17 +54,22 @@ test('contextDefault：standard → 输出 standard 或 +1（complex），不超
 test('不支持 context 的题型 → none（不受 KP 默认影响）', () => {
   const r = Engine.plan({ knowledgePointId: 'math-g1-m0-make-ten', count: 1, questionType: 'calc' });
   assert.notStrictEqual(r.plans[0].contextType, undefined);
-  // geometry 型 KP（en 认读）→ none
-  const r2 = Engine.plan({ knowledgePointId: 'en-g3-e1-letter-recognition', count: 1 });
+  // geometry 型 KP → none
+  const r2 = Engine.plan({ knowledgePointId: 'math-g4-c4-c4-solid', count: 1 });
   assert.strictEqual(r2.plans[0].contextType, 'none');
 });
 
-test('全量回归：574 KP 的 spiralLevel 与 contextType 均不超过 KP 定义范围', () => {
+test('全量回归：math 域 KP 的 spiralLevel 与 contextType 均不超过 KP 定义范围', () => {
   let checked = 0;
+  let expected = 0;
   Ontology.SUBJECTS.forEach(s => {
     (KnowledgeBank[s] || []).forEach(g => {
       (g.modules || []).forEach(m => {
         (m.knowledgePoints || []).forEach(kp => {
+          // Core Domain 收缩（Refactor Step 1）：语文(cn)/英语(en) 已移出核心生成链，
+          // Engine.plan 会抛 UNSUPPORTED_SUBJECT；全量回归仅覆盖 math 域。
+          if (kp.id.indexOf('cn-') === 0 || kp.id.indexOf('en-') === 0) return;
+          expected++;
           const r = Engine.plan({ knowledgePointId: kp.id, count: 1 });
           const plan = r.plans[0];
           const canonical = Ontology.normalize(kp);
@@ -89,5 +94,6 @@ test('全量回归：574 KP 的 spiralLevel 与 contextType 均不超过 KP 定�
       });
     });
   });
-  assert.strictEqual(checked, 574);
+  assert.ok(expected > 0, 'math 域 KP 应非空');
+  assert.strictEqual(checked, expected);
 });

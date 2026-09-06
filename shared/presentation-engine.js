@@ -61,11 +61,15 @@ function generateQuestions(plan, options) {
   // P5-R03: 记录生成开始
   Metrics.recordGenerationStart({ generator: plan.generatorId || 'unknown', subject: plan.subject, grade: plan.grade });
 
+  // Refactor Step 2：QuestionPlan KP 数组唯一语义（边界兼容旧单数）
+  var primaryKp = (Array.isArray(plan && plan.knowledgePointIds) && plan.knowledgePointIds[0]) ||
+    (plan && typeof plan.knowledgePointId === 'string' ? plan.knowledgePointId : null);
+
   // 1. 选择 Generator
   var selection = Selector.selectGenerator(plan);
   if (!selection.record) {
     Metrics.recordGenerationFailure({ generator: 'none', subject: plan.subject, grade: plan.grade });
-    return Promise.reject(new Error('无可用 Generator: ' + plan.knowledgePointId));
+    return Promise.reject(new Error('无可用 Generator: ' + primaryKp));
   }
 
   // 2. 实例化 Generator
@@ -99,7 +103,7 @@ function generateQuestions(plan, options) {
     if (!result.success && (!semanticQuestions || semanticQuestions.length === 0)) {
       var err = new Error(((result.error || 'GENERATION_FAILED') + (result.message ? ': ' + result.message : '')));
       err.generationFailed = true;
-      err.planKey = plan.planId || plan.knowledgePointId || null;
+      err.planKey = plan.planId || primaryKp || null;
       throw err;
     }
 

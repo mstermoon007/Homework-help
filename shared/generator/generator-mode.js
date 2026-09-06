@@ -55,7 +55,10 @@ function dump() {
 
 function resolve(plan) {
   plan = plan || {};
-  if (plan.knowledgePointId && overrides.knowledgePoint[plan.knowledgePointId]) return overrides.knowledgePoint[plan.knowledgePointId];
+  var primaryKp = (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId)
+    ? plan.knowledgePointId
+    : ((Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) || null);
+  if (primaryKp && overrides.knowledgePoint[primaryKp]) return overrides.knowledgePoint[primaryKp];
   return globalMode;
 }
 

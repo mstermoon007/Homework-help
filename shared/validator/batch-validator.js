@@ -51,7 +51,10 @@ function validateBatch(questions, plan) {
   // ② 知识点覆盖
   var kpCounts = countBy(questions, function (q) { return q.knowledgePoint || 'unknown'; });
   var kpCovered = Object.keys(kpCounts).filter(function (k) { return k !== 'unknown'; }).length;
-  var plannedKPs = plan.knowledgePoints || [];
+  // Refactor Step 2：计划内 KP 列表唯一语义 = knowledgePointIds[]（边界兼容旧 knowledgePoints）
+  var plannedKPs = (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length)
+    ? plan.knowledgePointIds
+    : ((Array.isArray(plan.knowledgePoints) ? plan.knowledgePoints : []) || []);
   if (plannedKPs.length) {
     var missingKPs = plannedKPs.filter(function (kp) { return !kpCounts[kp]; });
     if (missingKPs.length) {

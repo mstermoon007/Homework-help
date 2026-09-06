@@ -80,11 +80,15 @@ function generateQuestions(plan, options) {
   // P5-R03: 记录生成开始
   Metrics.recordGenerationStart({ generator: plan.generatorId || 'unknown', subject: plan.subject, grade: plan.grade });
 
+  // Refactor Step 2：QuestionPlan KP 数组唯一语义（边界兼容旧单数）
+  var primaryKp = (Array.isArray(plan && plan.knowledgePointIds) && plan.knowledgePointIds[0]) ||
+    (plan && typeof plan.knowledgePointId === 'string' ? plan.knowledgePointId : null);
+
   // 1. 选择 Generator
   var selection = Selector.selectGenerator(plan);
   if (!selection.record) {
     Metrics.recordGenerationFailure({ generator: 'none', subject: plan.subject, grade: plan.grade });
-    return Promise.reject(new Error('无可用 Generator: ' + plan.knowledgePointId));
+    return Promise.reject(new Error('无可用 Generator: ' + primaryKp));
   }
 
   // 2. 实例化 Generator
@@ -118,7 +122,7 @@ function generateQuestions(plan, options) {
     if (!result.success && (!semanticQuestions || semanticQuestions.length === 0)) {
       var err = new Error(((result.error || 'GENERATION_FAILED') + (result.message ? ': ' + result.message : '')));
       err.generationFailed = true;
-      err.planKey = plan.planId || plan.knowledgePointId || null;
+      err.planKey = plan.planId || primaryKp || null;
       throw err;
     }
 
@@ -369,9 +373,11 @@ function createGenerator(impl) {
      * @returns {Promise<SemanticQuestion[]> | SemanticQuestion[]}
      */
     generate: function (plan) {
-      // 1. 验证 plan
-      if (!plan || !plan.knowledgePointId || !plan.questionTypeId || plan.difficulty == null) {
-        throw new Error('Plan 缺少必填字段: knowledgePointId, questionTypeId, difficulty');
+      // 1. 验证 plan（知识点头取 knowledgePointIds[0]，兼容旧单数）
+      var primaryKp = (Array.isArray(plan && plan.knowledgePointIds) && plan.knowledgePointIds[0]) ||
+        (plan && typeof plan.knowledgePointId === 'string' ? plan.knowledgePointId : null);
+      if (!primaryKp || !plan.questionTypeId || plan.difficulty == null) {
+        throw new Error('Plan 缺少必填字段: knowledgePointIds, questionTypeId, difficulty');
       }
 
       // 2. 派生 seed
@@ -425,7 +431,7 @@ function normalizeOutput(item, plan, index) {
     generatorVersion: item.generatorVersion || '1.0.0',
     seed: plan.seed,
     index: index,
-    knowledgePoint: plan.knowledgePointId,
+    knowledgePoint: (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) || plan.knowledgePointId,
     difficulty: plan.difficulty,
     questionType: plan.questionTypeId
   }));
@@ -449,11 +455,13 @@ function createLegacyGenerator(legacyPlugin, meta) {
 
     generate: function (plan) {
       // 将 Plan 转换为 Legacy opts
+      var primaryKp = (Array.isArray(plan && plan.knowledgePointIds) && plan.knowledgePointIds[0]) ||
+        (plan && typeof plan.knowledgePointId === 'string' ? plan.knowledgePointId : null);
       var opts = {
         count: plan.count || 10,
         grade: plan.grade,
         difficulty: plan.difficulty,
-        knowledgePointId: plan.knowledgePointId,
+        knowledgePointId: primaryKp,
         questionType: plan.questionTypeId,
         seed: plan.seed,
         // 透传约束
@@ -474,7 +482,7 @@ function createLegacyGenerator(legacyPlugin, meta) {
           seed: plan.seed,
           planId: plan.planId,
           index: i,
-          knowledgePointId: plan.knowledgePointId,
+          knowledgePointId: primaryKp,
           difficulty: plan.difficulty
         });
       });
@@ -871,7 +879,10 @@ function validateBatch(questions, plan) {
   // ② 知识点覆盖
   var kpCounts = countBy(questions, function (q) { return q.knowledgePoint || 'unknown'; });
   var kpCovered = Object.keys(kpCounts).filter(function (k) { return k !== 'unknown'; }).length;
-  var plannedKPs = plan.knowledgePoints || [];
+  // Refactor Step 2：计划内 KP 列表唯一语义 = knowledgePointIds[]（边界兼容旧 knowledgePoints）
+  var plannedKPs = (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length)
+    ? plan.knowledgePointIds
+    : ((Array.isArray(plan.knowledgePoints) ? plan.knowledgePoints : []) || []);
   if (plannedKPs.length) {
     var missingKPs = plannedKPs.filter(function (kp) { return !kpCounts[kp]; });
     if (missingKPs.length) {

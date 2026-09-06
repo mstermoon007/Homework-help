@@ -2,7 +2,8 @@
 /**
  * dev/check-strategy-plumbing.js — M3-21 Strategy → Plugin 管道验收
  *
- * 对 574 KP 全量验证 7 个决策维度真正从 Strategy 进入 Plugin options：
+ * 对全部 math 知识点（Core Domain 收缩：语文/英语已移出核心生成链）全量验证
+ * 7 个决策维度真正从 Strategy 进入 Plugin options：
  *   ① questionType   options.questionType === plan.questionTypeId
  *   ② cognitiveLevel options.cognitiveLevel === plan.cognitiveLevel
  *   ③ difficulty     options.difficulty === plan.difficulty
@@ -34,6 +35,9 @@ function run() {
     (KnowledgeBank[s] || []).forEach(function (g) {
       (g.modules || []).forEach(function (m) {
         (m.knowledgePoints || []).forEach(function (kp) {
+          // Core Domain 收缩（Refactor Step 1）：语文(cn)/英语(en) 已移出核心生成链，
+          // 不再进入 StrategyEngine，探针只覆盖 math 域。
+          if (kp.id.indexOf('cn-') === 0 || kp.id.indexOf('en-') === 0) return;
           total++;
           var plan;
           try {

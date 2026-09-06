@@ -77,9 +77,11 @@ function createGenerator(impl) {
      * @returns {Promise<SemanticQuestion[]> | SemanticQuestion[]}
      */
     generate: function (plan) {
-      // 1. 验证 plan
-      if (!plan || !plan.knowledgePointId || !plan.questionTypeId || plan.difficulty == null) {
-        throw new Error('Plan 缺少必填字段: knowledgePointId, questionTypeId, difficulty');
+      // 1. 验证 plan（知识点头取 knowledgePointIds[0]，兼容旧单数）
+      var primaryKp = (Array.isArray(plan && plan.knowledgePointIds) && plan.knowledgePointIds[0]) ||
+        (plan && typeof plan.knowledgePointId === 'string' ? plan.knowledgePointId : null);
+      if (!primaryKp || !plan.questionTypeId || plan.difficulty == null) {
+        throw new Error('Plan 缺少必填字段: knowledgePointIds, questionTypeId, difficulty');
       }
 
       // 2. 派生 seed
@@ -133,7 +135,7 @@ function normalizeOutput(item, plan, index) {
     generatorVersion: item.generatorVersion || '1.0.0',
     seed: plan.seed,
     index: index,
-    knowledgePoint: plan.knowledgePointId,
+    knowledgePoint: (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) || plan.knowledgePointId,
     difficulty: plan.difficulty,
     questionType: plan.questionTypeId
   }));
@@ -157,11 +159,13 @@ function createLegacyGenerator(legacyPlugin, meta) {
 
     generate: function (plan) {
       // 将 Plan 转换为 Legacy opts
+      var primaryKp = (Array.isArray(plan && plan.knowledgePointIds) && plan.knowledgePointIds[0]) ||
+        (plan && typeof plan.knowledgePointId === 'string' ? plan.knowledgePointId : null);
       var opts = {
         count: plan.count || 10,
         grade: plan.grade,
         difficulty: plan.difficulty,
-        knowledgePointId: plan.knowledgePointId,
+        knowledgePointId: primaryKp,
         questionType: plan.questionTypeId,
         seed: plan.seed,
         // 透传约束
@@ -182,7 +186,7 @@ function createLegacyGenerator(legacyPlugin, meta) {
           seed: plan.seed,
           planId: plan.planId,
           index: i,
-          knowledgePointId: plan.knowledgePointId,
+          knowledgePointId: primaryKp,
           difficulty: plan.difficulty
         });
       });

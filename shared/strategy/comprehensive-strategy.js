@@ -15,6 +15,14 @@
 
   var DEFAULT_DIFFICULTY = 2;
 
+  // Core Domain 收缩（Refactor Step 1）：综合练习仅接受 math；cn/en 返回明确 unsupported。
+  var SUBJECT_MATH_ONLY = { math: 'math' };
+  function assertMathSubject(subject) {
+    var canon = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' }[String(subject || '').toLowerCase()];
+    if (!canon) return null;
+    return SUBJECT_MATH_ONLY[canon] ? null : canon;
+  }
+
   function getKB() {
     if (typeof global !== 'undefined' && global.KnowledgeBank) return global.KnowledgeBank;
     if (typeof require === 'function') {
@@ -131,8 +139,18 @@
     var subject = request.subject;
     var grade = request.grade;
     if (!subject) return Promise.reject(new Error('comprehensive 需要 subject'));
+    // Core Domain 收缩（Refactor Step 1）：非 math 科目综合练习 → 明确 unsupported，禁止 fallback。
+    var unsupported = assertMathSubject(subject);
+    if (unsupported) {
+      var uns = new Error('核心生成引擎仅支持数学（math）综合练习，暂不支持 ' + unsupported);
+      uns.name = 'GenerationUnsupportedError';
+      uns.code = 'UNSUPPORTED_SUBJECT';
+      uns.subject = unsupported;
+      return Promise.reject(uns);
+    }
     if (grade == null) return Promise.reject(new Error('comprehensive 需要 grade'));
-    var targetCount = request.count != null ? request.count : 10;
+    // Refactor Step 2：volume 为 count 别名（New Request 字段归一）
+    var targetCount = request.count != null ? request.count : (request.volume != null ? request.volume : 10);
     if (typeof targetCount !== 'number' || !isFinite(targetCount) || targetCount < 1 || Math.floor(targetCount) !== targetCount) {
       return Promise.reject(new Error('count 必须是 >=1 的整数: ' + targetCount));
     }
@@ -149,6 +167,11 @@
     if (deps.length) return Promise.reject(new Error('ComprehensiveStrategy 依赖缺失: ' + deps.join(', ')));
 
     var entries = KB.getEntries(subject, grade) || [];
+    // Refactor Step 2：unitId 按 moduleId 过滤（无匹配保持全集，避免误伤既有请求）
+    if (request.unitId != null) {
+      var unitFiltered = entries.filter(function (e) { return String(e.moduleId) === String(request.unitId); });
+      if (unitFiltered.length) entries = unitFiltered;
+    }
     if (request.questionTypes && Array.isArray(request.questionTypes) && request.questionTypes.length) {
       var qts = request.questionTypes;
       entries = entries.filter(function (e) {
@@ -188,7 +211,7 @@
 
     planTasks.forEach(function (task) {
       var req = {
-        knowledgePointId: task.entry.id,
+        knowledgePointIds: [task.entry.id],
         count: task.count,
         difficulty: difficulty,
         learnerProfile: request.learnerProfile || null

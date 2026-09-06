@@ -83,7 +83,44 @@
     return null;
   }
 
+  // Refactor Step 2：内部唯一 KP 语义 = knowledgePointIds 数组（边界归一旧单数/复数）
+  function requestKpIds(request) {
+    if (!request || typeof request !== 'object') return [];
+    if (Array.isArray(request.knowledgePointIds) && request.knowledgePointIds.length) return request.knowledgePointIds.slice();
+    if (Array.isArray(request.knowledgePoints) && request.knowledgePoints.length) return request.knowledgePoints.slice();
+    if (typeof request.knowledgePointId === 'string' && request.knowledgePointId) return [request.knowledgePointId];
+    if (typeof request.kp === 'string' && request.kp) return [request.kp];
+    return [];
+  }
+  function requestCount(request) {
+    if (!request) return null;
+    return request.count != null ? request.count : (request.volume != null ? request.volume : null);
+  }
+  function planKey(plan) {
+    if (!plan) return null;
+    if (plan.planId) return plan.planId;
+    return (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) || plan.knowledgePointId || null;
+  }
+
   // ---------- 请求校验 (轻量) ----------
+  /**
+   * Core Domain 收缩（Refactor Step 1）：编排仅接受 math。
+   * @param {Object} request
+   * @returns {string|null} 非 math 的 canonical subject，math/null 表示通过
+   */
+  function unsupportedSubject(request) {
+    if (!request) return null;
+    // kp id 前缀最权威（防止 subject=math 掩盖混入的 cn/en）
+    var kpIds = requestKpIds(request);
+    for (var i = 0; i < kpIds.length; i++) {
+      if (kpIds[i].indexOf('cn-') === 0) return 'cn';
+      if (kpIds[i].indexOf('en-') === 0) return 'en';
+    }
+    var m = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+    var s = m[String(request.subject || '').toLowerCase()] || null;
+    return (s && s !== 'math') ? s : null;
+  }
+
   /**
    * 轻量校验：仅检查对象/必填字段最小集，重校验走校验管道。
    * @param {Object} request
@@ -92,13 +129,12 @@
   function lightweightValidate(request) {
     if (!request || typeof request !== 'object') return ['request 必须是对象'];
     var errs = [];
-    var hasKp = request.knowledgePointId || request.knowledgePoint || request.kp;
-    var hasMultiKps = Array.isArray(request.knowledgePoints) && request.knowledgePoints.length;
+    var hasKp = requestKpIds(request).length > 0;
     var hasSubjectGrade = request.subject && request.grade != null;
-    if (!hasKp && !hasMultiKps && !hasSubjectGrade) {
-      errs.push('缺少 knowledgePointId / knowledgePoints / (subject+grade)');
+    if (!hasKp && !hasSubjectGrade) {
+      errs.push('缺少 knowledgePointIds（或旧 knowledgePointId / knowledgePoints / subject+grade）');
     }
-    if (request.count != null && (typeof request.count !== 'number' || request.count < 1)) {
+    if (requestCount(request) != null && (typeof requestCount(request) !== 'number' || requestCount(request) < 1)) {
       errs.push('count 必须 >=1');
     }
     if (request.targetDifficulty != null && (request.targetDifficulty < 1 || request.targetDifficulty > 10)) {
@@ -123,6 +159,15 @@
       return { plans: [], questions: [], failedPlans: [], trace: { error: lightErrs.join('; ') } };
     }
 
+    // Core Domain 收缩（Refactor Step 1）：非 math → 明确 unsupported，禁止 fallback。
+    var unsupported = unsupportedSubject(request);
+    if (unsupported) {
+      return {
+        plans: [], questions: [], failedPlans: [],
+        trace: { error: '核心生成引擎仅支持数学（math），暂不支持 ' + unsupported, code: 'UNSUPPORTED_SUBJECT', subject: unsupported }
+      };
+    }
+
     var StrategyEngine = getDep('strategyEngine');
     var ComprehensiveStrategy = getDep('comprehensiveStrategy');
     var OrchestratorEngine = getDep('orchestratorEngine');
@@ -131,10 +176,11 @@
     // 2-3. 调 Strategy Engine 生成 QuestionPlan (含 Generator 选择)
     var plans = [];
     var trace = {};
+    var kpIds = requestKpIds(request);
+    var totalCount = requestCount(request);
     var isComprehensive = request.comprehensive === true || request.mode === 'comprehensive' ||
-      (!request.knowledgePointId && request.subject && request.grade != null);
-    var isMultiKp = request.mode === 'multi-kp' ||
-      (Array.isArray(request.knowledgePoints) && request.knowledgePoints.length);
+      (kpIds.length === 0 && request.subject && request.grade != null);
+    var isMultiKp = request.mode === 'multi-kp' || kpIds.length > 1;
 
     if (isComprehensive) {
       if (!ComprehensiveStrategy || typeof ComprehensiveStrategy.build !== 'function') {
@@ -147,16 +193,15 @@
       if (!StrategyEngine || typeof StrategyEngine.plan !== 'function') {
         return { plans: [], questions: [], failedPlans: [], trace: { error: 'StrategyEngine 不可用' } };
       }
-      var kps = request.knowledgePoints;
       plans = [];
-      kps.forEach(function (kpId) {
+      kpIds.forEach(function (kpId) {
         try {
-          var single = { knowledgePointId: kpId, grade: request.grade, count: request.count, difficulty: request.difficulty, questionType: request.questionType, subtype: request.subtype, learnerProfile: request.learnerProfile };
+          var single = { knowledgePointIds: [kpId], grade: request.grade, count: totalCount, difficulty: request.difficulty, questionType: request.questionType, subtype: request.subtype, spiralLevel: request.spiralLevel != null ? request.spiralLevel : request.spiral_level, learnerProfile: request.learnerProfile };
           var r = StrategyEngine.plan(single);
           if (r && r.plans && r.plans[0]) plans.push(r.plans[0]);
         } catch (e) { /* skip */ }
       });
-      trace = { mode: 'multi-kp', kps: kps.length };
+      trace = { mode: 'multi-kp', kps: kpIds.length };
     } else {
       if (!StrategyEngine || typeof StrategyEngine.plan !== 'function') {
         return { plans: [], questions: [], failedPlans: [], trace: { error: 'StrategyEngine 不可用' } };
@@ -176,12 +221,12 @@
           var vr = StrategyValidator.validatePlan(plan);
           if (vr && vr.valid === false) {
             var msgs = (vr.errors && vr.errors.length) ? vr.errors : ['校验未通过'];
-            failedPlans.push({ planId: plan.planId || plan.knowledgePointId, error: msgs.join('; ') });
+            failedPlans.push({ planId: planKey(plan), error: msgs.join('; ') });
             return;
           }
         }
         if (!OrchestratorEngine || typeof OrchestratorEngine.generateQuestions !== 'function') {
-          failedPlans.push({ planId: plan.planId || plan.knowledgePointId, error: 'OrchestratorEngine 不可用' });
+          failedPlans.push({ planId: planKey(plan), error: 'OrchestratorEngine 不可用' });
           return;
         }
         var res = OrchestratorEngine.generateQuestions(plan, {
@@ -192,7 +237,7 @@
         var sqs = (res && (res.semanticQuestions || res.questions)) || [];
         questions.push.apply(questions, sqs);
       } catch (e) {
-        failedPlans.push({ planId: plan.planId || plan.knowledgePointId, error: String(e && e.message || e) });
+        failedPlans.push({ planId: planKey(plan), error: String(e && e.message || e) });
       }
     });
 

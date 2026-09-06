@@ -31,6 +31,15 @@
             "shared/strategy-engine.bundle.js"
           ]
         },
+        "STRATEGY": {
+          "desc": "核心策略规划：题型白名单∩能力 / 难度 / 复杂度档 / 样式与 SVG 模板族调度（策略引擎以 QuestionPlan 驱动生成，归生成层，见 docs/ARCHITECTURE_LAYERS.md §3.1）",
+          "files": [
+            "shared/strategy/strategy-engine.js",
+            "shared/strategy/comprehensive-strategy.js",
+            "shared/strategy/question-style-strategy.js",
+            "shared/strategy/complexity-strategy.js"
+          ]
+        },
         "SEMANTIC": {
           "desc": "语义结构：Schema / semantic-question 归一与构造",
           "files": [
@@ -69,11 +78,12 @@
           ]
         },
         "PRESENTATION": {
-          "desc": "呈现层：HTML 渲染 + SVG 渲染器 + factory",
+          "desc": "呈现层：HTML 渲染 + SVG 渲染器 + 固定样式模板族 + factory",
           "files": [
             "shared/presentation/html-renderer.js", "shared/presentation/legacy-svg-adapter.js",
             "shared/presentation/render-options.js", "shared/presentation/render-result.js",
             "shared/presentation/renderer.js", "shared/presentation/svg-registry.js",
+            "shared/svg-templates.js",
             "shared/render.js", "shared/print.js"
           ]
         },
@@ -116,15 +126,15 @@
           "files": ["shared/practice-bridge.js"]
         },
         "STRATEGY": {
-          "desc": "策略(计划/难度/结构编排)；三维螺旋·自适应预留契约：adaptive/learnerProfile/adaptiveDelta 默认关，见 docs/ARCHITECTURE_LAYERS.md R5",
+          "desc": "策略支撑子模块(计划/难度/结构编排辅助)；核心规划引擎已归生成层 STRATEGY 组（strategy-engine / comprehensive-strategy / question-style / complexity）。三维螺旋·自适应预留契约：adaptive/learnerProfile/adaptiveDelta 默认关，见 docs/ARCHITECTURE_LAYERS.md R5",
           "files": [
             "shared/strategy/adaptive-strategy.js", "shared/strategy/cognitive-strategy.js",
-            "shared/strategy/comprehensive-strategy.js", "shared/strategy/constraint-builder.js",
+            "shared/strategy/constraint-builder.js",
             "shared/strategy/context-strategy.js", "shared/strategy/difficulty-strategy.js",
             "shared/strategy/number-range-strategy.js", "shared/strategy/question-plan.js",
             "shared/strategy/question-type-allocation.js", "shared/strategy/question-type-strategy.js",
             "shared/strategy/spiral-strategy.js", "shared/strategy/static-difficulty.js",
-            "shared/strategy/strategy-engine.js", "shared/strategy/strategy-error.js",
+            "shared/strategy/strategy-error.js",
             "shared/strategy/strategy-request.js", "shared/strategy/strategy-resolver.js",
             "shared/strategy/strategy-result.js", "shared/strategy/strategy-validator.js",
             "shared/strategy/structure-constraints.js", "shared/strategy/target-difficulty.js",

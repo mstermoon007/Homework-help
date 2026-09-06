@@ -112,7 +112,7 @@ test('M7-R08 单点生成（knowledgePointId）不走综合策略', async () => 
   const kpId = KnowledgeBank.getEntries('math', 1)[0].id;
   const built = await GE.build({ knowledgePointId: kpId, count: 3, grade: 1 });
   assert.strictEqual(built.plans.length, 1);
-  assert.strictEqual(built.plans[0].knowledgePointId, kpId);
+  assert.deepStrictEqual(built.plans[0].knowledgePointIds, [kpId]);
 });
 
 test('M7-R09 interleaveByPlugin：两组交替', () => {

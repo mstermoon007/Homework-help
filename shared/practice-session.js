@@ -303,14 +303,17 @@
     };
 
     if (this.config.knowledgePointIds && this.config.knowledgePointIds.length) {
-      req.knowledgePoints = this.config.knowledgePointIds;
+      // Refactor Step 2：生成层内部唯一 KP 语义 = knowledgePointIds 数组
+      req.knowledgePointIds = this.config.knowledgePointIds;
       req.mode = 'multi-kp';
       // 知识点配额（生成层 multi-kp 按配额分配题量；无配额时生成层均分）
       if (this.config.kpAllocation && Array.isArray(this.config.kpAllocation.kps)) {
         req.kpAllocation = this.config.kpAllocation;
       }
+      // combine=true 且多知识点 → 生成层单计划合并（每份试卷一份合并计划）
+      if (this.config.combine === true) req.combine = true;
     } else if (this.config.knowledgePointId) {
-      req.knowledgePointId = this.config.knowledgePointId;
+      req.knowledgePointIds = [this.config.knowledgePointId];
       req.mode = 'single-kp';
     }
 

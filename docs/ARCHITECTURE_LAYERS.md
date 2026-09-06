@@ -19,9 +19,9 @@
 | 层 | 职责 | 典型路径 | 禁止 |
 |----|------|---------|------|
 | **UI** | 负责显示：页面壳 / 交互 / 渲染呈现入口 | `*.html`、`feedback/`、`knowledge/*.html` | 不决策题目结构、不直连生成引擎算法（唯一入口 `PracticeBridge.start`） |
-| **生成层** | 题目生成核心引擎：题面/答案生成、语义归一、渲染(HTML/SVG)输出 | `shared/generation-engine.js`、`shared/practice-session.js`、`shared/generator/**`、`shared/presentation/**`、`shared/svg-*.js` | Frozen Core，仅授权 Bug Fix(GEN) |
+| **生成层** | 题目生成核心引擎：题面/答案生成、核心策略规划（题型/难度/复杂度/样式模板）、语义归一、渲染(HTML/SVG)输出 | `shared/generation-engine.js`、`shared/practice-session.js`、`shared/strategy/strategy-engine.js`、`shared/generator/**`、`shared/presentation/**`、`shared/svg-*.js` | Frozen Core，仅授权 Bug Fix(GEN) |
 | **知识点库** | 基层数据核心：唯一数据来源、schema、规范映射 | `shared/knowledge-*.js`、`shared/*-ontology*.js`、`shared/hanzi-bank.js`、`knowledge/**` | 不生成题面、不参与 UI 决策 |
-| **大服务层** | 信息传递 / 项目控制 / 外围样式 / 打印等外围控制；**除 UI/生成/知识外全归此层** | `shared/practice-bridge.js`、`shared/strategy/**`、`shared/validator/**`、`shared/learner/**`、`shared/common.js`、`*.css`、`shared/print.js` | 不侵入 Frozen Core 算法 |
+| **大服务层** | 信息传递 / 项目控制 / 外围样式 / 打印等外围控制；**除 UI/生成/知识外全归此层** | `shared/practice-bridge.js`、`shared/strategy/**`（除核心规划引擎，见 §3.1）、`shared/validator/**`、`shared/learner/**`、`shared/common.js`、`*.css`、`shared/print.js` | 不侵入 Frozen Core 算法 |
 
 ## 2. 各层归属明细
 
@@ -32,10 +32,11 @@
 
 ### 2.2 生成层（题目生成核心引擎）
 - **引擎壳**：`generation-engine.js`、`practice-session.js`、`presentation-engine.js`（+bundle）
+- **核心策略**：`strategy/strategy-engine.js`（plan：题型白名单∩能力、难度、复杂度档注入）、`strategy/comprehensive-strategy.js`（综合分配/混排）、`strategy/question-style-strategy.js` + `strategy/complexity-strategy.js`（样式/复杂度档）、`svg-templates.js`（固定样式 → 模板族）
 - **语义**：`semantic-question.js`、`schemas/*`
 - **生成器**：`generator/**`（contract/mode/registry/selector/retry/legacy-adapter + `generators/` + `core/`）、`generator-capability-registry.js`、`generator-registry.js`
 - **服务接口**：`generation/orchestrator.js` + `adapters/` + `services/` + `api.js`/`dto.js`
-- **呈现/渲染**：`presentation/**`、`render.js`、`print.js`、`svg-{core,calculation,geometry,make-ten,chinese,english}.js`
+- **呈现/渲染**：`presentation/**`、`render.js`、`print.js`、`svg-{core,calculation,geometry,make-ten,chinese,english}.js`、`svg-templates.js`
 
 ### 2.3 知识点库（基层数据核心）
 - `knowledge-bank.js`、`knowledge-point.js`
@@ -61,7 +62,7 @@
 
 ### 2.4 大服务层（信息传递 / 控制 / 外围）
 - **关联/编排（外围控制核心）**：`practice-bridge.js`（`PracticeBridge.start/submit/control` 唯一生成入口）
-- **策略**：`strategy/**`、`strategy-config.js`
+- **策略支撑子模块**：`strategy/**`（除 `strategy-engine` / `comprehensive-strategy` / `question-style-strategy` / `complexity-strategy` 四个核心规划模块已归生成层 §2.2，其余子模块如 difficulty/spiral/adaptive/target-difficulty 等为支撑辅助）、`strategy-config.js`
 - **校验**：`validator/**`
 - **能力模型**：`capability-*.js`
 - **学习者模型**：`learner/**`

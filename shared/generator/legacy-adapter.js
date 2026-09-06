@@ -17,16 +17,27 @@
  *   5. hydrateLegacyGenerator(selection, plugin) —— Selector 实例化 legacy 生成器
  *   6. renderSet(set, pluginId) —— plugin.render 桥
  *   7. createLegacyGenerator(plugin, meta) —— Legacy GeneratorContract
- *   8. runLegacyFallback(plugin, plan) —— 兼容旧调用路径
+* 8. runLegacyFallback(plugin, plan) —— 兼容旧调用路径
  *
  * 删除：SemanticQuestion → Legacy Question 的反向转换（生成核心不再需要）。
  * 遗留插件输出直接转换为 SemanticQuestion 进入 Pipeline。
+ *
+ * Refactor Step 2：QuestionPlan KP 数组唯一语义（knowledgePointIds[]），
+ * planPrimaryKp() 取主元素 [0]（边界兼容旧单数 knowledgePointId）。
  */
 (function (global) {
   'use strict';
 
   var isBrowser = typeof window !== 'undefined';
   var pluginCache = {};
+
+  // Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
+  function planPrimaryKp(plan) {
+    if (!plan) return null;
+    if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+    if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+    return null;
+  }
 
   // ============================================================
   // 内部依赖（懒加载）
@@ -230,7 +241,7 @@
       }
 
       var sq = {
-        knowledgePointId: plan.knowledgePointId,
+        knowledgePointId: planPrimaryKp(plan),
         questionType: plan.questionTypeId,
         difficulty: q.difficulty != null ? q.difficulty : plan.difficulty,
         difficultyParams: {
@@ -448,8 +459,8 @@
       supports: function (plan) {
         if (!plan || !plan.questionTypeId) return false;
         if (capabilities.length && capabilities.indexOf(plan.questionTypeId) === -1) return false;
-        if (knowledgePoints.length && plan.knowledgePointId &&
-            knowledgePoints.indexOf(plan.knowledgePointId) === -1) return false;
+        var kp = planPrimaryKp(plan);
+        if (knowledgePoints.length && kp && knowledgePoints.indexOf(kp) === -1) return false;
         return true;
       },
 

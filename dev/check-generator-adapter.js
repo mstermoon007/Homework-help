@@ -19,7 +19,7 @@ var loader = require(path.join(ROOT, 'dev', 'plugin-loader.js'));
 var registryMod = require(path.join(ROOT, 'dev', 'plugin-registry.js'));
 var Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 var GenCap = require(path.join(ROOT, 'shared', 'generator-capability-registry.js'));
-var Adapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-plugin-adapter.js'));
+var Adapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-adapter.js'));
 var Contract = require(path.join(ROOT, 'shared', 'generator', 'generator-contract.js'));
 
 function run() {

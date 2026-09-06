@@ -4,6 +4,9 @@
  * M3-23 单知识点测试
  * 数学 × 5 / 语文 × 5 / 英语 × 5（KB 英语仅 3 个 KP，后 2 个 slot 循环复用，
  * 以不同难度覆盖）——每例测试基础(2)/中等(5)/高难(8)，验证 7 个决策维度。
+ *
+ * Core Domain 收缩（Refactor Step 1）：核心生成链仅接受 math。
+ * 语文(cn)/英语(en) 的单个知识点现在必须抛 UNSUPPORTED_SUBJECT，不再产出计划。
  */
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
@@ -22,20 +25,6 @@ const MATH_KPS = [
   'math-g4-m1-g4-oral-big',
   'math-g5-m1-g5-oral-fracadd'
 ];
-const CN_KPS = [
-  'cn-g1-n1-pinyin-basic',
-  'cn-g1-n2-stroke-order',
-  'cn-g2-n2-radical-grouping',
-  'cn-g3-n1-multi-pronunciation',
-  'cn-g3-n2-dictionary-lookup'
-];
-// 英语 KB 仅 3 个 KP（letter-recognition / letter-sound / word-spelling）
-const EN_UNIQUE = [
-  'en-g3-e1-letter-recognition',
-  'en-g3-e1-letter-sound',
-  'en-g3-e2-word-spelling'
-];
-const EN_KPS = [EN_UNIQUE[0], EN_UNIQUE[1], EN_UNIQUE[2], EN_UNIQUE[0], EN_UNIQUE[1]];
 
 const LEVELS = { 基础: 2, 中等: 5, 高难: 8 };
 
@@ -87,19 +76,29 @@ test('M3-23 数学 × 5（基础/中等/高难）', () => {
   });
 });
 
-test('M3-23 语文 × 5（基础/中等/高难）', () => {
-  CN_KPS.forEach(kpId => {
-    Object.keys(LEVELS).forEach(tier => {
-      verifySevenDimensions(kpId, LEVELS[tier], 'cn ' + kpId + ' ' + tier);
-    });
-  });
-});
-
-test('M3-23 英语 × 5（基础/中等/高难；KB 仅 3 个英语 KP，循环覆盖）', () => {
-  EN_KPS.forEach(kpId => {
-    Object.keys(LEVELS).forEach(tier => {
-      verifySevenDimensions(kpId, LEVELS[tier], 'en ' + kpId + ' ' + tier);
-    });
+// Core Domain 收缩（Refactor Step 1）：语文/英语不再进入核心生成链，
+// 返回明确 UNSUPPORTED_SUBJECT，禁止 fallback。原「语文×5/英语×5」测试转为该回归。
+test('M3-23 语文/英语 KS 不再进入核心生成链（UNSUPPORTED_SUBJECT）', () => {
+  const CN_KPS = [
+    'cn-g1-n1-pinyin-basic',
+    'cn-g1-n2-stroke-order',
+    'cn-g2-n2-radical-grouping',
+    'cn-g3-n1-multi-pronunciation',
+    'cn-g3-n2-dictionary-lookup'
+  ];
+  const EN_KPS = [
+    'en-g3-e1-letter-recognition',
+    'en-g3-e1-letter-sound',
+    'en-g3-e2-word-spelling'
+  ];
+  [...CN_KPS, ...EN_KPS].forEach(kpId => {
+    let err = null;
+    try { Engine.plan({ knowledgePointId: kpId, count: 3, difficulty: 2 }); }
+    catch (e) { err = e; }
+    assert.ok(err, kpId + ' 应抛出 unsupported 错误');
+    assert.strictEqual(err && err.name, 'StrategyError', kpId + ' 错误类型');
+    assert.strictEqual(err && err.code, 'UNSUPPORTED_SUBJECT', kpId + ' 错误码');
+    assert.match(err && err.message, /仅支持数学/, kpId + ' 错误信息明确');
   });
 });
 
