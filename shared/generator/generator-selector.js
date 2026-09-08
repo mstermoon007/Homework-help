@@ -213,14 +213,21 @@ function selectGenerator(plan, options) {
   // 算术语义域：可解析算术语义，或 legacy.category === 'algebra'（如 make-ten/cushi 属凑加，属算术）
   var isAlgebraDomain = !!(kp && kp.legacy && kp.legacy.category === 'algebra');
 
+  // C3：combine 合并计划路由收口。
+  // combine=true 且 ≥2 KP 时，只有 supportsComposite 生成器能在单题/单卷中同时
+  // 承载多 KP 语义；普通单 KP 生成器（如 arithmetic-addition）的产出只体现单一 KP，
+  // 必然触发 KP_SEMANTIC_COMPOSITE 失败（实测合并计划连选 20 次稳定误选）。
+  // 故在候选筛选最前端收口：合并计划仅 supportsComposite 生成器入候选；
+  // 非合并计划（含 multi-kp 拆分后的单 KP 计划）composite 不得入候选（原 P0-07 规则）。
+  var combineKpCount = QuestionPlan.planKnowledgePointIds(plan).length;
+  var isCombineRequest = plan.combine === true && combineKpCount >= 2;
+
   all.forEach(function (g) {
     var track = trackOf(g);
     if (mode === 'native' && track !== 'native') return;
 
-    // P0-07 Step 32/33：Composite 生成器仅服务 combine=true 且 ≥2 KP 的合并计划；
-    // 单 KP（含 multi-kp 拆分后的单计划）禁止路由到 Composite，防止 generate 因 KP 不足抛错。
-    if (g.supportsComposite === true &&
-        !(plan.combine === true && QuestionPlan.planKnowledgePointIds(plan).length >= 2)) return;
+    if (g.supportsComposite === true && !isCombineRequest) return;
+    if (isCombineRequest && g.supportsComposite !== true) return;
 
     var score = { record: g, kp: 0, semanticOp: 0, capability: 0, qt: 0, diff: 0 };
 

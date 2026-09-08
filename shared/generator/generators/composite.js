@@ -55,12 +55,12 @@ function getKpMeta(kpId) {
  */
 function makeCalcToJudge(plan, context, i, kpMetas, rng) {
   // 随机选择一个 KP 作为算式来源
-  var srcKp = rng.pick(kpMetas.filter(function(m) { return m.category === 'algebra'; }));
-  if (!srcKp) srcKp = rng.pick(kpMetas);
+  var srcKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'algebra'; }));
+  if (!srcKp) srcKp = Rng.pick(rng,kpMetas);
   
   var arithSem = require('../core/kp-arithmetic-semantics.js').resolveArithmeticSemantics(KP.get(srcKp.id));
   var ops = arithSem ? arithSem.operators : ['+', '−'];
-  var op = rng.pick(ops);
+  var op = Rng.pick(rng,ops);
   
   var a, b, correct, isTrue;
   if (op === '+') {
@@ -89,6 +89,7 @@ function makeCalcToJudge(plan, context, i, kpMetas, rng) {
   var prompt = a + ' ' + op + ' ' + b + ' = ' + shown + ' （对还是错？）';
   
   return {
+    knowledgePointId: pkp(plan),
     knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
     questionType: 'judge',
     difficulty: plan.difficulty,
@@ -117,8 +118,8 @@ function makeCalcToJudge(plan, context, i, kpMetas, rng) {
  * 适用：度量类 KP + 计算题型
  */
 function makeMeasureToCalc(plan, context, i, kpMetas, rng) {
-  var measureKp = rng.pick(kpMetas.filter(function(m) { return m.category === 'measurement'; }));
-  var calcKp = rng.pick(kpMetas.filter(function(m) { return m.category === 'algebra'; }));
+  var measureKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'measurement'; }));
+  var calcKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'algebra'; }));
   
   if (!measureKp || !calcKp) {
     // 兜底：单一 KP 时退化为普通计算
@@ -133,17 +134,18 @@ function makeMeasureToCalc(plan, context, i, kpMetas, rng) {
     { from: '元', to: '角', factor: 10 },
     { from: '角', to: '分', factor: 10 }
   ];
-  var unit = rng.pick(units);
+  var unit = Rng.pick(rng,units);
   var baseVal = Rng.randInt(rng, 1, 9);
   var converted = baseVal * unit.factor;
   
-  var op = rng.pick(['+', '−']);
+  var op = Rng.pick(rng,['+', '−']);
   var b = Rng.randInt(rng, 1, 20);
   var answer = op === '+' ? converted + b : converted - b;
   
   var prompt = baseVal + unit.from + ' = ' + converted + unit.to + '，' + converted + unit.to + ' ' + op + ' ' + b + unit.to + ' = ____ ' + unit.to;
   
   return {
+    knowledgePointId: pkp(plan),
     knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
     questionType: plan.questionTypeId || 'calc',
     difficulty: plan.difficulty,
@@ -172,8 +174,8 @@ function makeMeasureToCalc(plan, context, i, kpMetas, rng) {
  * 适用：几何类 KP + 填空/选择/应用题型
  */
 function makeShapeToApply(plan, context, i, kpMetas, rng) {
-  var shapeKp = rng.pick(kpMetas.filter(function(m) { return m.category === 'geometry'; }));
-  if (!shapeKp) shapeKp = rng.pick(kpMetas);
+  var shapeKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'geometry'; }));
+  if (!shapeKp) shapeKp = Rng.pick(rng,kpMetas);
   
   var shapeFeatures = {
     'cube': { name: '正方体', edges: 12, faces: 6, vertices: 8 },
@@ -187,16 +189,17 @@ function makeShapeToApply(plan, context, i, kpMetas, rng) {
     'circle': { name: '圆', edges: 0, faces: 1, vertices: 0 }
   };
   
-  var feature = rng.pick(Object.keys(shapeFeatures));
+  var feature = Rng.pick(rng,Object.keys(shapeFeatures));
   var meta = shapeFeatures[feature];
   
-  var attr = rng.pick(['edges', 'faces', 'vertices']);
+  var attr = Rng.pick(rng,['edges', 'faces', 'vertices']);
   var attrName = { edges: '棱', faces: '面', vertices: '顶点' }[attr];
   var answer = meta[attr];
   
   var prompt = meta.name + '有几个' + attrName + '？';
   
   return {
+    knowledgePointId: pkp(plan),
     knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
     questionType: plan.questionTypeId || 'fill',
     difficulty: plan.difficulty,

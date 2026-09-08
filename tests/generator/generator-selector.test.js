@@ -131,3 +131,25 @@ test('P0-07 Step 32：Composite 生成器仅服务 combine=true 且 ≥2 KP 的�
   });
   assert.strictEqual(combo.generatorId, 'generator:composite', 'combine=true 双 KP 应进 Composite');
 });
+
+test('C3：combine 合并计划绝不回落 arithmetic 等单 KP 生成器（防误选回归）', () => {
+  Mode.clearAll();
+  Mode.setGlobal('native');
+  // 多组合并计划重复选择，均必须为 composite（修复前实测连选 20 次稳定误选 arithmetic-addition）
+  const pairs = [
+    ['math-g1-m1-addsub-10', 'math-g1-m0-make-ten'],
+    ['math-g1-m1-addsub-5', 'math-g1-m0-make-ten-cushi']
+  ];
+  pairs.forEach(function (pair) {
+    const sel = Selector.selectGenerator({
+      knowledgePointId: pair[0],
+      knowledgePointIds: pair.slice(),
+      combine: true,
+      questionTypeId: 'calc',
+      difficulty: 3
+    });
+    assert.strictEqual(sel.generatorId, 'generator:composite', pair.join('+') + ' 必须由 composite 承接');
+    assert.strictEqual(sel.record.supportsComposite, true);
+    assert.ok(!/^generator:arithmetic-/.test(sel.generatorId), '合并计划不得回落 arithmetic 家族');
+  });
+});
