@@ -8,7 +8,7 @@
  *   context_default, max_spiral_level
  *
  * 分类：VALID（通过项）/ WARNING（已知缺口，不阻断）/ ERROR（结构违规，阻断）。
- * 不修改任何知识点数据（规则：M0 不强制改 574 个知识点）。
+ * 不修改任何知识点数据（规则：M0 不强制改 549 个知识点）。
  *
  * 输出结构化结果，供 M0 Verify Gate 聚合。
  */

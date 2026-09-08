@@ -2,7 +2,7 @@
 /**
  * dev/check-ontology-schema.js — Knowledge Ontology Schema Check (M1-01)
  *
- * 扫描 574 个 Legacy KnowledgePoint：
+ * 扫描 549 个 Legacy KnowledgePoint：
  *   Legacy -> Normalizer -> Canonical -> Validator
  * 输出：
  *   - 总体 VALID / WARNING / ERROR 计数

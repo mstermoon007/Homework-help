@@ -2,7 +2,7 @@
 /**
  * dev/check-factual-content.js — M1-02.2 Factual Content Gate
  *
- * 校验 574 KP 的 semantics.factualContent：
+ * 校验 549 KP 的 semantics.factualContent：
  *   - 非法策略字段 = 0
  *   - 未知非法类型不阻断（WARNING）
  *   - 空事实合法（覆盖率可统计）

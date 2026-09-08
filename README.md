@@ -69,7 +69,7 @@ python3 -m http.server 8080
 |------------|--------------------------|
 | 前端       | 原生 HTML/CSS/JavaScript（零第三方依赖，经典 `<script>` 加载） |
 | 题目生成   | **native 生成引擎 V2.1**：知识点（549 个）→ 策略引擎 → 语义路由（23 个专用生成器 + 硬阻断）→ 语义题 → HTML/SVG 渲染；种子化随机可复现 |
-| 知识点库   | `shared/knowledge-bank.js` + `knowledge-math.js`（只读数据源，基础 M0–M12 + 竞赛 C1–C9） |
+| 知识点库   | `shared/knowledge-bank.js` + `shared/knowledge-math.js`（只读数据源，基础 M0–M12 + 竞赛 C1–C9） |
 | 教学图形   | 图形描述符 → SVG 注册表分派（时钟/面积/分数/统计/几何/竖式/凑十等） |
 | 离线缓存   | Service Worker（`sw.js`）按 APP_VERSION 预缓存，支持离线访问 |
 | 质量保障   | Golden 自答案自批改（15 case 错误答案 0）、549/549 知识点覆盖、Frozen Core 基线、node:test 274 用例 |
@@ -99,8 +99,8 @@ Homework-help/
 │   ├── generator/          # 路由（selector/registry）+ generators/（23 个生成器）+ core/
 │   ├── presentation/       # render-format / html-renderer / svg-registry
 │   ├── validator/ learner/ # 验证管线 / 学习者模型
-│   ├── svg-*.js            # 教学 SVG（几何/竖式/凑十）
-│   └── tokens/base/components/states/toolbar/pages/subjects.css  # 分层样式令牌
+│   ├── svg-core.js / svg-calculation.js / svg-geometry.js / svg-make-ten.js / svg-templates.js  # 教学 SVG
+│   └── tokens.css / base.css / components.css / states.css / toolbar.css / pages.css / subjects.css  # 分层样式令牌
 ├── plugins/                # 6 个教学图形 SVG 插件（clock/area/fraction/data-stats/draw/competition）
 ├── knowledge/              # 400+ 生成的 SEO 知识点静态页
 ├── architecture/layers.json# 权威四层架构机器清单

@@ -2,7 +2,7 @@
 /**
  * dev/check-capability-matrix.js — M2-R04 Matrix Gate
  *
- * 对 574 KP 全量计算 KnowledgePoint × QuestionType × Capability Matrix：
+ * 对 549 KP 全量计算 KnowledgePoint × QuestionType × Capability Matrix：
  *   - 每 KP 至少 1 个 ALLOW 题型
  *   - 每个 ALLOW 题型都能解析到 Registry 能力
  *   - 不允许的组合明确拒绝（FORBID）

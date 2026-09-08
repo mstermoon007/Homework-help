@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * dev/check-knowledge-point.js — 574 KP Canonical 完整扫描 (M1-R06)
+ * dev/check-knowledge-point.js — 549 KP Canonical 完整扫描 (M1-R06)
  *
  * 通过 Ontology Normalizer 把每个 Legacy KP 归一化为 Canonical KnowledgePoint，
  * 逐 KP 输出 5 类分组状态（可审计），并生成 dev/reports/knowledge-point-inventory.json。

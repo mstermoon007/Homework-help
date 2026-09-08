@@ -22,62 +22,62 @@ jobs:
         with:
           node-version: '20'
 
+      # 项目零运行时依赖，npm install 仅为锁定环境兼容（无 install 脚本）
       - name: Install dependencies
         run: npm install
 
-      # ---- 核心验证 ----
-      - name: verify-setup
-        run: node dev/verify-setup.js
+      # ---- 基础环境 / 版本一致性 ----
+      - name: verify-setup（项目结构与规范文档）
+        run: npm run verify:setup
 
-      # ---- 任务1.2 / 1.3：版本与注册表一致性（CI 捕获不一致） ----
-      - name: check:sw-version
+      - name: check:sw-version（SW 缓存名与 APP_VERSION 同步）
         run: npm run check:sw-version
 
-      - name: check:registry
-        run: npm run check:registry
-
-      - name: check:contrast
+      - name: check:contrast（设计令牌对比度）
         run: npm run check:contrast
 
-      # ---- P1-R01：UI→Engine 边界（唯一生成入口 = GenerationEngine.generate）----
-      - name: check:ui-boundary
-        run: node dev/check-ui-boundary.js
+      # ---- UI 边界门禁 ----
+      - name: verify:ui-boundary（唯一生成入口）
+        run: npm run verify:ui-boundary
 
-      # ---- P4-R05：Legacy 下线条件门禁（生产调用=0/Adapter调用=0/R30通过）----
-      - name: check:p4-legacy-gate
-        run: node dev/check-p4-legacy-gate.js
+      - name: verify:practice-page（练习页职责）
+        run: npm run verify:practice-page
 
-      # ---- P3-R04：Practice 页面职责（无 Plugin/Strategy/Generator/Legacy/难度/SVG 判断）----
-      - name: check:practice-page
-        run: node dev/check-practice-page.js
+      # ---- 生成器契约 / 注册表 / 覆盖（549 KP / 583 QT）----
+      - name: verify:m4
+        run: npm run verify:m4
 
-      - name: verify-knowledge-bank
-        run: node dev/verify-knowledge-bank.js
+      # ---- 聚合硬门禁（SW/对比度/setup/kb-dir/题型模块/螺旋/难度/SVG/锚点/lint）----
+      - name: npm test
+        run: npm test
 
-      - name: regression-check
-        run: node dev/regression-check.js
+      # ---- 标准答案自批改（错误答案 0）----
+      - name: verify:golden
+        run: npm run verify:golden
 
-      # ---- 新增检查 ----
-      - name: concurrency-check
-        run: node dev/concurrency-check.js
+      # ---- M0-M2 统一网关 ----
+      - name: verify:syntax
+        run: npm run verify:syntax
 
-      - name: performance-budget
-        run: node dev/performance-budget.js
+      - name: verify:m0
+        run: npm run verify
 
-      # ---- P9：Frozen Core 保护门禁（核心文件完整性校验）----
-      - name: check:frozen-core
-        run: node dev/check-frozen-core.js --check
+      - name: verify:m1（本体/知识库）
+        run: npm run verify:m1
 
-      # ---- 插件接口合规性 ----
-      - name: check-plugin-interfaces
-        run: node dev/check-plugin-interfaces.js --report
+      - name: verify:m2（能力/契约）
+        run: npm run verify:m2
 
-      # ---- 任务4.1 / 4.2：Node 单元与插件生成测试 ----
-      - name: test:plugins
-        run: npm run test:plugins
+      # ---- 架构分层与 Frozen Core ----
+      - name: verify:layers
+        run: npm run verify:layers
 
-      - name: test:unit
-        run: npm run test:unit
+      - name: verify:frozen-core
+        run: npm run verify:frozen-core
+
+      # ---- Node 单元/契约测试全套（274 用例）----
+      - name: node:test 全套
+        run: node --test test/*.test.js test/unit/*.test.js tests/generator/*.test.js tests/strategy/*.test.js
 
       # ---- 结果汇总 ----
       - name: Upload test results

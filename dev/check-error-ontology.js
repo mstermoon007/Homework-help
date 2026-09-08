@@ -2,7 +2,7 @@
 /**
  * dev/check-error-ontology.js — M1-02.3 Error Ontology Gate
  *
- * 校验 574 KP 的 errors[]：
+ * 校验 549 KP 的 errors[]：
  *   - Error ID 合法（kebab，非插件/题目相关）
  *   - 无重复 ID
  *   - category 合法

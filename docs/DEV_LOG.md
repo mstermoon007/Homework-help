@@ -47,7 +47,7 @@
 
 ### Gate（执行后）
 - `npm run verify:m4`：549/549 KP 覆盖、583 QT ALLOW；`npm run verify:golden`：15/15；`npm test`：exit 0；
-- `verify:syntax` 274 文件 0 错误；`verify:m1/m2/layers/frozen-core` 全 PASS；node:test 274/274；
+- `verify:syntax` 270 文件 0 错误；`verify:m1/m2/layers/frozen-core` 全 PASS；node:test 274/274；
 - `check:sw-version`：缓存名 'hw-help-4.3.0' 与 APP_VERSION '4.3.0' 一致；frozen-core 基线已重建（80 文件）。
 
 ---

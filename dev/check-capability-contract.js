@@ -2,11 +2,11 @@
 /**
  * dev/check-capability-contract.js — M2-R03 Capability Contract Gate
  *
- * 对全部 574 KnowledgePoint 执行：
+ * 对全部 549 KnowledgePoint 执行：
  *   KP -> Canonical -> QuestionType -> Capability Resolver -> Capability Contract
  *
  * 检查：
- *   R03.2 574 KP Capability 扫描（resolve 全量不崩溃）
+ *   R03.2 549 KP Capability 扫描（resolve 全量不崩溃）
  *   R03.3 QuestionType 合法性（全部属于标准 Registry）
  *   R03.4 Capability Resolver 一致性（resolve / matrix / canGenerate 可调用且合法）
  *   R03.5 输出 dev/reports/capability-contract-report.json

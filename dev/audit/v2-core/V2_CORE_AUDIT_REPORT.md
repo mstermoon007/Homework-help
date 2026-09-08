@@ -657,7 +657,7 @@ No history arrays, undo stacks, or unlimited batches.
 | Difficulty composition | `target-difficulty.js`, `static-difficulty.js`, `adaptive-strategy.js` |
 | Generator selection priority | `generator-selector.js:76-121` |
 | Hard block arithmetic for non-arithmetic | `generator-selector.js:82-83` |
-| Shape/Position/Money/Application generators | `generators/shape.js`, `position.js`, `money.js`, `application.js` |
+| Shape/Position/Money/Application generators | `shared/generator/generators/shape.js`、`position.js`、`money.js`、`application.js` |
 | QuestionPlan fields | `strategy-engine.js:578-643` |
 | SemanticQuestion fields | `semantic-question.js`, `generator-selector.js:197-206` |
 | Validator pipeline layers | `validation-pipeline.js:31-66` |

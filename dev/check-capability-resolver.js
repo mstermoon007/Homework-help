@@ -2,7 +2,7 @@
 /**
  * dev/check-capability-resolver.js — M2-R06 Resolver 全量 Gate
  *
- * 扫描 574 KP × 9 标准题型，统计最终决策：
+ * 扫描 549 KP × 9 标准题型，统计最终决策：
  *   - 统计 ALLOW / FORBID / DEGRADE / MISSING / INVALID
  *   - 0 Resolver Error / 0 Mutation / 0 Invalid Capability
  * 输出 dev/reports/capability-resolution-report.json

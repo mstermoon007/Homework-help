@@ -34,7 +34,6 @@
     "verify:m4": "node --test tests/generator/*.test.js && node dev/check-generator-contract.js && node dev/check-generator-registry.js && node dev/check-core-generators.js && node dev/check-generator-mode.js && node dev/check-strategy-bundle.js && node dev/check-comprehensive-pipeline.js",
     "verify-pages": "node dev/verify-pages.js",
     "check-knowledge": "node dev/verify-knowledge-bank.js",
-    "check-duplicates": "node dev/check-duplicates.js",
     "check:sw-version": "node scripts/sync-sw-version.js",
     "check:contrast": "node dev/check-contrast.js",
     "test": "npm run check:sw-version && npm run check:contrast && npm run verify:setup && npm run verify:kb-dir && npm run verify:type-module-consistency && npm run verify:spiral-consistency && node dev/test-difficulty.js && node dev/test-difficulty-static.js && node dev/verify-svg.js && npm run verify:difficulty-anchor && npm run check-lint",

@@ -47,8 +47,8 @@ var FROZEN_CORE = {
     'shared/strategy/strategy-config.js',
     // NOTE 数据分片（knowledge-math/cn/en.js 等 818KB 纯数据）不纳入代码哈希：
     // 单个 KP 编辑（改 weight/涉及 new KP）即触发 whole-KB 重锁已违背「数据契约」原则，
-    // 知识库数据由 verify-knowledge-bank / check-knowledge-point / check-plugin-reachability /
-    // check-type-module-consistency 等按变更范围门禁保障
+    // 知识库数据由 verify-knowledge-bank / check-knowledge-point / check-type-module-consistency /
+    // check-spiral-consistency 等按变更范围门禁保障
   ],
   'M2 能力/生成器契约': [
     'shared/generator/generator-contract.js',

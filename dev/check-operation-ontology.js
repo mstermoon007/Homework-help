@@ -2,7 +2,7 @@
 /**
  * dev/check-operation-ontology.js — M1-02.1 Operation Ontology Gate
  *
- * 扫描 574 个 Legacy KnowledgePoint：
+ * 扫描 549 个 Legacy KnowledgePoint：
  *   Legacy -> Normalizer(含 operation map) -> Canonical
  * 校验：
  *   1. 所有 operation 都属于 Canonical Dictionary（Invalid = 0）
