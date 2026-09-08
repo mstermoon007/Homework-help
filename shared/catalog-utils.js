@@ -13,7 +13,7 @@
 (function (global) {
   'use strict';
 
-  var SUBJECT_CANON = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+  var SUBJECT_CANON = { math: 'math' };
 
   function canonSubject(s) { return SUBJECT_CANON[s] || s; }
 
@@ -120,7 +120,7 @@
  */
 function renderModuleCard(opts) {
   var subject = opts.subject, grade = opts.grade, mod = opts.module, qts = opts.questionTypes;
-  var subjectName = { math: '数学', cn: '语文', en: '英语', chinese: '语文', english: '英语' }[canonSubject(subject)] || subject;
+  var subjectName = { math: '数学' }[canonSubject(subject)] || subject;
   var hasAnyGen = qts.some(function (qt) { return qt.hasGenerator; });
   var disabled = !hasAnyGen;
   var kpCount = qts.reduce(function (sum, qt) { return sum + qt.kpIds.length; }, 0);

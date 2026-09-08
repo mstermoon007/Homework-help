@@ -38,9 +38,6 @@ var FROZEN_CORE = {
   ],
   'M1 本体/知识库': [
     'shared/knowledge-bank.js',
-    'shared/knowledge-math.js',
-    'shared/knowledge-cn.js',
-    'shared/knowledge-en.js',
     'shared/knowledge-ontology.js',
     'shared/module-catalog.js',
     'shared/capability-model.js',
@@ -48,6 +45,10 @@ var FROZEN_CORE = {
     'shared/capability-resolver.js',
     'shared/question-type-registry.js',
     'shared/strategy/strategy-config.js',
+    // NOTE 数据分片（knowledge-math/cn/en.js 等 818KB 纯数据）不纳入代码哈希：
+    // 单个 KP 编辑（改 weight/涉及 new KP）即触发 whole-KB 重锁已违背「数据契约」原则，
+    // 知识库数据由 verify-knowledge-bank / check-knowledge-point / check-plugin-reachability /
+    // check-type-module-consistency 等按变更范围门禁保障
   ],
   'M2 能力/生成器契约': [
     'shared/generator/generator-contract.js',
@@ -55,7 +56,6 @@ var FROZEN_CORE = {
     'shared/generator/generator-selector.js',
     'shared/generator/generator-mode.js',
     'shared/generator/retry-loop.js',
-    'shared/generator/legacy-adapter.js',
     'shared/generator/generators/arithmetic.js',
     'shared/generator/generators/selection.js',
     'shared/generator/generators/complex.js',
@@ -63,13 +63,12 @@ var FROZEN_CORE = {
     'shared/generator/core/rng.js',
     'shared/generator/core/arithmetic-core.js',
     'shared/generator/core/kp-complex-semantics.js',
-    'shared/generator/migration-switch.js',
     'shared/generator/semantic-question-bridge.js',
+    // MATH-14：legacy-adapter / migration-switch 已删除，移出冻结清单
   ],
   'M3 策略引擎': [
     'shared/strategy/strategy-engine.js',
     'shared/strategy/comprehensive-strategy.js',
-    'shared/strategy/legacy-adapter.js',
     'shared/strategy/strategy-error.js',
     'shared/strategy/strategy-request.js',
     'shared/strategy/strategy-resolver.js',
@@ -97,15 +96,10 @@ var FROZEN_CORE = {
     'shared/validator/validation-pipeline.js',
     'shared/validator/question-validator.js',
     'shared/validator/answer-validator.js',
-    'shared/validator/distractor-validator.js',
-    'shared/validator/structure-validator.js',
     'shared/validator/difficulty-validator.js',
     'shared/validator/duplicate-validator.js',
-    'shared/validator/graphic-validator.js',
-    'shared/validator/render-preflight.js',
     'shared/validator/batch-validator.js',
     'shared/validator/quality-scorer.js',
-    'shared/validator/kp-validator.js',
   ],
   'M6 学习者模型': [
     'shared/learner/learner-model.js',
@@ -122,7 +116,7 @@ var FROZEN_CORE = {
     'shared/presentation/html-renderer.js',
     'shared/presentation/render-options.js',
     'shared/presentation/render-result.js',
-    'shared/presentation/legacy-svg-adapter.js',
+    'shared/presentation/render-format.js',
     'shared/presentation/svg-registry.js',
     'shared/generation-engine.js',
     'shared/presentation-engine.js',
@@ -132,9 +126,8 @@ var FROZEN_CORE = {
     'shared/svg-core.js',
     'shared/svg-geometry.js',
     'shared/svg-calculation.js',
-    'shared/svg-chinese.js',
-    'shared/svg-english.js',
     'shared/svg-make-ten.js',
+    // MATH-14：legacy-svg-adapter 已删除，移出冻结清单
   ],
 };
 
@@ -146,16 +139,17 @@ var ALLOWLIST = [
   'practice.html',
   'math-types.html',
   'subject-types.html',
-  'chinese-types.html',
-  'english-types.html',
   'index.html',
   'faq.html',
   '.github/',
   'package.json',
   'package-lock.json',
   'README.md',
+  'llms.txt',
+  'robots.txt',
+  '技术文档--基础.md',
+  '设计文档.md',
   'docs/DEV_LOG.md',
-  'docs/DEVELOPMENT.md',
   'docs/',
 ];
 

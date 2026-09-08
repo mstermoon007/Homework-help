@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
  * 阶段1（难度元数据字段扩展）一次性迁移脚本
- * 为 shared/knowledge-{math,cn,en}.js 中每个知识点插入 7 个静态难度字段：
+ * 为 shared/knowledge-math.js 中每个知识点插入 7 个静态难度字段：
  *   spiral_level / max_spiral_level / cognitive_level /
  *   applicable_question_types / number_range_default /
  *   max_steps_default / context_default
@@ -87,8 +87,6 @@ function transformSubject(data, subject) {
   });
 }
 transformSubject(bank.math, 'math');
-transformSubject(bank.cn, 'cn');
-transformSubject(bank.en, 'en');
 
 function escapeRegex(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -116,15 +114,13 @@ function formatFields(f, indent, quoted) {
 }
 
 const SHARDS = [
-  { file: path.join(ROOT, 'shared', 'knowledge-math.js'), subject: 'math' },
-  { file: path.join(ROOT, 'shared', 'knowledge-cn.js'), subject: 'cn' },
-  { file: path.join(ROOT, 'shared', 'knowledge-en.js'), subject: 'en' }
+  { file: path.join(ROOT, 'shared', 'knowledge-math.js'), subject: 'math' }
 ];
 
 SHARDS.forEach(({ file, subject }) => {
   let text = fs.readFileSync(file, 'utf8');
   const quoted = /"grade":/.test(text);
-  const data = subject === 'math' ? bank.math : (subject === 'cn' ? bank.cn : bank.en);
+  const data = subject === 'math' ? bank.math : null;
   let pos = 0;
   let inserts = 0;
   let skipped = 0;

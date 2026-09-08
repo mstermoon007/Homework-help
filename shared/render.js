@@ -1,8 +1,8 @@
 /**
  * shared/render.js — 插件渲染与工厂（任务 3.2 拆分）
  *
- * renderCard / renderGrid / clockSVG / createPlugin 及科目化工厂（math/chinese/english）。
- * 增量挂载到 window.PluginUtil；跨模块裸调用（createPlugin → defaultQCheck / _maybeReportCoverage）
+ * renderCard / renderGrid / clockSVG / createPlugin 及科目化工厂（math）。
+ * 增量挂载到 window.PluginUtil；跨模块裸调用（createPlugin → defaultQCheck）
  * 经全局解析（check.js / core.js 已挂全局）。
  */
 (function (global) {
@@ -212,8 +212,7 @@
           }
         }
       }
-      // 开发期提示：当前页知识点覆盖（浏览器每页一次）
-      _maybeReportCoverage(config);
+      // MATH-14：_maybeReportCoverage 已随 legacy 插件轨道退役（覆盖统计走 native check-core-generators）
       var meta = (typeof config.meta === 'function') ? config.meta(opts)
         : (config.meta || { grade: opts.grade, count: questions.length });
       return { questions: questions, meta: meta };
@@ -242,7 +241,7 @@
     return plugin;
   }
 
-  // ============ 科目化插件工厂（数学/语文/英语，自动注入 subject + difficultyParams + 修饰类） ============
+  // ============ 科目化插件工厂（自动注入 subject + difficultyParams + 修饰类） ============
 
   /** 科目化辅助：包装 generate，调用前自动注入 opts.difficultyParams。
    *  优先级：

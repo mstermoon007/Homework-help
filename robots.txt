@@ -1,20 +1,64 @@
+# Homework Help（https://home.modouyu.top）
+# 小学 1-6 年级数学练习生成器 · 免费纯前端 · SEO + AI 爬虫全开放
+
 User-agent: *
 Allow: /
+# 开发/测试/构建资源无需收录（页面本身均可正常访问）
+Disallow: /dev/
+Disallow: /test/
+Disallow: /tests/
+Disallow: /scripts/
+Disallow: /node_modules/
 
-# 明确允许 AI 平台爬虫
+# ===== AI 平台爬虫（明确允许）=====
+# OpenAI
 User-agent: GPTBot
 Allow: /
-
+User-agent: ChatGPT-User
+Allow: /
 User-agent: OAI-SearchBot
 Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
+# Anthropic
 User-agent: ClaudeBot
 Allow: /
-
+User-agent: Claude-Web
+Allow: /
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+# Google（搜索 + Gemini 训练）
 User-agent: Googlebot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+# Apple Intelligence 训练
+User-agent: Applebot
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+# Common Crawl（多模型训练语料）
+User-agent: CCBot
+Allow: /
+# 字节 / 豆包
+User-agent: Bytespider
+Allow: /
+# 微软 Bing / Copilot
+User-agent: Bingbot
+Allow: /
+# 国内搜索引擎
+User-agent: Baiduspider
+Allow: /
+User-agent: Sogou web spider
+Allow: /
+User-agent: Sogou inst spider
+Allow: /
+User-agent: DuckDuckBot
+Allow: /
+User-agent: YandexBot
+Allow: /
+User-agent: Amazonbot
 Allow: /
 
 Sitemap: https://home.modouyu.top/sitemap.xml

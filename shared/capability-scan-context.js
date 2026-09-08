@@ -1,7 +1,7 @@
 /**
  * shared/capability-scan-context.js — M2-R08 Capability Scan Context
  *
- * 单次全量扫描上下文：一次性完成 574 KP 的 Canonical KP、Capability、Matrix、
+ * 单次全量扫描上下文：一次性完成全量（math 域）KP 的 Canonical KP、Capability、Matrix、
  * Generator Registry、以及 KP × QuestionType 最终决策计算，供 R04、R06、R07 复用，
  * 消除重复扫描。
  *
@@ -19,7 +19,8 @@ var KnowledgeBank = require('./knowledge-bank.js');
 var CapabilityModel = require('./capability-model.js');
 var Matrix = require('./capability-matrix.js');
 var Registry = require('./question-type-registry.js');
-var GenCap = require('./generator-capability-registry.js');
+// MATH-14：plugin 决策源（generator-capability-registry）已删除，改用 native Generator Registry。
+var GenRegistry = require('./generator/generator-registry.js');
 
 var SUBJECTS = Ontology.SUBJECTS;
 var QT_IDS = Registry.all().map(function (t) { return t.id; });
@@ -113,8 +114,16 @@ function buildScanContext(options) {
     });
   });
 
-  // ---- 2) Generator Capability Registry（构建一次，供 R05/R06/R07 复用） ----
-  var genRecords = GenCap.buildGeneratorCapabilityRegistry();
+  // ---- 2) Native Generator Registry（构建一次，供 R05/R06/R07 复用） ----
+  // MATH-14：记录形状映射为 pluginId 语义（pluginId = generator id），保持下游消费兼容。
+  var genRecords = GenRegistry.all().map(function (rec) {
+    return {
+      pluginId: rec.id,
+      questionTypes: rec.questionTypes || [],
+      knowledgePoints: rec.knowledgePoints || [],
+      invalidCapabilities: []
+    };
+  });
   var genWithKp = 0;
   var genNoKp = 0;
   var genInvalidQT = [];

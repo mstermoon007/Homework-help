@@ -77,23 +77,46 @@ function scanFile(filePath) {
 // ============ 校验 Generator 实例基本契约 ============
 function validateInstance(filePath) {
   var errors = [];
+  var rel = path.relative(ROOT, filePath);
   try {
     var gen = require(filePath);
-    if (!gen || typeof gen !== 'object') return [{ file: path.relative(ROOT, filePath), type: 'contract', label: '非对象导出' }];
-    if (typeof gen.generate !== 'function') {
-      errors.push({ file: path.relative(ROOT, filePath), type: 'contract', label: '缺少 generate(plan) 函数' });
+    if (!gen || typeof gen !== 'object') return [{ file: rel, type: 'contract', label: '非对象导出' }];
+
+    // 检查直接导出：如果有 generate 方法，按单实例校验
+    if (typeof gen.generate === 'function') {
+      if (typeof gen.supports !== 'function') {
+        errors.push({ file: rel, type: 'contract', label: '缺少 supports(plan) 函数' });
+      }
+      if (!gen.id || typeof gen.id !== 'string') {
+        errors.push({ file: rel, type: 'contract', label: '缺少 id 字段' });
+      }
+      if (!Array.isArray(gen.capabilities) || gen.capabilities.length === 0) {
+        errors.push({ file: rel, type: 'contract', label: 'capabilities 必须是非空数组' });
+      }
+      return errors;
     }
-    if (typeof gen.supports !== 'function') {
-      errors.push({ file: path.relative(ROOT, filePath), type: 'contract', label: '缺少 supports(plan) 函数' });
+
+    // 工厂模式：尝试 buildAll() / createXxxGenerator() 路径
+    if (typeof gen.buildAll === 'function') {
+      var instances = gen.buildAll();
+      if (!Array.isArray(instances) || instances.length === 0) {
+        errors.push({ file: rel, type: 'contract', label: 'buildAll() 未返回有效 Generator 数组' });
+        return errors;
+      }
+      for (var i = 0; i < instances.length; i++) {
+        var inst = instances[i];
+        if (typeof inst.generate !== 'function') errors.push({ file: rel, type: 'contract', label: '实例 #' + i + ' 缺少 generate(plan)' });
+        if (typeof inst.supports !== 'function') errors.push({ file: rel, type: 'contract', label: '实例 #' + i + ' 缺少 supports(plan)' });
+        if (!inst.id || typeof inst.id !== 'string') errors.push({ file: rel, type: 'contract', label: '实例 #' + i + ' 缺少 id 字段' });
+        if (!Array.isArray(inst.capabilities) || inst.capabilities.length === 0) errors.push({ file: rel, type: 'contract', label: '实例 #' + i + ' capabilities 必须是非空数组' });
+      }
+      return errors;
     }
-    if (!gen.id || typeof gen.id !== 'string') {
-      errors.push({ file: path.relative(ROOT, filePath), type: 'contract', label: '缺少 id 字段' });
-    }
-    if (!Array.isArray(gen.capabilities) || gen.capabilities.length === 0) {
-      errors.push({ file: path.relative(ROOT, filePath), type: 'contract', label: 'capabilities 必须是非空数组' });
-    }
+
+    // 无 generate 也无 buildAll → 不是有效 Generator 导出
+    errors.push({ file: rel, type: 'contract', label: '非对象导出' });
   } catch (e) {
-    errors.push({ file: path.relative(ROOT, filePath), type: 'require', label: 'require 失败: ' + e.message });
+    errors.push({ file: rel, type: 'require', label: 'require 失败: ' + e.message });
   }
   return errors;
 }
@@ -102,9 +125,9 @@ function validateInstance(filePath) {
 function main() {
   var generatorDir = path.join(ROOT, 'shared', 'generator');
   var coreDir = path.join(generatorDir, 'generators');
-  var legacyDir = path.join(ROOT, 'plugins');
+  // legacyDir = path.join(ROOT, 'plugins'); // plugins/ 下的 forbidden/hardcoded 属于 MATH-11~MATH-12/MATH-14 删除 legacy 范畴，当前 Gate 仅校验 core generators
 
-  var targetDirs = [coreDir, legacyDir].filter(function (d) { return fs.existsSync(d); });
+  var targetDirs = [coreDir].filter(function (d) { return fs.existsSync(d); });
 
   var allErrors = [];
   var fileCount = 0;

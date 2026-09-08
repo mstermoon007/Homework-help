@@ -58,6 +58,12 @@ function isDelegated(id) {
   return !!(strategyIds && strategyIds[id]);
 }
 
+function stripComments(code) {
+  return code
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/.*$/gm, '');
+}
+
 var modules = {};
 var queue = [ENTRY];
 
@@ -90,7 +96,7 @@ while (queue.length) {
     deps.push(depId);
     return 'require(' + JSON.stringify(depId) + ')';
   });
-  modules[id] = { content: content, deps: deps, missing: false };
+  modules[id] = { content: stripComments(content), deps: deps, missing: false };
   deps.forEach(function (d) {
     if (!modules[d] && !isDelegated(d)) queue.push(d);
   });

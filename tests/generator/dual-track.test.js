@@ -6,33 +6,32 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Selector = require(path.join(ROOT, 'shared', 'generator', 'generator-selector.js'));
 const Mode = require(path.join(ROOT, 'shared', 'generator', 'generator-mode.js'));
-const Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 
-function planFor(kpId) {
-  return Engine.plan({ knowledgePointId: kpId, count: 2, difficulty: 3 }).plans[0];
-}
-
-test('M4-R14 P2：native 模式 → 只选 core，无候选回退 legacy', () => {
+test('M4-R14 P2：native 模式 → 只选 core，无候选返回 GENERATOR_UNSUPPORTED（Step 14）', () => {
   Mode.clearAll();
   Mode.setGlobal('native');
   // math-oral KP 有 core arithmetic 能力 → 选中 core
   const sel = Selector.selectGenerator({ knowledgePointId: 'math-g1-m1-addsub-5', questionTypeId: 'calc', difficulty: 3 });
   assert.strictEqual(sel.record.scope, 'core');
   assert.strictEqual(sel.mode, 'native');
-  // 无 core 候选（make-ten review）→ fallback legacy
+  // P0-03 Step 14：native 无 core 候选（非算术语义 KP）→ 禁止静默 fallback legacy，返回 unsupported
   const sel2 = Selector.selectGenerator({ knowledgePointId: 'math-g1-m0-make-ten', questionTypeId: 'review', difficulty: 3 });
-  assert.strictEqual(sel2.source, 'fallback:legacy');
-  assert.strictEqual(sel2.generatorId, 'legacy:math-make-ten');
+  assert.strictEqual(sel2.source, 'unsupported');
+  assert.strictEqual(sel2.errorCode, 'GENERATOR_UNSUPPORTED');
+  assert.strictEqual(sel2.generatorId, null);
 });
 
-test('M4-R14 P2：hybrid 模式 → 双轨并轨，KP 绑定优先', () => {
+test('MATH-14：legacy 轨道已删除 → 任何模式都不存在 legacy: 记录，hybrid 也无回退宿主', () => {
   Mode.clearAll();
+  // registry 仅含 core，不再有任何 scope==='legacy' 记录
+  const GenRegistry = require(path.join(ROOT, 'shared', 'generator', 'generator-registry.js'));
+  const legacyRecs = GenRegistry.all().filter(r => r.scope === 'legacy' || /^legacy:/.test(r.id));
+  assert.strictEqual(legacyRecs.length, 0);
+  // 即使显式切 hybrid，旧的 legacy 绑定 KP 也不再回退到 legacy（无宿主）
   Mode.setGlobal('hybrid');
-  const plan = planFor('math-g1-m0-make-ten');
-  const sel = Selector.selectGenerator(plan);
-  assert.strictEqual(sel.generatorId, 'legacy:math-make-ten');
-  assert.strictEqual(sel.match.kp, 1);
-  assert.strictEqual(sel.mode, 'hybrid');
+  const sel = Selector.selectGenerator({ knowledgePointId: 'math-g1-m0-make-ten', questionTypeId: 'review', difficulty: 3 });
+  assert.ok(!/^legacy:/.test(sel.generatorId || ''));
+  assert.notStrictEqual(sel.source, 'fallback:legacy');
 });
 
 test('M4-R14 P2：knowledgePoint 覆盖 → 指定 KP 切模式', () => {

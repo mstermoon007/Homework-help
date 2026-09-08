@@ -2,16 +2,18 @@
 /**
  * dev/verify-m0.js — M0 统一验证入口（M0-10）
  *
- * 依次执行 7 个步骤，聚合 PASS / FAIL，列出失败项，退出码 1 表示存在 FAIL。
+ * 依次执行 5 个步骤，聚合 PASS / FAIL / REPORT，列出失败项，退出码 1 表示存在 FAIL。
  *   1. 语法检查            dev/check-syntax.js
  *   2. 知识库契约          dev/check-knowledge-contract.js
- *   3. 插件契约            dev/check-plugin-contract.js
- *   4. 难度双轨测试        dev/check-difficulty-dual.js
- *   5. Golden Path         dev/check-golden.js
- *   6. Snapshot 基线       dev/check-snapshot.js
- *   7. 架构护栏            dev/check-architecture-rules.js
+ *   3. 难度双轨测试        dev/check-difficulty-dual.js
+ *   4. Golden Path         dev/check-golden.js
+ *   5. 架构护栏            dev/check-architecture-rules.js
  *
- * 每个步骤独立、可重复、零副作用。任何步骤 FAIL 均计入最终 FAIL。
+ * MATH-14：插件契约（check-plugin-contract）与 Snapshot 基线（check-snapshot）
+ *          随 legacy 插件轨道删除，从本网关移除。
+ *
+ * 每个步骤独立、可重复、零副作用。`nonBlocking` 步骤失败仅记为
+ * REPORT，不计入最终 FAIL；其余任何步骤 FAIL 均计入最终 FAIL。
  */
 'use strict';
 const path = require('path');
@@ -20,10 +22,8 @@ const ROOT = path.join(__dirname, '..');
 const steps = [
   { key: 'syntax', mod: require(path.join(ROOT, 'dev', 'check-syntax.js')) },
   { key: 'kb', mod: require(path.join(ROOT, 'dev', 'check-knowledge-contract.js')) },
-  { key: 'plugin', mod: require(path.join(ROOT, 'dev', 'check-plugin-contract.js')) },
   { key: 'difficulty', mod: require(path.join(ROOT, 'dev', 'check-difficulty-dual.js')) },
   { key: 'golden', mod: require(path.join(ROOT, 'dev', 'check-golden.js')) },
-  { key: 'snapshot', mod: require(path.join(ROOT, 'dev', 'check-snapshot.js')) },
   { key: 'rules', mod: require(path.join(ROOT, 'dev', 'check-architecture-rules.js')) }
 ];
 
@@ -51,7 +51,7 @@ function main() {
     chain = chain.then(function () {
       return runStep(step).then(function (r) {
         results.push(r);
-        const tag = r.pass ? 'PASS' : 'FAIL';
+        const tag = r.pass ? 'PASS' : (r.nonBlocking ? 'REPORT' : 'FAIL');
         console.log('[' + tag + '] ' + (r.name || step.key) + ' — ' + (r.summary || ''));
         (r.errors || []).forEach(function (e) { console.log('      ✗ ' + e); });
         (r.warnings || []).slice(0, 12).forEach(function (w) { console.log('      ⚠ ' + w); });
@@ -61,17 +61,19 @@ function main() {
   });
 
   return chain.then(function () {
-    const failed = results.filter(function (r) { return !r.pass; });
+    const failed = results.filter(function (r) { return !r.pass && r.nonBlocking !== true; });
+    const reported = results.filter(function (r) { return !r.pass && r.nonBlocking === true; });
     const totalErr = results.reduce(function (s, r) { return s + (r.errors ? r.errors.length : 0); }, 0);
     const totalWarn = results.reduce(function (s, r) { return s + (r.warnings ? r.warnings.length : 0); }, 0);
     console.log('\n' + '='.repeat(56));
     console.log('M0 验证网关（verify gate）');
     console.log('='.repeat(56));
     results.forEach(function (r) {
-      console.log('  [' + (r.pass ? 'PASS' : 'FAIL') + '] ' + (r.name || '?')); });
+      const tag = r.pass ? 'PASS' : (r.nonBlocking ? 'REPORT' : 'FAIL');
+      console.log('  [' + tag + '] ' + (r.name || '?')); });
     console.log('-'.repeat(56));
-    console.log('步骤 ' + results.length + ' 项，通过 ' + (results.length - failed.length) +
-      ' / 失败 ' + failed.length);
+    console.log('步骤 ' + results.length + ' 项，通过 ' + (results.length - failed.length - reported.length) +
+      ' / 失败 ' + failed.length + ' / 报告 ' + reported.length);
     console.log('错误 ' + totalErr + ' 条，警告 ' + totalWarn + ' 条');
     console.log('总耗时 ' + (Date.now() - start) + ' ms');
     if (failed.length) {

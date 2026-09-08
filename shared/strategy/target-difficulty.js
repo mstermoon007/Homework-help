@@ -91,6 +91,18 @@ function resolveTargetDifficulty(options) {
     ? DifficultyStrategy.applyEffective(targetDifficulty, adaptiveDelta)
     : targetDifficulty;
 
+  // P0-02 Step 8 — 合成难度：base（target）上叠加 mode profile + question complexity + composite complexity
+  var composed = DifficultyStrategy.resolveComposedDifficulty({
+    base: targetDifficulty,
+    knowledgePoint: kp,
+    mode: options.mode,
+    grade: kp.grade,
+    hasUserDifficulty: requestedDifficulty != null
+  });
+  var composedDifficulty = adaptive
+    ? DifficultyStrategy.applyEffective(composed.composedDifficulty, adaptiveDelta)
+    : composed.composedDifficulty;
+
   return {
     targetDifficulty: targetDifficulty,
     source: source,
@@ -99,7 +111,9 @@ function resolveTargetDifficulty(options) {
     adaptive: adaptive,
     adaptiveDelta: adaptiveDelta,
     effectiveDifficulty: effectiveDifficulty,
-    staticDifficulty: staticDifficulty
+    staticDifficulty: staticDifficulty,
+    composedDifficulty: composedDifficulty,
+    difficultyComposition: composed.composition
   };
 }
 

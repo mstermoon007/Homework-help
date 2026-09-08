@@ -2,11 +2,10 @@
 
 /**
  * M3-23 单知识点测试
- * 数学 × 5 / 语文 × 5 / 英语 × 5（KB 英语仅 3 个 KP，后 2 个 slot 循环复用，
- * 以不同难度覆盖）——每例测试基础(2)/中等(5)/高难(8)，验证 7 个决策维度。
+ * 数学 × 5——每例测试基础(2)/中等(5)/高难(8)，验证 7 个决策维度。
  *
  * Core Domain 收缩（Refactor Step 1）：核心生成链仅接受 math。
- * 语文(cn)/英语(en) 的单个知识点现在必须抛 UNSUPPORTED_SUBJECT，不再产出计划。
+ * cn/en 知识点已随语文/英语生成器一并移除，其 ID 必须抛 KP_NOT_FOUND。
  */
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
@@ -23,7 +22,7 @@ const MATH_KPS = [
   'math-g2-m1-mult-table',
   'math-g3-m1-g3-mul-multi1',
   'math-g4-m1-g4-oral-big',
-  'math-g5-m1-g5-oral-fracadd'
+  'math-g5-m1-g5-oral-decmul'
 ];
 
 const LEVELS = { 基础: 2, 中等: 5, 高难: 8 };
@@ -76,9 +75,9 @@ test('M3-23 数学 × 5（基础/中等/高难）', () => {
   });
 });
 
-// Core Domain 收缩（Refactor Step 1）：语文/英语不再进入核心生成链，
-// 返回明确 UNSUPPORTED_SUBJECT，禁止 fallback。原「语文×5/英语×5」测试转为该回归。
-test('M3-23 语文/英语 KS 不再进入核心生成链（UNSUPPORTED_SUBJECT）', () => {
+// cn/en 知识点已随语文/英语生成器连同知识库一并移除（P0-16 剔除），
+// 其 ID 不再解析，必须抛 KP_NOT_FOUND（不会静默产出语文/英语内容）。
+test('P0-16 语文/英语知识点已移除（KP_NOT_FOUND）', () => {
   const CN_KPS = [
     'cn-g1-n1-pinyin-basic',
     'cn-g1-n2-stroke-order',
@@ -95,10 +94,9 @@ test('M3-23 语文/英语 KS 不再进入核心生成链（UNSUPPORTED_SUBJECT�
     let err = null;
     try { Engine.plan({ knowledgePointId: kpId, count: 3, difficulty: 2 }); }
     catch (e) { err = e; }
-    assert.ok(err, kpId + ' 应抛出 unsupported 错误');
+    assert.ok(err, kpId + ' 应抛出错误');
     assert.strictEqual(err && err.name, 'StrategyError', kpId + ' 错误类型');
-    assert.strictEqual(err && err.code, 'UNSUPPORTED_SUBJECT', kpId + ' 错误码');
-    assert.match(err && err.message, /仅支持数学/, kpId + ' 错误信息明确');
+    assert.strictEqual(err && err.code, 'KP_NOT_FOUND', kpId + ' 知识点应不存在');
   });
 });
 

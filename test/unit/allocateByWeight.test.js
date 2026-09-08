@@ -2,9 +2,12 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert');
-const comp = require('../../plugins/math-comprehensive.js');
+const CS = require('../../shared/strategy/comprehensive-strategy.js');
 
-const allocateByWeight = comp.__debug_allocateByWeight;
+// 分配器自 comprehensive 重构后移入 shared/strategy/comprehensive-strategy.js
+// 签名：allocateByWeight(weights, total) → number[]（和为 total，长度 = weights.length）
+// 旧版 math-comprehensive.js（已删）签名 allocateByWeight(count, plugins, weights) → 顺序调整
+const allocateByWeight = (count, plugins, weights) => CS.allocateByWeight(weights, count);
 
 test.describe('allocateByWeight', () => {
   test('返回数组长度等于插件数', () => {
@@ -43,9 +46,9 @@ test.describe('allocateByWeight', () => {
     assert.strictEqual(sum, 12, '总和仍应等于 count');
   });
 
-  test('全部无权重时退化为均分（余数前置）', () => {
+  test('全部无权重时返回全零（策略层语义：权重和为 0 → 不分配）', () => {
     const alloc = allocateByWeight(10, ['a', 'b', 'c'], [0, 0, 0]);
-    assert.deepStrictEqual(alloc, [4, 3, 3], '应均分为 4/3/3');
+    assert.deepStrictEqual(alloc, [0, 0, 0], '无权重项不做均分退避，返回全零');
   });
 
   test('count=0 时返回全零数组', () => {

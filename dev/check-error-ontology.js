@@ -19,7 +19,7 @@ var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
 var ErrOnt = require(path.join(ROOT, 'shared', 'knowledge-error.js'));
 var ErrMap = require(path.join(ROOT, 'shared', 'ontology-error-map.js'));
 
-var SUBJECTS = ['math', 'cn', 'en'];
+var SUBJECTS = ['math'];
 
 function run() {
   var total = 0, withErr = 0, without = 0, invalid = [], uniqueTypes = {}, categories = {};

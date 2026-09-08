@@ -37,16 +37,6 @@
     'math-decimal': [
       { id: 'decimal-point-error', category: 'notation', description: '小数点位置错误' }
     ],
-    'chinese-pinyin': [
-      { id: 'tone-marking-error', category: 'notation', description: '标调错误' },
-      { id: 'initial-final-confusion', category: 'reading', description: '声母韵母混淆' }
-    ],
-    'pinyin-to-char': [
-      { id: 'tone-marking-error', category: 'notation', description: '标调错误' }
-    ],
-    'english-alphabet': [
-      { id: 'letter-case-confusion', category: 'writing', description: '字母大小写混淆' }
-    ],
     'math-g1-multiplication-table': [
       { id: 'multiplication-fact-confusion', category: 'operation', description: '乘法口诀混淆' }
     ]

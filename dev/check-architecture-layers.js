@@ -7,7 +7,7 @@
  *   [B] 清单内登记的文件路径全部存在（通配 * 目录除外）
  *   [C] 覆盖率：仓库根 + shared/ 下所有 .js / .css 均已被归类到某层；未分类即 FAIL
  *
- * 见 docs/ARCHITECTURE_LAYERS.md（四层：UI/生成/知识/大服务）。
+ * 见根目录《技术文档--基础.md》§2（四层：UI/生成/知识/大服务）。
  * 退出码：0 = PASS；1 = FAIL。
  */
 'use strict';

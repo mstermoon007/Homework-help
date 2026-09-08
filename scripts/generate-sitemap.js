@@ -16,8 +16,6 @@ const BASE = 'https://home.modouyu.top/';
 const STATIC_PAGES = [
   'index.html',
   'math-types.html',
-  'chinese-types.html',
-  'english-types.html',
   'subject-types.html',
   'practice.html',
   'faq.html'

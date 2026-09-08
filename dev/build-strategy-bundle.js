@@ -6,7 +6,7 @@
  * 静态打包为单一浏览器文件 shared/strategy-engine.bundle.js，内置极简 require 注册表。
  *
  * 浏览器全局 shim（practice.html 已用 <script> 引入，不重复打包）：
- *   common.js / difficulty.js / difficulty-static.js / knowledge-bank.js / plugins/registry.js
+ *   common.js / difficulty.js / difficulty-static.js / knowledge-bank.js
  *
  * 用法：node dev/build-strategy-bundle.js
  */
@@ -18,7 +18,6 @@ var ROOT = path.join(__dirname, '..');
 
 var ENTRIES = [
   'shared/strategy/strategy-engine.js',
-  'shared/generator/legacy-adapter.js',
   'shared/strategy/strategy-config.js',
   'shared/strategy/question-type-strategy.js',
   'shared/strategy/question-type-allocation.js',
@@ -39,9 +38,8 @@ var ENTRIES = [
   'shared/strategy/strategy-resolver.js',
   // ===== M4-19 Generator Runtime（Strategy + Generation Runtime Bundle）=====
   // 显式声明，不自动扫描 shared/generator/ 整目录，避免循环依赖 / Bundle 膨胀 / 初始化顺序失控。
-  // strategy-engine 已传递依赖 generator-selector→registry→native generators→legacy-plugin-adapter；
-  // migration-switch 与 semantic-question-bridge 不被 Strategy 引用，故显式加入。
-  'shared/generator/migration-switch.js',
+  // MATH-14：legacy 插件轨道（legacy-adapter / migration-switch / plugins/registry）已删除，
+  // semantic-question-bridge 不被 Strategy 主链引用，故显式加入。
   'shared/generator/semantic-question-bridge.js'
 ];
 
@@ -51,26 +49,24 @@ var SHIMS = {
   'shared/difficulty.js': 'App.Difficulty',
   'shared/difficulty-static.js': 'App.DifficultyStatic',
   'shared/knowledge-bank.js': 'KnowledgeBank',
-  'plugins/registry.js': 'PLUGIN_REGISTRY',
   'node:path': '__bundledPathShim',
   'node:fs': '__bundledFsShim'
 };
 
 var REQUIRES = /require\(\s*(['"])([^'"]+)\1\s*\)/g;
 
+function stripComments(code) {
+  return code
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/.*$/gm, '');
+}
+
 function normalizeId(fromDir, rel) {
   return path.posix.normalize(path.posix.join(fromDir, rel));
 }
 
+// MATH-14：generator-capability-registry 的 __dirname 特例改写已随 legacy 删除。
 function rewriteSpecial(id, content) {
-  // generator-capability-registry 使用 node:path + __dirname 动态 require plugins/registry.js
-  // 浏览器无 __dirname：改写为静态 require（同 shim 语义）
-  if (id === 'shared/generator-capability-registry.js') {
-    content = content.replace(
-      /var ROOT = path\.resolve\(__dirname, '\.\.'\);[\s\S]*?var pluginRegistry = require\(path\.join\(ROOT, 'plugins', 'registry\.js'\)\);/,
-      'var pluginRegistry = require(\'plugins/registry.js\');'
-    );
-  }
   // 剥离 shebang（#!/usr/bin/env node）——仅允许出现在模块首行，否则无法嵌入 __defs 函数体
   if (/^#!/.test(content)) {
     content = content.replace(/^#![^\n]*\n?/, '');
@@ -105,7 +101,7 @@ while (queue.length) {
     deps.push(depId);
     return 'require(' + JSON.stringify(depId) + ')';
   });
-  modules[id] = { content: content, deps: deps, missing: false };
+  modules[id] = { content: stripComments(content), deps: deps, missing: false };
   deps.forEach(function (d) {
     if (!modules[d] && !SHIMS[d]) queue.push(d);
   });
@@ -163,7 +159,6 @@ Object.keys(modules).forEach(function (id) {
 
 // 浏览器全局挂载
 lines.push('global.StrategyEngine = __req(\'shared/strategy/strategy-engine.js\');');
-lines.push('global.StrategyLegacyAdapter = __req(\'shared/generator/legacy-adapter.js\');');
 lines.push('global.StrategyConfig = __req(\'shared/strategy/strategy-config.js\');');
 lines.push('global.StrategyValidator = __req(\'shared/strategy/strategy-validator.js\');');
 lines.push('global.QuestionTypeStrategy = __req(\'shared/strategy/question-type-strategy.js\');');
@@ -183,8 +178,6 @@ lines.push('global.ConstraintBuilder = __req(\'shared/strategy/constraint-builde
 lines.push('global.GeneratorSelector = __req(\'shared/generator/generator-selector.js\');');
 lines.push('global.GeneratorMode = __req(\'shared/generator/generator-mode.js\');');
 lines.push('global.GeneratorRegistry = __req(\'shared/generator/generator-registry.js\');');
-lines.push('global.MigrationSwitch = __req(\'shared/generator/migration-switch.js\');');
-lines.push('global.LegacyPluginAdapter = __req(\'shared/generator/legacy-adapter.js\');');
 lines.push('global.SemanticQuestionBridge = __req(\'shared/generator/semantic-question-bridge.js\');');
 lines.push('global.ComplexGen = __req(\'shared/generator/generators/complex.js\');');
 lines.push('global.StrategyBundle = { req: __req, modules: __defs };');

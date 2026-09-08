@@ -75,7 +75,7 @@ function createSelectionGenerator(spec) {
     if (mode === 'fill') {
       var qFill = buildBase(plan, context, i, { mode: 'fill', steps: base.structure.steps });
       qFill.prompt = expr + ' = ____';
-      qFill.answer = String(base.answer);
+      qFill.answer = { value: String(base.answer), acceptable: [] };
       return qFill;
     }
 
@@ -88,7 +88,7 @@ function createSelectionGenerator(spec) {
       var options = Rng.shuffle(base.rng, distractors.concat([base.answer]).map(String));
       var qChoice = buildBase(plan, context, i, { mode: 'choice', steps: base.structure.steps });
       qChoice.prompt = expr + ' = ?';
-      qChoice.answer = String(base.answer);
+      qChoice.answer = { value: String(base.answer), acceptable: [] };
       qChoice.data.options = options;
       qChoice.data.correctIndex = options.indexOf(String(base.answer));
       return qChoice;
@@ -101,15 +101,15 @@ function createSelectionGenerator(spec) {
       : base.answer + Rng.pick(base.rng, [-1, 1]) * Rng.randInt(base.rng, 1, 2);
     var qJudge = buildBase(plan, context, i, { mode: 'judge', steps: base.structure.steps, shownResult: String(shown) });
     qJudge.prompt = expr + ' = ' + shown + '（对还是错？）';
-    qJudge.answer = isTrue;
+    qJudge.answer = { value: isTrue, acceptable: [] };
     return qJudge;
   }
 
   var generator = {
     id: id,
     subject: subject,
-    capabilities: mode === 'fill' ? ['fill'] : (mode === 'choice' ? ['choice'] : ['judge']),
-    knowledgePoints: spec.knowledgePoints || [],
+    capabilities: mode === 'fill' ? ['fill', 'recognize', 'calc', 'oral', 'apply'] : (mode === 'choice' ? ['choice', 'recognize', 'calc', 'oral', 'apply'] : ['judge', 'recognize', 'calc', 'oral', 'apply']),
+    questionTypes: mode === 'fill' ? ['fill', 'recognize', 'calc', 'oral', 'apply'] : (mode === 'choice' ? ['choice', 'recognize', 'calc', 'oral', 'apply'] : ['judge', 'recognize', 'calc', 'oral', 'apply']),knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;

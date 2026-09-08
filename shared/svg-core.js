@@ -284,7 +284,7 @@
   function svgGrid(kind, o) {
     o = o || {};
     var x = o.x || 0, y = o.y || 0;
-    // 默认经 style 内联消费 tokens.css 书写格变量（与 svg-chinese/svg-english 约定一致），
+    // 默认经 style 内联消费 tokens.css 书写格变量，
     // 可经 lineColor/baselineColor/frameColor 覆盖（四线格颜色可配置）。
     var isFourLine = kind === 'four-line';
     var frame = o.frameColor || 'var(--grid-tianzige-frame)';

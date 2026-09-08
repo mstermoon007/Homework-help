@@ -65,3 +65,43 @@ test('缺少 KnowledgePoint -> 抛出错误', () => {
     DifficultyStrategy.computeEffectiveDifficulty({ questionType: 'calc' });
   }, /KnowledgePoint 不能为空/);
 });
+
+test('P0-02 Step 8：用户显式难度权威，不叠加内容/结构偏移', () => {
+  const r = DifficultyStrategy.resolveComposedDifficulty({ base: 5 });
+  assert.strictEqual(r.composedDifficulty, 6); // 5(standard)+1
+  assert.strictEqual(r.composition.source, 'composed');
+  const ru = DifficultyStrategy.resolveComposedDifficulty({ base: 5, hasUserDifficulty: true });
+  assert.strictEqual(ru.composedDifficulty, 5);
+  assert.strictEqual(ru.composition.source, 'user');
+  assert.strictEqual(ru.composition.questionComplexityAdjustment, 0);
+  assert.strictEqual(ru.composition.compositeAdjustment, 0);
+});
+
+test('P0-02 Step 8：question complexity 偏移（standard +1 / complex +2）', () => {
+  assert.strictEqual(DifficultyStrategy.resolveComposedDifficulty({ base: 4 }).composedDifficulty, 5);
+  assert.strictEqual(DifficultyStrategy.resolveComposedDifficulty({ base: 8 }).composedDifficulty, 10);
+  // 低档（simple）不加偏移
+  assert.strictEqual(DifficultyStrategy.resolveComposedDifficulty({ base: 3 }).composedDifficulty, 3);
+});
+
+test('P0-02 Step 8：composite complexity 偏移（显式复合结构 +1）', () => {
+  const bracket = { structure: { allowBracket: true, allowMultDiv: false } };
+  const sem = { structure: { allowBracket: false } };
+  const simple = { structure: { allowBracket: false } };
+  assert.strictEqual(DifficultyStrategy.compositeComplexityOf(bracket), 1);
+  assert.strictEqual(DifficultyStrategy.compositeComplexityOf(sem), 0);
+  assert.strictEqual(DifficultyStrategy.compositeComplexityOf(simple), 0);
+  const r = DifficultyStrategy.resolveComposedDifficulty({ base: 4, knowledgePoint: bracket });
+  assert.strictEqual(r.composedDifficulty, 6);
+  assert.strictEqual(r.composition.compositeAdjustment, 1);
+});
+
+test('P0-02 Step 8：competition mode profile —— 未显式难度时向年级锚点上沿顶格且不越过', () => {
+  const r = DifficultyStrategy.resolveComposedDifficulty({ base: 3, mode: 'competition', grade: 1 });
+  assert.strictEqual(r.composedDifficulty, 2); // G1 锚点 [1,2] 上沿
+  const rHigh = DifficultyStrategy.resolveComposedDifficulty({ base: 9, mode: 'competition', grade: 4 });
+  assert.strictEqual(rHigh.composedDifficulty, 7); // G4 锚点 [4,7] 上沿，不越过
+  // 用户显式难度不被 mode profile 改
+  const ru = DifficultyStrategy.resolveComposedDifficulty({ base: 9, mode: 'competition', grade: 1, hasUserDifficulty: true });
+  assert.strictEqual(ru.composedDifficulty, 9);
+});

@@ -87,7 +87,6 @@
 <div id="results"></div>
 
 <script src="../shared/common.js"></script>
-<script src="../plugins/registry.js"></script>
 <script>
 // 简单测试框架
 var TestRunner = {
@@ -179,25 +178,9 @@ var TestRunner = {
 function runAllTests() {
   TestRunner.reset();
   
-  // 测试插件注册表
-  TestRunner.suite('插件注册表测试');
-  TestRunner.test('PLUGIN_REGISTRY 应该存在', function() {
-    TestRunner.assertNotNull(window.PLUGIN_REGISTRY, 'PLUGIN_REGISTRY 未定义');
-  });
-  
-  TestRunner.test('PLUGIN_REGISTRY 应该包含数学插件', function() {
-    var mathPlugins = window.PLUGIN_REGISTRY.filter(function(p) { return p.subject === 'math'; });
-    TestRunner.assertTrue(mathPlugins.length > 0, '未找到数学插件');
-  });
-  
-  TestRunner.test('插件应该有必需字段', function() {
-    var plugin = window.PLUGIN_REGISTRY[0];
-    TestRunner.assertNotNull(plugin.id, '插件缺少 id 字段');
-    TestRunner.assertNotNull(plugin.name, '插件缺少 name 字段');
-    TestRunner.assertNotNull(plugin.subject, '插件缺少 subject 字段');
-    TestRunner.assertNotNull(plugin.grades, '插件缺少 grades 字段');
-  });
-  
+  // MATH-14：PLUGIN_REGISTRY 测试套件已随 legacy 插件轨道删除；
+  // native Generator 契约由 verify:m4（tests/generator/*）与 check-core-generators 承接。
+
   // 测试 PluginUtil
   TestRunner.suite('PluginUtil 工具函数测试');
   TestRunner.test('PluginUtil 应该存在', function() {

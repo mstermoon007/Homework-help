@@ -4,8 +4,7 @@
  * 依赖顺序：tokens → base → components → states → toolbar → pages → subjects
  * （本层高于 toolbar，可安全覆写练习页工具栏样式；subjects 层仅在二级题型页启用，为本层序最高）。
  *
- * 注：旧版「语文练习页」样式(.cn-page/.question-item/.user-ans-input/.score-panel/.wrong-section/.mark-icon 等)
- *     已由 renderCard 类化方案替代，属死代码，未搬入本层。当前仅保留综合练习仍在用的
+ * 注：旧版练习页样式由 renderCard 类化方案替代，属死代码，未搬入本层。当前仅保留综合练习仍在用的
  *     .questions-grid / .q-wrap / .q-badge 容器类。
  */
 @layer pages {

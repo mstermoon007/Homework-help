@@ -22,12 +22,11 @@ var ROOT = path.join(__dirname, '..');
 var STEPS = [
   { name: 'M0 (verify)', cmd: 'node dev/verify-m0.js' },
   { name: 'M1 (verify:m1)', cmd: 'node dev/verify-m1.js' },
-  { name: 'M2-R02 Capability Tests', cmd: 'node --test tests/capability/*.test.js' },
   { name: 'M2-R03 Capability Contract', cmd: 'node dev/check-capability-contract.js' },
   { name: 'M2-R04 Capability Matrix', cmd: 'node dev/check-capability-matrix.js' },
-  { name: 'M2-R05 Generator Capability', cmd: 'node dev/check-generator-capability.js' },
-  { name: 'M2-R06 Resolver', cmd: 'node dev/check-capability-resolver.js' },
-  { name: 'M2-R07 Final Report + Architecture', cmd: 'node dev/check-m2-final.js' }
+  { name: 'M2-R06 Resolver', cmd: 'node dev/check-capability-resolver.js' }
+  // MATH-14：M2-R02（tests/capability，测试 GenCap）、M2-R05（check-generator-capability）
+  // 与 M2-R07（check-m2-final，依赖 legacy GenCap 报告）随 legacy 插件轨道删除。
 ];
 
 function runStep(step) {

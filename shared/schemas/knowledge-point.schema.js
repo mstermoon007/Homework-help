@@ -21,7 +21,7 @@
 
   var VERSION = 1;
 
-  var SUBJECTS = ['math', 'cn', 'en'];
+  var SUBJECTS = ['math'];
 
   // 题型 SSOT：引用知识点库题型注册表（同为纯数据层），双环境兼容（Node require / 浏览器全局）。
   var QuestionTypeRegistry = (typeof require === 'function')

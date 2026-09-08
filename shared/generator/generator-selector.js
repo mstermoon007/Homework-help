@@ -4,33 +4,193 @@
  * 输入：QuestionPlan
  * 输出：最佳 Generator（记录 + source + match）
  *
- * 选择优先级：
- *   ① 知识点匹配  —— knowledgePoints 包含 plan.knowledgePointId
- *   ② 能力匹配    —— capabilities 包含 plan.questionTypeId
- *   ③ 题型匹配    —— questionTypes 包含 plan.questionTypeId
- *   ④ 难度范围匹配—— difficultyRange 覆盖 plan.difficulty
- *   ⑤ 版本        —— version 更高者优先
- *   ⑥ fallback    —— legacyPluginId 对应的 legacy Generator（无类型绑定）
+ * 选择优先级（P0-03 Step 12 重建）：
+ *   ① KP native binding    — knowledgePoints 包含 plan.knowledgePointId
+ *   ② semantic operation   — 语义域一致（算术 KP → arithmetic 家族；复杂 KP → complex-calc）
+ *   ③ content/capability   — generator.capabilities 包含 plan.questionTypeId
+ *   ④ questionType         — generator.questionTypes 包含 plan.questionTypeId
+ *   ⑤ difficulty range     — difficultyRange 覆盖 plan.difficulty
+ *   ⑥ version              — 更高者优先
+ *   ⑦ legacy               — legacyPluginId fallback（仅 hybrid 模式）
  *
- * 双轨（M4-R14，P2 Task 2.1 简化为 2 级覆盖）：
- *   native  —— 只看核心 Generator 轨道；无候选时回退旧插件
- *   hybrid  —— 双轨并轨，按优先级选优
+ * 硬阻断（P0-03 Step 13）：
+ *   arithmetic 家族生成器（generator:arithmetic-*）仅服务算术语义 KP（resolveArithmeticSemantics 非空）；
+ *   立体图形/人民币/位置等 geometry/measurement KP 禁止进入 arithmetic generator（仅共存 questionType 不视为匹配）。
  *
- * 轨道的有效模式由 generator-mode.js 按 knowledgePoint/global 解析。
- * 禁止 UI 直接选择 Generator：必须经本选择器（或 StrategyEngine）决策。
+ * 双轨（M4-R14）：
+ *   native — 只看核心 Generator 轨道；无候选时返回 GENERATOR_UNSUPPORTED（Step 14）
+ *   hybrid — 双轨并轨，按优先级选优；无候选时 fallback legacy adapter
  */
 'use strict';
 
 var GenRegistry = require('./generator-registry.js');
 var KnowledgePoint = require('../knowledge-point.js');
 var Mode = require('./generator-mode.js');
-// M7-R18：旧插件边界收敛到 shared/generator/legacy-adapter.js (P5 Task 5.1 统一)
-var LegacyAdapter = require('./legacy-adapter.js');
-// Refactor Step 2：QuestionPlan KP 数组唯一语义（边界兼容旧单数）
 var QuestionPlan = require('../strategy/question-plan.js');
+var ArithSem = require('./core/kp-arithmetic-semantics.js');
+var ComplexSem = require('./core/kp-complex-semantics.js');
 
 function trackOf(record) {
   return record.scope === 'core' ? 'native' : 'legacy';
+}
+
+function isArithmeticFamily(g) {
+  return g.id && (g.id.indexOf('generator:arithmetic-') === 0 || g.id.indexOf('generator:selection-') === 0);
+}
+
+function isComplexFamily(g) {
+  return g.id === 'generator:complex-calc';
+}
+
+function isShapeFamily(g) {
+  return g.id === 'generator:shape-recognition';
+}
+
+function isMoneyFamily(g) {
+  return g.id === 'generator:money-measurement';
+}
+
+function isCountingFamily(g) {
+  return g.id === 'generator:counting';
+}
+
+function isReasoningFamily(g) {
+  return g.id === 'generator:reasoning';
+}
+
+function isStatsFamily(g) {
+  return g.id === 'generator:stats';
+}
+
+function isPictureEquationFamily(g) {
+  return g.id === 'generator:picture-equation';
+}
+
+function isC1Family(g) {
+  return g.id === 'generator:c1-number-puzzle';
+}
+
+function isC2Family(g) {
+  return g.id === 'generator:c2-number-theory';
+}
+
+function isC5C6Family(g) {
+  return g.id === 'generator:c5-c6-journey-engineering';
+}
+
+function isC7Family(g) {
+  return g.id === 'generator:c7-clever-calc';
+}
+
+function isC9Family(g) {
+  return g.id === 'generator:c9-comprehensive';
+}
+
+function hasShapeSemantics(kp) {
+  return g.id === 'generator:application-word';
+}
+
+function hasShapeSemantics(kp) {
+  if (!kp) return false;
+  // 几何语义判定：graphicType 是 geometry 或 pluginId 含 geometry
+  if (kp.graphicType === 'geometry') return true;
+  if (kp.pluginId && (kp.pluginId.indexOf('geometry') !== -1 || kp.pluginId.indexOf('area') !== -1)) return true;
+  return false;
+}
+
+function hasMoneySemantics(kp) {
+  if (!kp) return false;
+  var p = kp.pluginId || '';
+  if (p.indexOf('money') !== -1 || p.indexOf('time') !== -1 || p.indexOf('unit') !== -1 || p.indexOf('measure') !== -1) return true;
+  if (kp.graphicType === 'clock' || kp.graphicType === 'ruler') return true;
+  return false;
+}
+
+function hasAppSemantics(kp) {
+  if (!kp) return false;
+  // 应用题语义：moduleId 是 M7（标准应用题）或 pluginId 明确是 word-problems
+  if (kp.moduleId === 'M7') return true;
+  var p = kp.pluginId || '';
+  if (p.indexOf('word-problem') !== -1 || p.indexOf('word_problem') !== -1) return true;
+  // application 本体绑定的自然有语义（硬阻断只在 score.kp=0 时触发）
+  return false;
+}
+
+function hasCountingSemantics(kp) {
+  if (!kp) return false;
+  var p = kp.pluginId || '';
+  if (p.indexOf('combination') !== -1 || p.indexOf('counting') !== -1) return true;
+  if (p.indexOf('c3-') !== -1) return true;
+  // G5/G6 竞赛计数：pluginId 形如 math-competition-g5-c3 / math-competition-g6-c3（结尾无横杠）
+  if (p.indexOf('c3') !== -1 && p.indexOf('competition') !== -1) return true;
+  if (kp.moduleId === 'C3') return true;
+  return false;
+}
+
+function hasReasoningSemantics(kp) {
+  if (!kp) return false;
+  var p = kp.pluginId || '';
+  if (p.indexOf('logic') !== -1 || p.indexOf('reason') !== -1) return true;
+  if (p.indexOf('c8') !== -1) return true;
+  if (kp.moduleId === 'C8') return true;
+  return false;
+}
+
+function hasStatsSemantics(kp) {
+  if (!kp) return false;
+  if (kp.graphicType === 'chart') return true;
+  var p = kp.pluginId || '';
+  if (p.indexOf('stats') !== -1 || p.indexOf('data') !== -1) return true;
+  return false;
+}
+
+function hasPictureEquationSemantics(kp) {
+  if (!kp) return false;
+  if (kp.graphicType === 'diagram') return true;
+  var p = kp.pluginId || '';
+  if (p.indexOf('picture') !== -1) return true;
+  return false;
+}
+
+function hasC1Semantics(kp) {
+  if (!kp) return false;
+  var p = kp.pluginId || '';
+  if (p.indexOf('c1-') !== -1) return true;
+  if (p.indexOf('c1') !== -1 && p.indexOf('competition') !== -1) return true;
+  return false;
+}
+
+function hasC2Semantics(kp) {
+  if (!kp) return false;
+  var p = kp.pluginId || '';
+  if (p.indexOf('c2-') !== -1) return true;
+  if (p.indexOf('c2') !== -1 && p.indexOf('competition') !== -1) return true;
+  return false;
+}
+
+function hasC5C6Semantics(kp) {
+  if (!kp) return false;
+  var p = kp.pluginId || '';
+  // C5 行程 / C6 工程浓度：pluginId 形如 math-competition-c5-journey、math-competition-g5-c6
+  if ((p.indexOf('c5') !== -1 || p.indexOf('c6') !== -1) && p.indexOf('competition') !== -1) return true;
+  return false;
+}
+
+function hasC7Semantics(kp) {
+  if (!kp) return false;
+  var p = kp.pluginId || '';
+  // C7 巧算/计算技巧：pluginId 形如 math-competition-g5-c7 / math-competition-g6-c7
+  if (p.indexOf('c7') !== -1 && p.indexOf('competition') !== -1) return true;
+  return false;
+}
+
+function hasC9Semantics(kp) {
+  if (!kp) return false;
+  var p = kp.pluginId || '';
+  // C9 综合应用题：pluginId 形如 math-competition-g4-c9 / math-competition-g5-c9 / math-competition-g6-c9
+  if (p.indexOf('c9') !== -1 && p.indexOf('competition') !== -1) return true;
+  if (kp.moduleId === 'C9') return true;
+  return false;
 }
 
 function selectGenerator(plan, options) {
@@ -46,50 +206,87 @@ function selectGenerator(plan, options) {
   var all = GenRegistry.all();
   var candidates = [];
 
+  // Step 11 审计定位：arithmetic semantics 基于原始 KP（source.legacyType + legacy.category），
+  // solid/money/position 等非算术语义 KP（geometry/measurement）禁止进入 arithmetic 家族。
+  var arithSem = kp ? ArithSem.resolveArithmeticSemantics(kp) : null;
+  var complexSem = kp ? ComplexSem.resolveComplexSemantics(kp) : null;
+  // 算术语义域：可解析算术语义，或 legacy.category === 'algebra'（如 make-ten/cushi 属凑加，属算术）
+  var isAlgebraDomain = !!(kp && kp.legacy && kp.legacy.category === 'algebra');
+
   all.forEach(function (g) {
-    // 双轨过滤：native 只看 core；hybrid 双轨都可达
     var track = trackOf(g);
     if (mode === 'native' && track !== 'native') return;
-    // hybrid：双轨都可达
 
-    var score = { record: g, kp: 0, capability: 0, qt: 0, diff: 0 };
+    // P0-07 Step 32/33：Composite 生成器仅服务 combine=true 且 ≥2 KP 的合并计划；
+    // 单 KP（含 multi-kp 拆分后的单计划）禁止路由到 Composite，防止 generate 因 KP 不足抛错。
+    if (g.supportsComposite === true &&
+        !(plan.combine === true && QuestionPlan.planKnowledgePointIds(plan).length >= 2)) return;
 
-    // ① 知识点匹配
+    var score = { record: g, kp: 0, semanticOp: 0, capability: 0, qt: 0, diff: 0 };
+
+    // ① KP native binding（本体绑定即语义契约，优先于任何泛型匹配）
     if (g.knowledgePoints.indexOf(primaryKp) !== -1) score.kp = 1;
 
-    // ② 能力匹配
+    // Step 13：硬阻断 —— 语义不一致的泛型候选直接拒绝（仅共存 questionType 不视为匹配）。
+    //   仅阻断「无本体绑定」的泛型匹配；显式绑定该 KP 的生成器视为语义契约，最高优先级放行。
+    //   recognize qt 是元题型（识别/判断/区分），不属于任何单一语义域，豁免所有硬阻断。
+    var qt = plan.questionTypeId;
+    var isRecognize = qt === 'recognize';
+    if (!isRecognize && isArithmeticFamily(g) && score.kp === 0 && !(arithSem || isAlgebraDomain || (kp && kp.operations && kp.operations.length > 0))) return;
+    if (!isRecognize && isComplexFamily(g) && score.kp === 0 && !complexSem) return;
+    if (!isRecognize && isShapeFamily(g) && score.kp === 0 && !hasShapeSemantics(kp)) return;
+    if (!isRecognize && isMoneyFamily(g) && score.kp === 0 && !hasMoneySemantics(kp)) return;
+    if (!isRecognize && isCountingFamily(g) && score.kp === 0 && !hasCountingSemantics(kp)) return;
+    if (!isRecognize && isReasoningFamily(g) && score.kp === 0 && !hasReasoningSemantics(kp)) return;
+    if (!isRecognize && isStatsFamily(g) && score.kp === 0 && !hasStatsSemantics(kp)) return;
+    if (!isRecognize && isPictureEquationFamily(g) && score.kp === 0 && !hasPictureEquationSemantics(kp)) return;
+    if (!isRecognize && isC1Family(g) && score.kp === 0 && !hasC1Semantics(kp)) return;
+    if (!isRecognize && isC2Family(g) && score.kp === 0 && !hasC2Semantics(kp)) return;
+    if (!isRecognize && isC5C6Family(g) && score.kp === 0 && !hasC5C6Semantics(kp)) return;
+    if (!isRecognize && isC7Family(g) && score.kp === 0 && !hasC7Semantics(kp)) return;
+    if (!isRecognize && isC9Family(g) && score.kp === 0 && !hasC9Semantics(kp)) return;
+
+    // ② semantic operation：语义域一致才算匹配
+    if (isArithmeticFamily(g) || isComplexFamily(g) || isShapeFamily(g) || isMoneyFamily(g) || isCountingFamily(g) || isReasoningFamily(g) || isStatsFamily(g) || isPictureEquationFamily(g) || isC1Family(g) || isC2Family(g) || isC5C6Family(g) || isC7Family(g) || isC9Family(g)) {
+      score.semanticOp = 1;
+    } else if (score.kp === 1) {
+      score.semanticOp = 1;
+    }
+
+    // ③ content/structure capability（generator.capabilities 交集）
     if (plan.questionTypeId && g.capabilities.indexOf(plan.questionTypeId) !== -1) score.capability = 1;
 
-    // ③ 题型匹配
+    // ④ questionType
     if (plan.questionTypeId && g.questionTypes.indexOf(plan.questionTypeId) !== -1) score.qt = 1;
 
-    // ④ 难度范围匹配（记录声明了 difficultyRange 才计分）
+    // ⑤ difficulty range
     if (g.difficultyRange && plan.difficulty != null) {
       if (plan.difficulty >= g.difficultyRange.min && plan.difficulty <= g.difficultyRange.max) score.diff = 1;
     }
 
+    // 候选资格：真实匹配维度（kp/capability/qt/diff）任一命中；
+    // semanticOp 仅作候选之间的优先级档位（Step 12 ②），不单独构成候选资格。
     if (score.kp + score.capability + score.qt + score.diff > 0) candidates.push(score);
   });
 
-  // 按优先级排序：kp > capability > qt > diff > version
+  // Step 12 priority：kp > semanticOp > capability > qt > diff > version
   candidates.sort(function (a, b) {
     if (a.kp !== b.kp) return b.kp - a.kp;
+    if (a.semanticOp !== b.semanticOp) return b.semanticOp - a.semanticOp;
     if (a.capability !== b.capability) return b.capability - a.capability;
     if (a.qt !== b.qt) return b.qt - a.qt;
     if (a.diff !== b.diff) return b.diff - a.diff;
-    return (b.record.version || 1) - (a.record.version || 1); // ⑤ 版本
+    var va = a.record.version || 1, vb = b.record.version || 1;
+    if (va !== vb) return vb - va;
+    // tiebreak：core 优先于 legacy
+    if (a.record.scope === 'core' && b.record.scope !== 'core') return -1;
+    if (b.record.scope === 'core' && a.record.scope !== 'core') return 1;
+    return 0;
   });
 
   if (candidates.length === 0) {
-    // ⑥ fallback：legacyPluginId → legacy Generator（无匹配时保留旧插件）
-    var legacyPluginId = kp && (kp.legacyPluginId || (kp.source && kp.source.pluginId));
-    if (legacyPluginId) {
-      var legacy = GenRegistry.get('legacy:' + legacyPluginId);
-      if (legacy) {
-        return { generatorId: legacy.id, source: 'fallback:legacy', record: legacy, mode: mode };
-      }
-    }
-    return { generatorId: null, source: 'none', record: null, mode: mode };
+    // MATH-14：legacy 轨道已删除，任何模式无候选均返回 GENERATOR_UNSUPPORTED（无 fallback 宿主）。
+    return { generatorId: null, source: 'unsupported', errorCode: 'GENERATOR_UNSUPPORTED', record: null, mode: mode };
   }
 
   var best = candidates[0];
@@ -97,7 +294,7 @@ function selectGenerator(plan, options) {
     generatorId: best.record.id,
     source: 'priority',
     record: best.record,
-    match: { kp: best.kp, capability: best.capability, questionType: best.qt, difficulty: best.diff },
+    match: { kp: best.kp, semanticOp: best.semanticOp, capability: best.capability, questionType: best.qt, difficulty: best.diff },
     mode: mode
   };
 }
@@ -112,15 +309,10 @@ function selectGenerator(plan, options) {
  */
 function instantiate(selection, plugin) {
   if (!selection || !selection.record) return null;
-  var gen;
-  if (selection.record.scope === 'core') {
-    var Generators = require('./generators/index.js');
-    gen = Generators.get(selection.record.id);
-  } else {
-    // M7-R18：legacy 实例化统一经 shared/generator/legacy-adapter.js（唯一旧插件边界）。
-    gen = LegacyAdapter.hydrateLegacyGenerator(selection, plugin);
-    if (!gen) return null;
-  }
+  // MATH-14：legacy 轨道已删，仅 core Generator 可实例化。
+  var Generators = require('./generators/index.js');
+  var gen = Generators.get(selection.record.id);
+  if (!gen) return null;
 
   var generatorId = selection.record.id;
   var generatorVersion = toSemver(selection.record.version);

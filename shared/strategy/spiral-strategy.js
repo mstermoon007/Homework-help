@@ -42,11 +42,11 @@ function resolveSpiral(options) {
 
   var spiral = options.spiral_level != null ? options.spiral_level : options.spiralLevel;
   if (spiral == null && kp) {
-    spiral = (kp.spiral && kp.spiral.level != null) ? kp.spiral.level : kp.spiral_level;
+    spiral = (kp.spiral && kp.spiral.level != null) ? kp.spiral.level : null;
   }
   var maxSpiral = options.max_spiral_level != null ? options.max_spiral_level : options.maxSpiralLevel;
   if (maxSpiral == null && kp) {
-    maxSpiral = (kp.spiral && kp.spiral.maxLevel != null) ? kp.spiral.maxLevel : kp.max_spiral_level;
+    maxSpiral = (kp.spiral && kp.spiral.maxLevel != null) ? kp.spiral.maxLevel : null;
   }
 
   var spiralLevel = toIntOr(spiral, 1);

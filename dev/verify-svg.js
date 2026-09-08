@@ -32,6 +32,11 @@ function check(name, svg) {
   }
   if (problems.length) { fail++; console.log('FAIL ' + name + ' → ' + problems.join('; ')); }
 }
+// 结构断言辅助：条件成立计入 total，失败计 fail 并输出原因
+function cnOk(cond, msg) {
+  total++;
+  if (!cond) { fail++; console.log('FAIL ' + msg); }
+}
 
 // ============ SVGGeometry 全 API × 参数变体 ============
 [[3, 2], [4, 3], [6, 5], [8, 7]].forEach(function (d, i) {
@@ -84,105 +89,6 @@ divCases.forEach(function (p2, i) { check('div#' + i, C.div(p2[0], p2[1])); });
   if (a !== null) check('pingTen#' + i, a);
   if (b !== null) check('poTen#' + i, b);
 });
-
-// ============ SVGChinese 语文生成器（任务8） ============
-var CN = require(path.join(ROOT, 'shared', 'svg-chinese.js'));
-
-// 结构断言辅助：条件成立计入 total，失败计 fail 并输出原因
-function cnOk(cond, msg) {
-  total++;
-  if (!cond) { fail++; console.log('FAIL ' + msg); }
-}
-
-// hanziGrid：田字格 / 米字格 / 非法输入
-var tianShan = CN.hanziGrid('山', 'tian');
-if (tianShan !== null) check('hanziGrid-tian-shan', tianShan); else { total++; fail++; console.log('FAIL hanziGrid-tian-shan → null'); }
-cnOk(tianShan && tianShan.indexOf('山') !== -1, '田字格含汉字「山」');
-cnOk(tianShan && (tianShan.match(/stroke-dasharray/g) || []).length >= 2, '田字格含虚线中线（横+竖）');
-var miMu = CN.hanziGrid('木', 'mi');
-if (miMu !== null) check('hanziGrid-mi-mu', miMu); else { total++; fail++; console.log('FAIL hanziGrid-mi-mu → null'); }
-cnOk(miMu && (miMu.match(/<line/g) || []).length === 4, '米字格含 4 条内线（十字+双对角）');
-var tianDefault = CN.hanziGrid('口');
-if (tianDefault !== null) check('hanziGrid-default-kou', tianDefault); else { total++; fail++; console.log('FAIL hanziGrid-default → null'); }
-cnOk(CN.hanziGrid() === null, 'hanziGrid 无参 → null');
-cnOk(CN.hanziGrid('AB') === null, 'hanziGrid 多字符 → null');
-cnOk(CN.hanziGrid('A') === null, 'hanziGrid 非汉字 → null');
-
-// pinyinGrid：带调音节 / 非法输入
-var pyHua = CN.pinyinGrid('huā');
-if (pyHua !== null) check('pinyinGrid-hua', pyHua); else { total++; fail++; console.log('FAIL pinyinGrid-hua → null'); }
-cnOk(pyHua && (pyHua.match(/<line/g) || []).length === 4, '四线三格含 4 条横线');
-cnOk(pyHua && pyHua.indexOf('huā') !== -1, '四线格显示音节文本');
-var pyLong = CN.pinyinGrid('zhuàng');
-if (pyLong !== null) check('pinyinGrid-zhuang', pyLong); else { total++; fail++; console.log('FAIL pinyinGrid-zhuang → null'); }
-cnOk(CN.pinyinGrid('') === null, 'pinyinGrid 空串 → null');
-cnOk(CN.pinyinGrid(123) === null, 'pinyinGrid 非字符串 → null');
-cnOk(CN.pinyinGrid('abc1') === null, 'pinyinGrid 含数字 → null');
-
-// strokeOrder：内置字笔画数与徽标数一致；未收录字返回 null
-[['山', 3], ['日', 4], ['木', 4], ['一', 1], ['人', 2]].forEach(function (c) {
-  var svg = CN.strokeOrder(c[0]);
-  if (svg !== null) check('strokeOrder-' + c[0], svg);
-  else { total++; fail++; console.log('FAIL strokeOrder-' + c[0] + ' → null'); }
-  cnOk(svg && (svg.match(/<polyline/g) || []).length === c[1], '「' + c[0] + '」折线数 = 笔画数 ' + c[1]);
-  cnOk(svg && (svg.match(/<circle/g) || []).length === c[1], '「' + c[0] + '」序号徽标数 = 笔画数 ' + c[1]);
-});
-cnOk(CN.strokeOrder('永') === null, 'strokeOrder 未收录「永」→ null');
-cnOk(CN.strokeOrder() === null, 'strokeOrder 无参 → null');
-
-// sentenceLine：示范文本书写格
-var sent = CN.sentenceLine('今天天气晴朗');
-if (sent !== null) check('sentenceLine-text', sent); else { total++; fail++; console.log('FAIL sentenceLine-text → null'); }
-cnOk(sent && sent.indexOf('今天天气晴朗') !== -1, '书写格含示范文本');
-cnOk(sent && (sent.match(/<line/g) || []).length >= 2, '书写格含基线+顶部导引线');
-check('sentenceLine-blank', CN.sentenceLine(''));
-cnOk(CN.sentenceLine(null) === null, 'sentenceLine 非字符串 → null');
-cnOk(CN.sentenceLine('字'.repeat(17)) === null, 'sentenceLine 超长(17) → null');
-
-// 命名空间一致性：模块导出即 SVGGenerators.cn，且 ready 标记为 true
-cnOk(global.SVGGenerators.cn === CN, 'SVGGenerators.cn 指向本模块导出');
-cnOk(typeof global.SVGGenerators.cn.ready === 'boolean', 'ready 标记存在');
-cnOk(global.SVGGenerators.cn.ready === true, '任务8 后 ready=true');
-
-// ============ SVGEnglish 英语生成器（任务9） ============
-var EN = require(path.join(ROOT, 'shared', 'svg-english.js'));
-
-// letterWriting：大小写 / 推断 / 非法输入
-var lwA = EN.letterWriting('A', 'upper');
-if (lwA !== null) check('letterWriting-A-upper', lwA); else { total++; fail++; console.log('FAIL letterWriting-A-upper → null'); }
-cnOk(lwA && (lwA.match(/<line/g) || []).length === 4, '四线三格含 4 条横线（验收点）');
-cnOk(lwA && lwA.indexOf('>A<') !== -1, '显示大写 A');
-var lwG = EN.letterWriting('g', 'lower');
-if (lwG !== null) check('letterWriting-g-lower', lwG); else { total++; fail++; console.log('FAIL letterWriting-g-lower → null'); }
-cnOk(lwG && lwG.indexOf('>g<') !== -1, '显示小写 g');
-cnOk(EN.letterWriting('B') !== null && EN.letterWriting('b') !== null, '省略 case 按字母自身推断');
-var lwBad = [EN.letterWriting(), EN.letterWriting('AB'), EN.letterWriting('1'),
-  EN.letterWriting('A', 'middle'), EN.letterWriting('A', 123)];
-cnOk(lwBad.every(x => x === null), 'letterWriting 非法输入 → null（缺参/多字符/非字母/未知 case）');
-
-// wordCard：单词+音标+抄写区；非法输入
-var wcBook = EN.wordCard('book', '/bʊk/');
-if (wcBook !== null) check('wordCard-book-phonetic', wcBook); else { total++; fail++; console.log('FAIL wordCard-book → null'); }
-cnOk(wcBook && wcBook.indexOf('book') !== -1 && wcBook.indexOf('/bʊk/') !== -1, '卡片含单词与音标');
-cnOk(wcBook && (wcBook.match(/<line/g) || []).length === 4, '卡片下部含四线抄写区');
-var wcApple = EN.wordCard('apple');
-if (wcApple !== null) check('wordCard-apple-noPhonetic', wcApple); else { total++; fail++; console.log('FAIL wordCard-apple → null'); }
-cnOk(wcApple && wcApple.indexOf('apple') !== -1, '无音标时仅展示单词');
-var wcBad = [EN.wordCard(''), EN.wordCard(123), EN.wordCard('bo1k'), EN.wordCard('ok', { x: 1 })];
-cnOk(wcBad.every(x => x === null), 'wordCard 非法输入 → null（空串/非串/数字混入/音标类型）');
-
-// fourLineWriting：句子抄写
-var flSent = EN.fourLineWriting('I like apples.');
-if (flSent !== null) check('fourLineWriting-sentence', flSent); else { total++; fail++; console.log('FAIL fourLineWriting-sentence → null'); }
-cnOk(flSent && flSent.indexOf('I like apples.') !== -1, '抄写条含句子文本');
-cnOk(flSent && (flSent.match(/<line/g) || []).length === 4, '抄写条含 4 条横线');
-var flBad = [EN.fourLineWriting(''), EN.fourLineWriting(null), EN.fourLineWriting('字'),
-  EN.fourLineWriting('x'.repeat(29))];
-cnOk(flBad.every(x => x === null), 'fourLineWriting 非法输入 → null（空/非串/中文/超长）');
-
-// 命名空间一致性
-cnOk(global.SVGGenerators.en === EN, 'SVGGenerators.en 指向本模块导出');
-cnOk(global.SVGGenerators.en.ready === true, '任务9 后 ready=true');
 
 // ============ SVGUtil 核心直查 ============
 check('core-wrap', U.svgWrap('<circle cx="30" cy="30" r="20"/>'));
@@ -302,50 +208,6 @@ cnOk((fl.match(/<line/g) || []).length === 4, 'svgGrid-four-line 含 4 条横线
   var pAnim = M.makeTen(9, 5, { printMode: true });
   cnOk(pAnim && pAnim.indexOf('svg-print') !== -1 && pAnim.indexOf('@keyframes') === -1,
     '凑十卡 printMode：svg-print 且无动画样式');
-})();
-
-// ============ 语文细化：十字格 / 多字笔顺 / 四线格颜色可配 ============
-(function () {
-  var cross = CN.hanziGrid('木', 'cross');
-  if (cross !== null) check('hanziGrid-cross-mu', cross); else { total++; fail++; console.log('FAIL hanziGrid-cross → null'); }
-  cnOk(cross && (cross.match(/<line/g) || []).length === 2, '十字格仅 2 条实线中线');
-  cnOk(cross && cross.indexOf('stroke-dasharray') === -1, '十字格无虚线（区别于田字格）');
-
-  var word = CN.strokeOrderWord('山口');
-  if (word !== null) check('strokeOrderWord-shankou', word); else { total++; fail++; console.log('FAIL strokeOrderWord → null'); }
-  cnOk(word && (word.match(/<polyline/g) || []).length === 6, '多字笔顺折线总数 = 山3+口3 = 6');
-  cnOk(word && (word.match(/<circle/g) || []).length === 6, '序号徽标跨字连续共 6 个');
-  cnOk(word && word.indexOf('>6<') !== -1, '末笔序号连续编号至 6');
-  cnOk(CN.strokeOrderWord('山永') === null, '多字笔顺含未收录字「永」→ null');
-  cnOk(CN.strokeOrderWord('山') === null, '单字请用 strokeOrder → null');
-
-  var pyCustom = CN.pinyinGrid('huā', { lineColor: '#ff0000', baselineColor: '#0000ff' });
-  cnOk(pyCustom && pyCustom.indexOf('#ff0000') !== -1 && pyCustom.indexOf('#0000ff') !== -1,
-    'pinyinGrid 四线格颜色可配置（验收点）');
-  var pyDefault = CN.pinyinGrid('huā');
-  cnOk(pyDefault && pyDefault.indexOf('svg-grid-line') !== -1, '四线格线条带 svg-grid-line 类');
-  var pyPrint = CN.pinyinGrid('huā').replace('<svg ', '<svg data-pm="1" ');
-  void pyPrint; // 打印变浅由 svgWrap printMode 统一处理（见上方 core 用例）
-})();
-
-// ============ 英语细化：大小写同框 / 笔顺示意 ============
-(function () {
-  var pair = EN.letterPair('a');
-  if (pair !== null) check('letterPair-Aa', pair); else { total++; fail++; console.log('FAIL letterPair → null'); }
-  cnOk(pair && pair.indexOf('>A<') !== -1 && pair.indexOf('>a<') !== -1, '配对卡同时含大小写字母');
-  cnOk(pair && (pair.match(/<line/g) || []).length >= 5, '配对卡含四线格+分隔虚线');
-  cnOk(EN.letterPair('AB') === null, 'letterPair 非单字母 → null');
-
-  var lsL = EN.letterStroke('L', 'upper');
-  if (lsL !== null) check('letterStroke-L-upper', lsL); else { total++; fail++; console.log('FAIL letterStroke-L → null'); }
-  cnOk(lsL && lsL.indexOf('>2<') !== -1, '大写 L 笔画数徽标 = 2');
-  cnOk(lsL && lsL.indexOf('<polygon') !== -1, '起笔方向箭头三角头存在');
-  cnOk(lsL && lsL.indexOf('fill="#c7d2e4"') !== -1, '描红虚线底稿层存在');
-  var lsa = EN.letterStroke('g', 'lower');
-  check('letterStroke-g-lower', lsa);
-  cnOk(lsa && lsa.indexOf('<polygon') === -1 && lsa.indexOf('>3<') === -1,
-    '小写不作笔画数/箭头标注（口径差异）');
-  cnOk(EN.letterStroke('A', 'middle') === null, 'letterStroke 非法 case → null');
 })();
 
 // ============ R-A04：六个语义 SVG 插件运行时挂载与派发校验 ============

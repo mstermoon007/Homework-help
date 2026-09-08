@@ -25,7 +25,11 @@ StrategyError.CODES = {
   GENERATOR_MISMATCH: 'GENERATOR_MISMATCH',
   // Core Domain 收缩（Refactor Step 1）：核心生成链仅接受 math。
   // 语文(cn)/英语(en) 返回明确 unsupported，禁止 fallback，不进入 Generator。
-  UNSUPPORTED_SUBJECT: 'UNSUPPORTED_SUBJECT'
+  UNSUPPORTED_SUBJECT: 'UNSUPPORTED_SUBJECT',
+  // P0-03 Step 14：native 模式无合法候选时返回 GENERATOR_UNSUPPORTED（禁止静默 fallback legacy）。
+  GENERATOR_UNSUPPORTED: 'GENERATOR_UNSUPPORTED',
+  // P0-07 Step 33：combine=true 但无 Composite Generator 时显式失败，禁止 fallback 单 KP
+  COMPOSITE_UNSUPPORTED: 'COMPOSITE_UNSUPPORTED'
 };
 
 function isStrategyError(err) {

@@ -31,9 +31,6 @@ const CASES = [
   { name: '数学G6选择',        url: '/practice.html?subject=math&grade=6&plugin=math-g6-choice',     expectType: 'opt',   multi: false },
   { name: '数学G1凑十(SVG)',   url: '/practice.html?subject=math&grade=1&plugin=math-make-ten',      expectType: 'svg',   multi: false },
   { name: '数学综合(异步)',    url: '/practice.html?subject=math&grade=2&plugin=math-comprehensive', expectType: 'mixed', multi: false },
-  { name: '语文G1拼音',        url: '/practice.html?subject=chinese&grade=1&plugin=chinese-pinyin',  expectType: 'opt',   multi: false },
-  // 跟读类（noCheck）：无书面输入，check 恒全对，checkBtn 隐藏 → 走专用断言分支
-  { name: '英语G3字母(跟读)',  url: '/practice.html?subject=english&grade=3&plugin=english-alphabet', expectType: 'listen', multi: false, noCheck: true },
 ];
 
 let pass = 0, fail = 0;
@@ -91,74 +88,48 @@ async function runCase(c) {
     R.cards = doc.querySelectorAll('#problemsArea .question-card, #problemsArea .problem').length;
     assert(R.cards >= 1, '题目卡数量 >= 1');
 
-    if (c.noCheck) {
-      // ---- 跟读类专用分支（english-alphabet：无书面答案） ----
-      // 3) 渲染形态：字母卡 + 发音按钮
-      R.rendered = {
-        letterCards: doc.querySelectorAll('#problemsArea .letter-card').length,
-        playBtns: doc.querySelectorAll('#problemsArea .play-btn').length
-      };
-      assert(R.rendered.letterCards >= 1, '存在字母卡');
-      assert(R.rendered.playBtns >= 1, '存在发音按钮');
+    // ---- 书面作答类 ----
+    // 3) 渲染形态：input / 选择 / SVG
+    const hasInput = doc.querySelectorAll('#problemsArea input').length > 0;
+    const hasOpt = doc.querySelectorAll('#problemsArea .opt, #problemsArea input[type="radio"]').length > 0;
+    const hasSvg = doc.querySelectorAll('#problemsArea svg').length > 0;
+    R.rendered = { inputs: doc.querySelectorAll('#problemsArea input').length, opts: doc.querySelectorAll('#problemsArea .opt, #problemsArea input[type="radio"]').length, svgs: doc.querySelectorAll('#problemsArea svg').length };
+    assert(hasInput || hasOpt || hasSvg, '存在可作答控件');
 
-      // 4) 批改入口：checkBtn 应被隐藏（practice.html 对 noCheck 隐藏）
-      const cb = doc.getElementById('checkBtn');
-      R.checkBtnHidden = cb && cb.style.display === 'none';
-      assert(R.checkBtnHidden, '跟读类隐藏「检查答案」按钮');
+    // 4) 答题：填全部输入框（选择类点第一个选项）
+    doc.querySelectorAll('#problemsArea input[data-index], #problemsArea input[data-idx]').forEach(i => { i.value = '1'; });
+    doc.querySelectorAll('#problemsArea input[type="radio"]').forEach((r, idx) => { if (idx === 0) r.checked = true; });
+    doc.querySelectorAll('#problemsArea .opt').forEach((o, idx) => { if (idx === 0) o.click(); });
 
-      // 5) check 兜底：插件自身恒返回全对
-      const plugin = win.__currentPlugin;
-      assert(plugin && typeof plugin.check === 'function', '插件存在且提供 check');
-      const res = plugin.check({ questions: [] }, {});
-      assert(res && res.score === 100 && res.correct === res.total, 'check 兜底恒全对');
-      R.score = res.score + '分(跟读)';
-      R.adaptiveStored = false; // 自适应难度记录功能已移除（hw_adaptive_v2 不再写入）
-      R.redoReduced = null;
-      R.allCorrect = true;
+    // 5) 批改：checkBtn
+    doc.getElementById('checkBtn').click();
+    await waitFor(win, w => w.document.getElementById('resultArea').classList.contains('show'), 10000, '批改结果');
+    const score = doc.querySelector('#resultArea .score');
+    assert(score, '结果区出现分数');
+    R.score = score.textContent;
+    R.detail = doc.querySelector('#resultArea .detail') ? doc.querySelector('#resultArea .detail').textContent : '';
+    assert(/分/.test(R.score), '分数格式');
+    R.adaptiveStored = false; // 自适应难度记录功能已移除（hw_adaptive_v2 不再写入）
+
+    // 6) 错题重做：点击 redoBtn 后进入错题答题态
+    //    注：全部答错时 wrong==before，重做题数不变（10→10），故不要求数量严格减少；
+    //    核心断言 = 题数不增且非空 + 结果区关闭（回到答题态）+ 检查按钮重新可用
+    const wrongCount = doc.querySelectorAll('#problemsArea .question-card.wrong, #problemsArea .problem.wrong').length;
+    const redoBtn = doc.getElementById('redoBtn');
+    if (redoBtn) {
+      const before = doc.querySelectorAll('#problemsArea .question-card, #problemsArea .problem').length;
+      redoBtn.click();
+      await waitFor(win, w => {
+        const cards = w.document.querySelectorAll('#problemsArea .question-card, #problemsArea .problem').length;
+        const ra = w.document.getElementById('resultArea');
+        const cb = w.document.getElementById('checkBtn');
+        return cards > 0 && cards <= before && ra && !ra.classList.contains('show') && cb && !cb.disabled;
+      }, 5000, '错题重做');
+      R.redoReduced = true;
+      R.redoWrong = wrongCount;
     } else {
-      // ---- 书面作答类 ----
-      // 3) 渲染形态：input / 选择 / SVG
-      const hasInput = doc.querySelectorAll('#problemsArea input').length > 0;
-      const hasOpt = doc.querySelectorAll('#problemsArea .opt, #problemsArea input[type="radio"]').length > 0;
-      const hasSvg = doc.querySelectorAll('#problemsArea svg').length > 0;
-      R.rendered = { inputs: doc.querySelectorAll('#problemsArea input').length, opts: doc.querySelectorAll('#problemsArea .opt, #problemsArea input[type="radio"]').length, svgs: doc.querySelectorAll('#problemsArea svg').length };
-      assert(hasInput || hasOpt || hasSvg, '存在可作答控件');
-
-      // 4) 答题：填全部输入框（选择类点第一个选项）
-      doc.querySelectorAll('#problemsArea input[data-index], #problemsArea input[data-idx]').forEach(i => { i.value = '1'; });
-      doc.querySelectorAll('#problemsArea input[type="radio"]').forEach((r, idx) => { if (idx === 0) r.checked = true; });
-      doc.querySelectorAll('#problemsArea .opt').forEach((o, idx) => { if (idx === 0) o.click(); });
-
-      // 5) 批改：checkBtn
-      doc.getElementById('checkBtn').click();
-      await waitFor(win, w => w.document.getElementById('resultArea').classList.contains('show'), 10000, '批改结果');
-      const score = doc.querySelector('#resultArea .score');
-      assert(score, '结果区出现分数');
-      R.score = score.textContent;
-      R.detail = doc.querySelector('#resultArea .detail') ? doc.querySelector('#resultArea .detail').textContent : '';
-      assert(/分/.test(R.score), '分数格式');
-      R.adaptiveStored = false; // 自适应难度记录功能已移除（hw_adaptive_v2 不再写入）
-
-      // 6) 错题重做：点击 redoBtn 后进入错题答题态
-      //    注：全部答错时 wrong==before，重做题数不变（10→10），故不要求数量严格减少；
-      //    核心断言 = 题数不增且非空 + 结果区关闭（回到答题态）+ 检查按钮重新可用
-      const wrongCount = doc.querySelectorAll('#problemsArea .question-card.wrong, #problemsArea .problem.wrong').length;
-      const redoBtn = doc.getElementById('redoBtn');
-      if (redoBtn) {
-        const before = doc.querySelectorAll('#problemsArea .question-card, #problemsArea .problem').length;
-        redoBtn.click();
-        await waitFor(win, w => {
-          const cards = w.document.querySelectorAll('#problemsArea .question-card, #problemsArea .problem').length;
-          const ra = w.document.getElementById('resultArea');
-          const cb = w.document.getElementById('checkBtn');
-          return cards > 0 && cards <= before && ra && !ra.classList.contains('show') && cb && !cb.disabled;
-        }, 5000, '错题重做');
-        R.redoReduced = true;
-        R.redoWrong = wrongCount;
-      } else {
-        R.redoReduced = null; // 全对无错题
-        R.allCorrect = true;
-      }
+      R.redoReduced = null; // 全对无错题
+      R.allCorrect = true;
     }
 
     // 7) 打印：printBtn → Print.open 被调用（新窗口被拦截，不抛错即 PASS）

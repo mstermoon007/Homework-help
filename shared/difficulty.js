@@ -167,14 +167,14 @@
 
   // ============ 任务10：按科目差异化策略 ============
 
-  /** 科目代号规范化：兼容注册表全称（chinese/english）与前缀缩写（cn/en） */
+  /** 科目代号规范化（项目仅保留数学；其余科目回落 math） */
   function canonSubject(subject) {
-    var m = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+    var m = { math: 'math' };
     return m[subject] || subject;
   }
 
   /**
-   * 正确率反馈调整规则（数学现行规则的显式化；cn/en 暂沿用同一反馈框架）。
+   * 正确率反馈调整规则（数学现行规则的显式化）。
    * @param {{emaRate:number, lastRate:number}} s
    * @returns {{delta:number, bias:string|null}}
    */
@@ -209,40 +209,10 @@
           allowMultDiv: p.structure.allowMultDiv
         };
       }
-    },
-    cn: {
-      subject: 'cn',
-      label: '语文',
-      defaultLevel: 3,
-      /** 语文映射：字词复杂度（字数上限/词档）与句子长度 */
-      toParams: function (level) {
-        var l = clamp10(level);
-        return {
-          level: l,
-          charCountMax: l <= 3 ? 8 : (l <= 6 ? 12 : 16),   // 字词复杂度：字数上限
-          sentenceLength: 6 + l * 2,                        // 句子长度（字）
-          vocabTier: l <= 3 ? 'basic' : (l <= 6 ? 'common' : (l <= 8 ? 'advanced' : 'extension'))
-        };
-      }
-    },
-    en: {
-      subject: 'en',
-      label: '英语',
-      defaultLevel: 3,
-      /** 英语映射：词汇长度、语法复杂度、句型层级 */
-      toParams: function (level) {
-        var l = clamp10(level);
-        return {
-          level: l,
-          wordLengthMax: l <= 3 ? 4 : (l <= 6 ? 6 : (l <= 8 ? 8 : 10)),  // 词汇长度上限（字母）
-          grammarTier: l <= 3 ? 1 : (l <= 6 ? 2 : (l <= 8 ? 3 : 4)),     // 语法复杂度分档
-          sentencePattern: l <= 3 ? 'simple' : (l <= 6 ? 'compound' : 'complex')
-        };
-      }
     }
   };
 
-  /** 取科目档案：chinese/english 归一为 cn/en；未知科目回落 math（安全默认） */
+  /** 取科目档案：未知科目回落 math（安全默认） */
   function profileFor(subject) {
     return DifficultyProfiles[canonSubject(subject)] || DifficultyProfiles.math;
   }
@@ -257,9 +227,7 @@
   /** 取科目调整策略（正确率反馈规则）；未知科目返回 null，调用方回退内置逻辑 */
   function strategyFor(subject) {
     var prof = profileFor(subject);
-    return prof === DifficultyProfiles.math ? DELTA_RULES
-      : (prof.subject === 'cn' || prof.subject === 'en') ? DELTA_RULES
-      : null;
+    return prof === DifficultyProfiles.math ? DELTA_RULES : null;
   }
 
   // ============ 导出：挂载 App.Difficulty（Node 端默认导出同一对象） ============

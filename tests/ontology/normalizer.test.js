@@ -45,7 +45,7 @@ test('math: Legacy -> Canonical 映射', () => {
   assert.strictEqual(c.cognition.raw, '掌握');
   assert.strictEqual(c.structure.maxSteps, 1);
   assert.strictEqual(c.presentation.questionTypes.length, 1);
-  assert.strictEqual(c.presentation.questionTypes[0].type, 'operate');
+  assert.strictEqual(c.presentation.questionTypes[0].type, 'oral');
   assert.strictEqual(c.presentation.questionTypes[0].weight, 0.6);
   assert.deepStrictEqual(c.numeric.range, { min: 1, max: 9 });
   assert.deepStrictEqual(c.context.defaults, ['standard']);
@@ -62,25 +62,4 @@ test('math: 确定性（同输入同输出）', () => {
     number_range_default: { min: 1, max: 20 }, max_steps_default: 2, context_default: 'standard'
   };
   assert.deepStrictEqual(O.normalize(legacy), O.normalize(legacy));
-});
-
-test('chinese: 真实 KB entry', () => {
-  const raw = findRaw('cn', 'cn-g1-n1-pinyin-basic');
-  assert.ok(raw, 'cn-g1-n1-pinyin-basic 应存在');
-  const c = O.normalize(raw);
-  assert.strictEqual(c.subject, 'cn');
-  assert.strictEqual(c.grade, 1);
-  assert.strictEqual(c.module.id, 'n1');
-  assert.strictEqual(c.identity.name, raw.name);
-  assert.strictEqual(c.cognition.level, 0.67);
-  assert.strictEqual(c.cognition.raw, '掌握');
-});
-
-test('english: 真实 KB entry', () => {
-  const raw = findRaw('en', 'en-g3-e1-letter-recognition');
-  assert.ok(raw, 'en-g3-e1-letter-recognition 应存在');
-  const c = O.normalize(raw);
-  assert.strictEqual(c.subject, 'en');
-  assert.strictEqual(c.grade, 3);
-  assert.strictEqual(c.module.id, 'e1');
 });

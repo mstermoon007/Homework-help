@@ -12,8 +12,6 @@ const keepFiles = [
   /^index\.html$/,
   /^practice\.html$/,
   /^math-types\.html$/,
-  /^chinese-types\.html$/,
-  /^english-types\.html$/,
   /^subject-types\.html$/,
   /^faq\.html$/,
   /^README\.md$/,
@@ -23,7 +21,6 @@ const keepFiles = [
   /^LICENSE$/,
   /^\.gitignore$/,
   /^assets\/banner\.webp$/,
-  /^pinyin-bank\.js$/,
   /^sw\.js$/,
   /^CNAME$/, // GitHub Pages 自定义域名文件，合法保留
   /^llms\.txt$/,
@@ -34,7 +31,7 @@ const keepFiles = [
   /^shared\/module-catalog\.js$/,
   /^plugins\/math-competition-placeholder\.js$/,
   // 已完成插件化迁移的旧练习页不再保留
-  // （comprehensive/english-alphabet/math-shapes 已迁移为 plugins/ 对应插件）
+  // （math-shapes 已迁移为 plugins/ 对应插件）
 ];
 
 // 应保留的目录前缀

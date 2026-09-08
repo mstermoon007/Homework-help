@@ -65,6 +65,29 @@ var COMPLEX_PROFILES = {
     allowBracket: false,
     comment: '乘除混合运算（g2-m1）'
   },
+  // g2-m2 竖式（列竖式）连算族：与脱式同属 chain 结构（2 步、3 操作数、无括号、非负），
+  // 竖式形态由表现层渲染承载。chain-add 恒 +，chain-sub 恒 −，mixed-col 为 +/− 混合。
+  'math-g2-m2-chain-add-col': {
+    family: 'chain',
+    operators: [OP_ADD],
+    steps: 2,
+    allowBracket: false,
+    comment: '连加竖式（g2-m2）'
+  },
+  'math-g2-m2-chain-sub-col': {
+    family: 'chain',
+    operators: [OP_SUB],
+    steps: 2,
+    allowBracket: false,
+    comment: '连减竖式（g2-m2）'
+  },
+  'math-g2-m2-mixed-col': {
+    family: 'chain',
+    operators: [OP_ADD, OP_SUB],
+    steps: 2,
+    allowBracket: false,
+    comment: '加减混合竖式（g2-m2）'
+  },
 
   // ─── no-bracket（混合运算，无括号）─────────────
   // g2-m3: 无括号混合运算：混合四种，2 operators（3 operands），无括号

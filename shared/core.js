@@ -15,22 +15,16 @@
 
   // ============ 站点常量 ============
   var GRADE_NAMES = { '1':'一年级','2':'二年级','3':'三年级','4':'四年级','5':'五年级','6':'六年级' };
-  var SUBJECT_NAMES = { 'math':'数学', 'chinese':'语文', 'english':'英语' };
+  var SUBJECT_NAMES = { 'math':'数学' };
 
   // ============ 路由配置 ============
   var ROUTES = {
     home:       'index.html',
     mathTypes:  'math-types.html',
-    chineseTypes: 'chinese-types.html',
-    englishTypes: 'english-types.html',
-    englishAlphabet: 'practice.html?plugin=english-alphabet',
     mathPractice: 'practice.html?plugin=math-oral',
     mathWord:   'practice.html?plugin=math-word-problems',
     mathMakeTen: 'practice.html?plugin=math-make-ten',
     mathShapes: 'practice.html?plugin=math-shapes',
-    pinyinPractice: 'practice.html?plugin=chinese-pinyin',
-    pinyinToChar: 'practice.html?plugin=pinyin-to-char',
-    comprehensive: 'practice.html?plugin=chinese-comprehensive',
     print:      'print.js'
   };
 
@@ -156,9 +150,20 @@
 
   // ============ 插件渲染/批改辅助（供 plugins/*.js 复用） ============
 
-  /** 标准化答案比较（去空格、小写） */
+  /**
+   * 标准化答案比较：去空格、小写；并归一化有余数除法的余数记号——
+   * 「……」「…」「...」「余」统一为「……」，使标准答案 "4……3" 与用户输入
+   * "4...3" / "4…3" / "4余3" 同源可比。批改层（check.js/defaultQCheck）与
+   * golden 自测（check-golden.js/buildUserAnswers）共用此唯一口径，
+   * 不得在调用方各自做 trim/记号替换。
+   * 注意：单个小数点（如 3.5）不受影响（正则要求 ≥2 个连续点）。
+   */
   function normalizeAns(v) {
-    return String(v == null ? '' : v).trim().replace(/\s+/g, '').toLowerCase();
+    return String(v == null ? '' : v)
+      .trim()
+      .replace(/\s+/g, '')
+      .replace(/(…+|\.{2,}|余)/g, '……')
+      .toLowerCase();
   }
 
   // ============ 公共题目池（PoolCache：跨调用连续发牌、Fisher-Yates 洗牌、不重复直至穷举） ============
@@ -191,44 +196,8 @@
     };
   }
 
-  /** 浏览器内加载插件后，自动输出一次当前年级知识点覆盖提示（每页仅一次） */
-  function _maybeReportCoverage(cfg) {
-    if (typeof global === 'undefined' || !global.window) return; // 仅浏览器
-    if (global.__kbCoverageShown) return;
-    if (!global.PLUGIN_REGISTRY || !global.KnowledgeBank) return;
-    if (!cfg) return;
-    global.__kbCoverageShown = true;
-    reportCoverage((cfg.subject) || 'math', ((cfg.grades) || [1])[0] || 1);
-  }
-
-  /**
-   * 知识点覆盖提示（终端/浏览器通用）。
-   * 基于注册表中实际存在的插件集合，输出「已覆盖 X/Y，建议下一个开发 Z」。
-   * @param {string} subject 科目
-   * @param {number} grade 年级
-   * @param {Array} [registry] 注册表，缺省读取 global.PLUGIN_REGISTRY
-   * @returns {Object|void} 覆盖数据（无知识库时返回 undefined）
-   */
-  function reportCoverage(subject, grade, registry) {
-    var KB = (typeof global.KnowledgeBank !== 'undefined') ? global.KnowledgeBank : null;
-    if (!KB) { if (global.console) console.warn('[coverage] KnowledgeBank 未加载，跳过覆盖统计'); return; }
-    if (subject !== 'math') {
-      if (global.console) console.info('[coverage] ' + subject + ' 科目暂无知识点库，跳过覆盖统计');
-      return;
-    }
-    // findGrade(subject, grade) 双参；subject 在本函数入口已确认是 'math'
-    var g = KB.findGrade ? KB.findGrade('math', grade) : null;
-    if (!g) { if (global.console) console.warn('[coverage] 无 ' + grade + ' 年级知识库数据'); return; }
-    var reg = registry || (typeof global.PLUGIN_REGISTRY !== 'undefined' ? global.PLUGIN_REGISTRY : null);
-    var cov = KB.coverageFromRegistry('math', grade, reg);
-    var next = cov.next ? (cov.next.name + '（建议开发插件：' + cov.next.pluginId + '）') : '已全部覆盖 🎉';
-    var missNames = cov.missing.map(function (e) { return e.name; }).join('、') || '无';
-    var line = '【知识点覆盖】' + grade + '年级·数学：已覆盖 ' + cov.covered + '/' + cov.total +
-      '（' + cov.ratio + '%）' + (cov.missing.length ? '，缺失：' + missNames : '，全部覆盖') +
-      '；建议下一个开发：' + next;
-    if (global.console) console.info(line);
-    return cov;
-  }
+  // MATH-14 native-only：reportCoverage/_maybeReportCoverage 已随 legacy 插件轨道（PLUGIN_REGISTRY）退役；
+  // 覆盖统计由 native Generator 轨道承接（dev/check-core-generators.js：549/549）。
 
   // ============ [L1 布局 · 灵活列数计算] ============
   // 预览(practice.html)与打印(print.js)共用的唯一列数算法来源，避免双份代码漂移。
@@ -380,14 +349,13 @@
   })();
 
   // ============ 科目工具按需加载（shared/subject-utils.js） ============
-  // Node：同步 require 并挂全局；浏览器：异步注入脚本（失败仅告警，
-  // normPY/normHZ 等内置兜底实现，功能不受影响）。
+  // Node：同步 require 并挂全局；浏览器：异步注入脚本（失败仅告警，功能不受影响）。
   (function ensureSubjectUtils() {
     if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
       try {
         var su = require('./subject-utils.js');
         global.SubjectUtils = su;
-        global.ChineseUtil = su.ChineseUtil;
+        global.MathUtil = su.MathUtil;
       } catch (e) { /* 静默：别名兜底 */ }
       return;
     }
@@ -398,7 +366,7 @@
       s.async = true;
       s.onerror = function () {
         if (global.console && global.console.warn) {
-          console.warn('[common] subject-utils.js 加载失败，normPY/normHZ 走内置兼容实现');
+          console.warn('[common] subject-utils.js 加载失败，功能不受影响');
         }
       };
       doc.head.appendChild(s);
@@ -422,11 +390,9 @@
   global.PluginUtil.diffMax = diffMax;
   global.PluginUtil.normalizeAns = normalizeAns;
   global.PluginUtil.createPoolCache = createPoolCache;
-  global.PluginUtil.reportCoverage = reportCoverage;
   global.PluginUtil.layout = Layout;
   // 跨模块裸调用兼容（render.js / check.js 经全局解析）
   global.normalizeAns = normalizeAns;
-  global._maybeReportCoverage = _maybeReportCoverage;
   // App（站点）
   global.App.SUBJECT_NAMES = SUBJECT_NAMES;
   global.App.ROUTES = ROUTES;
@@ -452,8 +418,8 @@
       randInt: randInt, shuffle: shuffle, rand: rand,
       diffLevel: diffLevel, diffScale: diffScale, diffMax: diffMax,
       normPY: normPY, normHZ: normHZ, normalizeAns: normalizeAns,
-      createPoolCache: createPoolCache, _maybeReportCoverage: _maybeReportCoverage,
-      reportCoverage: reportCoverage, Layout: Layout
+      createPoolCache: createPoolCache,
+      Layout: Layout
     };
   }
 

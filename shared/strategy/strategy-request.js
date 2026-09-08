@@ -33,12 +33,16 @@ var SPIRAL_MIN = 1;
 var SPIRAL_MAX = 6;
 
 // 生成模式（含兼容别名；归一后统一为 canonical 值）
-var VALID_MODES = ['single-kp', 'multi-kp', 'comprehensive', 'adaptive'];
+// Refactor Step 3：新增 quick / teacher / competition —— 由同一 StrategyEngine.plan() 直接扩展，
+// 不建三套引擎。quick=grade+volume+questionType 组成 KP Pool；teacher=unitId 组成 KP Pool；
+// competition=同池/同流程，仅抬升 spiral/cognition/difficulty/context/composite 权重。
+var VALID_MODES = ['single-kp', 'multi-kp', 'comprehensive', 'adaptive', 'quick', 'teacher', 'competition'];
 var MODE_ALIAS = {
   'single': 'single-kp', 'single-kp': 'single-kp', 'kp': 'single-kp',
   'multi': 'multi-kp', 'multi-kp': 'multi-kp',
   'comprehensive': 'comprehensive', 'zonghe': 'comprehensive',
-  'adaptive': 'adaptive', 'adaptive-kp': 'adaptive'
+  'adaptive': 'adaptive', 'adaptive-kp': 'adaptive',
+  'quick': 'quick', 'teacher': 'teacher', 'competition': 'competition'
 };
 
 /**
@@ -109,10 +113,23 @@ function validateRequest(req) {
   }
 
   // 核心输入：knowledgePointIds 数组（旧 knowledgePointId/knowledgePoints 自动归一）
+  // Refactor Step 3：quick/teacher/competition 由 KP Pool 驱动（grade+volume+questionType / unitId），
+  // 允许无显式 knowledgePointIds。
   var kpIds = resolveKnowledgePointIds(req);
   var hasSubjectGrade = req.subject && req.grade != null;
-  if (!kpIds.length && !hasSubjectGrade) {
-    errors.push('缺少 knowledgePointIds（或旧 knowledgePointId / knowledgePoints / subject+grade）');
+  if (!kpIds.length && !hasSubjectGrade && req.unitId == null) {
+    errors.push('缺少 knowledgePointIds（或旧 knowledgePointId / knowledgePoints / subject+grade / unitId）');
+  }
+
+  // Refactor Step 3：Pool 模式的池源要求
+  if (req.mode === 'teacher' && req.unitId == null) {
+    errors.push('teacher 模式需要 unitId（单元知识点池）');
+  }
+  if (req.mode === 'quick' && req.grade == null) {
+    errors.push('quick 模式需要 grade（年级知识点池）');
+  }
+  if (req.mode === 'competition' && req.grade == null && req.unitId == null) {
+    errors.push('competition 模式需要 grade 或 unitId（知识点池来源）');
   }
   if (kpIds.length) kpIds.forEach(function (id) {
     if (typeof id !== 'string' || !id) errors.push('knowledgePointIds 元素必须是非空字符串');

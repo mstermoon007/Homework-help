@@ -52,6 +52,19 @@ test('kpToUnified：中文认知层级映射', () => {
   assert.strictEqual(Cognitive.kpToUnified(fake('运用')), 'apply');
 });
 
+test('kpToUnified：P0-02 Step 9 —— kp.cognition.level（0..1 归一）为主来源', () => {
+  const lvl = (level) => ({ cognition: { level } });
+  assert.strictEqual(Cognitive.kpToUnified(lvl(0)), 'recognize');
+  assert.strictEqual(Cognitive.kpToUnified(lvl(0.33)), 'understand');
+  assert.strictEqual(Cognitive.kpToUnified(lvl(0.67)), 'apply');
+  assert.strictEqual(Cognitive.kpToUnified(lvl(1)), 'apply');
+  // level 与 raw 分歧时 level 优先
+  const conflict = { cognition: { level: 0.2, raw: '掌握' } };
+  assert.strictEqual(Cognitive.kpToUnified(conflict), 'recognize');
+  // 仅数值（无 raw/legacy）仍可判级
+  assert.strictEqual(Cognitive.kpToUnified({ cognition: { level: 0.5 } }), 'understand');
+});
+
 test('knowledgePointId 解析', () => {
   const r = Cognitive.resolveCognitiveLevel({ knowledgePointId: 'math-g1-m0-make-ten' });
   assert.strictEqual(r, 'apply');

@@ -15,10 +15,10 @@
 
   var DEFAULT_DIFFICULTY = 2;
 
-  // Core Domain 收缩（Refactor Step 1）：综合练习仅接受 math；cn/en 返回明确 unsupported。
+  // Core Domain 收缩（Refactor Step 1）：综合练习仅接受 math；其余返回明确 unsupported。
   var SUBJECT_MATH_ONLY = { math: 'math' };
   function assertMathSubject(subject) {
-    var canon = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' }[String(subject || '').toLowerCase()];
+    var canon = { math: 'math' }[String(subject || '').toLowerCase()];
     if (!canon) return null;
     return SUBJECT_MATH_ONLY[canon] ? null : canon;
   }

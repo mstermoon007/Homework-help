@@ -14,10 +14,9 @@
  *   INVALID → FORBID → MISSING → ALLOW → DEGRADE
  * 其中 DEGRADE 绝不自动升级为 ALLOW。
  *
- * 决策来源（R06.3）：
+ * 决策来源（R06.3，MATH-14 后为三源）：
  *   knowledgePoint : ontology
  *   questionType   : registry
- *   plugin         : generator-capability-registry（declared/inferred）
  *   matrix         : R04 capability-matrix
  */
 'use strict';
@@ -27,7 +26,6 @@ var Registry = require('./question-type-registry.js');
 var KnowledgePoint = require('./knowledge-point.js');
 var CapabilityModel = require('./capability-model.js');
 var Matrix = require('./capability-matrix.js');
-var GenCap = require('./generator-capability-registry.js');
 
 function resolve(canonicalKp) {
   // canonicalKp 已经是 Canonical KP，直接从 presentation.questionTypes 和 generation.capabilities 推导
@@ -56,26 +54,17 @@ function resolveFinal(input) {
   }
 
   // 3) 构建 R04 矩阵决策
+  // MATH-14：plugin 决策源（generator-capability-registry）随 legacy 插件轨道一并删除，
+  // 最终能力由 ontology/registry/matrix 三源决策。
   var mx = Matrix.buildMatrix(kp);
   var cell = mx.questionTypes[qtId];
   var matrixDecision = cell ? cell.decision : 'FORBID';
-
-  // 4) Plugin 能力（generator capability registry）
-  var pluginRec = null;
-  var allGen = GenCap.buildGeneratorCapabilityRegistry();
-  for (var i = 0; i < allGen.length; i++) {
-    if (allGen[i].pluginId === kp.pluginId) { pluginRec = allGen[i]; break; }
-  }
-  var pluginHas = pluginRec ? pluginRec.questionTypes.indexOf(qtId) !== -1 : null;
 
   var decision;
   if (matrixDecision === 'MISSING') decision = 'MISSING';
   else if (matrixDecision === 'FORBID') decision = 'FORBID';
   else if (matrixDecision === 'ALLOW') decision = 'ALLOW';
   else decision = 'DEGRADE'; // 不自动升级
-
-  // 若 plugin 明确缺失该能力但 matrix ALLOW，降级为 DEGRADE（声明不足，不伪造）
-  if (decision === 'ALLOW' && pluginHas === false) decision = 'DEGRADE';
 
   var confidence = 'declared';
   if (decision === 'ALLOW') confidence = 'declared';
@@ -90,7 +79,6 @@ function resolveFinal(input) {
     source: {
       knowledgePoint: 'ontology',
       questionType: 'registry',
-      plugin: pluginRec ? 'declared' : 'none',
       matrix: 'R04'
     },
     confidence: confidence

@@ -161,17 +161,16 @@ function summary() {
 // 合并二级/三级页后，统一宿主为 practice.html，题型选择经装配区（knowledgePointIds）
 // 或深链 kps 驱动 PracticeSession 生成。plugin= 直链为 v4.0.0 基线已移除的旧机制，
 // 本 E2E 改用 kps 深链覆盖同样的回归面。
-let KPS = { math1: [], math4: [], cn1: [], en3: [] };
+let KPS = { math1: [], math4: [] };
 try {
   const KB2 = require(path.join(ROOT, 'shared/knowledge-bank.js'));
-  require(path.join(ROOT, 'plugins/registry.js'));
-  const REG2 = global.PLUGIN_REGISTRY || [];
-  const P_IDX = {}; REG2.forEach(function (p) { P_IDX[p.id] = p; });
+  // MATH-14 native-only：可练采样数据源 = GeneratorRegistry（legacy plugins/registry 已删除）
+  const GenReg = require(path.join(ROOT, 'shared/generator/generator-registry.js'));
   function sampleKps(eng, grade, n) {
     var entries = KB2.getEntries(eng, grade); var ids = [];
     for (var i = 0; i < entries.length; i++) {
-      var e = entries[i]; var plugin = e.pluginId ? P_IDX[e.pluginId] : null;
-      if (plugin && !plugin.isPlaceholder && (!plugin.grades || plugin.grades.indexOf(grade) >= 0)) {
+      var e = entries[i];
+      if (e && e.id && GenReg.forKnowledgePoint(e.id).length) {
         ids.push(e.id); if (ids.length >= n) break;
       }
     }
@@ -179,8 +178,6 @@ try {
   }
   KPS.math1 = sampleKps('math', 1, 4);
   KPS.math4 = sampleKps('math', 4, 4);
-  KPS.cn1 = sampleKps('cn', 1, 4);
-  KPS.en3 = sampleKps('en', 3, 4);
 } catch (e) { console.error('  ⚠ kps 采样失败（将用空列表，相关用例会 FAIL）: ' + e.message); }
 function kps(keys) { return encodeURIComponent(keys.join(',')); }
 
@@ -315,17 +312,11 @@ async function case4_back(BASE) {
 async function case5_directAccess(BASE) {
   section('C5 直接访问：地址栏直达练习 URL（分享/收藏场景，kps 深链）');
 
-  // 语文（已知：该科目生成链路存在预存缺陷，回退为「生成失败」提示，不崩溃、无全局错误）
-  await open(BASE + '/practice.html?subject=chinese&grade=1&kps=' + kps(KPS.cn1) + '&count=10');
-  const cnNotice = await waitForEval("document.querySelector('#problemsArea .notice') !== null", 15000, '语文生成');
-  const cnText = await getText('#problemsArea .notice');
-  const cnGe = await evalJs("!document.getElementById('global-error') || getComputedStyle(document.getElementById('global-error')).display === 'none'");
-  check('直接访问：语文（预存生成缺陷 → 优雅失败提示，不崩溃）', cnNotice && cnGe === true, cnText.slice(0, 40));
-
-  // 英语（grade3 仅 2 个可练知识点，count=10 实际生成约 4 题，故阈值取 ≥2）
-  await open(BASE + '/practice.html?subject=english&grade=3&kps=' + kps(KPS.en3) + '&count=10');
-  const c2 = await waitForEval('document.querySelectorAll("' + CARD_SEL + '").length >= 2', 15000, '英语生成');
-  check('直接访问：英语练习正常生成', c2, await getCount(CARD_SEL) + ' 卡');
+  // 语文/英语生成器与知识库已随 P0-16 剔除，不再有语文/英语 deep-link 用例。
+  // 数学 kps 深链在 case4/case6 覆盖；此处补充一个 G1 口算深链直达。
+  await open(BASE + '/practice.html?subject=math&grade=1&kps=' + kps(KPS.math1) + '&count=10');
+  const ok = await waitForEval('document.querySelectorAll("' + CARD_SEL + '").length >= 2', 15000, '数学生成');
+  check('直接访问：数学练习正常生成', ok, await getCount(CARD_SEL) + ' 卡');
 }
 
 async function case6_print(BASE) {

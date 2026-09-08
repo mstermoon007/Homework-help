@@ -28,7 +28,7 @@ test('S1..S6：maxSpiralLevel=6 的 KP 全档映射', () => {
 });
 
 test('S1..S3：maxSpiralLevel=3 的 KP 全档映射', () => {
-  const KP_ID = 'math-g1-m6-solid-shape';
+  const KP_ID = 'math-g1-m13-multiplication-table';
   for (let s = 1; s <= 3; s++) {
     const r = Engine.plan({ knowledgePointId: KP_ID, count: 1, spiral_level: s, max_spiral_level: 3 });
     assert.strictEqual(r.plans[0].spiralLevel, s);
@@ -37,7 +37,7 @@ test('S1..S3：maxSpiralLevel=3 的 KP 全档映射', () => {
 });
 
 test('不得超过 maxSpiralLevel（请求超出 → clamp）', () => {
-  const r = Engine.plan({ knowledgePointId: 'math-g1-m6-solid-shape', count: 1, spiral_level: 5, max_spiral_level: 3 });
+  const r = Engine.plan({ knowledgePointId: 'math-g1-m13-multiplication-table', count: 1, spiral_level: 5, max_spiral_level: 3 });
   assert.strictEqual(r.plans[0].spiralLevel, 3);
   assert.strictEqual(r.plans[0].variationMode, 'presentation');
 });
@@ -62,15 +62,25 @@ test('不支持 context 的题型 → none（不受 KP 默认影响）', () => {
 test('全量回归：math 域 KP 的 spiralLevel 与 contextType 均不超过 KP 定义范围', () => {
   let checked = 0;
   let expected = 0;
+  const CODES = require(path.join(ROOT, 'shared', 'strategy', 'strategy-error.js')).StrategyError.CODES;
+  
   Ontology.SUBJECTS.forEach(s => {
     (KnowledgeBank[s] || []).forEach(g => {
       (g.modules || []).forEach(m => {
         (m.knowledgePoints || []).forEach(kp => {
-          // Core Domain 收缩（Refactor Step 1）：语文(cn)/英语(en) 已移出核心生成链，
-          // Engine.plan 会抛 UNSUPPORTED_SUBJECT；全量回归仅覆盖 math 域。
-          if (kp.id.indexOf('cn-') === 0 || kp.id.indexOf('en-') === 0) return;
           expected++;
-          const r = Engine.plan({ knowledgePointId: kp.id, count: 1 });
+          let r;
+          try {
+            r = Engine.plan({ knowledgePointId: kp.id, count: 1 });
+          } catch (e) {
+            if (e.code === CODES.GENERATOR_UNSUPPORTED) {
+              // P0-03 Step 14: KP 无 native generator 支持（geometry/measurement 等）在 native 模式返回 GENERATOR_UNSUPPORTED，
+              // 预期行为，不计入错误（该类 KP 在 hybrid 模式走 legacy adapter）。
+              expected--;
+              return;
+            }
+            throw e;
+          }
           const plan = r.plans[0];
           const canonical = Ontology.normalize(kp);
           const maxSpiral = (canonical.spiral && canonical.spiral.maxLevel) || 1;

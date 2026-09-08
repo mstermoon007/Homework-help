@@ -18,7 +18,7 @@ var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
 var FactOnt = require(path.join(ROOT, 'shared', 'knowledge-factual.js'));
 var FactMap = require(path.join(ROOT, 'shared', 'ontology-factual-map.js'));
 
-var SUBJECTS = ['math', 'cn', 'en'];
+var SUBJECTS = ['math'];
 
 function run() {
   var total = 0, present = 0, empty = 0, invalid = [], high = 0, medium = 0, low = 0, unverified = 0;

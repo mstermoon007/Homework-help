@@ -23,18 +23,6 @@
       factualContent: { units: ['元', '角', '分'] },
       confidence: 'high', evidence: 'standard-curriculum'
     },
-    'chinese-pinyin': {
-      factualContent: { system: '汉语拼音', initials: 23, finals: 24, tones: 4 },
-      confidence: 'medium', evidence: 'standard-curriculum'
-    },
-    'pinyin-to-char': {
-      factualContent: { system: '汉语拼音', tones: 4 },
-      confidence: 'medium', evidence: 'standard-curriculum'
-    },
-    'english-alphabet': {
-      factualContent: { alphabet: { letters: 26 } },
-      confidence: 'high', evidence: 'standard-curriculum'
-    },
     'math-unit-convert': {
       factualContent: { units: ['cm', 'm', 'km', 'g', 'kg', 'mL', 'L'] },
       confidence: 'medium', evidence: 'standard-curriculum'

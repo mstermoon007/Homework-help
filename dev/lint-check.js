@@ -36,7 +36,7 @@ function stripComments(src) {
 }
 
 // ============ R1/R2/R4：源码静态扫描 ============
-// 豁免：DEVELOPMENT.md「已知技术债」提及的保留字面量豁免清单 + 白字约定（color:#fff）
+// 豁免：《技术文档--基础》§8「已知技术债」提及的保留字面量豁免清单 + 白字约定（color:#fff）
 const EXEMPT_HEX = new Set(['#f5576c', '#10ac84', '#b8860b', '#fdf3e3', '#fffbe8',
   '#fef0e8', '#e8870a', '#e74c3c', '#4caf50', '#fffdf6', '#6b5310', '#e8d9b8',
   '#e0c98f', '#f0e3c0']);
@@ -48,8 +48,6 @@ const COLOR_ALLOW = /allow-color/;
 //   豁免：SVG 表现属性 fill/stroke、纯白 #fff、box-shadow 阴影 rgba、整行 allow-color 标记
 //   其余颜色必须改用 tokens.css 的 var(--*) 令牌。
 function scanColors(rel) {
-  const base = path.basename(rel);
-  if (base === '_template.js' || base === 'registry.js') return;
   const fp = path.join(ROOT, rel);
   if (!fs.existsSync(fp)) return;
   const src = fs.readFileSync(fp, 'utf8');
@@ -123,72 +121,23 @@ function scanKpIdsInSource(rel) {
     errors.push(`${rel}:${lineOf(src, m.index)} R4 知识点 ID 缺少科目前缀: ${m[0]}`);
   }
   // 声明/标注 ID 必须匹配完整四段式（含科目合法组合粗检）
-  const reFull = /['"](math|cn|en)-g[1-6]-(?:m(?:[0-9]|1[0-3])|c[1-9]|n[1-8]|e[1-6])-[a-z0-9-]+['"]/g;
+  const reFull = /['"]math-g[1-6]-(?:m(?:[0-9]|1[0-3])|c[1-9])-[a-z0-9-]+['"]/g;
   void reFull;
 }
 
 // ============ R3/R4-b：运行时加载检查 ============
-function loadPlugins() {
-  require(path.join(ROOT, 'shared', 'common.js'));
-  const registry = require(path.join(ROOT, 'plugins', 'registry.js'));
-  const out = [];
-  registry.forEach(rec => {
-    try {
-      const mod = require(path.join(ROOT, rec.file));
-      const plugin = (mod && mod.generate) ? mod
-        : ((mod && global.__currentPlugin && global.__currentPlugin.id === rec.id) ? global.__currentPlugin : null);
-      out.push({ rec, plugin });
-    } catch (e) {
-      warnings.push(`plugins/${path.basename(rec.file)} 加载失败（由 verify-setup 把关）: ${e.message}`);
-    }
-  });
-  return out;
-}
-
-function checkPluginFields(rec, plugin) {
-  const rel = rec.file;
-  const findLine = needle => {
-    const src = fs.readFileSync(path.join(ROOT, rel), 'utf8');
-    const i = src.indexOf(needle);
-    return i === -1 ? 1 : lineOf(src, i);
-  };
-  const subj = plugin ? plugin.subject : rec.subject;
-  if (!subj) {
-    errors.push(`${rel}:${findLine('id:')} R3 插件缺少 subject 字段`);
-  }
-  if (subj === 'math' && !plugin.moduleId && !(rec.moduleIds && rec.moduleIds.length)) {
-    // 占位插件允许以 registry moduleIds 兜底
-    if (!rec.isPlaceholder) {
-      warnings.push(`${rel}:${findLine("id: '" + rec.id + "'")} R3 数学插件未声明 moduleId`);
-    }
-  }
-  // R4-b: 运行时声明的知识点 ID 格式
-  const decl = plugin && (plugin.declaredKnowledgePoints || plugin.knowledgePoints);
-  if (decl) {
-    const ids = Array.isArray(decl) ? decl : Object.keys(decl).flatMap(k => Array.isArray(decl[k]) ? decl[k] : []);
-    const RE = /^(math|cn|en)-g[1-6]-(?:m(?:[0-9]|1[0-3])|c[1-9]|n[1-8]|e[1-6])-[a-z0-9-]+$/;
-    ids.forEach(id => {
-      if (!RE.test(id)) {
-        errors.push(`${rel}:${findLine(id)} R4 声明的知识点 ID 不符合科目前缀格式: ${id}`);
-      }
-    });
-  }
-}
+// MATH-14：legacy 插件轨道已删除（plugins/registry.js 等），插件字段检查（R3/R4-b）随之退役；
+// lint 收敛为纯静态扫描：现存 plugins/*.js（SVG 图形插件）+ shared/ 源码质量。
 
 // R4-c: shared/knowledge-*.js 数据内旧式 ID
 function scanKnowledgeShards() {
-  ['knowledge-bank.js', 'knowledge-math.js', 'knowledge-cn.js', 'knowledge-en.js'].forEach(f => {
+  ['knowledge-bank.js', 'knowledge-math.js'].forEach(f => {
     scanKpIdsInSource(path.join('shared', f));
   });
 }
 
 // ============ 主流程 ============
-console.log('🔍 lint-check — 插件/共享层静态质量检查\n' + '='.repeat(46));
-
-loadPlugins().forEach(({ rec, plugin }) => {
-  if (!plugin) return;
-  checkPluginFields(rec, plugin);
-});
+console.log('🔍 lint-check — 共享层/图形插件静态质量检查\n' + '='.repeat(46));
 
 listDir('plugins').forEach(rel => { scanSourceFile(rel, false); scanColors(rel); });
 listDir('plugins').forEach(scanKpIdsInSource); // 任务11：插件源码内旧式无前缀 ID 同样拦截

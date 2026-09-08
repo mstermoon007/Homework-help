@@ -52,17 +52,18 @@ function toUnified(level) {
 }
 
 function kpToUnified(kp) {
+  // P0-02 Step 9：主来源 = kp.cognition.level（0..1 归一），raw 仅兜底
+  var num = kp.cognition && kp.cognition.level;
+  if (typeof num === 'number' && isFinite(num)) {
+    if (num >= 0.67) return 'apply';       // 掌握/运用
+    if (num >= 0.33) return 'understand';  // 理解
+    return 'recognize';                    // 了解
+  }
   var raw = (kp.cognition && kp.cognition.raw) ||
     (kp.legacy && kp.legacy.cognitive_level);
   if (raw) {
     if (KP_RAW_TO_UNIFIED[raw]) return KP_RAW_TO_UNIFIED[raw];
     if (ENUM.indexOf(raw) !== -1) return toUnified(raw);
-  }
-  var num = kp.cognition && kp.cognition.level;
-  if (typeof num === 'number' && isFinite(num)) {
-    if (num >= 0.67) return 'apply';
-    if (num >= 0.33) return 'understand';
-    return 'recognize';
   }
   return null;
 }

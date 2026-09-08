@@ -336,7 +336,7 @@
   };
 
   PracticeSession.prototype._buildTitle = function () {
-    var subjectName = { math: '数学', chinese: '语文', english: '英语' }[this.config.subject] || this.config.subject;
+    var subjectName = { math: '数学' }[this.config.subject] || this.config.subject;
     var gradeName = '一二三四五六'.charAt(this.config.grade - 1) + '年级';
     // 任务3：传入 titleType 时输出「X年级数学 · 题型」，与屏显标题格式一致；否则保持原「X年级 数学练习」
     if (this.config.titleType) return gradeName + subjectName + ' · ' + this.config.titleType;

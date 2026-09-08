@@ -11,9 +11,11 @@
  *     使 native arithmetic 生成器按 KP 语义固定算符/步数（不再按难度乱生成多步链）
  *   ② legacy Adapter 据此映射 operators，使对照公平（同一语义驱动）
  *
- * 仅解析「单步、单/双算符、纯算术」类 legacyType（addsub/add/sub/mult/div），
- * 其余（remainder/mixed/relation/multi1/twodigit/div1/fraction/decimal）返回 null，
+ * 仅解析「单步、单/双算符、纯算术」类 legacyType（addsub/add/sub/mult/div/remainder），
+ * 其余（mixed/relation/multi1/twodigit/div1/fraction/decimal）返回 null，
  * 记为「不可用纯算术迁移」，由 BATCH 边界脚本决定保留 legacy 还是走专项模板生成器。
+ * remainder（有余数除法）于 2025 落地：派发 div-remainder 专用结构，答案携带 "q……r"，
+ * 覆盖 math-g2-m1-remainder-oral / math-g2-m2-remainder-col 两个 KP。
  */
 'use strict';
 
@@ -24,7 +26,10 @@ var SINGLE_STEP_PROFILE = {
   add: { operators: [OP_ADD], steps: 1 },
   sub: { operators: [OP_SUB], steps: 1 },
   mult: { operators: [OP_MUL], steps: 1 },
-  div: { operators: [OP_DIV], steps: 1 }
+  div: { operators: [OP_DIV], steps: 1 },
+  // 有余数除法：a ÷ b = q……r（0<r<b），由 buildDivRemainder 专用结构承载，
+  // 答案为余数记号字符串，与 normalizeAns 的余数记号归一化配套。
+  remainder: { operators: [OP_DIV], steps: 1, kind: 'div-remainder' }
 };
 
 // M4-R24 特殊口算族：legacy g4-oral 的整数域口算（除数是整十数/大数加减/三位乘一位/乘整十）。
@@ -47,7 +52,7 @@ var SPECIAL_ORAL_PROFILE = {
   'dec-mult':   { operators: [OP_MUL], steps: 1, kind: 'dec-mult' }
 };
 
-var NON_MIGRATABLE = ['remainder', 'mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];
+var NON_MIGRATABLE = ['mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];
 
 /**
  * 解析 KP 算术语义；无法由纯算术核心覆盖时返回 null。

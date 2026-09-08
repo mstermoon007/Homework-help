@@ -63,11 +63,10 @@ function checkLegacy() {
     assert(a === b, 'Legacy paramsFor 可重复（level=' + lvl + '）');
   }
 
-  // 科目差异化（cn/en 独立参数）
+  // 未知科目回落 math（安全默认，不再有独立 cn/en 档案）
   const cn = Difficulty.paramsFor('cn', 5);
-  assert(typeof cn.charCountMax === 'number', 'Legacy cn 含 charCountMax');
-  const en = Difficulty.paramsFor('en', 5);
-  assert(typeof en.wordLengthMax === 'number', 'Legacy en 含 wordLengthMax');
+  assert(cn.level === Difficulty.paramsFor('math', 5).level && typeof cn.charCountMax === 'undefined',
+    '未知科目回落 math（不再产出 charCountMax）');
 }
 
 // ============ Static 独立测试 ============

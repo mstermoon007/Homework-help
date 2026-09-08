@@ -4,7 +4,7 @@
  *  - 旧调用（knowledgePointId 字符串 / knowledgePoints 数组）可归一为 knowledgePointIds[]；
  *  - 新模式请求（knowledgePointIds 数组 / combine / spiralLevel / volume）可输出规范请求；
  *  - 内部 QuestionPlan 唯一语义 = knowledgePointIds[]，不再存在 plan.knowledgePointId（单数）；
- *  - 多知识点 subject 门禁逐 id 判定（任一 cn/en → UNSUPPORTED_SUBJECT）。
+ *  - 多知识点 subject 门禁：cn/en 知识点已随 P0-16 剔除，混入即拒绝（不静默产出）。
  */
 
 const { test } = require('node:test');
@@ -69,14 +69,15 @@ test('GATE-S2-5 引擎拒绝“多知识点且未 combine”的静默丢弃', as
   }
 });
 
-test('GATE-S2-6 多知识点混入 cn/en → UNSUPPORTED_SUBJECT（逐 id 门禁）', async () => {
-  const cnKp = 'cn-g1-m1-hanzi-1';
+test('GATE-S2-6 混入已剔除科目的知识点被拒绝（不静默产出）', async () => {
+  // cn/en 知识点已随 P0-16 从知识库剔除，不再是「合法但 unsupported」，而是未知/缺失；
+  // 引擎对混入请求必须失败（compare：未知组合或 KP_NOT_FOUND），禁止静默规划产出。
+  const cnKp = 'cn-g1-n1-pinyin-basic';
   try {
     Engine.plan({ knowledgePointIds: [KP, cnKp], combine: true, count: 4 });
-    assert.fail('应抛出 UNSUPPORTED_SUBJECT');
+    assert.fail('应抛出拒绝类错误（不得静默产出计划）');
   } catch (e) {
-    assert.strictEqual(e.code, 'UNSUPPORTED_SUBJECT');
-    assert.ok(e.message.includes('cn'), '消息应指明 cn：' + e.message);
+    assert.ok(/COMPOSITE_UNSUPPORTED|KP_NOT_FOUND/.test(e.code), '应明确拒绝：' + e.code);
   }
 });
 

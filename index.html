@@ -792,8 +792,6 @@ body {
 }
 
 .brand-subject.s-math { border-top: 3px solid var(--home-blue); }
-.brand-subject.s-chinese { border-top: 3px solid var(--home-green); }
-.brand-subject.s-english { border-top: 3px solid var(--home-orange); }
 
 .bs-head {
     display: flex;
@@ -1200,7 +1198,7 @@ body {
   "@type": "WebSite",
   "name": "Homework Help 小学家庭作业生成器",
   "url": "https://mstermoon007.github.io/Homework-help/",
-  "description": "免费无广告的小学 1-6 年级数学、语文、英语练习题生成与打印工具。"
+  "description": "免费无广告的小学 1-6 年级数学口算练习题生成与打印工具。"
 }
 </script>
 <script type="application/ld+json">
@@ -1256,15 +1254,14 @@ body {
                 <h1>让练习更轻松，<br><span>让学习更有趣。</span></h1>
 
                 <p class="hero-desc">
-                    同步教材知识，为小学 1–6 年级提供数学、语文、英语练习。
+                    同步教材知识，为小学 1–6 年级提供数学口算与应用练习。
                     选好年级和题量，即可开始练习、即时批改、纠正错题，并支持纯净打印。
                 </p>
 
                 <div class="hero-tags" aria-label="功能标签">
                     <span class="hero-tag">口算练习</span>
                     <span class="hero-tag">应用题</span>
-                    <span class="hero-tag">拼音练习</span>
-                    <span class="hero-tag">英语启蒙</span>
+                    <span class="hero-tag">竖式计算</span>
                     <span class="hero-tag">在线答题</span>
                     <span class="hero-tag">智能评分</span>
                 </div>
@@ -1323,7 +1320,7 @@ body {
                 <h2 id="brandTitle">简单一点，<br><span>孩子更愿意练。</span></h2>
                 <p>
                     完全<strong>免费</strong>、无广告、无弹窗的网页练习工具，专为家长辅导孩子学习设计。
-                    数学、语文、英语覆盖小学 1–6 年级，题型紧贴人教版教材与常见练习册，
+                    数学口算与应用覆盖小学 1–6 年级，题型紧贴人教版教材与常见练习册，
                     选好年级和题量，一键即可生成练习。
                 </p>
             </div>
@@ -1443,34 +1440,6 @@ body {
                         <i>口算</i><i>竖式</i><i>应用题</i><i>图形与几何</i>
                     </div>
                 </article>
-
-                <article class="brand-subject s-chinese">
-                    <div class="bs-head">
-                        <strong>语文</strong>
-                        <span>1–6 年级</span>
-                    </div>
-                    <p>
-                        拼音练习、看拼音写字、语文综合练习，
-                        围绕课本字词与拼音基础反复巩固。
-                    </p>
-                    <div class="bs-tags">
-                        <i>拼音</i><i>看拼音写字</i><i>综合练习</i>
-                    </div>
-                </article>
-
-                <article class="brand-subject s-english">
-                    <div class="bs-head">
-                        <strong>英语</strong>
-                        <span>1–6 年级</span>
-                    </div>
-                    <p>
-                        字母跟读练习，从认读起步，
-                        帮孩子建立最初的英语语感。
-                    </p>
-                    <div class="bs-tags">
-                        <i>字母</i><i>跟读</i><i>启蒙</i>
-                    </div>
-                </article>
             </div>
         </div>
 
@@ -1544,7 +1513,7 @@ body {
         vEl.textContent =
             (typeof APP_VERSION !== 'undefined')
                 ? APP_VERSION
-                : '4.1.0';
+                : '4.3.0';
     }
 
     /* 首页只负责视觉交互，不介入现有生成 / 选择业务逻辑 */

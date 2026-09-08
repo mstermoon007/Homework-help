@@ -6,7 +6,7 @@
  *   → 生成题目 → 校验管道 → 返回结果。
  *
  * 预留 registerService / getService 服务注册表；生成核心初始化时创建服务
- * 适配器 (knowledge-graph / capability / module-catalog / plugin-loader)
+ * 适配器 (knowledge-graph / capability / module-catalog)
  * 并通过 registerService 注入 (Task 0.5)。
  *
  * 内部模块导入 strategy/validator/generator 等模块时，一律经服务接口路由，
@@ -40,13 +40,12 @@
     return _services[name];
   }
 
-  // 生成核心初始化：创建各服务适配器并注入 (Task 0.5)
-  // 路径: adapters/* 相对本文件 (shared/generation/orchestrator.js)
+  // ---------- 回滚管理器 (M9-R01) ----------
+  var RollbackManager = require('./rollback-manager.js');
   var ADAPTER_PATHS = [
     ['knowledge-graph', './adapters/knowledge-graph-service.adapter.js'],
     ['capability', './adapters/capability-service.adapter.js'],
-    ['module-catalog', './adapters/module-catalog-service.adapter.js'],
-    ['plugin-loader', './adapters/plugin-loader-service.adapter.js']
+    ['module-catalog', './adapters/module-catalog-service.adapter.js']
   ];
   var _initialized = false;
   function initServices() {
@@ -110,13 +109,13 @@
    */
   function unsupportedSubject(request) {
     if (!request) return null;
-    // kp id 前缀最权威（防止 subject=math 掩盖混入的 cn/en）
+    // kp id 前缀最权威（防止 subject=math 掩盖混入的其他异常前缀）
     var kpIds = requestKpIds(request);
     for (var i = 0; i < kpIds.length; i++) {
       if (kpIds[i].indexOf('cn-') === 0) return 'cn';
       if (kpIds[i].indexOf('en-') === 0) return 'en';
     }
-    var m = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+    var m = { math: 'math' };
     var s = m[String(request.subject || '').toLowerCase()] || null;
     return (s && s !== 'math') ? s : null;
   }
@@ -147,7 +146,7 @@
   /**
    * 固定流程编排: 校验 → Strategy → Generator → 生成题目 → 校验管道 → 结果
    * @param {Object} request - GenerateRequest
-   * @param {Object} [options] - { legacyOutput, skipValidation }
+   * @param {Object} [options] - { skipValidation }
    * @returns {{plans: Array, questions: Array, failedPlans: Array, trace: Object}}
    */
   function orchestrate(request, options) {
@@ -179,7 +178,7 @@
     var kpIds = requestKpIds(request);
     var totalCount = requestCount(request);
     var isComprehensive = request.comprehensive === true || request.mode === 'comprehensive' ||
-      (kpIds.length === 0 && request.subject && request.grade != null);
+      (request.mode !== 'quick' && request.mode !== 'teacher' && request.mode !== 'competition' && kpIds.length === 0 && request.subject && request.grade != null);
     var isMultiKp = request.mode === 'multi-kp' || kpIds.length > 1;
 
     if (isComprehensive) {
@@ -196,7 +195,7 @@
       plans = [];
       kpIds.forEach(function (kpId) {
         try {
-          var single = { knowledgePointIds: [kpId], grade: request.grade, count: totalCount, difficulty: request.difficulty, questionType: request.questionType, subtype: request.subtype, spiralLevel: request.spiralLevel != null ? request.spiralLevel : request.spiral_level, learnerProfile: request.learnerProfile };
+          var single = { knowledgePointIds: [kpId], grade: request.grade, count: totalCount, difficulty: request.difficulty, questionType: request.questionType, subtype: request.subtype, spiralLevel: request.spiralLevel != null ? request.spiralLevel : request.spiral_level, learnerProfile: request.learnerProfile, mode: (request.mode != null && (request.mode !== 'competition' || request.grade != null)) ? request.mode : undefined };
           var r = StrategyEngine.plan(single);
           if (r && r.plans && r.plans[0]) plans.push(r.plans[0]);
         } catch (e) { /* skip */ }
@@ -230,7 +229,6 @@
           return;
         }
         var res = OrchestratorEngine.generateQuestions(plan, {
-          legacyOutput: options.legacyOutput === true,
           skipValidation: options.skipValidation,
           seenKeys: options.seenKeys || null
         });
@@ -242,14 +240,23 @@
     });
 
     trace.failedPlans = failedPlans;
-    return { plans: plans, questions: questions, failedPlans: failedPlans, trace: trace };
+    var result = { plans: plans, questions: questions, failedPlans: failedPlans, trace: trace };
+    // M9-R01: 提交生成结果到回滚管理器
+    RollbackManager.commit(result);
+    return result;
   }
 
   // ---------- 冻结公开 API ----------
   var Orchestrator = Object.freeze({
     orchestrate: orchestrate,
     registerService: registerService,
-    getService: getService
+    getService: getService,
+    // M9-R01: 回滚接口
+    rollback: RollbackManager.rollback,
+    rollbackStatus: RollbackManager.getStatus,
+    resetRollback: RollbackManager.reset,
+    getCurrentResult: RollbackManager.getCurrent,
+    getPreviousResult: RollbackManager.getPrevious
   });
 
   // 生成核心初始化：创建并注入各服务适配器 (Task 0.5)

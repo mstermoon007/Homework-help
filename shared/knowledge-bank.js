@@ -2,18 +2,16 @@
  * shared/knowledge-bank.js — 全科目知识库（按科目分组，1-6 年级）
  *
  * 数据结构（任务3 按科目分组；本文件为「入口壳」——仅含空组占位、查询方法与分片映射表，
- * 实际数据在 shared/knowledge-{math,cn,en}.js 分片中，加载/装配顺序见下）：
+ * 实际数据在 shared/knowledge-math.js 分片中，加载/装配顺序见下）：
  *   KnowledgeBank = {
- *     math: [ { grade: 1, modules: [...] }, ... ],   // ← 由 knowledge-math.js 装配
- *     cn:   [...],                                   // ← 由 knowledge-cn.js 装配
- *     en:   [...]                                    // ← 由 knowledge-en.js 装配
+ *     math: [ { grade: 1, modules: [...] }, ... ]   // ← 由 knowledge-math.js 装配
  *   }
  *
  * 加载与装配：
  *   - 浏览器：<script src="shared/knowledge-bank.js">（入口，先）→ 按科目经
  *     App.PluginLoader.ensureKnowledgeData(subject) 动态注入对应分片（后）；
  *     也可直接静态引入分片 <script>。分片自挂载到 KnowledgeBank 对应属性。
- *   - Node：require 本入口即自动同步 require 三分片完成全量装配（工具链/测试零感知）。
+ *   - Node：require 本入口即自动同步 require 分片完成全量装配（工具链/测试零感知）。
  *   其中每个年级条目：
  *     {
  *       grade: 1,
@@ -22,7 +20,7 @@
  *           moduleId: 'M0',                 // 对应 shared/module-catalog.js 中的题型模块 ID
  *           knowledgePoints: [
  *             { id, name, pluginId, weight, type }
- *             // id：科目前缀三段式 math-g{grade}-{module}-{slug}（cn-/en- 同构）
+ *             // id：科目前缀三段式 math-g{grade}-{module}-{slug}
  *             // weight：抽题比例权重（综合练习按此分配题量），也用于题型选择页排序
  *             // type：推荐传给插件 generate 的 opts.type（细分子题型），省略则用插件默认
  *           ]
@@ -33,7 +31,7 @@
  * 浏览器：<script src="shared/knowledge-bank.js"></script> -> 全局 KnowledgeBank（对象）
  * Node：  const KnowledgeBank = require('./shared/knowledge-bank.js')
  *
- * 便捷查询（挂在对象上；subject 取 'math' | 'cn' | 'en'）：
+ * 便捷查询（挂在对象上；subject 取 'math'）：
  *   KnowledgeBank.findGrade(subject, grade)        -> 该科目该年级条目（{grade, modules}）或 null
  *   KnowledgeBank.getEntries(subject, grade)       -> 扁平知识点数组 [{id,name,pluginId,moduleId,weight,type}]
  *   KnowledgeBank.getCoverage(subject, grade?, ids)-> 覆盖统计；grade 省略时聚合该科目全部年级
@@ -50,29 +48,18 @@
   var KnowledgeBank = {
 
     // ==================== 数学（math） ====================
-    math: [],
-
-    // ==================== 语文（cn） ====================
-    // 任务5：一年级 N1/N2 基础知识点初始填充（框架可用性验证）；其余年级/模块逐轮激活
-    cn: [],
-
-    // ==================== 英语（en） ====================
-    // 任务6：三年级 E1/E2 基础知识点初始填充；E2 暂无专属插件，以 status:'placeholder'
-    // 占位（省略 pluginId，覆盖统计如实计为未覆盖），待 english-placeholder 或真实插件落地
-    en: []
+    math: []
 
   };
 
   // ============ 便捷查询（挂在科目分组对象上） ============
 
-  /** 科目代号规范化：兼容注册表全称（chinese/english）与 ID 前缀缩写（cn/en） */
-  var SUBJECT_CANON = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+  /** 科目代号规范化：兼容注册表全称（math）与 ID 前缀缩写（math） */
+  var SUBJECT_CANON = { math: 'math' };
 
   /** 任务（按科目拆分）：分片文件路径映射表（站点根相对路径，浏览器动态注入用） */
   KnowledgeBank.SHARDS = {
-    math: 'shared/knowledge-math.js',
-    cn: 'shared/knowledge-cn.js',
-    en: 'shared/knowledge-en.js'
+    math: 'shared/knowledge-math.js'
   };
   function canonSubject(s) { return SUBJECT_CANON[s] || s; }
 
@@ -92,10 +79,18 @@
     return null;
   };
 
+  // M11-R01: KP Pool 缓存（subject+grade -> entries）
+  KnowledgeBank.__entriesCache = {};
+
   /** 扁平化某年级全部知识点：[{id,name,pluginId,moduleId,weight,type}]；无数据科目返回空数组 */
   KnowledgeBank.getEntries = function (subject, grade) {
-    var g = this.findGrade(subject, grade);
-    if (!g) return [];
+    var cs = canonSubject(subject);
+    var key = cs + '|' + grade;
+    if (KnowledgeBank.__entriesCache[key]) return KnowledgeBank.__entriesCache[key];
+
+    var g = this.findGrade(cs, grade);
+    if (!g) return (KnowledgeBank.__entriesCache[key] = []);
+
     var out = [];
     (g.modules || []).forEach(function (m) {
       (m.knowledgePoints || []).forEach(function (kp) {
@@ -109,12 +104,17 @@
         });
       });
     });
-    return out;
+    return (KnowledgeBank.__entriesCache[key] = out);
+  };
+
+  /** 清空 KP Pool 缓存（用于测试/热重载） */
+  KnowledgeBank.clearEntriesCache = function () {
+    KnowledgeBank.__entriesCache = {};
   };
 
   /**
    * 知识点覆盖统计。
-   * @param {string} subject 科目（'math' | 'cn' | 'en'）
+   * @param {string} subject 科目（'math'）
    * @param {number} [grade] 年级；省略时聚合该科目全部年级（missing 按 id 去重）
    * @param {string[]} [coveredPluginIds] 已注册且适用该年级的插件 id 集合
    * @returns {{total:number,covered:number,ratio:number,missing:Array,next:Object|null}}
@@ -174,7 +174,7 @@
    *  - Node：入口在被 require 时已同步装配分片，直接 resolve 已装配数组（工具链零感知）。
    *  - 网络/404 失败不抛错，resolve(null) 让调用方降级（不影响做题）。
    *  - 未选择科目（subject 为空/未知）时 resolve(null)，不发起任何请求。
-   * @param {string} subject 'math' | 'cn' | 'en'（兼容 chinese/english 全称）
+   * @param {string} subject 'math'
    * @returns {Promise<Array|null>}
    */
   KnowledgeBank.ensureKnowledgeData = function (subject) {
@@ -218,11 +218,9 @@
   };
   global.KnowledgeBank = KnowledgeBank;
 
-  // ============ 分片自动装配（Node）：入口被 require 时同步并入三科目数据 ============
+  // ============ 分片自动装配（Node）：入口被 require 时同步并入装配数据 ============
   if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
     try { KnowledgeBank.math = require('./knowledge-math.js'); } catch (e) { /* 分片缺失保持空组 */ }
-    try { KnowledgeBank.cn = require('./knowledge-cn.js'); } catch (e) { /* 同上 */ }
-    try { KnowledgeBank.en = require('./knowledge-en.js'); } catch (e) { /* 同上 */ }
   }
 
 

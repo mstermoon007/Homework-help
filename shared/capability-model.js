@@ -79,10 +79,12 @@ function resolveCapability(canonicalKp) {
 }
 
 function inferDifficultyRange(kp, qtypeId) {
-  // 根据 max_steps_default / number_range_default / cognitive_level 推断 difficultyRange [min, max]
-  var ms = Number(kp.max_steps_default);
+  // Canonical 推断 difficultyRange [min, max]：
+  //   structure.maxSteps / numeric.range / cognition.level（number 或 raw 字符串）
+  var ms = 1;
+  if (kp && kp.structure && kp.structure.maxSteps != null) ms = Number(kp.structure.maxSteps);
   if (!isFinite(ms) || ms < 1) ms = 1;
-  var range = kp.number_range_default;
+  var range = (kp && kp.numeric && kp.numeric.range) ? kp.numeric.range : null;
   var min = 1, max = 6; // default grade range
 
   if (ms > 1) max = Math.min(6, ms);
@@ -90,11 +92,18 @@ function inferDifficultyRange(kp, qtypeId) {
     min = Math.max(1, Math.min(6, range.min));
     max = Math.min(6, Math.max(range.min, range.max));
   }
-  var cl = kp.cognitive_level;
-  if (cl) {
-    var clMap = { '了解': 1, '理解': 2, '掌握': 3, '运用': 4 };
-    if (clMap[cl] !== undefined) {
-      var clNum = clMap[cl];
+  var cl = (kp && kp.cognition && kp.cognition.raw) ? kp.cognition.raw : null;
+  if (cl == null && kp && kp.legacy && kp.legacy.cognitive_level != null) cl = kp.legacy.cognitive_level;
+  if (cl != null) {
+    var clNum = null;
+    if (typeof cl === 'number') {
+      // normalizer 的 cognition.level 为 0..1 归一化值（掌握≈0.67）→ 还原到 1..4
+      clNum = (cl >= 0 && cl <= 1) ? Math.round(cl * 3) + 1 : cl;
+    } else {
+      var clMap = { '了解': 1, '理解': 2, '掌握': 3, '运用': 4 };
+      if (clMap[cl] !== undefined) clNum = clMap[cl];
+    }
+    if (clNum != null && isFinite(clNum)) {
       if (min > clNum) min = clNum;
       if (max < clNum) max = clNum;
     }

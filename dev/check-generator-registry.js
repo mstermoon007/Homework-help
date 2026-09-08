@@ -17,6 +17,7 @@
 var path = require('path');
 var ROOT = path.join(__dirname, '..');
 var GenRegistry = require(path.join(ROOT, 'shared', 'generator', 'generator-registry.js'));
+var GenSelector = require(path.join(ROOT, 'shared', 'generator', 'generator-selector.js'));
 var QuestionRegistry = require(path.join(ROOT, 'shared', 'question-type-registry.js'));
 var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
 var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
@@ -77,47 +78,50 @@ function run() {
     });
   });
 
-  // 4) 无知识点指向不存在 Generator（KB 中带 pluginId 的 KP）
-  var genByPlugin = {};
+  // 4) MATH-14：无 legacy 记录；每个 math KP 经 native selector 被 core Generator 覆盖
   records.forEach(function (r) {
-    genByPlugin[r.id.replace(/^legacy:/, '')] = r.id;
+    if (r.scope === 'legacy' || r.id.indexOf('legacy:') === 0) {
+      errors.push('发现 legacy 轨道记录（应已删除）: ' + r.id);
+    }
   });
-  var kpWithPlugin = 0, kpWithoutPlugin = 0, orphans = [];
+  var kpWithPlugin = 0, kpWithoutPlugin = 0;
+  var totalKp = 0, uncoveredKp = [];
   Ontology.SUBJECTS.forEach(function (s) {
     (KnowledgeBank[s] || []).forEach(function (g) {
       (g.modules || []).forEach(function (m) {
         (m.knowledgePoints || []).forEach(function (kp) {
-          // Core Domain 收缩（Refactor Step 1）：语文(cn)/英语(en) 不登记 Generator，
-          // 其 legacy pluginId 绑定不再参与「不存在 Generator」校验。
-          if (kp.id.indexOf('cn-') === 0 || kp.id.indexOf('en-') === 0) return;
-          if (!kp.pluginId) {
-            kpWithoutPlugin++;
-            return;
-          }
-          kpWithPlugin++;
-          if (!genByPlugin[kp.pluginId]) {
-            if (orphans.indexOf(kp.pluginId) === -1) orphans.push(kp.pluginId);
-          }
+          if (kp.id.indexOf('math-') !== 0) return; // 仅数学域
+          totalKp++;
+          if (kp.pluginId) kpWithPlugin++; else kpWithoutPlugin++;
+          var qts = (kp.applicable_question_types || []).map(function (q) { return q.type || q; });
+          var covered = qts.some(function (qt) {
+            var sel = GenSelector.selectGenerator(
+              { knowledgePointId: kp.id, questionTypeId: qt, difficulty: kp.difficulty || 5 },
+              { mode: 'native' }
+            );
+            return sel && sel.source === 'priority' && sel.record && sel.record.scope === 'core';
+          });
+          if (!covered) uncoveredKp.push(kp.id);
         });
       });
     });
   });
-  orphans.forEach(function (pid) {
-    errors.push('KB 知识点指向不存在 Generator 的 pluginId: ' + pid);
+  uncoveredKp.slice(0, 15).forEach(function (id) {
+    errors.push('math KP 未被任何 core Generator 覆盖: ' + id);
   });
 
-  // 6) 查询关系可用
-  var chain = GenRegistry.resolveChain('math-g1-m0-make-ten');
+  // 6) 查询关系可用（core 绑定 KP）
+  var chain = GenRegistry.resolveChain('math-g1-m1-addsub-5');
   if (!chain || chain.generators.length === 0) {
-    errors.push('KnowledgePoint → Capability → Generator 查询关系不可用（make-ten）');
+    errors.push('KnowledgePoint → Capability → Generator 查询关系不可用（addsub-5）');
   } else if (chain.capabilityQuestionTypes.length === 0) {
-    errors.push('make-ten 的 Capability questionTypes 为空');
+    errors.push('addsub-5 的 Capability questionTypes 为空');
   }
 
   console.log('M4-R03 Generator Registry Gate');
   console.log('');
-  console.log('Generator 记录:     ' + records.length);
-  console.log('KB KP 带 pluginId:  ' + kpWithPlugin);
+  console.log('Generator 记录:     ' + records.length + '（全部 core，无 legacy）');
+  console.log('math KP 覆盖:       ' + (totalKp - uncoveredKp.length) + '/' + totalKp + ' 由 core Generator 覆盖');
   console.log('KB KP 无 pluginId:  ' + kpWithoutPlugin + '（占位条目，WARNING）');
   console.log('查询关系:           ' + (chain ? 'KP→Capability→Generator OK' : 'FAIL'));
   console.log('Errors: ' + errors.length);

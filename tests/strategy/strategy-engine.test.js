@@ -31,6 +31,26 @@ test('plan：未指定难度 -> 静态难度', () => {
   assert.strictEqual(r.meta.targetDifficulty, r.meta.staticLevel);
 });
 
+test('P0-02 Step 8：合成难度进入计划与 trace（difficultyComposition）', () => {
+  const r = Engine.plan({ knowledgePointId: 'math-g2-m3-mixed-bracket', count: 1 });
+  assert.strictEqual(r.valid, true);
+  assert.strictEqual(r.plans[0].difficulty, r.meta.trace.composedDifficulty, 'plan.difficulty = composedDifficulty');
+  const c = r.meta.trace.difficultyComposition;
+  assert.ok(c, 'trace 必须携带 difficultyComposition');
+  assert.strictEqual(c.source, 'composed');
+  // 显式复合结构（括号/两步）应有 composite 偏移
+  assert.ok(c.compositeAdjustment >= 1, '两步混合 KPs 带完整语义注入');
+  // 用户显式难度为权威输入，不进内容/结构偏移
+  const ru = Engine.plan({ knowledgePointId: 'math-g1-m0-make-ten', difficulty: 7 });
+  assert.strictEqual(ru.plans[0].difficulty, 7);
+  assert.strictEqual(ru.meta.trace.difficultyComposition.source, 'user');
+});
+
+test('P0-02 Step 9：认知统一读 kp.cognition.level', () => {
+  const r = Engine.plan({ knowledgePointId: 'math-g1-m1-addsub-10', count: 1 });
+  assert.strictEqual(r.plans[0].cognitiveLevel, 'apply'); // level 0.67 → apply
+});
+
 test('plan：自适应开启 -> effective = target + delta', () => {
   const r = Engine.plan({ knowledgePointId: 'math-g1-m0-make-ten', count: 2, difficulty: 3, adaptive: true, adaptiveDelta: 2 });
   assert.strictEqual(r.plans[0].difficulty, 5);

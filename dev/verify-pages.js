@@ -39,12 +39,9 @@ const PAGE_DEPS = {
     'shared/difficulty.js',
     'shared/print.js',
     'shared/knowledge-bank.js',
-    'plugins/registry.js',
   ],
   'math-types.html': [],
   'subject-types.html': [],
-  'chinese-types.html': [],
-  'english-types.html': [],
   'faq.html': [
     'shared/tokens.css',
   ],
@@ -56,8 +53,6 @@ const CRITICAL_DOM = {
   'practice.html': ['<!DOCTYPE html>', 'problemsArea', 'generate', 'check'],
   'math-types.html': ['<!DOCTYPE html>', 'window.location'],
   'subject-types.html': ['<!DOCTYPE html>', 'window.location'],
-  'chinese-types.html': ['<!DOCTYPE html>', 'window.location'],
-  'english-types.html': ['<!DOCTYPE html>', 'window.location'],
   'faq.html': ['<!DOCTYPE html>', 'FAQPage'],
 };
 

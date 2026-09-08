@@ -7,16 +7,16 @@ cd "$(dirname "$0")/.."
 echo "▶ [1/5] 静态质量检查（lint-check）"
 npm run -s check-lint
 
-echo "▶ [2/5] 全插件接口合规性检查（check-plugin-interfaces）"
-node dev/check-plugin-interfaces.js || exit 1
+echo "▶ [2/5] native 生成器契约/注册表/覆盖校验（verify:m4）"
+npm run -s verify:m4
 
-echo "▶ [3/5] 项目搭建校验（verify-setup）"
+echo "▶ [3/5] 项目搭建校验（verify:m0）"
 npm run -s verify
 
-echo "▶ [4/5] 知识库 ↔ 插件对齐校验（verify-knowledge-bank）"
+echo "▶ [4/5] 知识库 ↔ 生成器对齐校验（check-knowledge）"
 npm run -s check-knowledge
 
-echo "▶ [5/5] 全插件满分回归 + 边界用例（regression-check）"
-npm run -s check-regression
+echo "▶ [5/5] 标准答案自批改回归（verify:golden，错误答案 0）"
+npm run -s verify:golden
 
 echo "✅ 核心校验全部通过。"

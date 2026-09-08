@@ -21,7 +21,7 @@ var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
 var OpsOnt = require(path.join(ROOT, 'shared', 'knowledge-operation.js'));
 var OpsMap = require(path.join(ROOT, 'shared', 'ontology-operation-map.js'));
 
-var SUBJECTS = ['math', 'cn', 'en'];
+var SUBJECTS = ['math'];
 var CANON = OpsOnt.CANONICAL_IDS;
 
 function run() {

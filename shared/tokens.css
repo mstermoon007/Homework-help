@@ -28,13 +28,13 @@
     --warn: #9a6b0a;
     --shadow: 0 8px 24px rgba(40, 70, 120, .10);
 
-    /* 科目三色令牌（任务13）：primary 主色 / secondary 浅底 / accent 强调（深）。
-       旧名 --math/--chinese/--english 已别名化指向对应 primary，
-       修改 primary 即全站数学/语文/英语相关元素同步变化。 */
+    /* 主色令牌：primary 主色 / secondary 浅底 / accent 强调（深）。
+   下方 cn/en 色板为通用强调色（math 插件作为补充配色引用）。 */
     --math-primary: #356fb2;
     --math-secondary: #ebf3fd;
     --math-accent: #2f6ea8;
 
+    /* 通用强调色板（原语文/英语色板，保留作 math 插件辅助配色） */
     --cn-primary: #247a52;
     --cn-secondary: #e6f7ee;
     --cn-accent: #27795a;
@@ -51,7 +51,7 @@
     --type-card-border: rgba(74, 144, 217, 0.2);
     --type-card-hover-border: rgba(74, 144, 217, 0.5);
 
-    /* 书写格颜色：田字格/米字格与四线三格（供 svg-chinese/svg-english 及练字组件使用） */
+    /* 书写格颜色：田字格/米字格与四线三格（供练字/书写组件使用） */
     --grid-tianzige-frame: #5a6f94;     /* 田字格外框 */
     --grid-tianzige-aux: #9fb3d1;       /* 田字格中十字虚线 */
     --grid-fourline-line: #9fb3d1;      /* 四线三格横线 */
@@ -59,13 +59,9 @@
     --paper-fourline-bg: #fffef9;       /* 拼音四线纸底色（.pinyin-grid 组件） */
     --paper-fourline-rule: #e8a0a0;     /* 拼音四线纸红线 */
 
-    /* 科目强调色（首页科目卡等共用，单一来源；已别名化至上方 primary） */
+    /* 科目强调色 */
     --math: var(--math-primary);
     --math-bg: #ebf3fd;
-    --chinese: var(--cn-primary);
-    --chinese-bg: #e6f7ee;
-    --english: var(--en-primary);
-    --english-bg: #fff7eb;
     --radius-card: 16px;
     --grad-hero: linear-gradient(160deg, #4a90d9 0%, #6db3f2 40%, #7eb6f0 100%);
     --grad-hero-overlay: linear-gradient(160deg, rgba(74, 144, 217, .55) 0%, rgba(109, 179, 242, .40) 40%, rgba(126, 182, 240, .35) 100%);

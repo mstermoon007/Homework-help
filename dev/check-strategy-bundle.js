@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 /**
- * dev/check-strategy-bundle.js — M4-19 Bundle Smoke Test
+ * dev/check-strategy-bundle.js — M4-19 Bundle Smoke Test（MATH-14 native-only）
  *
  * 验证「Strategy + Generator Runtime」bundle（shared/strategy-engine.bundle.js）：
  *  1. 全部运行时全局已挂载；
  *  2. Strategy → GeneratorSelector → Generator → SemanticQuestion 全链路可执行；
  *  3. 语义渲染桥可用；
- *  4. 迁移开关可 apply；
- *  5. 全程无运行时 require fallback（由全局解析，不落入 require 链）。
+ *  4. 全程无运行时 require fallback（由全局解析，不落入 require 链）。
+ *
+ * MATH-14：legacy 插件轨道已删除，MigrationSwitch / LegacyPluginAdapter /
+ *          StrategyLegacyAdapter 全局与迁移开关校验随之移除。
  *
  * 用 Node 模拟浏览器：先加载共享层 shim，再 eval bundle，再执行链路。
  * 退出码 0 = PASS（供 verify:m4 串联）。
@@ -32,7 +34,6 @@ try {
   require(path.join(ROOT, 'shared/difficulty.js'));
   require(path.join(ROOT, 'shared/difficulty-static.js'));
   require(path.join(ROOT, 'shared/knowledge-bank.js'));
-  global.PLUGIN_REGISTRY = require(path.join(ROOT, 'plugins/registry.js'));
 } catch (e) {
   console.error('共享层 shim 装载失败：' + e.message);
   process.exit(1);
@@ -48,31 +49,22 @@ try {
   process.exit(1);
 }
 
-var hadStrict = false;
-(function (global) {
-  var saved = global.__STRATEGY_BUNDLE_LOADED;
-  try {
-    // eslint-disable-next-line no-eval
-    (0, eval)(src);
-  } catch (e) {
-    console.log('  ✗ bundle eval 失败：' + e.message);
-    process.exit(1);
-  }
-  return saved;
-})(global);
-void hadStrict;
+try {
+  // eslint-disable-next-line no-eval
+  (0, eval)(src);
+} catch (e) {
+  console.log('  ✗ bundle eval 失败：' + e.message);
+  process.exit(1);
+}
 
 console.log('\n[1] Generator Runtime 全局');
 var EXPORTS = [
   'StrategyEngine',
-  'StrategyLegacyAdapter',
   'GeneratorSelector',
   'GeneratorMode',
   'GeneratorRegistry',
-  'MigrationSwitch',
   'SemanticQuestionBridge',
-  'ComplexGen',
-  'LegacyPluginAdapter'
+  'ComplexGen'
 ];
 EXPORTS.forEach(function (name) { check(name + ' 可获取', typeof global[name] !== 'undefined'); });
 
@@ -80,7 +72,6 @@ console.log('\n[2] 接口形态');
 check('StrategyEngine.plan 为函数', typeof global.StrategyEngine.plan === 'function');
 check('GeneratorSelector.selectGenerator 为函数', typeof global.GeneratorSelector.selectGenerator === 'function');
 check('GeneratorSelector.instantiate 为函数', typeof global.GeneratorSelector.instantiate === 'function');
-check('MigrationSwitch.apply 为函数', typeof global.MigrationSwitch.apply === 'function');
 check('SemanticQuestionBridge.toQuestions 为函数', typeof global.SemanticQuestionBridge.toQuestions === 'function');
 check('SemanticQuestionBridge.toQuestion 为函数', typeof global.SemanticQuestionBridge.toQuestion === 'function');
 
@@ -89,12 +80,11 @@ var PLAN_ERRORS = 0, okPlan = 0;
 var probes = [
   { id: 'math-g1-m1-mixed-chain', qt: 'calc', label: '复杂链(原生)' },
   { id: 'math-g2-m3-mixed-bracket', qt: 'calc', label: '带括号(原生)' },
-  { id: 'math-g2-m1-add-100', qt: 'oral', label: '口算(legacy)' },
+  { id: 'math-g2-m1-add-100', qt: 'oral', label: '口算(原生)' },
   { id: 'math-g1-m4-num-fill-unknown', qt: 'calc', label: '逆向□(原生)' }
 ];
 probes.forEach(function (probe) {
   try {
-    global.MigrationSwitch.apply();
     var plan = global.StrategyEngine.plan({
       knowledgePointId: probe.id, count: 3, difficulty: 3
     }).plans[0];
@@ -113,11 +103,6 @@ probes.forEach(function (probe) {
 if (okPlan === 0 && PLAN_ERRORS > 0) {
   check('至少一个 probe 成功', false);
 }
-
-console.log('\n[4] 迁移开关覆盖');
-var ALL = global.MigrationSwitch.ALL_MIGRATED;
-check('MigrationSwitch.ALL_MIGRATED 为非空数组', Array.isArray(ALL) && ALL.length > 0);
-check('迁移含复杂知识（complex）', Array.isArray(ALL) && ALL.indexOf('math-g2-m3-mixed-bracket') !== -1);
 
 console.log('\n=== M4-19 Bundle 门禁 ===');
 if (bad.length) {

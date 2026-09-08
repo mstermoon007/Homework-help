@@ -41,17 +41,20 @@ test('禁止保存执行函数源码（JSON 可序列化）', () => {
 });
 
 test('KnowledgePoint → Capability → Generator 查询关系', () => {
-  const chain = GenRegistry.resolveChain('math-g1-m0-make-ten');
+  // MATH-14：legacy 轨道已删，改查一个由 core 显式绑定的 KP
+  const chain = GenRegistry.resolveChain('math-g1-m1-addsub-5');
   assert.ok(chain);
-  assert.strictEqual(chain.knowledgePointId, 'math-g1-m0-make-ten');
+  assert.strictEqual(chain.knowledgePointId, 'math-g1-m1-addsub-5');
   assert.ok(chain.capabilityQuestionTypes.length > 0);
-  assert.ok(chain.generators.includes('legacy:math-make-ten'));
+  assert.ok(chain.generators.includes('generator:arithmetic-addition'));
+  assert.ok(!chain.generators.some(g => g.indexOf('legacy:') === 0));
 });
 
-test('forKnowledgePoint 返回服务该 KP 的 Generator', () => {
-  const gens = GenRegistry.forKnowledgePoint('math-g1-m0-make-ten');
-  assert.ok(gens.some(g => g.id === 'legacy:math-make-ten'));
-  assert.ok(gens.every(g => g.knowledgePoints.includes('math-g1-m0-make-ten')));
+test('forKnowledgePoint 返回服务该 KP 的 Generator（仅 core）', () => {
+  const gens = GenRegistry.forKnowledgePoint('math-g1-m1-addsub-5');
+  assert.ok(gens.some(g => g.id === 'generator:arithmetic-addition'));
+  assert.ok(gens.every(g => g.knowledgePoints.includes('math-g1-m1-addsub-5')));
+  assert.ok(gens.every(g => g.scope === 'core'));
 });
 
 test('forQuestionType 返回具备该题型的 Generator', () => {
@@ -60,24 +63,11 @@ test('forQuestionType 返回具备该题型的 Generator', () => {
   assert.ok(gens.every(g => g.questionTypes.includes('calc')));
 });
 
-test('KB 中带 pluginId 的 KP 均有对应 Generator', () => {
-  const Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
-  const KB = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-  const ids = {};
-  GenRegistry.all().forEach(r => { ids[r.id] = true; });
-  let checked = 0;
-  Ontology.SUBJECTS.forEach(s => {
-    (KB[s] || []).forEach(g => {
-      (g.modules || []).forEach(m => {
-        (m.knowledgePoints || []).forEach(kp => {
-          if (!kp.pluginId) return;
-          checked++;
-          assert.ok(ids['legacy:' + kp.pluginId], kp.id + ' :: 指向不存在 Generator: ' + kp.pluginId);
-        });
-      });
-    });
-  });
-  assert.ok(checked > 500);
+test('MATH-14：注册表仅含 native core，无任何 legacy 记录', () => {
+  const records = GenRegistry.all();
+  assert.ok(records.length > 0);
+  assert.strictEqual(records.filter(r => r.scope === 'legacy' || r.id.indexOf('legacy:') === 0).length, 0);
+  assert.ok(records.every(r => r.scope === 'core' && r.id.indexOf('generator:') === 0));
 });
 
 test('get(id) 与 all() 一致', () => {

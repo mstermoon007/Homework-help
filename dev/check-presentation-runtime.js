@@ -87,20 +87,18 @@ function makeVmRequire(absPath) {
   };
 }
 
-// 按 practice.html 脚本顺序装载（镜像 161-203 的浏览器加载顺序）
+// 按 practice.html 脚本顺序装载（MATH-14：registry.js / legacy-svg-adapter 已删除）
 function load(rel) { exec(path.join(ROOT, rel)); }
 load('shared/common.js');
 load('shared/difficulty.js');
 load('shared/difficulty-static.js');
 load('shared/knowledge-bank.js');
-load('plugins/registry.js');
 load('shared/strategy-engine.bundle.js');
 load('shared/presentation-engine.bundle.js');
-// presentation 渲染器栈（镜像 practice.html 183-200 的浏览器加载顺序），供
+// presentation 渲染器栈（镜像 practice.html 的浏览器加载顺序），供
 // GenerationEngine.generate → render() 使用（PresentationRenderer）
 load('shared/presentation/render-options.js');
 load('shared/presentation/render-result.js');
-load('shared/presentation/legacy-svg-adapter.js');
 load('shared/presentation/svg-registry.js');
 load('shared/generator/graphic-renderer.js');
 load('shared/svg-core.js');
@@ -132,12 +130,8 @@ var PresentationEngine = win.PresentationEngine;
 var GenerationEngine = win.GenerationEngine;
 
 // 经真实决策链构造 plan（StrategyEngine.plan —— 镜像 check-strategy-bundle 探针）
-// 与真实 practice 流程一致：先 apply 迁移开关，使原生（core）生成器轨生效
 var plan = null;
 try {
-  if (win.MigrationSwitch && typeof win.MigrationSwitch.apply === 'function') {
-    win.MigrationSwitch.apply();
-  }
   var decision = win.StrategyEngine.plan({
     knowledgePointId: 'math-g1-m1-addsub-5',
     count: 5,
@@ -157,16 +151,16 @@ if (!plan) { finish(); return; }
 PresentationEngine.generateQuestions(plan, { skipValidation: true })
   .then(function (result) {
     var sqs = result.semanticQuestions || result.questions || [];
-    var legacyQs = sqs.length ? PresentationEngine.LegacyAdapter.toLegacyQuestions(sqs) : [];
+    var renderableQs = sqs.length ? PresentationEngine.RenderFormat.toRenderableQuestions(sqs) : [];
     check('generateQuestions 正常返回（不抛错）', true);
-    check('生成题目数量 > 0（P0-001 消除，无静默空结果）', legacyQs.length > 0);
-    check('题目具备内容字段', (sqs[0] && (!!sqs[0].prompt || !!sqs[0].stem)) || (legacyQs[0] && !!legacyQs[0].q));
-    console.log('  → 生成题目数：' + legacyQs.length);
+    check('生成题目数量 > 0（P0-001 消除，无静默空结果）', renderableQs.length > 0);
+    check('题目具备内容字段', (sqs[0] && (!!sqs[0].prompt || !!sqs[0].stem)) || (renderableQs[0] && !!renderableQs[0].q));
+    console.log('  → 生成题目数：' + renderableQs.length);
 
     // C02：渲染链 —— renderQuestions → HTML（经 global.PluginUtil.renderGrid）
     var html = '';
     try {
-      html = PresentationEngine.renderQuestions(legacyQs, { columns: 1 });
+      html = PresentationEngine.renderQuestions(renderableQs, { columns: 1 });
       check('renderQuestions 产出非空 HTML', typeof html === 'string' && html.trim().length > 0);
       console.log('  → 渲染 HTML 长度：' + html.length);
     } catch (e) {
@@ -176,9 +170,9 @@ PresentationEngine.generateQuestions(plan, { skipValidation: true })
     // C02：判分链 —— checkAnswers → { score, total, correct }
     try {
       var userAnswers = {};
-      legacyQs.forEach(function (q, i) { userAnswers[i] = q.answer; });
-      var checked = PresentationEngine.checkAnswers(legacyQs, userAnswers);
-      check('checkAnswers 正常返回分数结构', checked && typeof checked.score === 'number' && checked.total === legacyQs.length);
+      renderableQs.forEach(function (q, i) { userAnswers[i] = q.answer; });
+      var checked = PresentationEngine.checkAnswers(renderableQs, userAnswers);
+      check('checkAnswers 正常返回分数结构', checked && typeof checked.score === 'number' && checked.total === renderableQs.length);
       console.log('  → 判分 score=' + (checked && checked.score) + ' total=' + (checked && checked.total));
     } catch (e) {
       check('checkAnswers 正常返回分数结构（' + (e && e.message) + '）', false);
@@ -230,7 +224,6 @@ function C02GraphicAndSession() {
   // ---- C02-01：真实 PracticeSession.start() 入口（practice.html 的 UI 路径）----
   return Promise.resolve()
     .then(function () {
-      if (win.MigrationSwitch && typeof win.MigrationSwitch.apply === 'function') win.MigrationSwitch.apply();
       var session = new win.PracticeSession({
         subject: 'math', grade: 1, count: 5, difficulty: 3,
         knowledgePointId: 'math-g1-m1-addsub-5'

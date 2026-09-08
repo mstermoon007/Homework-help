@@ -60,7 +60,7 @@ function covered(c, dim) {
 }
 
 function run() {
-  var SUBJECTS = ['math', 'cn', 'en'];
+  var SUBJECTS = ['math'];
   var total = 0, valid = 0, warn = 0, err = 0;
   var cov = {};
   DIMS.forEach(function (d) { cov[d] = 0; });

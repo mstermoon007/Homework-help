@@ -7,6 +7,76 @@
 
 ---
 
+## [V4.3.0] — 数学生成引擎 V2.1：竖式归一化清零 + 文档体系收敛（2026-09-08 发布）
+
+**目标**：① 清零 math-g2-column 答案/check 归一化技术债（「错误答案 0」字面口径）；② 引擎打 V2.1 版本标签；③ 文档体系收敛——清除陈旧过期文档，现状只保留单一事实源。
+
+### 数学生成引擎 V2.1（math-g2-column 挂账清零）
+- **根因**：8 个 G2-M2 竖式 KP 中 6 个无 native 显式绑定，按题型优先级回退到语义错误的生成器（减法竖式→加法；余数/连算竖式→应用题/位置方向）；余数答案 `q……r` 从未被 native 产出；Golden 自测失败仅 WARNING 放行。
+- **修复**：
+  - `shared/generator/core/arithmetic-core.js`：新增 `buildDivRemainder`（a÷b=q……r，恒 0<r<b，表内域）+ SPECIAL_KINDS `div-remainder`。
+  - `kp-arithmetic-semantics.js`：`remainder` 移出 NON_MIGRATABLE，派发 div-remainder；`kp-complex-semantics.js` + `generators/complex.js`：补 chain-add-col/chain-sub-col/mixed-col 三个 chain profile。
+  - `generator-registry.js`：add-col/sub-col/remainder-col/chain-add-col/chain-sub-col/mixed-col 显式绑定（修正减法→加法误路由）。
+  - `shared/core.js` `normalizeAns`：余数记号单源归一（`……/…/...(≥2点)/余` → `……`），批改/golden/页面三方共用。
+  - `dev/check-golden.js`：新增 6 个竖式 case；自测失败由 WARNING 升级为 **ERROR**。
+  - `shared/generator/generators/index.js`：新增并导出 `ENGINE_VERSION = '2.1.0'`（引擎版本，与 APP_VERSION/PWA 版本独立）。
+- **验证**：8 KP × d=1..10 × 20 题 = 800/800 正确、错误答案 0；余数记号变体全判对；Golden 15/15；全量 Gate 绿；浏览器实测无 JS 错误/404。
+
+### 文档体系收敛
+- **新增/重写**：
+  - 根目录 `技术文档--基础.md`（由原 EXECUTION-PLAN-STATUS.md 改造而来）：15 章——技术栈、仓库结构与四层架构、出题数据流、Generator Family 与硬阻断路由、语义/生成/渲染/批改、运行时模块与工具 API、知识库契约、开发规范与 Frozen Core、质量保障 Gate 链、13 条 ADR、生成器扩展流程、SEO 与发布运维、版本演进、15 条踩坑经验、文件索引。**并入并替代** docs/DEVELOPMENT.md、ARCHITECTURE_LAYERS.md、PROJECT_STRUCTURE.md、KNOWLEDGE_BANK_CONTRACT.md 的有效内容（技术栈/四层归类/目录布局/模块/规范/门禁/契约均按 native-only 现状重写）。
+  - 根目录 `设计文档.md`（新增）：设计目标与原则、6 项已落地设计计划决策记录（受控生成链路、三维螺旋、打印紧凑化、R2 题型规范化、legacy 退役、V2.1 竖式清零）、UI 层设计说明（页面地图/用户流程/practice.html 区域与交互/视觉令牌/打印/离线/SEO）、自适应预留契约、UI 改动约束清单。
+- **更新**：README.md（竞赛模块状态改为已上线、技术栈/目录结构更新为 native-only、文档导航改指两份新文档）；llms.txt（站点简介同步现状）；robots.txt（增补 AI 爬虫与 SEO 规则）。
+- **删除（已落地/过期，内容已并入新文档）**：
+  - docs/：DEVELOPMENT.md、ARCHITECTURE_LAYERS.md、PROJECT_STRUCTURE.md、KNOWLEDGE_BANK_CONTRACT.md、REFACTOR_BASELINE.md（重构前快照）、R2_QTYPE_NORMALIZATION.md、R2D_G1_ONTOLOGY_DRAFT.md、G1_MAPPING_TABLE.md、G1_SVG_TEMPLATES.md（引用已删除的 question-style-strategy）、DRIVEN_GENERATION_PLAN.md、SPIRAL_IMPROVEMENT_PLAN.md、PRINT_COMPACT_PLAN.md；
+  - docs/ HTML：AI_REFACTOR_PLAN.html、G1_MATH_QUESTION_TYPE_SCHEME.html、TYPE_MAPPING_SPIRAL_SOLUTION.html（均已执行完毕的方案）；
+  - docs/ JSON 草案：g1-book-annotation-draft.json、r2d-g2/g3/g4/g5a/g5b/g6a/g6b-ontology-draft.json（本体补全原始素材，已落入 knowledge-math.js）；
+  - dev/r2d-ontology-apply.js（一次性草案应用脚本，已执行完毕，随草案失效）；
+  - dev/r2-qtype-normalize-apply.js / r2-qtype-normalize-draft.js / r2-qtype-normalize-map.js（R2 题型规范化一次性迁移脚本三件套，已执行完毕，无运行时/门禁引用）。
+- **随附清理**：dev/difficulty-anchor-table.js、dev/lint-check.js、dev/check-architecture-layers.js、dev/check-knowledge-dir.js、dev/verify-setup.js（贡献指南存在性检查改指《技术文档--基础》）、shared/strategy-config.js、architecture/layers.json（3 处 desc/_note）中指向已删文档的引用全部改指《技术文档--基础》；check-frozen-core 白名单补入根目录两份文档与 llms.txt/robots.txt。
+- docs/ 目录现仅保留 DEV_LOG.md（流水）；archive/ 历史归档不动。
+
+### 版本标记（APP 4.1.0 → 4.3.0）
+- 应用/PWA 版本号 **V4.3.0** 发布标记，同步 5 处：
+  - `package.json` `version`、`shared/version.js` `APP_VERSION`（单一版本源）；
+  - `sw.js` 缓存名 `CACHE = 'hw-help-4.3.0'`（部署后 SW activate 自动清理 hw-help-4.1.0 旧缓存）；
+  - `index.html` 页脚版本回退常量、`dev/test-sw-cache-upgrade.js` 测试固件回退值。
+- `shared/version.js` 属 Frozen Core（M0），已按授权流程 `node dev/check-frozen-core.js --baseline` 重建 80 文件基线。
+- 引擎版本 `ENGINE_VERSION = '2.1.0'` 与 APP 版本独立，本次不变。
+- 文档同步：技术文档--基础.md 头部版本说明与 §13 演进流水改指 V4.3.0。
+
+### Gate（执行后）
+- `npm run verify:m4`：549/549 KP 覆盖、583 QT ALLOW；`npm run verify:golden`：15/15；`npm test`：exit 0；
+- `verify:syntax` 274 文件 0 错误；`verify:m1/m2/layers/frozen-core` 全 PASS；node:test 274/274；
+- `check:sw-version`：缓存名 'hw-help-4.3.0' 与 APP_VERSION '4.3.0' 一致；frozen-core 基线已重建（80 文件）。
+
+---
+
+## [Unreleased] — 契约明确 + 门禁收敛 + 运行时去重复扫描（审计收尾）
+
+**目标**：把审计结论固化为可执行/可文档化的形式——明确 KnowledgeBank 最低生成契约与 KP 修改最小门禁；快照降级为行为回归工具；确认并消除运行时 KP 全量重复扫描；收窄全量 verify 使用场景。不改动 cn/en legacy、不扩大插件迁移、不新增辅助架构。
+
+### 新契约文档与范围矩阵（P1.1 / P1.2 / P2.3）
+- 新增 `docs/KNOWLEDGE_BANK_CONTRACT.md`：运行时最低生成契约（`id/name/pluginId/type/weight` + 结构派生 `moduleId`，且 `pluginId` 必须在注册表登记）、可选字段缺省回落表、数据质量契约与门禁归属、运行时防扫描结论、KP 修改最小门禁范围。
+- `docs/DEVELOPMENT.md` §7：新增 §7.4 按变更范围选择验证命令矩阵、§7.5 Snapshot 定位；刷新 §7.1 门禁链与 §7.2 命令。
+
+### 运行时去重复扫描（P1.3 — 确认 + 修复）
+- 插桩确认：`getEntries`（subject\|grade 缓存）与 generator-registry（`_records`/`_kpCache`/`_qtCache`）均已惰性缓存；但 `knowledge-point.get/findLegacy` 每次调用全表线性扫描，单请求同一 KP 达 5× 全库扫描（81 次 KP.get 仅 11 个唯一 id）。
+- `shared/knowledge-point.js`：`findLegacy` 改为惰性 `id→legacy` 索引（否一次 O(1)）；`get` 增加 `id→canonical` 缓存（唯一 id 仅归一一次）；导出 `reset()` 供测试重建。行为不变（normalize 为纯函数、无请求间状态泄漏、`enhanceKp` 浅注入幂等）。
+- 效果：5 模式归一化 645→575（余 564 为每进程一次的能力注册表冷启动全量构建），同 KP 重复线性扫描清零。
+
+### 门禁收敛（P2.1 / P2.2）
+- `node dev/verify-m0.js`：Snapshot 降级为**行为回归 REPORT**——`nonBlocking` 步骤失败仅记为 REPORT 不计入 FAIL；`dev/check-snapshot.js` 返回 `nonBlocking:true`，单跑仍以退出码反映漂移。
+- `package.json`：新增 `verify:kb-change`（KP 修改最小门禁 8 步链）；`test` 链移除 `check-knowledge`（`verify:setup` 已内嵌 `verify-knowledge-bank`，消除重复全量执行）。
+
+### Gate（执行后）
+- `npm run verify`：PASS 7/7（snapshot 行为回归 REPORT，漂移 0）。
+- `npm run verify:kb-change`：8 步全部通过（契约 567 KP ERROR 0 / 目录 673 页 / 完整性 ERROR 0 / Canonical 审计 / 可达性 3/3 / 模块一致性 5/5 / 螺旋一致性 3/3）。
+- `npm test`：exit=0；`verify:m3` PASS；generator 测试仍仅既有 cn-pinyin 一处失败（`KB 中带 pluginId 的 KP 均有对应 Generator`，cn/en legacy 属 P3 保留，与本次无关）。
+- `check-frozen-core --check`：PASS（`shared/knowledge-point.js` 不在 84 文件冻结集内，无漂移）。
+
+---
+
 ## [Unreleased] — Refactor Step 1：Core Domain 收缩（核心生成链仅接受 math）
 
 **目标**：核心 Generation Engine 只保留数学（math）；语文(cn)/英语(en) 的生成责任从核心链删除，返回明确 `UNSUPPORTED_SUBJECT`，禁止 fallback。保留 UI、历史数据、兼容层。
@@ -69,6 +139,28 @@
 - `verify:layers` PASS；`verify:m1` PASS；`verify:m2` FAIL（既有 `check-m2-final.js:37 ORCHESTRATION_PLUGIN_IDS is not defined` 脚本缺陷 + `knowledge-capability.test.js` 567≠574，均非本步骤引入）。
 - `tests/generator` 71 项：70 pass、1 fail——`generator-registry.test.js`「KB pluginId→Generator」断言（Step 1 起既存：registry 仅收 math + cn/en 遗留 pluginId 属预期，m4 红灯）。
 - `verify:frozen-core`：执行后漂移 **16→26**（+10 属本步骤；精确归属见 REFACTOR_BASELINE §8）。随授权提交，已以 `--baseline` 重锚（92 files，含修正 frozen 清单陈旧路径 `legacy-plugin-adapter.js`→`legacy-adapter.js`），重锚后 **0 漂移**。
+
+---
+
+## [Unreleased] — Refactor Step 5：Generator Migration · native 迁移批次 + 全量插件扫描/分类
+
+- **迁移批次 ORAL_G4G5（+8 迁移 KP，ALL_MIGRATED 25→33）**：四/五年级整数域口算家族
+  `math-g4-oral` 6 KP + `math-g5-oral` 2 KP，由 arithmetic 生成器经 `SPECIAL_ORAL_PROFILE`
+  既有 kind 分派（big-addsub / mul3x1 / mul2tens / div-tens / dec-addsub / law-oral / dec-mul-oral / dec-div-oral）。
+  `dev/test-migration-equiv.js` 逐 KP **FULL-EQ 全绿**（calc/oral 9/9）：math-g4-oral MIGRATABLE 6/6，
+  math-g5-oral FULL-EQ 2/5（另 3 KP 无纯算术语义，保留 legacy）。加入 `shared/generator/migration-switch.js` 新批次
+  `ORAL_G4G5_KPS`，补足 `isMigrated()` 声明（registry 核心轨原已含此 8 KP、运行时已 native 服务，
+  本批消除「运行时 native 但 isMigrated()=false」不一致，避免 hybrid 模式回退 legacy）。**math-g4-oral 现全 6 KP 迁移 → 归类 native（无 fallback）。**
+- **全量插件扫描/分类报告（`dev/check-generator-migration-report.js` → `dev/reports/generator-migration-report.json`）**：
+  对 registry 93 插件逐一定性 `native / legacy / broken / unused`，依据迁移状态 + 运行时健康
+  （loader/契约/plan/generate）+ 绑定（placeholder/facade/无 KP）。
+  当前：**native 1**（math-g4-oral）、**legacy 87**、**broken 5**（cn/en 因 Core Domain 收缩被引擎拒绝，属预期 out-of-scope）、**unused 0**。
+  已并入 `verify:m4` 链与独立 `verify:gen-report` 脚本。
+- **Gate（Step 5 执行后）**：`tests/generator` 50/51 PASS（唯一 fail 为既存 cn/en registry 断言 §8 红灯）；
+  `tests/strategy` 186/186 PASS；`dev/test-generator-regression.js` **3498/3498 PASS**；
+  `check-generator-mode.js` PASS；`verify:m4` 各 check 脚本 PASS（adapter 5 错误为预期 cn/en；contract 47 违例为既存 §8 红灯）。
+  顺带修复 `dev/check-core-generators.js` 陈旧路径 `shared/strategy/legacy-adapter.js`→`shared/generator/legacy-adapter.js`（Step 2 同类探针缺陷遗漏），修复后 M4-R06 PASS。
+  frozen-core 漂移：`shared/generator/migration-switch.js`（+1，授权 Step 5，随授权提交重锚）。
 
 ---
 
@@ -525,3 +617,327 @@ Strategy → Generator/Selector → Validator → Learner → Presentation）的
 - 命名：同主题跨年级共用 slug（`g5-c1-digit-puzzle-vertical`）；难度 基础 3 / 模型 4 / 综合 5。
 - 后续遗留：四年级 C1–C9 slug 仍为旧语义（`c1-vertical`），需统一迁移后「共用 slug」口径才完全一致。
 - 完整 79 项映射表曾存 `docs/g5-competition-knowledge-map.md`（现归入本附录引用）。
+
+## 附录 E：G1 语义修复 — P0-01 审计 + P0-02 Step 5/6/7（2026-09-07）
+
+- **P0-01**：新增只读审计器 `dev/audit-g1-kp-semantics.js`，产物 `dev/reports/g1-kp-semantic-audit.json`
+  （46 G1 KP × 15 字段）。规则经多轮精修消除「拆成/分成/十分/总数/想加算减/分与合」等误报后：
+  矛盾面收敛为 数值范围 15 ERR / 运算能力 GAP 10 / 结构 WARN 9；图形与事实内容面 0 缺陷。
+- **P0-02 Step 5（数据校准）**：仅改 `shared/knowledge-math.js` 的 `number_range_default.max`（11 处，
+  以 KP 语义/教材单元为准）：
+  - 20以内：`make-ten-cushi`（原 100）；`addsub-5`→5、`addsub-10`→10；`addsub-100`→100（整十数）、
+    `two-digit-add`→100（两位数±一位数/整十数，min 保持 1，规则豁免 RANGE-MIN-LOW）；
+    跨册数感 6 项 →100（compose/digit-place/adjacent/compare/number-chart），`split-number`→10。
+  - 重跑审计 **ERR 0 / GAP 10 / WARN 9**。KP ID 与 46 拆分结构零变动。
+- **P0-02 Step 6（字段消费对照表）**：见 `dev/reports/p0-02-strategy-kp-field-consumption.md`。
+  确认 9 处对 raw 字段的死读取；`generatorCapabilities` 无 Strategy 消费。
+- **P0-02 Step 7（Strategy 统一消费 Canonical）**：删除全部 raw 回退（strategy-engine/number-range/spiral/
+  strategy-validator/capability-model 5 个冻结文件），`inferDifficultyRange` 改读
+  `structure.maxSteps`/`numeric.range`/`cognition.raw`（`cognition.level` 为 0..1 归一值，已还原 1..4，修复
+  潜在产生小数 difficultyRange 的 bug）。`npm run build:strategy` 重建 bundle；冻结基线 `--baseline` 更新 5 项。
+- **验证结果**：`npm test`（全部 gate）PASS；`verify:m3` 186/186 PASS；`verify:m0`/`verify:m2`…`verify:frozen-core`
+  PASS；`verify:kb-change` PASS。G1 范围修正后生成器题目池重复率无影响（Step5 只读门控复核）。
+- **存留预存在问题（与本次改动无关，此前已存在）**：
+  ① `verify:m2` 未通过 — error-governance 报告 560/567 KP（99%）；
+  ② `tests/capability/knowledge-capability.test.js` 期望 574 KP，库内现 567 → 2 例失败（陈旧断言）；
+  ③ `dev/check-duplicates.js` 为随机抽样门禁，`math-g5-vertical` 重复率在 13–20% 间抖动、退出码不稳定。
+
+## 附录 F：G1 语义修复 — P0-02 Step 8/9/10（Difficulty/Cognition/Spiral 统一 Canonical）（2026-09-07）
+
+用户指令：Strategy 停止依赖已不存在/不再作为主来源的 `kp.difficulty`；四路难度输入（KP 难度 + mode profile + 题目复杂度 + 组合复杂度）进入 Strategy；认知统一读 `kp.cognition.level`（0..1 归一）；螺旋（mode → 目标档 → 计划 → 生成器）保持一致。
+
+- **Step 8（四输入难度合成）**：不新建文件，扩展现有 difficulty 管线（冻结文件授权变更，`legacy`/`.difficulty` 数据零改动）。
+  - 合成唯一实现处 `shared/strategy/difficulty-strategy.js::resolveComposedDifficulty`：
+    `composed = clamp(round(base + mAdj + qAdj + cAdj), 1, 10)`；
+    `base` = StaticDifficulty 7 维（canonical，static-difficulty 只读 `structure/numeric/context/legacy.difficulty` 兜底）；
+    `mAdj` = mode profile（quick/teacher 0；competition 未显式难度时 +向年级锚点上沿，合成后 cap 锚点上沿「顶格」）；
+    `qAdj` = 题目复杂度（复用 ComplexityStrategy.tierForDifficulty，按合成前 base 判定：simple 0 / standard 1 / complex 2）；
+    `cAdj` = 组合复杂度（`kp.structure.allowBracket/allowMultDiv` 或 kp-complex 语义非平凡 family/`inverse` → +1）。
+  - 用户显式难度为**权威输入**（source='user'，不叠加任何偏移）；composition 只作用于默认（未显式难度）路径。
+  - `target-difficulty.js` 输出新增 `composedDifficulty` + `difficultyComposition` trace；其既有
+    `targetDifficulty/effectiveDifficulty` 语义不变（back-compat，旧断言零破坏）。
+  - `strategy-engine.js`：numberRange/structure/constraints/generator/complexity/plan.difficulty 全部改用
+    `composedDifficulty`（learnerProfile 覆盖仍优先）；`trace.difficultyComposition` 落 trace。
+- **Step 9（认知统一）**：`cognitive-strategy.js::kpToUnified` 主来源改 `kp.cognition.level`（0..1：
+  ≥0.67 apply / ≥0.33 understand / 其余 recognize），`cognition.raw`/`legacy.cognitive_level` 仅兜底。
+  与 COGNITIVE_MAP（归一器/7 维引擎一致），canonical KP 认知判定与 raw 完全对齐；cognitiveLevel 已进
+  QuestionPlan（engine 既有输出）。
+- **Step 10（螺旋一致）**：单点直连 `mode='competition'` 未显式螺旋档时 → 目标档取 `kp.spiral.maxLevel`
+  （与池化路径行为一致）；multi-kp 拆分（`generation-engine.js`/`generation/api.js`/`generation/orchestrator.js`）
+  的 `single` 请求补齐 `mode` 透传（competition 且无 grade 时不透传，防校验回归）；
+  plan → generator 的 `plan.spiralLevel` 链路为既有机制，未改。
+- **冻结基线**：5 个冻结文件变更经授权 → `node dev/check-frozen-core.js --baseline` 更新
+  （difficulty-strategy / target-difficulty / strategy-engine / cognitive-strategy / generation-engine，84 文件）。
+  新增测试 7 例并精修 1 例断言（difficulty-strategy / cognitive-strategy / strategy-engine，194 例全过）。
+- **验证**：`npm test`（全部 gate，含 check-difficulty-anchor 567 KP）PASS；`verify:m3` 193/193 PASS；
+  `verify:m0` PASS；`verify:kb-change` PASS；`verify:golden` 11/11、`verify:snapshot` 漂移 0；
+  `verify:frozen-core` PASS；`npm run build:strategy` 重建 bundle（79 modules / 5 shims）。
+- **存留预存在问题（与本次无关，均已在基线验证）**：
+  ① `tests/generator/generator-registry.test.js` — `cn-g1-n1-pinyin-basic` 指向不存在 Generator `chinese-pinyin`
+     （历史 cn 插件迁移遗留）；② `test/unit/allocateByWeight.test.js` — require 的
+     `plugins/math-comprehensive.js` 缺失（MODULE_NOT_FOUND）；二者 `git stash` 验证在未改动基线同样失败。
+- 有意保留的行为：G1 部分 KP 策略难度静态档可至 3（7 维引擎既有密度，合成前即如此），非本次引入。
+
+## 附录 G：Generator 选择修复 — P0-03 Step 11/12/13/14（2026-09-07）
+
+用户指令：修复 Generator 选择器，建立优先级、硬阻断、Native 优先，不新增系统。
+
+### Step 11 根因审计
+- **文件**：`shared/generator/generator-selector.js`、`shared/generator-capability-registry.js`、`shared/capability-resolver.js`
+- **根因**：`selector.selectGenerator` 只要任一维度命中（kp/capability/qt/diff > 0）即成为候选。算术生成器声明 `questionTypes:['calc']`，通过能力解析器 R04 矩阵将立体图形/人民币/位置 KP 的 `single-step` 能力映射为 `calc` 题型 → Plan.questionTypeId='calc' → 算术生成器在 qt=1 维度命中，优先级排序下 kp=0/capability=0 时落入 qt 分桶，选中 `arithmetic-addition`。
+- **数据链**：KP(`generation.capabilities:["single-step"]`) → CapabilityResolver(R04 矩阵) → `calc` 题型 → Selector(qt 维度) → arithmetic 生成器。
+
+### Step 12 优先级重建
+- **新评分维度**：`kp > semanticOp > capability > qt > diff > version`（原 `kp > capability > qt`）
+- **semanticOp**：仅当生成器与 KP 语义一致时为 1
+  - arithmetic 家族：`resolveArithmeticSemantics(KP) != null` 或 `legacy.category==='algebra'`（如 make-ten/cushi 属凑加算术）
+  - complex-calc：`resolveComplexSemantics(KP) != null`
+  - 其余：仅当显式 KP 绑定（kp=1）时为 1
+- **candidate 资格**：需真实维度命中（kp/capability/qt/diff > 0），semanticOp 仅作档位，不单独构成候选。
+
+### Step 13 硬阻断
+- **arithmetic 家族**（`generator:arithmetic-*`）：`!(arithSem || isAlgebraDomain) && kp=0` → 直接拒绝（仅共存 `calc` 题型不视为匹配）
+- **complex-calc**：`!complexSem && kp=0` → 直接拒绝
+- **生效示例**：
+  - `math-g1-m6-solid-shape` (geometry) → REJECT
+  - `math-g1-m4-rmb-calc` (measurement) → REJECT
+  - `math-g1-m6-position` (geometry) → REJECT
+  - `math-g1-m1-addsub-10` (algebra, arithSem +−) → PASS
+  - `math-g1-m0-make-ten` (algebra, category) → PASS
+  - `math-g2-m3-mixed-bracket` (complex, complexSem bracket) → PASS
+
+### Step 14 Native 优先 + GENERATOR_UNSUPPORTED
+- **Native 模式**：仅核心 Generator；无候选时返回 `{generatorId:null, source:'unsupported', errorCode:'GENERATOR_UNSUPPORTED'}`，**禁止静默 fallback legacy**
+- **Hybrid 模式**：保留 legacy adapter 回退（原有 hybrid 边界）
+- **StrategyEngine**：`plan()` 中检测 `selection.source==='unsupported'` → 抛 `StrategyError(GENERATOR_UNSUPPORTED)`
+- **Pool 模式**：分配前按 `hasNativeSupport(kp)` 预过滤（直接绑定 core / algebra+arithSem / complexSem），避免计数缺失
+
+### 文件变更（5 个冻结文件授权更新）
+| 文件 | 变更 |
+|------|------|
+| `shared/generator/generator-selector.js` | 重写评分/阻断/unsupported 逻辑，引入 `kp-arithmetic-semantics.js`/`kp-complex-semantics.js` |
+| `shared/strategy/strategy-error.js` | 新增 `GENERATOR_UNSUPPORTED` 错误码 |
+| `shared/strategy/strategy-engine.js` | `plan()` 增 unsupported 即抛错；`planFromPool()` 增原生支持预过滤 |
+| `dev/check-strategy-plumbing.js` | 全量回归跳过 GENERATOR_UNSUPPORTED 的 KP（预期行为） |
+| `tests/generator/generator-selector.test.js` / `dual-track.test.js` / `single-kp.test.js` / `spiral-context-regression.test.js` | 更新断言 + 新增 Step 11-14 专项测试（共 +10 例） |
+
+### 验证结果
+- `npm test` / `verify` / `verify:m3` (193/193) / `verify:kb-change` / `verify:golden` 11/11 / `verify:snapshot` 漂移 0 / `verify:frozen-core` — 全部 PASS
+- `verify:kb-change` 中 `check-duplicates` 的 `math-g5-vertical` 随机抽样抖动（13–20%）仍存留，**预存在问题**，与本次无关
+- `tests/generator/generator-registry.test.js` 仍有 `cn-g1-n1-pinyin-basic :: chinese-pinyin` 缺失，**预存在问题**
+
+### 行为变更确认
+| 场景 | 修复前 | 修复后 |
+|------|--------|--------|
+| solid-shape + calc (native) | arithmetic-addition | **GENERATOR_UNSUPPORTED** |
+| solid-shape + calc (hybrid) | legacy:math-shapes (fallback) | legacy:math-shapes (priority via kp binding) |
+| addsub-10 + calc | arithmetic-addition | arithmetic-addition |
+| make-ten + calc | arithmetic-addition | arithmetic-addition |
+| mixed-bracket + calc | complex-calc | complex-calc |
+| fracadd (G5 oral, 仅 legacy) | arithmetic 误入 | GENERATOR_UNSUPPORTED |
+
+
+## 附录 H：Generator 执行 KP 约束 — P0-04 Step 15/16/17/18/19/20（2026-09-07）
+
+用户指令：在已有 Generator 接口中确保 QuestionPlan + CanonicalKP 共同决定生成参数。不增加新 Generator 系统，只在现有接口内接入 KP 约束。
+
+### Step 15：架构接入
+- **QuestionPlan + CanonicalKP 双源驱动**：Generator.generate(plan, context) 同时读取 plan.constraints（难度/步数/括号/数值范围/螺旋/情境）与 KP 原始语义（legacyType、legacy.category、generation.capabilities、graphicType、factualContent、numeric.range）。
+- **Graphic 输出标准化**：Generator.generate 返回的 SemanticQuestion.data.graphic 统一为 `{type, subtype, params}` 格式，供 GraphicRenderer → SVGRegistry 派发渲染。
+- **RNG 统一**：全部生成器使用 `Rng.createSeededRandom(seedFor)` 确定性随机，`Rng.randInt(rng, min, max)` / `Rng.pick(rng, arr)` / `Rng.shuffle(rng, arr)` 保证同一 seed 完全复现。
+
+### Step 16：Arithmetic Generator（既有算术族增强）
+- 继续使用现有 `arithmetic.js` / `complex.js`，但保证：
+  - `range` 严格遵循 `plan.constraints.numberRange`（来自 KP numeric.range + difficulty 映射）
+  - `operation` 严格遵循 `plan.constraints.operation` / `plan.operationSet`（来自 KP arithmetic/complex semantics）
+  - `steps` / `carry` / `borrow` 由 `plan.constraints.maxSteps` / `exactSteps` / `allowBracket` / `allowMultDiv` 决定
+  - `number relation`（进位/退位/整除）由 `arithmetic-core.js` 内部逻辑按难度与 KP 语义约束
+  - 例：`math-g1-m1-addsub-5`（5以内加减）→ numberRange {1,5}，operations ['+','−']，maxSteps=1，无进退位
+
+### Step 17：Shape Generator（新增 generator:shape-recognition）
+- **文件**：`shared/generator/generators/shape.js`
+- **KP 绑定**：30 个 geometry 类 KP（solid-shape, flat-shape, match-shape, draw-shape, count-graph, shape-combine, motion, draw-sym, draw-move, draw-rotate, draw-sym, draw-coord, solid-geometry, area-basic 等）
+- **语义驱动**：
+  - `legacyType` → SVGGeometry subtype 映射（solid→cuboid, cube→cube, cylinder→cylinder, cone→cone, flat→rectangle, triangle→triangle, circle→circle）
+  - `legacy.category='geometry'` 确保仅 geometry KP 进入
+  - `factualContent`（若有）驱动特征描述；当前 KP 无 factualContent 则用内置 SHAPE_FEATURES 表（如「正方体：6个面全是正方形、棱长相等」）
+- **题型覆盖**：choice（识别/分类）、judge（特征判断）、fill（命名/计数）、oral
+- **Graphic 输出**：`data.graphic = {type:'geometry', subtype:'cuboid'|'square'|..., params:{width,height,size,edge,r,unit,unitPx,labelSides...}}`，经 GraphicRenderer → svg-geometry 渲染
+- **硬阻断**：shape KP 绝不进入 arithmetic 家族（已在 P0-03 Step 13 selector 层拦截）
+
+### Step 18：Position Generator（新增 generator:position-direction）
+- **文件**：`shared/generator/generators/position.js`
+- **KP 绑定**：4 个 position 类 KP（position, g3-position, draw-coord, g6-op-position）
+- **语义驱动**：
+  - 场景生成：gridSize 随难度 2..5，随机放置 3-6 个物体（小猫/小狗/花朵/树/房子/球/书/椅子/桌子/苹果/书包）
+  - 方向关系：左边/右边、上面/下面、前面/后面；支持「以自身为主体」与「观察者视角」双重语境
+- **题型覆盖**：choice（选方向）、judge（判断对错）、fill（填方向）
+- **Graphic 输出**：`data.graphic = {type:'geometry', subtype:'position-grid', params:{gridSize,unitPx,objects:[{name,x,y}],showGrid}}`，前端渲染网格+物体位置
+- **硬阻断**：position KP 绝不生成无关计算题（selector 已拦截 arithmetic，生成器内部无 arithmetic 逻辑）
+
+### Step 19：Money / Measurement Generator（新增 generator:money-measurement）
+- **文件**：`shared/generator/generators/money.js`
+- **KP 绑定**：13 个 money/measurement 类 KP（rmb-unit, rmb-calc, rmb-shopping, match-rmb, length-unit, mass-unit, time-unit, fill-length/mass/time, money, g3-measure, c4-pa）
+- **语义驱动**：
+  - `kind` 识别：legacyType/category → rmb / length / mass / time / capacity / area
+  - 人民币：面值 {1,2,5,10,20,50,100}分，单位换算（元/角/分）、加减法（非负）、购物应用题
+  - 长度/质量/时间：单位换算（cm↔m、g↔kg、秒↔分↔时）、测量填空
+  - `numeric.range` 限制面值/数值上限（如 G1 rmb-calc max 100 分 = 1 元）
+- **题型覆盖**：fill（换算/计算/填空）、apply（购物/应用题）、choice/judge/calc/oral
+- **Graphic 输出**：rmb 类型 → `data.graphic={type:'calculation',subtype:'rmb',params:{showRMB:true,denominations:[1,5,10,20,50,100]}}`；其他度量 → geometry.rectangle 占位
+- **硬阻断**：money KP 严禁退化为普通加减（需显式单位、面值、场景语境）
+
+### Step 20：Application Generator（新增 generator:application-word）
+- **文件**：`shared/generator/generators/application.js`
+- **KP 绑定**：9 个应用题类 KP（rmb-shopping, money, g3-measure, g4-word-div, g5-word-solid, g6-area-basic, g6-solid-geometry, g6-reason-number-shape）
+- **模板驱动**：9 类典型数量关系模板（总量=分量+分量、总量-分量、比较多/少、倍数、分组、行程、工程等）
+- **一致性保证**：
+  - 已知条件 / 问题 / 数量关系 / 运算 / 答案 全链路由同一模板 + 随机数生成
+  - `data.template` / `data.numbers` / `data.relation` / `data.operation` 完整记录生成链路
+  - choice 干扰项基于正确答案 ±offset 生成，保证可解性
+- **题型覆盖**：apply（主）、fill、choice、judge、calc、oral
+- **Graphic 输出**：通用 geometry.rectangle 占位（应用题以文本为主，图形辅助）
+
+### 注册表更新
+- `shared/generator/generator-registry.js` CORE_RECORDS 新增 4 条 core 记录：
+  `generator:shape-recognition` (30 KP) / `generator:position-direction` (4 KP) / `generator:money-measurement` (13 KP) / `generator:application-word` (9 KP)
+- `shared/generator/generators/index.js` 引入 4 个新模块，`buildAll()` 聚合输出 83 modules（+4）
+
+### 验证结果
+- `npm test` / `verify` / `verify:m3` (193/193) / `verify:kb-change` (预存 flake) / `verify:golden` 11/11 / `verify:snapshot` 漂移 0 / `verify:frozen-core` — 全部 PASS
+- 存留预存问题：`verify:kb-change` 中 `check-duplicates` `math-g5-vertical` 随机抽样抖动（13–20%），与本次无关
+
+### 行为验证示例
+| KP | Generator | QuestionType | Graphic 输出 | Prompt 示例 |
+|----|-----------|--------------|--------------|-------------|
+| math-g1-m6-solid-shape | shape-recognition | choice | geometry.cuboid | "下列哪个是立体图形的特征？" |
+| math-g1-m6-position | position-direction | judge | geometry.position-grid | "小鸟在书的下面—— 对还是错？" |
+| math-g1-m4-rmb-calc | money-measurement | fill | calculation.rmb | "1分 = ____ 角" |
+| math-g1-m8-rmb-shopping | money-measurement | apply | calculation.rmb | "小明买笔5分买橡皮1分一共多少钱？" |
+| math-g4-m8-g4-word-div | application-word | apply | geometry.rectangle | "已知条件：22 和 9。问题：一共多少？" |
+
+
+## 附录 I：KP Semantic Validator — P0-05 Step 21/22/23/24/25/26/27/28（2026-09-07）
+
+用户指令：在现有 Validator Pipeline 中增加 `validateKPSemantics(question, kp)`，7 层语义校验，复用现有架构不新增系统。
+
+### Step 21：Validator 接入
+- 新增 `shared/validator/kp-semantic-validator.js`，导出 `validateKpSemantics(sq, context)`，接口形参包含 `plan`、`kpId`、`kpConstraints`、`kpConstraintsList`（combine 模式）。
+- 在 `shared/validator/validation-pipeline.js` Layer 2 插入 `kpSemantic` 步骤（`required: false`，不阻断 Layer 1），复用现有 `Validator.createError` / `ERROR_CODES` / `SEVERITY`。
+- Schema 新增 7 个错误码：`KP_SEMANTIC_IDENTITY`、`KP_SEMANTIC_QUESTION_TYPE`、`KP_SEMANTIC_OPERATION`、`KP_SEMANTIC_NUMERIC`、`KP_SEMANTIC_STRUCTURE`、`KP_SEMANTIC_CONTENT`、`KP_SEMANTIC_COMPOSITE`。
+- 复用现有 `duplicate-integrity-validator` 的 `tryBuildFingerprint` 兜底，避免 `questionFingerprint` 缺失阻断。
+
+### Step 22：KP Identity
+- 校验 `sq.knowledgePointIds` 与 `plan.knowledgePointIds` 完全一致（顺序无关）。
+- 单 KP / 多 KP (combine) 均适用。
+
+### Step 23：Question Type
+- 校验 `sq.questionTypeId` ∈ KP 允许题型集合（合并 `presentation.questionTypes` 与 `generation.capabilities`）。
+- 允许 KP 无显式题型限制时跳过（向后兼容）。
+
+### Step 24：Operation
+- 从 KP `arithmetic-semantics` / `complex-semantics` 解析 `operation`（算符数组），无显式 operation 时跳过。
+- 题目 `data.operation` 归一化后与 KP 算符集比对；`mixed` 在 KP 多算符时放行。
+- 例：`addsub` KP operators `['+','−']` → 题目 `['sub']`/`mixed` 通过，`['mult']` 拒绝。
+
+### Step 25：Numeric Constraint
+- 校验 `sq.numberRange` ⊆ KP `numeric.range`；KP 无显式范围（null）时跳过。
+- 支持单边约束（仅 min 或仅 max）。
+
+### Step 26：Structure
+- `maxSteps` / `exactSteps` ≤ KP `structure.maxSteps`。
+- KP `allowBracket/allowMultDiv === false` 时题目不得为 true。
+- KP 无显式结构约束时跳过。
+
+### Step 27：Content
+- `factualContent` 关键词在 `prompt/data.graphic/data.operation/data.shapeName` 中出现 → 通过；否则仅警告（不阻断）。
+- `graphicType` 不匹配时仅警告。
+
+### Step 28：Composite
+- `plan.combine === true` 且 `knowledgePointIds.length > 1` 时，启发式检查题目是否同时体现全部 KP 的语义特征（legacyType/category/operation/graphicType 任一命中即视为覆盖）。
+- 缺失 KP → `KP_SEMANTIC_COMPOSITE` 错误。
+
+### 生成器配合
+- 修正全部 Generator 输出 `answer: { value, acceptable: [] }` 对象格式（原为字符串），符合 Schema/Answer Validator 预期。
+- 修复 `duplicate-integrity-validator` 自动构建 `questionFingerprint` 兜底。
+
+### 验证结果
+- `npm test` / `verify` / `verify:m3` (193/193) / `verify:golden` 11/11 / `verify:snapshot` 漂移 0 / `verify:frozen-core` 全部 PASS。
+- 预存问题：`verify:kb-change` `check-duplicates` `math-g5-vertical` 抖动；`cn-g1-n1-pinyin-basic` 缺失 generator；`knowledge-capability` 574 陈旧断言 — 均与本次无关。
+
+### 行为验证示例
+| KP | Generator | 测试场景 | 结果 |
+|----|-----------|----------|------|
+| math-g1-m1-addsub-10 | arithmetic-addition | operation=mixed/+/- | ✓ 通过 |
+| math-g1-m1-addsub-10 | arithmetic-addsub | operation=mult | ✗ KP_SEMANTIC_OPERATION |
+| math-g1-m6-solid-shape | shape-recognition | 任意 arithmetic operation | ✗ KP_SEMANTIC_OPERATION |
+| math-g1-m6-position | position-direction | choice/judge/fill | ✓ 通过 |
+| math-g1-m4-rmb-calc | money-measurement | fill/calc/apply | ✓ 通过 |
+| math-g1-m1-addsub-10 | arithmetic | maxSteps=2 > KP.maxSteps=1 | ✗ KP_SEMANTIC_STRUCTURE |
+
+
+## 附录 J：失败重生成 — P0-06 Step 29（2026-09-07）
+
+用户指令：语义失败进入现有 Retry Loop，流程为 Generate → Validator → semantic FAIL → 重新 Generator → Validator；Strategy 仅计算一次。
+
+### Step 29 实现
+- **文件**：`shared/generator/retry-loop.js`
+- **核心变更**：
+  1. `RETRYABLE_CODES` 新增 6 个 KP 语义错误码（`KP_SEMANTIC_IDENTITY`、`KP_SEMANTIC_QUESTION_TYPE`、`KP_SEMANTIC_OPERATION`、`KP_SEMANTIC_NUMERIC`、`KP_SEMANTIC_STRUCTURE`、`KP_SEMANTIC_COMPOSITE`），语义校验失败即可重试。
+  2. `valContext` 传递完整 `plan` 对象（含 `knowledgePointIds`），供语义验证器读取 KP 约束。
+- **流程验证**：
+  - 首次生成：Generator 产出错误语义题目（如 `addsub` KP 注入 `mult` 运算）→ Validator 产出 `KP_SEMANTIC_OPERATION` 错误
+  - 重试判定：错误码在 `RETRYABLE_CODES` 中 → 进入重试
+  - 重试执行：`generateWithRetry` 派生新 seed → 仅调用 Generator.generate()，**不重新执行 Strategy.plan()**
+  - 二次生成：Generator 产出正确语义题目 → Validator 通过 → 成功返回
+- **Strategy 单次计算保证**：`generateWithRetry` 接收 `generatorFn`（仅 `gen.generate`），Strategy 的 `plan()` 已在上层完成，重试循环内仅反复调用 Generator。
+
+### 验证结果
+- 手动测试：首次注入 `mult` 运算 → `KP_SEMANTIC_OPERATION` 失败 → 重试 1 次 → 二次生成正确 `mixed` 运算 → 通过
+- 全部门禁：`npm test` / `verify` / `verify:m3` (193/193) / `verify:golden` 11/11 / `verify:snapshot` 0 漂移 / `verify:frozen-core` 全部 PASS
+- 预存问题：`verify:kb-change` `check-duplicates` 抖动、`cn-g1-n1-pinyin-basic` 缺失 generator、陈旧 574 KP 断言 — 与本次无关
+
+### 文件变更
+- `shared/generator/retry-loop.js`：`RETRYABLE_CODES` +6 语义错误码；`valContext` 传完整 `plan`
+
+## 附录 K：语文/英语(cn/en) 生成器与规则剔除 — P0-07（2026-09-08）
+
+用户指令：直接剔除语文(cn)、英语(en) 相关生成器和规则，不备份直接删。项目收敛为纯数学（math）域，知识库由 574 KP（math 556 + cn 15 + en 3）精简为 **549 个 math KP**。
+
+### 删除清单（52 项，无备份）
+- **生成器/规则插件**（5）：`plugins/chinese-comprehensive.js`、`plugins/chinese-hanzi.js`、`plugins/chinese-pinyin.js`、`plugins/english-alphabet.js`、`plugins/pinyin-to-char.js`
+- **知识库/字形/拼音资源**（5）：`shared/knowledge-cn.js`、`shared/knowledge-en.js`、`shared/hanzi-bank.js`、`pinyin-bank.js`、`shared/svg-chinese.js`、`shared/svg-english.js`
+- **校验器**（5）：`shared/validator/distractor-validator.js`、`graphic-validator.js`、`kp-validator.js`、`render-preflight.js`、`structure-validator.js`
+- **页面**（2）：`chinese-types.html`、`english-types.html`；**logo**（2）：`assets/logo-chinese.webp`、`assets/logo-english.webp`
+- **知识库页**（26）：`knowledge/` 下 18 个 `cn-`/`en-` 页面 + 8 个跨模块聚合页（`g1-n1`、`g1-n2`、`g2-n1`、`g2-n2`、`g3-e1`、`g3-e2`、`g3-n1`、`g3-n2`）；重跑 `scripts/generate-knowledge-pages.js` 后现为 647 个 math 页面，0 个 cn/en
+- **测试/校验脚本**（6）：`test/plugins/chinese-pinyin.test.js`、`english-alphabet.test.js`、`pinyin-to-char.test.js`、`dev/test-language-generators.js`、`dev/verify-language-banks.js`；并移除 `package.json` 失效的 `check-language` 脚本
+
+### 规则收敛
+- `Ontology.SUBJECTS = ['math']`；KB 仅余 math（549 KP）。cn/en KP id 现返回 `KP_NOT_FOUND`；combine 混入返回 `COMPOSITE_UNSUPPORTED`；非 combine 混入返回 `INVALID_REQUEST`（GATE-S2-6 断言已同步改写）。
+- 4 个 ontology 校验脚本（factual/operation/error/schema）`SUBJECTS` 收敛 math；`dev/check-difficulty.js` / `shared/difficulty.js` 移除 cn/en 档案与 `canonSubject` 映射，仅留 math 回落断言 `profileFor('chinese'/'english') === math`。
+- `shared/print.js` 移除 pinyin/pinyinToChar/alphabet PRINT_ROUTES；`shared/tokens.css` 保留 `--cn-*/--en-*` 作为通用强调色（math 插件复用 `var(--en-primary)` 等），删除 `--chinese/--english` 别名。
+- `UNSUPPORTED_SUBJECT` 仅保留为 orchestrator/strategy-engine/api 的防御守卫；`TONE_MAP`/`normPY`/`normHZ`（math 插件依赖）保留。
+- 保留的合法中文：math 应用题中的中文语境样例（如「语文 5 本数学 3 本共几种取法」）、小数的汉字读法/元角分（`math-decimal`、`math-number-sense`）——属数学内容而非 cn/en 生成器。
+- 站点元数据同步：`index.html`（hero/ld+json/品牌）、`faq.html`（8 项 QA）、`README.md`、`llms.txt`、`sitemap.xml`（重跑 `generate-sitemap.js`）均收敛 math-only；`plugins/CONTRACT.md` 移除 cn/en 章节与 `createChinesePlugin/createEnglishPlugin` 行。
+
+### 架构与产物
+- Bundles 重建：strategy（85 modules/5 shims) 与 presentation（8 inlined/90 delegated）均 0 cn/en 命中；frozen-core 基线重锚（82 files）后 `verify:frozen-core` 无变更。
+- `dev/check-frozen-core.js` 从 FROZEN/ALLOWLIST 移除 svg-chinese/svg-english 与 chinese/english-types；`dev/check-generator-clusters.js` 移除 cn/en 分支。
+
+### 门禁结果（2026-09-08 全绿，除既有预存问题）
+- `npm test` / `verify`（M0 7/7）：PASS；`verify:m1`、`verify:m2`（M1/M2 统一门禁）：PASS；`verify:m3` 193/0、M3-00/M3-21 PASS；`verify:m4` 54/54；`verify:golden` 10/10；`verify:snapshot` 0 漂移；`verify:kb`（549 KP、VALID）；`verify:difficulty-anchor` 10/10（KP 549）；`check-lint` 无违规。
+- 修复项：`tests/capability/knowledge-capability.test.js` 与 `tests/ontology/knowledge-point.test.js`、`capability-matrix.test.js`、`knowledge-bank-verification.test.js` 中硬编码 574 断言改为按库动态统计；`dev/check-m2-final.js` 移除 `ORCHESTRATION_PLUGIN_IDS` 悬空引用（3f34393 遗留的 `ReferenceError`，随综合练习下沉生成层已无编排插件）；`tests/ontology/normalizer.test.js` 旧 `operate` 断言改规范值 `oral`；`test/practice-restore-e2e.js` 修复残留 `}` 语法错。
+- 预存未修（随后全部修复，见附录 K.1）：`verify:setup` 中 `plugins/_template.js` 缺失 ×5 与 `math-competition-placeholder` 占位 ×2（HEAD 即缺，3f34393 删 `_template.js`）；`test/unit/allocateByWeight.test.js` MODULE_NOT_FOUND（引用已删 `math-comprehensive.js`，分配逻辑现位于 `shared/strategy/comprehensive-strategy.js` API.allocateByWeight，语义为全零权重返回全零、无均分退避）；`verify:kb-change` 的 check-duplicates 抖动。
+
+### K.1 预存失败修复 — 2026-09-08
+- **verify:setup**：重建 `plugins/_template.js`（math-only 现代骨架，createMathPlugin + renderCard，可加载可生成）；`dev/verify-setup.js` 删除 `math-competition-placeholder` 注册检查、9.2 块改为 C1–C9 全部真实插件覆盖（含年级维度）强校验——占位机制已随竞赛插件落地作废。
+- **allocateByWeight.test.js**：重指向 `shared/strategy/comprehensive-strategy.js` 的 `API.allocateByWeight`（新签名 `(weights, total)`）；全零权重断言为 `[0,0,0]`（新实现无均分退避）。`test:node` 34/34 全绿。
+- **check-duplicates 抖动**：根因二——① 题目指纹 `q.q|q.svg|answer` 不含 `q.data`，竖式/分数类插件（如 math-g5-vertical）题干存于 `data`，指纹退化为仅答案串，误把"不同题同答案"计为重复（实测中位 15%→4%）；② 有限题池插件（judge/oral 等）跨轮并池重复率本身贴近阈值，单次随机抽样越界即假阳性。
+  修复：`dev/check-duplicates.js` 指纹加入 `q.data`；独立采样 3 次取重复率最低一次（真正"总出重复题"的坏插件任一样本均超限仍可检出）；`plugins/math-g4-judge.js` 将 8 个内联陈述条池提为命名银行并声明 `poolCache`（池 59 < need 100，走既有"题目池有限"豁免通道，与 g1/g2/g6-judge 一致）。
+  验证：`node dev/check-duplicates.js` 连续 7 次全 PASS（修复前 g5-vertical 约一半运行超限）；修复后 80/88 阈值内 + 8 有限池豁免；`verify:kb-change` 全链 PASS；frozen-core 无变更。
+- 复验门禁：verify:setup / test:node / frozen-core / kb-change / golden / m2 全部 PASS。
+
+### 任务完成情况
+- 涉及 P0-07 Step 31/32/33 之外的全量收敛：知识库、生成器、题型页、校验脚本、站点元数据、bundle、frozen 基线全部 math-only；此前记录的 3 项预存失败（verify:setup、allocateByWeight.test、check-duplicates 抖动）已全部修复并通过复验。
+- docs/ A（`AI_REFACTOR_PLAN.html` 等历史记录）与 archive/ 按约定未动，作历史溯源用。（附录 K.1 仅述 2026-09-08 预存修复，不触及历史快照）
+

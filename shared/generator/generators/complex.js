@@ -131,7 +131,7 @@ function makeChain(plan, context, i) {
   var answer = Arith.calculateAnswer(gen.operands, gen.operators);
   var q = buildBase(plan, context, i, { steps: gen.steps, mode: 'chain' });
   q.prompt = Arith.formatExpression(gen.operands, gen.operators) + ' =';
-  q.answer = String(answer);
+  q.answer = { value: String(answer), acceptable: [] };
   q.data.operands = gen.operands;
   q.data.operators = gen.operators;
   return q;
@@ -146,7 +146,7 @@ function makeBracket(plan, context, i) {
   });
   var q = buildBase(plan, context, i, { mode: 'bracket' });
   q.prompt = Arith.formatBracketExpression(s.operands, s.operators) + ' =';
-  q.answer = String(s.answer);
+  q.answer = { value: String(s.answer), acceptable: [] };
   q.data.operands = s.operands;
   q.data.operators = s.operators;
   return q;
@@ -163,7 +163,7 @@ function makeInverse(plan, context, i) {
     var fo = Arith.buildFillOperator(rng, { numberRange: constraints.numberRange, operators: operators });
     var q = buildBase(plan, context, i, { mode: 'fill-operator' });
     q.prompt = fo.prompt;
-    q.answer = fo.answer;
+    q.answer = { value: fo.answer, acceptable: [] };
     q.data.operands = fo.operands;
     return q;
   }
@@ -171,7 +171,7 @@ function makeInverse(plan, context, i) {
   var f = Arith.buildFillOperand(rng, { numberRange: constraints.numberRange, operators: operators });
   var q2 = buildBase(plan, context, i, { mode: 'fill-operand' });
   q2.prompt = f.prompt;
-  q2.answer = String(f.unknown);
+  q2.answer = { value: String(f.unknown), acceptable: [] };
   q2.data.position = f.position;
   q2.data.operator = f.operator;
   return q2;
@@ -223,7 +223,11 @@ var COMPLEX_KPS = [
   'math-g2-m3-mixed-no-bracket',
   'math-g2-m3-mixed-bracket',
   'math-g1-m4-num-fill-unknown',
-  'math-g2-m3-fill-operator'
+  'math-g2-m3-fill-operator',
+  // g2-m2 竖式连算族（列竖式连加/连减/加减混合，结构与 chain 脱式同构，竖式在表现层呈现）
+  'math-g2-m2-chain-add-col',
+  'math-g2-m2-chain-sub-col',
+  'math-g2-m2-mixed-col'
 ];
 
 function buildAll() {

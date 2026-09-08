@@ -3,13 +3,11 @@
  *
  * 将科目特有能力从通用 PluginUtil 中分离，减少全局污染与通用层膨胀：
  *   MathUtil      数值范围处理、分数运算、运算符号筛选（数学）
- *   ChineseUtil   拼音归一化、汉字标准化、字形比较（语文；含自 common.js 迁入的 normPY/normHZ 实现）
- *   EnglishUtil   单词大小写、音标处理（英语）
  *
  * 加载与兼容：
- *   - 浏览器：挂载全局 MathUtil / ChineseUtil / EnglishUtil / SubjectUtils；
+ *   - 浏览器：挂载全局 MathUtil / SubjectUtils；
  *     由 common.js 末尾的按需加载逻辑异步注入（失败时 common 内置兼容实现兜底）。
- *   - Node：require('./subject-utils.js') 即得三工具对象。
+ *   - Node：require('./subject-utils.js') 即得工具对象。
  *
  * 依赖：MathUtil 的随机/难度缩放惰性取用 PluginUtil（运行时解析，无加载期循环依赖）。
  */
@@ -114,74 +112,11 @@
     }
   };
 
-  // ============ ChineseUtil：语文 ============
-  var TONE_MAP = {
-    'ā': 'a', 'á': 'a', 'ǎ': 'a', 'à': 'a',
-    'ō': 'o', 'ó': 'o', 'ǒ': 'o', 'ò': 'o',
-    'ē': 'e', 'é': 'e', 'ě': 'e', 'è': 'e',
-    'ī': 'i', 'í': 'i', 'ǐ': 'i', 'ì': 'i',
-    'ū': 'u', 'ú': 'u', 'ǔ': 'u', 'ù': 'u',
-    'ǖ': 'ü', 'ǘ': 'ü', 'ǚ': 'ü', 'ǜ': 'ü'
-  };
-
-  var ChineseUtil = {
-    TONE_MAP: TONE_MAP,
-
-    /** 拼音归一化（自 common.js normPY 迁入）：去声调、去空格、小写、v→ü、去冒号 */
-    normPY: function (s) {
-      if (!s) return '';
-      return String(s).toLowerCase()
-        .split('').map(function (c) { return TONE_MAP[c] || c; }).join('')
-        .replace(/\s+/g, '')
-        .replace(/v/g, 'ü')
-        .replace(/[:：]/g, '');
-    },
-
-    /** 汉字标准化（自 common.js normHZ 迁入）：去空格去首尾空白 */
-    normHZ: function (s) {
-      if (!s) return '';
-      return String(s).replace(/\s+/g, '').trim();
-    }
-  };
-
-  // ============ EnglishUtil：英语 ============
-  var EnglishUtil = {
-    /** 单词大小写归一：小写 + 压缩空白 */
-    normalizeWord: function (w) {
-      return String(w == null ? '' : w).trim().toLowerCase().replace(/\s+/g, ' ');
-    },
-    /** 大小写变换：mode 'upper' | 'lower' | 'capitalize'（首字母大写） */
-    wordCase: function (word, mode) {
-      var s = String(word == null ? '' : word).trim();
-      if (!s) return '';
-      if (mode === 'upper') return s.toUpperCase();
-      if (mode === 'lower') return s.toLowerCase();
-      if (mode === 'capitalize') return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
-      return s;
-    },
-
-    /**
-     * 音标处理：去除两侧斜杠与多余空白，保留内部 IPA 符号。
-     * '/bʊk/'、'/ bʊk /' 与 'bʊk' 均归一为 'bʊk'。
-     */
-    normalizePhonetic: function (p) {
-      var s = String(p == null ? '' : p).trim();
-      s = s.replace(/^\/+/, '').replace(/\/+$/, '').trim();
-      return s.replace(/\s+/g, ' ');
-    },
-    /** 音标等值比较（两侧均归一后比较） */
-    samePhonetic: function (a, b) {
-      return this.normalizePhonetic(a) === this.normalizePhonetic(b);
-    }
-  };
-
-  // ============ 导出：科目隔离的全局命名空间 ============
-  var SubjectUtils = { version: '1.0', MathUtil: MathUtil, ChineseUtil: ChineseUtil, EnglishUtil: EnglishUtil };
+  // ============ 导出 ============
+  var SubjectUtils = { version: '1.0', MathUtil: MathUtil };
 
   global.SubjectUtils = SubjectUtils;
   global.MathUtil = MathUtil;
-  global.ChineseUtil = ChineseUtil;
-  global.EnglishUtil = EnglishUtil;
 
   if (typeof module !== 'undefined' && module.exports) module.exports = SubjectUtils;
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

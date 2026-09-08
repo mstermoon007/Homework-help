@@ -2,9 +2,8 @@
  * sw.js — Homework Help 离线缓存 Service Worker
  *
  * 策略：
- * - install：预缓存核心壳页（各 HTML、shared/、pinyin-bank.js、assets、registry.js、插件文件），
- *    并从 registry.js 解析出全部插件文件路径一并预缓存，实现「缓存所有插件和共享文件」。
- *    **版本控制**：在 CORE 数组中通过 `?v=` 查询参数维护版本号，便于在插件/共享文件更新时强制浏览器/CDN 回填新缓存。
+ * - install：预缓存核心壳页（各 HTML、shared/、assets、SVG 图形插件）。
+ *    **版本控制**：在 CORE 数组中通过 `?v=` 查询参数维护版本号，便于在共享文件更新时强制浏览器/CDN 回填新缓存。
  * - fetch：同源静态资源采用 Cache-First（命中即返回，未命中走网络并回填），
  *   配合 HTML 注入的 ?v=<版本号> 与完整 URL 缓存键，每个版本形成独立缓存条目，
  *   版本升级即令旧缓存失效，彻底避免新旧样式混排。导航请求保留 network-first。
@@ -14,7 +13,7 @@
  * - activate：清理旧版本缓存（保留当前版本及更旧），立即接管页面。
  * - 离线兜底：导航请求缓存未命中时回退到 index.html。
  *
- * 注册点：shared/plugin-loader.js 的 App.registerServiceWorker()（仅 http/https 协议生效）。
+ * 注册点：shared/common.js 的 App.registerServiceWorker()（仅 http/https 协议生效）。
  */
 
 // === 版本配置 ===
@@ -24,7 +23,7 @@ importScripts('./shared/version.js');
 // 缓存名 = 固定前缀 + 版本号。activate 按此名清理一切非当前版本缓存（含旧 hw-help-v64）。
 // ⚠️ 本常量缺失曾导致 fetch/install 内 5 处 caches.open(CACHE) 抛 ReferenceError，
 //    SW 激活后第二次导航即 net::ERR_FAILED（E2E C1 用例捕获的 P0）。
-const CACHE = 'hw-help-4.1.0';  // 必须与 shared/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
+const CACHE = 'hw-help-4.3.0';  // 必须与 shared/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
 
 // === 核心资源列表 ===
 // 所有路径相对于站点根。CORE 保持「无 ?v=」字面量：运行时 HTML 已由 scripts/add-asset-version.js
@@ -34,8 +33,6 @@ const CORE = [
   './',
   'index.html',
   'math-types.html',
-  'chinese-types.html',
-  'english-types.html',
   'subject-types.html',
   'practice.html',
   'faq.html',
@@ -52,39 +49,25 @@ const CORE = [
   'assets/banner.webp',
   'assets/logo.webp',
   'assets/logo-math.webp',
-  'assets/logo-chinese.webp',
-  'assets/logo-english.webp',
   'shared/print.js',
   'shared/knowledge-bank.js',
   'shared/knowledge-math.js',
-  'shared/knowledge-cn.js',
-  'shared/knowledge-en.js',
   'shared/module-catalog.js',
-  'shared/plugin-types.js',
   'shared/svg-core.js',
   'shared/svg-calculation.js',
   'shared/svg-geometry.js',
   'shared/svg-make-ten.js',
-  'shared/svg-chinese.js',
-  'shared/svg-english.js',
-  'pinyin-bank.js',
-  'plugins/registry.js'
+  // MATH-14：legacy 插件轨道已删除（plugins/registry.js + 非 SVG 插件移除）。
+  // SVG 图形插件仍被 practice.html 与 graphic-renderer 消费，显式预缓存。
+  'plugins/svg-clock.js',
+  'plugins/svg-area.js',
+  'plugins/svg-fraction.js',
+  'plugins/svg-data-stats.js',
+  'plugins/svg-draw.js',
+  'plugins/svg-competition.js'
 ];
 
 // （版本查询参数由 front-end 构建：scripts/add-asset-version.js 注入 ?v=APP_VERSION）
-
-/**
- * 从 registry.js 文本提取插件文件路径：file: 'plugins/xxx.js'
- */
-function pluginFilesFromRegistry(text) {
-  var files = [];
-  var re = /file:\s*'([^']+\.js)'/g;
-  var m;
-  while ((m = re.exec(text)) !== null) {
-    if (files.indexOf(m[1]) === -1) files.push(m[1]);
-  }
-  return files;
-}
 
 // 逐个缓存（单个失败不影响整体安装）——与 install 内 cacheAll(cache, CORE) 调用配套。
 // ⚠️ SWR 重写时曾丢失本函数定义，install 事件抛 ReferenceError（被吞，静默跳过全部预缓存）。
@@ -100,15 +83,6 @@ self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(CACHE).then(function (cache) {
       return cacheAll(cache, CORE);
-    }).then(function () {
-      // 解析 registry.js，预缓存全部插件文件
-      return fetch('plugins/registry.js')
-        .then(function (r) { return r.text(); })
-        .then(function (txt) {
-          var files = pluginFilesFromRegistry(txt);
-          return caches.open(CACHE).then(function (c) { return cacheAll(c, files); });
-        })
-        .catch(function () { /* 解析失败不阻塞安装，运行时再缓存 */ });
     }).then(function () { return self.skipWaiting(); })
   );
 });

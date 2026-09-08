@@ -23,9 +23,6 @@
   var RenderResult = (typeof global !== 'undefined' && global.RenderResult)
     ? global.RenderResult
     : require('./render-result.js');
-  var LegacyAdapter = (typeof global !== 'undefined' && global.LegacySvgAdapter)
-    ? global.LegacySvgAdapter
-    : require('./legacy-svg-adapter.js');
   var SVGRenderer = (typeof global !== 'undefined' && global.SVGRenderer)
     ? global.SVGRenderer
     : require('./svg-registry.js');
@@ -38,13 +35,13 @@
     ? global.HTMLRenderer
     : require('./html-renderer.js');
 
-  /** 归一化单题图形描述符（SemanticQuestion.graphic 直取；Legacy q.svg 经适配器） */
+  /** 归一化单题图形描述符（MATH-14：仅认 SemanticQuestion.graphic 描述符） */
   function graphicOf(sq) {
     if (!sq || typeof sq !== 'object') return null;
     if (sq.graphic && typeof sq.graphic === 'object' && typeof sq.graphic.type === 'string') {
       return sq.graphic;
     }
-    return LegacyAdapter.convert(sq) || null;
+    return null;
   }
 
   /**

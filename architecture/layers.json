@@ -1,7 +1,7 @@
 {
   "_doc": "Homework Help 权威四层架构清单（物理文件仍驻留 shared/，此清单为逻辑归属分类）。",
   "_boundary": "除 UI / 生成 / 知识库 三层以外，其余一律归入大服务层（信息传递 / 项目控制 / 外围样式 / 打印等外围控制）。",
-  "_note": "物理不移动原因见 docs/ARCHITECTURE_LAYERS.md：common.js 按自身路径注入同目录子模块、预编译 bundle 内嵌 shared/ 模块id、sw.js 与 dev 门禁与测试均硬编 shared/ 路径，shared/ 为稳定模块根，切勿拆分。",
+  "_note": "物理不移动原因见《技术文档--基础.md》§2.2：common.js 按自身路径注入同目录子模块、预编译 bundle 内嵌 shared/ 模块id、sw.js 与 dev 门禁与测试均硬编 shared/ 路径，shared/ 为稳定模块根，切勿拆分。",
   "schema": {
     "layer": { "description": "string, alias: string, sub?: { groupName: { desc, files[] } }" }
   },
@@ -12,7 +12,7 @@
       "alias": "display",
       "files": [
         "index.html", "practice.html", "select.html", "faq.html", "contact.html",
-        "math-types.html", "chinese-types.html", "english-types.html", "subject-types.html",
+        "math-types.html", "subject-types.html",
         "knowledge/*.html",
         "feedback/feedback.html", "feedback/feedback.css", "feedback/feedback.js",
         "sw.js"
@@ -32,7 +32,7 @@
           ]
         },
         "STRATEGY": {
-          "desc": "核心策略规划：题型白名单∩能力 / 难度 / 复杂度档 / 样式与 SVG 模板族调度（策略引擎以 QuestionPlan 驱动生成，归生成层，见 docs/ARCHITECTURE_LAYERS.md §3.1）",
+          "desc": "核心策略规划：题型白名单∩能力 / 难度 / 复杂度档 / 样式与 SVG 模板族调度（策略引擎以 QuestionPlan 驱动生成，归生成层，见《技术文档--基础.md》§3.1）",
           "files": [
             "shared/strategy/strategy-engine.js",
             "shared/strategy/comprehensive-strategy.js",
@@ -51,16 +51,22 @@
         "GENERATOR": {
           "desc": "按知识点生成器：generator-registry/selector/contract/mode/retry/generators/core",
           "files": [
-            "shared/generator/generator-contract.js", "shared/generator/generator-mode.js",
-            "shared/generator/generator-registry.js", "shared/generator/generator-selector.js",
-            "shared/generator/retry-loop.js", "shared/generator/migration-switch.js",
-            "shared/generator/legacy-adapter.js",
+            "shared/generator/generator-contract.js", "shared/generator/generator-registry.js", "shared/generator/generator-selector.js",
+            "shared/generator/generator-mode.js",
+            "shared/generator/retry-loop.js",
             "shared/generator/graphic-renderer.js",
-            "shared/generator/generators/arithmetic.js", "shared/generator/generators/complex.js",
-            "shared/generator/generators/selection.js", "shared/generator/generators/index.js",
+            "shared/generator/generators/arithmetic.js", "shared/generator/generators/application.js",
+            "shared/generator/generators/c1-number-puzzle.js", "shared/generator/generators/c2-number-theory.js",
+            "shared/generator/generators/c5-c6-journey-engineering.js", "shared/generator/generators/c7-clever-calc.js",
+            "shared/generator/generators/c9-comprehensive.js", "shared/generator/generators/complex.js",
+            "shared/generator/generators/composite.js", "shared/generator/generators/counting.js",
+            "shared/generator/generators/index.js", "shared/generator/generators/money.js",
+            "shared/generator/generators/picture-equation.js", "shared/generator/generators/position.js",
+            "shared/generator/generators/reasoning.js", "shared/generator/generators/selection.js",
+            "shared/generator/generators/shape.js", "shared/generator/generators/stats.js",
             "shared/generator/core/arithmetic-core.js", "shared/generator/core/kp-arithmetic-semantics.js",
             "shared/generator/core/kp-complex-semantics.js", "shared/generator/core/rng.js",
-            "shared/generator-capability-registry.js", "shared/generator-registry.js"
+            "shared/generator-registry.js"
           ]
         },
         "SERVICE_IFACE": {
@@ -70,17 +76,17 @@
             "shared/generation/adapters/capability-service.adapter.js",
             "shared/generation/adapters/knowledge-graph-service.adapter.js",
             "shared/generation/adapters/module-catalog-service.adapter.js",
-            "shared/generation/adapters/plugin-loader-service.adapter.js",
             "shared/generation/services/capability-service.js",
             "shared/generation/services/knowledge-graph-service.js",
             "shared/generation/services/module-catalog-service.js",
-            "shared/generation/services/plugin-loader-service.js"
+            "shared/generation/rollback-manager.js"
           ]
         },
         "PRESENTATION": {
           "desc": "呈现层：HTML 渲染 + SVG 渲染器 + 固定样式模板族 + factory",
           "files": [
-            "shared/presentation/html-renderer.js", "shared/presentation/legacy-svg-adapter.js",
+            "shared/presentation/html-renderer.js",
+            "shared/presentation/render-format.js",
             "shared/presentation/render-options.js", "shared/presentation/render-result.js",
             "shared/presentation/renderer.js", "shared/presentation/svg-registry.js",
             "shared/svg-templates.js",
@@ -90,8 +96,8 @@
         "GRAPHIC_RENDER": {
           "desc": "图形描述渲染：graphic-renderer / svg-core",
           "files": [
-            "shared/svg-core.js", "shared/svg-calculation.js", "shared/svg-chinese.js",
-            "shared/svg-english.js", "shared/svg-geometry.js", "shared/svg-make-ten.js"
+            "shared/svg-core.js", "shared/svg-calculation.js",
+            "shared/svg-geometry.js", "shared/svg-make-ten.js"
           ]
         },
         "PLUGINS": {
@@ -102,15 +108,14 @@
     },
 
     "KNOWLEDGE": {
-      "description": "知识点库基层数据：唯一数据核心、schema、规范映射（不生成题面、不参与 UI 决策）。pinyin-bank.js 为「根目录知识库数据例外」：属知识库数据但物理驻留根目录（8 处引用，迁移风险>收益），不物理迁移，详见 docs/ARCHITECTURE_LAYERS.md「知识库纯粹存放声明」。",
+      "description": "知识点库基层数据：唯一数据核心、schema、规范映射（不生成题面、不参与 UI 决策）。",
       "alias": "base-data",
       "files": [
         "shared/knowledge-bank.js", "shared/knowledge-point.js",
         "shared/knowledge-ontology.js", "shared/knowledge-ontology-normalizer.js",
         "shared/knowledge-ontology-validator.js", "shared/schemas/knowledge-point.schema.js",
-        "shared/knowledge-cn.js", "shared/knowledge-en.js", "shared/knowledge-math.js",
+        "shared/knowledge-math.js",
         "shared/knowledge-error.js", "shared/knowledge-factual.js", "shared/knowledge-operation.js",
-        "shared/hanzi-bank.js", "pinyin-bank.js",
         "shared/question-id.js", "shared/question-type-registry.js",
         "shared/ontology-error-map.js", "shared/ontology-factual-map.js", "shared/ontology-operation-map.js",
         "knowledge/*.html"
@@ -126,7 +131,7 @@
           "files": ["shared/practice-bridge.js"]
         },
         "STRATEGY": {
-          "desc": "策略支撑子模块(计划/难度/结构编排辅助)；核心规划引擎已归生成层 STRATEGY 组（strategy-engine / comprehensive-strategy / question-style / complexity）。三维螺旋·自适应预留契约：adaptive/learnerProfile/adaptiveDelta 默认关，见 docs/ARCHITECTURE_LAYERS.md R5",
+          "desc": "策略支撑子模块(计划/难度/结构编排辅助)；核心规划引擎已归生成层 STRATEGY 组（strategy-engine / comprehensive-strategy / question-style / complexity）。三维螺旋·自适应预留契约：adaptive/learnerProfile/adaptiveDelta 默认关，见《技术文档--基础.md》§2.6",
           "files": [
             "shared/strategy/adaptive-strategy.js", "shared/strategy/cognitive-strategy.js",
             "shared/strategy/constraint-builder.js",
@@ -145,11 +150,12 @@
           "desc": "校验器(质量/结构/图形/难度)",
           "files": [
             "shared/validator/answer-validator.js", "shared/validator/batch-validator.js",
-            "shared/validator/difficulty-validator.js", "shared/validator/distractor-validator.js",
-            "shared/validator/duplicate-validator.js", "shared/validator/graphic-validator.js",
-            "shared/validator/kp-validator.js", "shared/validator/quality-scorer.js",
-            "shared/validator/question-validator.js", "shared/validator/render-preflight.js",
-            "shared/validator/structure-validator.js", "shared/validator/validation-pipeline.js"
+            "shared/validator/composite-validator.js",
+            "shared/validator/difficulty-integrity-validator.js", "shared/validator/difficulty-validator.js",
+            "shared/validator/duplicate-integrity-validator.js", "shared/validator/duplicate-validator.js",
+            "shared/validator/kp-coverage-validator.js", "shared/validator/kp-semantic-validator.js",
+            "shared/validator/quality-scorer.js",
+            "shared/validator/question-validator.js", "shared/validator/validation-pipeline.js"
           ]
         },
         "CAPABILITY": {
@@ -171,8 +177,7 @@
         "CORE_UTIL": {
           "desc": "共享基础(信息传递/注入入口)",
           "files": [
-            "shared/common.js", "shared/core.js", "shared/check.js",
-            "shared/plugin-loader.js", "shared/plugin-types.js"
+            "shared/common.js", "shared/core.js", "shared/check.js"
           ]
         },
         "STATE_IO": {
@@ -186,7 +191,7 @@
           "files": [
             "shared/catalog-utils.js", "shared/module-catalog.js", "shared/version.js",
             "shared/feature-flags.js", "shared/subject-utils.js", "shared/difficulty.js",
-            "shared/difficulty-static.js", "shared/generation-config.js"
+            "shared/difficulty-static.js"
           ]
         },
         "CSS": {

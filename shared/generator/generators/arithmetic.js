@@ -52,7 +52,8 @@ function createArithmeticGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['oral', 'calc'],
+    capabilities: ['oral', 'calc', 'fill', 'apply'],
+    questionTypes: ['oral', 'calc', 'fill', 'apply'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -103,7 +104,7 @@ function createArithmeticGenerator(spec) {
           context: plan.contextType != null ? plan.contextType : 'standard',
           seed: seedFor(plan, context, i),
           prompt: prompt,
-          answer: String(answer),
+          answer: { value: String(answer), acceptable: [] },
           answerMode: 'input',
           hint: null,
           data: {

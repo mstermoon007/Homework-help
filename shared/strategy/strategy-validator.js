@@ -81,8 +81,7 @@ function validatePlan(plan) {
     errors.push('⑥ spiralLevel 必须是 1-6 的整数: ' + plan.spiralLevel);
   } else if (kp && isInt(plan.spiralLevel)) {
     // ⑦ spiralLevel <= maxSpiralLevel
-    var maxSpiral = (kp.spiral && typeof kp.spiral.maxLevel === 'number')
-      ? kp.spiral.maxLevel : (kp.max_spiral_level || 1);
+    var maxSpiral = (kp.spiral && typeof kp.spiral.maxLevel === 'number') ? kp.spiral.maxLevel : 1;
     if (plan.spiralLevel > maxSpiral) {
       errors.push('⑦ spiralLevel ' + plan.spiralLevel + ' 超过 maxSpiralLevel ' + maxSpiral);
     }

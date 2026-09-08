@@ -278,17 +278,12 @@
 <!-- 合并二级页装配能力：模块目录 + 题型目录工具（只读数据，浏览器安全，无顶层 require） -->
 <script src="shared/module-catalog.js"></script>
 <script src="shared/catalog-utils.js"></script>
-<!-- 知识库分片（knowledge-math/cn/en.js）不再静态引入，改为按需懒加载（任务 3.1）：
+<!-- 知识库分片（knowledge-math.js）不再静态引入，改为按需懒加载（任务 3.1）：
      由 boot() 在确认科目后调用 KnowledgeBank.ensureKnowledgeData(subject) 动态注入，
-     首屏仅加载当前科目，未使用的科目（语文/英语）不会被请求。 -->
-<!-- C01：restore plugins/registry.js —— strategy-engine.bundle.js 经 capability-resolver →
-     generator-capability-registry 会【急切】读取 global.PLUGIN_REGISTRY（浏览器 shim）。
-     此前 P3-R04 移除导致浏览器加载 bundle 时抛「缺少全局 PLUGIN_REGISTRY」，
-     实时生成链路在 strategy bundle 初始化阶段即中断（P0-001 上游根因）。 -->
-<script src="plugins/registry.js"></script>
-<!-- 任务3：浏览器插件脚本加载器（App.PluginLoader），用于装载旧插件（legacy 轨
-     Generator 需对应插件实例，见 shared/legacy/plugin-adapter.js 的 loadPlugin）。 -->
-<script src="shared/plugin-loader.js"></script>
+     首屏仅加载当前科目。 -->
+<!-- MATH-14：legacy 插件轨道已删除（plugins/registry.js + shared/plugin-loader.js 已移除），
+     strategy bundle 经 capability-resolver 只走 ontology/registry/matrix 三源决策，
+     不再急切读取 global.PLUGIN_REGISTRY。 -->
 <script src="shared/strategy-engine.bundle.js"></script>
 <!-- C01：presentation-engine.bundle.js 提供 global.PresentationEngine（其 __req 委托
      strategy-engine.bundle.js 的 require 命名空间）。generation-engine 的
@@ -308,7 +303,6 @@
      （无需重建策略 bundle，独立按需加载）。SVG 生成器(shared/svg-*.js)在 boot 阶段挂载。 -->
 <script src="shared/presentation/render-options.js"></script>
 <script src="shared/presentation/render-result.js"></script>
-<script src="shared/presentation/legacy-svg-adapter.js"></script>
 <script src="shared/presentation/svg-registry.js"></script>
 <script src="shared/generator/graphic-renderer.js"></script>
 <!-- R-A04：SVG 语义生成器运行时挂载（须先于首次渲染，svg-registry 的懒种子扫描才能捕获）。
@@ -349,9 +343,9 @@
   };
 
   // ============ URL 参数解析 ============
-  // 任务3：URL 科目别名归一化（select.html 用 cn/en，旧二级页用 chinese/english）
+  // 任务3：URL 科目别名归一化（仅 math 可用，其余科目回落 math）
   function canonSubjectForUI(raw) {
-    var m = { math: 'math', chinese: 'chinese', english: 'english', cn: 'chinese', en: 'english' };
+    var m = { math: 'math' };
     var r = String(raw || '').toLowerCase();
     return m[r] || 'math';
   }
@@ -484,7 +478,7 @@
     if (!window.PracticeBridge) return;
     state.count = Number(state.count) || 20;
     window.PracticeBridge.onStartFeedback(applySessionFeedback);
-    // U3 清理：deriveTypeName/state/ensureLegacyPlugins 均在本 IIFE 作用域内定义，恒可用，
+    // U3 清理：deriveTypeName/state 均在本 IIFE 作用域内定义，恒可用，
     // 原「typeof x !== 'undefined' ? x : null」三元恒取真分支，直接简化为直接引用。
     window.PracticeBridge.start(
       {
@@ -499,8 +493,7 @@
         titleType: deriveTypeName(),
         kpAllocation: state.kpAllocation || null,
         raw: { levels: state }
-      },
-      { ensureLegacyPlugins: ensureLegacyPlugins }
+      }
     );
   }
 
@@ -1090,7 +1083,7 @@
 
   // ============ 左上角快速切换（学科 / 年级） ============
   // ============ 合并：二级页装配区（科目/年级/题型选择） ============
-  // 仅 UI 层：复用 KnowledgeBank（catalog-utils.getKPEntries）、MODULE_CATALOG、已加载的 PLUGIN_REGISTRY，
+  // 仅 UI 层：复用 KnowledgeBank（catalog-utils.getKPEntries）、MODULE_CATALOG、GeneratorRegistry（原生 KP 覆盖），
   // 与 practice.html 既有的 PracticeSession / generate()；不新增任何引擎依赖。
   function clampNum(n, lo, hi, dft) { n = Number(n); if (!isFinite(n)) return dft; return Math.min(hi, Math.max(lo, Math.round(n))); }
 
@@ -1105,9 +1098,7 @@
   var asmKpById = {};
   var ASM_LEVEL_TAGS = ['基础', '变式', '综合', '拓展'];
   var ASM_SUBJECT_CONFIG = {
-    math: { name: '数学', moduleOrder: ['M0','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','C1','C2','C3','C4','C5','C6','C7','C8','C9'] },
-    chinese: { name: '语文', moduleOrder: ['N1','N2','N3','N4','N5','N6','N7','N8'] },
-    english: { name: '英语', moduleOrder: ['E1','E2','E3','E4','E5','E6'] }
+    math: { name: '数学', moduleOrder: ['M0','M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12','M13','C1','C2','C3','C4','C5','C6','C7','C8','C9'] }
   };
 
   // ============ 任务3：URL 入口解析（qt / kps / plugin）与知识点过滤 ============
@@ -1160,26 +1151,18 @@
     return (window.PracticeBridge && typeof window.PracticeBridge.questionTypeDisplayName === 'function')
       ? window.PracticeBridge.questionTypeDisplayName(q) : null;
   }
-  function asmPluginById() {
-    var p = {}; (window.PLUGIN_REGISTRY || []).forEach(function (r) { p[r.id] = r; });
-    return p;
-  }
-  // 旧 plugin= 参数反查知识点：优先按 KB.pluginId 直配 → 其次按注册表 moduleIds → 兜底该科目年级全部可用
+  // MATH-14 native-only：旧 plugin= 深链反查知识点。legacy 注册表已删除，
+  // 仅按知识库 pluginId 直配 → 兜底该科目年级全部可用（v4.0.0 基线行为）。
   function asmResolvePlugin(plugin, all) {
-    var p = asmPluginById()[plugin] || null;
     var ids = [];
     var direct = all.filter(function (k) { return k.pluginId === plugin; });
     if (direct.length) {
       var avail = direct.filter(function (k) { return k.avail; });
       ids = (avail.length ? avail : direct).map(function (k) { return k.id; });
-    } else if (p && p.moduleIds && p.moduleIds.length) {
-      ids = all.filter(function (k) { return k.avail && p.moduleIds.indexOf(k.moduleId) !== -1; }).map(function (k) { return k.id; });
-    } else if (p && p.grades && p.grades.indexOf(asmState.grade) >= 0) {
-      ids = all.filter(function (k) { return k.avail; }).map(function (k) { return k.id; });
     } else {
       ids = all.filter(function (k) { return k.avail; }).map(function (k) { return k.id; });
     }
-    return { ids: ids, name: (p && p.name) || null };
+    return { ids: ids, name: null };
   }
   // 当前过滤范围下的可见知识点
   function asmVisibleKps() {
@@ -1222,51 +1205,6 @@
     }
     return { auto: !!(urlParams.kp || urlParams.kps || urlParams.qt || urlParams.plugin) };
   }
-  // 任务3：装载当前科目/年级的旧插件（legacy 轨 Generator 依赖插件实例）。
-  //   装载后登记到 window.__mathSubPlugins 与 window.App.plugins（shared/legacy/plugin-adapter.js
-  //   的 loadPlugin 优先读这两个全局；综合插件 math-comprehensive 亦读 __mathSubPlugins）。
-  //   幂等：已装载的插件直接复用。返回 Promise。
-  var asmPluginReady = null;
-  function ensureLegacyPlugins(subject, grade) {
-    if (asmPluginReady) return asmPluginReady;
-    asmPluginReady = (function () {
-      var loadScript = function (src) {
-        return new Promise(function (resolve, reject) {
-          if (typeof window.App === 'object' && window.App.PluginLoader && window.App.PluginLoader.loadScript) {
-            window.App.PluginLoader.loadScript(src).then(resolve, reject);
-            return;
-          }
-          var s = document.createElement('script'); s.async = false; s.src = src;
-          var done = false; var timer = setTimeout(function () { if (done) return; done = true; reject(new Error('插件加载超时: ' + src)); }, 8000);
-          s.onload = function () { if (done) return; done = true; clearTimeout(timer); resolve(); };
-          s.onerror = function () { if (done) return; done = true; clearTimeout(timer); reject(new Error('插件加载失败: ' + src)); };
-          document.head.appendChild(s);
-        });
-      };
-      var canon = { math: 'math', chinese: 'chinese', cn: 'chinese', english: 'english', en: 'english' }[subject] || subject;
-      // 兼容 select（cn/en）→ registry 用 chinese/english
-      var registryKey = canon === 'chinese' ? 'chinese' : (canon === 'english' ? 'english' : 'math');
-      var records = ((window.PLUGIN_REGISTRY) || []).filter(function (r) {
-        return r.subject === registryKey && !r.isPlaceholder;
-      });
-      var depSet = {};
-      records.forEach(function (r) { (r.deps || []).forEach(function (d) { depSet[d] = true; }); });
-      var seq = Promise.resolve();
-      Object.keys(depSet).forEach(function (d) { seq = seq.then(function () { return loadScript(d); }); });
-      // 依次装载各插件，onload 后抓取 window.__currentPlugin 登记
-      records.forEach(function (r) {
-        seq = seq.then(function () { return loadScript(r.file); }).then(function () {
-          var p = window.__currentPlugin || null;
-          if (p && (grade == null || !p.grades || p.grades.indexOf(grade) >= 0)) {
-            (window.__mathSubPlugins = window.__mathSubPlugins || {})[r.id] = p;
-            window.App = window.App || {}; window.App.plugins = window.App.plugins || {}; window.App.plugins[r.id] = p;
-          }
-        }).catch(function (e) { console.warn('[plugin] 装载失败(忽略): ' + r.id, e && e.message); });
-      });
-      return seq;
-    })();
-    return asmPluginReady;
-  }
   // 底部知识页入口：当前知识点 → knowledge/{kpId}.html
   function renderKpLinks() {
     var bar = $('kpLinksBar'); if (!bar) return;
@@ -1279,14 +1217,19 @@
       return '<a class="kp-link" href="knowledge/' + esc(id) + '.html" title="' + esc(k && k.name ? k.name : id) + '">'
         + esc(k && k.name ? k.name : id) + '</a>';
     }).join('');
-    var canon = { math: 'math', chinese: 'cn', english: 'en' }[state.subject] || state.subject;
+    var canon = { math: 'math' }[state.subject] || state.subject;
     $('kpLinksIndex').href = 'knowledge/knowledge-index.html?subject=' + encodeURIComponent(canon) + '&grade=' + state.grade;
     bar.hidden = false;
   }
 
   function asmPluginIndex() {
-    var idx = {}; var reg = window.PLUGIN_REGISTRY || [];
-    reg.forEach(function (p) { idx[p.id] = p; }); return idx;
+    // MATH-14 native-only：可练判定数据源 = GeneratorRegistry（原生 Generator 声明的 KP 并集）
+    var idx = {};
+    var reg = (typeof window.GeneratorRegistry !== 'undefined' && window.GeneratorRegistry) || null;
+    if (reg && typeof reg.all === 'function') {
+      reg.all().forEach(function (r) { (r.knowledgePoints || []).forEach(function (kp) { idx[kp] = true; }); });
+    }
+    return idx;
   }
   function asmReadStat(kpId) {
     var stat = { attempts: 0, mastery: null, recentAccuracy: null, weak: false, errorProne: false };
@@ -1813,12 +1756,10 @@
               titleType: deriveTypeName(),
               kpAllocation: state.kpAllocation || null,
               raw: { levels: state }
-            },
-            { ensureLegacyPlugins: (typeof ensureLegacyPlugins === 'function') ? ensureLegacyPlugins : null }
+            }
           );
         };
-        if (ensureLegacyPlugins) { ensureLegacyPlugins(state.subject, state.grade).then(buildAndPrint).catch(buildAndPrint); }
-        else buildAndPrint();
+        buildAndPrint();
         return; // 直接打印模式不进入常规流程
       }
       // 题型卡片 / 深链直达：待分片就绪后自动生成

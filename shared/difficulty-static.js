@@ -7,16 +7,17 @@
  * 返回结构兼容（含 difficulty / scale / steps / allowBracket / allowMultDiv），
  * 额外附带 staticMeta 供插件细控。
  *
- * 七个维度评分（均归一化到 0~1）：
- *   G  螺旋进度   = (spiral_level - 1) / (max_spiral_level - 1)，首轮 0、末轮 1
- *   S  结构复杂度 = calcStructureScore(steps, allowBracket, allowMultDiv)，复用 difficultyToStructure 量纲
- *   C  认知层级   = mapCognitive(cognitive_level)
- *   T  题型系数   = getTypeCoefficient(questionType)
- *   St 步骤数     = (max_steps_default - 1) / 4
- *   N  数值范围   = calcNumberScore(number_range_default) = log10(max)/log10(100000)
- *   A  情境       = getContextScore(context_default)
+ * 八个维度评分（均归一化到 0~1）：
+ *   G    螺旋进度   = (spiral_level - 1) / (max_spiral_level - 1)，首轮 0、末轮 1
+ *   S    结构复杂度 = calcStructureScore(steps, allowBracket, allowMultDiv)，复用 difficultyToStructure 量纲
+ *   C    认知层级   = mapCognitive(cognitive_level)
+ *   T    题型系数   = getTypeCoefficient(questionType)
+ *   St   步骤数     = (max_steps_default - 1) / 4
+ *   N    数值范围   = calcNumberScore(number_range_default) = log10(max)/log10(100000)
+ *   A    情境       = getContextScore(context_default)
+ *   Comb 组合复杂度 = calcCombinationScore(步骤, 括号, 乘除, 运算种类数)，默认 1 种运算
  *
- * 合成：D = 1 + 9 * (0.15*G + 0.20*S + 0.15*C + 0.10*T + 0.15*St + 0.10*N + 0.15*A)
+ * 合成：D = 1 + 9 * (0.12*G + 0.15*S + 0.12*C + 0.08*T + 0.12*St + 0.08*N + 0.12*A + 0.15*Comb)
  *      level = clamp(round(D), 1, 10)
  *
  * 依赖：shared/difficulty.js（App.Difficulty 必须已加载；浏览器先加载 difficulty.js，
@@ -93,6 +94,19 @@
   }
 
   var CONTEXT_MAP = { pure: 0, simple: 0.3, standard: 0.5, complex: 0.8 };
+
+  // 组合复杂度：运算种类数 × 步骤交互 × 认知层级跨度
+  // 0: 单一运算单步
+  // 1: 单一运算多步 / 两种运算单步
+  // 2: 多运算多步 / 带括号嵌套
+  function calcCombinationScore(steps, allowBracket, allowMultDiv, operatorCount) {
+    var opCount = Number(operatorCount) || 1;
+    var s = Number(steps) || 1;
+    var raw = (s - 1) * 0.3 + (opCount - 1) * 0.4 + (allowBracket ? 0.2 : 0) + (allowMultDiv ? 0.1 : 0);
+    var minRaw = 0;
+    var maxRaw = (5 - 1) * 0.3 + (3 - 1) * 0.4 + 0.2 + 0.1; // 5步、3运算、括号、乘除
+    return clamp01((raw - minRaw) / (maxRaw - minRaw));
+  }
   function getContextScore(ctx) {
     return CONTEXT_MAP[ctx] != null ? CONTEXT_MAP[ctx] : 0.5; // 缺省 standard
   }
@@ -104,7 +118,7 @@
    * @param {Object} [customParams] 自定义覆盖（可覆盖 scale/steps 等生成参数）
    * @returns {{difficulty:number, level:number, scale:number, steps:number,
    *            allowBracket:boolean, allowMultDiv:boolean,
-   *            staticMeta:{G:number,S:number,C:number,T:number,St:number,N:number,A:number,D:number,level:number}}}
+   *            staticMeta:{G:number,S:number,C:number,T:number,St:number,N:number,A:number,Comb:number,D:number,level:number}}}
    */
   function paramsForKnowledgePoint(kpMeta, questionType, customParams) {
     kpMeta = kpMeta || {};
@@ -129,7 +143,12 @@
     var N = calcNumberScore(kpMeta.number_range_default);
     var A = getContextScore(kpMeta.context_default);
 
-    var wsum = 0.15 * G + 0.20 * S + 0.15 * C + 0.10 * T + 0.15 * St + 0.10 * N + 0.15 * A;
+    // 组合复杂度（新增维度：运算种类 × 步骤交互 × 结构）
+    var operatorCount = Array.isArray(kpMeta.operator_types) ? kpMeta.operator_types.length
+      : (typeof kpMeta.operator_count === 'number' ? kpMeta.operator_count : 1);
+    var Comb = calcCombinationScore(st.steps, st.allowBracket, st.allowMultDiv, operatorCount);
+
+    var wsum = 0.12 * G + 0.15 * S + 0.12 * C + 0.08 * T + 0.12 * St + 0.08 * N + 0.12 * A + 0.15 * Comb;
     var D = 1 + 9 * wsum;
     var level = clamp10(Math.round(D));
 
@@ -141,7 +160,7 @@
     for (var c in customParams) {
       if (Object.prototype.hasOwnProperty.call(customParams, c)) out[c] = customParams[c];
     }
-    out.staticMeta = { G: G, S: S, C: C, T: T, St: St, N: N, A: A, D: D, level: level };
+    out.staticMeta = { G: G, S: S, C: C, T: T, St: St, N: N, A: A, Comb: Comb, D: D, level: level };
     return out;
   }
 
@@ -153,6 +172,7 @@
     calcStructureScore: calcStructureScore,
     calcNumberScore: calcNumberScore,
     getContextScore: getContextScore,
+    calcCombinationScore: calcCombinationScore,
     paramsForKnowledgePoint: paramsForKnowledgePoint,
     COGNITIVE_MAP: COGNITIVE_MAP,
     TYPE_COEFF: TYPE_COEFF,

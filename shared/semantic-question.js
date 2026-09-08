@@ -15,7 +15,6 @@
  */
 'use strict';
 
-var path = require('path');
 var Schema = require('./schemas/semantic-question.schema.js');
 var QTR = require('./question-type-registry.js');
 var QID = require('./question-id.js');
@@ -149,7 +148,10 @@ function createSemanticQuestion(raw) {
     //（raw.svg 已由下方 sq.svg 单独保留，不走 graphic 描述符，避免触发「禁止原始 SVG」）。
     graphic: deepClone(raw.graphic) || null,
 
-    // ⑨ Metadata (可追溯)
+    // ⑨ Constraints (结构约束：maxSteps, allowBracket, allowMultDiv 等)
+    constraints: deepClone(raw.constraints) || {},
+
+    // ⑩ Metadata (可追溯)
     metadata: metadata
   };
 
@@ -177,7 +179,19 @@ function createSemanticQuestion(raw) {
   sq.questionType = raw.questionType || raw.type || null;
   sq.answerMode = (sq.question && sq.question.answerMode) || raw.answerMode || 'input';
 
+  // M6-R06：统一题目指纹（KP + type + semantic + numbers + structure → 去重键）
+  sq.questionFingerprint = computeFingerprint(sq);
+
   return sq;
+}
+
+// 惰性引入去重 / 指纹模块（避免与 validator 体系形成顶层循环依赖）
+function computeFingerprint(sq) {
+  try {
+    var Dup = require('./validator/duplicate-validator.js');
+    if (Dup && typeof Dup.buildQuestionFingerprint === 'function') return Dup.buildQuestionFingerprint(sq);
+  } catch (e) { /* 指纹不可用时静默降级，不阻断生成 */ }
+  return null;
 }
 
 /**
@@ -257,6 +271,7 @@ function normalizeSemanticQuestion(raw) {
     graphic: (raw.graphic && typeof raw.graphic === 'object')
       ? deepClone(raw.graphic)
       : (raw.svg ? { type: 'custom', params: { rawSvg: raw.svg } } : null),
+    constraints: deepClone(raw.constraints) || {},
     metadata: raw.metadata || {
       generator: raw.generator || raw.pluginId || raw.source,
       generatorVersion: raw.generatorVersion || raw.version,

@@ -9,8 +9,7 @@ const coreFiles = [
   'shared/components.css',
   'shared/toolbar.css',
   'shared/pages.css',
-  'shared/print.js',
-  'plugins/registry.js'
+  'shared/print.js'
 ];
 
 let allOk = true;

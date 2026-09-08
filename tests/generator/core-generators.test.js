@@ -19,8 +19,26 @@ const CORE_IDS = [
   'generator:selection-fill',
   'generator:selection-choice',
   'generator:selection-judge',
-  'generator:complex-calc'
+  'generator:complex-calc',
+  'generator:shape-recognition',
+  'generator:position-direction',
+  'generator:money-measurement',
+  'generator:application-word',
+  'generator:composite',
+  'generator:counting',
+  'generator:reasoning',
+  'generator:stats',
+  'generator:picture-equation',
+  'generator:c1-number-puzzle',
+  'generator:c2-number-theory',
+  'generator:c5-c6-journey-engineering',
+  'generator:c7-clever-calc',
+  'generator:c9-comprehensive'
 ];
+
+function answerValue(q) {
+  return (q.answer && typeof q.answer === 'object' && q.answer.value != null) ? q.answer.value : q.answer;
+}
 
 function planFor(kpId, count, difficulty, questionType) {
   return Engine.plan({ knowledgePointId: kpId, count: count || 5, difficulty: difficulty || 3 }).plans[0];
@@ -62,14 +80,14 @@ test('题量 === plan.count', () => {
 
 test('算术族：答案可由题干复算，且输出为合法 SemanticQuestion', () => {
   const plan = planFor('math-g1-m0-make-ten', 10, 5);
-  CORE_IDS.filter(id => id.indexOf('arithmetic') === 0).forEach(id => {
+  CORE_IDS.filter(id => id.indexOf('generator:arithmetic-') === 0).forEach(id => {
     const g = Generators.BY_ID[id];
     const qs = g.generate(plan, { seed: 'inv' });
     qs.forEach(q => {
       assert.strictEqual(Contract.validateSemanticQuestion(q).valid, true, id);
       const parsed = Arith.parseExpression(q.prompt);
       assert.ok(parsed, id + ' 题干不可解析: ' + q.prompt);
-      assert.strictEqual(String(Arith.calculateAnswer(parsed.operands, parsed.operators)), String(q.answer), id + ' 答案错误: ' + q.prompt);
+      assert.strictEqual(String(Arith.calculateAnswer(parsed.operands, parsed.operators)), String(answerValue(q)), id + ' 答案错误: ' + q.prompt);
     });
   });
 });
@@ -80,6 +98,7 @@ test('减法非负 / 除法整除 / 乘法操作数有界', () => {
   sub.forEach(q => {
     const p = Arith.parseExpression(q.prompt);
     assert.ok(p.operands[0] >= p.operands[1], '减法负数: ' + q.prompt);
+    assert.strictEqual(Number(answerValue(q)), Arith.calculateAnswer(p.operands, p.operators), '答案错误: ' + q.prompt);
   });
   const div = Generators.BY_ID['generator:arithmetic-division'].generate(plan, { seed: 'd' });
   div.forEach(q => {
@@ -87,9 +106,9 @@ test('减法非负 / 除法整除 / 乘法操作数有界', () => {
     // 链式表达式（如 a + b ÷ c）用答案复算不变量；÷ 为唯一运算符时校验整除性
     if (p.operators.length === 1 && p.operators[0] === '÷') {
       assert.ok(p.operands[0] % p.operands[1] === 0, '除法不整除: ' + q.prompt);
-      assert.strictEqual(Number(q.answer), p.operands[0] / p.operands[1]);
+      assert.strictEqual(Number(answerValue(q)), p.operands[0] / p.operands[1]);
     }
-    assert.strictEqual(Number(q.answer), Arith.calculateAnswer(p.operands, p.operators), '答案错误: ' + q.prompt);
+    assert.strictEqual(Number(answerValue(q)), Arith.calculateAnswer(p.operands, p.operators), '答案错误: ' + q.prompt);
   });
 });
 
@@ -99,13 +118,14 @@ test('choice：选项含唯一正确项且干扰项 >= 2；judge：布尔答案'
   choice.forEach(q => {
     const opts = q.data.options;
     assert.ok(Array.isArray(opts) && opts.length >= 3, '选项不足');
-    assert.strictEqual(opts.filter(o => o === String(q.answer)).length, 1, '正确项不唯一');
+    assert.strictEqual(opts.filter(o => o === String(answerValue(q))).length, 1, '正确项不唯一');
   });
 
   const planJudge = planFor('math-g1-m11-judge-mixed', 8, 3);
   const judge = Generators.BY_ID['generator:selection-judge'].generate(planJudge, { seed: 'j' });
   judge.forEach(q => {
-    assert.strictEqual(typeof q.answer, 'boolean');
+    const v = answerValue(q);
+    assert.strictEqual(typeof v, 'boolean');
   });
 });
 

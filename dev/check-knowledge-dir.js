@@ -4,7 +4,7 @@
  *
  * R3 守卫：knowledge/ 目录的「纯粹存放」校验。
  *
- * 依据 docs/AI_REFACTOR_PLAN.html 阶段 R3：
+ * 依据《技术文档--基础.md》§12（knowledge/ 生成页运维规范）：
  *   knowledge/ 只允许 .html 且必须由生成脚本产出（hash 对照）；
  *   禁止混入非 html / 手工散落文件。
  *

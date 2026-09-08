@@ -70,9 +70,6 @@
   function getGeneratorRegistry() {
     return ensure(null, 'GeneratorRegistry', './generator-registry.js');
   }
-  function getLegacyAdapter() {
-    return ensure(null, 'LegacyPluginAdapter', './legacy/plugin-adapter.js');
-  }
 
   // R15：内部构成说明（只读）
   var PIPELINE = {
@@ -81,8 +78,7 @@
     QuestionPlanner: 'shared/strategy/comprehensive-strategy.js',
     GeneratorRegistry: 'shared/generator-registry.js',
     Validator: 'shared/validator/validation-pipeline.js',
-    SemanticQuestionNormalizer: 'shared/semantic-question.js',
-    LegacyAdapter: 'shared/legacy/plugin-adapter.js'
+    SemanticQuestionNormalizer: 'shared/semantic-question.js'
   };
 
   // Refactor Step 2：内部唯一 KP 语义 = knowledgePointIds 数组。
@@ -115,6 +111,11 @@
     if (request.mode === 'multi-kp' || (kpIds.length && kpIds.length > 1)) {
       return false;
     }
+    // Refactor Step 3：quick/teacher/competition 由 StrategyEngine.plan() 统一池化处理，
+    // 不得落入「无单点 KP + subject/grade」的综合兜底。
+    if (request.mode === 'quick' || request.mode === 'teacher' || request.mode === 'competition') {
+      return false;
+    }
     return !!request && (
       request.model === 'comprehensive' ||
       (request.comprehensive === true) ||
@@ -122,33 +123,31 @@
     );
   };
 
-  // R26：统一 mode 归一（single-kp / multi-kp / comprehensive / adaptive）
+  // R26：统一 mode 归一（single-kp / multi-kp / comprehensive / adaptive / quick / teacher / competition）
   var MODE_ALIAS = {
     'single': 'single-kp', 'single-kp': 'single-kp', 'kp': 'single-kp',
     'multi': 'multi-kp', 'multi-kp': 'multi-kp',
     'comprehensive': 'comprehensive', 'zonghe': 'comprehensive',
-    'adaptive': 'adaptive', 'adaptive-kp': 'adaptive'
+    'adaptive': 'adaptive', 'adaptive-kp': 'adaptive',
+    'quick': 'quick', 'teacher': 'teacher', 'competition': 'competition'
   };
   function normMode(request) {
     if (!request) return null;
     return MODE_ALIAS[request.mode] || null;
   }
 
-  // ---------- Core Domain 收缩（Refactor Step 1）：生成引擎仅接受 math ----------
-  // 非 math（语文 cn / 英语 en）返回明确 unsupported error，禁止任何 fallback。
+  // ---------- Core Domain：生成引擎仅接收 math（其余科目一律拒绝） ----------
   function canonSubjectValue(v) {
-    var m = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+    var m = { math: 'math' };
     return m[String(v || '').toLowerCase()] || null;
   }
   function kpSubjectOfId(id) {
     if (!id || typeof id !== 'string') return null;
-    if (id.indexOf('cn-') === 0) return 'cn';
-    if (id.indexOf('en-') === 0) return 'en';
     if (id.indexOf('math-') === 0) return 'math';
     return null;
   }
   function requestSubject(request) {
-    // kp id 前缀最权威：single/multi 中任一非 math 知识点 → 该科目（防止 subject=math 掩盖混入的 cn/en）
+    // kp id 前缀最权威：single/multi 中任一非 math 知识点 → 该科目（防止 subject=math 掩盖混入的异常前缀）
     var kpIds = requestKpIds(request);
     for (var i = 0; i < kpIds.length; i++) {
       var t = kpSubjectOfId(kpIds[i]);
@@ -231,7 +230,8 @@
             questionType: request.questionType, questionTypes: request.questionTypes,
             subtype: request.subtype,
             spiralLevel: request.spiralLevel != null ? request.spiralLevel : request.spiral_level,
-            learnerProfile: request.learnerProfile
+            learnerProfile: request.learnerProfile,
+            mode: (request.mode != null && request.mode !== 'multi-kp' && (request.mode !== 'competition' || request.grade != null)) ? request.mode : undefined
           };
           var r = engine.plan(single);
           return (r.plans && r.plans[0]) || null;
@@ -445,41 +445,6 @@
     return { enabled: false, violations: [], pluginCalls: { generate: 0, render: 0 }, restore: function () {} };
   }
 
-  /**
-   * R16/R18：旧插件统一生成入口。UI 不再直接调用 plugin.generate，
-   * 一律经 GenerationEngine.generateLegacy(options) → LegacyPluginAdapter。
-   * options 需含 pluginId；透传给旧插件 generate。
-   * @returns {Promise<{ set:{questions,meta}, source:'legacy' }>}
-   */
-  function generateLegacy(options) {
-    var optionsArg = options || {};
-    var PA = getLegacyAdapter();
-    if (!PA) {
-      return Promise.reject(new Error('LegacyPluginAdapter 不可用，请先加载 shared/legacy/plugin-adapter.js'));
-    }
-    var pluginId = optionsArg.pluginId;
-    if (!pluginId) {
-      return Promise.reject(new Error('generateLegacy 需要 options.pluginId'));
-    }
-    return PA.generateByPluginId(pluginId, optionsArg).then(function (set) {
-      if (!set || !Array.isArray(set.questions)) {
-        throw new Error('Legacy 插件 generate 必须返回 { questions: [] }: ' + pluginId);
-      }
-      return { set: set, source: 'legacy', renderOptions: null };
-    });
-  }
-
-  /**
-   * R16/R18：旧题组渲染桥。UI 不再直接调用 plugin.render，
-   * 一律经 GenerationEngine.renderLegacySet(set, pluginId)。
-   * 插件无 render 时返回 null（上层走通用降级）。
-   */
-  function renderLegacySet(set, pluginId) {
-    var PA = getLegacyAdapter();
-    if (!PA || typeof PA.renderSet !== 'function') return null;
-    return PA.renderSet(set, pluginId);
-  }
-
   var API = {
     build: build,
     generate: generate,
@@ -489,8 +454,6 @@
     generateAndRender: generateAndRender,
     isComprehensive: isComprehensive,
     resolveGenerator: resolveGenerator,
-    generateLegacy: generateLegacy,
-    renderLegacySet: renderLegacySet,
     pipeline: PIPELINE,
     assertGenerationBoundary: assertGenerationBoundary,
     // 生成层引擎统一管理数字随机（可复现种子 PRNG + 防相邻重复）与去重指纹：

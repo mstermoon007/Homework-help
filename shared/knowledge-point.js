@@ -15,7 +15,13 @@
   var Ontology = require('./knowledge-ontology.js');
   var SUBJECTS = Ontology.SUBJECTS;
 
-  function findLegacy(id) {
+  // 运行时防全量重复扫描：id -> legacy 索引 + id -> canonical 缓存（惰性构建，一次性）。
+  // KnowledgeBank 数据在进程内是静态只读的，normalize 为纯函数，缓存结果可安全复用。
+  var _legacyIndex = null;
+  var _canonicalCache = null;
+
+  function buildLegacyIndex() {
+    var idx = {};
     for (var si = 0; si < SUBJECTS.length; si++) {
       var arr = KnowledgeBank[SUBJECTS[si]];
       if (!Array.isArray(arr)) continue;
@@ -26,21 +32,39 @@
           var kps = g.modules[mi].knowledgePoints;
           if (!Array.isArray(kps)) continue;
           for (var ki = 0; ki < kps.length; ki++) {
-            if (kps[ki] && kps[ki].id === id) return kps[ki];
+            var kp = kps[ki];
+            if (kp && kp.id != null) idx[kp.id] = kp;
           }
         }
       }
     }
-    return null;
+    return idx;
+  }
+
+  function ensureIndex() {
+    if (!_legacyIndex) _legacyIndex = buildLegacyIndex();
+  }
+
+  function findLegacy(id) {
+    ensureIndex();
+    return Object.prototype.hasOwnProperty.call(_legacyIndex, id) ? _legacyIndex[id] : null;
   }
 
   function get(id) {
+    if (!_canonicalCache) _canonicalCache = {};
+    if (Object.prototype.hasOwnProperty.call(_canonicalCache, id)) return _canonicalCache[id];
     var legacy = findLegacy(id);
-    if (!legacy) return null;
-    return Ontology.normalize(legacy);
+    var canonical = legacy ? Ontology.normalize(legacy) : null;
+    _canonicalCache[id] = canonical;
+    return canonical;
   }
 
-  var API = { get: get, findLegacy: findLegacy };
+  function reset() {
+    _legacyIndex = null;
+    _canonicalCache = null;
+  }
+
+  var API = { get: get, findLegacy: findLegacy, reset: reset };
 
   global.KnowledgePoint = API;
   if (typeof module !== 'undefined' && module.exports) module.exports = API;

@@ -148,7 +148,7 @@
 
     // 合并标题（沿用生成层同款格式）
     function mergedTitle(profile) {
-      var subjectName = { math: '数学', chinese: '语文', english: '英语' }[profile.subject] || profile.subject;
+      var subjectName = { math: '数学' }[profile.subject] || profile.subject;
       var gradeName = '一二三四五六'.charAt(Math.max(0, profile.grade - 1)) + '年级';
       var total = profile.count || 0;
       var t = profile.titleType || '综合练习';
@@ -179,16 +179,7 @@
       : (typeof require !== 'undefined' ? require('./practice-session.js') : null);
   }
 
-  // 装载旧插件（关联层不承载该逻辑，仅委托 UI 传入的 ensureLegacyPlugins 能力）
-  function ensurePlugins(ui, run) {
-    var loader = ui && ui.ensureLegacyPlugins;
-    var subj = (ui && ui.subject) || (ui && ui.state && ui.state.subject) || 'math';
-    if (typeof loader === 'function') {
-      try { return loader(subj, ui && ui.grade).then(run).catch(run); } catch (e) { run(); return null; }
-    }
-    run();
-    return null;
-  }
+  // MATH-14：ensureLegacyPlugins 委托已随 legacy 插件轨道退役（native 生成无需插件装载）。
 
   // ============================================
   // 知识点驱动生成：统一直发单个 PracticeSession（配额编排由生成层引擎 multi-kp 处理）
@@ -197,15 +188,11 @@
    * 依计划执行：恒为单个 PracticeSession.start()（多知识点/配额由生成层引擎统一规划）。
    * @returns {Object} 会话（单个 session），或 null。
    */
-  function runPlan(plan, handlers) {
-    var profile = plan.profile;
-    var run = function () {
-      runSingle(profile, handlers);
-    };
-    ensurePlugins({ ensureLegacyPlugins: handlers && handlers.ensureLegacyPlugins, subject: profile.subject, grade: profile.grade }, run);
+  function runPlan(plan) {
+    runSingle(plan.profile);
   }
 
-  function runSingle(profile, handlers) {
+  function runSingle(profile) {
     var Ctor = sessionCtor();
     if (!Ctor) { emitStart({ ok: false, error: { code: 'E_GEN_LAYER', message: '题目生成层（PracticeSession）未加载' } }); return; }
     try {
@@ -240,14 +227,13 @@
    * 开始一次生成练习：经外围控制层解析执行计划 → 直发或按知识点编排生成。
    * 反馈（成功 / 失败）归一化后回调 UI 注册的 _onStartFeedback。
    * @param {Object} ui - UI 业务状态（或已有指令）
-   * @param {Object} [handlers] - { ensureLegacyPlugins }
    * @returns {Object} 会话句柄（单个 session 或 null；编排路径异步完成后经反馈返回）
    */
-  function start(ui, handlers) {
+  function start(ui) {
     // B1 清理：__profile/__orchestrated/__partitions 为历史遗留死路径，全仓库无调用方，
     // 统一经外围控制层 plan() 解析执行计划（与 resolve* 同源，保证 count/难度/kp 一致）。
     var p = ControlService.plan(ui || {});
-    runPlan(p, handlers || {});
+    runPlan(p);
     return _session;
   }
 

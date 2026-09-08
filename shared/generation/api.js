@@ -33,7 +33,6 @@
     orchestrator: 'PresentationEngine',
     strategyEngine: 'StrategyEngine',
     comprehensiveStrategy: 'ComprehensiveStrategy',
-    legacyAdapter: 'LegacyPluginAdapter',
     presentationRenderer: 'PresentationRenderer',
     renderOptions: 'RenderOptions',
     generatorRegistry: 'GeneratorRegistry',
@@ -66,7 +65,6 @@
   }
 
   function getOrchestrator() { return getDep('orchestrator'); }
-  function getLegacyAdapter() { return getDep('legacyAdapter'); }
   function getPresentationRenderer() { return getDep('presentationRenderer'); }
   function getRenderOptions() { return getDep('renderOptions'); }
   function getGeneratorRegistry() { return getDep('generatorRegistry'); }
@@ -85,6 +83,11 @@
     if (request.mode === 'multi-kp' || (kpIds.length && kpIds.length > 1)) {
       return false;
     }
+    // Refactor Step 3：quick/teacher/competition 由 StrategyEngine.plan() 统一池化处理，
+    // 不得落入「无单点 KP + subject/grade」的综合兜底。
+    if (request.mode === 'quick' || request.mode === 'teacher' || request.mode === 'competition') {
+      return false;
+    }
     return request.model === 'comprehensive' ||
       request.comprehensive === true ||
       (kpIds.length === 0 && request.subject && request.grade != null);
@@ -94,7 +97,8 @@
     'single': 'single-kp', 'single-kp': 'single-kp', 'kp': 'single-kp',
     'multi': 'multi-kp', 'multi-kp': 'multi-kp',
     'comprehensive': 'comprehensive', 'zonghe': 'comprehensive',
-    'adaptive': 'adaptive', 'adaptive-kp': 'adaptive'
+    'adaptive': 'adaptive', 'adaptive-kp': 'adaptive',
+    'quick': 'quick', 'teacher': 'teacher', 'competition': 'competition'
   };
   function normMode(request) {
     return request && MODE_ALIAS[request.mode] || null;
@@ -126,15 +130,13 @@
   }
 
   // ---------- Core Domain 收缩（Refactor Step 1）：核心生成入口仅接受 math ----------
-  // 非 math（语文 cn / 英语 en）返回明确 unsupported error，禁止任何 fallback。
+  // 其余科目返回明确 unsupported error，禁止任何 fallback。
   function canonSubjectValue(v) {
-    var m = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+    var m = { math: 'math' };
     return m[String(v || '').toLowerCase()] || null;
   }
   function kpSubjectOfId(id) {
     if (!id || typeof id !== 'string') return null;
-    if (id.indexOf('cn-') === 0) return 'cn';
-    if (id.indexOf('en-') === 0) return 'en';
     if (id.indexOf('math-') === 0) return 'math';
     return null;
   }
@@ -186,6 +188,17 @@
       return Promise.resolve(ComprehensiveStrategy.build(request));
     }
 
+    // Refactor Step 3：quick/teacher/competition 走统一 StrategyEngine.plan()（池化多计划）
+    if (mode === 'quick' || mode === 'teacher' || mode === 'competition') {
+      if (!StrategyEngine) return Promise.reject(new Error('StrategyEngine 不可用'));
+      try {
+        var poolResult = StrategyEngine.plan(request);
+        return Promise.resolve({ plans: (poolResult && poolResult.plans) || [], trace: (poolResult && poolResult.trace) || {} });
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    }
+
     var kpList = requestKpIds(request);
 
     // Refactor Step 2：combine=true 且多知识点 → 单计划合并（StrategyEngine 直接产出
@@ -221,7 +234,8 @@
             questionType: request.questionType, questionTypes: request.questionTypes,
             subtype: request.subtype,
             spiralLevel: request.spiralLevel != null ? request.spiralLevel : request.spiral_level,
-            learnerProfile: request.learnerProfile
+            learnerProfile: request.learnerProfile,
+            mode: (request.mode != null && request.mode !== 'multi-kp' && (request.mode !== 'competition' || request.grade != null)) ? request.mode : undefined
           };
           var r = StrategyEngine.plan(single);
           return (r.plans && r.plans[0]) || null;
@@ -259,7 +273,6 @@
       seq = seq.then(function () {
         try {
           return orch.generateQuestions(plan, {
-            legacyOutput: options.legacyOutput === true,
             skipValidation: options.skipValidation,
             seenKeys: globalSeenKeys
           });
@@ -270,11 +283,15 @@
       }).then(function (res) {
         if (!res) return;
         var sqs = res.semanticQuestions || res.questions || [];
-        // 生成层统筹：把计划级固定样式 / SVG 模板族 / 复杂度档注入每题（SVG 调度落地到题）
+        // 生成层统筹：把计划级固定样式 / SVG 模板族 / 复杂度档 / knowledgePointIds 注入每题
         sqs.forEach(function (q) {
           if (plan.style) q.style = plan.style;
           if (plan.svgTemplate) q.svgTemplate = plan.svgTemplate;
           if (plan.complexity) q.complexity = plan.complexity;
+          // M10-R10: 注入 knowledgePointIds（用于渲染层多 KP 透传）
+          if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length) {
+            q.knowledgePointIds = plan.knowledgePointIds.slice();
+          }
         });
         results.push.apply(results, sqs);
       }).catch(function (err) {
@@ -371,7 +388,7 @@
     var failedPlans = [];
     plans.forEach(function (plan) {
       try {
-        var res = orch.generateQuestions(plan, { legacyOutput: options.legacyOutput === true, skipValidation: options.skipValidation });
+        var res = orch.generateQuestions(plan, { skipValidation: options.skipValidation });
         var sqs = res.semanticQuestions || res.questions || [];
         results.push.apply(results, sqs);
       } catch (e) {
@@ -403,36 +420,6 @@
     }
     var result = validator.validatePlan(plan);
     return result.valid ? [] : (result.errors || ['未知校验错误']);
-  }
-
-  /**
-   * 旧插件生成 (R18)
-   * @param {Object} options - LegacyGenerateOptions
-   * @returns {Promise<LegacyGenerateResult>}
-   */
-  function generateLegacy(options) {
-    var PA = getLegacyAdapter();
-    if (!PA) return Promise.reject(new Error('LegacyPluginAdapter 不可用'));
-    var pluginId = options && options.pluginId;
-    if (!pluginId) return Promise.reject(new Error('generateLegacy 需要 pluginId'));
-    return PA.generateByPluginId(pluginId, options).then(function (set) {
-      if (!set || !Array.isArray(set.questions)) {
-        throw new Error('Legacy 插件 generate 必须返回 { questions: [] }');
-      }
-      return { set: set, source: 'legacy', renderOptions: null };
-    });
-  }
-
-  /**
-   * 旧题组渲染桥
-   * @param {Object} set
-   * @param {string} pluginId
-   * @returns {string|null}
-   */
-  function renderLegacySet(set, pluginId) {
-    var PA = getLegacyAdapter();
-    if (!PA || typeof PA.renderSet !== 'function') return null;
-    return PA.renderSet(set, pluginId);
   }
 
   /**

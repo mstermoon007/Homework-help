@@ -5,10 +5,12 @@
  * 可静态验证的护栏（与 generation-rules.md 对应）：
  *   R1  Static 难度不得接入线上 UI：practice.html 不得引用 difficulty-static。（ERROR）
  *   R2  插件不得直接依赖/require difficulty-static。（ERROR）
- *   R3  Feature Flag 默认 legacy：shared/generation-config.js 的 getMode() === 'legacy'。（校验）
- *   R4  新代码禁止新增 Math.random：扫描 shared/ plugins/ 直调 Math.random，
+ *   R4  新代码禁止新增 Math.random：递归扫描 shared/ plugins/（含子目录）直调 Math.random，
  *       豁免 core.js/common.js（唯一随机源）。存在即记录 WARNING（既有技术债，不阻断）。
- *   R5  Legacy 适配层存在：shared/generator/legacy-adapter.js 可导。（校验）
+ *   R5  Legacy 插件轨道禁止复活：shared/generator/legacy-adapter.js、shared/plugin-loader.js、
+ *       shared/generator-capability-registry.js、shared/generator/migration-switch.js、
+ *       plugins/registry.js 不得再出现。（MATH-14 后 R5 语义反转为「禁止存在」）
+ *   （R3 已移除：generation-config.js 为 M0 遗留死代码，随清单删除，不再设锁定）
  */
 'use strict';
 const fs = require('fs');
@@ -18,17 +20,19 @@ const ROOT = path.join(__dirname, '..');
 const errors = [];
 const warnings = [];
 
-function stripComment(line) {
-  // 去掉 // 行内注释，避免把「禁止 Math.random」之类的说明误判为调用
-  const i = line.indexOf('//');
-  return i === -1 ? line : line.slice(0, i);
+function stripComments(code) {
+  // 去掉 // 和 /* */ 注释，避免把「禁止 Math.random」之类的说明误判为调用
+  return code
+    .replace(/\/\*[\s\S]*?\*\//g, '') // 去掉块注释
+    .replace(/\/\/.*$/gm, '');        // 去掉行注释
 }
 function grepFile(file, re) {
   if (!fs.existsSync(file)) return [];
-  const lines = fs.readFileSync(file, 'utf8').split('\n');
+  const code = fs.readFileSync(file, 'utf8');
+  const stripped = stripComments(code);
   const hits = [];
-  lines.forEach(function (ln, i) {
-    if (re.test(stripComment(ln))) hits.push((i + 1) + ': ' + ln.trim());
+  stripped.split('\n').forEach(function (ln, i) {
+    if (re.test(ln)) hits.push((i + 1) + ': ' + ln.trim());
   });
   return hits;
 }
@@ -63,30 +67,44 @@ function run() {
     });
   }
 
-  // R3
-  try {
-    const cfg = require(path.join(ROOT, 'shared', 'generation-config.js'));
-    if (cfg.getMode() !== 'legacy') errors.push('R3 违规：GenerationConfig 默认模式非 legacy（=' + cfg.getMode() + '）');
-    if (cfg.SUPPORTED.indexOf('legacy') === -1 || cfg.SUPPORTED.indexOf('strategy-v1') === -1)
-      errors.push('R3 违规：GenerationConfig 支持模式不完整');
-  } catch (e) { errors.push('R3 校验失败：' + e.message); }
-
-  // R5
-  try {
-    const ad = require(path.join(ROOT, 'shared', 'generator', 'legacy-adapter.js'));
-    if (typeof ad.adaptPlanToLegacyOptions !== 'function' || typeof ad.generateByPluginId !== 'function')
-      errors.push('R5 违规：LegacyAdapter 接口不完整');
-  } catch (e) { errors.push('R5 校验失败：' + e.message); }
+  // R3 已删除：generation-config.js（M0 遗留 Feature Flag）与运行链无关，R3 是对死代码的历史锁定。
+  // R5（MATH-14 反转）：legacy 插件轨道文件必须保持删除态，任何复活即 ERROR。
+  const LEGACY_FILES = [
+    'shared/generator/legacy-adapter.js',
+    'shared/plugin-loader.js',
+    'shared/generator-capability-registry.js',
+    'shared/generator/migration-switch.js',
+    'shared/presentation/legacy-svg-adapter.js',
+    'plugins/registry.js'
+  ];
+  LEGACY_FILES.forEach(function (rel) {
+    if (fs.existsSync(path.join(ROOT, rel))) {
+      errors.push('R5 违规：legacy 插件轨道文件复活：' + rel + '（MATH-14 已删除，禁止恢复）');
+    }
+  });
 
   // R4
-  ['shared', 'plugins'].forEach(function (d) {
-    const dir = path.join(ROOT, d);
+  // 检测 Math.random() 调用，而非正则字面量中的 Math.random
+  // 使用更精确的正则：Math\.random\s*\( 以避免误报 FORBIDDEN_PATTERNS 等验证数组中的正则字面量
+  // 递归扫描 shared/（含 generator/validator/strategy/generation 等子目录）与 plugins/（含子目录），
+  // 豁免 core.js/common.js（唯一合法随机源）；*.bundle.js 为自动生成产物，不判技术债。
+  const mathRandomCallRe = /\bMath\.random\s*\(/;
+  function walkRulesDir(dir, out) {
     if (!fs.existsSync(dir)) return;
     fs.readdirSync(dir).forEach(function (f) {
-      if (!f.endsWith('.js')) return;
-      if (f === 'core.js' || f === 'common.js') return; // 唯一合法随机源
-      const hits = grepFile(path.join(dir, f), /\bMath\.random\b/);
-      hits.forEach(function (h) { warnings.push('R4 技术债：' + d + '/' + f + ' 直调 Math.random (' + h + ')'); });
+      const abs = path.join(dir, f);
+      if (fs.statSync(abs).isDirectory()) { walkRulesDir(abs, out); return; }
+      if (!f.endsWith('.js') || f.endsWith('.bundle.js')) return;
+      out.push(abs);
+    });
+  }
+  ['shared', 'plugins'].forEach(function (d) {
+    const files = [];
+    walkRulesDir(path.join(ROOT, d), files);
+    files.forEach(function (abs) {
+      if (path.basename(abs) === 'core.js' || path.basename(abs) === 'common.js') return; // 唯一合法随机源
+      const hits = grepFile(abs, mathRandomCallRe);
+      hits.forEach(function (h) { warnings.push('R4 技术债：' + path.relative(ROOT, abs) + ' 直调 Math.random (' + h + ')'); });
     });
   });
 

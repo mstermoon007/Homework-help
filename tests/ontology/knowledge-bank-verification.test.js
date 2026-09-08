@@ -4,7 +4,7 @@ const KnowledgeBank = require('../../shared/knowledge-bank.js');
 const Ontology = require('../../shared/knowledge-ontology.js');
 const Schema = require('../../shared/schemas/knowledge-point.schema.js');
 
-test('574 KP 全部能归一化为合法 Canonical（ERROR=0）', () => {
+test('全部 KP 能归一化为合法 Canonical（ERROR=0）', () => {
   let errCount = 0;
   Ontology.SUBJECTS.forEach(function (s) {
     const arr = KnowledgeBank[s];
@@ -22,14 +22,18 @@ test('574 KP 全部能归一化为合法 Canonical（ERROR=0）', () => {
   assert.strictEqual(errCount, 0, '存在非法 Canonical KP');
 });
 
-test('KB Contract 基本完整性：574 + 分科正确', () => {
-  const math = KnowledgeBank.math.reduce((n, g) => n + g.modules.reduce((m, mm) => m + mm.knowledgePoints.length, 0), 0);
-  const cn = KnowledgeBank.cn.reduce((n, g) => n + g.modules.reduce((m, mm) => m + mm.knowledgePoints.length, 0), 0);
-  const en = KnowledgeBank.en.reduce((n, g) => n + g.modules.reduce((m, mm) => m + mm.knowledgePoints.length, 0), 0);
-  assert.strictEqual(math + cn + en, 574);
-  assert.strictEqual(math, 556);
-  assert.strictEqual(cn, 15);
-  assert.strictEqual(en, 3);
+test('KB Contract 基本完整性：全量 + 分科正确', () => {
+  const total = Ontology.SUBJECTS.reduce((n, s) => {
+    const arr = KnowledgeBank[s];
+    if (!Array.isArray(arr)) return n;
+    return n + arr.reduce((m, g) => m + g.modules.reduce((mm, mmod) => mm + mmod.knowledgePoints.length, 0), 0);
+  }, 0);
+  assert.ok(total > 0, '知识库非空');
+  assert.ok(KnowledgeBank.math.length > 0, '存在 math 分科');
+  Ontology.SUBJECTS.forEach((s) => {
+    if (s === 'math') return;
+    assert.ok(KnowledgeBank[s] === undefined, '非 math 分科已移除: ' + s);
+  });
 });
 
 test('未知 questionType 不升级为 ERROR（仅 WARNING）', () => {

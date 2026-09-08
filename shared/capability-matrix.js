@@ -1,7 +1,7 @@
 /**
  * shared/capability-matrix.js — KnowledgePoint × QuestionType × Capability Matrix (M2-R04)
  *
- * 建立 574 KP × 标准题型 的三维能力关系，并给出明确决策规则：
+ * 建立全量（math 域）KP 与标准题型的 能力关系，并给出明确决策规则：
  *
  *   ALLOW    ：该题型属于该 KP 的解析能力集 → 可生成
  *   FORBID   ：该题型不在能力集，且与能力集存在语义冲突（如 geometry 与纯口算）→ 明确禁止

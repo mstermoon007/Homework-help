@@ -23,14 +23,6 @@
         if (grid) grid.style.gridTemplateColumns = 'repeat(' + (cols || 3) + ', 1fr)';
       }
     },
-    pinyin: {
-      label: '拼音练习',
-      pageMargin: '12mm 10mm',
-      beforeClone: function(clone, cols) {
-        var grid = clone.querySelector('.questions-grid');
-        if (grid) grid.style.gridTemplateColumns = 'repeat(' + (cols || 3) + ', 1fr)';
-      }
-    },
     word: {
       label: '数学应用题',
       pageMargin: '12mm 10mm'
@@ -42,14 +34,6 @@
         // 巧算专项固定一行三题（屏幕与 A4 竖版打印一致），保证每行等宽排列
         var grid = clone.querySelector('.questions-grid');
         if (grid) grid.style.gridTemplateColumns = 'repeat(' + (cols || 3) + ', minmax(0, 1fr))';
-      }
-    },
-    pinyinToChar: {
-      label: '看拼音写字',
-      pageMargin: '12mm 10mm',
-      beforeClone: function(clone, cols) {
-        var grid = clone.querySelector('.questions-grid');
-        if (grid) grid.style.gridTemplateColumns = 'repeat(' + (cols || 3) + ', 1fr)';
       }
     },
     comprehensive: {
@@ -79,10 +63,6 @@
     unitConvert: {
       label: '单位换算练习',
       pageMargin: '12mm 10mm'
-    },
-    alphabet: {
-      label: '英语字母跟读练习',
-      pageMargin: '10mm 10mm'
     }
   };
 
@@ -249,8 +229,8 @@ var A4_PRINTABLE_PX = 718;
    * @param {string|Element} container - 内容容器选择器或DOM元素
    * @param {string} title - 打印标题
    * @param {Object} options
-   *   - pageType: 页面类型（math/pinyin/word/makeTen）
-   *   - columns: 列数（用于 math/pinyin）
+   *   - pageType: 页面类型（math/word/makeTen）
+   *   - columns: 列数（用于 math）
    */
   function open(container, title, options) {
     var printHtml = buildPrintHtml(container, title, options);

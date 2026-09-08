@@ -33,6 +33,15 @@ function inferredType(kp) {
   arr.forEach(t => { const x = t.coefficient == null ? 0 : t.coefficient; if (x > bx) { bx = x; best = t; } });
   return best.type;
 }
+// 组合复杂度（与引擎 calcCombinationScore 规范一致，独立复算用于交叉验证）
+function calcCombinationScore(steps, allowBracket, allowMultDiv, operatorCount) {
+  const opCount = Number(operatorCount) || 1;
+  const s = Number(steps) || 1;
+  const raw = (s - 1) * 0.3 + (opCount - 1) * 0.4 + (allowBracket ? 0.2 : 0) + (allowMultDiv ? 0.1 : 0);
+  const minRaw = 0;
+  const maxRaw = (5 - 1) * 0.3 + (3 - 1) * 0.4 + 0.2 + 0.1; // 5步、3运算、括号、乘除
+  return clamp01((raw - minRaw) / (maxRaw - minRaw));
+}
 // 独立于引擎、按规范公式重算 D 与各维度（用于交叉验证）
 function recompute(kp, qt) {
   const G = (kp.max_spiral_level && kp.max_spiral_level > 1)
@@ -45,9 +54,12 @@ function recompute(kp, qt) {
   const St = clamp01((Number(kp.max_steps_default || 1) - 1) / 4);
   const N = DS.calcNumberScore(kp.number_range_default);
   const A = DS.getContextScore(kp.context_default);
-  const wsum = 0.15 * G + 0.20 * S + 0.15 * C + 0.10 * T + 0.15 * St + 0.10 * N + 0.15 * A;
+  const operatorCount = Array.isArray(kp.operator_types) ? kp.operator_types.length
+    : (typeof kp.operator_count === 'number' ? kp.operator_count : 1);
+  const Comb = calcCombinationScore(st.steps, st.allowBracket, st.allowMultDiv, operatorCount);
+  const wsum = 0.12 * G + 0.15 * S + 0.12 * C + 0.08 * T + 0.12 * St + 0.08 * N + 0.12 * A + 0.15 * Comb;
   const D = 1 + 9 * wsum;
-  return { G: G, S: S, C: C, T: T, St: St, N: N, A: A, D: D, level: clamp10(D) };
+  return { G: G, S: S, C: C, T: T, St: St, N: N, A: A, Comb: Comb, D: D, level: clamp10(D) };
 }
 
 console.log('\n=== 1) 维度评分函数自检 ===');
@@ -76,8 +88,9 @@ combos.forEach((kp, i) => qts.forEach((qt, j) => {
   assert(approx(got.staticMeta.D, exp.D), `[${tag}] D 公式一致（引擎 ${got.staticMeta.D.toFixed(4)} / 期望 ${exp.D.toFixed(4)}）`);
   assert(got.level === exp.level, `[${tag}] level 与 D 取整一致（${got.level}）`);
   assert(approx(got.staticMeta.G, exp.G) && approx(got.staticMeta.S, exp.S) && approx(got.staticMeta.C, exp.C) &&
-    approx(got.staticMeta.T, exp.T) && approx(got.staticMeta.St, exp.St) && approx(got.staticMeta.N, exp.N) && approx(got.staticMeta.A, exp.A),
-    `[${tag}] 七维度评分与期望一致`);
+    approx(got.staticMeta.T, exp.T) && approx(got.staticMeta.St, exp.St) && approx(got.staticMeta.N, exp.N) &&
+    approx(got.staticMeta.A, exp.A) && approx(got.staticMeta.Comb, exp.Comb),
+    `[${tag}] 八维度评分与期望一致`);
 }));
 
 console.log('\n=== 3) 单调性：单维度升高，难度不降 ===');

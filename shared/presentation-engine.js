@@ -8,7 +8,7 @@
  *    ↓
  *   QuestionPlan
  *    ↓
- *   Generator / LegacyAdapter
+ *   Generator
  *    ↓
  *   SemanticQuestion
  *    ↓
@@ -27,19 +27,18 @@
  *
  * 渲染层适配：
  *   - 生成核心仅输出 SemanticQuestion[]
- *   - 如需 Legacy Question 格式，由渲染层自行转换（LegacyAdapter.toLegacyQuestions）
- *   - SVG 统一经 LegacySvgAdapter 适配至 graphic 描述符
+ *   - 渲染/批改所需题格式由 render-format.js 转换（toRenderableQuestions）
+ *   - SVG 经 GraphicRenderer/graphic 描述符渲染
  */
 'use strict';
 
 var Selector = require('./generator/generator-selector.js');
 var GeneratorContract = require('./generator/generator-contract.js');
-var Pipeline = require('./validator/validation-pipeline.js');
 var RetryLoop = require('./generator/retry-loop.js');
 var BatchValidator = require('./validator/batch-validator.js');
 var Quality = require('./validator/quality-scorer.js');
 var SQ = require('./semantic-question.js');
-var LegacyAdapter = require('./generator/legacy-adapter.js');
+var RenderFormat = require('./presentation/render-format.js');
 var FeatureFlags = require('./feature-flags.js');
 var Logger = require('./logger.js');
 var QID = require('./question-id.js');
@@ -118,12 +117,10 @@ function generateQuestions(plan, options) {
       Metrics.recordRetryAttempt({ generator: selection.record.id, retries: retries, maxRetries: ff.getMaxRetries(), errorCodes: result.attempts ? result.attempts.flatMap(function (a) { return (a.errors || []).map(function (e) { return e.code; }); }) : [] });
     }
 
-    // 4. 批量验证
+    // 4. 批量验证（逐题验证已在 RetryLoop 内完成，复用 finalValidation，避免整批二次验证）
     var batchResult = { valid: true, errors: [] };
-    var validationResults = [];
+    var validationResults = skipValidation ? [] : (result.validationResults || []);
     if (!skipValidation) {
-      var valContext = { generatorId: selection.record.id, seed: plan.seed, planId: plan.planId, seenKeys: options.seenKeys || null };
-      validationResults = Pipeline.runPipelineBatch(semanticQuestions, valContext);
       batchResult = BatchValidator.validateBatch(semanticQuestions, plan);
 
       // P5-R03: 记录验证指标
@@ -196,19 +193,19 @@ function generateQuestions(plan, options) {
  */
 function renderQuestions(questions, options) {
   if (!Array.isArray(questions) || !questions.length) return '';
-  // 判断是否为 SemanticQuestion（有 metadata/generator 字段）
-  var isSemantic = questions[0] && questions[0].metadata && questions[0].metadata.generator;
-  var legacyQuestions = isSemantic
-    ? LegacyAdapter.toLegacyQuestions(questions)
+  // 判断是否为 SemanticQuestion（有 metadata/knowledgePoint/content 等语义字段）
+  var isSemantic = questions[0] && questions[0].metadata && (questions[0].knowledgePoint || questions[0].content || questions[0].questionFingerprint);
+  var renderableQuestions = isSemantic
+    ? RenderFormat.toRenderableQuestions(questions)
     : questions;
 
   var PU = (typeof global !== 'undefined' && global.PluginUtil) || require('./render.js');
   try {
     var html;
     if (PU && PU.renderGrid) {
-      html = PU.renderGrid(legacyQuestions, options);
+      html = PU.renderGrid(renderableQuestions, options);
     } else {
-      html = legacyQuestions.map(function (q, i) { return PU.renderCard ? PU.renderCard(q, i, options) : ('<div>Q' + (i+1) + ': ' + (q.q||'') + '</div>'); }).join('');
+      html = renderableQuestions.map(function (q, i) { return PU.renderCard ? PU.renderCard(q, i, options) : ('<div>Q' + (i+1) + ': ' + (q.q||'') + '</div>'); }).join('');
     }
     Metrics.recordRenderResult({ success: true });
     return html;
@@ -267,7 +264,7 @@ module.exports = {
   renderQuestions: renderQuestions,
   checkAnswers: checkAnswers,
   generateAndRender: generateAndRender,
-  LegacyAdapter: LegacyAdapter
+  RenderFormat: RenderFormat
 };
 
 // 浏览器全局挂载

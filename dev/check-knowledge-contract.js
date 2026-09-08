@@ -17,11 +17,11 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 
 const bank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-const registry = require(path.join(ROOT, 'plugins', 'registry.js'));
+// MATH-14：legacy plugins/registry.js 已删除。pluginId 保留为知识库追溯字段，
+// 「pluginId 是否登记」检查随 legacy 轨道退役；可练性由 GeneratorRegistry 承接（check-core-generators）。
 
 const COGNITIVE = ['了解', '理解', '掌握', '运用'];
 const CONTEXT = ['pure', 'simple', 'standard', 'complex'];
-const registeredIds = new Set(registry.map(p => p.id));
 
 const errors = [];
 const warnings = [];
@@ -48,12 +48,10 @@ function validatePoint(kp, subject, grade, moduleId) {
     }
   });
 
-  // pluginId
+  // pluginId（MATH-14：仅校验存在性，登记校验随 legacy 注册表退役）
   if (!kp.pluginId) {
     if (isPlaceholder) addWarn(loc, '占位条目未声明 pluginId（已知缺口，待补）');
     else addErr(loc, '非占位条目缺 pluginId');
-  } else if (!registeredIds.has(kp.pluginId)) {
-    addErr(loc, 'pluginId 未在注册表登记: ' + kp.pluginId);
   }
 
   // 难度元数据字段（类型/范围）

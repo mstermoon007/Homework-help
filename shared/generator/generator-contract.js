@@ -4,15 +4,11 @@
  * 新契约：
  *   generate(plan) → Promise<SemanticQuestion[]> | SemanticQuestion[]
  *
- * 旧插件通过 LegacyAdapter 桥接：
- *   Legacy Plugin (generateQuestions)
- *         ↓ LegacyPluginAdapter
- *         ↓ SemanticQuestion[]
+ * MATH-14：legacy 插件轨道已删除，契约仅服务 native core Generator。
  */
 'use strict';
 
 var SQ = require('../semantic-question.js');
-var LegacyAdapter = require('./legacy-adapter.js');
 var Pipeline = require('../validator/validation-pipeline.js');
 var BatchValidator = require('../validator/batch-validator.js');
 var RetryLoop = require('./retry-loop.js');
@@ -141,59 +137,6 @@ function normalizeOutput(item, plan, index) {
   }));
 }
 
-/**
- * Legacy Plugin Adapter（旧插件 → 新契约）
- * 将旧插件的 generateQuestions(opts) 包装为新契约 generate(plan)
- */
-function createLegacyGenerator(legacyPlugin, meta) {
-  meta = meta || {};
-  var legacyId = meta.id || legacyPlugin.id || 'legacy:unknown';
-  var capabilities = meta.capabilities || [];
-  var knowledgePoints = meta.knowledgePoints || [];
-
-  return {
-    id: 'legacy:' + legacyId,
-    version: meta.version || '1.0.0',
-    capabilities: capabilities,
-    knowledgePoints: knowledgePoints,
-
-    generate: function (plan) {
-      // 将 Plan 转换为 Legacy opts
-      var primaryKp = (Array.isArray(plan && plan.knowledgePointIds) && plan.knowledgePointIds[0]) ||
-        (plan && typeof plan.knowledgePointId === 'string' ? plan.knowledgePointId : null);
-      var opts = {
-        count: plan.count || 10,
-        grade: plan.grade,
-        difficulty: plan.difficulty,
-        knowledgePointId: primaryKp,
-        questionType: plan.questionTypeId,
-        seed: plan.seed,
-        // 透传约束
-        difficultyParams: plan.constraints
-      };
-
-      // 调用旧插件
-      var legacyResult = legacyPlugin.generateQuestions ? legacyPlugin.generateQuestions(opts) :
-                         legacyPlugin.generate ? legacyPlugin.generate(opts) : { questions: [] };
-
-      var rawQuestions = legacyResult.questions || legacyResult || [];
-
-      // 转换为 SemanticQuestion
-      return rawQuestions.map(function (q, i) {
-        return LegacyAdapter.toLegacyQuestion(q, {
-          generatorId: 'legacy:' + legacyId,
-          generatorVersion: meta.version || '1.0.0',
-          seed: plan.seed,
-          planId: plan.planId,
-          index: i,
-          knowledgePointId: primaryKp,
-          difficulty: plan.difficulty
-        });
-      });
-    }
-  };
-}
-
 // ====== 源码禁止项（Generator 实现不得包含渲染/随机/自行决定难度代码） ======
 var FORBIDDEN_PATTERNS = [
   { pattern: /\bMath\.random\b/, label: 'Math.random（随机数必须由注入的随机源提供）' },
@@ -215,7 +158,7 @@ var GENERATOR_DIFFICULTY_PATTERNS = [
 // SemanticQuestion 禁止字段（渲染/执行契约不得进入语义层）
 var FORBIDDEN_KEYS = ['render', 'check', 'html', 'svg', 'generate', 'generator', 'template', 'execute'];
 
-var SUBJECTS = { math: 'math', cn: 'cn', en: 'en', chinese: 'cn', english: 'en' };
+var SUBJECTS = { math: 'math' };
 
 function isEmptyGraphic(g) {
   if (g == null || typeof g !== 'object') return false;
@@ -337,7 +280,6 @@ module.exports = {
   FORBIDDEN_KEYS: FORBIDDEN_KEYS,
   GENERATOR_CONTRACT: GENERATOR_CONTRACT,
   createGenerator: createGenerator,
-  createLegacyGenerator: createLegacyGenerator,
   validateGeneratorContract: validateGeneratorContract,
   runGeneratorWithValidation: runGeneratorWithValidation,
   canonSubject: function (s) { return (s || 'math').toLowerCase(); },

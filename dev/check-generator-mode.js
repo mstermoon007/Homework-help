@@ -15,7 +15,6 @@ var path = require('path');
 var ROOT = path.join(__dirname, '..');
 var Mode = require(path.join(ROOT, 'shared', 'generator', 'generator-mode.js'));
 var Selector = require(path.join(ROOT, 'shared', 'generator', 'generator-selector.js'));
-var Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 
 var errors = [];
 
@@ -46,12 +45,19 @@ function run() {
   assertEq('native 模式选中 core track', n.record && n.record.scope, 'core');
 
   var f = Selector.selectGenerator({ knowledgePointId: 'math-g1-m0-make-ten', questionTypeId: 'review', difficulty: 3 });
-  assertEq('native 无候选回退 legacy', f.source, 'fallback:legacy');
+  assertEq('native 无候选显式 unsupported（Step 14 禁止 fallback）', f.source, 'unsupported');
+  assertEq('native 无候选错误码', f.errorCode, 'GENERATOR_UNSUPPORTED');
 
   Mode.setGlobal('hybrid');
-  var h = Engine.plan({ knowledgePointId: 'math-g1-m0-make-ten', count: 2, difficulty: 3 }).plans[0].generator;
-  assertEq('hybrid 并轨选择（KP 绑定优先）', h.generatorId, 'legacy:math-make-ten');
-  assertEq('选择结果携带 mode', h.mode, 'hybrid');
+  // MATH-14：legacy 轨道已删，hybrid 也无 legacy 候选 → core 绑定 KP 选 core（携带 mode）
+  var GenReg = require(path.join(ROOT, 'shared', 'generator', 'generator-registry.js'));
+  var legacyCount = GenReg.all().filter(function (r) { return r.scope === 'legacy' || /^legacy:/.test(r.id); }).length;
+  assertEq('legacy 记录已清空', legacyCount, 0);
+  var hsel = Selector.selectGenerator({ knowledgePointId: 'math-g1-m1-addsub-5', questionTypeId: 'calc', difficulty: 3 });
+  assertEq('hybrid 选择 core（无 legacy 并轨）', hsel.record && hsel.record.scope, 'core');
+  assertEq('选择结果携带 mode', hsel.mode, 'hybrid');
+  var hNone = Selector.selectGenerator({ knowledgePointId: 'math-g1-m0-make-ten', questionTypeId: 'review', difficulty: 3 });
+  assertEq('hybrid 无候选也不回退 legacy', hNone.source, 'unsupported');
 
   // 4) instantiate
   var inst = Selector.instantiate(n);
@@ -62,7 +68,7 @@ function run() {
   console.log('');
   console.log('默认 mode:     ' + Mode.getGlobal());
   console.log('覆盖层级:      knowledgePoint > global（仅两级）');
-  console.log('双轨选择:      native→核心(无匹配回退) / hybrid→并轨');
+  console.log('双轨选择:      native→核心(无候选显式 unsupported) / hybrid→并轨');
   console.log('Errors: ' + errors.length);
   errors.forEach(function (e) { console.log('  ✖ ' + e); });
   console.log('');

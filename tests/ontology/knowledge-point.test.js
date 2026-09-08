@@ -18,8 +18,9 @@ function countAll() {
   return total;
 }
 
-test('574 KP 真实 math/cn/en 均可归一化', () => {
-  assert.strictEqual(countAll(), 574);
+test('真实 KP 均可归一化（math 全量）', () => {
+  assert.ok(countAll() > 0, '知识库非空');
+  assert.strictEqual(Math.max(...Ontology.SUBJECTS.map(s => (KnowledgeBank[s] || []).length)), KnowledgeBank.math.length, '主体为 math');
 });
 
 test('get 返回标准 Canonical KnowledgePoint（5 类齐全）', () => {
@@ -55,7 +56,9 @@ test('未知 id 返回 null', () => {
   assert.strictEqual(KP.get('__no_such_kp__'), null);
 });
 
-test('real cn / en 也能归一化', () => {
-  assert.ok(KP.get('cn-g1-n1-pinyin-basic'));
-  assert.ok(KP.get('en-g3-e1-letter-recognition'));
+test('真实 math KP 引用与未知异类 id 行为', () => {
+  // cn/en 已剔除：cn- 前缀 id 视为未知，返回 null（与 __no_such_kp__ 一致）
+  assert.ok(KP.get('math-g1-m0-make-ten'));
+  assert.strictEqual(KP.get('cn-g1-n1-pinyin-basic'), null);
+  assert.strictEqual(KP.get('en-g3-e1-letter-recognition'), null);
 });

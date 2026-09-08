@@ -400,6 +400,29 @@ function buildDivTens(rng, range) {
 }
 
 /**
+ * 有余数除法（div-remainder，二年级表内域）：a ÷ b = q …… r，恒有 0 < r < b。
+ * b（除数）、q（商）取表内 2..9，余数 r 取 1..b-1，被除数 a = b*q + r 保证 ≤ range.max。
+ * answer 直接携带 "q……r"（小学教材余数记号），与批改层 normalizeAns 的余数记号归一化配套，
+ * 使「5……2 / 5...2 / 5余2」等输入同源可比。
+ * @returns {{ operands:[a,b], operators:[÷], steps:1, answer:string }}
+ */
+function buildDivRemainder(rng, range) {
+  var max = Math.max(10, (range && range.max) || 100);
+  var guard = 0;
+  while (guard++ < 200) {
+    var b = Rng.randInt(rng, 2, 9);
+    var qMax = Math.max(2, Math.min(9, Math.floor((max - 1) / b)));
+    var q = Rng.randInt(rng, 2, qMax);
+    var r = Rng.randInt(rng, 1, b - 1);
+    var a = b * q + r;
+    if (a > max) continue;
+    return { operands: [a, b], operators: [OP_DIV], steps: 1, answer: String(q) + '……' + String(r) };
+  }
+  // 兜底：23 ÷ 5 = 4……3
+  return { operands: [23, 5], operators: [OP_DIV], steps: 1, answer: '4……3' };
+}
+
+/**
  * M4-R25 小数点清理：去掉浮点噪声（0.1+0.2 → 0.3），并去除多余尾 0（6.90 → 6.9）。
  */
 function trimDec(x) {
@@ -547,6 +570,7 @@ var SPECIAL_KINDS = {
   'mul3x1':        { build: buildMul3x1,       needsRange: false }, // 三位数乘一位数
   'mul2tens':      { build: buildMul2tens,     needsRange: false }, // 两位数乘整十数
   'div-tens':      { build: buildDivTens,      needsRange: true  }, // 除数是整十数
+  'div-remainder': { build: buildDivRemainder, needsRange: true  }, // 有余数除法（q……r）
   'add-law':       { build: buildAddLaw,       needsRange: false }, // 加法运算律
   'mul-law':       { build: buildMulLaw,       needsRange: false }, // 乘法运算律
   'neg-add-sub':   { build: buildNegAddsub,    needsRange: false }, // 负数加减
@@ -596,6 +620,7 @@ module.exports = {
   buildMul3x1: buildMul3x1,
   buildMul2tens: buildMul2tens,
   buildDivTens: buildDivTens,
+  buildDivRemainder: buildDivRemainder,
   buildDecAddsub: buildDecAddsub,
   buildLawOral: buildLawOral,
   buildDecMulOral: buildDecMulOral,

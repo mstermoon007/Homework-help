@@ -53,8 +53,8 @@ function resolveNumberRange(options) {
     }
   }
 
-  // ② KnowledgePoint numberRangeDefault（Canonical: numeric.range；Legacy: number_range_default）
-  var kpRange = kp && (kp.numeric && kp.numeric.range ? kp.numeric.range : kp.number_range_default);
+  // ② KnowledgePoint numberRangeDefault（Canonical: numeric.range）
+  var kpRange = kp && kp.numeric && kp.numeric.range ? kp.numeric.range : null;
   if (isValidRange(kpRange)) {
     return normalizeRange(kpRange.min, kpRange.max, 'knowledge-point');
   }

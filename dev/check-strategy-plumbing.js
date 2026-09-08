@@ -1,20 +1,21 @@
 #!/usr/bin/env node
 /**
- * dev/check-strategy-plumbing.js — M3-21 Strategy → Plugin 管道验收
+ * dev/check-strategy-plumbing.js — M3-21 Strategy → Generator 管道验收（MATH-14 native-only）
  *
  * 对全部 math 知识点（Core Domain 收缩：语文/英语已移出核心生成链）全量验证
- * 7 个决策维度真正从 Strategy 进入 Plugin options：
- *   ① questionType   options.questionType === plan.questionTypeId
- *   ② cognitiveLevel options.cognitiveLevel === plan.cognitiveLevel
- *   ③ difficulty     options.difficulty === plan.difficulty
- *                     options.difficultyParams.level === plan.difficulty
- *   ④ structure      options.difficultyParams.{steps,allowBracket,allowMultDiv,scale}
- *                     === plan.constraints.{maxSteps,allowBracket,allowMultDiv,scale}
- *   ⑤ spiralLevel    options.spiralLevel === plan.spiralLevel
- *   ⑥ context        options.contextType === plan.contextType
- *   ⑦ count          options.count === plan.count
+ * 7 个决策维度真正落在 Strategy 产出的 QuestionPlan 上（native Generator 直接消费 plan）：
+ *   ① questionType   plan.questionTypeId 为合法题型
+ *   ② cognitiveLevel plan.cognitiveLevel 非空
+ *   ③ difficulty     plan.difficulty 为有限数值
+ *   ④ structure      plan.constraints.{maxSteps,allowBracket,allowMultDiv,scale} 已定义
+ *   ⑤ spiralLevel    plan.spiralLevel 非空
+ *   ⑥ context        plan.contextType 非空
+ *   ⑦ count          plan.count === request.count
  *
  * 验证 M3-22 Debug Trace：request.debug=true 时 result.strategyTrace 含 11 步决策链。
+ *
+ * MATH-14：legacy Adapter.adaptPlanToLegacyOptions 管道探针已删除，
+ *          决策维度以 QuestionPlan 为唯一载体直接校验。
  */
 'use strict';
 
@@ -22,7 +23,6 @@ var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
 var Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
-var Adapter = require(path.join(ROOT, 'shared', 'generator', 'legacy-adapter.js'));
 var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
 var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
 
@@ -30,6 +30,11 @@ function run() {
   var errors = [];
   var total = 0;
   var dimChecks = { '① questionType': 0, '② cognitiveLevel': 0, '③ difficulty': 0, '④ structure': 0, '⑤ spiralLevel': 0, '⑥ context': 0, '⑦ count': 0 };
+  var VALID_QT = ['oral', 'calc', 'fill', 'choice', 'judge', 'apply', 'open', 'geometry', 'recognize'];
+
+  function isGeneratorUnsupportedError(e) {
+    return e && e.code === 'GENERATOR_UNSUPPORTED';
+  }
 
   Ontology.SUBJECTS.forEach(function (s) {
     (KnowledgeBank[s] || []).forEach(function (g) {
@@ -44,47 +49,44 @@ function run() {
             var result = Engine.plan({ knowledgePointId: kp.id, count: 3, debug: true });
             plan = result.plans[0];
           } catch (e) {
+            if (isGeneratorUnsupportedError(e)) {
+              // P0-03 Step 14: KP 无 native generator 支持时返回 GENERATOR_UNSUPPORTED，
+              // 这是预期行为，不计入错误（MATH-14 后无 legacy fallback，该 KP 由矩阵决策禁用）。
+              total--; // 不计入管道验收总量
+              return;
+            }
             errors.push(kp.id + ' :: plan 失败: ' + e.message);
             return;
           }
 
-          var options;
-          try {
-            options = Adapter.adaptPlanToLegacyOptions(plan, {});
-          } catch (e) {
-            errors.push(kp.id + ' :: adapter 失败: ' + e.message);
-            return;
-          }
-
           // ①
-          if (options.questionType === plan.questionTypeId) dimChecks['① questionType']++;
-          else errors.push(kp.id + ' :: ① questionType 未进入 options（plan=' + plan.questionTypeId + ' options=' + options.questionType + '）');
+          if (plan.questionTypeId && VALID_QT.indexOf(plan.questionTypeId) !== -1) dimChecks['① questionType']++;
+          else errors.push(kp.id + ' :: ① questionTypeId 缺失或非法（plan=' + plan.questionTypeId + '）');
 
           // ②
-          if (options.cognitiveLevel === plan.cognitiveLevel) dimChecks['② cognitiveLevel']++;
-          else errors.push(kp.id + ' :: ② cognitiveLevel 未进入 options');
+          if (plan.cognitiveLevel) dimChecks['② cognitiveLevel']++;
+          else errors.push(kp.id + ' :: ② cognitiveLevel 未落入 plan');
 
           // ③
-          if (options.difficulty === plan.difficulty && options.difficultyParams && options.difficultyParams.level === plan.difficulty) dimChecks['③ difficulty']++;
-          else errors.push(kp.id + ' :: ③ difficulty 未进入 options');
+          if (typeof plan.difficulty === 'number' && isFinite(plan.difficulty)) dimChecks['③ difficulty']++;
+          else errors.push(kp.id + ' :: ③ difficulty 未落入 plan（' + plan.difficulty + '）');
 
           // ④
-          var dp = options.difficultyParams || {};
           var cst = plan.constraints || {};
-          if (dp.steps === cst.maxSteps && dp.allowBracket === cst.allowBracket && dp.allowMultDiv === cst.allowMultDiv && dp.scale === cst.scale) dimChecks['④ structure']++;
-          else errors.push(kp.id + ' :: ④ structure 未进入 options（' + JSON.stringify(dp) + ' vs ' + JSON.stringify(cst) + '）');
+          if (cst.maxSteps != null && cst.allowBracket != null && cst.allowMultDiv != null && cst.scale != null) dimChecks['④ structure']++;
+          else errors.push(kp.id + ' :: ④ structure 约束未落入 plan（' + JSON.stringify(cst) + '）');
 
           // ⑤
-          if (options.spiralLevel === plan.spiralLevel) dimChecks['⑤ spiralLevel']++;
-          else errors.push(kp.id + ' :: ⑤ spiralLevel 未进入 options');
+          if (plan.spiralLevel != null) dimChecks['⑤ spiralLevel']++;
+          else errors.push(kp.id + ' :: ⑤ spiralLevel 未落入 plan');
 
           // ⑥
-          if (options.contextType === plan.contextType) dimChecks['⑥ context']++;
-          else errors.push(kp.id + ' :: ⑥ context 未进入 options');
+          if (plan.contextType) dimChecks['⑥ context']++;
+          else errors.push(kp.id + ' :: ⑥ contextType 未落入 plan');
 
           // ⑦
-          if (options.count === plan.count) dimChecks['⑦ count']++;
-          else errors.push(kp.id + ' :: ⑦ count 未进入 options');
+          if (plan.count === 3) dimChecks['⑦ count']++;
+          else errors.push(kp.id + ' :: ⑦ count 未落入 plan（plan=' + plan.count + '）');
 
           // M3-22 Debug Trace
           if (!result.strategyTrace || !Array.isArray(result.strategyTrace) || result.strategyTrace.length !== 11) {

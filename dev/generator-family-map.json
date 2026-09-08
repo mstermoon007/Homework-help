@@ -1,0 +1,181 @@
+{
+  "generatedAt": "2026-09-08T07:32:44.409Z",
+  "families": {
+    "Arithmetic": {
+      "legacyPlugins": [
+        "math-g1-choice",
+        "math-g1-judge",
+        "math-g1-multiplication-table",
+        "math-g2-choice",
+        "math-g2-column",
+        "math-g2-judge",
+        "math-g2-mixed",
+        "math-g4-choice",
+        "math-g4-judge",
+        "math-g4-mixed",
+        "math-g4-oral",
+        "math-g4-vertical",
+        "math-g5-choice",
+        "math-g5-judge",
+        "math-g5-mixed",
+        "math-g5-oral",
+        "math-g5-vertical",
+        "math-g6-calc",
+        "math-g6-choice",
+        "math-g6-judge",
+        "math-g6-oral",
+        "math-make-ten",
+        "math-oral"
+      ],
+      "coreGenerators": [
+        "generator:arithmetic-addition",
+        "generator:arithmetic-subtraction",
+        "generator:arithmetic-multiplication",
+        "generator:arithmetic-division",
+        "generator:arithmetic-mixed-calculation",
+        "generator:complex-calc",
+        "generator:selection-fill",
+        "generator:selection-choice",
+        "generator:selection-judge"
+      ],
+      "kpCount": 131
+    },
+    "Number": {
+      "legacyPlugins": [
+        "math-g1-matching",
+        "math-g2-matching",
+        "math-g4-fill",
+        "math-g5-fill",
+        "math-g6-fill",
+        "math-match",
+        "math-number-sense",
+        "math-patterns"
+      ],
+      "coreGenerators": [
+        "generator:position-direction"
+      ],
+      "kpCount": 51
+    },
+    "FractionDecimalPercent": {
+      "legacyPlugins": [
+        "math-decimal",
+        "math-fraction"
+      ],
+      "coreGenerators": [],
+      "kpCount": 2
+    },
+    "Measurement": {
+      "legacyPlugins": [
+        "math-clock",
+        "math-g1-operation",
+        "math-g2-matching",
+        "math-money",
+        "math-time-date",
+        "math-unit-convert"
+      ],
+      "coreGenerators": [
+        "generator:money-measurement"
+      ],
+      "kpCount": 14
+    },
+    "Geometry": {
+      "legacyPlugins": [
+        "math-area",
+        "math-g1-matching",
+        "math-g1-operation",
+        "math-g2-matching",
+        "math-g4-draw",
+        "math-g4-fill",
+        "math-g5-draw",
+        "math-g5-fill",
+        "math-g5-word",
+        "math-g6-fill",
+        "math-g6-operation",
+        "math-g6-word-problems",
+        "math-geometry",
+        "math-match",
+        "math-position-direction",
+        "math-shapes"
+      ],
+      "coreGenerators": [
+        "generator:shape-recognition"
+      ],
+      "kpCount": 55
+    },
+    "Statistics": {
+      "legacyPlugins": [
+        "math-data-stats",
+        "math-g4-stats",
+        "math-g5-stats",
+        "math-g6-stats"
+      ],
+      "coreGenerators": [],
+      "kpCount": 11
+    },
+    "WordProblem": {
+      "legacyPlugins": [
+        "math-g2-picture-equations",
+        "math-g4-picture",
+        "math-g4-word",
+        "math-g5-picture",
+        "math-g5-word",
+        "math-g6-picture-equation",
+        "math-g6-word-problems",
+        "math-picture-equations",
+        "math-word-problems"
+      ],
+      "coreGenerators": [
+        "generator:application-word"
+      ],
+      "kpCount": 66
+    },
+    "ReasoningCompetition": {
+      "legacyPlugins": [
+        "math-combination-set",
+        "math-competition-c1-numberpuzzle",
+        "math-competition-c2-numbertheory",
+        "math-competition-c3-counting",
+        "math-competition-c4-geometry",
+        "math-competition-c5-journey",
+        "math-competition-c8-logic",
+        "math-competition-g4-c9",
+        "math-competition-g5-c1",
+        "math-competition-g5-c2",
+        "math-competition-g5-c3",
+        "math-competition-g5-c4",
+        "math-competition-g5-c5",
+        "math-competition-g5-c6",
+        "math-competition-g5-c7",
+        "math-competition-g5-c8",
+        "math-competition-g5-c9",
+        "math-competition-g6-c1",
+        "math-competition-g6-c2",
+        "math-competition-g6-c3",
+        "math-competition-g6-c4",
+        "math-competition-g6-c5",
+        "math-competition-g6-c6",
+        "math-competition-g6-c7",
+        "math-competition-g6-c8",
+        "math-competition-g6-c9",
+        "math-g4-reason",
+        "math-g5-reason",
+        "math-g6-reasoning",
+        "math-logic-reasoning"
+      ],
+      "coreGenerators": [],
+      "kpCount": 219
+    }
+  },
+  "familyCount": 8,
+  "totalKPs": 549,
+  "summary": {
+    "Arithmetic": 131,
+    "Number": 51,
+    "FractionDecimalPercent": 2,
+    "Measurement": 14,
+    "Geometry": 55,
+    "Statistics": 11,
+    "WordProblem": 66,
+    "ReasoningCompetition": 219
+  }
+}

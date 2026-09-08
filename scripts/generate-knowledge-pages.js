@@ -273,8 +273,8 @@ function build(opts) {
   const incremental = !!opts.incremental;
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  // 任务3：知识库为按科目分组对象 {math,cn,en}；逐科目生成（科目名用于页面文案）
-  const SUBJECT_NAMES = { math: '数学', cn: '语文', en: '英语' };
+  // 任务3：知识库为按科目分组对象（现仅 math）；逐科目生成（科目名用于页面文案）
+  const SUBJECT_NAMES = { math: '数学' };
   const subjectKeys = Object.keys(KnowledgeBank).filter(k => Array.isArray(KnowledgeBank[k]));
   const gradesData = [];
   let written = 0, skipped = 0;
@@ -288,7 +288,7 @@ function build(opts) {
 
       (gradeObj.modules || []).forEach((module) => {
         const moduleId = module.moduleId;
-        // 空模块（占位阶段，如语文/英语未激活模块）跳过页面产出
+        // 空模块（占位阶段）跳过页面产出
         if (!Array.isArray(module.knowledgePoints) || module.knowledgePoints.length === 0) return;
 
         // ① 模块聚合页（哈希覆盖模块本身 + 年级 + 科目名，模块内容变即重生成）

@@ -126,15 +126,7 @@
     'math-competition-g6-c6': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
     'math-competition-g6-c7': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
     'math-competition-g6-c8': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c9': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-
-    // 其他（cn 综合、无插件占位）
-    'chinese-comprehensive': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'chinese-pinyin': { ops: ['read', 'write', 'identify'], confidence: 'high', evidence: 'documented' },
-    'chinese-hanzi': { ops: ['read', 'write', 'identify', 'compose'], confidence: 'high', evidence: 'documented' },
-    'pinyin-to-char': { ops: ['read', 'write', 'identify'], confidence: 'high', evidence: 'documented' },
-    'english-alphabet': { ops: ['read', 'write', 'identify'], confidence: 'high', evidence: 'documented' }
+    'math-competition-g6-c9': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' }
   };
 
   function operationsForPlugin(pluginId) {

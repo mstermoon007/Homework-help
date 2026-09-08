@@ -408,8 +408,6 @@
       <label class="f-label" for="subjectSelect">科目</label>
       <select id="subjectSelect">
         <option value="math">数学</option>
-        <option value="cn">语文</option>
-        <option value="en">英语</option>
       </select>
     </div>
     <div class="filter-item">
@@ -507,19 +505,14 @@
   'use strict';
 
   // ---------- 常量 ----------
-  var SUBJECT_CANON = { math: 'math', chinese: 'cn', cn: 'cn', english: 'en', en: 'en' };
+  var SUBJECT_CANON = { math: 'math' };
   var SUBJECT_CONFIG = {
-    math: { modules: ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'] },
-    cn:   { modules: ['N1','N2','N3','N4','N5','N6','N7','N8'] },
-    en:   { modules: ['E1','E2','E3','E4','E5','E6'] }
+    math: { modules: ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'] }
   };
   var MODULE_LABEL = {
     M1: '口算', M2: '竖式', M3: '脱式', M4: '填空', M5: '连线',
     M6: '操作', M7: '看图列式', M8: '应用题', M9: '统计整理',
-    M10: '推理广角', M11: '判断', M12: '选择',
-    N1: '拼音基础', N2: '识字写字', N3: '词语积累', N4: '句型句式',
-    N5: '古诗文', N6: '阅读理解', N7: '写作', N8: '语文综合',
-    E1: '字母发音', E2: '词汇', E3: '句型', E4: '情景对话', E5: '阅读', E6: '英语综合'
+    M10: '推理广角', M11: '判断', M12: '选择'
   };
   var MODE_DESC = {
     quick: { title: '快速模式', desc: '当前科目与年级的所有题型，可多选后一键生成练习题。' },
@@ -688,8 +681,7 @@
       }, []);
   }
 
-  // 快速模式：数学按 7 类题型卡（可多选，题型→能力匹配知识点，上下册过滤）；
-  // 语文/英语维持模块卡（可多选）
+  // 快速模式：数学按 7 类题型卡（可多选，题型→能力匹配知识点，上下册过滤）
   function renderQuick() {
     gridQuick.innerHTML = '';
     var entries = fullKPEntries(state.subject, state.grade);
@@ -699,34 +691,20 @@
       return;
     }
     var html = '';
-    if (state.subject === 'math') {
-      // 数学：7 类题型卡，副标显示「当前册 + 能力匹配」的知识点数（不再按模块锁定）
-      QUICK_TYPE_DEFS.forEach(function (t) {
-        var on = state.quickTypes.indexOf(t.key) !== -1 ? ' on' : '';
-        var cnt = entries.filter(function (k) { return kpMatchesType(k, t) && kpMatchesBook(k, state.quickBook); }).length;
-        var disabled = cnt === 0 ? ' disabled' : '';
-        html += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
-          '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
-      });
-    } else {
-      moduleTypeCards(state.subject, state.grade).forEach(function (c) {
-        var on = state.quickModules.indexOf(c.moduleId) !== -1 ? ' on' : '';
-        html += '<button type="button" class="type-card' + on + '" data-module="' + c.moduleId + '">' + c.label +
-          '<span class="tc-tag">' + c.kps.length + ' 个知识点</span></button>';
-      });
-    }
+    // 数学：7 类题型卡，副标显示「当前册 + 能力匹配」的知识点数（不再按模块锁定）
+    QUICK_TYPE_DEFS.forEach(function (t) {
+      var on = state.quickTypes.indexOf(t.key) !== -1 ? ' on' : '';
+      var cnt = entries.filter(function (k) { return kpMatchesType(k, t) && kpMatchesBook(k, state.quickBook); }).length;
+      var disabled = cnt === 0 ? ' disabled' : '';
+      html += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
+        '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
+    });
     gridQuick.innerHTML = html;
     gridQuick.querySelectorAll('.type-card').forEach(function (b) {
       b.addEventListener('click', function () {
-        if (state.subject === 'math') {
-          var tk = b.getAttribute('data-type');
-          var idx = state.quickTypes.indexOf(tk);
-          if (idx === -1) { state.quickTypes.push(tk); } else { state.quickTypes.splice(idx, 1); }
-        } else {
-          var mid = b.getAttribute('data-module');
-          var mi = state.quickModules.indexOf(mid);
-          if (mi === -1) { state.quickModules.push(mid); } else { state.quickModules.splice(mi, 1); }
-        }
+        var tk = b.getAttribute('data-type');
+        var idx = state.quickTypes.indexOf(tk);
+        if (idx === -1) { state.quickTypes.push(tk); } else { state.quickTypes.splice(idx, 1); }
         renderQuick();
         renderSummary();
       });
@@ -763,33 +741,28 @@
   function renderTeacher() {
     var entries = fullKPEntries(state.subject, state.grade);
 
-    // 左区：题型卡（数学 7 类 / 语文英语维持模块卡占位）
+    // 左区：题型卡（数学 7 类）
     teacherTypeGrid.innerHTML = '';
-    if (state.subject === 'math') {
-      var tHtml = '';
-      QUICK_TYPE_DEFS.forEach(function (t) {
-        var on = state.teacherTypes.indexOf(t.key) !== -1 ? ' on' : '';
-        var cnt = entries.filter(function (k) { return kpMatchesType(k, t) && kpMatchesBook(k, state.teacherBook); }).length;
-        var disabled = cnt === 0 ? ' disabled' : '';
-        tHtml += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
-          '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
+    var tHtml = '';
+    QUICK_TYPE_DEFS.forEach(function (t) {
+      var on = state.teacherTypes.indexOf(t.key) !== -1 ? ' on' : '';
+      var cnt = entries.filter(function (k) { return kpMatchesType(k, t) && kpMatchesBook(k, state.teacherBook); }).length;
+      var disabled = cnt === 0 ? ' disabled' : '';
+      tHtml += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
+        '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
+    });
+    teacherTypeGrid.innerHTML = tHtml;
+    teacherTypeGrid.querySelectorAll('.type-card').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var tk = b.getAttribute('data-type');
+        var idx = state.teacherTypes.indexOf(tk);
+        if (idx === -1) { state.teacherTypes.push(tk); } else { state.teacherTypes.splice(idx, 1); }
+        // 清空已选单元/知识点，避免残留不属于新题型范围的选择
+        state.teacherUnits = []; state.teacherKps = [];
+        renderTeacher();
+        renderSummary();
       });
-      teacherTypeGrid.innerHTML = tHtml;
-      teacherTypeGrid.querySelectorAll('.type-card').forEach(function (b) {
-        b.addEventListener('click', function () {
-          var tk = b.getAttribute('data-type');
-          var idx = state.teacherTypes.indexOf(tk);
-          if (idx === -1) { state.teacherTypes.push(tk); } else { state.teacherTypes.splice(idx, 1); }
-          // 清空已选单元/知识点，避免残留不属于新题型范围的选择
-          state.teacherUnits = []; state.teacherKps = [];
-          renderTeacher();
-          renderSummary();
-        });
-      });
-    } else {
-      teacherTypeGrid.innerHTML = '<div class="type-empty">教师模式题型选择目前仅支持数学（语文/英语请使用快速模式）</div>';
-      state.teacherTypes = [];
-    }
+    });
 
     // 中区：单元分组（命中已选题型的知识点按 上下册×单元 聚合）
     var tTypes = state.teacherTypes;
@@ -920,21 +893,13 @@
     var out = [];
     var entries = fullKPEntries(subject, grade);
     if (state.mode === 'quick') {
-      // 快速模式：数学按「题型能力匹配 + 上下册」收集知识点（数据驱动，无模块映射）；
-      // 语文/英语按所选模块汇总
-      if (subject === 'math') {
-        var defs = QUICK_TYPE_DEFS.filter(function (t) { return state.quickTypes.indexOf(t.key) !== -1; });
-        entries.forEach(function (k) {
-          if (!kpMatchesBook(k, state.quickBook)) return;
-          if (defs.length && !defs.some(function (d) { return kpMatchesType(k, d); })) return;
-          if (out.indexOf(k.id) === -1) out.push(k.id);
-        });
-      } else {
-        state.quickModules.forEach(function (mid) {
-          entries.filter(function (k) { return k.moduleId === mid; })
-            .forEach(function (k) { if (out.indexOf(k.id) === -1) out.push(k.id); });
-        });
-      }
+      // 快速模式：数学按「题型能力匹配 + 上下册」收集知识点（数据驱动，无模块映射）
+      var defs = QUICK_TYPE_DEFS.filter(function (t) { return state.quickTypes.indexOf(t.key) !== -1; });
+      entries.forEach(function (k) {
+        if (!kpMatchesBook(k, state.quickBook)) return;
+        if (defs.length && !defs.some(function (d) { return kpMatchesType(k, d); })) return;
+        if (out.indexOf(k.id) === -1) out.push(k.id);
+      });
     } else if (state.mode === 'teacher') {
       out = state.teacherKps.slice();
     } else if (state.module) {

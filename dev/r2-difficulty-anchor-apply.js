@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * dev/r2-difficulty-anchor-apply.js — 应用 R2 难度锚点标定到 knowledge-*.js（Frozen Core 数据）
+ * dev/r2-difficulty-anchor-apply.js — 应用 R2 难度锚点标定到 knowledge-math.js（Frozen Core 数据）
  *
  * 依据 Q6 年级难度锚点表（dev/difficulty-anchor-table.js）：G1 1-2 / G2 2-4 / G3 3-5 / G4 4-7 / G5 5-8 / G6 6-10。
  * 行为：
- *   1) 归档备份 knowledge-math/cn/en.js → archive/knowledge-<sub>-difficulty-<ts>.js
+ *   1) 归档备份 knowledge-math.js → archive/knowledge-math-difficulty-<ts>.js
  *   2) 逐行处理：跟踪当前 grade，将 `difficulty: <d>`（d ∈ 1-5）按锚点表线性映射为绝对难度（1-10）
  *      已映射值（6-10 或其它）不动；行级最小改写，保留文件其余内容/格式
  *   3) 输出每年级映射统计
@@ -17,7 +17,7 @@ const fs = require('fs');
 const ROOT = path.join(__dirname, '..');
 const { mapToAbs } = require(path.join(ROOT, 'dev', 'difficulty-anchor-table.js'));
 
-const FILES = ['math', 'cn', 'en'].map((sub) => ({
+const FILES = ['math'].map((sub) => ({
   sub,
   fp: path.join(ROOT, 'shared', 'knowledge-' + sub + '.js')
 }));
@@ -49,7 +49,7 @@ const DIFF_RE = /^(\s*["']?difficulty["']?\s*:\s*)(\d+)(\s*,?\s*)$/;
   if (already) {
     console.error('[ABORT] 检测到 knowledge-*.js 已存在难度 > 5，疑似已标定。');
     console.error('  重复执行会产生二次映射（G2/G3 等低锚点年级无法按值域区分）。');
-    console.error('  如需重跑，请先恢复原始数据：git checkout HEAD -- shared/knowledge-math.js shared/knowledge-cn.js shared/knowledge-en.js');
+    console.error('  如需重跑，请先恢复原始数据：git checkout HEAD -- shared/knowledge-math.js');
     process.exit(1);
   }
 }

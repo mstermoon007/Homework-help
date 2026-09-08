@@ -30,8 +30,6 @@
     'dataStats': { module: 'svg-datastats', label: '数据统计' },
     'draw': { module: 'svg-draw', label: '作图' },
     'competition': { module: 'svg-competition', label: '竞赛' },
-    'chinese': { module: 'svg-chinese', label: '汉字书写' },
-    'english': { module: 'svg-english', label: '英语字母' },
     'core': { module: 'svg-core', label: '基础 SVG 原语' },
     'custom': { module: 'svg-legacy', label: '既有 SVG 透传' },
     'illustration': { module: 'svg-legacy', label: '既有 SVG 透传' }
