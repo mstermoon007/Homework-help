@@ -35,6 +35,9 @@ function createArithmeticGenerator(spec) {
 
   function seedFor(plan, context, i) {
     if (context && context.seed != null) return context.seed + ':' + i;
+    // C2：契约层已按本代 baseSeed 派生 per-item seed（plan.seed）；无 context 时必须采用，
+    // 否则退化为 KP|题型|难度|题量 的确定性种子，导致「重新生成」题目完全不变。
+    if (plan && plan.seed != null) return plan.seed + ':' + i;
     return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
   }
 
@@ -108,7 +111,11 @@ function createArithmeticGenerator(spec) {
           answerMode: 'input',
           hint: null,
           data: {
-            operation: Arith.normalizeOperation(context.operation || plan.operation || op),
+            // C2：data.operation 必须用「运算标签字符串」。plan.operation 在新计划形态下
+            // 是算符数组（如 ['+']），直接送 normalizeOperation 会落入兜底 'mixed'，
+            // 导致单运算 KP（如竖式加法 KP operation=['+']）的题目被误标 mixed 而
+            // 触发 KP_SEMANTIC_OPERATION；优先级与上方 generateStructure 的运算决策一致。
+            operation: Arith.normalizeOperation(context.operation || planOperationStr(plan) || op),
             steps: structure.steps
           }
         });

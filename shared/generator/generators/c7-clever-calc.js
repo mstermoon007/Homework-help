@@ -23,6 +23,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':c7:' + i;
+  // C2：契约层已按本代 baseSeed 派生 per-item seed（plan.seed）；无 context 时必须采用，
+  // 否则退化为 KP|题型|难度|题量 的确定性种子，导致「重新生成」题目完全不变。
+  if (plan && plan.seed != null) return plan.seed + ':c7:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c7:' + i;
 }
 

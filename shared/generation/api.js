@@ -25,6 +25,9 @@
    */
   var _deps = {};
 
+  // C2: generationId 铸造序号（每次 generate() 自增，配合时间戳，无 Math.random）
+  var _generationSeq = 0;
+
   /**
    * 依赖名 → 浏览器全局兜底 key
    * @type {Object}
@@ -267,7 +270,12 @@
     var results = [];
     var failedPlans = [];
     // 生成层引擎统一去重：跨 plan 共享指纹集（同一套生成内不出现重复题）
+    // 跨代去重：previousSeenKeys（仅上一代成功题目的指纹）预置入袋，
+    // 使本代生成时与上一套练习互斥；本代成功题目的指纹仍由 validator 成功才入集。
     var globalSeenKeys = new Set();
+    if (options && options.previousSeenKeys) {
+      options.previousSeenKeys.forEach(function (k) { globalSeenKeys.add(k); });
+    }
     var seq = Promise.resolve();
     plans.forEach(function (plan) {
       seq = seq.then(function () {
@@ -299,7 +307,9 @@
       });
     });
     return seq.then(function () {
-      return { questions: results, trace: { failedPlans: failedPlans } };
+      // seenKeys 含「上一代 ∪ 本代」指纹（供 trace/诊断）；编排层应只取本代成功题目
+      // 的 questionFingerprint 作为下一代的 previousSeenKeys，保证窗口仅保留当前+上一代。
+      return { questions: results, trace: { failedPlans: failedPlans }, seenKeys: globalSeenKeys };
     });
   }
 
@@ -327,6 +337,9 @@
     var RO = getRenderOptions();
     var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop', density: 'normal' };
 
+    // C2: 铸造本代 generationId（单调自增 + 时间戳，无 Math.random）
+    var generationId = 'g-' + Date.now().toString(36) + '-' + (++_generationSeq).toString(36);
+
     return build(request).then(function (built) {
       var plans = built.plans || [];
       return runPlans(plans, options).then(function (run) {
@@ -341,7 +354,11 @@
           renderOptions: renderOutline.renderOptions,
           plans: plans,
           trace: mergedTrace,
-          failedPlans: (run.trace && run.trace.failedPlans) || []
+          failedPlans: (run.trace && run.trace.failedPlans) || [],
+          // C2: 代际身份与去重袋（seenKeys 含上一代∪本代；编排层只应留存本代题目指纹）
+          generationId: generationId,
+          previousGenerationId: options.previousGenerationId || null,
+          seenKeys: run.seenKeys || null
         };
       });
     });

@@ -74,6 +74,9 @@
       // C1：combine 合并出题标志必须进入 config（_buildGenerationRequest 读取 this.config.combine）
       combine: options.combine === true
     };
+    // C2：跨代去重上下文（由编排层 bridge 持有并注入；本层不自行跨会话记忆）：
+    // { generationId: 上一代 id, fingerprints: Set<questionFingerprint> }
+    this.previousGeneration = options.previousGeneration || null;
     this.state = STATE.IDLE;
     this.exerciseSet = null;      // { questions: LegacyQuestion[], meta }
     this.semanticQuestions = null; // SemanticQuestion[]
@@ -102,7 +105,16 @@
     var req = this._buildGenerationRequest();
 
     // 2. 调用统一生成 API (GenerationAPI)
-    return GenerationAPI.generate(req, { renderOptions: { mode: 'screen' } })
+    // C2：注入上一代指纹（previousSeenKeys）实现跨练习去重；generationId 随计划透传。
+    var genOptions = { renderOptions: { mode: 'screen' } };
+    if (this.previousGeneration) {
+      if (this.previousGeneration.fingerprints) genOptions.previousSeenKeys = this.previousGeneration.fingerprints;
+      if (this.previousGeneration.generationId) {
+        genOptions.previousGenerationId = this.previousGeneration.generationId;
+        req.previousGenerationId = this.previousGeneration.generationId;
+      }
+    }
+    return GenerationAPI.generate(req, genOptions)
       .then(function (g) {
         if (!g.questions || !g.questions.length) {
           throw new Error('该配置下没有可生成的题目');

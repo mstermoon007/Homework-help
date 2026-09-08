@@ -144,6 +144,29 @@ function validateTextAnswer(answerObj, expected) {
 }
 
 /**
+ * 验证余数除法答案：a ÷ b = q……r（小学教材余数记号），恒有 0 ≤ r < b、b*q+r = a。
+ * 题干形如 "53 ÷ 6 = ?"，答案形如 "8……5" / "8...5" / "8余5"。
+ * @returns {boolean|null} true 校验通过；false 确定不匹配；null 非余数题（调用方走常规数值校验）
+ */
+function validateRemainderAnswer(answerObj, prompt) {
+  var candidates = [answerObj && answerObj.value].concat(Array.isArray(answerObj && answerObj.acceptable) ? answerObj.acceptable : [])
+    .map(function (v) { return coerceString(v).trim(); })
+    .filter(function (v) { return v !== ''; });
+  var remCandidates = candidates.filter(function (c) { return /^\d+\s*(?:…+|\.{3,}|余)\s*\d+$/.test(c); });
+  if (!remCandidates.length) return null;
+  var dm = coerceString(prompt).match(/(\d+)\s*[÷/]\s*(\d+)/);
+  if (!dm) return null;
+  var a = parseInt(dm[1], 10), b = parseInt(dm[2], 10);
+  if (!(b > 0)) return false;
+  return remCandidates.some(function (c) {
+    var m = c.match(/^(\d+)\s*(?:…+|\.{3,}|余)\s*(\d+)$/);
+    if (!m) return false;
+    var q = parseInt(m[1], 10), r = parseInt(m[2], 10);
+    return r >= 0 && r < b && b * q + r === a;
+  });
+}
+
+/**
  * 主验证入口
  * @param {Object} sq SemanticQuestion
  * @returns {Object} { valid, errors, warnings, info, score, checks }
@@ -175,18 +198,26 @@ function validateAnswer(sq) {
     var res2 = validateJudgeAnswer(answerObj, true); // 默认期望 true，实际应从题干推断
     warnings.push({ code: 'JUDGE_ANSWER_UNVERIFIED', field: 'answer', message: '判断题正确性需人工/规则核对', severity: 'INFO' });
   } else if (qType === 'fill' || qType === 'calc') {
-    // 计算/填空：尝试从题干自动计算期望答案
-    var expected = computeExpectedAnswer(prompt);
-    if (expected) {
-      var res3 = validateNumericAnswer(answerObj, expected);
-      errors.push.apply(errors, res3.errors);
-      warnings.push.apply(warnings, res3.warnings);
+    // 有余数除法（a ÷ b = q……r）：余数记号无法用表达式求值，走专用语义校验
+    var remResult = validateRemainderAnswer(answerObj, prompt);
+    if (remResult === true) {
+      // 余数答案正确
+    } else if (remResult === false) {
+      errors.push(createError(ERROR_CODES.ANSWER_MISMATCH, 'answer.value', '余数除法答案不正确（不满足 b×q+r=a 且 0≤r<b）', SEVERITY.ERROR));
     } else {
-      // 无法自动计算，仅做非空校验
-      if (answerObj.value == null && (!answerObj.acceptable || answerObj.acceptable.length === 0)) {
-        errors.push(createError(ERROR_CODES.ANSWER_INVALID, 'answer.value', '答案为空且无法自动校验', SEVERITY.ERROR));
+      // 计算/填空：尝试从题干自动计算期望答案
+      var expected = computeExpectedAnswer(prompt);
+      if (expected) {
+        var res3 = validateNumericAnswer(answerObj, expected);
+        errors.push.apply(errors, res3.errors);
+        warnings.push.apply(warnings, res3.warnings);
       } else {
-        info.push({ code: 'ANSWER_UNVERIFIED', field: 'answer', message: '题目类型 ' + qType + ' 无法自动验证，需人工核对', severity: 'INFO' });
+        // 无法自动计算，仅做非空校验
+        if (answerObj.value == null && (!answerObj.acceptable || answerObj.acceptable.length === 0)) {
+          errors.push(createError(ERROR_CODES.ANSWER_INVALID, 'answer.value', '答案为空且无法自动校验', SEVERITY.ERROR));
+        } else {
+          info.push({ code: 'ANSWER_UNVERIFIED', field: 'answer', message: '题目类型 ' + qType + ' 无法自动验证，需人工核对', severity: 'INFO' });
+        }
       }
     }
   } else {
@@ -204,6 +235,7 @@ module.exports = {
   validateAnswer: validateAnswer,
   computeExpectedAnswer: computeExpectedAnswer,
   validateNumericAnswer: validateNumericAnswer,
+  validateRemainderAnswer: validateRemainderAnswer,
   validateChoiceAnswer: validateChoiceAnswer,
   validateJudgeAnswer: validateJudgeAnswer,
   validateTextAnswer: validateTextAnswer

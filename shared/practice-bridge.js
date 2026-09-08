@@ -179,6 +179,21 @@
   // 每次 start/newSession 递增；异步回调只在 requestId === _generationRequestId 时才允许 emit，
   // 旧请求即使成功/失败也静默丢弃 —— 绝不能让旧请求结果覆盖新请求的 UI。
   var _generationRequestId = 0;
+  // C2：跨代去重记忆——仅保留「上一代」成功题目的语义指纹与 generationId。
+  // 每次新生成成功后整体替换（窗口=当前代+上一代，不无限累积）；
+  // 由本编排层持有（UI 层与 Generator 层均不持有去重状态），经 sessionConfig.previousGeneration 注入。
+  var _lastGeneration = null;
+
+  // C2：从成功会话中提取本代题目指纹，滚动为「上一代」
+  function recordGeneration(session) {
+    var g = session && session.lastSemantic;
+    if (!g || !g.generationId || !Array.isArray(g.questions)) return;
+    var fingerprints = new Set();
+    g.questions.forEach(function (q) {
+      if (q && q.questionFingerprint) fingerprints.add(q.questionFingerprint);
+    });
+    if (fingerprints.size) _lastGeneration = { generationId: g.generationId, fingerprints: fingerprints };
+  }
 
   // 读取生成层类型（浏览器 / CommonJS 边界，不修改生成层）
   function sessionCtor() {
@@ -209,7 +224,10 @@
     // C1：session 必须由本次请求闭包持有，异步回调禁止重读全局 _session
     var session;
     try {
-      session = new Ctor(ControlService.sessionConfig(profile));
+      var sessionConfig = ControlService.sessionConfig(profile);
+      // C2：注入上一代指纹（跨练习去重）；无则不传（第一代自然无历史）
+      if (_lastGeneration) sessionConfig.previousGeneration = _lastGeneration;
+      session = new Ctor(sessionConfig);
     } catch (e) {
       if (requestId === _generationRequestId) emitStart({ ok: false, instruction: profile, error: { code: 'E_SESSION', message: '创建练习会话失败：' + (e && e.message || e) } });
       return;
@@ -217,6 +235,7 @@
     _session = session;
     session.start().then(function (result) {
       if (requestId !== _generationRequestId) return; // 旧请求：后台可正常结束，但不得更新 UI
+      recordGeneration(session); // C2：本代成功题目滚动为上一代指纹
       emitStart({
         ok: true,
         session: session,
@@ -333,7 +352,10 @@
     if (!Ctor) return null;
     var built = ControlService.plan(ins || {}).profile;
     ++_generationRequestId; // 新会话意图作废旧在途生成/批改回调
-    _session = new Ctor(ControlService.sessionConfig(built));
+    var sessionConfig = ControlService.sessionConfig(built);
+    // C2：新会话（错题本重做/换一套等）同样继承上一代指纹
+    if (_lastGeneration) sessionConfig.previousGeneration = _lastGeneration;
+    _session = new Ctor(sessionConfig);
     return _session;
   }
 

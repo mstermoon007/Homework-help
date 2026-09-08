@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T15:28:36.346Z",
+  "generatedAt": "2026-09-08T16:40:05.925Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -103,24 +103,24 @@
       "mtime": 1788863773511.1604
     },
     "shared/generator/retry-loop.js": {
-      "hash": "2f45c3d293c44768",
-      "size": 15253,
-      "mtime": 1788834079099.9973
+      "hash": "dc22d78088a1e85f",
+      "size": 18792,
+      "mtime": 1788884935910.2634
     },
     "shared/generator/generators/arithmetic.js": {
-      "hash": "f230579a4248721e",
-      "size": 5167,
-      "mtime": 1788855590632.6824
+      "hash": "f4c0c3c72a607763",
+      "size": 5889,
+      "mtime": 1788885211285.613
     },
     "shared/generator/generators/selection.js": {
-      "hash": "e6c58da93b85bacf",
-      "size": 5809,
-      "mtime": 1788855674002.742
+      "hash": "5c1255400f882f7b",
+      "size": 6098,
+      "mtime": 1788882741690.227
     },
     "shared/generator/generators/complex.js": {
-      "hash": "275baf766084f0bd",
-      "size": 9188,
-      "mtime": 1788871820503.5317
+      "hash": "127e4f1f492461c4",
+      "size": 9479,
+      "mtime": 1788882741361.1782
     },
     "shared/generator/generators/index.js": {
       "hash": "d818cb92396b1a86",
@@ -263,9 +263,9 @@
       "mtime": 1788108432197.7527
     },
     "shared/validator/answer-validator.js": {
-      "hash": "7072376451a36690",
-      "size": 9130,
-      "mtime": 1788108543813.5352
+      "hash": "76dfa2d63301985f",
+      "size": 10849,
+      "mtime": 1788885440509.0657
     },
     "shared/validator/difficulty-validator.js": {
       "hash": "c31fb53070e097e4",
@@ -273,9 +273,9 @@
       "mtime": 1788151649749.0671
     },
     "shared/validator/duplicate-validator.js": {
-      "hash": "028fd45b9bafd2d4",
-      "size": 6436,
-      "mtime": 1788751424572.9802
+      "hash": "b4c931ac9b7047ea",
+      "size": 7614,
+      "mtime": 1788881964168.916
     },
     "shared/validator/batch-validator.js": {
       "hash": "3a4d679d2207890c",
@@ -363,9 +363,9 @@
       "mtime": 1788867319174.9182
     },
     "shared/presentation-engine.js": {
-      "hash": "32b630221975b33c",
-      "size": 11626,
-      "mtime": 1788867246047.4434
+      "hash": "d16c3f47dd4f7c5f",
+      "size": 11801,
+      "mtime": 1788883502160.5396
     },
     "shared/print.js": {
       "hash": "8b829088de7cb1e5",
@@ -373,9 +373,9 @@
       "mtime": 1788829303949.6091
     },
     "shared/practice-session.js": {
-      "hash": "d9d27e1852ea9678",
-      "size": 15451,
-      "mtime": 1788881053347.4001
+      "hash": "6d92517b52f2c74f",
+      "size": 16218,
+      "mtime": 1788882217388.7554
     },
     "shared/check.js": {
       "hash": "fb37a44749114d74",

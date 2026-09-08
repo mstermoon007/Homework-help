@@ -2,10 +2,10 @@
  * shared/validator/duplicate-validator.js — M5-R10 Duplicate Validator
  *
  * 题目去重：
- *   - Canonical Key: knowledgePoint + operation + operands + structure + format + context
- *   - 同批次去重
- *   - 同一练习去重
- *   - 可选历史题目去重（需外部存储）
+ *   - 权威键：questionFingerprint（语义指纹 v2，buildQuestionFingerprint），
+ *     与 retry-loop.filterDuplicateQuestions 同一键空间，同批/同练习/跨代去重均以此为准。
+ *   - canonicalKey（题面数字/运算符归一）仅作诊断 info 字段，不再写入 seenKeys。
+ *   - 同批次去重 / 同一练习去重 / 跨代去重（previousSeenKeys 由编排层传入）
  */
 'use strict';
 
@@ -33,6 +33,9 @@ function extractOperands(sq) {
 }
 
 // 提取运算符集合（排序归一，忽略顺序，同式异写同指纹）
+// 族标签（题组级混合标记，不代表该题实例的运算符）必须剔除，
+// 否则 data.operation='mixed' 时 10−6 与 10+6 被错误并为同一指纹。
+var FAMILY_OP_LABELS = { mixed: true, combined: true, combine: true, mix: true, composite: true };
 function extractOperators(sq) {
   var ops = [];
   var data = sq && sq.data;
@@ -40,8 +43,12 @@ function extractOperators(sq) {
   if (data && data.operation) opSeeds.push(data.operation);
   if (Array.isArray(data && data.operators)) opSeeds.push.apply(opSeeds, data.operators);
   opSeeds.forEach(function (op) {
-    if (typeof op === 'string') ops.push(op.toLowerCase());
-    else if (op && typeof op.symbol === 'string') ops.push(op.symbol);
+    if (typeof op === 'string') {
+      var v = op.toLowerCase();
+      if (!FAMILY_OP_LABELS[v]) ops.push(v);
+    } else if (op && typeof op.symbol === 'string' && !FAMILY_OP_LABELS[String(op.symbol).toLowerCase()]) {
+      ops.push(op.symbol);
+    }
   });
   if (ops.length) return ops;
 
@@ -119,13 +126,17 @@ function validateDuplicate(sq, context) {
 
   context = context || {};
   var seenKeys = context.seenKeys || new Set();
-  var key = buildCanonicalKey(sq);
+  // 权威去重键：语义指纹 v2（与 retry-loop filterDuplicateQuestions 同一键空间）；
+  // canonicalKey 仅作诊断 info 字段，不再写入 seenKeys，避免双键混装。
+  var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
+  if (!sq.questionFingerprint) sq.questionFingerprint = key;
+  var diagKey = buildCanonicalKey(sq);
 
   if (seenKeys.has(key)) {
-    errors.push(createError(ERROR_CODES.DUPLICATE_QUESTION, 'canonicalKey', '重复题目: ' + key, SEVERITY.ERROR, { canonicalKey: key }));
+    errors.push(createError(ERROR_CODES.DUPLICATE_QUESTION, 'questionFingerprint', '重复题目: ' + key, SEVERITY.ERROR, { questionFingerprint: key, canonicalKey: diagKey }));
   } else {
     seenKeys.add(key);
-    info.push({ code: 'UNIQUE', field: 'canonicalKey', message: '题目唯一: ' + key, severity: 'INFO' });
+    info.push({ code: 'UNIQUE', field: 'questionFingerprint', message: '题目唯一: ' + key, severity: 'INFO', canonicalKey: diagKey });
   }
 
   return {
@@ -143,11 +154,13 @@ function validateBatchDuplicate(questions, context) {
   context = context || {};
   var seenKeys = context.seenKeys || new Set();
   var results = questions.map(function (sq) {
-    var key = buildCanonicalKey(sq);
+    var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
+    if (!sq.questionFingerprint) sq.questionFingerprint = key;
+    var diagKey = buildCanonicalKey(sq);
     var errors = [];
     var warnings = [];
     if (seenKeys.has(key)) {
-      errors.push(createError('DUPLICATE_QUESTION', 'canonicalKey', '重复题目: ' + key, 'ERROR', { canonicalKey: key }));
+      errors.push(createError('DUPLICATE_QUESTION', 'questionFingerprint', '重复题目: ' + key, 'ERROR', { questionFingerprint: key, canonicalKey: diagKey }));
     } else {
       seenKeys.add(key);
     }

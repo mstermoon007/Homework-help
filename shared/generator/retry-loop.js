@@ -16,6 +16,20 @@ var Pipeline = require('../validator/validation-pipeline.js');
 var QID = require('../question-id.js');
 
 var DEFAULT_MAX_RETRIES = 3;
+// C2：纯重复（跨代/批内指纹冲突）专用重试上限。
+// 纯重复属「随机抽样未命中剩余空间」，不代表题目质量问题，给更高预算逐位补齐；
+// 含质量类错误（答案/难度/结构等）仍走 DEFAULT_MAX_RETRIES。
+var DEDUP_MAX_RETRIES = 8;
+
+// C2：纯重复家族错误码（DUPLICATE_INTEGRITY_VIOLATION 来自 duplicate-integrity-validator
+// 的跨批冲突门，与 DUPLICATE_QUESTION 同属「抽样撞车」，不属质量错误）
+var DEDUP_ERROR_CODES = [
+  Validator.ERROR_CODES.DUPLICATE_QUESTION,
+  'DUPLICATE_INTEGRITY_VIOLATION'
+];
+function isDedupError(e) {
+  return !!e && DEDUP_ERROR_CODES.indexOf(e.code) !== -1;
+}
 
 // 空间耗尽信号：重试全部因「重复」而失败 → 说明该 KP+type+difficulty 语义空间的
 // 可见题量已不足（去重后剩余空间太小），继续重试无意义。
@@ -23,6 +37,7 @@ var GENERATION_SPACE_EXHAUSTED = 'GENERATION_SPACE_EXHAUSTED';
 var RETRYABLE_CODES = [
   Validator.ERROR_CODES.ANSWER_MISMATCH,
   Validator.ERROR_CODES.DUPLICATE_QUESTION,
+  'DUPLICATE_INTEGRITY_VIOLATION',
   Validator.ERROR_CODES.DIFFICULTY_MISMATCH,
   Validator.ERROR_CODES.GRAPHIC_INVALID,
   Validator.ERROR_CODES.DISTRACTOR_DUPLICATE,
@@ -65,24 +80,30 @@ function hasRetryable(errors) {
   return isRetryable(errors);
 }
 
-// M11-R05: 局部化重复重试——只重试重复的题目，保留有效题目
+// M11-R05: 局部化重复重试——按验证结果分区（含错误→待重试；通过→保留）。
+// C2：不再用 seenKeys.has(fp) 判重——管道 validator 已对逐题给出权威判定（重复即
+// DUPLICATE_QUESTION 错误），而 seenKeys 中会含有本批「已保留」题目自身的指纹，
+// 复查 has(fp) 会把保留题误判为重复导致永不收敛。null 空位（未获不重复候选，
+// 已带合成错误）直接列入待重试位。
 function filterDuplicateQuestions(questions, validationResults, seenKeys, Dup) {
-  var fpGetter = Dup && typeof Dup.buildQuestionFingerprint === 'function' ? Dup.buildQuestionFingerprint : null;
   var duplicateIndices = [];
   var validQuestions = [];
   var validResults = [];
 
   questions.forEach(function (sq, i) {
     var vr = validationResults[i];
+    if (!sq) {
+      duplicateIndices.push(i);
+      return;
+    }
     var fp = sq && sq.questionFingerprint;
-    if (!fp && fpGetter) {
-      fp = fpGetter(sq);
+    if (!fp && Dup && typeof Dup.buildQuestionFingerprint === 'function') {
+      fp = Dup.buildQuestionFingerprint(sq);
       sq.questionFingerprint = fp;
     }
-    var isDuplicate = fp && seenKeys && seenKeys.has(fp);
     var hasErrors = vr && vr.errors && vr.errors.length > 0;
 
-    if (isDuplicate || hasErrors) {
+    if (hasErrors) {
       duplicateIndices.push(i);
     } else {
       validQuestions.push(sq);
@@ -151,111 +172,138 @@ function generateWithRetry(generatorFn, plan, context) {
         return sq;
       });
 
-      // M11-R05: 局部重试时，保留有效题目，仅验证新生成的题目
+      // 新批次统一走验证管道（局部重试同样全量验证，再从中选「有效且不重复」者补位）
+      // C2：管道内 validateDuplicate 会把本题指纹即时写入共享 seenKeys（成功才入集的
+      // 终局登记在 allValid 后），因此预扫描必须基于「管道运行前」的快照判断跨批冲突，
+      // 否则每题都会在本批已入袋的集合中「自命中」，误报全部重复。
+      var seenKeysSnapshot = validatorContext.seenKeys ? new Set(validatorContext.seenKeys) : null;
+      var valContext = Object.assign({}, validatorContext, { generatorId: generatorId, seed: seed, plan: plan });
+      var newValidation = Pipeline.runPipelineBatch(newQuestions, valContext);
+
       var questionsToValidate;
       var finalQuestions;
       var finalResults;
 
       if (isPartialRetry) {
-        // 仅验证新生成的题目（替换重复位置）
         questionsToValidate = newQuestions;
-        // 构建最终题目数组：保留有效题目 + 新生成题目（按原位置插入）
-        // 原始批次大小 = 保留的有效题目数 + 需要替换的重复位置数（与 newQuestions 实际
-        // 长度无关——生成器可能返回完整批次而非仅替换项，取 min 防越界）。
+        // C2：候选池补位——新批次中「验证通过且不与 seenKeys/保留题/批内冲突」的题目
+        // 均可填补重复空位（不再按序只取前 N 题，避免有效新题被浪费、重复题漏网到终轮）。
+        var occupiedFps = new Set();
+        keepQuestions.forEach(function (q) {
+          if (q && q.questionFingerprint) occupiedFps.add(q.questionFingerprint);
+        });
+        var candidateIndices = [];
+        newQuestions.forEach(function (sq, i) {
+          var vr = newValidation[i];
+          if (!sq || !vr || !vr.valid) return;
+          var fp = sq.questionFingerprint;
+          if (!fp) return;
+          if (occupiedFps.has(fp)) return;
+          if (seenKeysSnapshot && seenKeysSnapshot.has(fp)) return;
+          occupiedFps.add(fp);
+          candidateIndices.push(i);
+        });
+
+        var dupSet = {};
+        duplicateIndices.forEach(function (d) { dupSet[d] = true; });
+        var originalCount = keepQuestions.length + duplicateIndices.length;
         finalQuestions = [];
-        var dupCount = duplicateIndices.length;
-        var originalCount = keepQuestions.length + dupCount;
-        var newQIdx = 0;
-        var keepQIdx = 0;
-        for (var pos = 0; pos < originalCount; pos++) {
-          if (duplicateIndices.indexOf(pos) !== -1) {
-            finalQuestions.push(newQIdx < newQuestions.length ? newQuestions[newQIdx++] : null);
-          } else {
-            finalQuestions.push(keepQIdx < keepQuestions.length ? keepQuestions[keepQIdx++] : null);
-          }
-        }
-        // 验证结果：保留有效结果 + 新生成题目的验证结果
         finalResults = [];
-        newQIdx = 0;
-        keepQIdx = 0;
-        for (var pos2 = 0; pos2 < originalCount; pos2++) {
-          if (duplicateIndices.indexOf(pos2) !== -1) {
-            finalResults.push(null); // 占位，稍后填入验证结果
-            newQIdx++;
+        var candCursor = 0;
+        var keepCursor = 0;
+        for (var pos = 0; pos < originalCount; pos++) {
+          if (dupSet[pos]) {
+            if (candCursor < candidateIndices.length) {
+              var ci = candidateIndices[candCursor++];
+              finalQuestions.push(newQuestions[ci]);
+              finalResults.push(newValidation[ci]);
+            } else {
+              // 空位：本轮新批次无不重复候选 → 合成重复错误，驱动继续局部重试
+              finalQuestions.push(null);
+              finalResults.push({
+                valid: false,
+                errors: [{
+                  code: Validator.ERROR_CODES.DUPLICATE_QUESTION,
+                  field: 'questionFingerprint',
+                  message: '局部重试：空位未获得不重复新题',
+                  severity: 'ERROR'
+                }],
+                warnings: [], info: [], score: 0, checks: { duplicate: 'fail' }
+              });
+            }
           } else {
-            finalResults.push(keepResults[keepQIdx++] || null);
+            finalQuestions.push(keepQuestions[keepCursor] || null);
+            finalResults.push(keepResults[keepCursor] || {
+              valid: false, errors: [], warnings: [], info: [], score: 0, checks: {}
+            });
+            keepCursor++;
           }
         }
       } else {
         questionsToValidate = newQuestions;
         finalQuestions = newQuestions;
-        finalResults = null; // 非局部重试：返回整个批次的验证结果
+        finalResults = newValidation;
       }
 
-      // 预生成级去重检查（基于 semantic 指纹，独立于 prompt 文本 canonicalKey）：
+      // 预生成级去重检查（非局部路径防御层；局部路径已在补位选择中排除重复）：
       //   - 跨批：指纹已存在于共享 seenKeys → 冲突
       //   - 批内：指纹在同批内重复 → 冲突
-      // 任一冲突 → 该批标记 DUPLICATE_QUESTION，整体触发重试再生（新 seed）。
       var dedupErrors = [];
-      var localSeen = new Set();
-      var fpGetter = Dup && typeof Dup.buildQuestionFingerprint === 'function' ? Dup.buildQuestionFingerprint : null;
-      questionsToValidate.forEach(function (sq, i) {
-        if (!sq) return;
-        var fp = sq && sq.questionFingerprint;
-        if (!fp && fpGetter) {
-          fp = fpGetter(sq);
-          sq.questionFingerprint = fp;
-        }
-        if (!fp) return;
-        if (localSeen.has(fp)) {
-          dedupErrors.push({
-            code: Validator.ERROR_CODES.DUPLICATE_QUESTION,
-            field: 'questionFingerprint',
-            message: '预生成去重: 批内指纹重复 ' + fp,
-            severity: 'ERROR'
-          });
-        } else if (validatorContext.seenKeys && validatorContext.seenKeys.has(fp)) {
-          dedupErrors.push({
-            code: Validator.ERROR_CODES.DUPLICATE_QUESTION,
-            field: 'questionFingerprint',
-            message: '预生成去重: 指纹已存在（跨批）' + fp,
-            severity: 'ERROR'
-          });
-        } else {
-          localSeen.add(fp);
-        }
-      });
-
-      // 运行验证管道（仅验证新生成/重试的题目）
-      // P0-06 Step 29: 传递完整 plan 给语义验证器（需要 knowledgePointIds）
-      var valContext = Object.assign({}, validatorContext, { generatorId: generatorId, seed: seed, plan: plan });
-      var validationResults = Pipeline.runPipelineBatch(questionsToValidate, valContext);
-
-      // M11-R05: 填入新生成题目的验证结果到最终结果数组
-      if (isPartialRetry) {
-        var newQIdx2 = 0;
-        for (var pos3 = 0; pos3 < finalResults.length; pos3++) {
-          if (duplicateIndices.indexOf(pos3) !== -1) {
-            finalResults[pos3] = validationResults[newQIdx2++];
+      if (!isPartialRetry) {
+        var localSeen = new Set();
+        var fpGetter = Dup && typeof Dup.buildQuestionFingerprint === 'function' ? Dup.buildQuestionFingerprint : null;
+        questionsToValidate.forEach(function (sq) {
+          if (!sq) return;
+          var fp = sq && sq.questionFingerprint;
+          if (!fp && fpGetter) {
+            fp = fpGetter(sq);
+            sq.questionFingerprint = fp;
           }
+          if (!fp) return;
+          if (localSeen.has(fp) || (seenKeysSnapshot && seenKeysSnapshot.has(fp))) {
+            dedupErrors.push({
+              code: Validator.ERROR_CODES.DUPLICATE_QUESTION,
+              field: 'questionFingerprint',
+              message: '预生成去重: 指纹重复 ' + fp,
+              severity: 'ERROR'
+            });
+          } else {
+            localSeen.add(fp);
+          }
+        });
+        if (dedupErrors.length) {
+          finalResults = finalResults.map(function (r) {
+            var errs = ((r && r.errors) || []).concat(dedupErrors);
+            return Object.assign({}, r, { valid: false, errors: errs });
+          });
         }
       }
 
-      // 预生成去重命中视为验证失败（当批题目整体无效 → 触发重试）
-      if (dedupErrors.length) {
-        validationResults = validationResults.map(function (r, i) {
-          var errs = (r.errors || []).concat(dedupErrors);
-          return Object.assign({}, r, { valid: r.valid && errs.length === 0, errors: errs });
-        });
+      var allValid = finalResults.every(function (r) { return r && r.valid; });
+      // C2：轮次错误集 = 各槽位错误（含未补齐空位的合成 DUPLICATE 错误）+ 新批次真实验证错误。
+      // 必须并入真实错误：局部重试候选池为空往往不是「抽样撞车」，而是新题全部质量失败
+      // （如 KP 语义/难度不匹配的路由问题）；若只看槽位合成错误，会把质量失败误判为
+      // 「纯重复」，套用去重预算（8 次）并掩盖真实错误码、延缓/误导失败判定。
+      var allErrors = finalResults.flatMap(function (r) { return (r && r.errors) || []; })
+        .concat(newValidation.flatMap(function (r) { return (r && r.errors) || []; }));
+
+      // C2：seenKeys 事务化。验证管道运行期间 validateDuplicate 会把「所验证题」的指纹
+      // 即时写入共享集；若本轮失败，这些题目会被丢弃/下轮重抽，其指纹必须回滚，否则
+      // 跨轮共享集被失败批次污染，空间逐轮萎缩直至误报「生成空间耗尽」。
+      //   - 全量重试：本轮不保留任何题 → 恢复为本轮前的已确立集合（快照）
+      //   - 局部重试：最终数组 = 保留题 + 本轮补齐题，仅这些指纹正式入集
+      if (validatorContext.seenKeys && seenKeysSnapshot) {
+        var liveSet = validatorContext.seenKeys;
+        liveSet.clear();
+        seenKeysSnapshot.forEach(function (k) { liveSet.add(k); });
+        if (isPartialRetry) {
+          finalQuestions.forEach(function (sq) {
+            if (sq && sq.questionFingerprint) liveSet.add(sq.questionFingerprint);
+          });
+        }
       }
 
-      var allValid = validationResults.every(function (r) { return r.valid; });
-      var allErrors = validationResults.flatMap(function (r) { return r.errors || []; });
-
-      // 非局部重试：最终逐题验证结果即整个批次的验证结果（供上层复用，避免二次验证）
-      var finalValidation = isPartialRetry ? finalResults : validationResults;
-
-      return { questions: finalQuestions, validationResults: finalValidation, allValid: allValid, allErrors: allErrors, seed: seed, dedupHits: dedupErrors.length };
+      return { questions: finalQuestions, validationResults: finalResults, allValid: allValid, allErrors: allErrors, seed: seed, dedupHits: dedupErrors.length };
     });
   }
 
@@ -318,20 +366,29 @@ function generateWithRetry(generatorFn, plan, context) {
     var duplicateIndices = dupFilter.duplicateIndices;
 
     // 提交失败统计：本次失败是否由「重复」导致
-    if (result.allErrors && result.allErrors.some(function (e) { return e.code === Validator.ERROR_CODES.DUPLICATE_QUESTION; })) {
+    if (result.allErrors && result.allErrors.some(isDedupError)) {
       duplicateFailures++;
     }
 
     // 如果没有重复题目（其他可重试错误），整批重试
     var shouldRetryAll = duplicateIndices.length === 0;
 
+    // C2：本轮失败若「全部由重复导致」（纯抽样撞车），使用去重专用重试预算；
+    // 一旦混入质量类错误，恢复默认质量重试预算（避免质量失败被无限重试掩盖）。
+    var isDedupOnlyFailure = result.allErrors.length > 0 && result.allErrors.every(isDedupError);
+    var effectiveCap = isDedupOnlyFailure ? DEDUP_MAX_RETRIES : maxRetries;
+
     // 重试
     retries++;
-    if (retries > maxRetries) {
-      if (duplicateFailures === allResults.length && duplicateFailures > 0) {
+    if (retries > effectiveCap) {
+      // 终轮可能残留 null 空位（未获不重复候选）：净化为非空题集，
+      // 下游凭 success=false / error 判定走失败路径，不静默输出空位。
+      var safeQuestions = result.questions.filter(function (sq) { return !!sq; });
+      var safeResults = result.validationResults.filter(function (vr, i) { return !!result.questions[i]; });
+      if (isDedupOnlyFailure && duplicateFailures > 0) {
         return {
-          questions: result.questions,
-          validationResults: result.validationResults,
+          questions: safeQuestions,
+          validationResults: safeResults,
           retries: retries,
           success: false,
           error: GENERATION_SPACE_EXHAUSTED,
@@ -340,12 +397,12 @@ function generateWithRetry(generatorFn, plan, context) {
         };
       }
       return {
-        questions: result.questions,
-        validationResults: result.validationResults,
+        questions: safeQuestions,
+        validationResults: safeResults,
         retries: retries,
         success: false,
         error: 'MAX_RETRIES_EXCEEDED',
-        message: '超过最大重试次数 (' + maxRetries + ')',
+        message: '超过最大重试次数 (' + effectiveCap + ')',
         attempts: allResults
       };
     }
@@ -370,6 +427,7 @@ function generateWithRetry(generatorFn, plan, context) {
 module.exports = {
   generateWithRetry: generateWithRetry,
   DEFAULT_MAX_RETRIES: DEFAULT_MAX_RETRIES,
+  DEDUP_MAX_RETRIES: DEDUP_MAX_RETRIES,
   GENERATION_SPACE_EXHAUSTED: GENERATION_SPACE_EXHAUSTED,
   RETRYABLE_CODES: RETRYABLE_CODES,
   FATAL_CODES: FATAL_CODES,

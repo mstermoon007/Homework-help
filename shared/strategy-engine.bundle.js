@@ -5928,6 +5928,9 @@ function createArithmeticGenerator(spec) {
 
   function seedFor(plan, context, i) {
     if (context && context.seed != null) return context.seed + ':' + i;
+    
+    
+    if (plan && plan.seed != null) return plan.seed + ':' + i;
     return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
   }
 
@@ -6001,7 +6004,11 @@ function createArithmeticGenerator(spec) {
           answerMode: 'input',
           hint: null,
           data: {
-            operation: Arith.normalizeOperation(context.operation || plan.operation || op),
+            
+            
+            
+            
+            operation: Arith.normalizeOperation(context.operation || planOperationStr(plan) || op),
             steps: structure.steps
           }
         });
@@ -6049,6 +6056,9 @@ function createSelectionGenerator(spec) {
 
   function seedFor(plan, context, i) {
     if (context && context.seed != null) return context.seed + ':' + i;
+    
+    
+    if (plan && plan.seed != null) return plan.seed + ':' + i;
     return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
   }
 
@@ -6182,6 +6192,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':complex:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':complex:' + i;
   return (pkp(plan) + '|' + plan.family + '|' + plan.difficulty + '|' + plan.count) + ':complex:' + i;
 }
 
@@ -6418,6 +6431,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':shape:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':shape:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':shape:' + i;
 }
 
@@ -7076,6 +7092,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':position:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':position:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':position:' + i;
 }
 
@@ -7362,6 +7381,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':money:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':money:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':money:' + i;
 }
 
@@ -7719,6 +7741,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':apply:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':apply:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':apply:' + i;
 }
 
@@ -8093,6 +8118,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':composite:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':composite:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':composite:' + i;
 }
 
@@ -8391,6 +8419,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':counting:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':counting:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':counting:' + i;
 }
 
@@ -8663,6 +8694,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':reason:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':reason:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':reason:' + i;
 }
 
@@ -8842,6 +8876,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':stats:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':stats:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':stats:' + i;
 }
 
@@ -8992,6 +9029,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':picture:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':picture:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':picture:' + i;
 }
 
@@ -9154,6 +9194,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':c1:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':c1:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c1:' + i;
 }
 
@@ -9306,6 +9349,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':c2:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':c2:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c2:' + i;
 }
 
@@ -9514,6 +9560,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':c5c6:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':c5c6:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c5c6:' + i;
 }
 
@@ -9777,6 +9826,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':c7:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':c7:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c7:' + i;
 }
 
@@ -9993,6 +10045,9 @@ function pkp(plan) {
 
 function seedFor(plan, context, i) {
   if (context && context.seed != null) return context.seed + ':c9:' + i;
+  
+  
+  if (plan && plan.seed != null) return plan.seed + ':c9:' + i;
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c9:' + i;
 }
 

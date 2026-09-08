@@ -96,12 +96,16 @@ function generateQuestions(plan, options) {
 
     // P0-004 校验 gate 输出（Bug-Fix）：重试耗尽/致命/不可重试错误时，禁止把
     // 完全不可用（无任何题目）的成果静默交付 UI——向上抛错 → runPlans 记入 failedPlans。
-    // 注意：仅拦截「零可用输出」；单个软校验告警（如 graphic 类型告警，见 R28-3 回归）
-    // 且仍产出可用题目的计划应照常交付，避免生成整轮被误杀（若需严格拦截硬失败，
-    // 由后续校验增强单独收敛，不在此扩大语义）。
-    if (!result.success && (!semanticQuestions || semanticQuestions.length === 0)) {
+    // C2：GENERATION_SPACE_EXHAUSTED（跨代/批内去重后语义空间饱和）即使仍有部分题目，
+    // 也必须显式失败——绝不静默交付含重复风险的不完整批次（不做「降题量」隐性降级）。
+    // 注意：其他软校验失败且仍产出可用题目的计划照常交付（保持 R28-3 以来的既有语义）。
+    if (!result.success && (
+      (!semanticQuestions || semanticQuestions.length === 0) ||
+      result.error === 'GENERATION_SPACE_EXHAUSTED'
+    )) {
       var err = new Error(((result.error || 'GENERATION_FAILED') + (result.message ? ': ' + result.message : '')));
       err.generationFailed = true;
+      err.generationError = result.error || null;
       err.planKey = plan.planId || primaryKp || null;
       throw err;
     }

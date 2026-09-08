@@ -82,9 +82,13 @@ function generateQuestions(plan, options) {
     
     
     
-    if (!result.success && (!semanticQuestions || semanticQuestions.length === 0)) {
+    if (!result.success && (
+      (!semanticQuestions || semanticQuestions.length === 0) ||
+      result.error === 'GENERATION_SPACE_EXHAUSTED'
+    )) {
       var err = new Error(((result.error || 'GENERATION_FAILED') + (result.message ? ': ' + result.message : '')));
       err.generationFailed = true;
+      err.generationError = result.error || null;
       err.planKey = plan.planId || primaryKp || null;
       throw err;
     }
@@ -506,10 +510,25 @@ var DEFAULT_MAX_RETRIES = 3;
 
 
 
+var DEDUP_MAX_RETRIES = 8;
+
+
+
+var DEDUP_ERROR_CODES = [
+  Validator.ERROR_CODES.DUPLICATE_QUESTION,
+  'DUPLICATE_INTEGRITY_VIOLATION'
+];
+function isDedupError(e) {
+  return !!e && DEDUP_ERROR_CODES.indexOf(e.code) !== -1;
+}
+
+
+
 var GENERATION_SPACE_EXHAUSTED = 'GENERATION_SPACE_EXHAUSTED';
 var RETRYABLE_CODES = [
   Validator.ERROR_CODES.ANSWER_MISMATCH,
   Validator.ERROR_CODES.DUPLICATE_QUESTION,
+  'DUPLICATE_INTEGRITY_VIOLATION',
   Validator.ERROR_CODES.DIFFICULTY_MISMATCH,
   Validator.ERROR_CODES.GRAPHIC_INVALID,
   Validator.ERROR_CODES.DISTRACTOR_DUPLICATE,
@@ -553,23 +572,29 @@ function hasRetryable(errors) {
 }
 
 
+
+
+
+
 function filterDuplicateQuestions(questions, validationResults, seenKeys, Dup) {
-  var fpGetter = Dup && typeof Dup.buildQuestionFingerprint === 'function' ? Dup.buildQuestionFingerprint : null;
   var duplicateIndices = [];
   var validQuestions = [];
   var validResults = [];
 
   questions.forEach(function (sq, i) {
     var vr = validationResults[i];
+    if (!sq) {
+      duplicateIndices.push(i);
+      return;
+    }
     var fp = sq && sq.questionFingerprint;
-    if (!fp && fpGetter) {
-      fp = fpGetter(sq);
+    if (!fp && Dup && typeof Dup.buildQuestionFingerprint === 'function') {
+      fp = Dup.buildQuestionFingerprint(sq);
       sq.questionFingerprint = fp;
     }
-    var isDuplicate = fp && seenKeys && seenKeys.has(fp);
     var hasErrors = vr && vr.errors && vr.errors.length > 0;
 
-    if (isDuplicate || hasErrors) {
+    if (hasErrors) {
       duplicateIndices.push(i);
     } else {
       validQuestions.push(sq);
@@ -633,110 +658,137 @@ function generateWithRetry(generatorFn, plan, context) {
       });
 
       
+      
+      
+      
+      var seenKeysSnapshot = validatorContext.seenKeys ? new Set(validatorContext.seenKeys) : null;
+      var valContext = Object.assign({}, validatorContext, { generatorId: generatorId, seed: seed, plan: plan });
+      var newValidation = Pipeline.runPipelineBatch(newQuestions, valContext);
+
       var questionsToValidate;
       var finalQuestions;
       var finalResults;
 
       if (isPartialRetry) {
-        
         questionsToValidate = newQuestions;
         
         
-        
+        var occupiedFps = new Set();
+        keepQuestions.forEach(function (q) {
+          if (q && q.questionFingerprint) occupiedFps.add(q.questionFingerprint);
+        });
+        var candidateIndices = [];
+        newQuestions.forEach(function (sq, i) {
+          var vr = newValidation[i];
+          if (!sq || !vr || !vr.valid) return;
+          var fp = sq.questionFingerprint;
+          if (!fp) return;
+          if (occupiedFps.has(fp)) return;
+          if (seenKeysSnapshot && seenKeysSnapshot.has(fp)) return;
+          occupiedFps.add(fp);
+          candidateIndices.push(i);
+        });
+
+        var dupSet = {};
+        duplicateIndices.forEach(function (d) { dupSet[d] = true; });
+        var originalCount = keepQuestions.length + duplicateIndices.length;
         finalQuestions = [];
-        var dupCount = duplicateIndices.length;
-        var originalCount = keepQuestions.length + dupCount;
-        var newQIdx = 0;
-        var keepQIdx = 0;
-        for (var pos = 0; pos < originalCount; pos++) {
-          if (duplicateIndices.indexOf(pos) !== -1) {
-            finalQuestions.push(newQIdx < newQuestions.length ? newQuestions[newQIdx++] : null);
-          } else {
-            finalQuestions.push(keepQIdx < keepQuestions.length ? keepQuestions[keepQIdx++] : null);
-          }
-        }
-        
         finalResults = [];
-        newQIdx = 0;
-        keepQIdx = 0;
-        for (var pos2 = 0; pos2 < originalCount; pos2++) {
-          if (duplicateIndices.indexOf(pos2) !== -1) {
-            finalResults.push(null); 
-            newQIdx++;
+        var candCursor = 0;
+        var keepCursor = 0;
+        for (var pos = 0; pos < originalCount; pos++) {
+          if (dupSet[pos]) {
+            if (candCursor < candidateIndices.length) {
+              var ci = candidateIndices[candCursor++];
+              finalQuestions.push(newQuestions[ci]);
+              finalResults.push(newValidation[ci]);
+            } else {
+              
+              finalQuestions.push(null);
+              finalResults.push({
+                valid: false,
+                errors: [{
+                  code: Validator.ERROR_CODES.DUPLICATE_QUESTION,
+                  field: 'questionFingerprint',
+                  message: '局部重试：空位未获得不重复新题',
+                  severity: 'ERROR'
+                }],
+                warnings: [], info: [], score: 0, checks: { duplicate: 'fail' }
+              });
+            }
           } else {
-            finalResults.push(keepResults[keepQIdx++] || null);
+            finalQuestions.push(keepQuestions[keepCursor] || null);
+            finalResults.push(keepResults[keepCursor] || {
+              valid: false, errors: [], warnings: [], info: [], score: 0, checks: {}
+            });
+            keepCursor++;
           }
         }
       } else {
         questionsToValidate = newQuestions;
         finalQuestions = newQuestions;
-        finalResults = null; 
+        finalResults = newValidation;
       }
 
-      
       
       
       
       var dedupErrors = [];
-      var localSeen = new Set();
-      var fpGetter = Dup && typeof Dup.buildQuestionFingerprint === 'function' ? Dup.buildQuestionFingerprint : null;
-      questionsToValidate.forEach(function (sq, i) {
-        if (!sq) return;
-        var fp = sq && sq.questionFingerprint;
-        if (!fp && fpGetter) {
-          fp = fpGetter(sq);
-          sq.questionFingerprint = fp;
-        }
-        if (!fp) return;
-        if (localSeen.has(fp)) {
-          dedupErrors.push({
-            code: Validator.ERROR_CODES.DUPLICATE_QUESTION,
-            field: 'questionFingerprint',
-            message: '预生成去重: 批内指纹重复 ' + fp,
-            severity: 'ERROR'
-          });
-        } else if (validatorContext.seenKeys && validatorContext.seenKeys.has(fp)) {
-          dedupErrors.push({
-            code: Validator.ERROR_CODES.DUPLICATE_QUESTION,
-            field: 'questionFingerprint',
-            message: '预生成去重: 指纹已存在（跨批）' + fp,
-            severity: 'ERROR'
-          });
-        } else {
-          localSeen.add(fp);
-        }
-      });
-
-      
-      
-      var valContext = Object.assign({}, validatorContext, { generatorId: generatorId, seed: seed, plan: plan });
-      var validationResults = Pipeline.runPipelineBatch(questionsToValidate, valContext);
-
-      
-      if (isPartialRetry) {
-        var newQIdx2 = 0;
-        for (var pos3 = 0; pos3 < finalResults.length; pos3++) {
-          if (duplicateIndices.indexOf(pos3) !== -1) {
-            finalResults[pos3] = validationResults[newQIdx2++];
+      if (!isPartialRetry) {
+        var localSeen = new Set();
+        var fpGetter = Dup && typeof Dup.buildQuestionFingerprint === 'function' ? Dup.buildQuestionFingerprint : null;
+        questionsToValidate.forEach(function (sq) {
+          if (!sq) return;
+          var fp = sq && sq.questionFingerprint;
+          if (!fp && fpGetter) {
+            fp = fpGetter(sq);
+            sq.questionFingerprint = fp;
           }
+          if (!fp) return;
+          if (localSeen.has(fp) || (seenKeysSnapshot && seenKeysSnapshot.has(fp))) {
+            dedupErrors.push({
+              code: Validator.ERROR_CODES.DUPLICATE_QUESTION,
+              field: 'questionFingerprint',
+              message: '预生成去重: 指纹重复 ' + fp,
+              severity: 'ERROR'
+            });
+          } else {
+            localSeen.add(fp);
+          }
+        });
+        if (dedupErrors.length) {
+          finalResults = finalResults.map(function (r) {
+            var errs = ((r && r.errors) || []).concat(dedupErrors);
+            return Object.assign({}, r, { valid: false, errors: errs });
+          });
         }
       }
 
+      var allValid = finalResults.every(function (r) { return r && r.valid; });
       
-      if (dedupErrors.length) {
-        validationResults = validationResults.map(function (r, i) {
-          var errs = (r.errors || []).concat(dedupErrors);
-          return Object.assign({}, r, { valid: r.valid && errs.length === 0, errors: errs });
-        });
+      
+      
+      
+      var allErrors = finalResults.flatMap(function (r) { return (r && r.errors) || []; })
+        .concat(newValidation.flatMap(function (r) { return (r && r.errors) || []; }));
+
+      
+      
+      
+      
+      
+      if (validatorContext.seenKeys && seenKeysSnapshot) {
+        var liveSet = validatorContext.seenKeys;
+        liveSet.clear();
+        seenKeysSnapshot.forEach(function (k) { liveSet.add(k); });
+        if (isPartialRetry) {
+          finalQuestions.forEach(function (sq) {
+            if (sq && sq.questionFingerprint) liveSet.add(sq.questionFingerprint);
+          });
+        }
       }
 
-      var allValid = validationResults.every(function (r) { return r.valid; });
-      var allErrors = validationResults.flatMap(function (r) { return r.errors || []; });
-
-      
-      var finalValidation = isPartialRetry ? finalResults : validationResults;
-
-      return { questions: finalQuestions, validationResults: finalValidation, allValid: allValid, allErrors: allErrors, seed: seed, dedupHits: dedupErrors.length };
+      return { questions: finalQuestions, validationResults: finalResults, allValid: allValid, allErrors: allErrors, seed: seed, dedupHits: dedupErrors.length };
     });
   }
 
@@ -799,7 +851,7 @@ function generateWithRetry(generatorFn, plan, context) {
     var duplicateIndices = dupFilter.duplicateIndices;
 
     
-    if (result.allErrors && result.allErrors.some(function (e) { return e.code === Validator.ERROR_CODES.DUPLICATE_QUESTION; })) {
+    if (result.allErrors && result.allErrors.some(isDedupError)) {
       duplicateFailures++;
     }
 
@@ -807,12 +859,21 @@ function generateWithRetry(generatorFn, plan, context) {
     var shouldRetryAll = duplicateIndices.length === 0;
 
     
+    
+    var isDedupOnlyFailure = result.allErrors.length > 0 && result.allErrors.every(isDedupError);
+    var effectiveCap = isDedupOnlyFailure ? DEDUP_MAX_RETRIES : maxRetries;
+
+    
     retries++;
-    if (retries > maxRetries) {
-      if (duplicateFailures === allResults.length && duplicateFailures > 0) {
+    if (retries > effectiveCap) {
+      
+      
+      var safeQuestions = result.questions.filter(function (sq) { return !!sq; });
+      var safeResults = result.validationResults.filter(function (vr, i) { return !!result.questions[i]; });
+      if (isDedupOnlyFailure && duplicateFailures > 0) {
         return {
-          questions: result.questions,
-          validationResults: result.validationResults,
+          questions: safeQuestions,
+          validationResults: safeResults,
           retries: retries,
           success: false,
           error: GENERATION_SPACE_EXHAUSTED,
@@ -821,12 +882,12 @@ function generateWithRetry(generatorFn, plan, context) {
         };
       }
       return {
-        questions: result.questions,
-        validationResults: result.validationResults,
+        questions: safeQuestions,
+        validationResults: safeResults,
         retries: retries,
         success: false,
         error: 'MAX_RETRIES_EXCEEDED',
-        message: '超过最大重试次数 (' + maxRetries + ')',
+        message: '超过最大重试次数 (' + effectiveCap + ')',
         attempts: allResults
       };
     }
@@ -851,6 +912,7 @@ function generateWithRetry(generatorFn, plan, context) {
 module.exports = {
   generateWithRetry: generateWithRetry,
   DEFAULT_MAX_RETRIES: DEFAULT_MAX_RETRIES,
+  DEDUP_MAX_RETRIES: DEDUP_MAX_RETRIES,
   GENERATION_SPACE_EXHAUSTED: GENERATION_SPACE_EXHAUSTED,
   RETRYABLE_CODES: RETRYABLE_CODES,
   FATAL_CODES: FATAL_CODES,
@@ -2507,6 +2569,9 @@ function extractOperands(sq) {
 }
 
 
+
+
+var FAMILY_OP_LABELS = { mixed: true, combined: true, combine: true, mix: true, composite: true };
 function extractOperators(sq) {
   var ops = [];
   var data = sq && sq.data;
@@ -2514,8 +2579,12 @@ function extractOperators(sq) {
   if (data && data.operation) opSeeds.push(data.operation);
   if (Array.isArray(data && data.operators)) opSeeds.push.apply(opSeeds, data.operators);
   opSeeds.forEach(function (op) {
-    if (typeof op === 'string') ops.push(op.toLowerCase());
-    else if (op && typeof op.symbol === 'string') ops.push(op.symbol);
+    if (typeof op === 'string') {
+      var v = op.toLowerCase();
+      if (!FAMILY_OP_LABELS[v]) ops.push(v);
+    } else if (op && typeof op.symbol === 'string' && !FAMILY_OP_LABELS[String(op.symbol).toLowerCase()]) {
+      ops.push(op.symbol);
+    }
   });
   if (ops.length) return ops;
 
@@ -2588,13 +2657,17 @@ function validateDuplicate(sq, context) {
 
   context = context || {};
   var seenKeys = context.seenKeys || new Set();
-  var key = buildCanonicalKey(sq);
+  
+  
+  var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
+  if (!sq.questionFingerprint) sq.questionFingerprint = key;
+  var diagKey = buildCanonicalKey(sq);
 
   if (seenKeys.has(key)) {
-    errors.push(createError(ERROR_CODES.DUPLICATE_QUESTION, 'canonicalKey', '重复题目: ' + key, SEVERITY.ERROR, { canonicalKey: key }));
+    errors.push(createError(ERROR_CODES.DUPLICATE_QUESTION, 'questionFingerprint', '重复题目: ' + key, SEVERITY.ERROR, { questionFingerprint: key, canonicalKey: diagKey }));
   } else {
     seenKeys.add(key);
-    info.push({ code: 'UNIQUE', field: 'canonicalKey', message: '题目唯一: ' + key, severity: 'INFO' });
+    info.push({ code: 'UNIQUE', field: 'questionFingerprint', message: '题目唯一: ' + key, severity: 'INFO', canonicalKey: diagKey });
   }
 
   return {
@@ -2612,11 +2685,13 @@ function validateBatchDuplicate(questions, context) {
   context = context || {};
   var seenKeys = context.seenKeys || new Set();
   var results = questions.map(function (sq) {
-    var key = buildCanonicalKey(sq);
+    var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
+    if (!sq.questionFingerprint) sq.questionFingerprint = key;
+    var diagKey = buildCanonicalKey(sq);
     var errors = [];
     var warnings = [];
     if (seenKeys.has(key)) {
-      errors.push(createError('DUPLICATE_QUESTION', 'canonicalKey', '重复题目: ' + key, 'ERROR', { canonicalKey: key }));
+      errors.push(createError('DUPLICATE_QUESTION', 'questionFingerprint', '重复题目: ' + key, 'ERROR', { questionFingerprint: key, canonicalKey: diagKey }));
     } else {
       seenKeys.add(key);
     }
@@ -3003,6 +3078,25 @@ function validateTextAnswer(answerObj, expected) {
 }
 
 
+function validateRemainderAnswer(answerObj, prompt) {
+  var candidates = [answerObj && answerObj.value].concat(Array.isArray(answerObj && answerObj.acceptable) ? answerObj.acceptable : [])
+    .map(function (v) { return coerceString(v).trim(); })
+    .filter(function (v) { return v !== ''; });
+  var remCandidates = candidates.filter(function (c) { return /^\d+\s*(?:…+|\.{3,}|余)\s*\d+$/.test(c); });
+  if (!remCandidates.length) return null;
+  var dm = coerceString(prompt).match(/(\d+)\s*[÷/]\s*(\d+)/);
+  if (!dm) return null;
+  var a = parseInt(dm[1], 10), b = parseInt(dm[2], 10);
+  if (!(b > 0)) return false;
+  return remCandidates.some(function (c) {
+    var m = c.match(/^(\d+)\s*(?:…+|\.{3,}|余)\s*(\d+)$/);
+    if (!m) return false;
+    var q = parseInt(m[1], 10), r = parseInt(m[2], 10);
+    return r >= 0 && r < b && b * q + r === a;
+  });
+}
+
+
 function validateAnswer(sq) {
   var errors = [];
   var warnings = [];
@@ -3031,17 +3125,25 @@ function validateAnswer(sq) {
     warnings.push({ code: 'JUDGE_ANSWER_UNVERIFIED', field: 'answer', message: '判断题正确性需人工/规则核对', severity: 'INFO' });
   } else if (qType === 'fill' || qType === 'calc') {
     
-    var expected = computeExpectedAnswer(prompt);
-    if (expected) {
-      var res3 = validateNumericAnswer(answerObj, expected);
-      errors.push.apply(errors, res3.errors);
-      warnings.push.apply(warnings, res3.warnings);
+    var remResult = validateRemainderAnswer(answerObj, prompt);
+    if (remResult === true) {
+      
+    } else if (remResult === false) {
+      errors.push(createError(ERROR_CODES.ANSWER_MISMATCH, 'answer.value', '余数除法答案不正确（不满足 b×q+r=a 且 0≤r<b）', SEVERITY.ERROR));
     } else {
       
-      if (answerObj.value == null && (!answerObj.acceptable || answerObj.acceptable.length === 0)) {
-        errors.push(createError(ERROR_CODES.ANSWER_INVALID, 'answer.value', '答案为空且无法自动校验', SEVERITY.ERROR));
+      var expected = computeExpectedAnswer(prompt);
+      if (expected) {
+        var res3 = validateNumericAnswer(answerObj, expected);
+        errors.push.apply(errors, res3.errors);
+        warnings.push.apply(warnings, res3.warnings);
       } else {
-        info.push({ code: 'ANSWER_UNVERIFIED', field: 'answer', message: '题目类型 ' + qType + ' 无法自动验证，需人工核对', severity: 'INFO' });
+        
+        if (answerObj.value == null && (!answerObj.acceptable || answerObj.acceptable.length === 0)) {
+          errors.push(createError(ERROR_CODES.ANSWER_INVALID, 'answer.value', '答案为空且无法自动校验', SEVERITY.ERROR));
+        } else {
+          info.push({ code: 'ANSWER_UNVERIFIED', field: 'answer', message: '题目类型 ' + qType + ' 无法自动验证，需人工核对', severity: 'INFO' });
+        }
       }
     }
   } else {
@@ -3059,6 +3161,7 @@ module.exports = {
   validateAnswer: validateAnswer,
   computeExpectedAnswer: computeExpectedAnswer,
   validateNumericAnswer: validateNumericAnswer,
+  validateRemainderAnswer: validateRemainderAnswer,
   validateChoiceAnswer: validateChoiceAnswer,
   validateJudgeAnswer: validateJudgeAnswer,
   validateTextAnswer: validateTextAnswer
