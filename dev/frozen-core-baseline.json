@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T14:38:36.897Z",
+  "generatedAt": "2026-09-08T15:28:36.346Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -373,9 +373,9 @@
       "mtime": 1788829303949.6091
     },
     "shared/practice-session.js": {
-      "hash": "7408ea410ab70477",
-      "size": 15294,
-      "mtime": 1788795604686.8088
+      "hash": "d9d27e1852ea9678",
+      "size": 15451,
+      "mtime": 1788881053347.4001
     },
     "shared/check.js": {
       "hash": "fb37a44749114d74",

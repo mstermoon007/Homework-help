@@ -70,7 +70,9 @@
       kpAllocation: options.kpAllocation || null,
       adaptive: options.adaptive || false,
       learnerProfile: options.learnerProfile || null,
-      titleType: options.titleType || null
+      titleType: options.titleType || null,
+      // C1：combine 合并出题标志必须进入 config（_buildGenerationRequest 读取 this.config.combine）
+      combine: options.combine === true
     };
     this.state = STATE.IDLE;
     this.exerciseSet = null;      // { questions: LegacyQuestion[], meta }

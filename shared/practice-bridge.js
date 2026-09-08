@@ -119,6 +119,8 @@
         learnerProfile: ui.learnerProfile || st.learnerProfile || null,
         titleType: ui.titleType || st.titleType || null,
         pluginIds: ui.pluginIds || st.pluginIds || null,
+        // C1：combine 合并出题标志透传（多 KP 合并为一套卷）
+        combine: ui.combine === true || st.combine === true,
         raw: ui.raw || null
       };
 
@@ -140,7 +142,8 @@
         questionTypes: Array.isArray(profile.questionTypes) ? profile.questionTypes : (profile.questionTypes ? [profile.questionTypes] : null),
         adaptive: !!profile.adaptive,
         learnerProfile: profile.learnerProfile || null,
-        titleType: profile.titleType || null
+        titleType: profile.titleType || null,
+        combine: profile.combine === true
       };
       if (profile.kpAllocation) config.kpAllocation = profile.kpAllocation;
       return config;
@@ -172,6 +175,10 @@
   var _session = null;          // 当前持有的生成层会话（单次直发：单个会话；编排：聚合会话 shim）
   var _onStartFeedback = null;  // UI 注册：接受生成层 start 反馈的钩子
   var _onSubmitFeedback = null; // UI 注册：接受生成层 submit 反馈的钩子
+  // C1：生成请求单调序号（latest request wins）。
+  // 每次 start/newSession 递增；异步回调只在 requestId === _generationRequestId 时才允许 emit，
+  // 旧请求即使成功/失败也静默丢弃 —— 绝不能让旧请求结果覆盖新请求的 UI。
+  var _generationRequestId = 0;
 
   // 读取生成层类型（浏览器 / CommonJS 边界，不修改生成层）
   function sessionCtor() {
@@ -194,26 +201,35 @@
 
   function runSingle(profile) {
     var Ctor = sessionCtor();
-    if (!Ctor) { emitStart({ ok: false, error: { code: 'E_GEN_LAYER', message: '题目生成层（PracticeSession）未加载' } }); return; }
-    try {
-      _session = new Ctor(ControlService.sessionConfig(profile));
-    } catch (e) {
-      emitStart({ ok: false, instruction: profile, error: { code: 'E_SESSION', message: '创建练习会话失败：' + (e && e.message || e) } });
+    var requestId = ++_generationRequestId; // 本次请求身份（latest request wins）
+    if (!Ctor) {
+      if (requestId === _generationRequestId) emitStart({ ok: false, error: { code: 'E_GEN_LAYER', message: '题目生成层（PracticeSession）未加载' } });
       return;
     }
-    _session.start().then(function (result) {
+    // C1：session 必须由本次请求闭包持有，异步回调禁止重读全局 _session
+    var session;
+    try {
+      session = new Ctor(ControlService.sessionConfig(profile));
+    } catch (e) {
+      if (requestId === _generationRequestId) emitStart({ ok: false, instruction: profile, error: { code: 'E_SESSION', message: '创建练习会话失败：' + (e && e.message || e) } });
+      return;
+    }
+    _session = session;
+    session.start().then(function (result) {
+      if (requestId !== _generationRequestId) return; // 旧请求：后台可正常结束，但不得更新 UI
       emitStart({
         ok: true,
-        session: _session,
+        session: session,
         instruction: profile,
         questions: result && result.questions || [],
         html: result && result.html || '',
         meta: result && result.meta || null
       });
     }).catch(function (err) {
+      if (requestId !== _generationRequestId) return; // 旧请求失败不得覆盖新请求 UI
       emitStart({
         ok: false,
-        session: _session,
+        session: session,
         instruction: profile,
         error: { code: 'E_GENERATE', message: (err && err.message) || '生成失败' }
       });
@@ -290,10 +306,14 @@
   // 提交批改：调用生成层 submit()（编排路径走聚合会话 shim），归一化反馈后交回 UI。
   function submit() {
     if (!_session) { emitSubmit({ ok: false, error: { code: 'E_NO_SESSION', message: '尚未生成练习会话' } }); return null; }
-    _session.submit().then(function (result) {
+    // C1：捕获本次提交的请求身份与会话闭包；批改异步返回期间若已开始新生成，反馈丢弃
+    var requestId = _generationRequestId;
+    var session = _session;
+    session.submit().then(function (result) {
+      if (requestId !== _generationRequestId) return;
       emitSubmit({
         ok: true,
-        session: _session,
+        session: session,
         score: result && result.score,
         total: result && result.total,
         correct: result && result.correct,
@@ -301,9 +321,10 @@
         correctAnswers: result && result.correctAnswers
       });
     }).catch(function (err) {
-      emitSubmit({ ok: false, session: _session, error: { code: 'E_SUBMIT', message: (err && err.message) || '批改失败' } });
+      if (requestId !== _generationRequestId) return;
+      emitSubmit({ ok: false, session: session, error: { code: 'E_SUBMIT', message: (err && err.message) || '批改失败' } });
     });
-    return _session;
+    return session;
   }
 
   // 组装配对新会话的会话（供错题本重做等复用）
@@ -311,6 +332,7 @@
     var Ctor = sessionCtor();
     if (!Ctor) return null;
     var built = ControlService.plan(ins || {}).profile;
+    ++_generationRequestId; // 新会话意图作废旧在途生成/批改回调
     _session = new Ctor(ControlService.sessionConfig(built));
     return _session;
   }
