@@ -29,7 +29,7 @@
 - 实测（native 模式）：`{combine:true, knowledgePointIds:['math-g1-m1-addsub-10','math-g1-m0-make-ten'], calc, diff2}` → 选中 **`generator:arithmetic-addition`**（应为 `generator:composite`）；连选 20 次稳定错误。与 txt 复现完全一致。
 - 根因：[generator-selector.js](file:///Users/zhanggaozhang/Code/Homework%20Help/shared/generator/generator-selector.js) L222-223 只有"**非 combine 排除 composite**"一半逻辑；combine=true 时 composite 与 arithmetic 同分（kp=1/semanticOp=1/capability=1/qt=1），L273-285 排序按 version → registry 插入序，arithmetic-addition 先注册抢中。**缺"combine 请求优先筛选 supportsComposite"**。
 - [strategy-engine.js](file:///Users/zhanggaozhang/Code/Homework%20Help/shared/strategy/strategy-engine.js) L371-393 只做"composite 必须能覆盖全部 KP 否则显式失败"的可用性校验，**不强制 selector 选 composite**。
-- composite 生成器自身契约正确（[composite.js](file:///Users/zhanggaozhang/Code/Homework%20Help/shared/generator/generators/composite.js) L218-240：要求 combine + ≥2 KP + ≥2 类别）。
+- composite 生成器自身契约正确（[composite.js](file:///Users/zhanggaozhang/Code/Homework%20Help/shared/generator/generators/composite.js) L241-252：要求 combine + ≥2 KP + ≥2 类别）。
 
 ### C4 死代码/门禁清理 —— 【大部分上轮已完成，剩余少量】
 - 已完成（本会话）：`check-duplicates` 死 script 已删；ci.yml 7 个失效步骤已重写；run-all-checks.sh 已重写；23 个过期 docs + 4 个一次性脚本已删；inject-schema/snapshot 等过期描述已清。
@@ -41,7 +41,7 @@
 实测 549 math KP：
 | 字段 | 缺失 | 空数组 | 非空 | 说明 |
 |---|---|---|---|---|
-| operations | **503** | 0 | 46 | 与 txt 一致；selector L235 硬阻断读 `kp.operations.length`（有 ArithSem/legacy.category 兜底） |
+| operations | **503** | 0 | 46 | 与 txt 一致；selector L242 硬阻断读 `kp.operations.length`（有 ArithSem/legacy.category 兜底） |
 | prerequisites | 0 | **18** | 531 | 空项清单已取（make-ten、compose-number、solid-shape、position、multiplication-table、time-unit、number-pattern、clock-read、data-tally、g3-time、G4 C9×3、g5-reason-seq、c7-arithmetic-series、g5-c9×3）——多为单元根节点/综合入口，多数合法 |
 | related | 0 | **3** | 546 | 空项全为 G4 C9 integrated/misc/mock（综合/模拟入口，合法空） |
 | category | **503** | 0 | 46 | 与 operations 同批 KP（canonical 层可推导） |

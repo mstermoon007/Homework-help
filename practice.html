@@ -318,6 +318,11 @@
 <script src="shared/presentation/html-renderer.js"></script>
 <script src="shared/presentation/renderer.js"></script>
 <script src="shared/generation-engine.js"></script>
+<!-- D007 修复：浏览器需加载 generation/api.js 才能使 GenerationEngine 走正常路径
+     （否则 GenerationAPI 为 null 走回退，回退返回不含 generationId，
+     导致 PracticeBridge.recordGeneration 因 g.generationId 缺失而跳过，
+     _lastGeneration 永不更新 → 跨代去重 seenKeys 不注入 → 重新生成出现重复题） -->
+<script src="shared/generation/api.js"></script>
 <script src="shared/strategy/comprehensive-strategy.js"></script>
 <!-- P7：统一练习会话（P7-R01~R04） -->
 <script src="shared/practice-session.js"></script>

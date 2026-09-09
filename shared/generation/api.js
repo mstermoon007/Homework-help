@@ -270,8 +270,9 @@
     var results = [];
     var failedPlans = [];
     // 生成层引擎统一去重：跨 plan 共享指纹集（同一套生成内不出现重复题）
-    // 跨代去重：previousSeenKeys（仅上一代成功题目的指纹）预置入袋，
-    // 使本代生成时与上一套练习互斥；本代成功题目的指纹仍由 validator 成功才入集。
+    // D001 修复：跨代去重——previousSeenKeys 由编排层注入全历史累积指纹
+    // （PracticeBridge._seenKeysAccum），使本代生成时与所有历史代互斥；
+    // 本代成功题目的指纹由 validator 成功才入集，编排层 recordGeneration 再累积。
     var globalSeenKeys = new Set();
     if (options && options.previousSeenKeys) {
       options.previousSeenKeys.forEach(function (k) { globalSeenKeys.add(k); });
@@ -300,6 +301,13 @@
           if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length) {
             q.knowledgePointIds = plan.knowledgePointIds.slice();
           }
+          // D004 修复：统一兜底——若 answer 是对象且缺 explanation，用 prompt+value 生成。
+          // 各 generator 可能不写 explanation；在 runPlans 汇聚层兜底保证每题有 explanation。
+          if (q.answer && typeof q.answer === 'object' && q.answer.explanation == null) {
+            var p = String(q.prompt || q.q || q.text || '');
+            var v = q.answer.value != null ? String(q.answer.value) : '';
+            q.answer.explanation = (p && v) ? p.replace(/\s*=\s*\?\s*$/, ' = ' + v) : ('答案：' + v);
+          }
         });
         results.push.apply(results, sqs);
       }).catch(function (err) {
@@ -307,8 +315,8 @@
       });
     });
     return seq.then(function () {
-      // seenKeys 含「上一代 ∪ 本代」指纹（供 trace/诊断）；编排层应只取本代成功题目
-      // 的 questionFingerprint 作为下一代的 previousSeenKeys，保证窗口仅保留当前+上一代。
+      // D001 修复：seenKeys 含「全历史 ∪ 本代」指纹；编排层 recordGeneration
+      // 再把本代成功题目累积入 _seenKeysAccum，保证下一代 previousSeenKeys 含全历史。
       return { questions: results, trace: { failedPlans: failedPlans }, seenKeys: globalSeenKeys };
     });
   }

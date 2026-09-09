@@ -16,6 +16,9 @@ var Pipeline = require('../validator/validation-pipeline.js');
 var QID = require('../question-id.js');
 
 var DEFAULT_MAX_RETRIES = 3;
+// D005 修复：连续零新增（本轮 valid 数 ≤ 上轮）达到此阈值 → 判定语义空间饱和。
+// 启发式值：3 轮零新增表明该 KP+type+difficulty 在 seenKeys 累积下已无新增空间。
+var CONSECUTIVE_ZERO_PROGRESS = 3;
 // C2：纯重复（跨代/批内指纹冲突）专用重试上限。
 // 纯重复属「随机抽样未命中剩余空间」，不代表题目质量问题，给更高预算逐位补齐；
 // 含质量类错误（答案/难度/结构等）仍走 DEFAULT_MAX_RETRIES。
@@ -139,6 +142,10 @@ function generateWithRetry(generatorFn, plan, context) {
   var lastQuestions = null;
   var lastValidation = null;
   var duplicateFailures = 0;   // 因重复导致的失败轮数
+  // D005 修复：连续零新增计数器——本轮 valid 数 ≤ 上轮 valid 数 视为零新增；
+  // 连续达到 CONSECUTIVE_ZERO_PROGRESS 轮 → 抛 GENERATION_SPACE_EXHAUSTED。
+  var consecutiveZeroProgress = 0;
+  var lastValidCount = 0;
   var Dup = require('../validator/duplicate-validator.js');
 
   function attempt(attemptIndex, seed, retryContext) {
@@ -370,6 +377,18 @@ function generateWithRetry(generatorFn, plan, context) {
       duplicateFailures++;
     }
 
+    // D005 修复：连续 N 轮零新增 → 语义空间饱和。
+    // 判定：本轮成功保留题数（dupFilter.validQuestions.length）相对前轮无新增
+    // （本轮全失败或本轮 valid 数 ≤ 上轮 valid 数），连续达到 CONSECUTIVE_ZERO_PROGRESS 轮 → 抛 GENERATION_SPACE_EXHAUSTED。
+    // 作用：渐进饱和（部分保留+部分重复轮多次）也能及时终止，不只依赖 DEDUP_MAX_RETRIES 耗尽。
+    var currentValidCount = dupFilter.validQuestions.length;
+    if (currentValidCount <= (lastValidCount || 0)) {
+      consecutiveZeroProgress++;
+    } else {
+      consecutiveZeroProgress = 0;
+      lastValidCount = currentValidCount;
+    }
+
     // 如果没有重复题目（其他可重试错误），整批重试
     var shouldRetryAll = duplicateIndices.length === 0;
 
@@ -380,6 +399,21 @@ function generateWithRetry(generatorFn, plan, context) {
 
     // 重试
     retries++;
+    // D005 修复：连续零新增短路——在 effectiveCap 耗尽前提前判定语义空间饱和。
+    // 比纯依赖 DEDUP_MAX_RETRIES 更早暴露饱和（渐进重试场景：每轮部分新增部分重复）。
+    if (consecutiveZeroProgress >= CONSECUTIVE_ZERO_PROGRESS && duplicateFailures > 0) {
+      var safeQ = result.questions.filter(function (sq) { return !!sq; });
+      var safeR = result.validationResults.filter(function (vr, i) { return !!result.questions[i]; });
+      return {
+        questions: safeQ,
+        validationResults: safeR,
+        retries: retries,
+        success: false,
+        error: GENERATION_SPACE_EXHAUSTED,
+        message: '生成空间耗尽：连续 ' + consecutiveZeroProgress + ' 轮零新增（KP+type+difficulty 在 seenKeys 累积下语义空间饱和）',
+        attempts: allResults
+      };
+    }
     if (retries > effectiveCap) {
       // 终轮可能残留 null 空位（未获不重复候选）：净化为非空题集，
       // 下游凭 success=false / error 判定走失败路径，不静默输出空位。

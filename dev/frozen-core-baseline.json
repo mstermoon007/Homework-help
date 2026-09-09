@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T01:20:10.641Z",
+  "generatedAt": "2026-09-09T03:12:33.378Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -103,14 +103,14 @@
       "mtime": 1788863773511.1604
     },
     "shared/generator/retry-loop.js": {
-      "hash": "dc22d78088a1e85f",
-      "size": 18792,
-      "mtime": 1788884935910.2634
+      "hash": "2a7bb3f924e64bec",
+      "size": 20855,
+      "mtime": 1788922325996.106
     },
     "shared/generator/generators/arithmetic.js": {
-      "hash": "f4c0c3c72a607763",
-      "size": 5889,
-      "mtime": 1788885211285.613
+      "hash": "ac766fb61c3a46cd",
+      "size": 6058,
+      "mtime": 1788923127329.998
     },
     "shared/generator/generators/selection.js": {
       "hash": "5c1255400f882f7b",
@@ -143,9 +143,9 @@
       "mtime": 1788871820499.7004
     },
     "shared/generator/semantic-question-bridge.js": {
-      "hash": "1de689fa215174e6",
-      "size": 4802,
-      "mtime": 1788514945150.9763
+      "hash": "8284b09b17598a84",
+      "size": 5402,
+      "mtime": 1788923281615.928
     },
     "shared/strategy/strategy-engine.js": {
       "hash": "9332505d03d37541",
@@ -358,9 +358,9 @@
       "mtime": 1788190235405.2598
     },
     "shared/generation-engine.js": {
-      "hash": "aa5d324c4d1033da",
-      "size": 21799,
-      "mtime": 1788867319174.9182
+      "hash": "3867203ee72743dc",
+      "size": 23553,
+      "mtime": 1788921067097.5398
     },
     "shared/presentation-engine.js": {
       "hash": "d16c3f47dd4f7c5f",

@@ -64,6 +64,15 @@ function toQuestion(sq) {
     data: sq.data || {}
   };
 
+  // D004 修复：统一兜底——若 answer 是对象且缺 explanation，用 prompt+value 自动生成。
+  // 各 generator（arithmetic/application/c1-number-puzzle 等）可能不写 explanation，
+  // 在 bridge 层兜底保证最终 Question 对象必有 explanation 供答题页显示。
+  if (q.answer && typeof q.answer === 'object' && q.answer.explanation == null) {
+    var ansVal = q.answer.value != null ? String(q.answer.value) : '';
+    if (ansVal) q.answer.explanation = prompt.replace(/\s*=\s*\?\s*$/, ' = ' + ansVal);
+    else q.answer.explanation = '答案：' + ansVal;
+  }
+
   // 选择题：data.options（如 selection-choice 的 data.options）
   var options = (sq.data && Array.isArray(sq.data.options) && sq.data.options.length) ? sq.data.options : null;
   if (options) {

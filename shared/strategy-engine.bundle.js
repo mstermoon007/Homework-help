@@ -2520,6 +2520,15 @@ function toQuestion(sq) {
   };
 
   
+  
+  
+  if (q.answer && typeof q.answer === 'object' && q.answer.explanation == null) {
+    var ansVal = q.answer.value != null ? String(q.answer.value) : '';
+    if (ansVal) q.answer.explanation = prompt.replace(/\s*=\s*\?\s*$/, ' = ' + ansVal);
+    else q.answer.explanation = '答案：' + ansVal;
+  }
+
+  
   var options = (sq.data && Array.isArray(sq.data.options) && sq.data.options.length) ? sq.data.options : null;
   if (options) {
     q.inputType = 'choice';
@@ -6015,7 +6024,8 @@ function createArithmeticGenerator(spec) {
           context: plan.contextType != null ? plan.contextType : 'standard',
           seed: seedFor(plan, context, i),
           prompt: prompt,
-          answer: { value: String(answer), acceptable: [] },
+          
+          answer: { value: String(answer), acceptable: [], explanation: prompt.replace(' = ?', ' = ' + answer) },
           answerMode: 'input',
           hint: null,
           data: {

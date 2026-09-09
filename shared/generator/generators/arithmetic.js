@@ -107,7 +107,8 @@ function createArithmeticGenerator(spec) {
           context: plan.contextType != null ? plan.contextType : 'standard',
           seed: seedFor(plan, context, i),
           prompt: prompt,
-          answer: { value: String(answer), acceptable: [] },
+          // D004 修复：补 answer.explanation，包含运算表达式与结果，供答题页显示解题步骤
+          answer: { value: String(answer), acceptable: [], explanation: prompt.replace(' = ?', ' = ' + answer) },
           answerMode: 'input',
           hint: null,
           data: {

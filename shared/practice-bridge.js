@@ -179,20 +179,29 @@
   // 每次 start/newSession 递增；异步回调只在 requestId === _generationRequestId 时才允许 emit，
   // 旧请求即使成功/失败也静默丢弃 —— 绝不能让旧请求结果覆盖新请求的 UI。
   var _generationRequestId = 0;
-  // C2：跨代去重记忆——仅保留「上一代」成功题目的语义指纹与 generationId。
-  // 每次新生成成功后整体替换（窗口=当前代+上一代，不无限累积）；
+  // C2 / D001 修复：跨代去重记忆——累积全历史成功题目的语义指纹（不覆写）。
+  // 旧实现仅保留「上一代」指纹，跨非邻代（G1∩G3、G1∩G4...）大量重复；
+  // 现改为累积语义：每代成功后把本代指纹 forEach add 入 _seenKeysAccum，
+  // 使下一代生成时 previousSeenKeys 含全历史，实现 10 代 × 20 题 = 200 unique 规格。
+  // 空间饱和时由生成层 retry-loop 抛 GENERATION_SPACE_EXHAUSTED（D005），UI 接失败反馈。
   // 由本编排层持有（UI 层与 Generator 层均不持有去重状态），经 sessionConfig.previousGeneration 注入。
-  var _lastGeneration = null;
+  var _seenKeysAccum = new Set();
+  var _lastGenerationId = null;  // 仅最新一代 id（用于 previousGenerationId，非去重）
 
-  // C2：从成功会话中提取本代题目指纹，滚动为「上一代」
+  // D001：从成功会话中提取本代题目指纹，累积入全局 seenKeys（不覆写）
   function recordGeneration(session) {
     var g = session && session.lastSemantic;
     if (!g || !g.generationId || !Array.isArray(g.questions)) return;
-    var fingerprints = new Set();
+    var added = 0;
     g.questions.forEach(function (q) {
-      if (q && q.questionFingerprint) fingerprints.add(q.questionFingerprint);
+      if (q && q.questionFingerprint) {
+        var sizeBefore = _seenKeysAccum.size;
+        _seenKeysAccum.add(q.questionFingerprint);
+        if (_seenKeysAccum.size > sizeBefore) added++;
+      }
     });
-    if (fingerprints.size) _lastGeneration = { generationId: g.generationId, fingerprints: fingerprints };
+    _lastGenerationId = g.generationId;
+    return { added: added, total: _seenKeysAccum.size };  // 供饱和检测参考
   }
 
   // 读取生成层类型（浏览器 / CommonJS 边界，不修改生成层）
@@ -225,8 +234,13 @@
     var session;
     try {
       var sessionConfig = ControlService.sessionConfig(profile);
-      // C2：注入上一代指纹（跨练习去重）；无则不传（第一代自然无历史）
-      if (_lastGeneration) sessionConfig.previousGeneration = _lastGeneration;
+      // C2 / D001：注入全历史累积指纹（跨练习去重）；无则不传（第一代自然无历史）
+      if (_seenKeysAccum.size > 0) {
+        sessionConfig.previousGeneration = {
+          generationId: _lastGenerationId,
+          fingerprints: _seenKeysAccum
+        };
+      }
       session = new Ctor(sessionConfig);
     } catch (e) {
       if (requestId === _generationRequestId) emitStart({ ok: false, instruction: profile, error: { code: 'E_SESSION', message: '创建练习会话失败：' + (e && e.message || e) } });
@@ -353,8 +367,13 @@
     var built = ControlService.plan(ins || {}).profile;
     ++_generationRequestId; // 新会话意图作废旧在途生成/批改回调
     var sessionConfig = ControlService.sessionConfig(built);
-    // C2：新会话（错题本重做/换一套等）同样继承上一代指纹
-    if (_lastGeneration) sessionConfig.previousGeneration = _lastGeneration;
+    // C2 / D001：新会话（错题本重做/换一套等）同样继承全历史累积指纹
+    if (_seenKeysAccum.size > 0) {
+      sessionConfig.previousGeneration = {
+        generationId: _lastGenerationId,
+        fingerprints: _seenKeysAccum
+      };
+    }
     _session = new Ctor(sessionConfig);
     return _session;
   }

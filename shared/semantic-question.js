@@ -227,6 +227,9 @@ function normalizeSemanticQuestion(raw) {
       return q;
     })(),
     answerMode: raw.answerMode,
+    // D003 修复：context 字段必须映射（生成器写 q.context = plan.contextType，
+    // 归一化时漏映射导致 createSemanticQuestion 收到 raw.context=undefined → coerceString('')）
+    context: raw.context,
     // P0-003：判断题 answer=false / 数字 0 / 空串均为合法答案，不能按 truthy 丢弃。
     // 仅当字段未提供（undefined/null）时才回退到 answerValue/correctAnswer。
     answer: (function () {

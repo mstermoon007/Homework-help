@@ -52,6 +52,9 @@
   // Phase 0: 委托给 GenerationAPI（冻结门面）
   var GenerationAPI = ensure(null, 'GenerationAPI', './generation/api.js');
 
+  // D007 修复：回退路径 generationId 铸造序号（模块级，避免每次调用重置）
+  var _fallbackGenerationSeq = 0;
+
   function getStrategyEngine() {
     return ensure(null, 'StrategyEngine', './strategy/strategy-engine.js');
   }
@@ -209,6 +212,12 @@
       }
     }
 
+    // D002 修复：combine=true 且 KP < 2 必须显式拒绝（不得偷偷走 multi-kp 分支吞错降级）。
+    // 与 StrategyEngine L336-339 校验一致，避免 multi-kp 分支构造 single 时丢失 combine 标志
+    // 后被 .catch 静默吞错，呈现为「未抛错但生成普通题」的违规降级。
+    if (request.combine === true && kpList.length < 2) {
+      return Promise.reject(new Error('combine=true 要求至少 2 个知识点（当前仅 ' + kpList.length + ' 个）'));
+    }
     if (mode === 'multi-kp' || kpList.length > 1) {
       if (!engine) return Promise.reject(new Error('StrategyEngine 不可用，请先加载 shared/strategy-engine.bundle.js'));
       var alloc = (request.kpAllocation && Array.isArray(request.kpAllocation.kps)) ? request.kpAllocation.kps : null;
@@ -278,9 +287,22 @@
     var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop', density: 'normal' };
     var PE = getPresentationEngine();
 
+    // D007 修复：回退路径也必须铸造 generationId（与 api.js generate 一致），
+    // 否则 PracticeBridge.recordGeneration 因 g.generationId 缺失而跳过，
+    // _lastGeneration 永不更新 → 跨代 seenKeys 不注入 → 重新生成出现重复题。
+    var generationId = 'g-' + Date.now().toString(36) + '-' + (++_fallbackGenerationSeq).toString(36);
+
     return build(request).then(function (built) {
       var plans = built.plans || [];
-      return runPlans(plans, options).then(function (run) {
+      // D007 修复：options.previousSeenKeys 注入 runPlans 的 seenKeys 初始集
+      var seenKeys = new Set();
+      if (options.previousSeenKeys && typeof options.previousSeenKeys.forEach === 'function') {
+        options.previousSeenKeys.forEach(function (k) { seenKeys.add(k); });
+      } else if (options.seenKeys) {
+        options.seenKeys.forEach(function (k) { seenKeys.add(k); });
+      }
+      var runOpts = { skipValidation: options.skipValidation, seenKeys: seenKeys };
+      return runPlans(plans, runOpts).then(function (run) {
         var questions = run.questions;
         var mergedTrace = built.trace || {};
         if (run.trace && run.trace.failedPlans) mergedTrace.failedPlans = run.trace.failedPlans;
@@ -292,7 +314,11 @@
           renderOptions: renderOutline.renderOptions,
           plans: plans,
           trace: mergedTrace,
-          failedPlans: (run.trace && run.trace.failedPlans) || []
+          failedPlans: (run.trace && run.trace.failedPlans) || [],
+          // D007 修复：回退路径补齐 generationId / previousGenerationId / seenKeys
+          generationId: generationId,
+          previousGenerationId: options.previousGenerationId || null,
+          seenKeys: seenKeys
         };
       });
     });

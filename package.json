@@ -40,6 +40,7 @@
     "check-lint": "node dev/lint-check.js",
     "verify:ui-boundary": "node dev/check-ui-boundary.js",
     "verify:practice-page": "node dev/check-practice-page.js",
+    "verify:bridge": "node --test tests/bridge/*.test.js",
     "verify:type-module-consistency": "node dev/check-type-module-consistency.js",
     "verify:spiral-consistency": "node dev/check-spiral-consistency.js",
     "verify:frozen-core": "node dev/check-frozen-core.js --check",

@@ -2,8 +2,8 @@
 /**
  * dev/check-presentation-runtime.js — C01/C02 Browser Runtime + E2E Probe
  *
- * 在浏览器式 vm 沙箱（与 dev/plugin-loader.js 同机制的持久上下文）中，按 practice.html
- * 的 <script> 顺序装载：registry.js → strategy bundle → presentation bundle →
+ * 在浏览器式 vm 沙箱（持久上下文）中，按 practice.html
+ * 的 <script> 顺序装载：common.js → strategy bundle → presentation bundle →
  * presentation 渲染器栈（render-options/render-result/svg/html-renderer/renderer）→
  * generation-engine.js，验证 C01（P0-001 浏览器运行时接线）与 C02（端到端）：
  *   1. window.PresentationEngine 已注册（含 generateQuestions）；
