@@ -7,6 +7,50 @@
 
 ---
 
+## [Unreleased] — C1–C5 审计修复链 + V4.1 全量回归（D001–D007）（2026-09-09 收口）
+
+**目标**：浏览器实机审计收口——修复快速/专业模式的生成请求竞态、跨轮重复、composite 合并路由与 context 传播缺陷；补齐统计/概率 KP 数据；V4.1 全量回归验证。
+
+### C1 生成请求竞态收口（236ee7e）
+- `latest request wins`：并发/快速连点下仅最新请求生效，旧请求结果不覆盖；combine 参数透传收口（dev/audit/c1-rapid-click-probe.js 复现验证）。
+
+### C2 跨轮去重与指纹统一（b44c8bb）
+- 指纹双轨统一：duplicate-validator 权威键改为 `questionFingerprint`，canonicalKey 仅作诊断；剔除 mixed/combined 族标签，修复 `data.operation='mixed'` 时 10−6 与 10+6 指纹碰撞。
+- 种子确定性修复：17 个生成器 seedFor 接收契约层 plan.seed，「重新生成」不再产出完全相同题目。
+- generationId 铸造 + previousSeenKeys 链路：api 铸造代际 id，practice-session 注入上一代指纹，practice-bridge 滚动持有「当前代 + 上一代」窗口；retry-loop seenKeys 事务化（失败轮指纹回滚）。
+- 跨代交集 0（dev/audit/c2-dedup-stats-probe.js）。
+
+### C3 Composite 合并路由收口（cb47c09）
+- generator-selector 候选筛选最前端收口：combine=true 且 ≥2 KP 的合并计划仅 supportsComposite 生成器入候选（修复合并计划稳定误选 arithmetic-addition 致题目仅体现单一 KP）；非合并计划 composite 不入候选。
+- composite 生成器运行时修复：rng.pick 为模块函数（原调用必抛 TypeError，合并计划始终 0 题）；三处输出补 knowledgePointId 主 KP 字段（消除 schema 缺字段告警）。
+- 实测合并生成 20/20、双 KP 均覆盖、跨代交集 0、failedPlans=0；新增 selector 回归用例（合并计划连选不得回落 arithmetic）。
+
+### C4 残余清理（c6c3897）
+- 9 个 dev 校验脚本头部注释 574 KP → 549 订正（native-only 收敛后纯数学域实际 KP 数；DEV_LOG 历史记载保留）。
+- ci.yml 与 run-all-checks.sh 对齐实际 npm 门禁脚本（verify:m4/golden/ui-boundary/practice-page），移除已退役 legacy/p4 门禁调用；README/技术文档/设计文档/frozen-core 检查器等链接同步订正。
+
+### C5 知识库数据补齐（3233b92）
+- 新增 `shared/ontology-category-map.js`：与 ontology-operation-map 同构，按 id/name 词法规则（R1–R5 有序）派生 algebra/measurement/geometry/synthesis 四域；统计与概率域无槽位返回 null（禁猜）。46 条原始 category 真值 100% 回放（473 DERIVED / 30 UNRESOLVED）。
+- normalizer 接线：fromLegacy 在 canonical 层写入 category（frozen knowledge-ontology.js 授权重建）——此前 canonical.category 恒空，composite 三模式类别过滤（measurement/geometry/algebra）不可达、仅 calc-to-judge 兜底；接线后三模式均按 KP 领域触发（实测各 20/20）。
+- composite makeShapeToApply 指纹收口：形状计数题 27 种「形状×属性」变体指纹全同 → 批内去重误判全重复 → EXHAUSTED；`data.operands` 补确定性语义编码（仅指纹通道消费，题型与答案逻辑不变）。
+- knowledge-math.js prerequisites 补填 3 条（time-unit/g3-time → clock-read、planting-problem → g5-word-tree）；空项分类审计（dev/audit/kb-data-completion.js，报告入 gitignored dev/reports/，未知空项/回放不一致即退出 1）。
+
+### V4.1 全量回归修复（42244d8，分支 01page-report）
+- **D007 CRITICAL**：practice.html 加载 api.js + generation-engine 回退补 generationId（浏览器相邻重复 20/20 → 0）。
+- **D001 HIGH**：practice-bridge.js 累积 seenKeys 不覆写（跨代重复率 72.5% → 0%）。
+- **D002 HIGH**：generation-engine.js combine=true+1KP 守卫（静默降级 → 显式拒绝）。
+- **D003 HIGH**：semantic-question.js mapped 补 context 字段（传播断链 120 → 0）。
+- **D004 LOW**：arithmetic.js + api.js + bridge 三层兜底 explanation（issues 120 → 0）。
+- **D005 INFO**：retry-loop.js 连续 N 轮零新增 → GENERATION_SPACE_EXHAUSTED。
+- **D006 INFO**：package.json 新增 `verify:bridge` 并接入 run-gates.sh。
+- **M1–M12**：30 个统计/概率 KP 补 category+operations（UNRESOLVED 30 → 0）。
+
+### Gate（执行后）
+- 13/13 Gate PASS + 8/8 探针 PASS；frozen-core 基线重锚（knowledge-ontology.js 授权变更 + 42244d8 后 dev/frozen-core-baseline.json 重建）。
+- 新增 dev/audit/ 探针集（11 个脚本 + v2-core/）留档复现与回归。
+
+---
+
 ## [V4.3.0] — 数学生成引擎 V2.1：竖式归一化清零 + 文档体系收敛（2026-09-08 发布）
 
 **目标**：① 清零 math-g2-column 答案/check 归一化技术债（「错误答案 0」字面口径）；② 引擎打 V2.1 版本标签；③ 文档体系收敛——清除陈旧过期文档，现状只保留单一事实源。
