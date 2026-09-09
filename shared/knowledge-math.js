@@ -3719,11 +3719,11 @@
               spiral_level: 1,
               max_spiral_level: 1,
               cognitive_level: "运用",
-              applicable_question_types: [],  // 待生成器适配（任务3），暂不开放出题
+              applicable_question_types: [ { type: "fill", rawType: "equivalent-reasoning", coefficient: 1 }, { type: "choice", rawType: "equivalent-reasoning", coefficient: 1 }, { type: "apply", rawType: "equivalent-reasoning", coefficient: 1 } ],  // 待生成器适配（任务3），暂不开放出题
               number_range_default: { min: 1, max: 100 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "inactive",
+              status: "active",
               "concept": "等量代换：利用物品间相等关系进行替换推理，解决简单的天平/称象等代换问题。",
               "factualContent": {"rule":"等量代换：若 A=B 且 B=C，则 A=C；用一个物品的等量关系逐步替换另一个物品（曹冲称象思路）。"},
               "graphicType": "text",
@@ -3828,11 +3828,11 @@
               spiral_level: 1,
               max_spiral_level: 1,
               cognitive_level: "了解",
-              applicable_question_types: [],  // 待生成器适配（任务3），暂不开放出题
+              applicable_question_types: [ { type: "fill", rawType: "code-recognition", coefficient: 1 }, { type: "choice", rawType: "code-recognition", coefficient: 1 }, { type: "judge", rawType: "code-recognition", coefficient: 1 } ],  // 待生成器适配（任务3），暂不开放出题
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 1,
               context_default: "standard",
-              status: "inactive",
+              status: "active",
               "concept": "数字编码：了解生活中常见编码（邮政编码/身份证号/车牌号/学号等）的规则与含义，能读取编码信息并编制简单编码。",
               "factualContent": {"rule":"常见编码含义：邮政编码前几位表示省/市；身份证第7~14位为出生日期；车牌号含省份简称与字母数字组合。"},
               "graphicType": "text",

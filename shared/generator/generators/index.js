@@ -35,6 +35,7 @@ var C2 = require('./c2-number-theory.js');
 var C5C6 = require('./c5-c6-journey-engineering.js');
 var C7 = require('./c7-clever-calc.js');
 var C9 = require('./c9-comprehensive.js');
+var SemanticSpecial = require('./semantic-special.js');
 
 var ALL = [].concat(
   Arithmetic.buildAll(),
@@ -53,7 +54,8 @@ var ALL = [].concat(
   C2.buildAll(),
   C5C6.buildAll(),
   C7.buildAll(),
-  C9.buildAll()
+  C9.buildAll(),
+  SemanticSpecial.buildAll()
 );
 
 var BY_ID = {};

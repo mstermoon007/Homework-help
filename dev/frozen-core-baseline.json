@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T03:12:33.378Z",
+  "generatedAt": "2026-09-09T05:57:03.552Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -88,9 +88,9 @@
       "mtime": 1788867295468.0247
     },
     "shared/generator/generator-registry.js": {
-      "hash": "2f00b185944c4121",
-      "size": 22725,
-      "mtime": 1788871936738.1157
+      "hash": "40f27fce501e4c59",
+      "size": 23367,
+      "mtime": 1788933289548.213
     },
     "shared/generator/generator-selector.js": {
       "hash": "e755c6fd9ca32403",
@@ -123,9 +123,9 @@
       "mtime": 1788882741361.1782
     },
     "shared/generator/generators/index.js": {
-      "hash": "d818cb92396b1a86",
-      "size": 2111,
-      "mtime": 1788874796176.7046
+      "hash": "3b3436c3b798bf11",
+      "size": 2197,
+      "mtime": 1788933273410.408
     },
     "shared/generator/core/rng.js": {
       "hash": "f51b0140c2e169ae",

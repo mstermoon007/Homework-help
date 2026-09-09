@@ -33,7 +33,9 @@ const CORE_IDS = [
   'generator:c2-number-theory',
   'generator:c5-c6-journey-engineering',
   'generator:c7-clever-calc',
-  'generator:c9-comprehensive'
+  'generator:c9-comprehensive',
+  'generator:code-recognition',
+  'generator:equivalent-reasoning'
 ];
 
 function answerValue(q) {

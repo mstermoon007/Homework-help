@@ -81,7 +81,15 @@ var CORE_RECORDS = [
       'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g2-m8-money', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-pa',
       'math-g1-m6-solid-shape', 'math-g1-m6-flat-shape', 'math-g1-m6-shape-combine', 'math-g2-m6-solid-shape', 'math-g4-c4-c4-solid', 'math-g5-c4-solid-geometry', 'math-g6-c4-solid-geometry'
     ],
-    scope: 'core', version: 1, supportsComposite: true }
+    scope: 'core', version: 1, supportsComposite: true },
+
+  // V2.1 专项语义生成器（新教材补录 KP 的专用逻辑，native 绑定保证语义正确路由）
+  { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'recognize'], questionTypes: ['fill', 'choice', 'judge', 'recognize'],
+    knowledgePoints: ['math-g3-m10-g3-code'],
+    scope: 'core', version: 2, supportsComposite: false },
+  { id: 'generator:equivalent-reasoning', subject: 'math', capabilities: ['fill', 'choice', 'apply'], questionTypes: ['fill', 'choice', 'apply'],
+    knowledgePoints: ['math-g3-m8-g3-equivalent'],
+    scope: 'core', version: 2, supportsComposite: false }
 ];
 
 function buildRecords() {
