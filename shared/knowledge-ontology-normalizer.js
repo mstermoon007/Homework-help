@@ -20,6 +20,7 @@
   var ErrOnt = require('./knowledge-error.js');
   var ErrMap = require('./ontology-error-map.js');
   var CatMap = require('./ontology-category-map.js');
+  var BookMap = require('./ontology-book-map.js');
   var Schema = require('./schemas/knowledge-point.schema.js');
   var MODULE_CATALOG = (function () {
     try { return require('./module-catalog.js'); } catch (e) { return null; }
@@ -110,6 +111,16 @@
     // 优先原始显式填写；缺失时由 ontology-category-map 按 id/name 确定性推导；
     // 统计与概率域无四域槽位 → null（留空禁猜）。
     c.category = CatMap.categoryForKp(legacyKP);
+
+    // V4.1.1：上下册 × 单元分层标注（快速/教师模式分组用，非生成语义）。
+    // 数据层显式填写（G1 新版教材）优先；缺失时查 ontology-book-map
+    // （G2–G6 旧版教材目录标注；竞赛 KP 不标注 → null）。
+    // book ∈ up|down|mixed|advance；unit 为教材单元显示名。
+    var _bu = (legacyKP.book != null)
+      ? { book: legacyKP.book, unit: legacyKP.unit || null }
+      : BookMap.bookUnitForKp(legacyKP);
+    c.book = _bu ? _bu.book : null;
+    c.unit = _bu ? _bu.unit : null;
 
     c.module = { id: moduleId, name: moduleName(moduleId) };
     c.identity = {
@@ -238,7 +249,12 @@
       context_default: ctx
     };
 
-    return Ontology.create(c);
+    // V4.1.1：book/unit 为 UI 分组标注（非生成语义），不在 Ontology.create 白名单内，
+    // 故在 create 后补注；若未来纳入 schema，此段可移除。
+    var canonical = Ontology.create(c);
+    canonical.book = c.book || null;
+    canonical.unit = c.unit || null;
+    return canonical;
   }
 
   var API = { fromLegacy: fromLegacy, mapCognitive: mapCognitive, canonQuestionType: canonQuestionType };
