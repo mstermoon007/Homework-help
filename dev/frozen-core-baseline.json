@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T16:50:07.478Z",
+  "generatedAt": "2026-09-09T01:20:10.641Z",
   "version": "1.0",
   "files": {
     "shared/common.js": {
@@ -53,9 +53,9 @@
       "mtime": 1788794304337.6672
     },
     "shared/knowledge-ontology.js": {
-      "hash": "93355475abfc07d4",
-      "size": 4265,
-      "mtime": 1788062378207.3506
+      "hash": "b1c6c56cd0873b98",
+      "size": 4352,
+      "mtime": 1788915553545.404
     },
     "shared/module-catalog.js": {
       "hash": "955d37b76d4c41d1",

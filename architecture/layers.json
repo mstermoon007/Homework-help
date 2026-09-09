@@ -118,6 +118,7 @@
         "shared/knowledge-error.js", "shared/knowledge-factual.js", "shared/knowledge-operation.js",
         "shared/question-id.js", "shared/question-type-registry.js",
         "shared/ontology-error-map.js", "shared/ontology-factual-map.js", "shared/ontology-operation-map.js",
+        "shared/ontology-category-map.js",
         "knowledge/*.html"
       ]
     },

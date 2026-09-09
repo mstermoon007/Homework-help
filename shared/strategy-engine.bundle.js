@@ -4923,6 +4923,7 @@ __defs["shared/knowledge-ontology.js"] = function (module, exports, require) {
       id: '',
       subject: null,
       grade: null,
+      category: null,
       module: { id: '', name: '' },
       identity: { id: '', name: '', description: '' },
       source: { pluginId: null, legacyType: null },
@@ -4946,6 +4947,7 @@ __defs["shared/knowledge-ontology.js"] = function (module, exports, require) {
     if (data.id !== undefined) c.id = data.id;
     if (data.subject !== undefined) c.subject = data.subject;
     if (data.grade !== undefined) c.grade = data.grade;
+    if (data.category !== undefined) c.category = data.category;
     if (data.module) c.module = Object.assign({}, c.module, data.module);
     if (data.identity) c.identity = Object.assign({}, c.identity, data.identity);
     if (data.source) c.source = Object.assign({}, c.source, data.source);
@@ -5593,6 +5595,7 @@ __defs["shared/knowledge-ontology-normalizer.js"] = function (module, exports, r
   var FactMap = require("shared/ontology-factual-map.js");
   var ErrOnt = require("shared/knowledge-error.js");
   var ErrMap = require("shared/ontology-error-map.js");
+  var CatMap = require("shared/ontology-category-map.js");
   var Schema = require("shared/schemas/knowledge-point.schema.js");
   var MODULE_CATALOG = (function () {
     try { return require("shared/module-catalog.js"); } catch (e) { return null; }
@@ -5678,6 +5681,11 @@ __defs["shared/knowledge-ontology-normalizer.js"] = function (module, exports, r
 
     c.subject = SUBJECTS.indexOf(subject) !== -1 ? subject : null;
     c.grade = grade;
+
+    
+    
+    
+    c.category = CatMap.categoryForKp(legacyKP);
 
     c.module = { id: moduleId, name: moduleName(moduleId) };
     c.identity = {
@@ -8275,15 +8283,20 @@ function makeShapeToApply(plan, context, i, kpMetas, rng) {
     'circle': { name: '圆', edges: 0, faces: 1, vertices: 0 }
   };
   
-  var feature = Rng.pick(rng,Object.keys(shapeFeatures));
+  var featureKeys = Object.keys(shapeFeatures);
+  var feature = Rng.pick(rng,featureKeys);
   var meta = shapeFeatures[feature];
-  
-  var attr = Rng.pick(rng,['edges', 'faces', 'vertices']);
+
+  var attrKeys = ['edges', 'faces', 'vertices'];
+  var attr = Rng.pick(rng,attrKeys);
   var attrName = { edges: '棱', faces: '面', vertices: '顶点' }[attr];
   var answer = meta[attr];
-  
+
   var prompt = meta.name + '有几个' + attrName + '？';
   
+  
+  var variantCodes = [featureKeys.indexOf(feature) + 1, attrKeys.indexOf(attr) + 1];
+
   return {
     knowledgePointId: pkp(plan),
     knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
@@ -8302,6 +8315,7 @@ function makeShapeToApply(plan, context, i, kpMetas, rng) {
       shapeType: feature,
       targetAttr: attr,
       attrName: attrName,
+      operands: variantCodes,
       composite: true
     }
   };
@@ -10785,6 +10799,86 @@ __defs["shared/ontology-error-map.js"] = function (module, exports, require) {
   var API = { MAP: MAP, errorsForPlugin: errorsForPlugin, metaForPlugin: metaForPlugin };
 
   global.OntologyErrorMap = API;
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+
+};
+__defs["shared/ontology-category-map.js"] = function (module, exports, require) {
+
+(function (global) {
+  'use strict';
+
+  var CATEGORIES = ['algebra', 'measurement', 'geometry', 'synthesis'];
+
+  
+
+  
+  var GEOM_ID = /(^|-)c4-|geom(?:etry|count|etric)|solid|flat-shape|shape|count-graph|angle|protractor|quad|tri(?!ple)|circle|cyl(?:inder)?|cone(?!centration)|perimeter|(?:^|-)area|lattice|pythagorean|painted-cube|transform|(?:^|-)sym|symmet|rotat|draw-move|(?:^|-)motion|draw-net|grid|draw-view|draw-observe|position|coord|(?:^|-)pa(?:-|$)|draw-para|(?:^|-)line(?:-|$)|draw-height/;
+
+  
+  var MEAS_ID = /(^|-)(rmb|money|clock|time|year-month|length|mass|weight|measure|unit-convert|match-unit|fill-(?:length|mass|time)|length-(?:unit|app)|mass-(?:unit|app)|time-unit|hectare)(-|$)/;
+
+  
+  var STATS_ID = /(^|-)(stats?|data-tally|data-question|possib\w*|possible|pie-chart|linechart|stats-line\d|match-chart|judge-chart|choice-chart|pic-pie-chart|stat-pie-chart|stat-possibility|fill-pie-chart|fill-linechart|fill-possible|word-possib|word-linechart|stats-bar|stats-double|stats-avg|stats-table|stats-possib\w*|stats-line\d|fill-avg|word-avg)(-|$)/;
+
+  var GEOM_NAME = /图形|角[的度类型与]|量角|画角|角度|线段(?!图)|射线|直线|平行|垂直|梯形|三角形|长方|正方|圆[的周角]?|圆柱|圆锥|周长|面积|体积|表面积|展开图|对称|平移|旋转|放大|缩小|位置|方向|数对|观察物体|几何|勾股|扇形|格点|鸟头|蝴蝶|燕尾|等积|割补|涂色|棱[，、]|锥[体]/;
+
+  var MEAS_NAME = /人民币|元角分|钟面|钟表|时、分、秒|时分秒|时间单位|长度单位|质量单位|面积单位|体积单位|容积单位|单位换算|填合适[^，。]*单位|单位与物品|测量|公顷|平方千米|年、月、日|长度|质量|重量/;
+
+  
+  function deriveCategory(kp) {
+    var id = (kp && kp.id ? String(kp.id) : '').toLowerCase();
+    var name = (kp && kp.name ? String(kp.name) : '') || '';
+
+    
+    
+    if (/(判断|选择)题综合|综合应用|杂题选讲|模拟竞赛/.test(name)) return 'synthesis';
+    if (/购物/.test(name) || /(?:^|-)shopping(?:-|$)/.test(id)) return 'synthesis';
+
+    
+    if (STATS_ID.test(id) || /统计|可能性|平均数|折线|条形统计图?|扇形统计图?|数据收集/.test(name)) {
+      return null;
+    }
+
+    
+    if (/reason-number-shape/.test(id)) return 'algebra';
+    
+    if (/(^|-)c4-/.test(id)) return 'geometry';
+    
+    if (/(^|-)(geomcount|geometry-counting)/.test(id)) return 'geometry';
+    
+    if (/(^|-)c5-/.test(id)) return 'algebra';
+    
+    if (/(^|-)c8-/.test(id)) return 'algebra';
+    
+    if (/线段图/.test(name)) return 'algebra';
+
+    if (GEOM_ID.test(id)) return 'geometry';
+    if (MEAS_ID.test(id)) return 'measurement';
+
+    if (GEOM_NAME.test(name)) return 'geometry';
+    if (MEAS_NAME.test(name)) return 'measurement';
+
+    
+    return 'algebra';
+  }
+
+  
+  function categoryForKp(kp) {
+    if (!kp) return null;
+    if (typeof kp.category === 'string' && CATEGORIES.indexOf(kp.category) !== -1) {
+      return kp.category;
+    }
+    return deriveCategory(kp);
+  }
+
+  var API = {
+    CATEGORIES: CATEGORIES,
+    categoryForKp: categoryForKp,
+    deriveCategory: deriveCategory
+  };
+
+  global.OntologyCategoryMap = API;
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
 

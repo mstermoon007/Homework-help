@@ -189,15 +189,20 @@ function makeShapeToApply(plan, context, i, kpMetas, rng) {
     'circle': { name: '圆', edges: 0, faces: 1, vertices: 0 }
   };
   
-  var feature = Rng.pick(rng,Object.keys(shapeFeatures));
+  var featureKeys = Object.keys(shapeFeatures);
+  var feature = Rng.pick(rng,featureKeys);
   var meta = shapeFeatures[feature];
-  
-  var attr = Rng.pick(rng,['edges', 'faces', 'vertices']);
+
+  var attrKeys = ['edges', 'faces', 'vertices'];
+  var attr = Rng.pick(rng,attrKeys);
   var attrName = { edges: '棱', faces: '面', vertices: '顶点' }[attr];
   var answer = meta[attr];
-  
+
   var prompt = meta.name + '有几个' + attrName + '？';
-  
+  // 计数题题面无数字/运算符，指纹的 operands 槽位承载（形状编码×属性编码）语义变体，
+  // 避免 27 种「形状×属性」题塌缩为同一指纹被误判重复（编码确定性派生，非随机）。
+  var variantCodes = [featureKeys.indexOf(feature) + 1, attrKeys.indexOf(attr) + 1];
+
   return {
     knowledgePointId: pkp(plan),
     knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
@@ -216,6 +221,7 @@ function makeShapeToApply(plan, context, i, kpMetas, rng) {
       shapeType: feature,
       targetAttr: attr,
       attrName: attrName,
+      operands: variantCodes,
       composite: true
     }
   };

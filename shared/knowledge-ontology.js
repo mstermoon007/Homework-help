@@ -29,6 +29,7 @@
       id: '',
       subject: null,
       grade: null,
+      category: null,
       module: { id: '', name: '' },
       identity: { id: '', name: '', description: '' },
       source: { pluginId: null, legacyType: null },
@@ -52,6 +53,7 @@
     if (data.id !== undefined) c.id = data.id;
     if (data.subject !== undefined) c.subject = data.subject;
     if (data.grade !== undefined) c.grade = data.grade;
+    if (data.category !== undefined) c.category = data.category;
     if (data.module) c.module = Object.assign({}, c.module, data.module);
     if (data.identity) c.identity = Object.assign({}, c.identity, data.identity);
     if (data.source) c.source = Object.assign({}, c.source, data.source);

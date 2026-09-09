@@ -19,6 +19,7 @@
   var FactMap = require('./ontology-factual-map.js');
   var ErrOnt = require('./knowledge-error.js');
   var ErrMap = require('./ontology-error-map.js');
+  var CatMap = require('./ontology-category-map.js');
   var Schema = require('./schemas/knowledge-point.schema.js');
   var MODULE_CATALOG = (function () {
     try { return require('./module-catalog.js'); } catch (e) { return null; }
@@ -104,6 +105,11 @@
 
     c.subject = SUBJECTS.indexOf(subject) !== -1 ? subject : null;
     c.grade = grade;
+
+    // C5：顶层领域字段（composite 按 canonical.category 路由跨域模式）。
+    // 优先原始显式填写；缺失时由 ontology-category-map 按 id/name 确定性推导；
+    // 统计与概率域无四域槽位 → null（留空禁猜）。
+    c.category = CatMap.categoryForKp(legacyKP);
 
     c.module = { id: moduleId, name: moduleName(moduleId) };
     c.identity = {
