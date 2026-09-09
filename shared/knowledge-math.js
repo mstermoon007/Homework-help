@@ -6508,7 +6508,7 @@
             },
             {
               id: "math-g5-m1-g5-oral-equ",
-              name: "简易方程口算",
+              name: "【已废弃】简易方程口算",
               pluginId: "math-g5-oral",
               weight: 2,
               type: "equation-oral",
@@ -6524,11 +6524,12 @@
               number_range_default: { min: 1, max: 20 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "简易方程口算：利用等式的性质口算简单方程的解（x+a=b、ax=b 型）。",
               "factualContent": {"rule":"方程口算：用逆运算求未知数（x+a=b → x=b-a；ax=b → x=b÷a）。"},
               "graphicType": "text",
               "common_errors": [{"id":"oral-equ-inverse-err","category":"reasoning","description":"逆运算（加减乘除对应）选错"},{"id":"oral-equ-calc-err","category":"calculation","description":"解的计算错误"}],
+              "deprecatedReason": "新版解方程移出小学（五上改“用字母表示数和数量关系”）"
             },
             {
               id: "math-g5-m1-g5-oral-fm",
@@ -6859,7 +6860,7 @@
             },
             {
               id: "math-g5-m4-g5-fill-equation",
-              name: "方程概念与等式的性质",
+              name: "【已废弃】方程概念与等式的性质",
               pluginId: "math-g5-fill",
               weight: 3,
               type: "equation-prop",
@@ -6875,11 +6876,36 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "方程概念与等式的性质：理解方程（含未知数的等式）与等式性质（两边同加减乘除）。",
               "factualContent": {"rule":"等式性质：等式两边同时加上/减去同一个数仍相等；两边同时乘/除以同一个不为 0 的数仍相等。"},
               "graphicType": "text",
               "common_errors": [{"id":"fill-equation-def-err","category":"concept","description":"方程与等式概念混淆"},{"id":"fill-equation-prop-err","category":"concept","description":"等式性质条件（0 除外）理解错误"}],
+              "deprecatedReason": "新版解方程移出小学"
+            },
+            {
+              id: "math-g5-m4-g5-fill-letter",
+              name: "用字母表示数",
+              pluginId: "math-g5-fill",
+              weight: 3,
+              type: "letter-fill",
+              description: "用字母表示数与数量关系，代入求值（新版五上第五单元，替代原简易方程）。",
+              example: "a×3 当 a=5 时，值是？（答案：15）",
+              prerequisites: ["math-g4-m4-g4-fill-op"],
+              related: ["math-g5-m4-g5-fill-equation"],
+              difficulty: 3,
+              spiral_level: 1,
+              max_spiral_level: 1,
+              cognitive_level: "运用",
+              applicable_question_types: [],  // 待生成器适配（任务3），暂不开放出题
+              number_range_default: { min: 1, max: 100 },
+              max_steps_default: 2,
+              context_default: "standard",
+              status: "inactive",
+              "concept": "用字母表示数：字母可以表示任意数，含字母的式子表示数量关系；代入求值。",
+              "factualContent": {"rule":"用字母表示数：如 a 表示未知数，a×3 表示 a 的 3 倍；已知 a 的值可代入求出式子的值。"},
+              "graphicType": "text",
+              "common_errors": [{"id":"fill-letter-sub-err","category":"calculation","description":"代入求值时计算错误"},{"id":"fill-letter-rel-err","category":"concept","description":"字母式子表示的数量关系理解错误"}],
             },
             {
               id: "math-g5-m4-g5-fill-fm",
@@ -7230,7 +7256,7 @@
             },
             {
               id: "math-g5-m5-g5-match-equ",
-              name: "方程与解连线",
+              name: "【已废弃】方程与解连线",
               pluginId: "math-match",
               weight: 3,
               type: "equation-solve",
@@ -7246,11 +7272,12 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "方程与解连线：把方程与其解连线。",
               "factualContent": {"rule":"方程解连线：用逆运算或代入法求每方程的解再连线；同解方程可对应同一解。"},
               "graphicType": "text",
               "common_errors": [{"id":"match-equ-solve-err","category":"calculation","description":"方程解求错"},{"id":"match-equ-check-err","category":"reasoning","description":"未代入验证导致连线错"}],
+              "deprecatedReason": "新版解方程移出小学"
             },
             {
               id: "math-g5-m5-g5-match-fracdec",
@@ -7432,7 +7459,7 @@
           knowledgePoints: [
             {
               id: "math-g5-m7-g5-pic-balance",
-              name: "天平平衡图（列方程）",
+              name: "【已废弃】天平平衡图（列方程）",
               pluginId: "math-g5-picture",
               weight: 3,
               type: "balance-equation",
@@ -7448,11 +7475,12 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "天平平衡图（列方程）：根据天平平衡的等量关系列出方程。",
               "factualContent": {"rule":"天平列方程：天平两边质量相等为等量关系，把未知量设为 x 列方程。"},
               "graphicType": "diagram",
               "common_errors": [{"id":"pic-balance-equal-err","category":"reasoning","description":"等量关系找错"},{"id":"pic-balance-equation-err","category":"reasoning","description":"列方程错误"}],
+              "deprecatedReason": "新版解方程移出小学"
             },
             {
               id: "math-g5-m7-g5-pic-area",
@@ -7504,7 +7532,7 @@
             },
             {
               id: "math-g5-m7-g5-pic-tree",
-              name: "植树问题示意图",
+              name: "【已废弃】植树问题示意图",
               pluginId: "math-g5-picture",
               weight: 2,
               type: "tree-planting",
@@ -7520,11 +7548,12 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "植树问题示意图：根据植树问题的示意图判断棵数、间隔数与路长的关系。",
               "factualContent": {"rule":"植树问题：两端都栽棵数=间隔数+1；一端栽棵数=间隔数；两端都不栽棵数=间隔数-1；封闭图形棵数=间隔数。"},
               "graphicType": "diagram",
               "common_errors": [{"id":"pic-tree-type-err","category":"reasoning","description":"植树类型判断错误"},{"id":"pic-tree-count-err","category":"reasoning","description":"棵数与间隔数关系错误"}],
+              "deprecatedReason": "新版五上删除数学广角植树问题"
             }
           ]
         },
@@ -7581,7 +7610,7 @@
             },
             {
               id: "math-g5-m8-g5-word-equ",
-              name: "列方程解决问题",
+              name: "【已废弃】列方程解决问题",
               pluginId: "math-g5-word",
               weight: 3,
               type: "equation-app",
@@ -7597,11 +7626,12 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "列方程解决问题：找等量关系、设未知数、列方程并解方程。",
               "factualContent": {"rule":"列方程：读题找等量关系 → 设未知数 x → 列方程 → 解方程 → 检验作答。"},
               "graphicType": "text",
               "common_errors": [{"id":"word-equ-relation-err","category":"reasoning","description":"等量关系找错"},{"id":"word-equ-solve-err","category":"calculation","description":"解方程错误"}],
+              "deprecatedReason": "新版解方程移出小学"
             },
             {
               id: "math-g5-m8-g5-word-fm",
@@ -7753,7 +7783,7 @@
             },
             {
               id: "math-g5-m8-g5-word-tree",
-              name: "植树问题",
+              name: "【已废弃】植树问题",
               pluginId: "math-g5-word",
               weight: 3,
               type: "tree-app",
@@ -7769,11 +7799,12 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "植树问题：解决两端栽、一端栽、两端不栽及环形等植树问题。",
               "factualContent": {"rule":"植树问题：棵数=间隔数+1（两端都栽）/ =间隔数（一端栽、环形）/ =间隔数-1（两端都不栽）；间隔数=总长÷间距。"},
               "graphicType": "text",
               "common_errors": [{"id":"word-tree-type-err","category":"reasoning","description":"植树类型判断错误"},{"id":"word-tree-count-err","category":"reasoning","description":"棵数与间隔数换算错误"}],
+              "deprecatedReason": "新版五上删除数学广角植树问题"
             },
             {
               id: "math-g5-m8-g5-word-defect",
@@ -7889,7 +7920,7 @@
           knowledgePoints: [
             {
               id: "math-g5-m10-g5-reason-tree3",
-              name: "植树问题（三种情况）",
+              name: "【已废弃】植树问题（三种情况）",
               pluginId: "math-g5-reason",
               weight: 3,
               type: "tree-three",
@@ -7905,11 +7936,12 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "植树问题（三种情况）：两端都栽、一端栽、两端都不栽及环形植树的棵数关系。",
               "factualContent": {"rule":"植树三种情况：棵数=间隔数+1（两端都栽）；棵数=间隔数（一端栽、环形）；棵数=间隔数-1（两端都不栽）。"},
               "graphicType": "text",
               "common_errors": [{"id":"reason-tree3-type-err","category":"reasoning","description":"三种情况判断错误"},{"id":"reason-tree3-calc-err","category":"calculation","description":"间隔数或棵数计算错误"}],
+              "deprecatedReason": "新版五上删除数学广角植树问题"
             },
             {
               id: "math-g5-m10-g5-reason-defect",
@@ -8014,7 +8046,7 @@
             },
             {
               id: "math-g5-m11-g5-judge-equ",
-              name: "方程概念",
+              name: "【已废弃】方程概念",
               pluginId: "math-g5-judge",
               weight: 2,
               type: "equation",
@@ -8030,11 +8062,12 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "方程概念判断：判断关于方程、等式、解方程的说法的正误。",
               "factualContent": {"rule":"方程判断：方程一定是等式、等式不一定是方程；方程须含未知数；解方程是利用等式性质。"},
               "graphicType": "text",
               "common_errors": [{"id":"judge-equ-eq-err","category":"concept","description":"方程与等式关系判断错误"},{"id":"judge-equ-solve-err","category":"concept","description":"解方程概念或步骤判断错误"}],
+              "deprecatedReason": "新版解方程移出小学"
             },
             {
               id: "math-g5-m11-g5-judge-fm",
@@ -8239,7 +8272,7 @@
             },
             {
               id: "math-g5-m12-g5-choice-equ",
-              name: "方程",
+              name: "【已废弃】方程",
               pluginId: "math-g5-choice",
               weight: 3,
               type: "equation",
@@ -8255,11 +8288,12 @@
               number_range_default: { min: 1, max: 10000 },
               max_steps_default: 2,
               context_default: "standard",
-              status: "active",
+              status: "deprecated",
               "concept": "方程选择：选择正确方程、方程的解或解方程方法。",
               "factualContent": {"rule":"方程选择：判断哪个是方程（含未知数等式）；哪个数是方程的解（代入成立）。"},
               "graphicType": "text",
               "common_errors": [{"id":"choice-equ-id-err","category":"concept","description":"方程识别错误"},{"id":"choice-equ-solve-err","category":"calculation","description":"方程的解判断错误"}],
+              "deprecatedReason": "新版解方程移出小学"
             },
             {
               id: "math-g5-m12-g5-choice-fm",
