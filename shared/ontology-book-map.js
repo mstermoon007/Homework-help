@@ -128,12 +128,15 @@
     'math-g3-m1-g3-mul-2digit':        { grade: 4, book: 'up', unit: '第三单元 多位数乘两位数' },
     // ---- 保留 G3（三上）----
     'math-g3-m1-g3-mul-multi1':        { book: 'up', unit: '第四单元 多位数乘一位数' },
+    'math-g3-m1-g3-oral-mul':          { book: 'up', unit: '第四单元 多位数乘一位数' },
     'math-g3-m4-g3-fraction':          { book: 'up', unit: '第六单元 分数的初步认识' },
+    'math-g3-m4-g3-fracadd':           { book: 'up', unit: '第六单元 分数的初步认识' },
     'math-g3-m4-g3-measure':           { book: 'up', unit: '第三单元 毫米、分米和千米' },
-    'math-g3-m6-g3-position':          { book: 'up', unit: '校园小导游（位置与方向）' },
+    'math-g3-m6-g3-position':          { book: 'mixed', unit: '清理候选（新版三上/三下删除位置与方向单元）' },
     // ---- 保留 G3（三下）----
     'math-g3-m1-g3-div1':              { book: 'down', unit: '第二单元 除数是一位数的除法' },
     'math-g3-m6-g3-perimeter':         { book: 'down', unit: '第三单元 长方形和正方形' },
+    'math-g3-m6-g3-polygon':           { book: 'down', unit: '第三单元 长方形和正方形' },
     'math-g3-m6-g3-area':              { book: 'down', unit: '第四单元 图形的面积' },
     'math-g3-m9-g3-stats-table':       { book: 'down', unit: '第五单元 数据的收集与整理' },
     'math-g3-m4-g3-year-month':        { book: 'down', unit: '☆年、月、日的秘密' },

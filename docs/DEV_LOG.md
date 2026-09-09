@@ -7,6 +7,30 @@
 
 ---
 
+## [Unreleased] — 二期知识库升级：G3 全量对照补录 + 语义路由根因修复（2026-09-09）
+
+**目标**：修复「三年级知识点明显不够」——以 dzkbw 2025 秋三上 / 2026 春三下目录为唯一基准全量对照补录；同时修复新增 KP 的语义路由机制根因。
+
+### G3 教材全量对照（三上 8 单元 + 三下 7 单元）
+- **新增 3 KP**：
+  - `math-g3-m1-g3-oral-mul` 多位数乘一位数口算（三上四单元「口算乘法」课时）→ active，registry native 绑定 arithmetic-multiplication。
+  - `math-g3-m6-g3-polygon` 认识多边形（三下三单元「多边形」课时）→ active，native 绑定 shape-recognition。
+  - `math-g3-m4-g3-fracadd` 同分母分数加减法（三上六单元课时）→ inactive 空题型（分数专用生成器待适配，避免泛型错误语义）。
+- **position 处置**：`math-g3-m6-g3-position` 位置与方向 → deprecated（新版三上/三下目录均无此单元，方向知识并入低年级及综合实践）；映射改清理候选。
+- **stats-table 改名**：复式统计表 → 数据的收集与整理（新版三下第五单元）。
+- 对照结论：三上（观察物体/混合运算/毫米分米千米/曹冲称象/多位数乘一位数/数字编码/线和角/分数/搭配）与三下（运动现象/除数一位数除法/长方形正方形/面积/数据收集/年月日/小数）**全部单元均有 KP 覆盖**（原生+G2/G4 跨册迁移，G3 归属 active 37 个）。
+
+### 语义路由根因修复（关键技术结论）
+- 实测发现：canonical（knowledge-ontology normalize）为**重映射结构**（`source.pluginId`/`presentation.graphicType`），selector 读取顶层 `kp.pluginId/graphicType/operations` **全部 undefined** → `has*Semantics` 家族语义判定在 canonical 层**整体失效**。
+- 结论：语义路由**唯一可靠机制 = registry native binding（score.kp=1 豁免一切硬阻断）**。新增 active KP 必须挂 registry（frozen 重锚），仅改 knowledge-math.js 会导致泛型乱路由（实测 oral-mul→position-direction、polygon→null）。
+- 这也是「数字编码/等量代换必须 inactive 或专用生成器」的深层原因。
+- **Error ID 禁词**：`FORBIDDEN_RE` 含 `en-` → `*den-err`/`*open-err` 非法；改名 `fracadd-bottom-err`/`polygon-unclosed-err`（全库 555 KP invalid=0）。
+
+### Gate（执行后）
+- 555 KP（active 新增 2 + inactive 新增 1）；M1 PASS；309/309 tests；Golden 15/15；M4-R03 555 VALID；contract VALID；frozen 基线重锚后 --check 无变更；新 KP 路由冒烟（oral-mul→arithmetic-multiplication、polygon→shape-recognition）语义正确。
+
+---
+
 ## [Unreleased] — 二期知识库升级：五上映射 + 待核实 KP 处置 + 生成器适配（2026-09-09）
 
 **目标**：人教版新教材（dzkbw 2025/2026 版为唯一基准）二期——五上映射先行、待核实 KP 归属定案、数字编码/等量代换专用生成逻辑解除 inactive；竞赛 203 KP 维持 book/unit 留空定稿。
