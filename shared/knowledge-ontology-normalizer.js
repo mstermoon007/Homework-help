@@ -112,15 +112,22 @@
     // 统计与概率域无四域槽位 → null（留空禁猜）。
     c.category = CatMap.categoryForKp(legacyKP);
 
-    // V4.1.1：上下册 × 单元分层标注（快速/教师模式分组用，非生成语义）。
+    // V4.1.2：上下册 × 单元分层标注（快速/教师模式分组用，非生成语义）。
     // 数据层显式填写（G1 新版教材）优先；缺失时查 ontology-book-map
-    // （G2–G6 旧版教材目录标注；竞赛 KP 不标注 → null）。
-    // book ∈ up|down|mixed|advance；unit 为教材单元显示名。
+    // （G2–G4 新版教材目录标注，含跨年级迁移 grade；G5–G6 二期）。
+    // book ∈ up|down|mixed|advance；unit 为教材单元显示名；unit=null 表示待核实。
     var _bu = (legacyKP.book != null)
       ? { book: legacyKP.book, unit: legacyKP.unit || null }
       : BookMap.bookUnitForKp(legacyKP);
     c.book = _bu ? _bu.book : null;
     c.unit = _bu ? _bu.unit : null;
+    // V4.1.2：新版教材跨年级归属（一期 G2→G1/G3、G3→G2/G4、G4→G3）。
+    // 数据层显式 gradeOverride（预留字段）优先；否则取映射表 grade；
+    // 无迁移 → null（UI 回退到 c.grade）。
+    var _go = null;
+    if (legacyKP.gradeOverride != null) _go = legacyKP.gradeOverride;
+    else if (_bu && _bu.grade != null) _go = _bu.grade;
+    c.gradeOverride = _go;
 
     c.module = { id: moduleId, name: moduleName(moduleId) };
     c.identity = {
@@ -249,11 +256,12 @@
       context_default: ctx
     };
 
-    // V4.1.1：book/unit 为 UI 分组标注（非生成语义），不在 Ontology.create 白名单内，
+    // V4.1.2：book/unit/gradeOverride 为 UI 分组标注（非生成语义），不在 Ontology.create 白名单内，
     // 故在 create 后补注；若未来纳入 schema，此段可移除。
     var canonical = Ontology.create(c);
     canonical.book = c.book || null;
     canonical.unit = c.unit || null;
+    canonical.gradeOverride = c.gradeOverride || null;
     return canonical;
   }
 
