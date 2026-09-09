@@ -7,6 +7,49 @@
 
 ---
 
+## [Unreleased] — 二期知识库升级：五上映射 + 待核实 KP 处置 + 生成器适配（2026-09-09）
+
+**目标**：人教版新教材（dzkbw 2025/2026 版为唯一基准）二期——五上映射先行、待核实 KP 归属定案、数字编码/等量代换专用生成逻辑解除 inactive；竞赛 203 KP 维持 book/unit 留空定稿。
+
+### 五上映射先行（ea15ef8）
+- G5 基础 81 KP 全量映射（80 原基础 + 1 新增 `math-g5-m4-g5-fill-letter` 用字母表示数，五上第五单元，inactive 空题型待适配）：
+  - 五上新版 8 单元归属（第一单元 观察简单组合体 / 第二单元 小数乘法 / 第三单元 小数除法 / 第四单元 图形的运动 / 第五单元 用字母表示数和数量关系 / 第六单元 多边形的面积 / 第七单元 可能性 / 第八单元 复习与关联）。
+  - 跨册迁移 G4：`fill-decloc`/`fill-deccmp`→四下 小数的意义和性质、`fill-prodrule`→四上 多位数乘两位数。
+  - 跨册迁移 G6：`fill-coord`/`draw-coord`→六上 位置（数对并入，unit 带「待六上定稿」注）。
+  - 五下（2027 春待定稿）：分数/因数倍数/长方体正方体/折线统计图/找次品等 unit 不带序号。
+  - 清理候选 10 个 deprecated（status + 【已废弃】名前缀 + deprecatedReason）：简易方程 7（新版解方程移出小学，五上改「用字母表示数和数量关系」）+ 植树问题 3（新版五上删除数学广角）。
+
+### 待核实 10 个 KP 归属定案（ea15ef8）
+- 教材培训多源确认（兰州城关智慧教育云 2026-07 / 美篇 2026-09 教研）：除数是两位数的除法、公顷和平方千米 → **调整至四下**（分散计算难点）；数学广角——优化 → **删除独立单元**（思想简化融入练习）。
+- 处置：除法 6 + 公顷 2 → `book:'down'` unit 带「调整至四下」；优化 2 → 清理候选（mixed）。
+
+### 生成器适配：数字编码 / 等量代换（9a86d99）
+- 新增 `shared/generator/generators/semantic-special.js`（V2.1 专项语义生成器）：
+  - `generator:code-recognition`（数字编码）：学号编制 fill / 编码含义 choice / 编码特性 judge；学号编码规则=年份4位+班级2位+序号2位。
+  - `generator:equivalent-reasoning`（等量代换）：两步代换 fill / choice / 文字情境 apply（书包/笔袋/钢笔等物品池，A=p×B、B=q×C → A=pq×C）。
+  - 全部基于种子 PRNG 确定性生成；规避泛型生成器对非算术语义 KP 出错误语义题的既有缺陷。
+- 挂载：`generators/index.js` require+合并（23→25 生成器）；`generator-registry.js` CORE_RECORDS 增补 2 条 native 绑定（version 2）；**selector 零改动**（native binding 最高优先 + 新 id 不触发任何家族硬阻断，语义契约放行）。
+- 激活 KP：`math-g3-m10-g3-code` / `math-g3-m8-g3-equivalent` → status active + applicable_question_types 填 fill/choice/（judge|apply）。
+- `tests/generator/core-generators.test.js`：CORE_IDS 23→25。
+- Frozen baseline 重锚（index.js / generator-registry.js 2 处授权变更）。
+- 冒烟验证：6 组 KP×题型路由全部命中专用生成器、语义与答案严格一致；同种子可复现。
+
+### 竞赛定稿确认（本轮）
+- 竞赛 203 KP（G4-G6 C1-C9）保持 book/unit 留空（0 被映射），与定稿一致；竞赛模式维持模块绑定/直通，本轮不修。
+
+### 六上映射状态（暂缓）
+- dzkbw 六上仍为旧版目录（百分数(一)/总复习）；多源（教习网 2026 新教材 / 名师工作室 / 学科网 2026-2027 预习讲义）指向新版六上为「百分数整合版」（整合原六上百分数(一)+六下百分数(二)），并含综合实践「体育中的数学」。**目录未完全定稿，按「目录完整确认后执行」暂缓**；G5→G6 数对迁移已先行标注待定稿注。
+
+### 综合实践补 KP 评估（本轮）
+- 数字编码 / 等量代换（三上综合实践）已补 KP + 专用生成器（见上）。
+- 五上「有趣的密铺」：活动/项目式操作（铺摆验证），以观察/操作为主，抽象出题可行性与生成语义风险高 → **不补 KP**（按需原则，汇报说明）。
+- 六上「体育中的数学」等：待六上目录定稿后一并评估。
+
+### Gate（执行后）
+- 309/309 tests（node:test）；M1 PASS；Golden 15/15；M4-R03 registry 552 KP VALID；knowledge-contract VALID 552；frozen-core --check 无变更（基线重锚后）。
+
+---
+
 ## [Unreleased] — C1–C5 审计修复链 + V4.1 全量回归（D001–D007）（2026-09-09 收口）
 
 **目标**：浏览器实机审计收口——修复快速/专业模式的生成请求竞态、跨轮重复、composite 合并路由与 context 传播缺陷；补齐统计/概率 KP 数据；V4.1 全量回归验证。
