@@ -30,6 +30,9 @@
     'dataStats': { module: 'svg-datastats', label: '数据统计' },
     'draw': { module: 'svg-draw', label: '作图' },
     'competition': { module: 'svg-competition', label: '竞赛' },
+    'chart': { module: 'svg-chart', label: '统计图表' },
+    'diagram': { module: 'svg-diagram', label: '示意图' },
+    'currency': { module: 'svg-currency', label: '人民币' },
     'core': { module: 'svg-core', label: '基础 SVG 原语' },
     'custom': { module: 'svg-legacy', label: '既有 SVG 透传' },
     'illustration': { module: 'svg-legacy', label: '既有 SVG 透传' }
@@ -63,7 +66,7 @@
 
   /**
    * 实际底层 SVG 引擎：浏览器取 global.SVGRenderer（svg-registry 挂载），
-   * Node 回退 require('./../presentation/svg-registry.js')。
+   * Node 回退 require('../presentation/svg-registry.js')。
    */
   function getSVGEngine() {
     var c = global && global.SVGRenderer;

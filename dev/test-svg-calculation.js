@@ -2,8 +2,8 @@
 /** dev/test-svg-calculation.js — SVGCalculation 单元测试 */
 'use strict';
 var path = require('path');
-require(path.join(__dirname, '..', 'shared', 'svg-core.js'));
-var C = require(path.join(__dirname, '..', 'shared', 'svg-calculation.js'));
+require(path.join(__dirname, '..', 'shared', 'svg', 'svg-core.js'));
+var C = require(path.join(__dirname, '..', 'shared', 'svg', 'svg-calculation.js'));
 
 var fail = 0, pass = 0;
 function assert(cond, msg) {

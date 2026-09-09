@@ -10,8 +10,9 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
 var Arith = require('../core/arithmetic-core.js');
+var OpSem = require('../core/op-semantics.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -155,7 +156,7 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
   var answerFen = op === 'add' ? aFen + bFen : aFen - bFen;
   var aStr = formatRMB(aFen);
   var bStr = formatRMB(bFen);
-  var opChar = op === 'add' ? '+' : '−';
+  var opChar = OpSem.symbol(op) || '−';
   var prompt = aStr + ' ' + opChar + ' ' + bStr + ' = ____';
   var answer = formatRMB(answerFen);
   
@@ -249,7 +250,7 @@ function makeWordProblemQuestion(plan, context, i, meta) {
       prompt: prompt,
       answer: { value: answer, acceptable: [] },
       answerMode: 'input',
-      data: { mode: 'apply', steps: 2, kind: 'rmb', operation: op === 'change' ? 'sub' : 'add' }
+      data: { mode: 'apply', steps: 2, kind: 'rmb', operation: op === 'change' ? 'sub' : 'add', amountA: aFen, amountB: bFen }
     };
   }
   
@@ -318,6 +319,25 @@ function createMoneyGenerator(spec) {
         }
         
         q.data.graphic = makeGraphicForMoney(meta, plan.difficulty);
+        // 人民币轨：发真实 currency/rmb 描述符（按题干实际金额画币值图标）
+        if (meta.kind === 'rmb' && q.data) {
+          var amounts = null;
+          var qd = q.data;
+          if (Array.isArray(qd.operands) && qd.operands.length >= 2) {
+            amounts = qd.operands.slice(0, 2).map(Number);
+          } else if (qd.amountA != null && qd.amountB != null) {
+            amounts = [Number(qd.amountA), Number(qd.amountB)];
+          } else if (qd.originalAmount != null) {
+            var fen = (typeof qd.originalAmount === 'string') ? parseRMB(qd.originalAmount) : Number(qd.originalAmount);
+            amounts = isFinite(fen) ? [fen] : null;
+          }
+          var op = OpSem.symbol(qd.operation);
+          if (amounts && amounts.length) {
+            q.data.graphic = { type: 'currency', subtype: 'rmb', params: { amounts: amounts, op: op } };
+          } else {
+            delete q.data.graphic;
+          }
+        }
         questions.push(q);
       }
       return questions;

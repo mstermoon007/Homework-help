@@ -7,7 +7,7 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -81,6 +81,7 @@ function makeCountingQuestion(plan, context, i, kp) {
   else if (name.indexOf('组合') !== -1) type = 'choose';
   else if (name.indexOf('集合') !== -1) type = 'set';
 
+  var v = i; // 变体序号：同 KP 同题型下轮换不同设问/参数，提升语义容量（R6）
   var prompt, answer, steps;
   if (type === 'principle') {
     var m = Rng.randInt(rng, 3, 8);
@@ -89,16 +90,27 @@ function makeCountingQuestion(plan, context, i, kp) {
     answer = m * n;
     steps = 2;
   } else if (type === 'enumeration') {
-    var digits = [1, 2, 3, 4, 5];
-    var len = Rng.randInt(rng, 2, 3);
-    prompt = '用' + digits.slice(0, len + 1).join('、') + '这' + (len + 1) + '个数字，可以组成多少个没有重复数字的' + len + '位数？';
-    var ans = 1; for (var d = len + 1; d > len + 1 - len; d--) ans *= d;
-    answer = ans;
+    // 枚举：从 n 个不同数字中取 k 个排列（无重复）→ A(n,k)
+    var ENUM = [
+      { digits: [1, 2, 3, 4, 5], len: 2 },
+      { digits: [1, 2, 3, 4, 5], len: 3 },
+      { digits: [2, 3, 4, 5, 6], len: 2 },
+      { digits: [1, 3, 5, 7, 9], len: 3 }
+    ];
+    var en = ENUM[v % ENUM.length];
+    var used = en.digits.slice(0, en.len + 1);
+    var enumAns = 1; for (var d = 0; d < en.len; d++) enumAns *= (used.length - d);
+    prompt = '用' + used.join('、') + '这' + used.length + '个数字，可以组成多少个没有重复数字的' + en.len + '位数？';
+    answer = enumAns;
     steps = 3;
   } else if (type === 'worst-case') {
-    prompt = '一个盒子里有红、黄、蓝三种颜色的球各若干个，至少要摸出多少个球，才能保证有3个球颜色相同？';
-    answer = 7;
-    steps = 2;
+    var WC = [
+      { c: 3, k: 3, ans: 7 }, { c: 4, k: 3, ans: 9 }, { c: 2, k: 4, ans: 7 }, { c: 5, k: 2, ans: 6 }
+    ];
+    var wc = WC[v % WC.length];
+    var colorNames = ['红', '黄', '蓝', '绿', '紫'];
+    prompt = '一个盒子里有' + colorNames.slice(0, wc.c).join('、') + '等' + wc.c + '种颜色的球各若干个，至少要摸出多少个球，才能保证有' + wc.k + '个球颜色相同？';
+    answer = wc.c * (wc.k - 1) + 1; steps = 2;
   } else if (type === 'combination') {
     var shirts = Rng.randInt(rng, 2, 5);
     var pants = Rng.randInt(rng, 2, 5);
@@ -126,44 +138,63 @@ function makeCountingQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (type === 'bundling') {
     // 捆绑法：n 本不同书，其中 2 本必须相邻 → 2! × (n-1)!
-    var bn = Rng.randInt(rng, 5, 6);
+    var BUNDLE = [5, 6, 7, 8];
+    var bn = BUNDLE[v % BUNDLE.length];
     prompt = bn + '本不同的书排成一排，其中有 2 本必须相邻，一共有多少种不同的排法？';
     answer = factorial(2) * factorial(bn - 1);
     steps = 3;
   } else if (type === 'insertion') {
-    // 插空法：3 名男生固定顺序排好形成 4 个空位，2 名女生插入且互不相邻 → 4×3
-    prompt = '3 名男生已按固定顺序排成一排（形成 4 个空位），现将 2 名女生插入空位，要求两名女生互不相邻，一共有多少种插入方法？';
-    answer = 4 * 3;
-    steps = 2;
+    // 插空法：m 名男生排好形成 m+1 个空位，f 名女生互不相邻插入 → P(m+1, f)
+    var INS = [
+      { m: 3, f: 2 }, { m: 4, f: 2 }, { m: 4, f: 3 }, { m: 5, f: 2 }
+    ];
+    var ins = INS[v % INS.length];
+    var insAns = 1; for (var ii = 0; ii < ins.f; ii++) insAns *= (ins.m + 1 - ii);
+    prompt = ins.m + ' 名男生已按固定顺序排成一排（形成 ' + (ins.m + 1) + ' 个空位），现将 ' + ins.f + ' 名女生插入空位，要求女生互不相邻，一共有多少种插入方法？';
+    answer = insAns; steps = 2;
   } else if (type === 'starsbars') {
-    // 隔板法：7 个相同苹果分给 3 人，每人至少 1 个 → C(6,2)
-    var sn = 7, sm = 3;
-    prompt = '把 ' + sn + ' 个相同的苹果分给 ' + sm + ' 个小朋友，每人至少分到 1 个，一共有多少种不同的分法？';
-    answer = nCr(sn - 1, sm - 1);
+    // 隔板法：sn 个相同苹果分给 sm 人，每人至少 1 个 → C(sn-1, sm-1)
+    var SB = [
+      { sn: 7, sm: 3 }, { sn: 10, sm: 4 }, { sn: 8, sm: 2 }, { sn: 12, sm: 5 }
+    ];
+    var sb = SB[v % SB.length];
+    prompt = '把 ' + sb.sn + ' 个相同的苹果分给 ' + sb.sm + ' 个小朋友，每人至少分到 1 个，一共有多少种不同的分法？';
+    answer = nCr(sb.sn - 1, sb.sm - 1);
     steps = 2;
   } else if (type === 'pigeonhole') {
-    // 抽屉原理：4 种颜色，保证 4 个同色 → 4×(4-1)+1
-    var colors = 4, want = 4;
-    prompt = '盒子里有红、黄、蓝、绿 4 种颜色的球各 10 个（球除颜色外完全相同）。至少要摸出多少个球，才能保证其中有 ' + want + ' 个球颜色相同？';
-    answer = colors * (want - 1) + 1;
+    // 抽屉原理：colors 种颜色，保证 want 个同色 → colors×(want-1)+1
+    var PH = [
+      { c: 4, k: 4 }, { c: 5, k: 3 }, { c: 3, k: 2 }, { c: 6, k: 3 }
+    ];
+    var ph = PH[v % PH.length];
+    var phColors = ['红', '黄', '蓝', '绿', '紫', '橙'];
+    prompt = '盒子里有' + phColors.slice(0, ph.c).join('、') + '等 ' + ph.c + ' 种颜色的球各若干个（球除颜色外完全相同）。至少要摸出多少个球，才能保证其中有 ' + ph.k + ' 个球颜色相同？';
+    answer = ph.c * (ph.k - 1) + 1;
     steps = 2;
   } else if (type === 'inclusion') {
     // 容斥原理（三集合）
-    var aN = 20, bN = 18, cN = 16, ab = 8, ac = 7, bc = 6, abc = 3, total = 40;
-    prompt = '某班共有 ' + total + ' 人，参加数学小组的有 ' + aN + ' 人，参加英语小组的有 ' + bN + ' 人，参加科学小组的有 ' + cN + ' 人；'
-      + '同时参加数学和英语的有 ' + ab + ' 人，同时参加数学和科学的有 ' + ac + ' 人，同时参加英语和科学的有 ' + bc + ' 人；'
-      + '三个小组都参加的有 ' + abc + ' 人。三个小组都没参加的有多少人？';
-    answer = total - (aN + bN + cN - ab - ac - bc + abc);
+    var INC = [
+      { total: 40, aN: 20, bN: 18, cN: 16, ab: 8, ac: 7, bc: 6, abc: 3 },
+      { total: 50, aN: 25, bN: 22, cN: 20, ab: 10, ac: 9, bc: 8, abc: 4 },
+      { total: 45, aN: 18, bN: 16, cN: 15, ab: 7, ac: 6, bc: 5, abc: 2 }
+    ];
+    var inc = INC[v % INC.length];
+    prompt = '某班共有 ' + inc.total + ' 人，参加数学小组的有 ' + inc.aN + ' 人，参加英语小组的有 ' + inc.bN + ' 人，参加科学小组的有 ' + inc.cN + ' 人；'
+      + '同时参加数学和英语的有 ' + inc.ab + ' 人，同时参加数学和科学的有 ' + inc.ac + ' 人，同时参加英语和科学的有 ' + inc.bc + ' 人；'
+      + '三个小组都参加的有 ' + inc.abc + ' 人。三个小组都没参加的有多少人？';
+    answer = inc.total - (inc.aN + inc.bN + inc.cN - inc.ab - inc.ac - inc.bc + inc.abc);
     steps = 3;
   } else if (type === 'recursion') {
     // 递推计数：爬楼梯，每次 1 或 2 级
-    var rn = 5;
+    var REC = [5, 6, 7, 4];
+    var rn = REC[v % REC.length];
     prompt = '小明上楼梯，每次可以走 1 级或 2 级台阶。他上到第 ' + rn + ' 级台阶时，一共有多少种不同的走法？';
     answer = stairWays(rn);
     steps = 3;
   } else if (type === 'derangement') {
-    // 错排：4 封信全部装错信封 → D(4)=9
-    var dn = 4;
+    // 错排：dn 封信全部装错信封 → D(dn)
+    var DER = [4, 3, 5, 6];
+    var dn = DER[v % DER.length];
     prompt = '有 ' + dn + ' 封信和写好对应地址的 ' + dn + ' 个信封，把信全部装错（没有一封信装进正确的信封），一共有多少种装法？';
     answer = derangement(dn);
     steps = 2;

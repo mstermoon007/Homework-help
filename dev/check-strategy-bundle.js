@@ -2,7 +2,7 @@
 /**
  * dev/check-strategy-bundle.js — M4-19 Bundle Smoke Test（MATH-14 native-only）
  *
- * 验证「Strategy + Generator Runtime」bundle（shared/strategy-engine.bundle.js）：
+ * 验证「Strategy + Generator Runtime」bundle（shared/engine/strategy-engine.bundle.js）：
  *  1. 全部运行时全局已挂载；
  *  2. Strategy → GeneratorSelector → Generator → SemanticQuestion 全链路可执行；
  *  3. 语义渲染桥可用；
@@ -30,22 +30,22 @@ function check(name, cond) {
 
 // 1) 装载 bundle 所需的共享层 shim（与 practice.html 一致）
 try {
-  require(path.join(ROOT, 'shared/common.js'));
-  require(path.join(ROOT, 'shared/difficulty.js'));
-  require(path.join(ROOT, 'shared/difficulty-static.js'));
-  require(path.join(ROOT, 'shared/knowledge-bank.js'));
+  require(path.join(ROOT, 'shared/core/common.js'));
+  require(path.join(ROOT, 'shared/catalog/difficulty.js'));
+  require(path.join(ROOT, 'shared/catalog/difficulty-static.js'));
+  require(path.join(ROOT, 'shared/knowledge/knowledge-bank.js'));
 } catch (e) {
   console.error('共享层 shim 装载失败：' + e.message);
   process.exit(1);
 }
 
 // 2) eval bundle（浏览器以 <script> 引入，Node 以文本 eval 模拟同一产物）
-var bundlePath = path.join(ROOT, 'shared/strategy-engine.bundle.js');
+var bundlePath = path.join(ROOT, 'shared/engine/strategy-engine.bundle.js');
 var src;
 try {
   src = fs.readFileSync(bundlePath, 'utf8');
 } catch (e) {
-  console.error('找不到 bundle：shared/strategy-engine.bundle.js（请先 node dev/build-strategy-bundle.js）');
+  console.error('找不到 bundle：shared/engine/strategy-engine.bundle.js（请先 node dev/build-strategy-bundle.js）');
   process.exit(1);
 }
 

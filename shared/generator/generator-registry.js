@@ -21,9 +21,9 @@
 // M4-R06 核心 Generator 声明（纯数据；执行实现位于 shared/generator/generators/）
 var CORE_RECORDS = [
   { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g2-m2-add-col', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec', 'math-g4-m3-g4-mix-addlaw', 'math-g6-m1-g6-oral-neg-add-sub'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g2-m2-sub-col', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g2-m2-sub-col', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec', 'math-g1-m7-picture-sub', 'math-g1-m8-sub-remain', 'math-g1-m8-sub-part', 'math-g2-m1-sub-100', 'math-g2-m7-pic-sub', 'math-g2-m8-sub-remain'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g2-m1-mult-table', 'math-g2-m2-mult-col', 'math-g2-m4-multiplication-meaning', 'math-g2-m7-pic-mult', 'math-g2-m8-mult-total', 'math-g2-m5-match-multdiv', 'math-g3-m1-g3-mul-multi1', 'math-g3-m1-g3-oral-mul', 'math-g4-m1-g4-oral-mul3x1', 'math-g4-m1-g4-oral-mul2t', 'math-g4-m1-g4-oral-law', 'math-g4-m3-g4-mix-mullaw', 'math-g5-m1-g5-oral-decmul', 'math-g6-m2-g6-calc-dec-mult'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m13-division-table', 'math-g2-m1-div-table', 'math-g2-m1-muldiv-relation', 'math-g2-m2-div-col', 'math-g2-m2-remainder-col', 'math-g2-m1-remainder-oral', 'math-g2-m4-division-meaning', 'math-g2-m7-pic-div', 'math-g2-m7-pic-div-include', 'math-g2-m8-div-partitive', 'math-g2-m8-div-quotative', 'math-g3-m1-g3-div1', 'math-g4-c2-c2-divisible', 'math-g4-m1-g4-oral-divt', 'math-g5-m1-g5-oral-decdiv', 'math-g4-m2-g4-v-div2', 'math-g4-m2-g4-v-div2q', 'math-g4-m8-g4-word-div'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m13-division-table', 'math-g2-m1-div-table', 'math-g2-m1-muldiv-relation', 'math-g2-m2-div-col', 'math-g2-m2-remainder-col', 'math-g2-m1-remainder-oral', 'math-g2-m4-division-meaning', 'math-g2-m7-pic-div', 'math-g2-m7-pic-div-include', 'math-g2-m8-div-partitive', 'math-g2-m8-div-quotative', 'math-g3-m1-g3-div1', 'math-g4-c2-c2-divisible', 'math-g4-m1-g4-oral-divt', 'math-g5-m1-g5-oral-decdiv', 'math-g4-m2-g4-v-div2', 'math-g4-m2-g4-v-div2q', 'math-g4-m8-g4-word-div', 'math-g2-m8-remainder-apply'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['fill', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g1-m13-division-table', 'math-g1-m13-fill-blank', 'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-cutfill', 'math-g4-c4-c4-pa', 'math-g4-c4-c4-solid', 'math-g4-c4-c4-count'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['choice', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g1-m12-choice-mixed', 'math-g1-m5-match-calc', 'math-g1-m5-match-shape', 'math-g1-m5-match-rmb', 'math-g2-m12-choice-mixed'], scope: 'core', version: 1, supportsComposite: false },
@@ -89,13 +89,57 @@ var CORE_RECORDS = [
     scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:equivalent-reasoning', subject: 'math', capabilities: ['fill', 'choice', 'apply'], questionTypes: ['fill', 'choice', 'apply'],
     knowledgePoints: ['math-g3-m8-g3-equivalent'],
-    scope: 'core', version: 2, supportsComposite: false }
+    scope: 'core', version: 2, supportsComposite: false },
+
+  // V2.1 补充：分类整理生成器（补齐 7 类规范题型中唯一无生成器的 classify）
+  { id: 'generator:classification', subject: 'math', capabilities: ['classify'], questionTypes: ['classify'],
+    knowledgePoints: ['math-g1-m4-count-quantity', 'math-g3-m9-g3-stats-table', 'math-g3-m10-g3-set', 'math-g3-m10-g3-combination'],
+    scope: 'core', version: 1, supportsComposite: false }
 ];
+
+// 7 类规范题型改造（知识点驱动）：manifest 历史 token（oral/recognize/open）在注册时
+// 经 question-type-registry 归一为规范 7 类（oral→calc / recognize→geometry / open→apply），
+// 避免逐生成器改写；保证 capability / questionTypes 全为 canonical 7 类。
+var QTR = (function () {
+  try { return require('../knowledge/question-type-registry.js'); }
+  catch (e) {
+    return (typeof window !== 'undefined' && window.QuestionTypeRegistry) ||
+      (typeof globalThis !== 'undefined' && globalThis.QuestionTypeRegistry) || null;
+  }
+})();
+
+function normToken(tok) {
+  if (!tok || typeof tok !== 'string') return tok;
+  if (!QTR) return tok;
+  var r = QTR.normalizeQuestionType(tok, { allowHeuristic: false });
+  return (r && r.id) ? r.id : tok;
+}
+
+function normList(arr) {
+  if (!Array.isArray(arr)) return arr;
+  var seen = {}, out = [];
+  arr.forEach(function (t) {
+    var n = normToken(t);
+    if (n && !seen[n]) { seen[n] = 1; out.push(n); }
+  });
+  return out;
+}
 
 function buildRecords() {
   // MATH-14：legacy 轨道已删除，注册表仅含 native core Generator。
   // （历史上曾合并 generator-capability-registry 的 legacy 插件记录，已移除。）
-  return CORE_RECORDS.slice();
+  return CORE_RECORDS.map(function (r) {
+    return {
+      id: r.id,
+      subject: r.subject,
+      capabilities: normList(r.capabilities),
+      questionTypes: normList(r.questionTypes),
+      knowledgePoints: r.knowledgePoints,
+      scope: r.scope,
+      version: r.version,
+      supportsComposite: r.supportsComposite
+    };
+  });
 }
 
 var _records = null;
@@ -146,8 +190,8 @@ function forSubject(subject) {
 }
 
 function resolveChain(kpId) {
-  var KnowledgePoint = require('../knowledge-point.js');
-  var Resolver = require('../capability-resolver.js');
+  var KnowledgePoint = require('../knowledge/knowledge-point.js');
+  var Resolver = require('../capability/capability-resolver.js');
   var kp = KnowledgePoint.get(kpId);
   if (!kp) return null;
   var capabilityQuestionTypes = Resolver.getCapabilities(kp).questionTypes || [];
@@ -184,7 +228,7 @@ function enhanceKp(kp) {
 
   // 无 Generator 直接绑定该 KP 时，回退解析链（CapabilityResolver 的能力集）
   if (capabilities.length === 0) {
-    var Resolver = require('../capability-resolver.js');
+    var Resolver = require('../capability/capability-resolver.js');
     var caps = Resolver.getCapabilities(kp).questionTypes || [];
     capabilities = caps.slice();
   }

@@ -230,7 +230,8 @@
         }
         var res = OrchestratorEngine.generateQuestions(plan, {
           skipValidation: options.skipValidation,
-          seenKeys: options.seenKeys || null
+          seenKeys: options.seenKeys || null,
+          mathSeenKeys: options.mathSeenKeys || null
         });
         var sqs = (res && (res.semanticQuestions || res.questions)) || [];
         questions.push.apply(questions, sqs);

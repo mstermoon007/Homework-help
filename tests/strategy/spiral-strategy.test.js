@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Spiral = require(path.join(ROOT, 'shared', 'strategy', 'spiral-strategy.js'));
-const KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 test('S1..S6 固定映射', () => {
   const expected = ['prototype', 'numeric', 'presentation', 'context', 'structure', 'transfer'];

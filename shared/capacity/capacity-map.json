@@ -1,0 +1,6803 @@
+{
+  "generatedAt": "2026-09-09T14:22:18.971Z",
+  "tiers": {
+    "HIGH": 332,
+    "MEDIUM": 51,
+    "LOW": 124,
+    "VERY_LOW": 59
+  },
+  "map": {
+    "math-g1-m1-addsub-whole-ten": {
+      "kpId": "math-g1-m1-addsub-whole-ten",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-oral-carry": {
+      "kpId": "math-g1-m1-oral-carry",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-oral-retreat": {
+      "kpId": "math-g1-m1-oral-retreat",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-pen-add": {
+      "kpId": "math-g1-m1-pen-add",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-pen-sub": {
+      "kpId": "math-g1-m1-pen-sub",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-compose-number": {
+      "kpId": "math-g1-m4-compose-number",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-adjacent-number": {
+      "kpId": "math-g1-m4-adjacent-number",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-compare-number": {
+      "kpId": "math-g1-m4-compare-number",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-number-chart": {
+      "kpId": "math-g1-m4-number-chart",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-100-compose": {
+      "kpId": "math-g1-m4-100-compose",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m7-picture-add": {
+      "kpId": "math-g1-m7-picture-add",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m7-brace-question": {
+      "kpId": "math-g1-m7-brace-question",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-sub-part": {
+      "kpId": "math-g1-m8-sub-part",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-compare-more": {
+      "kpId": "math-g1-m8-compare-more",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-compare-less": {
+      "kpId": "math-g1-m8-compare-less",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-two-step": {
+      "kpId": "math-g1-m8-two-step",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-exclude-extra": {
+      "kpId": "math-g1-m8-exclude-extra",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m13-fill-blank": {
+      "kpId": "math-g1-m13-fill-blank",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m5-match-calc": {
+      "kpId": "math-g1-m5-match-calc",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "choice": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m11-judge-mixed": {
+      "kpId": "math-g1-m11-judge-mixed",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-chain-add-col": {
+      "kpId": "math-g2-m2-chain-add-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-chain-sub-col": {
+      "kpId": "math-g2-m2-chain-sub-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-mixed-col": {
+      "kpId": "math-g2-m2-mixed-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m3-mixed-no-bracket": {
+      "kpId": "math-g2-m3-mixed-no-bracket",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m3-chain-addsub": {
+      "kpId": "math-g2-m3-chain-addsub",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m3-compare-simple": {
+      "kpId": "math-g2-m3-compare-simple",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m5-match-unit": {
+      "kpId": "math-g2-m5-match-unit",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m7-pic-sub": {
+      "kpId": "math-g2-m7-pic-sub",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-sub-remain": {
+      "kpId": "math-g2-m8-sub-remain",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-compare-diff": {
+      "kpId": "math-g2-m8-compare-diff",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-mass-app": {
+      "kpId": "math-g2-m8-mass-app",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m10-order": {
+      "kpId": "math-g2-m10-order",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m11-judge-mixed": {
+      "kpId": "math-g2-m11-judge-mixed",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m12-choice-mixed": {
+      "kpId": "math-g2-m12-choice-mixed",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "choice": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m4-g3-time": {
+      "kpId": "math-g3-m4-g3-time",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m4-g3-year-month": {
+      "kpId": "math-g3-m4-g3-year-month",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m3-g4-mix-order": {
+      "kpId": "math-g4-m3-g4-mix-order",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m3-g4-mix-addlaw": {
+      "kpId": "math-g4-m3-g4-mix-addlaw",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m4-g4-fill-bignum": {
+      "kpId": "math-g4-m4-g4-fill-bignum",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m4-g4-fill-hectare": {
+      "kpId": "math-g4-m4-g4-fill-hectare",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m4-g4-fill-op": {
+      "kpId": "math-g4-m4-g4-fill-op",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m5-g4-match-read": {
+      "kpId": "math-g4-m5-g4-match-read",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m9-g4-stats-avg": {
+      "kpId": "math-g4-m9-g4-stats-avg",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m11-g4-judge-read": {
+      "kpId": "math-g4-m11-g4-judge-read",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m12-g4-choice-big": {
+      "kpId": "math-g4-m12-g4-choice-big",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m12-g4-choice-dec": {
+      "kpId": "math-g4-m12-g4-choice-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c1-c1-horizontal": {
+      "kpId": "math-g4-c1-c1-horizontal",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c2-c2-parity": {
+      "kpId": "math-g4-c2-c2-parity",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c2-c2-prime": {
+      "kpId": "math-g4-c2-c2-prime",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c2-c2-factor": {
+      "kpId": "math-g4-c2-c2-factor",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-prime-composite": {
+      "kpId": "math-g5-c2-prime-composite",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c5-clock-problem": {
+      "kpId": "math-g5-c5-clock-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-compare-size": {
+      "kpId": "math-g5-c7-compare-size",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m4-unit-convert": {
+      "kpId": "math-g6-m4-unit-convert",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c1-horizontal-puzzle": {
+      "kpId": "math-g6-c1-horizontal-puzzle",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-clock": {
+      "kpId": "math-g6-c5-clock",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-compare-size": {
+      "kpId": "math-g6-c7-compare-size",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-digit-place": {
+      "kpId": "math-g1-m4-digit-place",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m7-picture-mixed": {
+      "kpId": "math-g1-m7-picture-mixed",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-sub-remain": {
+      "kpId": "math-g1-m8-sub-remain",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m5-match-shape": {
+      "kpId": "math-g1-m5-match-shape",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "choice": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m5-match-rmb": {
+      "kpId": "math-g1-m5-match-rmb",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "choice": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m12-choice-mixed": {
+      "kpId": "math-g1-m12-choice-mixed",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "choice": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-add-col": {
+      "kpId": "math-g2-m2-add-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-length-app": {
+      "kpId": "math-g2-m8-length-app",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m10-g5-reason-tree3": {
+      "kpId": "math-g5-m10-g5-reason-tree3",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c1-vertical-carry-complex": {
+      "kpId": "math-g6-c1-vertical-carry-complex",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-parity-analysis": {
+      "kpId": "math-g6-c2-parity-analysis",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m0-make-ten": {
+      "kpId": "math-g1-m0-make-ten",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m0-make-ten-ping": {
+      "kpId": "math-g1-m0-make-ten-ping",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m0-make-ten-po": {
+      "kpId": "math-g1-m0-make-ten-po",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m0-make-ten-cushi": {
+      "kpId": "math-g1-m0-make-ten-cushi",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-carry-add-20": {
+      "kpId": "math-g1-m1-carry-add-20",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-retreat-sub-20": {
+      "kpId": "math-g1-m1-retreat-sub-20",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-addsub-100": {
+      "kpId": "math-g1-m1-addsub-100",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-two-digit-add": {
+      "kpId": "math-g1-m1-two-digit-add",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-mixed-chain": {
+      "kpId": "math-g1-m1-mixed-chain",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-split-number": {
+      "kpId": "math-g1-m4-split-number",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-num-fill-unknown": {
+      "kpId": "math-g1-m4-num-fill-unknown",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-num-11-20": {
+      "kpId": "math-g1-m4-num-11-20",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-ordinal": {
+      "kpId": "math-g1-m4-ordinal",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-count-quantity": {
+      "kpId": "math-g1-m4-count-quantity",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m6-position": {
+      "kpId": "math-g1-m6-position",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m7-picture-sub": {
+      "kpId": "math-g1-m7-picture-sub",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-add-total": {
+      "kpId": "math-g1-m8-add-total",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m13-multiplication-table": {
+      "kpId": "math-g1-m13-multiplication-table",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m13-division-table": {
+      "kpId": "math-g1-m13-division-table",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-add-100": {
+      "kpId": "math-g2-m1-add-100",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-sub-100": {
+      "kpId": "math-g2-m1-sub-100",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-mixed-addsub": {
+      "kpId": "math-g2-m1-mixed-addsub",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-mixed-multdiv": {
+      "kpId": "math-g2-m1-mixed-multdiv",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-mixed-two-step": {
+      "kpId": "math-g2-m1-mixed-two-step",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-addsub-1000": {
+      "kpId": "math-g2-m1-addsub-1000",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-muldiv-relation": {
+      "kpId": "math-g2-m1-muldiv-relation",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-sub-col": {
+      "kpId": "math-g2-m2-sub-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-remainder-col": {
+      "kpId": "math-g2-m2-remainder-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m3-mixed-bracket": {
+      "kpId": "math-g2-m3-mixed-bracket",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m3-multdiv-mixed": {
+      "kpId": "math-g2-m3-multdiv-mixed",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m3-fill-operator": {
+      "kpId": "math-g2-m3-fill-operator",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-read-10000": {
+      "kpId": "math-g2-m4-read-10000",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-compose-10000": {
+      "kpId": "math-g2-m4-compose-10000",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-digit-order": {
+      "kpId": "math-g2-m4-digit-order",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-approx-number": {
+      "kpId": "math-g2-m4-approx-number",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-compare-10000": {
+      "kpId": "math-g2-m4-compare-10000",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-length-unit": {
+      "kpId": "math-g2-m4-length-unit",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-mass-unit": {
+      "kpId": "math-g2-m4-mass-unit",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-time-unit": {
+      "kpId": "math-g2-m4-time-unit",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-fill-length": {
+      "kpId": "math-g2-m4-fill-length",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-fill-mass": {
+      "kpId": "math-g2-m4-fill-mass",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-fill-time": {
+      "kpId": "math-g2-m4-fill-time",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-number-pattern": {
+      "kpId": "math-g2-m4-number-pattern",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-multiplication-meaning": {
+      "kpId": "math-g2-m4-multiplication-meaning",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-division-meaning": {
+      "kpId": "math-g2-m4-division-meaning",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-clock-read": {
+      "kpId": "math-g2-m4-clock-read",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m5-match-calc": {
+      "kpId": "math-g2-m5-match-calc",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m5-match-clock": {
+      "kpId": "math-g2-m5-match-clock",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m5-match-multdiv": {
+      "kpId": "math-g2-m5-match-multdiv",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m7-pic-add": {
+      "kpId": "math-g2-m7-pic-add",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m7-pic-div": {
+      "kpId": "math-g2-m7-pic-div",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m7-pic-div-include": {
+      "kpId": "math-g2-m7-pic-div-include",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m7-pic-mixed": {
+      "kpId": "math-g2-m7-pic-mixed",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-add-total": {
+      "kpId": "math-g2-m8-add-total",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-div-partitive": {
+      "kpId": "math-g2-m8-div-partitive",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-div-quotative": {
+      "kpId": "math-g2-m8-div-quotative",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-remainder-apply": {
+      "kpId": "math-g2-m8-remainder-apply",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m1-g3-add-sub-wan": {
+      "kpId": "math-g3-m1-g3-add-sub-wan",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m1-g3-mul-multi1": {
+      "kpId": "math-g3-m1-g3-mul-multi1",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m1-g3-oral-mul": {
+      "kpId": "math-g3-m1-g3-oral-mul",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m1-g3-mul-2digit": {
+      "kpId": "math-g3-m1-g3-mul-2digit",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m4-g3-fracadd": {
+      "kpId": "math-g3-m4-g3-fracadd",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m4-g3-decimal": {
+      "kpId": "math-g3-m4-g3-decimal",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m4-g3-measure": {
+      "kpId": "math-g3-m4-g3-measure",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m8-g3-times": {
+      "kpId": "math-g3-m8-g3-times",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m10-g3-set": {
+      "kpId": "math-g3-m10-g3-set",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m10-g3-code": {
+      "kpId": "math-g3-m10-g3-code",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m1-g4-oral-big": {
+      "kpId": "math-g4-m1-g4-oral-big",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m1-g4-oral-mul3x1": {
+      "kpId": "math-g4-m1-g4-oral-mul3x1",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m1-g4-oral-mul2t": {
+      "kpId": "math-g4-m1-g4-oral-mul2t",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m1-g4-oral-divt": {
+      "kpId": "math-g4-m1-g4-oral-divt",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m1-g4-oral-dec": {
+      "kpId": "math-g4-m1-g4-oral-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m2-g4-v-mul3x2": {
+      "kpId": "math-g4-m2-g4-v-mul3x2",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m2-g4-v-mulzero": {
+      "kpId": "math-g4-m2-g4-v-mulzero",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m2-g4-v-div2": {
+      "kpId": "math-g4-m2-g4-v-div2",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m2-g4-v-div2q": {
+      "kpId": "math-g4-m2-g4-v-div2q",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m2-g4-v-dec": {
+      "kpId": "math-g4-m2-g4-v-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m3-g4-mix-dist": {
+      "kpId": "math-g4-m3-g4-mix-dist",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m3-g4-mix-dec": {
+      "kpId": "math-g4-m3-g4-mix-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m4-g4-fill-quotient": {
+      "kpId": "math-g4-m4-g4-fill-quotient",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m4-g4-fill-dec": {
+      "kpId": "math-g4-m4-g4-fill-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m5-g4-match-law": {
+      "kpId": "math-g4-m5-g4-match-law",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "choice": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m5-g4-match-decfrac": {
+      "kpId": "math-g4-m5-g4-match-decfrac",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "choice": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m7-g4-pic-segment": {
+      "kpId": "math-g4-m7-g4-pic-segment",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m7-g4-pic-brace": {
+      "kpId": "math-g4-m7-g4-pic-brace",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m7-g4-pic-speed": {
+      "kpId": "math-g4-m7-g4-pic-speed",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m7-g4-pic-dec": {
+      "kpId": "math-g4-m7-g4-pic-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m8-g4-word-div": {
+      "kpId": "math-g4-m8-g4-word-div",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m11-g4-judge-dec": {
+      "kpId": "math-g4-m11-g4-judge-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m12-g4-choice-est": {
+      "kpId": "math-g4-m12-g4-choice-est",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c1-c1-vertical": {
+      "kpId": "math-g4-c1-c1-vertical",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c1-c1-array": {
+      "kpId": "math-g4-c1-c1-array",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c1-c1-magic": {
+      "kpId": "math-g4-c1-c1-magic",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c2-c2-divisible": {
+      "kpId": "math-g4-c2-c2-divisible",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c2-c2-remainder": {
+      "kpId": "math-g4-c2-c2-remainder",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c2-c2-place": {
+      "kpId": "math-g4-c2-c2-place",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c4-c4-pa": {
+      "kpId": "math-g4-c4-c4-pa",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c4-c4-cutfill": {
+      "kpId": "math-g4-c4-c4-cutfill",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c4-c4-count": {
+      "kpId": "math-g4-c4-c4-count",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c4-c4-solid": {
+      "kpId": "math-g4-c4-c4-solid",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "geometry": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m1-g5-oral-decmul": {
+      "kpId": "math-g5-m1-g5-oral-decmul",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m1-g5-oral-fracadd": {
+      "kpId": "math-g5-m1-g5-oral-fracadd",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m1-g5-oral-equ": {
+      "kpId": "math-g5-m1-g5-oral-equ",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m2-g5-v-divint": {
+      "kpId": "math-g5-m2-g5-v-divint",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m3-g5-mix-decmixed": {
+      "kpId": "math-g5-m3-g5-mix-decmixed",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m3-g5-mix-fracmixed": {
+      "kpId": "math-g5-m3-g5-mix-fracmixed",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m3-g5-mix-decsimple": {
+      "kpId": "math-g5-m3-g5-mix-decsimple",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m3-g5-mix-fracsimple": {
+      "kpId": "math-g5-m3-g5-mix-fracsimple",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-decloc": {
+      "kpId": "math-g5-m4-g5-fill-decloc",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-deccmp": {
+      "kpId": "math-g5-m4-g5-fill-deccmp",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-letter": {
+      "kpId": "math-g5-m4-g5-fill-letter",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m7-g5-pic-balance": {
+      "kpId": "math-g5-m7-g5-pic-balance",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m7-g5-pic-segment": {
+      "kpId": "math-g5-m7-g5-pic-segment",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m7-g5-pic-tree": {
+      "kpId": "math-g5-m7-g5-pic-tree",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m11-g5-judge-decmul": {
+      "kpId": "math-g5-m11-g5-judge-decmul",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-g5-choice-decmul": {
+      "kpId": "math-g5-m12-g5-choice-decmul",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c1-digit-puzzle-vertical": {
+      "kpId": "math-g5-c1-digit-puzzle-vertical",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c1-digit-puzzle-horizontal": {
+      "kpId": "math-g5-c1-digit-puzzle-horizontal",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c1-digit-puzzle-symbol": {
+      "kpId": "math-g5-c1-digit-puzzle-symbol",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c1-number-array-closed": {
+      "kpId": "math-g5-c1-number-array-closed",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c1-number-array-radial": {
+      "kpId": "math-g5-c1-number-array-radial",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c1-number-array-composite": {
+      "kpId": "math-g5-c1-number-array-composite",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c1-magic-square-3": {
+      "kpId": "math-g5-c1-magic-square-3",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c1-magic-square-4": {
+      "kpId": "math-g5-c1-magic-square-4",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-divisibility": {
+      "kpId": "math-g5-c2-divisibility",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-parity-analysis": {
+      "kpId": "math-g5-c2-parity-analysis",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-gcd-lcm": {
+      "kpId": "math-g5-c2-gcd-lcm",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-remainder-congruence": {
+      "kpId": "math-g5-c2-remainder-congruence",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-place-value": {
+      "kpId": "math-g5-c2-place-value",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m2-g6-calc-dec-mult": {
+      "kpId": "math-g6-m2-g6-calc-dec-mult",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m2-g6-calc-dec-div": {
+      "kpId": "math-g6-m2-g6-calc-dec-div",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m3-g6-mixed-frac-simple": {
+      "kpId": "math-g6-m3-g6-mixed-frac-simple",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m4-g6-fill-negative": {
+      "kpId": "math-g6-m4-g6-fill-negative",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m7-g6-pic-frac-line": {
+      "kpId": "math-g6-m7-g6-pic-frac-line",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m7-g6-pic-scale": {
+      "kpId": "math-g6-m7-g6-pic-scale",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m11-g6-judge-negative": {
+      "kpId": "math-g6-m11-g6-judge-negative",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m12-g6-choice-negative": {
+      "kpId": "math-g6-m12-g6-choice-negative",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c1-vertical-multidigit": {
+      "kpId": "math-g6-c1-vertical-multidigit",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c1-magic-square-adv": {
+      "kpId": "math-g6-c1-magic-square-adv",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c1-number-array": {
+      "kpId": "math-g6-c1-number-array",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-divisibility": {
+      "kpId": "math-g6-c2-divisibility",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-gcd-lcm": {
+      "kpId": "math-g6-c2-gcd-lcm",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-remainder-congruence": {
+      "kpId": "math-g6-c2-remainder-congruence",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-place-value": {
+      "kpId": "math-g6-c2-place-value",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-number-theory-extreme": {
+      "kpId": "math-g6-c2-number-theory-extreme",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-two-step": {
+      "kpId": "math-g2-m8-two-step",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-extra-condition": {
+      "kpId": "math-g2-m8-extra-condition",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m1-g3-div1": {
+      "kpId": "math-g3-m1-g3-div1",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m4-g4-fill-avg": {
+      "kpId": "math-g4-m4-g4-fill-avg",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m8-g4-word-big": {
+      "kpId": "math-g4-m8-g4-word-big",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m8-g4-word-speed": {
+      "kpId": "math-g4-m8-g4-word-speed",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m8-g4-word-price": {
+      "kpId": "math-g4-m8-g4-word-price",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m8-g4-word-area": {
+      "kpId": "math-g4-m8-g4-word-area",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m8-g4-word-opt": {
+      "kpId": "math-g4-m8-g4-word-opt",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m8-g4-word-cr": {
+      "kpId": "math-g4-m8-g4-word-cr",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m8-g4-word-dec": {
+      "kpId": "math-g4-m8-g4-word-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m8-g4-word-avg": {
+      "kpId": "math-g4-m8-g4-word-avg",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m11-g4-judge-quotient": {
+      "kpId": "math-g4-m11-g4-judge-quotient",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m1-g5-oral-fm": {
+      "kpId": "math-g5-m1-g5-oral-fm",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m2-g5-v-decmul": {
+      "kpId": "math-g5-m2-g5-v-decmul",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m2-g5-v-ddivdec": {
+      "kpId": "math-g5-m2-g5-v-ddivdec",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m2-g5-v-repeating": {
+      "kpId": "math-g5-m2-g5-v-repeating",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-prodrule": {
+      "kpId": "math-g5-m4-g5-fill-prodrule",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-repeating": {
+      "kpId": "math-g5-m4-g5-fill-repeating",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-equation": {
+      "kpId": "math-g5-m4-g5-fill-equation",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-fm": {
+      "kpId": "math-g5-m4-g5-fill-fm",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-prime": {
+      "kpId": "math-g5-m4-g5-fill-prime",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-fracmean": {
+      "kpId": "math-g5-m4-g5-fill-fracmean",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-fracprop": {
+      "kpId": "math-g5-m4-g5-fill-fracprop",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-fracdec": {
+      "kpId": "math-g5-m4-g5-fill-fracdec",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-possible": {
+      "kpId": "math-g5-m4-g5-fill-possible",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m5-g5-match-possib": {
+      "kpId": "math-g5-m5-g5-match-possib",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m5-g5-match-equ": {
+      "kpId": "math-g5-m5-g5-match-equ",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m5-g5-match-fracdec": {
+      "kpId": "math-g5-m5-g5-match-fracdec",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-decmul": {
+      "kpId": "math-g5-m8-g5-word-decmul",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-decdiv": {
+      "kpId": "math-g5-m8-g5-word-decdiv",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-equ": {
+      "kpId": "math-g5-m8-g5-word-equ",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-fm": {
+      "kpId": "math-g5-m8-g5-word-fm",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-frac": {
+      "kpId": "math-g5-m8-g5-word-frac",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-possib": {
+      "kpId": "math-g5-m8-g5-word-possib",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-tree": {
+      "kpId": "math-g5-m8-g5-word-tree",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-defect": {
+      "kpId": "math-g5-m8-g5-word-defect",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m11-g5-judge-equ": {
+      "kpId": "math-g5-m11-g5-judge-equ",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m11-g5-judge-fm": {
+      "kpId": "math-g5-m11-g5-judge-fm",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m11-g5-judge-frac": {
+      "kpId": "math-g5-m11-g5-judge-frac",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m11-g5-judge-possib": {
+      "kpId": "math-g5-m11-g5-judge-possib",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-g5-choice-equ": {
+      "kpId": "math-g5-m12-g5-choice-equ",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-g5-choice-fm": {
+      "kpId": "math-g5-m12-g5-choice-fm",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-g5-choice-frac": {
+      "kpId": "math-g5-m12-g5-choice-frac",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-g5-choice-possib": {
+      "kpId": "math-g5-m12-g5-choice-possib",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c8-extremum-problem": {
+      "kpId": "math-g5-c8-extremum-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m1-g6-oral-frac-mult-int": {
+      "kpId": "math-g6-m1-g6-oral-frac-mult-int",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m1-g6-oral-frac-mult-frac": {
+      "kpId": "math-g6-m1-g6-oral-frac-mult-frac",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m1-g6-oral-frac-div-int": {
+      "kpId": "math-g6-m1-g6-oral-frac-div-int",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m1-g6-oral-frac-div-frac": {
+      "kpId": "math-g6-m1-g6-oral-frac-div-frac",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m1-g6-oral-dec-perc": {
+      "kpId": "math-g6-m1-g6-oral-dec-perc",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m2-g6-calc-frac-mult-div": {
+      "kpId": "math-g6-m2-g6-calc-frac-mult-div",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m2-g6-calc-solve-proportion": {
+      "kpId": "math-g6-m2-g6-calc-solve-proportion",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m3-g6-mixed-frac-order": {
+      "kpId": "math-g6-m3-g6-mixed-frac-order",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m3-g6-mixed-solve-equation": {
+      "kpId": "math-g6-m3-g6-mixed-solve-equation",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m4-g6-fill-percent": {
+      "kpId": "math-g6-m4-g6-fill-percent",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m4-g6-fill-ratio": {
+      "kpId": "math-g6-m4-g6-fill-ratio",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m5-g6-match-proportion": {
+      "kpId": "math-g6-m5-g6-match-proportion",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m8-g6-app-frac-mult": {
+      "kpId": "math-g6-m8-g6-app-frac-mult",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m8-g6-app-frac-div": {
+      "kpId": "math-g6-m8-g6-app-frac-div",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m8-g6-app-percent-discount": {
+      "kpId": "math-g6-m8-g6-app-percent-discount",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m8-g6-app-ratio-prop": {
+      "kpId": "math-g6-m8-g6-app-ratio-prop",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m8-g6-app-travel-work": {
+      "kpId": "math-g6-m8-g6-app-travel-work",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m8-g6-app-pigeonhole": {
+      "kpId": "math-g6-m8-g6-app-pigeonhole",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m11-g6-judge-percent-ratio": {
+      "kpId": "math-g6-m11-g6-judge-percent-ratio",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m12-g6-choice-percent": {
+      "kpId": "math-g6-m12-g6-choice-percent",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-addsub-5": {
+      "kpId": "math-g1-m1-addsub-5",
+      "grade": 1,
+      "subject": "math",
+      "total": 15,
+      "tier": "MEDIUM",
+      "byType": {
+        "calc": 15
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-rmb-calc": {
+      "kpId": "math-g1-m4-rmb-calc",
+      "grade": 1,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "fill": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m6-solid-shape": {
+      "kpId": "math-g1-m6-solid-shape",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "choice": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g1-m6-flat-shape": {
+      "kpId": "math-g1-m6-flat-shape",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "choice": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g1-m6-count-graph": {
+      "kpId": "math-g1-m6-count-graph",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "fill": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g1-m6-shape-combine": {
+      "kpId": "math-g1-m6-shape-combine",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "choice": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g1-m6-draw-shape": {
+      "kpId": "math-g1-m6-draw-shape",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "choice": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m4-angle-basic": {
+      "kpId": "math-g2-m4-angle-basic",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m5-match-shape": {
+      "kpId": "math-g2-m5-match-shape",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m5-match-angle": {
+      "kpId": "math-g2-m5-match-angle",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m6-solid-shape": {
+      "kpId": "math-g2-m6-solid-shape",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m6-angle-recognize": {
+      "kpId": "math-g2-m6-angle-recognize",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m6-motion": {
+      "kpId": "math-g2-m6-motion",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m6-grid-draw": {
+      "kpId": "math-g2-m6-grid-draw",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m6-draw-line": {
+      "kpId": "math-g2-m6-draw-line",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m6-draw-angle": {
+      "kpId": "math-g2-m6-draw-angle",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m6-clock-draw": {
+      "kpId": "math-g2-m6-clock-draw",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m6-measure": {
+      "kpId": "math-g2-m6-measure",
+      "grade": 2,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g2-m9-data-tally": {
+      "kpId": "math-g2-m9-data-tally",
+      "grade": 2,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m9-data-question": {
+      "kpId": "math-g2-m9-data-question",
+      "grade": 2,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m10-logic-reasoning": {
+      "kpId": "math-g2-m10-logic-reasoning",
+      "grade": 2,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m10-sudoku3": {
+      "kpId": "math-g2-m10-sudoku3",
+      "grade": 2,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m10-combination": {
+      "kpId": "math-g2-m10-combination",
+      "grade": 2,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m10-handshake": {
+      "kpId": "math-g2-m10-handshake",
+      "grade": 2,
+      "subject": "math",
+      "total": 27,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 27
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m4-g3-fraction": {
+      "kpId": "math-g3-m4-g3-fraction",
+      "grade": 3,
+      "subject": "math",
+      "total": 5,
+      "tier": "LOW",
+      "byType": {
+        "geometry": 5
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m6-g3-perimeter": {
+      "kpId": "math-g3-m6-g3-perimeter",
+      "grade": 3,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g3-m6-g3-polygon": {
+      "kpId": "math-g3-m6-g3-polygon",
+      "grade": 3,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g3-m6-g3-area": {
+      "kpId": "math-g3-m6-g3-area",
+      "grade": 3,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g3-m6-g3-position": {
+      "kpId": "math-g3-m6-g3-position",
+      "grade": 3,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g3-m8-g3-equivalent": {
+      "kpId": "math-g3-m8-g3-equivalent",
+      "grade": 3,
+      "subject": "math",
+      "total": 6,
+      "tier": "LOW",
+      "byType": {
+        "fill": 6
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m9-g3-stats-table": {
+      "kpId": "math-g3-m9-g3-stats-table",
+      "grade": 3,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m10-g3-combination": {
+      "kpId": "math-g3-m10-g3-combination",
+      "grade": 3,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m4-g4-fill-line": {
+      "kpId": "math-g4-m4-g4-fill-line",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m4-g4-fill-angle": {
+      "kpId": "math-g4-m4-g4-fill-angle",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m4-g4-fill-quad": {
+      "kpId": "math-g4-m4-g4-fill-quad",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m4-g4-fill-tri": {
+      "kpId": "math-g4-m4-g4-fill-tri",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m5-g4-match-angle": {
+      "kpId": "math-g4-m5-g4-match-angle",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m5-g4-match-shape": {
+      "kpId": "math-g4-m5-g4-match-shape",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m6-g4-draw-protractor": {
+      "kpId": "math-g4-m6-g4-draw-protractor",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m6-g4-draw-para": {
+      "kpId": "math-g4-m6-g4-draw-para",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m6-g4-draw-grid": {
+      "kpId": "math-g4-m6-g4-draw-grid",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m6-g4-draw-view": {
+      "kpId": "math-g4-m6-g4-draw-view",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m6-g4-draw-sym": {
+      "kpId": "math-g4-m6-g4-draw-sym",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m6-g4-draw-move": {
+      "kpId": "math-g4-m6-g4-draw-move",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m9-g4-stats-bar": {
+      "kpId": "math-g4-m9-g4-stats-bar",
+      "grade": 4,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m9-g4-stats-double": {
+      "kpId": "math-g4-m9-g4-stats-double",
+      "grade": 4,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m10-g4-reason-opt": {
+      "kpId": "math-g4-m10-g4-reason-opt",
+      "grade": 4,
+      "subject": "math",
+      "total": 6,
+      "tier": "LOW",
+      "byType": {
+        "apply": 6
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m10-logic-reasoning": {
+      "kpId": "math-g4-m10-logic-reasoning",
+      "grade": 4,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m11-g4-judge-law": {
+      "kpId": "math-g4-m11-g4-judge-law",
+      "grade": 4,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "judge": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m11-g4-judge-angle": {
+      "kpId": "math-g4-m11-g4-judge-angle",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m11-g4-judge-line": {
+      "kpId": "math-g4-m11-g4-judge-line",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m11-g4-judge-tri": {
+      "kpId": "math-g4-m11-g4-judge-tri",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m11-stats": {
+      "kpId": "math-g4-m11-stats",
+      "grade": 4,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m12-g4-choice-angle": {
+      "kpId": "math-g4-m12-g4-choice-angle",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m12-g4-choice-shape": {
+      "kpId": "math-g4-m12-g4-choice-shape",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m12-g4-choice-law": {
+      "kpId": "math-g4-m12-g4-choice-law",
+      "grade": 4,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "judge": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c1-c1-symbol": {
+      "kpId": "math-g4-c1-c1-symbol",
+      "grade": 4,
+      "subject": "math",
+      "total": 9,
+      "tier": "LOW",
+      "byType": {
+        "apply": 9
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c3-c3-enum": {
+      "kpId": "math-g4-c3-c3-enum",
+      "grade": 4,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c3-c3-perm": {
+      "kpId": "math-g4-c3-c3-perm",
+      "grade": 4,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c3-c3-geomcount": {
+      "kpId": "math-g4-c3-c3-geomcount",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-c3-c3-worst": {
+      "kpId": "math-g4-c3-c3-worst",
+      "grade": 4,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c4-c4-angle": {
+      "kpId": "math-g4-c4-c4-angle",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-c4-c4-transform": {
+      "kpId": "math-g4-c4-c4-transform",
+      "grade": 4,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-c5-c5-basic": {
+      "kpId": "math-g4-c5-c5-basic",
+      "grade": 4,
+      "subject": "math",
+      "total": 25,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 25
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c5-c5-train": {
+      "kpId": "math-g4-c5-c5-train",
+      "grade": 4,
+      "subject": "math",
+      "total": 6,
+      "tier": "LOW",
+      "byType": {
+        "apply": 6
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c5-c5-river": {
+      "kpId": "math-g4-c5-c5-river",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c8-c8-drawer": {
+      "kpId": "math-g4-c8-c8-drawer",
+      "grade": 4,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c8-c8-logic": {
+      "kpId": "math-g4-c8-c8-logic",
+      "grade": 4,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c9-c9-integrated": {
+      "kpId": "math-g4-c9-c9-integrated",
+      "grade": 4,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c9-c9-misc": {
+      "kpId": "math-g4-c9-c9-misc",
+      "grade": 4,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c9-c9-mock": {
+      "kpId": "math-g4-c9-c9-mock",
+      "grade": 4,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-coord": {
+      "kpId": "math-g5-m4-g5-fill-coord",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-area": {
+      "kpId": "math-g5-m4-g5-fill-area",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-solid": {
+      "kpId": "math-g5-m4-g5-fill-solid",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-rotate": {
+      "kpId": "math-g5-m4-g5-fill-rotate",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-linechart": {
+      "kpId": "math-g5-m4-g5-fill-linechart",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m5-g5-match-areaf": {
+      "kpId": "math-g5-m5-g5-match-areaf",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m5-g5-match-solid": {
+      "kpId": "math-g5-m5-g5-match-solid",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m6-g5-draw-rotate": {
+      "kpId": "math-g5-m6-g5-draw-rotate",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m6-g5-draw-observe": {
+      "kpId": "math-g5-m6-g5-draw-observe",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m6-g5-draw-height": {
+      "kpId": "math-g5-m6-g5-draw-height",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m6-g5-draw-sym": {
+      "kpId": "math-g5-m6-g5-draw-sym",
+      "grade": 5,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g5-m6-g5-draw-coord": {
+      "kpId": "math-g5-m6-g5-draw-coord",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m6-g5-draw-net": {
+      "kpId": "math-g5-m6-g5-draw-net",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m7-g5-pic-area": {
+      "kpId": "math-g5-m7-g5-pic-area",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-area": {
+      "kpId": "math-g5-m8-g5-word-area",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-solid": {
+      "kpId": "math-g5-m8-g5-word-solid",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m8-g5-word-linechart": {
+      "kpId": "math-g5-m8-g5-word-linechart",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m9-g5-stats-line1": {
+      "kpId": "math-g5-m9-g5-stats-line1",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m9-g5-stats-line2": {
+      "kpId": "math-g5-m9-g5-stats-line2",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m10-g5-reason-defect": {
+      "kpId": "math-g5-m10-g5-reason-defect",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m10-logic-reasoning": {
+      "kpId": "math-g5-m10-logic-reasoning",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m10-g5-reason-seq": {
+      "kpId": "math-g5-m10-g5-reason-seq",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m11-g5-judge-area": {
+      "kpId": "math-g5-m11-g5-judge-area",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m11-g5-judge-solid": {
+      "kpId": "math-g5-m11-g5-judge-solid",
+      "grade": 5,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g5-m11-motion": {
+      "kpId": "math-g5-m11-motion",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m11-stats": {
+      "kpId": "math-g5-m11-stats",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-g5-choice-area": {
+      "kpId": "math-g5-m12-g5-choice-area",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-g5-choice-solid": {
+      "kpId": "math-g5-m12-g5-choice-solid",
+      "grade": 5,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g5-m12-motion": {
+      "kpId": "math-g5-m12-motion",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-stats": {
+      "kpId": "math-g5-m12-stats",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-prime-factorization": {
+      "kpId": "math-g5-c2-prime-factorization",
+      "grade": 5,
+      "subject": "math",
+      "total": 10,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 10
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-perfect-square": {
+      "kpId": "math-g5-c2-perfect-square",
+      "grade": 5,
+      "subject": "math",
+      "total": 15,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 15
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-number-theory-extreme": {
+      "kpId": "math-g5-c2-number-theory-extreme",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-multiplication-principle": {
+      "kpId": "math-g5-c3-multiplication-principle",
+      "grade": 5,
+      "subject": "math",
+      "total": 30,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 30
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-permutation": {
+      "kpId": "math-g5-c3-permutation",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-combination": {
+      "kpId": "math-g5-c3-combination",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-enumeration-counting": {
+      "kpId": "math-g5-c3-enumeration-counting",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-bundling-method": {
+      "kpId": "math-g5-c3-bundling-method",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-insertion-method": {
+      "kpId": "math-g5-c3-insertion-method",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-stars-bars": {
+      "kpId": "math-g5-c3-stars-bars",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-pigeonhole-principle": {
+      "kpId": "math-g5-c3-pigeonhole-principle",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-worst-case-principle": {
+      "kpId": "math-g5-c3-worst-case-principle",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-area-basic": {
+      "kpId": "math-g5-c4-area-basic",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-equal-area-transform": {
+      "kpId": "math-g5-c4-equal-area-transform",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-bird-head-model": {
+      "kpId": "math-g5-c4-bird-head-model",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-butterfly-model": {
+      "kpId": "math-g5-c4-butterfly-model",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-swallow-tail-model": {
+      "kpId": "math-g5-c4-swallow-tail-model",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-half-model": {
+      "kpId": "math-g5-c4-half-model",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-circle-sector": {
+      "kpId": "math-g5-c4-circle-sector",
+      "grade": 5,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g5-c4-solid-geometry": {
+      "kpId": "math-g5-c4-solid-geometry",
+      "grade": 5,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g5-c4-painted-cube": {
+      "kpId": "math-g5-c4-painted-cube",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-pythagorean-theorem": {
+      "kpId": "math-g5-c4-pythagorean-theorem",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-lattice-area": {
+      "kpId": "math-g5-c4-lattice-area",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c4-angle-calculation": {
+      "kpId": "math-g5-c4-angle-calculation",
+      "grade": 5,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g5-c5-train-bridge": {
+      "kpId": "math-g5-c5-train-bridge",
+      "grade": 5,
+      "subject": "math",
+      "total": 6,
+      "tier": "LOW",
+      "byType": {
+        "apply": 6
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c5-boat-stream": {
+      "kpId": "math-g5-c5-boat-stream",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c5-circular-track": {
+      "kpId": "math-g5-c5-circular-track",
+      "grade": 5,
+      "subject": "math",
+      "total": 36,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 36
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c5-average-speed": {
+      "kpId": "math-g5-c5-average-speed",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c5-ratio-motion": {
+      "kpId": "math-g5-c5-ratio-motion",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c6-work-problem": {
+      "kpId": "math-g5-c6-work-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 6,
+      "tier": "LOW",
+      "byType": {
+        "apply": 6
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c6-concentration-problem": {
+      "kpId": "math-g5-c6-concentration-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-rounding-calc": {
+      "kpId": "math-g5-c7-rounding-calc",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "calc": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-fraction-splitting": {
+      "kpId": "math-g5-c7-fraction-splitting",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "calc": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-integer-splitting": {
+      "kpId": "math-g5-c7-integer-splitting",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "calc": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-recurring-decimal-frac": {
+      "kpId": "math-g5-c7-recurring-decimal-frac",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-estimate-bounds": {
+      "kpId": "math-g5-c7-estimate-bounds",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "calc": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-complex-fraction": {
+      "kpId": "math-g5-c7-complex-fraction",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c8-logic-inference": {
+      "kpId": "math-g5-c8-logic-inference",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c8-winning-strategy": {
+      "kpId": "math-g5-c8-winning-strategy",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-sum-diff-problem": {
+      "kpId": "math-g5-c9-sum-diff-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-age-problem": {
+      "kpId": "math-g5-c9-age-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-profit-loss-problem": {
+      "kpId": "math-g5-c9-profit-loss-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-chicken-rabbit": {
+      "kpId": "math-g5-c9-chicken-rabbit",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-average-problem": {
+      "kpId": "math-g5-c9-average-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-planting-problem": {
+      "kpId": "math-g5-c9-planting-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-phalanx-problem": {
+      "kpId": "math-g5-c9-phalanx-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-periodic-problem": {
+      "kpId": "math-g5-c9-periodic-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-grass-problem": {
+      "kpId": "math-g5-c9-grass-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-fraction-percent-application": {
+      "kpId": "math-g5-c9-fraction-percent-application",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-economics-problem": {
+      "kpId": "math-g5-c9-economics-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-inclusion-exclusion": {
+      "kpId": "math-g5-c9-inclusion-exclusion",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-equation-linear-1": {
+      "kpId": "math-g5-c9-equation-linear-1",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-equation-linear-2": {
+      "kpId": "math-g5-c9-equation-linear-2",
+      "grade": 5,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c9-diophantine-equation": {
+      "kpId": "math-g5-c9-diophantine-equation",
+      "grade": 5,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m1-g6-oral-ratio-simp": {
+      "kpId": "math-g6-m1-g6-oral-ratio-simp",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m4-g6-fill-circle": {
+      "kpId": "math-g6-m4-g6-fill-circle",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-m4-g6-fill-cylinder-cone": {
+      "kpId": "math-g6-m4-g6-fill-cylinder-cone",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m4-g6-fill-pie-chart": {
+      "kpId": "math-g6-m4-g6-fill-pie-chart",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m5-g6-match-formula": {
+      "kpId": "math-g6-m5-g6-match-formula",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m5-g6-match-chart": {
+      "kpId": "math-g6-m5-g6-match-chart",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m6-g6-op-circle": {
+      "kpId": "math-g6-m6-g6-op-circle",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-m6-g6-op-symmetry": {
+      "kpId": "math-g6-m6-g6-op-symmetry",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-m6-g6-op-rotate-scale": {
+      "kpId": "math-g6-m6-g6-op-rotate-scale",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m6-g6-op-position": {
+      "kpId": "math-g6-m6-g6-op-position",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-m7-g6-pic-pie-chart": {
+      "kpId": "math-g6-m7-g6-pic-pie-chart",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m8-g6-app-circle": {
+      "kpId": "math-g6-m8-g6-app-circle",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-m8-g6-app-cyl-cone": {
+      "kpId": "math-g6-m8-g6-app-cyl-cone",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m9-g6-stat-pie-chart": {
+      "kpId": "math-g6-m9-g6-stat-pie-chart",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m10-g6-reason-number-shape": {
+      "kpId": "math-g6-m10-g6-reason-number-shape",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m10-g6-reason-pigeonhole": {
+      "kpId": "math-g6-m10-g6-reason-pigeonhole",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m11-g6-judge-circle": {
+      "kpId": "math-g6-m11-g6-judge-circle",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-m11-g6-judge-cyl-cone": {
+      "kpId": "math-g6-m11-g6-judge-cyl-cone",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m11-g6-judge-chart": {
+      "kpId": "math-g6-m11-g6-judge-chart",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m12-g6-choice-circle": {
+      "kpId": "math-g6-m12-g6-choice-circle",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-m12-g6-choice-cyl-cone": {
+      "kpId": "math-g6-m12-g6-choice-cyl-cone",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m12-g6-choice-chart": {
+      "kpId": "math-g6-m12-g6-choice-chart",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c1-symbol-number": {
+      "kpId": "math-g6-c1-symbol-number",
+      "grade": 6,
+      "subject": "math",
+      "total": 9,
+      "tier": "LOW",
+      "byType": {
+        "apply": 9
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c1-digit-reasoning": {
+      "kpId": "math-g6-c1-digit-reasoning",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c1-number-puzzle-competition": {
+      "kpId": "math-g6-c1-number-puzzle-competition",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-prime-factorization": {
+      "kpId": "math-g6-c2-prime-factorization",
+      "grade": 6,
+      "subject": "math",
+      "total": 10,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 10
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-perfect-square": {
+      "kpId": "math-g6-c2-perfect-square",
+      "grade": 6,
+      "subject": "math",
+      "total": 15,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 15
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-diophantine-equation": {
+      "kpId": "math-g6-c2-diophantine-equation",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-modulo-arithmetic": {
+      "kpId": "math-g6-c2-modulo-arithmetic",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-permutation": {
+      "kpId": "math-g6-c3-permutation",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-combination": {
+      "kpId": "math-g6-c3-combination",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-enumeration-counting": {
+      "kpId": "math-g6-c3-enumeration-counting",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-bundling-method": {
+      "kpId": "math-g6-c3-bundling-method",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-insertion-method": {
+      "kpId": "math-g6-c3-insertion-method",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-stars-bars": {
+      "kpId": "math-g6-c3-stars-bars",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-pigeonhole-principle": {
+      "kpId": "math-g6-c3-pigeonhole-principle",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-worst-case-principle": {
+      "kpId": "math-g6-c3-worst-case-principle",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-inclusion-exclusion": {
+      "kpId": "math-g6-c3-inclusion-exclusion",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-recursion-counting": {
+      "kpId": "math-g6-c3-recursion-counting",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-derangement": {
+      "kpId": "math-g6-c3-derangement",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-geometry-counting": {
+      "kpId": "math-g6-c3-geometry-counting",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-c4-area-basic": {
+      "kpId": "math-g6-c4-area-basic",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c4-equal-area-transform": {
+      "kpId": "math-g6-c4-equal-area-transform",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c4-bird-head-model": {
+      "kpId": "math-g6-c4-bird-head-model",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c4-butterfly-model": {
+      "kpId": "math-g6-c4-butterfly-model",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c4-swallow-tail-model": {
+      "kpId": "math-g6-c4-swallow-tail-model",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c4-half-model": {
+      "kpId": "math-g6-c4-half-model",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c4-circle-sector": {
+      "kpId": "math-g6-c4-circle-sector",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-c4-solid-geometry": {
+      "kpId": "math-g6-c4-solid-geometry",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-c4-painted-cube": {
+      "kpId": "math-g6-c4-painted-cube",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c4-pythagorean-theorem": {
+      "kpId": "math-g6-c4-pythagorean-theorem",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c4-lattice-area": {
+      "kpId": "math-g6-c4-lattice-area",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c4-angle-calculation": {
+      "kpId": "math-g6-c4-angle-calculation",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-c4-circle-angle": {
+      "kpId": "math-g6-c4-circle-angle",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-c4-solid-rotation": {
+      "kpId": "math-g6-c4-solid-rotation",
+      "grade": 6,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "geometry": 1
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g6-c5-basic": {
+      "kpId": "math-g6-c5-basic",
+      "grade": 6,
+      "subject": "math",
+      "total": 25,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 25
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-train-bridge": {
+      "kpId": "math-g6-c5-train-bridge",
+      "grade": 6,
+      "subject": "math",
+      "total": 6,
+      "tier": "LOW",
+      "byType": {
+        "apply": 6
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-boat-stream": {
+      "kpId": "math-g6-c5-boat-stream",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-journey-complex": {
+      "kpId": "math-g6-c5-journey-complex",
+      "grade": 6,
+      "subject": "math",
+      "total": 25,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 25
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-competition": {
+      "kpId": "math-g6-c5-competition",
+      "grade": 6,
+      "subject": "math",
+      "total": 25,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 25
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-interval-departure": {
+      "kpId": "math-g6-c5-interval-departure",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-pick-up-problem": {
+      "kpId": "math-g6-c5-pick-up-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c6-work-problem": {
+      "kpId": "math-g6-c6-work-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 6,
+      "tier": "LOW",
+      "byType": {
+        "apply": 6
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c6-concentration-problem": {
+      "kpId": "math-g6-c6-concentration-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-rounding-calc": {
+      "kpId": "math-g6-c7-rounding-calc",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "calc": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-fraction-splitting": {
+      "kpId": "math-g6-c7-fraction-splitting",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "calc": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-integer-splitting": {
+      "kpId": "math-g6-c7-integer-splitting",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "calc": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-recurring-decimal-frac": {
+      "kpId": "math-g6-c7-recurring-decimal-frac",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-estimate-bounds": {
+      "kpId": "math-g6-c7-estimate-bounds",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "calc": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-complex-fraction": {
+      "kpId": "math-g6-c7-complex-fraction",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-sequence-sum": {
+      "kpId": "math-g6-c7-sequence-sum",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c8-logic-inference": {
+      "kpId": "math-g6-c8-logic-inference",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c8-winning-strategy": {
+      "kpId": "math-g6-c8-winning-strategy",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c8-optimization": {
+      "kpId": "math-g6-c8-optimization",
+      "grade": 6,
+      "subject": "math",
+      "total": 6,
+      "tier": "LOW",
+      "byType": {
+        "apply": 6
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-sum-diff-problem": {
+      "kpId": "math-g6-c9-sum-diff-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-age-problem": {
+      "kpId": "math-g6-c9-age-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-profit-loss-problem": {
+      "kpId": "math-g6-c9-profit-loss-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-chicken-rabbit": {
+      "kpId": "math-g6-c9-chicken-rabbit",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-average-problem": {
+      "kpId": "math-g6-c9-average-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-planting-problem": {
+      "kpId": "math-g6-c9-planting-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-phalanx-problem": {
+      "kpId": "math-g6-c9-phalanx-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-periodic-problem": {
+      "kpId": "math-g6-c9-periodic-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-grass-problem": {
+      "kpId": "math-g6-c9-grass-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-fraction-percent-application": {
+      "kpId": "math-g6-c9-fraction-percent-application",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-economics-problem": {
+      "kpId": "math-g6-c9-economics-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-equation-linear-1": {
+      "kpId": "math-g6-c9-equation-linear-1",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-equation-linear-2": {
+      "kpId": "math-g6-c9-equation-linear-2",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-ratio-application": {
+      "kpId": "math-g6-c9-ratio-application",
+      "grade": 6,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-mixture-problem": {
+      "kpId": "math-g6-c9-mixture-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c9-inclusion-exclusion": {
+      "kpId": "math-g6-c9-inclusion-exclusion",
+      "grade": 6,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "apply": 3
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-mult-table": {
+      "kpId": "math-g2-m1-mult-table",
+      "grade": 2,
+      "subject": "math",
+      "total": 45,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 45
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-div-table": {
+      "kpId": "math-g2-m1-div-table",
+      "grade": 2,
+      "subject": "math",
+      "total": 42,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 42
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-remainder-oral": {
+      "kpId": "math-g2-m1-remainder-oral",
+      "grade": 2,
+      "subject": "math",
+      "total": 54,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 54
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m7-pic-mult": {
+      "kpId": "math-g2-m7-pic-mult",
+      "grade": 2,
+      "subject": "math",
+      "total": 45,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 45
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-mult-total": {
+      "kpId": "math-g2-m8-mult-total",
+      "grade": 2,
+      "subject": "math",
+      "total": 45,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 45
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m1-g4-oral-law": {
+      "kpId": "math-g4-m1-g4-oral-law",
+      "grade": 4,
+      "subject": "math",
+      "total": 35,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 35
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m3-g4-mix-mullaw": {
+      "kpId": "math-g4-m3-g4-mix-mullaw",
+      "grade": 4,
+      "subject": "math",
+      "total": 40,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 40
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m10-g4-reason-cr": {
+      "kpId": "math-g4-m10-g4-reason-cr",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c3-c3-am": {
+      "kpId": "math-g4-c3-c3-am",
+      "grade": 4,
+      "subject": "math",
+      "total": 30,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 30
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c5-c5-chase": {
+      "kpId": "math-g4-c5-c5-chase",
+      "grade": 4,
+      "subject": "math",
+      "total": 48,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 48
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c8-c8-extreme": {
+      "kpId": "math-g4-c8-c8-extreme",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c2-factor-count-sum": {
+      "kpId": "math-g5-c2-factor-count-sum",
+      "grade": 5,
+      "subject": "math",
+      "total": 49,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 49
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c3-addition-principle": {
+      "kpId": "math-g5-c3-addition-principle",
+      "grade": 5,
+      "subject": "math",
+      "total": 30,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 30
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c5-basic-motion": {
+      "kpId": "math-g5-c5-basic-motion",
+      "grade": 5,
+      "subject": "math",
+      "total": 25,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 25
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c5-chase-problem": {
+      "kpId": "math-g5-c5-chase-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 48,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 48
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c2-factor-count-sum": {
+      "kpId": "math-g6-c2-factor-count-sum",
+      "grade": 6,
+      "subject": "math",
+      "total": 49,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 49
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-addition-principle": {
+      "kpId": "math-g6-c3-addition-principle",
+      "grade": 6,
+      "subject": "math",
+      "total": 30,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 30
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c3-multiplication-principle": {
+      "kpId": "math-g6-c3-multiplication-principle",
+      "grade": 6,
+      "subject": "math",
+      "total": 30,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 30
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-chase": {
+      "kpId": "math-g6-c5-chase",
+      "grade": 6,
+      "subject": "math",
+      "total": 48,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 48
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-ring-runway": {
+      "kpId": "math-g6-c5-ring-runway",
+      "grade": 6,
+      "subject": "math",
+      "total": 36,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 36
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-define-operation": {
+      "kpId": "math-g6-c7-define-operation",
+      "grade": 6,
+      "subject": "math",
+      "total": 64,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 64
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c8-extremum-problem": {
+      "kpId": "math-g6-c8-extremum-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-addsub-10": {
+      "kpId": "math-g1-m1-addsub-10",
+      "grade": 1,
+      "subject": "math",
+      "total": 55,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 55
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-mult-col": {
+      "kpId": "math-g2-m2-mult-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 45,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 45
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-div-col": {
+      "kpId": "math-g2-m2-div-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 81,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 81
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m9-g5-stats-possib": {
+      "kpId": "math-g5-m9-g5-stats-possib",
+      "grade": 5,
+      "subject": "math",
+      "total": 56,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 56
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-define-operation": {
+      "kpId": "math-g5-c7-define-operation",
+      "grade": 5,
+      "subject": "math",
+      "total": 64,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 64
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m1-g6-oral-neg-add-sub": {
+      "kpId": "math-g6-m1-g6-oral-neg-add-sub",
+      "grade": 6,
+      "subject": "math",
+      "total": 45,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 45
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m9-g6-stat-possibility": {
+      "kpId": "math-g6-m9-g6-stat-possibility",
+      "grade": 6,
+      "subject": "math",
+      "total": 56,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 56
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-arithmetic-series": {
+      "kpId": "math-g6-c7-arithmetic-series",
+      "grade": 6,
+      "subject": "math",
+      "total": 81,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 81
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-money": {
+      "kpId": "math-g2-m8-money",
+      "grade": 2,
+      "subject": "math",
+      "total": 84,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 84
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c5-c5-meet": {
+      "kpId": "math-g4-c5-c5-meet",
+      "grade": 4,
+      "subject": "math",
+      "total": 100,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 100
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-extract-common-factor": {
+      "kpId": "math-g5-c7-extract-common-factor",
+      "grade": 5,
+      "subject": "math",
+      "total": 124,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 124
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-arithmetic-series": {
+      "kpId": "math-g5-c7-arithmetic-series",
+      "grade": 5,
+      "subject": "math",
+      "total": 81,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 81
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-meet": {
+      "kpId": "math-g6-c5-meet",
+      "grade": 6,
+      "subject": "math",
+      "total": 100,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 100
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-add-11-20": {
+      "kpId": "math-g1-m1-add-11-20",
+      "grade": 1,
+      "subject": "math",
+      "total": 66,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 66
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-rmb-unit": {
+      "kpId": "math-g1-m4-rmb-unit",
+      "grade": 1,
+      "subject": "math",
+      "total": 59,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 59
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-zero": {
+      "kpId": "math-g1-m4-zero",
+      "grade": 1,
+      "subject": "math",
+      "total": 50,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 50
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-rmb-shopping": {
+      "kpId": "math-g1-m8-rmb-shopping",
+      "grade": 1,
+      "subject": "math",
+      "total": 84,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 84
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m1-g5-oral-decdiv": {
+      "kpId": "math-g5-m1-g5-oral-decdiv",
+      "grade": 5,
+      "subject": "math",
+      "total": 114,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 114
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c5-meet-problem": {
+      "kpId": "math-g5-c5-meet-problem",
+      "grade": 5,
+      "subject": "math",
+      "total": 100,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 100
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c7-extract-common-factor": {
+      "kpId": "math-g6-c7-extract-common-factor",
+      "grade": 6,
+      "subject": "math",
+      "total": 124,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 124
+      },
+      "limited": false,
+      "limitedKind": null
+    }
+  }
+}

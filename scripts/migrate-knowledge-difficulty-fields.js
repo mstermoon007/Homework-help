@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
  * 阶段1（难度元数据字段扩展）一次性迁移脚本
- * 为 shared/knowledge-math.js 中每个知识点插入 7 个静态难度字段：
+ * 为 shared/knowledge/knowledge-math.js 中每个知识点插入 7 个静态难度字段：
  *   spiral_level / max_spiral_level / cognitive_level /
  *   applicable_question_types / number_range_default /
  *   max_steps_default / context_default
@@ -14,12 +14,12 @@ const path = require('path');
 const fs = require('fs');
 const ROOT = path.join(__dirname, '..');
 
-require(path.join(ROOT, 'shared', 'common.js')); // 供给 PluginUtil（difficulty.js 依赖）
-const Difficulty = require(path.join(ROOT, 'shared', 'difficulty.js'));
+require(path.join(ROOT, 'shared', 'core', 'common.js')); // 供给 PluginUtil（difficulty.js 依赖）
+const Difficulty = require(path.join(ROOT, 'shared', 'catalog', 'difficulty.js'));
 const MAX_STEPS = (Difficulty.difficultyToStructure && Difficulty.difficultyToStructure(3).steps) || 3;
 
 global.KnowledgeBank = global.KnowledgeBank || {};
-const bank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+const bank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 
 const COGNITIVE_DEFAULT = '掌握';
 const CONTEXT_DEFAULT = 'standard';
@@ -114,7 +114,7 @@ function formatFields(f, indent, quoted) {
 }
 
 const SHARDS = [
-  { file: path.join(ROOT, 'shared', 'knowledge-math.js'), subject: 'math' }
+  { file: path.join(ROOT, 'shared', 'knowledge', 'knowledge-math.js'), subject: 'math' }
 ];
 
 SHARDS.forEach(({ file, subject }) => {

@@ -23,14 +23,14 @@ var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..', '..');
 
-require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'comprehensive-strategy.js'));
-require(path.join(ROOT, 'shared', 'presentation-engine.js'));
+require(path.join(ROOT, 'shared', 'engine', 'presentation-engine.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'render-options.js'));
 
-var GE = require(path.join(ROOT, 'shared', 'generation-engine.js'));
+var GE = require(path.join(ROOT, 'shared', 'engine', 'generation-engine.js'));
 
 var LEGAL = ['pure', 'simple', 'standard', 'complex'];
 var TESTS = [

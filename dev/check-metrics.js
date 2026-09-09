@@ -16,7 +16,7 @@ var ROOT = path.join(__dirname, '..');
 var EXPORT_JSON = process.argv.indexOf('--json') !== -1;
 var RESET = process.argv.indexOf('--reset') !== -1;
 
-var Metrics = require(path.join(ROOT, 'shared', 'metrics.js'));
+var Metrics = require(path.join(ROOT, 'shared', 'state', 'metrics.js'));
 
 if (RESET) {
   Metrics.reset();

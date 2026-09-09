@@ -81,16 +81,34 @@ function extractStructureKey(sq) {
  *   | structure(steps/mode/operators) | context | format
  * 语义等价（同式异写、交换律等价）→ 同指纹；不同题目 → 不同指纹。
  */
+// 题面内容指纹（归一化哈希）：用于无数值操作数的语义/应用题，
+// 使其不同题面（不同统计收集对象、不同应用题叙述）产生不同指纹，
+// 避免「同 KP 同题型」退化为同指纹导致去重误判为重复、容量塌缩为 1。
+function promptHash(sq) {
+  var p = coerceString(sq.prompt || (sq.content && sq.content.prompt) || '');
+  p = p.replace(/\s+/g, '').replace(/[，。、？！：；,.?!:;（）()'"'""'']/g, '');
+  var h = 5381;
+  for (var i = 0; i < p.length; i++) h = ((h << 5) + h + p.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+
 function buildQuestionFingerprint(sq) {
   var parts = [];
   parts.push('v2');
   parts.push(coerceString(sq.knowledgePoint));
   parts.push(coerceString(sq.questionType || sq.type));
-  parts.push(extractOperators(sq).sort().join(','));
-  parts.push(extractOperands(sq).sort(function (a, b) { return a - b; }).join(','));
+  var ops = extractOperators(sq).sort();
+  var operands = extractOperands(sq).sort(function (a, b) { return a - b; });
+  parts.push(ops.join(','));
+  parts.push(operands.join(','));
   parts.push(extractStructureKey(sq));
   parts.push(coerceString(sq.content && sq.content.context));
   parts.push(coerceString(sq.content && sq.content.format));
+  // R6：语义型题型（应用/几何/判断/分类/开放/辨识）题面即为内容，原指纹忽略题面文字
+  // 会导致不同设问/不同统计对象被误判为重复、容量塌缩为 1。补齐题面内容指纹。
+  // 计算类题型（calc/fill 等）维持 operand 排序归一（同式异写=同指纹）语义，不附加题面哈希。
+  var SEMANTIC_TYPES = { apply: 1, geometry: 1, judge: 1, classify: 1, open: 1, recognize: 1 };
+  if (SEMANTIC_TYPES[sq.questionType || sq.type]) parts.push('ph:' + promptHash(sq));
   return parts.join('|');
 }
 
@@ -119,6 +137,15 @@ function buildCanonicalKey(sq) {
   return parts.join('|');
 }
 
+// 数学内容指纹：去掉 KP 维度，仅保留 题型|运算符|操作数(排序)|结构|context|format。
+// 用于「同一份练习跨知识点」去重——不同 KP 产出同一道算术（如 3+2=）视为重复，
+// 避免混合知识点练习中出现「同数学题换知识点」的视觉重复。
+function buildMathFingerprint(sq) {
+  var parts = buildQuestionFingerprint(sq).split('|');
+  parts.splice(1, 1); // 去掉 knowledgePoint 维度
+  return parts.join('|');
+}
+
 function validateDuplicate(sq, context) {
   var errors = [];
   var warnings = [];
@@ -126,16 +153,31 @@ function validateDuplicate(sq, context) {
 
   context = context || {};
   var seenKeys = context.seenKeys || new Set();
-  // 权威去重键：语义指纹 v2（与 retry-loop filterDuplicateQuestions 同一键空间）；
-  // canonicalKey 仅作诊断 info 字段，不再写入 seenKeys，避免双键混装。
+  var mathSeenKeys = context.mathSeenKeys || null; // 应为 Map<mathFingerprint, knowledgePoint>
+  // 权威去重键：语义指纹 v2（含 KP，用于跨代/跨练习去重，与 retry-loop 同一键空间）；
+  // mathSeenKeys：数学内容指纹（去 KP）→ 仅当「不同知识点」产出同一道数学时才判重，
+  // 避免混合知识点练习出现「同数学题换知识点」的视觉重复；同一知识点内部不去重（保留原 full-fp 行为）。
   var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
   if (!sq.questionFingerprint) sq.questionFingerprint = key;
+  var mathKey = buildMathFingerprint(sq);
+  var qkp = sq.knowledgePoint || (sq.knowledgePointIds && sq.knowledgePointIds[0]) || '';
   var diagKey = buildCanonicalKey(sq);
 
+  var isDup = false;
+  var dupMsg = '';
   if (seenKeys.has(key)) {
-    errors.push(createError(ERROR_CODES.DUPLICATE_QUESTION, 'questionFingerprint', '重复题目: ' + key, SEVERITY.ERROR, { questionFingerprint: key, canonicalKey: diagKey }));
+    isDup = true;
+    dupMsg = '重复题目(含知识点): ' + key;
+  } else if (mathSeenKeys && mathSeenKeys.get(mathKey) !== undefined && mathSeenKeys.get(mathKey) !== qkp) {
+    isDup = true;
+    dupMsg = '跨知识点同数学重复: ' + mathKey;
+  }
+
+  if (isDup) {
+    errors.push(createError(ERROR_CODES.DUPLICATE_QUESTION, 'questionFingerprint', dupMsg, SEVERITY.ERROR, { questionFingerprint: key, mathFingerprint: mathKey, canonicalKey: diagKey }));
   } else {
     seenKeys.add(key);
+    if (mathSeenKeys) mathSeenKeys.set(mathKey, qkp);
     info.push({ code: 'UNIQUE', field: 'questionFingerprint', message: '题目唯一: ' + key, severity: 'INFO', canonicalKey: diagKey });
   }
 
@@ -153,16 +195,21 @@ function validateDuplicate(sq, context) {
 function validateBatchDuplicate(questions, context) {
   context = context || {};
   var seenKeys = context.seenKeys || new Set();
+  var mathSeenKeys = context.mathSeenKeys || null; // 应为 Map<mathFingerprint, knowledgePoint>
   var results = questions.map(function (sq) {
     var key = sq.questionFingerprint || buildQuestionFingerprint(sq);
     if (!sq.questionFingerprint) sq.questionFingerprint = key;
+    var mathKey = buildMathFingerprint(sq);
+    var qkp = sq.knowledgePoint || (sq.knowledgePointIds && sq.knowledgePointIds[0]) || '';
     var diagKey = buildCanonicalKey(sq);
     var errors = [];
     var warnings = [];
-    if (seenKeys.has(key)) {
-      errors.push(createError('DUPLICATE_QUESTION', 'questionFingerprint', '重复题目: ' + key, 'ERROR', { questionFingerprint: key, canonicalKey: diagKey }));
+    var isDup = seenKeys.has(key) || (mathSeenKeys && mathSeenKeys.get(mathKey) !== undefined && mathSeenKeys.get(mathKey) !== qkp);
+    if (isDup) {
+      errors.push(createError('DUPLICATE_QUESTION', 'questionFingerprint', '重复题目: ' + key, 'ERROR', { questionFingerprint: key, mathFingerprint: mathKey, canonicalKey: diagKey }));
     } else {
       seenKeys.add(key);
+      if (mathSeenKeys) mathSeenKeys.set(mathKey, qkp);
     }
     return { valid: errors.length === 0, errors: errors, warnings: warnings, info: [], score: errors.length === 0 ? 1 : 0, checks: { duplicate: errors.length === 0 ? 'pass' : 'fail' } };
   });
@@ -174,6 +221,7 @@ module.exports = {
   validateBatchDuplicate: validateBatchDuplicate,
   buildCanonicalKey: buildCanonicalKey,
   buildQuestionFingerprint: buildQuestionFingerprint,
+  buildMathFingerprint: buildMathFingerprint,
   extractOperands: extractOperands,
   extractOperators: extractOperators,
   extractStructureKey: extractStructureKey

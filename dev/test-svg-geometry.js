@@ -5,8 +5,8 @@
  */
 'use strict';
 var path = require('path');
-require(path.join(__dirname, '..', 'shared', 'svg-core.js'));
-var G = require(path.join(__dirname, '..', 'shared', 'svg-geometry.js'));
+require(path.join(__dirname, '..', 'shared', 'svg', 'svg-core.js'));
+var G = require(path.join(__dirname, '..', 'shared', 'svg', 'svg-geometry.js'));
 
 var fail = 0, pass = 0;
 function assert(cond, msg) {

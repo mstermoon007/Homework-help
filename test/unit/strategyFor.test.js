@@ -2,7 +2,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert');
-const Difficulty = require('../../shared/difficulty.js');
+const Difficulty = require('../../shared/catalog/difficulty.js');
 
 test.describe('strategyFor / DELTA_RULES', () => {
   test('math / cn / en 返回 DELTA_RULES（含 apply）', () => {

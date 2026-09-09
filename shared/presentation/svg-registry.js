@@ -32,7 +32,7 @@
   function getSVGUtil() {
     return (global.SVGUtil && typeof global.SVGUtil.svgWrap === 'function')
       ? global.SVGUtil
-      : (typeof require !== 'undefined' ? require('../svg-core.js') : null);
+      : (typeof require !== 'undefined' ? require('../svg/svg-core.js') : null);
   }
 
   /**
@@ -77,10 +77,10 @@
     var namespaces = ['math', 'cn', 'en'];
     // P6-R02: 新增 SVG 生成器命名空间
     var additionalNamespaces = {
-      math: ['clock', 'area', 'fraction', 'dataStats', 'draw', 'competition']
+      math: ['clock', 'area', 'fraction', 'dataStats', 'draw', 'competition', 'chart', 'diagram', 'currency']
     };
     var seeded = 0;
-    var SUBJECT_TO_TYPE = { geometry: 'geometry', calculation: 'calculation', makeTen: 'makeTen', clock: 'clock', area: 'area', fraction: 'fraction', dataStats: 'dataStats', draw: 'draw', competition: 'competition' };
+    var SUBJECT_TO_TYPE = { geometry: 'geometry', calculation: 'calculation', makeTen: 'makeTen', clock: 'clock', area: 'area', fraction: 'fraction', dataStats: 'dataStats', draw: 'draw', competition: 'competition', chart: 'chart', diagram: 'diagram', currency: 'currency' };
     // make-ten（kebab）是 M4 graphic-renderer 的语义类型名，与 makeTen 同源
     function registerWithAlias(type, subtype, fn) {
       register(type, subtype, fn);
@@ -118,18 +118,21 @@
               if (key === 'calculation') {
                 // 竖式函数签名不一（add/sub 收数组或 (a,b)，mul/div 收两个数，
                 // dec 收 (a,b,op)，frac 收 (a,b,c,d,op)），按参数形态适配
-                registerWithAlias(descriptorType, subKeys[s], (function (orig) {
+                var arraySig = subKeys[s] === 'add';
+                registerWithAlias(descriptorType, subKeys[s], (function (orig, useArray) {
                   return function (p) {
                     if (Array.isArray(p)) return orig(p.slice(), {});
                     if (p && Array.isArray(p.values)) return orig(p.values.slice(), (p.options || p.opts) || {});
+                    var oo = (p && (p.options || p.opts)) || {};
+                    if (useArray && p) return orig(p.a != null ? [p.a, p.b != null ? p.b : 0] : (Array.isArray(p.v) ? p.v : []), oo);
                     if (p && p.a != null && p.b != null && p.c != null && p.d != null)
-                      return orig(p.a, p.b, p.c, p.d, p.op || '+', (p.options || p.opts) || {});
+                      return orig(p.a, p.b, p.c, p.d, p.op || '+', oo);
                     if (p && p.a != null && p.b != null && p.op)
-                      return orig(p.a, p.b, p.op, (p.options || p.opts) || {});
-                    if (p && p.a != null && p.b != null) return orig(p.a, p.b, (p.options || p.opts) || {});
+                      return orig(p.a, p.b, p.op, oo);
+                    if (p && p.a != null && p.b != null) return orig(p.a, p.b, oo);
                     return orig(p);
                   };
-                })(sub));
+                })(sub, arraySig));
               } else if (key === 'makeTen') {
                 // 凑十法生成器为位置参数 makeTen(a, b[, opts])，按 {num,add} 描述符形态适配
                 registerWithAlias('makeTen', subKeys[s], (function (orig) {
@@ -155,7 +158,7 @@
     // P6-R02: 处理额外的 math 子命名空间
     var mathNs = root.math;
     if (mathNs) {
-      var additionalKeys = ['clock', 'area', 'fraction', 'dataStats', 'draw', 'competition'];
+      var additionalKeys = ['clock', 'area', 'fraction', 'dataStats', 'draw', 'competition', 'chart', 'diagram', 'currency'];
       for (var a = 0; a < additionalKeys.length; a++) {
         var key = additionalKeys[a];
         var val = mathNs[key];

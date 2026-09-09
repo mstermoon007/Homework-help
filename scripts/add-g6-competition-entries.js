@@ -8,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const KB_FILE = path.join(__dirname, '..', 'shared', 'knowledge-bank.js');
+const KB_FILE = path.join(__dirname, '..', 'shared', 'knowledge', 'knowledge-bank.js');
 const KB = require(KB_FILE);
 
 const PLACEHOLDER = 'math-competition-placeholder';

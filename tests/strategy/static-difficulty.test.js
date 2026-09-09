@@ -5,8 +5,8 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const StaticDifficulty = require(path.join(ROOT, 'shared', 'strategy', 'static-difficulty.js'));
-const DifficultyStatic = require(path.join(ROOT, 'shared', 'difficulty-static.js'));
-const KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const DifficultyStatic = require(path.join(ROOT, 'shared', 'catalog', 'difficulty-static.js'));
+const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 test('输出结构：level/scale/steps/allowBracket/allowMultDiv/staticMeta', () => {
   const r = StaticDifficulty.resolveStaticDifficulty(

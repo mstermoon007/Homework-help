@@ -20,10 +20,10 @@
 var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
-var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
+var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+var Ontology = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology.js'));
 var Schema = require(path.join(ROOT, 'shared', 'schemas', 'knowledge-point.schema.js'));
-var Normalizer = require(path.join(ROOT, 'shared', 'knowledge-ontology-normalizer.js'));
+var Normalizer = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology-normalizer.js'));
 
 var SUBJECTS = Ontology.SUBJECTS;
 var COGNITIVE_MAP = Schema.COGNITIVE_MAP;

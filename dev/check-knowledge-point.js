@@ -12,8 +12,8 @@
 var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
-var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
+var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+var Ontology = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology.js'));
 
 var SUBJECTS = Ontology.SUBJECTS;
 

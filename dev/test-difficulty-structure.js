@@ -12,8 +12,8 @@
 'use strict';
 var path = require('path');
 var ROOT = path.join(__dirname, '..');
-require(path.join(ROOT, 'shared/common.js'));
-var D = require(path.join(ROOT, 'shared/difficulty.js'));
+require(path.join(ROOT, 'shared/core/common.js'));
+var D = require(path.join(ROOT, 'shared/catalog/difficulty.js'));
 
 var passed = 0, failed = 0;
 function ok(cond, msg) {

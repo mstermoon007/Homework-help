@@ -5,8 +5,8 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const GenRegistry = require(path.join(ROOT, 'shared', 'generator', 'generator-registry.js'));
-const QuestionRegistry = require(path.join(ROOT, 'shared', 'question-type-registry.js'));
-const KnowledgePoint = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const QuestionRegistry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
+const KnowledgePoint = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 test('Registry 非空且全部含必填声明字段', () => {
   const records = GenRegistry.all();

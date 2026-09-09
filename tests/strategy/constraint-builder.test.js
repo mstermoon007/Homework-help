@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Builder = require(path.join(ROOT, 'shared', 'strategy', 'constraint-builder.js'));
-const Difficulty = require(path.join(ROOT, 'shared', 'difficulty.js'));
+const Difficulty = require(path.join(ROOT, 'shared', 'catalog', 'difficulty.js'));
 
 const PIECES = () => ({
   difficulty: 4,

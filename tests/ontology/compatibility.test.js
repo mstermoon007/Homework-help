@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const O = require('../../shared/knowledge-ontology.js');
-const KB = require('../../shared/knowledge-bank.js');
+const O = require('../../shared/knowledge/knowledge-ontology.js');
+const KB = require('../../shared/knowledge/knowledge-bank.js');
 
 test('normalize 不修改原 KnowledgeBank 对象', () => {
   const kp = KB.math[0].modules[0].knowledgePoints[0];

@@ -16,7 +16,7 @@
  */
 'use strict';
 
-var KnowledgePoint = require('../knowledge-point.js');
+var KnowledgePoint = require('../knowledge/knowledge-point.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 

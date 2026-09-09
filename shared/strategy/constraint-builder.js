@@ -20,7 +20,7 @@
  */
 'use strict';
 
-var Difficulty = require('../difficulty.js');
+var Difficulty = require('../catalog/difficulty.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 

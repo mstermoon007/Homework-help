@@ -28,11 +28,11 @@ function run() {
 
   // ---------- 加载 ----------
   global.window = global;
-  require(path.join(ROOT, 'shared', 'common.js'));
+  require(path.join(ROOT, 'shared', 'core', 'common.js'));
   const Schema = require(path.join(ROOT, 'shared', 'schemas', 'knowledge-point.schema.js'));
-  const Registry = require(path.join(ROOT, 'shared', 'question-type-registry.js'));
-  const Normalizer = require(path.join(ROOT, 'shared', 'knowledge-ontology-normalizer.js'));
-  const KB = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+  const Registry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
+  const Normalizer = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology-normalizer.js'));
+  const KB = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 
   // ---------- 1) schema == registry ----------
   const schemaTypes = Schema.KNOWN_QUESTION_TYPES.slice().sort();

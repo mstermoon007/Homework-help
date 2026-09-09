@@ -7,10 +7,10 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 
 // 依赖装配顺序与浏览器一致：先 KB（Node 自动并入三科分片）→ StrategyEngine → PresentationEngine → 综合策略。
-const KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+const KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 assert.ok(Array.isArray(KnowledgeBank.math) && KnowledgeBank.math.length > 0, '数学知识分片应已装配');
 const StrategyEngine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
-require(path.join(ROOT, 'shared', 'presentation-engine.js'));
+require(path.join(ROOT, 'shared', 'engine', 'presentation-engine.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'render-options.js'));
 const CS = require(path.join(ROOT, 'shared', 'strategy', 'comprehensive-strategy.js'));
@@ -96,7 +96,7 @@ test('M7-R10 count 非法参数拒绝', async () => {
 });
 
 test('M7-R08/14 GenerationEngine 综合主链：计划→SemanticQuestion→RenderResult', async () => {
-  const GE = require(path.join(ROOT, 'shared', 'generation-engine.js'));
+  const GE = require(path.join(ROOT, 'shared', 'engine', 'generation-engine.js'));
   const g = await GE.generate({ model: 'comprehensive', subject: 'math', grade: 1, count: 6, difficulty: 2 });
   assert.ok(Array.isArray(g.questions) && g.questions.length > 0, '应产出 SemanticQuestion[]');
   assert.ok(g.questions.every(q => q && q.prompt), '每题应有 prompt');
@@ -108,7 +108,7 @@ test('M7-R08/14 GenerationEngine 综合主链：计划→SemanticQuestion→Rend
 });
 
 test('M7-R08 单点生成（knowledgePointId）不走综合策略', async () => {
-  const GE = require(path.join(ROOT, 'shared', 'generation-engine.js'));
+  const GE = require(path.join(ROOT, 'shared', 'engine', 'generation-engine.js'));
   const kpId = KnowledgeBank.getEntries('math', 1)[0].id;
   const built = await GE.build({ knowledgePointId: kpId, count: 3, grade: 1 });
   assert.strictEqual(built.plans.length, 1);

@@ -4,13 +4,13 @@
 <meta charset="UTF-8" data-page-node-id="tEIUv8XlQ7mcgVVnfA7C92">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="8P5KrhJC4TNH76LOkqyoJ1">
 <title>统一练习页 · Homework Help</title>
-<link rel="stylesheet" href="shared/tokens.css" data-page-node-id="2ypnXNyOxt1diYakQM86iQ">
-<link rel="stylesheet" href="shared/base.css" data-page-node-id="4EHc04FKAzveRwkShKj10T">
-<link rel="stylesheet" href="shared/components.css" data-page-node-id="GEZ7JnBLRCd7Rh4njw8qre">
-<link rel="stylesheet" href="shared/states.css" data-page-node-id="pZK3TMq4HVgAjN2yAwY70Z">
-<link rel="stylesheet" href="shared/toolbar.css" data-page-node-id="jbV9XJKs7Mv2iaZ77c9nKT">
-<link rel="stylesheet" href="shared/pages.css" data-page-node-id="DAic6DWvP493DPa6AL9OyZ">
-<!-- 练习页专属样式见 shared/pages.css（@layer pages）；共享组件见 components.css，令牌见 tokens.css -->
+<link rel="stylesheet" href="shared/styles/tokens.css" data-page-node-id="2ypnXNyOxt1diYakQM86iQ">
+<link rel="stylesheet" href="shared/styles/base.css" data-page-node-id="4EHc04FKAzveRwkShKj10T">
+<link rel="stylesheet" href="shared/styles/components.css" data-page-node-id="GEZ7JnBLRCd7Rh4njw8qre">
+<link rel="stylesheet" href="shared/styles/styles.css" data-page-node-id="pZK3TMq4HVgAjN2yAwY70Z">
+<link rel="stylesheet" href="shared/styles/toolbar.css" data-page-node-id="jbV9XJKs7Mv2iaZ77c9nKT">
+<link rel="stylesheet" href="shared/styles/pages.css" data-page-node-id="DAic6DWvP493DPa6AL9OyZ">
+<!-- 练习页专属样式见 shared/styles/pages.css（@layer pages）；共享组件见 components.css，令牌见 tokens.css -->
 <script>
   // 全局错误捕获与自动恢复（任务：错误处理升级）——运行时异常 / 资源加载失败 / 未处理的 Promise 拒绝
     window.addEventListener('error', function (e) {
@@ -123,7 +123,7 @@
   .site-footer .footer-sep { opacity: 0.5; }
   .site-footer .footer-beian img { vertical-align: -2px; }
 
-  /* 工具栏样式（panel.controls / 题量占比 / 自定义题量 / 教师填空）已集中至大服务层 shared/pages.css「工具栏集中管理」段 */
+  /* 工具栏样式（panel.controls / 题量占比 / 自定义题量 / 教师填空）已集中至大服务层 shared/styles/pages.css「工具栏集中管理」段 */
 </style>
 </head>
 <body data-page-node-id="rwBtS9BmX4E1JY5ZLzQA2D">
@@ -175,9 +175,9 @@
             </div>
           </div>
           <div class="group" data-page-node-id="kpGroup-001">
-            <span class="lbl" data-page-node-id="kpGroup-lbl-001">知识点占比：</span>
+            <span class="lbl" data-page-node-id="kpGroup-lbl-001">分题型题量：</span>
             <div class="setting-content kp-ratio" id="kpRatio" data-page-node-id="kpRatio-001">
-              <div class="kp-ratio-empty" id="kpRatioEmpty">未指定知识点（经 select 页选择后显示各模式知识点卡片题量占比）</div>
+              <div class="kp-ratio-empty" id="kpRatioEmpty">选择知识点与题型后，在此按题型微调题量（总数量守恒分配，各题型之和恒等于总数量）</div>
             </div>
           </div>
         </div>
@@ -252,9 +252,9 @@
   </footer>
 </div>
 
-<link rel="preload" href="shared/common.js" as="script" data-page-node-id="EAHopeTzYkanaX0UmPSDEk">
-<link rel="preload" href="shared/tokens.css" as="style" data-page-node-id="N9JBsS39DITBCU5e4INnHZ">
-<link rel="preload" href="shared/components.css" as="style" data-page-node-id="JXAl91j7FpGRXH9xNg5fpv">
+<link rel="preload" href="shared/core/common.js" as="script" data-page-node-id="EAHopeTzYkanaX0UmPSDEk">
+<link rel="preload" href="shared/styles/tokens.css" as="style" data-page-node-id="N9JBsS39DITBCU5e4INnHZ">
+<link rel="preload" href="shared/styles/components.css" as="style" data-page-node-id="JXAl91j7FpGRXH9xNg5fpv">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -270,29 +270,29 @@
   "url": "https://home.modouyu.top/practice.html"
 }
 </script>
-<script src="shared/common.js"></script>
-<script src="shared/difficulty.js"></script>
-<script src="shared/difficulty-static.js"></script>
-<script src="shared/print.js"></script>
-<script src="shared/knowledge-bank.js"></script>
+<script src="shared/core/common.js"></script>
+<script src="shared/catalog/difficulty.js"></script>
+<script src="shared/catalog/difficulty-static.js"></script>
+<script src="shared/presentation/print.js"></script>
+<script src="shared/knowledge/knowledge-bank.js"></script>
 <!-- 合并二级页装配能力：模块目录 + 题型目录工具（只读数据，浏览器安全，无顶层 require） -->
-<script src="shared/module-catalog.js"></script>
-<script src="shared/catalog-utils.js"></script>
+<script src="shared/catalog/module-catalog.js"></script>
+<script src="shared/catalog/catalog-utils.js"></script>
 <!-- 知识库分片（knowledge-math.js）不再静态引入，改为按需懒加载（任务 3.1）：
      由 boot() 在确认科目后调用 KnowledgeBank.ensureKnowledgeData(subject) 动态注入，
      首屏仅加载当前科目。 -->
 <!-- MATH-14：legacy 插件轨道已删除（plugins/registry.js + shared/plugin-loader.js 已移除），
      strategy bundle 经 capability-resolver 只走 ontology/registry/matrix 三源决策，
      不再急切读取 global.PLUGIN_REGISTRY。 -->
-<script src="shared/strategy-engine.bundle.js"></script>
+<script src="shared/engine/strategy-engine.bundle.js"></script>
 <!-- C01：presentation-engine.bundle.js 提供 global.PresentationEngine（其 __req 委托
      strategy-engine.bundle.js 的 require 命名空间）。generation-engine 的
      getPresentationEngine()→ensure() 在浏览器读取 global.PresentationEngine，
      缺省时 runPlans 会静默跳过全部 plan（P0-001）。必须先于 generation-engine.js 加载。 -->
-<script src="shared/presentation-engine.bundle.js"></script>
+<script src="shared/engine/presentation-engine.bundle.js"></script>
 <!-- M6：Learner Model + 自适应（R01-R30）。storage.js 提供跨会话持久化；learner 模块
      挂在 window.LearnerModel / LearnerStorage / ResultCollector 下，供下方主流程使用。 -->
-<script src="shared/storage.js"></script>
+<script src="shared/state/storage.js"></script>
 <script src="shared/learner/error-model.js"></script>
 <script src="shared/learner/practice-result.js"></script>
 <script src="shared/learner/learner-model.js"></script>
@@ -306,9 +306,17 @@
 <script src="shared/presentation/svg-registry.js"></script>
 <script src="shared/generator/graphic-renderer.js"></script>
 <!-- R-A04：SVG 语义生成器运行时挂载（须先于首次渲染，svg-registry 的懒种子扫描才能捕获）。
-     shared/svg-core.js 提供 SVGUtil；plugins/svg-*.js 挂载 SVGGenerators.math.{clock,area,fraction,
-     dataStats,draw,competition}，经 graphic-renderer → SVGRenderer 派发链产出 <svg>。 -->
-<script src="shared/svg-core.js"></script>
+     shared/svg/svg-core.js 提供 SVGUtil；核心渲染族（geometry/calculation/makeTen/chart/diagram/currency）
+     挂载 SVGGenerators.math.*；plugins/svg-*.js 挂载 {clock,area,fraction,dataStats,draw,competition}，
+     经 graphic-renderer → SVGRenderer 派发链产出 <svg>。 -->
+<script src="shared/svg/svg-core.js"></script>
+<script src="shared/svg/svg-geometry.js"></script>
+<script src="shared/svg/svg-calculation.js"></script>
+<script src="shared/svg/svg-make-ten.js"></script>
+<script src="shared/svg/svg-chart.js"></script>
+<script src="shared/svg/svg-diagram.js"></script>
+<script src="shared/svg/svg-currency.js"></script>
+<script src="shared/presentation/svg-templates.js"></script>
 <script src="plugins/svg-clock.js"></script>
 <script src="plugins/svg-area.js"></script>
 <script src="plugins/svg-fraction.js"></script>
@@ -317,7 +325,7 @@
 <script src="plugins/svg-competition.js"></script>
 <script src="shared/presentation/html-renderer.js"></script>
 <script src="shared/presentation/renderer.js"></script>
-<script src="shared/generation-engine.js"></script>
+<script src="shared/engine/generation-engine.js"></script>
 <!-- D007 修复：浏览器需加载 generation/api.js 才能使 GenerationEngine 走正常路径
      （否则 GenerationAPI 为 null 走回退，回退返回不含 generationId，
      导致 PracticeBridge.recordGeneration 因 g.generationId 缺失而跳过，
@@ -325,9 +333,9 @@
 <script src="shared/generation/api.js"></script>
 <script src="shared/strategy/comprehensive-strategy.js"></script>
 <!-- P7：统一练习会话（P7-R01~R04） -->
-<script src="shared/practice-session.js"></script>
+<script src="shared/engine/practice-session.js"></script>
 <!-- 关联层：UI 指令 → 生成层指令翻译与反馈接受（不改生成层） -->
-<script src="shared/practice-bridge.js"></script>
+<script src="shared/bridge/practice-bridge.js"></script>
 <script>
 (function () {
   'use strict';
@@ -482,6 +490,7 @@
   function generate() {
     if (!window.PracticeBridge) return;
     state.count = Number(state.count) || 20;
+    syncTypeCounts();
     window.PracticeBridge.onStartFeedback(applySessionFeedback);
     // U3 清理：deriveTypeName/state 均在本 IIFE 作用域内定义，恒可用，
     // 原「typeof x !== 'undefined' ? x : null」三元恒取真分支，直接简化为直接引用。
@@ -491,12 +500,13 @@
         knowledgePoints: state.knowledgePointIds || (urlParams.kps ? urlParams.kps.split(',').filter(Boolean) : null),
         knowledgePointId: state.kp || urlParams.kp || null,
         // 深链 qt 仅作「题型→可见知识点」的勾选过滤器（asmSeedFromUrl 已按 kpVisibleInQT 过滤勾选集合），
-        // 不作为强制题型传给生成层：生成层按勾选知识点各自受支持题型生成（知识点驱动），
-        // 避免 qt 的模块口径与 canonical 硬匹配口径冲突导致 0 题（深链 ?qt= 生成失败根因之一）。
+        // 不作为强制题型传给生成层；生成层按勾选知识点 + 题型（分题型题量）由决策层选择最优知识点群生成。
         questionType: state.questionType || null,
         questionTypes: state.questionTypes || null,
         titleType: deriveTypeName(),
-        kpAllocation: state.kpAllocation || null,
+        // 双量控制：总数量（count）+ 分题型数量（typeCounts，Σ 恒等于总数）。旧 kpAllocation「知识点控制数量」已废除。
+        perTypeCount: (state.typeCounts && state.typeCounts.length === 1) ? state.typeCounts[0].count : null,
+        typeCounts: state.typeCounts || null,
         raw: { levels: state }
       }
     );
@@ -680,11 +690,11 @@
   }
 
   // ============ A4 竖版宽度自适应 ============
-  // 列数算法已收敛为单一来源：shared/common.js 的 PluginUtil.layout
+  // 列数算法已收敛为单一来源：shared/core/common.js 的 PluginUtil.layout
   // （calcOptimalCols / fitColumns / estimateCardWidth / renderLen / gridColumnsFromDom / applySpanning）。
   // 预览与打印共用同一套逻辑，避免双份代码再次漂移。本页仅保留需要 Print.ROUTES 的 A4 宽度换算。
 
-  // A4 竖版可打印宽度（px），与 shared/print.js 的 @page 边距保持一致
+  // A4 竖版可打印宽度（px），与 shared/presentation/print.js 的 @page 边距保持一致
   // 不同题型路由边距不同（如 makeTen 8mm、其余 12mm/10mm），按路由取对应可打印宽
   function a4PrintableWidthPx(pageType) {
     var route = (window.Print && window.Print.ROUTES && window.Print.ROUTES[pageType]) || {};
@@ -989,6 +999,9 @@
     if (!(n >= 1 && n <= 50)) { showNotice('题量无效', '自定义题量请填写 1~50 之间的整数。'); return; }
     state.count = n;
     syncCountUI();
+    // 双量互锁守恒：总数量变化 → 分题型数量按最大余数重分配（Σ = 新总数量）
+    syncTypeCounts();
+    renderKpRatio();
     if (state.exerciseSet) generate();
   }
 
@@ -1040,7 +1053,7 @@
     var printableW = a4PrintableWidthPx(cfg);
     var fixedCols = state.exerciseSet.meta && state.exerciseSet.meta.columns;
     var cols = fixedCols ? fixedCols : PluginUtil.layout.calcOptimalCols(state.exerciseSet, printableW);
-    // 上下边距用于后续高度测算（与 shared/print.js 的 @page 边距一致）
+    // 上下边距用于后续高度测算（与 shared/presentation/print.js 的 @page 边距一致）
     var route = (window.Print && window.Print.ROUTES && window.Print.ROUTES[cfg]) || {};
     var m = (route.pageMargin || '12mm 10mm').match(/([\d.]+)mm\s+([\d.]+)mm/);
     var v = m ? parseFloat(m[1]) : 12;   // 上下边距
@@ -1286,182 +1299,101 @@
     });
     return groups;
   }
-  // ============ 知识点卡片题量占比（可调整，UI/状态层；生成层待接入） ============
-  // 分配策略（快速模式）：每张知识点卡的题量 = 该知识点 weight ÷ 所选全部知识点 weight 之和 × 总题量。
-  // 即：题量占比_k = weight_k / Σweight(选定卡)。用「最大剩余法」取整，保证各卡题量之和恰好等于总题量。
-  // 结果写入 state.kpRatio（面板展示、可手动微调）与 state.kpAllocation（发往题目生成层的结构化消息）。
-  // 快速模式展示口径：按题型聚合，仅显示题型名与可调题量，不显示具体知识点（分配仍落到每知识点）。
+  // ============ 分题型题量（双量控制：总数量 + 分题型数量，互锁守恒） ============
+  // 数量控制语义：
+  //   - 总数量由「数量」区（20/30/50/自定义）控制；分题型默认 = 总数量在所选题型间最大余数均分（Σ = 总数量，守恒）。
+  //   - 修改任一题型数量 → 其余题型守恒重分配（Σ 恒等于总数量）；题型数量恒 >= 0。
+  //   - 生成层决策（planByType）按题型在知识点池内选择最优化「最优知识点群」、群内均分题量；
+  //     旧「每知识点数量填空 / 权重占比 kpAllocation（知识点控制数量）」逻辑已移除。
   var QT_STD_NAMES = {
     oral: '口算', calc: '计算', vertical: '竖式计算', mixed: '混合运算',
     fill: '填空', match: '连线', operation: '算式', draw: '作图',
     picture: '看图列式', apply: '应用题', word: '应用题', stats: '统计',
-    reason: '推理', judge: '判断', choice: '选择', open: '开放题', geometry: '几何'
+    reason: '推理', judge: '判断', choice: '选择', open: '开放题', geometry: '几何',
+    operate: '操作/作图', sort: '排序'
   };
-  function kpTypeName(k) {
-    var t = k && k.type ? String(k.type) : '';
-    // R9 上收：细粒度展示名走大服务层（QuestionTypeRegistry.LEGACY_DISPLAY_NAMES）
-    var legacy = (window.PracticeBridge && typeof window.PracticeBridge.questionTypeDisplayName === 'function')
-      ? window.PracticeBridge.questionTypeDisplayName(t) : null;
-    return legacy || QT_STD_NAMES[t] || (k && k.moduleId ? moduleNameOf(k.moduleId) : '综合练习');
+  function typeDisplayName(t) {
+    var canonical = (window.PracticeBridge && typeof window.PracticeBridge.questionTypeDisplayName === 'function')
+      ? window.PracticeBridge.questionTypeDisplayName(String(t || '')) : null;
+    return canonical || QT_STD_NAMES[t] || String(t || '题型');
   }
-  function kpGroupsOf(ratio) {
-    var groups = [], index = {};
-    Object.keys(ratio).forEach(function (id) {
-      var name = kpTypeName(asmKpById[id]);
-      if (!(name in index)) { index[name] = groups.length; groups.push({ name: name, ids: [] }); }
-      groups[index[name]].ids.push(id);
+  // 当前有效题型顺序（去重）：优先 state.questionTypes，其次 asmState.questionTypes
+  function perTypeOrder() {
+    var t = (state.questionTypes && state.questionTypes.length) ? state.questionTypes
+      : (asmState.questionTypes || null);
+    if (!t || !t.length) return [];
+    var seen = {}, out = [];
+    t.forEach(function (x) { if (x && !seen[String(x)]) { seen[String(x)] = true; out.push(String(x)); } });
+    return out;
+  }
+  function splitEqual(total, n) {
+    var out = [];
+    if (!n || total < 1) return out;
+    var base = Math.floor(total / n), rem = total - base * n;
+    for (var i = 0; i < n; i++) out.push(base + (i < rem ? 1 : 0));
+    return out;
+  }
+  // 归一化分题型数量：state.perTypeCount{type:count} 存在、非负、Σ = 总数量（守恒）
+  function syncTypeCounts() {
+    var total = Number(state.count) || 20;
+    var types = perTypeOrder();
+    if (!types.length) { state.perTypeCount = null; state.typeCounts = null; return; }
+    var map = state.perTypeCount || {};
+    var dirty = false;
+    types.forEach(function (t) {
+      var v = Number(map[t]);
+      if (!(v >= 0) || Math.round(v) !== v) { map[t] = 0; dirty = true; }
     });
-    return groups;
+    var sum = types.reduce(function (a, t) { return a + (Number(map[t]) || 0); }, 0);
+    if (!dirty && sum === total) { state.perTypeCount = map; buildTypeCounts(); return; }
+    var shares = splitEqual(total, types.length);
+    state.perTypeCount = {};
+    types.forEach(function (t, i) { state.perTypeCount[t] = shares[i]; });
+    buildTypeCounts();
   }
-  function kpGroupSum(g) { return g.ids.reduce(function (a, id) { return a + state.kpRatio[id]; }, 0); }
-  // 组内腾挪：加题给「题量/权重」最小的一张，减题从题量最大的一张扣（每知识点最少 1 题）
-  function kpGroupGive(g) {
-    var best = null;
-    g.ids.forEach(function (id) { if (!best || state.kpRatio[id] > state.kpRatio[best]) best = id; });
-    if (best && state.kpRatio[best] > 1) { state.kpRatio[best] -= 1; return true; }
-    return false;
-  }
-  function kpGroupTake(g) {
-    var best = null;
-    g.ids.forEach(function (id) {
-      var r = state.kpRatio[id] / ((asmKpById[id] && asmKpById[id].weight) || 1);
-      var rb = best == null ? Infinity : state.kpRatio[best] / ((asmKpById[best] && asmKpById[best].weight) || 1);
-      if (best == null || r < rb) best = id;
+  function buildTypeCounts() {
+    var types = perTypeOrder();
+    if (!types.length) { state.typeCounts = null; return; }
+    state.typeCounts = types.map(function (t) {
+      return { questionType: t, count: Math.max(0, Number(state.perTypeCount[t]) || 0) };
     });
-    if (best) state.kpRatio[best] += 1;
   }
-  // 题型总量 ±1：组内按权重落到单卡；跨组转移一题，保持总题量不变
-  function adjustKpGroup(name, step) {
-    var groups = kpGroupsOf(state.kpRatio);
-    var own = null, others = [];
-    groups.forEach(function (g) { if (g.name === name) own = g; else others.push(g); });
-    if (!own) return;
-    var total = state.count || 20;
-    if (step > 0) {
-      if (kpGroupSum(own) >= total - others.length) return;
-      var donor = null;
-      others.forEach(function (g) { if (!donor || kpGroupSum(g) > kpGroupSum(donor)) donor = g; });
-      if (!donor || !kpGroupGive(donor)) return;
-      kpGroupTake(own);
-    } else {
-      if (kpGroupSum(own) <= own.ids.length) return;
-      if (!kpGroupGive(own)) return;
-      var acceptor = null;
-      others.forEach(function (g) { if (!acceptor || kpGroupSum(g) < kpGroupSum(acceptor)) acceptor = g; });
-      if (acceptor) kpGroupTake(acceptor);
+  // 修改某题型数量 → 该题型置为输入值，其余题型守恒重分配（Σ 恒 = 总数量）
+  function setTypeCount(type, v) {
+    var total = Number(state.count) || 20;
+    var types = perTypeOrder();
+    if (!types.length) return;
+    v = Math.max(0, Math.min(total, Math.round(Number(v))));
+    state.perTypeCount[type] = v;
+    var others = types.filter(function (t) { return t !== type; });
+    if (others.length) {
+      var shares = splitEqual(total - v, others.length);
+      others.forEach(function (t, i) { state.perTypeCount[t] = shares[i]; });
     }
+    buildTypeCounts();
   }
   function renderKpRatio() {
     var wrap = $('kpRatio'); if (!wrap) return;
+    syncTypeCounts();
+    var types = perTypeOrder();
     var ids = Object.keys(asmState.selected).filter(function (id) { return asmKpById[id]; });
-    if (!ids.length) {
-      if ((urlParams.kps && urlParams.kps.split(',').length) || urlParams.kp) {
-        wrap.innerHTML = '<div class="kp-ratio-list">' +
-          '<div class="kp-ratio-item sep"><span class="nm">已按 URL 入参选择知识点，待生成层接入占比后即可调整。</span>' +
-          '<span class="total">共 ' + state.count + ' 题</span></div></div>';
-      } else {
-        var e = $('kpRatioEmpty');
-        if (e) e.style.display = '';
-      }
-      state.kpRatio = null; state.kpAllocation = null;
-      return;
-    }
-    var total = state.count || 20;
-    var wSum = 0;
-    ids.forEach(function (id) { wSum += asmKpById[id].weight || 1; });
-    // 手动微调后重渲染时复用既有分配（同知识点集合且总量不变），否则按权重重新占比
-    var reuse = state.kpRatio && ids.every(function (id) { return id in state.kpRatio; }) &&
-      Object.keys(state.kpRatio).length === ids.length &&
-      Object.keys(state.kpRatio).reduce(function (a, id) { return a + state.kpRatio[id]; }, 0) === total;
-    var alloc;
-    if (reuse) {
-      alloc = state.kpRatio;
-    } else {
-      // R4 决策上收：权重占比分配（最大剩余法）收敛到大服务层
-      // shared/strategy/question-type-allocation.js 的 allocateKpRatio，经 PracticeBridge 获取规划结果；
-      // UI 只发「知识点 + 题量」指令，不再自实现分配算法。
-      var plan = (window.PracticeBridge && typeof window.PracticeBridge.allocateKpRatio === 'function')
-        ? window.PracticeBridge.allocateKpRatio(
-            ids.map(function (id) { return { id: id, weight: asmKpById[id].weight || 1 }; }),
-            total
-          )
-        : null;
-      alloc = {};
-      if (plan && Array.isArray(plan.kps)) {
-        plan.kps.forEach(function (p) { if (p && p.id != null) alloc[p.id] = p.count; });
-      } else {
-        // 兜底：大服务层不可用时退回本地权重占比（最大剩余法）
-        var rem = [];
-        ids.forEach(function (id) {
-          var w = asmKpById[id].weight || 1;
-          var exact = total * w / wSum;
-          alloc[id] = Math.floor(exact);
-          rem.push({ id: id, frac: exact - Math.floor(exact), w: w });
-        });
-        var sum = Object.keys(alloc).reduce(function (a, id) { return a + alloc[id]; }, 0);
-        rem.sort(function (a, b) { return b.frac - a.frac || b.w - a.w; });
-        for (var r = 0; r < total - sum && r < rem.length; r++) alloc[rem[r].id] += 1;
-      }
-      state.kpRatio = alloc;
-    }
-
-    // —— 发往题目生成层的结构化消息（当前仅到此处，生成层后续接入 consume 该字段）——
-    state.kpAllocation = {
-      mode: urlParams.mode || null,
-      subject: state.subject,
-      grade: state.grade,
-      total: total,
-      strategy: 'weight-ratio',
-      kps: ids.map(function (id) {
-        var k = asmKpById[id];
-        return {
-          id: id,
-          name: k.name,
-          moduleId: k.moduleId,
-          weight: k.weight || 1,
-          ratio: Math.round(k.weight / wSum * 1000) / 1000, // 占比（0~1，保留3位）
-          count: alloc[id]
-        };
-      })
-    };
-
-    if (isTeacherMode) {
-      // 专业（教师）模式：初始按权重占比分配，但仅罗列每知识点题量填空（可自由改）
-      // 横向排列，自动换行，换行缩进。填写后按 Enter 或点「生成练习」按已填数量出题。
-      var flow = document.createElement('div');
-      flow.className = 'kp-ratio-flow';
-      ids.forEach(function (id) {
-        var k = asmKpById[id]; var n = alloc[id];
-        var chip = document.createElement('label');
-        chip.className = 'kp-blank';
-        var identified = k && k.name ? k.name : id;
-        chip.innerHTML =
-          '<span class="kp-blank-nm" title="' + esc(identified) + '">' + esc(moduleNameOf(k && k.moduleId ? k.moduleId : '')) + '·' + esc(identified) + '</span>' +
-          '<input type="number" class="kp-blank-num" data-kp-id="' + esc(id) + '" min="0" max="' + total + '" value="' + n + '" aria-label="' + esc(identified) + ' 题量">' +
-          '<span class="kp-blank-unit">题</span>';
-        flow.appendChild(chip);
-      });
-      var totalLine = document.createElement('div');
-      totalLine.className = 'kp-ratio-item sep';
-      totalLine.innerHTML = '<span class="nm">总题量</span><span class="total" id="kpRatioTotal">' + total + ' 题</span>';
+    if (!types.length || !ids.length) {
+      var e = $('kpRatioEmpty');
+      if (e) e.style.display = '';
       wrap.innerHTML = '';
-      wrap.appendChild(flow);
-      wrap.appendChild(totalLine);
-      var empty = $('kpRatioEmpty'); if (empty) empty.style.display = 'none';
       return;
     }
-
+    var total = Number(state.count) || 20;
     var list = document.createElement('div');
     list.className = 'kp-ratio-list kp-ratio-types';
-    // 快速模式：胶囊「题型名称 + 可改填题量」同行排列、行满换行；改填数量即时守恒重分配
-    kpGroupsOf(state.kpRatio).forEach(function (g) {
-      var n = kpGroupSum(g);
+    types.forEach(function (t) {
+      var n = (state.perTypeCount && state.perTypeCount[t]) || 0;
       var item = document.createElement('div');
       item.className = 'kp-ratio-item';
       item.innerHTML =
-        '<span class="nm" title="' + esc(g.name) + '">' + esc(g.name) + '</span>' +
-        '<input type="number" class="kp-blank-num" data-gk="' + esc(g.name) + '" min="1" max="' + total + '" step="1" value="' + n + '" ' +
-          'aria-label="' + esc(g.name) + ' 题量（可修改，回车生效）">' +
+        '<span class="nm" title="' + esc(typeDisplayName(t)) + '">' + esc(typeDisplayName(t)) + '</span>' +
+        '<input type="number" class="kp-blank-num" data-pt="' + esc(t) + '" min="0" max="' + total + '" step="1" value="' + n + '" ' +
+          'aria-label="' + esc(typeDisplayName(t)) + ' 题量（可修改，其余题型守恒重分配）">' +
         '<span class="kp-blank-unit">题</span>';
       list.appendChild(item);
     });
@@ -1471,135 +1403,30 @@
     list.appendChild(sep);
     wrap.innerHTML = '';
     wrap.appendChild(list);
-    var empty = $('kpRatioEmpty'); if (empty) empty.style.display = 'none';
+    if ($('kpRatioEmpty')) $('kpRatioEmpty').style.display = 'none';
   }
   function bindKpRatio() {
     var wrap = $('kpRatio');
     if (!wrap) return;
-    wrap.addEventListener('click', function (e) {
-      var b = e.target.closest ? e.target.closest('button[data-d]') : null;
-      if (!b) return;
-      var step = Number(b.getAttribute('data-d'));
-      if (!state.kpRatio) return;
-      // 快速模式：题型分组行（data-gk），± 落到组内单卡并跨组守恒，随后整体重渲染
-      var gk = b.getAttribute('data-gk');
-      if (gk != null) {
-        adjustKpGroup(gk, step);
-        refreshKpAllocation();
-        renderKpRatio();
-        return;
-      }
-      // 兼容旧单卡行（data-kp-id）
-      var id = b.getAttribute('data-kp-id');
-      if (!id || !(id in state.kpRatio)) return;
-      var total = state.count || 20;
-      var ids = Object.keys(state.kpRatio);
-      var n = state.kpRatio[id] + step;
-      if (n < 1 || n > total) return;
-      state.kpRatio[id] = n;
-      // 手动 ± 时，从其它卡匀出一/补进一题，保证总题量不变（权重的整数取整差异，交由手动微调覆盖）
-      if (step > 0) {
-        // 加一题：从题量最多的一张卡减一
-        var donor = null;
-        for (var i = 0; i < ids.length; i++) {
-          var oid = ids[i];
-          if (oid === id) continue;
-          if (!donor || state.kpRatio[oid] > state.kpRatio[donor]) donor = oid;
-        }
-        if (donor && state.kpRatio[donor] > 1) state.kpRatio[donor] -= 1;
-      } else {
-        // 减一题：把减掉的题补给题量最少的一张卡
-        var acceptor = null;
-        for (var j = 0; j < ids.length; j++) {
-          var aid = ids[j];
-          if (aid === id) continue;
-          if (!acceptor || state.kpRatio[aid] < state.kpRatio[acceptor]) acceptor = aid;
-        }
-        if (acceptor && state.kpRatio[acceptor] < total) state.kpRatio[acceptor] += 1;
-      }
-      refreshKpAllocation();
-      var cnt = document.querySelector('#kpRatio [data-kp-id="' + id + '"].cnt');
-      if (cnt) cnt.textContent = state.kpRatio[id] + ' 题';
-      var pct = Math.round(state.kpRatio[id] / total * 100);
-      var pctNode = cnt && cnt.nextElementSibling;
-      if (pctNode && pctNode.className === 'pct') pctNode.textContent = pct + '%';
-      var tl = $('kpRatioTotal'); if (tl) tl.textContent = total + ' 题';
-    });
-    // 快速模式：题型题量直接改填（change/Enter 生效；总题量守恒，逐题跨组腾挪，触顶/触底自动止步）
-    wrap.addEventListener('change', function (e) {
-      var inp = e.target && e.target.closest ? e.target.closest('input.kp-blank-num[data-gk]') : null;
-      if (!inp || !state.kpRatio) return;
-      var gk = inp.getAttribute('data-gk');
-      var total = state.count || 20;
+    // change / Enter / ↑↓：该题型置为输入值，其余题型守恒重分配（Σ 恒 = 总数量，两量互锁）
+    var onCommit = function (e) {
+      var inp = e.target && e.target.closest ? e.target.closest('input.kp-blank-num[data-pt]') : null;
+      if (!inp || !state.perTypeCount) return;
+      var t = inp.getAttribute('data-pt');
+      var total = Number(state.count) || 20;
       var v = Math.round(Number(inp.value));
       if (isNaN(v)) { renderKpRatio(); return; }
-      v = Math.min(total, Math.max(1, v));
-      var own = null;
-      kpGroupsOf(state.kpRatio).forEach(function (g) { if (g.name === gk) own = g; });
-      if (!own) return;
-      var cur = kpGroupSum(own), guard = 0;
-      while (cur !== v && guard++ <= total) {
-        adjustKpGroup(gk, v > cur ? 1 : -1);
-        var next = kpGroupSum(own);
-        if (next === cur) break;
-        cur = next;
-      }
-      refreshKpAllocation();
+      setTypeCount(t, Math.min(total, Math.max(0, v)));
       renderKpRatio();
-    });
-    wrap.addEventListener('keydown', function (e) {
-      var inp = e.target && e.target.closest ? e.target.closest('input.kp-blank-num[data-gk]') : null;
-      if (inp && e.key === 'Enter') { e.preventDefault(); inp.blur(); }
-    });
-    // 专业模式：知识点题量数量填空（change 落盘，Enter 提交后按新数量生成）
-    if (isTeacherMode) {
-      wrap.addEventListener('change', function (e) {
-        var inp = e.target && e.target.closest ? e.target.closest('input.kp-blank-num') : null;
-        if (!inp) return;
-        var id = inp.getAttribute('data-kp-id');
-        if (!id || !state.kpRatio || !(id in state.kpRatio)) return;
-        var total = state.count || 20;
-        var v = Math.round(Number(inp.value));
-        if (!(v >= 0) || v > total || isNaN(v)) { inp.value = state.kpRatio[id]; return; }
-        state.kpRatio[id] = v;
-        // 其余卡不动，直接按所填数量出题（总题量取各卡之和）
-        refreshKpAllocation();
-        var tl2 = $('kpRatioTotal');
-        if (tl2) tl2.textContent = Object.keys(state.kpRatio).reduce(function (a, kp) { return a + state.kpRatio[kp]; }, 0) + ' 题';
-      });
-      wrap.addEventListener('keydown', function (e) {
-        var inp = e.target && e.target.closest ? e.target.closest('input.kp-blank-num') : null;
-        if (!inp) return;
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          inp.blur();
-          if (window.PracticeBridge) generate();
-        }
-      });
-    }
-  }
-
-  // 依据当前 state.kpRatio（可能被手动微调覆盖）重组发往生成层的结构化消息
-  function refreshKpAllocation() {
-    if (!state.kpRatio) { state.kpAllocation = null; return; }
-    var total = state.count || 20;
-    var ids = Object.keys(state.kpRatio);
-    var wSum = 0;
-    ids.forEach(function (id) { wSum += (asmKpById[id] && asmKpById[id].weight) || 1; });
-    state.kpAllocation = {
-      mode: urlParams.mode || null,
-      subject: state.subject,
-      grade: state.grade,
-      total: total,
-      strategy: 'weight-ratio',
-      kps: ids.map(function (id) {
-        var k = asmKpById[id];
-        return { id: id, name: k && k.name, moduleId: k && k.moduleId,
-          weight: (k && k.weight) || 1,
-          ratio: Math.round((k && k.weight || 1) / wSum * 1000) / 1000,
-          count: state.kpRatio[id] };
-      })
     };
+    wrap.addEventListener('change', onCommit);
+    wrap.addEventListener('keydown', function (e) {
+      var inp = e.target && e.target.closest ? e.target.closest('input.kp-blank-num[data-pt]') : null;
+      if (inp) {
+        if (e.key === 'Enter') { e.preventDefault(); onCommit(e); inp.blur(); }
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); onCommit(e); }
+      }
+    });
   }
 
   function asmGenerateFromSelection() {
@@ -1609,9 +1436,11 @@
     state.grade = asmState.grade;
     state.knowledgePointIds = ids;   // 供错题本 / 难度 EMA 使用（practiceContextId / feedLearnerModel 优先读取）
     state.questionTypes = asmState.questionTypes || null; // 题型策略白名单（随请求传给生成层）
-    // B4 收敛：此前在此 newSession 构造的会话会被 generate()→start() 内部重新构造并覆盖（孤儿），
-    // 直接移除。知识点题量占比（kpAllocation）已随 state 透传，generate()→start() 经
-    // state.knowledgePointIds=lambda 与 state.kpAllocation 拿到等价指令，mode 亦自动推导为 multi-kp。
+    // B4 收敛：types+count 双量随 state 透传，generate()→start() 经 state.knowledgePointIds 与
+    // state.typeCounts 拿到等价指令，mode 亦自动推导为 multi-kp。知识点题量占比（kpAllocation）
+    // 已废除：分题型数量由决策层按最优知识点群分配。
+    syncTypeCounts();
+    renderKpRatio();
     generate();
   }
 
@@ -1729,7 +1558,7 @@
         state.knowledgePointIds = Object.keys(asmState.selected);
         state.questionTypes = asmState.questionTypes || null;
         var buildAndPrint = function () {
-          // B5 修正：直接打印也统一经关联层唯一入口 PracticeBridge.start()（保留编排 / kpAllocation），
+          // B5 修正：直接打印也统一经关联层唯一入口 PracticeBridge.start()（保留编排 / 分题型数量），
           // 不再绕过关联层直调 new PracticeSession().start()。
           // 打印：单次会话经 session.print()（走语义题 print）；编排聚合会话（聚合 shim 无 print）
           // 回退到已渲染的 #problemsArea 整卷打印。
@@ -1751,6 +1580,7 @@
               }
             }, 300);
           });
+          syncTypeCounts();
           window.PracticeBridge.start(
             {
               state: state,
@@ -1759,7 +1589,8 @@
               qType: null, questionType: state.questionType || null,
               questionTypes: state.questionTypes || null,
               titleType: deriveTypeName(),
-              kpAllocation: state.kpAllocation || null,
+              perTypeCount: (state.typeCounts && state.typeCounts.length === 1) ? state.typeCounts[0].count : null,
+              typeCounts: state.typeCounts || null,
               raw: { levels: state }
             }
           );

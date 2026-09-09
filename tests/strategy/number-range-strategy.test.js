@@ -5,8 +5,8 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const NumberRange = require(path.join(ROOT, 'shared', 'strategy', 'number-range-strategy.js'));
-const PluginUtil = require(path.join(ROOT, 'shared', 'common.js'));
-const KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const PluginUtil = require(path.join(ROOT, 'shared', 'core', 'common.js'));
+const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 const MAKE_TEN = () => KP.get('math-g1-m0-make-ten');
 

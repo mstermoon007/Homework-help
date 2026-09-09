@@ -8,7 +8,9 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
+var OS = require('../core/op-semantics.js');
+var MUL = OS.symbol('multiply') || '×';
 
 function pkp(plan) {
   if (!plan) return null;
@@ -30,8 +32,8 @@ function lcm(a, b) { return a / gcd(a, b) * b; }
 
 function makeTheoryQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '数论问题';
-  var id = kp.id || '';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '数论问题';
+  var id = (kp && (kp.id || (kp.identity && kp.identity.id))) || '';
 
   var isParity = name.indexOf('奇偶') !== -1;
   var isDivisible = name.indexOf('整除') !== -1 || id.indexOf('divisible') !== -1 || id.indexOf('divisibility') !== -1;
@@ -45,6 +47,7 @@ function makeTheoryQuestion(plan, context, i, kp) {
   var isDiophantine = name.indexOf('不定方程') !== -1;
   var isModulo = name.indexOf('模运算') !== -1 || name.indexOf('周期') !== -1;
 
+  var v = i; // 变体序号：同 KP 同题型下轮换不同设问/参数，提升语义容量（R6）
   var prompt, answer;
 
   if (isParity) {
@@ -68,7 +71,7 @@ function makeTheoryQuestion(plan, context, i, kp) {
       while (res % p === 0) { factors.push(p); res /= p; }
     }
     if (res > 1) factors.push(res);
-    answer = factors.join(' × ');
+    answer = factors.join(' ' + MUL + ' ');
   } else if (isGcdLcm) {
     // 最大公因数 / 最小公倍数
     var m = Rng.randInt(rng, 10, 30);
@@ -102,18 +105,23 @@ function makeTheoryQuestion(plan, context, i, kp) {
     for (var i = 1; i <= n2; i++) if (n2 % i === 0) count++;
     answer = count;
   } else if (isExtreme) {
-    // 数论最值
-    prompt = '在 1~100 的自然数中，能被 3 整除但不能被 5 整除的数最大是多少？';
-    answer = '99';
+    // 数论最值：1~hi 中能被 d1 整除但不能被 d2 整除的最大数
+    var EXT = [{ hi: 100, d1: 3, d2: 5, ans: 99 }, { hi: 100, d1: 7, d2: 3, ans: 98 }, { hi: 50, d1: 5, d2: 2, ans: 45 }];
+    var ext = EXT[v % EXT.length];
+    prompt = '在 1~' + ext.hi + ' 的自然数中，能被 ' + ext.d1 + ' 整除但不能被 ' + ext.d2 + ' 整除的数最大是多少？';
+    answer = String(ext.ans);
   } else if (isDiophantine) {
-    // 不定方程
-    prompt = '方程 3x + 2y = 17 有多少组正整数解？';
-    answer = '2 组（x=1,y=7 和 x=3,y=4 和 x=5,y=1）';
+    // 不定方程正整数解组数
+    var DIO = [{ s: '3x + 2y = 17', ans: '3 组（x=1,y=7；x=3,y=4；x=5,y=1）' }, { s: '5x + 2y = 24', ans: '2 组（x=2,y=7；x=4,y=2）' }, { s: '2x + 3y = 18', ans: '2 组（x=3,y=4；x=6,y=2）' }];
+    var dio = DIO[v % DIO.length];
+    prompt = '方程 ' + dio.s + ' 有多少组正整数解？';
+    answer = dio.ans;
   } else if (isModulo) {
-    // 模运算周期
-    prompt = '计算 3^2024 的个位数字。';
-    // 3 的幂个位周期: 3,9,7,1 → 2024 % 4 = 0 → 1
-    answer = '1';
+    // 模运算周期（个位周期 4）
+    var MOD = [{ base: 3, exp: 2024, ans: '1' }, { base: 7, exp: 2023, ans: '3' }, { base: 2, exp: 2025, ans: '2' }];
+    var mod = MOD[v % MOD.length];
+    prompt = '计算 ' + mod.base + '^' + mod.exp + ' 的个位数字。';
+    answer = mod.ans;
   } else {
     prompt = name + '：请运用数论知识解答这个问题。';
     answer = '数论问题解答';

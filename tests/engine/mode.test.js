@@ -13,14 +13,14 @@ const assert = require('node:assert');
 const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'comprehensive-strategy.js'));
-require(path.join(ROOT, 'shared', 'presentation-engine.js'));
+require(path.join(ROOT, 'shared', 'engine', 'presentation-engine.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'render-options.js'));
 
-const GE = require(path.join(ROOT, 'shared', 'generation-engine.js'));
+const GE = require(path.join(ROOT, 'shared', 'engine', 'generation-engine.js'));
 
 test('R26-1 single-kp：按 knowledgePointId + 统一 request', async () => {
   const g = await GE.generate({ subject: 'math', grade: 1, mode: 'single-kp', knowledgePointId: 'math-g1-m1-addsub-10', count: 3, difficulty: 2 });

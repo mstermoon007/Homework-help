@@ -15,7 +15,7 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
 var Arith = require('../core/arithmetic-core.js');
 
 function pkp(plan) {
@@ -36,7 +36,7 @@ function seedFor(plan, context, i) {
 function getKpMeta(kpId) {
   var kp = KP.get(kpId);
   if (!kp) return null;
-  var canonical = require('../../knowledge-ontology.js').normalize(kp);
+  var canonical = require('../../knowledge/knowledge-ontology.js').normalize(kp);
   return {
     id: canonical.id,
     category: canonical.category || kp.legacy?.category,

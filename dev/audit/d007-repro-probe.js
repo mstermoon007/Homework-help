@@ -16,15 +16,15 @@ var fs = require('fs');
 var ROOT = path.join(__dirname, '..', '..');
 
 // 加载依赖到 global（Node require 链，非 bundle）
-require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'comprehensive-strategy.js'));
-require(path.join(ROOT, 'shared', 'presentation-engine.js'));
+require(path.join(ROOT, 'shared', 'engine', 'presentation-engine.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'render-options.js'));
-require(path.join(ROOT, 'shared', 'generation-engine.js'));
-require(path.join(ROOT, 'shared', 'practice-session.js'));
-require(path.join(ROOT, 'shared', 'practice-bridge.js'));
+require(path.join(ROOT, 'shared', 'engine', 'generation-engine.js'));
+require(path.join(ROOT, 'shared', 'engine', 'practice-session.js'));
+require(path.join(ROOT, 'shared', 'bridge', 'practice-bridge.js'));
 
 var Bridge = global.PracticeBridge;
 

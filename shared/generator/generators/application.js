@@ -9,7 +9,7 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
 var Arith = require('../core/arithmetic-core.js');
 
 function pkp(plan) {

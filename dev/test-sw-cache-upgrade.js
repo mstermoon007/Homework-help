@@ -47,9 +47,9 @@ var ROOT = path.join(__dirname, '..');
 // Dynamically import the shared version module to get CACHE_VERSION
 var versionMod;
 try {
-  versionMod = require(path.join(ROOT, 'shared/version.js'));
+  versionMod = require(path.join(ROOT, 'shared/catalog/version.js'));
 } catch (e) {
-  console.log('WARN: shared/version.js not found, using defaults for test');
+  console.log('WARN: shared/catalog/version.js not found, using defaults for test');
   versionMod = { CACHE_VERSION: 'homework-help-4.3.0' };
 }
 

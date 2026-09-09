@@ -2,8 +2,8 @@
 /**
  * dev/build-presentation-bundle.js — C01 Browser Runtime wiring
  *
- * 把 shared/presentation-engine.js（及它需要、但 strategy-engine.bundle.js 未打包的
- * 少量模块）静态打包为 shared/presentation-engine.bundle.js。
+ * 把 shared/engine/presentation-engine.js（及它需要、但 strategy-engine.bundle.js 未打包的
+ * 少量模块）静态打包为 shared/engine/presentation-engine.bundle.js。
  *
  * 复用既有 bundle/loader 架构（与 dev/build-strategy-bundle.js 同机制）：
  *   - __req 优先取本 bundle 内 __defs；缺失时委托 global.StrategyBundle.req()
@@ -19,7 +19,7 @@ var fs = require('fs');
 var path = require('path');
 var ROOT = path.join(__dirname, '..');
 
-var ENTRY = 'shared/presentation-engine.js';
+var ENTRY = 'shared/engine/presentation-engine.js';
 
 // 浏览器全局 shim / 委托：这些 id 由已加载的 strategy-engine.bundle.js 提供
 var SHIMS = {
@@ -139,6 +139,6 @@ lines.push('})(typeof window !== \'undefined\' ? window : (typeof globalThis !==
 var out = path.join(ROOT, 'shared', 'presentation-engine.bundle.js');
 fs.writeFileSync(out, lines.join('\n'));
 
-console.log('Presentation bundle written: shared/presentation-engine.bundle.js');
+console.log('Presentation bundle written: shared/engine/presentation-engine.bundle.js');
 console.log('  inlined modules: ' + Object.keys(modules).length);
 console.log('  delegated to strategy bundle: ' + (strategyIds ? Object.keys(strategyIds).length : '(bundle not found)'));

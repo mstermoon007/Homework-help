@@ -2,7 +2,7 @@
 /**
  * scripts/generate-knowledge-pages.js
  *
- * 读取 shared/knowledge-bank.js 与 shared/module-catalog.js，
+ * 读取 shared/knowledge/knowledge-bank.js 与 shared/catalog/module-catalog.js，
  * 为每个「年级 × 模块 × 知识点」生成静态 HTML 页面，输出到 knowledge/ 目录。
  *
  * 产出：
@@ -34,8 +34,8 @@ const ROOT = path.resolve(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'knowledge');
 
 // ---- 加载数据源 ----
-const KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-const MODULE_CATALOG = require(path.join(ROOT, 'shared', 'module-catalog.js'));
+const KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+const MODULE_CATALOG = require(path.join(ROOT, 'shared', 'catalog', 'module-catalog.js'));
 
 const GRADE_NAMES = { 1: '一年级', 2: '二年级', 3: '三年级', 4: '四年级', 5: '五年级', 6: '六年级' };
 
@@ -94,7 +94,7 @@ function baseHead(title, desc, canonFile) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)} · Homework Help 知识库</title>
 <meta name="description" content="${esc(desc)}">${canon}
-<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="../shared/styles/tokens.css">
 <style>
   body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;max-width:860px;margin:0 auto;padding:32px 20px;color:#27324a;line-height:1.7;background:#fafbff;}
   .crumb{font-size:13px;color:#7a879c;margin-bottom:18px;}

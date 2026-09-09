@@ -1,8 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const ErrOnt = require('../../shared/knowledge-error.js');
-const ErrMap = require('../../shared/ontology-error-map.js');
-const Ontology = require('../../shared/knowledge-ontology.js');
+const ErrOnt = require('../../shared/knowledge/knowledge-error.js');
+const ErrMap = require('../../shared/knowledge/ontology-error-map.js');
+const Ontology = require('../../shared/knowledge/knowledge-ontology.js');
 
 test('合法 string error', () => {
   assert.strictEqual(ErrOnt.validate(['unit-confusion']).valid, true);
@@ -16,7 +16,7 @@ test('合法 object error', () => {
 test('canonical error 来自 map', () => {
   const errs = ErrMap.errorsForPlugin('math-money');
   assert.strictEqual(ErrOnt.validate(errs).valid, true);
-  assert.strictEqual(errs[0].id, 'unit-confusion');
+  assert.strictEqual(errs[0].id, 'rmb-calc-borrow-error');
 });
 
 test('别名对象归一到 canonical', () => {

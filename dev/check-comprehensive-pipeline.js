@@ -19,13 +19,13 @@ var ROOT = path.join(__dirname, '..');
 
 global.window = global;
 // MATH-14：plugins/registry.js、shared/plugin-loader.js、legacy-svg-adapter 已随 legacy 插件轨道删除。
-['./shared/common.js', './shared/difficulty.js', './shared/difficulty-static.js',
- './shared/knowledge-bank.js',
- './shared/strategy-engine.bundle.js', './shared/presentation-engine.bundle.js',
+['./shared/core/common.js', './shared/catalog/difficulty.js', './shared/catalog/difficulty-static.js',
+ './shared/knowledge/knowledge-bank.js',
+ './shared/engine/strategy-engine.bundle.js', './shared/engine/presentation-engine.bundle.js',
  './shared/presentation/render-options.js', './shared/presentation/render-result.js',
  './shared/presentation/svg-registry.js',
  './shared/presentation/html-renderer.js', './shared/presentation/renderer.js',
- './shared/generation-engine.js', './shared/strategy/comprehensive-strategy.js'
+ './shared/engine/generation-engine.js', './shared/strategy/comprehensive-strategy.js'
 ].forEach(function (rel) {
   require(path.join(ROOT, rel));
 });
@@ -38,7 +38,7 @@ function check(name, cond) {
   return ok;
 }
 
-var Engine = global.GenerationEngine || require(path.join(ROOT, './shared/generation-engine.js'));
+var Engine = global.GenerationEngine || require(path.join(ROOT, './shared/engine/generation-engine.js'));
 if (!Engine || typeof Engine.generate !== 'function') {
   console.log('  ✗ 生成层引擎不可用');
   console.log('=== 综合练习管线门禁 ===\nFAIL');

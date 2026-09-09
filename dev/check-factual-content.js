@@ -13,10 +13,10 @@
 var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
-var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
-var FactOnt = require(path.join(ROOT, 'shared', 'knowledge-factual.js'));
-var FactMap = require(path.join(ROOT, 'shared', 'ontology-factual-map.js'));
+var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+var Ontology = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology.js'));
+var FactOnt = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-factual.js'));
+var FactMap = require(path.join(ROOT, 'shared', 'knowledge', 'ontology-factual-map.js'));
 
 var SUBJECTS = ['math'];
 

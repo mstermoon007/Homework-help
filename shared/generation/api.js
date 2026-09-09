@@ -135,7 +135,7 @@
   // ---------- Core Domain 收缩（Refactor Step 1）：核心生成入口仅接受 math ----------
   // 其余科目返回明确 unsupported error，禁止任何 fallback。
   function canonSubjectValue(v) {
-    var m = { math: 'math' };
+    var m = { math: 'math', chinese: 'chinese', english: 'english' };
     return m[String(v || '').toLowerCase()] || null;
   }
   function kpSubjectOfId(id) {
@@ -163,6 +163,67 @@
   function assertMathOnly(request) {
     var s = requestSubject(request);
     if (s && s !== 'math') throw buildUnsupportedError(s, 'subject=' + s);
+  }
+
+  // ---------- 学科路由（R14 / Phase 5）：仅 middle 层边界，不复制生成逻辑 ----------
+  // 数学：委托既有 GenerationEngine（本文件 build/generate，即 Frozen Core 数学链）。
+  // 语文/英语：仅预留 Engine 接口空间，返回明确 NOT_IMPLEMENTED；绝不走 Math Generator。
+  function makeNotImplemented(request, subject) {
+    var rc = (request && (request.count != null ? request.count
+      : (request.volume != null ? request.volume : null))) || 0;
+    return {
+      questions: [],
+      items: [],
+      html: '',
+      plans: [],
+      trace: { notImplemented: true, subject: subject },
+      failedPlans: [],
+      status: 'NOT_IMPLEMENTED',
+      producedCount: 0,
+      requestedCount: rc,
+      generationId: null,
+      previousGenerationId: null,
+      seenKeys: null,
+      subject: subject
+    };
+  }
+
+  var SubjectEngines = {
+    math: {
+      subject: 'math',
+      // 不重复实现：直接复用本模块既有的数学生成链
+      generate: function (req, opts) { return generate(req, opts); },
+      generateSync: function (req, opts) { return generateSync(req, opts); }
+    },
+    chinese: {
+      subject: 'chinese',
+      generate: function (req) { return Promise.resolve(makeNotImplemented(req, 'chinese')); },
+      generateSync: function (req) { return makeNotImplemented(req, 'chinese'); }
+    },
+    english: {
+      subject: 'english',
+      generate: function (req) { return Promise.resolve(makeNotImplemented(req, 'english')); },
+      generateSync: function (req) { return makeNotImplemented(req, 'english'); }
+    }
+  };
+
+  /**
+   * 按 subject 路由到对应 Engine 接口（不修改生成算法）。
+   * 未知/非 math 科目统一归为 NOT_IMPLEMENTED（不静默回退到数学）。
+   * @returns {{subject:string, generate:Function, generateSync:Function}}
+   */
+  function routeBySubject(request) {
+    var s = requestSubject(request);
+    // null = 默认数学（纯数学 KP 池未显式带 subject 时 requestSubject 返回 null，仍走数学链）
+    if (s === 'math' || s == null) return SubjectEngines.math;
+    if (s === 'chinese') return SubjectEngines.chinese;
+    if (s === 'english') return SubjectEngines.english;
+    // 其他非 math 科目（如混入的 cn/en 知识点）：返回 NOT_IMPLEMENTED，不静默回退
+    return {
+      subject: s,
+      generate: function (req) { return Promise.resolve(makeNotImplemented(req, s)); },
+      generateSync: function (req) { return makeNotImplemented(req, s); }
+    };
   }
 
   // ---------- 核心实现 ----------
@@ -218,35 +279,15 @@
 
     if (mode === 'multi-kp' || kpList.length > 1) {
       if (!StrategyEngine) return Promise.reject(new Error('StrategyEngine 不可用'));
-      var totalCount = requestCount(request);
-      var alloc = (request.kpAllocation && Array.isArray(request.kpAllocation.kps)) ? request.kpAllocation.kps : null;
-      var allocMap = {};
-      if (alloc) alloc.forEach(function (p) { if (p && p.id) allocMap[p.id] = p.count; });
-      var perKp = totalCount != null ? Math.floor(totalCount / kpList.length) : 0;
-      var remainder = totalCount != null ? totalCount % kpList.length : 0;
-      var plans = [];
-      var trace = { mode: 'multi-kp', kps: kpList.length, allocated: !!alloc };
-      var seq = Promise.resolve();
-      kpList.forEach(function (kpId, i) {
-        seq = seq.then(function () {
-          var kpCount = allocMap[kpId] != null ? allocMap[kpId] : (perKp + (i < remainder ? 1 : 0));
-          if (kpCount <= 0) return null;
-          var single = {
-            knowledgePointIds: [kpId], grade: request.grade,
-            count: kpCount, difficulty: request.difficulty,
-            questionType: request.questionType, questionTypes: request.questionTypes,
-            subtype: request.subtype,
-            spiralLevel: request.spiralLevel != null ? request.spiralLevel : request.spiral_level,
-            learnerProfile: request.learnerProfile,
-            mode: (request.mode != null && request.mode !== 'multi-kp' && (request.mode !== 'competition' || request.grade != null)) ? request.mode : undefined
-          };
-          var r = StrategyEngine.plan(single);
-          return (r.plans && r.plans[0]) || null;
-        }).then(function (plan) {
-          if (plan) plans.push(plan);
-        }).catch(function () { /* skip */ });
-      });
-      return seq.then(function () { return { plans: plans, trace: trace }; });
+      // 决策层类型驱动：知识点池 + 题型 + 数量（总数量 count / 分题型数量 perTypeCount 或 typeCounts）
+      // → 逐题型在池内按 density+depth 评分选择最优知识点群，群内均分题量。
+      // 旧 kpAllocation「知识点控制数量」配额/按 KP 均分逻辑已由决策层统一取代。
+      try {
+        var typeResult = StrategyEngine.planByType(request);
+        return Promise.resolve({ plans: (typeResult && typeResult.plans) || [], trace: (typeResult && typeResult.trace) || {} });
+      } catch (e) {
+        return Promise.reject(e);
+      }
     }
 
     if (!StrategyEngine) return Promise.reject(new Error('StrategyEngine 不可用'));
@@ -274,6 +315,11 @@
     // （PracticeBridge._seenKeysAccum），使本代生成时与所有历史代互斥；
     // 本代成功题目的指纹由 validator 成功才入集，编排层 recordGeneration 再累积。
     var globalSeenKeys = new Set();
+    // 跨知识点「同数学」去重集：仅限当前这一份练习（worksheet）内共享，
+    // 不跨代累积——避免不同天的练习被过度限制（间隔复习本应允许重复练同一算式）。
+    // 用 Map<mathFingerprint, knowledgePoint>：仅当「不同知识点」产出同一数学才判重，
+    // 同一知识点内部保持原 full-fp 去重行为（不限制不同情境的同数学题）。
+    var globalMathSeenKeys = new Map();
     if (options && options.previousSeenKeys) {
       options.previousSeenKeys.forEach(function (k) { globalSeenKeys.add(k); });
     }
@@ -283,7 +329,8 @@
         try {
           return orch.generateQuestions(plan, {
             skipValidation: options.skipValidation,
-            seenKeys: globalSeenKeys
+            seenKeys: globalSeenKeys,
+            mathSeenKeys: globalMathSeenKeys
           });
         } catch (e) {
           failedPlans.push({ planId: planKey(plan), error: String(e && e.message || e) });
@@ -342,6 +389,10 @@
    */
   function generate(request, options) {
     options = options || {};
+    // 学科路由（R14）：非 math 直接返回 NOT_IMPLEMENTED；math 走既有链（逻辑不变）
+    var engine = routeBySubject(request);
+    if (engine.subject !== 'math') return engine.generate(request, options);
+
     var RO = getRenderOptions();
     var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop', density: 'normal' };
 
@@ -353,8 +404,19 @@
       return runPlans(plans, options).then(function (run) {
         var questions = run.questions;
         var mergedTrace = built.trace || {};
-        if (run.trace && run.trace.failedPlans) mergedTrace.failedPlans = run.trace.failedPlans;
+        // 决策层 per-type failedPlans（题型无可用知识点等）与生成层 plan-level failedPlans 并列保留，
+        // 避免「计数不跨题型挪用」导致的短产在 trace 中无痕（题型计数/声明与实产差额无从诊断）。
+        var traceFailed = Array.isArray(mergedTrace.failedPlans) ? mergedTrace.failedPlans.slice() : [];
+        if (run.trace && Array.isArray(run.trace.failedPlans) && run.trace.failedPlans.length) {
+          mergedTrace.failedPlans = traceFailed.concat(run.trace.failedPlans);
+        }
         var renderOutline = renderQuestions(questions, ro, options.columns);
+        // R1/R5：请求级状态——有失败计划或零产出为 FAILED；产出<请求量为 PARTIAL；否则 SUCCESS。
+        var _reqCount = requestCount(request);
+        var _failed = (run.trace && run.trace.failedPlans) || [];
+        var _status = (_failed.length > 0 || questions.length === 0)
+          ? 'FAILED'
+          : (_reqCount != null && questions.length < _reqCount ? 'PARTIAL' : 'SUCCESS');
         return {
           questions: questions,
           items: renderOutline.items,
@@ -362,7 +424,10 @@
           renderOptions: renderOutline.renderOptions,
           plans: plans,
           trace: mergedTrace,
-          failedPlans: (run.trace && run.trace.failedPlans) || [],
+          failedPlans: _failed,
+          status: _status,
+          producedCount: questions.length,
+          requestedCount: _reqCount != null ? _reqCount : questions.length,
           // C2: 代际身份与去重袋（seenKeys 含上一代∪本代；编排层只应留存本代题目指纹）
           generationId: generationId,
           previousGenerationId: options.previousGenerationId || null,
@@ -422,6 +487,10 @@
     });
 
     var renderOutline = renderQuestions(results, ro, options.columns);
+    var _reqCount = requestCount(request);
+    var _status = (failedPlans.length > 0 || results.length === 0)
+      ? 'FAILED'
+      : (_reqCount != null && results.length < _reqCount ? 'PARTIAL' : 'SUCCESS');
     return {
       questions: results,
       items: renderOutline.items,
@@ -429,7 +498,10 @@
       renderOptions: renderOutline.renderOptions,
       plans: plans,
       trace: Object.assign({}, trace, { failedPlans: failedPlans }),
-      failedPlans: failedPlans
+      failedPlans: failedPlans,
+      status: _status,
+      producedCount: results.length,
+      requestedCount: _reqCount != null ? _reqCount : results.length
     };
   }
 
@@ -457,6 +529,86 @@
     return (G && typeof G.resolve === 'function') ? G.resolve(query || {}) : null;
   }
 
+  /**
+   * R2/R5：全局题量预算机制（Budget + Capacity 收口）
+   *
+   * 不再要求单个 KP 完成整个 requestedCount；而是在「兼容 KP 池」中按各 KP 的
+   * Effective Capacity 共同完成预算：
+   *   quota = min(remaining, effectiveCapacity)
+   * 任一 KP 容量耗尽（PARTIAL）即交付已有题并继续选择下一个兼容 KP；
+   * 全部兼容 KP 耗尽而 remaining>0 时返回真实 PARTIAL（不归零）。
+   *
+   * @param {Object} request - 含 count（预算）+ 以下其一：
+   *   - knowledgePointIds: 显式 KP 池
+   *   - subject + grade: 该年级全部 math KP 池
+   * @param {Object} [options] - { refreshCapacity, ...（透传给 generate） }
+   * @returns {Promise<{questions,status,requestedCount,producedCount,remainingCount,budget}>}
+   */
+  function generateBudget(request, options) {
+    options = options || {};
+    var requested = requestCount(request);
+    if (requested == null) return Promise.reject(new Error('generateBudget 需要 count（预算题量）'));
+
+    var kpIds = requestKpIds(request);
+    var pool;
+    if (kpIds.length) {
+      pool = kpIds.slice();
+    } else if (request.subject && request.grade != null) {
+      var KB = getDep('knowledgeBank') || (function () {
+        try { return require('../knowledge/knowledge-bank.js'); } catch (e) { return null; }
+      })();
+      if (!KB) return Promise.reject(new Error('KnowledgeBank 不可用，无法展开年级 KP 池'));
+      var g = KB.findGrade(request.subject, request.grade);
+      pool = [];
+      (g && g.modules || []).forEach(function (m) {
+        (m.knowledgePoints || []).forEach(function (kp) { pool.push(kp.id); });
+      });
+    } else {
+      return Promise.reject(new Error('generateBudget 需要 knowledgePointIds 或 subject+grade'));
+    }
+
+    var CapacityInventory = require('../capacity/capacity-inventory.js');
+    return CapacityInventory.getCapacityMap({ refresh: !!options.refreshCapacity }).then(function (capMap) {
+      // Capacity Ranking：容量大者优先消化预算（仍保留 KP 兼容性与题型/能力优先级由 generate 内部保证）
+      pool.sort(function (a, b) {
+        return ((capMap[b] && capMap[b].total) || 1) - ((capMap[a] && capMap[a].total) || 1);
+      });
+      var remaining = requested;
+      var questions = [];
+      var seq = Promise.resolve();
+      pool.forEach(function (kp) {
+        seq = seq.then(function () {
+          if (remaining <= 0) return;
+          var cap = (capMap[kp] && capMap[kp].total) || 1;
+          var quota = Math.min(remaining, cap);
+          if (quota <= 0) return;
+          var subReq = Object.assign({}, request, {
+            knowledgePointIds: [kp],
+            mode: 'single-kp',
+            grade: request.grade != null ? request.grade : (capMap[kp] ? capMap[kp].grade : null),
+            count: quota
+          });
+          return generate(subReq, options).then(function (r) {
+            var qs = (r && r.questions) || [];
+            questions.push.apply(questions, qs);
+            remaining -= qs.length;
+          }).catch(function () { /* 跳过该 KP（不可生成），继续补量 */ });
+        });
+      });
+      return seq.then(function () {
+        var status = remaining <= 0 ? 'SUCCESS' : 'PARTIAL';
+        return {
+          questions: questions,
+          status: status,
+          requestedCount: requested,
+          producedCount: questions.length,
+          remainingCount: remaining,
+          budget: true
+        };
+      });
+    });
+  }
+
   // ---------- 公开 API ----------
   var API = {
     /**
@@ -468,8 +620,16 @@
     generate: generate,
 
     /**
+     * R2/R5：全局题量预算（跨兼容 KP 池按 Capacity 共同完成预算）
+     * @param {Object} request
+     * @param {Object} [options]
+     * @returns {Promise<{questions,status,requestedCount,producedCount,remainingCount,budget}>}
+     */
+    generateBudget: generateBudget,
+
+    /**
      * 同步生成 (受限模式)
-     * @param {GenerateRequest} request
+     * @param {Object} request
      * @param {Object} [options]
      * @returns {GenerateResult}
      */
@@ -487,7 +647,19 @@
      * @param {Object} deps
      * @returns {Object} API
      */
-    inject: inject
+    inject: inject,
+
+    /**
+     * R14：学科路由（仅 middle 层边界）
+     * @param {Object} request
+     * @returns {{subject:string, generate:Function, generateSync:Function}}
+     */
+    routeBySubject: routeBySubject,
+
+    /**
+     * R14：三科 Engine 接口空间（math 委托既有链；chinese/english 仅 NOT_IMPLEMENTED 桩）
+     */
+    SubjectEngines: SubjectEngines
   };
 
   // 兼容：挂载到全局 App.GenerationAPI (不覆盖 GenerationEngine)

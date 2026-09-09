@@ -19,7 +19,7 @@ global.localStorage = {
   setItem: function (k, v) { this._d[k] = String(v); },
   removeItem: function (k) { delete this._d[k]; }
 };
-var common = require(path.join(ROOT, 'shared/common.js'));
+var common = require(path.join(ROOT, 'shared/core/common.js'));
 
 var fail = 0;
 function assert(cond, msg) {
@@ -45,18 +45,18 @@ Promise.resolve().then(function () {
   console.log('\n===== 综合练习（comprehensive 主链）难度透传 =====');
   // 综合练习经生成层 ComprehensiveStrategy：装配 strategy-engine.bundle + generation-engine。
   // MATH-14：plugins/registry.js / plugin-loader / legacy-svg-adapter 已删除。
-  require(path.join(ROOT, 'shared/difficulty-static.js'));
-  require(path.join(ROOT, 'shared/knowledge-bank.js'));
-  require(path.join(ROOT, 'shared/strategy-engine.bundle.js'));
-  require(path.join(ROOT, 'shared/presentation-engine.bundle.js'));
+  require(path.join(ROOT, 'shared/catalog/difficulty-static.js'));
+  require(path.join(ROOT, 'shared/knowledge/knowledge-bank.js'));
+  require(path.join(ROOT, 'shared/engine/strategy-engine.bundle.js'));
+  require(path.join(ROOT, 'shared/engine/presentation-engine.bundle.js'));
   require(path.join(ROOT, 'shared/presentation/render-options.js'));
   require(path.join(ROOT, 'shared/presentation/render-result.js'));
   require(path.join(ROOT, 'shared/presentation/svg-registry.js'));
   require(path.join(ROOT, 'shared/presentation/html-renderer.js'));
   require(path.join(ROOT, 'shared/presentation/renderer.js'));
-  require(path.join(ROOT, 'shared/generation-engine.js'));
+  require(path.join(ROOT, 'shared/engine/generation-engine.js'));
   require(path.join(ROOT, 'shared/strategy/comprehensive-strategy.js'));
-  var Engine = require(path.join(ROOT, 'shared/generation-engine.js'));
+  var Engine = require(path.join(ROOT, 'shared/engine/generation-engine.js'));
   return Engine.generate({ subject: 'math', grade: 1, count: 20, mode: 'comprehensive', difficulty: 8 })
     .then(function (res) {
       var set = { questions: res.questions || [] };
@@ -86,7 +86,7 @@ Promise.resolve().then(function () {
 
   // ===== 统一难度消费（App.Difficulty.consume） =====
   console.log('\n===== 统一难度消费（App.Difficulty.consume） =====');
-  var D = require(path.join(ROOT, 'shared/difficulty.js'));
+  var D = require(path.join(ROOT, 'shared/catalog/difficulty.js'));
 
   // consume：自带分档 → 通用难度不叠加；无分档 → 正常解析
   var c1 = D.consume({ difficulty: 9, level: 'advanced' });

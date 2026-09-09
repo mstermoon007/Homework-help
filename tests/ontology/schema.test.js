@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const O = require('../../shared/knowledge-ontology.js');
+const O = require('../../shared/knowledge/knowledge-ontology.js');
 
 test('VERSION / schemaVersion', () => {
   assert.strictEqual(O.VERSION, 1);

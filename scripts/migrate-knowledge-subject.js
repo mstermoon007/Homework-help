@@ -44,8 +44,8 @@ const textTargets = []
 const SLUG_MAP_FILE = path.join(ROOT, 'archive', 'dead-code-20260823', 'knowledge-slug-map.js');
 
 // ---- 读取旧 ID 清单 ----
-delete require.cache[require.resolve(path.join(ROOT, 'shared', 'knowledge-bank.js'))];
-const bank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+delete require.cache[require.resolve(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'))];
+const bank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 const oldIds = [];
 bank.forEach(entry => (entry.modules || []).forEach(mod =>
   (mod.knowledgePoints || []).forEach(kp => {
@@ -66,14 +66,14 @@ if (!dry) {
   let n = 2;
   while (fs.existsSync(dest)) dest = BACKUP_DIR + '-run' + (n++);
   fs.mkdirSync(dest, { recursive: true });
-  fs.copyFileSync(path.join(ROOT, 'shared', 'knowledge-bank.js'), path.join(dest, 'knowledge-bank.bak.js'));
+  fs.copyFileSync(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'), path.join(dest, 'knowledge-bank.bak.js'));
   fs.cpSync(path.join(ROOT, 'knowledge'), path.join(dest, 'knowledge'), { recursive: true });
   fs.writeFileSync(path.join(dest, 'README.md'),
     '# 知识点 ID 科目化迁移备份（任务2，2026-08-24）\n\n' +
     '- `knowledge-bank.bak.js`：迁移前知识库（旧三段式 ID）\n' +
     '- `knowledge/`：迁移前全部静态详情页（旧文件名）\n' +
     '- `manifest.json`：本次迁移的替换统计与重命名清单\n\n' +
-    '回滚方式：以本目录覆盖回 `shared/knowledge-bank.js` 与 `knowledge/`，\n' +
+    '回滚方式：以本目录覆盖回 `shared/knowledge/knowledge-bank.js` 与 `knowledge/`，\n' +
     '并对 plugins/dev/scripts/sitemap.xml 反向应用 manifest 中的 ID 替换。\n');
   console.log('📦 备份目录：' + path.relative(ROOT, dest));
   var backupDest = dest;

@@ -14,12 +14,12 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 const Req = require(path.join(ROOT, 'shared', 'strategy', 'strategy-request.js'));
 const QP = require(path.join(ROOT, 'shared', 'strategy', 'question-plan.js'));
-require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'comprehensive-strategy.js'));
-require(path.join(ROOT, 'shared', 'presentation-engine.js'));
+require(path.join(ROOT, 'shared', 'engine', 'presentation-engine.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'render-options.js'));
-const GE = require(path.join(ROOT, 'shared', 'generation-engine.js'));
+const GE = require(path.join(ROOT, 'shared', 'engine', 'generation-engine.js'));
 const API = require(path.join(ROOT, 'shared', 'generation', 'api.js'));
 
 const KP = 'math-g1-m0-make-ten';

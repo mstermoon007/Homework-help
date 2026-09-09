@@ -12,7 +12,10 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
+var OS = require('../core/op-semantics.js');
+var MUL = OS.symbol('multiply') || '×';
+var DIV = OS.symbol('divide') || '÷';
 
 function pkp(plan) {
   if (!plan) return null;
@@ -56,6 +59,7 @@ function makeQuestion(plan, context, i, kp) {
   var isComplexFrac = id.indexOf('complex-fraction') !== -1 || name.indexOf('繁分数') !== -1;
   var isSeqSum = id.indexOf('sequence-sum') !== -1 || name.indexOf('数列求和') !== -1 || name.indexOf('平方和') !== -1 || name.indexOf('立方和') !== -1;
 
+  var v = i; // 变体序号：同 KP 同题型下轮换不同设问/参数，提升语义容量（R6）
   var prompt, answer, steps;
 
   if (isExtract) {
@@ -63,21 +67,21 @@ function makeQuestion(plan, context, i, kp) {
     var c = [25, 28, 36, 48][Rng.randInt(rng, 0, 3)];
     var a = Rng.randInt(rng, 20, 80);
     var b = 100 - a;
-    prompt = '用简便方法计算：' + a + '×' + c + ' + ' + b + '×' + c;
+    prompt = '用简便方法计算：' + a + MUL + c + ' + ' + b + MUL + c;
     answer = (a + b) * c;
     steps = 2;
   } else if (isRounding) {
-    // 凑整：9 + 99 + 999 + 9999 = (10-1)+(100-1)+(1000-1)+(10000-1)
-    var nines = [9, 99, 999, 9999];
-    var sum = nines.reduce(function (s, x) { return s + x; }, 0);
-    prompt = '用凑整法巧算：' + nines.join(' + ');
-    answer = sum;
+    // 凑整：补数凑整
+    var RND = [{ t: [9, 99, 999, 9999], sum: 11106 }, { t: [8, 98, 998, 9998], sum: 11102 }, { t: [19, 199, 1999], sum: 2217 }, { t: [4, 44, 444], sum: 492 }];
+    var rnd = RND[v % RND.length];
+    prompt = '用凑整法巧算：' + rnd.t.join(' + ');
+    answer = rnd.sum;
     steps = 2;
   } else if (isFracSplit) {
     // 分数裂项：1/(1·2)+1/(2·3)+…+1/[n(n+1)] = 1 - 1/(n+1) = n/(n+1)
     var n = Rng.randInt(rng, 3, 5);
     var terms = [];
-    for (var k = 1; k <= n; k++) terms.push('1/(' + k + '×' + (k + 1) + ')');
+    for (var k = 1; k <= n; k++) terms.push('1/(' + k + MUL + (k + 1) + ')');
     prompt = '用裂项法计算：' + terms.join(' + ');
     answer = frac(n, n + 1);
     steps = 3;
@@ -85,7 +89,7 @@ function makeQuestion(plan, context, i, kp) {
     // 整数裂项：1×2+2×3+…+n(n+1) = n(n+1)(n+2)/3
     var m = Rng.randInt(rng, 3, 5);
     var iterms = [];
-    for (var k2 = 1; k2 <= m; k2++) iterms.push(k2 + '×' + (k2 + 1));
+    for (var k2 = 1; k2 <= m; k2++) iterms.push(k2 + MUL + (k2 + 1));
     prompt = '用裂项法计算：' + iterms.join(' + ');
     answer = m * (m + 1) * (m + 2) / 3;
     steps = 3;
@@ -96,9 +100,11 @@ function makeQuestion(plan, context, i, kp) {
     answer = last * (last + 1) / 2;
     steps = 2;
   } else if (isRecurring) {
-    // 循环小数化分数：0.3̇ = 3/9 = 1/3
-    prompt = '把循环小数化成分数：0.333…（3 循环）';
-    answer = frac(1, 3);
+    // 循环小数化分数
+    var REC = [{ s: '0.333…（3 循环）', n: 1, d: 3 }, { s: '0.666…（6 循环）', n: 2, d: 3 }, { s: '0.1666…（6 循环）', n: 1, d: 6 }, { s: '0.8333…（3 循环）', n: 5, d: 6 }];
+    var rec = REC[v % REC.length];
+    prompt = '把循环小数化成分数：' + rec.s;
+    answer = frac(rec.n, rec.d);
     steps = 2;
   } else if (isDefineOp) {
     // 定义新运算：规定 a※b = 2a + b，求 x※y
@@ -108,16 +114,18 @@ function makeQuestion(plan, context, i, kp) {
     answer = 2 * x + y;
     steps = 2;
   } else if (isEstimate) {
-    // 估算放缩：求 1/2+1/3+1/4 的整数部分
-    var eSum = 1 / 2 + 1 / 3 + 1 / 4;
-    prompt = '估算（写出整数部分）：1/2 + 1/3 + 1/4 的结果的整数部分是多少？';
-    answer = Math.floor(eSum);
+    // 估算放缩：求若干单位分数和的整数部分
+    var EST = [{ t: ['1/2', '1/3', '1/4'], val: 1.0833, ans: 1 }, { t: ['1/3', '1/4', '1/5'], val: 0.7833, ans: 0 }, { t: ['1/2', '1/4', '1/8'], val: 0.875, ans: 0 }, { t: ['1/2', '1/3', '1/6'], val: 1, ans: 1 }];
+    var est = EST[v % EST.length];
+    prompt = '估算（写出整数部分）：' + est.t.join(' + ') + ' 的结果的整数部分是多少？';
+    answer = est.ans;
     steps = 2;
   } else if (isComplexFrac) {
-    // 繁分数化简：(1/2) / (3/4) = (1/2)×(4/3) = 4/6 = 2/3
-    var n1 = 1, d1 = 2, n2 = 3, d2 = 4;
-    prompt = '化简繁分数：(1/2) ÷ (3/4)';
-    answer = frac(n1 * d2, d1 * n2);
+    // 繁分数化简：(n1/d1) / (n2/d2) = n1·d2 / (d1·n2)
+    var CF = [{ n1: 1, d1: 2, n2: 3, d2: 4 }, { n1: 2, d1: 3, n2: 4, d2: 5 }, { n1: 3, d1: 4, n2: 1, d2: 2 }, { n1: 1, d1: 3, n2: 2, d2: 5 }];
+    var cf = CF[v % CF.length];
+    prompt = '化简繁分数：( ' + cf.n1 + '/' + cf.d1 + ' ) ' + DIV + ' ( ' + cf.n2 + '/' + cf.d2 + ' )';
+    answer = frac(cf.n1 * cf.d2, cf.d1 * cf.n2);
     steps = 2;
   } else if (isSeqSum) {
     // 数列求和：1²+2²+…+n² = n(n+1)(2n+1)/6
@@ -131,7 +139,7 @@ function makeQuestion(plan, context, i, kp) {
     // 兜底：简单巧算
     var ga = Rng.randInt(rng, 2, 9);
     var gb = Rng.randInt(rng, 2, 9);
-    prompt = name + '：用简便方法计算 ' + ga + ' × 25 × 4';
+    prompt = name + '：用简便方法计算 ' + ga + ' ' + MUL + ' 25 ' + MUL + ' 4';
     answer = ga * 25 * 4;
     steps = 2;
   }

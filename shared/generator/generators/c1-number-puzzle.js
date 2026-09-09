@@ -7,7 +7,7 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -26,14 +26,15 @@ function seedFor(plan, context, i) {
 
 function makePuzzleQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '数字谜';
-  var id = kp.id || '';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '数字谜';
+  var id = (kp && (kp.id || (kp.identity && kp.identity.id)) || kp.id) || '';
 
   var isVertical = name.indexOf('竖式') !== -1 || id.indexOf('vertical') !== -1 || id.indexOf('digit-puzzle') !== -1;
   var isHorizontal = name.indexOf('横式') !== -1 || id.indexOf('horizontal') !== -1;
   var isSymbol = name.indexOf('符号') !== -1 || name.indexOf('字母') !== -1 || id.indexOf('symbol') !== -1;
   var isDigitReasoning = name.indexOf('数字推理') !== -1 || id.indexOf('digit-reasoning') !== -1 || id.indexOf('number-puzzle-competition') !== -1;
 
+  var v = i; // 变体序号：同 KP 同题型下轮换不同设问/参数，提升语义容量（R6）
   var prompt, answer;
 
   if (isVertical) {
@@ -64,10 +65,15 @@ function makePuzzleQuestion(plan, context, i, kp) {
     prompt = '已知 ★ + ▲ = ' + cc + '，且 ★ 和 ▲ 是不同的数字。当 ★ 最大时，★ = ?';
     answer = String(cc - 1);
   } else if (isDigitReasoning) {
-    // 数字推理综合
-    prompt = '一个三位数的各位数字之和是 15，百位数字比十位数字大 3，个位数字是十位数字的 2 倍。这个三位数是多少？';
-    // 设十位=x, 百位=x+3, 个位=2x → 4x+3=15 → x=3 → 636
-    answer = '636';
+    // 数字推理综合（不同数位关系 → 不同三位数）
+    var DR = [
+      { d: '百位数字比十位数字大 3，个位数字是十位数字的 2 倍，各位数字之和是 15', ans: '636' },
+      { d: '百位数字比十位数字大 2，个位数字是十位数字的 3 倍，各位数字之和是 17', ans: '539' },
+      { d: '百位数字是十位数字的 2 倍，个位比十位大 1，各位数字之和是 9', ans: '423' }
+    ];
+    var dr = DR[v % DR.length];
+    prompt = '一个三位数，' + dr.d + '。这个三位数是多少？';
+    answer = dr.ans;
   } else {
     prompt = name + '：请根据竖式和横式中的线索，推算每个字母代表的数字。';
     answer = 'A=1, B=2, C=3';

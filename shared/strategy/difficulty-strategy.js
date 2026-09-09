@@ -18,10 +18,10 @@
 'use strict';
 
 var StaticDifficulty = require('./static-difficulty.js');
-var KnowledgePoint = require('../knowledge-point.js');
+var KnowledgePoint = require('../knowledge/knowledge-point.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
-var StrategyConfig = require('../strategy-config.js');
+var StrategyConfig = require('./strategy-config.js');
 var ComplexityStrategy = require('./complexity-strategy.js');
 
 var DIFFICULTY_MIN = 1;

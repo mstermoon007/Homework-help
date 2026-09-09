@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const O = require('../../shared/knowledge-ontology.js');
-const KB = require('../../shared/knowledge-bank.js');
+const O = require('../../shared/knowledge/knowledge-ontology.js');
+const KB = require('../../shared/knowledge/knowledge-bank.js');
 
 function findRaw(subject, id) {
   const arr = KB[subject];
@@ -45,7 +45,7 @@ test('math: Legacy -> Canonical 映射', () => {
   assert.strictEqual(c.cognition.raw, '掌握');
   assert.strictEqual(c.structure.maxSteps, 1);
   assert.strictEqual(c.presentation.questionTypes.length, 1);
-  assert.strictEqual(c.presentation.questionTypes[0].type, 'oral');
+  assert.strictEqual(c.presentation.questionTypes[0].type, 'calc');
   assert.strictEqual(c.presentation.questionTypes[0].weight, 0.6);
   assert.deepStrictEqual(c.numeric.range, { min: 1, max: 9 });
   assert.deepStrictEqual(c.context.defaults, ['standard']);

@@ -3,7 +3,7 @@
  * dev/build-strategy-bundle.js — M3-20 辅助：StrategyEngine 浏览器打包
  *
  * 把 StrategyEngine 依赖链（M1 Ontology / M2 Capability / M3 Strategy 的 Node 模块）
- * 静态打包为单一浏览器文件 shared/strategy-engine.bundle.js，内置极简 require 注册表。
+ * 静态打包为单一浏览器文件 shared/engine/strategy-engine.bundle.js，内置极简 require 注册表。
  *
  * 浏览器全局 shim（practice.html 已用 <script> 引入，不重复打包）：
  *   common.js / difficulty.js / difficulty-static.js / knowledge-bank.js
@@ -45,10 +45,10 @@ var ENTRIES = [
 
 // 浏览器全局 shim：practice.html 已加载这些脚本
 var SHIMS = {
-  'shared/common.js': 'PluginUtil',
-  'shared/difficulty.js': 'App.Difficulty',
-  'shared/difficulty-static.js': 'App.DifficultyStatic',
-  'shared/knowledge-bank.js': 'KnowledgeBank',
+  'shared/core/common.js': 'PluginUtil',
+  'shared/catalog/difficulty.js': 'App.Difficulty',
+  'shared/catalog/difficulty-static.js': 'App.DifficultyStatic',
+  'shared/knowledge/knowledge-bank.js': 'KnowledgeBank',
   'node:path': '__bundledPathShim',
   'node:fs': '__bundledFsShim'
 };
@@ -186,5 +186,5 @@ lines.push('})(typeof window !== \'undefined\' ? window : (typeof globalThis !==
 var out = path.join(ROOT, 'shared', 'strategy-engine.bundle.js');
 fs.writeFileSync(out, lines.join('\n'));
 
-console.log('Strategy bundle written: shared/strategy-engine.bundle.js');
+console.log('Strategy bundle written: shared/engine/strategy-engine.bundle.js');
 console.log('  modules: ' + Object.keys(modules).length + ', shims: ' + Object.keys(SHIMS).filter(function (s) { return s.indexOf('node:') !== 0; }).length);

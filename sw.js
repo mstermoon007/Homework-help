@@ -13,17 +13,17 @@
  * - activate：清理旧版本缓存（保留当前版本及更旧），立即接管页面。
  * - 离线兜底：导航请求缓存未命中时回退到 index.html。
  *
- * 注册点：shared/common.js 的 App.registerServiceWorker()（仅 http/https 协议生效）。
+ * 注册点：shared/core/common.js 的 App.registerServiceWorker()（仅 http/https 协议生效）。
  */
 
 // === 版本配置 ===
 // 版本来源：经典 Service Worker 不支持顶层 ESM import，故用 importScripts 引入 version.js，
-// 其会把 APP_VERSION 挂到 self 上（见 shared/version.js）。CACHE 名必须与 APP_VERSION 同步。
-importScripts('./shared/version.js');
+// 其会把 APP_VERSION 挂到 self 上（见 shared/catalog/version.js）。CACHE 名必须与 APP_VERSION 同步。
+importScripts('./shared/catalog/version.js');
 // 缓存名 = 固定前缀 + 版本号。activate 按此名清理一切非当前版本缓存（含旧 hw-help-v64）。
 // ⚠️ 本常量缺失曾导致 fetch/install 内 5 处 caches.open(CACHE) 抛 ReferenceError，
 //    SW 激活后第二次导航即 net::ERR_FAILED（E2E C1 用例捕获的 P0）。
-const CACHE = 'hw-help-4.3.0';  // 必须与 shared/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
+const CACHE = 'hw-help-4.3.0';  // 必须与 shared/catalog/version.js 的 APP_VERSION 同步（scripts/sync-sw-version.js 校验）
 
 // === 核心资源列表 ===
 // 所有路径相对于站点根。CORE 保持「无 ?v=」字面量：运行时 HTML 已由 scripts/add-asset-version.js
@@ -37,26 +37,26 @@ const CORE = [
   'practice.html',
   'faq.html',
   // 这些静态资源在部署时由 scripts/add-asset-version.js 自动注入 ?v=APP_VERSION（见 HTML 产物）。
-  'shared/tokens.css',
-  'shared/base.css',
-  'shared/components.css',
-  'shared/states.css',
-  'shared/toolbar.css',
-  'shared/pages.css',
-  'shared/common.js',
-  'shared/subject-utils.js',
-  'shared/difficulty.js',
+  'shared/styles/tokens.css',
+  'shared/styles/base.css',
+  'shared/styles/components.css',
+  'shared/styles/styles.css',
+  'shared/styles/toolbar.css',
+  'shared/styles/pages.css',
+  'shared/core/common.js',
+  'shared/catalog/subject-utils.js',
+  'shared/catalog/difficulty.js',
   'assets/banner.webp',
   'assets/logo.webp',
   'assets/logo-math.webp',
-  'shared/print.js',
-  'shared/knowledge-bank.js',
-  'shared/knowledge-math.js',
-  'shared/module-catalog.js',
-  'shared/svg-core.js',
-  'shared/svg-calculation.js',
-  'shared/svg-geometry.js',
-  'shared/svg-make-ten.js',
+  'shared/presentation/print.js',
+  'shared/knowledge/knowledge-bank.js',
+  'shared/knowledge/knowledge-math.js',
+  'shared/catalog/module-catalog.js',
+  'shared/svg/svg-core.js',
+  'shared/svg/svg-calculation.js',
+  'shared/svg/svg-geometry.js',
+  'shared/svg/svg-make-ten.js',
   // MATH-14：legacy 插件轨道已删除（plugins/registry.js + 非 SVG 插件移除）。
   // SVG 图形插件仍被 practice.html 与 graphic-renderer 消费，显式预缓存。
   'plugins/svg-clock.js',

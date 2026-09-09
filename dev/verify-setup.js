@@ -31,25 +31,25 @@ check('shared/ 目录存在', fileExists('shared/'));
 check('dev/ 目录存在', fileExists('dev/'));
 
 // 2.5 难度系统模块（v2）
-check('shared/difficulty.js 存在', fileExists('shared/difficulty.js'));
-check('difficulty.js 挂载 App.Difficulty', fileContains('shared/difficulty.js', 'App.Difficulty'));
+check('shared/catalog/difficulty.js 存在', fileExists('shared/catalog/difficulty.js'));
+check('difficulty.js 挂载 App.Difficulty', fileContains('shared/catalog/difficulty.js', 'App.Difficulty'));
 check('difficulty.js 暴露 consume/createProfile/consumeProfile/difficultyToStructure',
   ['consume', 'createProfile', 'consumeProfile', 'difficultyToStructure'].every(function (k) {
-    return fileContains('shared/difficulty.js', k);
+    return fileContains('shared/catalog/difficulty.js', k);
   }));
 
 // 2.6 科目化模块（任务12/13：工具归类 + 科目 SVG 生成器）
-check('shared/subject-utils.js 存在', fileExists('shared/subject-utils.js'));
+check('shared/catalog/subject-utils.js 存在', fileExists('shared/catalog/subject-utils.js'));
 check('subject-utils 暴露 MathUtil',
   ['MathUtil'].every(function (k) {
-    return fileContains('shared/subject-utils.js', k);
+    return fileContains('shared/catalog/subject-utils.js', k);
   }));
 // 可加载性冒烟：require 后断言真实挂载（而非仅文本存在）
 try {
-  const su = require(path.join(ROOT, 'shared', 'subject-utils.js'));
+  const su = require(path.join(ROOT, 'shared', 'catalog', 'subject-utils.js'));
   const okSU = !!(su.MathUtil
     && typeof su.MathUtil.rangeByLevel === 'function');
-  const dfy = require(path.join(ROOT, 'shared', 'difficulty.js'));
+  const dfy = require(path.join(ROOT, 'shared', 'catalog', 'difficulty.js'));
   const okD = !!(dfy.DifficultyProfiles && dfy.DifficultyProfiles.math
     && dfy.paramsFor && dfy.profileFor && dfy.strategyFor);
   check('subject-utils/difficulty 可加载且暴露科目能力（Profiles / paramsFor / strategyFor）', okSU && okD);
@@ -63,7 +63,7 @@ try {
 // 5. 核心保护配置文件
 check('.github/CODEOWNERS 存在', fileExists('.github/CODEOWNERS'));
 check('CODEOWNERS 包含 practice.html', fileContains('.github/CODEOWNERS', 'practice.html'));
-check('CODEOWNERS 包含 shared/common.js', fileContains('.github/CODEOWNERS', 'shared/common.js'));
+check('CODEOWNERS 包含 shared/core/common.js', fileContains('.github/CODEOWNERS', 'shared/core/common.js'));
 
 // 6. 贡献指南与编码规范（V4.0.1 起统一维护于根目录《技术文档--基础》）
 check('技术文档--基础.md 存在', fileExists('技术文档--基础.md'));
@@ -102,8 +102,8 @@ try {
 
 // 9.1 知识库覆盖基线（数学知识库各年级均有知识点数据，且模块 ID 与目录一致）
 try {
-  const KB = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-  const MC = require(path.join(ROOT, 'shared', 'module-catalog.js'));
+  const KB = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+  const MC = require(path.join(ROOT, 'shared', 'catalog', 'module-catalog.js'));
   const validModules = new Set(MC.map(m => m.id));
 
   // 模块目录完整性：数学 M0-M13 + C1-C9 齐全、ID 唯一

@@ -5,8 +5,8 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Cognitive = require(path.join(ROOT, 'shared', 'strategy', 'cognitive-strategy.js'));
-const Registry = require(path.join(ROOT, 'shared', 'question-type-registry.js'));
-const KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const Registry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
+const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 test('统一三层均为 Registry 枚举子集（不重新定义枚举）', () => {
   Cognitive.UNIFIED_LEVELS.forEach(l => {

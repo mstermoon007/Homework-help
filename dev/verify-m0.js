@@ -24,12 +24,28 @@ const steps = [
   { key: 'kb', mod: require(path.join(ROOT, 'dev', 'check-knowledge-contract.js')) },
   { key: 'difficulty', mod: require(path.join(ROOT, 'dev', 'check-difficulty-dual.js')) },
   { key: 'golden', mod: require(path.join(ROOT, 'dev', 'check-golden.js')) },
-  { key: 'rules', mod: require(path.join(ROOT, 'dev', 'check-architecture-rules.js')) }
+  { key: 'rules', mod: require(path.join(ROOT, 'dev', 'check-architecture-rules.js')) },
+  {
+    key: 'ontology-integrity',
+    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'check-ontology-integrity.js')] }
+  }
 ];
 
 const PLUGIN_REQUIRES_ASYNC = false;
 
 function runStep(step) {
+  if (step.spawn) {
+    return new Promise((resolve) => {
+      const { execFile } = require('child_process');
+      execFile(step.spawn.cmd, step.spawn.args, { maxBuffer: 8 * 1024 * 1024 }, (err, stdout, stderr) => {
+        resolve({
+          name: step.key, pass: !err && err === null,
+          errors: err ? [(stderr || '').slice(0, 500) || ('退出码 ' + (err.code != null ? err.code : err.message))] : [],
+          warnings: [], summary: (stdout || '').split('\n').filter(Boolean).pop() || ''
+        });
+      });
+    });
+  }
   try {
     const r = step.mod.run();
     if (r && typeof r.then === 'function') return r;

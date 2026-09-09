@@ -11,23 +11,21 @@
 
   var VERSION = 1;
 
-  // ====== 题型枚举（与 KnowledgePoint 兼容）======
-  var QUESTION_TYPES = [
-    'calc',       // 计算题
-    'fill',       // 填空题
-    'judge',      // 判断题
-    'choice',     // 选择题
-    'operate',    // 操作题（作图/摆图等）
-    'apply',      // 应用题
-    'open',       // 开放题
-    'read-aloud'  // 跟读/口语
-  ];
+  // 题型枚举 SSOT：引用 question-type-registry.js 的 canonical 7 类（双环境兼容）
+  var QuestionTypeRegistry = (typeof require === 'function')
+    ? (function () { try { return require('../knowledge/question-type-registry.js'); } catch (e) { return null; } })()
+    : (global.QuestionTypeRegistry || null);
+
+  // ====== 题型枚举（与 KnowledgePoint / QuestionTypeRegistry 兼容）======
+  var QUESTION_TYPES = (QuestionTypeRegistry && QuestionTypeRegistry.all)
+    ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
+    : ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
 
   // ====== 难度档位 ======
   var DIFFICULTY_LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   // ====== 认知层级 ======
-  var COGNITIVE_LEVELS = ['了解', '理解', '掌握', '运用'];
+  var COGNITIVE_LEVELS = ['了解', '认识', '理解', '掌握', '运用'];
 
   // ====== 答案模式 ======
   var ANSWER_MODES = ['input', 'choice', 'multi', 'none', 'read-aloud'];
@@ -37,6 +35,7 @@
     'geometry',   // 几何图形
     'chart',      // 统计图表
     'diagram',    // 示意图
+    'currency',   // 人民币/货币
     'number-line', // 数轴
     'grid',       // 网格/方格
     'custom'      // 自定义
@@ -44,9 +43,10 @@
 
   // ====== 图形子类型 ======
   var GRAPHIC_SUBTYPES = {
-    geometry: ['triangle', 'rectangle', 'circle', 'polygon', 'angle', 'line', 'point'],
+    geometry: ['triangle', 'rectangle', 'circle', 'polygon', 'angle', 'line', 'point', 'position-grid'],
     chart: ['bar', 'line', 'pie', 'scatter'],
-    diagram: ['flow', 'tree', 'venn', 'mindmap'],
+    diagram: ['flow', 'tree', 'venn', 'mindmap', 'brace', 'segment', 'balance', 'scale'],
+    currency: ['rmb'],
     'number-line': ['integer', 'fraction', 'decimal'],
     grid: ['dot', 'square', 'isometric'],
     custom: []
@@ -240,7 +240,15 @@
     defaultDistractor: defaultDistractor,
 
     // 类型检查器
-    isValidQuestionType: function (t) { return QUESTION_TYPES.indexOf(t) !== -1; },
+    isValidQuestionType: function (t) {
+      if (QUESTION_TYPES.indexOf(t) !== -1) return true;
+      if (QuestionTypeRegistry && typeof QuestionTypeRegistry.normalizeQuestionType === 'function') {
+        var n = QuestionTypeRegistry.normalizeQuestionType(t);
+        // 拒绝启发式兜底（未知题型被误归并为 canonical），仅接受显式/精确别名
+        if (n && n.confidence !== 'heuristic' && n.id && QUESTION_TYPES.indexOf(n.id) !== -1) return true;
+      }
+      return false;
+    },
     isValidDifficulty: function (d) { return DIFFICULTY_LEVELS.indexOf(d) !== -1; },
     isValidCognitiveLevel: function (c) { return COGNITIVE_LEVELS.indexOf(c) !== -1; },
     isValidAnswerMode: function (m) { return ANSWER_MODES.indexOf(m) !== -1; },

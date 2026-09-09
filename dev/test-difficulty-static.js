@@ -12,9 +12,9 @@
 'use strict';
 
 global.KnowledgeBank = global.KnowledgeBank || {};
-const DS = require('../shared/difficulty-static.js');
-const Difficulty = require('../shared/difficulty.js');
-const bank = require('../shared/knowledge-bank.js');
+const DS = require('../shared/catalog/difficulty-static.js');
+const Difficulty = require('../shared/catalog/difficulty.js');
+const bank = require('../shared/knowledge/knowledge-bank.js');
 
 let failures = 0;
 function assert(cond, msg) {

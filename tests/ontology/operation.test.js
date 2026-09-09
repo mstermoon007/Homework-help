@@ -1,8 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const Ops = require('../../shared/knowledge-operation.js');
-const OpsMap = require('../../shared/ontology-operation-map.js');
-const Ontology = require('../../shared/knowledge-ontology.js');
+const Ops = require('../../shared/knowledge/knowledge-operation.js');
+const OpsMap = require('../../shared/knowledge/ontology-operation-map.js');
+const Ontology = require('../../shared/knowledge/knowledge-ontology.js');
 
 test('canonical operation', () => {
   const r = Ops.normalize('multiply');

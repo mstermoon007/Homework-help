@@ -16,8 +16,8 @@
 var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
-var ScanContext = require(path.join(ROOT, 'shared', 'capability-scan-context.js'));
-var Registry = require(path.join(ROOT, 'shared', 'question-type-registry.js'));
+var ScanContext = require(path.join(ROOT, 'shared', 'capability', 'capability-scan-context.js'));
+var Registry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
 
 function run() {
   var forceRefresh = process.argv.indexOf('--refresh') !== -1;

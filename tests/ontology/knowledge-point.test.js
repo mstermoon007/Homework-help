@@ -1,8 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const KnowledgeBank = require('../../shared/knowledge-bank.js');
-const Ontology = require('../../shared/knowledge-ontology.js');
-const KP = require('../../shared/knowledge-point.js');
+const KnowledgeBank = require('../../shared/knowledge/knowledge-bank.js');
+const Ontology = require('../../shared/knowledge/knowledge-ontology.js');
+const KP = require('../../shared/knowledge/knowledge-point.js');
 
 function countAll() {
   let total = 0;

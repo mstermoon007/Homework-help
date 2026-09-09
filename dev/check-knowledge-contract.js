@@ -16,11 +16,12 @@
 const path = require('path');
 const ROOT = path.join(__dirname, '..');
 
-const bank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+const bank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 // MATH-14：legacy plugins/registry.js 已删除。pluginId 保留为知识库追溯字段，
 // 「pluginId 是否登记」检查随 legacy 轨道退役；可练性由 GeneratorRegistry 承接（check-core-generators）。
 
-const COGNITIVE = ['了解', '理解', '掌握', '运用'];
+const Schema = require(path.join(ROOT, 'shared', 'schemas', 'knowledge-point.schema.js'));
+const COGNITIVE = Object.keys(Schema.COGNITIVE_MAP);
 const CONTEXT = ['pure', 'simple', 'standard', 'complex'];
 
 const errors = [];

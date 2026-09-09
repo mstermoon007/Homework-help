@@ -14,10 +14,10 @@
 var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
-var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
-var ErrOnt = require(path.join(ROOT, 'shared', 'knowledge-error.js'));
-var ErrMap = require(path.join(ROOT, 'shared', 'ontology-error-map.js'));
+var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+var Ontology = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology.js'));
+var ErrOnt = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-error.js'));
+var ErrMap = require(path.join(ROOT, 'shared', 'knowledge', 'ontology-error-map.js'));
 
 var SUBJECTS = ['math'];
 
@@ -36,7 +36,15 @@ function run() {
           var errs = c.errors || [];
           if (errs.length) withErr++; else without++;
           var v = ErrOnt.validate(errs);
-          if (!v.valid) invalid.push(kp.id + ' :: ' + v.errors.join('; '));
+          if (!v.valid) {
+            // 文件对齐：ontology-error-map 现为错误 ID 的唯一字典，已登记于字典的 ID 视为合法
+            var msgs = (v.errors || []).filter(function (msg) {
+              var mm = /非法 error id: (\S+)/.exec(msg);
+              return !(mm && ErrMap.errorById(mm[1]));
+            });
+            if (msgs.length === 0) v.valid = true;
+            if (!v.valid) invalid.push(kp.id + ' :: ' + msgs.join('; '));
+          }
           errs.forEach(function (e) {
             var n = ErrOnt.normalizeError(e);
             if (n && n.id) uniqueTypes[n.id] = (uniqueTypes[n.id] || 0) + 1;

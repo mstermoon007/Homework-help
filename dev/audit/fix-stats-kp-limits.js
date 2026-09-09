@@ -20,7 +20,7 @@
 var fs = require('fs');
 var path = require('path');
 var ROOT = path.join(__dirname, '..', '..');
-var FILE = path.join(ROOT, 'shared', 'knowledge-math.js');
+var FILE = path.join(ROOT, 'shared', 'knowledge', 'knowledge-math.js');
 
 // 修复规则表：type → { category, operations }
 var RULES = {
@@ -104,7 +104,7 @@ function run() {
   // 输出报告 JSON
   var reportPath = path.join(ROOT, 'dev', 'reports', 'fix-stats-kp-limits-report.json');
   fs.writeFileSync(reportPath, JSON.stringify({
-    meta: { script: 'dev/audit/fix-stats-kp-limits.js', target: 'shared/knowledge-math.js' },
+    meta: { script: 'dev/audit/fix-stats-kp-limits.js', target: 'shared/knowledge/knowledge-math.js' },
     summary: { patched: patched, skipped: skipped },
     rules: Object.keys(RULES).map(function (k) {
       return { type: k, category: RULES[k].category, operations: RULES[k].operations };

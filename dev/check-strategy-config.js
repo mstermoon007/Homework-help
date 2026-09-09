@@ -10,7 +10,7 @@
  */
 'use strict';
 
-var StrategyConfig = require('../shared/strategy-config.js');
+var StrategyConfig = require('../shared/strategy/strategy-config.js');
 
 function run() {
   console.log('M3-00 Feature Flag Verification');
@@ -57,7 +57,7 @@ function run() {
   // 6. 环境变量测试（通过子进程验证）
   console.log('6. Env var test...');
   var child = require('child_process');
-  var r = child.spawnSync('node', ['-e', 'process.env.GENERATION_STRATEGY="strategy-v1"; var c=require("./shared/strategy-config.js"); console.log(c.getStrategy())'], {
+  var r = child.spawnSync('node', ['-e', 'process.env.GENERATION_STRATEGY="strategy-v1"; var c=require("./shared/strategy/strategy-config.js"); console.log(c.getStrategy())'], {
     cwd: __dirname + '/..',
     encoding: 'utf8'
   });

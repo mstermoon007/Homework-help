@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const KnowledgeBank = require('../../shared/knowledge-bank.js');
-const Ontology = require('../../shared/knowledge-ontology.js');
+const KnowledgeBank = require('../../shared/knowledge/knowledge-bank.js');
+const Ontology = require('../../shared/knowledge/knowledge-ontology.js');
 const Schema = require('../../shared/schemas/knowledge-point.schema.js');
 
 test('全部 KP 能归一化为合法 Canonical（ERROR=0）', () => {

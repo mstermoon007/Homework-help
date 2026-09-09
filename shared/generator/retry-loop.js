@@ -13,7 +13,7 @@
 
 var Validator = require('../validator/question-validator.js');
 var Pipeline = require('../validator/validation-pipeline.js');
-var QID = require('../question-id.js');
+var QID = require('../knowledge/question-id.js');
 
 var DEFAULT_MAX_RETRIES = 3;
 // D005 修复：连续零新增（本轮 valid 数 ≤ 上轮）达到此阈值 → 判定语义空间饱和。
@@ -165,7 +165,7 @@ function generateWithRetry(generatorFn, plan, context) {
         if (q && q.seed == null) {
           q = Object.assign({}, q, { metadata: Object.assign({}, q.metadata, { seed: seed }) });
         }
-        var sq = require('../semantic-question.js').normalizeSemanticQuestion(Object.assign({}, q, {
+        var sq = require('../semantic/semantic-question.js').normalizeSemanticQuestion(Object.assign({}, q, {
           generator: generatorId,
           generatorVersion: generatorVersion,
           seed: seed,
@@ -338,6 +338,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: result.validationResults,
         retries: retries,
         success: true,
+        status: 'SUCCESS',
         attempts: allResults
       };
     }
@@ -349,6 +350,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: result.validationResults,
         retries: retries,
         success: false,
+        status: 'FAILED',
         error: 'FATAL_ERROR',
         message: '遇到不可恢复错误，停止重试',
         attempts: allResults
@@ -362,6 +364,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: result.validationResults,
         retries: retries,
         success: false,
+        status: 'FAILED',
         error: 'NON_RETRYABLE',
         message: '错误不可重试，停止重试',
         attempts: allResults
@@ -409,6 +412,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: safeR,
         retries: retries,
         success: false,
+        status: safeQ.length > 0 ? 'PARTIAL' : 'FAILED',
         error: GENERATION_SPACE_EXHAUSTED,
         message: '生成空间耗尽：连续 ' + consecutiveZeroProgress + ' 轮零新增（KP+type+difficulty 在 seenKeys 累积下语义空间饱和）',
         attempts: allResults
@@ -425,6 +429,7 @@ function generateWithRetry(generatorFn, plan, context) {
           validationResults: safeResults,
           retries: retries,
           success: false,
+          status: safeQuestions.length > 0 ? 'PARTIAL' : 'FAILED',
           error: GENERATION_SPACE_EXHAUSTED,
           message: '生成空间耗尽：仅因重复重试 ' + duplicateFailures + ' 次仍无法产出新题（KP+type+difficulty 语义空间已饱和）',
           attempts: allResults
@@ -435,6 +440,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: safeResults,
         retries: retries,
         success: false,
+        status: safeQuestions.length > 0 ? 'PARTIAL' : 'FAILED',
         error: 'MAX_RETRIES_EXCEEDED',
         message: '超过最大重试次数 (' + effectiveCap + ')',
         attempts: allResults

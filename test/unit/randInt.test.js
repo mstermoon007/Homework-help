@@ -2,7 +2,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert');
-const PU = require('../../shared/common.js');
+const PU = require('../../shared/core/common.js');
 
 const randInt = PU.randInt;
 

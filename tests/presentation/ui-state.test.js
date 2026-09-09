@@ -6,7 +6,7 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
 
 test('UIState.generationHtml 提供四种生成状态（P3-R03）', () => {
-  const { UIState } = require(path.join(ROOT, 'shared', 'ui-state.js'));
+  const { UIState } = require(path.join(ROOT, 'shared', 'state', 'ui-state.js'));
 
   // 待生成
   const idle = UIState.generationHtml.idle();
@@ -33,14 +33,14 @@ test('UIState.generationHtml 提供四种生成状态（P3-R03）', () => {
 });
 
 test('UIState.generationHtml 转义不可信输入', () => {
-  const { UIState } = require(path.join(ROOT, 'shared', 'ui-state.js'));
+  const { UIState } = require(path.join(ROOT, 'shared', 'state', 'ui-state.js'));
   const error = UIState.generationHtml.error('<script>alert(1)</script>');
   assert.doesNotMatch(error, /<script>alert\(1\)<\/script>/);
   assert.match(error, /&lt;script&gt;/);
 });
 
 test('UIState.generationHtml 兼容失败态重试操作 HTML', () => {
-  const { UIState } = require(path.join(ROOT, 'shared', 'ui-state.js'));
+  const { UIState } = require(path.join(ROOT, 'shared', 'state', 'ui-state.js'));
   const error = UIState.generationHtml.error('x', '<button>重试</button>');
   assert.match(error, /gs-actions/);
   assert.match(error, /重试/);

@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Allocation = require(path.join(ROOT, 'shared', 'strategy', 'question-type-allocation.js'));
-const KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 test('10 题 × 3 题型 -> oral 4 / fill 3 / choice 3', () => {
   const r = Allocation.allocateQuestionTypes({

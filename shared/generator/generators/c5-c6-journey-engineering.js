@@ -13,7 +13,7 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -50,6 +50,7 @@ function makeQuestion(plan, context, i, kp) {
   var isComplex = id.indexOf('complex') !== -1 || id.indexOf('competition') !== -1 || name.indexOf('综合') !== -1;
   var isBasic = id.indexOf('basic') !== -1 || name.indexOf('基本行程') !== -1;
 
+  var v = i; // 变体序号：同 KP 同题型下轮换不同参数/设问，提升语义容量（R6）
   var prompt, answer, steps;
 
   if (isWork) {
@@ -124,31 +125,33 @@ function makeQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (isAverage) {
     // 平均速度：往返等路程，avg = 2ab/(a+b)
-    var av1 = 30, av2 = 60;
-    var avg = 2 * av1 * av2 / (av1 + av2);
-    prompt = '小明骑车从家到书店，去时每小时行 ' + av1 + ' 千米，沿原路返回时每小时行 ' + av2 + ' 千米。'
-      + '求小明往返的平均速度。';
+    var AV = [{ a: 30, b: 60 }, { a: 40, b: 60 }, { a: 20, b: 30 }, { a: 50, b: 75 }];
+    var av = AV[v % AV.length];
+    var avg = 2 * av.a * av.b / (av.a + av.b);
+    prompt = '小明骑车从家到书店，去时每小时行 ' + av.a + ' 千米，沿原路返回时每小时行 ' + av.b + ' 千米。求小明往返的平均速度。';
     answer = avg;
     steps = 3;
   } else if (isRatio) {
-    // 比例行程：同路程，速度比 3:2，甲用 4 小时，乙用？小时（时间与速度成反比）
-    prompt = '走同一段路，甲、乙两人的速度比是 3:2。甲走完全程用了 4 小时，乙走完全程需要多少小时？';
-    answer = 6; // 时间比 = 速度反比 = 2:3 → 4 / 2 * 3 = 6
+    // 比例行程：同路程，速度比 r，甲用 ta 小时，乙用？小时（时间与速度成反比）
+    var RAT = [{ r: '3:2', ta: 4, tb: 6 }, { r: '4:3', ta: 6, tb: 8 }, { r: '2:1', ta: 3, tb: 6 }];
+    var rat = RAT[v % RAT.length];
+    prompt = '走同一段路，甲、乙两人的速度比是 ' + rat.r + '。甲走完全程用了 ' + rat.ta + ' 小时，乙走完全程需要多少小时？';
+    answer = rat.tb;
     steps = 3;
   } else if (isInterval) {
-    // 发车间隔：同向，车速与发车间隔
-    prompt = '一条公交线路上，公交车每隔 6 分钟发一班，车速为每分钟 500 米。'
-      + '小明沿公交线路以每分钟 100 米的速度与公交车同向步行。'
-      + '每隔多少分钟会有一辆公交车从身后追上小明？';
-    // 相邻两车间距 = 500*6 = 3000 米；相对速度 = 500-100 = 400；追及间隔 = 3000/400 = 7.5
-    answer = 7.5;
+    // 发车间隔：相邻车距 = car*interval；相对速度 = car-walk；追及间隔 = 车距/相对速度
+    var INT = [{ interval: 6, car: 500, walk: 100, ans: 7.5 }, { interval: 10, car: 600, walk: 200, ans: 15 }, { interval: 8, car: 500, walk: 100, ans: 10 }];
+    var itv = INT[v % INT.length];
+    prompt = '一条公交线路上，公交车每隔 ' + itv.interval + ' 分钟发一班，车速为每分钟 ' + itv.car + ' 米。'
+      + '小明沿公交线路以每分钟 ' + itv.walk + ' 米的速度与公交车同向步行。每隔多少分钟会有一辆公交车从身后追上小明？';
+    answer = itv.ans;
     steps = 3;
   } else if (isPickup) {
-    // 接送问题（简化定量版）
-    prompt = '汽车送一批人去机场，去程每小时行 60 千米，返程（空车）每小时行 90 千米，往返共用 5 小时（不含上下车时间）。'
-      + '出发点到机场的距离是多少千米？';
-    // 设距离 x：x/60 + x/90 = 5 → x*(3+2)/180 = 5 → x = 180
-    answer = 180;
+    // 接送问题（简化定量版）：x/go + x/back = total → x = total/(1/go+1/back)
+    var PK = [{ go: 60, back: 90, total: 5, ans: 180 }, { go: 40, back: 60, total: 5, ans: 120 }, { go: 50, back: 75, total: 5, ans: 150 }];
+    var pk = PK[v % PK.length];
+    prompt = '汽车送一批人去机场，去程每小时行 ' + pk.go + ' 千米，返程（空车）每小时行 ' + pk.back + ' 千米，往返共用 ' + pk.total + ' 小时（不含上下车时间）。出发点到机场的距离是多少千米？';
+    answer = pk.ans;
     steps = 3;
   } else if (isComplex || isBasic) {
     // 基本行程 / 行程综合：路程 = 速度 × 时间

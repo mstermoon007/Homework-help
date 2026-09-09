@@ -89,19 +89,19 @@ function makeVmRequire(absPath) {
 
 // 按 practice.html 脚本顺序装载（MATH-14：registry.js / legacy-svg-adapter 已删除）
 function load(rel) { exec(path.join(ROOT, rel)); }
-load('shared/common.js');
-load('shared/difficulty.js');
-load('shared/difficulty-static.js');
-load('shared/knowledge-bank.js');
-load('shared/strategy-engine.bundle.js');
-load('shared/presentation-engine.bundle.js');
+load('shared/core/common.js');
+load('shared/catalog/difficulty.js');
+load('shared/catalog/difficulty-static.js');
+load('shared/knowledge/knowledge-bank.js');
+load('shared/engine/strategy-engine.bundle.js');
+load('shared/engine/presentation-engine.bundle.js');
 // presentation 渲染器栈（镜像 practice.html 的浏览器加载顺序），供
 // GenerationEngine.generate → render() 使用（PresentationRenderer）
 load('shared/presentation/render-options.js');
 load('shared/presentation/render-result.js');
 load('shared/presentation/svg-registry.js');
 load('shared/generator/graphic-renderer.js');
-load('shared/svg-core.js');
+load('shared/svg/svg-core.js');
 load('plugins/svg-clock.js');
 load('plugins/svg-area.js');
 load('plugins/svg-fraction.js');
@@ -110,15 +110,15 @@ load('plugins/svg-draw.js');
 load('plugins/svg-competition.js');
 load('shared/presentation/html-renderer.js');
 load('shared/presentation/renderer.js');
-load('shared/generation-engine.js');
+load('shared/engine/generation-engine.js');
 // 镜像 practice.html:182-188 学习者模块（practice-session.js 依赖，保证相对 require 可解析）
-load('shared/storage.js');
+load('shared/state/storage.js');
 load('shared/learner/error-model.js');
 load('shared/learner/practice-result.js');
 load('shared/learner/learner-model.js');
 load('shared/learner/learner-storage.js');
 load('shared/learner/result-collector.js');
-load('shared/practice-session.js'); // 镜像 practice.html:211 真实练习会话入口
+load('shared/engine/practice-session.js'); // 镜像 practice.html:211 真实练习会话入口
 
 check('window.PresentationEngine 已注册', win.PresentationEngine && typeof win.PresentationEngine.generateQuestions === 'function');
 check('window.GeneratorSelector 已注册', !!win.GeneratorSelector);

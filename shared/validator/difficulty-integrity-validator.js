@@ -15,7 +15,7 @@ var ERROR_CODES = Validator.ERROR_CODES;
 var SEVERITY = Validator.SEVERITY;
 var createError = Validator.createError;
 
-var Difficulty = require('../difficulty.js');
+var Difficulty = require('../catalog/difficulty.js');
 
 function coerceInteger(v) { var n = Number(v); return isNaN(n) ? null : Math.floor(n); }
 

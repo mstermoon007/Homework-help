@@ -7,7 +7,7 @@
 'use strict';
 
 var path = require('path');
-var SVGUtil = require(path.join(__dirname, '..', 'shared', 'svg-core.js'));
+var SVGUtil = require(path.join(__dirname, '..', 'shared', 'svg', 'svg-core.js'));
 
 var fail = 0, pass = 0;
 function assert(cond, msg) {

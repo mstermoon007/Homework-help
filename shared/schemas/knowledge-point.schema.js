@@ -25,7 +25,7 @@
 
   // 题型 SSOT：引用知识点库题型注册表（同为纯数据层），双环境兼容（Node require / 浏览器全局）。
   var QuestionTypeRegistry = (typeof require === 'function')
-    ? (function () { try { return require('../question-type-registry.js'); } catch (e) { return null; } })()
+    ? (function () { try { return require('../knowledge/question-type-registry.js'); } catch (e) { return null; } })()
     : (global.QuestionTypeRegistry || null);
 
   var KNOWN_OPERATIONS = [
@@ -43,11 +43,11 @@
   // 环境缺 registry（异常/旧打包）时回退到历史 7 类数组，保证不崩。
   var KNOWN_QUESTION_TYPES = QuestionTypeRegistry && QuestionTypeRegistry.all
     ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
-    : ['calc', 'fill', 'judge', 'choice', 'operate', 'apply', 'open'];
+    : ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
 
   var KNOWN_CONTEXTS = ['pure', 'simple', 'standard', 'complex'];
 
-  var COGNITIVE_MAP = { '了解': 0, '理解': 0.33, '掌握': 0.67, '运用': 1.0 };
+  var COGNITIVE_MAP = { '了解': 0, '认识': 0, '理解': 0.33, '掌握': 0.67, '运用': 1.0 };
   var COGNITIVE_MIN = 0;
   var COGNITIVE_MAX = 1;
 
@@ -61,15 +61,20 @@
     'choice': { type: 'question-format' },
     'judge': { type: 'question-format' },
     'open': { type: 'question-format' },
+    'geometry': { type: 'question-format' },
+    'classify': { type: 'question-format' },
     'contextual': { type: 'context' },
     'application': { type: 'context' }
   };
 
   // Legacy applicable_question_types.type -> capability id（数据驱动推导，不猜测）。
+  // 7 类规范题型（知识点驱动）：recognize→geometry（认读并入操作/作图），oral→calculation（口算并入计算）。
   var QUESTION_TYPE_TO_CAPABILITY = {
     calc: 'calculation', operate: 'calculation',
     fill: 'fill', choice: 'choice', judge: 'judge',
-    apply: 'contextual', open: 'open'
+    apply: 'contextual', open: 'open',
+    geometry: 'geometry', classify: 'classify',
+    recognize: 'geometry', oral: 'calculation'
   };
 
   var CATEGORIES = {

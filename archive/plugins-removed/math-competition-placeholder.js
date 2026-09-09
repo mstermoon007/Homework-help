@@ -17,8 +17,8 @@
   'use strict';
 
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
-    : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
-  if (!_PU || !_PU.createPlugin) throw new Error('plugins/math-competition-placeholder.js 依赖 shared/common.js（PluginUtil.createPlugin），请先加载');
+    : (typeof require !== 'undefined' ? require('../shared/core/common.js') : null);
+  if (!_PU || !_PU.createPlugin) throw new Error('plugins/math-competition-placeholder.js 依赖 shared/core/common.js（PluginUtil.createPlugin），请先加载');
 
   // 对应竞赛模块：默认 C9（竞赛综合），页面通过 URL 参数 plugin=<this> 进入，
   // registry 以 competitionModuleIds 声明多个映射，加载到内存后由页面设置当前模块。

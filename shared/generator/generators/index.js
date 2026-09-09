@@ -15,7 +15,7 @@
 
 // 数学生成引擎版本标签（V2.1：native-only 单轨 + 23 Generator 语义路由 +
 // legacy 插件轨道退役 + math-g2-column 答案/check 归一化挂账清零）。
-// 注意：这是「生成引擎」版本，与 shared/version.js 的 APP_VERSION（PWA 缓存版本）是两个独立概念。
+// 注意：这是「生成引擎」版本，与 shared/catalog/version.js 的 APP_VERSION（PWA 缓存版本）是两个独立概念。
 var ENGINE_VERSION = '2.1.0';
 
 var Arithmetic = require('./arithmetic.js');
@@ -36,6 +36,7 @@ var C5C6 = require('./c5-c6-journey-engineering.js');
 var C7 = require('./c7-clever-calc.js');
 var C9 = require('./c9-comprehensive.js');
 var SemanticSpecial = require('./semantic-special.js');
+var Classification = require('./classify.js');
 
 var ALL = [].concat(
   Arithmetic.buildAll(),
@@ -55,7 +56,8 @@ var ALL = [].concat(
   C5C6.buildAll(),
   C7.buildAll(),
   C9.buildAll(),
-  SemanticSpecial.buildAll()
+  SemanticSpecial.buildAll(),
+  Classification.buildAll()
 );
 
 var BY_ID = {};

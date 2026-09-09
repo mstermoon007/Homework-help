@@ -11,9 +11,9 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 const Spiral = require(path.join(ROOT, 'shared', 'strategy', 'spiral-strategy.js'));
-const KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-const Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
-const Registry = require(path.join(ROOT, 'shared', 'question-type-registry.js'));
+const KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+const Ontology = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology.js'));
+const Registry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
 
 const MODES = Spiral.MODES; // S1..S6
 
@@ -44,7 +44,7 @@ test('不得超过 maxSpiralLevel（请求超出 → clamp）', () => {
 
 test('contextDefault：standard → 输出 standard 或 +1（complex），不超过 KP 定义范围', () => {
   const r = Engine.plan({ knowledgePointId: 'math-g1-m0-make-ten', count: 1, difficulty: 3 });
-  const kp = require(path.join(ROOT, 'shared', 'knowledge-point.js')).get('math-g1-m0-make-ten');
+  const kp = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js')).get('math-g1-m0-make-ten');
   const ctxDefault = kp.context.defaults[0];
   assert.strictEqual(ctxDefault, 'standard');
   // 允许 base 或 upgrade +1，绝不超过 complex

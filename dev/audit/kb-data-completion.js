@@ -22,9 +22,9 @@ var fs = require('fs');
 var path = require('path');
 
 global.window = global;
-require(path.join(__dirname, '../../shared/knowledge-bank.js'));
-require(path.join(__dirname, '../../shared/knowledge-math.js'));
-var OpsMap = require(path.join(__dirname, '../../shared/ontology-operation-map.js'));
+require(path.join(__dirname, '../../shared/knowledge/knowledge-bank.js'));
+require(path.join(__dirname, '../../shared/knowledge/knowledge-math.js'));
+var OpsMap = require(path.join(__dirname, '../../shared/knowledge/ontology-operation-map.js'));
 
 var KB = global.KnowledgeBank;
 

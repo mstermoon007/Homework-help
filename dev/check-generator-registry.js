@@ -18,10 +18,10 @@ var path = require('path');
 var ROOT = path.join(__dirname, '..');
 var GenRegistry = require(path.join(ROOT, 'shared', 'generator', 'generator-registry.js'));
 var GenSelector = require(path.join(ROOT, 'shared', 'generator', 'generator-selector.js'));
-var QuestionRegistry = require(path.join(ROOT, 'shared', 'question-type-registry.js'));
-var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
-var KnowledgePoint = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+var QuestionRegistry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
+var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+var Ontology = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology.js'));
+var KnowledgePoint = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 function run() {
   var errors = [];

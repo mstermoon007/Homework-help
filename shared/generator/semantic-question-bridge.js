@@ -18,14 +18,14 @@
 function getPluginUtil() {
   return (typeof PluginUtil !== 'undefined' ? PluginUtil
     : (typeof global !== 'undefined' && global.PluginUtil ? global.PluginUtil
-      : (typeof require !== 'undefined' ? require('../render.js') : null)));
+      : (typeof require !== 'undefined' ? require('../presentation/render.js') : null)));
 }
 
 function getQCheck() {
   var PU = getPluginUtil();
   if (PU && typeof PU.defaultQCheck === 'function') return PU.defaultQCheck;
   if (typeof defaultQCheck === 'function') return defaultQCheck;
-  if (typeof require !== 'undefined') return require('../check.js').defaultQCheck;
+  if (typeof require !== 'undefined') return require('../core/check.js').defaultQCheck;
   return null;
 }
 

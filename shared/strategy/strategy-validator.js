@@ -18,9 +18,9 @@
  */
 'use strict';
 
-var KnowledgePoint = require('../knowledge-point.js');
-var Registry = require('../question-type-registry.js');
-var Resolver = require('../capability-resolver.js');
+var KnowledgePoint = require('../knowledge/knowledge-point.js');
+var Registry = require('../knowledge/question-type-registry.js');
+var Resolver = require('../capability/capability-resolver.js');
 
 var CONTEXT_LEGAL = ['pure', 'simple', 'standard', 'complex', 'none'];
 

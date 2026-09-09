@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Context = require(path.join(ROOT, 'shared', 'strategy', 'context-strategy.js'));
-const KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 const MAKE_TEN = () => KP.get('math-g1-m0-make-ten');
 

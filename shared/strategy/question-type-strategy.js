@@ -12,8 +12,8 @@
  */
 'use strict';
 
-var Registry = require('../question-type-registry.js');
-var Resolver = require('../capability-resolver.js');
+var Registry = require('../knowledge/question-type-registry.js');
+var Resolver = require('../capability/capability-resolver.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 

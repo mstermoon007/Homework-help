@@ -26,24 +26,24 @@ function fileContains(relativePath, substring) {
 
 // Page dependencies definition
 // Each entry: pageName -> [required script/css references to check in the HTML]
-// Format: 'path/to/page.html' -> ['shared/common.js', 'shared/tokens.css', ...]
+// Format: 'path/to/page.html' -> ['shared/core/common.js', 'shared/styles/tokens.css', ...]
 const PAGE_DEPS = {
   'index.html': [
-    'shared/common.js',
-    'shared/tokens.css',
-    'shared/base.css',
-    'shared/states.css',
+    'shared/core/common.js',
+    'shared/styles/tokens.css',
+    'shared/styles/base.css',
+    'shared/styles/styles.css',
   ],
   'practice.html': [
-    'shared/common.js',
-    'shared/difficulty.js',
-    'shared/print.js',
-    'shared/knowledge-bank.js',
+    'shared/core/common.js',
+    'shared/catalog/difficulty.js',
+    'shared/presentation/print.js',
+    'shared/knowledge/knowledge-bank.js',
   ],
   'math-types.html': [],
   'subject-types.html': [],
   'faq.html': [
-    'shared/tokens.css',
+    'shared/styles/tokens.css',
   ],
 };
 
@@ -58,8 +58,8 @@ const CRITICAL_DOM = {
 
 // Entry script check: the first or key <script src=... reference
 const ENTRY_SCRIPTS = {
-  'index.html': 'shared/common.js',
-  'practice.html': 'shared/common.js',
+  'index.html': 'shared/core/common.js',
+  'practice.html': 'shared/core/common.js',
   'math-types.html': null,  // 重定向桩，无外部 shared 脚本
   'subject-types.html': null, // 重定向桩，无外部 shared 脚本
   'faq.html': null, // faq has inline scripts only, no external script src

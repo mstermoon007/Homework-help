@@ -10,7 +10,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
-const KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 const KP_ID = 'math-g1-m0-make-ten';
 
@@ -29,7 +29,7 @@ test('指定 subtype（legacy 归一化）-> 正常 Plan', () => {
 test('不指定题型 -> KP 默认题型（正常 Plan）', () => {
   const r = Engine.plan({ knowledgePointId: KP_ID, count: 2 });
   assert.strictEqual(r.valid, true);
-  const caps = require(path.join(ROOT, 'shared', 'capability-resolver.js')).getCapabilities(KP.get(KP_ID));
+  const caps = require(path.join(ROOT, 'shared', 'capability', 'capability-resolver.js')).getCapabilities(KP.get(KP_ID));
   assert.ok(caps.questionTypes.includes(r.plans[0].questionTypeId));
 });
 

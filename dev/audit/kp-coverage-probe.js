@@ -8,7 +8,7 @@
  *   2) 对每个 KP 判定是否存在至少 1 条合法生成路径（ALLOW 或 DEGRADE）
  *   3) 输出 MISSING 清单（应 = 0）
  *
- * 依据：shared/capability-resolver.js 的 resolveFinal()
+ * 依据：shared/capability/capability-resolver.js 的 resolveFinal()
  *   决策优先级：INVALID → FORBID → MISSING → ALLOW → DEGRADE
  *   DEGRADE 不自动升级为 ALLOW
  *
@@ -24,9 +24,9 @@ var fs = require('fs');
 var ROOT = path.join(__dirname, '..', '..');
 
 // CapabilityResolver 是 CommonJS module（非 IIFE 全局）
-var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-var Registry = require(path.join(ROOT, 'shared', 'question-type-registry.js'));
-var CapabilityResolver = require(path.join(ROOT, 'shared', 'capability-resolver.js'));
+var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+var Registry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
+var CapabilityResolver = require(path.join(ROOT, 'shared', 'capability', 'capability-resolver.js'));
 
 // 549 math KP 全枚举
 function loadAllMathKps() {

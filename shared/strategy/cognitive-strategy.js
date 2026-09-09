@@ -14,8 +14,8 @@
  */
 'use strict';
 
-var Registry = require('../question-type-registry.js');
-var KnowledgePoint = require('../knowledge-point.js');
+var Registry = require('../knowledge/question-type-registry.js');
+var KnowledgePoint = require('../knowledge/knowledge-point.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 
@@ -68,8 +68,28 @@ function kpToUnified(kp) {
   return null;
 }
 
+// 别名题型认知下限（Phase 1 将 oral/recognize/open 并入规范 7 类后，
+// 其各自历史认知范围需保留，避免被规范类型的更宽范围覆盖）：
+//   口算 oral     → 识记/理解（不含 apply）
+//   认读 recognize → 识别/理解
+//   开放 open     → 运用（开放题要求运用知识建构答案）
+var ALIAS_LEVELS = {
+  oral: ['recall', 'understand'],
+  recognize: ['recognize', 'understand'],
+  open: ['apply']
+};
+
 function supportedUnifiedSet(typeId) {
+  if (ALIAS_LEVELS[typeId]) {
+    var s = {};
+    ALIAS_LEVELS[typeId].forEach(function (l) { var u = toUnified(l); if (u) s[u] = true; });
+    return s;
+  }
   var t = Registry.get(typeId);
+  if (!t) {
+    var n = Registry.normalizeQuestionType(typeId);
+    t = n ? Registry.get(n.id) : null;
+  }
   if (!t) {
     throw new StrategyError('非法 questionTypeId: ' + typeId, CODES.INVALID_REQUEST, { questionTypeId: typeId });
   }

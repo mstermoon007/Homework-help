@@ -3,7 +3,7 @@
  *
  * 提供 ExercisePlugin 接口（id/name/grades/subject/category/generate/render/check），
  * 供 practice.html / dev/plugin-check.html 使用。
- * 随机数统一使用 shared/common.js 的 PluginUtil；图形全部为动态 SVG。
+ * 随机数统一使用 shared/core/common.js 的 PluginUtil；图形全部为动态 SVG。
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -12,12 +12,12 @@
   'use strict';
 
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
-    : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
-  if (!_PU) throw new Error('plugins/math-statistics.js 依赖 shared/common.js（PluginUtil），请先加载');
+    : (typeof require !== 'undefined' ? require('../shared/core/common.js') : null);
+  if (!_PU) throw new Error('plugins/math-statistics.js 依赖 shared/core/common.js（PluginUtil），请先加载');
   // 难度统一经 App.Difficulty.paramsFor 解析（批次7）
   var _D = (typeof App !== 'undefined' && App.Difficulty) ? App.Difficulty
-    : (typeof require !== 'undefined' ? require('../shared/difficulty.js') : null);
-  if (!_D || !_D.paramsFor) throw new Error('plugins/math-statistics.js 依赖 shared/difficulty.js（App.Difficulty），请先加载');
+    : (typeof require !== 'undefined' ? require('../shared/catalog/difficulty.js') : null);
+  if (!_D || !_D.paramsFor) throw new Error('plugins/math-statistics.js 依赖 shared/catalog/difficulty.js（App.Difficulty），请先加载');
 
   // ============ 随机工具（统一走 PluginUtil） ============
   function rnd(min, max) { return _PU.randInt(min, max); }

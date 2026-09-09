@@ -3,13 +3,13 @@ const fs = require('fs');
 const path = require('path');
 const coreFiles = [
   'practice.html',
-  'shared/common.js',
-  'shared/tokens.css',
-  'shared/base.css',
-  'shared/components.css',
-  'shared/toolbar.css',
-  'shared/pages.css',
-  'shared/print.js'
+  'shared/core/common.js',
+  'shared/styles/tokens.css',
+  'shared/styles/base.css',
+  'shared/styles/components.css',
+  'shared/styles/toolbar.css',
+  'shared/styles/pages.css',
+  'shared/presentation/print.js'
 ];
 
 let allOk = true;

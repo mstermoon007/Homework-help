@@ -19,7 +19,7 @@
 
 var StrategyRequest = require('./strategy-request.js');
 var StrategyResolver = require('./strategy-resolver.js');
-var CapabilityResolver = require('../capability-resolver.js');
+var CapabilityResolver = require('../capability/capability-resolver.js');
 var QuestionTypeStrategy = require('./question-type-strategy.js');
 var CognitiveStrategy = require('./cognitive-strategy.js');
 var StaticDifficulty = require('./static-difficulty.js');
@@ -34,7 +34,7 @@ var StrategyResult = require('./strategy-result.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 var AdaptiveStrategy = require('./adaptive-strategy.js');
-var StrategyConfig = require('../strategy-config.js');
+var StrategyConfig = require('./strategy-config.js');
 
 // ============ Refactor Step 3：统一 plan()，直接扩展三模式（quick/teacher/competition） ============
 // 不建三套 Strategy Engine：同一 plan() 内
@@ -66,7 +66,7 @@ function poolSource(request, mode) {
 }
 
 function poolEntries(source) {
-  var KB = require('../knowledge-bank.js');
+  var KB = require('../knowledge/knowledge-bank.js');
   var entries = [];
   if (source.unitId != null) {
     var grades = source.grade != null ? [source.grade] : [1, 2, 3, 4, 5, 6];
@@ -174,6 +174,296 @@ function allocateLargestRemainder(weights, total) {
   return out;
 }
 
+// P0-03 Step 14: native generator 支持检查（quick/teacher/competition 池化与类型驱动共用）
+function hasNativeSupport(kp) {
+  if (!kp) return false;
+  var GenRegistry = require('../generator/generator-registry.js');
+  // 直接绑定了 core generator
+  var gens = GenRegistry.forKnowledgePoint(kp.id);
+  if (gens.some(function (g) { return g.scope === 'core'; })) return true;
+  // 算术语义域（algebra + 可解析算术语义）
+  var ArithSem = require('../generator/core/kp-arithmetic-semantics.js');
+  var arithSem = ArithSem.resolveArithmeticSemantics(kp);
+  var isAlgebraDomain = !!(kp && kp.legacy && kp.legacy.category === 'algebra');
+  if (isAlgebraDomain && (arithSem || (kp.source && kp.source.legacyType))) return true;
+  // 复杂算术语义
+  var ComplexSem = require('../generator/core/kp-complex-semantics.js');
+  if (ComplexSem.resolveComplexSemantics(kp)) return true;
+  return false;
+}
+
+// ============ 决策层：分题型知识点选择（planByType） ============
+// UI 层透传 knowledgePointIds（用户选区）+ questionTypes + 数量（总数量 count / 分题型数量）。
+// 决策语义：题型数量在「最优知识点群」内均分，且知识点数量不再由 per-KP 配额 / 权重决定
+// （清除旧 kpAllocation「知识点控制数量」逻辑）。
+// 最优群评分（首版）：知识点密度（同模块数归一）+ 知识点延伸深度（螺旋×结构步数）；
+// 后续迭代再加入难度贴近度等维度。
+var TYPE_KP_MAX_GROUP = 4;
+
+// 按 ID 解析池条目：真实 knowledge-bank 条目优先（name/moduleId/weight 对齐），否则按 KnowledgePoint 合成
+function entriesById(ids) {
+  var KnowledgePoint = require('../knowledge/knowledge-point.js');
+  var KB = require('../knowledge/knowledge-bank.js');
+  var idx = {};
+  [1, 2, 3, 4, 5, 6].forEach(function (g) {
+    (KB.getEntries('math', g) || []).forEach(function (e) { idx[e.id] = e; });
+  });
+  return ids.map(function (id) {
+    if (idx[id]) return idx[id];
+    var kp = null;
+    try { kp = KnowledgePoint.get(id); } catch (e) { /* keep null */ }
+    return {
+      id: id,
+      name: (kp && kp.identity && kp.identity.name) || id,
+      pluginId: (kp && kp.source && kp.source.pluginId) || null,
+      moduleId: (kp && kp.module && kp.module.id) || null,
+      category: (idx[id] && idx[id].category) || (kp && kp.category) || (kp && kp.module && kp.module.category) || null,
+      weight: (kp && kp.metadata && typeof kp.metadata.weight === 'number') ? kp.metadata.weight : 1,
+      type: null
+    };
+  });
+}
+
+// “知识点密度”：该候选所在知识点分类（kp.category，缺失时回退 moduleId）在池内的候选数 /
+// 池内最大候选数（归一 0..1）。知识点驱动：按认知/能力分类聚合，而非按题型模块聚合。
+function densityKey(cand) {
+  return String((cand.entry && (cand.entry.category || cand.entry.moduleId)) ||
+    (cand.kp && cand.kp.category) || '');
+}
+function typeKpDensityDepth(cand, moduleCount, maxModule) {
+  var kp = cand.kp;
+  var density = moduleCount[densityKey(cand)] || 0;
+  var densityScore = Math.min(1, density / Math.max(1, maxModule));
+  var maxSpiral = (kp && kp.spiral && typeof kp.spiral.maxLevel === 'number') ? kp.spiral.maxLevel : 1;
+  var maxSteps = (kp && kp.structure && typeof kp.structure.maxSteps === 'number') ? kp.structure.maxSteps : 1;
+  var depth = 0.6 * Math.min(1, maxSpiral / 6) + 0.4 * Math.min(1, maxSteps / 4);
+  return { density: densityScore, depth: depth, composite: 0.5 * densityScore + 0.5 * depth };
+}
+
+// 双量控制（“两量互锁守恒”）：分题型数量的三种来源，返回 [{questionType, count}] 与参与题型总数
+//   ① typeCounts（显式逐题型数量） → 权威；参与数 = Σ count（守恒校验在 planByType 内完成）
+//   ② perTypeCount（统一分题型数量） → 每题型一致；参与题型数受总数量约束（守恒：n×perTypeCount ≤ count）
+//   ③ 仅 count → 最大余数均分（守恒：Σ = count）
+function allocateTypeCounts(qtList, count, perTypeCount, typeCounts) {
+  var n = qtList.length;
+  var out = { entries: [], total: 0 };
+  if (!n) return out;
+  var i, entry;
+  if (Array.isArray(typeCounts) && typeCounts.length) {
+    var map = {};
+    typeCounts.forEach(function (t) { if (t && t.questionType != null) map[String(t.questionType)] = t.count; });
+    var total = 0;
+    var entries = qtList.map(function (q) {
+      var c = map[String(q)] != null ? Math.max(0, Math.floor(map[String(q)])) : 0;
+      total += c;
+      return { questionType: q, count: c };
+    });
+    return { entries: entries, total: total };
+  }
+  if (perTypeCount != null && perTypeCount >= 1) {
+    var pt = Math.min(count, Math.floor(perTypeCount));
+    var effN = Math.min(n, Math.max(1, Math.floor(count / pt)));
+    return {
+      entries: qtList.map(function (q, j) { return { questionType: q, count: j < effN ? pt : 0 }; }),
+      total: effN * pt
+    };
+  }
+  var base = Math.floor(count / n);
+  var rem = count - base * n;
+  return {
+    entries: qtList.map(function (q, j) { return { questionType: q, count: base + (j < rem ? 1 : 0) }; }),
+    total: count
+  };
+}
+
+// 最大余数均分（组内等分，非权重）
+function equalShares(total, n) {
+  var out = [];
+  if (!n || total < 1) return out;
+  var base = Math.floor(total / n);
+  var rem = total - base * n;
+  for (var i = 0; i < n; i++) out.push(base + (i < rem ? 1 : 0));
+  return out;
+}
+
+/**
+ * 分题型知识点决策（决策层新入口）：
+ *   request.knowledgePointIds（用户选区） + request.questionTypes + 数量（count / perTypeCount / typeCounts）
+ *   → 逐题型在池内按 density+depth 评分选择“最优知识点群” → 群内等分题量 → 逐 KP 走 plan() 出计划。
+ *
+ * 无 questionTypes（无题型维度）时回退为池内均分（not 权重 / 非 per-KP 配额），兼容既有 multi-kp 拆分语义。
+ * 幂等：多题型之间相互独立；池内无可用候选时题型计数记入 trace.failedPlans（计数不跨题型挪用）。
+ */
+function planByType(request) {
+  request = StrategyRequest.normalizeRequest(request);
+  var reqCheck = StrategyRequest.validateRequest(request);
+  if (!reqCheck.valid) {
+    throw new StrategyError('Request 非法: ' + reqCheck.errors.join('; '), CODES.INVALID_REQUEST, { errors: reqCheck.errors });
+  }
+  var qtList = requestedQuestionTypes(request);
+  var source = poolSource(request, request.mode || 'multi-kp');
+  if (source.subject !== 'math') {
+    throw new StrategyError('核心生成引擎仅支持数学（math），暂不支持 ' + source.subject + '（multi-kp）', CODES.UNSUPPORTED_SUBJECT, { subject: source.subject });
+  }
+
+  var kpIds = request.knowledgePointIds || [];
+  var hasExplicitTypeCounts = Array.isArray(request.typeCounts) && request.typeCounts.length;
+  var count = request.count != null ? request.count : (request.volume != null ? request.volume : null);
+  if (hasExplicitTypeCounts && count == null) {
+    count = 0;
+    request.typeCounts.forEach(function (t) { count += (t && typeof t.count === 'number') ? t.count : 0; });
+  }
+  if (count == null) count = 10;
+  if (typeof count !== 'number' || !isFinite(count) || count < 1 || Math.floor(count) !== count) {
+    throw new StrategyError('count 必须是 >=1 的整数: ' + count, CODES.INVALID_REQUEST, { count: count });
+  }
+
+  var entries = kpIds.length ? entriesById(kpIds) : poolEntries(source);
+  var poolCandidates = resolvePoolCandidates(entries).filter(function (c) { return candidateFeasible(c, qtList); });
+  poolCandidates = poolCandidates.filter(function (c) { return hasNativeSupport(c.kp); });
+
+  var trace = {
+    mode: 'multi-kp',
+    driven: qtList.length ? 'type' : 'pool',
+    pool: { subject: source.subject, grade: source.grade, size: entries.length, feasible: poolCandidates.length, questionTypes: qtList.length ? qtList.slice() : null }
+  };
+
+  if (!poolCandidates.length) {
+    trace.selection = [];
+    trace.failedPlans = [];
+    trace.message = entries.length ? '池内知识点均不支持请求题型/无生成能力' : '该知识点池无可用知识点';
+    var emptyResult = StrategyResult.createStrategyResult([], { trace: trace, mode: 'multi-kp' }, []);
+    emptyResult.trace = trace;
+    return emptyResult;
+  }
+
+  var typePlan = allocateTypeCounts(qtList, count, request.perTypeCount, hasExplicitTypeCounts ? request.typeCounts : null);
+  // 守恒口径：显式逐题型数量（typeCounts）权威且必须 Σ = count（两量互锁守恒）；
+  // 统一 perTypeCount 为「每题型数量」，有效总数量 = 参与题型数 × perTypeCount（≤ count 上限）；
+  // 无题型维度走池内均分回退（独立守恒于 shares）。
+  if (hasExplicitTypeCounts && typePlan.total !== count) {
+    throw new StrategyError('分题型数量守恒不变式被破坏: sum=' + typePlan.total + ' !== count=' + count, CODES.INVALID_REQUEST, { typeCounts: typePlan.entries, count: count });
+  }
+  if (qtList.length && !hasExplicitTypeCounts && request.perTypeCount != null) {
+    count = typePlan.total;
+  }
+  trace.count = { total: count, perTypeCount: request.perTypeCount != null ? request.perTypeCount : null, typeCounts: hasExplicitTypeCounts ? request.typeCounts : null };
+  trace.typeCounts = typePlan.entries.filter(function (e) { return e.count > 0; });
+
+  // 模块密度（每模块候选数），供 density 评分复用
+  var moduleCount = {};
+  var maxModule = 0;
+  poolCandidates.forEach(function (c) {
+    var m = densityKey(c);
+    moduleCount[m] = (moduleCount[m] || 0) + 1;
+    if (moduleCount[m] > maxModule) maxModule = moduleCount[m];
+  });
+
+  var plans = [];
+  var failedPlans = [];
+  var planTraces = [];
+  var decisions = [];
+
+  function emitPlan(id, subCount, questionType, decision) {
+    var sub = Object.assign({}, request, {
+      mode: 'single-kp',
+      knowledgePointIds: [id],
+      knowledgePoints: undefined,
+      knowledgePointId: undefined,
+      kp: undefined,
+      count: subCount,
+      questionType: undefined,
+      questionTypes: questionType ? [questionType] : undefined,
+      perTypeCount: undefined,
+      typeCounts: undefined,
+      kpAllocation: undefined,
+      combine: undefined
+    });
+    try {
+      var r = plan(sub);
+      if (r && r.plans && r.plans[0]) {
+        var qp = r.plans[0];
+        qp.__pool = { mode: 'type-driven', questionType: decision.questionType || null, kpId: id, composite: decision.composite };
+        qp.__decision = { questionType: decision.questionType || null, kpId: id, density: decision.density, depth: decision.depth };
+        plans.push(qp);
+        if (r.meta && r.meta.trace) planTraces.push(r.meta.trace);
+      } else {
+        failedPlans.push({ questionType: decision.questionType || null, kpId: id, error: 'StrategyEngine 未产出计划' });
+      }
+    } catch (e) {
+      failedPlans.push({ questionType: decision.questionType || null, kpId: id, error: String((e && e.message) || e) });
+    }
+  }
+
+  if (!qtList.length) {
+    // 无题型维度：总数量池内均分（非权重、非 per-KP 配额），逐 KP 由 plan() 选默认题型
+    var shares = allocateLargestRemainder(poolCandidates.map(function () { return 1; }), count);
+    poolCandidates.forEach(function (c, i) {
+      if (shares[i] < 1) return;
+      emitPlan(c.entry.id, shares[i], null, { questionType: null, composite: 0, density: 0, depth: 0 });
+    });
+  } else {
+    // 逐题型：筛出支持该题型的候选人 → 按 density+depth 评分 → 最优知识点群 → 群内等分
+    typePlan.entries.forEach(function (te) {
+      if (!te.count) return;
+      var type = te.questionType;
+      var typePool = poolCandidates.filter(function (c) { return candidateFeasible(c, [type]); });
+      if (!typePool.length) {
+        failedPlans.push({ questionType: type, kpId: null, error: '池内无支持该题型且具备生成能力的知识点' });
+        return;
+      }
+      var scored = typePool.map(function (c) {
+        var s = typeKpDensityDepth(c, moduleCount, maxModule);
+        return { cand: c, score: s };
+      });
+      scored.sort(function (a, b) {
+        return (b.score.composite - a.score.composite) || (b.score.density - a.score.density) || (b.score.depth - a.score.depth) || (a.cand.entry.id < b.cand.entry.id ? -1 : 1);
+      });
+      var groupSize = Math.min(scored.length, Math.max(1, Math.min(TYPE_KP_MAX_GROUP, Math.ceil(te.count / 4))));
+      var group = scored.slice(0, groupSize);
+      var gShares = equalShares(te.count, group.length);
+      var decision = {
+        questionType: type,
+        count: te.count,
+        kps: group.map(function (g, i) {
+          return {
+            kpId: g.cand.entry.id,
+            name: g.cand.entry.name,
+            density: Math.round(g.score.density * 100) / 100,
+            depth: Math.round(g.score.depth * 100) / 100,
+            composite: Math.round(g.score.composite * 100) / 100,
+            share: gShares[i]
+          };
+        })
+      };
+      decisions.push(decision);
+      group.forEach(function (g, i) {
+        if (gShares[i] < 1) return;
+        emitPlan(g.cand.entry.id, gShares[i], type, {
+          questionType: type,
+          density: decision.kps[i].density,
+          depth: decision.kps[i].depth,
+          composite: decision.kps[i].composite
+        });
+      });
+    });
+  }
+
+  trace.decisions = decisions;
+  trace.selected = plans.length;
+  trace.failedPlans = failedPlans;
+  trace.planTraces = planTraces;
+
+  var result = StrategyResult.createStrategyResult(plans, { trace: trace, mode: 'multi-kp' }, []);
+  result.trace = trace;
+  var resultCheck = StrategyResult.validateStrategyResult(result);
+  if (!resultCheck.valid) {
+    throw new StrategyError('StrategyResult 校验失败: ' + resultCheck.errors.join('; '), CODES.INVALID_PLAN, { errors: resultCheck.errors });
+  }
+  result.valid = true;
+  return result;
+}
+
 // Pool 模式主流程：resolve pool → 打分 → 分配选择 → 逐 KP 走同一 plan() 核心 → QuestionPlan[]
 function planFromPool(request, mode) {
   var source = poolSource(request, mode);
@@ -205,22 +495,6 @@ function planFromPool(request, mode) {
 
   var scored = candidates.map(function (c) { return { cand: c, score: scorePoolCandidate(c, request, source, mode) }; });
   // P0-03 Step 14: 仅分配给有 native generator 支持的 KP（避免 GENERATOR_UNSUPPORTED 导致计数缺失）
-  var ArithSem = require('../generator/core/kp-arithmetic-semantics.js');
-  var ComplexSem = require('../generator/core/kp-complex-semantics.js');
-  var GenRegistry = require('../generator/generator-registry.js');
-  function hasNativeSupport(kp) {
-    if (!kp) return false;
-    // 直接绑定了 core generator
-    var gens = GenRegistry.forKnowledgePoint(kp.id);
-    if (gens.some(function (g) { return g.scope === 'core'; })) return true;
-    // 算术语义域（algebra + 可解析算术语义）
-    var arithSem = ArithSem.resolveArithmeticSemantics(kp);
-    var isAlgebraDomain = !!(kp && kp.legacy && kp.legacy.category === 'algebra');
-    if (isAlgebraDomain && (arithSem || kp.source.legacyType)) return true;
-    // 复杂算术语义
-    if (ComplexSem.resolveComplexSemantics(kp)) return true;
-    return false;
-  }
   scored = scored.filter(function (s) { return hasNativeSupport(s.cand.kp); });
   var shares = allocateLargestRemainder(scored.map(function (s) { return s.score.score; }), count);
 
@@ -228,6 +502,7 @@ function planFromPool(request, mode) {
     return {
       kpId: s.cand.entry.id,
       name: s.cand.entry.name,
+      category: densityKey(s.cand),
       moduleId: s.cand.entry.moduleId,
       pluginId: s.cand.entry.pluginId,
       baseWeight: Math.round(s.score.base * 100) / 100,
@@ -702,7 +977,10 @@ module.exports = {
   formatStrategyTrace: formatStrategyTrace,
   POOL_MODES: POOL_MODES,
   DIM_WEIGHTS: DIM_WEIGHTS,
-  planFromPool: planFromPool
+  planFromPool: planFromPool,
+  planByType: planByType,
+  allocateTypeCounts: allocateTypeCounts,
+  TYPE_KP_MAX_GROUP: TYPE_KP_MAX_GROUP
 };
 
 // 浏览器/全局挂载

@@ -12,7 +12,7 @@
  *     批改给出综合得分 + 分领域/分题型正确率提示。
  *
  * generate 返回 Promise（需异步加载子插件），practice.html 已支持异步 generate。
- * 随机数统一使用 shared/common.js 的 PluginUtil。
+ * 随机数统一使用 shared/core/common.js 的 PluginUtil。
  */
 // @ts-check
 /// <reference path="../shared/plugin-types.js" />
@@ -21,8 +21,8 @@
   'use strict';
 
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
-    : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
-  if (!_PU) throw new Error('plugins/math-comprehensive.js 依赖 shared/common.js（PluginUtil），请先加载');
+    : (typeof require !== 'undefined' ? require('../shared/core/common.js') : null);
+  if (!_PU) throw new Error('plugins/math-comprehensive.js 依赖 shared/core/common.js（PluginUtil），请先加载');
 
   // 子插件来源：统一从 PLUGIN_REGISTRY 动态选取（新增/删除插件自动同步，无硬编码清单）。
   // 仅在 PLUGIN_REGISTRY 不可用或当前无已注册数学插件时 reject，避免维护两份易漂移的数据。
@@ -32,7 +32,7 @@
   }
 
   // ============ 子插件异步加载 ============
-  // 统一走 shared/common.js 的 App.PluginLoader（scriptCache / 5 秒超时 / deps 依赖链 /
+  // 统一走 shared/core/common.js 的 App.PluginLoader（scriptCache / 5 秒超时 / deps 依赖链 /
   // Node require 回退均由加载器提供），本插件不再自建加载逻辑。
   var subPlugins = null;
   var subPluginMap = {};
@@ -82,7 +82,7 @@
     }
     var loader = (typeof App !== 'undefined' && App.PluginLoader) ? App.PluginLoader : null;
     if (!loader) {
-      return Promise.reject(new Error('math-comprehensive 依赖 App.PluginLoader（shared/common.js），请先加载'));
+      return Promise.reject(new Error('math-comprehensive 依赖 App.PluginLoader（shared/core/common.js），请先加载'));
     }
     subPlugins = [];
     subPluginMap = {};
@@ -549,7 +549,7 @@
    * @returns {Promise<Array<Object>>} 标准 Question[]（Promise，因 legacy generate 可异步）
    */
   function generateForKp(kp, n, grade, difficulty, existingPlan) {
-    // M4-19：Generator Runtime 统一来自 shared/strategy-engine.bundle.js 挂载的全局。
+    // M4-19：Generator Runtime 统一来自 shared/engine/strategy-engine.bundle.js 挂载的全局。
     // 不再运行时 require（消灭 require 链）；缺失即显式抛错，方便定位加载顺序问题。
     // Node 直接 require 本插件（仅测试 allocateByWeight 等纯函数）时不会走到此处生题，
     // 故无需 require fallback —— 保持与浏览器一致的全链路由全局注入。
@@ -558,7 +558,7 @@
     var Selector = g.GeneratorSelector;
     var Bridge = g.SemanticQuestionBridge;
     if (!Engine || !Selector || !Bridge) {
-      throw new Error('M4-19: Generator Runtime 未加载（需先加载 shared/strategy-engine.bundle.js）');
+      throw new Error('M4-19: Generator Runtime 未加载（需先加载 shared/engine/strategy-engine.bundle.js）');
     }
 
     var diff = (difficulty != null) ? difficulty : 3;
@@ -786,7 +786,7 @@
         var g = (typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
         var GE = g.GenerationEngine;
         if (!GE) {
-          return Promise.reject(new Error('M7-R08: GenerationEngine 未加载（需先加载 shared/generation-engine.js）'));
+          return Promise.reject(new Error('M7-R08: GenerationEngine 未加载（需先加载 shared/engine/generation-engine.js）'));
         }
         var grade = opts.grade || 1;
         var count = opts.count || 10;

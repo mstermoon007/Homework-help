@@ -16,7 +16,7 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -60,113 +60,153 @@ function makeQuestion(plan, context, i, kp) {
   var isMock = id.indexOf('mock') !== -1 || name.indexOf('模拟') !== -1;
   var isIntegrated = id.indexOf('integrated') !== -1 || name.indexOf('综合应用') !== -1;
 
+  var v = i; // 变体序号：同 KP 同题型下轮换不同参数/设问，提升语义容量（R6）
   var prompt, answer, steps;
 
   if (isSumDiff) {
-    // 和倍问题：甲+乙=48，甲是乙的 3 倍 → 乙=12，甲=36
-    prompt = '甲、乙两数的和是 48，甲数是乙数的 3 倍。乙数是多少？';
-    answer = 12;
+    // 和倍问题：甲+乙=S，甲是乙的 r 倍 → 乙=S/(r+1)
+    var SD = [{ s: 48, r: 3 }, { s: 60, r: 2 }, { s: 72, r: 5 }, { s: 96, r: 3 }];
+    var sd = SD[v % SD.length];
+    prompt = '甲、乙两数的和是 ' + sd.s + '，甲数是乙数的 ' + sd.r + ' 倍。乙数是多少？';
+    answer = sd.s / (sd.r + 1);
     steps = 2;
   } else if (isAge) {
-    // 年龄差不变：父 40、子 12，几年后父年龄是子 2 倍 → 差 28，子=28 时，28-12=16
-    prompt = '爸爸今年 40 岁，儿子今年 12 岁。多少年后爸爸的年龄正好是儿子的 2 倍？';
-    answer = 16;
+    // 年龄差不变：父 F、子 C，k 倍时子=(F-C)/(k-1)
+    var AGE = [{ f: 40, c: 12, k: 2 }, { f: 45, c: 15, k: 2 }, { f: 38, c: 10, k: 3 }, { f: 50, c: 20, k: 2 }];
+    var age = AGE[v % AGE.length];
+    var ageYears = (age.f - age.c) / (age.k - 1) - age.c;
+    prompt = '爸爸今年 ' + age.f + ' 岁，儿子今年 ' + age.c + ' 岁。多少年后爸爸的年龄正好是儿子的 ' + age.k + ' 倍？';
+    answer = ageYears;
     steps = 3;
   } else if (isProfitLoss) {
-    // 盈亏问题：每人 3 个多 7，每人 4 个少 5 → 人数=(7+5)/(4-3)=12
-    prompt = '幼儿园分苹果：如果每人分 3 个，则多出 7 个；如果每人分 4 个，则还差 5 个。'
-      + '幼儿园一共有多少个小朋友？';
-    answer = 12;
+    // 盈亏：每人 p1 多 e1，每人 p2 少 s2 → 人数=(e1+s2)/(p2-p1)
+    var PL = [{ p1: 3, e1: 7, p2: 4, s2: 5 }, { p1: 5, e1: 8, p2: 7, s2: 6 }, { p1: 4, e1: 10, p2: 6, s2: 2 }, { p1: 6, e1: 4, p2: 8, s2: 6 }];
+    var pl = PL[v % PL.length];
+    var plN = (pl.e1 + pl.s2) / (pl.p2 - pl.p1);
+    prompt = '幼儿园分苹果：如果每人分 ' + pl.p1 + ' 个，则多出 ' + pl.e1 + ' 个；如果每人分 ' + pl.p2 + ' 个，则还差 ' + pl.s2 + ' 个。幼儿园一共有多少个小朋友？';
+    answer = plN;
     steps = 3;
   } else if (isChicken) {
-    // 鸡兔同笼：头 20、脚 56 → 兔=(56-2×20)/2=8，鸡=12
-    prompt = '鸡兔同笼，共有 20 个头、56 只脚。笼中兔子有多少只？';
-    answer = 8;
+    // 鸡兔同笼：头 H、脚 F → 兔=(F-2H)/2
+    var CR = [{ h: 20, f: 56 }, { h: 30, f: 84 }, { h: 25, f: 70 }, { h: 18, f: 52 }];
+    var cr = CR[v % CR.length];
+    prompt = '鸡兔同笼，共有 ' + cr.h + ' 个头、' + cr.f + ' 只脚。笼中兔子有多少只？';
+    answer = (cr.f - 2 * cr.h) / 2;
     steps = 3;
   } else if (isAverage) {
-    // 平均数（移多补少）：三次平均 18，前两次 15、20 → 第三次=18×3-15-20=19
-    prompt = '小明三次数学测验的平均分是 18 分（满分 20），前两次分别得 15 分和 20 分。'
-      + '第三次测验得了多少分？';
-    answer = 19;
+    // 平均数：三次平均 A，前两次 x、y → 第三次=3A-x-y
+    var AV = [{ a: 18, x: 15, y: 20 }, { a: 90, x: 85, y: 92 }, { a: 88, x: 90, y: 86 }, { a: 80, x: 76, y: 82 }];
+    var av = AV[v % AV.length];
+    prompt = '小明三次数学测验的平均分是 ' + av.a + ' 分，前两次分别得 ' + av.x + ' 分和 ' + av.y + ' 分。第三次测验得了多少分？';
+    answer = 3 * av.a - av.x - av.y;
     steps = 2;
   } else if (isPlanting) {
-    // 植树（两端都栽）：路长 100 米，每隔 5 米一棵 → 100/5+1=21
-    prompt = '在一条长 100 米的小路一旁植树，每隔 5 米栽一棵，两端都要栽。一共要栽多少棵树？';
-    answer = 21;
+    // 植树（两端都栽）：路长 L、间隔 G → L/G+1
+    var PLT = [{ l: 100, g: 5 }, { l: 120, g: 6 }, { l: 150, g: 5 }, { l: 200, g: 8 }];
+    var plt = PLT[v % PLT.length];
+    prompt = '在一条长 ' + plt.l + ' 米的小路一旁植树，每隔 ' + plt.g + ' 米栽一棵，两端都要栽。一共要栽多少棵树？';
+    answer = plt.l / plt.g + 1;
     steps = 2;
   } else if (isPhalanx) {
-    // 实心方阵最外层：每边 8 人 → 4×(8-1)=28
-    prompt = '同学们排成一个实心方阵，最外层每边有 8 人。最外层一共有多少人？';
-    answer = 28;
+    // 实心方阵最外层：每边 n → 4(n-1)
+    var PHX = [8, 10, 6, 12];
+    var phx = PHX[v % PHX.length];
+    prompt = '同学们排成一个实心方阵，最外层每边有 ' + phx + ' 人。最外层一共有多少人？';
+    answer = 4 * (phx - 1);
     steps = 2;
   } else if (isPeriodic) {
-    // 周期：彩灯按红、黄、蓝循环，第 30 盏 → 30÷3=10 整除 → 蓝
-    prompt = '节日彩灯按「红、黄、蓝」的顺序循环排列。第 30 盏灯是什么颜色？';
-    answer = '蓝';
+    // 周期：颜色序列循环，第 pos 盏
+    var PER = [{ cols: ['红', '黄', '蓝'], pos: 30 }, { cols: ['红', '黄', '蓝', '绿'], pos: 25 }, { cols: ['红', '黄', '蓝'], pos: 22 }, { cols: ['黑', '白'], pos: 17 }];
+    var per = PER[v % PER.length];
+    prompt = '节日彩灯按「' + per.cols.join('、') + '」的顺序循环排列。第 ' + per.pos + ' 盏灯是什么颜色？';
+    answer = per.cols[(per.pos - 1) % per.cols.length];
     steps = 2;
   } else if (isGrass) {
-    // 牛吃草：10 头吃 20 天、15 头吃 10 天 → 每天长 5 份、原有 100 份；25 头吃 5 天
-    prompt = '一片牧场的草均匀生长。可供 10 头牛吃 20 天，或供 15 头牛吃 10 天。'
-      + '照此计算，可供 25 头牛吃多少天？';
-    answer = 5;
+    // 牛吃草：a 头 b 天、c 头 d 天 → 长 g=(a*b-c*d)/(b-d)，原 n0=a*b-g*b；e 头吃 t=n0/(e-g)
+    var GRASS = [{ a: 10, b: 20, c: 15, d: 10, e: 25, t: 5 }, { a: 10, b: 30, c: 15, d: 15, e: 20, t: 10 }, { a: 8, b: 20, c: 12, d: 10, e: 14, t: 8 }];
+    var gr = GRASS[v % GRASS.length];
+    prompt = '一片牧场的草均匀生长。可供 ' + gr.a + ' 头牛吃 ' + gr.b + ' 天，或供 ' + gr.c + ' 头牛吃 ' + gr.d + ' 天。照此计算，可供 ' + gr.e + ' 头牛吃多少天？';
+    answer = gr.t;
     steps = 4;
   } else if (isFracPct) {
-    // 分数应用：第一天 1/4、第二天 1/3，剩 50 页 → 剩 5/12，全书 120
-    prompt = '小明读一本书，第一天读了全书的 1/4，第二天读了全书的 1/3，还剩 50 页没读。'
-      + '这本书一共有多少页？';
-    answer = 120;
+    // 分数应用：第一天 f1、第二天 f2，剩 rem 页 → 全书=rem/(1-f1-f2)
+    var FR = [{ f1: '1/4', f2: '1/3', rem: 50, ans: 120 }, { f1: '1/3', f2: '1/4', rem: 60, ans: 144 }, { f1: '1/2', f2: '1/5', rem: 30, ans: 100 }];
+    var fr = FR[v % FR.length];
+    prompt = '小明读一本书，第一天读了全书的 ' + fr.f1 + '，第二天读了全书的 ' + fr.f2 + '，还剩 ' + fr.rem + ' 页没读。这本书一共有多少页？';
+    answer = fr.ans;
     steps = 3;
   } else if (isEconomics) {
-    // 经济利润：进价 80，标价 120，打八折 → 售价 96，利润 16
-    prompt = '一件商品进价 80 元，标价 120 元。商店按标价打八折出售，每件可获利多少元？';
-    answer = 16;
+    // 经济利润：进价 cost、标价 price、折扣 disc → 利润=price*disc-cost
+    var ECO = [{ cost: 80, price: 120, disc: 0.8, ans: 16 }, { cost: 100, price: 150, disc: 0.9, ans: 35 }, { cost: 60, price: 100, disc: 0.85, ans: 25 }];
+    var eco = ECO[v % ECO.length];
+    var ecoSale = Math.round(eco.price * eco.disc);
+    prompt = '一件商品进价 ' + eco.cost + ' 元，标价 ' + eco.price + ' 元。商店按标价打 ' + Math.round(eco.disc * 10) + ' 折出售，每件可获利多少元？';
+    answer = ecoSale - eco.cost;
     steps = 2;
   } else if (isInclusion) {
-    // 容斥（三集合）：40 人，数 20、英 18、科 16，数英 8、数科 7、英科 6，三者都参加 3
-    var total = 40, aN = 20, bN = 18, cN = 16, ab = 8, ac = 7, bc = 6, abc = 3;
-    prompt = '某班 40 人，参加数学小组 20 人、英语小组 18 人、科学小组 16 人；'
-      + '同时参加数学和英语的 8 人，数学和科学的 7 人，英语和科学的 6 人；三个小组都参加的 3 人。'
-      + '三个小组都没参加的有多少人？';
-    answer = total - (aN + bN + cN - ab - ac - bc + abc);
+    // 容斥（三集合）
+    var INC = [
+      { total: 40, aN: 20, bN: 18, cN: 16, ab: 8, ac: 7, bc: 6, abc: 3 },
+      { total: 50, aN: 25, bN: 22, cN: 20, ab: 10, ac: 9, bc: 8, abc: 4 },
+      { total: 45, aN: 18, bN: 16, cN: 15, ab: 7, ac: 6, bc: 5, abc: 2 }
+    ];
+    var inc = INC[v % INC.length];
+    prompt = '某班 ' + inc.total + ' 人，参加数学小组 ' + inc.aN + ' 人、英语小组 ' + inc.bN + ' 人、科学小组 ' + inc.cN + ' 人；'
+      + '同时参加数学和英语的 ' + inc.ab + ' 人，数学和科学的 ' + inc.ac + ' 人，英语和科学的 ' + inc.bc + ' 人；三个小组都参加的 ' + inc.abc + ' 人。三个小组都没参加的有多少人？';
+    answer = inc.total - (inc.aN + inc.bN + inc.cN - inc.ab - inc.ac - inc.bc + inc.abc);
     steps = 3;
   } else if (isEq2) {
-    // 二元一次方程组：x+y=10，x-y=4 → x=7
-    prompt = '已知甲、乙两数之和是 10，甲数比乙数大 4。甲数是多少？';
-    answer = 7;
+    // 二元一次方程组：x+y=S，x-y=D → x=(S+D)/2
+    var EQ2 = [{ s: 10, d: 4 }, { s: 14, d: 6 }, { s: 20, d: 8 }, { s: 16, d: 4 }];
+    var eq2 = EQ2[v % EQ2.length];
+    prompt = '已知甲、乙两数之和是 ' + eq2.s + '，甲数比乙数大 ' + eq2.d + '。甲数是多少？';
+    answer = (eq2.s + eq2.d) / 2;
     steps = 2;
   } else if (isEq1) {
-    // 一元一次方程：3x+5=20 → x=5
-    prompt = '一个数的 3 倍加上 5 等于 20。这个数是多少？（列方程解答）';
-    answer = 5;
+    // 一元一次方程：ax+b=c → x=(c-b)/a
+    var EQ1 = [{ a: 3, b: 5, c: 20 }, { a: 2, b: 3, c: 11 }, { a: 4, b: 7, c: 9 }, { a: 5, b: 8, c: 28 }];
+    var eq1 = EQ1[v % EQ1.length];
+    prompt = '一个数的 ' + eq1.a + ' 倍加上 ' + eq1.b + ' 等于 ' + eq1.c + '。这个数是多少？（列方程解答）';
+    answer = (eq1.c - eq1.b) / eq1.a;
     steps = 2;
   } else if (isDiophantine) {
-    // 不定方程：3x+2y=17 正整数解 → (1,7)(3,4)(5,1) 共 3 组
-    prompt = '求方程 3x + 2y = 17 的正整数解一共有多少组？';
-    answer = 3;
+    // 不定方程正整数解组数
+    var DIO = [{ s: '3x + 2y = 17', ans: 3 }, { s: '5x + 2y = 24', ans: 3 }, { s: '2x + 3y = 18', ans: 4 }];
+    var dio = DIO[v % DIO.length];
+    prompt = '求方程 ' + dio.s + ' 的正整数解一共有多少组？';
+    answer = dio.ans;
     steps = 3;
   } else if (isRatio) {
-    // 按比例分配：2:3:5 分 100 → 丙=100×5/10=50
-    prompt = '把 100 元奖金按 2:3:5 的比例分给甲、乙、丙三人。丙分得多少元？';
-    answer = 50;
+    // 按比例分配：比例 r1:r2:r3 分 T → 第三份=T*r3/(r1+r2+r3)
+    var RAT = [{ r: [2, 3, 5], t: 100 }, { r: [1, 2, 3], t: 120 }, { r: [3, 4, 5], t: 120 }, { r: [2, 5, 3], t: 100 }];
+    var rat = RAT[v % RAT.length];
+    var ratSum = rat.r[0] + rat.r[1] + rat.r[2];
+    prompt = '把 ' + rat.t + ' 元奖金按 ' + rat.r[0] + ':' + rat.r[1] + ':' + rat.r[2] + ' 的比例分给甲、乙、丙三人。丙分得多少元？';
+    answer = rat.t * rat.r[2] / ratSum;
     steps = 2;
   } else if (isMixture) {
-    // 混合浓度：300 克 20% 与 200 克 30% 混合 → 盐 60+60=120，浓度 120/500=24%
-    prompt = '把 300 克浓度 20% 的盐水和 200 克浓度 30% 的盐水混合。混合后盐水的浓度是百分之多少？';
-    answer = 24;
+    // 混合浓度：(m1*w1 + m2*w2)/(m1+m2)
+    var MIX = [{ m1: 300, w1: 20, m2: 200, w2: 30, ans: 24 }, { m1: 200, w1: 10, m2: 300, w2: 20, ans: 16 }, { m1: 400, w1: 15, m2: 100, w2: 25, ans: 17 }];
+    var mix = MIX[v % MIX.length];
+    prompt = '把 ' + mix.m1 + ' 克浓度 ' + mix.w1 + '% 的盐水和 ' + mix.m2 + ' 克浓度 ' + mix.w2 + '% 的盐水混合。混合后盐水的浓度是百分之多少？';
+    answer = (mix.m1 * mix.w1 + mix.m2 * mix.w2) / (mix.m1 + mix.m2);
     steps = 3;
   } else if (isMisc) {
-    // 统筹（烙饼）：锅每次烙 2 张、每面 3 分钟，烙 3 张最少 → 9 分钟
-    prompt = '一口平底锅每次最多能烙 2 张饼，每张饼两面都要烙，每面需 3 分钟。'
-      + '烙熟 3 张饼最少需要多少分钟？';
-    answer = 9;
+    // 统筹（烙饼）：锅每次 2 张、每面 s 分，烙 k 张最少 = k*s（每面均需 s，可重叠批）
+    var MISC = [{ k: 3, s: 3 }, { k: 3, s: 2 }, { k: 5, s: 3 }, { k: 4, s: 2 }];
+    var misc = MISC[v % MISC.length];
+    prompt = '一口平底锅每次最多能烙 2 张饼，每张饼两面都要烙，每面需 ' + misc.s + ' 分钟。烙熟 ' + misc.k + ' 张饼最少需要多少分钟？';
+    answer = misc.k * misc.s;
     steps = 3;
   } else if (isMock || isIntegrated) {
-    // 模拟卷 / 综合应用：和倍综合
-    prompt = '商店运来苹果和梨共 120 千克，其中苹果的质量是梨的 3 倍。梨有多少千克？';
-    answer = 30;
+    // 模拟卷 / 综合应用：和倍综合（总量 T，甲是乙 r 倍 → 乙=T/(r+1)）
+    var INT = [{ t: 120, r: 3 }, { t: 200, r: 4 }, { t: 160, r: 3 }, { t: 240, r: 5 }];
+    var it = INT[v % INT.length];
+    prompt = '商店运来苹果和梨共 ' + it.t + ' 千克，其中苹果的质量是梨的 ' + it.r + ' 倍。梨有多少千克？';
+    answer = it.t / (it.r + 1);
     steps = 2;
   } else {
-    // 兜底：简单和倍
+    // 兜底：简单和倍（随种子变化）
     var ga = Rng.randInt(rng, 2, 9);
     prompt = name + '：甲、乙两数的和是 ' + (ga * 4) + '，甲数是乙数的 3 倍，乙数是多少？';
     answer = ga;

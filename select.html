@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>选择练习 · 小学练习本</title>
-<link rel="stylesheet" href="shared/tokens.css">
-<link rel="stylesheet" href="shared/base.css">
-<link rel="stylesheet" href="shared/components.css">
-<link rel="stylesheet" href="shared/states.css">
+<link rel="stylesheet" href="shared/styles/tokens.css">
+<link rel="stylesheet" href="shared/styles/base.css">
+<link rel="stylesheet" href="shared/styles/components.css">
+<link rel="stylesheet" href="shared/styles/styles.css">
 <style>
   body {
     font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
@@ -269,6 +269,15 @@
     letter-spacing: 1px;
   }
   .sel-footer .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(245,166,35,0.45); }
+  .sel-footer .btn-start.disabled,
+  .sel-footer .btn-start.disabled:hover {
+    opacity: .5; cursor: not-allowed; box-shadow: none; transform: none; pointer-events: auto;
+  }
+  .subject-notice {
+    margin: 6px auto 0; max-width: 720px; padding: 12px 18px;
+    background: #fff7e6; border: 1px solid #ffe1a8; color: #a9650a;
+    border-radius: 12px; font-size: .92rem; text-align: center;
+  }
 
   /* 教师模式：左栏题目模块 + 右栏知识点模块（两栏布局） */
   .teacher-cols {
@@ -286,6 +295,18 @@
   }
   .teacher-col .type-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  .teacher-col .col-label {
+    font-size: 13px;
+    color: var(--brand, #2b6cc0);
+    font-weight: 600;
+    margin-bottom: 10px;
+    padding-left: 2px;
+  }
+  .teacher-col-mid {
+    border-left: 1px solid var(--line-strong, #d6e2f2);
+    border-right: 1px solid var(--line-strong, #d6e2f2);
+    padding: 0 20px;
   }
   /* 教师模式：知识点模块 */
   .kp-grid {
@@ -408,6 +429,8 @@
       <label class="f-label" for="subjectSelect">科目</label>
       <select id="subjectSelect">
         <option value="math">数学</option>
+        <option value="chinese">语文（接入中）</option>
+        <option value="english">英语（接入中）</option>
       </select>
     </div>
     <div class="filter-item">
@@ -426,15 +449,41 @@
   <!-- 模式说明（选择器下沿，单行，无特殊格式） -->
   <div class="mode-desc" id="modeDesc"></div>
 
+  <!-- 题量 / 难度 统一控制（R09 / R11：总预算 + 难度系统保留） -->
+  <div class="filter-bar" id="commonBar">
+    <div class="filter-item">
+      <label class="f-label" for="countSelect">题量（总预算）</label>
+      <select id="countSelect">
+        <option value="10">10 题</option>
+        <option value="20" selected>20 题</option>
+        <option value="30">30 题</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label class="f-label" for="difficultySelect">难度</label>
+      <select id="difficultySelect">
+        <option value="easy">简单</option>
+        <option value="normal" selected>适中</option>
+        <option value="hard">较难</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 非数学科目占位提示（R14：空白配置空间） -->
+  <div class="subject-notice" id="subjectNotice" style="display:none;"></div>
+
   <!-- 中部主视觉区 -->
   <div class="stage" id="stageQuick">
     <div class="sel-block">
-      <div class="blk-title">题型选择（可多选）</div>
+      <div class="blk-title">册别</div>
       <div class="book-seg" id="bookSegQuick">
         <button type="button" class="book-seg-btn on" data-book="all">全部</button>
         <button type="button" class="book-seg-btn" data-book="up">上册</button>
         <button type="button" class="book-seg-btn" data-book="down">下册</button>
       </div>
+      <div class="blk-title">单元（可多选）</div>
+      <div class="type-grid" id="unitGridQuick"></div>
+      <div class="blk-title">题型（可多选）</div>
       <div class="type-grid" id="typeGridQuick"></div>
       <div class="sel-footer">
         <a class="btn-start" id="startBtnQuick" href="practice.html">开始练习</a>
@@ -444,21 +493,26 @@
 
   <div class="stage" id="stageTeacher">
     <div class="sel-block">
-      <div class="blk-title">题型选择（可多选）</div>
-      <div class="type-grid" id="teacherTypeGrid"></div>
+      <div class="blk-title">册别</div>
       <div class="book-seg" id="bookSegTeacher">
         <button type="button" class="book-seg-btn on" data-book="all">全部</button>
         <button type="button" class="book-seg-btn" data-book="up">上册</button>
         <button type="button" class="book-seg-btn" data-book="down">下册</button>
       </div>
-      <div class="blk-title">单元知识点（按上下册 → 单元 → 知识点，可多选）</div>
+      <div class="blk-title">单元 → 知识点 → 题型（可多选）</div>
       <div class="teacher-cols">
         <div class="teacher-col">
+          <div class="col-label">单元</div>
           <div class="type-grid" id="teacherUnitGrid"></div>
         </div>
-        <div class="teacher-col teacher-col-right">
+        <div class="teacher-col teacher-col-mid">
+          <div class="col-label">知识点</div>
           <div class="chosen-empty" id="teacherKpHint">先选择单元，再勾选知识点</div>
           <div class="kp-grid" id="teacherKpGrid"></div>
+        </div>
+        <div class="teacher-col teacher-col-right">
+          <div class="col-label">题型</div>
+          <div class="type-grid" id="teacherTypeGrid"></div>
         </div>
       </div>
       <div class="sel-footer">
@@ -469,7 +523,7 @@
 
   <div class="stage" id="stageCompetition">
     <div class="sel-block">
-      <div class="blk-title">竞赛专题</div>
+      <div class="blk-title">题型标签（综合模块，可多选）</div>
       <div class="type-grid" id="typeGridCompetition"></div>
       <div class="sel-footer">
         <a class="btn-start" id="startBtnCompetition" href="practice.html">开始练习</a>
@@ -496,30 +550,24 @@
     </div>
 </footer>
 
-<script src="shared/core.js"></script>
-<script src="shared/module-catalog.js"></script>
-<script src="shared/knowledge-bank.js"></script>
-<script src="shared/catalog-utils.js"></script>
+<script src="shared/core/core.js"></script>
+<script src="shared/catalog/module-catalog.js"></script>
+<script src="shared/knowledge/knowledge-bank.js"></script>
+<script src="shared/request/request-normalize.js"></script>
+<script src="shared/catalog/catalog-utils.js"></script>
 <script>
 (function () {
   'use strict';
 
   // ---------- 常量 ----------
   var SUBJECT_CANON = { math: 'math' };
-  var SUBJECT_CONFIG = {
-    math: { modules: ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12'] }
-  };
-  var MODULE_LABEL = {
-    M1: '口算', M2: '竖式', M3: '脱式', M4: '填空', M5: '连线',
-    M6: '操作', M7: '看图列式', M8: '应用题', M9: '统计整理',
-    M10: '推理广角', M11: '判断', M12: '选择'
-  };
   var MODE_DESC = {
-    quick: { title: '快速模式', desc: '当前科目与年级的所有题型，可多选后一键生成练习题。' },
-    teacher: { title: '教师模式', desc: '按知识点自由挑选题型，灵活组合，适合备课与针对性训练。' },
-    competition: { title: '竞赛模式', desc: '高年级数学竞赛专题：数字谜、数论、组合计数与行程问题等。' }
+    quick: { title: '快速模式', desc: '按上下册 → 单元 → 题型，一键生成练习题。' },
+    teacher: { title: '教师模式', desc: '按上下册 → 单元 → 知识点 → 题型，知识点驱动生成。' },
+    competition: { title: '竞赛模式', desc: '按题型标签选题，竞赛综合模块知识点驱动生成。' }
   };
-  var COMPETITION_MIDS = ['C1','C2','C3','C4','C5','C6','C7','C8','C9'];
+  // 竞赛题型标签 = 7 类题型（与快速/教师一致，知识点驱动，不按 moduleId 过滤）
+  var COMPETITION_MIDS = [];
 
   // 快速模式（数学）：题型类别 → 能力类型匹配（数据驱动，不再锁定模块）。
   // 每个 KP 的 applicable_question_types 声明其支持题型；勾选某类题型即收集
@@ -537,15 +585,22 @@
 
   // ---------- 状态 ----------
   var state = {
-    mode: 'quick', subject: 'math', grade: 1, module: null,
-    quickModules: [], quickTypes: [], quickBook: 'all',
-    teacherTypes: [], teacherBook: 'all', teacherUnits: [], teacherKps: []
+    mode: 'quick', subject: 'math', grade: 1,
+    quickBook: 'all', quickUnits: [], quickTypes: [],
+    teacherBook: 'all', teacherUnits: [], teacherKps: [], teacherTypes: [],
+    competitionTags: []
   };
 
-  // 支持 URL 初态：?mode=quick|teacher|competition（深链/测试）
+  // 支持 URL 初态：?mode=&subject=&grade=（深链/测试，subject-types.html 跳转）
   (function () {
-    var m = /[?&]mode=([^&]+)/.exec(location.search);
+    var q = location.search;
+    var m = /[?&]mode=([^&]+)/.exec(q);
     if (m && ['quick', 'teacher', 'competition'].indexOf(m[1]) !== -1) state.mode = m[1];
+    var s = /[?&]subject=([^&]+)/.exec(q);
+    if (s && ['math', 'chinese', 'english'].indexOf(s[1]) !== -1) state.subject = s[1];
+    var g = /[?&]grade=([^&]+)/.exec(q);
+    var gn = Number(g && g[1]);
+    if (gn >= 1 && gn <= 6) state.grade = gn;
   })();
 
   // 元素
@@ -561,6 +616,7 @@
   var stageTeacher = document.getElementById('stageTeacher');
   var stageCompetition = document.getElementById('stageCompetition');
   var gridQuick = document.getElementById('typeGridQuick');
+  var unitGridQuick = document.getElementById('unitGridQuick');
   var gridCompetition = document.getElementById('typeGridCompetition');
   var teacherTypeGrid = document.getElementById('teacherTypeGrid');
   var teacherUnitGrid = document.getElementById('teacherUnitGrid');
@@ -611,20 +667,8 @@
   };
 
   function moduleTypeCards(subject, grade) {
-    var entries = fullKPEntries(subject, grade);
-    if (!entries.length && window.CatalogUtils && window.CatalogUtils.getKPEntries) {
-      entries = window.CatalogUtils.getKPEntries(subject, grade);
-    }
-    // 以实际数据为准：收集全部含知识点的模块（含 M0/M13 等不在白名单中的模块），
-    // 顺序优先沿用 SUBJECT_CONFIG.modules，出现过的模块追加在尾部，保证“全部展示”。
-    var order = (SUBJECT_CONFIG[subject] && SUBJECT_CONFIG[subject].modules) || [];
-    var buckets = {};
-    entries.forEach(function (k) { if (k.moduleId) (buckets[k.moduleId] = buckets[k.moduleId] || []).push(k); });
-    var mids = order.filter(function (mid) { return buckets[mid]; }).slice();
-    Object.keys(buckets).forEach(function (mid) { if (mids.indexOf(mid) === -1) mids.push(mid); });
-    return mids.map(function (mid) {
-      return { moduleId: mid, label: MODULE_LABEL[mid] || mid, kps: buckets[mid] };
-    });
+    // 已废弃：模块分组逻辑已删除，改用 unitBuckets 按教材单元分组（知识点驱动）
+    return [];
   }
 
   // 快速模式/教师模式共用：知识点是否命中某类题型（按 applicable_question_types 能力匹配，数据驱动）
@@ -669,38 +713,63 @@
       });
   }
 
+  // 竞赛模式：直接用 7 类题型标签（不按 moduleId 过滤，知识点驱动）
+  function competitionKpsByTag(subject, grade) {
+    if (subject !== 'math') return [];
+    return fullKPEntries(subject, grade);
+  }
   function competitionCards(subject, grade) {
-    if (subject !== 'math' || !window.CatalogUtils || !window.CatalogUtils.getKPEntries) return [];
-    return window.CatalogUtils.getKPEntries(subject, grade)
-      .filter(function (k) { return k.moduleId && COMPETITION_MIDS.indexOf(k.moduleId) !== -1; })
-      .map(function (k) { return { moduleId: k.moduleId, label: MODULE_LABEL[k.moduleId] || k.moduleId, kps: [k] }; })
-      .reduce(function (acc, c) {
-        var found = acc.find(function (a) { return a.moduleId === c.moduleId; });
-        if (found) { found.kps.push(c.kps[0]); } else { acc.push(c); }
-        return acc;
-      }, []);
+    // 已废弃：保留空实现避免外部引用报错
+    return [];
   }
 
-  // 快速模式：数学按 7 类题型卡（可多选，题型→能力匹配知识点，上下册过滤）
+  // 快速模式：上下册 → 单元（多选）→ 题型（多选），知识点驱动
   function renderQuick() {
-    gridQuick.innerHTML = '';
     var entries = fullKPEntries(state.subject, state.grade);
     var hasKps = entries && entries.length > 0;
+
+    // 单元卡（按上下册过滤，可多选）
+    var buckets = hasKps ? unitBuckets(entries, state.quickBook) : [];
+    var uHtml = '';
+    if (!buckets.length) {
+      uHtml = '<div class="type-empty">该册别暂无单元</div>';
+    } else {
+      buckets.forEach(function (bkt) {
+        var on = state.quickUnits.indexOf(bkt.unit) !== -1 ? ' on' : '';
+        uHtml += '<button type="button" class="type-card' + on + '" data-unit="' + esc(bkt.unit) + '">' + esc(bkt.unit) +
+          '<span class="tc-tag">' + bkt.kps.length + ' 个知识点</span></button>';
+      });
+    }
+    unitGridQuick.innerHTML = uHtml;
+    unitGridQuick.querySelectorAll('.type-card[data-unit]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var u = b.getAttribute('data-unit');
+        var idx = state.quickUnits.indexOf(u);
+        if (idx === -1) state.quickUnits.push(u); else state.quickUnits.splice(idx, 1);
+        renderQuick();
+        renderSummary();
+      });
+    });
+
+    // 题型卡（命中「册别 + 已选单元」的 KP 数）
+    gridQuick.innerHTML = '';
     if (!hasKps) {
       gridQuick.innerHTML = '<div class="type-empty">该科目 / 年级暂无可练内容</div>';
       return;
     }
     var html = '';
-    // 数学：7 类题型卡，副标显示「当前册 + 能力匹配」的知识点数（不再按模块锁定）
     QUICK_TYPE_DEFS.forEach(function (t) {
       var on = state.quickTypes.indexOf(t.key) !== -1 ? ' on' : '';
-      var cnt = entries.filter(function (k) { return kpMatchesType(k, t) && kpMatchesBook(k, state.quickBook); }).length;
+      var cnt = entries.filter(function (k) {
+        return kpMatchesBook(k, state.quickBook) && kpMatchesType(k, t) &&
+          (state.quickUnits.length ? state.quickUnits.indexOf(k.unit) !== -1 : true);
+      }).length;
       var disabled = cnt === 0 ? ' disabled' : '';
       html += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
         '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
     });
     gridQuick.innerHTML = html;
-    gridQuick.querySelectorAll('.type-card').forEach(function (b) {
+    gridQuick.querySelectorAll('.type-card[data-type]').forEach(function (b) {
       b.addEventListener('click', function () {
         var tk = b.getAttribute('data-type');
         var idx = state.quickTypes.indexOf(tk);
@@ -735,47 +804,18 @@
     return d.innerHTML;
   }
 
-  // 教师模式：题型（多选）→ 上下册单元 → 知识点（多选）。
-  // 左区：7 类题型卡；中区：按「上下册 × 单元」分组（仅含命中已选题型的知识点）；
-  // 右区：选中单元下的知识点多选。知识点为最终驱动（kps），题型作为策略白名单（types）。
+  // 教师模式：上下册 → 单元（多选）→ 知识点（多选）→ 题型（多选）
+  // 左栏：单元卡；中栏：知识点卡；右栏：题型卡。知识点为驱动，题型作为策略白名单。
   function renderTeacher() {
     var entries = fullKPEntries(state.subject, state.grade);
 
-    // 左区：题型卡（数学 7 类）
-    teacherTypeGrid.innerHTML = '';
-    var tHtml = '';
-    QUICK_TYPE_DEFS.forEach(function (t) {
-      var on = state.teacherTypes.indexOf(t.key) !== -1 ? ' on' : '';
-      var cnt = entries.filter(function (k) { return kpMatchesType(k, t) && kpMatchesBook(k, state.teacherBook); }).length;
-      var disabled = cnt === 0 ? ' disabled' : '';
-      tHtml += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
-        '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
-    });
-    teacherTypeGrid.innerHTML = tHtml;
-    teacherTypeGrid.querySelectorAll('.type-card').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var tk = b.getAttribute('data-type');
-        var idx = state.teacherTypes.indexOf(tk);
-        if (idx === -1) { state.teacherTypes.push(tk); } else { state.teacherTypes.splice(idx, 1); }
-        // 清空已选单元/知识点，避免残留不属于新题型范围的选择
-        state.teacherUnits = []; state.teacherKps = [];
-        renderTeacher();
-        renderSummary();
-      });
-    });
-
-    // 中区：单元分组（命中已选题型的知识点按 上下册×单元 聚合）
-    var tTypes = state.teacherTypes;
-    var filtered = entries.filter(function (k) {
-      return (tTypes.length ? tTypes.some(function (tk) {
-        var def = QUICK_TYPE_DEFS.filter(function (d) { return d.key === tk; })[0];
-        return def && kpMatchesType(k, def);
-      }) : true) && kpMatchesBook(k, state.teacherBook);
-    });
-    var buckets = unitBuckets(filtered, state.teacherBook);
+    // 左栏：单元卡（按上下册过滤，不依赖题型）
+    var unitFiltered = entries.filter(function (k) { return kpMatchesBook(k, state.teacherBook); });
+    var buckets = unitBuckets(unitFiltered, state.teacherBook);
     if (!buckets.length) {
-      teacherUnitGrid.innerHTML = '<div class="type-empty">当前「题型 + 册」组合下暂无单元（可先选择题型）</div>';
+      teacherUnitGrid.innerHTML = '<div class="type-empty">当前册别暂无单元</div>';
       teacherKpGrid.innerHTML = '';
+      teacherTypeGrid.innerHTML = '';
       if (teacherKpHint) { teacherKpHint.style.display = ''; teacherKpHint.textContent = '先选择单元，再勾选知识点'; }
       return;
     }
@@ -788,19 +828,14 @@
     });
     teacherUnitGrid.innerHTML = uHtml;
     renderTeacherKpGrid(buckets);
+    renderTeacherTypeGrid(buckets);
   }
 
   function renderTeacherKpGrid(buckets) {
     if (!buckets) {
       var entries = fullKPEntries(state.subject, state.grade);
-      var tTypes = state.teacherTypes;
-      var filtered = entries.filter(function (k) {
-        return (tTypes.length ? tTypes.some(function (tk) {
-          var def = QUICK_TYPE_DEFS.filter(function (d) { return d.key === tk; })[0];
-          return def && kpMatchesType(k, def);
-        }) : true) && kpMatchesBook(k, state.teacherBook);
-      });
-      buckets = unitBuckets(filtered, state.teacherBook);
+      var unitFiltered = entries.filter(function (k) { return kpMatchesBook(k, state.teacherBook); });
+      buckets = unitBuckets(unitFiltered, state.teacherBook);
     }
     var selectedUnits = buckets.filter(function (bkt) { return state.teacherUnits.indexOf(bkt.unit) !== -1; });
     if (!selectedUnits.length) {
@@ -822,11 +857,38 @@
       });
       html += '</div></div>';
     });
-    if (teacherKpHint) { teacherKpHint.style.display = totalKp ? 'none' : ''; teacherKpHint.textContent = totalKp ? ('已选 ' + totalKp + ' 个知识点') : '点击右侧知识点卡片多选（高亮）'; }
+    if (teacherKpHint) { teacherKpHint.style.display = totalKp ? 'none' : ''; teacherKpHint.textContent = totalKp ? ('已选 ' + totalKp + ' 个知识点') : '点击知识点卡片多选（高亮）'; }
     teacherKpGrid.innerHTML = html;
   }
 
-  // 教师模式：单元卡（中区）多选
+  // 右栏：题型卡（显示命中已选知识点的题型数量）
+  function renderTeacherTypeGrid(buckets) {
+    var selectedKps = [];
+    if (buckets) {
+      buckets.filter(function (bkt) { return state.teacherUnits.indexOf(bkt.unit) !== -1; })
+        .forEach(function (bkt) { bkt.kps.forEach(function (k) { if (state.teacherKps.indexOf(k.id) !== -1) selectedKps.push(k); }); });
+    }
+    var tHtml = '';
+    QUICK_TYPE_DEFS.forEach(function (t) {
+      var on = state.teacherTypes.indexOf(t.key) !== -1 ? ' on' : '';
+      var cnt = selectedKps.filter(function (k) { return kpMatchesType(k, t); }).length;
+      var disabled = cnt === 0 ? ' disabled' : '';
+      tHtml += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
+        '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
+    });
+    teacherTypeGrid.innerHTML = tHtml;
+    teacherTypeGrid.querySelectorAll('.type-card[data-type]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var tk = b.getAttribute('data-type');
+        var idx = state.teacherTypes.indexOf(tk);
+        if (idx === -1) { state.teacherTypes.push(tk); } else { state.teacherTypes.splice(idx, 1); }
+        renderTeacherTypeGrid();
+        renderSummary();
+      });
+    });
+  }
+
+  // 教师模式：单元卡（左栏）多选
   teacherUnitGrid.addEventListener('click', function (e) {
     var b = e.target.closest ? e.target.closest('[data-unit]') : null;
     if (!b) return;
@@ -843,6 +905,7 @@
       });
     }
     renderTeacherKpGrid();
+    renderTeacherTypeGrid();
     renderSummary();
   });
   teacherKpGrid.addEventListener('click', function (e) {
@@ -850,28 +913,29 @@
     if (!b) return;
     var kid = b.getAttribute('data-kp');
     var idx = state.teacherKps.indexOf(kid);
-    if (idx === -1) state.teacherKps.push(kid); else state.teacherKps.splice(idx, 1);
+    if (idx === -1) state.teacherKps.push(kid); else state.teacherKps.splice(kid, 1);
     b.classList.toggle('on');
+    renderTeacherTypeGrid();
     renderSummary();
   });
 
-  // 竞赛模式：竞赛题型
+  // 竞赛模式：7 类题型标签（不按 moduleId 过滤，知识点驱动）
   function renderCompetition() {
-    var cards = competitionCards(state.subject, state.grade);
-    if (!cards.length) {
-      gridCompetition.innerHTML = '<div class="type-empty">当前组合无可练竞赛题型（竞赛题型目前仅支持数学高年级）</div>';
-      return;
-    }
+    var entries = fullKPEntries(state.subject, state.grade);
     var html = '';
-    cards.forEach(function (c) {
-      var on = state.module === c.moduleId ? ' on' : '';
-      html += '<button type="button" class="type-card' + on + '" data-module="' + c.moduleId + '">' + c.label +
-        '<span class="tc-tag">竞赛专题</span></button>';
+    QUICK_TYPE_DEFS.forEach(function (t) {
+      var on = state.competitionTags.indexOf(t.key) !== -1 ? ' on' : '';
+      var cnt = entries.filter(function (k) { return kpMatchesType(k, t); }).length;
+      var disabled = cnt === 0 ? ' disabled' : '';
+      html += '<button type="button" class="type-card' + on + disabled + '" data-tag="' + t.key + '">' + t.label +
+        '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
     });
     gridCompetition.innerHTML = html;
-    gridCompetition.querySelectorAll('.type-card').forEach(function (b) {
+    gridCompetition.querySelectorAll('.type-card[data-tag]').forEach(function (b) {
       b.addEventListener('click', function () {
-        state.module = b.getAttribute('data-module');
+        var tk = b.getAttribute('data-tag');
+        var idx = state.competitionTags.indexOf(tk);
+        if (idx === -1) state.competitionTags.push(tk); else state.competitionTags.splice(idx, 1);
         renderCompetition();
         renderSummary();
       });
@@ -893,39 +957,78 @@
     var out = [];
     var entries = fullKPEntries(subject, grade);
     if (state.mode === 'quick') {
-      // 快速模式：数学按「题型能力匹配 + 上下册」收集知识点（数据驱动，无模块映射）
+      // 快速模式：按「上下册 + 已选单元 + 题型能力匹配」收集知识点（知识点驱动）
       var defs = QUICK_TYPE_DEFS.filter(function (t) { return state.quickTypes.indexOf(t.key) !== -1; });
       entries.forEach(function (k) {
         if (!kpMatchesBook(k, state.quickBook)) return;
+        if (state.quickUnits.length && state.quickUnits.indexOf(k.unit) === -1) return;
         if (defs.length && !defs.some(function (d) { return kpMatchesType(k, d); })) return;
         if (out.indexOf(k.id) === -1) out.push(k.id);
       });
     } else if (state.mode === 'teacher') {
       out = state.teacherKps.slice();
-    } else if (state.module) {
-      entries.filter(function (k) { return k.moduleId === state.module; })
-        .forEach(function (k) { if (out.indexOf(k.id) === -1) out.push(k.id); });
+    } else if (state.mode === 'competition') {
+      // 竞赛模式：按已选 7 类题型标签收集 KP（不按 moduleId 过滤，知识点驱动）
+      var tags = QUICK_TYPE_DEFS.filter(function (t) { return state.competitionTags.indexOf(t.key) !== -1; });
+      entries.forEach(function (k) {
+        if (tags.length && !tags.some(function (t) { return kpMatchesType(k, t); })) return;
+        if (out.indexOf(k.id) === -1) out.push(k.id);
+      });
     }
     return out;
   }
 
   function updateStartBtnUrl() {
     var subject = state.subject, grade = state.grade;
+    var countSel = document.getElementById('countSelect');
+    var diffSel = document.getElementById('difficultySelect');
+    var count = countSel ? Number(countSel.value) : 20;
+    var difficulty = diffSel ? diffSel.value : 'normal';
+
+    // R14：非数学科目仅预留配置空间，不直接生成（引擎返回 NOT_IMPLEMENTED）
+    var notice = document.getElementById('subjectNotice');
     var kps = collectKps(subject, grade);
-    var url = 'practice.html?subject=' + encodeURIComponent(SUBJECT_CANON[subject] || subject) + '&grade=' + grade + '&mode=' + state.mode;
-    if (kps.length) url += '&count=20&kps=' + encodeURIComponent(kps.join(','));
-    // 数学：把选中的 7 类题型随 URL 传给生成层作为题型策略白名单（知识点驱动 + 题型策略）
-    var types = (state.mode === 'quick') ? state.quickTypes.slice() : state.teacherTypes.slice();
-    if (subject === 'math' && types.length && kps.length) {
-      url += '&types=' + encodeURIComponent(types.join(','));
+    var types = (state.mode === 'quick') ? state.quickTypes.slice()
+      : (state.mode === 'teacher' ? state.teacherTypes.slice() : state.competitionTags.slice());
+    var book = (state.mode === 'quick') ? state.quickBook : state.teacherBook;
+
+    var req = RequestNormalize.createPracticeRequest({
+      mode: state.mode, subject: subject, grade: grade,
+      book: (book && book !== 'all') ? book : 'all',
+      unit: (state.mode === 'quick' && state.quickUnits.length) ? state.quickUnits : null,
+      knowledgePoints: kps,
+      tags: (state.mode === 'competition') ? state.competitionTags : [],
+      questionTypes: types,
+      count: count, difficulty: difficulty
+    });
+
+    var url = CatalogUtils.buildPracticeUrl(req);
+
+    // 统一出口：所有模式走同一 start 按钮集合
+    Object.keys(startBtns).forEach(function (m) {
+      var btn = startBtns[m];
+      if (!btn) return;
+      if (subject !== 'math') {
+        btn.href = '#';
+        btn.classList.add('disabled');
+        btn.onclick = function (e) { e.preventDefault(); };
+      } else {
+        btn.href = url;
+        btn.classList.remove('disabled');
+        btn.onclick = null;
+      }
+    });
+
+    if (notice) {
+      if (subject !== 'math') {
+        notice.style.display = 'block';
+        notice.textContent = '「' + ({ chinese: '语文', english: '英语' }[subject] || subject) +
+          '」生成引擎接入中，本阶段仅数学可生成，敬请期待。';
+      } else {
+        notice.style.display = 'none';
+        notice.textContent = '';
+      }
     }
-    // 数学：上下册过滤随 URL 透传（生成层据此可进一步校验；不传即全部）
-    if (subject === 'math') {
-      var book = (state.mode === 'quick') ? state.quickBook : state.teacherBook;
-      if (book && book !== 'all') url += '&book=' + encodeURIComponent(book);
-    }
-    var btn = startBtns[state.mode];
-    if (btn) btn.href = url;
   }
 
   function renderSummary() {
@@ -936,6 +1039,8 @@
     var md = MODE_DESC[state.mode] || MODE_DESC.quick;
     modeDesc.textContent = md.title + '：' + md.desc;
     if (modeSelect.value !== state.mode) modeSelect.value = state.mode; // 同步 URL 初态
+    if (subjectSelect.value !== state.subject) subjectSelect.value = state.subject; // 同步 subject（含 chinese/english 占位）
+    if (Number(gradeSelect.value) !== state.grade) gradeSelect.value = String(state.grade); // 同步 grade
     showStage();
     renderSummary();
   }
@@ -953,26 +1058,25 @@
   });
   subjectSelect.addEventListener('change', function () {
     state.subject = subjectSelect.value;
-    state.module = null;
-    state.quickModules = [];
-    state.quickTypes = [];
-    state.teacherTypes = [];
-    state.teacherUnits = [];
-    state.teacherKps = [];
+    state.quickUnits = []; state.quickTypes = [];
+    state.teacherTypes = []; state.teacherUnits = []; state.teacherKps = [];
+    state.competitionTags = [];
     state.quickBook = 'all'; state.teacherBook = 'all';
     ensureKnowledge(state.subject).then(renderAll);
   });
   gradeSelect.addEventListener('change', function () {
     state.grade = Number(gradeSelect.value);
-    state.module = null;
-    state.quickModules = [];
-    state.quickTypes = [];
-    state.teacherTypes = [];
-    state.teacherUnits = [];
-    state.teacherKps = [];
+    state.quickUnits = []; state.quickTypes = [];
+    state.teacherTypes = []; state.teacherUnits = []; state.teacherKps = [];
+    state.competitionTags = [];
     state.quickBook = 'all'; state.teacherBook = 'all';
     renderAll();
   });
+  // R09 / R11：题量（总预算）与难度变更即时刷新出口 URL
+  var countSelect = document.getElementById('countSelect');
+  var difficultySelect = document.getElementById('difficultySelect');
+  if (countSelect) countSelect.addEventListener('change', renderSummary);
+  if (difficultySelect) difficultySelect.addEventListener('change', renderSummary);
 
   // 知识库按需加载
   function ensureKnowledge(subject) {

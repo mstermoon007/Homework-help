@@ -45,8 +45,8 @@ function installStubSession() {
 var flush = function () { return new Promise(function (r) { setImmediate(r); }).then(function () { return new Promise(function (r) { setImmediate(r); }); }); };
 
 function freshBridge() {
-  delete require.cache[require.resolve(path.join(ROOT, 'shared', 'practice-bridge.js'))];
-  return require(path.join(ROOT, 'shared', 'practice-bridge.js'));
+  delete require.cache[require.resolve(path.join(ROOT, 'shared', 'bridge', 'practice-bridge.js'))];
+  return require(path.join(ROOT, 'shared', 'bridge', 'practice-bridge.js'));
 }
 
 function run() {

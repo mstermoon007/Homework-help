@@ -2,8 +2,8 @@
 /** dev/test-svg-make-ten.js — SVGMakeTen 单元测试 */
 'use strict';
 var path = require('path');
-require(path.join(__dirname, '..', 'shared', 'svg-core.js'));
-var M = require(path.join(__dirname, '..', 'shared', 'svg-make-ten.js'));
+require(path.join(__dirname, '..', 'shared', 'svg', 'svg-core.js'));
+var M = require(path.join(__dirname, '..', 'shared', 'svg', 'svg-make-ten.js'));
 
 var fail = 0, pass = 0;
 function assert(cond, msg) {

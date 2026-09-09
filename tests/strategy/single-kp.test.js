@@ -13,9 +13,9 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 const Validator = require(path.join(ROOT, 'shared', 'strategy', 'strategy-validator.js'));
-const Registry = require(path.join(ROOT, 'shared', 'question-type-registry.js'));
-const Resolver = require(path.join(ROOT, 'shared', 'capability-resolver.js'));
-const KnowledgePoint = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const Registry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
+const Resolver = require(path.join(ROOT, 'shared', 'capability', 'capability-resolver.js'));
+const KnowledgePoint = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 const MATH_KPS = [
   'math-g1-m0-make-ten',

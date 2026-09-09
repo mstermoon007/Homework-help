@@ -8,11 +8,11 @@
  */
 'use strict';
 
-var SQ = require('../semantic-question.js');
+var SQ = require('../semantic/semantic-question.js');
 var Pipeline = require('../validator/validation-pipeline.js');
 var BatchValidator = require('../validator/batch-validator.js');
 var RetryLoop = require('./retry-loop.js');
-var QID = require('../question-id.js');
+var QID = require('../knowledge/question-id.js');
 
 // ====== 新契约接口定义 ======
 var GENERATOR_CONTRACT = {
@@ -81,8 +81,8 @@ function createGenerator(impl) {
       }
 
       // 2. 派生 seed
-      var baseSeed = plan.seed || require('../question-id.js').generateBaseSeed();
-      var seeds = require('../question-id.js').generateSeedsForPlan({
+      var baseSeed = plan.seed || require('../knowledge/question-id.js').generateBaseSeed();
+      var seeds = require('../knowledge/question-id.js').generateSeedsForPlan({
         seed: baseSeed,
         generatorId: impl.id || 'unknown',
         count: plan.count || 1
@@ -126,7 +126,7 @@ function normalizeOutput(item, plan, index) {
     return item; // 已是标准格式
   }
   // 兜底：创建标准结构
-  return require('../semantic-question.js').createSemanticQuestion(Object.assign({}, item, {
+  return require('../semantic/semantic-question.js').createSemanticQuestion(Object.assign({}, item, {
     generator: item.generator || 'generator:' + (item.id || 'unknown'),
     generatorVersion: item.generatorVersion || '1.0.0',
     seed: plan.seed,
@@ -224,7 +224,7 @@ function validateSemanticQuestion(q) {
   }
 
   if (!q.knowledgePointId || typeof q.knowledgePointId !== 'string') errors.push('knowledgePointId 必填');
-  var QTR = require('../question-type-registry.js');
+  var QTR = require('../knowledge/question-type-registry.js');
   var qTypeValid = QTR.has(q.questionType) || SQ.Schema.isValidQuestionType(q.questionType) || q.questionType === 'read-aloud';
   if (!q.questionType || !qTypeValid) errors.push('questionType 非法: ' + q.questionType);
   if (q.difficulty == null || typeof q.difficulty !== 'number') errors.push('difficulty 必填（数字）');

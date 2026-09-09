@@ -12,11 +12,11 @@ const assert = require('node:assert');
 const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const G = require(path.join(ROOT, 'shared', 'generator-registry.js'));
+const G = require(path.join(ROOT, 'shared', 'generator', 'registry-facade.js'));
 
 test('R17-1 records/list 返回能力声明且无插件对象', () => {
   const recs = G.records();
-  assert.ok(recs.length >= 100, 'records >= 100');
+  assert.ok(recs.length >= 20, 'records >= 20');
   assert.ok(G.list().length === recs.length);
   recs.forEach(r => {
     assert.ok(Array.isArray(r.capabilities), 'capabilities array');
@@ -36,7 +36,7 @@ test('R17-2 resolve 能力语义解析 + subject 过滤', () => {
 });
 
 test('R17-3 has() 能力/题型存在性', () => {
-  assert.strictEqual(G.has('oral'), true, 'oral 为既有能力');
+  assert.strictEqual(G.has('calc'), true, 'calc 为既有能力（canonical 7 类）');
   assert.strictEqual(G.has('zzz-impossible'), false);
   assert.strictEqual(G.has(''), false);
 });

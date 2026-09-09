@@ -1,8 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const FactOnt = require('../../shared/knowledge-factual.js');
-const FactMap = require('../../shared/ontology-factual-map.js');
-const Ontology = require('../../shared/knowledge-ontology.js');
+const FactOnt = require('../../shared/knowledge/knowledge-factual.js');
+const FactMap = require('../../shared/knowledge/ontology-factual-map.js');
+const Ontology = require('../../shared/knowledge/knowledge-ontology.js');
 
 test('合法 formula / unit / vocabulary', () => {
   assert.strictEqual(FactOnt.validate({ formula: 'a^2+b^2=c^2' }).valid, true);

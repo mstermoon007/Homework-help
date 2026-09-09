@@ -1,406 +1,411 @@
 {
-  "generatedAt": "2026-09-09T06:15:11.578Z",
+  "generatedAt": "2026-09-09T15:33:45.086Z",
   "version": "1.0",
   "files": {
-    "shared/common.js": {
-      "hash": "79434a5a28003ccb",
-      "size": 4469,
-      "mtime": 1788867799035.4238
+    "shared/core/common.js": {
+      "hash": "926f96c4848beaba",
+      "size": 4527,
+      "mtime": 1788958169101.232
     },
-    "shared/version.js": {
+    "shared/catalog/version.js": {
       "hash": "bd3f6b625e26bc25",
       "size": 1051,
-      "mtime": 1788878306116.2397
+      "mtime": 1788958124579.8208
     },
-    "shared/tokens.css": {
+    "shared/styles/tokens.css": {
       "hash": "363222db033c868a",
       "size": 6505,
-      "mtime": 1788815687011.8584
+      "mtime": 1788958124573.9045
     },
-    "shared/base.css": {
+    "shared/styles/base.css": {
       "hash": "964d4f072087ebc6",
       "size": 987,
-      "mtime": 1787846118469.634
+      "mtime": 1788958124692.8108
     },
-    "shared/states.css": {
-      "hash": "052dfef7faa054dc",
-      "size": 6831,
-      "mtime": 1787846119108.3567
+    "shared/styles/styles.css": {
+      "hash": "9ea5aeee286bed01",
+      "size": 6843,
+      "mtime": 1788958168980.2627
     },
-    "shared/components.css": {
-      "hash": "ebcedf6822127764",
-      "size": 20500,
-      "mtime": 1788541579298.94
+    "shared/styles/components.css": {
+      "hash": "357134b881bfd1b1",
+      "size": 21619,
+      "mtime": 1788958168979.073
     },
-    "shared/pages.css": {
+    "shared/styles/pages.css": {
       "hash": "ab24cb4b03efa43e",
       "size": 15920,
-      "mtime": 1788829272216.106
+      "mtime": 1788958124665.7632
     },
-    "shared/toolbar.css": {
-      "hash": "73bfb988db174e5b",
-      "size": 9473,
-      "mtime": 1787933271547.0583
+    "shared/styles/toolbar.css": {
+      "hash": "7ce76776522e1347",
+      "size": 9487,
+      "mtime": 1788958168981.711
     },
-    "shared/subjects.css": {
+    "shared/styles/subjects.css": {
       "hash": "e5dbd4fe88d8b57c",
       "size": 7965,
-      "mtime": 1788013436971.3398
+      "mtime": 1788958124660.1907
     },
-    "shared/knowledge-bank.js": {
-      "hash": "38927608183ba8dc",
-      "size": 10032,
-      "mtime": 1788794304337.6672
+    "shared/knowledge/knowledge-bank.js": {
+      "hash": "985c073fe37e9643",
+      "size": 10112,
+      "mtime": 1788958169120.3901
     },
-    "shared/knowledge-ontology.js": {
-      "hash": "b1c6c56cd0873b98",
-      "size": 4352,
-      "mtime": 1788915553545.404
+    "shared/knowledge/knowledge-ontology.js": {
+      "hash": "04045d1445253ff4",
+      "size": 4363,
+      "mtime": 1788958169126.029
     },
-    "shared/module-catalog.js": {
-      "hash": "955d37b76d4c41d1",
-      "size": 9586,
-      "mtime": 1788795413054.5457
+    "shared/catalog/module-catalog.js": {
+      "hash": "0f83e4ace9262074",
+      "size": 9628,
+      "mtime": 1788958168842.6892
     },
-    "shared/capability-model.js": {
-      "hash": "5c928336eacd503d",
-      "size": 4312,
-      "mtime": 1788751424546.0403
+    "shared/capability/capability-model.js": {
+      "hash": "f3e2f91bb5e77f08",
+      "size": 4345,
+      "mtime": 1788958169097.4731
     },
-    "shared/capability-matrix.js": {
-      "hash": "78f239dd19e010e4",
-      "size": 2770,
-      "mtime": 1788831055279.7854
+    "shared/capability/capability-matrix.js": {
+      "hash": "fe30594d3d3fb890",
+      "size": 2792,
+      "mtime": 1788958169097.1118
     },
-    "shared/capability-resolver.js": {
-      "hash": "88b72ab89947a30d",
-      "size": 4414,
-      "mtime": 1788867430279.0798
+    "shared/capability/capability-resolver.js": {
+      "hash": "31428c4cb2ac2732",
+      "size": 4458,
+      "mtime": 1788958169098.4365
     },
-    "shared/question-type-registry.js": {
-      "hash": "5c75a5b9ad460ead",
-      "size": 15964,
-      "mtime": 1788527095299.4895
+    "shared/knowledge/question-type-registry.js": {
+      "hash": "d07bf986b2e9d5ea",
+      "size": 17096,
+      "mtime": 1788958168962.4192
+    },
+    "shared/strategy/strategy-config.js": {
+      "hash": "8ace029cd4047416",
+      "size": 2912,
+      "mtime": 1788958168974.6372
     },
     "shared/generator/generator-contract.js": {
-      "hash": "ca7a3c456bac1914",
-      "size": 12005,
-      "mtime": 1788867295468.0247
+      "hash": "8d1f7e2d4a572130",
+      "size": 12063,
+      "mtime": 1788958169106.3906
     },
     "shared/generator/generator-registry.js": {
-      "hash": "3a5cef9c67f2decf",
-      "size": 23418,
-      "mtime": 1788934356453.7517
+      "hash": "c6768b89db9c3920",
+      "size": 25357,
+      "mtime": 1788958169107.189
     },
     "shared/generator/generator-selector.js": {
-      "hash": "e755c6fd9ca32403",
-      "size": 15252,
-      "mtime": 1788885798292.1243
+      "hash": "a7b3a82caa2ef315",
+      "size": 15756,
+      "mtime": 1788958169107.8464
     },
     "shared/generator/generator-mode.js": {
       "hash": "9ff51d4da2df90c7",
       "size": 2541,
-      "mtime": 1788863773511.1604
+      "mtime": 1788958124596.0435
     },
     "shared/generator/retry-loop.js": {
-      "hash": "2a7bb3f924e64bec",
-      "size": 20855,
-      "mtime": 1788922325996.106
+      "hash": "50b2f6cb3088ba20",
+      "size": 21142,
+      "mtime": 1788960986085.9617
     },
     "shared/generator/generators/arithmetic.js": {
       "hash": "ac766fb61c3a46cd",
       "size": 6058,
-      "mtime": 1788923127329.998
+      "mtime": 1788958124627.345
     },
     "shared/generator/generators/selection.js": {
       "hash": "5c1255400f882f7b",
       "size": 6098,
-      "mtime": 1788882741690.227
+      "mtime": 1788958124633.5933
     },
     "shared/generator/generators/complex.js": {
       "hash": "127e4f1f492461c4",
       "size": 9479,
-      "mtime": 1788882741361.1782
+      "mtime": 1788958124638.2305
     },
     "shared/generator/generators/index.js": {
-      "hash": "3b3436c3b798bf11",
-      "size": 2197,
-      "mtime": 1788933273410.408
+      "hash": "3cc6e8b97dca80d0",
+      "size": 2281,
+      "mtime": 1788958168916.775
     },
     "shared/generator/core/rng.js": {
       "hash": "f51b0140c2e169ae",
       "size": 2003,
-      "mtime": 1788541680216.4817
+      "mtime": 1788958124599.27
     },
     "shared/generator/core/arithmetic-core.js": {
-      "hash": "7e5995e3cf6d29ba",
-      "size": 26825,
-      "mtime": 1788871700671.3828
+      "hash": "5c30bfc3182bbf2a",
+      "size": 26984,
+      "mtime": 1788958124615.5234
     },
     "shared/generator/core/kp-complex-semantics.js": {
       "hash": "b222f0c1dee07e4a",
       "size": 5852,
-      "mtime": 1788871820499.7004
+      "mtime": 1788958124612.7979
     },
     "shared/generator/semantic-question-bridge.js": {
-      "hash": "8284b09b17598a84",
-      "size": 5402,
-      "mtime": 1788923281615.928
+      "hash": "a8d0167492207bfb",
+      "size": 5420,
+      "mtime": 1788958169119.8464
     },
     "shared/strategy/strategy-engine.js": {
-      "hash": "9332505d03d37541",
-      "size": 30493,
-      "mtime": 1788867457821.9297
+      "hash": "ca8eec9ae80cf453",
+      "size": 43752,
+      "mtime": 1788958169145.0564
     },
     "shared/strategy/comprehensive-strategy.js": {
-      "hash": "d992a042821863ab",
-      "size": 12119,
-      "mtime": 1788797326090.3586
+      "hash": "aa291dafc2c30275",
+      "size": 12146,
+      "mtime": 1788958169138.42
     },
     "shared/strategy/strategy-error.js": {
       "hash": "37011023fd4f5082",
       "size": 1398,
-      "mtime": 1788785314844.1628
+      "mtime": 1788958124715.0974
     },
     "shared/strategy/strategy-request.js": {
-      "hash": "5f3b722fc6a8c4c8",
-      "size": 10680,
-      "mtime": 1788751424570.927
+      "hash": "17ae575410bc837d",
+      "size": 11995,
+      "mtime": 1788958169146.0051
     },
     "shared/strategy/strategy-resolver.js": {
-      "hash": "0f5ac503ce7f4112",
-      "size": 1363,
-      "mtime": 1788075283632.779
+      "hash": "cb6d47957a25ff6c",
+      "size": 1373,
+      "mtime": 1788958169146.371
     },
     "shared/strategy/strategy-result.js": {
       "hash": "d8392ba2eedcab29",
       "size": 2795,
-      "mtime": 1788699565588.3406
+      "mtime": 1788958124723.702
     },
     "shared/strategy/strategy-validator.js": {
-      "hash": "50d15c6b527ce6d0",
-      "size": 4435,
-      "mtime": 1788751424572.0005
+      "hash": "ac5243005404a526",
+      "size": 4466,
+      "mtime": 1788958169146.728
     },
     "shared/strategy/adaptive-strategy.js": {
       "hash": "efe3b684f6a30715",
       "size": 9109,
-      "mtime": 1788153627696.4768
+      "mtime": 1788958124715.8945
     },
     "shared/strategy/cognitive-strategy.js": {
-      "hash": "da1058856fabae45",
-      "size": 4772,
-      "mtime": 1788752915634.1213
+      "hash": "140ef33ec40556b1",
+      "size": 5528,
+      "mtime": 1788958169137.4836
     },
     "shared/strategy/context-strategy.js": {
-      "hash": "e76a155f6a5a635f",
-      "size": 2755,
-      "mtime": 1788083898867.7537
+      "hash": "58a4d05c95a0d4fc",
+      "size": 2775,
+      "mtime": 1788958169139.503
     },
     "shared/strategy/difficulty-strategy.js": {
-      "hash": "3649f20156466ea7",
-      "size": 7646,
-      "mtime": 1788752915634.8904
+      "hash": "f700d725a75c48cf",
+      "size": 7655,
+      "mtime": 1788958169140.1318
     },
     "shared/strategy/static-difficulty.js": {
-      "hash": "a798dc8d878378da",
-      "size": 3014,
-      "mtime": 1788083638425.4033
+      "hash": "7bab1ccd7e1a99de",
+      "size": 3022,
+      "mtime": 1788958169143.5168
     },
     "shared/strategy/number-range-strategy.js": {
-      "hash": "69c5b0d4bb19d196",
-      "size": 2945,
-      "mtime": 1788751424568.1304
+      "hash": "d3cea0d2e634bde3",
+      "size": 2968,
+      "mtime": 1788958169140.793
     },
     "shared/strategy/target-difficulty.js": {
-      "hash": "e695b2fa47e2b286",
-      "size": 4720,
-      "mtime": 1788752915636.5608
+      "hash": "86be19bd62c0fd04",
+      "size": 4730,
+      "mtime": 1788958169147.7158
     },
     "shared/strategy/spiral-strategy.js": {
-      "hash": "3af88686f562ec5b",
-      "size": 2236,
-      "mtime": 1788751424568.9832
+      "hash": "e531e36e29e869ff",
+      "size": 2246,
+      "mtime": 1788958169143.2131
     },
     "shared/strategy/constraint-builder.js": {
-      "hash": "d8e34a9cc7a6143d",
-      "size": 2992,
-      "mtime": 1788084339795.1362
+      "hash": "2da58cf576d21185",
+      "size": 3000,
+      "mtime": 1788958169138.9673
     },
     "shared/strategy/structure-constraints.js": {
-      "hash": "4e05a5d7d3340b27",
-      "size": 3620,
-      "mtime": 1788083676146.8467
+      "hash": "6617bd1709379e48",
+      "size": 3638,
+      "mtime": 1788958169147.1785
     },
     "shared/strategy/question-plan.js": {
-      "hash": "15dc26f493f9bb62",
-      "size": 6588,
-      "mtime": 1788699473270.3948
+      "hash": "e2d532b5372b1c98",
+      "size": 6732,
+      "mtime": 1788958169141.2524
     },
     "shared/strategy/question-type-strategy.js": {
-      "hash": "ac50af4376c323cc",
-      "size": 4334,
-      "mtime": 1788538358097.6924
+      "hash": "05d72eb94aa2fd56",
+      "size": 4355,
+      "mtime": 1788958169142.8218
     },
     "shared/strategy/question-type-allocation.js": {
-      "hash": "c7370e0954a64b80",
-      "size": 7491,
-      "mtime": 1788700098618.3071
+      "hash": "c7205d93c1a9c883",
+      "size": 7511,
+      "mtime": 1788958169142.2722
     },
     "shared/generator/core/kp-arithmetic-semantics.js": {
       "hash": "1fa961b80d8685d0",
       "size": 4487,
-      "mtime": 1788872073236.2703
+      "mtime": 1788958124608.6914
     },
     "shared/validator/validation-pipeline.js": {
       "hash": "9e552ce3caa54b64",
       "size": 7797,
-      "mtime": 1788770671014.0369
+      "mtime": 1788958124525.8943
     },
     "shared/validator/question-validator.js": {
-      "hash": "e57abf0e44047f5a",
-      "size": 4269,
-      "mtime": 1788108432197.7527
+      "hash": "e4524872e8e0e846",
+      "size": 4278,
+      "mtime": 1788958169152.0964
     },
     "shared/validator/answer-validator.js": {
       "hash": "76dfa2d63301985f",
       "size": 10849,
-      "mtime": 1788885440509.0657
+      "mtime": 1788958124531.8752
     },
     "shared/validator/difficulty-validator.js": {
       "hash": "c31fb53070e097e4",
       "size": 4458,
-      "mtime": 1788151649749.0671
+      "mtime": 1788958124527.0361
     },
     "shared/validator/duplicate-validator.js": {
-      "hash": "b4c931ac9b7047ea",
-      "size": 7614,
-      "mtime": 1788881964168.916
+      "hash": "f10227f87b268050",
+      "size": 10582,
+      "mtime": 1788963584881.2834
     },
     "shared/validator/batch-validator.js": {
       "hash": "3a4d679d2207890c",
       "size": 6631,
-      "mtime": 1788700145977.4473
+      "mtime": 1788958124550.8137
     },
     "shared/validator/quality-scorer.js": {
       "hash": "3851d521183883c9",
       "size": 6127,
-      "mtime": 1788110091699.3967
+      "mtime": 1788958124524.7996
     },
     "shared/learner/learner-model.js": {
       "hash": "dae266713aec6fe2",
       "size": 13444,
-      "mtime": 1788153469111.7024
+      "mtime": 1788958124655.6677
     },
     "shared/learner/learner-storage.js": {
-      "hash": "09ed81d371bb166f",
-      "size": 4222,
-      "mtime": 1788277448553.9895
+      "hash": "2ca34d4276ae2eec",
+      "size": 4234,
+      "mtime": 1788958169130.2825
     },
     "shared/learner/practice-result.js": {
       "hash": "2c713399d7fe628b",
       "size": 5856,
-      "mtime": 1788153136539.6418
+      "mtime": 1788958124654.9688
     },
     "shared/learner/result-collector.js": {
       "hash": "1ecac6fe333c3e32",
       "size": 3510,
-      "mtime": 1788277448558.0251
+      "mtime": 1788958124653.8347
     },
     "shared/learner/error-model.js": {
       "hash": "a2ce5f6099a68dd0",
       "size": 6195,
-      "mtime": 1788153106366.4775
+      "mtime": 1788958124657.3706
     },
-    "shared/storage.js": {
-      "hash": "35813ccad6c77d37",
-      "size": 5160,
-      "mtime": 1788153505982.3408
+    "shared/state/storage.js": {
+      "hash": "9c700cc7d2d03d3d",
+      "size": 5166,
+      "mtime": 1788958168970.226
     },
-    "shared/difficulty.js": {
-      "hash": "941cf8b00350ef4e",
-      "size": 9724,
-      "mtime": 1788812063323.381
+    "shared/catalog/difficulty.js": {
+      "hash": "8d82e48d6430d4c1",
+      "size": 9756,
+      "mtime": 1788958169099.8953
     },
-    "shared/difficulty-static.js": {
-      "hash": "c9fae150e9db0d96",
-      "size": 8605,
-      "mtime": 1788751424546.5786
+    "shared/catalog/difficulty-static.js": {
+      "hash": "34bbb0477762e66d",
+      "size": 8645,
+      "mtime": 1788958168840.9563
     },
     "shared/presentation/renderer.js": {
-      "hash": "c64e62a45e17d4f8",
-      "size": 4679,
-      "mtime": 1788867441368.584
+      "hash": "65f2cd0269a91ee4",
+      "size": 5013,
+      "mtime": 1788958124679.8655
     },
     "shared/presentation/html-renderer.js": {
       "hash": "88499bf6d01f662f",
       "size": 6759,
-      "mtime": 1788540840602.081
+      "mtime": 1788958124688.6924
     },
     "shared/presentation/render-options.js": {
       "hash": "38ffee901bd7c3a7",
       "size": 3226,
-      "mtime": 1788160904065.5789
+      "mtime": 1788958124687.5015
     },
     "shared/presentation/render-result.js": {
       "hash": "57682a660fda024b",
       "size": 2720,
-      "mtime": 1788158885946.4795
+      "mtime": 1788958124691.1038
     },
     "shared/presentation/render-format.js": {
       "hash": "89f32bfbdbdb8ab8",
       "size": 3554,
-      "mtime": 1788867213305.3623
+      "mtime": 1788958124681.5898
     },
     "shared/presentation/svg-registry.js": {
-      "hash": "a7021b5f82d46102",
-      "size": 10779,
-      "mtime": 1788190235405.2598
+      "hash": "63c6eff12404cd36",
+      "size": 11102,
+      "mtime": 1788958169132.6438
     },
-    "shared/generation-engine.js": {
-      "hash": "3867203ee72743dc",
-      "size": 23553,
-      "mtime": 1788921067097.5398
+    "shared/engine/generation-engine.js": {
+      "hash": "7ea5dad4590ff14b",
+      "size": 22935,
+      "mtime": 1788961313265.626
     },
-    "shared/presentation-engine.js": {
-      "hash": "d16c3f47dd4f7c5f",
-      "size": 11801,
-      "mtime": 1788883502160.5396
+    "shared/engine/presentation-engine.js": {
+      "hash": "46ba0fec3c5bfb40",
+      "size": 12159,
+      "mtime": 1788961009524.2595
     },
-    "shared/print.js": {
-      "hash": "8b829088de7cb1e5",
-      "size": 23702,
-      "mtime": 1788829303949.6091
+    "shared/presentation/print.js": {
+      "hash": "d4b4fa9ffdcf2e3a",
+      "size": 23709,
+      "mtime": 1788958795350.1738
     },
-    "shared/practice-session.js": {
-      "hash": "6d92517b52f2c74f",
-      "size": 16218,
-      "mtime": 1788882217388.7554
+    "shared/engine/practice-session.js": {
+      "hash": "b11ce951d7a7dfe9",
+      "size": 16567,
+      "mtime": 1788958169103.1177
     },
-    "shared/check.js": {
-      "hash": "fb37a44749114d74",
-      "size": 3388,
-      "mtime": 1787973587585.8472
+    "shared/core/check.js": {
+      "hash": "7ddb995988854067",
+      "size": 3393,
+      "mtime": 1788958168843.5833
     },
-    "shared/svg-core.js": {
-      "hash": "7666b7a57cf01187",
-      "size": 17390,
-      "mtime": 1788812168244.8096
+    "shared/svg/svg-core.js": {
+      "hash": "8d4acbddf5486228",
+      "size": 17394,
+      "mtime": 1788958168984.3828
     },
-    "shared/svg-geometry.js": {
-      "hash": "18816c2e6e422085",
-      "size": 15881,
-      "mtime": 1787846119113.3123
+    "shared/svg/svg-geometry.js": {
+      "hash": "b7e9e2817c19e9f3",
+      "size": 17323,
+      "mtime": 1788958168986.725
     },
-    "shared/svg-calculation.js": {
-      "hash": "c46b59286fbf2cb3",
-      "size": 18112,
-      "mtime": 1787846119110.2126
+    "shared/svg/svg-calculation.js": {
+      "hash": "228765de2406df39",
+      "size": 18128,
+      "mtime": 1788958168982.8093
     },
-    "shared/svg-make-ten.js": {
-      "hash": "872ead43498fa4b9",
-      "size": 10634,
-      "mtime": 1788421821714.303
+    "shared/svg/svg-make-ten.js": {
+      "hash": "d4152a9351210850",
+      "size": 10650,
+      "mtime": 1788958168987.4553
     }
   }
 }

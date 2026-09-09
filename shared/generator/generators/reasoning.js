@@ -7,7 +7,7 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge-point.js');
+var KP = require('../../knowledge/knowledge-point.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -26,7 +26,7 @@ function seedFor(plan, context, i) {
 
 function makeReasoningQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '逻辑推理';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '逻辑推理';
 
   var type = 'generic';
   if (name.indexOf('抽屉') !== -1 || name.indexOf('鸽巢') !== -1) type = 'drawer';
@@ -42,60 +42,135 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else type = 'logic';
 
   var prompt, answer, steps;
+  var v = i; // 变体序号：同 KP 同题型下轮换不同结构/设问，提升语义容量（R6）
   if (type === 'drawer') {
-    var colors = Rng.randInt(rng, 3, 5);
-    prompt = '有红、黄、蓝、绿四种颜色的球，至少要摸出多少个，才能保证有2个球颜色相同？';
-    answer = colors + 1;
-    steps = 2;
+    var DRAWER = [
+      { c: ['红', '黄', '蓝', '绿'], k: 2, ans: 5 },
+      { c: ['红', '黄', '蓝'], k: 2, ans: 4 },
+      { c: ['红', '黄', '蓝', '绿'], k: 3, ans: 9 },
+      { c: ['黑', '白'], k: 2, ans: 3 }
+    ];
+    var d = DRAWER[v % DRAWER.length];
+    prompt = '有' + d.c.length + '种颜色的球（' + d.c.join('、') + '），至少要摸出多少个，才能保证有' + d.k + '个球颜色相同？';
+    answer = d.ans; steps = 2;
   } else if (type === 'extreme') {
-    var twoSum = Rng.randInt(rng, 10, 50);
-    prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
-    var half = Math.floor(twoSum / 2);
-    answer = half * (twoSum - half);
-    steps = 2;
+    if (v % 3 === 0) {
+      var twoSum = Rng.randInt(rng, 10, 50);
+      var half = Math.floor(twoSum / 2);
+      prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
+      answer = half * (twoSum - half); steps = 2;
+    } else if (v % 3 === 1) {
+      var twoSum2 = Rng.randInt(rng, 10, 50);
+      var half2 = Math.floor(twoSum2 / 2);
+      prompt = '两个数的和是' + twoSum2 + '，这两个数相差最小时分别是多少？';
+      answer = half2 + ' 和 ' + (twoSum2 - half2); steps = 2;
+    } else {
+      var threeSum = Rng.randInt(rng, 12, 60);
+      var base = Math.floor(threeSum / 3);
+      var rem = threeSum - 3 * base;
+      var parts = [base, base, base]; parts[2] += rem;
+      prompt = '三个数的和是' + threeSum + '，这三个数尽可能接近时乘积最大，最大乘积是多少？';
+      answer = parts[0] * parts[1] * parts[2]; steps = 2;
+    }
   } else if (type === 'chicken-rabbit') {
-    var heads = Rng.randInt(rng, 8, 20);
-    var feet = heads * 2 + Rng.randInt(rng, 6, 20);
-    prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
-    var rabb = (feet - heads * 2) / 2;
-    answer = '鸡' + (heads - rabb) + '只，兔' + rabb + '只';
-    steps = 3;
+    if (v % 3 === 0) {
+      var heads = Rng.randInt(rng, 8, 20);
+      var rabb0 = Rng.randInt(rng, 3, 8);
+      var feet = heads * 2 + rabb0 * 2;
+      prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
+      var r0 = (feet - heads * 2) / 2;
+      answer = '鸡' + (heads - r0) + '只，兔' + r0 + '只'; steps = 3;
+    } else if (v % 3 === 1) {
+      var D = Rng.randInt(rng, 1, 5);
+      var R = Rng.randInt(rng, 3, 8);
+      var F = 6 * R + 2 * D;
+      prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
+      answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
+    } else {
+      var D2 = Rng.randInt(rng, 1, 4);
+      var C = Rng.randInt(rng, 3, 8);
+      var F2 = 6 * C + 4 * D2;
+      prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
+      answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
+    }
   } else if (type === 'tree-planting') {
-    var total = Rng.randInt(rng, 100, 500);
-    var gap = Rng.randInt(rng, 5, 20);
-    prompt = '在一条长' + total + '米的公路一边植树，每隔' + gap + '米栽一棵（两端都栽），一共要栽多少棵？';
-    answer = Math.floor(total / gap) + 1;
-    steps = 2;
+    var L = Rng.randInt(rng, 100, 500);
+    var G = Rng.randInt(rng, 5, 20);
+    var TP = [
+      { desc: '两端都栽', ans: Math.floor(L / G) + 1 },
+      { desc: '两端都不栽', ans: Math.floor(L / G) - 1 },
+      { desc: '只在一端栽', ans: Math.floor(L / G) },
+      { desc: '在环形操场周围栽（封闭）', ans: Math.floor(L / G) }
+    ];
+    var tp = TP[v % TP.length];
+    prompt = '在一条长' + L + '米的公路一边植树，每隔' + G + '米栽一棵（' + tp.desc + '），一共要栽多少棵？';
+    answer = tp.ans; steps = 2;
   } else if (type === 'find-defect') {
-    prompt = '有9瓶水，其中1瓶是次品（略轻）。用天平称，至少称几次就能找出次品？';
-    answer = 2;
-    steps = 2;
+    var DEFECT = [
+      { n: 3, ans: 1 }, { n: 9, ans: 2 }, { n: 27, ans: 3 }, { n: 81, ans: 4 }
+    ];
+    var df = DEFECT[v % DEFECT.length];
+    prompt = '有' + df.n + '瓶水，其中1瓶是次品（略轻）。用天平称，至少称几次就能找出次品？';
+    answer = df.ans; steps = 2;
   } else if (type === 'handshake') {
-    var n = Rng.randInt(rng, 4, 10);
-    prompt = n + '个人握手，每两个人握一次手，一共要握多少次？';
-    answer = n * (n - 1) / 2;
-    steps = 2;
+    var HSK = [
+      { w: '个人，每两个人握一次手', ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '支球队进行单循环比赛，每两队赛一场', ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '个点，每两个点连一条线段', ans: function (n) { return n * (n - 1) / 2; } }
+    ];
+    var hs = HSK[v % HSK.length];
+    var n = Rng.randInt(rng, 4, 12);
+    prompt = n + hs.w + '，一共需要多少次？';
+    answer = hs.ans(n); steps = 2;
   } else if (type === 'sudoku') {
-    prompt = name + '：请根据已知数字推理出空格中的数字。';
-    answer = '（推理过程略）';
-    steps = 4;
+    var SUD = [
+      { w: '请根据已知数字推理出空格中的数字。' },
+      { w: '在 4×4 数独中，根据已知数字填出空格。' },
+      { w: '在 6×6 数独中，根据已知数字填出空格。' }
+    ];
+    var su = SUD[v % SUD.length];
+    prompt = name + '：' + su.w;
+    answer = '（推理过程略）'; steps = 4;
   } else if (type === 'winning') {
-    prompt = name + '：两堆棋子，每次只能从一堆中取1~3个，取到最后一个棋子者胜。先手必胜还是后手必胜？';
-    answer = '先手必胜（对称策略）';
-    steps = 3;
+    var WIN = [
+      { w: '两堆棋子，每次只能从一堆中取 1~3 个，取到最后一个棋子者胜', a: '先手必胜（对称策略）' },
+      { w: '一堆石子，每次可取 1~4 个，取到最后一个者胜', a: '先手必胜（凑 5 策略）' },
+      { w: '三堆石子，每次从一堆取任意个，取到最后一个者胜', a: '先手必胜（尼姆和策略）' }
+    ];
+    var win = WIN[v % WIN.length];
+    prompt = name + '：' + win.w + '。先手必胜还是后手必胜？';
+    answer = win.a; steps = 3;
   } else if (type === 'optimization') {
-    var pans = Rng.randInt(rng, 2, 4);
-    prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要2分钟。至少需要多少分钟？';
-    answer = pans * 2;
-    steps = 3;
+    if (v % 3 === 0) {
+      var pans = Rng.randInt(rng, 2, 5);
+      prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
+      answer = pans * 2; steps = 3;
+    } else if (v % 3 === 1) {
+      prompt = '煮一个鸡蛋需要 8 分钟，同时可以洗锅 2 分钟。至少需要多少分钟？';
+      answer = 8; steps = 2;
+    } else {
+      prompt = '看一集动画需要 15 分钟，同时可以写完作业 10 分钟。至少需要多少分钟？';
+      answer = 15; steps = 2;
+    }
   } else if (type === 'seq') {
-    prompt = name + '：观察数列规律，写出下一个数：2, 4, 6, 8, ?';
-    answer = 10;
-    steps = 1;
+    var SEQ = [
+      { s: '2, 4, 6, 8', ans: 10 },
+      { s: '1, 3, 5, 7', ans: 9 },
+      { s: '1, 2, 4, 8', ans: 16 },
+      { s: '1, 1, 2, 3, 5', ans: 8 }
+    ];
+    var sq = SEQ[v % SEQ.length];
+    prompt = name + '：观察数列规律，写出下一个数：' + sq.s + ', ?';
+    answer = sq.ans; steps = 1;
   } else {
-    prompt = name + '：A、B、C、D四人中有一人说谎。根据条件推理谁在说谎。';
-    answer = '（逻辑推理略）';
-    steps = 4;
+    var LOGIC = [
+      { w: 'A、B、C、D 四人中有一人说谎。根据条件推理谁在说谎。' },
+      { w: '甲、乙、丙三人中只有一人说真话，根据各自陈述推理谁说真话。' },
+      { w: '三个盒子分别标“苹果”“橘子”“混合”，标签全贴错。只从一个盒子取一个水果，就能判断全部，如何判断？' }
+    ];
+    var lg = LOGIC[v % LOGIC.length];
+    prompt = name + '：' + lg.w;
+    answer = '（逻辑推理略）'; steps = 4;
   }
 
   return {

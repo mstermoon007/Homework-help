@@ -13,8 +13,8 @@
 const path = require('path');
 const ROOT = path.join(__dirname, '..');
 global.window = global;
-require(path.join(ROOT, 'shared/common.js'));
-const KB = require(path.join(ROOT, 'shared/knowledge-bank.js'));
+require(path.join(ROOT, 'shared/core/common.js'));
+const KB = require(path.join(ROOT, 'shared/knowledge/knowledge-bank.js'));
 const { ANCHOR, anchorOf, mapToAbs } = require(path.join(ROOT, 'dev', 'difficulty-anchor-table.js'));
 
 let pass = 0, fail = 0;

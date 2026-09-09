@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const Ontology = require('../../shared/knowledge-ontology.js');
+const Ontology = require('../../shared/knowledge/knowledge-ontology.js');
 const Schema = require('../../shared/schemas/knowledge-point.schema.js');
 
 function capsOf(legacy) {

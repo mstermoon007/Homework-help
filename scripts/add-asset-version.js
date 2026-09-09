@@ -14,7 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { APP_VERSION } = require('../shared/version.js');
+const { APP_VERSION } = require('../shared/catalog/version.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const htmlFiles = [];

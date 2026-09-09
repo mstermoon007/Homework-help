@@ -19,7 +19,7 @@ var fs = require('fs');
 var path = require('path');
 var ROOT = path.join(__dirname, '..');
 
-var KB = require(path.join(ROOT, 'shared/knowledge-bank.js'));
+var KB = require(path.join(ROOT, 'shared/knowledge/knowledge-bank.js'));
 
 // 任务3：知识库为按科目分组对象；扁平化为带 subject 的年级条目数组
 var entries = [];

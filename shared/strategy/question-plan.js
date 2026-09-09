@@ -6,15 +6,15 @@
  */
 'use strict';
 
-var StrategyConfig = require('../strategy-config.js');
-var Registry = require('../question-type-registry.js');
+var StrategyConfig = require('./strategy-config.js');
+var Registry = require('../knowledge/question-type-registry.js');
 
 var DIFFICULTY_MIN = 1;
 var DIFFICULTY_MAX = 10;
 var SPIRAL_MIN = 1;
 var SPIRAL_MAX = 6;
 
-var VALID_COGNITIVE_LEVELS = ['recall', 'recognize', 'understand', 'apply', 'analyze', 'evaluate', 'create'];
+var VALID_COGNITIVE_LEVELS = (Registry && Registry.COGNITIVE_LEVELS) || ['recall', 'recognize', 'understand', 'apply', 'analyze', 'evaluate', 'create'];
 
 var VALID_CONTEXT_TYPES = ['pure', 'simple', 'standard', 'complex'];
 
@@ -60,8 +60,10 @@ function validateQuestionPlan(plan) {
 
   if (!plan.questionTypeId || typeof plan.questionTypeId !== 'string') {
     errors.push('questionTypeId 是必填字符串');
-  } else if (!['oral', 'calc', 'fill', 'choice', 'judge', 'apply', 'open', 'geometry', 'recognize'].includes(plan.questionTypeId)) {
-    errors.push('非法 questionTypeId: ' + plan.questionTypeId);
+  } else {
+    var _n = Registry.normalizeQuestionType(plan.questionTypeId);
+    var _validIds = Registry.all().map(function (t) { return t.id; });
+    if (!_n || _n.confidence === 'heuristic' || _validIds.indexOf(_n.id) === -1) errors.push('非法 questionTypeId: ' + plan.questionTypeId);
   }
 
   // cognitiveLevel

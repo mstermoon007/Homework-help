@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const O = require('../../shared/knowledge-ontology.js');
+const O = require('../../shared/knowledge/knowledge-ontology.js');
 
 test('valid canonical', () => {
   const c = O.create({ id: 'x', subject: 'math', grade: 2, identity: { name: 'X' } });

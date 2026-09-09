@@ -2,7 +2,7 @@
 /**
  * scripts/sync-sw-version.js — Service Worker 缓存名 / 版本号同步校验（任务1.2）
  *
- * 背景：Service Worker 的缓存名（CACHE）与 shared/version.js 的 APP_VERSION 必须保持一致，
+ * 背景：Service Worker 的缓存名（CACHE）与 shared/catalog/version.js 的 APP_VERSION 必须保持一致，
  *       否则会出现「部署了新版本但离线缓存未失效 / 或缓存键错乱」。为防止手动改版本号却漏改
  *       sw.js 的遗漏，本脚本在 CI / npm test 中自动比对二者。
  *
@@ -23,10 +23,10 @@ function fail(msg) {
   process.exit(1);
 }
 
-// 1) 读取 shared/version.js 的 APP_VERSION
-const verSrc = fs.readFileSync(path.join(ROOT, 'shared', 'version.js'), 'utf8');
+// 1) 读取 shared/catalog/version.js 的 APP_VERSION
+const verSrc = fs.readFileSync(path.join(ROOT, 'shared', 'catalog', 'version.js'), 'utf8');
 const mApp = verSrc.match(/const\s+APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
-if (!mApp) fail('shared/version.js 未找到 APP_VERSION 定义');
+if (!mApp) fail('shared/catalog/version.js 未找到 APP_VERSION 定义');
 const APP_VERSION = mApp[1];
 const expected = 'hw-help-' + APP_VERSION;
 
@@ -40,7 +40,7 @@ if (mLit) {
       `Service Worker 缓存名与版本号不一致！\n` +
       `  sw.js  : CACHE = '${actual}'\n` +
       `  version.js: APP_VERSION = '${APP_VERSION}' → 期望缓存名 '${expected}'\n` +
-      `请同步修改 sw.js 的 CACHE 常量（或 shared/version.js 的 APP_VERSION）。`
+      `请同步修改 sw.js 的 CACHE 常量（或 shared/catalog/version.js 的 APP_VERSION）。`
     );
   }
   console.log(`✅ sync-sw-version: SW 缓存名 '${actual}' 与 APP_VERSION '${APP_VERSION}' 一致。`);

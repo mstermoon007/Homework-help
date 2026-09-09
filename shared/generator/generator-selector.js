@@ -24,10 +24,11 @@
 'use strict';
 
 var GenRegistry = require('./generator-registry.js');
-var KnowledgePoint = require('../knowledge-point.js');
+var KnowledgePoint = require('../knowledge/knowledge-point.js');
 var Mode = require('./generator-mode.js');
 var QuestionPlan = require('../strategy/question-plan.js');
 var ArithSem = require('./core/kp-arithmetic-semantics.js');
+var QuestionTypeRegistry = require('../knowledge/question-type-registry.js');
 var ComplexSem = require('./core/kp-complex-semantics.js');
 
 function trackOf(record) {
@@ -108,8 +109,7 @@ function hasMoneySemantics(kp) {
 
 function hasAppSemantics(kp) {
   if (!kp) return false;
-  // 应用题语义：moduleId 是 M7（标准应用题）或 pluginId 明确是 word-problems
-  if (kp.moduleId === 'M7') return true;
+  // 应用题语义：pluginId 明确是 word-problems（不再按 moduleId 判定）
   var p = kp.pluginId || '';
   if (p.indexOf('word-problem') !== -1 || p.indexOf('word_problem') !== -1) return true;
   // application 本体绑定的自然有语义（硬阻断只在 score.kp=0 时触发）
@@ -123,7 +123,6 @@ function hasCountingSemantics(kp) {
   if (p.indexOf('c3-') !== -1) return true;
   // G5/G6 竞赛计数：pluginId 形如 math-competition-g5-c3 / math-competition-g6-c3（结尾无横杠）
   if (p.indexOf('c3') !== -1 && p.indexOf('competition') !== -1) return true;
-  if (kp.moduleId === 'C3') return true;
   return false;
 }
 
@@ -132,7 +131,6 @@ function hasReasoningSemantics(kp) {
   var p = kp.pluginId || '';
   if (p.indexOf('logic') !== -1 || p.indexOf('reason') !== -1) return true;
   if (p.indexOf('c8') !== -1) return true;
-  if (kp.moduleId === 'C8') return true;
   return false;
 }
 
@@ -189,7 +187,6 @@ function hasC9Semantics(kp) {
   var p = kp.pluginId || '';
   // C9 综合应用题：pluginId 形如 math-competition-g4-c9 / math-competition-g5-c9 / math-competition-g6-c9
   if (p.indexOf('c9') !== -1 && p.indexOf('competition') !== -1) return true;
-  if (kp.moduleId === 'C9') return true;
   return false;
 }
 
@@ -202,6 +199,12 @@ function selectGenerator(plan, options) {
   }
 
   var mode = options.mode != null ? options.mode : Mode.resolve(plan);
+  // 7 类规范题型：归一 request 的 questionTypeId（oral→calc / recognize→geometry / open→apply），
+  // 保证下游 capability/qt 匹配始终基于规范 7 类，且兼容历史 KB 的原始题型 token。
+  if (plan && plan.questionTypeId && QuestionTypeRegistry && QuestionTypeRegistry.normalizeQuestionType) {
+    var _n = QuestionTypeRegistry.normalizeQuestionType(plan.questionTypeId, { allowHeuristic: false });
+    if (_n && _n.id) plan = Object.assign({}, plan, { questionTypeId: _n.id });
+  }
   var kp = KnowledgePoint.get(primaryKp);
   var all = GenRegistry.all();
   var candidates = [];
@@ -236,22 +239,22 @@ function selectGenerator(plan, options) {
 
     // Step 13：硬阻断 —— 语义不一致的泛型候选直接拒绝（仅共存 questionType 不视为匹配）。
     //   仅阻断「无本体绑定」的泛型匹配；显式绑定该 KP 的生成器视为语义契约，最高优先级放行。
-    //   recognize qt 是元题型（识别/判断/区分），不属于任何单一语义域，豁免所有硬阻断。
+    //   geometry/classify 是元题型（识别/作图/分类整理），不属于任何单一语义域，豁免所有硬阻断。
     var qt = plan.questionTypeId;
-    var isRecognize = qt === 'recognize';
-    if (!isRecognize && isArithmeticFamily(g) && score.kp === 0 && !(arithSem || isAlgebraDomain || (kp && kp.operations && kp.operations.length > 0))) return;
-    if (!isRecognize && isComplexFamily(g) && score.kp === 0 && !complexSem) return;
-    if (!isRecognize && isShapeFamily(g) && score.kp === 0 && !hasShapeSemantics(kp)) return;
-    if (!isRecognize && isMoneyFamily(g) && score.kp === 0 && !hasMoneySemantics(kp)) return;
-    if (!isRecognize && isCountingFamily(g) && score.kp === 0 && !hasCountingSemantics(kp)) return;
-    if (!isRecognize && isReasoningFamily(g) && score.kp === 0 && !hasReasoningSemantics(kp)) return;
-    if (!isRecognize && isStatsFamily(g) && score.kp === 0 && !hasStatsSemantics(kp)) return;
-    if (!isRecognize && isPictureEquationFamily(g) && score.kp === 0 && !hasPictureEquationSemantics(kp)) return;
-    if (!isRecognize && isC1Family(g) && score.kp === 0 && !hasC1Semantics(kp)) return;
-    if (!isRecognize && isC2Family(g) && score.kp === 0 && !hasC2Semantics(kp)) return;
-    if (!isRecognize && isC5C6Family(g) && score.kp === 0 && !hasC5C6Semantics(kp)) return;
-    if (!isRecognize && isC7Family(g) && score.kp === 0 && !hasC7Semantics(kp)) return;
-    if (!isRecognize && isC9Family(g) && score.kp === 0 && !hasC9Semantics(kp)) return;
+    var isMetaExempt = qt === 'recognize' || qt === 'geometry' || qt === 'classify';
+    if (!isMetaExempt && isArithmeticFamily(g) && score.kp === 0 && !(arithSem || isAlgebraDomain || (kp && kp.operations && kp.operations.length > 0))) return;
+    if (!isMetaExempt && isComplexFamily(g) && score.kp === 0 && !complexSem) return;
+    if (!isMetaExempt && isShapeFamily(g) && score.kp === 0 && !hasShapeSemantics(kp)) return;
+    if (!isMetaExempt && isMoneyFamily(g) && score.kp === 0 && !hasMoneySemantics(kp)) return;
+    if (!isMetaExempt && isCountingFamily(g) && score.kp === 0 && !hasCountingSemantics(kp)) return;
+    if (!isMetaExempt && isReasoningFamily(g) && score.kp === 0 && !hasReasoningSemantics(kp)) return;
+    if (!isMetaExempt && isStatsFamily(g) && score.kp === 0 && !hasStatsSemantics(kp)) return;
+    if (!isMetaExempt && isPictureEquationFamily(g) && score.kp === 0 && !hasPictureEquationSemantics(kp)) return;
+    if (!isMetaExempt && isC1Family(g) && score.kp === 0 && !hasC1Semantics(kp)) return;
+    if (!isMetaExempt && isC2Family(g) && score.kp === 0 && !hasC2Semantics(kp)) return;
+    if (!isMetaExempt && isC5C6Family(g) && score.kp === 0 && !hasC5C6Semantics(kp)) return;
+    if (!isMetaExempt && isC7Family(g) && score.kp === 0 && !hasC7Semantics(kp)) return;
+    if (!isMetaExempt && isC9Family(g) && score.kp === 0 && !hasC9Semantics(kp)) return;
 
     // ② semantic operation：语义域一致才算匹配
     if (isArithmeticFamily(g) || isComplexFamily(g) || isShapeFamily(g) || isMoneyFamily(g) || isCountingFamily(g) || isReasoningFamily(g) || isStatsFamily(g) || isPictureEquationFamily(g) || isC1Family(g) || isC2Family(g) || isC5C6Family(g) || isC7Family(g) || isC9Family(g)) {

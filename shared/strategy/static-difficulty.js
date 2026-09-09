@@ -18,7 +18,7 @@
  */
 'use strict';
 
-var DifficultyStatic = require('../difficulty-static.js');
+var DifficultyStatic = require('../catalog/difficulty-static.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 

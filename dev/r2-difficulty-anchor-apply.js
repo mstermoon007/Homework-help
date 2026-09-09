@@ -49,7 +49,7 @@ const DIFF_RE = /^(\s*["']?difficulty["']?\s*:\s*)(\d+)(\s*,?\s*)$/;
   if (already) {
     console.error('[ABORT] 检测到 knowledge-*.js 已存在难度 > 5，疑似已标定。');
     console.error('  重复执行会产生二次映射（G2/G3 等低锚点年级无法按值域区分）。');
-    console.error('  如需重跑，请先恢复原始数据：git checkout HEAD -- shared/knowledge-math.js');
+    console.error('  如需重跑，请先恢复原始数据：git checkout HEAD -- shared/knowledge/knowledge-math.js');
     process.exit(1);
   }
 }

@@ -13,9 +13,9 @@ const Renderer = require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'
 
 // svg-*.js 需先于首次渲染就绪（浏览器端由脚本/延迟加载保证；Node 测试显式前置），
 // 否则 svg-registry 的懒种子扫描捕获不到 geometry/calculation/makeTen 生成器。
-require(path.join(ROOT, 'shared', 'svg-core.js'));
-require(path.join(ROOT, 'shared', 'svg-geometry.js'));
-require(path.join(ROOT, 'shared', 'svg-calculation.js'));
+require(path.join(ROOT, 'shared', 'svg', 'svg-core.js'));
+require(path.join(ROOT, 'shared', 'svg', 'svg-geometry.js'));
+require(path.join(ROOT, 'shared', 'svg', 'svg-calculation.js'));
 
 // ============ M7-R07 统一 renderOptions ============
 test('M7-R07 screen 默认值', () => {
@@ -217,7 +217,7 @@ test('MATH-14 legacy q.svg 不再经适配器渲染（graphic 保持空）', () 
 });
 
 test('M7-R06 Print.buildFromQuestions 直接由题组出打印文档', () => {
-  const Mod = require(path.join(ROOT, 'shared', 'print.js'));
+  const Mod = require(path.join(ROOT, 'shared', 'presentation', 'print.js'));
   const Print = Mod.Print || Mod;
   assert.strictEqual(typeof Print.buildFromQuestions, 'function');
   const html = Print.buildFromQuestions([

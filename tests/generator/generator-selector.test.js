@@ -42,20 +42,21 @@ test('M4-R13：选择结果可实例化为 core Generator（能力匹配时）',
   }
 });
 
-test('MATH-14：legacy 已删除 → hybrid 与 native 均无 legacy 兜底（无能力时 UNSUPPORTED）', () => {
+test('MATH-14：legacy 已删除 → hybrid 与 native 均无 legacy 兜底（仅路由 core）', () => {
   Mode.clearAll();
   Mode.setGlobal('hybrid');
-  // hybrid：无 core 候选且 legacy 已不存在 → 不再 fallback，返回 unsupported
+  // hybrid：legacy 已不存在 → 不再 fallback legacy；geometry 为元题型（meta-exempt），
+  // 路由到 core shape-recognition（非 legacy 兜底）。
   const selHybrid = Selector.selectGenerator({ knowledgePointId: 'math-g1-m0-make-ten', questionTypeId: 'geometry', difficulty: 3 });
   assert.ok(!/^legacy:/.test(selHybrid.generatorId || ''));
   assert.notStrictEqual(selHybrid.source, 'fallback:legacy');
-  assert.strictEqual(selHybrid.source, 'unsupported');
-  assert.strictEqual(selHybrid.errorCode, 'GENERATOR_UNSUPPORTED');
-  // native：同样 unsupported
+  assert.strictEqual(selHybrid.source, 'priority');
+  // native：同样无 legacy 兜底，路由到 core
   Mode.setGlobal('native');
   const selNative = Selector.selectGenerator({ knowledgePointId: 'math-g1-m0-make-ten', questionTypeId: 'geometry', difficulty: 3 });
-  assert.strictEqual(selNative.source, 'unsupported');
-  assert.strictEqual(selNative.errorCode, 'GENERATOR_UNSUPPORTED');
+  assert.ok(!/^legacy:/.test(selNative.generatorId || ''));
+  assert.notStrictEqual(selNative.source, 'fallback:legacy');
+  assert.strictEqual(selNative.source, 'priority');
 });
 
 test('M4-R13：缺少 knowledgePointId → 抛错', () => {

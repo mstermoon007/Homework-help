@@ -10,11 +10,11 @@
 var path = require('path');
 var ROOT = path.join(__dirname, '..');
 
-require(path.join(ROOT, 'shared', 'svg-core.js'));
+require(path.join(ROOT, 'shared', 'svg', 'svg-core.js'));
 var U = global.SVGUtil;
-var G = require(path.join(ROOT, 'shared', 'svg-geometry.js'));
-var C = require(path.join(ROOT, 'shared', 'svg-calculation.js'));
-var M = require(path.join(ROOT, 'shared', 'svg-make-ten.js'));
+var G = require(path.join(ROOT, 'shared', 'svg', 'svg-geometry.js'));
+var C = require(path.join(ROOT, 'shared', 'svg', 'svg-calculation.js'));
+var M = require(path.join(ROOT, 'shared', 'svg', 'svg-make-ten.js'));
 
 var total = 0, fail = 0;
 function check(name, svg) {
@@ -244,6 +244,55 @@ cnOk((fl.match(/<line/g) || []).length === 4, 'svgGrid-four-line 含 4 条横线
     cnOk(typeof global.SVGRenderer.resolve(dispatchCases[t]) === 'function',
       'R-A04 派发可解析: ' + t + '.' + dispatchCases[t].subtype);
   });
+})();
+
+// ============ 核心 SVG 渲染族装配（geometry/calculation/makeTen/chart/diagram/currency） ============
+// 与 practice.html 加载面一致：svg-core 之后全部挂载 SVGGenerators.math.*，
+// svg-registry 种子扫描自动索引为 {type, subtype} 描述符。
+(function () {
+  var coreFiles = {
+    geometry: 'svg-geometry', calculation: 'svg-calculation', makeTen: 'svg-make-ten',
+    chart: 'svg-chart', diagram: 'svg-diagram', currency: 'svg-currency'
+  };
+  Object.keys(coreFiles).forEach(function (ns) {
+    require(path.join(ROOT, 'shared', 'svg', coreFiles[ns] + '.js'));
+  });
+  require(path.join(ROOT, 'shared', 'presentation', 'svg-templates.js'));
+  Object.keys(coreFiles).forEach(function (ns) {
+    cnOk(global.SVGGenerators && global.SVGGenerators.math && global.SVGGenerators.math[ns],
+      '核心渲染族已挂载 SVGGenerators.math.' + ns);
+  });
+
+  var registryC = require(path.join(ROOT, 'shared', 'presentation', 'svg-registry.js'));
+  // 本区块加载了 chart/diagram/currency 等模块，需再次 seed 才能被 SVGRenderer 索引（幂等覆盖）
+  registryC.seedFromGlobal();
+  var dispatchCore = {
+    geometry: ['rectangle', 'positionGrid'],
+    calculation: ['add'],
+    chart: ['bar', 'line', 'pie'],
+    diagram: ['brace', 'segment', 'balance', 'scale'],
+    currency: ['rmb']
+  };
+  Object.keys(dispatchCore).forEach(function (t) {
+    dispatchCore[t].forEach(function (sub) {
+      cnOk(typeof global.SVGRenderer.resolve({ type: t, subtype: sub }) === 'function',
+        'SVGRenderer 派发可解析: ' + t + '.' + sub);
+    });
+  });
+
+  var G = global.SVGGenerators.math;
+  var samples = [
+    ['geometry.positionGrid', G.geometry.positionGrid({ gridSize: 5, objects: [{ name: '小猫', x: 0, y: 0 }, { name: '小狗', x: 3, y: 2 }] })],
+    ['chart.bar', G.chart.bar({ data: [{ label: '一', value: 8 }, { label: '二', value: 5 }] })],
+    ['chart.line', G.chart.line({ data: [{ label: '一', value: 3 }, { label: '二', value: 6 }] })],
+    ['chart.pie', G.chart.pie({ data: [{ label: '语文', percent: 40 }, { label: '数学', percent: 60 }] })],
+    ['diagram.brace', G.diagram.brace({ left: 5, right: 6, unit: '个' })],
+    ['diagram.segment', G.diagram.segment({ total: 80, part: 30, unit: '米' })],
+    ['diagram.balance', G.diagram.balance({ left: 12, rightUnknown: 5, unit: 'kg' })],
+    ['diagram.scale', G.diagram.scale({ scale: 50000, mapDist: 6 })],
+    ['currency.rmb', G.currency.rmb({ amounts: [352, 128], op: '+' })]
+  ];
+  samples.forEach(function (s) { check(s[0], s[1]); });
 })();
 
 console.log('\n' + (fail === 0

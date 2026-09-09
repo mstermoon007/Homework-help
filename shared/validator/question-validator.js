@@ -26,7 +26,7 @@ function createError(code, field, message, severity, detail) {
  * @returns {Object} { valid, errors, warnings, info }
  */
 function validateSchemaOnly(sq) {
-  return require('../semantic-question.js').validateSchema(sq);
+  return require('../semantic/semantic-question.js').validateSchema(sq);
 }
 
 /**

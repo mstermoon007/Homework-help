@@ -163,7 +163,7 @@ function summary() {
 // 本 E2E 改用 kps 深链覆盖同样的回归面。
 let KPS = { math1: [], math4: [] };
 try {
-  const KB2 = require(path.join(ROOT, 'shared/knowledge-bank.js'));
+  const KB2 = require(path.join(ROOT, 'shared/knowledge/knowledge-bank.js'));
   // MATH-14 native-only：可练采样数据源 = GeneratorRegistry（legacy plugins/registry 已删除）
   const GenReg = require(path.join(ROOT, 'shared/generator/generator-registry.js'));
   function sampleKps(eng, grade, n) {

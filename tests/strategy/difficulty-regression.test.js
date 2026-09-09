@@ -10,9 +10,9 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
-const Difficulty = require(path.join(ROOT, 'shared', 'difficulty.js'));
+const Difficulty = require(path.join(ROOT, 'shared', 'catalog', 'difficulty.js'));
 const NumberRange = require(path.join(ROOT, 'shared', 'strategy', 'number-range-strategy.js'));
-const PluginUtil = require(path.join(ROOT, 'shared', 'common.js'));
+const PluginUtil = require(path.join(ROOT, 'shared', 'core', 'common.js'));
 
 const KP_ID = 'math-g1-m0-make-ten';
 const DIFFICULTIES = [1, 3, 5, 7, 10];

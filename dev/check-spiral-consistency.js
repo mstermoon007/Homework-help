@@ -6,7 +6,7 @@
  *
  * 深度度量（R5 公式）：
  *   depth(kp) = complexityScore(kp.difficulty) + spiral_level + 前置链深度
- *   - complexityScore：由 shared/difficulty.js difficultyToStructure(difficulty).complexityScore
+ *   - complexityScore：由 shared/catalog/difficulty.js difficultyToStructure(difficulty).complexityScore
  *     （1-10 难度 → 结构复杂度分，全档严格单调）
  *   - spiral_level：知识点螺旋层级（1..max_spiral_level，R2-c 已完备）
  *   - 前置链深度：prerequisites 递归链的最大深度（无前置为 0）
@@ -32,10 +32,10 @@ function run() {
 
   // ---------- 加载 ----------
   global.window = global;
-  require(path.join(ROOT, 'shared', 'common.js'));
-  const Diff = require(path.join(ROOT, 'shared', 'difficulty.js'));
-  require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-  const KM = require(path.join(ROOT, 'shared', 'knowledge-math.js'));
+  require(path.join(ROOT, 'shared', 'core', 'common.js'));
+  const Diff = require(path.join(ROOT, 'shared', 'catalog', 'difficulty.js'));
+  require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+  const KM = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-math.js'));
 
   // 展平数学 KB
   const all = [];

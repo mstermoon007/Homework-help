@@ -45,10 +45,11 @@
     "verify:spiral-consistency": "node dev/check-spiral-consistency.js",
     "verify:frozen-core": "node dev/check-frozen-core.js --check",
     "test:unit": "node --test test/unit/*.test.js",
-    "test:node": "node --test test/*.test.js test/unit/*.test.js",
+    "test:node": "node --test test/*.test.js test/unit/*.test.js tests/*/*.test.js",
     "generate:knowledge": "node scripts/generate-knowledge-pages.js --incremental",
     "watch:knowledge": "node scripts/generate-knowledge-pages.js --watch",
     "check-contracts": "node dev/check-generator-contract.js",
-    "verify:difficulty-anchor": "node dev/check-difficulty-anchor.js"
+    "verify:difficulty-anchor": "node dev/check-difficulty-anchor.js",
+    "verify:ontology-integrity": "node dev/check-ontology-integrity.js"
   }
 }

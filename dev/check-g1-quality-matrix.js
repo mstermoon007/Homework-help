@@ -30,15 +30,15 @@ const ROOT = path.join(__dirname, '..');
 require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'strategy-request.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'question-plan.js'));
-require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-require(path.join(ROOT, 'shared', 'generator-registry.js'));
+require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+require(path.join(ROOT, 'shared', 'generator', 'generator-registry.js'));
 require(path.join(ROOT, 'shared', 'strategy', 'comprehensive-strategy.js'));
-require(path.join(ROOT, 'shared', 'presentation-engine.js'));
+require(path.join(ROOT, 'shared', 'engine', 'presentation-engine.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
 require(path.join(ROOT, 'shared', 'presentation', 'render-options.js'));
 
-const GE = require(path.join(ROOT, 'shared', 'generation-engine.js'));
-const KB = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
+const GE = require(path.join(ROOT, 'shared', 'engine', 'generation-engine.js'));
+const KB = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
 
 // ---------- 一年级 KP 列表 ----------
 function g1Kps() {

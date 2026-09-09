@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const Strategy = require(path.join(ROOT, 'shared', 'strategy', 'question-type-strategy.js'));
-const KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 test('用户明确指定 questionType -> 直接返回', () => {
   const qt = Strategy.selectQuestionType(

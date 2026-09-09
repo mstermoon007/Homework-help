@@ -1,7 +1,7 @@
 // Unit test: verify calcOptimalCols and gridColumnsFromDom produce consistent results
 // for the same question set
 
-const { calcOptimalCols, fitColumns, gridColumnsFromDom, applySpanning, estimateCardWidth, coreText, renderLen } = require('../shared/common.js');
+const { calcOptimalCols, fitColumns, gridColumnsFromDom, applySpanning, estimateCardWidth, coreText, renderLen } = require('../shared/core/common.js');
 
 // Test question sets
 const testQuestions1 = [

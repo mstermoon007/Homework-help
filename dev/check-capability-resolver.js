@@ -15,8 +15,8 @@
 var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
-var ScanContext = require(path.join(ROOT, 'shared', 'capability-scan-context.js'));
-var Resolver = require(path.join(ROOT, 'shared', 'capability-resolver.js'));
+var ScanContext = require(path.join(ROOT, 'shared', 'capability', 'capability-scan-context.js'));
+var Resolver = require(path.join(ROOT, 'shared', 'capability', 'capability-resolver.js'));
 
 var PARITY_INTERVAL = 50;
 

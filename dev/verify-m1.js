@@ -41,7 +41,7 @@ function runStep(step) {
 function checkCanonicalAccess() {
   console.log('\n──────── M1-R03 Canonical Access ────────');
   try {
-    var KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+    var KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
     var sample = KP.get('math-g1-m0-make-ten');
     if (!sample) { console.log('[FAIL] 未找到可用于冒烟测试的已知 KP'); return false; }
     var checks = [

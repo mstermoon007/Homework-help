@@ -19,8 +19,8 @@ var Validator = require('./question-validator.js');
 var ERROR_CODES = Validator.ERROR_CODES;
 var SEVERITY = Validator.SEVERITY;
 var createError = Validator.createError;
-var KnowledgePoint = require('../knowledge-point.js');
-var Ontology = require('../knowledge-ontology.js');
+var KnowledgePoint = require('../knowledge/knowledge-point.js');
+var Ontology = require('../knowledge/knowledge-ontology.js');
 
 /**
  * 获取 KP 的规范语义约束

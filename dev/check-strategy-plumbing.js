@@ -23,14 +23,14 @@ var path = require('path');
 var fs = require('fs');
 var ROOT = path.join(__dirname, '..');
 var Engine = require(path.join(ROOT, 'shared', 'strategy', 'strategy-engine.js'));
-var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-var Ontology = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
+var KnowledgeBank = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+var Ontology = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology.js'));
 
 function run() {
   var errors = [];
   var total = 0;
   var dimChecks = { '① questionType': 0, '② cognitiveLevel': 0, '③ difficulty': 0, '④ structure': 0, '⑤ spiralLevel': 0, '⑥ context': 0, '⑦ count': 0 };
-  var VALID_QT = ['oral', 'calc', 'fill', 'choice', 'judge', 'apply', 'open', 'geometry', 'recognize'];
+  var VALID_QT = ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply', 'oral', 'open', 'recognize'];
 
   function isGeneratorUnsupportedError(e) {
     return e && e.code === 'GENERATOR_UNSUPPORTED';

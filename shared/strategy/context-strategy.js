@@ -14,8 +14,8 @@
  */
 'use strict';
 
-var Registry = require('../question-type-registry.js');
-var KnowledgePoint = require('../knowledge-point.js');
+var Registry = require('../knowledge/question-type-registry.js');
+var KnowledgePoint = require('../knowledge/knowledge-point.js');
 var CognitiveStrategy = require('./cognitive-strategy.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;

@@ -4,7 +4,7 @@
  *
  * 规则（违规即 errors，警告不计入退出码）：
  *   R1  运行时代码直接调用 Math.random() —— 应使用 PluginUtil.randInt / shuffle
- *       （注释中的提及不算；shared/common.js randInt 内部兜底为唯一豁免，不在扫描范围）
+ *       （注释中的提及不算；shared/core/common.js randInt 内部兜底为唯一豁免，不在扫描范围）
  *   R2  硬编码颜色字面量（任务1.1 扩展）：遍历 plugins/ 下全部 .js，匹配
  *       #hex / rgb()/rgba()/hsl()/hsla()，要求一律使用 tokens.css 的 var(--*) 令牌。
  *       自动豁免：SVG 表现属性（fill/stroke，属性不支持 var()）、纯白字 #fff、
@@ -76,7 +76,7 @@ function scanSourceFile(rel, doColor) {
   const clean = stripComments(src);
 
   // R1: Math.random 直调（去注释后仍存在即违规）
-  if (rel === 'shared/common.js' || rel === 'shared/core.js') return; // R1 豁免：随机源统一由 core.js 的 randInt/randFloat 经 crypto 提供，运行时代码不应直调 Math.random
+  if (rel === 'shared/core/common.js' || rel === 'shared/core/core.js') return; // R1 豁免：随机源统一由 core.js 的 randInt/randFloat 经 crypto 提供，运行时代码不应直调 Math.random
   const reRandom = /Math\.random\s*\(\s*\)/g;
   let m;
   while ((m = reRandom.exec(clean)) !== null) {

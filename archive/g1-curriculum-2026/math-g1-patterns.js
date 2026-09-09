@@ -1,7 +1,7 @@
 /**
  * plugins/math-g1-patterns.js — 一年级找规律插件（M4 找规律）
  *
- * 知识点覆盖（shared/knowledge-math.js 一年级 M4 模块）：
+ * 知识点覆盖（shared/knowledge/knowledge-math.js 一年级 M4 模块）：
  *   math-g1-m4-number-pattern   数字规律 / 图形规律 / 颜色规律（category: number / shape）
  *
  * 题库 ≥12 道：图形规律（△○□ 循环）、数字规律（等差数列）、填规律后继。
@@ -14,8 +14,8 @@
   'use strict';
 
   var _PU = typeof PluginUtil !== 'undefined' ? PluginUtil
-    : (typeof require !== 'undefined' ? require('../shared/common.js') : null);
-  if (!_PU) throw new Error('plugins/math-g1-patterns.js 依赖 shared/common.js（PluginUtil），请先加载');
+    : (typeof require !== 'undefined' ? require('../shared/core/common.js') : null);
+  if (!_PU) throw new Error('plugins/math-g1-patterns.js 依赖 shared/core/common.js（PluginUtil），请先加载');
 
   function rnd(min, max) { return _PU.randInt(min, max); }
   function shuffleArr(arr) { return _PU.shuffle(arr.slice()); }

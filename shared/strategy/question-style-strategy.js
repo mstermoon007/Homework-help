@@ -30,7 +30,8 @@ var STYLE_REGISTRY = {
   choice:   { style: 'choice', svgTemplate: 'svg-choice',      label: '选项卡' },
   judge:    { style: 'judge',  svgTemplate: 'svg-judge',       label: '判断陈述' },
   apply:    { style: 'story',  svgTemplate: 'svg-story',       label: '图文应用' },
-  geometry: { style: 'shape',  svgTemplate: 'svg-geometry',    label: '图形操作' },
+  geometry: { style: 'shape', svgTemplate: 'svg-geometry', label: '图形操作' },
+  classify: { style: 'sort',  svgTemplate: 'svg-calculation', label: '分类整理' },
   recognize: { style: 'choice', svgTemplate: 'svg-choice',     label: '认读识别' },
   open:     { style: 'open',   svgTemplate: 'svg-open',        label: '开放表达' }
 };

@@ -35,7 +35,8 @@ const CORE_IDS = [
   'generator:c7-clever-calc',
   'generator:c9-comprehensive',
   'generator:code-recognition',
-  'generator:equivalent-reasoning'
+  'generator:equivalent-reasoning',
+  'generator:classification'
 ];
 
 function answerValue(q) {

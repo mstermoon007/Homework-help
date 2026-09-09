@@ -10,8 +10,12 @@
 'use strict';
 
 var Rng = require('./rng.js');
+var OpSem = require('./op-semantics.js');
 
-var OP_ADD = '+', OP_SUB = '−', OP_MUL = '×', OP_DIV = '÷';
+var OP_ADD = OpSem.symbol('add') || '+';
+var OP_SUB = OpSem.symbol('subtract') || '−';
+var OP_MUL = OpSem.symbol('multiply') || '×';
+var OP_DIV = OpSem.symbol('divide') || '÷';
 
 function normalizeOperation(op) {
   var m = { add: 'add', addition: 'add', sub: 'sub', subtraction: 'sub',

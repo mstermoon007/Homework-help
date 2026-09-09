@@ -6,7 +6,7 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const TargetDifficulty = require(path.join(ROOT, 'shared', 'strategy', 'target-difficulty.js'));
 const StaticDifficulty = require(path.join(ROOT, 'shared', 'strategy', 'static-difficulty.js'));
-const KP = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 const MAKE_TEN = () => KP.get('math-g1-m0-make-ten');
 const staticLevel = () => StaticDifficulty.resolveStaticDifficulty(MAKE_TEN(), 'calc', {}).level;

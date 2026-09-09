@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const GenRegistry = require(path.join(ROOT, 'shared', 'generator', 'generator-registry.js'));
-const KnowledgePoint = require(path.join(ROOT, 'shared', 'knowledge-point.js'));
+const KnowledgePoint = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js'));
 
 test('M4-R12：enhanceKp 注入 capabilities（MATH-14：legacyPluginId 随 legacy 轨道退役）', () => {
   const kp = GenRegistry.enhanceKp(KnowledgePoint.get('math-g1-m0-make-ten'));
@@ -26,8 +26,8 @@ test('M4-R12：capabilities 与 Generator Registry 一致（KP → Generator →
 });
 
 test('M4-R12：不修改 KnowledgeBank 原始对象（只读增强）', () => {
-  const KB = require(path.join(ROOT, 'shared', 'knowledge-bank.js'));
-  const O = require(path.join(ROOT, 'shared', 'knowledge-ontology.js'));
+  const KB = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+  const O = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-ontology.js'));
   const before = O.normalize(KnowledgePoint.get('math-g1-m0-make-ten'));
   GenRegistry.enhanceKp(KnowledgePoint.get('math-g1-m0-make-ten'));
   const after = O.normalize(KnowledgePoint.get('math-g1-m0-make-ten'));

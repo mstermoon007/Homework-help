@@ -2,7 +2,7 @@
 /**
  * dev/check-contrast.js — WCAG 2.1 对比度校验（任务2.1）
  *
- * 静态解析 shared/tokens.css 中的颜色令牌，对「核心文本/背景」组合计算对比度，
+ * 静态解析 shared/styles/tokens.css 中的颜色令牌，对「核心文本/背景」组合计算对比度，
  * 阻断不满足 WCAG AA 的组合（正文 4.5:1，大文本 3:1）。
  *
  *  - CORE  组合：断言必须达到 4.5:1（正常文本），否则脚本退出码 1（纳入 npm test）。
@@ -13,7 +13,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const TOKENS = path.join(__dirname, '..', 'shared', 'tokens.css');
+const TOKENS = path.join(__dirname, '..', 'shared', 'styles', 'tokens.css');
 const css = fs.readFileSync(TOKENS, 'utf8');
 
 // 1. 解析所有 --name: value;

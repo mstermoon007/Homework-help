@@ -1,0 +1,414 @@
+/**
+ * shared/bridge/practice-bridge.js — 关联层 (Bridge / Coordinator)
+ *
+ * 职责：位于 UI 层与题目生成层 (PracticeSession / GenerationAPI) 之间，
+ *   按 UI 层的功能与指令，翻译成题目生成层可理解的指令（GenerateInstruction），
+ *   并接受生成层的反馈（成功 / 失败 / 批改结果），归一化后交回 UI 层。
+ *
+ * 外围控制层 (ControlService)：
+ *   本文件内抽离为一个「服务模式」整块，集中解析并全面介入：
+ *     - 数量 count（预置 20/30/50 / 自定义 1~50，默认 20）
+ *     - 难度 difficulty（1~10，默认 1）
+ *     - 知识点 knowledgePoints / knowledgePointId
+ *     - 双量控制（总数量 count + 分题型数量 perTypeCount / typeCounts）—— 由决策层按题型
+ *       选择最优知识点群、群内均分；旧 per-KP 配额（kpAllocation）已废除，本层仅透传分题型数量。
+ *
+ * 分层约束：
+ *   - 本文件不修改、不侵入题目生成层（shared/engine/practice-session.js / generation-*）。
+ *   - 本文件只“构造并调用”生成层，负责把 UI 意图翻译为生成层配置。
+ *   - UI 层只与本文件（PracticeBridge）交互，不再直接 new PracticeSession。
+ *
+ * 指令结构 (GenerateInstruction)：
+ *   {
+ *     subject, grade,            // 科目 / 年级
+ *     count,                     // 总题量
+ *     difficulty,                // 难度 1-10
+ *     mode,                      // quick / teacher / competition / adaptive / multi-kp
+ *     knowledgePointId,          // 单知识点（单选）
+ *     knowledgePoints,           // 多知识点（多选 / 快速模式）
+ *     perTypeCount,              // 统一分题型数量（双量控制；与 count 互锁守恒）
+ *     typeCounts,                // 逐题型数量 [{questionType, count}]（权威；Σ = count）
+ *     questionType, subtype,     // 题型（可空）
+ *     adaptive,                  // 是否自适应
+ *     learnerProfile,            // 学习者画像（自适应反馈）
+ *     titleType                  // 标题规格
+ *   }
+ *
+ * 反馈结构 (反馈统一由生成层回执，经本层归一化)：
+ *   - start() 成功 → { ok:true, session, questions, html, meta }
+ *   - start() 失败 → { ok:false, session, error:{ code, message } }
+ *   - submit()     → { ok:true, session, score, total, correct, results, correctAnswers }
+ */
+(function (global) {
+  'use strict';
+
+  // ============================================================
+  // 外围控制层 (ControlService) —— 服务模式整块
+  // ============================================================
+  // 集中解析与校验 UI 驱动生成所需的全部维度（数量/难度/知识点/知识点驱动配额），
+  // 并给出生成「执行计划」：带 per-KP 配额时编排为按知识点逐个生成，否则单次直发。
+  var ControlService = (function () {
+    var DEFAULTS = { count: 20, difficulty: 1 };
+    var COUNT_MIN = 1, COUNT_MAX = 50;
+    var DIFF_MIN = 1, DIFF_MAX = 10;
+    var PRESET_COUNTS = { 20: true, 30: true, 50: true };
+
+    function normNumber(v, min, max, dft) {
+      var n = Number(v);
+      return (isNaN(n) || n < min || n > max) ? dft : Math.floor(n);
+    }
+
+    // ---- 数量 ----
+    function resolveCount(ui) {
+      var raw = (ui && ui.count != null)
+        ? ui.count
+        : (ui && ui.state && ui.state.count != null ? ui.state.count : null);
+      return normNumber(raw, COUNT_MIN, COUNT_MAX, DEFAULTS.count);
+    }
+    function countProfile(ui) {
+      var count = resolveCount(ui);
+      return { count: count, preset: !!PRESET_COUNTS[count], min: COUNT_MIN, max: COUNT_MAX };
+    }
+
+    // ---- 难度 ----
+    function resolveDifficulty(ui) {
+      var raw = (ui && ui.difficulty != null)
+        ? ui.difficulty
+        : (ui && ui.state && ui.state.difficulty != null ? ui.state.difficulty : null);
+      return normNumber(raw, DIFF_MIN, DIFF_MAX, DEFAULTS.difficulty);
+    }
+
+    // ---- 知识点 ----
+    function extractKnowledgePoints(ui) {
+      var st = (ui && ui.state) || {};
+      var kps = ui.knowledgePoints || (Array.isArray(st.knowledgePointIds) && st.knowledgePointIds.length ? st.knowledgePointIds.slice() : null);
+      var kp = ui.knowledgePointId || st.kp || null;
+      if (!kps && kp) kps = [kp];
+      return { knowledgePoints: kps || null, knowledgePointId: kp || null };
+    }
+
+    /**
+     * 生成执行计划（大服务层只做信息流转：参数归一 → profile；不做编排运算）。
+     * 题量分配（分题型数量 perTypeCount / typeCounts 与总数量 count）由生成层决策层
+     * planByType 统一处理（按题型选择最优知识点群、群内均分）。
+     * @param {Object} ui - UI 注入的业务状态（含 state 与命令字段）。
+     * @returns {{ profile:Object }}
+     */
+    function plan(ui) {
+      ui = ui || {};
+      var st = ui.state || {};
+      var mode = ui.mode || st.mode || (ui.adaptive ? 'adaptive' : (ui.knowledgePoints && ui.knowledgePoints.length ? 'multi-kp' : 'native'));
+      var c = countProfile(ui);
+      var d = resolveDifficulty(ui);
+      var kp = extractKnowledgePoints(ui);
+      var subject = ui.subject || st.subject || 'math';
+      var grade = ui.grade != null ? ui.grade : (st.grade != null ? st.grade : 1);
+
+      var profile = {
+        subject: subject,
+        grade: grade,
+        count: c.count,
+        difficulty: d,
+        mode: mode,
+        knowledgePointId: kp.knowledgePointId,
+        knowledgePoints: kp.knowledgePoints,
+        perTypeCount: ui.perTypeCount != null ? ui.perTypeCount : (st.perTypeCount != null ? st.perTypeCount : null),
+        typeCounts: (ui.typeCounts && ui.typeCounts.length) ? ui.typeCounts : ((st.typeCounts && st.typeCounts.length) ? st.typeCounts : null),
+        questionType: ui.questionType || st.questionType || null,
+        questionTypes: ui.questionTypes || st.questionTypes || null,
+        subtype: ui.subtype || st.subtype || null,
+        adaptive: !!(ui.adaptive || st.adaptive),
+        learnerProfile: ui.learnerProfile || st.learnerProfile || null,
+        titleType: ui.titleType || st.titleType || null,
+        pluginIds: ui.pluginIds || st.pluginIds || null,
+        // C1：combine 合并出题标志透传（多 KP 合并为一套卷）
+        combine: ui.combine === true || st.combine === true,
+        raw: ui.raw || null
+      };
+
+      // 编排（多知识点配额/分区）已下沉生成层决策（planByType）：大服务层不再自行分区，
+      // 统一由 PracticeSession 携带 knowledgePoints+分题型数量直发生成层引擎。
+      return { profile: profile };
+    }
+
+    // 把单次指令翻译为生成层构造函数可消费的 options（只构造，不改生成层）
+    function sessionConfig(profile) {
+      var config = {
+        subject: profile.subject,
+        grade: profile.grade,
+        count: profile.count,
+        difficulty: profile.difficulty,
+        knowledgePointId: profile.knowledgePointId || null,
+        knowledgePointIds: Array.isArray(profile.knowledgePoints) ? profile.knowledgePoints : (profile.knowledgePointId ? [profile.knowledgePointId] : null),
+        questionType: profile.questionType || null,
+        questionTypes: Array.isArray(profile.questionTypes) ? profile.questionTypes : (profile.questionTypes ? [profile.questionTypes] : null),
+        perTypeCount: profile.perTypeCount != null ? profile.perTypeCount : null,
+        typeCounts: Array.isArray(profile.typeCounts) ? profile.typeCounts : null,
+        adaptive: !!profile.adaptive,
+        learnerProfile: profile.learnerProfile || null,
+        titleType: profile.titleType || null,
+        combine: profile.combine === true
+      };
+      return config;
+    }
+
+    // 合并标题（沿用生成层同款格式）
+    function mergedTitle(profile) {
+      var subjectName = { math: '数学' }[profile.subject] || profile.subject;
+      var gradeName = '一二三四五六'.charAt(Math.max(0, profile.grade - 1)) + '年级';
+      var total = profile.count || 0;
+      var t = profile.titleType || '综合练习';
+      return gradeName + subjectName + ' · ' + t + '（' + total + '题）';
+    }
+
+    return Object.freeze({
+      DEFAULTS: DEFAULTS,
+      PRESET_COUNTS: PRESET_COUNTS,
+      resolveCount: resolveCount,
+      resolveDifficulty: resolveDifficulty,
+      countProfile: countProfile,
+      extractKnowledgePoints: extractKnowledgePoints,
+      plan: plan,
+      sessionConfig: sessionConfig,
+      mergedTitle: mergedTitle
+    });
+  })();
+
+  // ---------- 关联层服务实例 ----------
+  var _session = null;          // 当前持有的生成层会话（单次直发：单个会话；编排：聚合会话 shim）
+  var _onStartFeedback = null;  // UI 注册：接受生成层 start 反馈的钩子
+  var _onSubmitFeedback = null; // UI 注册：接受生成层 submit 反馈的钩子
+  // C1：生成请求单调序号（latest request wins）。
+  // 每次 start/newSession 递增；异步回调只在 requestId === _generationRequestId 时才允许 emit，
+  // 旧请求即使成功/失败也静默丢弃 —— 绝不能让旧请求结果覆盖新请求的 UI。
+  var _generationRequestId = 0;
+  // C2 / D001 修复：跨代去重记忆——累积全历史成功题目的语义指纹（不覆写）。
+  // 去重状态随会话实例持有（session._seenKeys），不存于模块级全局，避免多用户/服务端部署下
+  // 跨用户指纹泄漏与无界内存增长；单用户连续性由当前 _session._seenKeys 继承。
+  var _lastGenerationId = null;  // 仅最新一代 id（用于 previousGenerationId，非去重）
+
+  // D001：从成功会话中提取本代题目指纹，累积入该会话自身的 seenKeys（不覆写）
+  function recordGeneration(session) {
+    var g = session && session.lastSemantic;
+    if (!g || !g.generationId || !Array.isArray(g.questions)) return;
+    if (!session._seenKeys) session._seenKeys = new Set();
+    var added = 0;
+    g.questions.forEach(function (q) {
+      if (q && q.questionFingerprint) {
+        var sizeBefore = session._seenKeys.size;
+        session._seenKeys.add(q.questionFingerprint);
+        if (session._seenKeys.size > sizeBefore) added++;
+      }
+    });
+    _lastGenerationId = g.generationId;
+    return { added: added, total: session._seenKeys.size };  // 供饱和检测参考
+  }
+
+  // 读取生成层类型（浏览器 / CommonJS 边界，不修改生成层）
+  function sessionCtor() {
+    return (typeof global.PracticeSession !== 'undefined') ? global.PracticeSession
+      : (typeof require !== 'undefined' ? require('../engine/practice-session.js') : null);
+  }
+
+  // MATH-14：ensureLegacyPlugins 委托已随 legacy 插件轨道退役（native 生成无需插件装载）。
+
+  // ============================================
+  // 知识点驱动生成：统一直发单个 PracticeSession（分题型数量由生成层决策层统一处理）
+  // ============================================
+  /**
+   * 依计划执行：恒为单个 PracticeSession.start()（多知识点/分题型数量由生成层决策层统一规划）。
+   * @returns {Object} 会话（单个 session），或 null。
+   */
+  function runPlan(plan) {
+    runSingle(plan.profile);
+  }
+
+  function runSingle(profile) {
+    var Ctor = sessionCtor();
+    var requestId = ++_generationRequestId; // 本次请求身份（latest request wins）
+    if (!Ctor) {
+      if (requestId === _generationRequestId) emitStart({ ok: false, error: { code: 'E_GEN_LAYER', message: '题目生成层（PracticeSession）未加载' } });
+      return;
+    }
+    // C1：session 必须由本次请求闭包持有，异步回调禁止重读全局 _session
+    var session;
+    try {
+      var sessionConfig = ControlService.sessionConfig(profile);
+      // C2 / D001：注入当前会话历史指纹（跨练习去重）；无则不传（第一代自然无历史）
+      var prevSeen = _session && _session._seenKeys;
+      if (prevSeen && prevSeen.size > 0) {
+        sessionConfig.previousGeneration = {
+          generationId: _lastGenerationId,
+          fingerprints: prevSeen
+        };
+      }
+      session = new Ctor(sessionConfig);
+      session._seenKeys = prevSeen || new Set();
+    } catch (e) {
+      if (requestId === _generationRequestId) emitStart({ ok: false, instruction: profile, error: { code: 'E_SESSION', message: '创建练习会话失败：' + (e && e.message || e) } });
+      return;
+    }
+    _session = session;
+    session.start().then(function (result) {
+      if (requestId !== _generationRequestId) return; // 旧请求：后台可正常结束，但不得更新 UI
+      recordGeneration(session); // C2：本代成功题目滚动为上一代指纹
+      emitStart({
+        ok: true,
+        session: session,
+        instruction: profile,
+        questions: result && result.questions || [],
+        html: result && result.html || '',
+        meta: result && result.meta || null
+      });
+    }).catch(function (err) {
+      if (requestId !== _generationRequestId) return; // 旧请求失败不得覆盖新请求 UI
+      emitStart({
+        ok: false,
+        session: session,
+        instruction: profile,
+        error: { code: 'E_GENERATE', message: (err && err.message) || '生成失败' }
+      });
+    });
+  }
+
+  // ============================================
+  // 生成层调用 + 反馈接收
+  // ============================================
+  /**
+   * 开始一次生成练习：经外围控制层解析执行计划 → 直发或按知识点编排生成。
+   * 反馈（成功 / 失败）归一化后回调 UI 注册的 _onStartFeedback。
+   * @param {Object} ui - UI 业务状态（或已有指令）
+   * @returns {Object} 会话句柄（单个 session 或 null；编排路径异步完成后经反馈返回）
+   */
+  function start(ui) {
+    // B1 清理：__profile/__orchestrated/__partitions 为历史遗留死路径，全仓库无调用方，
+    // 统一经外围控制层 plan() 解析执行计划（与 resolve* 同源，保证 count/难度/kp 一致）。
+    var p = ControlService.plan(ui || {});
+    runPlan(p);
+    return _session;
+  }
+
+  // ============================================
+  // R4：大服务层查询（决策上收）
+  //  - 可见性查询：知识点/模块在题型过滤范围内的可见性（源自 module-catalog.kpVisibleInType）
+  //  - 题型→可见模块：标准题型支撑的模块 id 列表（源自 module-catalog.visibleModulesForType）
+  //  - 题量规划：按知识点权重分配总题量（源自 question-type-allocation.allocateKpRatio）
+  // UI 只读查询结果，不做推导 / 不持有静态过滤表。
+  // ============================================
+  // 访问大服务层 module-catalog（浏览器 / CommonJS 边界）
+  function moduleCatalog() {
+    return (typeof global !== 'undefined' && global.MODULE_CATALOG)
+      ? global.MODULE_CATALOG
+      : (typeof require !== 'undefined' ? require('../catalog/module-catalog.js') : null);
+  }
+  // 访问大服务层 question-type-allocation（浏览器经 strategy-engine.bundle 暴露的全局 / CommonJS）
+  function typeAllocation() {
+    return (typeof global !== 'undefined' && global.QuestionTypeAllocation)
+      ? global.QuestionTypeAllocation
+      : (typeof require !== 'undefined' ? require('../strategy/question-type-allocation.js') : null);
+  }
+  // 访问题型注册表（全局唯一题型 SSOT；浏览器经 strategy-engine.bundle 暴露 / CommonJS）
+  function questionTypeRegistry() {
+    return (typeof global !== 'undefined' && global.QuestionTypeRegistry)
+      ? global.QuestionTypeRegistry
+      : (typeof require !== 'undefined' ? require('../knowledge/question-type-registry.js') : null);
+  }
+  // 可见性查询：知识点是否落在题型过滤范围内（无 qt 视为全部可见）
+  function kpVisibleInType(kp, type) {
+    var mc = moduleCatalog();
+    if (mc && typeof mc.kpVisibleInType === 'function') return mc.kpVisibleInType(kp, type);
+    return true; // 大服务层不可用时保守放行（不阻断 UI）
+  }
+  // 题型→可见模块：返回支撑该题型的模块 id 数组（未知题型返回 null）
+  function visibleModulesForType(type) {
+    var mc = moduleCatalog();
+    if (mc && typeof mc.visibleModulesForType === 'function') return mc.visibleModulesForType(type);
+    return null;
+  }
+  // 题量规划：按知识点权重分配总题量（最大剩余法，sum(count) === total）
+  function allocateKpRatio(kps, total) {
+    var ta = typeAllocation();
+    if (ta && typeof ta.allocateKpRatio === 'function') return ta.allocateKpRatio(kps, total);
+    return null;
+  }
+  // 题型展示名：canonical 题型 → 注册表 TYPES.name；历史细粒度 qt → LEGACY_DISPLAY_NAMES（R9 上收自 TYPE_PRETTY）。
+  function questionTypeDisplayName(value) {
+    var r = questionTypeRegistry();
+    if (r && typeof r.displayName === 'function') return r.displayName(value);
+    return null;
+  }
+
+  // 提交批改：调用生成层 submit()（编排路径走聚合会话 shim），归一化反馈后交回 UI。
+  function submit() {
+    if (!_session) { emitSubmit({ ok: false, error: { code: 'E_NO_SESSION', message: '尚未生成练习会话' } }); return null; }
+    // C1：捕获本次提交的请求身份与会话闭包；批改异步返回期间若已开始新生成，反馈丢弃
+    var requestId = _generationRequestId;
+    var session = _session;
+    session.submit().then(function (result) {
+      if (requestId !== _generationRequestId) return;
+      emitSubmit({
+        ok: true,
+        session: session,
+        score: result && result.score,
+        total: result && result.total,
+        correct: result && result.correct,
+        results: result && result.results,
+        correctAnswers: result && result.correctAnswers
+      });
+    }).catch(function (err) {
+      if (requestId !== _generationRequestId) return;
+      emitSubmit({ ok: false, session: session, error: { code: 'E_SUBMIT', message: (err && err.message) || '批改失败' } });
+    });
+    return session;
+  }
+
+  // 组装配对新会话的会话（供错题本重做等复用）
+  function newSession(ins) {
+    var Ctor = sessionCtor();
+    if (!Ctor) return null;
+    var built = ControlService.plan(ins || {}).profile;
+    ++_generationRequestId; // 新会话意图作废旧在途生成/批改回调
+    var sessionConfig = ControlService.sessionConfig(built);
+    // C2 / D001：新会话（错题本重做/换一套等）同样继承当前会话累积指纹
+    var prevSeen = _session && _session._seenKeys;
+    if (prevSeen && prevSeen.size > 0) {
+      sessionConfig.previousGeneration = {
+        generationId: _lastGenerationId,
+        fingerprints: prevSeen
+      };
+    }
+    _session = new Ctor(sessionConfig);
+    _session._seenKeys = prevSeen || new Set();
+    return _session;
+  }
+
+  // ---------- 反馈分发（归一化出口） ----------
+  function emitStart(fb) {
+    if (typeof _onStartFeedback === 'function') _onStartFeedback(fb);
+  }
+  function emitSubmit(fb) {
+    if (typeof _onSubmitFeedback === 'function') _onSubmitFeedback(fb);
+  }
+  function onStartFeedback(fn) { _onStartFeedback = fn; return bridge; }
+  function onSubmitFeedback(fn) { _onSubmitFeedback = fn; return bridge; }
+
+  // ---------- 冻结公开 API ----------
+  var bridge = Object.freeze({
+    control: ControlService,           // 外围控制层（服务模式整块）
+    start: start,
+    submit: submit,
+    newSession: newSession,
+    onStartFeedback: onStartFeedback,
+    onSubmitFeedback: onSubmitFeedback,
+    // R4 大服务层查询（决策上收，UI 只读）
+    kpVisibleInType: kpVisibleInType,
+    visibleModulesForType: visibleModulesForType,
+    allocateKpRatio: allocateKpRatio,
+    questionTypeDisplayName: questionTypeDisplayName
+  });
+
+  global.PracticeBridge = bridge;
+  if (global.App && typeof global.App === 'object') global.App.PracticeBridge = bridge;
+  if (typeof module !== 'undefined' && module.exports) module.exports = bridge;
+
+})(typeof window !== 'undefined' ? window : global);

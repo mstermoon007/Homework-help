@@ -15,14 +15,15 @@
  */
 'use strict';
 
-var StrategyConfig = require('../strategy-config.js');
+var StrategyConfig = require('./strategy-config.js');
+var QuestionTypeRegistry = require('../knowledge/question-type-registry.js');
 
 var LEGACY_UI_KEYS = ['subject', 'grade', 'count', 'difficulty', 'subtype', 'questionType', 'knowledgePointId', 'knowledgePoints'];
 
-// 标准题型枚举（来自 QuestionTypeRegistry）
-var VALID_QUESTION_TYPES = [
-  'oral', 'calc', 'fill', 'choice', 'judge', 'apply', 'open', 'geometry', 'recognize'
-];
+// 标准题型枚举（SSOT：question-type-registry.js 的 canonical 7 类）
+var VALID_QUESTION_TYPES = (QuestionTypeRegistry && QuestionTypeRegistry.all)
+  ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
+  : ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
 
 // 难度范围
 var DIFFICULTY_MIN = 1;
@@ -85,6 +86,8 @@ function normalizeRequest(request) {
   }
   if (out.spiralLevel == null && out.spiral_level != null) out.spiralLevel = out.spiral_level;
   if (out.mode != null && MODE_ALIAS[String(out.mode)] != null) out.mode = MODE_ALIAS[String(out.mode)];
+  // 清除旧「知识点控制数量」配额：分题型数量统一由 planByType 的 count / perTypeCount / typeCounts 取代
+  delete out.kpAllocation;
   return out;
 }
 
@@ -139,14 +142,37 @@ function validateRequest(req) {
   if (req.questionType != null) {
     if (typeof req.questionType !== 'string') {
       errors.push('questionType 必须是字符串');
-    } else if (VALID_QUESTION_TYPES.indexOf(req.questionType) === -1) {
-      errors.push('非法 questionType: ' + req.questionType);
+    } else {
+      var _n = QuestionTypeRegistry.normalizeQuestionType(req.questionType);
+      if (!_n || _n.confidence === 'heuristic' || VALID_QUESTION_TYPES.indexOf(_n.id) === -1) {
+        errors.push('非法 questionType: ' + req.questionType);
+      }
     }
   }
 
   // 题型策略白名单：可选，若提供必须是数组（元素合法性由题型选择池化逻辑容忍）
   if (req.questionTypes != null && !Array.isArray(req.questionTypes)) {
     errors.push('questionTypes 必须是数组');
+  }
+
+  // 分题型数量（双量控制：总数量 count + 分题型数量 perTypeCount / typeCounts）
+  if (req.perTypeCount != null) {
+    if (typeof req.perTypeCount !== 'number' || req.perTypeCount < 1 || req.perTypeCount % 1 !== 0) {
+      errors.push('perTypeCount 必须是 >=1 的整数');
+    }
+  }
+  if (req.typeCounts != null && !Array.isArray(req.typeCounts)) {
+    errors.push('typeCounts 必须是数组');
+  }
+  if (Array.isArray(req.typeCounts)) {
+    req.typeCounts.forEach(function (t) {
+      if (!t || typeof t.questionType !== 'string' || !t.questionType) {
+        errors.push('typeCounts 元素缺少非空 questionType');
+      }
+      if (!t || typeof t.count !== 'number' || t.count < 1 || t.count % 1 !== 0) {
+        errors.push('typeCounts 元素的 count 必须是 >=1 的整数');
+      }
+    });
   }
 
   // mode：若提供必须合法（含别名）

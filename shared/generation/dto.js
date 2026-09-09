@@ -31,7 +31,9 @@
  * @property {Object} [learnerProfile] - 学习者画像 { knowledgePoints:{kpId:{mastery,confidence,recentAccuracy,...}}, ... }
  * @property {Object} [settings] - 题目生成设置 (难度/范围/算符等)
  * @property {Object} [customParams] - 自定义参数透传
- * @property {Object} [kpAllocation] - multi-kp 配额 { kps:[{id,count}] }（无配额时均分）
+ * @property {number} [perTypeCount] - 统一分题型数量（双量控制：每题型固定题量；实际参与题型数受总数量约束）
+ * @property {Array<{questionType:string,count:number}>} [typeCounts] - 逐题型数量（双量控制，权威；Σ = 总数量）
+ * @property {Object} [kpAllocation] - DEPRECATED：旧 multi-kp 每知识点配额，已由决策层（分题型数量 + 最优知识点群）取代，忽略
  * @property {boolean} [legacyOutput=false] - 是否输出 Legacy Question 格式 (含 render/check)
  * @property {boolean} [skipValidation=false] - 是否跳过验证管道
  * @deprecated 旧字段 knowledgePointId(object) / knowledgePoints(string[]) 仅作向下兼容输入，经归一化为 knowledgePointIds 后内部不再使用。

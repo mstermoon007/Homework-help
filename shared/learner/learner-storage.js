@@ -1,7 +1,7 @@
 /**
  * shared/learner/learner-storage.js — M6-R03 Learner Model Storage
  *
- * - 复用现有 StorageManager（shared/storage.js）持久化；
+ * - 复用现有 StorageManager（shared/state/storage.js）持久化；
  *   数据存放在既有状态对象的 learnerState 顶层字段下（唯一 Storage Key：'hw-help-state'.learnerState）。
  * - 数据损坏 → 自动恢复默认状态。
  * - Storage 不可用（隐私模式/localStorage 禁用）→ 降级内存模式。
@@ -20,7 +20,7 @@
     if (StorageManager) return StorageManager;
     if (typeof global.StorageManager !== 'undefined') { StorageManager = global.StorageManager; return StorageManager; }
     if (typeof require !== 'undefined') {
-      try { StorageManager = require('../storage.js'); return StorageManager; }
+      try { StorageManager = require('../state/storage.js'); return StorageManager; }
       catch (e) { StorageManager = false; }
     }
     StorageManager = false;

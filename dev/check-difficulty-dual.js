@@ -21,8 +21,8 @@ const errors = [];
 const warnings = [];
 
 // ---- 加载引擎（Node 端 require，自动装配全局 App） ----
-const Difficulty = require(path.join(ROOT, 'shared', 'difficulty.js'));
-const DifficultyStatic = require(path.join(ROOT, 'shared', 'difficulty-static.js'));
+const Difficulty = require(path.join(ROOT, 'shared', 'catalog', 'difficulty.js'));
+const DifficultyStatic = require(path.join(ROOT, 'shared', 'catalog', 'difficulty-static.js'));
 
 function assert(cond, msg) {
   if (!cond) errors.push(msg);
@@ -127,7 +127,7 @@ function checkNotWiredToUI() {
     }
   }
   // Math.random 不得出现在 difficulty-static（新代码禁止）
-  const ds = fs.readFileSync(path.join(ROOT, 'shared', 'difficulty-static.js'), 'utf8');
+  const ds = fs.readFileSync(path.join(ROOT, 'shared', 'catalog', 'difficulty-static.js'), 'utf8');
   if (/\bMath\.random\b/.test(ds)) {
     errors.push('护栏违规：difficulty-static.js 使用了 Math.random');
   }

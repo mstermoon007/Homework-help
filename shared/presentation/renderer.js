@@ -35,11 +35,16 @@
     ? global.HTMLRenderer
     : require('./html-renderer.js');
 
-  /** 归一化单题图形描述符（MATH-14：仅认 SemanticQuestion.graphic 描述符） */
+  /** 归一化单题图形描述符（MATH-14：认 SemanticQuestion.graphic；生成器经 data 透传时兜底 data.graphic） */
   function graphicOf(sq) {
     if (!sq || typeof sq !== 'object') return null;
     if (sq.graphic && typeof sq.graphic === 'object' && typeof sq.graphic.type === 'string') {
       return sq.graphic;
+    }
+    // 兼容生成器输出轨道：描述符在 sq.data.graphic（position/money/application/shape/stats/picture）
+    var dataGraphic = sq.data && sq.data.graphic;
+    if (dataGraphic && typeof dataGraphic === 'object' && typeof dataGraphic.type === 'string') {
+      return dataGraphic;
     }
     return null;
   }

@@ -42,8 +42,8 @@ const flush = () => new Promise(function (r) { setImmediate(r); }).then(() => ne
 function freshBridge(Stub) {
   // 桥为单例：每轮换回调收集器；instances 清空
   Stub.instances.length = 0;
-  delete require.cache[require.resolve(path.join(ROOT, 'shared', 'practice-bridge.js'))];
-  const Bridge = require(path.join(ROOT, 'shared', 'practice-bridge.js'));
+  delete require.cache[require.resolve(path.join(ROOT, 'shared', 'bridge', 'practice-bridge.js'))];
+  const Bridge = require(path.join(ROOT, 'shared', 'bridge', 'practice-bridge.js'));
   return Bridge;
 }
 

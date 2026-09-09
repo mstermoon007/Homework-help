@@ -19,8 +19,8 @@
 
 var StaticDifficulty = require('./static-difficulty.js');
 var NumberRangeStrategy = require('./number-range-strategy.js');
-var Difficulty = require('../difficulty.js');
-var KnowledgePoint = require('../knowledge-point.js');
+var Difficulty = require('../catalog/difficulty.js');
+var KnowledgePoint = require('../knowledge/knowledge-point.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 

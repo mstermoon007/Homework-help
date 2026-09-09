@@ -18,23 +18,23 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 
 global.window = global;
-['./shared/common.js', './shared/difficulty.js', './shared/difficulty-static.js',
- './shared/knowledge-bank.js',
- './shared/strategy-engine.bundle.js', './shared/presentation-engine.bundle.js',
+['./shared/core/common.js', './shared/catalog/difficulty.js', './shared/catalog/difficulty-static.js',
+ './shared/knowledge/knowledge-bank.js',
+ './shared/engine/strategy-engine.bundle.js', './shared/engine/presentation-engine.bundle.js',
  './shared/presentation/render-options.js', './shared/presentation/render-result.js',
  './shared/presentation/svg-registry.js',
  './shared/presentation/html-renderer.js', './shared/presentation/renderer.js',
- './shared/generation-engine.js', './shared/strategy/comprehensive-strategy.js'
+ './shared/engine/generation-engine.js', './shared/strategy/comprehensive-strategy.js'
 ].forEach(function (rel) {
   require(path.join(ROOT, rel));
 });
 
 // print.js 在 Node 下挂载到 module.exports.Print，这里取出并补到 global.Print
-const _printMod = require(path.join(ROOT, 'shared', 'print.js'));
+const _printMod = require(path.join(ROOT, 'shared', 'presentation', 'print.js'));
 global.Print = _printMod.Print || global.Print;
 
 const RenderFormat = require(path.join(ROOT, 'shared', 'presentation', 'render-format.js'));
-const Engine = global.GenerationEngine || require(path.join(ROOT, './shared/generation-engine.js'));
+const Engine = global.GenerationEngine || require(path.join(ROOT, './shared/engine/generation-engine.js'));
 
 const errors = [];
 const warnings = [];
@@ -113,7 +113,7 @@ function evaluate(caseRec, res) {
   // 自身答案通过自身 check：按「错误答案 0」字面口径，任何一题自测不通过即阻断 Gate
   // （历史上该指标仅作 warning，math-g2-column 的答案/check 归一化挂账因此被放行）。
   const renderable = RenderFormat.toRenderableQuestions(qs);
-  const PE = global.PresentationEngine || require(path.join(ROOT, 'shared', 'presentation-engine.js'));
+  const PE = global.PresentationEngine || require(path.join(ROOT, 'shared', 'engine', 'presentation-engine.js'));
   try {
     const checkRes = PE.checkAnswers(renderable, buildUserAnswers(renderable));
     if (!checkRes || !Array.isArray(checkRes.results) || checkRes.results.length !== renderable.length) {
