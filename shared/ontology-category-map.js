@@ -13,17 +13,20 @@
  * 规则依据（dev/audit/kb-data-completion.js 回放验证）：
  *   - 46 条原始 FILLED 真值回放 0 不一致；
  *   - 473 条 DERIVED、30 条 UNRESOLVED（统计与概率域，四域分类法无槽位 → null，禁猜）。
+ *   - V4.1.1 起：统计与概率域显式补 30 条 category='statistics'（42244d8），
+ *     领域扩展为五域（+statistics），derive 对统计域可推导，canonical.category 549/549 全覆盖。
  *
  * 领域语义：
  *   algebra     数与代数（运算/方程/分数小数百分数/比/数论/规律/行程/工程/策略推理等）
  *   measurement 量与计量（人民币/时间/长度/质量/面积体积单位换算与测量活动）
  *   geometry    图形与几何（图形认识/角/线/周长面积体积概念计算/图形运动/位置方向）
  *   synthesis   综合与跨域（题型综合/竞赛综合组卷/购物等跨域应用）
+ *   statistics  统计与概率（数据收集整理/统计图表/平均数/可能性）
  */
 (function (global) {
   'use strict';
 
-  var CATEGORIES = ['algebra', 'measurement', 'geometry', 'synthesis'];
+  var CATEGORIES = ['algebra', 'measurement', 'geometry', 'synthesis', 'statistics'];
 
   // ---- 领域词法规则（与 dev/audit/kb-data-completion.js deriveCategory 保持同步）----
 
@@ -42,7 +45,7 @@
 
   /**
    * 按 id/name 词法信号确定性推导领域。
-   * @returns {string|null} category；无确定性依据（统计与概率域）返回 null
+   * @returns {string|null} category；无确定性依据返回 null
    */
   function deriveCategory(kp) {
     var id = (kp && kp.id ? String(kp.id) : '').toLowerCase();
@@ -53,9 +56,9 @@
     if (/(判断|选择)题综合|综合应用|杂题选讲|模拟竞赛/.test(name)) return 'synthesis';
     if (/购物/.test(name) || /(?:^|-)shopping(?:-|$)/.test(id)) return 'synthesis';
 
-    // R2 统计与概率 → 四域分类法无槽位 → null（禁猜）
+    // R2 统计与概率 → statistics 域（V4.1.1 起领域扩展，可推导；显式值优先）
     if (STATS_ID.test(id) || /统计|可能性|平均数|折线|条形统计图?|扇形统计图?|数据收集/.test(name)) {
-      return null;
+      return 'statistics';
     }
 
     // R3 数与形规律：数列/模式推理 → algebra（显式排除 shape 词误伤）
