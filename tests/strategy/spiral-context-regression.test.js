@@ -79,6 +79,12 @@ test('全量回归：math 域 KP 的 spiralLevel 与 contextType 均不超过 KP
               expected--;
               return;
             }
+            if (e.code === CODES.NO_CAPABILITY && kp.status === 'inactive') {
+              // V4.1.2：未启用 KP（applicable_question_types 置空，等待生成器适配）无题型能力，
+              // 数据层标记 status:'inactive'，属预期状态，跳过（不参与螺旋/上下文回归）。
+              expected--;
+              return;
+            }
             throw e;
           }
           const plan = r.plans[0];

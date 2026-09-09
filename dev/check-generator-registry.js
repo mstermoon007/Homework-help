@@ -91,6 +91,7 @@ function run() {
       (g.modules || []).forEach(function (m) {
         (m.knowledgePoints || []).forEach(function (kp) {
           if (kp.id.indexOf('math-') !== 0) return; // 仅数学域
+          if (kp.status === 'inactive') return; // V4.1.2：未启用 KP（待生成器适配）不要求 Generator 覆盖
           totalKp++;
           if (kp.pluginId) kpWithPlugin++; else kpWithoutPlugin++;
           var qts = (kp.applicable_question_types || []).map(function (q) { return q.type || q; });

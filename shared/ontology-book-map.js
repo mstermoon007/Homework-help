@@ -139,6 +139,8 @@
     'math-g3-m4-g3-year-month':        { book: 'down', unit: '☆年、月、日的秘密' },
     'math-g3-m4-g3-decimal':           { book: 'down', unit: '第六单元 小数的初步认识' },
     'math-g3-m10-g3-combination':      { book: 'up', unit: '数学广角：搭配问题' },
+    'math-g3-m10-g3-code':             { book: 'up', unit: '数字编码（认识数字编码/编制学号）' },
+    'math-g3-m8-g3-equivalent':        { book: 'up', unit: '曹冲称象的故事（等量代换）' },
     // ---- 清理候选（新版删除）----
     'math-g3-m8-g3-times':             { book: 'mixed', unit: '清理候选（新版三上删除倍的认识）' },
     'math-g3-m10-g3-set':              { book: 'mixed', unit: '清理候选（新版删除数学广角集合）' },
