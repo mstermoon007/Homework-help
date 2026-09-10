@@ -1673,6 +1673,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m1-add-100",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "100以内加法",
               pluginId: "math-oral",
               weight: 3,
@@ -1697,6 +1699,8 @@
             },
             {
               id: "math-g2-m1-sub-100",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "100以内减法",
               pluginId: "math-oral",
               weight: 3,
@@ -1721,6 +1725,8 @@
             },
             {
               id: "math-g2-m1-mult-table",
+              book: "up",
+              unit: "第四单元 表内乘法(一)",
               name: "表内乘法",
               pluginId: "math-oral",
               weight: 3,
@@ -1745,6 +1751,8 @@
             },
             {
               id: "math-g2-m1-div-table",
+              book: "down",
+              unit: "第二单元 表内除法(一)",
               name: "表内除法",
               pluginId: "math-oral",
               weight: 3,
@@ -1769,6 +1777,8 @@
             },
             {
               id: "math-g2-m1-remainder-oral",
+              book: "down",
+              unit: "第六单元 有余数的除法",
               name: "有余数除法口算",
               pluginId: "math-oral",
               weight: 2,
@@ -1793,6 +1803,8 @@
             },
             {
               id: "math-g2-m1-mixed-addsub",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "加减混合运算",
               pluginId: "math-oral",
               weight: 2,
@@ -1817,6 +1829,8 @@
             },
             {
               id: "math-g2-m1-mixed-multdiv",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "乘除混合运算",
               pluginId: "math-oral",
               weight: 2,
@@ -1841,6 +1855,8 @@
             },
             {
               id: "math-g2-m1-mixed-two-step",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "两步混合运算（含括号）",
               pluginId: "math-oral",
               weight: 2,
@@ -1865,6 +1881,8 @@
             },
             {
               id: "math-g2-m1-addsub-1000",
+              book: "down",
+              unit: "第七单元 万以内数的认识",
               name: "整百整千数加减",
               pluginId: "math-oral",
               weight: 2,
@@ -1889,6 +1907,8 @@
             },
             {
               id: "math-g2-m1-muldiv-relation",
+              book: "down",
+              unit: "第二单元 表内除法(一)",
               name: "乘除法关系口算",
               pluginId: "math-oral",
               weight: 1,
@@ -1918,6 +1938,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m2-add-col",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "两位数加两位数竖式",
               pluginId: "math-g2-column",
               weight: 3,
@@ -1942,6 +1964,8 @@
             },
             {
               id: "math-g2-m2-sub-col",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "两位数减两位数竖式",
               pluginId: "math-g2-column",
               weight: 3,
@@ -1966,6 +1990,8 @@
             },
             {
               id: "math-g2-m2-chain-add-col",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "连加竖式",
               pluginId: "math-g2-column",
               weight: 2,
@@ -1990,6 +2016,8 @@
             },
             {
               id: "math-g2-m2-chain-sub-col",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "连减竖式",
               pluginId: "math-g2-column",
               weight: 2,
@@ -2014,6 +2042,8 @@
             },
             {
               id: "math-g2-m2-mixed-col",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "加减混合竖式",
               pluginId: "math-g2-column",
               weight: 2,
@@ -2038,6 +2068,8 @@
             },
             {
               id: "math-g2-m2-mult-col",
+              book: "up",
+              unit: "第四单元 表内乘法(一)",
               name: "表内乘法竖式",
               pluginId: "math-g2-column",
               weight: 1,
@@ -2062,6 +2094,8 @@
             },
             {
               id: "math-g2-m2-div-col",
+              book: "down",
+              unit: "第二单元 表内除法(一)",
               name: "表内除法竖式",
               pluginId: "math-g2-column",
               weight: 1,
@@ -2086,6 +2120,8 @@
             },
             {
               id: "math-g2-m2-remainder-col",
+              book: "down",
+              unit: "第六单元 有余数的除法",
               name: "有余数除法竖式",
               pluginId: "math-g2-column",
               weight: 2,
@@ -2115,6 +2151,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m3-mixed-no-bracket",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "无括号混合运算",
               pluginId: "math-g2-mixed",
               weight: 3,
@@ -2139,6 +2177,8 @@
             },
             {
               id: "math-g2-m3-mixed-bracket",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "带括号混合运算",
               pluginId: "math-g2-mixed",
               weight: 3,
@@ -2163,6 +2203,8 @@
             },
             {
               id: "math-g2-m3-chain-addsub",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "连加连减脱式",
               pluginId: "math-g2-mixed",
               weight: 2,
@@ -2187,6 +2229,8 @@
             },
             {
               id: "math-g2-m3-multdiv-mixed",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "乘除混合脱式",
               pluginId: "math-g2-mixed",
               weight: 2,
@@ -2211,6 +2255,8 @@
             },
             {
               id: "math-g2-m3-compare-simple",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "比较算式大小",
               pluginId: "math-g2-mixed",
               weight: 1,
@@ -2235,6 +2281,8 @@
             },
             {
               id: "math-g2-m3-fill-operator",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "填运算符号",
               pluginId: "math-g2-mixed",
               weight: 1,
@@ -2264,6 +2312,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m4-read-10000",
+              book: "down",
+              unit: "第七单元 万以内数的认识",
               name: "万以内数的读写",
               pluginId: "math-number-sense",
               weight: 2,
@@ -2288,6 +2338,8 @@
             },
             {
               id: "math-g2-m4-compose-10000",
+              book: "down",
+              unit: "第七单元 万以内数的认识",
               name: "万以内数的组成",
               pluginId: "math-number-sense",
               weight: 2,
@@ -2312,6 +2364,8 @@
             },
             {
               id: "math-g2-m4-digit-order",
+              book: "down",
+              unit: "第七单元 万以内数的认识",
               name: "数位顺序",
               pluginId: "math-number-sense",
               weight: 2,
@@ -2336,6 +2390,8 @@
             },
             {
               id: "math-g2-m4-approx-number",
+              book: "down",
+              unit: "第七单元 万以内数的认识",
               name: "近似数",
               pluginId: "math-number-sense",
               weight: 1,
@@ -2360,6 +2416,8 @@
             },
             {
               id: "math-g2-m4-compare-10000",
+              book: "down",
+              unit: "第七单元 万以内数的认识",
               name: "万以内数比大小",
               pluginId: "math-number-sense",
               weight: 2,
@@ -2384,6 +2442,8 @@
             },
             {
               id: "math-g2-m4-length-unit",
+              book: "up",
+              unit: "第一单元 长度单位",
               name: "长度单位换算",
               pluginId: "math-unit-convert",
               weight: 3,
@@ -2408,6 +2468,8 @@
             },
             {
               id: "math-g2-m4-mass-unit",
+              book: "down",
+              unit: "第八单元 克和千克",
               name: "质量单位换算",
               pluginId: "math-unit-convert",
               weight: 2,
@@ -2432,6 +2494,8 @@
             },
             {
               id: "math-g2-m4-time-unit",
+              book: "up",
+              unit: "第七单元 认识时间",
               name: "时间单位换算",
               pluginId: "math-unit-convert",
               weight: 2,
@@ -2456,6 +2520,8 @@
             },
             {
               id: "math-g2-m4-fill-length",
+              book: "up",
+              unit: "第一单元 长度单位",
               name: "填合适长度单位",
               pluginId: "math-unit-convert",
               weight: 2,
@@ -2480,6 +2546,8 @@
             },
             {
               id: "math-g2-m4-fill-mass",
+              book: "down",
+              unit: "第八单元 克和千克",
               name: "填合适质量单位",
               pluginId: "math-unit-convert",
               weight: 2,
@@ -2504,6 +2572,8 @@
             },
             {
               id: "math-g2-m4-fill-time",
+              book: "up",
+              unit: "第七单元 认识时间",
               name: "填合适时间单位",
               pluginId: "math-unit-convert",
               weight: 1,
@@ -2528,6 +2598,8 @@
             },
             {
               id: "math-g2-m4-number-pattern",
+              book: "down",
+              unit: "第七单元 万以内数的认识",
               name: "数字规律",
               pluginId: "math-patterns",
               weight: 2,
@@ -2552,6 +2624,8 @@
             },
             {
               id: "math-g2-m4-multiplication-meaning",
+              book: "up",
+              unit: "第四单元 表内乘法(一)",
               name: "乘法意义填空",
               pluginId: "math-number-sense",
               weight: 2,
@@ -2576,6 +2650,8 @@
             },
             {
               id: "math-g2-m4-division-meaning",
+              book: "down",
+              unit: "第二单元 表内除法(一)",
               name: "除法意义填空",
               pluginId: "math-number-sense",
               weight: 2,
@@ -2600,6 +2676,8 @@
             },
             {
               id: "math-g2-m4-angle-basic",
+              book: "up",
+              unit: "第三单元 角的初步认识",
               name: "角的基本组成",
               pluginId: "math-geometry",
               weight: 2,
@@ -2624,6 +2702,8 @@
             },
             {
               id: "math-g2-m4-clock-read",
+              book: "up",
+              unit: "第七单元 认识时间",
               name: "时间认读",
               pluginId: "math-clock",
               weight: 2,
@@ -2653,6 +2733,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m5-match-calc",
+              book: "mixed",
+              unit: "总复习",
               name: "算式与得数连线",
               pluginId: "math-g2-matching",
               weight: 2,
@@ -2677,6 +2759,8 @@
             },
             {
               id: "math-g2-m5-match-shape",
+              book: "mixed",
+              unit: "总复习",
               name: "图形与名称连线",
               pluginId: "math-g2-matching",
               weight: 2,
@@ -2701,6 +2785,8 @@
             },
             {
               id: "math-g2-m5-match-angle",
+              book: "up",
+              unit: "第三单元 角的初步认识",
               name: "角的类型连线",
               pluginId: "math-g2-matching",
               weight: 2,
@@ -2725,6 +2811,8 @@
             },
             {
               id: "math-g2-m5-match-clock",
+              book: "up",
+              unit: "第七单元 认识时间",
               name: "钟面与时间连线",
               pluginId: "math-g2-matching",
               weight: 2,
@@ -2749,6 +2837,8 @@
             },
             {
               id: "math-g2-m5-match-unit",
+              book: "mixed",
+              unit: "总复习",
               name: "单位与物品连线",
               pluginId: "math-g2-matching",
               weight: 2,
@@ -2773,6 +2863,8 @@
             },
             {
               id: "math-g2-m5-match-multdiv",
+              book: "up",
+              unit: "第四单元 表内乘法(一)",
               name: "口诀与算式连线",
               pluginId: "math-g2-matching",
               weight: 2,
@@ -2802,6 +2894,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m6-solid-shape",
+              book: "up",
+              unit: "第五单元 观察物体(一)",
               name: "认识图形",
               pluginId: "math-shapes",
               weight: 2,
@@ -2826,6 +2920,8 @@
             },
             {
               id: "math-g2-m6-angle-recognize",
+              book: "up",
+              unit: "第三单元 角的初步认识",
               name: "角的认识",
               pluginId: "math-geometry",
               weight: 2,
@@ -2850,6 +2946,8 @@
             },
             {
               id: "math-g2-m6-motion",
+              book: "down",
+              unit: "第三单元 图形的运动(一)",
               name: "图形运动",
               pluginId: "math-geometry",
               weight: 2,
@@ -2874,6 +2972,8 @@
             },
             {
               id: "math-g2-m6-grid-draw",
+              book: "down",
+              unit: "第三单元 图形的运动(一)",
               name: "方格纸画图",
               pluginId: "math-geometry",
               weight: 2,
@@ -2898,6 +2998,8 @@
             },
             {
               id: "math-g2-m6-draw-line",
+              book: "up",
+              unit: "第一单元 长度单位",
               name: "画指定长度线段",
               pluginId: "math-g1-operation",
               weight: 2,
@@ -2922,6 +3024,8 @@
             },
             {
               id: "math-g2-m6-draw-angle",
+              book: "up",
+              unit: "第三单元 角的初步认识",
               name: "画指定角",
               pluginId: "math-g1-operation",
               weight: 2,
@@ -2946,6 +3050,8 @@
             },
             {
               id: "math-g2-m6-clock-draw",
+              book: "up",
+              unit: "第七单元 认识时间",
               name: "钟面画时间",
               pluginId: "math-g1-operation",
               weight: 2,
@@ -2970,6 +3076,8 @@
             },
             {
               id: "math-g2-m6-measure",
+              book: "up",
+              unit: "第一单元 长度单位",
               name: "测量线段",
               pluginId: "math-g1-operation",
               weight: 2,
@@ -2999,6 +3107,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m7-pic-add",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "看图列加法",
               pluginId: "math-g2-picture-equations",
               weight: 2,
@@ -3023,6 +3133,8 @@
             },
             {
               id: "math-g2-m7-pic-sub",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "看图列减法",
               pluginId: "math-g2-picture-equations",
               weight: 2,
@@ -3047,6 +3159,8 @@
             },
             {
               id: "math-g2-m7-pic-mult",
+              book: "up",
+              unit: "第四单元 表内乘法(一)",
               name: "看图列乘法",
               pluginId: "math-g2-picture-equations",
               weight: 3,
@@ -3071,6 +3185,8 @@
             },
             {
               id: "math-g2-m7-pic-div",
+              book: "down",
+              unit: "第二单元 表内除法(一)",
               name: "看图列除法（等分）",
               pluginId: "math-g2-picture-equations",
               weight: 3,
@@ -3095,6 +3211,8 @@
             },
             {
               id: "math-g2-m7-pic-div-include",
+              book: "down",
+              unit: "第二单元 表内除法(一)",
               name: "看图列除法（包含）",
               pluginId: "math-g2-picture-equations",
               weight: 3,
@@ -3119,6 +3237,8 @@
             },
             {
               id: "math-g2-m7-pic-mixed",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "看图列混合算式",
               pluginId: "math-g2-picture-equations",
               weight: 2,
@@ -3148,6 +3268,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m8-add-total",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "加法求和",
               pluginId: "math-word-problems",
               weight: 3,
@@ -3172,6 +3294,8 @@
             },
             {
               id: "math-g2-m8-sub-remain",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "减法求剩余",
               pluginId: "math-word-problems",
               weight: 3,
@@ -3196,6 +3320,8 @@
             },
             {
               id: "math-g2-m8-mult-total",
+              book: "up",
+              unit: "第四单元 表内乘法(一)",
               name: "乘法求总数",
               pluginId: "math-word-problems",
               weight: 3,
@@ -3220,6 +3346,8 @@
             },
             {
               id: "math-g2-m8-div-partitive",
+              book: "down",
+              unit: "第二单元 表内除法(一)",
               name: "等分除应用",
               pluginId: "math-word-problems",
               weight: 3,
@@ -3244,6 +3372,8 @@
             },
             {
               id: "math-g2-m8-div-quotative",
+              book: "down",
+              unit: "第二单元 表内除法(一)",
               name: "包含除应用",
               pluginId: "math-word-problems",
               weight: 3,
@@ -3268,6 +3398,8 @@
             },
             {
               id: "math-g2-m8-remainder-apply",
+              book: "down",
+              unit: "第六单元 有余数的除法",
               name: "有余数除法应用",
               pluginId: "math-word-problems",
               weight: 3,
@@ -3292,6 +3424,8 @@
             },
             {
               id: "math-g2-m8-compare-diff",
+              book: "up",
+              unit: "第二单元 100以内的加法和减法(二)",
               name: "比多比少问题",
               pluginId: "math-word-problems",
               weight: 2,
@@ -3316,6 +3450,8 @@
             },
             {
               id: "math-g2-m8-two-step",
+              book: "down",
+              unit: "第五单元 混合运算",
               name: "两步混合运算应用",
               pluginId: "math-word-problems",
               weight: 3,
@@ -3340,6 +3476,8 @@
             },
             {
               id: "math-g2-m8-money",
+              book: "mixed",
+              unit: "总复习",
               name: "人民币购物问题",
               pluginId: "math-word-problems",
               weight: 2,
@@ -3364,6 +3502,8 @@
             },
             {
               id: "math-g2-m8-length-app",
+              book: "up",
+              unit: "第一单元 长度单位",
               name: "长度单位应用",
               pluginId: "math-word-problems",
               weight: 2,
@@ -3388,6 +3528,8 @@
             },
             {
               id: "math-g2-m8-mass-app",
+              book: "down",
+              unit: "第八单元 克和千克",
               name: "质量单位应用",
               pluginId: "math-word-problems",
               weight: 2,
@@ -3412,6 +3554,8 @@
             },
             {
               id: "math-g2-m8-extra-condition",
+              book: "mixed",
+              unit: "总复习",
               name: "含多余条件问题",
               pluginId: "math-word-problems",
               weight: 1,
@@ -3441,6 +3585,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m9-data-tally",
+              book: "down",
+              unit: "第一单元 数据收集整理",
               name: "数据收集（正字法）",
               pluginId: "math-data-stats",
               weight: 2,
@@ -3467,6 +3613,8 @@
             },
             {
               id: "math-g2-m9-data-question",
+              book: "down",
+              unit: "第一单元 数据收集整理",
               name: "统计回答问题",
               pluginId: "math-data-stats",
               weight: 2,
@@ -3498,6 +3646,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m10-logic-reasoning",
+              book: "down",
+              unit: "第九单元 数学广角──推理",
               name: "简单逻辑推理",
               pluginId: "math-logic-reasoning",
               weight: 2,
@@ -3522,6 +3672,8 @@
             },
             {
               id: "math-g2-m10-sudoku3",
+              book: "down",
+              unit: "第九单元 数学广角──推理",
               name: "3×3数独",
               pluginId: "math-logic-reasoning",
               weight: 1,
@@ -3546,6 +3698,8 @@
             },
             {
               id: "math-g2-m10-combination",
+              book: "up",
+              unit: "第八单元 数学广角——搭配(一)",
               name: "搭配（排列组合）",
               pluginId: "math-logic-reasoning",
               weight: 2,
@@ -3570,6 +3724,8 @@
             },
             {
               id: "math-g2-m10-handshake",
+              book: "up",
+              unit: "第八单元 数学广角——搭配(一)",
               name: "握手问题",
               pluginId: "math-logic-reasoning",
               weight: 2,
@@ -3594,6 +3750,8 @@
             },
             {
               id: "math-g2-m10-order",
+              book: "up",
+              unit: "第八单元 数学广角——搭配(一)",
               name: "排队问题",
               pluginId: "math-logic-reasoning",
               weight: 1,
@@ -3623,6 +3781,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m11-judge-mixed",
+              book: "mixed",
+              unit: "总复习",
               name: "判断题综合",
               pluginId: "math-g2-judge",
               weight: 3,
@@ -3652,6 +3812,8 @@
           knowledgePoints: [
             {
               id: "math-g2-m12-choice-mixed",
+              book: "mixed",
+              unit: "总复习",
               name: "选择题综合",
               pluginId: "math-g2-choice",
               weight: 3,
@@ -3687,6 +3849,8 @@
           knowledgePoints: [
             {
               id: "math-g3-m1-g3-add-sub-wan",
+              book: "up",
+              unit: "第二单元 万以内的加法和减法(一)",
               name: "万以内的加减法",
               pluginId: "math-oral",
               weight: 3,
@@ -3711,6 +3875,8 @@
             },
             {
               id: "math-g3-m1-g3-mul-multi1",
+              book: "up",
+              unit: "第六单元 多位数乘一位数",
               name: "多位数乘一位数",
               pluginId: "math-oral",
               weight: 3,
@@ -3735,6 +3901,8 @@
             },
             {
               id: "math-g3-m1-g3-oral-mul",
+              book: "up",
+              unit: "第六单元 多位数乘一位数",
               name: "多位数乘一位数口算",
               pluginId: "math-oral",
               weight: 3,
@@ -3759,6 +3927,8 @@
             },
             {
               id: "math-g3-m1-g3-div1",
+              book: "down",
+              unit: "第二单元 除数是一位数的除法",
               name: "除数是一位数的除法",
               pluginId: "math-oral",
               weight: 3,
@@ -3783,6 +3953,8 @@
             },
             {
               id: "math-g3-m1-g3-mul-2digit",
+              book: "down",
+              unit: "第四单元 两位数乘两位数",
               name: "两位数乘两位数",
               pluginId: "math-oral",
               weight: 3,
@@ -3812,6 +3984,8 @@
           knowledgePoints: [
             {
               id: "math-g3-m4-g3-fraction",
+              book: "up",
+              unit: "第八单元 分数的初步认识",
               name: "分数的初步认识",
               pluginId: "math-fraction",
               weight: 3,
@@ -3836,6 +4010,8 @@
             },
             {
               id: "math-g3-m4-g3-fracadd",
+              book: "up",
+              unit: "第八单元 分数的初步认识",
               name: "同分母分数加减法",
               pluginId: "math-fraction",
               weight: 2,
@@ -3864,6 +4040,8 @@
             },
             {
               id: "math-g3-m4-g3-decimal",
+              book: "down",
+              unit: "第七单元 小数的初步认识",
               name: "小数的初步认识",
               pluginId: "math-decimal",
               weight: 3,
@@ -3888,6 +4066,8 @@
             },
             {
               id: "math-g3-m4-g3-time",
+              book: "up",
+              unit: "第一单元 时、分、秒",
               name: "时、分、秒",
               pluginId: "math-time-date",
               weight: 2,
@@ -3912,6 +4092,8 @@
             },
             {
               id: "math-g3-m4-g3-year-month",
+              book: "down",
+              unit: "第六单元 年、月、日",
               name: "年、月、日",
               pluginId: "math-time-date",
               weight: 2,
@@ -3936,6 +4118,8 @@
             },
             {
               id: "math-g3-m4-g3-measure",
+              book: "up",
+              unit: "第三单元 测量",
               name: "测量",
               pluginId: "math-unit-convert",
               weight: 2,
@@ -3965,6 +4149,8 @@
           knowledgePoints: [
             {
               id: "math-g3-m6-g3-perimeter",
+              book: "up",
+              unit: "第七单元 长方形和正方形",
               name: "长方形正方形的周长",
               pluginId: "math-geometry",
               weight: 2,
@@ -3989,6 +4175,8 @@
             },
             {
               id: "math-g3-m6-g3-polygon",
+              book: "up",
+              unit: "第七单元 长方形和正方形",
               name: "认识多边形",
               pluginId: "math-shape",
               weight: 2,
@@ -4014,6 +4202,8 @@
             },
             {
               id: "math-g3-m6-g3-area",
+              book: "down",
+              unit: "第五单元 面积",
               name: "面积",
               pluginId: "math-area",
               weight: 3,
@@ -4038,6 +4228,8 @@
             },
             {
               id: "math-g3-m6-g3-position",
+              book: "down",
+              unit: "第一单元 位置与方向(一)",
               name: "【已废弃】位置与方向",
               pluginId: "math-position-direction",
               weight: 2,
@@ -4068,6 +4260,8 @@
           knowledgePoints: [
             {
               id: "math-g3-m8-g3-times",
+              book: "up",
+              unit: "第五单元 倍的认识",
               name: "倍的认识",
               pluginId: "math-word-problems",
               weight: 2,
@@ -4093,6 +4287,8 @@
             },
             {
               id: "math-g3-m8-g3-equivalent",
+              book: "mixed",
+              unit: "总复习",
               name: "等量代换",
               pluginId: "math-equivalent",
               weight: 2,
@@ -4123,6 +4319,8 @@
           knowledgePoints: [
             {
               id: "math-g3-m9-g3-stats-table",
+              book: "down",
+              unit: "第三单元 复式统计表",
               name: "数据的收集与整理",
               pluginId: "math-data-stats",
               weight: 2,
@@ -4154,6 +4352,8 @@
           knowledgePoints: [
             {
               id: "math-g3-m10-g3-combination",
+              book: "down",
+              unit: "第八单元 数学广角——搭配(二)",
               name: "搭配问题",
               pluginId: "math-combination-set",
               weight: 2,
@@ -4178,6 +4378,8 @@
             },
             {
               id: "math-g3-m10-g3-set",
+              book: "up",
+              unit: "第九单元 数学广角──集合",
               name: "集合思想",
               pluginId: "math-combination-set",
               weight: 2,
@@ -4203,6 +4405,8 @@
             },
             {
               id: "math-g3-m10-g3-code",
+              book: "up",
+              unit: "综合与实践 数字编码",
               name: "认识数字编码",
               pluginId: "math-code",
               weight: 2,
@@ -4239,6 +4443,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m1-g4-oral-big",
+              book: "up",
+              unit: "第一单元 大数的认识",
               name: "大数加减口算",
               pluginId: "math-g4-oral",
               weight: 3,
@@ -4263,6 +4469,8 @@
             },
             {
               id: "math-g4-m1-g4-oral-mul3x1",
+              book: "up",
+              unit: "第四单元 三位数乘两位数",
               name: "三位数乘一位数口算",
               pluginId: "math-g4-oral",
               weight: 3,
@@ -4287,6 +4495,8 @@
             },
             {
               id: "math-g4-m1-g4-oral-mul2t",
+              book: "up",
+              unit: "第四单元 三位数乘两位数",
               name: "两位数乘整十数口算",
               pluginId: "math-g4-oral",
               weight: 3,
@@ -4311,6 +4521,8 @@
             },
             {
               id: "math-g4-m1-g4-oral-divt",
+              book: "up",
+              unit: "第六单元 除数是两位数的除法",
               name: "除数是整十数的口算",
               pluginId: "math-g4-oral",
               weight: 3,
@@ -4335,6 +4547,8 @@
             },
             {
               id: "math-g4-m1-g4-oral-dec",
+              book: "down",
+              unit: "第六单元 小数的加法和减法",
               name: "小数加减法口算",
               pluginId: "math-g4-oral",
               weight: 3,
@@ -4359,6 +4573,8 @@
             },
             {
               id: "math-g4-m1-g4-oral-law",
+              book: "down",
+              unit: "第三单元 运算定律",
               name: "运用运算律简便口算",
               pluginId: "math-g4-oral",
               weight: 2,
@@ -4388,6 +4604,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m2-g4-v-mul3x2",
+              book: "up",
+              unit: "第四单元 三位数乘两位数",
               name: "三位数乘两位数",
               pluginId: "math-g4-vertical",
               weight: 3,
@@ -4412,6 +4630,8 @@
             },
             {
               id: "math-g4-m2-g4-v-mulzero",
+              book: "up",
+              unit: "第四单元 三位数乘两位数",
               name: "因数中间或末尾有 0 的乘法",
               pluginId: "math-g4-vertical",
               weight: 3,
@@ -4436,6 +4656,8 @@
             },
             {
               id: "math-g4-m2-g4-v-div2",
+              book: "up",
+              unit: "第六单元 除数是两位数的除法",
               name: "除数是两位数的除法",
               pluginId: "math-g4-vertical",
               weight: 3,
@@ -4460,6 +4682,8 @@
             },
             {
               id: "math-g4-m2-g4-v-div2q",
+              book: "up",
+              unit: "第六单元 除数是两位数的除法",
               name: "商是两位数的除法",
               pluginId: "math-g4-vertical",
               weight: 3,
@@ -4484,6 +4708,8 @@
             },
             {
               id: "math-g4-m2-g4-v-dec",
+              book: "down",
+              unit: "第六单元 小数的加法和减法",
               name: "小数加减法竖式",
               pluginId: "math-g4-vertical",
               weight: 3,
@@ -4513,6 +4739,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m3-g4-mix-order",
+              book: "down",
+              unit: "第一单元 四则运算",
               name: "四则混合运算顺序",
               pluginId: "math-g4-mixed",
               weight: 3,
@@ -4537,6 +4765,8 @@
             },
             {
               id: "math-g4-m3-g4-mix-addlaw",
+              book: "down",
+              unit: "第三单元 运算定律",
               name: "加法运算律简便计算",
               pluginId: "math-g4-mixed",
               weight: 3,
@@ -4561,6 +4791,8 @@
             },
             {
               id: "math-g4-m3-g4-mix-mullaw",
+              book: "down",
+              unit: "第三单元 运算定律",
               name: "乘法运算律简便计算",
               pluginId: "math-g4-mixed",
               weight: 3,
@@ -4585,6 +4817,8 @@
             },
             {
               id: "math-g4-m3-g4-mix-dist",
+              book: "down",
+              unit: "第三单元 运算定律",
               name: "乘法分配律简便计算",
               pluginId: "math-g4-mixed",
               weight: 3,
@@ -4609,6 +4843,8 @@
             },
             {
               id: "math-g4-m3-g4-mix-dec",
+              book: "down",
+              unit: "第六单元 小数的加法和减法",
               name: "小数加减简便计算",
               pluginId: "math-g4-mixed",
               weight: 2,
@@ -4638,6 +4874,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m4-g4-fill-bignum",
+              book: "up",
+              unit: "第一单元 大数的认识",
               name: "大数的认识",
               pluginId: "math-g4-fill",
               weight: 3,
@@ -4662,6 +4900,8 @@
             },
             {
               id: "math-g4-m4-g4-fill-hectare",
+              book: "up",
+              unit: "第二单元 公顷和平方千米",
               name: "公顷和平方千米",
               pluginId: "math-g4-fill",
               weight: 2,
@@ -4686,6 +4926,8 @@
             },
             {
               id: "math-g4-m4-g4-fill-line",
+              book: "up",
+              unit: "第三单元 角的度量",
               name: "线段、射线、直线",
               pluginId: "math-g4-fill",
               weight: 2,
@@ -4710,6 +4952,8 @@
             },
             {
               id: "math-g4-m4-g4-fill-angle",
+              book: "up",
+              unit: "第三单元 角的度量",
               name: "角的度量与分类",
               pluginId: "math-g4-fill",
               weight: 3,
@@ -4734,6 +4978,8 @@
             },
             {
               id: "math-g4-m4-g4-fill-quad",
+              book: "up",
+              unit: "第五单元 平行四边形和梯形",
               name: "平行四边形和梯形",
               pluginId: "math-g4-fill",
               weight: 2,
@@ -4758,6 +5004,8 @@
             },
             {
               id: "math-g4-m4-g4-fill-op",
+              book: "down",
+              unit: "第一单元 四则运算",
               name: "四则运算的意义与关系、0 的运算",
               pluginId: "math-g4-fill",
               weight: 2,
@@ -4782,6 +5030,8 @@
             },
             {
               id: "math-g4-m4-g4-fill-quotient",
+              book: "up",
+              unit: "第六单元 除数是两位数的除法",
               name: "商不变规律",
               pluginId: "math-g4-fill",
               weight: 2,
@@ -4806,6 +5056,8 @@
             },
             {
               id: "math-g4-m4-g4-fill-dec",
+              book: "down",
+              unit: "第四单元 小数的意义和性质",
               name: "小数",
               pluginId: "math-g4-fill",
               weight: 3,
@@ -4830,6 +5082,8 @@
             },
             {
               id: "math-g4-m4-g4-fill-tri",
+              book: "down",
+              unit: "第五单元 三角形",
               name: "三角形",
               pluginId: "math-g4-fill",
               weight: 3,
@@ -4854,6 +5108,8 @@
             },
             {
               id: "math-g4-m4-g4-fill-avg",
+              book: "down",
+              unit: "第八单元 平均数与条形统计图",
               name: "平均数",
               pluginId: "math-g4-fill",
               weight: 2,
@@ -4885,6 +5141,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m5-g4-match-read",
+              book: "up",
+              unit: "第一单元 大数的认识",
               name: "大数与读法连线",
               pluginId: "math-match",
               weight: 2,
@@ -4909,6 +5167,8 @@
             },
             {
               id: "math-g4-m5-g4-match-angle",
+              book: "up",
+              unit: "第三单元 角的度量",
               name: "角与度数连线",
               pluginId: "math-match",
               weight: 2,
@@ -4933,6 +5193,8 @@
             },
             {
               id: "math-g4-m5-g4-match-shape",
+              book: "mixed",
+              unit: "总复习",
               name: "图形与特征连线",
               pluginId: "math-match",
               weight: 2,
@@ -4957,6 +5219,8 @@
             },
             {
               id: "math-g4-m5-g4-match-law",
+              book: "down",
+              unit: "第三单元 运算定律",
               name: "运算律与字母表达式连线",
               pluginId: "math-match",
               weight: 2,
@@ -4981,6 +5245,8 @@
             },
             {
               id: "math-g4-m5-g4-match-decfrac",
+              book: "down",
+              unit: "第四单元 小数的意义和性质",
               name: "小数与分数连线",
               pluginId: "math-match",
               weight: 2,
@@ -5010,6 +5276,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m6-g4-draw-protractor",
+              book: "up",
+              unit: "第三单元 角的度量",
               name: "用量角器量角、画角",
               pluginId: "math-g4-draw",
               weight: 3,
@@ -5034,6 +5302,8 @@
             },
             {
               id: "math-g4-m6-g4-draw-para",
+              book: "up",
+              unit: "第五单元 平行四边形和梯形",
               name: "画平行线、垂线",
               pluginId: "math-g4-draw",
               weight: 3,
@@ -5058,6 +5328,8 @@
             },
             {
               id: "math-g4-m6-g4-draw-grid",
+              book: "up",
+              unit: "第五单元 平行四边形和梯形",
               name: "在方格纸上画平行四边形、梯形",
               pluginId: "math-g4-draw",
               weight: 2,
@@ -5082,6 +5354,8 @@
             },
             {
               id: "math-g4-m6-g4-draw-view",
+              book: "down",
+              unit: "第二单元 观察物体(二)",
               name: "观察物体",
               pluginId: "math-g4-draw",
               weight: 2,
@@ -5106,6 +5380,8 @@
             },
             {
               id: "math-g4-m6-g4-draw-sym",
+              book: "down",
+              unit: "第七单元 图形的运动(二)",
               name: "画轴对称图形",
               pluginId: "math-g4-draw",
               weight: 2,
@@ -5130,6 +5406,8 @@
             },
             {
               id: "math-g4-m6-g4-draw-move",
+              book: "down",
+              unit: "第七单元 图形的运动(二)",
               name: "图形平移",
               pluginId: "math-g4-draw",
               weight: 2,
@@ -5159,6 +5437,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m7-g4-pic-segment",
+              book: "mixed",
+              unit: "总复习",
               name: "线段图列式（倍数问题）",
               pluginId: "math-g4-picture",
               weight: 3,
@@ -5183,6 +5463,8 @@
             },
             {
               id: "math-g4-m7-g4-pic-brace",
+              book: "down",
+              unit: "第一单元 四则运算",
               name: "大括号图列式（加减）",
               pluginId: "math-g4-picture",
               weight: 2,
@@ -5207,6 +5489,8 @@
             },
             {
               id: "math-g4-m7-g4-pic-speed",
+              book: "up",
+              unit: "第四单元 三位数乘两位数",
               name: "速度时间路程图",
               pluginId: "math-g4-picture",
               weight: 2,
@@ -5231,6 +5515,8 @@
             },
             {
               id: "math-g4-m7-g4-pic-dec",
+              book: "down",
+              unit: "第六单元 小数的加法和减法",
               name: "小数加减情境图",
               pluginId: "math-g4-picture",
               weight: 2,
@@ -5260,6 +5546,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m8-g4-word-big",
+              book: "up",
+              unit: "第一单元 大数的认识",
               name: "大数应用",
               pluginId: "math-g4-word",
               weight: 2,
@@ -5284,6 +5572,8 @@
             },
             {
               id: "math-g4-m8-g4-word-speed",
+              book: "up",
+              unit: "第四单元 三位数乘两位数",
               name: "乘法问题（速度×时间=路程）",
               pluginId: "math-g4-word",
               weight: 3,
@@ -5308,6 +5598,8 @@
             },
             {
               id: "math-g4-m8-g4-word-div",
+              book: "up",
+              unit: "第六单元 除数是两位数的除法",
               name: "除法问题（总量÷份数=每份数）",
               pluginId: "math-g4-word",
               weight: 3,
@@ -5332,6 +5624,8 @@
             },
             {
               id: "math-g4-m8-g4-word-price",
+              book: "up",
+              unit: "第四单元 三位数乘两位数",
               name: "单价、数量、总价问题",
               pluginId: "math-g4-word",
               weight: 3,
@@ -5356,6 +5650,8 @@
             },
             {
               id: "math-g4-m8-g4-word-area",
+              book: "up",
+              unit: "第二单元 公顷和平方千米",
               name: "面积问题（公顷/平方千米）",
               pluginId: "math-g4-word",
               weight: 2,
@@ -5380,6 +5676,8 @@
             },
             {
               id: "math-g4-m8-g4-word-opt",
+              book: "up",
+              unit: "第八单元 数学广角──优化",
               name: "优化问题",
               pluginId: "math-g4-word",
               weight: 2,
@@ -5404,6 +5702,8 @@
             },
             {
               id: "math-g4-m8-g4-word-cr",
+              book: "down",
+              unit: "第九单元 数学广角──鸡兔同笼",
               name: "鸡兔同笼",
               pluginId: "math-g4-word",
               weight: 2,
@@ -5428,6 +5728,8 @@
             },
             {
               id: "math-g4-m8-g4-word-dec",
+              book: "down",
+              unit: "第六单元 小数的加法和减法",
               name: "小数加减问题",
               pluginId: "math-g4-word",
               weight: 3,
@@ -5452,6 +5754,8 @@
             },
             {
               id: "math-g4-m8-g4-word-avg",
+              book: "down",
+              unit: "第八单元 平均数与条形统计图",
               name: "平均数问题",
               pluginId: "math-g4-word",
               weight: 2,
@@ -5483,6 +5787,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m9-g4-stats-bar",
+              book: "up",
+              unit: "第七单元 条形统计图",
               name: "条形统计图（1 格表示多个单位）",
               pluginId: "math-g4-stats",
               weight: 3,
@@ -5509,6 +5815,8 @@
             },
             {
               id: "math-g4-m9-g4-stats-double",
+              book: "down",
+              unit: "第八单元 平均数与条形统计图",
               name: "复式条形统计图",
               pluginId: "math-g4-stats",
               weight: 2,
@@ -5535,6 +5843,8 @@
             },
             {
               id: "math-g4-m9-g4-stats-avg",
+              book: "down",
+              unit: "第八单元 平均数与条形统计图",
               name: "平均数与统计",
               pluginId: "math-g4-stats",
               weight: 2,
@@ -5566,6 +5876,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m10-g4-reason-opt",
+              book: "up",
+              unit: "第八单元 数学广角──优化",
               name: "优化问题（沏茶、烙饼）",
               pluginId: "math-g4-reason",
               weight: 3,
@@ -5590,6 +5902,8 @@
             },
             {
               id: "math-g4-m10-g4-reason-cr",
+              book: "down",
+              unit: "第九单元 数学广角──鸡兔同笼",
               name: "鸡兔同笼（假设法）",
               pluginId: "math-g4-reason",
               weight: 3,
@@ -5614,6 +5928,8 @@
             },
             {
               id: "math-g4-m10-logic-reasoning",
+              book: "mixed",
+              unit: "总复习",
               name: "简单逻辑推理",
               pluginId: "math-g4-reason",
               weight: 2,
@@ -5643,6 +5959,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m11-g4-judge-read",
+              book: "up",
+              unit: "第一单元 大数的认识",
               name: "大数读写",
               pluginId: "math-g4-judge",
               weight: 2,
@@ -5667,6 +5985,8 @@
             },
             {
               id: "math-g4-m11-g4-judge-law",
+              book: "down",
+              unit: "第三单元 运算定律",
               name: "运算律",
               pluginId: "math-g4-judge",
               weight: 2,
@@ -5691,6 +6011,8 @@
             },
             {
               id: "math-g4-m11-g4-judge-angle",
+              book: "up",
+              unit: "第三单元 角的度量",
               name: "几何概念",
               pluginId: "math-g4-judge",
               weight: 2,
@@ -5715,6 +6037,8 @@
             },
             {
               id: "math-g4-m11-g4-judge-line",
+              book: "up",
+              unit: "第三单元 角的度量",
               name: "线段、射线、直线",
               pluginId: "math-g4-judge",
               weight: 2,
@@ -5739,6 +6063,8 @@
             },
             {
               id: "math-g4-m11-g4-judge-quotient",
+              book: "up",
+              unit: "第六单元 除数是两位数的除法",
               name: "商不变规律",
               pluginId: "math-g4-judge",
               weight: 2,
@@ -5763,6 +6089,8 @@
             },
             {
               id: "math-g4-m11-g4-judge-dec",
+              book: "down",
+              unit: "第四单元 小数的意义和性质",
               name: "小数性质",
               pluginId: "math-g4-judge",
               weight: 2,
@@ -5787,6 +6115,8 @@
             },
             {
               id: "math-g4-m11-g4-judge-tri",
+              book: "down",
+              unit: "第五单元 三角形",
               name: "三角形",
               pluginId: "math-g4-judge",
               weight: 2,
@@ -5811,6 +6141,8 @@
             },
             {
               id: "math-g4-m11-stats",
+              book: "mixed",
+              unit: "总复习",
               name: "统计",
               pluginId: "math-g4-judge",
               weight: 2,
@@ -5842,6 +6174,8 @@
           knowledgePoints: [
             {
               id: "math-g4-m12-g4-choice-big",
+              book: "up",
+              unit: "第一单元 大数的认识",
               name: "大数比较",
               pluginId: "math-g4-choice",
               weight: 3,
@@ -5866,6 +6200,8 @@
             },
             {
               id: "math-g4-m12-g4-choice-est",
+              book: "mixed",
+              unit: "总复习",
               name: "乘除法估算",
               pluginId: "math-g4-choice",
               weight: 2,
@@ -5890,6 +6226,8 @@
             },
             {
               id: "math-g4-m12-g4-choice-angle",
+              book: "up",
+              unit: "第三单元 角的度量",
               name: "角的认识",
               pluginId: "math-g4-choice",
               weight: 2,
@@ -5914,6 +6252,8 @@
             },
             {
               id: "math-g4-m12-g4-choice-shape",
+              book: "mixed",
+              unit: "总复习",
               name: "图形特征",
               pluginId: "math-g4-choice",
               weight: 2,
@@ -5938,6 +6278,8 @@
             },
             {
               id: "math-g4-m12-g4-choice-dec",
+              book: "down",
+              unit: "第四单元 小数的意义和性质",
               name: "小数意义",
               pluginId: "math-g4-choice",
               weight: 2,
@@ -5962,6 +6304,8 @@
             },
             {
               id: "math-g4-m12-g4-choice-law",
+              book: "down",
+              unit: "第三单元 运算定律",
               name: "运算律应用",
               pluginId: "math-g4-choice",
               weight: 2,
@@ -5991,6 +6335,8 @@
           knowledgePoints: [
             {
               id: "math-g4-c1-c1-vertical",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "竖式数字谜",
               pluginId: "math-competition-c1-numberpuzzle",
               weight: 3,
@@ -6015,6 +6361,8 @@
             },
             {
               id: "math-g4-c1-c1-horizontal",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "横式数字谜",
               pluginId: "math-competition-c1-numberpuzzle",
               weight: 2,
@@ -6039,6 +6387,8 @@
             },
             {
               id: "math-g4-c1-c1-symbol",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "符号代表数",
               pluginId: "math-competition-c1-numberpuzzle",
               weight: 2,
@@ -6063,6 +6413,8 @@
             },
             {
               id: "math-g4-c1-c1-array",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "数阵图",
               pluginId: "math-competition-c1-numberpuzzle",
               weight: 2,
@@ -6087,6 +6439,8 @@
             },
             {
               id: "math-g4-c1-c1-magic",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "幻方",
               pluginId: "math-competition-c1-numberpuzzle",
               weight: 2,
@@ -6116,6 +6470,8 @@
           knowledgePoints: [
             {
               id: "math-g4-c2-c2-parity",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "奇偶性与运算规律",
               pluginId: "math-competition-c2-numbertheory",
               weight: 3,
@@ -6140,6 +6496,8 @@
             },
             {
               id: "math-g4-c2-c2-divisible",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "整除特征（2/3/5/9）",
               pluginId: "math-competition-c2-numbertheory",
               weight: 3,
@@ -6164,6 +6522,8 @@
             },
             {
               id: "math-g4-c2-c2-prime",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "质数与合数",
               pluginId: "math-competition-c2-numbertheory",
               weight: 2,
@@ -6188,6 +6548,8 @@
             },
             {
               id: "math-g4-c2-c2-factor",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "因数与倍数",
               pluginId: "math-competition-c2-numbertheory",
               weight: 2,
@@ -6212,6 +6574,8 @@
             },
             {
               id: "math-g4-c2-c2-remainder",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "余数问题",
               pluginId: "math-competition-c2-numbertheory",
               weight: 2,
@@ -6236,6 +6600,8 @@
             },
             {
               id: "math-g4-c2-c2-place",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "位值原理",
               pluginId: "math-competition-c2-numbertheory",
               weight: 2,
@@ -6265,6 +6631,8 @@
           knowledgePoints: [
             {
               id: "math-g4-c3-c3-enum",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "枚举法",
               pluginId: "math-competition-c3-counting",
               weight: 2,
@@ -6289,6 +6657,8 @@
             },
             {
               id: "math-g4-c3-c3-am",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "加法与乘法原理",
               pluginId: "math-competition-c3-counting",
               weight: 3,
@@ -6313,6 +6683,8 @@
             },
             {
               id: "math-g4-c3-c3-perm",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "排列组合初步",
               pluginId: "math-competition-c3-counting",
               weight: 2,
@@ -6337,6 +6709,8 @@
             },
             {
               id: "math-g4-c3-c3-geomcount",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "几何计数",
               pluginId: "math-competition-c3-counting",
               weight: 2,
@@ -6361,6 +6735,8 @@
             },
             {
               id: "math-g4-c3-c3-worst",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "最不利原则",
               pluginId: "math-competition-c3-counting",
               weight: 2,
@@ -6390,6 +6766,8 @@
           knowledgePoints: [
             {
               id: "math-g4-c4-c4-pa",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "周长与面积",
               pluginId: "math-competition-c4-geometry",
               weight: 2,
@@ -6414,6 +6792,8 @@
             },
             {
               id: "math-g4-c4-c4-cutfill",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "割补法",
               pluginId: "math-competition-c4-geometry",
               weight: 2,
@@ -6438,6 +6818,8 @@
             },
             {
               id: "math-g4-c4-c4-angle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "角度初步",
               pluginId: "math-competition-c4-geometry",
               weight: 2,
@@ -6462,6 +6844,8 @@
             },
             {
               id: "math-g4-c4-c4-count",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "图形计数",
               pluginId: "math-competition-c4-geometry",
               weight: 2,
@@ -6486,6 +6870,8 @@
             },
             {
               id: "math-g4-c4-c4-transform",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "平移旋转与对称",
               pluginId: "math-competition-c4-geometry",
               weight: 2,
@@ -6510,6 +6896,8 @@
             },
             {
               id: "math-g4-c4-c4-solid",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "立体图形初步",
               pluginId: "math-competition-c4-geometry",
               weight: 2,
@@ -6539,6 +6927,8 @@
           knowledgePoints: [
             {
               id: "math-g4-c5-c5-basic",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "基本行程",
               pluginId: "math-competition-c5-journey",
               weight: 2,
@@ -6563,6 +6953,8 @@
             },
             {
               id: "math-g4-c5-c5-meet",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "相遇问题",
               pluginId: "math-competition-c5-journey",
               weight: 3,
@@ -6587,6 +6979,8 @@
             },
             {
               id: "math-g4-c5-c5-chase",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "追及问题",
               pluginId: "math-competition-c5-journey",
               weight: 3,
@@ -6611,6 +7005,8 @@
             },
             {
               id: "math-g4-c5-c5-train",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "火车过桥",
               pluginId: "math-competition-c5-journey",
               weight: 2,
@@ -6635,6 +7031,8 @@
             },
             {
               id: "math-g4-c5-c5-river",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "流水行船",
               pluginId: "math-competition-c5-journey",
               weight: 2,
@@ -6664,6 +7062,8 @@
           knowledgePoints: [
             {
               id: "math-g4-c8-c8-extreme",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "最值问题",
               pluginId: "math-competition-c8-logic",
               weight: 2,
@@ -6688,6 +7088,8 @@
             },
             {
               id: "math-g4-c8-c8-drawer",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "抽屉原理",
               pluginId: "math-competition-c8-logic",
               weight: 2,
@@ -6712,6 +7114,8 @@
             },
             {
               id: "math-g4-c8-c8-logic",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "逻辑推理",
               pluginId: "math-competition-c8-logic",
               weight: 3,
@@ -6741,6 +7145,8 @@
           knowledgePoints: [
             {
               id: "math-g4-c9-c9-integrated",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "综合应用题",
               pluginId: "math-competition-g4-c9",
               weight: 3,
@@ -6765,6 +7171,8 @@
             },
             {
               id: "math-g4-c9-c9-misc",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "杂题选讲（统筹/操作）",
               pluginId: "math-competition-g4-c9",
               weight: 2,
@@ -6789,6 +7197,8 @@
             },
             {
               id: "math-g4-c9-c9-mock",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "模拟竞赛卷",
               pluginId: "math-competition-g4-c9",
               weight: 2,
@@ -6824,6 +7234,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m1-g5-oral-decmul",
+              book: "up",
+              unit: "第一单元 小数乘法",
               name: "小数乘法口算",
               pluginId: "math-g5-oral",
               weight: 3,
@@ -6848,6 +7260,8 @@
             },
             {
               id: "math-g5-m1-g5-oral-decdiv",
+              book: "up",
+              unit: "第三单元 小数除法",
               name: "小数除法口算",
               pluginId: "math-g5-oral",
               weight: 3,
@@ -6872,6 +7286,8 @@
             },
             {
               id: "math-g5-m1-g5-oral-fracadd",
+              book: "down",
+              unit: "第六单元 分数的加法和减法",
               name: "同分母分数加减法口算",
               pluginId: "math-g5-oral",
               weight: 3,
@@ -6896,6 +7312,8 @@
             },
             {
               id: "math-g5-m1-g5-oral-equ",
+              book: "up",
+              unit: "第五单元 简易方程",
               name: "【已废弃】简易方程口算",
               pluginId: "math-g5-oral",
               weight: 2,
@@ -6921,6 +7339,8 @@
             },
             {
               id: "math-g5-m1-g5-oral-fm",
+              book: "down",
+              unit: "第二单元 因数与倍数",
               name: "因数倍数特征快速判断",
               pluginId: "math-g5-oral",
               weight: 2,
@@ -6950,6 +7370,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m2-g5-v-decmul",
+              book: "up",
+              unit: "第一单元 小数乘法",
               name: "小数乘法竖式",
               pluginId: "math-g5-vertical",
               weight: 3,
@@ -6974,6 +7396,8 @@
             },
             {
               id: "math-g5-m2-g5-v-divint",
+              book: "up",
+              unit: "第三单元 小数除法",
               name: "除数是整数的小数除法竖式",
               pluginId: "math-g5-vertical",
               weight: 3,
@@ -6998,6 +7422,8 @@
             },
             {
               id: "math-g5-m2-g5-v-ddivdec",
+              book: "up",
+              unit: "第三单元 小数除法",
               name: "除数是小数的小数除法竖式",
               pluginId: "math-g5-vertical",
               weight: 3,
@@ -7022,6 +7448,8 @@
             },
             {
               id: "math-g5-m2-g5-v-repeating",
+              book: "up",
+              unit: "第三单元 小数除法",
               name: "循环小数竖式表示",
               pluginId: "math-g5-vertical",
               weight: 2,
@@ -7051,6 +7479,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m3-g5-mix-decmixed",
+              book: "mixed",
+              unit: "总复习",
               name: "小数四则混合运算",
               pluginId: "math-g5-mixed",
               weight: 3,
@@ -7075,6 +7505,8 @@
             },
             {
               id: "math-g5-m3-g5-mix-fracmixed",
+              book: "down",
+              unit: "第六单元 分数的加法和减法",
               name: "分数加减混合运算",
               pluginId: "math-g5-mixed",
               weight: 3,
@@ -7099,6 +7531,8 @@
             },
             {
               id: "math-g5-m3-g5-mix-decsimple",
+              book: "up",
+              unit: "第一单元 小数乘法",
               name: "运算律推广到小数简便计算",
               pluginId: "math-g5-mixed",
               weight: 3,
@@ -7123,6 +7557,8 @@
             },
             {
               id: "math-g5-m3-g5-mix-fracsimple",
+              book: "down",
+              unit: "第六单元 分数的加法和减法",
               name: "运算律推广到分数简便计算",
               pluginId: "math-g5-mixed",
               weight: 3,
@@ -7152,6 +7588,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m4-g5-fill-decloc",
+              book: "mixed",
+              unit: "总复习",
               name: "小数的计数单位与数位",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7176,6 +7614,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-deccmp",
+              book: "mixed",
+              unit: "总复习",
               name: "小数大小比较",
               pluginId: "math-g5-fill",
               weight: 2,
@@ -7200,6 +7640,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-prodrule",
+              book: "mixed",
+              unit: "总复习",
               name: "积的变化规律",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7224,6 +7666,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-repeating",
+              book: "up",
+              unit: "第三单元 小数除法",
               name: "循环小数与简便记法",
               pluginId: "math-g5-fill",
               weight: 2,
@@ -7248,6 +7692,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-equation",
+              book: "up",
+              unit: "第五单元 简易方程",
               name: "【已废弃】方程概念与等式的性质",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7273,6 +7719,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-letter",
+              book: "up",
+              unit: "第五单元 简易方程",
               name: "用字母表示数",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7301,6 +7749,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-fm",
+              book: "down",
+              unit: "第二单元 因数与倍数",
               name: "因数与倍数的概念",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7325,6 +7775,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-prime",
+              book: "down",
+              unit: "第二单元 因数与倍数",
               name: "质数与合数",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7349,6 +7801,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-fracmean",
+              book: "down",
+              unit: "第四单元 分数的意义和性质",
               name: "分数的意义与分数单位",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7373,6 +7827,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-fracprop",
+              book: "down",
+              unit: "第四单元 分数的意义和性质",
               name: "分数的基本性质（约分、通分）",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7397,6 +7853,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-fracdec",
+              book: "down",
+              unit: "第四单元 分数的意义和性质",
               name: "分数与小数的互化",
               pluginId: "math-g5-fill",
               weight: 2,
@@ -7421,6 +7879,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-coord",
+              book: "up",
+              unit: "第二单元 位置",
               name: "数对的含义",
               pluginId: "math-g5-fill",
               weight: 2,
@@ -7445,6 +7905,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-area",
+              book: "up",
+              unit: "第六单元 多边形的面积",
               name: "多边形面积公式",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7469,6 +7931,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-solid",
+              book: "down",
+              unit: "第三单元 长方体和正方体",
               name: "长方体正方体特征与公式",
               pluginId: "math-g5-fill",
               weight: 3,
@@ -7493,6 +7957,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-rotate",
+              book: "down",
+              unit: "第五单元 图形的运动(三)",
               name: "旋转三要素",
               pluginId: "math-g5-fill",
               weight: 2,
@@ -7517,6 +7983,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-possible",
+              book: "up",
+              unit: "第四单元 可能性",
               name: "可能性描述",
               pluginId: "math-g5-fill",
               weight: 2,
@@ -7543,6 +8011,8 @@
             },
             {
               id: "math-g5-m4-g5-fill-linechart",
+              book: "down",
+              unit: "第七单元 折线统计图",
               name: "折线统计图特点",
               pluginId: "math-g5-fill",
               weight: 2,
@@ -7574,6 +8044,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m5-g5-match-areaf",
+              book: "up",
+              unit: "第六单元 多边形的面积",
               name: "图形与面积公式连线",
               pluginId: "math-match",
               weight: 3,
@@ -7598,6 +8070,8 @@
             },
             {
               id: "math-g5-m5-g5-match-solid",
+              book: "down",
+              unit: "第三单元 长方体和正方体",
               name: "立体图形特征连线",
               pluginId: "math-match",
               weight: 2,
@@ -7622,6 +8096,8 @@
             },
             {
               id: "math-g5-m5-g5-match-possib",
+              book: "up",
+              unit: "第四单元 可能性",
               name: "事件与可能性描述连线",
               pluginId: "math-match",
               weight: 2,
@@ -7648,6 +8124,8 @@
             },
             {
               id: "math-g5-m5-g5-match-equ",
+              book: "up",
+              unit: "第五单元 简易方程",
               name: "【已废弃】方程与解连线",
               pluginId: "math-match",
               weight: 3,
@@ -7673,6 +8151,8 @@
             },
             {
               id: "math-g5-m5-g5-match-fracdec",
+              book: "down",
+              unit: "第四单元 分数的意义和性质",
               name: "分数与小数连线",
               pluginId: "math-match",
               weight: 2,
@@ -7702,6 +8182,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m6-g5-draw-rotate",
+              book: "down",
+              unit: "第五单元 图形的运动(三)",
               name: "画旋转后的图形",
               pluginId: "math-g5-draw",
               weight: 3,
@@ -7726,6 +8208,8 @@
             },
             {
               id: "math-g5-m6-g5-draw-observe",
+              book: "down",
+              unit: "第一单元 观察物体(三)",
               name: "观察物体（三）",
               pluginId: "math-g5-draw",
               weight: 3,
@@ -7750,6 +8234,8 @@
             },
             {
               id: "math-g5-m6-g5-draw-height",
+              book: "up",
+              unit: "第六单元 多边形的面积",
               name: "画多边形的高",
               pluginId: "math-g5-draw",
               weight: 2,
@@ -7774,6 +8260,8 @@
             },
             {
               id: "math-g5-m6-g5-draw-sym",
+              book: "down",
+              unit: "第五单元 图形的运动(三)",
               name: "补全轴对称图形",
               pluginId: "math-g5-draw",
               weight: 2,
@@ -7798,6 +8286,8 @@
             },
             {
               id: "math-g5-m6-g5-draw-coord",
+              book: "up",
+              unit: "第二单元 位置",
               name: "用数对表示位置",
               pluginId: "math-g5-draw",
               weight: 2,
@@ -7822,6 +8312,8 @@
             },
             {
               id: "math-g5-m6-g5-draw-net",
+              book: "down",
+              unit: "第三单元 长方体和正方体",
               name: "长方体展开图",
               pluginId: "math-g5-draw",
               weight: 2,
@@ -7851,6 +8343,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m7-g5-pic-balance",
+              book: "up",
+              unit: "第五单元 简易方程",
               name: "【已废弃】天平平衡图（列方程）",
               pluginId: "math-g5-picture",
               weight: 3,
@@ -7876,6 +8370,8 @@
             },
             {
               id: "math-g5-m7-g5-pic-area",
+              book: "up",
+              unit: "第六单元 多边形的面积",
               name: "多边形面积图",
               pluginId: "math-g5-picture",
               weight: 3,
@@ -7900,6 +8396,8 @@
             },
             {
               id: "math-g5-m7-g5-pic-segment",
+              book: "mixed",
+              unit: "总复习",
               name: "线段图（小数倍数）",
               pluginId: "math-g5-picture",
               weight: 3,
@@ -7924,6 +8422,8 @@
             },
             {
               id: "math-g5-m7-g5-pic-tree",
+              book: "up",
+              unit: "第七单元 数学广角──植树问题",
               name: "【已废弃】植树问题示意图",
               pluginId: "math-g5-picture",
               weight: 2,
@@ -7954,6 +8454,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m8-g5-word-decmul",
+              book: "up",
+              unit: "第一单元 小数乘法",
               name: "小数乘法应用题",
               pluginId: "math-g5-word",
               weight: 3,
@@ -7978,6 +8480,8 @@
             },
             {
               id: "math-g5-m8-g5-word-decdiv",
+              book: "up",
+              unit: "第三单元 小数除法",
               name: "小数除法应用题（进一法、去尾法）",
               pluginId: "math-g5-word",
               weight: 3,
@@ -8002,6 +8506,8 @@
             },
             {
               id: "math-g5-m8-g5-word-equ",
+              book: "up",
+              unit: "第五单元 简易方程",
               name: "【已废弃】列方程解决问题",
               pluginId: "math-g5-word",
               weight: 3,
@@ -8027,6 +8533,8 @@
             },
             {
               id: "math-g5-m8-g5-word-fm",
+              book: "down",
+              unit: "第二单元 因数与倍数",
               name: "因数与倍数简单应用",
               pluginId: "math-g5-word",
               weight: 2,
@@ -8051,6 +8559,8 @@
             },
             {
               id: "math-g5-m8-g5-word-frac",
+              book: "down",
+              unit: "第六单元 分数的加法和减法",
               name: "分数加减法应用题",
               pluginId: "math-g5-word",
               weight: 3,
@@ -8075,6 +8585,8 @@
             },
             {
               id: "math-g5-m8-g5-word-area",
+              book: "up",
+              unit: "第六单元 多边形的面积",
               name: "多边形面积应用题",
               pluginId: "math-g5-word",
               weight: 3,
@@ -8099,6 +8611,8 @@
             },
             {
               id: "math-g5-m8-g5-word-solid",
+              book: "down",
+              unit: "第三单元 长方体和正方体",
               name: "长方体正方体应用题",
               pluginId: "math-g5-word",
               weight: 3,
@@ -8123,6 +8637,8 @@
             },
             {
               id: "math-g5-m8-g5-word-possib",
+              book: "up",
+              unit: "第四单元 可能性",
               name: "可能性问题",
               pluginId: "math-g5-word",
               weight: 2,
@@ -8149,6 +8665,8 @@
             },
             {
               id: "math-g5-m8-g5-word-linechart",
+              book: "down",
+              unit: "第七单元 折线统计图",
               name: "折线统计图分析",
               pluginId: "math-g5-word",
               weight: 2,
@@ -8175,6 +8693,8 @@
             },
             {
               id: "math-g5-m8-g5-word-tree",
+              book: "up",
+              unit: "第七单元 数学广角──植树问题",
               name: "【已废弃】植树问题",
               pluginId: "math-g5-word",
               weight: 3,
@@ -8200,6 +8720,8 @@
             },
             {
               id: "math-g5-m8-g5-word-defect",
+              book: "down",
+              unit: "第八单元 数学广角──找次品",
               name: "找次品",
               pluginId: "math-g5-word",
               weight: 2,
@@ -8229,6 +8751,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m9-g5-stats-possib",
+              book: "up",
+              unit: "第四单元 可能性",
               name: "可能性大小比较",
               pluginId: "math-g5-stats",
               weight: 3,
@@ -8255,6 +8779,8 @@
             },
             {
               id: "math-g5-m9-g5-stats-line1",
+              book: "down",
+              unit: "第七单元 折线统计图",
               name: "单式折线统计图",
               pluginId: "math-g5-stats",
               weight: 3,
@@ -8281,6 +8807,8 @@
             },
             {
               id: "math-g5-m9-g5-stats-line2",
+              book: "down",
+              unit: "第七单元 折线统计图",
               name: "复式折线统计图",
               pluginId: "math-g5-stats",
               weight: 3,
@@ -8312,6 +8840,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m10-g5-reason-tree3",
+              book: "up",
+              unit: "第七单元 数学广角──植树问题",
               name: "【已废弃】植树问题（三种情况）",
               pluginId: "math-g5-reason",
               weight: 3,
@@ -8337,6 +8867,8 @@
             },
             {
               id: "math-g5-m10-g5-reason-defect",
+              book: "down",
+              unit: "第八单元 数学广角──找次品",
               name: "找次品（天平称量）",
               pluginId: "math-g5-reason",
               weight: 3,
@@ -8361,6 +8893,8 @@
             },
             {
               id: "math-g5-m10-logic-reasoning",
+              book: "mixed",
+              unit: "总复习",
               name: "逻辑推理",
               pluginId: "math-g5-reason",
               weight: 2,
@@ -8385,6 +8919,8 @@
             },
             {
               id: "math-g5-m10-g5-reason-seq",
+              book: "mixed",
+              unit: "总复习",
               name: "数字推理",
               pluginId: "math-g5-reason",
               weight: 2,
@@ -8414,6 +8950,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m11-g5-judge-decmul",
+              book: "mixed",
+              unit: "总复习",
               name: "小数乘除法",
               pluginId: "math-g5-judge",
               weight: 3,
@@ -8438,6 +8976,8 @@
             },
             {
               id: "math-g5-m11-g5-judge-equ",
+              book: "up",
+              unit: "第五单元 简易方程",
               name: "【已废弃】方程概念",
               pluginId: "math-g5-judge",
               weight: 2,
@@ -8463,6 +9003,8 @@
             },
             {
               id: "math-g5-m11-g5-judge-fm",
+              book: "down",
+              unit: "第二单元 因数与倍数",
               name: "因数与倍数",
               pluginId: "math-g5-judge",
               weight: 3,
@@ -8487,6 +9029,8 @@
             },
             {
               id: "math-g5-m11-g5-judge-frac",
+              book: "down",
+              unit: "第四单元 分数的意义和性质",
               name: "分数的意义与性质",
               pluginId: "math-g5-judge",
               weight: 3,
@@ -8511,6 +9055,8 @@
             },
             {
               id: "math-g5-m11-g5-judge-area",
+              book: "up",
+              unit: "第六单元 多边形的面积",
               name: "多边形面积",
               pluginId: "math-g5-judge",
               weight: 3,
@@ -8535,6 +9081,8 @@
             },
             {
               id: "math-g5-m11-g5-judge-solid",
+              book: "down",
+              unit: "第三单元 长方体和正方体",
               name: "长方体正方体",
               pluginId: "math-g5-judge",
               weight: 3,
@@ -8559,6 +9107,8 @@
             },
             {
               id: "math-g5-m11-motion",
+              book: "down",
+              unit: "第五单元 图形的运动(三)",
               name: "图形的运动",
               pluginId: "math-g5-judge",
               weight: 2,
@@ -8583,6 +9133,8 @@
             },
             {
               id: "math-g5-m11-g5-judge-possib",
+              book: "up",
+              unit: "第四单元 可能性",
               name: "可能性",
               pluginId: "math-g5-judge",
               weight: 2,
@@ -8609,6 +9161,8 @@
             },
             {
               id: "math-g5-m11-stats",
+              book: "mixed",
+              unit: "总复习",
               name: "统计",
               pluginId: "math-g5-judge",
               weight: 2,
@@ -8640,6 +9194,8 @@
           knowledgePoints: [
             {
               id: "math-g5-m12-g5-choice-decmul",
+              book: "mixed",
+              unit: "总复习",
               name: "小数乘除法",
               pluginId: "math-g5-choice",
               weight: 3,
@@ -8664,6 +9220,8 @@
             },
             {
               id: "math-g5-m12-g5-choice-equ",
+              book: "up",
+              unit: "第五单元 简易方程",
               name: "【已废弃】方程",
               pluginId: "math-g5-choice",
               weight: 3,
@@ -8689,6 +9247,8 @@
             },
             {
               id: "math-g5-m12-g5-choice-fm",
+              book: "down",
+              unit: "第二单元 因数与倍数",
               name: "因数与倍数",
               pluginId: "math-g5-choice",
               weight: 3,
@@ -8713,6 +9273,8 @@
             },
             {
               id: "math-g5-m12-g5-choice-frac",
+              book: "down",
+              unit: "第四单元 分数的意义和性质",
               name: "分数的意义与性质",
               pluginId: "math-g5-choice",
               weight: 3,
@@ -8737,6 +9299,8 @@
             },
             {
               id: "math-g5-m12-g5-choice-area",
+              book: "up",
+              unit: "第六单元 多边形的面积",
               name: "多边形的面积",
               pluginId: "math-g5-choice",
               weight: 3,
@@ -8761,6 +9325,8 @@
             },
             {
               id: "math-g5-m12-g5-choice-solid",
+              book: "down",
+              unit: "第三单元 长方体和正方体",
               name: "长方体正方体容积",
               pluginId: "math-g5-choice",
               weight: 3,
@@ -8785,6 +9351,8 @@
             },
             {
               id: "math-g5-m12-motion",
+              book: "down",
+              unit: "第五单元 图形的运动(三)",
               name: "图形的运动",
               pluginId: "math-g5-choice",
               weight: 2,
@@ -8809,6 +9377,8 @@
             },
             {
               id: "math-g5-m12-g5-choice-possib",
+              book: "up",
+              unit: "第四单元 可能性",
               name: "可能性",
               pluginId: "math-g5-choice",
               weight: 2,
@@ -8835,6 +9405,8 @@
             },
             {
               id: "math-g5-m12-stats",
+              book: "mixed",
+              unit: "总复习",
               name: "统计",
               pluginId: "math-g5-choice",
               weight: 2,
@@ -8866,6 +9438,8 @@
           knowledgePoints: [
             {
               id: "math-g5-c1-digit-puzzle-vertical",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "竖式谜",
               pluginId: "math-competition-g5-c1",
               weight: 1,
@@ -8890,6 +9464,8 @@
             },
             {
               id: "math-g5-c1-digit-puzzle-horizontal",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "横式谜",
               pluginId: "math-competition-g5-c1",
               weight: 1,
@@ -8914,6 +9490,8 @@
             },
             {
               id: "math-g5-c1-digit-puzzle-symbol",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "字母符号代表数",
               pluginId: "math-competition-g5-c1",
               weight: 1,
@@ -8938,6 +9516,8 @@
             },
             {
               id: "math-g5-c1-number-array-closed",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "封闭型数阵",
               pluginId: "math-competition-g5-c1",
               weight: 1,
@@ -8962,6 +9542,8 @@
             },
             {
               id: "math-g5-c1-number-array-radial",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "辐射型数阵",
               pluginId: "math-competition-g5-c1",
               weight: 1,
@@ -8986,6 +9568,8 @@
             },
             {
               id: "math-g5-c1-number-array-composite",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "复合型数阵",
               pluginId: "math-competition-g5-c1",
               weight: 1,
@@ -9010,6 +9594,8 @@
             },
             {
               id: "math-g5-c1-magic-square-3",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "三阶幻方",
               pluginId: "math-competition-g5-c1",
               weight: 1,
@@ -9034,6 +9620,8 @@
             },
             {
               id: "math-g5-c1-magic-square-4",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "四阶幻方初步",
               pluginId: "math-competition-g5-c1",
               weight: 1,
@@ -9063,6 +9651,8 @@
           knowledgePoints: [
             {
               id: "math-g5-c2-divisibility",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "整除特征",
               pluginId: "math-competition-g5-c2",
               weight: 2,
@@ -9087,6 +9677,8 @@
             },
             {
               id: "math-g5-c2-parity-analysis",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "奇偶分析",
               pluginId: "math-competition-g5-c2",
               weight: 1,
@@ -9111,6 +9703,8 @@
             },
             {
               id: "math-g5-c2-prime-composite",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "质数与合数",
               pluginId: "math-competition-g5-c2",
               weight: 2,
@@ -9135,6 +9729,8 @@
             },
             {
               id: "math-g5-c2-prime-factorization",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "分解质因数",
               pluginId: "math-competition-g5-c2",
               weight: 2,
@@ -9159,6 +9755,8 @@
             },
             {
               id: "math-g5-c2-factor-count-sum",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "因数个数与因数和",
               pluginId: "math-competition-g5-c2",
               weight: 1,
@@ -9183,6 +9781,8 @@
             },
             {
               id: "math-g5-c2-gcd-lcm",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "最大公因数与最小公倍数",
               pluginId: "math-competition-g5-c2",
               weight: 2,
@@ -9207,6 +9807,8 @@
             },
             {
               id: "math-g5-c2-remainder-congruence",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "余数与同余",
               pluginId: "math-competition-g5-c2",
               weight: 2,
@@ -9231,6 +9833,8 @@
             },
             {
               id: "math-g5-c2-place-value",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "位值原理",
               pluginId: "math-competition-g5-c2",
               weight: 1,
@@ -9255,6 +9859,8 @@
             },
             {
               id: "math-g5-c2-perfect-square",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "完全平方数",
               pluginId: "math-competition-g5-c2",
               weight: 2,
@@ -9279,6 +9885,8 @@
             },
             {
               id: "math-g5-c2-number-theory-extreme",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "数论最值",
               pluginId: "math-competition-g5-c2",
               weight: 1,
@@ -9308,6 +9916,8 @@
           knowledgePoints: [
             {
               id: "math-g5-c3-addition-principle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "加法原理",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9332,6 +9942,8 @@
             },
             {
               id: "math-g5-c3-multiplication-principle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "乘法原理",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9356,6 +9968,8 @@
             },
             {
               id: "math-g5-c3-permutation",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "排列数",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9380,6 +9994,8 @@
             },
             {
               id: "math-g5-c3-combination",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "组合数",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9404,6 +10020,8 @@
             },
             {
               id: "math-g5-c3-enumeration-counting",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "枚举计数",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9428,6 +10046,8 @@
             },
             {
               id: "math-g5-c3-bundling-method",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "捆绑法",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9452,6 +10072,8 @@
             },
             {
               id: "math-g5-c3-insertion-method",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "插空法",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9476,6 +10098,8 @@
             },
             {
               id: "math-g5-c3-stars-bars",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "隔板法",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9500,6 +10124,8 @@
             },
             {
               id: "math-g5-c3-pigeonhole-principle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "抽屉原理",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9524,6 +10150,8 @@
             },
             {
               id: "math-g5-c3-worst-case-principle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "最不利原则",
               pluginId: "math-competition-g5-c3",
               weight: 1,
@@ -9553,6 +10181,8 @@
           knowledgePoints: [
             {
               id: "math-g5-c4-area-basic",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "基本面积公式",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -9577,6 +10207,8 @@
             },
             {
               id: "math-g5-c4-equal-area-transform",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "等积变形",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -9601,6 +10233,8 @@
             },
             {
               id: "math-g5-c4-bird-head-model",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "鸟头模型",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9625,6 +10259,8 @@
             },
             {
               id: "math-g5-c4-butterfly-model",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "蝴蝶模型",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9649,6 +10285,8 @@
             },
             {
               id: "math-g5-c4-swallow-tail-model",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "燕尾模型",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9673,6 +10311,8 @@
             },
             {
               id: "math-g5-c4-half-model",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "一半模型",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9697,6 +10337,8 @@
             },
             {
               id: "math-g5-c4-circle-sector",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "圆与扇形",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9721,6 +10363,8 @@
             },
             {
               id: "math-g5-c4-solid-geometry",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "立体图形表面积与体积",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9745,6 +10389,8 @@
             },
             {
               id: "math-g5-c4-painted-cube",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "表面涂色问题",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9769,6 +10415,8 @@
             },
             {
               id: "math-g5-c4-pythagorean-theorem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "勾股定理",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9793,6 +10441,8 @@
             },
             {
               id: "math-g5-c4-lattice-area",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "格点面积",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9817,6 +10467,8 @@
             },
             {
               id: "math-g5-c4-angle-calculation",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "角度计算",
               pluginId: "math-competition-g5-c4",
               weight: 2,
@@ -9846,6 +10498,8 @@
           knowledgePoints: [
             {
               id: "math-g5-c5-basic-motion",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "基本行程",
               pluginId: "math-competition-g5-c5",
               weight: 2,
@@ -9870,6 +10524,8 @@
             },
             {
               id: "math-g5-c5-meet-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "相遇问题",
               pluginId: "math-competition-g5-c5",
               weight: 2,
@@ -9894,6 +10550,8 @@
             },
             {
               id: "math-g5-c5-chase-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "追及问题",
               pluginId: "math-competition-g5-c5",
               weight: 2,
@@ -9918,6 +10576,8 @@
             },
             {
               id: "math-g5-c5-train-bridge",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "火车过桥",
               pluginId: "math-competition-g5-c5",
               weight: 2,
@@ -9942,6 +10602,8 @@
             },
             {
               id: "math-g5-c5-boat-stream",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "流水行船",
               pluginId: "math-competition-g5-c5",
               weight: 2,
@@ -9966,6 +10628,8 @@
             },
             {
               id: "math-g5-c5-circular-track",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "环形跑道",
               pluginId: "math-competition-g5-c5",
               weight: 1,
@@ -9990,6 +10654,8 @@
             },
             {
               id: "math-g5-c5-clock-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "时钟问题",
               pluginId: "math-competition-g5-c5",
               weight: 1,
@@ -10014,6 +10680,8 @@
             },
             {
               id: "math-g5-c5-average-speed",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "平均速度",
               pluginId: "math-competition-g5-c5",
               weight: 2,
@@ -10038,6 +10706,8 @@
             },
             {
               id: "math-g5-c5-ratio-motion",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "比例行程",
               pluginId: "math-competition-g5-c5",
               weight: 1,
@@ -10067,6 +10737,8 @@
           knowledgePoints: [
             {
               id: "math-g5-c6-work-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "工程问题",
               pluginId: "math-competition-g5-c6",
               weight: 1,
@@ -10091,6 +10763,8 @@
             },
             {
               id: "math-g5-c6-concentration-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "浓度问题",
               pluginId: "math-competition-g5-c6",
               weight: 1,
@@ -10120,6 +10794,8 @@
           knowledgePoints: [
             {
               id: "math-g5-c7-extract-common-factor",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "提取公因数",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10144,6 +10820,8 @@
             },
             {
               id: "math-g5-c7-rounding-calc",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "凑整巧算",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10168,6 +10846,8 @@
             },
             {
               id: "math-g5-c7-fraction-splitting",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "分数裂项",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10192,6 +10872,8 @@
             },
             {
               id: "math-g5-c7-integer-splitting",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "整数裂项",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10216,6 +10898,8 @@
             },
             {
               id: "math-g5-c7-arithmetic-series",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "等差数列",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10240,6 +10924,8 @@
             },
             {
               id: "math-g5-c7-recurring-decimal-frac",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "循环小数化分数",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10264,6 +10950,8 @@
             },
             {
               id: "math-g5-c7-define-operation",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "定义新运算",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10288,6 +10976,8 @@
             },
             {
               id: "math-g5-c7-compare-size",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "比较大小",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10312,6 +11002,8 @@
             },
             {
               id: "math-g5-c7-estimate-bounds",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "估算与放缩",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10336,6 +11028,8 @@
             },
             {
               id: "math-g5-c7-complex-fraction",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "繁分数化简",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -10365,6 +11059,8 @@
           knowledgePoints: [
             {
               id: "math-g5-c8-extremum-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "最值问题",
               pluginId: "math-competition-g5-c8",
               weight: 1,
@@ -10389,6 +11085,8 @@
             },
             {
               id: "math-g5-c8-logic-inference",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "逻辑推理",
               pluginId: "math-competition-g5-c8",
               weight: 1,
@@ -10413,6 +11111,8 @@
             },
             {
               id: "math-g5-c8-winning-strategy",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "必胜策略",
               pluginId: "math-competition-g5-c8",
               weight: 1,
@@ -10442,6 +11142,8 @@
           knowledgePoints: [
             {
               id: "math-g5-c9-sum-diff-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "和差倍问题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10466,6 +11168,8 @@
             },
             {
               id: "math-g5-c9-age-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "年龄问题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10490,6 +11194,8 @@
             },
             {
               id: "math-g5-c9-profit-loss-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "盈亏问题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10514,6 +11220,8 @@
             },
             {
               id: "math-g5-c9-chicken-rabbit",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "鸡兔同笼",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10538,6 +11246,8 @@
             },
             {
               id: "math-g5-c9-average-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "平均数问题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10564,6 +11274,8 @@
             },
             {
               id: "math-g5-c9-planting-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "植树问题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10588,6 +11300,8 @@
             },
             {
               id: "math-g5-c9-phalanx-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "方阵问题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10612,6 +11326,8 @@
             },
             {
               id: "math-g5-c9-periodic-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "周期问题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10636,6 +11352,8 @@
             },
             {
               id: "math-g5-c9-grass-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "牛吃草问题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10660,6 +11378,8 @@
             },
             {
               id: "math-g5-c9-fraction-percent-application",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "分数百分数应用题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10684,6 +11404,8 @@
             },
             {
               id: "math-g5-c9-economics-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "经济问题",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10708,6 +11430,8 @@
             },
             {
               id: "math-g5-c9-inclusion-exclusion",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "容斥原理",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10732,6 +11456,8 @@
             },
             {
               id: "math-g5-c9-equation-linear-1",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "一元一次方程（工具）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10756,6 +11482,8 @@
             },
             {
               id: "math-g5-c9-equation-linear-2",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "二元一次方程组（工具）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10780,6 +11508,8 @@
             },
             {
               id: "math-g5-c9-diophantine-equation",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "不定方程整数解（C9/C2）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -10815,6 +11545,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m1-g6-oral-frac-mult-int",
+              book: "up",
+              unit: "第一单元 分数乘法",
               name: "分数乘整数",
               pluginId: "math-g6-oral",
               weight: 3,
@@ -10839,6 +11571,8 @@
             },
             {
               id: "math-g6-m1-g6-oral-frac-mult-frac",
+              book: "up",
+              unit: "第一单元 分数乘法",
               name: "分数乘分数",
               pluginId: "math-g6-oral",
               weight: 3,
@@ -10863,6 +11597,8 @@
             },
             {
               id: "math-g6-m1-g6-oral-frac-div-int",
+              book: "up",
+              unit: "第三单元 分数除法",
               name: "分数除以整数",
               pluginId: "math-g6-oral",
               weight: 2,
@@ -10887,6 +11623,8 @@
             },
             {
               id: "math-g6-m1-g6-oral-frac-div-frac",
+              book: "up",
+              unit: "第三单元 分数除法",
               name: "一个数除以分数",
               pluginId: "math-g6-oral",
               weight: 3,
@@ -10911,6 +11649,8 @@
             },
             {
               id: "math-g6-m1-g6-oral-dec-perc",
+              book: "up",
+              unit: "第六单元 百分数(一)",
               name: "小数与百分数互化",
               pluginId: "math-g6-oral",
               weight: 2,
@@ -10935,6 +11675,8 @@
             },
             {
               id: "math-g6-m1-g6-oral-ratio-simp",
+              book: "up",
+              unit: "第四单元 比",
               name: "求比值与化简比",
               pluginId: "math-g6-oral",
               weight: 2,
@@ -10959,6 +11701,8 @@
             },
             {
               id: "math-g6-m1-g6-oral-neg-add-sub",
+              book: "down",
+              unit: "第一单元 负数",
               name: "负数加减",
               pluginId: "math-g6-oral",
               weight: 1,
@@ -10988,6 +11732,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m2-g6-calc-dec-mult",
+              book: "mixed",
+              unit: "总复习",
               name: "小数乘法笔算",
               pluginId: "math-g6-calc",
               weight: 2,
@@ -11012,6 +11758,8 @@
             },
             {
               id: "math-g6-m2-g6-calc-dec-div",
+              book: "mixed",
+              unit: "总复习",
               name: "小数除法笔算",
               pluginId: "math-g6-calc",
               weight: 2,
@@ -11036,6 +11784,8 @@
             },
             {
               id: "math-g6-m2-g6-calc-frac-mult-div",
+              book: "up",
+              unit: "第一单元 分数乘法",
               name: "分数乘除笔算",
               pluginId: "math-g6-calc",
               weight: 2,
@@ -11060,6 +11810,8 @@
             },
             {
               id: "math-g6-m2-g6-calc-solve-proportion",
+              book: "down",
+              unit: "第四单元 比例",
               name: "解比例",
               pluginId: "math-g6-calc",
               weight: 2,
@@ -11089,6 +11841,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m3-g6-mixed-frac-order",
+              book: "up",
+              unit: "第一单元 分数乘法",
               name: "分数四则混合运算",
               pluginId: "math-g6-calc",
               weight: 3,
@@ -11113,6 +11867,8 @@
             },
             {
               id: "math-g6-m3-g6-mixed-frac-simple",
+              book: "up",
+              unit: "第一单元 分数乘法",
               name: "分数简便运算（乘法分配律等）",
               pluginId: "math-g6-calc",
               weight: 2,
@@ -11137,6 +11893,8 @@
             },
             {
               id: "math-g6-m3-g6-mixed-solve-equation",
+              book: "mixed",
+              unit: "总复习",
               name: "解方程（含分数系数）",
               pluginId: "math-g6-calc",
               weight: 3,
@@ -11166,6 +11924,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m4-g6-fill-negative",
+              book: "down",
+              unit: "第一单元 负数",
               name: "负数的意义与读写",
               pluginId: "math-g6-fill",
               weight: 1,
@@ -11190,6 +11950,8 @@
             },
             {
               id: "math-g6-m4-g6-fill-percent",
+              book: "up",
+              unit: "第六单元 百分数(一)",
               name: "百分数的意义、互化与折扣",
               pluginId: "math-g6-fill",
               weight: 3,
@@ -11214,6 +11976,8 @@
             },
             {
               id: "math-g6-m4-g6-fill-ratio",
+              book: "down",
+              unit: "第四单元 比例",
               name: "比和比例的基本性质",
               pluginId: "math-g6-fill",
               weight: 3,
@@ -11238,6 +12002,8 @@
             },
             {
               id: "math-g6-m4-g6-fill-circle",
+              book: "up",
+              unit: "第五单元 圆",
               name: "圆的周长与面积公式",
               pluginId: "math-g6-fill",
               weight: 3,
@@ -11262,6 +12028,8 @@
             },
             {
               id: "math-g6-m4-g6-fill-cylinder-cone",
+              book: "down",
+              unit: "第三单元 圆柱与圆锥",
               name: "圆柱侧面积、表面积、体积与圆锥体积",
               pluginId: "math-g6-fill",
               weight: 3,
@@ -11286,6 +12054,8 @@
             },
             {
               id: "math-g6-m4-g6-fill-pie-chart",
+              book: "up",
+              unit: "第七单元 扇形统计图",
               name: "扇形统计图的特点",
               pluginId: "math-g6-fill",
               weight: 1,
@@ -11312,6 +12082,8 @@
             },
             {
               id: "math-g6-m4-unit-convert",
+              book: "mixed",
+              unit: "总复习",
               name: "单位换算",
               pluginId: "math-g6-fill",
               weight: 2,
@@ -11341,6 +12113,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m5-g6-match-proportion",
+              book: "down",
+              unit: "第四单元 比例",
               name: "正比例与反比例判断",
               pluginId: "math-match",
               weight: 2,
@@ -11365,6 +12139,8 @@
             },
             {
               id: "math-g6-m5-g6-match-formula",
+              book: "mixed",
+              unit: "总复习",
               name: "图形与公式配对",
               pluginId: "math-match",
               weight: 2,
@@ -11389,6 +12165,8 @@
             },
             {
               id: "math-g6-m5-g6-match-chart",
+              book: "up",
+              unit: "第七单元 扇形统计图",
               name: "统计图类型与特点配对",
               pluginId: "math-match",
               weight: 1,
@@ -11420,6 +12198,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m6-g6-op-circle",
+              book: "up",
+              unit: "第五单元 圆",
               name: "画圆与圆的认识",
               pluginId: "math-g6-operation",
               weight: 1,
@@ -11444,6 +12224,8 @@
             },
             {
               id: "math-g6-m6-g6-op-symmetry",
+              book: "up",
+              unit: "第五单元 圆",
               name: "画对称轴",
               pluginId: "math-g6-operation",
               weight: 1,
@@ -11468,6 +12250,8 @@
             },
             {
               id: "math-g6-m6-g6-op-rotate-scale",
+              book: "down",
+              unit: "第四单元 比例",
               name: "图形旋转与放大缩小",
               pluginId: "math-g6-operation",
               weight: 1,
@@ -11492,6 +12276,8 @@
             },
             {
               id: "math-g6-m6-g6-op-position",
+              book: "up",
+              unit: "第二单元 位置与方向(二)",
               name: "用方向和距离确定位置",
               pluginId: "math-g6-operation",
               weight: 1,
@@ -11521,6 +12307,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m7-g6-pic-frac-line",
+              book: "up",
+              unit: "第一单元 分数乘法",
               name: "分数应用题线段图",
               pluginId: "math-g6-picture-equation",
               weight: 2,
@@ -11545,6 +12333,8 @@
             },
             {
               id: "math-g6-m7-g6-pic-pie-chart",
+              book: "up",
+              unit: "第七单元 扇形统计图",
               name: "扇形统计图看图计算",
               pluginId: "math-g6-picture-equation",
               weight: 2,
@@ -11571,6 +12361,8 @@
             },
             {
               id: "math-g6-m7-g6-pic-scale",
+              book: "down",
+              unit: "第四单元 比例",
               name: "比例尺图",
               pluginId: "math-g6-picture-equation",
               weight: 1,
@@ -11600,6 +12392,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m8-g6-app-frac-mult",
+              book: "up",
+              unit: "第一单元 分数乘法",
               name: "求一个数的几分之几是多少（分数乘法）",
               pluginId: "math-g6-word-problems",
               weight: 3,
@@ -11624,6 +12418,8 @@
             },
             {
               id: "math-g6-m8-g6-app-frac-div",
+              book: "up",
+              unit: "第三单元 分数除法",
               name: "已知一个数的几分之几求这个数（分数除法）",
               pluginId: "math-g6-word-problems",
               weight: 3,
@@ -11648,6 +12444,8 @@
             },
             {
               id: "math-g6-m8-g6-app-percent-discount",
+              book: "down",
+              unit: "第二单元 百分数(二)",
               name: "折扣、成数、税率、利率百分数应用",
               pluginId: "math-g6-word-problems",
               weight: 4,
@@ -11672,6 +12470,8 @@
             },
             {
               id: "math-g6-m8-g6-app-ratio-prop",
+              book: "down",
+              unit: "第四单元 比例",
               name: "比和比例的应用（比例尺、按比例分配、用比例解）",
               pluginId: "math-g6-word-problems",
               weight: 3,
@@ -11696,6 +12496,8 @@
             },
             {
               id: "math-g6-m8-g6-app-circle",
+              book: "up",
+              unit: "第五单元 圆",
               name: "圆的周长和面积应用",
               pluginId: "math-g6-word-problems",
               weight: 2,
@@ -11720,6 +12522,8 @@
             },
             {
               id: "math-g6-m8-g6-app-cyl-cone",
+              book: "down",
+              unit: "第三单元 圆柱与圆锥",
               name: "圆柱圆锥体积与表面积应用",
               pluginId: "math-g6-word-problems",
               weight: 3,
@@ -11744,6 +12548,8 @@
             },
             {
               id: "math-g6-m8-g6-app-travel-work",
+              book: "up",
+              unit: "第三单元 分数除法",
               name: "行程、工程问题（分数除法应用）",
               pluginId: "math-g6-word-problems",
               weight: 2,
@@ -11768,6 +12574,8 @@
             },
             {
               id: "math-g6-m8-g6-app-pigeonhole",
+              book: "down",
+              unit: "第五单元 数学广角──鸽巢问题",
               name: "鸽巢问题简单应用",
               pluginId: "math-g6-word-problems",
               weight: 1,
@@ -11797,6 +12605,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m9-g6-stat-pie-chart",
+              book: "up",
+              unit: "第七单元 扇形统计图",
               name: "扇形统计图的选择与读图",
               pluginId: "math-g6-stats",
               weight: 2,
@@ -11823,6 +12633,8 @@
             },
             {
               id: "math-g6-m9-g6-stat-possibility",
+              book: "mixed",
+              unit: "总复习",
               name: "可能性大小判断",
               pluginId: "math-g6-stats",
               weight: 1,
@@ -11854,6 +12666,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m10-g6-reason-number-shape",
+              book: "up",
+              unit: "第八单元 数学广角──数与形",
               name: "数与形规律（连续奇数求和、图形规律）",
               pluginId: "math-g6-reasoning",
               weight: 2,
@@ -11878,6 +12692,8 @@
             },
             {
               id: "math-g6-m10-g6-reason-pigeonhole",
+              book: "down",
+              unit: "第五单元 数学广角──鸽巢问题",
               name: "鸽巢问题（抽屉原理）",
               pluginId: "math-g6-reasoning",
               weight: 2,
@@ -11907,6 +12723,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m11-g6-judge-circle",
+              book: "up",
+              unit: "第五单元 圆",
               name: "圆的概念辨析",
               pluginId: "math-g6-judge",
               weight: 2,
@@ -11931,6 +12749,8 @@
             },
             {
               id: "math-g6-m11-g6-judge-cyl-cone",
+              book: "down",
+              unit: "第三单元 圆柱与圆锥",
               name: "圆柱圆锥体积关系",
               pluginId: "math-g6-judge",
               weight: 2,
@@ -11955,6 +12775,8 @@
             },
             {
               id: "math-g6-m11-g6-judge-negative",
+              book: "down",
+              unit: "第一单元 负数",
               name: "负数大小比较",
               pluginId: "math-g6-judge",
               weight: 1,
@@ -11979,6 +12801,8 @@
             },
             {
               id: "math-g6-m11-g6-judge-percent-ratio",
+              book: "mixed",
+              unit: "总复习",
               name: "百分数与比的性质",
               pluginId: "math-g6-judge",
               weight: 2,
@@ -12003,6 +12827,8 @@
             },
             {
               id: "math-g6-m11-g6-judge-chart",
+              book: "up",
+              unit: "第七单元 扇形统计图",
               name: "统计图特点辨析",
               pluginId: "math-g6-judge",
               weight: 1,
@@ -12034,6 +12860,8 @@
           knowledgePoints: [
             {
               id: "math-g6-m12-g6-choice-negative",
+              book: "down",
+              unit: "第一单元 负数",
               name: "负数比较与数轴",
               pluginId: "math-g6-choice",
               weight: 1,
@@ -12058,6 +12886,8 @@
             },
             {
               id: "math-g6-m12-g6-choice-percent",
+              book: "mixed",
+              unit: "总复习",
               name: "分数百分数互化与比较",
               pluginId: "math-g6-choice",
               weight: 2,
@@ -12082,6 +12912,8 @@
             },
             {
               id: "math-g6-m12-g6-choice-circle",
+              book: "up",
+              unit: "第五单元 圆",
               name: "圆的计算选择题",
               pluginId: "math-g6-choice",
               weight: 2,
@@ -12106,6 +12938,8 @@
             },
             {
               id: "math-g6-m12-g6-choice-cyl-cone",
+              book: "down",
+              unit: "第三单元 圆柱与圆锥",
               name: "圆柱圆锥计算选择题",
               pluginId: "math-g6-choice",
               weight: 2,
@@ -12130,6 +12964,8 @@
             },
             {
               id: "math-g6-m12-g6-choice-chart",
+              book: "up",
+              unit: "第七单元 扇形统计图",
               name: "统计图选择",
               pluginId: "math-g6-choice",
               weight: 1,
@@ -12161,6 +12997,8 @@
           knowledgePoints: [
             {
               id: "math-g6-c1-vertical-multidigit",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "多位数竖式数字谜",
               pluginId: "math-competition-g6-c1",
               weight: 1,
@@ -12185,6 +13023,8 @@
             },
             {
               id: "math-g6-c1-vertical-carry-complex",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "复杂进位竖式谜",
               pluginId: "math-competition-g6-c1",
               weight: 1,
@@ -12209,6 +13049,8 @@
             },
             {
               id: "math-g6-c1-horizontal-puzzle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "横式数字谜",
               pluginId: "math-competition-g6-c1",
               weight: 1,
@@ -12233,6 +13075,8 @@
             },
             {
               id: "math-g6-c1-symbol-number",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "符号代表数",
               pluginId: "math-competition-g6-c1",
               weight: 1,
@@ -12257,6 +13101,8 @@
             },
             {
               id: "math-g6-c1-magic-square-adv",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "幻方进阶",
               pluginId: "math-competition-g6-c1",
               weight: 1,
@@ -12281,6 +13127,8 @@
             },
             {
               id: "math-g6-c1-number-array",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "数阵图进阶",
               pluginId: "math-competition-g6-c1",
               weight: 1,
@@ -12305,6 +13153,8 @@
             },
             {
               id: "math-g6-c1-digit-reasoning",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "数字推理综合",
               pluginId: "math-competition-g6-c1",
               weight: 1,
@@ -12329,6 +13179,8 @@
             },
             {
               id: "math-g6-c1-number-puzzle-competition",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "竞赛级数字谜综合",
               pluginId: "math-competition-g6-c1",
               weight: 1,
@@ -12358,6 +13210,8 @@
           knowledgePoints: [
             {
               id: "math-g6-c2-divisibility",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "整除特征（7、11、13 综合）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12382,6 +13236,8 @@
             },
             {
               id: "math-g6-c2-parity-analysis",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "奇偶分析（构造与证明）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12406,6 +13262,8 @@
             },
             {
               id: "math-g6-c2-prime-factorization",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "分解质因数（大数）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12430,6 +13288,8 @@
             },
             {
               id: "math-g6-c2-factor-count-sum",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "因数个数与因数和（逆用）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12454,6 +13314,8 @@
             },
             {
               id: "math-g6-c2-gcd-lcm",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "最大公因数与最小公倍数（应用）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12478,6 +13340,8 @@
             },
             {
               id: "math-g6-c2-remainder-congruence",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "同余方程与剩余定理",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12502,6 +13366,8 @@
             },
             {
               id: "math-g6-c2-place-value",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "位值原理（多位数）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12526,6 +13392,8 @@
             },
             {
               id: "math-g6-c2-perfect-square",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "完全平方数性质（个位、模3/4）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12550,6 +13418,8 @@
             },
             {
               id: "math-g6-c2-number-theory-extreme",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "数论最值（整除与余数）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12574,6 +13444,8 @@
             },
             {
               id: "math-g6-c2-diophantine-equation",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "不定方程整数解（含参数）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12598,6 +13470,8 @@
             },
             {
               id: "math-g6-c2-modulo-arithmetic",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "模运算与周期（大指数）",
               pluginId: "math-competition-g6-c2",
               weight: 1,
@@ -12627,6 +13501,8 @@
           knowledgePoints: [
             {
               id: "math-g6-c3-addition-principle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "加法原理（复杂分类）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12651,6 +13527,8 @@
             },
             {
               id: "math-g6-c3-multiplication-principle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "乘法原理（多步骤）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12675,6 +13553,8 @@
             },
             {
               id: "math-g6-c3-permutation",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "排列（含限制条件）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12699,6 +13579,8 @@
             },
             {
               id: "math-g6-c3-combination",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "组合（含分组问题）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12723,6 +13605,8 @@
             },
             {
               id: "math-g6-c3-enumeration-counting",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "枚举计数（有序技巧）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12747,6 +13631,8 @@
             },
             {
               id: "math-g6-c3-bundling-method",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "捆绑法（多组相邻）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12771,6 +13657,8 @@
             },
             {
               id: "math-g6-c3-insertion-method",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "插空法（多组不相邻）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12795,6 +13683,8 @@
             },
             {
               id: "math-g6-c3-stars-bars",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "隔板法（允许空）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12819,6 +13709,8 @@
             },
             {
               id: "math-g6-c3-pigeonhole-principle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "抽屉原理（构造抽屉）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12843,6 +13735,8 @@
             },
             {
               id: "math-g6-c3-worst-case-principle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "最不利原则（复杂保证）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12867,6 +13761,8 @@
             },
             {
               id: "math-g6-c3-inclusion-exclusion",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "容斥原理（三集合）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12891,6 +13787,8 @@
             },
             {
               id: "math-g6-c3-recursion-counting",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "递推计数（斐波那契、爬楼梯）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12915,6 +13813,8 @@
             },
             {
               id: "math-g6-c3-derangement",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "错排问题（初步）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12939,6 +13839,8 @@
             },
             {
               id: "math-g6-c3-geometry-counting",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "几何计数（三角形、矩形综合）",
               pluginId: "math-competition-g6-c3",
               weight: 1,
@@ -12968,6 +13870,8 @@
           knowledgePoints: [
             {
               id: "math-g6-c4-area-basic",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "基本面积（组合图形）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -12992,6 +13896,8 @@
             },
             {
               id: "math-g6-c4-equal-area-transform",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "等积变形（复杂平行线）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -13016,6 +13922,8 @@
             },
             {
               id: "math-g6-c4-bird-head-model",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "鸟头模型（多比例）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -13040,6 +13948,8 @@
             },
             {
               id: "math-g6-c4-butterfly-model",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "蝴蝶模型（任意四边形与梯形）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -13064,6 +13974,8 @@
             },
             {
               id: "math-g6-c4-swallow-tail-model",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "燕尾模型（多组比例）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -13088,6 +14000,8 @@
             },
             {
               id: "math-g6-c4-half-model",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "一半模型（复杂分割）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -13112,6 +14026,8 @@
             },
             {
               id: "math-g6-c4-circle-sector",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "圆与扇形（组合、阴影面积）",
               pluginId: "math-competition-g6-c4",
               weight: 1,
@@ -13136,6 +14052,8 @@
             },
             {
               id: "math-g6-c4-solid-geometry",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "立体图形（表面积、体积、切割）",
               pluginId: "math-competition-g6-c4",
               weight: 1,
@@ -13160,6 +14078,8 @@
             },
             {
               id: "math-g6-c4-painted-cube",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "表面涂色问题（非正方体）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -13184,6 +14104,8 @@
             },
             {
               id: "math-g6-c4-pythagorean-theorem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "勾股定理（逆定理与应用）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -13208,6 +14130,8 @@
             },
             {
               id: "math-g6-c4-lattice-area",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "格点面积（皮克定理应用）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -13232,6 +14156,8 @@
             },
             {
               id: "math-g6-c4-angle-calculation",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "角度计算（多边形、平行线）",
               pluginId: "math-competition-g5-c4",
               weight: 1,
@@ -13256,6 +14182,8 @@
             },
             {
               id: "math-g6-c4-circle-angle",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "圆角度（圆心角、圆周角）",
               pluginId: "math-competition-g6-c4",
               weight: 1,
@@ -13280,6 +14208,8 @@
             },
             {
               id: "math-g6-c4-solid-rotation",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "旋转体（圆柱、圆锥）",
               pluginId: "math-competition-g6-c4",
               weight: 1,
@@ -13309,6 +14239,8 @@
           knowledgePoints: [
             {
               id: "math-g6-c5-basic",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "基本行程",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13333,6 +14265,8 @@
             },
             {
               id: "math-g6-c5-meet",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "相遇问题进阶",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13357,6 +14291,8 @@
             },
             {
               id: "math-g6-c5-chase",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "追及问题进阶",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13381,6 +14317,8 @@
             },
             {
               id: "math-g6-c5-train-bridge",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "火车过桥",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13405,6 +14343,8 @@
             },
             {
               id: "math-g6-c5-boat-stream",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "流水行船",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13429,6 +14369,8 @@
             },
             {
               id: "math-g6-c5-ring-runway",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "环形跑道",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13453,6 +14395,8 @@
             },
             {
               id: "math-g6-c5-clock",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "时钟问题",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13477,6 +14421,8 @@
             },
             {
               id: "math-g6-c5-journey-complex",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "行程综合",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13501,6 +14447,8 @@
             },
             {
               id: "math-g6-c5-competition",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "竞赛行程综合",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13525,6 +14473,8 @@
             },
             {
               id: "math-g6-c5-interval-departure",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "发车间隔问题",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13549,6 +14499,8 @@
             },
             {
               id: "math-g6-c5-pick-up-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "接送问题（往返接送）",
               pluginId: "math-competition-g6-c5",
               weight: 1,
@@ -13578,6 +14530,8 @@
           knowledgePoints: [
             {
               id: "math-g6-c6-work-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "工程问题（合作、休息、变速）",
               pluginId: "math-competition-g6-c6",
               weight: 1,
@@ -13602,6 +14556,8 @@
             },
             {
               id: "math-g6-c6-concentration-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "浓度问题（混合、十字交叉）",
               pluginId: "math-competition-g6-c6",
               weight: 1,
@@ -13631,6 +14587,8 @@
           knowledgePoints: [
             {
               id: "math-g6-c7-extract-common-factor",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "提取公因数（复杂式子）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13655,6 +14613,8 @@
             },
             {
               id: "math-g6-c7-rounding-calc",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "凑整巧算（分数小数）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13679,6 +14639,8 @@
             },
             {
               id: "math-g6-c7-fraction-splitting",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "分数裂项（多级裂项）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13703,6 +14665,8 @@
             },
             {
               id: "math-g6-c7-integer-splitting",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "整数裂项（高阶）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13727,6 +14691,8 @@
             },
             {
               id: "math-g6-c7-arithmetic-series",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "等差数列（求和与项数应用）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13751,6 +14717,8 @@
             },
             {
               id: "math-g6-c7-recurring-decimal-frac",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "循环小数化分数（混循环）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13775,6 +14743,8 @@
             },
             {
               id: "math-g6-c7-define-operation",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "定义新运算（复杂规则）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13799,6 +14769,8 @@
             },
             {
               id: "math-g6-c7-compare-size",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "比较大小（放缩法）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13823,6 +14795,8 @@
             },
             {
               id: "math-g6-c7-estimate-bounds",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "估算与放缩（精确整数部分）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13847,6 +14821,8 @@
             },
             {
               id: "math-g6-c7-complex-fraction",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "繁分数化简（多层）",
               pluginId: "math-competition-g5-c7",
               weight: 1,
@@ -13871,6 +14847,8 @@
             },
             {
               id: "math-g6-c7-sequence-sum",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "数列求和（平方和、立方和）",
               pluginId: "math-competition-g6-c7",
               weight: 1,
@@ -13900,6 +14878,8 @@
           knowledgePoints: [
             {
               id: "math-g6-c8-extremum-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "最值问题（均值、乘积最大）",
               pluginId: "math-competition-g6-c8",
               weight: 1,
@@ -13924,6 +14904,8 @@
             },
             {
               id: "math-g6-c8-logic-inference",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "逻辑推理（多条件、表格法）",
               pluginId: "math-competition-g6-c8",
               weight: 1,
@@ -13948,6 +14930,8 @@
             },
             {
               id: "math-g6-c8-winning-strategy",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "必胜策略（取石子、对称）",
               pluginId: "math-competition-g6-c8",
               weight: 1,
@@ -13972,6 +14956,8 @@
             },
             {
               id: "math-g6-c8-optimization",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "统筹优化（烙饼、排队、过桥）",
               pluginId: "math-competition-g6-c8",
               weight: 1,
@@ -14001,6 +14987,8 @@
           knowledgePoints: [
             {
               id: "math-g6-c9-sum-diff-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "和差倍问题（复杂线段图）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14025,6 +15013,8 @@
             },
             {
               id: "math-g6-c9-age-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "年龄问题（列表方程）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14049,6 +15039,8 @@
             },
             {
               id: "math-g6-c9-profit-loss-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "盈亏问题（复杂分配）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14073,6 +15065,8 @@
             },
             {
               id: "math-g6-c9-chicken-rabbit",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "鸡兔同笼（变形：倒扣、得分）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14097,6 +15091,8 @@
             },
             {
               id: "math-g6-c9-average-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "平均数（移多补少、加权）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14123,6 +15119,8 @@
             },
             {
               id: "math-g6-c9-planting-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "植树问题（封闭与不封闭综合）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14147,6 +15145,8 @@
             },
             {
               id: "math-g6-c9-phalanx-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "方阵问题（空心、实心）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14171,6 +15171,8 @@
             },
             {
               id: "math-g6-c9-periodic-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "周期问题（复杂周期）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14195,6 +15197,8 @@
             },
             {
               id: "math-g6-c9-grass-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "牛吃草问题（多块草地）",
               pluginId: "math-competition-g6-c9",
               weight: 1,
@@ -14219,6 +15223,8 @@
             },
             {
               id: "math-g6-c9-fraction-percent-application",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "分数百分数应用题（综合）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14243,6 +15249,8 @@
             },
             {
               id: "math-g6-c9-economics-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "经济问题（折扣、利润最大化）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14267,6 +15275,8 @@
             },
             {
               id: "math-g6-c9-equation-linear-1",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "一元一次方程（应用题）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14291,6 +15301,8 @@
             },
             {
               id: "math-g6-c9-equation-linear-2",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "二元一次方程组（应用题）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
@@ -14315,6 +15327,8 @@
             },
             {
               id: "math-g6-c9-ratio-application",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "比例应用题（按比例分配、正反比例）",
               pluginId: "math-competition-g6-c9",
               weight: 1,
@@ -14339,6 +15353,8 @@
             },
             {
               id: "math-g6-c9-mixture-problem",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "混合问题（平均价、合金）",
               pluginId: "math-competition-g6-c9",
               weight: 1,
@@ -14363,6 +15379,8 @@
             },
             {
               id: "math-g6-c9-inclusion-exclusion",
+              book: "mixed",
+              unit: "竞赛拓展",
               name: "容斥原理（三集合深化）",
               pluginId: "math-competition-g5-c9",
               weight: 1,
