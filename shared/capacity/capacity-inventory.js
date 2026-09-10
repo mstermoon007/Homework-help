@@ -60,12 +60,31 @@ function bootstrap() {
     'shared/strategy/comprehensive-strategy.js',
     'shared/engine/presentation-engine.js',
     'shared/presentation/renderer.js',
-    'shared/presentation/render-options.js'
+    'shared/presentation/render-options.js',
+    'shared/knowledge/knowledge-ontology.js',
+    'shared/capability/capability-resolver.js',
+    'shared/capability/knowledge-capability-view.js',
+    'shared/knowledge/question-type-registry.js'
   ].forEach(function (p) { require(path.join(ROOT, p)); });
   return {
     GE: require(path.join(ROOT, 'shared/engine/generation-engine.js')),
-    KB: require(path.join(ROOT, 'shared/knowledge/knowledge-bank.js'))
+    KB: require(path.join(ROOT, 'shared/knowledge/knowledge-bank.js')),
+    KCV: require(path.join(ROOT, 'shared/capability/knowledge-capability-view.js')),
+    QTR: require(path.join(ROOT, 'shared/knowledge/question-type-registry.js'))
   };
+}
+
+// P0-02/§20：某 KP 在能力视图下「直接支持（ALLOW）」的题型候选。
+function allowedTypesFor(KCV, QTR, kpId) {
+  var ALL = QTR.TYPES.map(function (t) { return t.id; });
+  try {
+    var ev = KCV.buildEligibility([kpId], ALL);
+    var eligible = KCV.eligibleTypes(ev, ALL, [kpId]) || [];
+    var m = (ev.matrix && ev.matrix[kpId]) || {};
+    return eligible.filter(function (t) { return m[t] === 'ALLOW'; });
+  } catch (e) {
+    return [];
+  }
 }
 
 function tierOf(cap) {
@@ -131,7 +150,7 @@ function scan(opts) {
     ? opts.difficulties.slice()
     : DIFFICULTY_BUCKETS.map(function (b) { return b.sample; });
   var mods = bootstrap();
-  var GE = mods.GE, KB = mods.KB;
+  var GE = mods.GE, KB = mods.KB, KCV = mods.KCV, QTR = mods.QTR;
   var kps = allMathKps(KB);
   var map = {};
 
@@ -150,7 +169,26 @@ function scan(opts) {
         var t = q.questionType || 'unknown';
         byType[t] = (byType[t] || 0) + 1;
       });
-      return { total: qs.length, byType: byType };
+      // §20/§18：补充「能力视图 ALLOW、但通用扫描未产出」的题型容量——
+      // 以该题型单类型请求的真实产出作为该 KP×题型 容量（分类/选择等非主导题型得以显式化）。
+      var allowed = allowedTypesFor(KCV, QTR, entry.kpId).filter(function (t) { return !byType[t]; });
+      return Promise.all(allowed.map(function (t) {
+        try {
+          return GE.generate({
+            knowledgePointIds: [entry.kpId], mode: 'single-kp', grade: entry.grade,
+            count: COUNT, difficulty: difficulty,
+            questionTypes: [t], typeCounts: [{ questionType: t, count: COUNT }]
+          }, {});
+        } catch (e) {
+          return Promise.resolve(null);
+        }
+      })).then(function (probes) {
+        probes.forEach(function (pr, i) {
+          var t = allowed[i];
+          byType[t] = (pr && pr.questions) ? pr.questions.filter(function (q) { return q.questionType === t; }).length : 0;
+        });
+        return { total: qs.length, byType: byType };
+      });
     }).catch(function () {
       return { total: 0, byType: byType };
     });

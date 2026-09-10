@@ -4,7 +4,7 @@
  *
  * 用法：
  *   node dev/scan-capacity.js            # 读缓存（缺失则扫描）
- *   node dev/scan-capacity.js --refresh  # 强制重新扫描全量 574 KP
+ *   node dev/scan-capacity.js --refresh  # 强制重新扫描全量 566 KP
  *
  * 输出：shared/capacity/capacity-map.json（含分级 tiers + collapse 报告）
  */

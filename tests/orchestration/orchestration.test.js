@@ -346,3 +346,111 @@ test('orchestrate: 缺口回收多轮 → 所有 cell/question 均落在用户�
   (res.orchestration.kpTypeMatrix || []).forEach((cell) => assert.ok(selection.indexOf(cell.kpId) !== -1, '越界 cell: ' + cell.kpId));
   assert.ok(res.orchestration.coveredKpCount <= selection.length);
 });
+
+// ---------- §33 Case 03/04/05/06：真实多 KP × 7 题型，每题型 ≥1 且总量精确、选区不越界 ----------
+const P07_KPS = [
+  'math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m4-compose-number',
+  'math-g1-m11-judge-mixed', 'math-g3-m6-g3-polygon', 'math-g1-m4-count-quantity',
+  'math-g1-m4-rmb-calc'
+];
+const P07_TYPES = ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
+
+test('§33 C03/C04/C05：真实 7 KP × 7 题型 count=7/10/20 → 每题型≥1、总量精确、KP 不越界', async () => {
+  for (const count of [7, 10, 20]) {
+    const res = await GenerationAPI.generate({
+      subject: 'math', grade: 1,
+      knowledgePointIds: P07_KPS, questionTypes: P07_TYPES,
+      count, difficulty: 2
+    });
+    assert.strictEqual(res.status, 'SUCCESS', 'count=' + count + ' status=' + res.status);
+    assert.strictEqual(res.producedCount, count, 'count=' + count + ' 总量应精确');
+    const dist = {};
+    res.questions.forEach((q) => { dist[q.questionType] = (dist[q.questionType] || 0) + 1; });
+    P07_TYPES.forEach((t) => assert.ok((dist[t] || 0) >= 1, 'count=' + count + ' ' + t + ' 应≥1，实际 ' + (dist[t] || 0)));
+    assert.deepStrictEqual(res.orchestration.missingTypes, [], 'count=' + count + ' missing=' + JSON.stringify(res.orchestration.missingTypes));
+    res.questions.forEach((q) => assert.ok(P07_KPS.indexOf(q.knowledgePointId) !== -1, '越界 KP: ' + q.knowledgePointId));
+    assert.ok(res.orchestration.coveredKps.every((k) => P07_KPS.indexOf(k) !== -1));
+    (res.orchestration.kpTypeMatrix || []).forEach((cell) => assert.ok(P07_KPS.indexOf(cell.kpId) !== -1, '越界 cell: ' + cell.kpId));
+  }
+});
+
+test('§33 C02：真实 1 KP × 7 题型 count=7 → 产出在 [1,7]，缺口记录而非静默', async () => {
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 1, mode: 'single-kp',
+    knowledgePointIds: ['math-g1-m1-addsub-5'], questionTypes: P07_TYPES,
+    count: 7, difficulty: 2
+  });
+  assert.ok(res.producedCount >= 1 && res.producedCount <= 7, 'produced=' + res.producedCount);
+  assert.ok(res.status === 'SUCCESS' || res.status === 'PARTIAL');
+  // 无静默替换：即使部分题型该 KP 无法产出，也不应产生选区外 KP 题目
+  res.questions.forEach((q) => assert.strictEqual(q.knowledgePointId, 'math-g1-m1-addsub-5'));
+});
+
+// ---------- §33 Case 09：classify 完整闭环（Registry→Capability→Capacity→Orchestration→真实生成） ----------
+test('§33 C09：classify 多 KP 预算分摊（count=5 落在 3 个支持 KP）', async () => {
+  const kps = ['math-g1-m4-count-quantity', 'math-g3-m9-g3-stats-table', 'math-g3-m10-g3-set'];
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 1,
+    knowledgePointIds: kps, questionTypes: ['classify'],
+    count: 5, typeCounts: { classify: 5 }, difficulty: 2
+  });
+  assert.strictEqual(res.status, 'SUCCESS', 'status=' + res.status);
+  assert.strictEqual(res.producedCount, 5);
+  const used = [];
+  res.questions.forEach((q) => { if (used.indexOf(q.knowledgePointId) === -1) used.push(q.knowledgePointId); });
+  assert.strictEqual(used.length, 3, 'classify 应摊到 3 个支持 KP，实际 ' + JSON.stringify(used));
+  res.questions.forEach((q) => assert.strictEqual(q.questionType, 'classify'));
+});
+
+test('§33 C09：classify × 多题型共存（1 KP 内 classify/choice/fill 各自≥1）', async () => {
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 1, mode: 'single-kp',
+    knowledgePointIds: ['math-g1-m4-count-quantity'],
+    questionTypes: ['classify', 'choice', 'fill'],
+    count: 6, typeCounts: { classify: 2, choice: 2, fill: 2 }, difficulty: 2
+  });
+  assert.strictEqual(res.status, 'SUCCESS', 'status=' + res.status);
+  assert.strictEqual(res.producedCount, 6);
+  const dist = {};
+  res.questions.forEach((q) => { dist[q.questionType] = (dist[q.questionType] || 0) + 1; });
+  assert.deepStrictEqual(dist, { classify: 2, choice: 2, fill: 2 });
+});
+
+// ---------- §33 Case 10：难度维度对齐（用户难度 / Capacity 桶 / 生成难度一致） ----------
+test('§33 C10：difficulty=1/5/10 → ledger 桶与题目难度一致，无维度错位', async () => {
+  const cases = [[1, '1-3'], [5, '4-6'], [10, '7-10']];
+  for (const [d, bucket] of cases) {
+    const res = await GenerationAPI.generate({
+      subject: 'math', grade: 1,
+      knowledgePointIds: ['math-g1-m1-addsub-10', 'math-g1-m4-rmb-calc'],
+      questionTypes: ['calc', 'apply'],
+      count: 4, typeCounts: { calc: 2, apply: 2 }, difficulty: d
+    });
+    assert.strictEqual(res.status, 'SUCCESS', 'd=' + d + ' status=' + res.status);
+    assert.strictEqual(res.orchestration.difficultyBucket, bucket, 'd=' + d + ' 桶应=' + bucket);
+    res.questions.forEach((q) => assert.strictEqual(q.difficulty, d, '题目难度应等于用户难度 ' + d));
+  }
+});
+
+// ---------- §33 Case 07：无静默生成/替换；缺口入账（KP 容量天然受限场景） ----------
+test('§33 C07：容量天然受限 KP 超量请求 → 产出=容量上限、缺口记录、无选区外补题', async () => {
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 1, mode: 'single-kp',
+    knowledgePointIds: ['math-g3-m6-g3-polygon'], questionTypes: ['geometry'],
+    count: 5, typeCounts: { geometry: 5 }, difficulty: 2
+  });
+  assert.strictEqual(res.status, 'PARTIAL', '容量受限应 PARTIAL（不静默）');
+  assert.strictEqual(res.producedCount, 1, 'polygon geometry 容量=1');
+  assert.strictEqual(res.orchestration.plannedCount, 1, '容量应作为预算上限提前收缩（不按 5 规划）');
+  assert.strictEqual(res.orchestration.finalCount, 1, '缺口应入账（requested=5 → final=1）');
+  assert.strictEqual(res.orchestration.coverageStatus, 'CAPACITY_LIMITED', '应显式标记容量受限而非静默成功');
+  res.questions.forEach((q) => assert.strictEqual(q.knowledgePointId, 'math-g3-m6-g3-polygon'));
+});
+
+// ---------- §33 Case 08：Capacity=0 不降级为 FORBID（可行性由能力决定） ----------
+test('§33 C08：typeCap=0 的题型仍保留在预算（不得当作能力禁用直接删除）', () => {
+  const r = BA.allocateTypeBudgets({ count: 5, questionTypes: ['calc', 'fill'], typeCaps: { calc: 0, fill: 5 } });
+  const calcCount = r.typeCounts.find((e) => e.questionType === 'calc');
+  assert.ok(calcCount && calcCount.count >= 1, 'capacity=0 的 calc 仍应进入 typeCounts：' + JSON.stringify(r.typeCounts));
+  assert.strictEqual(r.plannedTotal, 5);
+});

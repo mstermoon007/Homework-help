@@ -188,16 +188,27 @@
    *   eligibleKpsForType  : { qt: [kpId] }           （knowledge-capability-view 输出）
    * @returns {{ cells:Array, kpDistribution:Object }} Σ cells.count === Σ typeCounts.count
    */
-  function allocateKpTypeBudget(args) {
+function allocateKpTypeBudget(args) {
     var typeCounts = (args && Array.isArray(args.typeCounts)) ? args.typeCounts.filter(function (e) { return e && e.count > 0; }) : [];
     var kps = (args && Array.isArray(args.kps)) ? args.kps.filter(Boolean) : [];
     var eligible = (args && args.eligibleKpsForType) || {};
+    var allowed = (args && args.allowedKpsForType) || {};
     var cells = [];
     var dist = {};
 
     typeCounts.forEach(function (tc) {
-      var el = Array.isArray(eligible[tc.questionType]) ? eligible[tc.questionType] : null;
-      var cs = cellsForType({ questionType: tc.questionType, count: tc.count, kps: kps, eligible: el || [] });
+      // KP 池分级：ALLOW（强）→ DEGRADE（弱）→ 全选区兜底。预算必须落在有真实生产能力的 KP，
+      // 避免把某题型配额错误堆到「首个不经能力筛选的 KP」（§24 二维预算真正的 KP×QT 分摊）。
+      var pool = null;
+      if (Array.isArray(allowed[tc.questionType]) && allowed[tc.questionType].length) {
+        pool = allowed[tc.questionType].slice();
+      } else if (Array.isArray(eligible[tc.questionType]) && eligible[tc.questionType].length) {
+        pool = eligible[tc.questionType].slice();
+      }
+      if (!pool) {
+        pool = Array.isArray(eligible[tc.questionType]) ? eligible[tc.questionType].slice() : kps.slice();
+      }
+      var cs = cellsForType({ questionType: tc.questionType, count: tc.count, kps: kps, eligible: pool });
       cs.forEach(function (c) {
         cells.push(c);
         dist[c.kpId] = (dist[c.kpId] || 0) + c.count;

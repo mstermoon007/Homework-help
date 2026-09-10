@@ -1,84 +1,49 @@
 {
-  "generatedAt": "2026-09-10T07:27:33.862Z",
+  "generatedAt": "2026-09-10T08:25:54.318Z",
   "tiers": {
     "HIGH": 331,
-    "MEDIUM": 52,
+    "VERY_LOW": 60,
     "LOW": 123,
-    "VERY_LOW": 60
+    "MEDIUM": 52
   },
   "map": {
-    "math-g1-m8-compare-more": {
-      "kpId": "math-g1-m8-compare-more",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m11-judge-mixed": {
-      "kpId": "math-g1-m11-judge-mixed",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g2-m2-chain-add-col": {
       "kpId": "math-g2-m2-chain-add-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-chain-sub-col": {
+      "kpId": "math-g2-m2-chain-sub-col",
       "grade": 2,
       "subject": "math",
       "total": 128,
@@ -147,8 +112,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g2-m3-chain-addsub": {
-      "kpId": "math-g2-m3-chain-addsub",
+    "math-g2-m3-mixed-no-bracket": {
+      "kpId": "math-g2-m3-mixed-no-bracket",
       "grade": 2,
       "subject": "math",
       "total": 128,
@@ -252,79 +217,44 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g1-m4-compose-number": {
-      "kpId": "math-g1-m4-compose-number",
-      "grade": 1,
+    "math-g5-m10-g5-reason-tree3": {
+      "kpId": "math-g5-m10-g5-reason-tree3",
+      "grade": 5,
       "subject": "math",
       "total": 128,
       "tier": "HIGH",
       "byType": {
-        "fill": 128
+        "apply": 128
       },
       "byDifficulty": {
         "1-3": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "fill": 128
+            "apply": 128
           }
         },
         "4-6": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "fill": 128
+            "apply": 128
           }
         },
         "7-10": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "fill": 128
+            "apply": 128
           }
         }
       },
       "limited": false,
       "limitedKind": null
     },
-    "math-g1-m4-adjacent-number": {
-      "kpId": "math-g1-m4-adjacent-number",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m7-brace-question": {
-      "kpId": "math-g1-m7-brace-question",
-      "grade": 1,
+    "math-g2-m3-chain-addsub": {
+      "kpId": "math-g2-m3-chain-addsub",
+      "grade": 2,
       "subject": "math",
       "total": 128,
       "tier": "HIGH",
@@ -357,70 +287,35 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g1-m8-two-step": {
-      "kpId": "math-g1-m8-two-step",
-      "grade": 1,
+    "math-g2-m5-match-unit": {
+      "kpId": "math-g2-m5-match-unit",
+      "grade": 2,
       "subject": "math",
       "total": 128,
       "tier": "HIGH",
       "byType": {
-        "apply": 128
+        "geometry": 128
       },
       "byDifficulty": {
         "1-3": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "apply": 128
+            "geometry": 128
           }
         },
         "4-6": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "apply": 128
+            "geometry": 128
           }
         },
         "7-10": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m8-exclude-extra": {
-      "kpId": "math-g1-m8-exclude-extra",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
+            "geometry": 128
           }
         }
       },
@@ -462,8 +357,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g4-m11-g4-judge-read": {
-      "kpId": "math-g4-m11-g4-judge-read",
+    "math-g4-m3-g4-mix-order": {
+      "kpId": "math-g4-m3-g4-mix-order",
       "grade": 4,
       "subject": "math",
       "total": 128,
@@ -497,9 +392,9 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g5-m10-g5-reason-tree3": {
-      "kpId": "math-g5-m10-g5-reason-tree3",
-      "grade": 5,
+    "math-g4-c1-c1-horizontal": {
+      "kpId": "math-g4-c1-c1-horizontal",
+      "grade": 4,
       "subject": "math",
       "total": 128,
       "tier": "HIGH",
@@ -532,105 +427,35 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g1-m0-make-ten": {
-      "kpId": "math-g1-m0-make-ten",
-      "grade": 1,
+    "math-g5-c2-parity-analysis": {
+      "kpId": "math-g5-c2-parity-analysis",
+      "grade": 5,
       "subject": "math",
       "total": 128,
       "tier": "HIGH",
       "byType": {
-        "calc": 128
+        "apply": 128
       },
       "byDifficulty": {
         "1-3": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "calc": 128
+            "apply": 128
           }
         },
         "4-6": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "calc": 128
+            "apply": 128
           }
         },
         "7-10": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m0-make-ten-ping": {
-      "kpId": "math-g1-m0-make-ten-ping",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m0-make-ten-po": {
-      "kpId": "math-g1-m0-make-ten-po",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
+            "apply": 128
           }
         }
       },
@@ -672,743 +497,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g1-m1-carry-add-20": {
-      "kpId": "math-g1-m1-carry-add-20",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-retreat-sub-20": {
-      "kpId": "math-g1-m1-retreat-sub-20",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-addsub-100": {
-      "kpId": "math-g1-m1-addsub-100",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-two-digit-add": {
-      "kpId": "math-g1-m1-two-digit-add",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-mixed-chain": {
-      "kpId": "math-g1-m1-mixed-chain",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-addsub-whole-ten": {
-      "kpId": "math-g1-m1-addsub-whole-ten",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-oral-carry": {
-      "kpId": "math-g1-m1-oral-carry",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-oral-retreat": {
-      "kpId": "math-g1-m1-oral-retreat",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-pen-add": {
-      "kpId": "math-g1-m1-pen-add",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-pen-sub": {
-      "kpId": "math-g1-m1-pen-sub",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-digit-place": {
-      "kpId": "math-g1-m4-digit-place",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-compare-number": {
-      "kpId": "math-g1-m4-compare-number",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-number-chart": {
-      "kpId": "math-g1-m4-number-chart",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-count-quantity": {
-      "kpId": "math-g1-m4-count-quantity",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-100-compose": {
-      "kpId": "math-g1-m4-100-compose",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m6-position": {
-      "kpId": "math-g1-m6-position",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m7-picture-add": {
-      "kpId": "math-g1-m7-picture-add",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m7-picture-sub": {
-      "kpId": "math-g1-m7-picture-sub",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m7-picture-mixed": {
-      "kpId": "math-g1-m7-picture-mixed",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m8-add-total": {
-      "kpId": "math-g1-m8-add-total",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m8-sub-remain": {
-      "kpId": "math-g1-m8-sub-remain",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m8-sub-part": {
-      "kpId": "math-g1-m8-sub-part",
+    "math-g1-m8-compare-more": {
+      "kpId": "math-g1-m8-compare-more",
       "grade": 1,
       "subject": "math",
       "total": 128,
@@ -1444,6 +534,41 @@
     },
     "math-g1-m8-compare-less": {
       "kpId": "math-g1-m8-compare-less",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-two-step": {
+      "kpId": "math-g1-m8-two-step",
       "grade": 1,
       "subject": "math",
       "total": 128,
@@ -1611,6 +736,41 @@
           "tier": "HIGH",
           "byType": {
             "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m11-judge-mixed": {
+      "kpId": "math-g1-m11-judge-mixed",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128
           }
         }
       },
@@ -1792,41 +952,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g2-m1-mixed-two-step": {
-      "kpId": "math-g2-m1-mixed-two-step",
-      "grade": 2,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g2-m1-addsub-1000": {
       "kpId": "math-g2-m1-addsub-1000",
       "grade": 2,
@@ -1932,78 +1057,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g2-m2-chain-sub-col": {
-      "kpId": "math-g2-m2-chain-sub-col",
-      "grade": 2,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g2-m2-remainder-col": {
       "kpId": "math-g2-m2-remainder-col",
-      "grade": 2,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g2-m3-mixed-no-bracket": {
-      "kpId": "math-g2-m3-mixed-no-bracket",
       "grade": 2,
       "subject": "math",
       "total": 128,
@@ -2527,78 +1582,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g2-m5-match-calc": {
-      "kpId": "math-g2-m5-match-calc",
-      "grade": 2,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g2-m5-match-clock": {
       "kpId": "math-g2-m5-match-clock",
-      "grade": 2,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "geometry": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "geometry": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "geometry": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "geometry": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g2-m5-match-unit": {
-      "kpId": "math-g2-m5-match-unit",
       "grade": 2,
       "subject": "math",
       "total": 128,
@@ -3017,76 +2002,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g3-m1-g3-mul-2digit": {
-      "kpId": "math-g3-m1-g3-mul-2digit",
-      "grade": 3,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g3-m4-g3-fracadd": {
-      "kpId": "math-g3-m4-g3-fracadd",
-      "grade": 3,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g3-m4-g3-time": {
       "kpId": "math-g3-m4-g3-time",
       "grade": 3,
@@ -3151,111 +2066,6 @@
           "tier": "HIGH",
           "byType": {
             "geometry": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g3-m8-g3-times": {
-      "kpId": "math-g3-m8-g3-times",
-      "grade": 3,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g3-m10-g3-set": {
-      "kpId": "math-g3-m10-g3-set",
-      "grade": 3,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g3-m10-g3-code": {
-      "kpId": "math-g3-m10-g3-code",
-      "grade": 3,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
           }
         }
       },
@@ -3437,146 +2247,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g4-m2-g4-v-mul3x2": {
-      "kpId": "math-g4-m2-g4-v-mul3x2",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-m2-g4-v-mulzero": {
-      "kpId": "math-g4-m2-g4-v-mulzero",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-m2-g4-v-dec": {
-      "kpId": "math-g4-m2-g4-v-dec",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-m3-g4-mix-order": {
-      "kpId": "math-g4-m3-g4-mix-order",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "geometry": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "geometry": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "geometry": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "geometry": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g4-m3-g4-mix-addlaw": {
       "kpId": "math-g4-m3-g4-mix-addlaw",
       "grade": 4,
@@ -3606,76 +2276,6 @@
           "tier": "HIGH",
           "byType": {
             "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-m3-g4-mix-dist": {
-      "kpId": "math-g4-m3-g4-mix-dist",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-m3-g4-mix-dec": {
-      "kpId": "math-g4-m3-g4-mix-dec",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
           }
         }
       },
@@ -3781,76 +2381,6 @@
           "tier": "HIGH",
           "byType": {
             "geometry": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-m4-g4-fill-quotient": {
-      "kpId": "math-g4-m4-g4-fill-quotient",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-m4-g4-fill-dec": {
-      "kpId": "math-g4-m4-g4-fill-dec",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
           }
         }
       },
@@ -4102,35 +2632,35 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g4-m11-g4-judge-dec": {
-      "kpId": "math-g4-m11-g4-judge-dec",
+    "math-g4-m11-g4-judge-read": {
+      "kpId": "math-g4-m11-g4-judge-read",
       "grade": 4,
       "subject": "math",
       "total": 128,
       "tier": "HIGH",
       "byType": {
-        "judge": 128
+        "geometry": 128
       },
       "byDifficulty": {
         "1-3": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "judge": 128
+            "geometry": 128
           }
         },
         "4-6": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "judge": 128
+            "geometry": 128
           }
         },
         "7-10": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "judge": 128
+            "geometry": 128
           }
         }
       },
@@ -4166,41 +2696,6 @@
           "tier": "HIGH",
           "byType": {
             "geometry": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-m12-g4-choice-est": {
-      "kpId": "math-g4-m12-g4-choice-est",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
           }
         }
       },
@@ -4271,41 +2766,6 @@
           "tier": "HIGH",
           "byType": {
             "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-c1-c1-horizontal": {
-      "kpId": "math-g4-c1-c1-horizontal",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
           }
         }
       },
@@ -4697,321 +3157,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g5-m1-g5-oral-fracadd": {
-      "kpId": "math-g5-m1-g5-oral-fracadd",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m1-g5-oral-equ": {
-      "kpId": "math-g5-m1-g5-oral-equ",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m3-g5-mix-decmixed": {
-      "kpId": "math-g5-m3-g5-mix-decmixed",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m3-g5-mix-fracmixed": {
-      "kpId": "math-g5-m3-g5-mix-fracmixed",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m3-g5-mix-decsimple": {
-      "kpId": "math-g5-m3-g5-mix-decsimple",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m3-g5-mix-fracsimple": {
-      "kpId": "math-g5-m3-g5-mix-fracsimple",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m4-g5-fill-decloc": {
-      "kpId": "math-g5-m4-g5-fill-decloc",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m4-g5-fill-deccmp": {
-      "kpId": "math-g5-m4-g5-fill-deccmp",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m4-g5-fill-letter": {
-      "kpId": "math-g5-m4-g5-fill-letter",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g5-m7-g5-pic-balance": {
       "kpId": "math-g5-m7-g5-pic-balance",
       "grade": 5,
@@ -5111,76 +3256,6 @@
           "tier": "HIGH",
           "byType": {
             "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m11-g5-judge-decmul": {
-      "kpId": "math-g5-m11-g5-judge-decmul",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m12-g5-choice-decmul": {
-      "kpId": "math-g5-m12-g5-choice-decmul",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
           }
         }
       },
@@ -5502,41 +3577,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g5-c2-parity-analysis": {
-      "kpId": "math-g5-c2-parity-analysis",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g5-c2-prime-composite": {
       "kpId": "math-g5-c2-prime-composite",
       "grade": 5,
@@ -5782,111 +3822,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g6-m2-g6-calc-dec-div": {
-      "kpId": "math-g6-m2-g6-calc-dec-div",
-      "grade": 6,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g6-m3-g6-mixed-frac-simple": {
-      "kpId": "math-g6-m3-g6-mixed-frac-simple",
-      "grade": 6,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g6-m4-g6-fill-negative": {
-      "kpId": "math-g6-m4-g6-fill-negative",
-      "grade": 6,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g6-m4-unit-convert": {
       "kpId": "math-g6-m4-unit-convert",
       "grade": 6,
@@ -5986,76 +3921,6 @@
           "tier": "HIGH",
           "byType": {
             "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g6-m11-g6-judge-negative": {
-      "kpId": "math-g6-m11-g6-judge-negative",
-      "grade": 6,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g6-m12-g6-choice-negative": {
-      "kpId": "math-g6-m12-g6-choice-negative",
-      "grade": 6,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "judge": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "judge": 128
           }
         }
       },
@@ -6517,41 +4382,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g1-m4-num-fill-unknown": {
-      "kpId": "math-g1-m4-num-fill-unknown",
-      "grade": 1,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g2-m4-fill-length": {
       "kpId": "math-g2-m4-fill-length",
       "grade": 2,
@@ -6799,41 +4629,6 @@
     },
     "math-g4-m4-g4-fill-avg": {
       "kpId": "math-g4-m4-g4-fill-avg",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-m8-g4-word-big": {
-      "kpId": "math-g4-m8-g4-word-big",
       "grade": 4,
       "subject": "math",
       "total": 128,
@@ -7182,8 +4977,78 @@
       "limited": false,
       "limitedKind": null
     },
+    "math-g5-m1-g5-oral-fm": {
+      "kpId": "math-g5-m1-g5-oral-fm",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
     "math-g5-m2-g5-v-decmul": {
       "kpId": "math-g5-m2-g5-v-decmul",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m2-g5-v-divint": {
+      "kpId": "math-g5-m2-g5-v-divint",
       "grade": 5,
       "subject": "math",
       "total": 128,
@@ -7429,41 +5294,6 @@
     },
     "math-g5-m4-g5-fill-prime": {
       "kpId": "math-g5-m4-g5-fill-prime",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m4-g5-fill-fracmean": {
-      "kpId": "math-g5-m4-g5-fill-fracmean",
       "grade": 5,
       "subject": "math",
       "total": 128,
@@ -8127,41 +5957,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g5-m12-g5-choice-equ": {
-      "kpId": "math-g5-m12-g5-choice-equ",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g5-m12-g5-choice-fm": {
       "kpId": "math-g5-m12-g5-choice-fm",
       "grade": 5,
@@ -8304,41 +6099,6 @@
     },
     "math-g6-m1-g6-oral-frac-mult-frac": {
       "kpId": "math-g6-m1-g6-oral-frac-mult-frac",
-      "grade": 6,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g6-m1-g6-oral-frac-div-int": {
-      "kpId": "math-g6-m1-g6-oral-frac-div-int",
       "grade": 6,
       "subject": "math",
       "total": 128,
@@ -9002,251 +6762,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g1-m1-addsub-5": {
-      "kpId": "math-g1-m1-addsub-5",
-      "grade": 1,
-      "subject": "math",
-      "total": 15,
-      "tier": "MEDIUM",
-      "byType": {
-        "calc": 15
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 15,
-          "tier": "MEDIUM",
-          "byType": {
-            "calc": 15
-          }
-        },
-        "4-6": {
-          "total": 15,
-          "tier": "MEDIUM",
-          "byType": {
-            "calc": 15
-          }
-        },
-        "7-10": {
-          "total": 15,
-          "tier": "MEDIUM",
-          "byType": {
-            "calc": 15
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-rmb-calc": {
-      "kpId": "math-g1-m4-rmb-calc",
-      "grade": 1,
-      "subject": "math",
-      "total": 3,
-      "tier": "LOW",
-      "byType": {
-        "fill": 3
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 3,
-          "tier": "LOW",
-          "byType": {
-            "fill": 3
-          }
-        },
-        "4-6": {
-          "total": 3,
-          "tier": "LOW",
-          "byType": {
-            "fill": 3
-          }
-        },
-        "7-10": {
-          "total": 3,
-          "tier": "LOW",
-          "byType": {
-            "fill": 3
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m6-solid-shape": {
-      "kpId": "math-g1-m6-solid-shape",
-      "grade": 1,
-      "subject": "math",
-      "total": 1,
-      "tier": "VERY_LOW",
-      "byType": {
-        "choice": 1
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        },
-        "4-6": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        },
-        "7-10": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        }
-      },
-      "limited": true,
-      "limitedKind": "EXPECTED_LIMITED"
-    },
-    "math-g1-m6-flat-shape": {
-      "kpId": "math-g1-m6-flat-shape",
-      "grade": 1,
-      "subject": "math",
-      "total": 1,
-      "tier": "VERY_LOW",
-      "byType": {
-        "choice": 1
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        },
-        "4-6": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        },
-        "7-10": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        }
-      },
-      "limited": true,
-      "limitedKind": "EXPECTED_LIMITED"
-    },
-    "math-g1-m6-count-graph": {
-      "kpId": "math-g1-m6-count-graph",
-      "grade": 1,
-      "subject": "math",
-      "total": 1,
-      "tier": "VERY_LOW",
-      "byType": {
-        "fill": 1
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "fill": 1
-          }
-        },
-        "4-6": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "fill": 1
-          }
-        },
-        "7-10": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "fill": 1
-          }
-        }
-      },
-      "limited": true,
-      "limitedKind": "EXPECTED_LIMITED"
-    },
-    "math-g1-m6-shape-combine": {
-      "kpId": "math-g1-m6-shape-combine",
-      "grade": 1,
-      "subject": "math",
-      "total": 1,
-      "tier": "VERY_LOW",
-      "byType": {
-        "choice": 1
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        },
-        "4-6": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        },
-        "7-10": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        }
-      },
-      "limited": true,
-      "limitedKind": "EXPECTED_LIMITED"
-    },
-    "math-g1-m6-draw-shape": {
-      "kpId": "math-g1-m6-draw-shape",
-      "grade": 1,
-      "subject": "math",
-      "total": 1,
-      "tier": "VERY_LOW",
-      "byType": {
-        "choice": 1
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        },
-        "4-6": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        },
-        "7-10": {
-          "total": 1,
-          "tier": "VERY_LOW",
-          "byType": {
-            "choice": 1
-          }
-        }
-      },
-      "limited": true,
-      "limitedKind": "EXPECTED_LIMITED"
-    },
     "math-g2-m4-angle-basic": {
       "kpId": "math-g2-m4-angle-basic",
       "grade": 2,
@@ -9807,41 +7322,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g3-m1-g3-oral-mul": {
-      "kpId": "math-g3-m1-g3-oral-mul",
-      "grade": 3,
-      "subject": "math",
-      "total": 45,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 45
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 45,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 45
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g3-m6-g3-perimeter": {
       "kpId": "math-g3-m6-g3-perimeter",
       "grade": 3,
@@ -9982,105 +7462,35 @@
       "limited": true,
       "limitedKind": "EXPECTED_LIMITED"
     },
-    "math-g3-m8-g3-equivalent": {
-      "kpId": "math-g3-m8-g3-equivalent",
-      "grade": 3,
+    "math-g4-m1-g4-oral-law": {
+      "kpId": "math-g4-m1-g4-oral-law",
+      "grade": 4,
       "subject": "math",
-      "total": 6,
-      "tier": "LOW",
+      "total": 35,
+      "tier": "HIGH",
       "byType": {
-        "fill": 6
+        "calc": 35
       },
       "byDifficulty": {
         "1-3": {
-          "total": 6,
-          "tier": "LOW",
+          "total": 35,
+          "tier": "HIGH",
           "byType": {
-            "fill": 6
+            "calc": 35
           }
         },
         "4-6": {
-          "total": 6,
-          "tier": "LOW",
+          "total": 35,
+          "tier": "HIGH",
           "byType": {
-            "fill": 6
+            "calc": 35
           }
         },
         "7-10": {
-          "total": 6,
-          "tier": "LOW",
+          "total": 35,
+          "tier": "HIGH",
           "byType": {
-            "fill": 6
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g3-m9-g3-stats-table": {
-      "kpId": "math-g3-m9-g3-stats-table",
-      "grade": 3,
-      "subject": "math",
-      "total": 4,
-      "tier": "LOW",
-      "byType": {
-        "apply": 4
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 4,
-          "tier": "LOW",
-          "byType": {
-            "apply": 4
-          }
-        },
-        "4-6": {
-          "total": 4,
-          "tier": "LOW",
-          "byType": {
-            "apply": 4
-          }
-        },
-        "7-10": {
-          "total": 4,
-          "tier": "LOW",
-          "byType": {
-            "apply": 4
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g3-m10-g3-combination": {
-      "kpId": "math-g3-m10-g3-combination",
-      "grade": 3,
-      "subject": "math",
-      "total": 16,
-      "tier": "MEDIUM",
-      "byType": {
-        "apply": 16
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 16,
-          "tier": "MEDIUM",
-          "byType": {
-            "apply": 16
-          }
-        },
-        "4-6": {
-          "total": 16,
-          "tier": "MEDIUM",
-          "byType": {
-            "apply": 16
-          }
-        },
-        "7-10": {
-          "total": 16,
-          "tier": "MEDIUM",
-          "byType": {
-            "apply": 16
+            "calc": 35
           }
         }
       },
@@ -10506,6 +7916,41 @@
       },
       "limited": true,
       "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g4-m8-g4-word-big": {
+      "kpId": "math-g4-m8-g4-word-big",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
     },
     "math-g4-m9-g4-stats-bar": {
       "kpId": "math-g4-m9-g4-stats-bar",
@@ -11172,41 +8617,6 @@
       "limited": true,
       "limitedKind": "EXPECTED_LIMITED"
     },
-    "math-g4-c5-c5-basic": {
-      "kpId": "math-g4-c5-c5-basic",
-      "grade": 4,
-      "subject": "math",
-      "total": 25,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 25
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 25,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 25
-          }
-        },
-        "4-6": {
-          "total": 25,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 25
-          }
-        },
-        "7-10": {
-          "total": 25,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 25
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g4-c5-c5-train": {
       "kpId": "math-g4-c5-c5-train",
       "grade": 4,
@@ -11236,41 +8646,6 @@
           "tier": "LOW",
           "byType": {
             "apply": 6
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g4-c5-c5-river": {
-      "kpId": "math-g4-c5-c5-river",
-      "grade": 4,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
           }
         }
       },
@@ -11452,43 +8827,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g5-m1-g5-oral-fm": {
-      "kpId": "math-g5-m1-g5-oral-fm",
-      "grade": 5,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-m2-g5-v-divint": {
-      "kpId": "math-g5-m2-g5-v-divint",
+    "math-g5-m4-g5-fill-fracmean": {
+      "kpId": "math-g5-m4-g5-fill-fracmean",
       "grade": 5,
       "subject": "math",
       "total": 128,
@@ -12426,6 +9766,41 @@
           "tier": "LOW",
           "byType": {
             "apply": 3
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-g5-choice-equ": {
+      "kpId": "math-g5-m12-g5-choice-equ",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
           }
         }
       },
@@ -14462,6 +11837,41 @@
       "limited": false,
       "limitedKind": null
     },
+    "math-g6-m1-g6-oral-frac-div-int": {
+      "kpId": "math-g6-m1-g6-oral-frac-div-int",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
     "math-g6-m4-g6-fill-circle": {
       "kpId": "math-g6-m4-g6-fill-circle",
       "grade": 6,
@@ -16177,41 +13587,6 @@
       "limited": true,
       "limitedKind": "EXPECTED_LIMITED"
     },
-    "math-g6-c4-painted-cube": {
-      "kpId": "math-g6-c4-painted-cube",
-      "grade": 6,
-      "subject": "math",
-      "total": 16,
-      "tier": "MEDIUM",
-      "byType": {
-        "apply": 16
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 16,
-          "tier": "MEDIUM",
-          "byType": {
-            "apply": 16
-          }
-        },
-        "4-6": {
-          "total": 16,
-          "tier": "MEDIUM",
-          "byType": {
-            "apply": 16
-          }
-        },
-        "7-10": {
-          "total": 16,
-          "tier": "MEDIUM",
-          "byType": {
-            "apply": 16
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g6-c4-pythagorean-theorem": {
       "kpId": "math-g6-c4-pythagorean-theorem",
       "grade": 6,
@@ -16387,41 +13762,6 @@
       "limited": true,
       "limitedKind": "EXPECTED_LIMITED"
     },
-    "math-g6-c5-basic": {
-      "kpId": "math-g6-c5-basic",
-      "grade": 6,
-      "subject": "math",
-      "total": 25,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 25
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 25,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 25
-          }
-        },
-        "4-6": {
-          "total": 25,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 25
-          }
-        },
-        "7-10": {
-          "total": 25,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 25
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g6-c5-train-bridge": {
       "kpId": "math-g6-c5-train-bridge",
       "grade": 6,
@@ -16492,8 +13832,43 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g6-c5-journey-complex": {
-      "kpId": "math-g6-c5-journey-complex",
+    "math-g6-c5-ring-runway": {
+      "kpId": "math-g6-c5-ring-runway",
+      "grade": 6,
+      "subject": "math",
+      "total": 36,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 36
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 36,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 36
+          }
+        },
+        "4-6": {
+          "total": 36,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 36
+          }
+        },
+        "7-10": {
+          "total": 36,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 36
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-competition": {
+      "kpId": "math-g6-c5-competition",
       "grade": 6,
       "subject": "math",
       "total": 25,
@@ -16906,6 +14281,41 @@
           "tier": "LOW",
           "byType": {
             "apply": 3
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c8-extremum-problem": {
+      "kpId": "math-g6-c8-extremum-problem",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
           }
         }
       },
@@ -17577,21 +14987,21 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g1-m13-multiplication-table": {
-      "kpId": "math-g1-m13-multiplication-table",
+    "math-g1-m4-split-number": {
+      "kpId": "math-g1-m4-split-number",
       "grade": 1,
       "subject": "math",
-      "total": 45,
+      "total": 55,
       "tier": "HIGH",
       "byType": {
-        "fill": 45
+        "fill": 55
       },
       "byDifficulty": {
         "1-3": {
-          "total": 45,
+          "total": 55,
           "tier": "HIGH",
           "byType": {
-            "fill": 45
+            "fill": 55
           }
         },
         "4-6": {
@@ -17606,41 +15016,6 @@
           "tier": "HIGH",
           "byType": {
             "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g2-m1-remainder-oral": {
-      "kpId": "math-g2-m1-remainder-oral",
-      "grade": 2,
-      "subject": "math",
-      "total": 54,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 54
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 54,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 54
-          }
-        },
-        "4-6": {
-          "total": 54,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 54
-          }
-        },
-        "7-10": {
-          "total": 54,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 54
           }
         }
       },
@@ -17682,8 +15057,43 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g2-m2-mult-col": {
-      "kpId": "math-g2-m2-mult-col",
+    "math-g2-m4-division-meaning": {
+      "kpId": "math-g2-m4-division-meaning",
+      "grade": 2,
+      "subject": "math",
+      "total": 42,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 42
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 42,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 42
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m8-mult-total": {
+      "kpId": "math-g2-m8-mult-total",
       "grade": 2,
       "subject": "math",
       "total": 45,
@@ -17711,41 +15121,6 @@
           "tier": "HIGH",
           "byType": {
             "calc": 45
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g2-m4-multiplication-meaning": {
-      "kpId": "math-g2-m4-multiplication-meaning",
-      "grade": 2,
-      "subject": "math",
-      "total": 45,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 45
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 45,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 45
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
           }
         }
       },
@@ -17857,41 +15232,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g4-m1-g4-oral-law": {
-      "kpId": "math-g4-m1-g4-oral-law",
-      "grade": 4,
-      "subject": "math",
-      "total": 35,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 35
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 35,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 35
-          }
-        },
-        "4-6": {
-          "total": 35,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 35
-          }
-        },
-        "7-10": {
-          "total": 35,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 35
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g4-m3-g4-mix-mullaw": {
       "kpId": "math-g4-m3-g4-mix-mullaw",
       "grade": 4,
@@ -17962,35 +15302,70 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g4-c5-c5-chase": {
-      "kpId": "math-g4-c5-c5-chase",
+    "math-g4-c5-c5-basic": {
+      "kpId": "math-g4-c5-c5-basic",
       "grade": 4,
       "subject": "math",
-      "total": 48,
+      "total": 25,
       "tier": "HIGH",
       "byType": {
-        "apply": 48
+        "apply": 25
       },
       "byDifficulty": {
         "1-3": {
-          "total": 48,
+          "total": 25,
           "tier": "HIGH",
           "byType": {
-            "apply": 48
+            "apply": 25
           }
         },
         "4-6": {
-          "total": 48,
+          "total": 25,
           "tier": "HIGH",
           "byType": {
-            "apply": 48
+            "apply": 25
           }
         },
         "7-10": {
-          "total": 48,
+          "total": 25,
           "tier": "HIGH",
           "byType": {
-            "apply": 48
+            "apply": 25
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-c5-c5-river": {
+      "kpId": "math-g4-c5-c5-river",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
           }
         }
       },
@@ -18137,41 +15512,6 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g5-c5-chase-problem": {
-      "kpId": "math-g5-c5-chase-problem",
-      "grade": 5,
-      "subject": "math",
-      "total": 48,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 48
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 48,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 48
-          }
-        },
-        "4-6": {
-          "total": 48,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 48
-          }
-        },
-        "7-10": {
-          "total": 48,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 48
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
     "math-g5-c5-circular-track": {
       "kpId": "math-g5-c5-circular-track",
       "grade": 5,
@@ -18207,35 +15547,35 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g6-c2-factor-count-sum": {
-      "kpId": "math-g6-c2-factor-count-sum",
+    "math-g6-m1-g6-oral-neg-add-sub": {
+      "kpId": "math-g6-m1-g6-oral-neg-add-sub",
       "grade": 6,
       "subject": "math",
-      "total": 49,
+      "total": 45,
       "tier": "HIGH",
       "byType": {
-        "apply": 49
+        "calc": 45
       },
       "byDifficulty": {
         "1-3": {
-          "total": 49,
+          "total": 45,
           "tier": "HIGH",
           "byType": {
-            "apply": 49
+            "calc": 45
           }
         },
         "4-6": {
-          "total": 49,
+          "total": 45,
           "tier": "HIGH",
           "byType": {
-            "apply": 49
+            "calc": 45
           }
         },
         "7-10": {
-          "total": 49,
+          "total": 45,
           "tier": "HIGH",
           "byType": {
-            "apply": 49
+            "calc": 45
           }
         }
       },
@@ -18277,6 +15617,76 @@
       "limited": false,
       "limitedKind": null
     },
+    "math-g6-c4-painted-cube": {
+      "kpId": "math-g6-c4-painted-cube",
+      "grade": 6,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 16,
+          "tier": "MEDIUM",
+          "byType": {
+            "apply": 16
+          }
+        },
+        "4-6": {
+          "total": 16,
+          "tier": "MEDIUM",
+          "byType": {
+            "apply": 16
+          }
+        },
+        "7-10": {
+          "total": 16,
+          "tier": "MEDIUM",
+          "byType": {
+            "apply": 16
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-c5-basic": {
+      "kpId": "math-g6-c5-basic",
+      "grade": 6,
+      "subject": "math",
+      "total": 25,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 25
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 25,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 25
+          }
+        },
+        "4-6": {
+          "total": 25,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 25
+          }
+        },
+        "7-10": {
+          "total": 25,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 25
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
     "math-g6-c5-chase": {
       "kpId": "math-g6-c5-chase",
       "grade": 6,
@@ -18312,8 +15722,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g6-c5-competition": {
-      "kpId": "math-g6-c5-competition",
+    "math-g6-c5-journey-complex": {
+      "kpId": "math-g6-c5-journey-complex",
       "grade": 6,
       "subject": "math",
       "total": 25,
@@ -18341,146 +15751,6 @@
           "tier": "HIGH",
           "byType": {
             "apply": 25
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g6-c8-extremum-problem": {
-      "kpId": "math-g6-c8-extremum-problem",
-      "grade": 6,
-      "subject": "math",
-      "total": 128,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 128
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-add-11-20": {
-      "kpId": "math-g1-m1-add-11-20",
-      "grade": 1,
-      "subject": "math",
-      "total": 66,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 66
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 66,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 66
-          }
-        },
-        "4-6": {
-          "total": 66,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 66
-          }
-        },
-        "7-10": {
-          "total": 66,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 66
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-split-number": {
-      "kpId": "math-g1-m4-split-number",
-      "grade": 1,
-      "subject": "math",
-      "total": 55,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 55
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 55,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 55
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-num-11-20": {
-      "kpId": "math-g1-m4-num-11-20",
-      "grade": 1,
-      "subject": "math",
-      "total": 55,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 55
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 55,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 55
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
           }
         }
       },
@@ -18522,6 +15792,111 @@
       "limited": false,
       "limitedKind": null
     },
+    "math-g2-m1-remainder-oral": {
+      "kpId": "math-g2-m1-remainder-oral",
+      "grade": 2,
+      "subject": "math",
+      "total": 54,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 54
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 54,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 54
+          }
+        },
+        "4-6": {
+          "total": 54,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 54
+          }
+        },
+        "7-10": {
+          "total": 54,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 54
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m2-mult-col": {
+      "kpId": "math-g2-m2-mult-col",
+      "grade": 2,
+      "subject": "math",
+      "total": 45,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 45
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 45,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 45
+          }
+        },
+        "4-6": {
+          "total": 45,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 45
+          }
+        },
+        "7-10": {
+          "total": 45,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 45
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m4-multiplication-meaning": {
+      "kpId": "math-g2-m4-multiplication-meaning",
+      "grade": 2,
+      "subject": "math",
+      "total": 45,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 45
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 45,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 45
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
     "math-g2-m5-match-multdiv": {
       "kpId": "math-g2-m5-match-multdiv",
       "grade": 2,
@@ -18557,8 +15932,43 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g2-m7-pic-div": {
-      "kpId": "math-g2-m7-pic-div",
+    "math-g2-m7-pic-mult": {
+      "kpId": "math-g2-m7-pic-mult",
+      "grade": 2,
+      "subject": "math",
+      "total": 45,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 45
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 45,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 45
+          }
+        },
+        "4-6": {
+          "total": 45,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 45
+          }
+        },
+        "7-10": {
+          "total": 45,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 45
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m7-pic-div-include": {
+      "kpId": "math-g2-m7-pic-div-include",
       "grade": 2,
       "subject": "math",
       "total": 81,
@@ -18592,8 +16002,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g2-m7-pic-div-include": {
-      "kpId": "math-g2-m7-pic-div-include",
+    "math-g2-m8-div-partitive": {
+      "kpId": "math-g2-m8-div-partitive",
       "grade": 2,
       "subject": "math",
       "total": 81,
@@ -18662,21 +16072,21 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g4-m2-g4-v-div2": {
-      "kpId": "math-g4-m2-g4-v-div2",
-      "grade": 4,
+    "math-g3-m1-g3-oral-mul": {
+      "kpId": "math-g3-m1-g3-oral-mul",
+      "grade": 3,
       "subject": "math",
-      "total": 81,
+      "total": 45,
       "tier": "HIGH",
       "byType": {
-        "calc": 81
+        "calc": 45
       },
       "byDifficulty": {
         "1-3": {
-          "total": 81,
+          "total": 45,
           "tier": "HIGH",
           "byType": {
-            "calc": 81
+            "calc": 45
           }
         },
         "4-6": {
@@ -18697,8 +16107,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g4-m2-g4-v-div2q": {
-      "kpId": "math-g4-m2-g4-v-div2q",
+    "math-g4-m2-g4-v-div2": {
+      "kpId": "math-g4-m2-g4-v-div2",
       "grade": 4,
       "subject": "math",
       "total": 81,
@@ -18767,6 +16177,41 @@
       "limited": false,
       "limitedKind": null
     },
+    "math-g4-m10-g4-reason-cr": {
+      "kpId": "math-g4-m10-g4-reason-cr",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
     "math-g4-c2-c2-divisible": {
       "kpId": "math-g4-c2-c2-divisible",
       "grade": 4,
@@ -18802,70 +16247,105 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g5-c7-define-operation": {
-      "kpId": "math-g5-c7-define-operation",
+    "math-g5-m9-g5-stats-possib": {
+      "kpId": "math-g5-m9-g5-stats-possib",
       "grade": 5,
       "subject": "math",
-      "total": 64,
+      "total": 56,
       "tier": "HIGH",
       "byType": {
-        "apply": 64
+        "apply": 56
       },
       "byDifficulty": {
         "1-3": {
-          "total": 64,
+          "total": 56,
           "tier": "HIGH",
           "byType": {
-            "apply": 64
+            "apply": 56
           }
         },
         "4-6": {
-          "total": 64,
+          "total": 56,
           "tier": "HIGH",
           "byType": {
-            "apply": 64
+            "apply": 56
           }
         },
         "7-10": {
-          "total": 64,
+          "total": 56,
           "tier": "HIGH",
           "byType": {
-            "apply": 64
+            "apply": 56
           }
         }
       },
       "limited": false,
       "limitedKind": null
     },
-    "math-g6-m1-g6-oral-neg-add-sub": {
-      "kpId": "math-g6-m1-g6-oral-neg-add-sub",
-      "grade": 6,
+    "math-g5-c5-chase-problem": {
+      "kpId": "math-g5-c5-chase-problem",
+      "grade": 5,
       "subject": "math",
-      "total": 45,
+      "total": 48,
       "tier": "HIGH",
       "byType": {
-        "calc": 45
+        "apply": 48
       },
       "byDifficulty": {
         "1-3": {
-          "total": 45,
+          "total": 48,
           "tier": "HIGH",
           "byType": {
-            "calc": 45
+            "apply": 48
           }
         },
         "4-6": {
-          "total": 44,
+          "total": 48,
           "tier": "HIGH",
           "byType": {
-            "calc": 44
+            "apply": 48
           }
         },
         "7-10": {
-          "total": 45,
+          "total": 48,
           "tier": "HIGH",
           "byType": {
-            "calc": 45
+            "apply": 48
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-c7-arithmetic-series": {
+      "kpId": "math-g5-c7-arithmetic-series",
+      "grade": 5,
+      "subject": "math",
+      "total": 81,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 81
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 81,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 81
+          }
+        },
+        "4-6": {
+          "total": 81,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 81
+          }
+        },
+        "7-10": {
+          "total": 81,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 81
           }
         }
       },
@@ -18907,35 +16387,35 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g6-c5-ring-runway": {
-      "kpId": "math-g6-c5-ring-runway",
+    "math-g6-c2-factor-count-sum": {
+      "kpId": "math-g6-c2-factor-count-sum",
       "grade": 6,
       "subject": "math",
-      "total": 36,
+      "total": 49,
       "tier": "HIGH",
       "byType": {
-        "apply": 36
+        "apply": 49
       },
       "byDifficulty": {
         "1-3": {
-          "total": 36,
+          "total": 49,
           "tier": "HIGH",
           "byType": {
-            "apply": 36
+            "apply": 49
           }
         },
         "4-6": {
-          "total": 36,
+          "total": 49,
           "tier": "HIGH",
           "byType": {
-            "apply": 36
+            "apply": 49
           }
         },
         "7-10": {
-          "total": 36,
+          "total": 49,
           "tier": "HIGH",
           "byType": {
-            "apply": 36
+            "apply": 49
           }
         }
       },
@@ -18971,111 +16451,6 @@
           "tier": "HIGH",
           "byType": {
             "apply": 64
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m1-addsub-10": {
-      "kpId": "math-g1-m1-addsub-10",
-      "grade": 1,
-      "subject": "math",
-      "total": 55,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 55
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 55,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 55
-          }
-        },
-        "4-6": {
-          "total": 55,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 55
-          }
-        },
-        "7-10": {
-          "total": 55,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 55
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-ordinal": {
-      "kpId": "math-g1-m4-ordinal",
-      "grade": 1,
-      "subject": "math",
-      "total": 55,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 55
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 55,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 55
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m13-division-table": {
-      "kpId": "math-g1-m13-division-table",
-      "grade": 1,
-      "subject": "math",
-      "total": 81,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 81
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 81,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 81
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
           }
         }
       },
@@ -19152,113 +16527,8 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g2-m4-division-meaning": {
-      "kpId": "math-g2-m4-division-meaning",
-      "grade": 2,
-      "subject": "math",
-      "total": 42,
-      "tier": "HIGH",
-      "byType": {
-        "fill": 42
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 42,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 42
-          }
-        },
-        "4-6": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        },
-        "7-10": {
-          "total": 128,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 128
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g2-m7-pic-mult": {
-      "kpId": "math-g2-m7-pic-mult",
-      "grade": 2,
-      "subject": "math",
-      "total": 45,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 45
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 45,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 45
-          }
-        },
-        "4-6": {
-          "total": 45,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 45
-          }
-        },
-        "7-10": {
-          "total": 45,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 45
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g2-m8-mult-total": {
-      "kpId": "math-g2-m8-mult-total",
-      "grade": 2,
-      "subject": "math",
-      "total": 45,
-      "tier": "HIGH",
-      "byType": {
-        "calc": 45
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 45,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 45
-          }
-        },
-        "4-6": {
-          "total": 45,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 45
-          }
-        },
-        "7-10": {
-          "total": 45,
-          "tier": "HIGH",
-          "byType": {
-            "calc": 45
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g2-m8-div-partitive": {
-      "kpId": "math-g2-m8-div-partitive",
+    "math-g2-m7-pic-div": {
+      "kpId": "math-g2-m7-pic-div",
       "grade": 2,
       "subject": "math",
       "total": 81,
@@ -19292,210 +16562,140 @@
       "limited": false,
       "limitedKind": null
     },
-    "math-g4-m10-g4-reason-cr": {
-      "kpId": "math-g4-m10-g4-reason-cr",
+    "math-g4-m2-g4-v-div2q": {
+      "kpId": "math-g4-m2-g4-v-div2q",
       "grade": 4,
       "subject": "math",
-      "total": 128,
+      "total": 81,
       "tier": "HIGH",
       "byType": {
-        "apply": 128
+        "calc": 81
       },
       "byDifficulty": {
         "1-3": {
-          "total": 128,
+          "total": 81,
           "tier": "HIGH",
           "byType": {
-            "apply": 128
+            "calc": 81
           }
         },
         "4-6": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "apply": 128
+            "calc": 128
           }
         },
         "7-10": {
           "total": 128,
           "tier": "HIGH",
           "byType": {
-            "apply": 128
+            "calc": 128
           }
         }
       },
       "limited": false,
       "limitedKind": null
     },
-    "math-g4-c5-c5-meet": {
-      "kpId": "math-g4-c5-c5-meet",
+    "math-g4-c5-c5-chase": {
+      "kpId": "math-g4-c5-c5-chase",
       "grade": 4,
       "subject": "math",
-      "total": 100,
+      "total": 48,
       "tier": "HIGH",
       "byType": {
-        "apply": 100
+        "apply": 48
       },
       "byDifficulty": {
         "1-3": {
-          "total": 100,
+          "total": 48,
           "tier": "HIGH",
           "byType": {
-            "apply": 100
+            "apply": 48
           }
         },
         "4-6": {
-          "total": 100,
+          "total": 48,
           "tier": "HIGH",
           "byType": {
-            "apply": 100
+            "apply": 48
           }
         },
         "7-10": {
-          "total": 100,
+          "total": 48,
           "tier": "HIGH",
           "byType": {
-            "apply": 100
+            "apply": 48
           }
         }
       },
       "limited": false,
       "limitedKind": null
     },
-    "math-g5-m9-g5-stats-possib": {
-      "kpId": "math-g5-m9-g5-stats-possib",
+    "math-g5-c7-define-operation": {
+      "kpId": "math-g5-c7-define-operation",
       "grade": 5,
       "subject": "math",
-      "total": 56,
+      "total": 64,
       "tier": "HIGH",
       "byType": {
-        "apply": 56
+        "apply": 64
       },
       "byDifficulty": {
         "1-3": {
-          "total": 56,
+          "total": 64,
           "tier": "HIGH",
           "byType": {
-            "apply": 56
+            "apply": 64
           }
         },
         "4-6": {
-          "total": 56,
+          "total": 64,
           "tier": "HIGH",
           "byType": {
-            "apply": 56
+            "apply": 64
           }
         },
         "7-10": {
-          "total": 56,
+          "total": 64,
           "tier": "HIGH",
           "byType": {
-            "apply": 56
+            "apply": 64
           }
         }
       },
       "limited": false,
       "limitedKind": null
     },
-    "math-g1-m4-rmb-unit": {
-      "kpId": "math-g1-m4-rmb-unit",
-      "grade": 1,
+    "math-g6-c7-arithmetic-series": {
+      "kpId": "math-g6-c7-arithmetic-series",
+      "grade": 6,
       "subject": "math",
-      "total": 58,
+      "total": 81,
       "tier": "HIGH",
       "byType": {
-        "fill": 58
+        "apply": 81
       },
       "byDifficulty": {
         "1-3": {
-          "total": 58,
+          "total": 81,
           "tier": "HIGH",
           "byType": {
-            "fill": 58
+            "apply": 81
           }
         },
         "4-6": {
-          "total": 59,
+          "total": 81,
           "tier": "HIGH",
           "byType": {
-            "fill": 59
+            "apply": 81
           }
         },
         "7-10": {
-          "total": 59,
+          "total": 81,
           "tier": "HIGH",
           "byType": {
-            "fill": 59
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m4-zero": {
-      "kpId": "math-g1-m4-zero",
-      "grade": 1,
-      "subject": "math",
-      "total": 15,
-      "tier": "MEDIUM",
-      "byType": {
-        "fill": 15
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 15,
-          "tier": "MEDIUM",
-          "byType": {
-            "fill": 15
-          }
-        },
-        "4-6": {
-          "total": 113,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 113
-          }
-        },
-        "7-10": {
-          "total": 115,
-          "tier": "HIGH",
-          "byType": {
-            "fill": 115
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g1-m8-rmb-shopping": {
-      "kpId": "math-g1-m8-rmb-shopping",
-      "grade": 1,
-      "subject": "math",
-      "total": 84,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 84
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 84,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 84
-          }
-        },
-        "4-6": {
-          "total": 84,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 84
-          }
-        },
-        "7-10": {
-          "total": 84,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 84
+            "apply": 81
           }
         }
       },
@@ -19520,10 +16720,10 @@
           }
         },
         "4-6": {
-          "total": 83,
+          "total": 84,
           "tier": "HIGH",
           "byType": {
-            "apply": 83
+            "apply": 84
           }
         },
         "7-10": {
@@ -19572,6 +16772,41 @@
       "limited": true,
       "limitedKind": "EXPECTED_LIMITED"
     },
+    "math-g4-c5-c5-meet": {
+      "kpId": "math-g4-c5-c5-meet",
+      "grade": 4,
+      "subject": "math",
+      "total": 100,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 100
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 100,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 100
+          }
+        },
+        "4-6": {
+          "total": 100,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 100
+          }
+        },
+        "7-10": {
+          "total": 100,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 100
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
     "math-g5-m1-g5-oral-decdiv": {
       "kpId": "math-g5-m1-g5-oral-decdiv",
       "grade": 5,
@@ -19597,10 +16832,10 @@
           }
         },
         "7-10": {
-          "total": 113,
+          "total": 114,
           "tier": "HIGH",
           "byType": {
-            "calc": 113
+            "calc": 114
           }
         }
       },
@@ -19646,17 +16881,17 @@
       "kpId": "math-g5-c7-extract-common-factor",
       "grade": 5,
       "subject": "math",
-      "total": 124,
+      "total": 123,
       "tier": "HIGH",
       "byType": {
-        "calc": 124
+        "calc": 123
       },
       "byDifficulty": {
         "1-3": {
-          "total": 124,
+          "total": 123,
           "tier": "HIGH",
           "byType": {
-            "calc": 124
+            "calc": 123
           }
         },
         "4-6": {
@@ -19671,41 +16906,6 @@
           "tier": "HIGH",
           "byType": {
             "calc": 124
-          }
-        }
-      },
-      "limited": false,
-      "limitedKind": null
-    },
-    "math-g5-c7-arithmetic-series": {
-      "kpId": "math-g5-c7-arithmetic-series",
-      "grade": 5,
-      "subject": "math",
-      "total": 81,
-      "tier": "HIGH",
-      "byType": {
-        "apply": 81
-      },
-      "byDifficulty": {
-        "1-3": {
-          "total": 81,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 81
-          }
-        },
-        "4-6": {
-          "total": 81,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 81
-          }
-        },
-        "7-10": {
-          "total": 81,
-          "tier": "HIGH",
-          "byType": {
-            "apply": 81
           }
         }
       },
@@ -19772,45 +16972,3201 @@
           }
         },
         "7-10": {
-          "total": 124,
+          "total": 123,
           "tier": "HIGH",
           "byType": {
-            "calc": 124
+            "calc": 123
           }
         }
       },
       "limited": false,
       "limitedKind": null
     },
-    "math-g6-c7-arithmetic-series": {
-      "kpId": "math-g6-c7-arithmetic-series",
+    "math-g1-m1-addsub-whole-ten": {
+      "kpId": "math-g1-m1-addsub-whole-ten",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-digit-place": {
+      "kpId": "math-g1-m4-digit-place",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-adjacent-number": {
+      "kpId": "math-g1-m4-adjacent-number",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-number-chart": {
+      "kpId": "math-g1-m4-number-chart",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m7-picture-mixed": {
+      "kpId": "math-g1-m7-picture-mixed",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m10-g3-set": {
+      "kpId": "math-g3-m10-g3-set",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128,
+        "classify": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "classify": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "classify": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "classify": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-compose-number": {
+      "kpId": "math-g1-m4-compose-number",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-compare-number": {
+      "kpId": "math-g1-m4-compare-number",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-100-compose": {
+      "kpId": "math-g1-m4-100-compose",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-add-total": {
+      "kpId": "math-g1-m8-add-total",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m0-make-ten": {
+      "kpId": "math-g1-m0-make-ten",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m0-make-ten-ping": {
+      "kpId": "math-g1-m0-make-ten-ping",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m0-make-ten-po": {
+      "kpId": "math-g1-m0-make-ten-po",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-carry-add-20": {
+      "kpId": "math-g1-m1-carry-add-20",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-retreat-sub-20": {
+      "kpId": "math-g1-m1-retreat-sub-20",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-addsub-100": {
+      "kpId": "math-g1-m1-addsub-100",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-two-digit-add": {
+      "kpId": "math-g1-m1-two-digit-add",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-mixed-chain": {
+      "kpId": "math-g1-m1-mixed-chain",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-oral-carry": {
+      "kpId": "math-g1-m1-oral-carry",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-oral-retreat": {
+      "kpId": "math-g1-m1-oral-retreat",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-pen-add": {
+      "kpId": "math-g1-m1-pen-add",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-pen-sub": {
+      "kpId": "math-g1-m1-pen-sub",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-count-quantity": {
+      "kpId": "math-g1-m4-count-quantity",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128,
+        "classify": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128,
+            "classify": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128,
+            "classify": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128,
+            "classify": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m7-picture-add": {
+      "kpId": "math-g1-m7-picture-add",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m7-picture-sub": {
+      "kpId": "math-g1-m7-picture-sub",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m7-brace-question": {
+      "kpId": "math-g1-m7-brace-question",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 128,
+        "choice": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "choice": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-sub-remain": {
+      "kpId": "math-g1-m8-sub-remain",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-sub-part": {
+      "kpId": "math-g1-m8-sub-part",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128,
+        "fill": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "fill": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "fill": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "fill": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-exclude-extra": {
+      "kpId": "math-g1-m8-exclude-extra",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 128,
+        "choice": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "choice": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m1-mixed-two-step": {
+      "kpId": "math-g2-m1-mixed-two-step",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g2-m5-match-calc": {
+      "kpId": "math-g2-m5-match-calc",
+      "grade": 2,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m1-g3-mul-2digit": {
+      "kpId": "math-g3-m1-g3-mul-2digit",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m8-g3-times": {
+      "kpId": "math-g3-m8-g3-times",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m9-g3-stats-table": {
+      "kpId": "math-g3-m9-g3-stats-table",
+      "grade": 3,
+      "subject": "math",
+      "total": 4,
+      "tier": "LOW",
+      "byType": {
+        "apply": 4,
+        "classify": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 4,
+          "tier": "LOW",
+          "byType": {
+            "apply": 4,
+            "classify": 128
+          }
+        },
+        "4-6": {
+          "total": 4,
+          "tier": "LOW",
+          "byType": {
+            "apply": 4,
+            "classify": 128
+          }
+        },
+        "7-10": {
+          "total": 4,
+          "tier": "LOW",
+          "byType": {
+            "apply": 4,
+            "classify": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m10-g3-combination": {
+      "kpId": "math-g3-m10-g3-combination",
+      "grade": 3,
+      "subject": "math",
+      "total": 16,
+      "tier": "MEDIUM",
+      "byType": {
+        "apply": 16,
+        "classify": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 16,
+          "tier": "MEDIUM",
+          "byType": {
+            "apply": 16,
+            "classify": 128
+          }
+        },
+        "4-6": {
+          "total": 16,
+          "tier": "MEDIUM",
+          "byType": {
+            "apply": 16,
+            "classify": 128
+          }
+        },
+        "7-10": {
+          "total": 16,
+          "tier": "MEDIUM",
+          "byType": {
+            "apply": 16,
+            "classify": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m2-g4-v-mul3x2": {
+      "kpId": "math-g4-m2-g4-v-mul3x2",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m2-g4-v-mulzero": {
+      "kpId": "math-g4-m2-g4-v-mulzero",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m2-g4-v-dec": {
+      "kpId": "math-g4-m2-g4-v-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m3-g4-mix-dist": {
+      "kpId": "math-g4-m3-g4-mix-dist",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m3-g4-mix-dec": {
+      "kpId": "math-g4-m3-g4-mix-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m4-g4-fill-quotient": {
+      "kpId": "math-g4-m4-g4-fill-quotient",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m4-g4-fill-dec": {
+      "kpId": "math-g4-m4-g4-fill-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m11-g4-judge-dec": {
+      "kpId": "math-g4-m11-g4-judge-dec",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g4-m12-g4-choice-est": {
+      "kpId": "math-g4-m12-g4-choice-est",
+      "grade": 4,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m1-g5-oral-fracadd": {
+      "kpId": "math-g5-m1-g5-oral-fracadd",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m1-g5-oral-equ": {
+      "kpId": "math-g5-m1-g5-oral-equ",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m3-g5-mix-decmixed": {
+      "kpId": "math-g5-m3-g5-mix-decmixed",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m3-g5-mix-fracmixed": {
+      "kpId": "math-g5-m3-g5-mix-fracmixed",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m3-g5-mix-decsimple": {
+      "kpId": "math-g5-m3-g5-mix-decsimple",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m3-g5-mix-fracsimple": {
+      "kpId": "math-g5-m3-g5-mix-fracsimple",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-decloc": {
+      "kpId": "math-g5-m4-g5-fill-decloc",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-deccmp": {
+      "kpId": "math-g5-m4-g5-fill-deccmp",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m11-g5-judge-decmul": {
+      "kpId": "math-g5-m11-g5-judge-decmul",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m12-g5-choice-decmul": {
+      "kpId": "math-g5-m12-g5-choice-decmul",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m2-g6-calc-dec-div": {
+      "kpId": "math-g6-m2-g6-calc-dec-div",
       "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m3-g6-mixed-frac-simple": {
+      "kpId": "math-g6-m3-g6-mixed-frac-simple",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m4-g6-fill-negative": {
+      "kpId": "math-g6-m4-g6-fill-negative",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m11-g6-judge-negative": {
+      "kpId": "math-g6-m11-g6-judge-negative",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g6-m12-g6-choice-negative": {
+      "kpId": "math-g6-m12-g6-choice-negative",
+      "grade": 6,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-num-fill-unknown": {
+      "kpId": "math-g1-m4-num-fill-unknown",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m4-g3-fracadd": {
+      "kpId": "math-g3-m4-g3-fracadd",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0,
+        "fill": 128,
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0,
+            "fill": 128,
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0,
+            "fill": 128,
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0,
+            "fill": 128,
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g5-m4-g5-fill-letter": {
+      "kpId": "math-g5-m4-g5-fill-letter",
+      "grade": 5,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128,
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128,
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128,
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128,
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m6-position": {
+      "kpId": "math-g1-m6-position",
+      "grade": 1,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "judge": 128,
+        "calc": 0,
+        "choice": 1
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0,
+            "choice": 1
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0,
+            "choice": 1
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "judge": 128,
+            "calc": 0,
+            "choice": 1
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g3-m10-g3-code": {
+      "kpId": "math-g3-m10-g3-code",
+      "grade": 3,
+      "subject": "math",
+      "total": 128,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 128,
+        "choice": 128,
+        "judge": 4
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128,
+            "judge": 4
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128,
+            "judge": 4
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128,
+            "judge": 4
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-addsub-5": {
+      "kpId": "math-g1-m1-addsub-5",
+      "grade": 1,
+      "subject": "math",
+      "total": 15,
+      "tier": "MEDIUM",
+      "byType": {
+        "calc": 15,
+        "fill": 15
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 15,
+          "tier": "MEDIUM",
+          "byType": {
+            "calc": 15,
+            "fill": 15
+          }
+        },
+        "4-6": {
+          "total": 15,
+          "tier": "MEDIUM",
+          "byType": {
+            "calc": 15,
+            "fill": 15
+          }
+        },
+        "7-10": {
+          "total": 15,
+          "tier": "MEDIUM",
+          "byType": {
+            "calc": 15,
+            "fill": 15
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m6-solid-shape": {
+      "kpId": "math-g1-m6-solid-shape",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "choice": 1,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        }
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g1-m6-flat-shape": {
+      "kpId": "math-g1-m6-flat-shape",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "choice": 1,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        }
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g1-m6-count-graph": {
+      "kpId": "math-g1-m6-count-graph",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "fill": 1,
+        "choice": 1
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "fill": 1,
+            "choice": 1
+          }
+        },
+        "4-6": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "fill": 1,
+            "choice": 1
+          }
+        },
+        "7-10": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "fill": 1,
+            "choice": 1
+          }
+        }
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g1-m6-shape-combine": {
+      "kpId": "math-g1-m6-shape-combine",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "choice": 1,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        }
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g1-m6-draw-shape": {
+      "kpId": "math-g1-m6-draw-shape",
+      "grade": 1,
+      "subject": "math",
+      "total": 1,
+      "tier": "VERY_LOW",
+      "byType": {
+        "choice": 1,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 1,
+          "tier": "VERY_LOW",
+          "byType": {
+            "choice": 1,
+            "calc": 0
+          }
+        }
+      },
+      "limited": true,
+      "limitedKind": "EXPECTED_LIMITED"
+    },
+    "math-g3-m8-g3-equivalent": {
+      "kpId": "math-g3-m8-g3-equivalent",
+      "grade": 3,
+      "subject": "math",
+      "total": 6,
+      "tier": "LOW",
+      "byType": {
+        "fill": 6,
+        "choice": 6,
+        "apply": 128
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 6,
+          "tier": "LOW",
+          "byType": {
+            "fill": 6,
+            "choice": 6,
+            "apply": 128
+          }
+        },
+        "4-6": {
+          "total": 6,
+          "tier": "LOW",
+          "byType": {
+            "fill": 6,
+            "choice": 6,
+            "apply": 128
+          }
+        },
+        "7-10": {
+          "total": 6,
+          "tier": "LOW",
+          "byType": {
+            "fill": 6,
+            "choice": 6,
+            "apply": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-zero": {
+      "kpId": "math-g1-m4-zero",
+      "grade": 1,
+      "subject": "math",
+      "total": 15,
+      "tier": "MEDIUM",
+      "byType": {
+        "fill": 15,
+        "choice": 30
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 15,
+          "tier": "MEDIUM",
+          "byType": {
+            "fill": 15,
+            "choice": 30
+          }
+        },
+        "4-6": {
+          "total": 118,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 118,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 112,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 112,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m13-multiplication-table": {
+      "kpId": "math-g1-m13-multiplication-table",
+      "grade": 1,
+      "subject": "math",
+      "total": 45,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 45,
+        "calc": 45
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 45,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 45,
+            "calc": 45
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "calc": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "calc": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-addsub-10": {
+      "kpId": "math-g1-m1-addsub-10",
+      "grade": 1,
+      "subject": "math",
+      "total": 55,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 55,
+        "fill": 55
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 55,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 55,
+            "fill": 55
+          }
+        },
+        "4-6": {
+          "total": 55,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 55,
+            "fill": 55
+          }
+        },
+        "7-10": {
+          "total": 55,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 55,
+            "fill": 55
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-rmb-calc": {
+      "kpId": "math-g1-m4-rmb-calc",
+      "grade": 1,
+      "subject": "math",
+      "total": 3,
+      "tier": "LOW",
+      "byType": {
+        "fill": 3,
+        "calc": 0,
+        "apply": 84
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 3,
+          "tier": "LOW",
+          "byType": {
+            "fill": 3,
+            "calc": 0,
+            "apply": 84
+          }
+        },
+        "4-6": {
+          "total": 3,
+          "tier": "LOW",
+          "byType": {
+            "fill": 3,
+            "calc": 0,
+            "apply": 84
+          }
+        },
+        "7-10": {
+          "total": 3,
+          "tier": "LOW",
+          "byType": {
+            "fill": 3,
+            "calc": 0,
+            "apply": 84
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m8-rmb-shopping": {
+      "kpId": "math-g1-m8-rmb-shopping",
+      "grade": 1,
+      "subject": "math",
+      "total": 84,
+      "tier": "HIGH",
+      "byType": {
+        "apply": 84,
+        "calc": 0
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 84,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 84,
+            "calc": 0
+          }
+        },
+        "4-6": {
+          "total": 84,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 84,
+            "calc": 0
+          }
+        },
+        "7-10": {
+          "total": 84,
+          "tier": "HIGH",
+          "byType": {
+            "apply": 84,
+            "calc": 0
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-ordinal": {
+      "kpId": "math-g1-m4-ordinal",
+      "grade": 1,
+      "subject": "math",
+      "total": 55,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 55,
+        "choice": 110
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 55,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 55,
+            "choice": 110
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m13-division-table": {
+      "kpId": "math-g1-m13-division-table",
+      "grade": 1,
       "subject": "math",
       "total": 81,
       "tier": "HIGH",
       "byType": {
-        "apply": 81
+        "fill": 81,
+        "calc": 81
       },
       "byDifficulty": {
         "1-3": {
           "total": 81,
           "tier": "HIGH",
           "byType": {
-            "apply": 81
+            "fill": 81,
+            "calc": 81
           }
         },
         "4-6": {
-          "total": 81,
+          "total": 128,
           "tier": "HIGH",
           "byType": {
-            "apply": 81
+            "fill": 128,
+            "calc": 128
           }
         },
         "7-10": {
-          "total": 81,
+          "total": 128,
           "tier": "HIGH",
           "byType": {
-            "apply": 81
+            "fill": 128,
+            "calc": 128
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m1-add-11-20": {
+      "kpId": "math-g1-m1-add-11-20",
+      "grade": 1,
+      "subject": "math",
+      "total": 66,
+      "tier": "HIGH",
+      "byType": {
+        "calc": 66,
+        "fill": 66
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 66,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 66,
+            "fill": 66
+          }
+        },
+        "4-6": {
+          "total": 66,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 66,
+            "fill": 66
+          }
+        },
+        "7-10": {
+          "total": 66,
+          "tier": "HIGH",
+          "byType": {
+            "calc": 66,
+            "fill": 66
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-rmb-unit": {
+      "kpId": "math-g1-m4-rmb-unit",
+      "grade": 1,
+      "subject": "math",
+      "total": 59,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 59,
+        "choice": 56
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 59,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 59,
+            "choice": 56
+          }
+        },
+        "4-6": {
+          "total": 59,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 59,
+            "choice": 56
+          }
+        },
+        "7-10": {
+          "total": 59,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 59,
+            "choice": 56
+          }
+        }
+      },
+      "limited": false,
+      "limitedKind": null
+    },
+    "math-g1-m4-num-11-20": {
+      "kpId": "math-g1-m4-num-11-20",
+      "grade": 1,
+      "subject": "math",
+      "total": 55,
+      "tier": "HIGH",
+      "byType": {
+        "fill": 55,
+        "choice": 110
+      },
+      "byDifficulty": {
+        "1-3": {
+          "total": 55,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 55,
+            "choice": 110
+          }
+        },
+        "4-6": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
+          }
+        },
+        "7-10": {
+          "total": 128,
+          "tier": "HIGH",
+          "byType": {
+            "fill": 128,
+            "choice": 128
           }
         }
       },

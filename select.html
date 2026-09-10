@@ -662,14 +662,9 @@
     return out;
   }
   var TYPE_LABEL = {
-    oral: '口算', calc: '计算', fill: '填空', choice: '选择', judge: '判断',
-    apply: '应用', open: '开放', geometry: '几何', recognize: '认读'
+    calc: '计算', fill: '填空', choice: '选择', judge: '判断',
+    apply: '应用', geometry: '作图', classify: '分类'
   };
-
-  function moduleTypeCards(subject, grade) {
-    // 已废弃：模块分组逻辑已删除，改用 unitBuckets 按教材单元分组（知识点驱动）
-    return [];
-  }
 
   // 快速模式/教师模式共用：知识点是否命中某类题型（按 applicable_question_types 能力匹配，数据驱动）
   function kpMatchesType(kp, typeDef) {

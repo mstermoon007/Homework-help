@@ -182,7 +182,8 @@
       var kpBudget = BudgetAllocation.allocateKpTypeBudget({
         typeCounts: alloc.typeCounts,
         kps: kpIds,
-        eligibleKpsForType: (ev.eligibility && ev.eligibility.eligibleKpsForType) || null
+        eligibleKpsForType: (ev.eligibility && ev.eligibility.eligibleKpsForType) || null,
+        allowedKpsForType: (ev.eligibility && ev.eligibility.allowedKpsForType) || null
       });
 
       var genReq = Object.assign({}, req, {

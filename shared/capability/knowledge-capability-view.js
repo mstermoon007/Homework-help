@@ -66,7 +66,9 @@
 
     var matrix = {};
     var eligibleKpsForType = {};
+    var allowedKpsForType = {};
     var skip = {};
+    var $allow = {}, $degrade = {};
 
     kps.forEach(function (kp) {
       var row = {};
@@ -84,9 +86,12 @@
           }
         }
         row[qt] = decision;
-        if (isEligible(decision)) {
-          if (!eligibleKpsForType[qt]) eligibleKpsForType[qt] = [];
-          if (eligibleKpsForType[qt].indexOf(kp) === -1) eligibleKpsForType[qt].push(kp);
+        if (decision === 'ALLOW') {
+          if (!$allow[qt]) $allow[qt] = [];
+          if ($allow[qt].indexOf(kp) === -1) $allow[qt].push(kp);
+        } else if (decision === 'DEGRADE') {
+          if (!$degrade[qt]) $degrade[qt] = [];
+          if ($degrade[qt].indexOf(kp) === -1) $degrade[qt].push(kp);
         } else {
           if (!skip[kp]) skip[kp] = [];
           if (skip[kp].indexOf(qt) === -1) skip[kp].push(qt);
@@ -95,7 +100,14 @@
       matrix[kp] = row;
     });
 
-    return { matrix: matrix, eligibleKpsForType: eligibleKpsForType, skip: skip, resolvable: true };
+    qts.forEach(function (qt) {
+      // 按决策强度排序：ALLOW（强）在前，DEGRADE（弱）在后——
+      // 供 KP×题型 预算均匀分摊时优先落在「真正支持该题型」的 KP（§24 二维预算）。
+      allowedKpsForType[qt] = ($allow[qt] || []).slice();
+      eligibleKpsForType[qt] = ($allow[qt] || []).concat($degrade[qt] || []);
+    });
+
+    return { matrix: matrix, eligibleKpsForType: eligibleKpsForType, allowedKpsForType: allowedKpsForType, skip: skip, resolvable: true };
   }
 
   /**
