@@ -2,7 +2,7 @@
 'use strict';
 /**
  * ============================================================
- * 真实用户流程 E2E（test/e2e-real-flow.js）
+ * 真实用户流程 E2E（tests/e2e/e2e-real-flow.js）
  * ============================================================
  * 测试对象：用户真实操作链 ——
  *   首页（科目 + 年级一步选完）→ 题目卡页（搜索/筛选/勾选知识点）→ 进入练习
@@ -17,7 +17,7 @@
  *     等价于用户点击后的到达页（headless 环境不支持页面内 location 赋值导航，见 README 注）。
  *  4. 覆盖验收矩阵：正常流程 / 错误参数 / 刷新 / 返回 / 直接访问 / 打印 / 移动端。
  *
- * 用法：node test/e2e-real-flow.js
+ * 用法：node tests/e2e/e2e-real-flow.js
  * 退出码：0=全过，1=有失败
  *
  * ⚠️ 关键陷阱（已踩坑并修复）：
@@ -38,7 +38,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '../..');
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.webp': 'image/webp',

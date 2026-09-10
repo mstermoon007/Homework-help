@@ -88,8 +88,6 @@ Homework-help/
 ├── practice.html           # 统一练习页（生成/作答/批改/打印/错题本/计时）
 ├── faq.html / contact.html # 常见问题 / 问题反馈
 ├── sw.js                   # Service Worker 离线缓存
-├── 技术文档--基础.md        # 引擎技术文档（架构/模块/契约/规范/门禁/决策）
-├── 设计文档.md              # 设计计划与 UI 层设计说明
 ├── shared/                 # 唯一公共来源（single source of truth）+ Frozen Core
 │   ├── common.js / core.js # 聚合入口 + PluginUtil（crypto 随机/标准化）/ normalizeAns
 │   ├── render.js / check.js / print.js        # 题卡渲染 / 批改 / 打印路由
@@ -106,16 +104,16 @@ Homework-help/
 ├── architecture/layers.json# 权威四层架构机器清单
 ├── dev/                    # 校验/门禁/lint/bundle 脚本
 ├── scripts/                # 代码生成（knowledge 页/sitemap/JSON-LD/SW 版本同步）
-├── test/ + tests/          # node:test 单元/契约测试（274 用例）
-└── docs/                   # 文档：DEV_LOG.md（开发日志）
+├── tests/                  # node:test 单元/契约/E2E/集成测试（按域分组）
+└── docs/                   # 文档：技术文档--基础.md / 设计文档.md / DEV_LOG.md / 知识层架构与7类题型模型.md
 ```
 
 ---
 
 ## 🧑‍💻 开发与贡献
 
-- 📘 [技术文档--基础.md](技术文档--基础.md)：引擎架构、四层归类、运行时模块、知识库契约、开发规范、Frozen Core、质量门禁与设计决策（ADR）。
-- 📐 [设计文档.md](设计文档.md)：设计目标与已落地设计计划、UI 层设计说明（页面流程、练习页、视觉令牌、打印、离线、SEO）。
+- 📘 [技术文档--基础.md](docs/技术文档--基础.md)：引擎架构、四层归类、运行时模块、知识库契约、开发规范、Frozen Core、质量门禁与设计决策（ADR）。
+- 📐 [设计文档.md](docs/设计文档.md)：设计目标与已落地设计计划、UI 层设计说明（页面流程、练习页、视觉令牌、打印、离线、SEO）。
 - 📝 [docs/DEV_LOG.md](docs/DEV_LOG.md)：版本演进与开发日志流水。
 
 常用开发命令：

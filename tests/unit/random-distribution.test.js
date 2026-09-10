@@ -1,4 +1,4 @@
-// test/random-distribution.test.js
+// tests/unit/random-distribution.test.js
 // 任务 4.3：randInt 随机源分布测试
 //   - 验证 crypto.getRandomValues 路径的均匀性（卡方检验）
 //   - 验证可注入随机源（rng）的确定性与无类型转换偏差
@@ -6,7 +6,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert');
-const PU = require('../shared/core/common.js');
+const PU = require('../../shared/core/common.js');
 const randInt = PU.randInt;
 const randFloat = PU.randFloat;
 

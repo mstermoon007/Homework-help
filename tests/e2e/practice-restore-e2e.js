@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /* practice.html 恢复验收：jsdom 全链路闭环测试
  * 覆盖：页面加载 / URL 解析 / 题目生成 / 渲染 / 答题 / 批改 / 错题 / 打印 / 自适应
- * 运行：node test/practice-restore-e2e.js  （需先 npm i jsdom 于隔离 workspace）
+ * 运行：node tests/e2e/practice-restore-e2e.js  （需先 npm i jsdom 于隔离 workspace）
  */
 'use strict';
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(__dirname, '../..');
 const PORT = 8765;
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.webp': 'image/webp' };
 

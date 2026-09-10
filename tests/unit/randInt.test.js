@@ -1,4 +1,4 @@
-// test/unit/randInt.test.js
+// tests/unit/randInt.test.js
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert');
