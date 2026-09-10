@@ -31,6 +31,24 @@ var path = require('path');
 var ROOT = path.resolve(__dirname, '..', '..');
 var CACHE_FILE = path.join(__dirname, 'capacity-map.json');
 
+// 难度分桶（P0-02：Capacity 与用户难度同维度）。
+// 每桶以代表性难度采样（1-3→2，4-6→5，7-10→8）；10 满难度并入 7-10 桶。
+var DIFFICULTY_BUCKETS = [
+  { key: '1-3', min: 1, max: 3, sample: 2 },
+  { key: '4-6', min: 4, max: 6, sample: 5 },
+  { key: '7-10', min: 7, max: 10, sample: 8 }
+];
+
+function difficultyBucket(d) {
+  var n = Number(d);
+  if (!isFinite(n) || n < 1) n = 1;
+  if (n > 10) n = 10;
+  for (var i = 0; i < DIFFICULTY_BUCKETS.length; i++) {
+    if (n >= DIFFICULTY_BUCKETS[i].min && n <= DIFFICULTY_BUCKETS[i].max) return DIFFICULTY_BUCKETS[i].key;
+  }
+  return '1-3';
+}
+
 // 引导生成层（仅扫描时需要）
 function bootstrap() {
   [
@@ -95,23 +113,34 @@ function allMathKps(KB) {
 }
 
 /**
- * 扫描全部 math KP 的有效容量。
- * @param {Object} [opts] { count=128, refresh=true }
- * @returns {Object} capacityMap: { kpId: {kpId,grade,subject,total,tier,byType,limited,limitedKind} }
+ * 扫描全部 math KP 的有效容量（按难度分桶）。
+ * @param {Object} [opts] { count=128, refresh=true, difficulties=[2,5,8] | [1..10] }
+ *   difficulties 传 null/[] 时仅扫 1-3 桶（与旧版行为一致，顶层字段即该桶）。
+ * @returns {Object} capacityMap:
+ *   map[kpId] = {
+ *     kpId, grade, subject,
+ *     total, tier, byType,           // 顶层 = 1-3 桶代表值（向后兼容）
+ *     byDifficulty: { '1-3': {total,tier,byType}, '4-6': {...}, '7-10': {...} },
+ *     limited, limitedKind
+ *   }
  */
 function scan(opts) {
   opts = opts || {};
   var COUNT = opts.count || 128;
+  var samples = Array.isArray(opts.difficulties) && opts.difficulties.length
+    ? opts.difficulties.slice()
+    : DIFFICULTY_BUCKETS.map(function (b) { return b.sample; });
   var mods = bootstrap();
   var GE = mods.GE, KB = mods.KB;
   var kps = allMathKps(KB);
   var map = {};
-  var promises = kps.map(function (entry) {
+
+  function scanKp(entry, difficulty) {
     var byType = {};
     var p;
     try {
-      // 单 KP 模式，请求大数；R1 后 PARTIAL 可交付真实容量（去重后有效题数）。
-      p = GE.generate({ knowledgePointIds: [entry.kpId], mode: 'single-kp', grade: entry.grade, count: COUNT, difficulty: 3 }, {});
+      // 单 KP 模式，请求大数；以该难度真实产出（去重后有效题数）作为该桶容量。
+      p = GE.generate({ knowledgePointIds: [entry.kpId], mode: 'single-kp', grade: entry.grade, count: COUNT, difficulty: difficulty }, {});
     } catch (e) {
       p = Promise.resolve(null);
     }
@@ -121,15 +150,31 @@ function scan(opts) {
         var t = q.questionType || 'unknown';
         byType[t] = (byType[t] || 0) + 1;
       });
-      commit(entry, qs.length, byType, map);
+      return { total: qs.length, byType: byType };
     }).catch(function () {
-      commit(entry, 0, byType, map);
+      return { total: 0, byType: byType };
     });
+  }
+
+  var guard = 0;
+  var promises = kps.map(function (entry) {
+    if (++guard > 2000) return Promise.resolve();
+    return Promise.all(samples.map(function (d) { return scanKp(entry, d); }))
+      .then(function (resList) {
+        var byDifficulty = {};
+        resList.forEach(function (res, i) {
+          var key = difficultyBucket(samples[i]);
+          // 同桶若被多采样点命中，取后写覆盖（抽样代表性一致）
+          byDifficulty[key] = { total: res.total, tier: tierOf(res.total), byType: res.byType };
+        });
+        var base = byDifficulty[difficultyBucket(samples[0])] || byDifficulty['1-3'] || { total: 0, tier: 'ZERO', byType: {} };
+        commit(entry, base.total, base.byType, map, byDifficulty);
+      });
   });
   return Promise.all(promises).then(function () { return map; });
 }
 
-function commit(entry, cap, byType, map) {
+function commit(entry, cap, byType, map, byDifficulty) {
   var tier = tierOf(cap);
   var limited = cap <= 2;
   map[entry.kpId] = {
@@ -139,6 +184,7 @@ function commit(entry, cap, byType, map) {
     total: cap,
     tier: tier,
     byType: byType,
+    byDifficulty: byDifficulty || null,
     limited: limited,
     limitedKind: limited ? classifyLimited(entry.kpId, cap, byType) : null
   };
@@ -181,11 +227,30 @@ function collapseReport(map) {
   return buckets;
 }
 
+/**
+ * 取某 KP 在指定用户难度下的容量条目（按难度分桶；无分桶缓存时回退顶层代表值）。
+ * @param {Object} map capacityMap
+ * @param {string} kpId
+ * @param {number} [difficulty] 1-10，默认 3
+ * @returns {{total:number,tier:string,byType:Object}|null}
+ */
+function getCapacityFor(map, kpId, difficulty) {
+  if (!map) return null;
+  var e = map[kpId];
+  if (!e) return null;
+  var key = difficultyBucket(difficulty);
+  if (e.byDifficulty && e.byDifficulty[key]) return e.byDifficulty[key];
+  return { total: e.total, tier: e.tier, byType: e.byType || {} };
+}
+
 module.exports = {
   scan: scan,
   getCapacityMap: getCapacityMap,
   collapseReport: collapseReport,
   tierOf: tierOf,
   classifyLimited: classifyLimited,
+  difficultyBucket: difficultyBucket,
+  getCapacityFor: getCapacityFor,
+  DIFFICULTY_BUCKETS: DIFFICULTY_BUCKETS,
   CACHE_FILE: CACHE_FILE
 };

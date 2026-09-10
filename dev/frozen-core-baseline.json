@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T15:33:45.086Z",
+  "generatedAt": "2026-09-10T07:56:51.589Z",
   "version": "1.0",
   "files": {
     "shared/core/common.js": {
@@ -48,9 +48,9 @@
       "mtime": 1788958124660.1907
     },
     "shared/knowledge/knowledge-bank.js": {
-      "hash": "985c073fe37e9643",
-      "size": 10112,
-      "mtime": 1788958169120.3901
+      "hash": "ad2c808d6429e24b",
+      "size": 10529,
+      "mtime": 1789026163112.482
     },
     "shared/knowledge/knowledge-ontology.js": {
       "hash": "04045d1445253ff4",
@@ -73,9 +73,9 @@
       "mtime": 1788958169097.1118
     },
     "shared/capability/capability-resolver.js": {
-      "hash": "31428c4cb2ac2732",
-      "size": 4458,
-      "mtime": 1788958169098.4365
+      "hash": "87c73a3b7334f17e",
+      "size": 4777,
+      "mtime": 1789026423804.882
     },
     "shared/knowledge/question-type-registry.js": {
       "hash": "d07bf986b2e9d5ea",

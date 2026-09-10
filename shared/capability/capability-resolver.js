@@ -27,9 +27,13 @@ var KnowledgePoint = require('../knowledge/knowledge-point.js');
 var CapabilityModel = require('./capability-model.js');
 var Matrix = require('./capability-matrix.js');
 
-function resolve(canonicalKp) {
+function resolve(kp) {
   // canonicalKp 已经是 Canonical KP，直接从 presentation.questionTypes 和 generation.capabilities 推导
-  return CapabilityModel.resolveCapability(canonicalKp);
+  // 防御：传入 raw legacy KP 时（gate / KB.getCapabilities / 浏览器深链）先归一化，保证能力来源一致
+  if (kp && !kp.presentation && (kp.applicable_question_types || kp.grade || kp.modules)) {
+    try { kp = Ontology.normalize(kp); } catch (e) { /* 保持原样，由 resolveCapability 兜底空结果 */ }
+  }
+  return CapabilityModel.resolveCapability(kp);
 }
 
 function canGenerate(kpId, qtId) {

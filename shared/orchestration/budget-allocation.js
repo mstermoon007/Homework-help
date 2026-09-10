@@ -139,9 +139,79 @@
     return { typeCounts: typeCounts, appliedTotal: appliedTotal };
   }
 
+  /**
+   * 题型配额在 KP 之间均衡分摊（P0-05：Type Budget + KP Budget → GenerationTask[]）。
+   * 纯函数：把某题型 count 平摊到给定 KPs（round-robin，每轮给当前最少的 KP +1，
+   * 剩余不足均分时按序补 1）。eligible 列表代表「该题型可行 KP」；为空时按全部 KPs 兜底，
+   * 保证预算量守恒（Σ cells.count === count）。
+   * @param {Object} args { questionType, count, kps, eligible }
+   * @returns {Array<{kpId:string,questionType:string,count:number}>} count>0 的 cell
+   */
+  function cellsForType(args) {
+    var type = args && args.questionType;
+    var count = args && args.count != null ? Math.max(0, Math.floor(Number(args.count) || 0)) : 0;
+    var kps = (args && Array.isArray(args.kps)) ? args.kps.filter(Boolean) : [];
+    var eligible = (args && Array.isArray(args.eligible)) ? args.eligible.filter(Boolean) : [];
+    if (!type || !kps.length || count <= 0) return [];
+
+    // eligible 内的 KP 优先；无 eligible 信息时全 KP 兜底（不因缺数据吞预算）
+    var pool = eligible.length ? eligible : kps;
+    var alloc = {};
+    pool.forEach(function (kp) { alloc[kp] = 0; });
+
+    var remaining = count;
+    var guard = count + pool.length + 1;
+    while (remaining > 0 && guard-- > 0) {
+      var pick = -1, minVal = Infinity;
+      for (var i = 0; i < pool.length; i++) {
+        var k = pool[i];
+        if (alloc[k] < minVal) { minVal = alloc[k]; pick = k; }
+      }
+      if (pick === -1) break;
+      alloc[pick] += 1;
+      remaining -= 1;
+    }
+    var cells = [];
+    pool.forEach(function (kp) {
+      if (alloc[kp] > 0) cells.push({ kpId: kp, questionType: type, count: alloc[kp] });
+    });
+    return cells;
+  }
+
+  /**
+   * Type Budget + KP Budget → GenerationTask[]（二维预算，P0-05）。
+   * 在 allocateTypeBudgets 得到的 typeCounts 之上，把每题型配额分摊到可行 KPs，
+   * 产出最终执行单元 cell（kpId × questionType × count）。
+   * @param {Object} args
+   *   typeCounts          : [{questionType,count}]   （allocateTypeBudgets 输出）
+   *   kps                 : [kpId]                   用户选区 KP
+   *   eligibleKpsForType  : { qt: [kpId] }           （knowledge-capability-view 输出）
+   * @returns {{ cells:Array, kpDistribution:Object }} Σ cells.count === Σ typeCounts.count
+   */
+  function allocateKpTypeBudget(args) {
+    var typeCounts = (args && Array.isArray(args.typeCounts)) ? args.typeCounts.filter(function (e) { return e && e.count > 0; }) : [];
+    var kps = (args && Array.isArray(args.kps)) ? args.kps.filter(Boolean) : [];
+    var eligible = (args && args.eligibleKpsForType) || {};
+    var cells = [];
+    var dist = {};
+
+    typeCounts.forEach(function (tc) {
+      var el = Array.isArray(eligible[tc.questionType]) ? eligible[tc.questionType] : null;
+      var cs = cellsForType({ questionType: tc.questionType, count: tc.count, kps: kps, eligible: el || [] });
+      cs.forEach(function (c) {
+        cells.push(c);
+        dist[c.kpId] = (dist[c.kpId] || 0) + c.count;
+      });
+    });
+
+    return { cells: cells, kpDistribution: dist };
+  }
+
   var API = {
     allocateTypeBudgets: allocateTypeBudgets,
-    allocateRecovery: allocateRecovery
+    allocateRecovery: allocateRecovery,
+    cellsForType: cellsForType,
+    allocateKpTypeBudget: allocateKpTypeBudget
   };
 
   global.BudgetAllocation = API;

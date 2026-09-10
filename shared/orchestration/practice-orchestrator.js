@@ -88,19 +88,59 @@
     return ids;
   }
 
-  // ---------- 题型容量（来自 capacity map 的 byType 经验值；缺失按 Infinity） ----------
-  function computeTypeCaps(kpIds, capMap) {
+  // ---------- 题型容量（能力之外的上限；缺失按 Infinity） ----------
+  function getCapacityHelpers() {
+    var CI = null;
+    try { CI = require('../capacity/capacity-inventory.js'); } catch (e) {}
+    if (!CI && global.CapacityInventory) CI = global.CapacityInventory;
+    return CI;
+  }
+
+  /**
+   * 汇总候选 KPs 在「用户难度桶」下的逐题型容量上限。
+   * 维度对齐（P0-02）：Capacity 按难度分桶（1-3/4-6/7-10）查询，与用户 difficulty 同维度；
+   * 无法获取到对应桶（缓存旧/缺失）时回退该 KP 顶层代表容量。
+   * @param {string[]} kpIds
+   * @param {Object|null} capMap
+   * @param {number} difficulty
+   * @returns {Object} { type: capacity }
+   */
+  function capacityByType(kpIds, capMap, difficulty) {
     var caps = {};
+    if (!capMap || !capMap) return caps;
+    var CI = getCapacityHelpers();
     (kpIds || []).forEach(function (kp) {
-      var e = capMap && capMap[kp];
-      if (!e) return;
-      var byType = e.byType || {};
+      var entry = null;
+      if (CI && typeof CI.getCapacityFor === 'function') entry = CI.getCapacityFor(capMap, kp, difficulty);
+      if (!entry) {
+        var e = capMap[kp];
+        if (!e) return;
+        entry = { total: e.total, byType: e.byType || {} };
+      }
+      var byType = entry.byType || {};
       Object.keys(byType).forEach(function (t) {
         var c = byType[t];
         if (typeof c === 'number' && c > 0) caps[t] = (caps[t] || 0) + c;
       });
     });
     return caps;
+  }
+
+  // ---------- 能力判定（Capability ≠ Capacity） ----------
+  function getCapabilityView() {
+    try { return require('../capability/knowledge-capability-view.js'); } catch (e) {}
+    return (typeof global !== 'undefined' && global.KnowledgeCapabilityView) ? global.KnowledgeCapabilityView : null;
+  }
+
+  function eligibleTypesFor(kpIds, qts) {
+    var KCV = getCapabilityView();
+    if (!KCV || typeof KCV.buildEligibility !== 'function') {
+      return { feasible: qts.slice(), eligibility: null, skips: {} };
+    }
+    var eligibility = KCV.buildEligibility(kpIds, qts);
+    var feasible = KCV.eligibleTypes(eligibility, qts, kpIds);
+    if (!feasible.length) feasible = qts.slice(); // 兜底：能力信息缺失时不吞请求
+    return { feasible: feasible, eligibility: eligibility, skips: eligibility.skip || {} };
   }
 
   // ---------- 不反向 require 上层：plan 只用只读数据 + 纯分配 ----------
@@ -113,9 +153,19 @@
     }
     var qts = collectQuestionTypes(req);
     if (!qts.length) return Promise.resolve({ active: false, reason: 'no-types' });
+    // combine=true 属 StrategyEngine 单计划合并语义（多 KP 融合出题），
+    // POL 的按 cell 拆分会破坏其合并语义 → 透明回退到 execute（原行为回归保护）。
+
+    if (req.combine === true) return Promise.resolve({ active: false, reason: 'combine' });
 
     var count = req.count != null ? req.count : (req.volume != null ? req.volume : 20);
     count = Math.max(1, Math.floor(Number(count) || 20));
+
+    // 用户难度（P0-02 维度对齐）：0/空按中档；1-10 归入对应难度桶
+    var difficulty = req.difficulty != null ? Number(req.difficulty) : null;
+    if (difficulty == null && req.scope && req.scope.difficulty != null) difficulty = Number(req.scope.difficulty);
+    if (difficulty == null || !isFinite(difficulty) || difficulty < 1) difficulty = 3;
+    if (difficulty > 10) difficulty = 10;
 
     // 仅对「显式候选 KP + 题型」路径介入（即 v4.3.0 二级/三级页与知识点深链的实际链路）。
     // 池模式（无显式 KP）保持原行为不变，避免回归；其题型覆盖可作为后续扩展。
@@ -123,15 +173,20 @@
     if (!kpIds.length) return Promise.resolve({ active: false, reason: 'no-kp' });
 
     return getCapacityMapSafe().then(function (capMap) {
-      var typeCaps = computeTypeCaps(kpIds, capMap);
-      // 可行题型：题型容量 > 0；浏览器无 capacity map 时视为全部可行（由 recovery 兜底真实能力）
-      var hasCap = Object.keys(typeCaps).length > 0;
-      var feasibleTypes = qts.filter(function (t) { return !hasCap || (typeCaps[t] || 0) > 0; });
-      var allocTypes = feasibleTypes.length ? feasibleTypes : qts;
-      var alloc = BudgetAllocation.allocateTypeBudgets({ count: count, questionTypes: allocTypes, typeCaps: typeCaps });
+      var typeCaps = capacityByType(kpIds, capMap, difficulty);
+      // 可行题型 = 能力判定（eligible），不是容量（P0-03）；容量仅作预算封顶。
+      var ev = eligibleTypesFor(kpIds, qts);
+      var feasibleTypes = ev.feasible;
+      var alloc = BudgetAllocation.allocateTypeBudgets({ count: count, questionTypes: feasibleTypes, typeCaps: typeCaps });
+      // Type Budget + KP Budget → GenerationTask[]（P0-05）
+      var kpBudget = BudgetAllocation.allocateKpTypeBudget({
+        typeCounts: alloc.typeCounts,
+        kps: kpIds,
+        eligibleKpsForType: (ev.eligibility && ev.eligibility.eligibleKpsForType) || null
+      });
 
       var genReq = Object.assign({}, req, {
-        questionTypes: qts.slice(),
+        questionTypes: feasibleTypes.slice(),
         count: count,
         typeCounts: alloc.typeCounts,
         perTypeCount: null
@@ -146,6 +201,12 @@
         selectedTypes: qts.slice(),
         feasibleTypes: feasibleTypes,
         typeCaps: alloc.typeCaps,
+        kpTypeMatrix: kpBudget.cells,
+        kpDistribution: kpBudget.kpDistribution,
+        eligibleKpsForType: (ev.eligibility && ev.eligibility.eligibleKpsForType) || null,
+        kpIds: kpIds.slice(),
+        capabilitySkips: ev.skips,
+        difficulty: difficulty,
         plannedTotal: alloc.plannedTotal,
         coverageStatus: alloc.coverageStatus,
         reason: alloc.reason
@@ -204,14 +265,62 @@
       }
 
       var genReq = p.request;
-      return execute(genReq, assignOpts(options, { __noRender: true })).then(function (first) {
+
+      // Tools：按 cell（kpId × questionType × count）串行执行并聚合，绝不越界到选区外 KP。
+      function runCells(cells, prevSeen) {
         var acc = {
-          questions: (first.questions || []).slice(),
-          plans: (first.plans || []).slice(),
-          trace: mergeTrace(first.trace),
-          failedPlans: (first.failedPlans || []).slice(),
-          seenKeys: (first.seenKeys instanceof Set) ? first.seenKeys : new Set()
+          questions: [],
+          plans: [],
+          trace: {},
+          failedPlans: [],
+          seenKeys: (prevSeen instanceof Set) ? prevSeen : new Set()
         };
+        var coveredKps = [];
+        var chain = Promise.resolve();
+        cells.forEach(function (cell) {
+          chain = chain.then(function () {
+            // 白名单构造 cellReq：仅携带 cell 所需字段，绝不复用父请求的组合/规划级标志
+            // （combine/planLevel 等只属于多 KP 合并语义，single-kp cell 不得继承）。
+            var cellReq = {
+              subject: genReq.subject,
+              grade: genReq.grade,
+              mode: 'single-kp',
+              knowledgePointIds: [cell.kpId],
+              questionTypes: [cell.questionType],
+              typeCounts: [{ questionType: cell.questionType, count: cell.count }],
+              perTypeCount: null,
+              count: cell.count,
+              difficulty: genReq.difficulty,
+              selectLevel: genReq.selectLevel,
+              style: genReq.style,
+              expectedAnswerStyle: genReq.expectedAnswerStyle
+            };
+            return execute(cellReq, assignOpts(options, { __noRender: true, previousSeenKeys: acc.seenKeys }))
+              .then(function (add) {
+                // 先按批前 seenKeys 过滤新题，再吸收本批指纹（避免 add.seenKeys 含本批指纹时误判为重复）
+                var newOnes = [];
+                (add.questions || []).forEach(function (q) {
+                  var fp = q && q.questionFingerprint;
+                  if (fp && acc.seenKeys.has(fp)) return;
+                  if (fp) acc.seenKeys.add(fp);
+                  newOnes.push(q);
+                });
+                if (add && add.seenKeys) add.seenKeys.forEach(function (k) { acc.seenKeys.add(k); });
+                if (!newOnes.length) return;
+                acc.questions = acc.questions.concat(newOnes);
+                acc.plans = acc.plans.concat(add.plans || []);
+                acc.trace = mergeTrace(acc.trace, add.trace);
+                acc.failedPlans = acc.failedPlans.concat(add.failedPlans || []);
+                if (coveredKps.indexOf(cell.kpId) === -1) coveredKps.push(cell.kpId);
+              });
+          });
+        });
+        return chain.then(function () { return { acc: acc, coveredKps: coveredKps }; });
+      }
+
+      return runCells(p.kpTypeMatrix || [], new Set()).then(function (firstRun) {
+        var acc = firstRun.acc;
+        var coveredKps = firstRun.coveredKps;
         var requested = p.requestedCount;
         var produced = acc.questions.length;
         var recovered = 0;
@@ -225,36 +334,33 @@
           var deficit = requested - produced;
           var rec = BudgetAllocation.allocateRecovery({
             deficit: deficit,
-            questionTypes: p.selectedTypes,
+            questionTypes: p.feasibleTypes.length ? p.feasibleTypes : p.selectedTypes,
             typeCaps: p.typeCaps,
             produced: producedByType
           });
           if (!rec.typeCounts.length || rec.appliedTotal <= 0) return Promise.resolve();
-          // 缺口二次分配：count 收敛为本次缺口量，保证 planByType 守恒不变式（Σ typeCounts === count）
-          var recReq = Object.assign({}, genReq, {
-            typeCounts: rec.typeCounts,
-            perTypeCount: null,
-            count: rec.appliedTotal
+          // 缺口跨题型回收后，再按能力分摊回 KPs（Type+KP 双层仍守恒：Σ cells.count === appliedTotal）
+          var cells = [];
+          rec.typeCounts.forEach(function (tc) {
+            var eligible = (p.eligibleKpsForType && Array.isArray(p.eligibleKpsForType[tc.questionType]))
+              ? p.eligibleKpsForType[tc.questionType] : p.kpIds;
+            cells = cells.concat(BudgetAllocation.cellsForType({
+              questionType: tc.questionType, count: tc.count, kps: p.kpIds, eligible: eligible
+            }));
           });
-          return execute(recReq, assignOpts(options, { __noRender: true, previousSeenKeys: acc.seenKeys }))
-            .then(function (add) {
-              if (add.seenKeys) add.seenKeys.forEach(function (k) { acc.seenKeys.add(k); });
-              var newOnes = [];
-              (add.questions || []).forEach(function (q) {
-                var fp = q && q.questionFingerprint;
-                if (fp && acc.seenKeys.has(fp)) return;
-                if (fp) acc.seenKeys.add(fp);
-                newOnes.push(q);
-              });
-              if (!newOnes.length) return Promise.resolve(); // 无进展：终止，杜绝死循环
-              acc.questions = acc.questions.concat(newOnes);
-              acc.plans = acc.plans.concat(add.plans || []);
-              acc.trace = mergeTrace(acc.trace, add.trace);
-              acc.failedPlans = acc.failedPlans.concat(add.failedPlans || []);
-              produced = acc.questions.length;
-              recovered += newOnes.length;
-              return loop();
-            });
+          if (!cells.length) return Promise.resolve();
+          return runCells(cells, acc.seenKeys).then(function (run) {
+            var gained = run.acc.questions.length;
+            if (!gained) return Promise.resolve(); // 无进展：终止，杜绝死循环
+            acc.questions = acc.questions.concat(run.acc.questions);
+            acc.plans = acc.plans.concat(run.acc.plans);
+            acc.trace = mergeTrace(acc.trace, run.acc.trace);
+            acc.failedPlans = acc.failedPlans.concat(run.acc.failedPlans);
+            run.coveredKps.forEach(function (k) { if (coveredKps.indexOf(k) === -1) coveredKps.push(k); });
+            produced = acc.questions.length;
+            recovered += gained;
+            return loop();
+          });
         }
 
         return loop().then(function () {
@@ -262,6 +368,7 @@
           var producedByTypeFinal = PracticePlan.aggregateTypeDistribution(acc.questions);
           var covered = p.selectedTypes.filter(function (t) { return (producedByTypeFinal[t] || 0) > 0; });
           var exhaustedTypes = p.selectedTypes.filter(function (t) { return !(producedByTypeFinal[t] > 0); });
+          var exhaustedKps = p.kpIds.filter(function (k) { return coveredKps.indexOf(k) === -1; });
 
           var status, reason = null;
           if (produced === 0) status = 'FAILED';
@@ -282,13 +389,23 @@
             coveredTypes: covered,
             typeDistribution: producedByTypeFinal,
             exhaustedTypes: exhaustedTypes,
-            exhaustedKps: [],
+            exhaustedKps: exhaustedKps,
             capacityExhausted: (p.coverageStatus === 'CAPACITY_LIMITED' || p.coverageStatus === 'TYPE_COVERAGE_INFEASIBLE'),
             generationFailed: status === 'FAILED',
             budgetRecovered: recovered,
             coverageStatus: p.coverageStatus,
             reason: reason
           });
+          ledger.difficultyBucket = null;
+          try {
+            var CI2 = getCapacityHelpers();
+            if (CI2 && typeof CI2.difficultyBucket === 'function') ledger.difficultyBucket = CI2.difficultyBucket(p.difficulty);
+          } catch (e) { /* 非关键 */ }
+          ledger.capabilitySkips = p.capabilitySkips || {};
+          ledger.kpTypeMatrix = (p.kpTypeMatrix || []).slice();
+          ledger.coveredKps = coveredKps.slice();
+          ledger.coveredKpCount = coveredKps.length;
+          ledger.selectedKpCount = p.kpIds.length;
 
           return {
             questions: acc.questions,

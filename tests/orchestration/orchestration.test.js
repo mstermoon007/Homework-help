@@ -129,17 +129,94 @@ test('性质：题型保底（count >= 题型数 → 每题型 ≥1）', () => {
   r.typeCounts.forEach((e) => assert.ok(e.count >= 1));
 });
 
+// ---------- P0-05：二维预算（Type + KP → GenerationTask） ----------
+test('allocateKpTypeBudget: 类型配额在可行 KPs 间均衡分摊，Σ守恒', () => {
+  const typeCounts = [
+    { questionType: 'calc', count: 5 }, { questionType: 'fill', count: 5 }
+  ];
+  const kps = ['kp-a', 'kp-b', 'kp-c'];
+  const eligible = { calc: ['kp-a', 'kp-b', 'kp-c'], fill: ['kp-a', 'kp-b'] };
+  const r = BA.allocateKpTypeBudget({ typeCounts, kps, eligibleKpsForType: eligible });
+  const sum = r.cells.reduce((a, c) => a + c.count, 0);
+  assert.strictEqual(sum, 10, 'Σ cells === Σ typeCounts（预算守恒）');
+  const calcCells = r.cells.filter((c) => c.questionType === 'calc');
+  assert.deepStrictEqual(calcCells.map((c) => c.count).sort((a, b) => a - b), [1, 2, 2]);
+  const fillCells = r.cells.filter((c) => c.questionType === 'fill');
+  assert.strictEqual(fillCells.length, 2, 'fill 仅分摊到 2 个可行 KP');
+  // P0-06 scope 硬边界：所有 cell 都在 kp 选区内
+  r.cells.forEach((c) => assert.ok(kps.indexOf(c.kpId) !== -1, 'cell.kpId ∈ 选区'));
+});
+
+test('cellsForType: count=1 只给一个可行 KP；count=0 无 cell', () => {
+  const cells = BA.cellsForType({ questionType: 'calc', count: 1, kps: ['a', 'b'], eligible: ['a', 'b'] });
+  assert.strictEqual(cells.length, 1);
+  assert.strictEqual(cells[0].count, 1);
+  const c2 = BA.cellsForType({ questionType: 'calc', count: 0, kps: ['a'] });
+  assert.deepStrictEqual(c2, []);
+});
+
+test('cellsForType: eligible 为空（能力信息缺失）→ 全 KP 兜底，预算不吞', () => {
+  const cells = BA.cellsForType({ questionType: 'calc', count: 3, kps: ['a', 'b'], eligible: [] });
+  assert.strictEqual(cells.reduce((a, c) => a + c.count, 0), 3);
+  assert.strictEqual(cells.length, 2);
+});
+
+// ---------- P0-02：难度分桶（Capacity × Difficulty 同维度） ----------
+test('difficultyBucket: 1-10 归桶正确（1-3/4-6/7-10）', () => {
+  const CI = require(path.join(ROOT, 'shared', 'capacity', 'capacity-inventory.js'));
+  assert.strictEqual(CI.difficultyBucket(1), '1-3');
+  assert.strictEqual(CI.difficultyBucket(3), '1-3');
+  assert.strictEqual(CI.difficultyBucket(4), '4-6');
+  assert.strictEqual(CI.difficultyBucket(6), '4-6');
+  assert.strictEqual(CI.difficultyBucket(7), '7-10');
+  assert.strictEqual(CI.difficultyBucket(10), '7-10');
+  assert.strictEqual(CI.difficultyBucket(0), '1-3');
+  assert.strictEqual(CI.difficultyBucket(11), '7-10');
+  assert.strictEqual(CI.difficultyBucket(NaN), '1-3');
+});
+
+test('getCapacityFor: 有分桶按难度桶取，无分桶回退顶层', () => {
+  const CI = require(path.join(ROOT, 'shared', 'capacity', 'capacity-inventory.js'));
+  const flatMap = { kp1: { total: 128, tier: 'HIGH', byType: { calc: 128 } } };
+  assert.strictEqual(CI.getCapacityFor(flatMap, 'kp1', 5).total, 128);
+  const bucketMap = {
+    kp1: {
+      total: 128, tier: 'HIGH', byType: { calc: 128 },
+      byDifficulty: {
+        '1-3': { total: 128, tier: 'HIGH', byType: { calc: 128 } },
+        '7-10': { total: 40, tier: 'MEDIUM', byType: { calc: 40 } }
+      }
+    }
+  };
+  assert.strictEqual(CI.getCapacityFor(bucketMap, 'kp1', 8).total, 40);
+  assert.strictEqual(CI.getCapacityFor(bucketMap, 'kp1', 2).total, 128);
+  assert.strictEqual(CI.getCapacityFor(bucketMap, 'missing', 2), null);
+  assert.strictEqual(CI.getCapacityFor(null, 'kp1', 2), null);
+});
+
+// ---------- P0-03：能力判定（Capability ≠ Capacity） ----------
+test('knowledge-capability-view: 真实 KP 判定 + 未知 KP 乐观可生成', () => {
+  require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-bank.js'));
+  const KCV = require(path.join(ROOT, 'shared', 'capability', 'knowledge-capability-view.js'));
+  const ev = KCV.buildEligibility(['math-g1-m1-addsub-10'], ['calc', 'fill', 'apply', 'classify']);
+  assert.ok(ev.resolvable, 'resolver 可用');
+  assert.strictEqual(ev.matrix['math-g1-m1-addsub-10'].calc, 'ALLOW');
+  const ev2 = KCV.buildEligibility(['kp-mock'], ['calc']);
+  assert.strictEqual(ev2.matrix['kp-mock'].calc, 'ALLOW', '未知 KP 不阻断');
+});
+
 // ---------- 编排层主流程（mock 执行体，确定性） ----------
+// mock 指纹全局唯一（与真实引擎一致）：同一 orchestrate 生命周期内跨 cell / 跨恢复轮次不重复。
 function makeMock(underFactor) {
+  let idx = 0;
   return function (req, opts) {
     const tcs = req.typeCounts || [];
     const qs = [];
-    let idx = 0;
     tcs.forEach((tc) => {
       let n = tc.count;
       if (underFactor && underFactor > 1) n = Math.floor(n / underFactor);
       for (let i = 0; i < n; i++) {
-        qs.push({ questionType: tc.questionType, questionFingerprint: tc.questionType + '-' + (idx++), prompt: 'p' });
+        qs.push({ questionType: tc.questionType, questionFingerprint: tc.questionType + '-' + (idx++), prompt: 'p', knowledgePointId: (req.knowledgePointIds || ['?'])[0] });
       }
     });
     return Promise.resolve({
@@ -184,11 +261,14 @@ test('orchestrate: 性质 最终题量 <= 请求量（单一预算账本）', as
 });
 
 test('orchestrate: 缺口回收触发（mock 欠产）→ 终止于恢复轮次，PARTIAL，recovered>0', async () => {
-  const res = await PO.orchestrate(baseReq({ count: 20 }), {}, { execute: makeMock(3), render: renderMock, getRenderOptions: roMock });
+  const res = await PO.orchestrate(baseReq({ count: 20 }), {}, { execute: makeMock(2), render: renderMock, getRenderOptions: roMock });
   assert.strictEqual(res.status, 'PARTIAL');
   assert.ok(res.producedCount > 0 && res.producedCount <= 20, 'produced=' + res.producedCount);
   assert.ok(res.orchestration.budgetRecovered > 0, '应触发回收');
   assert.ok(res.orchestration.finalCount <= res.requestedCount);
+  // 逐 type 覆盖仍然成立（部分题型至少 1 题）
+  const dist = PP.aggregateTypeDistribution(res.questions);
+  ['calc', 'fill', 'choice', 'judge'].forEach((t) => assert.ok(dist[t] > 0, t + ' 覆盖'));
 });
 
 test('orchestrate: 无题型 → 透明回退到 execute（POL 不介入）', async () => {
@@ -225,4 +305,44 @@ test('真实引擎：非数学科目 → NOT_IMPLEMENTED（边界不变）', asy
     knowledgePointIds: ['cn-g1-x'], questionTypes: ['calc'], count: 5
   });
   assert.strictEqual(res.status, 'NOT_IMPLEMENTED');
+});
+
+// ---------- P0-07：7 类规范题型最少覆盖真实 E2E（每题型 ≥1 真实产出） ----------
+test('真实引擎：7 类规范题型各自最少产出 1 题且 account 覆盖（P0-07）', async () => {
+  const cases = [
+    ['calc', 'math-g1-m1-addsub-5'],
+    ['fill', 'math-g1-m1-addsub-5'],
+    ['choice', 'math-g1-m4-compose-number'],
+    ['judge', 'math-g1-m11-judge-mixed'],
+    ['geometry', 'math-g3-m6-g3-polygon'],
+    ['classify', 'math-g1-m4-count-quantity'],
+    ['apply', 'math-g1-m4-rmb-calc']
+  ];
+  for (const [qt, kpId] of cases) {
+    const res = await GenerationAPI.generate({
+      subject: 'math', grade: 1, mode: 'single-kp',
+      knowledgePointIds: [kpId], questionTypes: [qt], count: 1, difficulty: 2
+    });
+    assert.ok(res.status === 'SUCCESS' || res.status === 'PARTIAL', qt + '@' + kpId + ' -> ' + res.status);
+    assert.ok(res.producedCount >= 1, qt + '@' + kpId + ' 应有产出，got ' + res.producedCount);
+    if (res.questions && res.questions.length) {
+      assert.ok(res.questions.every((q) => q.questionType === qt), qt + '@' + kpId + ' 产出类型应一致');
+    }
+    assert.ok(res.orchestration, qt + ' 应含编排账本');
+    assert.ok(res.orchestration.coveredKps.every((k) => k === kpId), qt + '@' + kpId + ' 越界到选区外 KP: ' + JSON.stringify(res.orchestration.coveredKps));
+  }
+});
+
+// ---------- P0-06：用户 KP 选区硬边界（缺口回收多轮下也绝不越界） ----------
+test('orchestrate: 缺口回收多轮 → 所有 cell/question 均落在用户选区（P0-06）', async () => {
+  const selection = ['kp-mock-a', 'kp-mock-b'];
+  const res = await PO.orchestrate(baseReq({ count: 20 }), {}, { execute: makeMock(3), render: renderMock, getRenderOptions: roMock });
+  assert.strictEqual(res.status, 'PARTIAL'); // 欠产触发回收
+  assert.ok(res.producedCount > 0, '应有回收产出');
+  // 产物 KP 全部属于用户选区
+  res.questions.forEach((q) => assert.ok(selection.indexOf(q.knowledgePointId) !== -1, '越界 KP: ' + q.knowledgePointId));
+  // 账本 KP 全部属于用户选区
+  assert.ok(res.orchestration.coveredKps.every((k) => selection.indexOf(k) !== -1));
+  (res.orchestration.kpTypeMatrix || []).forEach((cell) => assert.ok(selection.indexOf(cell.kpId) !== -1, '越界 cell: ' + cell.kpId));
+  assert.ok(res.orchestration.coveredKpCount <= selection.length);
 });

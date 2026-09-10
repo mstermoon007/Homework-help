@@ -210,11 +210,20 @@
   };
 
   // ============ M2-09: getCapabilities (只读，不修改查询语义) ============
+  function __capabilityResolver() {
+    try { return require('../capability/capability-resolver.js'); } catch (e) {}
+    return (typeof globalThis !== 'undefined' && globalThis.CapabilityResolver) || null;
+  }
+  function __knowledgePoint() {
+    try { return require('./knowledge-point.js'); } catch (e) {}
+    return (typeof globalThis !== 'undefined' && globalThis.KnowledgePoint) || null;
+  }
   KnowledgeBank.getCapabilities = function (kpId) {
-    var CapabilityResolver = require('../capability/capability-resolver.js');
-    var kp = KnowledgeBank.findLegacy(kpId);
-    if (!kp) return null;
-    return CapabilityResolver.resolve(kp);
+    var resolver = __capabilityResolver();
+    var KP = __knowledgePoint();
+    var kp = (KP && KP.findLegacy) ? KP.findLegacy(kpId) : null;
+    if (!kp || !resolver) return null;
+    return resolver.resolve(kp);
   };
   global.KnowledgeBank = KnowledgeBank;
 

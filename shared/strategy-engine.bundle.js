@@ -3001,9 +3001,13 @@ var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
 var CapabilityModel = require("shared/capability/capability-model.js");
 var Matrix = require("shared/capability/capability-matrix.js");
 
-function resolve(canonicalKp) {
+function resolve(kp) {
   
-  return CapabilityModel.resolveCapability(canonicalKp);
+  
+  if (kp && !kp.presentation && (kp.applicable_question_types || kp.grade || kp.modules)) {
+    try { kp = Ontology.normalize(kp); } catch (e) {  }
+  }
+  return CapabilityModel.resolveCapability(kp);
 }
 
 function canGenerate(kpId, qtId) {
@@ -8965,6 +8969,7 @@ function makeCountingQuestion(plan, context, i, kp) {
   else if (name.indexOf('组合') !== -1) type = 'choose';
   else if (name.indexOf('集合') !== -1) type = 'set';
 
+  var v = i; 
   var prompt, answer, steps;
   if (type === 'principle') {
     var m = Rng.randInt(rng, 3, 8);
@@ -8973,16 +8978,27 @@ function makeCountingQuestion(plan, context, i, kp) {
     answer = m * n;
     steps = 2;
   } else if (type === 'enumeration') {
-    var digits = [1, 2, 3, 4, 5];
-    var len = Rng.randInt(rng, 2, 3);
-    prompt = '用' + digits.slice(0, len + 1).join('、') + '这' + (len + 1) + '个数字，可以组成多少个没有重复数字的' + len + '位数？';
-    var ans = 1; for (var d = len + 1; d > len + 1 - len; d--) ans *= d;
-    answer = ans;
+    
+    var ENUM = [
+      { digits: [1, 2, 3, 4, 5], len: 2 },
+      { digits: [1, 2, 3, 4, 5], len: 3 },
+      { digits: [2, 3, 4, 5, 6], len: 2 },
+      { digits: [1, 3, 5, 7, 9], len: 3 }
+    ];
+    var en = ENUM[v % ENUM.length];
+    var used = en.digits.slice(0, en.len + 1);
+    var enumAns = 1; for (var d = 0; d < en.len; d++) enumAns *= (used.length - d);
+    prompt = '用' + used.join('、') + '这' + used.length + '个数字，可以组成多少个没有重复数字的' + en.len + '位数？';
+    answer = enumAns;
     steps = 3;
   } else if (type === 'worst-case') {
-    prompt = '一个盒子里有红、黄、蓝三种颜色的球各若干个，至少要摸出多少个球，才能保证有3个球颜色相同？';
-    answer = 7;
-    steps = 2;
+    var WC = [
+      { c: 3, k: 3, ans: 7 }, { c: 4, k: 3, ans: 9 }, { c: 2, k: 4, ans: 7 }, { c: 5, k: 2, ans: 6 }
+    ];
+    var wc = WC[v % WC.length];
+    var colorNames = ['红', '黄', '蓝', '绿', '紫'];
+    prompt = '一个盒子里有' + colorNames.slice(0, wc.c).join('、') + '等' + wc.c + '种颜色的球各若干个，至少要摸出多少个球，才能保证有' + wc.k + '个球颜色相同？';
+    answer = wc.c * (wc.k - 1) + 1; steps = 2;
   } else if (type === 'combination') {
     var shirts = Rng.randInt(rng, 2, 5);
     var pants = Rng.randInt(rng, 2, 5);
@@ -9010,44 +9026,63 @@ function makeCountingQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (type === 'bundling') {
     
-    var bn = Rng.randInt(rng, 5, 6);
+    var BUNDLE = [5, 6, 7, 8];
+    var bn = BUNDLE[v % BUNDLE.length];
     prompt = bn + '本不同的书排成一排，其中有 2 本必须相邻，一共有多少种不同的排法？';
     answer = factorial(2) * factorial(bn - 1);
     steps = 3;
   } else if (type === 'insertion') {
     
-    prompt = '3 名男生已按固定顺序排成一排（形成 4 个空位），现将 2 名女生插入空位，要求两名女生互不相邻，一共有多少种插入方法？';
-    answer = 4 * 3;
-    steps = 2;
+    var INS = [
+      { m: 3, f: 2 }, { m: 4, f: 2 }, { m: 4, f: 3 }, { m: 5, f: 2 }
+    ];
+    var ins = INS[v % INS.length];
+    var insAns = 1; for (var ii = 0; ii < ins.f; ii++) insAns *= (ins.m + 1 - ii);
+    prompt = ins.m + ' 名男生已按固定顺序排成一排（形成 ' + (ins.m + 1) + ' 个空位），现将 ' + ins.f + ' 名女生插入空位，要求女生互不相邻，一共有多少种插入方法？';
+    answer = insAns; steps = 2;
   } else if (type === 'starsbars') {
     
-    var sn = 7, sm = 3;
-    prompt = '把 ' + sn + ' 个相同的苹果分给 ' + sm + ' 个小朋友，每人至少分到 1 个，一共有多少种不同的分法？';
-    answer = nCr(sn - 1, sm - 1);
+    var SB = [
+      { sn: 7, sm: 3 }, { sn: 10, sm: 4 }, { sn: 8, sm: 2 }, { sn: 12, sm: 5 }
+    ];
+    var sb = SB[v % SB.length];
+    prompt = '把 ' + sb.sn + ' 个相同的苹果分给 ' + sb.sm + ' 个小朋友，每人至少分到 1 个，一共有多少种不同的分法？';
+    answer = nCr(sb.sn - 1, sb.sm - 1);
     steps = 2;
   } else if (type === 'pigeonhole') {
     
-    var colors = 4, want = 4;
-    prompt = '盒子里有红、黄、蓝、绿 4 种颜色的球各 10 个（球除颜色外完全相同）。至少要摸出多少个球，才能保证其中有 ' + want + ' 个球颜色相同？';
-    answer = colors * (want - 1) + 1;
+    var PH = [
+      { c: 4, k: 4 }, { c: 5, k: 3 }, { c: 3, k: 2 }, { c: 6, k: 3 }
+    ];
+    var ph = PH[v % PH.length];
+    var phColors = ['红', '黄', '蓝', '绿', '紫', '橙'];
+    prompt = '盒子里有' + phColors.slice(0, ph.c).join('、') + '等 ' + ph.c + ' 种颜色的球各若干个（球除颜色外完全相同）。至少要摸出多少个球，才能保证其中有 ' + ph.k + ' 个球颜色相同？';
+    answer = ph.c * (ph.k - 1) + 1;
     steps = 2;
   } else if (type === 'inclusion') {
     
-    var aN = 20, bN = 18, cN = 16, ab = 8, ac = 7, bc = 6, abc = 3, total = 40;
-    prompt = '某班共有 ' + total + ' 人，参加数学小组的有 ' + aN + ' 人，参加英语小组的有 ' + bN + ' 人，参加科学小组的有 ' + cN + ' 人；'
-      + '同时参加数学和英语的有 ' + ab + ' 人，同时参加数学和科学的有 ' + ac + ' 人，同时参加英语和科学的有 ' + bc + ' 人；'
-      + '三个小组都参加的有 ' + abc + ' 人。三个小组都没参加的有多少人？';
-    answer = total - (aN + bN + cN - ab - ac - bc + abc);
+    var INC = [
+      { total: 40, aN: 20, bN: 18, cN: 16, ab: 8, ac: 7, bc: 6, abc: 3 },
+      { total: 50, aN: 25, bN: 22, cN: 20, ab: 10, ac: 9, bc: 8, abc: 4 },
+      { total: 45, aN: 18, bN: 16, cN: 15, ab: 7, ac: 6, bc: 5, abc: 2 }
+    ];
+    var inc = INC[v % INC.length];
+    prompt = '某班共有 ' + inc.total + ' 人，参加数学小组的有 ' + inc.aN + ' 人，参加英语小组的有 ' + inc.bN + ' 人，参加科学小组的有 ' + inc.cN + ' 人；'
+      + '同时参加数学和英语的有 ' + inc.ab + ' 人，同时参加数学和科学的有 ' + inc.ac + ' 人，同时参加英语和科学的有 ' + inc.bc + ' 人；'
+      + '三个小组都参加的有 ' + inc.abc + ' 人。三个小组都没参加的有多少人？';
+    answer = inc.total - (inc.aN + inc.bN + inc.cN - inc.ab - inc.ac - inc.bc + inc.abc);
     steps = 3;
   } else if (type === 'recursion') {
     
-    var rn = 5;
+    var REC = [5, 6, 7, 4];
+    var rn = REC[v % REC.length];
     prompt = '小明上楼梯，每次可以走 1 级或 2 级台阶。他上到第 ' + rn + ' 级台阶时，一共有多少种不同的走法？';
     answer = stairWays(rn);
     steps = 3;
   } else if (type === 'derangement') {
     
-    var dn = 4;
+    var DER = [4, 3, 5, 6];
+    var dn = DER[v % DER.length];
     prompt = '有 ' + dn + ' 封信和写好对应地址的 ' + dn + ' 个信封，把信全部装错（没有一封信装进正确的信封），一共有多少种装法？';
     answer = derangement(dn);
     steps = 2;
@@ -9185,7 +9220,7 @@ function seedFor(plan, context, i) {
 
 function makeReasoningQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '逻辑推理';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '逻辑推理';
 
   var type = 'generic';
   if (name.indexOf('抽屉') !== -1 || name.indexOf('鸽巢') !== -1) type = 'drawer';
@@ -9201,60 +9236,135 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else type = 'logic';
 
   var prompt, answer, steps;
+  var v = i; 
   if (type === 'drawer') {
-    var colors = Rng.randInt(rng, 3, 5);
-    prompt = '有红、黄、蓝、绿四种颜色的球，至少要摸出多少个，才能保证有2个球颜色相同？';
-    answer = colors + 1;
-    steps = 2;
+    var DRAWER = [
+      { c: ['红', '黄', '蓝', '绿'], k: 2, ans: 5 },
+      { c: ['红', '黄', '蓝'], k: 2, ans: 4 },
+      { c: ['红', '黄', '蓝', '绿'], k: 3, ans: 9 },
+      { c: ['黑', '白'], k: 2, ans: 3 }
+    ];
+    var d = DRAWER[v % DRAWER.length];
+    prompt = '有' + d.c.length + '种颜色的球（' + d.c.join('、') + '），至少要摸出多少个，才能保证有' + d.k + '个球颜色相同？';
+    answer = d.ans; steps = 2;
   } else if (type === 'extreme') {
-    var twoSum = Rng.randInt(rng, 10, 50);
-    prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
-    var half = Math.floor(twoSum / 2);
-    answer = half * (twoSum - half);
-    steps = 2;
+    if (v % 3 === 0) {
+      var twoSum = Rng.randInt(rng, 10, 50);
+      var half = Math.floor(twoSum / 2);
+      prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
+      answer = half * (twoSum - half); steps = 2;
+    } else if (v % 3 === 1) {
+      var twoSum2 = Rng.randInt(rng, 10, 50);
+      var half2 = Math.floor(twoSum2 / 2);
+      prompt = '两个数的和是' + twoSum2 + '，这两个数相差最小时分别是多少？';
+      answer = half2 + ' 和 ' + (twoSum2 - half2); steps = 2;
+    } else {
+      var threeSum = Rng.randInt(rng, 12, 60);
+      var base = Math.floor(threeSum / 3);
+      var rem = threeSum - 3 * base;
+      var parts = [base, base, base]; parts[2] += rem;
+      prompt = '三个数的和是' + threeSum + '，这三个数尽可能接近时乘积最大，最大乘积是多少？';
+      answer = parts[0] * parts[1] * parts[2]; steps = 2;
+    }
   } else if (type === 'chicken-rabbit') {
-    var heads = Rng.randInt(rng, 8, 20);
-    var feet = heads * 2 + Rng.randInt(rng, 6, 20);
-    prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
-    var rabb = (feet - heads * 2) / 2;
-    answer = '鸡' + (heads - rabb) + '只，兔' + rabb + '只';
-    steps = 3;
+    if (v % 3 === 0) {
+      var heads = Rng.randInt(rng, 8, 20);
+      var rabb0 = Rng.randInt(rng, 3, 8);
+      var feet = heads * 2 + rabb0 * 2;
+      prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
+      var r0 = (feet - heads * 2) / 2;
+      answer = '鸡' + (heads - r0) + '只，兔' + r0 + '只'; steps = 3;
+    } else if (v % 3 === 1) {
+      var D = Rng.randInt(rng, 1, 5);
+      var R = Rng.randInt(rng, 3, 8);
+      var F = 6 * R + 2 * D;
+      prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
+      answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
+    } else {
+      var D2 = Rng.randInt(rng, 1, 4);
+      var C = Rng.randInt(rng, 3, 8);
+      var F2 = 6 * C + 4 * D2;
+      prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
+      answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
+    }
   } else if (type === 'tree-planting') {
-    var total = Rng.randInt(rng, 100, 500);
-    var gap = Rng.randInt(rng, 5, 20);
-    prompt = '在一条长' + total + '米的公路一边植树，每隔' + gap + '米栽一棵（两端都栽），一共要栽多少棵？';
-    answer = Math.floor(total / gap) + 1;
-    steps = 2;
+    var L = Rng.randInt(rng, 100, 500);
+    var G = Rng.randInt(rng, 5, 20);
+    var TP = [
+      { desc: '两端都栽', ans: Math.floor(L / G) + 1 },
+      { desc: '两端都不栽', ans: Math.floor(L / G) - 1 },
+      { desc: '只在一端栽', ans: Math.floor(L / G) },
+      { desc: '在环形操场周围栽（封闭）', ans: Math.floor(L / G) }
+    ];
+    var tp = TP[v % TP.length];
+    prompt = '在一条长' + L + '米的公路一边植树，每隔' + G + '米栽一棵（' + tp.desc + '），一共要栽多少棵？';
+    answer = tp.ans; steps = 2;
   } else if (type === 'find-defect') {
-    prompt = '有9瓶水，其中1瓶是次品（略轻）。用天平称，至少称几次就能找出次品？';
-    answer = 2;
-    steps = 2;
+    var DEFECT = [
+      { n: 3, ans: 1 }, { n: 9, ans: 2 }, { n: 27, ans: 3 }, { n: 81, ans: 4 }
+    ];
+    var df = DEFECT[v % DEFECT.length];
+    prompt = '有' + df.n + '瓶水，其中1瓶是次品（略轻）。用天平称，至少称几次就能找出次品？';
+    answer = df.ans; steps = 2;
   } else if (type === 'handshake') {
-    var n = Rng.randInt(rng, 4, 10);
-    prompt = n + '个人握手，每两个人握一次手，一共要握多少次？';
-    answer = n * (n - 1) / 2;
-    steps = 2;
+    var HSK = [
+      { w: '个人，每两个人握一次手', ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '支球队进行单循环比赛，每两队赛一场', ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '个点，每两个点连一条线段', ans: function (n) { return n * (n - 1) / 2; } }
+    ];
+    var hs = HSK[v % HSK.length];
+    var n = Rng.randInt(rng, 4, 12);
+    prompt = n + hs.w + '，一共需要多少次？';
+    answer = hs.ans(n); steps = 2;
   } else if (type === 'sudoku') {
-    prompt = name + '：请根据已知数字推理出空格中的数字。';
-    answer = '（推理过程略）';
-    steps = 4;
+    var SUD = [
+      { w: '请根据已知数字推理出空格中的数字。' },
+      { w: '在 4×4 数独中，根据已知数字填出空格。' },
+      { w: '在 6×6 数独中，根据已知数字填出空格。' }
+    ];
+    var su = SUD[v % SUD.length];
+    prompt = name + '：' + su.w;
+    answer = '（推理过程略）'; steps = 4;
   } else if (type === 'winning') {
-    prompt = name + '：两堆棋子，每次只能从一堆中取1~3个，取到最后一个棋子者胜。先手必胜还是后手必胜？';
-    answer = '先手必胜（对称策略）';
-    steps = 3;
+    var WIN = [
+      { w: '两堆棋子，每次只能从一堆中取 1~3 个，取到最后一个棋子者胜', a: '先手必胜（对称策略）' },
+      { w: '一堆石子，每次可取 1~4 个，取到最后一个者胜', a: '先手必胜（凑 5 策略）' },
+      { w: '三堆石子，每次从一堆取任意个，取到最后一个者胜', a: '先手必胜（尼姆和策略）' }
+    ];
+    var win = WIN[v % WIN.length];
+    prompt = name + '：' + win.w + '。先手必胜还是后手必胜？';
+    answer = win.a; steps = 3;
   } else if (type === 'optimization') {
-    var pans = Rng.randInt(rng, 2, 4);
-    prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要2分钟。至少需要多少分钟？';
-    answer = pans * 2;
-    steps = 3;
+    if (v % 3 === 0) {
+      var pans = Rng.randInt(rng, 2, 5);
+      prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
+      answer = pans * 2; steps = 3;
+    } else if (v % 3 === 1) {
+      prompt = '煮一个鸡蛋需要 8 分钟，同时可以洗锅 2 分钟。至少需要多少分钟？';
+      answer = 8; steps = 2;
+    } else {
+      prompt = '看一集动画需要 15 分钟，同时可以写完作业 10 分钟。至少需要多少分钟？';
+      answer = 15; steps = 2;
+    }
   } else if (type === 'seq') {
-    prompt = name + '：观察数列规律，写出下一个数：2, 4, 6, 8, ?';
-    answer = 10;
-    steps = 1;
+    var SEQ = [
+      { s: '2, 4, 6, 8', ans: 10 },
+      { s: '1, 3, 5, 7', ans: 9 },
+      { s: '1, 2, 4, 8', ans: 16 },
+      { s: '1, 1, 2, 3, 5', ans: 8 }
+    ];
+    var sq = SEQ[v % SEQ.length];
+    prompt = name + '：观察数列规律，写出下一个数：' + sq.s + ', ?';
+    answer = sq.ans; steps = 1;
   } else {
-    prompt = name + '：A、B、C、D四人中有一人说谎。根据条件推理谁在说谎。';
-    answer = '（逻辑推理略）';
-    steps = 4;
+    var LOGIC = [
+      { w: 'A、B、C、D 四人中有一人说谎。根据条件推理谁在说谎。' },
+      { w: '甲、乙、丙三人中只有一人说真话，根据各自陈述推理谁说真话。' },
+      { w: '三个盒子分别标“苹果”“橘子”“混合”，标签全贴错。只从一个盒子取一个水果，就能判断全部，如何判断？' }
+    ];
+    var lg = LOGIC[v % LOGIC.length];
+    prompt = name + '：' + lg.w;
+    answer = '（逻辑推理略）'; steps = 4;
   }
 
   return {
@@ -9367,7 +9477,7 @@ function seedFor(plan, context, i) {
 
 function makeStatsQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '统计问题';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '统计问题';
 
   var type = 'generic';
   if (name.indexOf('平均') !== -1) type = 'average';
@@ -9403,21 +9513,44 @@ function makeStatsQuestion(plan, context, i, kp) {
   } else if (type === 'line-chart') {
     var wdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
     series = buildSeries(wdays, 18, 35);
+    series.sort(function (x, y) { return wdays.indexOf(x.label) - wdays.indexOf(y.label); });
     var hi = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
-    prompt = name + '：根据折线图回答：哪一天的温度最高？最高温度是多少？';
-    answer = hi.label + '，' + hi.value + '℃'; steps = 1;
+    var lo = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
+    var LC_Q = [
+      { q: '哪一天的温度最高？最高温度是多少？', a: hi.label + '，' + hi.value + '℃' },
+      { q: '哪一天的温度最低？最低温度是多少？', a: lo.label + '，' + lo.value + '℃' },
+      { q: '温度最高的一天比最低的一天高多少℃？', a: (hi.value - lo.value) + '℃' }
+    ];
+    var lcq = LC_Q[i % LC_Q.length];
+    prompt = name + '：根据折线图回答：' + lcq.q;
+    answer = lcq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'line', params: { title: '一周气温变化', data: series } };
   } else if (type === 'bar-chart' || type === 'chart-read') {
     series = buildSeries(PEOPLE_LABELS, 20, 60);
+    series.sort(function (x, y) { return PEOPLE_LABELS.indexOf(x.label) - PEOPLE_LABELS.indexOf(y.label); });
     var hiBar = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
-    prompt = name + '：根据条形图回答：哪个年级的人数最多？多多少？';
-    answer = hiBar.label + '，' + hiBar.value + '人'; steps = 1;
+    var loBar = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
+    var BAR_Q = [
+      { q: '哪个年级的人数最多？多多少？', a: hiBar.label + '，' + hiBar.value + '人' },
+      { q: '哪个年级的人数最少？少多少？', a: loBar.label + '，' + loBar.value + '人' },
+      { q: '人数最多的年级比最少的年级多多少人？', a: (hiBar.value - loBar.value) + '人' }
+    ];
+    var bq = BAR_Q[i % BAR_Q.length];
+    prompt = name + '：根据条形图回答：' + bq.q;
+    answer = bq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
   } else if (type === 'pie-chart') {
-    var percents = [30, 25, 25, 20];
-    var pieData = SUBJECT_LABELS.map(function (l, pi) { return { label: l, percent: percents[pi] }; });
-    prompt = name + '：根据扇形图，如果总人数是100人，喜欢语文的有多少人？';
-    answer = pieData[0].percent + '人'; steps = 2;
+    var PIE = [
+      { p: [30, 25, 25, 20], ask: '喜欢语文的有多少人？', idx: 0 },
+      { p: [30, 25, 25, 20], ask: '喜欢数学和英语的一共有多少人？', idx: -1, extra: 45 },
+      { p: [40, 20, 25, 15], ask: '喜欢语文的有多少人？', idx: 0 },
+      { p: [20, 30, 30, 20], ask: '喜欢英语的有多少人？', idx: 2 }
+    ];
+    var pie = PIE[i % PIE.length];
+    var pieData = SUBJECT_LABELS.map(function (l, pi) { return { label: l, percent: pie.p[pi] }; });
+    var pieAns = pie.idx < 0 ? pie.extra + '人' : pieData[pie.idx].percent + '人';
+    prompt = name + '：根据扇形图，如果总人数是100人，' + pie.ask;
+    answer = pieAns; steps = 2;
     graphic = { type: 'chart', subtype: 'pie', params: { title: '最喜欢的科目', data: pieData } };
   } else if (type === 'double-chart') {
     var dLabels = ['跳绳', '跑步', '踢毽', '篮球'];
@@ -9427,19 +9560,45 @@ function makeStatsQuestion(plan, context, i, kp) {
     var gapMax = series.slice().sort(function (x, y) {
       return Math.abs(y.a - y.b) - Math.abs(x.a - x.b);
     })[0];
-    prompt = name + '：复式统计图中，男生和女生在哪一项上的差距最大？';
-    answer = gapMax.label + '（差 ' + Math.abs(gapMax.a - gapMax.b) + ' 人）'; steps = 2;
+    var gapMin = series.slice().sort(function (x, y) {
+      return Math.abs(x.a - x.b) - Math.abs(y.a - y.b);
+    })[0];
+    var DC_Q = [
+      { q: '男生和女生在哪一项上的差距最大？', a: gapMax.label + '（差 ' + Math.abs(gapMax.a - gapMax.b) + ' 人）' },
+      { q: '男生和女生在哪一项上的差距最小？', a: gapMin.label + '（差 ' + Math.abs(gapMin.a - gapMin.b) + ' 人）' },
+      { q: '男生在哪一项上参加的人数最多？', a: series.slice().sort(function (x, y) { return y.a - x.a; })[0].label + '（' + series.slice().sort(function (x, y) { return y.a - x.a; })[0].a + ' 人）' }
+    ];
+    var dcq = DC_Q[i % DC_Q.length];
+    prompt = name + '：复式统计图中，' + dcq.q;
+    answer = dcq.a; steps = 2;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '男生女生运动情况', yLabel: '人数', data: series } };
   } else if (type === 'data-collect') {
-    series = buildSeries(FRUIT_LABELS, 10, 40);
-    prompt = name + '：用正字法收集全班同学喜欢的水果，数据如下，请整理成统计表。';
+    
+    
+    var TALLY_VARIANTS = [
+      { labels: FRUIT_LABELS, title: '最喜欢的果汁', unit: '人', ask: '用正字法收集全班同学喜欢的水果，数据如下，请整理成统计表。' },
+      { labels: ['跳绳', '跑步', '踢毽', '篮球', '乒乓球'], title: '喜欢的运动', unit: '人', ask: '调查同学们喜欢的运动项目，用画“√”的方法记录，请整理成数据表。' },
+      { labels: ['故事书', '科普书', '漫画', '作文书'], title: '图书角类别', unit: '本', ask: '图书角有各类图书，分类清点数量后请填入统计表。' },
+      { labels: ['晴', '阴', '雨', '雪'], title: '一周天气', unit: '天', ask: '记录一周的天气情况，用统计表整理各类天气的天数。' }
+    ];
+    var tv = TALLY_VARIANTS[i % TALLY_VARIANTS.length];
+    series = buildSeries(tv.labels, 10, 40);
+    prompt = name + '：' + tv.ask;
     answer = '（统计整理略）'; steps = 2;
-    graphic = { type: 'chart', subtype: 'bar', params: { title: '最喜欢的果汁', yLabel: '人数', data: series } };
+    graphic = { type: 'chart', subtype: 'bar', params: { title: tv.title, yLabel: tv.unit, data: series } };
   } else {
     series = buildSeries(PEOPLE_LABELS, 20, 60);
+    series.sort(function (x, y) { return PEOPLE_LABELS.indexOf(x.label) - PEOPLE_LABELS.indexOf(y.label); });
     var hiRead = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
-    prompt = name + '：根据统计表中的数据，回答相关问题。';
-    answer = hiRead.label + '，' + hiRead.value + '人'; steps = 1;
+    var loRead = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
+    var READ_Q = [
+      { q: '人数最多的年级是哪一年级？有多少人？', a: hiRead.label + '，' + hiRead.value + '人' },
+      { q: '人数最少的年级是哪一年级？有多少人？', a: loRead.label + '，' + loRead.value + '人' },
+      { q: '人数最多的年级比最少的年级多多少人？', a: (hiRead.value - loRead.value) + '人' }
+    ];
+    var rq = READ_Q[i % READ_Q.length];
+    prompt = name + '：根据统计表中的数据，' + rq.q;
+    answer = rq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
   }
 
@@ -9729,14 +9888,15 @@ function seedFor(plan, context, i) {
 
 function makePuzzleQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '数字谜';
-  var id = kp.id || '';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '数字谜';
+  var id = (kp && (kp.id || (kp.identity && kp.identity.id)) || kp.id) || '';
 
   var isVertical = name.indexOf('竖式') !== -1 || id.indexOf('vertical') !== -1 || id.indexOf('digit-puzzle') !== -1;
   var isHorizontal = name.indexOf('横式') !== -1 || id.indexOf('horizontal') !== -1;
   var isSymbol = name.indexOf('符号') !== -1 || name.indexOf('字母') !== -1 || id.indexOf('symbol') !== -1;
   var isDigitReasoning = name.indexOf('数字推理') !== -1 || id.indexOf('digit-reasoning') !== -1 || id.indexOf('number-puzzle-competition') !== -1;
 
+  var v = i; 
   var prompt, answer;
 
   if (isVertical) {
@@ -9768,9 +9928,14 @@ function makePuzzleQuestion(plan, context, i, kp) {
     answer = String(cc - 1);
   } else if (isDigitReasoning) {
     
-    prompt = '一个三位数的各位数字之和是 15，百位数字比十位数字大 3，个位数字是十位数字的 2 倍。这个三位数是多少？';
-    
-    answer = '636';
+    var DR = [
+      { d: '百位数字比十位数字大 3，个位数字是十位数字的 2 倍，各位数字之和是 15', ans: '636' },
+      { d: '百位数字比十位数字大 2，个位数字是十位数字的 3 倍，各位数字之和是 17', ans: '539' },
+      { d: '百位数字是十位数字的 2 倍，个位比十位大 1，各位数字之和是 9', ans: '423' }
+    ];
+    var dr = DR[v % DR.length];
+    prompt = '一个三位数，' + dr.d + '。这个三位数是多少？';
+    answer = dr.ans;
   } else {
     prompt = name + '：请根据竖式和横式中的线索，推算每个字母代表的数字。';
     answer = 'A=1, B=2, C=3';
@@ -9889,8 +10054,8 @@ function lcm(a, b) { return a / gcd(a, b) * b; }
 
 function makeTheoryQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '数论问题';
-  var id = kp.id || '';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '数论问题';
+  var id = (kp && (kp.id || (kp.identity && kp.identity.id))) || '';
 
   var isParity = name.indexOf('奇偶') !== -1;
   var isDivisible = name.indexOf('整除') !== -1 || id.indexOf('divisible') !== -1 || id.indexOf('divisibility') !== -1;
@@ -9904,6 +10069,7 @@ function makeTheoryQuestion(plan, context, i, kp) {
   var isDiophantine = name.indexOf('不定方程') !== -1;
   var isModulo = name.indexOf('模运算') !== -1 || name.indexOf('周期') !== -1;
 
+  var v = i; 
   var prompt, answer;
 
   if (isParity) {
@@ -9962,17 +10128,22 @@ function makeTheoryQuestion(plan, context, i, kp) {
     answer = count;
   } else if (isExtreme) {
     
-    prompt = '在 1~100 的自然数中，能被 3 整除但不能被 5 整除的数最大是多少？';
-    answer = '99';
+    var EXT = [{ hi: 100, d1: 3, d2: 5, ans: 99 }, { hi: 100, d1: 7, d2: 3, ans: 98 }, { hi: 50, d1: 5, d2: 2, ans: 45 }];
+    var ext = EXT[v % EXT.length];
+    prompt = '在 1~' + ext.hi + ' 的自然数中，能被 ' + ext.d1 + ' 整除但不能被 ' + ext.d2 + ' 整除的数最大是多少？';
+    answer = String(ext.ans);
   } else if (isDiophantine) {
     
-    prompt = '方程 3x + 2y = 17 有多少组正整数解？';
-    answer = '2 组（x=1,y=7 和 x=3,y=4 和 x=5,y=1）';
+    var DIO = [{ s: '3x + 2y = 17', ans: '3 组（x=1,y=7；x=3,y=4；x=5,y=1）' }, { s: '5x + 2y = 24', ans: '2 组（x=2,y=7；x=4,y=2）' }, { s: '2x + 3y = 18', ans: '2 组（x=3,y=4；x=6,y=2）' }];
+    var dio = DIO[v % DIO.length];
+    prompt = '方程 ' + dio.s + ' 有多少组正整数解？';
+    answer = dio.ans;
   } else if (isModulo) {
     
-    prompt = '计算 3^2024 的个位数字。';
-    
-    answer = '1';
+    var MOD = [{ base: 3, exp: 2024, ans: '1' }, { base: 7, exp: 2023, ans: '3' }, { base: 2, exp: 2025, ans: '2' }];
+    var mod = MOD[v % MOD.length];
+    prompt = '计算 ' + mod.base + '^' + mod.exp + ' 的个位数字。';
+    answer = mod.ans;
   } else {
     prompt = name + '：请运用数论知识解答这个问题。';
     answer = '数论问题解答';
@@ -10115,6 +10286,7 @@ function makeQuestion(plan, context, i, kp) {
   var isComplex = id.indexOf('complex') !== -1 || id.indexOf('competition') !== -1 || name.indexOf('综合') !== -1;
   var isBasic = id.indexOf('basic') !== -1 || name.indexOf('基本行程') !== -1;
 
+  var v = i; 
   var prompt, answer, steps;
 
   if (isWork) {
@@ -10189,31 +10361,33 @@ function makeQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (isAverage) {
     
-    var av1 = 30, av2 = 60;
-    var avg = 2 * av1 * av2 / (av1 + av2);
-    prompt = '小明骑车从家到书店，去时每小时行 ' + av1 + ' 千米，沿原路返回时每小时行 ' + av2 + ' 千米。'
-      + '求小明往返的平均速度。';
+    var AV = [{ a: 30, b: 60 }, { a: 40, b: 60 }, { a: 20, b: 30 }, { a: 50, b: 75 }];
+    var av = AV[v % AV.length];
+    var avg = 2 * av.a * av.b / (av.a + av.b);
+    prompt = '小明骑车从家到书店，去时每小时行 ' + av.a + ' 千米，沿原路返回时每小时行 ' + av.b + ' 千米。求小明往返的平均速度。';
     answer = avg;
     steps = 3;
   } else if (isRatio) {
     
-    prompt = '走同一段路，甲、乙两人的速度比是 3:2。甲走完全程用了 4 小时，乙走完全程需要多少小时？';
-    answer = 6; 
+    var RAT = [{ r: '3:2', ta: 4, tb: 6 }, { r: '4:3', ta: 6, tb: 8 }, { r: '2:1', ta: 3, tb: 6 }];
+    var rat = RAT[v % RAT.length];
+    prompt = '走同一段路，甲、乙两人的速度比是 ' + rat.r + '。甲走完全程用了 ' + rat.ta + ' 小时，乙走完全程需要多少小时？';
+    answer = rat.tb;
     steps = 3;
   } else if (isInterval) {
     
-    prompt = '一条公交线路上，公交车每隔 6 分钟发一班，车速为每分钟 500 米。'
-      + '小明沿公交线路以每分钟 100 米的速度与公交车同向步行。'
-      + '每隔多少分钟会有一辆公交车从身后追上小明？';
-    
-    answer = 7.5;
+    var INT = [{ interval: 6, car: 500, walk: 100, ans: 7.5 }, { interval: 10, car: 600, walk: 200, ans: 15 }, { interval: 8, car: 500, walk: 100, ans: 10 }];
+    var itv = INT[v % INT.length];
+    prompt = '一条公交线路上，公交车每隔 ' + itv.interval + ' 分钟发一班，车速为每分钟 ' + itv.car + ' 米。'
+      + '小明沿公交线路以每分钟 ' + itv.walk + ' 米的速度与公交车同向步行。每隔多少分钟会有一辆公交车从身后追上小明？';
+    answer = itv.ans;
     steps = 3;
   } else if (isPickup) {
     
-    prompt = '汽车送一批人去机场，去程每小时行 60 千米，返程（空车）每小时行 90 千米，往返共用 5 小时（不含上下车时间）。'
-      + '出发点到机场的距离是多少千米？';
-    
-    answer = 180;
+    var PK = [{ go: 60, back: 90, total: 5, ans: 180 }, { go: 40, back: 60, total: 5, ans: 120 }, { go: 50, back: 75, total: 5, ans: 150 }];
+    var pk = PK[v % PK.length];
+    prompt = '汽车送一批人去机场，去程每小时行 ' + pk.go + ' 千米，返程（空车）每小时行 ' + pk.back + ' 千米，往返共用 ' + pk.total + ' 小时（不含上下车时间）。出发点到机场的距离是多少千米？';
+    answer = pk.ans;
     steps = 3;
   } else if (isComplex || isBasic) {
     
@@ -10391,6 +10565,7 @@ function makeQuestion(plan, context, i, kp) {
   var isComplexFrac = id.indexOf('complex-fraction') !== -1 || name.indexOf('繁分数') !== -1;
   var isSeqSum = id.indexOf('sequence-sum') !== -1 || name.indexOf('数列求和') !== -1 || name.indexOf('平方和') !== -1 || name.indexOf('立方和') !== -1;
 
+  var v = i; 
   var prompt, answer, steps;
 
   if (isExtract) {
@@ -10403,10 +10578,10 @@ function makeQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (isRounding) {
     
-    var nines = [9, 99, 999, 9999];
-    var sum = nines.reduce(function (s, x) { return s + x; }, 0);
-    prompt = '用凑整法巧算：' + nines.join(' + ');
-    answer = sum;
+    var RND = [{ t: [9, 99, 999, 9999], sum: 11106 }, { t: [8, 98, 998, 9998], sum: 11102 }, { t: [19, 199, 1999], sum: 2217 }, { t: [4, 44, 444], sum: 492 }];
+    var rnd = RND[v % RND.length];
+    prompt = '用凑整法巧算：' + rnd.t.join(' + ');
+    answer = rnd.sum;
     steps = 2;
   } else if (isFracSplit) {
     
@@ -10432,8 +10607,10 @@ function makeQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (isRecurring) {
     
-    prompt = '把循环小数化成分数：0.333…（3 循环）';
-    answer = frac(1, 3);
+    var REC = [{ s: '0.333…（3 循环）', n: 1, d: 3 }, { s: '0.666…（6 循环）', n: 2, d: 3 }, { s: '0.1666…（6 循环）', n: 1, d: 6 }, { s: '0.8333…（3 循环）', n: 5, d: 6 }];
+    var rec = REC[v % REC.length];
+    prompt = '把循环小数化成分数：' + rec.s;
+    answer = frac(rec.n, rec.d);
     steps = 2;
   } else if (isDefineOp) {
     
@@ -10444,15 +10621,17 @@ function makeQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (isEstimate) {
     
-    var eSum = 1 / 2 + 1 / 3 + 1 / 4;
-    prompt = '估算（写出整数部分）：1/2 + 1/3 + 1/4 的结果的整数部分是多少？';
-    answer = Math.floor(eSum);
+    var EST = [{ t: ['1/2', '1/3', '1/4'], val: 1.0833, ans: 1 }, { t: ['1/3', '1/4', '1/5'], val: 0.7833, ans: 0 }, { t: ['1/2', '1/4', '1/8'], val: 0.875, ans: 0 }, { t: ['1/2', '1/3', '1/6'], val: 1, ans: 1 }];
+    var est = EST[v % EST.length];
+    prompt = '估算（写出整数部分）：' + est.t.join(' + ') + ' 的结果的整数部分是多少？';
+    answer = est.ans;
     steps = 2;
   } else if (isComplexFrac) {
     
-    var n1 = 1, d1 = 2, n2 = 3, d2 = 4;
-    prompt = '化简繁分数：(1/2) ' + DIV + ' (3/4)';
-    answer = frac(n1 * d2, d1 * n2);
+    var CF = [{ n1: 1, d1: 2, n2: 3, d2: 4 }, { n1: 2, d1: 3, n2: 4, d2: 5 }, { n1: 3, d1: 4, n2: 1, d2: 2 }, { n1: 1, d1: 3, n2: 2, d2: 5 }];
+    var cf = CF[v % CF.length];
+    prompt = '化简繁分数：( ' + cf.n1 + '/' + cf.d1 + ' ) ' + DIV + ' ( ' + cf.n2 + '/' + cf.d2 + ' )';
+    answer = frac(cf.n1 * cf.d2, cf.d1 * cf.n2);
     steps = 2;
   } else if (isSeqSum) {
     
@@ -10610,110 +10789,150 @@ function makeQuestion(plan, context, i, kp) {
   var isMock = id.indexOf('mock') !== -1 || name.indexOf('模拟') !== -1;
   var isIntegrated = id.indexOf('integrated') !== -1 || name.indexOf('综合应用') !== -1;
 
+  var v = i; 
   var prompt, answer, steps;
 
   if (isSumDiff) {
     
-    prompt = '甲、乙两数的和是 48，甲数是乙数的 3 倍。乙数是多少？';
-    answer = 12;
+    var SD = [{ s: 48, r: 3 }, { s: 60, r: 2 }, { s: 72, r: 5 }, { s: 96, r: 3 }];
+    var sd = SD[v % SD.length];
+    prompt = '甲、乙两数的和是 ' + sd.s + '，甲数是乙数的 ' + sd.r + ' 倍。乙数是多少？';
+    answer = sd.s / (sd.r + 1);
     steps = 2;
   } else if (isAge) {
     
-    prompt = '爸爸今年 40 岁，儿子今年 12 岁。多少年后爸爸的年龄正好是儿子的 2 倍？';
-    answer = 16;
+    var AGE = [{ f: 40, c: 12, k: 2 }, { f: 45, c: 15, k: 2 }, { f: 38, c: 10, k: 3 }, { f: 50, c: 20, k: 2 }];
+    var age = AGE[v % AGE.length];
+    var ageYears = (age.f - age.c) / (age.k - 1) - age.c;
+    prompt = '爸爸今年 ' + age.f + ' 岁，儿子今年 ' + age.c + ' 岁。多少年后爸爸的年龄正好是儿子的 ' + age.k + ' 倍？';
+    answer = ageYears;
     steps = 3;
   } else if (isProfitLoss) {
     
-    prompt = '幼儿园分苹果：如果每人分 3 个，则多出 7 个；如果每人分 4 个，则还差 5 个。'
-      + '幼儿园一共有多少个小朋友？';
-    answer = 12;
+    var PL = [{ p1: 3, e1: 7, p2: 4, s2: 5 }, { p1: 5, e1: 8, p2: 7, s2: 6 }, { p1: 4, e1: 10, p2: 6, s2: 2 }, { p1: 6, e1: 4, p2: 8, s2: 6 }];
+    var pl = PL[v % PL.length];
+    var plN = (pl.e1 + pl.s2) / (pl.p2 - pl.p1);
+    prompt = '幼儿园分苹果：如果每人分 ' + pl.p1 + ' 个，则多出 ' + pl.e1 + ' 个；如果每人分 ' + pl.p2 + ' 个，则还差 ' + pl.s2 + ' 个。幼儿园一共有多少个小朋友？';
+    answer = plN;
     steps = 3;
   } else if (isChicken) {
     
-    prompt = '鸡兔同笼，共有 20 个头、56 只脚。笼中兔子有多少只？';
-    answer = 8;
+    var CR = [{ h: 20, f: 56 }, { h: 30, f: 84 }, { h: 25, f: 70 }, { h: 18, f: 52 }];
+    var cr = CR[v % CR.length];
+    prompt = '鸡兔同笼，共有 ' + cr.h + ' 个头、' + cr.f + ' 只脚。笼中兔子有多少只？';
+    answer = (cr.f - 2 * cr.h) / 2;
     steps = 3;
   } else if (isAverage) {
     
-    prompt = '小明三次数学测验的平均分是 18 分（满分 20），前两次分别得 15 分和 20 分。'
-      + '第三次测验得了多少分？';
-    answer = 19;
+    var AV = [{ a: 18, x: 15, y: 20 }, { a: 90, x: 85, y: 92 }, { a: 88, x: 90, y: 86 }, { a: 80, x: 76, y: 82 }];
+    var av = AV[v % AV.length];
+    prompt = '小明三次数学测验的平均分是 ' + av.a + ' 分，前两次分别得 ' + av.x + ' 分和 ' + av.y + ' 分。第三次测验得了多少分？';
+    answer = 3 * av.a - av.x - av.y;
     steps = 2;
   } else if (isPlanting) {
     
-    prompt = '在一条长 100 米的小路一旁植树，每隔 5 米栽一棵，两端都要栽。一共要栽多少棵树？';
-    answer = 21;
+    var PLT = [{ l: 100, g: 5 }, { l: 120, g: 6 }, { l: 150, g: 5 }, { l: 200, g: 8 }];
+    var plt = PLT[v % PLT.length];
+    prompt = '在一条长 ' + plt.l + ' 米的小路一旁植树，每隔 ' + plt.g + ' 米栽一棵，两端都要栽。一共要栽多少棵树？';
+    answer = plt.l / plt.g + 1;
     steps = 2;
   } else if (isPhalanx) {
     
-    prompt = '同学们排成一个实心方阵，最外层每边有 8 人。最外层一共有多少人？';
-    answer = 28;
+    var PHX = [8, 10, 6, 12];
+    var phx = PHX[v % PHX.length];
+    prompt = '同学们排成一个实心方阵，最外层每边有 ' + phx + ' 人。最外层一共有多少人？';
+    answer = 4 * (phx - 1);
     steps = 2;
   } else if (isPeriodic) {
     
-    prompt = '节日彩灯按「红、黄、蓝」的顺序循环排列。第 30 盏灯是什么颜色？';
-    answer = '蓝';
+    var PER = [{ cols: ['红', '黄', '蓝'], pos: 30 }, { cols: ['红', '黄', '蓝', '绿'], pos: 25 }, { cols: ['红', '黄', '蓝'], pos: 22 }, { cols: ['黑', '白'], pos: 17 }];
+    var per = PER[v % PER.length];
+    prompt = '节日彩灯按「' + per.cols.join('、') + '」的顺序循环排列。第 ' + per.pos + ' 盏灯是什么颜色？';
+    answer = per.cols[(per.pos - 1) % per.cols.length];
     steps = 2;
   } else if (isGrass) {
     
-    prompt = '一片牧场的草均匀生长。可供 10 头牛吃 20 天，或供 15 头牛吃 10 天。'
-      + '照此计算，可供 25 头牛吃多少天？';
-    answer = 5;
+    var GRASS = [{ a: 10, b: 20, c: 15, d: 10, e: 25, t: 5 }, { a: 10, b: 30, c: 15, d: 15, e: 20, t: 10 }, { a: 8, b: 20, c: 12, d: 10, e: 14, t: 8 }];
+    var gr = GRASS[v % GRASS.length];
+    prompt = '一片牧场的草均匀生长。可供 ' + gr.a + ' 头牛吃 ' + gr.b + ' 天，或供 ' + gr.c + ' 头牛吃 ' + gr.d + ' 天。照此计算，可供 ' + gr.e + ' 头牛吃多少天？';
+    answer = gr.t;
     steps = 4;
   } else if (isFracPct) {
     
-    prompt = '小明读一本书，第一天读了全书的 1/4，第二天读了全书的 1/3，还剩 50 页没读。'
-      + '这本书一共有多少页？';
-    answer = 120;
+    var FR = [{ f1: '1/4', f2: '1/3', rem: 50, ans: 120 }, { f1: '1/3', f2: '1/4', rem: 60, ans: 144 }, { f1: '1/2', f2: '1/5', rem: 30, ans: 100 }];
+    var fr = FR[v % FR.length];
+    prompt = '小明读一本书，第一天读了全书的 ' + fr.f1 + '，第二天读了全书的 ' + fr.f2 + '，还剩 ' + fr.rem + ' 页没读。这本书一共有多少页？';
+    answer = fr.ans;
     steps = 3;
   } else if (isEconomics) {
     
-    prompt = '一件商品进价 80 元，标价 120 元。商店按标价打八折出售，每件可获利多少元？';
-    answer = 16;
+    var ECO = [{ cost: 80, price: 120, disc: 0.8, ans: 16 }, { cost: 100, price: 150, disc: 0.9, ans: 35 }, { cost: 60, price: 100, disc: 0.85, ans: 25 }];
+    var eco = ECO[v % ECO.length];
+    var ecoSale = Math.round(eco.price * eco.disc);
+    prompt = '一件商品进价 ' + eco.cost + ' 元，标价 ' + eco.price + ' 元。商店按标价打 ' + Math.round(eco.disc * 10) + ' 折出售，每件可获利多少元？';
+    answer = ecoSale - eco.cost;
     steps = 2;
   } else if (isInclusion) {
     
-    var total = 40, aN = 20, bN = 18, cN = 16, ab = 8, ac = 7, bc = 6, abc = 3;
-    prompt = '某班 40 人，参加数学小组 20 人、英语小组 18 人、科学小组 16 人；'
-      + '同时参加数学和英语的 8 人，数学和科学的 7 人，英语和科学的 6 人；三个小组都参加的 3 人。'
-      + '三个小组都没参加的有多少人？';
-    answer = total - (aN + bN + cN - ab - ac - bc + abc);
+    var INC = [
+      { total: 40, aN: 20, bN: 18, cN: 16, ab: 8, ac: 7, bc: 6, abc: 3 },
+      { total: 50, aN: 25, bN: 22, cN: 20, ab: 10, ac: 9, bc: 8, abc: 4 },
+      { total: 45, aN: 18, bN: 16, cN: 15, ab: 7, ac: 6, bc: 5, abc: 2 }
+    ];
+    var inc = INC[v % INC.length];
+    prompt = '某班 ' + inc.total + ' 人，参加数学小组 ' + inc.aN + ' 人、英语小组 ' + inc.bN + ' 人、科学小组 ' + inc.cN + ' 人；'
+      + '同时参加数学和英语的 ' + inc.ab + ' 人，数学和科学的 ' + inc.ac + ' 人，英语和科学的 ' + inc.bc + ' 人；三个小组都参加的 ' + inc.abc + ' 人。三个小组都没参加的有多少人？';
+    answer = inc.total - (inc.aN + inc.bN + inc.cN - inc.ab - inc.ac - inc.bc + inc.abc);
     steps = 3;
   } else if (isEq2) {
     
-    prompt = '已知甲、乙两数之和是 10，甲数比乙数大 4。甲数是多少？';
-    answer = 7;
+    var EQ2 = [{ s: 10, d: 4 }, { s: 14, d: 6 }, { s: 20, d: 8 }, { s: 16, d: 4 }];
+    var eq2 = EQ2[v % EQ2.length];
+    prompt = '已知甲、乙两数之和是 ' + eq2.s + '，甲数比乙数大 ' + eq2.d + '。甲数是多少？';
+    answer = (eq2.s + eq2.d) / 2;
     steps = 2;
   } else if (isEq1) {
     
-    prompt = '一个数的 3 倍加上 5 等于 20。这个数是多少？（列方程解答）';
-    answer = 5;
+    var EQ1 = [{ a: 3, b: 5, c: 20 }, { a: 2, b: 3, c: 11 }, { a: 4, b: 7, c: 9 }, { a: 5, b: 8, c: 28 }];
+    var eq1 = EQ1[v % EQ1.length];
+    prompt = '一个数的 ' + eq1.a + ' 倍加上 ' + eq1.b + ' 等于 ' + eq1.c + '。这个数是多少？（列方程解答）';
+    answer = (eq1.c - eq1.b) / eq1.a;
     steps = 2;
   } else if (isDiophantine) {
     
-    prompt = '求方程 3x + 2y = 17 的正整数解一共有多少组？';
-    answer = 3;
+    var DIO = [{ s: '3x + 2y = 17', ans: 3 }, { s: '5x + 2y = 24', ans: 3 }, { s: '2x + 3y = 18', ans: 4 }];
+    var dio = DIO[v % DIO.length];
+    prompt = '求方程 ' + dio.s + ' 的正整数解一共有多少组？';
+    answer = dio.ans;
     steps = 3;
   } else if (isRatio) {
     
-    prompt = '把 100 元奖金按 2:3:5 的比例分给甲、乙、丙三人。丙分得多少元？';
-    answer = 50;
+    var RAT = [{ r: [2, 3, 5], t: 100 }, { r: [1, 2, 3], t: 120 }, { r: [3, 4, 5], t: 120 }, { r: [2, 5, 3], t: 100 }];
+    var rat = RAT[v % RAT.length];
+    var ratSum = rat.r[0] + rat.r[1] + rat.r[2];
+    prompt = '把 ' + rat.t + ' 元奖金按 ' + rat.r[0] + ':' + rat.r[1] + ':' + rat.r[2] + ' 的比例分给甲、乙、丙三人。丙分得多少元？';
+    answer = rat.t * rat.r[2] / ratSum;
     steps = 2;
   } else if (isMixture) {
     
-    prompt = '把 300 克浓度 20% 的盐水和 200 克浓度 30% 的盐水混合。混合后盐水的浓度是百分之多少？';
-    answer = 24;
+    var MIX = [{ m1: 300, w1: 20, m2: 200, w2: 30, ans: 24 }, { m1: 200, w1: 10, m2: 300, w2: 20, ans: 16 }, { m1: 400, w1: 15, m2: 100, w2: 25, ans: 17 }];
+    var mix = MIX[v % MIX.length];
+    prompt = '把 ' + mix.m1 + ' 克浓度 ' + mix.w1 + '% 的盐水和 ' + mix.m2 + ' 克浓度 ' + mix.w2 + '% 的盐水混合。混合后盐水的浓度是百分之多少？';
+    answer = (mix.m1 * mix.w1 + mix.m2 * mix.w2) / (mix.m1 + mix.m2);
     steps = 3;
   } else if (isMisc) {
     
-    prompt = '一口平底锅每次最多能烙 2 张饼，每张饼两面都要烙，每面需 3 分钟。'
-      + '烙熟 3 张饼最少需要多少分钟？';
-    answer = 9;
+    var MISC = [{ k: 3, s: 3 }, { k: 3, s: 2 }, { k: 5, s: 3 }, { k: 4, s: 2 }];
+    var misc = MISC[v % MISC.length];
+    prompt = '一口平底锅每次最多能烙 2 张饼，每张饼两面都要烙，每面需 ' + misc.s + ' 分钟。烙熟 ' + misc.k + ' 张饼最少需要多少分钟？';
+    answer = misc.k * misc.s;
     steps = 3;
   } else if (isMock || isIntegrated) {
     
-    prompt = '商店运来苹果和梨共 120 千克，其中苹果的质量是梨的 3 倍。梨有多少千克？';
-    answer = 30;
+    var INT = [{ t: 120, r: 3 }, { t: 200, r: 4 }, { t: 160, r: 3 }, { t: 240, r: 5 }];
+    var it = INT[v % INT.length];
+    prompt = '商店运来苹果和梨共 ' + it.t + ' 千克，其中苹果的质量是梨的 ' + it.r + ' 倍。梨有多少千克？';
+    answer = it.t / (it.r + 1);
     steps = 2;
   } else {
     
