@@ -454,3 +454,35 @@ test('§33 C08：typeCap=0 的题型仍保留在预算（不得当作能力禁�
   assert.ok(calcCount && calcCount.count >= 1, 'capacity=0 的 calc 仍应进入 typeCounts：' + JSON.stringify(r.typeCounts));
   assert.strictEqual(r.plannedTotal, 5);
 });
+
+// ---------- 难度系统兼容：静默难度的账本桶与生成维度对齐（P0-02） ----------
+test('C10b：未显式难度时 ledger 难度桶 = 实际产出题目难度的桶（修正默认 3 错位）', async () => {
+  const CI = require(path.join(ROOT, 'shared', 'capacity', 'capacity-inventory.js'));
+  // G4 中档 KP：策略 7 维静态 d4 → composed 5；之前 ledger 误标 1-3（默认 3），题目实为 d5
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 4, mode: 'single-kp',
+    knowledgePointIds: ['math-g4-m3-g4-mix-dist'], questionTypes: ['calc'], count: 1
+  });
+  assert.strictEqual(res.status, 'SUCCESS', 'status=' + res.status);
+  assert.ok(res.questions.length >= 1, '应产出');
+  const produced = res.questions[0].difficulty;
+  assert.strictEqual(res.orchestration.difficultyBucket, CI.difficultyBucket(produced),
+    'ledger 桶应与真实产出难度同维度：produced=' + produced + ' bucket=' + res.orchestration.difficultyBucket);
+  assert.strictEqual(res.orchestration.difficultyBucket, '4-6', 'G4 中档 composed=5 应落 4-6（而非默认 3 → 1-3）');
+});
+
+// ---------- 难度系统兼容：显式难度权威且生成/桶严格对齐（回归保护） ----------
+test('C10c：显式难度 d1/6/10 → 产出=d 且桶=difficultyBucket(d)（维度不错位）', async () => {
+  const CI = require(path.join(ROOT, 'shared', 'capacity', 'capacity-inventory.js'));
+  const KP = require(path.join(ROOT, 'shared', 'knowledge', 'knowledge-point.js')).get('math-g6-c1-vertical-multidigit');
+  assert.ok(KP && KP.grade === 6, 'G6 KP 可达');
+  for (const d of [1, 6, 10]) {
+    const res = await GenerationAPI.generate({
+      subject: 'math', grade: 6, mode: 'single-kp',
+      knowledgePointIds: ['math-g6-c1-vertical-multidigit'], questionTypes: ['calc'], count: 1, difficulty: d
+    });
+    assert.strictEqual(res.status, 'SUCCESS', 'd=' + d + ' status=' + res.status);
+    assert.strictEqual(res.questions[0].difficulty, d, '显式难度应权威生效 d=' + d);
+    assert.strictEqual(res.orchestration.difficultyBucket, CI.difficultyBucket(d), '桶应与用户难度同维度 d=' + d);
+  }
+});

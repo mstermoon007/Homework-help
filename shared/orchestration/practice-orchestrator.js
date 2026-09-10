@@ -132,6 +132,40 @@
     return (typeof global !== 'undefined' && global.KnowledgeCapabilityView) ? global.KnowledgeCapabilityView : null;
   }
 
+  function getKnowledgePointAccess() {
+    try { return require('../knowledge/knowledge-point.js'); } catch (e) {}
+    return (typeof global !== 'undefined' && global.KnowledgePoint) ? global.KnowledgePoint : null;
+  }
+
+  function getTargetDifficulty() {
+    try { return require('../strategy/target-difficulty.js'); } catch (e) {}
+    return null;
+  }
+
+  /**
+   * 用户未显式给难度时，预测实际生成难度（策略 7 维静态 + 合成），
+   * 使 Capacity 维度与生成维度对齐（P0-02）。无法推导时回落中档 3。
+   * 只影响容量估算与账本标记，绝不复写 genReq.difficulty（生成仍由策略自行合成）。
+   */
+  function predictDifficulty(kpIds, qts, mode) {
+    var Target = getTargetDifficulty();
+    var KP = getKnowledgePointAccess();
+    if (!Target || !KP) return null;
+    var type = (qts && qts.length ? qts[0] : null) || 'calc';
+    for (var i = 0; i < kpIds.length; i++) {
+      var kp;
+      try { kp = KP.get(kpIds[i]); } catch (e) { kp = null; }
+      if (!kp) continue;
+      try {
+        var r = Target.resolveTargetDifficulty({ knowledgePoint: kp, questionType: type, mode: mode || 'single-kp' });
+        if (r && typeof r.composedDifficulty === 'number' && isFinite(r.composedDifficulty)) {
+          return Math.min(10, Math.max(1, Math.round(r.composedDifficulty)));
+        }
+      } catch (e) { /* 单 KP 推导失败，尝试下一个 */ }
+    }
+    return null;
+  }
+
   function eligibleTypesFor(kpIds, qts) {
     var KCV = getCapabilityView();
     if (!KCV || typeof KCV.buildEligibility !== 'function') {
@@ -161,16 +195,23 @@
     var count = req.count != null ? req.count : (req.volume != null ? req.volume : 20);
     count = Math.max(1, Math.floor(Number(count) || 20));
 
-    // 用户难度（P0-02 维度对齐）：0/空按中档；1-10 归入对应难度桶
-    var difficulty = req.difficulty != null ? Number(req.difficulty) : null;
-    if (difficulty == null && req.scope && req.scope.difficulty != null) difficulty = Number(req.scope.difficulty);
-    if (difficulty == null || !isFinite(difficulty) || difficulty < 1) difficulty = 3;
-    if (difficulty > 10) difficulty = 10;
-
     // 仅对「显式候选 KP + 题型」路径介入（即 v4.3.0 二级/三级页与知识点深链的实际链路）。
     // 池模式（无显式 KP）保持原行为不变，避免回归；其题型覆盖可作为后续扩展。
     var kpIds = explicitKpIds(req);
     if (!kpIds.length) return Promise.resolve({ active: false, reason: 'no-kp' });
+
+    // 用户难度（P0-02 维度对齐）：0/空按中档；1-10 归入对应难度桶。
+    // 用户未显式给难度时，生成难度由策略 7 维静态+合成决定（题面 d≠默认 3），
+    // 因此用 predictDifficulty 把容量查询/账本维度对齐到真实生成维度，避免桶错位。
+    var userDifficulty = req.difficulty != null ? Number(req.difficulty) : null;
+    if (userDifficulty == null && req.scope && req.scope.difficulty != null) userDifficulty = Number(req.scope.difficulty);
+    var difficulty;
+    if (userDifficulty == null || !isFinite(userDifficulty)) {
+      var predicted = predictDifficulty(kpIds, qts, req.mode);
+      difficulty = (predicted != null && isFinite(predicted)) ? predicted : 3;
+    } else {
+      difficulty = Math.min(10, Math.max(1, Math.round(Number(userDifficulty))));
+    }
 
     return getCapacityMapSafe().then(function (capMap) {
       var typeCaps = capacityByType(kpIds, capMap, difficulty);
@@ -400,7 +441,18 @@
           ledger.difficultyBucket = null;
           try {
             var CI2 = getCapacityHelpers();
-            if (CI2 && typeof CI2.difficultyBucket === 'function') ledger.difficultyBucket = CI2.difficultyBucket(p.difficulty);
+            if (CI2 && typeof CI2.difficultyBucket === 'function') {
+              // 用户未显式给难度时，桶以真实产出题目的难度中位数为准（落账口与生成口径同维度，P0-02）
+              var bucketSource = p.difficulty;
+              var realDs = acc.questions
+                .map(function (q) { return Number(q.difficulty); })
+                .filter(function (n) { return isFinite(n) && n >= 1 && n <= 10; });
+              if (realDs.length) {
+                realDs.sort(function (a, b) { return a - b; });
+                bucketSource = realDs[Math.floor(realDs.length / 2)];
+              }
+              ledger.difficultyBucket = CI2.difficultyBucket(bucketSource);
+            }
           } catch (e) { /* 非关键 */ }
           ledger.capabilitySkips = p.capabilitySkips || {};
           ledger.kpTypeMatrix = (p.kpTypeMatrix || []).slice();
