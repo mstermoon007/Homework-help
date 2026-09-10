@@ -17,6 +17,12 @@
 
   var isBrowser = typeof window !== 'undefined';
 
+  // 标准练习编排层（POL）：node 端 require；浏览器由 practice.html 注入全局后兜底。
+  // 不反向 require 上层 API（依赖方向 API → Orchestrator → Strategy → Generator）。
+  var PracticeOrchestrator = (function () {
+    try { return require('../orchestration/practice-orchestrator.js'); } catch (e) { return null; }
+  })();
+
   // ---------- 依赖注入 (DI) ----------
   /**
    * 依赖注册表：内部模块一律通过 inject({...}) 或浏览器全局注入，
@@ -39,7 +45,8 @@
     presentationRenderer: 'PresentationRenderer',
     renderOptions: 'RenderOptions',
     generatorRegistry: 'GeneratorRegistry',
-    strategyValidator: 'StrategyValidator'
+    strategyValidator: 'StrategyValidator',
+    practiceOrchestrator: 'PracticeOrchestrator'
   };
 
   /**
@@ -74,6 +81,12 @@
   function getStrategyValidator() { return getDep('strategyValidator'); }
   function getStrategyEngine() { return getDep('strategyEngine'); }
   function getComprehensiveStrategy() { return getDep('comprehensiveStrategy'); }
+
+  // 编排层（POL）获取：优先 node require 注入，其次浏览器全局兜底
+  function getOrchestratorForPOL() {
+    if (PracticeOrchestrator) return PracticeOrchestrator;
+    return getDep('practiceOrchestrator');
+  }
 
   // ---------- 内部辅助 ----------
   function isComprehensive(request) {
@@ -382,12 +395,13 @@
   }
 
   /**
-   * 主入口：生成 + 渲染
-   * @param {Object} request - GenerateRequest
-   * @param {Object} [options] - { renderOptions, columns, legacyOutput, skipValidation }
-   * @returns {Promise<GenerateResult>}
+   * 内部执行体：build → runPlans → 渲染/状态。被 GenerationAPI.generate 与编排层（POL）共用。
+   * 选项 __noRender=true 时只返回语义题（不渲染），供编排层多轮累积后统一渲染一次。
+   * @param {Object} request
+   * @param {Object} [options]
+   * @returns {Promise<Object>}
    */
-  function generate(request, options) {
+  function executeInline(request, options) {
     options = options || {};
     // 学科路由（R14）：非 math 直接返回 NOT_IMPLEMENTED；math 走既有链（逻辑不变）
     var engine = routeBySubject(request);
@@ -409,6 +423,17 @@
         var traceFailed = Array.isArray(mergedTrace.failedPlans) ? mergedTrace.failedPlans.slice() : [];
         if (run.trace && Array.isArray(run.trace.failedPlans) && run.trace.failedPlans.length) {
           mergedTrace.failedPlans = traceFailed.concat(run.trace.failedPlans);
+        }
+        if (options.__noRender) {
+          return {
+            questions: questions,
+            plans: plans,
+            trace: mergedTrace,
+            failedPlans: (run.trace && run.trace.failedPlans) || [],
+            seenKeys: run.seenKeys || null,
+            producedCount: questions.length,
+            requestedCount: requestCount(request) != null ? requestCount(request) : questions.length
+          };
         }
         var renderOutline = renderQuestions(questions, ro, options.columns);
         // R1/R5：请求级状态——有失败计划或零产出为 FAILED；产出<请求量为 PARTIAL；否则 SUCCESS。
@@ -435,6 +460,27 @@
         };
       });
     });
+  }
+
+  /**
+   * 主入口：生成 + 渲染。
+   * 委托标准练习编排层（POL）统一处理「题型覆盖 / 均衡 / 容量 / 回收 / 账本」；
+   * 编排层对非激活请求（无显式 KP 或池模式）透明回退到 executeInline 原链。
+   * @param {Object} request - GenerateRequest
+   * @param {Object} [options] - { renderOptions, columns, legacyOutput, skipValidation }
+   * @returns {Promise<GenerateResult>}
+   */
+  function generate(request, options) {
+    options = options || {};
+    var PO = getOrchestratorForPOL();
+    if (PO && typeof PO.orchestrate === 'function') {
+      return PO.orchestrate(request, options, {
+        execute: executeInline,
+        render: renderQuestions,
+        getRenderOptions: getRenderOptions
+      });
+    }
+    return executeInline(request, options);
   }
 
   /**

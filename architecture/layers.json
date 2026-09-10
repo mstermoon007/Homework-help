@@ -37,7 +37,9 @@
             "shared/engine/practice-session.js",
             "shared/engine/presentation-engine.js",
             "shared/engine/presentation-engine.bundle.js",
-            "shared/engine/strategy-engine.bundle.js"
+            "shared/engine/strategy-engine.bundle.js",
+            "shared/presentation-engine.bundle.js",
+            "shared/strategy-engine.bundle.js"
           ]
         },
         "STRATEGY": {
@@ -91,7 +93,8 @@
             "shared/generator/core/rng.js",
             "shared/generator/registry-facade.js",
             "shared/generator/generators/semantic-special.js",
-            "shared/generator/core/op-semantics.js"
+            "shared/generator/core/op-semantics.js",
+            "shared/generator/generators/classify.js"
           ]
         },
         "SERVICE_IFACE": {
@@ -175,7 +178,16 @@
         "ASSOCIATION": {
           "desc": "关联层(外围控制/编排)：唯一生成入口与批改分发",
           "files": [
-            "shared/bridge/practice-bridge.js"
+            "shared/bridge/practice-bridge.js",
+            "shared/request/request-normalize.js"
+          ]
+        },
+        "ORCHESTRATION": {
+          "desc": "标准练习编排层(POL)：统一练习级预算/题型覆盖/均衡/容量/回收/账本；仅资源调度，不生成题目",
+          "files": [
+            "shared/orchestration/practice-plan.js",
+            "shared/orchestration/budget-allocation.js",
+            "shared/orchestration/practice-orchestrator.js"
           ]
         },
         "STRATEGY": {
@@ -226,7 +238,8 @@
             "shared/capability/capability-matrix.js",
             "shared/capability/capability-model.js",
             "shared/capability/capability-resolver.js",
-            "shared/capability/capability-scan-context.js"
+            "shared/capability/capability-scan-context.js",
+            "shared/capacity/capacity-inventory.js"
           ]
         },
         "LEARNER": {
