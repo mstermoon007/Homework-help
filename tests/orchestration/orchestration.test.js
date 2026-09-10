@@ -486,3 +486,74 @@ test('C10c：显式难度 d1/6/10 → 产出=d 且桶=difficultyBucket(d)（维�
     assert.strictEqual(res.orchestration.difficultyBucket, CI.difficultyBucket(d), '桶应与用户难度同维度 d=' + d);
   }
 });
+
+// ---------- 题型组合权威：typeCounts / perTypeCount 不再被均衡重算覆盖（策略引擎规则①/②对齐） ----------
+test('D01：typeCounts 显式单类型 → 产出=该题型数量，不被 recovery 补齐到 count', async () => {
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 1, mode: 'single-kp',
+    knowledgePointIds: ['math-g1-m1-addsub-10'], questionTypes: ['calc', 'fill'],
+    count: 10, typeCounts: { calc: 2 }, difficulty: 2
+  });
+  assert.strictEqual(res.status, 'PARTIAL', '请求 10 满足 2 应 PARTIAL（缺口如实入账，不静默）');
+  assert.strictEqual(res.orchestration.reason, 'PARTIAL_EXPLICIT_COMPOSITION');
+  assert.strictEqual(res.producedCount, 2, '显式 calc:2 权威，不得补齐到 10，实际 ' + res.producedCount);
+  assert.strictEqual(res.orchestration.plannedCount, 2, '计划应=2');
+  res.questions.forEach((q) => assert.strictEqual(q.questionType, 'calc'));
+});
+
+test('D02：typeCounts 显式多类型且 Σ<count → 产出=Σ（不补齐 count）', async () => {
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 1, mode: 'single-kp',
+    knowledgePointIds: ['math-g1-m1-addsub-10'], questionTypes: ['calc', 'fill'],
+    count: 6, typeCounts: { calc: 2, fill: 2 }, difficulty: 2
+  });
+  assert.strictEqual(res.status, 'PARTIAL', '请求 6 满足 4 → PARTIAL');
+  assert.strictEqual(res.orchestration.reason, 'PARTIAL_EXPLICIT_COMPOSITION');
+  assert.strictEqual(res.orchestration.plannedCount, 4, '计划应=Σ(2+2)=4');
+  assert.strictEqual(res.producedCount, 4, '产出应=4（不补齐到 6），实际 ' + res.producedCount);
+  const dist = {};
+  res.questions.forEach((q) => { dist[q.questionType] = (dist[q.questionType] || 0) + 1; });
+  assert.deepStrictEqual(dist, { calc: 2, fill: 2 });
+});
+
+test('D03：perTypeCount 统一每题型数量 → 产出=legibleType×pt，不被 recovery 补齐到 count', async () => {
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 1, mode: 'single-kp',
+    knowledgePointIds: ['math-g1-m1-addsub-10'], questionTypes: ['calc', 'fill'],
+    count: 10, perTypeCount: 2, difficulty: 2
+  });
+  assert.strictEqual(res.status, 'PARTIAL', '请求 10 满足 4 → PARTIAL（缺口如实入账）');
+  assert.strictEqual(res.orchestration.reason, 'PARTIAL_EXPLICIT_COMPOSITION');
+  assert.strictEqual(res.orchestration.plannedCount, 4, '计划应=2×2=4');
+  assert.strictEqual(res.producedCount, 4, '产出应=4（此前为补齐 count=10，修复后 2/2），实际 ' + res.producedCount);
+  const dist = {};
+  res.questions.forEach((q) => { dist[q.questionType] = (dist[q.questionType] || 0) + 1; });
+  assert.deepStrictEqual(dist, { calc: 2, fill: 2 });
+});
+
+test('D04：typeCounts 含选区不可行题型 → 跳过并记入 skippedTypes，其余类型原样保留', async () => {
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 1, mode: 'single-kp',
+    knowledgePointIds: ['math-g1-m1-addsub-10'], questionTypes: ['calc', 'fill', 'exercise'],
+    count: 6, typeCounts: { calc: 2, fill: 2, exercise: 2 }, difficulty: 2
+  });
+  assert.strictEqual(res.status, 'PARTIAL', '请求 6 满足 4 → PARTIAL');
+  assert.ok(Array.isArray(res.orchestration.skippedTypes) && res.orchestration.skippedTypes.indexOf('exercise') !== -1,
+    'exercise（选区不可行）应标记为 skipped，实际 ' + JSON.stringify(res.orchestration.skippedTypes || []));
+  assert.strictEqual(res.producedCount, 4, '产出应=可行题型 Σ(2+2)=4，实际 ' + res.producedCount);
+  const dist = {};
+  res.questions.forEach((q) => { dist[q.questionType] = (dist[q.questionType] || 0) + 1; });
+  assert.deepStrictEqual(dist, { calc: 2, fill: 2 });
+});
+
+test('D05：显式 typeCounts 受容量封顶（P0-03 容量仅作预算封顶）→ planned 收缩、缺口入账', async () => {
+  const res = await GenerationAPI.generate({
+    subject: 'math', grade: 1, mode: 'single-kp',
+    knowledgePointIds: ['math-g3-m6-g3-polygon'], questionTypes: ['geometry'],
+    count: 5, typeCounts: { geometry: 5 }, difficulty: 2
+  });
+  assert.strictEqual(res.status, 'PARTIAL', '请求 5 满足 1 → PARTIAL');
+  assert.strictEqual(res.orchestration.plannedCount, 1, '显式 5 亦受容量封顶，应收缩到 1');
+  assert.strictEqual(res.producedCount, 1, '产出应=容量上限 1');
+  assert.strictEqual(res.orchestration.coverageStatus, 'CAPACITY_LIMITED', '容量受限应显式标记');
+});

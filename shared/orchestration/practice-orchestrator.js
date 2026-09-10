@@ -213,12 +213,92 @@
       difficulty = Math.min(10, Math.max(1, Math.round(Number(userDifficulty))));
     }
 
-    return getCapacityMapSafe().then(function (capMap) {
+    /**
+   * 显式题型组合（typeCounts / perTypeCount）在 POL 路径同样权威（对齐 strategy-engine 规则①/②）：
+   *   - typeCounts   ：逐题型数量原样保留（仅剔除选区上不可行的题型），不再被均衡重算覆盖；
+   *   - perTypeCount ：统一每题型数量，参与题型受总量上限约束（Σ ≤ count）；
+   *   - 两类均受题型容量封顶（P0-03 容量仅作预算封顶）；封顶/不可行题型记入 skipped。
+   * 返回 null 表示未给出显式组合（走默认保底+均衡），或直接返回组合结果。
+   */
+  /** 归一显式 typeCounts：数组 [{questionType,count}] 或对象 {qt:count} 均可 */
+  function explicitTypeCountsEntries(req) {
+    if (Array.isArray(req.typeCounts) && req.typeCounts.length) {
+      return req.typeCounts.map(function (t) { return t ? { questionType: String(t.questionType), count: t.count } : null; })
+        .filter(Boolean);
+    }
+    if (req.typeCounts && typeof req.typeCounts === 'object') {
+      var arr = [];
+      for (var k in req.typeCounts) {
+        if (Object.prototype.hasOwnProperty.call(req.typeCounts, k)) {
+          var c = Number(req.typeCounts[k]);
+          if (isFinite(c) && c > 0) arr.push({ questionType: k, count: c });
+        }
+      }
+      return arr.length ? arr : null;
+    }
+    return null;
+  }
+
+  function explicitTypeCounts(req, feasibleTypes, count, typeCaps) {
+    var capOf = function (t) {
+      var c = typeCaps ? typeCaps[t] : null;
+      if (c == null) return Infinity;
+      c = Number(c);
+      return (isFinite(c) && c >= 0) ? c : Infinity;
+    };
+    var pairs = explicitTypeCountsEntries(req);
+    if (pairs) {
+      var out = [], total = 0, skipped = [], capped = false;
+      pairs.forEach(function (t) {
+        if (!t || t.questionType == null) return;
+        var label = String(t.questionType);
+        if (feasibleTypes.indexOf(label) === -1) { skipped.push(label); return; }
+        var c = Math.max(0, Math.floor(Number(t.count) || 0));
+        var cap = capOf(label);
+        if (c > cap) { capped = true; c = cap; }
+        if (c === 0) { skipped.push(label); return; }
+        out.push({ questionType: label, count: c });
+        total += c;
+      });
+      return {
+        typeCounts: out, plannedTotal: total,
+        coverageStatus: (skipped.length || capped) ? ((skipped.length ? 'TYPE_COVERAGE_INFEASIBLE' : 'CAPACITY_LIMITED')) : 'OK',
+        reason: (skipped.length ? '显式题型在选区不可行已跳过: ' + skipped.join(',')
+                                 : (capped ? '显式题型受容量封顶' : null)),
+        skipped: skipped
+      };
+    }
+    if (req.perTypeCount != null && req.perTypeCount >= 1) {
+      var pt = Math.max(1, Math.floor(Number(req.perTypeCount)));
+      pt = Math.min(count, pt);
+      var out2 = [], total2 = 0, skipped2 = [], capped2 = false;
+      (feasibleTypes || []).forEach(function (t) {
+        if (total2 + pt > count) { skipped2.push(t); return; }
+        var cap = capOf(t);
+        var give = Math.min(pt, cap);
+        if (give <= 0) { skipped2.push(t); return; }
+        if (give < pt) capped2 = true;
+        out2.push({ questionType: t, count: give });
+        total2 += give;
+      });
+      return {
+        typeCounts: out2, plannedTotal: total2,
+        coverageStatus: (skipped2.length || capped2) ? ((skipped2.length ? 'TYPE_COVERAGE_INFEASIBLE' : 'CAPACITY_LIMITED')) : 'OK',
+        reason: (skipped2.length ? '总量上限/容量封顶剔除题型: ' + skipped2.join(',') : (capped2 ? '显式题型受容量封顶' : null)),
+        skipped: skipped2
+      };
+    }
+    return null;
+  }
+
+  return getCapacityMapSafe().then(function (capMap) {
       var typeCaps = capacityByType(kpIds, capMap, difficulty);
       // 可行题型 = 能力判定（eligible），不是容量（P0-03）；容量仅作预算封顶。
       var ev = eligibleTypesFor(kpIds, qts);
       var feasibleTypes = ev.feasible;
-      var alloc = BudgetAllocation.allocateTypeBudgets({ count: count, questionTypes: feasibleTypes, typeCaps: typeCaps });
+      var explicitAlloc = explicitTypeCounts(req, feasibleTypes, count, typeCaps);
+      var alloc = explicitAlloc ||
+        BudgetAllocation.allocateTypeBudgets({ count: count, questionTypes: feasibleTypes, typeCaps: typeCaps });
       // Type Budget + KP Budget → GenerationTask[]（P0-05）
       var kpBudget = BudgetAllocation.allocateKpTypeBudget({
         typeCounts: alloc.typeCounts,
@@ -248,8 +328,12 @@
         eligibleKpsForType: (ev.eligibility && ev.eligibility.eligibleKpsForType) || null,
         kpIds: kpIds.slice(),
         capabilitySkips: ev.skips,
+        skippedTypes: explicitAlloc ? explicitAlloc.skipped : [],
+        explicitCombo: !!explicitAlloc,
         difficulty: difficulty,
         plannedTotal: alloc.plannedTotal,
+        // 显式题型组合（typeCounts/perTypeCount）权威：总量以计划为准，不得被 recovery 补齐到 count
+        targetTotal: explicitAlloc ? alloc.plannedTotal : count,
         coverageStatus: alloc.coverageStatus,
         reason: alloc.reason
       };
@@ -364,16 +448,20 @@
         var acc = firstRun.acc;
         var coveredKps = firstRun.coveredKps;
         var requested = p.requestedCount;
+        // 显式组合时以计划总量为目标（防 recovery 破坏显式逐题型数量守恒）；否则补齐到 count
+        var target = p.targetTotal != null ? p.targetTotal : p.requestedCount;
         var produced = acc.questions.length;
         var recovered = 0;
         var rounds = 0;
 
         function loop() {
-          if (produced >= requested) return Promise.resolve();
+          if (produced >= target) return Promise.resolve();
           if (rounds >= MAX_RECOVERY_ROUNDS) return Promise.resolve();
+          // 显式题型组合：逐题型数量为权威，跨题型 recovery 会破坏 O(计数不挪用) 语义 → 不补齐
+          if (p.explicitCombo) return Promise.resolve();
           rounds += 1;
           var producedByType = PracticePlan.aggregateTypeDistribution(acc.questions);
-          var deficit = requested - produced;
+          var deficit = target - produced;
           var rec = BudgetAllocation.allocateRecovery({
             deficit: deficit,
             questionTypes: p.feasibleTypes.length ? p.feasibleTypes : p.selectedTypes,
@@ -414,11 +502,14 @@
 
           var status, reason = null;
           if (produced === 0) status = 'FAILED';
+          // 状态以原请求（requested）为满足度：显式组合产出≥planned 但 < requested 时仍为 PARTIAL（缺口如实入账，不弱化）
           else if (produced >= requested) status = 'SUCCESS';
           else {
             status = 'PARTIAL';
-            if (exhaustedTypes.length) reason = 'PARTIAL_TYPE_COVERAGE';
-            else if (p.coverageStatus === 'CAPACITY_LIMITED' || p.coverageStatus === 'TYPE_COVERAGE_INFEASIBLE') reason = 'PARTIAL_CAPACITY';
+            if (p.explicitCombo && produced === p.plannedTotal) {
+              reason = 'PARTIAL_EXPLICIT_COMPOSITION'; // 显式题型组合权威：按计划产出，未补齐 count（语义对齐策略引擎规则①/②）
+            } else if (exhaustedTypes.length) { reason = 'PARTIAL_TYPE_COVERAGE'; }
+            else if (p.coverageStatus === 'CAPACITY_LIMITED' || p.coverageStatus === 'TYPE_COVERAGE_INFEASIBLE') { reason = 'PARTIAL_CAPACITY'; }
             else reason = (acc.failedPlans && acc.failedPlans.length) ? 'PARTIAL_GENERATION_SPACE' : 'PARTIAL_DEDUP';
           }
 
@@ -455,6 +546,7 @@
             }
           } catch (e) { /* 非关键 */ }
           ledger.capabilitySkips = p.capabilitySkips || {};
+          ledger.skippedTypes = (p.skippedTypes || []).slice();
           ledger.kpTypeMatrix = (p.kpTypeMatrix || []).slice();
           ledger.coveredKps = coveredKps.slice();
           ledger.coveredKpCount = coveredKps.length;
