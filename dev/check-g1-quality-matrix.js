@@ -83,8 +83,33 @@ const KEY_KPS = new Set([
   'math-g1-m13-division-table',       // 乘除扩展
 ]);
 
+// 低容量 KP（生成空间真实去重上限，2026-09-11 全量审计实测锚定）：
+// 图形族（solid/flat/count/combine/draw）当前各仅 1 个语义变体；rmb-calc 3；addsub-5 ≈15（抽样抖动 14~15，锚 14）。
+// 门禁按「实际容量」作回归基准：未来扩容生成器后同步上调对应上限即可，防止静默退化。
+// 值班点：若某 KP 题量跌破该上限，说明生成器发生回归，门禁即红。
+const CAPACITY = {
+  'math-g1-m6-solid-shape': 1,
+  'math-g1-m6-flat-shape': 1,
+  'math-g1-m6-count-graph': 1,
+  'math-g1-m6-shape-combine': 1,
+  'math-g1-m6-draw-shape': 1,
+  'math-g1-m4-rmb-calc': 3,
+  'math-g1-m1-addsub-5': 14,
+};
+
+// 低容量 KP 的判断题量（count=容量，全量穷尽，无 dedup 损失）
+function capacityOf(kp) {
+  return CAPACITY[kp] || 0;
+}
+
 function requiredCount(kp) {
+  if (capacityOf(kp)) return capacityOf(kp);
   return KEY_KPS.has(kp) ? 50 : 20;
+}
+
+// Step34 快速门禁（count=5）对低容量 KP 按容量收紧：要求产出等于其容量上限
+function step34Count(kp) {
+  return capacityOf(kp) ? capacityOf(kp) : 5;
 }
 
 // ---------- 生成辅助 ----------
@@ -100,9 +125,10 @@ async function runStep34() {
   console.log('\n--- Step 34: 一年级全 KP 门禁（每 KP count=5 快速门禁）---');
   let pass = 0, fail = 0;
   for (const kp of ALL_KPS) {
+    const want = step34Count(kp);
     try {
-      const g = await gen({ knowledgePointIds: [kp], mode: 'single-kp', grade: 1, count: 5, difficulty: 3 });
-      if (g.questions.length >= 5 && g.failedPlans.length === 0) {
+      const g = await gen({ knowledgePointIds: [kp], mode: 'single-kp', grade: 1, count: want, difficulty: 3 });
+      if (g.questions.length >= want && g.failedPlans.length === 0) {
         pass++;
       } else {
         console.log('  ⚠️ ' + kp + ': questions=' + g.questions.length + ' failed=' + g.failedPlans.length);

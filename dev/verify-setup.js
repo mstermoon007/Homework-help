@@ -65,9 +65,10 @@ check('.github/CODEOWNERS 存在', fileExists('.github/CODEOWNERS'));
 check('CODEOWNERS 包含 practice.html', fileContains('.github/CODEOWNERS', 'practice.html'));
 check('CODEOWNERS 包含 shared/core/common.js', fileContains('.github/CODEOWNERS', 'shared/core/common.js'));
 
-// 6. 贡献指南与编码规范（V4.0.1 起统一维护于根目录《技术文档--基础》）
-check('技术文档--基础.md 存在', fileExists('技术文档--基础.md'));
-check('技术文档--基础.md 载明 DOM 边界规范', fileContains('技术文档--基础.md', 'DOM 边界'));
+// 6. 贡献指南与编码规范（V4.0.1 起统一维护于根目录《技术文档--基础》；
+//    6052262 文档迁移后规范文档位于 docs/ 目录，此处对齐 README/Frozen Core 的规范地址）
+check('技术文档--基础.md 存在', fileExists('docs/技术文档--基础.md'));
+check('技术文档--基础.md 载明 DOM 边界规范', fileContains('docs/技术文档--基础.md', 'DOM 边界'));
 
 // 7. 题型目录页已收口：math-types.html 于「目录页合并」中改为纯重定向桩，
 //    不再承载题型渲染，故不再要求引入共享层脚本，改而校验其重定向目标

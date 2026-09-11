@@ -694,10 +694,22 @@
     return kp.book === book;
   }
 
+  // 知识点是否属于竞赛模块（C1–C9）——基础练习（快速/教师）不含竞赛单元，竞赛内容仅竞赛模式提供
+  function isCompetitionKp(kp) {
+    var mid = kp && kp.moduleId;
+    if (!mid) return false;
+    var catalog = (window.MODULE_CATALOG && Array.isArray(window.MODULE_CATALOG)) ? window.MODULE_CATALOG : [];
+    for (var i = 0; i < catalog.length; i++) {
+      if (catalog[i] && catalog[i].id === mid) { return catalog[i].level === 'competition'; }
+    }
+    return false;
+  }
+
   // 按（上下册 × 单元）分组知识点，返回 [{ book, unit, label, kps: [] }]
   function unitBuckets(entries, book) {
     var map = {};
     entries.forEach(function (k) {
+      if (isCompetitionKp(k)) return;
       if (!kpMatchesBook(k, book)) return;
       var b = k.book || 'all';
       var u = k.unit || ('（' + (b === 'up' ? '上册' : b === 'down' ? '下册' : b === 'advance' ? '超前' : '跨册') + ' 综合）');
@@ -762,7 +774,7 @@
     QUICK_TYPE_DEFS.forEach(function (t) {
       var on = state.quickTypes.indexOf(t.key) !== -1 ? ' on' : '';
       var cnt = entries.filter(function (k) {
-        return kpMatchesBook(k, state.quickBook) && kpMatchesType(k, t) &&
+        return !isCompetitionKp(k) && kpMatchesBook(k, state.quickBook) && kpMatchesType(k, t) &&
           (state.quickUnits.length ? state.quickUnits.indexOf(k.unit) !== -1 : true);
       }).length;
       var disabled = cnt === 0 ? ' disabled' : '';
@@ -969,6 +981,7 @@
       // 快速模式：按「上下册 + 已选单元 + 题型能力匹配」收集知识点（知识点驱动）
       var defs = QUICK_TYPE_DEFS.filter(function (t) { return state.quickTypes.indexOf(t.key) !== -1; });
       entries.forEach(function (k) {
+        if (isCompetitionKp(k)) return;
         if (!kpMatchesBook(k, state.quickBook)) return;
         if (state.quickUnits.length && state.quickUnits.indexOf(k.unit) === -1) return;
         if (defs.length && !defs.some(function (d) { return kpMatchesType(k, d); })) return;
