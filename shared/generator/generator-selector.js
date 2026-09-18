@@ -63,6 +63,12 @@ function isStatsFamily(g) {
   return g.id === 'generator:stats';
 }
 
+// P17-10：classification 是「分类整理」元题型（7 类中 classify 的唯一载体生成器）。
+// 仅对 classify 计划享有语义域地位，避免泛型匹配被 arithmetic 家族 semanticOp 抢先误选（产越界题）。
+function isClassificationFamily(g) {
+  return g.id === 'generator:classification';
+}
+
 function isPictureEquationFamily(g) {
   return g.id === 'generator:picture-equation';
 }
@@ -232,81 +238,47 @@ function selectGenerator(plan, options) {
     if (g.supportsComposite === true && !isCombineRequest) return;
     if (isCombineRequest && g.supportsComposite !== true) return;
 
-    var score = { record: g, kp: 0, semanticOp: 0, capability: 0, qt: 0, diff: 0 };
+    var score = { record: g, kp: 0, capability: 0, qt: 0 };
 
-    // ① KP native binding（本体绑定即语义契约，优先于任何泛型匹配）
-    if (g.knowledgePoints.indexOf(primaryKp) !== -1) score.kp = 1;
+// KP native binding (本体绑定即语义契约，优先于任何泛型匹配)
+if (g.knowledgePoints.indexOf(primaryKp) !== -1) score.kp = 1;
 
-    // Step 13：硬阻断 —— 语义不一致的泛型候选直接拒绝（仅共存 questionType 不视为匹配）。
-    //   仅阻断「无本体绑定」的泛型匹配；显式绑定该 KP 的生成器视为语义契约，最高优先级放行。
-    //   geometry/classify 是元题型（识别/作图/分类整理），不属于任何单一语义域，豁免所有硬阻断。
-    var qt = plan.questionTypeId;
-    var isMetaExempt = qt === 'recognize' || qt === 'geometry' || qt === 'classify';
-    if (!isMetaExempt && isArithmeticFamily(g) && score.kp === 0 && !(arithSem || isAlgebraDomain || (kp && kp.operations && kp.operations.length > 0))) return;
-    if (!isMetaExempt && isComplexFamily(g) && score.kp === 0 && !complexSem) return;
-    if (!isMetaExempt && isShapeFamily(g) && score.kp === 0 && !hasShapeSemantics(kp)) return;
-    if (!isMetaExempt && isMoneyFamily(g) && score.kp === 0 && !hasMoneySemantics(kp)) return;
-    if (!isMetaExempt && isCountingFamily(g) && score.kp === 0 && !hasCountingSemantics(kp)) return;
-    if (!isMetaExempt && isReasoningFamily(g) && score.kp === 0 && !hasReasoningSemantics(kp)) return;
-    if (!isMetaExempt && isStatsFamily(g) && score.kp === 0 && !hasStatsSemantics(kp)) return;
-    if (!isMetaExempt && isPictureEquationFamily(g) && score.kp === 0 && !hasPictureEquationSemantics(kp)) return;
-    if (!isMetaExempt && isC1Family(g) && score.kp === 0 && !hasC1Semantics(kp)) return;
-    if (!isMetaExempt && isC2Family(g) && score.kp === 0 && !hasC2Semantics(kp)) return;
-    if (!isMetaExempt && isC5C6Family(g) && score.kp === 0 && !hasC5C6Semantics(kp)) return;
-    if (!isMetaExempt && isC7Family(g) && score.kp === 0 && !hasC7Semantics(kp)) return;
-    if (!isMetaExempt && isC9Family(g) && score.kp === 0 && !hasC9Semantics(kp)) return;
+// capability：generator 能否处理该 questionType
+if (plan.questionTypeId && g.capabilities.indexOf(plan.questionTypeId) !== -1) score.capability = 1;
 
-    // ② semantic operation：语义域一致才算匹配
-    if (isArithmeticFamily(g) || isComplexFamily(g) || isShapeFamily(g) || isMoneyFamily(g) || isCountingFamily(g) || isReasoningFamily(g) || isStatsFamily(g) || isPictureEquationFamily(g) || isC1Family(g) || isC2Family(g) || isC5C6Family(g) || isC7Family(g) || isC9Family(g)) {
-      score.semanticOp = 1;
-    } else if (score.kp === 1) {
-      score.semanticOp = 1;
-    }
+// questionType
+if (plan.questionTypeId && g.questionTypes.indexOf(plan.questionTypeId) !== -1) score.qt = 1;
 
-    // ③ content/structure capability（generator.capabilities 交集）
-    if (plan.questionTypeId && g.capabilities.indexOf(plan.questionTypeId) !== -1) score.capability = 1;
+// Candidate qualification: at least one matching dimension
+if (score.kp + score.capability + score.qt > 0) candidates.push(score);
+});
 
-    // ④ questionType
-    if (plan.questionTypeId && g.questionTypes.indexOf(plan.questionTypeId) !== -1) score.qt = 1;
+// Step 12 priority: kp > capability > questionType > version（稳定排序，无 semanticOp/difficulty 二次评分）
+candidates.sort(function (a, b) {
+  if (a.kp !== b.kp) return b.kp - a.kp;
+  if (a.capability !== b.capability) return b.capability - a.capability;
+  if (a.qt !== b.qt) return b.qt - a.qt;
+  var va = a.record.version || 1, vb = b.record.version || 1;
+  if (va !== vb) return vb - va;
+  // tiebreak：core 优先于 legacy
+  if (a.record.scope === 'core' && b.record.scope !== 'core') return -1;
+  if (b.record.scope === 'core' && a.record.scope !== 'core') return 1;
+  return 0;
+});
 
-    // ⑤ difficulty range
-    if (g.difficultyRange && plan.difficulty != null) {
-      if (plan.difficulty >= g.difficultyRange.min && plan.difficulty <= g.difficultyRange.max) score.diff = 1;
-    }
+if (candidates.length === 0) {
+  // MATH-14：legacy 轨道已删除，任何模式无候选均返回 GENERATOR_UNSUPPORTED（无 fallback 宿主）。
+  return { generatorId: null, source: 'unsupported', errorCode: 'GENERATOR_UNSUPPORTED', record: null, mode: mode };
+}
 
-    // 候选资格：真实匹配维度（kp/capability/qt/diff）任一命中；
-    // semanticOp 仅作候选之间的优先级档位（Step 12 ②），不单独构成候选资格。
-    if (score.kp + score.capability + score.qt + score.diff > 0) candidates.push(score);
-  });
-
-  // Step 12 priority：kp > semanticOp > capability > qt > diff > version
-  candidates.sort(function (a, b) {
-    if (a.kp !== b.kp) return b.kp - a.kp;
-    if (a.semanticOp !== b.semanticOp) return b.semanticOp - a.semanticOp;
-    if (a.capability !== b.capability) return b.capability - a.capability;
-    if (a.qt !== b.qt) return b.qt - a.qt;
-    if (a.diff !== b.diff) return b.diff - a.diff;
-    var va = a.record.version || 1, vb = b.record.version || 1;
-    if (va !== vb) return vb - va;
-    // tiebreak：core 优先于 legacy
-    if (a.record.scope === 'core' && b.record.scope !== 'core') return -1;
-    if (b.record.scope === 'core' && a.record.scope !== 'core') return 1;
-    return 0;
-  });
-
-  if (candidates.length === 0) {
-    // MATH-14：legacy 轨道已删除，任何模式无候选均返回 GENERATOR_UNSUPPORTED（无 fallback 宿主）。
-    return { generatorId: null, source: 'unsupported', errorCode: 'GENERATOR_UNSUPPORTED', record: null, mode: mode };
-  }
-
-  var best = candidates[0];
-  return {
-    generatorId: best.record.id,
-    source: 'priority',
-    record: best.record,
-    match: { kp: best.kp, semanticOp: best.semanticOp, capability: best.capability, questionType: best.qt, difficulty: best.diff },
-    mode: mode
-  };
+var best = candidates[0];
+return {
+  generatorId: best.record.id,
+  source: 'priority',
+  record: best.record,
+  match: { kp: best.kp, capability: best.capability, questionType: best.qt },
+  mode: mode
+};
 }
 
 /**

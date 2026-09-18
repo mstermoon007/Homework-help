@@ -1,0 +1,1282 @@
+[
+  {
+    "unitId": "G1-advance-01",
+    "grade": "G1",
+    "book": "advance",
+    "unitNo": "X01",
+    "unitName": "超前（二上 表内乘法）",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-advance-02",
+    "grade": "G1",
+    "book": "advance",
+    "unitNo": "X02",
+    "unitName": "超前（二下 表内除法）",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-advance-03",
+    "grade": "G1",
+    "book": "advance",
+    "unitNo": "X03",
+    "unitName": "超前（乘除逆运算）",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-down-01",
+    "grade": "G1",
+    "book": "down",
+    "unitNo": "01",
+    "unitName": "认识平面图形",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-down-02",
+    "grade": "G1",
+    "book": "down",
+    "unitNo": "02",
+    "unitName": "20以内的退位减法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-down-03",
+    "grade": "G1",
+    "book": "down",
+    "unitNo": "03",
+    "unitName": "100以内数的认识",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-down-04",
+    "grade": "G1",
+    "book": "down",
+    "unitNo": "04",
+    "unitName": "100以内的口算加、减法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-down-05",
+    "grade": "G1",
+    "book": "down",
+    "unitNo": "05",
+    "unitName": "100以内的笔算加、减法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-down-06",
+    "grade": "G1",
+    "book": "down",
+    "unitNo": "06",
+    "unitName": "数量间的加减关系",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-down-92",
+    "grade": "G1",
+    "book": "down",
+    "unitNo": "06",
+    "unitName": "数量间的加减关系（连续两问）",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-down-91",
+    "grade": "G1",
+    "book": "down",
+    "unitNo": "X01",
+    "unitName": "欢乐购物街（认识人民币）",
+    "unitType": "practice",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-down-93",
+    "grade": "G1",
+    "book": "down",
+    "unitNo": "X02",
+    "unitName": "欢乐购物街（买卖我做主 · 综合实践）",
+    "unitType": "practice",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-01",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X01",
+    "unitName": "跨册（一上 11~20 / 一下 100以内数的组成）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-02",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X02",
+    "unitName": "跨册（一上 11~20 数位建立 / 一下 100以内扩展）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-03",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X03",
+    "unitName": "跨册（一上 11~20 / 一下 100以内数的顺序）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-04",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X04",
+    "unitName": "跨册（一上 5~20以内 / 一下 100以内比大小）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-05",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X05",
+    "unitName": "跨册（立体 / 平面图形计数）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-06",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X06",
+    "unitName": "跨册（解决问题·含多余条件）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-07",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X07",
+    "unitName": "跨册（口算算式与得数连线）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-08",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X08",
+    "unitName": "跨册（立体 / 平面图形与名称连线）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-09",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X09",
+    "unitName": "跨册（综合判断题练习）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-mixed-10",
+    "grade": "G1",
+    "book": "mixed",
+    "unitNo": "X10",
+    "unitName": "跨册（综合选择题练习）",
+    "unitType": "cross-book",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-01",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "5以内数的认识和加、减法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-94",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "5以内数的认识和加减法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-93",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "加减法（求未知数）",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-96",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "加减法应用（求剩余）",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-95",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "加减法应用（求总数）",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-97",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "加减法应用（求部分）",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-92",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "数的分与合（5以内 / 6~10）",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-02",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "02",
+    "unitName": "6～10的认识和加、减法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-03",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "03",
+    "unitName": "认识立体图形",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-04",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "04",
+    "unitName": "11~20的认识",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-05",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "05",
+    "unitName": "20以内的进位加法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-91",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "X01",
+    "unitName": "数学游戏",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G1-up-98",
+    "grade": "G1",
+    "book": "up",
+    "unitNo": "X02",
+    "unitName": "综合与实践 数学游戏（上下前后左右位置）",
+    "unitType": "practice",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-down-01",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "01",
+    "unitName": "数据收集整理",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-down-02",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "02",
+    "unitName": "表内除法(一)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-down-03",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "03",
+    "unitName": "图形的运动(一)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-down-05",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "05",
+    "unitName": "混合运算",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-down-06",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "06",
+    "unitName": "有余数的除法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-down-07",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "07",
+    "unitName": "万以内数的认识",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-down-08",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "08",
+    "unitName": "克和千克",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-down-09",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "09",
+    "unitName": "数学广角──推理",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-down-10",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "10",
+    "unitName": "数量间的乘除关系",
+    "unitType": "textbook",
+    "sourceUnitText": "2026版二下 第二单元 数量间的乘除关系",
+    "status": "active"
+  },
+  {
+    "unitId": "G2-down-11",
+    "grade": "G2",
+    "book": "down",
+    "unitNo": "11",
+    "unitName": "万以内的加法和减法",
+    "unitType": "textbook",
+    "sourceUnitText": "2026版二下 第四单元 万以内的加法和减法",
+    "status": "active"
+  },
+  {
+    "unitId": "G2-mixed-01",
+    "grade": "G2",
+    "book": "mixed",
+    "unitNo": "X01",
+    "unitName": "总复习",
+    "unitType": "review",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-up-01",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "长度单位",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-up-02",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "02",
+    "unitName": "100以内的加法和减法(二)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-up-03",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "03",
+    "unitName": "角的初步认识",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-up-04",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "04",
+    "unitName": "表内乘法(一)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-up-05",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "05",
+    "unitName": "观察物体(一)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-up-07",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "07",
+    "unitName": "认识时间",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-up-08",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "08",
+    "unitName": "数学广角——搭配(一)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G2-up-09",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "09",
+    "unitName": "分类与整理",
+    "unitType": "textbook",
+    "sourceUnitText": "2025版二上 第一单元 分类与整理",
+    "status": "active"
+  },
+  {
+    "unitId": "G2-up-10",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "10",
+    "unitName": "1~6的表内除法",
+    "unitType": "textbook",
+    "sourceUnitText": "2025版二上 第三单元 1~6的表内除法",
+    "status": "active"
+  },
+  {
+    "unitId": "G2-up-11",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "11",
+    "unitName": "校园小导游",
+    "unitType": "practice",
+    "sourceUnitText": "2025版二上 综合与实践 校园小导游",
+    "status": "active"
+  },
+  {
+    "unitId": "G2-up-12",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "12",
+    "unitName": "身体上的尺子",
+    "unitType": "practice",
+    "sourceUnitText": "2025版二上 综合与实践 身体上的尺子",
+    "status": "active"
+  },
+  {
+    "unitId": "G2-up-13",
+    "grade": "G2",
+    "book": "up",
+    "unitNo": "13",
+    "unitName": "7~9的表内乘、除法",
+    "unitType": "textbook",
+    "sourceUnitText": "2025版二上 第五单元 7~9的表内乘、除法",
+    "status": "active"
+  },
+  {
+    "unitId": "G3-down-01",
+    "grade": "G3",
+    "book": "down",
+    "unitNo": "01",
+    "unitName": "位置与方向(一)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-down-02",
+    "grade": "G3",
+    "book": "down",
+    "unitNo": "02",
+    "unitName": "除数是一位数的除法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-down-03",
+    "grade": "G3",
+    "book": "down",
+    "unitNo": "03",
+    "unitName": "复式统计表",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-down-04",
+    "grade": "G3",
+    "book": "down",
+    "unitNo": "04",
+    "unitName": "两位数乘两位数",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-down-05",
+    "grade": "G3",
+    "book": "down",
+    "unitNo": "05",
+    "unitName": "面积",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-down-06",
+    "grade": "G3",
+    "book": "down",
+    "unitNo": "06",
+    "unitName": "年、月、日",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-down-07",
+    "grade": "G3",
+    "book": "down",
+    "unitNo": "07",
+    "unitName": "小数的初步认识",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-down-08",
+    "grade": "G3",
+    "book": "down",
+    "unitNo": "08",
+    "unitName": "数学广角——搭配(二)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-mixed-01",
+    "grade": "G3",
+    "book": "mixed",
+    "unitNo": "X01",
+    "unitName": "总复习",
+    "unitType": "review",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-up-01",
+    "grade": "G3",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "时、分、秒",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-up-02",
+    "grade": "G3",
+    "book": "up",
+    "unitNo": "02",
+    "unitName": "万以内的加法和减法(一)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-up-03",
+    "grade": "G3",
+    "book": "up",
+    "unitNo": "03",
+    "unitName": "测量",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-up-05",
+    "grade": "G3",
+    "book": "up",
+    "unitNo": "05",
+    "unitName": "倍的认识",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-up-06",
+    "grade": "G3",
+    "book": "up",
+    "unitNo": "06",
+    "unitName": "多位数乘一位数",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-up-07",
+    "grade": "G3",
+    "book": "up",
+    "unitNo": "07",
+    "unitName": "长方形和正方形",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-up-08",
+    "grade": "G3",
+    "book": "up",
+    "unitNo": "08",
+    "unitName": "分数的初步认识",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-up-09",
+    "grade": "G3",
+    "book": "up",
+    "unitNo": "09",
+    "unitName": "数学广角──集合",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G3-up-91",
+    "grade": "G3",
+    "book": "up",
+    "unitNo": "X01",
+    "unitName": "综合与实践 数字编码",
+    "unitType": "practice",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-down-01",
+    "grade": "G4",
+    "book": "down",
+    "unitNo": "01",
+    "unitName": "四则运算",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-down-02",
+    "grade": "G4",
+    "book": "down",
+    "unitNo": "02",
+    "unitName": "观察物体(二)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-down-03",
+    "grade": "G4",
+    "book": "down",
+    "unitNo": "03",
+    "unitName": "运算定律",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-down-04",
+    "grade": "G4",
+    "book": "down",
+    "unitNo": "04",
+    "unitName": "小数的意义和性质",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-down-05",
+    "grade": "G4",
+    "book": "down",
+    "unitNo": "05",
+    "unitName": "三角形",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-down-06",
+    "grade": "G4",
+    "book": "down",
+    "unitNo": "06",
+    "unitName": "小数的加法和减法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-down-07",
+    "grade": "G4",
+    "book": "down",
+    "unitNo": "07",
+    "unitName": "图形的运动(二)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-down-08",
+    "grade": "G4",
+    "book": "down",
+    "unitNo": "08",
+    "unitName": "平均数与条形统计图",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-down-09",
+    "grade": "G4",
+    "book": "down",
+    "unitNo": "09",
+    "unitName": "数学广角──鸡兔同笼",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-mixed-01",
+    "grade": "G4",
+    "book": "mixed",
+    "unitNo": "X01",
+    "unitName": "总复习",
+    "unitType": "review",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-mixed-02",
+    "grade": "G4",
+    "book": "mixed",
+    "unitNo": "X02",
+    "unitName": "竞赛拓展",
+    "unitType": "competition",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-up-01",
+    "grade": "G4",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "大数的认识",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-up-02",
+    "grade": "G4",
+    "book": "up",
+    "unitNo": "02",
+    "unitName": "公顷和平方千米",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-up-03",
+    "grade": "G4",
+    "book": "up",
+    "unitNo": "03",
+    "unitName": "角的度量",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-up-04",
+    "grade": "G4",
+    "book": "up",
+    "unitNo": "04",
+    "unitName": "三位数乘两位数",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-up-05",
+    "grade": "G4",
+    "book": "up",
+    "unitNo": "05",
+    "unitName": "平行四边形和梯形",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-up-06",
+    "grade": "G4",
+    "book": "up",
+    "unitNo": "06",
+    "unitName": "除数是两位数的除法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-up-07",
+    "grade": "G4",
+    "book": "up",
+    "unitNo": "07",
+    "unitName": "条形统计图",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-up-08",
+    "grade": "G4",
+    "book": "up",
+    "unitNo": "08",
+    "unitName": "数学广角──优化",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G4-up-13",
+    "grade": "G4",
+    "book": "up",
+    "unitNo": "13",
+    "unitName": "可能性与随机现象(演练)",
+    "unitType": "practice",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-down-01",
+    "grade": "G5",
+    "book": "down",
+    "unitNo": "01",
+    "unitName": "观察物体(三)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-down-02",
+    "grade": "G5",
+    "book": "down",
+    "unitNo": "02",
+    "unitName": "因数与倍数",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-down-03",
+    "grade": "G5",
+    "book": "down",
+    "unitNo": "03",
+    "unitName": "长方体和正方体",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-down-04",
+    "grade": "G5",
+    "book": "down",
+    "unitNo": "04",
+    "unitName": "分数的意义和性质",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-down-05",
+    "grade": "G5",
+    "book": "down",
+    "unitNo": "05",
+    "unitName": "图形的运动(三)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-down-06",
+    "grade": "G5",
+    "book": "down",
+    "unitNo": "06",
+    "unitName": "分数的加法和减法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-down-07",
+    "grade": "G5",
+    "book": "down",
+    "unitNo": "07",
+    "unitName": "折线统计图",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-down-08",
+    "grade": "G5",
+    "book": "down",
+    "unitNo": "08",
+    "unitName": "数学广角──找次品",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-mixed-01",
+    "grade": "G5",
+    "book": "mixed",
+    "unitNo": "X01",
+    "unitName": "总复习",
+    "unitType": "review",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-mixed-02",
+    "grade": "G5",
+    "book": "mixed",
+    "unitNo": "X02",
+    "unitName": "竞赛拓展",
+    "unitType": "competition",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-up-01",
+    "grade": "G5",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "小数乘法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-up-02",
+    "grade": "G5",
+    "book": "up",
+    "unitNo": "02",
+    "unitName": "位置",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-up-03",
+    "grade": "G5",
+    "book": "up",
+    "unitNo": "03",
+    "unitName": "小数除法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-up-04",
+    "grade": "G5",
+    "book": "up",
+    "unitNo": "04",
+    "unitName": "可能性",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-up-05",
+    "grade": "G5",
+    "book": "up",
+    "unitNo": "05",
+    "unitName": "简易方程",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-up-06",
+    "grade": "G5",
+    "book": "up",
+    "unitNo": "06",
+    "unitName": "多边形的面积",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G5-up-07",
+    "grade": "G5",
+    "book": "up",
+    "unitNo": "07",
+    "unitName": "数学广角──植树问题",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-down-01",
+    "grade": "G6",
+    "book": "down",
+    "unitNo": "01",
+    "unitName": "负数",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-down-02",
+    "grade": "G6",
+    "book": "down",
+    "unitNo": "02",
+    "unitName": "百分数(二)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-down-03",
+    "grade": "G6",
+    "book": "down",
+    "unitNo": "03",
+    "unitName": "圆柱与圆锥",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-down-04",
+    "grade": "G6",
+    "book": "down",
+    "unitNo": "04",
+    "unitName": "比例",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-down-05",
+    "grade": "G6",
+    "book": "down",
+    "unitNo": "05",
+    "unitName": "数学广角──鸽巢问题",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-mixed-01",
+    "grade": "G6",
+    "book": "mixed",
+    "unitNo": "X01",
+    "unitName": "总复习",
+    "unitType": "review",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-mixed-02",
+    "grade": "G6",
+    "book": "mixed",
+    "unitNo": "X02",
+    "unitName": "竞赛拓展",
+    "unitType": "competition",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-up-01",
+    "grade": "G6",
+    "book": "up",
+    "unitNo": "01",
+    "unitName": "分数乘法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-up-02",
+    "grade": "G6",
+    "book": "up",
+    "unitNo": "02",
+    "unitName": "位置与方向(二)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-up-03",
+    "grade": "G6",
+    "book": "up",
+    "unitNo": "03",
+    "unitName": "分数除法",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-up-04",
+    "grade": "G6",
+    "book": "up",
+    "unitNo": "04",
+    "unitName": "比",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-up-05",
+    "grade": "G6",
+    "book": "up",
+    "unitNo": "05",
+    "unitName": "圆",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-up-06",
+    "grade": "G6",
+    "book": "up",
+    "unitNo": "06",
+    "unitName": "百分数(一)",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-up-07",
+    "grade": "G6",
+    "book": "up",
+    "unitNo": "07",
+    "unitName": "扇形统计图",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  },
+  {
+    "unitId": "G6-up-08",
+    "grade": "G6",
+    "book": "up",
+    "unitNo": "08",
+    "unitName": "数学广角──数与形",
+    "unitType": "textbook",
+    "status": "active",
+    "sourceUnitText": null
+  }
+]

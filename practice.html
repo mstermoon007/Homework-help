@@ -274,13 +274,17 @@
 <script src="shared/catalog/difficulty.js"></script>
 <script src="shared/catalog/difficulty-static.js"></script>
 <script src="shared/presentation/print.js"></script>
-<script src="shared/knowledge/knowledge-bank.js"></script>
+<!-- KBL Runtime 单入口 + POL 知识适配 + Frozen Strategy 兼容桥（须先于 strategy bundle） -->
+<script src="shared/knowledge/runtime/knowledge-runtime.js"></script>
+<script src="shared/orchestration/knowledge-context.js"></script>
+<script src="shared/engine/knowledge-compat.js"></script>
+<!-- P10-3：POL 能力判定视图（CapabilityResolver + KnowledgeContext 投影）接入浏览器，
+     使 practice-orchestrator.plan() 的 feasibleTypes / eligibleKpsForType 在浏览器与 Node 对齐
+     （此前仅 Node require 可达 → 浏览器能力判定恒为「全题型可行」）。 -->
+<script src="shared/capability/knowledge-capability-view.js"></script>
 <!-- 合并二级页装配能力：模块目录 + 题型目录工具（只读数据，浏览器安全，无顶层 require） -->
 <script src="shared/catalog/module-catalog.js"></script>
 <script src="shared/catalog/catalog-utils.js"></script>
-<!-- 知识库分片（knowledge-math.js）不再静态引入，改为按需懒加载（任务 3.1）：
-     由 boot() 在确认科目后调用 KnowledgeBank.ensureKnowledgeData(subject) 动态注入，
-     首屏仅加载当前科目。 -->
 <!-- MATH-14：legacy 插件轨道已删除（plugins/registry.js + shared/plugin-loader.js 已移除），
      strategy bundle 经 capability-resolver 只走 ontology/registry/matrix 三源决策，
      不再急切读取 global.PLUGIN_REGISTRY。 -->
@@ -316,7 +320,6 @@
 <script src="shared/svg/svg-chart.js"></script>
 <script src="shared/svg/svg-diagram.js"></script>
 <script src="shared/svg/svg-currency.js"></script>
-<script src="shared/presentation/svg-templates.js"></script>
 <script src="plugins/svg-clock.js"></script>
 <script src="plugins/svg-area.js"></script>
 <script src="plugins/svg-fraction.js"></script>
@@ -332,9 +335,10 @@
      _lastGeneration 永不更新 → 跨代去重 seenKeys 不注入 → 重新生成出现重复题） -->
 <script src="shared/orchestration/practice-plan.js"></script>
 <script src="shared/orchestration/budget-allocation.js"></script>
+<!-- Phase 8：POL 难度参数域唯一入口（DifficultyOrchestrator）须先于 POL 加载 -->
+<script src="shared/orchestration/difficulty-orchestrator.js"></script>
 <script src="shared/orchestration/practice-orchestrator.js"></script>
 <script src="shared/generation/api.js"></script>
-<script src="shared/strategy/comprehensive-strategy.js"></script>
 <!-- P7：统一练习会话（P7-R01~R04） -->
 <script src="shared/engine/practice-session.js"></script>
 <!-- 关联层：UI 指令 → 生成层指令翻译与反馈接受（不改生成层） -->
@@ -355,7 +359,8 @@
     timerId: null,         // setInterval 句柄
     startTime: 0,          // 开始时间戳
     answered: false,       // 是否已提交
-    knowledgePointIds: null // 合并后：交互选择的 KP id 列表（供错题本 / 难度 EMA；深链时回退 urlParams）
+    knowledgePointIds: null, // 合并后：交互选择的 KP id 列表（供错题本 / 难度 EMA；深链时回退 urlParams）
+    typeCountsEdited: false // P10：仅用户显式编辑分题型数量时才向请求传 typeCounts（否则由 POL 统一分配）
   };
 
   // ============ URL 参数解析 ============
@@ -502,7 +507,7 @@
         state: state,
         knowledgePoints: state.knowledgePointIds || (urlParams.kps ? urlParams.kps.split(',').filter(Boolean) : null),
         knowledgePointId: state.kp || urlParams.kp || null,
-        // 深链 qt 仅作「题型→可见知识点」的勾选过滤器（asmSeedFromUrl 已按 kpVisibleInQT 过滤勾选集合），
+        // 深链 qt 仅作展示/推荐元数据（P10-2 起不再做视图过滤；可生成范围由 POL 判定），
         // 不作为强制题型传给生成层；生成层按勾选知识点 + 题型（分题型题量）由决策层选择最优知识点群生成。
         questionType: state.questionType || null,
         questionTypes: state.questionTypes || null,
@@ -535,6 +540,21 @@
     // B5 关联层唯一入口收敛：bridge 经反馈回传真实会话；保存供 printFile() 打印
     //（此前 printFile 打印的是 initPracticeSession 预构造的空壳，无 exerciseSet 会报“请先生成练习题”）。
     if (fb.session) practiceSession = fb.session;
+    applyPartialNotice(fb);
+  }
+
+  // Phase 7：生成缩水语义显式化（PARTIAL 不静默当成功；不伪造/补齐题目）
+  function applyPartialNotice(fb) {
+    var s = practiceSession || (fb && fb.session) || null;
+    var g = s && s.lastSemantic;
+    if (!g || g.status !== 'PARTIAL') return;
+    var produced = (g.producedCount != null) ? g.producedCount : ((fb && fb.questions) ? fb.questions.length : 0);
+    var requested = (g.requestedCount != null) ? g.requestedCount : produced;
+    var p = $('genProgress'); var bar = $('genProgressBar'); var txt = $('genProgressText');
+    if (!p) return;
+    p.hidden = false;
+    if (bar) bar.style.width = '100%';
+    if (txt) txt.textContent = '本次已生成 ' + produced + ' / ' + requested + ' 题 · 部分题型/知识点暂无足够题目';
   }
 
   function applyExerciseSet(set) {
@@ -968,7 +988,7 @@
     // 打印统一经 Engine 产物：单次会话优先 session.print()（走语义题）；
     // 编排聚合会话（聚合 shim 无 print）回退到已渲染的 #problemsArea 整卷打印。
     if (practiceSession && typeof practiceSession.print === 'function') {
-      practiceSession.print().catch(function (err) { alert('打印失败：' + err.message); });
+      Promise.resolve(practiceSession.print()).catch(function (err) { alert('打印失败：' + err.message); });
     } else if (window.Print && document) {
       var area = document.getElementById('problemsArea');
       var meta = state.exerciseSet && state.exerciseSet.meta;
@@ -1104,7 +1124,7 @@
 
   // ============ 左上角快速切换（学科 / 年级） ============
   // ============ 合并：二级页装配区（科目/年级/题型选择） ============
-  // 仅 UI 层：复用 KnowledgeBank（catalog-utils.getKPEntries）、MODULE_CATALOG、GeneratorRegistry（原生 KP 覆盖），
+  // 仅 UI 层：复用 KnowledgeContext（catalog-utils.getKPEntries）、MODULE_CATALOG、GeneratorRegistry（原生 KP 覆盖），
   // 与 practice.html 既有的 PracticeSession / generate()；不新增任何引擎依赖。
   function clampNum(n, lo, hi, dft) { n = Number(n); if (!isFinite(n)) return dft; return Math.min(hi, Math.max(lo, Math.round(n))); }
 
@@ -1142,20 +1162,6 @@
     var keys = Object.keys(mids);
     if (keys.length === 1) return moduleNameOf(keys[0]);
     return keys.length ? '综合练习' : null;
-  }
-  // 知识点是否落在 qt 过滤范围内（无 qt 视为全部可见）。
-  // R4 上收：能力判断委托大服务层可见性查询服务 PracticeBridge.kpVisibleInType，
-  // UI 不再持有静态过滤表 / 不做推导，只读查询结果。
-  function kpVisibleInQT(k, qt) {
-    if (window.PracticeBridge && typeof window.PracticeBridge.kpVisibleInType === 'function') {
-      return window.PracticeBridge.kpVisibleInType(k, qt);
-    }
-    var q = String(qt || '').toLowerCase().trim();
-    if (!q) return true;
-    if (q === 'competition') return (k.moduleId || '').toUpperCase().charAt(0) === 'C';
-    if (k.moduleId && k.moduleId.toLowerCase() === q) return true;
-    if (k.type && String(k.type).toLowerCase() === q) return true;
-    return false;
   }
   // qt → 展示名（标题 / 提示用）。
   // R4：QT_STD_MODULES 已移除，可见模块查询走大服务层 PracticeBridge.visibleModulesForType；
@@ -1229,12 +1235,16 @@
   // 底部知识页入口：当前知识点 → knowledge/{kpId}.html
   function renderKpLinks() {
     var bar = $('kpLinksBar'); if (!bar) return;
-    var ids = Object.keys(asmState.selected).filter(function (id) { return asmKpById[id] && asmKpById[id].avail; });
-    if (!ids.length) ids = (state.knowledgePointIds || []).filter(function (id) { return asmKpById[id]; });
+    // 知识页仅覆盖 selectable KP（P9-10 G1-E）→ 链接前按 Policy 可练集合过滤，避免 404
+    var selIds = {};
+    try { (window.KnowledgeContext.selectable({ grade: state.grade }) || []).forEach(function (k) { selIds[k.knowledgeId] = true; }); } catch (e) {}
+    var ids = Object.keys(asmState.selected).filter(function (id) { return asmKpById[id] && asmKpById[id].avail && selIds[id]; });
+    if (!ids.length) ids = (state.knowledgePointIds || []).filter(function (id) { return asmKpById[id] && selIds[id]; });
     if (!ids.length) { bar.hidden = true; return; }
     var list = $('kpLinksList');
     list.innerHTML = ids.slice(0, 14).map(function (id) {
       var k = asmKpById[id];
+      // P9-10 G1-E：知识内容页已按 canonical ID 重建 → 直接链接 knowledge/{canonicalId}.html
       return '<a class="kp-link" href="knowledge/' + esc(id) + '.html" title="' + esc(k && k.name ? k.name : id) + '">'
         + esc(k && k.name ? k.name : id) + '</a>';
     }).join('');
@@ -1281,14 +1291,14 @@
     entries.forEach(function (e) {
       if (!e || !e.id) return;
       var level = clampNum(e.weight, 1, 4, 1);
-      var plugin = e.pluginId ? pIdx[e.pluginId] : null;
-      // 「可练」判定：注册表存在 + 非占位插件 + 年级在插件 grades 内（与二级页契约一致）
-      var avail = !!(plugin && !plugin.isPlaceholder && (!plugin.grades || plugin.grades.indexOf(grade) >= 0));
+      // P10-2：可练判定 = canonical KP 已被原生 Generator 绑定（asmPluginIndex 以 KP id 为键；
+      // 旧 pluginId/grades 判定属 legacy 插件轨道，已随 KBL 收口失效）。
+      var avail = !!pIdx[e.id];
       var k = { id: e.id, name: e.name || e.id, moduleId: e.moduleId || '', type: e.type || '',
         weight: Number(e.weight) || 1, level: level, tag: ASM_LEVEL_TAGS[level - 1], avail: avail, stat: asmReadStat(e.id),
         pluginId: e.pluginId || '' };
-      // 任务3：qt 题型过滤（comprehensive/exam 为全量覆盖，不做视图过滤）
-      if (asmState.qt && asmState.qt !== 'comprehensive' && asmState.qt !== 'exam' && !kpVisibleInQT(k, asmState.qt)) return;
+      // P10-2：移除 legacy 静态表（kpVisibleInQT/TYPE_MODULES）视图过滤——
+      // UI 只表达选择，可生成范围由 POL 能力判定（ALLOW→DEGRADE→Recovery→PARTIAL）负责。
       kps.push(k); asmKpById[k.id] = k;
     });
     var buckets = {};
@@ -1357,6 +1367,9 @@
   function buildTypeCounts() {
     var types = perTypeOrder();
     if (!types.length) { state.typeCounts = null; return; }
+    // P10-1-03：未显式编辑 → 不把 UI 等分预览写入请求（POL 唯一分配者）；
+    // perTypeCount 仅作为 UI 展示/编辑预览保留。
+    if (!state.typeCountsEdited) { state.typeCounts = null; return; }
     state.typeCounts = types.map(function (t) {
       return { questionType: t, count: Math.max(0, Number(state.perTypeCount[t]) || 0) };
     });
@@ -1366,6 +1379,7 @@
     var total = Number(state.count) || 20;
     var types = perTypeOrder();
     if (!types.length) return;
+    state.typeCountsEdited = true;
     v = Math.max(0, Math.min(total, Math.round(Number(v))));
     state.perTypeCount[type] = v;
     var others = types.filter(function (t) { return t !== type; });
@@ -1374,6 +1388,31 @@
       others.forEach(function (t, i) { state.perTypeCount[t] = shares[i]; });
     }
     buildTypeCounts();
+  }
+  // P10-3：分题型题量显示 → 由 POL plan() 完整编排结果（typeCounts/plannedTotal/coverageStatus）
+  // 统筹；仅在用户未显式编辑（typeCountsEdited=false）时用计划量覆盖 UI 预览。
+  var ratioPol = { sig: null, data: null, pending: null };
+  function ratioPolView() {
+    var types = perTypeOrder();
+    var ids = Object.keys(asmState.selected).filter(function (id) { return asmKpById[id]; });
+    var sig = 'ratio|' + state.subject + '|' + state.grade + '|' + (Number(state.count) || 20) + '|' +
+      ids.slice().sort().join(',') + '|' + types.slice().sort().join(',');
+    if (ratioPol.sig === sig) return ratioPol.data;   // 可能仍 pending（data=null）
+    if (ratioPol.pending === sig) return null;
+    ratioPol.sig = sig; ratioPol.data = null; ratioPol.pending = sig;
+    if (!window.CatalogUtils || typeof window.CatalogUtils.capabilityPlanView !== 'function' || !ids.length || !types.length) {
+      ratioPol.pending = null; return null;
+    }
+    window.CatalogUtils.capabilityPlanView({
+      subject: state.subject, grade: state.grade,
+      knowledgePointIds: ids, questionTypes: types,
+      count: Number(state.count) || 20, difficulty: state.difficulty
+    }).then(function (v) {
+      if (ratioPol.pending !== sig) return;   // 选区已变化，丢弃过期结果
+      ratioPol.data = v; ratioPol.pending = null;
+      renderKpRatio();
+    });
+    return null;
   }
   function renderKpRatio() {
     var wrap = $('kpRatio'); if (!wrap) return;
@@ -1387,10 +1426,20 @@
       return;
     }
     var total = Number(state.count) || 20;
+    // POL 计划量（未显式编辑时生效）：{type: count} + 总题量/覆盖状态
+    var view = ratioPolView();
+    var planMap = null, shownTotal = total, coverageReason = null;
+    if (view && view.ready && !state.typeCountsEdited) {
+      planMap = {};
+      (view.typeCounts || []).forEach(function (tc) { planMap[tc.questionType] = tc.count; });
+      types.forEach(function (t) { state.perTypeCount[t] = planMap[t] || 0; });
+      if (view.plannedTotal != null) shownTotal = view.plannedTotal;
+      if (view.coverageStatus && view.coverageStatus !== 'OK') coverageReason = view.reason || view.coverageStatus;
+    }
     var list = document.createElement('div');
     list.className = 'kp-ratio-list kp-ratio-types';
     types.forEach(function (t) {
-      var n = (state.perTypeCount && state.perTypeCount[t]) || 0;
+      var n = (planMap && !state.typeCountsEdited) ? (planMap[t] || 0) : ((state.perTypeCount && state.perTypeCount[t]) || 0);
       var item = document.createElement('div');
       item.className = 'kp-ratio-item';
       item.innerHTML =
@@ -1402,7 +1451,9 @@
     });
     var sep = document.createElement('div');
     sep.className = 'kp-ratio-item sep';
-    sep.innerHTML = '<span class="nm">总题量</span><span class="total" id="kpRatioTotal">' + total + ' 题</span>';
+    sep.innerHTML = '<span class="nm">总题量</span><span class="total" id="kpRatioTotal"' +
+      (coverageReason ? ' title="' + esc(coverageReason) + '"' : '') + '>' + shownTotal + ' 题</span>' +
+      (coverageReason ? '<span class="kp-blank-unit" title="' + esc(coverageReason) + '">· 部分题型受限</span>' : '');
     list.appendChild(sep);
     wrap.innerHTML = '';
     wrap.appendChild(list);
@@ -1542,10 +1593,8 @@
       area.innerHTML = '<div class="empty">选择参数后点击「生成练习题」开始～</div>';
     }
 
-    // 知识库分片懒加载：确认科目后按需注入 → 统一解析 URL 入参 → 需要时自动生成
-    var ensureKB = (typeof KnowledgeBank !== 'undefined' && KnowledgeBank.ensureKnowledgeData)
-      ? KnowledgeBank.ensureKnowledgeData(state.subject)
-      : Promise.resolve(null);
+    // 知识库为 KBL Runtime 单文件静态加载（App.KNOWLEDGE），无需分片注入 → 统一解析 URL 入参 → 需要时自动生成
+    var ensureKB = Promise.resolve(null);
 
     // 任务3：入参归一（kp/kps/qt/plugin）勾选 + 自动生成 + 打印参数支持
     function initFromUrlSeed() {
@@ -1571,10 +1620,12 @@
               return;
             }
             applyExerciseSet({ questions: fb.questions || [], meta: fb.meta });
+            if (fb.session) practiceSession = fb.session;
+            applyPartialNotice(fb);
             setTimeout(function () {
               var s = fb.session;
               if (s && typeof s.print === 'function') {
-                s.print().catch(function (err) { alert('打印失败：' + err.message); });
+                Promise.resolve(s.print()).catch(function (err) { alert('打印失败：' + err.message); });
               } else if (window.Print && document) {
                 var area = document.getElementById('problemsArea');
                 window.Print.open(area, (fb.meta && fb.meta.title) || '练习题', { pageType: 'math' });

@@ -55,13 +55,13 @@ function createArithmeticGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['oral', 'calc', 'fill', 'apply'],
-    questionTypes: ['oral', 'calc', 'fill', 'apply'],
+    capabilities: ['calc', 'fill', 'apply'],
+    questionTypes: ['calc', 'fill', 'apply'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
-      return plan.questionTypeId === 'oral' || plan.questionTypeId === 'calc';
+      return plan.questionTypeId === 'calc';
     },
 
     generate: function (plan, context) {

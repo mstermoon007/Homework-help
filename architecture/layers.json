@@ -38,8 +38,7 @@
             "shared/engine/presentation-engine.js",
             "shared/engine/presentation-engine.bundle.js",
             "shared/engine/strategy-engine.bundle.js",
-            "shared/presentation-engine.bundle.js",
-            "shared/strategy-engine.bundle.js"
+            "shared/engine/knowledge-compat.js"
           ]
         },
         "STRATEGY": {
@@ -56,8 +55,7 @@
           "files": [
             "shared/semantic/semantic-question.js",
             "shared/generator/semantic-question-bridge.js",
-            "shared/schemas/semantic-question.schema.js",
-            "shared/schemas/knowledge-point.schema.js"
+            "shared/schemas/semantic-question.schema.js"
           ]
         },
         "GENERATOR": {
@@ -98,18 +96,11 @@
           ]
         },
         "SERVICE_IFACE": {
-          "desc": "生成服务接口：generation/orchestrator + adapters + services + api/dto",
+          "desc": "生成服务接口：generation/api + 共同生成内核（GenerationCore/契约）",
           "files": [
             "shared/generation/api.js",
-            "shared/generation/dto.js",
-            "shared/generation/orchestrator.js",
-            "shared/generation/adapters/capability-service.adapter.js",
-            "shared/generation/adapters/knowledge-graph-service.adapter.js",
-            "shared/generation/adapters/module-catalog-service.adapter.js",
-            "shared/generation/services/capability-service.js",
-            "shared/generation/services/knowledge-graph-service.js",
-            "shared/generation/services/module-catalog-service.js",
-            "shared/generation/rollback-manager.js"
+            "shared/generation/generation-core.js",
+            "shared/generation/generation-contract.js"
           ]
         },
         "PRESENTATION": {
@@ -121,7 +112,6 @@
             "shared/presentation/render-result.js",
             "shared/presentation/renderer.js",
             "shared/presentation/svg-registry.js",
-            "shared/presentation/svg-templates.js",
             "shared/presentation/render.js",
             "shared/presentation/print.js"
           ]
@@ -151,24 +141,20 @@
       "description": "知识点库基层数据：唯一数据核心、schema、规范映射（不生成题面、不参与 UI 决策）。",
       "alias": "base-data",
       "files": [
-        "shared/knowledge/knowledge-bank.js",
-        "shared/knowledge/knowledge-point.js",
-        "shared/knowledge/knowledge-ontology.js",
-        "shared/knowledge/knowledge-ontology-normalizer.js",
-        "shared/knowledge/knowledge-ontology-validator.js",
-        "shared/schemas/knowledge-point.schema.js",
-        "shared/knowledge/knowledge-math.js",
-        "shared/knowledge/knowledge-error.js",
-        "shared/knowledge/knowledge-factual.js",
-        "shared/knowledge/knowledge-operation.js",
         "shared/knowledge/question-id.js",
         "shared/knowledge/question-type-registry.js",
-        "shared/knowledge/ontology-error-map.js",
-        "shared/knowledge/ontology-factual-map.js",
-        "shared/knowledge/ontology-operation-map.js",
-        "shared/knowledge/ontology-category-map.js",
         "knowledge/*.html",
-        "shared/knowledge/ontology-book-map.js"
+        "shared/knowledge/runtime/knowledge-contract.js",
+        "shared/knowledge/runtime/knowledge-loader.js",
+        "shared/knowledge/runtime/knowledge-relation.js",
+        "shared/knowledge/runtime/knowledge-policy.js",
+        "shared/knowledge/runtime/knowledge-index.js",
+        "shared/knowledge/runtime/knowledge-query.js",
+        "shared/knowledge/runtime/knowledge-api.js",
+        "shared/knowledge/runtime/knowledge-runtime.js",
+        "shared/knowledge/schema/knowledge-schema.js",
+        "shared/knowledge/schema/relation-schema.js",
+        "shared/knowledge/schema/manifest-schema.js"
       ]
     },
     "SERVICE": {
@@ -187,7 +173,9 @@
           "files": [
             "shared/orchestration/practice-plan.js",
             "shared/orchestration/budget-allocation.js",
-            "shared/orchestration/practice-orchestrator.js"
+            "shared/orchestration/practice-orchestrator.js",
+            "shared/orchestration/knowledge-context.js",
+            "shared/orchestration/difficulty-orchestrator.js"
           ]
         },
         "STRATEGY": {
@@ -200,7 +188,6 @@
             "shared/strategy/difficulty-strategy.js",
             "shared/strategy/number-range-strategy.js",
             "shared/strategy/question-plan.js",
-            "shared/strategy/question-type-allocation.js",
             "shared/strategy/question-type-strategy.js",
             "shared/strategy/spiral-strategy.js",
             "shared/strategy/static-difficulty.js",
@@ -234,7 +221,6 @@
         "CAPABILITY": {
           "desc": "能力模型/矩阵/解析",
           "files": [
-            "shared/capability/capability-contract.js",
             "shared/capability/capability-matrix.js",
             "shared/capability/capability-model.js",
             "shared/capability/capability-resolver.js",

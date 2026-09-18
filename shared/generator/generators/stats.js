@@ -7,7 +7,6 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge/knowledge-point.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -212,7 +211,7 @@ function createStatsGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeStatsQuestion(plan, context, i, kp));

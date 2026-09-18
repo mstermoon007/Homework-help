@@ -6,7 +6,8 @@
  * 静态打包为单一浏览器文件 shared/engine/strategy-engine.bundle.js，内置极简 require 注册表。
  *
  * 浏览器全局 shim（practice.html 已用 <script> 引入，不重复打包）：
- *   common.js / difficulty.js / difficulty-static.js / knowledge-bank.js
+ *   common.js / difficulty.js / difficulty-static.js
+ *   知识模块经 knowledge-compat.js 映射到 KBL Runtime（App.KNOWLEDGE）
  *
  * 用法：node dev/build-strategy-bundle.js
  */
@@ -20,7 +21,6 @@ var ENTRIES = [
   'shared/strategy/strategy-engine.js',
   'shared/strategy/strategy-config.js',
   'shared/strategy/question-type-strategy.js',
-  'shared/strategy/question-type-allocation.js',
   'shared/strategy/static-difficulty.js',
   'shared/strategy/difficulty-strategy.js',
   'shared/strategy/target-difficulty.js',
@@ -36,6 +36,9 @@ var ENTRIES = [
   'shared/strategy/strategy-result.js',
   'shared/strategy/question-plan.js',
   'shared/strategy/strategy-resolver.js',
+  // POL/页面经 global.ComprehensiveStrategy 使用（综合练习规划）；纳入 bundle 后
+  // 其知识访问统一经 bundle 的 knowledge-compat 桥（不再单独 <script> 引入）
+  'shared/strategy/comprehensive-strategy.js',
   // ===== M4-19 Generator Runtime（Strategy + Generation Runtime Bundle）=====
   // 显式声明，不自动扫描 shared/generator/ 整目录，避免循环依赖 / Bundle 膨胀 / 初始化顺序失控。
   // MATH-14：legacy 插件轨道（legacy-adapter / migration-switch / plugins/registry）已删除，
@@ -44,11 +47,18 @@ var ENTRIES = [
 ];
 
 // 浏览器全局 shim：practice.html 已加载这些脚本
+// 知识模块（bank/point/ontology）已删除 → 统一映射到 knowledge-compat.js 的
+// Runtime 兼容对象（KBL Runtime 唯一事实源；不重建旧数据层）。
 var SHIMS = {
   'shared/core/common.js': 'PluginUtil',
   'shared/catalog/difficulty.js': 'App.Difficulty',
   'shared/catalog/difficulty-static.js': 'App.DifficultyStatic',
-  'shared/knowledge/knowledge-bank.js': 'KnowledgeBank',
+  'shared/knowledge/knowledge-bank.js': 'KnowledgeBankCompat',
+  'shared/knowledge/knowledge-point.js': 'KnowledgePointCompat',
+  'shared/knowledge/knowledge-ontology.js': 'KnowledgeOntologyCompat',
+  // POL 知识适配边界：页面已以 <script> 加载（knowledge-runtime → knowledge-context → 本 bundle），
+  // 注册为委托可让 presentation bundle 复用同一实例，避免内联第二份 KC/Runtime 副本。
+  'shared/orchestration/knowledge-context.js': 'KnowledgeContext',
   'node:path': '__bundledPathShim',
   'node:fs': '__bundledFsShim'
 };
@@ -162,7 +172,6 @@ lines.push('global.StrategyEngine = __req(\'shared/strategy/strategy-engine.js\'
 lines.push('global.StrategyConfig = __req(\'shared/strategy/strategy-config.js\');');
 lines.push('global.StrategyValidator = __req(\'shared/strategy/strategy-validator.js\');');
 lines.push('global.QuestionTypeStrategy = __req(\'shared/strategy/question-type-strategy.js\');');
-lines.push('global.QuestionTypeAllocation = __req(\'shared/strategy/question-type-allocation.js\');');
 lines.push('global.StaticDifficultyStrategy = __req(\'shared/strategy/static-difficulty.js\');');
 lines.push('global.DifficultyStrategy = __req(\'shared/strategy/difficulty-strategy.js\');');
 lines.push('global.TargetDifficulty = __req(\'shared/strategy/target-difficulty.js\');');
@@ -178,12 +187,16 @@ lines.push('global.ConstraintBuilder = __req(\'shared/strategy/constraint-builde
 lines.push('global.GeneratorSelector = __req(\'shared/generator/generator-selector.js\');');
 lines.push('global.GeneratorMode = __req(\'shared/generator/generator-mode.js\');');
 lines.push('global.GeneratorRegistry = __req(\'shared/generator/generator-registry.js\');');
+lines.push('global.CapabilityResolver = __req(\'shared/capability/capability-resolver.js\');');
+lines.push('global.CapabilityModel = __req(\'shared/capability/capability-model.js\');');
+lines.push('global.CapabilityMatrix = __req(\'shared/capability/capability-matrix.js\');');
 lines.push('global.SemanticQuestionBridge = __req(\'shared/generator/semantic-question-bridge.js\');');
+lines.push('global.ComprehensiveStrategy = __req(\'shared/strategy/comprehensive-strategy.js\');');
 lines.push('global.ComplexGen = __req(\'shared/generator/generators/complex.js\');');
 lines.push('global.StrategyBundle = { req: __req, modules: __defs };');
 lines.push('})(typeof window !== \'undefined\' ? window : (typeof globalThis !== \'undefined\' ? globalThis : this));');
 
-var out = path.join(ROOT, 'shared', 'strategy-engine.bundle.js');
+var out = path.join(ROOT, 'shared', 'engine', 'strategy-engine.bundle.js');
 fs.writeFileSync(out, lines.join('\n'));
 
 console.log('Strategy bundle written: shared/engine/strategy-engine.bundle.js');

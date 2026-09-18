@@ -1,0 +1,153 @@
+# P17-0 依赖矩阵
+
+## 依赖方向矩阵
+
+| From ↓ / To → | KBL | Context | POL | GenEntry | Strategy | Generator | Validator | SQ | Presentation |
+|---|---|---|---|---|---|---|---|---|---|
+| KBL | — | ✓ | ✕ | ✕ | ✕ | ✕ | ✕ | ✕ | ✕ |
+| Context | ✕ | — | ✓ | ✕ | ✓ | ✕ | ✕ | ✕ | ✕ |
+| POL | ✕ | ✓ | — | ✓ | ✕ | ✕ | ✕ | ✕ | ✕ |
+| GenEntry | ✕ | ✓ | ✕ | — | ✓ | ✕ | ✕ | ✓ | ✕ |
+| Strategy | ✕ | ✓ | ✕ | ✕ | — | ✓ | ✕ | ✕ | ✕ |
+| Generator | ✕ | ✕ | ✕ | ✕ | ✕ | — | ✓ | ✓ | ✕ |
+| Validator | ✕ | ✕ | ✕ | ✕ | ✕ | ✕ | — | ✓ | ✕ |
+| Presentation | ✕ | ✕ | ✕ | ✕ | ✕ | ✕ | ✕ | ✓ | — |
+
+- ✓ = 允许
+- ✕ = 禁止
+
+---
+
+## 实际代码与矩阵对比
+
+### 合规项
+
+| 关系 | 代码位置 | 状态 |
+|------|----------|------|
+| KBL → Context | knowledge-context.js:25 | ✅ |
+| Context → POL | practice-orchestrator.js:require(knowledge-context) | ✅ |
+| POL → GenEntry | api.js:478 (execute: executeInline) | ✅ |
+| GenEntry → Strategy | api.js:273 (StrategyEngine.plan) | ✅ |
+| GenEntry → Presentation | api.js:runPlans → PresentationEngine.generateQuestions | ✅ |
+| Generator → Validator | retry-loop.js → question-validator.js | ✅ |
+| Generator → SQ | generators → semantic-question.js | ✅ |
+| Validator → SQ | question-validator.js → semantic-question.js | ✅ |
+
+### 违规项
+
+| 关系 | 代码位置 | 状态 |
+|------|----------|------|
+| Strategy → KBL | strategy-engine.js:69,206 (knowledge-bank) | ❌ |
+| Strategy → Generator | strategy-engine.js:102,180,618,649 (generator-registry) | ❌ |
+| Strategy → Selector | strategy-engine.js:831 (generator-selector) | ❌ |
+| Strategy → KBL | comprehensive-strategy.js:29 (knowledge-bank) | ❌ |
+| Validator → Context | kp-semantic-validator.js:21 (knowledge-context) | ❌ |
+| Validator → Generator | kp-semantic-validator.js:127 (generator-registry) | ❌ |
+
+---
+
+## 违规详细分析
+
+### 1. Strategy → KBL（3处）
+
+**影响**：Strategy 直接读取 KBL JSON 数据，绕过 KnowledgeContext 边界。
+
+**文件位置**：
+- `shared/strategy/strategy-engine.js:69` — `require('../knowledge/knowledge-bank.js')`
+- `shared/strategy/strategy-engine.js:206` — `require('../knowledge/knowledge-bank.js')`
+- `shared/strategy/comprehensive-strategy.js:29` — `require('../knowledge/knowledge-bank.js')`
+
+### 2. Strategy → Generator（5处）
+
+**影响**：Strategy 直接读取 GeneratorRegistry 数据，可能绕过正规的 Generator 选择流程。
+
+**文件位置**：
+- `shared/strategy/strategy-engine.js:102` — `require('../generator/generator-registry.js')`
+- `shared/strategy/strategy-engine.js:180` — `require('../generator/generator-registry.js')`
+- `shared/strategy/strategy-engine.js:618` — `require('../generator/generator-registry.js')`
+- `shared/strategy/strategy-engine.js:649` — `require('../generator/generator-registry.js')`
+- `shared/strategy/strategy-engine.js:831` — `require('../generator/generator-selector.js')`
+
+### 3. Validator → Context/Generator（2处）
+
+**影响**：Validator 直接访问 KnowledgeContext 和 GeneratorRegistry，可能绕过正规流程。
+
+**文件位置**：
+- `shared/validator/kp-semantic-validator.js:21` — `require('../orchestration/knowledge-context.js')`
+- `shared/validator/kp-semantic-validator.js:127` — `require('../generator/generator-registry.js')`
+
+---
+
+## Retry / Recovery 状态机
+
+### 当前实现
+
+```
+Cell
+  ↓
+PresentationEngine.generateQuestions()
+  ↓
+Selector → RetryLoop
+  ↓
+Validate (BatchValidator)
+  ├─ PASS → SemanticQuestion
+  └─ FAIL
+       ↓
+   Retry same Cell (max 3)
+       ↓
+   exhausted
+       ↓
+   shortfall → POL recovery
+```
+
+### 状态机合规性
+
+| 检查项 | 是否合规 |
+|--------|----------|
+| Generator 失败不偷换 KP | ✅ |
+| Generator 失败不偷换 type | ✅ |
+| Generator 失败不偷换 difficulty | ✅ |
+| Validator 失败不改 plan | ✅ |
+| Recovery 由 POL 决定 | ✅ |
+
+---
+
+## Composite 审计
+
+### generator:composite
+
+| 检查项 | 状态 |
+|--------|------|
+| supportsComposite | 仅 3 个 Generator 支持 |
+| COMPOSITE_KPS | 特殊设计别名 |
+| 18 special aliases | 设计别名，非 legacy KP |
+| 成为第二个 POL | 否 |
+
+### Composite 状态：✅ PASS
+
+Composite 只是特殊生成策略，不是第二个 POL。
+
+---
+
+## 依赖矩阵总结
+
+| 维度 | 合规 | 违规 | 状态 |
+|------|------|------|------|
+| KBL → Context | ✅ | 0 | PASS |
+| Context → POL | ✅ | 0 | PASS |
+| POL → GenEntry | ✅ | 0 | PASS |
+| GenEntry → Strategy | ✅ | 0 | PASS |
+| Strategy → KBL | ❌ | 3 | BLOCK |
+| Strategy → Generator | ❌ | 5 | BLOCK |
+| Generator → Validator | ✅ | 0 | PASS |
+| Generator → SQ | ✅ | 0 | PASS |
+| Validator → Context | ❌ | 1 | BLOCK |
+| Validator → Generator | ❌ | 1 | BLOCK |
+| Presentation → SQ | ✅ | 0 | PASS |
+
+**总违规数**：10处
+
+**主要违规集中在**：
+1. Strategy → KBL 直接访问（3处）
+2. Strategy → Generator 直接访问（5处）
+3. Validator → Context/Generator（2处）

@@ -1,0 +1,45 @@
+{
+  "tool": "extract-source.js",
+  "extractedAt": "2026-09-12T12:32:53.924Z",
+  "source": "/Users/zhanggaozhang/Code/Homework-Knowledge-Base",
+  "legacyManifest": {
+    "releaseId": "kbl-2026-09-11",
+    "rootHash": "011e6475df3562583db68bce59fbbe92ccf107b2c99a33feaf0cbcb7d5a04f7c"
+  },
+  "counts": {
+    "knowledgePoints": 598,
+    "perGrade": {
+      "G1": 57,
+      "G2": 112,
+      "G3": 21,
+      "G4": 104,
+      "G5": 160,
+      "G6": 144
+    },
+    "units": 128,
+    "relations": 1293,
+    "mappings": 660
+  },
+  "crossCheck": {
+    "kpUnitsWithoutCurriculum": [],
+    "curriculumUnitsWithoutKp": [
+      "G1-down-91",
+      "G1-down-93",
+      "G1-up-91",
+      "G1-up-98",
+      "G3-up-91"
+    ]
+  },
+  "integrity": {
+    "dataShas": {
+      "g1": "70e726112fdb6220a4e9c38066c65f8d8401d1e17df0d9bb54258dba0f76bb8c",
+      "g2": "adaa0423fe4cee3b3cc5792543bcfa06fcbd22578b2f49ad8128a8af30df8409",
+      "g3": "ceb6f40474baeeb2796f2638880659846b193678ce561551cebe5f3e146ff702",
+      "g4": "99fed7599f1fdab0882c36a6f85079ca163dd464ab0c42ded37c1ab218f11676",
+      "g5": "226e8d10de33e20e139351bf0600e40b432768961c8f508e5e2ad3fd45c43e02",
+      "g6": "162949ca04d21edc04c5a8fd935f2a913baf3dcd7f1cc984141610652a426061"
+    },
+    "relationsSha": "44174f3932b029d445a6be28d63377f1f94735a8b701f27e7720498238d86099",
+    "mappingsSha": "5c5a36beb8648b3a430c804a79c7d53fb15012e4119139c73c90e4d2607b15b3"
+  }
+}

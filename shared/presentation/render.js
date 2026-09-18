@@ -145,8 +145,6 @@
     if (!grades || !Array.isArray(grades) || !grades.length) console.error('[createPlugin] 插件 ' + id + ' 缺少必填字段 grades（非空数组）');
     if (typeof config.generateQuestions !== 'function') console.error('[createPlugin] 插件 ' + id + ' 必须提供 generateQuestions(opts) 函数');
 
-    var _kb = (typeof global.KnowledgeBank !== 'undefined') ? global.KnowledgeBank : null;
-
     function defaultRender(set) {
       var cols = (set && set.meta && set.meta.columns) || config.columns || 3;
       var html = '<div class="questions-grid" style="display:grid;grid-template-columns:repeat(' + cols + ',1fr);gap:14px;">';
@@ -196,22 +194,6 @@
         }
         return q;
       });
-      // 知识点声明校验：声明的知识点需在知识库中登记（统一结构：getEntries 扁平化）
-      // 支持两种格式：① string[]（对所有 grades 统一校验）② { [grade]: string[] }（按年级分别校验）
-      if (config.knowledgePoints && _kb && subject === 'math' && opts.grade) {
-        var entries = _kb.getEntries ? _kb.getEntries('math', opts.grade) : [];
-        if (entries.length) {
-          var entryById = {};
-          entries.forEach(function (e) { entryById[e.id] = true; entryById[e.name] = true; });
-          var kpRaw = config.knowledgePoints;
-          var kpList = Array.isArray(kpRaw) ? kpRaw : (kpRaw && kpRaw[opts.grade]) || [];
-          var missing = kpList.filter(function (kp) { return !entryById[kp]; });
-          if (missing.length) {
-            console.warn('[createPlugin:' + id + '] 在 ' + opts.grade + ' 年级声明覆盖的知识点未在知识库登记：' +
-              missing.join('、') + '（请补充 shared/knowledge/knowledge-bank.js 或修正 knowledgePoints）');
-          }
-        }
-      }
       // MATH-14：_maybeReportCoverage 已随 legacy 插件轨道退役（覆盖统计走 native check-core-generators）
       var meta = (typeof config.meta === 'function') ? config.meta(opts)
         : (config.meta || { grade: opts.grade, count: questions.length });
@@ -235,53 +217,13 @@
     plugin.render = config.render ? config.render : defaultRender;
     plugin.check = config.check ? config.check : defaultCheck;
     // 声明式知识点以独立字段暴露（RESERVED 不合并，避免与运行时方法混淆），
-    // 供 dev/verify-knowledge-bank.js 等工具静态校验「声明 ↔ 知识库」一致性
+    // 供 KBL 门禁（tools/kbl 目录）静态校验「声明 ↔ 知识库」一致性
     if (config.knowledgePoints) plugin.declaredKnowledgePoints = config.knowledgePoints;
 
     return plugin;
   }
 
   // ============ 科目化插件工厂（自动注入 subject + difficultyParams + 修饰类） ============
-
-  /** 科目化辅助：包装 generate，调用前自动注入 opts.difficultyParams。
-   *  优先级：
-   *   1) opts.knowledgePointMeta 存在（插件按知识点设置）→ 静态多维计算优先
-   *      （调用 App.DifficultyStatic.paramsForKnowledgePoint，不再使用 opts.difficulty / opts.adaptiveDelta）；
-   *      若插件同时提供 opts.level（自带难度 chip，hasOwnLevel）→ 仍用插件 level 解析，
-   *      静态结果仅作参考写入 staticMeta，不覆盖难度。
-   *   2) 否则回退现有「档位 + delta」逻辑（行为不变）。 */
-  function _wrapDifficultyParams(plugin, subject) {
-    var _orig = plugin.generate;
-    plugin.generate = function (opts) {
-      opts = opts || {};
-      if (opts.difficultyParams == null) {
-        var _D = (typeof global !== 'undefined') ? (global.App && global.App.Difficulty) : null;
-        var _DS = (typeof global !== 'undefined') ? (global.App && global.App.DifficultyStatic) : null;
-        var hasOwnLevel = opts.level != null && opts.level !== '';
-
-        if (opts.knowledgePointMeta && _DS && typeof _DS.paramsForKnowledgePoint === 'function') {
-          // 静态多维计算优先（ignore opts.difficulty / opts.adaptiveDelta；createProfile delta 恒为 0）
-          var staticOut = _DS.paramsForKnowledgePoint(opts.knowledgePointMeta, opts.questionType, opts.customParams);
-          if (hasOwnLevel) {
-            // 插件自带难度 chip：保留插件 level（createProfile delta 恒为 0），静态仅作参考
-            var lv = opts.level;
-            var prof = (_D && typeof _D.paramsFor === 'function')
-              ? _D.paramsFor(subject, lv) : { level: lv, difficulty: lv };
-            prof.staticMeta = staticOut.staticMeta;
-            opts.difficultyParams = prof;
-          } else {
-            opts.difficultyParams = staticOut;
-          }
-        } else if (_D && typeof _D.paramsFor === 'function') {
-          // 回退：现有「档位 + delta」逻辑（无知识点元数据时与历史行为一致）
-          var lv2 = (opts.difficulty != null) ? opts.difficulty : (opts.level || 3);
-          try { opts.difficultyParams = _D.paramsFor(subject, lv2); } catch (e) { /* 安全跳过 */ }
-        }
-        opts.hasOwnLevel = hasOwnLevel;
-      }
-      return _orig.call(plugin, opts);
-    };
-  }
 
   /** 科目化辅助：包装 render，在网格容器追加科目修饰类（math-grid / cn-grid / en-grid）。 */
   function _wrapGridClass(plugin) {
@@ -320,8 +262,8 @@
   }
 
   /**
-   * 数学插件工厂：预设 subject='math'、数值比较批改（'12'≡12）、math-grid/math-card 修饰类、
-   * 自动注入 opts.difficultyParams。旧 createPlugin(cfg) 完全兼容、行为不变。
+   * 数学插件工厂：预设 subject='math'、数值比较批改（'12'≡12）、math-grid/math-card 修饰类。
+   * 旧 createPlugin(cfg) 完全兼容、行为不变。
    */
   function createMathPlugin(config) {
     config = config || {};
@@ -341,7 +283,6 @@
     var plugin = createPlugin(config);
     plugin.cardClass = 'math-card';
     plugin.gridClass = 'math-grid';
-    _wrapDifficultyParams(plugin, 'math');
     _wrapGridClass(plugin);
     return plugin;
   }
@@ -360,7 +301,7 @@
     module.exports = {
       renderCard: renderCard, renderGrid: renderGrid, clockSVG: clockSVG,
       createPlugin: createPlugin, createMathPlugin: createMathPlugin,
-      _wrapDifficultyParams: _wrapDifficultyParams, _wrapGridClass: _wrapGridClass,
+      _wrapGridClass: _wrapGridClass,
       _numEq: _numEq, _mathQCheck: _mathQCheck
     };
   }

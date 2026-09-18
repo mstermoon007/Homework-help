@@ -1,22 +1,19 @@
 'use strict';
 
 /**
- * shared/generator/generators/composite.js — P0-07 Step 32 Composite Generators
+ * shared/generator/generators/composite.js — 最小 Composite 生成器
  *
- * 三个原生 Composite 模式（严格限定，不得扩展）：
- * 1. calc-to-judge   — 计算 → 判断（给算式让判断对错）
- * 2. measure-to-calc — 单位换算 → 运算（如：米换厘米 + 加减法）
- * 3. shape-to-apply  — 图形 → 数量关系（如：立体图形的棱/面/顶点数计算）
+ * 现状（POL–KBL Phase 4）：
+ *   combine 生成的可用性取决于 B6 绑定迁移（registry.knowledgePoints 仍为 legacy ID），
+ *   当前生产不可达；本模块保留**最小接口**（supportsComposite + combine 组合出题）。
  *
- * 共同要求：
- * - supportsComposite = true
- * - combine = true 时，knowledgePointIds.length > 1
- * - 生成单个 SemanticQuestion，同时体现多个 KP 的语义
+ * 约束（Phase 4 硬边界）：
+ *   - supportsComposite = true；combine=true 且 knowledgePointIds.length >= 2
+ *   - 不查询 KBL / 不分配题量 / 不计算难度 / 不决定知识范围（只消费 Strategy Plan）
+ *   - 不扩展模式：仅保留可达的 calc-to-judge 组合
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge/knowledge-point.js');
-var Arith = require('../core/arithmetic-core.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -33,64 +30,27 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':composite:' + i;
 }
 
-function getKpMeta(kpId) {
-  var kp = KP.get(kpId);
-  if (!kp) return null;
-  var canonical = require('../../knowledge/knowledge-ontology.js').normalize(kp);
-  return {
-    id: canonical.id,
-    category: canonical.category || kp.legacy?.category,
-    legacyType: canonical.source?.legacyType || kp.legacy?.legacyType,
-    numericRange: canonical.numeric?.range || null,
-    structure: canonical.structure || {},
-    factualContent: canonical.factualContent || null,
-    graphicType: canonical.graphicType || null
-  };
-}
-
-/**
- * 模式 1：计算 → 判断
- * 给出算式，让判断对错
- * 适用：加减乘除类 KP + 判断题型
- */
-function makeCalcToJudge(plan, context, i, kpMetas, rng) {
-  // 随机选择一个 KP 作为算式来源
-  var srcKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'algebra'; }));
-  if (!srcKp) srcKp = Rng.pick(rng,kpMetas);
-  
-  var arithSem = require('../core/kp-arithmetic-semantics.js').resolveArithmeticSemantics(KP.get(srcKp.id));
-  var ops = arithSem ? arithSem.operators : ['+', '−'];
-  var op = Rng.pick(rng,ops);
-  
-  var a, b, correct, isTrue;
+/** 组合出题（calc-to-judge）：给出算式让判断对错，题目同时归属全部 combine KP */
+function makeCalcToJudge(plan, context, i, kpIds) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var op = Rng.pick(rng, ['+', '−']);
+  var a, b, correct;
   if (op === '+') {
     a = Rng.randInt(rng, 1, 9);
     b = Rng.randInt(rng, 1, 9);
     correct = a + b;
-    isTrue = Rng.randInt(rng, 0, 1);
-  } else if (op === '−') {
+  } else {
     a = Rng.randInt(rng, 2, 10);
     b = Rng.randInt(rng, 1, a - 1);
     correct = a - b;
-    isTrue = Rng.randInt(rng, 0, 1);
-  } else if (op === '×') {
-    a = Rng.randInt(rng, 1, 9);
-    b = Rng.randInt(rng, 1, 9);
-    correct = a * b;
-    isTrue = Rng.randInt(rng, 0, 1);
-  } else if (op === '÷') {
-    b = Rng.randInt(rng, 2, 9);
-    correct = Rng.randInt(rng, 1, 9);
-    a = b * correct;
-    isTrue = Rng.randInt(rng, 0, 1);
   }
-  
+  var isTrue = Rng.randInt(rng, 0, 1) === 1;
   var shown = isTrue ? correct : correct + (Rng.randInt(rng, 0, 1) ? 1 : -1);
   var prompt = a + ' ' + op + ' ' + b + ' = ' + shown + ' （对还是错？）';
-  
+
   return {
     knowledgePointId: pkp(plan),
-    knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
+    knowledgePointIds: kpIds.slice(),
     questionType: 'judge',
     difficulty: plan.difficulty,
     spiralLevel: plan.spiralLevel || 1,
@@ -98,11 +58,10 @@ function makeCalcToJudge(plan, context, i, kpMetas, rng) {
     seed: seedFor(plan, context, i),
     prompt: prompt,
     answer: isTrue,
-    answerMode: 'judge',
-    data: {
+    answerMode: 'judge',    data: {
       mode: 'calc-to-judge',
       steps: 1,
-      primaryKp: srcKp.id,
+      primaryKp: pkp(plan),
       operation: op,
       operands: [a, b],
       correct: correct,
@@ -112,191 +71,34 @@ function makeCalcToJudge(plan, context, i, kpMetas, rng) {
   };
 }
 
-/**
- * 模式 2：单位换算 → 运算
- * 如：3米 = 300厘米，300 + 50 = 350厘米
- * 适用：度量类 KP + 计算题型
- */
-function makeMeasureToCalc(plan, context, i, kpMetas, rng) {
-  var measureKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'measurement'; }));
-  var calcKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'algebra'; }));
-  
-  if (!measureKp || !calcKp) {
-    // 兜底：单一 KP 时退化为普通计算
-    return makeCalcToJudge(plan, context, i, kpMetas, rng);
-  }
-  
-  // 单位换算：米→厘米，千克→克，小时→分钟
-  var units = [
-    { from: '米', to: '厘米', factor: 100 },
-    { from: '千克', to: '克', factor: 1000 },
-    { from: '小时', to: '分钟', factor: 60 },
-    { from: '元', to: '角', factor: 10 },
-    { from: '角', to: '分', factor: 10 }
-  ];
-  var unit = Rng.pick(rng,units);
-  var baseVal = Rng.randInt(rng, 1, 9);
-  var converted = baseVal * unit.factor;
-  
-  var op = Rng.pick(rng,['+', '−']);
-  var b = Rng.randInt(rng, 1, 20);
-  var answer = op === '+' ? converted + b : converted - b;
-  
-  var prompt = baseVal + unit.from + ' = ' + converted + unit.to + '，' + converted + unit.to + ' ' + op + ' ' + b + unit.to + ' = ____ ' + unit.to;
-  
-  return {
-    knowledgePointId: pkp(plan),
-    knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
-    questionType: plan.questionTypeId || 'calc',
-    difficulty: plan.difficulty,
-    spiralLevel: plan.spiralLevel || 1,
-    context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: String(answer),
-    answerMode: 'input',
-    data: {
-      mode: 'measure-to-calc',
-      steps: 2,
-      primaryKp: calcKp.id,
-      measureKp: measureKp.id,
-      operation: op,
-      conversion: { from: unit.from, to: unit.to, factor: unit.factor, base: baseVal, converted: converted },
-      operand: b,
-      composite: true
-    }
-  };
-}
-
-/**
- * 模式 3：图形 → 数量关系
- * 如：长方体有 12 条棱，6 个面，8 个顶点
- * 适用：几何类 KP + 填空/选择/应用题型
- */
-function makeShapeToApply(plan, context, i, kpMetas, rng) {
-  var shapeKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'geometry'; }));
-  if (!shapeKp) shapeKp = Rng.pick(rng,kpMetas);
-  
-  var shapeFeatures = {
-    'cube': { name: '正方体', edges: 12, faces: 6, vertices: 8 },
-    'cuboid': { name: '长方体', edges: 12, faces: 6, vertices: 8 },
-    'cylinder': { name: '圆柱', edges: 2, faces: 3, vertices: 0 },
-    'cone': { name: '圆锥', edges: 1, faces: 2, vertices: 1 },
-    'sphere': { name: '球', edges: 0, faces: 1, vertices: 0 },
-    'rectangle': { name: '长方形', edges: 4, faces: 1, vertices: 4 },
-    'square': { name: '正方形', edges: 4, faces: 1, vertices: 4 },
-    'triangle': { name: '三角形', edges: 3, faces: 1, vertices: 3 },
-    'circle': { name: '圆', edges: 0, faces: 1, vertices: 0 }
-  };
-  
-  var featureKeys = Object.keys(shapeFeatures);
-  var feature = Rng.pick(rng,featureKeys);
-  var meta = shapeFeatures[feature];
-
-  var attrKeys = ['edges', 'faces', 'vertices'];
-  var attr = Rng.pick(rng,attrKeys);
-  var attrName = { edges: '棱', faces: '面', vertices: '顶点' }[attr];
-  var answer = meta[attr];
-
-  var prompt = meta.name + '有几个' + attrName + '？';
-  // 计数题题面无数字/运算符，指纹的 operands 槽位承载（形状编码×属性编码）语义变体，
-  // 避免 27 种「形状×属性」题塌缩为同一指纹被误判重复（编码确定性派生，非随机）。
-  var variantCodes = [featureKeys.indexOf(feature) + 1, attrKeys.indexOf(attr) + 1];
-
-  return {
-    knowledgePointId: pkp(plan),
-    knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
-    questionType: plan.questionTypeId || 'fill',
-    difficulty: plan.difficulty,
-    spiralLevel: plan.spiralLevel || 1,
-    context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: String(answer),
-    answerMode: 'input',
-    data: {
-      mode: 'shape-to-apply',
-      steps: 1,
-      primaryKp: shapeKp.id,
-      shapeType: feature,
-      targetAttr: attr,
-      attrName: attrName,
-      operands: variantCodes,
-      composite: true
-    }
-  };
-}
-
 function createCompositeGenerator(spec) {
   spec = spec || {};
-  var mode = spec.mode || 'auto'; // auto | calc-to-judge | measure-to-calc | shape-to-apply
-  
+
   return {
     id: spec.id || 'generator:composite',
     subject: spec.subject || 'math',
     capabilities: ['calc', 'judge', 'fill', 'apply'],
-    questionTypes: ['calc', 'judge', 'fill', 'apply', 'oral'],
+    questionTypes: ['calc', 'judge', 'fill', 'apply'],
     knowledgePoints: spec.knowledgePoints || [],
     supportsComposite: true,
-    
+
     supports: function (plan) {
-      if (!plan || !plan.combine) return false;
-      if (!plan.knowledgePointIds || plan.knowledgePointIds.length < 2) return false;
-      // 检查是否有至少两个不同类别的 KP
-      var kpIds = plan.knowledgePointIds;
-      var categories = new Set();
-      kpIds.forEach(function(id) {
-        var meta = getKpMeta(id);
-        if (meta) categories.add(meta.category);
-      });
-      return categories.size >= 2;
+      return !!(plan && plan.combine === true &&
+        Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length >= 2);
     },
-    
+
     generate: function (plan, context) {
       context = context || {};
+      var kpIds = (plan && Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length)
+        ? plan.knowledgePointIds
+        : (plan && plan.knowledgePointId ? [plan.knowledgePointId] : []);
+      if (kpIds.length < 2) {
+        throw new Error('Composite generator 需要至少 2 个知识点');
+      }
       var count = plan.count || 1;
       var questions = [];
-      var kpIds = plan.knowledgePointIds || [plan.knowledgePointId];
-      var kpMetas = kpIds.map(getKpMeta).filter(Boolean);
-      
-      if (kpMetas.length < 2) {
-        throw new Error('Composite generator 需要至少 2 个不同类别的 KP');
-      }
-      
       for (var i = 0; i < count; i++) {
-        var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-        var q;
-        
-        // 根据模式选择生成策略
-        var mode = spec.mode || 'auto';
-        if (mode === 'auto') {
-          var categories = new Set(kpMetas.map(function(m) { return m.category; }));
-          if (categories.has('algebra') && categories.has('geometry')) {
-            mode = 'shape-to-apply';
-          } else if (categories.has('algebra') && categories.has('measurement')) {
-            mode = 'measure-to-calc';
-          } else if (categories.has('algebra')) {
-            mode = 'calc-to-judge';
-          } else {
-            mode = 'calc-to-judge';
-          }
-        }
-        
-        switch (mode) {
-          case 'calc-to-judge':
-            q = makeCalcToJudge(plan, context, i, kpMetas, rng);
-            break;
-          case 'measure-to-calc':
-            q = makeMeasureToCalc(plan, context, i, kpMetas, rng);
-            break;
-          case 'shape-to-apply':
-            q = makeShapeToApply(plan, context, i, kpMetas, rng);
-            break;
-          default:
-            q = makeCalcToJudge(plan, context, i, kpMetas, rng);
-        }
-        
-        questions.push(q);
+        questions.push(makeCalcToJudge(plan, context, i, kpIds));
       }
       return questions;
     }
@@ -320,7 +122,6 @@ function buildAll() {
   return [
     createCompositeGenerator({
       id: 'generator:composite',
-      mode: 'auto',
       knowledgePoints: COMPOSITE_KPS
     })
   ];

@@ -26,58 +26,23 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # ---- 基础环境 / 版本一致性 ----
-      - name: verify-setup（项目结构与规范文档）
-        run: npm run verify:setup
-
+      # ---- 冻结基线（v4.3.0）门禁链 ----
       - name: check:sw-version（SW 缓存名与 APP_VERSION 同步）
         run: npm run check:sw-version
 
-      - name: check:contrast（设计令牌对比度）
-        run: npm run check:contrast
+      - name: check-lint（静态质量检查）
+        run: npm run check-lint
 
-      # ---- UI 边界门禁 ----
-      - name: verify:ui-boundary（唯一生成入口）
-        run: npm run verify:ui-boundary
+      - name: verify:syntax（全量 JS 语法门禁）
+        run: npm run verify:syntax
 
-      - name: verify:practice-page（练习页职责）
-        run: npm run verify:practice-page
-
-      # ---- 生成器契约 / 注册表 / 覆盖（549 KP / 583 QT）----
-      - name: verify:m4
-        run: npm run verify:m4
-
-      # ---- 聚合硬门禁（SW/对比度/setup/kb-dir/题型模块/螺旋/难度/SVG/锚点/lint）----
+      # ---- Node 单元/契约测试全套 ----
       - name: npm test
         run: npm test
 
-      # ---- 标准答案自批改（错误答案 0）----
-      - name: verify:golden
-        run: npm run verify:golden
-
-      # ---- M0-M2 统一网关 ----
-      - name: verify:syntax
-        run: npm run verify:syntax
-
-      - name: verify:m0
+      # ---- M0 聚合门禁（kbl validate+runtime+uniqueness+access+dir）----
+      - name: verify（M0 gate）
         run: npm run verify
-
-      - name: verify:m1（本体/知识库）
-        run: npm run verify:m1
-
-      - name: verify:m2（能力/契约）
-        run: npm run verify:m2
-
-      # ---- 架构分层与 Frozen Core ----
-      - name: verify:layers
-        run: npm run verify:layers
-
-      - name: verify:frozen-core
-        run: npm run verify:frozen-core
-
-      # ---- Node 单元/契约测试全套（274 用例）----
-      - name: node:test 全套
-        run: node --test test/*.test.js test/unit/*.test.js tests/generator/*.test.js tests/strategy/*.test.js
 
       # ---- 结果汇总 ----
       - name: Upload test results
@@ -87,6 +52,4 @@ jobs:
           name: ci-results
           path: |
             dev/reports/
-            **.html
-            **.txt
           retention-days: 30

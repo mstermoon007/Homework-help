@@ -12,7 +12,6 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge/knowledge-point.js');
 var OS = require('../core/op-semantics.js');
 var MUL = OS.symbol('multiply') || '×';
 var DIV = OS.symbol('divide') || '÷';
@@ -207,7 +206,7 @@ function createC7Generator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i, kp));

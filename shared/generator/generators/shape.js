@@ -10,7 +10,6 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge/knowledge-point.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -318,7 +317,7 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   // geometry qt：输出带 graphic descriptor 的填充题/判断题
   // 基于 KP 名称构建题干，让学生识别/测量图形
-  var kp = KP.get(pkp(plan)) || {};
+  var kp = {};
   var name = kp.name || '几何图形';
   var angleWords = ['角', '直角', '锐角', '钝角', '平角', '周角'];
   var isAngle = angleWords.some(function(w){ return name.indexOf(w) !== -1; });
@@ -361,7 +360,7 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic) {
 function makeRecognizeQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   // recognize qt：输出分类/判断题，让学生识别图形类型
-  var kp = KP.get(pkp(plan)) || {};
+  var kp = {};
   var name = kp.name || '图形识别';
   var isChoice = rng() < 0.5;
 
@@ -423,7 +422,7 @@ function makeRecognizeQuestion(plan, context, i, shapeMeta, graphic) {
 
 function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var kp = KP.get(pkp(plan)) || {};
+  var kp = {};
   var name = kp.name || '几何应用';
   // 几何 apply 题：面积/周长/体积/对称/变换 等
   var isArea = name.indexOf('面积') !== -1 || name.indexOf('周长') !== -1;
@@ -488,8 +487,8 @@ function createShapeGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'],
-    questionTypes: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'],
+    capabilities: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'],
+    questionTypes: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -501,7 +500,7 @@ function createShapeGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
       var shapeMeta = getShapeMeta(kp);
 
       for (var i = 0; i < count; i++) {

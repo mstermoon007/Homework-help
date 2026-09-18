@@ -1,0 +1,5942 @@
+[
+  {
+    "knowledgeId": "math-G1-advance-01-muldiv-001",
+    "questionType": "calc",
+    "capability": "selection.fill",
+    "permission": "allow",
+    "pluginId": "math-g1-multiplication-table",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-advance-01-muldiv-001",
+    "questionType": "fill",
+    "capability": "selection.fill",
+    "permission": "allow",
+    "pluginId": "math-g1-multiplication-table",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-advance-02-muldiv-001",
+    "questionType": "calc",
+    "capability": "selection.fill",
+    "permission": "allow",
+    "pluginId": "math-g1-multiplication-table",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-advance-02-muldiv-001",
+    "questionType": "fill",
+    "capability": "selection.fill",
+    "permission": "allow",
+    "pluginId": "math-g1-multiplication-table",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-advance-03-muldiv-001",
+    "questionType": "fill",
+    "capability": "selection.fill",
+    "permission": "allow",
+    "pluginId": "math-g1-multiplication-table",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-01-geom-002",
+    "questionType": "calc",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-shapes",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-01-geom-002",
+    "questionType": "choice",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-shapes",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-01-geom-006",
+    "questionType": "calc",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-shapes",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-01-geom-006",
+    "questionType": "choice",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-shapes",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-01-money-003",
+    "questionType": "choice",
+    "capability": "money.measurement",
+    "permission": "allow",
+    "pluginId": "math-money",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-01-money-003",
+    "questionType": "fill",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-money",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-01-money-004",
+    "questionType": "apply",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-money",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-01-money-004",
+    "questionType": "calc",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-money",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-01-money-005",
+    "questionType": "choice",
+    "capability": "money.measurement",
+    "permission": "allow",
+    "pluginId": "math-g1-matching",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-02-addsub-001",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-02-addsub-001",
+    "questionType": "fill",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-02-compskills-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-make-ten",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-02-compskills-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-make-ten",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-02-compskills-003",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-make-ten",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-02-compskills-003",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-make-ten",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-02-money-004",
+    "questionType": "apply",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-02-money-004",
+    "questionType": "calc",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-03-addsub-002",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-03-addsub-002",
+    "questionType": "fill",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-03-numsense-001",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-03-numsense-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-03-numsense-003",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-03-numsense-003",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-04-addsub-001",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-04-addsub-001",
+    "questionType": "fill",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-down-04-addsub-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-04-addsub-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-04-addsub-003",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-04-addsub-003",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-04-addsub-004",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-04-addsub-004",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-05-addsub-001",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-05-addsub-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-05-addsub-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-05-addsub-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-06-addsub-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-06-addsub-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-down-92-addsub-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-01-numsense-001",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-01-numsense-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-02-numsense-001",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-02-numsense-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-03-numsense-001",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-03-numsense-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-04-numsense-001",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-04-numsense-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-05-geom-001",
+    "questionType": "choice",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g1-operation",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-mixed-05-geom-001",
+    "questionType": "fill",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g1-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-mixed-06-addsub-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-06-addsub-001",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-mixed-07-addsub-001",
+    "questionType": "choice",
+    "capability": "selection.choice",
+    "permission": "allow",
+    "pluginId": "math-g1-matching",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-mixed-08-geom-001",
+    "questionType": "choice",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g1-matching",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-mixed-09-comp-001",
+    "questionType": "judge",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-g1-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-mixed-10-comp-001",
+    "questionType": "choice",
+    "capability": "selection.choice",
+    "permission": "allow",
+    "pluginId": "math-g1-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-01-addsub-001",
+    "questionType": "calc",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-01-addsub-001",
+    "questionType": "fill",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-02-addsub-005",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-picture-equations",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-02-addsub-005",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-picture-equations",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-02-addsub-006",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-02-addsub-006",
+    "questionType": "fill",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-02-geom-007",
+    "questionType": "calc",
+    "capability": "position.direction",
+    "permission": "allow",
+    "pluginId": "math-shapes",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-02-geom-007",
+    "questionType": "choice",
+    "capability": "position.direction",
+    "permission": "allow",
+    "pluginId": "math-shapes",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-03-geom-001",
+    "questionType": "calc",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-shapes",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-03-geom-001",
+    "questionType": "choice",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-shapes",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-04-addsub-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-04-addsub-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-04-numsense-001",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-04-numsense-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-05-addsub-001",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-05-addsub-001",
+    "questionType": "fill",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-05-compskills-002",
+    "questionType": "calc",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-make-ten",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-05-compskills-002",
+    "questionType": "fill",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-make-ten",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-05-compskills-003",
+    "questionType": "judge",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-g1-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-92-numsense-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-93-addsub-001",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-93-addsub-001",
+    "questionType": "fill",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-94-numsense-001",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-94-numsense-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-94-numsense-002",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-94-numsense-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-95-addsub-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-95-addsub-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G1-up-96-addsub-001",
+    "questionType": "apply",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-96-addsub-001",
+    "questionType": "fill",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-97-addsub-001",
+    "questionType": "apply",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G1-up-97-addsub-001",
+    "questionType": "fill",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-01-stat-001",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-data-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-01-stat-002",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-data-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-02-muldiv-003",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-g2-column",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-02-muldiv-005",
+    "questionType": "fill",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-02-muldiv-006",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-02-muldiv-007",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-g2-picture-equations",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-02-muldiv-008",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-g2-picture-equations",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-001",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g2-mixed",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-002",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-g2-mixed",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-003",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-004",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-g2-mixed",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-005",
+    "questionType": "calc",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g2-picture-equations",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-006",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-g2-mixed",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-007",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-008",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-009",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-g2-mixed",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-05-mixops-010",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-g2-mixed",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-06-muldiv-001",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-06-muldiv-002",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-g2-column",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-06-muldiv-003",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-07-compskills-007",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-07-numsense-001",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-07-numsense-002",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-07-numsense-003",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-patterns",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-07-numsense-004",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-07-numsense-005",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-07-numsense-006",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-08-measure-001",
+    "questionType": "fill",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-unit-convert",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-08-measure-002",
+    "questionType": "geometry",
+    "capability": "selection.fill",
+    "permission": "allow",
+    "pluginId": "math-unit-convert",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-08-measure-003",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-down-09-logic-001",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-logic-reasoning",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-09-logic-002",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-logic-reasoning",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-down-10-muldiv-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-down-10-muldiv-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-down-10-muldiv-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-down-11-addsub-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-down-11-addsub-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-down-11-addsub-003",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-01-measure-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g1-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-01-measure-002",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g1-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-01-measure-003",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-01-measure-004",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-01-measure-005",
+    "questionType": "fill",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-unit-convert",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-01-measure-006",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-01-measure-007",
+    "questionType": "geometry",
+    "capability": "selection.fill",
+    "permission": "allow",
+    "pluginId": "math-unit-convert",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-01-measure-008",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-002",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-picture-equations",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-002",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-picture-equations",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-picture-equations",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-003",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-picture-equations",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-003",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-004",
+    "questionType": "apply",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-picture-equations",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-004",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-picture-equations",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-004",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-007",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-009",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-g2-picture-equations",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-010",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-g2-column",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-011",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-g2-column",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-012",
+    "questionType": "calc",
+    "capability": "arithmetic.addition",
+    "permission": "allow",
+    "pluginId": "math-g2-column",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-addsub-013",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-g2-column",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-frac-008",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g2-picture-equations",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-02-mixops-005",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-g2-column",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-02-mixops-006",
+    "questionType": "calc",
+    "capability": "complex.calc",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-03-numsense-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g1-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-03-numsense-002",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-03-numsense-003",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g2-matching",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-03-numsense-004",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-04-compskills-007",
+    "questionType": "fill",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-number-sense",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-04-geom-005",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-g2-column",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-04-mixops-008",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-04-money-012",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-04-muldiv-001",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-04-muldiv-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-04-muldiv-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-04-muldiv-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-04-muldiv-006",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-04-muldiv-009",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-g2-picture-equations",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-04-muldiv-010",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-g2-matching",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-04-muldiv-011",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-07-numsense-002",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-clock",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-07-time-001",
+    "questionType": "geometry",
+    "capability": "selection.fill",
+    "permission": "allow",
+    "pluginId": "math-unit-convert",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-07-time-003",
+    "questionType": "fill",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-unit-convert",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-07-time-004",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g1-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-07-time-005",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g2-matching",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-08-count-001",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-logic-reasoning",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-08-logic-002",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-logic-reasoning",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G2-up-08-logic-003",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-logic-reasoning",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G2-up-09-stat-001",
+    "questionType": "classify",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-09-stat-002",
+    "questionType": "classify",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-09-stat-003",
+    "questionType": "classify",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-10-muldiv-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-10-muldiv-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-10-muldiv-003",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-10-muldiv-004",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-11-geom-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-11-geom-001",
+    "questionType": "judge",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-11-geom-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-12-measure-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-001",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-001",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-003",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-003",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-005",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-005",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-006",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G2-up-13-muldiv-006",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G3-down-02-muldiv-001",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-down-02-muldiv-001",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-down-03-stat-001",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-data-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-down-03-stat-001",
+    "questionType": "classify",
+    "capability": "classification",
+    "permission": "allow",
+    "pluginId": "math-data-stats",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-down-04-muldiv-001",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G3-down-05-measure-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-area",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-down-06-time-001",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-time-date",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G3-down-07-money-001",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-decimal",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G3-down-08-logic-001",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-combination-set",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-down-08-logic-001",
+    "questionType": "classify",
+    "capability": "classification",
+    "permission": "allow",
+    "pluginId": "math-combination-set",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-up-01-time-002",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-time-date",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G3-up-02-addsub-001",
+    "questionType": "calc",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-up-02-addsub-001",
+    "questionType": "fill",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-up-05-muldiv-001",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G3-up-07-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-shape",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-up-08-frac-001",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fraction",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G3-up-08-frac-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fraction",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G3-up-08-frac-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fraction",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G3-up-08-frac-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fraction",
+    "coefficient": 0.8,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G3-up-09-logic-001",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-combination-set",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G3-up-09-logic-001",
+    "questionType": "classify",
+    "capability": "classification",
+    "permission": "allow",
+    "pluginId": "math-combination-set",
+    "coefficient": 0.6,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-01-mixops-001",
+    "questionType": "calc",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g4-picture",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-01-mixops-002",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-mixed",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-01-mixops-003",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-02-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-03-compskills-001",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-mixed",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-03-compskills-002",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-g4-mixed",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-03-compskills-003",
+    "questionType": "calc",
+    "capability": "arithmetic.addition",
+    "permission": "allow",
+    "pluginId": "math-g4-mixed",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-03-compskills-004",
+    "questionType": "judge",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-03-compskills-005",
+    "questionType": "judge",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-03-compskills-006",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-03-compskills-007",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-g4-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-04-dec-001",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-04-dec-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-06-compskills-003",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-mixed",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-06-dec-001",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-g4-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-06-dec-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-vertical",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-06-dec-004",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g4-picture",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-06-money-005",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-07-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-07-geom-002",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-08-stat-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-08-stat-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-08-stat-004",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g4-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-down-09-logic-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-down-09-logic-002",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-g4-reason",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-comp-015",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g4-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-comp-031",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g4-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-count-009",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-c3-counting",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-count-016",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-c3-counting",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-count-032",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-c3-counting",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-frac-019",
+    "questionType": "calc",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-c1-numberpuzzle",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-geom-002",
+    "questionType": "apply",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-c1-numberpuzzle",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-geom-008",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-c3-counting",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-geom-010",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-c4-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-geom-017",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-c4-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-geom-021",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-c4-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-logic-013",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-c8-logic",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-logic-025",
+    "questionType": "calc",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-c2-numbertheory",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-muldiv-024",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-competition-c2-numbertheory",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-numthy-004",
+    "questionType": "apply",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-c1-numberpuzzle",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-numthy-005",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-competition-c1-numberpuzzle",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-numthy-018",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-c2-numbertheory",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-numthy-020",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-competition-c1-numberpuzzle",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-numthy-022",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-c2-numbertheory",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-numthy-027",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-competition-c2-numbertheory",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-numthy-028",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-competition-c2-numbertheory",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-opt-001",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-c8-logic",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-opt-026",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g4-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-opt-033",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-c8-logic",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-stat-014",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-c3-counting",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-travel-006",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-c5-journey",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-travel-007",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-c5-journey",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-travel-012",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-c5-journey",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-mixed-02-travel-023",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-c5-journey",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-01-addsub-004",
+    "questionType": "calc",
+    "capability": "arithmetic.subtraction",
+    "permission": "allow",
+    "pluginId": "math-g4-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-001",
+    "questionType": "choice",
+    "capability": "code.recognition",
+    "permission": "allow",
+    "pluginId": "math-code",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-001",
+    "questionType": "fill",
+    "capability": "code.recognition",
+    "permission": "allow",
+    "pluginId": "math-code",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-001",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-001",
+    "questionType": "judge",
+    "capability": "code.recognition",
+    "permission": "allow",
+    "pluginId": "math-code",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-002",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-002",
+    "questionType": "classify",
+    "capability": "classification",
+    "permission": "allow",
+    "pluginId": "math-fill",
+    "coefficient": 0.4,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-002",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-002",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-003",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-005",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-01-numsense-006",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-02-measure-001",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-02-measure-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-03-measure-001",
+    "questionType": "calc",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-unit-convert",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-03-measure-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-03-measure-002",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-03-measure-003",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-03-measure-004",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-03-measure-005",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-03-measure-006",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-03-measure-007",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-04-money-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-04-muldiv-003",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-g4-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-04-muldiv-003",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G4-up-04-muldiv-003",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "新教材补充知识点，Generator 尚未实现"
+  },
+  {
+    "knowledgeId": "math-G4-up-04-muldiv-004",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-vertical",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-04-muldiv-004",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-04-muldiv-005",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-g4-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-04-muldiv-007",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-vertical",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-04-travel-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-04-travel-006",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g4-picture",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-06-muldiv-001",
+    "questionType": "apply",
+    "capability": "application.word",
+    "permission": "allow",
+    "pluginId": "math-g4-word",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-06-muldiv-001",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-06-muldiv-002",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-g4-vertical",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-06-muldiv-002",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-06-muldiv-003",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-g4-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-06-muldiv-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-06-muldiv-005",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-06-muldiv-006",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-g4-vertical",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-07-stat-001",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g4-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-08-opt-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-08-opt-002",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-g4-reason",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-01-geom-001",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-01-geom-001",
+    "questionType": "calc",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g1-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-01-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-position-direction",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-02-muldiv-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-02-muldiv-002",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-02-muldiv-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-02-muldiv-004",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-02-numthy-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-02-numthy-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-02-numthy-005",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-02-numthy-006",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-03-geom-005",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-03-measure-004",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-03-measure-006",
+    "questionType": "apply",
+    "capability": "application.word",
+    "permission": "allow",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-04-frac-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-04-frac-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-04-frac-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-04-frac-003",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-04-frac-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-04-frac-004",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-04-frac-005",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-04-frac-006",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-05-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-05-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-05-geom-002",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-05-geom-002",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-05-geom-003",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-05-geom-004",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-05-geom-005",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-06-compskills-004",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-mixed",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-06-frac-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-06-frac-003",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-06-mixops-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-mixed",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-down-07-stat-001",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g5-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-07-stat-002",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g5-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-07-stat-003",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-07-stat-004",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-08-logic-002",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-g5-reason",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-08-stat-001",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g4-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-down-08-stat-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-mixed-01-comp-009",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-mixed-01-comp-010",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-mixed-01-comp-011",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-mixed",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-addsub-010",
+    "questionType": "apply",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-alg-013",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-alg-028",
+    "questionType": "apply",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-alg-064",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-alg-075",
+    "questionType": "apply",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-count-023",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-count-035",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-count-038",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-count-042",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-count-076",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-count-077",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-frac-014",
+    "questionType": "apply",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-frac-017",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-frac-061",
+    "questionType": "apply",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-011",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-011",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-c4-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-019",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-020",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-025",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-029",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-029",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-c4-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-033",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-036",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-039",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-044",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-062",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-063",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-geom-068",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-015",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-021",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-024",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c6",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-032",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-041",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c8",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-043",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-051",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-054",
+    "questionType": "calc",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-066",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-071",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-logic-073",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-measure-022",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-mix-045",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-mix-046",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c6",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-money-037",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-muldiv-050",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-muldiv-065",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-muldiv-070",
+    "questionType": "calc",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numsense-026",
+    "questionType": "calc",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numsense-027",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numthy-012",
+    "questionType": "apply",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numthy-016",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numthy-055",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numthy-056",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numthy-057",
+    "questionType": "calc",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numthy-058",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numthy-069",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numthy-072",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-numthy-078",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-opt-003",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c8",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-opt-079",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c8",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-stat-048",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-travel-002",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-travel-030",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-c5-journey",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-travel-030",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-travel-031",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-travel-034",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-travel-040",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-travel-053",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-competition-g5-c5",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-travel-060",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-mixed-02-travel-074",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-01-dec-001",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-g5-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-01-dec-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-vertical",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-01-money-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-02-geom-002",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-03-dec-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-vertical",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-03-dec-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-vertical",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-03-dec-003",
+    "questionType": "calc",
+    "capability": "arithmetic.division",
+    "permission": "allow",
+    "pluginId": "math-g5-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-03-dec-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-03-dec-005",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-vertical",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-03-dec-006",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-04-stat-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-04-stat-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-04-stat-003",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g5-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-04-stat-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-04-stat-005",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-04-stat-006",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-005",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-006",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-007",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g5-picture",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-008",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 0.5,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-008",
+    "questionType": "choice",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 0.6,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-05-alg-008",
+    "questionType": "fill",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-06-geom-001",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-06-geom-002",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-06-geom-003",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-06-geom-004",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-picture",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-06-geom-005",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-06-geom-006",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-06-geom-007",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-07-logic-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-word",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G5-up-07-logic-002",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-g5-reason",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G5-up-07-logic-003",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g5-picture",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-01-addsub-004",
+    "questionType": "calc",
+    "capability": "arithmetic.addition",
+    "permission": "allow",
+    "pluginId": "math-g6-oral",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-01-numsense-001",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-down-01-numsense-002",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-down-01-numsense-003",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-down-02-money-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-down-03-geom-001",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-03-geom-001",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-03-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-03-geom-002",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-03-geom-002",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-03-geom-002",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-03-geom-003",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-03-geom-003",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-03-geom-004",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-04-ratio-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-down-04-ratio-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-down-04-ratio-003",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g6-picture-equation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-04-ratio-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-calc",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-down-04-ratio-005",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-04-ratio-006",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-down-05-opt-001",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-g6-reasoning",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-down-05-opt-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-001",
+    "questionType": "apply",
+    "capability": "equivalent.reasoning",
+    "permission": "allow",
+    "pluginId": "math-equivalent",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-001",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g4-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-001",
+    "questionType": "choice",
+    "capability": "equivalent.reasoning",
+    "permission": "allow",
+    "pluginId": "math-equivalent",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-001",
+    "questionType": "fill",
+    "capability": "equivalent.reasoning",
+    "permission": "allow",
+    "pluginId": "math-equivalent",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-001",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g2-matching",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-002",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-g4-reason",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-002",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-g5-reason",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-002",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-003",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g4-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-003",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-g5-reason",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-003",
+    "questionType": "judge",
+    "capability": "selection.judge",
+    "permission": "allow",
+    "pluginId": "math-g2-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-004",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g5-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-calc",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-004",
+    "questionType": "apply",
+    "capability": "composite",
+    "permission": "allow",
+    "pluginId": "math-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-004",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-005",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g5-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-005",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g6-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-005",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g2-matching",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-005",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-006",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g4-picture",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-006",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g5-picture",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-006",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-006",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g2-matching",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-007",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-judge",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-007",
+    "questionType": "calc",
+    "capability": "arithmetic.multiplication",
+    "permission": "allow",
+    "pluginId": "math-g6-calc",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-007",
+    "questionType": "choice",
+    "capability": "selection.choice",
+    "permission": "allow",
+    "pluginId": "math-g2-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-008",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-choice",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-01-comp-008",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-calc",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-addsub-011",
+    "questionType": "apply",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-addsub-063",
+    "questionType": "apply",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-addsub-084",
+    "questionType": "calc",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-alg-005",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-alg-005",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-alg-016",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-alg-023",
+    "questionType": "apply",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-alg-053",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-compskills-009",
+    "questionType": "calc",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-006",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-006",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-007",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-007",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-010",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-013",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-026",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-041",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-047",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-047",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-051",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-057",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-088",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-count-089",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-frac-001",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-frac-018",
+    "questionType": "apply",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-frac-018",
+    "questionType": "calc",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-frac-021",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-frac-022",
+    "questionType": "calc",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-frac-075",
+    "questionType": "apply",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-frac-078",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-003",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c8",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-003",
+    "questionType": "fill",
+    "capability": "selection.fill",
+    "permission": "allow",
+    "pluginId": "math-competition-c4-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-004",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-012",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-028",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-030",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-032",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-038",
+    "questionType": "apply",
+    "capability": "application.word",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-040",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-042",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-048",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-074",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-077",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-081",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-geom-082",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-019",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-024",
+    "questionType": "calc",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-027",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c6",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-037",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-050",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c8",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-060",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-061",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-080",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-085",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-logic-086",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-measure-025",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-mix-035",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-mix-055",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-mix-056",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c6",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-money-044",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-muldiv-020",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-muldiv-079",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numsense-029",
+    "questionType": "calc",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-014",
+    "questionType": "apply",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-015",
+    "questionType": "calc",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-031",
+    "questionType": "apply",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-034",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-045",
+    "questionType": "apply",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-052",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-052",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-059",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-059",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-064",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-065",
+    "questionType": "apply",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-066",
+    "questionType": "apply",
+    "capability": "c1.number.puzzle",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c1",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-067",
+    "questionType": "calc",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-067",
+    "questionType": "calc",
+    "capability": "c7.clever.calc",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c7",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-068",
+    "questionType": "calc",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-070",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-071",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-083",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-numthy-090",
+    "questionType": "apply",
+    "capability": "c2.number.theory",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c2",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-opt-008",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-opt-008",
+    "questionType": "apply",
+    "capability": "counting",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c3",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-opt-091",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c8",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-ratio-002",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-ratio-054",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-ratio-076",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c4",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-stat-058",
+    "questionType": "apply",
+    "capability": "c9.comprehensive",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c9",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-017",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-033",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-036",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-039",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-043",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-046",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-049",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g5-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-049",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-062",
+    "questionType": "geometry",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-069",
+    "questionType": "apply",
+    "capability": "reasoning",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c8",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-072",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-073",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-mixed-02-travel-087",
+    "questionType": "apply",
+    "capability": "c5.c6.journey.engineering",
+    "permission": "allow",
+    "pluginId": "math-competition-g6-c5",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-01-compskills-004",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g5-mixed",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-01-compskills-004",
+    "questionType": "calc",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-calc",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-01-frac-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-01-frac-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-01-frac-006",
+    "questionType": "calc",
+    "capability": "picture.equation",
+    "permission": "allow",
+    "pluginId": "math-g6-picture-equation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-01-frac-007",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-01-mixops-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-calc",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-01-mixops-005",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-calc",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-02-geom-001",
+    "questionType": "apply",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g5-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-02-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-03-frac-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-03-frac-003",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-03-frac-004",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-03-travel-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-word-problems",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-04-ratio-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-001",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-shapes",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-002",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-002",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-operation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-003",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g4-draw",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-003",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-004",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-005",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-word-problems",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-05-geom-006",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-g6-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-06-frac-002",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-oral",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-06-money-001",
+    "questionType": "apply",
+    "capability": "unresolved",
+    "permission": "missing",
+    "pluginId": "math-g6-fill",
+    "coefficient": 1,
+    "review": "Generator 未注册该知识点×题型，需技术排期"
+  },
+  {
+    "knowledgeId": "math-G6-up-07-geom-002",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g6-stats",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-07-geom-002",
+    "questionType": "geometry",
+    "capability": "shape.recognition",
+    "permission": "allow",
+    "pluginId": "math-geometry",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-07-geom-003",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g6-picture-equation",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-07-geom-004",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-match",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-07-geom-005",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g6-judge",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-07-geom-006",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g6-choice",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-07-ratio-001",
+    "questionType": "apply",
+    "capability": "stats",
+    "permission": "allow",
+    "pluginId": "math-g6-fill",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G6-up-08-geom-001",
+    "questionType": "apply",
+    "capability": "application.word",
+    "permission": "allow",
+    "pluginId": "math-g6-reasoning",
+    "coefficient": 1,
+    "review": null
+  },
+  {
+    "knowledgeId": "math-G4-up-13-stat-001",
+    "questionType": "judge",
+    "capability": "TBD.probability",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "生成器尚未实现该能力，由技术排期"
+  },
+  {
+    "knowledgeId": "math-G4-up-13-stat-001",
+    "questionType": "choice",
+    "capability": "TBD.probability",
+    "permission": "missing",
+    "pluginId": null,
+    "coefficient": 1,
+    "review": "生成器尚未实现该能力，由技术排期"
+  }
+]

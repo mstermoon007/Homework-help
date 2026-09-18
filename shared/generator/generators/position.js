@@ -10,7 +10,6 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge/knowledge-point.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -227,8 +226,8 @@ function createPositionGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['choice', 'judge', 'fill', 'oral'],
-    questionTypes: ['choice', 'judge', 'fill', 'oral'],
+    capabilities: ['choice', 'judge', 'fill', 'calc'],
+    questionTypes: ['choice', 'judge', 'fill', 'calc'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -240,7 +239,7 @@ function createPositionGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
       var meta = getPositionMeta(kp);
 
       for (var i = 0; i < count; i++) {

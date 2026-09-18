@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "name": "KBL-BASELINE",
+    "generatedAt": "2026-09-12T14:25:57.133Z",
+    "schemaVersion": "1.0.0"
+  },
+  "counts": {
+    "course": 19,
+    "unit": 128,
+    "unitWithKp": 123,
+    "ghostUnit": 5,
+    "knowledge": 598,
+    "relation": 1293,
+    "mapping": 639
+  },
+  "perGradeKP": {
+    "g1": 57,
+    "g2": 112,
+    "g3": 21,
+    "g4": 104,
+    "g5": 160,
+    "g6": 144
+  },
+  "perGradeUnits": {
+    "g1": 35,
+    "g2": 23,
+    "g3": 18,
+    "g4": 20,
+    "g5": 17,
+    "g6": 15
+  },
+  "perBookUnits": {
+    "up": 58,
+    "down": 49,
+    "mixed": 18,
+    "advance": 3
+  },
+  "kpStatus": {
+    "active": 571,
+    "deprecated": 25,
+    "inactive": 2
+  },
+  "ghostUnits": [
+    {
+      "unitId": "math-g1-up-u12",
+      "grade": "g1",
+      "book": "up",
+      "unitNo": 12,
+      "unitName": "数学游戏",
+      "unitType": "textbook",
+      "oldUnitId": "G1-up-91"
+    },
+    {
+      "unitId": "math-g1-up-u13",
+      "grade": "g1",
+      "book": "up",
+      "unitNo": 13,
+      "unitName": "综合与实践 数学游戏（上下前后左右位置）",
+      "unitType": "practice",
+      "oldUnitId": "G1-up-98"
+    },
+    {
+      "unitId": "math-g1-down-u08",
+      "grade": "g1",
+      "book": "down",
+      "unitNo": 8,
+      "unitName": "欢乐购物街（认识人民币）",
+      "unitType": "practice",
+      "oldUnitId": "G1-down-91"
+    },
+    {
+      "unitId": "math-g1-down-u09",
+      "grade": "g1",
+      "book": "down",
+      "unitNo": 9,
+      "unitName": "欢乐购物街（买卖我做主 · 综合实践）",
+      "unitType": "practice",
+      "oldUnitId": "G1-down-93"
+    },
+    {
+      "unitId": "math-g3-up-u09",
+      "grade": "g3",
+      "book": "up",
+      "unitNo": 9,
+      "unitName": "综合与实践 数字编码",
+      "unitType": "practice",
+      "oldUnitId": "G3-up-91"
+    }
+  ],
+  "relations": {
+    "types": {
+      "related": 693,
+      "prerequisite": 600
+    },
+    "sources": {
+      "legacy": 1277,
+      "kbl-seed": 15,
+      "editor": 1
+    },
+    "selfLoops": 0,
+    "dups": 0
+  },
+  "mappings": {
+    "count": 639,
+    "permission": {
+      "allow": 639
+    },
+    "allAllow": true,
+    "source": "generator-registry"
+  },
+  "rootHash": "47ba582ea236a467b80a330a7265eff750f8e3feb379079d4b3b965218ca2c7d",
+  "releaseVersion": "v1.0.0",
+  "releaseSnapshot": "kbl-math-v1.0.0-47ba582e",
+  "manifest": {
+    "schemaVersion": "1.0.0",
+    "catalogVersion": "math-v1.0.0",
+    "packageVersion": "kbl-math-2026-09-12",
+    "generatedAt": "2026-09-12T14:19:43.240Z",
+    "counts": {
+      "knowledgePoints": 598,
+      "relations": 1293,
+      "mappings": 639,
+      "units": 128
+    },
+    "idRules": {
+      "pattern": "^(math|chinese|english)-g[1-6]-(up|down|mixed|advance|comprehensive)-u\\d{2}-k\\d{3}$",
+      "stable": true,
+      "generatedOnce": true,
+      "runtimePositionIndependent": true
+    },
+    "rootHash": "47ba582ea236a467b80a330a7265eff750f8e3feb379079d4b3b965218ca2c7d",
+    "distributedRootHash": "47ba582ea236a467b80a330a7265eff750f8e3feb379079d4b3b965218ca2c7d"
+  },
+  "fourAreas": {
+    "excel": {
+      "file": "kbl/input/KBL-Course-Input.xlsx",
+      "sheets": {
+        "01 课程": 19,
+        "02 单元": 128,
+        "03 知识点": 598,
+        "04 知识关系": 1293,
+        "05 生成映射": 639,
+        "06 扩展": 598,
+        "07 数据字典": 94
+      },
+      "providedIds": 0
+    },
+    "build": {
+      "kps": 598,
+      "units": 128,
+      "relations": 1293,
+      "mappings": 639,
+      "rootHash": "47ba582ea236a467b80a330a7265eff750f8e3feb379079d4b3b965218ca2c7d"
+    },
+    "release": {
+      "kps": 598,
+      "units": 128,
+      "relations": 1293,
+      "mappings": 639,
+      "rootHash": "47ba582ea236a467b80a330a7265eff750f8e3feb379079d4b3b965218ca2c7d",
+      "snapshot": "kbl-math-v1.0.0-47ba582e"
+    },
+    "runtime": {
+      "kps": 598,
+      "bundleFile": "shared/knowledge/runtime/knowledge-runtime.js",
+      "bundleBytes": 25071
+    }
+  },
+  "sources": {
+    "externalSource": "/Users/zhanggaozhang/Code/Homework-Knowledge-Base",
+    "externalManifest": {
+      "knowledgePoints": 598,
+      "units": 128,
+      "relations": 1293,
+      "mappings": 660,
+      "rootHash": "011e6475df3562583db68bce59fbbe92ccf107b2c99a33feaf0cbcb7d5a04f7c"
+    },
+    "migrationRaw": "migration/raw/report.json: kps 598 / units 128 / relations 1293 / mappings 660",
+    "migrationExcelRaw": "migration/excel-raw/report.json: kps 598 / units 128 / relations 1293 / mappings 639"
+  },
+  "discrepanciesResolved": [
+    {
+      "claim": "598/608 KP",
+      "source": "方案文本",
+      "verdict": [
+        "外部源 598",
+        "迁移抽取 598",
+        "Excel 598",
+        "构建 598",
+        "运行时 598"
+      ],
+      "conclusion": "无任何数据集存在 608，608 无数据支撑，不照搬修数据"
+    },
+    {
+      "claim": "128/149 Unit",
+      "source": "方案文本",
+      "verdict": [
+        "外部源 128",
+        "迁移抽取 128",
+        "Excel 128",
+        "构建 128（课程树）"
+      ],
+      "conclusion": "无任何数据集存在 149；128 课程树单元含 5 ghost（无 KP）: math-g1-up-u12, math-g1-up-u13, math-g1-down-u08, math-g1-down-u09, math-g3-up-u09 — 均为 2024 人教版综合与实践单元，应保留（补 KP 或标 pending），不可简单删除；有 KP 单元 123"
+    },
+    {
+      "claim": "639/660 Mapping",
+      "source": "外部原始 vs 规范去重",
+      "verdict": [
+        "外部源 660（pluginId 冗余行）",
+        "Excel/构建/发布/运行时 639（按生成契约去重）"
+      ],
+      "conclusion": "真实差异；639 为规范数，M7 需核验 639 全 allow 的真实性"
+    }
+  ]
+}

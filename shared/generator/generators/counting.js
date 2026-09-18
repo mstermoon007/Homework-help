@@ -7,7 +7,6 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge/knowledge-point.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -61,7 +60,7 @@ function stairWays(n) {
 
 function makeCountingQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  // KP.get() 返回归一化对象，中文名在 identity.name
+  // Generator 已与旧知识层断开：KP 上下文不再可用，名称走默认（兼容约束见 pending 登记）
   var name = (kp && kp.identity && kp.identity.name) || (kp && kp.name) || '计数问题';
 
   // 根据 KP 名称选择题型
@@ -281,7 +280,7 @@ function createCountingGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeCountingQuestion(plan, context, i, kp));

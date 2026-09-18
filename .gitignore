@@ -24,10 +24,12 @@ build/
 
 # 本地 AI 辅助工具记忆（不属于源码）
 .workbuddy/
+.trae/
 
 # 本地生成的检查报告（由各 verify/check 门禁再生于 dev/reports/）
 dev/reports/
-archive/
+# 仅忽略根目录历史归档；docs/archive/ 为冻结文档归档，需入库
+/archive/
 competition-report.json
 *.png
 !assets/poster-*.png

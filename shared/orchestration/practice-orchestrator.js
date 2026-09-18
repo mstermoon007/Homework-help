@@ -13,6 +13,25 @@
  *
  * 收敛点：GenerationAPI.generate 委托本模块；浏览器 PracticeSession.start 经 GenerationAPI 同样收敛。
  *
+ * ── Generation Cell Context Contract（P11-00 冻结）────────────────────────────
+ * Request → PracticePlan → Cell Request 的投影规则（cellReq 白名单，只增不改语义）：
+ *
+ *   [生成上下文 Generation Context] cell 必须完整继承（会改变题目生成语义）：
+ *     subject / grade / difficulty / selectLevel / style / expectedAnswerStyle
+ *     subtype / cognitiveLevel / spiralLevel / max_spiral_level
+ *     customParams / settings / allowDifficultyOverride
+ *     adaptive / adaptiveMode / adaptiveDelta / learnerProfile
+ *
+ *   [规划上下文 Planning Context] cell 不得继承（只属于多 KP 合并/计划级语义）：
+ *     combine / planLevel / typeCounts（父级预算）/ perTypeCount / count（父级总预算）
+ *
+ *   [选区收窄] cell 是编排单元：knowledgePointIds = [cell.kpId]、questionTypes = [cell.questionType]、
+ *     count = cell.count；所有 cell 必须落在 selectedKPs × selectedTypes 内（范围由 plan() 保证）。
+ *
+ *   不变式：任何会改变生成语义的请求字段，要么在生成上下文中随 cell 传递，要么在规划上下文中被
+ *   显式排除；不存在"静默丢弃"。新增 Request 生成语义字段时必须同步更新本节与白名单。
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
  * @module shared/orchestration/practice-orchestrator
  */
 (function (global) {
@@ -33,9 +52,9 @@
     try { return require('../request/request-normalize.js'); } catch (e) {}
     return (typeof global !== 'undefined' && global.RequestNormalize) ? global.RequestNormalize : null;
   }
-  function getKnowledgeBank() {
-    try { return require('../knowledge/knowledge-bank.js'); } catch (e) {}
-    return (typeof global !== 'undefined' && global.KnowledgeBank) ? global.KnowledgeBank : null;
+  function getKnowledgeContext() {
+    try { return require('./knowledge-context.js'); } catch (e) {}
+    return (typeof global !== 'undefined' && global.KnowledgeContext) ? global.KnowledgeContext : null;
   }
   function getCapacityMapSafe() {
     try {
@@ -70,22 +89,13 @@
   }
 
   function resolvePoolKps(req) {
-    var KB = getKnowledgeBank();
-    if (!KB) return [];
-    var subject = (req.subject === 'chinese' || req.subject === 'english') ? 'math' : (req.subject || 'math');
-    var grade = req.grade != null ? req.grade : (req.scope && req.scope.grade != null ? req.scope.grade : null);
-    if (grade == null) return [];
-    var ids = [];
-    var unit = req.unit != null ? req.unit : (req.scope && req.scope.unit != null ? req.scope.unit : null);
-    var g = KB.findGrade(subject, grade);
-    if (unit != null) {
-      (g && g.modules || []).forEach(function (m) {
-        if (String(m.id) === String(unit)) (m.knowledgePoints || []).forEach(function (kp) { ids.push(kp.id); });
-      });
-    } else {
-      (KB.getEntries(subject, grade) || []).forEach(function (e) { ids.push(e.id); });
-    }
-    return ids;
+    var KC = getKnowledgeContext();
+    if (!KC) return [];
+    return KC.poolKpIds({
+      subject: req.subject,
+      grade: req.grade != null ? req.grade : (req.scope && req.scope.grade != null ? req.scope.grade : null),
+      unit: req.unit != null ? req.unit : (req.scope && req.scope.unit != null ? req.scope.unit : null)
+    });
   }
 
   // ---------- 题型容量（能力之外的上限；缺失按 Infinity） ----------
@@ -132,29 +142,37 @@
     return (typeof global !== 'undefined' && global.KnowledgeCapabilityView) ? global.KnowledgeCapabilityView : null;
   }
 
-  function getKnowledgePointAccess() {
-    try { return require('../knowledge/knowledge-point.js'); } catch (e) {}
-    return (typeof global !== 'undefined' && global.KnowledgePoint) ? global.KnowledgePoint : null;
-  }
-
   function getTargetDifficulty() {
     try { return require('../strategy/target-difficulty.js'); } catch (e) {}
-    return null;
+    return (typeof global !== 'undefined' && global.TargetDifficulty) ? global.TargetDifficulty : null;
+  }
+
+  // M2/M3：编排层难度参数域（DifficultyContext）唯一入口；只做参数整理，不计算难度。
+  function getDifficultyOrchestrator() {
+    try { return require('./difficulty-orchestrator.js'); } catch (e) {}
+    return (typeof global !== 'undefined' && global.DifficultyOrchestrator) ? global.DifficultyOrchestrator : null;
+  }
+
+  function getKnowledgeContext() {
+    try { return require('./knowledge-context.js'); } catch (e) {}
+    return (typeof global !== 'undefined' && global.KnowledgeContext) ? global.KnowledgeContext : null;
   }
 
   /**
    * 用户未显式给难度时，预测实际生成难度（策略 7 维静态 + 合成），
    * 使 Capacity 维度与生成维度对齐（P0-02）。无法推导时回落中档 3。
    * 只影响容量估算与账本标记，绝不复写 genReq.difficulty（生成仍由策略自行合成）。
+   * KP 经 KnowledgeContext 的 Practice Context 视图（strategyView）获取：
+   * Frozen Target/StaticDifficulty 期望该形状（canonical 直传会全落默认 → Shape Drift）。
    */
   function predictDifficulty(kpIds, qts, mode) {
     var Target = getTargetDifficulty();
-    var KP = getKnowledgePointAccess();
-    if (!Target || !KP) return null;
+    var KC = getKnowledgeContext();
+    if (!Target || !KC) return null;
     var type = (qts && qts.length ? qts[0] : null) || 'calc';
     for (var i = 0; i < kpIds.length; i++) {
       var kp;
-      try { kp = KP.get(kpIds[i]); } catch (e) { kp = null; }
+      try { kp = KC.strategyView(kpIds[i]); } catch (e) { kp = null; }
       if (!kp) continue;
       try {
         var r = Target.resolveTargetDifficulty({ knowledgePoint: kp, questionType: type, mode: mode || 'single-kp' });
@@ -189,22 +207,34 @@
     if (!qts.length) return Promise.resolve({ active: false, reason: 'no-types' });
     // combine=true 属 StrategyEngine 单计划合并语义（多 KP 融合出题），
     // POL 的按 cell 拆分会破坏其合并语义 → 透明回退到 execute（原行为回归保护）。
-
     if (req.combine === true) return Promise.resolve({ active: false, reason: 'combine' });
+    // comprehensive 属既有 ComprehensiveStrategy 全年级加权分配语义（与 api.js isComprehensive 对齐），
+    // 不属于 POL 的「选区 KP × 题型」cell 编排 → 显式回退（防带题型白名单时误入池路径）。
+    if (req.mode === 'comprehensive' || req.model === 'comprehensive' || req.comprehensive === true) {
+      return Promise.resolve({ active: false, reason: 'comprehensive' });
+    }
 
     var count = req.count != null ? req.count : (req.volume != null ? req.volume : 20);
     count = Math.max(1, Math.floor(Number(count) || 20));
 
     // 仅对「显式候选 KP + 题型」路径介入（即 v4.3.0 二级/三级页与知识点深链的实际链路）。
-    // 池模式（无显式 KP）保持原行为不变，避免回归；其题型覆盖可作为后续扩展。
+    // 池模式（无显式 KP）：POL 经 KnowledgeContext 展开年级/单元池（KBL Runtime 唯一事实源），
+    // 取代 Frozen Strategy poolEntries（KB.getEntries）路径 → Strategy 不再主动查询 KnowledgeBank。
     var kpIds = explicitKpIds(req);
+    if (!kpIds.length) {
+      var poolGrade = req.grade != null ? req.grade : (req.scope && req.scope.grade != null ? req.scope.grade : null);
+      if (poolGrade != null) kpIds = resolvePoolKps(req);
+    }
     if (!kpIds.length) return Promise.resolve({ active: false, reason: 'no-kp' });
 
-    // 用户难度（P0-02 维度对齐）：0/空按中档；1-10 归入对应难度桶。
+    // 用户难度（P0-02 维度对齐）：经 DifficultyOrchestrator 归一（number/object/null 均可），
+    // 0/空按中档；1-10 归入对应难度桶。
     // 用户未显式给难度时，生成难度由策略 7 维静态+合成决定（题面 d≠默认 3），
     // 因此用 predictDifficulty 把容量查询/账本维度对齐到真实生成维度，避免桶错位。
-    var userDifficulty = req.difficulty != null ? Number(req.difficulty) : null;
-    if (userDifficulty == null && req.scope && req.scope.difficulty != null) userDifficulty = Number(req.scope.difficulty);
+    var DO = getDifficultyOrchestrator();
+    var diffParam = DO ? DO.normalizeDifficultyInput({ difficulty: req.difficulty, scope: req.scope })
+      : { requested: req.difficulty != null ? Number(req.difficulty) : null, min: null, max: null, tolerance: 0, source: 'auto' };
+    var userDifficulty = diffParam.requested != null ? diffParam.requested : null;
     var difficulty;
     if (userDifficulty == null || !isFinite(userDifficulty)) {
       var predicted = predictDifficulty(kpIds, qts, req.mode);
@@ -212,6 +242,10 @@
     } else {
       difficulty = Math.min(10, Math.max(1, Math.round(Number(userDifficulty))));
     }
+    // M4：编排层 DifficultyContext（难度参数域）。base 由 M5（strategy static-difficulty）接入前暂为 null，
+    // 本阶段仅承载 requested/min/max/tolerance/source 与 target 选择；不参与任何难度计算。
+    var difficultyContext = DO ? DO.resolveContext(diffParam, null)
+      : { requested: diffParam.requested != null ? difficulty : null, base: null, target: null, min: diffParam.min, max: diffParam.max, tolerance: diffParam.tolerance, source: diffParam.source };
 
     /**
    * 显式题型组合（typeCounts / perTypeCount）在 POL 路径同样权威（对齐 strategy-engine 规则①/②）：
@@ -220,18 +254,33 @@
    *   - 两类均受题型容量封顶（P0-03 容量仅作预算封顶）；封顶/不可行题型记入 skipped。
    * 返回 null 表示未给出显式组合（走默认保底+均衡），或直接返回组合结果。
    */
-  /** 归一显式 typeCounts：数组 [{questionType,count}] 或对象 {qt:count} 均可 */
+  /** 归一显式 typeCounts：数组 [{questionType,count}] 或对象 {qt:count} 均可；
+   *  questionType 经 RequestNormalize 归一为 canonical（P0-11：alias 不得进入预算/cell/统计键） */
   function explicitTypeCountsEntries(req) {
+    var RN = getRequestNormalize();
+    var canon = function (t) {
+      var s = String(t == null ? '' : t);
+      if (!s) return null;
+      if (RN && typeof RN.normalizeQuestionType === 'function') {
+        var c = RN.normalizeQuestionType(s);
+        return c || null;
+      }
+      return s;
+    };
     if (Array.isArray(req.typeCounts) && req.typeCounts.length) {
-      return req.typeCounts.map(function (t) { return t ? { questionType: String(t.questionType), count: t.count } : null; })
-        .filter(Boolean);
+      return req.typeCounts.map(function (t) {
+        if (!t) return null;
+        var ct = canon(t.questionType);
+        return ct ? { questionType: ct, count: t.count } : null;
+      }).filter(Boolean);
     }
     if (req.typeCounts && typeof req.typeCounts === 'object') {
       var arr = [];
       for (var k in req.typeCounts) {
         if (Object.prototype.hasOwnProperty.call(req.typeCounts, k)) {
           var c = Number(req.typeCounts[k]);
-          if (isFinite(c) && c > 0) arr.push({ questionType: k, count: c });
+          var ck = canon(k);
+          if (ck && isFinite(c) && c > 0) arr.push({ questionType: ck, count: c });
         }
       }
       return arr.length ? arr : null;
@@ -331,6 +380,7 @@
         skippedTypes: explicitAlloc ? explicitAlloc.skipped : [],
         explicitCombo: !!explicitAlloc,
         difficulty: difficulty,
+        difficultyContext: difficultyContext,
         plannedTotal: alloc.plannedTotal,
         // 显式题型组合（typeCounts/perTypeCount）权威：总量以计划为准，不得被 recovery 补齐到 count
         targetTotal: explicitAlloc ? alloc.plannedTotal : count,
@@ -399,7 +449,8 @@
           plans: [],
           trace: {},
           failedPlans: [],
-          seenKeys: (prevSeen instanceof Set) ? prevSeen : new Set()
+          seenKeys: (prevSeen instanceof Set) ? prevSeen : new Set(),
+          outOfScopeDropped: 0
         };
         var coveredKps = [];
         var chain = Promise.resolve();
@@ -419,13 +470,32 @@
               difficulty: genReq.difficulty,
               selectLevel: genReq.selectLevel,
               style: genReq.style,
-              expectedAnswerStyle: genReq.expectedAnswerStyle
+              expectedAnswerStyle: genReq.expectedAnswerStyle,
+              // P10-3：难度/生成语义字段随 cell 传递（此前被白名单丢弃 → 用户难度上下文丢失）。
+              // 仅携带执行语义；combine/planLevel 等规划级标志仍不继承（见上方注释）。
+              subtype: genReq.subtype,
+              cognitiveLevel: genReq.cognitiveLevel,
+              spiralLevel: genReq.spiralLevel,
+              max_spiral_level: genReq.max_spiral_level,
+              customParams: genReq.customParams,
+              settings: genReq.settings,
+              allowDifficultyOverride: genReq.allowDifficultyOverride,
+              adaptive: genReq.adaptive,
+              adaptiveMode: genReq.adaptiveMode,
+              adaptiveDelta: genReq.adaptiveDelta,
+              learnerProfile: genReq.learnerProfile
             };
             return execute(cellReq, assignOpts(options, { __noRender: true, previousSeenKeys: acc.seenKeys }))
               .then(function (add) {
                 // 先按批前 seenKeys 过滤新题，再吸收本批指纹（避免 add.seenKeys 含本批指纹时误判为重复）
                 var newOnes = [];
                 (add.questions || []).forEach(function (q) {
+                  // P11-03 Scope 守卫：生成结果不得偷换题型（Strategy 退化产物越界 selectedTypes
+                  // → 丢弃，缺口如实走 Recovery/PARTIAL；不把越界题交付用户）。
+                  if (q && q.questionType && p.selectedTypes && p.selectedTypes.indexOf(q.questionType) === -1) {
+                    acc.outOfScopeDropped = (acc.outOfScopeDropped || 0) + 1;
+                    return;
+                  }
                   var fp = q && q.questionFingerprint;
                   if (fp && acc.seenKeys.has(fp)) return;
                   if (fp) acc.seenKeys.add(fp);
@@ -444,7 +514,14 @@
         return chain.then(function () { return { acc: acc, coveredKps: coveredKps }; });
       }
 
-      return runCells(p.kpTypeMatrix || [], new Set()).then(function (firstRun) {
+      // P11-02 F-DUP-1：初始 seenKeys 以父级 previousSeenKeys 播种。
+      // 此前用空集启动并用它覆盖 cell 的 previousSeenKeys，导致 session/bridge 注入的
+      // 跨代全历史指纹在 POL 激活路径丢失（重新生成与上一代不互斥）。
+      var seedSeen = new Set();
+      if (options && options.previousSeenKeys && typeof options.previousSeenKeys.forEach === 'function') {
+        options.previousSeenKeys.forEach(function (k) { seedSeen.add(k); });
+      }
+      return runCells(p.kpTypeMatrix || [], seedSeen).then(function (firstRun) {
         var acc = firstRun.acc;
         var coveredKps = firstRun.coveredKps;
         var requested = p.requestedCount;
@@ -526,6 +603,7 @@
             capacityExhausted: (p.coverageStatus === 'CAPACITY_LIMITED' || p.coverageStatus === 'TYPE_COVERAGE_INFEASIBLE'),
             generationFailed: status === 'FAILED',
             budgetRecovered: recovered,
+            outOfScopeDropped: acc.outOfScopeDropped || 0,
             coverageStatus: p.coverageStatus,
             reason: reason
           });
@@ -551,6 +629,7 @@
           ledger.coveredKps = coveredKps.slice();
           ledger.coveredKpCount = coveredKps.length;
           ledger.selectedKpCount = p.kpIds.length;
+          ledger.difficultyContext = p.difficultyContext || null;
 
           return {
             questions: acc.questions,
@@ -566,6 +645,7 @@
             generationId: generationId,
             previousGenerationId: options.previousGenerationId || null,
             seenKeys: acc.seenKeys,
+            difficultyContext: p.difficultyContext || null,
             orchestration: ledger
           };
         });

@@ -68,28 +68,13 @@ function kpToUnified(kp) {
   return null;
 }
 
-// 别名题型认知下限（Phase 1 将 oral/recognize/open 并入规范 7 类后，
-// 其各自历史认知范围需保留，避免被规范类型的更宽范围覆盖）：
-//   口算 oral     → 识记/理解（不含 apply）
-//   认读 recognize → 识别/理解
-//   开放 open     → 运用（开放题要求运用知识建构答案）
-var ALIAS_LEVELS = {
-  oral: ['recall', 'understand'],
-  recognize: ['recognize', 'understand'],
-  open: ['apply']
-};
-
+// P0-11 收口：不再自持 oral/recognize/open 别名认知表（原 ALIAS_LEVELS）。
+// 别名题型统一经 Registry.normalizeQuestionType 归一为 canonical 7 类后取认知范围
+//（oral→calc / recognize→geometry / open→apply），alias 不再参与业务决策。
 function supportedUnifiedSet(typeId) {
-  if (ALIAS_LEVELS[typeId]) {
-    var s = {};
-    ALIAS_LEVELS[typeId].forEach(function (l) { var u = toUnified(l); if (u) s[u] = true; });
-    return s;
-  }
-  var t = Registry.get(typeId);
-  if (!t) {
-    var n = Registry.normalizeQuestionType(typeId);
-    t = n ? Registry.get(n.id) : null;
-  }
+  var _n = Registry.normalizeQuestionType(typeId);
+  var canonicalId = (_n && _n.id) ? _n.id : typeId;
+  var t = Registry.get(canonicalId);
   if (!t) {
     throw new StrategyError('非法 questionTypeId: ' + typeId, CODES.INVALID_REQUEST, { questionTypeId: typeId });
   }

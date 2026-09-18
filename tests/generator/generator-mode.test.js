@@ -52,3 +52,39 @@ test('M4-R14 P2：dump 输出全局模式与 knowledgePointOverrides', () => {
   assert.ok(!('questionTypeOverrides' in d));
   assert.ok(!('subjectOverrides' in d));
 });
+// ===== Phase 9：并入原 dev/check-generator-mode.js 的独有检查（一事实一入口） =====
+const Env = require(path.join(ROOT, 'dev', '_bundle-env.js'));
+const Selector = Env.GeneratorSelector;
+const GenRegistry = Env.GeneratorRegistry;
+// 选择器来自 bundle，其内部 Mode 实例与源码 Mode 不同 → 选择相关测试用 bundle Mode
+const BundleMode = Env.GeneratorMode;
+
+test('M4-R14：native 模式选中 core track；无候选显式 unsupported（Step 14 禁止 fallback）', () => {
+  BundleMode.clearAll();
+  BundleMode.setGlobal('native');
+  const n = Selector.selectGenerator({ knowledgePointId: 'math-g1-up-u01-k001', questionTypeId: 'calc', difficulty: 3 });
+  assert.equal(n.record && n.record.scope, 'core');
+  const f = Selector.selectGenerator({ knowledgePointId: 'math-g1-up-u05-k001', questionTypeId: 'review', difficulty: 3 });
+  assert.equal(f.source, 'unsupported');
+  assert.equal(f.errorCode, 'GENERATOR_UNSUPPORTED');
+});
+
+test('M4-R14：hybrid 无 legacy 并轨（legacy 记录已清空）；选择结果携带 mode', () => {
+  BundleMode.setGlobal('hybrid');
+  const legacyCount = GenRegistry.all().filter((r) => r.scope === 'legacy' || /^legacy:/.test(r.id)).length;
+  assert.equal(legacyCount, 0);
+  const hsel = Selector.selectGenerator({ knowledgePointId: 'math-g1-up-u01-k001', questionTypeId: 'calc', difficulty: 3 });
+  assert.equal(hsel.record && hsel.record.scope, 'core');
+  assert.equal(hsel.mode, 'hybrid');
+  const hNone = Selector.selectGenerator({ knowledgePointId: 'math-g1-up-u05-k001', questionTypeId: 'review', difficulty: 3 });
+  assert.equal(hNone.source, 'unsupported');
+});
+
+test('M4-R14：instantiate 可实例化 core 生成器并产出题量', () => {
+  BundleMode.clearAll();
+  BundleMode.setGlobal('native');
+  const n = Selector.selectGenerator({ knowledgePointId: 'math-g1-up-u01-k001', questionTypeId: 'calc', difficulty: 3 });
+  const inst = Selector.instantiate(n);
+  const qs = inst.generate({ knowledgePointId: 'math-g1-up-u01-k001', questionTypeId: 'calc', difficulty: 3, count: 2 }, { seed: 'gate' });
+  assert.equal(qs.length, 2);
+});

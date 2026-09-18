@@ -129,21 +129,13 @@ function scanKpIdsInSource(rel) {
 // MATH-14：legacy 插件轨道已删除（plugins/registry.js 等），插件字段检查（R3/R4-b）随之退役；
 // lint 收敛为纯静态扫描：现存 plugins/*.js（SVG 图形插件）+ shared/ 源码质量。
 
-// R4-c: shared/knowledge-*.js 数据内旧式 ID
-function scanKnowledgeShards() {
-  ['knowledge-bank.js', 'knowledge-math.js'].forEach(f => {
-    scanKpIdsInSource(path.join('shared', f));
-  });
-}
-
+// R4-c：旧知识分片（knowledge-bank/knowledge-math）已随 KBL 收口删除，规则退役。
 // ============ 主流程 ============
 console.log('🔍 lint-check — 共享层/图形插件静态质量检查\n' + '='.repeat(46));
 
 listDir('plugins').forEach(rel => { scanSourceFile(rel, false); scanColors(rel); });
 listDir('plugins').forEach(scanKpIdsInSource); // 任务11：插件源码内旧式无前缀 ID 同样拦截
 listDir('shared').forEach(rel => scanSourceFile(rel, true));
-
-scanKnowledgeShards();
 
 function listDir(dir) {
   const p = path.join(ROOT, dir);

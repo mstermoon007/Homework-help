@@ -21,28 +21,34 @@
   var SUBJECTS = ['math', 'chinese', 'english'];
   var MODES = ['quick', 'teacher', 'competition'];
   var GRADES = [1, 2, 3, 4, 5, 6];
+  var QuestionTypeRegistry = require('../knowledge/question-type-registry.js');
 
-  // 内部 canonical 题型（与 Frozen Core 生成链一致）
-  var CANONICAL_TYPES = ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
+  // 内部 canonical 题型（唯一来源：Registry.TYPES）
+  var CANONICAL_TYPES = QuestionTypeRegistry.TYPES.map(function (t) { return t.id; });
 
   // spec 七种题型 ID（页面统一用语）
   var SPEC_TYPES = ['calculation', 'fill_blank', 'choice', 'true_false', 'operation', 'classification', 'word_problem'];
 
-  // spec ID / 旧别名 → canonical
-  var TYPE_ALIASES = {
-    calculation: 'calc', calc: 'calc', oral: 'calc', vertical: 'calc', mixed: 'calc', cushi: 'calc',
-    fill_blank: 'fill', fill: 'fill',
-    choice: 'choice',
-    true_false: 'judge', judge: 'judge',
-    operation: 'geometry', geometry: 'geometry', recognize: 'geometry',
-    classification: 'classify', classify: 'classify', sort: 'classify',
-    word_problem: 'apply', apply: 'apply'
-  };
+  // 别名表收口（P0-11）：仅 Registry 未覆盖的 spec 边界映射本地保留（请求边界语义，非题型定义）；
+  // 其余旧别名（oral/vertical/mixed/cushi/recognize/sort/...）统一继承 Registry.canonicalAliases，不再自持第二套词表。
+  var TYPE_ALIASES = (function () {
+    var SPEC_TO_CANONICAL = {
+      calculation: 'calc', fill_blank: 'fill', true_false: 'judge',
+      operation: 'geometry', classification: 'classify', word_problem: 'apply'
+    };
+    var merged = {}, k;
+    for (k in SPEC_TO_CANONICAL) merged[k] = SPEC_TO_CANONICAL[k];
+    var aliases = QuestionTypeRegistry.canonicalAliases || {};
+    for (k in aliases) if (!merged[k]) merged[k] = aliases[k];
+    return merged;
+  })();
 
-  var TYPE_LABELS = {
-    calc: '计算题', fill: '填空题', choice: '选择题', judge: '判断题',
-    geometry: '操作/作图题', classify: '分类整理题', apply: '解决问题/应用题'
-  };
+  // 题型显示名：唯一来源 Registry.TYPES.name（P0-11 收口，不再本地维护）
+  var TYPE_LABELS = (function () {
+    var labels = {};
+    QuestionTypeRegistry.TYPES.forEach(function (t) { labels[t.id] = t.name; });
+    return labels;
+  })();
 
   // 难度：引擎契约为 1-10 整数；UI 用语（easy/normal/hard）在请求边界归一为数值。
   var DIFFICULTY_MAP = { easy: 4, simple: 4, normal: 6, medium: 6, hard: 9, difficult: 9 };
@@ -52,6 +58,35 @@
     var n = Number(d);
     if (!isNaN(n) && n >= 1 && n <= 10) return Math.round(n);
     return DIFFICULTY_MAP[String(d).toLowerCase()] || 6;
+  }
+
+  /**
+   * 编排层难度参数域（M2）：number → {requested, source:'user'}；
+   * 结构化对象 {requested,min,max,tolerance,source} 原样归一（min/max 纯约束，不参与计算）；
+   * null/缺省 → {requested:null, source:'auto'}。向下兼容旧 `difficulty: number`。
+   * 输出仅供编排层使用；生成链仍消费 `difficulty` 数值（引擎契约 1-10）。
+   */
+  function normalizeDifficultyParam(d) {
+    if (d != null && typeof d === 'object') {
+      var o = { source: String(d.source == null ? '' : d.source).toLowerCase() };
+      o.source = (o.source === 'user' || o.source === 'auto' || o.source === 'static') ? o.source
+        : (d.requested != null ? 'user' : 'auto');
+      return {
+        requested: d.requested == null ? null : normalizeDifficulty(d.requested),
+        min: (d.min == null) ? null : Number(d.min),
+        max: (d.max == null) ? null : Number(d.max),
+        tolerance: (d.tolerance == null || !(Number(d.tolerance) >= 0)) ? 0 : Number(d.tolerance),
+        source: o.source
+      };
+    }
+    var n = normalizeDifficulty(d);
+    return {
+      requested: (d == null || d === '') ? null : n,
+      min: null,
+      max: null,
+      tolerance: 0,
+      source: (d == null || d === '') ? 'auto' : 'user'
+    };
   }
 
   function normalizeSubject(s) {
@@ -113,6 +148,7 @@
       questionTypes: normalizeQuestionTypes(opts.questionTypes),
       count: Number(opts.count) > 0 ? Number(opts.count) : 20,
       difficulty: normalizeDifficulty(opts.difficulty),
+      difficultyParam: normalizeDifficultyParam(opts.difficulty),
       adaptiveMode: !!opts.adaptiveMode,
       adaptiveDelta: Number(opts.adaptiveDelta) || 0
     };
@@ -128,6 +164,7 @@
     TYPE_LABELS: TYPE_LABELS,
     DIFFICULTY_MAP: DIFFICULTY_MAP,
     normalizeDifficulty: normalizeDifficulty,
+    normalizeDifficultyParam: normalizeDifficultyParam,
     normalizeSubject: normalizeSubject,
     normalizeMode: normalizeMode,
     normalizeGrade: normalizeGrade,

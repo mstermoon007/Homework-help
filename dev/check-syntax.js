@@ -1,55 +1,39 @@
 #!/usr/bin/env node
-/**
- * dev/check-syntax.js — 语法检查（M0-10 步骤 1）
- *
- * 对 shared/ plugins/ dev/ scripts/ test/ tests/ 下所有 .js 执行 `node --check`，
- * 捕获语法错误。纯静态、零副作用、可重复。
- */
 'use strict';
-const { execFileSync } = require('child_process');
+// dev/check-syntax.js — JS 语法门禁：对全部源码/脚本/测试执行 node --check
+// 冻结基线门禁之一（输出 N/0：检查文件数 / 语法错误数）
+
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '..');
-const DIRS = ['shared', 'plugins', 'dev', 'scripts', 'test', 'tests'];
+const DIRS = ['shared', 'dev', 'scripts', 'tests', 'tools'];
 
-function walk(dir, out) {
-  if (!fs.existsSync(dir)) return;
-  fs.readdirSync(dir).forEach(function (e) {
-    const p = path.join(dir, e);
-    let st;
-    try { st = fs.statSync(p); } catch (err) { return; }
-    if (st.isDirectory()) walk(p, out);
-    else if (e.endsWith('.js')) out.push(p);
-  });
+function collectJs(dir, out) {
+  const abs = path.join(ROOT, dir);
+  if (!fs.existsSync(abs)) return;
+  for (const entry of fs.readdirSync(abs, { withFileTypes: true })) {
+    const rel = path.join(dir, entry.name);
+    if (entry.isDirectory()) collectJs(rel, out);
+    else if (entry.name.endsWith('.js')) out.push(rel);
+  }
 }
 
 const files = [];
-DIRS.forEach(function (d) { walk(path.join(ROOT, d), files); });
+DIRS.forEach((d) => collectJs(d, files));
 
-const errors = [];
-files.forEach(function (f) {
-  try {
-    execFileSync(process.execPath, ['--check', f], { stdio: 'pipe' });
-  } catch (err) {
-    const first = (err.stderr ? err.stderr.toString() : err.message || '').split('\n').filter(Boolean)[0] || 'syntax error';
-    errors.push(f.replace(ROOT + path.sep, '') + ' :: ' + first);
+let failed = 0;
+for (const file of files) {
+  const r = spawnSync(process.execPath, ['--check', path.join(ROOT, file)], {
+    encoding: 'utf8',
+  });
+  if (r.status !== 0) {
+    failed += 1;
+    console.error(`[FAIL] ${file}`);
+    console.error(r.stderr);
   }
-});
-
-function run() {
-  return {
-    name: '语法检查 (Syntax Check)',
-    pass: errors.length === 0,
-    errors: errors,
-    warnings: [],
-    summary: '检查 ' + files.length + ' 个 JS 文件，发现 ' + errors.length + ' 处语法错误'
-  };
 }
 
-module.exports = { run: run };
-if (require.main === module) {
-  const r = run();
-  console.log(JSON.stringify(r, null, 2));
-  process.exit(r.pass ? 0 : 1);
-}
+console.log(`语法检查：${files.length} 个文件，${failed} 个错误`);
+process.exit(failed > 0 ? 1 : 0);

@@ -1,0 +1,18 @@
+{
+  "sourceId": "math-primary-g1-g6",
+  "subject": "math",
+  "subjectName": "小学G1-G6数学",
+  "edition": "2025-pep",
+  "grades": [1, 2, 3, 4, 5, 6],
+  "books": ["up", "down"],
+  "file": "kbl/root/小学G1-G6数学知识点.xlsx",
+  "readonly": true,
+  "schemaVersion": "1.0.0",
+  "establishedAt": "2026-09-15",
+  "declaredUniqueSource": "本文件为项目唯一人工知识源（P16-01 决策登记）。只读：READ/PARSE/VALIDATE/EXTRACT/HASH/DIFF，禁止写回。",
+  "superseded": {
+    "kbl/input/KBL-Course-Input.xlsx": {
+      "reason": "旧 2022 版引擎化 KBL 载体（598 集），由新教材知识清单（root）替换；旧文件保留归档至 P16-07 清理，不再作为知识源。"
+    }
+  }
+}

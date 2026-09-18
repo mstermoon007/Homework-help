@@ -11,7 +11,12 @@
 'use strict';
 var path = require('path');
 var ROOT = path.resolve(__dirname, '..');
-var CI = require(path.join(ROOT, 'shared/capacity/capacity-inventory.js'));
+// P13-04：Node 侧需浏览器等价环境（bundle 全局）方可运行扫描（冻结 Strategy/Generator 不可裸 require）
+require(path.join(ROOT, 'dev', '_bundle-env.js'));
+require(path.join(ROOT, 'shared', 'presentation', 'html-renderer.js'));
+require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
+require(path.join(ROOT, 'shared', 'generation', 'api.js'));
+var CI = require(path.join(ROOT, 'shared', 'capacity', 'capacity-inventory.js'));
 
 var refresh = process.argv.indexOf('--refresh') !== -1;
 

@@ -24,10 +24,10 @@
     // 浏览器：推导 shared/ 目录（兼容页面从不同深度引用本文件），注入子模块
     var base = (document.currentScript.src || 'shared/core/common.js').replace(/[^\/]*$/, '');
     document.write('<script src="' + base + 'core.js"></script>');
-    document.write('<script src="' + base + 'render.js"></script>');
+    document.write('<script src="' + base + '../presentation/render.js"></script>');
     document.write('<script src="' + base + 'check.js"></script>');
-    document.write('<script src="' + base + 'ui-state.js"></script>');
-    document.write('<script src="' + base + 'storage.js"></script>');
+    document.write('<script src="' + base + '../state/ui-state.js"></script>');
+    document.write('<script src="' + base + '../state/storage.js"></script>');
   } else if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
     // Node：子模块经 require 加载后已增量挂载到 global.PluginUtil / global.App
     require('./core.js');

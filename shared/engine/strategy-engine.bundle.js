@@ -39,8 +39,20 @@ __defs["shared/catalog/difficulty-static.js"] = function (m) {
   m.exports = global.App.DifficultyStatic;
 };
 __defs["shared/knowledge/knowledge-bank.js"] = function (m) {
-  if (global.KnowledgeBank == null) throw new Error('strategy-bundle: 缺少全局 KnowledgeBank（请先加载对应脚本）');
-  m.exports = global.KnowledgeBank;
+  if (global.KnowledgeBankCompat == null) throw new Error('strategy-bundle: 缺少全局 KnowledgeBankCompat（请先加载对应脚本）');
+  m.exports = global.KnowledgeBankCompat;
+};
+__defs["shared/knowledge/knowledge-point.js"] = function (m) {
+  if (global.KnowledgePointCompat == null) throw new Error('strategy-bundle: 缺少全局 KnowledgePointCompat（请先加载对应脚本）');
+  m.exports = global.KnowledgePointCompat;
+};
+__defs["shared/knowledge/knowledge-ontology.js"] = function (m) {
+  if (global.KnowledgeOntologyCompat == null) throw new Error('strategy-bundle: 缺少全局 KnowledgeOntologyCompat（请先加载对应脚本）');
+  m.exports = global.KnowledgeOntologyCompat;
+};
+__defs["shared/orchestration/knowledge-context.js"] = function (m) {
+  if (global.KnowledgeContext == null) throw new Error('strategy-bundle: 缺少全局 KnowledgeContext（请先加载对应脚本）');
+  m.exports = global.KnowledgeContext;
 };
 __defs["shared/strategy/strategy-engine.js"] = function (module, exports, require) {
 
@@ -1007,7 +1019,98 @@ if (typeof window !== 'undefined') window.StrategyEngine = module.exports;
 if (typeof global !== 'undefined') global.StrategyEngine = module.exports;
 };
 __defs["shared/strategy/strategy-config.js"] = function (module, exports, require) {
-  module.exports = null;
+
+'use strict';
+
+var STRATEGY_VERSION = '1.0.0';
+var DEFAULT_STRATEGY = 'legacy'; 
+
+
+
+
+
+
+var GRADE_DIFFICULTY_ANCHORS = {
+  1: [1, 2],
+  2: [2, 4],
+  3: [3, 5],
+  4: [4, 7],
+  5: [5, 8],
+  6: [6, 10]
+};
+
+function difficultyAnchorOf(grade) {
+  return GRADE_DIFFICULTY_ANCHORS[Number(grade)] || null;
+}
+
+
+var _currentStrategy = null;
+var _configOverrides = {};
+
+function getStrategy() {
+  if (_currentStrategy) return _currentStrategy;
+  
+  if (typeof process !== 'undefined' && process.env && process.env.GENERATION_STRATEGY) {
+    return process.env.GENERATION_STRATEGY;
+  }
+  if (typeof globalThis !== 'undefined' && globalThis.__GENERATION_STRATEGY__) {
+    return globalThis.__GENERATION_STRATEGY__;
+  }
+  return DEFAULT_STRATEGY;
+}
+
+function setStrategy(strategy) {
+  if (strategy !== 'legacy' && strategy !== 'strategy-v1') {
+    throw new Error('Invalid strategy: ' + strategy + ' (expected "legacy" | "strategy-v1")');
+  }
+  _currentStrategy = strategy;
+  if (typeof globalThis !== 'undefined') {
+    globalThis.__GENERATION_STRATEGY__ = strategy;
+  }
+}
+
+function isLegacy() {
+  return getStrategy() === 'legacy';
+}
+
+function isStrategyV1() {
+  return getStrategy() === 'strategy-v1';
+}
+
+function getConfig() {
+  return {
+    version: STRATEGY_VERSION,
+    current: getStrategy(),
+    overrides: _configOverrides,
+    features: {
+      strategyEngine: isStrategyV1(),
+      legacyFallback: isLegacy()
+    }
+  };
+}
+
+function setConfigOverrides(overrides) {
+  _configOverrides = Object.assign({}, _configOverrides, overrides);
+}
+
+function reset() {
+  _currentStrategy = null;
+  _configOverrides = {};
+}
+
+module.exports = {
+  STRATEGY_VERSION: STRATEGY_VERSION,
+  DEFAULT_STRATEGY: DEFAULT_STRATEGY,
+  GRADE_DIFFICULTY_ANCHORS: GRADE_DIFFICULTY_ANCHORS,
+  difficultyAnchorOf: difficultyAnchorOf,
+  getStrategy: getStrategy,
+  setStrategy: setStrategy,
+  isLegacy: isLegacy,
+  isStrategyV1: isStrategyV1,
+  getConfig: getConfig,
+  setConfigOverrides: setConfigOverrides,
+  reset: reset
+};
 };
 __defs["shared/strategy/question-type-strategy.js"] = function (module, exports, require) {
 
@@ -1113,177 +1216,6 @@ module.exports = {
   matchByCognitiveLevel: matchByCognitiveLevel,
   getDefaultFromKP: getDefaultFromKP,
   getRegistryDefault: getRegistryDefault
-};
-
-};
-__defs["shared/strategy/question-type-allocation.js"] = function (module, exports, require) {
-
-'use strict';
-
-var Registry = require("shared/knowledge/question-type-registry.js");
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
-var QuestionTypeStrategy = require("shared/strategy/question-type-strategy.js");
-var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
-var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
-
-function allocateQuestionTypes(options) {
-  options = options || {};
-
-  var count = options.count;
-  if (typeof count !== 'number' || !isFinite(count) || count < 1 || Math.floor(count) !== count) {
-    throw new StrategyError('count 必须是 >=1 的整数: ' + count, CODES.INVALID_REQUEST, { count: count });
-  }
-
-  var kp = null;
-  if (options.knowledgePointId != null) {
-    kp = KnowledgePoint.get(options.knowledgePointId);
-    if (!kp) {
-      throw new StrategyError('知识点不存在: ' + options.knowledgePointId, CODES.KP_NOT_FOUND, { knowledgePointId: options.knowledgePointId });
-    }
-  } else if (options.kp != null) {
-    kp = options.kp;
-  }
-
-  
-  var candidateTypes;
-  if (Array.isArray(options.questionTypes) && options.questionTypes.length > 0) {
-    candidateTypes = options.questionTypes.slice();
-  } else if (kp) {
-    candidateTypes = QuestionTypeStrategy.supportedTypes(kp);
-  } else {
-    throw new StrategyError('缺少候选题型：请提供 questionTypes 或 knowledgePointId/kp', CODES.INVALID_REQUEST);
-  }
-
-  
-  var seen = {};
-  candidateTypes = candidateTypes.filter(function (t) {
-    if (seen[t]) return false;
-    seen[t] = true;
-    return true;
-  });
-  candidateTypes.forEach(function (t) {
-    if (!Registry.has(t)) {
-      throw new StrategyError('非法 questionTypeId: ' + t, CODES.INVALID_REQUEST, { questionTypeId: t });
-    }
-    if (kp && QuestionTypeStrategy.supportedTypes(kp).indexOf(t) === -1) {
-      throw new StrategyError('KP 不支持该题型: ' + t, CODES.NO_CAPABILITY, { questionTypeId: t, knowledgePointId: kp.id });
-    }
-  });
-  if (candidateTypes.length === 0) {
-    throw new StrategyError('KP 无任何受支持题型: ' + (kp && kp.id), CODES.NO_CAPABILITY, { knowledgePointId: kp && kp.id });
-  }
-
-  
-  if (kp && candidateTypes.length > 1) {
-    var preferred = QuestionTypeStrategy.selectQuestionType(kp, options);
-    var idx = candidateTypes.indexOf(preferred);
-    if (idx > 0) {
-      candidateTypes.splice(idx, 1);
-      candidateTypes.unshift(preferred);
-    }
-  }
-
-  
-  var plans = distribute(count, candidateTypes);
-
-  
-  var total = plans.reduce(function (n, p) { return n + p.count; }, 0);
-  if (total !== count) {
-    throw new StrategyError('分配不变式被破坏: sum=' + total + ' !== count=' + count, CODES.INVALID_PLAN, { total: total, count: count });
-  }
-
-  return {
-    requestCount: count,
-    total: total,
-    plans: plans.map(function (p) {
-      return {
-        knowledgePointIds: [kp ? kp.id : (options.knowledgePointId || null)].filter(function (x) { return x; }),
-        questionTypeId: p.questionTypeId,
-        count: p.count
-      };
-    })
-  };
-}
-
-function distribute(count, types) {
-  var n = types.length;
-  var base = Math.floor(count / n);
-  var rem = count % n;
-  var plans = [];
-  for (var i = 0; i < n; i++) {
-    var c = base + (i < rem ? 1 : 0);
-    if (c > 0) plans.push({ questionTypeId: types[i], count: c });
-  }
-  return plans;
-}
-
-
-function allocateKpRatio(kps, total) {
-  if (!Array.isArray(kps) || !kps.length) {
-    throw new StrategyError('kps 必须是包含至少一个知识点的数组', CODES.INVALID_REQUEST, { kps: kps });
-  }
-  var n = Number(total);
-  if (typeof n !== 'number' || !isFinite(n) || n < 1 || Math.floor(n) !== n) {
-    throw new StrategyError('total 必须是 >=1 的整数: ' + total, CODES.INVALID_REQUEST, { total: total });
-  }
-  kps.forEach(function (k, i) {
-    if (!k || typeof k !== 'object' || !k.id) {
-      throw new StrategyError('kp[' + i + '] 缺少 id', CODES.INVALID_REQUEST, { index: i });
-    }
-  });
-
-  var wSum = 0;
-  kps.forEach(function (k) { wSum += Number(k.weight) || 1; });
-
-  
-  var alloc = {}, rem = [];
-  kps.forEach(function (k) {
-    var w = Number(k.weight) || 1;
-    var exact = n * w / wSum;
-    alloc[k.id] = Math.floor(exact);
-    rem.push({ id: k.id, frac: exact - Math.floor(exact), w: w });
-  });
-  var sum = Object.keys(alloc).reduce(function (a, id) { return a + alloc[id]; }, 0);
-  rem.sort(function (a, b) { return (b.frac - a.frac) || (b.w - a.w); });
-  for (var r = 0; r < n - sum && r < rem.length; r++) alloc[rem[r].id] += 1;
-
-  
-  var out = kps.map(function (k) {
-    return { id: k.id, weight: Number(k.weight) || 1, count: alloc[k.id] };
-  });
-  var totalOut = out.reduce(function (a, p) { return a + p.count; }, 0);
-  if (totalOut !== n) {
-    throw new StrategyError('kpRatio 分配不变式被破坏: sum=' + totalOut + ' !== total=' + n, CODES.INVALID_PLAN, { totalOut: totalOut, total: n });
-  }
-  return { total: n, kps: out };
-}
-
-function validateAllocation(plans, requestCount) {
-  var errors = [];
-  if (!Array.isArray(plans)) {
-    return { valid: false, errors: ['plans 必须是数组'] };
-  }
-  var sum = 0;
-  plans.forEach(function (p, i) {
-    if (!p || typeof p !== 'object') { errors.push('plan[' + i + '] 必须是对象'); return; }
-    if (typeof p.questionTypeId !== 'string') errors.push('plan[' + i + '] 缺少 questionTypeId');
-    if (typeof p.count !== 'number' || p.count < 1 || Math.floor(p.count) !== p.count) {
-      errors.push('plan[' + i + '] count 必须是 >=1 的整数');
-    } else {
-      sum += p.count;
-    }
-  });
-  if (sum !== requestCount) {
-    errors.push('分配总数 ' + sum + ' !== 请求数 ' + requestCount);
-  }
-  return { valid: errors.length === 0, errors: errors };
-}
-
-module.exports = {
-  allocateQuestionTypes: allocateQuestionTypes,
-  allocateKpRatio: allocateKpRatio,
-  distribute: distribute,
-  validateAllocation: validateAllocation
 };
 
 };
@@ -1824,25 +1756,10 @@ function kpToUnified(kp) {
 
 
 
-
-
-var ALIAS_LEVELS = {
-  oral: ['recall', 'understand'],
-  recognize: ['recognize', 'understand'],
-  open: ['apply']
-};
-
 function supportedUnifiedSet(typeId) {
-  if (ALIAS_LEVELS[typeId]) {
-    var s = {};
-    ALIAS_LEVELS[typeId].forEach(function (l) { var u = toUnified(l); if (u) s[u] = true; });
-    return s;
-  }
-  var t = Registry.get(typeId);
-  if (!t) {
-    var n = Registry.normalizeQuestionType(typeId);
-    t = n ? Registry.get(n.id) : null;
-  }
+  var _n = Registry.normalizeQuestionType(typeId);
+  var canonicalId = (_n && _n.id) ? _n.id : typeId;
+  var t = Registry.get(canonicalId);
   if (!t) {
     throw new StrategyError('非法 questionTypeId: ' + typeId, CODES.INVALID_REQUEST, { questionTypeId: typeId });
   }
@@ -2790,6 +2707,299 @@ module.exports = {
   hasKnowledgePoint: hasKnowledgePoint
 };
 };
+__defs["shared/strategy/comprehensive-strategy.js"] = function (module, exports, require) {
+
+(function (global) {
+  'use strict';
+
+  var DEFAULT_DIFFICULTY = 2;
+
+  
+  var SUBJECT_MATH_ONLY = { math: 'math' };
+  function assertMathSubject(subject) {
+    var canon = { math: 'math' }[String(subject || '').toLowerCase()];
+    if (!canon) return null;
+    return SUBJECT_MATH_ONLY[canon] ? null : canon;
+  }
+
+  function getKB() {
+    if (typeof global !== 'undefined' && global.KnowledgeBank) return global.KnowledgeBank;
+    if (typeof require === 'function') {
+      try { return require("shared/knowledge/knowledge-bank.js"); } catch (e) {  }
+    }
+    return null;
+  }
+
+  function getStrategyEngine() {
+    if (typeof global !== 'undefined' && global.StrategyEngine) return global.StrategyEngine;
+    if (typeof require === 'function') {
+      try { return require("shared/strategy/strategy-engine.js"); } catch (e) {  }
+    }
+    return null;
+  }
+
+  
+  
+  function allocate(weights, total) {
+    var n = weights.length;
+    var out = new Array(n).fill(0);
+    var wsum = 0;
+    var remainders = [];
+
+    for (var i = 0; i < n; i++) {
+      var w = (typeof weights[i] === 'number' && weights[i] > 0) ? weights[i] : 0;
+      wsum += w;
+      remainders.push({ i: i, w: w });
+    }
+    if (wsum <= 0) return out;
+
+    var assigned = 0;
+    for (var j = 0; j < n; j++) {
+      out[j] = Math.floor(total * weights[j] / wsum);
+      assigned += out[j];
+    }
+    var leftover = total - assigned;
+    if (leftover > 0) {
+      remainders.sort(function (a, b) {
+        var fa = total * a.w / wsum - Math.floor(total * a.w / wsum);
+        var fb = total * b.w / wsum - Math.floor(total * b.w / wsum);
+        return fb - fa || b.w - a.w;
+      });
+      for (var k = 0; k < leftover && k < n; k++) {
+        out[remainders[k].i] += 1;
+      }
+    }
+    return out;
+  }
+
+  
+  
+  function kpLearnerState(profile, kpId) {
+    if (!profile || typeof profile !== 'object') return null;
+    if (profile.knowledgePoints && profile.knowledgePoints[kpId] && typeof profile.knowledgePoints[kpId] === 'object') {
+      return profile.knowledgePoints[kpId];
+    }
+    return null;
+  }
+
+  var STRATEGIES = {
+    weighted: {
+      name: 'weighted',
+      weight: function (entry) {
+        return (typeof entry.weight === 'number' && entry.weight > 0) ? entry.weight : 1;
+      }
+    },
+    balanced: {
+      name: 'balanced',
+      weight: function (entry) {
+        return 1;
+      }
+    },
+    'weak-first': {
+      name: 'weak-first',
+      weight: function (entry, policy, profile) {
+        var base = (typeof entry.weight === 'number' && entry.weight > 0) ? entry.weight : 1;
+        var ls = kpLearnerState(profile, entry.id);
+        if (ls && typeof ls.mastery === 'number') {
+          return base * (1 + Math.pow(1 - Math.min(Math.max(ls.mastery, 0), 1), 1.5));
+        }
+        return base * 2; 
+      }
+    },
+    'recent-first': {
+      name: 'recent-first',
+      weight: function (entry, policy, profile) {
+        var base = (typeof entry.weight === 'number' && entry.weight > 0) ? entry.weight : 1;
+        var ls = kpLearnerState(profile, entry.id);
+        var exposure = ls && typeof ls.exposure === 'number' ? Math.max(ls.exposure, 0) : 0;
+        return base * (1 + 1 / (1 + exposure));
+      }
+    }
+  };
+
+  
+  
+  function build(request) {
+    if (!request || typeof request !== 'object') return Promise.reject(new Error('comprehensive request 必须是对象'));
+    var subject = request.subject;
+    var grade = request.grade;
+    if (!subject) return Promise.reject(new Error('comprehensive 需要 subject'));
+    
+    var unsupported = assertMathSubject(subject);
+    if (unsupported) {
+      var uns = new Error('核心生成引擎仅支持数学（math）综合练习，暂不支持 ' + unsupported);
+      uns.name = 'GenerationUnsupportedError';
+      uns.code = 'UNSUPPORTED_SUBJECT';
+      uns.subject = unsupported;
+      return Promise.reject(uns);
+    }
+    if (grade == null) return Promise.reject(new Error('comprehensive 需要 grade'));
+    
+    var targetCount = request.count != null ? request.count : (request.volume != null ? request.volume : 10);
+    if (typeof targetCount !== 'number' || !isFinite(targetCount) || targetCount < 1 || Math.floor(targetCount) !== targetCount) {
+      return Promise.reject(new Error('count 必须是 >=1 的整数: ' + targetCount));
+    }
+    var policyName = ['weighted', 'balanced', 'weak-first', 'recent-first'].indexOf(request.coveragePolicy) !== -1
+      ? request.coveragePolicy
+      : 'weighted';
+    var strategy = STRATEGIES[policyName];
+
+    var KB = getKB();
+    var engine = getStrategyEngine();
+    var deps = [];
+    if (!KB) deps.push('shared/knowledge/knowledge-bank.js');
+    if (!engine) deps.push('shared/engine/strategy-engine.bundle.js');
+    if (deps.length) return Promise.reject(new Error('ComprehensiveStrategy 依赖缺失: ' + deps.join(', ')));
+
+    var entries = KB.getEntries(subject, grade) || [];
+    
+    if (request.unitId != null) {
+      var unitFiltered = entries.filter(function (e) { return String(e.moduleId) === String(request.unitId); });
+      if (unitFiltered.length) entries = unitFiltered;
+    }
+    if (request.questionTypes && Array.isArray(request.questionTypes) && request.questionTypes.length) {
+      var qts = request.questionTypes;
+      entries = entries.filter(function (e) {
+        return (e.type && qts.indexOf(e.type) !== -1) || qts.indexOf(e.pluginId) !== -1;
+      });
+    }
+    if (!entries.length) {
+      return Promise.resolve({ plans: [], allocation: [], trace: { policy: policyName, coverage: { total: 0, covered: 0, ratio: 0 }, entries: [], fromEntries: false, message: '该年级无可用知识点' } });
+    }
+
+    
+    var weights = entries.map(function (e) { return strategy.weight(e, policyName, request.learnerProfile); });
+    var shares = allocate(weights, targetCount);
+
+    var allocation = [];
+    var planTasks = [];
+    entries.forEach(function (e, i) {
+      var cnt = shares[i];
+      allocation.push({
+        kpId: e.id,
+        name: e.name,
+        pluginId: e.pluginId,
+        moduleId: e.moduleId,
+        type: e.type || null,
+        count: cnt,
+        weight: (typeof e.weight === 'number' && e.weight > 0) ? e.weight : 1,
+        policyScore: Math.round(weights[i] * 100) / 100
+      });
+      if (cnt < 1) return;
+      planTasks.push({ entry: e, count: cnt, baseWeight: (typeof e.weight === 'number' && e.weight > 0) ? e.weight : 1 });
+    });
+
+    
+    var plans = [];
+    var failedPlans = [];
+    var difficulty = request.difficulty != null ? request.difficulty : DEFAULT_DIFFICULTY;
+
+    planTasks.forEach(function (task) {
+      var req = {
+        knowledgePointIds: [task.entry.id],
+        count: task.count,
+        difficulty: difficulty,
+        learnerProfile: request.learnerProfile || null
+      };
+      if (request.questionType != null) req.questionType = request.questionType;
+      try {
+        var res = engine.plan(req);
+        var qp = res && res.plans && res.plans[0];
+        if (!qp) {
+          failedPlans.push({ kpId: task.entry.id, error: 'StrategyEngine 未产出计划' });
+          return;
+        }
+        qp.__comprehensive = {
+          kpId: task.entry.id,
+          pluginId: task.entry.pluginId,
+          weight: task.baseWeight
+        };
+        plans.push(qp);
+      } catch (e) {
+        failedPlans.push({ kpId: task.entry.id, error: String((e && e.message) || e) });
+      }
+    });
+
+    
+    var mixed = interleaveByPlugin(plans);
+    var mixing = { reordered: mixed.length > 0, original: plans.length };
+
+    
+    var coveredIds = {};
+    allocation.forEach(function (a) { if (a.count > 0) coveredIds[a.pluginId] = true; });
+    var totalPlugins = {};
+    entries.forEach(function (e) { totalPlugins[e.pluginId] = true; });
+
+    return Promise.resolve({
+      plans: mixed,
+      allocation: allocation,
+      trace: {
+        policy: policyName,
+        coverage: {
+          total: Object.keys(totalPlugins).length,
+          plugins: Object.keys(coveredIds).length,
+          entries: entries.length,
+          coveredEntries: allocation.filter(function (a) { return a.count > 0; }).length,
+          ratio: entries.length ? Math.round(allocation.filter(function (a) { return a.count > 0; }).length / entries.length * 100) / 100 : 0
+        },
+        entries: allocation,
+        failedPlans: failedPlans,
+        mixing: mixing
+      }
+    });
+  }
+
+  
+  function interleaveByPlugin(plans) {
+    if (!plans || plans.length < 2) return plans || [];
+    var groups = {};
+    plans.forEach(function (p) {
+      var plugin = (p && p.__comprehensive && p.__comprehensive.pluginId) || p.pluginId || '?';
+      (groups[plugin] = groups[plugin] || []).push(p);
+    });
+    var keys = Object.keys(groups).sort(function (a, b) { return groups[b].length - groups[a].length; });
+    var out = [];
+    var pick = 0;
+    var guard = 0;
+    while (pick < plans.length && guard < plans.length + keys.length) {
+      guard++;
+      var progress = false;
+      for (var i = 0; i < keys.length && pick < plans.length; i++) {
+        var bucket = groups[keys[i]];
+        if (bucket.length) {
+          out.push(bucket.shift());
+          pick++;
+          progress = true;
+        }
+      }
+      if (!progress) break;
+    }
+    return out;
+  }
+
+  var API = {
+    build: build,
+    allocate: allocate,
+    allocateByWeight: allocate, 
+    scoreEntries: function (entries, policy, profile) {
+      var strat = STRATEGIES[policy] || STRATEGIES.weighted;
+      return entries.map(function (e, idx) {
+        var base = (typeof e.weight === 'number' && e.weight > 0) ? e.weight : 1;
+        return { index: idx, base: base, policyScore: strat.weight(e, policy, profile) };
+      });
+    },
+    interleaveByPlugin: interleaveByPlugin,
+    STRATEGIES: STRATEGIES,
+    DEFAULT_DIFFICULTY: DEFAULT_DIFFICULTY
+  };
+
+  global.ComprehensiveStrategy = API;
+  if (global.App && typeof global.App === 'object') global.App.ComprehensiveStrategy = API;
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+  return API;
+})(typeof window !== 'undefined' ? window : global);
+};
 __defs["shared/generator/semantic-question-bridge.js"] = function (module, exports, require) {
 
 'use strict';
@@ -2910,9 +3120,13 @@ var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
 var CapabilityModel = require("shared/capability/capability-model.js");
 var Matrix = require("shared/capability/capability-matrix.js");
 
-function resolve(canonicalKp) {
+function resolve(kp) {
   
-  return CapabilityModel.resolveCapability(canonicalKp);
+  
+  if (kp && !kp.presentation && (kp.applicable_question_types || kp.grade || kp.modules)) {
+    try { kp = Ontology.normalize(kp); } catch (e) {  }
+  }
+  return CapabilityModel.resolveCapability(kp);
 }
 
 function canGenerate(kpId, qtId) {
@@ -3230,100 +3444,6 @@ module.exports = {
   ADJ_MAX: ADJ_MAX
 };
 };
-__defs["shared/strategy/strategy-config.js"] = function (module, exports, require) {
-
-'use strict';
-
-var STRATEGY_VERSION = '1.0.0';
-var DEFAULT_STRATEGY = 'legacy'; 
-
-
-
-
-
-
-var GRADE_DIFFICULTY_ANCHORS = {
-  1: [1, 2],
-  2: [2, 4],
-  3: [3, 5],
-  4: [4, 7],
-  5: [5, 8],
-  6: [6, 10]
-};
-
-function difficultyAnchorOf(grade) {
-  return GRADE_DIFFICULTY_ANCHORS[Number(grade)] || null;
-}
-
-
-var _currentStrategy = null;
-var _configOverrides = {};
-
-function getStrategy() {
-  if (_currentStrategy) return _currentStrategy;
-  
-  if (typeof process !== 'undefined' && process.env && process.env.GENERATION_STRATEGY) {
-    return process.env.GENERATION_STRATEGY;
-  }
-  if (typeof globalThis !== 'undefined' && globalThis.__GENERATION_STRATEGY__) {
-    return globalThis.__GENERATION_STRATEGY__;
-  }
-  return DEFAULT_STRATEGY;
-}
-
-function setStrategy(strategy) {
-  if (strategy !== 'legacy' && strategy !== 'strategy-v1') {
-    throw new Error('Invalid strategy: ' + strategy + ' (expected "legacy" | "strategy-v1")');
-  }
-  _currentStrategy = strategy;
-  if (typeof globalThis !== 'undefined') {
-    globalThis.__GENERATION_STRATEGY__ = strategy;
-  }
-}
-
-function isLegacy() {
-  return getStrategy() === 'legacy';
-}
-
-function isStrategyV1() {
-  return getStrategy() === 'strategy-v1';
-}
-
-function getConfig() {
-  return {
-    version: STRATEGY_VERSION,
-    current: getStrategy(),
-    overrides: _configOverrides,
-    features: {
-      strategyEngine: isStrategyV1(),
-      legacyFallback: isLegacy()
-    }
-  };
-}
-
-function setConfigOverrides(overrides) {
-  _configOverrides = Object.assign({}, _configOverrides, overrides);
-}
-
-function reset() {
-  _currentStrategy = null;
-  _configOverrides = {};
-}
-
-module.exports = {
-  STRATEGY_VERSION: STRATEGY_VERSION,
-  DEFAULT_STRATEGY: DEFAULT_STRATEGY,
-  GRADE_DIFFICULTY_ANCHORS: GRADE_DIFFICULTY_ANCHORS,
-  difficultyAnchorOf: difficultyAnchorOf,
-  getStrategy: getStrategy,
-  setStrategy: setStrategy,
-  isLegacy: isLegacy,
-  isStrategyV1: isStrategyV1,
-  getConfig: getConfig,
-  setConfigOverrides: setConfigOverrides,
-  reset: reset
-};
-};
 __defs["shared/generator/generator-registry.js"] = function (module, exports, require) {
 
 'use strict';
@@ -3334,81 +3454,80 @@ __defs["shared/generator/generator-registry.js"] = function (module, exports, re
 
 
 var CORE_RECORDS = [
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g2-m2-add-col', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec', 'math-g4-m3-g4-mix-addlaw', 'math-g6-m1-g6-oral-neg-add-sub'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m1-addsub-5', 'math-g1-m1-addsub-10', 'math-g1-m1-addsub-100', 'math-g1-m1-carry-add-20', 'math-g1-m1-retreat-sub-20', 'math-g1-m1-two-digit-add', 'math-g2-m1-addsub-1000', 'math-g2-m2-sub-col', 'math-g4-m1-g4-oral-big', 'math-g4-m1-g4-oral-dec', 'math-g1-m7-picture-sub', 'math-g1-m8-sub-remain', 'math-g1-m8-sub-part', 'math-g2-m1-sub-100', 'math-g2-m7-pic-sub', 'math-g2-m8-sub-remain'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g2-m1-mult-table', 'math-g2-m2-mult-col', 'math-g2-m4-multiplication-meaning', 'math-g2-m7-pic-mult', 'math-g2-m8-mult-total', 'math-g2-m5-match-multdiv', 'math-g3-m1-g3-mul-multi1', 'math-g3-m1-g3-oral-mul', 'math-g4-m1-g4-oral-mul3x1', 'math-g4-m1-g4-oral-mul2t', 'math-g4-m1-g4-oral-law', 'math-g4-m3-g4-mix-mullaw', 'math-g5-m1-g5-oral-decmul', 'math-g6-m2-g6-calc-dec-mult'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-m13-division-table', 'math-g2-m1-div-table', 'math-g2-m1-muldiv-relation', 'math-g2-m2-div-col', 'math-g2-m2-remainder-col', 'math-g2-m1-remainder-oral', 'math-g2-m4-division-meaning', 'math-g2-m7-pic-div', 'math-g2-m7-pic-div-include', 'math-g2-m8-div-partitive', 'math-g2-m8-div-quotative', 'math-g3-m1-g3-div1', 'math-g4-c2-c2-divisible', 'math-g4-m1-g4-oral-divt', 'math-g5-m1-g5-oral-decdiv', 'math-g4-m2-g4-v-div2', 'math-g4-m2-g4-v-div2q', 'math-g4-m8-g4-word-div', 'math-g2-m8-remainder-apply'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g4-down-u03-k003', 'math-g6-down-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-up-u04-k001', 'math-g1-up-u06-k001', 'math-g2-down-u06-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g4-down-u06-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u04-k001', 'math-g2-up-u04-k002', 'math-g4-down-u03-k002', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g5-up-u01-k002'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k003', 'math-g2-down-u02-k005', 'math-g2-down-u05-k001', 'math-g2-down-u05-k002', 'math-g2-down-u05-k003', 'math-g3-down-u02-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['fill', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g1-m13-multiplication-table', 'math-g1-m13-division-table', 'math-g1-m13-fill-blank', 'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-cutfill', 'math-g4-c4-c4-pa', 'math-g4-c4-c4-solid', 'math-g4-c4-c4-count'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['choice', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g1-m12-choice-mixed', 'math-g1-m5-match-calc', 'math-g1-m5-match-shape', 'math-g1-m5-match-rmb', 'math-g2-m12-choice-mixed'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['judge', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g1-m0-make-ten-cushi', 'math-g1-m11-judge-mixed', 'math-g2-m11-judge-mixed'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['fill', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['choice', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['judge', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill', 'oral'], questionTypes: ['calc', 'fill', 'oral'],
-    knowledgePoints: ['math-g1-m1-mixed-chain', 'math-g2-m1-mixed-addsub', 'math-g2-m1-mixed-multdiv', 'math-g2-m3-chain-addsub', 'math-g2-m3-multdiv-mixed', 'math-g2-m3-mixed-no-bracket', 'math-g2-m3-mixed-bracket', 'math-g1-m4-num-fill-unknown', 'math-g2-m3-fill-operator', 'math-g2-m2-chain-add-col', 'math-g2-m2-chain-sub-col', 'math-g2-m2-mixed-col'],
+    knowledgePoints: ['math-g1-up-u03-k001', 'math-g2-down-u04-k002', 'math-g2-down-u04-k003', 'math-g2-down-u04-k004', 'math-g2-down-u04-k006'],
     scope: 'core', version: 1, supportsComposite: false },
 
   
   { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'],
-    knowledgePoints: ['math-g1-m6-solid-shape', 'math-g1-m6-flat-shape', 'math-g1-m6-count-graph', 'math-g1-m6-shape-combine', 'math-g1-m6-draw-shape', 'math-g1-m5-match-shape', 'math-g2-m5-match-shape', 'math-g2-m6-solid-shape', 'math-g2-m6-motion', 'math-g4-m5-g4-match-shape', 'math-g4-m6-g4-draw-sym', 'math-g4-m6-g4-draw-move', 'math-g4-c4-c4-count', 'math-g4-c4-c4-solid', 'math-g5-m4-g5-fill-solid', 'math-g5-m5-g5-match-areaf', 'math-g5-m5-g5-match-solid', 'math-g5-m6-g5-draw-rotate', 'math-g5-m6-g5-draw-sym', 'math-g5-m6-g5-draw-coord', 'math-g5-m8-g5-word-solid', 'math-g5-m11-g5-judge-solid', 'math-g5-m12-g5-choice-solid', 'math-g5-m12-motion', 'math-g5-c4-solid-geometry', 'math-g6-m5-g6-match-formula', 'math-g6-m6-g6-op-rotate-scale', 'math-g6-m6-g6-op-position', 'math-g6-m10-g6-reason-number-shape', 'math-g6-c4-area-basic', 'math-g6-c4-solid-geometry', 'math-g2-m4-angle-basic', 'math-g2-m5-match-angle', 'math-g2-m6-angle-recognize', 'math-g2-m6-grid-draw', 'math-g2-m6-draw-line', 'math-g2-m6-draw-angle', 'math-g2-m6-clock-draw', 'math-g2-m6-measure', 'math-g3-m6-g3-perimeter', 'math-g3-m6-g3-area', 'math-g3-m6-g3-polygon', 'math-g3-m6-g3-position', 'math-g4-m4-g4-fill-line', 'math-g4-m4-g4-fill-angle', 'math-g4-m4-g4-fill-quad', 'math-g4-m4-g4-fill-tri', 'math-g4-m5-g4-match-angle', 'math-g4-m6-g4-draw-protractor', 'math-g4-m6-g4-draw-para', 'math-g4-m6-g4-draw-grid', 'math-g4-m6-g4-draw-view', 'math-g4-m11-g4-judge-angle', 'math-g4-m11-g4-judge-line', 'math-g4-m11-g4-judge-tri', 'math-g4-m12-g4-choice-angle', 'math-g4-m12-g4-choice-shape', 'math-g4-c3-c3-geomcount', 'math-g4-c4-c4-pa', 'math-g4-c4-c4-angle', 'math-g4-c4-c4-transform', 'math-g5-c4-circle-sector', 'math-g5-c4-angle-calculation', 'math-g6-m4-g6-fill-circle', 'math-g6-m6-g6-op-circle', 'math-g6-m6-g6-op-symmetry', 'math-g6-m8-g6-app-circle', 'math-g6-m11-g6-judge-circle', 'math-g6-m12-g6-choice-circle', 'math-g6-c3-geometry-counting', 'math-g6-c4-circle-sector', 'math-g6-c4-angle-calculation', 'math-g6-c4-circle-angle', 'math-g6-c4-solid-rotation', 'math-g5-m4-g5-fill-coord', 'math-g5-m4-g5-fill-area', 'math-g5-m4-g5-fill-rotate', 'math-g5-m6-g5-draw-observe', 'math-g5-m6-g5-draw-height', 'math-g5-m6-g5-draw-net', 'math-g5-m7-g5-pic-area', 'math-g5-m8-g5-word-area', 'math-g5-m11-g5-judge-area', 'math-g5-m11-motion', 'math-g5-m12-g5-choice-area', 'math-g5-c4-area-basic', 'math-g5-c4-equal-area-transform', 'math-g5-c4-bird-head-model', 'math-g5-c4-butterfly-model', 'math-g5-c4-swallow-tail-model', 'math-g5-c4-half-model', 'math-g5-c4-painted-cube', 'math-g5-c4-pythagorean-theorem', 'math-g5-c4-lattice-area', 'math-g6-m4-g6-fill-cylinder-cone', 'math-g6-m8-g6-app-cyl-cone', 'math-g6-m11-g6-judge-cyl-cone', 'math-g6-m12-g6-choice-cyl-cone', 'math-g6-c4-equal-area-transform', 'math-g6-c4-bird-head-model', 'math-g6-c4-butterfly-model', 'math-g6-c4-swallow-tail-model', 'math-g6-c4-half-model', 'math-g6-c4-painted-cube', 'math-g6-c4-pythagorean-theorem', 'math-g6-c4-lattice-area'],
+    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g3-down-u05-k001', 'math-g3-up-u06-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u02-k002', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-down-u04-k005', 'math-g6-up-u02-k001', 'math-g6-up-u05-k001', 'math-g6-up-u05-k002', 'math-g6-up-u05-k003', 'math-g6-up-u05-k004', 'math-g6-up-u05-k005', 'math-g6-up-u05-k006', 'math-g6-up-u07-k001'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:position-direction', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'oral'], questionTypes: ['choice', 'judge', 'fill', 'oral'],
-    knowledgePoints: ['math-g1-m6-position', 'math-g3-m6-g3-position', 'math-g5-m6-g5-draw-coord', 'math-g6-m6-g6-op-position'],
+    knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:money-measurement', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply', 'calc', 'oral'], questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc', 'oral'],
-    knowledgePoints: ['math-g1-m4-rmb-unit', 'math-g1-m4-rmb-calc', 'math-g1-m5-match-rmb', 'math-g1-m8-rmb-shopping', 'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g2-m8-money', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-pa'],
+    knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'],
-    knowledgePoints: ['math-g1-m8-rmb-shopping', 'math-g2-m8-money', 'math-g3-m4-g3-measure', 'math-g4-m8-g4-word-div', 'math-g5-m8-g5-word-solid', 'math-g6-c4-area-basic', 'math-g6-c4-solid-geometry', 'math-g6-m10-g6-reason-number-shape'],
+    knowledgePoints: ['math-g4-up-u06-k001', 'math-g5-down-u03-k006'],
     scope: 'core', version: 1, supportsComposite: false },
 
   
   { id: 'generator:counting', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g3-m10-g3-combination', 'math-g3-m10-g3-set', 'math-g4-c3-c3-enum', 'math-g4-c3-c3-am', 'math-g4-c3-c3-perm', 'math-g4-c3-c3-worst', 'math-g5-c3-addition-principle', 'math-g5-c3-multiplication-principle', 'math-g5-c3-permutation', 'math-g5-c3-combination', 'math-g5-c3-enumeration-counting', 'math-g5-c3-bundling-method', 'math-g5-c3-insertion-method', 'math-g5-c3-stars-bars', 'math-g5-c3-pigeonhole-principle', 'math-g5-c3-worst-case-principle', 'math-g6-c3-addition-principle', 'math-g6-c3-multiplication-principle', 'math-g6-c3-permutation', 'math-g6-c3-combination', 'math-g6-c3-enumeration-counting', 'math-g6-c3-bundling-method', 'math-g6-c3-insertion-method', 'math-g6-c3-stars-bars', 'math-g6-c3-pigeonhole-principle', 'math-g6-c3-worst-case-principle', 'math-g6-c3-inclusion-exclusion', 'math-g6-c3-recursion-counting', 'math-g6-c3-derangement'],
+    knowledgePoints: ['math-g3-down-u08-k001', 'math-g3-up-u08-k001'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:reasoning', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g2-m10-logic-reasoning', 'math-g2-m10-sudoku3', 'math-g2-m10-combination', 'math-g2-m10-handshake', 'math-g4-m10-g4-reason-opt', 'math-g4-m10-g4-reason-cr', 'math-g4-m10-logic-reasoning', 'math-g4-c8-c8-extreme', 'math-g4-c8-c8-drawer', 'math-g4-c8-c8-logic', 'math-g5-m10-g5-reason-tree3', 'math-g5-m10-g5-reason-defect', 'math-g5-m10-logic-reasoning', 'math-g5-m10-g5-reason-seq', 'math-g5-c8-extremum-problem', 'math-g5-c8-logic-inference', 'math-g5-c8-winning-strategy', 'math-g6-m10-g6-reason-pigeonhole', 'math-g6-c8-extremum-problem', 'math-g6-c8-logic-inference', 'math-g6-c8-winning-strategy', 'math-g6-c8-optimization'],
+    knowledgePoints: ['math-g2-up-u07-k001', 'math-g4-down-u09-k002', 'math-g4-up-u08-k002', 'math-g5-down-u08-k001', 'math-g5-up-u07-k002', 'math-g6-down-u05-k001'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:stats', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g2-m9-data-tally', 'math-g2-m9-data-question', 'math-g3-m9-g3-stats-table', 'math-g4-m9-g4-stats-bar', 'math-g4-m9-g4-stats-double', 'math-g4-m9-g4-stats-avg', 'math-g4-m11-stats', 'math-g5-m4-g5-fill-linechart', 'math-g5-m8-g5-word-linechart', 'math-g5-m9-g5-stats-possib', 'math-g5-m9-g5-stats-line1', 'math-g5-m9-g5-stats-line2', 'math-g5-m11-stats', 'math-g5-m12-stats', 'math-g6-m4-g6-fill-pie-chart', 'math-g6-m5-g6-match-chart', 'math-g6-m7-g6-pic-pie-chart', 'math-g6-m9-g6-stat-pie-chart', 'math-g6-m9-g6-stat-possibility', 'math-g6-m11-g6-judge-chart', 'math-g6-m12-g6-choice-chart'],
+    knowledgePoints: ['math-g2-down-u01-k001', 'math-g2-down-u01-k002', 'math-g3-down-u03-k001', 'math-g4-down-u08-k004', 'math-g4-up-u07-k001', 'math-g5-down-u07-k001', 'math-g5-down-u07-k002', 'math-g5-down-u07-k003', 'math-g5-down-u08-k002', 'math-g5-up-u04-k003', 'math-g6-up-u07-k001', 'math-g6-up-u07-k002', 'math-g6-up-u07-k003'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:picture-equation', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g2-m7-pic-mixed', 'math-g4-m7-g4-pic-segment', 'math-g4-m7-g4-pic-brace', 'math-g4-m7-g4-pic-speed', 'math-g4-m7-g4-pic-dec', 'math-g4-c1-c1-array', 'math-g4-c1-c1-magic', 'math-g5-m7-g5-pic-balance', 'math-g5-m7-g5-pic-segment', 'math-g5-m7-g5-pic-tree', 'math-g5-c1-number-array-closed', 'math-g5-c1-number-array-radial', 'math-g5-c1-number-array-composite', 'math-g5-c1-magic-square-3', 'math-g5-c1-magic-square-4', 'math-g6-m7-g6-pic-frac-line', 'math-g6-m7-g6-pic-scale', 'math-g6-c1-magic-square-adv', 'math-g6-c1-number-array'],
+    knowledgePoints: ['math-g2-down-u04-k005', 'math-g4-down-u01-k001', 'math-g4-down-u06-k004', 'math-g5-up-u07-k003', 'math-g6-down-u04-k003'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:c1-number-puzzle', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g4-c1-c1-vertical', 'math-g4-c1-c1-horizontal', 'math-g4-c1-c1-symbol', 'math-g5-c1-digit-puzzle-vertical', 'math-g5-c1-digit-puzzle-horizontal', 'math-g5-c1-digit-puzzle-symbol', 'math-g6-c1-vertical-multidigit', 'math-g6-c1-vertical-carry-complex', 'math-g6-c1-horizontal-puzzle', 'math-g6-c1-symbol-number', 'math-g6-c1-digit-reasoning', 'math-g6-c1-number-puzzle-competition'],
+    knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:c2-number-theory', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g4-c2-c2-parity', 'math-g4-c2-c2-remainder', 'math-g4-c2-c2-place', 'math-g5-c2-divisibility', 'math-g5-c2-parity-analysis', 'math-g5-c2-prime-factorization', 'math-g5-c2-factor-count-sum', 'math-g5-c2-gcd-lcm', 'math-g5-c2-remainder-congruence', 'math-g5-c2-place-value', 'math-g5-c2-perfect-square', 'math-g5-c2-number-theory-extreme', 'math-g6-c2-divisibility', 'math-g6-c2-parity-analysis', 'math-g6-c2-prime-factorization', 'math-g6-c2-factor-count-sum', 'math-g6-c2-gcd-lcm', 'math-g6-c2-remainder-congruence', 'math-g6-c2-place-value', 'math-g6-c2-perfect-square', 'math-g6-c2-number-theory-extreme', 'math-g6-c2-diophantine-equation', 'math-g6-c2-modulo-arithmetic'],
+    knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:c5-c6-journey-engineering', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g4-c5-c5-basic', 'math-g4-c5-c5-meet', 'math-g4-c5-c5-chase', 'math-g4-c5-c5-train', 'math-g4-c5-c5-river', 'math-g5-c5-basic-motion', 'math-g5-c5-meet-problem', 'math-g5-c5-chase-problem', 'math-g5-c5-train-bridge', 'math-g5-c5-boat-stream', 'math-g5-c5-circular-track', 'math-g5-c5-average-speed', 'math-g5-c5-ratio-motion', 'math-g5-c6-work-problem', 'math-g5-c6-concentration-problem', 'math-g6-c5-basic', 'math-g6-c5-meet', 'math-g6-c5-chase', 'math-g6-c5-train-bridge', 'math-g6-c5-boat-stream', 'math-g6-c5-ring-runway', 'math-g6-c5-journey-complex', 'math-g6-c5-competition', 'math-g6-c5-interval-departure', 'math-g6-c5-pick-up-problem', 'math-g6-c6-work-problem', 'math-g6-c6-concentration-problem'],
+    knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:c7-clever-calc', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g5-c7-extract-common-factor', 'math-g5-c7-rounding-calc', 'math-g5-c7-fraction-splitting', 'math-g5-c7-integer-splitting', 'math-g5-c7-arithmetic-series', 'math-g5-c7-recurring-decimal-frac', 'math-g5-c7-define-operation', 'math-g5-c7-estimate-bounds', 'math-g5-c7-complex-fraction', 'math-g6-c7-extract-common-factor', 'math-g6-c7-rounding-calc', 'math-g6-c7-fraction-splitting', 'math-g6-c7-integer-splitting', 'math-g6-c7-arithmetic-series', 'math-g6-c7-recurring-decimal-frac', 'math-g6-c7-define-operation', 'math-g6-c7-estimate-bounds', 'math-g6-c7-complex-fraction', 'math-g6-c7-sequence-sum'],
+    knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:c9-comprehensive', subject: 'math', capabilities: ['apply', 'calc', 'open'], questionTypes: ['apply', 'calc', 'open'],
-    knowledgePoints: ['math-g4-c9-c9-integrated', 'math-g4-c9-c9-misc', 'math-g4-c9-c9-mock', 'math-g5-c9-sum-diff-problem', 'math-g5-c9-age-problem', 'math-g5-c9-profit-loss-problem', 'math-g5-c9-chicken-rabbit', 'math-g5-c9-average-problem', 'math-g5-c9-planting-problem', 'math-g5-c9-phalanx-problem', 'math-g5-c9-periodic-problem', 'math-g5-c9-grass-problem', 'math-g5-c9-fraction-percent-application', 'math-g5-c9-economics-problem', 'math-g5-c9-inclusion-exclusion', 'math-g5-c9-equation-linear-1', 'math-g5-c9-equation-linear-2', 'math-g5-c9-diophantine-equation', 'math-g6-c9-sum-diff-problem', 'math-g6-c9-age-problem', 'math-g6-c9-profit-loss-problem', 'math-g6-c9-chicken-rabbit', 'math-g6-c9-average-problem', 'math-g6-c9-planting-problem', 'math-g6-c9-phalanx-problem', 'math-g6-c9-periodic-problem', 'math-g6-c9-grass-problem', 'math-g6-c9-fraction-percent-application', 'math-g6-c9-economics-problem', 'math-g6-c9-equation-linear-1', 'math-g6-c9-equation-linear-2', 'math-g6-c9-inclusion-exclusion', 'math-g6-c9-ratio-application', 'math-g6-c9-mixture-problem'],
+    knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:composite', subject: 'math', capabilities: ['calc', 'judge', 'fill', 'apply', 'oral'], questionTypes: ['calc', 'judge', 'fill', 'apply', 'oral'],
-    knowledgePoints: [
-      'math-g1-m1-addsub-10', 'math-g1-m0-make-ten', 'math-g1-m0-make-ten-cushi', 'math-g1-m1-addsub-5', 'math-g1-m11-judge-mixed',
-      'math-g1-m4-rmb-unit', 'math-g1-m4-rmb-calc', 'math-g1-m5-match-rmb', 'math-g1-m8-rmb-shopping',
-      'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit', 'math-g2-m4-fill-length', 'math-g2-m4-fill-mass', 'math-g2-m4-fill-time', 'math-g2-m8-money', 'math-g3-m4-g3-measure', 'math-g4-c4-c4-pa',
-      'math-g1-m6-solid-shape', 'math-g1-m6-flat-shape', 'math-g1-m6-shape-combine', 'math-g2-m6-solid-shape', 'math-g4-c4-c4-solid', 'math-g5-c4-solid-geometry', 'math-g6-c4-solid-geometry'
-    ],
+    knowledgePoints: ['math-g1-up-u01-k001', 'math-g2-down-u07-k001', 'math-g2-up-u01-k005', 'math-g3-up-u02-k001', 'math-g4-up-u03-k001'],
     scope: 'core', version: 1, supportsComposite: true },
 
   
   { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'recognize'], questionTypes: ['fill', 'choice', 'judge', 'recognize'],
-    knowledgePoints: ['math-g3-m10-g3-code'],
+    knowledgePoints: ['math-g4-up-u01-k002'],
     scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:equivalent-reasoning', subject: 'math', capabilities: ['fill', 'choice', 'apply'], questionTypes: ['fill', 'choice', 'apply'],
-    knowledgePoints: ['math-g3-m8-g3-equivalent'],
+    knowledgePoints: [],
     scope: 'core', version: 2, supportsComposite: false },
 
   
+  
+  
+  
+  
   { id: 'generator:classification', subject: 'math', capabilities: ['classify'], questionTypes: ['classify'],
-    knowledgePoints: ['math-g1-m4-count-quantity', 'math-g3-m9-g3-stats-table', 'math-g3-m10-g3-set', 'math-g3-m10-g3-combination'],
-    scope: 'core', version: 1, supportsComposite: false }
+    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g2-up-u01-k003', 'math-g2-up-u01-k004', 'math-g2-up-u01-k005', 'math-g2-up-u01-k006', 'math-g3-down-u05-k001', 'math-g3-down-u05-k002', 'math-g3-down-u05-k003', 'math-g3-down-u05-k004', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g4-up-u06-k004', 'math-g4-down-u08-k001', 'math-g4-down-u08-k002', 'math-g4-down-u08-k003', 'math-g4-down-u08-k004', 'math-g5-up-u07-k001', 'math-g5-up-u07-k002', 'math-g5-up-u07-k003', 'math-g5-up-u07-k004', 'math-g5-down-u07-k001', 'math-g5-down-u07-k002', 'math-g5-down-u07-k003'],
+    scope: 'core', version: 2, supportsComposite: false }
 ];
 
 
@@ -3774,71 +3893,6 @@ module.exports = {
   resolveComplexSemantics: resolveComplexSemantics,
   isComplexMigratable: isComplexMigratable
 };
-
-};
-__defs["shared/knowledge/knowledge-point.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var KnowledgeBank = require("shared/knowledge/knowledge-bank.js");
-  var Ontology = require("shared/knowledge/knowledge-ontology.js");
-  var SUBJECTS = Ontology.SUBJECTS;
-
-  
-  
-  var _legacyIndex = null;
-  var _canonicalCache = null;
-
-  function buildLegacyIndex() {
-    var idx = {};
-    for (var si = 0; si < SUBJECTS.length; si++) {
-      var arr = KnowledgeBank[SUBJECTS[si]];
-      if (!Array.isArray(arr)) continue;
-      for (var gi = 0; gi < arr.length; gi++) {
-        var g = arr[gi];
-        if (!g || !g.modules) continue;
-        for (var mi = 0; mi < g.modules.length; mi++) {
-          var kps = g.modules[mi].knowledgePoints;
-          if (!Array.isArray(kps)) continue;
-          for (var ki = 0; ki < kps.length; ki++) {
-            var kp = kps[ki];
-            if (kp && kp.id != null) idx[kp.id] = kp;
-          }
-        }
-      }
-    }
-    return idx;
-  }
-
-  function ensureIndex() {
-    if (!_legacyIndex) _legacyIndex = buildLegacyIndex();
-  }
-
-  function findLegacy(id) {
-    ensureIndex();
-    return Object.prototype.hasOwnProperty.call(_legacyIndex, id) ? _legacyIndex[id] : null;
-  }
-
-  function get(id) {
-    if (!_canonicalCache) _canonicalCache = {};
-    if (Object.prototype.hasOwnProperty.call(_canonicalCache, id)) return _canonicalCache[id];
-    var legacy = findLegacy(id);
-    var canonical = legacy ? Ontology.normalize(legacy) : null;
-    _canonicalCache[id] = canonical;
-    return canonical;
-  }
-
-  function reset() {
-    _legacyIndex = null;
-    _canonicalCache = null;
-  }
-
-  var API = { get: get, findLegacy: findLegacy, reset: reset };
-
-  global.KnowledgePoint = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
 
 };
 __defs["shared/learner/learner-model.js"] = function (module, exports, require) {
@@ -4210,6 +4264,12 @@ function isStatsFamily(g) {
   return g.id === 'generator:stats';
 }
 
+
+
+function isClassificationFamily(g) {
+  return g.id === 'generator:classification';
+}
+
 function isPictureEquationFamily(g) {
   return g.id === 'generator:picture-equation';
 }
@@ -4379,81 +4439,47 @@ function selectGenerator(plan, options) {
     if (g.supportsComposite === true && !isCombineRequest) return;
     if (isCombineRequest && g.supportsComposite !== true) return;
 
-    var score = { record: g, kp: 0, semanticOp: 0, capability: 0, qt: 0, diff: 0 };
+    var score = { record: g, kp: 0, capability: 0, qt: 0 };
 
-    
-    if (g.knowledgePoints.indexOf(primaryKp) !== -1) score.kp = 1;
 
-    
-    
-    
-    var qt = plan.questionTypeId;
-    var isMetaExempt = qt === 'recognize' || qt === 'geometry' || qt === 'classify';
-    if (!isMetaExempt && isArithmeticFamily(g) && score.kp === 0 && !(arithSem || isAlgebraDomain || (kp && kp.operations && kp.operations.length > 0))) return;
-    if (!isMetaExempt && isComplexFamily(g) && score.kp === 0 && !complexSem) return;
-    if (!isMetaExempt && isShapeFamily(g) && score.kp === 0 && !hasShapeSemantics(kp)) return;
-    if (!isMetaExempt && isMoneyFamily(g) && score.kp === 0 && !hasMoneySemantics(kp)) return;
-    if (!isMetaExempt && isCountingFamily(g) && score.kp === 0 && !hasCountingSemantics(kp)) return;
-    if (!isMetaExempt && isReasoningFamily(g) && score.kp === 0 && !hasReasoningSemantics(kp)) return;
-    if (!isMetaExempt && isStatsFamily(g) && score.kp === 0 && !hasStatsSemantics(kp)) return;
-    if (!isMetaExempt && isPictureEquationFamily(g) && score.kp === 0 && !hasPictureEquationSemantics(kp)) return;
-    if (!isMetaExempt && isC1Family(g) && score.kp === 0 && !hasC1Semantics(kp)) return;
-    if (!isMetaExempt && isC2Family(g) && score.kp === 0 && !hasC2Semantics(kp)) return;
-    if (!isMetaExempt && isC5C6Family(g) && score.kp === 0 && !hasC5C6Semantics(kp)) return;
-    if (!isMetaExempt && isC7Family(g) && score.kp === 0 && !hasC7Semantics(kp)) return;
-    if (!isMetaExempt && isC9Family(g) && score.kp === 0 && !hasC9Semantics(kp)) return;
+if (g.knowledgePoints.indexOf(primaryKp) !== -1) score.kp = 1;
 
-    
-    if (isArithmeticFamily(g) || isComplexFamily(g) || isShapeFamily(g) || isMoneyFamily(g) || isCountingFamily(g) || isReasoningFamily(g) || isStatsFamily(g) || isPictureEquationFamily(g) || isC1Family(g) || isC2Family(g) || isC5C6Family(g) || isC7Family(g) || isC9Family(g)) {
-      score.semanticOp = 1;
-    } else if (score.kp === 1) {
-      score.semanticOp = 1;
-    }
 
-    
-    if (plan.questionTypeId && g.capabilities.indexOf(plan.questionTypeId) !== -1) score.capability = 1;
+if (plan.questionTypeId && g.capabilities.indexOf(plan.questionTypeId) !== -1) score.capability = 1;
 
-    
-    if (plan.questionTypeId && g.questionTypes.indexOf(plan.questionTypeId) !== -1) score.qt = 1;
 
-    
-    if (g.difficultyRange && plan.difficulty != null) {
-      if (plan.difficulty >= g.difficultyRange.min && plan.difficulty <= g.difficultyRange.max) score.diff = 1;
-    }
+if (plan.questionTypeId && g.questionTypes.indexOf(plan.questionTypeId) !== -1) score.qt = 1;
 
-    
-    
-    if (score.kp + score.capability + score.qt + score.diff > 0) candidates.push(score);
-  });
 
+if (score.kp + score.capability + score.qt > 0) candidates.push(score);
+});
+
+
+candidates.sort(function (a, b) {
+  if (a.kp !== b.kp) return b.kp - a.kp;
+  if (a.capability !== b.capability) return b.capability - a.capability;
+  if (a.qt !== b.qt) return b.qt - a.qt;
+  var va = a.record.version || 1, vb = b.record.version || 1;
+  if (va !== vb) return vb - va;
   
-  candidates.sort(function (a, b) {
-    if (a.kp !== b.kp) return b.kp - a.kp;
-    if (a.semanticOp !== b.semanticOp) return b.semanticOp - a.semanticOp;
-    if (a.capability !== b.capability) return b.capability - a.capability;
-    if (a.qt !== b.qt) return b.qt - a.qt;
-    if (a.diff !== b.diff) return b.diff - a.diff;
-    var va = a.record.version || 1, vb = b.record.version || 1;
-    if (va !== vb) return vb - va;
-    
-    if (a.record.scope === 'core' && b.record.scope !== 'core') return -1;
-    if (b.record.scope === 'core' && a.record.scope !== 'core') return 1;
-    return 0;
-  });
+  if (a.record.scope === 'core' && b.record.scope !== 'core') return -1;
+  if (b.record.scope === 'core' && a.record.scope !== 'core') return 1;
+  return 0;
+});
 
-  if (candidates.length === 0) {
-    
-    return { generatorId: null, source: 'unsupported', errorCode: 'GENERATOR_UNSUPPORTED', record: null, mode: mode };
-  }
+if (candidates.length === 0) {
+  
+  return { generatorId: null, source: 'unsupported', errorCode: 'GENERATOR_UNSUPPORTED', record: null, mode: mode };
+}
 
-  var best = candidates[0];
-  return {
-    generatorId: best.record.id,
-    source: 'priority',
-    record: best.record,
-    match: { kp: best.kp, semanticOp: best.semanticOp, capability: best.capability, questionType: best.qt, difficulty: best.diff },
-    mode: mode
-  };
+var best = candidates[0];
+return {
+  generatorId: best.record.id,
+  source: 'priority',
+  record: best.record,
+  match: { kp: best.kp, capability: best.capability, questionType: best.qt },
+  mode: mode
+};
 }
 
 
@@ -4518,19 +4544,18 @@ __defs["shared/strategy/question-style-strategy.js"] = function (module, exports
 
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
+var QuestionTypeRegistry = require("shared/knowledge/question-type-registry.js");
+
 
 
 var STYLE_REGISTRY = {
   calc:     { style: 'calc',   svgTemplate: 'svg-calculation', label: '计算式' },
-  oral:     { style: 'calc',   svgTemplate: 'svg-calculation', label: '口算' },
   fill:     { style: 'fill',   svgTemplate: 'svg-calculation', label: '填空格' },
   choice:   { style: 'choice', svgTemplate: 'svg-choice',      label: '选项卡' },
   judge:    { style: 'judge',  svgTemplate: 'svg-judge',       label: '判断陈述' },
   apply:    { style: 'story',  svgTemplate: 'svg-story',       label: '图文应用' },
   geometry: { style: 'shape', svgTemplate: 'svg-geometry', label: '图形操作' },
-  classify: { style: 'sort',  svgTemplate: 'svg-calculation', label: '分类整理' },
-  recognize: { style: 'choice', svgTemplate: 'svg-choice',     label: '认读识别' },
-  open:     { style: 'open',   svgTemplate: 'svg-open',        label: '开放表达' }
+  classify: { style: 'sort',  svgTemplate: 'svg-calculation', label: '分类整理' }
 };
 
 
@@ -4547,14 +4572,17 @@ function resolveQuestionStyle(options) {
   if (typeof qt !== 'string' || !qt) {
     throw new StrategyError('questionTypeId 必填字符串', CODES.INVALID_REQUEST, { questionTypeId: qt });
   }
-  var base = STYLE_REGISTRY[qt];
+  
+  var _n = QuestionTypeRegistry.normalizeQuestionType(qt);
+  var canonicalQt = (_n && _n.id) ? _n.id : qt;
+  var base = STYLE_REGISTRY[canonicalQt];
   if (!base) {
     throw new StrategyError('未知题型，无法确定固定样式: ' + qt, CODES.INVALID_REQUEST, { questionTypeId: qt, knowledgePointId: options.knowledgePointId });
   }
   var style = base.style;
   var category = options.category;
-  if (category && CATEGORY_STYLE_OVERRIDE[category] && CATEGORY_STYLE_OVERRIDE[category][qt]) {
-    style = CATEGORY_STYLE_OVERRIDE[category][qt];
+  if (category && CATEGORY_STYLE_OVERRIDE[category] && CATEGORY_STYLE_OVERRIDE[category][canonicalQt]) {
+    style = CATEGORY_STYLE_OVERRIDE[category][canonicalQt];
   }
   return {
     style: style,
@@ -5018,8 +5046,6 @@ __defs["shared/presentation/render.js"] = function (module, exports, require) {
     if (!grades || !Array.isArray(grades) || !grades.length) console.error('[createPlugin] 插件 ' + id + ' 缺少必填字段 grades（非空数组）');
     if (typeof config.generateQuestions !== 'function') console.error('[createPlugin] 插件 ' + id + ' 必须提供 generateQuestions(opts) 函数');
 
-    var _kb = (typeof global.KnowledgeBank !== 'undefined') ? global.KnowledgeBank : null;
-
     function defaultRender(set) {
       var cols = (set && set.meta && set.meta.columns) || config.columns || 3;
       var html = '<div class="questions-grid" style="display:grid;grid-template-columns:repeat(' + cols + ',1fr);gap:14px;">';
@@ -5070,22 +5096,6 @@ __defs["shared/presentation/render.js"] = function (module, exports, require) {
         return q;
       });
       
-      
-      if (config.knowledgePoints && _kb && subject === 'math' && opts.grade) {
-        var entries = _kb.getEntries ? _kb.getEntries('math', opts.grade) : [];
-        if (entries.length) {
-          var entryById = {};
-          entries.forEach(function (e) { entryById[e.id] = true; entryById[e.name] = true; });
-          var kpRaw = config.knowledgePoints;
-          var kpList = Array.isArray(kpRaw) ? kpRaw : (kpRaw && kpRaw[opts.grade]) || [];
-          var missing = kpList.filter(function (kp) { return !entryById[kp]; });
-          if (missing.length) {
-            console.warn('[createPlugin:' + id + '] 在 ' + opts.grade + ' 年级声明覆盖的知识点未在知识库登记：' +
-              missing.join('、') + '（请补充 shared/knowledge/knowledge-bank.js 或修正 knowledgePoints）');
-          }
-        }
-      }
-      
       var meta = (typeof config.meta === 'function') ? config.meta(opts)
         : (config.meta || { grade: opts.grade, count: questions.length });
       return { questions: questions, meta: meta };
@@ -5115,40 +5125,6 @@ __defs["shared/presentation/render.js"] = function (module, exports, require) {
   }
 
   
-
-  
-  function _wrapDifficultyParams(plugin, subject) {
-    var _orig = plugin.generate;
-    plugin.generate = function (opts) {
-      opts = opts || {};
-      if (opts.difficultyParams == null) {
-        var _D = (typeof global !== 'undefined') ? (global.App && global.App.Difficulty) : null;
-        var _DS = (typeof global !== 'undefined') ? (global.App && global.App.DifficultyStatic) : null;
-        var hasOwnLevel = opts.level != null && opts.level !== '';
-
-        if (opts.knowledgePointMeta && _DS && typeof _DS.paramsForKnowledgePoint === 'function') {
-          
-          var staticOut = _DS.paramsForKnowledgePoint(opts.knowledgePointMeta, opts.questionType, opts.customParams);
-          if (hasOwnLevel) {
-            
-            var lv = opts.level;
-            var prof = (_D && typeof _D.paramsFor === 'function')
-              ? _D.paramsFor(subject, lv) : { level: lv, difficulty: lv };
-            prof.staticMeta = staticOut.staticMeta;
-            opts.difficultyParams = prof;
-          } else {
-            opts.difficultyParams = staticOut;
-          }
-        } else if (_D && typeof _D.paramsFor === 'function') {
-          
-          var lv2 = (opts.difficulty != null) ? opts.difficulty : (opts.level || 3);
-          try { opts.difficultyParams = _D.paramsFor(subject, lv2); } catch (e) {  }
-        }
-        opts.hasOwnLevel = hasOwnLevel;
-      }
-      return _orig.call(plugin, opts);
-    };
-  }
 
   
   function _wrapGridClass(plugin) {
@@ -5205,7 +5181,6 @@ __defs["shared/presentation/render.js"] = function (module, exports, require) {
     var plugin = createPlugin(config);
     plugin.cardClass = 'math-card';
     plugin.gridClass = 'math-grid';
-    _wrapDifficultyParams(plugin, 'math');
     _wrapGridClass(plugin);
     return plugin;
   }
@@ -5224,7 +5199,7 @@ __defs["shared/presentation/render.js"] = function (module, exports, require) {
     module.exports = {
       renderCard: renderCard, renderGrid: renderGrid, clockSVG: clockSVG,
       createPlugin: createPlugin, createMathPlugin: createMathPlugin,
-      _wrapDifficultyParams: _wrapDifficultyParams, _wrapGridClass: _wrapGridClass,
+      _wrapGridClass: _wrapGridClass,
       _numEq: _numEq, _mathQCheck: _mathQCheck
     };
   }
@@ -5299,107 +5274,6 @@ __defs["shared/core/check.js"] = function (module, exports, require) {
     };
   }
 
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/knowledge-ontology.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var Schema = require("shared/schemas/knowledge-point.schema.js");
-
-  var VERSION = Schema.VERSION;
-  var SUBJECTS = Schema.SUBJECTS;
-  var KNOWN_OPERATIONS = Schema.KNOWN_OPERATIONS;
-  var KNOWN_QUESTION_TYPES = Schema.KNOWN_QUESTION_TYPES;
-  var KNOWN_CONTEXTS = Schema.KNOWN_CONTEXTS;
-
-  function isPlainObject(x) {
-    return x && typeof x === 'object' && !Array.isArray(x);
-  }
-
-  function defaultCanonical() {
-    return {
-      id: '',
-      subject: null,
-      grade: null,
-      category: null,
-      module: { id: '', name: '' },
-      identity: { id: '', name: '', description: '' },
-      source: { pluginId: null, legacyType: null },
-      knowledge: { concept: null, operations: [], factualContent: {}, prerequisites: [] },
-      structure: { minSteps: 1, maxSteps: 1, allowBracket: false, allowMultDiv: false },
-      cognition: { level: 0, targets: [], raw: null },
-      presentation: { questionTypes: [], graphicType: null },
-      numeric: { range: { min: null, max: null }, integerOnly: true, decimalPlaces: 0 },
-      context: { defaults: [], allowPure: true, allowContextual: true },
-      errors: [],
-      spiral: { level: 1, maxLevel: 1 },
-      generation: { capabilities: [] },
-      metadata: { weight: 1, version: VERSION },
-      legacy: {}
-    };
-  }
-
-  function create(data) {
-    var c = defaultCanonical();
-    if (!isPlainObject(data)) return c;
-    if (data.id !== undefined) c.id = data.id;
-    if (data.subject !== undefined) c.subject = data.subject;
-    if (data.grade !== undefined) c.grade = data.grade;
-    if (data.category !== undefined) c.category = data.category;
-    if (data.module) c.module = Object.assign({}, c.module, data.module);
-    if (data.identity) c.identity = Object.assign({}, c.identity, data.identity);
-    if (data.source) c.source = Object.assign({}, c.source, data.source);
-    if (data.knowledge) c.knowledge = Object.assign({}, c.knowledge, data.knowledge);
-    if (data.structure) c.structure = Object.assign({}, c.structure, data.structure);
-    if (data.cognition) c.cognition = Object.assign({}, c.cognition, data.cognition);
-    if (data.presentation) c.presentation = Object.assign({}, c.presentation, data.presentation);
-    if (data.numeric) {
-      c.numeric = Object.assign({}, c.numeric, data.numeric);
-      if (data.numeric.range) c.numeric.range = Object.assign({}, c.numeric.range);
-    }
-    if (data.context) c.context = Object.assign({}, c.context, data.context);
-    if (data.errors) c.errors = data.errors;
-    if (data.spiral) c.spiral = Object.assign({}, c.spiral, data.spiral);
-    if (data.generation) c.generation = Object.assign({}, c.generation, data.generation);
-    if (data.metadata) c.metadata = Object.assign({}, c.metadata, data.metadata);
-    if (data.legacy) c.legacy = Object.assign({}, data.legacy);
-    return c;
-  }
-
-  function normalize(legacyKP) {
-    var Normalizer = require("shared/knowledge/knowledge-ontology-normalizer.js");
-    return Normalizer.fromLegacy(legacyKP);
-  }
-
-  function validate(kp) {
-    var Validator = require("shared/knowledge/knowledge-ontology-validator.js");
-    return Validator.validate(kp);
-  }
-
-  function isValid(kp) {
-    var r = validate(kp);
-    return !!(r && r.valid);
-  }
-
-  var API = {
-    VERSION: VERSION,
-    SUBJECTS: SUBJECTS,
-    KNOWN_OPERATIONS: KNOWN_OPERATIONS,
-    KNOWN_QUESTION_TYPES: KNOWN_QUESTION_TYPES,
-    KNOWN_CONTEXTS: KNOWN_CONTEXTS,
-    defaultCanonical: defaultCanonical,
-    create: create,
-    normalize: normalize,
-    validate: validate,
-    isValid: isValid,
-    schemaVersion: function () { return VERSION; }
-  };
-
-  global.KnowledgeOntology = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
 
 };
@@ -5849,510 +5723,6 @@ module.exports = {
 };
 
 };
-__defs["shared/schemas/knowledge-point.schema.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var VERSION = 1;
-
-  var SUBJECTS = ['math'];
-
-  
-  var QuestionTypeRegistry = (typeof require === 'function')
-    ? (function () { try { return require("shared/knowledge/question-type-registry.js"); } catch (e) { return null; } })()
-    : (global.QuestionTypeRegistry || null);
-
-  var KNOWN_OPERATIONS = [
-    'add', 'subtract', 'multiply', 'divide',
-    'compare', 'order',
-    'compose', 'decompose',
-    'measure', 'convert',
-    'identify', 'classify',
-    'read', 'write',
-    'calculate', 'reason',
-    'represent', 'model'
-  ];
-
-  
-  
-  var KNOWN_QUESTION_TYPES = QuestionTypeRegistry && QuestionTypeRegistry.all
-    ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
-    : ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
-
-  var KNOWN_CONTEXTS = ['pure', 'simple', 'standard', 'complex'];
-
-  var COGNITIVE_MAP = { '了解': 0, '认识': 0, '理解': 0.33, '掌握': 0.67, '运用': 1.0 };
-  var COGNITIVE_MIN = 0;
-  var COGNITIVE_MAX = 1;
-
-  
-  var CAPABILITIES = {
-    'single-step': { type: 'procedure' },
-    'multi-step': { type: 'procedure' },
-    'calculation': { type: 'calculation' },
-    'oral': { type: 'question-format' },
-    'fill': { type: 'question-format' },
-    'choice': { type: 'question-format' },
-    'judge': { type: 'question-format' },
-    'open': { type: 'question-format' },
-    'geometry': { type: 'question-format' },
-    'classify': { type: 'question-format' },
-    'contextual': { type: 'context' },
-    'application': { type: 'context' }
-  };
-
-  
-  
-  var QUESTION_TYPE_TO_CAPABILITY = {
-    calc: 'calculation', operate: 'calculation',
-    fill: 'fill', choice: 'choice', judge: 'judge',
-    apply: 'contextual', open: 'open',
-    geometry: 'geometry', classify: 'classify',
-    recognize: 'geometry', oral: 'calculation'
-  };
-
-  var CATEGORIES = {
-    identity: { fields: ['id', 'subject', 'grade', 'module', 'name', 'description'] },
-    knowledge: { fields: ['concept', 'operations', 'factualContent', 'prerequisites'] },
-    difficulty: { fields: ['spiralLevel', 'maxSpiralLevel', 'cognitiveLevel', 'numberRangeDefault', 'maxStepsDefault'] },
-    assessment: { fields: ['applicableQuestionTypes', 'contextDefault', 'errors'] },
-    generation: { fields: ['capabilities'] }
-  };
-
-  function isKnownCapability(id) { return CAPABILITIES[id] != null; }
-  function isValidCognitiveRaw(v) { return COGNITIVE_MAP[v] != null; }
-  
-  function isValidQuestionType(t) {
-    if (KNOWN_QUESTION_TYPES.indexOf(t) !== -1) return true;
-    if (QuestionTypeRegistry && typeof QuestionTypeRegistry.normalizeQuestionType === 'function') {
-      var n = QuestionTypeRegistry.normalizeQuestionType(t);
-      return n && KNOWN_QUESTION_TYPES.indexOf(n.id) !== -1;
-    }
-    return false;
-  }
-
-  
-  function checkLegality(c) {
-    var errors = [];
-    c = c || {};
-
-    var range = c.numeric && c.numeric.range;
-    if (range && typeof range.min === 'number' && typeof range.max === 'number' && range.min > range.max) {
-      errors.push('numberRange min > max');
-    }
-
-    var st = c.structure || {};
-    if (typeof st.maxSteps === 'number' && st.maxSteps < 1) {
-      errors.push('maxSteps < 1');
-    }
-
-    var sp = c.spiral || {};
-    if (typeof sp.level === 'number' && typeof sp.maxLevel === 'number' && sp.level > sp.maxLevel) {
-      errors.push('spiralLevel > maxSpiralLevel');
-    }
-
-    var cog = c.cognition || {};
-    if (typeof cog.level === 'number' && (cog.level < COGNITIVE_MIN || cog.level > COGNITIVE_MAX)) {
-      errors.push('cognitiveLevel 超出范围');
-    }
-
-    
-    
-
-    var gen = c.generation || {};
-    if (Array.isArray(gen.capabilities)) {
-      gen.capabilities.forEach(function (cap) {
-        if (cap && !isKnownCapability(cap.id)) errors.push('未知 capability: ' + (cap && cap.id));
-      });
-    }
-
-    return { errors: errors, warnings: [] };
-  }
-
-  var API = {
-    VERSION: VERSION,
-    SUBJECTS: SUBJECTS,
-    KNOWN_OPERATIONS: KNOWN_OPERATIONS,
-    KNOWN_QUESTION_TYPES: KNOWN_QUESTION_TYPES,
-    KNOWN_CONTEXTS: KNOWN_CONTEXTS,
-    COGNITIVE_MAP: COGNITIVE_MAP,
-    COGNITIVE_MIN: COGNITIVE_MIN,
-    COGNITIVE_MAX: COGNITIVE_MAX,
-    CAPABILITIES: CAPABILITIES,
-    QUESTION_TYPE_TO_CAPABILITY: QUESTION_TYPE_TO_CAPABILITY,
-    CATEGORIES: CATEGORIES,
-    isKnownCapability: isKnownCapability,
-    isValidCognitiveRaw: isValidCognitiveRaw,
-    isValidQuestionType: isValidQuestionType,
-    checkLegality: checkLegality
-  };
-
-  global.KnowledgePointSchema = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/knowledge-ontology-normalizer.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var Ontology = require("shared/knowledge/knowledge-ontology.js");
-  var OpsOnt = require("shared/knowledge/knowledge-operation.js");
-  var OpsMap = require("shared/knowledge/ontology-operation-map.js");
-  var FactOnt = require("shared/knowledge/knowledge-factual.js");
-  var FactMap = require("shared/knowledge/ontology-factual-map.js");
-  var ErrOnt = require("shared/knowledge/knowledge-error.js");
-  var ErrMap = require("shared/knowledge/ontology-error-map.js");
-  var CatMap = require("shared/knowledge/ontology-category-map.js");
-  var BookMap = require("shared/knowledge/ontology-book-map.js");
-  var Schema = require("shared/schemas/knowledge-point.schema.js");
-  var QTR = require("shared/knowledge/question-type-registry.js");
-  var MODULE_CATALOG = (function () {
-    try { return require("shared/catalog/module-catalog.js"); } catch (e) { return null; }
-  })();
-
-  var SUBJECTS = Ontology.SUBJECTS;
-
-  var COGNITIVE_MAP = { '了解': 0, '认识': 0, '理解': 0.33, '掌握': 0.67, '运用': 1.0 };
-  function mapCognitive(v) {
-    if (v == null) return 0;
-    if (COGNITIVE_MAP[v] != null) return COGNITIVE_MAP[v];
-    return 0.67;
-  }
-
-  var TYPE_ALIAS = {
-    cushi: 'calc',
-    
-    word: 'apply',
-    
-    
-    
-    picture: 'calc',
-    matching: 'choice', column: 'fill', comparison: 'judge'
-  };
-  function canonQuestionType(t) {
-    if (!t) return t;
-    if (Ontology.KNOWN_QUESTION_TYPES.indexOf(t) !== -1) return t;
-    if (TYPE_ALIAS[t]) return TYPE_ALIAS[t];
-    
-    if (QTR && typeof QTR.normalizeQuestionType === 'function') {
-      var n = QTR.normalizeQuestionType(t, { allowHeuristic: false });
-      if (n && n.id && Ontology.KNOWN_QUESTION_TYPES.indexOf(n.id) !== -1) return n.id;
-    }
-    return t;
-  }
-
-  function moduleName(token) {
-    if (!token) return '';
-    if (MODULE_CATALOG && MODULE_CATALOG.byId) {
-      var m = MODULE_CATALOG.byId(token.toUpperCase()) || MODULE_CATALOG.byId(token);
-      if (m) return m.name || token;
-    }
-    return token;
-  }
-
-  function deriveCapabilities(legacyKP, maxSteps) {
-    legacyKP = legacyKP || {};
-    var capIds = {};
-    var out = [];
-    function pushCap(id) {
-      if (id && Schema.isKnownCapability(id) && !capIds[id]) {
-        capIds[id] = 1;
-        out.push({ id: id, type: Schema.CAPABILITIES[id].type });
-      }
-    }
-    if (Array.isArray(legacyKP.applicable_question_types)) {
-      legacyKP.applicable_question_types.forEach(function (a) {
-        if (a && a.type) {
-          var ct = canonQuestionType(a.type);
-          var cap = Schema.QUESTION_TYPE_TO_CAPABILITY[ct];
-          if (cap) pushCap(cap);
-        }
-      });
-    }
-    if (typeof legacyKP.type === 'string') {
-      var capT = Schema.QUESTION_TYPE_TO_CAPABILITY[legacyKP.type];
-      if (capT) pushCap(capT);
-    }
-    var ms = Number(maxSteps);
-    if (!isFinite(ms) || ms < 1) ms = 1;
-    pushCap(ms > 1 ? 'multi-step' : 'single-step');
-    return out;
-  }
-
-  function fromLegacy(legacyKP) {
-    legacyKP = legacyKP || {};
-    var c = {};
-
-    c.id = typeof legacyKP.id === 'string' ? legacyKP.id : '';
-
-    var parts = c.id ? c.id.split('-') : [];
-    var subject = parts[0] || null;
-    var grade = null;
-    if (parts[1]) {
-      var gm = /^g(\d+)$/.exec(parts[1]);
-      if (gm) grade = parseInt(gm[1], 10);
-    }
-    var moduleId = parts[2] || '';
-
-    c.subject = SUBJECTS.indexOf(subject) !== -1 ? subject : null;
-    c.grade = grade;
-
-    
-    
-    
-    c.category = CatMap.categoryForKp(legacyKP);
-
-    
-    
-    
-    
-    var _bu = (legacyKP.book != null)
-      ? { book: legacyKP.book, unit: legacyKP.unit || null }
-      : BookMap.bookUnitForKp(legacyKP);
-    c.book = _bu ? _bu.book : null;
-    c.unit = _bu ? _bu.unit : null;
-    
-    
-    
-    var _go = null;
-    if (legacyKP.gradeOverride != null) _go = legacyKP.gradeOverride;
-    else if (_bu && _bu.grade != null) _go = _bu.grade;
-    c.gradeOverride = _go;
-
-    c.module = { id: moduleId, name: moduleName(moduleId) };
-    c.identity = {
-      id: c.id,
-      name: typeof legacyKP.name === 'string' ? legacyKP.name : '',
-      description: typeof legacyKP.description === 'string' ? legacyKP.description : ''
-    };
-    c.source = {
-      pluginId: legacyKP.pluginId || null,
-      legacyType: legacyKP.type || null
-    };
-
-    var rawOps = Array.isArray(legacyKP.operations) && legacyKP.operations.length
-      ? legacyKP.operations.slice()
-      : OpsMap.operationsForPlugin(legacyKP.pluginId);
-    var operations = [];
-    var seenOp = {};
-    rawOps.forEach(function (o) {
-      var norm = OpsOnt.normalize(o);
-      var canon = norm.canonical || o;
-      if (!seenOp[canon]) { seenOp[canon] = 1; operations.push(canon); }
-    });
-    var factual = (legacyKP.factualContent && typeof legacyKP.factualContent === 'object')
-      ? legacyKP.factualContent : FactMap.factualForPlugin(legacyKP.pluginId);
-    var concept = (typeof legacyKP.concept === 'string' && legacyKP.concept) ? legacyKP.concept : null;
-    var prerequisites = Array.isArray(legacyKP.prerequisites) ? legacyKP.prerequisites.slice() : [];
-    c.knowledge = {
-      concept: concept,
-      operations: operations,
-      factualContent: factual,
-      prerequisites: prerequisites
-    };
-
-    var maxSteps = Number(legacyKP.max_steps_default);
-    if (!isFinite(maxSteps) || maxSteps < 1) maxSteps = 1;
-    c.structure = {
-      minSteps: 1,
-      maxSteps: maxSteps,
-      allowBracket: !!legacyKP.allowBracket,
-      allowMultDiv: !!legacyKP.allowMultDiv
-    };
-
-    var cogRaw = legacyKP.cognitive_level != null ? legacyKP.cognitive_level : null;
-    c.cognition = { level: mapCognitive(cogRaw), targets: [], raw: cogRaw };
-
-    var qts = [];
-    if (Array.isArray(legacyKP.applicable_question_types)) {
-      legacyKP.applicable_question_types.forEach(function (a) {
-        if (!a || !a.type) return;
-        qts.push({
-          type: canonQuestionType(a.type),
-          weight: Number(a.coefficient) || 1,
-          rawType: a.type,
-          cognitiveLevels: null,
-          difficultyFactor: null
-        });
-      });
-    } else if (typeof legacyKP.type === 'string' && legacyKP.type) {
-      qts.push({
-        type: canonQuestionType(legacyKP.type),
-        weight: 1,
-        rawType: legacyKP.type,
-        cognitiveLevels: null,
-        difficultyFactor: null
-      });
-    }
-    c.presentation = {
-      questionTypes: qts,
-      graphicType: legacyKP.graphicType != null ? legacyKP.graphicType : null
-    };
-
-    var range = { min: null, max: null };
-    var nr = legacyKP.number_range_default;
-    if (nr && typeof nr === 'object' && (nr.min != null || nr.max != null)) {
-      range.min = nr.min != null ? Number(nr.min) : null;
-      range.max = nr.max != null ? Number(nr.max) : null;
-    } else if (typeof nr === 'number') {
-      range.min = 1;
-      range.max = nr;
-    }
-    c.numeric = { range: range, integerOnly: true, decimalPlaces: 0 };
-
-    var ctxDefaults = [];
-    var allowPure = true, allowContextual = true;
-    var ctx = legacyKP.context_default;
-    if (typeof ctx === 'string' && ctx) {
-      ctxDefaults.push(ctx);
-      if (ctx === 'pure') allowContextual = false;
-    }
-    c.context = { defaults: ctxDefaults, allowPure: allowPure, allowContextual: allowContextual };
-
-    var errs = [];
-    if (Array.isArray(legacyKP.common_errors) && legacyKP.common_errors.length) {
-      legacyKP.common_errors.forEach(function (e) {
-        if (typeof e === 'string') errs.push(e);
-        else if (e && e.id) errs.push(e);
-      });
-    } else {
-      ErrMap.errorsForPlugin(legacyKP.pluginId).forEach(function (e) { errs.push(e); });
-    }
-    c.errors = errs;
-
-    c.generation = { capabilities: deriveCapabilities(legacyKP, c.structure.maxSteps) };
-
-    var sLevel = Number(legacyKP.spiral_level);
-    if (!isFinite(sLevel) || sLevel < 1) sLevel = 1;
-    var sMax = Number(legacyKP.max_spiral_level);
-    if (!isFinite(sMax) || sMax < sLevel) sMax = sLevel;
-    c.spiral = { level: sLevel, maxLevel: sMax };
-
-    c.metadata = {
-      weight: Number(legacyKP.weight) || 1,
-      version: Ontology.VERSION
-    };
-
-    c.legacy = {
-      difficulty: legacyKP.difficulty != null ? legacyKP.difficulty : null,
-      example: legacyKP.example || null,
-      prerequisites: legacyKP.prerequisites || null,
-      related: legacyKP.related || null,
-      status: legacyKP.status || null,
-      category: legacyKP.category || null,
-      bankRef: legacyKP.bankRef || null,
-      exerciseTypes: legacyKP.exerciseTypes || null,
-      cognitive_level: cogRaw,
-      context_default: ctx
-    };
-
-    
-    
-    var canonical = Ontology.create(c);
-    canonical.book = c.book || null;
-    canonical.unit = c.unit || null;
-    canonical.gradeOverride = c.gradeOverride || null;
-    return canonical;
-  }
-
-  var API = { fromLegacy: fromLegacy, mapCognitive: mapCognitive, canonQuestionType: canonQuestionType };
-
-  global.KnowledgeOntologyNormalizer = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/knowledge-ontology-validator.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var Ontology = require("shared/knowledge/knowledge-ontology.js");
-  var Schema = require("shared/schemas/knowledge-point.schema.js");
-
-  var COGNITIVE_MAP = Schema.COGNITIVE_MAP;
-
-  function validate(kp) {
-    var errors = [];
-    var warnings = [];
-    kp = kp || {};
-
-    var name = kp.identity && kp.identity.name;
-
-    if (!kp.id) errors.push('id 缺失');
-    if (!name) errors.push('name 缺失');
-    if (!kp.subject || Schema.SUBJECTS.indexOf(kp.subject) === -1) errors.push('subject 缺失/非法');
-
-    var grade = kp.grade;
-    if (typeof grade !== 'number' || grade < 1 || grade > 6 || grade % 1 !== 0) errors.push('grade 非法');
-
-    var sp = kp.spiral || {};
-    if (typeof sp.level !== 'number' || sp.level < 1) errors.push('spiral.level 非法');
-    if (typeof sp.maxLevel !== 'number' || sp.maxLevel < sp.level) errors.push('spiral.maxLevel < spiral.level');
-
-    var st = kp.structure || {};
-    if (typeof st.maxSteps === 'number' && typeof st.minSteps === 'number' && st.maxSteps < st.minSteps) {
-      errors.push('structure.maxSteps < minSteps');
-    }
-
-    var pres = kp.presentation || {};
-    if (!Array.isArray(pres.questionTypes)) errors.push('questionTypes 非数组');
-
-    var cog = kp.cognition || {};
-    if (typeof cog.level !== 'number' || isNaN(cog.level)) errors.push('cognition.level 非法');
-
-    
-    var legal = Schema.checkLegality(kp);
-    legal.errors.forEach(function (e) { errors.push(e); });
-
-    if (!(kp.identity && kp.identity.description)) warnings.push('description 缺失');
-
-    var sem = kp.knowledge || {};
-    if (!sem.factualContent || Object.keys(sem.factualContent).length === 0) warnings.push('factualContent 为空');
-    if (!sem.operations || sem.operations.length === 0) warnings.push('operations 为空');
-    if (Array.isArray(sem.operations)) {
-      sem.operations.forEach(function (o) {
-        if (Schema.KNOWN_OPERATIONS.indexOf(o) === -1) warnings.push('未知 operation: ' + o);
-      });
-    }
-    if (sem.concept == null) warnings.push('concept 缺失');
-    if (!Array.isArray(sem.prerequisites) || sem.prerequisites.length === 0) warnings.push('prerequisites 为空');
-
-    var ctx = kp.context || {};
-    if (!ctx.defaults || ctx.defaults.length === 0) warnings.push('context 为空');
-
-    if (!kp.errors || kp.errors.length === 0) warnings.push('errors 为空');
-
-    if (!(pres && pres.graphicType)) warnings.push('graphicType 缺失');
-
-    if (Array.isArray(pres.questionTypes)) {
-      pres.questionTypes.forEach(function (q) {
-        if (q && Schema.KNOWN_QUESTION_TYPES.indexOf(q.type) === -1) warnings.push('未知 questionType: ' + q.type);
-      });
-    }
-
-    var gen = kp.generation || {};
-    var caps = Array.isArray(gen.capabilities) ? gen.capabilities : [];
-    if (caps.length === 0) warnings.push('generation.capabilities 为空');
-
-    if (cog.raw != null && typeof cog.raw === 'string' && !COGNITIVE_MAP[cog.raw]) {
-      warnings.push('未知 cognitive_level: ' + cog.raw);
-    }
-
-    var valid = errors.length === 0;
-    return { valid: valid, errors: errors, warnings: warnings, normalized: true };
-  }
-
-  var API = { validate: validate };
-
-  global.KnowledgeOntologyValidator = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
 __defs["shared/generator/generators/arithmetic.js"] = function (module, exports, require) {
 
 'use strict';
@@ -6404,13 +5774,13 @@ function createArithmeticGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['oral', 'calc', 'fill', 'apply'],
-    questionTypes: ['oral', 'calc', 'fill', 'apply'],
+    capabilities: ['calc', 'fill', 'apply'],
+    questionTypes: ['calc', 'fill', 'apply'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
-      return plan.questionTypeId === 'oral' || plan.questionTypeId === 'calc';
+      return plan.questionTypeId === 'calc';
     },
 
     generate: function (plan, context) {
@@ -6597,8 +5967,8 @@ function createSelectionGenerator(spec) {
   var generator = {
     id: id,
     subject: subject,
-    capabilities: mode === 'fill' ? ['fill', 'recognize', 'calc', 'oral', 'apply'] : (mode === 'choice' ? ['choice', 'recognize', 'calc', 'oral', 'apply'] : ['judge', 'recognize', 'calc', 'oral', 'apply']),
-    questionTypes: mode === 'fill' ? ['fill', 'recognize', 'calc', 'oral', 'apply'] : (mode === 'choice' ? ['choice', 'recognize', 'calc', 'oral', 'apply'] : ['judge', 'recognize', 'calc', 'oral', 'apply']),knowledgePoints: spec.knowledgePoints || [],
+    capabilities: mode === 'fill' ? ['fill', 'geometry', 'calc', 'apply'] : (mode === 'choice' ? ['choice', 'geometry', 'calc', 'apply'] : ['judge', 'geometry', 'calc', 'apply']),
+    questionTypes: mode === 'fill' ? ['fill', 'geometry', 'calc', 'apply'] : (mode === 'choice' ? ['choice', 'geometry', 'calc', 'apply'] : ['judge', 'geometry', 'calc', 'apply']),knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -6809,8 +6179,8 @@ function createComplexGenerator(spec) {
   var generator = {
     id: id,
     subject: subject,
-    capabilities: spec.capabilities || ['calc', 'fill', 'oral'],
-    questionTypes: spec.questionTypes || ['calc', 'fill', 'oral'],
+    capabilities: spec.capabilities || ['calc', 'fill'],
+    questionTypes: spec.questionTypes || ['calc', 'fill'],
     knowledgePoints: knowledgePoints,
 
     supports: function (plan) {
@@ -6857,8 +6227,8 @@ function buildAll() {
   return [
     createComplexGenerator({
       id: 'generator:complex-calc',
-      capabilities: ['calc', 'fill', 'oral'],
-      questionTypes: ['calc', 'fill', 'oral'],
+      capabilities: ['calc', 'fill'],
+      questionTypes: ['calc', 'fill'],
       knowledgePoints: COMPLEX_KPS
     })
   ];
@@ -6877,7 +6247,6 @@ __defs["shared/generator/generators/shape.js"] = function (module, exports, requ
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -7185,7 +6554,7 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   
   
-  var kp = KP.get(pkp(plan)) || {};
+  var kp = {};
   var name = kp.name || '几何图形';
   var angleWords = ['角', '直角', '锐角', '钝角', '平角', '周角'];
   var isAngle = angleWords.some(function(w){ return name.indexOf(w) !== -1; });
@@ -7228,7 +6597,7 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic) {
 function makeRecognizeQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   
-  var kp = KP.get(pkp(plan)) || {};
+  var kp = {};
   var name = kp.name || '图形识别';
   var isChoice = rng() < 0.5;
 
@@ -7290,7 +6659,7 @@ function makeRecognizeQuestion(plan, context, i, shapeMeta, graphic) {
 
 function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var kp = KP.get(pkp(plan)) || {};
+  var kp = {};
   var name = kp.name || '几何应用';
   
   var isArea = name.indexOf('面积') !== -1 || name.indexOf('周长') !== -1;
@@ -7355,8 +6724,8 @@ function createShapeGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'],
-    questionTypes: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'],
+    capabilities: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'],
+    questionTypes: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -7368,7 +6737,7 @@ function createShapeGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
       var shapeMeta = getShapeMeta(kp);
 
       for (var i = 0; i < count; i++) {
@@ -7538,7 +6907,6 @@ __defs["shared/generator/generators/position.js"] = function (module, exports, r
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -7755,8 +7123,8 @@ function createPositionGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['choice', 'judge', 'fill', 'oral'],
-    questionTypes: ['choice', 'judge', 'fill', 'oral'],
+    capabilities: ['choice', 'judge', 'fill', 'calc'],
+    questionTypes: ['choice', 'judge', 'fill', 'calc'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -7768,7 +7136,7 @@ function createPositionGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
       var meta = getPositionMeta(kp);
 
       for (var i = 0; i < count; i++) {
@@ -7826,7 +7194,6 @@ __defs["shared/generator/generators/money.js"] = function (module, exports, requ
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
 var OpSem = require("shared/generator/core/op-semantics.js");
 
@@ -8102,8 +7469,8 @@ function createMoneyGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['fill', 'choice', 'judge', 'apply', 'calc', 'oral'],
-    questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc', 'oral'],
+    capabilities: ['fill', 'choice', 'judge', 'apply', 'calc'],
+    questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -8115,7 +7482,7 @@ function createMoneyGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
       var meta = getMoneyMeta(kp);
 
       for (var i = 0; i < count; i++) {
@@ -8206,7 +7573,6 @@ __defs["shared/generator/generators/application.js"] = function (module, exports
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
 
 function pkp(plan) {
@@ -8493,8 +7859,8 @@ function createApplicationGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'],
-    questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'],
+    capabilities: ['apply', 'fill', 'choice', 'judge', 'calc'],
+    questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -8506,7 +7872,7 @@ function createApplicationGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
       var meta = getApplicationMeta(kp);
 
       for (var i = 0; i < count; i++) {
@@ -8522,7 +7888,8 @@ function createApplicationGenerator(spec) {
           var answer = computeAnswer('multiplication', { a: a, n: b });
           q = {
             knowledgePointId: pkp(plan),
-            questionType: 'open',
+            
+            questionType: 'apply',
             difficulty: plan.difficulty,
             spiralLevel: plan.spiralLevel || 1,
             context: plan.contextType || 'standard',
@@ -8583,8 +7950,6 @@ __defs["shared/generator/generators/composite.js"] = function (module, exports, 
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
-var Arith = require("shared/generator/core/arithmetic-core.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -8601,60 +7966,27 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':composite:' + i;
 }
 
-function getKpMeta(kpId) {
-  var kp = KP.get(kpId);
-  if (!kp) return null;
-  var canonical = require("shared/knowledge/knowledge-ontology.js").normalize(kp);
-  return {
-    id: canonical.id,
-    category: canonical.category || kp.legacy?.category,
-    legacyType: canonical.source?.legacyType || kp.legacy?.legacyType,
-    numericRange: canonical.numeric?.range || null,
-    structure: canonical.structure || {},
-    factualContent: canonical.factualContent || null,
-    graphicType: canonical.graphicType || null
-  };
-}
 
-
-function makeCalcToJudge(plan, context, i, kpMetas, rng) {
-  
-  var srcKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'algebra'; }));
-  if (!srcKp) srcKp = Rng.pick(rng,kpMetas);
-  
-  var arithSem = require("shared/generator/core/kp-arithmetic-semantics.js").resolveArithmeticSemantics(KP.get(srcKp.id));
-  var ops = arithSem ? arithSem.operators : ['+', '−'];
-  var op = Rng.pick(rng,ops);
-  
-  var a, b, correct, isTrue;
+function makeCalcToJudge(plan, context, i, kpIds) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var op = Rng.pick(rng, ['+', '−']);
+  var a, b, correct;
   if (op === '+') {
     a = Rng.randInt(rng, 1, 9);
     b = Rng.randInt(rng, 1, 9);
     correct = a + b;
-    isTrue = Rng.randInt(rng, 0, 1);
-  } else if (op === '−') {
+  } else {
     a = Rng.randInt(rng, 2, 10);
     b = Rng.randInt(rng, 1, a - 1);
     correct = a - b;
-    isTrue = Rng.randInt(rng, 0, 1);
-  } else if (op === '×') {
-    a = Rng.randInt(rng, 1, 9);
-    b = Rng.randInt(rng, 1, 9);
-    correct = a * b;
-    isTrue = Rng.randInt(rng, 0, 1);
-  } else if (op === '÷') {
-    b = Rng.randInt(rng, 2, 9);
-    correct = Rng.randInt(rng, 1, 9);
-    a = b * correct;
-    isTrue = Rng.randInt(rng, 0, 1);
   }
-  
+  var isTrue = Rng.randInt(rng, 0, 1) === 1;
   var shown = isTrue ? correct : correct + (Rng.randInt(rng, 0, 1) ? 1 : -1);
   var prompt = a + ' ' + op + ' ' + b + ' = ' + shown + ' （对还是错？）';
-  
+
   return {
     knowledgePointId: pkp(plan),
-    knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
+    knowledgePointIds: kpIds.slice(),
     questionType: 'judge',
     difficulty: plan.difficulty,
     spiralLevel: plan.spiralLevel || 1,
@@ -8662,11 +7994,10 @@ function makeCalcToJudge(plan, context, i, kpMetas, rng) {
     seed: seedFor(plan, context, i),
     prompt: prompt,
     answer: isTrue,
-    answerMode: 'judge',
-    data: {
+    answerMode: 'judge',    data: {
       mode: 'calc-to-judge',
       steps: 1,
-      primaryKp: srcKp.id,
+      primaryKp: pkp(plan),
       operation: op,
       operands: [a, b],
       correct: correct,
@@ -8676,183 +8007,34 @@ function makeCalcToJudge(plan, context, i, kpMetas, rng) {
   };
 }
 
-
-function makeMeasureToCalc(plan, context, i, kpMetas, rng) {
-  var measureKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'measurement'; }));
-  var calcKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'algebra'; }));
-  
-  if (!measureKp || !calcKp) {
-    
-    return makeCalcToJudge(plan, context, i, kpMetas, rng);
-  }
-  
-  
-  var units = [
-    { from: '米', to: '厘米', factor: 100 },
-    { from: '千克', to: '克', factor: 1000 },
-    { from: '小时', to: '分钟', factor: 60 },
-    { from: '元', to: '角', factor: 10 },
-    { from: '角', to: '分', factor: 10 }
-  ];
-  var unit = Rng.pick(rng,units);
-  var baseVal = Rng.randInt(rng, 1, 9);
-  var converted = baseVal * unit.factor;
-  
-  var op = Rng.pick(rng,['+', '−']);
-  var b = Rng.randInt(rng, 1, 20);
-  var answer = op === '+' ? converted + b : converted - b;
-  
-  var prompt = baseVal + unit.from + ' = ' + converted + unit.to + '，' + converted + unit.to + ' ' + op + ' ' + b + unit.to + ' = ____ ' + unit.to;
-  
-  return {
-    knowledgePointId: pkp(plan),
-    knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
-    questionType: plan.questionTypeId || 'calc',
-    difficulty: plan.difficulty,
-    spiralLevel: plan.spiralLevel || 1,
-    context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: String(answer),
-    answerMode: 'input',
-    data: {
-      mode: 'measure-to-calc',
-      steps: 2,
-      primaryKp: calcKp.id,
-      measureKp: measureKp.id,
-      operation: op,
-      conversion: { from: unit.from, to: unit.to, factor: unit.factor, base: baseVal, converted: converted },
-      operand: b,
-      composite: true
-    }
-  };
-}
-
-
-function makeShapeToApply(plan, context, i, kpMetas, rng) {
-  var shapeKp = Rng.pick(rng,kpMetas.filter(function(m) { return m.category === 'geometry'; }));
-  if (!shapeKp) shapeKp = Rng.pick(rng,kpMetas);
-  
-  var shapeFeatures = {
-    'cube': { name: '正方体', edges: 12, faces: 6, vertices: 8 },
-    'cuboid': { name: '长方体', edges: 12, faces: 6, vertices: 8 },
-    'cylinder': { name: '圆柱', edges: 2, faces: 3, vertices: 0 },
-    'cone': { name: '圆锥', edges: 1, faces: 2, vertices: 1 },
-    'sphere': { name: '球', edges: 0, faces: 1, vertices: 0 },
-    'rectangle': { name: '长方形', edges: 4, faces: 1, vertices: 4 },
-    'square': { name: '正方形', edges: 4, faces: 1, vertices: 4 },
-    'triangle': { name: '三角形', edges: 3, faces: 1, vertices: 3 },
-    'circle': { name: '圆', edges: 0, faces: 1, vertices: 0 }
-  };
-  
-  var featureKeys = Object.keys(shapeFeatures);
-  var feature = Rng.pick(rng,featureKeys);
-  var meta = shapeFeatures[feature];
-
-  var attrKeys = ['edges', 'faces', 'vertices'];
-  var attr = Rng.pick(rng,attrKeys);
-  var attrName = { edges: '棱', faces: '面', vertices: '顶点' }[attr];
-  var answer = meta[attr];
-
-  var prompt = meta.name + '有几个' + attrName + '？';
-  
-  
-  var variantCodes = [featureKeys.indexOf(feature) + 1, attrKeys.indexOf(attr) + 1];
-
-  return {
-    knowledgePointId: pkp(plan),
-    knowledgePointIds: kpMetas.map(function(m) { return m.id; }),
-    questionType: plan.questionTypeId || 'fill',
-    difficulty: plan.difficulty,
-    spiralLevel: plan.spiralLevel || 1,
-    context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: String(answer),
-    answerMode: 'input',
-    data: {
-      mode: 'shape-to-apply',
-      steps: 1,
-      primaryKp: shapeKp.id,
-      shapeType: feature,
-      targetAttr: attr,
-      attrName: attrName,
-      operands: variantCodes,
-      composite: true
-    }
-  };
-}
-
 function createCompositeGenerator(spec) {
   spec = spec || {};
-  var mode = spec.mode || 'auto'; 
-  
+
   return {
     id: spec.id || 'generator:composite',
     subject: spec.subject || 'math',
     capabilities: ['calc', 'judge', 'fill', 'apply'],
-    questionTypes: ['calc', 'judge', 'fill', 'apply', 'oral'],
+    questionTypes: ['calc', 'judge', 'fill', 'apply'],
     knowledgePoints: spec.knowledgePoints || [],
     supportsComposite: true,
-    
+
     supports: function (plan) {
-      if (!plan || !plan.combine) return false;
-      if (!plan.knowledgePointIds || plan.knowledgePointIds.length < 2) return false;
-      
-      var kpIds = plan.knowledgePointIds;
-      var categories = new Set();
-      kpIds.forEach(function(id) {
-        var meta = getKpMeta(id);
-        if (meta) categories.add(meta.category);
-      });
-      return categories.size >= 2;
+      return !!(plan && plan.combine === true &&
+        Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length >= 2);
     },
-    
+
     generate: function (plan, context) {
       context = context || {};
+      var kpIds = (plan && Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length)
+        ? plan.knowledgePointIds
+        : (plan && plan.knowledgePointId ? [plan.knowledgePointId] : []);
+      if (kpIds.length < 2) {
+        throw new Error('Composite generator 需要至少 2 个知识点');
+      }
       var count = plan.count || 1;
       var questions = [];
-      var kpIds = plan.knowledgePointIds || [plan.knowledgePointId];
-      var kpMetas = kpIds.map(getKpMeta).filter(Boolean);
-      
-      if (kpMetas.length < 2) {
-        throw new Error('Composite generator 需要至少 2 个不同类别的 KP');
-      }
-      
       for (var i = 0; i < count; i++) {
-        var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-        var q;
-        
-        
-        var mode = spec.mode || 'auto';
-        if (mode === 'auto') {
-          var categories = new Set(kpMetas.map(function(m) { return m.category; }));
-          if (categories.has('algebra') && categories.has('geometry')) {
-            mode = 'shape-to-apply';
-          } else if (categories.has('algebra') && categories.has('measurement')) {
-            mode = 'measure-to-calc';
-          } else if (categories.has('algebra')) {
-            mode = 'calc-to-judge';
-          } else {
-            mode = 'calc-to-judge';
-          }
-        }
-        
-        switch (mode) {
-          case 'calc-to-judge':
-            q = makeCalcToJudge(plan, context, i, kpMetas, rng);
-            break;
-          case 'measure-to-calc':
-            q = makeMeasureToCalc(plan, context, i, kpMetas, rng);
-            break;
-          case 'shape-to-apply':
-            q = makeShapeToApply(plan, context, i, kpMetas, rng);
-            break;
-          default:
-            q = makeCalcToJudge(plan, context, i, kpMetas, rng);
-        }
-        
-        questions.push(q);
+        questions.push(makeCalcToJudge(plan, context, i, kpIds));
       }
       return questions;
     }
@@ -8876,7 +8058,6 @@ function buildAll() {
   return [
     createCompositeGenerator({
       id: 'generator:composite',
-      mode: 'auto',
       knowledgePoints: COMPOSITE_KPS
     })
   ];
@@ -8887,6 +8068,7 @@ module.exports = {
   createCompositeGenerator: createCompositeGenerator,
   buildAll: buildAll
 };
+
 };
 __defs["shared/generator/generators/counting.js"] = function (module, exports, require) {
 'use strict';
@@ -8894,7 +8076,6 @@ __defs["shared/generator/generators/counting.js"] = function (module, exports, r
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -8968,6 +8149,7 @@ function makeCountingQuestion(plan, context, i, kp) {
   else if (name.indexOf('组合') !== -1) type = 'choose';
   else if (name.indexOf('集合') !== -1) type = 'set';
 
+  var v = i; 
   var prompt, answer, steps;
   if (type === 'principle') {
     var m = Rng.randInt(rng, 3, 8);
@@ -8976,16 +8158,27 @@ function makeCountingQuestion(plan, context, i, kp) {
     answer = m * n;
     steps = 2;
   } else if (type === 'enumeration') {
-    var digits = [1, 2, 3, 4, 5];
-    var len = Rng.randInt(rng, 2, 3);
-    prompt = '用' + digits.slice(0, len + 1).join('、') + '这' + (len + 1) + '个数字，可以组成多少个没有重复数字的' + len + '位数？';
-    var ans = 1; for (var d = len + 1; d > len + 1 - len; d--) ans *= d;
-    answer = ans;
+    
+    var ENUM = [
+      { digits: [1, 2, 3, 4, 5], len: 2 },
+      { digits: [1, 2, 3, 4, 5], len: 3 },
+      { digits: [2, 3, 4, 5, 6], len: 2 },
+      { digits: [1, 3, 5, 7, 9], len: 3 }
+    ];
+    var en = ENUM[v % ENUM.length];
+    var used = en.digits.slice(0, en.len + 1);
+    var enumAns = 1; for (var d = 0; d < en.len; d++) enumAns *= (used.length - d);
+    prompt = '用' + used.join('、') + '这' + used.length + '个数字，可以组成多少个没有重复数字的' + en.len + '位数？';
+    answer = enumAns;
     steps = 3;
   } else if (type === 'worst-case') {
-    prompt = '一个盒子里有红、黄、蓝三种颜色的球各若干个，至少要摸出多少个球，才能保证有3个球颜色相同？';
-    answer = 7;
-    steps = 2;
+    var WC = [
+      { c: 3, k: 3, ans: 7 }, { c: 4, k: 3, ans: 9 }, { c: 2, k: 4, ans: 7 }, { c: 5, k: 2, ans: 6 }
+    ];
+    var wc = WC[v % WC.length];
+    var colorNames = ['红', '黄', '蓝', '绿', '紫'];
+    prompt = '一个盒子里有' + colorNames.slice(0, wc.c).join('、') + '等' + wc.c + '种颜色的球各若干个，至少要摸出多少个球，才能保证有' + wc.k + '个球颜色相同？';
+    answer = wc.c * (wc.k - 1) + 1; steps = 2;
   } else if (type === 'combination') {
     var shirts = Rng.randInt(rng, 2, 5);
     var pants = Rng.randInt(rng, 2, 5);
@@ -9013,44 +8206,63 @@ function makeCountingQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (type === 'bundling') {
     
-    var bn = Rng.randInt(rng, 5, 6);
+    var BUNDLE = [5, 6, 7, 8];
+    var bn = BUNDLE[v % BUNDLE.length];
     prompt = bn + '本不同的书排成一排，其中有 2 本必须相邻，一共有多少种不同的排法？';
     answer = factorial(2) * factorial(bn - 1);
     steps = 3;
   } else if (type === 'insertion') {
     
-    prompt = '3 名男生已按固定顺序排成一排（形成 4 个空位），现将 2 名女生插入空位，要求两名女生互不相邻，一共有多少种插入方法？';
-    answer = 4 * 3;
-    steps = 2;
+    var INS = [
+      { m: 3, f: 2 }, { m: 4, f: 2 }, { m: 4, f: 3 }, { m: 5, f: 2 }
+    ];
+    var ins = INS[v % INS.length];
+    var insAns = 1; for (var ii = 0; ii < ins.f; ii++) insAns *= (ins.m + 1 - ii);
+    prompt = ins.m + ' 名男生已按固定顺序排成一排（形成 ' + (ins.m + 1) + ' 个空位），现将 ' + ins.f + ' 名女生插入空位，要求女生互不相邻，一共有多少种插入方法？';
+    answer = insAns; steps = 2;
   } else if (type === 'starsbars') {
     
-    var sn = 7, sm = 3;
-    prompt = '把 ' + sn + ' 个相同的苹果分给 ' + sm + ' 个小朋友，每人至少分到 1 个，一共有多少种不同的分法？';
-    answer = nCr(sn - 1, sm - 1);
+    var SB = [
+      { sn: 7, sm: 3 }, { sn: 10, sm: 4 }, { sn: 8, sm: 2 }, { sn: 12, sm: 5 }
+    ];
+    var sb = SB[v % SB.length];
+    prompt = '把 ' + sb.sn + ' 个相同的苹果分给 ' + sb.sm + ' 个小朋友，每人至少分到 1 个，一共有多少种不同的分法？';
+    answer = nCr(sb.sn - 1, sb.sm - 1);
     steps = 2;
   } else if (type === 'pigeonhole') {
     
-    var colors = 4, want = 4;
-    prompt = '盒子里有红、黄、蓝、绿 4 种颜色的球各 10 个（球除颜色外完全相同）。至少要摸出多少个球，才能保证其中有 ' + want + ' 个球颜色相同？';
-    answer = colors * (want - 1) + 1;
+    var PH = [
+      { c: 4, k: 4 }, { c: 5, k: 3 }, { c: 3, k: 2 }, { c: 6, k: 3 }
+    ];
+    var ph = PH[v % PH.length];
+    var phColors = ['红', '黄', '蓝', '绿', '紫', '橙'];
+    prompt = '盒子里有' + phColors.slice(0, ph.c).join('、') + '等 ' + ph.c + ' 种颜色的球各若干个（球除颜色外完全相同）。至少要摸出多少个球，才能保证其中有 ' + ph.k + ' 个球颜色相同？';
+    answer = ph.c * (ph.k - 1) + 1;
     steps = 2;
   } else if (type === 'inclusion') {
     
-    var aN = 20, bN = 18, cN = 16, ab = 8, ac = 7, bc = 6, abc = 3, total = 40;
-    prompt = '某班共有 ' + total + ' 人，参加数学小组的有 ' + aN + ' 人，参加英语小组的有 ' + bN + ' 人，参加科学小组的有 ' + cN + ' 人；'
-      + '同时参加数学和英语的有 ' + ab + ' 人，同时参加数学和科学的有 ' + ac + ' 人，同时参加英语和科学的有 ' + bc + ' 人；'
-      + '三个小组都参加的有 ' + abc + ' 人。三个小组都没参加的有多少人？';
-    answer = total - (aN + bN + cN - ab - ac - bc + abc);
+    var INC = [
+      { total: 40, aN: 20, bN: 18, cN: 16, ab: 8, ac: 7, bc: 6, abc: 3 },
+      { total: 50, aN: 25, bN: 22, cN: 20, ab: 10, ac: 9, bc: 8, abc: 4 },
+      { total: 45, aN: 18, bN: 16, cN: 15, ab: 7, ac: 6, bc: 5, abc: 2 }
+    ];
+    var inc = INC[v % INC.length];
+    prompt = '某班共有 ' + inc.total + ' 人，参加数学小组的有 ' + inc.aN + ' 人，参加英语小组的有 ' + inc.bN + ' 人，参加科学小组的有 ' + inc.cN + ' 人；'
+      + '同时参加数学和英语的有 ' + inc.ab + ' 人，同时参加数学和科学的有 ' + inc.ac + ' 人，同时参加英语和科学的有 ' + inc.bc + ' 人；'
+      + '三个小组都参加的有 ' + inc.abc + ' 人。三个小组都没参加的有多少人？';
+    answer = inc.total - (inc.aN + inc.bN + inc.cN - inc.ab - inc.ac - inc.bc + inc.abc);
     steps = 3;
   } else if (type === 'recursion') {
     
-    var rn = 5;
+    var REC = [5, 6, 7, 4];
+    var rn = REC[v % REC.length];
     prompt = '小明上楼梯，每次可以走 1 级或 2 级台阶。他上到第 ' + rn + ' 级台阶时，一共有多少种不同的走法？';
     answer = stairWays(rn);
     steps = 3;
   } else if (type === 'derangement') {
     
-    var dn = 4;
+    var DER = [4, 3, 5, 6];
+    var dn = DER[v % DER.length];
     prompt = '有 ' + dn + ' 封信和写好对应地址的 ' + dn + ' 个信封，把信全部装错（没有一封信装进正确的信封），一共有多少种装法？';
     answer = derangement(dn);
     steps = 2;
@@ -9137,7 +8349,7 @@ function createCountingGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeCountingQuestion(plan, context, i, kp));
@@ -9169,7 +8381,6 @@ __defs["shared/generator/generators/reasoning.js"] = function (module, exports, 
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -9188,7 +8399,7 @@ function seedFor(plan, context, i) {
 
 function makeReasoningQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '逻辑推理';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '逻辑推理';
 
   var type = 'generic';
   if (name.indexOf('抽屉') !== -1 || name.indexOf('鸽巢') !== -1) type = 'drawer';
@@ -9204,60 +8415,135 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else type = 'logic';
 
   var prompt, answer, steps;
+  var v = i; 
   if (type === 'drawer') {
-    var colors = Rng.randInt(rng, 3, 5);
-    prompt = '有红、黄、蓝、绿四种颜色的球，至少要摸出多少个，才能保证有2个球颜色相同？';
-    answer = colors + 1;
-    steps = 2;
+    var DRAWER = [
+      { c: ['红', '黄', '蓝', '绿'], k: 2, ans: 5 },
+      { c: ['红', '黄', '蓝'], k: 2, ans: 4 },
+      { c: ['红', '黄', '蓝', '绿'], k: 3, ans: 9 },
+      { c: ['黑', '白'], k: 2, ans: 3 }
+    ];
+    var d = DRAWER[v % DRAWER.length];
+    prompt = '有' + d.c.length + '种颜色的球（' + d.c.join('、') + '），至少要摸出多少个，才能保证有' + d.k + '个球颜色相同？';
+    answer = d.ans; steps = 2;
   } else if (type === 'extreme') {
-    var twoSum = Rng.randInt(rng, 10, 50);
-    prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
-    var half = Math.floor(twoSum / 2);
-    answer = half * (twoSum - half);
-    steps = 2;
+    if (v % 3 === 0) {
+      var twoSum = Rng.randInt(rng, 10, 50);
+      var half = Math.floor(twoSum / 2);
+      prompt = '两个数的和是' + twoSum + '，这两个数的乘积最大是多少？';
+      answer = half * (twoSum - half); steps = 2;
+    } else if (v % 3 === 1) {
+      var twoSum2 = Rng.randInt(rng, 10, 50);
+      var half2 = Math.floor(twoSum2 / 2);
+      prompt = '两个数的和是' + twoSum2 + '，这两个数相差最小时分别是多少？';
+      answer = half2 + ' 和 ' + (twoSum2 - half2); steps = 2;
+    } else {
+      var threeSum = Rng.randInt(rng, 12, 60);
+      var base = Math.floor(threeSum / 3);
+      var rem = threeSum - 3 * base;
+      var parts = [base, base, base]; parts[2] += rem;
+      prompt = '三个数的和是' + threeSum + '，这三个数尽可能接近时乘积最大，最大乘积是多少？';
+      answer = parts[0] * parts[1] * parts[2]; steps = 2;
+    }
   } else if (type === 'chicken-rabbit') {
-    var heads = Rng.randInt(rng, 8, 20);
-    var feet = heads * 2 + Rng.randInt(rng, 6, 20);
-    prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
-    var rabb = (feet - heads * 2) / 2;
-    answer = '鸡' + (heads - rabb) + '只，兔' + rabb + '只';
-    steps = 3;
+    if (v % 3 === 0) {
+      var heads = Rng.randInt(rng, 8, 20);
+      var rabb0 = Rng.randInt(rng, 3, 8);
+      var feet = heads * 2 + rabb0 * 2;
+      prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
+      var r0 = (feet - heads * 2) / 2;
+      answer = '鸡' + (heads - r0) + '只，兔' + r0 + '只'; steps = 3;
+    } else if (v % 3 === 1) {
+      var D = Rng.randInt(rng, 1, 5);
+      var R = Rng.randInt(rng, 3, 8);
+      var F = 6 * R + 2 * D;
+      prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
+      answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
+    } else {
+      var D2 = Rng.randInt(rng, 1, 4);
+      var C = Rng.randInt(rng, 3, 8);
+      var F2 = 6 * C + 4 * D2;
+      prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
+      answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
+    }
   } else if (type === 'tree-planting') {
-    var total = Rng.randInt(rng, 100, 500);
-    var gap = Rng.randInt(rng, 5, 20);
-    prompt = '在一条长' + total + '米的公路一边植树，每隔' + gap + '米栽一棵（两端都栽），一共要栽多少棵？';
-    answer = Math.floor(total / gap) + 1;
-    steps = 2;
+    var L = Rng.randInt(rng, 100, 500);
+    var G = Rng.randInt(rng, 5, 20);
+    var TP = [
+      { desc: '两端都栽', ans: Math.floor(L / G) + 1 },
+      { desc: '两端都不栽', ans: Math.floor(L / G) - 1 },
+      { desc: '只在一端栽', ans: Math.floor(L / G) },
+      { desc: '在环形操场周围栽（封闭）', ans: Math.floor(L / G) }
+    ];
+    var tp = TP[v % TP.length];
+    prompt = '在一条长' + L + '米的公路一边植树，每隔' + G + '米栽一棵（' + tp.desc + '），一共要栽多少棵？';
+    answer = tp.ans; steps = 2;
   } else if (type === 'find-defect') {
-    prompt = '有9瓶水，其中1瓶是次品（略轻）。用天平称，至少称几次就能找出次品？';
-    answer = 2;
-    steps = 2;
+    var DEFECT = [
+      { n: 3, ans: 1 }, { n: 9, ans: 2 }, { n: 27, ans: 3 }, { n: 81, ans: 4 }
+    ];
+    var df = DEFECT[v % DEFECT.length];
+    prompt = '有' + df.n + '瓶水，其中1瓶是次品（略轻）。用天平称，至少称几次就能找出次品？';
+    answer = df.ans; steps = 2;
   } else if (type === 'handshake') {
-    var n = Rng.randInt(rng, 4, 10);
-    prompt = n + '个人握手，每两个人握一次手，一共要握多少次？';
-    answer = n * (n - 1) / 2;
-    steps = 2;
+    var HSK = [
+      { w: '个人，每两个人握一次手', ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '支球队进行单循环比赛，每两队赛一场', ans: function (n) { return n * (n - 1) / 2; } },
+      { w: '个点，每两个点连一条线段', ans: function (n) { return n * (n - 1) / 2; } }
+    ];
+    var hs = HSK[v % HSK.length];
+    var n = Rng.randInt(rng, 4, 12);
+    prompt = n + hs.w + '，一共需要多少次？';
+    answer = hs.ans(n); steps = 2;
   } else if (type === 'sudoku') {
-    prompt = name + '：请根据已知数字推理出空格中的数字。';
-    answer = '（推理过程略）';
-    steps = 4;
+    var SUD = [
+      { w: '请根据已知数字推理出空格中的数字。' },
+      { w: '在 4×4 数独中，根据已知数字填出空格。' },
+      { w: '在 6×6 数独中，根据已知数字填出空格。' }
+    ];
+    var su = SUD[v % SUD.length];
+    prompt = name + '：' + su.w;
+    answer = '（推理过程略）'; steps = 4;
   } else if (type === 'winning') {
-    prompt = name + '：两堆棋子，每次只能从一堆中取1~3个，取到最后一个棋子者胜。先手必胜还是后手必胜？';
-    answer = '先手必胜（对称策略）';
-    steps = 3;
+    var WIN = [
+      { w: '两堆棋子，每次只能从一堆中取 1~3 个，取到最后一个棋子者胜', a: '先手必胜（对称策略）' },
+      { w: '一堆石子，每次可取 1~4 个，取到最后一个者胜', a: '先手必胜（凑 5 策略）' },
+      { w: '三堆石子，每次从一堆取任意个，取到最后一个者胜', a: '先手必胜（尼姆和策略）' }
+    ];
+    var win = WIN[v % WIN.length];
+    prompt = name + '：' + win.w + '。先手必胜还是后手必胜？';
+    answer = win.a; steps = 3;
   } else if (type === 'optimization') {
-    var pans = Rng.randInt(rng, 2, 4);
-    prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要2分钟。至少需要多少分钟？';
-    answer = pans * 2;
-    steps = 3;
+    if (v % 3 === 0) {
+      var pans = Rng.randInt(rng, 2, 5);
+      prompt = '用一口锅烙' + pans + '张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？';
+      answer = pans * 2; steps = 3;
+    } else if (v % 3 === 1) {
+      prompt = '煮一个鸡蛋需要 8 分钟，同时可以洗锅 2 分钟。至少需要多少分钟？';
+      answer = 8; steps = 2;
+    } else {
+      prompt = '看一集动画需要 15 分钟，同时可以写完作业 10 分钟。至少需要多少分钟？';
+      answer = 15; steps = 2;
+    }
   } else if (type === 'seq') {
-    prompt = name + '：观察数列规律，写出下一个数：2, 4, 6, 8, ?';
-    answer = 10;
-    steps = 1;
+    var SEQ = [
+      { s: '2, 4, 6, 8', ans: 10 },
+      { s: '1, 3, 5, 7', ans: 9 },
+      { s: '1, 2, 4, 8', ans: 16 },
+      { s: '1, 1, 2, 3, 5', ans: 8 }
+    ];
+    var sq = SEQ[v % SEQ.length];
+    prompt = name + '：观察数列规律，写出下一个数：' + sq.s + ', ?';
+    answer = sq.ans; steps = 1;
   } else {
-    prompt = name + '：A、B、C、D四人中有一人说谎。根据条件推理谁在说谎。';
-    answer = '（逻辑推理略）';
-    steps = 4;
+    var LOGIC = [
+      { w: 'A、B、C、D 四人中有一人说谎。根据条件推理谁在说谎。' },
+      { w: '甲、乙、丙三人中只有一人说真话，根据各自陈述推理谁说真话。' },
+      { w: '三个盒子分别标“苹果”“橘子”“混合”，标签全贴错。只从一个盒子取一个水果，就能判断全部，如何判断？' }
+    ];
+    var lg = LOGIC[v % LOGIC.length];
+    prompt = name + '：' + lg.w;
+    answer = '（逻辑推理略）'; steps = 4;
   }
 
   return {
@@ -9319,7 +8605,7 @@ function createReasoningGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeReasoningQuestion(plan, context, i, kp));
@@ -9351,7 +8637,6 @@ __defs["shared/generator/generators/stats.js"] = function (module, exports, requ
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -9370,7 +8655,7 @@ function seedFor(plan, context, i) {
 
 function makeStatsQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '统计问题';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '统计问题';
 
   var type = 'generic';
   if (name.indexOf('平均') !== -1) type = 'average';
@@ -9406,21 +8691,44 @@ function makeStatsQuestion(plan, context, i, kp) {
   } else if (type === 'line-chart') {
     var wdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
     series = buildSeries(wdays, 18, 35);
+    series.sort(function (x, y) { return wdays.indexOf(x.label) - wdays.indexOf(y.label); });
     var hi = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
-    prompt = name + '：根据折线图回答：哪一天的温度最高？最高温度是多少？';
-    answer = hi.label + '，' + hi.value + '℃'; steps = 1;
+    var lo = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
+    var LC_Q = [
+      { q: '哪一天的温度最高？最高温度是多少？', a: hi.label + '，' + hi.value + '℃' },
+      { q: '哪一天的温度最低？最低温度是多少？', a: lo.label + '，' + lo.value + '℃' },
+      { q: '温度最高的一天比最低的一天高多少℃？', a: (hi.value - lo.value) + '℃' }
+    ];
+    var lcq = LC_Q[i % LC_Q.length];
+    prompt = name + '：根据折线图回答：' + lcq.q;
+    answer = lcq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'line', params: { title: '一周气温变化', data: series } };
   } else if (type === 'bar-chart' || type === 'chart-read') {
     series = buildSeries(PEOPLE_LABELS, 20, 60);
+    series.sort(function (x, y) { return PEOPLE_LABELS.indexOf(x.label) - PEOPLE_LABELS.indexOf(y.label); });
     var hiBar = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
-    prompt = name + '：根据条形图回答：哪个年级的人数最多？多多少？';
-    answer = hiBar.label + '，' + hiBar.value + '人'; steps = 1;
+    var loBar = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
+    var BAR_Q = [
+      { q: '哪个年级的人数最多？多多少？', a: hiBar.label + '，' + hiBar.value + '人' },
+      { q: '哪个年级的人数最少？少多少？', a: loBar.label + '，' + loBar.value + '人' },
+      { q: '人数最多的年级比最少的年级多多少人？', a: (hiBar.value - loBar.value) + '人' }
+    ];
+    var bq = BAR_Q[i % BAR_Q.length];
+    prompt = name + '：根据条形图回答：' + bq.q;
+    answer = bq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
   } else if (type === 'pie-chart') {
-    var percents = [30, 25, 25, 20];
-    var pieData = SUBJECT_LABELS.map(function (l, pi) { return { label: l, percent: percents[pi] }; });
-    prompt = name + '：根据扇形图，如果总人数是100人，喜欢语文的有多少人？';
-    answer = pieData[0].percent + '人'; steps = 2;
+    var PIE = [
+      { p: [30, 25, 25, 20], ask: '喜欢语文的有多少人？', idx: 0 },
+      { p: [30, 25, 25, 20], ask: '喜欢数学和英语的一共有多少人？', idx: -1, extra: 45 },
+      { p: [40, 20, 25, 15], ask: '喜欢语文的有多少人？', idx: 0 },
+      { p: [20, 30, 30, 20], ask: '喜欢英语的有多少人？', idx: 2 }
+    ];
+    var pie = PIE[i % PIE.length];
+    var pieData = SUBJECT_LABELS.map(function (l, pi) { return { label: l, percent: pie.p[pi] }; });
+    var pieAns = pie.idx < 0 ? pie.extra + '人' : pieData[pie.idx].percent + '人';
+    prompt = name + '：根据扇形图，如果总人数是100人，' + pie.ask;
+    answer = pieAns; steps = 2;
     graphic = { type: 'chart', subtype: 'pie', params: { title: '最喜欢的科目', data: pieData } };
   } else if (type === 'double-chart') {
     var dLabels = ['跳绳', '跑步', '踢毽', '篮球'];
@@ -9430,19 +8738,45 @@ function makeStatsQuestion(plan, context, i, kp) {
     var gapMax = series.slice().sort(function (x, y) {
       return Math.abs(y.a - y.b) - Math.abs(x.a - x.b);
     })[0];
-    prompt = name + '：复式统计图中，男生和女生在哪一项上的差距最大？';
-    answer = gapMax.label + '（差 ' + Math.abs(gapMax.a - gapMax.b) + ' 人）'; steps = 2;
+    var gapMin = series.slice().sort(function (x, y) {
+      return Math.abs(x.a - x.b) - Math.abs(y.a - y.b);
+    })[0];
+    var DC_Q = [
+      { q: '男生和女生在哪一项上的差距最大？', a: gapMax.label + '（差 ' + Math.abs(gapMax.a - gapMax.b) + ' 人）' },
+      { q: '男生和女生在哪一项上的差距最小？', a: gapMin.label + '（差 ' + Math.abs(gapMin.a - gapMin.b) + ' 人）' },
+      { q: '男生在哪一项上参加的人数最多？', a: series.slice().sort(function (x, y) { return y.a - x.a; })[0].label + '（' + series.slice().sort(function (x, y) { return y.a - x.a; })[0].a + ' 人）' }
+    ];
+    var dcq = DC_Q[i % DC_Q.length];
+    prompt = name + '：复式统计图中，' + dcq.q;
+    answer = dcq.a; steps = 2;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '男生女生运动情况', yLabel: '人数', data: series } };
   } else if (type === 'data-collect') {
-    series = buildSeries(FRUIT_LABELS, 10, 40);
-    prompt = name + '：用正字法收集全班同学喜欢的水果，数据如下，请整理成统计表。';
+    
+    
+    var TALLY_VARIANTS = [
+      { labels: FRUIT_LABELS, title: '最喜欢的果汁', unit: '人', ask: '用正字法收集全班同学喜欢的水果，数据如下，请整理成统计表。' },
+      { labels: ['跳绳', '跑步', '踢毽', '篮球', '乒乓球'], title: '喜欢的运动', unit: '人', ask: '调查同学们喜欢的运动项目，用画“√”的方法记录，请整理成数据表。' },
+      { labels: ['故事书', '科普书', '漫画', '作文书'], title: '图书角类别', unit: '本', ask: '图书角有各类图书，分类清点数量后请填入统计表。' },
+      { labels: ['晴', '阴', '雨', '雪'], title: '一周天气', unit: '天', ask: '记录一周的天气情况，用统计表整理各类天气的天数。' }
+    ];
+    var tv = TALLY_VARIANTS[i % TALLY_VARIANTS.length];
+    series = buildSeries(tv.labels, 10, 40);
+    prompt = name + '：' + tv.ask;
     answer = '（统计整理略）'; steps = 2;
-    graphic = { type: 'chart', subtype: 'bar', params: { title: '最喜欢的果汁', yLabel: '人数', data: series } };
+    graphic = { type: 'chart', subtype: 'bar', params: { title: tv.title, yLabel: tv.unit, data: series } };
   } else {
     series = buildSeries(PEOPLE_LABELS, 20, 60);
+    series.sort(function (x, y) { return PEOPLE_LABELS.indexOf(x.label) - PEOPLE_LABELS.indexOf(y.label); });
     var hiRead = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
-    prompt = name + '：根据统计表中的数据，回答相关问题。';
-    answer = hiRead.label + '，' + hiRead.value + '人'; steps = 1;
+    var loRead = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
+    var READ_Q = [
+      { q: '人数最多的年级是哪一年级？有多少人？', a: hiRead.label + '，' + hiRead.value + '人' },
+      { q: '人数最少的年级是哪一年级？有多少人？', a: loRead.label + '，' + loRead.value + '人' },
+      { q: '人数最多的年级比最少的年级多多少人？', a: (hiRead.value - loRead.value) + '人' }
+    ];
+    var rq = READ_Q[i % READ_Q.length];
+    prompt = name + '：根据统计表中的数据，' + rq.q;
+    answer = rq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
   }
 
@@ -9507,7 +8841,7 @@ function createStatsGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeStatsQuestion(plan, context, i, kp));
@@ -9539,7 +8873,6 @@ __defs["shared/generator/generators/picture-equation.js"] = function (module, ex
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -9681,7 +9014,7 @@ function createPictureEquationGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makePictureEquationQuestion(plan, context, i, kp));
@@ -9713,7 +9046,6 @@ __defs["shared/generator/generators/c1-number-puzzle.js"] = function (module, ex
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -9732,14 +9064,15 @@ function seedFor(plan, context, i) {
 
 function makePuzzleQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '数字谜';
-  var id = kp.id || '';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '数字谜';
+  var id = (kp && (kp.id || (kp.identity && kp.identity.id)) || kp.id) || '';
 
   var isVertical = name.indexOf('竖式') !== -1 || id.indexOf('vertical') !== -1 || id.indexOf('digit-puzzle') !== -1;
   var isHorizontal = name.indexOf('横式') !== -1 || id.indexOf('horizontal') !== -1;
   var isSymbol = name.indexOf('符号') !== -1 || name.indexOf('字母') !== -1 || id.indexOf('symbol') !== -1;
   var isDigitReasoning = name.indexOf('数字推理') !== -1 || id.indexOf('digit-reasoning') !== -1 || id.indexOf('number-puzzle-competition') !== -1;
 
+  var v = i; 
   var prompt, answer;
 
   if (isVertical) {
@@ -9771,9 +9104,14 @@ function makePuzzleQuestion(plan, context, i, kp) {
     answer = String(cc - 1);
   } else if (isDigitReasoning) {
     
-    prompt = '一个三位数的各位数字之和是 15，百位数字比十位数字大 3，个位数字是十位数字的 2 倍。这个三位数是多少？';
-    
-    answer = '636';
+    var DR = [
+      { d: '百位数字比十位数字大 3，个位数字是十位数字的 2 倍，各位数字之和是 15', ans: '636' },
+      { d: '百位数字比十位数字大 2，个位数字是十位数字的 3 倍，各位数字之和是 17', ans: '539' },
+      { d: '百位数字是十位数字的 2 倍，个位比十位大 1，各位数字之和是 9', ans: '423' }
+    ];
+    var dr = DR[v % DR.length];
+    prompt = '一个三位数，' + dr.d + '。这个三位数是多少？';
+    answer = dr.ans;
   } else {
     prompt = name + '：请根据竖式和横式中的线索，推算每个字母代表的数字。';
     answer = 'A=1, B=2, C=3';
@@ -9836,7 +9174,7 @@ function createC1Generator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makePuzzleQuestion(plan, context, i, kp));
@@ -9868,7 +9206,6 @@ __defs["shared/generator/generators/c2-number-theory.js"] = function (module, ex
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 var OS = require("shared/generator/core/op-semantics.js");
 var MUL = OS.symbol('multiply') || '×';
 
@@ -9892,8 +9229,8 @@ function lcm(a, b) { return a / gcd(a, b) * b; }
 
 function makeTheoryQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '数论问题';
-  var id = kp.id || '';
+  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '数论问题';
+  var id = (kp && (kp.id || (kp.identity && kp.identity.id))) || '';
 
   var isParity = name.indexOf('奇偶') !== -1;
   var isDivisible = name.indexOf('整除') !== -1 || id.indexOf('divisible') !== -1 || id.indexOf('divisibility') !== -1;
@@ -9907,6 +9244,7 @@ function makeTheoryQuestion(plan, context, i, kp) {
   var isDiophantine = name.indexOf('不定方程') !== -1;
   var isModulo = name.indexOf('模运算') !== -1 || name.indexOf('周期') !== -1;
 
+  var v = i; 
   var prompt, answer;
 
   if (isParity) {
@@ -9965,17 +9303,22 @@ function makeTheoryQuestion(plan, context, i, kp) {
     answer = count;
   } else if (isExtreme) {
     
-    prompt = '在 1~100 的自然数中，能被 3 整除但不能被 5 整除的数最大是多少？';
-    answer = '99';
+    var EXT = [{ hi: 100, d1: 3, d2: 5, ans: 99 }, { hi: 100, d1: 7, d2: 3, ans: 98 }, { hi: 50, d1: 5, d2: 2, ans: 45 }];
+    var ext = EXT[v % EXT.length];
+    prompt = '在 1~' + ext.hi + ' 的自然数中，能被 ' + ext.d1 + ' 整除但不能被 ' + ext.d2 + ' 整除的数最大是多少？';
+    answer = String(ext.ans);
   } else if (isDiophantine) {
     
-    prompt = '方程 3x + 2y = 17 有多少组正整数解？';
-    answer = '2 组（x=1,y=7 和 x=3,y=4 和 x=5,y=1）';
+    var DIO = [{ s: '3x + 2y = 17', ans: '3 组（x=1,y=7；x=3,y=4；x=5,y=1）' }, { s: '5x + 2y = 24', ans: '2 组（x=2,y=7；x=4,y=2）' }, { s: '2x + 3y = 18', ans: '2 组（x=3,y=4；x=6,y=2）' }];
+    var dio = DIO[v % DIO.length];
+    prompt = '方程 ' + dio.s + ' 有多少组正整数解？';
+    answer = dio.ans;
   } else if (isModulo) {
     
-    prompt = '计算 3^2024 的个位数字。';
-    
-    answer = '1';
+    var MOD = [{ base: 3, exp: 2024, ans: '1' }, { base: 7, exp: 2023, ans: '3' }, { base: 2, exp: 2025, ans: '2' }];
+    var mod = MOD[v % MOD.length];
+    prompt = '计算 ' + mod.base + '^' + mod.exp + ' 的个位数字。';
+    answer = mod.ans;
   } else {
     prompt = name + '：请运用数论知识解答这个问题。';
     answer = '数论问题解答';
@@ -10049,7 +9392,7 @@ function createC2Generator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeTheoryQuestion(plan, context, i, kp));
@@ -10081,7 +9424,6 @@ __defs["shared/generator/generators/c5-c6-journey-engineering.js"] = function (m
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -10118,6 +9460,7 @@ function makeQuestion(plan, context, i, kp) {
   var isComplex = id.indexOf('complex') !== -1 || id.indexOf('competition') !== -1 || name.indexOf('综合') !== -1;
   var isBasic = id.indexOf('basic') !== -1 || name.indexOf('基本行程') !== -1;
 
+  var v = i; 
   var prompt, answer, steps;
 
   if (isWork) {
@@ -10192,31 +9535,33 @@ function makeQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (isAverage) {
     
-    var av1 = 30, av2 = 60;
-    var avg = 2 * av1 * av2 / (av1 + av2);
-    prompt = '小明骑车从家到书店，去时每小时行 ' + av1 + ' 千米，沿原路返回时每小时行 ' + av2 + ' 千米。'
-      + '求小明往返的平均速度。';
+    var AV = [{ a: 30, b: 60 }, { a: 40, b: 60 }, { a: 20, b: 30 }, { a: 50, b: 75 }];
+    var av = AV[v % AV.length];
+    var avg = 2 * av.a * av.b / (av.a + av.b);
+    prompt = '小明骑车从家到书店，去时每小时行 ' + av.a + ' 千米，沿原路返回时每小时行 ' + av.b + ' 千米。求小明往返的平均速度。';
     answer = avg;
     steps = 3;
   } else if (isRatio) {
     
-    prompt = '走同一段路，甲、乙两人的速度比是 3:2。甲走完全程用了 4 小时，乙走完全程需要多少小时？';
-    answer = 6; 
+    var RAT = [{ r: '3:2', ta: 4, tb: 6 }, { r: '4:3', ta: 6, tb: 8 }, { r: '2:1', ta: 3, tb: 6 }];
+    var rat = RAT[v % RAT.length];
+    prompt = '走同一段路，甲、乙两人的速度比是 ' + rat.r + '。甲走完全程用了 ' + rat.ta + ' 小时，乙走完全程需要多少小时？';
+    answer = rat.tb;
     steps = 3;
   } else if (isInterval) {
     
-    prompt = '一条公交线路上，公交车每隔 6 分钟发一班，车速为每分钟 500 米。'
-      + '小明沿公交线路以每分钟 100 米的速度与公交车同向步行。'
-      + '每隔多少分钟会有一辆公交车从身后追上小明？';
-    
-    answer = 7.5;
+    var INT = [{ interval: 6, car: 500, walk: 100, ans: 7.5 }, { interval: 10, car: 600, walk: 200, ans: 15 }, { interval: 8, car: 500, walk: 100, ans: 10 }];
+    var itv = INT[v % INT.length];
+    prompt = '一条公交线路上，公交车每隔 ' + itv.interval + ' 分钟发一班，车速为每分钟 ' + itv.car + ' 米。'
+      + '小明沿公交线路以每分钟 ' + itv.walk + ' 米的速度与公交车同向步行。每隔多少分钟会有一辆公交车从身后追上小明？';
+    answer = itv.ans;
     steps = 3;
   } else if (isPickup) {
     
-    prompt = '汽车送一批人去机场，去程每小时行 60 千米，返程（空车）每小时行 90 千米，往返共用 5 小时（不含上下车时间）。'
-      + '出发点到机场的距离是多少千米？';
-    
-    answer = 180;
+    var PK = [{ go: 60, back: 90, total: 5, ans: 180 }, { go: 40, back: 60, total: 5, ans: 120 }, { go: 50, back: 75, total: 5, ans: 150 }];
+    var pk = PK[v % PK.length];
+    prompt = '汽车送一批人去机场，去程每小时行 ' + pk.go + ' 千米，返程（空车）每小时行 ' + pk.back + ' 千米，往返共用 ' + pk.total + ' 小时（不含上下车时间）。出发点到机场的距离是多少千米？';
+    answer = pk.ans;
     steps = 3;
   } else if (isComplex || isBasic) {
     
@@ -10315,7 +9660,7 @@ function createJourneyEngineeringGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i, kp));
@@ -10347,7 +9692,6 @@ __defs["shared/generator/generators/c7-clever-calc.js"] = function (module, expo
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 var OS = require("shared/generator/core/op-semantics.js");
 var MUL = OS.symbol('multiply') || '×';
 var DIV = OS.symbol('divide') || '÷';
@@ -10394,6 +9738,7 @@ function makeQuestion(plan, context, i, kp) {
   var isComplexFrac = id.indexOf('complex-fraction') !== -1 || name.indexOf('繁分数') !== -1;
   var isSeqSum = id.indexOf('sequence-sum') !== -1 || name.indexOf('数列求和') !== -1 || name.indexOf('平方和') !== -1 || name.indexOf('立方和') !== -1;
 
+  var v = i; 
   var prompt, answer, steps;
 
   if (isExtract) {
@@ -10406,10 +9751,10 @@ function makeQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (isRounding) {
     
-    var nines = [9, 99, 999, 9999];
-    var sum = nines.reduce(function (s, x) { return s + x; }, 0);
-    prompt = '用凑整法巧算：' + nines.join(' + ');
-    answer = sum;
+    var RND = [{ t: [9, 99, 999, 9999], sum: 11106 }, { t: [8, 98, 998, 9998], sum: 11102 }, { t: [19, 199, 1999], sum: 2217 }, { t: [4, 44, 444], sum: 492 }];
+    var rnd = RND[v % RND.length];
+    prompt = '用凑整法巧算：' + rnd.t.join(' + ');
+    answer = rnd.sum;
     steps = 2;
   } else if (isFracSplit) {
     
@@ -10435,8 +9780,10 @@ function makeQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (isRecurring) {
     
-    prompt = '把循环小数化成分数：0.333…（3 循环）';
-    answer = frac(1, 3);
+    var REC = [{ s: '0.333…（3 循环）', n: 1, d: 3 }, { s: '0.666…（6 循环）', n: 2, d: 3 }, { s: '0.1666…（6 循环）', n: 1, d: 6 }, { s: '0.8333…（3 循环）', n: 5, d: 6 }];
+    var rec = REC[v % REC.length];
+    prompt = '把循环小数化成分数：' + rec.s;
+    answer = frac(rec.n, rec.d);
     steps = 2;
   } else if (isDefineOp) {
     
@@ -10447,15 +9794,17 @@ function makeQuestion(plan, context, i, kp) {
     steps = 2;
   } else if (isEstimate) {
     
-    var eSum = 1 / 2 + 1 / 3 + 1 / 4;
-    prompt = '估算（写出整数部分）：1/2 + 1/3 + 1/4 的结果的整数部分是多少？';
-    answer = Math.floor(eSum);
+    var EST = [{ t: ['1/2', '1/3', '1/4'], val: 1.0833, ans: 1 }, { t: ['1/3', '1/4', '1/5'], val: 0.7833, ans: 0 }, { t: ['1/2', '1/4', '1/8'], val: 0.875, ans: 0 }, { t: ['1/2', '1/3', '1/6'], val: 1, ans: 1 }];
+    var est = EST[v % EST.length];
+    prompt = '估算（写出整数部分）：' + est.t.join(' + ') + ' 的结果的整数部分是多少？';
+    answer = est.ans;
     steps = 2;
   } else if (isComplexFrac) {
     
-    var n1 = 1, d1 = 2, n2 = 3, d2 = 4;
-    prompt = '化简繁分数：(1/2) ' + DIV + ' (3/4)';
-    answer = frac(n1 * d2, d1 * n2);
+    var CF = [{ n1: 1, d1: 2, n2: 3, d2: 4 }, { n1: 2, d1: 3, n2: 4, d2: 5 }, { n1: 3, d1: 4, n2: 1, d2: 2 }, { n1: 1, d1: 3, n2: 2, d2: 5 }];
+    var cf = CF[v % CF.length];
+    prompt = '化简繁分数：( ' + cf.n1 + '/' + cf.d1 + ' ) ' + DIV + ' ( ' + cf.n2 + '/' + cf.d2 + ' )';
+    answer = frac(cf.n1 * cf.d2, cf.d1 * cf.n2);
     steps = 2;
   } else if (isSeqSum) {
     
@@ -10537,7 +9886,7 @@ function createC7Generator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i, kp));
@@ -10569,7 +9918,6 @@ __defs["shared/generator/generators/c9-comprehensive.js"] = function (module, ex
 
 
 var Rng = require("shared/generator/core/rng.js");
-var KP = require("shared/knowledge/knowledge-point.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -10613,110 +9961,150 @@ function makeQuestion(plan, context, i, kp) {
   var isMock = id.indexOf('mock') !== -1 || name.indexOf('模拟') !== -1;
   var isIntegrated = id.indexOf('integrated') !== -1 || name.indexOf('综合应用') !== -1;
 
+  var v = i; 
   var prompt, answer, steps;
 
   if (isSumDiff) {
     
-    prompt = '甲、乙两数的和是 48，甲数是乙数的 3 倍。乙数是多少？';
-    answer = 12;
+    var SD = [{ s: 48, r: 3 }, { s: 60, r: 2 }, { s: 72, r: 5 }, { s: 96, r: 3 }];
+    var sd = SD[v % SD.length];
+    prompt = '甲、乙两数的和是 ' + sd.s + '，甲数是乙数的 ' + sd.r + ' 倍。乙数是多少？';
+    answer = sd.s / (sd.r + 1);
     steps = 2;
   } else if (isAge) {
     
-    prompt = '爸爸今年 40 岁，儿子今年 12 岁。多少年后爸爸的年龄正好是儿子的 2 倍？';
-    answer = 16;
+    var AGE = [{ f: 40, c: 12, k: 2 }, { f: 45, c: 15, k: 2 }, { f: 38, c: 10, k: 3 }, { f: 50, c: 20, k: 2 }];
+    var age = AGE[v % AGE.length];
+    var ageYears = (age.f - age.c) / (age.k - 1) - age.c;
+    prompt = '爸爸今年 ' + age.f + ' 岁，儿子今年 ' + age.c + ' 岁。多少年后爸爸的年龄正好是儿子的 ' + age.k + ' 倍？';
+    answer = ageYears;
     steps = 3;
   } else if (isProfitLoss) {
     
-    prompt = '幼儿园分苹果：如果每人分 3 个，则多出 7 个；如果每人分 4 个，则还差 5 个。'
-      + '幼儿园一共有多少个小朋友？';
-    answer = 12;
+    var PL = [{ p1: 3, e1: 7, p2: 4, s2: 5 }, { p1: 5, e1: 8, p2: 7, s2: 6 }, { p1: 4, e1: 10, p2: 6, s2: 2 }, { p1: 6, e1: 4, p2: 8, s2: 6 }];
+    var pl = PL[v % PL.length];
+    var plN = (pl.e1 + pl.s2) / (pl.p2 - pl.p1);
+    prompt = '幼儿园分苹果：如果每人分 ' + pl.p1 + ' 个，则多出 ' + pl.e1 + ' 个；如果每人分 ' + pl.p2 + ' 个，则还差 ' + pl.s2 + ' 个。幼儿园一共有多少个小朋友？';
+    answer = plN;
     steps = 3;
   } else if (isChicken) {
     
-    prompt = '鸡兔同笼，共有 20 个头、56 只脚。笼中兔子有多少只？';
-    answer = 8;
+    var CR = [{ h: 20, f: 56 }, { h: 30, f: 84 }, { h: 25, f: 70 }, { h: 18, f: 52 }];
+    var cr = CR[v % CR.length];
+    prompt = '鸡兔同笼，共有 ' + cr.h + ' 个头、' + cr.f + ' 只脚。笼中兔子有多少只？';
+    answer = (cr.f - 2 * cr.h) / 2;
     steps = 3;
   } else if (isAverage) {
     
-    prompt = '小明三次数学测验的平均分是 18 分（满分 20），前两次分别得 15 分和 20 分。'
-      + '第三次测验得了多少分？';
-    answer = 19;
+    var AV = [{ a: 18, x: 15, y: 20 }, { a: 90, x: 85, y: 92 }, { a: 88, x: 90, y: 86 }, { a: 80, x: 76, y: 82 }];
+    var av = AV[v % AV.length];
+    prompt = '小明三次数学测验的平均分是 ' + av.a + ' 分，前两次分别得 ' + av.x + ' 分和 ' + av.y + ' 分。第三次测验得了多少分？';
+    answer = 3 * av.a - av.x - av.y;
     steps = 2;
   } else if (isPlanting) {
     
-    prompt = '在一条长 100 米的小路一旁植树，每隔 5 米栽一棵，两端都要栽。一共要栽多少棵树？';
-    answer = 21;
+    var PLT = [{ l: 100, g: 5 }, { l: 120, g: 6 }, { l: 150, g: 5 }, { l: 200, g: 8 }];
+    var plt = PLT[v % PLT.length];
+    prompt = '在一条长 ' + plt.l + ' 米的小路一旁植树，每隔 ' + plt.g + ' 米栽一棵，两端都要栽。一共要栽多少棵树？';
+    answer = plt.l / plt.g + 1;
     steps = 2;
   } else if (isPhalanx) {
     
-    prompt = '同学们排成一个实心方阵，最外层每边有 8 人。最外层一共有多少人？';
-    answer = 28;
+    var PHX = [8, 10, 6, 12];
+    var phx = PHX[v % PHX.length];
+    prompt = '同学们排成一个实心方阵，最外层每边有 ' + phx + ' 人。最外层一共有多少人？';
+    answer = 4 * (phx - 1);
     steps = 2;
   } else if (isPeriodic) {
     
-    prompt = '节日彩灯按「红、黄、蓝」的顺序循环排列。第 30 盏灯是什么颜色？';
-    answer = '蓝';
+    var PER = [{ cols: ['红', '黄', '蓝'], pos: 30 }, { cols: ['红', '黄', '蓝', '绿'], pos: 25 }, { cols: ['红', '黄', '蓝'], pos: 22 }, { cols: ['黑', '白'], pos: 17 }];
+    var per = PER[v % PER.length];
+    prompt = '节日彩灯按「' + per.cols.join('、') + '」的顺序循环排列。第 ' + per.pos + ' 盏灯是什么颜色？';
+    answer = per.cols[(per.pos - 1) % per.cols.length];
     steps = 2;
   } else if (isGrass) {
     
-    prompt = '一片牧场的草均匀生长。可供 10 头牛吃 20 天，或供 15 头牛吃 10 天。'
-      + '照此计算，可供 25 头牛吃多少天？';
-    answer = 5;
+    var GRASS = [{ a: 10, b: 20, c: 15, d: 10, e: 25, t: 5 }, { a: 10, b: 30, c: 15, d: 15, e: 20, t: 10 }, { a: 8, b: 20, c: 12, d: 10, e: 14, t: 8 }];
+    var gr = GRASS[v % GRASS.length];
+    prompt = '一片牧场的草均匀生长。可供 ' + gr.a + ' 头牛吃 ' + gr.b + ' 天，或供 ' + gr.c + ' 头牛吃 ' + gr.d + ' 天。照此计算，可供 ' + gr.e + ' 头牛吃多少天？';
+    answer = gr.t;
     steps = 4;
   } else if (isFracPct) {
     
-    prompt = '小明读一本书，第一天读了全书的 1/4，第二天读了全书的 1/3，还剩 50 页没读。'
-      + '这本书一共有多少页？';
-    answer = 120;
+    var FR = [{ f1: '1/4', f2: '1/3', rem: 50, ans: 120 }, { f1: '1/3', f2: '1/4', rem: 60, ans: 144 }, { f1: '1/2', f2: '1/5', rem: 30, ans: 100 }];
+    var fr = FR[v % FR.length];
+    prompt = '小明读一本书，第一天读了全书的 ' + fr.f1 + '，第二天读了全书的 ' + fr.f2 + '，还剩 ' + fr.rem + ' 页没读。这本书一共有多少页？';
+    answer = fr.ans;
     steps = 3;
   } else if (isEconomics) {
     
-    prompt = '一件商品进价 80 元，标价 120 元。商店按标价打八折出售，每件可获利多少元？';
-    answer = 16;
+    var ECO = [{ cost: 80, price: 120, disc: 0.8, ans: 16 }, { cost: 100, price: 150, disc: 0.9, ans: 35 }, { cost: 60, price: 100, disc: 0.85, ans: 25 }];
+    var eco = ECO[v % ECO.length];
+    var ecoSale = Math.round(eco.price * eco.disc);
+    prompt = '一件商品进价 ' + eco.cost + ' 元，标价 ' + eco.price + ' 元。商店按标价打 ' + Math.round(eco.disc * 10) + ' 折出售，每件可获利多少元？';
+    answer = ecoSale - eco.cost;
     steps = 2;
   } else if (isInclusion) {
     
-    var total = 40, aN = 20, bN = 18, cN = 16, ab = 8, ac = 7, bc = 6, abc = 3;
-    prompt = '某班 40 人，参加数学小组 20 人、英语小组 18 人、科学小组 16 人；'
-      + '同时参加数学和英语的 8 人，数学和科学的 7 人，英语和科学的 6 人；三个小组都参加的 3 人。'
-      + '三个小组都没参加的有多少人？';
-    answer = total - (aN + bN + cN - ab - ac - bc + abc);
+    var INC = [
+      { total: 40, aN: 20, bN: 18, cN: 16, ab: 8, ac: 7, bc: 6, abc: 3 },
+      { total: 50, aN: 25, bN: 22, cN: 20, ab: 10, ac: 9, bc: 8, abc: 4 },
+      { total: 45, aN: 18, bN: 16, cN: 15, ab: 7, ac: 6, bc: 5, abc: 2 }
+    ];
+    var inc = INC[v % INC.length];
+    prompt = '某班 ' + inc.total + ' 人，参加数学小组 ' + inc.aN + ' 人、英语小组 ' + inc.bN + ' 人、科学小组 ' + inc.cN + ' 人；'
+      + '同时参加数学和英语的 ' + inc.ab + ' 人，数学和科学的 ' + inc.ac + ' 人，英语和科学的 ' + inc.bc + ' 人；三个小组都参加的 ' + inc.abc + ' 人。三个小组都没参加的有多少人？';
+    answer = inc.total - (inc.aN + inc.bN + inc.cN - inc.ab - inc.ac - inc.bc + inc.abc);
     steps = 3;
   } else if (isEq2) {
     
-    prompt = '已知甲、乙两数之和是 10，甲数比乙数大 4。甲数是多少？';
-    answer = 7;
+    var EQ2 = [{ s: 10, d: 4 }, { s: 14, d: 6 }, { s: 20, d: 8 }, { s: 16, d: 4 }];
+    var eq2 = EQ2[v % EQ2.length];
+    prompt = '已知甲、乙两数之和是 ' + eq2.s + '，甲数比乙数大 ' + eq2.d + '。甲数是多少？';
+    answer = (eq2.s + eq2.d) / 2;
     steps = 2;
   } else if (isEq1) {
     
-    prompt = '一个数的 3 倍加上 5 等于 20。这个数是多少？（列方程解答）';
-    answer = 5;
+    var EQ1 = [{ a: 3, b: 5, c: 20 }, { a: 2, b: 3, c: 11 }, { a: 4, b: 7, c: 9 }, { a: 5, b: 8, c: 28 }];
+    var eq1 = EQ1[v % EQ1.length];
+    prompt = '一个数的 ' + eq1.a + ' 倍加上 ' + eq1.b + ' 等于 ' + eq1.c + '。这个数是多少？（列方程解答）';
+    answer = (eq1.c - eq1.b) / eq1.a;
     steps = 2;
   } else if (isDiophantine) {
     
-    prompt = '求方程 3x + 2y = 17 的正整数解一共有多少组？';
-    answer = 3;
+    var DIO = [{ s: '3x + 2y = 17', ans: 3 }, { s: '5x + 2y = 24', ans: 3 }, { s: '2x + 3y = 18', ans: 4 }];
+    var dio = DIO[v % DIO.length];
+    prompt = '求方程 ' + dio.s + ' 的正整数解一共有多少组？';
+    answer = dio.ans;
     steps = 3;
   } else if (isRatio) {
     
-    prompt = '把 100 元奖金按 2:3:5 的比例分给甲、乙、丙三人。丙分得多少元？';
-    answer = 50;
+    var RAT = [{ r: [2, 3, 5], t: 100 }, { r: [1, 2, 3], t: 120 }, { r: [3, 4, 5], t: 120 }, { r: [2, 5, 3], t: 100 }];
+    var rat = RAT[v % RAT.length];
+    var ratSum = rat.r[0] + rat.r[1] + rat.r[2];
+    prompt = '把 ' + rat.t + ' 元奖金按 ' + rat.r[0] + ':' + rat.r[1] + ':' + rat.r[2] + ' 的比例分给甲、乙、丙三人。丙分得多少元？';
+    answer = rat.t * rat.r[2] / ratSum;
     steps = 2;
   } else if (isMixture) {
     
-    prompt = '把 300 克浓度 20% 的盐水和 200 克浓度 30% 的盐水混合。混合后盐水的浓度是百分之多少？';
-    answer = 24;
+    var MIX = [{ m1: 300, w1: 20, m2: 200, w2: 30, ans: 24 }, { m1: 200, w1: 10, m2: 300, w2: 20, ans: 16 }, { m1: 400, w1: 15, m2: 100, w2: 25, ans: 17 }];
+    var mix = MIX[v % MIX.length];
+    prompt = '把 ' + mix.m1 + ' 克浓度 ' + mix.w1 + '% 的盐水和 ' + mix.m2 + ' 克浓度 ' + mix.w2 + '% 的盐水混合。混合后盐水的浓度是百分之多少？';
+    answer = (mix.m1 * mix.w1 + mix.m2 * mix.w2) / (mix.m1 + mix.m2);
     steps = 3;
   } else if (isMisc) {
     
-    prompt = '一口平底锅每次最多能烙 2 张饼，每张饼两面都要烙，每面需 3 分钟。'
-      + '烙熟 3 张饼最少需要多少分钟？';
-    answer = 9;
+    var MISC = [{ k: 3, s: 3 }, { k: 3, s: 2 }, { k: 5, s: 3 }, { k: 4, s: 2 }];
+    var misc = MISC[v % MISC.length];
+    prompt = '一口平底锅每次最多能烙 2 张饼，每张饼两面都要烙，每面需 ' + misc.s + ' 分钟。烙熟 ' + misc.k + ' 张饼最少需要多少分钟？';
+    answer = misc.k * misc.s;
     steps = 3;
   } else if (isMock || isIntegrated) {
     
-    prompt = '商店运来苹果和梨共 120 千克，其中苹果的质量是梨的 3 倍。梨有多少千克？';
-    answer = 30;
+    var INT = [{ t: 120, r: 3 }, { t: 200, r: 4 }, { t: 160, r: 3 }, { t: 240, r: 5 }];
+    var it = INT[v % INT.length];
+    prompt = '商店运来苹果和梨共 ' + it.t + ' 千克，其中苹果的质量是梨的 ' + it.r + ' 倍。梨有多少千克？';
+    answer = it.t / (it.r + 1);
     steps = 2;
   } else {
     
@@ -10805,7 +10193,7 @@ function createC9Generator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
 
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i, kp));
@@ -11154,2359 +10542,6 @@ module.exports = {
   createClassificationGenerator: createClassificationGenerator,
   buildAll: buildAll
 };
-
-};
-__defs["shared/knowledge/knowledge-operation.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var VERSION = 1;
-
-  var OPERATIONS = {
-    add:        { id: 'add',        name: '加法',         description: '执行加法运算',            category: 'arithmetic' },
-    subtract:   { id: 'subtract',   name: '减法',         description: '执行减法运算',            category: 'arithmetic' },
-    multiply:   { id: 'multiply',   name: '乘法',         description: '执行乘法运算',            category: 'arithmetic' },
-    divide:     { id: 'divide',     name: '除法',         description: '执行除法运算',            category: 'arithmetic' },
-    calculate:  { id: 'calculate',  name: '计算',         description: '进行数值计算',            category: 'arithmetic' },
-
-    compare:    { id: 'compare',    name: '比较',         description: '比较大小/多少/关系',      category: 'comparison' },
-    order:      { id: 'order',      name: '排序',         description: '按规则排序/排列',         category: 'comparison' },
-
-    compose:    { id: 'compose',    name: '组合',         description: '组合/合成整体',           category: 'composition' },
-    decompose:  { id: 'decompose',  name: '分解',         description: '分解/拆分',               category: 'composition' },
-
-    measure:    { id: 'measure',    name: '度量',         description: '测量/量化',               category: 'measurement' },
-    convert:    { id: 'convert',    name: '换算',         description: '单位/形式换算',           category: 'measurement' },
-
-    identify:   { id: 'identify',   name: '识别',         description: '识别/辨认对象或属性',     category: 'classification' },
-    classify:   { id: 'classify',   name: '分类',         description: '分类/归类',               category: 'classification' },
-
-    count:      { id: 'count',      name: '数数',         description: '逐一/按群数出数量',       category: 'arithmetic' },
-
-    read:       { id: 'read',       name: '认读',         description: '认读/阅读符号文字',       category: 'literacy' },
-    write:      { id: 'write',      name: '书写',         description: '书写/表达',               category: 'literacy' },
-
-    reason:     { id: 'reason',     name: '推理',         description: '逻辑推理',                category: 'cognition' },
-    represent:  { id: 'represent',  name: '表征',         description: '用图/式/模型表征',        category: 'cognition' },
-    model:      { id: 'model',      name: '建模',         description: '建立模型解决问题',        category: 'cognition' }
-  };
-
-  var ALIASES = {
-    addition: 'add', plus: 'add', sum: 'add', 加: 'add', 加法: 'add', calcadd: 'add', 'add-operation': 'add',
-    subtraction: 'subtract', minus: 'subtract', 减: 'subtract', 减法: 'subtract', sub: 'subtract',
-    multiplication: 'multiply', 乘: 'multiply', 乘法: 'multiply', mult: 'multiply',
-    division: 'divide', 除: 'divide', 除法: 'divide', div: 'divide',
-    比较: 'compare', 比大小: 'compare', comparison: 'compare', 对比: 'compare',
-    排序: 'order', 顺序: 'order', sort: 'order', 排列: 'order',
-    组合: 'compose', 合成: 'compose', 合并: 'compose',
-    分解: 'decompose', 拆分: 'decompose',
-    测量: 'measure', 度量: 'measure',
-    换算: 'convert', 转换: 'convert',
-    识别: 'identify', 辨认: 'identify', 认: 'identify',
-    分类: 'classify', 归类: 'classify',
-    数数: 'count', 计数: 'count', enumerate: 'count',
-    读: 'read', 认读: 'read',
-    写: 'write', 书写: 'write',
-    计算: 'calculate', compute: 'calculate', calc: 'calculate',
-    推理: 'reason', 逻辑: 'reason',
-    表示: 'represent', 表征: 'represent',
-    建模: 'model'
-  };
-
-  function isCanonical(id) {
-    return OPERATIONS.hasOwnProperty(id);
-  }
-
-  function normalize(raw) {
-    if (raw == null) return { canonical: null, status: 'unresolved' };
-    var s = String(raw).trim();
-    if (isCanonical(s)) return { canonical: s, status: 'canonical' };
-    if (ALIASES.hasOwnProperty(s)) return { canonical: ALIASES[s], status: 'alias' };
-    return { canonical: null, status: 'unresolved' };
-  }
-
-  function hasAliasCycle() {
-    var visited = {}, inStack = {};
-    var keys = Object.keys(ALIASES);
-    for (var i = 0; i < keys.length; i++) {
-      var k = keys[i];
-      if (visited[k]) continue;
-      var chain = [], cur = k;
-      while (cur != null) {
-        if (inStack[cur]) return true;
-        if (visited[cur]) break;
-        inStack[cur] = true; visited[cur] = true; chain.push(cur);
-        cur = ALIASES[cur];
-        if (cur != null && isCanonical(cur)) break;
-      }
-      inStack = {};
-    }
-    return false;
-  }
-
-  var API = {
-    VERSION: VERSION,
-    OPERATIONS: OPERATIONS,
-    ALIASES: ALIASES,
-    CANONICAL_IDS: Object.keys(OPERATIONS),
-    isCanonical: isCanonical,
-    normalize: normalize,
-    hasAliasCycle: hasAliasCycle
-  };
-
-  global.KnowledgeOperation = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/ontology-operation-map.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var Ops = require("shared/knowledge/knowledge-operation.js");
-
-  var MAP = {
-    'math-oral': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g4-oral': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g5-oral': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g6-oral': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'math-g1-multiplication-table': { ops: ['multiply'], confidence: 'high', evidence: 'plugin-name' },
-
-    'math-g2-column': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g4-vertical': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g5-vertical': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'math-make-ten': { ops: ['add', 'subtract'], confidence: 'medium', evidence: 'documented' },
-
-    'math-shapes': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-geometry': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-area': { ops: ['identify', 'classify', 'measure'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'math-fraction': { ops: ['identify', 'compare', 'calculate'], confidence: 'medium', evidence: 'documented' },
-    'math-decimal': { ops: ['identify', 'compare', 'calculate'], confidence: 'medium', evidence: 'documented' },
-
-    'math-unit-convert': { ops: ['convert', 'measure'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-money': { ops: ['measure', 'convert', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'math-clock': { ops: ['read', 'measure'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-time-date': { ops: ['read', 'measure'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'math-patterns': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'documented' },
-    'math-number-sense': { ops: ['identify', 'compare', 'classify'], confidence: 'medium', evidence: 'documented' },
-    'math-position-direction': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-combination-set': { ops: ['classify', 'identify'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'math-data-stats': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g4-stats': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g5-stats': { ops: ['classify', 'identify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'math-word-problems': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'documented' },
-    'math-g6-word-problems': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'documented' },
-    'math-g4-word': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'documented' },
-    'math-g5-word': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'documented' },
-
-    'math-picture-equations': { ops: ['represent', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g2-picture-equations': { ops: ['represent', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g4-picture': { ops: ['represent', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g5-picture': { ops: ['represent', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g6-picture-equation': { ops: ['represent', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'math-logic-reasoning': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g6-reasoning': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
-
-    'math-g4-draw': { ops: ['represent'], confidence: 'low', evidence: 'plugin-name' },
-    'math-g5-draw': { ops: ['represent'], confidence: 'low', evidence: 'plugin-name' },
-
-    
-    
-    'math-g1-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g1-operation': { ops: ['represent', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g1-matching': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g1-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g2-mixed': { ops: ['calculate'], confidence: 'high', evidence: 'plugin-name' },
-    'math-g2-matching': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g2-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g2-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g4-mixed': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g4-fill': { ops: ['identify', 'write', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-match': { ops: ['classify', 'identify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g4-reason': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g4-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g4-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g5-mixed': { ops: ['calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g5-fill': { ops: ['identify', 'write', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g5-reason': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g5-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g5-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g6-calc': { ops: ['calculate'], confidence: 'high', evidence: 'plugin-name' },
-    'math-g6-fill': { ops: ['identify', 'write', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g6-operation': { ops: ['represent', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g6-stats': { ops: ['identify', 'classify', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g6-judge': { ops: ['reason', 'compare'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-g6-choice': { ops: ['identify', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
-
-    
-    'math-competition-c1-numberpuzzle': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-c2-numbertheory': { ops: ['reason', 'calculate', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-c3-counting': { ops: ['reason', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-c4-geometry': { ops: ['identify', 'measure', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-c5-journey': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-c8-logic': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g4-c9': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g5-c1': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g5-c2': { ops: ['reason', 'calculate', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g5-c3': { ops: ['reason', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g5-c4': { ops: ['identify', 'measure', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g5-c5': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g5-c6': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g5-c7': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g5-c8': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g5-c9': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c1': { ops: ['reason', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c2': { ops: ['reason', 'calculate', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c3': { ops: ['reason', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c4': { ops: ['identify', 'measure', 'reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c5': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c6': { ops: ['identify', 'classify'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c7': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c8': { ops: ['reason'], confidence: 'medium', evidence: 'plugin-name' },
-    'math-competition-g6-c9': { ops: ['reason', 'model', 'calculate'], confidence: 'medium', evidence: 'plugin-name' }
-  };
-
-  function operationsForPlugin(pluginId) {
-    var e = pluginId && MAP[pluginId];
-    if (!e) return [];
-    return e.ops.filter(function (o) { return Ops.isCanonical(o); });
-  }
-
-  function metaForPlugin(pluginId) {
-    return pluginId && MAP[pluginId] ? MAP[pluginId] : null;
-  }
-
-  function operationsForKP(kp) {
-    kp = kp || {};
-    if (Array.isArray(kp.operations) && kp.operations.length) return kp.operations.slice();
-    return operationsForPlugin(kp.pluginId);
-  }
-
-  
-  
-  var OP_SEMANTICS = {
-    add:      { symbol: '+',  calcMethod: 'calc.add',      visualAlias: '加法' },
-    subtract: { symbol: '−',  calcMethod: 'calc.sub',      visualAlias: '减法' },
-    multiply: { symbol: '×',  calcMethod: 'calc.mul',      visualAlias: '乘法' },
-    divide:   { symbol: '÷',  calcMethod: 'calc.div',      visualAlias: '除法' },
-    calculate:{ symbol: '',   calcMethod: 'calc',          visualAlias: '计算' },
-    count:    { symbol: '',   calcMethod: null,            visualAlias: '数数' },
-    compare:  { symbol: '',   calcMethod: null,            visualAlias: '比大小' },
-    order:    { symbol: '',   calcMethod: null,            visualAlias: '排序' },
-    compose:  { symbol: '',   calcMethod: null,            visualAlias: '组合' },
-    decompose:{ symbol: '',   calcMethod: null,            visualAlias: '分解' },
-    measure:  { symbol: '',   calcMethod: null,            visualAlias: '度量' },
-    convert:  { symbol: '',   calcMethod: null,            visualAlias: '换算' },
-    identify: { symbol: '',   calcMethod: null,            visualAlias: '识别' },
-    classify: { symbol: '',   calcMethod: null,            visualAlias: '分类' },
-    read:     { symbol: '',   calcMethod: null,            visualAlias: '认读' },
-    write:    { symbol: '',   calcMethod: null,            visualAlias: '书写' },
-    reason:   { symbol: '',   calcMethod: null,            visualAlias: '推理' },
-    represent:{ symbol: '',   calcMethod: null,            visualAlias: '表征' },
-    model:    { symbol: '',   calcMethod: null,            visualAlias: '建模' }
-  };
-
-  function semanticsFor(opId) {
-    return opId && OP_SEMANTICS[opId] ? OP_SEMANTICS[opId] : null;
-  }
-
-  function symbolOf(opId) {
-    var s = semanticsFor(opId);
-    return s ? s.symbol : null;
-  }
-
-  function calcMethodOf(opId) {
-    var s = semanticsFor(opId);
-    return s ? s.calcMethod : null;
-  }
-
-  function visualAliasOf(opId) {
-    var s = semanticsFor(opId);
-    return s ? s.visualAlias : null;
-  }
-
-  var API = {
-    MAP: MAP,
-    OP_SEMANTICS: OP_SEMANTICS,
-    operationsForPlugin: operationsForPlugin,
-    operationsForKP: operationsForKP,
-    metaForPlugin: metaForPlugin,
-    semanticsFor: semanticsFor,
-    symbolOf: symbolOf,
-    calcMethodOf: calcMethodOf,
-    visualAliasOf: visualAliasOf
-  };
-
-  global.OntologyOperationMap = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/knowledge-factual.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var VERSION = 1;
-
-  var FACT_TYPES = [
-    'formula', 'rule', 'concept', 'vocabulary', 'unit', 'table',
-    'classification', 'relationship', 'notation', 'range', 'system', 'count', 'alphabet'
-  ];
-
-  var STRATEGY_FIELDS = [
-    'questionCount', 'preferredDifficulty', 'adaptiveDelta', 'userMastery',
-    'nextQuestion', 'generationOrder', 'randomSeed', 'difficulty', 'useContext'
-  ];
-
-  function isFactualType(k) { return FACT_TYPES.indexOf(k) !== -1; }
-
-  function validate(fc) {
-    var errors = [], warnings = [];
-    if (fc == null) return { valid: true, errors: errors, warnings: warnings };
-    if (typeof fc !== 'object' || Array.isArray(fc)) {
-      errors.push('factualContent 必须是对象');
-      return { valid: false, errors: errors, warnings: warnings };
-    }
-    Object.keys(fc).forEach(function (k) {
-      if (STRATEGY_FIELDS.indexOf(k) !== -1) {
-        errors.push('策略字段混入 factualContent: ' + k);
-      } else if (!isFactualType(k)) {
-        warnings.push('未声明 fact type: ' + k);
-      }
-    });
-    return { valid: errors.length === 0, errors: errors, warnings: warnings };
-  }
-
-  var API = {
-    VERSION: VERSION,
-    FACT_TYPES: FACT_TYPES,
-    STRATEGY_FIELDS: STRATEGY_FIELDS,
-    isFactualType: isFactualType,
-    validate: validate
-  };
-
-  global.KnowledgeFactual = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/ontology-factual-map.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var FactOnt = require("shared/knowledge/knowledge-factual.js");
-
-  var MAP = {
-    'math-g1-multiplication-table': {
-      factualContent: { table: '1-9' },
-      confidence: 'high', evidence: 'plugin-name'
-    },
-    'math-money': {
-      factualContent: { units: ['元', '角', '分'] },
-      confidence: 'high', evidence: 'standard-curriculum'
-    },
-    'math-unit-convert': {
-      factualContent: { units: ['cm', 'm', 'km', 'g', 'kg', 'mL', 'L'] },
-      confidence: 'medium', evidence: 'standard-curriculum'
-    },
-    'math-fraction': {
-      factualContent: { notation: 'a/b', concept: '整体的一部分' },
-      confidence: 'medium', evidence: 'standard-curriculum'
-    },
-    'math-decimal': {
-      factualContent: { notation: '十进制小数' },
-      confidence: 'low', evidence: 'standard-curriculum'
-    },
-    'math-clock': {
-      factualContent: { unit: '小时', subUnits: ['分', '秒'], notation: 'hh:mm' },
-      confidence: 'medium', evidence: 'standard-curriculum'
-    },
-    'math-time-date': {
-      factualContent: { units: ['年', '月', '日', '时', '分', '秒'], dayHours: 24, weekDays: 7 },
-      confidence: 'medium', evidence: 'standard-curriculum'
-    },
-    'math-shapes': {
-      factualContent: { categories: ['平面图形', '立体图形'] },
-      confidence: 'medium', evidence: 'standard-curriculum'
-    },
-    'math-geometry': {
-      factualContent: { categories: ['点', '线', '角', '面', '体'] },
-      confidence: 'medium', evidence: 'standard-curriculum'
-    },
-    'math-area': {
-      factualContent: { formulas: { rectangle: '长×宽', square: '边长×边长' } },
-      confidence: 'medium', evidence: 'standard-curriculum'
-    },
-    'math-combination-set': {
-      factualContent: { concept: '排列与组合' },
-      confidence: 'low', evidence: 'standard-curriculum'
-    }
-  };
-
-  function factualForPlugin(pluginId) {
-    var e = pluginId && MAP[pluginId];
-    if (!e) return {};
-    return e.factualContent;
-  }
-
-  function metaForPlugin(pluginId) {
-    return pluginId && MAP[pluginId] ? MAP[pluginId] : null;
-  }
-
-  var API = { MAP: MAP, factualForPlugin: factualForPlugin, metaForPlugin: metaForPlugin };
-
-  global.OntologyFactualMap = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/knowledge-error.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var VERSION = 1;
-
-  var ERROR_CATEGORIES = [
-    'concept', 'operation', 'calculation', 'notation',
-    'unit', 'reading', 'writing', 'structure', 'reasoning', 'attention'
-  ];
-
-  var ID_RE = /^[a-z][a-z0-9]*(-[a-z0-9]+)+$/;
-  var FORBIDDEN_RE = /(plugin|question|error-[0-9]|math-g|cn-|en-)/;
-
-  function isCategory(c) { return ERROR_CATEGORIES.indexOf(c) !== -1; }
-
-  function isValidId(id) {
-    if (typeof id !== 'string' || !ID_RE.test(id)) return false;
-    if (FORBIDDEN_RE.test(id)) return false;
-    return true;
-  }
-
-  function normalizeError(e) {
-    if (typeof e === 'string') return { id: e, category: null, description: e };
-    if (e && typeof e === 'object') return { id: e.id, category: e.category || null, description: e.description || '' };
-    return null;
-  }
-
-  function validate(errors) {
-    var errs = [], warns = [];
-    if (!Array.isArray(errors)) {
-      errs.push('errors 必须是数组');
-      return { valid: false, errors: errs, warnings: warns };
-    }
-    var seen = {};
-    errors.forEach(function (raw) {
-      var e = normalizeError(raw);
-      if (!e || !e.id) { errs.push('error 缺少合法 id'); return; }
-      if (!isValidId(e.id)) errs.push('非法 error id: ' + e.id);
-      if (seen[e.id]) errs.push('重复 error id: ' + e.id);
-      seen[e.id] = 1;
-      if (!e.description) errs.push('error 缺少 description: ' + e.id);
-      if (e.category && !isCategory(e.category)) errs.push('未知 error category: ' + e.category);
-    });
-    return { valid: errs.length === 0, errors: errs, warnings: warns };
-  }
-
-  var API = {
-    VERSION: VERSION,
-    ERROR_CATEGORIES: ERROR_CATEGORIES,
-    isCategory: isCategory,
-    isValidId: isValidId,
-    normalizeError: normalizeError,
-    validate: validate
-  };
-
-  global.KnowledgeError = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/ontology-error-map.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var MAP = {
-    "math-area": [
-      { id: "area-formula-err", category: "calculation", description: "面积公式记错或混用（面积与周长公式混淆）" },
-      { id: "area-unit-err", category: "unit", description: "面积单位写错或换算错误" },
-    ],
-    "math-clock": [
-      { id: "clock-hour-misread", category: "reading", description: "时针在两数之间时误读为后一个数（如 3:45 读成 4 时）" },
-      { id: "clock-minute-count-err", category: "reading", description: "分针读数算错（大格×5 或小格数错）" },
-    ],
-    "math-code": [
-      { id: "code-digit-err", category: "concept", description: "混淆编码各段数字的含义" },
-      { id: "code-read-err", category: "reading", description: "读错编码中的数字信息" },
-    ],
-    "math-combination-set": [
-      { id: "combination-dup-case", category: "reasoning", description: "列举组合时重复计数" },
-      { id: "combination-miss-case", category: "reasoning", description: "列举组合时遗漏方案，计数偏少" },
-      { id: "set-count-err", category: "calculation", description: "集合数量计算错误" },
-      { id: "set-overlap-err", category: "reasoning", description: "未扣除重叠部分，总人数多算" },
-    ],
-    "math-competition-c1-numberpuzzle": [
-      { id: "c1-array-fill-err", category: "reasoning", description: "公共格取值推理错误" },
-      { id: "c1-array-sum-err", category: "calculation", description: "每条线的和计算错误" },
-      { id: "c1-horizontal-order-err", category: "operation", description: "未按运算顺序倒推" },
-      { id: "c1-horizontal-trial-err", category: "reasoning", description: "倒推方向错误" },
-      { id: "c1-magic-line-err", category: "reasoning", description: "某行/列/对角线和不相等" },
-      { id: "c1-magic-sum-err", category: "calculation", description: "幻和或中心数计算错误" },
-      { id: "c1-symbol-calc-err", category: "calculation", description: "代入计算错误" },
-      { id: "c1-symbol-relation-err", category: "reasoning", description: "符号与数对应关系推理错误" },
-      { id: "c1-vertical-carry-err", category: "reasoning", description: "推理时漏考虑进位/借位" },
-      { id: "c1-vertical-trial-err", category: "reasoning", description: "试算方向错误，数字填错" },
-    ],
-    "math-competition-c2-numbertheory": [
-      { id: "c2-divisible-digit-err", category: "calculation", description: "各位数字和计算错误" },
-      { id: "c2-divisible-feature-err", category: "concept", description: "整除特征记错（3 与 9 混淆）" },
-      { id: "c2-factor-list-miss", category: "reasoning", description: "枚举因数时遗漏" },
-      { id: "c2-factor-relation-err", category: "concept", description: "因数倍数关系表述错误" },
-      { id: "c2-parity-count-err", category: "reasoning", description: "奇偶个数判断错误" },
-      { id: "c2-parity-op-err", category: "concept", description: "奇偶运算结果判断错误" },
-      { id: "c2-place-digit-err", category: "calculation", description: "位值展开计算错误" },
-      { id: "c2-place-value-err", category: "concept", description: "数位值与数字混淆" },
-      { id: "c2-prime-composite-mix", category: "concept", description: "质数与合数判断错误" },
-      { id: "c2-prime-one-err", category: "concept", description: "把 1 当作质数或合数" },
-      { id: "c2-remainder-calc-err", category: "calculation", description: "带余除法计算错误" },
-      { id: "c2-remainder-divisor-err", category: "concept", description: "余数不小于除数" },
-    ],
-    "math-competition-c3-counting": [
-      { id: "c3-am-add-mult-mix", category: "concept", description: "加法与乘法原理使用场景混淆" },
-      { id: "c3-am-count-err", category: "calculation", description: "分类分步数算错" },
-      { id: "c3-enum-miss-err", category: "reasoning", description: "列举遗漏某些情况" },
-      { id: "c3-enum-order-err", category: "reasoning", description: "枚举无顺序，导致重漏" },
-      { id: "c3-geomcount-line-err", category: "reasoning", description: "数线段时遗漏较长线段" },
-      { id: "c3-geomcount-shape-err", category: "reasoning", description: "组合图形计数遗漏或重复" },
-      { id: "c3-perm-dup-err", category: "reasoning", description: "组合计数重复或遗漏" },
-      { id: "c3-perm-order-err", category: "concept", description: "排列组合有序/无序判断错误" },
-      { id: "c3-worst-add-err", category: "reasoning", description: "最不利数量加 1 处理错误" },
-      { id: "c3-worst-case-err", category: "reasoning", description: "最坏情况设想错误" },
-    ],
-    "math-competition-c4-geometry": [
-      { id: "c4-angle-relation-err", category: "concept", description: "角的关系（内角和等）理解错误" },
-      { id: "c4-angle-sum-err", category: "calculation", description: "角度求和/差计算错误" },
-      { id: "c4-count-miss-err", category: "reasoning", description: "组合图形遗漏" },
-      { id: "c4-count-order-err", category: "reasoning", description: "计数无顺序导致重漏" },
-      { id: "c4-cutfill-calc-err", category: "calculation", description: "规则图形面积计算错误" },
-      { id: "c4-cutfill-equivalence-err", category: "reasoning", description: "割补前后面积关系判断错误" },
-      { id: "c4-pa-formula-err", category: "calculation", description: "公式套用错误" },
-      { id: "c4-pa-peri-area-mix", category: "concept", description: "周长与面积概念或单位混淆" },
-      { id: "c4-solid-face-err", category: "concept", description: "面/棱/顶点数量或特征错误" },
-      { id: "c4-solid-net-err", category: "reasoning", description: "展开图与立体图形对应错误" },
-      { id: "c4-transform-axis-err", category: "reasoning", description: "对称轴或旋转中心判断错误" },
-      { id: "c4-transform-type-err", category: "concept", description: "三种变换类型判断错误" },
-    ],
-    "math-competition-c5-journey": [
-      { id: "c5-basic-formula-err", category: "calculation", description: "行程三量关系式用错" },
-      { id: "c5-basic-unit-err", category: "unit", description: "速度/时间/路程单位不统一或换算错误" },
-      { id: "c5-chase-distance-err", category: "reasoning", description: "路程差确定错误" },
-      { id: "c5-chase-speed-diff-err", category: "calculation", description: "速度差计算错误" },
-      { id: "c5-meet-speed-sum-err", category: "calculation", description: "速度和计算错误" },
-      { id: "c5-meet-time-err", category: "reasoning", description: "相遇时间与路程关系处理错误" },
-      { id: "c5-river-dir-err", category: "reasoning", description: "顺流逆流方向与加减关系错误" },
-      { id: "c5-river-speed-err", category: "calculation", description: "顺逆水速度计算错误" },
-      { id: "c5-train-length-err", category: "reasoning", description: "未加/减车长，路程错误" },
-      { id: "c5-train-speed-err", category: "calculation", description: "速度或时间计算错误" },
-    ],
-    "math-competition-c8-logic": [
-      { id: "c8-drawer-drawer-err", category: "reasoning", description: "抽屉（分类）确定错误" },
-      { id: "c8-drawer-object-err", category: "reasoning", description: "物体数与抽屉数关系判断错误" },
-      { id: "c8-extreme-bound-err", category: "reasoning", description: "取值边界分析错误" },
-      { id: "c8-extreme-calc-err", category: "calculation", description: "极值计算错误" },
-      { id: "c8-logic-cond-err", category: "reading", description: "漏用或误读条件" },
-      { id: "c8-logic-deduce-err", category: "reasoning", description: "推理或假设矛盾处理错误" },
-    ],
-    "math-competition-g4-c9": [
-      { id: "c9-integrated-calc-err", category: "calculation", description: "某步计算错误" },
-      { id: "c9-integrated-step-err", category: "reasoning", description: "分步逻辑错误或漏步" },
-      { id: "c9-misc-operate-err", category: "reasoning", description: "操作步骤或逆向思维错误" },
-      { id: "c9-misc-opt-err", category: "reasoning", description: "优化策略选择错误" },
-      { id: "c9-mock-calc-err", category: "calculation", description: "综合计算或步骤错误" },
-      { id: "c9-mock-time-err", category: "attention", description: "时间分配不当导致未完成" },
-    ],
-    "math-competition-g5-c1": [
-      { id: "comp-array-decompose-err", category: "reasoning", description: "数阵结构分解错误" },
-      { id: "comp-array-verify-err", category: "reasoning", description: "填数后未逐线验证" },
-      { id: "dph-inverse-err", category: "reasoning", description: "倒推方向或逆运算错误" },
-      { id: "dph-order-err", category: "operation", description: "未按运算顺序处理" },
-      { id: "dps-calc-err", category: "calculation", description: "代入计算错误" },
-      { id: "dps-relation-err", category: "reasoning", description: "符号与数对应关系推理错误" },
-      { id: "dpv-carry-err", category: "reasoning", description: "推理时漏考虑进位或借位" },
-      { id: "dpv-trial-err", category: "reasoning", description: "试算方向错误导致数字填错" },
-      { id: "magic3-center-err", category: "calculation", description: "幻和或中心数计算错误" },
-      { id: "magic3-fill-err", category: "reasoning", description: "对称格填数错误" },
-      { id: "magic4-method-err", category: "reasoning", description: "四阶填数方法错误" },
-      { id: "magic4-sum-err", category: "calculation", description: "幻和计算错误" },
-      { id: "nac-fill-err", category: "reasoning", description: "公共点取值推理错误" },
-      { id: "nac-sum-err", category: "calculation", description: "每边和或公共点计算错误" },
-      { id: "nar-center-err", category: "reasoning", description: "中心数确定错误" },
-      { id: "nar-line-err", category: "calculation", description: "辐射线和计算错误" },
-    ],
-    "math-competition-g5-c2": [
-      { id: "div-digit-err", category: "calculation", description: "数字和计算错误" },
-      { id: "div-feature-err", category: "concept", description: "整除特征记错或混淆" },
-      { id: "fc-count-err", category: "calculation", description: "因数个数公式计算错误" },
-      { id: "fc-sum-err", category: "calculation", description: "因数和公式展开错误" },
-      { id: "gcd-error-err", category: "calculation", description: "最大公因数计算错误" },
-      { id: "lcm-error-err", category: "calculation", description: "最小公倍数计算错误" },
-      { id: "nt-cond-err", category: "reasoning", description: "数论约束遗漏" },
-      { id: "nt-maxmin-err", category: "reasoning", description: "最值构造方向错误" },
-      { id: "parity-count-err", category: "reasoning", description: "奇偶个数判断错误" },
-      { id: "parity-op-err", category: "concept", description: "奇偶运算规律记错" },
-      { id: "pc-judge-err", category: "concept", description: "质数合数判断错误" },
-      { id: "pc-sieve-err", category: "reasoning", description: "筛法找质数遗漏或误删" },
-      { id: "pf-composite-err", category: "concept", description: "分解结果含合数因数" },
-      { id: "pf-divide-err", category: "calculation", description: "短除法计算错误" },
-      { id: "pv-expand-err", category: "calculation", description: "位值展开错误" },
-      { id: "pv-swap-err", category: "reasoning", description: "数字交换后关系推理错误" },
-      { id: "rem-calc-err", category: "calculation", description: "带余除法计算错误" },
-      { id: "rem-cond-err", category: "concept", description: "余数小于除数条件忽略" },
-      { id: "sqr-digit-err", category: "concept", description: "完全平方数个位特征记错" },
-      { id: "sqr-exponent-err", category: "concept", description: "完全平方数质因数指数特征判断错误" },
-    ],
-    "math-competition-g5-c3": [
-      { id: "ap-classify-err", category: "reasoning", description: "分类不完整或重复" },
-      { id: "ap-sum-err", category: "calculation", description: "各类方法数相加错误" },
-      { id: "bundle-inner-err", category: "calculation", description: "内部排列数漏乘" },
-      { id: "bundle-overall-err", category: "reasoning", description: "捆绑整体排列处理错误" },
-      { id: "comb-formula-err", category: "calculation", description: "组合数计算错误" },
-      { id: "comb-unordered-err", category: "concept", description: "组合与排列顺序理解错误" },
-      { id: "enum-miss-err", category: "reasoning", description: "枚举遗漏" },
-      { id: "enum-repeat-err", category: "reasoning", description: "枚举重复" },
-      { id: "insert-perm-err", category: "calculation", description: "插空排列数计算错误" },
-      { id: "insert-slot-err", category: "reasoning", description: "空档数量计算错误（漏两端）" },
-      { id: "mp-product-err", category: "calculation", description: "各步方法数相乘错误" },
-      { id: "mp-step-err", category: "reasoning", description: "分步不完整" },
-      { id: "perm-formula-err", category: "calculation", description: "排列数公式计算错误" },
-      { id: "perm-order-err", category: "concept", description: "排列与组合有序性混淆" },
-      { id: "pigeon-count-err", category: "reasoning", description: "至少数计算错误" },
-      { id: "pigeon-drawer-err", category: "reasoning", description: "抽屉（分组）确定错误" },
-      { id: "sb-comb-err", category: "calculation", description: "组合数计算错误" },
-      { id: "sb-convert-err", category: "reasoning", description: "至少/可为 0 转化错误" },
-      { id: "worst-plus1-err", category: "reasoning", description: "最不利数量加 1 处理错误" },
-      { id: "worst-scenario-err", category: "reasoning", description: "最不利情况设想错误" },
-    ],
-    "math-competition-g5-c4": [
-      { id: "anglecalc-relation-err", category: "concept", description: "角的关系理解错误" },
-      { id: "anglecalc-sum-err", category: "calculation", description: "角度和差计算错误" },
-      { id: "areabasic-formula-err", category: "calculation", description: "面积公式用错" },
-      { id: "areabasic-unit-err", category: "unit", description: "面积单位或换算错误" },
-      { id: "birdhead-common-err", category: "concept", description: "共角关系识别错误" },
-      { id: "birdhead-ratio-err", category: "calculation", description: "面积比计算错误" },
-      { id: "butterfly-product-err", category: "calculation", description: "面积积相等关系用错" },
-      { id: "butterfly-trapezoid-err", category: "reasoning", description: "梯形蝴蝶模型面积比判断错误" },
-      { id: "circle-formula-err", category: "calculation", description: "圆周长面积公式混淆" },
-      { id: "eat-equal-err", category: "concept", description: "等积条件（底高对应）判断错误" },
-      { id: "eat-transform-err", category: "reasoning", description: "等积转化方向错误" },
-      { id: "g6angle-polygon-err", category: "calculation", description: "多边形内角和计算错误" },
-      { id: "g6angle-relation-err", category: "concept", description: "角的关系应用错误" },
-      { id: "g6areabasic-combine-err", category: "reasoning", description: "组合图形分割错误" },
-      { id: "g6areabasic-formula-err", category: "calculation", description: "面积公式用错" },
-      { id: "g6bh-common-err", category: "concept", description: "共角识别错误" },
-      { id: "g6bh-ratio-err", category: "calculation", description: "面积比计算错误" },
-      { id: "g6butterfly-product-err", category: "calculation", description: "面积积相等关系用错" },
-      { id: "g6butterfly-trap-err", category: "reasoning", description: "梯形蝴蝶面积比用错" },
-      { id: "g6eat-equal-err", category: "concept", description: "等积条件判断错误" },
-      { id: "g6eat-move-err", category: "reasoning", description: "顶点移动等积变形方向错误" },
-      { id: "g6half-calc-err", category: "calculation", description: "面积一半计算错误" },
-      { id: "g6half-recognize-err", category: "concept", description: "一半构型识别错误" },
-      { id: "g6lattice-count-err", category: "calculation", description: "格点数统计错误" },
-      { id: "g6lattice-pick-err", category: "calculation", description: "皮克定理应用错误" },
-      { id: "g6pc-cuboid-err", category: "reasoning", description: "长方体涂色分析错误" },
-      { id: "g6pc-formula-err", category: "calculation", description: "涂色分类计算错误" },
-      { id: "g6pyth-number-err", category: "concept", description: "勾股数识别错误" },
-      { id: "g6pyth-square-err", category: "calculation", description: "平方或开方计算错误" },
-      { id: "g6swallow-nest-err", category: "reasoning", description: "嵌套燕尾应用错误" },
-      { id: "g6swallow-ratio-err", category: "reasoning", description: "面积比与边比对应错误" },
-      { id: "half-area-err", category: "calculation", description: "面积一半计算错误" },
-      { id: "half-shape-err", category: "concept", description: "一半关系图形识别错误" },
-      { id: "lattice-count-err", category: "calculation", description: "内/边界格点数统计错误" },
-      { id: "lattice-pick-err", category: "calculation", description: "皮克定理公式应用错误" },
-      { id: "painted-count-err", category: "calculation", description: "涂色面数计算错误" },
-      { id: "painted-formula-err", category: "reasoning", description: "涂色分类公式用错" },
-      { id: "pythag-formula-err", category: "calculation", description: "勾股定理计算错误" },
-      { id: "pythag-hyp-err", category: "concept", description: "斜边与直角边混淆" },
-      { id: "sector-ratio-err", category: "calculation", description: "扇形面积按圆心角比例计算错误" },
-      { id: "solidgeo-calc-err", category: "calculation", description: "立体计算错误" },
-      { id: "solidgeo-formula-err", category: "calculation", description: "表面积体积公式混淆" },
-      { id: "swallow-detect-err", category: "concept", description: "燕尾结构识别错误" },
-      { id: "swallow-ratio-err", category: "calculation", description: "面积比与边比对应错误" },
-    ],
-    "math-competition-g5-c5": [
-      { id: "avgspeed-calc-err", category: "calculation", description: "总路程或总时间计算错误" },
-      { id: "avgspeed-formula-err", category: "concept", description: "误用速度算术平均" },
-      { id: "chase-dist-err", category: "reasoning", description: "路程差确定错误" },
-      { id: "chase-speed-err", category: "calculation", description: "速度差计算错误" },
-      { id: "circular-lap-err", category: "reasoning", description: "圈数与周长关系处理错误" },
-      { id: "circular-mode-err", category: "reasoning", description: "相遇/追及类型混淆" },
-      { id: "clock-calc-err", category: "calculation", description: "追及时间计算错误" },
-      { id: "clock-speed-err", category: "concept", description: "分针时针角速度记错" },
-      { id: "meet-speed-err", category: "calculation", description: "速度和计算错误" },
-      { id: "meet-time-err", category: "reasoning", description: "相遇时间与路程关系错误" },
-      { id: "motionbasic-formula-err", category: "calculation", description: "三量关系式用错" },
-      { id: "motionbasic-unit-err", category: "unit", description: "速度单位换算错误" },
-      { id: "ratiomotion-inverse-err", category: "reasoning", description: "速度与时间反比关系用错" },
-      { id: "ratiomotion-setup-err", category: "reasoning", description: "比例关系设列错误" },
-      { id: "stream-dir-err", category: "reasoning", description: "顺流逆流方向与加减错误" },
-      { id: "stream-speed-err", category: "calculation", description: "顺逆水速计算错误" },
-      { id: "train-length-err", category: "reasoning", description: "未加/减车长" },
-      { id: "train-speed-err", category: "calculation", description: "速度时间计算错误" },
-    ],
-    "math-competition-g5-c6": [
-      { id: "concentration-formula-err", category: "concept", description: "浓度公式用错" },
-      { id: "concentration-mix-err", category: "calculation", description: "混合浓度计算错误" },
-      { id: "work-cooperate-err", category: "reasoning", description: "合作效率处理错误" },
-      { id: "work-rate-err", category: "calculation", description: "工作效率计算错误" },
-    ],
-    "math-competition-g5-c7": [
-      { id: "compare-calc-err", category: "calculation", description: "通分或化小数错误" },
-      { id: "compare-method-err", category: "reasoning", description: "比较方法选择不当" },
-      { id: "complexfrac-calc-err", category: "calculation", description: "分步化简错误" },
-      { id: "complexfrac-mainline-err", category: "operation", description: "主分数线与除号混淆" },
-      { id: "define-priority-err", category: "operation", description: "新运算优先级处理错误" },
-      { id: "define-substitute-err", category: "calculation", description: "代入数字错误" },
-      { id: "estimate-calc-err", category: "calculation", description: "放缩计算错误" },
-      { id: "estimate-range-err", category: "reasoning", description: "估算范围过宽或方向错误" },
-      { id: "extract-calc-err", category: "calculation", description: "提取后计算错误" },
-      { id: "extract-detect-err", category: "reasoning", description: "公因数识别错误" },
-      { id: "fracsplit-cancel-err", category: "calculation", description: "相消或剩余项计算错误" },
-      { id: "fracsplit-formula-err", category: "concept", description: "裂项公式记错" },
-      { id: "g6compare-calc-err", category: "calculation", description: "统一形式转换错误" },
-      { id: "g6compare-method-err", category: "reasoning", description: "比较方法选择不当" },
-      { id: "g6complexfrac-layer-err", category: "operation", description: "由内向外层序错误" },
-      { id: "g6complexfrac-mainline-err", category: "concept", description: "主分数线识别错误" },
-      { id: "g6define-letter-err", category: "reasoning", description: "含字母新运算处理错误" },
-      { id: "g6define-sub-err", category: "calculation", description: "代入展开错误" },
-      { id: "g6estimate-bound-err", category: "reasoning", description: "放缩范围错误" },
-      { id: "g6estimate-int-err", category: "reasoning", description: "整数部分确定错误" },
-      { id: "g6extract-detect-err", category: "reasoning", description: "公因数识别错误" },
-      { id: "g6extract-unify-err", category: "calculation", description: "分数小数统一错误" },
-      { id: "g6fracsplit-cancel-err", category: "calculation", description: "相消剩余项错误" },
-      { id: "g6fracsplit-k-err", category: "calculation", description: "裂项系数 k 处理错误" },
-      { id: "g6intsplit-coeff-err", category: "calculation", description: "裂项系数错误" },
-      { id: "g6intsplit-sum-err", category: "calculation", description: "求和或相消错误" },
-      { id: "g6recurfrac-mixed-err", category: "reasoning", description: "混循环处理错误" },
-      { id: "g6recurfrac-niner-err", category: "calculation", description: "分母 9 的个数错误" },
-      { id: "g6round-complement-err", category: "reasoning", description: "补数拆数错误" },
-      { id: "g6round-sign-err", category: "calculation", description: "拆数符号错误" },
-      { id: "g6series-middle-err", category: "reasoning", description: "中项平均数性质用错" },
-      { id: "g6series-term-err", category: "calculation", description: "通项计算错误" },
-      { id: "intsplit-calc-err", category: "calculation", description: "展开或相消错误" },
-      { id: "intsplit-formula-err", category: "concept", description: "整数裂项公式记错" },
-      { id: "recurfrac-mixed-err", category: "calculation", description: "混循环小数化分数错误" },
-      { id: "recurfrac-pure-err", category: "concept", description: "纯循环化分数分母写错" },
-      { id: "round-complement-err", category: "reasoning", description: "补数凑整错误" },
-      { id: "round-sign-err", category: "calculation", description: "拆数后符号处理错误" },
-      { id: "series-sum-err", category: "calculation", description: "求和公式用错" },
-      { id: "series-term-err", category: "calculation", description: "通项公式计算错误" },
-    ],
-    "math-competition-g5-c8": [
-      { id: "extremum-calc-err", category: "calculation", description: "最值计算错误" },
-      { id: "extremum-construct-err", category: "reasoning", description: "最值构造方向错误" },
-      { id: "logicinf-cond-err", category: "reading", description: "条件遗漏或误读" },
-      { id: "logicinf-deduce-err", category: "reasoning", description: "推理或矛盾处理错误" },
-      { id: "winning-backward-err", category: "reasoning", description: "倒推关键状态错误" },
-      { id: "winning-control-err", category: "reasoning", description: "控制数或合取策略错误" },
-    ],
-    "math-competition-g5-c9": [
-      { id: "age-diff-err", category: "concept", description: "年龄差不变性质理解错误" },
-      { id: "age-multiple-err", category: "reasoning", description: "差倍关系列式错误" },
-      { id: "avg-parts-err", category: "reasoning", description: "总份数判断错误" },
-      { id: "avg-total-err", category: "calculation", description: "总数量计算错误" },
-      { id: "chickrabbit-diff-err", category: "calculation", description: "假设后脚数差计算错误" },
-      { id: "chickrabbit-swap-err", category: "reasoning", description: "换一只脚数差判断错误" },
-      { id: "diophantine-enum-err", category: "calculation", description: "枚举或验证错误" },
-      { id: "diophantine-range-err", category: "reasoning", description: "未知数取值范围确定错误" },
-      { id: "economics-discount-err", category: "reasoning", description: "折扣与现价关系错误" },
-      { id: "economics-profit-err", category: "calculation", description: "利润或利润率计算错误" },
-      { id: "fracpercent-calc-err", category: "calculation", description: "乘除方向或计算错误" },
-      { id: "fracpercent-unit1-err", category: "reasoning", description: "单位 1 识别错误" },
-      { id: "g6age-diff-err", category: "concept", description: "年龄差不变性质用错" },
-      { id: "g6age-time-err", category: "reasoning", description: "过去未来年份处理错误" },
-      { id: "g6avg-total-err", category: "calculation", description: "总数量计算错误" },
-      { id: "g6avg-weight-err", category: "reasoning", description: "加权平均权重处理错误" },
-      { id: "g6cr-diff-err", category: "calculation", description: "脚数差计算错误" },
-      { id: "g6cr-variant-err", category: "reasoning", description: "变式脚数单位处理错误" },
-      { id: "g6economics-cost-err", category: "calculation", description: "成本或利润计算错误" },
-      { id: "g6economics-discount-err", category: "reasoning", description: "折扣与利润关系错误" },
-      { id: "g6fp-continuous-err", category: "calculation", description: "连续增减计算错误" },
-      { id: "g6fp-unit1-err", category: "reasoning", description: "单位 1 转换错误" },
-      { id: "g6ie2-calc-err", category: "calculation", description: "集合数量计算错误" },
-      { id: "g6ie2-overlap-err", category: "reasoning", description: "重叠处理错误" },
-      { id: "g6linear1-bracket-err", category: "operation", description: "去括号去分母错误" },
-      { id: "g6linear1-solve-err", category: "calculation", description: "移项合并错误" },
-      { id: "g6linear2-eliminate-err", category: "calculation", description: "消元计算错误" },
-      { id: "g6linear2-model-err", category: "reasoning", description: "方程组建模错误" },
-      { id: "g6periodic-lcm-err", category: "reasoning", description: "多周期公倍周期处理错误" },
-      { id: "g6periodic-remainder-err", category: "calculation", description: "余数对应项错误" },
-      { id: "g6phalanx-hollow-err", category: "reasoning", description: "空心方阵计算错误" },
-      { id: "g6phalanx-layer-err", category: "calculation", description: "层间差 8 处理错误" },
-      { id: "g6pl-calc-err", category: "calculation", description: "份数计算错误" },
-      { id: "g6pl-type-err", category: "reasoning", description: "盈亏类型判断错误" },
-      { id: "g6planting-calc-err", category: "calculation", description: "间隔计算错误" },
-      { id: "g6planting-type-err", category: "reasoning", description: "变形类型判断错误" },
-      { id: "g6sumdiff-formula-err", category: "calculation", description: "公式用反" },
-      { id: "g6sumdiff-multi-err", category: "reasoning", description: "多量关系处理错误" },
-      { id: "grass-growth-err", category: "calculation", description: "每天增长量计算错误" },
-      { id: "grass-original-err", category: "reasoning", description: "原有草量或剩余草处理错误" },
-      { id: "inclusion-overlap-err", category: "reasoning", description: "重叠部分加减错误" },
-      { id: "inclusion-three-err", category: "calculation", description: "三集合容斥计算错误" },
-      { id: "linear1-setup-err", category: "reasoning", description: "列方程错误" },
-      { id: "linear1-solve-err", category: "calculation", description: "解方程计算错误" },
-      { id: "linear2-eliminate-err", category: "calculation", description: "消元计算错误" },
-      { id: "linear2-substitute-err", category: "reasoning", description: "代回求另一个未知数错误" },
-      { id: "periodic-cycle-err", category: "reasoning", description: "周期判断错误" },
-      { id: "periodic-remainder-err", category: "calculation", description: "余数与对应项判断错误" },
-      { id: "phalanx-layer-err", category: "reasoning", description: "外层或相邻层人数错误" },
-      { id: "phalanx-side-err", category: "calculation", description: "每边与总数关系错误" },
-      { id: "planting-calc-err", category: "calculation", description: "间隔数计算错误" },
-      { id: "planting-type-err", category: "reasoning", description: "变形问题类型判断错误" },
-      { id: "profitloss-calc-err", category: "calculation", description: "份数或总数计算错误" },
-      { id: "profitloss-type-err", category: "reasoning", description: "盈/亏类型判断错误" },
-      { id: "sumdiff-formula-err", category: "calculation", description: "大数小数公式用反" },
-      { id: "sumdiff-line-err", category: "reasoning", description: "线段图关系错误" },
-    ],
-    "math-competition-g6-c1": [
-      { id: "g6dr-div-err", category: "reasoning", description: "整除特征应用错误" },
-      { id: "g6dr-place-err", category: "reasoning", description: "位值分析错误" },
-      { id: "g6hp-inverse-err", category: "reasoning", description: "逆运算倒推错误" },
-      { id: "g6hp-order-err", category: "operation", description: "运算顺序处理错误" },
-      { id: "g6msa-fill-err", category: "reasoning", description: "约束条件利用错误" },
-      { id: "g6msa-sum-err", category: "calculation", description: "幻和或中心数计算错误" },
-      { id: "g6na-decompose-err", category: "reasoning", description: "数阵结构分解错误" },
-      { id: "g6na-verify-err", category: "reasoning", description: "未逐行逐线验证" },
-      { id: "g6npc-combine-err", category: "reasoning", description: "技巧综合运用错误" },
-      { id: "g6npc-unique-err", category: "reasoning", description: "多解取舍或验证错误" },
-      { id: "g6sn-solve-err", category: "calculation", description: "求解或验证错误" },
-      { id: "g6sn-system-err", category: "reasoning", description: "符号间关系建立错误" },
-      { id: "g6vcc-chain-err", category: "reasoning", description: "连续进位链分析错误" },
-      { id: "g6vcc-trial-err", category: "reasoning", description: "试算验证不完整" },
-      { id: "g6vm-carry-err", category: "reasoning", description: "多位数进位借位推理遗漏" },
-      { id: "g6vm-digit-err", category: "reasoning", description: "数位对应数字推理错误" },
-    ],
-    "math-competition-g6-c2": [
-      { id: "g6de-range-err", category: "reasoning", description: "变量范围确定错误" },
-      { id: "g6de-solve-err", category: "calculation", description: "枚举验证错误" },
-      { id: "g6div-combine-err", category: "reasoning", description: "多个整除条件综合应用错误" },
-      { id: "g6div-feature-err", category: "concept", description: "多位整除特征记错" },
-      { id: "g6fcs-count-err", category: "calculation", description: "因数个数公式计算错误" },
-      { id: "g6fcs-sum-err", category: "calculation", description: "因数和公式展开错误" },
-      { id: "g6gl-gcd-err", category: "calculation", description: "最大公因数计算错误" },
-      { id: "g6gl-lcm-err", category: "calculation", description: "最小公倍数计算错误" },
-      { id: "g6mod-cycle-err", category: "reasoning", description: "幂余周期性分析错误" },
-      { id: "g6mod-property-err", category: "concept", description: "模运算性质用错" },
-      { id: "g6nte-bound-err", category: "reasoning", description: "约束边界分析错误" },
-      { id: "g6nte-construct-err", category: "reasoning", description: "极值构造错误" },
-      { id: "g6pa-conclusion-err", category: "reasoning", description: "奇偶结论判断错误" },
-      { id: "g6pa-invariant-err", category: "reasoning", description: "奇偶不变量找错" },
-      { id: "g6pf-apply-err", category: "reasoning", description: "质因数应用（求因数等）错误" },
-      { id: "g6pf-divide-err", category: "calculation", description: "短除法试除错误" },
-      { id: "g6ps-exponent-err", category: "concept", description: "指数全偶判断错误" },
-      { id: "g6ps-range-err", category: "reasoning", description: "夹逼判断平方数错误" },
-      { id: "g6pv-eq-err", category: "reasoning", description: "位值方程建立错误" },
-      { id: "g6pv-expand-err", category: "calculation", description: "位值展开错误" },
-      { id: "g6rc-calc-err", category: "calculation", description: "余数计算错误" },
-      { id: "g6rc-cond-err", category: "concept", description: "同余条件理解错误" },
-    ],
-    "math-competition-g6-c3": [
-      { id: "g6ap-class-err", category: "reasoning", description: "分类重叠或遗漏" },
-      { id: "g6ap-sum-err", category: "calculation", description: "方法数求和错误" },
-      { id: "g6bundle-group-err", category: "reasoning", description: "多组捆绑整体处理错误" },
-      { id: "g6bundle-inner-err", category: "calculation", description: "内部排列数漏乘" },
-      { id: "g6comb-formula-err", category: "calculation", description: "组合数计算错误" },
-      { id: "g6comb-identity-err", category: "concept", description: "组合恒等式应用错误" },
-      { id: "g6derr-formula-err", category: "calculation", description: "错位排列递推或数值错误" },
-      { id: "g6derr-scenario-err", category: "reasoning", description: "错位情景识别错误" },
-      { id: "g6ec-miss-err", category: "reasoning", description: "枚举遗漏" },
-      { id: "g6ec-repeat-err", category: "reasoning", description: "枚举重复" },
-      { id: "g6gc-layer-err", category: "reasoning", description: "分层或组合图形计数错误" },
-      { id: "g6gc-miss-err", category: "reasoning", description: "计数遗漏" },
-      { id: "g6ie-calc-err", category: "calculation", description: "集合计数计算错误" },
-      { id: "g6ie-sign-err", category: "reasoning", description: "容斥加减号处理错误" },
-      { id: "g6insert-order-err", category: "calculation", description: "插入排列数计算错误" },
-      { id: "g6insert-slot-err", category: "reasoning", description: "空档数算错（漏两端）" },
-      { id: "g6mp-product-err", category: "calculation", description: "分步相乘错误" },
-      { id: "g6mp-restrict-err", category: "reasoning", description: "受限位（首位）处理错误" },
-      { id: "g6perm-calc-err", category: "calculation", description: "排列数计算错误" },
-      { id: "g6perm-restrict-err", category: "reasoning", description: "受限条件处理错误" },
-      { id: "g6pigeon-calc-err", category: "calculation", description: "至少数计算错误" },
-      { id: "g6pigeon-construct-err", category: "reasoning", description: "抽屉构造错误" },
-      { id: "g6rc-initial-err", category: "calculation", description: "初值或递推计算错误" },
-      { id: "g6rc-recursion-err", category: "reasoning", description: "递推关系建立错误" },
-      { id: "g6sb-comb-err", category: "calculation", description: "组合数计算错误" },
-      { id: "g6sb-zero-err", category: "reasoning", description: "允许 0 与至少 1 转化错误" },
-      { id: "g6worst-case-err", category: "reasoning", description: "最坏情况设想错误" },
-      { id: "g6worst-ensure-err", category: "reasoning", description: "保证数量加 1 处理错误" },
-    ],
-    "math-competition-g6-c4": [
-      { id: "g6ca-diameter-err", category: "concept", description: "直径所对圆周角 90° 应用错误" },
-      { id: "g6ca-half-err", category: "concept", description: "圆周角与圆心角关系记错" },
-      { id: "g6cs-arc-err", category: "calculation", description: "弧长或扇形面积计算错误" },
-      { id: "g6cs-comb-err", category: "reasoning", description: "扇形组合图形分解错误" },
-      { id: "g6solidgeo-cut-err", category: "reasoning", description: "切割拼接面积体积变化错误" },
-      { id: "g6solidgeo-formula-err", category: "calculation", description: "立体公式用错" },
-      { id: "g6sr-rh-err", category: "concept", description: "旋转半径高确定错误" },
-      { id: "g6sr-shape-err", category: "reasoning", description: "旋转形成的立体判断错误" },
-    ],
-    "math-competition-g6-c5": [
-      { id: "g6chase-delay-err", category: "reasoning", description: "先后出发时间差处理错误" },
-      { id: "g6chase-lap-err", category: "reasoning", description: "环形追及圈数处理错误" },
-      { id: "g6clock-angle-err", category: "calculation", description: "夹角计算错误" },
-      { id: "g6clock-speed-err", category: "concept", description: "角速度记错" },
-      { id: "g6comp-model-err", category: "reasoning", description: "模型分解错误" },
-      { id: "g6comp-simult-err", category: "reasoning", description: "同时性处理错误" },
-      { id: "g6interval-eq-err", category: "reasoning", description: "方程建立错误" },
-      { id: "g6interval-spacing-err", category: "reasoning", description: "车间距计算错误" },
-      { id: "g6journey-calc-err", category: "calculation", description: "分段计算错误" },
-      { id: "g6journey-model-err", category: "reasoning", description: "行程模型建立错误" },
-      { id: "g6meet-multiple-err", category: "reasoning", description: "多次相遇全程数判断错误" },
-      { id: "g6meet-speed-err", category: "calculation", description: "速度和或时间计算错误" },
-      { id: "g6motionbasic-formula-err", category: "calculation", description: "三量关系式用错" },
-      { id: "g6motionbasic-segment-err", category: "reasoning", description: "分段行程合并错误" },
-      { id: "g6pick-figure-err", category: "reasoning", description: "行程图理解错误" },
-      { id: "g6pick-simult-err", category: "reasoning", description: "同时进行关系处理错误" },
-      { id: "g6ring-count-err", category: "calculation", description: "圈数计算错误" },
-      { id: "g6ring-mode-err", category: "reasoning", description: "相遇追及类型混淆" },
-      { id: "g6stream-round-err", category: "reasoning", description: "往返顺逆时间处理错误" },
-      { id: "g6stream-speed-err", category: "calculation", description: "顺逆水速计算错误" },
-      { id: "g6train-length-err", category: "reasoning", description: "车长漏加" },
-      { id: "g6train-pass-err", category: "reasoning", description: "错车超车路程处理错误" },
-    ],
-    "math-competition-g6-c6": [
-      { id: "g6concent-cross-err", category: "reasoning", description: "十字交叉法应用错误" },
-      { id: "g6concent-mix-err", category: "calculation", description: "混合浓度计算错误" },
-      { id: "g6work-cycle-err", category: "reasoning", description: "轮流周期处理错误" },
-      { id: "g6work-rate-err", category: "calculation", description: "效率计算错误" },
-    ],
-    "math-competition-g6-c7": [
-      { id: "g6seqsum-common-err", category: "calculation", description: "常见数列和公式记错" },
-      { id: "g6seqsum-geometric-err", category: "calculation", description: "等比求和公式用错" },
-    ],
-    "math-competition-g6-c8": [
-      { id: "g6extremum-calc-err", category: "calculation", description: "最值计算错误" },
-      { id: "g6extremum-equal-err", category: "reasoning", description: "取等条件判断错误" },
-      { id: "g6logic-cond-err", category: "reading", description: "条件误读或遗漏" },
-      { id: "g6logic-contradict-err", category: "reasoning", description: "矛盾分析错误" },
-      { id: "g6optimize-compare-err", category: "reasoning", description: "方案比较遗漏" },
-      { id: "g6optimize-parallel-err", category: "reasoning", description: "并行工序利用错误" },
-      { id: "g6winning-cycle-err", category: "reasoning", description: "控制周期计算错误" },
-      { id: "g6winning-lose-err", category: "reasoning", description: "必败态判断错误" },
-    ],
-    "math-competition-g6-c9": [
-      { id: "g6grass-consume-err", category: "reasoning", description: "消耗增长差值处理错误" },
-      { id: "g6grass-growth-err", category: "calculation", description: "增长量计算错误" },
-      { id: "g6mixture-ratio-err", category: "reasoning", description: "混合比例求错" },
-      { id: "g6mixture-total-err", category: "calculation", description: "总量成分求和错误" },
-      { id: "g6ratio-apportion-err", category: "calculation", description: "按比分配计算错误" },
-      { id: "g6ratio-convert-err", category: "reasoning", description: "比例转化错误" },
-    ],
-    "math-data-stats": [
-      { id: "data-query-compare-err", category: "reasoning", description: "最多/最少判断错误或相差计算错误" },
-      { id: "data-query-read-err", category: "reading", description: "统计图表数据读错" },
-      { id: "data-tally-count-err", category: "calculation", description: "正字笔画数错，计数错误（漏数/多数）" },
-      { id: "data-tally-total-err", category: "calculation", description: "汇总各类数量时合计错误" },
-      { id: "stats-table-compare-err", category: "reasoning", description: "基于统计表比较分析结论错误" },
-      { id: "stats-table-read-err", category: "reading", description: "从复式统计表读错数据（行列表头对应错）" },
-    ],
-    "math-decimal": [
-      { id: "decimal-point-err", category: "notation", description: "小数点位置写错或漏写" },
-      { id: "decimal-point-error", category: "notation", description: "小数点位置错误" },
-      { id: "decimal-read-err", category: "reading", description: "小数读法错误（整数部分/小数部分读数混淆）" },
-    ],
-    "math-equivalent": [
-      { id: "equiv-calc-err", category: "calculation", description: "代换后数量计算错误" },
-      { id: "equiv-chain-err", category: "reasoning", description: "多步代换时链条关系断裂，替换出错" },
-    ],
-    "math-fill": [
-      { id: "100-compose-place-error", category: "concept", description: "十位个位颠倒（3 个十 4 个一写成 43）" },
-      { id: "count-skip-error", category: "attention", description: "数数漏数或重复数" },
-      { id: "num-11-20-place-error", category: "concept", description: "位值混淆（把 11 写成 2）" },
-      { id: "num-11-20-write-error", category: "notation", description: "书写倒序（如把 15 写成 51）" },
-      { id: "ordinal-quantity-confuse", category: "concept", description: "混淆第几与几个（把第 3 理解为 3 个）" },
-      { id: "zero-meaning-error", category: "concept", description: "不理解 0 表示没有（认为 0 不是数）" },
-    ],
-    "math-fraction": [
-      { id: "denominator-confusion", category: "concept", description: "分子/分母混淆" },
-      { id: "fracadd-bottom-err", category: "concept", description: "分母也相加减" },
-      { id: "fracadd-calc-err", category: "calculation", description: "分子加减计算错误" },
-      { id: "fraction-part-whole-err", category: "concept", description: "未理解“平均分”，把不平均分的图也当分数" },
-      { id: "fraction-read-write-err", category: "notation", description: "分数读写错误（分子分母读反）" },
-    ],
-    "math-g1-choice": [
-      { id: "choice-mixed-calculation", category: "calculation", description: "选择题中计算错误导致选错" },
-      { id: "choice-mixed-distractor", category: "attention", description: "选择题被干扰项迷惑选错" },
-    ],
-    "math-g1-judge": [
-      { id: "judge-calc-error", category: "calculation", description: "正误判断时因计算失误误判" },
-      { id: "judge-method-confuse", category: "concept", description: "判断凑十/平十/破十方法时混淆三法适用场景" },
-      { id: "judge-mixed-calc-error", category: "calculation", description: "判断算式对错时计算失误" },
-      { id: "judge-mixed-concept-error", category: "concept", description: "判断对错时知识点概念掌握不准" },
-    ],
-    "math-g1-matching": [
-      { id: "match-calc-calc-error", category: "calculation", description: "连线前计算结果错误导致连错" },
-      { id: "match-calc-line-cross", category: "attention", description: "多条连线交叉时连错目标" },
-      { id: "match-rmb-denom-error", category: "unit", description: "人民币面值辨认错误" },
-      { id: "match-rmb-equal-error", category: "concept", description: "不同面值等价关系计算错误" },
-      { id: "match-shape-feature-error", category: "concept", description: "图形特征辨认错误导致连错名称" },
-      { id: "match-shape-solid-flat", category: "concept", description: "立体图形与平面图形混淆" },
-    ],
-    "math-g1-multiplication-table": [
-      { id: "div-table-concept-error", category: "concept", description: "除法各部分名称混淆（被除数/除数/商）" },
-      { id: "div-table-quotient-error", category: "calculation", description: "用乘法口诀求商时商找错" },
-      { id: "fill-blank-calc-error", category: "calculation", description: "填空计算错误" },
-      { id: "fill-blank-op-inverse", category: "operation", description: "乘除法填空未用逆运算（求因数误用乘法）" },
-      { id: "mult-table-memory-error", category: "calculation", description: "乘法口诀记忆错误（如六七四十二记成四十八）" },
-      { id: "mult-table-reverse-error", category: "concept", description: "口诀与算式对应错误（乘法交换律理解偏差）" },
-      { id: "multiplication-fact-confusion", category: "operation", description: "乘法口诀混淆" },
-    ],
-    "math-g1-operation": [
-      { id: "clock-draw-hand-err", category: "operation", description: "时针/分针位置画反或画错" },
-      { id: "clock-draw-minute-err", category: "operation", description: "分针指向与分钟数不对应" },
-      { id: "draw-angle-size-err", category: "operation", description: "角的开口大小画错（钝角画成锐角）" },
-      { id: "draw-angle-vertex-err", category: "operation", description: "角的顶点或边的画法错误" },
-      { id: "draw-line-length-err", category: "operation", description: "线段长度画错（起止刻度错误）" },
-      { id: "draw-line-start-err", category: "operation", description: "未从 0 刻度起画，起点偏移导致长度不准" },
-      { id: "draw-shape-feature-error", category: "concept", description: "画图时图形特征画错（正方形边长不相等）" },
-      { id: "draw-shape-incomplete", category: "attention", description: "按要求画图遗漏部分要素" },
-      { id: "graph-count-dup", category: "attention", description: "图形计数重复数（重叠图形漏去重）" },
-      { id: "graph-count-miss", category: "attention", description: "图形计数遗漏（组合图形中的小图形漏数）" },
-      { id: "measure-read-err", category: "reading", description: "刻度读数错误（看错大格小格）" },
-      { id: "measure-start-align", category: "operation", description: "未从 0 刻度对齐线段端点，测出的长度偏大/偏小" },
-    ],
-    "math-g2-choice": [
-      { id: "choice-calc-err", category: "calculation", description: "计算错误导致选错选项" },
-      { id: "choice-option-err", category: "reasoning", description: "对选项筛选不严，选了相近但错误的项" },
-    ],
-    "math-g2-column": [
-      { id: "carry-omission", category: "calculation", description: "进位遗漏" },
-      { id: "chain-add-carry-err", category: "calculation", description: "第一步或第二步的进位漏加或加错" },
-      { id: "chain-add-mid-forget", category: "operation", description: "漏算某一步（只加两个数），未完成三个数连加" },
-      { id: "chain-sub-borrow-err", category: "calculation", description: "某一步退位处理错误导致差错" },
-      { id: "chain-sub-step-miss", category: "operation", description: "只减一次就结束，漏掉第三次减法" },
-      { id: "col-add-align-err", category: "operation", description: "竖式书写时数位未对齐（个位对十位）" },
-      { id: "col-add-carry-forget", category: "calculation", description: "个位满十进位后，十位相加漏加进位的 1" },
-      { id: "col-sub-borrow-deduct", category: "operation", description: "十位被借走 1 后未减 1，十位结果算多" },
-      { id: "col-sub-borrow-miss", category: "calculation", description: "个位不够减未借位，直接用小数减大数" },
-      { id: "digit-alignment-error", category: "notation", description: "数位未对齐" },
-      { id: "div-col-quotient-pos", category: "notation", description: "商写错位置（未写在被除数相应数位上方）" },
-      { id: "div-col-remainder-err", category: "calculation", description: "余数比除数大或漏写余数" },
-      { id: "mixed-col-carry-borrow-err", category: "calculation", description: "进位/退位混用时处理错误" },
-      { id: "mixed-col-order-err", category: "operation", description: "竖式计算顺序颠倒，未按算式从左到右" },
-      { id: "mult-col-align-err", category: "operation", description: "竖式书写时数位不对齐" },
-      { id: "mult-col-product-err", category: "calculation", description: "口诀背错导致积写错" },
-      { id: "rem-col-quotient-err", category: "calculation", description: "试商偏大或偏小，导致余数错误" },
-      { id: "rem-col-remainder-big", category: "calculation", description: "余数不小于除数，商应再大 1" },
-    ],
-    "math-g2-judge": [
-      { id: "judge-calc-err", category: "calculation", description: "对算式结果或运算顺序的判断错误" },
-      { id: "judge-concept-err", category: "concept", description: "对概念表述（余数小于除数、数位顺序等）判断错误" },
-    ],
-    "math-g2-matching": [
-      { id: "match-angle-judge-err", category: "reasoning", description: "用三角板比较时顶点/边未对齐，误判类型" },
-      { id: "match-angle-type-confuse", category: "reasoning", description: "锐角与钝角判断混淆" },
-      { id: "match-calc-compute-err", category: "calculation", description: "算式结果算错，导致连错线" },
-      { id: "match-calc-wrong-line", category: "reasoning", description: "得数相近的算式连线混淆" },
-      { id: "match-clock-read-err", category: "reading", description: "钟面时刻读错（时针/分针读数错误）" },
-      { id: "match-clock-time-confuse", category: "reading", description: "相近时刻（如 3:45 与 4:45）连线混淆" },
-      { id: "match-multdiv-line", category: "reasoning", description: "口诀与算式对应关系混淆" },
-      { id: "match-multdiv-recite-err", category: "calculation", description: "口诀记忆错误导致连线错误" },
-      { id: "match-shape-feature", category: "reasoning", description: "按特征（边数、直角）判断图形时出错" },
-      { id: "match-shape-name-confuse", category: "concept", description: "图形名称混淆（长方形与正方形、三角形与梯形）" },
-      { id: "match-unit-object-err", category: "unit", description: "物品对应的单位选择错误（如桌子高选厘米）" },
-      { id: "match-unit-scope", category: "concept", description: "不同类别单位（长度/质量/时间）混淆" },
-    ],
-    "math-g2-mixed": [
-      { id: "borrow-omission", category: "calculation", description: "退位遗漏" },
-      { id: "bracket-before-outside", category: "operation", description: "忽略括号优先级，先算括号外导致顺序错误" },
-      { id: "bracket-inner-calc-err", category: "calculation", description: "括号内计算错误，导致整体结果错误" },
-      { id: "carry-omission", category: "calculation", description: "进位遗漏" },
-      { id: "chain-addsub-calc-err", category: "calculation", description: "某一步进位/退位算错，导致最终结果错误" },
-      { id: "chain-defer-step-miss", category: "operation", description: "脱式漏写中间步骤，直接写出最后结果" },
-      { id: "compare-result-misjudge", category: "reasoning", description: "两边结果算对但大小判断方向反了" },
-      { id: "compare-side-calc-err", category: "calculation", description: "某一边算式算错，导致比较结果错误" },
-      { id: "fill-op-multidiv-mix", category: "concept", description: "加减与乘除符号混淆（如该填 × 填成 +）" },
-      { id: "fill-op-trial-err", category: "reasoning", description: "试算时未考虑运算顺序，符号判断错误" },
-      { id: "mixed-order-priority-err", category: "operation", description: "未先算乘除后算加减，直接按从左到右全部算" },
-      { id: "mixed-two-level-err", category: "calculation", description: "乘除或加减某一步计算错误，影响最终结果" },
-      { id: "multdiv-left-right-err", category: "operation", description: "乘除混合未按从左到右，先算后两步" },
-      { id: "multdiv-mid-calc-err", category: "calculation", description: "中间一步口诀用错导致后续错误" },
-    ],
-    "math-g2-picture-equations": [
-      { id: "pic-add-count-err", category: "reading", description: "图中数量数错，导致算式错误" },
-      { id: "pic-add-part-merge", category: "reasoning", description: "未区分部分与整体，加法关系理解错误" },
-      { id: "pic-div-include-confuse", category: "concept", description: "包含与等分除法意义混淆，算式列错" },
-      { id: "pic-div-parts-err", category: "reading", description: "份数或每份数看错，商错误" },
-      { id: "pic-div-quotient-err", category: "calculation", description: "商（份数）算错" },
-      { id: "pic-div-total-err", category: "reading", description: "总数数错，除法算式错误" },
-      { id: "pic-mixed-order-err", category: "operation", description: "列式或计算时运算顺序错误" },
-      { id: "pic-mixed-step-err", category: "reasoning", description: "两步计算关系分析错误，算式列错" },
-      { id: "pic-mult-groups-miss", category: "reading", description: "份数与每份数数错，乘法算式错误" },
-      { id: "pic-mult-multadd-mix", category: "concept", description: "相同加数求和误用加法，未用乘法表示" },
-      { id: "pic-sub-part-err", category: "reading", description: "去掉或剩下的部分数数错" },
-      { id: "pic-sub-total-miss", category: "reasoning", description: "未找准总数，减法算式列错" },
-    ],
-    "math-g4-choice": [
-      { id: "choice-angle-degree-err", category: "concept", description: "特殊角（平角周角）度数错误" },
-      { id: "choice-angle-type-err", category: "concept", description: "角类型判断错误" },
-      { id: "choice-big-digit-err", category: "reasoning", description: "未先比位数直接比数字" },
-      { id: "choice-big-place-err", category: "reasoning", description: "高位比较方向错误" },
-      { id: "choice-dec-convert-err", category: "concept", description: "小数与分数/单位互化错误" },
-      { id: "choice-dec-meaning-err", category: "concept", description: "小数意义理解错误" },
-      { id: "choice-est-calc-err", category: "calculation", description: "估算后的计算错误" },
-      { id: "choice-est-round-err", category: "reasoning", description: "取近似数方向或精度错误" },
-      { id: "choice-law-apply-err", category: "operation", description: "运算律应用过程错误" },
-      { id: "choice-law-select-err", category: "reasoning", description: "简便方法选择错误" },
-      { id: "choice-shape-feature-err", category: "concept", description: "图形特征描述选择错误" },
-      { id: "choice-shape-relation-err", category: "concept", description: "图形包含关系（正方形是特殊长方形）判断错误" },
-    ],
-    "math-g4-draw": [
-      { id: "draw-grid-position-err", category: "operation", description: "格数或位置画错" },
-      { id: "draw-grid-shape-err", category: "operation", description: "图形特征（对边/高低）画错" },
-      { id: "draw-move-grid-err", category: "operation", description: "平移格数或方向错误" },
-      { id: "draw-move-part-err", category: "operation", description: "图形部分移动，未整体平移" },
-      { id: "draw-para-perp-err", category: "operation", description: "平行与垂直的画法混淆" },
-      { id: "draw-para-position-err", category: "operation", description: "所画线未过指定点或位置偏移" },
-      { id: "draw-protractor-align-err", category: "operation", description: "量角器未对齐顶点或 0 刻度线" },
-      { id: "draw-protractor-ring-err", category: "operation", description: "量角内外圈读数读错" },
-      { id: "draw-sym-axis-err", category: "operation", description: "对称轴找错或对称点画错" },
-      { id: "draw-sym-distance-err", category: "operation", description: "对称点到轴距离不等，图形不对称" },
-      { id: "draw-view-direction-err", category: "reasoning", description: "不同方向视图混淆" },
-      { id: "draw-view-occlusion-err", category: "reasoning", description: "遮挡关系判断错误，视图画错" },
-    ],
-    "math-g4-fill": [
-      { id: "fill-angle-measure-err", category: "operation", description: "用量角器量角读数错误（内外圈读错）" },
-      { id: "fill-angle-type-err", category: "concept", description: "角的类型与度数范围对应错误" },
-      { id: "fill-avg-parts-err", category: "reasoning", description: "总份数确定错误（份数而非人数/次数）" },
-      { id: "fill-avg-total-err", category: "calculation", description: "总数量求和错误" },
-      { id: "fill-bignum-read-err", category: "notation", description: "大数读法错误（0 的处理、分级）" },
-      { id: "fill-bignum-write-err", category: "notation", description: "大数写法错误（数位对应错）" },
-      { id: "fill-dec-place-err", category: "concept", description: "小数数位及计数单位理解错误" },
-      { id: "fill-dec-property-err", category: "concept", description: "小数性质应用错误（中间 0 不能去掉）" },
-      { id: "fill-hectare-convert-err", category: "calculation", description: "面积单位换算计算错误" },
-      { id: "fill-hectare-rate-err", category: "unit", description: "公顷与平方米、平方千米进率记错" },
-      { id: "fill-line-attr-err", category: "concept", description: "线段、射线、直线特征（端点/延伸）混淆" },
-      { id: "fill-line-count-err", category: "reasoning", description: "点数与线段数对应关系理解错误" },
-      { id: "fill-op-inverse-err", category: "concept", description: "加减/乘除互逆关系理解错误" },
-      { id: "fill-op-zero-err", category: "concept", description: "0 的运算性质记错（如 0 不能作除数）" },
-      { id: "fill-quad-feature-err", category: "concept", description: "平行四边形与梯形特征（对边平行）混淆" },
-      { id: "fill-quad-special-err", category: "concept", description: "长方形、正方形与平行四边形的包含关系错误" },
-      { id: "fill-quotient-cond-err", category: "concept", description: "忽略“0 除外”或只变一个数" },
-      { id: "fill-quotient-rem-err", category: "reasoning", description: "被除数除数同时变化时余数处理错误" },
-      { id: "fill-tri-angle-err", category: "concept", description: "按角分类判断错误" },
-      { id: "fill-tri-side-err", category: "concept", description: "等腰等边关系或三角形成立条件错误" },
-    ],
-    "math-g4-judge": [
-      { id: "judge-angle-comp-err", category: "concept", description: "角的组成或类型判断错误" },
-      { id: "judge-angle-size-err", category: "concept", description: "角的大小与边长短关系理解错误" },
-      { id: "judge-dec-equal-err", category: "reasoning", description: "小数大小相等判断错误" },
-      { id: "judge-dec-tail-err", category: "concept", description: "末尾 0 与中间 0 处理混淆" },
-      { id: "judge-law-apply-err", category: "reasoning", description: "运算律应用是否正确判断错误" },
-      { id: "judge-law-type-err", category: "concept", description: "运算律类型（交换/结合/分配）判断错误" },
-      { id: "judge-line-attr-err", category: "concept", description: "线的端点/长度属性判断错误" },
-      { id: "judge-line-extend-err", category: "concept", description: "射线的延伸方向判断错误" },
-      { id: "judge-quotient-cond-err", category: "concept", description: "“同时、相同数、0 除外”条件判断错误" },
-      { id: "judge-quotient-rem-err", category: "reasoning", description: "余数变化判断错误" },
-      { id: "judge-read-digit-err", category: "notation", description: "大数分级或数位判断错误" },
-      { id: "judge-read-zero-err", category: "notation", description: "0 的读法规则判断错误" },
-      { id: "judge-stats-concl-err", category: "reasoning", description: "统计结论判断错误" },
-      { id: "judge-stats-read-err", category: "reading", description: "统计图数据读取判断错误" },
-      { id: "judge-tri-class-err", category: "concept", description: "三角形分类判断错误" },
-      { id: "judge-tri-property-err", category: "concept", description: "内角和或三边关系判断错误" },
-    ],
-    "math-g4-mixed": [
-      { id: "mix-addlaw-calc-err", category: "calculation", description: "凑整后计算错误" },
-      { id: "mix-addlaw-pair-err", category: "reasoning", description: "凑整配对选错，简便无效" },
-      { id: "mix-dec-calc-err", category: "calculation", description: "小数加减算错或小数点处理错" },
-      { id: "mix-dec-pair-err", category: "reasoning", description: "小数凑整组合找错" },
-      { id: "mix-dist-forget-err", category: "operation", description: "分配时只乘其中一个加数，漏乘" },
-      { id: "mix-dist-mix-law-err", category: "concept", description: "分配律与结合律混淆，拆括号错误" },
-      { id: "mix-mullaw-calc-err", category: "calculation", description: "乘法计算错误" },
-      { id: "mix-mullaw-pair-err", category: "reasoning", description: "凑整组合找错" },
-      { id: "mix-order-bracket-err", category: "operation", description: "括号优先级处理错误" },
-      { id: "mix-order-priority-err", category: "operation", description: "未按先乘除后加减的顺序计算" },
-    ],
-    "math-g4-oral": [
-      { id: "oral-big-unit-err", category: "calculation", description: "整万/整亿口算时计数单位个数算错" },
-      { id: "oral-big-zero-err", category: "calculation", description: "结果末尾 0 的个数写错" },
-      { id: "oral-dec-borrow-err", category: "calculation", description: "小数退位减法算错" },
-      { id: "oral-dec-point-err", category: "notation", description: "小数点位置处理错误" },
-      { id: "oral-divt-calc-err", category: "calculation", description: "简化后的除法算错" },
-      { id: "oral-divt-zero-err", category: "calculation", description: "去 0 后未按商不变处理，商错" },
-      { id: "oral-law-calc-err", category: "calculation", description: "凑整后计算错误" },
-      { id: "oral-law-group-err", category: "reasoning", description: "凑整组合找错，未达到简便效果" },
-      { id: "oral-mul2t-calc-err", category: "calculation", description: "前两位相乘算错" },
-      { id: "oral-mul2t-zero-err", category: "calculation", description: "积末尾漏补 0" },
-      { id: "oral-mul3x1-calc-err", category: "calculation", description: "一位数乘法口诀算错" },
-      { id: "oral-mul3x1-zero-err", category: "calculation", description: "补 0 个数错误（漏 0 或多 0）" },
-    ],
-    "math-g4-picture": [
-      { id: "pic-brace-calc-err", category: "calculation", description: "加减计算错误" },
-      { id: "pic-brace-total-err", category: "reasoning", description: "总数与部分关系判断错误" },
-      { id: "pic-dec-align-err", category: "operation", description: "小数加减未对齐小数点" },
-      { id: "pic-dec-count-err", category: "reading", description: "图中数量读错" },
-      { id: "pic-segment-formula-err", category: "reasoning", description: "根据线段图列式错误" },
-      { id: "pic-segment-unit-err", category: "reasoning", description: "一倍量/倍数线段画错" },
-      { id: "pic-speed-formula-err", category: "calculation", description: "路程/速度/时间关系式选错" },
-      { id: "pic-speed-unit-err", category: "unit", description: "速度单位（千米/时）书写或换算错误" },
-    ],
-    "math-g4-reason": [
-      { id: "logic-condition-err", category: "reading", description: "漏用或误读推理条件" },
-      { id: "logic-deduce-err", category: "reasoning", description: "推理步骤错误，结论不合条件" },
-      { id: "reason-cr-diff-err", category: "calculation", description: "假设后脚数差计算错误" },
-      { id: "reason-cr-step-err", category: "reasoning", description: "假设法步骤混乱，结果错误" },
-      { id: "reason-opt-pancake-err", category: "reasoning", description: "烙饼时间计算错误（未考虑同时烙）" },
-      { id: "reason-opt-parallel-err", category: "reasoning", description: "未利用可同时进行的工序" },
-    ],
-    "math-g4-stats": [
-      { id: "stats-avg-compare-err", category: "reasoning", description: "平均数比较判断错误" },
-      { id: "stats-avg-sum-err", category: "calculation", description: "数据求和错误" },
-      { id: "stats-bar-draw-err", category: "operation", description: "条形高度/格数绘制错误" },
-      { id: "stats-bar-unit-err", category: "reading", description: "一格代表多少的单位看错" },
-      { id: "stats-double-compare-err", category: "reasoning", description: "两组数据对比分析错误" },
-      { id: "stats-double-legend-err", category: "reading", description: "图例与数据对应错误" },
-    ],
-    "math-g4-vertical": [
-      { id: "carry-omission", category: "calculation", description: "进位遗漏" },
-      { id: "v-dec-align-err", category: "operation", description: "未按小数点对齐，数位错位" },
-      { id: "v-dec-point-err", category: "notation", description: "结果小数点位置写错" },
-      { id: "v-div2-remainder-err", category: "calculation", description: "余数不小于除数，或余数计算错误" },
-      { id: "v-div2-trial-err", category: "calculation", description: "试商偏大或偏小，需调商" },
-      { id: "v-div2q-calc-err", category: "calculation", description: "试商或余数计算错误" },
-      { id: "v-div2q-place-err", category: "operation", description: "商的数位或 0 占位错误" },
-      { id: "v-mul3x2-carry-err", category: "calculation", description: "进位漏加或加错" },
-      { id: "v-mul3x2-place-err", category: "operation", description: "十位乘的积数位未对齐" },
-      { id: "v-mulzero-mid-err", category: "calculation", description: "中间有 0 的位漏乘或进位处理错误" },
-      { id: "v-mulzero-tail-err", category: "operation", description: "末尾补 0 个数错误" },
-    ],
-    "math-g4-word": [
-      { id: "word-area-calc-err", category: "calculation", description: "面积计算错误" },
-      { id: "word-area-unit-err", category: "unit", description: "面积单位换算或选择错误" },
-      { id: "word-avg-parts-err", category: "reasoning", description: "总份数判断错误" },
-      { id: "word-avg-total-err", category: "calculation", description: "总数量计算错误" },
-      { id: "word-big-approx-err", category: "reasoning", description: "四舍五入求近似数错误" },
-      { id: "word-big-rewrite-err", category: "operation", description: "大数改写单位错误或漏补 0" },
-      { id: "word-cr-assume-err", category: "reasoning", description: "假设后差脚数计算错误" },
-      { id: "word-cr-replace-err", category: "reasoning", description: "换一只的脚数差判断错误" },
-      { id: "word-dec-align-err", category: "operation", description: "小数加减未对齐小数点" },
-      { id: "word-dec-calc-err", category: "calculation", description: "小数计算错误" },
-      { id: "word-div-calc-err", category: "calculation", description: "除法计算错误" },
-      { id: "word-div-relation-err", category: "reasoning", description: "求每份还是求份数判断错误" },
-      { id: "word-opt-order-err", category: "reasoning", description: "工序顺序安排不当，总时间非最少" },
-      { id: "word-opt-parallel-err", category: "reasoning", description: "未利用可并行的空档时间" },
-      { id: "word-price-calc-err", category: "calculation", description: "乘除计算错误" },
-      { id: "word-price-formula-err", category: "calculation", description: "单价数量总价关系式用错" },
-      { id: "word-speed-calc-err", category: "calculation", description: "乘法计算或单位换算错误" },
-      { id: "word-speed-formula-err", category: "calculation", description: "速度时间路程关系式用错" },
-    ],
-    "math-g5-choice": [
-      { id: "choice-area-compare-err", category: "reasoning", description: "面积大小比较错误" },
-      { id: "choice-area-formula-err", category: "concept", description: "面积公式选择错误" },
-      { id: "choice-decmul-method-err", category: "reasoning", description: "算法选择错误" },
-      { id: "choice-decmul-result-err", category: "calculation", description: "结果判断错误" },
-      { id: "choice-equ-id-err", category: "concept", description: "方程识别错误" },
-      { id: "choice-equ-solve-err", category: "calculation", description: "方程的解判断错误" },
-      { id: "choice-fm-prime-err", category: "concept", description: "质数合数判断错误" },
-      { id: "choice-fm-relation-err", category: "concept", description: "因数倍数关系判断错误" },
-      { id: "choice-frac-compare-err", category: "reasoning", description: "分数大小比较错误" },
-      { id: "choice-frac-unit-err", category: "concept", description: "分数单位判断错误" },
-      { id: "choice-motion-type-err", category: "concept", description: "运动类型判断错误" },
-      { id: "choice-possib-fair-err", category: "reasoning", description: "公平性判断错误" },
-      { id: "choice-possib-size-err", category: "reasoning", description: "可能性大小判断错误" },
-      { id: "choice-solid-sv-err", category: "concept", description: "表面积体积容积概念混淆" },
-      { id: "choice-solid-unit-err", category: "unit", description: "体积容积单位换算错误" },
-      { id: "choice-stats-chart-err", category: "concept", description: "统计图选择错误" },
-      { id: "choice-stats-read-err", category: "reading", description: "折线图数据读取错误" },
-      { id: "motion-symaxis-err", category: "reasoning", description: "对称轴数量判断错误" },
-    ],
-    "math-g5-draw": [
-      { id: "draw-coord-count-err", category: "operation", description: "格数数错" },
-      { id: "draw-coord-order-err", category: "operation", description: "列行顺序颠倒" },
-      { id: "draw-height-base-err", category: "operation", description: "对应的底找错" },
-      { id: "draw-height-dir-err", category: "operation", description: "高的方向（垂直）错误" },
-      { id: "draw-net-fold-err", category: "reasoning", description: "展开图能否围成立体判断错误" },
-      { id: "draw-net-opposite-err", category: "reasoning", description: "相对面判断错误" },
-      { id: "draw-observe-layer-err", category: "reasoning", description: "层数与遮挡判断错误" },
-      { id: "draw-observe-view-err", category: "reasoning", description: "方向视图混淆" },
-      { id: "draw-rotate-angle-err", category: "operation", description: "旋转角度错误" },
-      { id: "draw-rotate-center-err", category: "operation", description: "绕错旋转中心" },
-      { id: "draw-sym-distance-err", category: "operation", description: "对称点到轴距离不等" },
-      { id: "draw-sym-perp-err", category: "operation", description: "对称点连线未垂直对称轴" },
-    ],
-    "math-g5-fill": [
-      { id: "fill-area-formula-err", category: "calculation", description: "面积公式记错或漏÷2" },
-      { id: "fill-area-unit-err", category: "unit", description: "面积单位写错（厘米²等）" },
-      { id: "fill-coord-order-err", category: "concept", description: "列行顺序颠倒" },
-      { id: "fill-coord-read-err", category: "reading", description: "方格位置读错" },
-      { id: "fill-deccmp-digit-err", category: "reasoning", description: "逐位比较方向或顺序错误" },
-      { id: "fill-deccmp-equal-err", category: "reasoning", description: "末尾补 0 后比较判断错误" },
-      { id: "fill-decloc-count-err", category: "concept", description: "小数组成（含几个十分之一等）判断错误" },
-      { id: "fill-decloc-unit-err", category: "concept", description: "计数单位与数位对应错误" },
-      { id: "fill-equation-def-err", category: "concept", description: "方程与等式概念混淆" },
-      { id: "fill-equation-prop-err", category: "concept", description: "等式性质条件（0 除外）理解错误" },
-      { id: "fill-fm-minmax-err", category: "concept", description: "最小/最大因数倍数判断错误" },
-      { id: "fill-fm-relation-err", category: "concept", description: "因数倍数关系表述错误" },
-      { id: "fill-fracdec-div-err", category: "calculation", description: "分数化小数除法错误" },
-      { id: "fill-fracdec-place-err", category: "concept", description: "小数化分数位数对应错误" },
-      { id: "fill-fracmean-meaning-err", category: "concept", description: "平均分的份数与所取份数理解错误" },
-      { id: "fill-fracmean-unit-err", category: "concept", description: "分数单位判断错误" },
-      { id: "fill-fracprop-property-err", category: "concept", description: "分数基本性质应用错误" },
-      { id: "fill-fracprop-yue-err", category: "calculation", description: "约分未化最简或通分错误" },
-      { id: "fill-letter-rel-err", category: "concept", description: "字母式子表示的数量关系理解错误" },
-      { id: "fill-letter-sub-err", category: "calculation", description: "代入求值时计算错误" },
-      { id: "fill-linechart-feature-err", category: "concept", description: "折线图与条形图特点混淆" },
-      { id: "fill-linechart-trend-err", category: "reading", description: "增减趋势读取错误" },
-      { id: "fill-possible-judge-err", category: "reasoning", description: "事件确定性判断错误" },
-      { id: "fill-possible-word-err", category: "reasoning", description: "一定/可能/不可能用词错误" },
-      { id: "fill-prime-list-err", category: "concept", description: "质数判断错误" },
-      { id: "fill-prime-one-err", category: "concept", description: "把 1 当质数或合数" },
-      { id: "fill-prodrule-both-err", category: "reasoning", description: "两因数同时变化时积的变化判断错误" },
-      { id: "fill-prodrule-one-err", category: "reasoning", description: "只考虑一个因数变化时出错" },
-      { id: "fill-repeating-cmp-err", category: "reasoning", description: "循环小数比较错误" },
-      { id: "fill-repeating-cycle-err", category: "concept", description: "循环节识别错误" },
-      { id: "fill-rotate-direction-err", category: "concept", description: "旋转方向判断错误" },
-      { id: "fill-rotate-element-err", category: "concept", description: "旋转三要素理解错误" },
-      { id: "fill-solid-feature-err", category: "concept", description: "面棱顶点数量或特征错误" },
-      { id: "fill-solid-formula-err", category: "calculation", description: "表面积体积公式混淆" },
-    ],
-    "math-g5-judge": [
-      { id: "judge-area-equal-err", category: "concept", description: "等底等高面积关系判断错误" },
-      { id: "judge-area-formula-err", category: "concept", description: "面积公式应用判断错误" },
-      { id: "judge-decmul-dot-err", category: "concept", description: "小数位与积商关系判断错误" },
-      { id: "judge-decmul-relation-err", category: "concept", description: "乘除对数值大小影响判断错误" },
-      { id: "judge-equ-eq-err", category: "concept", description: "方程与等式关系判断错误" },
-      { id: "judge-equ-solve-err", category: "concept", description: "解方程概念或步骤判断错误" },
-      { id: "judge-fm-special-err", category: "concept", description: "1 的特殊性判断错误" },
-      { id: "judge-fm-zero-err", category: "concept", description: "0 的倍数表述判断错误" },
-      { id: "judge-frac-meaning-err", category: "concept", description: "分数意义判断错误" },
-      { id: "judge-frac-property-err", category: "concept", description: "分数基本性质判断错误" },
-      { id: "judge-possib-compare-err", category: "reasoning", description: "可能性大小判断错误" },
-      { id: "judge-possib-word-err", category: "concept", description: "可能性描述用词判断错误" },
-      { id: "judge-solid-special-err", category: "concept", description: "正方体与长方体关系判断错误" },
-      { id: "judge-solid-sv-err", category: "concept", description: "表面积体积概念混淆" },
-      { id: "judge-stats-read-err", category: "reading", description: "统计图数据读取判断错误" },
-      { id: "judge-stats-type-err", category: "concept", description: "统计图类型选择判断错误" },
-      { id: "motion-prop-err", category: "concept", description: "运动性质（形状大小）判断错误" },
-      { id: "motion-type-err", category: "concept", description: "平移旋转轴对称类型判断错误" },
-    ],
-    "math-g5-mixed": [
-      { id: "mix-decmixed-calc-err", category: "calculation", description: "小数计算错误" },
-      { id: "mix-decmixed-order-err", category: "operation", description: "运算顺序错误" },
-      { id: "mix-decsimple-calc-err", category: "calculation", description: "小数计算错误" },
-      { id: "mix-decsimple-pair-err", category: "reasoning", description: "凑整组合选错" },
-      { id: "mix-fracmixed-calc-err", category: "calculation", description: "分数加减计算错误" },
-      { id: "mix-fracmixed-tong-err", category: "calculation", description: "通分错误" },
-      { id: "mix-fracsimple-calc-err", category: "calculation", description: "分数计算错误" },
-      { id: "mix-fracsimple-pair-err", category: "reasoning", description: "凑整组合选错" },
-    ],
-    "math-g5-oral": [
-      { id: "oral-decdiv-div-err", category: "calculation", description: "除法计算错误" },
-      { id: "oral-decdiv-dot-err", category: "notation", description: "商的小数点位置错误" },
-      { id: "oral-decmul-dot-err", category: "notation", description: "积的小数点位置错误" },
-      { id: "oral-decmul-mul-err", category: "calculation", description: "整数相乘算错" },
-      { id: "oral-equ-calc-err", category: "calculation", description: "解的计算错误" },
-      { id: "oral-equ-inverse-err", category: "reasoning", description: "逆运算（加减乘除对应）选错" },
-      { id: "oral-fm-digit-err", category: "calculation", description: "数字和计算错误" },
-      { id: "oral-fm-feature-err", category: "concept", description: "整除特征记错" },
-      { id: "oral-fracadd-num-err", category: "calculation", description: "分子相加减错误" },
-      { id: "oral-fracadd-simplify-err", category: "calculation", description: "结果未约分成最简分数" },
-    ],
-    "math-g5-picture": [
-      { id: "pic-area-base-err", category: "reading", description: "底或高识别错误" },
-      { id: "pic-area-formula-err", category: "calculation", description: "面积计算错误" },
-      { id: "pic-balance-equal-err", category: "reasoning", description: "等量关系找错" },
-      { id: "pic-balance-equation-err", category: "reasoning", description: "列方程错误" },
-      { id: "pic-segment-formula-err", category: "reasoning", description: "根据线段图列式错误" },
-      { id: "pic-segment-unit-err", category: "reasoning", description: "一倍量确定错误" },
-      { id: "pic-tree-count-err", category: "reasoning", description: "棵数与间隔数关系错误" },
-      { id: "pic-tree-type-err", category: "reasoning", description: "植树类型判断错误" },
-    ],
-    "math-g5-reason": [
-      { id: "logic-reasoning-cond-err", category: "reading", description: "条件遗漏或误读" },
-      { id: "logic-reasoning-deduce-err", category: "reasoning", description: "推理过程错误" },
-      { id: "reason-defect-3groups-err", category: "reasoning", description: "未分 3 份导致次数多" },
-      { id: "reason-defect-times-err", category: "reasoning", description: "最少次数判断错误" },
-      { id: "reason-seq-calc-err", category: "calculation", description: "按规律计算下一项错误" },
-      { id: "reason-seq-pattern-err", category: "reasoning", description: "规律识别错误" },
-      { id: "reason-tree3-calc-err", category: "calculation", description: "间隔数或棵数计算错误" },
-      { id: "reason-tree3-type-err", category: "reasoning", description: "三种情况判断错误" },
-    ],
-    "math-g5-stats": [
-      { id: "stats-line1-plot-err", category: "operation", description: "描点或标数据错误" },
-      { id: "stats-line1-read-err", category: "reading", description: "数据或趋势读取错误" },
-      { id: "stats-line2-compare-err", category: "reasoning", description: "两组趋势对比分析错误" },
-      { id: "stats-line2-legend-err", category: "reading", description: "图例与数据对应错误" },
-      { id: "stats-possib-cmp-err", category: "reasoning", description: "可能性大小比较错误" },
-      { id: "stats-possib-count-err", category: "reasoning", description: "等可能情况数统计错误" },
-    ],
-    "math-g5-vertical": [
-      { id: "carry-omission", category: "calculation", description: "进位遗漏" },
-      { id: "v-ddivdec-dot-err", category: "notation", description: "商的小数点位置错误" },
-      { id: "v-ddivdec-move-err", category: "operation", description: "被除数小数点未同步移动或补 0" },
-      { id: "v-decmul-dot-err", category: "notation", description: "积的小数位数点错" },
-      { id: "v-decmul-place-err", category: "operation", description: "竖式对位或进位错误" },
-      { id: "v-divint-dot-err", category: "notation", description: "商的小数点未对齐" },
-      { id: "v-divint-zero-err", category: "operation", description: "不够商 1 时未商 0 占位" },
-      { id: "v-repeating-cycle-err", category: "concept", description: "循环节判断错误" },
-      { id: "v-repeating-notation-err", category: "notation", description: "循环节简便记法写错" },
-    ],
-    "math-g5-word": [
-      { id: "word-area-formula-err", category: "calculation", description: "面积公式用错" },
-      { id: "word-area-unit-err", category: "unit", description: "单位不统一或换算错误" },
-      { id: "word-decdiv-div-err", category: "calculation", description: "除法计算错误" },
-      { id: "word-decdiv-method-err", category: "reasoning", description: "进一/去尾方法选择错误" },
-      { id: "word-decmul-dot-err", category: "notation", description: "积的小数点或单位错误" },
-      { id: "word-decmul-relation-err", category: "reasoning", description: "数量关系判断错误" },
-      { id: "word-defect-group-err", category: "reasoning", description: "分组不平均（未分 3 份）" },
-      { id: "word-defect-times-err", category: "reasoning", description: "称量次数判断错误" },
-      { id: "word-equ-relation-err", category: "reasoning", description: "等量关系找错" },
-      { id: "word-equ-solve-err", category: "calculation", description: "解方程错误" },
-      { id: "word-fm-list-err", category: "calculation", description: "列举因数倍数遗漏" },
-      { id: "word-fm-relation-err", category: "reasoning", description: "公因数公倍数判断错误" },
-      { id: "word-frac-solve-err", category: "reasoning", description: "加还是减判断错误" },
-      { id: "word-frac-tong-err", category: "calculation", description: "通分错误" },
-      { id: "word-linechart-read-err", category: "reading", description: "图中数据读取错误" },
-      { id: "word-linechart-trend-err", category: "reasoning", description: "趋势分析错误" },
-      { id: "word-possib-compare-err", category: "reasoning", description: "可能性大小比较错误" },
-      { id: "word-possib-count-err", category: "reasoning", description: "等可能情况数统计错误" },
-      { id: "word-solid-face-err", category: "reasoning", description: "需计算的面判断错误（少/多一面）" },
-      { id: "word-solid-volume-err", category: "calculation", description: "体积容积计算或换算错误" },
-      { id: "word-tree-count-err", category: "reasoning", description: "棵数与间隔数换算错误" },
-      { id: "word-tree-type-err", category: "reasoning", description: "植树类型判断错误" },
-    ],
-    "math-g6-calc": [
-      { id: "calcdd-dot-err", category: "notation", description: "商的小数点位置错误" },
-      { id: "calcdd-move-err", category: "operation", description: "小数点未同步移动或补 0" },
-      { id: "calcdm-dot-err", category: "notation", description: "积的小数位数点错" },
-      { id: "calcdm-place-err", category: "operation", description: "竖式对位或进位错误" },
-      { id: "calcfmd-calc-err", category: "calculation", description: "约分或相乘错误" },
-      { id: "calcfmd-turn-err", category: "operation", description: "除转乘倒数处理错误" },
-      { id: "mf-calc-err", category: "calculation", description: "分数计算错误" },
-      { id: "mf-order-err", category: "operation", description: "运算顺序错误" },
-      { id: "mfs-calc-err", category: "calculation", description: "简便后计算错误" },
-      { id: "mfs-pair-err", category: "reasoning", description: "凑整组合选错" },
-      { id: "mse-denominator-err", category: "operation", description: "去分母或移项错误" },
-      { id: "mse-solve-err", category: "calculation", description: "求解计算错误" },
-      { id: "solvprop-cross-err", category: "operation", description: "内外项相乘位置错误" },
-      { id: "solvprop-solve-err", category: "calculation", description: "方程求解错误" },
-    ],
-    "math-g6-choice": [
-      { id: "choicecc-formula-err", category: "concept", description: "圆柱圆锥公式选择错误" },
-      { id: "choicecc-relation-err", category: "reasoning", description: "体积关系选择错误" },
-      { id: "choicechart-calc-err", category: "calculation", description: "扇形占比计算错误" },
-      { id: "choicechart-select-err", category: "concept", description: "统计图选择错误" },
-      { id: "choicecircle-formula-err", category: "calculation", description: "周长面积计算选择错误" },
-      { id: "choicecircle-relation-err", category: "concept", description: "半径直径关系选择错误" },
-      { id: "choiceneg-compare-err", category: "reasoning", description: "负数大小比较选择错误" },
-      { id: "choiceneg-meaning-err", category: "concept", description: "负数意义选择错误" },
-      { id: "choiceper-convert-err", category: "calculation", description: "百分数互化选择错误" },
-      { id: "choiceper-discount-err", category: "concept", description: "折扣成数理解错误" },
-    ],
-    "math-g6-fill": [
-      { id: "fillcc-formula-err", category: "calculation", description: "圆柱圆锥体积公式混淆" },
-      { id: "fillcc-third-err", category: "reasoning", description: "圆锥 1/3 关系用错" },
-      { id: "fillcircle-formula-err", category: "calculation", description: "周长面积公式混淆" },
-      { id: "fillcircle-radius-err", category: "reasoning", description: "半径直径关系用错" },
-      { id: "fillneg-compare-err", category: "reasoning", description: "负数大小比较错误" },
-      { id: "fillneg-meaning-err", category: "concept", description: "负数意义（相反量）理解错误" },
-      { id: "fillper-convert-err", category: "calculation", description: "百分数与分数小数互化错误" },
-      { id: "fillper-meaning-err", category: "concept", description: "百分数意义理解错误" },
-      { id: "fillpie-angle-err", category: "calculation", description: "圆心角计算错误" },
-      { id: "fillpie-ratio-err", category: "reading", description: "扇形占比读取错误" },
-      { id: "fillratio-direct-err", category: "concept", description: "正反比例判断错误" },
-      { id: "fillratio-simplify-err", category: "operation", description: "化简比与求比值混淆" },
-      { id: "unitconv-dir-err", category: "unit", description: "大小单位换算方向错误" },
-      { id: "unitconv-rate-err", category: "unit", description: "进率记错" },
-    ],
-    "math-g6-judge": [
-      { id: "judgecc-third-err", category: "concept", description: "圆锥 1/3 关系判断错误" },
-      { id: "judgecc-unfold-err", category: "concept", description: "侧面展开图形判断错误" },
-      { id: "judgechart-read-err", category: "reading", description: "统计图数据读取判断错误" },
-      { id: "judgechart-type-err", category: "concept", description: "统计图选择判断错误" },
-      { id: "judgecircle-change-err", category: "concept", description: "半径变化对周长面积影响判断错误" },
-      { id: "judgecircle-formula-err", category: "concept", description: "圆公式或概念判断错误" },
-      { id: "judgeneg-size-err", category: "reasoning", description: "负数大小判断错误" },
-      { id: "judgeneg-zero-err", category: "concept", description: "0 与负数关系判断错误" },
-      { id: "judgepr-percent-err", category: "concept", description: "百分数相对量概念判断错误" },
-      { id: "judgepr-ratio-err", category: "concept", description: "比与比值、正反比例判断错误" },
-    ],
-    "math-g6-operation": [
-      { id: "opcircle-center-err", category: "operation", description: "圆心定位错误" },
-      { id: "opcircle-radius-err", category: "operation", description: "圆规张开的长度（半径）错误" },
-      { id: "opposition-angle-err", category: "reasoning", description: "角度或距离标注错误" },
-      { id: "opposition-dir-err", category: "reading", description: "方向描述错误" },
-      { id: "oprscale-angle-err", category: "operation", description: "旋转角度或方向错误" },
-      { id: "oprscale-ratio-err", category: "operation", description: "缩放比例应用错误" },
-      { id: "opsym-axis-err", category: "operation", description: "对称轴画错" },
-      { id: "opsym-distance-err", category: "operation", description: "对称点距离不等" },
-    ],
-    "math-g6-oral": [
-      { id: "decper-move-err", category: "calculation", description: "小数点移动方向或位数错误" },
-      { id: "decper-percent-err", category: "notation", description: "% 号添去错误" },
-      { id: "fdivfrac-calc-err", category: "calculation", description: "乘倒数后计算错误" },
-      { id: "fdivfrac-turn-err", category: "operation", description: "除号变乘号或取倒数错误" },
-      { id: "fdivint-calc-err", category: "calculation", description: "乘倒数后计算错误" },
-      { id: "fdivint-reciprocal-err", category: "calculation", description: "倒数转化错误" },
-      { id: "fmfrac-cross-err", category: "calculation", description: "交叉约分错误" },
-      { id: "fmfrac-num-err", category: "calculation", description: "分子分母相乘错误" },
-      { id: "fmint-mult-err", category: "calculation", description: "分子与整数相乘错误" },
-      { id: "fmint-simplify-err", category: "calculation", description: "结果未约分或约分错误" },
-      { id: "negadd-sign-err", category: "calculation", description: "结果符号取错" },
-      { id: "negadd-value-err", category: "calculation", description: "绝对值加减计算错误" },
-      { id: "ratiosimp-form-err", category: "concept", description: "最简整数比形式理解错误" },
-      { id: "ratiosimp-gcd-err", category: "calculation", description: "最大公因数或化简计算错误" },
-    ],
-    "math-g6-picture-equation": [
-      { id: "picfraction-column-err", category: "reasoning", description: "根据线段图列式错误" },
-      { id: "picfraction-unit1-err", category: "reasoning", description: "单位 1 画错" },
-      { id: "picpie-part-err", category: "calculation", description: "部分量计算错误" },
-      { id: "picpie-total-err", category: "reasoning", description: "总数推算错误" },
-      { id: "picscale-formula-err", category: "calculation", description: "比例尺关系式用错" },
-      { id: "picscale-unit-err", category: "unit", description: "图上实际单位换算错误" },
-    ],
-    "math-g6-reasoning": [
-      { id: "reasonns-formula-err", category: "reasoning", description: "规律公式化错误" },
-      { id: "reasonns-pattern-err", category: "reasoning", description: "图形规律发现错误" },
-      { id: "reasonph-construct-err", category: "reasoning", description: "抽屉构造错误" },
-      { id: "reasonph-proof-err", category: "reasoning", description: "至少结论推理错误" },
-    ],
-    "math-g6-stats": [
-      { id: "statpie-calc-err", category: "calculation", description: "数量或圆心角计算错误" },
-      { id: "statpie-ratio-err", category: "reading", description: "占比读取错误" },
-      { id: "statposs-fair-err", category: "reasoning", description: "公平性判断错误" },
-      { id: "statposs-frac-err", category: "calculation", description: "可能性分数计算错误" },
-    ],
-    "math-g6-word-problems": [
-      { id: "appcc-face-err", category: "reasoning", description: "需计算的面判断错误" },
-      { id: "appcc-third-err", category: "calculation", description: "圆锥 1/3 或体积计算错误" },
-      { id: "appcircle-comb-err", category: "reasoning", description: "组合图形分解错误" },
-      { id: "appcircle-ring-err", category: "calculation", description: "环形面积计算错误" },
-      { id: "appfd-calc-err", category: "calculation", description: "计算错误" },
-      { id: "appfd-method-err", category: "reasoning", description: "乘除方法选错" },
-      { id: "appfm-calc-err", category: "calculation", description: "分数计算错误" },
-      { id: "appfm-unit1-err", category: "reasoning", description: "单位 1 识别错误" },
-      { id: "appper-discount-err", category: "calculation", description: "折扣与现价关系错误" },
-      { id: "appper-interest-err", category: "calculation", description: "利息或税率计算错误" },
-      { id: "apppigeon-count-err", category: "calculation", description: "至少数计算错误" },
-      { id: "apppigeon-drawer-err", category: "reasoning", description: "抽屉分组错误" },
-      { id: "appratio-solve-err", category: "calculation", description: "比例式求解错误" },
-      { id: "appratio-type-err", category: "reasoning", description: "正反比例判断错误" },
-      { id: "apptw-calc-err", category: "calculation", description: "计算错误" },
-      { id: "apptw-model-err", category: "reasoning", description: "数量关系建模错误" },
-    ],
-    "math-geometry": [
-      { id: "angle-life-confuse", category: "concept", description: "生活中的角辨认不出来或误认非角" },
-      { id: "angle-type-judge-err", category: "reasoning", description: "直角、锐角、钝角大小判断错误" },
-      { id: "angle-type-misjudge", category: "reasoning", description: "角的大小类型判断错误" },
-      { id: "angle-vertex-miss", category: "concept", description: "未理解角必须有顶点和两条边，把非角图形当角" },
-      { id: "grid-draw-move-err", category: "operation", description: "平移方向或格数错误，图形位置不对" },
-      { id: "grid-draw-shape-err", category: "structure", description: "方格纸上图形边长/形状画错" },
-      { id: "motion-axis-judge-err", category: "reasoning", description: "判断图形是否轴对称时出错（对称轴找错）" },
-      { id: "motion-type-confuse", category: "concept", description: "平移与旋转现象区分不清" },
-      { id: "perimeter-formula-err", category: "calculation", description: "周长公式记错或混用（如只加两条边）" },
-      { id: "perimeter-unit-err", category: "unit", description: "周长单位写错（用面积单位表示周长）" },
-    ],
-    "math-logic-reasoning": [
-      { id: "combination-dup-case", category: "reasoning", description: "列举时重复计数同一方案" },
-      { id: "combination-miss-case", category: "reasoning", description: "列举搭配时漏掉某些方案，计数偏少" },
-      { id: "handshake-count-miss", category: "calculation", description: "累加握手次数时算错或漏算" },
-      { id: "handshake-pair-err", category: "reasoning", description: "重复计算两人之间的握手（如 3 人算 6 次）" },
-      { id: "logic-condition-miss", category: "reading", description: "漏看推理条件，结论错误" },
-      { id: "logic-deduce-err", category: "reasoning", description: "推理过程跳跃或方向错误，结论不合条件" },
-      { id: "order-front-back", category: "reading", description: "前后方向或“第几/几人”理解混淆" },
-      { id: "order-position-err", category: "reasoning", description: "计算总人数时忘加自己（漏 +1）" },
-      { id: "sudoku-miss-num", category: "reasoning", description: "某格候选数判断漏项，填错数字" },
-      { id: "sudoku-repeat-err", category: "reasoning", description: "同一行或同一列出现重复数字" },
-    ],
-    "math-make-ten": [
-      { id: "borrow-omission", category: "calculation", description: "退位减法遗漏退位" },
-      { id: "make10-compose-error", category: "concept", description: "十的组成不熟导致凑十失败（如 8+6 不知 8 需拆 2）" },
-      { id: "make10-result-miss", category: "calculation", description: "凑成 10 后忘记加剩余部分（9+5 只算 10 未加 4）" },
-      { id: "make10-split-error", category: "calculation", description: "凑十时拆分错误（如 9+5 拆成 5 和 0，未拆出 1）" },
-      { id: "ping-split-error", category: "calculation", description: "平十法拆分减数错误（如 15-8 未把 8 拆成 5 和 3）" },
-      { id: "ping-two-step-miss", category: "calculation", description: "平十两步计算漏一步（15-8 只算 15-5 未再减 3）" },
-      { id: "po-decompose-error", category: "calculation", description: "破十法分解被减数错误（如 15-8 把 15 拆成 10 和 6）" },
-      { id: "po10-result-miss", category: "calculation", description: "破十后忘记把 10 减剩的数加回剩余部分" },
-    ],
-    "math-match": [
-      { id: "match-angle-degree-err", category: "reasoning", description: "角类型与度数范围对应错误" },
-      { id: "match-angle-mix-err", category: "concept", description: "不同角类型的度数混淆" },
-      { id: "match-areaf-div2-err", category: "concept", description: "三角形/梯形面积是否÷2混淆" },
-      { id: "match-areaf-formula-err", category: "calculation", description: "图形与公式对应错误" },
-      { id: "match-decfrac-place-err", category: "concept", description: "小数位数与分数分母对应错误" },
-      { id: "match-decfrac-simplify-err", category: "calculation", description: "分数化简或等值判断错误" },
-      { id: "match-equ-check-err", category: "reasoning", description: "未代入验证导致连线错" },
-      { id: "match-equ-solve-err", category: "calculation", description: "方程解求错" },
-      { id: "match-fracdec-common-err", category: "concept", description: "常见分数小数等值不熟" },
-      { id: "match-fracdec-convert-err", category: "calculation", description: "互化错误导致连线错" },
-      { id: "match-law-letter-err", category: "calculation", description: "运算律与字母表达式对应错误" },
-      { id: "match-law-mix-err", category: "concept", description: "分配律与结合律混淆" },
-      { id: "match-possib-class-err", category: "reasoning", description: "事件类别判断错误" },
-      { id: "match-possib-word-err", category: "reasoning", description: "描述用词连线错误" },
-      { id: "match-read-digit-err", category: "reading", description: "数位读法混淆（万级亿级）" },
-      { id: "match-read-zero-err", category: "notation", description: "0 的读法判断错误导致连线错" },
-      { id: "match-shape-confuse-err", category: "concept", description: "相似图形（平行四边与梯形）特征混淆" },
-      { id: "match-shape-feature-err", category: "concept", description: "图形特征描述匹配错误" },
-      { id: "match-solid-confuse-err", category: "concept", description: "长方体与正方体特征混淆" },
-      { id: "match-solid-feature-err", category: "concept", description: "立体图形特征匹配错误" },
-      { id: "matchchart-feature-err", category: "concept", description: "统计图特点混淆" },
-      { id: "matchchart-type-err", category: "concept", description: "统计图适用场景判断错误" },
-      { id: "matchformula-cyl-err", category: "concept", description: "圆柱圆锥公式混淆" },
-      { id: "matchformula-mix-err", category: "concept", description: "公式与图形对应错误" },
-      { id: "matchprop-direct-err", category: "concept", description: "正反比例判断错误" },
-      { id: "matchprop-relation-err", category: "reasoning", description: "数量关系识别错误" },
-    ],
-    "math-money": [
-      { id: "rmb-calc-borrow-error", category: "calculation", description: "角不够减向元借位换算错误" },
-      { id: "rmb-calc-unit-align", category: "unit", description: "元角分相加未按单位分别计算" },
-      { id: "rmb-convert-error", category: "calculation", description: "元角互换计算错误" },
-      { id: "rmb-unit-rate-error", category: "unit", description: "元角分进率错误（误以为 1 元=10 角记错为 100）" },
-      { id: "unit-confusion", category: "unit", description: "人民币单位混淆" },
-    ],
-    "math-number-sense": [
-      { id: "adjacent-direction-error", category: "attention", description: "前一个/后一个方向搞反" },
-      { id: "adjacent-off-by-one", category: "concept", description: "相邻数概念错误（前后相差 1 理解偏差）" },
-      { id: "approx-boundary-err", category: "concept", description: "正好在整百中间的数（如 450）近似方向判断错误" },
-      { id: "approx-nearest-err", category: "reasoning", description: "没有找最接近的整十/整百数，选错近似值" },
-      { id: "chart-fill-calc-error", category: "calculation", description: "百数表填空时加减 1/10 计算错误" },
-      { id: "chart-row-col-error", category: "concept", description: "百数表行列规律不清（行+1 列+10 理解错误）" },
-      { id: "compare-digit-first-err", category: "reasoning", description: "未先比位数，直接比数字导致错误" },
-      { id: "compare-place-order-error", category: "concept", description: "比较两位数时先比个位（未先比十位）" },
-      { id: "compare-same-place-err", category: "reasoning", description: "位数相同但从低位移比，比较方向错误" },
-      { id: "compare-sign-error", category: "notation", description: "大于号小于号方向写反" },
-      { id: "compose-count-miss", category: "calculation", description: "某一位的计数单位个数数错（如 3020 认为有 2 个百）" },
-      { id: "compose-order-confuse", category: "concept", description: "组成与分解混淆（分与合方向不清）" },
-      { id: "compose-place-err", category: "notation", description: "数位与计数单位对应错乱（把千位当百位）" },
-      { id: "compose10-miss", category: "concept", description: "数的组成不熟（如不知道 7 由 3 和 4 组成）" },
-      { id: "digit-order-misplace", category: "notation", description: "数位顺序记反（把十位当成百位）" },
-      { id: "digit-order-value-err", category: "concept", description: "相同数字在不同数位上表示的数值混淆" },
-      { id: "div-meaning-group-err", category: "concept", description: "被除数、除数、商对应关系写错（求每份还是求份数）" },
-      { id: "div-meaning-part-include", category: "concept", description: "等分与包含两种分法混淆，除法算式含义理解错" },
-      { id: "mult-meaning-add-mix", category: "concept", description: "相同加数的加法未写成乘法，或把不同加数也写成乘法" },
-      { id: "mult-meaning-groups-miss", category: "concept", description: "“几个几”中的份数与每份数混淆，写错算式" },
-      { id: "place-value-confuse", category: "concept", description: "个位十位概念混淆（如 15 的 1 在个位）" },
-      { id: "place-value-count-error", category: "calculation", description: "按数位写数时计数错误" },
-      { id: "read-zero-mid-err", category: "notation", description: "中间有 0 未读“零”，或多个 0 读了多个零" },
-      { id: "read-zero-tail-err", category: "notation", description: "末尾的 0 也读出来，读法错误" },
-      { id: "split-pair-miss", category: "concept", description: "分与合遗漏一种拆分（如 5 分成 1 和 4 漏 2 和 3）" },
-      { id: "split-total-error", category: "calculation", description: "拆分后两部分相加不等于总数" },
-      { id: "unknown-check-miss", category: "reasoning", description: "求出未知数后未代入检验" },
-      { id: "unknown-solve-op-error", category: "operation", description: "求未知数时运算方法错误（该加用减）" },
-    ],
-    "math-oral": [
-      { id: "add-100-carry-miss", category: "calculation", description: "个位满十未向十位进 1，或进位后十位忘加进位 1" },
-      { id: "add-100-place-misalign", category: "operation", description: "列竖式时数位未对齐（个位对十位），导致计算错误" },
-      { id: "add10-compose-miss", category: "calculation", description: "10 以内数的组成不熟导致加减出错" },
-      { id: "add10-sign-error", category: "attention", description: "粗心把加号看成减号（或反之）" },
-      { id: "add11-20-carry-error", category: "calculation", description: "十几加几误进位（如 14+2 误算为 17）" },
-      { id: "add5-addsub-mix", category: "operation", description: "加减运算符号看错，把加当减或反之" },
-      { id: "add5-counting-error", category: "calculation", description: "5 以内加减靠数数出错（漏数或多数）" },
-      { id: "addsub-1000-carry-miss", category: "calculation", description: "整百整千相加减时进位/退位处理错误" },
-      { id: "addsub-1000-zeros-err", category: "calculation", description: "结果末尾 0 的个数写错（如 300+500 得 800 写成 80）" },
-      { id: "addsub-wan-borrow-err", category: "calculation", description: "连续退位时某一位被借后未减 1" },
-      { id: "addsub-wan-carry-err", category: "calculation", description: "连续进位时某一位进位漏加" },
-      { id: "carry-add-carry-miss", category: "calculation", description: "个位满十未向十位进 1" },
-      { id: "carry-add-unit-error", category: "calculation", description: "个位相加结果算错导致进位错误" },
-      { id: "chain-order-error", category: "operation", description: "连加连减运算顺序错误（未按从左到右）" },
-      { id: "chain-step-miss", category: "attention", description: "连加连减漏算一步" },
-      { id: "div-table-product-back", category: "calculation", description: "忘记“除法是乘法的逆运算”，直接用乘法口诀结果当商" },
-      { id: "div-table-quotient-err", category: "calculation", description: "用错乘法口诀，商算错（如 24÷6 想成四六二十四算成 4 却写成 6）" },
-      { id: "div1-quotient-pos-err", category: "operation", description: "商写错位置（0 占位缺失）" },
-      { id: "div1-remainder-err", category: "calculation", description: "余数不小于除数，或某一步余数计算错误" },
-      { id: "mixed-addsub-mid-err", category: "calculation", description: "中间一步的进位/退位算错，导致最终结果错误" },
-      { id: "mixed-addsub-order-miss", category: "operation", description: "未按从左到右顺序，先算后面再算前面导致错误" },
-      { id: "muldiv-relation-calc-err", category: "calculation", description: "用口诀求商/求因数时算错" },
-      { id: "muldiv-relation-inverse-err", category: "concept", description: "求未知因数时误用乘法，未理解乘除互逆关系" },
-      { id: "mult-table-product-miss", category: "calculation", description: "乘数交换后积不变，但按错口诀算错积" },
-      { id: "mult-table-recite-err", category: "calculation", description: "口诀记忆混淆（如六六三十六与六九五十四相邻口诀记错）" },
-      { id: "mult2-carry-err", category: "calculation", description: "某一步进位或相加错误" },
-      { id: "mult2-digit-place-err", category: "operation", description: "十位乘的积数位写错（末位未对齐十位）" },
-      { id: "multdiv-mid-err", category: "calculation", description: "中间一步口诀用错，导致后续结果错误" },
-      { id: "multdiv-order-miss", category: "operation", description: "未按从左到右顺序，先做后两步导致错误" },
-      { id: "multi1-carry-err", category: "calculation", description: "乘法进位忘加或加错" },
-      { id: "multi1-place-err", category: "operation", description: "未从个位乘起，或某一位漏乘" },
-      { id: "oral-carry-miss", category: "calculation", description: "进位加法漏进位（28+5 算成 23）" },
-      { id: "oral-mul-split-err", category: "calculation", description: "两位数拆分口算时相加遗漏" },
-      { id: "oral-mul-zero-err", category: "calculation", description: "末尾 0 的个数处理错误" },
-      { id: "oral-retreat-miss", category: "calculation", description: "退位减法漏退位（32-5 算成 37）" },
-      { id: "pen-add-align-error", category: "notation", description: "竖式数位未对齐" },
-      { id: "pen-add-carry-miss", category: "calculation", description: "竖式加法漏进位" },
-      { id: "pen-sub-align-error", category: "notation", description: "竖式数位未对齐" },
-      { id: "pen-sub-retreat-miss", category: "calculation", description: "竖式减法漏退位" },
-      { id: "remainder-greater-divisor", category: "concept", description: "余数大于或等于除数，说明还能再分，商应增大" },
-      { id: "remainder-leftover-miss", category: "calculation", description: "分完后忘记把剩余的数量写成余数，或余数算错" },
-      { id: "retreat-sub-borrow-forget", category: "calculation", description: "个位不够减未从十位退 1 当 10" },
-      { id: "retreat-sub-borrow-miss", category: "calculation", description: "退位后十位少算 1（如 15-8 十位未减 1）" },
-      { id: "sub-100-borrow-miss", category: "calculation", description: "个位不够减时忘记借位，或借位后十位未减 1" },
-      { id: "sub-100-digit-borrow", category: "operation", description: "被减数十位借走后仍按原数相减，十位结果算错" },
-      { id: "tens-add-carry-miss", category: "calculation", description: "整十数相加时进位处理错误" },
-      { id: "tens-unit-place-error", category: "notation", description: "整十数加减时数位对应错位" },
-      { id: "two-step-bracket-ignore", category: "operation", description: "忽略小括号，不先算括号内导致顺序错误" },
-      { id: "two-step-bracket-inner-err", category: "calculation", description: "括号内计算错误，导致整个结果错误" },
-      { id: "twodigit-align-error", category: "notation", description: "竖式计算时数位未对齐" },
-      { id: "twodigit-carry-miss", category: "calculation", description: "两位数加一位数个位满十未进位" },
-      { id: "whole-ten-align-error", category: "calculation", description: "加减整十数时误把整十数当个位数相加（如 34+20 算成 34+2=36）" },
-    ],
-    "math-patterns": [
-      { id: "pattern-next-err", category: "calculation", description: "规律正确但续写下一项时计算错误" },
-      { id: "pattern-rule-miss", category: "reasoning", description: "规律找错或只观察部分项，未发现整体规律" },
-    ],
-    "math-picture-equations": [
-      { id: "brace-op-error", category: "concept", description: "大括号问号位置判断错误（求总数用加、求部分用减）" },
-      { id: "brace-part-error", category: "calculation", description: "大括号标注的数量读错" },
-      { id: "picture-add-count-error", category: "calculation", description: "数图中物体数量错误" },
-      { id: "picture-add-part-error", category: "concept", description: "看图列加法时把总数列为加数" },
-      { id: "picture-mixed-count-error", category: "attention", description: "分步看图时物体增减数量数错" },
-      { id: "picture-mixed-op-error", category: "operation", description: "看图列连加连减运算顺序或符号错误" },
-      { id: "picture-sub-direction-error", category: "concept", description: "看图列减法被减数/减数搞反" },
-      { id: "picture-sub-total-error", category: "calculation", description: "总数数错导致减法算式错误" },
-    ],
-    "math-position-direction": [
-      { id: "position-direction-err", category: "concept", description: "方向辨认错误（东西、南北混淆）" },
-      { id: "position-map-err", category: "reading", description: "地图方位（上北下南）理解错误导致位置判断错" },
-    ],
-    "math-shape": [
-      { id: "polygon-side-err", category: "concept", description: "边数与名称对应错误" },
-      { id: "polygon-unclosed-err", category: "concept", description: "未闭合图形误认为多边形" },
-    ],
-    "math-shapes": [
-      { id: "flat-feature-error", category: "concept", description: "平面图形边角特征辨认错误（三角形/正方形混淆）" },
-      { id: "flat-shape-count-error", category: "attention", description: "复杂图形中数平面图形漏数" },
-      { id: "position-relative-error", category: "concept", description: "相对位置判断错误（左右的相对性未理解）" },
-      { id: "position-self-other", category: "reasoning", description: "以他人为参照判断位置时方向搞反" },
-      { id: "shape-combine-count-error", category: "attention", description: "拼组前后图形数量对应错误" },
-      { id: "shape-combine-miss", category: "reasoning", description: "图形拼组时空间想象错误" },
-      { id: "solid-feature-miss", category: "concept", description: "立体图形特征记忆错误（如正方体 6 个面不全相同）" },
-      { id: "solid-flat-confuse", category: "concept", description: "立体图形与平面图形混淆（圆柱当圆形）" },
-      { id: "solid-shape-3d2d-confuse", category: "concept", description: "立体图形与平面图形混淆（圆柱面与圆）" },
-      { id: "solid-shape-feature-err", category: "concept", description: "长方体与正方体特征区分不清" },
-    ],
-    "math-time-date": [
-      { id: "time-hand-err", category: "reading", description: "钟面时刻读错或经过时间计算错误" },
-      { id: "time-rate-err", category: "unit", description: "时间进率记成十进制（如 1 时=100 分）" },
-      { id: "year-leap-err", category: "unit", description: "平年闰年判断或二月天数错误" },
-      { id: "year-month-days-err", category: "unit", description: "大月小月天数记错（如 7 月当 30 天）" },
-    ],
-    "math-unit-convert": [
-      { id: "length-convert-dir-err", category: "unit", description: "高级单位换低级单位应乘进率、反向应除，方向搞反" },
-      { id: "length-object-scope", category: "concept", description: "混淆厘米与米的适用场景（如铅笔长度选米）" },
-      { id: "length-rate-err", category: "unit", description: "长度单位间进率记错（如把 1 米当成 10 厘米）" },
-      { id: "length-unit-choice-err", category: "unit", description: "对物体长短判断失误，单位选得过大或过小" },
-      { id: "mass-convert-dir-err", category: "unit", description: "克与千克换算方向/数值错误" },
-      { id: "mass-object-scope", category: "concept", description: "混淆克与千克的适用场景（如一袋大米选克）" },
-      { id: "mass-rate-err", category: "unit", description: "千克与克进率记错（如当成 100）" },
-      { id: "mass-unit-choice-err", category: "unit", description: "对物体轻重判断失误，单位选错" },
-      { id: "measure-convert-err", category: "calculation", description: "单位换算计算错误（乘除进率方向错）" },
-      { id: "measure-unit-err", category: "unit", description: "长度单位进率记错或换算错误" },
-      { id: "time-convert-calc-err", category: "calculation", description: "时分秒换算时计算错误（如 2 时换算成 120 分算错）" },
-      { id: "time-object-scope", category: "concept", description: "混淆秒、分、时的适用场景（如一节课选秒）" },
-      { id: "time-rate-err", category: "unit", description: "时间进率记成 100 或 10，误用十进制" },
-      { id: "time-unit-choice-err", category: "unit", description: "对事件时长判断失误，单位选错" },
-      { id: "unit-confusion", category: "unit", description: "单位混淆/进率错误" },
-    ],
-    "math-word-problems": [
-      { id: "add-total-combine-err", category: "calculation", description: "两部分相加计算错误" },
-      { id: "add-total-op-error", category: "concept", description: "求总数误用减法" },
-      { id: "add-total-part-err", category: "reading", description: "题目中两部分数量提取错误" },
-      { id: "add-total-part-error", category: "attention", description: "漏加一个部分量" },
-      { id: "compare-diff-calc-err", category: "calculation", description: "减法计算错误" },
-      { id: "compare-diff-direction", category: "reasoning", description: "被减数与减数方向弄反，差为负或错" },
-      { id: "compare-less-direction", category: "reasoning", description: "“少几”的理解与列式方向错误" },
-      { id: "compare-less-op-error", category: "concept", description: "求比谁少几误用加法" },
-      { id: "compare-more-diff-error", category: "calculation", description: "两数差计算错误" },
-      { id: "compare-more-op-error", category: "concept", description: "求比谁多几误用加法" },
-      { id: "div-part-average-err", category: "reasoning", description: "未识别“平均分”，除法列式错误" },
-      { id: "div-part-total-err", category: "reading", description: "总数或份数提取错误" },
-      { id: "div-quot-each-err", category: "reading", description: "每份数提取错误" },
-      { id: "div-quot-parts-err", category: "reasoning", description: "包含与等分除法混淆，列式错误" },
-      { id: "exclude-extra-calc-error", category: "calculation", description: "有效条件计算错误" },
-      { id: "exclude-extra-cond-error", category: "reasoning", description: "未排除多余条件，把无关信息纳入列式" },
-      { id: "extra-choose-right", category: "reading", description: "未识别出所需条件，漏用必要数据" },
-      { id: "extra-use-irrelevant", category: "reasoning", description: "把多余条件也用于计算，结果错误" },
-      { id: "length-app-calc-err", category: "calculation", description: "长度计算或换算错误" },
-      { id: "length-app-unit-mix", category: "unit", description: "不同长度单位直接相加减，未换算" },
-      { id: "mass-app-calc-err", category: "calculation", description: "质量计算或换算错误" },
-      { id: "mass-app-unit-mix", category: "unit", description: "克与千克未换算直接运算" },
-      { id: "money-calc-change-err", category: "calculation", description: "付钱/找零计算错误，或单位未统一" },
-      { id: "money-unit-convert-err", category: "unit", description: "元角分进率记错（如 1 元当 100 角）" },
-      { id: "mult-total-calc-err", category: "calculation", description: "乘法口诀算错" },
-      { id: "mult-total-groups-err", category: "reading", description: "每份数与份数提取错误" },
-      { id: "rem-apply-answer-plusone", category: "reasoning", description: "需要“商+1”的情况（装袋/乘车）未进位，答案少 1" },
-      { id: "rem-apply-remainder-ignore", category: "concept", description: "忽略余数，只答商导致答案不完整" },
-      { id: "rmb-shopping-change-error", category: "calculation", description: "计算找零错误" },
-      { id: "rmb-shopping-unit-error", category: "unit", description: "购物付款时元角单位换算错误" },
-      { id: "sub-part-op-error", category: "concept", description: "求部分误用加法（已知总数和一部分求另一部分应用减）" },
-      { id: "sub-part-which-part-error", category: "reasoning", description: "所求部分识别错误" },
-      { id: "sub-remain-calc-err", category: "calculation", description: "减法计算（借位）错误" },
-      { id: "sub-remain-op-error", category: "concept", description: "求剩余误用加法" },
-      { id: "sub-remain-total-error", category: "attention", description: "总数识别错误导致列式错误" },
-      { id: "sub-remain-which-sub", category: "reasoning", description: "未分清总数和部分，减法方向反了" },
-      { id: "times-calc-err", category: "calculation", description: "除法或乘法计算错误" },
-      { id: "times-which-mult-err", category: "reasoning", description: "求倍数与求几倍是多少的运算选择错误" },
-      { id: "two-step-first-err", category: "reasoning", description: "第一步求错量，导致第二步连带错误" },
-      { id: "two-step-intermediate-error", category: "calculation", description: "两步计算的中间量算错" },
-      { id: "two-step-order-err", category: "operation", description: "综合算式运算顺序错误" },
-      { id: "two-step-plan-error", category: "reasoning", description: "两步解题思路错误（第一步该算什么判断错）" },
-    ]
-  };
-
-  var ERR_INDEX = {};
-  Object.keys(MAP).forEach(function (plugin) {
-    (MAP[plugin] || []).forEach(function (e) {
-      if (!e || !e.id) return;
-      if (!ERR_INDEX[e.id]) ERR_INDEX[e.id] = { category: e.category, description: e.description, plugins: [] };
-      else if (ERR_INDEX[e.id].category !== e.category) {
-        ERR_INDEX[e.id].category = e.category;
-        ERR_INDEX[e.id].description = e.description;
-      }
-      ERR_INDEX[e.id].plugins.push(plugin);
-    });
-  });
-
-  function errorById(id) {
-    return id && ERR_INDEX[id] ? ERR_INDEX[id] : null;
-  }
-
-  function errorsForPlugin(pluginId) {
-    var e = pluginId && MAP[pluginId];
-    return e ? e.slice() : [];
-  }
-
-  function metaForPlugin(pluginId) {
-    var e = pluginId && MAP[pluginId];
-    return e ? { count: e.length, ids: e.map(function (x) { return x.id; }) } : null;
-  }
-
-  var API = {
-    MAP: MAP,
-    ERR_INDEX: ERR_INDEX,
-    errorById: errorById,
-    errorsForPlugin: errorsForPlugin,
-    metaForPlugin: metaForPlugin
-  };
-
-  global.OntologyErrorMap = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/ontology-category-map.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var CATEGORIES = ['algebra', 'measurement', 'geometry', 'synthesis', 'statistics'];
-
-  
-
-  
-  var GEOM_ID = /(^|-)c4-|geom(?:etry|count|etric)|solid|flat-shape|shape|count-graph|angle|protractor|quad|tri(?!ple)|circle|cyl(?:inder)?|cone(?!centration)|perimeter|(?:^|-)area|lattice|pythagorean|painted-cube|transform|(?:^|-)sym|symmet|rotat|draw-move|(?:^|-)motion|draw-net|grid|draw-view|draw-observe|position|coord|(?:^|-)pa(?:-|$)|draw-para|(?:^|-)line(?:-|$)|draw-height/;
-
-  
-  var MEAS_ID = /(^|-)(rmb|money|clock|time|year-month|length|mass|weight|measure|unit-convert|match-unit|fill-(?:length|mass|time)|length-(?:unit|app)|mass-(?:unit|app)|time-unit|hectare)(-|$)/;
-
-  
-  var STATS_ID = /(^|-)(stats?|data-tally|data-question|possib\w*|possible|pie-chart|linechart|stats-line\d|match-chart|judge-chart|choice-chart|pic-pie-chart|stat-pie-chart|stat-possibility|fill-pie-chart|fill-linechart|fill-possible|word-possib|word-linechart|stats-bar|stats-double|stats-avg|stats-table|stats-possib\w*|stats-line\d|fill-avg|word-avg)(-|$)/;
-
-  var GEOM_NAME = /图形|角[的度类型与]|量角|画角|角度|线段(?!图)|射线|直线|平行|垂直|梯形|三角形|长方|正方|圆[的周角]?|圆柱|圆锥|周长|面积|体积|表面积|展开图|对称|平移|旋转|放大|缩小|位置|方向|数对|观察物体|几何|勾股|扇形|格点|鸟头|蝴蝶|燕尾|等积|割补|涂色|棱[，、]|锥[体]/;
-
-  var MEAS_NAME = /人民币|元角分|钟面|钟表|时、分、秒|时分秒|时间单位|长度单位|质量单位|面积单位|体积单位|容积单位|单位换算|填合适[^，。]*单位|单位与物品|测量|公顷|平方千米|年、月、日|长度|质量|重量/;
-
-  
-  function deriveCategory(kp) {
-    var id = (kp && kp.id ? String(kp.id) : '').toLowerCase();
-    var name = (kp && kp.name ? String(kp.name) : '') || '';
-
-    
-    
-    if (/(判断|选择)题综合|综合应用|杂题选讲|模拟竞赛/.test(name)) return 'synthesis';
-    if (/购物/.test(name) || /(?:^|-)shopping(?:-|$)/.test(id)) return 'synthesis';
-
-    
-    if (STATS_ID.test(id) || /统计|可能性|平均数|折线|条形统计图?|扇形统计图?|数据收集/.test(name)) {
-      return 'statistics';
-    }
-
-    
-    if (/reason-number-shape/.test(id)) return 'algebra';
-    
-    if (/(^|-)c4-/.test(id)) return 'geometry';
-    
-    if (/(^|-)(geomcount|geometry-counting)/.test(id)) return 'geometry';
-    
-    if (/(^|-)c5-/.test(id)) return 'algebra';
-    
-    if (/(^|-)c8-/.test(id)) return 'algebra';
-    
-    if (/线段图/.test(name)) return 'algebra';
-
-    if (GEOM_ID.test(id)) return 'geometry';
-    if (MEAS_ID.test(id)) return 'measurement';
-
-    if (GEOM_NAME.test(name)) return 'geometry';
-    if (MEAS_NAME.test(name)) return 'measurement';
-
-    
-    return 'algebra';
-  }
-
-  
-  function categoryForKp(kp) {
-    if (!kp) return null;
-    if (typeof kp.category === 'string' && CATEGORIES.indexOf(kp.category) !== -1) {
-      return kp.category;
-    }
-    return deriveCategory(kp);
-  }
-
-  var API = {
-    CATEGORIES: CATEGORIES,
-    categoryForKp: categoryForKp,
-    deriveCategory: deriveCategory
-  };
-
-  global.OntologyCategoryMap = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/knowledge/ontology-book-map.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var BOOK_UNIT_MAP = {
-    
-    
-    'math-g2-m1-add-100':              { grade: 1, book: 'down', unit: '第四单元 100以内的口算加、减法' },
-    'math-g2-m1-sub-100':              { grade: 1, book: 'down', unit: '第四单元 100以内的口算加、减法' },
-    'math-g2-m1-mixed-addsub':         { grade: 1, book: 'down', unit: '第四单元 100以内的口算加、减法' },
-    'math-g2-m2-add-col':              { grade: 1, book: 'down', unit: '第五单元 100以内的笔算加、减法' },
-    'math-g2-m2-sub-col':              { grade: 1, book: 'down', unit: '第五单元 100以内的笔算加、减法' },
-    'math-g2-m2-chain-add-col':        { grade: 1, book: 'down', unit: '第五单元 100以内的笔算加、减法' },
-    'math-g2-m2-chain-sub-col':        { grade: 1, book: 'down', unit: '第五单元 100以内的笔算加、减法' },
-    'math-g2-m2-mixed-col':            { grade: 1, book: 'down', unit: '第五单元 100以内的笔算加、减法' },
-    'math-g2-m7-pic-add':              { grade: 1, book: 'down', unit: '第四单元 100以内的口算加、减法' },
-    'math-g2-m7-pic-sub':              { grade: 1, book: 'down', unit: '第四单元 100以内的口算加、减法' },
-    'math-g2-m7-pic-mixed':            { grade: 1, book: 'down', unit: '第四单元 100以内的口算加、减法' },
-    'math-g2-m8-add-total':            { grade: 1, book: 'down', unit: '第六单元 数量间的加减关系' },
-    'math-g2-m8-sub-remain':           { grade: 1, book: 'down', unit: '第六单元 数量间的加减关系' },
-    'math-g2-m8-compare-diff':         { grade: 1, book: 'down', unit: '第六单元 数量间的加减关系' },
-    'math-g2-m8-money':                { grade: 1, book: 'down', unit: '欢乐购物街（人民币购物）' },
-    'math-g2-m8-extra-condition':      { grade: 1, book: 'mixed', unit: '跨册（解决问题·含多余条件）' },
-    
-    'math-g2-m1-mixed-two-step':       { grade: 3, book: 'up', unit: '第二单元 混合运算' },
-    'math-g2-m3-mixed-no-bracket':     { grade: 3, book: 'up', unit: '第二单元 混合运算' },
-    'math-g2-m3-mixed-bracket':        { grade: 3, book: 'up', unit: '第二单元 混合运算' },
-    'math-g2-m3-chain-addsub':         { grade: 3, book: 'up', unit: '第二单元 混合运算' },
-    'math-g2-m3-multdiv-mixed':        { grade: 3, book: 'up', unit: '第二单元 混合运算' },
-    'math-g2-m3-compare-simple':       { grade: 3, book: 'up', unit: '第二单元 混合运算' },
-    'math-g2-m3-fill-operator':        { grade: 3, book: 'up', unit: '第二单元 混合运算' },
-    'math-g2-m8-two-step':             { grade: 3, book: 'up', unit: '第二单元 混合运算' },
-    'math-g2-m6-motion':               { grade: 3, book: 'down', unit: '第一单元 生活中的运动现象' },
-    'math-g2-m6-grid-draw':            { grade: 3, book: 'down', unit: '第一单元 生活中的运动现象' },
-    'math-g2-m4-angle-basic':          { grade: 3, book: 'up', unit: '第五单元 线和角' },
-    'math-g2-m6-angle-recognize':      { grade: 3, book: 'up', unit: '第五单元 线和角' },
-    'math-g2-m5-match-angle':          { grade: 3, book: 'up', unit: '第五单元 线和角' },
-    'math-g2-m6-draw-angle':           { grade: 3, book: 'up', unit: '第五单元 线和角' },
-    'math-g2-m4-mass-unit':            { grade: 3, book: 'up', unit: '曹冲称象的故事（认识质量单位）' },
-    'math-g2-m4-fill-mass':            { grade: 3, book: 'up', unit: '曹冲称象的故事（认识质量单位）' },
-    'math-g2-m8-mass-app':             { grade: 3, book: 'up', unit: '曹冲称象的故事（认识质量单位）' },
-    'math-g2-m10-combination':         { grade: 3, book: 'up', unit: '数学广角：搭配问题' },
-    'math-g2-m10-handshake':           { grade: 3, book: 'up', unit: '数学广角：搭配问题' },
-    
-    'math-g2-m1-mult-table':           { book: 'up', unit: '第二~四单元 表内乘法' },
-    'math-g2-m1-div-table':            { book: 'up', unit: '第四~六单元 表内除法' },
-    'math-g2-m2-mult-col':             { book: 'up', unit: '第二~四单元 表内乘法' },
-    'math-g2-m2-div-col':              { book: 'up', unit: '第四~六单元 表内除法' },
-    'math-g2-m4-multiplication-meaning': { book: 'up', unit: '第二~四单元 表内乘法' },
-    'math-g2-m4-division-meaning':     { book: 'up', unit: '第四~六单元 表内除法' },
-    'math-g2-m5-match-multdiv':        { book: 'up', unit: '第二~四单元 表内乘法' },
-    'math-g2-m7-pic-mult':             { book: 'up', unit: '第二~四单元 表内乘法' },
-    'math-g2-m7-pic-div':              { book: 'up', unit: '第四~六单元 表内除法' },
-    'math-g2-m7-pic-div-include':      { book: 'up', unit: '第四~六单元 表内除法' },
-    'math-g2-m8-mult-total':           { book: 'up', unit: '第二~四单元 表内乘法' },
-    'math-g2-m8-div-partitive':        { book: 'up', unit: '第四~六单元 表内除法' },
-    'math-g2-m8-div-quotative':        { book: 'up', unit: '第四~六单元 表内除法' },
-    'math-g2-m4-length-unit':          { book: 'up', unit: '第三单元 厘米和米' },
-    'math-g2-m4-fill-length':          { book: 'up', unit: '第三单元 厘米和米' },
-    'math-g2-m6-draw-line':            { book: 'up', unit: '第三单元 厘米和米' },
-    'math-g2-m6-measure':              { book: 'up', unit: '第三单元 厘米和米' },
-    'math-g2-m8-length-app':           { book: 'up', unit: '第三单元 厘米和米' },
-    'math-g2-m9-data-tally':           { book: 'up', unit: '第一单元 分类与整理' },
-    'math-g2-m9-data-question':        { book: 'up', unit: '第一单元 分类与整理' },
-    
-    'math-g2-m1-remainder-oral':       { book: 'down', unit: '第一单元 有余数的除法' },
-    'math-g2-m2-remainder-col':        { book: 'down', unit: '第一单元 有余数的除法' },
-    'math-g2-m8-remainder-apply':      { book: 'down', unit: '第一单元 有余数的除法' },
-    'math-g2-m1-mixed-multdiv':        { book: 'down', unit: '第二单元 数量间的乘除关系' },
-    'math-g2-m1-muldiv-relation':      { book: 'down', unit: '第二单元 数量间的乘除关系' },
-    'math-g2-m4-read-10000':           { book: 'down', unit: '第三单元 万以内数的认识' },
-    'math-g2-m4-compose-10000':        { book: 'down', unit: '第三单元 万以内数的认识' },
-    'math-g2-m4-digit-order':          { book: 'down', unit: '第三单元 万以内数的认识' },
-    'math-g2-m4-approx-number':        { book: 'down', unit: '第三单元 万以内数的认识' },
-    'math-g2-m4-compare-10000':        { book: 'down', unit: '第三单元 万以内数的认识' },
-    'math-g2-m1-addsub-1000':          { book: 'down', unit: '第四单元 万以内的加法和减法' },
-    'math-g2-m4-time-unit':            { book: 'down', unit: '☆时间在哪里（认识时间）' },
-    'math-g2-m4-fill-time':            { book: 'down', unit: '☆时间在哪里（认识时间）' },
-    'math-g2-m4-clock-read':           { book: 'down', unit: '☆时间在哪里（认识时间）' },
-    'math-g2-m6-clock-draw':           { book: 'down', unit: '☆时间在哪里（认识时间）' },
-    'math-g2-m5-match-clock':          { book: 'down', unit: '☆时间在哪里（认识时间）' },
-    
-    'math-g2-m4-number-pattern':       { book: 'mixed', unit: '跨册（数列与算式规律续写）' },
-    'math-g2-m5-match-calc':           { book: 'mixed', unit: '跨册（口算练习）' },
-    'math-g2-m5-match-shape':          { book: 'mixed', unit: '跨册（图形与名称连线）' },
-    'math-g2-m5-match-unit':           { book: 'mixed', unit: '跨册（单位与物品连线）' },
-    'math-g2-m6-solid-shape':          { book: 'mixed', unit: '跨册（立体图形认识）' },
-    'math-g2-m10-logic-reasoning':     { book: 'mixed', unit: '跨册（逻辑推理）' },
-    'math-g2-m10-sudoku3':             { book: 'mixed', unit: '跨册（数独游戏）' },
-    'math-g2-m10-order':               { book: 'mixed', unit: '跨册（排队问题）' },
-    'math-g2-m11-judge-mixed':         { book: 'mixed', unit: '跨册（判断题综合）' },
-    'math-g2-m12-choice-mixed':        { book: 'mixed', unit: '跨册（选择题综合）' },
-
-    
-    
-    'math-g3-m1-g3-add-sub-wan':       { grade: 2, book: 'down', unit: '第四单元 万以内的加法和减法' },
-    'math-g3-m4-g3-time':              { grade: 2, book: 'down', unit: '☆时间在哪里（认识时间）' },
-    
-    'math-g3-m1-g3-mul-2digit':        { grade: 4, book: 'up', unit: '第三单元 多位数乘两位数' },
-    
-    'math-g3-m1-g3-mul-multi1':        { book: 'up', unit: '第四单元 多位数乘一位数' },
-    'math-g3-m1-g3-oral-mul':          { book: 'up', unit: '第四单元 多位数乘一位数' },
-    'math-g3-m4-g3-fraction':          { book: 'up', unit: '第六单元 分数的初步认识' },
-    'math-g3-m4-g3-fracadd':           { book: 'up', unit: '第六单元 分数的初步认识' },
-    'math-g3-m4-g3-measure':           { book: 'up', unit: '第三单元 毫米、分米和千米' },
-    'math-g3-m6-g3-position':          { book: 'mixed', unit: '清理候选（新版三上/三下删除位置与方向单元）' },
-    
-    'math-g3-m1-g3-div1':              { book: 'down', unit: '第二单元 除数是一位数的除法' },
-    'math-g3-m6-g3-perimeter':         { book: 'down', unit: '第三单元 长方形和正方形' },
-    'math-g3-m6-g3-polygon':           { book: 'down', unit: '第三单元 长方形和正方形' },
-    'math-g3-m6-g3-area':              { book: 'down', unit: '第四单元 图形的面积' },
-    'math-g3-m9-g3-stats-table':       { book: 'down', unit: '第五单元 数据的收集与整理' },
-    'math-g3-m4-g3-year-month':        { book: 'down', unit: '☆年、月、日的秘密' },
-    'math-g3-m4-g3-decimal':           { book: 'down', unit: '第六单元 小数的初步认识' },
-    'math-g3-m10-g3-combination':      { book: 'up', unit: '数学广角：搭配问题' },
-    'math-g3-m10-g3-code':             { book: 'up', unit: '数字编码（认识数字编码/编制学号）' },
-    'math-g3-m8-g3-equivalent':        { book: 'up', unit: '曹冲称象的故事（等量代换）' },
-    
-    'math-g3-m8-g3-times':             { book: 'mixed', unit: '清理候选（新版三上删除倍的认识）' },
-    'math-g3-m10-g3-set':              { book: 'mixed', unit: '清理候选（新版删除数学广角集合）' },
-
-    
-    
-    'math-g4-m4-g4-fill-line':         { grade: 3, book: 'up', unit: '第五单元 线和角' },
-    'math-g4-m11-g4-judge-line':       { grade: 3, book: 'up', unit: '第五单元 线和角' },
-    'math-g4-m6-g4-draw-view':         { grade: 3, book: 'up', unit: '第一单元 观察物体' },
-    
-    'math-g4-m1-g4-oral-big':          { book: 'up', unit: '第一单元 万以上数的认识' },
-    'math-g4-m4-g4-fill-bignum':       { book: 'up', unit: '第一单元 万以上数的认识' },
-    'math-g4-m5-g4-match-read':        { book: 'up', unit: '第一单元 万以上数的认识' },
-    'math-g4-m7-g4-pic-brace':         { book: 'up', unit: '第一单元 万以上数的认识' },
-    'math-g4-m8-g4-word-big':          { book: 'up', unit: '第一单元 万以上数的认识' },
-    'math-g4-m11-g4-judge-read':       { book: 'up', unit: '第一单元 万以上数的认识' },
-    'math-g4-m12-g4-choice-big':       { book: 'up', unit: '第一单元 万以上数的认识' },
-    'math-g4-m4-g4-fill-angle':        { book: 'up', unit: '第二单元 角的度量' },
-    'math-g4-m5-g4-match-angle':       { book: 'up', unit: '第二单元 角的度量' },
-    'math-g4-m6-g4-draw-protractor':   { book: 'up', unit: '第二单元 角的度量' },
-    'math-g4-m11-g4-judge-angle':      { book: 'up', unit: '第二单元 角的度量' },
-    'math-g4-m12-g4-choice-angle':     { book: 'up', unit: '第二单元 角的度量' },
-    'math-g4-m1-g4-oral-mul3x1':       { book: 'up', unit: '第三单元 多位数乘两位数' },
-    'math-g4-m1-g4-oral-mul2t':        { book: 'up', unit: '第三单元 多位数乘两位数' },
-    'math-g4-m2-g4-v-mul3x2':          { book: 'up', unit: '第三单元 多位数乘两位数' },
-    'math-g4-m2-g4-v-mulzero':         { book: 'up', unit: '第三单元 多位数乘两位数' },
-    'math-g4-m12-g4-choice-est':       { book: 'up', unit: '第三单元 多位数乘两位数' },
-    'math-g4-m7-g4-pic-segment':       { book: 'up', unit: '第四单元 加法模型和乘法模型' },
-    'math-g4-m7-g4-pic-speed':         { book: 'up', unit: '第四单元 加法模型和乘法模型' },
-    'math-g4-m8-g4-word-speed':        { book: 'up', unit: '第四单元 加法模型和乘法模型' },
-    'math-g4-m8-g4-word-price':        { book: 'up', unit: '第四单元 加法模型和乘法模型' },
-    'math-g4-m4-g4-fill-quad':         { book: 'up', unit: '第五单元 平行四边形和梯形' },
-    'math-g4-m5-g4-match-shape':       { book: 'up', unit: '第五单元 平行四边形和梯形' },
-    'math-g4-m6-g4-draw-para':         { book: 'up', unit: '第五单元 平行四边形和梯形' },
-    'math-g4-m6-g4-draw-grid':         { book: 'up', unit: '第五单元 平行四边形和梯形' },
-    'math-g4-m12-g4-choice-shape':     { book: 'up', unit: '第五单元 平行四边形和梯形' },
-    'math-g4-m9-g4-stats-bar':         { book: 'up', unit: '第六单元 条形统计图' },
-    'math-g4-m9-g4-stats-double':      { book: 'up', unit: '第六单元 条形统计图' },
-    
-    'math-g4-m3-g4-mix-order':         { book: 'down', unit: '第一单元 四则运算' },
-    'math-g4-m4-g4-fill-op':           { book: 'down', unit: '第一单元 四则运算' },
-    'math-g4-m1-g4-oral-law':          { book: 'down', unit: '第三单元 运算定律' },
-    'math-g4-m3-g4-mix-addlaw':        { book: 'down', unit: '第三单元 运算定律' },
-    'math-g4-m3-g4-mix-mullaw':        { book: 'down', unit: '第三单元 运算定律' },
-    'math-g4-m3-g4-mix-dist':          { book: 'down', unit: '第三单元 运算定律' },
-    'math-g4-m5-g4-match-law':         { book: 'down', unit: '第三单元 运算定律' },
-    'math-g4-m11-g4-judge-law':        { book: 'down', unit: '第三单元 运算定律' },
-    'math-g4-m12-g4-choice-law':       { book: 'down', unit: '第三单元 运算定律' },
-    'math-g4-m4-g4-fill-dec':          { book: 'down', unit: '第四单元 小数的意义和性质' },
-    'math-g4-m5-g4-match-decfrac':     { book: 'down', unit: '第四单元 小数的意义和性质' },
-    'math-g4-m11-g4-judge-dec':        { book: 'down', unit: '第四单元 小数的意义和性质' },
-    'math-g4-m12-g4-choice-dec':       { book: 'down', unit: '第四单元 小数的意义和性质' },
-    'math-g4-m4-g4-fill-tri':          { book: 'down', unit: '第五单元 三角形' },
-    'math-g4-m11-g4-judge-tri':        { book: 'down', unit: '第五单元 三角形' },
-    'math-g4-m1-g4-oral-dec':          { book: 'down', unit: '第六单元 小数的加法和减法' },
-    'math-g4-m2-g4-v-dec':             { book: 'down', unit: '第六单元 小数的加法和减法' },
-    'math-g4-m3-g4-mix-dec':           { book: 'down', unit: '第六单元 小数的加法和减法' },
-    'math-g4-m7-g4-pic-dec':           { book: 'down', unit: '第六单元 小数的加法和减法' },
-    'math-g4-m8-g4-word-dec':          { book: 'down', unit: '第六单元 小数的加法和减法' },
-    'math-g4-m6-g4-draw-sym':          { book: 'down', unit: '第七单元 图形的运动（二）' },
-    'math-g4-m6-g4-draw-move':         { book: 'down', unit: '第七单元 图形的运动（二）' },
-    'math-g4-m4-g4-fill-avg':          { book: 'down', unit: '第八单元 平均数与条形统计图' },
-    'math-g4-m8-g4-word-avg':          { book: 'down', unit: '第八单元 平均数与条形统计图' },
-    'math-g4-m9-g4-stats-avg':         { book: 'down', unit: '第八单元 平均数与条形统计图' },
-    'math-g4-m11-stats':               { book: 'down', unit: '第八单元 平均数与条形统计图' },
-    'math-g4-m8-g4-word-cr':           { book: 'down', unit: '第九单元 数学广角——鸡兔同笼' },
-    'math-g4-m10-g4-reason-cr':        { book: 'down', unit: '第九单元 数学广角——鸡兔同笼' },
-    'math-g4-m10-logic-reasoning':     { book: 'mixed', unit: '跨册（简单逻辑推理）' },
-    
-    
-    
-    'math-g4-m1-g4-oral-divt':         { book: 'down', unit: '除数是两位数的除法（调整至四下）' },
-    'math-g4-m2-g4-v-div2':            { book: 'down', unit: '除数是两位数的除法（调整至四下）' },
-    'math-g4-m2-g4-v-div2q':           { book: 'down', unit: '除数是两位数的除法（调整至四下）' },
-    'math-g4-m4-g4-fill-quotient':     { book: 'down', unit: '除数是两位数的除法（调整至四下）' },
-    'math-g4-m8-g4-word-div':          { book: 'down', unit: '除数是两位数的除法（调整至四下）' },
-    'math-g4-m11-g4-judge-quotient':   { book: 'down', unit: '除数是两位数的除法（调整至四下）' },
-    'math-g4-m4-g4-fill-hectare':      { book: 'down', unit: '公顷和平方千米（调整至四下）' },
-    'math-g4-m8-g4-word-area':         { book: 'down', unit: '公顷和平方千米（调整至四下）' },
-    'math-g4-m8-g4-word-opt':          { book: 'mixed', unit: '清理候选（新版删除数学广角优化）' },
-    'math-g4-m10-g4-reason-opt':       { book: 'mixed', unit: '清理候选（新版删除数学广角优化）' },
-    
-    
-    'math-g5-m4-g5-fill-decloc':       { grade: 4, book: 'down', unit: '第四单元 小数的意义和性质' },
-    'math-g5-m4-g5-fill-deccmp':       { grade: 4, book: 'down', unit: '第四单元 小数的意义和性质' },
-    'math-g5-m4-g5-fill-prodrule':     { grade: 4, book: 'up', unit: '第三单元 多位数乘两位数' },
-    
-    'math-g5-m4-g5-fill-coord':        { grade: 6, book: 'up', unit: '位置与方向（数对并入，待六上定稿）' },
-    'math-g5-m6-g5-draw-coord':        { grade: 6, book: 'up', unit: '位置与方向（数对并入，待六上定稿）' },
-    
-    'math-g5-m1-g5-oral-decmul':       { book: 'up', unit: '第二单元 小数乘法' },
-    'math-g5-m2-g5-v-decmul':          { book: 'up', unit: '第二单元 小数乘法' },
-    'math-g5-m3-g5-mix-decsimple':     { book: 'up', unit: '第二单元 小数乘法' },
-    'math-g5-m7-g5-pic-segment':       { book: 'up', unit: '第二~三单元 小数乘除法' },
-    'math-g5-m8-g5-word-decmul':       { book: 'up', unit: '第二单元 小数乘法' },
-    'math-g5-m1-g5-oral-decdiv':       { book: 'up', unit: '第三单元 小数除法' },
-    'math-g5-m2-g5-v-divint':          { book: 'up', unit: '第三单元 小数除法' },
-    'math-g5-m2-g5-v-ddivdec':         { book: 'up', unit: '第三单元 小数除法' },
-    'math-g5-m2-g5-v-repeating':       { book: 'up', unit: '第三单元 小数除法' },
-    'math-g5-m4-g5-fill-repeating':    { book: 'up', unit: '第三单元 小数除法' },
-    'math-g5-m8-g5-word-decdiv':       { book: 'up', unit: '第三单元 小数除法' },
-    'math-g5-m3-g5-mix-decmixed':      { book: 'up', unit: '第二~三单元 小数乘除法' },
-    'math-g5-m6-g5-draw-observe':      { book: 'up', unit: '第一单元 观察简单组合体' },
-    'math-g5-m4-g5-fill-rotate':       { book: 'up', unit: '第四单元 图形的运动' },
-    'math-g5-m6-g5-draw-rotate':       { book: 'up', unit: '第四单元 图形的运动' },
-    'math-g5-m6-g5-draw-sym':          { book: 'up', unit: '第四单元 图形的运动' },
-    'math-g5-m11-motion':              { book: 'up', unit: '第四单元 图形的运动' },
-    'math-g5-m12-motion':              { book: 'up', unit: '第四单元 图形的运动' },
-    'math-g5-m4-g5-fill-area':         { book: 'up', unit: '第六单元 多边形的面积' },
-    'math-g5-m5-g5-match-areaf':       { book: 'up', unit: '第六单元 多边形的面积' },
-    'math-g5-m6-g5-draw-height':       { book: 'up', unit: '第六单元 多边形的面积' },
-    'math-g5-m7-g5-pic-area':          { book: 'up', unit: '第六单元 多边形的面积' },
-    'math-g5-m8-g5-word-area':         { book: 'up', unit: '第六单元 多边形的面积' },
-    'math-g5-m11-g5-judge-area':       { book: 'up', unit: '第六单元 多边形的面积' },
-    'math-g5-m12-g5-choice-area':      { book: 'up', unit: '第六单元 多边形的面积' },
-    'math-g5-m4-g5-fill-possible':     { book: 'up', unit: '第七单元 可能性' },
-    'math-g5-m5-g5-match-possib':      { book: 'up', unit: '第七单元 可能性' },
-    'math-g5-m8-g5-word-possib':       { book: 'up', unit: '第七单元 可能性' },
-    'math-g5-m9-g5-stats-possib':      { book: 'up', unit: '第七单元 可能性' },
-    'math-g5-m11-g5-judge-possib':     { book: 'up', unit: '第七单元 可能性' },
-    'math-g5-m12-g5-choice-possib':    { book: 'up', unit: '第七单元 可能性' },
-    'math-g5-m11-g5-judge-decmul':     { book: 'up', unit: '第二~三单元 小数乘除法' },
-    'math-g5-m12-g5-choice-decmul':    { book: 'up', unit: '第二~三单元 小数乘除法' },
-    'math-g5-m4-g5-fill-letter':       { book: 'up', unit: '第五单元 用字母表示数和数量关系' },
-    
-    'math-g5-m1-g5-oral-fracadd':      { book: 'down', unit: '分数的加法和减法（五下）' },
-    'math-g5-m3-g5-mix-fracmixed':     { book: 'down', unit: '分数的加法和减法（五下）' },
-    'math-g5-m3-g5-mix-fracsimple':    { book: 'down', unit: '分数的加法和减法（五下）' },
-    'math-g5-m1-g5-oral-fm':           { book: 'down', unit: '因数与倍数（五下）' },
-    'math-g5-m4-g5-fill-fm':           { book: 'down', unit: '因数与倍数（五下）' },
-    'math-g5-m4-g5-fill-prime':        { book: 'down', unit: '因数与倍数（五下）' },
-    'math-g5-m8-g5-word-fm':           { book: 'down', unit: '因数与倍数（五下）' },
-    'math-g5-m11-g5-judge-fm':         { book: 'down', unit: '因数与倍数（五下）' },
-    'math-g5-m12-g5-choice-fm':        { book: 'down', unit: '因数与倍数（五下）' },
-    'math-g5-m4-g5-fill-fracmean':     { book: 'down', unit: '分数的意义和性质（五下）' },
-    'math-g5-m4-g5-fill-fracprop':     { book: 'down', unit: '分数的意义和性质（五下）' },
-    'math-g5-m4-g5-fill-fracdec':      { book: 'down', unit: '分数的意义和性质（五下）' },
-    'math-g5-m5-g5-match-fracdec':     { book: 'down', unit: '分数的意义和性质（五下）' },
-    'math-g5-m8-g5-word-frac':         { book: 'down', unit: '分数的意义和性质（五下）' },
-    'math-g5-m11-g5-judge-frac':       { book: 'down', unit: '分数的意义和性质（五下）' },
-    'math-g5-m12-g5-choice-frac':      { book: 'down', unit: '分数的意义和性质（五下）' },
-    'math-g5-m4-g5-fill-solid':        { book: 'down', unit: '长方体和正方体（五下）' },
-    'math-g5-m5-g5-match-solid':       { book: 'down', unit: '长方体和正方体（五下）' },
-    'math-g5-m6-g5-draw-net':          { book: 'down', unit: '长方体和正方体（五下）' },
-    'math-g5-m8-g5-word-solid':        { book: 'down', unit: '长方体和正方体（五下）' },
-    'math-g5-m11-g5-judge-solid':      { book: 'down', unit: '长方体和正方体（五下）' },
-    'math-g5-m12-g5-choice-solid':     { book: 'down', unit: '长方体和正方体（五下）' },
-    'math-g5-m4-g5-fill-linechart':    { book: 'down', unit: '折线统计图（五下）' },
-    'math-g5-m8-g5-word-linechart':    { book: 'down', unit: '折线统计图（五下）' },
-    'math-g5-m9-g5-stats-line1':       { book: 'down', unit: '折线统计图（五下）' },
-    'math-g5-m9-g5-stats-line2':       { book: 'down', unit: '折线统计图（五下）' },
-    'math-g5-m11-stats':               { book: 'down', unit: '折线统计图（五下）' },
-    'math-g5-m12-stats':               { book: 'down', unit: '折线统计图（五下）' },
-    'math-g5-m8-g5-word-defect':       { book: 'down', unit: '数学广角——找次品（五下）' },
-    'math-g5-m10-g5-reason-defect':    { book: 'down', unit: '数学广角——找次品（五下）' },
-    
-    'math-g5-m1-g5-oral-equ':          { book: 'mixed', unit: '清理候选（新版解方程移出小学）' },
-    'math-g5-m4-g5-fill-equation':     { book: 'mixed', unit: '清理候选（新版解方程移出小学）' },
-    'math-g5-m5-g5-match-equ':         { book: 'mixed', unit: '清理候选（新版解方程移出小学）' },
-    'math-g5-m7-g5-pic-balance':       { book: 'mixed', unit: '清理候选（新版解方程移出小学）' },
-    'math-g5-m8-g5-word-equ':          { book: 'mixed', unit: '清理候选（新版解方程移出小学）' },
-    'math-g5-m11-g5-judge-equ':        { book: 'mixed', unit: '清理候选（新版解方程移出小学）' },
-    'math-g5-m12-g5-choice-equ':       { book: 'mixed', unit: '清理候选（新版解方程移出小学）' },
-    'math-g5-m7-g5-pic-tree':          { book: 'mixed', unit: '清理候选（新版五上删除数学广角植树问题）' },
-    'math-g5-m8-g5-word-tree':         { book: 'mixed', unit: '清理候选（新版五上删除数学广角植树问题）' },
-    'math-g5-m10-g5-reason-tree3':     { book: 'mixed', unit: '清理候选（新版五上删除数学广角植树问题）' },
-    
-    'math-g5-m10-logic-reasoning':     { book: 'mixed', unit: '跨册（逻辑推理）' },
-    'math-g5-m10-g5-reason-seq':       { book: 'mixed', unit: '跨册（数字推理）' }
-    
-  };
-
-  
-  function bookUnitForKp(kp) {
-    if (!kp || !kp.id) return null;
-    return BOOK_UNIT_MAP[kp.id] || null;
-  }
-
-  var API = {
-    bookUnitForKp: bookUnitForKp,
-    BOOK_UNIT_MAP: BOOK_UNIT_MAP
-  };
-
-  global.OntologyBookMap = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/catalog/module-catalog.js"] = function (module, exports, require) {
-
-
-(function(global) {
-  
-  const SUBJECTS = { MATH: 'math' };
-
-  const BASIC_MODULES = [
-    { id: 'M0', name: '巧算专项', subject: SUBJECTS.MATH, grades: [1], category: 'number', level: 'basic' },
-    { id: 'M1', name: '口算练习', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'number', level: 'basic' },
-    { id: 'M2', name: '竖式计算', subject: SUBJECTS.MATH, grades: [2,3,4,5,6], category: 'number', level: 'basic' },
-    { id: 'M3', name: '脱式计算', subject: SUBJECTS.MATH, grades: [2,3,4,5,6], category: 'number', level: 'basic' },
-    { id: 'M4', name: '填空题', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'mixed', level: 'basic' },
-    { id: 'M5', name: '连线题', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'mixed', level: 'basic' },
-    { id: 'M6', name: '操作题', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'geometry', level: 'basic' },
-    { id: 'M7', name: '看图列式', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'number', level: 'basic' },
-    { id: 'M8', name: '解决问题', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'mixed', level: 'basic' },
-    { id: 'M9', name: '分类与整理', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'statistics', level: 'basic' },
-    { id: 'M10', name: '推理与数学广角', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'statistics', level: 'basic' },
-   { id: 'M11', name: '判断题', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'mixed', level: 'basic' },
-   { id: 'M12', name: '选择题', subject: SUBJECTS.MATH, grades: [1,2,3,4,5,6], category: 'mixed', level: 'basic' },
-    
-    
-    {
-      id: 'M13', name: '提前预习', subject: SUBJECTS.MATH, grades: [1], category: 'number', level: 'basic',
-      display: {
-        color: '#7cb342',
-        tags: ['乘法表', '除法表', '乘除法填空']
-      }
-    }
-  ];
-
-  const COMPETITION_MODULES = [
-    { id: 'C1', name: '数字谜与数阵图', subject: SUBJECTS.MATH, grades: [4,5,6], category: 'number', level: 'competition', icon: '🧩',
-      desc: '竖式/横式数字谜、幻方与数阵图填数，训练位值分析与枚举推理',
-      gradeStatus: { 4: 'active', 5: 'active', 6: 'active' } },
-    { id: 'C2', name: '数论初步', subject: SUBJECTS.MATH, grades: [4,5,6], category: 'number', level: 'competition', icon: '🔢',
-      desc: '整除特征、奇偶性、质数合数、因数倍数与余数规律',
-      gradeStatus: { 4: 'active', 5: 'active', 6: 'active' } },
-    { id: 'C3', name: '组合计数', subject: SUBJECTS.MATH, grades: [4,5,6], category: 'number', level: 'competition', icon: '🔀',
-      desc: '加乘原理、排列组合初步、枚举与容斥、找规律计数',
-      gradeStatus: { 4: 'active', 5: 'active', 6: 'active' } },
-    { id: 'C4', name: '几何模型', subject: SUBJECTS.MATH, grades: [4,5,6], category: 'geometry', level: 'competition', icon: '📐',
-      desc: '鸟头、蝴蝶、燕尾、一半模型，圆与扇形，勾股定理与格点面积',
-      gradeStatus: { 4: 'active', 5: 'active', 6: 'active' } },
-    { id: 'C5', name: '行程问题', subject: SUBJECTS.MATH, grades: [4,5,6], category: 'number', level: 'competition', icon: '🚗',
-      desc: '相遇追及、火车过桥、流水行船与环形跑道，画线段图分析',
-      gradeStatus: { 4: 'active', 5: 'active', 6: 'active' } },
-    { id: 'C6', name: '工程与浓度', subject: SUBJECTS.MATH, grades: [5,6], category: 'number', level: 'competition', icon: '🏗️',
-      desc: '工程问题（工作量/工效/工时）、溶液浓度混合与配比问题',
-      gradeStatus: { 5: 'active', 6: 'active' } },
-    { id: 'C7', name: '分数与巧算', subject: SUBJECTS.MATH, grades: [5,6], category: 'number', level: 'competition', icon: '✨',
-      desc: '分数与小数巧算、繁分数化简、换元与裂项等速算技巧',
-      gradeStatus: { 5: 'active', 6: 'active' } },
-    { id: 'C8', name: '最值与逻辑推理', subject: SUBJECTS.MATH, grades: [4,5,6], category: 'statistics', level: 'competition', icon: '🧠',
-      desc: '最大最小问题、抽屉原理、逻辑推理（列表/假设法）与对策问题',
-      gradeStatus: { 4: 'active', 5: 'active', 6: 'active' } },
-    { id: 'C9', name: '竞赛综合', subject: SUBJECTS.MATH, grades: [4,5,6], category: 'mixed', level: 'competition', icon: '🏆',
-      desc: '跨模块综合卷：按各竞赛模块知识点 weight 加权混编，模拟竞赛组卷',
-      gradeStatus: { 4: 'active', 5: 'active', 6: 'active' } }
-  ];
-
-  const MODULE_CATALOG = BASIC_MODULES
-    .concat(COMPETITION_MODULES);
-
-  const MODULE_BY_ID = {};
-  MODULE_CATALOG.forEach(function (m) {
-    if (MODULE_BY_ID[m.id]) throw new Error('module-catalog：模块 ID 重复 ' + m.id);
-    MODULE_BY_ID[m.id] = m;
-  });
-  MODULE_CATALOG.byId = function (id) { return MODULE_BY_ID[id] || null; };
-  MODULE_CATALOG.SUBJECTS = SUBJECTS;
-
-  
-  
-  
-  
-  const TYPE_MODULES = {
-    oral: ['M1'], calc: ['M1', 'M2', 'M3'], vertical: ['M2'], mixed: ['M3'],
-    fill: ['M4'], match: ['M5'], operation: ['M6', 'M9'], draw: ['M6', 'M9'],
-    picture: ['M7'], apply: ['M8'], word: ['M8'], stats: ['M9'], reason: ['M10'],
-    judge: ['M11'], choice: ['M12'], open: ['M6', 'M8'], geometry: ['M6']
-  };
-
-  
-  
-  function visibleModulesForType(type) {
-    var t = String(type == null ? '' : type).toLowerCase().trim();
-    if (!t) return null;
-    var mods = TYPE_MODULES[t];
-    return mods ? mods.slice() : null;
-  }
-
-  
-  
-  
-  
-  function kpVisibleInType(kp, type) {
-    var q = String(type == null ? '' : type).toLowerCase().trim();
-    if (!q) return true;
-    if (q === 'competition') return String((kp && kp.moduleId) || '').toUpperCase().charAt(0) === 'C';
-    if (kp && kp.moduleId && String(kp.moduleId).toLowerCase() === q) return true;
-    if (kp && kp.type && String(kp.type).toLowerCase() === q) return true;
-    var mods = TYPE_MODULES[q];
-    if (mods && kp && kp.moduleId && mods.indexOf(kp.moduleId) !== -1) return true;
-    return false;
-  }
-
-  MODULE_CATALOG.TYPE_MODULES = TYPE_MODULES;
-  MODULE_CATALOG.visibleModulesForType = visibleModulesForType;
-  MODULE_CATALOG.kpVisibleInType = kpVisibleInType;
-
-  global.MODULE_CATALOG = MODULE_CATALOG;
-  global.SUBJECTS = SUBJECTS;
-  global.BASIC_MODULES = BASIC_MODULES;
-  global.COMPETITION_MODULES = COMPETITION_MODULES;
-  if (typeof module !== 'undefined') module.exports = MODULE_CATALOG;
-})(typeof window !== 'undefined' ? window : global);
 
 };
 __defs["shared/generator/core/rng.js"] = function (module, exports, require) {
@@ -14130,10 +11165,6 @@ __defs["shared/generator/core/op-semantics.js"] = function (module, exports, req
 (function (global) {
   'use strict';
 
-  var OpsMap = (typeof require === 'function')
-    ? require("shared/knowledge/ontology-operation-map.js")
-    : (global.OntologyOperationMap || null);
-
   var NORM = {
     add: 'add', addition: 'add',
     sub: 'subtract', subtraction: 'subtract', subtract: 'subtract',
@@ -14142,47 +11173,34 @@ __defs["shared/generator/core/op-semantics.js"] = function (module, exports, req
     '+': 'add', '−': 'subtract', '-': 'subtract', '×': 'multiply', 'x': 'multiply', '÷': 'divide'
   };
 
+  var SYMBOLS = {
+    add: '+',
+    subtract: '−',
+    multiply: '×',
+    divide: '÷'
+  };
+
   function normalize(opId) {
     if (typeof opId !== 'string') return null;
-    if (NORM.hasOwnProperty(opId)) return NORM[opId];
-    return OpsMap && OpsMap.semanticsFor(opId) ? opId : null;
+    return NORM.hasOwnProperty(opId) ? NORM[opId] : null;
   }
 
   function symbol(opId) {
     var n = normalize(opId);
     if (!n) return null;
-    var s = OpsMap.semanticsFor(n);
-    return s ? s.symbol : null;
+    return SYMBOLS.hasOwnProperty(n) ? SYMBOLS[n] : null;
   }
 
-  function calc(opId) {
-    var n = normalize(opId);
-    if (!n) return null;
-    var s = OpsMap.semanticsFor(n);
-    return s ? s.calcMethod : null;
-  }
-
-  function visual(opId) {
-    var n = normalize(opId);
-    if (!n) return null;
-    var s = OpsMap.semanticsFor(n);
-    return s ? s.visualAlias : null;
-  }
-
-  var API = { normalize: normalize, symbol: symbol, calc: calc, visual: visual, NORM: NORM };
+  var API = { normalize: normalize, symbol: symbol };
 
   global.GenOpSemantics = API;
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
 };
-__defs["shared/shared/catalog/module-catalog.js"] = function (module, exports, require) {
-  module.exports = null;
-};
 global.StrategyEngine = __req('shared/strategy/strategy-engine.js');
 global.StrategyConfig = __req('shared/strategy/strategy-config.js');
 global.StrategyValidator = __req('shared/strategy/strategy-validator.js');
 global.QuestionTypeStrategy = __req('shared/strategy/question-type-strategy.js');
-global.QuestionTypeAllocation = __req('shared/strategy/question-type-allocation.js');
 global.StaticDifficultyStrategy = __req('shared/strategy/static-difficulty.js');
 global.DifficultyStrategy = __req('shared/strategy/difficulty-strategy.js');
 global.TargetDifficulty = __req('shared/strategy/target-difficulty.js');
@@ -14195,7 +11213,11 @@ global.ConstraintBuilder = __req('shared/strategy/constraint-builder.js');
 global.GeneratorSelector = __req('shared/generator/generator-selector.js');
 global.GeneratorMode = __req('shared/generator/generator-mode.js');
 global.GeneratorRegistry = __req('shared/generator/generator-registry.js');
+global.CapabilityResolver = __req('shared/capability/capability-resolver.js');
+global.CapabilityModel = __req('shared/capability/capability-model.js');
+global.CapabilityMatrix = __req('shared/capability/capability-matrix.js');
 global.SemanticQuestionBridge = __req('shared/generator/semantic-question-bridge.js');
+global.ComprehensiveStrategy = __req('shared/strategy/comprehensive-strategy.js');
 global.ComplexGen = __req('shared/generator/generators/complex.js');
 global.StrategyBundle = { req: __req, modules: __defs };
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

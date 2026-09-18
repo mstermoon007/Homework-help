@@ -1,0 +1,2627 @@
+[
+  {
+    "knowledgeId": "math-g1-up-u01-k001",
+    "tags": [],
+    "notes": "R02:数域=1-5;R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u01-k002",
+    "tags": [],
+    "notes": "R02:数域=5以内;R04:问题情境;R07:理解;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u01-k003",
+    "tags": [],
+    "notes": "R02:数域=5以内;R04:问题情境;R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u02-k001",
+    "tags": [],
+    "notes": "R02:数域=10以内;R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u02-k002",
+    "tags": [],
+    "notes": "R02:数域=10以内;R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u03-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u03-k002",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u04-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u04-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u04-k003",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u05-k001",
+    "tags": [],
+    "notes": "R08:综合应用;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u05-k002",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u05-k003",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-up-u06-k001",
+    "tags": [],
+    "notes": "R08:综合应用;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u01-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u02-k001",
+    "tags": [],
+    "notes": "R08:综合应用;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u02-k002",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u02-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u03-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u03-k002",
+    "tags": [],
+    "notes": "R02:数域=100以内;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u03-k003",
+    "tags": [],
+    "notes": "R02:数域=100以内;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u03-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u03-k005",
+    "tags": [],
+    "notes": "R02:数域=100以内;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u03-k006",
+    "tags": [],
+    "notes": "R02:数域=100以内;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u04-k001",
+    "tags": [],
+    "notes": "R02:数域=两位数;R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u04-k002",
+    "tags": [],
+    "notes": "R02:数域=两位数;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u04-k003",
+    "tags": [],
+    "notes": "R02:数域=两位数;R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u04-k004",
+    "tags": [],
+    "notes": "R02:数域=两位数;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u04-k005",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u05-k001",
+    "tags": [],
+    "notes": "R02:数域=两位数;R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u05-k002",
+    "tags": [],
+    "notes": "R02:数域=两位数;R09:运算;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u05-k003",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u06-k001",
+    "tags": [],
+    "notes": "R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u06-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u06-k003",
+    "tags": [],
+    "notes": "R03:多步;R04:问题情境;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u07-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u07-k002",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u07-k003",
+    "tags": [],
+    "notes": "R04:问题情境;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g1-down-u08-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u01-k001",
+    "tags": [],
+    "notes": "R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u01-k002",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u01-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u01-k004",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u01-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u01-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u02-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u02-k002",
+    "tags": [],
+    "notes": "R02:数域=2～6;R09:运算;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u02-k003",
+    "tags": [],
+    "notes": "R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u02-k004",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u03-k001",
+    "tags": [],
+    "notes": "R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u03-k002",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u03-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u03-k004",
+    "tags": [],
+    "notes": "R02:数域=2～6;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u03-k005",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u04-k001",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u04-k002",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u04-k003",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u04-k004",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u05-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u05-k002",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u05-k003",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u05-k004",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u05-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u06-k001",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u07-k001",
+    "tags": [],
+    "notes": "R02:数域=7～9;R09:运算;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u07-k002",
+    "tags": [],
+    "notes": "R02:数域=7～9;R04:问题情境;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-up-u08-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R08:综合应用;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u01-k001",
+    "tags": [],
+    "notes": "R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u01-k002",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u01-k003",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u02-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u02-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u02-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R07:理解;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u02-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u02-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u03-k001",
+    "tags": [],
+    "notes": "R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u03-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u03-k003",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u03-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u03-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u03-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u04-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u04-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u04-k003",
+    "tags": [],
+    "notes": "R02:数域=万以内;R06:初始认识;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u04-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u04-k005",
+    "tags": [],
+    "notes": "R02:数域=万以内;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u04-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u04-k007",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u05-k001",
+    "tags": [],
+    "notes": "R02:数域=三位数;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u05-k002",
+    "tags": [],
+    "notes": "R02:数域=三位数;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u05-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u05-k004",
+    "tags": [],
+    "notes": "R02:数域=万以内;R04:问题情境;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u06-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u06-k002",
+    "tags": [],
+    "notes": "R02:数域=万以内;R08:综合应用;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u06-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u06-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u07-k001",
+    "tags": [],
+    "notes": "R02:数域=万以内;R09:运算;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u07-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=1",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g2-down-u07-k003",
+    "tags": [],
+    "notes": "R03:多步;R04:问题情境;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u01-k001",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u01-k002",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u01-k003",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u02-k001",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u02-k002",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u02-k003",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u02-k004",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u02-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R03:多步;R04:问题情境;R08:综合应用;R10:步数=5",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u03-k001",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u03-k002",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u03-k003",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u03-k004",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u04-k001",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u04-k002",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u04-k003",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u04-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u05-k001",
+    "tags": [],
+    "notes": "R02:数域=一位数;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u05-k002",
+    "tags": [],
+    "notes": "R02:数域=一位数;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u05-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u05-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u05-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R07:理解;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u06-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u06-k002",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u06-k003",
+    "tags": [],
+    "notes": "R07:理解;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u06-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u06-k005",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u07-k001",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u07-k002",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u07-k003",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u07-k004",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u08-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u08-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u08-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u08-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u08-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-up-u09-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u01-k001",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u01-k002",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u01-k003",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u01-k004",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u02-k001",
+    "tags": [],
+    "notes": "R02:数域=两位数;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u02-k002",
+    "tags": [],
+    "notes": "R02:数域=一位数;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u02-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u02-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u02-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u02-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u03-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u03-k002",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u03-k003",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u03-k004",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u04-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u04-k002",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u04-k003",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u04-k004",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u04-k005",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u05-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u05-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u05-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u05-k004",
+    "tags": [],
+    "notes": "R04:问题情境;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u06-k001",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u06-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u07-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u07-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u07-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u07-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u08-k001",
+    "tags": [],
+    "notes": "R02:数域=一位数;R05:高阶数系;R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u08-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u08-k003",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u08-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u08-k005",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g3-down-u08-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u01-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u01-k002",
+    "tags": [],
+    "notes": "R02:数域=亿以内;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u01-k003",
+    "tags": [],
+    "notes": "R02:数域=亿以内;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u01-k004",
+    "tags": [],
+    "notes": "R02:数域=亿以内;R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u01-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u01-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u02-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u02-k002",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u02-k003",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u03-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u03-k002",
+    "tags": [],
+    "notes": "R02:数域=两位数;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u03-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u04-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u04-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u04-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u05-k001",
+    "tags": [],
+    "notes": "R07:理解;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u05-k002",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u05-k003",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u05-k004",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u06-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u06-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u06-k003",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u06-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u07-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u08-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u08-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u08-k003",
+    "tags": [],
+    "notes": "R04:问题情境;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-up-u09-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R06:初始认识;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u01-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R07:理解;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u01-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R07:理解;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u01-k003",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u01-k004",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u02-k001",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u02-k002",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u02-k003",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u03-k001",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u03-k002",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u03-k003",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u03-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R08:综合应用;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u04-k001",
+    "tags": [],
+    "notes": "R02:数域=两位数;R05:高阶数系;R07:理解;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u04-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u04-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u04-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u04-k005",
+    "tags": [],
+    "notes": "R02:数域=两位数;R05:高阶数系;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u04-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u04-k007",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u05-k001",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u05-k002",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u05-k003",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u05-k004",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u05-k005",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u05-k006",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u06-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u06-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u06-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u06-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u07-k001",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u07-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u07-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u07-k004",
+    "tags": [],
+    "notes": "R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u07-k005",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u08-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R07:理解;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u08-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u08-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u08-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u09-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u09-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u09-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g4-down-u10-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R07:理解;R10:步数=2",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u01-k001",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u01-k002",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u01-k003",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u02-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u02-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u02-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u02-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u02-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u03-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u03-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u03-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u03-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u03-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u03-k006",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u04-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u04-k002",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u04-k003",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u05-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R07:理解;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u05-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u05-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u05-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u06-k001",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u06-k002",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u06-k003",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u06-k004",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u06-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u06-k006",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u07-k001",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u07-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u07-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u07-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u08-k001",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u08-k002",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u08-k003",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u08-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-up-u09-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R06:初始认识;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u01-k001",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u01-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u01-k003",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u02-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u02-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u02-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u02-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u02-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u02-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u03-k001",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u03-k002",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u03-k003",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u03-k004",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u03-k005",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u03-k006",
+    "tags": [],
+    "notes": "R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u04-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R07:理解;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u04-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u04-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u04-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u04-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u04-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u05-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u05-k002",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u05-k003",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u05-k004",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u06-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u06-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u06-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u06-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u06-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u07-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u07-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u07-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u08-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u08-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u08-k003",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u09-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u09-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u09-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u10-k001",
+    "tags": [],
+    "notes": "R04:问题情境;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u10-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u10-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u10-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g5-down-u11-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R07:理解;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u01-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u01-k002",
+    "tags": [],
+    "notes": "R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u01-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u02-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R07:理解;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u02-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R07:理解;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u02-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u02-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u03-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u03-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u03-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u03-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u03-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u04-k001",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u04-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u04-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R09:运算;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u04-k004",
+    "tags": [],
+    "notes": "R08:综合应用;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u04-k005",
+    "tags": [],
+    "notes": "R04:问题情境;R07:理解;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u05-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R07:理解;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u05-k002",
+    "tags": [],
+    "notes": "R02:数域=两位数;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u05-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u05-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u05-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u05-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u06-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R06:初始认识;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u07-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u07-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-up-u07-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R07:理解;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u01-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R07:理解;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u01-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u01-k003",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u01-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u01-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R07:理解;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u02-k001",
+    "tags": [],
+    "notes": "R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u02-k002",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u02-k003",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u02-k004",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u02-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u03-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u03-k002",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u03-k003",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u03-k004",
+    "tags": [],
+    "notes": "R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u03-k005",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u03-k006",
+    "tags": [],
+    "notes": "R04:问题情境;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u04-k001",
+    "tags": [],
+    "notes": "R05:高阶数系;R07:理解;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u04-k002",
+    "tags": [],
+    "notes": "R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u04-k003",
+    "tags": [],
+    "notes": "R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u04-k004",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u04-k005",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u04-k006",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u04-k007",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u04-k008",
+    "tags": [],
+    "notes": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R08:综合应用;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u05-k001",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u05-k002",
+    "tags": [],
+    "notes": "R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u05-k003",
+    "tags": [],
+    "notes": "R07:理解;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u05-k004",
+    "tags": [],
+    "notes": "R04:问题情境;R07:理解;R10:步数=4",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  },
+  {
+    "knowledgeId": "math-g6-down-u06-k001",
+    "tags": [],
+    "notes": "R02:数域=整数域;R05:高阶数系;R06:初始认识;R10:步数=3",
+    "source": "kbl-root-derived",
+    "sourceReference": null
+  }
+]

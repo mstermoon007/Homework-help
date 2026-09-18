@@ -37,7 +37,7 @@ function normalizeId(fromDir, rel) {
 
 // 读取 strategy bundle 已注册的模块 id，实现「委托」而非重复打包
 function strategyModuleIds() {
-  var bundlePath = path.join(ROOT, 'shared', 'strategy-engine.bundle.js');
+  var bundlePath = path.join(ROOT, 'shared', 'engine', 'strategy-engine.bundle.js');
   var bundle;
   try {
     bundle = fs.readFileSync(bundlePath, 'utf8');
@@ -64,8 +64,13 @@ function stripComments(code) {
     .replace(/\/\/.*$/gm, '');
 }
 
+// P17-8：额外内联生成内核 GenerationCore 及其契约层，并注册 global.GenerationCore。
+// presentation-engine.js（冻结）已内联 retry-loop/validator 链，故不重复打包；
+// generation-core 的 selector/registry 依赖经 __req 委托 strategy bundle。
+var GENERATION_CORE_ENTRY = 'shared/generation/generation-core.js';
+
 var modules = {};
-var queue = [ENTRY];
+var queue = [ENTRY, GENERATION_CORE_ENTRY];
 
 while (queue.length) {
   var id = queue.shift();
@@ -134,9 +139,12 @@ Object.keys(modules).forEach(function (id) {
 
 lines.push('global.PresentationEngine = __req(' + JSON.stringify(ENTRY) + ');');
 lines.push('global.PresentationBundle = __req(' + JSON.stringify(ENTRY) + ');');
+// P17-8：浏览器端注册生成内核，使 api.js 的 getGenerationCore() 可解析
+//（接管真实运行时 single-KP 计划，避免落回 PresentationEngine 内联 Selector/RetryLoop）。
+lines.push('global.GenerationCore = __req(' + JSON.stringify(GENERATION_CORE_ENTRY) + ');');
 lines.push('})(typeof window !== \'undefined\' ? window : (typeof globalThis !== \'undefined\' ? globalThis : this));');
 
-var out = path.join(ROOT, 'shared', 'presentation-engine.bundle.js');
+var out = path.join(ROOT, 'shared', 'engine', 'presentation-engine.bundle.js');
 fs.writeFileSync(out, lines.join('\n'));
 
 console.log('Presentation bundle written: shared/engine/presentation-engine.bundle.js');

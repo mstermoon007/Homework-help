@@ -1,0 +1,7074 @@
+{
+  "schemaVersion": "1.0.0",
+  "subject": "math",
+  "grade": "g2",
+  "knowledgePoints": [
+    {
+      "knowledgeId": "math-g2-up-u01-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u01",
+      "unitNo": 1,
+      "knowledgeNo": "1",
+      "unitName": "分类与整理",
+      "module": "statistics",
+      "name": "分类的含义",
+      "aliases": [],
+      "type": "statistics",
+      "semantic": {
+        "family": "statistics",
+        "concept": "根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "statistics",
+        "tags": []
+      },
+      "content": {
+        "description": "根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "classify",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "classify",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R07:理解;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u01-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u01",
+      "unitNo": 1,
+      "knowledgeNo": "2",
+      "unitName": "分类与整理",
+      "module": "statistics",
+      "name": "单一标准分类",
+      "aliases": [],
+      "type": "statistics",
+      "semantic": {
+        "family": "statistics",
+        "concept": "先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "statistics",
+        "tags": []
+      },
+      "content": {
+        "description": "先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "classify",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "classify",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u01-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u01",
+      "unitNo": 1,
+      "knowledgeNo": "3",
+      "unitName": "分类与整理",
+      "module": "statistics",
+      "name": "不同标准分类",
+      "aliases": [],
+      "type": "statistics",
+      "semantic": {
+        "family": "statistics",
+        "concept": "同一组物体可以按不同维度分类（如铅笔可按颜色分，也可按长短分）；分类标准不同，结果不同，但总数不变",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "statistics",
+        "tags": []
+      },
+      "content": {
+        "description": "同一组物体可以按不同维度分类（如铅笔可按颜色分，也可按长短分）；分类标准不同，结果不同，但总数不变",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "classify",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "classify",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u01-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u01",
+      "unitNo": 1,
+      "knowledgeNo": "4",
+      "unitName": "分类与整理",
+      "module": "statistics",
+      "name": "逐层分类",
+      "aliases": [],
+      "type": "statistics",
+      "semantic": {
+        "family": "statistics",
+        "concept": "先按一级标准分成大类，再对每个大类按二级标准细分。",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "statistics",
+        "tags": []
+      },
+      "content": {
+        "description": "先按一级标准分成大类，再对每个大类按二级标准细分。",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "classify",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "classify",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u01-k005",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u01",
+      "unitNo": 1,
+      "knowledgeNo": "5",
+      "unitName": "分类与整理",
+      "module": "statistics",
+      "name": "统计方法",
+      "aliases": [],
+      "type": "statistics",
+      "semantic": {
+        "family": "statistics",
+        "concept": "用计数法直接数出每类数量；用符号记录法（画“○”、画“正”字等）对应计数，“正”字一笔代表1个，一个“正”字代表5个",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "statistics",
+        "tags": []
+      },
+      "content": {
+        "description": "用计数法直接数出每类数量；用符号记录法（画“○”、画“正”字等）对应计数，“正”字一笔代表1个，一个“正”字代表5个",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "classify",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "classify",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u01-k006",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u01",
+      "unitNo": 1,
+      "knowledgeNo": "6",
+      "unitName": "分类与整理",
+      "module": "statistics",
+      "name": "简单统计表",
+      "aliases": [],
+      "type": "statistics",
+      "semantic": {
+        "family": "statistics",
+        "concept": "能看懂包含“分类标准—类别列—数量列”的统计表，并根据统计表回答简单问题",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "statistics",
+        "tags": []
+      },
+      "content": {
+        "description": "能看懂包含“分类标准—类别列—数量列”的统计表，并根据统计表回答简单问题",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "classify",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "classify",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "apply",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u02-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u02",
+      "unitNo": 2,
+      "knowledgeNo": "1",
+      "unitName": "1～6的表内乘法",
+      "module": "algebra",
+      "name": "乘法的初步认识",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "理解乘法是求几个相同加数和的简便运算；认识乘号，会读、写乘法算式",
+        "operations": [
+          "addition",
+          "multiplication"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "理解乘法是求几个相同加数和的简便运算；认识乘号，会读、写乘法算式",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "recognize",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R06:初始认识;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u02-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u02",
+      "unitNo": 2,
+      "knowledgeNo": "2",
+      "unitName": "1～6的表内乘法",
+      "module": "algebra",
+      "name": "2～6的乘法口诀",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "掌握2、3、4、5、6的乘法口诀，能熟练背诵并运用口诀进行乘法计算",
+        "operations": [
+          "multiplication"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "掌握2、3、4、5、6的乘法口诀，能熟练背诵并运用口诀进行乘法计算",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 6
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 4,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=2～6;R09:运算;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u02-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u02",
+      "unitNo": 2,
+      "knowledgeNo": "3",
+      "unitName": "1～6的表内乘法",
+      "module": "algebra",
+      "name": "乘加、乘减",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "理解乘加、乘减算式的含义，掌握先算乘法、再算加减的运算顺序",
+        "operations": [
+          "addition",
+          "subtraction",
+          "multiplication"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "理解乘加、乘减算式的含义，掌握先算乘法、再算加减的运算顺序",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R07:理解;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u02-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u02",
+      "unitNo": 2,
+      "knowledgeNo": "4",
+      "unitName": "1～6的表内乘法",
+      "module": "algebra",
+      "name": "解决问题",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "能用乘法解决“求几个几相加”的实际问题",
+        "operations": [
+          "addition",
+          "multiplication"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "能用乘法解决“求几个几相加”的实际问题",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 4,
+        "cognitiveLevel": "analyze",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R04:问题情境;R08:综合应用;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u03-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u03",
+      "unitNo": 3,
+      "knowledgeNo": "1",
+      "unitName": "1～6的表内除法",
+      "module": "algebra",
+      "name": "平均分",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "理解“每份分得同样多”叫做平均分；掌握平均分的两种情况——等分（把一些物品平均分成几份，求每份是多少）和包含（把一些物品按每几个一份分，求能分成几份）",
+        "operations": [
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "理解“每份分得同样多”叫做平均分；掌握平均分的两种情况——等分（把一些物品平均分成几份，求每份是多少）和包含（把一些物品按每几个一份分，求能分成几份）",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R07:理解;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u03-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u03",
+      "unitNo": 3,
+      "knowledgeNo": "2",
+      "unitName": "1～6的表内除法",
+      "module": "algebra",
+      "name": "除法的含义",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "只要是平均分的过程，就可以用除法算式表示；认识除号，会读、写除法算式",
+        "operations": [
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "只要是平均分的过程，就可以用除法算式表示；认识除号，会读、写除法算式",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "recognize",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R06:初始认识;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u03-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u03",
+      "unitNo": 3,
+      "knowledgeNo": "3",
+      "unitName": "1～6的表内除法",
+      "module": "algebra",
+      "name": "除法算式名称",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "除法算式各部分名称：被除数÷除数=商",
+        "operations": [
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "除法算式各部分名称：被除数÷除数=商",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u03-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u03",
+      "unitNo": 3,
+      "knowledgeNo": "4",
+      "unitName": "1～6的表内除法",
+      "module": "algebra",
+      "name": "用2～6的乘法口诀求商",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "想乘法口诀，除数和几相乘得被除数，商就是几；一句乘法口诀一般可以写出两道除法算式（乘数相同的除外）",
+        "operations": [
+          "multiplication",
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "想乘法口诀，除数和几相乘得被除数，商就是几；一句乘法口诀一般可以写出两道除法算式（乘数相同的除外）",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=2～6;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u03-k005",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u03",
+      "unitNo": 3,
+      "knowledgeNo": "5",
+      "unitName": "1～6的表内除法",
+      "module": "algebra",
+      "name": "解决问题",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "能用除法解决平均分的实际问题",
+        "operations": [
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "能用除法解决平均分的实际问题",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 4,
+        "cognitiveLevel": "analyze",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R04:问题情境;R08:综合应用;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u04-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u04",
+      "unitNo": 4,
+      "knowledgeNo": "1",
+      "unitName": "综合实践——方向",
+      "module": "geometry",
+      "name": "辨认方向",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "借助生活经验（如早晨面向太阳，前面是东、后面是西、左面是北、右面是南）和指南针辨认东、南、西、北四个方向。",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "借助生活经验（如早晨面向太阳，前面是东、后面是西、左面是北、右面是南）和指南针辨认东、南、西、北四个方向。",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u04-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u04",
+      "unitNo": 4,
+      "knowledgeNo": "2",
+      "unitName": "综合实践——方向",
+      "module": "geometry",
+      "name": "地图上的方向",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "地图通常按“上北、下南、左西、右东”绘制；东和西相对，南和北相对，确定一个方向即可推出其余三个方向",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "地图通常按“上北、下南、左西、右东”绘制；东和西相对，南和北相对，确定一个方向即可推出其余三个方向",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u04-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u04",
+      "unitNo": 4,
+      "knowledgeNo": "3",
+      "unitName": "综合实践——方向",
+      "module": "geometry",
+      "name": "描述物体所在方向",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "先确定观测点，以观测点为中心标出四个方向，再用方向描述两个物体间的位置关系",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "先确定观测点，以观测点为中心标出四个方向，再用方向描述两个物体间的位置关系",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u04-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u04",
+      "unitNo": 4,
+      "knowledgeNo": "4",
+      "unitName": "综合实践——方向",
+      "module": "geometry",
+      "name": "描述行走路线",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "用“从……出发，先向……走到……再向……走到……最后向……走到……”来描述路线",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "用“从……出发，先向……走到……再向……走到……最后向……走到……”来描述路线",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u05-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u05",
+      "unitNo": 5,
+      "knowledgeNo": "1",
+      "unitName": "厘米和米",
+      "module": "geometry",
+      "name": "认识厘米和米",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "量比较短的物体用“厘米（cm）”作单位，量比较长的物体用“米（m）”作单位；1米=100厘米",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "量比较短的物体用“厘米（cm）”作单位，量比较长的物体用“米（m）”作单位；1米=100厘米",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "recognize",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R06:初始认识;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u05-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u05",
+      "unitNo": 5,
+      "knowledgeNo": "2",
+      "unitName": "厘米和米",
+      "module": "geometry",
+      "name": "测量物体长度的方法",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "<r>把尺子的刻度0对准物体左端，看右端对着刻度几就是几厘米；如果不是从刻度0开始，物体长度=终点刻度</r><r><rPr></rPr>−</r><r><rPr></rPr>起始刻度</r>",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "<r>把尺子的刻度0对准物体左端，看右端对着刻度几就是几厘米；如果不是从刻度0开始，物体长度=终点刻度</r><r><rPr></rPr>−</r><r><rPr></rPr>起始刻度</r>",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u05-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u05",
+      "unitNo": 5,
+      "knowledgeNo": "3",
+      "unitName": "厘米和米",
+      "module": "geometry",
+      "name": "认识线段",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "线段是直的，可以量出长度，两端各有一个点；连接两点之间只有一条线段",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "线段是直的，可以量出长度，两端各有一个点；连接两点之间只有一条线段",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "recognize",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R06:初始认识;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u05-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u05",
+      "unitNo": 5,
+      "knowledgeNo": "4",
+      "unitName": "厘米和米",
+      "module": "geometry",
+      "name": "画线段的方法",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "通常从尺子的刻度0画起，是几厘米长的线段就画到刻度几的地方",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "通常从尺子的刻度0画起，是几厘米长的线段就画到刻度几的地方",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u05-k005",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u05",
+      "unitNo": 5,
+      "knowledgeNo": "5",
+      "unitName": "厘米和米",
+      "module": "geometry",
+      "name": "选择合适的长度单位",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "结合数据和单位，借助熟知的标准长度（如食指宽度约1厘米，小朋友身高约1米多）去比较或推测",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "结合数据和单位，借助熟知的标准长度（如食指宽度约1厘米，小朋友身高约1米多）去比较或推测",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u06-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u06",
+      "unitNo": 6,
+      "knowledgeNo": "1",
+      "unitName": "综合实践——长度",
+      "module": "geometry",
+      "name": "身体上的尺子",
+      "aliases": [],
+      "type": "geometry",
+      "semantic": {
+        "family": "geometry",
+        "concept": "通过用身体部位（如手指、手掌、手臂等）进行估测和测量，进一步建立长度观念，培养估测意识和动手实践能力",
+        "operations": [],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "geometry",
+        "tags": []
+      },
+      "content": {
+        "description": "通过用身体部位（如手指、手掌、手臂等）进行估测和测量，进一步建立长度观念，培养估测意识和动手实践能力",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "judge",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "geometry",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "judge",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u07-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u07",
+      "unitNo": 7,
+      "knowledgeNo": "1",
+      "unitName": "7～9的表内乘、除法",
+      "module": "algebra",
+      "name": "7～9的乘、除法",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "掌握7、8、9的乘法口诀，能熟练背诵并运用口诀进行乘法计算 用乘法口诀求商，想“除数×商=被除数”",
+        "operations": [
+          "multiplication",
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "掌握7、8、9的乘法口诀，能熟练背诵并运用口诀进行乘法计算 用乘法口诀求商，想“除数×商=被除数”",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=7～9;R09:运算;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u07-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u07",
+      "unitNo": 7,
+      "knowledgeNo": "2",
+      "unitName": "7～9的表内乘、除法",
+      "module": "algebra",
+      "name": "解决问题",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "能运用7～9的乘除法口诀解决较复杂的实际问题，培养综合运用能力",
+        "operations": [
+          "multiplication",
+          "division",
+          "mixed"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "能运用7～9的乘除法口诀解决较复杂的实际问题，培养综合运用能力",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 9
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "analyze",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=7～9;R04:问题情境;R08:综合应用;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-up-u08-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "up",
+      "unitId": "math-g2-up-u08",
+      "unitNo": 8,
+      "knowledgeNo": "1",
+      "unitName": "复习与关联",
+      "module": "practice",
+      "name": "综合运用本册知识",
+      "aliases": [],
+      "type": "application",
+      "semantic": {
+        "family": "application-word",
+        "concept": "对全册知识进行系统梳理与综合运用，沟通各单元之间的内在联系，涵盖数与代数、图形与几何、综合实践等领域",
+        "operations": [
+          "mixed"
+        ],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "practice",
+        "tags": []
+      },
+      "content": {
+        "description": "对全册知识进行系统梳理与综合运用，沟通各单元之间的内在联系，涵盖数与代数、图形与几何、综合实践等领域",
+        "example": null,
+        "factualContent": {},
+        "graphicType": "graphic"
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "analyze",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R08:综合应用;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u01-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u01",
+      "unitNo": 1,
+      "knowledgeNo": "1",
+      "unitName": "综合实践——时间",
+      "module": "algebra",
+      "name": "钟面结构",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "时针、分针、秒针；钟面大格、小格含义，认读几时几分、几时几秒；识别接近整时的时刻（易错点）",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "时针、分针、秒针；钟面大格、小格含义，认读几时几分、几时几秒；识别接近整时的时刻（易错点）",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R07:理解;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u01-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u01",
+      "unitNo": 1,
+      "knowledgeNo": "2",
+      "unitName": "综合实践——时间",
+      "module": "algebra",
+      "name": "时间单位换算",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "1 时 = 60 分，1 分 = 60 秒",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "1 时 = 60 分，1 分 = 60 秒",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u01-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u01",
+      "unitNo": 1,
+      "knowledgeNo": "3",
+      "unitName": "综合实践——时间",
+      "module": "algebra",
+      "name": "计算简单经过时间",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "<r>结束时间</r><r><rPr></rPr>−</r><r><rPr></rPr>开始时间，生活时间感知，制作作息时间小书，建立时间观念</r>",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "<r>结束时间</r><r><rPr></rPr>−</r><r><rPr></rPr>开始时间，生活时间感知，制作作息时间小书，建立时间观念</r>",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R09:运算;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u02-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u02",
+      "unitNo": 2,
+      "knowledgeNo": "1",
+      "unitName": "有余数的除法",
+      "module": "algebra",
+      "name": "有余数除法的含义",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "平均分物品时，有时会有剩余，剩余的部分叫做余数",
+        "operations": [
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "平均分物品时，有时会有剩余，剩余的部分叫做余数",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R07:理解;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u02-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u02",
+      "unitNo": 2,
+      "knowledgeNo": "2",
+      "unitName": "有余数的除法",
+      "module": "algebra",
+      "name": "余数和除数的关系",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数",
+        "operations": [
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u02-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u02",
+      "unitNo": 2,
+      "knowledgeNo": "3",
+      "unitName": "有余数的除法",
+      "module": "algebra",
+      "name": "除法竖式运算",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "掌握有余数除法的竖式计算方法，理解竖式中各部分的含义",
+        "operations": [
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "掌握有余数除法的竖式计算方法，理解竖式中各部分的含义",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R07:理解;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u02-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u02",
+      "unitNo": 2,
+      "knowledgeNo": "4",
+      "unitName": "有余数的除法",
+      "module": "algebra",
+      "name": "解决问题",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "能运用有余数除法解决实际问题，并结合生活实际进行判断和取舍，进一法：租船、乘车、装箱（剩余也要多一份）；去尾法：购物、裁剪材料（剩余不足一份直接舍弃）",
+        "operations": [
+          "multiplication",
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "能运用有余数除法解决实际问题，并结合生活实际进行判断和取舍，进一法：租船、乘车、装箱（剩余也要多一份）；去尾法：购物、裁剪材料（剩余不足一份直接舍弃）",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "analyze",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u02-k005",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u02",
+      "unitNo": 2,
+      "knowledgeNo": "5",
+      "unitName": "有余数的除法",
+      "module": "algebra",
+      "name": "周期问题",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "利用有余数除法找图形、彩旗排列规律",
+        "operations": [
+          "division"
+        ],
+        "representations": [
+          "numeric",
+          "graphic"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "利用有余数除法找图形、彩旗排列规律",
+        "example": null,
+        "factualContent": {},
+        "graphicType": "graphic"
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "geometry",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          },
+          {
+            "id": "geometry",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "apply",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u03-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u03",
+      "unitNo": 3,
+      "knowledgeNo": "1",
+      "unitName": "数量间的乘除关系",
+      "module": "algebra",
+      "name": "乘除法互逆关系",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "一道乘法算式对应两道除法算式",
+        "operations": [
+          "multiplication",
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "一道乘法算式对应两道除法算式",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u03-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u03",
+      "unitNo": 3,
+      "knowledgeNo": "2",
+      "unitName": "数量间的乘除关系",
+      "module": "algebra",
+      "name": "平均分两类模型",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "按份数分、按每份数量分",
+        "operations": [
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "按份数分、按每份数量分",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u03-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u03",
+      "unitNo": 3,
+      "knowledgeNo": "3",
+      "unitName": "数量间的乘除关系",
+      "module": "algebra",
+      "name": "倍的认识",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "圈一圈，理解 “几倍” 就是几份",
+        "operations": [
+          "multiplication"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "圈一圈，理解 “几倍” 就是几份",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 3,
+        "cognitiveLevel": "recognize",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R06:初始认识;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u03-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u03",
+      "unitNo": 3,
+      "knowledgeNo": "4",
+      "unitName": "数量间的乘除关系",
+      "module": "algebra",
+      "name": "两类倍应用题",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "求一个数是另一个数的几倍：除法；求一个数的几倍是多少：乘法",
+        "operations": [
+          "multiplication",
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "求一个数是另一个数的几倍：除法；求一个数的几倍是多少：乘法",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "apply",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u03-k005",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u03",
+      "unitNo": 3,
+      "knowledgeNo": "5",
+      "unitName": "数量间的乘除关系",
+      "module": "algebra",
+      "name": "逆向倍数问题",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "已知一个数的几倍是多少，求这个数",
+        "operations": [
+          "multiplication"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "已知一个数的几倍是多少，求这个数",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "apply",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u03-k006",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u03",
+      "unitNo": 3,
+      "knowledgeNo": "6",
+      "unitName": "数量间的乘除关系",
+      "module": "algebra",
+      "name": "解决问题",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "multiplication-division",
+        "concept": "看图列式，画线段图表达数量关系，解决复合乘除应用题",
+        "operations": [
+          "multiplication",
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "看图列式，画线段图表达数量关系，解决复合乘除应用题",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "analyze",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u04-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u04",
+      "unitNo": 4,
+      "knowledgeNo": "1",
+      "unitName": "万以内数的认识",
+      "module": "algebra",
+      "name": "计数单位",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "10 个一百是一千，10 个一千是一万；数位顺序（个、十、百、千、万）",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "10 个一百是一千，10 个一千是一万；数位顺序（个、十、百、千、万）",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u04-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u04",
+      "unitNo": 4,
+      "knowledgeNo": "2",
+      "unitName": "万以内数的认识",
+      "module": "algebra",
+      "name": "数的组成",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "一个数由几个千、几个百、几个十、几个一组成",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "一个数由几个千、几个百、几个十、几个一组成",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u04-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u04",
+      "unitNo": 4,
+      "knowledgeNo": "3",
+      "unitName": "万以内数的认识",
+      "module": "algebra",
+      "name": "万以内数读写",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "读法：高位读起；中间 0 读零，末尾 0 不读；写法：高位写起，空位用 0 占位",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "读法：高位读起；中间 0 读零，末尾 0 不读；写法：高位写起，空位用 0 占位",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "recognize",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=万以内;R06:初始认识;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u04-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u04",
+      "unitNo": 4,
+      "knowledgeNo": "4",
+      "unitName": "万以内数的认识",
+      "module": "algebra",
+      "name": "算盘认数",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "上珠代表 5，下珠代表 1",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "上珠代表 5，下珠代表 1",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u04-k005",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u04",
+      "unitNo": 4,
+      "knowledgeNo": "5",
+      "unitName": "万以内数的认识",
+      "module": "algebra",
+      "name": "万以内数大小比较",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "位数多的数更大；位数相同从高位依次比较",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "位数多的数更大；位数相同从高位依次比较",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=万以内;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u04-k006",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u04",
+      "unitNo": 4,
+      "knowledgeNo": "6",
+      "unitName": "万以内数的认识",
+      "module": "algebra",
+      "name": "近似数",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "找接近整百、整千的数；简单估算",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "找接近整百、整千的数；简单估算",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u04-k007",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u04",
+      "unitNo": 4,
+      "knowledgeNo": "7",
+      "unitName": "万以内数的认识",
+      "module": "algebra",
+      "name": "整百、千口算",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "整百、整千数加减法口算",
+        "operations": [
+          "addition",
+          "subtraction"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "整百、整千数加减法口算",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u05-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u05",
+      "unitNo": 5,
+      "knowledgeNo": "1",
+      "unitName": "万以内的加法和减法",
+      "module": "algebra",
+      "name": "三位数加法竖式",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "相同数位对齐，从个位加起；满十向前一位进 1；连续进位加法；加法验算方法",
+        "operations": [
+          "addition"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "相同数位对齐，从个位加起；满十向前一位进 1；连续进位加法；加法验算方法",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 1000
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=三位数;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u05-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u05",
+      "unitNo": 5,
+      "knowledgeNo": "2",
+      "unitName": "万以内的加法和减法",
+      "module": "algebra",
+      "name": "三位数减法竖式",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "相同数位对齐，从个位减起；不够减向前一位借 1；连续退位减法；减法验算方法",
+        "operations": [
+          "subtraction"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "相同数位对齐，从个位减起；不够减向前一位借 1；连续退位减法；减法验算方法",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 1000
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=三位数;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u05-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u05",
+      "unitNo": 5,
+      "knowledgeNo": "3",
+      "unitName": "万以内的加法和减法",
+      "module": "algebra",
+      "name": "加减法各部分名称与关系",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "<r>和 = 加数 + 加数；加数 = 和 </r><r><rPr></rPr>−</r><r><rPr></rPr> 另一个加数；差 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 减数；被减数 = 差 + 减数；减数 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 差</r>",
+        "operations": [
+          "addition",
+          "subtraction"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "<r>和 = 加数 + 加数；加数 = 和 </r><r><rPr></rPr>−</r><r><rPr></rPr> 另一个加数；差 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 减数；被减数 = 差 + 减数；减数 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 差</r>",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u05-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u05",
+      "unitNo": 5,
+      "knowledgeNo": "4",
+      "unitName": "万以内的加法和减法",
+      "module": "algebra",
+      "name": "解决问题",
+      "aliases": [],
+      "type": "calculation",
+      "semantic": {
+        "family": "calculation",
+        "concept": "万以内加减法估算解决生活问题，填数字谜、错中求解类变式题",
+        "operations": [
+          "addition",
+          "subtraction"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "algebra",
+        "tags": []
+      },
+      "content": {
+        "description": "万以内加减法估算解决生活问题，填数字谜、错中求解类变式题",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "calc",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "calc",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "analyze",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=万以内;R04:问题情境;R08:综合应用;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u06-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u06",
+      "unitNo": 6,
+      "knowledgeNo": "1",
+      "unitName": "综合实践——数学连环画",
+      "module": "practice",
+      "name": "连环画提取信息",
+      "aliases": [],
+      "type": "application",
+      "semantic": {
+        "family": "application-word",
+        "concept": "从连环画故事场景提取数学信息，发现并提出数学问题",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "practice",
+        "tags": []
+      },
+      "content": {
+        "description": "从连环画故事场景提取数学信息，发现并提出数学问题",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "apply",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u06-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u06",
+      "unitNo": 6,
+      "knowledgeNo": "2",
+      "unitName": "综合实践——数学连环画",
+      "module": "practice",
+      "name": "综合运用本学期知识",
+      "aliases": [],
+      "type": "application",
+      "semantic": {
+        "family": "application-word",
+        "concept": "有余数除法、倍数、加减乘除、万以内计算",
+        "operations": [
+          "addition",
+          "subtraction",
+          "multiplication",
+          "division",
+          "mixed"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "practice",
+        "tags": []
+      },
+      "content": {
+        "description": "有余数除法、倍数、加减乘除、万以内计算",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "analyze",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=万以内;R08:综合应用;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u06-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u06",
+      "unitNo": 6,
+      "knowledgeNo": "3",
+      "unitName": "综合实践——数学连环画",
+      "module": "practice",
+      "name": "创作数学连环画",
+      "aliases": [],
+      "type": "application",
+      "semantic": {
+        "family": "application-word",
+        "concept": "用图画 + 文字构建包含数学问题的小故事",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "practice",
+        "tags": []
+      },
+      "content": {
+        "description": "用图画 + 文字构建包含数学问题的小故事",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "apply",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u06-k004",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u06",
+      "unitNo": 6,
+      "knowledgeNo": "4",
+      "unitName": "综合实践——数学连环画",
+      "module": "practice",
+      "name": "列式解答",
+      "aliases": [],
+      "type": "application",
+      "semantic": {
+        "family": "application-word",
+        "concept": "讲解故事中的数量关系，列式解答",
+        "operations": [],
+        "representations": [
+          "numeric"
+        ],
+        "category": "practice",
+        "tags": []
+      },
+      "content": {
+        "description": "讲解故事中的数量关系，列式解答",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 2
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "apply",
+        "maxSteps": 2,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R04:问题情境;R10:步数=2",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u07-k001",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u07",
+      "unitNo": 7,
+      "knowledgeNo": "1",
+      "unitName": "复习与关联",
+      "module": "practice",
+      "name": "数与运算整合",
+      "aliases": [],
+      "type": "application",
+      "semantic": {
+        "family": "application-word",
+        "concept": "有余数除法、万以内加减、整百整千口算",
+        "operations": [
+          "addition",
+          "subtraction",
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "practice",
+        "tags": []
+      },
+      "content": {
+        "description": "有余数除法、万以内加减、整百整千口算",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "understand",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=万以内;R09:运算;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u07-k002",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u07",
+      "unitNo": 7,
+      "knowledgeNo": "2",
+      "unitName": "复习与关联",
+      "module": "practice",
+      "name": "数量关系整合",
+      "aliases": [],
+      "type": "application",
+      "semantic": {
+        "family": "application-word",
+        "concept": "平均分模型、倍数模型、时间相关量",
+        "operations": [
+          "multiplication",
+          "division"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "practice",
+        "tags": []
+      },
+      "content": {
+        "description": "平均分模型、倍数模型、时间相关量",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": {
+          "min": 1,
+          "max": 100
+        },
+        "maxSteps": 1
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 5,
+        "cognitiveLevel": "apply",
+        "maxSteps": 1,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R02:数域=整数域;R10:步数=1",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    },
+    {
+      "knowledgeId": "math-g2-down-u07-k003",
+      "subject": "math",
+      "grade": "g2",
+      "book": "down",
+      "unitId": "math-g2-down-u07",
+      "unitNo": 7,
+      "knowledgeNo": "3",
+      "unitName": "复习与关联",
+      "module": "practice",
+      "name": "综合运用本册知识",
+      "aliases": [],
+      "type": "application",
+      "semantic": {
+        "family": "application-word",
+        "concept": "多步混合情境题",
+        "operations": [
+          "mixed"
+        ],
+        "representations": [
+          "numeric"
+        ],
+        "category": "practice",
+        "tags": []
+      },
+      "content": {
+        "description": "多步混合情境题",
+        "example": null,
+        "factualContent": {},
+        "graphicType": null
+      },
+      "assessment": {
+        "questionTypes": [
+          {
+            "type": "apply",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "fill",
+            "coefficient": 1,
+            "rawType": null
+          },
+          {
+            "type": "choice",
+            "coefficient": 1,
+            "rawType": null
+          }
+        ],
+        "contextDefault": [
+          "standard"
+        ],
+        "errors": []
+      },
+      "generation": {
+        "pluginId": "generator:arithmetic-addition",
+        "capabilities": [
+          {
+            "id": "apply",
+            "type": "question-format"
+          },
+          {
+            "id": "fill",
+            "type": "question-format"
+          },
+          {
+            "id": "choice",
+            "type": "question-format"
+          }
+        ],
+        "numberRange": null,
+        "maxSteps": 4
+      },
+      "weight": 1,
+      "status": "active",
+      "publication": "published",
+      "difficultyAnnotation": {
+        "seedDifficulty": 6,
+        "cognitiveLevel": "analyze",
+        "maxSteps": 4,
+        "numberRange": null,
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+      },
+      "source": {
+        "system": "kbl-root-derived"
+      },
+      "meta": {
+        "schemaVersion": "1.0.0",
+        "hash": null,
+        "version": 1,
+        "deprecatedReason": null,
+        "notes": "R03:多步;R04:问题情境;R08:综合应用;R10:步数=4",
+        "derivedFields": [
+          "module",
+          "type",
+          "semantic",
+          "content",
+          "assessment",
+          "generation",
+          "difficultyAnnotation",
+          "publication",
+          "numberRange"
+        ],
+        "updatedAt": null
+      }
+    }
+  ]
+}

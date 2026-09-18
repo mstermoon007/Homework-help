@@ -1,11 +1,11 @@
 /**
  * shared/catalog/catalog-utils.js — P2-R02/R03 题型目录统一工具
  *
- * 从 KnowledgeBank 获取可用知识点，按模块分组，解析可用题型，
+ * 从 KBL Runtime（经 KnowledgeContext）获取可用知识点，按模块分组，解析可用题型，
  * 生成 PracticeRequest，供目录页渲染与跳转使用。
  *
  * 核心原则：
- *   - 数据源唯一：KnowledgeBank（不依赖 Plugin 注册表）
+ *   - 数据源唯一：KBL Runtime（经 KnowledgeContext；不依赖 Plugin 注册表）
  *   - 卡片绑定 knowledgePointId[]
  *   - 点击生成 PracticeRequest（subject, grade, knowledgePoints, questionType, mode）
  *   - 无可用 Generator Capability 的知识点按现状显示，不强行生成
@@ -17,13 +17,20 @@
 
   function canonSubject(s) { return SUBJECT_CANON[s] || s; }
 
+  function getKnowledgeContext() {
+    if (typeof window !== 'undefined' && window.KnowledgeContext) return window.KnowledgeContext;
+    if (typeof global !== 'undefined' && global.KnowledgeContext) return global.KnowledgeContext;
+    return null;
+  }
+
   /**
-   * 获取某科目某年级的知识点条目（扁平）
+   * 获取某科目某年级的知识点条目（扁平，UI 视图）
    * @returns [{id,name,pluginId,moduleId,weight,type}]
    */
   function getKPEntries(subject, grade) {
-    if (typeof window.KnowledgeBank === 'undefined') return [];
-    return window.KnowledgeBank.getEntries(canonSubject(subject), grade) || [];
+    var KC = getKnowledgeContext();
+    if (!KC || typeof KC.uiListForGrade !== 'function') return [];
+    return KC.uiListForGrade(canonSubject(subject), grade) || [];
   }
 
   /**
@@ -207,12 +214,64 @@ function renderModuleCard(opts) {
     '</div>';
   }
 
+  /**
+   * P10-3：知识点×题型显示 → 由标准编排层（POL）完整编排结果（plan）统筹。
+   * UI 只渲染，不自持「KP 支持哪些题型」的判定（可生成范围唯一归 POL 能力判定）。
+   *
+   * @param {Object} args { subject, grade, knowledgePointIds[], questionTypes[], count, difficulty }
+   * @returns {Promise<{
+   *   ready:boolean, feasibleTypes:string[], eligibleKpsForType:Object,
+   *   kpTypes:Object, typeCounts:Array, plannedTotal:number,
+   *   coverageStatus:string, reason:string|null, requestedCount:number
+   * }>}
+   * plan 不可用 / 非激活 / 无能力信息时返回 { ready:false }（调用方回退保守显示）。
+   */
+  function capabilityPlanView(args) {
+    args = args || {};
+    var PO = (typeof window !== 'undefined' && window.PracticeOrchestrator)
+      || (typeof global !== 'undefined' && global.PracticeOrchestrator) || null;
+    var pool = Array.isArray(args.knowledgePointIds) ? args.knowledgePointIds.filter(Boolean) : [];
+    var types = Array.isArray(args.questionTypes) ? args.questionTypes.filter(Boolean) : [];
+    if (!PO || typeof PO.plan !== 'function' || !pool.length || !types.length) {
+      return Promise.resolve({ ready: false });
+    }
+    return PO.plan({
+      subject: args.subject, grade: args.grade,
+      knowledgePointIds: pool, questionTypes: types,
+      count: args.count || 20, difficulty: args.difficulty
+    }).then(function (plan) {
+      if (!plan || plan.active !== true || !plan.eligibleKpsForType) return { ready: false };
+      // 题型 → KP 反查为 KP → 题型（供 UI 逐 KP 提示 / 过滤）
+      var kpTypes = {};
+      Object.keys(plan.eligibleKpsForType).forEach(function (qt) {
+        (plan.eligibleKpsForType[qt] || []).forEach(function (kp) {
+          (kpTypes[kp] = kpTypes[kp] || {})[qt] = true;
+        });
+      });
+      // typeCounts 位于 plan.request.typeCounts（[]{questionType,count}，POL 预算分配结果）；
+      // plan 顶层无此字段。
+      var counts = (plan.request && plan.request.typeCounts) || plan.typeCounts || [];
+      return {
+        ready: true,
+        feasibleTypes: (plan.feasibleTypes || []).slice(),
+        eligibleKpsForType: plan.eligibleKpsForType,
+        kpTypes: kpTypes,
+        typeCounts: counts,
+        plannedTotal: plan.plannedTotal,
+        coverageStatus: plan.coverageStatus,
+        reason: plan.reason || null,
+        requestedCount: plan.requestedCount
+      };
+    }).catch(function () { return { ready: false }; });
+  }
+
   // 暴露 API
   var API = {
     getKPEntries: getKPEntries,
     groupKPsByModule: groupKPsByModule,
     checkKPCapability: checkKPCapability,
     getModuleQuestionTypes: getModuleQuestionTypes,
+    capabilityPlanView: capabilityPlanView,
     buildPracticeLink: buildPracticeLink,
     buildPracticeUrl: buildPracticeUrl,
     renderModuleCard: renderModuleCard

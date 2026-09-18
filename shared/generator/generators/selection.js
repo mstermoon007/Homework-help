@@ -111,8 +111,8 @@ function createSelectionGenerator(spec) {
   var generator = {
     id: id,
     subject: subject,
-    capabilities: mode === 'fill' ? ['fill', 'recognize', 'calc', 'oral', 'apply'] : (mode === 'choice' ? ['choice', 'recognize', 'calc', 'oral', 'apply'] : ['judge', 'recognize', 'calc', 'oral', 'apply']),
-    questionTypes: mode === 'fill' ? ['fill', 'recognize', 'calc', 'oral', 'apply'] : (mode === 'choice' ? ['choice', 'recognize', 'calc', 'oral', 'apply'] : ['judge', 'recognize', 'calc', 'oral', 'apply']),knowledgePoints: spec.knowledgePoints || [],
+    capabilities: mode === 'fill' ? ['fill', 'geometry', 'calc', 'apply'] : (mode === 'choice' ? ['choice', 'geometry', 'calc', 'apply'] : ['judge', 'geometry', 'calc', 'apply']),
+    questionTypes: mode === 'fill' ? ['fill', 'geometry', 'calc', 'apply'] : (mode === 'choice' ? ['choice', 'geometry', 'calc', 'apply'] : ['judge', 'geometry', 'calc', 'apply']),knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;

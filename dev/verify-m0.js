@@ -2,15 +2,16 @@
 /**
  * dev/verify-m0.js — M0 统一验证入口（M0-10）
  *
- * 依次执行 5 个步骤，聚合 PASS / FAIL / REPORT，列出失败项，退出码 1 表示存在 FAIL。
+ * 依次执行以下步骤，聚合 PASS / FAIL / REPORT，列出失败项，退出码 1 表示存在 FAIL。
  *   1. 语法检查            dev/check-syntax.js
- *   2. 知识库契约          dev/check-knowledge-contract.js
+ *   2. KBL 校验            tools/kbl/validate.js（旧 check-knowledge-contract 已随旧知识层删除）
  *   3. 难度双轨测试        dev/check-difficulty-dual.js
  *   4. Golden Path         dev/check-golden.js
  *   5. 架构护栏            dev/check-architecture-rules.js
  *
  * MATH-14：插件契约（check-plugin-contract）与 Snapshot 基线（check-snapshot）
  *          随 legacy 插件轨道删除，从本网关移除。
+ * KBL 收口：旧本体完整性（check-ontology-integrity）随旧知识层删除。
  *
  * 每个步骤独立、可重复、零副作用。`nonBlocking` 步骤失败仅记为
  * REPORT，不计入最终 FAIL；其余任何步骤 FAIL 均计入最终 FAIL。
@@ -20,14 +21,25 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 
 const steps = [
-  { key: 'syntax', mod: require(path.join(ROOT, 'dev', 'check-syntax.js')) },
-  { key: 'kb', mod: require(path.join(ROOT, 'dev', 'check-knowledge-contract.js')) },
-  { key: 'difficulty', mod: require(path.join(ROOT, 'dev', 'check-difficulty-dual.js')) },
-  { key: 'golden', mod: require(path.join(ROOT, 'dev', 'check-golden.js')) },
-  { key: 'rules', mod: require(path.join(ROOT, 'dev', 'check-architecture-rules.js')) },
   {
-    key: 'ontology-integrity',
-    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'check-ontology-integrity.js')] }
+    key: 'kbl-validate',
+    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'tools', 'kbl', 'validate.js')] }
+  },
+  {
+    key: 'kbl-runtime',
+    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'verify-kbl-runtime.js')] }
+  },
+  {
+    key: 'kbl-uniqueness',
+    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'check-kbl-uniqueness.js')] }
+  },
+  {
+    key: 'kbl-access',
+    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'check-knowledge-access.js')] }
+  },
+  {
+    key: 'kbl-dir',
+    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'check-knowledge-dir.js')] }
   }
 ];
 

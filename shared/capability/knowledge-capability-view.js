@@ -32,9 +32,9 @@
     return (typeof global !== 'undefined' && global.CapabilityResolver) ? global.CapabilityResolver : null;
   }
 
-  function getKnowledgePoint() {
-    try { return require('../knowledge/knowledge-point.js'); } catch (e) {}
-    return (typeof global !== 'undefined' && global.KnowledgePoint) ? global.KnowledgePoint : null;
+  function getKnowledgeContext() {
+    try { return require('../orchestration/knowledge-context.js'); } catch (e) {}
+    return (typeof global !== 'undefined' && global.KnowledgeContext) ? global.KnowledgeContext : null;
   }
 
   function isEligible(decision) {
@@ -49,7 +49,7 @@
    */
   function buildEligibility(kpIds, questionTypes) {
     var Resolver = getResolver();
-    var KP = getKnowledgePoint();
+    var KC = getKnowledgeContext();
     var kps = Array.isArray(kpIds) ? kpIds.slice() : [];
     var qts = Array.isArray(questionTypes) ? questionTypes.slice() : [];
 
@@ -72,10 +72,10 @@
 
     kps.forEach(function (kp) {
       var row = {};
-      var legacy = (KP && typeof KP.findLegacy === 'function') ? KP.findLegacy(kp) : null;
+      var known = (KC && typeof KC.get === 'function') ? !!KC.get(kp) : false;
       qts.forEach(function (qt) {
         var decision;
-        if (!legacy) {
+        if (!known) {
           decision = 'ALLOW'; // 未知 KP：乐观可生成，由 recovery 兜底
         } else {
           try {

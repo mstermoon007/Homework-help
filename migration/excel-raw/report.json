@@ -1,0 +1,16 @@
+{
+  "importedAt": "2026-09-15T08:56:55.250Z",
+  "source": "/Users/zhanggaozhang/Code/Homework Help/kbl/input/KBL-Course-Input.xlsx",
+  "sheets": {
+    "01 课程": 12,
+    "02 单元": 98,
+    "03 知识点": 375,
+    "04 知识关系": 0,
+    "05 生成映射": 1570,
+    "06 扩展": 375,
+    "07 数据字典": 54
+  },
+  "oNormalizedCells": "单元格值 \"O\"/\"o\"/\"○\"/空 已归一为 null；必填列填 O 在导入时报错",
+  "providedIds": 0,
+  "warnings": []
+}

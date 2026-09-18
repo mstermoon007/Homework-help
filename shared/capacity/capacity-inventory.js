@@ -50,27 +50,32 @@ function difficultyBucket(d) {
 }
 
 // 引导生成层（仅扫描时需要）
+// P13-04：优先使用已装载的浏览器等价全局（dev/_bundle-env.js / 页面）；
+// 裸 require 冻结 Strategy 在 Node 侧不可解析（knowledge-point 依赖仅 bundle 兼容桥可解）。
 function bootstrap() {
-  [
-    'shared/strategy/strategy-engine.js',
-    'shared/strategy/strategy-request.js',
-    'shared/strategy/question-plan.js',
-    'shared/knowledge/knowledge-bank.js',
-    'shared/generator/generator-registry.js',
-    'shared/strategy/comprehensive-strategy.js',
-    'shared/engine/presentation-engine.js',
-    'shared/presentation/renderer.js',
-    'shared/presentation/render-options.js',
-    'shared/knowledge/knowledge-ontology.js',
-    'shared/capability/capability-resolver.js',
-    'shared/capability/knowledge-capability-view.js',
-    'shared/knowledge/question-type-registry.js'
-  ].forEach(function (p) { require(path.join(ROOT, p)); });
+  var g = (typeof global !== 'undefined') ? global : {};
+  var hasGlobals = g.KnowledgeContext && g.StrategyEngine && g.PresentationEngine;
+  if (!hasGlobals) {
+    [
+      'shared/strategy/strategy-engine.js',
+      'shared/strategy/strategy-request.js',
+      'shared/strategy/question-plan.js',
+      '../shared/generator/generator-registry.js',
+      'shared/strategy/comprehensive-strategy.js',
+      'shared/engine/presentation-engine.js',
+      'shared/presentation/renderer.js',
+      'shared/presentation/render-options.js',
+      'shared/capability/capability-resolver.js',
+      'shared/capability/knowledge-capability-view.js',
+      'shared/knowledge/question-type-registry.js'
+    ].forEach(function (p) { require(path.join(ROOT, p)); });
+  }
+  var KC = g.KnowledgeContext || require(path.join(ROOT, 'shared/orchestration/knowledge-context.js'));
   return {
-    GE: require(path.join(ROOT, 'shared/engine/generation-engine.js')),
-    KB: require(path.join(ROOT, 'shared/knowledge/knowledge-bank.js')),
-    KCV: require(path.join(ROOT, 'shared/capability/knowledge-capability-view.js')),
-    QTR: require(path.join(ROOT, 'shared/knowledge/question-type-registry.js'))
+    GE: g.GenerationEngine || require(path.join(ROOT, 'shared/engine/generation-engine.js')),
+    KC: KC,
+    KCV: g.KnowledgeCapabilityView || require(path.join(ROOT, 'shared/capability/knowledge-capability-view.js')),
+    QTR: g.QuestionTypeRegistry || require(path.join(ROOT, 'shared/knowledge/question-type-registry.js'))
   };
 }
 
@@ -117,15 +122,11 @@ function classifyLimited(kpId, cap, byType) {
   return 'GENERATOR_LIMITED';
 }
 
-function allMathKps(KB) {
+function allMathKps(KC) {
   var out = [];
   for (var g = 1; g <= 6; g++) {
-    var grade = KB.findGrade('math', g);
-    if (!grade) continue;
-    (grade.modules || []).forEach(function (m) {
-      (m.knowledgePoints || []).forEach(function (kp) {
-        out.push({ kpId: kp.id, grade: g, subject: 'math' });
-      });
+    (KC.kpsForGrade('math', g) || []).forEach(function (kp) {
+      out.push({ kpId: kp.knowledgeId, grade: g, subject: 'math' });
     });
   }
   return out;
@@ -150,8 +151,14 @@ function scan(opts) {
     ? opts.difficulties.slice()
     : DIFFICULTY_BUCKETS.map(function (b) { return b.sample; });
   var mods = bootstrap();
-  var GE = mods.GE, KB = mods.KB, KCV = mods.KCV, QTR = mods.QTR;
-  var kps = allMathKps(KB);
+  var GE = mods.GE, KC = mods.KC, KCV = mods.KCV, QTR = mods.QTR;
+  var kps = allMathKps(KC);
+  // P13-04：可选 KP 过滤（分批复建 / 采样测速；不改变全量语义）
+  if (Array.isArray(opts.kpIds) && opts.kpIds.length) {
+    var keep = {};
+    opts.kpIds.forEach(function (id) { keep[id] = true; });
+    kps = kps.filter(function (e) { return keep[e.kpId]; });
+  }
   var map = {};
 
   function scanKp(entry, difficulty) {
@@ -243,7 +250,7 @@ function getCapacityMap(opts) {
       }
     } catch (e) { /* ignore, rescan */ }
   }
-  return scan({ refresh: true }).then(function (map) {
+  return scan({ refresh: true, count: opts.count, kpIds: opts.kpIds, difficulties: opts.difficulties }).then(function (map) {
     writeCache(map);
     return map;
   });

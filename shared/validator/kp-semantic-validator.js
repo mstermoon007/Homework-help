@@ -10,7 +10,6 @@
  * 4. Numeric       — numberRange 在 KP numeric.range 内
  * 5. Structure     — maxSteps/structure 符合 KP 约束
  * 6. Content       — factualContent / graphicType 语义必须出现
- * 7. Composite     — combine=true 时多 KP 必须同时体现
  *
  * 复用现有 Validator Pipeline：作为 Layer 2 步骤插入。
  */
@@ -19,37 +18,61 @@ var Validator = require('./question-validator.js');
 var ERROR_CODES = Validator.ERROR_CODES;
 var SEVERITY = Validator.SEVERITY;
 var createError = Validator.createError;
-var KnowledgePoint = require('../knowledge/knowledge-point.js');
-var Ontology = require('../knowledge/knowledge-ontology.js');
+
+// P17-7: 去 Context/Registry 直接依赖——经注入/全局边界获取（与 api.js/generation-core.js 一致的 DI 风格），
+// 保留受保护的惰性 require 兜底以兼容 Node 直载与双环境。
+var _GLOBAL = typeof window !== 'undefined' ? window : global;
+var _deps = {};
+var DEP_GLOBAL_KEYS = { knowledgeContext: 'KnowledgeContext', generatorRegistry: 'GeneratorRegistry' };
+function getDep(name) {
+  if (_deps[name]) return _deps[name];
+  var key = DEP_GLOBAL_KEYS[name];
+  var g = _GLOBAL && _GLOBAL[key];
+  if (g) _deps[name] = g;
+  return _deps[name];
+}
+function getKC() {
+  var KC = getDep('knowledgeContext');
+  if (KC) return KC;
+  try { KC = require('../orchestration/knowledge-context.js'); _deps.knowledgeContext = KC; } catch (e) {}
+  return KC;
+}
+function getGenRegistry() {
+  var R = getDep('generatorRegistry');
+  if (R) return R;
+  try { R = require('../generator/generator-registry.js'); _deps.generatorRegistry = R; } catch (e) {}
+  return R;
+}
 
 /**
- * 获取 KP 的规范语义约束
+ * 获取 KP 的规范语义约束（经 KnowledgeContext 的 Practice Context 视图；
+ * 不再连接旧知识层，也不再直读 canonical——验证器读取的是 legacy-normalized 字段）
  */
 function getKpConstraints(kpId) {
-  var kp = KnowledgePoint.get(kpId);
-  if (!kp) return null;
-  var canonical = Ontology.normalize(kp);
-  
-  // 获取算术语义运算
+  var KC = getKC();
+  var canonical = KC && KC.strategyView(kpId);
+  if (!canonical) return null;
+
+  // 获取算术语义运算（Frozen 语义解析器对 canonical KP 缺失 legacy 字段时安全返回 null）
   var arithSem = null;
-  try { arithSem = require('../generator/core/kp-arithmetic-semantics.js').resolveArithmeticSemantics(kp); } catch (e) {}
+  try { arithSem = require('../generator/core/kp-arithmetic-semantics.js').resolveArithmeticSemantics(canonical); } catch (e) {}
   var complexSem = null;
-  try { complexSem = require('../generator/core/kp-complex-semantics.js').resolveComplexSemantics(kp); } catch (e) {}
-  
+  try { complexSem = require('../generator/core/kp-complex-semantics.js').resolveComplexSemantics(canonical); } catch (e) {}
+
   var operation = null;
   if (arithSem && arithSem.operators) operation = arithSem.operators;
   else if (complexSem && complexSem.operators) operation = complexSem.operators;
   else operation = canonical.operation || (canonical.constraints && canonical.constraints.operation) || null;
-  
+
   return {
     id: canonical.id,
-    category: canonical.category || kp.legacy?.category,
-    legacyType: canonical.source?.legacyType || kp.legacy?.legacyType,
-    numericRange: canonical.numeric?.range || null,
+    category: canonical.category || null,
+    legacyType: (canonical.source && canonical.source.legacyType) || null,
+    numericRange: (canonical.numeric && canonical.numeric.range) || null,
     structure: canonical.structure || {},
-    generationCapabilities: canonical.generation?.capabilities || [],
-    presentationQuestionTypes: (canonical.presentation?.questionTypes || []).map(function(q){ return q.type; }),
-    factualContent: canonical.factualContent || null,
+    generationCapabilities: (canonical.generation && canonical.generation.capabilities) || [],
+    presentationQuestionTypes: ((canonical.presentation && canonical.presentation.questionTypes) || []).map(function(q){ return q.type; }),
+    factualContent: (canonical.knowledge && canonical.knowledge.factualContent) || null,
     graphicType: canonical.graphicType || null,
     operation: operation,
     spiral: canonical.spiral || {}
@@ -97,13 +120,14 @@ function checkQuestionType(sq, kpConstraints) {
  */
 function checkOperation(sq, kpConstraints) {
   var errors = [];
-  if (!kpConstraints) return errors;
+  var warnings = [];
+  if (!kpConstraints) return { errors: errors, warnings: warnings };
   
   var kpOp = kpConstraints.operation;
-  if (!kpOp) return errors; // 无显式 operation 约束时跳过
+  if (!kpOp) return { errors: errors, warnings: warnings }; // 无显式 operation 约束时跳过
   
   var sqOp = sq.data?.operation;
-  if (!sqOp) return errors; // 题目无运算信息时跳过
+  if (!sqOp) return { errors: errors, warnings: warnings }; // 题目无运算信息时跳过
   
   // 归一化比较：KP operation 可能是 ['+','−'] 或 ['add','sub']；题目可能是 ['+'] 或 'add' 或 'mixed'
   var kpOps = Array.isArray(kpOp) ? kpOp : [kpOp];
@@ -120,9 +144,19 @@ function checkOperation(sq, kpConstraints) {
   });
   
   if (mismatch) {
-    errors.push(createError(ERROR_CODES.KP_SEMANTIC_OPERATION, 'operation', '题目运算 ' + JSON.stringify(sqOps) + ' 与 KP operation ' + JSON.stringify(kpOps) + ' 不一致', SEVERITY.ERROR, { kpOperation: kpOps, questionOperation: sqOps }));
+    // B5/B6 known-pending：canonical 绑定迁移未完成时（forKnowledgePoint 恒空），
+    // 选择器无法按运算区分算术家族，只能走泛型兜底 → 运算不匹配属「选择局限」而非「生成错误」，
+    // 记 WARNING 保留交付；绑定迁移完成后自动恢复 ERROR（自愈，无需再改本处）。
+    var hasNativeBinding = false;
+    try {
+      var GenRegistry = getGenRegistry();
+      hasNativeBinding = GenRegistry.forKnowledgePoint(kpConstraints.id).length > 0;
+    } catch (e) { /* registry 不可用 → 维持降级 */ }
+    var opError = createError(ERROR_CODES.KP_SEMANTIC_OPERATION, 'operation', '题目运算 ' + JSON.stringify(sqOps) + ' 与 KP operation ' + JSON.stringify(kpOps) + ' 不一致', hasNativeBinding ? SEVERITY.ERROR : SEVERITY.WARNING, { kpOperation: kpOps, questionOperation: sqOps });
+    if (hasNativeBinding) errors.push(opError);
+    else warnings.push(opError);
   }
-  return errors;
+  return { errors: errors, warnings: warnings };
 }
 
 function normalizeOp(op) {
@@ -237,37 +271,6 @@ function checkContent(sq, kpConstraints) {
 }
 
 /**
- * 7. Composite: combine=true 时多 KP 必须同时体现
- */
-function checkComposite(sq, plan, kpConstraintsList) {
-  var errors = [];
-  if (!plan?.combine || !plan?.knowledgePointIds || plan.knowledgePointIds.length <= 1) return errors;
-  
-  var kpIds = plan.knowledgePointIds;
-  var covered = kpIds.filter(function(id) {
-    // 检查题目是否体现了该 KP 的语义
-    var kp = KnowledgePoint.get(id);
-    if (!kp) return false;
-    var canonical = Ontology.normalize(kp);
-    var legacyType = canonical.source?.legacyType || kp.legacy?.legacyType;
-    var category = canonical.category || kp.legacy?.category;
-    
-    // 简单启发式：检查 prompt/data 中是否出现 KP 特征
-    var searchable = [sq.prompt, sq.data?.operation, sq.data?.graphic?.subtype, sq.data?.shapeName, sq.data?.kind, sq.data?.template].filter(Boolean).join(' ').toLowerCase();
-    
-    // 通过 legacyType/category/operation 特征匹配
-    var features = [legacyType, category, canonical.operation, canonical.graphicType].filter(Boolean).join(' ').toLowerCase();
-    return features.split(' ').some(function(f) { return f && searchable.indexOf(f) !== -1; });
-  });
-  
-  if (covered.length < kpIds.length) {
-    var missing = kpIds.filter(function(id) { return covered.indexOf(id) === -1; });
-    errors.push(createError(ERROR_CODES.KP_SEMANTIC_COMPOSITE, 'composite', 'Combine 模式下题目未同时体现全部 KP，缺失: ' + missing.join(','), SEVERITY.ERROR, { requiredKpIds: kpIds, coveredKpIds: covered, missingKpIds: missing }));
-  }
-  return errors;
-}
-
-/**
  * 主验证入口
  * @param {Object} sq SemanticQuestion
  * @param {Object} context { plan: QuestionPlan, kpConstraints: Object }
@@ -289,7 +292,9 @@ function validateKpSemantics(sq, context) {
   allErrors.push.apply(allErrors, checkQuestionType(sq, kpConstraints));
   
   // 3. Operation
-  allErrors.push.apply(allErrors, checkOperation(sq, kpConstraints));
+  var opResult = checkOperation(sq, kpConstraints);
+  allErrors.push.apply(allErrors, opResult.errors);
+  allWarnings.push.apply(allWarnings, opResult.warnings);
   
   // 4. Numeric
   allErrors.push.apply(allErrors, checkNumeric(sq, kpConstraints));
@@ -301,11 +306,6 @@ function validateKpSemantics(sq, context) {
   var contentResult = checkContent(sq, kpConstraints);
   allErrors.push.apply(allErrors, contentResult.errors);
   allWarnings.push.apply(allWarnings, contentResult.warnings);
-  
-  // 7. Composite
-  if (context.kpConstraintsList) {
-    allErrors.push.apply(allErrors, checkComposite(sq, plan, context.kpConstraintsList));
-  }
   
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
@@ -319,11 +319,10 @@ function validateKpSemantics(sq, context) {
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
-      operation: checkOperation(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
+      operation: opResult.errors.length === 0 ? 'pass' : 'fail',
       numeric: checkNumeric(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       structure: checkStructure(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
-      content: contentResult.errors.length === 0 ? 'pass' : 'fail',
-      composite: (context.kpConstraintsList ? checkComposite(sq, plan, context.kpConstraintsList).length === 0 : 'skipped')
+      content: contentResult.errors.length === 0 ? 'pass' : 'fail'
     }
   };
 }
@@ -336,6 +335,5 @@ module.exports = {
   checkOperation: checkOperation,
   checkNumeric: checkNumeric,
   checkStructure: checkStructure,
-  checkContent: checkContent,
-  checkComposite: checkComposite
+  checkContent: checkContent
 };

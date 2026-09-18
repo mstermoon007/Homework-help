@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "catalogVersion": "math-v1.0.0",
+  "packageVersion": "kbl-math-2026-09-16",
+  "publishedAt": "2026-09-16T03:45:37.823Z",
+  "publisher": "tools/kbl/publish.js",
+  "counts": {
+    "knowledgePoints": 375,
+    "units": 98,
+    "relations": 0,
+    "mappings": 1570
+  },
+  "idRules": {
+    "pattern": "^(math|chinese|english)-g[1-6]-(up|down|mixed|advance|comprehensive)-u\\d{2}-k\\d{3}$",
+    "stable": true,
+    "generatedOnce": true,
+    "runtimePositionIndependent": true
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "filesCount": 10,
+    "rootHash": "18a21dfba5ce951e5024dca74ad92cbeb11c43156e5aa203d3dadc7c70c7704b"
+  }
+}

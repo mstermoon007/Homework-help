@@ -10,7 +10,6 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge/knowledge-point.js');
 var Arith = require('../core/arithmetic-core.js');
 var OpSem = require('../core/op-semantics.js');
 
@@ -286,8 +285,8 @@ function createMoneyGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['fill', 'choice', 'judge', 'apply', 'calc', 'oral'],
-    questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc', 'oral'],
+    capabilities: ['fill', 'choice', 'judge', 'apply', 'calc'],
+    questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -299,7 +298,7 @@ function createMoneyGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
       var meta = getMoneyMeta(kp);
 
       for (var i = 0; i < count; i++) {

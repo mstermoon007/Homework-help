@@ -599,18 +599,10 @@
     var pool;
     if (kpIds.length) {
       pool = kpIds.slice();
-    } else if (request.subject && request.grade != null) {
-      var KB = getDep('knowledgeBank') || (function () {
-        try { return require('../knowledge/knowledge-bank.js'); } catch (e) { return null; }
-      })();
-      if (!KB) return Promise.reject(new Error('KnowledgeBank 不可用，无法展开年级 KP 池'));
-      var g = KB.findGrade(request.subject, request.grade);
-      pool = [];
-      (g && g.modules || []).forEach(function (m) {
-        (m.knowledgePoints || []).forEach(function (kp) { pool.push(kp.id); });
-      });
     } else {
-      return Promise.reject(new Error('generateBudget 需要 knowledgePointIds 或 subject+grade'));
+      // P0-10：subject+grade 年级展开分支随 Legacy KnowledgeBank 一并删除（真实生产调用=0）。
+      // 年级 KP 池唯一来源 = KBL Runtime byGrade，由编排层上游展开后以 knowledgePointIds 传入。
+      return Promise.reject(new Error('generateBudget 需要 knowledgePointIds（年级 KP 池由 KBL 上游展开后传入）'));
     }
 
     var CapacityInventory = require('../capacity/capacity-inventory.js');

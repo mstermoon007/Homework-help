@@ -17,7 +17,7 @@
  *   A    情境       = getContextScore(context_default)
  *   Comb 组合复杂度 = calcCombinationScore(步骤, 括号, 乘除, 运算种类数)，默认 1 种运算
  *
- * 合成：D = 1 + 9 * (0.12*G + 0.15*S + 0.12*C + 0.08*T + 0.12*St + 0.08*N + 0.12*A + 0.15*Comb)
+ * 合成：D = 1 + 9 * (wsum / 0.94)          # 归一化（权重和 0.94），理论最大值 D=10（M8/M15 D1 修复）
  *      level = clamp(round(D), 1, 10)
  *
  * 依赖：shared/catalog/difficulty.js（App.Difficulty 必须已加载；浏览器先加载 difficulty.js，
@@ -149,7 +149,8 @@
     var Comb = calcCombinationScore(st.steps, st.allowBracket, st.allowMultDiv, operatorCount);
 
     var wsum = 0.12 * G + 0.15 * S + 0.12 * C + 0.08 * T + 0.12 * St + 0.08 * N + 0.12 * A + 0.15 * Comb;
-    var D = 1 + 9 * wsum;
+    var WSUM_MAX = 0.94; // 0.12+0.15+0.12+0.08+0.12+0.08+0.12+0.15（权重和归一化，令理论最大值 D=10）
+    var D = 1 + 9 * (wsum / WSUM_MAX);
     var level = clamp10(Math.round(D));
 
     var base = Difficulty.paramsFor('math', level);

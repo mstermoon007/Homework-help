@@ -9,7 +9,6 @@
  */
 
 var Rng = require('../core/rng.js');
-var KP = require('../../knowledge/knowledge-point.js');
 var Arith = require('../core/arithmetic-core.js');
 
 function pkp(plan) {
@@ -296,8 +295,8 @@ function createApplicationGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'],
-    questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'],
+    capabilities: ['apply', 'fill', 'choice', 'judge', 'calc'],
+    questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -309,7 +308,7 @@ function createApplicationGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = KP.get(pkp(plan));
+      var kp = {};
       var meta = getApplicationMeta(kp);
 
       for (var i = 0; i < count; i++) {
@@ -325,7 +324,8 @@ function createApplicationGenerator(spec) {
           var answer = computeAnswer('multiplication', { a: a, n: b });
           q = {
             knowledgePointId: pkp(plan),
-            questionType: 'open',
+            // P0-11：open 为 Registry 别名（open→apply），canonical 归类 apply；data.mode 保留 'open' 作为竞赛开放模板语义
+            questionType: 'apply',
             difficulty: plan.difficulty,
             spiralLevel: plan.spiralLevel || 1,
             context: plan.contextType || 'standard',

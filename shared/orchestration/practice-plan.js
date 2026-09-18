@@ -104,6 +104,7 @@
       capacityExhausted: !!data.capacityExhausted,
       generationFailed: !!data.generationFailed,
       budgetRecovered: data.budgetRecovered != null ? data.budgetRecovered : 0,
+      outOfScopeDropped: data.outOfScopeDropped != null ? data.outOfScopeDropped : 0,
       coverageStatus: data.coverageStatus || 'OK',
       reason: data.reason || null
     };

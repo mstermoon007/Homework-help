@@ -6,7 +6,7 @@
  * 消除重复扫描。
  *
  * 数据流：
- *   KnowledgeBank (legacy) -> Ontology.normalize -> CapabilityModel.resolveCapability
+ *   KBL Runtime（KnowledgeContext）-> CapabilityModel.resolveCapability
  *     -> Matrix.buildMatrix（注入已解析 cap，避免二次解析）
  *     -> 最终决策（与 Resolver.resolveFinal 同一套优先级规则）
  *
@@ -14,15 +14,14 @@
  */
 'use strict';
 
-var Ontology = require('../knowledge/knowledge-ontology.js');
-var KnowledgeBank = require('../knowledge/knowledge-bank.js');
+var KC = require('../orchestration/knowledge-context.js');
 var CapabilityModel = require('./capability-model.js');
 var Matrix = require('./capability-matrix.js');
 var Registry = require('../knowledge/question-type-registry.js');
 // MATH-14：plugin 决策源（generator-capability-registry）已删除，改用 native Generator Registry。
 var GenRegistry = require('../generator/generator-registry.js');
 
-var SUBJECTS = Ontology.SUBJECTS;
+var SUBJECTS = ['math'];
 var QT_IDS = Registry.all().map(function (t) { return t.id; });
 
 var _scanCache = null;
@@ -78,41 +77,35 @@ function buildScanContext(options) {
   var mutations = [];
 
   SUBJECTS.forEach(function (s) {
-    var arr = KnowledgeBank[s];
-    if (!Array.isArray(arr)) return;
-    arr.forEach(function (g) {
-      (g.modules || []).forEach(function (m) {
-        (m.knowledgePoints || []).forEach(function (kp) {
-          totalKp++;
-          var before = JSON.stringify(kp);
-          try {
-            var canonicalKp = Ontology.normalize(kp);
-            var cap = CapabilityModel.resolveCapability(canonicalKp);
-            var mx = Matrix.buildMatrix(canonicalKp, cap);
+    for (var g = 1; g <= 6; g++) {
+      (KC.kpsForGrade(s, g) || []).forEach(function (kp) {
+        totalKp++;
+        try {
+          // 能力/矩阵消费 Frozen 期望的 Practice Context 形状（经 KnowledgeContext 投影）
+          var view = KC.strategyView(kp.knowledgeId);
+          var cap = CapabilityModel.resolveCapability(view);
+          var mx = Matrix.buildMatrix(view);
 
-            kpResults[kp.id] = {
-              id: kp.id,
-              subject: canonicalKp.subject,
-              grade: canonicalKp.grade,
-              pluginId: canonicalKp.pluginId,
-              canonical: canonicalKp,
-              capability: cap,
-              matrix: mx
-            };
+          kpResults[kp.knowledgeId] = {
+            id: kp.knowledgeId,
+            subject: view.subject,
+            grade: view.grade,
+            pluginId: null,
+            canonical: view,
+            capability: cap,
+            matrix: mx
+          };
 
-            Object.keys(mx.questionTypes).forEach(function (qt) {
-              var d = mx.questionTypes[qt].decision;
-              if (stats[d] !== undefined) stats[d]++;
-              else stats[d] = 1;
-            });
-          } catch (e) {
-            errors.push(kp.id + ' :: ' + e.message);
-          }
-          var after = JSON.stringify(kp);
-          if (before !== after) mutations.push(kp.id + ' 被修改');
-        });
+          Object.keys(mx.questionTypes).forEach(function (qt) {
+            var d = mx.questionTypes[qt].decision;
+            if (stats[d] !== undefined) stats[d]++;
+            else stats[d] = 1;
+          });
+        } catch (e) {
+          errors.push(kp.knowledgeId + ' :: ' + e.message);
+        }
       });
-    });
+    }
   });
 
   // ---- 2) Native Generator Registry（构建一次，供 R05/R06/R07 复用） ----

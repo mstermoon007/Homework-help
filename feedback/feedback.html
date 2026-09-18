@@ -9,57 +9,20 @@
     body {
       padding-top: 0;
     }
-    .top-nav {
-      background: #ffffff;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      margin-bottom: 24px;
+
+    /* 左上角悬浮返回按钮（替代原顶栏导航） */
+    .fab-back {
+      position: fixed; top: 14px; left: 14px; z-index: 1200;
+      height: 44px; padding: 0 18px; border: none; border-radius: 999px;
+      display: flex; align-items: center; gap: 6px;
+      background: #ffffff; color: #5b8def;
+      font-size: 15px; font-weight: 800; cursor: pointer; line-height: 1;
+      box-shadow: 0 4px 16px rgba(20, 40, 90, .18);
+      transition: transform .15s, box-shadow .15s;
     }
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #5b8def;
-      text-decoration: none;
-    }
-    .nav-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      object-fit: cover;
-      display: block;
-    }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .nav-link {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: #7a879c;
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-    .nav-link:hover {
-      color: #5b8def;
-      background: #eef3fb;
-    }
-    .nav-link.active {
-      color: #5b8def;
-      background: #eef3fb;
-    }
+    .fab-back:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(20, 40, 90, .24); }
+    .fab-back:active { transform: scale(.96); }
+    @media print { .fab-back { display: none; } }
     .site-footer {
       margin-top: 40px;
       padding: 18px 16px 24px;
@@ -77,17 +40,9 @@
   </style>
 </head>
 <body>
-  <!-- 顶部导航栏 -->
-  <nav class="top-nav">
-    <a class="nav-brand" href="../index.html">
-      <img src="../assets/logo.webp" alt="小学练习本" class="nav-logo">
-      <span>首页</span>
-    </a>
-    <div class="nav-links">
-      <a href="../contact.html" class="nav-link">联系我们</a>
-      <a href="feedback.html" class="nav-link active">问题反馈</a>
-    </div>
-  </nav>
+  <!-- 左上角悬浮返回按钮 -->
+  <button type="button" class="fab-back" aria-label="返回上页" title="返回上页"
+          onclick="history.length &gt; 1 ? history.back() : (location.href='../index.html')">🔙 返回上页</button>
 
   <div class="feedback-container">
     <header class="feedback-header">

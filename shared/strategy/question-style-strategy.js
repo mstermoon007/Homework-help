@@ -21,19 +21,18 @@
 
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
+var QuestionTypeRegistry = require('../knowledge/question-type-registry.js');
 
-// 固定样式注册表：questionTypeId → 样式族（含 SVG 模板族引用）
+// 固定样式注册表：questionTypeId → 样式族（含 SVG 模板族引用）。
+// P0-11 收口：仅 canonical 7 类；别名输入由 resolveQuestionStyle 入口经 Registry 归一后查表。
 var STYLE_REGISTRY = {
   calc:     { style: 'calc',   svgTemplate: 'svg-calculation', label: '计算式' },
-  oral:     { style: 'calc',   svgTemplate: 'svg-calculation', label: '口算' },
   fill:     { style: 'fill',   svgTemplate: 'svg-calculation', label: '填空格' },
   choice:   { style: 'choice', svgTemplate: 'svg-choice',      label: '选项卡' },
   judge:    { style: 'judge',  svgTemplate: 'svg-judge',       label: '判断陈述' },
   apply:    { style: 'story',  svgTemplate: 'svg-story',       label: '图文应用' },
   geometry: { style: 'shape', svgTemplate: 'svg-geometry', label: '图形操作' },
-  classify: { style: 'sort',  svgTemplate: 'svg-calculation', label: '分类整理' },
-  recognize: { style: 'choice', svgTemplate: 'svg-choice',     label: '认读识别' },
-  open:     { style: 'open',   svgTemplate: 'svg-open',        label: '开放表达' }
+  classify: { style: 'sort',  svgTemplate: 'svg-calculation', label: '分类整理' }
 };
 
 // 知识点类别对样式的修正（同一题型在不同类别下微调呈现骨架）
@@ -58,14 +57,17 @@ function resolveQuestionStyle(options) {
   if (typeof qt !== 'string' || !qt) {
     throw new StrategyError('questionTypeId 必填字符串', CODES.INVALID_REQUEST, { questionTypeId: qt });
   }
-  var base = STYLE_REGISTRY[qt];
+  // P0-11：别名输入归一为 canonical 后查表（oral→calc / recognize→geometry / open→apply）
+  var _n = QuestionTypeRegistry.normalizeQuestionType(qt);
+  var canonicalQt = (_n && _n.id) ? _n.id : qt;
+  var base = STYLE_REGISTRY[canonicalQt];
   if (!base) {
     throw new StrategyError('未知题型，无法确定固定样式: ' + qt, CODES.INVALID_REQUEST, { questionTypeId: qt, knowledgePointId: options.knowledgePointId });
   }
   var style = base.style;
   var category = options.category;
-  if (category && CATEGORY_STYLE_OVERRIDE[category] && CATEGORY_STYLE_OVERRIDE[category][qt]) {
-    style = CATEGORY_STYLE_OVERRIDE[category][qt];
+  if (category && CATEGORY_STYLE_OVERRIDE[category] && CATEGORY_STYLE_OVERRIDE[category][canonicalQt]) {
+    style = CATEGORY_STYLE_OVERRIDE[category][canonicalQt];
   }
   return {
     style: style,

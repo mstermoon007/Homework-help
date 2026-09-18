@@ -82,9 +82,11 @@ function generateQuestions(plan, options) {
     
     
     
+    
+    var isRealError = result.error && result.error !== 'GENERATION_SPACE_EXHAUSTED';
     if (!result.success && (
       (!semanticQuestions || semanticQuestions.length === 0) ||
-      result.error === 'GENERATION_SPACE_EXHAUSTED'
+      isRealError
     )) {
       var err = new Error(((result.error || 'GENERATION_FAILED') + (result.message ? ': ' + result.message : '')));
       err.generationFailed = true;
@@ -166,6 +168,7 @@ function generateQuestions(plan, options) {
       batchResult: batchResult,
       qualitySummary: qualitySummary,
       retries: retries,
+      status: result.status || (result.success ? 'SUCCESS' : 'FAILED'),
       generator: selection.record.id
     };
   });
@@ -240,6 +243,238 @@ module.exports = {
 
 if (typeof window !== 'undefined') window.PresentationEngine = module.exports;
 if (typeof global !== 'undefined') global.PresentationEngine = module.exports;
+};
+__defs["shared/generation/generation-core.js"] = function (module, exports, require) {
+
+(function (global) {
+  'use strict';
+
+  var isBrowser = typeof window !== 'undefined';
+
+  var GenerationContract = (function () {
+    try { return require("shared/generation/generation-contract.js"); } catch (e) { return null; }
+  })() || (typeof global !== 'undefined' ? global.GenerationContract : null);
+  var Selector = (function () {
+    try { return require("shared/generator/generator-selector.js"); } catch (e) { return null; }
+  })() || (typeof global !== 'undefined' ? global.GeneratorSelector : null);
+  var RetryLoop = (function () {
+    try { return require("shared/generator/retry-loop.js"); } catch (e) { return null; }
+  })() || (typeof global !== 'undefined' ? global.RetryLoop : null);
+  var SQ = (function () {
+    try { return require("shared/semantic/semantic-question.js"); } catch (e) { return null; }
+  })() || (typeof global !== 'undefined' ? global.SemanticQuestion : null);
+
+  var MAX_CELL_RETRIES = 3;
+
+  
+  var _deps = {};
+  var DEP_GLOBAL_KEYS = {
+    selector: 'GeneratorSelector',
+    retryLoop: 'RetryLoop',
+    semanticQuestion: 'SemanticQuestion'
+  };
+  function getDep(name) {
+    if (_deps[name]) return _deps[name];
+    var key = DEP_GLOBAL_KEYS[name];
+    var g = (typeof global !== 'undefined') && global[key];
+    if (g) _deps[name] = g;
+    return _deps[name];
+  }
+  function getSelector() { return Selector || getDep('selector'); }
+  function getRetryLoop() { return RetryLoop || getDep('retryLoop'); }
+  function getSQ() { return SQ || getDep('semanticQuestion'); }
+
+  
+  function collectQuestions(result) {
+    var arr = (result && result.questions) || [];
+    return Array.isArray(arr) ? arr : [];
+  }
+
+  
+  function executeCell(cell, options) {
+    options = options || {};
+    var contract = GenerationContract;
+    var c = contract ? contract.normalizeCell(cell) : cell;
+    if (!c || !c.kpId || !c.questionType) {
+      var badErr = new Error('GenerationCore: 非法 Cell（缺 kpId 或 questionType）');
+      return Promise.resolve({ questions: [], failures: [{ cell: c, error: badErr },], retries: 0 });
+    }
+
+    var baseSeed = options.seed || null;
+    var seenKeys = options.seenKeys || null;
+    var mathSeenKeys = options.mathSeenKeys || null;
+    var maxCellRetries = options.maxRetries != null ? options.maxRetries : MAX_CELL_RETRIES;
+
+    var selector = getSelector();
+    var retryLoop = getRetryLoop();
+    if (!selector || !retryLoop || !getSQ()) {
+      var depErr = new Error('GenerationCore: 依赖不可用（selector/retryLoop/semanticQuestion）');
+      return Promise.resolve({ questions: [], failures: [{ cell: c, error: depErr }], retries: 0 });
+    }
+
+    
+    var sp = {
+      knowledgePointIds: [c.kpId],
+      questionTypeId: c.questionType,
+      difficulty: c.difficulty,
+      count: c.count,
+      seed: baseSeed,
+      constraints: Object.assign({}, c.context || {})
+    };
+
+    var selection;
+    try {
+      selection = selector.selectGenerator(sp, { mode: 'native' });
+    } catch (e) {
+      return Promise.resolve({ questions: [], failures: [{ cell: c, error: e }], retries: 0 });
+    }
+    if (!selection || !selection.record) {
+      return Promise.resolve({
+        questions: [],
+        failures: [{ cell: c, error: new Error('无可用 Generator: ' + c.kpId + '/' + c.questionType) }],
+        retries: 0
+      });
+    }
+    var generator = selector.instantiate(selection, selection.plugin);
+    if (!generator) {
+      return Promise.resolve({
+        questions: [],
+        failures: [{ cell: c, error: new Error('Generator 实例化失败: ' + selection.record.id) }],
+        retries: 0
+      });
+    }
+
+    var attempts = 0;
+    return retryLoop.generateWithRetry(
+      function (p) { return generator.generate(p); },
+      sp,
+      {
+        generatorId: selection.record.id,
+        generatorVersion: selection.record.version || '1.0.0',
+        maxRetries: maxCellRetries,
+        validatorEnabled: options.skipValidation !== true,
+        seed: baseSeed,
+        validatorContext: {
+          generatorId: selection.record.id,
+          seed: baseSeed,
+          seenKeys: seenKeys,
+          mathSeenKeys: mathSeenKeys,
+          plan: sp
+        }
+      }
+    ).then(function (result) {
+      var questions = collectQuestions(result);
+      var failure = null;
+      
+      if (!result.success && (!questions || questions.length === 0)) {
+        failure = {
+          cell: c,
+          error: new Error(((result.error || 'GENERATION_FAILED') + (result.message ? ': ' + result.message : ''))),
+          retries: result.retries || 0
+        };
+      }
+      return {
+        questions: questions,
+        failures: failure ? [failure] : [],
+        retries: result.retries || 0
+      };
+    }).catch(function (err) {
+      return {
+        questions: [],
+        failures: [{ cell: c, error: err, retries: attempts }],
+        retries: attempts
+      };
+    });
+  }
+
+  
+  function execute(plan, options) {
+    options = options || {};
+    var contract = GenerationContract;
+    var normPlan = contract ? contract.normalizePlan(plan || {}) : (plan || { cells: [] });
+    var cells = (Array.isArray(normPlan.cells) ? normPlan.cells : []).concat();
+    var targetTotal = normPlan.targetTotal || cells.reduce(function (n, c) { return n + (c.count || 0); }, 0);
+
+    
+    var seenKeys = new Set();
+    var mathSeenKeys = new Map();
+    if (options.previousSeenKeys) {
+      (options.previousSeenKeys.forEach ? options.previousSeenKeys : []).forEach(function (k) { seenKeys.add(k); });
+    }
+    if (options.previousMathSeenKeys) {
+      var mk = options.previousMathSeenKeys;
+      Object.keys(mk || {}).forEach(function (k) { mathSeenKeys.set(k, mk[k]); });
+    }
+
+    var allQuestions = [];
+    var allFailures = [];
+    var retryTotal = 0;
+    var seq = Promise.resolve();
+    cells.forEach(function (cell) {
+      seq = seq.then(function () {
+        return executeCell(cell, {
+          seenKeys: seenKeys,
+          mathSeenKeys: mathSeenKeys,
+          skipValidation: options.skipValidation,
+          maxRetries: options.maxRetries,
+          seed: options.seed
+        }).then(function (res) {
+          allQuestions.push.apply(allQuestions, res.questions);
+          retryTotal += res.retries;
+          (res.failures || []).forEach(function (f) { allFailures.push(f); });
+          
+          (res.questions || []).forEach(function (sq) {
+            if (sq && sq.questionFingerprint) seenKeys.add(sq.questionFingerprint);
+          });
+        });
+      });
+    });
+
+    return seq.then(function () {
+      var generated = allQuestions.length;
+      var failures = allFailures;
+      var metadata = {
+        retryTotal: retryTotal,
+        generatorIds: [],
+        seenKeys: seenKeys,
+        request: normPlan
+      };
+      if (contract) {
+        return contract.makeResult(allQuestions, { targetTotal: targetTotal, requestedCount: normPlan.requestedCount }, targetTotal - generated, failures, metadata);
+      }
+      var status = generated === 0 ? 'FAILED' : (generated < targetTotal ? 'PARTIAL' : 'SUCCESS');
+      return {
+        questions: allQuestions,
+        generatedCount: generated,
+        plannedCount: targetTotal,
+        shortfall: Math.max(0, targetTotal - generated),
+        failures: failures,
+        metadata: metadata,
+        status: status
+      };
+    });
+  }
+
+  function inject(deps) {
+    if (deps) {
+      for (var k in deps) {
+        if (Object.prototype.hasOwnProperty.call(deps, k)) _deps[k] = deps[k];
+      }
+    }
+    return API;
+  }
+
+  var API = {
+    execute: execute,
+    executeCell: executeCell,
+    MAX_CELL_RETRIES: MAX_CELL_RETRIES,
+    inject: inject
+  };
+
+  global.GenerationCore = API;
+  if (global.App && typeof global.App === 'object') global.App.GenerationCore = API;
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+})(typeof globalThis !== 'undefined' ? globalThis : (typeof global !== 'undefined' ? global : this));
 };
 __defs["shared/generator/generator-contract.js"] = function (module, exports, require) {
 
@@ -823,6 +1058,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: result.validationResults,
         retries: retries,
         success: true,
+        status: 'SUCCESS',
         attempts: allResults
       };
     }
@@ -834,6 +1070,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: result.validationResults,
         retries: retries,
         success: false,
+        status: 'FAILED',
         error: 'FATAL_ERROR',
         message: '遇到不可恢复错误，停止重试',
         attempts: allResults
@@ -847,6 +1084,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: result.validationResults,
         retries: retries,
         success: false,
+        status: 'FAILED',
         error: 'NON_RETRYABLE',
         message: '错误不可重试，停止重试',
         attempts: allResults
@@ -894,6 +1132,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: safeR,
         retries: retries,
         success: false,
+        status: safeQ.length > 0 ? 'PARTIAL' : 'FAILED',
         error: GENERATION_SPACE_EXHAUSTED,
         message: '生成空间耗尽：连续 ' + consecutiveZeroProgress + ' 轮零新增（KP+type+difficulty 在 seenKeys 累积下语义空间饱和）',
         attempts: allResults
@@ -910,6 +1149,7 @@ function generateWithRetry(generatorFn, plan, context) {
           validationResults: safeResults,
           retries: retries,
           success: false,
+          status: safeQuestions.length > 0 ? 'PARTIAL' : 'FAILED',
           error: GENERATION_SPACE_EXHAUSTED,
           message: '生成空间耗尽：仅因重复重试 ' + duplicateFailures + ' 次仍无法产出新题（KP+type+difficulty 语义空间已饱和）',
           attempts: allResults
@@ -920,6 +1160,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: safeResults,
         retries: retries,
         success: false,
+        status: safeQuestions.length > 0 ? 'PARTIAL' : 'FAILED',
         error: 'MAX_RETRIES_EXCEEDED',
         message: '超过最大重试次数 (' + effectiveCap + ')',
         attempts: allResults
@@ -2278,6 +2519,184 @@ __defs["shared/state/metrics.js"] = function (module, exports, require) {
   }
 })(typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
 };
+__defs["shared/generation/generation-contract.js"] = function (module, exports, require) {
+
+(function (global) {
+  'use strict';
+
+  var VERSION = 1;
+
+  
+  var QuestionTypeRegistry = (typeof require === 'function')
+    ? (function () { try { return require("shared/knowledge/question-type-registry.js"); } catch (e) { return null; } })()
+    : (global.QuestionTypeRegistry || null);
+  var CANONICAL_TYPES = (QuestionTypeRegistry && QuestionTypeRegistry.all)
+    ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
+    : ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
+
+  
+  var GENERATION_CONTEXT_FIELDS = [
+    'subject', 'grade', 'difficulty', 'selectLevel', 'style', 'expectedAnswerStyle',
+    'subtype', 'cognitiveLevel', 'spiralLevel', 'max_spiral_level',
+    'customParams', 'settings', 'allowDifficultyOverride',
+    'adaptive', 'adaptiveMode', 'adaptiveDelta', 'learnerProfile'
+  ];
+  
+  var PLANNING_CONTEXT_FIELDS = ['combine', 'planLevel', 'typeCounts', 'perTypeCount', 'count'];
+
+  
+  
+  
+  
+  
+  
+  
+  
+  function normalizeCell(raw) {
+    var c = raw || {};
+    var count = Math.floor(Number(c.count));
+    if (!Number.isFinite(count) || count < 1) count = 1;
+    var difficulty = Number(c.difficulty);
+    if (!Number.isFinite(difficulty)) difficulty = 5;
+    difficulty = Math.max(1, Math.min(10, difficulty));
+    var ctx = {};
+    if (c.context && typeof c.context === 'object') {
+      Object.keys(c.context).forEach(function (k) {
+        if (GENERATION_CONTEXT_FIELDS.indexOf(k) !== -1) ctx[k] = c.context[k];
+      });
+    }
+    
+    var type = c.questionType || (c.context && c.context.questionType);
+    return {
+      kpId: String(c.kpId || (c.context && c.context.kpId) || ''),
+      questionType: String(type || ''),
+      difficulty: difficulty,
+      count: count,
+      context: ctx
+    };
+  }
+
+  function isValidCell(cell) {
+    return !!(cell && typeof cell.kpId === 'string' && cell.kpId &&
+      CANONICAL_TYPES.indexOf(cell.questionType) !== -1 &&
+      typeof cell.difficulty === 'number' && cell.difficulty >= 1 && cell.difficulty <= 10 &&
+      Number.isInteger(cell.count) && cell.count >= 1);
+  }
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  function normalizePlan(raw) {
+    var p = raw || {};
+    var plan = {
+      cells: (Array.isArray(p.cells) ? p.cells : []).map(normalizeCell),
+      targetTotal: Number(p.targetTotal) || 0,
+      requestedCount: Number(p.requestedCount) || 0,
+      selectedTypes: Array.isArray(p.selectedTypes) ? p.selectedTypes.slice() : [],
+      selectedKPs: Array.isArray(p.selectedKPs) ? p.selectedKPs.slice() : []
+    };
+    if (typeof p.explicitCombo === 'boolean') plan.explicitCombo = p.explicitCombo;
+    if (p.meta && typeof p.meta === 'object') plan.meta = p.meta;
+    return plan;
+  }
+
+  
+  
+  function makeStrategyPlan(cell, seedOverride) {
+    return {
+      knowledgePointIds: [cell.kpId],
+      questionTypeId: cell.questionType,
+      difficulty: cell.difficulty,
+      count: cell.count,
+      seed: seedOverride || null,
+      constraints: Object.assign({}, cell.context)
+    };
+  }
+
+  
+  
+  function makeCandidate(cell, generatorId, rawItems) {
+    return {
+      cell: cell,
+      generatorId: String(generatorId || ''),
+      rawItems: Array.isArray(rawItems) ? rawItems : [],
+      attempts: 1
+    };
+  }
+
+  
+  
+  function makeValidationResult(valid, errors, warnings, checks) {
+    return {
+      valid: !!valid,
+      errors: Array.isArray(errors) ? errors : [],
+      warnings: Array.isArray(warnings) ? warnings : [],
+      checks: checks || {},
+      filteredItems: []
+    };
+  }
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  function makeResult(questions, plan, shortfall, failures, metadata) {
+    var requested = (plan && plan.targetTotal) || 0;
+    var generated = Array.isArray(questions) ? questions.length : 0;
+    var status = generated === 0 ? 'FAILED' : (generated < requested ? 'PARTIAL' : 'SUCCESS');
+    return {
+      questions: Array.isArray(questions) ? questions : [],
+      generatedCount: generated,
+      plannedCount: requested,
+      shortfall: requested - generated,
+      failures: Array.isArray(failures) ? failures : [],
+      metadata: metadata || {},
+      status: status
+    };
+  }
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  var API = {
+    VERSION: VERSION,
+    CANONICAL_TYPES: CANONICAL_TYPES,
+    GENERATION_CONTEXT_FIELDS: GENERATION_CONTEXT_FIELDS,
+    PLANNING_CONTEXT_FIELDS: PLANNING_CONTEXT_FIELDS,
+    normalizeCell: normalizeCell,
+    isValidCell: isValidCell,
+    normalizePlan: normalizePlan,
+    makeStrategyPlan: makeStrategyPlan,
+    makeCandidate: makeCandidate,
+    makeValidationResult: makeValidationResult,
+    makeResult: makeResult
+  };
+
+  global.GenerationContract = API;
+  if (global.App && typeof global.App === 'object') global.App.GenerationContract = API;
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+})(typeof globalThis !== 'undefined' ? globalThis : (typeof global !== 'undefined' ? global : this));
+};
 __defs["shared/validator/validation-pipeline.js"] = function (module, exports, require) {
 
 'use strict';
@@ -2649,16 +3068,34 @@ function extractStructureKey(sq) {
 }
 
 
+
+
+
+function promptHash(sq) {
+  var p = coerceString(sq.prompt || (sq.content && sq.content.prompt) || '');
+  p = p.replace(/\s+/g, '').replace(/[，。、？！：；,.?!:;（）()'"'""'']/g, '');
+  var h = 5381;
+  for (var i = 0; i < p.length; i++) h = ((h << 5) + h + p.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+
 function buildQuestionFingerprint(sq) {
   var parts = [];
   parts.push('v2');
   parts.push(coerceString(sq.knowledgePoint));
   parts.push(coerceString(sq.questionType || sq.type));
-  parts.push(extractOperators(sq).sort().join(','));
-  parts.push(extractOperands(sq).sort(function (a, b) { return a - b; }).join(','));
+  var ops = extractOperators(sq).sort();
+  var operands = extractOperands(sq).sort(function (a, b) { return a - b; });
+  parts.push(ops.join(','));
+  parts.push(operands.join(','));
   parts.push(extractStructureKey(sq));
   parts.push(coerceString(sq.content && sq.content.context));
   parts.push(coerceString(sq.content && sq.content.format));
+  
+  
+  
+  var SEMANTIC_TYPES = { apply: 1, geometry: 1, judge: 1, classify: 1, open: 1, recognize: 1 };
+  if (SEMANTIC_TYPES[sq.questionType || sq.type]) parts.push('ph:' + promptHash(sq));
   return parts.join('|');
 }
 
@@ -3787,35 +4224,58 @@ var Validator = require("shared/validator/question-validator.js");
 var ERROR_CODES = Validator.ERROR_CODES;
 var SEVERITY = Validator.SEVERITY;
 var createError = Validator.createError;
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
-var Ontology = require("shared/knowledge/knowledge-ontology.js");
+
+
+
+var _GLOBAL = typeof window !== 'undefined' ? window : global;
+var _deps = {};
+var DEP_GLOBAL_KEYS = { knowledgeContext: 'KnowledgeContext', generatorRegistry: 'GeneratorRegistry' };
+function getDep(name) {
+  if (_deps[name]) return _deps[name];
+  var key = DEP_GLOBAL_KEYS[name];
+  var g = _GLOBAL && _GLOBAL[key];
+  if (g) _deps[name] = g;
+  return _deps[name];
+}
+function getKC() {
+  var KC = getDep('knowledgeContext');
+  if (KC) return KC;
+  try { KC = require("shared/orchestration/knowledge-context.js"); _deps.knowledgeContext = KC; } catch (e) {}
+  return KC;
+}
+function getGenRegistry() {
+  var R = getDep('generatorRegistry');
+  if (R) return R;
+  try { R = require("shared/generator/generator-registry.js"); _deps.generatorRegistry = R; } catch (e) {}
+  return R;
+}
 
 
 function getKpConstraints(kpId) {
-  var kp = KnowledgePoint.get(kpId);
-  if (!kp) return null;
-  var canonical = Ontology.normalize(kp);
-  
+  var KC = getKC();
+  var canonical = KC && KC.strategyView(kpId);
+  if (!canonical) return null;
+
   
   var arithSem = null;
-  try { arithSem = require("shared/generator/core/kp-arithmetic-semantics.js").resolveArithmeticSemantics(kp); } catch (e) {}
+  try { arithSem = require("shared/generator/core/kp-arithmetic-semantics.js").resolveArithmeticSemantics(canonical); } catch (e) {}
   var complexSem = null;
-  try { complexSem = require("shared/generator/core/kp-complex-semantics.js").resolveComplexSemantics(kp); } catch (e) {}
-  
+  try { complexSem = require("shared/generator/core/kp-complex-semantics.js").resolveComplexSemantics(canonical); } catch (e) {}
+
   var operation = null;
   if (arithSem && arithSem.operators) operation = arithSem.operators;
   else if (complexSem && complexSem.operators) operation = complexSem.operators;
   else operation = canonical.operation || (canonical.constraints && canonical.constraints.operation) || null;
-  
+
   return {
     id: canonical.id,
-    category: canonical.category || kp.legacy?.category,
-    legacyType: canonical.source?.legacyType || kp.legacy?.legacyType,
-    numericRange: canonical.numeric?.range || null,
+    category: canonical.category || null,
+    legacyType: (canonical.source && canonical.source.legacyType) || null,
+    numericRange: (canonical.numeric && canonical.numeric.range) || null,
     structure: canonical.structure || {},
-    generationCapabilities: canonical.generation?.capabilities || [],
-    presentationQuestionTypes: (canonical.presentation?.questionTypes || []).map(function(q){ return q.type; }),
-    factualContent: canonical.factualContent || null,
+    generationCapabilities: (canonical.generation && canonical.generation.capabilities) || [],
+    presentationQuestionTypes: ((canonical.presentation && canonical.presentation.questionTypes) || []).map(function(q){ return q.type; }),
+    factualContent: (canonical.knowledge && canonical.knowledge.factualContent) || null,
     graphicType: canonical.graphicType || null,
     operation: operation,
     spiral: canonical.spiral || {}
@@ -3857,13 +4317,14 @@ function checkQuestionType(sq, kpConstraints) {
 
 function checkOperation(sq, kpConstraints) {
   var errors = [];
-  if (!kpConstraints) return errors;
+  var warnings = [];
+  if (!kpConstraints) return { errors: errors, warnings: warnings };
   
   var kpOp = kpConstraints.operation;
-  if (!kpOp) return errors; 
+  if (!kpOp) return { errors: errors, warnings: warnings }; 
   
   var sqOp = sq.data?.operation;
-  if (!sqOp) return errors; 
+  if (!sqOp) return { errors: errors, warnings: warnings }; 
   
   
   var kpOps = Array.isArray(kpOp) ? kpOp : [kpOp];
@@ -3880,9 +4341,19 @@ function checkOperation(sq, kpConstraints) {
   });
   
   if (mismatch) {
-    errors.push(createError(ERROR_CODES.KP_SEMANTIC_OPERATION, 'operation', '题目运算 ' + JSON.stringify(sqOps) + ' 与 KP operation ' + JSON.stringify(kpOps) + ' 不一致', SEVERITY.ERROR, { kpOperation: kpOps, questionOperation: sqOps }));
+    
+    
+    
+    var hasNativeBinding = false;
+    try {
+      var GenRegistry = getGenRegistry();
+      hasNativeBinding = GenRegistry.forKnowledgePoint(kpConstraints.id).length > 0;
+    } catch (e) {  }
+    var opError = createError(ERROR_CODES.KP_SEMANTIC_OPERATION, 'operation', '题目运算 ' + JSON.stringify(sqOps) + ' 与 KP operation ' + JSON.stringify(kpOps) + ' 不一致', hasNativeBinding ? SEVERITY.ERROR : SEVERITY.WARNING, { kpOperation: kpOps, questionOperation: sqOps });
+    if (hasNativeBinding) errors.push(opError);
+    else warnings.push(opError);
   }
-  return errors;
+  return { errors: errors, warnings: warnings };
 }
 
 function normalizeOp(op) {
@@ -3991,35 +4462,6 @@ function checkContent(sq, kpConstraints) {
 }
 
 
-function checkComposite(sq, plan, kpConstraintsList) {
-  var errors = [];
-  if (!plan?.combine || !plan?.knowledgePointIds || plan.knowledgePointIds.length <= 1) return errors;
-  
-  var kpIds = plan.knowledgePointIds;
-  var covered = kpIds.filter(function(id) {
-    
-    var kp = KnowledgePoint.get(id);
-    if (!kp) return false;
-    var canonical = Ontology.normalize(kp);
-    var legacyType = canonical.source?.legacyType || kp.legacy?.legacyType;
-    var category = canonical.category || kp.legacy?.category;
-    
-    
-    var searchable = [sq.prompt, sq.data?.operation, sq.data?.graphic?.subtype, sq.data?.shapeName, sq.data?.kind, sq.data?.template].filter(Boolean).join(' ').toLowerCase();
-    
-    
-    var features = [legacyType, category, canonical.operation, canonical.graphicType].filter(Boolean).join(' ').toLowerCase();
-    return features.split(' ').some(function(f) { return f && searchable.indexOf(f) !== -1; });
-  });
-  
-  if (covered.length < kpIds.length) {
-    var missing = kpIds.filter(function(id) { return covered.indexOf(id) === -1; });
-    errors.push(createError(ERROR_CODES.KP_SEMANTIC_COMPOSITE, 'composite', 'Combine 模式下题目未同时体现全部 KP，缺失: ' + missing.join(','), SEVERITY.ERROR, { requiredKpIds: kpIds, coveredKpIds: covered, missingKpIds: missing }));
-  }
-  return errors;
-}
-
-
 function validateKpSemantics(sq, context) {
   context = context || {};
   var plan = context.plan;
@@ -4037,7 +4479,9 @@ function validateKpSemantics(sq, context) {
   allErrors.push.apply(allErrors, checkQuestionType(sq, kpConstraints));
   
   
-  allErrors.push.apply(allErrors, checkOperation(sq, kpConstraints));
+  var opResult = checkOperation(sq, kpConstraints);
+  allErrors.push.apply(allErrors, opResult.errors);
+  allWarnings.push.apply(allWarnings, opResult.warnings);
   
   
   allErrors.push.apply(allErrors, checkNumeric(sq, kpConstraints));
@@ -4049,11 +4493,6 @@ function validateKpSemantics(sq, context) {
   var contentResult = checkContent(sq, kpConstraints);
   allErrors.push.apply(allErrors, contentResult.errors);
   allWarnings.push.apply(allWarnings, contentResult.warnings);
-  
-  
-  if (context.kpConstraintsList) {
-    allErrors.push.apply(allErrors, checkComposite(sq, plan, context.kpConstraintsList));
-  }
   
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
@@ -4067,11 +4506,10 @@ function validateKpSemantics(sq, context) {
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
-      operation: checkOperation(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
+      operation: opResult.errors.length === 0 ? 'pass' : 'fail',
       numeric: checkNumeric(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       structure: checkStructure(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
-      content: contentResult.errors.length === 0 ? 'pass' : 'fail',
-      composite: (context.kpConstraintsList ? checkComposite(sq, plan, context.kpConstraintsList).length === 0 : 'skipped')
+      content: contentResult.errors.length === 0 ? 'pass' : 'fail'
     }
   };
 }
@@ -4084,10 +4522,10 @@ module.exports = {
   checkOperation: checkOperation,
   checkNumeric: checkNumeric,
   checkStructure: checkStructure,
-  checkContent: checkContent,
-  checkComposite: checkComposite
+  checkContent: checkContent
 };
 };
 global.PresentationEngine = __req("shared/engine/presentation-engine.js");
 global.PresentationBundle = __req("shared/engine/presentation-engine.js");
+global.GenerationCore = __req("shared/generation/generation-core.js");
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

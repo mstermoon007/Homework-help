@@ -187,6 +187,29 @@
   // 跨用户指纹泄漏与无界内存增长；单用户连续性由当前 _session._seenKeys 继承。
   var _lastGenerationId = null;  // 仅最新一代 id（用于 previousGenerationId，非去重）
 
+  // P11-02 A：刷新（同标签页）后仍尽量避开上一批 —— sessionStorage 最小跨批记忆（有界 FIFO）。
+  // 仅浏览器可用；隐私模式/配额异常静默跳过（不阻塞生成）。不存服务端、不跨用户。
+  var SEEN_STORE_KEY = 'hh-practice-seenkeys-v1';
+  var SEEN_STORE_MAX = 800;
+  function loadPersistedSeenKeys() {
+    try {
+      if (typeof sessionStorage === 'undefined') return null;
+      var raw = sessionStorage.getItem(SEEN_STORE_KEY);
+      if (!raw) return null;
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : null;
+    } catch (e) { return null; }
+  }
+  function persistSeenKeys(set) {
+    try {
+      if (typeof sessionStorage === 'undefined' || !set || typeof set.forEach !== 'function') return;
+      var arr = [];
+      set.forEach(function (k) { arr.push(k); });
+      if (arr.length > SEEN_STORE_MAX) arr = arr.slice(arr.length - SEEN_STORE_MAX);
+      sessionStorage.setItem(SEEN_STORE_KEY, JSON.stringify(arr));
+    } catch (e) { /* 配额/隐私模式：跳过持久化 */ }
+  }
+
   // D001：从成功会话中提取本代题目指纹，累积入该会话自身的 seenKeys（不覆写）
   function recordGeneration(session) {
     var g = session && session.lastSemantic;
@@ -201,6 +224,7 @@
       }
     });
     _lastGenerationId = g.generationId;
+    persistSeenKeys(session._seenKeys); // P11-02 A：滚动持久化（刷新后继续互斥）
     return { added: added, total: session._seenKeys.size };  // 供饱和检测参考
   }
 
@@ -236,6 +260,12 @@
       var sessionConfig = ControlService.sessionConfig(profile);
       // C2 / D001：注入当前会话历史指纹（跨练习去重）；无则不传（第一代自然无历史）
       var prevSeen = _session && _session._seenKeys;
+      // P11-02 A：合并 sessionStorage 跨刷新记忆（同标签页刷新后仍尽量避开上一批）
+      var persisted = loadPersistedSeenKeys();
+      if (persisted && persisted.length) {
+        if (!prevSeen) prevSeen = new Set();
+        persisted.forEach(function (k) { prevSeen.add(k); });
+      }
       if (prevSeen && prevSeen.size > 0) {
         sessionConfig.previousGeneration = {
           generationId: _lastGenerationId,
@@ -290,10 +320,9 @@
 
   // ============================================
   // R4：大服务层查询（决策上收）
-  //  - 可见性查询：知识点/模块在题型过滤范围内的可见性（源自 module-catalog.kpVisibleInType）
   //  - 题型→可见模块：标准题型支撑的模块 id 列表（源自 module-catalog.visibleModulesForType）
-  //  - 题量规划：按知识点权重分配总题量（源自 question-type-allocation.allocateKpRatio）
-  // UI 只读查询结果，不做推导 / 不持有静态过滤表。
+  //  - 题型展示名：canonical 题型 → 注册表 displayName
+  // P10-2：kpVisibleInType / allocateKpRatio 包装已删除（零消费者；可生成范围与预算分配归 POL）。
   // ============================================
   // 访问大服务层 module-catalog（浏览器 / CommonJS 边界）
   function moduleCatalog() {
@@ -301,34 +330,16 @@
       ? global.MODULE_CATALOG
       : (typeof require !== 'undefined' ? require('../catalog/module-catalog.js') : null);
   }
-  // 访问大服务层 question-type-allocation（浏览器经 strategy-engine.bundle 暴露的全局 / CommonJS）
-  function typeAllocation() {
-    return (typeof global !== 'undefined' && global.QuestionTypeAllocation)
-      ? global.QuestionTypeAllocation
-      : (typeof require !== 'undefined' ? require('../strategy/question-type-allocation.js') : null);
-  }
   // 访问题型注册表（全局唯一题型 SSOT；浏览器经 strategy-engine.bundle 暴露 / CommonJS）
   function questionTypeRegistry() {
     return (typeof global !== 'undefined' && global.QuestionTypeRegistry)
       ? global.QuestionTypeRegistry
       : (typeof require !== 'undefined' ? require('../knowledge/question-type-registry.js') : null);
   }
-  // 可见性查询：知识点是否落在题型过滤范围内（无 qt 视为全部可见）
-  function kpVisibleInType(kp, type) {
-    var mc = moduleCatalog();
-    if (mc && typeof mc.kpVisibleInType === 'function') return mc.kpVisibleInType(kp, type);
-    return true; // 大服务层不可用时保守放行（不阻断 UI）
-  }
   // 题型→可见模块：返回支撑该题型的模块 id 数组（未知题型返回 null）
   function visibleModulesForType(type) {
     var mc = moduleCatalog();
     if (mc && typeof mc.visibleModulesForType === 'function') return mc.visibleModulesForType(type);
-    return null;
-  }
-  // 题量规划：按知识点权重分配总题量（最大剩余法，sum(count) === total）
-  function allocateKpRatio(kps, total) {
-    var ta = typeAllocation();
-    if (ta && typeof ta.allocateKpRatio === 'function') return ta.allocateKpRatio(kps, total);
     return null;
   }
   // 题型展示名：canonical 题型 → 注册表 TYPES.name；历史细粒度 qt → LEGACY_DISPLAY_NAMES（R9 上收自 TYPE_PRETTY）。
@@ -401,9 +412,7 @@
     onStartFeedback: onStartFeedback,
     onSubmitFeedback: onSubmitFeedback,
     // R4 大服务层查询（决策上收，UI 只读）
-    kpVisibleInType: kpVisibleInType,
     visibleModulesForType: visibleModulesForType,
-    allocateKpRatio: allocateKpRatio,
     questionTypeDisplayName: questionTypeDisplayName
   });
 

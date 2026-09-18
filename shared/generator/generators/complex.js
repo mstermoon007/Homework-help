@@ -189,8 +189,8 @@ function createComplexGenerator(spec) {
   var generator = {
     id: id,
     subject: subject,
-    capabilities: spec.capabilities || ['calc', 'fill', 'oral'],
-    questionTypes: spec.questionTypes || ['calc', 'fill', 'oral'],
+    capabilities: spec.capabilities || ['calc', 'fill'],
+    questionTypes: spec.questionTypes || ['calc', 'fill'],
     knowledgePoints: knowledgePoints,
 
     supports: function (plan) {
@@ -237,8 +237,8 @@ function buildAll() {
   return [
     createComplexGenerator({
       id: 'generator:complex-calc',
-      capabilities: ['calc', 'fill', 'oral'],
-      questionTypes: ['calc', 'fill', 'oral'],
+      capabilities: ['calc', 'fill'],
+      questionTypes: ['calc', 'fill'],
       knowledgePoints: COMPLEX_KPS
     })
   ];

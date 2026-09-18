@@ -559,9 +559,22 @@
 </footer>
 
 <script src="shared/core/core.js"></script>
+<script src="shared/catalog/difficulty.js"></script>
+<script src="shared/catalog/difficulty-static.js"></script>
 <script src="shared/catalog/module-catalog.js"></script>
-<script src="shared/knowledge/knowledge-bank.js"></script>
+<script src="shared/knowledge/runtime/knowledge-runtime.js"></script>
+<script src="shared/orchestration/knowledge-context.js"></script>
+<script src="shared/engine/knowledge-compat.js"></script>
+<!-- P10-3：二级页「知识点×题型」显示由标准编排层（POL）完整编排结果统筹。
+     加载 POL 依赖栈：strategy bundle（CapabilityResolver/TargetDifficulty）→ 能力视图 →
+     预算分配 → 难度入口 → POL；plan() 返回 feasibleTypes/eligibleKpsForType/typeCounts 供 UI 渲染。 -->
+<script src="shared/engine/strategy-engine.bundle.js"></script>
+<script src="shared/capability/knowledge-capability-view.js"></script>
 <script src="shared/request/request-normalize.js"></script>
+<script src="shared/orchestration/practice-plan.js"></script>
+<script src="shared/orchestration/budget-allocation.js"></script>
+<script src="shared/orchestration/difficulty-orchestrator.js"></script>
+<script src="shared/orchestration/practice-orchestrator.js"></script>
 <script src="shared/catalog/catalog-utils.js"></script>
 <script>
 (function () {
@@ -580,7 +593,7 @@
   // 全部 applicable_question_types 命中该类能力映射的知识点（不再按 M0/M1 模块翻译）。
   // 生成层以 kps 驱动 + types 白名单过滤（知识点驱动、题型策略、直接生成）。
   var QUICK_TYPE_DEFS = [
-    { key: 'calc',    label: '计算题',          types: ['calc', 'oral'] },
+    { key: 'calc',    label: '计算题',          types: ['calc'] },
     { key: 'fill',    label: '填空题',          types: ['fill'] },
     { key: 'choice',  label: '选择题',          types: ['choice'] },
     { key: 'judge',   label: '判断题',          types: ['judge'] },
@@ -632,29 +645,73 @@
   var bookSegTeacher = document.getElementById('bookSegTeacher');
   var modeDesc = document.getElementById('modeDesc');
 
-  // R9-② 完整知识点条目读取：从 KnowledgeBank 原始年级数据取完整 KP
+  // R9-② 完整知识点条目读取：经 KnowledgeContext（KBL Runtime）取年级 UI 视图
   // （含 applicable_question_types / difficulty / cognitive_level），供选择时提醒使用；
   // 大服务层可见性查询（module-catalog.kpVisibleInType）经 PracticeBridge/module-catalog 读取。
   function fullKPEntries(subject, grade) {
-    var cs = SUBJECT_CANON[subject] || subject;
-    var arr = (window.KnowledgeBank && KnowledgeBank[cs]) || null;
-    if (!Array.isArray(arr)) return [];
-    var out = [];
-    arr.forEach(function (g) {
-      if (g && g.grade === grade) {
-        (g.modules || []).forEach(function (m) {
-          (m.knowledgePoints || []).forEach(function (kp) {
-            out.push(Object.assign({}, kp, { moduleId: m.moduleId }));
-          });
-        });
-      }
-    });
-    return out;
+    var KC = window.KnowledgeContext;
+    if (!KC || typeof KC.uiListForGrade !== 'function') return [];
+    return KC.uiListForGrade(SUBJECT_CANON[subject] || subject, grade);
   }
 
-  // R9-② 可用 canonical 题型提示（applicable_question_types 已 R2 规范化）：
+  // ---------- P10-3：知识点×题型显示 → 由标准编排层（POL）完整编排结果统筹 ----------
+  // POL plan() 的 feasibleTypes / eligibleKpsForType（→ kpTypes 反查）是唯一权威；
+  // UI 只渲染。plan 未就绪时回退 applicable_question_types（保守显示，就绪后重渲）。
+  var polView = { sig: null, data: null, pending: null };
+  var POL_CANONICAL_TYPES = (function () {
+    var out = [], seen = {};
+    QUICK_TYPE_DEFS.forEach(function (t) {
+      (t.types || []).forEach(function (x) { if (x && !seen[x]) { seen[x] = true; out.push(x); } });
+    });
+    return out;
+  })();
+
+  function polSig(scope, subject, grade, poolIds) {
+    return scope + '|' + (SUBJECT_CANON[subject] || subject) + '|' + grade + '|' + poolIds.slice().sort().join(',');
+  }
+  // 取当前 scope 的 POL 视图；未就绪时启动异步计算并返回 null（调用方回退）。
+  function ensurePolView(scope, subject, grade, poolIds) {
+    var sig = polSig(scope, subject, grade, poolIds);
+    if (polView.sig === sig) return polView.data;   // 可能仍 pending（data=null）
+    if (polView.pending === sig) return null;
+    polView.sig = sig;
+    polView.data = null;
+    polView.pending = sig;
+    if (!window.CatalogUtils || typeof window.CatalogUtils.capabilityPlanView !== 'function' || !poolIds.length) {
+      polView.pending = null;
+      return null;
+    }
+    var countSel = document.getElementById('countSelect');
+    window.CatalogUtils.capabilityPlanView({
+      subject: SUBJECT_CANON[subject] || subject, grade: grade,
+      knowledgePointIds: poolIds, questionTypes: POL_CANONICAL_TYPES,
+      count: countSel ? Number(countSel.value) : 20
+    }).then(function (v) {
+      if (polView.pending !== sig) return;   // 选区已变化，丢弃过期结果
+      polView.data = v;
+      polView.pending = null;
+      rerenderStage();
+    });
+    return null;
+  }
+  // POL 结果就绪后按当前模式重渲（UI 展示随编排结果更新）
+  function rerenderStage() {
+    if (state.mode === 'quick') renderQuick();
+    else if (state.mode === 'teacher') renderTeacher();
+    else renderCompetition();
+    renderSummary();
+  }
+
+  // R9-② 可用 canonical 题型提示。P10-3：优先取 POL 能力判定（view.kpTypes），
+  // 未就绪时回退 applicable_question_types（数据驱动，保守显示）。
   // [{type,coefficient}] → ['计算','填空'] 展示名；无数据时返回空数组
-  function kpTypeHints(kp) {
+  function kpTypeHints(kp, view) {
+    if (view && view.ready && kp && kp.id) {
+      var m = view.kpTypes[kp.id] || {};
+      var outV = [], seenV = {};
+      Object.keys(m).forEach(function (t) { if (t && !seenV[t]) { seenV[t] = true; outV.push(TYPE_LABEL[t] || t); } });
+      return outV;
+    }
     var list = (kp && kp.applicable_question_types) || [];
     if (!Array.isArray(list)) list = [];
     var seen = {};
@@ -672,9 +729,14 @@
     apply: '应用', geometry: '作图', classify: '分类'
   };
 
-  // 快速模式/教师模式共用：知识点是否命中某类题型（按 applicable_question_types 能力匹配，数据驱动）
-  function kpMatchesType(kp, typeDef) {
+  // 快速模式/教师模式共用：知识点是否命中某类题型。
+  // P10-3：优先取 POL 能力判定（view.kpTypes），未就绪时回退 applicable_question_types。
+  function kpMatchesType(kp, typeDef, view) {
     if (!typeDef) return false;
+    if (view && view.ready) {
+      var m = (kp && kp.id && view.kpTypes[kp.id]) || {};
+      return (typeDef.types || []).some(function (t) { return !!m[t]; });
+    }
     var list = (kp && kp.applicable_question_types) || [];
     if (!Array.isArray(list)) list = [];
     var hit = list.some(function (item) {
@@ -770,13 +832,16 @@
       gridQuick.innerHTML = '<div class="type-empty">该科目 / 年级暂无可练内容</div>';
       return;
     }
+    // P10-3：候选池（与题型无关）→ POL plan 能力视图；题型数按能力判定统计
+    var pool = entries.filter(function (k) {
+      return !isCompetitionKp(k) && kpMatchesBook(k, state.quickBook) &&
+        (state.quickUnits.length ? state.quickUnits.indexOf(k.unit) !== -1 : true);
+    });
+    var view = ensurePolView('quick', state.subject, state.grade, pool.map(function (k) { return k.id; }));
     var html = '';
     QUICK_TYPE_DEFS.forEach(function (t) {
       var on = state.quickTypes.indexOf(t.key) !== -1 ? ' on' : '';
-      var cnt = entries.filter(function (k) {
-        return !isCompetitionKp(k) && kpMatchesBook(k, state.quickBook) && kpMatchesType(k, t) &&
-          (state.quickUnits.length ? state.quickUnits.indexOf(k.unit) !== -1 : true);
-      }).length;
+      var cnt = pool.filter(function (k) { return kpMatchesType(k, t, view); }).length;
       var disabled = cnt === 0 ? ' disabled' : '';
       html += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
         '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
@@ -815,6 +880,22 @@
     var d = document.createElement('div');
     d.textContent = (s == null) ? '' : String(s);
     return d.innerHTML;
+  }
+
+  // P10-3：教师模式「当前展示的 KP 池」（已选单元下全部 KP）→ POL plan 能力视图。
+  // 以展示池（而非仅已选 KP）查询，保证知识点卡在勾选前即显示能力判定提示。
+  function teacherDisplayPool() {
+    var entries = fullKPEntries(state.subject, state.grade);
+    var buckets = unitBuckets(entries.filter(function (k) { return kpMatchesBook(k, state.teacherBook); }), state.teacherBook);
+    var pool = [], seen = {};
+    buckets.forEach(function (bkt) {
+      if (state.teacherUnits.indexOf(bkt.unit) === -1) return;
+      bkt.kps.forEach(function (k) { if (k && k.id && !seen[k.id]) { seen[k.id] = true; pool.push(k.id); } });
+    });
+    return pool;
+  }
+  function teacherPolView() {
+    return ensurePolView('teacher', state.subject, state.grade, teacherDisplayPool());
   }
 
   // 教师模式：上下册 → 单元（多选）→ 知识点（多选）→ 题型（多选）
@@ -856,6 +937,7 @@
       if (teacherKpHint) { teacherKpHint.style.display = ''; teacherKpHint.textContent = '先选择单元，再勾选知识点'; }
       return;
     }
+    var view = teacherPolView();
     var totalKp = state.teacherKps.length;
     var html = '';
     selectedUnits.forEach(function (bkt) {
@@ -863,7 +945,7 @@
         '（已选 ' + bkt.kps.filter(function (k) { return state.teacherKps.indexOf(k.id) !== -1; }).length + '/' + bkt.kps.length + '）</div><div class="kp-grid">';
       bkt.kps.forEach(function (k) {
         var on = state.teacherKps.indexOf(k.id) !== -1 ? ' on' : '';
-        var hints = kpTypeHints(k);
+        var hints = kpTypeHints(k, view);
         html += '<button type="button" class="kp-chip' + on + '" data-kp="' + k.id + '">' + esc(k.name) +
           (hints.length ? '<span class="kp-hint">' + esc(hints.join(' · ')) + '</span>' : '') +
           '</button>';
@@ -881,10 +963,11 @@
       buckets.filter(function (bkt) { return state.teacherUnits.indexOf(bkt.unit) !== -1; })
         .forEach(function (bkt) { bkt.kps.forEach(function (k) { if (state.teacherKps.indexOf(k.id) !== -1) selectedKps.push(k); }); });
     }
+    var view = teacherPolView();
     var tHtml = '';
     QUICK_TYPE_DEFS.forEach(function (t) {
       var on = state.teacherTypes.indexOf(t.key) !== -1 ? ' on' : '';
-      var cnt = selectedKps.filter(function (k) { return kpMatchesType(k, t); }).length;
+      var cnt = selectedKps.filter(function (k) { return kpMatchesType(k, t, view); }).length;
       var disabled = cnt === 0 ? ' disabled' : '';
       tHtml += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
         '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
@@ -978,13 +1061,16 @@
     var out = [];
     var entries = fullKPEntries(subject, grade);
     if (state.mode === 'quick') {
-      // 快速模式：按「上下册 + 已选单元 + 题型能力匹配」收集知识点（知识点驱动）
+      // 快速模式：按「上下册 + 已选单元 + 题型能力匹配」收集知识点（知识点驱动）。
+      // P10-3：题型能力匹配走 POL plan 能力视图（未就绪时回退 applicable_question_types）。
       var defs = QUICK_TYPE_DEFS.filter(function (t) { return state.quickTypes.indexOf(t.key) !== -1; });
-      entries.forEach(function (k) {
-        if (isCompetitionKp(k)) return;
-        if (!kpMatchesBook(k, state.quickBook)) return;
-        if (state.quickUnits.length && state.quickUnits.indexOf(k.unit) === -1) return;
-        if (defs.length && !defs.some(function (d) { return kpMatchesType(k, d); })) return;
+      var pool = entries.filter(function (k) {
+        return !isCompetitionKp(k) && kpMatchesBook(k, state.quickBook) &&
+          (state.quickUnits.length ? state.quickUnits.indexOf(k.unit) !== -1 : true);
+      });
+      var view = ensurePolView('quick', subject, grade, pool.map(function (k) { return k.id; }));
+      pool.forEach(function (k) {
+        if (defs.length && !defs.some(function (d) { return kpMatchesType(k, d, view); })) return;
         if (out.indexOf(k.id) === -1) out.push(k.id);
       });
     } else if (state.mode === 'teacher') {
@@ -1100,11 +1186,8 @@
   if (countSelect) countSelect.addEventListener('change', renderSummary);
   if (difficultySelect) difficultySelect.addEventListener('change', renderSummary);
 
-  // 知识库按需加载
+  // 知识库为 KBL Runtime 单文件静态加载（App.KNOWLEDGE），无需按需注入
   function ensureKnowledge(subject) {
-    if (window.KnowledgeBank && window.KnowledgeBank.ensureKnowledgeData) {
-      return window.KnowledgeBank.ensureKnowledgeData(SUBJECT_CANON[subject] || subject);
-    }
     return Promise.resolve();
   }
 

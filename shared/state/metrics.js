@@ -8,7 +8,7 @@
  *   - 重复率
  *   - 渲染失败率
  *
- * 仅内存存储，不持久化；可通过 dev/check-metrics.js 导出快照
+ * 仅内存存储，不持久化（诊断导出工具已随 P5 阶段结束退役）
  */
 (function (global) {
   'use strict';
