@@ -32,45 +32,79 @@ function seedFor(plan, context, i) {
 var RMB_DENOMS = [1, 2, 5, 10, 20, 50, 100]; // 分
 var RMB_UNITS = { yuan: 100, jiao: 10, fen: 1 };
 
-// 度量单位
+// 度量单位（P25-08：单位名与 MEASUREMENT_KINDS 对齐，否则换算题恒回退 RMB）
 var LENGTH_UNITS = [
-  { unit: 'cm', base: 1 },
-  { unit: 'm', base: 100 },
-  { unit: 'km', base: 100000 }
+  { unit: '毫米', base: 1 },
+  { unit: '厘米', base: 10 },
+  { unit: '米', base: 1000 },
+  { unit: '千米', base: 1000000 }
 ];
 var MASS_UNITS = [
-  { unit: 'g', base: 1 },
-  { unit: 'kg', base: 1000 }
+  { unit: '克', base: 1 },
+  { unit: '千克', base: 1000 },
+  { unit: '吨', base: 1000000 }
 ];
 var TIME_UNITS = [
   { unit: '秒', base: 1 },
   { unit: '分', base: 60 },
-  { unit: '时', base: 3600 }
+  { unit: '小时', base: 3600 }
 ];
 
 var MEASUREMENT_KINDS = {
   'rmb': { units: ['元', '角', '分'], category: 'money' },
-  'length': { units: ['厘米', '米'], category: 'length' },
-  'mass': { units: ['克', '千克'], category: 'mass' },
+  'length': { units: ['毫米', '厘米', '米', '千米'], category: 'length' },
+  'mass': { units: ['克', '千克', '吨'], category: 'mass' },
   'time': { units: ['秒', '分', '小时'], category: 'time' },
   'capacity': { units: ['毫升', '升'], category: 'capacity' },
-  'area': { units: ['平方厘米', '平方米'], category: 'area' }
+  'area': { units: ['平方厘米', '平方分米', '平方米'], category: 'area' }
 };
 
-function getMoneyMeta(kp) {
-  // 防护：非 money/measurement KP 被泛型路由到此处时，返回默认 rmb 类型
-  if (!kp) return { legacyType: null, category: null, kind: 'rmb' };
-  var lt = (kp.source && kp.source.legacyType) || (kp.legacy && kp.legacy.legacyType);
-  var cat = kp.legacy ? kp.legacy.category : null;
-  
-  // 判断度量种类
-  var kind = 'rmb';
-  if (lt?.includes('length') || cat === 'length') kind = 'length';
-  else if (lt?.includes('mass') || cat === 'mass') kind = 'mass';
-  else if (lt?.includes('time') || cat === 'time') kind = 'time';
-  else if (lt?.includes('area') || cat === 'area') kind = 'area';
-  else if (lt?.includes('capacity') || cat === 'capacity') kind = 'capacity';
-  
+// 面积单位（独立，因进率与长度不同）
+var AREA_UNITS = [
+  { unit: '平方厘米', base: 1 },
+  { unit: '平方分米', base: 100 },
+  { unit: '平方米', base: 10000 }
+];
+var CAPACITY_UNITS = [
+  { unit: '毫升', base: 1 },
+  { unit: '升', base: 1000 }
+];
+
+// P25-08：由 KP 名称机械派生度量种类（替代 kp={} 恒 rmb 的语义偏移）
+var NAME_TO_MEASURE = [
+  { re: /人民币|元.*角|角.*分|购物|钱/, kind: 'rmb' },
+  { re: /面积/, kind: 'area' },
+  { re: /容积|升|毫升/, kind: 'capacity' },
+  { re: /质量|千克|克|吨/, kind: 'mass' },
+  { re: /时间|时.*分|分.*秒|小时/, kind: 'time' },
+  { re: /厘米|米|长度|线段|进率/, kind: 'length' }
+];
+
+function deriveMeasureKind(name) {
+  if (!name || typeof name !== 'string') return null;
+  for (var i = 0; i < NAME_TO_MEASURE.length; i++) {
+    if (NAME_TO_MEASURE[i].re.test(name)) return NAME_TO_MEASURE[i].kind;
+  }
+  return null;
+}
+
+function getMoneyMeta(kp, name) {
+  // P25-08：优先由 plan.semanticParams.name 派生度量种类；回退到 legacyType/category；最终 rmb。
+  var kind = deriveMeasureKind(name)
+    || (kp && ((kp.source && kp.source.legacyType) || (kp.legacy && kp.legacy.legacyType)))
+    || (kp && kp.legacy && kp.legacy.category)
+    || 'rmb';
+  // normalize kind token
+  if (typeof kind === 'string') {
+    if (kind.indexOf('length') !== -1 || kind.indexOf('厘米') !== -1 || kind.indexOf('米') !== -1) kind = 'length';
+    else if (kind.indexOf('mass') !== -1 || kind.indexOf('克') !== -1 || kind.indexOf('千克') !== -1) kind = 'mass';
+    else if (kind.indexOf('time') !== -1 || kind.indexOf('时') !== -1 || kind.indexOf('分') !== -1) kind = 'time';
+    else if (kind.indexOf('area') !== -1 || kind.indexOf('面积') !== -1) kind = 'area';
+    else if (kind.indexOf('capacity') !== -1 || kind.indexOf('升') !== -1) kind = 'capacity';
+    else kind = 'rmb';
+  }
+  var lt = (kp && kp.source && kp.source.legacyType) || (kp && kp.legacy && kp.legacy.legacyType);
+  var cat = kp && kp.legacy && kp.legacy.category;
   return { legacyType: lt, category: cat, kind: kind };
 }
 
@@ -158,56 +192,91 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
   var opChar = OpSem.symbol(op) || '−';
   var prompt = aStr + ' ' + opChar + ' ' + bStr + ' = ____';
   var answer = formatRMB(answerFen);
-  
-  return {
+  var qt = plan.questionTypeId;
+  var result = {
     knowledgePointId: pkp(plan),
-    questionType: plan.questionTypeId,
+    questionType: qt,
     difficulty: plan.difficulty,
     spiralLevel: plan.spiralLevel || 1,
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
     answer: { value: answer, acceptable: [] },
-    answerMode: 'input',
+    answerMode: qt === 'choice' ? 'choice' : 'input',
     data: {
-      mode: plan.questionTypeId === 'choice' ? 'choice' : 'fill',
+      mode: qt === 'choice' ? 'choice' : 'fill',
       steps: 1,
       kind: 'rmb',
       operation: op,
       operands: [aFen, bFen]
     }
   };
+  // P25-08：choice 必须提供选项（答案带单位如「105分」，finisher 数值选项构建无法解析）
+  if (qt === 'choice') {
+    var distractors = [];
+    var deltaSet = [1, 5, 10, 50, 100];
+    while (distractors.length < 3) {
+      var d = answerFen + Rng.pick(rng, deltaSet) * (rng() < 0.5 ? 1 : -1);
+      if (d <= 0) d = answerFen + Rng.pick(rng, deltaSet);
+      var dStr = formatRMB(d);
+      if (dStr !== answer && distractors.indexOf(dStr) === -1) distractors.push(dStr);
+    }
+    result.data.options = Rng.shuffle(rng, [answer].concat(distractors).slice(0, 4));
+    result.data.correctIndex = result.data.options.indexOf(answer);
+    result.answer = { value: String(result.data.correctIndex), acceptable: [] };
+  }
+  return result;
 }
 
 function makeMeasurementConversionQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var kind = meta.kind;
-  var unitInfo = (kind === 'length' ? LENGTH_UNITS : kind === 'mass' ? MASS_UNITS : TIME_UNITS)[0];
+  var table = kind === 'area' ? AREA_UNITS
+    : kind === 'capacity' ? CAPACITY_UNITS
+    : kind === 'mass' ? MASS_UNITS
+    : kind === 'time' ? TIME_UNITS
+    : LENGTH_UNITS;
+  var units = table.filter(function(u){
+    return MEASUREMENT_KINDS[kind] && MEASUREMENT_KINDS[kind].units && MEASUREMENT_KINDS[kind].units.indexOf(u.unit) !== -1;
+  });
   
-  var baseValue = Rng.randInt(rng, 1, Math.max(5, plan.difficulty * 2));
-  var fromUnit = Rng.pick(rng, LENGTH_UNITS.concat(MASS_UNITS, TIME_UNITS).filter(function(u){ return MEASUREMENT_KINDS[kind]?.units?.includes(u.unit); }));
-  var toUnit = Rng.pick(rng, LENGTH_UNITS.concat(MASS_UNITS, TIME_UNITS).filter(function(u){ return MEASUREMENT_KINDS[kind]?.units?.includes(u.unit) && u.unit !== fromUnit.unit; }));
-  
-  if (!fromUnit || !toUnit) {
-    // 兜底回退到人民币
+  if (units.length < 2) {
     return makeRMBConversionQuestion(plan, context, i, meta);
   }
   
-  var answer = baseValue * fromUnit.base / toUnit.base;
-  var prompt = baseValue + fromUnit.unit + ' = ____ ' + toUnit.unit;
+  var baseValue = Rng.randInt(rng, 1, Math.max(5, plan.difficulty * 2));
+  var fromUnit = Rng.pick(rng, units);
+  var toUnit = Rng.pick(rng, units.filter(function(u){ return u.unit !== fromUnit.unit; }));
   
-  return {
+  if (!fromUnit || !toUnit) {
+    return makeRMBConversionQuestion(plan, context, i, meta);
+  }
+  
+  var factor = fromUnit.base / toUnit.base;
+  var answer = baseValue * factor;
+  // 消除浮点噪声：度量换算均为 10^n 进制，保留 6 位小数后去尾
+  answer = Math.round(answer * 1e6) / 1e6;
+  var qt = plan.questionTypeId;
+  var prompt;
+  // P25-08：calc 题型必须内嵌算式（EXPR_RE 或 BLANK_EQ_RE）
+  if (qt === 'calc') {
+    prompt = baseValue + fromUnit.unit + ' = ' + baseValue + ' × ' + factor + ' = ____ ' + toUnit.unit;
+  } else {
+    prompt = baseValue + fromUnit.unit + ' = ____ ' + toUnit.unit;
+  }
+  
+  var result = {
     knowledgePointId: pkp(plan),
-    questionType: 'fill',
+    questionType: qt,
     difficulty: plan.difficulty,
     spiralLevel: plan.spiralLevel || 1,
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
     answer: { value: String(answer), acceptable: [] },
-    answerMode: 'input',
+    answerMode: qt === 'choice' ? 'choice' : 'input',
     data: {
-      mode: 'fill',
+      mode: qt,
       steps: 1,
       kind: kind,
       operation: 'conversion',
@@ -215,6 +284,21 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
       toUnit: toUnit.unit
     }
   };
+  // P25-08：choice 提供数值选项
+  if (qt === 'choice') {
+    var ansNum = Number(answer);
+    var distr = [];
+    var deltas = [1, 2, 5, 10, 100];
+    while (distr.length < 3) {
+      var dv = ansNum + Rng.pick(rng, deltas) * (rng() < 0.5 ? 1 : -1);
+      if (dv <= 0) dv = ansNum + Rng.pick(rng, deltas);
+      if (distr.indexOf(dv) === -1 && dv !== ansNum) distr.push(dv);
+    }
+    result.data.options = Rng.shuffle(rng, [ansNum].concat(distr).slice(0, 4));
+    result.data.correctIndex = result.data.options.indexOf(ansNum);
+    result.answer = { value: String(result.data.correctIndex), acceptable: [] };
+  }
+  return result;
 }
 
 function makeWordProblemQuestion(plan, context, i, meta) {
@@ -254,6 +338,75 @@ function makeWordProblemQuestion(plan, context, i, meta) {
   }
   
   // 兜底
+  // P25-08：非 rmb 度量种类的应用情境题
+  if (kind === 'length') {
+    var a = Rng.randInt(rng, 5, 50);
+    var b = Rng.randInt(rng, 1, 20);
+    var useCut = rng() < 0.5;
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: useCut
+        ? '一根绳子长 ' + a + ' 厘米，剪去 ' + b + ' 厘米，还剩多少厘米？'
+        : '小明身高 ' + a + ' 厘米，小红比小明矮 ' + b + ' 厘米，小红身高多少厘米？',
+      answer: { value: String(useCut ? a - b : a - b), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'length', operation: 'sub' }
+    };
+  }
+  if (kind === 'area') {
+    var w = Rng.randInt(rng, 3, 12);
+    var h = Rng.randInt(rng, 2, 10);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '一个长方形长 ' + w + ' 厘米，宽 ' + h + ' 厘米，它的面积是多少平方厘米？',
+      answer: { value: String(w * h), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'area', operation: 'mul' }
+    };
+  }
+  if (kind === 'mass') {
+    var m1 = Rng.randInt(rng, 1, 10);
+    var m2 = Rng.randInt(rng, 1, 5);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '一袋大米重 ' + m1 + ' 千克，一袋面粉重 ' + m2 + ' 千克，大米比面粉重多少千克？',
+      answer: { value: String(m1 - m2), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'mass', operation: 'sub' }
+    };
+  }
+  if (kind === 'time') {
+    var t1 = Rng.randInt(rng, 1, 10);
+    var t2 = Rng.randInt(rng, 1, 5);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '小明做作业用了 ' + t1 + ' 分钟，看电视用了 ' + t2 + ' 分钟，一共用了多少分钟？',
+      answer: { value: String(t1 + t2), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'time', operation: 'add' }
+    };
+  }
+  if (kind === 'capacity') {
+    var c1 = Rng.randInt(rng, 1, 5);
+    var c2 = Rng.randInt(rng, 1, 3);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '一桶油有 ' + c1 + ' 升，用去 ' + c2 + ' 升，还剩多少升？',
+      answer: { value: String(c1 - c2), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'capacity', operation: 'sub' }
+    };
+  }
   return makeRMBConversionQuestion(plan, context, i, meta);
 }
 
@@ -299,20 +452,28 @@ function createMoneyGenerator(spec) {
       var count = plan.count || 1;
       var questions = [];
       var kp = {};
-      var meta = getMoneyMeta(kp);
+      // P25-08：从 plan.semanticParams.name 派生度量种类（rmb/length/area/mass/time/capacity）
+      var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
+      var meta = getMoneyMeta(kp, kpName);
 
       for (var i = 0; i < count; i++) {
         var q;
         var qt = plan.questionTypeId;
+        var isRMB = meta.kind === 'rmb';
         
         if (qt === 'fill') {
-          if (meta.kind === 'rmb' && rng() < 0.5) q = makeRMBConversionQuestion(plan, context, i, meta);
-          else if (meta.kind === 'rmb') q = makeRMBCalculationQuestion(plan, context, i, meta);
+          if (isRMB && rng() < 0.5) q = makeRMBConversionQuestion(plan, context, i, meta);
+          else if (isRMB) q = makeRMBCalculationQuestion(plan, context, i, meta);
           else q = makeMeasurementConversionQuestion(plan, context, i, meta);
         } else if (qt === 'apply') {
           q = makeWordProblemQuestion(plan, context, i, meta);
+        } else if (qt === 'calc') {
+          // P25-08：calc 必须内嵌算式。rmb 用金额计算，其他度量用单位换算算式。
+          q = isRMB ? makeRMBCalculationQuestion(plan, context, i, meta)
+                    : makeMeasurementConversionQuestion(plan, context, i, meta);
         } else if (qt === 'choice' || qt === 'judge') {
-          q = makeRMBCalculationQuestion(plan, context, i, meta);
+          q = isRMB ? makeRMBCalculationQuestion(plan, context, i, meta)
+                    : makeMeasurementConversionQuestion(plan, context, i, meta);
         } else {
           q = makeRMBConversionQuestion(plan, context, i, meta);
         }

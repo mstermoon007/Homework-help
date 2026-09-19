@@ -192,12 +192,15 @@ test('selector：calc 计划候选必须声明 calc（无 kp 绑定时胜者声�
   assert.ok(sel.record.questionTypes.indexOf('calc') !== -1, '胜者必须声明 calc');
 });
 
-test('selector：shape-recognition 不再 claim calc（P25-07 摘除 oral 历史伪声明）', () => {
-  const rec = Selector.selectGenerator(
-    { knowledgePointIds: ['math-g1-down-u02-k002'], questionTypeId: 'calc', difficulty: 2, count: 1 },
+test('selector：shape-recognition 为几何度量 KP claim calc（P25-08 新增 makeCalcMeasurementQuestion）', () => {
+  // P25-08：shape-recognition 为 geometric-measurement KP 提供 calc（圆周长/面积等），
+  // 题干内嵌算式满足 calc 不变式。验证其 registry 声明 calc 且对绑定 KP 胜出。
+  const sel = Selector.selectGenerator(
+    { knowledgePointIds: ['math-g6-up-u04-k002'], questionTypeId: 'calc', difficulty: 2, count: 1 },
     { mode: 'native' }
   );
-  assert.notEqual(rec.generatorId, 'generator:shape-recognition');
+  assert.equal(sel.generatorId, 'generator:shape-recognition', '圆的周长 calc 应由 shape-recognition 承载');
+  assert.ok(sel.record.questionTypes.indexOf('calc') !== -1, 'shape-recognition 应声明 calc（几何度量）');
 });
 
 /* ---------------- 8. 端到端（bundle 环境，代表行） ---------------- */

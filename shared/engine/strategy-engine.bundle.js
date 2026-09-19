@@ -3505,7 +3505,7 @@ var CORE_RECORDS = [
   { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-up-u04-k001', 'math-g1-up-u06-k001', 'math-g2-down-u06-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g4-down-u06-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u04-k001', 'math-g2-up-u04-k002', 'math-g4-down-u03-k002', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g5-up-u01-k002', 'math-g5-up-u02-k002', 'math-g6-down-u04-k005'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-down-u02-k003', 'math-g2-down-u05-k001', 'math-g2-down-u05-k002', 'math-g2-down-u05-k003', 'math-g3-down-u02-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['fill', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['choice', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['judge', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
@@ -3516,18 +3516,20 @@ var CORE_RECORDS = [
   
   
   
-  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'geometry', 'recognize', 'apply'],
-    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g3-up-u06-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g6-up-u07-k001'],
+  
+  
+  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'calc', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'calc', 'geometry', 'recognize', 'apply'],
+    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g3-up-u06-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g6-up-u07-k001', 'math-g1-down-u01-k001', 'math-g1-up-u03-k002', 'math-g2-up-u05-k003', 'math-g2-up-u05-k004', 'math-g2-up-u06-k001', 'math-g3-down-u01-k001', 'math-g3-down-u03-k004', 'math-g3-down-u08-k003', 'math-g3-down-u08-k006', 'math-g3-up-u01-k002', 'math-g3-up-u01-k003', 'math-g3-up-u03-k003', 'math-g3-up-u03-k004', 'math-g3-up-u07-k001', 'math-g3-up-u07-k002', 'math-g3-up-u07-k004', 'math-g4-down-u02-k002', 'math-g4-down-u05-k001', 'math-g4-down-u05-k002', 'math-g4-down-u05-k003', 'math-g4-down-u05-k004', 'math-g4-down-u05-k005', 'math-g4-down-u05-k006', 'math-g4-up-u02-k001', 'math-g4-up-u02-k003', 'math-g4-up-u05-k001', 'math-g4-up-u05-k002', 'math-g4-up-u05-k003', 'math-g4-up-u05-k004', 'math-g5-down-u01-k002', 'math-g5-down-u03-k001', 'math-g5-down-u03-k002', 'math-g5-up-u08-k001', 'math-g5-up-u08-k002', 'math-g5-up-u08-k003', 'math-g5-up-u08-k004', 'math-g6-down-u03-k006', 'math-g6-up-u04-k001', 'math-g6-up-u04-k004', 'math-g6-up-u04-k005', 'math-g2-up-u05-k002', 'math-g3-down-u03-k002', 'math-g3-down-u03-k003', 'math-g3-down-u04-k001', 'math-g3-down-u04-k003', 'math-g3-down-u04-k005', 'math-g3-up-u07-k003', 'math-g4-up-u02-k002', 'math-g5-down-u03-k003', 'math-g6-down-u03-k005', 'math-g6-up-u04-k002', 'math-g6-up-u04-k003'],
+    scope: 'core', version: 3, supportsComposite: false },
+  { id: 'generator:position-direction', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'geometry', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'geometry', 'apply'],
+    knowledgePoints: ['math-g2-up-u04-k003', 'math-g2-up-u04-k004', 'math-g3-down-u01-k002', 'math-g3-down-u01-k003', 'math-g3-down-u01-k004', 'math-g3-up-u01-k001', 'math-g4-down-u02-k003', 'math-g4-down-u07-k003', 'math-g4-down-u07-k004', 'math-g4-down-u07-k005', 'math-g5-down-u01-k003', 'math-g5-up-u01-k001', 'math-g5-up-u01-k003', 'math-g5-up-u04-k001', 'math-g5-up-u04-k002', 'math-g6-up-u01-k001', 'math-g6-up-u01-k002', 'math-g6-up-u01-k003'],
     scope: 'core', version: 2, supportsComposite: false },
-  { id: 'generator:position-direction', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'oral'], questionTypes: ['choice', 'judge', 'fill', 'oral'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:money-measurement', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply', 'calc', 'oral'], questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc', 'oral'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:money-measurement', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply', 'calc'], questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc'],
+    knowledgePoints: ['math-g1-down-u07-k001', 'math-g1-down-u07-k002', 'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004', 'math-g3-up-u03-k001', 'math-g3-up-u03-k002'],
+    scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'],
-    knowledgePoints: ['math-g4-up-u06-k001', 'math-g5-down-u03-k006'],
-    scope: 'core', version: 1, supportsComposite: false },
+    knowledgePoints: ['math-g4-up-u06-k001', 'math-g5-down-u03-k006', 'math-g1-down-u08-k001', 'math-g2-up-u08-k001', 'math-g3-up-u09-k001', 'math-g4-down-u10-k001', 'math-g4-up-u09-k001', 'math-g5-down-u11-k001', 'math-g5-up-u09-k001', 'math-g6-down-u06-k001', 'math-g6-up-u06-k001'],
+    scope: 'core', version: 2, supportsComposite: false },
 
   
   { id: 'generator:counting', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
@@ -7033,16 +7035,22 @@ var SHAPE_SUBTYPE = {
   
   'solid': 'cuboid',
   'cube': 'cube',
+  'cuboid': 'cuboid',
   'cylinder': 'cylinder',
   'cone': 'cone',
   'sphere': 'sphere',
   
   'flat': 'rectangle',
+  'rectangle': 'rectangle',
   'square': 'square',
   'triangle': 'triangle',
   'circle': 'circle',
   'parallelogram': 'parallelogram',
   'trapezoid': 'trapezoid',
+  'line-segment': 'line-segment',
+  'angle': 'angle',
+  'symmetry': 'rectangle',
+  'tessellation': 'rectangle',
   
   'match-shape': 'rectangle',
   'count-graph': 'rectangle',
@@ -7054,22 +7062,61 @@ var SHAPE_SUBTYPE = {
 var SHAPE_FEATURES = {
   'solid': { name: '立体图形', features: ['有长宽高', '占据空间', '有体积'], examples: ['长方体', '正方体', '圆柱', '圆锥', '球'] },
   'cube': { name: '正方体', features: ['6个面都是正方形', '棱长相等', '12条棱', '8个顶点'], examples: ['魔方', '骰子'] },
+  'cuboid': { name: '长方体', features: ['6个面都是长方形', '相对的面相等', '12条棱分3组'], examples: ['文具盒', '砖头'] },
   'cylinder': { name: '圆柱', features: ['2个圆形底面', '1个侧面', '侧面展开是长方形'], examples: ['铅笔', '水桶'] },
   'cone': { name: '圆锥', features: ['1个圆形底面', '1个顶点', '侧面展开是扇形'], examples: ['路锥', '帽子'] },
   'sphere': { name: '球', features: ['没有棱和面', '滚动最快', '任意剖面是圆'], examples: ['皮球', '地球仪'] },
   'flat': { name: '平面图形', features: ['只有长和宽', '没有厚度', '在平面上'], examples: ['长方形', '正方形', '三角形', '圆'] },
+  'rectangle': { name: '长方形', features: ['4个角都是直角', '对边相等', '对角线相等'], examples: ['课本', '黑板'] },
   'square': { name: '正方形', features: ['4条边相等', '4个角都是直角', '对角线相等且互相垂直平分'], examples: ['手帕', '棋盘格'] },
   'triangle': { name: '三角形', features: ['3条边', '3个角', '内角和180度'], examples: ['三角尺', '屋顶'] },
   'circle': { name: '圆', features: ['没有直线边', '到圆心距离相等', '周长=2πr'], examples: ['硬币', '时钟面'] },
   'parallelogram': { name: '平行四边形', features: ['对边平行且相等', '对角互补'], examples: ['推拉窗'] },
-  'trapezoid': { name: '梯形', features: ['一组对边平行', '腰不等长'], examples: ['裙子', '灯罩'] }
+  'trapezoid': { name: '梯形', features: ['一组对边平行', '腰不等长'], examples: ['裙子', '灯罩'] },
+  'line-segment': { name: '线段', features: ['有两个端点', '可以度量长度', '是直线的一部分'], examples: ['尺子的边', '桌子棱'] },
+  'angle': { name: '角', features: ['有一个顶点', '两条边是射线', '有大小（度）'], examples: ['三角尺的角', '墙角'] },
+  'symmetry': { name: '轴对称图形', features: ['沿对称轴对折两边重合', '至少1条对称轴', '对应点到对称轴距离相等'], examples: ['蝴蝶', '双喜字'] },
+  'tessellation': { name: '密铺', features: ['无缝隙不重叠铺满平面', '拼接点处角度和为360度', '可重复单元'], examples: ['地砖', '蜂巢'] }
 };
 
-function getShapeMeta(kp) {
+
+
+var NAME_TO_SHAPE = [
+  { re: /正方/, type: 'square' },
+  { re: /长方/, type: 'rectangle' },
+  { re: /三角/, type: 'triangle' },
+  { re: /圆/, type: 'circle' },
+  { re: /平行四边形/, type: 'parallelogram' },
+  { re: /梯形/, type: 'trapezoid' },
+  { re: /线段|画线段/, type: 'line-segment' },
+  { re: /角(的|各|度|认)/, type: 'angle' },
+  { re: /对称/, type: 'symmetry' },
+  { re: /密铺/, type: 'tessellation' },
+  { re: /立方/, type: 'cube' },
+  { re: /长.*体|长方体/, type: 'cuboid' },
+  { re: /圆柱/, type: 'cylinder' },
+  { re: /圆锥/, type: 'cone' },
+  { re: /球/, type: 'sphere' },
+  { re: /立体/, type: 'solid' },
+  { re: /平面|图形/, type: 'flat' }
+];
+
+function deriveShapeTypeFromName(name) {
+  if (!name || typeof name !== 'string') return null;
+  for (var i = 0; i < NAME_TO_SHAPE.length; i++) {
+    if (NAME_TO_SHAPE[i].re.test(name)) return NAME_TO_SHAPE[i].type;
+  }
+  return null;
+}
+
+function getShapeMeta(kp, name) {
   
   
-  var lt = kp.source?.legacyType || kp.legacy?.legacyType || 'flat';
-  var cat = kp.legacy?.category;
+  var lt = deriveShapeTypeFromName(name)
+    || (kp && kp.source && kp.source.legacyType)
+    || (kp && kp.legacy && kp.legacy.legacyType)
+    || 'flat';
+  var cat = kp && kp.legacy && kp.legacy.category;
   var subtype = SHAPE_SUBTYPE[lt] || 'rectangle';
   var meta = SHAPE_FEATURES[lt] || { name: '图形', features: ['有形状', '可识别'], examples: ['各种图形'] };
   return { legacyType: lt, category: cat, subtype: subtype, meta: meta };
@@ -7323,12 +7370,11 @@ function makeCountQuestion(plan, context, i, shapeMeta, graphic) {
   };
 }
 
-function makeGeometryQuestion(plan, context, i, shapeMeta, graphic) {
+function makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   
   
-  var kp = {};
-  var name = kp.name || '几何图形';
+  var name = kpName || '几何图形';
   var angleWords = ['角', '直角', '锐角', '钝角', '平角', '周角'];
   var isAngle = angleWords.some(function(w){ return name.indexOf(w) !== -1; });
   var prompt;
@@ -7367,11 +7413,10 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic) {
   };
 }
 
-function makeRecognizeQuestion(plan, context, i, shapeMeta, graphic) {
+function makeRecognizeQuestion(plan, context, i, shapeMeta, graphic, kpName) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   
-  var kp = {};
-  var name = kp.name || '图形识别';
+  var name = kpName || '图形识别';
   var isChoice = rng() < 0.5;
 
   if (isChoice) {
@@ -7430,18 +7475,74 @@ function makeRecognizeQuestion(plan, context, i, shapeMeta, graphic) {
   }
 }
 
-function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic) {
+function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var kp = {};
-  var name = kp.name || '几何应用';
+  var name = kpName || '几何应用';
   
-  var isArea = name.indexOf('面积') !== -1 || name.indexOf('周长') !== -1;
-  var isVolume = name.indexOf('圆柱') !== -1 || name.indexOf('圆锥') !== -1 || name.indexOf('体积') !== -1;
+  var isArea = name.indexOf('面积') !== -1 || name.indexOf('周长') !== -1 || name.indexOf('表面积') !== -1;
+  var isVolume = name.indexOf('圆柱') !== -1 || name.indexOf('圆锥') !== -1 || name.indexOf('体积') !== -1 || name.indexOf('表面积') !== -1;
+  var isCircle = name.indexOf('圆') !== -1;
   var isCoord = name.indexOf('数对') !== -1 || name.indexOf('坐标') !== -1;
-  var isMotion = name.indexOf('旋转') !== -1 || name.indexOf('对称') !== -1;
+  var isMotion = name.indexOf('旋转') !== -1 || name.indexOf('对称') !== -1 || name.indexOf('平移') !== -1;
+  var isFeature = name.indexOf('特征') !== -1 || name.indexOf('认识') !== -1;
+  var isSolid = name.indexOf('正方') !== -1 || name.indexOf('长方') !== -1 ||
+    name.indexOf('圆柱') !== -1 || name.indexOf('圆锥') !== -1 || name.indexOf('球') !== -1;
   var prompt, answer, answerMode;
 
-  if (isArea) {
+  if (isFeature && isSolid) {
+    
+    var isCube = name.indexOf('正方') !== -1;
+    var faces = 6, edges = 12, vertices = 8;
+    var featPrompt;
+    if (isCube) {
+      featPrompt = '正方体有 6 个面、12 条棱、8 个顶点。';
+    } else if (name.indexOf('长方') !== -1) {
+      featPrompt = '长方体有 6 个面、12 条棱、8 个顶点。';
+    } else if (name.indexOf('圆柱') !== -1) {
+      featPrompt = '圆柱有 2 个底面和 1 个侧面。';
+    } else if (name.indexOf('圆锥') !== -1) {
+      featPrompt = '圆锥有 1 个底面和 1 个顶点。';
+    } else {
+      featPrompt = '球没有平面，只有一个曲面。';
+    }
+    prompt = name + '：' + featPrompt + ' 请说出它有几个面？';
+    answer = { value: String(faces), acceptable: [faces + '个'] };
+    answerMode = 'input';
+  } else if (isCircle && name.indexOf('周长') !== -1) {
+    var r = Rng.randInt(rng, 3, 10);
+    var circ = Math.round(2 * 3.14 * r * 100) / 100;
+    prompt = '一个圆的半径是 ' + r + ' 厘米，求它的周长。（π取3.14）';
+    answer = { value: String(circ), acceptable: [circ + '厘米'] };
+    answerMode = 'input';
+  } else if (isCircle && name.indexOf('面积') !== -1) {
+    var rc = Rng.randInt(rng, 3, 10);
+    var areaC = Math.round(3.14 * rc * rc * 100) / 100;
+    prompt = '一个圆的半径是 ' + rc + ' 厘米，求它的面积。（π取3.14）';
+    answer = { value: String(areaC), acceptable: [areaC + '平方厘米'] };
+    answerMode = 'input';
+  } else if (name.indexOf('周长') !== -1) {
+    var pw = Rng.randInt(rng, 4, 15);
+    var ph = Rng.randInt(rng, 3, 12);
+    var peri = 2 * (pw + ph);
+    prompt = '一个长方形，长' + pw + '厘米，宽' + ph + '厘米，求它的周长。';
+    answer = { value: String(peri), acceptable: [peri + '厘米'] };
+    answerMode = 'input';
+  } else if (name.indexOf('表面积') !== -1) {
+    var sw = Rng.randInt(rng, 3, 8);
+    var sh = Rng.randInt(rng, 2, 6);
+    var sd = Rng.randInt(rng, 2, 6);
+    var surf = 2 * (sw * sh + sw * sd + sh * sd);
+    prompt = '一个长方体，长' + sw + '厘米，宽' + sd + '厘米，高' + sh + '厘米，求它的表面积。';
+    answer = { value: String(surf), acceptable: [surf + '平方厘米'] };
+    answerMode = 'input';
+  } else if (name.indexOf('圆锥') !== -1 && name.indexOf('体积') !== -1) {
+    var vr = Rng.randInt(rng, 2, 6);
+    var vh = Rng.randInt(rng, 3, 9);
+    var vol = Math.round(3.14 * vr * vr * vh / 3 * 100) / 100;
+    prompt = '一个圆锥，底面半径' + vr + '厘米，高' + vh + '厘米，求它的体积。（π取3.14）';
+    answer = { value: String(vol), acceptable: [vol + '立方厘米'] };
+    answerMode = 'input';
+  } else if (isArea) {
     var width = Rng.randInt(rng, 4, 15);
     var height = Rng.randInt(rng, 3, 12);
     var area = width * height;
@@ -7455,16 +7556,16 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic) {
     answer = { value: String(Math.round(3.14 * r * r * h)), acceptable: [] };
     answerMode = 'input';
   } else if (isCoord) {
-    prompt = name + '：请在方格纸上标出点的位置。';
+    prompt = name + '：请在方格纸上标出点的位置，说一说你是怎样确定位置的？';
     answer = { value: '已标注', acceptable: [] };
     answerMode = 'input';
   } else if (isMotion) {
-    prompt = name + '：请说明图形变换的三要素。';
+    prompt = name + '：请说一说图形变换的三要素是什么？';
     answer = { value: '旋转中心、旋转方向、旋转角度', acceptable: [] };
     answerMode = 'input';
   } else {
     var side = Rng.randInt(rng, 5, 20);
-    prompt = name + '：一个图形的边长为' + side + '厘米，请计算相关几何量。';
+    prompt = name + '：一个图形的边长为' + side + '厘米，求它的面积是多少？';
     answer = { value: String(side * side), acceptable: [] };
     answerMode = 'input';
   }
@@ -7485,6 +7586,72 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic) {
       graphic: graphic,
       shapeName: shapeMeta.meta.name
     }
+  };
+}
+
+
+function makeCalcMeasurementQuestion(plan, context, i, kpName) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var name = kpName || '几何计算';
+  var prompt, answer;
+
+  if (name.indexOf('圆') !== -1 && name.indexOf('周长') !== -1) {
+    var r = Rng.randInt(rng, 3, 10);
+    var circ = Math.round(2 * 3.14 * r * 100) / 100;
+    prompt = '列式计算：半径 ' + r + ' 厘米的圆，周长 = 2 × 3.14 × ' + r + ' = ？（厘米）';
+    answer = String(circ);
+  } else if (name.indexOf('圆') !== -1 && name.indexOf('面积') !== -1) {
+    var rc = Rng.randInt(rng, 3, 10);
+    var areaC = Math.round(3.14 * rc * rc * 100) / 100;
+    prompt = '列式计算：半径 ' + rc + ' 厘米的圆，面积 = 3.14 × ' + rc + ' × ' + rc + ' = ？（平方厘米）';
+    answer = String(areaC);
+  } else if (name.indexOf('周长') !== -1) {
+    var pw = Rng.randInt(rng, 4, 15);
+    var ph = Rng.randInt(rng, 3, 12);
+    var peri = 2 * (pw + ph);
+    prompt = '列式计算：长方形长 ' + pw + ' 厘米，宽 ' + ph + ' 厘米，周长 = 2 × (' + pw + ' + ' + ph + ') = ？（厘米）';
+    answer = String(peri);
+  } else if (name.indexOf('表面积') !== -1) {
+    var sw = Rng.randInt(rng, 3, 8);
+    var sh = Rng.randInt(rng, 2, 6);
+    var sd = Rng.randInt(rng, 2, 6);
+    var surf = 2 * (sw * sh + sw * sd + sh * sd);
+    prompt = '列式计算：长方体长 ' + sw + '、宽 ' + sd + '、高 ' + sh + ' 厘米，表面积 = 2 × (' + sw + '×' + sh + ' + ' + sw + '×' + sd + ' + ' + sh + '×' + sd + ') = ？（平方厘米）';
+    answer = String(surf);
+  } else if (name.indexOf('圆锥') !== -1 && name.indexOf('体积') !== -1) {
+    var vr = Rng.randInt(rng, 2, 6);
+    var vh = Rng.randInt(rng, 3, 9);
+    var vol = Math.round(3.14 * vr * vr * vh / 3 * 100) / 100;
+    prompt = '列式计算：圆锥底面半径 ' + vr + ' 厘米，高 ' + vh + ' 厘米，体积 = 3.14 × ' + vr + ' × ' + vr + ' × ' + vh + ' ÷ 3 = ？（立方厘米）';
+    answer = String(vol);
+  } else if (name.indexOf('面积') !== -1) {
+    var w = Rng.randInt(rng, 4, 15);
+    var hh = Rng.randInt(rng, 3, 12);
+    var ar = w * hh;
+    prompt = '列式计算：长方形长 ' + w + ' 厘米，宽 ' + hh + ' 厘米，面积 = ' + w + ' × ' + hh + ' = ？（平方厘米）';
+    answer = String(ar);
+  } else if (name.indexOf('角') !== -1) {
+    var angle = Rng.pick(rng, [30, 45, 60, 90, 120, 150, 180]);
+    prompt = '列式计算：一个 ' + angle + ' 度的角，它的补角 = 180 − ' + angle + ' = ？（度）';
+    answer = String(180 - angle);
+  } else {
+    var a = Rng.randInt(rng, 5, 50);
+    var b = Rng.randInt(rng, 1, 20);
+    prompt = '列式计算：一根绳子长 ' + a + ' 厘米，用去 ' + b + ' 厘米，还剩 = ' + a + ' − ' + b + ' = ？（厘米）';
+    answer = String(a - b);
+  }
+
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: 'calc',
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: { value: answer, acceptable: [] },
+    answerMode: 'input',
+    data: { mode: 'calc', steps: 2, shapeName: name }
   };
 }
 
@@ -7511,7 +7678,10 @@ function createShapeGenerator(spec) {
       var count = plan.count || 1;
       var questions = [];
       var kp = {};
-      var shapeMeta = getShapeMeta(kp);
+      
+      
+      var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
+      var shapeMeta = getShapeMeta(kp, kpName);
 
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
@@ -7528,12 +7698,15 @@ function createShapeGenerator(spec) {
           if (rng() < 0.6) q = makeNamingQuestion(plan, context, i, shapeMeta, graphic);
           else q = makeCountQuestion(plan, context, i, shapeMeta, graphic);
         } else if (qt === 'geometry') {
-          q = makeGeometryQuestion(plan, context, i, shapeMeta, graphic);
+          q = makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName);
         } else if (qt === 'recognize') {
-          q = makeRecognizeQuestion(plan, context, i, shapeMeta, graphic);
+          q = makeRecognizeQuestion(plan, context, i, shapeMeta, graphic, kpName);
         } else if (qt === 'apply') {
           
-          q = makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic);
+          q = makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName);
+        } else if (qt === 'calc') {
+          
+          q = makeCalcMeasurementQuestion(plan, context, i, kpName);
         } else {
           q = makeRecognitionQuestion(plan, context, i, shapeMeta, graphic);
         }
@@ -7777,6 +7950,197 @@ function makeGraphicForPosition(scene, difficulty) {
   };
 }
 
+
+var NAME_TO_SPATIAL = [
+  { re: /数对|坐标/, type: 'coordinate' },
+  { re: /距离/, type: 'distance' },
+  { re: /路线|行走/, type: 'route' },
+  { re: /平移/, type: 'translation' },
+  { re: /旋转/, type: 'rotation' },
+  { re: /对称/, type: 'symmetry' },
+  { re: /观察/, type: 'observe' },
+  { re: /方向|位置|空间/, type: 'direction' }
+];
+
+function deriveSpatialType(name) {
+  if (!name || typeof name !== 'string') return 'direction';
+  for (var i = 0; i < NAME_TO_SPATIAL.length; i++) {
+    if (NAME_TO_SPATIAL[i].re.test(name)) return NAME_TO_SPATIAL[i].type;
+  }
+  return 'direction';
+}
+
+function makeTranslationQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var dx = Rng.pick(rng, [-3, -2, -1, 1, 2, 3]);
+  var dy = Rng.pick(rng, [-3, -2, -1, 1, 2, 3]);
+  var qt = plan.questionTypeId;
+  var hWord = dx > 0 ? '向右' + dx + '格' : '向左' + (-dx) + '格';
+  var vWord = dy > 0 ? '向下' + dy + '格' : '向上' + (-dy) + '格';
+  var prompt = '一个图形先' + hWord + '，再' + vWord + '，一共平移了多少格？';
+  var answer = Math.abs(dx) + Math.abs(dy);
+  if (qt === 'fill') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i), prompt: prompt + ' ____ 格',
+      answer: { value: String(answer), acceptable: [] }, answerMode: 'input',
+      data: { mode: 'fill', steps: 1, shapeName: '平移' }
+    };
+  }
+  if (qt === 'choice') {
+    var distractorSet = new Set();
+    distractorSet.add(String(answer));
+    var candList = [answer + 1, answer - 1, answer + 2, Math.abs(dx), Math.abs(dy), answer + 3];
+    var distractors = [];
+    for (var ci = 0; ci < candList.length && distractors.length < 3; ci++) {
+      var cv = String(candList[ci]);
+      if (!distractorSet.has(cv) && candList[ci] > 0) { distractorSet.add(cv); distractors.push(cv); }
+    }
+    while (distractors.length < 3) { distractors.push(String(answer + distractors.length + 4)); }
+    var opts = Rng.shuffle(rng, [String(answer)].concat(distractors)).slice(0, 4);
+    var ci2 = opts.indexOf(String(answer));
+    return {
+      knowledgePointId: pkp(plan), questionType: 'choice', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i), prompt: prompt,
+      answer: { value: String(ci2), acceptable: [] }, answerMode: 'choice',
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci2, shapeName: '平移' }
+    };
+  }
+  
+  var shown = rng() < 0.5 ? answer : answer + (rng() < 0.5 ? 1 : -1);
+  return {
+    knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i), prompt: prompt + ' 答案是 ' + shown + ' 格——对还是错？',
+    answer: { value: shown === answer, acceptable: [] }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '平移' }
+  };
+}
+
+function makeRotationQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var angle = Rng.pick(rng, [90, 180, 270]);
+  var dir = rng() < 0.5 ? '顺时针' : '逆时针';
+  var qt = plan.questionTypeId;
+  var prompt = '一个图形绕中心点' + dir + '旋转 ' + angle + ' 度后，方向是否改变？';
+  var isTrue = angle === 180 ? true : true;
+  if (qt === 'judge') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '一个图形' + dir + '旋转 ' + angle + ' 度后，形状和大小不变——对还是错？',
+      answer: { value: true, acceptable: [] }, answerMode: 'judge',
+      data: { mode: 'judge', steps: 1, shapeName: '旋转' }
+    };
+  }
+  if (qt === 'fill') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '钟表指针从 12 走到 3，是' + dir + '旋转了 ____ 度。',
+      answer: { value: '90', acceptable: [] }, answerMode: 'input',
+      data: { mode: 'fill', steps: 1, shapeName: '旋转' }
+    };
+  }
+  
+  var opts = Rng.shuffle(rng, ['形状不变', '大小改变', '位置不变', '颜色改变']);
+  return {
+    knowledgePointId: pkp(plan), questionType: 'choice', difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: '图形旋转后，下列哪个说法是正确的？',
+    answer: { value: '0', acceptable: [] }, answerMode: 'choice',
+    data: { mode: 'choice', steps: 1, options: opts, correctIndex: 0, shapeName: '旋转' }
+  };
+}
+
+function makeObserveQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var views = ['正面', '上面', '侧面'];
+  var correct = Rng.pick(rng, views);
+  var qt = plan.questionTypeId;
+  if (qt === 'choice') {
+    var opts = Rng.shuffle(rng, views.slice());
+    var ci = opts.indexOf(correct);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'choice', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '从' + correct + '观察一个正方体，看到的形状是正方形，这是从哪个方向看到的？',
+      answer: { value: String(ci), acceptable: [] }, answerMode: 'choice',
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '观察' }
+    };
+  }
+  if (qt === 'fill') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '从____观察正方体，看到的是正方形。',
+      answer: { value: correct, acceptable: [] }, answerMode: 'input',
+      data: { mode: 'fill', steps: 1, shapeName: '观察' }
+    };
+  }
+  
+  return {
+    knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: '从不同方向观察同一个物体，看到的形状一定相同——对还是错？',
+    answer: { value: false, acceptable: [] }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '观察' }
+  };
+}
+
+function makeCoordinateQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var x = Rng.randInt(rng, 1, 9);
+  var y = Rng.randInt(rng, 1, 9);
+  var qt = plan.questionTypeId;
+  if (qt === 'fill') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '在方格图中，点 A 的位置用数对表示是（____，' + y + '），它在第 ' + x + ' 列。',
+      answer: { value: String(x), acceptable: [] }, answerMode: 'input',
+      data: { mode: 'fill', steps: 1, shapeName: '数对' }
+    };
+  }
+  if (qt === 'choice') {
+    var correct = '(' + x + ',' + y + ')';
+    var candCoords = ['(' + y + ',' + x + ')', '(' + (x + 1) + ',' + y + ')', '(' + x + ',' + (y + 1) + ')', '(' + (x + 1) + ',' + (y + 1) + ')'];
+    var coordSet = new Set([correct]);
+    var coordDistractors = [];
+    for (var cdi = 0; cdi < candCoords.length && coordDistractors.length < 3; cdi++) {
+      if (!coordSet.has(candCoords[cdi])) { coordSet.add(candCoords[cdi]); coordDistractors.push(candCoords[cdi]); }
+    }
+    var opts = Rng.shuffle(rng, [correct].concat(coordDistractors)).slice(0, 4);
+    var ci = opts.indexOf(correct);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'choice', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '点 A 在第 ' + x + ' 列第 ' + y + ' 行，用数对表示是？',
+      answer: { value: String(ci), acceptable: [] }, answerMode: 'choice',
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '数对' }
+    };
+  }
+  
+  return {
+    knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: '数对（3，5）表示第 3 行第 5 列——对还是错？',
+    answer: { value: false, acceptable: [] }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '数对' }
+  };
+}
+
 function createPositionGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:position';
@@ -7785,8 +8149,8 @@ function createPositionGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['choice', 'judge', 'fill', 'calc'],
-    questionTypes: ['choice', 'judge', 'fill', 'calc'],
+    capabilities: ['choice', 'judge', 'fill', 'geometry', 'apply'],
+    questionTypes: ['choice', 'judge', 'fill', 'geometry', 'apply'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -7798,28 +8162,93 @@ function createPositionGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = {};
-      var meta = getPositionMeta(kp);
+      
+      var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
+      var spatialType = deriveSpatialType(kpName);
 
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-        var scene = generateScene(rng, plan.difficulty);
-        var graphic = makeGraphicForPosition(scene, plan.difficulty);
-
         var q;
         var qt = plan.questionTypeId;
-        if (qt === 'choice') {
-          q = makeChoiceDirectionQuestion(plan, context, i, scene, meta);
-          q.data.graphic = graphic;
-        } else if (qt === 'judge') {
-          q = makeDirectionQuestion(plan, context, i, scene, meta);
-          q.data.graphic = graphic;
-        } else if (qt === 'fill') {
-          q = makeFillDirectionQuestion(plan, context, i, scene, meta);
-          q.data.graphic = graphic;
+
+        if ((spatialType === 'translation' || spatialType === 'rotation' ||
+             spatialType === 'observe' || spatialType === 'coordinate') &&
+            (qt === 'geometry' || qt === 'apply')) {
+          
+          q = null;
+        } else if (spatialType === 'translation') {
+          q = makeTranslationQuestion(plan, context, i);
+        } else if (spatialType === 'rotation') {
+          q = makeRotationQuestion(plan, context, i);
+        } else if (spatialType === 'observe') {
+          q = makeObserveQuestion(plan, context, i);
+        } else if (spatialType === 'coordinate') {
+          q = makeCoordinateQuestion(plan, context, i);
         } else {
-          q = makeDirectionQuestion(plan, context, i, scene, meta);
-          q.data.graphic = graphic;
+          var scene = generateScene(rng, plan.difficulty);
+          var graphic = makeGraphicForPosition(scene, plan.difficulty);
+          var meta = { legacyType: null, category: null };
+          if (qt === 'choice') {
+            q = makeChoiceDirectionQuestion(plan, context, i, scene, meta);
+            q.data.graphic = graphic;
+          } else if (qt === 'judge') {
+            q = makeDirectionQuestion(plan, context, i, scene, meta);
+            q.data.graphic = graphic;
+          } else if (qt === 'fill') {
+            q = makeFillDirectionQuestion(plan, context, i, scene, meta);
+            q.data.graphic = graphic;
+          } else if (qt === 'geometry') {
+            
+            q = makeFillDirectionQuestion(plan, context, i, scene, meta);
+            q.questionType = 'geometry';
+            q.data.graphic = graphic;
+          } else if (qt === 'apply') {
+            
+            var objA = Rng.pick(rng, scene.objects);
+            var objB = Rng.pick(rng, scene.objects.filter(function(o){ return o !== objA; })) || scene.objects[0];
+            var dir = getRelativeDirection(objA, objB, 'self');
+            q = {
+              knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+              spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+              seed: seedFor(plan, context, i),
+              prompt: objA.name + '在' + objB.name + '的' + dir + '。请再说出' + objB.name + '在' + objA.name + '的什么方向？',
+              answer: { value: dir === '左边' ? '右边' : dir === '右边' ? '左边' : dir === '上面' ? '下面' : dir === '下面' ? '上面' : dir, acceptable: [] },
+              answerMode: 'input',
+              data: { mode: 'apply', steps: 1, graphic: graphic, shapeName: '方向' }
+            };
+          } else {
+            q = makeDirectionQuestion(plan, context, i, scene, meta);
+            q.data.graphic = graphic;
+          }
+        }
+        
+        
+        if (!q) {
+          var scene2 = generateScene(rng, plan.difficulty);
+          var graphic2 = makeGraphicForPosition(scene2, plan.difficulty);
+          var objA2 = Rng.pick(rng, scene2.objects);
+          var objB2 = Rng.pick(rng, scene2.objects.filter(function(o){ return o !== objA2; })) || scene2.objects[0];
+          var dir2 = getRelativeDirection(objA2, objB2, 'self');
+          if (qt === 'geometry') {
+            q = {
+              knowledgePointId: pkp(plan), questionType: 'geometry', difficulty: plan.difficulty,
+              spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+              seed: seedFor(plan, context, i),
+              prompt: '观察下图，' + objA2.name + '在' + objB2.name + '的什么方向？',
+              answer: { value: dir2, acceptable: [] }, answerMode: 'input',
+              data: { mode: 'geometry', steps: 1, graphic: graphic2, shapeName: '空间' }
+            };
+          } else {
+            q = {
+              knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+              spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+              seed: seedFor(plan, context, i),
+              prompt: objA2.name + '在' + objB2.name + '的' + dir2 + '。请说一说' + objB2.name + '在' + objA2.name + '的什么方向？',
+              answer: { value: dir2 === '左边' ? '右边' : dir2 === '右边' ? '左边' : dir2 === '上面' ? '下面' : dir2 === '下面' ? '上面' : dir2, acceptable: [] },
+              answerMode: 'input',
+              data: { mode: 'apply', steps: 1, graphic: graphic2, shapeName: '空间' }
+            };
+          }
         }
         questions.push(q);
       }
@@ -7870,43 +8299,77 @@ var RMB_UNITS = { yuan: 100, jiao: 10, fen: 1 };
 
 
 var LENGTH_UNITS = [
-  { unit: 'cm', base: 1 },
-  { unit: 'm', base: 100 },
-  { unit: 'km', base: 100000 }
+  { unit: '毫米', base: 1 },
+  { unit: '厘米', base: 10 },
+  { unit: '米', base: 1000 },
+  { unit: '千米', base: 1000000 }
 ];
 var MASS_UNITS = [
-  { unit: 'g', base: 1 },
-  { unit: 'kg', base: 1000 }
+  { unit: '克', base: 1 },
+  { unit: '千克', base: 1000 },
+  { unit: '吨', base: 1000000 }
 ];
 var TIME_UNITS = [
   { unit: '秒', base: 1 },
   { unit: '分', base: 60 },
-  { unit: '时', base: 3600 }
+  { unit: '小时', base: 3600 }
 ];
 
 var MEASUREMENT_KINDS = {
   'rmb': { units: ['元', '角', '分'], category: 'money' },
-  'length': { units: ['厘米', '米'], category: 'length' },
-  'mass': { units: ['克', '千克'], category: 'mass' },
+  'length': { units: ['毫米', '厘米', '米', '千米'], category: 'length' },
+  'mass': { units: ['克', '千克', '吨'], category: 'mass' },
   'time': { units: ['秒', '分', '小时'], category: 'time' },
   'capacity': { units: ['毫升', '升'], category: 'capacity' },
-  'area': { units: ['平方厘米', '平方米'], category: 'area' }
+  'area': { units: ['平方厘米', '平方分米', '平方米'], category: 'area' }
 };
 
-function getMoneyMeta(kp) {
+
+var AREA_UNITS = [
+  { unit: '平方厘米', base: 1 },
+  { unit: '平方分米', base: 100 },
+  { unit: '平方米', base: 10000 }
+];
+var CAPACITY_UNITS = [
+  { unit: '毫升', base: 1 },
+  { unit: '升', base: 1000 }
+];
+
+
+var NAME_TO_MEASURE = [
+  { re: /人民币|元.*角|角.*分|购物|钱/, kind: 'rmb' },
+  { re: /面积/, kind: 'area' },
+  { re: /容积|升|毫升/, kind: 'capacity' },
+  { re: /质量|千克|克|吨/, kind: 'mass' },
+  { re: /时间|时.*分|分.*秒|小时/, kind: 'time' },
+  { re: /厘米|米|长度|线段|进率/, kind: 'length' }
+];
+
+function deriveMeasureKind(name) {
+  if (!name || typeof name !== 'string') return null;
+  for (var i = 0; i < NAME_TO_MEASURE.length; i++) {
+    if (NAME_TO_MEASURE[i].re.test(name)) return NAME_TO_MEASURE[i].kind;
+  }
+  return null;
+}
+
+function getMoneyMeta(kp, name) {
   
-  if (!kp) return { legacyType: null, category: null, kind: 'rmb' };
-  var lt = (kp.source && kp.source.legacyType) || (kp.legacy && kp.legacy.legacyType);
-  var cat = kp.legacy ? kp.legacy.category : null;
+  var kind = deriveMeasureKind(name)
+    || (kp && ((kp.source && kp.source.legacyType) || (kp.legacy && kp.legacy.legacyType)))
+    || (kp && kp.legacy && kp.legacy.category)
+    || 'rmb';
   
-  
-  var kind = 'rmb';
-  if (lt?.includes('length') || cat === 'length') kind = 'length';
-  else if (lt?.includes('mass') || cat === 'mass') kind = 'mass';
-  else if (lt?.includes('time') || cat === 'time') kind = 'time';
-  else if (lt?.includes('area') || cat === 'area') kind = 'area';
-  else if (lt?.includes('capacity') || cat === 'capacity') kind = 'capacity';
-  
+  if (typeof kind === 'string') {
+    if (kind.indexOf('length') !== -1 || kind.indexOf('厘米') !== -1 || kind.indexOf('米') !== -1) kind = 'length';
+    else if (kind.indexOf('mass') !== -1 || kind.indexOf('克') !== -1 || kind.indexOf('千克') !== -1) kind = 'mass';
+    else if (kind.indexOf('time') !== -1 || kind.indexOf('时') !== -1 || kind.indexOf('分') !== -1) kind = 'time';
+    else if (kind.indexOf('area') !== -1 || kind.indexOf('面积') !== -1) kind = 'area';
+    else if (kind.indexOf('capacity') !== -1 || kind.indexOf('升') !== -1) kind = 'capacity';
+    else kind = 'rmb';
+  }
+  var lt = (kp && kp.source && kp.source.legacyType) || (kp && kp.legacy && kp.legacy.legacyType);
+  var cat = kp && kp.legacy && kp.legacy.category;
   return { legacyType: lt, category: cat, kind: kind };
 }
 
@@ -7994,56 +8457,91 @@ function makeRMBCalculationQuestion(plan, context, i, meta) {
   var opChar = OpSem.symbol(op) || '−';
   var prompt = aStr + ' ' + opChar + ' ' + bStr + ' = ____';
   var answer = formatRMB(answerFen);
-  
-  return {
+  var qt = plan.questionTypeId;
+  var result = {
     knowledgePointId: pkp(plan),
-    questionType: plan.questionTypeId,
+    questionType: qt,
     difficulty: plan.difficulty,
     spiralLevel: plan.spiralLevel || 1,
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
     answer: { value: answer, acceptable: [] },
-    answerMode: 'input',
+    answerMode: qt === 'choice' ? 'choice' : 'input',
     data: {
-      mode: plan.questionTypeId === 'choice' ? 'choice' : 'fill',
+      mode: qt === 'choice' ? 'choice' : 'fill',
       steps: 1,
       kind: 'rmb',
       operation: op,
       operands: [aFen, bFen]
     }
   };
+  
+  if (qt === 'choice') {
+    var distractors = [];
+    var deltaSet = [1, 5, 10, 50, 100];
+    while (distractors.length < 3) {
+      var d = answerFen + Rng.pick(rng, deltaSet) * (rng() < 0.5 ? 1 : -1);
+      if (d <= 0) d = answerFen + Rng.pick(rng, deltaSet);
+      var dStr = formatRMB(d);
+      if (dStr !== answer && distractors.indexOf(dStr) === -1) distractors.push(dStr);
+    }
+    result.data.options = Rng.shuffle(rng, [answer].concat(distractors).slice(0, 4));
+    result.data.correctIndex = result.data.options.indexOf(answer);
+    result.answer = { value: String(result.data.correctIndex), acceptable: [] };
+  }
+  return result;
 }
 
 function makeMeasurementConversionQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var kind = meta.kind;
-  var unitInfo = (kind === 'length' ? LENGTH_UNITS : kind === 'mass' ? MASS_UNITS : TIME_UNITS)[0];
+  var table = kind === 'area' ? AREA_UNITS
+    : kind === 'capacity' ? CAPACITY_UNITS
+    : kind === 'mass' ? MASS_UNITS
+    : kind === 'time' ? TIME_UNITS
+    : LENGTH_UNITS;
+  var units = table.filter(function(u){
+    return MEASUREMENT_KINDS[kind] && MEASUREMENT_KINDS[kind].units && MEASUREMENT_KINDS[kind].units.indexOf(u.unit) !== -1;
+  });
   
-  var baseValue = Rng.randInt(rng, 1, Math.max(5, plan.difficulty * 2));
-  var fromUnit = Rng.pick(rng, LENGTH_UNITS.concat(MASS_UNITS, TIME_UNITS).filter(function(u){ return MEASUREMENT_KINDS[kind]?.units?.includes(u.unit); }));
-  var toUnit = Rng.pick(rng, LENGTH_UNITS.concat(MASS_UNITS, TIME_UNITS).filter(function(u){ return MEASUREMENT_KINDS[kind]?.units?.includes(u.unit) && u.unit !== fromUnit.unit; }));
-  
-  if (!fromUnit || !toUnit) {
-    
+  if (units.length < 2) {
     return makeRMBConversionQuestion(plan, context, i, meta);
   }
   
-  var answer = baseValue * fromUnit.base / toUnit.base;
-  var prompt = baseValue + fromUnit.unit + ' = ____ ' + toUnit.unit;
+  var baseValue = Rng.randInt(rng, 1, Math.max(5, plan.difficulty * 2));
+  var fromUnit = Rng.pick(rng, units);
+  var toUnit = Rng.pick(rng, units.filter(function(u){ return u.unit !== fromUnit.unit; }));
   
-  return {
+  if (!fromUnit || !toUnit) {
+    return makeRMBConversionQuestion(plan, context, i, meta);
+  }
+  
+  var factor = fromUnit.base / toUnit.base;
+  var answer = baseValue * factor;
+  
+  answer = Math.round(answer * 1e6) / 1e6;
+  var qt = plan.questionTypeId;
+  var prompt;
+  
+  if (qt === 'calc') {
+    prompt = baseValue + fromUnit.unit + ' = ' + baseValue + ' × ' + factor + ' = ____ ' + toUnit.unit;
+  } else {
+    prompt = baseValue + fromUnit.unit + ' = ____ ' + toUnit.unit;
+  }
+  
+  var result = {
     knowledgePointId: pkp(plan),
-    questionType: 'fill',
+    questionType: qt,
     difficulty: plan.difficulty,
     spiralLevel: plan.spiralLevel || 1,
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
     answer: { value: String(answer), acceptable: [] },
-    answerMode: 'input',
+    answerMode: qt === 'choice' ? 'choice' : 'input',
     data: {
-      mode: 'fill',
+      mode: qt,
       steps: 1,
       kind: kind,
       operation: 'conversion',
@@ -8051,6 +8549,21 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
       toUnit: toUnit.unit
     }
   };
+  
+  if (qt === 'choice') {
+    var ansNum = Number(answer);
+    var distr = [];
+    var deltas = [1, 2, 5, 10, 100];
+    while (distr.length < 3) {
+      var dv = ansNum + Rng.pick(rng, deltas) * (rng() < 0.5 ? 1 : -1);
+      if (dv <= 0) dv = ansNum + Rng.pick(rng, deltas);
+      if (distr.indexOf(dv) === -1 && dv !== ansNum) distr.push(dv);
+    }
+    result.data.options = Rng.shuffle(rng, [ansNum].concat(distr).slice(0, 4));
+    result.data.correctIndex = result.data.options.indexOf(ansNum);
+    result.answer = { value: String(result.data.correctIndex), acceptable: [] };
+  }
+  return result;
 }
 
 function makeWordProblemQuestion(plan, context, i, meta) {
@@ -8090,6 +8603,75 @@ function makeWordProblemQuestion(plan, context, i, meta) {
   }
   
   
+  
+  if (kind === 'length') {
+    var a = Rng.randInt(rng, 5, 50);
+    var b = Rng.randInt(rng, 1, 20);
+    var useCut = rng() < 0.5;
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: useCut
+        ? '一根绳子长 ' + a + ' 厘米，剪去 ' + b + ' 厘米，还剩多少厘米？'
+        : '小明身高 ' + a + ' 厘米，小红比小明矮 ' + b + ' 厘米，小红身高多少厘米？',
+      answer: { value: String(useCut ? a - b : a - b), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'length', operation: 'sub' }
+    };
+  }
+  if (kind === 'area') {
+    var w = Rng.randInt(rng, 3, 12);
+    var h = Rng.randInt(rng, 2, 10);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '一个长方形长 ' + w + ' 厘米，宽 ' + h + ' 厘米，它的面积是多少平方厘米？',
+      answer: { value: String(w * h), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'area', operation: 'mul' }
+    };
+  }
+  if (kind === 'mass') {
+    var m1 = Rng.randInt(rng, 1, 10);
+    var m2 = Rng.randInt(rng, 1, 5);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '一袋大米重 ' + m1 + ' 千克，一袋面粉重 ' + m2 + ' 千克，大米比面粉重多少千克？',
+      answer: { value: String(m1 - m2), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'mass', operation: 'sub' }
+    };
+  }
+  if (kind === 'time') {
+    var t1 = Rng.randInt(rng, 1, 10);
+    var t2 = Rng.randInt(rng, 1, 5);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '小明做作业用了 ' + t1 + ' 分钟，看电视用了 ' + t2 + ' 分钟，一共用了多少分钟？',
+      answer: { value: String(t1 + t2), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'time', operation: 'add' }
+    };
+  }
+  if (kind === 'capacity') {
+    var c1 = Rng.randInt(rng, 1, 5);
+    var c2 = Rng.randInt(rng, 1, 3);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '一桶油有 ' + c1 + ' 升，用去 ' + c2 + ' 升，还剩多少升？',
+      answer: { value: String(c1 - c2), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'apply', steps: 2, kind: 'capacity', operation: 'sub' }
+    };
+  }
   return makeRMBConversionQuestion(plan, context, i, meta);
 }
 
@@ -8135,20 +8717,28 @@ function createMoneyGenerator(spec) {
       var count = plan.count || 1;
       var questions = [];
       var kp = {};
-      var meta = getMoneyMeta(kp);
+      
+      var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
+      var meta = getMoneyMeta(kp, kpName);
 
       for (var i = 0; i < count; i++) {
         var q;
         var qt = plan.questionTypeId;
+        var isRMB = meta.kind === 'rmb';
         
         if (qt === 'fill') {
-          if (meta.kind === 'rmb' && rng() < 0.5) q = makeRMBConversionQuestion(plan, context, i, meta);
-          else if (meta.kind === 'rmb') q = makeRMBCalculationQuestion(plan, context, i, meta);
+          if (isRMB && rng() < 0.5) q = makeRMBConversionQuestion(plan, context, i, meta);
+          else if (isRMB) q = makeRMBCalculationQuestion(plan, context, i, meta);
           else q = makeMeasurementConversionQuestion(plan, context, i, meta);
         } else if (qt === 'apply') {
           q = makeWordProblemQuestion(plan, context, i, meta);
+        } else if (qt === 'calc') {
+          
+          q = isRMB ? makeRMBCalculationQuestion(plan, context, i, meta)
+                    : makeMeasurementConversionQuestion(plan, context, i, meta);
         } else if (qt === 'choice' || qt === 'judge') {
-          q = makeRMBCalculationQuestion(plan, context, i, meta);
+          q = isRMB ? makeRMBCalculationQuestion(plan, context, i, meta)
+                    : makeMeasurementConversionQuestion(plan, context, i, meta);
         } else {
           q = makeRMBConversionQuestion(plan, context, i, meta);
         }

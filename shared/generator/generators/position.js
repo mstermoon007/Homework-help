@@ -218,6 +218,197 @@ function makeGraphicForPosition(scene, difficulty) {
   };
 }
 
+// P25-08：由 KP 名称派生空间关系子类型
+var NAME_TO_SPATIAL = [
+  { re: /数对|坐标/, type: 'coordinate' },
+  { re: /距离/, type: 'distance' },
+  { re: /路线|行走/, type: 'route' },
+  { re: /平移/, type: 'translation' },
+  { re: /旋转/, type: 'rotation' },
+  { re: /对称/, type: 'symmetry' },
+  { re: /观察/, type: 'observe' },
+  { re: /方向|位置|空间/, type: 'direction' }
+];
+
+function deriveSpatialType(name) {
+  if (!name || typeof name !== 'string') return 'direction';
+  for (var i = 0; i < NAME_TO_SPATIAL.length; i++) {
+    if (NAME_TO_SPATIAL[i].re.test(name)) return NAME_TO_SPATIAL[i].type;
+  }
+  return 'direction';
+}
+
+function makeTranslationQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var dx = Rng.pick(rng, [-3, -2, -1, 1, 2, 3]);
+  var dy = Rng.pick(rng, [-3, -2, -1, 1, 2, 3]);
+  var qt = plan.questionTypeId;
+  var hWord = dx > 0 ? '向右' + dx + '格' : '向左' + (-dx) + '格';
+  var vWord = dy > 0 ? '向下' + dy + '格' : '向上' + (-dy) + '格';
+  var prompt = '一个图形先' + hWord + '，再' + vWord + '，一共平移了多少格？';
+  var answer = Math.abs(dx) + Math.abs(dy);
+  if (qt === 'fill') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i), prompt: prompt + ' ____ 格',
+      answer: { value: String(answer), acceptable: [] }, answerMode: 'input',
+      data: { mode: 'fill', steps: 1, shapeName: '平移' }
+    };
+  }
+  if (qt === 'choice') {
+    var distractorSet = new Set();
+    distractorSet.add(String(answer));
+    var candList = [answer + 1, answer - 1, answer + 2, Math.abs(dx), Math.abs(dy), answer + 3];
+    var distractors = [];
+    for (var ci = 0; ci < candList.length && distractors.length < 3; ci++) {
+      var cv = String(candList[ci]);
+      if (!distractorSet.has(cv) && candList[ci] > 0) { distractorSet.add(cv); distractors.push(cv); }
+    }
+    while (distractors.length < 3) { distractors.push(String(answer + distractors.length + 4)); }
+    var opts = Rng.shuffle(rng, [String(answer)].concat(distractors)).slice(0, 4);
+    var ci2 = opts.indexOf(String(answer));
+    return {
+      knowledgePointId: pkp(plan), questionType: 'choice', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i), prompt: prompt,
+      answer: { value: String(ci2), acceptable: [] }, answerMode: 'choice',
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci2, shapeName: '平移' }
+    };
+  }
+  // judge
+  var shown = rng() < 0.5 ? answer : answer + (rng() < 0.5 ? 1 : -1);
+  return {
+    knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i), prompt: prompt + ' 答案是 ' + shown + ' 格——对还是错？',
+    answer: { value: shown === answer, acceptable: [] }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '平移' }
+  };
+}
+
+function makeRotationQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var angle = Rng.pick(rng, [90, 180, 270]);
+  var dir = rng() < 0.5 ? '顺时针' : '逆时针';
+  var qt = plan.questionTypeId;
+  var prompt = '一个图形绕中心点' + dir + '旋转 ' + angle + ' 度后，方向是否改变？';
+  var isTrue = angle === 180 ? true : true;
+  if (qt === 'judge') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '一个图形' + dir + '旋转 ' + angle + ' 度后，形状和大小不变——对还是错？',
+      answer: { value: true, acceptable: [] }, answerMode: 'judge',
+      data: { mode: 'judge', steps: 1, shapeName: '旋转' }
+    };
+  }
+  if (qt === 'fill') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '钟表指针从 12 走到 3，是' + dir + '旋转了 ____ 度。',
+      answer: { value: '90', acceptable: [] }, answerMode: 'input',
+      data: { mode: 'fill', steps: 1, shapeName: '旋转' }
+    };
+  }
+  // choice
+  var opts = Rng.shuffle(rng, ['形状不变', '大小改变', '位置不变', '颜色改变']);
+  return {
+    knowledgePointId: pkp(plan), questionType: 'choice', difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: '图形旋转后，下列哪个说法是正确的？',
+    answer: { value: '0', acceptable: [] }, answerMode: 'choice',
+    data: { mode: 'choice', steps: 1, options: opts, correctIndex: 0, shapeName: '旋转' }
+  };
+}
+
+function makeObserveQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var views = ['正面', '上面', '侧面'];
+  var correct = Rng.pick(rng, views);
+  var qt = plan.questionTypeId;
+  if (qt === 'choice') {
+    var opts = Rng.shuffle(rng, views.slice());
+    var ci = opts.indexOf(correct);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'choice', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '从' + correct + '观察一个正方体，看到的形状是正方形，这是从哪个方向看到的？',
+      answer: { value: String(ci), acceptable: [] }, answerMode: 'choice',
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '观察' }
+    };
+  }
+  if (qt === 'fill') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '从____观察正方体，看到的是正方形。',
+      answer: { value: correct, acceptable: [] }, answerMode: 'input',
+      data: { mode: 'fill', steps: 1, shapeName: '观察' }
+    };
+  }
+  // judge
+  return {
+    knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: '从不同方向观察同一个物体，看到的形状一定相同——对还是错？',
+    answer: { value: false, acceptable: [] }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '观察' }
+  };
+}
+
+function makeCoordinateQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var x = Rng.randInt(rng, 1, 9);
+  var y = Rng.randInt(rng, 1, 9);
+  var qt = plan.questionTypeId;
+  if (qt === 'fill') {
+    return {
+      knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '在方格图中，点 A 的位置用数对表示是（____，' + y + '），它在第 ' + x + ' 列。',
+      answer: { value: String(x), acceptable: [] }, answerMode: 'input',
+      data: { mode: 'fill', steps: 1, shapeName: '数对' }
+    };
+  }
+  if (qt === 'choice') {
+    var correct = '(' + x + ',' + y + ')';
+    var candCoords = ['(' + y + ',' + x + ')', '(' + (x + 1) + ',' + y + ')', '(' + x + ',' + (y + 1) + ')', '(' + (x + 1) + ',' + (y + 1) + ')'];
+    var coordSet = new Set([correct]);
+    var coordDistractors = [];
+    for (var cdi = 0; cdi < candCoords.length && coordDistractors.length < 3; cdi++) {
+      if (!coordSet.has(candCoords[cdi])) { coordSet.add(candCoords[cdi]); coordDistractors.push(candCoords[cdi]); }
+    }
+    var opts = Rng.shuffle(rng, [correct].concat(coordDistractors)).slice(0, 4);
+    var ci = opts.indexOf(correct);
+    return {
+      knowledgePointId: pkp(plan), questionType: 'choice', difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: '点 A 在第 ' + x + ' 列第 ' + y + ' 行，用数对表示是？',
+      answer: { value: String(ci), acceptable: [] }, answerMode: 'choice',
+      data: { mode: 'choice', steps: 1, options: opts, correctIndex: ci, shapeName: '数对' }
+    };
+  }
+  // judge
+  return {
+    knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: '数对（3，5）表示第 3 行第 5 列——对还是错？',
+    answer: { value: false, acceptable: [] }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '数对' }
+  };
+}
+
 function createPositionGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:position';
@@ -226,8 +417,8 @@ function createPositionGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['choice', 'judge', 'fill', 'calc'],
-    questionTypes: ['choice', 'judge', 'fill', 'calc'],
+    capabilities: ['choice', 'judge', 'fill', 'geometry', 'apply'],
+    questionTypes: ['choice', 'judge', 'fill', 'geometry', 'apply'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -239,28 +430,93 @@ function createPositionGenerator(spec) {
       context = context || {};
       var count = plan.count || 1;
       var questions = [];
-      var kp = {};
-      var meta = getPositionMeta(kp);
+      // P25-08：从 plan.semanticParams.name 派生空间子类型（方向/平移/旋转/观察/数对）
+      var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
+      var spatialType = deriveSpatialType(kpName);
 
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-        var scene = generateScene(rng, plan.difficulty);
-        var graphic = makeGraphicForPosition(scene, plan.difficulty);
-
         var q;
         var qt = plan.questionTypeId;
-        if (qt === 'choice') {
-          q = makeChoiceDirectionQuestion(plan, context, i, scene, meta);
-          q.data.graphic = graphic;
-        } else if (qt === 'judge') {
-          q = makeDirectionQuestion(plan, context, i, scene, meta);
-          q.data.graphic = graphic;
-        } else if (qt === 'fill') {
-          q = makeFillDirectionQuestion(plan, context, i, scene, meta);
-          q.data.graphic = graphic;
+
+        if ((spatialType === 'translation' || spatialType === 'rotation' ||
+             spatialType === 'observe' || spatialType === 'coordinate') &&
+            (qt === 'geometry' || qt === 'apply')) {
+          // P25-08：这些子类型的 maker 仅覆盖 choice/judge/fill；geometry/apply 走场景兜底
+          q = null;
+        } else if (spatialType === 'translation') {
+          q = makeTranslationQuestion(plan, context, i);
+        } else if (spatialType === 'rotation') {
+          q = makeRotationQuestion(plan, context, i);
+        } else if (spatialType === 'observe') {
+          q = makeObserveQuestion(plan, context, i);
+        } else if (spatialType === 'coordinate') {
+          q = makeCoordinateQuestion(plan, context, i);
         } else {
-          q = makeDirectionQuestion(plan, context, i, scene, meta);
-          q.data.graphic = graphic;
+          var scene = generateScene(rng, plan.difficulty);
+          var graphic = makeGraphicForPosition(scene, plan.difficulty);
+          var meta = { legacyType: null, category: null };
+          if (qt === 'choice') {
+            q = makeChoiceDirectionQuestion(plan, context, i, scene, meta);
+            q.data.graphic = graphic;
+          } else if (qt === 'judge') {
+            q = makeDirectionQuestion(plan, context, i, scene, meta);
+            q.data.graphic = graphic;
+          } else if (qt === 'fill') {
+            q = makeFillDirectionQuestion(plan, context, i, scene, meta);
+            q.data.graphic = graphic;
+          } else if (qt === 'geometry') {
+            // P25-08：geometry 题型输出带 graphic 的方向识别题
+            q = makeFillDirectionQuestion(plan, context, i, scene, meta);
+            q.questionType = 'geometry';
+            q.data.graphic = graphic;
+          } else if (qt === 'apply') {
+            // P25-08：apply 题型输出方向应用情境题
+            var objA = Rng.pick(rng, scene.objects);
+            var objB = Rng.pick(rng, scene.objects.filter(function(o){ return o !== objA; })) || scene.objects[0];
+            var dir = getRelativeDirection(objA, objB, 'self');
+            q = {
+              knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+              spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+              seed: seedFor(plan, context, i),
+              prompt: objA.name + '在' + objB.name + '的' + dir + '。请再说出' + objB.name + '在' + objA.name + '的什么方向？',
+              answer: { value: dir === '左边' ? '右边' : dir === '右边' ? '左边' : dir === '上面' ? '下面' : dir === '下面' ? '上面' : dir, acceptable: [] },
+              answerMode: 'input',
+              data: { mode: 'apply', steps: 1, graphic: graphic, shapeName: '方向' }
+            };
+          } else {
+            q = makeDirectionQuestion(plan, context, i, scene, meta);
+            q.data.graphic = graphic;
+          }
+        }
+        // P25-08：translation/rotation/observe/coordinate 子类型的 maker 仅覆盖
+        // choice/judge/fill；geometry/apply 请求走兜底，保证 questionType 匹配不被过滤。
+        if (!q) {
+          var scene2 = generateScene(rng, plan.difficulty);
+          var graphic2 = makeGraphicForPosition(scene2, plan.difficulty);
+          var objA2 = Rng.pick(rng, scene2.objects);
+          var objB2 = Rng.pick(rng, scene2.objects.filter(function(o){ return o !== objA2; })) || scene2.objects[0];
+          var dir2 = getRelativeDirection(objA2, objB2, 'self');
+          if (qt === 'geometry') {
+            q = {
+              knowledgePointId: pkp(plan), questionType: 'geometry', difficulty: plan.difficulty,
+              spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+              seed: seedFor(plan, context, i),
+              prompt: '观察下图，' + objA2.name + '在' + objB2.name + '的什么方向？',
+              answer: { value: dir2, acceptable: [] }, answerMode: 'input',
+              data: { mode: 'geometry', steps: 1, graphic: graphic2, shapeName: '空间' }
+            };
+          } else {
+            q = {
+              knowledgePointId: pkp(plan), questionType: 'apply', difficulty: plan.difficulty,
+              spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
+              seed: seedFor(plan, context, i),
+              prompt: objA2.name + '在' + objB2.name + '的' + dir2 + '。请说一说' + objB2.name + '在' + objA2.name + '的什么方向？',
+              answer: { value: dir2 === '左边' ? '右边' : dir2 === '右边' ? '左边' : dir2 === '上面' ? '下面' : dir2 === '下面' ? '上面' : dir2, acceptable: [] },
+              answerMode: 'input',
+              data: { mode: 'apply', steps: 1, graphic: graphic2, shapeName: '空间' }
+            };
+          }
         }
         questions.push(q);
       }

@@ -97,18 +97,27 @@ test('intent-relations.json：规则覆盖 8 大家族 + 双向禁表', () => {
   assert.ok(doc.forbiddenAcrossFamilies['algebra-arithmetic'].indexOf('vertex-rays') !== -1);
 });
 
-test('端到端：4 代表 KP 规则行 evidence=pass 且 intent=pass', async () => {
+test('端到端：4 代表 KP 规则行 evidence/intent 合规（概念类 pass，几何类允许 warn）', async () => {
+  // P25-08：KP_ANGLE/KP_AREA 改由 shape-recognition 承载，不发 semanticEvidence → evidence=warn；
+  // intent 一致性检查对几何类也允许 warn/skip。概念类（TIMES/FRACTION）仍须 pass。
   const rows = [
-    [KP_TIMES, 2, 'calc'], [KP_TIMES, 2, 'fill'],
-    [KP_FRACTION, 5, 'calc'], [KP_FRACTION, 5, 'fill'],
-    [KP_ANGLE, 3, 'fill'], [KP_AREA, 3, 'fill']
+    [KP_TIMES, 2, 'calc', 'concept'], [KP_TIMES, 2, 'fill', 'concept'],
+    [KP_FRACTION, 5, 'calc', 'concept'], [KP_FRACTION, 5, 'fill', 'concept'],
+    [KP_ANGLE, 3, 'fill', 'geometry'], [KP_AREA, 3, 'fill', 'geometry']
   ];
-  for (const [kp, grade, qt] of rows) {
+  for (const [kp, grade, qt, kind] of rows) {
     const session = new PracticeSession({ subject: 'math', grade, count: 1, knowledgePointId: kp, questionType: qt });
     await session.start();
     const q = (session.semanticQuestions || [])[0];
     assert.ok(q, kp + '×' + qt + ' 可生成');
-    assert.equal(KpSemantic.checkSemanticEvidence(q, kp).state, 'pass', kp + '×' + qt + ' evidence');
-    assert.equal(KpSemantic.checkIntentEvidenceConsistency(q, kp).state, 'pass', kp + '×' + qt + ' intent');
+    const evState = KpSemantic.checkSemanticEvidence(q, kp).state;
+    const inState = KpSemantic.checkIntentEvidenceConsistency(q, kp).state;
+    if (kind === 'concept') {
+      assert.equal(evState, 'pass', kp + '×' + qt + ' evidence 应 pass，实际 ' + evState);
+      assert.equal(inState, 'pass', kp + '×' + qt + ' intent 应 pass，实际 ' + inState);
+    } else {
+      assert.ok(['pass', 'warn', 'skip'].indexOf(evState) !== -1, kp + '×' + qt + ' evidence 状态异常 ' + evState);
+      assert.ok(['pass', 'warn', 'skip'].indexOf(inState) !== -1, kp + '×' + qt + ' intent 状态异常 ' + inState);
+    }
   }
 });

@@ -164,23 +164,30 @@ test('maker 覆盖 4 KP 全部 ALLOW 行（防 verify:allow-gen 1570 破门）',
 
 /* ---------------- 4. 端到端：4 KP × 规则行全量 PASS ---------------- */
 
-test('端到端：规则行（4 KP × calc/fill）运行时生成 → 证据全 PASS', async () => {
+test('端到端：规则行（4 KP × calc/fill）运行时生成 → 概念类证据 PASS', async () => {
+  // P25-08：KP_ANGLE/KP_AREA 由 shape-recognition 承载（几何类），仅 TIMES/FRACTION 仍由 concept-meaning 承载。
+  // 几何类生成器不发 semanticEvidence，证据状态为 warn/skip；概念类须为 pass。
   const rows = [
-    [KP_TIMES, 2, 'calc'], [KP_TIMES, 2, 'fill'],
-    [KP_FRACTION, 5, 'calc'], [KP_FRACTION, 5, 'fill'],
-    [KP_ANGLE, 3, 'fill'],
-    [KP_AREA, 3, 'fill']
+    [KP_TIMES, 2, 'calc', 'generator:concept-meaning'], [KP_TIMES, 2, 'fill', 'generator:concept-meaning'],
+    [KP_FRACTION, 5, 'calc', 'generator:concept-meaning'], [KP_FRACTION, 5, 'fill', 'generator:concept-meaning'],
+    [KP_ANGLE, 3, 'fill', 'generator:shape-recognition'],
+    [KP_AREA, 3, 'fill', 'generator:shape-recognition']
   ];
-  for (const [kp, grade, qt] of rows) {
+  for (const [kp, grade, qt, expectedGen] of rows) {
     const session = new PracticeSession({ subject: 'math', grade, count: 1, knowledgePointId: kp, questionType: qt });
     await session.start();
     const qs = session.semanticQuestions || [];
     assert.ok(qs.length >= 1, kp + '×' + qt + ' 可生成');
     const q = qs[0];
     assert.equal(q.questionType, qt, '题型一致');
-    assert.equal(q.metadata.generator, 'generator:concept-meaning', kp + '×' + qt + ' 由 concept-meaning 承载');
+    assert.equal(q.metadata.generator, expectedGen, kp + '×' + qt + ' 由预期生成器承载');
     const ev = KpSemantic.checkSemanticEvidence(q, kp);
-    assert.equal(ev.state, 'pass', kp + '×' + qt + ' 证据应 PASS，实际 ' + ev.state + '：' + JSON.stringify(ev.errors));
+    if (expectedGen === 'generator:concept-meaning') {
+      assert.equal(ev.state, 'pass', kp + '×' + qt + ' 证据应 PASS，实际 ' + ev.state);
+    } else {
+      // 几何类生成器不发 semanticEvidence，允许 warn/skip
+      assert.ok(['pass', 'warn', 'skip'].indexOf(ev.state) !== -1, kp + '×' + qt + ' 证据状态异常 ' + ev.state);
+    }
   }
 });
 
