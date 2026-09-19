@@ -18,10 +18,10 @@
   },
   "counts": {
     "rows": 1570,
-    "confirmed": 95,
-    "aiVerified": 1190,
+    "confirmed": 98,
+    "aiVerified": 1187,
     "needsReview": 285,
-    "rejected": 3,
+    "rejected": 0,
     "byQuestionType": {
       "calc": 189,
       "fill": 375,
@@ -205,20 +205,20 @@
     {
       "knowledgeId": "math-g1-up-u01-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
-        "trainsWhat": "训练「1-5数的认识」（5以内数的认识和加、减法 · 认、读、写1—5各数； 知道1—5的顺序（从前往后1、2、3、4、5，从后往前5、4、3、2、1）； 理解数的含义，能用实物表示；初步区分基数（表示数量）与序数（表示顺序）； 掌握“一一对应”的比较方法；能用“多”“少”“同样多”描述数量关系）：认、读、写1—5各数",
-        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内",
+        "trainsWhat": "借助选择题辨认 1—5 的数字符号与实物数量的对应（基数意义），并辨析「多/少/同样多」的比较关系",
+        "whyThisType": "实质依据：本 KP 含「一一对应比较」「基数/序数区分」子目标，选择题可用干扰项探查「数量↔数字对应」与序数位置辨析，适合认识层级的快速探测",
         "differentiation": "同 KP 其他允许题型：apply、calc、fill。本题型差异——apply属综合应用而本题型属辨认判断；apply无干扰项（需独立产出）；calc属计算操作而本题型属辨认判断",
         "driftRisk": "风险（choice）：干扰项排除法使「辨认」替代「理解」，答对不代表掌握（猜测成分）",
-        "legitimacy": "成立：认知层级「认识」落于choice认知区间[认识/理解/应用]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立（限定）：choice 在本 KP 仅限「对应与辨析」用途，明确不承载认、读、写训练（读写由 fill/apply 等题型承载）"
       },
       "intentStatus": {
-        "trainsWhat": "kbl-derived",
-        "whyThisType": "ai-verified",
+        "trainsWhat": "confirmed",
+        "whyThisType": "confirmed",
         "differentiation": "ai-verified",
         "driftRisk": "ai-verified",
-        "legitimacy": "ai-verified"
+        "legitimacy": "confirmed"
       },
       "evidence": {
         "kbl": {
@@ -247,9 +247,10 @@
         ],
         "flags": [],
         "humanReview": {
-          "verdict": "rejected",
-          "batch": "sample-1",
-          "note": ""
+          "verdict": "confirmed",
+          "batch": "rejected-3-fix",
+          "corrected": true,
+          "origin": "用户确认的打回行修正（2026-09-19）：①②按 AI 提案，③含用户补充——竖式计算与填空承载方法操练、apply 考方法选择与迁移"
         }
       }
     },
@@ -2969,20 +2970,20 @@
     {
       "knowledgeId": "math-g1-down-u01-k001",
       "questionType": "judge",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
-        "trainsWhat": "训练「平面图形认识」（认识平面图形 · 直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组）：直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组",
-        "whyThisType": "judge（判断题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在judge题型认知区间[认识/理解]内；表征支持：本知识点含图形表征，judge题型支持图形呈现",
+        "trainsWhat": "用判断题辨析平面图形的名称与基本特征（边、形、直观属性），巩固「面在体上」的关系判断",
+        "whyThisType": "实质依据：judge 可对图形名称与特征做正误辨析，配合图形呈现探查直观认识层级；不承载拼组考查",
         "differentiation": "同 KP 其他允许题型：apply、choice、fill、geometry。本题型差异——apply属综合应用而本题型属辨认判断；apply认知跨度[理解/应用/分析]与本题型[认识/理解]不同；choice含干扰项（辨认成分重）",
         "driftRisk": "风险（judge）：50% 猜测成分，判断正确不能独立证明理解",
-        "legitimacy": "成立：认知层级「认识」落于judge认知区间[认识/理解]，图形表征获支持；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立（限定）：judge 在本 KP 仅限「名称与特征辨析」用途，明确不承载拼组子目标（拼组由 apply/geometry 题型承载）"
       },
       "intentStatus": {
-        "trainsWhat": "kbl-derived",
-        "whyThisType": "ai-verified",
+        "trainsWhat": "confirmed",
+        "whyThisType": "confirmed",
         "differentiation": "ai-verified",
         "driftRisk": "ai-verified",
-        "legitimacy": "ai-verified"
+        "legitimacy": "confirmed"
       },
       "evidence": {
         "kbl": {
@@ -3012,9 +3013,10 @@
         ],
         "flags": [],
         "humanReview": {
-          "verdict": "rejected",
-          "batch": "sample-1",
-          "note": ""
+          "verdict": "confirmed",
+          "batch": "rejected-3-fix",
+          "corrected": true,
+          "origin": "用户确认的打回行修正（2026-09-19）：①②按 AI 提案，③含用户补充——竖式计算与填空承载方法操练、apply 考方法选择与迁移"
         }
       }
     },
@@ -3178,20 +3180,20 @@
     {
       "knowledgeId": "math-g1-down-u02-k001",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
-        "trainsWhat": "训练「运算方法（平十、破十）」（20以内的退位减法 · 掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算）：掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算",
-        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内",
-        "differentiation": "同 KP 其他允许题型：calc、choice、fill。本题型差异——calc属计算操作而本题型属综合应用；calc仅文字/算式；choice属辨认判断而本题型属综合应用",
+        "trainsWhat": "在解决问题情境中选用破十法/平十法/想加算减并说明理由——考查方法的选择与迁移；方法本身的操练由平十、破十的竖式计算（calc）与填空（fill）承载",
+        "whyThisType": "实质依据：apply 的情境迫使学生对「用哪种方法」做分析性决策（对应 analyze 层级）；与 calc/fill 的方法操练形成「操练—迁移」分工",
+        "differentiation": "calc/fill 承载平十、破十的竖式计算与填空操练（方法本身）；apply 与之的差异=在真实情境中选择并迁移方法（方法选择型应用题）",
         "driftRisk": "风险（apply）：情境阅读负担淹没数学内核，考查点从数学滑向语文阅读",
-        "legitimacy": "成立：认知层级「分析」落于apply认知区间[理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性"
+        "legitimacy": "成立（限定）：仅限「方法运用型」应用题表述，不复述方法定义"
       },
       "intentStatus": {
-        "trainsWhat": "kbl-derived",
-        "whyThisType": "ai-verified",
-        "differentiation": "ai-verified",
+        "trainsWhat": "confirmed",
+        "whyThisType": "confirmed",
+        "differentiation": "confirmed",
         "driftRisk": "ai-verified",
-        "legitimacy": "ai-verified"
+        "legitimacy": "confirmed"
       },
       "evidence": {
         "kbl": {
@@ -3220,9 +3222,10 @@
         ],
         "flags": [],
         "humanReview": {
-          "verdict": "rejected",
-          "batch": "sample-1",
-          "note": ""
+          "verdict": "confirmed",
+          "batch": "rejected-3-fix",
+          "corrected": true,
+          "origin": "用户确认的打回行修正（2026-09-19）：①②按 AI 提案，③含用户补充——竖式计算与填空承载方法操练、apply 考方法选择与迁移"
         }
       }
     },

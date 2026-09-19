@@ -5,8 +5,8 @@
 | 指标 | 值 |
 | --- | --- |
 | 覆盖 | 1570/1570 ALLOW 行（集合相等断言） |
-| **confirmed（人工抽查通过）** | **95** |
-| ai-verified（待抽查） | 1190（其中被「打回」3 行待修正重审） |
+| **confirmed（人工抽查通过）** | **98** |
+| ai-verified（待抽查） | 1187（其中被「打回」0 行待修正重审） |
 | needs-review（未裁决） | 285（旗标：{"cognitive-out-of-range":325,"legitimacy-cognitive-only":324,"no-type-evidence":114,"representation-conflict":4}） |
 | 题型分布 | {"calc":189,"fill":375,"apply":375,"choice":375,"geometry":105,"judge":126,"classify":25} |
 

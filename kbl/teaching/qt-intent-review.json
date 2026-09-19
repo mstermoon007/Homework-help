@@ -512,6 +512,37 @@
           "note": "用户口头指令：未裁决行全部确认通过"
         }
       }
+    },
+    {
+      "batch": "rejected-3-fix",
+      "origin": "用户确认的打回行修正（2026-09-19）：①②按 AI 提案，③含用户补充——竖式计算与填空承载方法操练、apply 考方法选择与迁移",
+      "verdicts": {
+        "math-g1-up-u01-k001|choice": {
+          "verdict": "通过",
+          "correctedIntent": {
+            "trainsWhat": "借助选择题辨认 1—5 的数字符号与实物数量的对应（基数意义），并辨析「多/少/同样多」的比较关系",
+            "whyThisType": "实质依据：本 KP 含「一一对应比较」「基数/序数区分」子目标，选择题可用干扰项探查「数量↔数字对应」与序数位置辨析，适合认识层级的快速探测",
+            "legitimacy": "成立（限定）：choice 在本 KP 仅限「对应与辨析」用途，明确不承载认、读、写训练（读写由 fill/apply 等题型承载）"
+          }
+        },
+        "math-g1-down-u01-k001|judge": {
+          "verdict": "通过",
+          "correctedIntent": {
+            "trainsWhat": "用判断题辨析平面图形的名称与基本特征（边、形、直观属性），巩固「面在体上」的关系判断",
+            "whyThisType": "实质依据：judge 可对图形名称与特征做正误辨析，配合图形呈现探查直观认识层级；不承载拼组考查",
+            "legitimacy": "成立（限定）：judge 在本 KP 仅限「名称与特征辨析」用途，明确不承载拼组子目标（拼组由 apply/geometry 题型承载）"
+          }
+        },
+        "math-g1-down-u02-k001|apply": {
+          "verdict": "通过",
+          "correctedIntent": {
+            "trainsWhat": "在解决问题情境中选用破十法/平十法/想加算减并说明理由——考查方法的选择与迁移；方法本身的操练由平十、破十的竖式计算（calc）与填空（fill）承载",
+            "whyThisType": "实质依据：apply 的情境迫使学生对「用哪种方法」做分析性决策（对应 analyze 层级）；与 calc/fill 的方法操练形成「操练—迁移」分工",
+            "differentiation": "calc/fill 承载平十、破十的竖式计算与填空操练（方法本身）；apply 与之的差异=在真实情境中选择并迁移方法（方法选择型应用题）",
+            "legitimacy": "成立（限定）：仅限「方法运用型」应用题表述，不复述方法定义"
+          }
+        }
+      }
     }
   ]
 }

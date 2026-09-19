@@ -236,27 +236,41 @@ var nrRows = rows.filter(function (r) { return r.status === 'needs-review'; });
 var reviewLedger = null;
 try { reviewLedger = JSON.parse(fs.readFileSync(path.join(TEACHING_DIR, 'qt-intent-review.json'), 'utf8')); } catch (e) { /* 首次推导无账本，合法 */ }
 var confirmedRows = [], rejectedRows = [];
-function applyVerdict(key, v, batchTag) {
-  var hit = null;
-  rows.forEach(function (r) { if (r.knowledgeId + '|' + r.questionType === key) hit = r; });
-  if (!hit) { console.warn('[P25-03] 账本行不在矩阵中，跳过: ' + key); return; }
-  if (v.verdict === '通过') {
-    hit.status = 'confirmed';
-    hit.evidence.humanReview = { verdict: 'confirmed', batch: batchTag };
-    confirmedRows.push(hit);
-  } else if (v.verdict === '打回') {
-    hit.evidence.humanReview = { verdict: 'rejected', batch: batchTag, note: v.note || '' };
-    rejectedRows.push(hit);
-  }
-}
+// 收集全部裁决（verdicts → supplements，后者覆盖前者；同一 key 只应用一次）
+var appliedVerdicts = {};
 if (reviewLedger) {
   if (reviewLedger.verdicts) Object.keys(reviewLedger.verdicts).forEach(function (key) {
-    applyVerdict(key, reviewLedger.verdicts[key], reviewLedger.batch || 'sample-1');
+    appliedVerdicts[key] = { v: reviewLedger.verdicts[key], batch: reviewLedger.batch || 'sample-1', from: 'verdicts' };
   });
   (reviewLedger.supplements || []).forEach(function (sup) {
     Object.keys(sup.verdicts || {}).forEach(function (key) {
-      applyVerdict(key, sup.verdicts[key], sup.batch || 'supplement');
+      appliedVerdicts[key] = { v: sup.verdicts[key], batch: sup.batch || 'supplement', from: 'supplements', origin: sup.origin || '' };
     });
+  });
+  Object.keys(appliedVerdicts).forEach(function (key) {
+    var hit = null;
+    rows.forEach(function (r) { if (r.knowledgeId + '|' + r.questionType === key) hit = r; });
+    if (!hit) { console.warn('[P25-03] 账本行不在矩阵中，跳过: ' + key); return; }
+    var av = appliedVerdicts[key];
+    var v = av.v;
+    if (v.verdict === '通过') {
+      hit.status = 'confirmed';
+      // 人工修正覆盖：correctedIntent 逐字段覆盖推导文本，被覆盖字段状态记 confirmed（人工）
+      if (v.correctedIntent) {
+        Object.keys(v.correctedIntent).forEach(function (k) {
+          assert(Object.prototype.hasOwnProperty.call(hit.intent, k), 'correctedIntent 未知字段 ' + k);
+          hit.intent[k] = v.correctedIntent[k];
+          hit.intentStatus[k] = 'confirmed';
+        });
+        hit.evidence.humanReview = { verdict: 'confirmed', batch: av.batch, corrected: true, origin: av.origin || '' };
+      } else {
+        hit.evidence.humanReview = { verdict: 'confirmed', batch: av.batch };
+      }
+      confirmedRows.push(hit);
+    } else if (v.verdict === '打回') {
+      hit.evidence.humanReview = { verdict: 'rejected', batch: av.batch, note: v.note || '' };
+      rejectedRows.push(hit);
+    }
   });
 }
 var flagDist = {};
