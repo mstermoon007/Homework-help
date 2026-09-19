@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "p25-05.1",
+  "note": "P25-05 意图×证据一致性映射表。基于 KBL 语义事实（category / operations / graphicType）派生 allowedRelations，不做题面 NLP。消费方：shared/validator/kp-semantic-validator.js 第 8 检查 checkIntentEvidenceConsistency。三态：skip=题目未声明 semanticEvidence（与 P25-04 warn 互补，不重复告警）/pass=声明关系全部在 allowedRelations 内/fail=存在跨家族矛盾关系（intent-evidence-conflict，ERROR）。设计原则：只禁跨家族矛盾（几何 KP 声明 add-combine、算术 KP 声明 vertex-rays 等），同家族内不做细分裁决（避免过度门禁）。",
+  "rules": [
+    { "when": { "hasOperation": "addition" }, "allow": ["add-combine"] },
+    { "when": { "hasOperation": "subtraction" }, "allow": ["sub-take-away"] },
+    { "when": { "hasOperation": "multiplication" }, "allow": ["multiply-by-times", "times-compare"] },
+    { "when": { "hasOperation": "division" }, "allow": ["divide-share", "equal-partition"] },
+    { "when": { "hasOperation": "mixed" }, "allow": ["add-combine", "sub-take-away", "multiply-by-times", "divide-share"] },
+    { "when": { "category": "geometry" }, "allow": ["shape-identify", "vertex-rays", "area-surface", "length-measure", "angle-observe", "perimeter-calc", "volume-calc"] },
+    { "when": { "category": "statistics" }, "allow": ["data-aggregate", "count-compare", "chart-read", "average-calc"] },
+    { "when": { "category": "algebra", "operationsEmpty": true }, "allow": ["count-quantity", "number-recognize", "place-value", "number-order"] },
+    { "when": { "family": "fraction" }, "allow": ["unit-one", "equal-partition", "fraction-meaning", "fraction-equalize"] },
+    { "when": { "family": "percent" }, "allow": ["percent-rate", "percent-change", "percent-of"] },
+    { "when": { "family": "decimal" }, "allow": ["decimal-place", "decimal-convert"] }
+  ],
+  "forbiddenAcrossFamilies": {
+    "geometry": ["add-combine", "sub-take-away", "multiply-by-times", "divide-share", "unit-one", "fraction-meaning", "percent-rate", "count-quantity"],
+    "algebra-arithmetic": ["vertex-rays", "area-surface", "length-measure", "angle-observe", "shape-identify", "perimeter-calc", "volume-calc", "chart-read"]
+  },
+  "relationVocabulary": {
+    "add-combine": "加法合并（合并不加数）",
+    "sub-take-away": "减法取走",
+    "multiply-by-times": "乘法求几倍数",
+    "times-compare": "倍的比较（几倍）",
+    "divide-share": "除法平均分",
+    "equal-partition": "平均分（分数/除法通用）",
+    "unit-one": "单位“1”（分数意义）",
+    "fraction-meaning": "分数意义",
+    "fraction-equalize": "通分约分",
+    "percent-rate": "百分率",
+    "percent-change": "增减百分比",
+    "percent-of": "求一个数的百分之几",
+    "decimal-place": "小数数位",
+    "decimal-convert": "小数与分数/百分数互化",
+    "count-quantity": "计数（几个）",
+    "number-recognize": "数的认读写",
+    "place-value": "位值（十进制）",
+    "number-order": "数序（大小比较）",
+    "shape-identify": "图形辨认",
+    "vertex-rays": "角的顶点与射线",
+    "area-surface": "面积（表面大小）",
+    "length-measure": "长度度量",
+    "angle-observe": "角的观察/度量",
+    "perimeter-calc": "周长计算",
+    "volume-calc": "体积计算",
+    "data-aggregate": "数据汇总",
+    "count-compare": "数量比较",
+    "chart-read": "图表读取",
+    "average-calc": "平均数计算"
+  }
+}

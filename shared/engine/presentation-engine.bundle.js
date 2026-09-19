@@ -3365,7 +3365,10 @@ __defs["shared/schemas/semantic-question.schema.js"] = function (module, exports
     KP_SEMANTIC_COMPOSITE: 'KP_SEMANTIC_COMPOSITE',
 
     
-    KP_SEMANTIC_EVIDENCE: 'KP_SEMANTIC_EVIDENCE'
+    KP_SEMANTIC_EVIDENCE: 'KP_SEMANTIC_EVIDENCE',
+
+    
+    KP_SEMANTIC_INTENT_CONFLICT: 'KP_SEMANTIC_INTENT_CONFLICT'
   };
 
   
@@ -4538,6 +4541,89 @@ function checkSemanticEvidence(sq, kpId) {
 }
 
 
+var _intentRelations = null;
+function getIntentRelations() {
+  if (_intentRelations) return _intentRelations;
+  try {
+    var p = '../../' + 'kbl/' + 'teaching/' + 'intent-relations.json';
+    _intentRelations = require(p) || { rules: [], forbiddenAcrossFamilies: {} };
+  } catch (e) { _intentRelations = { rules: [], forbiddenAcrossFamilies: {} }; }
+  return _intentRelations;
+}
+
+
+function getAllowedRelations(kpSemantic) {
+  var doc = getIntentRelations();
+  var allowed = {};
+  if (!kpSemantic || !Array.isArray(doc.rules)) return allowed;
+  var family = kpSemantic.family || null;
+  var type = kpSemantic.type || null; 
+  var ops = kpSemantic.operations || [];
+  var opsEmpty = ops.length === 0;
+
+  doc.rules.forEach(function (rule) {
+    var w = rule.when || {};
+    var match = true;
+    if (w.category && w.category !== type) match = false;
+    if (w.family && w.family !== family) match = false;
+    if (w.operationsEmpty === true && !opsEmpty) match = false;
+    if (w.operationsEmpty === false && opsEmpty) match = false;
+    if (w.hasOperation && ops.indexOf(w.hasOperation) === -1) match = false;
+    if (match && Array.isArray(rule.allow)) rule.allow.forEach(function (r) { allowed[r] = true; });
+  });
+
+  
+  var forbidden = doc.forbiddenAcrossFamilies || {};
+  if (type === 'geometry' || family === 'geometry') {
+    (forbidden.geometry || []).forEach(function (r) { delete allowed[r]; });
+  } else if (type === 'calculation' || family === 'multiplication-division' ||
+             family === 'fraction' || family === 'decimal' || family === 'percent') {
+    (forbidden['algebra-arithmetic'] || []).forEach(function (r) { delete allowed[r]; });
+  }
+  return allowed;
+}
+
+function getKpSemanticForIntent(kpId) {
+  if (!kpId) return null;
+  var KC = getKC();
+  if (!KC || typeof KC.get !== 'function') return null;
+  var kp = KC.get(kpId);
+  if (!kp) return null;
+  var sem = kp.semantic || {};
+  return { family: sem.family || null, type: kp.type || null, operations: sem.operations || [] };
+}
+
+function checkIntentEvidenceConsistency(sq, kpId) {
+  var errors = [];
+  var decl = sq.data && sq.data.semanticEvidence;
+  var relations = decl && Array.isArray(decl.relations) ? decl.relations : [];
+  if (relations.length === 0) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+
+  
+  var kpSemantic = getKpSemanticForIntent(kpId);
+  if (!kpSemantic) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+
+  var allowed = getAllowedRelations(kpSemantic);
+  
+  if (Object.keys(allowed).length === 0) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+
+  var conflicts = relations.filter(function (r) { return !allowed[r]; });
+  if (conflicts.length) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_CONFLICT, 'data.semanticEvidence.relations',
+      '声明的语义关系与 KP 意图矛盾（跨家族）：' + conflicts.join(','), SEVERITY.ERROR,
+      { kpId: kpId, conflicts: conflicts, allowedRelations: Object.keys(allowed) }));
+    return { state: 'fail', errors: errors, warnings: [] };
+  }
+  return { state: 'pass', errors: errors, warnings: [] };
+}
+
+
 function validateKpSemantics(sq, context) {
   context = context || {};
   var plan = context.plan;
@@ -4575,6 +4661,10 @@ function validateKpSemantics(sq, context) {
   allErrors.push.apply(allErrors, evidenceResult.errors);
   allWarnings.push.apply(allWarnings, evidenceResult.warnings);
 
+  
+  var intentResult = checkIntentEvidenceConsistency(sq, kpId);
+  allErrors.push.apply(allErrors, intentResult.errors);
+
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
 
@@ -4585,6 +4675,7 @@ function validateKpSemantics(sq, context) {
     info: allInfo,
     score: score,
     semanticEvidence: evidenceResult.state,
+    intentConsistency: intentResult.state,
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
@@ -4592,7 +4683,8 @@ function validateKpSemantics(sq, context) {
       numeric: checkNumeric(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       structure: checkStructure(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       content: contentResult.errors.length === 0 ? 'pass' : 'fail',
-      semanticEvidence: evidenceResult.state
+      semanticEvidence: evidenceResult.state,
+      intentConsistency: intentResult.state
     }
   };
 }
@@ -4607,6 +4699,8 @@ module.exports = {
   checkStructure: checkStructure,
   checkContent: checkContent,
   checkSemanticEvidence: checkSemanticEvidence,
+  checkIntentEvidenceConsistency: checkIntentEvidenceConsistency,
+  getAllowedRelations: getAllowedRelations,
   getEvidenceRules: getEvidenceRules
 };
 };

@@ -360,6 +360,107 @@ function checkSemanticEvidence(sq, kpId) {
 }
 
 /**
+ * 8. Intent×Evidence 一致性（P25-05）：跨家族矛盾门禁。
+ *
+ * P25-03 意图矩阵声明了每 KP×QT 的 trainsWhat（训练什么），
+ * P25-04 证据验证要求题目声明 semanticEvidence.relations。
+ * 本检查确保二者不矛盾：题目声明的语义关系必须属于该 KP 语义家族允许的关系集，
+ * 否则「意图说训练倍的比较，证据却声明加法合并」即跨家族矛盾。
+ *
+ * 数据源：kbl/teaching/intent-relations.json
+ *   - rules[]：when(category/hasOperation/operationsEmpty/family) → allow[]
+ *   - forbiddenAcrossFamilies：跨家族禁表（兜底，防止规则漏覆盖）
+ *
+ * 三态：
+ *   skip — 题目未声明 semanticEvidence.relations（与 P25-04 warn 互补，不重复告警）
+ *   pass — 声明关系全部在 allowedRelations 内
+ *   fail — 存在跨家族矛盾关系（SEVERITY.ERROR，KP_SEMANTIC_INTENT_CONFLICT）
+ *
+ * 加载方式同 checkSemanticEvidence：计算路径 require，避免 bundle 内联 kbl/ 数据。
+ */
+var _intentRelations = null;
+function getIntentRelations() {
+  if (_intentRelations) return _intentRelations;
+  try {
+    var p = '../../' + 'kbl/' + 'teaching/' + 'intent-relations.json';
+    _intentRelations = require(p) || { rules: [], forbiddenAcrossFamilies: {} };
+  } catch (e) { _intentRelations = { rules: [], forbiddenAcrossFamilies: {} }; }
+  return _intentRelations;
+}
+
+/** 基于 KP 语义事实（type/family/operations）匹配 intent-relations 规则，返回允许的关系集合 */
+function getAllowedRelations(kpSemantic) {
+  var doc = getIntentRelations();
+  var allowed = {};
+  if (!kpSemantic || !Array.isArray(doc.rules)) return allowed;
+  var family = kpSemantic.family || null;
+  var type = kpSemantic.type || null; // KBL type（calculation/geometry/...）
+  var ops = kpSemantic.operations || [];
+  var opsEmpty = ops.length === 0;
+
+  doc.rules.forEach(function (rule) {
+    var w = rule.when || {};
+    var match = true;
+    if (w.category && w.category !== type) match = false;
+    if (w.family && w.family !== family) match = false;
+    if (w.operationsEmpty === true && !opsEmpty) match = false;
+    if (w.operationsEmpty === false && opsEmpty) match = false;
+    if (w.hasOperation && ops.indexOf(w.hasOperation) === -1) match = false;
+    if (match && Array.isArray(rule.allow)) rule.allow.forEach(function (r) { allowed[r] = true; });
+  });
+
+  // 跨家族禁表兜底：几何家族禁算术关系，算术家族禁几何关系
+  var forbidden = doc.forbiddenAcrossFamilies || {};
+  if (type === 'geometry' || family === 'geometry') {
+    (forbidden.geometry || []).forEach(function (r) { delete allowed[r]; });
+  } else if (type === 'calculation' || family === 'multiplication-division' ||
+             family === 'fraction' || family === 'decimal' || family === 'percent') {
+    (forbidden['algebra-arithmetic'] || []).forEach(function (r) { delete allowed[r]; });
+  }
+  return allowed;
+}
+
+function getKpSemanticForIntent(kpId) {
+  if (!kpId) return null;
+  var KC = getKC();
+  if (!KC || typeof KC.get !== 'function') return null;
+  var kp = KC.get(kpId);
+  if (!kp) return null;
+  var sem = kp.semantic || {};
+  return { family: sem.family || null, type: kp.type || null, operations: sem.operations || [] };
+}
+
+function checkIntentEvidenceConsistency(sq, kpId) {
+  var errors = [];
+  var decl = sq.data && sq.data.semanticEvidence;
+  var relations = decl && Array.isArray(decl.relations) ? decl.relations : [];
+  if (relations.length === 0) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+
+  // KC 不可用（如浏览器 bundle 未加载 knowledge-context）时无法判定，skip 不误杀
+  var kpSemantic = getKpSemanticForIntent(kpId);
+  if (!kpSemantic) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+
+  var allowed = getAllowedRelations(kpSemantic);
+  // 规则表为空（bundle 未内联 intent-relations.json / 加载失败）时无法判定，skip 不误杀
+  if (Object.keys(allowed).length === 0) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+
+  var conflicts = relations.filter(function (r) { return !allowed[r]; });
+  if (conflicts.length) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_CONFLICT, 'data.semanticEvidence.relations',
+      '声明的语义关系与 KP 意图矛盾（跨家族）：' + conflicts.join(','), SEVERITY.ERROR,
+      { kpId: kpId, conflicts: conflicts, allowedRelations: Object.keys(allowed) }));
+    return { state: 'fail', errors: errors, warnings: [] };
+  }
+  return { state: 'pass', errors: errors, warnings: [] };
+}
+
+/**
  * 主验证入口
  * @param {Object} sq SemanticQuestion
  * @param {Object} context { plan: QuestionPlan, kpConstraints: Object }
@@ -401,6 +502,10 @@ function validateKpSemantics(sq, context) {
   allErrors.push.apply(allErrors, evidenceResult.errors);
   allWarnings.push.apply(allWarnings, evidenceResult.warnings);
 
+  // 8. Intent×Evidence 一致性（P25-05：跨家族矛盾门禁；skip/pass/fail）
+  var intentResult = checkIntentEvidenceConsistency(sq, kpId);
+  allErrors.push.apply(allErrors, intentResult.errors);
+
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
 
@@ -411,6 +516,7 @@ function validateKpSemantics(sq, context) {
     info: allInfo,
     score: score,
     semanticEvidence: evidenceResult.state,
+    intentConsistency: intentResult.state,
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
@@ -418,7 +524,8 @@ function validateKpSemantics(sq, context) {
       numeric: checkNumeric(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       structure: checkStructure(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       content: contentResult.errors.length === 0 ? 'pass' : 'fail',
-      semanticEvidence: evidenceResult.state
+      semanticEvidence: evidenceResult.state,
+      intentConsistency: intentResult.state
     }
   };
 }
@@ -433,5 +540,7 @@ module.exports = {
   checkStructure: checkStructure,
   checkContent: checkContent,
   checkSemanticEvidence: checkSemanticEvidence,
+  checkIntentEvidenceConsistency: checkIntentEvidenceConsistency,
+  getAllowedRelations: getAllowedRelations,
   getEvidenceRules: getEvidenceRules
 };
