@@ -23,27 +23,42 @@
     "math-g1-up-u01-k003|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「0的认识和加减法」（5以内数的认识和加、减法 · 理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式。）：理解减法是从整体中去掉一部分的运算"
+      }
     },
     "math-g1-up-u03-k001|geometry": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征"
+      }
     },
     "math-g1-up-u03-k001|judge": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征"
+      }
     },
     "math-g1-up-u03-k001|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征"
+      }
     },
     "math-g1-down-u01-k001|geometry": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「平面图形认识」（认识平面图形 · 直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组）：直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组"
+      }
     },
     "math-g1-down-u01-k001|judge": {
       "verdict": "打回",
@@ -53,7 +68,10 @@
     "math-g1-down-u01-k001|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「平面图形认识」（认识平面图形 · 直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组）：直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组"
+      }
     },
     "math-g1-down-u02-k001|apply": {
       "verdict": "打回",
@@ -63,322 +81,514 @@
     "math-g1-down-u02-k002|calc": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「减法口算」（20以内的退位减法 · 进一步巩固退位减法的口算）：进一步巩固退位减法的口算"
+      }
     },
     "math-g1-down-u02-k002|fill": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「减法口算」（20以内的退位减法 · 进一步巩固退位减法的口算）：进一步巩固退位减法的口算"
+      }
     },
     "math-g1-down-u02-k002|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「减法口算」（20以内的退位减法 · 进一步巩固退位减法的口算）：进一步巩固退位减法的口算"
+      }
     },
     "math-g1-down-u02-k003|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「解决问题」（20以内的退位减法 · 能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题）：能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题"
+      }
     },
     "math-g1-down-u03-k004|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「数位」（100以内数的认识 · 认识个位、十位、百位，理解各数位的意义）：认识个位、十位、百位，理解各数位的意义"
+      }
     },
     "math-g1-down-u04-k005|calc": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「解决问题」（100以内的口算加、减法 · 能用加、减法解决实际问题）：能用加、减法解决实际问题"
+      }
     },
     "math-g1-down-u04-k005|fill": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「解决问题」（100以内的口算加、减法 · 能用加、减法解决实际问题）：能用加、减法解决实际问题"
+      }
     },
     "math-g1-down-u04-k005|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「解决问题」（100以内的口算加、减法 · 能用加、减法解决实际问题）：能用加、减法解决实际问题"
+      }
     },
     "math-g1-down-u04-k005|choice": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「解决问题」（100以内的口算加、减法 · 能用加、减法解决实际问题）：能用加、减法解决实际问题"
+      }
     },
     "math-g1-down-u06-k002|calc": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系"
+      }
     },
     "math-g1-down-u06-k002|fill": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系"
+      }
     },
     "math-g1-down-u06-k002|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系"
+      }
     },
     "math-g1-down-u06-k002|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系"
+      }
     },
     "math-g1-down-u06-k002|geometry": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系"
+      }
     },
     "math-g1-down-u06-k003|calc": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「比多少、多步加减运算应用题」（数量间的加减关系 · 能解决“比多比少”以及多步加减关系的实际问题）：能解决“比多比少”以及多步加减关系的实际问题"
+      }
     },
     "math-g1-down-u06-k003|fill": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「比多少、多步加减运算应用题」（数量间的加减关系 · 能解决“比多比少”以及多步加减关系的实际问题）：能解决“比多比少”以及多步加减关系的实际问题"
+      }
     },
     "math-g1-down-u06-k003|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「比多少、多步加减运算应用题」（数量间的加减关系 · 能解决“比多比少”以及多步加减关系的实际问题）：能解决“比多比少”以及多步加减关系的实际问题"
+      }
     },
     "math-g1-down-u06-k003|choice": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「比多少、多步加减运算应用题」（数量间的加减关系 · 能解决“比多比少”以及多步加减关系的实际问题）：能解决“比多比少”以及多步加减关系的实际问题"
+      }
     },
     "math-g1-down-u07-k001|apply": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「认识人民币的单位」（欢乐购物街 · 元、角、分。）：元、角、分"
+      }
     },
     "math-g1-down-u07-k001|fill": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「认识人民币的单位」（欢乐购物街 · 元、角、分。）：元、角、分"
+      }
     },
     "math-g1-down-u07-k001|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「认识人民币的单位」（欢乐购物街 · 元、角、分。）：元、角、分"
+      }
     },
     "math-g1-down-u07-k002|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「人民币换算」（欢乐购物街 · 知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算）：知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算"
+      }
     },
     "math-g1-down-u07-k002|fill": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「人民币换算」（欢乐购物街 · 知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算）：知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算"
+      }
     },
     "math-g1-down-u07-k002|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「人民币换算」（欢乐购物街 · 知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算）：知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算"
+      }
     },
     "math-g1-down-u08-k001|apply": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「综合运用本册知识」（复习与关联 · 对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固）：对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固"
+      }
     },
     "math-g1-down-u08-k001|fill": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「综合运用本册知识」（复习与关联 · 对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固）：对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固"
+      }
     },
     "math-g1-down-u08-k001|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「综合运用本册知识」（复习与关联 · 对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固）：对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固"
+      }
     },
     "math-g2-up-u01-k001|fill": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏"
+      }
     },
     "math-g2-up-u01-k001|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏"
+      }
     },
     "math-g2-up-u01-k001|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏"
+      }
     },
     "math-g2-up-u01-k001|classify": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏"
+      }
     },
     "math-g2-up-u01-k001|judge": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏"
+      }
     },
     "math-g2-up-u01-k002|fill": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组"
+      }
     },
     "math-g2-up-u01-k002|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组"
+      }
     },
     "math-g2-up-u01-k002|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组"
+      }
     },
     "math-g2-up-u01-k002|classify": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组"
+      }
     },
     "math-g2-up-u01-k002|judge": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组"
+      }
     },
     "math-g2-down-u02-k001|calc": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「有余数除法的含义」（有余数的除法 · 平均分物品时，有时会有剩余，剩余的部分叫做余数）：平均分物品时，有时会有剩余，剩余的部分叫做余数"
+      }
     },
     "math-g2-down-u02-k001|fill": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「有余数除法的含义」（有余数的除法 · 平均分物品时，有时会有剩余，剩余的部分叫做余数）：平均分物品时，有时会有剩余，剩余的部分叫做余数"
+      }
     },
     "math-g2-down-u02-k001|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「有余数除法的含义」（有余数的除法 · 平均分物品时，有时会有剩余，剩余的部分叫做余数）：平均分物品时，有时会有剩余，剩余的部分叫做余数"
+      }
     },
     "math-g2-down-u02-k001|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「有余数除法的含义」（有余数的除法 · 平均分物品时，有时会有剩余，剩余的部分叫做余数）：平均分物品时，有时会有剩余，剩余的部分叫做余数"
+      }
     },
     "math-g2-down-u02-k002|calc": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「余数和除数的关系」（有余数的除法 · 核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数）：核心规则：**余数＜除数**"
+      }
     },
     "math-g2-down-u02-k002|fill": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「余数和除数的关系」（有余数的除法 · 核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数）：核心规则：**余数＜除数**"
+      }
     },
     "math-g2-down-u02-k002|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「余数和除数的关系」（有余数的除法 · 核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数）：核心规则：**余数＜除数**"
+      }
     },
     "math-g2-down-u02-k002|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「余数和除数的关系」（有余数的除法 · 核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数）：核心规则：**余数＜除数**"
+      }
     },
     "math-g3-up-u08-k001|calc": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「初步认识分数」（分数的初步认识 · 几分之一、几分之几的含义）：几分之一、几分之几的含义"
+      }
     },
     "math-g3-up-u08-k001|fill": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「初步认识分数」（分数的初步认识 · 几分之一、几分之几的含义）：几分之一、几分之几的含义"
+      }
     },
     "math-g3-up-u08-k001|apply": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「初步认识分数」（分数的初步认识 · 几分之一、几分之几的含义）：几分之一、几分之几的含义"
+      }
     },
     "math-g3-up-u08-k001|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「初步认识分数」（分数的初步认识 · 几分之一、几分之几的含义）：几分之一、几分之几的含义"
+      }
     },
     "math-g3-up-u08-k002|calc": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「分数的读写」（分数的初步认识 · 分子、分母、分数线的认识）：分子、分母、分数线的认识"
+      }
     },
     "math-g3-up-u08-k002|fill": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「分数的读写」（分数的初步认识 · 分子、分母、分数线的认识）：分子、分母、分数线的认识"
+      }
     },
     "math-g3-up-u08-k002|apply": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「分数的读写」（分数的初步认识 · 分子、分母、分数线的认识）：分子、分母、分数线的认识"
+      }
     },
     "math-g3-up-u08-k002|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「分数的读写」（分数的初步认识 · 分子、分母、分数线的认识）：分子、分母、分数线的认识"
+      }
     },
     "math-g3-down-u07-k001|calc": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「认识小数」（小数的初步认识 · 小数的读法、写法，小数点各部分名称。）：小数的读法、写法，小数点各部分名称"
+      }
     },
     "math-g3-down-u07-k001|fill": {
       "verdict": "通过",
       "fromStatus": "needs-review",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「认识小数」（小数的初步认识 · 小数的读法、写法，小数点各部分名称。）：小数的读法、写法，小数点各部分名称"
+      }
     },
     "math-g3-down-u07-k001|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「认识小数」（小数的初步认识 · 小数的读法、写法，小数点各部分名称。）：小数的读法、写法，小数点各部分名称"
+      }
     },
     "math-g3-down-u07-k002|calc": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「小数的大小比较」（小数的初步认识 · 先比较整数部分，整数部分相同再比较小数部分。）：先比较整数部分，整数部分相同再比较小数部分"
+      }
     },
     "math-g3-down-u07-k002|fill": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「小数的大小比较」（小数的初步认识 · 先比较整数部分，整数部分相同再比较小数部分。）：先比较整数部分，整数部分相同再比较小数部分"
+      }
     },
     "math-g3-down-u07-k002|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「小数的大小比较」（小数的初步认识 · 先比较整数部分，整数部分相同再比较小数部分。）：先比较整数部分，整数部分相同再比较小数部分"
+      }
     },
     "math-g3-down-u07-k002|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「小数的大小比较」（小数的初步认识 · 先比较整数部分，整数部分相同再比较小数部分。）：先比较整数部分，整数部分相同再比较小数部分"
+      }
     },
     "math-g6-down-u02-k001|calc": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「折扣」（百分数（二） · 商品按原定价格的百分之几出售。几折就是原价的百分之几十。原价 × 折扣 = 现价；现价 ÷ 折扣 = 原价）：商品按原定价格的百分之几出售"
+      }
     },
     "math-g6-down-u02-k001|fill": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「折扣」（百分数（二） · 商品按原定价格的百分之几出售。几折就是原价的百分之几十。原价 × 折扣 = 现价；现价 ÷ 折扣 = 原价）：商品按原定价格的百分之几出售"
+      }
     },
     "math-g6-down-u02-k001|apply": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「折扣」（百分数（二） · 商品按原定价格的百分之几出售。几折就是原价的百分之几十。原价 × 折扣 = 现价；现价 ÷ 折扣 = 原价）：商品按原定价格的百分之几出售"
+      }
     },
     "math-g6-down-u02-k001|choice": {
       "verdict": "通过",
       "fromStatus": "ai-verified",
-      "note": ""
+      "note": "",
+      "textFrozen": {
+        "trainsWhat": "训练「折扣」（百分数（二） · 商品按原定价格的百分之几出售。几折就是原价的百分之几十。原价 × 折扣 = 现价；现价 ÷ 折扣 = 原价）：商品按原定价格的百分之几出售"
+      }
     }
   },
   "supplements": [
@@ -389,127 +599,202 @@
         "math-g1-up-u01-k001|calc": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「1-5数的认识」（5以内数的认识和加、减法 · 认、读、写1—5各数； 知道1—5的顺序（从前往后1、2、3、4、5，从后往前5、4、3、2、1）； 理解数的含义，能用实物表示；初步区分基数（表示数量）与序数（表示顺序）； 掌握“一一对应”的比较方法；能用“多”“少”“同样多”描述数量关系）：认、读、写1—5各数"
+          }
         },
         "math-g1-up-u01-k001|fill": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「1-5数的认识」（5以内数的认识和加、减法 · 认、读、写1—5各数； 知道1—5的顺序（从前往后1、2、3、4、5，从后往前5、4、3、2、1）； 理解数的含义，能用实物表示；初步区分基数（表示数量）与序数（表示顺序）； 掌握“一一对应”的比较方法；能用“多”“少”“同样多”描述数量关系）：认、读、写1—5各数"
+          }
         },
         "math-g1-up-u01-k001|apply": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「1-5数的认识」（5以内数的认识和加、减法 · 认、读、写1—5各数； 知道1—5的顺序（从前往后1、2、3、4、5，从后往前5、4、3、2、1）； 理解数的含义，能用实物表示；初步区分基数（表示数量）与序数（表示顺序）； 掌握“一一对应”的比较方法；能用“多”“少”“同样多”描述数量关系）：认、读、写1—5各数"
+          }
         },
         "math-g1-up-u01-k003|calc": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「0的认识和加减法」（5以内数的认识和加、减法 · 理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式。）：理解减法是从整体中去掉一部分的运算"
+          }
         },
         "math-g1-up-u01-k003|fill": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「0的认识和加减法」（5以内数的认识和加、减法 · 理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式。）：理解减法是从整体中去掉一部分的运算"
+          }
         },
         "math-g1-up-u01-k003|apply": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「0的认识和加减法」（5以内数的认识和加、减法 · 理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式。）：理解减法是从整体中去掉一部分的运算"
+          }
         },
         "math-g1-up-u03-k001|fill": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征"
+          }
         },
         "math-g1-up-u03-k001|apply": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征"
+          }
         },
         "math-g1-down-u01-k001|fill": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「平面图形认识」（认识平面图形 · 直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组）：直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组"
+          }
         },
         "math-g1-down-u01-k001|apply": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「平面图形认识」（认识平面图形 · 直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组）：直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组"
+          }
         },
         "math-g1-down-u02-k001|calc": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「运算方法（平十、破十）」（20以内的退位减法 · 掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算）：掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算"
+          }
         },
         "math-g1-down-u02-k001|fill": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「运算方法（平十、破十）」（20以内的退位减法 · 掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算）：掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算"
+          }
         },
         "math-g1-down-u02-k001|choice": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「运算方法（平十、破十）」（20以内的退位减法 · 掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算）：掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算"
+          }
         },
         "math-g1-down-u02-k002|choice": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「减法口算」（20以内的退位减法 · 进一步巩固退位减法的口算）：进一步巩固退位减法的口算"
+          }
         },
         "math-g1-down-u02-k003|calc": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「解决问题」（20以内的退位减法 · 能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题）：能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题"
+          }
         },
         "math-g1-down-u02-k003|fill": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「解决问题」（20以内的退位减法 · 能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题）：能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题"
+          }
         },
         "math-g1-down-u02-k003|choice": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「解决问题」（20以内的退位减法 · 能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题）：能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题"
+          }
         },
         "math-g1-down-u03-k004|calc": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「数位」（100以内数的认识 · 认识个位、十位、百位，理解各数位的意义）：认识个位、十位、百位，理解各数位的意义"
+          }
         },
         "math-g1-down-u03-k004|fill": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「数位」（100以内数的认识 · 认识个位、十位、百位，理解各数位的意义）：认识个位、十位、百位，理解各数位的意义"
+          }
         },
         "math-g1-down-u03-k004|apply": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「数位」（100以内数的认识 · 认识个位、十位、百位，理解各数位的意义）：认识个位、十位、百位，理解各数位的意义"
+          }
         },
         "math-g3-down-u07-k001|apply": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「认识小数」（小数的初步认识 · 小数的读法、写法，小数点各部分名称。）：小数的读法、写法，小数点各部分名称"
+          }
         },
         "math-g6-up-u05-k006|calc": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「解决问题」（百分数 · 求一个数比另一个数多（少）百分之几；已知比一个数多（少）百分之几的数是多少，求这个数；求常见的百分率（出勤率、合格率等））：求一个数比另一个数多（少）百分之几"
+          }
         },
         "math-g6-up-u05-k006|fill": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「解决问题」（百分数 · 求一个数比另一个数多（少）百分之几；已知比一个数多（少）百分之几的数是多少，求这个数；求常见的百分率（出勤率、合格率等））：求一个数比另一个数多（少）百分之几"
+          }
         },
         "math-g6-up-u05-k006|apply": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「解决问题」（百分数 · 求一个数比另一个数多（少）百分之几；已知比一个数多（少）百分之几的数是多少，求这个数；求常见的百分率（出勤率、合格率等））：求一个数比另一个数多（少）百分之几"
+          }
         },
         "math-g6-up-u05-k006|choice": {
           "verdict": "通过",
           "fromStatus": "见批次说明",
-          "note": "用户口头指令：未裁决行全部确认通过"
+          "note": "用户口头指令：未裁决行全部确认通过",
+          "textFrozen": {
+            "trainsWhat": "训练「解决问题」（百分数 · 求一个数比另一个数多（少）百分之几；已知比一个数多（少）百分之几的数是多少，求这个数；求常见的百分率（出勤率、合格率等））：求一个数比另一个数多（少）百分之几"
+          }
         }
       }
     },

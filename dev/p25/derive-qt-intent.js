@@ -59,7 +59,7 @@ var CATEGORY_CN = {
   calculation: '计算操作', written: '书面表达', selection: '辨认判断',
   geometry: '图形操作', classification: '分类整理', application: '综合应用'
 };
-// 题型级通用语义漂移（教学法常识，作用于该题型所有行，非 KP 专属断言）
+// 题型级语义漂移（教学法常识，作用于该题型所有行，非 KP 专属断言）
 var TYPE_DRIFT = {
   calc: '题面退化为纯算式，知识点语义情境丢失（算对≠理解该知识的意义）',
   fill: '答案唯一性约束下退化为机械计算或抄写，考查点从理解滑向记忆',
@@ -68,6 +68,20 @@ var TYPE_DRIFT = {
   geometry: '作图/操作要求在非交互载体上退化为文字描述，图形表征降级',
   classify: '若分组元素可被单一表面特征（数值大小）分组，退化为排序/计算',
   apply: '情境阅读负担淹没数学内核，考查点从数学滑向语文阅读'
+};
+
+// 题型级「可承载子目标」透镜（7 条，题型级数据非 KP 级硬编码）：
+// 词频分析证明定义子句无法按线索词判别题型（数/分/算 全题型高频、同 KP 各题型分布相同），
+// 故 trainsWhat 采用「题型功能透镜 + KP 对象 + 不承载声明」三段式，不猜子句
+var TYPE_SCOPE = {
+  calc:    { carry: '计算过程与得数产出', forbid: '概念表述与图形操作' },
+  fill:    { carry: '关键步骤与结果的书面表达', forbid: '多步推理的完整表述' },
+  choice:  { carry: '辨认、对应与辨析（在干扰项下做出正确选择）', forbid: '完整的书写与计算过程' },
+  judge:   { carry: '特征与关系的正误辨析', forbid: '操作性任务与多步应用' },
+  classify:{ carry: '按标准分类与归纳整理', forbid: '数值计算本身' },
+  sort:    { carry: '依据规则的排序与大小比较', forbid: '情境化问题解决' },
+  geometry:{ carry: '图形操作与直观辨认', forbid: '脱离图形的纯文字表述' },
+  apply:   { carry: '在情境中运用与迁移', forbid: '方法定义的复述' }
 };
 
 function typeMeta(qt) {
@@ -112,9 +126,11 @@ function deriveRow(knowledgeId, questionType) {
   var flags = [];
   var st = {}; // 每问状态
 
-  // ① trainsWhat —— KBL 事实投影，恒可推导
-  var what = '训练「' + f.name + '」（' + f.unitName + (f.concept ? ' · ' + f.concept : '') + '）';
-  if (f.definitionHead) what += '：' + f.definitionHead;
+  // ① trainsWhat —— 题型收窄（三段式）：题型功能透镜 + KP 对象 + 不承载声明
+  var scope = TYPE_SCOPE[questionType] || { carry: '', forbid: '' };
+  var what = '通过' + questionType + '（' + t.name + '）训练' + scope.carry +
+    '，对象为「' + f.name + '」（' + (f.definitionHead || f.concept || f.unitName) + '）' +
+    '；题型限定：不承载' + scope.forbid;
   st.trainsWhat = 'kbl-derived';
 
   // ② whyThisType —— 认知/表征/范畴匹配证据，≥1 条才可推导
@@ -264,6 +280,12 @@ if (reviewLedger) {
         });
         hit.evidence.humanReview = { verdict: 'confirmed', batch: av.batch, corrected: true, origin: av.origin || '' };
       } else {
+        // 冻结回放：confirmed 时点的人工快照优先于后续推导规则变更（确认语义 = 确认当时文本）
+        if (v.textFrozen) {
+          Object.keys(v.textFrozen).forEach(function (k) {
+            if (hit.intent[k] !== undefined) hit.intent[k] = v.textFrozen[k];
+          });
+        }
         hit.evidence.humanReview = { verdict: 'confirmed', batch: av.batch };
       }
       confirmedRows.push(hit);
