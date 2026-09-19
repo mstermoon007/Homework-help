@@ -18,8 +18,10 @@
   },
   "counts": {
     "rows": 1570,
-    "aiVerified": 1242,
-    "needsReview": 328,
+    "confirmed": 95,
+    "aiVerified": 1190,
+    "needsReview": 285,
+    "rejected": 3,
     "byQuestionType": {
       "calc": 189,
       "fill": 375,
@@ -46,7 +48,7 @@
     {
       "knowledgeId": "math-g1-up-u01-k001",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「1-5数的认识」（5以内数的认识和加、减法 · 认、读、写1—5各数； 知道1—5的顺序（从前往后1、2、3、4、5，从后往前5、4、3、2、1）； 理解数的含义，能用实物表示；初步区分基数（表示数量）与序数（表示顺序）； 掌握“一一对应”的比较方法；能用“多”“少”“同样多”描述数量关系）：认、读、写1—5各数",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -89,13 +91,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-up-u01-k001",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「1-5数的认识」（5以内数的认识和加、减法 · 认、读、写1—5各数； 知道1—5的顺序（从前往后1、2、3、4、5，从后往前5、4、3、2、1）； 理解数的含义，能用实物表示；初步区分基数（表示数量）与序数（表示顺序）； 掌握“一一对应”的比较方法；能用“多”“少”“同样多”描述数量关系）：认、读、写1—5各数",
         "whyThisType": null,
@@ -137,13 +143,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-up-u01-k001",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「1-5数的认识」（5以内数的认识和加、减法 · 认、读、写1—5各数； 知道1—5的顺序（从前往后1、2、3、4、5，从后往前5、4、3、2、1）； 理解数的含义，能用实物表示；初步区分基数（表示数量）与序数（表示顺序）； 掌握“一一对应”的比较方法；能用“多”“少”“同样多”描述数量关系）：认、读、写1—5各数",
         "whyThisType": null,
@@ -185,7 +195,11 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
@@ -231,7 +245,12 @@
         "matches": [
           "认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "rejected",
+          "batch": "sample-1",
+          "note": ""
+        }
       }
     },
     {
@@ -422,7 +441,7 @@
     {
       "knowledgeId": "math-g1-up-u01-k003",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「0的认识和加减法」（5以内数的认识和加、减法 · 理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式。）：理解减法是从整体中去掉一部分的运算",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -465,13 +484,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-up-u01-k003",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「0的认识和加减法」（5以内数的认识和加、减法 · 理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式。）：理解减法是从整体中去掉一部分的运算",
         "whyThisType": null,
@@ -513,13 +536,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-up-u01-k003",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「0的认识和加减法」（5以内数的认识和加、减法 · 理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式。）：理解减法是从整体中去掉一部分的运算",
         "whyThisType": null,
@@ -561,13 +588,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-up-u01-k003",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「0的认识和加减法」（5以内数的认识和加、减法 · 理解减法是从整体中去掉一部分的运算；掌握5以内减法的口算方法；能根据情境图列减法算式。）：理解减法是从整体中去掉一部分的运算",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内",
@@ -607,7 +638,11 @@
         "matches": [
           "认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
@@ -989,7 +1024,7 @@
     {
       "knowledgeId": "math-g1-up-u03-k001",
       "questionType": "geometry",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征",
         "whyThisType": "geometry（操作/作图题，图形操作）选取依据——认知匹配：本知识点认知层级「认识」在geometry题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，geometry题型支持图形呈现；范畴对应：图形与几何域知识点对应操作/作图题型",
@@ -1033,13 +1068,17 @@
           "表征支持：本知识点含图形表征，geometry题型支持图形呈现",
           "范畴对应：图形与几何域知识点对应操作/作图题型"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-up-u03-k001",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征",
         "whyThisType": "fill（填空题，书面表达）选取依据——表征支持：本知识点含图形表征，fill题型支持图形呈现",
@@ -1083,13 +1122,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-up-u03-k001",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——表征支持：本知识点含图形表征，apply题型支持图形呈现",
@@ -1133,13 +1176,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-up-u03-k001",
       "questionType": "judge",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征",
         "whyThisType": "judge（判断题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在judge题型认知区间[认识/理解]内；表征支持：本知识点含图形表征，judge题型支持图形呈现",
@@ -1180,13 +1227,17 @@
           "认知匹配：本知识点认知层级「认识」在judge题型认知区间[认识/理解]内",
           "表征支持：本知识点含图形表征，judge题型支持图形呈现"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-up-u03-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「立体图形初识」（认识立体图形 · 直观认识长方体、正方体、圆柱、球等立体图形的特征）：直观认识长方体、正方体、圆柱、球等立体图形的特征",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内；表征支持：本知识点含图形表征，choice题型支持图形呈现",
@@ -1228,7 +1279,11 @@
           "认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内",
           "表征支持：本知识点含图形表征，choice题型支持图形呈现"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
@@ -2752,7 +2807,7 @@
     {
       "knowledgeId": "math-g1-down-u01-k001",
       "questionType": "geometry",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「平面图形认识」（认识平面图形 · 直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组）：直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组",
         "whyThisType": "geometry（操作/作图题，图形操作）选取依据——认知匹配：本知识点认知层级「认识」在geometry题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，geometry题型支持图形呈现；范畴对应：图形与几何域知识点对应操作/作图题型",
@@ -2796,13 +2851,17 @@
           "表征支持：本知识点含图形表征，geometry题型支持图形呈现",
           "范畴对应：图形与几何域知识点对应操作/作图题型"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u01-k001",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「平面图形认识」（认识平面图形 · 直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组）：直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组",
         "whyThisType": "fill（填空题，书面表达）选取依据——表征支持：本知识点含图形表征，fill题型支持图形呈现",
@@ -2846,13 +2905,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u01-k001",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「平面图形认识」（认识平面图形 · 直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组）：直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——表征支持：本知识点含图形表征，apply题型支持图形呈现",
@@ -2896,7 +2959,11 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
@@ -2943,13 +3010,18 @@
           "认知匹配：本知识点认知层级「认识」在judge题型认知区间[认识/理解]内",
           "表征支持：本知识点含图形表征，judge题型支持图形呈现"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "rejected",
+          "batch": "sample-1",
+          "note": ""
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u01-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「平面图形认识」（认识平面图形 · 直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组）：直观认识长方形、正方形、三角形、圆、平行四边形，知道名称并能辨认和区分 体会“面在体上”——平面图形可以从立体图形上得到 会用平面图形进行简单的拼组",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内；表征支持：本知识点含图形表征，choice题型支持图形呈现",
@@ -2991,13 +3063,17 @@
           "认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内",
           "表征支持：本知识点含图形表征，choice题型支持图形呈现"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k001",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「运算方法（平十、破十）」（20以内的退位减法 · 掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算）：掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -3040,13 +3116,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k001",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「运算方法（平十、破十）」（20以内的退位减法 · 掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算）：掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算",
         "whyThisType": null,
@@ -3088,7 +3168,11 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
@@ -3134,13 +3218,18 @@
         "matches": [
           "认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "rejected",
+          "batch": "sample-1",
+          "note": ""
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k001",
       "questionType": "choice",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「运算方法（平十、破十）」（20以内的退位减法 · 掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算）：掌握“破十法”“平十法”“想加算减”等计算方法 运用多种算法灵活计算",
         "whyThisType": null,
@@ -3182,13 +3271,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k002",
       "questionType": "calc",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「减法口算」（20以内的退位减法 · 进一步巩固退位减法的口算）：进一步巩固退位减法的口算",
         "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内；数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -3229,13 +3322,17 @@
           "认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内",
           "数值表征：本知识点为数值表征，与计算题的算式形态一致"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k002",
       "questionType": "fill",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「减法口算」（20以内的退位减法 · 进一步巩固退位减法的口算）：进一步巩固退位减法的口算",
         "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内",
@@ -3275,13 +3372,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k002",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「减法口算」（20以内的退位减法 · 进一步巩固退位减法的口算）：进一步巩固退位减法的口算",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内",
@@ -3321,13 +3422,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k002",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「减法口算」（20以内的退位减法 · 进一步巩固退位减法的口算）：进一步巩固退位减法的口算",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内",
@@ -3367,13 +3472,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k003",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（20以内的退位减法 · 能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题）：能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -3416,13 +3525,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k003",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（20以内的退位减法 · 能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题）：能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题",
         "whyThisType": null,
@@ -3464,13 +3577,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k003",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（20以内的退位减法 · 能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题）：能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内",
@@ -3510,13 +3627,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u02-k003",
       "questionType": "choice",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（20以内的退位减法 · 能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题）：能解决“有多余条件”的实际问题，以及“求一个数比另一个数多几（或少几）”的问题",
         "whyThisType": null,
@@ -3558,7 +3679,11 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
@@ -4119,7 +4244,7 @@
     {
       "knowledgeId": "math-g1-down-u03-k004",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「数位」（100以内数的认识 · 认识个位、十位、百位，理解各数位的意义）：认识个位、十位、百位，理解各数位的意义",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -4162,13 +4287,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u03-k004",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「数位」（100以内数的认识 · 认识个位、十位、百位，理解各数位的意义）：认识个位、十位、百位，理解各数位的意义",
         "whyThisType": null,
@@ -4210,13 +4339,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u03-k004",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「数位」（100以内数的认识 · 认识个位、十位、百位，理解各数位的意义）：认识个位、十位、百位，理解各数位的意义",
         "whyThisType": null,
@@ -4258,13 +4391,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u03-k004",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「数位」（100以内数的认识 · 认识个位、十位、百位，理解各数位的意义）：认识个位、十位、百位，理解各数位的意义",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内",
@@ -4304,7 +4441,11 @@
         "matches": [
           "认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
@@ -5420,7 +5561,7 @@
     {
       "knowledgeId": "math-g1-down-u04-k005",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（100以内的口算加、减法 · 能用加、减法解决实际问题）：能用加、减法解决实际问题",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -5463,13 +5604,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u04-k005",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（100以内的口算加、减法 · 能用加、减法解决实际问题）：能用加、减法解决实际问题",
         "whyThisType": null,
@@ -5511,13 +5656,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u04-k005",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（100以内的口算加、减法 · 能用加、减法解决实际问题）：能用加、减法解决实际问题",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内",
@@ -5557,13 +5706,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u04-k005",
       "questionType": "choice",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（100以内的口算加、减法 · 能用加、减法解决实际问题）：能用加、减法解决实际问题",
         "whyThisType": null,
@@ -5605,7 +5758,11 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
@@ -6351,7 +6508,7 @@
     {
       "knowledgeId": "math-g1-down-u06-k002",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系",
         "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「理解」在calc题型认知区间[了解/理解/应用]内",
@@ -6394,13 +6551,17 @@
         ],
         "flags": [
           "representation-conflict"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u06-k002",
       "questionType": "fill",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系",
         "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/理解/应用]内；表征支持：本知识点含图形表征，fill题型支持图形呈现",
@@ -6442,13 +6603,17 @@
           "认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/理解/应用]内",
           "表征支持：本知识点含图形表征，fill题型支持图形呈现"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u06-k002",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「理解」在apply题型认知区间[理解/应用/分析]内；表征支持：本知识点含图形表征，apply题型支持图形呈现",
@@ -6490,13 +6655,17 @@
           "认知匹配：本知识点认知层级「理解」在apply题型认知区间[理解/应用/分析]内",
           "表征支持：本知识点含图形表征，apply题型支持图形呈现"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u06-k002",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用]内；表征支持：本知识点含图形表征，choice题型支持图形呈现",
@@ -6538,13 +6707,17 @@
           "认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用]内",
           "表征支持：本知识点含图形表征，choice题型支持图形呈现"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u06-k002",
       "questionType": "geometry",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「图形表述数量关系」（数量间的加减关系 · 借助画图等策略理解数量间的加减关系）：借助画图等策略理解数量间的加减关系",
         "whyThisType": "geometry（操作/作图题，图形操作）选取依据——认知匹配：本知识点认知层级「理解」在geometry题型认知区间[认识/理解/应用/分析]内；表征支持：本知识点含图形表征，geometry题型支持图形呈现",
@@ -6587,13 +6760,17 @@
           "认知匹配：本知识点认知层级「理解」在geometry题型认知区间[认识/理解/应用/分析]内",
           "表征支持：本知识点含图形表征，geometry题型支持图形呈现"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u06-k003",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「比多少、多步加减运算应用题」（数量间的加减关系 · 能解决“比多比少”以及多步加减关系的实际问题）：能解决“比多比少”以及多步加减关系的实际问题",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -6636,13 +6813,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u06-k003",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「比多少、多步加减运算应用题」（数量间的加减关系 · 能解决“比多比少”以及多步加减关系的实际问题）：能解决“比多比少”以及多步加减关系的实际问题",
         "whyThisType": null,
@@ -6684,13 +6865,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u06-k003",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「比多少、多步加减运算应用题」（数量间的加减关系 · 能解决“比多比少”以及多步加减关系的实际问题）：能解决“比多比少”以及多步加减关系的实际问题",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内",
@@ -6730,13 +6915,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u06-k003",
       "questionType": "choice",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「比多少、多步加减运算应用题」（数量间的加减关系 · 能解决“比多比少”以及多步加减关系的实际问题）：能解决“比多比少”以及多步加减关系的实际问题",
         "whyThisType": null,
@@ -6778,13 +6967,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u07-k001",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「认识人民币的单位」（欢乐购物街 · 元、角、分。）：元、角、分",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——表征支持：本知识点含图形表征，apply题型支持图形呈现；情境支持：综合与实践域知识点适合有情境载体的题型",
@@ -6829,13 +7022,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u07-k001",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「认识人民币的单位」（欢乐购物街 · 元、角、分。）：元、角、分",
         "whyThisType": "fill（填空题，书面表达）选取依据——表征支持：本知识点含图形表征，fill题型支持图形呈现；情境支持：综合与实践域知识点适合有情境载体的题型",
@@ -6880,13 +7077,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u07-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「认识人民币的单位」（欢乐购物街 · 元、角、分。）：元、角、分",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内；表征支持：本知识点含图形表征，choice题型支持图形呈现；情境支持：综合与实践域知识点适合有情境载体的题型",
@@ -6929,13 +7130,17 @@
           "表征支持：本知识点含图形表征，choice题型支持图形呈现",
           "情境支持：综合与实践域知识点适合有情境载体的题型"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u07-k002",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「人民币换算」（欢乐购物街 · 知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算）：知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内；表征支持：本知识点含图形表征，apply题型支持图形呈现；情境支持：综合与实践域知识点适合有情境载体的题型",
@@ -6978,13 +7183,17 @@
           "表征支持：本知识点含图形表征，apply题型支持图形呈现",
           "情境支持：综合与实践域知识点适合有情境载体的题型"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u07-k002",
       "questionType": "fill",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「人民币换算」（欢乐购物街 · 知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算）：知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算",
         "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内；表征支持：本知识点含图形表征，fill题型支持图形呈现；情境支持：综合与实践域知识点适合有情境载体的题型",
@@ -7027,13 +7236,17 @@
           "表征支持：本知识点含图形表征，fill题型支持图形呈现",
           "情境支持：综合与实践域知识点适合有情境载体的题型"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u07-k002",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「人民币换算」（欢乐购物街 · 知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算）：知道1元=10角，1角=10分，会进行100元以内人民币之间的简单换算",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内；表征支持：本知识点含图形表征，choice题型支持图形呈现；情境支持：综合与实践域知识点适合有情境载体的题型",
@@ -7076,7 +7289,11 @@
           "表征支持：本知识点含图形表征，choice题型支持图形呈现",
           "情境支持：综合与实践域知识点适合有情境载体的题型"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
@@ -7223,7 +7440,7 @@
     {
       "knowledgeId": "math-g1-down-u08-k001",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「综合运用本册知识」（复习与关联 · 对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固）：对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——表征支持：本知识点含图形表征，apply题型支持图形呈现；情境支持：综合与实践域知识点适合有情境载体的题型",
@@ -7268,13 +7485,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u08-k001",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「综合运用本册知识」（复习与关联 · 对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固）：对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固",
         "whyThisType": "fill（填空题，书面表达）选取依据——表征支持：本知识点含图形表征，fill题型支持图形呈现；情境支持：综合与实践域知识点适合有情境载体的题型",
@@ -7319,13 +7540,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g1-down-u08-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「综合运用本册知识」（复习与关联 · 对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固）：对全册知识进行系统梳理，涵盖数与运算、图形的认识、数量关系等模块，进行综合应用与复习巩固",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内；表征支持：本知识点含图形表征，choice题型支持图形呈现；情境支持：综合与实践域知识点适合有情境载体的题型",
@@ -7368,13 +7593,17 @@
           "表征支持：本知识点含图形表征，choice题型支持图形呈现",
           "情境支持：综合与实践域知识点适合有情境载体的题型"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k001",
       "questionType": "fill",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏",
         "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/理解/应用]内",
@@ -7414,13 +7643,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用]内",
@@ -7460,13 +7693,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k001",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「理解」在apply题型认知区间[理解/应用/分析]内",
@@ -7506,13 +7743,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「理解」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k001",
       "questionType": "classify",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏",
         "whyThisType": "classify（分类整理题，分类整理）选取依据——认知匹配：本知识点认知层级「理解」在classify题型认知区间[认识/理解/应用]内",
@@ -7552,13 +7793,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「理解」在classify题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k001",
       "questionType": "judge",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「分类的含义」（分类与整理 · 根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏）：根据事物的共同特征（颜色、形状、用途等）将物体有序分组，做到不重复、不遗漏",
         "whyThisType": "judge（判断题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在judge题型认知区间[认识/理解]内",
@@ -7597,13 +7842,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「理解」在judge题型认知区间[认识/理解]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k002",
       "questionType": "fill",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组",
         "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内",
@@ -7643,13 +7892,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k002",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内",
@@ -7689,13 +7942,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k002",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内",
@@ -7735,13 +7992,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k002",
       "questionType": "classify",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组",
         "whyThisType": "classify（分类整理题，分类整理）选取依据——认知匹配：本知识点认知层级「应用」在classify题型认知区间[认识/理解/应用]内",
@@ -7781,13 +8042,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在classify题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-up-u01-k002",
       "questionType": "judge",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「单一标准分类」（分类与整理 · 先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组。）：先确定分类依据（如“按形状分”），逐一对物体判断归类，再检查是否所有物体都已分组",
         "whyThisType": null,
@@ -7828,7 +8093,11 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
@@ -13963,7 +14232,7 @@
     {
       "knowledgeId": "math-g2-down-u02-k001",
       "questionType": "calc",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「有余数除法的含义」（有余数的除法 · 平均分物品时，有时会有剩余，剩余的部分叫做余数）：平均分物品时，有时会有剩余，剩余的部分叫做余数",
         "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「理解」在calc题型认知区间[了解/理解/应用]内；数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -14004,13 +14273,17 @@
           "认知匹配：本知识点认知层级「理解」在calc题型认知区间[了解/理解/应用]内",
           "数值表征：本知识点为数值表征，与计算题的算式形态一致"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-down-u02-k001",
       "questionType": "fill",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「有余数除法的含义」（有余数的除法 · 平均分物品时，有时会有剩余，剩余的部分叫做余数）：平均分物品时，有时会有剩余，剩余的部分叫做余数",
         "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/理解/应用]内",
@@ -14050,13 +14323,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「理解」在fill题型认知区间[了解/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-down-u02-k001",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「有余数除法的含义」（有余数的除法 · 平均分物品时，有时会有剩余，剩余的部分叫做余数）：平均分物品时，有时会有剩余，剩余的部分叫做余数",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「理解」在apply题型认知区间[理解/应用/分析]内",
@@ -14096,13 +14373,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「理解」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-down-u02-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「有余数除法的含义」（有余数的除法 · 平均分物品时，有时会有剩余，剩余的部分叫做余数）：平均分物品时，有时会有剩余，剩余的部分叫做余数",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用]内",
@@ -14142,13 +14423,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「理解」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-down-u02-k002",
       "questionType": "calc",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「余数和除数的关系」（有余数的除法 · 核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数）：核心规则：**余数＜除数**",
         "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内；数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -14189,13 +14474,17 @@
           "认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内",
           "数值表征：本知识点为数值表征，与计算题的算式形态一致"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-down-u02-k002",
       "questionType": "fill",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「余数和除数的关系」（有余数的除法 · 核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数）：核心规则：**余数＜除数**",
         "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内",
@@ -14235,13 +14524,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-down-u02-k002",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「余数和除数的关系」（有余数的除法 · 核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数）：核心规则：**余数＜除数**",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内",
@@ -14281,13 +14574,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g2-down-u02-k002",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「余数和除数的关系」（有余数的除法 · 核心规则：**余数＜除数**；被除数 = 商 × 除数 + 余数）：核心规则：**余数＜除数**",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内",
@@ -14327,7 +14624,11 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
@@ -25067,7 +25368,7 @@
     {
       "knowledgeId": "math-g3-up-u08-k001",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「初步认识分数」（分数的初步认识 · 几分之一、几分之几的含义）：几分之一、几分之几的含义",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -25110,13 +25411,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-up-u08-k001",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「初步认识分数」（分数的初步认识 · 几分之一、几分之几的含义）：几分之一、几分之几的含义",
         "whyThisType": null,
@@ -25158,13 +25463,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-up-u08-k001",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「初步认识分数」（分数的初步认识 · 几分之一、几分之几的含义）：几分之一、几分之几的含义",
         "whyThisType": null,
@@ -25206,13 +25515,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-up-u08-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「初步认识分数」（分数的初步认识 · 几分之一、几分之几的含义）：几分之一、几分之几的含义",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内",
@@ -25252,13 +25565,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-up-u08-k002",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「分数的读写」（分数的初步认识 · 分子、分母、分数线的认识）：分子、分母、分数线的认识",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -25301,13 +25618,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-up-u08-k002",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「分数的读写」（分数的初步认识 · 分子、分母、分数线的认识）：分子、分母、分数线的认识",
         "whyThisType": null,
@@ -25349,13 +25670,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-up-u08-k002",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「分数的读写」（分数的初步认识 · 分子、分母、分数线的认识）：分子、分母、分数线的认识",
         "whyThisType": null,
@@ -25397,13 +25722,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-up-u08-k002",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「分数的读写」（分数的初步认识 · 分子、分母、分数线的认识）：分子、分母、分数线的认识",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内",
@@ -25443,7 +25772,11 @@
         "matches": [
           "认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
@@ -31732,7 +32065,7 @@
     {
       "knowledgeId": "math-g3-down-u07-k001",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「认识小数」（小数的初步认识 · 小数的读法、写法，小数点各部分名称。）：小数的读法、写法，小数点各部分名称",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -31775,13 +32108,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-down-u07-k001",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「认识小数」（小数的初步认识 · 小数的读法、写法，小数点各部分名称。）：小数的读法、写法，小数点各部分名称",
         "whyThisType": null,
@@ -31823,13 +32160,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-down-u07-k001",
       "questionType": "apply",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「认识小数」（小数的初步认识 · 小数的读法、写法，小数点各部分名称。）：小数的读法、写法，小数点各部分名称",
         "whyThisType": null,
@@ -31871,13 +32212,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-down-u07-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「认识小数」（小数的初步认识 · 小数的读法、写法，小数点各部分名称。）：小数的读法、写法，小数点各部分名称",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内",
@@ -31917,13 +32262,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「认识」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-down-u07-k002",
       "questionType": "calc",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「小数的大小比较」（小数的初步认识 · 先比较整数部分，整数部分相同再比较小数部分。）：先比较整数部分，整数部分相同再比较小数部分",
         "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内；数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -31964,13 +32313,17 @@
           "认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内",
           "数值表征：本知识点为数值表征，与计算题的算式形态一致"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-down-u07-k002",
       "questionType": "fill",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「小数的大小比较」（小数的初步认识 · 先比较整数部分，整数部分相同再比较小数部分。）：先比较整数部分，整数部分相同再比较小数部分",
         "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内",
@@ -32010,13 +32363,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-down-u07-k002",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「小数的大小比较」（小数的初步认识 · 先比较整数部分，整数部分相同再比较小数部分。）：先比较整数部分，整数部分相同再比较小数部分",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内",
@@ -32056,13 +32413,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g3-down-u07-k002",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「小数的大小比较」（小数的初步认识 · 先比较整数部分，整数部分相同再比较小数部分。）：先比较整数部分，整数部分相同再比较小数部分",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内",
@@ -32102,7 +32463,11 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
@@ -68105,7 +68470,7 @@
     {
       "knowledgeId": "math-g6-up-u05-k006",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（百分数 · 求一个数比另一个数多（少）百分之几；已知比一个数多（少）百分之几的数是多少，求这个数；求常见的百分率（出勤率、合格率等））：求一个数比另一个数多（少）百分之几",
         "whyThisType": "calc（计算题，计算操作）选取依据——数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -68148,13 +68513,17 @@
         "flags": [
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g6-up-u05-k006",
       "questionType": "fill",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（百分数 · 求一个数比另一个数多（少）百分之几；已知比一个数多（少）百分之几的数是多少，求这个数；求常见的百分率（出勤率、合格率等））：求一个数比另一个数多（少）百分之几",
         "whyThisType": null,
@@ -68196,13 +68565,17 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g6-up-u05-k006",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（百分数 · 求一个数比另一个数多（少）百分之几；已知比一个数多（少）百分之几的数是多少，求这个数；求常见的百分率（出勤率、合格率等））：求一个数比另一个数多（少）百分之几",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内",
@@ -68242,13 +68615,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「分析」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
       "knowledgeId": "math-g6-up-u05-k006",
       "questionType": "choice",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「解决问题」（百分数 · 求一个数比另一个数多（少）百分之几；已知比一个数多（少）百分之几的数是多少，求这个数；求常见的百分率（出勤率、合格率等））：求一个数比另一个数多（少）百分之几",
         "whyThisType": null,
@@ -68290,7 +68667,11 @@
           "no-type-evidence",
           "cognitive-out-of-range",
           "legitimacy-cognitive-only"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1-supplement"
+        }
       }
     },
     {
@@ -69805,7 +70186,7 @@
     {
       "knowledgeId": "math-g6-down-u02-k001",
       "questionType": "calc",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「折扣」（百分数（二） · 商品按原定价格的百分之几出售。几折就是原价的百分之几十。原价 × 折扣 = 现价；现价 ÷ 折扣 = 原价）：商品按原定价格的百分之几出售",
         "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内；数值表征：本知识点为数值表征，与计算题的算式形态一致",
@@ -69846,13 +70227,17 @@
           "认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内",
           "数值表征：本知识点为数值表征，与计算题的算式形态一致"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g6-down-u02-k001",
       "questionType": "fill",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「折扣」（百分数（二） · 商品按原定价格的百分之几出售。几折就是原价的百分之几十。原价 × 折扣 = 现价；现价 ÷ 折扣 = 原价）：商品按原定价格的百分之几出售",
         "whyThisType": "fill（填空题，书面表达）选取依据——认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内",
@@ -69892,13 +70277,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在fill题型认知区间[了解/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g6-down-u02-k001",
       "questionType": "apply",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「折扣」（百分数（二） · 商品按原定价格的百分之几出售。几折就是原价的百分之几十。原价 × 折扣 = 现价；现价 ÷ 折扣 = 原价）：商品按原定价格的百分之几出售",
         "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内",
@@ -69938,13 +70327,17 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {
       "knowledgeId": "math-g6-down-u02-k001",
       "questionType": "choice",
-      "status": "ai-verified",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "训练「折扣」（百分数（二） · 商品按原定价格的百分之几出售。几折就是原价的百分之几十。原价 × 折扣 = 现价；现价 ÷ 折扣 = 原价）：商品按原定价格的百分之几出售",
         "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内",
@@ -69984,7 +70377,11 @@
         "matches": [
           "认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内"
         ],
-        "flags": []
+        "flags": [],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "sample-1"
+        }
       }
     },
     {

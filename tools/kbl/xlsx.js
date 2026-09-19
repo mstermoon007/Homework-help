@@ -209,10 +209,13 @@ function readXlsx(buf) {
 
   var shared = [];
   var sstXml = files['xl/sharedStrings.xml'] ? xml('xl/sharedStrings.xml') : '<sst/>';
-  var reSi = /<si>([\s\S]*?)<\/si>/g;
+  var reSi = /<si(?:\s[^>]*)?>([\s\S]*?)<\/si>/g;
   while ((m = reSi.exec(sstXml))) {
     var inner = m[1];
-    var txt = inner.replace(/<t[^>]*>([\s\S]*?)<\/t>/g, function (a, t) { return t; });
+    // 剔除拼音注音块（WPS/Excel 中文输入回存），再剥标签保留文本；空串目（<t/>、<si/>）→ ''
+    var txt = inner
+      .replace(/<rPh[\s\S]*?<\/rPh>/g, '')
+      .replace(/<[^>]+>/g, '');
     shared.push(unesc(txt));
   }
 

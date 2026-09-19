@@ -1,0 +1,517 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "P25-03 人工抽查裁决账本。derive-qt-intent.js 重推导时合并：通过→confirmed；打回→保留原状态并记录 humanReview.rejected",
+  "batch": "sample-1",
+  "sourceFile": "kbl/teaching/qt-intent-sample.xlsx",
+  "reviewedBy": "项目所有者（人工抽查）",
+  "reviewedAt": "2026-09-19",
+  "counts": {
+    "sampled": 98,
+    "confirmed": 70,
+    "rejected": 3,
+    "unprocessed": 25
+  },
+  "unprocessedInvalid": [
+    "math-g1-down-u02-k002|choice←\"8\""
+  ],
+  "verdicts": {
+    "math-g1-up-u01-k001|choice": {
+      "verdict": "打回",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-up-u01-k003|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-up-u03-k001|geometry": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-up-u03-k001|judge": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-up-u03-k001|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u01-k001|geometry": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u01-k001|judge": {
+      "verdict": "打回",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u01-k001|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u02-k001|apply": {
+      "verdict": "打回",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u02-k002|calc": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u02-k002|fill": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u02-k002|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u02-k003|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u03-k004|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u04-k005|calc": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u04-k005|fill": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u04-k005|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u04-k005|choice": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u06-k002|calc": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u06-k002|fill": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u06-k002|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u06-k002|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u06-k002|geometry": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u06-k003|calc": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u06-k003|fill": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u06-k003|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u06-k003|choice": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u07-k001|apply": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u07-k001|fill": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u07-k001|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u07-k002|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u07-k002|fill": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u07-k002|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g1-down-u08-k001|apply": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u08-k001|fill": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g1-down-u08-k001|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k001|fill": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k001|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k001|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k001|classify": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k001|judge": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k002|fill": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k002|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k002|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k002|classify": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-up-u01-k002|judge": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g2-down-u02-k001|calc": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-down-u02-k001|fill": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-down-u02-k001|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-down-u02-k001|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-down-u02-k002|calc": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-down-u02-k002|fill": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-down-u02-k002|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g2-down-u02-k002|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g3-up-u08-k001|calc": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g3-up-u08-k001|fill": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g3-up-u08-k001|apply": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g3-up-u08-k001|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g3-up-u08-k002|calc": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g3-up-u08-k002|fill": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g3-up-u08-k002|apply": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g3-up-u08-k002|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g3-down-u07-k001|calc": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g3-down-u07-k001|fill": {
+      "verdict": "通过",
+      "fromStatus": "needs-review",
+      "note": ""
+    },
+    "math-g3-down-u07-k001|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g3-down-u07-k002|calc": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g3-down-u07-k002|fill": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g3-down-u07-k002|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g3-down-u07-k002|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g6-down-u02-k001|calc": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g6-down-u02-k001|fill": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g6-down-u02-k001|apply": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    },
+    "math-g6-down-u02-k001|choice": {
+      "verdict": "通过",
+      "fromStatus": "ai-verified",
+      "note": ""
+    }
+  },
+  "supplements": [
+    {
+      "batch": "sample-1-supplement",
+      "origin": "用户指令（2026-09-19）：未裁决 25 条确认为通过，不做下一轮抽样",
+      "verdicts": {
+        "math-g1-up-u01-k001|calc": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-up-u01-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-up-u01-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-up-u01-k003|calc": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-up-u01-k003|fill": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-up-u01-k003|apply": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-up-u03-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-up-u03-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u01-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u01-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u02-k001|calc": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u02-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u02-k001|choice": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u02-k002|choice": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u02-k003|calc": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u02-k003|fill": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u02-k003|choice": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u03-k004|calc": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u03-k004|fill": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g1-down-u03-k004|apply": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g3-down-u07-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g6-up-u05-k006|calc": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g6-up-u05-k006|fill": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g6-up-u05-k006|apply": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        },
+        "math-g6-up-u05-k006|choice": {
+          "verdict": "通过",
+          "fromStatus": "见批次说明",
+          "note": "用户口头指令：未裁决行全部确认通过"
+        }
+      }
+    }
+  ]
+}

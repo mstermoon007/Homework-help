@@ -229,6 +229,36 @@ rows.forEach(function (r) {
 
 var aiRows = rows.filter(function (r) { return r.status === 'ai-verified'; });
 var nrRows = rows.filter(function (r) { return r.status === 'needs-review'; });
+
+// ---------- 5.5 人工抽查账本合并（P25-03 AI 验证流程：裁决在重推导中持久） ----------
+// ledger 由 dev/p25/import-qt-intent-review.js 从人工回填的 qt-intent-sample.xlsx 生成；
+// verdict=通过 → confirmed（含 needs-review 行的人工接受，旗标保留）；verdict=打回 → 保留原状态并记录 humanReview
+var reviewLedger = null;
+try { reviewLedger = JSON.parse(fs.readFileSync(path.join(TEACHING_DIR, 'qt-intent-review.json'), 'utf8')); } catch (e) { /* 首次推导无账本，合法 */ }
+var confirmedRows = [], rejectedRows = [];
+function applyVerdict(key, v, batchTag) {
+  var hit = null;
+  rows.forEach(function (r) { if (r.knowledgeId + '|' + r.questionType === key) hit = r; });
+  if (!hit) { console.warn('[P25-03] 账本行不在矩阵中，跳过: ' + key); return; }
+  if (v.verdict === '通过') {
+    hit.status = 'confirmed';
+    hit.evidence.humanReview = { verdict: 'confirmed', batch: batchTag };
+    confirmedRows.push(hit);
+  } else if (v.verdict === '打回') {
+    hit.evidence.humanReview = { verdict: 'rejected', batch: batchTag, note: v.note || '' };
+    rejectedRows.push(hit);
+  }
+}
+if (reviewLedger) {
+  if (reviewLedger.verdicts) Object.keys(reviewLedger.verdicts).forEach(function (key) {
+    applyVerdict(key, reviewLedger.verdicts[key], reviewLedger.batch || 'sample-1');
+  });
+  (reviewLedger.supplements || []).forEach(function (sup) {
+    Object.keys(sup.verdicts || {}).forEach(function (key) {
+      applyVerdict(key, sup.verdicts[key], sup.batch || 'supplement');
+    });
+  });
+}
 var flagDist = {};
 rows.forEach(function (r) { r.evidence.flags.forEach(function (x) { flagDist[x] = (flagDist[x] || 0) + 1; }); });
 var byQt = {}, byModule = {};
@@ -236,6 +266,11 @@ rows.forEach(function (r) {
   byQt[r.questionType] = (byQt[r.questionType] || 0) + 1;
   byModule[r.evidence.kbl.module] = (byModule[r.evidence.kbl.module] || 0) + 1;
 });
+// 合并后状态口径：confirmed（含 AI 核准后人工抽查通过与 needs-review 行人工接受）/
+// ai-verified（待抽查，含被「打回」行——它们带 humanReview.rejected 旗标）/
+// needs-review（未裁决或推导不可行）
+aiRows = rows.filter(function (r) { return r.status === 'ai-verified'; });
+nrRows = rows.filter(function (r) { return r.status === 'needs-review'; });
 
 // ---------- 6. 产出 qt-intent.json ----------
 var extract = require(path.join(ROOT, 'kbl', 'import', 'extract-raw.json'));
@@ -251,7 +286,8 @@ var out = {
   },
   statuses: { AI_VERIFIED: 'ai-verified', NEEDS_REVIEW: 'needs-review', CONFIRMED: 'confirmed' },
   counts: {
-    rows: rows.length, aiVerified: aiRows.length, needsReview: nrRows.length,
+    rows: rows.length, confirmed: confirmedRows.length, aiVerified: aiRows.length, needsReview: nrRows.length,
+    rejected: rejectedRows.length,
     byQuestionType: byQt, byModule: byModule, flags: flagDist
   },
   rows: rows
@@ -312,8 +348,14 @@ md.push('');
 md.push('| 指标 | 值 |');
 md.push('| --- | --- |');
 md.push('| 覆盖 | 1570/1570 ALLOW 行（集合相等断言） |');
-md.push('| ai-verified | **' + aiRows.length + '**（' + (aiRows.length / 15.7).toFixed(1) + '%） |');
-md.push('| needs-review | ' + nrRows.length + '（旗标：' + JSON.stringify(flagDist) + '） |');
+if (confirmedRows.length) {
+  md.push('| **confirmed（人工抽查通过）** | **' + confirmedRows.length + '** |');
+  md.push('| ai-verified（待抽查） | ' + aiRows.length + '（其中被「打回」' + rejectedRows.length + ' 行待修正重审） |');
+  md.push('| needs-review（未裁决） | ' + nrRows.length + '（旗标：' + JSON.stringify(flagDist) + '） |');
+} else {
+  md.push('| ai-verified | **' + aiRows.length + '**（' + (aiRows.length / 15.7).toFixed(1) + '%） |');
+  md.push('| needs-review | ' + nrRows.length + '（旗标：' + JSON.stringify(flagDist) + '） |');
+}
 md.push('| 题型分布 | ' + JSON.stringify(byQt) + ' |');
 md.push('');
 md.push('## needs-review 旗标语义（内容为 null 的原因，全部为机械可判定事实）');
@@ -332,7 +374,7 @@ fs.writeFileSync(path.join(DOCS_DIR, 'P25-KP-QT-INTENT.md'), md.join('\n'));
 
 // ---------- 9. 汇总 ----------
 console.log('[P25-03] 意图矩阵推导完成（AI 受限推导核准流程）');
-console.log('  1570/1570 行；ai-verified=' + aiRows.length + ' needs-review=' + nrRows.length);
+console.log('  1570/1570 行；confirmed=' + confirmedRows.length + ' ai-verified=' + aiRows.length + ' needs-review=' + nrRows.length + ' 打回=' + rejectedRows.length);
 console.log('  旗标：' + JSON.stringify(flagDist));
 console.log('  抽查单：' + sampleRows.length + ' 行（' + Object.keys(sampledKp).length + ' 个 KP）');
 console.log('  产出：kbl/teaching/qt-intent.json, kbl/teaching/qt-intent-sample.xlsx, docs/p25/P25-KP-QT-INTENT.md');
