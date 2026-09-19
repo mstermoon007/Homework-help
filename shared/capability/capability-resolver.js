@@ -27,6 +27,32 @@ var KnowledgePoint = require('../knowledge/knowledge-point.js');
 var CapabilityModel = require('./capability-model.js');
 var Matrix = require('./capability-matrix.js');
 
+// P25-06 教学裁决覆盖层（teaching denials）。
+// canonical 粗派生给 ALLOW、但教学层否认当前运行时执行的 KP×QT（execution-gap：
+// 无原生语义生成器、兜底产出语义无关题）。裁决理由/证据/批次 SSOT 在
+// kbl/teaching/teaching-denials.json；此处仅以 KP ID 引用承载运行时执行——
+// 必须双环境（Node/浏览器 bundle）一致生效，故内联 ID 引用而非计算路径 require JSON；
+// 不内嵌 canonical 数据载荷，符合 check-kbl-uniqueness（同 generator-registry 的 knowledgePoints 先例）。
+// tests/generator/p25-06 断言本表与 teaching-denials.json 的集合一致，防漂移。
+var TEACHING_DENIALS = {
+  'math-g1-down-u06-k002|calc': 'P25-06',
+  'math-g2-down-u02-k005|calc': 'P25-06',
+  'math-g6-down-u04-k007|calc': 'P25-06',
+  'math-g6-down-u04-k008|calc': 'P25-06'
+};
+
+function isTeachingDenied(kpId, qtId) {
+  return !!kpId && !!qtId &&
+    Object.prototype.hasOwnProperty.call(TEACHING_DENIALS, kpId + '|' + qtId);
+}
+
+function listTeachingDenials() {
+  return Object.keys(TEACHING_DENIALS).map(function (key) {
+    var parts = key.split('|');
+    return { knowledgeId: parts[0], questionType: parts[1], batch: TEACHING_DENIALS[key] };
+  });
+}
+
 function resolve(kp) {
   // canonicalKp 已经是 Canonical KP，直接从 presentation.questionTypes 和 generation.capabilities 推导
   // 防御：传入 raw legacy KP 时（gate / KB.getCapabilities / 浏览器深链）先归一化，保证能力来源一致
@@ -70,10 +96,19 @@ function resolveFinal(input) {
   else if (matrixDecision === 'ALLOW') decision = 'ALLOW';
   else decision = 'DEGRADE'; // 不自动升级
 
+  // P25-06 教学裁决覆盖：R04 矩阵 ALLOW/DEGRADE 但被教学层 deny（execution-gap）
+  // → FORBID，source.teachingDenial 标记批次（buildEligibility 自然归入 skip）。
+  var teachingDenial = null;
+  if ((decision === 'ALLOW' || decision === 'DEGRADE') && isTeachingDenied(kpId, qtId)) {
+    teachingDenial = 'P25-06';
+    decision = 'FORBID';
+  }
+
   var confidence = 'declared';
   if (decision === 'ALLOW') confidence = 'declared';
   else if (decision === 'DEGRADE') confidence = 'inferred';
   else if (decision === 'MISSING') confidence = 'unknown';
+  if (teachingDenial) confidence = 'teaching-denied';
 
   return {
     knowledgePointId: kpId,
@@ -83,7 +118,8 @@ function resolveFinal(input) {
     source: {
       knowledgePoint: 'ontology',
       questionType: 'registry',
-      matrix: 'R04'
+      matrix: 'R04',
+      teachingDenial: teachingDenial
     },
     confidence: confidence
   };
@@ -114,10 +150,19 @@ function matrix(kp) {
 function getCapabilities(kp) {
   // 获取指定 KP 的能力描述：{ questionTypes, cognitiveLevels, difficultyRange }
   var cap = resolve(kp);
-  var questionTypes = cap.questionTypes.map(function (q) { return q.id; });
+  // resolveCapability 产出的 cap.knowledgePointId 依赖 canonicalKp.id（部分数据源以
+  // knowledgeId/knowledgePointId 为标识，该字段可能为空），故从入参多态取真实 KP ID。
+  var kpId = (typeof kp === 'string') ? kp
+    : (kp && (kp.id || kp.knowledgePointId || kp.knowledgeId)) || cap.knowledgePointId || '';
+  // P25-06：与 resolveFinal 同一教学裁决覆盖，被 deny 的题型不进入能力列表
+  //（strategy Step3 selectQuestionType 经此取题型，保证两处决策一致）。
+  var liveTypes = cap.questionTypes.filter(function (q) {
+    return !isTeachingDenied(kpId, q.id);
+  });
+  var questionTypes = liveTypes.map(function (q) { return q.id; });
   var cognitiveLevels = {};
   var difficultyRange = {};
-  cap.questionTypes.forEach(function (q) {
+  liveTypes.forEach(function (q) {
     cognitiveLevels[q.id] = q.cognitiveLevels;
     difficultyRange[q.id] = q.difficultyRange;
   });
@@ -133,5 +178,7 @@ module.exports = {
   resolveFinal: resolveFinal,
   canGenerate: canGenerate,
   matrix: matrix,
-  getCapabilities: getCapabilities
+  getCapabilities: getCapabilities,
+  isTeachingDenied: isTeachingDenied,
+  listTeachingDenials: listTeachingDenials
 };

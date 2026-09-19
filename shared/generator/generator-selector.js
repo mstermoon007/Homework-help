@@ -89,14 +89,9 @@ function isC7Family(g) {
   return g.id === 'generator:c7-clever-calc';
 }
 
-function isC9Family(g) {
-  return g.id === 'generator:c9-comprehensive';
-}
-
-function hasShapeSemantics(kp) {
-  return g.id === 'generator:application-word';
-}
-
+// P25-06：此处原有两个无调用死函数——isC9Family(g) 与引用未定义变量 g 的
+// hasShapeSemantics(kp)（后者被下文同名函数覆盖、一旦误调用即 ReferenceError），已删除。
+// selector 现存的 has*Semantics 系列（pluginId 子串判定）均无调用方，列入审计债务，留待后续治理。
 function hasShapeSemantics(kp) {
   if (!kp) return false;
   // 几何语义判定：graphicType 是 geometry 或 pluginId 含 geometry

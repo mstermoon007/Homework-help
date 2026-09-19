@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "P25-06 教学正当性人工裁决账本：canonical 粗派生 ALLOW、但教学层否认当前运行时执行的 KP×QT 组合。与 canonical/mappings.json 的关系：不修改机械派生事实（derive-kbl 仅从 root Excel 派生，不接受人工源），本账本是其之上的教学裁决覆盖层，由 shared/capability/capability-resolver.js 在最终能力决策时执行（resolveFinal 返回 FORBID + source.teachingDenial）。",
+  "decidedBy": "项目所有者（P25-06 审计治理，人工授权「同步处理，清理」）",
+  "decidedAt": "2026-09-19",
+  "batch": "p25-06-representation-conflict",
+  "originFlag": "representation-conflict（P25-03 qt-intent 旗标：KP representations 含 graphic 而 calc 题型 supports.graphic=false）",
+  "decisionSemantics": {
+    "deny": "运行时禁止该 KP×QT 进入生成计划（capability resolver 返回 FORBID）；不删除 canonical ALLOW 行，仅覆盖执行",
+    "kind.execution-gap": "题型意图描述可成立（P25-03 五问），但当前无原生语义生成器、兜底产出语义无关题；待专项语义生成器补齐后可由人工撤销本裁决",
+    "scope": "本次仅裁决 representation-conflict 旗标点名的 calc 行；同 KP 的 fill/apply/choice/geometry 不在本批范围"
+  },
+  "denials": [
+    {
+      "knowledgeId": "math-g1-down-u06-k002",
+      "questionType": "calc",
+      "kind": "execution-gap",
+      "kpName": "图形表述数量关系（借助画图等策略理解数量间的加减关系）",
+      "reason": "calc 不承载图形表征，而本 KP 核心语义是「借助画图策略理解数量关系」；当前无原生生成器",
+      "evidence": "2026-09-19 PracticeSession 实测 calc 产出「47 + 62 = ?」通用双加兜底题，与 KP 语义无关，且无 semanticEvidence 声明",
+      "retainedTypes": ["fill", "apply", "choice", "geometry"]
+    },
+    {
+      "knowledgeId": "math-g2-down-u02-k005",
+      "questionType": "calc",
+      "kind": "execution-gap",
+      "kpName": "周期问题（利用有余数除法找图形、彩旗排列规律）",
+      "reason": "calc 不承载图形/周期情境，本 KP 语义是借有余数除法推断图形排列周期；当前无原生生成器",
+      "evidence": "2026-09-19 实测产出「5 ÷ 1 + 12 = ?」通用混式兜底题，与周期规律无关，且无 semanticEvidence 声明",
+      "retainedTypes": ["fill", "apply", "choice", "geometry"]
+    },
+    {
+      "knowledgeId": "math-g6-down-u04-k007",
+      "questionType": "calc",
+      "kind": "execution-gap",
+      "kpName": "图形的放大与缩小（按一定的比将图形放大或缩小）",
+      "reason": "calc 不承载图形表征，本 KP 语义是图形按比变换（形状相同、大小不同）；当前无原生生成器",
+      "evidence": "2026-09-19 实测产出「7 + 28 = ?」通用加法兜底题，与按比缩放无关，且无 semanticEvidence 声明",
+      "retainedTypes": ["fill", "apply", "choice", "geometry"]
+    },
+    {
+      "knowledgeId": "math-g6-down-u04-k008",
+      "questionType": "calc",
+      "kind": "execution-gap",
+      "kpName": "解决问题（运用正比例和反比例解决归一、行程等实际问题）",
+      "reason": "本 KP 认知层级 analyze 超出 calc 题型区间[recall,understand,apply]（P25-03 另带 cognitive-out-of-range/no-type-evidence 旗标），且语义为综合比例应用；当前无原生生成器",
+      "evidence": "2026-09-19 实测产出「83 + 10 + 65 = ?」通用三连加兜底题，与正反比例无关，且无 semanticEvidence 声明",
+      "retainedTypes": ["fill", "apply", "choice", "geometry"]
+    }
+  ]
+}

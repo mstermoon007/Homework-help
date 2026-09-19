@@ -3120,6 +3120,32 @@ var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
 var CapabilityModel = require("shared/capability/capability-model.js");
 var Matrix = require("shared/capability/capability-matrix.js");
 
+
+
+
+
+
+
+
+var TEACHING_DENIALS = {
+  'math-g1-down-u06-k002|calc': 'P25-06',
+  'math-g2-down-u02-k005|calc': 'P25-06',
+  'math-g6-down-u04-k007|calc': 'P25-06',
+  'math-g6-down-u04-k008|calc': 'P25-06'
+};
+
+function isTeachingDenied(kpId, qtId) {
+  return !!kpId && !!qtId &&
+    Object.prototype.hasOwnProperty.call(TEACHING_DENIALS, kpId + '|' + qtId);
+}
+
+function listTeachingDenials() {
+  return Object.keys(TEACHING_DENIALS).map(function (key) {
+    var parts = key.split('|');
+    return { knowledgeId: parts[0], questionType: parts[1], batch: TEACHING_DENIALS[key] };
+  });
+}
+
 function resolve(kp) {
   
   
@@ -3163,10 +3189,19 @@ function resolveFinal(input) {
   else if (matrixDecision === 'ALLOW') decision = 'ALLOW';
   else decision = 'DEGRADE'; 
 
+  
+  
+  var teachingDenial = null;
+  if ((decision === 'ALLOW' || decision === 'DEGRADE') && isTeachingDenied(kpId, qtId)) {
+    teachingDenial = 'P25-06';
+    decision = 'FORBID';
+  }
+
   var confidence = 'declared';
   if (decision === 'ALLOW') confidence = 'declared';
   else if (decision === 'DEGRADE') confidence = 'inferred';
   else if (decision === 'MISSING') confidence = 'unknown';
+  if (teachingDenial) confidence = 'teaching-denied';
 
   return {
     knowledgePointId: kpId,
@@ -3176,7 +3211,8 @@ function resolveFinal(input) {
     source: {
       knowledgePoint: 'ontology',
       questionType: 'registry',
-      matrix: 'R04'
+      matrix: 'R04',
+      teachingDenial: teachingDenial
     },
     confidence: confidence
   };
@@ -3207,10 +3243,19 @@ function matrix(kp) {
 function getCapabilities(kp) {
   
   var cap = resolve(kp);
-  var questionTypes = cap.questionTypes.map(function (q) { return q.id; });
+  
+  
+  var kpId = (typeof kp === 'string') ? kp
+    : (kp && (kp.id || kp.knowledgePointId || kp.knowledgeId)) || cap.knowledgePointId || '';
+  
+  
+  var liveTypes = cap.questionTypes.filter(function (q) {
+    return !isTeachingDenied(kpId, q.id);
+  });
+  var questionTypes = liveTypes.map(function (q) { return q.id; });
   var cognitiveLevels = {};
   var difficultyRange = {};
-  cap.questionTypes.forEach(function (q) {
+  liveTypes.forEach(function (q) {
     cognitiveLevels[q.id] = q.cognitiveLevels;
     difficultyRange[q.id] = q.difficultyRange;
   });
@@ -3226,7 +3271,9 @@ module.exports = {
   resolveFinal: resolveFinal,
   canGenerate: canGenerate,
   matrix: matrix,
-  getCapabilities: getCapabilities
+  getCapabilities: getCapabilities,
+  isTeachingDenied: isTeachingDenied,
+  listTeachingDenials: listTeachingDenials
 };
 
 };
@@ -4337,13 +4384,8 @@ function isC7Family(g) {
   return g.id === 'generator:c7-clever-calc';
 }
 
-function isC9Family(g) {
-  return g.id === 'generator:c9-comprehensive';
-}
 
-function hasShapeSemantics(kp) {
-  return g.id === 'generator:application-word';
-}
+
 
 function hasShapeSemantics(kp) {
   if (!kp) return false;

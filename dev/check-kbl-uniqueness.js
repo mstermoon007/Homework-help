@@ -148,7 +148,11 @@ function scanBundles() {
     var src = fs.readFileSync(p, 'utf8');
     // 绑定引用 ≠ 数据内嵌：generator 的 knowledgePoints 数组为 canonical ID 引用列表，
     // 检测 KBL 数据内嵌前先剥离（数据内嵌会携带 knowledgeId+name/semantic/unitName 等载荷）。
-    var dataText = src.replace(/knowledgePoints:\s*\[[\s\S]*?\]/g, '');
+    // P25-06：capability-resolver 的 TEACHING_DENIALS 同为「ID 引用表」（键=kpId|qt，无数据载荷；
+    // 理由/证据 SSOT 在 kbl/teaching/teaching-denials.json），一并剥离，按合法引用对待。
+    var dataText = src
+      .replace(/knowledgePoints:\s*\[[\s\S]*?\]/g, '')
+      .replace(/TEACHING_DENIALS\s*=\s*\{[\s\S]*?\n\};/g, '');
     var rec = {
       file: rel,
       // 副本判定：内联 KC/Runtime 会挂载全局（shim 委托不会）

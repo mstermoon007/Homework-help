@@ -6,7 +6,10 @@
 // 且 question.questionType === 请求 QT、题目 KP === 请求 KP。
 //
 // 背景：KBL capability ALLOW 只声明「应该支持」，本门禁证明「实际可生成」
-// （Capability Declaration = Executable Capability）。2026-09-19 基线 1570/1570。
+// （Capability Declaration = Executable Capability）。
+// 2026-09-19 P25-06 起基线 1566/1566：canonical 仍 1570 ALLOW，其中 4 个图形表征 KP × calc
+// 经教学裁决覆盖层（kbl/teaching/teaching-denials.json，execution-gap）在 capability-resolver
+// 被判 FORBID，本脚本按 buildEligibility 的 ALLOW 动态枚举，自动不计入这 4 对。
 //
 // 用法：node dev/check-allow-generation.js
 
