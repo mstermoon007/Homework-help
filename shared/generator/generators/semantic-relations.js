@@ -298,7 +298,8 @@ function makeScaleCalc(plan, context, i) {
     fromLength: s.orig, toLength: s.next
   });
   return finish(q, '列式计算：一个长方形的长是 ' + s.orig + ' 厘米，按 ' + ratio
-    + ' 的比' + (s.enlarge ? '放大' : '缩小') + '，变换后的长是多少厘米？', s.next, [String(s.next)],
+    + ' 的比' + (s.enlarge ? '放大' : '缩小') + '。列式：' + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ？（厘米）',
+    s.next, [String(s.next)],
     (s.enlarge ? '放大到 ' + s.k + ' 倍：' : '缩小到 1/' + s.k + '：')
       + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ' + s.next + ' 厘米');
 }
@@ -377,7 +378,8 @@ function makePropCalc(plan, context, i) {
     unitPrice: unit, quantityA: a, quantityB: b
   });
   return finish(q, '列式计算：买 ' + a + ' 支同样的钢笔要用 ' + (a * unit)
-    + ' 元，买 ' + b + ' 支这样的钢笔要用多少元？', b * unit, [String(b * unit)],
+    + ' 元，买 ' + b + ' 支这样的钢笔要用多少元？列式：' + (a * unit) + ' ÷ ' + a + ' × ' + b + ' = ？（元）',
+    b * unit, [String(b * unit)],
     '先求单价（归一）：' + (a * unit) + ' ÷ ' + a + ' = ' + unit + ' 元；'
       + b + ' × ' + unit + ' = ' + (b * unit) + ' 元');
 }

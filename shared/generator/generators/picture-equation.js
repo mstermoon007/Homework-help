@@ -51,6 +51,11 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     prompt = '根据大括号图：左边有' + a + '个苹果，右边有' + b + '个苹果，一共有多少个？';
     answer = a + b; steps = 1;
     graphic = { type: 'diagram', subtype: 'brace', params: { left: a, right: b, unit: '个' } };
+    // P25-07：calc 计划下列式计算形态，题干内嵌可求值算式
+    if (plan.questionTypeId === 'calc') {
+      prompt = '看图列式：大括号图左边有 ' + a + ' 个苹果，右边有 ' + b + ' 个苹果。'
+        + '列式计算一共有多少个：' + a + ' + ' + b + ' = ？';
+    }
   } else if (type === 'balance') {
     var left = Rng.randInt(rng, 5, 20);
     var right = left;

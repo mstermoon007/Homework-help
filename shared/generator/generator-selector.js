@@ -25,6 +25,7 @@ var Mode = require('./generator-mode.js');
 var QuestionPlan = require('../strategy/question-plan.js');
 var QuestionTypeRegistry = require('../knowledge/question-type-registry.js');
 var SemanticParameters = require('./core/semantic-parameters.js');
+var TypeContract = require('./core/type-contract.js');
 
 function trackOf(record) {
   return record.scope === 'core' ? 'native' : 'legacy';
@@ -63,6 +64,12 @@ function selectGenerator(plan, options) {
 
     if (g.supportsComposite === true && !isCombineRequest) return;
     if (isCombineRequest && g.supportsComposite !== true) return;
+
+    // P25-07 form-bound 声明门：calc/geometry/classify 题型形态与内容绑定，
+    // 候选必须声明该题型（native kp 绑定不豁免）——否则「未声明路由」（kp=1 直通）
+    // 必然产出无算式 calc / 无图形 geometry / 无分组 classify 的契约违例题。
+    if (TypeContract.FORM_BOUND.indexOf(plan.questionTypeId) !== -1 &&
+      g.questionTypes.indexOf(plan.questionTypeId) === -1) return;
 
     var score = { record: g, kp: 0, capability: 0, qt: 0 };
 
@@ -148,10 +155,15 @@ function wrapGenerator(gen, generatorId, generatorVersion) {
   gen.generate = function (plan, context) {
     var paramPlan = SemanticParameters.attachToPlan(plan);
     var out = orig(paramPlan, context);
+    // P25-07：产出单点收口 —— 按题型教育契约 finish（convertible 机械转换）
+    // / drop（form-bound 与不可转换者，fail-closed），再附加追溯元数据。
+    var finish = function (sqs) {
+      return attachMeta(TypeContract.enforce(sqs, paramPlan), generatorId, generatorVersion);
+    };
     if (out && typeof out.then === 'function') {
-      return out.then(function (sqs) { return attachMeta(sqs, generatorId, generatorVersion); });
+      return out.then(finish);
     }
-    return attachMeta(out, generatorId, generatorVersion);
+    return finish(out);
   };
   return gen;
 }

@@ -3514,9 +3514,11 @@ var CORE_RECORDS = [
     scope: 'core', version: 1, supportsComposite: false },
 
   
-  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'],
+  
+  
+  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'geometry', 'recognize', 'apply'],
     knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g3-up-u06-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g6-up-u07-k001'],
-    scope: 'core', version: 1, supportsComposite: false },
+    scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:position-direction', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'oral'], questionTypes: ['choice', 'judge', 'fill', 'oral'],
     knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
@@ -3531,7 +3533,9 @@ var CORE_RECORDS = [
   { id: 'generator:counting', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: ['math-g3-down-u08-k001', 'math-g3-up-u08-k001'],
     scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:reasoning', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
+  
+  
+  { id: 'generator:reasoning', subject: 'math', capabilities: ['apply'], questionTypes: ['apply'],
     knowledgePoints: ['math-g2-up-u07-k001', 'math-g4-down-u09-k002', 'math-g4-up-u08-k002', 'math-g5-down-u08-k001', 'math-g5-up-u07-k002', 'math-g6-down-u05-k001'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:stats', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
@@ -3560,7 +3564,9 @@ var CORE_RECORDS = [
     scope: 'core', version: 1, supportsComposite: true },
 
   
-  { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'recognize'], questionTypes: ['fill', 'choice', 'judge', 'recognize'],
+  
+  
+  { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge'], questionTypes: ['fill', 'choice', 'judge'],
     knowledgePoints: ['math-g4-up-u01-k002'],
     scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:equivalent-reasoning', subject: 'math', capabilities: ['fill', 'choice', 'apply'], questionTypes: ['fill', 'choice', 'apply'],
@@ -4333,6 +4339,7 @@ var Mode = require("shared/generator/generator-mode.js");
 var QuestionPlan = require("shared/strategy/question-plan.js");
 var QuestionTypeRegistry = require("shared/knowledge/question-type-registry.js");
 var SemanticParameters = require("shared/generator/core/semantic-parameters.js");
+var TypeContract = require("shared/generator/core/type-contract.js");
 
 function trackOf(record) {
   return record.scope === 'core' ? 'native' : 'legacy';
@@ -4371,6 +4378,12 @@ function selectGenerator(plan, options) {
 
     if (g.supportsComposite === true && !isCombineRequest) return;
     if (isCombineRequest && g.supportsComposite !== true) return;
+
+    
+    
+    
+    if (TypeContract.FORM_BOUND.indexOf(plan.questionTypeId) !== -1 &&
+      g.questionTypes.indexOf(plan.questionTypeId) === -1) return;
 
     var score = { record: g, kp: 0, capability: 0, qt: 0 };
 
@@ -4444,10 +4457,15 @@ function wrapGenerator(gen, generatorId, generatorVersion) {
   gen.generate = function (plan, context) {
     var paramPlan = SemanticParameters.attachToPlan(plan);
     var out = orig(paramPlan, context);
+    
+    
+    var finish = function (sqs) {
+      return attachMeta(TypeContract.enforce(sqs, paramPlan), generatorId, generatorVersion);
+    };
     if (out && typeof out.then === 'function') {
-      return out.then(function (sqs) { return attachMeta(sqs, generatorId, generatorVersion); });
+      return out.then(finish);
     }
-    return attachMeta(out, generatorId, generatorVersion);
+    return finish(out);
   };
   return gen;
 }
@@ -5845,6 +5863,514 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
 
 };
+__defs["shared/generator/core/type-contract.js"] = function (module, exports, require) {
+
+(function (global) {
+  'use strict';
+
+  var Rng = require("shared/generator/core/rng.js");
+
+  var SCHEMA_VERSION = 'p25-07.1';
+
+  
+  var CONTRACT_MAP = {
+    calc: ['expressionPresent'],
+    fill: ['blankPresent'],
+    choice: ['optionsPresent', 'answerInOptions'],
+    judge: ['booleanAnswer'],
+    geometry: ['graphicOrInstruction'],
+    classify: ['groupStructure'],
+    apply: ['contextPresent']
+  };
+
+  
+  var FORM_BOUND = ['calc', 'geometry', 'classify'];
+
+  
+  var INVARIANT_IDS = ['optionsPresent', 'answerInOptions', 'booleanAnswer', 'blankPresent',
+    'expressionPresent', 'contextPresent', 'graphicOrInstruction', 'groupStructure'];
+
+  
+
+  var BLANK_RE = /____|\(\s*\)|（\s*）/;
+  var EXPR_RE = /\d\s*[+\-−×x*÷\/]\s*[\d.]/;
+  var BLANK_EQ_RE = /\d\s*=\s*(____|\(\s*\)|（\s*）)/;
+  var SETTING_RE = /[？?]/;
+  var QWORD_RE = /多少|几|求/;
+  var TASK_VERB_RE = /排列|整理|分类|排序|分组|推理|设计|搭配|解决|涂色|数一数/;
+  var GEO_RE = /作图|画一画|画出|量一量|认一认|观察|看图|看示|示意图|线段图|在图上|图形|钟面|摆一摆|数一数|剪一|拼一|折一|七巧板/;
+  var GROUP_RE = /分类|整理|排列|排序|分组/;
+
+  function dataOf(sq) { return (sq && sq.data) ? sq.data : {}; }
+
+  function checkOptionsPresent(sq) {
+    var opts = dataOf(sq).options;
+    if (!Array.isArray(opts) || opts.length < 3) return false;
+    var seen = {};
+    for (var i = 0; i < opts.length; i++) {
+      if (typeof opts[i] !== 'string' || opts[i].length === 0) return false;
+      if (seen[opts[i]]) return false;
+      seen[opts[i]] = 1;
+    }
+    return true;
+  }
+
+  function checkAnswerInOptions(sq) {
+    var d = dataOf(sq);
+    var opts = d.options;
+    if (!Array.isArray(opts) || !sq.answer || sq.answer.value == null) return false;
+    var v = String(sq.answer.value);
+    if (opts.map(String).indexOf(v) !== -1) return true;                       
+    if (d.correctIndex != null && v === String(d.correctIndex)                 
+      && d.correctIndex >= 0 && d.correctIndex < opts.length) return true;
+    return false;
+  }
+
+  function checkBooleanAnswer(sq) {
+    return !!(sq.answer && typeof sq.answer.value === 'boolean');
+  }
+
+  function checkBlankPresent(sq) { return BLANK_RE.test(String(sq.prompt || '')); }
+
+  function checkExpressionPresent(sq) {
+    var p = String(sq.prompt || '');
+    if (EXPR_RE.test(p)) return true;                    
+    if (dataOf(sq).operation) return true;               
+    if (BLANK_EQ_RE.test(p)) return true;                
+    return false;
+  }
+
+  function checkContextPresent(sq) {
+    var p = String(sq.prompt || '');
+    if (p.replace(/\s/g, '').length < 10) return false;
+    if (SETTING_RE.test(p)) return true;
+    if (BLANK_RE.test(p)) return true;
+    if (QWORD_RE.test(p)) return true;
+    if (TASK_VERB_RE.test(p)) return true;
+    return false;
+  }
+
+  function checkGraphicOrInstruction(sq) {
+    var d = dataOf(sq);
+    if (d.graphic && d.graphic.type) return true;
+    if (d.shapeName) return true;
+    return GEO_RE.test(String(sq.prompt || ''));
+  }
+
+  function checkGroupStructure(sq) {
+    var d = dataOf(sq);
+    if (d.sort || d.groups || d.categories) return true;
+    return GROUP_RE.test(String(sq.prompt || ''));
+  }
+
+  var INVARIANTS = {
+    optionsPresent: checkOptionsPresent,
+    answerInOptions: checkAnswerInOptions,
+    booleanAnswer: checkBooleanAnswer,
+    blankPresent: checkBlankPresent,
+    expressionPresent: checkExpressionPresent,
+    contextPresent: checkContextPresent,
+    graphicOrInstruction: checkGraphicOrInstruction,
+    groupStructure: checkGroupStructure
+  };
+
+  
+  function check(qt, sq) {
+    var invariants = CONTRACT_MAP[qt];
+    if (!invariants) return { ok: true, violations: [] };   
+    if (!sq) return { ok: false, violations: invariants.slice() };
+    var violations = [];
+    for (var i = 0; i < invariants.length; i++) {
+      var fn = INVARIANTS[invariants[i]];
+      if (fn && !fn(sq)) violations.push(invariants[i]);
+    }
+    return { ok: violations.length === 0, violations: violations };
+  }
+
+  
+
+  function rngFor(sq) {
+    var base = (sq && sq.seed != null) ? String(sq.seed)
+      : String((sq && sq.knowledgePointId) || '') + '|' + String((sq && sq.prompt) || '');
+    return Rng.createSeededRandom(base + ':type-contract');
+  }
+
+  
+  function parseAnswerNum(sq) {
+    if (!sq || !sq.answer || sq.answer.value == null) return null;
+    var s = String(sq.answer.value).trim();
+    var m = /^(-?\d+(?:\.\d+)?)(%)?$/.exec(s);
+    if (!m) return null;
+    return { num: parseFloat(m[1]), suffix: m[2] || '' };
+  }
+
+  
+  function parseAnswerRemainder(sq) {
+    if (!sq || !sq.answer || sq.answer.value == null) return null;
+    var s = String(sq.answer.value).trim();
+    var m = /^(\d+)\s*(……|余)\s*(\d+)$/.exec(s);
+    if (!m) return null;
+    return { q: parseInt(m[1], 10), mark: m[2], r: parseInt(m[3], 10) };
+  }
+
+  
+  function parseSeq(sq) {
+    if (!sq || !sq.answer || sq.answer.value == null) return null;
+    var s = String(sq.answer.value).trim();
+    if (!/^[\d，,\s、.]+$/.test(s)) return null;
+    var parts = s.split(/[，,、\s]+/).filter(Boolean);
+    if (parts.length < 3) return null;
+    var nums = [];
+    for (var i = 0; i < parts.length; i++) {
+      var n = Number(parts[i]);
+      if (!isFinite(n)) return null;
+      nums.push(n);
+    }
+    return nums;
+  }
+
+  function sortNums(nums, desc) {
+    var c = nums.slice().sort(function (a, b) { return a - b; });
+    return desc ? c.reverse() : c;
+  }
+
+  
+  function swapped(seq, rng) {
+    if (!seq || seq.length < 2) return null;
+    for (var t = 0; t < seq.length * 2; t++) {
+      var i = Rng.randInt(rng, 0, seq.length - 2);
+      var s = seq.slice();
+      var tmp = s[i]; s[i] = s[i + 1]; s[i + 1] = tmp;
+      var same = true;
+      for (var k = 0; k < s.length; k++) { if (s[k] !== seq[k]) { same = false; break; } }
+      if (!same) return s;
+    }
+    return seq.slice().reverse();
+  }
+
+  function numStr(n) { return String(n); }
+
+  
+
+  function tidyChoicePrompt(p) {
+    p = String(p || '');
+    p = p.replace(/^列式计算[:：]\s*/, '');
+    p = p.replace(/=\s*[？?]\s*$/, '=（ ）');
+    p = p.replace(/=\s*$/, '=（ ）');
+    return p;
+  }
+
+  function buildNumericOptions(rng, correct, suffix) {
+    var abs = Math.abs(correct);
+    var step = abs < 20 ? 1 : (abs < 100 ? 10 : 100);
+    var cands = [correct + step, correct - step, correct + 2 * step, correct - 2 * step, correct * 2];
+    if (correct > 0 && correct % 2 === 0) cands.push(correct / 2);
+    var opts = [correct];
+    for (var i = 0; i < cands.length && opts.length < 4; i++) {
+      var c = cands[i];
+      if (correct >= 0 && c < 0) continue;                 
+      if (c !== correct && opts.indexOf(c) === -1) opts.push(c);
+    }
+    var pad = 1;
+    while (opts.length < 4) {
+      var e = correct + pad * step + pad;
+      if (e !== correct && opts.indexOf(e) === -1) opts.push(e);
+      pad++;
+    }
+    return Rng.shuffle(rng, opts).map(function (n) { return numStr(n) + (suffix || ''); });
+  }
+
+  function finishChoice(sq, rng) {
+    var d = dataOf(sq);
+    var opts = d.options;
+
+    
+    if (Array.isArray(opts) && opts.length >= 3 && sq.answer && sq.answer.value != null
+      && d.correctIndex != null && d.correctIndex >= 0 && d.correctIndex < opts.length
+      && opts.every(function (o) { return typeof o === 'string' || typeof o === 'number'; })
+      && opts.map(String).indexOf(String(sq.answer.value)) === -1
+      && String(sq.answer.value) === String(d.correctIndex)) {
+      d.options = opts.map(String);
+      sq.answer.value = String(d.options[d.correctIndex]);
+      return { fixed: ['answerInOptions'] };
+    }
+
+    
+    if (!Array.isArray(opts) || opts.length < 3) {
+      var an = parseAnswerNum(sq);
+      if (an) {
+        var built = buildNumericOptions(rng, an.num, an.suffix);
+        d.options = built;
+        d.correctIndex = built.indexOf(String(an.num) + an.suffix);
+        sq.answer.value = String(an.num) + an.suffix;
+        sq.prompt = tidyChoicePrompt(sq.prompt);
+        return { fixed: ['optionsPresent', 'answerInOptions'] };
+      }
+      var rem = parseAnswerRemainder(sq);
+      if (rem) {
+        var cand = [];
+        var push = function (q, r) { var s = q + '……' + r; if (cand.indexOf(s) === -1 && s !== rem.q + '……' + rem.r) cand.push(s); };
+        push(rem.q + 1, rem.r); if (rem.q > 1) push(rem.q - 1, rem.r);
+        push(rem.q, rem.r + 1); if (rem.r > 0) push(rem.q, rem.r - 1);
+        push(rem.q + 1, rem.r + 1);
+        if (cand.length < 3) return null;
+        var ropts = [rem.q + '……' + rem.r, cand[0], cand[1], cand[2]];
+        var shuffled = Rng.shuffle(rng, ropts);
+        d.options = shuffled;
+        d.correctIndex = shuffled.indexOf(rem.q + '……' + rem.r);
+        sq.answer.value = rem.q + '……' + rem.r;
+        sq.prompt = tidyChoicePrompt(sq.prompt);
+        return { fixed: ['optionsPresent', 'answerInOptions'] };
+      }
+    }
+
+    
+    var seq = parseSeq(sq);
+    if (seq) {
+      var correctStr = seq.join('，');
+      var sopts = [correctStr];
+      var guard = 0;
+      while (sopts.length < 4 && guard < 10) {
+        guard++;
+        var sw = swapped(seq, rng);
+        var s = sw ? sw.join('，') : null;
+        if (s && sopts.indexOf(s) === -1) sopts.push(s);
+      }
+      if (sopts.length < 3) return null;
+      var sh = Rng.shuffle(rng, sopts);
+      d.options = sh;
+      d.correctIndex = sh.indexOf(correctStr);
+      d.sort = true;
+      sq.answer.value = correctStr;
+      return { fixed: ['optionsPresent', 'answerInOptions'] };
+    }
+
+    return null;   
+  }
+
+  
+
+  function finishJudge(sq, rng) {
+    var d = dataOf(sq);
+    var p = String(sq.prompt || '');
+    p = p.replace(/^列式计算[:：]\s*/, '');
+    var an = parseAnswerNum(sq);
+
+    if (an) {
+      var isTrue = rng() < 0.5;
+      var shown = isTrue ? an.num : an.num + 1;
+      var shownStr = numStr(shown) + an.suffix;
+      if (/=\s*[？?]\s*$/.test(p)) {
+        p = p.replace(/=\s*[？?]\s*$/, '= ' + shownStr + '（对还是错？）');
+      } else if (/=\s*$/.test(p)) {
+        p = p.replace(/=\s*$/, '= ' + shownStr + '（对还是错？）');
+      } else {
+        p = p.replace(/[。？?]\s*$/, '') + '。有人说结果是 ' + shownStr + '，对还是错？';
+      }
+      sq.prompt = p;
+      sq.answer.value = (shown === an.num);
+      d.shownResult = shownStr;
+      d.expectedResult = numStr(an.num) + an.suffix;
+      return { fixed: ['booleanAnswer'] };
+    }
+
+    var rem = parseAnswerRemainder(sq);
+    if (rem) {
+      var isTrue2 = rng() < 0.5;
+      var shown2 = isTrue2 ? rem : { q: rem.q + 1, mark: rem.mark, r: rem.r };
+      var shownStr2 = shown2.q + '……' + shown2.r;
+      var p2 = /=\s*[？?]?\s*$/.test(p)
+        ? p.replace(/=\s*[？?]\s*$/, '').replace(/=\s*$/, '= ' + shownStr2 + '（对还是错？）')
+        : (p.replace(/[。？?]\s*$/, '') + '。有人说结果是 ' + shownStr2 + '，对还是错？');
+      sq.prompt = p2;
+      sq.answer.value = isTrue2;
+      d.shownResult = shownStr2;
+      return { fixed: ['booleanAnswer'] };
+    }
+
+    var seq = parseSeq(sq);
+    if (seq) {
+      var desc = /从大到小|大到小/.test(p);
+      var correct = sortNums(seq, desc);
+      var isTrue3 = rng() < 0.5;
+      var shownSeq = isTrue3 ? correct : swapped(correct, rng);
+      if (!isTrue3 && shownSeq.join('，') === correct.join('，')) shownSeq = correct.slice().reverse();
+      var base = p.replace(/[。？?]\s*$/, '');
+      sq.prompt = base + '。小明排出：' + shownSeq.join('，') + '——对还是错？';
+      sq.answer.value = isTrue3;
+      d.shownResult = shownSeq.join('，');
+      d.expectedResult = correct.join('，');
+      return { fixed: ['booleanAnswer'] };
+    }
+
+    return null;
+  }
+
+  
+
+  function finishFill(sq) {
+    var p = String(sq.prompt || '');
+    if (BLANK_RE.test(p)) return { fixed: [] };
+    if (parseSeq(sq) && /[。]\s*$/.test(p)) {
+      sq.prompt = p.replace(/[。]\s*$/, '') + '，排序结果是 ____。';
+      return { fixed: ['blankPresent'] };
+    }
+    if (/=\s*[？?]\s*$/.test(p)) { sq.prompt = p.replace(/=\s*[？?]\s*$/, '= ____'); return { fixed: ['blankPresent'] }; }
+    if (/=\s*$/.test(p)) { sq.prompt = p.replace(/=\s*$/, '= ____'); return { fixed: ['blankPresent'] }; }
+    if (/[？?]\s*$/.test(p)) { sq.prompt = p.replace(/\s+$/, '') + ' 答：____'; return { fixed: ['blankPresent'] }; }
+    if (/[:：]\s*$/.test(p)) { sq.prompt = p + ' ____'; return { fixed: ['blankPresent'] }; }
+    if (/[。]\s*$/.test(p)) { sq.prompt = p.replace(/[。]\s*$/, '') + ' → ____。'; return { fixed: ['blankPresent'] }; }
+    sq.prompt = p + ' ____';
+    return { fixed: ['blankPresent'] };
+  }
+
+  
+
+  function parseSingleExpr(p) {
+    var ops = String(p || '').match(/[+\-−×x*÷\/]/g);
+    if (!ops || ops.length !== 1) return null;
+    var m = /(-?\d+(?:\.\d+)?)\s*([+\-−×x*÷\/])\s*(-?\d+(?:\.\d+)?)/.exec(p);
+    if (!m) return null;
+    return { a: parseFloat(m[1]), op: m[2], b: parseFloat(m[3]) };
+  }
+
+  function parseDoubleExpr(p) {
+    var m = /(-?\d+(?:\.\d+)?)\s*([+\-−×x*÷\/])\s*(-?\d+(?:\.\d+)?)\s*([+\-−×x*÷\/])\s*(-?\d+(?:\.\d+)?)/.exec(p || '');
+    if (!m) return null;
+    return { a: parseFloat(m[1]), op1: m[2], b: parseFloat(m[3]), op2: m[4], c: parseFloat(m[5]) };
+  }
+
+  function opName(ch) {
+    if (ch === '+') return 'add';
+    if (ch === '-' || ch === '−') return 'sub';
+    if (ch === '×' || ch === 'x' || ch === '*') return 'mult';
+    return 'div';
+  }
+
+  function applyStorySingle(e, p) {
+    var a = e.a, b = e.b, op = e.op;
+    if ((op === '×' || op === 'x' || op === '*') && /%/.test(p)) {
+      
+      var m1 = /(\d+(?:\.\d+)?)\s*%\s*[×x*]/.exec(p);
+      if (m1) {
+        var rate = parseFloat(m1[1]);
+        return '一件商品现价是原价的 ' + rate + '%，原价 ' + b + ' 元，现价是多少元？';
+      }
+      var rate2 = /%/.test(String(b) ) ? a : b;
+      var base2 = /%/.test(String(b)) ? b : a;
+      return '一件商品原价 ' + base2 + ' 元，现按原价的 ' + rate2 + '% 出售，现价是多少元？';
+    }
+    if (op === '+') return '小明买一支钢笔用去 ' + a + ' 元，又买一个笔袋用去 ' + b + ' 元，一共用去多少元？';
+    if (op === '-' || op === '−') {
+      if (a >= b) return '小明有 ' + a + ' 元零花钱，买文具用去 ' + b + ' 元，还剩多少元？';
+      return '小明买文具用去 ' + a + ' 元，付给收银员 ' + b + ' 元，应找回多少元？';
+    }
+    if (op === '×' || op === 'x' || op === '*') {
+      return '每盒鸡蛋有 ' + a + ' 个，买了 ' + b + ' 盒，一共有多少个鸡蛋？';
+    }
+    
+    if (b === 0) return null;
+    if (a % b === 0) return '把 ' + a + ' 个苹果平均分给 ' + b + ' 个小朋友，每人分得多少个？';
+    return '有 ' + a + ' 个苹果，每 ' + b + ' 个装一袋，可以装满多少袋，还剩几个？';
+  }
+
+  function applyStoryDouble(e) {
+    var o1 = opName(e.op1), o2 = opName(e.op2);
+    var a = e.a, b = e.b, c = e.c;
+    var key = o1 + ',' + o2;
+    switch (key) {
+      case 'add,add': return '水果店上午卖出 ' + a + ' 箱苹果，中午卖出 ' + b + ' 箱，下午卖出 ' + c + ' 箱，一天一共卖出多少箱？';
+      case 'add,sub': return '小明有 ' + a + ' 元，爸爸又给他 ' + b + ' 元，买文具用去 ' + c + ' 元，现在有多少元？';
+      case 'sub,add': return '公交车上有 ' + a + ' 人，到站后下去 ' + b + ' 人，又上来 ' + c + ' 人，现在车上有多少人？';
+      case 'sub,sub': return '小明有 ' + a + ' 元，买书用去 ' + b + ' 元，买笔用去 ' + c + ' 元，还剩多少元？';
+      case 'mult,add': return '一套书每本 ' + a + ' 元，买 ' + b + ' 本，加配送费 ' + c + ' 元，一共要付多少元？';
+      case 'mult,sub': return '每支笔 ' + a + ' 元，买 ' + b + ' 支，用会员卡立减 ' + c + ' 元，一共要付多少元？';
+      case 'div,add': return '把 ' + a + ' 颗糖平均分给 ' + b + ' 个小朋友后，老师又给每人 ' + c + ' 颗，每人现在有多少颗？';
+      case 'div,sub': return '把 ' + a + ' 颗糖平均分给 ' + b + ' 个小朋友，小华分到后吃掉 ' + c + ' 颗，小华还剩多少颗？';
+      default:
+        return '按下面的数量关系解决问题：' + a + ' ' + e.op1 + ' ' + b + ' ' + e.op2 + ' ' + c
+          + '。先算出最后结果，再写清每一步求的是什么，结果是多少？';
+    }
+  }
+
+  function finishApply(sq) {
+    if (checkContextPresent(sq)) return { fixed: [] };     
+    var p = String(sq.prompt || '');
+    var single = parseSingleExpr(p);
+    if (single) {
+      var story = applyStorySingle(single, p);
+      if (story) { sq.prompt = story; return { fixed: ['contextPresent'] }; }
+    }
+    var dbl = parseDoubleExpr(p);
+    if (dbl) {
+      sq.prompt = applyStoryDouble(dbl);
+      return { fixed: ['contextPresent'] };
+    }
+    return null;
+  }
+
+  
+
+  var FINISHERS = { choice: finishChoice, judge: finishJudge, fill: finishFill, apply: finishApply };
+
+  function trace(sq, action, violations, fixed) {
+    sq.metadata = sq.metadata || {};
+    sq.metadata.typeContract = { action: action, violations: violations || [], fixed: fixed || [] };
+  }
+
+  
+  function enforce(sqs, plan) {
+    if (!sqs) return sqs;
+    var isArr = Array.isArray(sqs);
+    var arr = isArr ? sqs : (sqs.questions && Array.isArray(sqs.questions) ? sqs.questions : null);
+    if (!arr) return sqs;
+    var qt = plan ? String(plan.questionTypeId || plan.questionType || '') : '';
+    var out = [];
+    for (var i = 0; i < arr.length; i++) {
+      var sq = arr[i];
+      if (!sq) continue;
+      
+      
+      
+      if (sq.answer != null && (typeof sq.answer === 'string' || typeof sq.answer === 'number' || typeof sq.answer === 'boolean')) {
+        sq.answer = { value: typeof sq.answer === 'boolean' ? sq.answer : String(sq.answer), acceptable: [] };
+      }
+      var res = check(qt, sq);
+      if (res.ok) { trace(sq, 'pass', [], []); out.push(sq); continue; }
+      var finisher = FORM_BOUND.indexOf(qt) === -1 ? FINISHERS[qt] : null;
+      var fixed = null;
+      if (finisher) {
+        try { fixed = finisher(sq, rngFor(sq)); } catch (e) { fixed = null; }
+      }
+      if (!fixed) { trace(sq, 'drop', res.violations, []); continue; }
+      var re = check(qt, sq);
+      if (!re.ok) { trace(sq, 'drop', re.violations, fixed.fixed || []); continue; }
+      trace(sq, 'finish', res.violations, fixed.fixed || []);
+      out.push(sq);
+    }
+    if (isArr) { arr.length = 0; for (var j = 0; j < out.length; j++) arr.push(out[j]); return sqs; }
+    sqs.questions = out;
+    return sqs;
+  }
+
+  var api = {
+    SCHEMA_VERSION: SCHEMA_VERSION,
+    CONTRACT_MAP: CONTRACT_MAP,
+    FORM_BOUND: FORM_BOUND,
+    INVARIANT_IDS: INVARIANT_IDS,
+    INVARIANTS: INVARIANTS,
+    check: check,
+    enforce: enforce
+  };
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  } else {
+    global.TypeContract = api;
+  }
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+
+};
 __defs["shared/generator/generators/index.js"] = function (module, exports, require) {
 
 'use strict';
@@ -5910,6 +6436,71 @@ module.exports = {
   ALL: ALL,
   BY_ID: BY_ID,
   get: function (id) { return BY_ID[id] || null; }
+};
+
+};
+__defs["shared/generator/core/rng.js"] = function (module, exports, require) {
+
+'use strict';
+
+function hashSeed(str) {
+  var h = 5381;
+  str = String(str);
+  for (var i = 0; i < str.length; i++) {
+    h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+  }
+  return h >>> 0;
+}
+
+function createSeededRandom(seed) {
+  var a = (seed == null ? 1 : (typeof seed === 'number' ? (seed >>> 0) : hashSeed(seed))) || 1;
+  return function () {
+    a |= 0;
+    a = (a + 0x6D2B79F5) | 0;
+    var t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function randInt(rng, min, max) {
+  if (max < min) { var t = min; min = max; max = t; }
+  return min + Math.floor(rng() * (max - min + 1));
+}
+
+
+function randIntExcluding(rng, min, max, exclude) {
+  var v = randInt(rng, min, max);
+  if (exclude == null || v !== exclude) return v;
+  
+  for (var i = 0; i < 8; i++) {
+    v = randInt(rng, min, max);
+    if (v !== exclude) return v;
+  }
+  return v;
+}
+
+function pick(rng, arr) {
+  if (!arr || arr.length === 0) return undefined;
+  return arr[randInt(rng, 0, arr.length - 1)];
+}
+
+function shuffle(rng, arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = randInt(rng, 0, i);
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+module.exports = {
+  hashSeed: hashSeed,
+  createSeededRandom: createSeededRandom,
+  randInt: randInt,
+  randIntExcluding: randIntExcluding,
+  pick: pick,
+  shuffle: shuffle
 };
 
 };
@@ -6475,7 +7066,9 @@ var SHAPE_FEATURES = {
 };
 
 function getShapeMeta(kp) {
-  var lt = kp.source?.legacyType || kp.legacy?.legacyType;
+  
+  
+  var lt = kp.source?.legacyType || kp.legacy?.legacyType || 'flat';
   var cat = kp.legacy?.category;
   var subtype = SHAPE_SUBTYPE[lt] || 'rectangle';
   var meta = SHAPE_FEATURES[lt] || { name: '图形', features: ['有形状', '可识别'], examples: ['各种图形'] };
@@ -6618,10 +7211,16 @@ function makeClassificationQuestion(plan, context, i, shapeMeta, graphic) {
   var allShapes = Object.keys(SHAPE_FEATURES);
   var target = shapeMeta.legacyType;
   var prompt = '下列哪个图形属于' + shapeMeta.meta.name + '？';
-  var correct = target;
-  var distractors = allShapes.filter(function(s){ return s !== target; }).slice(0, 3);
-  if (distractors.length < 3) distractors = distractors.concat(['sphere', 'cone', 'cylinder'].filter(function(d){ return distractors.indexOf(d) === -1 && d !== target; }));
-  var options = Rng.shuffle(rng, [correct].concat(distractors).slice(0, 4));
+  
+  
+  var correct = shapeMeta.meta.name;
+  var distractorNames = allShapes.filter(function (s) { return s !== target; }).slice(0, 3)
+    .map(function (s) { return SHAPE_FEATURES[s].name; });
+  if (distractorNames.length < 3) {
+    distractorNames = distractorNames.concat(['立体图形', '长方体', '圆柱']
+      .filter(function (d) { return distractorNames.indexOf(d) === -1 && d !== correct; }));
+  }
+  var options = Rng.shuffle(rng, [correct].concat(distractorNames).slice(0, 4));
   var correctIndex = options.indexOf(correct);
 
   return {
@@ -8276,6 +8875,11 @@ function makeCountingQuestion(plan, context, i, kp) {
     prompt = name + '：从' + a + '种水果和' + b + '种饮料中各选一种，共有多少种搭配？';
     answer = a * b;
     steps = 2;
+    
+    if (plan.questionTypeId === 'calc') {
+      prompt = name + '：从' + a + '种水果和' + b + '种饮料中各选一种，一共有多少种搭配？'
+        + '列式：' + a + ' × ' + b + ' = ？';
+    }
   }
 
   return {
@@ -8378,7 +8982,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else if (name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
   else type = 'logic';
 
-  var prompt, answer, steps;
+  
+  var prompt, answer, steps, logicOptions = null, choicePool = null;
   var v = i; 
   if (type === 'drawer') {
     var DRAWER = [
@@ -8412,23 +9017,35 @@ function makeReasoningQuestion(plan, context, i, kp) {
   } else if (type === 'chicken-rabbit') {
     if (v % 3 === 0) {
       var heads = Rng.randInt(rng, 8, 20);
-      var rabb0 = Rng.randInt(rng, 3, 8);
+      var rabb0 = Rng.randInt(rng, 3, Math.max(3, heads - 2));
       var feet = heads * 2 + rabb0 * 2;
       prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
       var r0 = (feet - heads * 2) / 2;
       answer = '鸡' + (heads - r0) + '只，兔' + r0 + '只'; steps = 3;
+      choicePool = ['鸡' + (heads - r0) + '只，兔' + r0 + '只',
+        '鸡' + r0 + '只，兔' + (heads - r0) + '只',
+        '鸡' + (heads - r0 - 1) + '只，兔' + (r0 + 1) + '只',
+        '鸡' + (heads - r0 + 1) + '只，兔' + (r0 - 1) + '只'];
     } else if (v % 3 === 1) {
       var D = Rng.randInt(rng, 1, 5);
       var R = Rng.randInt(rng, 3, 8);
       var F = 6 * R + 2 * D;
       prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
       answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
+      choicePool = ['鸡' + (R + D) + '只，兔' + R + '只',
+        '鸡' + R + '只，兔' + (R + D) + '只',
+        '鸡' + (R + D - 1) + '只，兔' + (R + 1) + '只',
+        '鸡' + (R + D + 1) + '只，兔' + (R - 1) + '只'];
     } else {
       var D2 = Rng.randInt(rng, 1, 4);
       var C = Rng.randInt(rng, 3, 8);
       var F2 = 6 * C + 4 * D2;
       prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
       answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
+      choicePool = ['鸡' + C + '只，兔' + (C + D2) + '只',
+        '鸡' + (C + D2) + '只，兔' + C + '只',
+        '鸡' + (C - 1) + '只，兔' + (C + D2 + 1) + '只',
+        '鸡' + (C + 1) + '只，兔' + (C + D2 - 1) + '只'];
     }
   } else if (type === 'tree-planting') {
     var L = Rng.randInt(rng, 100, 500);
@@ -8500,14 +9117,49 @@ function makeReasoningQuestion(plan, context, i, kp) {
     prompt = name + '：观察数列规律，写出下一个数：' + sq.s + ', ?';
     answer = sq.ans; steps = 1;
   } else {
-    var LOGIC = [
-      { w: 'A、B、C、D 四人中有一人说谎。根据条件推理谁在说谎。' },
-      { w: '甲、乙、丙三人中只有一人说真话，根据各自陈述推理谁说真话。' },
-      { w: '三个盒子分别标“苹果”“橘子”“混合”，标签全贴错。只从一个盒子取一个水果，就能判断全部，如何判断？' }
-    ];
-    var lg = LOGIC[v % LOGIC.length];
-    prompt = name + '：' + lg.w;
-    answer = '（逻辑推理略）'; steps = 4;
+    
+    
+    var LGV = v % 3;
+    if (LGV === 0) {
+      prompt = '甲、乙、丙三人中只有一人说真话。甲说：「乙在说谎。」乙说：「丙在说谎。」丙说：「甲和乙都在说谎。」谁说了真话？';
+      answer = '乙'; steps = 3;
+      logicOptions = ['甲', '乙', '丙'];
+    } else if (LGV === 1) {
+      var ageTop = Rng.randInt(rng, 9, 12);
+      prompt = '小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 ' + ageTop + ' 岁。三人中谁最大？';
+      answer = '小明'; steps = 2;
+      logicOptions = ['小明', '小红', '小刚'];
+    } else {
+      prompt = '三个盒子上分别标着「苹果」「橘子」「混合」，标签全都贴错了。只从其中一个盒子里摸出一个水果，就能判断所有盒子里装的是什么。应该从哪个盒子摸？';
+      answer = '标着「混合」的盒子'; steps = 3;
+      logicOptions = ['标着「苹果」的盒子', '标着「橘子」的盒子', '标着「混合」的盒子'];
+    }
+  }
+
+  
+  
+  if (plan.questionTypeId === 'choice' && (logicOptions || choicePool)) {
+    var srcPool = (choicePool || logicOptions).map(String);
+    var uniq = [], seenO = {};
+    for (var oi = 0; oi < srcPool.length; oi++) {
+      if (srcPool[oi] && !seenO[srcPool[oi]]) { seenO[srcPool[oi]] = 1; uniq.push(srcPool[oi]); }
+    }
+    var ansText = String(answer);
+    if (uniq.indexOf(ansText) === -1) uniq.unshift(ansText);
+    var opts = Rng.shuffle(rng, uniq.slice(0, 4));
+    if (opts.indexOf(ansText) === -1) opts[0] = ansText;
+    return {
+      knowledgePointId: pkp(plan),
+      questionType: plan.questionTypeId,
+      difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1,
+      context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: prompt,
+      answer: { value: ansText, acceptable: [] },
+      answerMode: 'choice',
+      data: { mode: 'apply', steps: steps, questionType: plan.questionTypeId, options: opts, correctIndex: opts.indexOf(ansText) }
+    };
   }
 
   return {
@@ -8613,6 +9265,7 @@ function makeStatsQuestion(plan, context, i, kp) {
   }
 
   var prompt, answer, steps, graphic;
+  var data = { mode: 'apply', steps: steps, questionType: plan.questionTypeId };
   if (type === 'average') {
     var nums = [];
     for (var ai = 0; ai < 4; ai++) nums.push(Rng.randInt(rng, 20, 100));
@@ -8653,6 +9306,39 @@ function makeStatsQuestion(plan, context, i, kp) {
     prompt = name + '：根据条形图回答：' + bq.q;
     answer = bq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
+
+    
+    
+    if (plan.questionTypeId === 'choice') {
+      var chOpts, chAns;
+      if (i % 3 === 2) {
+        var diffV = hiBar.value - loBar.value;
+        chAns = diffV + '人';
+        chOpts = [chAns, (diffV + 1) + '人', (diffV - 1) + '人', (diffV + 2) + '人'];
+      } else {
+        var targetC = (i % 3 === 0) ? hiBar : loBar;
+        chAns = targetC.label + '，' + targetC.value + '人';
+        chOpts = series.map(function (s) { return s.label + '，' + s.value + '人'; });
+      }
+      chOpts = Rng.shuffle(rng, chOpts);
+      prompt = name + '：根据条形图回答：' + bq.q + '（  ）';
+      answer = chAns;
+      data.choiceForm = true;
+    } else if (plan.questionTypeId === 'judge') {
+      var targetJ = (i % 3 === 0) ? hiBar : loBar;
+      var isTrueJ = rng() < 0.5;
+      var deltaJ = (targetJ.value > 21 && rng() < 0.5) ? -1 : 1;
+      var shownJ = isTrueJ ? targetJ.value : targetJ.value + deltaJ;
+      prompt = name + '：根据条形图判断：「' + targetJ.label + '有 ' + shownJ + ' 人」——对还是错？';
+      answer = isTrueJ;
+      data.judgeForm = true;
+    } else if (plan.questionTypeId === 'calc') {
+      
+      prompt = name + '：根据条形图列式计算，人数最多的年级比最少的年级多多少人？'
+        + '列式：' + hiBar.value + ' − ' + loBar.value + ' = ？';
+      answer = hiBar.value - loBar.value;
+      data.calcForm = true;
+    }
   } else if (type === 'pie-chart') {
     var PIE = [
       { p: [30, 25, 25, 20], ask: '喜欢语文的有多少人？', idx: 0 },
@@ -8716,8 +9402,12 @@ function makeStatsQuestion(plan, context, i, kp) {
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
   }
 
-  var data = { mode: 'apply', steps: steps, questionType: plan.questionTypeId };
   if (graphic) data.graphic = graphic;
+  data.steps = steps;
+  if (data.choiceForm) {
+    data.options = chOpts;
+    data.correctIndex = chOpts.indexOf(String(answer));
+  }
 
   return {
     knowledgePointId: pkp(plan),
@@ -8727,8 +9417,8 @@ function makeStatsQuestion(plan, context, i, kp) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: typeof answer === 'number' ? { value: String(answer), acceptable: [] } : { value: String(answer), acceptable: [] },
-    answerMode: 'input',
+    answer: typeof answer === 'boolean' ? { value: answer, acceptable: [] } : { value: String(answer), acceptable: [] },
+    answerMode: data.choiceForm ? 'choice' : (data.judgeForm ? 'judge' : 'input'),
     data: data
   };
 }
@@ -8825,6 +9515,11 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     prompt = '根据大括号图：左边有' + a + '个苹果，右边有' + b + '个苹果，一共有多少个？';
     answer = a + b; steps = 1;
     graphic = { type: 'diagram', subtype: 'brace', params: { left: a, right: b, unit: '个' } };
+    
+    if (plan.questionTypeId === 'calc') {
+      prompt = '看图列式：大括号图左边有 ' + a + ' 个苹果，右边有 ' + b + ' 个苹果。'
+        + '列式计算一共有多少个：' + a + ' + ' + b + ' = ？';
+    }
   } else if (type === 'balance') {
     var left = Rng.randInt(rng, 5, 20);
     var right = left;
@@ -10360,22 +11055,31 @@ function makePercentOf(plan, context, i) {
 function makeConversion(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var variant = i % 3;
+  var isCalc = qt(plan) === 'calc';
   var q = buildBase(plan, context, i, { subType: 'percent-conversion', variant: variant });
   if (variant === 0) {
     var d = (Rng.randInt(rng, 1, 9) * 10 + Rng.randInt(rng, 1, 9)) / 100;
     var dpct = Math.round(d * 100);
-    return finish(q, '把小数 ' + d.toFixed(2) + ' 化成百分数是（ ）%（只填数字）。', dpct,
-      d.toFixed(2) + ' = ' + dpct + '%');
+    var stem0 = isCalc
+      ? '把小数 ' + d.toFixed(2) + ' 化成百分数，列式：' + d.toFixed(2) + ' =（ ）%（只填数字）。'
+      : '把小数 ' + d.toFixed(2) + ' 化成百分数是（ ）%（只填数字）。';
+    return finish(q, stem0, dpct, d.toFixed(2) + ' = ' + dpct + '%');
   }
   if (variant === 1) {
     var f = Rng.pick(rng, FRACTION_PERCENT);
     var stem = qt(plan) === 'fill'
       ? '把分数 ' + f.num + '/' + f.den + ' 化成百分数：____%（只填数字）'
-      : f.num + '/' + f.den + ' 化成百分数是多少？（只填数字）';
+      : (isCalc
+        ? '把分数 ' + f.num + '/' + f.den + ' 化成百分数，列式：' + f.num + '/' + f.den + ' =（ ）%（只填数字）'
+        : f.num + '/' + f.den + ' 化成百分数是多少？（只填数字）');
     return finish(q, stem, f.percent, f.num + '/' + f.den + ' = ' + f.percent + '%');
   }
   var p = Rng.pick(rng, CLEAN_PERCENTS);
   var dec = (p / 100).toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+  if (isCalc) {
+    
+    return finish(q, '把 ' + p + '% 化成小数，列式：' + p + ' ÷ 100 =（ ）。', dec, p + '% = ' + dec);
+  }
   return finish(q, '把 ' + p + '% 化成小数是（ ）。', dec, p + '% = ' + dec);
 }
 
@@ -10387,6 +11091,12 @@ function makeDiscount(plan, context, i) {
   var cur = Math.round(price * d.rate) / 100;
   var askSaved = (i % 2 === 1);
   var prompt;
+  
+  if (qt(plan) === 'calc') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: 'current' }),
+      '列式计算：一件商品原价 ' + price + ' 元，现在' + d.label + '出售，现价是多少元？列式：' + price + ' × ' + d.rate + '% = ？',
+      cur, '现价 ' + price + ' × ' + d.rate + '% = ' + cur + ' 元');
+  }
   if (askSaved) {
     prompt = '一件商品原价 ' + price + ' 元，现在' + d.label + '出售，买这件商品可以便宜多少元？';
     return finish(buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: 'saved' }),
@@ -10405,6 +11115,12 @@ function makeInterest(plan, context, i) {
   var years = Rng.randInt(rng, 1, 3);
   var interest = principal * rate * years / 100;
   var askTotal = (i % 2 === 1);
+  
+  if (qt(plan) === 'calc') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: 'interest' }),
+      '列式计算：' + principal + ' 元存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。列式求到期利息：' + principal + ' × ' + rate + '% × ' + years + ' = ？',
+      interest, '利息 ' + principal + ' × ' + rate + '% × ' + years + ' = ' + interest + ' 元');
+  }
   if (askTotal) {
     return finish(buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: 'total' }),
       '小明把 ' + principal + ' 元压岁钱存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期时一共可以取回多少元？',
@@ -10419,6 +11135,15 @@ function makeInterest(plan, context, i) {
 function makeRateLine(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var q = buildBase(plan, context, i, { subType: 'percent-target-rate' });
+  
+  if (qt(plan) === 'calc') {
+    var ctotal = Rng.pick(rng, [50, 100, 200, 400, 500]);
+    var crate = Rng.pick(rng, [80, 90, 95, 75, 60]);
+    var cneed = Math.round(ctotal * crate / 100);
+    return finish(q,
+      '列式计算：学校规定体育达标率不低于 ' + crate + '%，全年级共 ' + ctotal + ' 人。列式求至少达标人数：' + ctotal + ' × ' + crate + '% = ？',
+      cneed, ctotal + ' × ' + crate + '% = ' + cneed + ' 人');
+  }
   if (i % 2 === 1) {
     
     var total = Rng.pick(rng, [50, 100, 200, 400, 500]);
@@ -10445,6 +11170,12 @@ function makePercentChange(plan, context, i) {
   var increase = (i % 2 === 0);
   var ans = increase ? base + base * p / 100 : base - base * p / 100;
   var prompt;
+  
+  if (qt(plan) === 'calc') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-change', base: base, percent: p, increase: increase }),
+      '列式计算：' + base + (increase ? ' + ' : ' − ') + base + ' × ' + p + '% = ？',
+      ans, base + ' × (1' + (increase ? '+' : '−') + p + '%) = ' + ans);
+  }
   if (increase) {
     prompt = '果园去年收苹果 ' + base + ' 千克，今年比去年增产 ' + p + '%，今年收苹果多少千克？';
   } else {
@@ -11112,7 +11843,8 @@ function makeScaleCalc(plan, context, i) {
     fromLength: s.orig, toLength: s.next
   });
   return finish(q, '列式计算：一个长方形的长是 ' + s.orig + ' 厘米，按 ' + ratio
-    + ' 的比' + (s.enlarge ? '放大' : '缩小') + '，变换后的长是多少厘米？', s.next, [String(s.next)],
+    + ' 的比' + (s.enlarge ? '放大' : '缩小') + '。列式：' + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ？（厘米）',
+    s.next, [String(s.next)],
     (s.enlarge ? '放大到 ' + s.k + ' 倍：' : '缩小到 1/' + s.k + '：')
       + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ' + s.next + ' 厘米');
 }
@@ -11189,7 +11921,8 @@ function makePropCalc(plan, context, i) {
     unitPrice: unit, quantityA: a, quantityB: b
   });
   return finish(q, '列式计算：买 ' + a + ' 支同样的钢笔要用 ' + (a * unit)
-    + ' 元，买 ' + b + ' 支这样的钢笔要用多少元？', b * unit, [String(b * unit)],
+    + ' 元，买 ' + b + ' 支这样的钢笔要用多少元？列式：' + (a * unit) + ' ÷ ' + a + ' × ' + b + ' = ？（元）',
+    b * unit, [String(b * unit)],
     '先求单价（归一）：' + (a * unit) + ' ÷ ' + a + ' = ' + unit + ' 元；'
       + b + ' × ' + unit + ' = ' + (b * unit) + ' 元');
 }
@@ -11333,71 +12066,6 @@ function buildAll() {
 module.exports = {
   createSemanticRelationsGenerator: createSemanticRelationsGenerator,
   buildAll: buildAll
-};
-
-};
-__defs["shared/generator/core/rng.js"] = function (module, exports, require) {
-
-'use strict';
-
-function hashSeed(str) {
-  var h = 5381;
-  str = String(str);
-  for (var i = 0; i < str.length; i++) {
-    h = ((h << 5) + h + str.charCodeAt(i)) | 0;
-  }
-  return h >>> 0;
-}
-
-function createSeededRandom(seed) {
-  var a = (seed == null ? 1 : (typeof seed === 'number' ? (seed >>> 0) : hashSeed(seed))) || 1;
-  return function () {
-    a |= 0;
-    a = (a + 0x6D2B79F5) | 0;
-    var t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function randInt(rng, min, max) {
-  if (max < min) { var t = min; min = max; max = t; }
-  return min + Math.floor(rng() * (max - min + 1));
-}
-
-
-function randIntExcluding(rng, min, max, exclude) {
-  var v = randInt(rng, min, max);
-  if (exclude == null || v !== exclude) return v;
-  
-  for (var i = 0; i < 8; i++) {
-    v = randInt(rng, min, max);
-    if (v !== exclude) return v;
-  }
-  return v;
-}
-
-function pick(rng, arr) {
-  if (!arr || arr.length === 0) return undefined;
-  return arr[randInt(rng, 0, arr.length - 1)];
-}
-
-function shuffle(rng, arr) {
-  var a = arr.slice();
-  for (var i = a.length - 1; i > 0; i--) {
-    var j = randInt(rng, 0, i);
-    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-  }
-  return a;
-}
-
-module.exports = {
-  hashSeed: hashSeed,
-  createSeededRandom: createSeededRandom,
-  randInt: randInt,
-  randIntExcluding: randIntExcluding,
-  pick: pick,
-  shuffle: shuffle
 };
 
 };

@@ -47,6 +47,7 @@ function makeStatsQuestion(plan, context, i, kp) {
   }
 
   var prompt, answer, steps, graphic;
+  var data = { mode: 'apply', steps: steps, questionType: plan.questionTypeId };
   if (type === 'average') {
     var nums = [];
     for (var ai = 0; ai < 4; ai++) nums.push(Rng.randInt(rng, 20, 100));
@@ -87,6 +88,39 @@ function makeStatsQuestion(plan, context, i, kp) {
     prompt = name + '：根据条形图回答：' + bq.q;
     answer = bq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
+
+    // P25-07 题型形态适配：choice/judge/calc 计划下产出对应教育形态
+    //（原生只产「读图问答题」，choice 无选项、judge 非布尔、calc 无算式，均不合规）。
+    if (plan.questionTypeId === 'choice') {
+      var chOpts, chAns;
+      if (i % 3 === 2) {
+        var diffV = hiBar.value - loBar.value;
+        chAns = diffV + '人';
+        chOpts = [chAns, (diffV + 1) + '人', (diffV - 1) + '人', (diffV + 2) + '人'];
+      } else {
+        var targetC = (i % 3 === 0) ? hiBar : loBar;
+        chAns = targetC.label + '，' + targetC.value + '人';
+        chOpts = series.map(function (s) { return s.label + '，' + s.value + '人'; });
+      }
+      chOpts = Rng.shuffle(rng, chOpts);
+      prompt = name + '：根据条形图回答：' + bq.q + '（  ）';
+      answer = chAns;
+      data.choiceForm = true;
+    } else if (plan.questionTypeId === 'judge') {
+      var targetJ = (i % 3 === 0) ? hiBar : loBar;
+      var isTrueJ = rng() < 0.5;
+      var deltaJ = (targetJ.value > 21 && rng() < 0.5) ? -1 : 1;
+      var shownJ = isTrueJ ? targetJ.value : targetJ.value + deltaJ;
+      prompt = name + '：根据条形图判断：「' + targetJ.label + '有 ' + shownJ + ' 人」——对还是错？';
+      answer = isTrueJ;
+      data.judgeForm = true;
+    } else if (plan.questionTypeId === 'calc') {
+      // 列式计算形态：问法收敛为「最多 − 最少」差值，题干内嵌可求值算式
+      prompt = name + '：根据条形图列式计算，人数最多的年级比最少的年级多多少人？'
+        + '列式：' + hiBar.value + ' − ' + loBar.value + ' = ？';
+      answer = hiBar.value - loBar.value;
+      data.calcForm = true;
+    }
   } else if (type === 'pie-chart') {
     var PIE = [
       { p: [30, 25, 25, 20], ask: '喜欢语文的有多少人？', idx: 0 },
@@ -150,8 +184,12 @@ function makeStatsQuestion(plan, context, i, kp) {
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
   }
 
-  var data = { mode: 'apply', steps: steps, questionType: plan.questionTypeId };
   if (graphic) data.graphic = graphic;
+  data.steps = steps;
+  if (data.choiceForm) {
+    data.options = chOpts;
+    data.correctIndex = chOpts.indexOf(String(answer));
+  }
 
   return {
     knowledgePointId: pkp(plan),
@@ -161,8 +199,8 @@ function makeStatsQuestion(plan, context, i, kp) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: typeof answer === 'number' ? { value: String(answer), acceptable: [] } : { value: String(answer), acceptable: [] },
-    answerMode: 'input',
+    answer: typeof answer === 'boolean' ? { value: answer, acceptable: [] } : { value: String(answer), acceptable: [] },
+    answerMode: data.choiceForm ? 'choice' : (data.judgeForm ? 'judge' : 'input'),
     data: data
   };
 }

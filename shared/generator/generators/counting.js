@@ -203,6 +203,11 @@ function makeCountingQuestion(plan, context, i, kp) {
     prompt = name + '：从' + a + '种水果和' + b + '种饮料中各选一种，共有多少种搭配？';
     answer = a * b;
     steps = 2;
+    // P25-07：calc 计划下列式计算形态（乘法原理），题干内嵌可求值算式
+    if (plan.questionTypeId === 'calc') {
+      prompt = name + '：从' + a + '种水果和' + b + '种饮料中各选一种，一共有多少种搭配？'
+        + '列式：' + a + ' × ' + b + ' = ？';
+    }
   }
 
   return {

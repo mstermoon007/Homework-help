@@ -64,7 +64,9 @@ var SHAPE_FEATURES = {
 };
 
 function getShapeMeta(kp) {
-  var lt = kp.source?.legacyType || kp.legacy?.legacyType;
+  // P25-07：legacyType 缺失（kp={} 结构载体）时回退 flat，保证 SHAPE_FEATURES
+  // 命中「平面图形」而非裸 fallback「图形」——否则 classification 选项会混入 undefined。
+  var lt = kp.source?.legacyType || kp.legacy?.legacyType || 'flat';
   var cat = kp.legacy?.category;
   var subtype = SHAPE_SUBTYPE[lt] || 'rectangle';
   var meta = SHAPE_FEATURES[lt] || { name: '图形', features: ['有形状', '可识别'], examples: ['各种图形'] };
@@ -207,10 +209,16 @@ function makeClassificationQuestion(plan, context, i, shapeMeta, graphic) {
   var allShapes = Object.keys(SHAPE_FEATURES);
   var target = shapeMeta.legacyType;
   var prompt = '下列哪个图形属于' + shapeMeta.meta.name + '？';
-  var correct = target;
-  var distractors = allShapes.filter(function(s){ return s !== target; }).slice(0, 3);
-  if (distractors.length < 3) distractors = distractors.concat(['sphere', 'cone', 'cylinder'].filter(function(d){ return distractors.indexOf(d) === -1 && d !== target; }));
-  var options = Rng.shuffle(rng, [correct].concat(distractors).slice(0, 4));
+  // P25-07：选项用中文图形名（原 legacyType 英文键在 kp={} 时为 undefined，
+  // 序列化后成 null 选项，违反 choice 契约 optionsPresent 的字符串要求）
+  var correct = shapeMeta.meta.name;
+  var distractorNames = allShapes.filter(function (s) { return s !== target; }).slice(0, 3)
+    .map(function (s) { return SHAPE_FEATURES[s].name; });
+  if (distractorNames.length < 3) {
+    distractorNames = distractorNames.concat(['立体图形', '长方体', '圆柱']
+      .filter(function (d) { return distractorNames.indexOf(d) === -1 && d !== correct; }));
+  }
+  var options = Rng.shuffle(rng, [correct].concat(distractorNames).slice(0, 4));
   var correctIndex = options.indexOf(correct);
 
   return {

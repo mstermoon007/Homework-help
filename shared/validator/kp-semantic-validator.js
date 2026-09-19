@@ -461,6 +461,52 @@ function checkIntentEvidenceConsistency(sq, kpId) {
 }
 
 /**
+ * 9. 题型教育契约（P25-07）：声明制结构不变式门禁。
+ *
+ * 每个 contractible 题型（calc/fill/choice/judge/geometry/classify/apply）声明了
+ * 交付形态不变式（CONTRACT_MAP：calc→expressionPresent、choice→optionsPresent+
+ * answerInOptions…）。题目到达验证器时必须已满足全部不变式——
+ * 生成管道中 wrapGenerator 的 TypeContract.enforce（finish/drop 单点收口）是
+ * 保证者；此处到验证器仍不合规即「绕过收口」→ SEVERITY.ERROR（KP_TYPE_CONTRACT）。
+ *
+ * 执行层：shared/generator/core/type-contract.js（纯代码模块，不含 kbl/ 数据，
+ * 可安全被 bundle 内联——与 evidence/intent-relations 的 skip 策略不同，本检查
+ * 在 Node 与 bundle 环境同效）。
+ *
+ * 两态：
+ *   skip — TypeContract 不可用，或题目题型无契约（非规范 7 类 / legacy token）
+ *   pass — 全部声明不变式满足
+ *   fail — 存在不变式违例（违反题型交付形态，fail-closed）
+ */
+var _typeContract = null;
+function getTypeContract() {
+  if (_typeContract !== null) return _typeContract;
+  try { _typeContract = require('../generator/core/type-contract.js'); }
+  catch (e) { _typeContract = false; }
+  return _typeContract;
+}
+
+function checkTypeContract(sq) {
+  var errors = [];
+  var TC = getTypeContract();
+  if (!TC || typeof TC.check !== 'function') {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+  var qt = sq.questionType || sq.questionTypeId || null;
+  if (!qt || !TC.CONTRACT_MAP || !TC.CONTRACT_MAP[qt]) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+  var res = TC.check(qt, sq);
+  if (!res || res.ok !== false) {
+    return { state: 'pass', errors: errors, warnings: [] };
+  }
+  errors.push(createError(ERROR_CODES.KP_TYPE_CONTRACT, 'questionType',
+    '题型教育契约违例（' + qt + '）：' + (res.violations || []).join(','),
+    SEVERITY.ERROR, { questionType: qt, violations: res.violations || [] }));
+  return { state: 'fail', errors: errors, warnings: [] };
+}
+
+/**
  * 主验证入口
  * @param {Object} sq SemanticQuestion
  * @param {Object} context { plan: QuestionPlan, kpConstraints: Object }
@@ -506,6 +552,10 @@ function validateKpSemantics(sq, context) {
   var intentResult = checkIntentEvidenceConsistency(sq, kpId);
   allErrors.push.apply(allErrors, intentResult.errors);
 
+  // 9. 题型教育契约（P25-07：声明制结构不变式门禁；skip/pass/fail）
+  var typeContractResult = checkTypeContract(sq);
+  allErrors.push.apply(allErrors, typeContractResult.errors);
+
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
 
@@ -517,6 +567,7 @@ function validateKpSemantics(sq, context) {
     score: score,
     semanticEvidence: evidenceResult.state,
     intentConsistency: intentResult.state,
+    typeContract: typeContractResult.state,
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
@@ -525,7 +576,8 @@ function validateKpSemantics(sq, context) {
       structure: checkStructure(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       content: contentResult.errors.length === 0 ? 'pass' : 'fail',
       semanticEvidence: evidenceResult.state,
-      intentConsistency: intentResult.state
+      intentConsistency: intentResult.state,
+      typeContract: typeContractResult.state
     }
   };
 }
@@ -541,6 +593,7 @@ module.exports = {
   checkContent: checkContent,
   checkSemanticEvidence: checkSemanticEvidence,
   checkIntentEvidenceConsistency: checkIntentEvidenceConsistency,
+  checkTypeContract: checkTypeContract,
   getAllowedRelations: getAllowedRelations,
   getEvidenceRules: getEvidenceRules
 };

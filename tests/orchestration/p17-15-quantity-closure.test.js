@@ -45,14 +45,18 @@ test('Q1 计数档位 1/3/5/7/10：SUCCESS，generated=final=count，Σcell=coun
   }
 });
 
-test('Q2 真实 capacity=1：时间类 KP count=3 → PARTIAL，final ≤ 1，不伪装 SUCCESS', async () => {
-  const KP = 'math-g2-down-u01-k001'; // 钟面结构，真实容量=1（P17-1 审计证据）
+test('Q2 时间类 KP calc：P25-07 修复 stats calc 伪容量后 → SUCCESS，3 题真实互异', async () => {
+  // 前提变更留痕（P25-07）：本 KP×calc 在 P17-1 审计时「真实容量=1」，其根因是旧 stats
+  // calc 产出与条目种子无关的同一道题、被去重削减为 1。P25-07 将 stats calc 收敛为
+  // 「最多−最少」差值列式（题干内嵌算式，满足 calc 契约）后按条目种子出题，
+  // 真实容量提升至 ≥3，SUCCESS 为如实上报而非伪装。短产如实上报不变量由 Q3 覆盖。
+  const KP = 'math-g2-down-u01-k001';
   const res = await realGen(KP, 'calc', 3, 5);
-  assert.notEqual(res.status, 'SUCCESS', '容量=1 不得 SUCCESS');
-  assert.ok(res.questions.length <= 1, 'actual final ≤ 1（短产如实上报）');
-  if (res.questions.length) {
-    res.questions.forEach((q) => assert.equal(q.questionType, 'calc', '产出的仍是请求类型'));
-  }
+  assert.equal(res.status, 'SUCCESS', '修复后真实容量 ≥3 → SUCCESS');
+  assert.equal(res.questions.length, 3, 'final = count');
+  res.questions.forEach((q) => assert.equal(q.questionType, 'calc', '产出的仍是请求类型'));
+  const prompts = res.questions.map((q) => q.prompt);
+  assert.equal(new Set(prompts).size, 3, '3 题真实互异（非重复填充）');
 });
 
 test('Q3 geometry 小语义空间：count=2 → PARTIAL n≥1（真实短产，非 0）', async () => {

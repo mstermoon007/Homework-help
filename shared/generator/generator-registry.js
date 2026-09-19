@@ -33,9 +33,11 @@ var CORE_RECORDS = [
     scope: 'core', version: 1, supportsComposite: false },
 
   // P0-04 Step 15-20: 新增形状/位置/金钱/应用题 Generator
-  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'],
+  // P25-07：version 升 2（classification choice 选项 null 修复 + flat 语义回退）；
+  // 摘除 'oral'（历史 token，归一后即 calc——shape 无列式形态，不得 claim form-bound 的 calc）
+  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'geometry', 'recognize', 'apply'],
     knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g3-up-u06-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g6-up-u07-k001'],
-    scope: 'core', version: 1, supportsComposite: false },
+    scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:position-direction', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'oral'], questionTypes: ['choice', 'judge', 'fill', 'oral'],
     knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
@@ -50,7 +52,9 @@ var CORE_RECORDS = [
   { id: 'generator:counting', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: ['math-g3-down-u08-k001', 'math-g3-up-u08-k001'],
     scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:reasoning', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
+  // P25-07：reasoning 产出「推理问答题」形态，不承载 calc（calc 为 form-bound，
+  // 未声明即不入候选，(g2-up-u07-k001, calc) 由算术兜底承载）。
+  { id: 'generator:reasoning', subject: 'math', capabilities: ['apply'], questionTypes: ['apply'],
     knowledgePoints: ['math-g2-up-u07-k001', 'math-g4-down-u09-k002', 'math-g4-up-u08-k002', 'math-g5-down-u08-k001', 'math-g5-up-u07-k002', 'math-g6-down-u05-k001'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:stats', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
@@ -79,7 +83,9 @@ var CORE_RECORDS = [
     scope: 'core', version: 1, supportsComposite: true },
 
   // V2.1 专项语义生成器（新教材补录 KP 的专用逻辑，native 绑定保证语义正确路由）
-  { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'recognize'], questionTypes: ['fill', 'choice', 'judge', 'recognize'],
+  // P25-07：摘除 'recognize'（normList 归一后即 geometry）——编码题目无图形表征，
+  // geometry 为 form-bound，未声明即不入候选，(g4-up-u01-k002, geometry) 由 shape-recognition 承载。
+  { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge'], questionTypes: ['fill', 'choice', 'judge'],
     knowledgePoints: ['math-g4-up-u01-k002'],
     scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:equivalent-reasoning', subject: 'math', capabilities: ['fill', 'choice', 'apply'], questionTypes: ['fill', 'choice', 'apply'],

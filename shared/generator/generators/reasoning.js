@@ -40,7 +40,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else if (name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
   else type = 'logic';
 
-  var prompt, answer, steps;
+  // P25-07：choicePool/logicOptions 供 choice 题型构建选项（值约定）；其余题型忽略。
+  var prompt, answer, steps, logicOptions = null, choicePool = null;
   var v = i; // 变体序号：同 KP 同题型下轮换不同结构/设问，提升语义容量（R6）
   if (type === 'drawer') {
     var DRAWER = [
@@ -74,23 +75,35 @@ function makeReasoningQuestion(plan, context, i, kp) {
   } else if (type === 'chicken-rabbit') {
     if (v % 3 === 0) {
       var heads = Rng.randInt(rng, 8, 20);
-      var rabb0 = Rng.randInt(rng, 3, 8);
+      var rabb0 = Rng.randInt(rng, 3, Math.max(3, heads - 2));
       var feet = heads * 2 + rabb0 * 2;
       prompt = '鸡兔同笼，共有' + heads + '个头，' + feet + '只脚。鸡和兔各多少只？';
       var r0 = (feet - heads * 2) / 2;
       answer = '鸡' + (heads - r0) + '只，兔' + r0 + '只'; steps = 3;
+      choicePool = ['鸡' + (heads - r0) + '只，兔' + r0 + '只',
+        '鸡' + r0 + '只，兔' + (heads - r0) + '只',
+        '鸡' + (heads - r0 - 1) + '只，兔' + (r0 + 1) + '只',
+        '鸡' + (heads - r0 + 1) + '只，兔' + (r0 - 1) + '只'];
     } else if (v % 3 === 1) {
       var D = Rng.randInt(rng, 1, 5);
       var R = Rng.randInt(rng, 3, 8);
       var F = 6 * R + 2 * D;
       prompt = '鸡兔同笼，鸡比兔多' + D + '只，共有' + F + '只脚。鸡和兔各多少只？';
       answer = '鸡' + (R + D) + '只，兔' + R + '只'; steps = 3;
+      choicePool = ['鸡' + (R + D) + '只，兔' + R + '只',
+        '鸡' + R + '只，兔' + (R + D) + '只',
+        '鸡' + (R + D - 1) + '只，兔' + (R + 1) + '只',
+        '鸡' + (R + D + 1) + '只，兔' + (R - 1) + '只'];
     } else {
       var D2 = Rng.randInt(rng, 1, 4);
       var C = Rng.randInt(rng, 3, 8);
       var F2 = 6 * C + 4 * D2;
       prompt = '鸡兔同笼，兔比鸡多' + D2 + '只，共有' + F2 + '只脚。鸡和兔各多少只？';
       answer = '鸡' + C + '只，兔' + (C + D2) + '只'; steps = 3;
+      choicePool = ['鸡' + C + '只，兔' + (C + D2) + '只',
+        '鸡' + (C + D2) + '只，兔' + C + '只',
+        '鸡' + (C - 1) + '只，兔' + (C + D2 + 1) + '只',
+        '鸡' + (C + 1) + '只，兔' + (C + D2 - 1) + '只'];
     }
   } else if (type === 'tree-planting') {
     var L = Rng.randInt(rng, 100, 500);
@@ -162,14 +175,49 @@ function makeReasoningQuestion(plan, context, i, kp) {
     prompt = name + '：观察数列规律，写出下一个数：' + sq.s + ', ?';
     answer = sq.ans; steps = 1;
   } else {
-    var LOGIC = [
-      { w: 'A、B、C、D 四人中有一人说谎。根据条件推理谁在说谎。' },
-      { w: '甲、乙、丙三人中只有一人说真话，根据各自陈述推理谁说真话。' },
-      { w: '三个盒子分别标“苹果”“橘子”“混合”，标签全贴错。只从一个盒子取一个水果，就能判断全部，如何判断？' }
-    ];
-    var lg = LOGIC[v % LOGIC.length];
-    prompt = name + '：' + lg.w;
-    answer = '（逻辑推理略）'; steps = 4;
+    // P25-07：可解答的逻辑推理实例（替换原「（逻辑推理略）」不可解答桩）。
+    // 三个模板均为唯一解，答案可机械验证；logicOptions 供 choice 题型构建选项。
+    var LGV = v % 3;
+    if (LGV === 0) {
+      prompt = '甲、乙、丙三人中只有一人说真话。甲说：「乙在说谎。」乙说：「丙在说谎。」丙说：「甲和乙都在说谎。」谁说了真话？';
+      answer = '乙'; steps = 3;
+      logicOptions = ['甲', '乙', '丙'];
+    } else if (LGV === 1) {
+      var ageTop = Rng.randInt(rng, 9, 12);
+      prompt = '小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 ' + ageTop + ' 岁。三人中谁最大？';
+      answer = '小明'; steps = 2;
+      logicOptions = ['小明', '小红', '小刚'];
+    } else {
+      prompt = '三个盒子上分别标着「苹果」「橘子」「混合」，标签全都贴错了。只从其中一个盒子里摸出一个水果，就能判断所有盒子里装的是什么。应该从哪个盒子摸？';
+      answer = '标着「混合」的盒子'; steps = 3;
+      logicOptions = ['标着「苹果」的盒子', '标着「橘子」的盒子', '标着「混合」的盒子'];
+    }
+  }
+
+  // P25-07：choice 题型且源码侧有语义选项池 → 直接构建值约定选项
+  //（避免落入 finisher 的数值重建把「鸡X只，兔Y只」类语义选项丢成数字）。
+  if (plan.questionTypeId === 'choice' && (logicOptions || choicePool)) {
+    var srcPool = (choicePool || logicOptions).map(String);
+    var uniq = [], seenO = {};
+    for (var oi = 0; oi < srcPool.length; oi++) {
+      if (srcPool[oi] && !seenO[srcPool[oi]]) { seenO[srcPool[oi]] = 1; uniq.push(srcPool[oi]); }
+    }
+    var ansText = String(answer);
+    if (uniq.indexOf(ansText) === -1) uniq.unshift(ansText);
+    var opts = Rng.shuffle(rng, uniq.slice(0, 4));
+    if (opts.indexOf(ansText) === -1) opts[0] = ansText;
+    return {
+      knowledgePointId: pkp(plan),
+      questionType: plan.questionTypeId,
+      difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1,
+      context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: prompt,
+      answer: { value: ansText, acceptable: [] },
+      answerMode: 'choice',
+      data: { mode: 'apply', steps: steps, questionType: plan.questionTypeId, options: opts, correctIndex: opts.indexOf(ansText) }
+    };
   }
 
   return {

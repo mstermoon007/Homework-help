@@ -3368,7 +3368,10 @@ __defs["shared/schemas/semantic-question.schema.js"] = function (module, exports
     KP_SEMANTIC_EVIDENCE: 'KP_SEMANTIC_EVIDENCE',
 
     
-    KP_SEMANTIC_INTENT_CONFLICT: 'KP_SEMANTIC_INTENT_CONFLICT'
+    KP_SEMANTIC_INTENT_CONFLICT: 'KP_SEMANTIC_INTENT_CONFLICT',
+
+    
+    KP_TYPE_CONTRACT: 'KP_TYPE_CONTRACT'
   };
 
   
@@ -4624,6 +4627,35 @@ function checkIntentEvidenceConsistency(sq, kpId) {
 }
 
 
+var _typeContract = null;
+function getTypeContract() {
+  if (_typeContract !== null) return _typeContract;
+  try { _typeContract = require("shared/generator/core/type-contract.js"); }
+  catch (e) { _typeContract = false; }
+  return _typeContract;
+}
+
+function checkTypeContract(sq) {
+  var errors = [];
+  var TC = getTypeContract();
+  if (!TC || typeof TC.check !== 'function') {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+  var qt = sq.questionType || sq.questionTypeId || null;
+  if (!qt || !TC.CONTRACT_MAP || !TC.CONTRACT_MAP[qt]) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+  var res = TC.check(qt, sq);
+  if (!res || res.ok !== false) {
+    return { state: 'pass', errors: errors, warnings: [] };
+  }
+  errors.push(createError(ERROR_CODES.KP_TYPE_CONTRACT, 'questionType',
+    '题型教育契约违例（' + qt + '）：' + (res.violations || []).join(','),
+    SEVERITY.ERROR, { questionType: qt, violations: res.violations || [] }));
+  return { state: 'fail', errors: errors, warnings: [] };
+}
+
+
 function validateKpSemantics(sq, context) {
   context = context || {};
   var plan = context.plan;
@@ -4665,6 +4697,10 @@ function validateKpSemantics(sq, context) {
   var intentResult = checkIntentEvidenceConsistency(sq, kpId);
   allErrors.push.apply(allErrors, intentResult.errors);
 
+  
+  var typeContractResult = checkTypeContract(sq);
+  allErrors.push.apply(allErrors, typeContractResult.errors);
+
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
 
@@ -4676,6 +4712,7 @@ function validateKpSemantics(sq, context) {
     score: score,
     semanticEvidence: evidenceResult.state,
     intentConsistency: intentResult.state,
+    typeContract: typeContractResult.state,
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
@@ -4684,7 +4721,8 @@ function validateKpSemantics(sq, context) {
       structure: checkStructure(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       content: contentResult.errors.length === 0 ? 'pass' : 'fail',
       semanticEvidence: evidenceResult.state,
-      intentConsistency: intentResult.state
+      intentConsistency: intentResult.state,
+      typeContract: typeContractResult.state
     }
   };
 }
@@ -4700,6 +4738,7 @@ module.exports = {
   checkContent: checkContent,
   checkSemanticEvidence: checkSemanticEvidence,
   checkIntentEvidenceConsistency: checkIntentEvidenceConsistency,
+  checkTypeContract: checkTypeContract,
   getAllowedRelations: getAllowedRelations,
   getEvidenceRules: getEvidenceRules
 };

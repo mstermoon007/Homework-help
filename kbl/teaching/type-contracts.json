@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "p25-07.1",
+  "purpose": "P25-07 七题型教育契约（声明制）。每个规范题型声明：教育定位（训练什么）、结构不变式（任何该题型题目必须满足的机器可判定断言）、禁则（该题型不得呈现的形态）。执行层：shared/generator/core/type-contract.js（不变式判定 + 可转换题型 finisher）；验证器第 9 检查 checkTypeContract（kp-semantic-validator.js）按本契约逐题断言。转换能力分两类：convertible=结构可由语义基底机械转换（choice/judge/fill/apply，selector wrap 单点 finish）；form-bound=题型形态与内容绑定、必须由声明该题型的生成器承载（calc/geometry/classify，selector 候选须声明）。",
+  "builtFrom": [
+    "shared/knowledge/question-type-registry.js TYPES（认知层级/支持能力/难度区间的唯一真值源，本契约不复制）",
+    "kbl/teaching/qt-intent.json（P25-03 题型意图，本契约承接其结构层）"
+  ],
+  "invariantKinds": {
+    "optionsPresent": "data.options 为 ≥3 个互异字符串选项",
+    "answerInOptions": "answer.value 必须出现在 options 中且 data.correctIndex 指向它",
+    "booleanAnswer": "answer.value 必须为布尔（判断题只允许对/错二值）",
+    "blankPresent": "prompt 必须含空位标记（____ 或 （ ））",
+    "expressionPresent": "prompt 含可求值算式，或 data.operation 声明运算，或空位等式（数字 + = + 空位）形态",
+    "contextPresent": "prompt 为情境叙述或任务指令（≥10 字）且含设问（？/（ ）/____/多少/几/求）或任务动词（排列/整理/分类/排序/设计/推理等）",
+    "graphicOrInstruction": "data.graphic.type 或图形对象存在，或 prompt 含作图/操作/认读/观察类指令词",
+    "groupStructure": "data.sort/groups/categories 存在，或 prompt 含分类/整理/排列/排序/分组指令"
+  },
+  "contracts": [
+    {
+      "questionType": "calc",
+      "name": "计算题",
+      "goal": "以运算求值为核心任务：呈现可求值的算式或空位等式，训练运算顺序、算理与口算/笔算技能",
+      "invariants": ["expressionPresent"],
+      "boundaries": [
+        "禁止以纯文字应用题形态冒充计算题（无算式、无运算声明、无空位等式）",
+        "禁止答案非数值化（计算题答案必须是可求值结果）"
+      ],
+      "conversion": "form-bound"
+    },
+    {
+      "questionType": "fill",
+      "name": "填空题",
+      "goal": "在语句/算式的空位处补全关键结果或概念，训练识记与局部推理",
+      "invariants": ["blankPresent"],
+      "boundaries": [
+        "禁止无空位的完整问答句冒充填空题",
+        "禁止把空位留白交给解释性长文（答案须可直接填入空位）"
+      ],
+      "conversion": "convertible"
+    },
+    {
+      "questionType": "choice",
+      "name": "选择题",
+      "goal": "在干扰项中辨认正确答案，训练概念辨析与运算结果的估算校验",
+      "invariants": ["optionsPresent", "answerInOptions"],
+      "boundaries": [
+        "禁止无选项裸题贴 choice 标签（如『列式计算』直接改标选择）",
+        "禁止正确答案不在选项内或选项重复/缺失"
+      ],
+      "conversion": "convertible"
+    },
+    {
+      "questionType": "judge",
+      "name": "判断题",
+      "goal": "对一个完整命题作出真假判断，训练概念理解的反例辨识",
+      "invariants": ["booleanAnswer"],
+      "boundaries": [
+        "禁止以计算/填空作答形态冒充判断题（判断题答案只能对/错）",
+        "禁止命题不完整（题面未呈现被判断的命题）"
+      ],
+      "conversion": "convertible"
+    },
+    {
+      "questionType": "geometry",
+      "name": "操作/作图题",
+      "goal": "对图形进行认读、观察、度量、作画与操作，训练空间观念（吸收认读类任务）",
+      "invariants": ["graphicOrInstruction"],
+      "boundaries": [
+        "禁止纯算式/纯文字计算冒充操作作图题",
+        "禁止与图形无关的编码/计算内容借用 geometry 通道"
+      ],
+      "conversion": "form-bound"
+    },
+    {
+      "questionType": "classify",
+      "name": "分类整理题",
+      "goal": "按标准对一组对象进行分类、整理与排序，训练分类思想与数据意识",
+      "invariants": ["groupStructure"],
+      "boundaries": [
+        "禁止无分组结构的普通计算/应用题借用 classify 通道"
+      ],
+      "conversion": "form-bound"
+    },
+    {
+      "questionType": "apply",
+      "name": "解决问题/应用题",
+      "goal": "在真实情境中调用知识解决问题（吸收开放题），训练数量关系分析与建模",
+      "invariants": ["contextPresent"],
+      "boundaries": [
+        "禁止裸算式（如『5 × 3 = ?』）直接贴 apply 标签",
+        "禁止无情境无任务的一步问答冒充应用题"
+      ],
+      "conversion": "convertible"
+    }
+  ]
+}
