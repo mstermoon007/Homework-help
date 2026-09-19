@@ -25,7 +25,47 @@ function seedFor(plan, context, i) {
 
 function makeReasoningQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '逻辑推理';
+  // P25-09：名称以 selector 注入的 semanticParams.name 为准（kp={} 占位曾使分派恒落 logic）；
+  // 直连调用兜底读传入 kp，再兜底「逻辑推理」。
+  var name = (plan && plan.semanticParams && plan.semanticParams.name)
+    || (kp && (kp.name || (kp.identity && kp.identity.name)))
+    || '逻辑推理';
+
+  // P25-09：calc 为 form-bound 题型（题干必须内嵌算式 EXPR_RE）。
+  // 推理族中仅 g2-up-u07-k001（7～9 的乘、除法）ALLOW calc，走 7~9 表乘除列式；
+  // 其余名称兜底为带算式的规律计算题。
+  if (plan.questionTypeId === 'calc') {
+    var cPrompt, cAnswer;
+    if (name.indexOf('除') !== -1 || name.indexOf('乘') !== -1 || name.indexOf('口诀') !== -1) {
+      var a = Rng.randInt(rng, 7, 9);
+      var b = Rng.randInt(rng, 2, 9);
+      if (i % 2 === 0) {
+        cPrompt = a + ' × ' + b + ' = ____';
+        cAnswer = a * b;
+      } else {
+        cPrompt = (a * b) + ' ÷ ' + a + ' = ____';
+        cAnswer = b;
+      }
+    } else {
+      var x = Rng.randInt(rng, 2, 9);
+      var y = Rng.randInt(rng, 2, 9);
+      var z = Rng.randInt(rng, 1, 9);
+      cPrompt = '找规律列式：' + x + ' × ' + y + ' + ' + z + ' = ____';
+      cAnswer = x * y + z;
+    }
+    return {
+      knowledgePointId: pkp(plan),
+      questionType: 'calc',
+      difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1,
+      context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: cPrompt,
+      answer: { value: String(cAnswer), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'calc', steps: 1, operation: 'mixed-arith', questionType: 'calc' }
+    };
+  }
 
   var type = 'generic';
   if (name.indexOf('抽屉') !== -1 || name.indexOf('鸽巢') !== -1) type = 'drawer';
@@ -37,7 +77,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else if (name.indexOf('数独') !== -1) type = 'sudoku';
   else if (name.indexOf('必胜') !== -1) type = 'winning';
   else if (name.indexOf('优化') !== -1 || name.indexOf('沏茶') !== -1 || name.indexOf('烙饼') !== -1 || name.indexOf('统筹') !== -1) type = 'optimization';
-  else if (name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
+  else if (name.indexOf('规律') !== -1 || name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
   else type = 'logic';
 
   // P25-07：choicePool/logicOptions 供 choice 题型构建选项（值约定）；其余题型忽略。
@@ -244,8 +284,10 @@ function createReasoningGenerator(spec) {
   return {
     id: id,
     subject: 'math',
-    capabilities: ['apply', 'calc'],
-    questionTypes: ['apply', 'calc'],
+    // P25-09：补 fill/choice——native 绑定的推理 KP（列表法/鸽巢/优化/规律）ALLOW 均为 fill/choice/apply；
+    // fill 由 wrapGenerator finisher 机械补空位，choice 数值题走数值干扰项、logic/鸡兔题走源码选项池。
+    capabilities: ['apply', 'calc', 'fill', 'choice'],
+    questionTypes: ['apply', 'calc', 'fill', 'choice'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {

@@ -3501,16 +3501,18 @@ __defs["shared/generator/generator-registry.js"] = function (module, exports, re
 
 
 var CORE_RECORDS = [
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g4-down-u03-k003', 'math-g6-down-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-up-u04-k001', 'math-g1-up-u06-k001', 'math-g2-down-u06-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g4-down-u06-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u04-k001', 'math-g2-up-u04-k002', 'math-g4-down-u03-k002', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g5-up-u01-k002', 'math-g5-up-u02-k002', 'math-g6-down-u04-k005'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-down-u02-k003', 'math-g2-down-u05-k001', 'math-g2-down-u05-k002', 'math-g2-down-u05-k003', 'math-g3-down-u02-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
+  
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k001', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g1-up-u04-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k003', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['fill', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['choice', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['judge', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
+  
   { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill', 'oral'], questionTypes: ['calc', 'fill', 'oral'],
-    knowledgePoints: ['math-g1-up-u03-k001', 'math-g2-down-u04-k002', 'math-g2-down-u04-k003', 'math-g2-down-u04-k004', 'math-g2-down-u04-k006'],
+    knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
 
   
@@ -3518,17 +3520,28 @@ var CORE_RECORDS = [
   
   
   
+  
+  
+  
+  
+  
   { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'calc', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'calc', 'geometry', 'recognize', 'apply'],
-    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g3-up-u06-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g6-up-u07-k001', 'math-g1-down-u01-k001', 'math-g1-up-u03-k002', 'math-g2-up-u05-k003', 'math-g2-up-u05-k004', 'math-g2-up-u06-k001', 'math-g3-down-u01-k001', 'math-g3-down-u03-k004', 'math-g3-down-u08-k003', 'math-g3-down-u08-k006', 'math-g3-up-u01-k002', 'math-g3-up-u01-k003', 'math-g3-up-u03-k003', 'math-g3-up-u03-k004', 'math-g3-up-u07-k001', 'math-g3-up-u07-k002', 'math-g3-up-u07-k004', 'math-g4-down-u02-k002', 'math-g4-down-u05-k001', 'math-g4-down-u05-k002', 'math-g4-down-u05-k003', 'math-g4-down-u05-k004', 'math-g4-down-u05-k005', 'math-g4-down-u05-k006', 'math-g4-up-u02-k001', 'math-g4-up-u02-k003', 'math-g4-up-u05-k001', 'math-g4-up-u05-k002', 'math-g4-up-u05-k003', 'math-g4-up-u05-k004', 'math-g5-down-u01-k002', 'math-g5-down-u03-k001', 'math-g5-down-u03-k002', 'math-g5-up-u08-k001', 'math-g5-up-u08-k002', 'math-g5-up-u08-k003', 'math-g5-up-u08-k004', 'math-g6-down-u03-k006', 'math-g6-up-u04-k001', 'math-g6-up-u04-k004', 'math-g6-up-u04-k005', 'math-g2-up-u05-k002', 'math-g3-down-u03-k002', 'math-g3-down-u03-k003', 'math-g3-down-u04-k001', 'math-g3-down-u04-k003', 'math-g3-down-u04-k005', 'math-g3-up-u07-k003', 'math-g4-up-u02-k002', 'math-g5-down-u03-k003', 'math-g6-down-u03-k005', 'math-g6-up-u04-k002', 'math-g6-up-u04-k003'],
+    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g1-down-u01-k001', 'math-g1-up-u03-k002', 'math-g2-up-u05-k003', 'math-g2-up-u05-k004', 'math-g2-up-u06-k001', 'math-g3-down-u01-k001', 'math-g3-down-u03-k004', 'math-g3-down-u08-k003', 'math-g3-down-u08-k006', 'math-g3-up-u01-k002', 'math-g3-up-u01-k003', 'math-g3-up-u03-k003', 'math-g3-up-u03-k004', 'math-g3-up-u07-k001', 'math-g3-up-u07-k004', 'math-g4-down-u02-k002', 'math-g4-down-u05-k001', 'math-g4-down-u05-k002', 'math-g4-down-u05-k003', 'math-g4-down-u05-k004', 'math-g4-down-u05-k005', 'math-g4-down-u05-k006', 'math-g4-up-u02-k001', 'math-g4-up-u02-k003', 'math-g4-up-u05-k001', 'math-g4-up-u05-k002', 'math-g4-up-u05-k003', 'math-g4-up-u05-k004', 'math-g5-down-u01-k002', 'math-g5-down-u03-k001', 'math-g5-down-u03-k002', 'math-g5-up-u08-k001', 'math-g5-up-u08-k002', 'math-g5-up-u08-k003', 'math-g5-up-u08-k004', 'math-g6-down-u03-k006', 'math-g6-up-u04-k001', 'math-g6-up-u04-k004', 'math-g6-up-u04-k005', 'math-g2-up-u05-k002', 'math-g3-down-u03-k002', 'math-g3-down-u03-k003', 'math-g3-down-u04-k003', 'math-g3-down-u04-k005', 'math-g3-up-u07-k003', 'math-g4-up-u02-k002', 'math-g5-down-u03-k003', 'math-g6-down-u03-k005', 'math-g6-up-u04-k002', 'math-g6-up-u04-k003', 'math-g1-up-u03-k001', 'math-g3-down-u03-k001', 'math-g5-down-u09-k001', 'math-g5-down-u09-k002',
+      
+      
+      
+      'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004',
+      'math-g3-up-u03-k001', 'math-g3-up-u03-k002', 'math-g5-down-u03-k006',
+      'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'],
     scope: 'core', version: 3, supportsComposite: false },
   { id: 'generator:position-direction', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'geometry', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'geometry', 'apply'],
-    knowledgePoints: ['math-g2-up-u04-k003', 'math-g2-up-u04-k004', 'math-g3-down-u01-k002', 'math-g3-down-u01-k003', 'math-g3-down-u01-k004', 'math-g3-up-u01-k001', 'math-g4-down-u02-k003', 'math-g4-down-u07-k003', 'math-g4-down-u07-k004', 'math-g4-down-u07-k005', 'math-g5-down-u01-k003', 'math-g5-up-u01-k001', 'math-g5-up-u01-k003', 'math-g5-up-u04-k001', 'math-g5-up-u04-k002', 'math-g6-up-u01-k001', 'math-g6-up-u01-k002', 'math-g6-up-u01-k003'],
+    knowledgePoints: ['math-g2-up-u04-k003', 'math-g2-up-u04-k004', 'math-g3-down-u01-k002', 'math-g3-down-u01-k003', 'math-g3-down-u01-k004', 'math-g3-up-u01-k001', 'math-g4-down-u02-k003', 'math-g4-down-u07-k003', 'math-g4-down-u07-k004', 'math-g4-down-u07-k005', 'math-g5-down-u01-k003', 'math-g5-up-u01-k001', 'math-g5-up-u01-k003', 'math-g5-up-u04-k001', 'math-g5-up-u04-k002', 'math-g6-up-u01-k001', 'math-g6-up-u01-k002', 'math-g6-up-u01-k003', 'math-g2-up-u04-k001', 'math-g2-up-u04-k002', 'math-g5-up-u01-k002', 'math-g4-up-u08-k001', 'math-g4-up-u08-k002', 'math-g4-up-u08-k003', 'math-g5-up-u04-k003'],
     scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:money-measurement', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply', 'calc'], questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc'],
-    knowledgePoints: ['math-g1-down-u07-k001', 'math-g1-down-u07-k002', 'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004', 'math-g3-up-u03-k001', 'math-g3-up-u03-k002'],
+    knowledgePoints: ['math-g1-down-u07-k001', 'math-g1-down-u07-k002', 'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004', 'math-g3-up-u03-k001', 'math-g3-up-u03-k002', 'math-g1-down-u07-k003', 'math-g3-up-u04-k002', 'math-g3-up-u04-k003', 'math-g3-up-u04-k004'],
     scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'],
-    knowledgePoints: ['math-g4-up-u06-k001', 'math-g5-down-u03-k006', 'math-g1-down-u08-k001', 'math-g2-up-u08-k001', 'math-g3-up-u09-k001', 'math-g4-down-u10-k001', 'math-g4-up-u09-k001', 'math-g5-down-u11-k001', 'math-g5-up-u09-k001', 'math-g6-down-u06-k001', 'math-g6-up-u06-k001'],
+    knowledgePoints: ['math-g4-up-u06-k001', 'math-g5-down-u03-k006', 'math-g1-down-u08-k001', 'math-g2-up-u08-k001', 'math-g3-up-u09-k001', 'math-g4-down-u10-k001', 'math-g4-up-u09-k001', 'math-g5-down-u11-k001', 'math-g5-up-u09-k001', 'math-g6-down-u06-k001', 'math-g6-up-u06-k001', 'math-g1-down-u02-k003', 'math-g1-down-u04-k005', 'math-g1-down-u05-k003', 'math-g1-down-u06-k003', 'math-g1-up-u05-k003', 'math-g1-up-u06-k001', 'math-g2-down-u05-k004', 'math-g2-down-u06-k001', 'math-g2-down-u06-k002', 'math-g2-down-u06-k003', 'math-g2-down-u06-k004', 'math-g2-down-u07-k001', 'math-g2-down-u07-k003', 'math-g3-down-u08-k002', 'math-g3-down-u08-k005', 'math-g3-up-u02-k005', 'math-g3-up-u04-k001', 'math-g4-down-u01-k004', 'math-g4-down-u09-k003', 'math-g5-up-u03-k006', 'math-g5-down-u09-k003', 'math-g6-down-u01-k005'],
     scope: 'core', version: 2, supportsComposite: false },
 
   
@@ -3537,14 +3550,20 @@ var CORE_RECORDS = [
     scope: 'core', version: 1, supportsComposite: false },
   
   
-  { id: 'generator:reasoning', subject: 'math', capabilities: ['apply'], questionTypes: ['apply'],
-    knowledgePoints: ['math-g2-up-u07-k001', 'math-g4-down-u09-k002', 'math-g4-up-u08-k002', 'math-g5-down-u08-k001', 'math-g5-up-u07-k002', 'math-g6-down-u05-k001'],
+  
+  
+  
+  { id: 'generator:reasoning', subject: 'math', capabilities: ['apply', 'calc', 'fill', 'choice'], questionTypes: ['apply', 'calc', 'fill', 'choice'],
+    knowledgePoints: ['math-g2-up-u07-k001', 'math-g4-down-u09-k001', 'math-g4-down-u09-k002', 'math-g5-down-u08-k001', 'math-g5-down-u08-k002', 'math-g5-down-u08-k003', 'math-g5-down-u10-k001', 'math-g5-down-u10-k002', 'math-g5-down-u10-k003', 'math-g5-down-u10-k004', 'math-g5-up-u07-k002', 'math-g6-down-u05-k001', 'math-g6-down-u05-k002', 'math-g6-down-u05-k003', 'math-g6-down-u05-k004'],
     scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:stats', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g2-down-u01-k001', 'math-g2-down-u01-k002', 'math-g3-down-u03-k001', 'math-g4-down-u08-k004', 'math-g4-up-u07-k001', 'math-g5-down-u07-k001', 'math-g5-down-u07-k002', 'math-g5-down-u07-k003', 'math-g5-down-u08-k002', 'math-g5-up-u04-k003', 'math-g6-up-u07-k001', 'math-g6-up-u07-k002', 'math-g6-up-u07-k003'],
+  
+  
+  
+  { id: 'generator:stats', subject: 'math', capabilities: ['apply', 'calc', 'fill', 'choice'], questionTypes: ['apply', 'calc', 'fill', 'choice'],
+    knowledgePoints: ['math-g2-down-u01-k001', 'math-g2-down-u01-k002', 'math-g2-down-u01-k003', 'math-g3-down-u06-k001', 'math-g3-down-u06-k002', 'math-g3-down-u08-k004', 'math-g4-down-u08-k004', 'math-g4-up-u07-k001', 'math-g5-down-u07-k001', 'math-g5-down-u07-k002', 'math-g5-down-u07-k003'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:picture-equation', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g2-down-u04-k005', 'math-g4-down-u01-k001', 'math-g4-down-u06-k004', 'math-g5-up-u07-k003', 'math-g6-down-u04-k003'],
+    knowledgePoints: ['math-g4-down-u01-k001', 'math-g5-up-u07-k003'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:c1-number-puzzle', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: [],
@@ -3568,8 +3587,10 @@ var CORE_RECORDS = [
   
   
   
-  { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge'], questionTypes: ['fill', 'choice', 'judge'],
-    knowledgePoints: ['math-g4-up-u01-k002'],
+  
+  
+  { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply'], questionTypes: ['fill', 'choice', 'judge', 'apply'],
+    knowledgePoints: ['math-g3-up-u06-k001', 'math-g3-up-u06-k002', 'math-g3-up-u06-k003', 'math-g3-up-u06-k004', 'math-g3-up-u06-k005'],
     scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:equivalent-reasoning', subject: 'math', capabilities: ['fill', 'choice', 'apply'], questionTypes: ['fill', 'choice', 'apply'],
     knowledgePoints: [],
@@ -3587,10 +3608,14 @@ var CORE_RECORDS = [
   
   
   
+  
   { id: 'generator:percent-calc', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'],
-    knowledgePoints: ['math-g6-up-u05-k001', 'math-g6-up-u05-k002', 'math-g6-up-u05-k003', 'math-g6-up-u05-k004', 'math-g6-up-u05-k005', 'math-g6-up-u05-k006'],
+    knowledgePoints: ['math-g6-up-u05-k001', 'math-g6-up-u05-k002', 'math-g6-up-u05-k003', 'math-g6-up-u05-k004', 'math-g6-up-u05-k005', 'math-g6-up-u05-k006', 'math-g6-down-u02-k001', 'math-g6-down-u02-k002', 'math-g6-down-u02-k003', 'math-g6-down-u02-k004', 'math-g6-down-u02-k005'],
     scope: 'core', version: 1, supportsComposite: false },
 
+  
+  
+  
   
   
   
@@ -3598,17 +3623,22 @@ var CORE_RECORDS = [
   
   
   { id: 'generator:concept-meaning', subject: 'math', capabilities: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'], questionTypes: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'],
-    knowledgePoints: ['math-g2-down-u03-k003', 'math-g3-up-u07-k002', 'math-g3-down-u04-k001', 'math-g5-down-u04-k001'],
+    knowledgePoints: ['math-g2-down-u03-k003', 'math-g3-up-u07-k002', 'math-g3-down-u04-k001', 'math-g5-down-u04-k001', 'math-g1-down-u03-k002', 'math-g1-down-u03-k003', 'math-g1-down-u03-k004', 'math-g1-down-u03-k005', 'math-g1-down-u03-k006', 'math-g1-up-u02-k001', 'math-g1-up-u04-k002', 'math-g2-down-u04-k001', 'math-g2-down-u04-k002', 'math-g2-down-u04-k003', 'math-g2-down-u04-k004', 'math-g2-down-u04-k005', 'math-g2-down-u04-k006', 'math-g4-up-u01-k002', 'math-g4-up-u01-k003', 'math-g4-up-u01-k004', 'math-g4-up-u01-k005', 'math-g4-up-u01-k006', 'math-g5-up-u05-k004', 'math-g5-down-u02-k003', 'math-g5-down-u02-k004', 'math-g5-down-u02-k005', 'math-g5-down-u02-k006', 'math-g6-down-u01-k001', 'math-g6-down-u01-k002', 'math-g6-down-u01-k003', 'math-g6-down-u01-k004', 'math-g6-up-u07-k001', 'math-g6-up-u07-k002', 'math-g6-up-u07-k003', 'math-g5-up-u05-k001', 'math-g5-up-u05-k002', 'math-g5-up-u05-k003', 'math-g2-down-u03-k001', 'math-g4-down-u01-k002', 'math-g2-down-u03-k004', 'math-g2-down-u03-k005', 'math-g1-up-u01-k001'],
     scope: 'core', version: 1, supportsComposite: false },
 
   
   
-  
-  
-  
-  
   { id: 'generator:semantic-relations', subject: 'math', capabilities: ['calc', 'fill', 'apply', 'choice', 'geometry'], questionTypes: ['calc', 'fill', 'apply', 'choice', 'geometry'],
-    knowledgePoints: ['math-g1-down-u06-k002', 'math-g2-down-u02-k005', 'math-g6-down-u04-k007', 'math-g6-down-u04-k008'],
+    knowledgePoints: ['math-g1-down-u06-k002', 'math-g2-down-u02-k005', 'math-g6-down-u04-k001', 'math-g6-down-u04-k002', 'math-g6-down-u04-k003', 'math-g6-down-u04-k004', 'math-g6-down-u04-k005', 'math-g6-down-u04-k006', 'math-g6-down-u04-k007', 'math-g6-down-u04-k008'],
+    scope: 'core', version: 1, supportsComposite: false },
+
+  
+  
+  { id: 'generator:decimal-number', subject: 'math', capabilities: ['calc', 'fill', 'choice', 'apply'], questionTypes: ['calc', 'fill', 'choice', 'apply'],
+    knowledgePoints: ['math-g3-down-u07-k001', 'math-g3-down-u07-k002', 'math-g3-down-u07-k003', 'math-g3-down-u07-k004', 'math-g4-down-u04-k001', 'math-g4-down-u04-k002', 'math-g4-down-u04-k003', 'math-g4-down-u04-k004', 'math-g4-down-u04-k005', 'math-g4-down-u04-k006', 'math-g4-down-u04-k007', 'math-g4-down-u06-k001', 'math-g4-down-u06-k002', 'math-g4-down-u06-k003', 'math-g4-down-u06-k004', 'math-g5-up-u02-k001', 'math-g5-up-u02-k002', 'math-g5-up-u02-k003', 'math-g5-up-u02-k004', 'math-g5-up-u02-k005', 'math-g5-up-u03-k001', 'math-g5-up-u03-k002', 'math-g5-up-u03-k004', 'math-g5-up-u03-k005'],
+    scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:fraction-number', subject: 'math', capabilities: ['calc', 'fill', 'choice', 'apply'], questionTypes: ['calc', 'fill', 'choice', 'apply'],
+    knowledgePoints: ['math-g3-up-u08-k002', 'math-g3-up-u08-k003', 'math-g3-up-u08-k004', 'math-g3-up-u08-k005', 'math-g5-down-u04-k002', 'math-g5-down-u04-k003', 'math-g5-down-u04-k004', 'math-g5-down-u04-k005', 'math-g5-down-u04-k006', 'math-g5-down-u06-k001', 'math-g5-down-u06-k002', 'math-g5-down-u06-k003', 'math-g5-down-u06-k004', 'math-g5-down-u06-k005', 'math-g6-up-u03-k001', 'math-g6-up-u03-k002', 'math-g6-up-u03-k003', 'math-g6-up-u03-k004', 'math-g6-up-u03-k005'],
     scope: 'core', version: 1, supportsComposite: false }
 ];
 
@@ -4360,7 +4390,15 @@ function selectGenerator(plan, options) {
   
   if (plan && plan.questionTypeId && QuestionTypeRegistry && QuestionTypeRegistry.normalizeQuestionType) {
     var _n = QuestionTypeRegistry.normalizeQuestionType(plan.questionTypeId, { allowHeuristic: false });
-    if (_n && _n.id) plan = Object.assign({}, plan, { questionTypeId: _n.id });
+    if (_n && _n.id) {
+      plan = Object.assign({}, plan, { questionTypeId: _n.id });
+    } else {
+      
+      
+      
+      return { generatorId: null, source: 'unsupported', errorCode: 'GENERATOR_UNSUPPORTED',
+        record: null, mode: mode };
+    }
   }
   var all = GenRegistry.all();
   var candidates = [];
@@ -5726,6 +5764,10 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
   
   var SUBTOPIC_RULES = [
     
+    
+    
+    nameConceptRule('number-theory', ['number-sense'], /倍数的特征|奇数|偶数|质数|合数|奇偶性/),
+    
     nameConceptRule('times-concept', ['multiple-ratio'], /倍/),
     nameConceptRule('angle-concept', ['geometric-figure'], /角(的认识|各部分)/, /两条射线/),
     nameConceptRule('area-concept', ['geometric-measurement'], /面积/),
@@ -5743,11 +5785,34 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
       null, /正比例|反比例/),
     
     nameConceptRule('percent-conversion', ['percent'], /互化/, /化百分数|百分数化/),
+    
+    
+    nameConceptRule('percent-life', ['percent'], /生活与百分数/),
     nameConceptRule('percent-discount', ['percent'], /折扣|打折/, /折扣|打几?折/),
     nameConceptRule('percent-interest', ['percent'], /利率|利息|本金/, /利息\s*=|本金/),
+    nameConceptRule('percent-tax', ['percent'], /税率/, /应纳税额|税率/),
+    nameConceptRule('percent-chengshu', ['percent'], /成数/, /几成|成数/),
     nameConceptRule('percent-target-rate', ['percent'], /达标/),
     nameConceptRule('percent-change', ['percent'], /增产|减产|增减/, /多（?少）?百分之几|百分之几的数是多少/),
-    nameConceptRule('percent-of', ['percent'], /百分数的意义/, /百分之几/)
+    nameConceptRule('percent-of', ['percent'], /百分数的意义/, /百分之几/),
+    
+    
+    nameConceptRule('algebra-letter', ['number-sense'], /字母|含有字母的式子/),
+    nameConceptRule('negative-number', ['number-sense'], /正负数|负数|数轴/),
+    nameConceptRule('number-concept', ['number-sense'],
+      /组成|读数|写数|读写|认识|数位|顺序|计数单位|亿|近似数|改写|百数表|大小比较|比较|相邻|算盘/),
+    
+    
+    
+    
+    
+    nameConceptRule('multdiv-relation', ['multiplicative-relation'],
+      /互逆|各部分|余数|被除数|平均数的意义/),
+    
+    nameConceptRule('scale-map', ['ratio-proportion'], /比例尺/),
+    
+    
+    nameConceptRule('ratio-basics', ['ratio-proportion'], /比例的意义|比例的基本性质|正比例|解比例/)
   ];
 
   function deriveSubTopic(facts, primaryFamily) {
@@ -6404,6 +6469,8 @@ var Classification = require("shared/generator/generators/classify.js");
 var Percent = require("shared/generator/generators/percent.js");
 var ConceptMeaning = require("shared/generator/generators/concept-meaning.js");
 var SemanticRelations = require("shared/generator/generators/semantic-relations.js");
+var Decimal = require("shared/generator/generators/decimal.js");   
+var Fraction = require("shared/generator/generators/fraction.js"); 
 
 var ALL = [].concat(
   Arithmetic.buildAll(),
@@ -6427,7 +6494,9 @@ var ALL = [].concat(
   Classification.buildAll(),
   Percent.buildAll(),
   ConceptMeaning.buildAll(),
-  SemanticRelations.buildAll()
+  SemanticRelations.buildAll(),
+  Decimal.buildAll(),
+  Fraction.buildAll()
 );
 
 var BY_ID = {};
@@ -6514,6 +6583,15 @@ var Rng = require("shared/generator/core/rng.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
 
 
+
+
+function deriveKindFromName(name, op) {
+  if (!name) return null;
+  if (op === 'div' && name.indexOf('余数') !== -1) return 'div-remainder';
+  return null;
+}
+
+
 function pkp(plan) {
   if (!plan) return null;
   if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
@@ -6575,8 +6653,11 @@ function createArithmeticGenerator(spec) {
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
+        
+        var kpName = plan.semanticParams && plan.semanticParams.name;
+        var nameKind = deriveKindFromName(kpName, op);
         var kind = constraints.kind ||
-          ((plan.constraints && plan.constraints.kind) || (plan.kind || null));
+          ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || nameKind;
         var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: constraints.numberRange });
         if (!structure) {
           structure = Arith.generateStructure(rng, {
@@ -8336,11 +8417,13 @@ var CAPACITY_UNITS = [
 ];
 
 
+
+
 var NAME_TO_MEASURE = [
   { re: /人民币|元.*角|角.*分|购物|钱/, kind: 'rmb' },
   { re: /面积/, kind: 'area' },
   { re: /容积|升|毫升/, kind: 'capacity' },
-  { re: /质量|千克|克|吨/, kind: 'mass' },
+  { re: /质量|千克|克|吨|称重|秤/, kind: 'mass' },
   { re: /时间|时.*分|分.*秒|小时/, kind: 'time' },
   { re: /厘米|米|长度|线段|进率/, kind: 'length' }
 ];
@@ -8353,9 +8436,12 @@ function deriveMeasureKind(name) {
   return null;
 }
 
-function getMoneyMeta(kp, name) {
+function getMoneyMeta(kp, name, concept) {
+  
+  
   
   var kind = deriveMeasureKind(name)
+    || deriveMeasureKind(concept)
     || (kp && ((kp.source && kp.source.legacyType) || (kp.legacy && kp.legacy.legacyType)))
     || (kp && kp.legacy && kp.legacy.category)
     || 'rmb';
@@ -8718,8 +8804,10 @@ function createMoneyGenerator(spec) {
       var questions = [];
       var kp = {};
       
+      
       var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
-      var meta = getMoneyMeta(kp, kpName);
+      var kpConcept = (plan.semanticParams && plan.semanticParams.concept) || '';
+      var meta = getMoneyMeta(kp, kpName, kpConcept);
 
       for (var i = 0; i < count; i++) {
         var q;
@@ -9557,7 +9645,47 @@ function seedFor(plan, context, i) {
 
 function makeReasoningQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '逻辑推理';
+  
+  
+  var name = (plan && plan.semanticParams && plan.semanticParams.name)
+    || (kp && (kp.name || (kp.identity && kp.identity.name)))
+    || '逻辑推理';
+
+  
+  
+  
+  if (plan.questionTypeId === 'calc') {
+    var cPrompt, cAnswer;
+    if (name.indexOf('除') !== -1 || name.indexOf('乘') !== -1 || name.indexOf('口诀') !== -1) {
+      var a = Rng.randInt(rng, 7, 9);
+      var b = Rng.randInt(rng, 2, 9);
+      if (i % 2 === 0) {
+        cPrompt = a + ' × ' + b + ' = ____';
+        cAnswer = a * b;
+      } else {
+        cPrompt = (a * b) + ' ÷ ' + a + ' = ____';
+        cAnswer = b;
+      }
+    } else {
+      var x = Rng.randInt(rng, 2, 9);
+      var y = Rng.randInt(rng, 2, 9);
+      var z = Rng.randInt(rng, 1, 9);
+      cPrompt = '找规律列式：' + x + ' × ' + y + ' + ' + z + ' = ____';
+      cAnswer = x * y + z;
+    }
+    return {
+      knowledgePointId: pkp(plan),
+      questionType: 'calc',
+      difficulty: plan.difficulty,
+      spiralLevel: plan.spiralLevel || 1,
+      context: plan.contextType || 'standard',
+      seed: seedFor(plan, context, i),
+      prompt: cPrompt,
+      answer: { value: String(cAnswer), acceptable: [] },
+      answerMode: 'input',
+      data: { mode: 'calc', steps: 1, operation: 'mixed-arith', questionType: 'calc' }
+    };
+  }
 
   var type = 'generic';
   if (name.indexOf('抽屉') !== -1 || name.indexOf('鸽巢') !== -1) type = 'drawer';
@@ -9569,7 +9697,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
   else if (name.indexOf('数独') !== -1) type = 'sudoku';
   else if (name.indexOf('必胜') !== -1) type = 'winning';
   else if (name.indexOf('优化') !== -1 || name.indexOf('沏茶') !== -1 || name.indexOf('烙饼') !== -1 || name.indexOf('统筹') !== -1) type = 'optimization';
-  else if (name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
+  else if (name.indexOf('规律') !== -1 || name.indexOf('线段') !== -1 || name.indexOf('数字推理') !== -1) type = 'seq';
   else type = 'logic';
 
   
@@ -9776,8 +9904,10 @@ function createReasoningGenerator(spec) {
   return {
     id: id,
     subject: 'math',
-    capabilities: ['apply', 'calc'],
-    questionTypes: ['apply', 'calc'],
+    
+    
+    capabilities: ['apply', 'calc', 'fill', 'choice'],
+    questionTypes: ['apply', 'calc', 'fill', 'choice'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -9833,15 +9963,27 @@ function seedFor(plan, context, i) {
 
 function makeStatsQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '统计问题';
+  
+  var name = (plan && plan.semanticParams && plan.semanticParams.name)
+    || (kp && (kp.name || (kp.identity && kp.identity.name)))
+    || '统计问题';
 
+  var qt = plan.questionTypeId;
   var type = 'generic';
   if (name.indexOf('平均') !== -1) type = 'average';
   else if (name.indexOf('可能') !== -1) type = 'probability';
+  
+  else if (name.indexOf('复式') !== -1) type = 'double-chart';
   else if (name.indexOf('折线') !== -1) type = 'line-chart';
   else if (name.indexOf('条形') !== -1) type = 'bar-chart';
   else if (name.indexOf('扇形') !== -1 || name.indexOf('饼') !== -1) type = 'pie-chart';
-  else if (name.indexOf('复式') !== -1) type = 'double-chart';
+  
+  
+  else if (name.indexOf('经过') !== -1) type = 'elapsed-time';
+  else if (name.indexOf('平年') !== -1 || name.indexOf('闰年') !== -1) type = 'leap-year';
+  else if (name.indexOf('钟面') !== -1 || name.indexOf('时针') !== -1 || name.indexOf('分针') !== -1 || name.indexOf('秒针') !== -1) type = 'clock';
+  else if (name.indexOf('时间单位') !== -1 || name.indexOf('时、分、秒') !== -1) type = 'time-convert';
+  else if (name.indexOf('年') !== -1 || name.indexOf('月') !== -1) type = 'calendar';
   else if (name.indexOf('统计表') !== -1 || name.indexOf('正字') !== -1 || name.indexOf('收集') !== -1) type = 'data-collect';
   else type = 'chart-read';
 
@@ -9853,9 +9995,17 @@ function makeStatsQuestion(plan, context, i, kp) {
   function buildSeries(labels, lo, hi) {
     return labels.map(function (l) { return { label: l, value: Rng.randInt(rng, lo, hi) }; });
   }
+  
+  function distinctSeries(labels, lo, hi) {
+    var pool = [];
+    for (var v = lo; v <= hi; v++) pool.push(v);
+    var picked = Rng.shuffle(rng, pool).slice(0, labels.length);
+    return labels.map(function (l, li) { return { label: l, value: picked[li] }; });
+  }
 
   var prompt, answer, steps, graphic;
-  var data = { mode: 'apply', steps: steps, questionType: plan.questionTypeId };
+  var chOpts = null;
+  var data = { mode: 'apply', steps: steps, questionType: qt };
   if (type === 'average') {
     var nums = [];
     for (var ai = 0; ai < 4; ai++) nums.push(Rng.randInt(rng, 20, 100));
@@ -9867,9 +10017,28 @@ function makeStatsQuestion(plan, context, i, kp) {
     var favorable = Rng.randInt(rng, 1, total - 1);
     prompt = '盒子里有' + total + '个球，其中' + favorable + '个红球，摸到红球的可能性是多少？';
     answer = favorable + '/' + total; steps = 1;
+    if (qt === 'choice') {
+      
+      var pPool = [favorable, favorable - 1, favorable + 1, favorable + 2];
+      var pSeen = {};
+      var pUniq = [];
+      pPool.forEach(function (x) {
+        if (x >= 1 && x <= total - 1 && !pSeen[x]) { pSeen[x] = 1; pUniq.push(x); }
+      });
+      var pPad = 1;
+      while (pUniq.length < 4) {
+        var pCand = ((favorable + pPad * 2) % (total - 1)) + 1;
+        if (!pSeen[pCand]) { pSeen[pCand] = 1; pUniq.push(pCand); }
+        pPad++;
+      }
+      chOpts = Rng.shuffle(rng, pUniq.slice(0, 4).map(function (x) { return x + '/' + total; }));
+      answer = favorable + '/' + total;
+      prompt = name + '：盒子里有' + total + '个球，其中' + favorable + '个红球，其余是白球。摸到红球的可能性是多少？';
+      data.choiceForm = true;
+    }
   } else if (type === 'line-chart') {
     var wdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-    series = buildSeries(wdays, 18, 35);
+    series = distinctSeries(wdays, 18, 35);
     series.sort(function (x, y) { return wdays.indexOf(x.label) - wdays.indexOf(y.label); });
     var hi = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
     var lo = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
@@ -9882,6 +10051,14 @@ function makeStatsQuestion(plan, context, i, kp) {
     prompt = name + '：根据折线图回答：' + lcq.q;
     answer = lcq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'line', params: { title: '一周气温变化', data: series } };
+    if (qt === 'choice') {
+      
+      var lcTarget = (i % 2 === 0) ? hi : lo;
+      chOpts = Rng.shuffle(rng, series.map(function (s) { return s.label + '，' + s.value + '℃'; }));
+      answer = lcTarget.label + '，' + lcTarget.value + '℃';
+      prompt = name + '：根据折线图回答：' + ((i % 2 === 0) ? '哪一天的温度最高？' : '哪一天的温度最低？') + '（  ）';
+      data.choiceForm = true;
+    }
   } else if (type === 'bar-chart' || type === 'chart-read') {
     series = buildSeries(PEOPLE_LABELS, 20, 60);
     series.sort(function (x, y) { return PEOPLE_LABELS.indexOf(x.label) - PEOPLE_LABELS.indexOf(y.label); });
@@ -9936,16 +10113,27 @@ function makeStatsQuestion(plan, context, i, kp) {
       { p: [40, 20, 25, 15], ask: '喜欢语文的有多少人？', idx: 0 },
       { p: [20, 30, 30, 20], ask: '喜欢英语的有多少人？', idx: 2 }
     ];
-    var pie = PIE[i % PIE.length];
+    
+    var pie = (qt === 'choice') ? ((i % 2 === 0) ? PIE[0] : PIE[2]) : PIE[i % PIE.length];
     var pieData = SUBJECT_LABELS.map(function (l, pi) { return { label: l, percent: pie.p[pi] }; });
     var pieAns = pie.idx < 0 ? pie.extra + '人' : pieData[pie.idx].percent + '人';
     prompt = name + '：根据扇形图，如果总人数是100人，' + pie.ask;
     answer = pieAns; steps = 2;
     graphic = { type: 'chart', subtype: 'pie', params: { title: '最喜欢的科目', data: pieData } };
+    if (qt === 'choice') {
+      var pieMax = pieData.slice().sort(function (x, y) { return y.percent - x.percent; })[0];
+      chOpts = Rng.shuffle(rng, SUBJECT_LABELS.slice());
+      answer = pieMax.label;
+      prompt = name + '：根据扇形图，最喜欢哪一科的人数所占百分比最大？';
+      data.choiceForm = true;
+    }
   } else if (type === 'double-chart') {
     var dLabels = ['跳绳', '跑步', '踢毽', '篮球'];
-    series = dLabels.map(function (l) {
-      return { label: l, a: Rng.randInt(rng, 15, 40), b: Rng.randInt(rng, 15, 40) };
+    
+    var aVals = Rng.shuffle(rng, [16, 22, 28, 35]);
+    var bVals = Rng.shuffle(rng, [18, 24, 31, 37]);
+    series = dLabels.map(function (l, di) {
+      return { label: l, a: aVals[di], b: bVals[di] };
     });
     var gapMax = series.slice().sort(function (x, y) {
       return Math.abs(y.a - y.b) - Math.abs(x.a - x.b);
@@ -9961,8 +10149,25 @@ function makeStatsQuestion(plan, context, i, kp) {
     var dcq = DC_Q[i % DC_Q.length];
     prompt = name + '：复式统计图中，' + dcq.q;
     answer = dcq.a; steps = 2;
-    graphic = { type: 'chart', subtype: 'bar', params: { title: '男生女生运动情况', yLabel: '人数', data: series } };
+    graphic = {
+      type: 'chart',
+      subtype: name.indexOf('折线') !== -1 ? 'line' : 'bar',
+      params: { title: '男生女生运动情况', yLabel: '人数', data: series }
+    };
+    if (qt === 'choice') {
+      
+      var dcIsBoy = (i % 2 === 0);
+      var dcPick = series.slice().sort(function (x, y) {
+        return dcIsBoy ? (y.a - x.a) : (y.b - x.b);
+      })[0];
+      chOpts = Rng.shuffle(rng, dLabels.slice());
+      answer = dcPick.label;
+      prompt = name + '：复式统计图中，' + (dcIsBoy ? '男生' : '女生') + '参加人数最多的是哪一项？';
+      data.choiceForm = true;
+    }
   } else if (type === 'data-collect') {
+    
+    
     
     
     var TALLY_VARIANTS = [
@@ -9972,10 +10177,187 @@ function makeStatsQuestion(plan, context, i, kp) {
       { labels: ['晴', '阴', '雨', '雪'], title: '一周天气', unit: '天', ask: '记录一周的天气情况，用统计表整理各类天气的天数。' }
     ];
     var tv = TALLY_VARIANTS[i % TALLY_VARIANTS.length];
-    series = buildSeries(tv.labels, 10, 40);
-    prompt = name + '：' + tv.ask;
-    answer = '（统计整理略）'; steps = 2;
+    
+    var tallyBase = Rng.shuffle(rng, tv.labels.map(function (_, ti) {
+      return 12 + ti * 7 + Rng.randInt(rng, 0, 4);
+    }));
+    series = tv.labels.map(function (l, ti) { return { label: l, value: tallyBase[ti] }; });
+    var dcMax = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
+    var dcMin = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
+    var dcTotal = series.reduce(function (acc, s) { return acc + s.value; }, 0);
     graphic = { type: 'chart', subtype: 'bar', params: { title: tv.title, yLabel: tv.unit, data: series } };
+    if (qt === 'choice') {
+      var dcAskMax = (i % 2 === 0);
+      chOpts = Rng.shuffle(rng, tv.labels.slice());
+      answer = dcAskMax ? dcMax.label : dcMin.label;
+      prompt = name + '：调查记录整理成统计表后，数量' + (dcAskMax ? '最多' : '最少') + '的是哪一类？';
+      data.choiceForm = true;
+      steps = 2;
+    } else if (qt === 'fill') {
+      answer = dcTotal;
+      prompt = name + '：' + tv.ask + '表中各类数量一共有多少' + tv.unit + '？（合计：____）';
+      steps = 2;
+    } else {
+      answer = dcMax.label + '（' + dcMax.value + tv.unit + '）';
+      prompt = name + '：' + tv.ask + '并回答：数量最多的是哪一类，有多少' + tv.unit + '？';
+      steps = 2;
+    }
+  } else if (type === 'clock') {
+    
+    steps = 1;
+    if (qt === 'calc') {
+      var CLK_CALC = [
+        { q: '钟面上有12个大格，每个大格有5个小格，钟面上一共有多少个小格？列式：12 × 5 = ？', a: 60 },
+        { q: '分针从12走到6，走了6个大格，一共走了多少分钟？列式：6 × 5 = ？', a: 30 },
+        { q: '时针从2走到5，走了几个大格、是多少小时？列式：(5 − 2) × 1 = ？', a: 3 }
+      ];
+      var clkC = CLK_CALC[i % CLK_CALC.length];
+      prompt = name + '：' + clkC.q; answer = clkC.a; data.calcForm = true;
+    } else if (qt === 'choice') {
+      var CLK_OPTS = [
+        { q: '钟面上一共有多少个大格？', a: '12个', o: ['10个', '11个', '12个', '24个'] },
+        { q: '分针走1个大格是多少分钟？', a: '5分钟', o: ['1分钟', '5分钟', '15分钟', '60分钟'] },
+        { q: '时针从3走到7，经过了几小时？', a: '4小时', o: ['3小时', '4小时', '5小时', '7小时'] },
+        { q: '时针指向8、分针指向12，这时是几时？', a: '8时', o: ['7时', '8时', '9时', '12时'] }
+      ];
+      var clkO = CLK_OPTS[i % CLK_OPTS.length];
+      prompt = name + '：' + clkO.q; answer = clkO.a;
+      chOpts = Rng.shuffle(rng, clkO.o); data.choiceForm = true;
+    } else {
+      var CLK_FILL = [
+        { q: '看钟面：时针指向9、分针指向12，现在是几时？', a: '9时' },
+        { q: '看钟面：时针走过3、分针指向6，现在是几时几分？', a: '3时30分' },
+        { q: '分针从12走到4，走了几个大格？是多少分钟？', a: '4个大格，20分钟' },
+        { q: '钟面上一共有多少个大格？每个大格分成几个小格？', a: '12个大格，每个大格5个小格' }
+      ];
+      var clkF = CLK_FILL[i % CLK_FILL.length];
+      prompt = name + '：' + clkF.q; answer = clkF.a;
+    }
+  } else if (type === 'time-convert') {
+    
+    steps = 1;
+    if (qt === 'calc') {
+      var TC_CALC = [
+        { q: '3时等于多少分？列式：3 × 60 = ？', a: 180 },
+        { q: '2分等于多少秒？列式：2 × 60 = ？', a: 120 },
+        { q: '1时20分等于多少分？列式：60 + 20 = ？', a: 80 },
+        { q: '180秒等于多少分？列式：180 ÷ 60 = ？', a: 3 }
+      ];
+      var tcC = TC_CALC[i % TC_CALC.length];
+      prompt = name + '：' + tcC.q; answer = tcC.a; data.calcForm = true;
+    } else if (qt === 'choice') {
+      var TC_OPTS = [
+        { q: '3时 = （ ）分', a: '180分', o: ['30分', '60分', '180分', '300分'] },
+        { q: '2分 = （ ）秒', a: '120秒', o: ['12秒', '60秒', '120秒', '200秒'] },
+        { q: '180秒 = （ ）分', a: '3分', o: ['2分', '3分', '4分', '18分'] },
+        { q: '1时15分 = （ ）分', a: '75分', o: ['60分', '75分', '115分', '150分'] }
+      ];
+      var tcO = TC_OPTS[i % TC_OPTS.length];
+      prompt = name + '：' + tcO.q; answer = tcO.a;
+      chOpts = Rng.shuffle(rng, tcO.o); data.choiceForm = true;
+    } else {
+      var TC_FILL = [
+        { q: '4时 = （ ）分', a: '240分' },
+        { q: '5分 = （ ）秒', a: '300秒' },
+        { q: '120秒 = （ ）分', a: '2分' },
+        { q: '1分40秒 = （ ）秒', a: '100秒' }
+      ];
+      var tcF = TC_FILL[i % TC_FILL.length];
+      prompt = name + '：' + tcF.q; answer = tcF.a;
+    }
+  } else if (type === 'elapsed-time') {
+    
+    steps = 2;
+    if (qt === 'calc') {
+      var ET_CALC = [
+        { q: '小明7:30从家出发，7:45到达学校，经过了多少分钟？列式：45 − 30 = ？', a: 15 },
+        { q: '一列火车8:40从甲站开出，9:10到达乙站，经过了多少分钟？列式：(60 − 40) + 10 = ？', a: 30 },
+        { q: '一场电影下午2:00开始，下午4:00结束，放映了多少小时？列式：4 − 2 = ？', a: 2 }
+      ];
+      var etC = ET_CALC[i % ET_CALC.length];
+      prompt = name + '：' + etC.q; answer = etC.a; data.calcForm = true;
+    } else if (qt === 'choice') {
+      var ET_OPTS = [
+        { q: '小明7:30从家出发，7:45到达学校，他路上用了多长时间？', a: '15分钟', o: ['10分钟', '15分钟', '20分钟', '25分钟'] },
+        { q: '一节课8:50开始，9:30结束，这节课有多少分钟？', a: '40分钟', o: ['30分钟', '40分钟', '50分钟', '60分钟'] },
+        { q: '一场电影下午2:00开始，下午4:00结束，放映了几小时？', a: '2小时', o: ['1小时', '2小时', '3小时', '4小时'] },
+        { q: '小红晚上8:00睡觉，第二天早上6:00起床，她睡了几小时？', a: '10小时', o: ['8小时', '9小时', '10小时', '12小时'] }
+      ];
+      var etO = ET_OPTS[i % ET_OPTS.length];
+      prompt = name + '：' + etO.q; answer = etO.a;
+      chOpts = Rng.shuffle(rng, etO.o); data.choiceForm = true;
+    } else {
+      var ET_FILL = [
+        { q: '小明7:30从家出发，7:45到达学校，路上经过了多少分钟？', a: '15分钟' },
+        { q: '一节课8:50开始，9:30结束，这节课上了多少分钟？', a: '40分钟' },
+        { q: '妈妈上午8:00上班，在公司工作8小时，妈妈下午几时下班？', a: '下午4:00（16:00）' },
+        { q: '一列火车9:10进站，9:55开出，在车站停靠了多少分钟？', a: '45分钟' }
+      ];
+      var etF = ET_FILL[i % ET_FILL.length];
+      prompt = name + '：' + etF.q; answer = etF.a;
+    }
+  } else if (type === 'calendar') {
+    
+    steps = 2;
+    if (qt === 'calc') {
+      var CAL_CALC = [
+        { q: '7月和8月都是大月，两个月一共有多少天？列式：31 + 31 = ？', a: 62 },
+        { q: '平年的2月有28天，4月有30天，4月比2月多多少天？列式：30 − 28 = ？', a: 2 },
+        { q: '一年有4个小月，每个小月都是30天，4个小月一共有多少天？列式：4 × 30 = ？', a: 120 }
+      ];
+      var calC = CAL_CALC[i % CAL_CALC.length];
+      prompt = name + '：' + calC.q; answer = calC.a; data.calcForm = true;
+    } else if (qt === 'choice') {
+      var CAL_OPTS = [
+        { q: '下面的月份中，哪个月是有31天的大月？', a: '7月', o: ['4月', '6月', '7月', '11月'] },
+        { q: '一年一共有多少个月？', a: '12个月', o: ['10个月', '11个月', '12个月', '24个月'] },
+        { q: '11月一共有多少天？', a: '30天', o: ['28天', '29天', '30天', '31天'] },
+        { q: '平年全年一共有多少天？', a: '365天', o: ['364天', '365天', '366天', '400天'] }
+      ];
+      var calO = CAL_OPTS[i % CAL_OPTS.length];
+      prompt = name + '：' + calO.q; answer = calO.a;
+      chOpts = Rng.shuffle(rng, calO.o); data.choiceForm = true;
+    } else {
+      var CAL_FILL = [
+        { q: '一年有多少个月？哪几个月是有31天的大月？', a: '12个月；1月、3月、5月、7月、8月、10月、12月是大月' },
+        { q: '4月有多少天？它是大月还是小月？', a: '30天，是小月' },
+        { q: '6月1日的前一天是几月几日？', a: '5月31日' },
+        { q: '7月和8月是连续的两个大月，两个月一共有多少天？', a: '62天' }
+      ];
+      var calF = CAL_FILL[i % CAL_FILL.length];
+      prompt = name + '：' + calF.q; answer = calF.a;
+    }
+  } else if (type === 'leap-year') {
+    
+    steps = 2;
+    if (qt === 'calc') {
+      var LY_CALC = [
+        { q: '闰年全年有多少天？（7个大月、4个小月，2月29天）列式：7 × 31 + 4 × 30 + 29 = ？', a: 366 },
+        { q: '平年全年有多少天？（7个大月、4个小月，2月28天）列式：7 × 31 + 4 × 30 + 28 = ？', a: 365 },
+        { q: '闰年的2月比平年的2月多多少天？列式：29 − 28 = ？', a: 1 }
+      ];
+      var lyC = LY_CALC[i % LY_CALC.length];
+      prompt = name + '：' + lyC.q; answer = lyC.a; data.calcForm = true;
+    } else if (qt === 'choice') {
+      var LY_OPTS = [
+        { q: '下面哪一年是闰年？', a: '2024年', o: ['2021年', '2022年', '2023年', '2024年'] },
+        { q: '下面哪一年是平年？', a: '2023年', o: ['2016年', '2020年', '2023年', '2024年'] },
+        { q: '下面哪个整百年份是闰年？', a: '2000年', o: ['1900年', '2000年', '2100年', '2200年'] },
+        { q: '闰年的2月有多少天？', a: '29天', o: ['28天', '29天', '30天', '31天'] }
+      ];
+      var lyO = LY_OPTS[i % LY_OPTS.length];
+      prompt = name + '：' + lyO.q; answer = lyO.a;
+      chOpts = Rng.shuffle(rng, lyO.o); data.choiceForm = true;
+    } else {
+      var LY_FILL = [
+        { q: '2024年是平年还是闰年？写出判断理由。', a: '闰年；2024 ÷ 4 = 506，没有余数，公历年份是4的倍数的一般是闰年' },
+        { q: '1900年是平年还是闰年？为什么？', a: '平年；整百年份必须是400的倍数才是闰年，1900不是400的倍数' },
+        { q: '闰年全年有多少天？比平年多几天？', a: '366天，比平年多1天' },
+        { q: '小明是2016年2月29日出生的，他下一次能在2月29日过生日是哪一年？', a: '2020年' }
+      ];
+      var lyF = LY_FILL[i % LY_FILL.length];
+      prompt = name + '：' + lyF.q; answer = lyF.a;
+    }
   } else {
     series = buildSeries(PEOPLE_LABELS, 20, 60);
     series.sort(function (x, y) { return PEOPLE_LABELS.indexOf(x.label) - PEOPLE_LABELS.indexOf(y.label); });
@@ -10022,8 +10404,10 @@ function createStatsGenerator(spec) {
   return {
     id: id,
     subject: 'math',
-    capabilities: ['apply', 'calc'],
-    questionTypes: ['apply', 'calc'],
+    
+    
+    capabilities: ['apply', 'calc', 'fill', 'choice'],
+    questionTypes: ['apply', 'calc', 'fill', 'choice'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -11272,39 +11656,182 @@ function buildQuestions(plan, context, count, make) {
 
 
 
-function makeCodeFill(plan, context, i) {
+
+function codeName(plan) {
+  return (plan && plan.semanticParams && plan.semanticParams.name) || '';
+}
+
+function codeCategory(name) {
+  if (name.indexOf('身份证') !== -1) return 'idcard';
+  if (name.indexOf('邮政编码') !== -1 || name.indexOf('邮编') !== -1) return 'postal';
+  if (name.indexOf('特点') !== -1) return 'feature';
+  if (name.indexOf('实践') !== -1) return 'practice';
+  return 'life';
+}
+
+
+var CODE_BANK = {
+  idcard: {
+    fill: [
+      { q: '身份证号 110101201008151234 中，第 7~14 位表示出生日期，持证人的出生日期是（  ）。', a: '2010年8月15日' },
+      { q: '身份证号第 17 位是 3（奇数），说明持证人为（  ）性。', a: '男' },
+      { q: '我国第二代居民身份证号码一共有（  ）位。', a: '18位' },
+      { q: '身份证号 310104201203054528 的持证人出生日期是（  ）。', a: '2012年3月5日' }
+    ],
+    choice: [
+      { q: '身份证号 110101201008151234 的持证人出生日期是哪一天？', a: '2010年8月15日',
+        o: ['2010年8月15日', '2010年8月5日', '2011年8月15日', '2001年8月15日'] },
+      { q: '身份证号第 17 位是 4（偶数），持证人性别是？', a: '女',
+        o: ['男', '女', '不能确定', '既是男也是女'] },
+      { q: '身份证号码的前 6 位表示什么信息？', a: '地址码（户籍地）',
+        o: ['出生日期', '地址码（户籍地）', '顺序码', '校验码'] },
+      { q: '身份证号码的第 18 位是什么码？', a: '校验码',
+        o: ['地址码', '出生日期码', '顺序码', '校验码'] }
+    ],
+    apply: [
+      { q: '警察捡到一张身份证，号码是 110101201008151234。请你帮忙判断：失主出生于哪一年几月几日？是男生还是女生？并写出身份证号每一部分表示的信息。',
+        a: '2010年8月15日出生，男性（第17位3为奇数）；前6位地址码、第7~14位出生日期码、第15~17位顺序码、第18位校验码' },
+      { q: '银行开户需要登记身份证号 310104201203054528。请说出这位同学的出生年月日，并说明身份证号为什么能唯一确定一个人？',
+        a: '2012年3月5日出生；18位编码包含地址、出生日期、顺序码和校验码，全国每人唯一' },
+      { q: '小明要填写学籍表，其中有“出生日期”和“性别”两栏，他只记得自己的身份证号是 440103201112200617。请帮他把这两栏填好并说明依据？',
+        a: '出生日期2011年12月20日，男性（第17位1为奇数）' }
+    ]
+  },
+  postal: {
+    fill: [
+      { q: '我国的邮政编码由（  ）位阿拉伯数字组成。', a: '6位' },
+      { q: '邮政编码的前两位表示省（自治区、直辖市），前三位表示（  ）。', a: '邮区' },
+      { q: '邮政编码的最后两位表示（  ）。', a: '投递局（所）' },
+      { q: '寄信时要在信封左上角的方框内填写收信人所在地的（  ）位邮政编码。', a: '6位' }
+    ],
+    choice: [
+      { q: '我国邮政编码一共有几位数字？', a: '6位',
+        o: ['4位', '5位', '6位', '8位'] },
+      { q: '邮政编码 100000 中，前两位“10”表示哪里？', a: '北京市',
+        o: ['上海市', '北京市', '天津市', '重庆市'] },
+      { q: '邮政编码的前四位数字表示什么？', a: '县（市）邮局',
+        o: ['省（自治区、直辖市）', '邮区', '县（市）邮局', '投递局（所）'] },
+      { q: '下面哪个数可能是一个正确的邮政编码？', a: '100000',
+        o: ['10000', '100000', '1000000', '100'] }
+    ],
+    apply: [
+      { q: '小红给北京的奶奶寄信，北京的邮政编码以 10 开头（如 100000）。请在信封上写清收信人邮编，并说明邮政编码的 6 位数字分别表示哪几级信息？',
+        a: '前2位省（自治区、直辖市）、前3位邮区、前4位县（市）邮局、最后2位投递局（所）' },
+      { q: '一封信上写的邮政编码是 310012。请你按编码规则说一说这 6 个数字分别表示什么，机器分拣信件时编码有什么好处？',
+        a: '31表示浙江省、310表示所在邮区、3100表示杭州市邮局、12表示投递局；编码规范统一，分拣又快又准' },
+      { q: '小明给杭州（邮编 310012）的笔友写信，请你告诉他收信人邮编应写在信封的什么位置，并完整说出 6 位邮编的含义？',
+        a: '写在信封左上方框内；31省、310邮区、3100县（市）邮局、12投递局（所）' }
+    ]
+  },
+  feature: {
+    fill: [
+      { q: '同一个班两位同学的学号不能相同，这体现了数字编码的（  ）性。', a: '唯一' },
+      { q: '所有学号都按“入学年份+班级+序号”的统一格式编制，这体现了数字编码的（  ）性。', a: '规范' },
+      { q: '用数字编号代替完整书名登记图书，检索更方便，这体现了数字编码的（  ）性。', a: '简洁' },
+      { q: '门牌号沿街道从一端到另一端依次增大，这体现了数字编码的（  ）性。', a: '有序' }
+    ],
+    choice: [
+      { q: '全校学生的学号互不相同，主要体现了数字编码的什么特点？', a: '唯一性',
+        o: ['唯一性', '规范性', '简洁性', '美观性'] },
+      { q: '所有学号都按统一格式“4位年份+2位班级+2位序号”编制，体现了什么特点？', a: '规范性',
+        o: ['唯一性', '规范性', '保密性', '随意性'] },
+      { q: '图书馆用 6 位数字给图书编号，比书写完整书名更方便快捷，体现了什么特点？', a: '简洁性',
+        o: ['简洁性', '唯一性', '规范性', '有序性'] },
+      { q: '门牌号按街道方向依次增大，便于查找，体现了数字编码的什么特点？', a: '有序性',
+        o: ['唯一性', '规范性', '简洁性', '有序性'] }
+    ],
+    apply: [
+      { q: '学校给每位同学编学号，要求全校不重复、格式统一、还能按入学年份排序查找。请说出这样的学号设计分别利用了数字编码的哪些特点？',
+        a: '不重复体现唯一性，格式统一体现规范性，按年份排序体现有序性' },
+      { q: '图书馆要给几十万册图书编号，请结合数字编码简洁、唯一、规范、有序的特点，说明为什么用数字编号比直接用书名登记更好？',
+        a: '数字编号简洁好记、每书唯一、格式统一、可按顺序排列检索，借阅和盘点都更方便' },
+      { q: '快递单上的单号有十几位数字且全国不重复、格式统一。请结合数字编码的特点，说明快递公司为什么要这样编号？',
+        a: '唯一性保证每单可查，规范性便于各环节统一处理，简洁有序便于机器分拣和快速追踪' }
+    ]
+  },
+  practice: {
+    fill: [
+      { q: '按“入学年份4位+班级2位+序号2位”的规则，2024年入学3班序号8的同学学号应编为（  ）。', a: '20240308' },
+      { q: '宾馆房间号 302 中，第一位 3 表示楼层，后两位 02 表示（  ）。', a: '第2个房间' },
+      { q: '图书编号 A-03-12 中，A 表示类别、03 表示书架号、12 表示（  ）。', a: '第12本书' },
+      { q: '停车场车位编号 B2-15 中，B2 表示地下2层，15 表示（  ）。', a: '第15号车位' }
+    ],
+    choice: [
+      { q: '按“年份4位+班级2位+序号2位”的规则，2023年入学5班序号12的同学学号是？', a: '20230512',
+        o: ['20230512', '20235012', '05122023', '12052023'] },
+      { q: '宾馆用“楼层+两位房间序号”编房号，5楼第18个房间的房号应该是？', a: '518',
+        o: ['518', '185', '5018', '1805'] },
+      { q: '订单按“年4位+月2位+日2位”编号，2024年3月15日的第1张订单编号可以是？', a: '2024031501',
+        o: ['2024031501', '15032024', '31520241', '03150124'] },
+      { q: '图书室用“楼层1位+书架2位+层1位”编号，3楼第8架第2层的编号是？', a: '3082',
+        o: ['3082', '3820', '2083', '3280'] }
+    ],
+    apply: [
+      { q: '请你为学校图书馆设计一套图书编码：要能看出图书类别、所在楼层和书架序号，并用一个具体例子说明每一位的含义。',
+        a: '示例 A-3-05：A 表示类别、3 表示楼层、05 表示第5架（方案不唯一，结构清晰、唯一规范即可）' },
+      { q: '请为宾馆房间设计编号规则，使客人一看房号就知道楼层和房间序号，并写出 5 楼第 8 间、12 楼第 3 间的编号。',
+        a: '规则：楼层数+两位房间序号；5楼第8间为 508，12楼第3间为 1203' },
+      { q: '请为全校同学设计学号，要求包含入学年份、班级、序号和性别信息（末位用 1 表示男、2 表示女），并为 2024 年入学 2 班序号 16 的女生写出一个学号。',
+        a: '规则：4位年份+2位班级+2位序号+1位性别；该女生学号如 202402162' },
+      { q: '小区地下车库要给每个车位编号，要求从编号能看出楼层、区域和车位序号。请设计规则并给出地下2层B区第15号车位的编号。',
+        a: '示例 B2-B-15：B2 表示地下2层、B 表示区域、15 表示车位序号（方案合理即可）' }
+    ]
+  },
+  life: {
+    fill: [
+      { q: '发现违法犯罪需要报警时，应拨打（  ）电话。', a: '110' },
+      { q: '发生火灾时应拨打的火警电话是（  ）。', a: '119' },
+      { q: '有人突发疾病需要急救时，应拨打（  ）急救电话。', a: '120' },
+      { q: '“京A·12345”是汽车的（  ）号码编码。', a: '车牌' }
+    ],
+    choice: [
+      { q: '发现房屋着火应拨打的电话是？', a: '119',
+        o: ['110', '119', '120', '122'] },
+      { q: '路上有人突发疾病需要急救，应拨打哪个电话？', a: '120',
+        o: ['110', '119', '120', '122'] },
+      { q: '下面哪一项属于生活中的数字编码？', a: '车牌号京A·12345',
+        o: ['一幅风景画', '车牌号京A·12345', '一首儿歌', '一块橡皮'] },
+      { q: '发生交通事故需要报警时，应拨打哪个电话？', a: '122',
+        o: ['110', '119', '120', '122'] }
+    ],
+    apply: [
+      { q: '小华在家发现厨房着火了，请你告诉他应该拨打哪个电话，并说出生活中还有哪些常见的数字编码（至少写出 3 个）？',
+        a: '应拨打 119；常见数字编码有身份证号码、邮政编码、学号、门牌号、车牌号、电话号码等' },
+      { q: '小区门牌号 8-3-201 表示 8 号楼 3 单元 2 层 01 室。请说说你家的住址可以怎样用数字编码表示，这样编码有什么好处？',
+        a: '可用“楼号-单元-楼层房号”编码（如 12-2-502）；编码唯一、规范、简洁，便于查找、投递和救援' },
+      { q: '妈妈让小明熟记三个特殊服务电话。请你分别写出报警、火警、急救的电话号码，并说明这些短号码为什么要这样编？',
+        a: '报警110、火警119、急救120；号码简短规范、全国统一，便于记忆和紧急情况下快速拨打' }
+    ]
+  }
+};
+
+function makeCodeByKind(plan, context, i, qt) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var year = Rng.randInt(rng, 2022, 2025);
-  var cls = Rng.randInt(rng, 1, 6);
-  var seq = Rng.randInt(rng, 1, 30);
-  var name = Rng.pick(rng, ['小华', '小明', '小红', '小刚', '小丽']);
-  var code = String(year) + String(cls < 10 ? '0' + cls : cls) + String(seq < 10 ? '0' + seq : seq);
-  var q = buildBase(plan, context, i, { mode: 'fill', codeType: 'student-id' });
-  q.prompt = '光明小学给每位同学编学号：前 4 位是入学年份，第 5~6 位是班级，第 7~8 位是学号。'
-    + name + ' ' + year + ' 年入学，在 ' + cls + ' 班，学号是 ' + seq + '，他的学号是（  ）。';
-  q.answer = { value: code, acceptable: [] };
+  var cat = codeCategory(codeName(plan));
+  var bank = CODE_BANK[cat][qt];
+  var item = bank[i % bank.length];
+  var q = buildBase(plan, context, i, { mode: qt, codeType: cat });
+  q.prompt = item.q;
+  q.answer = { value: item.a, acceptable: [] };
+  if (qt === 'choice') {
+    var options = Rng.shuffle(rng, item.o.slice());
+    q.data.options = options;
+    q.data.correctIndex = options.indexOf(item.a);
+    q.answerMode = 'choice';
+  }
   return q;
 }
 
+function makeCodeFill(plan, context, i) {
+  return makeCodeByKind(plan, context, i, 'fill');
+}
+
 function makeCodeChoice(plan, context, i) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var year = Rng.randInt(rng, 2022, 2025);
-  var cls = Rng.randInt(rng, 1, 6);
-  var seq = Rng.randInt(rng, 1, 30);
-  var code = String(year) + String(cls < 10 ? '0' + cls : cls) + String(seq < 10 ? '0' + seq : seq);
-  var wrongs = [
-    year + ' 年入学' + '，' + seq + ' 班',
-    (year + 1) + ' 年入学',
-    (year - 1) + ' 年入学'
-  ];
-  var options = Rng.shuffle(rng, [year + ' 年入学'].concat(wrongs));
-  var q = buildBase(plan, context, i, { mode: 'choice', codeType: 'student-id' });
-  q.prompt = '光明小学的学号前 4 位表示入学年份，第 5~6 位表示班级，第 7~8 位表示学号。'
-    + '小芳的学号是 ' + code + '，她的学号说明她（  ）。';
-  q.answer = { value: String(year) + ' 年入学', acceptable: [] };
-  q.data.options = options;
-  q.data.correctIndex = options.indexOf(String(year) + ' 年入学');
-  return q;
+  return makeCodeByKind(plan, context, i, 'choice');
+}
+
+function makeCodeApply(plan, context, i) {
+  return makeCodeByKind(plan, context, i, 'apply');
 }
 
 function makeCodeJudge(plan, context, i) {
@@ -11328,8 +11855,10 @@ function createCodeGenerator(spec) {
   var generator = {
     id: id,
     subject: 'math',
-    capabilities: ['fill', 'choice', 'judge', 'recognize'],
-    questionTypes: ['fill', 'choice', 'judge', 'recognize'],
+    
+    
+    capabilities: ['fill', 'choice', 'judge', 'apply'],
+    questionTypes: ['fill', 'choice', 'judge', 'apply'],
     
     
     knowledgePoints: spec.knowledgePoints || [],
@@ -11343,6 +11872,7 @@ function createCodeGenerator(spec) {
       var count = plan.count || 1;
       var qt = plan.questionTypeId;
       if (qt === 'choice') return buildQuestions(plan, context, count, makeCodeChoice);
+      if (qt === 'apply') return buildQuestions(plan, context, count, makeCodeApply);
       if (qt === 'judge') return buildQuestions(plan, context, count, makeCodeJudge);
       return buildQuestions(plan, context, count, makeCodeFill);
     }
@@ -11777,6 +12307,111 @@ function makePercentChange(plan, context, i) {
 }
 
 
+function makeTax(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var income = Rng.pick(rng, [3000, 5000, 8000, 10000, 20000, 50000]);
+  var rate = Rng.pick(rng, [3, 5, 6, 10]);
+  var tax = Math.round(income * rate) / 100;
+  var goods = Rng.pick(rng, ['商店某月的营业额', '一家餐馆某月的营业额', '某公司某月的营业额']);
+  if (qt(plan) === 'calc') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate }),
+      '列式计算：' + goods + '是 ' + income + ' 元，按 ' + rate + '% 的税率缴纳税款，应缴纳税款多少元？列式：' + income + ' × ' + rate + '% = ？',
+      tax, '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元');
+  }
+  if (qt(plan) === 'fill') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate }),
+      income + ' × ' + rate + '% = ____（元）',
+      tax, '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元');
+  }
+  return finish(buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate }),
+    goods + '是 ' + income + ' 元，按规定要按 ' + rate + '% 的税率缴纳税款。这家应缴纳税款多少元？',
+    tax, '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元');
+}
+
+
+var CHENGSHU = [
+  { label: '一成', num: 1, rate: 10 }, { label: '二成', num: 2, rate: 20 },
+  { label: '三成', num: 3, rate: 30 }, { label: '三成五', num: 3.5, rate: 35 },
+  { label: '四成', num: 4, rate: 40 }, { label: '七成五', num: 7.5, rate: 75 }
+];
+function makeChengshu(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var c = Rng.pick(rng, CHENGSHU);
+  
+  if (i % 2 === 0) {
+    var q = buildBase(plan, context, i, { subType: 'percent-chengshu', chengshu: c.label, ask: 'convert' });
+    var stemC = qt(plan) === 'calc'
+      ? '列式：把' + c.label + '改写成百分数，' + c.num + ' ÷ 10 = （ ）%（只填数字）。'
+      : (qt(plan) === 'fill'
+        ? c.label + ' = ' + c.num + ' ÷ 10 = ____%（只填数字）'
+        : '农业收成常用「成数」表示：' + c.label + ' = ' + c.num + ' ÷ 10，' + c.label + '改写成百分数是多少？（只填数字）');
+    return finish(q, stemC, c.rate, c.label + ' = ' + c.num + '/10 = ' + c.rate + '%');
+  }
+  var base = Rng.pick(rng, [200, 300, 400, 500, 600, 800]);
+  var gain = Math.round(base * c.rate) / 100;
+  var crop = Rng.pick(rng, ['小麦', '玉米', '水稻', '苹果']);
+  if (qt(plan) === 'calc') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' }),
+      '列式计算：去年产' + crop + ' ' + base + ' 吨，今年比去年增产' + c.label + '（' + c.rate + '%），今年增产多少吨？列式：' + base + ' × ' + c.rate + '% = ？',
+      gain, '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨');
+  }
+  if (qt(plan) === 'fill') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' }),
+      '去年产' + crop + ' ' + base + ' 吨，今年增产' + c.label + '（' + c.rate + '%）：' + base + ' × ' + c.rate + '% = ____（吨）',
+      gain, '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨');
+  }
+  return finish(buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' }),
+    '李叔叔家去年产' + crop + ' ' + base + ' 吨，今年风调雨顺，比去年增产' + c.label + '（也就是 ' + c.rate + '%）。今年比去年增产多少吨？',
+    gain, '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨');
+}
+
+
+function makeLife(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var scenario;
+  if (i % 2 === 0) {
+    
+    var total = Rng.pick(rng, [300, 500, 800, 1000, 2000]);
+    var pct = Rng.pick(rng, [80, 85, 90, 95, 96]);
+    var part = Math.round(total * pct) / 100;
+    var things = Rng.pick(rng, [
+      ['小区居民', '参与垃圾分类的家庭'],
+      ['学校学生', '每天坚持阅读的学生'],
+      ['全村农户', '参加了新农合的农户']
+    ]);
+    scenario = {
+      total: total, pct: pct, ans: part,
+      story: things[0] + '共 ' + total + ' 户（人），其中 ' + pct + '% 是' + things[1] + '。' + things[1] + '有多少户（人）？',
+      expr: total + ' × ' + pct + '%'
+    };
+  } else {
+    
+    var price = Rng.pick(rng, [150, 200, 300, 400, 500, 600]);
+    var rate2 = Rng.pick(rng, [80, 85, 88, 90, 95]);
+    var cur = Math.round(price * rate2) / 100;
+    var goods2 = Rng.pick(rng, ['一套科普书', '一个书包', '一双运动鞋', '一件外套']);
+    scenario = {
+      total: price, pct: rate2, ans: cur,
+      story: '书店（商场）店庆，' + goods2 + '原价 ' + price + ' 元，会员可按原价的 ' + rate2 + '% 购买。会员买' + goods2 + '要花多少元？',
+      expr: price + ' × ' + rate2 + '%'
+    };
+  }
+  if (qt(plan) === 'calc') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct }),
+      '列式计算：' + scenario.story + '列式：' + scenario.expr + ' = ？',
+      scenario.ans, scenario.expr + ' = ' + scenario.ans);
+  }
+  if (qt(plan) === 'fill') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct }),
+      scenario.story + '（列式：' + scenario.expr + ' = ____）',
+      scenario.ans, scenario.expr + ' = ' + scenario.ans);
+  }
+  return finish(buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct }),
+    scenario.story,
+    scenario.ans, scenario.expr + ' = ' + scenario.ans);
+}
+
+
 
 var SUBTOPIC_MAKERS = {
   'percent-of': makePercentOf,
@@ -11784,7 +12419,10 @@ var SUBTOPIC_MAKERS = {
   'percent-discount': makeDiscount,
   'percent-interest': makeInterest,
   'percent-target-rate': makeRateLine,
-  'percent-change': makePercentChange
+  'percent-change': makePercentChange,
+  'percent-tax': makeTax,
+  'percent-chengshu': makeChengshu,
+  'percent-life': makeLife
 };
 
 
@@ -12115,11 +12753,259 @@ function makeAreaJudge(plan, context, i) {
 
 
 
+function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
+
+function buildNumberConceptItem(rng, name) {
+  
+  
+  if (name.indexOf('1-5') !== -1 || name.indexOf('1～5') !== -1) {
+    var n5 = ri(rng, 2, 5);
+    return { stem: '数一数：' + n5 + ' 前面一个数是多少？（参考：' + n5 + ' − 1 = ' + (n5 - 1) + '）',
+      answer: String(n5 - 1), options: [String(n5 - 1), String(n5), String(n5 + 1)],
+      apply: '排队报数，小明报 ' + n5 + '（' + n5 + ' − 1 = ' + (n5 - 1) + '），他前面一个同学报几？' };
+  }
+  if (name.indexOf('百数表') !== -1) {
+    var x0 = ri(rng, 12, 88);
+    return { stem: '百数表中，' + x0 + ' 右边一个数是多少？（参考：' + x0 + ' + 1 = ' + (x0 + 1) + '）',
+      answer: String(x0 + 1), options: [String(x0 + 1), String(x0 + 10), String(x0 - 1)],
+      apply: '在百数表（每行10个数）里圈出 ' + x0 + '，它右边一格的数是多少？（' + x0 + ' + 1 = ？）' };
+  }
+  if (name.indexOf('近似') !== -1 || name.indexOf('改写') !== -1) {
+    var n0 = ri(rng, 2, 8) * 10000;
+    return { stem: '把 ' + n0 + ' 改写成用「万」作单位的数：' + n0 + ' = ' + (n0 / 10000) + ' × 10000，等于多少万？',
+      answer: String(n0 / 10000) + '万', options: [n0 / 10000 + '万', n0 / 1000 + '万', n0 + '万'],
+      apply: '某城市人口约 ' + n0 + ' 人，' + n0 + ' = ' + (n0 / 10000) + ' × 10000，改写成用万作单位是多少万人？' };
+  }
+  if (name.indexOf('亿') !== -1) {
+    return { stem: '10 个一千万是多少？（10 × 10000000 = 100000000）',
+      answer: '一亿', options: ['一亿', '一千万', '一百万'],
+      apply: '计数器上一千万一千万地数，10 × 10000000 = 100000000，10 个一千万是多少？' };
+  }
+  if (name.indexOf('计数单位') !== -1) {
+    var units = [['一百', '一千', 100, 1000], ['一十', '一百', 10, 100], ['一千', '一万', 1000, 10000]];
+    var u = units[ri(rng, 0, 2)];
+    return { stem: '10 个' + u[0] + '是多少？（10 × ' + u[2] + ' = ' + u[3] + '）',
+      answer: u[1], options: [u[1], u[0], '一亿'],
+      apply: '数数时，10 × ' + u[2] + ' = ' + u[3] + '，10 个' + u[0] + '组成的计数单位是什么？' };
+  }
+  if (name.indexOf('数位') !== -1) {
+    var tens = ri(rng, 1, 9), ones = ri(rng, 1, 9);
+    var num0 = tens * 10 + ones;
+    return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' × 10 + ' + ones + ' = ' + num0 + '）',
+      answer: '十位', options: ['十位', '个位', '百位'],
+      apply: '计数器拨出 ' + num0 + '（' + tens + ' × 10 + ' + ones + ' = ' + num0 + '），' + tens + ' 拨在哪一位上？' };
+  }
+  if (name.indexOf('顺序') !== -1 || name.indexOf('相邻') !== -1) {
+    var cur = ri(rng, 11, 88);
+    return { stem: '与 ' + cur + ' 相邻的两个数是多少？（参考：' + cur + ' − 1 = ' + (cur - 1) + '）',
+      answer: (cur - 1) + ' 和 ' + (cur + 1), options: [(cur - 1) + ' 和 ' + (cur + 1), cur + ' 和 ' + (cur + 1), (cur - 1) + ' 和 ' + cur],
+      apply: '发牌时数到 ' + cur + '，它前一个是 ' + (cur - 1) + '（' + cur + ' − 1 = ' + (cur - 1) + '），后一个数是多少？' };
+  }
+  if (name.indexOf('比较') !== -1) {
+    var a0 = ri(rng, 12, 98), b0 = a0 + ri(rng, 1, 9) * (rng() < 0.5 ? 1 : -1);
+    if (b0 <= 10) b0 = a0 + 5;
+    return { stem: '比较大小：' + Math.min(a0, b0) + ' ○ ' + Math.max(a0, b0) + '（参考：' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '）',
+      answer: '<', options: ['>', '<', '='],
+      apply: '一年级有 ' + Math.min(a0, b0) + ' 人，二年级有 ' + Math.max(a0, b0) + ' 人，' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '，哪个年级人数多（填 > 或 <）？' };
+  }
+  if (name.indexOf('组成') !== -1) {
+    var t0 = ri(rng, 1, 9), o0 = ri(rng, 1, 9);
+    return { stem: (t0 * 10 + o0) + ' 是由几个十和几个一组成的？（参考：' + t0 + ' × 10 + ' + o0 + ' = ' + (t0 * 10 + o0) + '）',
+      answer: t0 + '个十和' + o0 + '个一', options: [t0 + '个十和' + o0 + '个一', o0 + '个十和' + t0 + '个一', '1个十和' + o0 + '个一'],
+      apply: '小红有 ' + t0 + ' 捆（每捆10根）零 ' + o0 + ' 根小棒，' + t0 + ' × 10 + ' + o0 + ' = ' + (t0 * 10 + o0) + '，一共多少根，由几个十和几个一组成？' };
+  }
+  if (name.indexOf('算盘') !== -1) {
+    
+    var abPick = rng();
+    if (abPick < 0.34) {
+      return { stem: '算盘上一个上珠靠梁表示几？（参考：1 × 5 = 5）',
+        answer: '5', options: ['5', '1', '10'],
+        apply: '在算盘上拨数，1 个上珠靠梁，1 × 5 = 5，它表示数字几？' };
+    }
+    if (abPick < 0.67) {
+      return { stem: '算盘上一个下珠靠梁表示几？（参考：1 × 1 = 1）',
+        answer: '1', options: ['1', '5', '10'],
+        apply: '在算盘上拨数，1 个下珠靠梁，1 × 1 = 1，它表示数字几？' };
+    }
+    return { stem: '算盘的十位上1个上珠靠梁、个位上2个下珠靠梁，表示的数是多少？（参考：5 × 10 + 2 = 52）',
+      answer: '52', options: ['52', '25', '70'],
+      apply: '算盘十位1个上珠靠梁表示5个十，个位2个下珠靠梁表示2个一，5 × 10 + 2 = ？，表示的数是多少？' };
+  }
+  
+  var t1 = ri(rng, 1, 9), o1 = ri(rng, 1, 9);
+  return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' × 10 + ' + o1 + ' = ' + (t1 * 10 + o1) + '），写作多少？',
+    answer: String(t1 * 10 + o1), options: [String(t1 * 10 + o1), String(t1 + o1), String(o1 * 10 + t1)],
+    apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' × 10 + ' + o1 + ' = ？，这个数写作多少？' };
+}
+
+function buildNegativeItem(rng, name) {
+  if (name.indexOf('数轴') !== -1) {
+    var k0 = ri(rng, 2, 6);
+    return { stem: '在数轴上，0 左边第 ' + k0 + ' 格表示什么数？（参考：0 − ' + k0 + ' = −' + k0 + '）',
+      answer: '−' + k0, options: ['−' + k0, String(k0), '0'],
+      apply: '温度计以 0℃ 为分界，0 − ' + k0 + ' = −' + k0 + '，数轴上 0 左边第 ' + k0 + ' 格是什么数？' };
+  }
+  if (name.indexOf('比较') !== -1) {
+    var a1 = ri(rng, 2, 8), b1 = a1 + ri(rng, 1, 5);
+    return { stem: '比较大小：−' + b1 + ' ○ −' + a1 + '（参考：' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，负号后越大数越小）',
+      answer: '<', options: ['>', '<', '='],
+      apply: '哈尔滨 −' + b1 + '℃，北京 −' + a1 + '℃，' + b1 + ' − ' + a1 + ' = ' + (b1 - a1) + '，哪里更冷，即 −' + b1 + ' ○ −' + a1 + '？' };
+  }
+  
+  return { stem: '读出下面的数：−5 与 +8（参考：0 − 5 = −5），−5 读作什么？',
+    answer: '负五', options: ['负五', '正五', '五'],
+    apply: '存折上支出 5 元记作 −5（0 − 5 = −5），−5 应该怎样读？' };
+}
+
+function buildMultDivRelationItem(rng, name) {
+  if (name.indexOf('平均分') !== -1) {
+    var total0 = ri(rng, 2, 9) * ri(rng, 2, 9), groups0 = ri(rng, 2, 6);
+    while (total0 % groups0 !== 0) total0 += 1;
+    return { stem: '把 ' + total0 + ' 平均分成 ' + groups0 + ' 份，每份多少？（' + total0 + ' ÷ ' + groups0 + ' = ？）',
+      answer: String(total0 / groups0), options: [String(total0 / groups0), String(groups0), String(total0)],
+      apply: '把 ' + total0 + ' 块糖平均分给 ' + groups0 + ' 个小朋友，' + total0 + ' ÷ ' + groups0 + ' = ？，每人几块？' };
+  }
+  var a2 = ri(rng, 2, 9), b2 = ri(rng, 2, 9), p2 = a2 * b2;
+  return { stem: '因为 ' + a2 + ' × ' + b2 + ' = ' + p2 + '，所以 ' + p2 + ' ÷ ' + a2 + ' = 多少？',
+    answer: String(b2), options: [String(b2), String(a2), String(p2)],
+    apply: '每盒有 ' + a2 + ' 支笔，' + b2 + ' 盒共 ' + p2 + ' 支（' + a2 + ' × ' + b2 + ' = ' + p2 + '）。反过来 ' + p2 + ' ÷ ' + a2 + ' = ？，是多少盒？' };
+}
+
+function buildAlgebraLetterItem(rng, name) {
+  if (name.indexOf('数量关系') !== -1) {
+    return { stem: '速度用 v 表示，时间用 t 表示，路程 s 等于什么？（参考：80 × 2 = 160）',
+      answer: 's = v × t', options: ['s = v × t', 's = v + t', 's = v − t'],
+      apply: '汽车每小时行 v 千米，行了 t 小时（如 80 × 2 = 160），路程 s 用字母怎样表示？' };
+  }
+  if (name.indexOf('值') !== -1) {
+    var a3 = ri(rng, 2, 6), k3 = ri(rng, 2, 5);
+    return { stem: '当 a = ' + a3 + ' 时，' + k3 + 'a + 1 = ' + k3 + ' × ' + a3 + ' + 1 = 多少？',
+      answer: String(k3 * a3 + 1), options: [String(k3 * a3 + 1), String(k3 * a3), String(a3 + 1)],
+      apply: '文具店有 a 盒彩笔，每盒 ' + k3 + ' 支还多 1 支样品。当 a = ' + a3 + ' 时，' + k3 + ' × ' + a3 + ' + 1 = ？，共多少支？' };
+  }
+  
+  var d0 = ri(rng, 4, 20);
+  return { stem: '小明今年 a 岁，爸爸比他大 ' + d0 + ' 岁。当 a = 10 时，10 + ' + d0 + ' = 多少，爸爸岁数用字母怎样表示？',
+    answer: 'a + ' + d0 + '（岁）', options: ['a + ' + d0, 'a − ' + d0, 'a × ' + d0],
+    apply: '小明今年 a 岁，爸爸比他大 ' + d0 + ' 岁（a = 10 时 10 + ' + d0 + ' = ' + (10 + d0) + '），爸爸的岁数用含字母的式子怎样表示？' };
+}
+
+
+function buildNumberTheoryItem(rng, name) {
+  
+  if (name.indexOf('奇偶性') !== -1 || name.indexOf('和的奇偶') !== -1) {
+    var patterns = [
+      { oddA: true, oddB: true, res: '偶数', rule: '奇数 + 奇数 = 偶数' },
+      { oddA: false, oddB: false, res: '偶数', rule: '偶数 + 偶数 = 偶数' },
+      { oddA: true, oddB: false, res: '奇数', rule: '奇数 + 偶数 = 奇数' }
+    ];
+    var pt = patterns[ri(rng, 0, patterns.length - 1)];
+    var pa = pt.oddA ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
+    var pb = pt.oddB ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
+    var ps = pa + pb;
+    return { stem: pt.rule + '：' + pa + ' + ' + pb + ' = ' + ps + '，' + pa + ' 与 ' + pb + ' 的和是奇数还是偶数？',
+      answer: pt.res, options: ['偶数', '奇数', '无法确定'],
+      apply: '两队人数分别是 ' + pa + ' 和 ' + pb + '（' + pt.rule + '），' + pa + ' + ' + pb + ' = ' + ps + '，两队合并后的总人数是奇数还是偶数？' };
+  }
+  
+  if (name.indexOf('质数') !== -1 || name.indexOf('合数') !== -1) {
+    var primes = [7, 11, 13, 17, 19];
+    var composites = [4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20];
+    var pn = primes[ri(rng, 0, primes.length - 1)];
+    var pool = composites.slice();
+    var d1 = pool.splice(ri(rng, 0, pool.length - 1), 1)[0];
+    var d2 = pool.splice(ri(rng, 0, pool.length - 1), 1)[0];
+    return { stem: '一个数只有 1 和它本身两个因数就是质数：1 × ' + pn + ' = ' + pn + '。下面哪个数是质数？',
+      answer: String(pn), options: [String(pn), String(d1), String(d2)],
+      apply: '分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 ' + pn + '（1 × ' + pn + ' = ' + pn + '）能分成人数相同且多于1人的小组吗，它是质数还是合数？' };
+  }
+  
+  if (name.indexOf('奇数') !== -1 || name.indexOf('偶数') !== -1) {
+    var en = ri(rng, 2, 24) * 2;
+    var askEven = rng() < 0.5;
+    if (askEven) {
+      return { stem: '2 的倍数是偶数：' + en + ' ÷ 2 = ' + (en / 2) + '。下面哪个数是偶数？',
+        answer: String(en), options: [String(en), String(en + 1), String(en + 3)],
+        apply: '门牌号按单双号排列，' + en + ' ÷ 2 = ' + (en / 2) + ' 没有余数，' + en + ' 号是奇数还是偶数？' };
+    }
+    var on = ri(rng, 2, 24) * 2 - 1;
+    return { stem: '不是 2 的倍数的数是奇数，如 ' + on + ' ÷ 2 = ' + ((on - 1) / 2) + '……1。下面哪个数是奇数？',
+      answer: String(on), options: [String(on), String(on + 1), String(on - 1)],
+      apply: '报数时逢双数蹲下，' + on + ' ÷ 2 余 1 不能整除，' + on + ' 号同学该蹲下吗，' + on + ' 是奇数还是偶数？' };
+  }
+  
+  var feats = [
+    { f: 2, text: '个位上是 0、2、4、6、8', build: function () { var x = ri(rng, 6, 49) * 2; return x; },
+      bad: function (x) { var b = x + (rng() < 0.5 ? 1 : -1); return b % 2 === 0 ? b + 1 : b; } },
+    { f: 5, text: '个位上是 0 或 5', build: function () { return ri(rng, 2, 19) * 5; },
+      bad: function (x) { var b = x + (rng() < 0.5 ? 1 : -1); return b % 5 === 0 ? b + 1 : b; } },
+    { f: 3, text: '各位上数字之和是 3 的倍数', build: function () {
+        for (var t = 0; t < 30; t++) { var x = ri(rng, 12, 99); var s = Math.floor(x / 10) + x % 10; if (s % 3 === 0) return x; }
+        return 12;
+      }, bad: function (x) {
+        for (var t = 0; t < 30; t++) { var b = ri(rng, 12, 99); var s = Math.floor(b / 10) + b % 10; if (s % 3 !== 0 && b !== x) return b; }
+        return x + 1;
+      } }
+  ];
+  var ft = feats[ri(rng, 0, 2)];
+  var fn = ft.build();
+  var fd1 = ft.bad(fn), fd2 = ft.bad(fn);
+  while (fd2 === fd1 || fd2 === fn) fd2 = ft.bad(fn);
+  var fsum = Math.floor(fn / 10) + fn % 10;
+  var fref = ft.f === 3 ? '（数字和 ' + fsum + '，' + fsum + ' ÷ 3 = ' + (fsum / 3) + '）'
+    : '（参考：' + fn + ' ÷ ' + ft.f + ' = ' + (fn / ft.f) + '）';
+  return { stem: ft.text + ' 的数是 ' + ft.f + ' 的倍数' + fref + '。下面哪个数是 ' + ft.f + ' 的倍数？',
+    answer: String(fn), options: [String(fn), String(fd1), String(fd2)],
+    apply: '体育分组每组 ' + ft.f + ' 人正好分完，人数须是 ' + ft.f + ' 的倍数。班级人数 ' + fn + fref + '，哪个班能正好分完？' };
+}
+
+
+function makeByItem(plan, context, i, builder, subType) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var params = plan.semanticParams || {};
+  var item = builder(rng, params.name || '');
+  var qt = plan.questionTypeId;
+  var q = buildBase(plan, context, i, { subType: subType });
+  var stem = item.stem, answer = item.answer;
+  if (qt === 'apply') stem = item.apply || item.stem;
+  if (qt === 'fill') {
+    stem = stem.replace('多少？', '____').replace('什么？', '____').replace('？', '____');
+    if (!/____|\(\s*\)/.test(stem)) stem += ' ____';
+  }
+  if (qt === 'choice') {
+    finishChoice(q, rng, item.answer, item.options.filter(function (o) { return o !== item.answer; }));
+    q.prompt = stem;
+    return q;
+  }
+  return finish(q, stem, answer, [answer], stem.replace(/（参考.*?）/, ''));
+}
+
+function makeNumberConcept(plan, context, i) { return makeByItem(plan, context, i, buildNumberConceptItem, 'number-concept'); }
+function makeNegativeNumber(plan, context, i) { return makeByItem(plan, context, i, buildNegativeItem, 'negative-number'); }
+function makeMultDivRelation(plan, context, i) { return makeByItem(plan, context, i, buildMultDivRelationItem, 'multdiv-relation'); }
+function makeAlgebraLetter(plan, context, i) { return makeByItem(plan, context, i, buildAlgebraLetterItem, 'algebra-letter'); }
+function makeNumberTheory(plan, context, i) { return makeByItem(plan, context, i, buildNumberTheoryItem, 'number-theory'); }
+
+var P25_09_SUBTOPIC_QTS = ['calc', 'fill', 'apply', 'choice'];
+function bindP2509(fn) {
+  var row = {};
+  P25_09_SUBTOPIC_QTS.forEach(function (qt) { row[qt] = fn; });
+  return row;
+}
+
+
+
 var SUBTOPIC_MAKERS = {
   'times-concept': { calc: makeTimesCalc, fill: makeTimesFill, apply: makeTimesApply, choice: makeTimesChoice },
   'fraction-meaning': { calc: makeFractionCalc, fill: makeFractionFill, apply: makeFractionApply, choice: makeFractionChoice },
   'angle-concept': { fill: makeAngleFill, apply: makeAngleApply, choice: makeAngleChoice, geometry: makeAngleGeometry, judge: makeAngleJudge },
-  'area-concept': { fill: makeAreaFill, apply: makeAreaApply, choice: makeAreaChoice, geometry: makeAreaGeometry, judge: makeAreaJudge }
+  'area-concept': { fill: makeAreaFill, apply: makeAreaApply, choice: makeAreaChoice, geometry: makeAreaGeometry, judge: makeAreaJudge },
+  
+  'number-concept': bindP2509(makeNumberConcept),
+  'negative-number': bindP2509(makeNegativeNumber),
+  'multdiv-relation': bindP2509(makeMultDivRelation),
+  'algebra-letter': bindP2509(makeAlgebraLetter),
+  'number-theory': bindP2509(makeNumberTheory)
 };
 
 
@@ -12593,6 +13479,203 @@ function makePropGeometry(plan, context, i) {
 
 
 
+var MAP_SCALES = [
+  { label: '1:5000', factor: 5000 },
+  { label: '1:10000', factor: 10000 },
+  { label: '1:20000', factor: 20000 },
+  { label: '1:50000', factor: 50000 }
+];
+
+function mapPick(rng) {
+  var s = Rng.pick(rng, MAP_SCALES);
+  var mapCm = Rng.randInt(rng, 2, 9);
+  var realCm = mapCm * s.factor;
+  return { label: s.label, factor: s.factor, mapCm: mapCm, realCm: realCm, realM: realCm / 100 };
+}
+
+function makeMapCalc(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var m = mapPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
+  });
+  if (i % 2 === 0) {
+    return finish(q, '列式计算：一幅地图的比例尺是 ' + m.label + '，量得两地间的图上距离是 ' + m.mapCm
+      + ' 厘米。列式求实际距离：' + m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + '（厘米）= ？（米）',
+      m.realM, [String(m.realM)],
+      '实际距离 = 图上距离 × 比例尺后项：' + m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
+  }
+  return finish(q, '列式计算：一幅地图的比例尺是 ' + m.label + '，两地实际相距 ' + m.realM
+    + ' 米（' + m.realCm + ' 厘米）。列式求图上距离：' + m.realCm + ' ÷ ' + m.factor + ' = ？（厘米）',
+    m.mapCm, [String(m.mapCm)],
+    '图上距离 = 实际距离 ÷ 比例尺后项：' + m.realCm + ' ÷ ' + m.factor + ' = ' + m.mapCm + ' 厘米');
+}
+
+function makeMapFill(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var m = mapPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
+  });
+  if (i % 2 === 0) {
+    return finish(q, '在比例尺是 ' + m.label + ' 的地图上，量得两地间的图上距离是 ' + m.mapCm
+      + ' 厘米，两地的实际距离是（  ）米。', m.realM, [String(m.realM)],
+      m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
+  }
+  return finish(q, '在比例尺是 ' + m.label + ' 的地图上，实际距离 ' + m.realM + ' 米（' + m.realCm
+    + ' 厘米）的两地，图上距离是（  ）厘米。', m.mapCm, [String(m.mapCm)],
+    m.realCm + ' ÷ ' + m.factor + ' = ' + m.mapCm + ' 厘米');
+}
+
+function makeMapApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var m = mapPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
+  });
+  var places = Rng.pick(rng, [['学校', '少年宫'], ['公园', '图书馆'], ['小明家', '汽车站']]);
+  return finish(q, '小明要从' + places[0] + '走到' + places[1] + '，他在比例尺为 ' + m.label
+    + ' 的地图上量得两地相距 ' + m.mapCm + ' 厘米。照这样计算，' + places[0] + '到' + places[1]
+    + '实际要走多少米？', m.realM, [String(m.realM)],
+    '实际距离 ' + m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
+}
+
+function makeMapChoice(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var m = mapPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
+  });
+  q.prompt = '一幅地图的比例尺是 ' + m.label + '，图上距离 ' + m.mapCm + ' 厘米表示的实际距离是多少米？（  ）';
+  var wrongs = [m.realM + m.factor / 100, m.realM + 100, m.mapCm * m.factor];
+  return finishChoice(q, rng, String(m.realM), wrongs.map(String));
+}
+
+
+
+function ratioName(plan) {
+  var p = plan && plan.semanticParams;
+  return p && p.name ? p.name : '';
+}
+
+
+function equalRatiosPick(rng) {
+  var pairs = [[1, 2], [1, 3], [2, 3], [3, 4], [2, 5]];
+  var base = Rng.pick(rng, pairs);
+  var r = Rng.randInt(rng, 2, 4);
+  var s;
+  do { s = Rng.randInt(rng, 2, 4); } while (s === r);
+  return { a: base[0] * r, b: base[1] * r, c: base[0] * s, d: base[1] * s };
+}
+
+
+function solveRatioPick(rng) {
+  for (var t = 0; t < 40; t++) {
+    var x = Rng.randInt(rng, 2, 6);
+    var d = Rng.randInt(rng, 2, 9);
+    var c = Rng.randInt(rng, 2, 6);
+    if ((x * d) % c === 0) {
+      var b = x * d / c;
+      if (b >= 2 && b <= 9) return { x: x, b: b, c: c, d: d };
+    }
+  }
+  return { x: 4, b: 6, c: 2, d: 3 };
+}
+
+function makeRatioCalc(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var name = ratioName(plan);
+  if (name.indexOf('基本性质') !== -1) {
+    if (i % 2 === 0) {
+      var s = solveRatioPick(rng);
+      var q0 = buildBase(plan, context, i, {
+        subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x
+      });
+      return finish(q0, '列式计算：解比例 x∶' + s.b + ' = ' + s.c + '∶' + s.d + '。根据比例的基本性质，'
+        + 'x × ' + s.d + ' = ' + s.b + ' × ' + s.c + ' = ' + (s.b * s.c) + '，x = ' + (s.b * s.c) + ' ÷ ' + s.d + ' = ？',
+        s.x, [String(s.x)],
+        '内项积 = 外项积：x = ' + s.b + ' × ' + s.c + ' ÷ ' + s.d + ' = ' + s.x);
+    }
+    var e = equalRatiosPick(rng);
+    var q1 = buildBase(plan, context, i, {
+      subTopic: 'ratio-basics', aspect: 'property'
+    });
+    return finish(q1, '列式计算：在比例 ' + e.a + '∶' + e.b + ' = ' + e.c + '∶' + e.d
+      + ' 中，两个外项的积是多少？列式：' + e.a + ' × ' + e.d + ' = ？',
+      e.a * e.d, [String(e.a * e.d)],
+      '外项积 = 内项积：' + e.a + ' × ' + e.d + ' = ' + e.b + ' × ' + e.c + ' = ' + (e.a * e.d));
+  }
+  
+  var p = equalRatiosPick(rng);
+  var q2 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
+  return finish(q2, '列式计算：判断 ' + p.a + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d
+    + ' 能否组成比例。检验：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d) + '，' + p.b + ' × ' + p.c + ' = '
+    + (p.b * p.c) + '，积相等，填「能」或「不能」。',
+    '能', ['能'],
+    '比值相等（' + p.a + '/' + p.b + ' = ' + p.c + '/' + p.d + '），可以组成比例');
+}
+
+function makeRatioFill(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var name = ratioName(plan);
+  var s = solveRatioPick(rng);
+  if (name.indexOf('基本性质') !== -1 && i % 2 === 1) {
+    var e = equalRatiosPick(rng);
+    var q0 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'property' });
+    return finish(q0, '在比例 ' + e.a + '∶' + e.b + ' = ' + e.c + '∶' + e.d + ' 中（' + e.a + ' × ' + e.d
+      + ' = ' + (e.a * e.d) + '），两个内项的积是（  ）。', e.b * e.c, [String(e.b * e.c)],
+      '内项积 = 外项积 = ' + (e.a * e.d));
+  }
+  var q1 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x });
+  return finish(q1, '根据比例的基本性质填空：x∶' + s.b + ' = ' + s.c + '∶' + s.d + '，'
+    + 'x × ' + s.d + ' = ' + s.b + ' × ' + s.c + ' = ' + (s.b * s.c) + '，x =（  ）。',
+    s.x, [String(s.x)], 'x = ' + s.b + ' × ' + s.c + ' ÷ ' + s.d + ' = ' + s.x);
+}
+
+function makeRatioApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  
+  var scenarios = [
+    { a: 3, b: 2, c: 9, label: '国旗长与宽的比是 3∶2，一面国旗长 9 分米', ask: '宽应该是多少分米', unit: '分米' },
+    { a: 1, b: 4, c: 6, label: '调蜂蜜水时蜂蜜与水的比是 1∶4，放了 6 份蜂蜜', ask: '需要加同样份数的水多少份', unit: '份' },
+    { a: 2, b: 3, c: 8, label: '配制盐水时盐与水的比是 2∶3，用了 8 克盐', ask: '需要加水多少克', unit: '克' }
+  ];
+  var c0 = Rng.pick(rng, scenarios);
+  var x = c0.b * c0.c / c0.a;
+  var q = buildBase(plan, context, i, {
+    subTopic: 'ratio-basics', aspect: 'apply-solve', ratioA: c0.a, ratioB: c0.b, given: c0.c
+  });
+  return finish(q, c0.label + '（' + c0.a + '∶' + c0.b + ' = ' + c0.c + '∶x）。按照这个比，' + c0.ask + '？'
+    + '列式 ' + c0.a + ' × x = ' + c0.b + ' × ' + c0.c + ' = ' + (c0.b * c0.c) + '，x = ？',
+    x, [String(x)],
+    '解比例：x = ' + c0.b + ' × ' + c0.c + ' ÷ ' + c0.a + ' = ' + x + c0.unit);
+}
+
+function makeRatioChoice(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var name = ratioName(plan);
+  if (name.indexOf('基本性质') !== -1) {
+    var s = solveRatioPick(rng);
+    var q0 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x });
+    q0.prompt = '根据比例的基本性质解比例 x∶' + s.b + ' = ' + s.c + '∶' + s.d
+      + '（x × ' + s.d + ' = ' + s.b + ' × ' + s.c + '），x = ？（  ）';
+    return finishChoice(q0, rng, String(s.x), [String(s.x + 1), String(Math.max(1, s.x - 1)), String(s.c)]);
+  }
+  var p = equalRatiosPick(rng);
+  var q1 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
+  q1.prompt = '下面哪组中的两个比可以组成比例？（提示：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d)
+    + '，' + p.b + ' × ' + p.c + ' = ' + (p.b * p.c) + '）（  ）';
+  var correct = p.a + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d;
+  var wrongs = [
+    p.a + '∶' + p.b + ' 和 ' + (p.c + 1) + '∶' + p.d,
+    p.a + '∶' + (p.b + 1) + ' 和 ' + p.c + '∶' + p.d,
+    (p.a + 1) + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d
+  ];
+  return finishChoice(q1, rng, correct, wrongs);
+}
+
+
+
 var SUBTOPIC_MAKERS = {
   'pictorial-additive-relation': {
     calc: makeAddRelCalc, fill: makeAddRelFill, apply: makeAddRelApply,
@@ -12609,6 +13692,13 @@ var SUBTOPIC_MAKERS = {
   'proportion-application': {
     calc: makePropCalc, fill: makePropFill, apply: makePropApply,
     choice: makePropChoice, geometry: makePropGeometry
+  },
+  
+  'scale-map': {
+    calc: makeMapCalc, fill: makeMapFill, apply: makeMapApply, choice: makeMapChoice
+  },
+  'ratio-basics': {
+    calc: makeRatioCalc, fill: makeRatioFill, apply: makeRatioApply, choice: makeRatioChoice
   }
 };
 
@@ -12655,6 +13745,511 @@ function buildAll() {
 
 module.exports = {
   createSemanticRelationsGenerator: createSemanticRelationsGenerator,
+  buildAll: buildAll
+};
+
+};
+__defs["shared/generator/generators/decimal.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Rng = require("shared/generator/core/rng.js");
+
+function pkp(plan) {
+  if (!plan) return null;
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+  return null;
+}
+
+function seedFor(plan, context, i) {
+  if (context && context.seed != null) return context.seed + ':dec:' + i;
+  if (plan && plan.seed != null) return plan.seed + ':dec:' + i;
+  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':dec:' + i;
+}
+
+
+function r1(x) { return Math.round(x * 10) / 10; }
+function r2(x) { return Math.round(x * 100) / 100; }
+function r4(x) { return Math.round(x * 10000) / 10000; }
+function fmt(x) { return String(r4(x)); }
+
+
+var NAME_RULES = [
+  { sub: 'word', re: /应用|解决问题/ },
+  { sub: 'unit', re: /单位换算/ },
+  { sub: 'addsub-mix', re: /加减混合/ },
+  { sub: 'mult-estimate', re: /乘法的估算|乘.*估算/ },
+  { sub: 'div', re: /除以|除法|循环小数/ },
+  { sub: 'mult', re: /乘/ },
+  { sub: 'addsub', re: /加|减/ },
+  { sub: 'point-move', re: /小数点.*移动/ },
+  { sub: 'approx', re: /近似/ },
+  { sub: 'nature', re: /性质/ },
+  { sub: 'compare', re: /比较/ },
+  { sub: 'readwrite', re: /读法|写法|读写|认识|意义/ }
+];
+
+function deriveSubtype(name) {
+  for (var i = 0; i < NAME_RULES.length; i++) {
+    if (NAME_RULES[i].re.test(name || '')) return NAME_RULES[i].sub;
+  }
+  return 'readwrite';
+}
+
+
+
+function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
+function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
+
+function addsubStructure(rng, mixed) {
+  var a = r2(ri(rng, 11, 99) / 10);
+  var b = r2(ri(rng, 11, Math.max(12, Math.floor(a * 10) - 1)) / 10);
+  var add = rng() < 0.5;
+  if (mixed) {
+    var c = r2(ri(rng, 11, 50) / 10);
+    var ops = rng() < 0.5 ? ['+', '−'] : ['−', '+'];
+    var v = ops[0] === '+' ? a + b : a - b;
+    v = ops[1] === '+' ? v + c : v - c;
+    return { expr: fmt(a) + ' ' + ops[0] + ' ' + fmt(b) + ' ' + ops[1] + ' ' + fmt(c), answer: fmt(r2(v)) };
+  }
+  return add
+    ? { expr: fmt(a) + ' + ' + fmt(b), answer: fmt(r2(a + b)) }
+    : { expr: fmt(a) + ' − ' + fmt(b), answer: fmt(r2(a - b)) };
+}
+
+function multStructure(rng) {
+  if (rng() < 0.5) {
+    var a = r2(ri(rng, 12, 88) / 10);
+    var n = ri(rng, 2, 9);
+    return { expr: fmt(a) + ' × ' + n, answer: fmt(r2(a * n)) };
+  }
+  var x = r1(ri(rng, 11, 35) / 10);
+  var y = r1(ri(rng, 12, Math.max(13, Math.floor(x * 10) - 2)) / 10);
+  return { expr: fmt(x) + ' × ' + fmt(y), answer: fmt(r2(x * y)) };
+}
+
+function divStructure(rng) {
+  if (rng() < 0.5) {
+    var b = ri(rng, 2, 9);
+    var q = r2(ri(rng, 12, 84) / 10);
+    var a = r2(b * q);
+    return { expr: fmt(a) + ' ÷ ' + b, answer: fmt(q), explain: fmt(b) + ' × ' + fmt(q) + ' = ' + fmt(a) };
+  }
+  var d = r1(ri(rng, 12, 25) / 10);
+  var q2 = ri(rng, 2, 8);
+  var a2 = r2(d * q2);
+  return { expr: fmt(a2) + ' ÷ ' + fmt(d), answer: String(q2), explain: fmt(d) + ' × ' + q2 + ' = ' + fmt(a2) };
+}
+
+
+
+function conceptItem(sub, rng) {
+  if (sub === 'compare') {
+    var a = r1(ri(rng, 11, 88) / 10), b = r1(ri(rng, 11, 88) / 10);
+    while (b === a) b = r1(ri(rng, 11, 88) / 10);
+    var sign = a > b ? '>' : '<';
+    return { stem: '比较大小：' + fmt(a) + ' ○ ' + fmt(b) + '（参考：' + fmt(Math.max(a, b)) + ' − ' + fmt(Math.min(a, b)) + ' = ' + fmt(r1(Math.abs(a - b))) + '），○ 里应填什么（>、< 或 =）？', answer: sign,
+      options: ['>', '<', '='], support: fmt(Math.max(a, b)) + ' − ' + fmt(Math.min(a, b)) + ' = ' + fmt(r1(Math.abs(a - b))) };
+  }
+  if (sub === 'nature') {
+    var base = r1(ri(rng, 12, 85) / 10);
+    return { stem: '根据小数的性质，化简 ' + fmt(base) + '0 = ____', answer: fmt(base),
+      options: [fmt(base), fmt(base) + '0', fmt(r1(base / 10))], support: fmt(base) + '0 − 0 = ' + fmt(base) + '0' };
+  }
+  if (sub === 'point-move') {
+    var p = r2(ri(rng, 11, 99) / 100);
+    var right = rng() < 0.5;
+    return { expr: (right ? fmt(p) + ' × 10' : fmt(ri(rng, 11, 99) * 10) + ' ÷ 10'),
+      answer: right ? fmt(r2(p * 10)) : fmt(r2(ri(rng, 11, 99) / 10)),
+      stem: (right ? '小数点向右移动一位：' + fmt(p) + ' × 10 = ____' : '小数点向左移动一位：' + fmt(ri(rng, 11, 99)) + ' ÷ 10 = ____') };
+  }
+  if (sub === 'approx') {
+    var x = r2(ri(rng, 105, 999) / 100);
+    var one = r1(Math.round(x * 10) / 10);
+    return { stem: fmt(x) + ' 保留一位小数 ≈ ____（参考：' + fmt(one) + ' + 0.0 = ' + fmt(one) + '）', answer: fmt(one),
+      options: [fmt(one), fmt(Math.round(x)), fmt(r2(x + 0.1))] };
+  }
+  if (sub === 'unit') {
+    var m = ri(rng, 2, 9), dm = m * 10;
+    return { expr: m + ' × 10', answer: String(dm), stem: m + ' 米 = ' + m + ' × 10 = ____ 分米',
+      options: [String(dm), String(m), String(dm * 10)] };
+  }
+  
+  var n = ri(rng, 2, 9);
+  var dec = r1(n / 10);
+  return { stem: fmt(dec) + ' 里面有 ____ 个 0.1（参考：' + n + ' ÷ 10 = ' + fmt(dec) + '）',
+    answer: String(n), options: [String(n), String(dec), '10'] };
+}
+
+
+
+function buildQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var name = (plan.semanticParams && plan.semanticParams.name) || '小数';
+  var sub = deriveSubtype(name);
+  var qt = plan.questionTypeId;
+
+  var prompt, answer, options = null, steps = 1;
+
+  var calcSubs = { 'addsub': 1, 'addsub-mix': 1, 'mult': 1, 'mult-estimate': 1, 'div': 1, 'point-move': 1, 'unit': 1 };
+
+  if (sub === 'word') {
+    var inner = rng() < 0.5 ? addsubStructure(rng, false) : multStructure(rng);
+    var goods = pick(rng, ['笔记本', '橡皮', '彩带', '布料']);
+    prompt = '买' + goods + '一共花了 ' + inner.expr.replace(' ', '').replace(' ', '') + ' 元。列式计算 ' + inner.expr + ' = 多少元？';
+    answer = inner.answer;
+  } else if (calcSubs[sub]) {
+    var st;
+    if (sub === 'addsub' || sub === 'addsub-mix') st = addsubStructure(rng, sub === 'addsub-mix');
+    else if (sub === 'div') st = divStructure(rng);
+    else if (sub === 'point-move' || sub === 'unit') st = null;
+    else st = multStructure(rng);
+    if (st) {
+      prompt = '列式计算：' + st.expr + ' = ？';
+      answer = st.answer;
+    } else {
+      var c = conceptItem(sub, rng);
+      prompt = '列式计算：' + c.stem;
+      answer = c.answer; options = c.options;
+    }
+  } else {
+    var item = conceptItem(sub, rng);
+    prompt = item.stem;
+    answer = item.answer; options = item.options;
+  }
+
+  
+  if (qt === 'fill') {
+    prompt = prompt.replace(' = ？', ' = ____').replace('？', '____');
+    if (!/____|\(\s*\)/.test(prompt)) prompt += ' ____';
+  }
+
+  var data = { mode: 'decimal', subType: sub, steps: steps };
+  if (qt === 'choice') {
+    var pool;
+    if (options) {
+      pool = options.map(String).slice(0, 4);
+    } else if (!isNaN(Number(answer))) {
+      var num = Number(answer);
+      var cand = {};
+      cand[String(num)] = 1;
+      [r2(num + 0.1), r2(num - 0.1), r2(num + 1), r2(num - 1), r2(num + 0.2)].forEach(function (x) {
+        if (x > 0) cand[fmt(x)] = 1;
+      });
+      pool = Object.keys(cand);
+      while (pool.length < 4) pool.push(fmt(r2(num + pool.length + 0.3)));
+      pool = pool.slice(0, 4);
+    } else {
+      pool = [String(answer), '都不是', '无法确定'];
+    }
+    var uniq = [], seen = {};
+    pool.forEach(function (o) { o = String(o); if (!seen[o]) { seen[o] = 1; uniq.push(o); } });
+    while (uniq.length < 4) uniq.push('以上都不对（' + uniq.length + '）');
+    options = Rng.shuffle(rng, uniq.slice(0, 4));
+    data.options = options;
+    data.correctIndex = options.indexOf(String(answer));
+    answer = String(answer);
+  }
+
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: { value: String(answer), acceptable: [] },
+    answerMode: 'input',
+    data: data
+  };
+}
+
+function createDecimalGenerator(spec) {
+  spec = spec || {};
+  return {
+    id: spec.id || 'generator:decimal-number',
+    subject: 'math',
+    capabilities: ['calc', 'fill', 'choice', 'apply'],
+    questionTypes: ['calc', 'fill', 'choice', 'apply'],
+    knowledgePoints: spec.knowledgePoints || [],
+
+    supports: function (plan) {
+      if (!plan || !plan.questionTypeId) return false;
+      return ['calc', 'fill', 'choice', 'apply'].indexOf(plan.questionTypeId) !== -1;
+    },
+
+    generate: function (plan, context) {
+      context = context || {};
+      var count = (plan && plan.count) || 1;
+      var name = plan.semanticParams && plan.semanticParams.name;
+      if (!name) return []; 
+      var out = [];
+      for (var i = 0; i < count; i++) out.push(buildQuestion(plan, context, i));
+      return out;
+    }
+  };
+}
+
+function buildAll() { return [createDecimalGenerator()]; }
+
+module.exports = {
+  deriveSubtype: deriveSubtype,
+  createDecimalGenerator: createDecimalGenerator,
+  buildAll: buildAll
+};
+
+};
+__defs["shared/generator/generators/fraction.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Rng = require("shared/generator/core/rng.js");
+
+function pkp(plan) {
+  if (!plan) return null;
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+  return null;
+}
+
+function seedFor(plan, context, i) {
+  if (context && context.seed != null) return context.seed + ':frac:' + i;
+  if (plan && plan.seed != null) return plan.seed + ':frac:' + i;
+  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':frac:' + i;
+}
+
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = a % b; a = b; b = t; } return a || 1; }
+function simp(n, d) { var g = gcd(n, d); return { n: n / g, d: d / g }; }
+function fs(f) { return f.n + '/' + f.d; }
+function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
+function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
+
+
+var NAME_RULES = [
+  { sub: 'word', re: /解决问题/ },
+  { sub: 'reciprocal', re: /倒数/ },
+  { sub: 'div', re: /除以|除法/ },
+  { sub: 'mix', re: /混合/ },
+  { sub: 'addsub-diff', re: /异分母/ },
+  { sub: 'addsub', re: /加|减|简单计算/ },
+  { sub: 'compare', re: /比较|比大小/ },
+  { sub: 'relation', re: /与除法|除法.*关系/ },
+  { sub: 'proper', re: /真分数|假分数/ },
+  { sub: 'nature', re: /性质|约分|通分|互化/ },
+  { sub: 'meaning', re: /读写|认识|意义/ }
+];
+
+function deriveSubtype(name) {
+  for (var i = 0; i < NAME_RULES.length; i++) {
+    if (NAME_RULES[i].re.test(name || '')) return NAME_RULES[i].sub;
+  }
+  return 'meaning';
+}
+
+
+
+function sameDenomAdd(rng, maxD) {
+  var d = ri(rng, 3, maxD || 9);
+  var n1 = ri(rng, 1, d - 1), n2 = ri(rng, 1, d - n1);
+  var add = ri(rng, 0, 1);
+  if (add) return { expr: n1 + '/' + d + ' + ' + n2 + '/' + d, answer: fs(simp(n1 + n2, d)) };
+  var hi = Math.max(n1, n2), lo = Math.min(n1, n2);
+  return { expr: hi + '/' + d + ' − ' + lo + '/' + d, answer: fs(simp(hi - lo, d)) };
+}
+
+function diffDenomAdd(rng) {
+  var d1 = pick(rng, [2, 3, 4, 6]), d2 = pick(rng, [3, 5, 4, 6].filter(function (x) { return x !== d1; }));
+  var n1 = ri(rng, 1, d1 - 1), n2 = ri(rng, 1, d2 - 1);
+  var lcm = d1 * d2 / gcd(d1, d2);
+  var num = n1 * (lcm / d1) + n2 * (lcm / d2);
+  return { expr: n1 + '/' + d1 + ' + ' + n2 + '/' + d2, answer: fs(simp(num, lcm)) };
+}
+
+function fracDiv(rng) {
+  var n1 = ri(rng, 1, 5), d1 = ri(rng, 2, 8);
+  var n2 = ri(rng, 1, 5), d2 = ri(rng, 2, 8);
+  var r = simp(n1 * d2, d1 * n2);
+  return { expr: n1 + '/' + d1 + ' ÷ ' + n2 + '/' + d2, answer: fs(r) };
+}
+
+function fracDivInt(rng) {
+  var d = ri(rng, 2, 8), n = ri(rng, 1, d - 1), k = ri(rng, 2, 6);
+  return { expr: n + '/' + d + ' ÷ ' + k, answer: fs(simp(n, d * k)) };
+}
+
+
+
+function conceptItem(sub, rng) {
+  if (sub === 'compare') {
+    var same = rng() < 0.5;
+    var a, b, sign, support;
+    if (same) {
+      var d = ri(rng, 4, 9);
+      a = { n: ri(rng, 1, d - 2), d: d }; b = { n: ri(rng, a.n + 1, d - 1), d: d };
+      sign = '<'; support = b.n + ' − ' + a.n + ' = ' + (b.n - a.n) + '，同分母分子大的大';
+    } else {
+      var n = ri(rng, 1, 4);
+      a = { n: n, d: 4 }; b = { n: n, d: 6 };
+      sign = '>'; support = n + ' ÷ ' + a.d + ' 与 ' + n + ' ÷ ' + b.d + '，同分子分母小的大';
+    }
+    return { stem: '比较大小：' + fs(a) + ' ○ ' + fs(b) + '（参考：' + support + '），○ 里应填什么（>、< 或 =）？', answer: sign, options: ['>', '<', '='], support: support };
+  }
+  if (sub === 'relation') {
+    var n = ri(rng, 2, 8), d = n + ri(rng, 1, 4);
+    return { stem: n + ' ÷ ' + d + ' = ____（用分数表示商）', answer: n + '/' + d, options: [n + '/' + d, d + '/' + n, (n + d) + '/' + d] };
+  }
+  if (sub === 'proper') {
+    var improper = rng() < 0.5;
+    var pn = improper ? ri(rng, 5, 9) : ri(rng, 1, 4);
+    var pd = ri(rng, pn + 1, pn + 5);
+    var fracStr = pn + '/' + (improper ? Math.max(2, pn - ri(rng, 1, 2)) : pd);
+    var isImproper = parseInt(fracStr.split('/')[0], 10) >= parseInt(fracStr.split('/')[1], 10);
+    return { stem: fracStr + ' 的分子' + (isImproper ? '大于或等于分母' : '小于分母') + '，它是 ____ 分数（参考：' +
+        pn + ' − ' + fracStr.split('/')[1] + ' = ' + (pn - parseInt(fracStr.split('/')[1], 10)) + '）',
+      answer: isImproper ? '假分数' : '真分数', options: ['真分数', '假分数', '带分数'] };
+  }
+  if (sub === 'nature') {
+    var variant = ri(rng, 0, 2);
+    if (variant === 0) {
+      var d2 = ri(rng, 3, 8), k2 = ri(rng, 2, 5);
+      return { stem: '分数基本性质：1/' + d2 + ' 的分子分母同乘 ' + k2 + '（1 × ' + k2 + ' = ' + k2 + '），得到 ____/' + (d2 * k2),
+        answer: String(k2), options: [String(k2), String(1), String(d2 * k2)] };
+    }
+    if (variant === 1) {
+      var n3 = ri(rng, 2, 5) * 2, d3 = n3 + ri(rng, 1, 4) * 2;
+      var g = gcd(n3, d3), rn = n3 / g, rd = d3 / g;
+      return { stem: '约分：' + n3 + '/' + d3 + ' = ' + rn + '/____（分子分母同除以 ' + g + '，' + n3 + ' ÷ ' + g + ' = ' + rn + '）',
+        answer: String(rd), options: [String(rd), String(g), String(d3)] };
+    }
+    return { stem: '分数与小数互化：1/2 = 1 ÷ 2 = ____', answer: '0.5', options: ['0.5', '0.2', '0.1'] };
+  }
+  if (sub === 'reciprocal') {
+    if (rng() < 0.5) {
+      var nn = ri(rng, 2, 8), dd = nn + ri(rng, 1, 3);
+      return { stem: nn + '/' + dd + ' 的分子分母调换位置，它的倒数是 ____（参考：' + nn + ' × ' + dd + ' 作新分母）',
+        answer: dd + '/' + nn, options: [dd + '/' + nn, nn + '/' + dd, '1'] };
+    }
+    var whole = ri(rng, 2, 9);
+    return { stem: whole + ' 可以写成 ' + whole + '/1，它的倒数是 ____（参考：' + whole + ' ÷ ' + whole + ' = 1）',
+      answer: '1/' + whole, options: ['1/' + whole, String(whole), '1'] };
+  }
+  
+  var d0 = ri(rng, 3, 9);
+  return { stem: '把一个圆平均分成 ' + d0 + ' 份，取其中的 1 份（1 ÷ ' + d0 + '），用分数表示是 ____',
+    answer: '1/' + d0, options: ['1/' + d0, '1/' + (d0 + 1), d0 + '/1'] };
+}
+
+
+
+function buildQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var name = (plan.semanticParams && plan.semanticParams.name) || '分数';
+  var sub = deriveSubtype(name);
+  var qt = plan.questionTypeId;
+
+  var prompt, answer, options = null;
+
+  if (sub === 'word') {
+    
+    var wd = ri(rng, 3, 9), wn1 = ri(rng, 1, wd - 1), wn2 = ri(rng, 1, wd - wn1);
+    var wexpr = wn1 + '/' + wd + ' + ' + wn2 + '/' + wd;
+    var wans = fs(simp(wn1 + wn2, wd));
+    prompt = '一块蛋糕，小明吃了 ' + wn1 + '/' + wd + '，小红吃了 ' + wn2 + '/' + wd +
+      '。两人一共吃了这块蛋糕的几分之几？列式 ' + wexpr + ' = ？';
+    answer = wans;
+  } else if (sub === 'addsub') {
+    var s1 = sameDenomAdd(rng, 9);
+    prompt = '列式计算：' + s1.expr + ' = ？';
+    answer = s1.answer;
+  } else if (sub === 'addsub-diff') {
+    var s2 = diffDenomAdd(rng);
+    prompt = '列式计算（先通分）：' + s2.expr + ' = ？';
+    answer = s2.answer;
+  } else if (sub === 'mix') {
+    var a = sameDenomAdd(rng, 9), b = sameDenomAdd(rng, 9);
+    var d = ri(rng, 3, 9), n1 = ri(rng, 1, d - 2), n2 = ri(rng, 1, d - n1 - 1), n3 = ri(rng, 1, d - n1 - n2);
+    var tot = n1 + n2 + n3;
+    prompt = '列式计算：' + n1 + '/' + d + ' + ' + n2 + '/' + d + ' + ' + n3 + '/' + d + ' = ？';
+    answer = fs(simp(tot, d));
+  } else if (sub === 'div') {
+    var dv = rng() < 0.5 ? fracDiv(rng) : fracDivInt(rng);
+    prompt = '列式计算：' + dv.expr + ' = ？';
+    answer = dv.answer;
+  } else {
+    var item = conceptItem(sub, rng);
+    prompt = item.stem;
+    answer = item.answer;
+    options = item.options;
+  }
+
+  if (qt === 'fill') {
+    prompt = prompt.replace(' = ？', ' = ____').replace('？', '____');
+    if (!/____|\(\s*\)/.test(prompt)) prompt += ' ____';
+  }
+  if (qt === 'apply' && /列式计算/.test(prompt)) {
+    prompt = prompt.replace('列式计算（先通分）：', '解决问题——先通分再计算：').replace('列式计算：', '解决问题——列式计算：');
+  }
+
+  var data = { mode: 'fraction', subType: sub, steps: 1 };
+  if (qt === 'choice') {
+    var pool;
+    if (options) pool = options.map(String);
+    else { pool = [String(answer)]; }
+    var uniq = [], seen = {};
+    pool.forEach(function (o) { o = String(o); if (!seen[o]) { seen[o] = 1; uniq.push(o); } });
+    while (uniq.length < 4) uniq.push('以上都不对（' + uniq.length + '）');
+    options = Rng.shuffle(rng, uniq.slice(0, 4));
+    data.options = options;
+    data.correctIndex = options.indexOf(String(answer));
+  }
+
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: { value: String(answer), acceptable: [] },
+    answerMode: 'input',
+    data: data
+  };
+}
+
+function createFractionGenerator(spec) {
+  spec = spec || {};
+  return {
+    id: spec.id || 'generator:fraction-number',
+    subject: 'math',
+    capabilities: ['calc', 'fill', 'choice', 'apply'],
+    questionTypes: ['calc', 'fill', 'choice', 'apply'],
+    knowledgePoints: spec.knowledgePoints || [],
+
+    supports: function (plan) {
+      if (!plan || !plan.questionTypeId) return false;
+      return ['calc', 'fill', 'choice', 'apply'].indexOf(plan.questionTypeId) !== -1;
+    },
+
+    generate: function (plan, context) {
+      context = context || {};
+      var count = (plan && plan.count) || 1;
+      var name = plan.semanticParams && plan.semanticParams.name;
+      if (!name) return [];
+      var out = [];
+      for (var i = 0; i < count; i++) out.push(buildQuestion(plan, context, i));
+      return out;
+    }
+  };
+}
+
+function buildAll() { return [createFractionGenerator()]; }
+
+module.exports = {
+  deriveSubtype: deriveSubtype,
+  createFractionGenerator: createFractionGenerator,
   buildAll: buildAll
 };
 

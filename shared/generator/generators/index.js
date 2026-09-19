@@ -40,6 +40,8 @@ var Classification = require('./classify.js');
 var Percent = require('./percent.js');
 var ConceptMeaning = require('./concept-meaning.js');
 var SemanticRelations = require('./semantic-relations.js');
+var Decimal = require('./decimal.js');   // P25-09 小数专项
+var Fraction = require('./fraction.js'); // P25-09 分数专项
 
 var ALL = [].concat(
   Arithmetic.buildAll(),
@@ -63,7 +65,9 @@ var ALL = [].concat(
   Classification.buildAll(),
   Percent.buildAll(),
   ConceptMeaning.buildAll(),
-  SemanticRelations.buildAll()
+  SemanticRelations.buildAll(),
+  Decimal.buildAll(),
+  Fraction.buildAll()
 );
 
 var BY_ID = {};

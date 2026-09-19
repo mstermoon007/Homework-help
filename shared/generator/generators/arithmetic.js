@@ -11,6 +11,15 @@
 var Rng = require('../core/rng.js');
 var Arith = require('../core/arithmetic-core.js');
 
+// P25-09：按 KP 名称机械派生特殊结构 kind（仅除法族当前需要余数结构）。
+// 与 shape/position/money 的 NAME_TO_* 规则同构：消费 selector 注入的
+// plan.semanticParams.name，禁止 KP ID 猜测；无命中返回 null 走通用结构。
+function deriveKindFromName(name, op) {
+  if (!name) return null;
+  if (op === 'div' && name.indexOf('余数') !== -1) return 'div-remainder';
+  return null;
+}
+
 // Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
 function pkp(plan) {
   if (!plan) return null;
@@ -73,8 +82,11 @@ function createArithmeticGenerator(spec) {
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
+        // P25-09：优先显式 kind；其次按 KP 名称派生（有余数除法 → q……r 结构）
+        var kpName = plan.semanticParams && plan.semanticParams.name;
+        var nameKind = deriveKindFromName(kpName, op);
         var kind = constraints.kind ||
-          ((plan.constraints && plan.constraints.kind) || (plan.kind || null));
+          ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || nameKind;
         var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: constraints.numberRange });
         if (!structure) {
           structure = Arith.generateStructure(rng, {

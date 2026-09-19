@@ -241,6 +241,111 @@ function makePercentChange(plan, context, i) {
     base + ' × (1' + (increase ? '+' : '−') + p + '%) = ' + ans);
 }
 
+/* ---------- P25-09 k003 百分数的应用——税率 ---------- */
+function makeTax(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var income = Rng.pick(rng, [3000, 5000, 8000, 10000, 20000, 50000]);
+  var rate = Rng.pick(rng, [3, 5, 6, 10]);
+  var tax = Math.round(income * rate) / 100;
+  var goods = Rng.pick(rng, ['商店某月的营业额', '一家餐馆某月的营业额', '某公司某月的营业额']);
+  if (qt(plan) === 'calc') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate }),
+      '列式计算：' + goods + '是 ' + income + ' 元，按 ' + rate + '% 的税率缴纳税款，应缴纳税款多少元？列式：' + income + ' × ' + rate + '% = ？',
+      tax, '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元');
+  }
+  if (qt(plan) === 'fill') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate }),
+      income + ' × ' + rate + '% = ____（元）',
+      tax, '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元');
+  }
+  return finish(buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate }),
+    goods + '是 ' + income + ' 元，按规定要按 ' + rate + '% 的税率缴纳税款。这家应缴纳税款多少元？',
+    tax, '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元');
+}
+
+/* ---------- P25-09 k002 百分数的应用——成数（几成 = 十分之几 = 百分之几十） ---------- */
+var CHENGSHU = [
+  { label: '一成', num: 1, rate: 10 }, { label: '二成', num: 2, rate: 20 },
+  { label: '三成', num: 3, rate: 30 }, { label: '三成五', num: 3.5, rate: 35 },
+  { label: '四成', num: 4, rate: 40 }, { label: '七成五', num: 7.5, rate: 75 }
+];
+function makeChengshu(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var c = Rng.pick(rng, CHENGSHU);
+  // 变体 0：成数 → 百分数；变体 1：成数应用（求增产量）
+  if (i % 2 === 0) {
+    var q = buildBase(plan, context, i, { subType: 'percent-chengshu', chengshu: c.label, ask: 'convert' });
+    var stemC = qt(plan) === 'calc'
+      ? '列式：把' + c.label + '改写成百分数，' + c.num + ' ÷ 10 = （ ）%（只填数字）。'
+      : (qt(plan) === 'fill'
+        ? c.label + ' = ' + c.num + ' ÷ 10 = ____%（只填数字）'
+        : '农业收成常用「成数」表示：' + c.label + ' = ' + c.num + ' ÷ 10，' + c.label + '改写成百分数是多少？（只填数字）');
+    return finish(q, stemC, c.rate, c.label + ' = ' + c.num + '/10 = ' + c.rate + '%');
+  }
+  var base = Rng.pick(rng, [200, 300, 400, 500, 600, 800]);
+  var gain = Math.round(base * c.rate) / 100;
+  var crop = Rng.pick(rng, ['小麦', '玉米', '水稻', '苹果']);
+  if (qt(plan) === 'calc') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' }),
+      '列式计算：去年产' + crop + ' ' + base + ' 吨，今年比去年增产' + c.label + '（' + c.rate + '%），今年增产多少吨？列式：' + base + ' × ' + c.rate + '% = ？',
+      gain, '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨');
+  }
+  if (qt(plan) === 'fill') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' }),
+      '去年产' + crop + ' ' + base + ' 吨，今年增产' + c.label + '（' + c.rate + '%）：' + base + ' × ' + c.rate + '% = ____（吨）',
+      gain, '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨');
+  }
+  return finish(buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' }),
+    '李叔叔家去年产' + crop + ' ' + base + ' 吨，今年风调雨顺，比去年增产' + c.label + '（也就是 ' + c.rate + '%）。今年比去年增产多少吨？',
+    gain, '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨');
+}
+
+/* ---------- P25-09 k005 生活与百分数：促销/普及率等综合生活情境 ---------- */
+function makeLife(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var scenario;
+  if (i % 2 === 0) {
+    // 普及率/合格率：总量 × 百分率
+    var total = Rng.pick(rng, [300, 500, 800, 1000, 2000]);
+    var pct = Rng.pick(rng, [80, 85, 90, 95, 96]);
+    var part = Math.round(total * pct) / 100;
+    var things = Rng.pick(rng, [
+      ['小区居民', '参与垃圾分类的家庭'],
+      ['学校学生', '每天坚持阅读的学生'],
+      ['全村农户', '参加了新农合的农户']
+    ]);
+    scenario = {
+      total: total, pct: pct, ans: part,
+      story: things[0] + '共 ' + total + ' 户（人），其中 ' + pct + '% 是' + things[1] + '。' + things[1] + '有多少户（人）？',
+      expr: total + ' × ' + pct + '%'
+    };
+  } else {
+    // 会员促销：原价 × 会员折扣率
+    var price = Rng.pick(rng, [150, 200, 300, 400, 500, 600]);
+    var rate2 = Rng.pick(rng, [80, 85, 88, 90, 95]);
+    var cur = Math.round(price * rate2) / 100;
+    var goods2 = Rng.pick(rng, ['一套科普书', '一个书包', '一双运动鞋', '一件外套']);
+    scenario = {
+      total: price, pct: rate2, ans: cur,
+      story: '书店（商场）店庆，' + goods2 + '原价 ' + price + ' 元，会员可按原价的 ' + rate2 + '% 购买。会员买' + goods2 + '要花多少元？',
+      expr: price + ' × ' + rate2 + '%'
+    };
+  }
+  if (qt(plan) === 'calc') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct }),
+      '列式计算：' + scenario.story + '列式：' + scenario.expr + ' = ？',
+      scenario.ans, scenario.expr + ' = ' + scenario.ans);
+  }
+  if (qt(plan) === 'fill') {
+    return finish(buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct }),
+      scenario.story + '（列式：' + scenario.expr + ' = ____）',
+      scenario.ans, scenario.expr + ' = ' + scenario.ans);
+  }
+  return finish(buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct }),
+    scenario.story,
+    scenario.ans, scenario.expr + ' = ' + scenario.ans);
+}
+
 // 子类型按 GenerationParameters.subTopic 分派（键与 semantic-parameters 规则一一对应）。
 // 完整 KP→生成器绑定的唯一真值源是 generator-registry.js 的 knowledgePoints。
 var SUBTOPIC_MAKERS = {
@@ -249,7 +354,10 @@ var SUBTOPIC_MAKERS = {
   'percent-discount': makeDiscount,
   'percent-interest': makeInterest,
   'percent-target-rate': makeRateLine,
-  'percent-change': makePercentChange
+  'percent-change': makePercentChange,
+  'percent-tax': makeTax,
+  'percent-chengshu': makeChengshu,
+  'percent-life': makeLife
 };
 
 /** 取本 plan 的语义参数：优先 selector 注入；缺省时即时派生（直连调用方/单测兜底，同一 SSOT） */

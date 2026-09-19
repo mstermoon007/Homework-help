@@ -165,13 +165,14 @@ test('maker 覆盖 4 KP 全部 ALLOW 行（防 verify:allow-gen 1570 破门）',
 /* ---------------- 4. 端到端：4 KP × 规则行全量 PASS ---------------- */
 
 test('端到端：规则行（4 KP × calc/fill）运行时生成 → 概念类证据 PASS', async () => {
-  // P25-08：KP_ANGLE/KP_AREA 由 shape-recognition 承载（几何类），仅 TIMES/FRACTION 仍由 concept-meaning 承载。
-  // 几何类生成器不发 semanticEvidence，证据状态为 warn/skip；概念类须为 pass。
+  // P25-09：KP_ANGLE/KP_AREA 从 shape-recognition 解绑、回归 concept-meaning 唯一承载
+  // （角的认识→angle-concept / 面积的认识→area-concept maker 已补齐并发 semanticEvidence）。
+  // 4 个 A 类代表 KP 全部由 concept-meaning 承载，规则行证据状态一律 pass。
   const rows = [
     [KP_TIMES, 2, 'calc', 'generator:concept-meaning'], [KP_TIMES, 2, 'fill', 'generator:concept-meaning'],
     [KP_FRACTION, 5, 'calc', 'generator:concept-meaning'], [KP_FRACTION, 5, 'fill', 'generator:concept-meaning'],
-    [KP_ANGLE, 3, 'fill', 'generator:shape-recognition'],
-    [KP_AREA, 3, 'fill', 'generator:shape-recognition']
+    [KP_ANGLE, 3, 'fill', 'generator:concept-meaning'],
+    [KP_AREA, 3, 'fill', 'generator:concept-meaning']
   ];
   for (const [kp, grade, qt, expectedGen] of rows) {
     const session = new PracticeSession({ subject: 'math', grade, count: 1, knowledgePointId: kp, questionType: qt });

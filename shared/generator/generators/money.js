@@ -71,11 +71,13 @@ var CAPACITY_UNITS = [
 ];
 
 // P25-08：由 KP 名称机械派生度量种类（替代 kp={} 恒 rmb 的语义偏移）
+// P25-09：补「称重/秤」（g3-up-u04-k004 称重实践）；名称无信号时允许用 concept 文本二次派生
+//（g3-up-u04-k003 单位适用场景，concept 明确列举克/千克/吨的适用物品）。
 var NAME_TO_MEASURE = [
   { re: /人民币|元.*角|角.*分|购物|钱/, kind: 'rmb' },
   { re: /面积/, kind: 'area' },
   { re: /容积|升|毫升/, kind: 'capacity' },
-  { re: /质量|千克|克|吨/, kind: 'mass' },
+  { re: /质量|千克|克|吨|称重|秤/, kind: 'mass' },
   { re: /时间|时.*分|分.*秒|小时/, kind: 'time' },
   { re: /厘米|米|长度|线段|进率/, kind: 'length' }
 ];
@@ -88,9 +90,12 @@ function deriveMeasureKind(name) {
   return null;
 }
 
-function getMoneyMeta(kp, name) {
-  // P25-08：优先由 plan.semanticParams.name 派生度量种类；回退到 legacyType/category；最终 rmb。
+function getMoneyMeta(kp, name, concept) {
+  // P25-08：优先由 plan.semanticParams.name 派生度量种类；
+  // P25-09：名称无信号时用 concept 文本兜底（仅 money 已绑定的度量 KP，误派面可控）；
+  // 再回退 legacyType/category；最终 rmb。
   var kind = deriveMeasureKind(name)
+    || deriveMeasureKind(concept)
     || (kp && ((kp.source && kp.source.legacyType) || (kp.legacy && kp.legacy.legacyType)))
     || (kp && kp.legacy && kp.legacy.category)
     || 'rmb';
@@ -453,8 +458,10 @@ function createMoneyGenerator(spec) {
       var questions = [];
       var kp = {};
       // P25-08：从 plan.semanticParams.name 派生度量种类（rmb/length/area/mass/time/capacity）
+      // P25-09：name 无信号时用 concept 文本兜底（如「单位适用场景」）
       var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
-      var meta = getMoneyMeta(kp, kpName);
+      var kpConcept = (plan.semanticParams && plan.semanticParams.concept) || '';
+      var meta = getMoneyMeta(kp, kpName, kpConcept);
 
       for (var i = 0; i < count; i++) {
         var q;

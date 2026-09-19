@@ -459,6 +459,207 @@ function makePropGeometry(plan, context, i) {
 }
 
 /* ================================================================
+ * ⑤ scale-map（g6）：比例尺 = 图上距离∶实际距离（1∶n 求实际/图上距离）
+ * ================================================================ */
+
+var MAP_SCALES = [
+  { label: '1:5000', factor: 5000 },
+  { label: '1:10000', factor: 10000 },
+  { label: '1:20000', factor: 20000 },
+  { label: '1:50000', factor: 50000 }
+];
+
+function mapPick(rng) {
+  var s = Rng.pick(rng, MAP_SCALES);
+  var mapCm = Rng.randInt(rng, 2, 9);
+  var realCm = mapCm * s.factor;
+  return { label: s.label, factor: s.factor, mapCm: mapCm, realCm: realCm, realM: realCm / 100 };
+}
+
+function makeMapCalc(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var m = mapPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
+  });
+  if (i % 2 === 0) {
+    return finish(q, '列式计算：一幅地图的比例尺是 ' + m.label + '，量得两地间的图上距离是 ' + m.mapCm
+      + ' 厘米。列式求实际距离：' + m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + '（厘米）= ？（米）',
+      m.realM, [String(m.realM)],
+      '实际距离 = 图上距离 × 比例尺后项：' + m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
+  }
+  return finish(q, '列式计算：一幅地图的比例尺是 ' + m.label + '，两地实际相距 ' + m.realM
+    + ' 米（' + m.realCm + ' 厘米）。列式求图上距离：' + m.realCm + ' ÷ ' + m.factor + ' = ？（厘米）',
+    m.mapCm, [String(m.mapCm)],
+    '图上距离 = 实际距离 ÷ 比例尺后项：' + m.realCm + ' ÷ ' + m.factor + ' = ' + m.mapCm + ' 厘米');
+}
+
+function makeMapFill(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var m = mapPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
+  });
+  if (i % 2 === 0) {
+    return finish(q, '在比例尺是 ' + m.label + ' 的地图上，量得两地间的图上距离是 ' + m.mapCm
+      + ' 厘米，两地的实际距离是（  ）米。', m.realM, [String(m.realM)],
+      m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
+  }
+  return finish(q, '在比例尺是 ' + m.label + ' 的地图上，实际距离 ' + m.realM + ' 米（' + m.realCm
+    + ' 厘米）的两地，图上距离是（  ）厘米。', m.mapCm, [String(m.mapCm)],
+    m.realCm + ' ÷ ' + m.factor + ' = ' + m.mapCm + ' 厘米');
+}
+
+function makeMapApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var m = mapPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
+  });
+  var places = Rng.pick(rng, [['学校', '少年宫'], ['公园', '图书馆'], ['小明家', '汽车站']]);
+  return finish(q, '小明要从' + places[0] + '走到' + places[1] + '，他在比例尺为 ' + m.label
+    + ' 的地图上量得两地相距 ' + m.mapCm + ' 厘米。照这样计算，' + places[0] + '到' + places[1]
+    + '实际要走多少米？', m.realM, [String(m.realM)],
+    '实际距离 ' + m.mapCm + ' × ' + m.factor + ' = ' + m.realCm + ' 厘米 = ' + m.realM + ' 米');
+}
+
+function makeMapChoice(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var m = mapPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-map', scaleLabel: m.label, mapDistanceCm: m.mapCm, realDistanceM: m.realM
+  });
+  q.prompt = '一幅地图的比例尺是 ' + m.label + '，图上距离 ' + m.mapCm + ' 厘米表示的实际距离是多少米？（  ）';
+  var wrongs = [m.realM + m.factor / 100, m.realM + 100, m.mapCm * m.factor];
+  return finishChoice(q, rng, String(m.realM), wrongs.map(String));
+}
+
+/* ================================================================
+ * ⑥ ratio-basics（g6）：比例的意义 / 比例的基本性质（内项积=外项积、解比例）
+ * ================================================================ */
+
+function ratioName(plan) {
+  var p = plan && plan.semanticParams;
+  return p && p.name ? p.name : '';
+}
+
+/** 可组成比例的两个比 a∶b = c∶d（a×d = b×c，数值控制在一位数） */
+function equalRatiosPick(rng) {
+  var pairs = [[1, 2], [1, 3], [2, 3], [3, 4], [2, 5]];
+  var base = Rng.pick(rng, pairs);
+  var r = Rng.randInt(rng, 2, 4);
+  var s;
+  do { s = Rng.randInt(rng, 2, 4); } while (s === r);
+  return { a: base[0] * r, b: base[1] * r, c: base[0] * s, d: base[1] * s };
+}
+
+/** 解比例 x∶b = c∶d，保证 b×c 能被 d 整除，x 为一位数 */
+function solveRatioPick(rng) {
+  for (var t = 0; t < 40; t++) {
+    var x = Rng.randInt(rng, 2, 6);
+    var d = Rng.randInt(rng, 2, 9);
+    var c = Rng.randInt(rng, 2, 6);
+    if ((x * d) % c === 0) {
+      var b = x * d / c;
+      if (b >= 2 && b <= 9) return { x: x, b: b, c: c, d: d };
+    }
+  }
+  return { x: 4, b: 6, c: 2, d: 3 };
+}
+
+function makeRatioCalc(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var name = ratioName(plan);
+  if (name.indexOf('基本性质') !== -1) {
+    if (i % 2 === 0) {
+      var s = solveRatioPick(rng);
+      var q0 = buildBase(plan, context, i, {
+        subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x
+      });
+      return finish(q0, '列式计算：解比例 x∶' + s.b + ' = ' + s.c + '∶' + s.d + '。根据比例的基本性质，'
+        + 'x × ' + s.d + ' = ' + s.b + ' × ' + s.c + ' = ' + (s.b * s.c) + '，x = ' + (s.b * s.c) + ' ÷ ' + s.d + ' = ？',
+        s.x, [String(s.x)],
+        '内项积 = 外项积：x = ' + s.b + ' × ' + s.c + ' ÷ ' + s.d + ' = ' + s.x);
+    }
+    var e = equalRatiosPick(rng);
+    var q1 = buildBase(plan, context, i, {
+      subTopic: 'ratio-basics', aspect: 'property'
+    });
+    return finish(q1, '列式计算：在比例 ' + e.a + '∶' + e.b + ' = ' + e.c + '∶' + e.d
+      + ' 中，两个外项的积是多少？列式：' + e.a + ' × ' + e.d + ' = ？',
+      e.a * e.d, [String(e.a * e.d)],
+      '外项积 = 内项积：' + e.a + ' × ' + e.d + ' = ' + e.b + ' × ' + e.c + ' = ' + (e.a * e.d));
+  }
+  // 比例的意义：比值相等的两个比可以组成比例
+  var p = equalRatiosPick(rng);
+  var q2 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
+  return finish(q2, '列式计算：判断 ' + p.a + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d
+    + ' 能否组成比例。检验：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d) + '，' + p.b + ' × ' + p.c + ' = '
+    + (p.b * p.c) + '，积相等，填「能」或「不能」。',
+    '能', ['能'],
+    '比值相等（' + p.a + '/' + p.b + ' = ' + p.c + '/' + p.d + '），可以组成比例');
+}
+
+function makeRatioFill(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var name = ratioName(plan);
+  var s = solveRatioPick(rng);
+  if (name.indexOf('基本性质') !== -1 && i % 2 === 1) {
+    var e = equalRatiosPick(rng);
+    var q0 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'property' });
+    return finish(q0, '在比例 ' + e.a + '∶' + e.b + ' = ' + e.c + '∶' + e.d + ' 中（' + e.a + ' × ' + e.d
+      + ' = ' + (e.a * e.d) + '），两个内项的积是（  ）。', e.b * e.c, [String(e.b * e.c)],
+      '内项积 = 外项积 = ' + (e.a * e.d));
+  }
+  var q1 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x });
+  return finish(q1, '根据比例的基本性质填空：x∶' + s.b + ' = ' + s.c + '∶' + s.d + '，'
+    + 'x × ' + s.d + ' = ' + s.b + ' × ' + s.c + ' = ' + (s.b * s.c) + '，x =（  ）。',
+    s.x, [String(s.x)], 'x = ' + s.b + ' × ' + s.c + ' ÷ ' + s.d + ' = ' + s.x);
+}
+
+function makeRatioApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  // 按比例配制：蜂蜜水中蜂蜜与水的比固定，或国旗长宽比 3∶2
+  var scenarios = [
+    { a: 3, b: 2, c: 9, label: '国旗长与宽的比是 3∶2，一面国旗长 9 分米', ask: '宽应该是多少分米', unit: '分米' },
+    { a: 1, b: 4, c: 6, label: '调蜂蜜水时蜂蜜与水的比是 1∶4，放了 6 份蜂蜜', ask: '需要加同样份数的水多少份', unit: '份' },
+    { a: 2, b: 3, c: 8, label: '配制盐水时盐与水的比是 2∶3，用了 8 克盐', ask: '需要加水多少克', unit: '克' }
+  ];
+  var c0 = Rng.pick(rng, scenarios);
+  var x = c0.b * c0.c / c0.a;
+  var q = buildBase(plan, context, i, {
+    subTopic: 'ratio-basics', aspect: 'apply-solve', ratioA: c0.a, ratioB: c0.b, given: c0.c
+  });
+  return finish(q, c0.label + '（' + c0.a + '∶' + c0.b + ' = ' + c0.c + '∶x）。按照这个比，' + c0.ask + '？'
+    + '列式 ' + c0.a + ' × x = ' + c0.b + ' × ' + c0.c + ' = ' + (c0.b * c0.c) + '，x = ？',
+    x, [String(x)],
+    '解比例：x = ' + c0.b + ' × ' + c0.c + ' ÷ ' + c0.a + ' = ' + x + c0.unit);
+}
+
+function makeRatioChoice(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var name = ratioName(plan);
+  if (name.indexOf('基本性质') !== -1) {
+    var s = solveRatioPick(rng);
+    var q0 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'solve', unknown: s.x });
+    q0.prompt = '根据比例的基本性质解比例 x∶' + s.b + ' = ' + s.c + '∶' + s.d
+      + '（x × ' + s.d + ' = ' + s.b + ' × ' + s.c + '），x = ？（  ）';
+    return finishChoice(q0, rng, String(s.x), [String(s.x + 1), String(Math.max(1, s.x - 1)), String(s.c)]);
+  }
+  var p = equalRatiosPick(rng);
+  var q1 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
+  q1.prompt = '下面哪组中的两个比可以组成比例？（提示：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d)
+    + '，' + p.b + ' × ' + p.c + ' = ' + (p.b * p.c) + '）（  ）';
+  var correct = p.a + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d;
+  var wrongs = [
+    p.a + '∶' + p.b + ' 和 ' + (p.c + 1) + '∶' + p.d,
+    p.a + '∶' + (p.b + 1) + ' 和 ' + p.c + '∶' + p.d,
+    (p.a + 1) + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d
+  ];
+  return finishChoice(q1, rng, correct, wrongs);
+}
+
+/* ================================================================
  * subTopic × 题型 分派（键 = SemanticParameters.subTopic；覆盖 4 KP 全部 ALLOW 行）
  * ================================================================ */
 
@@ -478,6 +679,13 @@ var SUBTOPIC_MAKERS = {
   'proportion-application': {
     calc: makePropCalc, fill: makePropFill, apply: makePropApply,
     choice: makePropChoice, geometry: makePropGeometry
+  },
+  // P25-09
+  'scale-map': {
+    calc: makeMapCalc, fill: makeMapFill, apply: makeMapApply, choice: makeMapChoice
+  },
+  'ratio-basics': {
+    calc: makeRatioCalc, fill: makeRatioFill, apply: makeRatioApply, choice: makeRatioChoice
   }
 };
 

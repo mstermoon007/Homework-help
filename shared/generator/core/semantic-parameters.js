@@ -145,6 +145,10 @@
 
   // 顺序敏感：具体规则在前，族内兜底规则在后
   var SUBTOPIC_RULES = [
+    // number-theory 必须全局最先：①先于 number-concept（倍数特征/奇偶/质合也含「数」字）；
+    // ②先于 times-concept 的裸「倍」——「2、5、3的倍数的特征」「因数与倍数的特征」在 bundle
+    // 降级全扫时会被 /倍/ 抢先命中 times-concept，与 Node 族收窄路径（number-theory）不一致。
+    nameConceptRule('number-theory', ['number-sense'], /倍数的特征|奇数|偶数|质数|合数|奇偶性/),
     // —— 概念理解族（concept-meaning 生成器消费）——
     nameConceptRule('times-concept', ['multiple-ratio'], /倍/),
     nameConceptRule('angle-concept', ['geometric-figure'], /角(的认识|各部分)/, /两条射线/),
@@ -163,11 +167,34 @@
       null, /正比例|反比例/),
     // —— 百分数族（percent-calc 生成器消费）——
     nameConceptRule('percent-conversion', ['percent'], /互化/, /化百分数|百分数化/),
+    // percent-life 必须先于 percent-discount：「生活与百分数」concept 文本会提及打折，
+    // 名称精确规则前置才能避免被折扣规则经 concept 字段截胡
+    nameConceptRule('percent-life', ['percent'], /生活与百分数/),
     nameConceptRule('percent-discount', ['percent'], /折扣|打折/, /折扣|打几?折/),
     nameConceptRule('percent-interest', ['percent'], /利率|利息|本金/, /利息\s*=|本金/),
+    nameConceptRule('percent-tax', ['percent'], /税率/, /应纳税额|税率/),
+    nameConceptRule('percent-chengshu', ['percent'], /成数/, /几成|成数/),
     nameConceptRule('percent-target-rate', ['percent'], /达标/),
     nameConceptRule('percent-change', ['percent'], /增产|减产|增减/, /多（?少）?百分之几|百分之几的数是多少/),
-    nameConceptRule('percent-of', ['percent'], /百分数的意义/, /百分之几/)
+    nameConceptRule('percent-of', ['percent'], /百分数的意义/, /百分之几/),
+    // —— P25-09 数概念/代数族（concept-meaning / c2-number-theory 消费）——
+    // （number-theory 规则已上移至规则表首位，理由见上）
+    nameConceptRule('algebra-letter', ['number-sense'], /字母|含有字母的式子/),
+    nameConceptRule('negative-number', ['number-sense'], /正负数|负数|数轴/),
+    nameConceptRule('number-concept', ['number-sense'],
+      /组成|读数|写数|读写|认识|数位|顺序|计数单位|亿|近似数|改写|百数表|大小比较|比较|相邻|算盘/),
+    // —— P25-09 乘除关系族（concept-meaning 消费）——
+    // 名称正则必须自带运算语境：裸「意义/关系」会在 bundle 降级全扫路径跨族误匹配
+    // （如「比例的意义」被本规则截胡，ratio-basics 无法命中 → 双环境不一致）。
+    // 真正承载的 7 KP：余数和除数的关系/乘除法互逆关系/加减法各部分名称与关系/
+    // 加减法的意义和各部分间的关系/乘除法的意义和各部分间的关系/平均数的意义/商与被除数的大小关系。
+    nameConceptRule('multdiv-relation', ['multiplicative-relation'],
+      /互逆|各部分|余数|被除数|平均数的意义/),
+    // —— P25-09 比例基础（semantic-relations 消费）——
+    nameConceptRule('scale-map', ['ratio-proportion'], /比例尺/),
+    // 解比例须在比例基础族内（proportion-application 的 concept 兜底可能提及正比例，
+    // 但名称规则为 null，名称含「解比例」时由本规则经名称精确命中）
+    nameConceptRule('ratio-basics', ['ratio-proportion'], /比例的意义|比例的基本性质|正比例|解比例/)
   ];
 
   function deriveSubTopic(facts, primaryFamily) {

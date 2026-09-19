@@ -44,7 +44,15 @@ function selectGenerator(plan, options) {
   // 保证下游 capability/qt 匹配始终基于规范 7 类，且兼容历史 KB 的原始题型 token。
   if (plan && plan.questionTypeId && QuestionTypeRegistry && QuestionTypeRegistry.normalizeQuestionType) {
     var _n = QuestionTypeRegistry.normalizeQuestionType(plan.questionTypeId, { allowHeuristic: false });
-    if (_n && _n.id) plan = Object.assign({}, plan, { questionTypeId: _n.id });
+    if (_n && _n.id) {
+      plan = Object.assign({}, plan, { questionTypeId: _n.id });
+    } else {
+      // P25-09 fail-closed：题型存在但无法归一到规范 7 类时，不得靠 kp=1 绑定直通
+      // （375 KP 全量 native 覆盖后，任意未知 token 都能在 kp 维度得分，会把无效题型
+      // 路由给本体生成器）。显式 unsupported 由上游修正请求，禁止 fallback。
+      return { generatorId: null, source: 'unsupported', errorCode: 'GENERATOR_UNSUPPORTED',
+        record: null, mode: mode };
+    }
   }
   var all = GenRegistry.all();
   var candidates = [];
