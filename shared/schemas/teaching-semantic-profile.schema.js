@@ -25,7 +25,8 @@
   var STATUS = {
     KBL_DERIVED: 'kbl-derived',     // 由 KBL 现有字段投影得到（事实）
     NEEDS_REVIEW: 'needs-review',   // 人工治理未完成：值必须为 null/[]，禁止猜测（P25-02/03/09/10 填充）
-    CONFIRMED: 'confirmed'          // 人工已确认（P25-02 之后才会出现）
+    AI_VERIFIED: 'ai-verified',      // AI 受限推导核准（P25-03 起授权流程）：必须携带内容 + evidence 溯源，待人工抽查
+    CONFIRMED: 'confirmed'          // 人工已确认（抽查通过 / 人工评审写回）
   };
 
   // ====== 核心字段（指令建议最小字段）与类型规格 ======
@@ -73,7 +74,7 @@
    *   E04 字段类型不符
    *   E05 NEEDS_REVIEW 字段值非空（伪造嫌疑，红线 #8/#9）
    *   E06 sourceStatus 引用未知字段 / 状态值非法 / 覆盖不全
-   *   E07 CONFIRMED 字段值为空（确认必须带来内容）
+   *   E07 CONFIRMED/AI_VERIFIED 字段值为空（确认/核准必须带来内容）
    */
   function validateProfile(p) {
     var errors = [], warnings = [];
@@ -104,7 +105,7 @@
     // E06 sourceStatus 完整性与合法性
     Object.keys(st).forEach(function (k) {
       if (!isKnownField(k)) errors.push({ code: 'E06', field: k, message: 'sourceStatus 引用未知字段' });
-      else if (STATUS.KBL_DERIVED !== st[k] && STATUS.NEEDS_REVIEW !== st[k] && STATUS.CONFIRMED !== st[k]) {
+      else if (STATUS.KBL_DERIVED !== st[k] && STATUS.NEEDS_REVIEW !== st[k] && STATUS.AI_VERIFIED !== st[k] && STATUS.CONFIRMED !== st[k]) {
         errors.push({ code: 'E06', field: k, message: '非法状态值 ' + JSON.stringify(st[k]) });
       }
     });
@@ -120,9 +121,9 @@
         !(typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0);
       if (nonEmpty) errors.push({ code: 'E05', field: k, message: 'NEEDS_REVIEW 字段不得携带内容（未经人工确认的数据不得伪造为事实）' });
     });
-    // E07 CONFIRMED 必须非空
+    // E07 CONFIRMED / AI_VERIFIED 必须非空（确认与核准都必须带来内容）
     Object.keys(st).forEach(function (k) {
-      if (st[k] !== STATUS.CONFIRMED) return;
+      if (st[k] !== STATUS.CONFIRMED && st[k] !== STATUS.AI_VERIFIED) return;
       var v = p[k];
       var empty = v === null || v === undefined || (Array.isArray(v) && v.length === 0) ||
         (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0);

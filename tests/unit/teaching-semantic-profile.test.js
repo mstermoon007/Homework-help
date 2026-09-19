@@ -84,6 +84,23 @@ test.describe('TeachingSemanticProfile Schema（P25-01）', () => {
     });
     assert.ok(r.errors.some(e => e.code === 'E07' && e.field === 'learningTargets'));
   });
+
+  test('ai-verified 状态：带内容合法，空值触发 E07（P25-03 授权流程）', () => {
+    const withContent = Schema.validateProfile({
+      knowledgePointId: 'math-g2-up-u01-k001',
+      learningTargets: ['能说出分类的标准并按标准整理'],
+      sourceStatus: { learningTargets: 'ai-verified' },
+      meta: {}
+    });
+    assert.ok(!withContent.errors.some(e => e.field === 'learningTargets'), JSON.stringify(withContent.errors));
+    const empty = Schema.validateProfile({
+      knowledgePointId: 'math-g2-up-u01-k001',
+      learningTargets: null,
+      sourceStatus: { learningTargets: 'ai-verified' },
+      meta: {}
+    });
+    assert.ok(empty.errors.some(e => e.code === 'E07' && e.field === 'learningTargets'));
+  });
 });
 
 test.describe('Read Model：KBL → TeachingSemanticProfile 投影', () => {
