@@ -231,46 +231,8 @@ function makeQuestion(plan, context, i, kp) {
   };
 }
 
-var C9_KPS = [
-  // —— G4 C9 综合（math-competition-g4-c9，3 个；mock 为 open 题型）——
-  'math-g4-c9-c9-integrated',
-  'math-g4-c9-c9-misc',
-  'math-g4-c9-c9-mock',
-  // —— G5 C9 综合（math-competition-g5-c9，15 个）——
-  'math-g5-c9-sum-diff-problem',
-  'math-g5-c9-age-problem',
-  'math-g5-c9-profit-loss-problem',
-  'math-g5-c9-chicken-rabbit',
-  'math-g5-c9-average-problem',
-  'math-g5-c9-planting-problem',
-  'math-g5-c9-phalanx-problem',
-  'math-g5-c9-periodic-problem',
-  'math-g5-c9-grass-problem',
-  'math-g5-c9-fraction-percent-application',
-  'math-g5-c9-economics-problem',
-  'math-g5-c9-inclusion-exclusion',
-  'math-g5-c9-equation-linear-1',
-  'math-g5-c9-equation-linear-2',
-  'math-g5-c9-diophantine-equation',
-  // —— G6 C9 综合（math-competition-g6-c9，16 个）——
-  'math-g6-c9-sum-diff-problem',
-  'math-g6-c9-age-problem',
-  'math-g6-c9-profit-loss-problem',
-  'math-g6-c9-chicken-rabbit',
-  'math-g6-c9-average-problem',
-  'math-g6-c9-planting-problem',
-  'math-g6-c9-phalanx-problem',
-  'math-g6-c9-periodic-problem',
-  'math-g6-c9-grass-problem',
-  'math-g6-c9-fraction-percent-application',
-  'math-g6-c9-economics-problem',
-  'math-g6-c9-equation-linear-1',
-  'math-g6-c9-equation-linear-2',
-  'math-g6-c9-inclusion-exclusion',
-  'math-g6-c9-ratio-application',
-  'math-g6-c9-mixture-problem'
-];
-
+// P25-06 H2：原 C9_KPS（math-gN-c9-* 竞赛制 legacy ID）已随竞赛 KP 全部剔除，
+// 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS（[] 泛匹配）。
 function createC9Generator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:c9-comprehensive';
@@ -280,7 +242,7 @@ function createC9Generator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc', 'open'],
     questionTypes: ['apply', 'calc', 'open'],
-    knowledgePoints: spec.knowledgePoints || C9_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -302,16 +264,10 @@ function createC9Generator(spec) {
 }
 
 function buildAll() {
-  return [
-    createC9Generator({
-      id: 'generator:c9-comprehensive',
-      knowledgePoints: C9_KPS
-    })
-  ];
+  return [createC9Generator()];
 }
 
 module.exports = {
-  C9_KPS: C9_KPS,
   createC9Generator: createC9Generator,
   buildAll: buildAll
 };

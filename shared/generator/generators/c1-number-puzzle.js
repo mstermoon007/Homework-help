@@ -97,24 +97,9 @@ function makePuzzleQuestion(plan, context, i, kp) {
   };
 }
 
-var C1_KPS = [
-  // G4
-  'math-g4-c1-c1-vertical',
-  'math-g4-c1-c1-horizontal',
-  'math-g4-c1-c1-symbol',
-  // G5
-  'math-g5-c1-digit-puzzle-vertical',
-  'math-g5-c1-digit-puzzle-horizontal',
-  'math-g5-c1-digit-puzzle-symbol',
-  // G6
-  'math-g6-c1-vertical-multidigit',
-  'math-g6-c1-vertical-carry-complex',
-  'math-g6-c1-horizontal-puzzle',
-  'math-g6-c1-symbol-number',
-  'math-g6-c1-digit-reasoning',
-  'math-g6-c1-number-puzzle-competition'
-];
-
+// P25-06 H2：原 C1_KPS（math-gN-c1-* 竞赛制 legacy ID）已全部随竞赛 KP 剔除，
+// 对 canonical 375 永不命中，属纯死数据；KP→生成器绑定 SSOT 在 generator-registry.js
+// CORE_RECORDS（本生成器记录 knowledgePoints: []，仅按 capability 泛匹配）。
 function createC1Generator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:c1-number-puzzle';
@@ -124,7 +109,7 @@ function createC1Generator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || C1_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -146,16 +131,10 @@ function createC1Generator(spec) {
 }
 
 function buildAll() {
-  return [
-    createC1Generator({
-      id: 'generator:c1-number-puzzle',
-      knowledgePoints: C1_KPS
-    })
-  ];
+  return [createC1Generator()];
 }
 
 module.exports = {
-  C1_KPS: C1_KPS,
   createC1Generator: createC1Generator,
   buildAll: buildAll
 };

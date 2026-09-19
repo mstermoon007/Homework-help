@@ -217,35 +217,19 @@ function createComplexGenerator(spec) {
   return generator;
 }
 
-var COMPLEX_KPS = [
-  'math-g1-m1-mixed-chain',
-  'math-g2-m1-mixed-addsub',
-  'math-g2-m1-mixed-multdiv',
-  'math-g2-m3-chain-addsub',
-  'math-g2-m3-multdiv-mixed',
-  'math-g2-m3-mixed-no-bracket',
-  'math-g2-m3-mixed-bracket',
-  'math-g1-m4-num-fill-unknown',
-  'math-g2-m3-fill-operator',
-  // g2-m2 竖式连算族（列竖式连加/连减/加减混合，结构与 chain 脱式同构，竖式在表现层呈现）
-  'math-g2-m2-chain-add-col',
-  'math-g2-m2-chain-sub-col',
-  'math-g2-m2-mixed-col'
-];
-
+// P25-06 H2：原 COMPLEX_KPS（math-gN-mN-* 模块制 legacy ID）已随旧体系 KP 全部剔除，
+// 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function buildAll() {
   return [
     createComplexGenerator({
       id: 'generator:complex-calc',
       capabilities: ['calc', 'fill'],
-      questionTypes: ['calc', 'fill'],
-      knowledgePoints: COMPLEX_KPS
+      questionTypes: ['calc', 'fill']
     })
   ];
 }
 
 module.exports = {
-  COMPLEX_KPS: COMPLEX_KPS,
   createComplexGenerator: createComplexGenerator,
   buildAll: buildAll
 };

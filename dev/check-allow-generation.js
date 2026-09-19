@@ -7,9 +7,10 @@
 //
 // 背景：KBL capability ALLOW 只声明「应该支持」，本门禁证明「实际可生成」
 // （Capability Declaration = Executable Capability）。
-// 2026-09-19 P25-06 起基线 1566/1566：canonical 仍 1570 ALLOW，其中 4 个图形表征 KP × calc
-// 经教学裁决覆盖层（kbl/teaching/teaching-denials.json，execution-gap）在 capability-resolver
-// 被判 FORBID，本脚本按 buildEligibility 的 ALLOW 动态枚举，自动不计入这 4 对。
+// 2026-09-19 P25-06 本体起恢复基线 1570/1570：原被教学裁决覆盖层（teaching-denials.json，
+// execution-gap）判 FORBID 的 4 个图形表征 KP × calc，已由 generator:semantic-relations
+// 参数化族生成器补齐，4 条 deny 全部撤销（账本置 status=revoked 留痕，resolver ACTIVE 为空）。
+// 本脚本按 buildEligibility 的 ALLOW 动态枚举，未来若再登记 ACTIVE deny 基线会相应回落。
 //
 // 用法：node dev/check-allow-generation.js
 

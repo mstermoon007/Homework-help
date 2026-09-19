@@ -15,8 +15,10 @@
  * 的 maker 在 sq.data.semanticEvidence 中按题声明 {relations, constructs}，使验证器第 7 检查
  * checkSemanticEvidence 达 PASS；非规则行（apply/choice/geometry/judge）不声明，验证为 skip。
  *
- * KP 分派：解析 plan.knowledgePointId 的 年级/单元/序号 组合键（同 percent.js 的防
- * kbl-uniqueness「bundle 内嵌 canonical 数据」手法，源码不裸写 canonical KP 字面量）。
+ * P25-06 分派：不再解析 KP ID 的年级/单元/序号组合键，统一消费 selector 注入的
+ * plan.semanticParams.subTopic（times-concept / fraction-meaning / angle-concept /
+ * area-concept，SemanticParameters 按语义族 + KBL name/concept 机械派生）；
+ * subTopic 缺失或该题型无 maker 时返回 []（fail-closed，不静默兜底）。
  *
  * 挂载点：
  *   - generators/index.js  require + buildAll 合并
@@ -28,6 +30,7 @@
 'use strict';
 
 var Rng = require('../core/rng.js');
+var SemanticParameters = require('../core/semantic-parameters.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -312,23 +315,22 @@ function makeAreaJudge(plan, context, i) {
 }
 
 /* ================================================================
- * KP × 题型 分派（键 = 年级-单元-序号；覆盖 4 KP 的全部 ALLOW 行）
+ * subTopic × 题型 分派（键 = SemanticParameters.subTopic；覆盖 4 KP 的全部 ALLOW 行）
  * ================================================================ */
 
-var KP_MAKERS = {
-  'g2-u03-k003': { calc: makeTimesCalc, fill: makeTimesFill, apply: makeTimesApply, choice: makeTimesChoice },
-  'g5-u04-k001': { calc: makeFractionCalc, fill: makeFractionFill, apply: makeFractionApply, choice: makeFractionChoice },
-  'g3-u07-k002': { fill: makeAngleFill, apply: makeAngleApply, choice: makeAngleChoice, geometry: makeAngleGeometry, judge: makeAngleJudge },
-  'g3-u04-k001': { fill: makeAreaFill, apply: makeAreaApply, choice: makeAreaChoice, geometry: makeAreaGeometry, judge: makeAreaJudge }
+var SUBTOPIC_MAKERS = {
+  'times-concept': { calc: makeTimesCalc, fill: makeTimesFill, apply: makeTimesApply, choice: makeTimesChoice },
+  'fraction-meaning': { calc: makeFractionCalc, fill: makeFractionFill, apply: makeFractionApply, choice: makeFractionChoice },
+  'angle-concept': { fill: makeAngleFill, apply: makeAngleApply, choice: makeAngleChoice, geometry: makeAngleGeometry, judge: makeAngleJudge },
+  'area-concept': { fill: makeAreaFill, apply: makeAreaApply, choice: makeAreaChoice, geometry: makeAreaGeometry, judge: makeAreaJudge }
 };
 
-var KP_KEY_RE = /-g([1-6])-(up|down|mixed|advance|comprehensive)-u([0-9]{2})-k([0-9]{3})/;
-
-function kpMakerKey(kpId) {
+/** 取本 plan 的语义参数：优先 selector 注入；缺省时即时派生（直连调用方/单测兜底，同一 SSOT） */
+function paramsOf(plan) {
+  if (plan && plan.semanticParams) return plan.semanticParams;
+  var kpId = pkp(plan);
   if (!kpId) return null;
-  var m = KP_KEY_RE.exec(kpId);
-  if (!m) return null;
-  return 'g' + m[1] + '-u' + m[3] + '-k' + m[4];
+  return SemanticParameters.resolve(kpId, plan && (plan.questionTypeId || plan.questionType));
 }
 
 function createConceptMeaningGenerator(spec) {
@@ -348,8 +350,10 @@ function createConceptMeaningGenerator(spec) {
 
     generate: function (plan, context) {
       var count = (plan && plan.count) || 1;
-      var row = KP_MAKERS[kpMakerKey(pkp(plan))];
+      var params = paramsOf(plan);
+      var row = params ? SUBTOPIC_MAKERS[params.subTopic] : null;
       var maker = row && row[plan.questionTypeId];
+      // fail-closed：语义参数缺失或该 subTopic×题型无 maker → 不产出，禁止猜测兜底
       if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));

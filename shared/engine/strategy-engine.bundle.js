@@ -3127,12 +3127,12 @@ var Matrix = require("shared/capability/capability-matrix.js");
 
 
 
-var TEACHING_DENIALS = {
-  'math-g1-down-u06-k002|calc': 'P25-06',
-  'math-g2-down-u02-k005|calc': 'P25-06',
-  'math-g6-down-u04-k007|calc': 'P25-06',
-  'math-g6-down-u04-k008|calc': 'P25-06'
-};
+
+
+
+
+
+var TEACHING_DENIALS = {};
 
 function isTeachingDenied(kpId, qtId) {
   return !!kpId && !!qtId &&
@@ -3504,7 +3504,7 @@ var CORE_RECORDS = [
   { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g4-down-u03-k003', 'math-g6-down-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-up-u04-k001', 'math-g1-up-u06-k001', 'math-g2-down-u06-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g4-down-u06-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u04-k001', 'math-g2-up-u04-k002', 'math-g4-down-u03-k002', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g5-up-u01-k002', 'math-g5-up-u02-k002', 'math-g6-down-u04-k005'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-down-u02-k003', 'math-g2-down-u02-k005', 'math-g2-down-u05-k001', 'math-g2-down-u05-k002', 'math-g2-down-u05-k003', 'math-g3-down-u02-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-down-u02-k003', 'math-g2-down-u05-k001', 'math-g2-down-u05-k002', 'math-g2-down-u05-k003', 'math-g3-down-u02-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['fill', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['choice', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
@@ -3591,6 +3591,16 @@ var CORE_RECORDS = [
   
   { id: 'generator:concept-meaning', subject: 'math', capabilities: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'], questionTypes: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'],
     knowledgePoints: ['math-g2-down-u03-k003', 'math-g3-up-u07-k002', 'math-g3-down-u04-k001', 'math-g5-down-u04-k001'],
+    scope: 'core', version: 1, supportsComposite: false },
+
+  
+  
+  
+  
+  
+  
+  { id: 'generator:semantic-relations', subject: 'math', capabilities: ['calc', 'fill', 'apply', 'choice', 'geometry'], questionTypes: ['calc', 'fill', 'apply', 'choice', 'geometry'],
+    knowledgePoints: ['math-g1-down-u06-k002', 'math-g2-down-u02-k005', 'math-g6-down-u04-k007', 'math-g6-down-u04-k008'],
     scope: 'core', version: 1, supportsComposite: false }
 ];
 
@@ -4319,171 +4329,13 @@ __defs["shared/generator/generator-selector.js"] = function (module, exports, re
 'use strict';
 
 var GenRegistry = require("shared/generator/generator-registry.js");
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
 var Mode = require("shared/generator/generator-mode.js");
 var QuestionPlan = require("shared/strategy/question-plan.js");
-var ArithSem = require("shared/generator/core/kp-arithmetic-semantics.js");
 var QuestionTypeRegistry = require("shared/knowledge/question-type-registry.js");
-var ComplexSem = require("shared/generator/core/kp-complex-semantics.js");
+var SemanticParameters = require("shared/generator/core/semantic-parameters.js");
 
 function trackOf(record) {
   return record.scope === 'core' ? 'native' : 'legacy';
-}
-
-function isArithmeticFamily(g) {
-  return g.id && (g.id.indexOf('generator:arithmetic-') === 0 || g.id.indexOf('generator:selection-') === 0);
-}
-
-function isComplexFamily(g) {
-  return g.id === 'generator:complex-calc';
-}
-
-function isShapeFamily(g) {
-  return g.id === 'generator:shape-recognition';
-}
-
-function isMoneyFamily(g) {
-  return g.id === 'generator:money-measurement';
-}
-
-function isCountingFamily(g) {
-  return g.id === 'generator:counting';
-}
-
-function isReasoningFamily(g) {
-  return g.id === 'generator:reasoning';
-}
-
-function isStatsFamily(g) {
-  return g.id === 'generator:stats';
-}
-
-
-
-function isClassificationFamily(g) {
-  return g.id === 'generator:classification';
-}
-
-function isPictureEquationFamily(g) {
-  return g.id === 'generator:picture-equation';
-}
-
-function isC1Family(g) {
-  return g.id === 'generator:c1-number-puzzle';
-}
-
-function isC2Family(g) {
-  return g.id === 'generator:c2-number-theory';
-}
-
-function isC5C6Family(g) {
-  return g.id === 'generator:c5-c6-journey-engineering';
-}
-
-function isC7Family(g) {
-  return g.id === 'generator:c7-clever-calc';
-}
-
-
-
-
-function hasShapeSemantics(kp) {
-  if (!kp) return false;
-  
-  if (kp.graphicType === 'geometry') return true;
-  if (kp.pluginId && (kp.pluginId.indexOf('geometry') !== -1 || kp.pluginId.indexOf('area') !== -1)) return true;
-  return false;
-}
-
-function hasMoneySemantics(kp) {
-  if (!kp) return false;
-  var p = kp.pluginId || '';
-  if (p.indexOf('money') !== -1 || p.indexOf('time') !== -1 || p.indexOf('unit') !== -1 || p.indexOf('measure') !== -1) return true;
-  if (kp.graphicType === 'clock' || kp.graphicType === 'ruler') return true;
-  return false;
-}
-
-function hasAppSemantics(kp) {
-  if (!kp) return false;
-  
-  var p = kp.pluginId || '';
-  if (p.indexOf('word-problem') !== -1 || p.indexOf('word_problem') !== -1) return true;
-  
-  return false;
-}
-
-function hasCountingSemantics(kp) {
-  if (!kp) return false;
-  var p = kp.pluginId || '';
-  if (p.indexOf('combination') !== -1 || p.indexOf('counting') !== -1) return true;
-  if (p.indexOf('c3-') !== -1) return true;
-  
-  if (p.indexOf('c3') !== -1 && p.indexOf('competition') !== -1) return true;
-  return false;
-}
-
-function hasReasoningSemantics(kp) {
-  if (!kp) return false;
-  var p = kp.pluginId || '';
-  if (p.indexOf('logic') !== -1 || p.indexOf('reason') !== -1) return true;
-  if (p.indexOf('c8') !== -1) return true;
-  return false;
-}
-
-function hasStatsSemantics(kp) {
-  if (!kp) return false;
-  if (kp.graphicType === 'chart') return true;
-  var p = kp.pluginId || '';
-  if (p.indexOf('stats') !== -1 || p.indexOf('data') !== -1) return true;
-  return false;
-}
-
-function hasPictureEquationSemantics(kp) {
-  if (!kp) return false;
-  if (kp.graphicType === 'diagram') return true;
-  var p = kp.pluginId || '';
-  if (p.indexOf('picture') !== -1) return true;
-  return false;
-}
-
-function hasC1Semantics(kp) {
-  if (!kp) return false;
-  var p = kp.pluginId || '';
-  if (p.indexOf('c1-') !== -1) return true;
-  if (p.indexOf('c1') !== -1 && p.indexOf('competition') !== -1) return true;
-  return false;
-}
-
-function hasC2Semantics(kp) {
-  if (!kp) return false;
-  var p = kp.pluginId || '';
-  if (p.indexOf('c2-') !== -1) return true;
-  if (p.indexOf('c2') !== -1 && p.indexOf('competition') !== -1) return true;
-  return false;
-}
-
-function hasC5C6Semantics(kp) {
-  if (!kp) return false;
-  var p = kp.pluginId || '';
-  
-  if ((p.indexOf('c5') !== -1 || p.indexOf('c6') !== -1) && p.indexOf('competition') !== -1) return true;
-  return false;
-}
-
-function hasC7Semantics(kp) {
-  if (!kp) return false;
-  var p = kp.pluginId || '';
-  
-  if (p.indexOf('c7') !== -1 && p.indexOf('competition') !== -1) return true;
-  return false;
-}
-
-function hasC9Semantics(kp) {
-  if (!kp) return false;
-  var p = kp.pluginId || '';
-  
-  if (p.indexOf('c9') !== -1 && p.indexOf('competition') !== -1) return true;
-  return false;
 }
 
 function selectGenerator(plan, options) {
@@ -4501,16 +4353,8 @@ function selectGenerator(plan, options) {
     var _n = QuestionTypeRegistry.normalizeQuestionType(plan.questionTypeId, { allowHeuristic: false });
     if (_n && _n.id) plan = Object.assign({}, plan, { questionTypeId: _n.id });
   }
-  var kp = KnowledgePoint.get(primaryKp);
   var all = GenRegistry.all();
   var candidates = [];
-
-  
-  
-  var arithSem = kp ? ArithSem.resolveArithmeticSemantics(kp) : null;
-  var complexSem = kp ? ComplexSem.resolveComplexSemantics(kp) : null;
-  
-  var isAlgebraDomain = !!(kp && kp.legacy && kp.legacy.category === 'algebra');
 
   
   
@@ -4598,7 +4442,8 @@ function wrapGenerator(gen, generatorId, generatorVersion) {
   if (!gen || typeof gen.generate !== 'function') return gen;
   var orig = gen.generate.bind(gen);
   gen.generate = function (plan, context) {
-    var out = orig(plan, context);
+    var paramPlan = SemanticParameters.attachToPlan(plan);
+    var out = orig(paramPlan, context);
     if (out && typeof out.then === 'function') {
       return out.then(function (sqs) { return attachMeta(sqs, generatorId, generatorVersion); });
     }
@@ -5750,6 +5595,256 @@ module.exports = {
 };
 
 };
+__defs["shared/generator/core/semantic-parameters.js"] = function (module, exports, require) {
+
+(function (global) {
+  'use strict';
+
+  var SCHEMA_VERSION = 1;
+
+  
+
+  function getGlobalKC() {
+    if (global.KnowledgeContext) return global.KnowledgeContext;
+    if (global.App && global.App.KnowledgeContext) return global.App.KnowledgeContext;
+    return null;
+  }
+
+  function defaultGetKp(kpId) {
+    
+    
+    
+    var KC = getGlobalKC();
+    if (KC && typeof KC.get === 'function') return KC.get(kpId) || null;
+    return null;
+  }
+
+  
+  function readFacts(kp) {
+    if (!kp) return null;
+    var identity = kp.identity || {};
+    var knowledge = kp.knowledge || {};
+    var semantic = kp.semantic || {};
+    var presentation = kp.presentation || {};
+    var name = typeof kp.name === 'string' ? kp.name
+      : (typeof identity.name === 'string' ? identity.name : '');
+    var concept = typeof semantic.concept === 'string' ? semantic.concept
+      : (typeof knowledge.concept === 'string' ? knowledge.concept
+        : (typeof identity.description === 'string' ? identity.description : ''));
+    var operations = Array.isArray(semantic.operations) ? semantic.operations
+      : (Array.isArray(knowledge.operations) ? knowledge.operations : []);
+    var representations = Array.isArray(semantic.representations) ? semantic.representations
+      : (Array.isArray(presentation.representations) ? presentation.representations : []);
+    var coarseFamily = typeof semantic.family === 'string' ? semantic.family : null;
+    return { name: name, concept: concept, operations: operations,
+      representations: representations, coarseFamily: coarseFamily };
+  }
+
+  
+
+  function loadTeaching(baseName) {
+    try {
+      
+      return require('../../../' + 'kbl' + '/' + 'teaching' + '/' + baseName + '.json');
+    } catch (e) {
+      return null;
+    }
+  }
+
+  var _familyTable = null;
+  var _familyLoaded = false;
+  function getFamilyEntry(kpId) {
+    if (!_familyLoaded) {
+      var doc = loadTeaching('semantic-families');
+      _familyTable = (doc && doc.kpFamilies) ? doc.kpFamilies : {};
+      _familyLoaded = true;
+    }
+    return _familyTable[kpId] || null;
+  }
+
+  var _intentIndex = null;
+  function getIntent(kpId, questionType) {
+    if (_intentIndex === null) {
+      var doc = loadTeaching('qt-intent');
+      var index = {};
+      var rows = (doc && Array.isArray(doc.rows)) ? doc.rows : [];
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        if (row && row.knowledgeId && row.questionType) {
+          index[row.knowledgeId + '|' + row.questionType] = row;
+        }
+      }
+      _intentIndex = index;
+    }
+    return _intentIndex[kpId + '|' + questionType] || null;
+  }
+
+  
+
+  function reTest(re, text) {
+    if (!text) return null;
+    var m = re.exec(text);
+    return m ? m[0] : null;
+  }
+
+  function nameConceptRule(subTopic, families, nameRe, conceptRe) {
+    return {
+      subTopic: subTopic,
+      families: families,
+      match: function (facts) {
+        var hit = nameRe ? reTest(nameRe, facts.name) : null;
+        if (hit) return { field: 'name', matched: hit };
+        if (conceptRe) {
+          hit = reTest(conceptRe, facts.concept);
+          if (hit) return { field: 'concept', matched: hit };
+        }
+        return null;
+      }
+    };
+  }
+
+  
+  var SUBTOPIC_RULES = [
+    
+    nameConceptRule('times-concept', ['multiple-ratio'], /倍/),
+    nameConceptRule('angle-concept', ['geometric-figure'], /角(的认识|各部分)/, /两条射线/),
+    nameConceptRule('area-concept', ['geometric-measurement'], /面积/),
+    
+    
+    nameConceptRule('fraction-meaning', ['fraction'], /(^|[^百])分数的意义/),
+    
+    nameConceptRule('pictorial-additive-relation', ['word-application'],
+      /图形表述数量关系/, /画图[\s\S]*加减关系|加减关系[\s\S]*画图/),
+    nameConceptRule('periodic-pattern', ['multiplicative-relation'],
+      /周期/, /有余数除法[\s\S]*(规律|排列)|(规律|排列)[\s\S]*有余数除法/),
+    nameConceptRule('scale-transform', ['ratio-proportion'],
+      /放大|缩小/, /按[一]?定的比/),
+    nameConceptRule('proportion-application', ['word-application', 'ratio-proportion'],
+      null, /正比例|反比例/),
+    
+    nameConceptRule('percent-conversion', ['percent'], /互化/, /化百分数|百分数化/),
+    nameConceptRule('percent-discount', ['percent'], /折扣|打折/, /折扣|打几?折/),
+    nameConceptRule('percent-interest', ['percent'], /利率|利息|本金/, /利息\s*=|本金/),
+    nameConceptRule('percent-target-rate', ['percent'], /达标/),
+    nameConceptRule('percent-change', ['percent'], /增产|减产|增减/, /多（?少）?百分之几|百分之几的数是多少/),
+    nameConceptRule('percent-of', ['percent'], /百分数的意义/, /百分之几/)
+  ];
+
+  function deriveSubTopic(facts, primaryFamily) {
+    var rules = SUBTOPIC_RULES;
+    if (primaryFamily) {
+      var narrowed = [];
+      for (var i = 0; i < SUBTOPIC_RULES.length; i++) {
+        if (SUBTOPIC_RULES[i].families.indexOf(primaryFamily) !== -1) {
+          narrowed.push(SUBTOPIC_RULES[i]);
+        }
+      }
+      
+      if (narrowed.length > 0) rules = narrowed;
+    }
+    for (var j = 0; j < rules.length; j++) {
+      var hit = rules[j].match(facts);
+      if (hit) {
+        return { subTopic: rules[j].subTopic,
+          evidence: { rule: rules[j].subTopic, family: primaryFamily || null,
+            field: hit.field, matched: hit.matched } };
+      }
+    }
+    return { subTopic: null, evidence: null };
+  }
+
+  
+
+  function createSemanticParameterResolver(options) {
+    var getKp = (options && typeof options.getKp === 'function') ? options.getKp : defaultGetKp;
+
+    
+    function resolve(kpId, questionType) {
+      if (!kpId) return null;
+      var kp = getKp(kpId);
+      if (!kp) return null;
+      var facts = readFacts(kp);
+
+      var familyEntry = getFamilyEntry(kpId);
+      var primaryFamily = familyEntry && familyEntry.primary ? familyEntry.primary : null;
+      var families = familyEntry && Array.isArray(familyEntry.families) ? familyEntry.families.slice() : [];
+      var familySource = primaryFamily ? 'teaching:semantic-families'
+        : (facts.coarseFamily ? 'kbl:semantic.family' : 'none');
+      if (!primaryFamily && facts.coarseFamily) primaryFamily = facts.coarseFamily;
+
+      var derived = deriveSubTopic(facts, familyEntry && familyEntry.primary ? familyEntry.primary : null);
+
+      var intentRow = questionType ? getIntent(kpId, questionType) : null;
+      var intent = null;
+      if (intentRow && intentRow.intent) {
+        intent = {
+          trainsWhat: intentRow.intent.trainsWhat || null,
+          whyThisType: intentRow.intent.whyThisType || null,
+          differentiation: intentRow.intent.differentiation || null,
+          driftRisk: intentRow.intent.driftRisk || null,
+          legitimacy: intentRow.intent.legitimacy || null
+        };
+      }
+
+      return {
+        schemaVersion: SCHEMA_VERSION,
+        knowledgePointId: kpId,
+        questionType: questionType || null,
+        name: facts.name,
+        concept: facts.concept || null,
+        semanticFamily: primaryFamily,
+        families: families,
+        subTopic: derived.subTopic,
+        subTopicEvidence: derived.evidence,
+        operations: facts.operations.slice(),
+        representations: facts.representations.slice(),
+        intent: intent,
+        sources: {
+          family: familySource,
+          subTopic: 'mechanical-rule:kbl-name-concept',
+          intent: intent ? 'teaching:qt-intent' : 'none'
+        }
+      };
+    }
+
+    
+    function attachToPlan(plan) {
+      if (!plan) return plan;
+      var next = Object.assign({}, plan);
+      var pkp = null;
+      if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length > 0) {
+        pkp = plan.knowledgePointIds[0];
+      } else if (plan.knowledgePointId) {
+        pkp = plan.knowledgePointId;
+      }
+      next.semanticParams = resolve(pkp, plan.questionTypeId || plan.questionType);
+      return next;
+    }
+
+    return { resolve: resolve, attachToPlan: attachToPlan };
+  }
+
+  var singleton = createSemanticParameterResolver({});
+
+  var api = {
+    SCHEMA_VERSION: SCHEMA_VERSION,
+    SUBTOPIC_RULES: SUBTOPIC_RULES,
+    createSemanticParameterResolver: createSemanticParameterResolver,
+    resolve: singleton.resolve,
+    attachToPlan: singleton.attachToPlan,
+    
+    deriveSubTopic: deriveSubTopic,
+    readFacts: readFacts
+  };
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = api;
+  } else {
+    global.SemanticParameters = api;
+  }
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+
+};
 __defs["shared/generator/generators/index.js"] = function (module, exports, require) {
 
 'use strict';
@@ -5780,6 +5875,7 @@ var SemanticSpecial = require("shared/generator/generators/semantic-special.js")
 var Classification = require("shared/generator/generators/classify.js");
 var Percent = require("shared/generator/generators/percent.js");
 var ConceptMeaning = require("shared/generator/generators/concept-meaning.js");
+var SemanticRelations = require("shared/generator/generators/semantic-relations.js");
 
 var ALL = [].concat(
   Arithmetic.buildAll(),
@@ -5802,7 +5898,8 @@ var ALL = [].concat(
   SemanticSpecial.buildAll(),
   Classification.buildAll(),
   Percent.buildAll(),
-  ConceptMeaning.buildAll()
+  ConceptMeaning.buildAll(),
+  SemanticRelations.buildAll()
 );
 
 var BY_ID = {};
@@ -6300,35 +6397,19 @@ function createComplexGenerator(spec) {
   return generator;
 }
 
-var COMPLEX_KPS = [
-  'math-g1-m1-mixed-chain',
-  'math-g2-m1-mixed-addsub',
-  'math-g2-m1-mixed-multdiv',
-  'math-g2-m3-chain-addsub',
-  'math-g2-m3-multdiv-mixed',
-  'math-g2-m3-mixed-no-bracket',
-  'math-g2-m3-mixed-bracket',
-  'math-g1-m4-num-fill-unknown',
-  'math-g2-m3-fill-operator',
-  
-  'math-g2-m2-chain-add-col',
-  'math-g2-m2-chain-sub-col',
-  'math-g2-m2-mixed-col'
-];
+
 
 function buildAll() {
   return [
     createComplexGenerator({
       id: 'generator:complex-calc',
       capabilities: ['calc', 'fill'],
-      questionTypes: ['calc', 'fill'],
-      knowledgePoints: COMPLEX_KPS
+      questionTypes: ['calc', 'fill']
     })
   ];
 }
 
 module.exports = {
-  COMPLEX_KPS: COMPLEX_KPS,
   createComplexGenerator: createComplexGenerator,
   buildAll: buildAll
 };
@@ -6865,124 +6946,13 @@ function createShapeGenerator(spec) {
 }
 
 
-var SHAPE_KPS = [
-  'math-g1-m6-solid-shape',
-  'math-g1-m6-flat-shape',
-  'math-g1-m6-count-graph',
-  'math-g1-m6-shape-combine',
-  'math-g1-m6-draw-shape',
-  'math-g1-m5-match-shape',
-  'math-g2-m5-match-shape',
-  'math-g2-m6-solid-shape',
-  'math-g2-m6-motion',
-  'math-g4-m5-g4-match-shape',
-  'math-g4-m6-g4-draw-sym',
-  'math-g4-m6-g4-draw-move',
-  'math-g4-c4-c4-count',
-  'math-g4-c4-c4-solid',
-  'math-g5-m4-g5-fill-solid',
-  'math-g5-m5-g5-match-areaf',
-  'math-g5-m5-g5-match-solid',
-  'math-g5-m6-g5-draw-rotate',
-  'math-g5-m6-g5-draw-sym',
-  'math-g5-m6-g5-draw-coord',
-  'math-g5-m8-g5-word-solid',
-  'math-g5-m11-g5-judge-solid',
-  'math-g5-m12-g5-choice-solid',
-  'math-g5-m12-motion',
-  'math-g5-c4-solid-geometry',
-  'math-g6-m5-g6-match-formula',
-  'math-g6-m6-g6-op-rotate-scale',
-  'math-g6-m6-g6-op-position',
-  'math-g6-m10-g6-reason-number-shape',
-  'math-g6-c4-area-basic',
-  'math-g6-c4-solid-geometry',
-  
-  'math-g2-m4-angle-basic',
-  'math-g2-m5-match-angle',
-  'math-g2-m6-angle-recognize',
-  'math-g2-m6-grid-draw',
-  'math-g2-m6-draw-line',
-  'math-g2-m6-draw-angle',
-  'math-g2-m6-clock-draw',
-  'math-g2-m6-measure',
-  'math-g3-m6-g3-perimeter',
-  'math-g3-m6-g3-area',
-  'math-g4-m4-g4-fill-line',
-  'math-g4-m4-g4-fill-angle',
-  'math-g4-m4-g4-fill-quad',
-  'math-g4-m4-g4-fill-tri',
-  'math-g4-m5-g4-match-angle',
-  'math-g4-m6-g4-draw-protractor',
-  'math-g4-m6-g4-draw-para',
-  'math-g4-m6-g4-draw-grid',
-  'math-g4-m6-g4-draw-view',
-  'math-g4-m11-g4-judge-angle',
-  'math-g4-m11-g4-judge-line',
-  'math-g4-m11-g4-judge-tri',
-  'math-g4-m12-g4-choice-angle',
-  'math-g4-m12-g4-choice-shape',
-  'math-g4-c3-c3-geomcount',
-  'math-g4-c4-c4-angle',
-  'math-g4-c4-c4-transform',
-  'math-g5-c4-circle-sector',
-  'math-g5-c4-angle-calculation',
-  'math-g6-m4-g6-fill-circle',
-  'math-g6-m6-g6-op-circle',
-  'math-g6-m6-g6-op-symmetry',
-  'math-g6-m8-g6-app-circle',
-  'math-g6-m11-g6-judge-circle',
-  'math-g6-m12-g6-choice-circle',
-  'math-g6-c3-geometry-counting',
-  'math-g6-c4-circle-sector',
-  'math-g6-c4-angle-calculation',
-  'math-g6-c4-circle-angle',
-  'math-g6-c4-solid-geometry',
-  
-  'math-g3-m6-g3-position',
-  'math-g4-c4-c4-pa',
-  'math-g6-c4-solid-rotation',
-  
-  'math-g5-m4-g5-fill-coord',
-  'math-g5-m4-g5-fill-area',
-  'math-g5-m4-g5-fill-rotate',
-  'math-g5-m6-g5-draw-observe',
-  'math-g5-m6-g5-draw-height',
-  'math-g5-m6-g5-draw-net',
-  'math-g5-m7-g5-pic-area',
-  'math-g5-m8-g5-word-area',
-  'math-g5-m11-g5-judge-area',
-  'math-g5-m11-motion',
-  'math-g5-m12-g5-choice-area',
-  'math-g5-c4-area-basic',
-  'math-g5-c4-equal-area-transform',
-  'math-g5-c4-bird-head-model',
-  'math-g5-c4-butterfly-model',
-  'math-g5-c4-swallow-tail-model',
-  'math-g5-c4-half-model',
-  'math-g5-c4-painted-cube',
-  'math-g5-c4-pythagorean-theorem',
-  'math-g5-c4-lattice-area',
-  'math-g6-m4-g6-fill-cylinder-cone',
-  'math-g6-m8-g6-app-cyl-cone',
-  'math-g6-m11-g6-judge-cyl-cone',
-  'math-g6-m12-g6-choice-cyl-cone',
-  'math-g6-c4-equal-area-transform',
-  'math-g6-c4-bird-head-model',
-  'math-g6-c4-butterfly-model',
-  'math-g6-c4-swallow-tail-model',
-  'math-g6-c4-half-model',
-  'math-g6-c4-painted-cube',
-  'math-g6-c4-pythagorean-theorem',
-  'math-g6-c4-lattice-area'
-];
+
 
 function buildAll() {
   return [
     createShapeGenerator({
       id: 'generator:shape-recognition',
-      mode: 'recognition',
-      knowledgePoints: SHAPE_KPS
+      mode: 'recognition'
     })
   ];
 }
@@ -7259,20 +7229,10 @@ function createPositionGenerator(spec) {
   };
 }
 
-var POSITION_KPS = [
-  'math-g1-m6-position',
-  'math-g3-m6-g3-position',
-  'math-g5-m6-g5-draw-coord',
-  'math-g6-m6-g6-op-position'
-];
+
 
 function buildAll() {
-  return [
-    createPositionGenerator({
-      id: 'generator:position-direction',
-      knowledgePoints: POSITION_KPS
-    })
-  ];
+  return [createPositionGenerator({ id: 'generator:position-direction' })];
 }
 
 module.exports = {
@@ -7627,29 +7587,11 @@ function rng() {
   return RNG_HELPER();
 }
 
-var MONEY_KPS = [
-  'math-g1-m4-rmb-unit',
-  'math-g1-m4-rmb-calc',
-  'math-g1-m5-match-rmb',
-  'math-g1-m8-rmb-shopping',
-  'math-g2-m4-length-unit',
-  'math-g2-m4-mass-unit',
-  'math-g2-m4-time-unit',
-  'math-g2-m4-fill-length',
-  'math-g2-m4-fill-mass',
-  'math-g2-m4-fill-time',
-  'math-g2-m8-money',
-  'math-g3-m4-g3-measure',
-  'math-g4-c4-c4-pa'
-];
+
+
 
 function buildAll() {
-  return [
-    createMoneyGenerator({
-      id: 'generator:money-measurement',
-      knowledgePoints: MONEY_KPS
-    })
-  ];
+  return [createMoneyGenerator({ id: 'generator:money-measurement' })];
 }
 
 module.exports = {
@@ -8009,26 +7951,11 @@ function createApplicationGenerator(spec) {
   };
 }
 
-var APPLICATION_KPS = [
-  'math-g1-m8-rmb-shopping',
-  'math-g2-m8-money',
-  'math-g3-m4-g3-measure',
-  'math-g4-m8-g4-word-div',
-  'math-g4-m8-g4-word-div', 
-  'math-g5-m8-g5-word-solid',
-  'math-g6-c4-area-basic',
-  'math-g6-c4-solid-geometry',
-  'math-g6-m10-g6-reason-number-shape'
-  
-];
+
+
 
 function buildAll() {
-  return [
-    createApplicationGenerator({
-      id: 'generator:application-word',
-      knowledgePoints: APPLICATION_KPS
-    })
-  ];
+  return [createApplicationGenerator({ id: 'generator:application-word' })];
 }
 
 module.exports = {
@@ -8134,30 +8061,14 @@ function createCompositeGenerator(spec) {
   };
 }
 
-var COMPOSITE_KPS = [
-  
-  'math-g1-m1-addsub-10', 'math-g1-m0-make-ten', 'math-g1-m0-make-ten-cushi', 'math-g1-m1-addsub-5', 'math-g1-m11-judge-mixed',
-  
-  'math-g1-m4-rmb-unit', 'math-g1-m4-rmb-calc', 'math-g1-m8-rmb-shopping',
-  'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit',
-  'math-g2-m8-money', 'math-g3-m4-g3-measure',
-  
-  'math-g1-m6-solid-shape', 'math-g1-m6-flat-shape', 'math-g1-m6-shape-combine',
-  'math-g2-m6-solid-shape', 'math-g4-c4-c4-solid', 'math-g5-c4-solid-geometry',
-  'math-g6-c4-solid-geometry'
-];
+
+
 
 function buildAll() {
-  return [
-    createCompositeGenerator({
-      id: 'generator:composite',
-      knowledgePoints: COMPOSITE_KPS
-    })
-  ];
+  return [createCompositeGenerator({ id: 'generator:composite' })];
 }
 
 module.exports = {
-  COMPOSITE_KPS: COMPOSITE_KPS,
   createCompositeGenerator: createCompositeGenerator,
   buildAll: buildAll
 };
@@ -8385,42 +8296,8 @@ function makeCountingQuestion(plan, context, i, kp) {
   };
 }
 
-var COUNTING_KPS = [
-  
-  'math-g3-m10-g3-combination',
-  'math-g3-m10-g3-set',
-  
-  'math-g4-c3-c3-enum',
-  'math-g4-c3-c3-am',
-  'math-g4-c3-c3-perm',
-  'math-g4-c3-c3-worst',
-  
-  
-  'math-g5-c3-addition-principle',
-  'math-g5-c3-multiplication-principle',
-  'math-g5-c3-permutation',
-  'math-g5-c3-combination',
-  'math-g5-c3-enumeration-counting',
-  'math-g5-c3-bundling-method',
-  'math-g5-c3-insertion-method',
-  'math-g5-c3-stars-bars',
-  'math-g5-c3-pigeonhole-principle',
-  'math-g5-c3-worst-case-principle',
-  
-  'math-g6-c3-addition-principle',
-  'math-g6-c3-multiplication-principle',
-  'math-g6-c3-permutation',
-  'math-g6-c3-combination',
-  'math-g6-c3-enumeration-counting',
-  'math-g6-c3-bundling-method',
-  'math-g6-c3-insertion-method',
-  'math-g6-c3-stars-bars',
-  'math-g6-c3-pigeonhole-principle',
-  'math-g6-c3-worst-case-principle',
-  'math-g6-c3-inclusion-exclusion',
-  'math-g6-c3-recursion-counting',
-  'math-g6-c3-derangement'
-];
+
+
 
 function createCountingGenerator(spec) {
   spec = spec || {};
@@ -8431,7 +8308,7 @@ function createCountingGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || COUNTING_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -8453,16 +8330,10 @@ function createCountingGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createCountingGenerator({
-      id: 'generator:counting',
-      knowledgePoints: COUNTING_KPS
-    })
-  ];
+  return [createCountingGenerator()];
 }
 
 module.exports = {
-  COUNTING_KPS: COUNTING_KPS,
   createCountingGenerator: createCountingGenerator,
   buildAll: buildAll
 };
@@ -8653,30 +8524,8 @@ function makeReasoningQuestion(plan, context, i, kp) {
   };
 }
 
-var REASONING_KPS = [
-  'math-g2-m10-logic-reasoning',
-  'math-g2-m10-sudoku3',
-  'math-g2-m10-combination',
-  'math-g2-m10-handshake',
-  'math-g4-m10-g4-reason-opt',
-  'math-g4-m10-g4-reason-cr',
-  'math-g4-m10-logic-reasoning',
-  'math-g4-c8-c8-extreme',
-  'math-g4-c8-c8-drawer',
-  'math-g4-c8-c8-logic',
-  'math-g5-m10-g5-reason-tree3',
-  'math-g5-m10-g5-reason-defect',
-  'math-g5-m10-logic-reasoning',
-  'math-g5-m10-g5-reason-seq',
-  'math-g5-c8-extremum-problem',
-  'math-g5-c8-logic-inference',
-  'math-g5-c8-winning-strategy',
-  'math-g6-m10-g6-reason-pigeonhole',
-  'math-g6-c8-extremum-problem',
-  'math-g6-c8-logic-inference',
-  'math-g6-c8-winning-strategy',
-  'math-g6-c8-optimization'
-];
+
+
 
 function createReasoningGenerator(spec) {
   spec = spec || {};
@@ -8687,7 +8536,7 @@ function createReasoningGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || REASONING_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -8709,16 +8558,10 @@ function createReasoningGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createReasoningGenerator({
-      id: 'generator:reasoning',
-      knowledgePoints: REASONING_KPS
-    })
-  ];
+  return [createReasoningGenerator()];
 }
 
 module.exports = {
-  REASONING_KPS: REASONING_KPS,
   createReasoningGenerator: createReasoningGenerator,
   buildAll: buildAll
 };
@@ -8890,29 +8733,7 @@ function makeStatsQuestion(plan, context, i, kp) {
   };
 }
 
-var STATS_KPS = [
-  'math-g2-m9-data-tally',
-  'math-g2-m9-data-question',
-  'math-g3-m9-g3-stats-table',
-  'math-g4-m9-g4-stats-bar',
-  'math-g4-m9-g4-stats-double',
-  'math-g4-m9-g4-stats-avg',
-  'math-g4-m11-stats',
-  'math-g5-m4-g5-fill-linechart',
-  'math-g5-m8-g5-word-linechart',
-  'math-g5-m9-g5-stats-possib',
-  'math-g5-m9-g5-stats-line1',
-  'math-g5-m9-g5-stats-line2',
-  'math-g5-m11-stats',
-  'math-g5-m12-stats',
-  'math-g6-m4-g6-fill-pie-chart',
-  'math-g6-m5-g6-match-chart',
-  'math-g6-m7-g6-pic-pie-chart',
-  'math-g6-m9-g6-stat-pie-chart',
-  'math-g6-m9-g6-stat-possibility',
-  'math-g6-m11-g6-judge-chart',
-  'math-g6-m12-g6-choice-chart'
-];
+
 
 function createStatsGenerator(spec) {
   spec = spec || {};
@@ -8923,7 +8744,7 @@ function createStatsGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || STATS_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -8945,16 +8766,10 @@ function createStatsGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createStatsGenerator({
-      id: 'generator:stats',
-      knowledgePoints: STATS_KPS
-    })
-  ];
+  return [createStatsGenerator()];
 }
 
 module.exports = {
-  STATS_KPS: STATS_KPS,
   createStatsGenerator: createStatsGenerator,
   buildAll: buildAll
 };
@@ -9065,27 +8880,8 @@ function makePictureEquationQuestion(plan, context, i, kp) {
   };
 }
 
-var PICTURE_EQ_KPS = [
-  'math-g2-m7-pic-mixed',
-  'math-g4-m7-g4-pic-segment',
-  'math-g4-m7-g4-pic-brace',
-  'math-g4-m7-g4-pic-speed',
-  'math-g4-m7-g4-pic-dec',
-  'math-g4-c1-c1-array',
-  'math-g4-c1-c1-magic',
-  'math-g5-m7-g5-pic-balance',
-  'math-g5-m7-g5-pic-segment',
-  'math-g5-m7-g5-pic-tree',
-  'math-g5-c1-number-array-closed',
-  'math-g5-c1-number-array-radial',
-  'math-g5-c1-number-array-composite',
-  'math-g5-c1-magic-square-3',
-  'math-g5-c1-magic-square-4',
-  'math-g6-m7-g6-pic-frac-line',
-  'math-g6-m7-g6-pic-scale',
-  'math-g6-c1-magic-square-adv',
-  'math-g6-c1-number-array'
-];
+
+
 
 function createPictureEquationGenerator(spec) {
   spec = spec || {};
@@ -9096,7 +8892,7 @@ function createPictureEquationGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || PICTURE_EQ_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -9118,16 +8914,10 @@ function createPictureEquationGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createPictureEquationGenerator({
-      id: 'generator:picture-equation',
-      knowledgePoints: PICTURE_EQ_KPS
-    })
-  ];
+  return [createPictureEquationGenerator()];
 }
 
 module.exports = {
-  PICTURE_EQ_KPS: PICTURE_EQ_KPS,
   createPictureEquationGenerator: createPictureEquationGenerator,
   buildAll: buildAll
 };
@@ -9229,23 +9019,8 @@ function makePuzzleQuestion(plan, context, i, kp) {
   };
 }
 
-var C1_KPS = [
-  
-  'math-g4-c1-c1-vertical',
-  'math-g4-c1-c1-horizontal',
-  'math-g4-c1-c1-symbol',
-  
-  'math-g5-c1-digit-puzzle-vertical',
-  'math-g5-c1-digit-puzzle-horizontal',
-  'math-g5-c1-digit-puzzle-symbol',
-  
-  'math-g6-c1-vertical-multidigit',
-  'math-g6-c1-vertical-carry-complex',
-  'math-g6-c1-horizontal-puzzle',
-  'math-g6-c1-symbol-number',
-  'math-g6-c1-digit-reasoning',
-  'math-g6-c1-number-puzzle-competition'
-];
+
+
 
 function createC1Generator(spec) {
   spec = spec || {};
@@ -9256,7 +9031,7 @@ function createC1Generator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || C1_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -9278,16 +9053,10 @@ function createC1Generator(spec) {
 }
 
 function buildAll() {
-  return [
-    createC1Generator({
-      id: 'generator:c1-number-puzzle',
-      knowledgePoints: C1_KPS
-    })
-  ];
+  return [createC1Generator()];
 }
 
 module.exports = {
-  C1_KPS: C1_KPS,
   createC1Generator: createC1Generator,
   buildAll: buildAll
 };
@@ -9436,34 +9205,7 @@ function makeTheoryQuestion(plan, context, i, kp) {
   };
 }
 
-var C2_KPS = [
-  
-  'math-g4-c2-c2-parity',
-  'math-g4-c2-c2-remainder',
-  'math-g4-c2-c2-place',
-  
-  'math-g5-c2-divisibility',
-  'math-g5-c2-parity-analysis',
-  'math-g5-c2-prime-factorization',
-  'math-g5-c2-factor-count-sum',
-  'math-g5-c2-gcd-lcm',
-  'math-g5-c2-remainder-congruence',
-  'math-g5-c2-place-value',
-  'math-g5-c2-perfect-square',
-  'math-g5-c2-number-theory-extreme',
-  
-  'math-g6-c2-divisibility',
-  'math-g6-c2-parity-analysis',
-  'math-g6-c2-prime-factorization',
-  'math-g6-c2-factor-count-sum',
-  'math-g6-c2-gcd-lcm',
-  'math-g6-c2-remainder-congruence',
-  'math-g6-c2-place-value',
-  'math-g6-c2-perfect-square',
-  'math-g6-c2-number-theory-extreme',
-  'math-g6-c2-diophantine-equation',
-  'math-g6-c2-modulo-arithmetic'
-];
+
 
 function createC2Generator(spec) {
   spec = spec || {};
@@ -9474,7 +9216,7 @@ function createC2Generator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || C2_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -9496,16 +9238,10 @@ function createC2Generator(spec) {
 }
 
 function buildAll() {
-  return [
-    createC2Generator({
-      id: 'generator:c2-number-theory',
-      knowledgePoints: C2_KPS
-    })
-  ];
+  return [createC2Generator()];
 }
 
 module.exports = {
-  C2_KPS: C2_KPS,
   createC2Generator: createC2Generator,
   buildAll: buildAll
 };
@@ -9698,40 +9434,7 @@ function makeQuestion(plan, context, i, kp) {
   };
 }
 
-var C5C6_KPS = [
-  
-  'math-g4-c5-c5-basic',
-  'math-g4-c5-c5-meet',
-  'math-g4-c5-c5-chase',
-  'math-g4-c5-c5-train',
-  'math-g4-c5-c5-river',
-  
-  'math-g5-c5-basic-motion',
-  'math-g5-c5-meet-problem',
-  'math-g5-c5-chase-problem',
-  'math-g5-c5-train-bridge',
-  'math-g5-c5-boat-stream',
-  'math-g5-c5-circular-track',
-  'math-g5-c5-average-speed',
-  'math-g5-c5-ratio-motion',
-  
-  'math-g5-c6-work-problem',
-  'math-g5-c6-concentration-problem',
-  
-  'math-g6-c5-basic',
-  'math-g6-c5-meet',
-  'math-g6-c5-chase',
-  'math-g6-c5-train-bridge',
-  'math-g6-c5-boat-stream',
-  'math-g6-c5-ring-runway',
-  'math-g6-c5-journey-complex',
-  'math-g6-c5-competition',
-  'math-g6-c5-interval-departure',
-  'math-g6-c5-pick-up-problem',
-  
-  'math-g6-c6-work-problem',
-  'math-g6-c6-concentration-problem'
-];
+
 
 function createJourneyEngineeringGenerator(spec) {
   spec = spec || {};
@@ -9742,7 +9445,7 @@ function createJourneyEngineeringGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || C5C6_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -9764,16 +9467,10 @@ function createJourneyEngineeringGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createJourneyEngineeringGenerator({
-      id: 'generator:c5-c6-journey-engineering',
-      knowledgePoints: C5C6_KPS
-    })
-  ];
+  return [createJourneyEngineeringGenerator()];
 }
 
 module.exports = {
-  C5C6_KPS: C5C6_KPS,
   createJourneyEngineeringGenerator: createJourneyEngineeringGenerator,
   buildAll: buildAll
 };
@@ -9935,29 +9632,7 @@ function makeQuestion(plan, context, i, kp) {
   };
 }
 
-var C7_KPS = [
-  
-  'math-g5-c7-extract-common-factor',
-  'math-g5-c7-rounding-calc',
-  'math-g5-c7-fraction-splitting',
-  'math-g5-c7-integer-splitting',
-  'math-g5-c7-arithmetic-series',
-  'math-g5-c7-recurring-decimal-frac',
-  'math-g5-c7-define-operation',
-  'math-g5-c7-estimate-bounds',
-  'math-g5-c7-complex-fraction',
-  
-  'math-g6-c7-extract-common-factor',
-  'math-g6-c7-rounding-calc',
-  'math-g6-c7-fraction-splitting',
-  'math-g6-c7-integer-splitting',
-  'math-g6-c7-arithmetic-series',
-  'math-g6-c7-recurring-decimal-frac',
-  'math-g6-c7-define-operation',
-  'math-g6-c7-estimate-bounds',
-  'math-g6-c7-complex-fraction',
-  'math-g6-c7-sequence-sum'
-];
+
 
 function createC7Generator(spec) {
   spec = spec || {};
@@ -9968,7 +9643,7 @@ function createC7Generator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || C7_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -9990,16 +9665,10 @@ function createC7Generator(spec) {
 }
 
 function buildAll() {
-  return [
-    createC7Generator({
-      id: 'generator:c7-clever-calc',
-      knowledgePoints: C7_KPS
-    })
-  ];
+  return [createC7Generator()];
 }
 
 module.exports = {
-  C7_KPS: C7_KPS,
   createC7Generator: createC7Generator,
   buildAll: buildAll
 };
@@ -10226,45 +9895,7 @@ function makeQuestion(plan, context, i, kp) {
   };
 }
 
-var C9_KPS = [
-  
-  'math-g4-c9-c9-integrated',
-  'math-g4-c9-c9-misc',
-  'math-g4-c9-c9-mock',
-  
-  'math-g5-c9-sum-diff-problem',
-  'math-g5-c9-age-problem',
-  'math-g5-c9-profit-loss-problem',
-  'math-g5-c9-chicken-rabbit',
-  'math-g5-c9-average-problem',
-  'math-g5-c9-planting-problem',
-  'math-g5-c9-phalanx-problem',
-  'math-g5-c9-periodic-problem',
-  'math-g5-c9-grass-problem',
-  'math-g5-c9-fraction-percent-application',
-  'math-g5-c9-economics-problem',
-  'math-g5-c9-inclusion-exclusion',
-  'math-g5-c9-equation-linear-1',
-  'math-g5-c9-equation-linear-2',
-  'math-g5-c9-diophantine-equation',
-  
-  'math-g6-c9-sum-diff-problem',
-  'math-g6-c9-age-problem',
-  'math-g6-c9-profit-loss-problem',
-  'math-g6-c9-chicken-rabbit',
-  'math-g6-c9-average-problem',
-  'math-g6-c9-planting-problem',
-  'math-g6-c9-phalanx-problem',
-  'math-g6-c9-periodic-problem',
-  'math-g6-c9-grass-problem',
-  'math-g6-c9-fraction-percent-application',
-  'math-g6-c9-economics-problem',
-  'math-g6-c9-equation-linear-1',
-  'math-g6-c9-equation-linear-2',
-  'math-g6-c9-inclusion-exclusion',
-  'math-g6-c9-ratio-application',
-  'math-g6-c9-mixture-problem'
-];
+
 
 function createC9Generator(spec) {
   spec = spec || {};
@@ -10275,7 +9906,7 @@ function createC9Generator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc', 'open'],
     questionTypes: ['apply', 'calc', 'open'],
-    knowledgePoints: spec.knowledgePoints || C9_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -10297,16 +9928,10 @@ function createC9Generator(spec) {
 }
 
 function buildAll() {
-  return [
-    createC9Generator({
-      id: 'generator:c9-comprehensive',
-      knowledgePoints: C9_KPS
-    })
-  ];
+  return [createC9Generator()];
 }
 
 module.exports = {
-  C9_KPS: C9_KPS,
   createC9Generator: createC9Generator,
   buildAll: buildAll
 };
@@ -10420,7 +10045,9 @@ function createCodeGenerator(spec) {
     subject: 'math',
     capabilities: ['fill', 'choice', 'judge', 'recognize'],
     questionTypes: ['fill', 'choice', 'judge', 'recognize'],
-    knowledgePoints: spec.knowledgePoints || ['math-g3-m10-g3-code'],
+    
+    
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -10502,7 +10129,9 @@ function createEquivalentGenerator(spec) {
     subject: 'math',
     capabilities: ['fill', 'choice', 'apply'],
     questionTypes: ['fill', 'choice', 'apply'],
-    knowledgePoints: spec.knowledgePoints || ['math-g3-m8-g3-equivalent'],
+    
+    
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -10612,7 +10241,9 @@ function createClassificationGenerator(spec) {
     subject: 'math',
     capabilities: ['classify'],
     questionTypes: ['classify'],
-    knowledgePoints: spec.knowledgePoints || ['math-g1-m4-count-quantity'],
+    
+    
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -10642,6 +10273,7 @@ __defs["shared/generator/generators/percent.js"] = function (module, exports, re
 'use strict';
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticParameters = require("shared/generator/core/semantic-parameters.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -10728,7 +10360,7 @@ function makePercentOf(plan, context, i) {
 function makeConversion(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var variant = i % 3;
-  var q = buildBase(plan, context, i, { subType: 'conversion', variant: variant });
+  var q = buildBase(plan, context, i, { subType: 'percent-conversion', variant: variant });
   if (variant === 0) {
     var d = (Rng.randInt(rng, 1, 9) * 10 + Rng.randInt(rng, 1, 9)) / 100;
     var dpct = Math.round(d * 100);
@@ -10757,11 +10389,11 @@ function makeDiscount(plan, context, i) {
   var prompt;
   if (askSaved) {
     prompt = '一件商品原价 ' + price + ' 元，现在' + d.label + '出售，买这件商品可以便宜多少元？';
-    return finish(buildBase(plan, context, i, { subType: 'discount', price: price, rate: d.rate, ask: 'saved' }),
+    return finish(buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: 'saved' }),
       prompt, price - cur, '便宜 ' + price + ' − ' + cur + ' = ' + (price - cur) + ' 元');
   }
   prompt = '一件商品原价 ' + price + ' 元，现在' + d.label + '出售，现价是多少元？';
-  return finish(buildBase(plan, context, i, { subType: 'discount', price: price, rate: d.rate, ask: 'current' }),
+  return finish(buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: 'current' }),
     prompt, cur, '现价 ' + price + ' × ' + d.rate + '% = ' + cur + ' 元');
 }
 
@@ -10774,11 +10406,11 @@ function makeInterest(plan, context, i) {
   var interest = principal * rate * years / 100;
   var askTotal = (i % 2 === 1);
   if (askTotal) {
-    return finish(buildBase(plan, context, i, { subType: 'interest', principal: principal, rate: rate, years: years, ask: 'total' }),
+    return finish(buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: 'total' }),
       '小明把 ' + principal + ' 元压岁钱存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期时一共可以取回多少元？',
       principal + interest, '本息合计 ' + principal + ' + ' + interest + ' = ' + (principal + interest) + ' 元');
   }
-  return finish(buildBase(plan, context, i, { subType: 'interest', principal: principal, rate: rate, years: years, ask: 'interest' }),
+  return finish(buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: 'interest' }),
     '小明把 ' + principal + ' 元存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期可得利息多少元？',
     interest, '利息 ' + principal + ' × ' + rate + '% × ' + years + ' = ' + interest + ' 元');
 }
@@ -10786,7 +10418,7 @@ function makeInterest(plan, context, i) {
 
 function makeRateLine(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var q = buildBase(plan, context, i, { subType: 'target-rate' });
+  var q = buildBase(plan, context, i, { subType: 'percent-target-rate' });
   if (i % 2 === 1) {
     
     var total = Rng.pick(rng, [50, 100, 200, 400, 500]);
@@ -10825,19 +10457,21 @@ function makePercentChange(plan, context, i) {
 
 
 
-
-var SUBTYPE_MAKERS = {
-  '001': makePercentOf,
-  '002': makeConversion,
-  '003': makeDiscount,
-  '004': makeInterest,
-  '005': makeRateLine,
-  '006': makePercentChange
+var SUBTOPIC_MAKERS = {
+  'percent-of': makePercentOf,
+  'percent-conversion': makeConversion,
+  'percent-discount': makeDiscount,
+  'percent-interest': makeInterest,
+  'percent-target-rate': makeRateLine,
+  'percent-change': makePercentChange
 };
 
-function subtypeMaker(kpId) {
-  var suffix = kpId ? kpId.slice(-3) : '';
-  return SUBTYPE_MAKERS[suffix] || makePercentOf;
+
+function paramsOf(plan) {
+  if (plan && plan.semanticParams) return plan.semanticParams;
+  var kpId = pkp(plan);
+  if (!kpId) return null;
+  return SemanticParameters.resolve(kpId, plan && (plan.questionTypeId || plan.questionType));
 }
 
 function createPercentGenerator(spec) {
@@ -10857,7 +10491,10 @@ function createPercentGenerator(spec) {
 
     generate: function (plan, context) {
       var count = (plan && plan.count) || 1;
-      var maker = subtypeMaker(pkp(plan));
+      var params = paramsOf(plan);
+      var maker = params ? SUBTOPIC_MAKERS[params.subTopic] : null;
+      
+      if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
       return out;
@@ -10880,6 +10517,7 @@ __defs["shared/generator/generators/concept-meaning.js"] = function (module, exp
 'use strict';
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticParameters = require("shared/generator/core/semantic-parameters.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -11156,20 +10794,19 @@ function makeAreaJudge(plan, context, i) {
 
 
 
-var KP_MAKERS = {
-  'g2-u03-k003': { calc: makeTimesCalc, fill: makeTimesFill, apply: makeTimesApply, choice: makeTimesChoice },
-  'g5-u04-k001': { calc: makeFractionCalc, fill: makeFractionFill, apply: makeFractionApply, choice: makeFractionChoice },
-  'g3-u07-k002': { fill: makeAngleFill, apply: makeAngleApply, choice: makeAngleChoice, geometry: makeAngleGeometry, judge: makeAngleJudge },
-  'g3-u04-k001': { fill: makeAreaFill, apply: makeAreaApply, choice: makeAreaChoice, geometry: makeAreaGeometry, judge: makeAreaJudge }
+var SUBTOPIC_MAKERS = {
+  'times-concept': { calc: makeTimesCalc, fill: makeTimesFill, apply: makeTimesApply, choice: makeTimesChoice },
+  'fraction-meaning': { calc: makeFractionCalc, fill: makeFractionFill, apply: makeFractionApply, choice: makeFractionChoice },
+  'angle-concept': { fill: makeAngleFill, apply: makeAngleApply, choice: makeAngleChoice, geometry: makeAngleGeometry, judge: makeAngleJudge },
+  'area-concept': { fill: makeAreaFill, apply: makeAreaApply, choice: makeAreaChoice, geometry: makeAreaGeometry, judge: makeAreaJudge }
 };
 
-var KP_KEY_RE = /-g([1-6])-(up|down|mixed|advance|comprehensive)-u([0-9]{2})-k([0-9]{3})/;
 
-function kpMakerKey(kpId) {
+function paramsOf(plan) {
+  if (plan && plan.semanticParams) return plan.semanticParams;
+  var kpId = pkp(plan);
   if (!kpId) return null;
-  var m = KP_KEY_RE.exec(kpId);
-  if (!m) return null;
-  return 'g' + m[1] + '-u' + m[3] + '-k' + m[4];
+  return SemanticParameters.resolve(kpId, plan && (plan.questionTypeId || plan.questionType));
 }
 
 function createConceptMeaningGenerator(spec) {
@@ -11189,8 +10826,10 @@ function createConceptMeaningGenerator(spec) {
 
     generate: function (plan, context) {
       var count = (plan && plan.count) || 1;
-      var row = KP_MAKERS[kpMakerKey(pkp(plan))];
+      var params = paramsOf(plan);
+      var row = params ? SUBTOPIC_MAKERS[params.subTopic] : null;
       var maker = row && row[plan.questionTypeId];
+      
       if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
@@ -11205,6 +10844,494 @@ function buildAll() {
 
 module.exports = {
   createConceptMeaningGenerator: createConceptMeaningGenerator,
+  buildAll: buildAll
+};
+
+};
+__defs["shared/generator/generators/semantic-relations.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Rng = require("shared/generator/core/rng.js");
+var SemanticParameters = require("shared/generator/core/semantic-parameters.js");
+
+var QTYPES = ['calc', 'fill', 'apply', 'choice', 'geometry'];
+
+function pkp(plan) {
+  if (!plan) return null;
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+  return null;
+}
+
+function seedFor(plan, context, i) {
+  if (context && context.seed != null) return context.seed + ':' + i;
+  if (plan && plan.seed != null) return plan.seed + ':' + i;
+  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
+}
+
+function buildBase(plan, context, i, extra) {
+  var constraints = plan.constraints || {};
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: plan.questionTypeId,
+    difficulty: plan.difficulty,
+    difficultyParams: {
+      level: plan.difficulty,
+      scale: constraints.scale != null ? constraints.scale : 1,
+      steps: constraints.maxSteps != null ? constraints.maxSteps : 1,
+      allowBracket: !!constraints.allowBracket,
+      allowMultDiv: !!constraints.allowMultDiv
+    },
+    numberRange: constraints.numberRange || { min: 1, max: 100 },
+    spiralLevel: plan.spiralLevel != null ? plan.spiralLevel : 1,
+    context: plan.contextType != null ? plan.contextType : 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: '',
+    answer: null,
+    answerMode: 'input',
+    hint: null,
+    data: Object.assign({ mode: 'semantic-relations' }, extra || {})
+  };
+}
+
+function finish(q, prompt, answer, acceptable, explanation) {
+  q.prompt = prompt;
+  q.answer = {
+    value: String(answer),
+    acceptable: acceptable || [],
+    explanation: explanation || (prompt.replace(/[？?]\s*$/, '') + ' = ' + answer)
+  };
+  return q;
+}
+
+
+function finishChoice(q, rng, correct, wrongs) {
+  var seen = {}, pool = [];
+  [correct].concat(wrongs).forEach(function (o) {
+    o = String(o);
+    if (!seen[o]) { seen[o] = 1; pool.push(o); }
+  });
+  while (pool.length < 4) {
+    var filler = '都不对（' + pool.length + '）';
+    if (!seen[filler]) { seen[filler] = 1; pool.push(filler); }
+  }
+  pool = pool.slice(0, 4);
+  var options = Rng.shuffle(rng, pool);
+  q.data.options = options;
+  q.data.correctIndex = options.indexOf(String(correct));
+  return finish(q, q.prompt, String(correct), [], null);
+}
+
+
+
+function makeAddRelCalc(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var take = Rng.randInt(rng, 2, 9);
+  var left = Rng.randInt(rng, 2, 9);
+  var subtract = (i % 2 === 0);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'pictorial-additive-relation',
+    operation: subtract ? 'sub' : 'add',
+    barModel: true
+  });
+  if (subtract) {
+    return finish(q, '看图列式：盘子里原来有 ' + (take + left) + ' 个桃，小猴子吃掉 ' + take
+      + ' 个（在图中圈出吃掉的部分）。还剩多少个？', left, [],
+      '总数 − 吃掉的部分 = 剩下的部分：' + (take + left) + ' − ' + take + ' = ' + left);
+  }
+  return finish(q, '看图列式：草地上左边有 ' + left + ' 只羊，右边又来了 ' + take
+    + ' 只羊（在图中画出两部分）。一共有多少只羊？', take + left, [],
+    '两部分合起来：' + left + ' + ' + take + ' = ' + (take + left));
+}
+
+function makeAddRelFill(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var a = Rng.randInt(rng, 3, 9);
+  var b = Rng.randInt(rng, 3, 9);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true
+  });
+  return finish(q, '看线段图填空：第一条线段表示 ' + a + '，第二条线段表示 ' + b
+    + '，两条线段合起来表示（  ）。', a + b, [String(a + b)],
+    a + ' + ' + b + ' = ' + (a + b));
+}
+
+function makeAddRelApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var base = Rng.randInt(rng, 5, 12);
+  var diff = Rng.randInt(rng, 2, 8);
+  var more = (i % 2 === 0);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'pictorial-additive-relation',
+    operation: more ? 'add' : 'sub',
+    barModel: true,
+    comparison: more ? 'more' : 'less'
+  });
+  if (more) {
+    return finish(q, '先画一画，再列式：小红有 ' + base + ' 朵小红花，小丽比小红多 ' + diff
+      + ' 朵。小丽有多少朵？', base + diff, [String(base + diff)],
+      '小红的朵数 + 多出来的部分 = 小丽的朵数：' + base + ' + ' + diff + ' = ' + (base + diff));
+  }
+  return finish(q, '先画一画，再列式：小红有 ' + (base + diff) + ' 朵小红花，小丽比小红少 ' + diff
+    + ' 朵。小丽有多少朵？', base, [String(base)],
+    '小红的朵数 − 少的部分 = 小丽的朵数：' + (base + diff) + ' − ' + diff + ' = ' + base);
+}
+
+function makeAddRelChoice(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var a = Rng.randInt(rng, 4, 9);
+  var b = Rng.randInt(rng, 4, 9);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true
+  });
+  q.prompt = '线段图把总数分成两部分：第一部分是 ' + a + '，第二部分是 ' + b
+    + '。求总数应该用下面哪个算式？（  ）';
+  return finishChoice(q, rng, a + ' + ' + b,
+    [a + ' − ' + b, b + ' − ' + a, a + ' × ' + b]);
+}
+
+function makeAddRelGeometry(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var a = Rng.randInt(rng, 4, 9);
+  var longer = Rng.randInt(rng, 2, 6);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true
+  });
+  return finish(q, '看线段图：第一条线段表示 ' + a + '，第二条线段比第一条长 ' + longer
+    + '（在图上标出长出来的那一段）。第二条线段表示多少？', a + longer, [String(a + longer)],
+    '第一条 + 长出的部分 = 第二条：' + a + ' + ' + longer + ' = ' + (a + longer));
+}
+
+
+
+var PATTERN_SHAPES = ['△', '○', '□', '☆'];
+
+function patternPick(rng) {
+  var n = Rng.randInt(rng, 2, 4);
+  var shapes = Rng.shuffle(rng, PATTERN_SHAPES).slice(0, n);
+  var period = Rng.randInt(rng, 7, 30);
+  var rem = period % n;
+  var shape = rem === 0 ? shapes[n - 1] : shapes[rem - 1];
+  var quotient = Math.floor(period / n);
+  return { n: n, shapes: shapes, period: period, rem: rem, shape: shape, quotient: quotient };
+}
+
+function makePeriodCalc(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var p = patternPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'periodic-pattern', operation: 'div',
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem
+  });
+  return finish(q, '图形按「' + p.shapes.join('') + '」为一组重复排列。要确定第 ' + p.period
+    + ' 个图形是什么，列式 ' + p.period + ' ÷ ' + p.n + ' 的余数是几？（只填余数）',
+    p.rem, [String(p.rem)],
+    p.period + ' ÷ ' + p.n + ' = ' + p.quotient + '……' + p.rem
+      + (p.rem === 0 ? '，余数为 0 对应每组最后一个图形「' + p.shape + '」'
+        : '，余数 ' + p.rem + ' 对应每组第 ' + p.rem + ' 个图形「' + p.shape + '」'));
+}
+
+function makePeriodFill(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var p = patternPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'periodic-pattern', operation: 'div',
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem
+  });
+  return finish(q, '图形按「' + p.shapes.join('') + '」为一组重复排列，第 ' + p.period
+    + ' 个图形是（  ）。', p.shape, [p.shapes],
+    p.period + ' ÷ ' + p.n + ' = ' + p.quotient + '……' + p.rem
+      + '，余数 ' + (p.rem === 0 ? '0（取末位）' : p.rem) + ' → 「' + p.shape + '」');
+}
+
+function makePeriodApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var items = [['红旗', '黄旗', '蓝旗'], ['红花', '黄花', '蓝花'], ['红灯笼', '黄灯笼', '蓝灯笼']];
+  var set = Rng.pick(rng, items);
+  var n = set.length;
+  var k = Rng.randInt(rng, 10, 40);
+  var rem = k % n;
+  var which = rem === 0 ? set[n - 1] : set[rem - 1];
+  var q = buildBase(plan, context, i, {
+    subTopic: 'periodic-pattern', operation: 'div',
+    periodLength: n, periodPosition: k, remainder: rem
+  });
+  return finish(q, '学校大门前按「' + set.join('、') + '」的顺序循环挂彩旗，第 ' + k
+    + ' 面彩旗是什么颜色？', which, [which],
+    k + ' ÷ ' + n + ' = ' + Math.floor(k / n) + '……' + rem
+      + '，余数 ' + (rem === 0 ? '0（取每组最后）' : rem) + ' → ' + which);
+}
+
+function makePeriodChoice(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var p = patternPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'periodic-pattern', operation: 'div',
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem
+  });
+  q.prompt = '图形按「' + p.shapes.join('') + '」为一组重复排列，第 ' + p.period
+    + ' 个图形是哪个？（  ）';
+  var distractors = PATTERN_SHAPES.filter(function (s) { return s !== p.shape; }).slice(0, 3);
+  return finishChoice(q, rng, p.shape, distractors);
+}
+
+function makePeriodGeometry(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var p = patternPick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'periodic-pattern', operation: 'div',
+    periodLength: p.n, periodPosition: p.period, remainder: p.rem,
+    graphicPattern: p.shapes.join('')
+  });
+  return finish(q, '观察排列图：' + p.shapes.join('') + p.shapes.join('') + '……'
+    + '照这样接着画，第 ' + p.period + ' 个位置应该画什么图形？', p.shape, [p.shape],
+    '每 ' + p.n + ' 个一组，' + p.period + ' ÷ ' + p.n + ' 余 '
+      + (p.rem === 0 ? '0（末位）' : p.rem) + ' → 「' + p.shape + '」');
+}
+
+
+
+var SCALE_SIDES = [2, 3, 4, 5, 6];
+
+function scalePick(rng) {
+  var enlarge = Rng.randInt(rng, 0, 1) === 0;
+  var k = Rng.randInt(rng, 2, 3);
+  
+  var orig = enlarge ? Rng.pick(rng, SCALE_SIDES) : Rng.pick(rng, SCALE_SIDES) * k;
+  var next = enlarge ? orig * k : orig / k;
+  return { enlarge: enlarge, k: k, orig: orig, next: next };
+}
+
+function makeScaleCalc(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var s = scalePick(rng);
+  var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-transform', scaleRatio: ratio,
+    fromLength: s.orig, toLength: s.next
+  });
+  return finish(q, '列式计算：一个长方形的长是 ' + s.orig + ' 厘米，按 ' + ratio
+    + ' 的比' + (s.enlarge ? '放大' : '缩小') + '，变换后的长是多少厘米？', s.next, [String(s.next)],
+    (s.enlarge ? '放大到 ' + s.k + ' 倍：' : '缩小到 1/' + s.k + '：')
+      + s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ' + s.next + ' 厘米');
+}
+
+function makeScaleFill(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var s = scalePick(rng);
+  var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-transform', scaleRatio: ratio,
+    fromLength: s.orig, toLength: s.next
+  });
+  return finish(q, '把一个边长 ' + s.orig + ' 厘米的正方形按 ' + ratio + ' 的比'
+    + (s.enlarge ? '放大' : '缩小') + '，变换后正方形的边长是（  ）厘米。', s.next, [String(s.next)],
+    s.orig + (s.enlarge ? ' × ' : ' ÷ ') + s.k + ' = ' + s.next);
+}
+
+function makeScaleApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var s = scalePick(rng);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-transform',
+    scaleRatio: s.enlarge ? (s.k + ':1') : ('1:' + s.k),
+    fromLength: s.orig, toLength: s.next
+  });
+  if (s.enlarge) {
+    return finish(q, '一张小卡片长 ' + s.orig + ' 厘米，照相馆按 ' + s.k + ':1 的比把图案放大印成海报，'
+      + '海报上的图案长多少厘米？', s.next, [String(s.next)],
+      '放大到 ' + s.k + ' 倍：' + s.orig + ' × ' + s.k + ' = ' + s.next + ' 厘米');
+  }
+  return finish(q, '一张建筑设计图上某段长 ' + s.orig + ' 厘米，施工时要按 1:' + s.k
+    + ' 的比缩小制作模型，模型上这段长多少厘米？', s.next, [String(s.next)],
+    '缩小到 1/' + s.k + '：' + s.orig + ' ÷ ' + s.k + ' = ' + s.next + ' 厘米');
+}
+
+function makeScaleChoice(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var s = scalePick(rng);
+  var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-transform', scaleRatio: ratio,
+    fromLength: s.orig, toLength: s.next
+  });
+  q.prompt = '一个图形按 ' + ratio + ' 的比' + (s.enlarge ? '放大' : '缩小')
+    + '，原长 ' + s.orig + ' 厘米，变换后的长是多少厘米？（  ）';
+  return finishChoice(q, rng, String(s.next),
+    [String(s.orig), String(s.next + s.k), String(Math.max(1, s.next - 1))]);
+}
+
+function makeScaleGeometry(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var s = scalePick(rng);
+  var ratio = s.enlarge ? (s.k + ':1') : ('1:' + s.k);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'scale-transform', scaleRatio: ratio,
+    fromLength: s.orig, toLength: s.next, gridFigure: true
+  });
+  return finish(q, '方格图上一个长方形的长占 ' + s.orig + ' 格，把图形按 ' + ratio
+    + ' 的比' + (s.enlarge ? '放大' : '缩小') + '后，长应占多少格？', s.next, [String(s.next)],
+    '图形' + (s.enlarge ? '放大' : '缩小') + '后形状不变，长' + (s.enlarge ? '扩大' : '缩小')
+      + '到原来的' + (s.enlarge ? s.k + ' 倍' : '1/' + s.k) + '：' + s.next + ' 格');
+}
+
+
+
+function makePropCalc(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  
+  var unit = Rng.pick(rng, [2, 3, 4, 5, 6, 8]);
+  var a = Rng.randInt(rng, 2, 6);
+  var b = Rng.randInt(rng, 2, 9);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'proportion-application', proportion: 'direct',
+    unitPrice: unit, quantityA: a, quantityB: b
+  });
+  return finish(q, '列式计算：买 ' + a + ' 支同样的钢笔要用 ' + (a * unit)
+    + ' 元，买 ' + b + ' 支这样的钢笔要用多少元？', b * unit, [String(b * unit)],
+    '先求单价（归一）：' + (a * unit) + ' ÷ ' + a + ' = ' + unit + ' 元；'
+      + b + ' × ' + unit + ' = ' + (b * unit) + ' 元');
+}
+
+function makePropFill(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  
+  var speed = Rng.pick(rng, [40, 50, 60, 70, 80]);
+  var t1 = Rng.randInt(rng, 2, 4);
+  var t2 = Rng.randInt(rng, 5, 9);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'proportion-application', proportion: 'direct',
+    speed: speed, hoursA: t1, hoursB: t2
+  });
+  return finish(q, '一辆汽车 ' + t1 + ' 小时行驶了 ' + (speed * t1)
+    + ' 千米。照这样的速度，' + t2 + ' 小时能行驶（  ）千米。', speed * t2, [String(speed * t2)],
+    '速度一定，路程与时间成正比例：速度 ' + speed + ' 千米/时，' + t2 + ' × ' + speed
+      + ' = ' + (speed * t2) + ' 千米');
+}
+
+function makePropApply(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  
+  var rows2Choices = [
+    { per1: 20, rows1: 12, per2: 24 },
+    { per1: 15, rows1: 16, per2: 20 },
+    { per1: 12, rows1: 15, per2: 18 },
+    { per1: 25, rows1: 12, per2: 20 }
+  ];
+  var c = Rng.pick(rng, rows2Choices);
+  var total = c.per1 * c.rows1;
+  var rows2 = total / c.per2;
+  var q = buildBase(plan, context, i, {
+    subTopic: 'proportion-application', proportion: 'inverse',
+    total: total, perRowA: c.per1, rowsA: c.rows1, perRowB: c.per2
+  });
+  return finish(q, '同学们排队做操，每行站 ' + c.per1 + ' 人，正好站 ' + c.rows1
+    + ' 行。如果每行站 ' + c.per2 + ' 人，可以站多少行？', rows2, [String(rows2)],
+    '总人数一定，每行人数与行数成反比例：' + c.per1 + ' × ' + c.rows1 + ' = ' + total
+      + '（人），' + total + ' ÷ ' + c.per2 + ' = ' + rows2 + ' 行');
+}
+
+function makePropChoice(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var unit = Rng.pick(rng, [3, 4, 5, 6]);
+  var a = Rng.randInt(rng, 2, 5);
+  var b = Rng.randInt(rng, 6, 9);
+  var q = buildBase(plan, context, i, {
+    subTopic: 'proportion-application', proportion: 'direct',
+    unitPrice: unit, quantityA: a, quantityB: b
+  });
+  q.prompt = '买 ' + a + ' 千克苹果付了 ' + (a * unit) + ' 元，买 ' + b
+    + ' 千克同样的苹果要付多少元？（  ）';
+  return finishChoice(q, rng, String(b * unit) + ' 元',
+    [String((a * unit) + b) + ' 元', String(a * b) + ' 元', String(a + b + unit) + ' 元']);
+}
+
+function makePropGeometry(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  
+  var pairs = [
+    { h1: 2, s1: 3, s2: 15 },
+    { h1: 2, s1: 4, s2: 20 },
+    { h1: 3, s1: 2, s2: 12 },
+    { h1: 4, s1: 3, s2: 18 }
+  ];
+  var c = Rng.pick(rng, pairs);
+  var h2 = c.h1 * c.s2 / c.s1;
+  var q = buildBase(plan, context, i, {
+    subTopic: 'proportion-application', proportion: 'direct',
+    poleHeight: c.h1, poleShadow: c.s1, treeShadow: c.s2
+  });
+  return finish(q, '看示意图：同一时刻，一根 ' + c.h1 + ' 米长的竹竿影长是 ' + c.s1
+    + ' 米，旁边一棵树的影长是 ' + c.s2 + ' 米。这棵树高多少米？', h2, [String(h2)],
+    '同一时刻物高与影长成正比例：' + c.h1 + ':' + c.s1 + ' = 树高:' + c.s2
+      + '，树高 = ' + c.h1 + ' × ' + c.s2 + ' ÷ ' + c.s1 + ' = ' + h2 + ' 米');
+}
+
+
+
+var SUBTOPIC_MAKERS = {
+  'pictorial-additive-relation': {
+    calc: makeAddRelCalc, fill: makeAddRelFill, apply: makeAddRelApply,
+    choice: makeAddRelChoice, geometry: makeAddRelGeometry
+  },
+  'periodic-pattern': {
+    calc: makePeriodCalc, fill: makePeriodFill, apply: makePeriodApply,
+    choice: makePeriodChoice, geometry: makePeriodGeometry
+  },
+  'scale-transform': {
+    calc: makeScaleCalc, fill: makeScaleFill, apply: makeScaleApply,
+    choice: makeScaleChoice, geometry: makeScaleGeometry
+  },
+  'proportion-application': {
+    calc: makePropCalc, fill: makePropFill, apply: makePropApply,
+    choice: makePropChoice, geometry: makePropGeometry
+  }
+};
+
+
+function paramsOf(plan) {
+  if (plan && plan.semanticParams) return plan.semanticParams;
+  var kpId = pkp(plan);
+  if (!kpId) return null;
+  return SemanticParameters.resolve(kpId, plan && (plan.questionTypeId || plan.questionType));
+}
+
+function createSemanticRelationsGenerator(spec) {
+  spec = spec || {};
+  return {
+    id: 'generator:semantic-relations',
+    subject: 'math',
+    capabilities: QTYPES.slice(),
+    questionTypes: QTYPES.slice(),
+    
+    knowledgePoints: spec.knowledgePoints || [],
+
+    supports: function (plan) {
+      if (!plan || !plan.questionTypeId) return false;
+      return QTYPES.indexOf(plan.questionTypeId) !== -1;
+    },
+
+    generate: function (plan, context) {
+      var count = (plan && plan.count) || 1;
+      var params = paramsOf(plan);
+      var row = params ? SUBTOPIC_MAKERS[params.subTopic] : null;
+      var maker = row && row[plan.questionTypeId];
+      
+      if (!maker) return [];
+      var out = [];
+      for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
+      return out;
+    }
+  };
+}
+
+function buildAll() {
+  return [createSemanticRelationsGenerator()];
+}
+
+module.exports = {
+  createSemanticRelationsGenerator: createSemanticRelationsGenerator,
   buildAll: buildAll
 };
 

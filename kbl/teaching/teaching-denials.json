@@ -8,44 +8,73 @@
   "decisionSemantics": {
     "deny": "运行时禁止该 KP×QT 进入生成计划（capability resolver 返回 FORBID）；不删除 canonical ALLOW 行，仅覆盖执行",
     "kind.execution-gap": "题型意图描述可成立（P25-03 五问），但当前无原生语义生成器、兜底产出语义无关题；待专项语义生成器补齐后可由人工撤销本裁决",
+    "revoke": "execution-gap 消失（专项语义生成器补齐且 E2E 实测语义正确）后撤销：行保留并置 status=revoked，resolver ACTIVE 表同步移除，capability 恢复 ALLOW；行不删除以保留裁决审计链",
     "scope": "本次仅裁决 representation-conflict 旗标点名的 calc 行；同 KP 的 fill/apply/choice/geometry 不在本批范围"
   },
   "denials": [
     {
       "knowledgeId": "math-g1-down-u06-k002",
       "questionType": "calc",
+      "status": "revoked",
       "kind": "execution-gap",
       "kpName": "图形表述数量关系（借助画图等策略理解数量间的加减关系）",
       "reason": "calc 不承载图形表征，而本 KP 核心语义是「借助画图策略理解数量关系」；当前无原生生成器",
       "evidence": "2026-09-19 PracticeSession 实测 calc 产出「47 + 62 = ?」通用双加兜底题，与 KP 语义无关，且无 semanticEvidence 声明",
-      "retainedTypes": ["fill", "apply", "choice", "geometry"]
+      "retainedTypes": ["fill", "apply", "choice", "geometry"],
+      "resolution": {
+        "revokedAt": "2026-09-19",
+        "revokedBy": "P25-06 本体（SemanticProfile→Intent→GenerationParameters→Generator 语义参数链路）",
+        "replacedBy": "generator:semantic-relations（subTopic=pictorial-additive-relation，覆盖 calc/fill/apply/choice/geometry 全部 ALLOW 题型）",
+        "verification": "参数化 maker 按题声明 data.operation∈add/sub 并带 barModel 语义标记；verify:allow-gen E2E 1570 全验，p25-06 测试断言 calc 真实产出且路由命中 semantic-relations"
+      }
     },
     {
       "knowledgeId": "math-g2-down-u02-k005",
       "questionType": "calc",
+      "status": "revoked",
       "kind": "execution-gap",
       "kpName": "周期问题（利用有余数除法找图形、彩旗排列规律）",
       "reason": "calc 不承载图形/周期情境，本 KP 语义是借有余数除法推断图形排列周期；当前无原生生成器",
       "evidence": "2026-09-19 实测产出「5 ÷ 1 + 12 = ?」通用混式兜底题，与周期规律无关，且无 semanticEvidence 声明",
-      "retainedTypes": ["fill", "apply", "choice", "geometry"]
+      "retainedTypes": ["fill", "apply", "choice", "geometry"],
+      "resolution": {
+        "revokedAt": "2026-09-19",
+        "revokedBy": "P25-06 本体（SemanticProfile→Intent→GenerationParameters→Generator 语义参数链路）",
+        "replacedBy": "generator:semantic-relations（subTopic=periodic-pattern；同步从 arithmetic-division native 绑定移除——有余数除法只是周期判定工具），覆盖全部 ALLOW 题型",
+        "verification": "maker 按题声明 data.operation=div，题干绑定周期情境（第 k 个由 k÷n 余数决定，余数 0 取末位）；verify:allow-gen E2E 1570 全验"
+      }
     },
     {
       "knowledgeId": "math-g6-down-u04-k007",
       "questionType": "calc",
+      "status": "revoked",
       "kind": "execution-gap",
       "kpName": "图形的放大与缩小（按一定的比将图形放大或缩小）",
       "reason": "calc 不承载图形表征，本 KP 语义是图形按比变换（形状相同、大小不同）；当前无原生生成器",
       "evidence": "2026-09-19 实测产出「7 + 28 = ?」通用加法兜底题，与按比缩放无关，且无 semanticEvidence 声明",
-      "retainedTypes": ["fill", "apply", "choice", "geometry"]
+      "retainedTypes": ["fill", "apply", "choice", "geometry"],
+      "resolution": {
+        "revokedAt": "2026-09-19",
+        "revokedBy": "P25-06 本体（SemanticProfile→Intent→GenerationParameters→Generator 语义参数链路）",
+        "replacedBy": "generator:semantic-relations（subTopic=scale-transform，新长度=原长度×k，覆盖全部 ALLOW 题型）",
+        "verification": "参数化 maker 区分放大（k:1，整数倍）与缩小（1:k，保证整除），题干绑定方格图/图纸情境；verify:allow-gen E2E 1570 全验"
+      }
     },
     {
       "knowledgeId": "math-g6-down-u04-k008",
       "questionType": "calc",
+      "status": "revoked",
       "kind": "execution-gap",
       "kpName": "解决问题（运用正比例和反比例解决归一、行程等实际问题）",
       "reason": "本 KP 认知层级 analyze 超出 calc 题型区间[recall,understand,apply]（P25-03 另带 cognitive-out-of-range/no-type-evidence 旗标），且语义为综合比例应用；当前无原生生成器",
       "evidence": "2026-09-19 实测产出「83 + 10 + 65 = ?」通用三连加兜底题，与正反比例无关，且无 semanticEvidence 声明",
-      "retainedTypes": ["fill", "apply", "choice", "geometry"]
+      "retainedTypes": ["fill", "apply", "choice", "geometry"],
+      "resolution": {
+        "revokedAt": "2026-09-19",
+        "revokedBy": "P25-06 本体（SemanticProfile→Intent→GenerationParameters→Generator 语义参数链路）",
+        "replacedBy": "generator:semantic-relations（subTopic=proportion-application，正比例归一/速度、反比例总量固定、物高影长，覆盖全部 ALLOW 题型）",
+        "verification": "calc maker 走一步归一（先求单价再乘数量），难度可控且语义绑定正反比例；verify:allow-gen E2E 1570 全验"
+      }
     }
   ]
 }

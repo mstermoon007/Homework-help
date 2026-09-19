@@ -350,29 +350,11 @@ function rng() {
   return RNG_HELPER();
 }
 
-var MONEY_KPS = [
-  'math-g1-m4-rmb-unit',
-  'math-g1-m4-rmb-calc',
-  'math-g1-m5-match-rmb',
-  'math-g1-m8-rmb-shopping',
-  'math-g2-m4-length-unit',
-  'math-g2-m4-mass-unit',
-  'math-g2-m4-time-unit',
-  'math-g2-m4-fill-length',
-  'math-g2-m4-fill-mass',
-  'math-g2-m4-fill-time',
-  'math-g2-m8-money',
-  'math-g3-m4-g3-measure',
-  'math-g4-c4-c4-pa'
-];
-
+// P25-06 H2：原 MONEY_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 legacy ID）
+// 已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
+// 绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function buildAll() {
-  return [
-    createMoneyGenerator({
-      id: 'generator:money-measurement',
-      knowledgePoints: MONEY_KPS
-    })
-  ];
+  return [createMoneyGenerator({ id: 'generator:money-measurement' })];
 }
 
 module.exports = {

@@ -106,28 +106,9 @@ function makePictureEquationQuestion(plan, context, i, kp) {
   };
 }
 
-var PICTURE_EQ_KPS = [
-  'math-g2-m7-pic-mixed',
-  'math-g4-m7-g4-pic-segment',
-  'math-g4-m7-g4-pic-brace',
-  'math-g4-m7-g4-pic-speed',
-  'math-g4-m7-g4-pic-dec',
-  'math-g4-c1-c1-array',
-  'math-g4-c1-c1-magic',
-  'math-g5-m7-g5-pic-balance',
-  'math-g5-m7-g5-pic-segment',
-  'math-g5-m7-g5-pic-tree',
-  'math-g5-c1-number-array-closed',
-  'math-g5-c1-number-array-radial',
-  'math-g5-c1-number-array-composite',
-  'math-g5-c1-magic-square-3',
-  'math-g5-c1-magic-square-4',
-  'math-g6-m7-g6-pic-frac-line',
-  'math-g6-m7-g6-pic-scale',
-  'math-g6-c1-magic-square-adv',
-  'math-g6-c1-number-array'
-];
-
+// P25-06 H2：原 PICTURE_EQ_KPS（math-gN-m7-* 模块制 / math-gN-c1-* 竞赛制 legacy ID）
+// 已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
+// 绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function createPictureEquationGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:picture-equation';
@@ -137,7 +118,7 @@ function createPictureEquationGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || PICTURE_EQ_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -159,16 +140,10 @@ function createPictureEquationGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createPictureEquationGenerator({
-      id: 'generator:picture-equation',
-      knowledgePoints: PICTURE_EQ_KPS
-    })
-  ];
+  return [createPictureEquationGenerator()];
 }
 
 module.exports = {
-  PICTURE_EQ_KPS: PICTURE_EQ_KPS,
   createPictureEquationGenerator: createPictureEquationGenerator,
   buildAll: buildAll
 };

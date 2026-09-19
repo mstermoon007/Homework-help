@@ -10,6 +10,11 @@
  *   - generator-registry.js CORE_RECORDS 1 条 native 绑定
  *   - selector 无需改动：KP native binding 直接胜出
  *
+ * P25-06：6 个子类型（意义/互化/折扣/利率/达标线/增减百分之几）不再按 KP ID 尾缀
+ * 切片猜测，统一消费 selector 注入的 plan.semanticParams.subTopic
+ * （SemanticParameters 按语义族 + KBL name/concept 机械派生，证据可溯源）；
+ * subTopic 缺失或无对应 maker 时返回 []（fail-closed，不静默兜底）。
+ *
  * 题型：calc（直接列式）/ fill（填空）/ apply（应用情境），答案均为数值（answerMode=input）。
  * 不声明 choice：选择题由 generation-contract 指定的 generator:selection-choice 承载。
  *
@@ -18,6 +23,7 @@
 'use strict';
 
 var Rng = require('../core/rng.js');
+var SemanticParameters = require('../core/semantic-parameters.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -104,7 +110,7 @@ function makePercentOf(plan, context, i) {
 function makeConversion(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var variant = i % 3;
-  var q = buildBase(plan, context, i, { subType: 'conversion', variant: variant });
+  var q = buildBase(plan, context, i, { subType: 'percent-conversion', variant: variant });
   if (variant === 0) {
     var d = (Rng.randInt(rng, 1, 9) * 10 + Rng.randInt(rng, 1, 9)) / 100;
     var dpct = Math.round(d * 100);
@@ -133,11 +139,11 @@ function makeDiscount(plan, context, i) {
   var prompt;
   if (askSaved) {
     prompt = '一件商品原价 ' + price + ' 元，现在' + d.label + '出售，买这件商品可以便宜多少元？';
-    return finish(buildBase(plan, context, i, { subType: 'discount', price: price, rate: d.rate, ask: 'saved' }),
+    return finish(buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: 'saved' }),
       prompt, price - cur, '便宜 ' + price + ' − ' + cur + ' = ' + (price - cur) + ' 元');
   }
   prompt = '一件商品原价 ' + price + ' 元，现在' + d.label + '出售，现价是多少元？';
-  return finish(buildBase(plan, context, i, { subType: 'discount', price: price, rate: d.rate, ask: 'current' }),
+  return finish(buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: 'current' }),
     prompt, cur, '现价 ' + price + ' × ' + d.rate + '% = ' + cur + ' 元');
 }
 
@@ -150,11 +156,11 @@ function makeInterest(plan, context, i) {
   var interest = principal * rate * years / 100;
   var askTotal = (i % 2 === 1);
   if (askTotal) {
-    return finish(buildBase(plan, context, i, { subType: 'interest', principal: principal, rate: rate, years: years, ask: 'total' }),
+    return finish(buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: 'total' }),
       '小明把 ' + principal + ' 元压岁钱存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期时一共可以取回多少元？',
       principal + interest, '本息合计 ' + principal + ' + ' + interest + ' = ' + (principal + interest) + ' 元');
   }
-  return finish(buildBase(plan, context, i, { subType: 'interest', principal: principal, rate: rate, years: years, ask: 'interest' }),
+  return finish(buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: 'interest' }),
     '小明把 ' + principal + ' 元存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期可得利息多少元？',
     interest, '利息 ' + principal + ' × ' + rate + '% × ' + years + ' = ' + interest + ' 元');
 }
@@ -162,7 +168,7 @@ function makeInterest(plan, context, i) {
 /* ---------- k005 确定达标线：达标率 / 至少达标人数 ---------- */
 function makeRateLine(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var q = buildBase(plan, context, i, { subType: 'target-rate' });
+  var q = buildBase(plan, context, i, { subType: 'percent-target-rate' });
   if (i % 2 === 1) {
     // 已知达标率与总人数，求至少达标人数
     var total = Rng.pick(rng, [50, 100, 200, 400, 500]);
@@ -199,21 +205,23 @@ function makePercentChange(plan, context, i) {
     base + ' × (1' + (increase ? '+' : '−') + p + '%) = ' + ans);
 }
 
-// 子类型按 canonical KP 尾缀（u05 单元内 k001–k006）分派；
-// 完整 KP→生成器绑定的唯一真值源是 generator-registry.js 的 knowledgePoints
-// （KBL 唯一性门禁允许 knowledgePoints 引用，禁止 bundle 内重复内嵌 canonical 数据）。
-var SUBTYPE_MAKERS = {
-  '001': makePercentOf,
-  '002': makeConversion,
-  '003': makeDiscount,
-  '004': makeInterest,
-  '005': makeRateLine,
-  '006': makePercentChange
+// 子类型按 GenerationParameters.subTopic 分派（键与 semantic-parameters 规则一一对应）。
+// 完整 KP→生成器绑定的唯一真值源是 generator-registry.js 的 knowledgePoints。
+var SUBTOPIC_MAKERS = {
+  'percent-of': makePercentOf,
+  'percent-conversion': makeConversion,
+  'percent-discount': makeDiscount,
+  'percent-interest': makeInterest,
+  'percent-target-rate': makeRateLine,
+  'percent-change': makePercentChange
 };
 
-function subtypeMaker(kpId) {
-  var suffix = kpId ? kpId.slice(-3) : '';
-  return SUBTYPE_MAKERS[suffix] || makePercentOf;
+/** 取本 plan 的语义参数：优先 selector 注入；缺省时即时派生（直连调用方/单测兜底，同一 SSOT） */
+function paramsOf(plan) {
+  if (plan && plan.semanticParams) return plan.semanticParams;
+  var kpId = pkp(plan);
+  if (!kpId) return null;
+  return SemanticParameters.resolve(kpId, plan && (plan.questionTypeId || plan.questionType));
 }
 
 function createPercentGenerator(spec) {
@@ -233,7 +241,10 @@ function createPercentGenerator(spec) {
 
     generate: function (plan, context) {
       var count = (plan && plan.count) || 1;
-      var maker = subtypeMaker(pkp(plan));
+      var params = paramsOf(plan);
+      var maker = params ? SUBTOPIC_MAKERS[params.subTopic] : null;
+      // fail-closed：语义参数缺失或子类型无 maker → 不产出，交 retry/上层判失败，禁止猜测兜底
+      if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
       return out;

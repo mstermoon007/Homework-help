@@ -105,30 +105,14 @@ function createCompositeGenerator(spec) {
   };
 }
 
-var COMPOSITE_KPS = [
-  // 计算 + 判断
-  'math-g1-m1-addsub-10', 'math-g1-m0-make-ten', 'math-g1-m0-make-ten-cushi', 'math-g1-m1-addsub-5', 'math-g1-m11-judge-mixed',
-  // 单位换算 + 运算
-  'math-g1-m4-rmb-unit', 'math-g1-m4-rmb-calc', 'math-g1-m8-rmb-shopping',
-  'math-g2-m4-length-unit', 'math-g2-m4-mass-unit', 'math-g2-m4-time-unit',
-  'math-g2-m8-money', 'math-g3-m4-g3-measure',
-  // 图形 + 数量关系
-  'math-g1-m6-solid-shape', 'math-g1-m6-flat-shape', 'math-g1-m6-shape-combine',
-  'math-g2-m6-solid-shape', 'math-g4-c4-c4-solid', 'math-g5-c4-solid-geometry',
-  'math-g6-c4-solid-geometry'
-];
-
+// P25-06 H2：原 COMPOSITE_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 legacy ID）
+// 已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
+// 绑定 SSOT 在 generator-registry.js CORE_RECORDS（composite 记录由 supportsComposite 承载）。
 function buildAll() {
-  return [
-    createCompositeGenerator({
-      id: 'generator:composite',
-      knowledgePoints: COMPOSITE_KPS
-    })
-  ];
+  return [createCompositeGenerator({ id: 'generator:composite' })];
 }
 
 module.exports = {
-  COMPOSITE_KPS: COMPOSITE_KPS,
   createCompositeGenerator: createCompositeGenerator,
   buildAll: buildAll
 };

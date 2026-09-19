@@ -186,31 +186,9 @@ function makeReasoningQuestion(plan, context, i, kp) {
   };
 }
 
-var REASONING_KPS = [
-  'math-g2-m10-logic-reasoning',
-  'math-g2-m10-sudoku3',
-  'math-g2-m10-combination',
-  'math-g2-m10-handshake',
-  'math-g4-m10-g4-reason-opt',
-  'math-g4-m10-g4-reason-cr',
-  'math-g4-m10-logic-reasoning',
-  'math-g4-c8-c8-extreme',
-  'math-g4-c8-c8-drawer',
-  'math-g4-c8-c8-logic',
-  'math-g5-m10-g5-reason-tree3',
-  'math-g5-m10-g5-reason-defect',
-  'math-g5-m10-logic-reasoning',
-  'math-g5-m10-g5-reason-seq',
-  'math-g5-c8-extremum-problem',
-  'math-g5-c8-logic-inference',
-  'math-g5-c8-winning-strategy',
-  'math-g6-m10-g6-reason-pigeonhole',
-  'math-g6-c8-extremum-problem',
-  'math-g6-c8-logic-inference',
-  'math-g6-c8-winning-strategy',
-  'math-g6-c8-optimization'
-];
-
+// P25-06 H2：原 REASONING_KPS（math-gN-m10-* 模块制 / math-gN-c8-* 竞赛制 legacy ID）
+// 已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
+// 绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function createReasoningGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:reasoning';
@@ -220,7 +198,7 @@ function createReasoningGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || REASONING_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -242,16 +220,10 @@ function createReasoningGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createReasoningGenerator({
-      id: 'generator:reasoning',
-      knowledgePoints: REASONING_KPS
-    })
-  ];
+  return [createReasoningGenerator()];
 }
 
 module.exports = {
-  REASONING_KPS: REASONING_KPS,
   createReasoningGenerator: createReasoningGenerator,
   buildAll: buildAll
 };

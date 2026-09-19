@@ -162,30 +162,8 @@ function makeQuestion(plan, context, i, kp) {
   };
 }
 
-var C7_KPS = [
-  // —— G5 C7 巧算（math-competition-g5-c7，9 个 apply/calc；compare-size 为 recognize 留 selection）——
-  'math-g5-c7-extract-common-factor',
-  'math-g5-c7-rounding-calc',
-  'math-g5-c7-fraction-splitting',
-  'math-g5-c7-integer-splitting',
-  'math-g5-c7-arithmetic-series',
-  'math-g5-c7-recurring-decimal-frac',
-  'math-g5-c7-define-operation',
-  'math-g5-c7-estimate-bounds',
-  'math-g5-c7-complex-fraction',
-  // —— G6 C7 巧算（math-competition-g6-c7，10 个 apply/calc；compare-size 为 recognize 留 selection）——
-  'math-g6-c7-extract-common-factor',
-  'math-g6-c7-rounding-calc',
-  'math-g6-c7-fraction-splitting',
-  'math-g6-c7-integer-splitting',
-  'math-g6-c7-arithmetic-series',
-  'math-g6-c7-recurring-decimal-frac',
-  'math-g6-c7-define-operation',
-  'math-g6-c7-estimate-bounds',
-  'math-g6-c7-complex-fraction',
-  'math-g6-c7-sequence-sum'
-];
-
+// P25-06 H2：原 C7_KPS（math-gN-c7-* 竞赛制 legacy ID）已随竞赛 KP 全部剔除，
+// 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS（[] 泛匹配）。
 function createC7Generator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:c7-clever-calc';
@@ -195,7 +173,7 @@ function createC7Generator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || C7_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -217,16 +195,10 @@ function createC7Generator(spec) {
 }
 
 function buildAll() {
-  return [
-    createC7Generator({
-      id: 'generator:c7-clever-calc',
-      knowledgePoints: C7_KPS
-    })
-  ];
+  return [createC7Generator()];
 }
 
 module.exports = {
-  C7_KPS: C7_KPS,
   createC7Generator: createC7Generator,
   buildAll: buildAll
 };

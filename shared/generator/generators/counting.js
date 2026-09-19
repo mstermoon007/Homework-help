@@ -223,43 +223,9 @@ function makeCountingQuestion(plan, context, i, kp) {
   };
 }
 
-var COUNTING_KPS = [
-  // —— 基础/标准模块 ——
-  'math-g3-m10-g3-combination',
-  'math-g3-m10-g3-set',
-  // —— G4 C3 competition（math-competition-c3-counting）——
-  'math-g4-c3-c3-enum',
-  'math-g4-c3-c3-am',
-  'math-g4-c3-c3-perm',
-  'math-g4-c3-c3-worst',
-  // 注：math-g4-c3-c3-geomcount（几何计数，qt=geometry）由 shape-recognition 承接
-  // —— G5 C3 competition（math-competition-g5-c3，10 个）——
-  'math-g5-c3-addition-principle',
-  'math-g5-c3-multiplication-principle',
-  'math-g5-c3-permutation',
-  'math-g5-c3-combination',
-  'math-g5-c3-enumeration-counting',
-  'math-g5-c3-bundling-method',
-  'math-g5-c3-insertion-method',
-  'math-g5-c3-stars-bars',
-  'math-g5-c3-pigeonhole-principle',
-  'math-g5-c3-worst-case-principle',
-  // —— G6 C3 competition（math-competition-g6-c3，13 个 apply；geometry-counting 归 shape）——
-  'math-g6-c3-addition-principle',
-  'math-g6-c3-multiplication-principle',
-  'math-g6-c3-permutation',
-  'math-g6-c3-combination',
-  'math-g6-c3-enumeration-counting',
-  'math-g6-c3-bundling-method',
-  'math-g6-c3-insertion-method',
-  'math-g6-c3-stars-bars',
-  'math-g6-c3-pigeonhole-principle',
-  'math-g6-c3-worst-case-principle',
-  'math-g6-c3-inclusion-exclusion',
-  'math-g6-c3-recursion-counting',
-  'math-g6-c3-derangement'
-];
-
+// P25-06 H2：原 COUNTING_KPS（math-gN-m10-* 模块制 / math-gN-c3-* 竞赛制 legacy ID）
+// 已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
+// 绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function createCountingGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:counting';
@@ -269,7 +235,7 @@ function createCountingGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || COUNTING_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -291,16 +257,10 @@ function createCountingGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createCountingGenerator({
-      id: 'generator:counting',
-      knowledgePoints: COUNTING_KPS
-    })
-  ];
+  return [createCountingGenerator()];
 }
 
 module.exports = {
-  COUNTING_KPS: COUNTING_KPS,
   createCountingGenerator: createCountingGenerator,
   buildAll: buildAll
 };

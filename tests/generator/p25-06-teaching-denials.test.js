@@ -1,18 +1,21 @@
 'use strict';
 
 /**
- * tests/generator/p25-06-teaching-denials.test.js — P25-06 教学裁决覆盖层
+ * tests/generator/p25-06-teaching-denials.test.js — P25-06 教学裁决撤销与语义参数链路
+ *
+ * P25-06 本体：首批 4 条 teaching deny（图形表征 KP × calc，execution-gap）
+ * 已随 generator:semantic-relations 参数化族生成器补齐而全部撤销。
  *
  * 冻结不变量：
- *   1. 4 个图形表征 KP × calc（representation-conflict 旗标行）经教学裁决后：
- *      resolveFinal=FORBID + source.teachingDenial=P25-06 + confidence=teaching-denied；
- *      canGenerate=false；getCapabilities 不含 calc；buildEligibility 归入 skip。
- *   2. 同 KP 的 fill/apply/choice/geometry 不受影响（仍 ALLOW）。
- *   3. 普通 KP 的 calc 不受影响（回归）。
- *   4. 运行时代码表（resolver TEACHING_DENIALS）与审计 SSOT
- *      （kbl/teaching/teaching-denials.json）集合一致，防漂移。
- *   5. 端到端：显式请求被 deny 的 calc → fail-fast（无可生成题目），
- *      不再静默产出语义无关兜底题；fill 仍可正常生成。
+ *   1. ACTIVE 裁决为空：4 KP × calc（及全部 5 题型）resolveFinal=ALLOW，
+ *      isTeachingDenied=false，getCapabilities 含 calc，buildEligibility 不 skip。
+ *   2. 账本留痕：teaching-denials.json 4 行均 status=revoked 且带 resolution
+ *      （revokedAt/replacedBy/verification）；代码 ACTIVE 表 ↔ JSON 非 revoked 集合一致。
+ *   3. 路由：4 KP × 5 题型 selector 全部命中 generator:semantic-relations，
+ *      生成题目经 KpSemanticValidator 无 ERROR。
+ *   4. 端到端：PracticeSession 显式 calc 可真实生成 ≥1 题，
+ *      metadata.generator=generator:semantic-relations、题型/KP 正确。
+ *   5. 回归：普通 KP calc 不受裁决机制影响。
  */
 
 const { test } = require('node:test');
@@ -23,99 +26,134 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..', '..');
 require(path.join(ROOT, 'dev', '_bundle-env.js'));
 
-// 运行时实际使用 bundle 内联的 resolver（strategy bundle 设置 global.CapabilityResolver），
-// 与浏览器/PracticeSession 路径同源，保证测试即运行时行为。
+// 运行时实际使用 bundle 内联模块（strategy bundle 设置 global.*），与浏览器/PracticeSession 同源。
 const Resolver = global.CapabilityResolver;
+const Selector = global.GeneratorSelector;
 const KCV = require(path.join(ROOT, 'shared', 'capability', 'knowledge-capability-view.js'));
 const KC = require(path.join(ROOT, 'shared', 'orchestration', 'knowledge-context.js'));
+const KpSemantic = require(path.join(ROOT, 'shared', 'validator', 'kp-semantic-validator.js'));
 const PracticeSession = require(path.join(ROOT, 'shared', 'engine', 'practice-session.js'));
 
-const DENIED = [
-  { id: 'math-g1-down-u06-k002', grade: 1 },
-  { id: 'math-g2-down-u02-k005', grade: 2 },
-  { id: 'math-g6-down-u04-k007', grade: 6 },
-  { id: 'math-g6-down-u04-k008', grade: 6 }
+const REVOKED = [
+  { id: 'math-g1-down-u06-k002', grade: 1, subTopic: 'pictorial-additive-relation' },
+  { id: 'math-g2-down-u02-k005', grade: 2, subTopic: 'periodic-pattern' },
+  { id: 'math-g6-down-u04-k007', grade: 6, subTopic: 'scale-transform' },
+  { id: 'math-g6-down-u04-k008', grade: 6, subTopic: 'proportion-application' }
 ];
-const RETAINED = ['fill', 'apply', 'choice', 'geometry'];
+const ALL_TYPES = ['calc', 'fill', 'apply', 'choice', 'geometry'];
 
-test('resolver 可用（strategy bundle 已加载）', () => {
+test('bundle 可用（resolver/selector 已随最新源码重建）', () => {
   assert.ok(Resolver && typeof Resolver.resolveFinal === 'function', 'global.CapabilityResolver 不可用——先重建 bundle');
+  assert.ok(Selector && typeof Selector.selectGenerator === 'function', 'global.GeneratorSelector 不可用——先重建 bundle');
 });
 
-DENIED.forEach(function (d) {
-  test('deny：' + d.id + ' × calc → FORBID/teachingDenial', () => {
-    const r = Resolver.resolveFinal({ knowledgePointId: d.id, questionType: 'calc' });
-    assert.equal(r.decision, 'FORBID');
-    assert.equal(r.source.teachingDenial, 'P25-06');
-    assert.equal(r.confidence, 'teaching-denied');
-    assert.equal(Resolver.canGenerate(d.id, 'calc'), false);
-    assert.equal(Resolver.isTeachingDenied(d.id, 'calc'), true);
+test('ACTIVE 教学裁决为空（机制保留，首批 4 条已撤销）', () => {
+  assert.deepEqual(Resolver.listTeachingDenials(), []);
+  REVOKED.forEach(function (d) {
+    ALL_TYPES.forEach(function (qt) {
+      assert.equal(Resolver.isTeachingDenied(d.id, qt), false);
+    });
   });
+});
 
-  RETAINED.forEach(function (qt) {
-    test('不波及：' + d.id + ' × ' + qt + ' 仍 ALLOW', () => {
+REVOKED.forEach(function (d) {
+  ALL_TYPES.forEach(function (qt) {
+    test('恢复 ALLOW：' + d.id + ' × ' + qt, () => {
       const r = Resolver.resolveFinal({ knowledgePointId: d.id, questionType: qt });
-      assert.equal(r.decision, 'ALLOW', qt + ' 不应被教学裁决波及');
+      assert.equal(r.decision, 'ALLOW');
       assert.equal(r.source.teachingDenial, null);
+      assert.equal(Resolver.canGenerate(d.id, qt), true);
     });
   });
 
-  test('getCapabilities：' + d.id + ' 能力列表剔除 calc、保留其余题型', () => {
+  test('getCapabilities：' + d.id + ' 能力列表含全部 5 题型', () => {
     const caps = Resolver.getCapabilities(KC.get(d.id));
-    assert.ok(caps.questionTypes.indexOf('calc') === -1, 'calc 应被剔除');
-    RETAINED.forEach(function (qt) {
-      assert.ok(caps.questionTypes.indexOf(qt) !== -1, qt + ' 应保留');
+    ALL_TYPES.forEach(function (qt) {
+      assert.ok(caps.questionTypes.indexOf(qt) !== -1, qt + ' 应在能力列表');
     });
   });
 });
 
-test('buildEligibility：4 行 calc 归入 skip（POL 不再规划）', () => {
-  const ev = KCV.buildEligibility(DENIED.map(function (d) { return d.id; }), ['calc', 'fill']);
-  DENIED.forEach(function (d) {
-    assert.equal(ev.matrix[d.id].calc, 'FORBID');
-    assert.ok((ev.skip[d.id] || []).indexOf('calc') !== -1);
-    assert.equal(ev.matrix[d.id].fill, 'ALLOW');
+test('buildEligibility：4 KP × calc 全部 ALLOW（不再 FORBID/skip）', () => {
+  const ev = KCV.buildEligibility(REVOKED.map(function (d) { return d.id; }), ALL_TYPES);
+  REVOKED.forEach(function (d) {
+    ALL_TYPES.forEach(function (qt) {
+      assert.equal(ev.matrix[d.id][qt], 'ALLOW');
+    });
+    assert.equal((ev.skip[d.id] || []).length, 0);
   });
 });
 
-test('回归：普通 KP（倍 math-g2-down-u03-k003）calc 仍 ALLOW', () => {
-  const kp = 'math-g2-down-u03-k003';
-  assert.equal(Resolver.isTeachingDenied(kp, 'calc'), false);
-  assert.equal(Resolver.resolveFinal({ knowledgePointId: kp, questionType: 'calc' }).decision, 'ALLOW');
-  assert.ok(Resolver.getCapabilities(KC.get(kp)).questionTypes.indexOf('calc') !== -1);
-});
-
-test('防漂移：resolver 代码表与 teaching-denials.json SSOT 集合一致', () => {
+test('防漂移：resolver ACTIVE 表与 teaching-denials.json 非 revoked 集合一致（空 ↔ 空）', () => {
   const doc = JSON.parse(fs.readFileSync(path.join(ROOT, 'kbl', 'teaching', 'teaching-denials.json'), 'utf8'));
-  const fromJson = doc.denials.map(function (d) { return d.knowledgeId + '|' + d.questionType; }).sort();
-  const fromCode = Resolver.listTeachingDenials().map(function (d) {
+  const activeFromJson = (doc.denials || [])
+    .filter(function (d) { return d.status !== 'revoked'; })
+    .map(function (d) { return d.knowledgeId + '|' + d.questionType; })
+    .sort();
+  const activeFromCode = Resolver.listTeachingDenials().map(function (d) {
     return d.knowledgeId + '|' + d.questionType;
   }).sort();
-  assert.deepEqual(fromCode, fromJson);
-  // SSOT 每条裁决必须可审计
-  doc.denials.forEach(function (d) {
-    assert.ok(d.reason && d.evidence && d.kind === 'execution-gap', d.knowledgeId + ' 裁决缺理由/证据/kind');
-    assert.deepEqual(d.retainedTypes, RETAINED, d.knowledgeId + ' retainedTypes 与测试冻结不一致');
+  assert.deepEqual(activeFromCode, activeFromJson);
+
+  // 4 条历史裁决必须以 revoked 形态保留完整审计链
+  const revoked = (doc.denials || []).filter(function (d) { return d.status === 'revoked'; });
+  assert.equal(revoked.length, 4);
+  revoked.forEach(function (d) {
+    assert.equal(d.kind, 'execution-gap');
+    assert.ok(d.reason && d.evidence, d.knowledgeId + ' 缺原裁决理由/证据');
+    assert.ok(d.resolution, d.knowledgeId + ' revoked 行缺 resolution');
+    assert.ok(d.resolution.revokedAt && d.resolution.replacedBy && d.resolution.verification,
+      d.knowledgeId + ' resolution 缺 revokedAt/replacedBy/verification');
+    assert.ok(d.resolution.replacedBy.indexOf('generator:semantic-relations') !== -1,
+      d.knowledgeId + ' replacedBy 应指向 semantic-relations');
+    assert.deepEqual(d.retainedTypes, ['fill', 'apply', 'choice', 'geometry']);
   });
 });
 
-DENIED.forEach(function (d) {
-  test('端到端：' + d.id + ' 显式请求 calc → fail-fast（不再静默出兜底题）', async () => {
+REVOKED.forEach(function (d) {
+  ALL_TYPES.forEach(function (qt) {
+    test('语义路由+校验：' + d.id + ' × ' + qt + ' → semantic-relations 且无 ERROR', () => {
+      const plan = { knowledgePointIds: [d.id], questionTypeId: qt, difficulty: 2, count: 1, seed: 'p2506' };
+      const sel = Selector.selectGenerator(plan, { mode: 'native' });
+      assert.equal(sel.generatorId, 'generator:semantic-relations');
+      const gen = Selector.instantiate(sel);
+      const sqs = gen.generate(plan, {});
+      assert.equal(sqs.length, 1);
+      const sq = sqs[0];
+      assert.equal(sq.questionType, qt);
+      assert.equal(sq.knowledgePointId, d.id);
+      assert.equal(sq.data.subTopic, d.subTopic);
+      assert.equal(sq.metadata.generator, 'generator:semantic-relations');
+      const result = KpSemantic.validateKpSemantics(sq, { kpId: d.id, kpConstraints: null, plan: plan });
+      assert.deepEqual(result.errors, []);
+    });
+  });
+});
+
+REVOKED.forEach(function (d) {
+  test('端到端：' + d.id + ' 显式 calc 真实生成（撤销 deny，不再 fail-fast）', async () => {
     const session = new PracticeSession({
       subject: 'math', grade: d.grade, count: 1,
       knowledgePointId: d.id, questionType: 'calc'
     });
-    await assert.rejects(function () { return session.start(); }, /没有可生成的题目|不可生成|FORBID/);
+    const result = await session.start();
+    const qs = session.semanticQuestions || result.questions || [];
+    assert.ok(qs.length >= 1, 'calc 应可真实生成');
+    const sq = qs[0];
+    assert.equal(sq.questionType, 'calc');
+    const sqKp = sq.knowledgePointId || (sq.knowledgePointIds && sq.knowledgePointIds[0]);
+    assert.equal(sqKp, d.id);
+    assert.equal(sq.metadata && sq.metadata.generator, 'generator:semantic-relations');
   });
 });
 
-test('端到端：math-g1-down-u06-k002 显式 fill 仍可真实生成 ≥1 题', async () => {
-  const session = new PracticeSession({
-    subject: 'math', grade: 1, count: 1,
-    knowledgePointId: 'math-g1-down-u06-k002', questionType: 'fill'
-  });
-  const result = await session.start();
-  const qs = session.semanticQuestions || result.questions || [];
-  assert.ok(qs.length >= 1, 'fill 应仍可生成');
-  assert.equal(qs[0].questionType, 'fill');
+test('回归：普通 KP（倍 math-g2-down-u03-k003）calc 仍 ALLOW 且命中 concept-meaning', () => {
+  const kp = 'math-g2-down-u03-k003';
+  assert.equal(Resolver.isTeachingDenied(kp, 'calc'), false);
+  assert.equal(Resolver.resolveFinal({ knowledgePointId: kp, questionType: 'calc' }).decision, 'ALLOW');
+  assert.ok(Resolver.getCapabilities(KC.get(kp)).questionTypes.indexOf('calc') !== -1);
+  const sel = Selector.selectGenerator(
+    { knowledgePointIds: [kp], questionTypeId: 'calc', difficulty: 2, count: 1 },
+    { mode: 'native' });
+  assert.equal(sel.generatorId, 'generator:concept-meaning');
 });

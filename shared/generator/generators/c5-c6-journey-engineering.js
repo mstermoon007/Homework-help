@@ -194,41 +194,8 @@ function makeQuestion(plan, context, i, kp) {
   };
 }
 
-var C5C6_KPS = [
-  // —— G4 C5 行程（math-competition-c5-journey，5 个）——
-  'math-g4-c5-c5-basic',
-  'math-g4-c5-c5-meet',
-  'math-g4-c5-c5-chase',
-  'math-g4-c5-c5-train',
-  'math-g4-c5-c5-river',
-  // —— G5 C5 行程（math-competition-g5-c5，8 个 apply；clock-problem 为 recognize 留 selection）——
-  'math-g5-c5-basic-motion',
-  'math-g5-c5-meet-problem',
-  'math-g5-c5-chase-problem',
-  'math-g5-c5-train-bridge',
-  'math-g5-c5-boat-stream',
-  'math-g5-c5-circular-track',
-  'math-g5-c5-average-speed',
-  'math-g5-c5-ratio-motion',
-  // —— G5 C6 工程/浓度（math-competition-g5-c6，2 个）——
-  'math-g5-c6-work-problem',
-  'math-g5-c6-concentration-problem',
-  // —— G6 C5 行程（math-competition-g6-c5，10 个 apply；clock 为 recognize 留 selection）——
-  'math-g6-c5-basic',
-  'math-g6-c5-meet',
-  'math-g6-c5-chase',
-  'math-g6-c5-train-bridge',
-  'math-g6-c5-boat-stream',
-  'math-g6-c5-ring-runway',
-  'math-g6-c5-journey-complex',
-  'math-g6-c5-competition',
-  'math-g6-c5-interval-departure',
-  'math-g6-c5-pick-up-problem',
-  // —— G6 C6 工程/浓度（math-competition-g6-c6，2 个）——
-  'math-g6-c6-work-problem',
-  'math-g6-c6-concentration-problem'
-];
-
+// P25-06 H2：原 C5C6_KPS（math-gN-c5/c6-* 竞赛制 legacy ID）已随竞赛 KP 全部剔除，
+// 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS（[] 泛匹配）。
 function createJourneyEngineeringGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:c5-c6-journey-engineering';
@@ -238,7 +205,7 @@ function createJourneyEngineeringGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || C5C6_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -260,16 +227,10 @@ function createJourneyEngineeringGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createJourneyEngineeringGenerator({
-      id: 'generator:c5-c6-journey-engineering',
-      knowledgePoints: C5C6_KPS
-    })
-  ];
+  return [createJourneyEngineeringGenerator()];
 }
 
 module.exports = {
-  C5C6_KPS: C5C6_KPS,
   createJourneyEngineeringGenerator: createJourneyEngineeringGenerator,
   buildAll: buildAll
 };

@@ -167,30 +167,8 @@ function makeStatsQuestion(plan, context, i, kp) {
   };
 }
 
-var STATS_KPS = [
-  'math-g2-m9-data-tally',
-  'math-g2-m9-data-question',
-  'math-g3-m9-g3-stats-table',
-  'math-g4-m9-g4-stats-bar',
-  'math-g4-m9-g4-stats-double',
-  'math-g4-m9-g4-stats-avg',
-  'math-g4-m11-stats',
-  'math-g5-m4-g5-fill-linechart',
-  'math-g5-m8-g5-word-linechart',
-  'math-g5-m9-g5-stats-possib',
-  'math-g5-m9-g5-stats-line1',
-  'math-g5-m9-g5-stats-line2',
-  'math-g5-m11-stats',
-  'math-g5-m12-stats',
-  'math-g6-m4-g6-fill-pie-chart',
-  'math-g6-m5-g6-match-chart',
-  'math-g6-m7-g6-pic-pie-chart',
-  'math-g6-m9-g6-stat-pie-chart',
-  'math-g6-m9-g6-stat-possibility',
-  'math-g6-m11-g6-judge-chart',
-  'math-g6-m12-g6-choice-chart'
-];
-
+// P25-06 H2：原 STATS_KPS（math-gN-mN-* 模块制 legacy ID）已随旧体系 KP 全部剔除，
+// 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function createStatsGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:stats';
@@ -200,7 +178,7 @@ function createStatsGenerator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || STATS_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -222,16 +200,10 @@ function createStatsGenerator(spec) {
 }
 
 function buildAll() {
-  return [
-    createStatsGenerator({
-      id: 'generator:stats',
-      knowledgePoints: STATS_KPS
-    })
-  ];
+  return [createStatsGenerator()];
 }
 
 module.exports = {
-  STATS_KPS: STATS_KPS,
   createStatsGenerator: createStatsGenerator,
   buildAll: buildAll
 };

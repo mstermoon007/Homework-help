@@ -39,6 +39,7 @@ var SemanticSpecial = require('./semantic-special.js');
 var Classification = require('./classify.js');
 var Percent = require('./percent.js');
 var ConceptMeaning = require('./concept-meaning.js');
+var SemanticRelations = require('./semantic-relations.js');
 
 var ALL = [].concat(
   Arithmetic.buildAll(),
@@ -61,7 +62,8 @@ var ALL = [].concat(
   SemanticSpecial.buildAll(),
   Classification.buildAll(),
   Percent.buildAll(),
-  ConceptMeaning.buildAll()
+  ConceptMeaning.buildAll(),
+  SemanticRelations.buildAll()
 );
 
 var BY_ID = {};

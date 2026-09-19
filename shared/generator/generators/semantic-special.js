@@ -123,7 +123,9 @@ function createCodeGenerator(spec) {
     subject: 'math',
     capabilities: ['fill', 'choice', 'judge', 'recognize'],
     questionTypes: ['fill', 'choice', 'judge', 'recognize'],
-    knowledgePoints: spec.knowledgePoints || ['math-g3-m10-g3-code'],
+    // P25-06 H2：原 fallback 'math-g3-m10-g3-code' 为模块制 legacy ID（canonical 绑定
+    // math-g4-up-u01-k002 在 generator-registry.js CORE_RECORDS，是 SSOT）。
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -207,7 +209,9 @@ function createEquivalentGenerator(spec) {
     subject: 'math',
     capabilities: ['fill', 'choice', 'apply'],
     questionTypes: ['fill', 'choice', 'apply'],
-    knowledgePoints: spec.knowledgePoints || ['math-g3-m8-g3-equivalent'],
+    // P25-06 H2：原 fallback 'math-g3-m8-g3-equivalent' 为模块制 legacy ID；
+    // 本生成器 CORE_RECORDS knowledgePoints 为 []，仅按 capability 泛匹配。
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;

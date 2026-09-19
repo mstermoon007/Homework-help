@@ -33,13 +33,13 @@ var Matrix = require('./capability-matrix.js');
 // kbl/teaching/teaching-denials.json；此处仅以 KP ID 引用承载运行时执行——
 // 必须双环境（Node/浏览器 bundle）一致生效，故内联 ID 引用而非计算路径 require JSON；
 // 不内嵌 canonical 数据载荷，符合 check-kbl-uniqueness（同 generator-registry 的 knowledgePoints 先例）。
-// tests/generator/p25-06 断言本表与 teaching-denials.json 的集合一致，防漂移。
-var TEACHING_DENIALS = {
-  'math-g1-down-u06-k002|calc': 'P25-06',
-  'math-g2-down-u02-k005|calc': 'P25-06',
-  'math-g6-down-u04-k007|calc': 'P25-06',
-  'math-g6-down-u04-k008|calc': 'P25-06'
-};
+// tests/generator/p25-06 断言本表（ACTIVE）与 teaching-denials.json（status!=revoked）集合一致，防漂移。
+//
+// P25-06 本体：首批 4 条（g1-down-u06-k002 / g2-down-u02-k005 / g6-down-u04-k007 /
+// g6-down-u04-k008 × calc）已随 generator:semantic-relations 参数化族生成器补齐而全部撤销
+// （账本保留 revoked 留痕，runtime 有效能力恢复 1570）。当前 ACTIVE 集合为空；
+// 机制保留：未来若再出现 execution-gap，在此登记新表并在账本记一条非 revoked 行。
+var TEACHING_DENIALS = {};
 
 function isTeachingDenied(kpId, qtId) {
   return !!kpId && !!qtId &&

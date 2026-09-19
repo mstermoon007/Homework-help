@@ -145,35 +145,8 @@ function makeTheoryQuestion(plan, context, i, kp) {
   };
 }
 
-var C2_KPS = [
-  // G4
-  'math-g4-c2-c2-parity',
-  'math-g4-c2-c2-remainder',
-  'math-g4-c2-c2-place',
-  // G5
-  'math-g5-c2-divisibility',
-  'math-g5-c2-parity-analysis',
-  'math-g5-c2-prime-factorization',
-  'math-g5-c2-factor-count-sum',
-  'math-g5-c2-gcd-lcm',
-  'math-g5-c2-remainder-congruence',
-  'math-g5-c2-place-value',
-  'math-g5-c2-perfect-square',
-  'math-g5-c2-number-theory-extreme',
-  // G6
-  'math-g6-c2-divisibility',
-  'math-g6-c2-parity-analysis',
-  'math-g6-c2-prime-factorization',
-  'math-g6-c2-factor-count-sum',
-  'math-g6-c2-gcd-lcm',
-  'math-g6-c2-remainder-congruence',
-  'math-g6-c2-place-value',
-  'math-g6-c2-perfect-square',
-  'math-g6-c2-number-theory-extreme',
-  'math-g6-c2-diophantine-equation',
-  'math-g6-c2-modulo-arithmetic'
-];
-
+// P25-06 H2：原 C2_KPS（math-gN-c2-* 竞赛制 legacy ID）已随竞赛 KP 全部剔除，
+// 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS（[] 泛匹配）。
 function createC2Generator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:c2-number-theory';
@@ -183,7 +156,7 @@ function createC2Generator(spec) {
     subject: 'math',
     capabilities: ['apply', 'calc'],
     questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || C2_KPS,
+    knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
       if (!plan || !plan.questionTypeId) return false;
@@ -205,16 +178,10 @@ function createC2Generator(spec) {
 }
 
 function buildAll() {
-  return [
-    createC2Generator({
-      id: 'generator:c2-number-theory',
-      knowledgePoints: C2_KPS
-    })
-  ];
+  return [createC2Generator()];
 }
 
 module.exports = {
-  C2_KPS: C2_KPS,
   createC2Generator: createC2Generator,
   buildAll: buildAll
 };

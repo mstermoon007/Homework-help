@@ -352,26 +352,11 @@ function createApplicationGenerator(spec) {
   };
 }
 
-var APPLICATION_KPS = [
-  'math-g1-m8-rmb-shopping',
-  'math-g2-m8-money',
-  'math-g3-m4-g3-measure',
-  'math-g4-m8-g4-word-div',
-  'math-g4-m8-g4-word-div', // duplicate intentionally for weight
-  'math-g5-m8-g5-word-solid',
-  'math-g6-c4-area-basic',
-  'math-g6-c4-solid-geometry',
-  'math-g6-m10-g6-reason-number-shape'
-  // 注：math-g4-c9-c9-mock（open qt 竞赛模拟卷）已移至 generator:c9-comprehensive
-];
-
+// P25-06 H2：原 APPLICATION_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 legacy ID，
+// 含一条故意重复的权重项）已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
+// 绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function buildAll() {
-  return [
-    createApplicationGenerator({
-      id: 'generator:application-word',
-      knowledgePoints: APPLICATION_KPS
-    })
-  ];
+  return [createApplicationGenerator({ id: 'generator:application-word' })];
 }
 
 module.exports = {
