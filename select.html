@@ -598,7 +598,7 @@
     { key: 'choice',  label: '选择题',          types: ['choice'] },
     { key: 'judge',   label: '判断题',          types: ['judge'] },
     { key: 'operate', label: '操作/作图题',     types: ['geometry'], categories: ['geometry'] },
-    { key: 'sort',    label: '分类整理题',      types: [] },
+    { key: 'classify', label: '分类整理题',     types: ['classify'] },
     { key: 'apply',   label: '解决问题/应用题', types: ['apply'] }
   ];
 
@@ -1009,7 +1009,7 @@
     if (!b) return;
     var kid = b.getAttribute('data-kp');
     var idx = state.teacherKps.indexOf(kid);
-    if (idx === -1) state.teacherKps.push(kid); else state.teacherKps.splice(kid, 1);
+    if (idx === -1) state.teacherKps.push(kid); else state.teacherKps.splice(idx, 1);
     b.classList.toggle('on');
     renderTeacherTypeGrid();
     renderSummary();

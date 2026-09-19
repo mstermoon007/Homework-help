@@ -3456,8 +3456,8 @@ __defs["shared/generator/generator-registry.js"] = function (module, exports, re
 var CORE_RECORDS = [
   { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g4-down-u03-k003', 'math-g6-down-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-up-u04-k001', 'math-g1-up-u06-k001', 'math-g2-down-u06-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g4-down-u06-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u04-k001', 'math-g2-up-u04-k002', 'math-g4-down-u03-k002', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g5-up-u01-k002'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k003', 'math-g2-down-u02-k005', 'math-g2-down-u05-k001', 'math-g2-down-u05-k002', 'math-g2-down-u05-k003', 'math-g3-down-u02-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u04-k001', 'math-g2-up-u04-k002', 'math-g4-down-u03-k002', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g5-up-u01-k002', 'math-g5-up-u02-k002', 'math-g6-down-u04-k005'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-down-u02-k003', 'math-g2-down-u02-k005', 'math-g2-down-u05-k001', 'math-g2-down-u05-k002', 'math-g2-down-u05-k003', 'math-g3-down-u02-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['fill', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['choice', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
@@ -3468,7 +3468,7 @@ var CORE_RECORDS = [
 
   
   { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'oral', 'geometry', 'recognize', 'apply'],
-    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g3-down-u05-k001', 'math-g3-up-u06-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u02-k002', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-down-u04-k005', 'math-g6-up-u02-k001', 'math-g6-up-u05-k001', 'math-g6-up-u05-k002', 'math-g6-up-u05-k003', 'math-g6-up-u05-k004', 'math-g6-up-u05-k005', 'math-g6-up-u05-k006', 'math-g6-up-u07-k001'],
+    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g3-up-u06-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g6-up-u07-k001'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:position-direction', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'oral'], questionTypes: ['choice', 'judge', 'fill', 'oral'],
     knowledgePoints: [],
@@ -3527,7 +3527,14 @@ var CORE_RECORDS = [
   
   { id: 'generator:classification', subject: 'math', capabilities: ['classify'], questionTypes: ['classify'],
     knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g2-up-u01-k003', 'math-g2-up-u01-k004', 'math-g2-up-u01-k005', 'math-g2-up-u01-k006', 'math-g3-down-u05-k001', 'math-g3-down-u05-k002', 'math-g3-down-u05-k003', 'math-g3-down-u05-k004', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g4-up-u06-k004', 'math-g4-down-u08-k001', 'math-g4-down-u08-k002', 'math-g4-down-u08-k003', 'math-g4-down-u08-k004', 'math-g5-up-u07-k001', 'math-g5-up-u07-k002', 'math-g5-up-u07-k003', 'math-g5-up-u07-k004', 'math-g5-down-u07-k001', 'math-g5-down-u07-k002', 'math-g5-down-u07-k003'],
-    scope: 'core', version: 2, supportsComposite: false }
+    scope: 'core', version: 2, supportsComposite: false },
+
+  
+  
+  
+  { id: 'generator:percent-calc', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'],
+    knowledgePoints: ['math-g6-up-u05-k001', 'math-g6-up-u05-k002', 'math-g6-up-u05-k003', 'math-g6-up-u05-k004', 'math-g6-up-u05-k005', 'math-g6-up-u05-k006'],
+    scope: 'core', version: 1, supportsComposite: false }
 ];
 
 
@@ -3716,9 +3723,38 @@ var SPECIAL_ORAL_PROFILE = {
 var NON_MIGRATABLE = ['mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];
 
 
+
+
+
+var CANONICAL_KP_OVERRIDES = [
+  
+  { knowledgePoints: ['math-g5-up-u02-k002'], operators: [OP_MUL], steps: 1, kind: 'dec-mult' }
+];
+
+var CANONICAL_KP_PROFILE = {};
+CANONICAL_KP_OVERRIDES.forEach(function (rec) {
+  rec.knowledgePoints.forEach(function (kpId) { CANONICAL_KP_PROFILE[kpId] = rec; });
+});
+
+
 function resolveArithmeticSemantics(kp, options) {
   options = options || {};
   if (!kp || !kp.source) return null;
+
+  
+  var kpId = kp.knowledgeId || kp.id || (kp.source && kp.source.knowledgeId);
+  var canonical = kpId ? CANONICAL_KP_PROFILE[kpId] : null;
+  if (canonical) {
+    var cout = {
+      operators: canonical.operators.slice(),
+      steps: canonical.steps,
+      canonicalKp: kpId,
+      migratable: true
+    };
+    if (canonical.kind) cout.kind = canonical.kind;
+    return cout;
+  }
+
   var lt = kp.source.legacyType;
 
   if (NON_MIGRATABLE.indexOf(lt) !== -1) return null;
@@ -3746,6 +3782,7 @@ module.exports = {
   SINGLE_STEP_PROFILE: SINGLE_STEP_PROFILE,
   SPECIAL_ORAL_PROFILE: SPECIAL_ORAL_PROFILE,
   NON_MIGRATABLE: NON_MIGRATABLE,
+  CANONICAL_KP_PROFILE: CANONICAL_KP_PROFILE,
   resolveArithmeticSemantics: resolveArithmeticSemantics,
   isArithmeticMigratable: isArithmeticMigratable
 };
@@ -5689,6 +5726,7 @@ var C7 = require("shared/generator/generators/c7-clever-calc.js");
 var C9 = require("shared/generator/generators/c9-comprehensive.js");
 var SemanticSpecial = require("shared/generator/generators/semantic-special.js");
 var Classification = require("shared/generator/generators/classify.js");
+var Percent = require("shared/generator/generators/percent.js");
 
 var ALL = [].concat(
   Arithmetic.buildAll(),
@@ -5709,7 +5747,8 @@ var ALL = [].concat(
   C7.buildAll(),
   C9.buildAll(),
   SemanticSpecial.buildAll(),
-  Classification.buildAll()
+  Classification.buildAll(),
+  Percent.buildAll()
 );
 
 var BY_ID = {};
@@ -10540,6 +10579,244 @@ function buildAll() {
 
 module.exports = {
   createClassificationGenerator: createClassificationGenerator,
+  buildAll: buildAll
+};
+
+};
+__defs["shared/generator/generators/percent.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Rng = require("shared/generator/core/rng.js");
+
+function pkp(plan) {
+  if (!plan) return null;
+  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
+  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
+  return null;
+}
+
+function seedFor(plan, context, i) {
+  if (context && context.seed != null) return context.seed + ':' + i;
+  if (plan && plan.seed != null) return plan.seed + ':' + i;
+  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
+}
+
+
+var CLEAN_PERCENTS = [10, 20, 25, 40, 50, 60, 75, 80, 90];
+
+var DISCOUNTS = [
+  { label: '八折', rate: 80 }, { label: '七五折', rate: 75 },
+  { label: '九折', rate: 90 }, { label: '八五折', rate: 85 },
+  { label: '六五折', rate: 65 }, { label: '六折', rate: 60 }
+];
+
+var FRACTION_PERCENT = [
+  { num: 1, den: 2, percent: 50 }, { num: 1, den: 4, percent: 25 },
+  { num: 3, den: 4, percent: 75 }, { num: 1, den: 5, percent: 20 },
+  { num: 2, den: 5, percent: 40 }, { num: 3, den: 5, percent: 60 },
+  { num: 4, den: 5, percent: 80 }, { num: 1, den: 10, percent: 10 },
+  { num: 1, den: 20, percent: 5 }, { num: 1, den: 50, percent: 2 }
+];
+
+function buildBase(plan, context, i, extra) {
+  var constraints = plan.constraints || {};
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: plan.questionTypeId,
+    difficulty: plan.difficulty,
+    difficultyParams: {
+      level: plan.difficulty,
+      scale: constraints.scale != null ? constraints.scale : 1,
+      steps: constraints.maxSteps != null ? constraints.maxSteps : 1,
+      allowBracket: !!constraints.allowBracket,
+      allowMultDiv: !!constraints.allowMultDiv
+    },
+    numberRange: constraints.numberRange || { min: 1, max: 100 },
+    spiralLevel: plan.spiralLevel != null ? plan.spiralLevel : 1,
+    context: plan.contextType != null ? plan.contextType : 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: '',
+    answer: null,
+    answerMode: 'input',
+    hint: null,
+    data: Object.assign({ mode: 'percent-calc' }, extra || {})
+  };
+}
+
+function finish(q, prompt, answer, explanation) {
+  q.prompt = prompt;
+  q.answer = { value: String(answer), acceptable: [], explanation: explanation || (prompt.replace(/[？?]\s*$/, '') + ' = ' + answer) };
+  return q;
+}
+
+var qt = function (plan) { return plan.questionTypeId; };
+
+
+function makePercentOf(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var base = Rng.pick(rng, [100, 200, 300, 400, 500, 800]);
+  var p = Rng.pick(rng, CLEAN_PERCENTS);
+  var ans = Math.round(base * p / 100 * 100) / 100;
+  var prompt;
+  if (qt(plan) === 'apply') {
+    prompt = '图书室有 ' + base + ' 本图书，其中 ' + p + '% 是故事书。故事书有多少本？';
+  } else if (qt(plan) === 'fill') {
+    prompt = base + ' 的 ' + p + '% 等于 ____。';
+  } else {
+    prompt = '列式计算：' + base + ' × ' + p + '% = ？';
+  }
+  return finish(buildBase(plan, context, i, { subType: 'percent-of', base: base, percent: p }),
+    prompt, ans, base + ' × ' + p + '% = ' + ans);
+}
+
+
+function makeConversion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var variant = i % 3;
+  var q = buildBase(plan, context, i, { subType: 'conversion', variant: variant });
+  if (variant === 0) {
+    var d = (Rng.randInt(rng, 1, 9) * 10 + Rng.randInt(rng, 1, 9)) / 100;
+    var dpct = Math.round(d * 100);
+    return finish(q, '把小数 ' + d.toFixed(2) + ' 化成百分数是（ ）%（只填数字）。', dpct,
+      d.toFixed(2) + ' = ' + dpct + '%');
+  }
+  if (variant === 1) {
+    var f = Rng.pick(rng, FRACTION_PERCENT);
+    var stem = qt(plan) === 'fill'
+      ? '把分数 ' + f.num + '/' + f.den + ' 化成百分数：____%（只填数字）'
+      : f.num + '/' + f.den + ' 化成百分数是多少？（只填数字）';
+    return finish(q, stem, f.percent, f.num + '/' + f.den + ' = ' + f.percent + '%');
+  }
+  var p = Rng.pick(rng, CLEAN_PERCENTS);
+  var dec = (p / 100).toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+  return finish(q, '把 ' + p + '% 化成小数是（ ）。', dec, p + '% = ' + dec);
+}
+
+
+function makeDiscount(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var price = Rng.pick(rng, [100, 200, 300, 400, 500, 600, 800]);
+  var d = Rng.pick(rng, DISCOUNTS);
+  var cur = Math.round(price * d.rate) / 100;
+  var askSaved = (i % 2 === 1);
+  var prompt;
+  if (askSaved) {
+    prompt = '一件商品原价 ' + price + ' 元，现在' + d.label + '出售，买这件商品可以便宜多少元？';
+    return finish(buildBase(plan, context, i, { subType: 'discount', price: price, rate: d.rate, ask: 'saved' }),
+      prompt, price - cur, '便宜 ' + price + ' − ' + cur + ' = ' + (price - cur) + ' 元');
+  }
+  prompt = '一件商品原价 ' + price + ' 元，现在' + d.label + '出售，现价是多少元？';
+  return finish(buildBase(plan, context, i, { subType: 'discount', price: price, rate: d.rate, ask: 'current' }),
+    prompt, cur, '现价 ' + price + ' × ' + d.rate + '% = ' + cur + ' 元');
+}
+
+
+function makeInterest(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var principal = Rng.pick(rng, [1000, 2000, 3000, 5000, 8000]);
+  var rate = Rng.pick(rng, [2, 3, 4, 5]);
+  var years = Rng.randInt(rng, 1, 3);
+  var interest = principal * rate * years / 100;
+  var askTotal = (i % 2 === 1);
+  if (askTotal) {
+    return finish(buildBase(plan, context, i, { subType: 'interest', principal: principal, rate: rate, years: years, ask: 'total' }),
+      '小明把 ' + principal + ' 元压岁钱存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期时一共可以取回多少元？',
+      principal + interest, '本息合计 ' + principal + ' + ' + interest + ' = ' + (principal + interest) + ' 元');
+  }
+  return finish(buildBase(plan, context, i, { subType: 'interest', principal: principal, rate: rate, years: years, ask: 'interest' }),
+    '小明把 ' + principal + ' 元存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期可得利息多少元？',
+    interest, '利息 ' + principal + ' × ' + rate + '% × ' + years + ' = ' + interest + ' 元');
+}
+
+
+function makeRateLine(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var q = buildBase(plan, context, i, { subType: 'target-rate' });
+  if (i % 2 === 1) {
+    
+    var total = Rng.pick(rng, [50, 100, 200, 400, 500]);
+    var ratePct = Rng.pick(rng, [80, 90, 95, 75, 60]);
+    var need = Math.round(total * ratePct / 100);
+    return finish(q,
+      '学校规定体育达标率不低于 ' + ratePct + '%。全年级共 ' + total + ' 人，至少要有多少人达标？',
+      need, total + ' × ' + ratePct + '% = ' + need + ' 人');
+  }
+  
+  var total2 = Rng.pick(rng, [40, 50, 100, 200, 250]);
+  var pct = Rng.pick(rng, CLEAN_PERCENTS.concat([95, 85]));
+  var reached = Math.round(total2 * pct / 100);
+  return finish(q,
+    '六年级共有 ' + total2 + ' 人，体育达标 ' + reached + ' 人。达标率是（ ）%（只填数字）。',
+    Math.round(reached / total2 * 100), reached + ' ÷ ' + total2 + ' ×100% = ' + Math.round(reached / total2 * 100) + '%');
+}
+
+
+function makePercentChange(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var base = Rng.pick(rng, [100, 200, 250, 400, 500]);
+  var p = Rng.pick(rng, CLEAN_PERCENTS);
+  var increase = (i % 2 === 0);
+  var ans = increase ? base + base * p / 100 : base - base * p / 100;
+  var prompt;
+  if (increase) {
+    prompt = '果园去年收苹果 ' + base + ' 千克，今年比去年增产 ' + p + '%，今年收苹果多少千克？';
+  } else {
+    prompt = '一件衣服原价 ' + base + ' 元，店庆期间降价 ' + p + '% 出售，现价多少元？';
+  }
+  return finish(buildBase(plan, context, i, { subType: 'percent-change', base: base, percent: p, increase: increase }),
+    prompt, ans,
+    base + ' × (1' + (increase ? '+' : '−') + p + '%) = ' + ans);
+}
+
+
+
+
+var SUBTYPE_MAKERS = {
+  '001': makePercentOf,
+  '002': makeConversion,
+  '003': makeDiscount,
+  '004': makeInterest,
+  '005': makeRateLine,
+  '006': makePercentChange
+};
+
+function subtypeMaker(kpId) {
+  var suffix = kpId ? kpId.slice(-3) : '';
+  return SUBTYPE_MAKERS[suffix] || makePercentOf;
+}
+
+function createPercentGenerator(spec) {
+  spec = spec || {};
+  return {
+    id: 'generator:percent-calc',
+    subject: 'math',
+    capabilities: ['calc', 'fill', 'apply'],
+    questionTypes: ['calc', 'fill', 'apply'],
+    
+    knowledgePoints: spec.knowledgePoints || [],
+
+    supports: function (plan) {
+      if (!plan || !plan.questionTypeId) return false;
+      return ['calc', 'fill', 'apply'].indexOf(plan.questionTypeId) !== -1;
+    },
+
+    generate: function (plan, context) {
+      var count = (plan && plan.count) || 1;
+      var maker = subtypeMaker(pkp(plan));
+      var out = [];
+      for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
+      return out;
+    }
+  };
+}
+
+function buildAll() {
+  return [createPercentGenerator()];
+}
+
+module.exports = {
+  createPercentGenerator: createPercentGenerator,
   buildAll: buildAll
 };
 

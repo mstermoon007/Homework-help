@@ -37,6 +37,7 @@ var C7 = require('./c7-clever-calc.js');
 var C9 = require('./c9-comprehensive.js');
 var SemanticSpecial = require('./semantic-special.js');
 var Classification = require('./classify.js');
+var Percent = require('./percent.js');
 
 var ALL = [].concat(
   Arithmetic.buildAll(),
@@ -57,7 +58,8 @@ var ALL = [].concat(
   C7.buildAll(),
   C9.buildAll(),
   SemanticSpecial.buildAll(),
-  Classification.buildAll()
+  Classification.buildAll(),
+  Percent.buildAll()
 );
 
 var BY_ID = {};

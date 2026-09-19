@@ -8,7 +8,8 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '..');
-const DIRS = ['shared', 'dev', 'scripts', 'tests', 'tools'];
+// P24-05：补入 plugins / feedback（原漏检 7 个 JS）。
+const DIRS = ['shared', 'dev', 'scripts', 'tests', 'tools', 'plugins', 'feedback'];
 
 function collectJs(dir, out) {
   const abs = path.join(ROOT, dir);

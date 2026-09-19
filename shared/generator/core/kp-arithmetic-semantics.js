@@ -54,6 +54,20 @@ var SPECIAL_ORAL_PROFILE = {
 
 var NON_MIGRATABLE = ['mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fraction', 'decimal', 'g3', 'md'];
 
+// P24-02：canonical KP 算术语义覆盖（按 canonical ID 精确指定算术语义 profile）。
+// 这些 2025 人教版 KP 无 legacyType，但 KBL 教育属性（operations/families）明确，
+// 且 arithmetic-core 已有对应专用结构构造器，按 ID 直接派发，不走 legacy 解析。
+// 绑定以 knowledgePoints 引用形式声明（KBL 数据真值源仍为 kbl/canonical，此处不内嵌数据载荷）。
+var CANONICAL_KP_OVERRIDES = [
+  // 五上「小数乘小数」（operations=multiplication, families=decimal）：一位/两位小数因数乘法笔算
+  { knowledgePoints: ['math-g5-up-u02-k002'], operators: [OP_MUL], steps: 1, kind: 'dec-mult' }
+];
+
+var CANONICAL_KP_PROFILE = {};
+CANONICAL_KP_OVERRIDES.forEach(function (rec) {
+  rec.knowledgePoints.forEach(function (kpId) { CANONICAL_KP_PROFILE[kpId] = rec; });
+});
+
 /**
  * 解析 KP 算术语义；无法由纯算术核心覆盖时返回 null。
  * @param {Object} kp Canonical KnowledgePoint
@@ -62,6 +76,21 @@ var NON_MIGRATABLE = ['mixed', 'relation', 'multi1', 'twodigit', 'div1', 'fracti
 function resolveArithmeticSemantics(kp, options) {
   options = options || {};
   if (!kp || !kp.source) return null;
+
+  // P24-02：canonical ID 精确覆盖优先于 legacyType 解析
+  var kpId = kp.knowledgeId || kp.id || (kp.source && kp.source.knowledgeId);
+  var canonical = kpId ? CANONICAL_KP_PROFILE[kpId] : null;
+  if (canonical) {
+    var cout = {
+      operators: canonical.operators.slice(),
+      steps: canonical.steps,
+      canonicalKp: kpId,
+      migratable: true
+    };
+    if (canonical.kind) cout.kind = canonical.kind;
+    return cout;
+  }
+
   var lt = kp.source.legacyType;
 
   if (NON_MIGRATABLE.indexOf(lt) !== -1) return null;
@@ -89,6 +118,7 @@ module.exports = {
   SINGLE_STEP_PROFILE: SINGLE_STEP_PROFILE,
   SPECIAL_ORAL_PROFILE: SPECIAL_ORAL_PROFILE,
   NON_MIGRATABLE: NON_MIGRATABLE,
+  CANONICAL_KP_PROFILE: CANONICAL_KP_PROFILE,
   resolveArithmeticSemantics: resolveArithmeticSemantics,
   isArithmeticMigratable: isArithmeticMigratable
 };

@@ -67,6 +67,19 @@ pre-commit / run-all-checks.sh / ci.yml 门禁链接到现存脚本；修复测�
 - 实际修改文件（冻结收口轮）：`package.json`、`dev/check-syntax.js`（新）、`scripts/pre-commit.sh`、`scripts/run-all-checks.sh`、`.github/workflows/ci.yml`、`tests/orchestration/p11-01-coverage-quota.test.js`、`docs/*`（四类核心文档 + archive/）。
 - 结论：**PASS，全项冻结，进入维护模式。**
 
+## T11｜P24 产品化一致性收口 — FROZEN（2026-09-19）
+
+依据产品化审计（CORE PASS / PRODUCTIZATION NOT FINAL，8 项：3 P0 / 4 P1 / 1 P2）逐项核验修复，不重新设计架构：
+
+- **P24-01（P0）知识页 + sitemap 重建**：`build-knowledge-pages.js` 重建 375 个 KP 页（剪除旧页 326）；sitemap 381 URL（5 静态 + 376 知识）。KBL 375 = 页面 375 = sitemap 375。
+- **P24-02（P0）ALLOW 真实性**：探针实测 1570 个 KBL ALLOW 映射，15 个 calc 对真实生成 0 题，根因为 15 个 canonical KP 误绑 `generator:shape-recognition`（只产图形兜底题）。修复：4 个二上除法 KP 重绑 arithmetic-division、4 个四上/五上/六下乘法 KP 重绑 arithmetic-multiplication（含 g5-up-u02-k002 经 `CANONICAL_KP_OVERRIDES` 注入 `dec-mult` 专用结构）；新增 `generator:percent-calc`（六上百分数 6 KP，意义/互化/折扣/利率/达标线/增减幅 6 子类型按 KP 尾缀分派）；shape-recognition 解绑 15 KP。新增正式门禁 `dev/check-allow-generation.js`（`npm run verify:allow-gen`），接入 run-all-checks.sh 与 CI。修复后 1570/1570 PASS。
+- **P24-03（P0）Capacity Map 重建**：`scan-capacity.js --refresh` → 375 keys / 1570 ALLOW 全重叠 / 0 stale / 0 missing；分级 HIGH 333 / MEDIUM 4 / LOW 11 / VERY_LOW 27（全部 GENERATOR_LIMITED）。T10 遗留项关闭。
+- **P24-04（P1）UI bug ×3**：select.html 快速模式「分类整理题」`sort` 失效键改为 `classify`；教师模式取消选择误用 `splice(kid,1)` 改为 `splice(idx,1)`；浏览器回归时发现并修复阻断性缺陷（T10 基线已存在）：`shared/request/request-normalize.js` 顶层裸 `require` 在浏览器经典脚本环境抛 ReferenceError，致 `RequestNormalize` 整模块未挂载、select.html 三个开始链接始终退化为裸 `practice.html`（所选年级/KP/题型全丢失）——改为跨环境守卫（Node require / 浏览器用 bundle 挂载的 `window.QuestionTypeRegistry`）。浏览器实测：快速模式分类整理题 → 20/20 classify 排序题；教师模式 A/B 选中取消不错位、href 含正确 kps。
+- **P24-05（P1/P2）发布治理**：版本三方冲突统一为 5.0.0（VERSION / package.json / version.js / SW CACHE / index.html 兜底 / README / CI 注释）；语法门禁补入 plugins、feedback（209→218 文件）；README 竞赛口径由「C1–C9 已上线」改为「入口预留，竞赛知识点未纳入 2025 人教版 KBL 发布包」（375 KP 中竞赛 KP = 0）。
+- 纪律：Compatibility Bridge（knowledge-compat.js）与旧 require 断链维持 TECH-DEBT 登记不改；selector 评分架构不改（choice 对算术绑定 KP 的既有 input 兜底模式为全产品既有行为）。
+- 最终门禁：check:sw-version ✅ + lint 0 + syntax 218/0 + npm test 239/239 + verify 5/5 + verify:allow-gen 1570/1570。
+- 主要修改文件：`dev/build-knowledge-pages.js` 产物 375 页、`scripts/generate-sitemap.js` 产物、`select.html`、`shared/request/request-normalize.js`、`shared/generator/generator-registry.js`、`shared/generator/generators/index.js`、`shared/generator/generators/percent.js`（新）、`shared/generator/core/kp-arithmetic-semantics.js`、`shared/engine/*.bundle.js`（重建）、`shared/capacity/capacity-map.json`（重建）、`dev/check-allow-generation.js`（新）、`dev/check-syntax.js`、`VERSION`、`package.json`、`shared/catalog/version.js`、`sw.js`、`index.html`、`README.md`、`scripts/run-all-checks.sh`、`scripts/pre-commit.sh`、`.github/workflows/ci.yml`、`docs/00、02、03`。
+
 ---
 
 ## 冻结报告汇总（阶段十 final report 格式）
@@ -79,5 +92,15 @@ pre-commit / run-all-checks.sh / ci.yml 门禁链接到现存脚本；修复测�
 | 验证 | verify 5/5；syntax 209/0；npm test 239/239；lint 0；E2E 4 项 PASS；浏览器回归 13/13 |
 | 判定 | PASS |
 | 遗留问题 | 3 项 TRACKED（见 00 基线 §6） |
+| 是否冻结 | 是 |
+| 下一阶段 | 维护模式（见 03-CURRENT-TASK） |
+
+| 项 | 内容（T11 / P24 修订） |
+| --- | --- |
+| 阶段 | T11 P24 产品化一致性收口 |
+| 目标 | 依据产品化审计修复 8 项（3 P0 / 4 P1 / 1 P2），达成「375=375=375、1570 ALLOW=1570 真实生成、版本统一 5.0.0」 |
+| 验证 | sw-version ✅；lint 0；syntax 218/0；npm test 239/239；verify 5/5；verify:allow-gen 1570/1570；capacity 375/1570/0/0 |
+| 判定 | PASS |
+| 遗留问题 | 2 项 TRACKED（见 00 基线 §6；capacity 过期项已关闭） |
 | 是否冻结 | 是 |
 | 下一阶段 | 维护模式（见 03-CURRENT-TASK） |

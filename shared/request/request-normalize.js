@@ -21,7 +21,13 @@
   var SUBJECTS = ['math', 'chinese', 'english'];
   var MODES = ['quick', 'teacher', 'competition'];
   var GRADES = [1, 2, 3, 4, 5, 6];
-  var QuestionTypeRegistry = require('../knowledge/question-type-registry.js');
+  // 跨环境：Node 走 require；浏览器（select.html 经典脚本）无全局 require，
+  // QuestionTypeRegistry 由 strategy-engine.bundle.js 挂到 window（P24 修复：
+  // 原先裸 require 在浏览器加载即抛 ReferenceError，致 RequestNormalize 整个未挂载、
+  // select.html 开始链接始终退化为裸 practice.html，所选年级/知识点/题型全部丢失）。
+  var QuestionTypeRegistry = (typeof require === 'function')
+    ? require('../knowledge/question-type-registry.js')
+    : global.QuestionTypeRegistry;
 
   // 内部 canonical 题型（唯一来源：Registry.TYPES）
   var CANONICAL_TYPES = QuestionTypeRegistry.TYPES.map(function (t) { return t.id; });
