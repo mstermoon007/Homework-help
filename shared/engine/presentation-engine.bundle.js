@@ -3362,7 +3362,10 @@ __defs["shared/schemas/semantic-question.schema.js"] = function (module, exports
     KP_SEMANTIC_NUMERIC: 'KP_SEMANTIC_NUMERIC',
     KP_SEMANTIC_STRUCTURE: 'KP_SEMANTIC_STRUCTURE',
     KP_SEMANTIC_CONTENT: 'KP_SEMANTIC_CONTENT',
-    KP_SEMANTIC_COMPOSITE: 'KP_SEMANTIC_COMPOSITE'
+    KP_SEMANTIC_COMPOSITE: 'KP_SEMANTIC_COMPOSITE',
+
+    
+    KP_SEMANTIC_EVIDENCE: 'KP_SEMANTIC_EVIDENCE'
   };
 
   
@@ -4462,6 +4465,79 @@ function checkContent(sq, kpConstraints) {
 }
 
 
+var _evidenceRules = null;
+function getEvidenceRules() {
+  if (_evidenceRules) return _evidenceRules;
+  var map = {};
+  try {
+    var rulesPath = '../../' + 'kbl/' + 'teaching/' + 'evidence-rules.json';
+    var doc = require(rulesPath);
+    if (doc && Array.isArray(doc.rules)) {
+      doc.rules.forEach(function (r) {
+        if (r && r.knowledgePointId && r.questionType) {
+          map[r.knowledgePointId + '|' + r.questionType] = r;
+        }
+      });
+    }
+  } catch (e) {  }
+  _evidenceRules = map;
+  return _evidenceRules;
+}
+
+
+function fieldEquals(sq, path, value) {
+  var cur = sq;
+  var parts = String(path).split('.');
+  for (var i = 0; i < parts.length; i++) {
+    if (cur == null || typeof cur !== 'object') return false;
+    cur = cur[parts[i]];
+  }
+  if (Array.isArray(value) || Array.isArray(cur)) {
+    if (!Array.isArray(value) || !Array.isArray(cur)) return false;
+    return value.slice().sort().join('\u0001') === cur.slice().sort().join('\u0001');
+  }
+  return cur === value;
+}
+
+function checkSemanticEvidence(sq, kpId) {
+  var errors = [];
+  var warnings = [];
+  var qt = sq.questionType || sq.questionTypeId || null;
+  var rule = (kpId && qt) ? getEvidenceRules()[kpId + '|' + qt] : null;
+  if (!rule) return { state: 'skip', errors: errors, warnings: warnings };
+
+  var decl = sq.data && sq.data.semanticEvidence;
+  if (!decl || typeof decl !== 'object') {
+    warnings.push(createError(ERROR_CODES.KP_SEMANTIC_EVIDENCE, 'data.semanticEvidence',
+      'KP×题型存在证据规则但题目未声明 semanticEvidence（过渡期 WARN，不阻断）',
+      SEVERITY.WARNING, { kpId: kpId, questionType: qt }));
+    return { state: 'warn', errors: errors, warnings: warnings };
+  }
+
+  var relations = Array.isArray(decl.relations) ? decl.relations : [];
+  var missing = [];
+  (rule.required || []).forEach(function (a) {
+    if (a.kind === 'relation' && relations.indexOf(a.relation) === -1) missing.push('relation:' + a.relation);
+    if (a.kind === 'field' && !fieldEquals(sq, a.path, a.value)) missing.push(a.path);
+  });
+  var forbiddenHits = [];
+  (rule.forbidden || []).forEach(function (a) {
+    if (a.kind === 'relationNot' && relations.indexOf(a.relation) !== -1) forbiddenHits.push('relation:' + a.relation);
+    if (a.kind === 'fieldNot' && fieldEquals(sq, a.path, a.value)) forbiddenHits.push(a.path);
+  });
+
+  if (missing.length || forbiddenHits.length) {
+    var msg = '语义证据不满足';
+    if (missing.length) msg += '：缺 ' + missing.join(',');
+    if (forbiddenHits.length) msg += (missing.length ? '；' : '：') + '违禁命中 ' + forbiddenHits.join(',');
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_EVIDENCE, 'data.semanticEvidence', msg,
+      SEVERITY.ERROR, { kpId: kpId, questionType: qt, missing: missing, forbiddenHits: forbiddenHits }));
+    return { state: 'fail', errors: errors, warnings: warnings };
+  }
+  return { state: 'pass', errors: errors, warnings: warnings };
+}
+
+
 function validateKpSemantics(sq, context) {
   context = context || {};
   var plan = context.plan;
@@ -4493,23 +4569,30 @@ function validateKpSemantics(sq, context) {
   var contentResult = checkContent(sq, kpConstraints);
   allErrors.push.apply(allErrors, contentResult.errors);
   allWarnings.push.apply(allWarnings, contentResult.warnings);
+
   
+  var evidenceResult = checkSemanticEvidence(sq, kpId);
+  allErrors.push.apply(allErrors, evidenceResult.errors);
+  allWarnings.push.apply(allWarnings, evidenceResult.warnings);
+
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
-  
+
   return {
     valid: valid,
     errors: allErrors,
     warnings: allWarnings,
     info: allInfo,
     score: score,
+    semanticEvidence: evidenceResult.state,
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       operation: opResult.errors.length === 0 ? 'pass' : 'fail',
       numeric: checkNumeric(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
       structure: checkStructure(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
-      content: contentResult.errors.length === 0 ? 'pass' : 'fail'
+      content: contentResult.errors.length === 0 ? 'pass' : 'fail',
+      semanticEvidence: evidenceResult.state
     }
   };
 }
@@ -4522,7 +4605,9 @@ module.exports = {
   checkOperation: checkOperation,
   checkNumeric: checkNumeric,
   checkStructure: checkStructure,
-  checkContent: checkContent
+  checkContent: checkContent,
+  checkSemanticEvidence: checkSemanticEvidence,
+  getEvidenceRules: getEvidenceRules
 };
 };
 global.PresentationEngine = __req("shared/engine/presentation-engine.js");

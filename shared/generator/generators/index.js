@@ -38,6 +38,7 @@ var C9 = require('./c9-comprehensive.js');
 var SemanticSpecial = require('./semantic-special.js');
 var Classification = require('./classify.js');
 var Percent = require('./percent.js');
+var ConceptMeaning = require('./concept-meaning.js');
 
 var ALL = [].concat(
   Arithmetic.buildAll(),
@@ -59,7 +60,8 @@ var ALL = [].concat(
   C9.buildAll(),
   SemanticSpecial.buildAll(),
   Classification.buildAll(),
-  Percent.buildAll()
+  Percent.buildAll(),
+  ConceptMeaning.buildAll()
 );
 
 var BY_ID = {};

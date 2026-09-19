@@ -100,6 +100,16 @@ var CORE_RECORDS = [
   // choice 仍由 generation-contract 指定的 generator:selection-choice 承载。
   { id: 'generator:percent-calc', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'],
     knowledgePoints: ['math-g6-up-u05-k001', 'math-g6-up-u05-k002', 'math-g6-up-u05-k003', 'math-g6-up-u05-k004', 'math-g6-up-u05-k005', 'math-g6-up-u05-k006'],
+    scope: 'core', version: 1, supportsComposite: false },
+
+  // P25-04：A 类代表 KP 概念语义生成器（倍的认识/角的认识/面积的认识/分数的意义）。
+  // 此前 4 KP 无原生绑定，calc/fill 被泛型兜底产出错误语义题（加法题冒充倍、编码题冒充分数）。
+  // 规则行（KP×calc/fill）的产出在 data.semanticEvidence 按题声明语义关系，对应
+  // kbl/teaching/evidence-rules.json（验证器第 7 检查 checkSemanticEvidence，声明制）。
+  // capabilities 覆盖 4 KP 全部 ALLOW 题型：native binding 下 kp=1 胜出不分题型，
+  // 未覆盖题型会导致该 ALLOW 行 0 产出破坏 verify:allow-gen 1570 门禁。
+  { id: 'generator:concept-meaning', subject: 'math', capabilities: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'], questionTypes: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'],
+    knowledgePoints: ['math-g2-down-u03-k003', 'math-g3-up-u07-k002', 'math-g3-down-u04-k001', 'math-g5-down-u04-k001'],
     scope: 'core', version: 1, supportsComposite: false }
 ];
 

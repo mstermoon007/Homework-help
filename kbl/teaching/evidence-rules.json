@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "p25-04.1",
+  "note": "P25-04 Semantic Evidence 规则（声明制验证）。覆盖 A 类代表 KP 中实际存在 ALLOW 的 calc/fill 行（角/面积无 calc ALLOW，故无 calc 规则行）。required/forbidden 逐条锚定 KBL 语义事实（kbl/data/math/*/knowledge-points.json 的 semantic 字段）。消费方：shared/validator/kp-semantic-validator.js 第 7 检查 checkSemanticEvidence；供给方：generator 在 sq.data.semanticEvidence 中按题声明 {relations:[],constructs:[]}。四态：skip=该 KP×qt 无规则 / warn=有规则但题面未声明（过渡期） / pass=声明齐且 required 全满足、forbidden 无命中 / fail=有声明但 required 缺或 forbidden 命中。",
+  "assertionKinds": {
+    "required": ["field(path,value): sq 字段断言（路径相对 sq 根，如 data.operation）", "relation(relation): 声明 relations 数组须包含该语义关系"],
+    "forbidden": ["fieldNot(path,value): 字段等于 value 即违禁", "relationNot(relation): 声明含该关系即违禁"]
+  },
+  "rules": [
+    {
+      "knowledgePointId": "math-g2-down-u03-k003",
+      "knowledgePointName": "倍的认识",
+      "questionType": "calc",
+      "kblAnchor": "semantic.concept=圈一圈，理解“几倍”就是几份；semantic.operations=[multiplication]",
+      "required": [
+        { "kind": "relation", "relation": "times-compare" },
+        { "kind": "relation", "relation": "multiply-by-times" },
+        { "kind": "field", "path": "data.operation", "value": "mult" },
+        { "kind": "field", "path": "data.timesRelation", "value": "times-of" }
+      ],
+      "forbidden": [
+        { "kind": "fieldNot", "path": "data.operation", "value": "add" },
+        { "kind": "relationNot", "relation": "add-combine" }
+      ]
+    },
+    {
+      "knowledgePointId": "math-g2-down-u03-k003",
+      "knowledgePointName": "倍的认识",
+      "questionType": "fill",
+      "kblAnchor": "同 calc 行",
+      "required": [
+        { "kind": "relation", "relation": "times-compare" },
+        { "kind": "relation", "relation": "multiply-by-times" },
+        { "kind": "field", "path": "data.operation", "value": "mult" },
+        { "kind": "field", "path": "data.timesRelation", "value": "times-of" }
+      ],
+      "forbidden": [
+        { "kind": "fieldNot", "path": "data.operation", "value": "add" },
+        { "kind": "relationNot", "relation": "add-combine" }
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u04-k001",
+      "knowledgePointName": "分数的意义",
+      "questionType": "calc",
+      "kblAnchor": "semantic.concept=单位“1”平均分成若干份…；semantic.operations=[division]",
+      "required": [
+        { "kind": "relation", "relation": "unit-one" },
+        { "kind": "relation", "relation": "equal-partition" },
+        { "kind": "field", "path": "data.operation", "value": "div" },
+        { "kind": "field", "path": "data.equalPartition", "value": true }
+      ],
+      "forbidden": [
+        { "kind": "fieldNot", "path": "data.operation", "value": "add" },
+        { "kind": "relationNot", "relation": "add-combine" }
+      ]
+    },
+    {
+      "knowledgePointId": "math-g5-down-u04-k001",
+      "knowledgePointName": "分数的意义",
+      "questionType": "fill",
+      "kblAnchor": "同 calc 行（fill 不列式，无 operation 断言）",
+      "required": [
+        { "kind": "relation", "relation": "unit-one" },
+        { "kind": "relation", "relation": "equal-partition" },
+        { "kind": "field", "path": "data.equalPartition", "value": true }
+      ],
+      "forbidden": [
+        { "kind": "relationNot", "relation": "add-combine" }
+      ]
+    },
+    {
+      "knowledgePointId": "math-g3-up-u07-k002",
+      "knowledgePointName": "角的认识",
+      "questionType": "fill",
+      "kblAnchor": "semantic.concept=从一点引出两条射线所组成的图形叫做角…顶点、边",
+      "required": [
+        { "kind": "relation", "relation": "vertex-rays" },
+        { "kind": "field", "path": "data.topic", "value": "vertex-edges" }
+      ],
+      "forbidden": [
+        { "kind": "relationNot", "relation": "length-measure" }
+      ]
+    },
+    {
+      "knowledgePointId": "math-g3-down-u04-k001",
+      "knowledgePointName": "面积的认识",
+      "questionType": "fill",
+      "kblAnchor": "semantic.concept=物体表面或封闭图形的大小",
+      "required": [
+        { "kind": "relation", "relation": "area-surface" },
+        { "kind": "field", "path": "data.quantityKind", "value": "area" }
+      ],
+      "forbidden": [
+        { "kind": "relationNot", "relation": "length-measure" }
+      ]
+    }
+  ]
+}
