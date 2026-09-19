@@ -11,8 +11,8 @@
 
 ## 产物
 
-- [P25-KP-SEMANTIC-MATRIX.xlsx](./P25-KP-SEMANTIC-MATRIX.xlsx) — 人工评审表（总览 / A类评审 / D类治理 / 字段口径）
-- [P25-KP-SEMANTIC-REVIEW.json](./P25-KP-SEMANTIC-REVIEW.json) — 机读评审文件（含 workflow 与逐字段状态）
+- [semantic-matrix.xlsx](../../kbl/teaching/semantic-matrix.xlsx) — 人工评审表（总览 / A类评审 / D类治理 / 字段口径）
+- [semantic-review.json](../../kbl/teaching/semantic-review.json) — 机读评审文件（含 workflow 与逐字段状态）
 
 ## 状态机
 

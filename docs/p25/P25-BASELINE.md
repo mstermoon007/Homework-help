@@ -18,7 +18,7 @@
 
 ## 1. KP 总表与字段口径（对应指令第 1/2 项）
 
-全量 375 行见 [P25-KP-MATRIX.json](./P25-KP-MATRIX.json)。字段口径：`grade/book/unitId/unitNo/unitName/module(domain)/name/description(definition)/cognitiveLevel/seedDifficulty/numberRange/maxSteps/questionTypes(allowedTypes)/semanticFamily/operations/representations/assessmentQuestionTypes/misconceptionSlots(现 assessment.errors 空槽)/generatorBindings(registry 原生绑定)/canonicalPlugins(canonical 粗派生承载)/allowByQuestionType/draftSemanticLevel/draftBasis`。
+全量 375 行见 [kp-matrix.json](../../kbl/teaching/kp-matrix.json)。字段口径：`grade/book/unitId/unitNo/unitName/module(domain)/name/description(definition)/cognitiveLevel/seedDifficulty/numberRange/maxSteps/questionTypes(allowedTypes)/semanticFamily/operations/representations/assessmentQuestionTypes/misconceptionSlots(现 assessment.errors 空槽)/generatorBindings(registry 原生绑定)/canonicalPlugins(canonical 粗派生承载)/allowByQuestionType/draftSemanticLevel/draftBasis`。
 
 ### 分布
 
@@ -28,7 +28,7 @@
 
 ## 2. 1570 条 KP×QuestionType 映射（对应指令第 3 项）
 
-全量 1570 行见 [P25-GENERATION-MATRIX.json](./P25-GENERATION-MATRIX.json)（每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation/draftSemanticLevel）。
+全量 1570 行见 [generation-matrix.json](../../kbl/teaching/generation-matrix.json)（每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation/draftSemanticLevel）。
 
 - 按题型分布：{"apply":375,"choice":375,"fill":375,"geometry":105,"judge":126,"calc":189,"classify":25}
 - 按草拟分级×题型：{"D":{"apply":93,"choice":93,"fill":93,"geometry":76,"judge":73,"calc":3},"B":{"apply":41,"calc":35,"choice":41,"fill":41,"geometry":5,"judge":4},"C":{"apply":166,"calc":136,"choice":166,"fill":166},"A":{"apply":75,"calc":15,"choice":75,"fill":75,"classify":25,"judge":49,"geometry":24}}
@@ -91,7 +91,7 @@ Generator 的「语义族」以其 questionTypes/capabilities + 所绑定 KP 的
 
 | 级别 | 数量 | 说明 |
 | --- | --- | --- |
-| A 深语义型 | 75 | 全表见 P25-KP-MATRIX.json（draftSemanticLevel=A） |
+| A 深语义型 | 75 | 全表见 kbl/teaching/kp-matrix.json（draftSemanticLevel=A） |
 | B 结构语义型 | 41 | 同上（=B） |
 | C 通用基础型 | 166 | 同上（=C） |
 | D 待治理型 | 93 | 同上（=D）；P25-02 优先治理对象 |

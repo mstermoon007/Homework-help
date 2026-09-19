@@ -11,8 +11,8 @@
  *   shared/generator/generator-registry.js  —— CORE_RECORDS 原生绑定（KP→Generator SSOT）
  *
  * 产出（全部新增文件，可重复运行）：
- *   docs/p25/P25-KP-MATRIX.json             —— 375 KP 教学语义矩阵（含 A/B/C/D 草拟分级 + 依据）
- *   docs/p25/P25-GENERATION-MATRIX.json     —— 1570 映射逐行 + Generator 实际使用索引
+ *   kbl/teaching/kp-matrix.json             —— 375 KP 教学语义矩阵（含 A/B/C/D 草拟分级 + 依据）
+ *   kbl/teaching/generation-matrix.json     —— 1570 映射逐行 + Generator 实际使用索引
  *   docs/p25/P25-BASELINE.md                —— 11 项基线报告
  *
  * 不变式（违反即 exit 1）：
@@ -23,7 +23,8 @@ var fs = require('fs');
 var path = require('path');
 
 var ROOT = path.resolve(__dirname, '..', '..');
-var OUT_DIR = path.join(ROOT, 'docs', 'p25');
+// KBL 教学语义扩展层（数据派生/治理产物落位 kbl/teaching/；报告 md 留 docs/p25/）
+var OUT_DIR = path.join(ROOT, 'kbl', 'teaching');
 
 function readJSON(rel) {
   return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8'));
@@ -271,8 +272,8 @@ var kpMatrixJson = {
   distributions: { byDraftLevel: levelDist, byDomain: domainDist, byGradeBook: gradeDist, allowByQuestionType: qtDist, allowByLevelQuestionType: levelQt },
   kps: kpMatrix
 };
-fs.writeFileSync(path.join(OUT_DIR, 'P25-KP-MATRIX.json'), JSON.stringify(kpMatrixJson, null, 2) + '\n');
-fs.writeFileSync(path.join(OUT_DIR, 'P25-GENERATION-MATRIX.json'), JSON.stringify(generationMatrix, null, 2) + '\n');
+fs.writeFileSync(path.join(OUT_DIR, 'kp-matrix.json'), JSON.stringify(kpMatrixJson, null, 2) + '\n');
+fs.writeFileSync(path.join(OUT_DIR, 'generation-matrix.json'), JSON.stringify(generationMatrix, null, 2) + '\n');
 
 // ---------- 9. BASELINE.md ----------
 function lvlList(level) {
@@ -301,7 +302,7 @@ md.push('不变式校验：KP=375 ✔ / ALLOW=1570 ✔ / capability 覆盖 375 �
 md.push('');
 md.push('## 1. KP 总表与字段口径（对应指令第 1/2 项）');
 md.push('');
-md.push('全量 375 行见 [P25-KP-MATRIX.json](./P25-KP-MATRIX.json)。字段口径：`grade/book/unitId/unitNo/unitName/module(domain)/name/description(definition)/cognitiveLevel/seedDifficulty/numberRange/maxSteps/questionTypes(allowedTypes)/semanticFamily/operations/representations/assessmentQuestionTypes/misconceptionSlots(现 assessment.errors 空槽)/generatorBindings(registry 原生绑定)/canonicalPlugins(canonical 粗派生承载)/allowByQuestionType/draftSemanticLevel/draftBasis`。');
+md.push('全量 375 行见 [kp-matrix.json](../../kbl/teaching/kp-matrix.json)。字段口径：`grade/book/unitId/unitNo/unitName/module(domain)/name/description(definition)/cognitiveLevel/seedDifficulty/numberRange/maxSteps/questionTypes(allowedTypes)/semanticFamily/operations/representations/assessmentQuestionTypes/misconceptionSlots(现 assessment.errors 空槽)/generatorBindings(registry 原生绑定)/canonicalPlugins(canonical 粗派生承载)/allowByQuestionType/draftSemanticLevel/draftBasis`。');
 md.push('');
 md.push('### 分布');
 md.push('');
@@ -311,7 +312,7 @@ md.push('- 年级·册分布：' + JSON.stringify(gradeDist));
 md.push('');
 md.push('## 2. 1570 条 KP×QuestionType 映射（对应指令第 3 项）');
 md.push('');
-md.push('全量 1570 行见 [P25-GENERATION-MATRIX.json](./P25-GENERATION-MATRIX.json)（每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation/draftSemanticLevel）。');
+md.push('全量 1570 行见 [generation-matrix.json](../../kbl/teaching/generation-matrix.json)（每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation/draftSemanticLevel）。');
 md.push('');
 md.push('- 按题型分布：' + JSON.stringify(qtDist));
 md.push('- 按草拟分级×题型：' + JSON.stringify(levelQt));
@@ -355,7 +356,7 @@ md.push('草拟口径（以 registry 原生绑定为主证据，详见脚本注�
 md.push('');
 md.push('| 级别 | 数量 | 说明 |');
 md.push('| --- | --- | --- |');
-md.push('| A 深语义型 | ' + aList.length + ' | 全表见 P25-KP-MATRIX.json（draftSemanticLevel=A） |');
+md.push('| A 深语义型 | ' + aList.length + ' | 全表见 kbl/teaching/kp-matrix.json（draftSemanticLevel=A） |');
 md.push('| B 结构语义型 | ' + bList.length + ' | 同上（=B） |');
 md.push('| C 通用基础型 | ' + cList.length + ' | 同上（=C） |');
 md.push('| D 待治理型 | ' + dList.length + ' | 同上（=D）；P25-02 优先治理对象 |');
@@ -375,11 +376,11 @@ md.push('```bash');
 md.push('node dev/p25/build-baseline.js   # 只读；产出 docs/p25/ 三件套');
 md.push('```');
 md.push('');
-fs.writeFileSync(path.join(OUT_DIR, 'P25-BASELINE.md'), md.join('\n'));
+fs.writeFileSync(path.join(ROOT, 'docs', 'p25', 'P25-BASELINE.md'), md.join('\n'));
 
 // ---------- 10. 汇总输出 ----------
 console.log('[P25-00] 基线构建完成（只读，未修改任何源码/数据）');
 console.log('  KP = ' + kpIds.length + ' / ALLOW = ' + mapRows.length + ' / capability = ' + capRows.length + ' / 语义库 = ' + Object.keys(semById).length);
 console.log('  草拟分级：A=' + aList.length + ' B=' + bList.length + ' C=' + cList.length + ' D=' + dList.length);
 console.log('  registry 原生绑定 Generator：' + recs.length + ' 记录 / canonical 粗派生承载种类：' + generationMatrix.generatorIndex.canonicalPluginCoverage.length);
-console.log('  产出：docs/p25/P25-BASELINE.md, P25-KP-MATRIX.json, P25-GENERATION-MATRIX.json');
+console.log('  产出：docs/p25/P25-BASELINE.md, kbl/teaching/kp-matrix.json, kbl/teaching/generation-matrix.json');

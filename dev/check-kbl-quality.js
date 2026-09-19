@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * dev/check-kbl-quality.js — KBL 收口 M17 数据质量门禁（9 项，全新 canonical 数据层）
+ * dev/check-kbl-quality.js — KBL 收口 M17 数据质量门禁（10 项，全新 canonical 数据层）
  *
- * 9 项：
+ * 10 项：
  *   Q1  数量守恒：unit 98 / KP 375 / relations 0 / mappings 1570 with kbl/manifest 一致
  *   Q2  Canonical relations 为空集（释义派生，无迁移关系）；roundtrip 保障 source 一致
  *   Q3  ID 规则：全部 KP id 匹配规范 pattern 且全局唯一
@@ -12,6 +12,8 @@
  *   Q7  Canonical↔Release 快照一致：kbl/manifest.counts == shared manifest.counts（三方一致）
  *   Q8  Runtime 一致性：运行时 KP / 单元 / 关系 / permission 计数与 canonical 完全一致
  *   Q9  Schema/计数审计：释放包 10 文件 rootHash 复算一致（kbl/manifest.rootHash ↔ shared integrity.rootHash）
+ *   Q10 唯一人工源只读守卫：root Excel sha256/字节数 ↔ extract-raw 抽取快照指纹一致；
+ *       指纹变化 = 源被重写（含应用重存）。若为人工修正，重跑 node tools/kbl/extract-source.js 登记新指纹并在提交信息注明
  *
  * ALL PASS 才退出码 0。
  */
@@ -139,7 +141,22 @@ var hashOk = (function () {
 })();
 item('Q9 释放包 rootHash 复算(kbl/manifest ↔ shared integrity)', hashOk, 'rootHash 不一致');
 
+// ---- Q10 唯一人工源只读守卫（root Excel 指纹 ↔ 抽取快照） ----
+// 指纹唯一登记处 = kbl/import/extract-raw.json.fingerprint（extract-source.js 重跑即刷新，无双份漂移）
+var rootSourceOk = (function () {
+  try {
+    var extract = readJson('kbl/import/extract-raw.json');
+    var fp = extract.fingerprint || {};
+    var ROOT_XLSX = path.join(ROOT, 'kbl', 'root', '小学G1-G6数学知识点.xlsx');
+    var buf = fs.readFileSync(ROOT_XLSX);
+    var curHash = crypto.createHash('sha256').update(buf).digest('hex');
+    return curHash === fp.fileHash && buf.length === fp.fileSize;
+  } catch (e) { return false; }
+})();
+item('Q10 root Excel 指纹 ↔ extract-raw 快照一致（唯一人工源只读守卫）', rootSourceOk,
+  'root Excel 与抽取快照指纹不一致。若为人工修正：重跑 node tools/kbl/extract-source.js 登记新指纹并在提交信息注明变更；否则立即排查谁改动了 kbl/root/');
+
 console.log('');
 var allPass = pass && results.filter(function (x) { return !x.pass; }).length === 0;
-console.log(allPass ? 'M17 数据质量门禁: ALL PASS (9/9)' : 'M17 数据质量门禁: ' + results.filter(function (x) { return x.pass; }).length + '/9 PASS --- 存在缺陷');
+console.log(allPass ? 'M17 数据质量门禁: ALL PASS (10/10)' : 'M17 数据质量门禁: ' + results.filter(function (x) { return x.pass; }).length + '/10 PASS --- 存在缺陷');
 process.exitCode = allPass ? 0 : 1;
