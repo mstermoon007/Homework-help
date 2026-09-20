@@ -3,15 +3,19 @@
  * dev/verify-m0.js — M0 统一验证入口（M0-10）
  *
  * 依次执行以下步骤，聚合 PASS / FAIL / REPORT，列出失败项，退出码 1 表示存在 FAIL。
- *   1. 语法检查            dev/check-syntax.js
- *   2. KBL 校验            tools/kbl/validate.js（旧 check-knowledge-contract 已随旧知识层删除）
- *   3. 难度双轨测试        dev/check-difficulty-dual.js
- *   4. Golden Path         dev/check-golden.js
- *   5. 架构护栏            dev/check-architecture-rules.js
+ *   1. KBL 校验            tools/kbl/validate.js
+ *   2. KBL 运行时          dev/verify-kbl-runtime.js
+ *   3. KBL 唯一性          dev/check-kbl-uniqueness.js
+ *   4. KBL 访问            dev/check-knowledge-access.js
+ *   5. KBL 目录            dev/check-knowledge-dir.js
+ *   6. 教育真实性门禁      dev/check-educational-generation.js  （P25-15，307 A 类 × 核心题型）
+ *   7. 教育覆盖率          dev/p25/build-coverage-report.js --strict  （P25-14，7 维防 declared-only 回归）
+ *   8. 黄金题集            dev/p25/validate-golden-dataset.js  （P25-16，结构验证 0 errors）
  *
  * MATH-14：插件契约（check-plugin-contract）与 Snapshot 基线（check-snapshot）
  *          随 legacy 插件轨道删除，从本网关移除。
  * KBL 收口：旧本体完整性（check-ontology-integrity）随旧知识层删除。
+ * P25-17：新增 3 步防退化守卫（edu-gen/coverage/golden），均 blocking。
  *
  * 每个步骤独立、可重复、零副作用。`nonBlocking` 步骤失败仅记为
  * REPORT，不计入最终 FAIL；其余任何步骤 FAIL 均计入最终 FAIL。
@@ -40,6 +44,19 @@ const steps = [
   {
     key: 'kbl-dir',
     spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'check-knowledge-dir.js')] }
+  },
+  // P25-17 防退化守卫：教育真实性 + 覆盖率 + 黄金题
+  {
+    key: 'edu-gen',
+    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'check-educational-generation.js')] }
+  },
+  {
+    key: 'coverage',
+    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'p25', 'build-coverage-report.js'), '--strict'] }
+  },
+  {
+    key: 'golden',
+    spawn: { cmd: process.execPath, args: [path.join(ROOT, 'dev', 'p25', 'validate-golden-dataset.js')] }
   }
 ];
 
