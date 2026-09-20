@@ -939,6 +939,10 @@ function plan(request) {
     }
   }
 
+  // P25-13：注入只读 Explainability Metadata（"下一题为什么这样出"可解释链）
+  // 全部字段从已计算的局部变量派生，禁止重新求解（避免重复核验）
+  questionPlan.explainability = buildExplainability(kp, questionType, finalDifficulty, learnerDecision, selectedGenerator);
+
   // Plan validate（步骤 8）
   var check = StrategyValidator.validatePlan(questionPlan);
   if (!check.valid) {
@@ -993,6 +997,66 @@ function formatStrategyTrace(trace) {
   return trace.map(function (s) {
     return s.name + ' : ' + formatValue(s.value);
   }).join('\n  ↓\n');
+}
+
+// ============ P25-13：QuestionPlan Explainability Metadata（"下一题为什么这样出"可解释链） ============
+
+// qt-intent.json 行索引（kpId|questionType → row），惰性构建一次后复用
+// 加载方式（有意为之，同 variation-directive.js / kp-semantic-validator.js 先例）：
+//   require 路径用字符串拼接计算，打包器静态正则不会把 kbl/ 数据内联进 bundle
+//   （check-kbl-uniqueness 门禁）。Node 直载正常读取；浏览器运行时 __req 未注册
+//   该 id，抛错被捕获 → 索引留空 → explainability 降级为 kp.module 兜底（fail-open）。
+var _qtIntentIndex = null;
+function getQtIntentRow(kpId, qt) {
+  if (_qtIntentIndex === null) {
+    _qtIntentIndex = {};
+    try {
+      var p = '../../' + 'kbl/' + 'teaching/' + 'qt-intent.json';
+      var data = require(p);
+      (data && data.rows || []).forEach(function (r) {
+        _qtIntentIndex[r.knowledgeId + '|' + r.questionType] = r;
+      });
+    } catch (e) {
+      // bundle 缺失或环境无 KBL teaching 数据：留空索引，explainability 降级为 module 兜底
+    }
+  }
+  return _qtIntentIndex[kpId + '|' + qt] || null;
+}
+
+/**
+ * 构建只读 Explainability Metadata。
+ * 全部字段从已计算的局部变量派生，禁止重新求解（避免重复核验）。
+ *
+ * @param {Object} kp                - 知识点（含 id/name/module）
+ * @param {string} questionType      - 规范题型 id
+ * @param {number} finalDifficulty   - 最终难度
+ * @param {Object|null} learnerDecision - 学习者决策结果（含 variant/errorFocus）
+ * @param {Object} selectedGenerator   - 生成器选择结果（含 generatorId/source）
+ * @returns {Object} explainability 元数据对象
+ */
+function buildExplainability(kp, questionType, finalDifficulty, learnerDecision, selectedGenerator) {
+  var intentRow = getQtIntentRow(kp.id, questionType);
+  var trainsWhat = (intentRow && intentRow.intent && intentRow.intent.trainsWhat) || null;
+  var whyThisType = (intentRow && intentRow.intent && intentRow.intent.whyThisType) || null;
+  var variant = learnerDecision ? learnerDecision.variant : 'fixed';
+  var errorFocus = (learnerDecision && Array.isArray(learnerDecision.errorFocus))
+    ? learnerDecision.errorFocus.slice(0, 2)
+    : [];
+  var generatorId = (selectedGenerator && (selectedGenerator.generatorId || selectedGenerator.id)) || 'unknown';
+
+  return {
+    knowledgePoint: kp.id + ' ' + (kp.name || ''),
+    semanticTarget: trainsWhat || (kp.module || 'unknown'),
+    questionIntent: whyThisType || 'unknown',
+    questionType: questionType,
+    difficulty: finalDifficulty,
+    variation: variant,
+    selectionReason: 'KP=' + kp.id +
+      '; intent=' + (trainsWhat ? 'declared' : 'unknown') +
+      '; variant=' + variant +
+      '; errorFocus=' + (errorFocus.length ? errorFocus.join(',') : 'none') +
+      '; generator=' + generatorId
+  };
 }
 
 module.exports = {

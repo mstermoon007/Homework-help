@@ -974,6 +974,10 @@ function plan(request) {
   }
 
   
+  
+  questionPlan.explainability = buildExplainability(kp, questionType, finalDifficulty, learnerDecision, selectedGenerator);
+
+  
   var check = StrategyValidator.validatePlan(questionPlan);
   if (!check.valid) {
     throw new StrategyError('QuestionPlan 校验失败: ' + check.errors.join('; '), CODES.INVALID_PLAN, { errors: check.errors });
@@ -1024,6 +1028,56 @@ function formatStrategyTrace(trace) {
   return trace.map(function (s) {
     return s.name + ' : ' + formatValue(s.value);
   }).join('\n  ↓\n');
+}
+
+
+
+
+
+
+
+
+var _qtIntentIndex = null;
+function getQtIntentRow(kpId, qt) {
+  if (_qtIntentIndex === null) {
+    _qtIntentIndex = {};
+    try {
+      var p = '../../' + 'kbl/' + 'teaching/' + 'qt-intent.json';
+      var data = require(p);
+      (data && data.rows || []).forEach(function (r) {
+        _qtIntentIndex[r.knowledgeId + '|' + r.questionType] = r;
+      });
+    } catch (e) {
+      
+    }
+  }
+  return _qtIntentIndex[kpId + '|' + qt] || null;
+}
+
+
+function buildExplainability(kp, questionType, finalDifficulty, learnerDecision, selectedGenerator) {
+  var intentRow = getQtIntentRow(kp.id, questionType);
+  var trainsWhat = (intentRow && intentRow.intent && intentRow.intent.trainsWhat) || null;
+  var whyThisType = (intentRow && intentRow.intent && intentRow.intent.whyThisType) || null;
+  var variant = learnerDecision ? learnerDecision.variant : 'fixed';
+  var errorFocus = (learnerDecision && Array.isArray(learnerDecision.errorFocus))
+    ? learnerDecision.errorFocus.slice(0, 2)
+    : [];
+  var generatorId = (selectedGenerator && (selectedGenerator.generatorId || selectedGenerator.id)) || 'unknown';
+
+  return {
+    knowledgePoint: kp.id + ' ' + (kp.name || ''),
+    semanticTarget: trainsWhat || (kp.module || 'unknown'),
+    questionIntent: whyThisType || 'unknown',
+    questionType: questionType,
+    difficulty: finalDifficulty,
+    variation: variant,
+    selectionReason: 'KP=' + kp.id +
+      '; intent=' + (trainsWhat ? 'declared' : 'unknown') +
+      '; variant=' + variant +
+      '; errorFocus=' + (errorFocus.length ? errorFocus.join(',') : 'none') +
+      '; generator=' + generatorId
+  };
 }
 
 module.exports = {
@@ -2665,6 +2719,31 @@ function validateQuestionPlan(plan) {
       }
       if (cx.mixLevel != null && (typeof cx.mixLevel !== 'number' || cx.mixLevel < 0 || cx.mixLevel > 2)) {
         errors.push('complexity.mixLevel 必须是 0-2 的数字');
+      }
+    }
+  }
+
+  
+  
+  if (plan.explainability != null) {
+    if (typeof plan.explainability !== 'object' || plan.explainability === null || Array.isArray(plan.explainability)) {
+      errors.push('explainability 必须是对象');
+    } else {
+      var ex = plan.explainability;
+      var EX_STRING_FIELDS = ['knowledgePoint', 'semanticTarget', 'questionIntent', 'questionType', 'variation', 'selectionReason'];
+      EX_STRING_FIELDS.forEach(function (k) {
+        var v = ex[k];
+        if (v == null) return; 
+        if (typeof v !== 'string' && !Array.isArray(v)) {
+          errors.push('explainability.' + k + ' 必须是 string | string[] | null');
+        } else if (Array.isArray(v)) {
+          v.forEach(function (item, idx) {
+            if (typeof item !== 'string') errors.push('explainability.' + k + '[' + idx + '] 必须是 string');
+          });
+        }
+      });
+      if (ex.difficulty != null && typeof ex.difficulty !== 'number' && typeof ex.difficulty !== 'string') {
+        errors.push('explainability.difficulty 必须是 number | string | null');
       }
     }
   }

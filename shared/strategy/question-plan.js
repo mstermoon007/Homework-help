@@ -161,6 +161,31 @@ function validateQuestionPlan(plan) {
     }
   }
 
+  // P25-13：explainability 只读元数据（可解释链）— 可选字段，类型守卫
+  // 子字段全可空（不强制必填），仅校验类型；不进 forbidden 列表
+  if (plan.explainability != null) {
+    if (typeof plan.explainability !== 'object' || plan.explainability === null || Array.isArray(plan.explainability)) {
+      errors.push('explainability 必须是对象');
+    } else {
+      var ex = plan.explainability;
+      var EX_STRING_FIELDS = ['knowledgePoint', 'semanticTarget', 'questionIntent', 'questionType', 'variation', 'selectionReason'];
+      EX_STRING_FIELDS.forEach(function (k) {
+        var v = ex[k];
+        if (v == null) return; // 全可空
+        if (typeof v !== 'string' && !Array.isArray(v)) {
+          errors.push('explainability.' + k + ' 必须是 string | string[] | null');
+        } else if (Array.isArray(v)) {
+          v.forEach(function (item, idx) {
+            if (typeof item !== 'string') errors.push('explainability.' + k + '[' + idx + '] 必须是 string');
+          });
+        }
+      });
+      if (ex.difficulty != null && typeof ex.difficulty !== 'number' && typeof ex.difficulty !== 'string') {
+        errors.push('explainability.difficulty 必须是 number | string | null');
+      }
+    }
+  }
+
   // 禁止字段
   var forbidden = ['svg', 'html', 'generate', 'generator', 'render', 'template', 'execute', 'executeFunction'];
   forbidden.forEach(function (k) {
