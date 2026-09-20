@@ -40,10 +40,11 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var a = Rng.randInt(rng, 7, 9);
       var b = Rng.randInt(rng, 2, 9);
       if (i % 2 === 0) {
-        cPrompt = a + ' × ' + b + ' = ____';
+        // P26：意图矩阵 driftRisk 警告「题面退化为纯算式」——补口诀运用情境词（calc form-bound，算式保留）
+        cPrompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ____';
         cAnswer = a * b;
       } else {
-        cPrompt = (a * b) + ' ÷ ' + a + ' = ____';
+        cPrompt = '用乘法口诀求商：' + (a * b) + ' ÷ ' + a + ' = ____';
         cAnswer = b;
       }
     } else {

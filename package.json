@@ -14,6 +14,10 @@
     "build:strategy": "node dev/build-strategy-bundle.js",
     "build:presentation": "node dev/build-presentation-bundle.js",
     "build:knowledge": "node dev/build-knowledge-runtime.js && node dev/build-knowledge-pages.js",
-    "generate:sitemap": "node scripts/generate-sitemap.js"
+    "generate:sitemap": "node scripts/generate-sitemap.js",
+    "check:sitemap": "node dev/check-sitemap.js",
+    "check:llm-understanding": "node dev/check-llm-understanding.js",
+    "check:crawl-health": "node dev/check-crawl-health.js",
+    "crawl:simulate": "node scripts/crawl-site.js"
   }
 }

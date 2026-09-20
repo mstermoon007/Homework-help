@@ -1,0 +1,3383 @@
+{
+  "version": "5.0.0",
+  "subject": "math",
+  "generatedAt": "2026-09-20T03:03:42.560Z",
+  "total": 375,
+  "knowledgePoints": [
+    {
+      "id": "math-g1-down-u01-k001",
+      "name": "平面图形认识",
+      "grade": 1,
+      "unit": "认识平面图形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u02-k001",
+      "name": "运算方法（平十、破十）",
+      "grade": 1,
+      "unit": "20以内的退位减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u02-k002",
+      "name": "减法口算",
+      "grade": 1,
+      "unit": "20以内的退位减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u02-k003",
+      "name": "解决问题",
+      "grade": 1,
+      "unit": "20以内的退位减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u03-k001",
+      "name": "数数",
+      "grade": 1,
+      "unit": "100以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u03-k002",
+      "name": "数的组成",
+      "grade": 1,
+      "unit": "100以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u03-k003",
+      "name": "读数与写数",
+      "grade": 1,
+      "unit": "100以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u03-k004",
+      "name": "数位",
+      "grade": 1,
+      "unit": "100以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u03-k005",
+      "name": "数的顺序",
+      "grade": 1,
+      "unit": "100以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u03-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u03-k006",
+      "name": "比较大小",
+      "grade": 1,
+      "unit": "100以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u03-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u04-k001",
+      "name": "两位数不进位加法",
+      "grade": 1,
+      "unit": "100以内的口算加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u04-k002",
+      "name": "两位数进位加法",
+      "grade": 1,
+      "unit": "100以内的口算加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u04-k003",
+      "name": "两位数不退位减法",
+      "grade": 1,
+      "unit": "100以内的口算加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u04-k004",
+      "name": "两位数退位减法",
+      "grade": 1,
+      "unit": "100以内的口算加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u04-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u04-k005",
+      "name": "解决问题",
+      "grade": 1,
+      "unit": "100以内的口算加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u04-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u05-k001",
+      "name": "两位数加（竖式计算）",
+      "grade": 1,
+      "unit": "100以内的笔算加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u05-k002",
+      "name": "两位数减（竖式计算）",
+      "grade": 1,
+      "unit": "100以内的笔算加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u05-k003",
+      "name": "整理和复习",
+      "grade": 1,
+      "unit": "100以内的笔算加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u06-k001",
+      "name": "加法模型",
+      "grade": 1,
+      "unit": "数量间的加减关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u06-k002",
+      "name": "图形表述数量关系",
+      "grade": 1,
+      "unit": "数量间的加减关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u06-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u06-k003",
+      "name": "比多少、多步加减运算应用题",
+      "grade": 1,
+      "unit": "数量间的加减关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u06-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u07-k001",
+      "name": "认识人民币的单位",
+      "grade": 1,
+      "unit": "欢乐购物街",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u07-k002",
+      "name": "人民币换算",
+      "grade": 1,
+      "unit": "欢乐购物街",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u07-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u07-k003",
+      "name": "人民币实际应用",
+      "grade": 1,
+      "unit": "欢乐购物街",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u07-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-down-u08-k001",
+      "name": "综合运用本册知识",
+      "grade": 1,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g1-down-u08-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u01-k001",
+      "name": "1-5数的认识",
+      "grade": 1,
+      "unit": "5以内数的认识和加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u01-k002",
+      "name": "5以内的加减法",
+      "grade": 1,
+      "unit": "5以内数的认识和加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u01-k003",
+      "name": "0的认识和加减法",
+      "grade": 1,
+      "unit": "5以内数的认识和加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u02-k001",
+      "name": "6和10的认识",
+      "grade": 1,
+      "unit": "6～10的认识和加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u02-k002",
+      "name": "10以内连加连减",
+      "grade": 1,
+      "unit": "6～10的认识和加、减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u03-k001",
+      "name": "立体图形初识",
+      "grade": 1,
+      "unit": "认识立体图形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u03-k002",
+      "name": "生活中的立体图形",
+      "grade": 1,
+      "unit": "认识立体图形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u04-k001",
+      "name": "11—20数的认识",
+      "grade": 1,
+      "unit": "11～20的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u04-k002",
+      "name": "数的组成",
+      "grade": 1,
+      "unit": "11～20的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u04-k003",
+      "name": "简单的加减法",
+      "grade": 1,
+      "unit": "11～20的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u05-k001",
+      "name": "凑十法",
+      "grade": 1,
+      "unit": "20以内的进位加法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u05-k002",
+      "name": "加法口算",
+      "grade": 1,
+      "unit": "20以内的进位加法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u05-k003",
+      "name": "解决问题",
+      "grade": 1,
+      "unit": "20以内的进位加法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g1-up-u06-k001",
+      "name": "综合运用本册知识",
+      "grade": 1,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g1-up-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u01-k001",
+      "name": "钟面结构",
+      "grade": 2,
+      "unit": "综合实践——时间",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u01-k002",
+      "name": "时间单位换算",
+      "grade": 2,
+      "unit": "综合实践——时间",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u01-k003",
+      "name": "计算简单经过时间",
+      "grade": 2,
+      "unit": "综合实践——时间",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u02-k001",
+      "name": "有余数除法的含义",
+      "grade": 2,
+      "unit": "有余数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u02-k002",
+      "name": "余数和除数的关系",
+      "grade": 2,
+      "unit": "有余数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u02-k003",
+      "name": "除法竖式运算",
+      "grade": 2,
+      "unit": "有余数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u02-k004",
+      "name": "解决问题",
+      "grade": 2,
+      "unit": "有余数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u02-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u02-k005",
+      "name": "周期问题",
+      "grade": 2,
+      "unit": "有余数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u02-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u03-k001",
+      "name": "乘除法互逆关系",
+      "grade": 2,
+      "unit": "数量间的乘除关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u03-k002",
+      "name": "平均分两类模型",
+      "grade": 2,
+      "unit": "数量间的乘除关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u03-k003",
+      "name": "倍的认识",
+      "grade": 2,
+      "unit": "数量间的乘除关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u03-k004",
+      "name": "两类倍应用题",
+      "grade": 2,
+      "unit": "数量间的乘除关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u03-k005",
+      "name": "逆向倍数问题",
+      "grade": 2,
+      "unit": "数量间的乘除关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u03-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u03-k006",
+      "name": "解决问题",
+      "grade": 2,
+      "unit": "数量间的乘除关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u03-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u04-k001",
+      "name": "计数单位",
+      "grade": 2,
+      "unit": "万以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u04-k002",
+      "name": "数的组成",
+      "grade": 2,
+      "unit": "万以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u04-k003",
+      "name": "万以内数读写",
+      "grade": 2,
+      "unit": "万以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u04-k004",
+      "name": "算盘认数",
+      "grade": 2,
+      "unit": "万以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u04-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u04-k005",
+      "name": "万以内数大小比较",
+      "grade": 2,
+      "unit": "万以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u04-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u04-k006",
+      "name": "近似数",
+      "grade": 2,
+      "unit": "万以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u04-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u04-k007",
+      "name": "整百、千口算",
+      "grade": 2,
+      "unit": "万以内数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u04-k007.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u05-k001",
+      "name": "三位数加法竖式",
+      "grade": 2,
+      "unit": "万以内的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u05-k002",
+      "name": "三位数减法竖式",
+      "grade": 2,
+      "unit": "万以内的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u05-k003",
+      "name": "加减法各部分名称与关系",
+      "grade": 2,
+      "unit": "万以内的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u05-k004",
+      "name": "解决问题",
+      "grade": 2,
+      "unit": "万以内的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u06-k001",
+      "name": "连环画提取信息",
+      "grade": 2,
+      "unit": "综合实践——数学连环画",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u06-k002",
+      "name": "综合运用本学期知识",
+      "grade": 2,
+      "unit": "综合实践——数学连环画",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u06-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u06-k003",
+      "name": "创作数学连环画",
+      "grade": 2,
+      "unit": "综合实践——数学连环画",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u06-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u06-k004",
+      "name": "列式解答",
+      "grade": 2,
+      "unit": "综合实践——数学连环画",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u06-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u07-k001",
+      "name": "数与运算整合",
+      "grade": 2,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u07-k002",
+      "name": "数量关系整合",
+      "grade": 2,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u07-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-down-u07-k003",
+      "name": "综合运用本册知识",
+      "grade": 2,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g2-down-u07-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u01-k001",
+      "name": "分类的含义",
+      "grade": 2,
+      "unit": "分类与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u01-k002",
+      "name": "单一标准分类",
+      "grade": 2,
+      "unit": "分类与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u01-k003",
+      "name": "不同标准分类",
+      "grade": 2,
+      "unit": "分类与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u01-k004",
+      "name": "逐层分类",
+      "grade": 2,
+      "unit": "分类与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u01-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u01-k005",
+      "name": "统计方法",
+      "grade": 2,
+      "unit": "分类与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u01-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u01-k006",
+      "name": "简单统计表",
+      "grade": 2,
+      "unit": "分类与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u01-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u02-k001",
+      "name": "乘法的初步认识",
+      "grade": 2,
+      "unit": "1～6的表内乘法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u02-k002",
+      "name": "2～6的乘法口诀",
+      "grade": 2,
+      "unit": "1～6的表内乘法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u02-k003",
+      "name": "乘加、乘减",
+      "grade": 2,
+      "unit": "1～6的表内乘法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u02-k004",
+      "name": "解决问题",
+      "grade": 2,
+      "unit": "1～6的表内乘法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u02-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u03-k001",
+      "name": "平均分",
+      "grade": 2,
+      "unit": "1～6的表内除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u03-k002",
+      "name": "除法的含义",
+      "grade": 2,
+      "unit": "1～6的表内除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u03-k003",
+      "name": "除法算式名称",
+      "grade": 2,
+      "unit": "1～6的表内除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u03-k004",
+      "name": "用2～6的乘法口诀求商",
+      "grade": 2,
+      "unit": "1～6的表内除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u03-k005",
+      "name": "解决问题",
+      "grade": 2,
+      "unit": "1～6的表内除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u03-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u04-k001",
+      "name": "辨认方向",
+      "grade": 2,
+      "unit": "综合实践——方向",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u04-k002",
+      "name": "地图上的方向",
+      "grade": 2,
+      "unit": "综合实践——方向",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u04-k003",
+      "name": "描述物体所在方向",
+      "grade": 2,
+      "unit": "综合实践——方向",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u04-k004",
+      "name": "描述行走路线",
+      "grade": 2,
+      "unit": "综合实践——方向",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u04-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u05-k001",
+      "name": "认识厘米和米",
+      "grade": 2,
+      "unit": "厘米和米",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u05-k002",
+      "name": "测量物体长度的方法",
+      "grade": 2,
+      "unit": "厘米和米",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u05-k003",
+      "name": "认识线段",
+      "grade": 2,
+      "unit": "厘米和米",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u05-k004",
+      "name": "画线段的方法",
+      "grade": 2,
+      "unit": "厘米和米",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u05-k005",
+      "name": "选择合适的长度单位",
+      "grade": 2,
+      "unit": "厘米和米",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u05-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u06-k001",
+      "name": "身体上的尺子",
+      "grade": 2,
+      "unit": "综合实践——长度",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u07-k001",
+      "name": "7～9的乘、除法",
+      "grade": 2,
+      "unit": "7～9的表内乘、除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u07-k002",
+      "name": "解决问题",
+      "grade": 2,
+      "unit": "7～9的表内乘、除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u07-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g2-up-u08-k001",
+      "name": "综合运用本册知识",
+      "grade": 2,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g2-up-u08-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u01-k001",
+      "name": "轴对称图形",
+      "grade": 3,
+      "unit": "生活中的运动现象",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u01-k002",
+      "name": "平移",
+      "grade": 3,
+      "unit": "生活中的运动现象",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u01-k003",
+      "name": "旋转",
+      "grade": 3,
+      "unit": "生活中的运动现象",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u01-k004",
+      "name": "剪纸活动",
+      "grade": 3,
+      "unit": "生活中的运动现象",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u01-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u02-k001",
+      "name": "口算除法",
+      "grade": 3,
+      "unit": "除数是一位数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u02-k002",
+      "name": "笔算除法",
+      "grade": 3,
+      "unit": "除数是一位数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u02-k003",
+      "name": "0的除法",
+      "grade": 3,
+      "unit": "除数是一位数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u02-k004",
+      "name": "除法验算",
+      "grade": 3,
+      "unit": "除数是一位数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u02-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u02-k005",
+      "name": "除法估算",
+      "grade": 3,
+      "unit": "除数是一位数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u02-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u02-k006",
+      "name": "解决问题",
+      "grade": 3,
+      "unit": "除数是一位数的除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u02-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u03-k001",
+      "name": "认识多边形及长方形、正方形的特点",
+      "grade": 3,
+      "unit": "长方形和正方形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u03-k002",
+      "name": "认识周长",
+      "grade": 3,
+      "unit": "长方形和正方形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u03-k003",
+      "name": "长方形和正方形的周长计算",
+      "grade": 3,
+      "unit": "长方形和正方形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u03-k004",
+      "name": "拼图游戏",
+      "grade": 3,
+      "unit": "长方形和正方形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u04-k001",
+      "name": "面积的认识",
+      "grade": 3,
+      "unit": "图形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u04-k002",
+      "name": "常用面积单位",
+      "grade": 3,
+      "unit": "图形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u04-k003",
+      "name": "长方形和正方形的面积计算",
+      "grade": 3,
+      "unit": "图形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u04-k004",
+      "name": "面积单位间的进率",
+      "grade": 3,
+      "unit": "图形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u04-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u04-k005",
+      "name": "周长与面积的联系与区分",
+      "grade": 3,
+      "unit": "图形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u04-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u05-k001",
+      "name": "数据的收集方法",
+      "grade": 3,
+      "unit": "数据的收集与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u05-k002",
+      "name": "数据的整理方法",
+      "grade": 3,
+      "unit": "数据的收集与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u05-k003",
+      "name": "复式统计表",
+      "grade": 3,
+      "unit": "数据的收集与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u05-k004",
+      "name": "统计的应用",
+      "grade": 3,
+      "unit": "数据的收集与整理",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u06-k001",
+      "name": "年、月、日的基本知识",
+      "grade": 3,
+      "unit": "年、月、日的秘密",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u06-k002",
+      "name": "平年与闰年的判断方法",
+      "grade": 3,
+      "unit": "年、月、日的秘密",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u06-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u07-k001",
+      "name": "认识小数",
+      "grade": 3,
+      "unit": "小数的初步认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u07-k002",
+      "name": "小数的大小比较",
+      "grade": 3,
+      "unit": "小数的初步认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u07-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u07-k003",
+      "name": "简单的小数加、减法",
+      "grade": 3,
+      "unit": "小数的初步认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u07-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u07-k004",
+      "name": "小数的应用",
+      "grade": 3,
+      "unit": "小数的初步认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u07-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u08-k001",
+      "name": "数与运算",
+      "grade": 3,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u08-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u08-k002",
+      "name": "数量关系",
+      "grade": 3,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u08-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u08-k003",
+      "name": "图形的认识与测量、位置与运动",
+      "grade": 3,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u08-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u08-k004",
+      "name": "数据的收集、整理与表达",
+      "grade": 3,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u08-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u08-k005",
+      "name": "常见的量",
+      "grade": 3,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u08-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-down-u08-k006",
+      "name": "数学广角——重叠问题",
+      "grade": 3,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-down-u08-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u01-k001",
+      "name": "观察原则",
+      "grade": 3,
+      "unit": "观察物体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u01-k002",
+      "name": "反推观察角",
+      "grade": 3,
+      "unit": "观察物体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u01-k003",
+      "name": "观察正方体",
+      "grade": 3,
+      "unit": "观察物体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u02-k001",
+      "name": "混合运算的定义",
+      "grade": 3,
+      "unit": "混合运算",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u02-k002",
+      "name": "无括号运算顺序",
+      "grade": 3,
+      "unit": "混合运算",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u02-k003",
+      "name": "有括号运算顺序",
+      "grade": 3,
+      "unit": "混合运算",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u02-k004",
+      "name": "脱式计算规范",
+      "grade": 3,
+      "unit": "混合运算",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u02-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u02-k005",
+      "name": "两步解决问题",
+      "grade": 3,
+      "unit": "混合运算",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u02-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u03-k001",
+      "name": "常用长度单位（从小到大）",
+      "grade": 3,
+      "unit": "毫米、分米和千米",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u03-k002",
+      "name": "单位进率",
+      "grade": 3,
+      "unit": "毫米、分米和千米",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u03-k003",
+      "name": "适用场景",
+      "grade": 3,
+      "unit": "毫米、分米和千米",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u03-k004",
+      "name": "解决问题",
+      "grade": 3,
+      "unit": "毫米、分米和千米",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u04-k001",
+      "name": "等量代换",
+      "grade": 3,
+      "unit": "综合实践——质量",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u04-k002",
+      "name": "认识质量单位及换算",
+      "grade": 3,
+      "unit": "综合实践——质量",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u04-k003",
+      "name": "单位适用场景",
+      "grade": 3,
+      "unit": "综合实践——质量",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u04-k004",
+      "name": "称重实践",
+      "grade": 3,
+      "unit": "综合实践——质量",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u04-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u05-k001",
+      "name": "口算乘法",
+      "grade": 3,
+      "unit": "多位数乘一位数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u05-k002",
+      "name": "笔算乘法",
+      "grade": 3,
+      "unit": "多位数乘一位数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u05-k003",
+      "name": "连续进位乘法",
+      "grade": 3,
+      "unit": "多位数乘一位数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u05-k004",
+      "name": "有关0的乘法",
+      "grade": 3,
+      "unit": "多位数乘一位数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u05-k005",
+      "name": "解决问题",
+      "grade": 3,
+      "unit": "多位数乘一位数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u05-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u06-k001",
+      "name": "认识生活中的数字编码",
+      "grade": 3,
+      "unit": "综合实践——编码",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u06-k002",
+      "name": "身份证号码的编码规则",
+      "grade": 3,
+      "unit": "综合实践——编码",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u06-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u06-k003",
+      "name": "邮政编码",
+      "grade": 3,
+      "unit": "综合实践——编码",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u06-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u06-k004",
+      "name": "数字编码的特点",
+      "grade": 3,
+      "unit": "综合实践——编码",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u06-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u06-k005",
+      "name": "实践活动",
+      "grade": 3,
+      "unit": "综合实践——编码",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u06-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u07-k001",
+      "name": "线段、射线、直线",
+      "grade": 3,
+      "unit": "线和角",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u07-k002",
+      "name": "角的认识",
+      "grade": 3,
+      "unit": "线和角",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u07-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u07-k003",
+      "name": "角的度量（初步）",
+      "grade": 3,
+      "unit": "线和角",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u07-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u07-k004",
+      "name": "单元小结",
+      "grade": 3,
+      "unit": "线和角",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u07-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u08-k001",
+      "name": "初步认识分数",
+      "grade": 3,
+      "unit": "分数的初步认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u08-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u08-k002",
+      "name": "分数的读写",
+      "grade": 3,
+      "unit": "分数的初步认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u08-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u08-k003",
+      "name": "比较分数大小",
+      "grade": 3,
+      "unit": "分数的初步认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u08-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u08-k004",
+      "name": "分数的简单计算",
+      "grade": 3,
+      "unit": "分数的初步认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u08-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u08-k005",
+      "name": "进一步认识分数",
+      "grade": 3,
+      "unit": "分数的初步认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u08-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g3-up-u09-k001",
+      "name": "综合运用本册知识",
+      "grade": 3,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g3-up-u09-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u01-k001",
+      "name": "加减法的意义和各部分间的关系",
+      "grade": 4,
+      "unit": "四则运算",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u01-k002",
+      "name": "乘除法的意义和各部分间的关系",
+      "grade": 4,
+      "unit": "四则运算",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u01-k003",
+      "name": "四则混合运算顺序",
+      "grade": 4,
+      "unit": "四则运算",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u01-k004",
+      "name": "解决问题——租船问题",
+      "grade": 4,
+      "unit": "四则运算",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u01-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u02-k001",
+      "name": "从不同方向观察物体",
+      "grade": 4,
+      "unit": "观察物体（二）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u02-k002",
+      "name": "由平面到立体",
+      "grade": 4,
+      "unit": "观察物体（二）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u02-k003",
+      "name": "发展空间观念",
+      "grade": 4,
+      "unit": "观察物体（二）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u03-k001",
+      "name": "加法运算律",
+      "grade": 4,
+      "unit": "运算律",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u03-k002",
+      "name": "减法运算律",
+      "grade": 4,
+      "unit": "运算律",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u03-k003",
+      "name": "乘法运算律",
+      "grade": 4,
+      "unit": "运算律",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u03-k004",
+      "name": "综合运用运算律",
+      "grade": 4,
+      "unit": "运算律",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u04-k001",
+      "name": "小数的意义",
+      "grade": 4,
+      "unit": "小数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u04-k002",
+      "name": "小数的读法和写法",
+      "grade": 4,
+      "unit": "小数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u04-k003",
+      "name": "小数的性质",
+      "grade": 4,
+      "unit": "小数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u04-k004",
+      "name": "小数的大小比较",
+      "grade": 4,
+      "unit": "小数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u04-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u04-k005",
+      "name": "小数点移动引起小数大小的变化",
+      "grade": 4,
+      "unit": "小数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u04-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u04-k006",
+      "name": "小数与单位换算",
+      "grade": 4,
+      "unit": "小数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u04-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u04-k007",
+      "name": "小数的近似数",
+      "grade": 4,
+      "unit": "小数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u04-k007.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u05-k001",
+      "name": "三角形的特性",
+      "grade": 4,
+      "unit": "三角形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u05-k002",
+      "name": "三角形的高和底",
+      "grade": 4,
+      "unit": "三角形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u05-k003",
+      "name": "三角形三条边的关系",
+      "grade": 4,
+      "unit": "三角形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u05-k004",
+      "name": "三角形的分类",
+      "grade": 4,
+      "unit": "三角形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u05-k005",
+      "name": "三角形的内角和",
+      "grade": 4,
+      "unit": "三角形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u05-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u05-k006",
+      "name": "四边形的内角和",
+      "grade": 4,
+      "unit": "三角形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u05-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u06-k001",
+      "name": "位数相同的小数加减法",
+      "grade": 4,
+      "unit": "小数的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u06-k002",
+      "name": "位数不同的小数加减法",
+      "grade": 4,
+      "unit": "小数的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u06-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u06-k003",
+      "name": "小数加减混合运算",
+      "grade": 4,
+      "unit": "小数的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u06-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u06-k004",
+      "name": "整数加法运算律推广到小数",
+      "grade": 4,
+      "unit": "小数的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u06-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u07-k001",
+      "name": "轴对称",
+      "grade": 4,
+      "unit": "图形的运动（二）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u07-k002",
+      "name": "补全轴对称图形",
+      "grade": 4,
+      "unit": "图形的运动（二）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u07-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u07-k003",
+      "name": "平移",
+      "grade": 4,
+      "unit": "图形的运动（二）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u07-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u07-k004",
+      "name": "平移的画法",
+      "grade": 4,
+      "unit": "图形的运动（二）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u07-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u07-k005",
+      "name": "运用平移解决问题",
+      "grade": 4,
+      "unit": "图形的运动（二）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u07-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u08-k001",
+      "name": "平均数的意义",
+      "grade": 4,
+      "unit": "平均数与条形统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u08-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u08-k002",
+      "name": "求平均数的方法",
+      "grade": 4,
+      "unit": "平均数与条形统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u08-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u08-k003",
+      "name": "复式条形统计图",
+      "grade": 4,
+      "unit": "平均数与条形统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u08-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u08-k004",
+      "name": "解决问题——营养午餐",
+      "grade": 4,
+      "unit": "平均数与条形统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u08-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u09-k001",
+      "name": "列表法",
+      "grade": 4,
+      "unit": "数学广角——鸡兔同笼",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u09-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u09-k002",
+      "name": "假设法",
+      "grade": 4,
+      "unit": "数学广角——鸡兔同笼",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u09-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u09-k003",
+      "name": "解决问题——解题模型",
+      "grade": 4,
+      "unit": "数学广角——鸡兔同笼",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u09-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-down-u10-k001",
+      "name": "综合运用本册知识",
+      "grade": 4,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g4-down-u10-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u01-k001",
+      "name": "计数单位与十进制计数法",
+      "grade": 4,
+      "unit": "万以上数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u01-k002",
+      "name": "数位与数级",
+      "grade": 4,
+      "unit": "万以上数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u01-k003",
+      "name": "亿以内数的读法与写法",
+      "grade": 4,
+      "unit": "万以上数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u01-k004",
+      "name": "亿以上数的认识",
+      "grade": 4,
+      "unit": "万以上数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u01-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u01-k005",
+      "name": "数的大小比较",
+      "grade": 4,
+      "unit": "万以上数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u01-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u01-k006",
+      "name": "数的改写与求近似数",
+      "grade": 4,
+      "unit": "万以上数的认识",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u01-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u02-k001",
+      "name": "角的再认识",
+      "grade": 4,
+      "unit": "角的度量",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u02-k002",
+      "name": "角的度量",
+      "grade": 4,
+      "unit": "角的度量",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u02-k003",
+      "name": "角的分类",
+      "grade": 4,
+      "unit": "角的度量",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u03-k001",
+      "name": "口算乘法",
+      "grade": 4,
+      "unit": "多位数乘两位数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u03-k002",
+      "name": "笔算乘法",
+      "grade": 4,
+      "unit": "多位数乘两位数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u03-k003",
+      "name": "积的变化规律",
+      "grade": 4,
+      "unit": "多位数乘两位数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u04-k001",
+      "name": "加法模型",
+      "grade": 4,
+      "unit": "加法模型和乘法模型",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u04-k002",
+      "name": "乘法模型",
+      "grade": 4,
+      "unit": "加法模型和乘法模型",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u04-k003",
+      "name": "解决问题",
+      "grade": 4,
+      "unit": "加法模型和乘法模型",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u05-k001",
+      "name": "平行与垂直",
+      "grade": 4,
+      "unit": "平行四边形和梯形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u05-k002",
+      "name": "平行四边形",
+      "grade": 4,
+      "unit": "平行四边形和梯形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u05-k003",
+      "name": "梯形",
+      "grade": 4,
+      "unit": "平行四边形和梯形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u05-k004",
+      "name": "四边形之间的关系",
+      "grade": 4,
+      "unit": "平行四边形和梯形",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u06-k001",
+      "name": "单式条形统计图",
+      "grade": 4,
+      "unit": "条形统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u06-k002",
+      "name": "复式条形统计图",
+      "grade": 4,
+      "unit": "条形统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u06-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u06-k003",
+      "name": "横向与纵向复式条形统计图",
+      "grade": 4,
+      "unit": "条形统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u06-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u06-k004",
+      "name": "读图与数据分析",
+      "grade": 4,
+      "unit": "条形统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u06-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u07-k001",
+      "name": "1亿有多大",
+      "grade": 4,
+      "unit": "综合实践——大数",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u08-k001",
+      "name": "认识方向与位置",
+      "grade": 4,
+      "unit": "综合实践——方向、位置",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u08-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u08-k002",
+      "name": "描述位置",
+      "grade": 4,
+      "unit": "综合实践——方向、位置",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u08-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u08-k003",
+      "name": "读图与绘图",
+      "grade": 4,
+      "unit": "综合实践——方向、位置",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u08-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g4-up-u09-k001",
+      "name": "综合运用本册知识",
+      "grade": 4,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g4-up-u09-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u01-k001",
+      "name": "从不同角度观察立体图形",
+      "grade": 5,
+      "unit": "观察物体（三）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u01-k002",
+      "name": "根据平面视图搭建立体图形",
+      "grade": 5,
+      "unit": "观察物体（三）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u01-k003",
+      "name": "发展空间观念",
+      "grade": 5,
+      "unit": "观察物体（三）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u02-k001",
+      "name": "因数和倍数的概念",
+      "grade": 5,
+      "unit": "因数与倍数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u02-k002",
+      "name": "因数与倍数的特征",
+      "grade": 5,
+      "unit": "因数与倍数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u02-k003",
+      "name": "2、5、3的倍数的特征",
+      "grade": 5,
+      "unit": "因数与倍数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u02-k004",
+      "name": "奇数与偶数",
+      "grade": 5,
+      "unit": "因数与倍数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u02-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u02-k005",
+      "name": "质数与合数",
+      "grade": 5,
+      "unit": "因数与倍数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u02-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u02-k006",
+      "name": "和的奇偶性规律",
+      "grade": 5,
+      "unit": "因数与倍数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u02-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u03-k001",
+      "name": "长方体的特征",
+      "grade": 5,
+      "unit": "长方体和正方体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u03-k002",
+      "name": "正方体的特征",
+      "grade": 5,
+      "unit": "长方体和正方体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u03-k003",
+      "name": "表面积",
+      "grade": 5,
+      "unit": "长方体和正方体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u03-k004",
+      "name": "体积",
+      "grade": 5,
+      "unit": "长方体和正方体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u03-k005",
+      "name": "容积",
+      "grade": 5,
+      "unit": "长方体和正方体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u03-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u03-k006",
+      "name": "不规则物体的体积",
+      "grade": 5,
+      "unit": "长方体和正方体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u03-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u04-k001",
+      "name": "分数的意义",
+      "grade": 5,
+      "unit": "分数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u04-k002",
+      "name": "分数与除法的关系",
+      "grade": 5,
+      "unit": "分数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u04-k003",
+      "name": "真分数和假分数",
+      "grade": 5,
+      "unit": "分数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u04-k004",
+      "name": "分数的基本性质",
+      "grade": 5,
+      "unit": "分数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u04-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u04-k005",
+      "name": "约分与通分",
+      "grade": 5,
+      "unit": "分数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u04-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u04-k006",
+      "name": "分数和小数的互化",
+      "grade": 5,
+      "unit": "分数的意义和性质",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u04-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u05-k001",
+      "name": "旋转的三要素",
+      "grade": 5,
+      "unit": "图形的运动（三）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u05-k002",
+      "name": "在方格纸上画旋转图形",
+      "grade": 5,
+      "unit": "图形的运动（三）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u05-k003",
+      "name": "轴对称的再认识",
+      "grade": 5,
+      "unit": "图形的运动（三）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u05-k004",
+      "name": "设计图案",
+      "grade": 5,
+      "unit": "图形的运动（三）",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u06-k001",
+      "name": "同分母分数加减法",
+      "grade": 5,
+      "unit": "分数的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u06-k002",
+      "name": "异分母分数加减法",
+      "grade": 5,
+      "unit": "分数的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u06-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u06-k003",
+      "name": "分数加减混合运算",
+      "grade": 5,
+      "unit": "分数的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u06-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u06-k004",
+      "name": "整数加法运算律推广到分数",
+      "grade": 5,
+      "unit": "分数的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u06-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u06-k005",
+      "name": "解决问题",
+      "grade": 5,
+      "unit": "分数的加法和减法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u06-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u07-k001",
+      "name": "单式折线统计图",
+      "grade": 5,
+      "unit": "折线统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u07-k002",
+      "name": "复式折线统计图",
+      "grade": 5,
+      "unit": "折线统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u07-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u07-k003",
+      "name": "读图与分析",
+      "grade": 5,
+      "unit": "折线统计图",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u07-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u08-k001",
+      "name": "找次品的基本策略",
+      "grade": 5,
+      "unit": "数学广角——找次品",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u08-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u08-k002",
+      "name": "最优策略的规律",
+      "grade": 5,
+      "unit": "数学广角——找次品",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u08-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u08-k003",
+      "name": "推理与优化",
+      "grade": 5,
+      "unit": "数学广角——找次品",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u08-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u09-k001",
+      "name": "正方体涂色问题",
+      "grade": 5,
+      "unit": "综合实践——探索图形",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u09-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u09-k002",
+      "name": "各类涂色小正方体的位置特征",
+      "grade": 5,
+      "unit": "综合实践——探索图形",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u09-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u09-k003",
+      "name": "化繁为简的探究方法",
+      "grade": 5,
+      "unit": "综合实践——探索图形",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u09-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u10-k001",
+      "name": "问题情境",
+      "grade": 5,
+      "unit": "综合实践——怎样通知最快",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u10-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u10-k002",
+      "name": "优化方案的探究",
+      "grade": 5,
+      "unit": "综合实践——怎样通知最快",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u10-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u10-k003",
+      "name": "规律发现",
+      "grade": 5,
+      "unit": "综合实践——怎样通知最快",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u10-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u10-k004",
+      "name": "运筹思想的渗透",
+      "grade": 5,
+      "unit": "综合实践——怎样通知最快",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u10-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-down-u11-k001",
+      "name": "综合运用本册知识",
+      "grade": 5,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-down-u11-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u01-k001",
+      "name": "从不同方向观察组合体",
+      "grade": 5,
+      "unit": "观察简单组合体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u01-k002",
+      "name": "根据平面视图想象组合体",
+      "grade": 5,
+      "unit": "观察简单组合体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u01-k003",
+      "name": "发展空间观念",
+      "grade": 5,
+      "unit": "观察简单组合体",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u02-k001",
+      "name": "小数乘整数",
+      "grade": 5,
+      "unit": "小数乘法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u02-k002",
+      "name": "小数乘小数",
+      "grade": 5,
+      "unit": "小数乘法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u02-k003",
+      "name": "整数乘法运算律推广到小数",
+      "grade": 5,
+      "unit": "小数乘法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u02-k004",
+      "name": "小数乘法的估算",
+      "grade": 5,
+      "unit": "小数乘法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u02-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u02-k005",
+      "name": "解决问题",
+      "grade": 5,
+      "unit": "小数乘法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u02-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u03-k001",
+      "name": "除数是整数的小数除法",
+      "grade": 5,
+      "unit": "小数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u03-k002",
+      "name": "一个数除以小数",
+      "grade": 5,
+      "unit": "小数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u03-k003",
+      "name": "商与被除数的大小关系",
+      "grade": 5,
+      "unit": "小数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u03-k004",
+      "name": "小数除法的验算",
+      "grade": 5,
+      "unit": "小数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u03-k005",
+      "name": "循环小数的初步感知",
+      "grade": 5,
+      "unit": "小数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u03-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u03-k006",
+      "name": "解决问题",
+      "grade": 5,
+      "unit": "小数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u03-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u04-k001",
+      "name": "轴对称、平移深化",
+      "grade": 5,
+      "unit": "图形的运动",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u04-k002",
+      "name": "旋转",
+      "grade": 5,
+      "unit": "图形的运动",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u04-k003",
+      "name": "设计图案",
+      "grade": 5,
+      "unit": "图形的运动",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u05-k001",
+      "name": "用字母表示数",
+      "grade": 5,
+      "unit": "用字母表示数和数量关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u05-k002",
+      "name": "用字母表示数量关系",
+      "grade": 5,
+      "unit": "用字母表示数和数量关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u05-k003",
+      "name": "求含有字母的式子的值",
+      "grade": 5,
+      "unit": "用字母表示数和数量关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u05-k004",
+      "name": "探秘百数表（选学）",
+      "grade": 5,
+      "unit": "用字母表示数和数量关系",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u06-k001",
+      "name": "平行四边形的面积",
+      "grade": 5,
+      "unit": "多边形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u06-k002",
+      "name": "三角形的面积",
+      "grade": 5,
+      "unit": "多边形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u06-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u06-k003",
+      "name": "梯形的面积",
+      "grade": 5,
+      "unit": "多边形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u06-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u06-k004",
+      "name": "组合图形的面积",
+      "grade": 5,
+      "unit": "多边形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u06-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u06-k005",
+      "name": "格点多边形的面积（选学）",
+      "grade": 5,
+      "unit": "多边形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u06-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u06-k006",
+      "name": "等底等高的图形面积关系",
+      "grade": 5,
+      "unit": "多边形的面积",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u06-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u07-k001",
+      "name": "事件发生的确定性与不确定性",
+      "grade": 5,
+      "unit": "可能性",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u07-k002",
+      "name": "可能性的大小",
+      "grade": 5,
+      "unit": "可能性",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u07-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u07-k003",
+      "name": "根据可能性大小进行推测",
+      "grade": 5,
+      "unit": "可能性",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u07-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u07-k004",
+      "name": "掷一掷（选学）",
+      "grade": 5,
+      "unit": "可能性",
+      "module": "statistics",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u07-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u08-k001",
+      "name": "密铺的概念",
+      "grade": 5,
+      "unit": "综合实践——有趣的密铺",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u08-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u08-k002",
+      "name": "可密铺与不可密铺的图形",
+      "grade": 5,
+      "unit": "综合实践——有趣的密铺",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u08-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u08-k003",
+      "name": "密铺的原理",
+      "grade": 5,
+      "unit": "综合实践——有趣的密铺",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u08-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u08-k004",
+      "name": "设计密铺图案",
+      "grade": 5,
+      "unit": "综合实践——有趣的密铺",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u08-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g5-up-u09-k001",
+      "name": "综合运用本册知识",
+      "grade": 5,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g5-up-u09-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u01-k001",
+      "name": "负数的意义",
+      "grade": 6,
+      "unit": "负数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u01-k002",
+      "name": "正负数的读写",
+      "grade": 6,
+      "unit": "负数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u01-k003",
+      "name": "数轴上的正负数",
+      "grade": 6,
+      "unit": "负数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u01-k004",
+      "name": "正负数的大小比较",
+      "grade": 6,
+      "unit": "负数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u01-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u01-k005",
+      "name": "解决问题",
+      "grade": 6,
+      "unit": "负数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u01-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u02-k001",
+      "name": "折扣",
+      "grade": 6,
+      "unit": "百分数（二）",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u02-k002",
+      "name": "成数",
+      "grade": 6,
+      "unit": "百分数（二）",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u02-k003",
+      "name": "税率",
+      "grade": 6,
+      "unit": "百分数（二）",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u02-k004",
+      "name": "利率",
+      "grade": 6,
+      "unit": "百分数（二）",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u02-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u02-k005",
+      "name": "生活与百分数",
+      "grade": 6,
+      "unit": "百分数（二）",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u02-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u03-k001",
+      "name": "圆柱的认识",
+      "grade": 6,
+      "unit": "圆柱与圆锥",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u03-k002",
+      "name": "圆柱的表面积",
+      "grade": 6,
+      "unit": "圆柱与圆锥",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u03-k003",
+      "name": "圆柱的体积",
+      "grade": 6,
+      "unit": "圆柱与圆锥",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u03-k004",
+      "name": "圆锥的认识",
+      "grade": 6,
+      "unit": "圆柱与圆锥",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u03-k005",
+      "name": "圆锥的体积",
+      "grade": 6,
+      "unit": "圆柱与圆锥",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u03-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u03-k006",
+      "name": "解决问题",
+      "grade": 6,
+      "unit": "圆柱与圆锥",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u03-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u04-k001",
+      "name": "比例的意义",
+      "grade": 6,
+      "unit": "比例",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u04-k002",
+      "name": "比例的基本性质",
+      "grade": 6,
+      "unit": "比例",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u04-k003",
+      "name": "解比例",
+      "grade": 6,
+      "unit": "比例",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u04-k004",
+      "name": "正比例",
+      "grade": 6,
+      "unit": "比例",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u04-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u04-k005",
+      "name": "反比例",
+      "grade": 6,
+      "unit": "比例",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u04-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u04-k006",
+      "name": "比例尺",
+      "grade": 6,
+      "unit": "比例",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u04-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u04-k007",
+      "name": "图形的放大与缩小",
+      "grade": 6,
+      "unit": "比例",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u04-k007.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u04-k008",
+      "name": "解决问题",
+      "grade": 6,
+      "unit": "比例",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u04-k008.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u05-k001",
+      "name": "鸽巢原理（抽屉原理）",
+      "grade": 6,
+      "unit": "数学广角——鸽巢问题",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u05-k002",
+      "name": "鸽巢原理一般形式",
+      "grade": 6,
+      "unit": "数学广角——鸽巢问题",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u05-k003",
+      "name": "鸽巢原理解题方法",
+      "grade": 6,
+      "unit": "数学广角——鸽巢问题",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u05-k004",
+      "name": "鸽巢原理运用",
+      "grade": 6,
+      "unit": "数学广角——鸽巢问题",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-down-u06-k001",
+      "name": "综合运用小学知识",
+      "grade": 6,
+      "unit": "整理和复习",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g6-down-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u01-k001",
+      "name": "用有序数对确定位置",
+      "grade": 6,
+      "unit": "确定位置",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u01-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u01-k002",
+      "name": "用方向和距离确定位置",
+      "grade": 6,
+      "unit": "确定位置",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u01-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u01-k003",
+      "name": "两种定位方法的适用场景",
+      "grade": 6,
+      "unit": "确定位置",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u01-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u02-k001",
+      "name": "分数乘整数",
+      "grade": 6,
+      "unit": "分数乘法",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u02-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u02-k002",
+      "name": "一个数乘分数",
+      "grade": 6,
+      "unit": "分数乘法",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u02-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u02-k003",
+      "name": "分数、小数混合运算及运算律",
+      "grade": 6,
+      "unit": "分数乘法",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u02-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u02-k004",
+      "name": "解决问题",
+      "grade": 6,
+      "unit": "分数乘法",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u02-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u03-k001",
+      "name": "倒数的认识",
+      "grade": 6,
+      "unit": "分数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u03-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u03-k002",
+      "name": "分数除以整数",
+      "grade": 6,
+      "unit": "分数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u03-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u03-k003",
+      "name": "一个数除以分数",
+      "grade": 6,
+      "unit": "分数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u03-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u03-k004",
+      "name": "分数混合运算",
+      "grade": 6,
+      "unit": "分数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u03-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u03-k005",
+      "name": "解决问题",
+      "grade": 6,
+      "unit": "分数除法",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u03-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u04-k001",
+      "name": "圆和扇形的认识",
+      "grade": 6,
+      "unit": "圆",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u04-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u04-k002",
+      "name": "圆的周长",
+      "grade": 6,
+      "unit": "圆",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u04-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u04-k003",
+      "name": "圆的面积",
+      "grade": 6,
+      "unit": "圆",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u04-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u04-k004",
+      "name": "利用圆设计图案",
+      "grade": 6,
+      "unit": "圆",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u04-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u04-k005",
+      "name": "确定起跑线",
+      "grade": 6,
+      "unit": "圆",
+      "module": "geometry",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u04-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u05-k001",
+      "name": "百分数的意义",
+      "grade": 6,
+      "unit": "百分数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u05-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u05-k002",
+      "name": "百分数与分数、小数的互化",
+      "grade": 6,
+      "unit": "百分数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u05-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u05-k003",
+      "name": "百分数的应用——折扣",
+      "grade": 6,
+      "unit": "百分数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u05-k003.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u05-k004",
+      "name": "百分数的应用——利率",
+      "grade": 6,
+      "unit": "百分数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u05-k004.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u05-k005",
+      "name": "确定达标线（新增专题）",
+      "grade": 6,
+      "unit": "百分数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u05-k005.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u05-k006",
+      "name": "解决问题",
+      "grade": 6,
+      "unit": "百分数",
+      "module": "algebra",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u05-k006.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u06-k001",
+      "name": "综合运用本册知识",
+      "grade": 6,
+      "unit": "复习与关联",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u06-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u07-k001",
+      "name": "寻找负数",
+      "grade": 6,
+      "unit": "综合实践——生活中的负数",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u07-k001.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u07-k002",
+      "name": "认识负数",
+      "grade": 6,
+      "unit": "综合实践——生活中的负数",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u07-k002.html",
+      "status": "published"
+    },
+    {
+      "id": "math-g6-up-u07-k003",
+      "name": "应用负数",
+      "grade": 6,
+      "unit": "综合实践——生活中的负数",
+      "module": "practice",
+      "url": "https://home.modouyu.top/knowledge/math-g6-up-u07-k003.html",
+      "status": "published"
+    }
+  ]
+}

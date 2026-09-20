@@ -702,6 +702,13 @@ function plan(request) {
   var effectiveDifficulty = difficulty.effectiveDifficulty;
   var finalDifficulty = difficulty.composedDifficulty != null ? difficulty.composedDifficulty : effectiveDifficulty;
 
+  // 算术/复杂语义注入（M4-R17/18）——上提至学习者决策之前，供 P27-11
+  // 变式指令的运算谓词（triggerPattern.operations）在计划期判定使用
+  var KpArith = require('../generator/core/kp-arithmetic-semantics.js');
+  var arithSem = KpArith.resolveArithmeticSemantics(kp);
+  var KpComplex = require('../generator/core/kp-complex-semantics.js');
+  var complexSem = KpComplex.resolveComplexSemantics(kp);
+
   var learnerDecision = null;
   if (request.learnerProfile && typeof request.learnerProfile === 'object') {
     var LearnerModel = require('../learner/learner-model.js');
@@ -713,6 +720,20 @@ function plan(request) {
     }
     var maxSpiral = 6;
     if (kp && kp.spiral && typeof kp.spiral.maxLevel === 'number') maxSpiral = kp.spiral.maxLevel;
+    // P27-11：Misconception→NextVariation——错因聚焦 × MisconceptionProfile
+    // triggerPattern（计划期可判定谓词）→ 变式指令，传入 R18 做变体转向
+    var VariationDirective = require('./variation-directive.js');
+    // 运算 token 回退链：算术语义算符（精确）→ KBL 事实 operations 标签（粗粒度，
+    // multiplication/division 等，与 MisconceptionProfile trigger 词汇同源）；
+    // 三者皆无 → null（仅匹配无运算限定的 trigger）
+    var planOperationTokens = (arithSem && arithSem.operators) || (complexSem && complexSem.operators) ||
+      (Array.isArray(kp.operations) && kp.operations.length ? kp.operations : null);
+    var misconceptionDirectives = VariationDirective.resolveForPlan({
+      kpId: kp.id,
+      errorTypes: AdaptiveStrategy.errorFocusFor(kpState, 2),
+      questionTypeId: questionType,
+      operationTokens: planOperationTokens
+    });
     learnerDecision = AdaptiveStrategy.resolve({
       kpId: kp.id,
       learnerState: kpState,
@@ -721,7 +742,8 @@ function plan(request) {
       allowDifficultyOverride: request.allowDifficultyOverride,
       adaptiveMode: request.adaptiveMode,
       adaptiveDelta: difficulty.adaptiveDelta,
-      maxSpiralLevel: maxSpiral
+      maxSpiralLevel: maxSpiral,
+      misconceptionDirectives: misconceptionDirectives
     });
     if (learnerDecision.effectiveDifficulty != null) {
       effectiveDifficulty = learnerDecision.effectiveDifficulty;
@@ -737,7 +759,8 @@ function plan(request) {
       attempts: learnerDecision.attempts,
       targetSpiralLevel: learnerDecision.targetSpiralLevel,
       variant: learnerDecision.variant,
-      errorFocus: learnerDecision.errorFocus
+      errorFocus: learnerDecision.errorFocus,
+      variationDirectives: learnerDecision.variationDirectives
     };
   }
   trace.staticDifficulty = staticProfile.level;
@@ -807,11 +830,7 @@ function plan(request) {
     allowMultDiv: structure.allowMultDiv
   });
 
-  // 算术/复杂语义注入（M4-R17/18）
-  var KpArith = require('../generator/core/kp-arithmetic-semantics.js');
-  var arithSem = KpArith.resolveArithmeticSemantics(kp);
-  var KpComplex = require('../generator/core/kp-complex-semantics.js');
-  var complexSem = KpComplex.resolveComplexSemantics(kp);
+  // 算术/复杂语义注入（M4-R17/18）：解析已在学习者决策前完成（见上），此处仅写 trace
   trace.kpArithmeticSemantics = arithSem ? { legacyType: arithSem.legacyType, operators: arithSem.operators, steps: arithSem.steps } : null;
   trace.kpComplexSemantics = complexSem ? { family: complexSem.family, operators: complexSem.operators, steps: complexSem.steps } : null;
 
@@ -914,6 +933,10 @@ function plan(request) {
     };
     questionPlan.variant = learnerDecision.variant;
     questionPlan.errorFocus = learnerDecision.errorFocus;
+    // P27-11：Misconception→NextVariation 指令随计划下发生成器（含 R18 转向后 variant）
+    if (Array.isArray(learnerDecision.variationDirectives) && learnerDecision.variationDirectives.length) {
+      questionPlan.variationDirectives = learnerDecision.variationDirectives;
+    }
   }
 
   // Plan validate（步骤 8）

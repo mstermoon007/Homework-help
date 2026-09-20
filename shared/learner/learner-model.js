@@ -6,10 +6,21 @@
  * 每个知识点维护：
  *   mastery            EMA 掌握度（R07）：mastery(t)=α×result+(1-α)×mastery(t-1)
  *   confidence         置信度（R08）：与 mastery 分离，随样本量与一致性增长
- *   attempts / correct / accuracy / recentAccuracy / recentResults（R06）
- *   errorPatterns      错因（R09，类型与计数由 ErrorModel 维护）
+ *   attempts / correct / incorrect / accuracy / recentAccuracy / recentResults（R06）
+ *   errorPatterns      错因 SSOT（R09，类型与计数由 ErrorModel 维护）
  *   exposureCount / lastPracticedAt
  *   recommendedDifficulty / recommendedSpiralLevel（默认推荐，权威值由 AdaptiveStrategy 覆盖）
+ *
+ * P27-12 KnowledgePracticeState 最小掌握度闭环（任务书 P25-12）：
+ *   incorrect                派生（attempts - correct），不另算
+ *   questionTypeStats        题型分布统计 {[qt]: {attempts, correct, incorrect, recentResults, lastPracticedAt}}
+ *   semanticTargetStats     语义目标分布统计 {[st|null]: {attempts, correct, incorrect, lastPracticedAt}}
+ *   recentErrors             最近错题摘要 [{questionType, semanticTarget, errorType, correct, timestamp}]（cap 20）
+ *   misconceptionStats       只读派生视图（由 errorPatterns 经 ErrorModel.getErrorFocus 派生，不另存 SSOT）
+ *
+ * 红线（任务书 P25-12）：不改 Difficulty Core；不建第二套评分系统；
+ *   只提供学习状态数据。mastery/confidence/recommended* 仍是唯一评分入口，
+ *   新增字段均为纯统计或只读派生。
  *
  * R11：Strategy 只能通过本 API 读取，禁止直接读 Storage。
  * R26：normalizeLearnerState() 统一容错（NaN/负数/>1 mastery/非法错因/旧版本数据）。
@@ -25,6 +36,7 @@
   var DEFAULT_ALPHA = 0.3;      // EMA 平滑系数
   var RECENT_WINDOW = 10;       // recentAccuracy 采用的最近结果数
   var RECENT_RESULTS_CAP = 20;  // recentResults 保留上限
+  var RECENT_ERRORS_CAP = 20;   // P27-12：recentErrors 保留上限
   var DIFF_MIN = 1, DIFF_MAX = 10;
 
   // ===== 字段默认值 =====
@@ -35,6 +47,7 @@
       confidence: 0,
       attempts: 0,
       correct: 0,
+      incorrect: 0,                     // P27-12：派生（attempts - correct），便于 UI 直接读
       accuracy: 0,
       recentAccuracy: 0,
       recentResults: [],
@@ -43,8 +56,21 @@
       lastPracticedAt: null,
       recommendedDifficulty: DIFF_MIN,
       recommendedSpiralLevel: 1,
-      updatedAt: null
+      updatedAt: null,
+      // P27-12 KnowledgePracticeState 新增字段（只统计、不评分）
+      questionTypeStats: {},           // {[qt]: {attempts, correct, incorrect, recentResults, lastPracticedAt}}
+      semanticTargetStats: {},         // {[st|null]: {attempts, correct, incorrect, lastPracticedAt}}
+      recentErrors: [],                // [{questionType, semanticTarget, errorType, correct, timestamp}]
+      misconceptionStats: []           // 只读派生视图（由 errorPatterns 派生）
     };
+  }
+
+  // P27-12：题型/语义目标分布桶默认值
+  function defaultQtBucket() {
+    return { attempts: 0, correct: 0, incorrect: 0, recentResults: [], lastPracticedAt: null };
+  }
+  function defaultStBucket() {
+    return { attempts: 0, correct: 0, incorrect: 0, lastPracticedAt: null };
   }
 
   // ===== 数值工具 =====
@@ -74,6 +100,7 @@
     d.confidence = clamp01(raw.confidence);
     d.attempts = nonNegInt(raw.attempts);
     d.correct = Math.min(nonNegInt(raw.correct), d.attempts); // 正确数不可能超过尝试数
+    d.incorrect = Math.max(0, d.attempts - d.correct);        // P27-12：派生
     d.accuracy = clamp01(raw.accuracy != null ? raw.accuracy : (d.attempts ? d.correct / d.attempts : 0));
     d.exposureCount = nonNegInt(raw.exposureCount);
     d.recentResults = valuesAre01Array(raw.recentResults);
@@ -84,11 +111,73 @@
     d.updatedAt = isValidTs(raw.updatedAt) ? raw.updatedAt : null;
     d.recommendedDifficulty = clampDiff(raw.recommendedDifficulty == null ? DIFF_MIN : raw.recommendedDifficulty);
     d.recommendedSpiralLevel = clampLevel(raw.recommendedSpiralLevel == null ? 1 : raw.recommendedSpiralLevel, 6);
+    // P27-12：questionTypeStats / semanticTargetStats / recentErrors 容错归一
+    d.questionTypeStats = normalizeQtStats(raw.questionTypeStats);
+    d.semanticTargetStats = normalizeStStats(raw.semanticTargetStats);
+    d.recentErrors = normalizeRecentErrors(raw.recentErrors);
+    // P27-12：misconceptionStats 只读派生（由 errorPatterns 派生，不存 SSOT，每次 normalize 重派）
+    d.misconceptionStats = ErrorModel.getErrorFocus(d.errorPatterns);
     // 旧数据/损坏数据缺失 mastery 字段时用准确率兜底（字段存在但越界时仍走 clamp，不触发兜底）
     if ((raw.mastery == null || typeof raw.mastery !== 'number' || !isFinite(raw.mastery)) && d.attempts) {
       d.mastery = recomputeMasteryFallback(d);
     }
     return d;
+  }
+
+  // P27-12：题型分布桶容错
+  function normalizeQtStats(raw) {
+    var out = {};
+    if (raw == null || typeof raw !== 'object') return out;
+    Object.keys(raw).forEach(function (qt) {
+      if (!qt) return;
+      var b = raw[qt];
+      if (b == null || typeof b !== 'object') b = {};
+      var attempts = nonNegInt(b.attempts);
+      var correct = Math.min(nonNegInt(b.correct), attempts);
+      out[qt] = {
+        attempts: attempts,
+        correct: correct,
+        incorrect: Math.max(0, attempts - correct),
+        recentResults: valuesAre01Array(b.recentResults),
+        lastPracticedAt: isValidTs(b.lastPracticedAt) ? b.lastPracticedAt : null
+      };
+    });
+    return out;
+  }
+
+  // P27-12：语义目标分布桶容错
+  function normalizeStStats(raw) {
+    var out = {};
+    if (raw == null || typeof raw !== 'object') return out;
+    Object.keys(raw).forEach(function (st) {
+      var key = (st == null || st === 'null') ? 'null' : String(st);
+      var b = raw[st];
+      if (b == null || typeof b !== 'object') b = {};
+      var attempts = nonNegInt(b.attempts);
+      var correct = Math.min(nonNegInt(b.correct), attempts);
+      out[key] = {
+        attempts: attempts,
+        correct: correct,
+        incorrect: Math.max(0, attempts - correct),
+        lastPracticedAt: isValidTs(b.lastPracticedAt) ? b.lastPracticedAt : null
+      };
+    });
+    return out;
+  }
+
+  // P27-12：最近错题摘要容错
+  function normalizeRecentErrors(raw) {
+    if (!Array.isArray(raw)) return [];
+    return raw.map(function (e) {
+      if (e == null || typeof e !== 'object') return null;
+      return {
+        questionType: (typeof e.questionType === 'string' && e.questionType) ? e.questionType : null,
+        semanticTarget: (typeof e.semanticTarget === 'string' && e.semanticTarget) ? e.semanticTarget : null,
+        errorType: ErrorModel.normalizeErrorType(e.errorType),
+        correct: false,           // recentErrors 只存错题，correct 恒为 false
+        timestamp: isValidTs(e.timestamp) ? e.timestamp : null
+      };
+    }).filter(function (e) { return e && e.timestamp != null; }).slice(-RECENT_ERRORS_CAP);
   }
 
   function recomputeMasteryFallback(s) {
@@ -274,6 +363,49 @@
     var etype = ErrorModel.resolveErrorType(result);
     if (etype && !isSkip) {
       ErrorModel.recordError(kp.errorPatterns, etype, ts);
+    }
+
+    // P27-12 KnowledgePracticeState：题型/语义目标分布 + 最近错题摘要
+    // 语义与 attempts/correct 同步：跳过不计；重做只更新 recentResults，不重复 first-pass
+    if (!isSkip) {
+      var qt = (typeof result.questionType === 'string' && result.questionType) ? result.questionType : null;
+      var st = (typeof result.semanticTarget === 'string' && result.semanticTarget) ? result.semanticTarget : null;
+      var stKey = st || 'null';
+      var qtBucket = kp.questionTypeStats[qt] || defaultQtBucket();
+      var stBucket = kp.semanticTargetStats[stKey] || defaultStBucket();
+      if (!isRedo) {
+        qtBucket.attempts += 1;
+        stBucket.attempts += 1;
+        if (res === 1) {
+          qtBucket.correct += 1;
+          stBucket.correct += 1;
+        } else {
+          qtBucket.incorrect += 1;
+          stBucket.incorrect += 1;
+        }
+      }
+      qtBucket.recentResults.push(res);
+      if (qtBucket.recentResults.length > RECENT_RESULTS_CAP) {
+        qtBucket.recentResults = qtBucket.recentResults.slice(-RECENT_RESULTS_CAP);
+      }
+      qtBucket.lastPracticedAt = ts;
+      stBucket.lastPracticedAt = ts;
+      kp.questionTypeStats[qt] = qtBucket;
+      kp.semanticTargetStats[stKey] = stBucket;
+
+      // recentErrors：只追加错题（res===0；redo 错题也追加，与 errorPatterns 同步）
+      if (res === 0) {
+        kp.recentErrors.push({
+          questionType: qt,
+          semanticTarget: st,
+          errorType: etype,
+          correct: false,
+          timestamp: ts
+        });
+        if (kp.recentErrors.length > RECENT_ERRORS_CAP) {
+          kp.recentErrors = kp.recentErrors.slice(-RECENT_ERRORS_CAP);
+        }
+      }
     }
 
     kp.lastPracticedAt = ts;

@@ -101,9 +101,14 @@ function spiralTarget(mastery, confidence, recentAccuracy) {
 }
 
 // ===== R18 变体选择 =====
-function variantFor(mastery, confidence, errorFocus) {
+// P27-11：misconceptionDirectives 非空且存在错因聚焦时，用第一条指令的 variant
+// 转向（Misconception→NextVariation 消费链；指令来自 P27-10 overlay，每条带 basis）。
+function variantFor(mastery, confidence, errorFocus, misconceptionDirectives) {
   var m = clamp(safeNumber(mastery, 0), 0, 1);
   var conf = clamp(safeNumber(confidence, 0), 0, 1);
+  if (misconceptionDirectives && misconceptionDirectives.length && errorFocus && errorFocus.length) {
+    return misconceptionDirectives[0].variant;
+  }
   // 有错因且 mastery 低 → 回到基础变体做巩固
   if (errorFocus && errorFocus.length && m < 0.7) return '基础';
   if (m < 0.4) return '基础';
@@ -204,7 +209,7 @@ function resolve(opts) {
   targetSpiral = Math.min(targetSpiral, maxSpiral);
   if (attempts === 0) targetSpiral = 1; // 无记录从最低螺旋开始
 
-  var variant = variantFor(mastery, confidence, focus);
+  var variant = variantFor(mastery, confidence, focus, opts.misconceptionDirectives);
 
   return {
     effectiveDifficulty: effectiveDifficulty,
@@ -212,6 +217,7 @@ function resolve(opts) {
     cognitiveLevel: cognitiveFor(mastery),
     variant: variant,
     errorFocus: focus,
+    variationDirectives: Array.isArray(opts.misconceptionDirectives) ? opts.misconceptionDirectives : [],
     adjustment: adj,
     mastery: round3(mastery),
     confidence: round3(confidence),

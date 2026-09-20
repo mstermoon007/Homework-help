@@ -12,6 +12,7 @@
  *     questionDifficulty,
  *     questionType,
  *     spiralLevel,
+ *     semanticTarget,   // P27-12：语义目标维度（P25 新增，可回溯用）；无则 null
  *     errorType,         // 只允许来自可靠来源（R10）；否则 null
  *     status,            // 'correct' | 'wrong' | 'unanswered' | 'skipped' | 'redo'
  *     timestamp
@@ -64,6 +65,10 @@
       questionDifficulty: numOrNull(sq.difficulty),
       questionType: strOrNull(sq.questionType) || strOrNull(sq.type),
       spiralLevel: numOrNull(sq.spiralLevel != null ? sq.spiralLevel : (sq.constraints && sq.constraints.spiralLevel)),
+      // P27-12：semanticTarget 优先取 sq.semanticTarget（字符串）；
+      // 兼容 sq.semanticTargets（数组）取首项；无则 null（绝不伪造）。
+      semanticTarget: strOrNull(sq.semanticTarget)
+        || (Array.isArray(sq.semanticTargets) && sq.semanticTargets.length ? strOrNull(sq.semanticTargets[0]) : null),
       errorType: opts.errorType != null ? opts.errorType : sq.errorType,
       status: opts.status || (opts.correct === true ? STATUS.CORRECT : STATUS.WRONG),
       timestamp: numOrNull(opts.timestamp) || now()
@@ -91,6 +96,7 @@
       questionDifficulty: numOrNull(opts.questionDifficulty),
       questionType: strOrNull(question && (question.questionType || question.type)),
       spiralLevel: numOrNull(opts.spiralLevel),
+      semanticTarget: strOrNull(opts.semanticTarget) || strOrNull(question && question.semanticTarget),
       errorType: opts.errorType != null ? opts.errorType : (question && question.errorType),
       status: opts.status || (opts.correct === true ? STATUS.CORRECT : STATUS.WRONG),
       timestamp: numOrNull(opts.timestamp) || now()
@@ -116,6 +122,7 @@
       questionDifficulty: numOrNull(partial.questionDifficulty),
       questionType: strOrNull(partial.questionType),
       spiralLevel: numOrNull(partial.spiralLevel),
+      semanticTarget: strOrNull(partial.semanticTarget),
       errorType: normalizeErrorTypeField(partial.errorType),
       status: status,
       timestamp: numOrNull(partial.timestamp) || now()

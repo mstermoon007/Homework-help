@@ -12,6 +12,12 @@
  *      未覆盖题型会 0 产出破坏 verify:allow-gen 1570 门禁）。
  *   4. 证据规则数据 kbl/teaching/evidence-rules.json：断言 kind 仅
  *      field/fieldNot/relation/relationNot 四种。
+ *
+ * P26 evidence 全量扩建：规则表从 4 代表 KP 扩到 A 类全量（kp-matrix.json
+ * draftSemanticLevel==='A' 的 75 KP × ALLOW 题型，机械派生契约）+ 既有 6 行保留。
+ * 候选真值源 dev/p25/reports/evidence-derive-report.json（真实生成产出字段稳定性
+ * + KBL 语义事实跨家族守卫）；本测试冻结：总行数、A 类全覆盖、断言 kind 合法、
+ * 键不重复、既有 4 代表 KP 规则行不被扩建侵蚀。
  */
 
 const { test, before } = require('node:test');
@@ -43,7 +49,8 @@ before(() => {});
 /* ---------------- 1. 四态语义 ---------------- */
 
 test('skip：KP×题型 无证据规则 → 不产出任何 error/warning', () => {
-  const r = KpSemantic.checkSemanticEvidence(sqOf({ knowledgePointIds: [KP_AREA], questionType: 'apply' }), KP_AREA);
+  // P26 后 4 代表 KP 已入 A 类、其 ALLOW 行均有规则；skip 夹具改用无规则的 KP×题型（面积×calc 无 ALLOW 无规则）
+  const r = KpSemantic.checkSemanticEvidence(sqOf({ knowledgePointIds: [KP_AREA], questionType: 'calc' }), KP_AREA);
   assert.equal(r.state, 'skip');
   assert.equal(r.errors.length, 0);
   assert.equal(r.warnings.length, 0);
@@ -101,17 +108,18 @@ test('四态进入 validateKpSemantics.checks.semanticEvidence 与 result.semant
   const out2 = KpSemantic.validateKpSemantics(warnSq, { kpId: KP_TIMES, kpConstraints: null, plan: null });
   assert.equal(out2.semanticEvidence, 'warn');
 
-  const skipSq = sqOf({ knowledgePointIds: [KP_ANGLE], questionType: 'judge', data: {} });
+  const skipSq = sqOf({ knowledgePointIds: [KP_ANGLE], questionType: 'calc', data: {} });
   const out3 = KpSemantic.validateKpSemantics(skipSq, { kpId: KP_ANGLE, kpConstraints: null, plan: null });
   assert.equal(out3.semanticEvidence, 'skip');
 });
 
 /* ---------------- 2. 证据规则数据完整性 ---------------- */
 
-test('evidence-rules.json：6 行、断言 kind 合法、键不重复', () => {
+test('evidence-rules.json：断言 kind 合法、键不重复、A 类 ALLOW 行全覆盖（口径自维护）', () => {
   const doc = require(path.join(ROOT, 'kbl', 'teaching', 'evidence-rules.json'));
+  const matrix = require(path.join(ROOT, 'kbl', 'teaching', 'kp-matrix.json'));
+  const mappings = require(path.join(ROOT, 'kbl', 'canonical', 'mappings.json')).mappings;
   assert.ok(Array.isArray(doc.rules));
-  assert.equal(doc.rules.length, 6);
   const seen = new Set();
   const KINDS = new Set(['field', 'fieldNot', 'relation', 'relationNot']);
   doc.rules.forEach((r) => {
@@ -121,11 +129,29 @@ test('evidence-rules.json：6 行、断言 kind 合法、键不重复', () => {
     assert.ok(Array.isArray(r.required) && r.required.length >= 1, key + ' 必须有 required');
     (r.required || []).concat(r.forbidden || []).forEach((a) => assert.ok(KINDS.has(a.kind), 'kind 合法: ' + a.kind));
   });
-  // 规则覆盖面 == 设计口径：倍 calc/fill、分数 calc/fill、角 fill、面积 fill
+  // 既有规则覆盖面（P25-04 人工规则，不被扩建侵蚀）：倍 calc/fill、分数 calc/fill、角 fill、面积 fill
   ['calc', 'fill'].forEach((qt) => assert.ok(seen.has(KP_TIMES + '|' + qt)));
   ['calc', 'fill'].forEach((qt) => assert.ok(seen.has(KP_FRACTION + '|' + qt)));
   assert.ok(seen.has(KP_ANGLE + '|fill'));
   assert.ok(seen.has(KP_AREA + '|fill'));
+  // P26 扩建覆盖面（口径自维护，无魔法数字）：
+  // A 类 = kp-matrix draftSemanticLevel==='A'；ALLOW 行 = canonical mappings permission==='allow'。
+  const aKps = new Set(matrix.kps.filter((k) => k.draftSemanticLevel === 'A').map((k) => k.id));
+  assert.ok(aKps.size >= 75, 'A 类 KP 应 ≥75（P26 刷新后矩阵），实际 ' + aKps.size);
+  const aAllowRows = new Set();
+  mappings.forEach((m) => {
+    if (aKps.has(m.knowledgeId) && m.permission === 'allow') aAllowRows.add(m.knowledgeId + '|' + m.questionType);
+  });
+  aAllowRows.forEach((key) => {
+    assert.ok(seen.has(key), 'A 类 ALLOW 行缺证据规则: ' + key);
+  });
+  // 规则行范围精确：= A 类 ALLOW 行（既有 6 行 ⊆ 其中——4 代表 KP 已随矩阵刷新入 A）
+  assert.equal(doc.rules.length, aAllowRows.size,
+    '规则行数应恰为 A 类 ALLOW 行数');
+  doc.rules.forEach((r) => {
+    assert.ok(aKps.has(r.knowledgePointId),
+      '规则行 KP 越界（非 A 类）: ' + r.knowledgePointId);
+  });
 });
 
 /* ---------------- 3. 绑定与路由 ---------------- */

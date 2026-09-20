@@ -79,6 +79,19 @@ function createArithmeticGenerator(spec) {
       var count = plan.count || 1;
       var questions = [];
 
+      // P27-11：变式指令通用消费（无 KP 分支）。指令来自 strategy-engine 挂载的
+      // plan.variationDirectives（Misconception→NextVariation，P27-10 overlay 派生）。
+      // axis='numeric' → 数值低位巩固：运算数在本行 numberRange 的下半区生成，
+      // 报告值仍用原始 numberRange（不动 validator check#4 的语义边界）。
+      var vDirectives = Array.isArray(plan && plan.variationDirectives) ? plan.variationDirectives : [];
+      var numericSteer = vDirectives.some(function (d) { return d && d.axis === 'numeric'; });
+      var genRange = constraints.numberRange;
+      if (numericSteer && genRange && typeof genRange.min === 'number' && typeof genRange.max === 'number' &&
+          genRange.max > genRange.min) {
+        var mid = Math.floor((genRange.min + genRange.max) / 2);
+        genRange = { min: genRange.min, max: Math.max(genRange.min, mid) };
+      }
+
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
@@ -87,13 +100,13 @@ function createArithmeticGenerator(spec) {
         var nameKind = deriveKindFromName(kpName, op);
         var kind = constraints.kind ||
           ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || nameKind;
-        var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: constraints.numberRange });
+        var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: genRange });
         if (!structure) {
           structure = Arith.generateStructure(rng, {
             operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
             operationSet: opSet,
             exactSteps: constraints.exactSteps,
-            numberRange: constraints.numberRange,
+            numberRange: genRange,
             maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
             allowBracket: constraints.allowBracket,
             allowMultDiv: constraints.allowMultDiv,

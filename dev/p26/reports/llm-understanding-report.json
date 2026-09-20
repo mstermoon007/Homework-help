@@ -1,0 +1,108 @@
+{
+  "generatedAt": "2026-09-20T03:07:46.291Z",
+  "totalTested": 20,
+  "passed": 20,
+  "failed": 0,
+  "results": [
+    {
+      "kpId": "math-g1-down-u01-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g1-up-u01-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g1-up-u06-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g2-down-u01-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g2-up-u03-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g2-up-u07-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g3-down-u01-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g3-up-u03-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g3-up-u09-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g4-down-u02-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g4-up-u03-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g4-up-u08-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g5-down-u01-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g5-up-u02-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g5-up-u04-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g5-up-u09-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g6-down-u01-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g6-up-u02-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g6-up-u04-k001",
+      "pass": true,
+      "mismatches": []
+    },
+    {
+      "kpId": "math-g6-up-u07-k001",
+      "pass": true,
+      "mismatches": []
+    }
+  ]
+}

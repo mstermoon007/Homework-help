@@ -736,6 +736,13 @@ function plan(request) {
   var effectiveDifficulty = difficulty.effectiveDifficulty;
   var finalDifficulty = difficulty.composedDifficulty != null ? difficulty.composedDifficulty : effectiveDifficulty;
 
+  
+  
+  var KpArith = require("shared/generator/core/kp-arithmetic-semantics.js");
+  var arithSem = KpArith.resolveArithmeticSemantics(kp);
+  var KpComplex = require("shared/generator/core/kp-complex-semantics.js");
+  var complexSem = KpComplex.resolveComplexSemantics(kp);
+
   var learnerDecision = null;
   if (request.learnerProfile && typeof request.learnerProfile === 'object') {
     var LearnerModel = require("shared/learner/learner-model.js");
@@ -747,6 +754,20 @@ function plan(request) {
     }
     var maxSpiral = 6;
     if (kp && kp.spiral && typeof kp.spiral.maxLevel === 'number') maxSpiral = kp.spiral.maxLevel;
+    
+    
+    var VariationDirective = require("shared/strategy/variation-directive.js");
+    
+    
+    
+    var planOperationTokens = (arithSem && arithSem.operators) || (complexSem && complexSem.operators) ||
+      (Array.isArray(kp.operations) && kp.operations.length ? kp.operations : null);
+    var misconceptionDirectives = VariationDirective.resolveForPlan({
+      kpId: kp.id,
+      errorTypes: AdaptiveStrategy.errorFocusFor(kpState, 2),
+      questionTypeId: questionType,
+      operationTokens: planOperationTokens
+    });
     learnerDecision = AdaptiveStrategy.resolve({
       kpId: kp.id,
       learnerState: kpState,
@@ -755,7 +776,8 @@ function plan(request) {
       allowDifficultyOverride: request.allowDifficultyOverride,
       adaptiveMode: request.adaptiveMode,
       adaptiveDelta: difficulty.adaptiveDelta,
-      maxSpiralLevel: maxSpiral
+      maxSpiralLevel: maxSpiral,
+      misconceptionDirectives: misconceptionDirectives
     });
     if (learnerDecision.effectiveDifficulty != null) {
       effectiveDifficulty = learnerDecision.effectiveDifficulty;
@@ -771,7 +793,8 @@ function plan(request) {
       attempts: learnerDecision.attempts,
       targetSpiralLevel: learnerDecision.targetSpiralLevel,
       variant: learnerDecision.variant,
-      errorFocus: learnerDecision.errorFocus
+      errorFocus: learnerDecision.errorFocus,
+      variationDirectives: learnerDecision.variationDirectives
     };
   }
   trace.staticDifficulty = staticProfile.level;
@@ -842,10 +865,6 @@ function plan(request) {
   });
 
   
-  var KpArith = require("shared/generator/core/kp-arithmetic-semantics.js");
-  var arithSem = KpArith.resolveArithmeticSemantics(kp);
-  var KpComplex = require("shared/generator/core/kp-complex-semantics.js");
-  var complexSem = KpComplex.resolveComplexSemantics(kp);
   trace.kpArithmeticSemantics = arithSem ? { legacyType: arithSem.legacyType, operators: arithSem.operators, steps: arithSem.steps } : null;
   trace.kpComplexSemantics = complexSem ? { family: complexSem.family, operators: complexSem.operators, steps: complexSem.steps } : null;
 
@@ -948,6 +967,10 @@ function plan(request) {
     };
     questionPlan.variant = learnerDecision.variant;
     questionPlan.errorFocus = learnerDecision.errorFocus;
+    
+    if (Array.isArray(learnerDecision.variationDirectives) && learnerDecision.variationDirectives.length) {
+      questionPlan.variationDirectives = learnerDecision.variationDirectives;
+    }
   }
 
   
@@ -3364,9 +3387,14 @@ function spiralTarget(mastery, confidence, recentAccuracy) {
 }
 
 
-function variantFor(mastery, confidence, errorFocus) {
+
+
+function variantFor(mastery, confidence, errorFocus, misconceptionDirectives) {
   var m = clamp(safeNumber(mastery, 0), 0, 1);
   var conf = clamp(safeNumber(confidence, 0), 0, 1);
+  if (misconceptionDirectives && misconceptionDirectives.length && errorFocus && errorFocus.length) {
+    return misconceptionDirectives[0].variant;
+  }
   
   if (errorFocus && errorFocus.length && m < 0.7) return '基础';
   if (m < 0.4) return '基础';
@@ -3456,7 +3484,7 @@ function resolve(opts) {
   targetSpiral = Math.min(targetSpiral, maxSpiral);
   if (attempts === 0) targetSpiral = 1; 
 
-  var variant = variantFor(mastery, confidence, focus);
+  var variant = variantFor(mastery, confidence, focus, opts.misconceptionDirectives);
 
   return {
     effectiveDifficulty: effectiveDifficulty,
@@ -3464,6 +3492,7 @@ function resolve(opts) {
     cognitiveLevel: cognitiveFor(mastery),
     variant: variant,
     errorFocus: focus,
+    variationDirectives: Array.isArray(opts.misconceptionDirectives) ? opts.misconceptionDirectives : [],
     adjustment: adj,
     mastery: round3(mastery),
     confidence: round3(confidence),
@@ -4050,6 +4079,7 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
   var DEFAULT_ALPHA = 0.3;      
   var RECENT_WINDOW = 10;       
   var RECENT_RESULTS_CAP = 20;  
+  var RECENT_ERRORS_CAP = 20;   
   var DIFF_MIN = 1, DIFF_MAX = 10;
 
   
@@ -4060,6 +4090,7 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
       confidence: 0,
       attempts: 0,
       correct: 0,
+      incorrect: 0,                     
       accuracy: 0,
       recentAccuracy: 0,
       recentResults: [],
@@ -4068,8 +4099,21 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
       lastPracticedAt: null,
       recommendedDifficulty: DIFF_MIN,
       recommendedSpiralLevel: 1,
-      updatedAt: null
+      updatedAt: null,
+      
+      questionTypeStats: {},           
+      semanticTargetStats: {},         
+      recentErrors: [],                
+      misconceptionStats: []           
     };
+  }
+
+  
+  function defaultQtBucket() {
+    return { attempts: 0, correct: 0, incorrect: 0, recentResults: [], lastPracticedAt: null };
+  }
+  function defaultStBucket() {
+    return { attempts: 0, correct: 0, incorrect: 0, lastPracticedAt: null };
   }
 
   
@@ -4099,6 +4143,7 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
     d.confidence = clamp01(raw.confidence);
     d.attempts = nonNegInt(raw.attempts);
     d.correct = Math.min(nonNegInt(raw.correct), d.attempts); 
+    d.incorrect = Math.max(0, d.attempts - d.correct);        
     d.accuracy = clamp01(raw.accuracy != null ? raw.accuracy : (d.attempts ? d.correct / d.attempts : 0));
     d.exposureCount = nonNegInt(raw.exposureCount);
     d.recentResults = valuesAre01Array(raw.recentResults);
@@ -4110,10 +4155,72 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
     d.recommendedDifficulty = clampDiff(raw.recommendedDifficulty == null ? DIFF_MIN : raw.recommendedDifficulty);
     d.recommendedSpiralLevel = clampLevel(raw.recommendedSpiralLevel == null ? 1 : raw.recommendedSpiralLevel, 6);
     
+    d.questionTypeStats = normalizeQtStats(raw.questionTypeStats);
+    d.semanticTargetStats = normalizeStStats(raw.semanticTargetStats);
+    d.recentErrors = normalizeRecentErrors(raw.recentErrors);
+    
+    d.misconceptionStats = ErrorModel.getErrorFocus(d.errorPatterns);
+    
     if ((raw.mastery == null || typeof raw.mastery !== 'number' || !isFinite(raw.mastery)) && d.attempts) {
       d.mastery = recomputeMasteryFallback(d);
     }
     return d;
+  }
+
+  
+  function normalizeQtStats(raw) {
+    var out = {};
+    if (raw == null || typeof raw !== 'object') return out;
+    Object.keys(raw).forEach(function (qt) {
+      if (!qt) return;
+      var b = raw[qt];
+      if (b == null || typeof b !== 'object') b = {};
+      var attempts = nonNegInt(b.attempts);
+      var correct = Math.min(nonNegInt(b.correct), attempts);
+      out[qt] = {
+        attempts: attempts,
+        correct: correct,
+        incorrect: Math.max(0, attempts - correct),
+        recentResults: valuesAre01Array(b.recentResults),
+        lastPracticedAt: isValidTs(b.lastPracticedAt) ? b.lastPracticedAt : null
+      };
+    });
+    return out;
+  }
+
+  
+  function normalizeStStats(raw) {
+    var out = {};
+    if (raw == null || typeof raw !== 'object') return out;
+    Object.keys(raw).forEach(function (st) {
+      var key = (st == null || st === 'null') ? 'null' : String(st);
+      var b = raw[st];
+      if (b == null || typeof b !== 'object') b = {};
+      var attempts = nonNegInt(b.attempts);
+      var correct = Math.min(nonNegInt(b.correct), attempts);
+      out[key] = {
+        attempts: attempts,
+        correct: correct,
+        incorrect: Math.max(0, attempts - correct),
+        lastPracticedAt: isValidTs(b.lastPracticedAt) ? b.lastPracticedAt : null
+      };
+    });
+    return out;
+  }
+
+  
+  function normalizeRecentErrors(raw) {
+    if (!Array.isArray(raw)) return [];
+    return raw.map(function (e) {
+      if (e == null || typeof e !== 'object') return null;
+      return {
+        questionType: (typeof e.questionType === 'string' && e.questionType) ? e.questionType : null,
+        semanticTarget: (typeof e.semanticTarget === 'string' && e.semanticTarget) ? e.semanticTarget : null,
+        errorType: ErrorModel.normalizeErrorType(e.errorType),
+        correct: false,           
+        timestamp: isValidTs(e.timestamp) ? e.timestamp : null
+      };
+    }).filter(function (e) { return e && e.timestamp != null; }).slice(-RECENT_ERRORS_CAP);
   }
 
   function recomputeMasteryFallback(s) {
@@ -4292,6 +4399,49 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
       ErrorModel.recordError(kp.errorPatterns, etype, ts);
     }
 
+    
+    
+    if (!isSkip) {
+      var qt = (typeof result.questionType === 'string' && result.questionType) ? result.questionType : null;
+      var st = (typeof result.semanticTarget === 'string' && result.semanticTarget) ? result.semanticTarget : null;
+      var stKey = st || 'null';
+      var qtBucket = kp.questionTypeStats[qt] || defaultQtBucket();
+      var stBucket = kp.semanticTargetStats[stKey] || defaultStBucket();
+      if (!isRedo) {
+        qtBucket.attempts += 1;
+        stBucket.attempts += 1;
+        if (res === 1) {
+          qtBucket.correct += 1;
+          stBucket.correct += 1;
+        } else {
+          qtBucket.incorrect += 1;
+          stBucket.incorrect += 1;
+        }
+      }
+      qtBucket.recentResults.push(res);
+      if (qtBucket.recentResults.length > RECENT_RESULTS_CAP) {
+        qtBucket.recentResults = qtBucket.recentResults.slice(-RECENT_RESULTS_CAP);
+      }
+      qtBucket.lastPracticedAt = ts;
+      stBucket.lastPracticedAt = ts;
+      kp.questionTypeStats[qt] = qtBucket;
+      kp.semanticTargetStats[stKey] = stBucket;
+
+      
+      if (res === 0) {
+        kp.recentErrors.push({
+          questionType: qt,
+          semanticTarget: st,
+          errorType: etype,
+          correct: false,
+          timestamp: ts
+        });
+        if (kp.recentErrors.length > RECENT_ERRORS_CAP) {
+          kp.recentErrors = kp.recentErrors.slice(-RECENT_ERRORS_CAP);
+        }
+      }
+    }
+
     kp.lastPracticedAt = ts;
     kp.updatedAt = ts;
 
@@ -4361,6 +4511,86 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
   global.LearnerModel = LearnerModel;
   if (typeof module !== 'undefined' && module.exports) module.exports = LearnerModel;
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+};
+__defs["shared/strategy/variation-directive.js"] = function (module, exports, require) {
+
+(function (global) {
+  'use strict';
+
+  var _overlay = null;
+  var _overlayLoaded = false;
+
+  function getOverlay() {
+    if (_overlayLoaded) return _overlay;
+    _overlayLoaded = true;
+    try {
+      var p = '../../' + 'kbl/' + 'teaching/' + 'misconception-profiles.json';
+      var doc = require(p);
+      if (doc && doc.kps && typeof doc.kps === 'object') _overlay = doc;
+    } catch (e) {  }
+    return _overlay;
+  }
+
+  
+  var OP_NORM = {
+    '+': 'add', '−': 'sub', '-': 'sub', '×': 'mult', '*': 'mult', '÷': 'div', '/': 'div',
+    'add': 'add', 'sub': 'sub', 'mult': 'mult', 'div': 'div',
+    'addition': 'add', 'subtraction': 'sub', 'multiplication': 'mult', 'division': 'div'
+  };
+
+  function normalizeOps(tokens) {
+    var out = [];
+    var arr = Array.isArray(tokens) ? tokens : (tokens == null ? [] : [tokens]);
+    arr.forEach(function (t) {
+      if (t == null) return;
+      var key = String(t);
+      var n = OP_NORM[key] || OP_NORM[key.toLowerCase()];
+      if (n && out.indexOf(n) === -1) out.push(n);
+    });
+    return out;
+  }
+
+  
+  function resolveForPlan(opts) {
+    var overlay = getOverlay();
+    if (!overlay || !opts || !opts.kpId) return [];
+    if (!Array.isArray(opts.errorTypes) || !opts.errorTypes.length) return [];
+    var entry = overlay.kps[opts.kpId];
+    if (!entry || !Array.isArray(entry.slots)) return [];
+    var focus = {};
+    opts.errorTypes.forEach(function (t) { if (typeof t === 'string') focus[t] = true; });
+    var planOps = normalizeOps(opts.operationTokens);
+    var out = [];
+    entry.slots.forEach(function (slot) {
+      if (!slot || !focus[slot.errorType]) return;
+      var tp = slot.triggerPattern || {};
+      if (Array.isArray(tp.questionTypes) && tp.questionTypes.indexOf(opts.questionTypeId) === -1) return;
+      if (Array.isArray(tp.operations) && tp.operations.length) {
+        var hit = false;
+        tp.operations.forEach(function (op) { if (planOps.indexOf(op) !== -1) hit = true; });
+        if (!hit) return;
+      }
+      var resp = slot.response || {};
+      out.push({
+        errorType: slot.errorType,
+        variant: resp.variant,
+        axis: resp.axis,
+        basis: slot.basis
+      });
+    });
+    return out;
+  }
+
+  var VariationDirective = {
+    resolveForPlan: resolveForPlan,
+    normalizeOps: normalizeOps,
+    getOverlay: getOverlay
+  };
+
+  global.VariationDirective = VariationDirective;
+  if (typeof module !== 'undefined' && module.exports) module.exports = VariationDirective;
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+
 };
 __defs["shared/generator/generator-selector.js"] = function (module, exports, require) {
 
@@ -6650,6 +6880,19 @@ function createArithmeticGenerator(spec) {
       var count = plan.count || 1;
       var questions = [];
 
+      
+      
+      
+      
+      var vDirectives = Array.isArray(plan && plan.variationDirectives) ? plan.variationDirectives : [];
+      var numericSteer = vDirectives.some(function (d) { return d && d.axis === 'numeric'; });
+      var genRange = constraints.numberRange;
+      if (numericSteer && genRange && typeof genRange.min === 'number' && typeof genRange.max === 'number' &&
+          genRange.max > genRange.min) {
+        var mid = Math.floor((genRange.min + genRange.max) / 2);
+        genRange = { min: genRange.min, max: Math.max(genRange.min, mid) };
+      }
+
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
@@ -6658,13 +6901,13 @@ function createArithmeticGenerator(spec) {
         var nameKind = deriveKindFromName(kpName, op);
         var kind = constraints.kind ||
           ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || nameKind;
-        var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: constraints.numberRange });
+        var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: genRange });
         if (!structure) {
           structure = Arith.generateStructure(rng, {
             operation: context.operation || planOperationStr(plan) || ((opSet && opSet.filter(function (o) { return o === '+' || o === '−'; }).length === opSet.length) ? 'add' : op),
             operationSet: opSet,
             exactSteps: constraints.exactSteps,
-            numberRange: constraints.numberRange,
+            numberRange: genRange,
             maxSteps: constraints.exactSteps != null ? constraints.exactSteps : constraints.maxSteps,
             allowBracket: constraints.allowBracket,
             allowMultDiv: constraints.allowMultDiv,
@@ -9660,10 +9903,11 @@ function makeReasoningQuestion(plan, context, i, kp) {
       var a = Rng.randInt(rng, 7, 9);
       var b = Rng.randInt(rng, 2, 9);
       if (i % 2 === 0) {
-        cPrompt = a + ' × ' + b + ' = ____';
+        
+        cPrompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ____';
         cAnswer = a * b;
       } else {
-        cPrompt = (a * b) + ' ÷ ' + a + ' = ____';
+        cPrompt = '用乘法口诀求商：' + (a * b) + ' ÷ ' + a + ' = ____';
         cAnswer = b;
       }
     } else {

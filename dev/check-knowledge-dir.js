@@ -31,6 +31,9 @@ const KB_DIR = path.join(ROOT, 'knowledge');
 // 生成器在页面尾部写入的权威哈希标记。
 const HASH_RE = /<!--\s*kbgen:hash=([0-9a-f]{64})\s*-->/;
 
+// P26-11：knowledge-index.json 是 build-knowledge-pages.js 产出的 KBL 派生只读索引，允许驻留
+const ALLOWED_NON_HTML = new Set(['knowledge-index.json']);
+
 function main() {
   if (!fs.existsSync(KB_DIR)) {
     console.error('❌ knowledge/ 目录不存在');
@@ -48,7 +51,9 @@ function main() {
       return;
     }
     if (!name.endsWith('.html')) {
-      violations.push(`非 html 混入：${name}`);
+      if (!ALLOWED_NON_HTML.has(name)) {
+        violations.push(`非 html 混入：${name}`);
+      }
       return;
     }
     // .html：必须是生成脚本权威产出（带 kbgen:hash 标记）
