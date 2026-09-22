@@ -25,6 +25,18 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-00～03｜FINAL 专项基线建立（2026-09-22）
+
+- modified: 无（仅新建 FINAL 专项文档）
+- deleted: 无
+- reason: 项目进入正式服务器发布前的最终修复专项启动，建立「当前唯一事实基线」「任务状态机制」「禁止范围扩张」三份治理文档，防止 AI 根据旧记忆重新打开已解决问题、禁止无限审计/扩展/新架构/新兼容层。
+- tests:
+  - 新建 `docs/FINAL-REPAIR-BASELINE.md`（FINAL-01）：从当前仓库实际状态采集——Version 5.0.0 / KBL hash 18a21dfb / 375 KP / 98 Units / 0 Relations / 1570 mappings / 7 QuestionTypes / 24 generator 源文件 / 534 tests 100% PASS / A-class FAIL=0 / bundle SHA-256 短前缀 / 26 门禁全 PASS / Git clean；记录已确认完成（20 项 FROZEN）、已确认删除（render.js 等）、明确不再修改（架构/数据/题型/契约/构建流程）。
+  - 新建 `docs/FINAL-REPAIR-STATUS.md`（FINAL-02）：20 项 FROZEN（KBL 375/1570/7types/Difficulty/SVG/Validator/Renderer/Learner/Web/Security/Tests/CI/Docs/Bundle 等），2 项 PENDING（构建发布包 / 上传服务器）；规则：FROZEN→除非当前测试失败→禁止重新打开。
+  - 新建 `docs/FINAL-REPAIR-DEFERRED.md`（FINAL-03）：1 项 P2 延后（D-001 judge 单 KP DEGRADE 口径不一致，非发布阻塞）；0 项 P0/P1 延后。
+  - 文档一致性门禁 PASS。
+- risk: 无（仅新建治理文档，不改产品代码）。
+
 ### P28-54｜P28 后 AI 编程规则固化（2026-09-22）
 
 - modified: 无（新增本地工作区规则文件，已 gitignore）
