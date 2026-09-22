@@ -68,12 +68,7 @@
             "shared/generator/graphic-renderer.js",
             "shared/generator/generators/arithmetic.js",
             "shared/generator/generators/application.js",
-            "shared/generator/generators/c1-number-puzzle.js",
-            "shared/generator/generators/c2-number-theory.js",
-            "shared/generator/generators/c5-c6-journey-engineering.js",
-            "shared/generator/generators/c7-clever-calc.js",
-            "shared/generator/generators/c9-comprehensive.js",
-            "shared/generator/generators/complex.js",
+            "shared/generator/generators/semantic-special.js",
             "shared/generator/generators/composite.js",
             "shared/generator/generators/counting.js",
             "shared/generator/generators/index.js",
@@ -189,13 +184,11 @@
             "shared/strategy/spiral-strategy.js",
             "shared/strategy/static-difficulty.js",
             "shared/strategy/strategy-error.js",
-            "shared/strategy/strategy-request.js",
             "shared/strategy/strategy-resolver.js",
             "shared/strategy/strategy-result.js",
             "shared/strategy/strategy-validator.js",
             "shared/strategy/structure-constraints.js",
-            "shared/strategy/target-difficulty.js",
-            "shared/strategy/strategy-config.js"
+            "shared/strategy/target-difficulty.js"
           ]
         },
         "VALIDATOR": {

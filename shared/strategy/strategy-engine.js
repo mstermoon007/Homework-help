@@ -17,10 +17,11 @@
  */
 'use strict';
 
-var StrategyRequest = require('./strategy-request.js');
 var StrategyResolver = require('./strategy-resolver.js');
 var CapabilityResolver = require('../capability/capability-resolver.js');
 var QuestionTypeStrategy = require('./question-type-strategy.js');
+var QuestionTypeRegistry = require('../knowledge/question-type-registry.js');
+var DifficultyStrategy = require('./difficulty-strategy.js');
 var CognitiveStrategy = require('./cognitive-strategy.js');
 var StaticDifficulty = require('./static-difficulty.js');
 var TargetDifficulty = require('./target-difficulty.js');
@@ -34,7 +35,227 @@ var StrategyResult = require('./strategy-result.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 var AdaptiveStrategy = require('./adaptive-strategy.js');
-var StrategyConfig = require('./strategy-config.js');
+
+// ============ Request 归一化（原 strategy-request.js，FINAL-16 内联；引擎是唯一调用方） ============
+
+// 标准题型枚举（SSOT：question-type-registry.js 的 canonical 7 类）
+var VALID_QUESTION_TYPES = QuestionTypeRegistry.all().map(function (t) { return t.id; });
+
+// 难度范围
+var DIFFICULTY_MIN = 1;
+var DIFFICULTY_MAX = 10;
+
+// 螺旋层级范围
+var SPIRAL_MIN = 1;
+var SPIRAL_MAX = 6;
+
+// 生成模式（含兼容别名；归一后统一为 canonical 值）
+// Refactor Step 3：新增 quick / teacher / competition —— 由同一 StrategyEngine.plan() 直接扩展，
+// 不建三套引擎。quick=grade+volume+questionType 组成 KP Pool；teacher=unitId 组成 KP Pool；
+// competition=同池/同流程，仅抬升 spiral/cognition/difficulty/context/composite 权重。
+var VALID_MODES = ['single-kp', 'multi-kp', 'comprehensive', 'adaptive', 'quick', 'teacher', 'competition'];
+var MODE_ALIAS = {
+  'single': 'single-kp', 'single-kp': 'single-kp', 'kp': 'single-kp',
+  'multi': 'multi-kp', 'multi-kp': 'multi-kp',
+  'comprehensive': 'comprehensive', 'zonghe': 'comprehensive',
+  'adaptive': 'adaptive', 'adaptive-kp': 'adaptive',
+  'quick': 'quick', 'teacher': 'teacher', 'competition': 'competition'
+};
+
+/**
+ * 命中单数/复数/旧名/新名任一来源的知识点 ID 列表（唯一 KP 语义：数组）。
+ * 优先级：knowledgePointIds > knowledgePoints > knowledgePointId > kp。
+ * @param {Object} request
+ * @returns {string[]} 知识点 ID 数组（可为空，表示按 subject+grade 兜底/综合）
+ */
+function resolveKnowledgePointIds(request) {
+  if (!request || typeof request !== 'object') return [];
+  if (Array.isArray(request.knowledgePointIds) && request.knowledgePointIds.length) {
+    return request.knowledgePointIds.filter(function (x) { return typeof x === 'string' && x; });
+  }
+  if (Array.isArray(request.knowledgePoints) && request.knowledgePoints.length) {
+    return request.knowledgePoints.filter(function (x) { return typeof x === 'string' && x; });
+  }
+  if (typeof request.knowledgePointId === 'string' && request.knowledgePointId) return [request.knowledgePointId];
+  if (typeof request.kp === 'string' && request.kp) return [request.kp];
+  return [];
+}
+
+/**
+ * 归一化请求为规范形状（内部流程唯一语义）。
+ *  - knowledgePointIds 权威化（删除单数 knowledgePointId/knowledgePoints/kp，禁止双语义漂移）
+ *  - volume ↔ count：volume 为题量别名，count 缺省时由 volume 补足
+ *  - spiral_level → spiralLevel（旧参数兼容）
+ * 其余字段透传。
+ * @param {Object} request
+ * @returns {Object} 规范请求
+ */
+function normalizeRequest(request) {
+  request = request || {};
+  var out = Object.assign({}, request);
+  out.knowledgePointIds = resolveKnowledgePointIds(request);
+  delete out.knowledgePointId;
+  delete out.knowledgePoints;
+  delete out.kp;
+  if (out.count == null && typeof out.volume === 'number' && out.volume >= 1) {
+    out.count = Math.floor(out.volume);
+  }
+  if (out.spiralLevel == null && out.spiral_level != null) out.spiralLevel = out.spiral_level;
+  if (out.mode != null && MODE_ALIAS[String(out.mode)] != null) out.mode = MODE_ALIAS[String(out.mode)];
+  // 清除旧「知识点控制数量」配额：分题型数量统一由 planByType 的 count / perTypeCount / typeCounts 取代
+  delete out.kpAllocation;
+  return out;
+}
+
+function validateRequest(req) {
+  var errors = [];
+
+  if (!req || typeof req !== 'object') {
+    errors.push('Request 必须是对象');
+    return { valid: false, errors: errors };
+  }
+
+  // 核心输入：knowledgePointIds 数组（旧 knowledgePointId/knowledgePoints 自动归一）
+  // Refactor Step 3：quick/teacher/competition 由 KP Pool 驱动（grade+volume+questionType / unitId），
+  // 允许无显式 knowledgePointIds。
+  var kpIds = resolveKnowledgePointIds(req);
+  var hasSubjectGrade = req.subject && req.grade != null;
+  if (!kpIds.length && !hasSubjectGrade && req.unitId == null) {
+    errors.push('缺少 knowledgePointIds（或旧 knowledgePointId / knowledgePoints / subject+grade / unitId）');
+  }
+
+  // Refactor Step 3：Pool 模式的池源要求
+  if (req.mode === 'teacher' && req.unitId == null) {
+    errors.push('teacher 模式需要 unitId（单元知识点池）');
+  }
+  if (req.mode === 'quick' && req.grade == null) {
+    errors.push('quick 模式需要 grade（年级知识点池）');
+  }
+  if (req.mode === 'competition' && req.grade == null && req.unitId == null) {
+    errors.push('competition 模式需要 grade 或 unitId（知识点池来源）');
+  }
+  if (kpIds.length) kpIds.forEach(function (id) {
+    if (typeof id !== 'string' || !id) errors.push('knowledgePointIds 元素必须是非空字符串');
+  });
+
+  // 题型：若提供，必须在合法枚举中
+  if (req.questionType != null) {
+    if (typeof req.questionType !== 'string') {
+      errors.push('questionType 必须是字符串');
+    } else {
+      var _n = QuestionTypeRegistry.normalizeQuestionType(req.questionType);
+      if (!_n || _n.confidence === 'heuristic' || VALID_QUESTION_TYPES.indexOf(_n.id) === -1) {
+        errors.push('非法 questionType: ' + req.questionType);
+      }
+    }
+  }
+
+  // 题型策略白名单：可选，若提供必须是数组（元素合法性由题型选择池化逻辑容忍）
+  if (req.questionTypes != null && !Array.isArray(req.questionTypes)) {
+    errors.push('questionTypes 必须是数组');
+  }
+
+  // 分题型数量（双量控制：总数量 count + 分题型数量 perTypeCount / typeCounts）
+  if (req.perTypeCount != null) {
+    if (typeof req.perTypeCount !== 'number' || req.perTypeCount < 1 || req.perTypeCount % 1 !== 0) {
+      errors.push('perTypeCount 必须是 >=1 的整数');
+    }
+  }
+  if (req.typeCounts != null && !Array.isArray(req.typeCounts)) {
+    errors.push('typeCounts 必须是数组');
+  }
+  if (Array.isArray(req.typeCounts)) {
+    req.typeCounts.forEach(function (t) {
+      if (!t || typeof t.questionType !== 'string' || !t.questionType) {
+        errors.push('typeCounts 元素缺少非空 questionType');
+      }
+      if (!t || typeof t.count !== 'number' || t.count < 1 || t.count % 1 !== 0) {
+        errors.push('typeCounts 元素的 count 必须是 >=1 的整数');
+      }
+    });
+  }
+
+  // mode：若提供必须合法（含别名）
+  if (req.mode != null && MODE_ALIAS[String(req.mode)] == null) {
+    errors.push('非法 mode: ' + req.mode + '（应为 ' + VALID_MODES.join('/') + '）');
+  }
+
+  // difficulty 必须在 1-10
+  if (req.difficulty != null) {
+    var df = req.difficulty;
+    if (typeof df !== 'number' || df < DIFFICULTY_MIN || df > DIFFICULTY_MAX || df % 1 !== 0) {
+      errors.push('difficulty 必须是 1-10 的整数');
+    }
+  }
+
+  // targetDifficulty 必须在 1-10（旧字段兼容）
+  if (req.targetDifficulty != null) {
+    var td = req.targetDifficulty;
+    if (typeof td !== 'number' || td < DIFFICULTY_MIN || td > DIFFICULTY_MAX || td % 1 !== 0) {
+      errors.push('targetDifficulty 必须是 1-10 的整数');
+    }
+  }
+
+  // count 必须 >=1（volume 为别名）
+  var cval = req.count != null ? req.count : req.volume;
+  if (cval != null) {
+    var c = cval;
+    if (typeof c !== 'number' || c < 1 || c % 1 !== 0) {
+      errors.push('count 必须是 >=1 的整数');
+    }
+  }
+
+  // spiralLevel 必须在 1-6
+  if (req.spiralLevel != null || req.spiral_level != null) {
+    var sl = req.spiralLevel != null ? req.spiralLevel : req.spiral_level;
+    if (typeof sl !== 'number' || sl < SPIRAL_MIN || sl > SPIRAL_MAX || sl % 1 !== 0) {
+      errors.push('spiralLevel 必须是 1-6 的整数');
+    }
+  }
+
+  // unitId：可选，必须字符串
+  if (req.unitId != null && typeof req.unitId !== 'string') {
+    errors.push('unitId 必须是字符串');
+  }
+
+  // combine：可选，必须布尔
+  if (req.combine != null && typeof req.combine !== 'boolean') {
+    errors.push('combine 必须是布尔值');
+  }
+
+  // previousGenerationId：可选，必须字符串
+  if (req.previousGenerationId != null && typeof req.previousGenerationId !== 'string') {
+    errors.push('previousGenerationId 必须是字符串');
+  }
+
+  // subject/grade 若提供，需合法
+  if (req.subject != null && typeof req.subject !== 'string') {
+    errors.push('subject 必须是字符串');
+  }
+  if (req.grade != null && (typeof req.grade !== 'number' || req.grade < 1 || req.grade > 6 || req.grade % 1 !== 0)) {
+    errors.push('grade 必须是 1-6 的整数');
+  }
+
+  // learnerProfile 可选，若提供必须是对象
+  if (req.learnerProfile != null && typeof req.learnerProfile !== 'object') {
+    errors.push('learnerProfile 必须是对象');
+  }
+
+  // settings 可选，若提供必须是对象
+  if (req.settings != null && typeof req.settings !== 'object') {
+    errors.push('settings 必须是对象');
+  }
+
+  // 禁止字段：不允许直接包含 SVG/HTML/生成器
+  var forbidden = ['svg', 'html', 'generate', 'generator', 'render', 'template'];
+  forbidden.forEach(function (k) {
+    if (req[k] !== undefined) {
+      errors.push('禁止字段: ' + k + ' (不允许在 Request 中包含 SVG/HTML/生成器)');
+    }
+  });
+
+  return { valid: errors.length === 0, errors: errors };
+}
 
 // ============ Refactor Step 3：统一 plan()，直接扩展三模式（quick/teacher/competition） ============
 // 不建三套 Strategy Engine：同一 plan() 内
@@ -126,7 +347,7 @@ function candidateFeasible(cand, qtList) {
 function poolDimScores(cand, request, source) {
   var kp = cand.kp;
   var grade = source.grade != null ? source.grade : (request.grade != null ? request.grade : 1);
-  var anchor = StrategyConfig.difficultyAnchorOf ? StrategyConfig.difficultyAnchorOf(grade) : null;
+  var anchor = DifficultyStrategy.difficultyAnchorOf(grade);
   var gradeMid = anchor ? (anchor[0] + anchor[1]) / 2 : 3;
   var reqD = request.difficulty != null ? request.difficulty : gradeMid;
   var kpDiff = (kp && kp.legacy && kp.legacy.difficulty != null) ? kp.legacy.difficulty : gradeMid;
@@ -295,8 +516,8 @@ function equalShares(total, n) {
  * 幂等：多题型之间相互独立；池内无可用候选时题型计数记入 trace.failedPlans（计数不跨题型挪用）。
  */
 function planByType(request) {
-  request = StrategyRequest.normalizeRequest(request);
-  var reqCheck = StrategyRequest.validateRequest(request);
+  request = normalizeRequest(request);
+  var reqCheck = validateRequest(request);
   if (!reqCheck.valid) {
     throw new StrategyError('Request 非法: ' + reqCheck.errors.join('; '), CODES.INVALID_REQUEST, { errors: reqCheck.errors });
   }
@@ -585,10 +806,10 @@ function plan(request) {
 
   // Refactor Step 2：请求归一。内部唯一 KP 语义 = knowledgePointIds 数组。
   // 旧调用（knowledgePointId 字符串 / knowledgePoints 数组）在此归一为数组，之后不再有单数语义。
-  request = StrategyRequest.normalizeRequest(request);
+  request = normalizeRequest(request);
 
   // 1) Request validate
-  var reqCheck = StrategyRequest.validateRequest(request);
+  var reqCheck = validateRequest(request);
   if (!reqCheck.valid) {
     throw new StrategyError('Request 非法: ' + reqCheck.errors.join('; '), CODES.INVALID_REQUEST, { errors: reqCheck.errors });
   }
@@ -871,6 +1092,8 @@ function plan(request) {
   var questionPlan = {
     knowledgePointIds: request.combine === true ? kpIds.slice() : [kp.id],
     questionTypeId: questionType,
+    // FINAL-13：显式 seed 入 Plan（PLAN_SCHEMA 已声明 seed）；未指定为 null，RetryLoop 沿用 auto seed。
+    seed: request.seed != null ? request.seed : null,
     subtype: request.subtype != null && request.subtype !== '' ? request.subtype : undefined,
     count: count,
     difficulty: finalDifficulty,

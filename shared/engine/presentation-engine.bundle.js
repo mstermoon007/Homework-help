@@ -66,6 +66,9 @@ function generateQuestions(plan, options) {
     {
       generatorId: selection.record.id,
       generatorVersion: selection.record.version || '1.0.0',
+      
+      
+      seed: plan.seed != null ? plan.seed : undefined,
       maxRetries: ff.getMaxRetries(),
       validatorEnabled: !skipValidation,
       validatorContext: { generatorId: selection.record.id, seenKeys: options.seenKeys || null, mathSeenKeys: options.mathSeenKeys || null }

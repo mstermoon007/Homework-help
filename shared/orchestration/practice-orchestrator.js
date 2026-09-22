@@ -483,7 +483,9 @@
               adaptive: genReq.adaptive,
               adaptiveMode: genReq.adaptiveMode,
               adaptiveDelta: genReq.adaptiveDelta,
-              learnerProfile: genReq.learnerProfile
+              learnerProfile: genReq.learnerProfile,
+              // FINAL-13：显式 seed 随 cell 传递（冻结/可复现）；未指定为 undefined，下游 auto seed 不变。
+              seed: genReq.seed
             };
             return execute(cellReq, assignOpts(options, { __noRender: true, previousSeenKeys: acc.seenKeys }))
               .then(function (add) {

@@ -94,13 +94,7 @@ var DECL = {
     validator: 'pipeline(kpSemantic+TypeContract[booleanAnswer]+schema)',
     status: 'DORMANT-CONTRACT-CARRIER', note: '重复能力：contract 126 行 judge 名义载体，实际 0 产出（judge 由 shape/position/classification 覆盖）'
   },
-  'generator:complex-calc': {
-    family: 'complex', kblFamily: 'integer-arithmetic',
-    inputContract: 'plan + constraints.structure.family(chain/no-bracket/bracket/inverse)，需 kp-complex-semantics 注入；不读 semanticParams',
-    outputContract: 'answerMode=input; chain/bracket/fill-operator/fill-operand 形态; data{mode,operands,operators,steps}',
-    validator: 'pipeline(kpSemantic+TypeContract+schema)；依赖 kp-complex-semantics constraints',
-    status: 'DORMANT-NO-BINDING', note: '重复能力：calc/fill 被算术族全覆盖；0 绑定 0 产出；bundled 预留'
-  },
+  // FINAL-20：complex-calc dormant，从生产 bundle 排除。GENERATOR_CONTRACTS 条目移除。
   'generator:shape-recognition': {
     family: 'shape', kblFamily: 'geometric-figure / geometric-measurement',
     inputContract: 'plan + semanticParams.name（deriveShapeTypeFromName 派生具体图形）',
@@ -157,41 +151,6 @@ var DECL = {
     validator: 'pipeline(kpSemantic+TypeContract+schema)',
     status: 'PRODUCTION', note: '2 KP 绑定'
   },
-  'generator:c1-number-puzzle': {
-    family: 'c1', kblFamily: 'number-sense',
-    inputContract: 'plan only；kp={}，name 恒为默认',
-    outputContract: '数字谜 text; data{mode:apply,steps:3,questionType,family:c1-number-puzzle}',
-    validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'DORMANT-NO-BINDING', note: '重复能力：apply/calc 全覆盖；0 绑定 0 产出；竞赛 C 族预留'
-  },
-  'generator:c2-number-theory': {
-    family: 'c2', kblFamily: 'number-sense',
-    inputContract: 'plan only；依赖 op-semantics 符号',
-    outputContract: '数论题 text; data{family:c2-number-theory}',
-    validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'DORMANT-NO-BINDING', note: '同 c1：0 绑定 0 产出；预留'
-  },
-  'generator:c5-c6-journey-engineering': {
-    family: 'c5c6', kblFamily: 'ratio-proportion / multiple-ratio',
-    inputContract: 'plan only',
-    outputContract: '行程/工程/浓度题 text; data{family:c5-c6-journey-engineering}',
-    validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'DORMANT-NO-BINDING', note: '同 c1：0 绑定 0 产出；预留'
-  },
-  'generator:c7-clever-calc': {
-    family: 'c7', kblFamily: 'integer-arithmetic',
-    inputContract: 'plan only；依赖 op-semantics 符号',
-    outputContract: '巧算/裂项 text; data{mode:calc,family:c7-clever-calc}',
-    validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'DORMANT-NO-BINDING', note: '同 c1：0 绑定 0 产出；预留'
-  },
-  'generator:c9-comprehensive': {
-    family: 'c9', kblFamily: 'word-application',
-    inputContract: 'plan only；竞争模式由外层 hasC9Semantics 硬阻断',
-    outputContract: '综合应用题 text; data{mode:apply,family:c9-comprehensive}',
-    validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'DORMANT-NO-BINDING', note: '同 c1：0 绑定 0 产出；头部注释陈旧（mock=open 描述已随 P28-07 摘除）'
-  },
   'generator:composite': {
     family: 'composite', kblFamily: '跨族（combine 组合）',
     inputContract: 'plan.combine===true && knowledgePointIds.length≥2（supports 门 + 自有 throw guard）',
@@ -206,13 +165,7 @@ var DECL = {
     validator: 'pipeline(kpSemantic+TypeContract+schema)',
     status: 'PRODUCTION', note: '5 KP 绑定（数字编码单元）'
   },
-  'generator:equivalent-reasoning': {
-    family: 'equivalent', kblFamily: 'multiple-ratio',
-    inputContract: 'plan + constraints；不读 semanticParams',
-    outputContract: '等量代换 chain/买家 story; data{mode,chain:[p,q],options,correctIndex}; choice 分支 answerMode 未切（残留 input）',
-    validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'DORMANT-NO-BINDING', note: '重复能力：fill/choice/apply 全覆盖；0 绑定 0 产出；answerMode 契约偏差（收口发现）'
-  },
+  // FINAL-20：equivalent-reasoning 死符号已从 semantic-special.js 清除。GENERATOR_CONTRACTS 条目移除。
   'generator:classification': {
     family: 'classification', kblFamily: 'classification',
     inputContract: 'plan + constraints{numberRange}',
@@ -270,7 +223,7 @@ try {
   var fz = JSON.parse(fs.readFileSync(path.join(ROOT, 'docs', 'archive', 'phases', 'p28', 'P28-GENERATION-MATRIX-FROZEN.json'), 'utf8'));
   evidence = fz.evidence || [];
 } catch (e) {
-  console.error('无法读取 P28-08 冻结证据（' + e.message + '）——请先运行 node dev/p28/check-generation-matrix-freeze.js');
+  console.error('无法读取 P28-08 冻结证据（' + e.message + '）——请先运行 node dev/p28/check-generation-matrix-freeze.js --write');
   process.exit(2);
 }
 
@@ -446,8 +399,8 @@ function writeMd(a) {
   md.push('2. `generator:classification` 欠声明 fill/choice/judge/apply：经 kp=1 在 25 绑定 KP 上产出 4 类；补齐声明会改变 tiebreak 路由，需联动审计，故列入待处置。');
   md.push('3. selection 族几何名义声明：maker 仅产出算术形态，form-bound 门内从不命中 geometry（无害）。');
   md.push('4. `generator:application-word` answer 原始 string/boolean（非 `{value,acceptable}`），由下游 TypeContract/schema 归一（契约偏差）。');
-  md.push('5. `generator:equivalent-reasoning` choice 分支 answerMode 残留 input（dormant，无运行影响）。');
-  md.push('6. `generator:c9-comprehensive` 头部注释陈旧（mock=open 描述，随 P28-07 已摘除 open，注释未同步）。');
+  md.push('5. `generator:equivalent-reasoning` FINAL-20 已从 semantic-special.js 清除（0 产出死符号）。');
+  // FINAL-20：c9-comprehensive 已从生产 bundle 排除，头部注释陈旧提示随之移除。
   md.push('7. 非 formBound 泛型产出（native kp=1 扩展）：arithmetic×5、selection-fill、counting、picture-equation、percent-calc、classification 在未声明 choice/fill/apply/judge 情况下仍经 kp=1 产出该类题（maker 泛化）；form-bound（calc/geometry/classify）受 form-bound 声明门约束，本次无一违例（R4 全绿）。');
   md.push('');
   md.push('## 6. 门禁');

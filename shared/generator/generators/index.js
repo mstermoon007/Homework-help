@@ -20,7 +20,6 @@ var ENGINE_VERSION = '2.1.0';
 
 var Arithmetic = require('./arithmetic.js');
 var Selection = require('./selection.js');
-var Complex = require('./complex.js');
 var Shape = require('./shape.js');
 var Position = require('./position.js');
 var Money = require('./money.js');
@@ -30,11 +29,6 @@ var Counting = require('./counting.js');
 var Reasoning = require('./reasoning.js');
 var Stats = require('./stats.js');
 var PictureEquation = require('./picture-equation.js');
-var C1 = require('./c1-number-puzzle.js');
-var C2 = require('./c2-number-theory.js');
-var C5C6 = require('./c5-c6-journey-engineering.js');
-var C7 = require('./c7-clever-calc.js');
-var C9 = require('./c9-comprehensive.js');
 var SemanticSpecial = require('./semantic-special.js');
 var Classification = require('./classify.js');
 var Percent = require('./percent.js');
@@ -46,7 +40,6 @@ var Fraction = require('./fraction.js'); // P25-09 分数专项
 var ALL = [].concat(
   Arithmetic.buildAll(),
   Selection.buildAll(),
-  Complex.buildAll(),
   Shape.buildAll(),
   Position.buildAll(),
   Money.buildAll(),
@@ -56,11 +49,6 @@ var ALL = [].concat(
   Reasoning.buildAll(),
   Stats.buildAll(),
   PictureEquation.buildAll(),
-  C1.buildAll(),
-  C2.buildAll(),
-  C5C6.buildAll(),
-  C7.buildAll(),
-  C9.buildAll(),
   SemanticSpecial.buildAll(),
   Classification.buildAll(),
   Percent.buildAll(),

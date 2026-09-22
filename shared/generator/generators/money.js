@@ -469,7 +469,10 @@ function createMoneyGenerator(spec) {
         var isRMB = meta.kind === 'rmb';
         
         if (qt === 'fill') {
-          if (isRMB && rng() < 0.5) q = makeRMBConversionQuestion(plan, context, i, meta);
+          // FINAL-13：换算/计算分支选择必须由题目固定 seed 决定；
+          // 此前用模块级 Date.now() 种子 RNG，导致同 seed 跨运行题面漂移。
+          var fillBranchRng = Rng.createSeededRandom(seedFor(plan, context, i) + ':fill-branch');
+          if (isRMB && fillBranchRng() < 0.5) q = makeRMBConversionQuestion(plan, context, i, meta);
           else if (isRMB) q = makeRMBCalculationQuestion(plan, context, i, meta);
           else q = makeMeasurementConversionQuestion(plan, context, i, meta);
         } else if (qt === 'apply') {
@@ -510,12 +513,6 @@ function createMoneyGenerator(spec) {
       return questions;
     }
   };
-}
-
-var RNG_HELPER = null;
-function rng() {
-  if (!RNG_HELPER) RNG_HELPER = Rng.createSeededRandom('money-seed-' + Date.now());
-  return RNG_HELPER();
 }
 
 // P25-06 H2：原 MONEY_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 历史 ID）

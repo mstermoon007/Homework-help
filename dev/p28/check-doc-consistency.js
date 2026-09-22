@@ -23,7 +23,18 @@ const LEGACY_TOKENS = [
   { token: '218 syntax', desc: '旧语法检查文件数（当前 286）' },
 ];
 
+// 词边界正则：仅当 token 不被字母/数字包围时才算违规。
+// 目的：拦截历史"计数"泄露（如 "598 KP"），不误判 sha256 哈希内部的子串（如 "...45988..." 中的 598）。
+function buildRegex(token) {
+  const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp('(?<![A-Za-z0-9])' + escaped + '(?![A-Za-z0-9])');
+}
+const LEGACY_REGEX = LEGACY_TOKENS.map(function (t) { return { token: t.token, desc: t.desc, re: buildRegex(t.token) }; });
+
 // 非.archive 目录下的 .md 文件
+// 豁免审计日志（change-log.md / CHANGELOG.md）：它们需引用被禁历史 token 来记录治理修复本身，
+// 属于元文档；扫描它们会对「描述扫描器」的合法引用产生假阳性（FINAL-01 已确立反假阳性原则）。
+const AUDIT_LOG_BASENAMES = new Set(['change-log.md', 'changelog.md']);
 function collectDocs(dir, base = '') {
   const results = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -33,6 +44,7 @@ function collectDocs(dir, base = '') {
     if (entry.isDirectory()) {
       results.push(...collectDocs(path.join(dir, entry.name), rel));
     } else if (entry.name.endsWith('.md')) {
+      if (AUDIT_LOG_BASENAMES.has(entry.name.toLowerCase())) continue;
       results.push({ rel, abs: path.join(dir, entry.name) });
     }
   }
@@ -48,8 +60,8 @@ for (const doc of docs) {
   const lines = content.split('\n');
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    for (const { token, desc } of LEGACY_TOKENS) {
-      if (line.includes(token)) {
+    for (const { token, desc, re } of LEGACY_REGEX) {
+      if (re.test(line)) {
         violations.push({
           file: doc.rel,
           line: i + 1,

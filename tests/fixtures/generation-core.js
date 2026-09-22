@@ -1,7 +1,9 @@
 /**
- * shared/generation/generation-core.js — 共同生成内核 GenerationCore（P17-3 冻结）
+ * tests/fixtures/generation-core.js — 共同生成内核 GenerationCore（P17-3 冻结）
  *
- * ⚠️ P28-28 定位：TEST-ONLY / HISTORICAL（非生产链）
+ * ⚠️ FINAL-17 迁移：TEST-ONLY / HISTORICAL（非生产链）
+ *   原位置 shared/generation/generation-core.js 已删除——生产源码不得存在
+ *   「看起来像正式 GenerationCore、实际无生产调用」的假核心。
  *   生产链 = api.js orchestrate → build → runPlans → generateQuestions，
  *   不经过本模块。本文件仅被 tests/orchestration/p17-*.test.js 直接装载以验证
  *   execute 语义，不进入 strategy-engine.bundle.js / presentation-engine.bundle.js。
@@ -28,16 +30,16 @@
   var isBrowser = typeof window !== 'undefined';
 
   var GenerationContract = (function () {
-    try { return require('./generation-contract.js'); } catch (e) { return null; }
+    try { return require('../../shared/generation/generation-contract.js'); } catch (e) { return null; }
   })() || (typeof global !== 'undefined' ? global.GenerationContract : null);
   var Selector = (function () {
-    try { return require('../generator/generator-selector.js'); } catch (e) { return null; }
+    try { return require('../../shared/generator/generator-selector.js'); } catch (e) { return null; }
   })() || (typeof global !== 'undefined' ? global.GeneratorSelector : null);
   var RetryLoop = (function () {
-    try { return require('../generator/retry-loop.js'); } catch (e) { return null; }
+    try { return require('../../shared/generator/retry-loop.js'); } catch (e) { return null; }
   })() || (typeof global !== 'undefined' ? global.RetryLoop : null);
   var SQ = (function () {
-    try { return require('../semantic/semantic-question.js'); } catch (e) { return null; }
+    try { return require('../../shared/semantic/semantic-question.js'); } catch (e) { return null; }
   })() || (typeof global !== 'undefined' ? global.SemanticQuestion : null);
 
   var MAX_CELL_RETRIES = 3;

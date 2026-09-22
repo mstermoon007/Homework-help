@@ -1,7 +1,7 @@
 {
  "task": "P28-09 Generator Registry 收口 —— GENERATOR_MATRIX",
  "date": "2026-09-22",
- "generatorCount": 31,
+ "generatorCount": 24,
  "canonicalTypes": [
   "calc",
   "fill",
@@ -12,11 +12,11 @@
   "apply"
  ],
  "statusCounts": {
-  "total": 31,
+  "total": 24,
   "production": 21,
   "combineOnly": 1,
   "dormantCarrier": 2,
-  "dormantNoBinding": 7,
+  "dormantNoBinding": 0,
   "sumProducedRows": 1570
  },
  "rules": [
@@ -221,121 +221,6 @@
    ]
   },
   {
-   "id": "generator:c1-number-puzzle",
-   "semanticFamily": "number-sense",
-   "family": "c1",
-   "supportedQuestionTypes": [
-    "apply",
-    "calc"
-   ],
-   "inputContract": "plan only；kp={}，name 恒为默认",
-   "outputContract": "数字谜 text; data{mode:apply,steps:3,questionType,family:c1-number-puzzle}",
-   "validator": "pipeline(kpSemantic+TypeContract+schema)",
-   "productionStatus": "DORMANT-NO-BINDING",
-   "scope": "core",
-   "version": 1,
-   "supportsComposite": false,
-   "kpBindings": 0,
-   "contractCarrierRows": 0,
-   "producedRows1570": 0,
-   "actualProducerTypes": [],
-   "tests": [],
-   "historical": [],
-   "note": "重复能力：apply/calc 全覆盖；0 绑定 0 产出；竞赛 C 族预留"
-  },
-  {
-   "id": "generator:c2-number-theory",
-   "semanticFamily": "number-sense",
-   "family": "c2",
-   "supportedQuestionTypes": [
-    "apply",
-    "calc"
-   ],
-   "inputContract": "plan only；依赖 op-semantics 符号",
-   "outputContract": "数论题 text; data{family:c2-number-theory}",
-   "validator": "pipeline(kpSemantic+TypeContract+schema)",
-   "productionStatus": "DORMANT-NO-BINDING",
-   "scope": "core",
-   "version": 1,
-   "supportsComposite": false,
-   "kpBindings": 0,
-   "contractCarrierRows": 0,
-   "producedRows1570": 0,
-   "actualProducerTypes": [],
-   "tests": [],
-   "historical": [],
-   "note": "同 c1：0 绑定 0 产出；预留"
-  },
-  {
-   "id": "generator:c5-c6-journey-engineering",
-   "semanticFamily": "ratio-proportion / multiple-ratio",
-   "family": "c5c6",
-   "supportedQuestionTypes": [
-    "apply",
-    "calc"
-   ],
-   "inputContract": "plan only",
-   "outputContract": "行程/工程/浓度题 text; data{family:c5-c6-journey-engineering}",
-   "validator": "pipeline(kpSemantic+TypeContract+schema)",
-   "productionStatus": "DORMANT-NO-BINDING",
-   "scope": "core",
-   "version": 1,
-   "supportsComposite": false,
-   "kpBindings": 0,
-   "contractCarrierRows": 0,
-   "producedRows1570": 0,
-   "actualProducerTypes": [],
-   "tests": [],
-   "historical": [],
-   "note": "同 c1：0 绑定 0 产出；预留"
-  },
-  {
-   "id": "generator:c7-clever-calc",
-   "semanticFamily": "integer-arithmetic",
-   "family": "c7",
-   "supportedQuestionTypes": [
-    "apply",
-    "calc"
-   ],
-   "inputContract": "plan only；依赖 op-semantics 符号",
-   "outputContract": "巧算/裂项 text; data{mode:calc,family:c7-clever-calc}",
-   "validator": "pipeline(kpSemantic+TypeContract+schema)",
-   "productionStatus": "DORMANT-NO-BINDING",
-   "scope": "core",
-   "version": 1,
-   "supportsComposite": false,
-   "kpBindings": 0,
-   "contractCarrierRows": 0,
-   "producedRows1570": 0,
-   "actualProducerTypes": [],
-   "tests": [],
-   "historical": [],
-   "note": "同 c1：0 绑定 0 产出；预留"
-  },
-  {
-   "id": "generator:c9-comprehensive",
-   "semanticFamily": "word-application",
-   "family": "c9",
-   "supportedQuestionTypes": [
-    "apply",
-    "calc"
-   ],
-   "inputContract": "plan only；竞争模式由外层 hasC9Semantics 硬阻断",
-   "outputContract": "综合应用题 text; data{mode:apply,family:c9-comprehensive}",
-   "validator": "pipeline(kpSemantic+TypeContract+schema)",
-   "productionStatus": "DORMANT-NO-BINDING",
-   "scope": "core",
-   "version": 1,
-   "supportsComposite": false,
-   "kpBindings": 0,
-   "contractCarrierRows": 0,
-   "producedRows1570": 0,
-   "actualProducerTypes": [],
-   "tests": [],
-   "historical": [],
-   "note": "同 c1：0 绑定 0 产出；头部注释陈旧（mock=open 描述已随 P28-07 摘除）"
-  },
-  {
    "id": "generator:classification",
    "semanticFamily": "classification",
    "family": "classification",
@@ -397,29 +282,6 @@
    "tests": [],
    "historical": [],
    "note": "5 KP 绑定（数字编码单元）"
-  },
-  {
-   "id": "generator:complex-calc",
-   "semanticFamily": "integer-arithmetic",
-   "family": "complex",
-   "supportedQuestionTypes": [
-    "calc",
-    "fill"
-   ],
-   "inputContract": "plan + constraints.structure.family(chain/no-bracket/bracket/inverse)，需 kp-complex-semantics 注入；不读 semanticParams",
-   "outputContract": "answerMode=input; chain/bracket/fill-operator/fill-operand 形态; data{mode,operands,operators,steps}",
-   "validator": "pipeline(kpSemantic+TypeContract+schema)；依赖 kp-complex-semantics constraints",
-   "productionStatus": "DORMANT-NO-BINDING",
-   "scope": "core",
-   "version": 1,
-   "supportsComposite": false,
-   "kpBindings": 0,
-   "contractCarrierRows": 0,
-   "producedRows1570": 0,
-   "actualProducerTypes": [],
-   "tests": [],
-   "historical": [],
-   "note": "重复能力：calc/fill 被算术族全覆盖；0 绑定 0 产出；bundled 预留"
   },
   {
    "id": "generator:composite",
@@ -541,30 +403,6 @@
    "tests": [],
    "historical": [],
    "note": "24 KP 绑定"
-  },
-  {
-   "id": "generator:equivalent-reasoning",
-   "semanticFamily": "multiple-ratio",
-   "family": "equivalent",
-   "supportedQuestionTypes": [
-    "fill",
-    "choice",
-    "apply"
-   ],
-   "inputContract": "plan + constraints；不读 semanticParams",
-   "outputContract": "等量代换 chain/买家 story; data{mode,chain:[p,q],options,correctIndex}; choice 分支 answerMode 未切（残留 input）",
-   "validator": "pipeline(kpSemantic+TypeContract+schema)",
-   "productionStatus": "DORMANT-NO-BINDING",
-   "scope": "core",
-   "version": 2,
-   "supportsComposite": false,
-   "kpBindings": 0,
-   "contractCarrierRows": 0,
-   "producedRows1570": 0,
-   "actualProducerTypes": [],
-   "tests": [],
-   "historical": [],
-   "note": "重复能力：fill/choice/apply 全覆盖；0 绑定 0 产出；answerMode 契约偏差（收口发现）"
   },
   {
    "id": "generator:fraction-number",

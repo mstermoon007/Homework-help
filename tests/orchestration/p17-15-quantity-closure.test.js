@@ -5,7 +5,7 @@
  *
  * 注意：GenerationCore 为测试/历史资产（P28-28 定性）。生产链 = api.js
  * orchestrate → build → runPlans → generateQuestions，不经过 GenerationCore；
- * 本测试直接装载 shared/generation/generation-core.js 验证其 execute 语义。
+ * 本测试直接装载 tests/fixtures/generation-core.js 验证其 execute 语义。
  *
  * 冻结不变量（真实生成链，非 stub）：
  *   contract ≥ planned ≥ generated = final；Σ cell.plannedCount = Plan.planned。
@@ -21,7 +21,7 @@ const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const Env = require(path.join(ROOT, 'dev', '_bundle-env.js'));
-const GenerationCore = require(path.join(ROOT, 'shared', 'generation', 'generation-core.js'));
+const GenerationCore = require(path.join(ROOT, 'tests', 'fixtures', 'generation-core.js'));
 const retryLoop = require(path.join(ROOT, 'shared', 'generator', 'retry-loop.js'));
 const semanticQuestion = require(path.join(ROOT, 'shared', 'semantic', 'semantic-question.js'));
 

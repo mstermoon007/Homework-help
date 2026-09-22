@@ -84,6 +84,9 @@ function generateQuestions(plan, options) {
     {
       generatorId: selection.record.id,
       generatorVersion: selection.record.version || '1.0.0',
+      // FINAL-13：Plan 显式 seed 透传给 RetryLoop（固定 seed → 可复现）；
+      // 未携带时为 undefined，RetryLoop 回退 auto seed（生产 UI 行为不变）。
+      seed: plan.seed != null ? plan.seed : undefined,
       maxRetries: ff.getMaxRetries(),
       validatorEnabled: !skipValidation,
       validatorContext: { generatorId: selection.record.id, seenKeys: options.seenKeys || null, mathSeenKeys: options.mathSeenKeys || null }

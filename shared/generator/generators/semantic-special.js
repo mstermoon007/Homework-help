@@ -291,101 +291,13 @@ function createCodeGenerator(spec) {
   return generator;
 }
 
-/* ================================================================
- * generator:equivalent-reasoning — 等量代换
- * ================================================================ */
-
-var ITEMS = [
-  ['盒奶糖', '袋薯片', '支铅笔'],
-  ['个苹果', '个橙子', '块饼干'],
-  ['个书包', '个笔袋', '支钢笔'],
-  ['辆玩具汽车', '个魔方', '块积木']
-];
-
-function pickChain(rng) {
-  var trio = Rng.pick(rng, ITEMS);
-  var p = Rng.randInt(rng, 2, 4);
-  var q = Rng.randInt(rng, 2, 4);
-  return { X: trio[0], Y: trio[1], Z: trio[2], p: p, q: q };
-}
-
-function makeEquivalentFill(plan, context, i) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var c = pickChain(rng);
-  var ans = c.p * c.q;
-  var q = buildBase(plan, context, i, { mode: 'fill', chain: [c.p, c.q] });
-  q.prompt = '1' + c.X + ' = ' + c.p + c.Y + '，1' + c.Y + ' = ' + c.q + c.Z
-    + '。1' + c.X + ' = （  ）' + c.Z + '。';
-  q.answer = { value: String(ans), acceptable: [] };
-  return q;
-}
-
-function makeEquivalentChoice(plan, context, i) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var c = pickChain(rng);
-  var ans = c.p * c.q;
-  var wrongs = [c.p, c.q, c.p + c.q, c.p + c.q - 1].filter(function (v) { return v !== ans; });
-  var pool = [ans].concat(wrongs);
-  while (pool.length < 4) pool.push(ans + Rng.randInt(rng, 1, 3));
-  var options = Rng.shuffle(rng, pool.slice(0, 4).map(String));
-  var q = buildBase(plan, context, i, { mode: 'choice', chain: [c.p, c.q] });
-  q.prompt = '1' + c.X + ' = ' + c.p + c.Y + '，1' + c.Y + ' = ' + c.q + c.Z
-    + '。1' + c.X + ' = （  ）' + c.Z + '。';
-  q.answer = { value: String(ans), acceptable: [] };
-  q.data.options = options;
-  q.data.correctIndex = options.indexOf(String(ans));
-  return q;
-}
-
-function makeEquivalentApply(plan, context, i) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var c = pickChain(rng);
-  var ans = c.p * c.q;
-  var buyer = Rng.pick(rng, ['妈妈', '爸爸', '王老师', '李阿姨']);
-  var q = buildBase(plan, context, i, { mode: 'apply', chain: [c.p, c.q] });
-  q.prompt = buyer + '买 1' + c.X + '的钱可以买 ' + c.p + c.Y + '，买 1' + c.Y + '的钱可以买 '
-    + c.q + c.Z + '。' + buyer + '买 1' + c.X + '的钱可以买（  ）' + c.Z + '。';
-  q.answer = { value: String(ans), acceptable: [] };
-  return q;
-}
-
-function createEquivalentGenerator(spec) {
-  spec = spec || {};
-  var id = spec.id || 'generator:equivalent-reasoning';
-  var generator = {
-    id: id,
-    subject: 'math',
-    capabilities: ['fill', 'choice', 'apply'],
-    questionTypes: ['fill', 'choice', 'apply'],
-    // P25-06 H2：原 fallback 'math-g3-m8-g3-equivalent' 为模块制 历史 ID；
-    // 本生成器 CORE_RECORDS knowledgePoints 为 []，仅按 capability 泛匹配。
-    knowledgePoints: spec.knowledgePoints || [],
-
-    supports: function (plan) {
-      if (!plan || !plan.questionTypeId) return false;
-      return generator.capabilities.indexOf(plan.questionTypeId) !== -1;
-    },
-
-    generate: function (plan, context) {
-      var count = plan.count || 1;
-      var qt = plan.questionTypeId;
-      if (qt === 'choice') return buildQuestions(plan, context, count, makeEquivalentChoice);
-      if (qt === 'apply') return buildQuestions(plan, context, count, makeEquivalentApply);
-      return buildQuestions(plan, context, count, makeEquivalentFill);
-    }
-  };
-  return generator;
-}
-
 function buildAll() {
   return [
-    createCodeGenerator(),
-    createEquivalentGenerator()
+    createCodeGenerator()
   ];
 }
 
 module.exports = {
   createCodeGenerator: createCodeGenerator,
-  createEquivalentGenerator: createEquivalentGenerator,
   buildAll: buildAll
 };

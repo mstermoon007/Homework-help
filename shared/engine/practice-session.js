@@ -85,6 +85,8 @@
       adaptive: options.adaptive || false,
       learnerProfile: options.learnerProfile || null,
       titleType: options.titleType || null,
+      // FINAL-13：显式 seed（冻结/可复现场景）；UI 不传为 null，生成链保持 auto seed 行为
+      seed: options.seed != null ? options.seed : null,
       // C1：combine 合并出题标志必须进入 config（_buildGenerationRequest 读取 this.config.combine）
       combine: options.combine === true
     };
@@ -360,6 +362,10 @@
       req.adaptive = true;
       req.mode = 'adaptive';
     }
+
+    // FINAL-13：显式 seed 透传至生成链（POL cellReq → Strategy Plan → RetryLoop）；
+    // 未指定时不带 seed，下游沿用 auto seed（生产 UI 行为不变）。
+    if (this.config.seed != null) req.seed = this.config.seed;
 
     return req;
   };

@@ -12,6 +12,11 @@ jobs:
     name: check-all
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # CI 即「正式发布环境」：真实执行 Browser E2E（9 步路径），浏览器不可用即 FAIL（不得 SKIPPED/PASS）。
+    # ubuntu-latest 预装 google-chrome；browser-e2e.js 依赖 Node ≥22 全局 WebSocket。
+    env:
+      REQUIRE_BROWSER_E2E: '1'
+      CHROME_BIN: 'google-chrome'
 
     steps:
       - name: Checkout repository
@@ -20,14 +25,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       # 项目零运行时依赖，npm install 仅为锁定环境兼容（无 install 脚本）
       - name: Install dependencies
         run: npm install
 
       # ---- 唯一全量检查入口（与本地 npm run check-all 完全一致）----
-      - name: check-all（17 域全量门禁）
+      - name: check-all（全量门禁 + 真实 Browser E2E）
         run: npm run check-all
 
       # ---- 结果汇总 ----

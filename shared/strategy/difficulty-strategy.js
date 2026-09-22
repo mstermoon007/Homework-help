@@ -21,8 +21,24 @@ var StaticDifficulty = require('./static-difficulty.js');
 var KnowledgePoint = require('../knowledge/knowledge-point.js');
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
-var StrategyConfig = require('./strategy-config.js');
 var ComplexityStrategy = require('./complexity-strategy.js');
+
+// ---- R5：年级难度锚点表（原 strategy-config.js，FINAL-16 内联；难度归属模块）----
+// 依据《技术文档--基础.md》§5 年级难度锚点（R5）：
+//   G1 1-2 / G2 2-4 / G3 3-5 / G4 4-7 / G5 5-8 / G6 6-10
+// 语义：该年级 KP 的基础难度应落在锚点区间 [min,max]；区间随年级螺旋上升。
+var GRADE_DIFFICULTY_ANCHORS = {
+  1: [1, 2],
+  2: [2, 4],
+  3: [3, 5],
+  4: [4, 7],
+  5: [5, 8],
+  6: [6, 10]
+};
+// 查询：年级 → 难度锚点区间 [min,max]；年级非法时返回 null
+function difficultyAnchorOf(grade) {
+  return GRADE_DIFFICULTY_ANCHORS[Number(grade)] || null;
+}
 
 var DIFFICULTY_MIN = 1;
 var DIFFICULTY_MAX = 10;
@@ -200,6 +216,7 @@ function resolveComposedDifficulty(options) {
 module.exports = {
   DIFFICULTY_MIN: DIFFICULTY_MIN,
   DIFFICULTY_MAX: DIFFICULTY_MAX,
+  difficultyAnchorOf: difficultyAnchorOf,
   applyEffective: applyEffective,
   computeEffectiveDifficulty: computeEffectiveDifficulty,
   compositeComplexityOf: compositeComplexityOf,

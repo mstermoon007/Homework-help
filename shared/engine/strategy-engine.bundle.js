@@ -43,10 +43,11 @@ __defs["shared/strategy/strategy-engine.js"] = function (module, exports, requir
 
 'use strict';
 
-var StrategyRequest = require("shared/strategy/strategy-request.js");
 var StrategyResolver = require("shared/strategy/strategy-resolver.js");
 var CapabilityResolver = require("shared/capability/capability-resolver.js");
 var QuestionTypeStrategy = require("shared/strategy/question-type-strategy.js");
+var QuestionTypeRegistry = require("shared/knowledge/question-type-registry.js");
+var DifficultyStrategy = require("shared/strategy/difficulty-strategy.js");
 var CognitiveStrategy = require("shared/strategy/cognitive-strategy.js");
 var StaticDifficulty = require("shared/strategy/static-difficulty.js");
 var TargetDifficulty = require("shared/strategy/target-difficulty.js");
@@ -60,7 +61,214 @@ var StrategyResult = require("shared/strategy/strategy-result.js");
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
 var AdaptiveStrategy = require("shared/strategy/adaptive-strategy.js");
-var StrategyConfig = require("shared/strategy/strategy-config.js");
+
+
+
+
+var VALID_QUESTION_TYPES = QuestionTypeRegistry.all().map(function (t) { return t.id; });
+
+
+var DIFFICULTY_MIN = 1;
+var DIFFICULTY_MAX = 10;
+
+
+var SPIRAL_MIN = 1;
+var SPIRAL_MAX = 6;
+
+
+
+
+
+var VALID_MODES = ['single-kp', 'multi-kp', 'comprehensive', 'adaptive', 'quick', 'teacher', 'competition'];
+var MODE_ALIAS = {
+  'single': 'single-kp', 'single-kp': 'single-kp', 'kp': 'single-kp',
+  'multi': 'multi-kp', 'multi-kp': 'multi-kp',
+  'comprehensive': 'comprehensive', 'zonghe': 'comprehensive',
+  'adaptive': 'adaptive', 'adaptive-kp': 'adaptive',
+  'quick': 'quick', 'teacher': 'teacher', 'competition': 'competition'
+};
+
+
+function resolveKnowledgePointIds(request) {
+  if (!request || typeof request !== 'object') return [];
+  if (Array.isArray(request.knowledgePointIds) && request.knowledgePointIds.length) {
+    return request.knowledgePointIds.filter(function (x) { return typeof x === 'string' && x; });
+  }
+  if (Array.isArray(request.knowledgePoints) && request.knowledgePoints.length) {
+    return request.knowledgePoints.filter(function (x) { return typeof x === 'string' && x; });
+  }
+  if (typeof request.knowledgePointId === 'string' && request.knowledgePointId) return [request.knowledgePointId];
+  if (typeof request.kp === 'string' && request.kp) return [request.kp];
+  return [];
+}
+
+
+function normalizeRequest(request) {
+  request = request || {};
+  var out = Object.assign({}, request);
+  out.knowledgePointIds = resolveKnowledgePointIds(request);
+  delete out.knowledgePointId;
+  delete out.knowledgePoints;
+  delete out.kp;
+  if (out.count == null && typeof out.volume === 'number' && out.volume >= 1) {
+    out.count = Math.floor(out.volume);
+  }
+  if (out.spiralLevel == null && out.spiral_level != null) out.spiralLevel = out.spiral_level;
+  if (out.mode != null && MODE_ALIAS[String(out.mode)] != null) out.mode = MODE_ALIAS[String(out.mode)];
+  
+  delete out.kpAllocation;
+  return out;
+}
+
+function validateRequest(req) {
+  var errors = [];
+
+  if (!req || typeof req !== 'object') {
+    errors.push('Request 必须是对象');
+    return { valid: false, errors: errors };
+  }
+
+  
+  
+  
+  var kpIds = resolveKnowledgePointIds(req);
+  var hasSubjectGrade = req.subject && req.grade != null;
+  if (!kpIds.length && !hasSubjectGrade && req.unitId == null) {
+    errors.push('缺少 knowledgePointIds（或旧 knowledgePointId / knowledgePoints / subject+grade / unitId）');
+  }
+
+  
+  if (req.mode === 'teacher' && req.unitId == null) {
+    errors.push('teacher 模式需要 unitId（单元知识点池）');
+  }
+  if (req.mode === 'quick' && req.grade == null) {
+    errors.push('quick 模式需要 grade（年级知识点池）');
+  }
+  if (req.mode === 'competition' && req.grade == null && req.unitId == null) {
+    errors.push('competition 模式需要 grade 或 unitId（知识点池来源）');
+  }
+  if (kpIds.length) kpIds.forEach(function (id) {
+    if (typeof id !== 'string' || !id) errors.push('knowledgePointIds 元素必须是非空字符串');
+  });
+
+  
+  if (req.questionType != null) {
+    if (typeof req.questionType !== 'string') {
+      errors.push('questionType 必须是字符串');
+    } else {
+      var _n = QuestionTypeRegistry.normalizeQuestionType(req.questionType);
+      if (!_n || _n.confidence === 'heuristic' || VALID_QUESTION_TYPES.indexOf(_n.id) === -1) {
+        errors.push('非法 questionType: ' + req.questionType);
+      }
+    }
+  }
+
+  
+  if (req.questionTypes != null && !Array.isArray(req.questionTypes)) {
+    errors.push('questionTypes 必须是数组');
+  }
+
+  
+  if (req.perTypeCount != null) {
+    if (typeof req.perTypeCount !== 'number' || req.perTypeCount < 1 || req.perTypeCount % 1 !== 0) {
+      errors.push('perTypeCount 必须是 >=1 的整数');
+    }
+  }
+  if (req.typeCounts != null && !Array.isArray(req.typeCounts)) {
+    errors.push('typeCounts 必须是数组');
+  }
+  if (Array.isArray(req.typeCounts)) {
+    req.typeCounts.forEach(function (t) {
+      if (!t || typeof t.questionType !== 'string' || !t.questionType) {
+        errors.push('typeCounts 元素缺少非空 questionType');
+      }
+      if (!t || typeof t.count !== 'number' || t.count < 1 || t.count % 1 !== 0) {
+        errors.push('typeCounts 元素的 count 必须是 >=1 的整数');
+      }
+    });
+  }
+
+  
+  if (req.mode != null && MODE_ALIAS[String(req.mode)] == null) {
+    errors.push('非法 mode: ' + req.mode + '（应为 ' + VALID_MODES.join('/') + '）');
+  }
+
+  
+  if (req.difficulty != null) {
+    var df = req.difficulty;
+    if (typeof df !== 'number' || df < DIFFICULTY_MIN || df > DIFFICULTY_MAX || df % 1 !== 0) {
+      errors.push('difficulty 必须是 1-10 的整数');
+    }
+  }
+
+  
+  if (req.targetDifficulty != null) {
+    var td = req.targetDifficulty;
+    if (typeof td !== 'number' || td < DIFFICULTY_MIN || td > DIFFICULTY_MAX || td % 1 !== 0) {
+      errors.push('targetDifficulty 必须是 1-10 的整数');
+    }
+  }
+
+  
+  var cval = req.count != null ? req.count : req.volume;
+  if (cval != null) {
+    var c = cval;
+    if (typeof c !== 'number' || c < 1 || c % 1 !== 0) {
+      errors.push('count 必须是 >=1 的整数');
+    }
+  }
+
+  
+  if (req.spiralLevel != null || req.spiral_level != null) {
+    var sl = req.spiralLevel != null ? req.spiralLevel : req.spiral_level;
+    if (typeof sl !== 'number' || sl < SPIRAL_MIN || sl > SPIRAL_MAX || sl % 1 !== 0) {
+      errors.push('spiralLevel 必须是 1-6 的整数');
+    }
+  }
+
+  
+  if (req.unitId != null && typeof req.unitId !== 'string') {
+    errors.push('unitId 必须是字符串');
+  }
+
+  
+  if (req.combine != null && typeof req.combine !== 'boolean') {
+    errors.push('combine 必须是布尔值');
+  }
+
+  
+  if (req.previousGenerationId != null && typeof req.previousGenerationId !== 'string') {
+    errors.push('previousGenerationId 必须是字符串');
+  }
+
+  
+  if (req.subject != null && typeof req.subject !== 'string') {
+    errors.push('subject 必须是字符串');
+  }
+  if (req.grade != null && (typeof req.grade !== 'number' || req.grade < 1 || req.grade > 6 || req.grade % 1 !== 0)) {
+    errors.push('grade 必须是 1-6 的整数');
+  }
+
+  
+  if (req.learnerProfile != null && typeof req.learnerProfile !== 'object') {
+    errors.push('learnerProfile 必须是对象');
+  }
+
+  
+  if (req.settings != null && typeof req.settings !== 'object') {
+    errors.push('settings 必须是对象');
+  }
+
+  
+  var forbidden = ['svg', 'html', 'generate', 'generator', 'render', 'template'];
+  forbidden.forEach(function (k) {
+    if (req[k] !== undefined) {
+      errors.push('禁止字段: ' + k + ' (不允许在 Request 中包含 SVG/HTML/生成器)');
+    }
+  });
+
+  return { valid: errors.length === 0, errors: errors };
+}
 
 
 
@@ -152,7 +360,7 @@ function candidateFeasible(cand, qtList) {
 function poolDimScores(cand, request, source) {
   var kp = cand.kp;
   var grade = source.grade != null ? source.grade : (request.grade != null ? request.grade : 1);
-  var anchor = StrategyConfig.difficultyAnchorOf ? StrategyConfig.difficultyAnchorOf(grade) : null;
+  var anchor = DifficultyStrategy.difficultyAnchorOf(grade);
   var gradeMid = anchor ? (anchor[0] + anchor[1]) / 2 : 3;
   var reqD = request.difficulty != null ? request.difficulty : gradeMid;
   var kpDiff = (kp && kp.legacy && kp.legacy.difficulty != null) ? kp.legacy.difficulty : gradeMid;
@@ -314,8 +522,8 @@ function equalShares(total, n) {
 
 
 function planByType(request) {
-  request = StrategyRequest.normalizeRequest(request);
-  var reqCheck = StrategyRequest.validateRequest(request);
+  request = normalizeRequest(request);
+  var reqCheck = validateRequest(request);
   if (!reqCheck.valid) {
     throw new StrategyError('Request 非法: ' + reqCheck.errors.join('; '), CODES.INVALID_REQUEST, { errors: reqCheck.errors });
   }
@@ -604,10 +812,10 @@ function plan(request) {
 
   
   
-  request = StrategyRequest.normalizeRequest(request);
+  request = normalizeRequest(request);
 
   
-  var reqCheck = StrategyRequest.validateRequest(request);
+  var reqCheck = validateRequest(request);
   if (!reqCheck.valid) {
     throw new StrategyError('Request 非法: ' + reqCheck.errors.join('; '), CODES.INVALID_REQUEST, { errors: reqCheck.errors });
   }
@@ -890,6 +1098,8 @@ function plan(request) {
   var questionPlan = {
     knowledgePointIds: request.combine === true ? kpIds.slice() : [kp.id],
     questionTypeId: questionType,
+    
+    seed: request.seed != null ? request.seed : null,
     subtype: request.subtype != null && request.subtype !== '' ? request.subtype : undefined,
     count: count,
     difficulty: finalDifficulty,
@@ -1080,94 +1290,6 @@ module.exports = {
 if (typeof window !== 'undefined') window.StrategyEngine = module.exports;
 if (typeof global !== 'undefined') global.StrategyEngine = module.exports;
 };
-__defs["shared/strategy/strategy-config.js"] = function (module, exports, require) {
-
-'use strict';
-
-var STRATEGY_VERSION = '1.0.0';
-var DEFAULT_STRATEGY = 'legacy'; 
-
-
-
-
-
-
-var GRADE_DIFFICULTY_ANCHORS = {
-  1: [1, 2],
-  2: [2, 4],
-  3: [3, 5],
-  4: [4, 7],
-  5: [5, 8],
-  6: [6, 10]
-};
-
-function difficultyAnchorOf(grade) {
-  return GRADE_DIFFICULTY_ANCHORS[Number(grade)] || null;
-}
-
-
-var _currentStrategy = null;
-var _configOverrides = {};
-
-function getStrategy() {
-  if (_currentStrategy) return _currentStrategy;
-  
-  if (typeof process !== 'undefined' && process.env && process.env.GENERATION_STRATEGY) {
-    return process.env.GENERATION_STRATEGY;
-  }
-  if (typeof globalThis !== 'undefined' && globalThis.__GENERATION_STRATEGY__) {
-    return globalThis.__GENERATION_STRATEGY__;
-  }
-  return DEFAULT_STRATEGY;
-}
-
-function setStrategy(strategy) {
-  if (strategy !== 'legacy' && strategy !== 'strategy-v1') {
-    throw new Error('Invalid strategy: ' + strategy + ' (expected "legacy" | "strategy-v1")');
-  }
-  _currentStrategy = strategy;
-  if (typeof globalThis !== 'undefined') {
-    globalThis.__GENERATION_STRATEGY__ = strategy;
-  }
-}
-
-function isStrategyV1() {
-  return getStrategy() === 'strategy-v1';
-}
-
-function getConfig() {
-  return {
-    version: STRATEGY_VERSION,
-    current: getStrategy(),
-    overrides: _configOverrides,
-    features: {
-      strategyEngine: isStrategyV1()
-    }
-  };
-}
-
-function setConfigOverrides(overrides) {
-  _configOverrides = Object.assign({}, _configOverrides, overrides);
-}
-
-function reset() {
-  _currentStrategy = null;
-  _configOverrides = {};
-}
-
-module.exports = {
-  STRATEGY_VERSION: STRATEGY_VERSION,
-  DEFAULT_STRATEGY: DEFAULT_STRATEGY,
-  GRADE_DIFFICULTY_ANCHORS: GRADE_DIFFICULTY_ANCHORS,
-  difficultyAnchorOf: difficultyAnchorOf,
-  getStrategy: getStrategy,
-  setStrategy: setStrategy,
-  isStrategyV1: isStrategyV1,
-  getConfig: getConfig,
-  setConfigOverrides: setConfigOverrides,
-  reset: reset
-};
-};
 __defs["shared/strategy/question-type-strategy.js"] = function (module, exports, require) {
 
 'use strict';
@@ -1337,8 +1459,24 @@ var StaticDifficulty = require("shared/strategy/static-difficulty.js");
 var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
-var StrategyConfig = require("shared/strategy/strategy-config.js");
 var ComplexityStrategy = require("shared/strategy/complexity-strategy.js");
+
+
+
+
+
+var GRADE_DIFFICULTY_ANCHORS = {
+  1: [1, 2],
+  2: [2, 4],
+  3: [3, 5],
+  4: [4, 7],
+  5: [5, 8],
+  6: [6, 10]
+};
+
+function difficultyAnchorOf(grade) {
+  return GRADE_DIFFICULTY_ANCHORS[Number(grade)] || null;
+}
 
 var DIFFICULTY_MIN = 1;
 var DIFFICULTY_MAX = 10;
@@ -1486,6 +1624,7 @@ function resolveComposedDifficulty(options) {
 module.exports = {
   DIFFICULTY_MIN: DIFFICULTY_MIN,
   DIFFICULTY_MAX: DIFFICULTY_MAX,
+  difficultyAnchorOf: difficultyAnchorOf,
   applyEffective: applyEffective,
   computeEffectiveDifficulty: computeEffectiveDifficulty,
   compositeComplexityOf: compositeComplexityOf,
@@ -2206,240 +2345,6 @@ module.exports = {
   isStrategyError: isStrategyError
 };
 };
-__defs["shared/strategy/strategy-request.js"] = function (module, exports, require) {
-
-'use strict';
-
-var StrategyConfig = require("shared/strategy/strategy-config.js");
-var QuestionTypeRegistry = require("shared/knowledge/question-type-registry.js");
-
-
-var VALID_QUESTION_TYPES = (QuestionTypeRegistry && QuestionTypeRegistry.all)
-  ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
-  : ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
-
-
-var DIFFICULTY_MIN = 1;
-var DIFFICULTY_MAX = 10;
-
-
-var SPIRAL_MIN = 1;
-var SPIRAL_MAX = 6;
-
-
-
-
-
-var VALID_MODES = ['single-kp', 'multi-kp', 'comprehensive', 'adaptive', 'quick', 'teacher', 'competition'];
-var MODE_ALIAS = {
-  'single': 'single-kp', 'single-kp': 'single-kp', 'kp': 'single-kp',
-  'multi': 'multi-kp', 'multi-kp': 'multi-kp',
-  'comprehensive': 'comprehensive', 'zonghe': 'comprehensive',
-  'adaptive': 'adaptive', 'adaptive-kp': 'adaptive',
-  'quick': 'quick', 'teacher': 'teacher', 'competition': 'competition'
-};
-
-
-function resolveKnowledgePointIds(request) {
-  if (!request || typeof request !== 'object') return [];
-  if (Array.isArray(request.knowledgePointIds) && request.knowledgePointIds.length) {
-    return request.knowledgePointIds.filter(function (x) { return typeof x === 'string' && x; });
-  }
-  if (Array.isArray(request.knowledgePoints) && request.knowledgePoints.length) {
-    return request.knowledgePoints.filter(function (x) { return typeof x === 'string' && x; });
-  }
-  if (typeof request.knowledgePointId === 'string' && request.knowledgePointId) return [request.knowledgePointId];
-  if (typeof request.kp === 'string' && request.kp) return [request.kp];
-  return [];
-}
-
-
-function normalizeRequest(request) {
-  request = request || {};
-  var out = Object.assign({}, request);
-  out.knowledgePointIds = resolveKnowledgePointIds(request);
-  delete out.knowledgePointId;
-  delete out.knowledgePoints;
-  delete out.kp;
-  if (out.count == null && typeof out.volume === 'number' && out.volume >= 1) {
-    out.count = Math.floor(out.volume);
-  }
-  if (out.spiralLevel == null && out.spiral_level != null) out.spiralLevel = out.spiral_level;
-  if (out.mode != null && MODE_ALIAS[String(out.mode)] != null) out.mode = MODE_ALIAS[String(out.mode)];
-  
-  delete out.kpAllocation;
-  return out;
-}
-
-function validateRequest(req) {
-  var errors = [];
-
-  if (!req || typeof req !== 'object') {
-    errors.push('Request 必须是对象');
-    return { valid: false, errors: errors };
-  }
-
-  
-  
-  
-  var kpIds = resolveKnowledgePointIds(req);
-  var hasSubjectGrade = req.subject && req.grade != null;
-  if (!kpIds.length && !hasSubjectGrade && req.unitId == null) {
-    errors.push('缺少 knowledgePointIds（或旧 knowledgePointId / knowledgePoints / subject+grade / unitId）');
-  }
-
-  
-  if (req.mode === 'teacher' && req.unitId == null) {
-    errors.push('teacher 模式需要 unitId（单元知识点池）');
-  }
-  if (req.mode === 'quick' && req.grade == null) {
-    errors.push('quick 模式需要 grade（年级知识点池）');
-  }
-  if (req.mode === 'competition' && req.grade == null && req.unitId == null) {
-    errors.push('competition 模式需要 grade 或 unitId（知识点池来源）');
-  }
-  if (kpIds.length) kpIds.forEach(function (id) {
-    if (typeof id !== 'string' || !id) errors.push('knowledgePointIds 元素必须是非空字符串');
-  });
-
-  
-  if (req.questionType != null) {
-    if (typeof req.questionType !== 'string') {
-      errors.push('questionType 必须是字符串');
-    } else {
-      var _n = QuestionTypeRegistry.normalizeQuestionType(req.questionType);
-      if (!_n || _n.confidence === 'heuristic' || VALID_QUESTION_TYPES.indexOf(_n.id) === -1) {
-        errors.push('非法 questionType: ' + req.questionType);
-      }
-    }
-  }
-
-  
-  if (req.questionTypes != null && !Array.isArray(req.questionTypes)) {
-    errors.push('questionTypes 必须是数组');
-  }
-
-  
-  if (req.perTypeCount != null) {
-    if (typeof req.perTypeCount !== 'number' || req.perTypeCount < 1 || req.perTypeCount % 1 !== 0) {
-      errors.push('perTypeCount 必须是 >=1 的整数');
-    }
-  }
-  if (req.typeCounts != null && !Array.isArray(req.typeCounts)) {
-    errors.push('typeCounts 必须是数组');
-  }
-  if (Array.isArray(req.typeCounts)) {
-    req.typeCounts.forEach(function (t) {
-      if (!t || typeof t.questionType !== 'string' || !t.questionType) {
-        errors.push('typeCounts 元素缺少非空 questionType');
-      }
-      if (!t || typeof t.count !== 'number' || t.count < 1 || t.count % 1 !== 0) {
-        errors.push('typeCounts 元素的 count 必须是 >=1 的整数');
-      }
-    });
-  }
-
-  
-  if (req.mode != null && MODE_ALIAS[String(req.mode)] == null) {
-    errors.push('非法 mode: ' + req.mode + '（应为 ' + VALID_MODES.join('/') + '）');
-  }
-
-  
-  if (req.difficulty != null) {
-    var df = req.difficulty;
-    if (typeof df !== 'number' || df < DIFFICULTY_MIN || df > DIFFICULTY_MAX || df % 1 !== 0) {
-      errors.push('difficulty 必须是 1-10 的整数');
-    }
-  }
-
-  
-  if (req.targetDifficulty != null) {
-    var td = req.targetDifficulty;
-    if (typeof td !== 'number' || td < DIFFICULTY_MIN || td > DIFFICULTY_MAX || td % 1 !== 0) {
-      errors.push('targetDifficulty 必须是 1-10 的整数');
-    }
-  }
-
-  
-  var cval = req.count != null ? req.count : req.volume;
-  if (cval != null) {
-    var c = cval;
-    if (typeof c !== 'number' || c < 1 || c % 1 !== 0) {
-      errors.push('count 必须是 >=1 的整数');
-    }
-  }
-
-  
-  if (req.spiralLevel != null || req.spiral_level != null) {
-    var sl = req.spiralLevel != null ? req.spiralLevel : req.spiral_level;
-    if (typeof sl !== 'number' || sl < SPIRAL_MIN || sl > SPIRAL_MAX || sl % 1 !== 0) {
-      errors.push('spiralLevel 必须是 1-6 的整数');
-    }
-  }
-
-  
-  if (req.unitId != null && typeof req.unitId !== 'string') {
-    errors.push('unitId 必须是字符串');
-  }
-
-  
-  if (req.combine != null && typeof req.combine !== 'boolean') {
-    errors.push('combine 必须是布尔值');
-  }
-
-  
-  if (req.previousGenerationId != null && typeof req.previousGenerationId !== 'string') {
-    errors.push('previousGenerationId 必须是字符串');
-  }
-
-  
-  if (req.subject != null && typeof req.subject !== 'string') {
-    errors.push('subject 必须是字符串');
-  }
-  if (req.grade != null && (typeof req.grade !== 'number' || req.grade < 1 || req.grade > 6 || req.grade % 1 !== 0)) {
-    errors.push('grade 必须是 1-6 的整数');
-  }
-
-  
-  if (req.learnerProfile != null && typeof req.learnerProfile !== 'object') {
-    errors.push('learnerProfile 必须是对象');
-  }
-
-  
-  if (req.settings != null && typeof req.settings !== 'object') {
-    errors.push('settings 必须是对象');
-  }
-
-  
-  var forbidden = ['svg', 'html', 'generate', 'generator', 'render', 'template'];
-  forbidden.forEach(function (k) {
-    if (req[k] !== undefined) {
-      errors.push('禁止字段: ' + k + ' (不允许在 Request 中包含 SVG/HTML/生成器)');
-    }
-  });
-
-  return { valid: errors.length === 0, errors: errors };
-}
-
-function createRequest(params) {
-  var req = Object.assign({}, params || {});
-  return req;
-}
-
-module.exports = {
-  VALID_QUESTION_TYPES: VALID_QUESTION_TYPES,
-  DIFFICULTY_MIN: DIFFICULTY_MIN,
-  DIFFICULTY_MAX: DIFFICULTY_MAX,
-  SPIRAL_MIN: SPIRAL_MIN,
-  SPIRAL_MAX: SPIRAL_MAX,
-  VALID_MODES: VALID_MODES,
-  MODE_ALIAS: MODE_ALIAS,
-  resolveKnowledgePointIds: resolveKnowledgePointIds,
-  normalizeRequest: normalizeRequest,
-  validateRequest: validateRequest,
-  createRequest: createRequest
-};
-};
 __defs["shared/strategy/strategy-result.js"] = function (module, exports, require) {
 
 'use strict';
@@ -2524,7 +2429,6 @@ __defs["shared/strategy/question-plan.js"] = function (module, exports, require)
 
 'use strict';
 
-var StrategyConfig = require("shared/strategy/strategy-config.js");
 var Registry = require("shared/knowledge/question-type-registry.js");
 
 var DIFFICULTY_MIN = 1;
@@ -3214,6 +3118,251 @@ module.exports = {
 };
 
 };
+__defs["shared/knowledge/question-type-registry.js"] = function (module, exports, require) {
+
+(function (global) {
+  'use strict';
+
+  var COGNITIVE_LEVELS = ['recall', 'recognize', 'understand', 'apply', 'analyze', 'evaluate', 'create'];
+
+  
+  
+  var TYPES = [
+    { id: 'calc', name: '计算题', category: 'calculation',
+      cognitiveLevels: ['recall', 'understand', 'apply'], difficultyRange: [1, 6],
+      supports: { context: true, graphic: false, distractors: false } },
+    { id: 'fill', name: '填空题', category: 'written',
+      cognitiveLevels: ['recall', 'understand', 'apply'], difficultyRange: [1, 6],
+      supports: { context: true, graphic: true, distractors: false } },
+    { id: 'choice', name: '选择题', category: 'selection',
+      cognitiveLevels: ['recognize', 'understand', 'apply'], difficultyRange: [1, 6],
+      supports: { context: true, graphic: true, distractors: true } },
+    { id: 'judge', name: '判断题', category: 'selection',
+      cognitiveLevels: ['recognize', 'understand'], difficultyRange: [1, 6],
+      supports: { context: true, graphic: true, distractors: false } },
+    { id: 'geometry', name: '操作/作图题', category: 'geometry',
+      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
+      supports: { context: false, graphic: true, distractors: false } },
+    { id: 'classify', name: '分类整理题', category: 'classification',
+      cognitiveLevels: ['recognize', 'understand', 'apply'], difficultyRange: [1, 6],
+      supports: { context: true, graphic: true, distractors: false } },
+    { id: 'apply', name: '解决问题/应用题', category: 'application',
+      cognitiveLevels: ['understand', 'apply', 'analyze'], difficultyRange: [1, 6],
+      supports: { context: true, graphic: true, distractors: false } }
+  ];
+
+  
+  var CANONICAL_ALIASES = {
+    operate: 'calc', oral: 'calc', 'law-oral': 'calc', 'dec-mul-oral': 'calc', 'dec-div-oral': 'calc',
+    'frac-addsub-oral': 'calc', 'equation-oral': 'calc', 'mul-oral': 'calc',
+    calc: 'calc', cushi: 'calc', addsub: 'calc', mixed: 'calc', mix: 'calc', column: 'calc',
+    'chain-add': 'calc', 'chain-sub': 'calc', 'chain': 'calc', bracket: 'calc', 'multdiv': 'calc',
+    add: 'calc', sub: 'calc', mult: 'calc', div: 'calc', remainder: 'calc',
+    'mul-table': 'calc', 'div-table': 'calc', multiTable: 'calc', 'big-addsub': 'calc',
+    'mul3x1': 'calc', 'mul2tens': 'calc', 'div-tens': 'calc', 'mul3x2': 'calc', 'mul-zero': 'calc',
+    'div-2digit': 'calc', 'div-2quotient': 'calc', 'dec-vertical': 'calc', 'add-law': 'calc',
+    'mul-law': 'calc', 'dist-law': 'calc', 'dec-simple': 'calc', 'dec-addsub': 'calc',
+    'big-num': 'calc', dec: 'calc', vertical: 'calc', 'vertical-multi': 'calc', 'carry-complex': 'calc',
+    'neg-add-sub': 'calc', 'dec-mult': 'calc', 'dec-div': 'calc', decimal: 'calc', negative: 'calc',
+    'est-muldiv': 'calc', estimate: 'calc', rounding: 'calc', 'dec-meaning': 'calc', 'dec-place': 'calc',
+    'dec-compare': 'calc', 'dec-mixed': 'calc', 'frac-mixed': 'calc', 'frac-simple': 'calc',
+    'frac-line': 'calc', 'int-split': 'calc', 'frac-split': 'calc', 'frac-perc': 'calc',
+    fill: 'fill', 'fill-length': 'fill', 'fill-mass': 'fill', 'fill-time': 'fill', cutfill: 'fill',
+    choice: 'choice', matching: 'choice', 'match-shape': 'choice', 'match-clock': 'choice', 'match-rmb': 'choice',
+    judge: 'judge', comparison: 'judge',
+    apply: 'apply', word: 'apply', open: 'apply', 'big-app': 'apply', 'mul-travel': 'apply',
+    'word-problem': 'apply', 'word-problems': 'apply',
+    'div-share': 'apply', 'price-qty': 'apply', 'dec-pay': 'apply', 'avg-score': 'apply', 'dec-scene': 'apply',
+    'dec-mul-app': 'apply', 'dec-div-app': 'apply', 'equation-app': 'apply', 'factor-app': 'apply',
+    'frac-app': 'apply', 'area-app': 'apply', 'solid-app': 'apply', 'possibility-app': 'apply',
+    'linechart-app': 'apply', 'tree-app': 'apply', 'speed-distance': 'apply', work: 'apply',
+    concentration: 'apply', 'profit-loss': 'apply', age: 'apply', planting: 'apply', phalanx: 'apply',
+    grass: 'apply', economics: 'apply', 'percent-discount': 'apply', ratio: 'apply', proportion: 'apply',
+    percent: 'apply', optimize: 'apply', optimization: 'apply', 'journey-complex': 'apply', 'travel-work': 'apply',
+    'sum-diff': 'apply', 'inclusion-exclusion': 'apply', equation: 'apply', fraction: 'apply', area: 'apply',
+    rotation: 'apply', array: 'apply', magic: 'apply', sequence: 'apply', series: 'apply', recurring: 'apply',
+    'chicken-rabbit': 'apply', pancake: 'apply', assume: 'apply', law: 'apply', quotient: 'apply', stats: 'apply',
+    'big-compare': 'apply', horizontal: 'apply', symbol: 'apply', 'divisibility': 'apply', 'prime-factor': 'apply',
+    'factor-count': 'apply', 'gcd-lcm': 'apply', 'perfect-square': 'apply', 'nt-extreme': 'apply',
+    'add-principle': 'apply', 'mult-principle': 'apply', permutation: 'apply', enumeration: 'apply',
+    bundling: 'apply', insertion: 'apply', 'stars-bars': 'apply', pigeonhole: 'apply', 'worst-case': 'apply',
+    'area-basic': 'apply', 'equal-area': 'apply', 'bird-head': 'apply', 'butterfly': 'apply', 'swallow-tail': 'apply',
+    half: 'apply', 'painted-cube': 'apply', pythagorean: 'apply', lattice: 'apply', boat: 'apply', circular: 'apply',
+    'avg-speed': 'apply', 'ratio-prop': 'apply', 'ratio-simp': 'apply', 'frac-percent': 'apply', 'cy-cone': 'apply',
+    'cyl-cone': 'apply', 'number-shape': 'apply', 'percent-ratio': 'apply', 'magic-adv': 'apply', 'array-adv': 'apply',
+    competition: 'apply', modulo: 'apply', recursion: 'apply', derangement: 'apply', periodic: 'apply',
+    'sequence-sum': 'apply', extremum: 'apply', winning: 'apply', 'define-op': 'apply', 'complex-frac': 'apply',
+    diophantine: 'apply', eq1: 'apply', eq2: 'apply', 'frac-mult-int': 'apply', 'frac-mult-frac': 'apply',
+    'frac-div-int': 'apply', 'frac-div-frac': 'apply', 'dec-perc': 'apply', 'frac-mult-div': 'apply',
+    'solve-proportion': 'apply', 'frac-order': 'apply', 'solve-equation': 'apply', 'cylinder-cone': 'apply',
+    formula: 'apply', chart: 'apply', 'rotate-scale': 'apply', 'frac-mult': 'apply', 'frac-div': 'apply', scale: 'apply',
+    'dec-div-int': 'apply', 'dec-div-dec': 'apply', 'repeating-dec': 'apply', 'product-rule': 'apply',
+    'repeating-note': 'apply', 'equation-prop': 'apply', 'prime-composite': 'apply', 'frac-meaning': 'apply',
+    'frac-property': 'apply', 'frac-decimal': 'apply', coordinate: 'apply', 'area-formula': 'apply',
+    'solid-formula': 'apply', 'rotation-elem': 'apply', possibility: 'apply', 'linechart-feature': 'apply',
+    'solid-feature': 'apply', 'possibility-desc': 'apply', 'equation-solve': 'apply', 'rotation-draw': 'apply',
+    'observe-3d': 'apply', 'polygon-height': 'apply', 'coordinate-plot': 'apply', 'solid-net': 'apply',
+    'balance-equation': 'apply', 'area-picture': 'apply', 'tree-planting': 'apply', 'possibility-compare': 'apply',
+    'linechart-single': 'apply', 'linechart-double': 'apply', 'tree-three': 'apply', defective: 'apply',
+    'defective-scale': 'apply', 'dec-mul-vertical': 'apply',
+    geometry: 'geometry', circle: 'geometry', angle: 'geometry', clock: 'geometry', 'clock-read': 'geometry',
+    'clock-draw': 'geometry', clockFace: 'geometry', shape: 'geometry', 'draw-shape': 'geometry', symmetry: 'geometry',
+    translate: 'geometry', perimeter: 'geometry', rect: 'geometry', compass: 'geometry', 'line-ray': 'geometry',
+    'angle-metric': 'geometry', quad: 'geometry', 'op-meaning': 'geometry', 'quotient-law': 'geometry',
+    triangle: 'geometry', average: 'geometry', 'angle-degree': 'geometry', 'shape-feature': 'geometry',
+    'law-formula': 'geometry', 'dec-frac': 'geometry', protractor: 'geometry', 'parallel-perp': 'geometry',
+    'grid-quad': 'geometry', observe: 'geometry', 'segment-multiple': 'geometry', 'brace-addsub': 'geometry',
+    'area-hectare': 'geometry', hectare: 'geometry', solid: 'geometry', flat: 'geometry', 'count-graph': 'geometry',
+    position: 'geometry', grid: 'geometry', 'draw-line': 'geometry', 'draw-angle': 'geometry', measure: 'geometry',
+    motion: 'geometry', transform: 'geometry', basic: 'geometry', meet: 'geometry', chase: 'geometry', train: 'geometry',
+    river: 'geometry', extreme: 'geometry', drawer: 'geometry', integrated: 'geometry', misc: 'geometry', mock: 'geometry',
+    'geometry-count': 'geometry', 'circle-angle': 'geometry', 'solid-rotation': 'geometry', 'interval-departure': 'geometry',
+    'pick-up': 'geometry', mixture: 'geometry', all: 'geometry', 'factor-multiple': 'geometry',
+    read: 'geometry', number: 'geometry', count: 'geometry', tally: 'geometry', enum: 'geometry',
+    recognize: 'geometry',
+    table: 'geometry', picto: 'geometry', set: 'geometry', place: 'geometry',
+    am: 'geometry', perm: 'geometry', pa: 'geometry', digit: 'geometry', composite: 'geometry', shard: 'geometry',
+    ym: 'geometry', relation: 'geometry', operator: 'geometry', readwrite: 'geometry', approx: 'geometry',
+    length: 'geometry', mass: 'geometry', time: 'geometry', pattern: 'geometry', 'mult-meaning': 'geometry',
+    'div-meaning': 'geometry', unit: 'geometry', convert: 'geometry', order: 'geometry', compare: 'geometry',
+    'big-compare': 'geometry', parity: 'geometry', divisible: 'geometry', prime: 'geometry', factor: 'geometry',
+    'digit-reason': 'geometry',
+    classify: 'classify', sort: 'classify', group: 'classify', grouping: 'classify', category: 'classify',
+    'class-sort': 'classify', tallyChart: 'classify'
+  };
+
+  var GEOMETRY_KEYWORDS = [
+    'angle', 'shape', 'clock', 'circle', 'symmetry', 'coordinate', 'draw', 'grid', 'line', 'ray',
+    'perimeter', 'area', 'solid', 'rotate', 'rotation', 'translate', 'scale', 'cylinder', 'cone',
+    'triangle', 'quad', 'parallel', 'perpendicular', 'protractor', 'compass', 'segment', 'polygon',
+    'lattice', 'pythagorean', 'geometry', 'observe-3d', 'solid-net', 'solid-feature', 'rotation-elem',
+    'rotation-draw', 'polygon-height', 'coordinate-plot', 'geomcount', 'geometry-count', 'grid-quad',
+    'circle-angle', 'solid-rotation', 'angle-degree', 'angle-metric', 'shape-feature', 'line-ray',
+    'draw-line', 'draw-angle', 'draw-shape', 'motion', 'transform', 'count-graph', 'measure'
+  ];
+
+  var RECOGNIZE_KEYWORDS = [
+    'read', 'number', 'count', 'tally', 'enum', 'classify', 'table', 'picto', 'set', 'place',
+    'digit', 'composite', 'shard', 'ym', 'relation', 'operator', 'readwrite', 'approx', 'length',
+    'mass', 'time', 'pattern', 'meaning', 'unit', 'convert', 'order', 'compare', 'parity',
+    'divisible', 'prime', 'factor', 'recognize', 'recall'
+  ];
+
+  var BY_ID = {};
+  TYPES.forEach(function (t) { BY_ID[t.id] = t; });
+
+  
+  
+  
+  var LEGACY_DISPLAY_NAMES = {
+    addsub: '加减法', muldiv: '乘除法', cushi: '凑十法', pingshi: '平十法', poshi: '破十法',
+    mix: '混合', pattern: '找规律', clock: '钟表', money: '人民币',
+    oral: '口算', open: '开放', recognize: '认读'
+  };
+
+  
+  var MODES = ['quick', 'teacher', 'competition'];
+  var MODE_LABELS = {
+    quick: '快速模式',
+    teacher: '教师模式',
+    competition: '竞赛模式'
+  };
+
+  function isCognitiveLevel(v) { return COGNITIVE_LEVELS.indexOf(v) !== -1; }
+
+  function normalizeQuestionType(token, opts) {
+    opts = opts || {};
+    if (!token || typeof token !== 'string') return { id: null, confidence: 'none' };
+    if (BY_ID[token]) return { id: token, confidence: 'exact' };
+    var mapped = CANONICAL_ALIASES[token];
+    if (mapped) return { id: mapped, confidence: 'explicit' };
+    var lower = token.toLowerCase();
+    var i;
+    for (i = 0; i < GEOMETRY_KEYWORDS.length; i++) {
+      if (lower.indexOf(GEOMETRY_KEYWORDS[i]) !== -1) return { id: 'geometry', confidence: 'heuristic' };
+    }
+    for (i = 0; i < RECOGNIZE_KEYWORDS.length; i++) {
+      if (lower.indexOf(RECOGNIZE_KEYWORDS[i]) !== -1) return { id: 'geometry', confidence: 'heuristic' };
+    }
+    if (opts.allowHeuristic !== false) return { id: 'calc', confidence: 'heuristic' };
+    return { id: null, confidence: 'unmapped' };
+  }
+
+  function validateType(t) {
+    var errs = [];
+    if (!t || !t.id) errs.push('题型缺少 id');
+    if (!t.name) errs.push('题型缺少 name');
+    if (!t.category) errs.push('题型缺少 category');
+    if (!Array.isArray(t.cognitiveLevels) || t.cognitiveLevels.length === 0) errs.push('cognitiveLevels 非法');
+    else t.cognitiveLevels.forEach(function (c) { if (!isCognitiveLevel(c)) errs.push('非法 cognitiveLevel: ' + c); });
+    if (!Array.isArray(t.difficultyRange) || t.difficultyRange.length !== 2) errs.push('difficultyRange 非法');
+    else {
+      var lo = t.difficultyRange[0], hi = t.difficultyRange[1];
+      if (typeof lo !== 'number' || typeof hi !== 'number' || lo < 1 || hi > 6 || lo > hi) errs.push('difficultyRange 越界: ' + lo + '-' + hi);
+    }
+    if (!t.supports || typeof t.supports !== 'object') errs.push('supports 非法');
+    else {
+      ['context', 'graphic', 'distractors'].forEach(function (k) {
+        if (typeof t.supports[k] !== 'boolean') errs.push('supports.' + k + ' 必须为布尔');
+      });
+    }
+    return errs;
+  }
+
+  
+  function displayName(value) {
+    if (!value || typeof value !== 'string') return null;
+    var t = BY_ID[value];
+    if (t) return t.name;
+    return LEGACY_DISPLAY_NAMES[value] || null;
+  }
+
+  var validationErrors = [];
+  var seen = {};
+  TYPES.forEach(function (t) {
+    if (seen[t.id]) validationErrors.push('重复题型 ID: ' + t.id);
+    seen[t.id] = 1;
+    validateType(t).forEach(function (e) { validationErrors.push(t.id + ' :: ' + e); });
+  });
+
+  var API = {
+    COGNITIVE_LEVELS: COGNITIVE_LEVELS,
+    TYPES: TYPES,
+    MODES: MODES,
+    MODE_LABELS: MODE_LABELS,
+    canonicalAliases: CANONICAL_ALIASES,
+    LEGACY_DISPLAY_NAMES: LEGACY_DISPLAY_NAMES,
+    get: function (id) {
+      if (BY_ID[id]) return BY_ID[id];
+      
+      var mapped = CANONICAL_ALIASES[id];
+      return mapped ? BY_ID[mapped] || null : null;
+    },
+    has: function (id) { return !!BY_ID[id] || !!CANONICAL_ALIASES[id]; },
+    all: function () { return TYPES.slice(); },
+    displayName: displayName,
+    byCategory: function (category) { return TYPES.filter(function (t) { return t.category === category; }); },
+    byMode: function (mode) { return MODES.indexOf(mode) !== -1 ? mode : null; },
+    isMode: function (mode) { return MODES.indexOf(mode) !== -1; },
+    supports: function (id, capability) {
+      var t = BY_ID[id] || (CANONICAL_ALIASES[id] ? BY_ID[CANONICAL_ALIASES[id]] : null);
+      if (!t) return false;
+      return !!(t.supports && t.supports[capability]);
+    },
+    normalizeQuestionType: normalizeQuestionType,
+    validate: function (id) {
+      var t = BY_ID[id];
+      if (!t) return { valid: false, errors: ['未知题型 ID: ' + id] };
+      return { valid: validationErrors.length === 0, errors: validateType(t) };
+    },
+    validationErrors: validationErrors
+  };
+
+  global.QuestionTypeRegistry = API;
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
+
+};
 __defs["shared/strategy/adaptive-strategy.js"] = function (module, exports, require) {
 
 'use strict';
@@ -3454,9 +3603,7 @@ var CORE_RECORDS = [
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'geometry', 'calc', 'apply'], questionTypes: ['choice', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'geometry', 'calc', 'apply'], questionTypes: ['judge', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   
-  { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill'], questionTypes: ['calc', 'fill'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
+  
 
   
   
@@ -3508,21 +3655,7 @@ var CORE_RECORDS = [
   { id: 'generator:picture-equation', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: ['math-g4-down-u01-k001', 'math-g5-up-u07-k003'],
     scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c1-number-puzzle', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c2-number-theory', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c5-c6-journey-engineering', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c7-clever-calc', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c9-comprehensive', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
+  
   { id: 'generator:composite', subject: 'math', capabilities: ['calc', 'judge', 'fill', 'apply'], questionTypes: ['calc', 'judge', 'fill', 'apply'],
     knowledgePoints: ['math-g1-up-u01-k001', 'math-g2-down-u07-k001', 'math-g2-up-u01-k005', 'math-g3-up-u02-k001', 'math-g4-up-u03-k001'],
     scope: 'core', version: 1, supportsComposite: true },
@@ -3535,9 +3668,7 @@ var CORE_RECORDS = [
   { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply'], questionTypes: ['fill', 'choice', 'judge', 'apply'],
     knowledgePoints: ['math-g3-up-u06-k001', 'math-g3-up-u06-k002', 'math-g3-up-u06-k003', 'math-g3-up-u06-k004', 'math-g3-up-u06-k005'],
     scope: 'core', version: 2, supportsComposite: false },
-  { id: 'generator:equivalent-reasoning', subject: 'math', capabilities: ['fill', 'choice', 'apply'], questionTypes: ['fill', 'choice', 'apply'],
-    knowledgePoints: [],
-    scope: 'core', version: 2, supportsComposite: false },
+  
 
   
   
@@ -4826,251 +4957,6 @@ module.exports = {
 };
 
 };
-__defs["shared/knowledge/question-type-registry.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var COGNITIVE_LEVELS = ['recall', 'recognize', 'understand', 'apply', 'analyze', 'evaluate', 'create'];
-
-  
-  
-  var TYPES = [
-    { id: 'calc', name: '计算题', category: 'calculation',
-      cognitiveLevels: ['recall', 'understand', 'apply'], difficultyRange: [1, 6],
-      supports: { context: true, graphic: false, distractors: false } },
-    { id: 'fill', name: '填空题', category: 'written',
-      cognitiveLevels: ['recall', 'understand', 'apply'], difficultyRange: [1, 6],
-      supports: { context: true, graphic: true, distractors: false } },
-    { id: 'choice', name: '选择题', category: 'selection',
-      cognitiveLevels: ['recognize', 'understand', 'apply'], difficultyRange: [1, 6],
-      supports: { context: true, graphic: true, distractors: true } },
-    { id: 'judge', name: '判断题', category: 'selection',
-      cognitiveLevels: ['recognize', 'understand'], difficultyRange: [1, 6],
-      supports: { context: true, graphic: true, distractors: false } },
-    { id: 'geometry', name: '操作/作图题', category: 'geometry',
-      cognitiveLevels: ['recognize', 'understand', 'apply', 'analyze'], difficultyRange: [1, 6],
-      supports: { context: false, graphic: true, distractors: false } },
-    { id: 'classify', name: '分类整理题', category: 'classification',
-      cognitiveLevels: ['recognize', 'understand', 'apply'], difficultyRange: [1, 6],
-      supports: { context: true, graphic: true, distractors: false } },
-    { id: 'apply', name: '解决问题/应用题', category: 'application',
-      cognitiveLevels: ['understand', 'apply', 'analyze'], difficultyRange: [1, 6],
-      supports: { context: true, graphic: true, distractors: false } }
-  ];
-
-  
-  var CANONICAL_ALIASES = {
-    operate: 'calc', oral: 'calc', 'law-oral': 'calc', 'dec-mul-oral': 'calc', 'dec-div-oral': 'calc',
-    'frac-addsub-oral': 'calc', 'equation-oral': 'calc', 'mul-oral': 'calc',
-    calc: 'calc', cushi: 'calc', addsub: 'calc', mixed: 'calc', mix: 'calc', column: 'calc',
-    'chain-add': 'calc', 'chain-sub': 'calc', 'chain': 'calc', bracket: 'calc', 'multdiv': 'calc',
-    add: 'calc', sub: 'calc', mult: 'calc', div: 'calc', remainder: 'calc',
-    'mul-table': 'calc', 'div-table': 'calc', multiTable: 'calc', 'big-addsub': 'calc',
-    'mul3x1': 'calc', 'mul2tens': 'calc', 'div-tens': 'calc', 'mul3x2': 'calc', 'mul-zero': 'calc',
-    'div-2digit': 'calc', 'div-2quotient': 'calc', 'dec-vertical': 'calc', 'add-law': 'calc',
-    'mul-law': 'calc', 'dist-law': 'calc', 'dec-simple': 'calc', 'dec-addsub': 'calc',
-    'big-num': 'calc', dec: 'calc', vertical: 'calc', 'vertical-multi': 'calc', 'carry-complex': 'calc',
-    'neg-add-sub': 'calc', 'dec-mult': 'calc', 'dec-div': 'calc', decimal: 'calc', negative: 'calc',
-    'est-muldiv': 'calc', estimate: 'calc', rounding: 'calc', 'dec-meaning': 'calc', 'dec-place': 'calc',
-    'dec-compare': 'calc', 'dec-mixed': 'calc', 'frac-mixed': 'calc', 'frac-simple': 'calc',
-    'frac-line': 'calc', 'int-split': 'calc', 'frac-split': 'calc', 'frac-perc': 'calc',
-    fill: 'fill', 'fill-length': 'fill', 'fill-mass': 'fill', 'fill-time': 'fill', cutfill: 'fill',
-    choice: 'choice', matching: 'choice', 'match-shape': 'choice', 'match-clock': 'choice', 'match-rmb': 'choice',
-    judge: 'judge', comparison: 'judge',
-    apply: 'apply', word: 'apply', open: 'apply', 'big-app': 'apply', 'mul-travel': 'apply',
-    'word-problem': 'apply', 'word-problems': 'apply',
-    'div-share': 'apply', 'price-qty': 'apply', 'dec-pay': 'apply', 'avg-score': 'apply', 'dec-scene': 'apply',
-    'dec-mul-app': 'apply', 'dec-div-app': 'apply', 'equation-app': 'apply', 'factor-app': 'apply',
-    'frac-app': 'apply', 'area-app': 'apply', 'solid-app': 'apply', 'possibility-app': 'apply',
-    'linechart-app': 'apply', 'tree-app': 'apply', 'speed-distance': 'apply', work: 'apply',
-    concentration: 'apply', 'profit-loss': 'apply', age: 'apply', planting: 'apply', phalanx: 'apply',
-    grass: 'apply', economics: 'apply', 'percent-discount': 'apply', ratio: 'apply', proportion: 'apply',
-    percent: 'apply', optimize: 'apply', optimization: 'apply', 'journey-complex': 'apply', 'travel-work': 'apply',
-    'sum-diff': 'apply', 'inclusion-exclusion': 'apply', equation: 'apply', fraction: 'apply', area: 'apply',
-    rotation: 'apply', array: 'apply', magic: 'apply', sequence: 'apply', series: 'apply', recurring: 'apply',
-    'chicken-rabbit': 'apply', pancake: 'apply', assume: 'apply', law: 'apply', quotient: 'apply', stats: 'apply',
-    'big-compare': 'apply', horizontal: 'apply', symbol: 'apply', 'divisibility': 'apply', 'prime-factor': 'apply',
-    'factor-count': 'apply', 'gcd-lcm': 'apply', 'perfect-square': 'apply', 'nt-extreme': 'apply',
-    'add-principle': 'apply', 'mult-principle': 'apply', permutation: 'apply', enumeration: 'apply',
-    bundling: 'apply', insertion: 'apply', 'stars-bars': 'apply', pigeonhole: 'apply', 'worst-case': 'apply',
-    'area-basic': 'apply', 'equal-area': 'apply', 'bird-head': 'apply', 'butterfly': 'apply', 'swallow-tail': 'apply',
-    half: 'apply', 'painted-cube': 'apply', pythagorean: 'apply', lattice: 'apply', boat: 'apply', circular: 'apply',
-    'avg-speed': 'apply', 'ratio-prop': 'apply', 'ratio-simp': 'apply', 'frac-percent': 'apply', 'cy-cone': 'apply',
-    'cyl-cone': 'apply', 'number-shape': 'apply', 'percent-ratio': 'apply', 'magic-adv': 'apply', 'array-adv': 'apply',
-    competition: 'apply', modulo: 'apply', recursion: 'apply', derangement: 'apply', periodic: 'apply',
-    'sequence-sum': 'apply', extremum: 'apply', winning: 'apply', 'define-op': 'apply', 'complex-frac': 'apply',
-    diophantine: 'apply', eq1: 'apply', eq2: 'apply', 'frac-mult-int': 'apply', 'frac-mult-frac': 'apply',
-    'frac-div-int': 'apply', 'frac-div-frac': 'apply', 'dec-perc': 'apply', 'frac-mult-div': 'apply',
-    'solve-proportion': 'apply', 'frac-order': 'apply', 'solve-equation': 'apply', 'cylinder-cone': 'apply',
-    formula: 'apply', chart: 'apply', 'rotate-scale': 'apply', 'frac-mult': 'apply', 'frac-div': 'apply', scale: 'apply',
-    'dec-div-int': 'apply', 'dec-div-dec': 'apply', 'repeating-dec': 'apply', 'product-rule': 'apply',
-    'repeating-note': 'apply', 'equation-prop': 'apply', 'prime-composite': 'apply', 'frac-meaning': 'apply',
-    'frac-property': 'apply', 'frac-decimal': 'apply', coordinate: 'apply', 'area-formula': 'apply',
-    'solid-formula': 'apply', 'rotation-elem': 'apply', possibility: 'apply', 'linechart-feature': 'apply',
-    'solid-feature': 'apply', 'possibility-desc': 'apply', 'equation-solve': 'apply', 'rotation-draw': 'apply',
-    'observe-3d': 'apply', 'polygon-height': 'apply', 'coordinate-plot': 'apply', 'solid-net': 'apply',
-    'balance-equation': 'apply', 'area-picture': 'apply', 'tree-planting': 'apply', 'possibility-compare': 'apply',
-    'linechart-single': 'apply', 'linechart-double': 'apply', 'tree-three': 'apply', defective: 'apply',
-    'defective-scale': 'apply', 'dec-mul-vertical': 'apply',
-    geometry: 'geometry', circle: 'geometry', angle: 'geometry', clock: 'geometry', 'clock-read': 'geometry',
-    'clock-draw': 'geometry', clockFace: 'geometry', shape: 'geometry', 'draw-shape': 'geometry', symmetry: 'geometry',
-    translate: 'geometry', perimeter: 'geometry', rect: 'geometry', compass: 'geometry', 'line-ray': 'geometry',
-    'angle-metric': 'geometry', quad: 'geometry', 'op-meaning': 'geometry', 'quotient-law': 'geometry',
-    triangle: 'geometry', average: 'geometry', 'angle-degree': 'geometry', 'shape-feature': 'geometry',
-    'law-formula': 'geometry', 'dec-frac': 'geometry', protractor: 'geometry', 'parallel-perp': 'geometry',
-    'grid-quad': 'geometry', observe: 'geometry', 'segment-multiple': 'geometry', 'brace-addsub': 'geometry',
-    'area-hectare': 'geometry', hectare: 'geometry', solid: 'geometry', flat: 'geometry', 'count-graph': 'geometry',
-    position: 'geometry', grid: 'geometry', 'draw-line': 'geometry', 'draw-angle': 'geometry', measure: 'geometry',
-    motion: 'geometry', transform: 'geometry', basic: 'geometry', meet: 'geometry', chase: 'geometry', train: 'geometry',
-    river: 'geometry', extreme: 'geometry', drawer: 'geometry', integrated: 'geometry', misc: 'geometry', mock: 'geometry',
-    'geometry-count': 'geometry', 'circle-angle': 'geometry', 'solid-rotation': 'geometry', 'interval-departure': 'geometry',
-    'pick-up': 'geometry', mixture: 'geometry', all: 'geometry', 'factor-multiple': 'geometry',
-    read: 'geometry', number: 'geometry', count: 'geometry', tally: 'geometry', enum: 'geometry',
-    recognize: 'geometry',
-    table: 'geometry', picto: 'geometry', set: 'geometry', place: 'geometry',
-    am: 'geometry', perm: 'geometry', pa: 'geometry', digit: 'geometry', composite: 'geometry', shard: 'geometry',
-    ym: 'geometry', relation: 'geometry', operator: 'geometry', readwrite: 'geometry', approx: 'geometry',
-    length: 'geometry', mass: 'geometry', time: 'geometry', pattern: 'geometry', 'mult-meaning': 'geometry',
-    'div-meaning': 'geometry', unit: 'geometry', convert: 'geometry', order: 'geometry', compare: 'geometry',
-    'big-compare': 'geometry', parity: 'geometry', divisible: 'geometry', prime: 'geometry', factor: 'geometry',
-    'digit-reason': 'geometry',
-    classify: 'classify', sort: 'classify', group: 'classify', grouping: 'classify', category: 'classify',
-    'class-sort': 'classify', tallyChart: 'classify'
-  };
-
-  var GEOMETRY_KEYWORDS = [
-    'angle', 'shape', 'clock', 'circle', 'symmetry', 'coordinate', 'draw', 'grid', 'line', 'ray',
-    'perimeter', 'area', 'solid', 'rotate', 'rotation', 'translate', 'scale', 'cylinder', 'cone',
-    'triangle', 'quad', 'parallel', 'perpendicular', 'protractor', 'compass', 'segment', 'polygon',
-    'lattice', 'pythagorean', 'geometry', 'observe-3d', 'solid-net', 'solid-feature', 'rotation-elem',
-    'rotation-draw', 'polygon-height', 'coordinate-plot', 'geomcount', 'geometry-count', 'grid-quad',
-    'circle-angle', 'solid-rotation', 'angle-degree', 'angle-metric', 'shape-feature', 'line-ray',
-    'draw-line', 'draw-angle', 'draw-shape', 'motion', 'transform', 'count-graph', 'measure'
-  ];
-
-  var RECOGNIZE_KEYWORDS = [
-    'read', 'number', 'count', 'tally', 'enum', 'classify', 'table', 'picto', 'set', 'place',
-    'digit', 'composite', 'shard', 'ym', 'relation', 'operator', 'readwrite', 'approx', 'length',
-    'mass', 'time', 'pattern', 'meaning', 'unit', 'convert', 'order', 'compare', 'parity',
-    'divisible', 'prime', 'factor', 'recognize', 'recall'
-  ];
-
-  var BY_ID = {};
-  TYPES.forEach(function (t) { BY_ID[t.id] = t; });
-
-  
-  
-  
-  var LEGACY_DISPLAY_NAMES = {
-    addsub: '加减法', muldiv: '乘除法', cushi: '凑十法', pingshi: '平十法', poshi: '破十法',
-    mix: '混合', pattern: '找规律', clock: '钟表', money: '人民币',
-    oral: '口算', open: '开放', recognize: '认读'
-  };
-
-  
-  var MODES = ['quick', 'teacher', 'competition'];
-  var MODE_LABELS = {
-    quick: '快速模式',
-    teacher: '教师模式',
-    competition: '竞赛模式'
-  };
-
-  function isCognitiveLevel(v) { return COGNITIVE_LEVELS.indexOf(v) !== -1; }
-
-  function normalizeQuestionType(token, opts) {
-    opts = opts || {};
-    if (!token || typeof token !== 'string') return { id: null, confidence: 'none' };
-    if (BY_ID[token]) return { id: token, confidence: 'exact' };
-    var mapped = CANONICAL_ALIASES[token];
-    if (mapped) return { id: mapped, confidence: 'explicit' };
-    var lower = token.toLowerCase();
-    var i;
-    for (i = 0; i < GEOMETRY_KEYWORDS.length; i++) {
-      if (lower.indexOf(GEOMETRY_KEYWORDS[i]) !== -1) return { id: 'geometry', confidence: 'heuristic' };
-    }
-    for (i = 0; i < RECOGNIZE_KEYWORDS.length; i++) {
-      if (lower.indexOf(RECOGNIZE_KEYWORDS[i]) !== -1) return { id: 'geometry', confidence: 'heuristic' };
-    }
-    if (opts.allowHeuristic !== false) return { id: 'calc', confidence: 'heuristic' };
-    return { id: null, confidence: 'unmapped' };
-  }
-
-  function validateType(t) {
-    var errs = [];
-    if (!t || !t.id) errs.push('题型缺少 id');
-    if (!t.name) errs.push('题型缺少 name');
-    if (!t.category) errs.push('题型缺少 category');
-    if (!Array.isArray(t.cognitiveLevels) || t.cognitiveLevels.length === 0) errs.push('cognitiveLevels 非法');
-    else t.cognitiveLevels.forEach(function (c) { if (!isCognitiveLevel(c)) errs.push('非法 cognitiveLevel: ' + c); });
-    if (!Array.isArray(t.difficultyRange) || t.difficultyRange.length !== 2) errs.push('difficultyRange 非法');
-    else {
-      var lo = t.difficultyRange[0], hi = t.difficultyRange[1];
-      if (typeof lo !== 'number' || typeof hi !== 'number' || lo < 1 || hi > 6 || lo > hi) errs.push('difficultyRange 越界: ' + lo + '-' + hi);
-    }
-    if (!t.supports || typeof t.supports !== 'object') errs.push('supports 非法');
-    else {
-      ['context', 'graphic', 'distractors'].forEach(function (k) {
-        if (typeof t.supports[k] !== 'boolean') errs.push('supports.' + k + ' 必须为布尔');
-      });
-    }
-    return errs;
-  }
-
-  
-  function displayName(value) {
-    if (!value || typeof value !== 'string') return null;
-    var t = BY_ID[value];
-    if (t) return t.name;
-    return LEGACY_DISPLAY_NAMES[value] || null;
-  }
-
-  var validationErrors = [];
-  var seen = {};
-  TYPES.forEach(function (t) {
-    if (seen[t.id]) validationErrors.push('重复题型 ID: ' + t.id);
-    seen[t.id] = 1;
-    validateType(t).forEach(function (e) { validationErrors.push(t.id + ' :: ' + e); });
-  });
-
-  var API = {
-    COGNITIVE_LEVELS: COGNITIVE_LEVELS,
-    TYPES: TYPES,
-    MODES: MODES,
-    MODE_LABELS: MODE_LABELS,
-    canonicalAliases: CANONICAL_ALIASES,
-    LEGACY_DISPLAY_NAMES: LEGACY_DISPLAY_NAMES,
-    get: function (id) {
-      if (BY_ID[id]) return BY_ID[id];
-      
-      var mapped = CANONICAL_ALIASES[id];
-      return mapped ? BY_ID[mapped] || null : null;
-    },
-    has: function (id) { return !!BY_ID[id] || !!CANONICAL_ALIASES[id]; },
-    all: function () { return TYPES.slice(); },
-    displayName: displayName,
-    byCategory: function (category) { return TYPES.filter(function (t) { return t.category === category; }); },
-    byMode: function (mode) { return MODES.indexOf(mode) !== -1 ? mode : null; },
-    isMode: function (mode) { return MODES.indexOf(mode) !== -1; },
-    supports: function (id, capability) {
-      var t = BY_ID[id] || (CANONICAL_ALIASES[id] ? BY_ID[CANONICAL_ALIASES[id]] : null);
-      if (!t) return false;
-      return !!(t.supports && t.supports[capability]);
-    },
-    normalizeQuestionType: normalizeQuestionType,
-    validate: function (id) {
-      var t = BY_ID[id];
-      if (!t) return { valid: false, errors: ['未知题型 ID: ' + id] };
-      return { valid: validationErrors.length === 0, errors: validateType(t) };
-    },
-    validationErrors: validationErrors
-  };
-
-  global.QuestionTypeRegistry = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
 __defs["shared/capability/capability-model.js"] = function (module, exports, require) {
 
 'use strict';
@@ -6255,7 +6141,6 @@ var ENGINE_VERSION = '2.1.0';
 
 var Arithmetic = require("shared/generator/generators/arithmetic.js");
 var Selection = require("shared/generator/generators/selection.js");
-var Complex = require("shared/generator/generators/complex.js");
 var Shape = require("shared/generator/generators/shape.js");
 var Position = require("shared/generator/generators/position.js");
 var Money = require("shared/generator/generators/money.js");
@@ -6265,11 +6150,6 @@ var Counting = require("shared/generator/generators/counting.js");
 var Reasoning = require("shared/generator/generators/reasoning.js");
 var Stats = require("shared/generator/generators/stats.js");
 var PictureEquation = require("shared/generator/generators/picture-equation.js");
-var C1 = require("shared/generator/generators/c1-number-puzzle.js");
-var C2 = require("shared/generator/generators/c2-number-theory.js");
-var C5C6 = require("shared/generator/generators/c5-c6-journey-engineering.js");
-var C7 = require("shared/generator/generators/c7-clever-calc.js");
-var C9 = require("shared/generator/generators/c9-comprehensive.js");
 var SemanticSpecial = require("shared/generator/generators/semantic-special.js");
 var Classification = require("shared/generator/generators/classify.js");
 var Percent = require("shared/generator/generators/percent.js");
@@ -6281,7 +6161,6 @@ var Fraction = require("shared/generator/generators/fraction.js");
 var ALL = [].concat(
   Arithmetic.buildAll(),
   Selection.buildAll(),
-  Complex.buildAll(),
   Shape.buildAll(),
   Position.buildAll(),
   Money.buildAll(),
@@ -6291,11 +6170,6 @@ var ALL = [].concat(
   Reasoning.buildAll(),
   Stats.buildAll(),
   PictureEquation.buildAll(),
-  C1.buildAll(),
-  C2.buildAll(),
-  C5C6.buildAll(),
-  C7.buildAll(),
-  C9.buildAll(),
   SemanticSpecial.buildAll(),
   Classification.buildAll(),
   Percent.buildAll(),
@@ -6681,229 +6555,6 @@ function buildAll() {
 
 module.exports = {
   createSelectionGenerator: createSelectionGenerator,
-  buildAll: buildAll
-};
-
-};
-__defs["shared/generator/generators/complex.js"] = function (module, exports, require) {
-
-'use strict';
-
-var Rng = require("shared/generator/core/rng.js");
-var Arith = require("shared/generator/core/arithmetic-core.js");
-
-
-function pkp(plan) {
-  if (!plan) return null;
-  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
-  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
-  return null;
-}
-
-function seedFor(plan, context, i) {
-  if (context && context.seed != null) return context.seed + ':complex:' + i;
-  
-  
-  if (plan && plan.seed != null) return plan.seed + ':complex:' + i;
-  return (pkp(plan) + '|' + plan.family + '|' + plan.difficulty + '|' + plan.count) + ':complex:' + i;
-}
-
-function buildBase(plan, context, i, extra) {
-  var constraints = plan.constraints || {};
-  return {
-    knowledgePointId: pkp(plan),
-    questionType: plan.questionTypeId,
-    difficulty: plan.difficulty,
-    difficultyParams: {
-      level: plan.difficulty,
-      scale: constraints.scale != null ? constraints.scale : 1,
-      steps: (constraints.structure && constraints.structure.family === 'chain') ? (constraints.exactSteps || 2) : (constraints.maxSteps || 1),
-      allowBracket: !!constraints.allowBracket,
-      allowMultDiv: !!constraints.allowMultDiv
-    },
-    spiralLevel: plan.spiralLevel != null ? plan.spiralLevel : 1,
-    numberRange: constraints.numberRange || { min: 1, max: 20 },
-    context: plan.contextType != null ? plan.contextType : 'standard',
-    seed: seedFor(plan, context, i),
-    hint: null,
-    answerMode: 'input',
-    family: (constraints.structure && constraints.structure.family) || 'chain',
-    data: extra || {}
-  };
-}
-
-
-function buildMultDivChain(rng, cfg) {
-  cfg = cfg || {};
-  var range = cfg.numberRange || { min: 1, max: 20 };
-  var min = Math.max(1, Math.floor(range.min));
-  var max = Math.max(min, Math.floor(range.max));
-  var maxForMult = Math.min(max, 9);
-
-  var guard = 0;
-  while (guard++ < 200) {
-    var op1 = Rng.pick(rng, [Arith.OP_MUL, Arith.OP_DIV]);
-    var op2 = Rng.pick(rng, [Arith.OP_MUL, Arith.OP_DIV]);
-    var a, b, c;
-    if (op1 === Arith.OP_DIV) {
-      
-      b = Rng.randInt(rng, 2, maxForMult);
-      var q = Rng.randInt(rng, 2, maxForMult);
-      a = b * q;
-      if (a > max) continue;
-      if (op2 === Arith.OP_MUL) {
-        c = Rng.randInt(rng, 2, maxForMult);
-        return { operands: [a, b, c], operators: [op1, op2], steps: 2 };
-      }
-      
-      c = Rng.randInt(rng, 2, maxForMult);
-      if (q % c !== 0) continue;
-      return { operands: [a, b, c], operators: [op1, op2], steps: 2 };
-    } else {
-      
-      a = Rng.randInt(rng, 2, maxForMult);
-      b = Rng.randInt(rng, 2, maxForMult);
-      var prod = a * b;
-      if (op2 === Arith.OP_DIV) {
-        if (prod > max) continue;
-        c = Rng.randInt(rng, 2, maxForMult);
-        if (prod % c !== 0) continue;
-        return { operands: [a, b, c], operators: [op1, op2], steps: 2 };
-      }
-      
-      c = Rng.randInt(rng, 2, maxForMult);
-      if (a * b * c > max) continue;
-      return { operands: [a, b, c], operators: [op1, op2], steps: 2 };
-    }
-  }
-  return { operands: [6, 3, 2], operators: [Arith.OP_DIV, Arith.OP_MUL], steps: 2 };
-}
-
-function makeChain(plan, context, i) {
-  var constraints = plan.constraints || {};
-  var structure = constraints.structure || {};
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var operators = constraints.operation || [Arith.OP_ADD, Arith.OP_SUB];
-
-  
-  var onlyMultDiv = operators.length > 0 &&
-    operators.every(function (o) { return o === Arith.OP_MUL || o === Arith.OP_DIV; });
-
-  var gen;
-  if (onlyMultDiv) {
-    gen = buildMultDivChain(rng, { numberRange: constraints.numberRange });
-  } else {
-    gen = Arith.generateStructure(rng, {
-      operation: 'mixed',
-      numberRange: constraints.numberRange,
-      maxSteps: constraints.maxSteps || 2,
-      allowBracket: false,
-      allowMultDiv: (structure.family === 'no-bracket' || structure.family === 'chain'),
-      exactSteps: constraints.exactSteps || 2,
-      operationSet: operators,
-      noNegative: true
-    });
-  }
-  var answer = Arith.calculateAnswer(gen.operands, gen.operators);
-  var q = buildBase(plan, context, i, { steps: gen.steps, mode: 'chain' });
-  q.prompt = Arith.formatExpression(gen.operands, gen.operators) + ' =';
-  q.answer = { value: String(answer), acceptable: [] };
-  q.data.operands = gen.operands;
-  q.data.operators = gen.operators;
-  return q;
-}
-
-function makeBracket(plan, context, i) {
-  var constraints = plan.constraints || {};
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var s = Arith.buildBracket(rng, {
-    numberRange: constraints.numberRange,
-    noNegative: true
-  });
-  var q = buildBase(plan, context, i, { mode: 'bracket' });
-  q.prompt = Arith.formatBracketExpression(s.operands, s.operators) + ' =';
-  q.answer = { value: String(s.answer), acceptable: [] };
-  q.data.operands = s.operands;
-  q.data.operators = s.operators;
-  return q;
-}
-
-function makeInverse(plan, context, i) {
-  var constraints = plan.constraints || {};
-  var structure = constraints.structure || {};
-  var mode = (structure.inverse && structure.inverse.mode) || 'fill-operand';
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var operators = constraints.operation || [Arith.OP_ADD, Arith.OP_SUB];
-
-  if (mode === 'fill-operator') {
-    var fo = Arith.buildFillOperator(rng, { numberRange: constraints.numberRange, operators: operators });
-    var q = buildBase(plan, context, i, { mode: 'fill-operator' });
-    q.prompt = fo.prompt;
-    q.answer = { value: fo.answer, acceptable: [] };
-    q.data.operands = fo.operands;
-    return q;
-  }
-
-  var f = Arith.buildFillOperand(rng, { numberRange: constraints.numberRange, operators: operators });
-  var q2 = buildBase(plan, context, i, { mode: 'fill-operand' });
-  q2.prompt = f.prompt;
-  q2.answer = { value: String(f.unknown), acceptable: [] };
-  q2.data.position = f.position;
-  q2.data.operator = f.operator;
-  return q2;
-}
-
-function createComplexGenerator(spec) {
-  spec = spec || {};
-  var id = spec.id || 'generator:complex';
-  var subject = spec.subject || 'math';
-  var knowledgePoints = spec.knowledgePoints || [];
-
-  var generator = {
-    id: id,
-    subject: subject,
-    capabilities: spec.capabilities || ['calc', 'fill'],
-    questionTypes: spec.questionTypes || ['calc', 'fill'],
-    knowledgePoints: knowledgePoints,
-
-    supports: function (plan) {
-      if (!plan || !plan.constraints || !plan.constraints.structure) return false;
-      
-      return knowledgePoints.indexOf(pkp(plan)) !== -1;
-    },
-
-    generate: function (plan, context) {
-      var family = (plan.constraints && plan.constraints.structure && plan.constraints.structure.family) || 'chain';
-      context = context || {};
-      var count = plan.count || 1;
-      var questions = [];
-      for (var i = 0; i < count; i++) {
-        var q;
-        if (family === 'bracket') q = makeBracket(plan, context, i);
-        else if (family === 'inverse') q = makeInverse(plan, context, i);
-        else q = makeChain(plan, context, i);
-        questions.push(q);
-      }
-      return questions;
-    }
-  };
-  return generator;
-}
-
-
-
-function buildAll() {
-  return [
-    createComplexGenerator({
-      id: 'generator:complex-calc',
-      capabilities: ['calc', 'fill'],
-      questionTypes: ['calc', 'fill']
-    })
-  ];
-}
-
-module.exports = {
-  createComplexGenerator: createComplexGenerator,
   buildAll: buildAll
 };
 
@@ -8570,7 +8221,10 @@ function createMoneyGenerator(spec) {
         var isRMB = meta.kind === 'rmb';
         
         if (qt === 'fill') {
-          if (isRMB && rng() < 0.5) q = makeRMBConversionQuestion(plan, context, i, meta);
+          
+          
+          var fillBranchRng = Rng.createSeededRandom(seedFor(plan, context, i) + ':fill-branch');
+          if (isRMB && fillBranchRng() < 0.5) q = makeRMBConversionQuestion(plan, context, i, meta);
           else if (isRMB) q = makeRMBCalculationQuestion(plan, context, i, meta);
           else q = makeMeasurementConversionQuestion(plan, context, i, meta);
         } else if (qt === 'apply') {
@@ -8611,12 +8265,6 @@ function createMoneyGenerator(spec) {
       return questions;
     }
   };
-}
-
-var RNG_HELPER = null;
-function rng() {
-  if (!RNG_HELPER) RNG_HELPER = Rng.createSeededRandom('money-seed-' + Date.now());
-  return RNG_HELPER();
 }
 
 
@@ -8819,9 +8467,15 @@ function makeApplicationQuestion(plan, context, i, meta) {
   var prompt = formatTemplate(template, nums);
   
   
+  
+  
+  
+  
   var distractors = [];
   var ans = answer;
-  for (var d = 0; d < 3; d++) {
+  var guard = 0;
+  while (distractors.length < 3 && guard < 50) {
+    guard++;
     var offset = randInt(rng, -5, 5);
     if (offset === 0) offset = 1;
     var dist = ans + offset;
@@ -8829,11 +8483,12 @@ function makeApplicationQuestion(plan, context, i, meta) {
       distractors.push(dist);
     }
   }
-  
+
   var qt = plan.questionTypeId;
   if (qt === 'choice') {
-    var options = Rng.shuffle(rng, [ans].concat(distractors).slice(0, 4));
-    var correctIndex = options.indexOf(ans);
+    
+    var options = Rng.shuffle(rng, [ans].concat(distractors).slice(0, 4)).map(function (n) { return String(n); });
+    var correctIndex = options.indexOf(String(ans));
     return {
       knowledgePointId: pkp(plan),
       questionType: 'choice',
@@ -8842,7 +8497,7 @@ function makeApplicationQuestion(plan, context, i, meta) {
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: prompt,
-      answer: String(correctIndex),
+      answer: String(ans),
       answerMode: 'choice',
       data: {
         mode: 'choice',
@@ -10317,1020 +9972,6 @@ module.exports = {
 };
 
 };
-__defs["shared/generator/generators/c1-number-puzzle.js"] = function (module, exports, require) {
-'use strict';
-
-
-
-var Rng = require("shared/generator/core/rng.js");
-
-function pkp(plan) {
-  if (!plan) return null;
-  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
-  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
-  return null;
-}
-
-function seedFor(plan, context, i) {
-  if (context && context.seed != null) return context.seed + ':c1:' + i;
-  
-  
-  if (plan && plan.seed != null) return plan.seed + ':c1:' + i;
-  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c1:' + i;
-}
-
-function makePuzzleQuestion(plan, context, i, kp) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '数字谜';
-  var id = (kp && (kp.id || (kp.identity && kp.identity.id)) || kp.id) || '';
-
-  var isVertical = name.indexOf('竖式') !== -1 || id.indexOf('vertical') !== -1 || id.indexOf('digit-puzzle') !== -1;
-  var isHorizontal = name.indexOf('横式') !== -1 || id.indexOf('horizontal') !== -1;
-  var isSymbol = name.indexOf('符号') !== -1 || name.indexOf('字母') !== -1 || id.indexOf('symbol') !== -1;
-  var isDigitReasoning = name.indexOf('数字推理') !== -1 || id.indexOf('digit-reasoning') !== -1 || id.indexOf('number-puzzle-competition') !== -1;
-
-  var v = i; 
-  var prompt, answer;
-
-  if (isVertical) {
-    
-    var base = Rng.randInt(rng, 10, 50);
-    var add = Rng.randInt(rng, 10, 50);
-    var sum = base + add;
-    
-    var hidePos = Rng.randInt(rng, 0, String(sum).length - 1);
-    var sumStr = String(sum);
-    var hiddenDigit = sumStr[hidePos];
-    var shownSum = sumStr.substring(0, hidePos) + '□' + sumStr.substring(hidePos + 1);
-    prompt = '在下面的竖式中，"□" 表示被擦掉的数字。\n  ' + base + '\n+ ' + add + '\n----\n ' + shownSum + '\n请算出 □ 代表的数字。';
-    answer = hiddenDigit;
-  } else if (isHorizontal) {
-    
-    var a = Rng.randInt(rng, 10, 99);
-    var b = Rng.randInt(rng, 10, 99);
-    var c = a + b;
-    prompt = '在等式 ' + a + ' + □ = ' + c + ' 中，□ 代表什么数字？';
-    answer = b;
-  } else if (isSymbol) {
-    
-    var aa = Rng.randInt(rng, 2, 9);
-    var bb = Rng.randInt(rng, 2, 9);
-    var cc = aa + bb;
-    if (cc > 9) { cc = aa + bb - 9; }
-    prompt = '已知 ★ + ▲ = ' + cc + '，且 ★ 和 ▲ 是不同的数字。当 ★ 最大时，★ = ?';
-    answer = String(cc - 1);
-  } else if (isDigitReasoning) {
-    
-    var DR = [
-      { d: '百位数字比十位数字大 3，个位数字是十位数字的 2 倍，各位数字之和是 15', ans: '636' },
-      { d: '百位数字比十位数字大 2，个位数字是十位数字的 3 倍，各位数字之和是 17', ans: '539' },
-      { d: '百位数字是十位数字的 2 倍，个位比十位大 1，各位数字之和是 9', ans: '423' }
-    ];
-    var dr = DR[v % DR.length];
-    prompt = '一个三位数，' + dr.d + '。这个三位数是多少？';
-    answer = dr.ans;
-  } else {
-    prompt = name + '：请根据竖式和横式中的线索，推算每个字母代表的数字。';
-    answer = 'A=1, B=2, C=3';
-  }
-
-  return {
-    knowledgePointId: pkp(plan),
-    questionType: plan.questionTypeId,
-    difficulty: plan.difficulty,
-    spiralLevel: plan.spiralLevel || 1,
-    context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
-    answerMode: 'input',
-    data: {
-      mode: 'apply',
-      steps: 3,
-      questionType: plan.questionTypeId,
-      family: 'c1-number-puzzle'
-    }
-  };
-}
-
-
-
-
-function createC1Generator(spec) {
-  spec = spec || {};
-  var id = spec.id || 'generator:c1-number-puzzle';
-
-  return {
-    id: id,
-    subject: 'math',
-    capabilities: ['apply', 'calc'],
-    questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || [],
-
-    supports: function (plan) {
-      if (!plan || !plan.questionTypeId) return false;
-      return this.capabilities.indexOf(plan.questionTypeId) !== -1;
-    },
-
-    generate: function (plan, context) {
-      context = context || {};
-      var count = plan.count || 1;
-      var questions = [];
-      var kp = {};
-
-      for (var i = 0; i < count; i++) {
-        questions.push(makePuzzleQuestion(plan, context, i, kp));
-      }
-      return questions;
-    }
-  };
-}
-
-function buildAll() {
-  return [createC1Generator()];
-}
-
-module.exports = {
-  createC1Generator: createC1Generator,
-  buildAll: buildAll
-};
-
-};
-__defs["shared/generator/generators/c2-number-theory.js"] = function (module, exports, require) {
-'use strict';
-
-
-
-var Rng = require("shared/generator/core/rng.js");
-var OS = require("shared/generator/core/op-semantics.js");
-var MUL = OS.symbol('multiply') || '×';
-
-function pkp(plan) {
-  if (!plan) return null;
-  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
-  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
-  return null;
-}
-
-function seedFor(plan, context, i) {
-  if (context && context.seed != null) return context.seed + ':c2:' + i;
-  
-  
-  if (plan && plan.seed != null) return plan.seed + ':c2:' + i;
-  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c2:' + i;
-}
-
-function gcd(a, b) { while (b) { var t = b; b = a % b; a = t; } return a; }
-function lcm(a, b) { return a / gcd(a, b) * b; }
-
-function makeTheoryQuestion(plan, context, i, kp) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = (kp && (kp.name || (kp.identity && kp.identity.name))) || '数论问题';
-  var id = (kp && (kp.id || (kp.identity && kp.identity.id))) || '';
-
-  var isParity = name.indexOf('奇偶') !== -1;
-  var isDivisible = name.indexOf('整除') !== -1 || id.indexOf('divisible') !== -1 || id.indexOf('divisibility') !== -1;
-  var isPrimeFactor = name.indexOf('质因数') !== -1 || name.indexOf('分解质因数') !== -1;
-  var isGcdLcm = name.indexOf('最大公') !== -1 || name.indexOf('最小公') !== -1;
-  var isRemainder = name.indexOf('余数') !== -1 || name.indexOf('同余') !== -1 || id.indexOf('remainder') !== -1 || id.indexOf('congruence') !== -1;
-  var isPlaceValue = name.indexOf('位值') !== -1 || id.indexOf('place-value') !== -1;
-  var isPerfectSquare = name.indexOf('完全平方') !== -1;
-  var isFactorCount = name.indexOf('因数个数') !== -1 || name.indexOf('因数和') !== -1;
-  var isExtreme = name.indexOf('最值') !== -1;
-  var isDiophantine = name.indexOf('不定方程') !== -1;
-  var isModulo = name.indexOf('模运算') !== -1 || name.indexOf('周期') !== -1;
-
-  var v = i; 
-  var prompt, answer;
-
-  if (isParity) {
-    
-    var a = Rng.randInt(rng, 10, 99);
-    var b = Rng.randInt(rng, 10, 99);
-    prompt = '已知 a = ' + a + '，b = ' + b + '。判断 a + b 是奇数还是偶数？';
-    answer = ((a + b) % 2 === 0) ? '偶数' : '奇数';
-  } else if (isDivisible) {
-    
-    var n = Rng.randInt(rng, 100, 999);
-    prompt = '三位数 ' + n + ' 能被 9 整除吗？请说明理由。';
-    answer = (n % 9 === 0) ? '能' : '不能';
-  } else if (isPrimeFactor) {
-    
-    var nums = [30, 36, 48, 54, 60, 72, 84, 96, 108, 120];
-    var num = nums[Rng.randInt(rng, 0, nums.length - 1)];
-    prompt = '将 ' + num + ' 分解质因数。';
-    var res = num; var factors = [];
-    for (var p = 2; p * p <= res; p++) {
-      while (res % p === 0) { factors.push(p); res /= p; }
-    }
-    if (res > 1) factors.push(res);
-    answer = factors.join(' ' + MUL + ' ');
-  } else if (isGcdLcm) {
-    
-    var m = Rng.randInt(rng, 10, 30);
-    var k = Rng.randInt(rng, 10, 30);
-    prompt = '求 ' + m + ' 和 ' + k + ' 的最大公因数和最小公倍数。';
-    answer = '最大公因数 ' + gcd(m, k) + '，最小公倍数 ' + lcm(m, k);
-  } else if (isRemainder) {
-    
-    var big = Rng.randInt(rng, 100, 500);
-    var div = Rng.randInt(rng, 3, 9);
-    prompt = big + ' 除以 ' + div + ' 余几？';
-    answer = big % div;
-  } else if (isPlaceValue) {
-    
-    var hun = Rng.randInt(rng, 1, 9);
-    var ten = Rng.randInt(rng, 0, 9);
-    var one = Rng.randInt(rng, 0, 9);
-    var val = hun * 100 + ten * 10 + one;
-    prompt = '一个三位数，百位上是 ' + hun + '，十位上是 ' + ten + '，个位上是 ' + one + '。这个数是多少？';
-    answer = val;
-  } else if (isPerfectSquare) {
-    
-    var sq = Rng.randInt(rng, 1, 15);
-    prompt = (sq * sq) + ' 是完全平方数吗？请说明理由。';
-    answer = '是';
-  } else if (isFactorCount) {
-    
-    var n2 = Rng.randInt(rng, 12, 60);
-    prompt = n2 + ' 有多少个正因数？';
-    var count = 0;
-    for (var i = 1; i <= n2; i++) if (n2 % i === 0) count++;
-    answer = count;
-  } else if (isExtreme) {
-    
-    var EXT = [{ hi: 100, d1: 3, d2: 5, ans: 99 }, { hi: 100, d1: 7, d2: 3, ans: 98 }, { hi: 50, d1: 5, d2: 2, ans: 45 }];
-    var ext = EXT[v % EXT.length];
-    prompt = '在 1~' + ext.hi + ' 的自然数中，能被 ' + ext.d1 + ' 整除但不能被 ' + ext.d2 + ' 整除的数最大是多少？';
-    answer = String(ext.ans);
-  } else if (isDiophantine) {
-    
-    var DIO = [{ s: '3x + 2y = 17', ans: '3 组（x=1,y=7；x=3,y=4；x=5,y=1）' }, { s: '5x + 2y = 24', ans: '2 组（x=2,y=7；x=4,y=2）' }, { s: '2x + 3y = 18', ans: '2 组（x=3,y=4；x=6,y=2）' }];
-    var dio = DIO[v % DIO.length];
-    prompt = '方程 ' + dio.s + ' 有多少组正整数解？';
-    answer = dio.ans;
-  } else if (isModulo) {
-    
-    var MOD = [{ base: 3, exp: 2024, ans: '1' }, { base: 7, exp: 2023, ans: '3' }, { base: 2, exp: 2025, ans: '2' }];
-    var mod = MOD[v % MOD.length];
-    prompt = '计算 ' + mod.base + '^' + mod.exp + ' 的个位数字。';
-    answer = mod.ans;
-  } else {
-    prompt = name + '：请运用数论知识解答这个问题。';
-    answer = '数论问题解答';
-  }
-
-  return {
-    knowledgePointId: pkp(plan),
-    questionType: plan.questionTypeId,
-    difficulty: plan.difficulty,
-    spiralLevel: plan.spiralLevel || 1,
-    context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
-    answerMode: 'input',
-    data: {
-      mode: 'apply',
-      steps: 3,
-      questionType: plan.questionTypeId,
-      family: 'c2-number-theory'
-    }
-  };
-}
-
-
-
-function createC2Generator(spec) {
-  spec = spec || {};
-  var id = spec.id || 'generator:c2-number-theory';
-
-  return {
-    id: id,
-    subject: 'math',
-    capabilities: ['apply', 'calc'],
-    questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || [],
-
-    supports: function (plan) {
-      if (!plan || !plan.questionTypeId) return false;
-      return this.capabilities.indexOf(plan.questionTypeId) !== -1;
-    },
-
-    generate: function (plan, context) {
-      context = context || {};
-      var count = plan.count || 1;
-      var questions = [];
-      var kp = {};
-
-      for (var i = 0; i < count; i++) {
-        questions.push(makeTheoryQuestion(plan, context, i, kp));
-      }
-      return questions;
-    }
-  };
-}
-
-function buildAll() {
-  return [createC2Generator()];
-}
-
-module.exports = {
-  createC2Generator: createC2Generator,
-  buildAll: buildAll
-};
-
-};
-__defs["shared/generator/generators/c5-c6-journey-engineering.js"] = function (module, exports, require) {
-'use strict';
-
-
-
-var Rng = require("shared/generator/core/rng.js");
-
-function pkp(plan) {
-  if (!plan) return null;
-  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
-  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
-  return null;
-}
-
-function seedFor(plan, context, i) {
-  if (context && context.seed != null) return context.seed + ':c5c6:' + i;
-  
-  
-  if (plan && plan.seed != null) return plan.seed + ':c5c6:' + i;
-  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c5c6:' + i;
-}
-
-function makeQuestion(plan, context, i, kp) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = (kp && kp.identity && kp.identity.name) || (kp && kp.name) || '行程问题';
-  var id = (kp && (kp.identity && kp.identity.id)) || (kp && kp.id) || '';
-
-  
-  var isWork = id.indexOf('work') !== -1 || name.indexOf('工程') !== -1;
-  var isConcentration = id.indexOf('concentration') !== -1 || name.indexOf('浓度') !== -1;
-  var isMeet = id.indexOf('meet') !== -1 || name.indexOf('相遇') !== -1;
-  var isChase = id.indexOf('chase') !== -1 || name.indexOf('追及') !== -1;
-  var isTrain = id.indexOf('train') !== -1 || name.indexOf('火车') !== -1;
-  var isBoat = id.indexOf('boat') !== -1 || id.indexOf('river') !== -1 || name.indexOf('流水') !== -1 || name.indexOf('行船') !== -1;
-  var isCircular = id.indexOf('circular') !== -1 || id.indexOf('ring') !== -1 || name.indexOf('环形') !== -1 || name.indexOf('跑道') !== -1;
-  var isAverage = id.indexOf('average-speed') !== -1 || name.indexOf('平均速度') !== -1;
-  var isRatio = id.indexOf('ratio-motion') !== -1 || name.indexOf('比例行程') !== -1;
-  var isInterval = id.indexOf('interval') !== -1 || name.indexOf('发车间隔') !== -1 || name.indexOf('间隔') !== -1;
-  var isPickup = id.indexOf('pick-up') !== -1 || id.indexOf('pickup') !== -1 || name.indexOf('接送') !== -1;
-  var isComplex = id.indexOf('complex') !== -1 || id.indexOf('competition') !== -1 || name.indexOf('综合') !== -1;
-  var isBasic = id.indexOf('basic') !== -1 || name.indexOf('基本行程') !== -1;
-
-  var v = i; 
-  var prompt, answer, steps;
-
-  if (isWork) {
-    
-    var pairs = [[6, 3], [12, 6], [10, 15], [8, 8], [20, 30], [12, 4]];
-    var wp = pairs[Rng.randInt(rng, 0, pairs.length - 1)];
-    var a = wp[0], b = wp[1];
-    var together = a * b / (a + b);
-    prompt = '一项工程，甲队单独做需要 ' + a + ' 天完成，乙队单独做需要 ' + b + ' 天完成。'
-      + '如果两队合作，多少天可以完成？';
-    answer = together;
-    steps = 3;
-  } else if (isConcentration) {
-    
-    var solution = [200, 300, 400, 500][Rng.randInt(rng, 0, 3)];
-    var pct = [10, 15, 20, 25][Rng.randInt(rng, 0, 3)];
-    var salt = solution * pct / 100;
-    prompt = '现有 ' + solution + ' 克盐水，浓度为 ' + pct + '%。这杯盐水中含盐多少克？';
-    answer = salt;
-    steps = 2;
-  } else if (isMeet) {
-    
-    var v1 = Rng.randInt(rng, 4, 8) * 10;   
-    var v2 = Rng.randInt(rng, 4, 8) * 10;
-    var t = Rng.randInt(rng, 2, 5);
-    var dist = (v1 + v2) * t;
-    prompt = '甲、乙两车分别从相距 ' + dist + ' 千米的两地同时出发，相向而行。'
-      + '甲车每小时行 ' + v1 + ' 千米，乙车每小时行 ' + v2 + ' 千米。两车经过几小时相遇？';
-    answer = t;
-    steps = 2;
-  } else if (isChase) {
-    
-    var vf = Rng.randInt(rng, 6, 9) * 10;
-    var vs = Rng.randInt(rng, 3, 5) * 10;
-    var ct = Rng.randInt(rng, 2, 5);
-    var gap = (vf - vs) * ct;
-    prompt = '弟弟以每小时 ' + vs + ' 千米的速度先出发，哥哥在距弟弟 ' + gap + ' 千米处骑自行车追赶，'
-      + '哥哥每小时行 ' + vf + ' 千米。哥哥几小时后追上弟弟？';
-    answer = ct;
-    steps = 2;
-  } else if (isTrain) {
-    
-    var trainLen = [150, 180][Rng.randInt(rng, 0, 1)];
-    var bridgeLen = [300, 450, 600][Rng.randInt(rng, 0, 2)];
-    var speed = 15; 
-    var total = trainLen + bridgeLen;
-    var tt = total / speed;
-    prompt = '一列火车长 ' + trainLen + ' 米，以每秒 ' + speed + ' 米的速度通过一座长 ' + bridgeLen + ' 米的大桥。'
-      + '从车头上桥到车尾离桥，一共需要多少秒？';
-    answer = tt;
-    steps = 2;
-  } else if (isBoat) {
-    
-    var vb = Rng.randInt(rng, 20, 30);   
-    var vw = Rng.randInt(rng, 3, 6);     
-    var down = vb + vw;
-    var bd = down * Rng.randInt(rng, 2, 4);
-    var bt = bd / down;
-    prompt = '一艘轮船在静水中每小时行 ' + vb + ' 千米，水流速度为每小时 ' + vw + ' 千米。'
-      + '这艘船顺水航行 ' + bd + ' 千米，需要多少小时？';
-    answer = bt;
-    steps = 2;
-  } else if (isCircular) {
-    
-    var sp1 = Rng.randInt(rng, 3, 6) * 10;   
-    var sp2 = Rng.randInt(rng, 2, 4) * 10;   
-    var ctime0 = Rng.randInt(rng, 2, 4);     
-    var circ = (sp1 + sp2) * ctime0;
-    prompt = '甲、乙两人在周长 ' + circ + ' 米的环形跑道上从同一地点同时出发，背向而行。'
-      + '甲每分钟跑 ' + sp1 + ' 米，乙每分钟跑 ' + sp2 + ' 米。两人经过多少分钟第一次相遇？';
-    answer = ctime0;
-    steps = 2;
-  } else if (isAverage) {
-    
-    var AV = [{ a: 30, b: 60 }, { a: 40, b: 60 }, { a: 20, b: 30 }, { a: 50, b: 75 }];
-    var av = AV[v % AV.length];
-    var avg = 2 * av.a * av.b / (av.a + av.b);
-    prompt = '小明骑车从家到书店，去时每小时行 ' + av.a + ' 千米，沿原路返回时每小时行 ' + av.b + ' 千米。求小明往返的平均速度。';
-    answer = avg;
-    steps = 3;
-  } else if (isRatio) {
-    
-    var RAT = [{ r: '3:2', ta: 4, tb: 6 }, { r: '4:3', ta: 6, tb: 8 }, { r: '2:1', ta: 3, tb: 6 }];
-    var rat = RAT[v % RAT.length];
-    prompt = '走同一段路，甲、乙两人的速度比是 ' + rat.r + '。甲走完全程用了 ' + rat.ta + ' 小时，乙走完全程需要多少小时？';
-    answer = rat.tb;
-    steps = 3;
-  } else if (isInterval) {
-    
-    var INT = [{ interval: 6, car: 500, walk: 100, ans: 7.5 }, { interval: 10, car: 600, walk: 200, ans: 15 }, { interval: 8, car: 500, walk: 100, ans: 10 }];
-    var itv = INT[v % INT.length];
-    prompt = '一条公交线路上，公交车每隔 ' + itv.interval + ' 分钟发一班，车速为每分钟 ' + itv.car + ' 米。'
-      + '小明沿公交线路以每分钟 ' + itv.walk + ' 米的速度与公交车同向步行。每隔多少分钟会有一辆公交车从身后追上小明？';
-    answer = itv.ans;
-    steps = 3;
-  } else if (isPickup) {
-    
-    var PK = [{ go: 60, back: 90, total: 5, ans: 180 }, { go: 40, back: 60, total: 5, ans: 120 }, { go: 50, back: 75, total: 5, ans: 150 }];
-    var pk = PK[v % PK.length];
-    prompt = '汽车送一批人去机场，去程每小时行 ' + pk.go + ' 千米，返程（空车）每小时行 ' + pk.back + ' 千米，往返共用 ' + pk.total + ' 小时（不含上下车时间）。出发点到机场的距离是多少千米？';
-    answer = pk.ans;
-    steps = 3;
-  } else if (isComplex || isBasic) {
-    
-    var bv = Rng.randInt(rng, 5, 9) * 10;
-    var bt2 = Rng.randInt(rng, 2, 6);
-    var bd2 = bv * bt2;
-    if (isComplex) {
-      prompt = '一辆汽车从甲地开往乙地，前 ' + (bt2 - 1) + ' 小时每小时行 ' + bv + ' 千米，'
-        + '最后 1 小时又行了 ' + bv + ' 千米正好到达。甲、乙两地相距多少千米？';
-      answer = bv * bt2;
-    } else {
-      prompt = '一列火车以每小时 ' + bv + ' 千米的速度行驶，' + bt2 + ' 小时可以行驶多少千米？';
-      answer = bd2;
-    }
-    steps = 2;
-  } else {
-    
-    var gv = Rng.randInt(rng, 5, 9) * 10;
-    var gt = Rng.randInt(rng, 2, 5);
-    prompt = name + '：一辆车以每小时 ' + gv + ' 千米的速度行驶 ' + gt + ' 小时，共行驶多少千米？';
-    answer = gv * gt;
-    steps = 2;
-  }
-
-  return {
-    knowledgePointId: pkp(plan),
-    questionType: plan.questionTypeId,
-    difficulty: plan.difficulty,
-    spiralLevel: plan.spiralLevel || 1,
-    context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
-    answerMode: 'input',
-    data: {
-      mode: 'apply',
-      steps: steps,
-      questionType: plan.questionTypeId,
-      family: 'c5-c6-journey-engineering'
-    }
-  };
-}
-
-
-
-function createJourneyEngineeringGenerator(spec) {
-  spec = spec || {};
-  var id = spec.id || 'generator:c5-c6-journey-engineering';
-
-  return {
-    id: id,
-    subject: 'math',
-    capabilities: ['apply', 'calc'],
-    questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || [],
-
-    supports: function (plan) {
-      if (!plan || !plan.questionTypeId) return false;
-      return this.capabilities.indexOf(plan.questionTypeId) !== -1;
-    },
-
-    generate: function (plan, context) {
-      context = context || {};
-      var count = plan.count || 1;
-      var questions = [];
-      var kp = {};
-
-      for (var i = 0; i < count; i++) {
-        questions.push(makeQuestion(plan, context, i, kp));
-      }
-      return questions;
-    }
-  };
-}
-
-function buildAll() {
-  return [createJourneyEngineeringGenerator()];
-}
-
-module.exports = {
-  createJourneyEngineeringGenerator: createJourneyEngineeringGenerator,
-  buildAll: buildAll
-};
-
-};
-__defs["shared/generator/generators/c7-clever-calc.js"] = function (module, exports, require) {
-'use strict';
-
-
-
-var Rng = require("shared/generator/core/rng.js");
-var OS = require("shared/generator/core/op-semantics.js");
-var MUL = OS.symbol('multiply') || '×';
-var DIV = OS.symbol('divide') || '÷';
-
-function pkp(plan) {
-  if (!plan) return null;
-  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
-  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
-  return null;
-}
-
-function seedFor(plan, context, i) {
-  if (context && context.seed != null) return context.seed + ':c7:' + i;
-  
-  
-  if (plan && plan.seed != null) return plan.seed + ':c7:' + i;
-  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c7:' + i;
-}
-
-function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = b; b = a % b; a = t; } return a || 1; }
-
-
-function frac(n, d) {
-  if (d < 0) { n = -n; d = -d; }
-  var g = gcd(n, d);
-  n /= g; d /= g;
-  return d === 1 ? String(n) : n + '/' + d;
-}
-
-function makeQuestion(plan, context, i, kp) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = (kp && kp.identity && kp.identity.name) || (kp && kp.name) || '巧算';
-  var id = (kp && (kp.identity && kp.identity.id)) || (kp && kp.id) || '';
-
-  
-  var isExtract = id.indexOf('extract') !== -1 || name.indexOf('提取公因数') !== -1 || name.indexOf('公因数') !== -1;
-  var isRounding = id.indexOf('rounding') !== -1 || name.indexOf('凑整') !== -1;
-  var isFracSplit = id.indexOf('fraction-splitting') !== -1 || name.indexOf('分数裂项') !== -1;
-  var isIntSplit = id.indexOf('integer-splitting') !== -1 || name.indexOf('整数裂项') !== -1;
-  var isSeries = id.indexOf('arithmetic-series') !== -1 || name.indexOf('等差数列') !== -1;
-  var isRecurring = id.indexOf('recurring') !== -1 || name.indexOf('循环小数') !== -1;
-  var isDefineOp = id.indexOf('define-operation') !== -1 || name.indexOf('定义新运算') !== -1 || name.indexOf('新运算') !== -1;
-  var isEstimate = id.indexOf('estimate') !== -1 || name.indexOf('估算') !== -1 || name.indexOf('放缩') !== -1;
-  var isComplexFrac = id.indexOf('complex-fraction') !== -1 || name.indexOf('繁分数') !== -1;
-  var isSeqSum = id.indexOf('sequence-sum') !== -1 || name.indexOf('数列求和') !== -1 || name.indexOf('平方和') !== -1 || name.indexOf('立方和') !== -1;
-
-  var v = i; 
-  var prompt, answer, steps;
-
-  if (isExtract) {
-    
-    var c = [25, 28, 36, 48][Rng.randInt(rng, 0, 3)];
-    var a = Rng.randInt(rng, 20, 80);
-    var b = 100 - a;
-    prompt = '用简便方法计算：' + a + MUL + c + ' + ' + b + MUL + c;
-    answer = (a + b) * c;
-    steps = 2;
-  } else if (isRounding) {
-    
-    var RND = [{ t: [9, 99, 999, 9999], sum: 11106 }, { t: [8, 98, 998, 9998], sum: 11102 }, { t: [19, 199, 1999], sum: 2217 }, { t: [4, 44, 444], sum: 492 }];
-    var rnd = RND[v % RND.length];
-    prompt = '用凑整法巧算：' + rnd.t.join(' + ');
-    answer = rnd.sum;
-    steps = 2;
-  } else if (isFracSplit) {
-    
-    var n = Rng.randInt(rng, 3, 5);
-    var terms = [];
-    for (var k = 1; k <= n; k++) terms.push('1/(' + k + MUL + (k + 1) + ')');
-    prompt = '用裂项法计算：' + terms.join(' + ');
-    answer = frac(n, n + 1);
-    steps = 3;
-  } else if (isIntSplit) {
-    
-    var m = Rng.randInt(rng, 3, 5);
-    var iterms = [];
-    for (var k2 = 1; k2 <= m; k2++) iterms.push(k2 + MUL + (k2 + 1));
-    prompt = '用裂项法计算：' + iterms.join(' + ');
-    answer = m * (m + 1) * (m + 2) / 3;
-    steps = 3;
-  } else if (isSeries) {
-    
-    var last = Rng.randInt(rng, 20, 100);
-    prompt = '计算等差数列之和：1 + 2 + 3 + … + ' + last;
-    answer = last * (last + 1) / 2;
-    steps = 2;
-  } else if (isRecurring) {
-    
-    var REC = [{ s: '0.333…（3 循环）', n: 1, d: 3 }, { s: '0.666…（6 循环）', n: 2, d: 3 }, { s: '0.1666…（6 循环）', n: 1, d: 6 }, { s: '0.8333…（3 循环）', n: 5, d: 6 }];
-    var rec = REC[v % REC.length];
-    prompt = '把循环小数化成分数：' + rec.s;
-    answer = frac(rec.n, rec.d);
-    steps = 2;
-  } else if (isDefineOp) {
-    
-    var x = Rng.randInt(rng, 2, 9);
-    var y = Rng.randInt(rng, 2, 9);
-    prompt = '定义新运算：a※b = 2a + b。求 ' + x + '※' + y + ' 的值。';
-    answer = 2 * x + y;
-    steps = 2;
-  } else if (isEstimate) {
-    
-    var EST = [{ t: ['1/2', '1/3', '1/4'], val: 1.0833, ans: 1 }, { t: ['1/3', '1/4', '1/5'], val: 0.7833, ans: 0 }, { t: ['1/2', '1/4', '1/8'], val: 0.875, ans: 0 }, { t: ['1/2', '1/3', '1/6'], val: 1, ans: 1 }];
-    var est = EST[v % EST.length];
-    prompt = '估算（写出整数部分）：' + est.t.join(' + ') + ' 的结果的整数部分是多少？';
-    answer = est.ans;
-    steps = 2;
-  } else if (isComplexFrac) {
-    
-    var CF = [{ n1: 1, d1: 2, n2: 3, d2: 4 }, { n1: 2, d1: 3, n2: 4, d2: 5 }, { n1: 3, d1: 4, n2: 1, d2: 2 }, { n1: 1, d1: 3, n2: 2, d2: 5 }];
-    var cf = CF[v % CF.length];
-    prompt = '化简繁分数：( ' + cf.n1 + '/' + cf.d1 + ' ) ' + DIV + ' ( ' + cf.n2 + '/' + cf.d2 + ' )';
-    answer = frac(cf.n1 * cf.d2, cf.d1 * cf.n2);
-    steps = 2;
-  } else if (isSeqSum) {
-    
-    var s = Rng.randInt(rng, 3, 5);
-    var sterms = [];
-    for (var k3 = 1; k3 <= s; k3++) sterms.push(k3 + '²');
-    prompt = '用公式计算平方和：' + sterms.join(' + ');
-    answer = s * (s + 1) * (2 * s + 1) / 6;
-    steps = 3;
-  } else {
-    
-    var ga = Rng.randInt(rng, 2, 9);
-    var gb = Rng.randInt(rng, 2, 9);
-    prompt = name + '：用简便方法计算 ' + ga + ' ' + MUL + ' 25 ' + MUL + ' 4';
-    answer = ga * 25 * 4;
-    steps = 2;
-  }
-
-  return {
-    knowledgePointId: pkp(plan),
-    questionType: plan.questionTypeId,
-    difficulty: plan.difficulty,
-    spiralLevel: plan.spiralLevel || 1,
-    context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
-    answerMode: 'input',
-    data: {
-      mode: 'calc',
-      steps: steps,
-      questionType: plan.questionTypeId,
-      family: 'c7-clever-calc'
-    }
-  };
-}
-
-
-
-function createC7Generator(spec) {
-  spec = spec || {};
-  var id = spec.id || 'generator:c7-clever-calc';
-
-  return {
-    id: id,
-    subject: 'math',
-    capabilities: ['apply', 'calc'],
-    questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || [],
-
-    supports: function (plan) {
-      if (!plan || !plan.questionTypeId) return false;
-      return this.capabilities.indexOf(plan.questionTypeId) !== -1;
-    },
-
-    generate: function (plan, context) {
-      context = context || {};
-      var count = plan.count || 1;
-      var questions = [];
-      var kp = {};
-
-      for (var i = 0; i < count; i++) {
-        questions.push(makeQuestion(plan, context, i, kp));
-      }
-      return questions;
-    }
-  };
-}
-
-function buildAll() {
-  return [createC7Generator()];
-}
-
-module.exports = {
-  createC7Generator: createC7Generator,
-  buildAll: buildAll
-};
-
-};
-__defs["shared/generator/generators/c9-comprehensive.js"] = function (module, exports, require) {
-'use strict';
-
-
-
-var Rng = require("shared/generator/core/rng.js");
-
-function pkp(plan) {
-  if (!plan) return null;
-  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
-  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
-  return null;
-}
-
-function seedFor(plan, context, i) {
-  if (context && context.seed != null) return context.seed + ':c9:' + i;
-  
-  
-  if (plan && plan.seed != null) return plan.seed + ':c9:' + i;
-  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':c9:' + i;
-}
-
-function makeQuestion(plan, context, i, kp) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = (kp && kp.identity && kp.identity.name) || (kp && kp.name) || '综合应用';
-  var id = (kp && (kp.identity && kp.identity.id)) || (kp && kp.id) || '';
-
-  
-  var isSumDiff = id.indexOf('sum-diff') !== -1 || name.indexOf('和差') !== -1 || name.indexOf('和倍') !== -1;
-  var isAge = id.indexOf('age') !== -1 || name.indexOf('年龄') !== -1;
-  var isProfitLoss = id.indexOf('profit-loss') !== -1 || name.indexOf('盈亏') !== -1;
-  var isChicken = id.indexOf('chicken') !== -1 || name.indexOf('鸡兔') !== -1;
-  var isAverage = id.indexOf('average') !== -1 || name.indexOf('平均数') !== -1;
-  var isPlanting = id.indexOf('planting') !== -1 || name.indexOf('植树') !== -1;
-  var isPhalanx = id.indexOf('phalanx') !== -1 || name.indexOf('方阵') !== -1;
-  var isPeriodic = id.indexOf('periodic') !== -1 || name.indexOf('周期') !== -1;
-  var isGrass = id.indexOf('grass') !== -1 || name.indexOf('牛吃草') !== -1;
-  var isFracPct = id.indexOf('fraction-percent') !== -1 || name.indexOf('分数百分数') !== -1;
-  var isEconomics = id.indexOf('economics') !== -1 || name.indexOf('经济') !== -1;
-  var isInclusion = id.indexOf('inclusion-exclusion') !== -1 || name.indexOf('容斥') !== -1;
-  var isEq2 = id.indexOf('equation-linear-2') !== -1 || name.indexOf('二元') !== -1;
-  var isEq1 = id.indexOf('equation-linear-1') !== -1 || name.indexOf('一元一次') !== -1;
-  var isDiophantine = id.indexOf('diophantine') !== -1 || name.indexOf('不定方程') !== -1;
-  var isRatio = id.indexOf('ratio-application') !== -1 || id.indexOf('ratio') !== -1 || name.indexOf('比例应用') !== -1;
-  var isMixture = id.indexOf('mixture') !== -1 || name.indexOf('混合') !== -1;
-  var isMisc = id.indexOf('misc') !== -1 || name.indexOf('杂题') !== -1 || name.indexOf('统筹') !== -1;
-  var isMock = id.indexOf('mock') !== -1 || name.indexOf('模拟') !== -1;
-  var isIntegrated = id.indexOf('integrated') !== -1 || name.indexOf('综合应用') !== -1;
-
-  var v = i; 
-  var prompt, answer, steps;
-
-  if (isSumDiff) {
-    
-    var SD = [{ s: 48, r: 3 }, { s: 60, r: 2 }, { s: 72, r: 5 }, { s: 96, r: 3 }];
-    var sd = SD[v % SD.length];
-    prompt = '甲、乙两数的和是 ' + sd.s + '，甲数是乙数的 ' + sd.r + ' 倍。乙数是多少？';
-    answer = sd.s / (sd.r + 1);
-    steps = 2;
-  } else if (isAge) {
-    
-    var AGE = [{ f: 40, c: 12, k: 2 }, { f: 45, c: 15, k: 2 }, { f: 38, c: 10, k: 3 }, { f: 50, c: 20, k: 2 }];
-    var age = AGE[v % AGE.length];
-    var ageYears = (age.f - age.c) / (age.k - 1) - age.c;
-    prompt = '爸爸今年 ' + age.f + ' 岁，儿子今年 ' + age.c + ' 岁。多少年后爸爸的年龄正好是儿子的 ' + age.k + ' 倍？';
-    answer = ageYears;
-    steps = 3;
-  } else if (isProfitLoss) {
-    
-    var PL = [{ p1: 3, e1: 7, p2: 4, s2: 5 }, { p1: 5, e1: 8, p2: 7, s2: 6 }, { p1: 4, e1: 10, p2: 6, s2: 2 }, { p1: 6, e1: 4, p2: 8, s2: 6 }];
-    var pl = PL[v % PL.length];
-    var plN = (pl.e1 + pl.s2) / (pl.p2 - pl.p1);
-    prompt = '幼儿园分苹果：如果每人分 ' + pl.p1 + ' 个，则多出 ' + pl.e1 + ' 个；如果每人分 ' + pl.p2 + ' 个，则还差 ' + pl.s2 + ' 个。幼儿园一共有多少个小朋友？';
-    answer = plN;
-    steps = 3;
-  } else if (isChicken) {
-    
-    var CR = [{ h: 20, f: 56 }, { h: 30, f: 84 }, { h: 25, f: 70 }, { h: 18, f: 52 }];
-    var cr = CR[v % CR.length];
-    prompt = '鸡兔同笼，共有 ' + cr.h + ' 个头、' + cr.f + ' 只脚。笼中兔子有多少只？';
-    answer = (cr.f - 2 * cr.h) / 2;
-    steps = 3;
-  } else if (isAverage) {
-    
-    var AV = [{ a: 18, x: 15, y: 20 }, { a: 90, x: 85, y: 92 }, { a: 88, x: 90, y: 86 }, { a: 80, x: 76, y: 82 }];
-    var av = AV[v % AV.length];
-    prompt = '小明三次数学测验的平均分是 ' + av.a + ' 分，前两次分别得 ' + av.x + ' 分和 ' + av.y + ' 分。第三次测验得了多少分？';
-    answer = 3 * av.a - av.x - av.y;
-    steps = 2;
-  } else if (isPlanting) {
-    
-    var PLT = [{ l: 100, g: 5 }, { l: 120, g: 6 }, { l: 150, g: 5 }, { l: 200, g: 8 }];
-    var plt = PLT[v % PLT.length];
-    prompt = '在一条长 ' + plt.l + ' 米的小路一旁植树，每隔 ' + plt.g + ' 米栽一棵，两端都要栽。一共要栽多少棵树？';
-    answer = plt.l / plt.g + 1;
-    steps = 2;
-  } else if (isPhalanx) {
-    
-    var PHX = [8, 10, 6, 12];
-    var phx = PHX[v % PHX.length];
-    prompt = '同学们排成一个实心方阵，最外层每边有 ' + phx + ' 人。最外层一共有多少人？';
-    answer = 4 * (phx - 1);
-    steps = 2;
-  } else if (isPeriodic) {
-    
-    var PER = [{ cols: ['红', '黄', '蓝'], pos: 30 }, { cols: ['红', '黄', '蓝', '绿'], pos: 25 }, { cols: ['红', '黄', '蓝'], pos: 22 }, { cols: ['黑', '白'], pos: 17 }];
-    var per = PER[v % PER.length];
-    prompt = '节日彩灯按「' + per.cols.join('、') + '」的顺序循环排列。第 ' + per.pos + ' 盏灯是什么颜色？';
-    answer = per.cols[(per.pos - 1) % per.cols.length];
-    steps = 2;
-  } else if (isGrass) {
-    
-    var GRASS = [{ a: 10, b: 20, c: 15, d: 10, e: 25, t: 5 }, { a: 10, b: 30, c: 15, d: 15, e: 20, t: 10 }, { a: 8, b: 20, c: 12, d: 10, e: 14, t: 8 }];
-    var gr = GRASS[v % GRASS.length];
-    prompt = '一片牧场的草均匀生长。可供 ' + gr.a + ' 头牛吃 ' + gr.b + ' 天，或供 ' + gr.c + ' 头牛吃 ' + gr.d + ' 天。照此计算，可供 ' + gr.e + ' 头牛吃多少天？';
-    answer = gr.t;
-    steps = 4;
-  } else if (isFracPct) {
-    
-    var FR = [{ f1: '1/4', f2: '1/3', rem: 50, ans: 120 }, { f1: '1/3', f2: '1/4', rem: 60, ans: 144 }, { f1: '1/2', f2: '1/5', rem: 30, ans: 100 }];
-    var fr = FR[v % FR.length];
-    prompt = '小明读一本书，第一天读了全书的 ' + fr.f1 + '，第二天读了全书的 ' + fr.f2 + '，还剩 ' + fr.rem + ' 页没读。这本书一共有多少页？';
-    answer = fr.ans;
-    steps = 3;
-  } else if (isEconomics) {
-    
-    var ECO = [{ cost: 80, price: 120, disc: 0.8, ans: 16 }, { cost: 100, price: 150, disc: 0.9, ans: 35 }, { cost: 60, price: 100, disc: 0.85, ans: 25 }];
-    var eco = ECO[v % ECO.length];
-    var ecoSale = Math.round(eco.price * eco.disc);
-    prompt = '一件商品进价 ' + eco.cost + ' 元，标价 ' + eco.price + ' 元。商店按标价打 ' + Math.round(eco.disc * 10) + ' 折出售，每件可获利多少元？';
-    answer = ecoSale - eco.cost;
-    steps = 2;
-  } else if (isInclusion) {
-    
-    var INC = [
-      { total: 40, aN: 20, bN: 18, cN: 16, ab: 8, ac: 7, bc: 6, abc: 3 },
-      { total: 50, aN: 25, bN: 22, cN: 20, ab: 10, ac: 9, bc: 8, abc: 4 },
-      { total: 45, aN: 18, bN: 16, cN: 15, ab: 7, ac: 6, bc: 5, abc: 2 }
-    ];
-    var inc = INC[v % INC.length];
-    prompt = '某班 ' + inc.total + ' 人，参加数学小组 ' + inc.aN + ' 人、英语小组 ' + inc.bN + ' 人、科学小组 ' + inc.cN + ' 人；'
-      + '同时参加数学和英语的 ' + inc.ab + ' 人，数学和科学的 ' + inc.ac + ' 人，英语和科学的 ' + inc.bc + ' 人；三个小组都参加的 ' + inc.abc + ' 人。三个小组都没参加的有多少人？';
-    answer = inc.total - (inc.aN + inc.bN + inc.cN - inc.ab - inc.ac - inc.bc + inc.abc);
-    steps = 3;
-  } else if (isEq2) {
-    
-    var EQ2 = [{ s: 10, d: 4 }, { s: 14, d: 6 }, { s: 20, d: 8 }, { s: 16, d: 4 }];
-    var eq2 = EQ2[v % EQ2.length];
-    prompt = '已知甲、乙两数之和是 ' + eq2.s + '，甲数比乙数大 ' + eq2.d + '。甲数是多少？';
-    answer = (eq2.s + eq2.d) / 2;
-    steps = 2;
-  } else if (isEq1) {
-    
-    var EQ1 = [{ a: 3, b: 5, c: 20 }, { a: 2, b: 3, c: 11 }, { a: 4, b: 7, c: 9 }, { a: 5, b: 8, c: 28 }];
-    var eq1 = EQ1[v % EQ1.length];
-    prompt = '一个数的 ' + eq1.a + ' 倍加上 ' + eq1.b + ' 等于 ' + eq1.c + '。这个数是多少？（列方程解答）';
-    answer = (eq1.c - eq1.b) / eq1.a;
-    steps = 2;
-  } else if (isDiophantine) {
-    
-    var DIO = [{ s: '3x + 2y = 17', ans: 3 }, { s: '5x + 2y = 24', ans: 3 }, { s: '2x + 3y = 18', ans: 4 }];
-    var dio = DIO[v % DIO.length];
-    prompt = '求方程 ' + dio.s + ' 的正整数解一共有多少组？';
-    answer = dio.ans;
-    steps = 3;
-  } else if (isRatio) {
-    
-    var RAT = [{ r: [2, 3, 5], t: 100 }, { r: [1, 2, 3], t: 120 }, { r: [3, 4, 5], t: 120 }, { r: [2, 5, 3], t: 100 }];
-    var rat = RAT[v % RAT.length];
-    var ratSum = rat.r[0] + rat.r[1] + rat.r[2];
-    prompt = '把 ' + rat.t + ' 元奖金按 ' + rat.r[0] + ':' + rat.r[1] + ':' + rat.r[2] + ' 的比例分给甲、乙、丙三人。丙分得多少元？';
-    answer = rat.t * rat.r[2] / ratSum;
-    steps = 2;
-  } else if (isMixture) {
-    
-    var MIX = [{ m1: 300, w1: 20, m2: 200, w2: 30, ans: 24 }, { m1: 200, w1: 10, m2: 300, w2: 20, ans: 16 }, { m1: 400, w1: 15, m2: 100, w2: 25, ans: 17 }];
-    var mix = MIX[v % MIX.length];
-    prompt = '把 ' + mix.m1 + ' 克浓度 ' + mix.w1 + '% 的盐水和 ' + mix.m2 + ' 克浓度 ' + mix.w2 + '% 的盐水混合。混合后盐水的浓度是百分之多少？';
-    answer = (mix.m1 * mix.w1 + mix.m2 * mix.w2) / (mix.m1 + mix.m2);
-    steps = 3;
-  } else if (isMisc) {
-    
-    var MISC = [{ k: 3, s: 3 }, { k: 3, s: 2 }, { k: 5, s: 3 }, { k: 4, s: 2 }];
-    var misc = MISC[v % MISC.length];
-    prompt = '一口平底锅每次最多能烙 2 张饼，每张饼两面都要烙，每面需 ' + misc.s + ' 分钟。烙熟 ' + misc.k + ' 张饼最少需要多少分钟？';
-    answer = misc.k * misc.s;
-    steps = 3;
-  } else if (isMock || isIntegrated) {
-    
-    var INT = [{ t: 120, r: 3 }, { t: 200, r: 4 }, { t: 160, r: 3 }, { t: 240, r: 5 }];
-    var it = INT[v % INT.length];
-    prompt = '商店运来苹果和梨共 ' + it.t + ' 千克，其中苹果的质量是梨的 ' + it.r + ' 倍。梨有多少千克？';
-    answer = it.t / (it.r + 1);
-    steps = 2;
-  } else {
-    
-    var ga = Rng.randInt(rng, 2, 9);
-    prompt = name + '：甲、乙两数的和是 ' + (ga * 4) + '，甲数是乙数的 3 倍，乙数是多少？';
-    answer = ga;
-    steps = 2;
-  }
-
-  return {
-    knowledgePointId: pkp(plan),
-    questionType: plan.questionTypeId,
-    difficulty: plan.difficulty,
-    spiralLevel: plan.spiralLevel || 1,
-    context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: { value: String(answer), acceptable: [] },
-    answerMode: 'input',
-    data: {
-      mode: 'apply',
-      steps: steps,
-      questionType: plan.questionTypeId,
-      family: 'c9-comprehensive'
-    }
-  };
-}
-
-
-
-function createC9Generator(spec) {
-  spec = spec || {};
-  var id = spec.id || 'generator:c9-comprehensive';
-
-  return {
-    id: id,
-    subject: 'math',
-    capabilities: ['apply', 'calc'],
-    questionTypes: ['apply', 'calc'],
-    knowledgePoints: spec.knowledgePoints || [],
-
-    supports: function (plan) {
-      if (!plan || !plan.questionTypeId) return false;
-      return this.capabilities.indexOf(plan.questionTypeId) !== -1;
-    },
-
-    generate: function (plan, context) {
-      context = context || {};
-      var count = plan.count || 1;
-      var questions = [];
-      var kp = {};
-
-      for (var i = 0; i < count; i++) {
-        questions.push(makeQuestion(plan, context, i, kp));
-      }
-      return questions;
-    }
-  };
-}
-
-function buildAll() {
-  return [createC9Generator()];
-}
-
-module.exports = {
-  createC9Generator: createC9Generator,
-  buildAll: buildAll
-};
-
-};
 __defs["shared/generator/generators/semantic-special.js"] = function (module, exports, require) {
 
 'use strict';
@@ -11605,100 +10246,14 @@ function createCodeGenerator(spec) {
   return generator;
 }
 
-
-
-var ITEMS = [
-  ['盒奶糖', '袋薯片', '支铅笔'],
-  ['个苹果', '个橙子', '块饼干'],
-  ['个书包', '个笔袋', '支钢笔'],
-  ['辆玩具汽车', '个魔方', '块积木']
-];
-
-function pickChain(rng) {
-  var trio = Rng.pick(rng, ITEMS);
-  var p = Rng.randInt(rng, 2, 4);
-  var q = Rng.randInt(rng, 2, 4);
-  return { X: trio[0], Y: trio[1], Z: trio[2], p: p, q: q };
-}
-
-function makeEquivalentFill(plan, context, i) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var c = pickChain(rng);
-  var ans = c.p * c.q;
-  var q = buildBase(plan, context, i, { mode: 'fill', chain: [c.p, c.q] });
-  q.prompt = '1' + c.X + ' = ' + c.p + c.Y + '，1' + c.Y + ' = ' + c.q + c.Z
-    + '。1' + c.X + ' = （  ）' + c.Z + '。';
-  q.answer = { value: String(ans), acceptable: [] };
-  return q;
-}
-
-function makeEquivalentChoice(plan, context, i) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var c = pickChain(rng);
-  var ans = c.p * c.q;
-  var wrongs = [c.p, c.q, c.p + c.q, c.p + c.q - 1].filter(function (v) { return v !== ans; });
-  var pool = [ans].concat(wrongs);
-  while (pool.length < 4) pool.push(ans + Rng.randInt(rng, 1, 3));
-  var options = Rng.shuffle(rng, pool.slice(0, 4).map(String));
-  var q = buildBase(plan, context, i, { mode: 'choice', chain: [c.p, c.q] });
-  q.prompt = '1' + c.X + ' = ' + c.p + c.Y + '，1' + c.Y + ' = ' + c.q + c.Z
-    + '。1' + c.X + ' = （  ）' + c.Z + '。';
-  q.answer = { value: String(ans), acceptable: [] };
-  q.data.options = options;
-  q.data.correctIndex = options.indexOf(String(ans));
-  return q;
-}
-
-function makeEquivalentApply(plan, context, i) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var c = pickChain(rng);
-  var ans = c.p * c.q;
-  var buyer = Rng.pick(rng, ['妈妈', '爸爸', '王老师', '李阿姨']);
-  var q = buildBase(plan, context, i, { mode: 'apply', chain: [c.p, c.q] });
-  q.prompt = buyer + '买 1' + c.X + '的钱可以买 ' + c.p + c.Y + '，买 1' + c.Y + '的钱可以买 '
-    + c.q + c.Z + '。' + buyer + '买 1' + c.X + '的钱可以买（  ）' + c.Z + '。';
-  q.answer = { value: String(ans), acceptable: [] };
-  return q;
-}
-
-function createEquivalentGenerator(spec) {
-  spec = spec || {};
-  var id = spec.id || 'generator:equivalent-reasoning';
-  var generator = {
-    id: id,
-    subject: 'math',
-    capabilities: ['fill', 'choice', 'apply'],
-    questionTypes: ['fill', 'choice', 'apply'],
-    
-    
-    knowledgePoints: spec.knowledgePoints || [],
-
-    supports: function (plan) {
-      if (!plan || !plan.questionTypeId) return false;
-      return generator.capabilities.indexOf(plan.questionTypeId) !== -1;
-    },
-
-    generate: function (plan, context) {
-      var count = plan.count || 1;
-      var qt = plan.questionTypeId;
-      if (qt === 'choice') return buildQuestions(plan, context, count, makeEquivalentChoice);
-      if (qt === 'apply') return buildQuestions(plan, context, count, makeEquivalentApply);
-      return buildQuestions(plan, context, count, makeEquivalentFill);
-    }
-  };
-  return generator;
-}
-
 function buildAll() {
   return [
-    createCodeGenerator(),
-    createEquivalentGenerator()
+    createCodeGenerator()
   ];
 }
 
 module.exports = {
   createCodeGenerator: createCodeGenerator,
-  createEquivalentGenerator: createEquivalentGenerator,
   buildAll: buildAll
 };
 
@@ -14568,7 +13123,6 @@ __defs["shared/generator/core/op-semantics.js"] = function (module, exports, req
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
 };
 global.StrategyEngine = __req('shared/strategy/strategy-engine.js');
-global.StrategyConfig = __req('shared/strategy/strategy-config.js');
 global.StrategyValidator = __req('shared/strategy/strategy-validator.js');
 global.QuestionTypeStrategy = __req('shared/strategy/question-type-strategy.js');
 global.StaticDifficultyStrategy = __req('shared/strategy/static-difficulty.js');
@@ -14587,6 +13141,5 @@ global.CapabilityResolver = __req('shared/capability/capability-resolver.js');
 global.CapabilityModel = __req('shared/capability/capability-model.js');
 global.CapabilityMatrix = __req('shared/capability/capability-matrix.js');
 global.ComprehensiveStrategy = __req('shared/strategy/comprehensive-strategy.js');
-global.ComplexGen = __req('shared/generator/generators/complex.js');
 global.StrategyBundle = { req: __req, modules: __defs };
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

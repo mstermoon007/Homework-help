@@ -6,7 +6,6 @@
  */
 'use strict';
 
-var StrategyConfig = require('./strategy-config.js');
 var Registry = require('../knowledge/question-type-registry.js');
 
 var DIFFICULTY_MIN = 1;

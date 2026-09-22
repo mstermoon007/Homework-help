@@ -20,7 +20,26 @@ const os = require('node:os');
 const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+
+// 浏览器查找顺序：CHROME_BIN → PATH(chrome → chromium → chromium-browser)
+// 禁止硬编码开发者机器路径（如 macOS .app 包内可执行文件全路径）。
+function resolveChrome() {
+  const candidates = [];
+  if (process.env.CHROME_BIN) candidates.push(process.env.CHROME_BIN);
+  candidates.push('chrome', 'chromium', 'chromium-browser');
+  for (const c of candidates) {
+    try {
+      if (path.isAbsolute(c)) {
+        if (fs.existsSync(c)) return c;
+      } else {
+        const found = execSync('command -v ' + c + ' 2>/dev/null', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+        if (found) return found;
+      }
+    } catch (e) { /* 尝试下一个候选 */ }
+  }
+  throw new Error('E2E: 未找到 Chrome/Chromium。请设置 CHROME_BIN 环境变量，或将 chrome/chromium/chromium-browser 置于 PATH。');
+}
+const CHROME = resolveChrome();
 const HTTP_PORT = 8123;
 let CDP_PORT = 0;
 let CHROME_USER_DIR = '';
@@ -629,6 +648,183 @@ async function main() {
         out.push({ scenario: sc.name, ok: ok, summary: s, checks: checks });
       }
       console.log(JSON.stringify({ mode: mode, failed: failed, results: out }, null, 2));
+      process.exitCode = failed ? 1 : 0;
+      return;
+    }
+
+    // ── FINAL-12：9 步全路径（真实浏览器 E2E）──
+    // 首页 → 快速练习 → 教师模式 → 知识点入口 → 7 类题型 → 生成 → 重新生成 → 刷新 → 打印
+    if (mode === 'final-12') {
+      const DOWN = 'math-g2-down-u02-k001'; // calc/fill/choice/judge/apply
+      const UP = 'math-g2-up-u01-k001';      // classify
+      const GEO = 'math-g2-up-u04-k001';    // geometry
+      const KPS7 = DOWN + ',' + UP + ',' + GEO; // 合并覆盖 7 类
+      const T7 = 'calc,fill,choice,judge,geometry,classify,apply';
+      const out = []; let failed = 0;
+
+      // Step 1: 首页 index.html（无生成，仅断言入口）
+      {
+        const tr = await httpJson('http://127.0.0.1:' + CDP_PORT + '/json/new?' + encodeURIComponent('about:blank'), 'PUT');
+        const c = cdpClient(tr.json.webSocketDebuggerUrl); await c.ready;
+        await c.send('Page.enable'); await c.send('Runtime.enable');
+        await c.send('Page.navigate', { url: 'http://127.0.0.1:' + HTTP_PORT + '/index.html' });
+        await waitFor(async () => c.evaluate('document.readyState === "complete"', false), 15000, 'index ready');
+        const info = await c.evaluate(`(function(){
+          var btn = document.getElementById('startBtn');
+          return { title: document.title, startHref: btn ? btn.getAttribute('href') : null };
+        })()`, false);
+        const checks = {
+          '首页 title=小学练习本': info.title === '小学练习本',
+          '首页 开始学习→select.html': info.startHref === 'select.html'
+        };
+        const ok = Object.keys(checks).every((k) => checks[k] === true);
+        if (!ok) failed++;
+        out.push({ step: '1 首页', ok, checks, info });
+        c.close();
+      }
+
+      // Step 2: 快速练习 mode=quick + 生成
+      {
+        const data = await runScenario('/practice.html?subject=math&grade=2&mode=quick&kps=' + DOWN + '&types=calc&count=8&difficulty=5', {});
+        const r = (data.calls[0] || {}).result || {};
+        const checks = {
+          '快速练习 生成结果': !!r.status,
+          '可交付 SUCCESS|PARTIAL': r.status === 'SUCCESS' || r.status === 'PARTIAL',
+          'DOM cards>0': (data.dom && data.dom.cards) > 0,
+          'no JS errors': (data.errors || []).length === 0
+        };
+        const ok = Object.keys(checks).every((k) => checks[k] === true);
+        if (!ok) failed++;
+        out.push({ step: '2 快速练习', ok, checks, produced: (r.questions || []).length, status: r.status });
+      }
+
+      // Step 3: 教师模式 mode=teacher
+      {
+        const data = await runScenario('/practice.html?subject=math&grade=2&mode=teacher&kps=' + DOWN + '&types=calc&count=8&difficulty=5', {});
+        const r = (data.calls[0] || {}).result || {};
+        const checks = {
+          '教师模式 生成结果': !!r.status,
+          '可交付 SUCCESS|PARTIAL': r.status === 'SUCCESS' || r.status === 'PARTIAL',
+          'no JS errors': (data.errors || []).length === 0
+        };
+        const ok = Object.keys(checks).every((k) => checks[k] === true);
+        if (!ok) failed++;
+        out.push({ step: '3 教师模式', ok, checks, produced: (r.questions || []).length, status: r.status });
+      }
+
+      // Step 4: 知识点入口（读知识页 CTA 深链）
+      {
+        const khtml = fs.readFileSync(path.join(ROOT, 'knowledge', UP + '.html'), 'utf8');
+        const m = khtml.match(/href="(\.\.\/practice\.html\?[^"]+)"/);
+        const cta = m ? '/' + m[1].replace('../', '') : ('/practice.html?subject=math&grade=2&kps=' + UP);
+        const data = await runScenario(cta, {});
+        const req = (data.calls[0] || {}).req || {};
+        const r = (data.calls[0] || {}).result || {};
+        const kpsOut = Array.from(new Set((r.questions || []).map((q) => q.kp)));
+        const checks = {
+          '知识页 CTA 解析': !!m,
+          '深链 KP 注入请求': JSON.stringify(req.knowledgePointIds) === JSON.stringify([UP]),
+          '题目 KP=深链 KP': kpsOut.length > 0 && kpsOut.every((k) => k === UP),
+          '可交付 SUCCESS|PARTIAL': r.status === 'SUCCESS' || r.status === 'PARTIAL',
+          'no JS errors': (data.errors || []).length === 0
+        };
+        const ok = Object.keys(checks).every((k) => checks[k] === true);
+        if (!ok) failed++;
+        out.push({ step: '4 知识点入口', ok, checks, cta: cta.slice(0, 80), produced: (r.questions || []).length });
+      }
+
+      // Step 5+6: 7 类题型 生成
+      {
+        const data = await runScenario('/practice.html?subject=math&grade=2&kps=' + KPS7 + '&types=' + T7 + '&count=21&difficulty=5', {});
+        const s = summarize(data);
+        const producedTypes = Object.keys(s.types || {});
+        const expected = ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
+        const checks = {
+          '7 类题型全部出现': expected.every((t) => producedTypes.indexOf(t) !== -1),
+          'DOM cards=produced': s.domCards === s.produced,
+          '可交付 SUCCESS|PARTIAL': s.status === 'SUCCESS' || s.status === 'PARTIAL',
+          'no JS errors': (s.errors || []).length === 0
+        };
+        const ok = Object.keys(checks).every((k) => checks[k] === true);
+        if (!ok) failed++;
+        out.push({ step: '5+6 7类题型生成', ok, checks, types: s.types, produced: s.produced, producedTypes: producedTypes });
+      }
+
+      // Step 7: 重新生成
+      {
+        const data = await runScenario('/practice.html?subject=math&grade=2&kps=' + KPS7 + '&types=' + T7 + '&count=21&difficulty=5', { action: 'regenerate' });
+        const first = data.calls[0] || {}, second = data.calls[1] || {};
+        const fps1 = new Set(((first.result || {}).questions || []).map((q) => q.fp).filter(Boolean));
+        const overlap = ((second.result || {}).questions || []).filter((q) => fps1.has(q.fp)).length;
+        const checks = {
+          '重新生成 第二批存在': !!(second.result && second.result.status),
+          '请求参数保持': JSON.stringify(first.req) === JSON.stringify(second.req),
+          'hasPrevSeen=true': second.opts && second.opts.hasPrevSeen === true,
+          'overlap=0': overlap === 0,
+          'no JS errors': (data.errors || []).length === 0
+        };
+        const ok = Object.keys(checks).every((k) => checks[k] === true);
+        if (!ok) failed++;
+        out.push({ step: '7 重新生成', ok, checks, overlap, batch1: ((first.result || {}).questions || []).length, batch2: ((second.result || {}).questions || []).length });
+      }
+
+      // Step 8: 刷新（reload 自动生成）
+      {
+        const data = await runScenario('/practice.html?subject=math&grade=2&kps=' + KPS7 + '&types=' + T7 + '&count=21&difficulty=5', { action: 'reload' });
+        const before = data.beforeReload[0] || {}, after = data.calls[0] || {};
+        const checks = {
+          '刷新后自动生成': !!(after.result && after.result.status),
+          '请求参数保持': JSON.stringify(before.req) === JSON.stringify(after.req),
+          'hasPrevSeen=true': after.opts && after.opts.hasPrevSeen === true,
+          'no JS errors': (data.errors || []).length === 0
+        };
+        const ok = Object.keys(checks).every((k) => checks[k] === true);
+        if (!ok) failed++;
+        out.push({ step: '8 刷新', ok, checks });
+      }
+
+      // Step 9: 打印（mock window.open/print）
+      {
+        const tr = await httpJson('http://127.0.0.1:' + CDP_PORT + '/json/new?' + encodeURIComponent('about:blank'), 'PUT');
+        const cc = cdpClient(tr.json.webSocketDebuggerUrl); await cc.ready;
+        await cc.send('Page.enable'); await cc.send('Runtime.enable');
+        await cc.send('Page.addScriptToEvaluateOnNewDocument', { source: HOOK_SOURCE + `
+          window.__print = { opens: 0, writes: 0, prints: 0, lastHtml: '', errors: [] };
+          var origOpen = window.open;
+          window.open = function (url, name, features) {
+            if (String(url) === '' && String(name) === '_blank') {
+              window.__print.opens++;
+              return { document: { write: function (h) { window.__print.writes++; window.__print.lastHtml += String(h); }, close: function () {} }, print: function () { window.__print.prints++; }, focus: function () {}, close: function () {} };
+            }
+            return origOpen.apply(window, arguments);
+          };
+        ` });
+        await cc.send('Page.navigate', { url: 'http://127.0.0.1:' + HTTP_PORT + '/practice.html?subject=math&grade=2&kps=' + DOWN + '&types=calc&count=10&difficulty=5' });
+        await waitFor(async () => cc.evaluate('!!(window.__e2e && window.__e2e.calls.length && window.__e2e.calls[0].result)', false), 60000, 'print gen');
+        await sleep(400);
+        const before = await cc.evaluate('window.__e2e.calls.length', false);
+        await cc.evaluate("document.getElementById('printBtn').click()", false);
+        await waitFor(async () => cc.evaluate('window.__print.prints >= 1', false), 10000, 'print invoked');
+        const pr = await cc.evaluate(`(function(){
+          var html = window.__print.lastHtml || '';
+          return { print: { opens: window.__print.opens, writes: window.__print.writes, prints: window.__print.prints }, cards: (html.match(/class="question-card/g) || []).length, hasTitle: /<title>/.test(html) || /ps-title/.test(html), genCalls: window.__e2e.calls.length, errors: window.__e2e.errors };
+        })()`, false);
+        const produced = (await cc.evaluate('window.__e2e.calls[0].result.questions.length', false)) || 0;
+        const checks = {
+          '打印弹窗+print 调用': pr.print.prints >= 1,
+          '打印 cards≥produced': pr.cards >= produced,
+          '打印标题存在': pr.hasTitle === true,
+          '打印不触发新生成': pr.genCalls === before,
+          'no JS errors': (pr.errors || []).length === 0
+        };
+        cc.close();
+        if (!checks['no JS errors']) console.error('PRINT ERRORS:', JSON.stringify(pr.errors));
+        const ok = Object.keys(checks).every((k) => checks[k] === true);
+        if (!ok) failed++;
+        out.push({ step: '9 打印', ok, checks, print: pr.print, printedCards: pr.cards, produced: produced });
+      }
+
+      console.log(JSON.stringify({ mode: mode, steps: 9, failed: failed, results: out }, null, 2));
       process.exitCode = failed ? 1 : 0;
       return;
     }

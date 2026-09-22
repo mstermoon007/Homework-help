@@ -6,7 +6,8 @@ const { test } = require('node:test');
 const assert = require('node:assert');
 
 // Test svg-registry.js render contract
-const ROOT = '/Users/zhanggaozhang/Code/Homework Help';
+const path = require('node:path');
+const ROOT = path.resolve(__dirname, '../..');
 global.window = global;
 
 ['shared/svg/svg-core.js', 'shared/presentation/svg-sanitizer.js', 'shared/presentation/svg-registry.js'].forEach(function (rel) {

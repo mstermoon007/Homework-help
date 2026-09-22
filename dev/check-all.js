@@ -15,7 +15,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 
 const results = [];
-let totalPass = 0, totalFail = 0;
+let totalPass = 0, totalFail = 0, totalSkip = 0;
 
 function run(label, command, opts = {}) {
   const { timeout = 300000 } = opts;
@@ -33,6 +33,16 @@ function run(label, command, opts = {}) {
     totalPass++;
     return { ok: true, output };
   } catch (e) {
+    // exit code 2 = SKIPPED（浏览器不可用等，非发布环境）—— 不得冒充 PASS
+    if (e.status === 2) {
+      process.stdout.write('⊘ SKIPPED\n');
+      const out = (e.stdout || '') + (e.stderr || '');
+      const lines = out.split('\n').filter(l => l.trim()).slice(-2);
+      for (const l of lines) process.stdout.write('  ' + l + '\n');
+      results.push({ label, status: 'SKIPPED' });
+      totalSkip++;
+      return { ok: false, skipped: true, output: out };
+    }
     process.stdout.write('✗ FAIL\n');
     if (e.killed) {
       process.stdout.write('  (timeout)\n');
@@ -105,8 +115,10 @@ run('15b. Crawl       (爬虫健康)', 'node dev/check-crawl-health.js');
 run('16. LLM          (AI 可读体检)', 'node dev/check-llm-understanding.js');
 
 // ── 17. Browser/E2E ──
-// 归档的 p005-e2e.js 为冻结 E2E 资产；当前全链 E2E 由 unit tests (tests/bridge/generation-concurrency.test.js) 覆盖
-run('17. Browser/E2E  (并发契约 + 生成链)', 'node --test tests/bridge/generation-concurrency.test.js');
+// 真实浏览器 9 步路径（首页→快速→教师→KP→7类→生成→重生成→刷新→打印）；
+// 浏览器不可用 → SKIPPED（不得冒充 PASS）；发布环境（REQUIRE_BROWSER_E2E=1）强制真实执行，不可用即 FAIL。
+// 注：并发契约单元测试 tests/bridge/generation-concurrency.test.js 已由 #5 `tests/**/*.test.js` 覆盖，此处不再重复。
+run('17. Browser/E2E  (真实浏览器 9 步路径)', 'node dev/p28/check-browser-e2e.js', { timeout: 300000 });
 
 // ── Bonus: Doc Consistency ──
 run('18. Doc          (历史数字扫描)', 'node dev/p28/check-doc-consistency.js');
@@ -122,10 +134,10 @@ console.log('\n============================================');
 console.log('  全量检查结果汇总');
 console.log('============================================');
 for (const r of results) {
-  const mark = r.status === 'PASS' ? '✓' : '✗';
-  console.log(`  ${mark} ${r.status.padEnd(4)}  ${r.label}`);
+  const mark = r.status === 'PASS' ? '✓' : (r.status === 'SKIPPED' ? '⊘' : '✗');
+  console.log(`  ${mark} ${r.status.padEnd(7)}  ${r.label}`);
 }
 console.log('--------------------------------------------');
-console.log(`  合计：${totalPass} PASS / ${totalFail} FAIL / ${results.length} 项`);
+console.log(`  合计：${totalPass} PASS / ${totalFail} FAIL / ${totalSkip} SKIP / ${results.length} 项`);
 console.log('============================================');
 process.exit(totalFail > 0 ? 1 : 0);

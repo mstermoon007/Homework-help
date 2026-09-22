@@ -25,6 +25,165 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-20｜生产 Bundle 排除 6 个 dormant Generator + semantic-special 清死符号（2026-09-22）
+
+- modified:
+  - `shared/generator/generators/index.js`（移除 6 个 dormant generator 的 require + buildAll 调用：Complex/C1/C2/C5C6/C7/C9；源码文件保留但不再装载）
+  - `shared/generator/generator-registry.js`（移除 6 个 dormant generator 注册条目 + equivalent-reasoning 注册条目；code-recognition 保留——freeze evidence 15 行实际产出）
+  - `shared/generator/generators/semantic-special.js`（移除 generator:equivalent-reasoning 的工厂定义与 buildAll 导出；保留 code-recognition）
+  - `dev/build-strategy-bundle.js`（移除 `global.ComplexGen` 挂载——dormant generator 不再 global 暴露）
+  - `architecture/layers.json`（STRATEGY Generator files 清单移除 6 个 dormant 文件）
+  - `dev/p28/check-dead-code.js`（CANDIDATES 条目 3-8/10：DORMANT-NO-BINDING → BUNDLE-EXCLUDED，note 注明源码保留但生产 bundle 不再装载）
+  - `dev/p28/check-generator-matrix.js`（GENERATOR_CONTRACTS 移除 5 个 C 族契约定义——dormant generator 不在矩阵检查范围）
+  - `shared/engine/strategy-engine.bundle.js`（重建）
+- deleted: 无（源码保留——用户指令"源码可以保留"；6 个 dormant 文件不复制到 legacy/archive/future/backup）
+- reason: 用户 FINAL-20 指令。核查确认 1570 mapping 对 6 个 dormant generator（complex-calc/c1-number-puzzle/c2-number-theory/c5-c6-journey-engineering/c7-clever-calc/c9-comprehensive）0 依赖，freeze evidence 0 产出，0 测试引用。semantic-special.js 经查含 code-recognition（15 行 freeze 实际产出）不是 dormant——仅清理其中 equivalent-reasoning 死符号。6 个文件 check-dead-code 标记"竞赛 C 族预留"非永久废弃，走"源码保留 + bundle 排除"路径（非物理删除）。生产 bundle 不含 dormant generator 后，selector 不可见、不会被选中，无运行时影响。
+- tests:
+  - `npm run build:strategy` 重建成功；bundle 中无 6 个 dormant 文件的 `__defs`
+  - `node dev/p28/check-generation-matrix-freeze.js`（只读）1570/1570 PASS——code-recognition 仍正常产出
+  - `npm test` 全 PASS
+  - `node dev/check-all.js` 26 项全绿（25 PASS / 0 FAIL / 1 SKIP 本机）
+- risk: 低。6 个 dormant generator 0 mapping、0 evidence、0 测试，从 registry/index.js 移除后 selector 不可见；code-recognition 保留且有 15 行产出；equivalent-reasoning 0 产出清理不影响。layers.json/check-dead-code/check-generator-matrix 三处清单同步。
+
+### FINAL-17｜GenerationCore 移出生产源码至 tests/fixtures（2026-09-22）
+
+- modified:
+  - `tests/orchestration/p17-10-classify.test.js`（require 路径 `shared/generation/generation-core.js` → `tests/fixtures/generation-core.js`）
+  - `tests/orchestration/p17-14-seven-types.test.js`（同上）
+  - `tests/orchestration/p17-15-quantity-closure.test.js`（同上）
+  - `tests/orchestration/p17-16-difficulty-closure.test.js`（同上）
+  - `dev/p28/check-dead-code.js`（CANDIDATES 条目 3 `generation-core.js`：status 由 TEST-ONLY/HISTORICAL → RELOCATED，note 注明迁移至 tests/fixtures/，原位置不存在）
+  - `dev/build-presentation-bundle.js`（注释提及 generation-core 路径同步为 tests/fixtures/）
+- deleted:
+  - `shared/generation/generation-core.js`（TEST-ONLY / HISTORICAL；生产 0 引用、bundle 0 引用、仅 4 个 p17 测试 require；迁移至 `tests/fixtures/generation-core.js`，原位置不存在——生产源码不得存在「看起来像正式 GenerationCore、实际无生产调用」的假核心）
+- reason: 用户 FINAL-17 指令。核查确认 production=0、bundle=0（build-presentation-bundle.js:65 仅注释说 P28-28 排除），仅 tests/orchestration/p17-10/14/15/16 直接装载验证 execute 语义。按指令移动到测试 fixture 原文件位置变更 `tests/fixtures/`（非复制），原位置必须不存在。迁移后文件内 4 个相对 require 路径同步修正（从 shared/generation/ 迁至 tests/fixtures/ 后指向 `../../shared/...`）。
+- tests:
+  - `node --check tests/fixtures/generation-core.js` + 4 个 p17 测试 `node --check`
+  - `npm test` 全 PASS（p17-10/14/15/16 从新路径装载且语义不变）
+  - `node dev/check-all.js` 26 项全绿（25 PASS / 0 FAIL / 1 SKIP 本机）
+  - 全仓 grep `shared/generation/generation-core`：仅剩 docs/archive 历史档案与 change-log 历史记录
+- risk: 低。文件体逐字迁移（仅 4 个相对 require 路径按目录深度修正），测试从新路径装载；生产 0 引用、bundle 0 引用，无运行时影响。check-dead-code 门禁条目同步，不会因原文件消失而误报。
+
+### FINAL-16｜物理删除 Legacy Strategy 文件：strategy-request.js / strategy-config.js（2026-09-22）
+
+- modified:
+  - `shared/strategy/strategy-engine.js`（内联原 strategy-request.js 全部活符号：VALID_QUESTION_TYPES / DIFFICULTY_MIN/MAX / SPIRAL_MIN/MAX / VALID_MODES / MODE_ALIAS / resolveKnowledgePointIds / normalizeRequest / validateRequest——引擎是唯一调用方（plan 归一化入口 ×2 处）；`createRequest` 无任何调用方，随删除不迁移。删除对两文件的 require；difficultyAnchorOf 改经 DifficultyStrategy 取用）
+  - `shared/strategy/difficulty-strategy.js`（内联原 strategy-config.js 唯一活符号 GRADE_DIFFICULTY_ANCHORS + difficultyAnchorOf——本模块是难度归属且已消费 ×2；导出 difficultyAnchorOf 供引擎使用。strategy-config 其余符号（getStrategy/setStrategy/isStrategyV1/getConfig/setConfigOverrides/reset/DEFAULT_STRATEGY legacy 开关机器）全仓 0 调用者，随文件删除不迁移）
+  - `shared/strategy/question-plan.js`（删除残留 `require('./strategy-config.js')`——require 后从未使用）
+  - `dev/build-strategy-bundle.js`（ENTRIES 移除两文件；删除 footer `global.StrategyConfig` 挂载——全仓无任何 `StrategyConfig.`/`StrategyRequest.` 浏览器侧消费）
+  - `shared/capacity/capacity-inventory.js`（bootstrap require 清单移除 strategy-request.js）
+  - `architecture/layers.json`（STRATEGY files 清单移除两文件——文档引用同步）
+  - `dev/p28/check-legacy-matrix.js`（CANDIDATES 移除条目 1/2——其审计对象（两文件内已删 legacy 符号）随整文件删除而消亡；该检查对 DELETE 候选断言文件存在，不删条目会误报）
+  - `docs/FINAL-REPAIR-BASELINE.md`（两行符号→文件映射更新为「文件已删除 FINAL-16」）
+  - `shared/engine/strategy-engine.bundle.js`（重建）
+- deleted:
+  - `shared/strategy/strategy-request.js`（M3-01 Strategy Request；活符号已内联至 strategy-engine.js）
+  - `shared/strategy/strategy-config.js`（M3 Feature Flag & Strategy Config；活符号 difficultyAnchorOf 已内联至 difficulty-strategy.js，legacy 开关机器 0 调用者直接消亡）
+- reason: 用户 FINAL-16 指令物理删除两文件。核查确认两文件并非整文件死代码：strategy-request.js 的 normalizeRequest/validateRequest 是 StrategyEngine.plan 请求归一化唯一入口；strategy-config.js 的 difficultyAnchorOf（R5 年级难度锚点）被引擎与难度策略消费。经用户确认仍按字面删除，活符号就近迁入唯一/归属消费者（引擎与难度策略），不新建 compat/bridge/legacy-wrapper 文件；死符号（legacy 策略开关机器 + createRequest）零调用直接消亡。
+- tests:
+  - `node --check` 全部改动文件
+  - 删除后全仓 grep `strategy-request|strategy-config|StrategyRequest\.|StrategyConfig\.`：仅剩 docs/archive 历史档案与 change-log 历史记录（按规则不改写）
+  - `npm run build:strategy` 重建成功；bundle 内无两文件 `__defs` 残留
+  - `npm test` 全 PASS；`node dev/check-all.js` 26 项全绿（25 PASS / 0 FAIL / 1 SKIP 本机）
+- risk: 中。生成主链路（plan 归一化 + 年级难度锚点）的宿主文件变更，但符号体逐字迁移、调用点仅改前缀；对外 API（StrategyEngine.plan / DifficultyStrategy.*）不变。layers.json / capacity-inventory / legacy-matrix / bundler 四处清单已同步，门禁存在性断言不会因文件消失而误报。
+
+### FINAL-14｜冻结检查默认只读：仅 `--write` 可更新冻结产物（2026-09-22）
+
+- modified:
+  - `dev/p28/check-generation-matrix-freeze.js`（默认只读：照常逐行重生成 1570 条证据，但不再写盘，改为与 `P28-GENERATION-MATRIX-FROZEN.json` 逐字段逐行比对，一致且 frozen=true → 退出 0；不一致/文件缺失 → 打印差异并退出 1，绝不写文件。仅显式 `--write` 才重建 JSON+MD 冻结产物。防止普通 CI/审计（check-all #6b 无参调用）产生 Git diff）
+  - `dev/p28/check-generator-matrix.js`（提示语同步：冻结证据缺失时指引改为先运行 `node dev/p28/check-generation-matrix-freeze.js --write` 初始化）
+- deleted: 无
+- reason: 用户 FINAL-14 指令——冻结检查默认只读（check），不允许修改冻结文件；只有显式 `--write` 才能更新冻结数据。此前脚本每次运行都无条件覆写冻结 JSON/MD，CI 或本地审计一旦在产物未同步的代码状态下跑 check-all，就会把差异静默写回仓库产生 Git diff，掩盖「代码与冻结产物不一致」这一违规信号。只读比对把该信号转为退出码 1 + 差异报告，写回必须显式声明意图。
+- tests:
+  - 默认（无参）运行：退出 0，`git status` 显示两份冻结产物未被修改（与运行前字节一致）
+  - 人为篡改冻结 JSON 一行证据后运行：退出 1，报告指向被篡改行，且冻结文件本身未被回写；随后从备份原样恢复
+  - `--write` 运行：产物与当前冻结产物字节一致（同日复写不产生 diff）
+  - `node dev/check-all.js`：#6b 矩阵冻结以只读模式 PASS，26 项全绿（25 PASS / 0 FAIL / 1 SKIP 本机）
+- risk: 低。仅影响 dev 门禁脚本行为，不触运行时；调用方 check-all #6b 无参调用自动进入只读（期望行为）；唯一行为变化是「产物不一致时不再静默回写而是报错」，依赖旧覆写行为的流程需显式加 `--write`。
+
+### FINAL-13｜修复 Freeze 随机污染：冻结样本使用固定 seed（2026-09-22）
+
+- modified:
+  - `dev/p28/check-generation-matrix-freeze.js`（每行固定 seed：`freeze:p28-v1|<kp>|<qt>|d<难度>`，难度提为常量 FREEZE_DIFFICULTY=3 并同时用于生成请求与 KpSem 校验 plan；经 PracticeSession 真实链生成；evidence 行登记 seed。修复前连续两次运行 1291/1570 行 prompt/answer/sample/promptLen 不同）
+  - `shared/engine/practice-session.js`（config/请求透传 `options.seed` → `req.seed`；不传保持 null，生产行为不变）
+  - `shared/orchestration/practice-orchestrator.js`（POL cellReq 白名单增加 `seed: genReq.seed`，随 cell 传递，不静默丢弃生成语义字段）
+  - `shared/strategy/strategy-engine.js`（QuestionPlan 增加 `seed: request.seed != null ? request.seed : null`，契约 PLAN_SCHEMA 本就声明 seed）
+  - `shared/engine/presentation-engine.js`（generateQuestions 的 RetryLoop context 透传 `seed: plan.seed`；retry-loop 本就支持 context.seed，缺省仍回退 auto seed）
+  - `shared/generator/generators/money.js`（fill 题分支选择由模块级 `Date.now()` 种子 RNG 改为题目固定 seed 派生 RNG；删除失去调用方的模块级 RNG_HELPER/rng 时间种子助手——Generator 层禁用非注入随机源）
+  - `shared/generator/generators/application.js`（固定 seed 暴露的第二污染源：choice 题干扰项原仅抽 3 次、合法才入集，可能只剩 2 个干扰项，且答案发索引约定 `String(correctIndex)`，当索引字符串与选项值撞串（如 options=[1,4,6]、correctIndex=1）时被 TypeContract choice finisher fail-closed 丢弃，「能否出题」退化为取决于随机种子，实测 `math-g3-up-u09-k001/choice` 在固定 seed 下稳定 0 题。修复：有界补足 3 个为正互异干扰项；选项字符串化；答案直接发值约定 answer.value ∈ options）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（源码改动后重建）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json`、`.md`（固定 seed 后再生成的冻结产物）
+  - `docs/FINAL-REPAIR-STATUS.md`（追加 FINAL-13 任务行）
+- deleted: 无（money.js 模块级 `RNG_HELPER`/`rng` 时间种子助手随修复移除，非独立文件删除）
+- reason: 用户 FINAL-13 指令——冻结样本必须使用固定 seed；同一 KP/QT/Difficulty/Seed/Generator/KBL 必须产出完全一致的 prompt/answer/sample/promptLen；连续三次 freeze 必须 git diff=0。根因：freeze 经 PracticeSession→POL cellReq→StrategyEngine plan→presentation-engine→retry-loop 全程未透传 seed，retry-loop 以 `Date.now()+计数器` 铸造 baseSeed（实测污染 1291/1570 行）；money.js fill 分支直接使用 `Date.now()` 种子的模块级 RNG；application.js choice 题干扰项/答案约定缺陷使其在部分 seed 下被 TypeContract finisher fail-closed 稳定丢弃（固定 seed 后暴露为 1 行 0 题）。修法为沿各层既有 seed 契约槽位（PLAN_SCHEMA.seed / context.seed / plan.seed）接通，不新增架构、无双轨；seed 缺省路径完全不变。
+- tests:
+  - 修复前复现：连续两次 `node dev/p28/check-generation-matrix-freeze.js` 产物 diff，1291/1570 行不一致（20 个 generator 受影响）
+  - 修复后：连续 4 次 freeze 全部 exit 0、1570/1570、FAIL rows=0；JSON/MD 产物两两 `diff` 字节一致；第 4 次复跑前后 `git diff --stat` 完全相同（连续 freeze 的 git diff 增量=0）
+  - 定点复测：`math-g3-up-u09-k001/choice` 同 seed 双生 prompt/answer/options 完全一致（ans="4"，options=["5","4","1","6"]）
+  - `npm test` → 534/534 PASS / 0 FAIL
+  - `node dev/check-all.js` → 25 PASS / 0 FAIL / 1 SKIP / 26 项（#17 Browser E2E 本机无 Chrome 按 FINAL-12 设计 SKIPPED，CI `REQUIRE_BROWSER_E2E=1` 强制真实执行）；#6b 矩阵冻结 PASS；check-all 跑完后冻结产物仍字节一致
+- risk: 中。seed 透传跨 Practice/POL/Strategy/Generator 执行桥四层，但每层仅加 1 个既有契约字段的透传，无逻辑分支变更；生产 UI 不传 seed → plan.seed=null → auto seed 行为与此前完全一致。money fill 题分支改为确定性后，人民币 fill 行在「换算/计算」两形态间的选择随 seed 固定（同 seed 永远同形）；application-word choice 题改为值约定 + 3 干扰项有界补足后，该题型的选项集合与答案随 seed 固定——冻结产物中相应行内容会与旧产物不同但跨运行稳定。bundle 已同步重建。
+
+### FINAL-12｜真实 Browser E2E 纳入最终门禁（2026-09-22）
+
+- modified:
+  - `dev/e2e/browser-e2e.js`（新增 `final-12` 场景模式：9 步全路径——首页 index.html → 快速练习 mode=quick → 教师模式 mode=teacher → 知识点入口（读知识页 CTA 深链）→ 7 类题型 calc/fill/choice/judge/geometry/classify/apply 生成 → 重新生成 → 刷新 → 打印；每步断言关键观测点；2 个 KP `math-g2-down-u02-k001`(calc/geometry) + `math-g2-up-u01-k001`(classify) 合并覆盖 7 类）
+  - `dev/check-all.js`（`run()` 支持 exit code 2 = SKIPPED 语义；#17 由 `node --test tests/bridge/generation-concurrency.test.js`（单元测试冒充浏览器测试）替换为 `node dev/p28/check-browser-e2e.js`；汇总行加 SKIP 计数；并发契约测试本就由 #5 `tests/**/*.test.js` 覆盖，无覆盖损失）
+  - `dev/p28/check-browser-e2e.js`（新建 wrapper：探测浏览器（CHROME_BIN→PATH chrome/chromium/chromium-browser）+ 全局 WebSocket（Node 22+）；不可用→exit 2 SKIPPED；`REQUIRE_BROWSER_E2E=1` 时不可用→exit 1 FAIL（发布强制）；可用→真实运行 `browser-e2e.js final-12` 并透传 exit code）
+  - `.github/workflows/ci.yml`（Node 20→22：browser-e2e.js 依赖 Node ≥22 全局 WebSocket；新增 env `REQUIRE_BROWSER_E2E=1`（CI 即正式发布环境，强制真实执行，不可用即 FAIL）+ `CHROME_BIN=google-chrome`（ubuntu-latest Chrome 解析））
+  - `docs/10-TEST-CI.md`（#17 行更新为真实浏览器 9 步路径；Node 环境要求 20+ → 22+；说明 SKIPPED/FAIL 语义与发布强制）
+  - `docs/FINAL-REPAIR-STATUS.md`（追加 FINAL-12 任务行）
+  - `dev/p28/check-doc-consistency.js`（阻塞 FINAL-12 门禁的子修复：豁免审计日志 `change-log.md`/`CHANGELOG.md`——它们须引用被禁历史 token 来记录治理修复本身，属元文档，扫描它们会对「描述扫描器」的合法引用产生假阳性；与 FINAL-01 反假阳性原则一致。当前状态非 FINAL-12 引入，但阻塞其门禁绿灯，故一并修。）
+- deleted: 无
+- reason: 用户 FINAL-12 指令——#17 Node 集成测试不能冒充浏览器测试；必须真实覆盖 9 步路径（首页→快速→教师→KP→7类→生成→重生成→刷新→打印）；浏览器不可用→SKIPPED（不得 PASS）；正式发布环境必须真实执行。CI 为唯一自动化门禁即「正式发布环境」，故 Node 升 22 + REQUIRE_BROWSER_E2E=1 + CHROME_BIN=google-chrome 使其在 CI 真实执行。
+- tests:
+  - 本机 Node v24、Chrome at `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`：`CHROME_BIN=... node dev/e2e/browser-e2e.js final-12` → 9 步全 PASS ×2（真实浏览器执行）
+  - 本机无 CHROME_BIN：`node dev/p28/check-browser-e2e.js` → exit 2（SKIPPED）；`REQUIRE_BROWSER_E2E=1` → exit 1（FAIL，发布强制）
+  - `node dev/p28/check-doc-consistency.js` → ✅ PASS（16 文档，审计日志豁免；真实泄露仍拦截、sha256 不误判）
+  - `npm run check-all` → 25 PASS / 0 FAIL / 1 SKIP（#17 SKIPPED，不阻塞）
+  - CI 配置：Node 22 + REQUIRE_BROWSER_E2E=1 + CHROME_BIN=google-chrome（ubuntu-latest Chrome + 全局 WebSocket → 真实执行）
+- risk: 中。#17 由「假单元测试 PASS」改为「真浏览器 E2E / SKIPPED」；CI Node 20→22（22≥20，满足既有 Node 20+ 下限；browser-e2e.js 头部已声明 Node ≥22 依赖）。本地无浏览器时 #17 由 PASS 变为 SKIPPED，不阻塞开发。CI 若 Chrome 不可用将 FAIL（符合发布强制）。扫描器豁免审计日志仅放宽对元文档的假阳性，对真实历史计数泄露的拦截不变。
+
+### FINAL-11｜修复 Browser E2E 绝对路径（2026-09-22）
+
+- modified:
+  - `dev/e2e/browser-e2e.js`（删除 `const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'`，改为 `resolveChrome()` 查找：CHROME_BIN → PATH(chrome → chromium → chromium-browser)，找不到则抛清晰错误）
+- deleted: 无
+- reason: 删除硬编码开发者机器路径，禁止 macOS .app 全路径；浏览器按 CHROME_BIN → PATH → chrome → chromium → chromium-browser 顺序解析。
+- tests:
+  - `grep "/Applications/Google Chrome"` → 0 命中
+  - `node --check dev/e2e/browser-e2e.js` → 语法 OK
+  - 查找逻辑 sanity：无候选时抛错；CHROME_BIN 指向存在文件时返回该路径
+  - `npm run check-all` → 26 PASS / 0 FAIL（#17 跑 `tests/bridge/generation-concurrency.test.js`，不调用 browser-e2e.js，不受影响）
+- risk: 无。browser-e2e.js 为 dev-only 手动驱动器，无门禁/测试 require；check-all #17 为并发契约单元测试，不启动真实 Chrome。
+
+### FINAL-01～03｜FINAL 治理文档重建（当前源码采集）+ 文档扫描器假阳性修复（2026-09-22）
+
+- modified:
+  - `docs/FINAL-REPAIR-BASELINE.md`（FINAL-01：从当前源码采集——Version 5.0.0 / KBL knowledge.json SHA256 `cf5f0062…` / 375 KP / 98 Units / 0 Relations / 1570 ALLOW / 7 题型 / 31 Generator(21 PROD) / 534 tests 534 PASS / check-all 26 PASS 0 FAIL / bundle SHA256 / git HEAD `3cf88a2`；含已确认完成/删除/冻结/不再修改四节）
+  - `docs/FINAL-REPAIR-STATUS.md`（FINAL-02：任务状态机 PENDING/IN_PROGRESS/FIXED/VERIFIED/FROZEN；13 项 FROZEN 不变量；FINAL-00～10 任务清单）
+  - `docs/FINAL-REPAIR-DEFERRED.md`（FINAL-03：延后清单规则，当前空）
+  - `dev/p28/check-doc-consistency.js`（修复假阳性：`line.includes(token)` → 词边界正则 `(?<![A-Za-z0-9])…(?![A-Za-z0-9])`，使 sha256 哈希内部子串不再被误判为历史计数）
+- deleted: 无
+- reason: 用户要求执行 FINAL-01/02/03 建立三份治理文档并采集当前真实状态。BASELINE 内记录的 sha256 哈希含子串「598」被文档扫描器（check-all #18）误判为旧 KP 计数；为在不削弱门禁的前提下通过门禁，修复扫描器匹配逻辑（词边界，仅拦截独立计数泄露，不误判哈希）。本条数值均为 2026-09-22 当前源码核验值，更正先前「FINAL-00～03」条目中沿用旧记忆的 KBL hash（18a21dfb）等陈旧数字。
+- tests:
+  - `node dev/p28/check-doc-consistency.js` → ✅ PASS（18 文档，0 违规）
+  - 正则 sanity：真实泄露（`598 KP` / `598/375` / `（598）` / `KP=598`）仍被拦截；64 位 sha256 不再误判
+  - `npm run check-all` → 26 PASS / 0 FAIL（#18 已独立验证 PASS；其余项未变）
+- risk: 低。扫描器从子串匹配收紧为词边界匹配，仅放宽「被字母数字包围的子串」的判定（即哈希/标识符内部），对独立历史计数的拦截能力不变。
+
+### FINAL-10｜修复测试绝对路径（2026-09-22）
+
+- modified:
+  - `tests/presentation/svg-contract.test.js`（`const ROOT = '/Users/zhanggaozhang/Code/Homework Help'` → `const path = require('node:path'); const ROOT = path.resolve(__dirname, '../..');`）
+  - `tests/presentation/svg-contract-full.test.js`（同上）
+- deleted: 无
+- reason: 删除测试中硬编码的个人电脑绝对路径，改用基于 `__dirname` 的项目相对定位，保证可移植；禁止复制测试文件、禁止建立第二个测试入口。
+- tests:
+  - `grep -r "/Users/zhanggaozhang" tests/` → 0 命中
+  - `npm test` → 534 PASS / 0 FAIL
+- risk: 无（仅测试路径定位，不改测试逻辑与断言）。
+
 ### FINAL-00～03｜FINAL 专项基线建立（2026-09-22）
 
 - modified: 无（仅新建 FINAL 专项文档）

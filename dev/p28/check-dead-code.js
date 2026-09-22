@@ -40,74 +40,74 @@ var CANDIDATES = [
     note: '重复 Legacy Bridge；Generator.generate() 已直接返回 SemanticQuestion[]；P28-21 删除'
   },
 
-  // ── 2. TEST-ONLY（生产不引用，测试依赖） ──
+  // ── 2. RELOCATED（FINAL-17 从 shared/ 迁至 tests/fixtures/） ──
   {
     file: 'shared/generation/generation-core.js',
     symbol: 'GenerationCore',
     prodCalls: 0,
-    testCalls: 4, // p17-10, p17-14, p17-15, p17-16
+    testCalls: 4, // p17-10, p17-14, p17-15, p17-16（从 tests/fixtures/ 装载）
     bundleCalls: 0, // P28-28 从 bundle 排除
-    status: 'TEST-ONLY / HISTORICAL',
-    decision: 'KEEP',
-    note: '生产链 = api.js orchestrate→build→runPlans→generateQuestions，不经过 GenerationCore；4 个测试直接装载验证 execute 语义'
+    status: 'RELOCATED (FINAL-17)',
+    decision: 'RELOCATED',
+    note: '原位置已删除；现位于 tests/fixtures/generation-core.js。生产链 = api.js orchestrate→build→runPlans→generateQuestions，不经过 GenerationCore；4 个测试从 fixtures 装载验证 execute 语义'
   },
 
-  // ── 3. DORMANT-NO-BINDING（0 绑定 0 产出，bundled 预留） ──
+  // ── 3. BUNDLE-EXCLUDED（FINAL-20：0 mapping、0 evidence、0 测试，源码保留但生产 bundle 排除） ──
   {
     file: 'shared/generator/generators/complex.js',
     symbol: 'generator:complex-calc',
-    prodCalls: 0, testCalls: 0, bundleCalls: 1, // index.js → bundle
-    status: 'DORMANT-NO-BINDING',
-    decision: 'KEEP',
-    note: '重复能力：calc/fill 被算术族全覆盖；0 绑定 0 产出；bundled 预留'
+    prodCalls: 0, testCalls: 0, bundleCalls: 0, // FINAL-20 后 bundle 不含
+    status: 'BUNDLE-EXCLUDED (FINAL-20)',
+    decision: 'EXCLUDE',
+    note: '重复能力：calc/fill 被算术族全覆盖；0 绑定 0 产出；源码保留但 index.js 不再 require、registry 不再注册、bundle 不再打包'
   },
   {
     file: 'shared/generator/generators/c1-number-puzzle.js',
     symbol: 'generator:c1-number-puzzle',
-    prodCalls: 0, testCalls: 0, bundleCalls: 1,
-    status: 'DORMANT-NO-BINDING',
-    decision: 'KEEP',
-    note: '竞赛 C 族预留；0 绑定 0 产出'
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'BUNDLE-EXCLUDED (FINAL-20)',
+    decision: 'EXCLUDE',
+    note: '竞赛 C 族预留；0 绑定 0 产出；源码保留但生产 bundle 排除'
   },
   {
     file: 'shared/generator/generators/c2-number-theory.js',
     symbol: 'generator:c2-number-theory',
-    prodCalls: 0, testCalls: 0, bundleCalls: 1,
-    status: 'DORMANT-NO-BINDING',
-    decision: 'KEEP',
-    note: '竞赛 C 族预留；0 绑定 0 产出'
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'BUNDLE-EXCLUDED (FINAL-20)',
+    decision: 'EXCLUDE',
+    note: '竞赛 C 族预留；0 绑定 0 产出；源码保留但生产 bundle 排除'
   },
   {
     file: 'shared/generator/generators/c5-c6-journey-engineering.js',
     symbol: 'generator:c5-c6-journey-engineering',
-    prodCalls: 0, testCalls: 0, bundleCalls: 1,
-    status: 'DORMANT-NO-BINDING',
-    decision: 'KEEP',
-    note: '竞赛 C 族预留；0 绑定 0 产出'
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'BUNDLE-EXCLUDED (FINAL-20)',
+    decision: 'EXCLUDE',
+    note: '竞赛 C 族预留；0 绑定 0 产出；源码保留但生产 bundle 排除'
   },
   {
     file: 'shared/generator/generators/c7-clever-calc.js',
     symbol: 'generator:c7-clever-calc',
-    prodCalls: 0, testCalls: 0, bundleCalls: 1,
-    status: 'DORMANT-NO-BINDING',
-    decision: 'KEEP',
-    note: '竞赛 C 族预留；0 绑定 0 产出'
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'BUNDLE-EXCLUDED (FINAL-20)',
+    decision: 'EXCLUDE',
+    note: '竞赛 C 族预留；0 绑定 0 产出；源码保留但生产 bundle 排除'
   },
   {
     file: 'shared/generator/generators/c9-comprehensive.js',
     symbol: 'generator:c9-comprehensive',
-    prodCalls: 0, testCalls: 0, bundleCalls: 1,
-    status: 'DORMANT-NO-BINDING',
-    decision: 'KEEP',
-    note: '竞赛 C 族预留；0 绑定 0 产出；头部注释陈旧（mock=open 描述已随 P28-07 摘除）'
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'BUNDLE-EXCLUDED (FINAL-20)',
+    decision: 'EXCLUDE',
+    note: '竞赛 C 族预留；0 绑定 0 产出；源码保留但生产 bundle 排除'
   },
   {
     file: 'shared/generator/generators/semantic-special.js',
     symbol: 'generator:equivalent-reasoning',
-    prodCalls: 0, testCalls: 0, bundleCalls: 1,
-    status: 'DORMANT-NO-BINDING',
-    decision: 'KEEP',
-    note: '重复能力：fill/choice/apply 全覆盖；0 绑定 0 产出；同文件含 generator:code-recognition（PRODUCTION 5 KP）不可删'
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'DEAD-SYMBOL-REMOVED (FINAL-20)',
+    decision: 'REMOVE-SYMBOL',
+    note: 'equivalent-reasoning 死符号已从 semantic-special.js 清除（工厂+题库+导出全删）；code-recognition 保留（15 行 freeze 产出）'
   },
 
   // ── 4. DORMANT-CONTRACT-CARRIER（契约名义载体，0 产出） ──

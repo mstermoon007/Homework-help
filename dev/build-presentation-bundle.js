@@ -62,10 +62,10 @@ function stripComments(code) {
     .replace(/\/\/.*$/gm, '');
 }
 
-// P28-28：GenerationCore（shared/generation/generation-core.js + generation-contract.js）
+// P28-28 + FINAL-17：GenerationCore 原位于 shared/generation/generation-core.js，
 // 定性为测试/历史资产（生产链 api.js orchestrate→build→runPlans→generateQuestions 不经过它；
-// shared/ 生产源码 0 处 require）。不再内联进生产 bundle，删除 global.GenerationCore 注册。
-// 保留源文件与 tests/orchestration/p17-10/14/15/16 直接装载使用。
+// shared/ 生产源码 0 处 require）。FINAL-17 迁至 tests/fixtures/generation-core.js，
+// 原 shared/ 位置已删除；tests/orchestration/p17-10/14/15/16 从 fixtures 装载。
 
 var modules = {};
 var queue = [ENTRY];

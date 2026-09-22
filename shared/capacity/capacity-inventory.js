@@ -58,7 +58,6 @@ function bootstrap() {
   if (!hasGlobals) {
     [
       'shared/strategy/strategy-engine.js',
-      'shared/strategy/strategy-request.js',
       'shared/strategy/question-plan.js',
       '../shared/generator/generator-registry.js',
       'shared/strategy/comprehensive-strategy.js',

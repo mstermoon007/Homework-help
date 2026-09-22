@@ -35,8 +35,19 @@ npm test   # node --test tests/**/*.test.js
 npm run check-all
 ```
 
-CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本、同一环境要求**（Node 20+）。
+CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本**。环境要求：Node 22+（`dev/e2e/browser-e2e.js` 依赖 Node ≥22 内置全局 `WebSocket`；Node 20+ 仅满足非浏览器检查域）。
 `scripts/run-all-checks.sh` 也委托到 `npm run check-all`。
+
+### Browser E2E 语义（FINAL-12）
+
+| 环境 | 浏览器 | #17 行为 |
+|---|---|---|
+| 本地开发 | 不可用 | **SKIPPED**（不阻塞，不得冒充 PASS） |
+| 本地开发 | 可用（`CHROME_BIN` 指向 Chrome） | 真实执行 9 步路径 |
+| CI / 正式发布 | `CHROME_BIN=google-chrome` + `REQUIRE_BROWSER_E2E=1` | **必须真实执行**；不可用即 FAIL |
+
+9 步路径：首页 index.html → 快速练习 mode=quick → 教师模式 mode=teacher → 知识点入口（知识页 CTA 深链）→ 7 类题型（calc/fill/choice/judge/geometry/classify/apply）→ 生成 → 重新生成 → 刷新 → 打印。
+退出码约定：`0`=PASS / `1`=FAIL / `2`=SKIPPED。`check-all` 的 `run()` 据此将 exit 2 标记为 SKIPPED，不计入 FAIL。
 
 ### 检查域清单（24 项）
 
@@ -58,7 +69,7 @@ CI（`.github/workflows/ci.yml`）与本地使用**同一入口、同一脚本�
 | 14 | Sitemap | `check-sitemap-freeze.js` | 381 URL 逐条保证 |
 | 15 | Crawl | `check-ai-agent-crawl` + `check-crawl-health` | AI Agent 375/375 + 爬虫健康 |
 | 16 | LLM | `check:llm-understanding` | AI 可读体检 |
-| 17 | Browser/E2E | `generation-concurrency.test.js` | 并发契约 + 生成链 |
+| 17 | Browser/E2E | `dev/p28/check-browser-e2e.js` | 真实浏览器 9 步路径（首页→快速→教师→KP→7类→生成→重生成→刷新→打印）；不可用→SKIPPED，发布强制 |
 | 18 | Doc | `check-doc-consistency.js` | 历史数字扫描 |
 
 ## 3. 专项门禁脚本（`dev/p28/`）

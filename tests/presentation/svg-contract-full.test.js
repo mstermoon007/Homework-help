@@ -2,8 +2,9 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert');
+const path = require('node:path');
 
-const ROOT = '/Users/zhanggaozhang/Code/Homework Help';
+const ROOT = path.resolve(__dirname, '../..');
 global.window = global;
 
 // Load all SVG generators

@@ -8,7 +8,7 @@
 
 ## 1. 收口结论
 
-**31 个 Generator · PRODUCTION=21 · COMBINE-ONLY=1 · DORMANT-CARRIER=2 · DORMANT-NO-BINDING=7 —— 收口冻结 ✅**
+**24 个 Generator · PRODUCTION=21 · COMBINE-ONLY=1 · DORMANT-CARRIER=2 · DORMANT-NO-BINDING=0 —— 收口冻结 ✅**
 
 冻结证据：1570 行真实生成（P28-08）中，实际承载行合计 = 1570；历史使用集中在 `archive/legacy-tests/generator/*`（31 个 id 全量旧测试）+ `migration/excel-raw/*`（4 个）+ kbl 冻结产物。
 
@@ -22,19 +22,12 @@
 | `generator:arithmetic-mixed-calculation` | `arithmetic` | `integer-arithmetic` | calc/fill/apply | 同 arithmetic-addition（op=mixed；operationSet 算子集） | 同上（data.operation=mixed） | pipeline(kpSemantic+TypeContract+schema) | `PRODUCTION` |
 | `generator:arithmetic-multiplication` | `arithmetic` | `integer-arithmetic` | calc/fill/apply | 同 arithmetic-addition（op=mult） | 同上（data.operation=mult） | pipeline(kpSemantic+TypeContract+schema) | `PRODUCTION` |
 | `generator:arithmetic-subtraction` | `arithmetic` | `integer-arithmetic` | calc/fill/apply | 同 arithmetic-addition（op=sub） | 同上（data.operation=sub） | pipeline(kpSemantic+TypeContract+schema) | `PRODUCTION` |
-| `generator:c1-number-puzzle` | `c1` | `number-sense` | apply/calc | plan only；kp={}，name 恒为默认 | 数字谜 text; data{mode:apply,steps:3,questionType,family:c1-number-puzzle} | pipeline(kpSemantic+TypeContract+schema) | `DORMANT-NO-BINDING` |
-| `generator:c2-number-theory` | `c2` | `number-sense` | apply/calc | plan only；依赖 op-semantics 符号 | 数论题 text; data{family:c2-number-theory} | pipeline(kpSemantic+TypeContract+schema) | `DORMANT-NO-BINDING` |
-| `generator:c5-c6-journey-engineering` | `c5c6` | `ratio-proportion / multiple-ratio` | apply/calc | plan only | 行程/工程/浓度题 text; data{family:c5-c6-journey-engineering} | pipeline(kpSemantic+TypeContract+schema) | `DORMANT-NO-BINDING` |
-| `generator:c7-clever-calc` | `c7` | `integer-arithmetic` | apply/calc | plan only；依赖 op-semantics 符号 | 巧算/裂项 text; data{mode:calc,family:c7-clever-calc} | pipeline(kpSemantic+TypeContract+schema) | `DORMANT-NO-BINDING` |
-| `generator:c9-comprehensive` | `c9` | `word-application` | apply/calc | plan only；竞争模式由外层 hasC9Semantics 硬阻断 | 综合应用题 text; data{mode:apply,family:c9-comprehensive} | pipeline(kpSemantic+TypeContract+schema) | `DORMANT-NO-BINDING` |
 | `generator:classification` | `classification` | `classification` | classify | plan + constraints{numberRange} | 分类/排序; data{mode:classify,sort{desc,count}}; answerMode=input | pipeline(kpSemantic[metaExempt]+TypeContract+schema) | `PRODUCTION` |
 | `generator:code-recognition` | `code` | `number-sense` | fill/choice/judge/apply | plan + constraints + semanticParams.name（codeCategory: idcard/postal/feature/practice/life） | CODE_BANK 5 类长情境题; data{mode,codeType}; choice 附 options/correctIndex | pipeline(kpSemantic+TypeContract+schema) | `PRODUCTION` |
-| `generator:complex-calc` | `complex` | `integer-arithmetic` | calc/fill | plan + constraints.structure.family(chain/no-bracket/bracket/inverse)，需 kp-complex-semantics 注入；不读 semanticParams | answerMode=input; chain/bracket/fill-operator/fill-operand 形态; data{mode,operands,operators,steps} | pipeline(kpSemantic+TypeContract+schema)；依赖 kp-complex-semantics constraints | `DORMANT-NO-BINDING` |
 | `generator:composite` | `composite` | `跨族（combine 组合）` | calc/judge/fill/apply | plan.combine===true && knowledgePointIds.length≥2（supports 门 + 自有 throw guard） | calc-to-judge 组合题; data{mode:calc-to-judge,steps:1,primaryKp,operation,operands,correct,shown,composite:true} | pipeline(kpSemantic+TypeContract[booleanAnswer]+schema)+自有 guard（<2 KP 抛错） | `PRODUCTION-COMBINE-ONLY` |
 | `generator:concept-meaning` | `concept` | `number-sense` | calc/fill/apply/choice/geometry/judge | plan + constraints + semanticParams.subTopic+name（次数/分数意义/角/面积/负数等 maker） | 概念题（列式/填空/判断/选择）; data{mode:concept-meaning,subType,semanticEvidence{relations,constructs},options,correctIndex} | pipeline(kpSemantic[checkSemanticEvidence]+TypeContract+schema) | `PRODUCTION` |
 | `generator:counting` | `counting` | `multiplicative-relation` | apply/calc | plan + semanticParams.name（组合学 subtype 派生） | apply/calc 计数/排列组合 story; data{mode,steps,questionType} | pipeline(kpSemantic+TypeContract+schema) | `PRODUCTION` |
 | `generator:decimal-number` | `decimal` | `decimal` | calc/fill/choice/apply | plan + semanticParams.name（NAME_RULES→subtype 12 分支；fail-closed 缺 name 返回[]） | 小数专项; data{mode:decimal,subType,steps,options,correctIndex} | pipeline(kpSemantic+TypeContract+schema) | `PRODUCTION` |
-| `generator:equivalent-reasoning` | `equivalent` | `multiple-ratio` | fill/choice/apply | plan + constraints；不读 semanticParams | 等量代换 chain/买家 story; data{mode,chain:[p,q],options,correctIndex}; choice 分支 answerMode 未切（残留 input） | pipeline(kpSemantic+TypeContract+schema) | `DORMANT-NO-BINDING` |
 | `generator:fraction-number` | `fraction` | `fraction` | calc/fill/choice/apply | plan + semanticParams.name（NAME_RULES→subtype 11 分支；fail-closed） | 分数专项; data{mode:fraction,subType,steps:1,options,correctIndex} | pipeline(kpSemantic+TypeContract+schema) | `PRODUCTION` |
 | `generator:money-measurement` | `money-measurement` | `unit-measurement` | fill/choice/judge/apply/calc | plan + semanticParams.name+concept（deriveMeasureKind: rmb/length/area/mass/time/capacity） | fill/choice/judge/apply/calc; data{kind,operation,originalAmount/targetUnit/fromUnit/toUnit,options}; graphic currency/rectangle | pipeline(kpSemantic+TypeContract+schema) | `PRODUCTION` |
 | `generator:percent-calc` | `percent` | `percent` | calc/fill/apply | plan + constraints + semanticParams.subTopic（paramsOf→SUBTOPIC_MAKERS） | 百分数计算/互化/折扣/利率; data{mode:percent-calc,subType,...}; answerMode=input | pipeline(kpSemantic+TypeContract+schema) | `PRODUCTION` |
@@ -65,7 +58,7 @@
 | PRODUCTION（1570 实际承载≥1 行） | 21 | `generator:application-word`、`generator:arithmetic-addition`、`generator:arithmetic-division`、`generator:arithmetic-mixed-calculation`、`generator:arithmetic-multiplication`、`generator:arithmetic-subtraction`、`generator:classification`、`generator:code-recognition`、`generator:concept-meaning`、`generator:counting`、`generator:decimal-number`、`generator:fraction-number`、`generator:money-measurement`、`generator:percent-calc`、`generator:picture-equation`、`generator:position-direction`、`generator:reasoning`、`generator:selection-fill`、`generator:semantic-relations`、`generator:shape-recognition`、`generator:stats` |
 | PRODUCTION-COMBINE-ONLY（combine 专享） | 1 | `generator:composite` |
 | DORMANT-CONTRACT-CARRIER（契约名义载体，0 产出，重复能力） | 2 | `generator:selection-choice`、`generator:selection-judge` |
-| DORMANT-NO-BINDING（0 绑定 0 产出，bundled 预留） | 7 | `generator:c1-number-puzzle`、`generator:c2-number-theory`、`generator:c5-c6-journey-engineering`、`generator:c7-clever-calc`、`generator:c9-comprehensive`、`generator:complex-calc`、`generator:equivalent-reasoning` |
+| DORMANT-NO-BINDING（0 绑定 0 产出，bundled 预留） | 0 |  |
 
 ## 5. 收口发现（契约/声明漂移，不阻塞现行生产，待 P28-10 处置）
 
@@ -73,8 +66,7 @@
 2. `generator:classification` 欠声明 fill/choice/judge/apply：经 kp=1 在 25 绑定 KP 上产出 4 类；补齐声明会改变 tiebreak 路由，需联动审计，故列入待处置。
 3. selection 族几何名义声明：maker 仅产出算术形态，form-bound 门内从不命中 geometry（无害）。
 4. `generator:application-word` answer 原始 string/boolean（非 `{value,acceptable}`），由下游 TypeContract/schema 归一（契约偏差）。
-5. `generator:equivalent-reasoning` choice 分支 answerMode 残留 input（dormant，无运行影响）。
-6. `generator:c9-comprehensive` 头部注释陈旧（mock=open 描述，随 P28-07 已摘除 open，注释未同步）。
+5. `generator:equivalent-reasoning` FINAL-20 已从 semantic-special.js 清除（0 产出死符号）。
 7. 非 formBound 泛型产出（native kp=1 扩展）：arithmetic×5、selection-fill、counting、picture-equation、percent-calc、classification 在未声明 choice/fill/apply/judge 情况下仍经 kp=1 产出该类题（maker 泛化）；form-bound（calc/geometry/classify）受 form-bound 声明门约束，本次无一违例（R4 全绿）。
 
 ## 6. 门禁

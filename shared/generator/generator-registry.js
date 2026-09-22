@@ -30,9 +30,7 @@ var CORE_RECORDS = [
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'geometry', 'calc', 'apply'], questionTypes: ['choice', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'geometry', 'calc', 'apply'], questionTypes: ['judge', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   // P25-09：原 5 个误绑 KP 已全部迁出（g1-up-u03-k001→shape；g2-down-u04-k002/3/4/6→concept）。
-  { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill'], questionTypes: ['calc', 'fill'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
+  // FINAL-20：complex-calc dormant（0 mapping、0 evidence、重复能力被算术族全覆盖），从生产 bundle 排除。源码保留。
 
   // P0-04 Step 15-20: 新增形状/位置/金钱/应用题 Generator
   // P25-07：version 升 2（classification choice 选项 null 修复 + flat 语义回退）；
@@ -84,21 +82,7 @@ var CORE_RECORDS = [
   { id: 'generator:picture-equation', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: ['math-g4-down-u01-k001', 'math-g5-up-u07-k003'],
     scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c1-number-puzzle', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c2-number-theory', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c5-c6-journey-engineering', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c7-clever-calc', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c9-comprehensive', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: [],
-    scope: 'core', version: 1, supportsComposite: false },
+  // FINAL-20：c1/c2/c5-c6/c7/c9 dormant（0 mapping、0 evidence、竞赛 C 族预留），从生产 bundle 排除。源码保留。
   { id: 'generator:composite', subject: 'math', capabilities: ['calc', 'judge', 'fill', 'apply'], questionTypes: ['calc', 'judge', 'fill', 'apply'],
     knowledgePoints: ['math-g1-up-u01-k001', 'math-g2-down-u07-k001', 'math-g2-up-u01-k005', 'math-g3-up-u02-k001', 'math-g4-up-u03-k001'],
     scope: 'core', version: 1, supportsComposite: true },
@@ -111,9 +95,7 @@ var CORE_RECORDS = [
   { id: 'generator:code-recognition', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply'], questionTypes: ['fill', 'choice', 'judge', 'apply'],
     knowledgePoints: ['math-g3-up-u06-k001', 'math-g3-up-u06-k002', 'math-g3-up-u06-k003', 'math-g3-up-u06-k004', 'math-g3-up-u06-k005'],
     scope: 'core', version: 2, supportsComposite: false },
-  { id: 'generator:equivalent-reasoning', subject: 'math', capabilities: ['fill', 'choice', 'apply'], questionTypes: ['fill', 'choice', 'apply'],
-    knowledgePoints: [],
-    scope: 'core', version: 2, supportsComposite: false },
+  // FINAL-20：equivalent-reasoning dormant（0 mapping、0 evidence、重复能力全覆盖），注册条目移除。源码已从 semantic-special.js 清除。
 
   // V2.1 补充：分类整理生成器（补齐 7 类规范题型中唯一无生成器的 classify）
   // P17-10：knowledgePoints 重对齐为 canonical 生成映射（shared/knowledge/mappings/generation-contract/math.json

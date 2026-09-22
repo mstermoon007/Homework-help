@@ -187,10 +187,16 @@ function makeApplicationQuestion(plan, context, i, meta) {
   var answer = computeAnswer(template, nums);
   var prompt = formatTemplate(template, nums);
   
-  // 添加干扰项（用于 choice）
+  // 添加干扰项（用于 choice）：必须凑齐 3 个为正、互异且不等于答案的干扰项。
+  // FINAL-13：此前仅抽 3 次、合法才入集 → 可能只剩 2 个干扰项（3 选项），
+  // 且索引约定答案 String(correctIndex) 可能与某个选项值撞串（如 options=[1,4,6]、
+  // correctIndex=1），被 TypeContract choice finisher fail-closed 丢弃——是否出题
+  // 退化为取决于随机种子。改为有界补足干扰项 + 值约定答案（answer.value ∈ options）。
   var distractors = [];
   var ans = answer;
-  for (var d = 0; d < 3; d++) {
+  var guard = 0;
+  while (distractors.length < 3 && guard < 50) {
+    guard++;
     var offset = randInt(rng, -5, 5);
     if (offset === 0) offset = 1;
     var dist = ans + offset;
@@ -198,11 +204,12 @@ function makeApplicationQuestion(plan, context, i, meta) {
       distractors.push(dist);
     }
   }
-  
+
   var qt = plan.questionTypeId;
   if (qt === 'choice') {
-    var options = Rng.shuffle(rng, [ans].concat(distractors).slice(0, 4));
-    var correctIndex = options.indexOf(ans);
+    // 值约定：options 字符串化（optionsPresent 要求 string 元素），answer.value ∈ options
+    var options = Rng.shuffle(rng, [ans].concat(distractors).slice(0, 4)).map(function (n) { return String(n); });
+    var correctIndex = options.indexOf(String(ans));
     return {
       knowledgePointId: pkp(plan),
       questionType: 'choice',
@@ -211,7 +218,7 @@ function makeApplicationQuestion(plan, context, i, meta) {
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: prompt,
-      answer: String(correctIndex),
+      answer: String(ans),
       answerMode: 'choice',
       data: {
         mode: 'choice',

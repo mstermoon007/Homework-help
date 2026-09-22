@@ -18,27 +18,7 @@ var fs = require('fs');
 var ROOT = path.resolve(__dirname, '..', '..');
 
 var CANDIDATES = [
-  // ── 1. strategy-request.js: Legacy UI 参数兼容 ──
-  {
-    file: 'shared/strategy/strategy-request.js',
-    symbol: 'LEGACY_UI_KEYS + normalizeLegacyParams + createFromLegacyUI + isLegacyRequest',
-    reason: '兼容旧 UI 参数格式（subject/grade/count/difficulty/subtype → StrategyRequest）',
-    callers: { prod: 0, test: 0, dev: 0, bundle: 1 },
-    deleteCondition: '无人调用（prod=0, test=0, dev=0）→ 已满足',
-    decision: 'DELETE',
-    note: '导出但无任何调用者；旧 UI 参数兼容已不需要'
-  },
-  // ── 2. strategy-config.js: isLegacy / legacyFallback ──
-  {
-    file: 'shared/strategy/strategy-config.js',
-    symbol: 'isLegacy() + legacyFallback property',
-    reason: '检测当前是否为 legacy 策略模式；提供给 config 对象的 legacyFallback 标志',
-    callers: { prod: 0, test: 0, dev: 0, bundle: 1 },
-    deleteCondition: 'isLegacy 仅自引用（line 71 设 legacyFallback）；legacyFallback 无消费者 → 已满足',
-    decision: 'DELETE',
-    note: 'isLegacy() 仅在自身文件 line 71 调用设置 legacyFallback，但 legacyFallback 从未被任何外部消费者读取'
-  },
-  // ── 3. practice-result.js: fromLegacy ──
+  // ── 1. practice-result.js: fromLegacy ──
   {
     file: 'shared/learner/practice-result.js',
     symbol: 'fromLegacy()',

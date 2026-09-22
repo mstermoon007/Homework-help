@@ -16,7 +16,10 @@
 //   docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json（含逐行冻结证据）
 //   docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.md（冻结结论）
 //
-// 用法：node dev/p28/check-generation-matrix-freeze.js
+// 用法（FINAL-14 默认只读）：
+//   node dev/p28/check-generation-matrix-freeze.js            只读复核：重生成 1570 行证据与冻结产物比对，
+//                                                             一致且 frozen=true → 退出 0；不一致/缺失 → 退出 1，绝不写盘
+//   node dev/p28/check-generation-matrix-freeze.js --write    显式重建冻结 JSON+MD（仅用于有意更新冻结数据）
 
 var path = require('path');
 var fs = require('fs');
@@ -34,6 +37,15 @@ var MATRIX_FILE = path.join(ROOT, 'shared', 'knowledge', 'mappings', 'generation
 
 var CANONICAL = QTR.TYPES.map(function (t) { return t.id; });
 var PLACEHOLDER = /占位|placeholder|TODO|待定|待补充|Lorem|^\.{3,}$/;
+
+// FINAL-13：冻结样本必须可复现。固定难度 + 每行固定 seed（KP/QT/难度的确定性函数），
+// 同一 KP/QT/Difficulty/Seed/Generator/KBL 必须产出完全一致 prompt/answer/sample/promptLen；
+// 连续运行本脚本产物必须字节一致（git diff = 0）。
+var FREEZE_SEED_VERSION = 'p28-v1';
+var FREEZE_DIFFICULTY = 3;
+function freezeSeed(kp, qt) {
+  return 'freeze:' + FREEZE_SEED_VERSION + '|' + kp + '|' + qt + '|d' + FREEZE_DIFFICULTY;
+}
 
 function gradeOf(kp) {
   var m = /^math-g(\d)-/.exec(kp);
@@ -109,15 +121,19 @@ var fails = [];
   for (var i = 0; i < pairs.length; i++) {
     var p = pairs[i];
     var row = rowSet[p.kp + '/' + p.qt];
+    var rowSeed = freezeSeed(p.kp, p.qt);
     var rec = {
       kp: p.kp, qt: p.qt, pluginId: row ? row.pluginId : null,
+      seed: rowSeed,
       generator: null, schema: 1, kpSem: 1, tc: 1, realGen: 1,
       promptLen: 0, sample: '', ans: '', ok: true, err: null
     };
     try {
       var session = new PracticeSession({
         subject: 'math', grade: gradeOf(p.kp), count: 1,
-        knowledgePointId: p.kp, questionType: p.qt
+        difficulty: FREEZE_DIFFICULTY,
+        knowledgePointId: p.kp, questionType: p.qt,
+        seed: rowSeed
       });
       await session.start();
       var qs = session.semanticQuestions || [];
@@ -133,7 +149,7 @@ var fails = [];
         var sv = SQ.validateSchema(q);
         if (!sv.valid) { rec.schema = 0; rec.ok = false; summaries.schemaFail++; rec.err = 'schema'; }
 
-        var plan = { knowledgePointIds: [p.kp], questionTypeId: p.qt, difficulty: 5, count: 1 };
+        var plan = { knowledgePointIds: [p.kp], questionTypeId: p.qt, difficulty: FREEZE_DIFFICULTY, count: 1 };
         var kv = KpSem.validateKpSemantics(q, { plan: plan, kpId: p.kp });
         if (!kv.valid) { rec.kpSem = 0; rec.ok = false; summaries.kpSemFail++; rec.err = 'kpSem'; }
 
@@ -174,6 +190,12 @@ var fails = [];
   var artifact = {
     task: 'P28-08 1570 Generation Matrix 最终冻结',
     date: new Date().toISOString().slice(0, 10),
+    seedPolicy: {
+      version: FREEZE_SEED_VERSION,
+      difficulty: FREEZE_DIFFICULTY,
+      formula: 'freeze:<version>|<kp>|<qt>|d<difficulty>',
+      deterministic: true
+    },
     matrixFile: 'shared/knowledge/mappings/generation-contract/math.json',
     matrixCount: rows.length,
     canonicalTypes: CANONICAL,
@@ -193,14 +215,33 @@ var fails = [];
     evidence: evidence
   };
 
-  fs.mkdirSync(path.join(ROOT, 'docs', 'archive', 'phases', 'p28'), { recursive: true });
-  fs.writeFileSync(
-    path.join(ROOT, 'docs', 'archive', 'phases', 'p28', 'P28-GENERATION-MATRIX-FROZEN.json'),
-    JSON.stringify(artifact, null, 1) + '\n'
-  );
-  writeMd(artifact, rowFails, cons, generated);
-  console.log('产物已写入 docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.{json,md}');
-  process.exit(artifact.frozen ? 0 : 1);
+  var FROZEN_JSON = path.join(ROOT, 'docs', 'archive', 'phases', 'p28', 'P28-GENERATION-MATRIX-FROZEN.json');
+  var WRITE = process.argv.indexOf('--write') !== -1;
+  if (WRITE) {
+    fs.mkdirSync(path.join(ROOT, 'docs', 'archive', 'phases', 'p28'), { recursive: true });
+    fs.writeFileSync(FROZEN_JSON, JSON.stringify(artifact, null, 1) + '\n');
+    writeMd(artifact, rowFails, cons, generated);
+    console.log('产物已写入 docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.{json,md}（--write）');
+    process.exit(artifact.frozen ? 0 : 1);
+  }
+
+  // FINAL-14：默认只读复核——与冻结产物比对，绝不写盘（防止普通 CI/审计产生 Git diff）
+  if (!fs.existsSync(FROZEN_JSON)) {
+    console.log('只读复核 FAIL：冻结产物不存在 ' + path.relative(ROOT, FROZEN_JSON) + ' —— 首次生成请显式运行 node dev/p28/check-generation-matrix-freeze.js --write');
+    process.exit(1);
+  }
+  var frozen = JSON.parse(fs.readFileSync(FROZEN_JSON, 'utf8'));
+  var diffs = diffArtifact(frozen, artifact);
+  if (artifact.frozen && diffs.length === 0) {
+    console.log('只读复核：与冻结产物完全一致（git diff = 0）');
+    process.exit(0);
+  }
+  console.log('只读复核 FAIL：与冻结产物存在 ' + diffs.length + ' 处差异（本次生成 frozen=' + artifact.frozen + '）—— 有意更新冻结数据请显式运行 node dev/p28/check-generation-matrix-freeze.js --write');
+  diffs.slice(0, 10).forEach(function (d) {
+    console.log('  DIFF ' + d.field + (d.kp ? ' ' + d.kp + ' ' + d.qt : '') + (d.why ? ' ' + d.why : ''));
+  });
+  if (diffs.length > 10) console.log('  … 其余 ' + (diffs.length - 10) + ' 处省略');
+  process.exit(1);
 })().catch(function (e) {
   console.error('FATAL', e);
   process.exit(1);
@@ -214,6 +255,27 @@ function summaryCountRow(s) {
   return rowFail;
 }
 
+// FINAL-14：冻结产物比对（忽略运行日期 date；evidence 逐行比对）
+function diffArtifact(frozen, current) {
+  var diffs = [];
+  Object.keys(current).forEach(function (k) {
+    if (k === 'date' || k === 'evidence') return;
+    if (!(k in frozen)) { diffs.push({ field: k, why: '冻结产物缺失该字段' }); return; }
+    if (JSON.stringify(frozen[k]) !== JSON.stringify(current[k])) diffs.push({ field: k });
+  });
+  var fe = frozen.evidence || [];
+  var ce = current.evidence || [];
+  if (fe.length !== ce.length) diffs.push({ field: 'evidence.length', why: '冻结 ' + fe.length + ' 行 vs 现生成 ' + ce.length + ' 行' });
+  var n = Math.min(fe.length, ce.length);
+  for (var i = 0; i < n; i++) {
+    if (JSON.stringify(fe[i]) !== JSON.stringify(ce[i])) {
+      diffs.push({ field: 'evidence[' + i + ']', kp: ce[i].kp, qt: ce[i].qt });
+      if (diffs.length >= 200) break;
+    }
+  }
+  return diffs;
+}
+
 function writeMd(a, rowFails, cons, generated) {
   var md = [];
   md.push('# P28-Generation-Matrix-Freeze — 1570 生成矩阵最终冻结');
@@ -222,6 +284,7 @@ function writeMd(a, rowFails, cons, generated) {
   md.push('|---|---|');
   md.push('| 任务 | P28-08 生成矩阵最终冻结：1570 条 ALLOW(KP, QuestionType) 逐条对齐真实 Generator、真实生成、通过 Validator、产出合法 SemanticQuestion；禁 fake/placeholder/empty/fallback 题 |');
   md.push('| 执行日期 | ' + a.date + ' |');
+  md.push('| 固定 seed | `' + a.seedPolicy.formula + '`（version=' + a.seedPolicy.version + '，difficulty=' + a.seedPolicy.difficulty + '）；同 KP/QT/Difficulty/Seed/Generator/KBL → prompt/answer/sample/promptLen 完全一致，连续复跑字节相同 |');
   md.push('| 判定规则 | 静态矩阵 == 动态能力端点 == 1570；每行 pluginId ∈ GeneratorRegistry；逐行重生成证据 10 项全绿 |');
   md.push('');
   md.push('## 1. 矩阵一致性');

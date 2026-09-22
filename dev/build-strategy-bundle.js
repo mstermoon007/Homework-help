@@ -19,7 +19,6 @@ var ROOT = path.join(__dirname, '..');
 
 var ENTRIES = [
   'shared/strategy/strategy-engine.js',
-  'shared/strategy/strategy-config.js',
   'shared/strategy/question-type-strategy.js',
   'shared/strategy/static-difficulty.js',
   'shared/strategy/difficulty-strategy.js',
@@ -32,7 +31,6 @@ var ENTRIES = [
   'shared/strategy/constraint-builder.js',
   'shared/strategy/strategy-validator.js',
   'shared/strategy/strategy-error.js',
-  'shared/strategy/strategy-request.js',
   'shared/strategy/strategy-result.js',
   'shared/strategy/question-plan.js',
   'shared/strategy/strategy-resolver.js',
@@ -156,7 +154,6 @@ Object.keys(modules).forEach(function (id) {
 
 // 浏览器全局挂载
 lines.push('global.StrategyEngine = __req(\'shared/strategy/strategy-engine.js\');');
-lines.push('global.StrategyConfig = __req(\'shared/strategy/strategy-config.js\');');
 lines.push('global.StrategyValidator = __req(\'shared/strategy/strategy-validator.js\');');
 lines.push('global.QuestionTypeStrategy = __req(\'shared/strategy/question-type-strategy.js\');');
 lines.push('global.StaticDifficultyStrategy = __req(\'shared/strategy/static-difficulty.js\');');
@@ -178,7 +175,7 @@ lines.push('global.CapabilityResolver = __req(\'shared/capability/capability-res
 lines.push('global.CapabilityModel = __req(\'shared/capability/capability-model.js\');');
 lines.push('global.CapabilityMatrix = __req(\'shared/capability/capability-matrix.js\');');
 lines.push('global.ComprehensiveStrategy = __req(\'shared/strategy/comprehensive-strategy.js\');');
-lines.push('global.ComplexGen = __req(\'shared/generator/generators/complex.js\');');
+// FINAL-20：ComplexGen dormant（0 mapping、0 evidence），不再 global 挂载。
 lines.push('global.StrategyBundle = { req: __req, modules: __defs };');
 lines.push('})(typeof window !== \'undefined\' ? window : (typeof globalThis !== \'undefined\' ? globalThis : this));');
 
