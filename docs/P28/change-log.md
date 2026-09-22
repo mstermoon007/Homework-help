@@ -43,7 +43,7 @@
   - **Tests**：100% PASS（全链 534 tests，check-all 5 PASS）✅。
   - **CI**：本地 = CI（`npm run check-all` = `node dev/check-all.js` = `.github/workflows/ci.yml` 唯一入口）✅。
   - **Docs**：唯一 CURRENT BASELINE（仅 `docs/00-BASELINE.md` 含 CURRENT 标记，无其他 baseline）✅。
-  - **Git**：clean（commit 1e25e62「P28 最终产品化交付（P28-38 ~ P28-52）」，工作树无未提交改动）✅。
+  - **Git**：clean（P28 累积改动已提交，工作树无未提交改动）✅。
   - 全量门禁：`node dev/check-all.js` 26 PASS / 0 FAIL。
 - risk: 无（验收通过，已提交交付）。
 
