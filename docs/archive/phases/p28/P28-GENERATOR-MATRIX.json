@@ -1,0 +1,936 @@
+{
+ "task": "P28-09 Generator Registry 收口 —— GENERATOR_MATRIX",
+ "date": "2026-09-22",
+ "generatorCount": 31,
+ "canonicalTypes": [
+  "calc",
+  "fill",
+  "choice",
+  "judge",
+  "geometry",
+  "classify",
+  "apply"
+ ],
+ "statusCounts": {
+  "total": 31,
+  "production": 21,
+  "combineOnly": 1,
+  "dormantCarrier": 2,
+  "dormantNoBinding": 7,
+  "sumProducedRows": 1570
+ },
+ "rules": [
+  "R1 覆盖",
+  "R2 题型=registry",
+  "R3 声明完整",
+  "R4 产出⊆声明",
+  "R5 状态一致",
+  "R6 无 legacy"
+ ],
+ "generators": [
+  {
+   "id": "generator:application-word",
+   "semanticFamily": "word-application",
+   "family": "application",
+   "supportedQuestionTypes": [
+    "apply",
+    "fill",
+    "choice",
+    "judge",
+    "calc"
+   ],
+   "inputContract": "plan only（不读 semanticParams）；模板+随机数驱动（模板由难度闸）",
+   "outputContract": "模板题; data{mode,steps,template,numbers,relation,options,correctIndex,shownAnswer}; answer=原始 string/boolean（契约偏差，由下游归一）; graphic 矩形虚线",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 2,
+   "supportsComposite": false,
+   "kpBindings": 33,
+   "contractCarrierRows": 0,
+   "producedRows1570": 108,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply",
+    "judge"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "33 KP 绑定；answer 不走 {value,acceptable}（收口发现）"
+  },
+  {
+   "id": "generator:arithmetic-addition",
+   "semanticFamily": "integer-arithmetic",
+   "family": "arithmetic",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "apply"
+   ],
+   "inputContract": "plan{kp,qt,difficulty,count,seed} + constraints{numberRange,kind,maxSteps,allowBracket,allowMultDiv,scale} + semanticParams.name(key kind)",
+   "outputContract": "answerMode=input; prompt=算式+“=？”; data{operation,steps}; 无图形",
+   "validator": "pipeline(kpSemantic+TypeContract[calc:expressionPresent]+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 13,
+   "contractCarrierRows": 939,
+   "producedRows1570": 52,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "算术族五算子之一，op=add",
+   "nativeExtendedTypes": [
+    "choice:13"
+   ]
+  },
+  {
+   "id": "generator:arithmetic-division",
+   "semanticFamily": "integer-arithmetic",
+   "family": "arithmetic",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "apply"
+   ],
+   "inputContract": "同 arithmetic-addition（op=div；kind=div-remainder 由 name 派生）",
+   "outputContract": "同上（data.operation=div）",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 23,
+   "contractCarrierRows": 0,
+   "producedRows1570": 86,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "op=div",
+   "nativeExtendedTypes": [
+    "choice:21"
+   ]
+  },
+  {
+   "id": "generator:arithmetic-mixed-calculation",
+   "semanticFamily": "integer-arithmetic",
+   "family": "arithmetic",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "apply"
+   ],
+   "inputContract": "同 arithmetic-addition（op=mixed；operationSet 算子集）",
+   "outputContract": "同上（data.operation=mixed）",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 10,
+   "contractCarrierRows": 0,
+   "producedRows1570": 28,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "op=mixed",
+   "nativeExtendedTypes": [
+    "choice:7"
+   ]
+  },
+  {
+   "id": "generator:arithmetic-multiplication",
+   "semanticFamily": "integer-arithmetic",
+   "family": "arithmetic",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "apply"
+   ],
+   "inputContract": "同 arithmetic-addition（op=mult）",
+   "outputContract": "同上（data.operation=mult）",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 15,
+   "contractCarrierRows": 0,
+   "producedRows1570": 54,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "op=mult",
+   "nativeExtendedTypes": [
+    "choice:13"
+   ]
+  },
+  {
+   "id": "generator:arithmetic-subtraction",
+   "semanticFamily": "integer-arithmetic",
+   "family": "arithmetic",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "apply"
+   ],
+   "inputContract": "同 arithmetic-addition（op=sub）",
+   "outputContract": "同上（data.operation=sub）",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 13,
+   "contractCarrierRows": 0,
+   "producedRows1570": 52,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "op=sub",
+   "nativeExtendedTypes": [
+    "choice:13"
+   ]
+  },
+  {
+   "id": "generator:c1-number-puzzle",
+   "semanticFamily": "number-sense",
+   "family": "c1",
+   "supportedQuestionTypes": [
+    "apply",
+    "calc"
+   ],
+   "inputContract": "plan only；kp={}，name 恒为默认",
+   "outputContract": "数字谜 text; data{mode:apply,steps:3,questionType,family:c1-number-puzzle}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "DORMANT-NO-BINDING",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 0,
+   "contractCarrierRows": 0,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "重复能力：apply/calc 全覆盖；0 绑定 0 产出；竞赛 C 族预留"
+  },
+  {
+   "id": "generator:c2-number-theory",
+   "semanticFamily": "number-sense",
+   "family": "c2",
+   "supportedQuestionTypes": [
+    "apply",
+    "calc"
+   ],
+   "inputContract": "plan only；依赖 op-semantics 符号",
+   "outputContract": "数论题 text; data{family:c2-number-theory}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "DORMANT-NO-BINDING",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 0,
+   "contractCarrierRows": 0,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "同 c1：0 绑定 0 产出；预留"
+  },
+  {
+   "id": "generator:c5-c6-journey-engineering",
+   "semanticFamily": "ratio-proportion / multiple-ratio",
+   "family": "c5c6",
+   "supportedQuestionTypes": [
+    "apply",
+    "calc"
+   ],
+   "inputContract": "plan only",
+   "outputContract": "行程/工程/浓度题 text; data{family:c5-c6-journey-engineering}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "DORMANT-NO-BINDING",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 0,
+   "contractCarrierRows": 0,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "同 c1：0 绑定 0 产出；预留"
+  },
+  {
+   "id": "generator:c7-clever-calc",
+   "semanticFamily": "integer-arithmetic",
+   "family": "c7",
+   "supportedQuestionTypes": [
+    "apply",
+    "calc"
+   ],
+   "inputContract": "plan only；依赖 op-semantics 符号",
+   "outputContract": "巧算/裂项 text; data{mode:calc,family:c7-clever-calc}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "DORMANT-NO-BINDING",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 0,
+   "contractCarrierRows": 0,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "同 c1：0 绑定 0 产出；预留"
+  },
+  {
+   "id": "generator:c9-comprehensive",
+   "semanticFamily": "word-application",
+   "family": "c9",
+   "supportedQuestionTypes": [
+    "apply",
+    "calc"
+   ],
+   "inputContract": "plan only；竞争模式由外层 hasC9Semantics 硬阻断",
+   "outputContract": "综合应用题 text; data{mode:apply,family:c9-comprehensive}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "DORMANT-NO-BINDING",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 0,
+   "contractCarrierRows": 0,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "同 c1：0 绑定 0 产出；头部注释陈旧（mock=open 描述已随 P28-07 摘除）"
+  },
+  {
+   "id": "generator:classification",
+   "semanticFamily": "classification",
+   "family": "classification",
+   "supportedQuestionTypes": [
+    "classify"
+   ],
+   "inputContract": "plan + constraints{numberRange}",
+   "outputContract": "分类/排序; data{mode:classify,sort{desc,count}}; answerMode=input",
+   "validator": "pipeline(kpSemantic[metaExempt]+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 2,
+   "supportsComposite": false,
+   "kpBindings": 25,
+   "contractCarrierRows": 25,
+   "producedRows1570": 89,
+   "actualProducerTypes": [
+    "classify",
+    "fill",
+    "choice",
+    "judge",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "唯一 classify 承接者（无重复）；25 KP 绑定；经 kp=1 同时产出 fill/choice/judge/apply → 欠声明（收口发现）",
+   "nativeExtendedTypes": [
+    "fill:14",
+    "choice:16",
+    "judge:21",
+    "apply:13"
+   ]
+  },
+  {
+   "id": "generator:code-recognition",
+   "semanticFamily": "number-sense",
+   "family": "code",
+   "supportedQuestionTypes": [
+    "fill",
+    "choice",
+    "judge",
+    "apply"
+   ],
+   "inputContract": "plan + constraints + semanticParams.name（codeCategory: idcard/postal/feature/practice/life）",
+   "outputContract": "CODE_BANK 5 类长情境题; data{mode,codeType}; choice 附 options/correctIndex",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 2,
+   "supportsComposite": false,
+   "kpBindings": 5,
+   "contractCarrierRows": 0,
+   "producedRows1570": 15,
+   "actualProducerTypes": [
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "5 KP 绑定（数字编码单元）"
+  },
+  {
+   "id": "generator:complex-calc",
+   "semanticFamily": "integer-arithmetic",
+   "family": "complex",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill"
+   ],
+   "inputContract": "plan + constraints.structure.family(chain/no-bracket/bracket/inverse)，需 kp-complex-semantics 注入；不读 semanticParams",
+   "outputContract": "answerMode=input; chain/bracket/fill-operator/fill-operand 形态; data{mode,operands,operators,steps}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)；依赖 kp-complex-semantics constraints",
+   "productionStatus": "DORMANT-NO-BINDING",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 0,
+   "contractCarrierRows": 0,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "重复能力：calc/fill 被算术族全覆盖；0 绑定 0 产出；bundled 预留"
+  },
+  {
+   "id": "generator:composite",
+   "semanticFamily": "跨族（combine 组合）",
+   "family": "composite",
+   "supportedQuestionTypes": [
+    "calc",
+    "judge",
+    "fill",
+    "apply"
+   ],
+   "inputContract": "plan.combine===true && knowledgePointIds.length≥2（supports 门 + 自有 throw guard）",
+   "outputContract": "calc-to-judge 组合题; data{mode:calc-to-judge,steps:1,primaryKp,operation,operands,correct,shown,composite:true}",
+   "validator": "pipeline(kpSemantic+TypeContract[booleanAnswer]+schema)+自有 guard（<2 KP 抛错）",
+   "productionStatus": "PRODUCTION-COMBINE-ONLY",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": true,
+   "kpBindings": 5,
+   "contractCarrierRows": 0,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "唯一 supportsComposite；1570 单 KP 扫描下 0 行（combine 场景承载，见 composite.test.js）"
+  },
+  {
+   "id": "generator:concept-meaning",
+   "semanticFamily": "number-sense",
+   "family": "concept",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "apply",
+    "choice",
+    "geometry",
+    "judge"
+   ],
+   "inputContract": "plan + constraints + semanticParams.subTopic+name（次数/分数意义/角/面积/负数等 maker）",
+   "outputContract": "概念题（列式/填空/判断/选择）; data{mode:concept-meaning,subType,semanticEvidence{relations,constructs},options,correctIndex}",
+   "validator": "pipeline(kpSemantic[checkSemanticEvidence]+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 42,
+   "contractCarrierRows": 0,
+   "producedRows1570": 167,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply",
+    "judge",
+    "geometry"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "42 KP 绑定（1570 第二大承载，167 行）"
+  },
+  {
+   "id": "generator:counting",
+   "semanticFamily": "multiplicative-relation",
+   "family": "counting",
+   "supportedQuestionTypes": [
+    "apply",
+    "calc"
+   ],
+   "inputContract": "plan + semanticParams.name（组合学 subtype 派生）",
+   "outputContract": "apply/calc 计数/排列组合 story; data{mode,steps,questionType}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 2,
+   "contractCarrierRows": 0,
+   "producedRows1570": 7,
+   "actualProducerTypes": [
+    "fill",
+    "choice",
+    "apply",
+    "calc"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "2 KP 绑定",
+   "nativeExtendedTypes": [
+    "fill:2",
+    "choice:2"
+   ]
+  },
+  {
+   "id": "generator:decimal-number",
+   "semanticFamily": "decimal",
+   "family": "decimal",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "inputContract": "plan + semanticParams.name（NAME_RULES→subtype 12 分支；fail-closed 缺 name 返回[]）",
+   "outputContract": "小数专项; data{mode:decimal,subType,steps,options,correctIndex}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 24,
+   "contractCarrierRows": 0,
+   "producedRows1570": 96,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "24 KP 绑定"
+  },
+  {
+   "id": "generator:equivalent-reasoning",
+   "semanticFamily": "multiple-ratio",
+   "family": "equivalent",
+   "supportedQuestionTypes": [
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "inputContract": "plan + constraints；不读 semanticParams",
+   "outputContract": "等量代换 chain/买家 story; data{mode,chain:[p,q],options,correctIndex}; choice 分支 answerMode 未切（残留 input）",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "DORMANT-NO-BINDING",
+   "scope": "core",
+   "version": 2,
+   "supportsComposite": false,
+   "kpBindings": 0,
+   "contractCarrierRows": 0,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "重复能力：fill/choice/apply 全覆盖；0 绑定 0 产出；answerMode 契约偏差（收口发现）"
+  },
+  {
+   "id": "generator:fraction-number",
+   "semanticFamily": "fraction",
+   "family": "fraction",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "inputContract": "plan + semanticParams.name（NAME_RULES→subtype 11 分支；fail-closed）",
+   "outputContract": "分数专项; data{mode:fraction,subType,steps:1,options,correctIndex}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 19,
+   "contractCarrierRows": 0,
+   "producedRows1570": 76,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "19 KP 绑定"
+  },
+  {
+   "id": "generator:money-measurement",
+   "semanticFamily": "unit-measurement",
+   "family": "money-measurement",
+   "supportedQuestionTypes": [
+    "fill",
+    "choice",
+    "judge",
+    "apply",
+    "calc"
+   ],
+   "inputContract": "plan + semanticParams.name+concept（deriveMeasureKind: rmb/length/area/mass/time/capacity）",
+   "outputContract": "fill/choice/judge/apply/calc; data{kind,operation,originalAmount/targetUnit/fromUnit/toUnit,options}; graphic currency/rectangle",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 2,
+   "supportsComposite": false,
+   "kpBindings": 12,
+   "contractCarrierRows": 0,
+   "producedRows1570": 20,
+   "actualProducerTypes": [
+    "fill",
+    "choice",
+    "apply",
+    "calc"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "12 KP 绑定；模块级 rng 非逐题确定"
+  },
+  {
+   "id": "generator:percent-calc",
+   "semanticFamily": "percent",
+   "family": "percent",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "apply"
+   ],
+   "inputContract": "plan + constraints + semanticParams.subTopic（paramsOf→SUBTOPIC_MAKERS）",
+   "outputContract": "百分数计算/互化/折扣/利率; data{mode:percent-calc,subType,...}; answerMode=input",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 11,
+   "contractCarrierRows": 0,
+   "producedRows1570": 44,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "11 KP 绑定",
+   "nativeExtendedTypes": [
+    "choice:11"
+   ]
+  },
+  {
+   "id": "generator:picture-equation",
+   "semanticFamily": "number-sense",
+   "family": "picture-equation",
+   "supportedQuestionTypes": [
+    "apply",
+    "calc"
+   ],
+   "inputContract": "plan only（不读 semanticParams）",
+   "outputContract": "apply/calc 看图列式; data{mode,steps,questionType,graphic{type:diagram,subtype:segment/brace/balance/scale}}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 2,
+   "contractCarrierRows": 0,
+   "producedRows1570": 5,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "2 KP 绑定",
+   "nativeExtendedTypes": [
+    "fill:1",
+    "choice:1"
+   ]
+  },
+  {
+   "id": "generator:position-direction",
+   "semanticFamily": "spatial-reasoning",
+   "family": "position",
+   "supportedQuestionTypes": [
+    "choice",
+    "judge",
+    "fill",
+    "geometry",
+    "apply"
+   ],
+   "inputContract": "plan + semanticParams.name（deriveSpatialType）",
+   "outputContract": "choice/judge/fill/geometry/apply; data{scene{objects,gridSize},options,isTrue,correctDirection,graphic{type:geometry,subtype:position-grid}}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 2,
+   "supportsComposite": false,
+   "kpBindings": 25,
+   "contractCarrierRows": 0,
+   "producedRows1570": 119,
+   "actualProducerTypes": [
+    "fill",
+    "choice",
+    "judge",
+    "geometry",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "25 KP 绑定"
+  },
+  {
+   "id": "generator:reasoning",
+   "semanticFamily": "multiplicative-relation / statistics-probability",
+   "family": "reasoning",
+   "supportedQuestionTypes": [
+    "apply",
+    "calc",
+    "fill",
+    "choice"
+   ],
+   "inputContract": "plan + semanticParams.name（推理 subtype 派生）",
+   "outputContract": "apply/calc/fill/choice; data{mode,steps,operation,options,correctIndex}",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 15,
+   "contractCarrierRows": 0,
+   "producedRows1570": 46,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "15 KP 绑定"
+  },
+  {
+   "id": "generator:selection-choice",
+   "semanticFamily": "integer-arithmetic",
+   "family": "selection",
+   "supportedQuestionTypes": [
+    "choice",
+    "geometry",
+    "calc",
+    "apply"
+   ],
+   "inputContract": "plan + constraints；不读 semanticParams",
+   "outputContract": "answerMode=input; prompt=算式+“=？”; data{mode:choice,steps,options,correctIndex}",
+   "validator": "pipeline(kpSemantic+TypeContract[optionsPresent/answerInOptions]+schema)",
+   "productionStatus": "DORMANT-CONTRACT-CARRIER",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 0,
+   "contractCarrierRows": 375,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "重复能力：contract 375 行 choice 名义载体，实际 0 产出（choice 由原生绑定族全覆盖）"
+  },
+  {
+   "id": "generator:selection-fill",
+   "semanticFamily": "integer-arithmetic",
+   "family": "selection",
+   "supportedQuestionTypes": [
+    "fill",
+    "geometry",
+    "calc",
+    "apply"
+   ],
+   "inputContract": "plan + constraints{numberRange,maxSteps,allowBracket,allowMultDiv,scale}；不读 semanticParams",
+   "outputContract": "answerMode=input; prompt=算式+“=____”; data{mode:fill,steps,options,correctIndex}",
+   "validator": "pipeline(kpSemantic+TypeContract[blankPresent]+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 1,
+   "contractCarrierRows": 105,
+   "producedRows1570": 3,
+   "actualProducerTypes": [
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "1 绑定 KP（g2-down-u07-k002）；几何为名义声明",
+   "nativeExtendedTypes": [
+    "choice:1"
+   ]
+  },
+  {
+   "id": "generator:selection-judge",
+   "semanticFamily": "integer-arithmetic",
+   "family": "selection",
+   "supportedQuestionTypes": [
+    "judge",
+    "geometry",
+    "calc",
+    "apply"
+   ],
+   "inputContract": "plan + constraints",
+   "outputContract": "answerMode=input; prompt=算式+“=shown（对还是错？）”; data{mode:judge,steps,shownResult}",
+   "validator": "pipeline(kpSemantic+TypeContract[booleanAnswer]+schema)",
+   "productionStatus": "DORMANT-CONTRACT-CARRIER",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 0,
+   "contractCarrierRows": 126,
+   "producedRows1570": 0,
+   "actualProducerTypes": [],
+   "tests": [],
+   "historical": [],
+   "note": "重复能力：contract 126 行 judge 名义载体，实际 0 产出（judge 由 shape/position/classification 覆盖）"
+  },
+  {
+   "id": "generator:semantic-relations",
+   "semanticFamily": "ratio-proportion / multiple-ratio / unit-measurement",
+   "family": "semantic-relations",
+   "supportedQuestionTypes": [
+    "calc",
+    "fill",
+    "apply",
+    "choice",
+    "geometry"
+   ],
+   "inputContract": "plan + constraints + semanticParams.subTopic(+name)（图解加/周期规律/比例尺/比例应用/比例意义）",
+   "outputContract": "图形/比例/周期; data{mode:semantic-relations,subTopic,operation/barModel/periodLength/scaleRatio/proportion,options}",
+   "validator": "pipeline(kpSemantic[operation 规则]+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 10,
+   "contractCarrierRows": 0,
+   "producedRows1570": 44,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "geometry",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "10 KP 绑定"
+  },
+  {
+   "id": "generator:shape-recognition",
+   "semanticFamily": "geometric-figure / geometric-measurement",
+   "family": "shape",
+   "supportedQuestionTypes": [
+    "choice",
+    "judge",
+    "fill",
+    "calc",
+    "geometry",
+    "apply"
+   ],
+   "inputContract": "plan + semanticParams.name（deriveShapeTypeFromName 派生具体图形）",
+   "outputContract": "choice4/judge/fill/geometry/calc; data{graphic{type:geometry,subtype},options,correctIndex}; 度量 calc 含列式",
+   "validator": "pipeline(kpSemantic+TypeContract[geometry:graphicPresent]+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 3,
+   "supportsComposite": false,
+   "kpBindings": 88,
+   "contractCarrierRows": 0,
+   "producedRows1570": 421,
+   "actualProducerTypes": [
+    "fill",
+    "choice",
+    "judge",
+    "geometry",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "1570 最大承载（421 行）；88 KP 绑定"
+  },
+  {
+   "id": "generator:stats",
+   "semanticFamily": "statistics-probability",
+   "family": "stats",
+   "supportedQuestionTypes": [
+    "apply",
+    "calc",
+    "fill",
+    "choice"
+   ],
+   "inputContract": "plan + semanticParams.name（统计/时间/日历 subtype 派生）",
+   "outputContract": "apply/calc/fill/choice; data{mode:apply,graphic{type:chart},choiceForm/judgeForm/calcForm,options}; judge 经 data.judgeForm 产出",
+   "validator": "pipeline(kpSemantic+TypeContract+schema)",
+   "productionStatus": "PRODUCTION",
+   "scope": "core",
+   "version": 1,
+   "supportsComposite": false,
+   "kpBindings": 11,
+   "contractCarrierRows": 0,
+   "producedRows1570": 38,
+   "actualProducerTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "apply"
+   ],
+   "tests": [],
+   "historical": [],
+   "note": "欠声明 judge：产出 judgeForm 但能力数组无 judge（收口发现）"
+  }
+ ],
+ "fails": [],
+ "frozen": true
+}

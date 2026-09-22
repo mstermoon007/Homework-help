@@ -161,6 +161,14 @@ function wrapGenerator(gen, generatorId, generatorVersion) {
   if (!gen || typeof gen.generate !== 'function') return gen;
   var orig = gen.generate.bind(gen);
   gen.generate = function (plan, context) {
+    // P28-07：旧题型 token（oral/recognize/open）只在生成器边界经 normalizeQuestionType 归一一次，
+    // 之后 generate 一律消费 canonical 7 类；旧 token 不得再作为能力声明或生成器分支进入。
+    if (plan && plan.questionTypeId && QuestionTypeRegistry && typeof QuestionTypeRegistry.normalizeQuestionType === 'function') {
+      var _n = QuestionTypeRegistry.normalizeQuestionType(plan.questionTypeId, { allowHeuristic: false });
+      if (_n && _n.id && _n.id !== plan.questionTypeId) {
+        plan = Object.assign({}, plan, { questionTypeId: _n.id });
+      }
+    }
     var paramPlan = SemanticParameters.attachToPlan(plan);
     var out = orig(paramPlan, context);
     // P25-07：产出单点收口 —— 按题型教育契约 finish（convertible 机械转换）

@@ -227,8 +227,7 @@ function runDynamic() {
       var sel = global.GeneratorSelector.selectGenerator(plan);
       var inst = global.GeneratorSelector.instantiate(sel);
       var sems = inst.generate(plan, { seed: 'kbl-uniqueness', count: 3 });
-      var list = global.SemanticQuestionBridge.toQuestions(sems || []);
-      result.semanticQuestions = list ? list.length : 0;
+      result.semanticQuestions = Array.isArray(sems) ? sems.length : 0;
     }
     result.legacyGlobals = {
       KnowledgeBank: typeof global.KnowledgeBank,

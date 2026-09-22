@@ -35,7 +35,8 @@ module.exports = {
   CapabilityResolver: global.CapabilityResolver,
   CapabilityModel: global.CapabilityModel,
   CapabilityMatrix: global.CapabilityMatrix,
-  SemanticQuestionBridge: global.SemanticQuestionBridge,
+  // P28-21：唯一 Legacy Adapter（SemanticQuestion → Legacy），替代已删除的 semantic-question-bridge
+  RenderFormat: (global.PresentationEngine && global.PresentationEngine.RenderFormat) || null,
   ComprehensiveStrategy: global.ComprehensiveStrategy,
   KnowledgeContext: global.KnowledgeContext
 };

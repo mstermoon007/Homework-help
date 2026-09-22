@@ -1,0 +1,201 @@
+{
+  "meta": {
+    "task": "P28-00",
+    "tool": "dev/p28/build-baseline.js",
+    "generatedAt": "2026-09-21T15:06:49.105Z",
+    "version": "5.0.0",
+    "git": {
+      "commit": "dabe71c",
+      "branch": "01page-report"
+    },
+    "readOnly": true,
+    "tokensScanned": [
+      "TODO",
+      "FIXME",
+      "HACK",
+      "LEGACY",
+      "DEPRECATED",
+      "COMPAT",
+      "BRIDGE",
+      "TEMP",
+      "DEBUG"
+    ],
+    "matches": {
+      "DEBUG": 6,
+      "COMPAT": 2,
+      "BRIDGE": 2,
+      "TODO": 5,
+      "FIXME": 2,
+      "LEGACY": 14
+    },
+    "filesAffected": 15
+  },
+  "files": {
+    "shared/state/logger.js": {
+      "tokens": [
+        {
+          "token": "DEBUG",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "ext": "js"
+    },
+    "shared/engine/presentation-engine.bundle.js": {
+      "tokens": [
+        {
+          "token": "DEBUG",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "ext": "js"
+    },
+    "docs/AI-DEVELOPMENT-RULES.md": {
+      "tokens": [
+        {
+          "token": "COMPAT",
+          "count": 1
+        },
+        {
+          "token": "BRIDGE",
+          "count": 1
+        }
+      ],
+      "total": 2,
+      "ext": "md"
+    },
+    "docs/CROSS-LAYER-MATRIX.md": {
+      "tokens": [
+        {
+          "token": "COMPAT",
+          "count": 1
+        },
+        {
+          "token": "BRIDGE",
+          "count": 1
+        }
+      ],
+      "total": 2,
+      "ext": "md"
+    },
+    "docs/archive/phases/DEV_LOG.md": {
+      "tokens": [
+        {
+          "token": "TODO",
+          "count": 1
+        },
+        {
+          "token": "FIXME",
+          "count": 1
+        }
+      ],
+      "total": 2,
+      "ext": "md"
+    },
+    "docs/archive/phases/pol-kbl-phase9-governance.md": {
+      "tokens": [
+        {
+          "token": "DEBUG",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "ext": "md"
+    },
+    "docs/archive/phases/audit/P17-0-final-report.md": {
+      "tokens": [
+        {
+          "token": "LEGACY",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "ext": "md"
+    },
+    "docs/archive/phases/audit/P17-0-legacy-audit.md": {
+      "tokens": [
+        {
+          "token": "LEGACY",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "ext": "md"
+    },
+    "archive/r6-gate-cleanup/check-legacy-dependencies.js": {
+      "tokens": [
+        {
+          "token": "LEGACY",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-legacy-gate.js": {
+      "tokens": [
+        {
+          "token": "LEGACY",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-p4-legacy-gate.js": {
+      "tokens": [
+        {
+          "token": "LEGACY",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "ext": "js"
+    },
+    "archive/plugins-removed/math-comprehensive.js": {
+      "tokens": [
+        {
+          "token": "TODO",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "ext": "js"
+    },
+    "archive/g1-curriculum-2026/math-g1-patterns.js": {
+      "tokens": [
+        {
+          "token": "TODO",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "ext": "js"
+    },
+    "archive/g1-curriculum-2026/math-statistics.js": {
+      "tokens": [
+        {
+          "token": "TODO",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "ext": "js"
+    },
+    "archive/docs-2026-09/PROJECT_SUMMARY.md": {
+      "tokens": [
+        {
+          "token": "TODO",
+          "count": 1
+        },
+        {
+          "token": "FIXME",
+          "count": 1
+        }
+      ],
+      "total": 2,
+      "ext": "md"
+    }
+  }
+}

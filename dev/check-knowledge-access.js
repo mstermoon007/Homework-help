@@ -35,7 +35,9 @@ const DATA_PATTERNS = ['data', 'relations', 'mappings', 'index', 'manifest'].map
 // compat-bridge（knowledge-compat.js / build-strategy-bundle.js）为 Frozen Strategy bundle 的
 // 构建期接线：旧模块名 → KBL Runtime 委托，属受控例外（不得扩散）。
 const IGNORE_DIRS = ['node_modules', '.git', 'archive', 'migration', 'docs', 'shared/knowledge/runtime'];
-const TOOLS = new Set(['tools/kbl/build.js', 'tools/kbl/publish.js', 'tools/kbl/verify.js', 'dev/verify-kbl-runtime.js', 'dev/build-knowledge-runtime.js', 'dev/check-knowledge-access.js', 'dev/check-kbl-quality.js']);
+const TOOLS = new Set(['tools/kbl/build.js', 'tools/kbl/publish.js', 'tools/kbl/verify.js',
+  'dev/verify-kbl-runtime.js', 'dev/build-knowledge-runtime.js', 'dev/check-knowledge-access.js',
+  'dev/check-kbl-quality.js', 'dev/p28/check-generation-matrix-freeze.js']);
 
 function hitKind(content) {
   const kinds = [];

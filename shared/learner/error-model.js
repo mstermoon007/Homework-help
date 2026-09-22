@@ -13,6 +13,9 @@
  * M6-R10 来源约束：本模型不自行分析答案；“错因”只允许来自
  * Validator / SemanticQuestion 提供的 errorType。系统无可靠错因时
  * 一律返回 null（不伪造诊断）。
+ *
+ * P28-31 定位：错因 SSOT（固定 8 类 + other）。只记录字面可靠错因计数，
+ *   不做因果/归因推断；禁止新增自推导诊断、黑盒归因、AI 分类器。
  */
 (function (global) {
   'use strict';

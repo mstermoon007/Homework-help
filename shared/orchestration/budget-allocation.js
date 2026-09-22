@@ -1,7 +1,7 @@
 /**
  * shared/orchestration/budget-allocation.js — 题型级预算分配（Round-Robin 均衡 + 容量约束 + 缺口回收）
  *
- * 纯函数层，不读 Capacity 文件、不生成、不接触 Generator / Validator / KnowledgeBank。
+ * 纯函数层，不读 Capacity 文件、不生成、不接触 Generator / Validator / 知识层。
  * 容量数据（typeCaps）由调用方（practice-orchestrator）注入：node 端来自 capacity-inventory，
  * 浏览器端无 fs 则传 Infinity（不封顶），正确性由编排层 recovery 兜底。
  *

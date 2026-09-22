@@ -26,8 +26,12 @@ build/
 .workbuddy/
 .trae/
 
-# 本地生成的检查报告（由各 verify/check 门禁再生于 dev/reports/）
+# 本地生成的检查报告（由各 verify/check 门禁再生）
 dev/reports/
+dev/p25/reports/
+dev/p26/reports/
+dev/p27/reports/
+dev/p28/reports/
 # 仅忽略根目录历史归档；docs/archive/ 为冻结文档归档，需入库
 /archive/
 competition-report.json

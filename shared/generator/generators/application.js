@@ -312,39 +312,8 @@ function createApplicationGenerator(spec) {
       var meta = getApplicationMeta(kp);
 
       for (var i = 0; i < count; i++) {
-        var q;
-        var qt = plan.questionTypeId;
-        if (qt === 'open') {
-          // open qt：竞赛开放题，综合运用知识点
-          var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-          var a = randInt(rng, 10, 99);
-          var b = randInt(rng, 2, 12);
-          var ops = ['加', '减', '乘', '除'];
-          var opWord = Rng.pick(rng, ops);
-          var answer = computeAnswer('multiplication', { a: a, n: b });
-          q = {
-            knowledgePointId: pkp(plan),
-            // P0-11：open 为 Registry 别名（open→apply），canonical 归类 apply；data.mode 保留 'open' 作为竞赛开放模板语义
-            questionType: 'apply',
-            difficulty: plan.difficulty,
-            spiralLevel: plan.spiralLevel || 1,
-            context: plan.contextType || 'standard',
-            seed: seedFor(plan, context, i),
-            prompt: '【竞赛开放题】一个数是' + a + '，另一个数是' + b + '的多少倍？请写出完整的解题过程并说明你的思路。',
-            answer: { value: String(answer), acceptable: [] },
-            answerMode: 'input',
-            data: {
-              mode: 'open',
-              steps: 3,
-              graphic: makeGraphicForApplication('multiplication', { a: a, n: b }),
-              numbers: { a: a, b: b, answer: answer },
-              template: 'competition-open'
-            }
-          };
-        } else {
-          q = makeApplicationQuestion(plan, context, i, meta);
-          q.data.graphic = makeGraphicForApplication(q.data.template, q.data.numbers);
-        }
+        var q = makeApplicationQuestion(plan, context, i, meta);
+        q.data.graphic = makeGraphicForApplication(q.data.template, q.data.numbers);
         questions.push(q);
       }
       return questions;
@@ -352,7 +321,7 @@ function createApplicationGenerator(spec) {
   };
 }
 
-// P25-06 H2：原 APPLICATION_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 legacy ID，
+// P25-06 H2：原 APPLICATION_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 历史 ID，
 // 含一条故意重复的权重项）已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
 // 绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function buildAll() {

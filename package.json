@@ -21,6 +21,7 @@
     "check:sitemap": "node dev/check-sitemap.js",
     "check:llm-understanding": "node dev/check-llm-understanding.js",
     "check:crawl-health": "node dev/check-crawl-health.js",
-    "crawl:simulate": "node scripts/crawl-site.js"
+    "crawl:simulate": "node scripts/crawl-site.js",
+    "check-all": "node dev/check-all.js"
   }
 }

@@ -10,6 +10,8 @@
  *   kbl/canonical/mappings.json    —— 每 KP × allowedType 生成映射（capability=canonical 题型词表；pluginId 校验自生成器注册表）
  *
  * 可审计性：capability/mappings 每个派生值记录 derivation.rule（命中规则编号）与 evidence（命中关键词），非黑盒。
+ * 确定性（P28-05）：canonical 数据禁止 generatedAt / random ID / random ordering / 环境相关路径；
+ *   同一 extract-raw（同一 Excel）重复派生，输出 byte 级一致（SHA256 完全一致）。
  * 约束：不写回 Excel；不改变 canonical 数据结构与 ID 规则；不新增旧 ID 兼容；permission 仅 allow/missing；relations 空缺保持空集。
  */
 'use strict';
@@ -85,7 +87,6 @@ function detectSteps(s) {
 }
 
 // ---------- Deriver ----------
-function nowISO() { return new Date().toISOString(); }
 
 function derive() {
   var raw = JSON.parse(fs.readFileSync(RAW, 'utf8'));
@@ -217,10 +218,10 @@ function derive() {
   });
 
   fs.mkdirSync(path.dirname(CAP_OUT), { recursive: true });
-  fs.writeFileSync(COURSE_OUT, JSON.stringify({ schemaVersion: canonSchema, source: srcFile, generatedAt: nowISO(), course: course }, null, 2));
-  fs.writeFileSync(KNOW_OUT, JSON.stringify({ schemaVersion: canonSchema, source: srcFile, generatedAt: nowISO(), count: knowledge.length, knowledge: knowledge }, null, 2));
-  fs.writeFileSync(REL_OUT, JSON.stringify({ schemaVersion: canonSchema, source: srcFile, note: 'SRC 无关系字段；旧关系 1287 行已按裁决清除。关系集为空，待人工源补充或后续从释义派生。', generatedAt: nowISO(), count: relations.length, relations: relations }, null, 2));
-  fs.writeFileSync(CAP_OUT, JSON.stringify({ schemaVersion: '1.0.0', source: 'root extract + 释义规则派生', generatedAt: new Date().toISOString(), count: capability.length, capability: capability }, null, 2));
+  fs.writeFileSync(COURSE_OUT, JSON.stringify({ schemaVersion: canonSchema, source: srcFile, course: course }, null, 2));
+  fs.writeFileSync(KNOW_OUT, JSON.stringify({ schemaVersion: canonSchema, source: srcFile, count: knowledge.length, knowledge: knowledge }, null, 2));
+  fs.writeFileSync(REL_OUT, JSON.stringify({ schemaVersion: canonSchema, source: srcFile, note: 'SRC 无关系字段；旧关系 1287 行已按裁决清除。关系集为空，待人工源补充或后续从释义派生。', count: relations.length, relations: relations }, null, 2));
+  fs.writeFileSync(CAP_OUT, JSON.stringify({ schemaVersion: '1.0.0', source: 'root extract + 释义规则派生', count: capability.length, capability: capability }, null, 2));
   fs.writeFileSync(MAP_OUT, JSON.stringify({ schemaVersion: '1.0.0', source: 'kbl-derived', subject: 'math', count: mappings.length, mappings: mappings }, null, 2));
 
   return { course: course.length, knowledge: knowledge.length, relations: relations.length, capability: capability.length, mappings: mappings.length, generatorCount: genIds.length, diffSpread: {}, typeSpread: {}, permission: {} };

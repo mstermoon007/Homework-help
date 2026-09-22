@@ -4,7 +4,7 @@
  * shared/generator/generators/composite.js — 最小 Composite 生成器
  *
  * 现状（POL–KBL Phase 4）：
- *   combine 生成的可用性取决于 B6 绑定迁移（registry.knowledgePoints 仍为 legacy ID），
+ *   combine 生成的可用性取决于 B6 绑定迁移（registry.knowledgePoints 仍为 历史 ID），
  *   当前生产不可达；本模块保留**最小接口**（supportsComposite + combine 组合出题）。
  *
  * 约束（Phase 4 硬边界）：
@@ -105,7 +105,7 @@ function createCompositeGenerator(spec) {
   };
 }
 
-// P25-06 H2：原 COMPOSITE_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 legacy ID）
+// P25-06 H2：原 COMPOSITE_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 历史 ID）
 // 已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
 // 绑定 SSOT 在 generator-registry.js CORE_RECORDS（composite 记录由 supportsComposite 承载）。
 function buildAll() {

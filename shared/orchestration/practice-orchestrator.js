@@ -6,7 +6,7 @@
  *   → Budget Recovery（带终止）→ PracticeResult（含编排账本）
  *
  * 硬约束：
- *   - 不改 Generator / Validator / Difficulty / KnowledgeBank / Capability（Frozen Core）。
+ *   - 不改 Generator / Validator / Difficulty / 知识层 / Capability（Frozen Core）。
  *   - 不反向 require 上层 API（依赖方向 API → Orchestrator → Strategy → Generator）。
  *   - 容量数据来自 capacity-inventory（node）；浏览器无 fs → 传 Infinity，由 recovery 兜底。
  *   - 单一预算账本：totalBudget 只减不增；recovery 仅重新分配已存在的预算单位。
@@ -219,7 +219,7 @@
 
     // 仅对「显式候选 KP + 题型」路径介入（即 v4.3.0 二级/三级页与知识点深链的实际链路）。
     // 池模式（无显式 KP）：POL 经 KnowledgeContext 展开年级/单元池（KBL Runtime 唯一事实源），
-    // 取代 Frozen Strategy poolEntries（KB.getEntries）路径 → Strategy 不再主动查询 KnowledgeBank。
+    // 取代 Frozen Strategy poolEntries（KB.getEntries）路径 → Strategy 不再主动查询知识层。
     var kpIds = explicitKpIds(req);
     if (!kpIds.length) {
       var poolGrade = req.grade != null ? req.grade : (req.scope && req.scope.grade != null ? req.scope.grade : null);

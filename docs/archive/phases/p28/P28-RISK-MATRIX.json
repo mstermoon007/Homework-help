@@ -1,0 +1,6342 @@
+{
+  "meta": {
+    "task": "P28-00",
+    "tool": "dev/p28/build-baseline.js",
+    "generatedAt": "2026-09-21T15:06:49.105Z",
+    "version": "5.0.0",
+    "git": {
+      "commit": "dabe71c",
+      "branch": "01page-report"
+    },
+    "readOnly": true,
+    "patternsScanned": [
+      {
+        "token": "eval",
+        "risk": "high"
+      },
+      {
+        "token": "new Function",
+        "risk": "high"
+      },
+      {
+        "token": "document.write",
+        "risk": "high"
+      },
+      {
+        "token": "innerHTML",
+        "risk": "high"
+      },
+      {
+        "token": "outerHTML",
+        "risk": "high"
+      },
+      {
+        "token": "rawHtml",
+        "risk": "medium"
+      },
+      {
+        "token": "rawSvg",
+        "risk": "medium"
+      },
+      {
+        "token": "Math.random",
+        "risk": "medium"
+      },
+      {
+        "token": "require",
+        "risk": "info"
+      },
+      {
+        "token": "import",
+        "risk": "info"
+      }
+    ],
+    "highRiskFiles": 7,
+    "mediumRiskFiles": 25,
+    "infoRiskFiles": 305
+  },
+  "byToken": {
+    "require": [
+      {
+        "file": "shared/validator/answer-validator.js",
+        "count": 1
+      },
+      {
+        "file": "shared/validator/batch-validator.js",
+        "count": 2
+      },
+      {
+        "file": "shared/validator/composite-validator.js",
+        "count": 1
+      },
+      {
+        "file": "shared/validator/difficulty-integrity-validator.js",
+        "count": 2
+      },
+      {
+        "file": "shared/validator/difficulty-validator.js",
+        "count": 1
+      },
+      {
+        "file": "shared/validator/duplicate-integrity-validator.js",
+        "count": 2
+      },
+      {
+        "file": "shared/validator/duplicate-validator.js",
+        "count": 1
+      },
+      {
+        "file": "shared/validator/kp-coverage-validator.js",
+        "count": 1
+      },
+      {
+        "file": "shared/validator/kp-semantic-validator.js",
+        "count": 8
+      },
+      {
+        "file": "shared/validator/quality-scorer.js",
+        "count": 4
+      },
+      {
+        "file": "shared/validator/question-validator.js",
+        "count": 2
+      },
+      {
+        "file": "shared/validator/validation-pipeline.js",
+        "count": 12
+      },
+      {
+        "file": "shared/svg/svg-calculation.js",
+        "count": 1
+      },
+      {
+        "file": "shared/svg/svg-chart.js",
+        "count": 1
+      },
+      {
+        "file": "shared/svg/svg-currency.js",
+        "count": 1
+      },
+      {
+        "file": "shared/svg/svg-diagram.js",
+        "count": 1
+      },
+      {
+        "file": "shared/svg/svg-geometry.js",
+        "count": 1
+      },
+      {
+        "file": "shared/svg/svg-make-ten.js",
+        "count": 1
+      },
+      {
+        "file": "shared/strategy/adaptive-strategy.js",
+        "count": 1
+      },
+      {
+        "file": "shared/strategy/cognitive-strategy.js",
+        "count": 4
+      },
+      {
+        "file": "shared/strategy/complexity-strategy.js",
+        "count": 2
+      },
+      {
+        "file": "shared/strategy/comprehensive-strategy.js",
+        "count": 2
+      },
+      {
+        "file": "shared/strategy/constraint-builder.js",
+        "count": 3
+      },
+      {
+        "file": "shared/strategy/context-strategy.js",
+        "count": 5
+      },
+      {
+        "file": "shared/strategy/difficulty-strategy.js",
+        "count": 7
+      },
+      {
+        "file": "shared/strategy/number-range-strategy.js",
+        "count": 6
+      },
+      {
+        "file": "shared/strategy/question-plan.js",
+        "count": 2
+      },
+      {
+        "file": "shared/strategy/question-style-strategy.js",
+        "count": 3
+      },
+      {
+        "file": "shared/strategy/question-type-strategy.js",
+        "count": 4
+      },
+      {
+        "file": "shared/strategy/spiral-strategy.js",
+        "count": 3
+      },
+      {
+        "file": "shared/strategy/static-difficulty.js",
+        "count": 3
+      },
+      {
+        "file": "shared/strategy/strategy-engine.js",
+        "count": 35
+      },
+      {
+        "file": "shared/strategy/strategy-request.js",
+        "count": 2
+      },
+      {
+        "file": "shared/strategy/strategy-resolver.js",
+        "count": 3
+      },
+      {
+        "file": "shared/strategy/strategy-validator.js",
+        "count": 3
+      },
+      {
+        "file": "shared/strategy/structure-constraints.js",
+        "count": 6
+      },
+      {
+        "file": "shared/strategy/target-difficulty.js",
+        "count": 5
+      },
+      {
+        "file": "shared/strategy/variation-directive.js",
+        "count": 1
+      },
+      {
+        "file": "shared/state/logger.js",
+        "count": 1
+      },
+      {
+        "file": "shared/semantic/semantic-question.js",
+        "count": 4
+      },
+      {
+        "file": "shared/schemas/semantic-question.schema.js",
+        "count": 1
+      },
+      {
+        "file": "shared/request/request-normalize.js",
+        "count": 1
+      },
+      {
+        "file": "shared/presentation/print.js",
+        "count": 1
+      },
+      {
+        "file": "shared/presentation/renderer.js",
+        "count": 4
+      },
+      {
+        "file": "shared/presentation/svg-registry.js",
+        "count": 2
+      },
+      {
+        "file": "shared/orchestration/knowledge-context.js",
+        "count": 1
+      },
+      {
+        "file": "shared/orchestration/practice-orchestrator.js",
+        "count": 10
+      },
+      {
+        "file": "shared/learner/learner-model.js",
+        "count": 1
+      },
+      {
+        "file": "shared/learner/learner-storage.js",
+        "count": 2
+      },
+      {
+        "file": "shared/learner/practice-result.js",
+        "count": 1
+      },
+      {
+        "file": "shared/learner/result-collector.js",
+        "count": 2
+      },
+      {
+        "file": "shared/knowledge/question-id.js",
+        "count": 1
+      },
+      {
+        "file": "shared/knowledge/runtime/knowledge-api.js",
+        "count": 5
+      },
+      {
+        "file": "shared/knowledge/runtime/knowledge-index.js",
+        "count": 2
+      },
+      {
+        "file": "shared/knowledge/runtime/knowledge-loader.js",
+        "count": 4
+      },
+      {
+        "file": "shared/knowledge/runtime/knowledge-policy.js",
+        "count": 2
+      },
+      {
+        "file": "shared/knowledge/runtime/knowledge-query.js",
+        "count": 4
+      },
+      {
+        "file": "shared/knowledge/runtime/knowledge-relation.js",
+        "count": 2
+      },
+      {
+        "file": "shared/knowledge/runtime/knowledge-runtime.js",
+        "count": 19
+      },
+      {
+        "file": "shared/knowledge/runtime/teaching-semantic-profile.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generator-contract.js",
+        "count": 10
+      },
+      {
+        "file": "shared/generator/generator-registry.js",
+        "count": 4
+      },
+      {
+        "file": "shared/generator/generator-selector.js",
+        "count": 7
+      },
+      {
+        "file": "shared/generator/graphic-renderer.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/registry-facade.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/retry-loop.js",
+        "count": 5
+      },
+      {
+        "file": "shared/generator/generators/application.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generators/arithmetic.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generators/c1-number-puzzle.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/c2-number-theory.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generators/c5-c6-journey-engineering.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/c7-clever-calc.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generators/c9-comprehensive.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/classify.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/complex.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generators/composite.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/concept-meaning.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generators/counting.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/decimal.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/fraction.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/index.js",
+        "count": 24
+      },
+      {
+        "file": "shared/generator/generators/money.js",
+        "count": 3
+      },
+      {
+        "file": "shared/generator/generators/percent.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generators/picture-equation.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/position.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/reasoning.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/selection.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generators/semantic-relations.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generators/semantic-special.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/shape.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/generators/stats.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/core/arithmetic-core.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/core/op-semantics.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/core/semantic-parameters.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generator/core/type-contract.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generation/api.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generation/generation-contract.js",
+        "count": 1
+      },
+      {
+        "file": "shared/generation/generation-core.js",
+        "count": 4
+      },
+      {
+        "file": "shared/engine/generation-engine.js",
+        "count": 1
+      },
+      {
+        "file": "shared/engine/practice-session.js",
+        "count": 12
+      },
+      {
+        "file": "shared/engine/presentation-engine.bundle.js",
+        "count": 58
+      },
+      {
+        "file": "shared/engine/presentation-engine.js",
+        "count": 9
+      },
+      {
+        "file": "shared/engine/strategy-engine.bundle.js",
+        "count": 184
+      },
+      {
+        "file": "shared/core/common.js",
+        "count": 6
+      },
+      {
+        "file": "shared/core/core.js",
+        "count": 1
+      },
+      {
+        "file": "shared/catalog/difficulty-static.js",
+        "count": 1
+      },
+      {
+        "file": "shared/catalog/difficulty.js",
+        "count": 1
+      },
+      {
+        "file": "shared/catalog/module-catalog.js",
+        "count": 1
+      },
+      {
+        "file": "shared/catalog/subject-utils.js",
+        "count": 2
+      },
+      {
+        "file": "shared/capacity/capacity-inventory.js",
+        "count": 7
+      },
+      {
+        "file": "shared/capability/capability-matrix.js",
+        "count": 2
+      },
+      {
+        "file": "shared/capability/capability-model.js",
+        "count": 2
+      },
+      {
+        "file": "shared/capability/capability-resolver.js",
+        "count": 5
+      },
+      {
+        "file": "shared/capability/capability-scan-context.js",
+        "count": 5
+      },
+      {
+        "file": "shared/capability/knowledge-capability-view.js",
+        "count": 2
+      },
+      {
+        "file": "shared/bridge/practice-bridge.js",
+        "count": 3
+      },
+      {
+        "file": "scripts/add-asset-version.js",
+        "count": 3
+      },
+      {
+        "file": "scripts/crawl-site.js",
+        "count": 2
+      },
+      {
+        "file": "scripts/generate-sitemap.js",
+        "count": 2
+      },
+      {
+        "file": "scripts/sync-sw-version.js",
+        "count": 2
+      },
+      {
+        "file": "tools/kbl/build.js",
+        "count": 3
+      },
+      {
+        "file": "tools/kbl/derive-kbl.js",
+        "count": 5
+      },
+      {
+        "file": "tools/kbl/emit-canonical.js",
+        "count": 2
+      },
+      {
+        "file": "tools/kbl/extract-source.js",
+        "count": 4
+      },
+      {
+        "file": "tools/kbl/publish.js",
+        "count": 3
+      },
+      {
+        "file": "tools/kbl/roundtrip.js",
+        "count": 3
+      },
+      {
+        "file": "tools/kbl/validate.js",
+        "count": 7
+      },
+      {
+        "file": "tools/kbl/verify.js",
+        "count": 2
+      },
+      {
+        "file": "tools/kbl/xlsx.js",
+        "count": 3
+      },
+      {
+        "file": "tests/validator/answer-validator.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/unit/allocateByWeight.test.js",
+        "count": 3
+      },
+      {
+        "file": "tests/unit/p25-05-semantic-families.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/unit/randInt.test.js",
+        "count": 3
+      },
+      {
+        "file": "tests/unit/random-distribution.test.js",
+        "count": 3
+      },
+      {
+        "file": "tests/unit/strategyFor.test.js",
+        "count": 3
+      },
+      {
+        "file": "tests/unit/teaching-semantic-profile.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/strategy/p25-13-explainability.test.js",
+        "count": 7
+      },
+      {
+        "file": "tests/shape/pol-kbl-shape.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/request/request-contract.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/presentation/renderer.test.js",
+        "count": 12
+      },
+      {
+        "file": "tests/presentation/svg-contract-full.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/presentation/svg-contract.test.js",
+        "count": 7
+      },
+      {
+        "file": "tests/presentation/svg-sanitizer.test.js",
+        "count": 3
+      },
+      {
+        "file": "tests/presentation/ui-state.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/orchestration/p10-2-scope-contract.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/orchestration/p10-3-difficulty-contract.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/orchestration/p10-count-contract.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/orchestration/p11-00-generation-context.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/orchestration/p11-01-coverage-quota.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/orchestration/p11-02-duplicate-contract.test.js",
+        "count": 8
+      },
+      {
+        "file": "tests/orchestration/p11-03-capacity-recovery.test.js",
+        "count": 9
+      },
+      {
+        "file": "tests/orchestration/p17-10-classify.test.js",
+        "count": 9
+      },
+      {
+        "file": "tests/orchestration/p17-14-seven-types.test.js",
+        "count": 8
+      },
+      {
+        "file": "tests/orchestration/p17-15-quantity-closure.test.js",
+        "count": 7
+      },
+      {
+        "file": "tests/orchestration/p17-16-difficulty-closure.test.js",
+        "count": 7
+      },
+      {
+        "file": "tests/orchestration/pol-generation.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/learner/learner-model.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/learner/learner-storage.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/learner/p28-32-learner-data-chain.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/helpers/helpers.js",
+        "count": 1
+      },
+      {
+        "file": "tests/helpers/project-root.js",
+        "count": 2
+      },
+      {
+        "file": "tests/generator-registry/generator-registry.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/generator/composite.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/generator/generator-contract.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/generator/generator-mode.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/generator/graphic-renderer.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/generator/p25-04-semantic-evidence.test.js",
+        "count": 11
+      },
+      {
+        "file": "tests/generator/p25-05-intent-evidence-consistency.test.js",
+        "count": 7
+      },
+      {
+        "file": "tests/generator/p25-06-semantic-params.test.js",
+        "count": 7
+      },
+      {
+        "file": "tests/generator/p25-06-teaching-denials.test.js",
+        "count": 9
+      },
+      {
+        "file": "tests/generator/p25-07-type-contracts.test.js",
+        "count": 9
+      },
+      {
+        "file": "tests/generator/p25-09-native-bindings.test.js",
+        "count": 9
+      },
+      {
+        "file": "tests/generator/p25-14-coverage.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/generator/p25-15-educational-gate.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/generator/p25-16-golden-dataset.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/generator/p25-17-anti-regression.test.js",
+        "count": 7
+      },
+      {
+        "file": "tests/generator/p25-18-acceptance.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/generator/p27-12-knowledge-practice-state.test.js",
+        "count": 7
+      },
+      {
+        "file": "tests/generator/p27-misconception-profile.test.js",
+        "count": 9
+      },
+      {
+        "file": "tests/generator/p27-variation-directive.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/generator/p27-variation-profile.test.js",
+        "count": 10
+      },
+      {
+        "file": "tests/difficulty/difficulty-anchor.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/difficulty/difficulty-context-flow.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/difficulty/difficulty-distribution-regression.test.js",
+        "count": 6
+      },
+      {
+        "file": "tests/difficulty/difficulty-orchestrator-normalize.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/difficulty/difficulty-static-weights.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/difficulty/difficulty-structure-fetch.test.js",
+        "count": 5
+      },
+      {
+        "file": "tests/bridge/generation-concurrency.test.js",
+        "count": 4
+      },
+      {
+        "file": "tests/adaptive/adaptive-strategy.test.js",
+        "count": 5
+      },
+      {
+        "file": "docs/archive/phases/DEV_LOG.md",
+        "count": 9
+      },
+      {
+        "file": "docs/archive/phases/P16-FOLLOWUP-C5-strategy.md",
+        "count": 6
+      },
+      {
+        "file": "docs/archive/phases/P16-FOLLOWUP-D0-audit.md",
+        "count": 2
+      },
+      {
+        "file": "docs/archive/phases/p16-kbl-audit.md",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/pol-kbl-phase2-closeout.md",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/pol-kbl-phase8-difficulty-audit.md",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/pol-kbl-shape-drift-audit.md",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/p25/P25-SEMANTIC-EVIDENCE.md",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/freeze-20260919/p005-e2e.js",
+        "count": 3
+      },
+      {
+        "file": "docs/archive/phases/freeze-20260919/p13-combo.js",
+        "count": 2
+      },
+      {
+        "file": "docs/archive/phases/freeze-20260919/p13-dup.js",
+        "count": 2
+      },
+      {
+        "file": "docs/archive/phases/freeze-20260919/step20-count.js",
+        "count": 2
+      },
+      {
+        "file": "docs/archive/phases/audit/P17-0-baseline.json",
+        "count": 6
+      },
+      {
+        "file": "docs/archive/phases/audit/P17-0-dependency-matrix.json",
+        "count": 11
+      },
+      {
+        "file": "docs/archive/phases/audit/P17-0-final-report.md",
+        "count": 4
+      },
+      {
+        "file": "docs/archive/phases/audit/P17-0-kbl-boundary.md",
+        "count": 11
+      },
+      {
+        "file": "docs/archive/phases/audit/P17-0-presentation-audit.md",
+        "count": 4
+      },
+      {
+        "file": "docs/archive/phases/audit/P17-0-validator-audit.md",
+        "count": 2
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-architecture-final.js",
+        "count": 11
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-generator-coverage.js",
+        "count": 9
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-generator-migration-r18.js",
+        "count": 6
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-generator-migration-switch.js",
+        "count": 5
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-generator-migration.js",
+        "count": 4
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-generator-traceability.js",
+        "count": 5
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-knowledge-maintenance.js",
+        "count": 3
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-legacy-dependencies.js",
+        "count": 3
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-legacy-gate.js",
+        "count": 4
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-m5-final.js",
+        "count": 34
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-m7-final.js",
+        "count": 54
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-migration-coverage.js",
+        "count": 7
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-migration-status.js",
+        "count": 9
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-ontology-semantic.js",
+        "count": 10
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-p4-legacy-gate.js",
+        "count": 3
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-p6-render-print.js",
+        "count": 14
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-question-validator.js",
+        "count": 12
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-renderer-coverage.js",
+        "count": 9
+      },
+      {
+        "file": "archive/r6-gate-cleanup/g1-fill-apply.js",
+        "count": 3
+      },
+      {
+        "file": "archive/r6-gate-cleanup/g1-fill-draft.js",
+        "count": 7
+      },
+      {
+        "file": "archive/plugins-removed/_template.js",
+        "count": 1
+      },
+      {
+        "file": "archive/plugins-removed/math-competition-placeholder.js",
+        "count": 1
+      },
+      {
+        "file": "archive/plugins-removed/math-comprehensive.js",
+        "count": 1
+      },
+      {
+        "file": "archive/legacy-tools/add-g5-competition-entries.js",
+        "count": 3
+      },
+      {
+        "file": "archive/legacy-tools/add-g6-competition-entries.js",
+        "count": 3
+      },
+      {
+        "file": "archive/legacy-tools/clean-difficulty-consume.js",
+        "count": 2
+      },
+      {
+        "file": "archive/legacy-tools/cleanup-scan.js",
+        "count": 3
+      },
+      {
+        "file": "archive/legacy-tools/generate-knowledge-pages.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tools/migrate-knowledge-difficulty-fields.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tools/migrate-knowledge-subject.js",
+        "count": 3
+      },
+      {
+        "file": "archive/legacy-tools/prereq-review.js",
+        "count": 3
+      },
+      {
+        "file": "archive/legacy-tests/strategy/cognitive-strategy.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/strategy/constraint-builder.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/strategy/context-strategy.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/strategy/count-regression.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/strategy/difficulty-regression.test.js",
+        "count": 7
+      },
+      {
+        "file": "archive/legacy-tests/strategy/difficulty-strategy.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/strategy/kp-array-gate.test.js",
+        "count": 13
+      },
+      {
+        "file": "archive/legacy-tests/strategy/number-range-strategy.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/strategy/pool-mode-gate.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/strategy/question-plan.test.js",
+        "count": 4
+      },
+      {
+        "file": "archive/legacy-tests/strategy/question-type-allocation.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/strategy/question-type-regression.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/strategy/question-type-strategy.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/strategy/single-kp.test.js",
+        "count": 8
+      },
+      {
+        "file": "archive/legacy-tests/strategy/spiral-context-regression.test.js",
+        "count": 10
+      },
+      {
+        "file": "archive/legacy-tests/strategy/spiral-strategy.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/strategy/static-difficulty.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/strategy/strategy-engine.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/strategy/strategy-request.test.js",
+        "count": 4
+      },
+      {
+        "file": "archive/legacy-tests/strategy/strategy-resolver.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/strategy/strategy-result.test.js",
+        "count": 4
+      },
+      {
+        "file": "archive/legacy-tests/strategy/strategy-validator.test.js",
+        "count": 4
+      },
+      {
+        "file": "archive/legacy-tests/strategy/structure-constraints.test.js",
+        "count": 7
+      },
+      {
+        "file": "archive/legacy-tests/strategy/target-difficulty.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/orchestration/orchestration.test.js",
+        "count": 20
+      },
+      {
+        "file": "archive/legacy-tests/ontology/compatibility.test.js",
+        "count": 4
+      },
+      {
+        "file": "archive/legacy-tests/ontology/errors.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/ontology/factual-content.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/ontology/generation-capability.test.js",
+        "count": 4
+      },
+      {
+        "file": "archive/legacy-tests/ontology/knowledge-bank-verification.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/ontology/knowledge-point.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/ontology/normalizer.test.js",
+        "count": 4
+      },
+      {
+        "file": "archive/legacy-tests/ontology/operation.test.js",
+        "count": 5
+      },
+      {
+        "file": "archive/legacy-tests/ontology/schema.test.js",
+        "count": 3
+      },
+      {
+        "file": "archive/legacy-tests/ontology/validator.test.js",
+        "count": 3
+      },
+      {
+        "file": "archive/legacy-tests/integration/column-consistency-test.js",
+        "count": 1
+      },
+      {
+        "file": "archive/legacy-tests/generator/core-generators.test.js",
+        "count": 8
+      },
+      {
+        "file": "archive/legacy-tests/generator/cross-generation-dedup.test.js",
+        "count": 13
+      },
+      {
+        "file": "archive/legacy-tests/generator/dual-track.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/generator/generator-registry.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/generator/generator-selector.test.js",
+        "count": 7
+      },
+      {
+        "file": "archive/legacy-tests/generator/kp-binding.test.js",
+        "count": 7
+      },
+      {
+        "file": "archive/legacy-tests/engine/boundary.test.js",
+        "count": 9
+      },
+      {
+        "file": "archive/legacy-tests/engine/mode.test.js",
+        "count": 10
+      },
+      {
+        "file": "archive/legacy-tests/e2e/e2e-real-flow.js",
+        "count": 6
+      },
+      {
+        "file": "archive/legacy-tests/comprehensive/comprehensive-strategy.test.js",
+        "count": 11
+      },
+      {
+        "file": "archive/legacy-tests/adaptive/engine-adaptive.test.js",
+        "count": 6
+      },
+      {
+        "file": "archive/g1-curriculum-2026/math-g1-patterns.js",
+        "count": 1
+      },
+      {
+        "file": "archive/g1-curriculum-2026/math-statistics.js",
+        "count": 2
+      },
+      {
+        "file": "archive/docs-2026-09/CONTRIBUTING.md",
+        "count": 1
+      },
+      {
+        "file": "archive/docs-2026-09/ref-docs/API.md",
+        "count": 1
+      },
+      {
+        "file": "archive/docs-2026-09/migration-reports/audit-completion-report.md",
+        "count": 1
+      },
+      {
+        "file": "archive/docs-2026-09/migration-reports/frozen-core-change-m4-c06-dead-code.md",
+        "count": 4
+      },
+      {
+        "file": "archive/docs-2026-09/migration-reports/m1-m4-old-debt-scan.md",
+        "count": 3
+      },
+      {
+        "file": "archive/docs-2026-09/migration-reports/migration-closure-report.md",
+        "count": 2
+      },
+      {
+        "file": "archive/docs-2026-09/migration-reports/audit-json/dead-code-audit.json",
+        "count": 4
+      },
+      {
+        "file": "archive/docs-2026-09/migration-reports/audit-json/migration-closure-summary.json",
+        "count": 1
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/DIFFICULTY-AUDIT.md",
+        "count": 1
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/test/unit/strategyFor.test.js",
+        "count": 3
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/shared/common.js",
+        "count": 8
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/shared/core.js",
+        "count": 1
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/shared/difficulty.js",
+        "count": 1
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/plugins/_template.js",
+        "count": 1
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/dev/plugin-loader.js",
+        "count": 8
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/dev/prereq-review.js",
+        "count": 3
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/dev/test-difficulty-structure.js",
+        "count": 3
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/dev/test-difficulty.js",
+        "count": 8
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/dev/verify-setup.js",
+        "count": 10
+      },
+      {
+        "file": "archive/audit-probes/c1-rapid-click-probe.js",
+        "count": 4
+      },
+      {
+        "file": "archive/audit-probes/c2-dedup-stats-probe.js",
+        "count": 11
+      },
+      {
+        "file": "archive/audit-probes/composite-routing-probe.js",
+        "count": 12
+      },
+      {
+        "file": "archive/audit-probes/context-propagation-probe.js",
+        "count": 10
+      },
+      {
+        "file": "archive/audit-probes/d007-repro-probe.js",
+        "count": 12
+      },
+      {
+        "file": "archive/audit-probes/final-browser-sim-probe.js",
+        "count": 12
+      },
+      {
+        "file": "archive/audit-probes/fix-stats-kp-limits.js",
+        "count": 2
+      },
+      {
+        "file": "archive/audit-probes/kb-data-completion.js",
+        "count": 5
+      },
+      {
+        "file": "archive/audit-probes/kp-coverage-probe.js",
+        "count": 6
+      },
+      {
+        "file": "archive/audit-probes/question-integrity-probe.js",
+        "count": 11
+      },
+      {
+        "file": "archive/audit-probes/stress-probe.js",
+        "count": 11
+      }
+    ],
+    "rawSvg": [
+      {
+        "file": "shared/semantic/semantic-question.js",
+        "count": 6
+      },
+      {
+        "file": "shared/presentation/render-format.js",
+        "count": 1
+      },
+      {
+        "file": "shared/presentation/svg-registry.js",
+        "count": 3
+      },
+      {
+        "file": "shared/presentation/svg-sanitizer.js",
+        "count": 1
+      },
+      {
+        "file": "shared/engine/presentation-engine.bundle.js",
+        "count": 3
+      },
+      {
+        "file": "tests/presentation/renderer.test.js",
+        "count": 3
+      },
+      {
+        "file": "tests/presentation/svg-contract-full.test.js",
+        "count": 2
+      },
+      {
+        "file": "tests/presentation/svg-contract.test.js",
+        "count": 4
+      },
+      {
+        "file": "docs/archive/phases/DEV_LOG.md",
+        "count": 1
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-m7-final.js",
+        "count": 2
+      }
+    ],
+    "document.write": [
+      {
+        "file": "shared/presentation/print.js",
+        "count": 1
+      },
+      {
+        "file": "shared/core/common.js",
+        "count": 4
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/shared/common.js",
+        "count": 6
+      }
+    ],
+    "innerHTML": [
+      {
+        "file": "shared/presentation/print.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generator-contract.js",
+        "count": 1
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-p6-render-print.js",
+        "count": 3
+      },
+      {
+        "file": "archive/legacy-tests/integration/column-consistency-test.html",
+        "count": 1
+      },
+      {
+        "file": "archive/docs-2026-09/CONTRIBUTING.md",
+        "count": 1
+      }
+    ],
+    "outerHTML": [
+      {
+        "file": "shared/presentation/print.js",
+        "count": 2
+      },
+      {
+        "file": "shared/generator/generator-contract.js",
+        "count": 1
+      }
+    ],
+    "import": [
+      {
+        "file": "shared/presentation/svg-sanitizer.js",
+        "count": 1
+      },
+      {
+        "file": "shared/catalog/version.js",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/layer-structure-audit.md",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/pol-kbl-phase1-inventory.md",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/pol-kbl-phase9-governance.md",
+        "count": 1
+      },
+      {
+        "file": "archive/r6-gate-cleanup/check-legacy-dependencies.js",
+        "count": 2
+      },
+      {
+        "file": "archive/docs-2026-09/PROJECT_SUMMARY.md",
+        "count": 1
+      },
+      {
+        "file": "migration/kbl-migration-report.md",
+        "count": 1
+      }
+    ],
+    "Math.random": [
+      {
+        "file": "shared/knowledge/question-id.js",
+        "count": 1
+      },
+      {
+        "file": "shared/core/common.js",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/DEV_LOG.md",
+        "count": 1
+      },
+      {
+        "file": "docs/archive/phases/技术文档--基础.md",
+        "count": 6
+      },
+      {
+        "file": "archive/plugins-removed/_template.js",
+        "count": 1
+      },
+      {
+        "file": "archive/docs-2026-09/CHANGELOG.md",
+        "count": 1
+      },
+      {
+        "file": "archive/docs-2026-09/CONTRIBUTING.md",
+        "count": 4
+      },
+      {
+        "file": "archive/docs-2026-09/overview.md",
+        "count": 5
+      },
+      {
+        "file": "archive/docs-2026-09/ref-docs/AI_DEV_GUIDE.md",
+        "count": 1
+      },
+      {
+        "file": "archive/docs-2026-09/ref-docs/API.md",
+        "count": 1
+      },
+      {
+        "file": "archive/docs-2026-09/ref-docs/CONTRIBUTING.md",
+        "count": 1
+      },
+      {
+        "file": "archive/docs-2026-09/ref-docs/PLUGIN_QUICKSTART.md",
+        "count": 3
+      },
+      {
+        "file": "archive/docs-2026-09/ref-docs/knowledge-base.md",
+        "count": 1
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/shared/common.js",
+        "count": 1
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/plugins/_template.js",
+        "count": 1
+      }
+    ],
+    "rawHtml": [
+      {
+        "file": "archive/docs-2026-09/CONTRIBUTING.md",
+        "count": 1
+      },
+      {
+        "file": "archive/difficulty-refactor-20260829/shared/render.js",
+        "count": 1
+      }
+    ]
+  },
+  "files": {
+    "shared/validator/answer-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/batch-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/composite-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/difficulty-integrity-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/difficulty-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/duplicate-integrity-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/duplicate-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/kp-coverage-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/kp-semantic-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 8
+        }
+      ],
+      "total": 8,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/quality-scorer.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/question-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/validator/validation-pipeline.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 12
+        }
+      ],
+      "total": 12,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/svg/svg-calculation.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/svg/svg-chart.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/svg/svg-currency.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/svg/svg-diagram.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/svg/svg-geometry.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/svg/svg-make-ten.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/adaptive-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/cognitive-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/complexity-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/comprehensive-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/constraint-builder.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/context-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/difficulty-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/number-range-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/question-plan.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/question-style-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/question-type-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/spiral-strategy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/static-difficulty.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/strategy-engine.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 35
+        }
+      ],
+      "total": 35,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/strategy-request.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/strategy-resolver.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/strategy-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/structure-constraints.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/target-difficulty.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/strategy/variation-directive.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/state/logger.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/semantic/semantic-question.js": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 6
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 10,
+      "high": 0,
+      "med": 6,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "shared/schemas/semantic-question.schema.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/request/request-normalize.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/presentation/print.js": {
+      "hits": [
+        {
+          "token": "document.write",
+          "risk": "high",
+          "count": 1
+        },
+        {
+          "token": "innerHTML",
+          "risk": "high",
+          "count": 2
+        },
+        {
+          "token": "outerHTML",
+          "risk": "high",
+          "count": 2
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 6,
+      "high": 5,
+      "med": 0,
+      "maxRisk": "high",
+      "ext": "js"
+    },
+    "shared/presentation/render-format.js": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "shared/presentation/renderer.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/presentation/svg-registry.js": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 3
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 3,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "shared/presentation/svg-sanitizer.js": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "import",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "shared/orchestration/knowledge-context.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/orchestration/practice-orchestrator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 10
+        }
+      ],
+      "total": 10,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/learner/learner-model.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/learner/learner-storage.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/learner/practice-result.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/learner/result-collector.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/knowledge/question-id.js": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "shared/knowledge/runtime/knowledge-api.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/knowledge/runtime/knowledge-index.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/knowledge/runtime/knowledge-loader.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/knowledge/runtime/knowledge-policy.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/knowledge/runtime/knowledge-query.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/knowledge/runtime/knowledge-relation.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/knowledge/runtime/knowledge-runtime.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 19
+        }
+      ],
+      "total": 19,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/knowledge/runtime/teaching-semantic-profile.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generator-contract.js": {
+      "hits": [
+        {
+          "token": "innerHTML",
+          "risk": "high",
+          "count": 1
+        },
+        {
+          "token": "outerHTML",
+          "risk": "high",
+          "count": 1
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 10
+        }
+      ],
+      "total": 12,
+      "high": 2,
+      "med": 0,
+      "maxRisk": "high",
+      "ext": "js"
+    },
+    "shared/generator/generator-registry.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generator-selector.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/graphic-renderer.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/registry-facade.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/retry-loop.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/application.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/arithmetic.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/c1-number-puzzle.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/c2-number-theory.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/c5-c6-journey-engineering.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/c7-clever-calc.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/c9-comprehensive.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/classify.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/complex.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/composite.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/concept-meaning.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/counting.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/decimal.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/fraction.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/index.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 24
+        }
+      ],
+      "total": 24,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/money.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/percent.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/picture-equation.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/position.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/reasoning.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/selection.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/semantic-relations.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/semantic-special.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/shape.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/generators/stats.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/core/arithmetic-core.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/core/op-semantics.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/core/semantic-parameters.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generator/core/type-contract.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generation/api.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generation/generation-contract.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/generation/generation-core.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/engine/generation-engine.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/engine/practice-session.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 12
+        }
+      ],
+      "total": 12,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/engine/presentation-engine.bundle.js": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 3
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 58
+        }
+      ],
+      "total": 61,
+      "high": 0,
+      "med": 3,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "shared/engine/presentation-engine.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/engine/strategy-engine.bundle.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 184
+        }
+      ],
+      "total": 184,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/core/common.js": {
+      "hits": [
+        {
+          "token": "document.write",
+          "risk": "high",
+          "count": 4
+        },
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 11,
+      "high": 4,
+      "med": 1,
+      "maxRisk": "high",
+      "ext": "js"
+    },
+    "shared/core/core.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/catalog/difficulty-static.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/catalog/difficulty.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/catalog/module-catalog.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/catalog/subject-utils.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/catalog/version.js": {
+      "hits": [
+        {
+          "token": "import",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/capacity/capacity-inventory.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/capability/capability-matrix.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/capability/capability-model.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/capability/capability-resolver.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/capability/capability-scan-context.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/capability/knowledge-capability-view.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "shared/bridge/practice-bridge.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "scripts/add-asset-version.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "scripts/crawl-site.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "scripts/generate-sitemap.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "scripts/sync-sw-version.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tools/kbl/build.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tools/kbl/derive-kbl.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tools/kbl/emit-canonical.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tools/kbl/extract-source.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tools/kbl/publish.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tools/kbl/roundtrip.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tools/kbl/validate.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tools/kbl/verify.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tools/kbl/xlsx.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/validator/answer-validator.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/unit/allocateByWeight.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/unit/p25-05-semantic-families.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/unit/randInt.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/unit/random-distribution.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/unit/strategyFor.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/unit/teaching-semantic-profile.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/strategy/p25-13-explainability.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/shape/pol-kbl-shape.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/request/request-contract.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/presentation/renderer.test.js": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 3
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 12
+        }
+      ],
+      "total": 15,
+      "high": 0,
+      "med": 3,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "tests/presentation/svg-contract-full.test.js": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 2
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 8,
+      "high": 0,
+      "med": 2,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "tests/presentation/svg-contract.test.js": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 4
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 4,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "tests/presentation/svg-sanitizer.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/presentation/ui-state.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p10-2-scope-contract.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p10-3-difficulty-contract.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p10-count-contract.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p11-00-generation-context.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p11-01-coverage-quota.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p11-02-duplicate-contract.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 8
+        }
+      ],
+      "total": 8,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p11-03-capacity-recovery.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p17-10-classify.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p17-14-seven-types.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 8
+        }
+      ],
+      "total": 8,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p17-15-quantity-closure.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/p17-16-difficulty-closure.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/orchestration/pol-generation.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/learner/learner-model.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/learner/learner-storage.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/learner/p28-32-learner-data-chain.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/helpers/helpers.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/helpers/project-root.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator-registry/generator-registry.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/composite.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/generator-contract.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/generator-mode.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/graphic-renderer.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-04-semantic-evidence.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 11
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-05-intent-evidence-consistency.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-06-semantic-params.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-06-teaching-denials.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-07-type-contracts.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-09-native-bindings.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-14-coverage.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-15-educational-gate.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-16-golden-dataset.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-17-anti-regression.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p25-18-acceptance.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p27-12-knowledge-practice-state.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p27-misconception-profile.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p27-variation-directive.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/generator/p27-variation-profile.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 10
+        }
+      ],
+      "total": 10,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/difficulty/difficulty-anchor.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/difficulty/difficulty-context-flow.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/difficulty/difficulty-distribution-regression.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/difficulty/difficulty-orchestrator-normalize.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/difficulty/difficulty-static-weights.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/difficulty/difficulty-structure-fetch.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/bridge/generation-concurrency.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "tests/adaptive/adaptive-strategy.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "docs/archive/phases/DEV_LOG.md": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 2,
+      "maxRisk": "medium",
+      "ext": "md"
+    },
+    "docs/archive/phases/P16-FOLLOWUP-C5-strategy.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/P16-FOLLOWUP-D0-audit.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/layer-structure-audit.md": {
+      "hits": [
+        {
+          "token": "import",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/p16-kbl-audit.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/pol-kbl-phase1-inventory.md": {
+      "hits": [
+        {
+          "token": "import",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/pol-kbl-phase2-closeout.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/pol-kbl-phase8-difficulty-audit.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/pol-kbl-phase9-governance.md": {
+      "hits": [
+        {
+          "token": "import",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/pol-kbl-shape-drift-audit.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/技术文档--基础.md": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 6,
+      "maxRisk": "medium",
+      "ext": "md"
+    },
+    "docs/archive/phases/p25/P25-SEMANTIC-EVIDENCE.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/freeze-20260919/p005-e2e.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "docs/archive/phases/freeze-20260919/p13-combo.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "docs/archive/phases/freeze-20260919/p13-dup.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "docs/archive/phases/freeze-20260919/step20-count.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "docs/archive/phases/audit/P17-0-baseline.json": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "json"
+    },
+    "docs/archive/phases/audit/P17-0-dependency-matrix.json": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 11
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "json"
+    },
+    "docs/archive/phases/audit/P17-0-final-report.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/audit/P17-0-kbl-boundary.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 11
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/audit/P17-0-presentation-audit.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "docs/archive/phases/audit/P17-0-validator-audit.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "archive/r6-gate-cleanup/check-architecture-final.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 11
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-generator-coverage.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-generator-migration-r18.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-generator-migration-switch.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-generator-migration.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-generator-traceability.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-knowledge-maintenance.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-legacy-dependencies.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        },
+        {
+          "token": "import",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-legacy-gate.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-m5-final.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 34
+        }
+      ],
+      "total": 34,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-m7-final.js": {
+      "hits": [
+        {
+          "token": "rawSvg",
+          "risk": "medium",
+          "count": 2
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 54
+        }
+      ],
+      "total": 56,
+      "high": 0,
+      "med": 2,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-migration-coverage.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-migration-status.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-ontology-semantic.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 10
+        }
+      ],
+      "total": 10,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-p4-legacy-gate.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-p6-render-print.js": {
+      "hits": [
+        {
+          "token": "innerHTML",
+          "risk": "high",
+          "count": 3
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 14
+        }
+      ],
+      "total": 17,
+      "high": 3,
+      "med": 0,
+      "maxRisk": "high",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-question-validator.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 12
+        }
+      ],
+      "total": 12,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/check-renderer-coverage.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/g1-fill-apply.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/r6-gate-cleanup/g1-fill-draft.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/plugins-removed/_template.js": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "archive/plugins-removed/math-competition-placeholder.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/plugins-removed/math-comprehensive.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tools/add-g5-competition-entries.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tools/add-g6-competition-entries.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tools/clean-difficulty-consume.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tools/cleanup-scan.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tools/generate-knowledge-pages.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tools/migrate-knowledge-difficulty-fields.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tools/migrate-knowledge-subject.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tools/prereq-review.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/cognitive-strategy.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/constraint-builder.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/context-strategy.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/count-regression.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/difficulty-regression.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/difficulty-strategy.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/kp-array-gate.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 13
+        }
+      ],
+      "total": 13,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/number-range-strategy.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/pool-mode-gate.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/question-plan.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/question-type-allocation.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/question-type-regression.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/question-type-strategy.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/single-kp.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 8
+        }
+      ],
+      "total": 8,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/spiral-context-regression.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 10
+        }
+      ],
+      "total": 10,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/spiral-strategy.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/static-difficulty.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/strategy-engine.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/strategy-request.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/strategy-resolver.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/strategy-result.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/strategy-validator.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/structure-constraints.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/strategy/target-difficulty.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/orchestration/orchestration.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 20
+        }
+      ],
+      "total": 20,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/compatibility.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/errors.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/factual-content.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/generation-capability.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/knowledge-bank-verification.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/knowledge-point.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/normalizer.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/operation.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/schema.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/ontology/validator.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/integration/column-consistency-test.html": {
+      "hits": [
+        {
+          "token": "innerHTML",
+          "risk": "high",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 1,
+      "med": 0,
+      "maxRisk": "high",
+      "ext": "html"
+    },
+    "archive/legacy-tests/integration/column-consistency-test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/generator/core-generators.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 8
+        }
+      ],
+      "total": 8,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/generator/cross-generation-dedup.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 13
+        }
+      ],
+      "total": 13,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/generator/dual-track.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/generator/generator-registry.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/generator/generator-selector.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/generator/kp-binding.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 7
+        }
+      ],
+      "total": 7,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/engine/boundary.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 9
+        }
+      ],
+      "total": 9,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/engine/mode.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 10
+        }
+      ],
+      "total": 10,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/e2e/e2e-real-flow.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/comprehensive/comprehensive-strategy.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 11
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/legacy-tests/adaptive/engine-adaptive.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/g1-curriculum-2026/math-g1-patterns.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/g1-curriculum-2026/math-statistics.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/docs-2026-09/CHANGELOG.md": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/CONTRIBUTING.md": {
+      "hits": [
+        {
+          "token": "innerHTML",
+          "risk": "high",
+          "count": 1
+        },
+        {
+          "token": "rawHtml",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 4
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 7,
+      "high": 1,
+      "med": 5,
+      "maxRisk": "high",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/PROJECT_SUMMARY.md": {
+      "hits": [
+        {
+          "token": "import",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/overview.md": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 5,
+      "maxRisk": "medium",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/ref-docs/AI_DEV_GUIDE.md": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/ref-docs/API.md": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/ref-docs/CONTRIBUTING.md": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/ref-docs/PLUGIN_QUICKSTART.md": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 3,
+      "maxRisk": "medium",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/ref-docs/knowledge-base.md": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/migration-reports/audit-completion-report.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/migration-reports/frozen-core-change-m4-c06-dead-code.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/migration-reports/m1-m4-old-debt-scan.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/migration-reports/migration-closure-report.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "archive/docs-2026-09/migration-reports/audit-json/dead-code-audit.json": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "json"
+    },
+    "archive/docs-2026-09/migration-reports/audit-json/migration-closure-summary.json": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "json"
+    },
+    "archive/difficulty-refactor-20260829/DIFFICULTY-AUDIT.md": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    },
+    "archive/difficulty-refactor-20260829/test/unit/strategyFor.test.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/shared/common.js": {
+      "hits": [
+        {
+          "token": "document.write",
+          "risk": "high",
+          "count": 6
+        },
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 8
+        }
+      ],
+      "total": 15,
+      "high": 6,
+      "med": 1,
+      "maxRisk": "high",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/shared/core.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/shared/difficulty.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/shared/render.js": {
+      "hits": [
+        {
+          "token": "rawHtml",
+          "risk": "medium",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/plugins/_template.js": {
+      "hits": [
+        {
+          "token": "Math.random",
+          "risk": "medium",
+          "count": 1
+        },
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 1,
+      "maxRisk": "medium",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/dev/plugin-loader.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 8
+        }
+      ],
+      "total": 8,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/dev/prereq-review.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/dev/test-difficulty-structure.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 3
+        }
+      ],
+      "total": 3,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/dev/test-difficulty.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 8
+        }
+      ],
+      "total": 8,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/difficulty-refactor-20260829/dev/verify-setup.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 10
+        }
+      ],
+      "total": 10,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/c1-rapid-click-probe.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 4
+        }
+      ],
+      "total": 4,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/c2-dedup-stats-probe.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 11
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/composite-routing-probe.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 12
+        }
+      ],
+      "total": 12,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/context-propagation-probe.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 10
+        }
+      ],
+      "total": 10,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/d007-repro-probe.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 12
+        }
+      ],
+      "total": 12,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/final-browser-sim-probe.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 12
+        }
+      ],
+      "total": 12,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/fix-stats-kp-limits.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 2
+        }
+      ],
+      "total": 2,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/kb-data-completion.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 5
+        }
+      ],
+      "total": 5,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/kp-coverage-probe.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 6
+        }
+      ],
+      "total": 6,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/question-integrity-probe.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 11
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "archive/audit-probes/stress-probe.js": {
+      "hits": [
+        {
+          "token": "require",
+          "risk": "info",
+          "count": 11
+        }
+      ],
+      "total": 11,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "js"
+    },
+    "migration/kbl-migration-report.md": {
+      "hits": [
+        {
+          "token": "import",
+          "risk": "info",
+          "count": 1
+        }
+      ],
+      "total": 1,
+      "high": 0,
+      "med": 0,
+      "maxRisk": "info",
+      "ext": "md"
+    }
+  }
+}

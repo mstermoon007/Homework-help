@@ -8,8 +8,7 @@
  *   基本行程、相遇、追及、火车过桥、流水行船、环形跑道、平均速度、比例行程、
  *   行程综合、发车间隔、接送问题、工程问题（合作/休息/变速）、浓度问题（混合/十字交叉）
  *
- * 注：C5 中两个「时钟问题」KP（math-g5-c5-clock-problem / math-g6-c5-clock）的
- *     题型为 recognize（元题型），按 recognize 豁免哲学保留给 selection 家族，不在本族。
+ * 注：C5 当年两个「时钟问题」KP（recognize 元题型，曾归 selection 家族）已随竞赛 KP 全部剔除（P25-06），本族永不命中。
  */
 
 var Rng = require('../core/rng.js');
@@ -194,7 +193,7 @@ function makeQuestion(plan, context, i, kp) {
   };
 }
 
-// P25-06 H2：原 C5C6_KPS（math-gN-c5/c6-* 竞赛制 legacy ID）已随竞赛 KP 全部剔除，
+// P25-06 H2：原 C5C6_KPS（math-gN-c5/c6-* 历史 ID）已随竞赛 KP 全部剔除，
 // 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS（[] 泛匹配）。
 function createJourneyEngineeringGenerator(spec) {
   spec = spec || {};

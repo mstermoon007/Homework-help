@@ -10,6 +10,9 @@
  *   LearnerModel.update()
  *
  * 覆盖：正确 / 错误 / 未作答 / 重做 / 跳过。
+ *
+ * P28-31 定位：批改→状态更新的唯一装配链（不引入任何评分/评估逻辑本身；
+ *   规则全在 LearnerModel.update，本模块只负责归一、路由与批量）。
  */
 (function (global) {
   'use strict';

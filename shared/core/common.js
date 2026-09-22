@@ -3,10 +3,11 @@
  *
  * 旧版单体（~1160 行）已拆分为职责单一的子模块（均 <300 行，增量挂载到 window.PluginUtil / window.App）：
  *   core.js        运行时核心：站点常量/路由/年级参数、随机·标准化工具、灵活列数布局、知识点覆盖
- *   render.js       renderCard / renderGrid / clockSVG / createPlugin 及科目化工厂
  *   check.js        defaultQCheck / computeResult / pickOpt
  *   ui-state.js     escHtml / UIState
  *   storage.js      本地练习状态持久化 StorageManager
+ *   （render.js 已按 P28-22 删除：renderCard/renderGrid/clockSVG/createPlugin 无生产调用，
+ *     唯一渲染链收口为 PresentationRenderer → HTMLRenderer → RenderResult）
  *
  * 浏览器：经 document.write 按站点根相对路径注入子模块（路径由 document.currentScript.src 推导，
  *         兼容各页面从不同深度引用 shared/core/common.js）；子模块自挂载后本文件无需再组装。
@@ -24,14 +25,12 @@
     // 浏览器：推导 shared/ 目录（兼容页面从不同深度引用本文件），注入子模块
     var base = (document.currentScript.src || 'shared/core/common.js').replace(/[^\/]*$/, '');
     document.write('<script src="' + base + 'core.js"></script>');
-    document.write('<script src="' + base + '../presentation/render.js"></script>');
     document.write('<script src="' + base + 'check.js"></script>');
     document.write('<script src="' + base + '../state/ui-state.js"></script>');
     document.write('<script src="' + base + '../state/storage.js"></script>');
   } else if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
     // Node：子模块经 require 加载后已增量挂载到 global.PluginUtil / global.App
     require('./core.js');
-    require('../presentation/render.js');
     require('./check.js');
     require('../state/ui-state.js');
     require('../state/storage.js');

@@ -3,7 +3,7 @@
  *
  * 站点常量 / 路由 / 年级参数 / 随机·标准化工具 / 灵活列数布局 / 知识点覆盖。
  * 以「增量挂载」方式把导出挂到 window.PluginUtil / window.App（浏览器）与 globalThis（Node），
- * 使跨模块裸调用（如 render.js 调 defaultQCheck）经全局对象解析，避免循环依赖。
+ * 使跨模块裸调用（如 check.js 调 defaultQCheck）经全局对象解析，避免循环依赖。
  *
  * 由 shared/core/common.js（聚合出口）按需加载：
  *   浏览器：common.js 经 document.write 注入本文件；Node：common.js 经 require 加载本文件。
@@ -391,7 +391,7 @@
   global.PluginUtil.normalizeAns = normalizeAns;
   global.PluginUtil.createPoolCache = createPoolCache;
   global.PluginUtil.layout = Layout;
-  // 跨模块裸调用兼容（render.js / check.js 经全局解析）
+  // 跨模块裸调用兼容（check.js 等经全局解析）
   global.normalizeAns = normalizeAns;
   // App（站点）
   global.App.SUBJECT_NAMES = SUBJECT_NAMES;

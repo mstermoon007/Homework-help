@@ -12,7 +12,8 @@
  *   - 容斥（c9-inclusion-exclusion）与 counting 的 c3 容斥、不定方程与 c2 数论版、
  *     鸡兔同笼/植树与 reasoning 标准版均为不同 KP（id 不同），靠 id 显式绑定 +
  *     hasC9Semantics(pluginId 含 c9 且 competition) 硬阻断隔离，互不抢单。
- *   - mock（模拟竞赛卷）题型为 open，故本族 capabilities 含 open。
+ *   - mock（模拟竞赛卷）历史题型为 open，P28-07 归一后即 apply；本族能力声明保持
+ *     规范 7 类 ['apply','calc']（open 不得进入能力声明）。
  */
 
 var Rng = require('../core/rng.js');
@@ -231,7 +232,7 @@ function makeQuestion(plan, context, i, kp) {
   };
 }
 
-// P25-06 H2：原 C9_KPS（math-gN-c9-* 竞赛制 legacy ID）已随竞赛 KP 全部剔除，
+// P25-06 H2：原 C9_KPS（math-gN-c9-* 竞赛制 历史 ID）已随竞赛 KP 全部剔除，
 // 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS（[] 泛匹配）。
 function createC9Generator(spec) {
   spec = spec || {};
@@ -240,8 +241,8 @@ function createC9Generator(spec) {
   return {
     id: id,
     subject: 'math',
-    capabilities: ['apply', 'calc', 'open'],
-    questionTypes: ['apply', 'calc', 'open'],
+    capabilities: ['apply', 'calc'],
+    questionTypes: ['apply', 'calc'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {

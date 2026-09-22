@@ -21,16 +21,16 @@
 // M4-R06 核心 Generator 声明（纯数据；执行实现位于 shared/generator/generators/）
 var CORE_RECORDS = [
   // P25-09：B/C 类 KP 语义重绑——整数运算 KP 归位到对应算术生成器（原无绑定/误绑）。
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k001', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g1-up-u04-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k003', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['fill', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['choice', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['judge', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k001', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g1-up-u04-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k003', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'geometry', 'calc', 'apply'], questionTypes: ['fill', 'geometry', 'calc', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'geometry', 'calc', 'apply'], questionTypes: ['choice', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'geometry', 'calc', 'apply'], questionTypes: ['judge', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   // P25-09：原 5 个误绑 KP 已全部迁出（g1-up-u03-k001→shape；g2-down-u04-k002/3/4/6→concept）。
-  { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill', 'oral'], questionTypes: ['calc', 'fill', 'oral'],
+  { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill'], questionTypes: ['calc', 'fill'],
     knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
 
@@ -44,7 +44,7 @@ var CORE_RECORDS = [
   // g3-up-u06-k001（数字编码）移交 code-recognition；
   // g3-up-u07-k002（角的认识）/g3-down-u04-k001（面积的认识）/g6-up-u07-k001（寻找负数）
   // 移交 concept-meaning 专属 maker（含 geometry/judge 行覆盖）。
-  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'calc', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'calc', 'geometry', 'recognize', 'apply'],
+  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'],
     knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g1-down-u01-k001', 'math-g1-up-u03-k002', 'math-g2-up-u05-k003', 'math-g2-up-u05-k004', 'math-g2-up-u06-k001', 'math-g3-down-u01-k001', 'math-g3-down-u03-k004', 'math-g3-down-u08-k003', 'math-g3-down-u08-k006', 'math-g3-up-u01-k002', 'math-g3-up-u01-k003', 'math-g3-up-u03-k003', 'math-g3-up-u03-k004', 'math-g3-up-u07-k001', 'math-g3-up-u07-k004', 'math-g4-down-u02-k002', 'math-g4-down-u05-k001', 'math-g4-down-u05-k002', 'math-g4-down-u05-k003', 'math-g4-down-u05-k004', 'math-g4-down-u05-k005', 'math-g4-down-u05-k006', 'math-g4-up-u02-k001', 'math-g4-up-u02-k003', 'math-g4-up-u05-k001', 'math-g4-up-u05-k002', 'math-g4-up-u05-k003', 'math-g4-up-u05-k004', 'math-g5-down-u01-k002', 'math-g5-down-u03-k001', 'math-g5-down-u03-k002', 'math-g5-up-u08-k001', 'math-g5-up-u08-k002', 'math-g5-up-u08-k003', 'math-g5-up-u08-k004', 'math-g6-down-u03-k006', 'math-g6-up-u04-k001', 'math-g6-up-u04-k004', 'math-g6-up-u04-k005', 'math-g2-up-u05-k002', 'math-g3-down-u03-k002', 'math-g3-down-u03-k003', 'math-g3-down-u04-k003', 'math-g3-down-u04-k005', 'math-g3-up-u07-k003', 'math-g4-up-u02-k002', 'math-g5-down-u03-k003', 'math-g6-down-u03-k005', 'math-g6-up-u04-k002', 'math-g6-up-u04-k003', 'math-g1-up-u03-k001', 'math-g3-down-u03-k001', 'math-g5-down-u09-k001', 'math-g5-down-u09-k002',
       // P25-09 geometry 行显式双绑（10 KP）：下列 KP 的非 geometry 行仍由 money/application/
       // arithmetic 本体承载（kp=1+cap=1 胜出），仅 geometry（操作/作图意图）经 form-bound
@@ -59,7 +59,7 @@ var CORE_RECORDS = [
   { id: 'generator:money-measurement', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply', 'calc'], questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc'],
     knowledgePoints: ['math-g1-down-u07-k001', 'math-g1-down-u07-k002', 'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004', 'math-g3-up-u03-k001', 'math-g3-up-u03-k002', 'math-g1-down-u07-k003', 'math-g3-up-u04-k002', 'math-g3-up-u04-k003', 'math-g3-up-u04-k004'],
     scope: 'core', version: 2, supportsComposite: false },
-  { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'],
+  { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc'],
     knowledgePoints: ['math-g4-up-u06-k001', 'math-g5-down-u03-k006', 'math-g1-down-u08-k001', 'math-g2-up-u08-k001', 'math-g3-up-u09-k001', 'math-g4-down-u10-k001', 'math-g4-up-u09-k001', 'math-g5-down-u11-k001', 'math-g5-up-u09-k001', 'math-g6-down-u06-k001', 'math-g6-up-u06-k001', 'math-g1-down-u02-k003', 'math-g1-down-u04-k005', 'math-g1-down-u05-k003', 'math-g1-down-u06-k003', 'math-g1-up-u05-k003', 'math-g1-up-u06-k001', 'math-g2-down-u05-k004', 'math-g2-down-u06-k001', 'math-g2-down-u06-k002', 'math-g2-down-u06-k003', 'math-g2-down-u06-k004', 'math-g2-down-u07-k001', 'math-g2-down-u07-k003', 'math-g3-down-u08-k002', 'math-g3-down-u08-k005', 'math-g3-up-u02-k005', 'math-g3-up-u04-k001', 'math-g4-down-u01-k004', 'math-g4-down-u09-k003', 'math-g5-up-u03-k006', 'math-g5-down-u09-k003', 'math-g6-down-u01-k005'],
     scope: 'core', version: 2, supportsComposite: false },
 
@@ -96,10 +96,10 @@ var CORE_RECORDS = [
   { id: 'generator:c7-clever-calc', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c9-comprehensive', subject: 'math', capabilities: ['apply', 'calc', 'open'], questionTypes: ['apply', 'calc', 'open'],
+  { id: 'generator:c9-comprehensive', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:composite', subject: 'math', capabilities: ['calc', 'judge', 'fill', 'apply', 'oral'], questionTypes: ['calc', 'judge', 'fill', 'apply', 'oral'],
+  { id: 'generator:composite', subject: 'math', capabilities: ['calc', 'judge', 'fill', 'apply'], questionTypes: ['calc', 'judge', 'fill', 'apply'],
     knowledgePoints: ['math-g1-up-u01-k001', 'math-g2-down-u07-k001', 'math-g2-up-u01-k005', 'math-g3-up-u02-k001', 'math-g4-up-u03-k001'],
     scope: 'core', version: 1, supportsComposite: true },
 
@@ -161,9 +161,10 @@ var CORE_RECORDS = [
     scope: 'core', version: 1, supportsComposite: false }
 ];
 
-// 7 类规范题型改造（知识点驱动）：manifest 历史 token（oral/recognize/open）在注册时
-// 经 question-type-registry 归一为规范 7 类（oral→calc / recognize→geometry / open→apply），
-// 避免逐生成器改写；保证 capability / questionTypes 全为 canonical 7 类。
+// 7 类规范题型（知识点驱动）：CORE_RECORDS 的 capability / questionTypes 声明
+// 一律为 canonical 7 类；历史 token（oral/recognize/open）仅在 request/策略入口
+// 经 question-type-registry.normalizeQuestionType 归一，不得进入能力声明。
+// normList 保留为归一兜底，保证下游暴露的 capability / questionTypes 恒为规范 7 类。
 var QTR = (function () {
   try { return require('../knowledge/question-type-registry.js'); }
   catch (e) {
@@ -273,7 +274,7 @@ function resolveChain(kpId) {
  *   capabilities     —— 该 KP 能由哪些能力生成（Generator Registry 推导，覆盖类型级 capability）
  *   legacyPluginId   —— 迁移兼容字段（保留原 pluginId 引用，逐步淘汰）
  *
- * 不修改 KnowledgeBank / 插件；只读增强返回同一对象（浅注入）。
+ * 不修改知识层 / 插件；只读增强返回同一对象（浅注入）。
  */
 function enhanceKp(kp) {
   if (!kp || typeof kp !== 'object' || !kp.id) return kp;

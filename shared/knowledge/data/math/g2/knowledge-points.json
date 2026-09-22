@@ -2426,7 +2426,7 @@
       "type": "geometry",
       "semantic": {
         "family": "geometry",
-        "concept": "<r>把尺子的刻度0对准物体左端，看右端对着刻度几就是几厘米；如果不是从刻度0开始，物体长度=终点刻度</r><r><rPr></rPr>−</r><r><rPr></rPr>起始刻度</r>",
+        "concept": "把尺子的刻度0对准物体左端，看右端对着刻度几就是几厘米；如果不是从刻度0开始，物体长度=终点刻度−起始刻度",
         "operations": [],
         "representations": [
           "numeric",
@@ -2436,7 +2436,7 @@
         "tags": []
       },
       "content": {
-        "description": "<r>把尺子的刻度0对准物体左端，看右端对着刻度几就是几厘米；如果不是从刻度0开始，物体长度=终点刻度</r><r><rPr></rPr>−</r><r><rPr></rPr>起始刻度</r>",
+        "description": "把尺子的刻度0对准物体左端，看右端对着刻度几就是几厘米；如果不是从刻度0开始，物体长度=终点刻度−起始刻度",
         "example": null,
         "factualContent": {},
         "graphicType": null
@@ -3616,7 +3616,7 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
-        "concept": "<r>结束时间</r><r><rPr></rPr>−</r><r><rPr></rPr>开始时间，生活时间感知，制作作息时间小书，建立时间观念</r>",
+        "concept": "结束时间−开始时间，生活时间感知，制作作息时间小书，建立时间观念",
         "operations": [],
         "representations": [
           "numeric"
@@ -3625,7 +3625,7 @@
         "tags": []
       },
       "content": {
-        "description": "<r>结束时间</r><r><rPr></rPr>−</r><r><rPr></rPr>开始时间，生活时间感知，制作作息时间小书，建立时间观念</r>",
+        "description": "结束时间−开始时间，生活时间感知，制作作息时间小书，建立时间观念",
         "example": null,
         "factualContent": {},
         "graphicType": null
@@ -6086,7 +6086,7 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
-        "concept": "<r>和 = 加数 + 加数；加数 = 和 </r><r><rPr></rPr>−</r><r><rPr></rPr> 另一个加数；差 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 减数；被减数 = 差 + 减数；减数 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 差</r>",
+        "concept": "和 = 加数 + 加数；加数 = 和 − 另一个加数；差 = 被减数 − 减数；被减数 = 差 + 减数；减数 = 被减数 − 差",
         "operations": [
           "addition",
           "subtraction"
@@ -6098,7 +6098,7 @@
         "tags": []
       },
       "content": {
-        "description": "<r>和 = 加数 + 加数；加数 = 和 </r><r><rPr></rPr>−</r><r><rPr></rPr> 另一个加数；差 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 减数；被减数 = 差 + 减数；减数 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 差</r>",
+        "description": "和 = 加数 + 加数；加数 = 和 − 另一个加数；差 = 被减数 − 减数；被减数 = 差 + 减数；减数 = 被减数 − 差",
         "example": null,
         "factualContent": {},
         "graphicType": null

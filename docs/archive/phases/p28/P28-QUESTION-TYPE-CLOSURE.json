@@ -1,0 +1,125 @@
+{
+  "task": "P28-07-question-type-closure",
+  "date": "2026-09-20",
+  "canonicalTypes": [
+    "calc",
+    "fill",
+    "choice",
+    "judge",
+    "geometry",
+    "classify",
+    "apply"
+  ],
+  "legacyTokens": [
+    "oral",
+    "recognize",
+    "open"
+  ],
+  "verification": {
+    "test": 480,
+    "verifySteps": 8,
+    "crossLayerNewEdges": 0,
+    "syntaxFiles": 270,
+    "syntaxErrors": 0,
+    "allowGenPairs": 1570,
+    "allowGenPass": 1570,
+    "kblUniqueness": "PASS"
+  },
+  "capabilityDeclarationsCanonical": true,
+  "generatorBoundaryNormalize": "generator-selector.js wrapGenerator",
+  "changedDeclarations": [
+    "arithmetic-addition",
+    "arithmetic-subtraction",
+    "arithmetic-multiplication",
+    "arithmetic-division",
+    "arithmetic-mixed-calculation",
+    "selection-fill",
+    "selection-choice",
+    "selection-judge",
+    "complex-calc",
+    "shape-recognition",
+    "application-word",
+    "c9-comprehensive",
+    "composite",
+    "c9-comprehensive.js spec",
+    "registry-facade.js example"
+  ],
+  "removedBranches": [
+    "application.js qt==open competition-open template",
+    "shape.js qt==recognize + makeRecognizeQuestion"
+  ],
+  "productionLegacySites": [
+    {
+      "file": "shared/catalog/catalog-utils.js",
+      "token": "oral",
+      "hits": 1,
+      "class": "difficulty-or-render"
+    },
+    {
+      "file": "shared/catalog/difficulty-static.js",
+      "token": "oral",
+      "hits": 1,
+      "class": "difficulty-or-render"
+    },
+    {
+      "file": "shared/catalog/difficulty-static.js",
+      "token": "recognize",
+      "hits": 1,
+      "class": "difficulty-or-render"
+    },
+    {
+      "file": "shared/catalog/difficulty-static.js",
+      "token": "open",
+      "hits": 1,
+      "class": "difficulty-or-render"
+    },
+    {
+      "file": "shared/catalog/difficulty.js",
+      "token": "oral",
+      "hits": 2,
+      "class": "difficulty-or-render"
+    },
+    {
+      "file": "shared/generator/generator-registry.js",
+      "token": "oral",
+      "hits": 1,
+      "class": "comment"
+    },
+    {
+      "file": "shared/generator/generator-registry.js",
+      "token": "recognize",
+      "hits": 1,
+      "class": "comment"
+    },
+    {
+      "file": "shared/knowledge/question-type-registry.js",
+      "token": "recognize",
+      "hits": 6,
+      "class": "normalize-ssot"
+    },
+    {
+      "file": "shared/strategy/cognitive-strategy.js",
+      "token": "recognize",
+      "hits": 6,
+      "class": "cognitive-or-style"
+    },
+    {
+      "file": "shared/strategy/question-plan.js",
+      "token": "recognize",
+      "hits": 1,
+      "class": "cognitive-or-style"
+    },
+    {
+      "file": "shared/strategy/question-plan.js",
+      "token": "open",
+      "hits": 1,
+      "class": "cognitive-or-style"
+    },
+    {
+      "file": "shared/validator/difficulty-integrity-validator.js",
+      "token": "recognize",
+      "hits": 1,
+      "class": "cognitive-or-style"
+    }
+  ]
+}

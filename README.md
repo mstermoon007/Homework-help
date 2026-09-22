@@ -16,7 +16,7 @@
 
 **P23**：数学产品化收口专项——数据源清洗、派生链路验证、生成链路健康、产品验收、最终冻结
 
-**核心冻结边界**：KBL/Runtime/KnowledgeContext/POL/GenerationCore/Strategy/26Generators/Validator/SemanticQuestion/Presentation 均为只读态。
+**核心冻结边界**：KBL/Runtime/KnowledgeContext/POL/Strategy/26Generators/Validator/SemanticQuestion/Presentation 均为只读态。（GenerationCore 为测试/历史资产，见下。）
 
 **健康检查入口**：`npm run verify:frozen-core`、`npm run verify:p17-deps`、`npm test`（全链）
 
@@ -31,6 +31,12 @@
 - P18–P21：产品化闭环、页面产品化、题目质量、工程稳定性
 - P23：数学产品化收口——数据源清洗、派生链路健康、生成链健康、产品验收、冻结
 - P24：产品化一致性收口——知识页/sitemap 重建（375=375=375）、ALLOW 真实性门禁（1570/1570）、Capacity Map 重建、版本统一 5.0.0、语法门禁补齐
+- P28-29：Bundle 最终收口——strategy/presentation bundle 清理 legacy/测试/GenerationCore/重复 renderer/registry 死代码（strategy 71 defs、presentation 21 defs 全可达，node:path/node:fs/generator-contract/generation-core 零内联）
+- P28-30：Practice 首屏性能治理——45 项同步脚本中的 21 项（渲染栈/SVG 生成器含非核心插件/打印模块）移出首屏，经 `ensureDeferredReady()` 顺序惰性装载（约 -168KB 初始 JS：46→25 静态标签）；首次生成/打印前门控就绪，语义与旧同步装载零差异；sw.js CORE 补齐 render-options/render-result 保离线；`resolved Print` 惰性化（practice-session）
+- P28-33：KBL→页面→AI 数据边界（FROZEN）——公开知识内容单向 `KBL→Static Page`；SEO/AI/Crawler/LLM 禁反向修改 KBL（KBL 唯一可写方=离线派生白名单）；`build-knowledge-pages.js --check` 升级为真漂移校验（页面哈希 vs 当前 KBL 投影，审计归零 11 个过期 kbgen:hash 页面）；新增门禁 `check:kbl-ai-boundary`（写方白名单 + 零漂移 + 公开物驻留，已接入 run-all-checks 第 6 步）
+- P28-34：SEO/AI 历史数据隔离（FROZEN）——`archive/migration/audit-results/.trae/test/dev` 六目录不进 sitemap/内部导航/llms 知识源；robots.txt 补齐 4 项 Disallow；历史 html（`dev/svg-test.html`、`archive/legacy-tests/…`）补 `noindex`；llms.txt 新增「知识源单一性声明」= 正式发布知识页面唯一；新增门禁 `check:seo-ai-history`（run-all-checks 第 7 步）
+- P28-35：sitemap 最终冻结（FROZEN）——集合定死 5 公共页 + 375 KP + 索引（381 条）；逐 URL 验证 HTTP 200·无 redirect·文件存在·canonical 与 sitemap URL 完全一致（补上 index.html 缺失 canonical）；新增门禁 `check:sitemap-freeze`（run-all-checks 第 8 步）
+- P28-36：AI Agent 抓取最终测试（FROZEN）——模拟不执行 JS 的抓取（GET→HTML→link→knowledge→practice）；入口 index.html 仅靠静态链接图可达全部 KP；375/375 可发现·375/375 可读取（服务端含名称+释义）·375/375 identity 正确（canonical/知识点 ID/h1=KBL 名称）；新增门禁 `check:ai-crawl`（run-all-checks 第 9 步）
 
 **已完成的关键交付**：
 - 7类真实生成矩阵测试（p17-14） through 11 tests
@@ -49,14 +55,14 @@
 **冻结边界**：
 - KBL数据模型、KBL运行API
 - POL编排职责
-- GenerationCore主执行链
+- GenerationCore共同生成内核 = **测试/历史资产**（非生产）：源文件保留（T9「不误删」），但生产 bundle 不内联、生产链不经过；仅 `tests/orchestration/p17-10/14/15/16` 直接装载验证其 execute 语义
 - 26个Generator算法
 - Validator核心规则
 - SemanticQuestion数据契约
 - 7个canonical question types
 - 难度公式/数量分配原则
 
-**健康检查**（2026-09-19 P24 冻结基线，详见 `docs/00-PROJECT-BASELINE.md`）：
+**健康检查**（2026-09-19 P24 冻结基线，详见 `docs/00-BASELINE.md`）：
 - `npm run verify`（M0 聚合门禁）：5/5 PASS
 - `npm run verify:syntax`：218 文件 / 0 错误
 - `npm run verify:allow-gen`：ALLOW 真实性 1570/1570 PASS
@@ -67,7 +73,7 @@
 
 ## 📁 仓库结构要点
 
-- `docs/`：当前基线（00-03 核心文档）；历史文档在 `docs/archive/`（ARCHIVED）
+- `docs/`：当前基线（00-BASELINE ~ 11-SECURITY + CHANGELOG，按主题域组织）；历史阶段报告在 `docs/archive/phases/`（ARCHIVED）
 - `dev/`：验证与检查脚本
 - `tests/`：单元与集成测试
 - `shared/`：核心源代码（冻结模块）
@@ -78,7 +84,7 @@
 
 ## 📜 版本变更日志
 
-> 详细变更请参考 `docs/02-DEVELOPMENT-TIMELINE.md` 与 `docs/archive/` 下的历史审计报告。
+> 详细变更请参考 `docs/CHANGELOG.md` 与 `docs/archive/` 下的历史审计报告。
 > 版本号遵循语义化版本；5.0.0 为 2026-09-19 产品冻结版本。
 
 ---

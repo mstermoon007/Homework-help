@@ -10,6 +10,13 @@ Disallow: /tests/
 Disallow: /scripts/
 Disallow: /node_modules/
 
+# P28-34 SEO/AI 历史数据隔离：工程历史/迁移/审计/AI 辅助目录不进入索引
+# （不进入 sitemap、不进入内部公开导航；其中历史 html 均已 noindex）
+Disallow: /archive/
+Disallow: /migration/
+Disallow: /audit-results/
+Disallow: /.trae/
+
 # ===== AI 平台爬虫（明确允许）=====
 # OpenAI
 User-agent: GPTBot

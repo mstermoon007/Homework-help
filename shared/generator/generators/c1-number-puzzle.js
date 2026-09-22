@@ -97,7 +97,7 @@ function makePuzzleQuestion(plan, context, i, kp) {
   };
 }
 
-// P25-06 H2：原 C1_KPS（math-gN-c1-* 竞赛制 legacy ID）已全部随竞赛 KP 剔除，
+// P25-06 H2：原 C1_KPS（math-gN-c1-* 竞赛制 历史 ID）已全部随竞赛 KP 剔除，
 // 对 canonical 375 永不命中，属纯死数据；KP→生成器绑定 SSOT 在 generator-registry.js
 // CORE_RECORDS（本生成器记录 knowledgePoints: []，仅按 capability 泛匹配）。
 function createC1Generator(spec) {

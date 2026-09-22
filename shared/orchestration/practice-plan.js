@@ -2,7 +2,7 @@
  * shared/orchestration/practice-plan.js — PracticePlan / TypeBudget / KPBudget / Ledger 结构
  *
  * 标准练习编排层（POL）的数据结构层。纯数据结构 + 聚合工具，不做任何生成、不读 Capacity、
- * 不接触 Generator / Validator / KnowledgeBank。
+ * 不接触 Generator / Validator / 知识层。
  *
  * 职责（仅数据）：
  *   - PracticePlan      : 执行前的预算计划（totalCount / selectedTypes / typeBudgets / kpBudgets / remainingBudget / status）

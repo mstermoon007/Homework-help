@@ -1439,7 +1439,7 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
-        "concept": "<r>核心关系为总量 = 分量 + 分量（或整体 = 部分 + 部分），用于描述两个或多个数量合并后求总数的关系。在此基础上引出减法变形公式：分量 = 总量 </r><r><rPr></rPr>−</r><r><rPr></rPr> 另一个分量。涵盖“加法求和”“比多比少”等模型</r>",
+        "concept": "核心关系为总量 = 分量 + 分量（或整体 = 部分 + 部分），用于描述两个或多个数量合并后求总数的关系。在此基础上引出减法变形公式：分量 = 总量 − 另一个分量。涵盖“加法求和”“比多比少”等模型",
         "operations": [
           "addition",
           "subtraction"
@@ -1451,7 +1451,7 @@
         "tags": []
       },
       "content": {
-        "description": "<r>核心关系为总量 = 分量 + 分量（或整体 = 部分 + 部分），用于描述两个或多个数量合并后求总数的关系。在此基础上引出减法变形公式：分量 = 总量 </r><r><rPr></rPr>−</r><r><rPr></rPr> 另一个分量。涵盖“加法求和”“比多比少”等模型</r>",
+        "description": "核心关系为总量 = 分量 + 分量（或整体 = 部分 + 部分），用于描述两个或多个数量合并后求总数的关系。在此基础上引出减法变形公式：分量 = 总量 − 另一个分量。涵盖“加法求和”“比多比少”等模型",
         "example": null,
         "factualContent": {},
         "graphicType": null
@@ -3319,7 +3319,7 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
-        "concept": "<r>把两个数合并成一个数的运算叫做加法。已知两个数的和与其中一个加数，求另一个加数的运算叫做减法。和 = 加数 + 加数；差 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 减数。减法是加法的逆运算</r>",
+        "concept": "把两个数合并成一个数的运算叫做加法。已知两个数的和与其中一个加数，求另一个加数的运算叫做减法。和 = 加数 + 加数；差 = 被减数 − 减数。减法是加法的逆运算",
         "operations": [
           "addition",
           "subtraction"
@@ -3331,7 +3331,7 @@
         "tags": []
       },
       "content": {
-        "description": "<r>把两个数合并成一个数的运算叫做加法。已知两个数的和与其中一个加数，求另一个加数的运算叫做减法。和 = 加数 + 加数；差 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 减数。减法是加法的逆运算</r>",
+        "description": "把两个数合并成一个数的运算叫做加法。已知两个数的和与其中一个加数，求另一个加数的运算叫做减法。和 = 加数 + 加数；差 = 被减数 − 减数。减法是加法的逆运算",
         "example": null,
         "factualContent": {},
         "graphicType": null
@@ -4276,7 +4276,7 @@
       "type": "calculation",
       "semantic": {
         "family": "calculation",
-        "concept": "<r>减法的性质：a </r><r><rPr></rPr>−</r><r><rPr></rPr> b </r><r><rPr></rPr>−</r><r><rPr></rPr> c = a </r><r><rPr></rPr>−</r><r><rPr></rPr> (b + c)；a </r><r><rPr></rPr>−</r><r><rPr></rPr> (b + c) = a </r><r><rPr></rPr>−</r><r><rPr></rPr> b </r><r><rPr></rPr>−</r><r><rPr></rPr> c</r>",
+        "concept": "减法的性质：a − b − c = a − (b + c)；a − (b + c) = a − b − c",
         "operations": [
           "subtraction"
         ],
@@ -4287,7 +4287,7 @@
         "tags": []
       },
       "content": {
-        "description": "<r>减法的性质：a </r><r><rPr></rPr>−</r><r><rPr></rPr> b </r><r><rPr></rPr>−</r><r><rPr></rPr> c = a </r><r><rPr></rPr>−</r><r><rPr></rPr> (b + c)；a </r><r><rPr></rPr>−</r><r><rPr></rPr> (b + c) = a </r><r><rPr></rPr>−</r><r><rPr></rPr> b </r><r><rPr></rPr>−</r><r><rPr></rPr> c</r>",
+        "description": "减法的性质：a − b − c = a − (b + c)；a − (b + c) = a − b − c",
         "example": null,
         "factualContent": {},
         "graphicType": null

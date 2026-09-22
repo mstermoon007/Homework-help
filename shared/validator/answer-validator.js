@@ -22,20 +22,20 @@ function coerceNumber(v) { if (v == null) return null; var n = Number(v); return
 function safeTrim(v) { return coerceString(v).trim(); }
 
 /**
- * 计算标准算式的正确答案
- * 支持：a + b, a - b, a × b, a ÷ b, 混合运算（含括号）
- * @param {string} prompt
- * @returns {string|null} 正确答案字符串，无法解析返回 null
- */
+  * 计算标准算式的正确答案（安全解析器，无 eval/new Function）
+  * 支持：number, + - * / ( ), % (postfix percent), decimal
+  * 优先级：% (postfix) > * / > + - ; 括号改变优先级；支持一元负号
+  * @param {string} prompt
+  * @returns {string|null} 正确答案字符串，无法解析返回 null
+  */
 function computeExpectedAnswer(prompt) {
-  var expr = coerceString(prompt).replace(/[？?□_\\s]/g, '').replace(/[×xX]/g, '*').replace(/[÷]/g, '/').replace(/[＝=]/g, '');
+  var expr = coerceString(prompt).replace(/[？?□_\s]/g, '').replace(/[×xX]/g, '*').replace(/[÷]/g, '/').replace(/[＝=]/g, '');
   if (!expr) return null;
 
   try {
-    // 简单表达式求值（仅支持 + - * / ( )）
-    // 注意：生产环境建议用 math.js 或安全表达式解析器
-    var fn = new Function('return ' + expr);
-    var result = fn();
+    var tokens = tokenize(expr);
+    var ast = parseExpression(tokens);
+    var result = evaluate(ast);
     if (typeof result === 'number' && isFinite(result)) {
       // 整数保持整数，小数保留 2 位
       return Number.isInteger(result) ? String(result) : result.toFixed(2).replace(/\.?0+$/, '');
@@ -43,6 +43,164 @@ function computeExpectedAnswer(prompt) {
     return String(result);
   } catch (e) {
     return null;
+  }
+}
+
+/**
+ * 安全数学表达式解析器（Tokenizer → Parser → AST → Evaluator）
+ * 仅允许：数字、+ - * / ( ) % (postfix)
+ * 拒绝：任何标识符、函数调用、属性访问、赋值、逗号、其他字符
+ */
+
+function tokenize(str) {
+  var tokens = [];
+  var i = 0;
+  while (i < str.length) {
+    var ch = str[i];
+    if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r') { i++; continue; }
+    if (ch === '+' || ch === '-' || ch === '*' || ch === '/' || ch === '%' || ch === '(' || ch === ')') {
+      tokens.push({ type: 'op', value: ch });
+      i++;
+    } else if ((ch >= '0' && ch <= '9') || ch === '.') {
+      var j = i;
+      var hasDot = false;
+      while (j < str.length) {
+        var c = str[j];
+        if (c >= '0' && c <= '9') { j++; }
+        else if (c === '.' && !hasDot) { hasDot = true; j++; }
+        else { break; }
+      }
+      var numStr = str.slice(i, j);
+      // 避免单独的 "." 或 "123." 末尾点号（后者保留为整数部分）
+      if (numStr === '.' || numStr.endsWith('.')) {
+        // 单独的 "." 不是合法数字，交给后续报错
+      }
+      tokens.push({ type: 'num', value: numStr });
+      i = j;
+    } else {
+      // 非法字符：标识符、函数、属性、逗号、其他
+      throw new Error('Invalid character: ' + ch);
+    }
+  }
+  tokens.push({ type: 'eof' });
+  return tokens;
+}
+
+function createParser(tokens) {
+  var index = 0;
+  function peek() { return tokens[index]; }
+  function consume() { return tokens[index++]; }
+  function expect(type, value) {
+    var t = peek();
+    if (t.type !== type || (value !== undefined && t.value !== value)) {
+      throw new Error('Expected ' + type + (value ? ' ' + value : '') + ', got ' + JSON.stringify(t));
+    }
+    return consume();
+  }
+
+  function parseAddSub() {
+    var left = parseMulDiv();
+    while (true) {
+      var t = peek();
+      if (t.type === 'op' && (t.value === '+' || t.value === '-')) {
+        var op = consume().value;
+        var right = parseMulDiv();
+        left = { type: 'bin', op: op, left: left, right: right };
+      } else break;
+    }
+    return left;
+  }
+
+  function parseMulDiv() {
+    var left = parseUnary();
+    while (true) {
+      var t = peek();
+      if (t.type === 'op' && (t.value === '*' || t.value === '/')) {
+        var op = consume().value;
+        var right = parseUnary();
+        left = { type: 'bin', op: op, left: left, right: right };
+      } else break;
+    }
+    return left;
+  }
+
+  function parseUnary() {
+    var t = peek();
+    if (t.type === 'op' && t.value === '-') {
+      consume();
+      var operand = parseUnary();
+      return { type: 'unary', op: '-', operand: operand };
+    }
+    return parsePostfix();
+  }
+
+  function parsePostfix() {
+    var node = parsePrimary();
+    while (true) {
+      var t = peek();
+      if (t.type === 'op' && t.value === '%') {
+        consume();
+        node = { type: 'postfix', op: '%', operand: node };
+      } else break;
+    }
+    return node;
+  }
+
+  function parsePrimary() {
+    var t = peek();
+    if (t.type === 'num') {
+      consume();
+      var v = t.value;
+      if (v === '.') throw new Error('Invalid number: .');
+      if (v.startsWith('.')) v = '0' + v;
+      if (v.endsWith('.')) v = v.slice(0, -1);
+      return { type: 'num', value: Number(v) };
+    }
+    if (t.type === 'op' && t.value === '(') {
+      consume();
+      var node = parseAddSub();
+      expect('op', ')');
+      return node;
+    }
+    throw new Error('Unexpected token: ' + JSON.stringify(t));
+  }
+
+  return { parse: parseAddSub, peek: peek };
+}
+
+function parseExpression(tokens) {
+  var parser = createParser(tokens);
+  var ast = parser.parse();
+  // 确保所有 token 被消费（除 eof），防止 "3 + 4) * 5" 这类残留 token 被静默忽略
+  var finalTok = parser.peek();
+  if (finalTok && finalTok.type !== 'eof') {
+    throw new Error('Unexpected trailing token: ' + JSON.stringify(finalTok));
+  }
+  return ast;
+}
+
+function evaluate(node) {
+  switch (node.type) {
+    case 'num': return node.value;
+    case 'unary':
+      if (node.op === '-') return -evaluate(node.operand);
+      throw new Error('Unknown unary op: ' + node.op);
+    case 'postfix':
+      if (node.op === '%') return evaluate(node.operand) / 100;
+      throw new Error('Unknown postfix op: ' + node.op);
+    case 'bin':
+      var l = evaluate(node.left);
+      var r = evaluate(node.right);
+      switch (node.op) {
+        case '+': return l + r;
+        case '-': return l - r;
+        case '*': return l * r;
+        case '/':
+          if (r === 0) throw new Error('Division by zero');
+          return l / r;
+        default: throw new Error('Unknown binary op: ' + node.op);
+      }
+    default: throw new Error('Unknown AST node: ' + node.type);
   }
 }
 

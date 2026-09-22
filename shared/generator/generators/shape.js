@@ -409,68 +409,6 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName) {
   };
 }
 
-function makeRecognizeQuestion(plan, context, i, shapeMeta, graphic, kpName) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  // recognize qt：输出分类/判断题，让学生识别图形类型
-  var name = kpName || '图形识别';
-  var isChoice = rng() < 0.5;
-
-  if (isChoice) {
-    // 选择题：哪个是 X 图形
-    var target = shapeMeta.legacyType;
-    var correct = shapeMeta.meta.name;
-    var allShapes = Object.keys(SHAPE_FEATURES);
-    var distractors = allShapes.filter(function(s){ return s !== target; }).slice(0, 3);
-    var options = [correct];
-    for (var d = 0; d < distractors.length; d++) {
-      options.push(SHAPE_FEATURES[distractors[d]]?.name || distractors[d]);
-    }
-    options = Rng.shuffle(rng, options).slice(0, 4);
-    var correctIndex = options.indexOf(correct);
-    return {
-      knowledgePointId: pkp(plan),
-      questionType: 'recognize',
-      difficulty: plan.difficulty,
-      spiralLevel: plan.spiralLevel || 1,
-      context: plan.contextType || 'standard',
-      seed: seedFor(plan, context, i),
-      prompt: name + '：下列哪个图形符合描述？',
-      answer: { value: String(correctIndex), acceptable: [] },
-      answerMode: 'choice',
-      data: {
-        mode: 'recognize',
-        steps: 1,
-        graphic: graphic,
-        options: options,
-        correctIndex: correctIndex,
-        shapeName: shapeMeta.meta.name
-      }
-    };
-  } else {
-    // 判断题：这是 X 图形吗
-    var shownIsCorrect = rng() < 0.6;
-    var shownShape = shownIsCorrect ? correct : (Rng.pick(rng, ['三角形', '长方形', '正方形', '圆']) || '三角形');
-    return {
-      knowledgePointId: pkp(plan),
-      questionType: 'recognize',
-      difficulty: plan.difficulty,
-      spiralLevel: plan.spiralLevel || 1,
-      context: plan.contextType || 'standard',
-      seed: seedFor(plan, context, i),
-      prompt: name + '：这是' + shownShape + '吗？',
-      answer: { value: shownIsCorrect, acceptable: [] },
-      answerMode: 'judge',
-      data: {
-        mode: 'recognize',
-        steps: 1,
-        graphic: graphic,
-        expectedShape: shownShape,
-        shapeName: shapeMeta.meta.name
-      }
-    };
-  }
-}
-
 function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var name = kpName || '几何应用';
@@ -695,8 +633,6 @@ function createShapeGenerator(spec) {
           else q = makeCountQuestion(plan, context, i, shapeMeta, graphic);
         } else if (qt === 'geometry') {
           q = makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName);
-        } else if (qt === 'recognize') {
-          q = makeRecognizeQuestion(plan, context, i, shapeMeta, graphic, kpName);
         } else if (qt === 'apply') {
           // geometry 应用题（面积/周长/体积等）
           q = makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName);
@@ -713,7 +649,7 @@ function createShapeGenerator(spec) {
   };
 }
 
-// P25-06 H2：原 SHAPE_KPS（105 条 math-gN-mN-* 模块制 / math-gN-cN-* 竞赛制 legacy ID）
+// P25-06 H2：原 SHAPE_KPS（105 条 math-gN-mN-* 模块制 / math-gN-cN-* 竞赛制 历史 ID）
 // 已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
 // 绑定 SSOT 在 generator-registry.js CORE_RECORDS（shape-recognition 记录的 canonical 列表）。
 function buildAll() {

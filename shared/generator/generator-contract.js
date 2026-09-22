@@ -26,6 +26,7 @@ var GENERATOR_CONTRACT = {
     difficulty: { required: true, type: 'number', min: 1, max: 10 },
     count: { required: true, type: 'number', min: 1 },
     seed: { required: false, type: 'string' },
+    variation: { required: false, type: 'object', allowedKeys: ['numeric', 'unknown-position', 'representation', 'context', 'operation', 'cognitive'] },
     constraints: { required: false, type: 'object' },
     planId: { required: false, type: 'string' }
   },

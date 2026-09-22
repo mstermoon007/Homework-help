@@ -203,56 +203,101 @@
   }
 
   /**
-   * 渲染到一个 <svg> 字符串；无注册生成器或非图片题时返回 ''。
+   * P28-23：custom / illustration 承载的既有 rawSvg 字符串必须先经 SVGSanitizer
+   * 白名单清洗（只允许安全 SVG 标签/属性、拒绝脚本/事件/外联/foreignObject），
+   * 任何未经验证的 SVG 字符串一律禁止直接进入 DOM。
+   */
+  function sanitizeSvgRaw(raw) {
+    var San = (global && global.SVGSanitizer && typeof global.SVGSanitizer.sanitizeSvg === 'function')
+      ? global.SVGSanitizer
+      : (typeof require !== 'undefined' ? require('./svg-sanitizer.js') : null);
+    if (!San) return '';
+    return San.sanitizeSvg(raw);
+  }
+
+  /**
+   * 标准渲染结果契约 (P28-26)
+   * @typedef {Object} RenderResult
+   * @property {'SUCCESS'|'UNSUPPORTED'|'FAILED'} status
+   * @property {string} [svg] - 仅 SUCCESS 时存在
+   * @property {string} [reason] - UNSUPPORTED/FAILED 时的原因
+   * @property {Error} [error] - FAILED 时的原始错误
+   */
+
+  /**
+   * 核心渲染：解析 graphic 并委托生成器，返回标准契约对象。
    * @param {Object} graphic graphic 描述符 {type,subtype,params}
-   * @param {Object} [options] renderOptions（可含 density 等微调，默认不处理）
-   * @returns {string}
+   * @param {Object} [options] renderOptions
+   * @returns {RenderResult}
    */
   function renderFor(graphic, options) {
-    if (!graphic || typeof graphic !== 'object') return '';
-    // custom：直接承载既成 SVG（legacy q.svg 适配路径）
+    if (!graphic || typeof graphic !== 'object') {
+      return { status: 'UNSUPPORTED', reason: 'Invalid graphic descriptor: not an object' };
+    }
+    // custom：直接承载既成 SVG（legacy q.svg 适配路径）—— 须经 P28-23 安全边界
     if (graphic.type === 'custom' || graphic.type === 'illustration') {
       var raw = graphic.params && graphic.params.rawSvg;
       if (typeof raw === 'string' && raw.trim().length > 0) {
-        return raw.trim().indexOf('<svg') === 0 ? raw.trim() : '<svg xmlns="http://www.w3.org/2000/svg">' + raw + '</svg>';
+        var cleaned = sanitizeSvgRaw(raw.trim());
+        if (!cleaned) {
+          return { status: 'FAILED', reason: 'SVG sanitization rejected input', error: new Error('Sanitizer returned empty') };
+        }
+        var finalSvg = cleaned.indexOf('<svg') === 0 ? cleaned : '<svg xmlns="http://www.w3.org/2000/svg">' + cleaned + '</svg>';
+        return { status: 'SUCCESS', svg: finalSvg };
       }
-      return '';
+      return { status: 'UNSUPPORTED', reason: 'custom/illustration graphic missing rawSvg' };
     }
     var fn = resolve(graphic);
-    if (typeof fn !== 'function') return '';
+    if (typeof fn !== 'function') {
+      return { status: 'UNSUPPORTED', reason: 'No generator registered for type=' + graphic.type + (graphic.subtype ? ',subtype=' + graphic.subtype : '') };
+    }
     var args = graphic.params || {};
     var svg;
     try {
       svg = fn(args);
     } catch (e) {
-      return '';
+      return { status: 'FAILED', reason: 'Generator threw exception', error: e };
     }
-    if (typeof svg === 'string' && svg.trim().length > 0) return svg.trim();
-    return '';
+    if (typeof svg === 'string' && svg.trim().length > 0) {
+      return { status: 'SUCCESS', svg: svg.trim() };
+    }
+    return { status: 'FAILED', reason: 'Generator returned empty or non-string', error: new Error('Empty output') };
   }
 
+  /**
+   * 对外渲染入口：委托 renderFor，SUCCESS 时再做 svgWrap 包装。
+   * @param {Object} graphic graphic 描述符
+   * @param {Object} [options] renderOptions
+   * @returns {RenderResult}
+   */
   function render(graphic, options) {
-    var svg = renderFor(graphic, options);
-    if (svg === '') return '';
+    var result = renderFor(graphic, options);
+    if (result.status !== 'SUCCESS') return result;
     var U = getSVGUtil();
-    if (U && typeof U.svgWrap === 'function' && svg.indexOf('<svg') !== 0) {
-      return U.svgWrap(svg, { padding: 8 });
+    if (U && typeof U.svgWrap === 'function' && result.svg.indexOf('<svg') !== 0) {
+      try {
+        var wrapped = U.svgWrap(result.svg, { padding: 8 });
+        return { status: 'SUCCESS', svg: wrapped };
+      } catch (e) {
+        return { status: 'FAILED', reason: 'svgWrap threw exception', error: e };
+      }
     }
-    return svg;
+    return result;
   }
 
   var SVGRegistry = {
     register: register,
     seedFromGlobal: seedFromGlobal,
     resolve: resolve,
-    render: render
+    render: render,
+    renderFor: renderFor
   };
 
   // 挂到既有全局命名空间（与 shared/svg-*.js 的挂载共存），提供正式 API
   global.SVGGenerators = global.SVGGenerators || {};
   global.SVGGenerators.register = register;
 
-  global.SVGRenderer = { render: render, resolve: resolve, register: register };
+  global.SVGRenderer = { render: render, resolve: resolve, register: register, renderFor: renderFor };
   if (typeof module !== 'undefined' && module.exports) module.exports = SVGRegistry;
   return SVGRegistry;
 })(typeof window !== 'undefined' ? window : global);

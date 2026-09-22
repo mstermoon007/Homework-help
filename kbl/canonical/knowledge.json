@@ -1,7 +1,6 @@
 {
   "schemaVersion": "1.0.0",
   "source": "kbl/root/小学G1-G6数学知识点.xlsx",
-  "generatedAt": "2026-09-16T03:45:35.380Z",
   "count": 375,
   "knowledge": [
     {
@@ -1373,7 +1372,7 @@
         "unitOrdinal": 5
       },
       "domain": "geometry",
-      "definition": "<r>把尺子的刻度0对准物体左端，看右端对着刻度几就是几厘米；如果不是从刻度0开始，物体长度=终点刻度</r><r><rPr></rPr>−</r><r><rPr></rPr>起始刻度</r>",
+      "definition": "把尺子的刻度0对准物体左端，看右端对着刻度几就是几厘米；如果不是从刻度0开始，物体长度=终点刻度−起始刻度",
       "edition": "2025",
       "status": "active",
       "knowledgeNo": "5.2",
@@ -1603,7 +1602,7 @@
         "unitOrdinal": 1
       },
       "domain": "algebra",
-      "definition": "<r>结束时间</r><r><rPr></rPr>−</r><r><rPr></rPr>开始时间，生活时间感知，制作作息时间小书，建立时间观念</r>",
+      "definition": "结束时间−开始时间，生活时间感知，制作作息时间小书，建立时间观念",
       "edition": "2026",
       "status": "active",
       "knowledgeNo": "1.3",
@@ -2086,7 +2085,7 @@
         "unitOrdinal": 5
       },
       "domain": "algebra",
-      "definition": "<r>和 = 加数 + 加数；加数 = 和 </r><r><rPr></rPr>−</r><r><rPr></rPr> 另一个加数；差 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 减数；被减数 = 差 + 减数；减数 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 差</r>",
+      "definition": "和 = 加数 + 加数；加数 = 和 − 另一个加数；差 = 被减数 − 减数；被减数 = 差 + 减数；减数 = 被减数 − 差",
       "edition": "2026",
       "status": "active",
       "knowledgeNo": "5.3",
@@ -4202,7 +4201,7 @@
         "unitOrdinal": 4
       },
       "domain": "algebra",
-      "definition": "<r>核心关系为总量 = 分量 + 分量（或整体 = 部分 + 部分），用于描述两个或多个数量合并后求总数的关系。在此基础上引出减法变形公式：分量 = 总量 </r><r><rPr></rPr>−</r><r><rPr></rPr> 另一个分量。涵盖“加法求和”“比多比少”等模型</r>",
+      "definition": "核心关系为总量 = 分量 + 分量（或整体 = 部分 + 部分），用于描述两个或多个数量合并后求总数的关系。在此基础上引出减法变形公式：分量 = 总量 − 另一个分量。涵盖“加法求和”“比多比少”等模型",
       "edition": "2026",
       "status": "active",
       "knowledgeNo": "4.1",
@@ -4570,7 +4569,7 @@
         "unitOrdinal": 1
       },
       "domain": "algebra",
-      "definition": "<r>把两个数合并成一个数的运算叫做加法。已知两个数的和与其中一个加数，求另一个加数的运算叫做减法。和 = 加数 + 加数；差 = 被减数 </r><r><rPr></rPr>−</r><r><rPr></rPr> 减数。减法是加法的逆运算</r>",
+      "definition": "把两个数合并成一个数的运算叫做加法。已知两个数的和与其中一个加数，求另一个加数的运算叫做减法。和 = 加数 + 加数；差 = 被减数 − 减数。减法是加法的逆运算",
       "edition": "2026",
       "status": "active",
       "knowledgeNo": "1.1",
@@ -4754,7 +4753,7 @@
         "unitOrdinal": 3
       },
       "domain": "algebra",
-      "definition": "<r>减法的性质：a </r><r><rPr></rPr>−</r><r><rPr></rPr> b </r><r><rPr></rPr>−</r><r><rPr></rPr> c = a </r><r><rPr></rPr>−</r><r><rPr></rPr> (b + c)；a </r><r><rPr></rPr>−</r><r><rPr></rPr> (b + c) = a </r><r><rPr></rPr>−</r><r><rPr></rPr> b </r><r><rPr></rPr>−</r><r><rPr></rPr> c</r>",
+      "definition": "减法的性质：a − b − c = a − (b + c)；a − (b + c) = a − b − c",
       "edition": "2026",
       "status": "active",
       "knowledgeNo": "3.2",
@@ -7123,7 +7122,7 @@
         "unitOrdinal": 8
       },
       "domain": "practice",
-      "definition": "<r>待测物品个数与保证找到次品所需的最少称量次数之间的关系——物品个数在3</r><r><rPr></rPr>ⁿ⁻</r><r><rPr></rPr>¹+1到3</r><r><rPr></rPr>ⁿ</r><r><rPr></rPr>之间时，至少需要称n次</r>",
+      "definition": "待测物品个数与保证找到次品所需的最少称量次数之间的关系——物品个数在3ⁿ⁻¹+1到3ⁿ之间时，至少需要称n次",
       "edition": "2026",
       "status": "active",
       "knowledgeNo": "8.2",
@@ -7192,7 +7191,7 @@
         "unitOrdinal": 9
       },
       "domain": "practice",
-      "definition": "<r>三面涂色的小正方体在大正方体的顶点处（8个）；两面涂色的小正方体在棱上（除去顶点），数量为12×(n</r><r><rPr></rPr>−</r><r><rPr></rPr>2)；一面涂色的小正方体在面上（除去棱和顶点），数量为6×(n</r><r><rPr></rPr>−</r><r><rPr></rPr>2)²；没有涂色的小正方体在内部，数量为(n</r><r><rPr></rPr>−</r><r><rPr></rPr>2)³</r>",
+      "definition": "三面涂色的小正方体在大正方体的顶点处（8个）；两面涂色的小正方体在棱上（除去顶点），数量为12×(n−2)；一面涂色的小正方体在面上（除去棱和顶点），数量为6×(n−2)²；没有涂色的小正方体在内部，数量为(n−2)³",
       "edition": "2026",
       "status": "active",
       "knowledgeNo": "9.2",
@@ -7261,7 +7260,7 @@
         "unitOrdinal": 10
       },
       "domain": "practice",
-      "definition": "<r>从逐个通知、分组通知到所有已接到通知的人同时参与通知，逐步优化方案。最优方案是每个接到通知的人都不空闲，同时参与通知，这样第n分钟新接到通知的人数呈2</r><r><rPr></rPr>ⁿ⁻</r><r><rPr></rPr>¹增长</r>",
+      "definition": "从逐个通知、分组通知到所有已接到通知的人同时参与通知，逐步优化方案。最优方案是每个接到通知的人都不空闲，同时参与通知，这样第n分钟新接到通知的人数呈2ⁿ⁻¹增长",
       "edition": "2026",
       "status": "active",
       "knowledgeNo": "10.2",
@@ -7284,7 +7283,7 @@
         "unitOrdinal": 10
       },
       "domain": "practice",
-      "definition": "<r>第n分钟所有接到通知的队员总数是2</r><r><rPr></rPr>ⁿ</r><r><rPr></rPr>−</r><r><rPr></rPr>1。通过画图、列表等方式发现隐含的规律，培养归纳推理能力</r>",
+      "definition": "第n分钟所有接到通知的队员总数是2ⁿ−1。通过画图、列表等方式发现隐含的规律，培养归纳推理能力",
       "edition": "2026",
       "status": "active",
       "knowledgeNo": "10.3",

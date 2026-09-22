@@ -457,7 +457,7 @@ function makeStatsQuestion(plan, context, i, kp) {
   };
 }
 
-// P25-06 H2：原 STATS_KPS（math-gN-mN-* 模块制 legacy ID）已随旧体系 KP 全部剔除，
+// P25-06 H2：原 STATS_KPS（math-gN-mN-* 模块制 历史 ID）已随旧体系 KP 全部剔除，
 // 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function createStatsGenerator(spec) {
   spec = spec || {};

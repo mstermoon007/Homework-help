@@ -21,13 +21,11 @@ var ROOT = path.join(__dirname, '..');
 
 var ENTRY = 'shared/engine/presentation-engine.js';
 
-// 浏览器全局 shim / 委托：这些 id 由已加载的 strategy-engine.bundle.js 提供
-var SHIMS = {
-  'node:path': true,
-  'path': true,
-  'fs': true,
-  'node:fs': true
-};
+// 浏览器全局 shim / 委托：这些 id 由已加载的 strategy-engine.bundle.js 提供。
+// P28-29：仅保留真实被引用的委托标记——shared/state/logger.js 对可选 file transport
+// 有受保护的 require('fs')（try 兜底），故 'fs' 保持"保留 require 原样"；path / node:path /
+// node:fs 无任何引用已删除（dead 配置）。
+var SHIMS = { 'fs': true };
 
 var REQUIRES = /require\(\s*(['"])([^'"]+)\1\s*\)/g;
 
@@ -64,13 +62,13 @@ function stripComments(code) {
     .replace(/\/\/.*$/gm, '');
 }
 
-// P17-8：额外内联生成内核 GenerationCore 及其契约层，并注册 global.GenerationCore。
-// presentation-engine.js（冻结）已内联 retry-loop/validator 链，故不重复打包；
-// generation-core 的 selector/registry 依赖经 __req 委托 strategy bundle。
-var GENERATION_CORE_ENTRY = 'shared/generation/generation-core.js';
+// P28-28：GenerationCore（shared/generation/generation-core.js + generation-contract.js）
+// 定性为测试/历史资产（生产链 api.js orchestrate→build→runPlans→generateQuestions 不经过它；
+// shared/ 生产源码 0 处 require）。不再内联进生产 bundle，删除 global.GenerationCore 注册。
+// 保留源文件与 tests/orchestration/p17-10/14/15/16 直接装载使用。
 
 var modules = {};
-var queue = [ENTRY, GENERATION_CORE_ENTRY];
+var queue = [ENTRY];
 
 while (queue.length) {
   var id = queue.shift();
@@ -139,9 +137,6 @@ Object.keys(modules).forEach(function (id) {
 
 lines.push('global.PresentationEngine = __req(' + JSON.stringify(ENTRY) + ');');
 lines.push('global.PresentationBundle = __req(' + JSON.stringify(ENTRY) + ');');
-// P17-8：浏览器端注册生成内核，使 api.js 的 getGenerationCore() 可解析
-//（接管真实运行时 single-KP 计划，避免落回 PresentationEngine 内联 Selector/RetryLoop）。
-lines.push('global.GenerationCore = __req(' + JSON.stringify(GENERATION_CORE_ENTRY) + ');');
 lines.push('})(typeof window !== \'undefined\' ? window : (typeof globalThis !== \'undefined\' ? globalThis : this));');
 
 var out = path.join(ROOT, 'shared', 'engine', 'presentation-engine.bundle.js');

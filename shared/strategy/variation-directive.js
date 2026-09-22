@@ -18,9 +18,19 @@
  *
  * 红线：纯解析；不改 Learner 状态、不选生成器、不做 KP ID 分支——一切命中
  * 都来自 overlay 数据（P27-10 机械派生，每 slot 带 basis 引文）。
+ *
+ * P28-19 五段链声明（同一模型面，串行可溯源）：
+ *   Misconception      →  overlay.kps[kpId].slots[]            （错因剖面 slot 集合）
+ *   Trigger            →  slot.triggerPattern                  （触发谓词：题型 + 运算标签）
+ *   QuestionVariation  →  slot.response.{variant,axis}         （变式转向，R18 六变体）
+ *   ExpectedError      →  slot.errorType                       （预期错因，error-model 8 类）
+ *   Feedback           →  slot.feedback                        （反馈文案，缺省空串）
  */
 (function (global) {
   'use strict';
+
+  // P28-19 五段链段名（供门禁与溯源消费；不承载逻辑，仅声明链面）
+  var CHAIN_SEGMENTS = ['Misconception', 'Trigger', 'QuestionVariation', 'ExpectedError', 'Feedback'];
 
   var _overlay = null;
   var _overlayLoaded = false;
@@ -87,8 +97,10 @@
       var resp = slot.response || {};
       out.push({
         errorType: slot.errorType,
+        expectedError: slot.errorType,
         variant: resp.variant,
         axis: resp.axis,
+        feedback: typeof slot.feedback === 'string' ? slot.feedback : '',
         basis: slot.basis
       });
     });
@@ -98,7 +110,8 @@
   var VariationDirective = {
     resolveForPlan: resolveForPlan,
     normalizeOps: normalizeOps,
-    getOverlay: getOverlay
+    getOverlay: getOverlay,
+    CHAIN_SEGMENTS: CHAIN_SEGMENTS
   };
 
   global.VariationDirective = VariationDirective;

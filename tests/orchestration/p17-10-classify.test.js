@@ -3,6 +3,10 @@
 /**
  * tests/orchestration/p17-10-classify.test.js — 7 类口径统一：classify 真实生成（P17-10）
  *
+ * 注意：GenerationCore 为测试/历史资产（P28-28 定性）。生产链 = api.js
+ * orchestrate → build → runPlans → generateQuestions，不经过 GenerationCore；
+ * 本测试直接装载 shared/generation/generation-core.js 验证其 execute 语义。
+ *
  * 冻结不变量（canonical 7 类对齐，assert 数据链为运行时绑定真值源）：
  *   generator:classification 运行时绑定 == 权威生成映射（mappings/generation-contract/math.json）
  *     classify→generator:classification 的 25 个 canonical 载体（无 legacy 残留绑定）。

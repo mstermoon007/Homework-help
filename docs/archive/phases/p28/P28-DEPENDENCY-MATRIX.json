@@ -1,0 +1,1852 @@
+{
+  "meta": {
+    "task": "P28-00",
+    "tool": "dev/p28/build-baseline.js",
+    "generatedAt": "2026-09-21T15:06:49.105Z",
+    "version": "5.0.0",
+    "git": {
+      "commit": "dabe71c",
+      "branch": "01page-report"
+    },
+    "readOnly": true,
+    "totalModules": 334,
+    "totalEdges": 310
+  },
+  "nodes": [
+    "shared/validator/answer-validator.js",
+    "shared/validator/batch-validator.js",
+    "shared/validator/composite-validator.js",
+    "shared/validator/difficulty-integrity-validator.js",
+    "shared/validator/difficulty-validator.js",
+    "shared/validator/duplicate-integrity-validator.js",
+    "shared/validator/duplicate-validator.js",
+    "shared/validator/kp-coverage-validator.js",
+    "shared/validator/kp-semantic-validator.js",
+    "shared/validator/quality-scorer.js",
+    "shared/validator/question-validator.js",
+    "shared/validator/validation-pipeline.js",
+    "shared/svg/svg-calculation.js",
+    "shared/svg/svg-chart.js",
+    "shared/svg/svg-core.js",
+    "shared/svg/svg-currency.js",
+    "shared/svg/svg-diagram.js",
+    "shared/svg/svg-geometry.js",
+    "shared/svg/svg-make-ten.js",
+    "shared/strategy/adaptive-strategy.js",
+    "shared/strategy/cognitive-strategy.js",
+    "shared/strategy/complexity-strategy.js",
+    "shared/strategy/comprehensive-strategy.js",
+    "shared/strategy/constraint-builder.js",
+    "shared/strategy/context-strategy.js",
+    "shared/strategy/difficulty-strategy.js",
+    "shared/strategy/number-range-strategy.js",
+    "shared/strategy/question-plan.js",
+    "shared/strategy/question-style-strategy.js",
+    "shared/strategy/question-type-strategy.js",
+    "shared/strategy/spiral-strategy.js",
+    "shared/strategy/static-difficulty.js",
+    "shared/strategy/strategy-config.js",
+    "shared/strategy/strategy-engine.js",
+    "shared/strategy/strategy-error.js",
+    "shared/strategy/strategy-request.js",
+    "shared/strategy/strategy-resolver.js",
+    "shared/strategy/strategy-result.js",
+    "shared/strategy/strategy-validator.js",
+    "shared/strategy/structure-constraints.js",
+    "shared/strategy/target-difficulty.js",
+    "shared/strategy/variation-directive.js",
+    "shared/state/logger.js",
+    "shared/state/metrics.js",
+    "shared/state/storage.js",
+    "shared/state/ui-state.js",
+    "shared/semantic/semantic-question.js",
+    "shared/schemas/semantic-question.schema.js",
+    "shared/schemas/teaching-semantic-profile.schema.js",
+    "shared/request/request-normalize.js",
+    "shared/presentation/html-renderer.js",
+    "shared/presentation/print.js",
+    "shared/presentation/render-format.js",
+    "shared/presentation/render-options.js",
+    "shared/presentation/render-result.js",
+    "shared/presentation/renderer.js",
+    "shared/presentation/svg-registry.js",
+    "shared/presentation/svg-sanitizer.js",
+    "shared/orchestration/budget-allocation.js",
+    "shared/orchestration/difficulty-orchestrator.js",
+    "shared/orchestration/knowledge-context.js",
+    "shared/orchestration/practice-orchestrator.js",
+    "shared/orchestration/practice-plan.js",
+    "shared/learner/error-model.js",
+    "shared/learner/learner-model.js",
+    "shared/learner/learner-storage.js",
+    "shared/learner/practice-result.js",
+    "shared/learner/result-collector.js",
+    "shared/knowledge/question-id.js",
+    "shared/knowledge/question-type-registry.js",
+    "shared/knowledge/schema/knowledge-schema.js",
+    "shared/knowledge/schema/manifest-schema.js",
+    "shared/knowledge/schema/relation-schema.js",
+    "shared/knowledge/runtime/knowledge-api.js",
+    "shared/knowledge/runtime/knowledge-contract.js",
+    "shared/knowledge/runtime/knowledge-index.js",
+    "shared/knowledge/runtime/knowledge-loader.js",
+    "shared/knowledge/runtime/knowledge-policy.js",
+    "shared/knowledge/runtime/knowledge-query.js",
+    "shared/knowledge/runtime/knowledge-relation.js",
+    "shared/knowledge/runtime/knowledge-runtime.js",
+    "shared/knowledge/runtime/teaching-semantic-profile.js",
+    "shared/generator/generator-contract.js",
+    "shared/generator/generator-mode.js",
+    "shared/generator/generator-registry.js",
+    "shared/generator/generator-selector.js",
+    "shared/generator/graphic-renderer.js",
+    "shared/generator/registry-facade.js",
+    "shared/generator/retry-loop.js",
+    "shared/generator/generators/application.js",
+    "shared/generator/generators/arithmetic.js",
+    "shared/generator/generators/c1-number-puzzle.js",
+    "shared/generator/generators/c2-number-theory.js",
+    "shared/generator/generators/c5-c6-journey-engineering.js",
+    "shared/generator/generators/c7-clever-calc.js",
+    "shared/generator/generators/c9-comprehensive.js",
+    "shared/generator/generators/classify.js",
+    "shared/generator/generators/complex.js",
+    "shared/generator/generators/composite.js",
+    "shared/generator/generators/concept-meaning.js",
+    "shared/generator/generators/counting.js",
+    "shared/generator/generators/decimal.js",
+    "shared/generator/generators/fraction.js",
+    "shared/generator/generators/index.js",
+    "shared/generator/generators/money.js",
+    "shared/generator/generators/percent.js",
+    "shared/generator/generators/picture-equation.js",
+    "shared/generator/generators/position.js",
+    "shared/generator/generators/reasoning.js",
+    "shared/generator/generators/selection.js",
+    "shared/generator/generators/semantic-relations.js",
+    "shared/generator/generators/semantic-special.js",
+    "shared/generator/generators/shape.js",
+    "shared/generator/generators/stats.js",
+    "shared/generator/core/arithmetic-core.js",
+    "shared/generator/core/kp-arithmetic-semantics.js",
+    "shared/generator/core/kp-complex-semantics.js",
+    "shared/generator/core/op-semantics.js",
+    "shared/generator/core/rng.js",
+    "shared/generator/core/semantic-parameters.js",
+    "shared/generator/core/type-contract.js",
+    "shared/generation/api.js",
+    "shared/generation/generation-contract.js",
+    "shared/generation/generation-core.js",
+    "shared/engine/generation-engine.js",
+    "shared/engine/knowledge-compat.js",
+    "shared/engine/practice-session.js",
+    "shared/engine/presentation-engine.bundle.js",
+    "shared/engine/presentation-engine.js",
+    "shared/engine/strategy-engine.bundle.js",
+    "shared/core/check.js",
+    "shared/core/common.js",
+    "shared/core/core.js",
+    "shared/catalog/catalog-utils.js",
+    "shared/catalog/difficulty-static.js",
+    "shared/catalog/difficulty.js",
+    "shared/catalog/feature-flags.js",
+    "shared/catalog/module-catalog.js",
+    "shared/catalog/subject-utils.js",
+    "shared/catalog/version.js",
+    "shared/capacity/capacity-inventory.js",
+    "shared/capability/capability-matrix.js",
+    "shared/capability/capability-model.js",
+    "shared/capability/capability-resolver.js",
+    "shared/capability/capability-scan-context.js",
+    "shared/capability/knowledge-capability-view.js",
+    "shared/bridge/practice-bridge.js",
+    "scripts/add-asset-version.js",
+    "scripts/crawl-site.js",
+    "scripts/generate-sitemap.js",
+    "scripts/sync-sw-version.js",
+    "tools/kbl/build.js",
+    "tools/kbl/derive-kbl.js",
+    "tools/kbl/emit-canonical.js",
+    "tools/kbl/extract-source.js",
+    "tools/kbl/publish.js",
+    "tools/kbl/roundtrip.js",
+    "tools/kbl/validate.js",
+    "tools/kbl/verify.js",
+    "tools/kbl/xlsx.js",
+    "tests/validator/answer-validator.test.js",
+    "tests/unit/allocateByWeight.test.js",
+    "tests/unit/p25-05-semantic-families.test.js",
+    "tests/unit/randInt.test.js",
+    "tests/unit/random-distribution.test.js",
+    "tests/unit/strategyFor.test.js",
+    "tests/unit/teaching-semantic-profile.test.js",
+    "tests/strategy/p25-13-explainability.test.js",
+    "tests/shape/pol-kbl-shape.test.js",
+    "tests/request/request-contract.test.js",
+    "tests/presentation/renderer.test.js",
+    "tests/presentation/svg-contract-full.test.js",
+    "tests/presentation/svg-contract.test.js",
+    "tests/presentation/svg-sanitizer.test.js",
+    "tests/presentation/ui-state.test.js",
+    "tests/orchestration/p10-2-scope-contract.test.js",
+    "tests/orchestration/p10-3-difficulty-contract.test.js",
+    "tests/orchestration/p10-count-contract.test.js",
+    "tests/orchestration/p11-00-generation-context.test.js",
+    "tests/orchestration/p11-01-coverage-quota.test.js",
+    "tests/orchestration/p11-02-duplicate-contract.test.js",
+    "tests/orchestration/p11-03-capacity-recovery.test.js",
+    "tests/orchestration/p17-10-classify.test.js",
+    "tests/orchestration/p17-14-seven-types.test.js",
+    "tests/orchestration/p17-15-quantity-closure.test.js",
+    "tests/orchestration/p17-16-difficulty-closure.test.js",
+    "tests/orchestration/pol-generation.test.js",
+    "tests/learner/learner-model.test.js",
+    "tests/learner/learner-storage.test.js",
+    "tests/learner/p28-32-learner-data-chain.test.js",
+    "tests/helpers/helpers.js",
+    "tests/helpers/project-root.js",
+    "tests/generator-registry/generator-registry.test.js",
+    "tests/generator/composite.test.js",
+    "tests/generator/generator-contract.test.js",
+    "tests/generator/generator-mode.test.js",
+    "tests/generator/graphic-renderer.test.js",
+    "tests/generator/p25-04-semantic-evidence.test.js",
+    "tests/generator/p25-05-intent-evidence-consistency.test.js",
+    "tests/generator/p25-06-semantic-params.test.js",
+    "tests/generator/p25-06-teaching-denials.test.js",
+    "tests/generator/p25-07-type-contracts.test.js",
+    "tests/generator/p25-09-native-bindings.test.js",
+    "tests/generator/p25-14-coverage.test.js",
+    "tests/generator/p25-15-educational-gate.test.js",
+    "tests/generator/p25-16-golden-dataset.test.js",
+    "tests/generator/p25-17-anti-regression.test.js",
+    "tests/generator/p25-18-acceptance.test.js",
+    "tests/generator/p27-12-knowledge-practice-state.test.js",
+    "tests/generator/p27-misconception-profile.test.js",
+    "tests/generator/p27-variation-directive.test.js",
+    "tests/generator/p27-variation-profile.test.js",
+    "tests/difficulty/difficulty-anchor.test.js",
+    "tests/difficulty/difficulty-context-flow.test.js",
+    "tests/difficulty/difficulty-distribution-regression.test.js",
+    "tests/difficulty/difficulty-orchestrator-normalize.test.js",
+    "tests/difficulty/difficulty-static-weights.test.js",
+    "tests/difficulty/difficulty-structure-fetch.test.js",
+    "tests/bridge/generation-concurrency.test.js",
+    "tests/adaptive/adaptive-strategy.test.js",
+    "docs/archive/phases/freeze-20260919/p005-e2e.js",
+    "docs/archive/phases/freeze-20260919/p13-combo.js",
+    "docs/archive/phases/freeze-20260919/p13-dup.js",
+    "docs/archive/phases/freeze-20260919/step20-count.js",
+    "plugins/svg-area.js",
+    "plugins/svg-clock.js",
+    "plugins/svg-competition.js",
+    "plugins/svg-data-stats.js",
+    "plugins/svg-draw.js",
+    "plugins/svg-fraction.js",
+    "archive/r6-gate-cleanup/check-architecture-final.js",
+    "archive/r6-gate-cleanup/check-generator-coverage.js",
+    "archive/r6-gate-cleanup/check-generator-migration-r18.js",
+    "archive/r6-gate-cleanup/check-generator-migration-switch.js",
+    "archive/r6-gate-cleanup/check-generator-migration.js",
+    "archive/r6-gate-cleanup/check-generator-traceability.js",
+    "archive/r6-gate-cleanup/check-knowledge-maintenance.js",
+    "archive/r6-gate-cleanup/check-legacy-dependencies.js",
+    "archive/r6-gate-cleanup/check-legacy-gate.js",
+    "archive/r6-gate-cleanup/check-m5-final.js",
+    "archive/r6-gate-cleanup/check-m7-final.js",
+    "archive/r6-gate-cleanup/check-migration-coverage.js",
+    "archive/r6-gate-cleanup/check-migration-status.js",
+    "archive/r6-gate-cleanup/check-ontology-semantic.js",
+    "archive/r6-gate-cleanup/check-p4-legacy-gate.js",
+    "archive/r6-gate-cleanup/check-p6-render-print.js",
+    "archive/r6-gate-cleanup/check-question-validator.js",
+    "archive/r6-gate-cleanup/check-renderer-coverage.js",
+    "archive/r6-gate-cleanup/g1-fill-apply.js",
+    "archive/r6-gate-cleanup/g1-fill-draft.js",
+    "archive/plugins-removed/_template.js",
+    "archive/plugins-removed/math-competition-placeholder.js",
+    "archive/plugins-removed/math-comprehensive.js",
+    "archive/legacy-tools/add-g5-competition-entries.js",
+    "archive/legacy-tools/add-g6-competition-entries.js",
+    "archive/legacy-tools/clean-difficulty-consume.js",
+    "archive/legacy-tools/cleanup-scan.js",
+    "archive/legacy-tools/generate-knowledge-pages.js",
+    "archive/legacy-tools/migrate-knowledge-difficulty-fields.js",
+    "archive/legacy-tools/migrate-knowledge-subject.js",
+    "archive/legacy-tools/prereq-review.js",
+    "archive/legacy-tools/semantic-parse.js",
+    "archive/legacy-tests/strategy/cognitive-strategy.test.js",
+    "archive/legacy-tests/strategy/constraint-builder.test.js",
+    "archive/legacy-tests/strategy/context-strategy.test.js",
+    "archive/legacy-tests/strategy/count-regression.test.js",
+    "archive/legacy-tests/strategy/difficulty-regression.test.js",
+    "archive/legacy-tests/strategy/difficulty-strategy.test.js",
+    "archive/legacy-tests/strategy/kp-array-gate.test.js",
+    "archive/legacy-tests/strategy/number-range-strategy.test.js",
+    "archive/legacy-tests/strategy/pool-mode-gate.test.js",
+    "archive/legacy-tests/strategy/question-plan.test.js",
+    "archive/legacy-tests/strategy/question-type-allocation.test.js",
+    "archive/legacy-tests/strategy/question-type-regression.test.js",
+    "archive/legacy-tests/strategy/question-type-strategy.test.js",
+    "archive/legacy-tests/strategy/single-kp.test.js",
+    "archive/legacy-tests/strategy/spiral-context-regression.test.js",
+    "archive/legacy-tests/strategy/spiral-strategy.test.js",
+    "archive/legacy-tests/strategy/static-difficulty.test.js",
+    "archive/legacy-tests/strategy/strategy-engine.test.js",
+    "archive/legacy-tests/strategy/strategy-request.test.js",
+    "archive/legacy-tests/strategy/strategy-resolver.test.js",
+    "archive/legacy-tests/strategy/strategy-result.test.js",
+    "archive/legacy-tests/strategy/strategy-validator.test.js",
+    "archive/legacy-tests/strategy/structure-constraints.test.js",
+    "archive/legacy-tests/strategy/target-difficulty.test.js",
+    "archive/legacy-tests/orchestration/orchestration.test.js",
+    "archive/legacy-tests/ontology/compatibility.test.js",
+    "archive/legacy-tests/ontology/errors.test.js",
+    "archive/legacy-tests/ontology/factual-content.test.js",
+    "archive/legacy-tests/ontology/generation-capability.test.js",
+    "archive/legacy-tests/ontology/knowledge-bank-verification.test.js",
+    "archive/legacy-tests/ontology/knowledge-point.test.js",
+    "archive/legacy-tests/ontology/normalizer.test.js",
+    "archive/legacy-tests/ontology/operation.test.js",
+    "archive/legacy-tests/ontology/schema.test.js",
+    "archive/legacy-tests/ontology/validator.test.js",
+    "archive/legacy-tests/integration/column-consistency-test.js",
+    "archive/legacy-tests/generator/core-generators.test.js",
+    "archive/legacy-tests/generator/cross-generation-dedup.test.js",
+    "archive/legacy-tests/generator/dual-track.test.js",
+    "archive/legacy-tests/generator/generator-registry.test.js",
+    "archive/legacy-tests/generator/generator-selector.test.js",
+    "archive/legacy-tests/generator/kp-binding.test.js",
+    "archive/legacy-tests/engine/boundary.test.js",
+    "archive/legacy-tests/engine/mode.test.js",
+    "archive/legacy-tests/e2e/e2e-real-flow.js",
+    "archive/legacy-tests/comprehensive/comprehensive-strategy.test.js",
+    "archive/legacy-tests/adaptive/engine-adaptive.test.js",
+    "archive/g1-curriculum-2026/math-g1-patterns.js",
+    "archive/g1-curriculum-2026/math-statistics.js",
+    "archive/difficulty-refactor-20260829/test/unit/strategyFor.test.js",
+    "archive/difficulty-refactor-20260829/shared/common.js",
+    "archive/difficulty-refactor-20260829/shared/core.js",
+    "archive/difficulty-refactor-20260829/shared/difficulty.js",
+    "archive/difficulty-refactor-20260829/shared/render.js",
+    "archive/difficulty-refactor-20260829/shared/storage.js",
+    "archive/difficulty-refactor-20260829/plugins/_template.js",
+    "archive/difficulty-refactor-20260829/dev/plugin-loader.js",
+    "archive/difficulty-refactor-20260829/dev/prereq-review.js",
+    "archive/difficulty-refactor-20260829/dev/test-difficulty-structure.js",
+    "archive/difficulty-refactor-20260829/dev/test-difficulty.js",
+    "archive/difficulty-refactor-20260829/dev/verify-setup.js",
+    "archive/audit-probes/c1-rapid-click-probe.js",
+    "archive/audit-probes/c2-dedup-stats-probe.js",
+    "archive/audit-probes/composite-routing-probe.js",
+    "archive/audit-probes/context-propagation-probe.js",
+    "archive/audit-probes/d007-repro-probe.js",
+    "archive/audit-probes/final-browser-sim-probe.js",
+    "archive/audit-probes/fix-stats-kp-limits.js",
+    "archive/audit-probes/kb-data-completion.js",
+    "archive/audit-probes/kp-coverage-probe.js",
+    "archive/audit-probes/question-integrity-probe.js",
+    "archive/audit-probes/stress-probe.js"
+  ],
+  "edges": [
+    {
+      "from": "shared/validator/answer-validator.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/batch-validator.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/batch-validator.js",
+      "to": "shared/validator/duplicate-validator.js"
+    },
+    {
+      "from": "shared/validator/composite-validator.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/difficulty-integrity-validator.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/difficulty-integrity-validator.js",
+      "to": "shared/catalog/difficulty.js"
+    },
+    {
+      "from": "shared/validator/difficulty-validator.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/duplicate-integrity-validator.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/duplicate-integrity-validator.js",
+      "to": "shared/validator/duplicate-validator.js"
+    },
+    {
+      "from": "shared/validator/duplicate-validator.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/kp-coverage-validator.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/kp-semantic-validator.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/kp-semantic-validator.js",
+      "to": "shared/orchestration/knowledge-context.js"
+    },
+    {
+      "from": "shared/validator/kp-semantic-validator.js",
+      "to": "shared/generator/generator-registry.js"
+    },
+    {
+      "from": "shared/validator/kp-semantic-validator.js",
+      "to": "shared/generator/core/kp-arithmetic-semantics.js"
+    },
+    {
+      "from": "shared/validator/kp-semantic-validator.js",
+      "to": "shared/generator/core/kp-complex-semantics.js"
+    },
+    {
+      "from": "shared/validator/kp-semantic-validator.js",
+      "to": "shared/generator/core/type-contract.js"
+    },
+    {
+      "from": "shared/validator/quality-scorer.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/quality-scorer.js",
+      "to": "shared/schemas/semantic-question.schema.js"
+    },
+    {
+      "from": "shared/validator/quality-scorer.js",
+      "to": "shared/validator/duplicate-validator.js"
+    },
+    {
+      "from": "shared/validator/question-validator.js",
+      "to": "shared/schemas/semantic-question.schema.js"
+    },
+    {
+      "from": "shared/validator/question-validator.js",
+      "to": "shared/semantic/semantic-question.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/schemas/semantic-question.schema.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/validator/answer-validator.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/validator/difficulty-validator.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/validator/duplicate-validator.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/validator/kp-coverage-validator.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/validator/composite-validator.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/validator/difficulty-integrity-validator.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/validator/duplicate-integrity-validator.js"
+    },
+    {
+      "from": "shared/validator/validation-pipeline.js",
+      "to": "shared/validator/kp-semantic-validator.js"
+    },
+    {
+      "from": "shared/svg/svg-calculation.js",
+      "to": "shared/svg/svg-core.js"
+    },
+    {
+      "from": "shared/svg/svg-chart.js",
+      "to": "shared/svg/svg-core.js"
+    },
+    {
+      "from": "shared/svg/svg-currency.js",
+      "to": "shared/svg/svg-core.js"
+    },
+    {
+      "from": "shared/svg/svg-diagram.js",
+      "to": "shared/svg/svg-core.js"
+    },
+    {
+      "from": "shared/svg/svg-geometry.js",
+      "to": "shared/svg/svg-core.js"
+    },
+    {
+      "from": "shared/svg/svg-make-ten.js",
+      "to": "shared/svg/svg-core.js"
+    },
+    {
+      "from": "shared/strategy/adaptive-strategy.js",
+      "to": "shared/learner/learner-model.js"
+    },
+    {
+      "from": "shared/strategy/cognitive-strategy.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/strategy/cognitive-strategy.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/complexity-strategy.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/comprehensive-strategy.js",
+      "to": "shared/strategy/strategy-engine.js"
+    },
+    {
+      "from": "shared/strategy/constraint-builder.js",
+      "to": "shared/catalog/difficulty.js"
+    },
+    {
+      "from": "shared/strategy/constraint-builder.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/context-strategy.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/strategy/context-strategy.js",
+      "to": "shared/strategy/cognitive-strategy.js"
+    },
+    {
+      "from": "shared/strategy/context-strategy.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/difficulty-strategy.js",
+      "to": "shared/strategy/static-difficulty.js"
+    },
+    {
+      "from": "shared/strategy/difficulty-strategy.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/difficulty-strategy.js",
+      "to": "shared/strategy/strategy-config.js"
+    },
+    {
+      "from": "shared/strategy/difficulty-strategy.js",
+      "to": "shared/strategy/complexity-strategy.js"
+    },
+    {
+      "from": "shared/strategy/difficulty-strategy.js",
+      "to": "shared/generator/core/kp-complex-semantics.js"
+    },
+    {
+      "from": "shared/strategy/number-range-strategy.js",
+      "to": "shared/strategy/static-difficulty.js"
+    },
+    {
+      "from": "shared/strategy/number-range-strategy.js",
+      "to": "shared/catalog/difficulty.js"
+    },
+    {
+      "from": "shared/strategy/number-range-strategy.js",
+      "to": "shared/core/common.js"
+    },
+    {
+      "from": "shared/strategy/number-range-strategy.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/question-plan.js",
+      "to": "shared/strategy/strategy-config.js"
+    },
+    {
+      "from": "shared/strategy/question-plan.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/strategy/question-style-strategy.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/question-style-strategy.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/strategy/question-type-strategy.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/strategy/question-type-strategy.js",
+      "to": "shared/capability/capability-resolver.js"
+    },
+    {
+      "from": "shared/strategy/question-type-strategy.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/spiral-strategy.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/static-difficulty.js",
+      "to": "shared/catalog/difficulty-static.js"
+    },
+    {
+      "from": "shared/strategy/static-difficulty.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/strategy-request.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/strategy-resolver.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/capability/capability-resolver.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/question-type-strategy.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/cognitive-strategy.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/static-difficulty.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/target-difficulty.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/number-range-strategy.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/structure-constraints.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/spiral-strategy.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/context-strategy.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/constraint-builder.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/strategy-validator.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/strategy-result.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/adaptive-strategy.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/strategy-config.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/generator/generator-registry.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/generator/core/kp-arithmetic-semantics.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/generator/core/kp-complex-semantics.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/learner/learner-model.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/variation-directive.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/generator/generator-selector.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/question-style-strategy.js"
+    },
+    {
+      "from": "shared/strategy/strategy-engine.js",
+      "to": "shared/strategy/complexity-strategy.js"
+    },
+    {
+      "from": "shared/strategy/strategy-request.js",
+      "to": "shared/strategy/strategy-config.js"
+    },
+    {
+      "from": "shared/strategy/strategy-request.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/strategy/strategy-resolver.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/strategy-validator.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/strategy/strategy-validator.js",
+      "to": "shared/capability/capability-resolver.js"
+    },
+    {
+      "from": "shared/strategy/structure-constraints.js",
+      "to": "shared/strategy/static-difficulty.js"
+    },
+    {
+      "from": "shared/strategy/structure-constraints.js",
+      "to": "shared/strategy/number-range-strategy.js"
+    },
+    {
+      "from": "shared/strategy/structure-constraints.js",
+      "to": "shared/catalog/difficulty.js"
+    },
+    {
+      "from": "shared/strategy/structure-constraints.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/strategy/target-difficulty.js",
+      "to": "shared/strategy/static-difficulty.js"
+    },
+    {
+      "from": "shared/strategy/target-difficulty.js",
+      "to": "shared/strategy/difficulty-strategy.js"
+    },
+    {
+      "from": "shared/strategy/target-difficulty.js",
+      "to": "shared/strategy/strategy-error.js"
+    },
+    {
+      "from": "shared/semantic/semantic-question.js",
+      "to": "shared/schemas/semantic-question.schema.js"
+    },
+    {
+      "from": "shared/semantic/semantic-question.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/semantic/semantic-question.js",
+      "to": "shared/knowledge/question-id.js"
+    },
+    {
+      "from": "shared/semantic/semantic-question.js",
+      "to": "shared/validator/duplicate-validator.js"
+    },
+    {
+      "from": "shared/schemas/semantic-question.schema.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/request/request-normalize.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/presentation/renderer.js",
+      "to": "shared/presentation/render-options.js"
+    },
+    {
+      "from": "shared/presentation/renderer.js",
+      "to": "shared/presentation/render-result.js"
+    },
+    {
+      "from": "shared/presentation/renderer.js",
+      "to": "shared/presentation/svg-registry.js"
+    },
+    {
+      "from": "shared/presentation/renderer.js",
+      "to": "shared/presentation/html-renderer.js"
+    },
+    {
+      "from": "shared/presentation/svg-registry.js",
+      "to": "shared/svg/svg-core.js"
+    },
+    {
+      "from": "shared/presentation/svg-registry.js",
+      "to": "shared/presentation/svg-sanitizer.js"
+    },
+    {
+      "from": "shared/orchestration/knowledge-context.js",
+      "to": "shared/knowledge/runtime/knowledge-runtime.js"
+    },
+    {
+      "from": "shared/orchestration/practice-orchestrator.js",
+      "to": "shared/orchestration/practice-plan.js"
+    },
+    {
+      "from": "shared/orchestration/practice-orchestrator.js",
+      "to": "shared/orchestration/budget-allocation.js"
+    },
+    {
+      "from": "shared/orchestration/practice-orchestrator.js",
+      "to": "shared/request/request-normalize.js"
+    },
+    {
+      "from": "shared/orchestration/practice-orchestrator.js",
+      "to": "shared/orchestration/knowledge-context.js"
+    },
+    {
+      "from": "shared/orchestration/practice-orchestrator.js",
+      "to": "shared/capacity/capacity-inventory.js"
+    },
+    {
+      "from": "shared/orchestration/practice-orchestrator.js",
+      "to": "shared/capability/knowledge-capability-view.js"
+    },
+    {
+      "from": "shared/orchestration/practice-orchestrator.js",
+      "to": "shared/strategy/target-difficulty.js"
+    },
+    {
+      "from": "shared/orchestration/practice-orchestrator.js",
+      "to": "shared/orchestration/difficulty-orchestrator.js"
+    },
+    {
+      "from": "shared/learner/learner-model.js",
+      "to": "shared/learner/error-model.js"
+    },
+    {
+      "from": "shared/learner/learner-storage.js",
+      "to": "shared/learner/learner-model.js"
+    },
+    {
+      "from": "shared/learner/learner-storage.js",
+      "to": "shared/state/storage.js"
+    },
+    {
+      "from": "shared/learner/practice-result.js",
+      "to": "shared/learner/error-model.js"
+    },
+    {
+      "from": "shared/learner/result-collector.js",
+      "to": "shared/learner/learner-model.js"
+    },
+    {
+      "from": "shared/learner/result-collector.js",
+      "to": "shared/learner/practice-result.js"
+    },
+    {
+      "from": "shared/knowledge/question-id.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-api.js",
+      "to": "shared/knowledge/runtime/knowledge-contract.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-api.js",
+      "to": "shared/knowledge/runtime/knowledge-loader.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-api.js",
+      "to": "shared/knowledge/runtime/knowledge-relation.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-api.js",
+      "to": "shared/knowledge/runtime/knowledge-policy.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-api.js",
+      "to": "shared/knowledge/runtime/knowledge-query.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-index.js",
+      "to": "shared/knowledge/runtime/knowledge-contract.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-index.js",
+      "to": "shared/knowledge/runtime/knowledge-loader.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-loader.js",
+      "to": "shared/knowledge/runtime/knowledge-contract.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-policy.js",
+      "to": "shared/knowledge/runtime/knowledge-contract.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-policy.js",
+      "to": "shared/knowledge/runtime/knowledge-loader.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-query.js",
+      "to": "shared/knowledge/runtime/knowledge-contract.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-query.js",
+      "to": "shared/knowledge/runtime/knowledge-loader.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-query.js",
+      "to": "shared/knowledge/runtime/knowledge-policy.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-query.js",
+      "to": "shared/knowledge/runtime/knowledge-index.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-relation.js",
+      "to": "shared/knowledge/runtime/knowledge-contract.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-relation.js",
+      "to": "shared/knowledge/runtime/knowledge-loader.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-runtime.js",
+      "to": "shared/knowledge/runtime/knowledge-contract.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-runtime.js",
+      "to": "shared/knowledge/runtime/knowledge-loader.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-runtime.js",
+      "to": "shared/knowledge/runtime/knowledge-policy.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-runtime.js",
+      "to": "shared/knowledge/runtime/knowledge-index.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-runtime.js",
+      "to": "shared/knowledge/runtime/knowledge-relation.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/knowledge-runtime.js",
+      "to": "shared/knowledge/runtime/knowledge-query.js"
+    },
+    {
+      "from": "shared/knowledge/runtime/teaching-semantic-profile.js",
+      "to": "shared/schemas/teaching-semantic-profile.schema.js"
+    },
+    {
+      "from": "shared/generator/generator-contract.js",
+      "to": "shared/semantic/semantic-question.js"
+    },
+    {
+      "from": "shared/generator/generator-contract.js",
+      "to": "shared/validator/validation-pipeline.js"
+    },
+    {
+      "from": "shared/generator/generator-contract.js",
+      "to": "shared/validator/batch-validator.js"
+    },
+    {
+      "from": "shared/generator/generator-contract.js",
+      "to": "shared/generator/retry-loop.js"
+    },
+    {
+      "from": "shared/generator/generator-contract.js",
+      "to": "shared/knowledge/question-id.js"
+    },
+    {
+      "from": "shared/generator/generator-contract.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/generator/generator-registry.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/generator/generator-registry.js",
+      "to": "shared/capability/capability-resolver.js"
+    },
+    {
+      "from": "shared/generator/generator-selector.js",
+      "to": "shared/generator/generator-registry.js"
+    },
+    {
+      "from": "shared/generator/generator-selector.js",
+      "to": "shared/generator/generator-mode.js"
+    },
+    {
+      "from": "shared/generator/generator-selector.js",
+      "to": "shared/strategy/question-plan.js"
+    },
+    {
+      "from": "shared/generator/generator-selector.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/generator/generator-selector.js",
+      "to": "shared/generator/core/semantic-parameters.js"
+    },
+    {
+      "from": "shared/generator/generator-selector.js",
+      "to": "shared/generator/core/type-contract.js"
+    },
+    {
+      "from": "shared/generator/generator-selector.js",
+      "to": "shared/generator/generators/index.js"
+    },
+    {
+      "from": "shared/generator/graphic-renderer.js",
+      "to": "shared/presentation/svg-registry.js"
+    },
+    {
+      "from": "shared/generator/registry-facade.js",
+      "to": "shared/generator/generator-registry.js"
+    },
+    {
+      "from": "shared/generator/retry-loop.js",
+      "to": "shared/validator/question-validator.js"
+    },
+    {
+      "from": "shared/generator/retry-loop.js",
+      "to": "shared/validator/validation-pipeline.js"
+    },
+    {
+      "from": "shared/generator/retry-loop.js",
+      "to": "shared/knowledge/question-id.js"
+    },
+    {
+      "from": "shared/generator/retry-loop.js",
+      "to": "shared/validator/duplicate-validator.js"
+    },
+    {
+      "from": "shared/generator/retry-loop.js",
+      "to": "shared/semantic/semantic-question.js"
+    },
+    {
+      "from": "shared/generator/generators/application.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/application.js",
+      "to": "shared/generator/core/arithmetic-core.js"
+    },
+    {
+      "from": "shared/generator/generators/arithmetic.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/arithmetic.js",
+      "to": "shared/generator/core/arithmetic-core.js"
+    },
+    {
+      "from": "shared/generator/generators/c1-number-puzzle.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/c2-number-theory.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/c2-number-theory.js",
+      "to": "shared/generator/core/op-semantics.js"
+    },
+    {
+      "from": "shared/generator/generators/c5-c6-journey-engineering.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/c7-clever-calc.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/c7-clever-calc.js",
+      "to": "shared/generator/core/op-semantics.js"
+    },
+    {
+      "from": "shared/generator/generators/c9-comprehensive.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/classify.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/complex.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/complex.js",
+      "to": "shared/generator/core/arithmetic-core.js"
+    },
+    {
+      "from": "shared/generator/generators/composite.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/concept-meaning.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/concept-meaning.js",
+      "to": "shared/generator/core/semantic-parameters.js"
+    },
+    {
+      "from": "shared/generator/generators/counting.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/decimal.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/fraction.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/arithmetic.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/selection.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/complex.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/shape.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/position.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/money.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/application.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/composite.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/counting.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/reasoning.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/stats.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/picture-equation.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/c1-number-puzzle.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/c2-number-theory.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/c5-c6-journey-engineering.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/c7-clever-calc.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/c9-comprehensive.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/semantic-special.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/classify.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/percent.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/concept-meaning.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/semantic-relations.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/decimal.js"
+    },
+    {
+      "from": "shared/generator/generators/index.js",
+      "to": "shared/generator/generators/fraction.js"
+    },
+    {
+      "from": "shared/generator/generators/money.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/money.js",
+      "to": "shared/generator/core/arithmetic-core.js"
+    },
+    {
+      "from": "shared/generator/generators/money.js",
+      "to": "shared/generator/core/op-semantics.js"
+    },
+    {
+      "from": "shared/generator/generators/percent.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/percent.js",
+      "to": "shared/generator/core/semantic-parameters.js"
+    },
+    {
+      "from": "shared/generator/generators/picture-equation.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/position.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/reasoning.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/selection.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/selection.js",
+      "to": "shared/generator/core/arithmetic-core.js"
+    },
+    {
+      "from": "shared/generator/generators/semantic-relations.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/semantic-relations.js",
+      "to": "shared/generator/core/semantic-parameters.js"
+    },
+    {
+      "from": "shared/generator/generators/semantic-special.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/shape.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/generators/stats.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/core/arithmetic-core.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generator/core/arithmetic-core.js",
+      "to": "shared/generator/core/op-semantics.js"
+    },
+    {
+      "from": "shared/generator/core/type-contract.js",
+      "to": "shared/generator/core/rng.js"
+    },
+    {
+      "from": "shared/generation/api.js",
+      "to": "shared/orchestration/practice-orchestrator.js"
+    },
+    {
+      "from": "shared/generation/api.js",
+      "to": "shared/capacity/capacity-inventory.js"
+    },
+    {
+      "from": "shared/generation/generation-contract.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/generation/generation-core.js",
+      "to": "shared/generation/generation-contract.js"
+    },
+    {
+      "from": "shared/generation/generation-core.js",
+      "to": "shared/generator/generator-selector.js"
+    },
+    {
+      "from": "shared/generation/generation-core.js",
+      "to": "shared/generator/retry-loop.js"
+    },
+    {
+      "from": "shared/generation/generation-core.js",
+      "to": "shared/semantic/semantic-question.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/engine/generation-engine.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/generation/api.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/state/storage.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/learner/result-collector.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/learner/learner-storage.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/learner/practice-result.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/core/common.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/presentation/render-format.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/presentation/renderer.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/presentation/print.js"
+    },
+    {
+      "from": "shared/engine/practice-session.js",
+      "to": "shared/state/metrics.js"
+    },
+    {
+      "from": "shared/engine/presentation-engine.js",
+      "to": "shared/generator/generator-selector.js"
+    },
+    {
+      "from": "shared/engine/presentation-engine.js",
+      "to": "shared/generator/retry-loop.js"
+    },
+    {
+      "from": "shared/engine/presentation-engine.js",
+      "to": "shared/validator/batch-validator.js"
+    },
+    {
+      "from": "shared/engine/presentation-engine.js",
+      "to": "shared/validator/quality-scorer.js"
+    },
+    {
+      "from": "shared/engine/presentation-engine.js",
+      "to": "shared/semantic/semantic-question.js"
+    },
+    {
+      "from": "shared/engine/presentation-engine.js",
+      "to": "shared/presentation/render-format.js"
+    },
+    {
+      "from": "shared/engine/presentation-engine.js",
+      "to": "shared/catalog/feature-flags.js"
+    },
+    {
+      "from": "shared/engine/presentation-engine.js",
+      "to": "shared/state/logger.js"
+    },
+    {
+      "from": "shared/engine/presentation-engine.js",
+      "to": "shared/state/metrics.js"
+    },
+    {
+      "from": "shared/core/common.js",
+      "to": "shared/core/core.js"
+    },
+    {
+      "from": "shared/core/common.js",
+      "to": "shared/core/check.js"
+    },
+    {
+      "from": "shared/core/common.js",
+      "to": "shared/state/ui-state.js"
+    },
+    {
+      "from": "shared/core/common.js",
+      "to": "shared/state/storage.js"
+    },
+    {
+      "from": "shared/core/core.js",
+      "to": "shared/catalog/subject-utils.js"
+    },
+    {
+      "from": "shared/catalog/difficulty-static.js",
+      "to": "shared/catalog/difficulty.js"
+    },
+    {
+      "from": "shared/catalog/difficulty.js",
+      "to": "shared/core/common.js"
+    },
+    {
+      "from": "shared/catalog/subject-utils.js",
+      "to": "shared/core/common.js"
+    },
+    {
+      "from": "shared/capability/capability-matrix.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/capability/capability-matrix.js",
+      "to": "shared/capability/capability-model.js"
+    },
+    {
+      "from": "shared/capability/capability-model.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/capability/capability-resolver.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/capability/capability-resolver.js",
+      "to": "shared/capability/capability-model.js"
+    },
+    {
+      "from": "shared/capability/capability-resolver.js",
+      "to": "shared/capability/capability-matrix.js"
+    },
+    {
+      "from": "shared/capability/capability-scan-context.js",
+      "to": "shared/orchestration/knowledge-context.js"
+    },
+    {
+      "from": "shared/capability/capability-scan-context.js",
+      "to": "shared/capability/capability-model.js"
+    },
+    {
+      "from": "shared/capability/capability-scan-context.js",
+      "to": "shared/capability/capability-matrix.js"
+    },
+    {
+      "from": "shared/capability/capability-scan-context.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "shared/capability/capability-scan-context.js",
+      "to": "shared/generator/generator-registry.js"
+    },
+    {
+      "from": "shared/capability/knowledge-capability-view.js",
+      "to": "shared/capability/capability-resolver.js"
+    },
+    {
+      "from": "shared/capability/knowledge-capability-view.js",
+      "to": "shared/orchestration/knowledge-context.js"
+    },
+    {
+      "from": "shared/bridge/practice-bridge.js",
+      "to": "shared/engine/practice-session.js"
+    },
+    {
+      "from": "shared/bridge/practice-bridge.js",
+      "to": "shared/catalog/module-catalog.js"
+    },
+    {
+      "from": "shared/bridge/practice-bridge.js",
+      "to": "shared/knowledge/question-type-registry.js"
+    },
+    {
+      "from": "scripts/add-asset-version.js",
+      "to": "shared/catalog/version.js"
+    },
+    {
+      "from": "tools/kbl/extract-source.js",
+      "to": "tools/kbl/xlsx.js"
+    },
+    {
+      "from": "tools/kbl/validate.js",
+      "to": "shared/knowledge/schema/knowledge-schema.js"
+    },
+    {
+      "from": "tools/kbl/validate.js",
+      "to": "shared/knowledge/schema/manifest-schema.js"
+    },
+    {
+      "from": "tools/kbl/validate.js",
+      "to": "shared/knowledge/schema/relation-schema.js"
+    },
+    {
+      "from": "tools/kbl/validate.js",
+      "to": "shared/generator/generator-registry.js"
+    },
+    {
+      "from": "tests/validator/answer-validator.test.js",
+      "to": "shared/validator/answer-validator.js"
+    },
+    {
+      "from": "tests/unit/allocateByWeight.test.js",
+      "to": "shared/strategy/comprehensive-strategy.js"
+    },
+    {
+      "from": "tests/unit/randInt.test.js",
+      "to": "shared/core/common.js"
+    },
+    {
+      "from": "tests/unit/random-distribution.test.js",
+      "to": "shared/core/common.js"
+    },
+    {
+      "from": "tests/unit/strategyFor.test.js",
+      "to": "shared/catalog/difficulty.js"
+    },
+    {
+      "from": "tests/unit/teaching-semantic-profile.test.js",
+      "to": "shared/schemas/teaching-semantic-profile.schema.js"
+    },
+    {
+      "from": "tests/unit/teaching-semantic-profile.test.js",
+      "to": "shared/knowledge/runtime/teaching-semantic-profile.js"
+    },
+    {
+      "from": "tests/strategy/p25-13-explainability.test.js",
+      "to": "kbl/teaching/qt-intent.json"
+    },
+    {
+      "from": "tests/presentation/svg-sanitizer.test.js",
+      "to": "shared/presentation/svg-sanitizer.js"
+    },
+    {
+      "from": "tests/helpers/helpers.js",
+      "to": "shared/core/common.js"
+    },
+    {
+      "from": "archive/difficulty-refactor-20260829/shared/common.js",
+      "to": "archive/difficulty-refactor-20260829/shared/core.js"
+    },
+    {
+      "from": "archive/difficulty-refactor-20260829/shared/common.js",
+      "to": "archive/difficulty-refactor-20260829/shared/render.js"
+    },
+    {
+      "from": "archive/difficulty-refactor-20260829/shared/common.js",
+      "to": "archive/difficulty-refactor-20260829/shared/storage.js"
+    },
+    {
+      "from": "archive/difficulty-refactor-20260829/shared/difficulty.js",
+      "to": "archive/difficulty-refactor-20260829/shared/common.js"
+    }
+  ],
+  "fanIn": {
+    "shared/validator/question-validator.js": 12,
+    "shared/validator/duplicate-validator.js": 6,
+    "shared/catalog/difficulty.js": 6,
+    "shared/orchestration/knowledge-context.js": 4,
+    "shared/generator/generator-registry.js": 6,
+    "shared/generator/core/kp-arithmetic-semantics.js": 2,
+    "shared/generator/core/kp-complex-semantics.js": 3,
+    "shared/generator/core/type-contract.js": 2,
+    "shared/schemas/semantic-question.schema.js": 4,
+    "shared/semantic/semantic-question.js": 5,
+    "shared/validator/answer-validator.js": 2,
+    "shared/validator/difficulty-validator.js": 1,
+    "shared/validator/kp-coverage-validator.js": 1,
+    "shared/validator/composite-validator.js": 1,
+    "shared/validator/difficulty-integrity-validator.js": 1,
+    "shared/validator/duplicate-integrity-validator.js": 1,
+    "shared/validator/kp-semantic-validator.js": 1,
+    "shared/svg/svg-core.js": 7,
+    "shared/learner/learner-model.js": 4,
+    "shared/knowledge/question-type-registry.js": 19,
+    "shared/strategy/strategy-error.js": 14,
+    "shared/strategy/strategy-engine.js": 1,
+    "shared/strategy/cognitive-strategy.js": 2,
+    "shared/strategy/static-difficulty.js": 5,
+    "shared/strategy/strategy-config.js": 4,
+    "shared/strategy/complexity-strategy.js": 2,
+    "shared/core/common.js": 7,
+    "shared/capability/capability-resolver.js": 5,
+    "shared/catalog/difficulty-static.js": 1,
+    "shared/strategy/strategy-request.js": 1,
+    "shared/strategy/strategy-resolver.js": 1,
+    "shared/strategy/question-type-strategy.js": 1,
+    "shared/strategy/target-difficulty.js": 2,
+    "shared/strategy/number-range-strategy.js": 2,
+    "shared/strategy/structure-constraints.js": 1,
+    "shared/strategy/spiral-strategy.js": 1,
+    "shared/strategy/context-strategy.js": 1,
+    "shared/strategy/constraint-builder.js": 1,
+    "shared/strategy/strategy-validator.js": 1,
+    "shared/strategy/strategy-result.js": 1,
+    "shared/strategy/adaptive-strategy.js": 1,
+    "shared/strategy/variation-directive.js": 1,
+    "shared/generator/generator-selector.js": 3,
+    "shared/strategy/question-style-strategy.js": 1,
+    "shared/strategy/difficulty-strategy.js": 1,
+    "shared/knowledge/question-id.js": 3,
+    "shared/presentation/render-options.js": 1,
+    "shared/presentation/render-result.js": 1,
+    "shared/presentation/svg-registry.js": 2,
+    "shared/presentation/html-renderer.js": 1,
+    "shared/presentation/svg-sanitizer.js": 2,
+    "shared/knowledge/runtime/knowledge-runtime.js": 1,
+    "shared/orchestration/practice-plan.js": 1,
+    "shared/orchestration/budget-allocation.js": 1,
+    "shared/request/request-normalize.js": 1,
+    "shared/capacity/capacity-inventory.js": 2,
+    "shared/capability/knowledge-capability-view.js": 1,
+    "shared/orchestration/difficulty-orchestrator.js": 1,
+    "shared/learner/error-model.js": 2,
+    "shared/state/storage.js": 3,
+    "shared/learner/practice-result.js": 2,
+    "shared/generator/core/rng.js": 27,
+    "shared/knowledge/runtime/knowledge-contract.js": 7,
+    "shared/knowledge/runtime/knowledge-loader.js": 6,
+    "shared/knowledge/runtime/knowledge-relation.js": 2,
+    "shared/knowledge/runtime/knowledge-policy.js": 3,
+    "shared/knowledge/runtime/knowledge-query.js": 2,
+    "shared/knowledge/runtime/knowledge-index.js": 2,
+    "shared/schemas/teaching-semantic-profile.schema.js": 2,
+    "shared/validator/validation-pipeline.js": 2,
+    "shared/validator/batch-validator.js": 2,
+    "shared/generator/retry-loop.js": 3,
+    "shared/generator/generator-mode.js": 1,
+    "shared/strategy/question-plan.js": 1,
+    "shared/generator/core/semantic-parameters.js": 4,
+    "shared/generator/generators/index.js": 1,
+    "shared/generator/core/arithmetic-core.js": 5,
+    "shared/generator/core/op-semantics.js": 4,
+    "shared/generator/generators/arithmetic.js": 1,
+    "shared/generator/generators/selection.js": 1,
+    "shared/generator/generators/complex.js": 1,
+    "shared/generator/generators/shape.js": 1,
+    "shared/generator/generators/position.js": 1,
+    "shared/generator/generators/money.js": 1,
+    "shared/generator/generators/application.js": 1,
+    "shared/generator/generators/composite.js": 1,
+    "shared/generator/generators/counting.js": 1,
+    "shared/generator/generators/reasoning.js": 1,
+    "shared/generator/generators/stats.js": 1,
+    "shared/generator/generators/picture-equation.js": 1,
+    "shared/generator/generators/c1-number-puzzle.js": 1,
+    "shared/generator/generators/c2-number-theory.js": 1,
+    "shared/generator/generators/c5-c6-journey-engineering.js": 1,
+    "shared/generator/generators/c7-clever-calc.js": 1,
+    "shared/generator/generators/c9-comprehensive.js": 1,
+    "shared/generator/generators/semantic-special.js": 1,
+    "shared/generator/generators/classify.js": 1,
+    "shared/generator/generators/percent.js": 1,
+    "shared/generator/generators/concept-meaning.js": 1,
+    "shared/generator/generators/semantic-relations.js": 1,
+    "shared/generator/generators/decimal.js": 1,
+    "shared/generator/generators/fraction.js": 1,
+    "shared/orchestration/practice-orchestrator.js": 1,
+    "shared/generation/generation-contract.js": 1,
+    "shared/engine/generation-engine.js": 1,
+    "shared/generation/api.js": 1,
+    "shared/learner/result-collector.js": 1,
+    "shared/learner/learner-storage.js": 1,
+    "shared/presentation/render-format.js": 2,
+    "shared/presentation/renderer.js": 1,
+    "shared/presentation/print.js": 1,
+    "shared/state/metrics.js": 2,
+    "shared/validator/quality-scorer.js": 1,
+    "shared/catalog/feature-flags.js": 1,
+    "shared/state/logger.js": 1,
+    "shared/core/core.js": 1,
+    "shared/core/check.js": 1,
+    "shared/state/ui-state.js": 1,
+    "shared/catalog/subject-utils.js": 1,
+    "shared/capability/capability-model.js": 3,
+    "shared/capability/capability-matrix.js": 2,
+    "shared/engine/practice-session.js": 1,
+    "shared/catalog/module-catalog.js": 1,
+    "shared/catalog/version.js": 1,
+    "tools/kbl/xlsx.js": 1,
+    "shared/knowledge/schema/knowledge-schema.js": 1,
+    "shared/knowledge/schema/manifest-schema.js": 1,
+    "shared/knowledge/schema/relation-schema.js": 1,
+    "shared/strategy/comprehensive-strategy.js": 1,
+    "shared/knowledge/runtime/teaching-semantic-profile.js": 1,
+    "kbl/teaching/qt-intent.json": 1,
+    "archive/difficulty-refactor-20260829/shared/core.js": 1,
+    "archive/difficulty-refactor-20260829/shared/render.js": 1,
+    "archive/difficulty-refactor-20260829/shared/storage.js": 1,
+    "archive/difficulty-refactor-20260829/shared/common.js": 1
+  },
+  "topFanIn": [
+    [
+      "shared/generator/core/rng.js",
+      27
+    ],
+    [
+      "shared/knowledge/question-type-registry.js",
+      19
+    ],
+    [
+      "shared/strategy/strategy-error.js",
+      14
+    ],
+    [
+      "shared/validator/question-validator.js",
+      12
+    ],
+    [
+      "shared/svg/svg-core.js",
+      7
+    ],
+    [
+      "shared/core/common.js",
+      7
+    ],
+    [
+      "shared/knowledge/runtime/knowledge-contract.js",
+      7
+    ],
+    [
+      "shared/validator/duplicate-validator.js",
+      6
+    ],
+    [
+      "shared/catalog/difficulty.js",
+      6
+    ],
+    [
+      "shared/generator/generator-registry.js",
+      6
+    ],
+    [
+      "shared/knowledge/runtime/knowledge-loader.js",
+      6
+    ],
+    [
+      "shared/semantic/semantic-question.js",
+      5
+    ],
+    [
+      "shared/strategy/static-difficulty.js",
+      5
+    ],
+    [
+      "shared/capability/capability-resolver.js",
+      5
+    ],
+    [
+      "shared/generator/core/arithmetic-core.js",
+      5
+    ],
+    [
+      "shared/orchestration/knowledge-context.js",
+      4
+    ],
+    [
+      "shared/schemas/semantic-question.schema.js",
+      4
+    ],
+    [
+      "shared/learner/learner-model.js",
+      4
+    ],
+    [
+      "shared/strategy/strategy-config.js",
+      4
+    ],
+    [
+      "shared/generator/core/semantic-parameters.js",
+      4
+    ],
+    [
+      "shared/generator/core/op-semantics.js",
+      4
+    ],
+    [
+      "shared/generator/core/kp-complex-semantics.js",
+      3
+    ],
+    [
+      "shared/generator/generator-selector.js",
+      3
+    ],
+    [
+      "shared/knowledge/question-id.js",
+      3
+    ],
+    [
+      "shared/state/storage.js",
+      3
+    ],
+    [
+      "shared/knowledge/runtime/knowledge-policy.js",
+      3
+    ],
+    [
+      "shared/generator/retry-loop.js",
+      3
+    ],
+    [
+      "shared/capability/capability-model.js",
+      3
+    ],
+    [
+      "shared/generator/core/kp-arithmetic-semantics.js",
+      2
+    ],
+    [
+      "shared/generator/core/type-contract.js",
+      2
+    ]
+  ]
+}

@@ -1,0 +1,731 @@
+{
+  "task": "P28-06-legacy-isolation",
+  "date": "2026-09-20",
+  "verification": {
+    "productionMandatedTokens": 0,
+    "totalMandatedRows": 144
+  },
+  "productionHits": [],
+  "rows": [
+    {
+      "file": "README.md",
+      "token": "598",
+      "hits": 1
+    },
+    {
+      "file": "archive/audit-probes/kb-data-completion.js",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "archive/audit-probes/kp-coverage-probe.js",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/audit-probes/v2-core/V2_CORE_AUDIT_REPORT.md",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/difficulty-refactor-20260829/shared/core.js",
+      "token": "KnowledgeBank",
+      "hits": 4
+    },
+    {
+      "file": "archive/difficulty-refactor-20260829/shared/render.js",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/docs-2026-09/CONTRIBUTING.md",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "archive/docs-2026-09/PROJECT_SUMMARY.md",
+      "token": "566",
+      "hits": 1
+    },
+    {
+      "file": "archive/docs-2026-09/PROJECT_SUMMARY.md",
+      "token": "KnowledgeBank",
+      "hits": 3
+    },
+    {
+      "file": "archive/docs-2026-09/architecture/current-architecture.md",
+      "token": "KnowledgeBank",
+      "hits": 3
+    },
+    {
+      "file": "archive/docs-2026-09/architecture/generation-flow.md",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/docs-2026-09/architecture/generation-rules.md",
+      "token": "KnowledgeBank",
+      "hits": 3
+    },
+    {
+      "file": "archive/docs-2026-09/architecture/knowledge-ontology-schema.md",
+      "token": "KnowledgeBank",
+      "hits": 5
+    },
+    {
+      "file": "archive/docs-2026-09/architecture/knowledge-ontology-schema.md",
+      "token": "legacyKnowledge",
+      "hits": 1
+    },
+    {
+      "file": "archive/docs-2026-09/architecture/m1-02-semantic-governance-report.md",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/docs-2026-09/architecture/m1-final-report.md",
+      "token": "KnowledgeBank",
+      "hits": 4
+    },
+    {
+      "file": "archive/docs-2026-09/ref-docs/knowledge-base.md",
+      "token": "KnowledgeBank",
+      "hits": 3
+    },
+    {
+      "file": "archive/docs-2026-09/知识层架构与7类题型模型.md",
+      "token": "566",
+      "hits": 3
+    },
+    {
+      "file": "archive/docs-2026-09/知识层架构与7类题型模型.md",
+      "token": "564",
+      "hits": 2
+    },
+    {
+      "file": "archive/legacy-tests/comprehensive/comprehensive-strategy.test.js",
+      "token": "KnowledgeBank",
+      "hits": 4
+    },
+    {
+      "file": "archive/legacy-tests/generator/kp-binding.test.js",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "archive/legacy-tests/ontology/compatibility.test.js",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/legacy-tests/ontology/compatibility.test.js",
+      "token": "legacyKnowledge",
+      "hits": 1
+    },
+    {
+      "file": "archive/legacy-tests/ontology/knowledge-bank-verification.test.js",
+      "token": "KnowledgeBank",
+      "hits": 10
+    },
+    {
+      "file": "archive/legacy-tests/ontology/knowledge-point.test.js",
+      "token": "KnowledgeBank",
+      "hits": 4
+    },
+    {
+      "file": "archive/legacy-tests/strategy/spiral-context-regression.test.js",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/legacy-tools/add-g5-competition-entries.js",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/legacy-tools/add-g6-competition-entries.js",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/legacy-tools/generate-knowledge-pages.js",
+      "token": "KnowledgeBank",
+      "hits": 7
+    },
+    {
+      "file": "archive/legacy-tools/migrate-knowledge-difficulty-fields.js",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/plugins-removed/math-comprehensive.js",
+      "token": "KnowledgeBank",
+      "hits": 11
+    },
+    {
+      "file": "archive/r6-gate-cleanup/check-migration-status.js",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/r6-gate-cleanup/check-ontology-semantic.js",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "archive/r6-gate-cleanup/check-question-validator.js",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "dev/check-kbl-uniqueness.js",
+      "token": "KnowledgeBank",
+      "hits": 7
+    },
+    {
+      "file": "dev/check-kbl-uniqueness.js",
+      "token": "legacyKnowledge",
+      "hits": 2
+    },
+    {
+      "file": "dev/reports/capability-contract-report.json",
+      "token": "566",
+      "hits": 2
+    },
+    {
+      "file": "dev/reports/dom-usage.txt",
+      "token": "566",
+      "hits": 1
+    },
+    {
+      "file": "dev/reports/error-migration-preview.json",
+      "token": "566",
+      "hits": 1
+    },
+    {
+      "file": "dev/reports/kbl-uniqueness-report.json",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "dev/reports/knowledge-bank-verification.json",
+      "token": "566",
+      "hits": 1
+    },
+    {
+      "file": "dev/reports/knowledge-point-inventory.json",
+      "token": "566",
+      "hits": 13
+    },
+    {
+      "file": "dev/reports/v41-regression/V4.1-FULL-REGRESSION-REPORT-POSTFIX.md",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "dev/reports/v41-regression/V4.1-FULL-REGRESSION-REPORT.md",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "dev/reports/v41-regression/gate-verify_kb-change.log",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "dev/reports/v41-regression/gate-verify_m2.log",
+      "token": "KnowledgeBank",
+      "hits": 3
+    },
+    {
+      "file": "dev/reports/v41-regression/gate-verify_m4.log",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "docs/00-PROJECT-BASELINE.md",
+      "token": "598",
+      "hits": 1
+    },
+    {
+      "file": "docs/00-PROJECT-BASELINE.md",
+      "token": "1293",
+      "hits": 1
+    },
+    {
+      "file": "docs/00-PROJECT-BASELINE.md",
+      "token": "639",
+      "hits": 1
+    },
+    {
+      "file": "docs/01-ARCHITECTURE-FROZEN.md",
+      "token": "598",
+      "hits": 1
+    },
+    {
+      "file": "docs/01-ARCHITECTURE-FROZEN.md",
+      "token": "1293",
+      "hits": 1
+    },
+    {
+      "file": "docs/01-ARCHITECTURE-FROZEN.md",
+      "token": "639",
+      "hits": 1
+    },
+    {
+      "file": "docs/01-ARCHITECTURE-FROZEN.md",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "docs/02-DEVELOPMENT-TIMELINE.md",
+      "token": "598",
+      "hits": 1
+    },
+    {
+      "file": "docs/02-DEVELOPMENT-TIMELINE.md",
+      "token": "1293",
+      "hits": 1
+    },
+    {
+      "file": "docs/02-DEVELOPMENT-TIMELINE.md",
+      "token": "639",
+      "hits": 1
+    },
+    {
+      "file": "docs/02-DEVELOPMENT-TIMELINE.md",
+      "token": "KnowledgeBank",
+      "hits": 3
+    },
+    {
+      "file": "docs/archive/DEV_LOG.md",
+      "token": "598",
+      "hits": 34
+    },
+    {
+      "file": "docs/archive/DEV_LOG.md",
+      "token": "566",
+      "hits": 3
+    },
+    {
+      "file": "docs/archive/DEV_LOG.md",
+      "token": "564",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/DEV_LOG.md",
+      "token": "1293",
+      "hits": 3
+    },
+    {
+      "file": "docs/archive/DEV_LOG.md",
+      "token": "639",
+      "hits": 6
+    },
+    {
+      "file": "docs/archive/DEV_LOG.md",
+      "token": "KnowledgeBank",
+      "hits": 5
+    },
+    {
+      "file": "docs/archive/DEV_LOG.md",
+      "token": "legacy_id",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/P16-FOLLOWUP-C5-strategy.md",
+      "token": "KnowledgeBank",
+      "hits": 3
+    },
+    {
+      "file": "docs/archive/P16-FOLLOWUP-D0-audit.md",
+      "token": "legacy_id",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/audit/P17-0-final-report.md",
+      "token": "KnowledgeBank",
+      "hits": 3
+    },
+    {
+      "file": "docs/archive/audit/P17-0-kbl-boundary.md",
+      "token": "KnowledgeBank",
+      "hits": 7
+    },
+    {
+      "file": "docs/archive/difficulty-system-audit.md",
+      "token": "598",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/f-type-2-root-cause.md",
+      "token": "598",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/human-data-requests/README.md",
+      "token": "598",
+      "hits": 4
+    },
+    {
+      "file": "docs/archive/issue-register.md",
+      "token": "598",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/issue-register.md",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/issue-register.md",
+      "token": "legacy_id",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/kbl-freeze-line.md",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/kbl-freeze-line.md",
+      "token": "legacy_id",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/kbl-freeze.md",
+      "token": "598",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/kbl-freeze.md",
+      "token": "1293",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/kbl-freeze.md",
+      "token": "639",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/kbl-freeze.md",
+      "token": "legacyKnowledge",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/kbl-runtime-access-map.md",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/kbl-runtime-bypass-list.md",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/kbl-runtime-bypass-list.md",
+      "token": "legacy_id",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/kbl-runtime-uniqueness-audit.md",
+      "token": "KnowledgeBank",
+      "hits": 4
+    },
+    {
+      "file": "docs/archive/kbl-runtime-uniqueness-result.md",
+      "token": "KnowledgeBank",
+      "hits": 3
+    },
+    {
+      "file": "docs/archive/kbl-runtime-uniqueness-result.md",
+      "token": "legacy_id",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/layer-structure-audit.md",
+      "token": "598",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/p13-content-data-governance.md",
+      "token": "598",
+      "hits": 4
+    },
+    {
+      "file": "docs/archive/p14-release-audit.md",
+      "token": "598",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/p14-release-audit.md",
+      "token": "KnowledgeBank",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/p16-kbl-audit.md",
+      "token": "598",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/pol-kbl-pending.md",
+      "token": "598",
+      "hits": 6
+    },
+    {
+      "file": "docs/archive/pol-kbl-pending.md",
+      "token": "639",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/pol-kbl-pending.md",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/pol-kbl-pending.md",
+      "token": "legacy_id",
+      "hits": 3
+    },
+    {
+      "file": "docs/archive/pol-kbl-phase1-inventory.md",
+      "token": "639",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/pol-kbl-phase1-inventory.md",
+      "token": "KnowledgeBank",
+      "hits": 7
+    },
+    {
+      "file": "docs/archive/pol-kbl-phase2-closeout.md",
+      "token": "598",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/pol-kbl-phase2-closeout.md",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/pol-kbl-phase8-difficulty-audit.md",
+      "token": "598",
+      "hits": 3
+    },
+    {
+      "file": "docs/archive/pol-kbl-phase9-governance.md",
+      "token": "598",
+      "hits": 7
+    },
+    {
+      "file": "docs/archive/pol-kbl-phase9-governance.md",
+      "token": "639",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/pol-kbl-shape-drift-audit.md",
+      "token": "598",
+      "hits": 6
+    },
+    {
+      "file": "docs/archive/pol-kbl-stable-baseline.md",
+      "token": "598",
+      "hits": 3
+    },
+    {
+      "file": "docs/archive/pol-kbl-stable-baseline.md",
+      "token": "639",
+      "hits": 1
+    },
+    {
+      "file": "docs/archive/unified-layer-audit.md",
+      "token": "598",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/unified-layer-audit.md",
+      "token": "639",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/unified-layer-audit.md",
+      "token": "KnowledgeBank",
+      "hits": 5
+    },
+    {
+      "file": "docs/archive/unified-layer-audit.md",
+      "token": "legacy_id",
+      "hits": 2
+    },
+    {
+      "file": "docs/archive/技术文档--基础.md",
+      "token": "566",
+      "hits": 2
+    },
+    {
+      "file": "docs/p25/P25-HARDCODE-AUDIT.md",
+      "token": "legacy_id",
+      "hits": 1
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.json",
+      "token": "598",
+      "hits": 28
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.json",
+      "token": "566",
+      "hits": 13
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.json",
+      "token": "564",
+      "hits": 4
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.json",
+      "token": "1293",
+      "hits": 11
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.json",
+      "token": "639",
+      "hits": 15
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.json",
+      "token": "KnowledgeBank",
+      "hits": 55
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.json",
+      "token": "legacyKnowledge",
+      "hits": 8
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.json",
+      "token": "legacy_id",
+      "hits": 28
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.md",
+      "token": "598",
+      "hits": 9
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.md",
+      "token": "566",
+      "hits": 5
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.md",
+      "token": "564",
+      "hits": 3
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.md",
+      "token": "1293",
+      "hits": 5
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.md",
+      "token": "639",
+      "hits": 6
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.md",
+      "token": "KnowledgeBank",
+      "hits": 12
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.md",
+      "token": "legacyKnowledge",
+      "hits": 4
+    },
+    {
+      "file": "docs/p28/P28-LEGACY-ISOLATION.md",
+      "token": "legacy_id",
+      "hits": 4
+    },
+    {
+      "file": "kbl/manifest/source-manifest.json",
+      "token": "598",
+      "hits": 1
+    },
+    {
+      "file": "migration/archive/baseline-migration/KBL_BASELINE.json",
+      "token": "598",
+      "hits": 16
+    },
+    {
+      "file": "migration/archive/baseline-migration/KBL_BASELINE.json",
+      "token": "1293",
+      "hits": 8
+    },
+    {
+      "file": "migration/archive/baseline-migration/KBL_BASELINE.json",
+      "token": "639",
+      "hits": 12
+    },
+    {
+      "file": "migration/archive/baseline-migration/KBL_BASELINE.md",
+      "token": "598",
+      "hits": 21
+    },
+    {
+      "file": "migration/archive/baseline-migration/KBL_BASELINE.md",
+      "token": "1293",
+      "hits": 11
+    },
+    {
+      "file": "migration/archive/baseline-migration/KBL_BASELINE.md",
+      "token": "639",
+      "hits": 14
+    },
+    {
+      "file": "migration/archive/baseline-migration/KBL_BASELINE.md",
+      "token": "legacyKnowledge",
+      "hits": 1
+    },
+    {
+      "file": "migration/kbl-migration-report.md",
+      "token": "598",
+      "hits": 4
+    },
+    {
+      "file": "migration/kbl-migration-report.md",
+      "token": "566",
+      "hits": 3
+    },
+    {
+      "file": "migration/kbl-migration-report.md",
+      "token": "1293",
+      "hits": 3
+    },
+    {
+      "file": "migration/kbl-migration-report.md",
+      "token": "639",
+      "hits": 2
+    },
+    {
+      "file": "migration/kbl-migration-report.md",
+      "token": "KnowledgeBank",
+      "hits": 2
+    },
+    {
+      "file": "migration/legacy-baseline.json",
+      "token": "566",
+      "hits": 1
+    },
+    {
+      "file": "migration/raw/report.json",
+      "token": "598",
+      "hits": 1
+    },
+    {
+      "file": "migration/raw/report.json",
+      "token": "1293",
+      "hits": 1
+    }
+  ]
+}

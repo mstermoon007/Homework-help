@@ -5,7 +5,9 @@
  *   Schema → KnowledgePoint → Answer → Distractor → Structure → Difficulty → Duplicate → Graphic → RenderPreflight
  *
  * 输出：
- *   { valid, errors, warnings, info, score, checks: { schema, knowledgePoint, answer, ... } }
+ *   { valid, errors, warnings, info, score, checks,
+ *     generationPass, semanticPass, semanticWarn, semanticFail }
+ *   P28-16：Generation 与 Semantic 显式分离，PASS 不含 WARN。
  */
 'use strict';
 
@@ -94,9 +96,17 @@ function runPipeline(sq, context) {
   var checks = {};
   var seenKeys = context.seenKeys || new Set();
 
+  // P28-16: 显式分层标签（Generation vs Semantic，禁止 PASS = PASS + WARN）
+  //   Generation 面 = Layer 1（schema / answer / kpCoverage）
+  //   Semantic  面 = Layer 2/3/4（difficulty / composite / kpSemantic / integrity / duplicate）
+  var genErrors = [];
+  var semErrors = [];
+  var semWarnings = [];
+
   for (var li = 0; li < PIPELINE_LAYERS.length; li++) {
     var layer = PIPELINE_LAYERS[li];
     var layerHasErrors = false;
+    var isGenLayer = (layer.name === 'layer1-critical');
 
     for (var si = 0; si < layer.steps.length; si++) {
       var step = layer.steps[si];
@@ -113,8 +123,15 @@ function runPipeline(sq, context) {
       }
 
       // 累积结果
-      if (result.errors) allErrors.push.apply(allErrors, result.errors);
-      if (result.warnings) allWarnings.push.apply(allWarnings, result.warnings);
+      if (result.errors) {
+        allErrors.push.apply(allErrors, result.errors);
+        if (isGenLayer) genErrors.push.apply(genErrors, result.errors);
+        else semErrors.push.apply(semErrors, result.errors);
+      }
+      if (result.warnings) {
+        allWarnings.push.apply(allWarnings, result.warnings);
+        if (!isGenLayer) semWarnings.push.apply(semWarnings, result.warnings);
+      }
       if (result.info) allInfo.push.apply(allInfo, result.info);
       if (typeof result.score === 'number') scores.push(result.score);
       if (result.checks) Object.assign(checks, result.checks);
@@ -137,13 +154,24 @@ function runPipeline(sq, context) {
   var valid = allErrors.length === 0;
   var score = scores.length ? scores.reduce(function (a, b) { return a + b; }, 0) / scores.length : 1;
 
+  // P28-16: 四类显式标签（Generation 与 Semantic 分别统计，PASS 不含 WARN）
+  var generationPass = genErrors.length === 0;
+  var semanticFail = semErrors.length > 0;
+  var semanticWarn = !semanticFail && semWarnings.length > 0;
+  var semanticPass = !semanticFail && semWarnings.length === 0;
+
   return {
     valid: valid,
     errors: allErrors,
     warnings: allWarnings,
     info: allInfo,
     score: score,
-    checks: checks
+    checks: checks,
+    // P28-16 显式分类标签
+    generationPass: generationPass,
+    semanticPass: semanticPass,
+    semanticWarn: semanticWarn,
+    semanticFail: semanticFail
   };
 }
 
@@ -202,7 +230,18 @@ function runBatchValidators(questions, context) {
   var valid = allErrors.length === 0;
   var score = scores.length ? scores.reduce(function (a, b) { return a + b; }, 0) / scores.length : 1;
 
-  return { valid: valid, errors: allErrors, warnings: allWarnings, info: allInfo, score: score, checks: checks };
+  // P28-16: 批次级验证器均属 Semantic 面（kpCoverage/composite/integrity）
+  var semanticFail = allErrors.length > 0;
+  var semanticWarn = !semanticFail && allWarnings.length > 0;
+  var semanticPass = !semanticFail && allWarnings.length === 0;
+
+  return {
+    valid: valid, errors: allErrors, warnings: allWarnings, info: allInfo, score: score, checks: checks,
+    generationPass: true,
+    semanticPass: semanticPass,
+    semanticWarn: semanticWarn,
+    semanticFail: semanticFail
+  };
 }
 
 /**

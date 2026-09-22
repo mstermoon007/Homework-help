@@ -14,7 +14,7 @@
  *   GeneratorRegistry.records()                  — 只读数据声明（与 M4 generator-registry 一致）
  *
  * 示例（R17）：
- *   GeneratorRegistry.resolve({ subject:'math', capability:'multiplication', questionType:'oral' })
+ *   GeneratorRegistry.resolve({ subject:'math', capability:'multiplication', questionType:'calc' })
  *
  * 依赖仅限共享层；不 require 任何 plugin 文件。
  */

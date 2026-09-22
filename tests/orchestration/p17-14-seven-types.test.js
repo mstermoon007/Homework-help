@@ -7,6 +7,10 @@
  *   1 载体 KP × 1 难度 × 1 题，真实走通
  *   Request → POL(Cell) → GenerationCore → executeCell → Selector → Generator → Validator → SemanticQuestion。
  *
+ * 注意：GenerationCore 为测试/历史资产（P28-28 定性）。生产链 = api.js
+ * orchestrate → build → runPlans → generateQuestions，不经过 GenerationCore；
+ * 本测试直接装载 shared/generation/generation-core.js 验证其 execute 语义。
+ *
  * 冻结不变量：
  *   - 每类 status = SUCCESS，产题 n == 请求数。
  *   - 产题 questionType == 请求 canonical 题型（经 question-type-registry normalize 后比较，无周边类型越界）。

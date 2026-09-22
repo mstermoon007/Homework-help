@@ -22,8 +22,9 @@
  *
  * 入口函数：
  *   generateQuestions(plan, options)
- *   renderQuestions(questions, options)
- *   checkAnswers(questions, userAnswers, options)
+ *   （P28-22 已删除无调用方导出 renderQuestions / checkAnswers / generateAndRender：
+ *     渲染唯一链为 PresentationRenderer.renderAll → HTMLRenderer → RenderResult，
+ *     批改唯一入口为 PluginUtil.computeResult / defaultQCheck。）
  *
  * 渲染层适配：
  *   - 生成核心仅输出 SemanticQuestion[]
@@ -33,7 +34,6 @@
 'use strict';
 
 var Selector = require('../generator/generator-selector.js');
-var GeneratorContract = require('../generator/generator-contract.js');
 var RetryLoop = require('../generator/retry-loop.js');
 var BatchValidator = require('../validator/batch-validator.js');
 var Quality = require('../validator/quality-scorer.js');
@@ -41,7 +41,6 @@ var SQ = require('../semantic/semantic-question.js');
 var RenderFormat = require('../presentation/render-format.js');
 var FeatureFlags = require('../catalog/feature-flags.js');
 var Logger = require('../state/logger.js');
-var QID = require('../knowledge/question-id.js');
 var Metrics = require('../state/metrics.js');
 
 /**
@@ -192,85 +191,14 @@ function generateQuestions(plan, options) {
 }
 
 /**
- * 渲染入口：SemanticQuestion[] 或 Legacy Questions → HTML/SVG
- * 内部自动将 SemanticQuestion 转换为 Legacy Question（含 render/check/svg）
- * @param {Array<Object>} questions (SemanticQuestion[] 或 Legacy Question[])
- * @param {Object} options { columns, renderOpts }
- * @returns {string} HTML
+ * P28-22：renderQuestions / checkAnswers / generateAndRender 已删除（均无生产调用；
+ * 原 renderQuestions 经 PluginUtil.renderGrid/renderCard —— 随 shared/presentation/render.js 一并删除）。
+ * 渲染唯一链：PresentationRenderer.renderAll → HTMLRenderer → RenderResult（见 shared/presentation/renderer.js）；
+ * 判分唯一入口：PluginUtil.computeResult / defaultQCheck（shared/core/check.js）。
  */
-function renderQuestions(questions, options) {
-  if (!Array.isArray(questions) || !questions.length) return '';
-  // 判断是否为 SemanticQuestion（有 metadata/knowledgePoint/content 等语义字段）
-  var isSemantic = questions[0] && questions[0].metadata && (questions[0].knowledgePoint || questions[0].content || questions[0].questionFingerprint);
-  var renderableQuestions = isSemantic
-    ? RenderFormat.toRenderableQuestions(questions)
-    : questions;
-
-  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require('../presentation/render.js');
-  try {
-    var html;
-    if (PU && PU.renderGrid) {
-      html = PU.renderGrid(renderableQuestions, options);
-    } else {
-      html = renderableQuestions.map(function (q, i) { return PU.renderCard ? PU.renderCard(q, i, options) : ('<div>Q' + (i+1) + ': ' + (q.q||'') + '</div>'); }).join('');
-    }
-    Metrics.recordRenderResult({ success: true });
-    return html;
-  } catch (e) {
-    Metrics.recordRenderResult({ success: false, errorType: e.name || 'RENDER_ERROR' });
-    throw e;
-  }
-}
-
-/**
- * 判分入口：Legacy Questions + 用户答案 → 结果
- * @param {Array<Object>} questions
- * @param {Object} userAnswers
- * @param {Object} options
- * @returns {Object} { score, total, correct, results }
- */
-function checkAnswers(questions, userAnswers, options) {
-  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require('../presentation/render.js');
-  if (PU && PU.defaultCheck) {
-    return PU.defaultCheck(questions, userAnswers, options);
-  }
-  // 兜底简易判分
-  var correct = 0;
-  var results = [];
-  questions.forEach(function (q, i) {
-    var ua = userAnswers && userAnswers[i];
-    var isCorrect = false;
-    if (q.inputType === 'choice') {
-      isCorrect = String(ua) === String(q.answer);
-    } else if (q.inputType === 'multi') {
-      isCorrect = Array.isArray(ua) && Array.isArray(q.answer) && JSON.stringify(ua) === JSON.stringify(q.answer);
-    } else {
-      isCorrect = String(ua || '').trim() === String(q.answer || '').trim();
-    }
-    if (isCorrect) correct++;
-    results.push({ index: i, correct: isCorrect, userAnswer: ua, expected: q.answer });
-  });
-  return { score: questions.length ? Math.round(correct / questions.length * 100) : 0, total: questions.length, correct: correct, results: results };
-}
-
-/**
- * 一站式：Plan → 生成 → 渲染 → 返回 HTML + 元数据
- * @param {Object} plan
- * @param {Object} options
- * @returns {Promise<{ html, questions, meta }>}
- */
-function generateAndRender(plan, options) {
-  return generateQuestions(plan, options).then(function (result) {
-    var html = renderQuestions(result.questions, options);
-    return { html: html, questions: result.questions, meta: { semanticQuestions: result.semanticQuestions, quality: result.qualitySummary, validation: result.batchResult } };
-  });
-}
 
 module.exports = {
   generateQuestions: generateQuestions,
-  renderQuestions: renderQuestions,
-  checkAnswers: checkAnswers,
-  generateAndRender: generateAndRender,
   RenderFormat: RenderFormat
 };
 

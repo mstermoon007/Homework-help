@@ -89,7 +89,7 @@ function createClassificationGenerator(spec) {
     subject: 'math',
     capabilities: ['classify'],
     questionTypes: ['classify'],
-    // P25-06 H2：原 fallback 'math-g1-m4-count-quantity' 为模块制 legacy ID；
+    // P25-06 H2：原 fallback 'math-g1-m4-count-quantity' 为模块制 历史 ID；
     // canonical 绑定（25 个 classify KP）在 generator-registry.js CORE_RECORDS，是 SSOT。
     knowledgePoints: spec.knowledgePoints || [],
 

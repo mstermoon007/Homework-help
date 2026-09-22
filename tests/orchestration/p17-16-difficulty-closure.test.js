@@ -3,6 +3,10 @@
 /**
  * tests/orchestration/p17-16-difficulty-closure.test.js — 难度闭环验证（P17-16）
  *
+ * 注意：GenerationCore 为测试/历史资产（P28-28 定性）。生产链 = api.js
+ * orchestrate → build → runPlans → generateQuestions，不经过 GenerationCore；
+ * 本测试直接装载 shared/generation/generation-core.js 验证其 execute 语义。
+ *
  * 冻结不变量（真实生成链）：难度档位 1/3/5/7/10 逐档贯通
  *   Request → GenerationCore Cell(difficulty) → StrategyPlan.difficulty=请求值 → Generator 透传（不重算）
  *   → SemanticQuestion.difficulty == 请求值；generator 内部 difficultyParams（level 等）按单一来源策略

@@ -2,13 +2,13 @@
  * shared/core/check.js — 批改逻辑（任务 3.2 拆分）
  *
  * defaultQCheck / computeResult / pickOpt（选项点击）。
- * 跨模块裸调用：createPlugin（render.js）→ defaultQCheck 经全局解析。
+ * （P28-22：旧 render.js createPlugin 已删除，defaultQCheck 由综合练习/批改层共用。）
  * normalizeAns 由 core.js 挂全局，本文件直接裸调用。
  */
 (function (global) {
   'use strict';
 
-  /** 缺省单题判定（createPlugin 与综合练习共用）：
+  /** 缺省单题判定（批改层/综合练习共用）：
    *  - inputType 'multi'：按 answers['i:j'] 分字段比较（数组答案；字符串答案按 、/，/, 拆分）
    *  - 其余（text/choice）：整串比较（数组答案拼接后比较） */
   function defaultQCheck(q, answers, i) {
@@ -63,7 +63,7 @@
   global.PluginUtil.defaultQCheck = defaultQCheck;
   global.PluginUtil.computeResult = computeResult;
   global.PluginUtil.pickOpt = pickOpt;
-  global.defaultQCheck = defaultQCheck;     // 跨模块裸调用兼容（render.js createPlugin）
+  global.defaultQCheck = defaultQCheck;     // 跨模块裸调用兼容（综合练习/批改层）
   global.__pickOpt = pickOpt;               // 卡片 onclick="window.__pickOpt(this)" 兼容
 
   if (typeof module !== 'undefined' && module.exports) {

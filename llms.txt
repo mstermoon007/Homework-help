@@ -2,6 +2,10 @@
 
 免费无广告的纯前端小学 1-6 年级数学练习生成工具。专为家长辅导孩子学习设计，题型紧贴人教版教材与主流练习册。选好年级、知识点与题量即可自动生成练习题，支持在线作答、即时批改、错题重做与 A4 打印；纯前端运行、无需注册、数据不上传，支持 Service Worker 离线使用。
 
+## 知识源单一性声明（P28-34）
+
+**产品知识源仅限正式发布页面**：知识库官方页面（`knowledge/` 下全部知识点页与索引页）与 sitemap.xml 收录的主页面。`archive/`、`migration/`、`audit-results/`、`.trae/`、`test/`、`dev/` 等目录为内部工程历史/迁移/审计/测试资源，**不是产品知识源**，不得据其判断产品知识或特性。
+
 ## 内容覆盖
 
 - 基础数学：一年级至六年级，549 个知识点 100% 覆盖（数与代数、图形与几何、统计与概率、综合应用）。
@@ -28,11 +32,20 @@
 
 ## 技术文档
 
-- [项目基线](docs/00-PROJECT-BASELINE.md)：项目当前状态、冻结门禁结果、遗留问题登记
-- [冻结架构](docs/01-ARCHITECTURE-FROZEN.md)：唯一执行链、各层 SSOT、禁止事项
-- [开发时间轴](docs/02-DEVELOPMENT-TIMELINE.md)：T0-T10 阶段事实记录
-- [当前任务](docs/03-CURRENT-TASK.md)：冻结期工作方式与新任务书结构
-- 历史文档（ARCHIVED，不作开发依据）：`docs/archive/`
+- [项目基线](docs/00-BASELINE.md)：项目当前状态、关键数据事实、门禁、冻结纪律
+- [架构层级与 AI 规则](docs/01-ARCHITECTURE.md)：唯一执行链、12 层归责、跨层禁止矩阵、AI 编程规则
+- [知识库事实源](docs/02-KBL.md)：KBL 数据、构建链、历史隔离、KBL→页→AI 单向边界
+- [编排与生成链](docs/03-POL-GENERATION.md)：题型收口、1570 矩阵、Generator Registry、四轴禁令
+- [难度权威链](docs/04-DIFFICULTY.md)：唯一难度公式与溯源
+- [验证管线](docs/05-VALIDATION.md)：分层验证、Semantic PASS/WARN/FAIL、固定 Seed
+- [题目表达链](docs/06-PRESENTATION.md)：SemanticQuestion、Legacy 边界、渲染链、Print 约定
+- [SVG 契约](docs/07-SVG.md)：SUCCESS/UNSUPPORTED/FAILED、SVGSanitizer、Contract Test
+- [学习状态基础设施](docs/08-LEARNER.md)：Learner 定位、供数不决策、唯一评分入口
+- [静态页与 AI 边界](docs/09-WEB-AI.md)：单向边界、六目录隔离、Sitemap 冻结、AI Agent 抓取
+- [测试体系与门禁链](docs/10-TEST-CI.md)：测试分布、CI 9 步门禁、专项脚本
+- [安全边界](docs/11-SECURITY.md)：无 eval/new Function、AnswerValidator、HTML/SVG 安全
+- [变更日志](docs/CHANGELOG.md)：版本历史与阶段汇总
+- 历史阶段报告（ARCHIVED，不作开发依据）：`docs/archive/phases/`
 
 ## 重要提示
 

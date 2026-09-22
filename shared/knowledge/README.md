@@ -3,6 +3,11 @@
 **状态**：一次迁移完成（2026-09-12）。旧层 `knowledge-*.js` / `ontology-*.map.js` 于 Phase E
 删除；本层 `data/ + relations/ + mappings/ + index/ + manifest/ + runtime/` 为唯一知识数据与访问通道。
 
+**现行数据规模（P28-04/05 核真）**：6 个年级、98 个单元、375 个知识点、
+`mappings/generation-contract/math.json` 全量 `allow`（契约去重后 1570 行）、0 条关系
+（SRC 无关系字段，旧关系 1287 行已按裁决清除，关系集待人工源补充或从释义派生）。
+`manifest/manifest.json` rootHash 已确定性锁定（重建不动内容即得同一指纹）。
+
 > Difficulty Authority 不在本层。`difficultyAnnotation` 仅做展示/排序参考；
 > 生成难度由 `shared/catalog/difficulty.js`（App.Difficulty）与 `shared/catalog/difficulty-static.js`
 > 独占裁决。
@@ -11,12 +16,14 @@
 
 ```
 shared/knowledge/
-├── data/math/curriculum.json        # 课程树（128 单元，含 unitType/status/unitNo 顺序）
-├── data/math/g1..g6/knowledge-points.json   # 知识库主体（6 文件，共 598 知识点）
-├── relations/math/relations.json    # 知识点关系（1287 行，M6 移除 6 条成环 prereq）
-├── mappings/generation-contract/math.json    # 生成契约（639 行，唯一键 知识Id×题型×capability，permission 由注册表自动计算）
+├── data/math/curriculum.json        # 课程树（98 单元，含 unitType/status/unitNo 顺序）
+├── data/math/g1..g6/knowledge-points.json   # 知识库主体（6 文件，共 375 知识点）
+├── relations/math/relations.json    # 知识点关系（当前为空集，见上）
+├── mappings/generation-contract/math.json    # 生成契约（1570 行，唯一键 知识Id×题型×capability，permission 由注册表自动计算）
 ├── index/index.json                 # 只读索引（byId/byGrade/byBook/byUnit/...）
 ├── manifest/manifest.json           # 完整性指纹（per-file sha256 + rootHash）
+├── schema/                          # 知识 / 关系 / 清单 schema
+├── question-id.js / question-type-registry.js   # 知识 Id 与题型注册（冻结）
 └── runtime/                         # 唯一数据访问层
 ```
 
@@ -46,7 +53,7 @@ shared/knowledge/
 
 - `mappings/generation-contract/math.json` 的 `permission` 由
   `shared/generator/generator-registry.js` 自动计算，人工不得直接写 ALLOW。
-- `allow | forbid | degrade | missing` 四档；当前已全量 `allow`（639，契约去重后）。
+- `allow | forbid | degrade | missing` 四档；当前已全量 `allow`（1570，契约去重后）。
 
 ## 运行时（唯一入口）
 
@@ -77,31 +84,27 @@ knowledge-policy → knowledge-index → knowledge-query → knowledge-api`
 ## 构建与验证（npm）
 
 ```bash
-node tools/kbl/import-excel.js      # Excel（唯一人工输入）→ migration/excel-raw
-node tools/kbl/normalize.js         # Canonical Transformer → kbl/（新 ID 固化；--editorial 读取 Excel）
-node tools/kbl/validate.js          # 迁移门禁（Schema/ID/课程树/关系/权限/索引/守恒）
-node tools/kbl/build.js             # 镜像 → shared/knowledge/ + 确定性 rootHash
-node tools/kbl/publish.js           # 发布快照 → kbl/releases/（rootHash 锁定）+ latest.json
-node tools/kbl/verify.js            # 最终门禁：validate→roundtrip→build→runtime→access→publish
-node dev/verify-kbl-runtime.js      # Runtime E2E
-node dev/check-knowledge-access.js  # 静态访问门禁（KBL ACCESS AUDIT）
+node tools/kbl/extract-source.js   # Excel（唯一人工输入）→ kbl/import/extract-raw.json
+node tools/kbl/derive-kbl.js       # 确定性派生 → kbl/canonical/*（SD 级确定性，无时间戳字段）
+node tools/kbl/emit-canonical.js   # canonical → kbl/data + 镜像 → shared/knowledge/
+node tools/kbl/validate.js         # 迁移门禁（Schema/ID/课程树/关系/权限/索引/守恒）
+node tools/kbl/build.js            # 分发产物（剥离溯源字段）+ 确定性 rootHash
+node dev/verify-kbl-runtime.js     # Runtime E2E
+node dev/check-knowledge-access.js # 静态访问门禁（KBL ACCESS AUDIT）
 ```
 
-一键：`npm run kbl:verify`（等效 `npm run verify:kbl`：validate→roundtrip→build→runtime→access→publish）。
+一键：`npm run verify`（extract→derive→verify→roundtrip→build→runtime→access）。
+确定性说明：输入不变时 `extract-raw / canonical / kbl/data / shared/knowledge` 逐字节一致。
 
 ## 迁移溯源的处置
 
-- `kbl/`（canonical source）保留 `oldUnitId` 供一次迁移追踪；`build` 分发产物已剔除。
+- `kbl/`（canonical source）保留一次迁移的溯源字段供追踪；`build` 分发产物已剔除
+  （`oldUnitId` 等仅存在于 canonical，不进入 `shared/knowledge/` 与 bundle）。
 - `migration/raw` 为提取档案（一次性输入源，`id-map.json` 仅供工具内部使用，运行层不存在 old→new 映射）；
   `migration/knowledge-access-expectations.json` 为访问门禁基线，长期保留。
-- 一次性提取工具 `tools/kbl/extract-source.js` 已随迁移完成删除（其输入源 `knowledge-math.js` 为 Phase E 删除对象）。
-
-## 下游接线（记录不修复）
-
-既有直接引用旧层的 67 个 `downstream-pending` + 2 个 `pages-pending` 消费者
-（capability / capacity / catalog / engine / generation / generator /
-orchestration / presentation / strategy / validator / sw.js / scripts / tests）
-为预期断链清单，Phase E 收口后逐个接入 `App.KNOWLEDGE`。
+- 冻结 Strategy/Capability 内不可改写的旧模块名引用，统一经
+  `shared/engine/knowledge-compat.js`（`KnowledgeCompat` 等）委托回 KBL Runtime；
+  唯一性由 `dev/check-kbl-uniqueness.js` 门禁强制（生产代码不得再出现旧知识记号）。
 
 ## KBL 永久规范（方案 §44）
 
@@ -113,7 +116,7 @@ orchestration / presentation / strategy / validator / sw.js / scripts / tests）
 >
 > **4. Runtime 禁止直接读取 Catalog、Relation、Mapping 文件。**
 >
-> **5. 业务层禁止直接访问旧 KnowledgeBank、Ontology 或知识 JSON。**
+> **5. 业务层禁止直接访问旧知识层、Ontology 或知识 JSON。**
 >
 > **6. ID、Index、Relation Index、Manifest、Hash 均由程序生成。**
 >

@@ -1,6 +1,11 @@
 /**
  * shared/generation/generation-core.js — 共同生成内核 GenerationCore（P17-3 冻结）
  *
+ * ⚠️ P28-28 定位：TEST-ONLY / HISTORICAL（非生产链）
+ *   生产链 = api.js orchestrate → build → runPlans → generateQuestions，
+ *   不经过本模块。本文件仅被 tests/orchestration/p17-*.test.js 直接装载以验证
+ *   execute 语义，不进入 strategy-engine.bundle.js / presentation-engine.bundle.js。
+ *
  * 职责（单一）：按 POL 产出的 GenerationPlan 逐 Cell「执行」生成。
  *   接受：GenerationPlan { cells: GenerationCell[], targetTotal }
  *   返回：GenerationResult { questions, generatedCount, plannedCount, shortfall, failures, metadata }

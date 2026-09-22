@@ -11,21 +11,6 @@ function __req(id) {
   __defs[id](m, m.exports, __req);
   return m.exports;
 }
-__defs['node:path'] = function (m) {
-  var posix = {
-    resolve: function (a, b) { return b ? (a.replace(/\/$/, '') + '/' + b) : a; },
-    join: function () {
-      var parts = []; for (var i = 0; i < arguments.length; i++) { var p = String(arguments[i]); if (p) parts.push(p.replace(/\/+$/, '')); }
-      return parts.join('/');
-    },
-    dirname: function (p) { var i = p.lastIndexOf('/'); return i === -1 ? '.' : p.slice(0, i); },
-    basename: function (p) { var i = p.lastIndexOf('/'); return i === -1 ? p : p.slice(i + 1); },
-    extname: function (p) { var b = posix.basename(p); var i = b.lastIndexOf('.'); return i <= 0 ? '' : b.slice(i); },
-    normalize: function (p) { return p; }
-  };
-  posix.posix = posix;
-  m.exports = posix;
-};
 __defs["shared/core/common.js"] = function (m) {
   if (global.PluginUtil == null) throw new Error('strategy-bundle: 缺少全局 PluginUtil（请先加载对应脚本）');
   m.exports = global.PluginUtil;
@@ -39,8 +24,8 @@ __defs["shared/catalog/difficulty-static.js"] = function (m) {
   m.exports = global.App.DifficultyStatic;
 };
 __defs["shared/knowledge/knowledge-bank.js"] = function (m) {
-  if (global.KnowledgeBankCompat == null) throw new Error('strategy-bundle: 缺少全局 KnowledgeBankCompat（请先加载对应脚本）');
-  m.exports = global.KnowledgeBankCompat;
+  if (global.KnowledgeCompat == null) throw new Error('strategy-bundle: 缺少全局 KnowledgeCompat（请先加载对应脚本）');
+  m.exports = global.KnowledgeCompat;
 };
 __defs["shared/knowledge/knowledge-point.js"] = function (m) {
   if (global.KnowledgePointCompat == null) throw new Error('strategy-bundle: 缺少全局 KnowledgePointCompat（请先加载对应脚本）');
@@ -1146,10 +1131,6 @@ function setStrategy(strategy) {
   }
 }
 
-function isLegacy() {
-  return getStrategy() === 'legacy';
-}
-
 function isStrategyV1() {
   return getStrategy() === 'strategy-v1';
 }
@@ -1160,8 +1141,7 @@ function getConfig() {
     current: getStrategy(),
     overrides: _configOverrides,
     features: {
-      strategyEngine: isStrategyV1(),
-      legacyFallback: isLegacy()
+      strategyEngine: isStrategyV1()
     }
   };
 }
@@ -1182,7 +1162,6 @@ module.exports = {
   difficultyAnchorOf: difficultyAnchorOf,
   getStrategy: getStrategy,
   setStrategy: setStrategy,
-  isLegacy: isLegacy,
   isStrategyV1: isStrategyV1,
   getConfig: getConfig,
   setConfigOverrides: setConfigOverrides,
@@ -2234,8 +2213,6 @@ __defs["shared/strategy/strategy-request.js"] = function (module, exports, requi
 var StrategyConfig = require("shared/strategy/strategy-config.js");
 var QuestionTypeRegistry = require("shared/knowledge/question-type-registry.js");
 
-var LEGACY_UI_KEYS = ['subject', 'grade', 'count', 'difficulty', 'subtype', 'questionType', 'knowledgePointId', 'knowledgePoints'];
-
 
 var VALID_QUESTION_TYPES = (QuestionTypeRegistry && QuestionTypeRegistry.all)
   ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
@@ -2291,22 +2268,6 @@ function normalizeRequest(request) {
   if (out.mode != null && MODE_ALIAS[String(out.mode)] != null) out.mode = MODE_ALIAS[String(out.mode)];
   
   delete out.kpAllocation;
-  return out;
-}
-
-function normalizeLegacyParams(params) {
-  var out = {};
-  
-  if (params.subject != null) out.subject = params.subject;
-  if (params.grade != null) out.grade = params.grade;
-  if (params.count != null) out.count = Math.max(1, Math.floor(params.count));
-  else if (params.volume != null) out.count = Math.max(1, Math.floor(params.volume));
-  if (params.difficulty != null) {
-    var d = Math.max(DIFFICULTY_MIN, Math.min(DIFFICULTY_MAX, Math.floor(params.difficulty)));
-    out.targetDifficulty = d;
-  }
-  if (params.subtype != null) out.subtype = params.subtype;
-  if (params.questionType != null) out.questionType = params.questionType;
   return out;
 }
 
@@ -2465,18 +2426,6 @@ function createRequest(params) {
   return req;
 }
 
-function createFromLegacyUI(legacyParams) {
-  
-  var base = normalizeLegacyParams(legacyParams || {});
-  
-  base._legacy = true;
-  return base;
-}
-
-function isLegacyRequest(req) {
-  return req && req._legacy === true;
-}
-
 module.exports = {
   VALID_QUESTION_TYPES: VALID_QUESTION_TYPES,
   DIFFICULTY_MIN: DIFFICULTY_MIN,
@@ -2487,11 +2436,8 @@ module.exports = {
   MODE_ALIAS: MODE_ALIAS,
   resolveKnowledgePointIds: resolveKnowledgePointIds,
   normalizeRequest: normalizeRequest,
-  normalizeLegacyParams: normalizeLegacyParams,
   validateRequest: validateRequest,
-  createRequest: createRequest,
-  createFromLegacyUI: createFromLegacyUI,
-  isLegacyRequest: isLegacyRequest
+  createRequest: createRequest
 };
 };
 __defs["shared/strategy/strategy-result.js"] = function (module, exports, require) {
@@ -2825,7 +2771,6 @@ __defs["shared/strategy/comprehensive-strategy.js"] = function (module, exports,
   }
 
   function getKB() {
-    if (typeof global !== 'undefined' && global.KnowledgeBank) return global.KnowledgeBank;
     if (typeof require === 'function') {
       try { return require("shared/knowledge/knowledge-bank.js"); } catch (e) {  }
     }
@@ -2949,7 +2894,7 @@ __defs["shared/strategy/comprehensive-strategy.js"] = function (module, exports,
     var KB = getKB();
     var engine = getStrategyEngine();
     var deps = [];
-    if (!KB) deps.push('shared/knowledge/knowledge-bank.js');
+    if (!KB) deps.push('shared/engine/knowledge-compat.js');
     if (!engine) deps.push('shared/engine/strategy-engine.bundle.js');
     if (deps.length) return Promise.reject(new Error('ComprehensiveStrategy 依赖缺失: ' + deps.join(', ')));
 
@@ -3101,116 +3046,6 @@ __defs["shared/strategy/comprehensive-strategy.js"] = function (module, exports,
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
   return API;
 })(typeof window !== 'undefined' ? window : global);
-};
-__defs["shared/generator/semantic-question-bridge.js"] = function (module, exports, require) {
-
-'use strict';
-
-function getPluginUtil() {
-  return (typeof PluginUtil !== 'undefined' ? PluginUtil
-    : (typeof global !== 'undefined' && global.PluginUtil ? global.PluginUtil
-      : (typeof require !== 'undefined' ? require("shared/presentation/render.js") : null)));
-}
-
-function getQCheck() {
-  var PU = getPluginUtil();
-  if (PU && typeof PU.defaultQCheck === 'function') return PU.defaultQCheck;
-  if (typeof defaultQCheck === 'function') return defaultQCheck;
-  if (typeof require !== 'undefined') return require("shared/core/check.js").defaultQCheck;
-  return null;
-}
-
-function safeStr(v) {
-  if (v == null) return '';
-  if (typeof v === 'boolean') return v ? '对' : '错';
-  return String(v);
-}
-
-
-function toQuestion(sq) {
-  sq = sq || {};
-  var prompt = safeStr(sq.prompt);
-  var answer = sq.answer;
-  var ui = getPluginUtil();
-  var qcheck = getQCheck();
-
-  var q = {
-    q: prompt,
-    text: prompt,
-    answer: answer,
-    answerMode: sq.answerMode || 'input',
-    hint: sq.hint != null ? sq.hint : null,
-    knowledgePointId: sq.knowledgePointId,
-    questionType: sq.questionType,
-    type: sq.type || sq.questionType || null,
-    difficulty: sq.difficulty,
-    difficultyParams: sq.difficultyParams,
-    numberRange: sq.numberRange,
-    seed: sq.seed,
-    data: sq.data || {}
-  };
-
-  
-  
-  
-  if (q.answer && typeof q.answer === 'object' && q.answer.explanation == null) {
-    var ansVal = q.answer.value != null ? String(q.answer.value) : '';
-    if (ansVal) q.answer.explanation = prompt.replace(/\s*=\s*\?\s*$/, ' = ' + ansVal);
-    else q.answer.explanation = '答案：' + ansVal;
-  }
-
-  
-  var options = (sq.data && Array.isArray(sq.data.options) && sq.data.options.length) ? sq.data.options : null;
-  if (options) {
-    q.inputType = 'choice';
-    q.options = options.map(function (o) { return safeStr(o); });
-    q.answer = safeStr(sq.answer);
-  } else if (Array.isArray(sq.answer)) {
-    q.inputType = 'multi';
-  } else {
-    q.inputType = 'text';
-  }
-
-  
-  if (q.answerMode === 'read-aloud' || (q.answer == null && q.answerMode === 'read-aloud')) {
-    q.inputType = 'none';
-  }
-
-  
-  q.render = function (idx) {
-    if (ui && typeof ui.renderCard === 'function') return ui.renderCard(q, idx, {});
-    
-    var head = '<div class="question-card" data-index="' + idx + '"><div class="q-header"><span class="num">' + (idx + 1) + '</span> <span class="q-text">' + prompt + '</span></div>';
-    var field = (q.inputType === 'choice' && q.options)
-      ? '<div class="options">' + q.options.map(function (o) { return '<button type="button" class="opt" data-val="' + o + '">' + o + '</button>'; }).join('') + '</div>'
-      : '<input type="text" class="answer-inp" data-index="' + idx + '">';
-    return head + field + '</div>';
-  };
-
-  
-  q.check = function (answers, idx) {
-    if (q.inputType === 'none') return true;
-    if (qcheck) return !!qcheck(q, answers, idx);
-    
-    var ua = Array.isArray(answers) ? answers[idx] : (answers ? answers[idx] : undefined);
-    var norm = function (v) { return String(v == null ? '' : v).trim(); };
-    return norm(ua) === norm(Array.isArray(q.answer) ? q.answer.join('') : q.answer);
-  };
-
-  return q;
-}
-
-
-function toQuestions(sems) {
-  if (!Array.isArray(sems)) return [];
-  return sems.map(function (sq) { return toQuestion(sq); });
-}
-
-module.exports = {
-  toQuestion: toQuestion,
-  toQuestions: toQuestions
-};
-
 };
 __defs["shared/capability/capability-resolver.js"] = function (module, exports, require) {
 
@@ -3610,16 +3445,16 @@ __defs["shared/generator/generator-registry.js"] = function (module, exports, re
 
 var CORE_RECORDS = [
   
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k001', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g1-up-u04-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k003', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['oral', 'calc', 'fill', 'apply'], questionTypes: ['oral', 'calc', 'fill', 'apply'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['fill', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['choice', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'recognize', 'calc', 'oral', 'apply'], questionTypes: ['judge', 'recognize', 'calc', 'oral', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k001', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g1-up-u04-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k003', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'geometry', 'calc', 'apply'], questionTypes: ['fill', 'geometry', 'calc', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'geometry', 'calc', 'apply'], questionTypes: ['choice', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'geometry', 'calc', 'apply'], questionTypes: ['judge', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   
-  { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill', 'oral'], questionTypes: ['calc', 'fill', 'oral'],
+  { id: 'generator:complex-calc', subject: 'math', capabilities: ['calc', 'fill'], questionTypes: ['calc', 'fill'],
     knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
 
@@ -3633,7 +3468,7 @@ var CORE_RECORDS = [
   
   
   
-  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'calc', 'geometry', 'recognize', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'calc', 'geometry', 'recognize', 'apply'],
+  { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'],
     knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g1-down-u01-k001', 'math-g1-up-u03-k002', 'math-g2-up-u05-k003', 'math-g2-up-u05-k004', 'math-g2-up-u06-k001', 'math-g3-down-u01-k001', 'math-g3-down-u03-k004', 'math-g3-down-u08-k003', 'math-g3-down-u08-k006', 'math-g3-up-u01-k002', 'math-g3-up-u01-k003', 'math-g3-up-u03-k003', 'math-g3-up-u03-k004', 'math-g3-up-u07-k001', 'math-g3-up-u07-k004', 'math-g4-down-u02-k002', 'math-g4-down-u05-k001', 'math-g4-down-u05-k002', 'math-g4-down-u05-k003', 'math-g4-down-u05-k004', 'math-g4-down-u05-k005', 'math-g4-down-u05-k006', 'math-g4-up-u02-k001', 'math-g4-up-u02-k003', 'math-g4-up-u05-k001', 'math-g4-up-u05-k002', 'math-g4-up-u05-k003', 'math-g4-up-u05-k004', 'math-g5-down-u01-k002', 'math-g5-down-u03-k001', 'math-g5-down-u03-k002', 'math-g5-up-u08-k001', 'math-g5-up-u08-k002', 'math-g5-up-u08-k003', 'math-g5-up-u08-k004', 'math-g6-down-u03-k006', 'math-g6-up-u04-k001', 'math-g6-up-u04-k004', 'math-g6-up-u04-k005', 'math-g2-up-u05-k002', 'math-g3-down-u03-k002', 'math-g3-down-u03-k003', 'math-g3-down-u04-k003', 'math-g3-down-u04-k005', 'math-g3-up-u07-k003', 'math-g4-up-u02-k002', 'math-g5-down-u03-k003', 'math-g6-down-u03-k005', 'math-g6-up-u04-k002', 'math-g6-up-u04-k003', 'math-g1-up-u03-k001', 'math-g3-down-u03-k001', 'math-g5-down-u09-k001', 'math-g5-down-u09-k002',
       
       
@@ -3648,7 +3483,7 @@ var CORE_RECORDS = [
   { id: 'generator:money-measurement', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply', 'calc'], questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc'],
     knowledgePoints: ['math-g1-down-u07-k001', 'math-g1-down-u07-k002', 'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004', 'math-g3-up-u03-k001', 'math-g3-up-u03-k002', 'math-g1-down-u07-k003', 'math-g3-up-u04-k002', 'math-g3-up-u04-k003', 'math-g3-up-u04-k004'],
     scope: 'core', version: 2, supportsComposite: false },
-  { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'oral', 'open'],
+  { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc'],
     knowledgePoints: ['math-g4-up-u06-k001', 'math-g5-down-u03-k006', 'math-g1-down-u08-k001', 'math-g2-up-u08-k001', 'math-g3-up-u09-k001', 'math-g4-down-u10-k001', 'math-g4-up-u09-k001', 'math-g5-down-u11-k001', 'math-g5-up-u09-k001', 'math-g6-down-u06-k001', 'math-g6-up-u06-k001', 'math-g1-down-u02-k003', 'math-g1-down-u04-k005', 'math-g1-down-u05-k003', 'math-g1-down-u06-k003', 'math-g1-up-u05-k003', 'math-g1-up-u06-k001', 'math-g2-down-u05-k004', 'math-g2-down-u06-k001', 'math-g2-down-u06-k002', 'math-g2-down-u06-k003', 'math-g2-down-u06-k004', 'math-g2-down-u07-k001', 'math-g2-down-u07-k003', 'math-g3-down-u08-k002', 'math-g3-down-u08-k005', 'math-g3-up-u02-k005', 'math-g3-up-u04-k001', 'math-g4-down-u01-k004', 'math-g4-down-u09-k003', 'math-g5-up-u03-k006', 'math-g5-down-u09-k003', 'math-g6-down-u01-k005'],
     scope: 'core', version: 2, supportsComposite: false },
 
@@ -3685,10 +3520,10 @@ var CORE_RECORDS = [
   { id: 'generator:c7-clever-calc', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:c9-comprehensive', subject: 'math', capabilities: ['apply', 'calc', 'open'], questionTypes: ['apply', 'calc', 'open'],
+  { id: 'generator:c9-comprehensive', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: [],
     scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:composite', subject: 'math', capabilities: ['calc', 'judge', 'fill', 'apply', 'oral'], questionTypes: ['calc', 'judge', 'fill', 'apply', 'oral'],
+  { id: 'generator:composite', subject: 'math', capabilities: ['calc', 'judge', 'fill', 'apply'], questionTypes: ['calc', 'judge', 'fill', 'apply'],
     knowledgePoints: ['math-g1-up-u01-k001', 'math-g2-down-u07-k001', 'math-g2-up-u01-k005', 'math-g3-up-u02-k001', 'math-g4-up-u03-k001'],
     scope: 'core', version: 1, supportsComposite: true },
 
@@ -3749,6 +3584,7 @@ var CORE_RECORDS = [
     knowledgePoints: ['math-g3-up-u08-k002', 'math-g3-up-u08-k003', 'math-g3-up-u08-k004', 'math-g3-up-u08-k005', 'math-g5-down-u04-k002', 'math-g5-down-u04-k003', 'math-g5-down-u04-k004', 'math-g5-down-u04-k005', 'math-g5-down-u04-k006', 'math-g5-down-u06-k001', 'math-g5-down-u06-k002', 'math-g5-down-u06-k003', 'math-g5-down-u06-k004', 'math-g5-down-u06-k005', 'math-g6-up-u03-k001', 'math-g6-up-u03-k002', 'math-g6-up-u03-k003', 'math-g6-up-u03-k004', 'math-g6-up-u03-k005'],
     scope: 'core', version: 1, supportsComposite: false }
 ];
+
 
 
 
@@ -4596,6 +4432,9 @@ __defs["shared/strategy/variation-directive.js"] = function (module, exports, re
 (function (global) {
   'use strict';
 
+  
+  var CHAIN_SEGMENTS = ['Misconception', 'Trigger', 'QuestionVariation', 'ExpectedError', 'Feedback'];
+
   var _overlay = null;
   var _overlayLoaded = false;
 
@@ -4652,8 +4491,10 @@ __defs["shared/strategy/variation-directive.js"] = function (module, exports, re
       var resp = slot.response || {};
       out.push({
         errorType: slot.errorType,
+        expectedError: slot.errorType,
         variant: resp.variant,
         axis: resp.axis,
+        feedback: typeof slot.feedback === 'string' ? slot.feedback : '',
         basis: slot.basis
       });
     });
@@ -4663,7 +4504,8 @@ __defs["shared/strategy/variation-directive.js"] = function (module, exports, re
   var VariationDirective = {
     resolveForPlan: resolveForPlan,
     normalizeOps: normalizeOps,
-    getOverlay: getOverlay
+    getOverlay: getOverlay,
+    CHAIN_SEGMENTS: CHAIN_SEGMENTS
   };
 
   global.VariationDirective = VariationDirective;
@@ -4804,6 +4646,14 @@ function wrapGenerator(gen, generatorId, generatorVersion) {
   if (!gen || typeof gen.generate !== 'function') return gen;
   var orig = gen.generate.bind(gen);
   gen.generate = function (plan, context) {
+    
+    
+    if (plan && plan.questionTypeId && QuestionTypeRegistry && typeof QuestionTypeRegistry.normalizeQuestionType === 'function') {
+      var _n = QuestionTypeRegistry.normalizeQuestionType(plan.questionTypeId, { allowHeuristic: false });
+      if (_n && _n.id && _n.id !== plan.questionTypeId) {
+        plan = Object.assign({}, plan, { questionTypeId: _n.id });
+      }
+    }
     var paramPlan = SemanticParameters.attachToPlan(plan);
     var out = orig(paramPlan, context);
     
@@ -5218,363 +5068,6 @@ __defs["shared/knowledge/question-type-registry.js"] = function (module, exports
 
   global.QuestionTypeRegistry = API;
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/presentation/render.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  function renderCard(q, idx, opts) {
-    opts = opts || {};
-    var st = function (key, extra) {
-      var s = (extra || '');
-      return s ? ' style="' + s + '"' : '';
-    };
-    var inpW = opts.inputWidth || 96;
-    
-    var inpWStyle = opts.inputWidth ? 'width:' + inpW + 'px;' : '';
-    var svgHtml = '';
-    if (q.svg) {
-      svgHtml = '<div class="scene-box"' + st('scene-box') + '>' + q.svg + '</div>';
-    }
-    var hintHtml = q.hint ? '<div class="q-hint"' + st('q-hint') + '>💡 ' + q.hint + '</div>' : '';
-    var badgeHtml = '';
-    if (opts.badgeLabels && q.type && opts.badgeLabels[q.type]) {
-      badgeHtml = '<span class="badge"' + st('badge') + '>' + opts.badgeLabels[q.type] + '</span>';
-    }
-    var formulaHtml = '<span class="qa-label"' + st('qa-label') + '>算式</span>' +
-      '<input type="text" class="formula-inp" data-formula="' + idx + '" placeholder="列式" autocomplete="off" aria-label="第 ' + (idx + 1) + ' 题 列式"' + st('formula-inp', 'width:120px;') + '>' +
-      '<span class="qa-label"' + st('qa-label') + '>答案</span>';
-    var inputHtml = '';
-    if (q.inputType === 'choice') {
-      var optsHtml = '';
-      (q.options || []).forEach(function (o) {
-        optsHtml += '<button type="button" class="opt" role="radio" aria-checked="false" data-val="' + String(o).replace(/"/g, '&quot;') + '" aria-label="第 ' + (idx + 1) + ' 题 选项：' + o + '" onclick="window.__pickOpt(this)"' + st('opt') + '>' + o + '</button>';
-      });
-      inputHtml = '<div class="options" role="radiogroup" aria-label="第 ' + (idx + 1) + ' 题 选项"' + st('options') + '>' + optsHtml + '</div>' +
-        '<input type="hidden" data-index="' + idx + '">';
-    } else if (q.inputType === 'multi') {
-      var count = q.inputCount || (Array.isArray(q.answer) ? q.answer.length : 1);
-      var inputs = '';
-      for (var j = 0; j < count; j++) {
-        inputs += '<input type="text" class="answer-inp" data-idx="' + idx + '" data-field="' + j + '" placeholder="?" autocomplete="off" aria-label="第 ' + (idx + 1) + ' 题 第 ' + (j + 1) + ' 空"' + st('answer-inp', inpWStyle) + '>';
-      }
-      inputHtml = '<div class="input-group"' + st('input-group') + '>' + inputs + '</div>';
-    } else {
-      inputHtml = '<div class="input-group"' + st('input-group') + '>' +
-        '<input type="text" class="answer-inp" data-index="' + idx + '" placeholder="?" autocomplete="off" aria-label="第 ' + (idx + 1) + ' 题 答案"' + st('answer-inp', inpWStyle) + '>' +
-        (q.unit ? '<span class="unit"' + st('unit') + '>' + q.unit + '</span>' : '') +
-        '</div>';
-    }
-    var qaRowHtml = '<div class="qa-row"' + st('qa-row') + '>' + formulaHtml + inputHtml + '</div>';
-    var qTextHtml = q.rawHtml ? (q.q || '') : '<span class="q-text">' + (q.q || q.text || '') + '</span>';
-    var qHeaderHtml = '<div class="q-header"' + st('q-header') + '>' +
-      '<span class="num"' + st('num') + '>' + (idx + 1) + '</span>' +
-      '&nbsp;&nbsp;&nbsp;&nbsp;' +
-      qTextHtml +
-      '</div>';
-    return '<div class="question-card" data-index="' + idx + '" role="group" aria-label="第 ' + (idx + 1) + ' 题"' + st('question-card') + '>' +
-      qHeaderHtml +
-      badgeHtml +
-      svgHtml +
-      qaRowHtml +
-      hintHtml +
-      '<div class="feedback"' + st('feedback') + ' aria-live="polite"></div>' +
-      '</div>';
-  }
-
-  
-  function renderGrid(questions, opts) {
-    opts = opts || {};
-    var cols = opts.columns || 3;
-    var html = '<div class="questions-grid" style="display:grid;grid-template-columns:repeat(' + cols + ',1fr);gap:14px;">';
-    questions.forEach(function (q, i) { html += renderCard(q, i, opts); });
-    return html + '</div>';
-  }
-
-  
-  
-  function clockSVG(hour, minute) {
-    hour = ((hour % 12) + 12) % 12;
-    minute = minute || 0;
-    var cx = 60, cy = 60, r = 54;
-    var hAngle = (hour % 12) * 30 + minute * 0.5;  
-    var mAngle = minute * 6;
-    var hRad = (hAngle - 90) * Math.PI / 180;
-    var mRad = (mAngle - 90) * Math.PI / 180;
-    var hx = cx + 26 * Math.cos(hRad);
-    var hy = cy + 26 * Math.sin(hRad);
-    var mx = cx + 42 * Math.cos(mRad);
-    var my = cy + 42 * Math.sin(mRad);
-    var ticks = '';
-    for (var i = 0; i < 12; i++) {
-      var a = (i * 30 - 90) * Math.PI / 180;
-      var r1 = (i % 3 === 0) ? 46 : 49;
-      ticks += '<line x1="' + (cx + r1 * Math.cos(a)).toFixed(1) + '" y1="' + (cy + r1 * Math.sin(a)).toFixed(1) +
-        '" x2="' + (cx + r * Math.cos(a)).toFixed(1) + '" y2="' + (cy + r * Math.sin(a)).toFixed(1) +
-        '" stroke="#9aa6bd" stroke-width="' + (i % 3 === 0 ? 2 : 1) + '"/>';
-    }
-    
-    var nums = [[12, 0], [3, 90], [6, 180], [9, 270]];
-    var numHtml = '';
-    nums.forEach(function (n) {
-      var a = (n[1] - 90) * Math.PI / 180;
-      var nx = cx + 40 * Math.cos(a);
-      var ny = cy + 40 * Math.sin(a) + 4;
-      numHtml += '<text x="' + nx.toFixed(1) + '" y="' + ny.toFixed(1) + '" text-anchor="middle" font-size="14" fill="#5b6b85" font-weight="700">' + n[0] + '</text>';
-    });
-    return '<svg width="120" height="120" viewBox="0 0 120 120" style="background:#fff;border-radius:50%;">' +
-      '<circle cx="60" cy="60" r="54" fill="#fafbff" stroke="#5b8def" stroke-width="3"/>' +
-      ticks + numHtml +
-      '<line x1="60" y1="60" x2="' + hx.toFixed(1) + '" y2="' + hy.toFixed(1) + '" stroke="#27324a" stroke-width="4" stroke-linecap="round"/>' +
-      '<line x1="60" y1="60" x2="' + mx.toFixed(1) + '" y2="' + my.toFixed(1) + '" stroke="#e8870a" stroke-width="3" stroke-linecap="round"/>' +
-      '<circle cx="60" cy="60" r="4" fill="#27324a"/>' +
-      '</svg>';
-  }
-
-  
-  
-  function createPlugin(config) {
-    if (!config || typeof config !== 'object') {
-      throw new Error('createPlugin(config)：配置对象缺失');
-    }
-    var id = config.id, name = config.name, subject = config.subject, grades = config.grades;
-    if (!id || typeof id !== 'string') console.error('[createPlugin] 插件 ' + (name || '?') + ' 缺少必填字段 id（字符串）');
-    if (!name) console.error('[createPlugin] 插件 ' + id + ' 缺少必填字段 name');
-    if (!subject) console.error('[createPlugin] 插件 ' + id + ' 缺少必填字段 subject');
-    if (!grades || !Array.isArray(grades) || !grades.length) console.error('[createPlugin] 插件 ' + id + ' 缺少必填字段 grades（非空数组）');
-    if (typeof config.generateQuestions !== 'function') console.error('[createPlugin] 插件 ' + id + ' 必须提供 generateQuestions(opts) 函数');
-
-    function defaultRender(set) {
-      var cols = (set && set.meta && set.meta.columns) || config.columns || 3;
-      var html = '<div class="questions-grid" style="display:grid;grid-template-columns:repeat(' + cols + ',1fr);gap:14px;">';
-      set.questions.forEach(function (q, i) {
-        html += (typeof q.render === 'function') ? q.render(i) : renderCard(q, i);
-      });
-      html += '</div>';
-      return html;
-    }
-
-    function defaultCheck(set, answers) {
-      var correct = 0, results = [], correctAnswers = [];
-      set.questions.forEach(function (q, i) {
-        var ok;
-        if (typeof q.check === 'function') ok = !!q.check(answers, i);
-        else ok = defaultQCheck(q, answers, i); 
-        if (ok) correct++;
-        results.push(ok);
-        correctAnswers.push(Array.isArray(q.answer) ? q.answer.join('、') : String(q.answer));
-      });
-      var total = set.questions.length;
-      var score = total ? Math.round(correct / total * 100) : 0;
-      var message = score === 100 ? '太棒了！全对！' : score >= 80 ? '很不错！' : '继续加油！';
-      return { score: score, total: total, correct: correct, message: message, results: results, correctAnswers: correctAnswers };
-    }
-
-    function defaultGenerate(options) {
-      var opts = options || {};
-      
-      if (opts.count != null && (!(opts.count > 0) || Math.floor(opts.count) !== opts.count)) {
-        console.warn('[createPlugin:' + id + '] 参数 count 应为正整数，收到：' + opts.count);
-      }
-      var questions = [];
-      try {
-        questions = config.generateQuestions.call(plugin, opts) || [];
-      } catch (e) {
-        console.error('[createPlugin:' + id + '] generateQuestions 执行出错：', e);
-        throw new Error('题型「' + name + '」生成题目时出错：' + (e && e.message ? e.message : e));
-      }
-      
-      questions = questions.map(function (q, i) {
-        if (q && typeof q.render !== 'function' && q.answer != null) {
-          q.render = function (idx) { return renderCard(q, idx); };
-        }
-        if (q && typeof q.check !== 'function') {
-          q.check = function (answers, idx) { return defaultQCheck(q, answers, idx); };
-        }
-        return q;
-      });
-      
-      var meta = (typeof config.meta === 'function') ? config.meta(opts)
-        : (config.meta || { grade: opts.grade, count: questions.length });
-      return { questions: questions, meta: meta };
-    }
-
-    
-    var RESERVED = { id: 1, name: 1, subject: 1, grades: 1, category: 1, description: 1,
-      generateQuestions: 1, render: 1, check: 1, knowledgePoints: 1, columns: 1, meta: 1 };
-    var plugin = {};
-    Object.keys(config).forEach(function (k) { if (!RESERVED[k]) plugin[k] = config[k]; });
-    plugin.id = id;
-    plugin.name = name;
-    plugin.subject = subject;
-    plugin.grades = grades;
-    if (config.category) plugin.category = config.category;
-    if (config.description) plugin.description = config.description;
-    if (config.printConfig) plugin.printConfig = config.printConfig;
-    if (config.settings) plugin.settings = config.settings;
-    plugin.generate = config.generate ? config.generate : defaultGenerate;
-    plugin.render = config.render ? config.render : defaultRender;
-    plugin.check = config.check ? config.check : defaultCheck;
-    
-    
-    if (config.knowledgePoints) plugin.declaredKnowledgePoints = config.knowledgePoints;
-
-    return plugin;
-  }
-
-  
-
-  
-  function _wrapGridClass(plugin) {
-    if (!plugin.gridClass) return;
-    var _orig = plugin.render;
-    plugin.render = function (set) {
-      var html = _orig.call(plugin, set);
-      if (html.indexOf(plugin.gridClass) === -1) {
-        html = html.replace('class="questions-grid"', 'class="questions-grid ' + plugin.gridClass + '"');
-      }
-      return html;
-    };
-  }
-
-  
-  function _numEq(a, b) {
-    var na = Number(normalizeAns(a));
-    var nb = Number(normalizeAns(b));
-    if (!isNaN(na) && !isNaN(nb)) return na === nb;
-    return normalizeAns(a) === normalizeAns(b);
-  }
-
-  
-  function _mathQCheck(q, answers, i) {
-    if (q.inputType === 'multi') {
-      var parts = Array.isArray(q.answer) ? q.answer : String(q.answer).split(/[、,，]/);
-      for (var j = 0; j < parts.length; j++) {
-        var uv = answers ? answers[i + ':' + j] : undefined;
-        if (!_numEq(uv, parts[j])) return false;
-      }
-      return true;
-    }
-    var ua = answers ? answers[i] : undefined;
-    var ans = Array.isArray(q.answer) ? q.answer.join('') : q.answer;
-    return _numEq(ua, ans);
-  }
-
-  
-  function createMathPlugin(config) {
-    config = config || {};
-    config.subject = 'math';
-    var _origGQ = config.generateQuestions;
-    if (typeof _origGQ === 'function') {
-      config.generateQuestions = function (opts) {
-        var qs = _origGQ.call(this, opts) || [];
-        qs.forEach(function (q) {
-          if (q && typeof q.check !== 'function' && q.answer != null) {
-            q.check = function (answers, idx) { return _mathQCheck(q, answers, idx); };
-          }
-        });
-        return qs;
-      };
-    }
-    var plugin = createPlugin(config);
-    plugin.cardClass = 'math-card';
-    plugin.gridClass = 'math-grid';
-    _wrapGridClass(plugin);
-    return plugin;
-  }
-
-  
-  global.PluginUtil = global.PluginUtil || {};
-  global.PluginUtil.renderCard = renderCard;
-  global.PluginUtil.renderGrid = renderGrid;
-  global.PluginUtil.clockSVG = clockSVG;
-  global.PluginUtil.createPlugin = createPlugin;
-  global.PluginUtil.createMathPlugin = createMathPlugin;
-  global.renderCard = renderCard;       
-  global.clockSVG = clockSVG;           
-
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-      renderCard: renderCard, renderGrid: renderGrid, clockSVG: clockSVG,
-      createPlugin: createPlugin, createMathPlugin: createMathPlugin,
-      _wrapGridClass: _wrapGridClass,
-      _numEq: _numEq, _mathQCheck: _mathQCheck
-    };
-  }
-
-})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
-
-};
-__defs["shared/core/check.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  
-  function defaultQCheck(q, answers, i) {
-    if (q.inputType === 'multi') {
-      var parts = Array.isArray(q.answer) ? q.answer : String(q.answer).split(/[、,，]/);
-      for (var j = 0; j < parts.length; j++) {
-        var uv = answers ? answers[i + ':' + j] : undefined;
-        if (normalizeAns(uv) !== normalizeAns(parts[j])) return false;
-      }
-      return true;
-    }
-    var ua = answers ? answers[i] : undefined;
-    var ans = Array.isArray(q.answer) ? q.answer.join('') : q.answer;
-    return normalizeAns(ua) === normalizeAns(ans);
-  }
-
-  
-  function computeResult(questions, userAnswers, opts) {
-    opts = opts || {};
-    var checkFn = opts.checkFn || defaultQCheck;
-    var correct = 0, results = [], correctAnswers = [];
-    questions.forEach(function (q, i) {
-      var ok = checkFn(q, userAnswers, i);
-      if (ok) correct++;
-      results.push(ok);
-      var disp = Array.isArray(q.answer) ? q.answer.join('、') : q.answer;
-      correctAnswers.push(q.answerParts ? q.answerParts.join('、') : disp);
-    });
-    var total = questions.length;
-    var score = total ? Math.round(correct / total * 100) : 0;
-    var message = score === 100 ? '太棒了！全对！' : score >= 80 ? '很不错！' : '继续加油！';
-    return { score: score, total: total, correct: correct, message: message, results: results, correctAnswers: correctAnswers };
-  }
-
-  
-  function pickOpt(el) {
-    var card = el.parentNode && el.parentNode.parentNode;
-    if (!card) return;
-    var opts = card.querySelectorAll('.opt');
-    for (var i = 0; i < opts.length; i++) {
-      opts[i].classList.remove('chosen');
-      opts[i].setAttribute('aria-checked', 'false');
-    }
-    el.classList.add('chosen');
-    el.setAttribute('aria-checked', 'true');
-    var inp = card.querySelector('input[data-index]');
-    if (inp) inp.value = el.getAttribute('data-val') || el.textContent;
-  }
-
-  
-  global.PluginUtil = global.PluginUtil || {};
-  global.PluginUtil.defaultQCheck = defaultQCheck;
-  global.PluginUtil.computeResult = computeResult;
-  global.PluginUtil.pickOpt = pickOpt;
-  global.defaultQCheck = defaultQCheck;     
-  global.__pickOpt = pickOpt;               
-
-  if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-      defaultQCheck: defaultQCheck, computeResult: computeResult, pickOpt: pickOpt
-    };
-  }
-
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
 
 };
@@ -6712,7 +6205,10 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
         sq.answer = { value: typeof sq.answer === 'boolean' ? sq.answer : String(sq.answer), acceptable: [] };
       }
       var res = check(qt, sq);
-      if (res.ok) { trace(sq, 'pass', [], []); out.push(sq); continue; }
+      
+      
+      
+      if (res.ok) { if (qt === 'choice') sq.answerMode = 'choice'; trace(sq, 'pass', [], []); out.push(sq); continue; }
       var finisher = FORM_BOUND.indexOf(qt) === -1 ? FINISHERS[qt] : null;
       var fixed = null;
       if (finisher) {
@@ -6721,6 +6217,7 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
       if (!fixed) { trace(sq, 'drop', res.violations, []); continue; }
       var re = check(qt, sq);
       if (!re.ok) { trace(sq, 'drop', re.violations, fixed.fixed || []); continue; }
+      if (qt === 'choice') sq.answerMode = 'choice';
       trace(sq, 'finish', res.violations, fixed.fixed || []);
       out.push(sq);
     }
@@ -7816,68 +7313,6 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName) {
   };
 }
 
-function makeRecognizeQuestion(plan, context, i, shapeMeta, graphic, kpName) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  
-  var name = kpName || '图形识别';
-  var isChoice = rng() < 0.5;
-
-  if (isChoice) {
-    
-    var target = shapeMeta.legacyType;
-    var correct = shapeMeta.meta.name;
-    var allShapes = Object.keys(SHAPE_FEATURES);
-    var distractors = allShapes.filter(function(s){ return s !== target; }).slice(0, 3);
-    var options = [correct];
-    for (var d = 0; d < distractors.length; d++) {
-      options.push(SHAPE_FEATURES[distractors[d]]?.name || distractors[d]);
-    }
-    options = Rng.shuffle(rng, options).slice(0, 4);
-    var correctIndex = options.indexOf(correct);
-    return {
-      knowledgePointId: pkp(plan),
-      questionType: 'recognize',
-      difficulty: plan.difficulty,
-      spiralLevel: plan.spiralLevel || 1,
-      context: plan.contextType || 'standard',
-      seed: seedFor(plan, context, i),
-      prompt: name + '：下列哪个图形符合描述？',
-      answer: { value: String(correctIndex), acceptable: [] },
-      answerMode: 'choice',
-      data: {
-        mode: 'recognize',
-        steps: 1,
-        graphic: graphic,
-        options: options,
-        correctIndex: correctIndex,
-        shapeName: shapeMeta.meta.name
-      }
-    };
-  } else {
-    
-    var shownIsCorrect = rng() < 0.6;
-    var shownShape = shownIsCorrect ? correct : (Rng.pick(rng, ['三角形', '长方形', '正方形', '圆']) || '三角形');
-    return {
-      knowledgePointId: pkp(plan),
-      questionType: 'recognize',
-      difficulty: plan.difficulty,
-      spiralLevel: plan.spiralLevel || 1,
-      context: plan.contextType || 'standard',
-      seed: seedFor(plan, context, i),
-      prompt: name + '：这是' + shownShape + '吗？',
-      answer: { value: shownIsCorrect, acceptable: [] },
-      answerMode: 'judge',
-      data: {
-        mode: 'recognize',
-        steps: 1,
-        graphic: graphic,
-        expectedShape: shownShape,
-        shapeName: shapeMeta.meta.name
-      }
-    };
-  }
-}
-
 function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var name = kpName || '几何应用';
@@ -8102,8 +7537,6 @@ function createShapeGenerator(spec) {
           else q = makeCountQuestion(plan, context, i, shapeMeta, graphic);
         } else if (qt === 'geometry') {
           q = makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName);
-        } else if (qt === 'recognize') {
-          q = makeRecognizeQuestion(plan, context, i, shapeMeta, graphic, kpName);
         } else if (qt === 'apply') {
           
           q = makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName);
@@ -9510,39 +8943,8 @@ function createApplicationGenerator(spec) {
       var meta = getApplicationMeta(kp);
 
       for (var i = 0; i < count; i++) {
-        var q;
-        var qt = plan.questionTypeId;
-        if (qt === 'open') {
-          
-          var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-          var a = randInt(rng, 10, 99);
-          var b = randInt(rng, 2, 12);
-          var ops = ['加', '减', '乘', '除'];
-          var opWord = Rng.pick(rng, ops);
-          var answer = computeAnswer('multiplication', { a: a, n: b });
-          q = {
-            knowledgePointId: pkp(plan),
-            
-            questionType: 'apply',
-            difficulty: plan.difficulty,
-            spiralLevel: plan.spiralLevel || 1,
-            context: plan.contextType || 'standard',
-            seed: seedFor(plan, context, i),
-            prompt: '【竞赛开放题】一个数是' + a + '，另一个数是' + b + '的多少倍？请写出完整的解题过程并说明你的思路。',
-            answer: { value: String(answer), acceptable: [] },
-            answerMode: 'input',
-            data: {
-              mode: 'open',
-              steps: 3,
-              graphic: makeGraphicForApplication('multiplication', { a: a, n: b }),
-              numbers: { a: a, b: b, answer: answer },
-              template: 'competition-open'
-            }
-          };
-        } else {
-          q = makeApplicationQuestion(plan, context, i, meta);
-          q.data.graphic = makeGraphicForApplication(q.data.template, q.data.numbers);
-        }
+        var q = makeApplicationQuestion(plan, context, i, meta);
+        q.data.graphic = makeGraphicForApplication(q.data.template, q.data.numbers);
         questions.push(q);
       }
       return questions;
@@ -11896,8 +11298,8 @@ function createC9Generator(spec) {
   return {
     id: id,
     subject: 'math',
-    capabilities: ['apply', 'calc', 'open'],
-    questionTypes: ['apply', 'calc', 'open'],
+    capabilities: ['apply', 'calc'],
+    questionTypes: ['apply', 'calc'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -15184,7 +14586,6 @@ global.GeneratorRegistry = __req('shared/generator/generator-registry.js');
 global.CapabilityResolver = __req('shared/capability/capability-resolver.js');
 global.CapabilityModel = __req('shared/capability/capability-model.js');
 global.CapabilityMatrix = __req('shared/capability/capability-matrix.js');
-global.SemanticQuestionBridge = __req('shared/generator/semantic-question-bridge.js');
 global.ComprehensiveStrategy = __req('shared/strategy/comprehensive-strategy.js');
 global.ComplexGen = __req('shared/generator/generators/complex.js');
 global.StrategyBundle = { req: __req, modules: __defs };

@@ -31,6 +31,13 @@
       typeof global.GraphicRenderer.render === 'function')
     ? global.GraphicRenderer
     : (typeof global !== 'undefined' && global.SVGRenderer ? global.SVGRenderer : SVGRenderer);
+
+  /** 从 GraphicRenderer 结果提取 SVG 字符串（SUCCESS 返回 svg，否则返回 ''） */
+  function extractSvg(result) {
+    if (!result || typeof result !== 'object') return '';
+    if (result.status === 'SUCCESS' && typeof result.svg === 'string') return result.svg;
+    return '';
+  }
   var HTMLRenderer = (typeof global !== 'undefined' && global.HTMLRenderer)
     ? global.HTMLRenderer
     : require('./html-renderer.js');
@@ -60,10 +67,15 @@
     var ro = RenderOptions.normalize(options);
     var i = typeof index === 'number' ? index : 0;
     var graphicDesc = graphicOf(sq);
-    var svg = graphicDesc ? GraphicRenderer.render(graphicDesc, ro) : '';
+    var gfxResult = graphicDesc ? GraphicRenderer.render(graphicDesc, ro) : { status: 'UNSUPPORTED', reason: 'No graphic descriptor' };
+    var svg = extractSvg(gfxResult);
     // P2.1（Issue #1 延伸）：density 透传给 HTML 渲染器（仅影响 HTML 输出，不进 RenderResult 元数据）
     var html = HTMLRenderer.render(sq, i, { mode: ro.mode, graphic: svg, density: ro.density });
-    return RenderResult.create(sq, html, svg);
+    var rr = RenderResult.create(sq, html, svg);
+    // 附加渲染状态元数据供上游诊断（不破坏 RenderResult 契约）
+    rr._gfxStatus = gfxResult.status;
+    rr._gfxReason = gfxResult.reason;
+    return rr;
   }
 
   /**

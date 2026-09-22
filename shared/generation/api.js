@@ -89,6 +89,15 @@
   }
 
   // ---------- 内部辅助 ----------
+  // P28-32：语义目标标量化（见 runPlans 注入点）——避免对象形态污染 Learner 统计桶。
+  function normalizeSemanticTarget(st) {
+    if (typeof st === 'string') return st;
+    if (st && typeof st === 'object') {
+      if (typeof st.name === 'string' && st.name) return st.name;
+      if (typeof st.id === 'string' && st.id) return st.id;
+    }
+    return null;
+  }
   function isComprehensive(request) {
     if (!request) return false;
     if (request.mode === 'comprehensive') return true;
@@ -361,6 +370,14 @@
           if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length) {
             q.knowledgePointIds = plan.knowledgePointIds.slice();
           }
+          // P28-32：语义目标随计划注入每题——只读 explainability 元数据（trainsWhat || kp.module，
+          // 与 questionIntent 同源，勿改题面/答案/难度/去重）。供 Learner 数据链
+          // Question→Semantic Target→Result→KnowledgePracticeState 端到端消费。
+          // 归一为字符串：trainsWhat 为长文本；缺行时 kp.module 为 {id,name} 对象——
+          // 一律取 name/id/原始串，杜绝 '[object Object]' 污染 KPS 统计桶。
+          if (plan.explainability && plan.explainability.semanticTarget != null) {
+            q.semanticTarget = normalizeSemanticTarget(plan.explainability.semanticTarget);
+          }
           // D004 修复：统一兜底——若 answer 是对象且缺 explanation，用 prompt+value 生成。
           // 各 generator 可能不写 explanation；在 runPlans 汇聚层兜底保证每题有 explanation。
           if (q.answer && typeof q.answer === 'object' && q.answer.explanation == null) {
@@ -600,7 +617,7 @@
     if (kpIds.length) {
       pool = kpIds.slice();
     } else {
-      // P0-10：subject+grade 年级展开分支随 Legacy KnowledgeBank 一并删除（真实生产调用=0）。
+      // P0-10：subject+grade 年级展开分支已随旧知识层一并删除（真实生产调用=0）。
       // 年级 KP 池唯一来源 = KBL Runtime byGrade，由编排层上游展开后以 knowledgePointIds 传入。
       return Promise.reject(new Error('generateBudget 需要 knowledgePointIds（年级 KP 池由 KBL 上游展开后传入）'));
     }

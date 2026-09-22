@@ -842,8 +842,10 @@
     QUICK_TYPE_DEFS.forEach(function (t) {
       var on = state.quickTypes.indexOf(t.key) !== -1 ? ' on' : '';
       var cnt = pool.filter(function (k) { return kpMatchesType(k, t, view); }).length;
-      var disabled = cnt === 0 ? ' disabled' : '';
-      html += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
+      // P28-48：disabled 此前被拼进 class 属性值（仅灰显），按钮仍可点；现同时输出样式类与原生 disabled 属性
+      var disabledCls = cnt === 0 ? ' disabled' : '';
+      var disabledAttr = cnt === 0 ? ' disabled' : '';
+      html += '<button type="button" class="type-card' + on + disabledCls + '"' + disabledAttr + ' data-type="' + t.key + '">' + t.label +
         '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
     });
     gridQuick.innerHTML = html;
@@ -946,7 +948,7 @@
       bkt.kps.forEach(function (k) {
         var on = state.teacherKps.indexOf(k.id) !== -1 ? ' on' : '';
         var hints = kpTypeHints(k, view);
-        html += '<button type="button" class="kp-chip' + on + '" data-kp="' + k.id + '">' + esc(k.name) +
+        html += '<button type="button" class="kp-chip' + on + '" data-kp="' + esc(k.id) + '">' + esc(k.name) +
           (hints.length ? '<span class="kp-hint">' + esc(hints.join(' · ')) + '</span>' : '') +
           '</button>';
       });
@@ -958,18 +960,24 @@
 
   // 右栏：题型卡（显示命中已选知识点的题型数量）
   function renderTeacherTypeGrid(buckets) {
-    var selectedKps = [];
-    if (buckets) {
-      buckets.filter(function (bkt) { return state.teacherUnits.indexOf(bkt.unit) !== -1; })
-        .forEach(function (bkt) { bkt.kps.forEach(function (k) { if (state.teacherKps.indexOf(k.id) !== -1) selectedKps.push(k); }); });
+    // P28-48：KP/单元点击回调以无参形式调用本函数；此前无 buckets 时 selectedKps 恒为空，
+    // 导致已选 KP 后右栏 7 张题型卡全部显示「0 个知识点」。无 buckets 时按当前册别自行重算。
+    if (!buckets) {
+      var allEntries = fullKPEntries(state.subject, state.grade);
+      var scoped = allEntries.filter(function (k) { return kpMatchesBook(k, state.teacherBook); });
+      buckets = unitBuckets(scoped, state.teacherBook);
     }
+    var selectedKps = [];
+    buckets.filter(function (bkt) { return state.teacherUnits.indexOf(bkt.unit) !== -1; })
+      .forEach(function (bkt) { bkt.kps.forEach(function (k) { if (state.teacherKps.indexOf(k.id) !== -1) selectedKps.push(k); }); });
     var view = teacherPolView();
     var tHtml = '';
     QUICK_TYPE_DEFS.forEach(function (t) {
       var on = state.teacherTypes.indexOf(t.key) !== -1 ? ' on' : '';
       var cnt = selectedKps.filter(function (k) { return kpMatchesType(k, t, view); }).length;
-      var disabled = cnt === 0 ? ' disabled' : '';
-      tHtml += '<button type="button" class="type-card' + on + disabled + '" data-type="' + t.key + '">' + t.label +
+      var disabledCls = cnt === 0 ? ' disabled' : '';
+      var disabledAttr = cnt === 0 ? ' disabled' : '';
+      tHtml += '<button type="button" class="type-card' + on + disabledCls + '"' + disabledAttr + ' data-type="' + t.key + '">' + t.label +
         '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
     });
     teacherTypeGrid.innerHTML = tHtml;
@@ -1027,9 +1035,11 @@
     mods.forEach(function (m) {
       var on = state.competitionModules.indexOf(m.id) !== -1 ? ' on' : '';
       var cnt = entries.filter(function (k) { return k.moduleId === m.id; }).length;
-      var disabled = cnt === 0 ? ' disabled' : '';
-      html += '<button type="button" class="type-card module-card' + on + disabled + '" data-mid="' + esc(m.id) + '">' +
-        '<span class="mc-icon" aria-hidden="true">' + (m.icon || '') + '</span>' + esc(m.name || m.id) +
+      // P28-48：同 quick/teacher，disabled 同时作为样式类与原生属性输出
+      var disabledCls = cnt === 0 ? ' disabled' : '';
+      var disabledAttr = cnt === 0 ? ' disabled' : '';
+      html += '<button type="button" class="type-card module-card' + on + disabledCls + '"' + disabledAttr + ' data-mid="' + esc(m.id) + '">' +
+        '<span class="mc-icon" aria-hidden="true">' + esc(m.icon || '') + '</span>' + esc(m.name || m.id) +
         '<span class="tc-tag">' + cnt + ' 个知识点</span>' +
         (m.desc ? '<span class="mc-desc">' + esc(m.desc) + '</span>' : '') +
         '</button>';

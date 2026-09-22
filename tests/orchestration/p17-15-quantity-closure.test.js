@@ -3,6 +3,10 @@
 /**
  * tests/orchestration/p17-15-quantity-closure.test.js — 数量闭环验证（P17-15）
  *
+ * 注意：GenerationCore 为测试/历史资产（P28-28 定性）。生产链 = api.js
+ * orchestrate → build → runPlans → generateQuestions，不经过 GenerationCore；
+ * 本测试直接装载 shared/generation/generation-core.js 验证其 execute 语义。
+ *
  * 冻结不变量（真实生成链，非 stub）：
  *   contract ≥ planned ≥ generated = final；Σ cell.plannedCount = Plan.planned。
  *   计数档位 1/3/5/7/10 → SUCCESS 且 generated == count（高容量载体、真实题）。

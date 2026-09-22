@@ -96,15 +96,19 @@ test('MATH-14 legacy q.svg 字段不再被消费（native-only）', () => {
 // ============ M7-R03 SVG Renderer ============
 test('M7-R03 register + custom rawSvg', () => {
   const g = SVGRegistry.render({ type: 'custom', params: { rawSvg: '<svg></svg>' } });
-  assert.ok(g.indexOf('<svg') === 0);
+  assert.strictEqual(g.status, 'SUCCESS');
+  assert.ok(g.svg.indexOf('<svg') === 0);
   SVGRegistry.register('shape-test', 'box', () => '<svg><rect/></svg>');
   const out = SVGRegistry.render({ type: 'shape-test', subtype: 'box', params: {} });
-  assert.ok(out.indexOf('rect') !== -1);
+  assert.strictEqual(out.status, 'SUCCESS');
+  assert.ok(out.svg.indexOf('rect') !== -1);
 });
 
-test('M7-R03 未注册类型返回空串', () => {
-  assert.strictEqual(SVGRegistry.render({ type: 'nope', subtype: 'x', params: {} }), '');
-  assert.strictEqual(SVGRegistry.render(null), '');
+test('M7-R03 未注册类型返回 UNSUPPORTED', () => {
+  const r1 = SVGRegistry.render({ type: 'nope', subtype: 'x', params: {} });
+  assert.strictEqual(r1.status, 'UNSUPPORTED');
+  const r2 = SVGRegistry.render(null);
+  assert.strictEqual(r2.status, 'UNSUPPORTED');
 });
 
 test('M7-R03 几何描述符接入 svg-geometry 生成器', () => {
@@ -115,9 +119,11 @@ test('M7-R03 几何描述符接入 svg-geometry 生成器', () => {
 
 test('M7-R03 竖式 calculation 描述符（数组/双参适配）', () => {
   const a = SVGRegistry.render({ type: 'calculation', subtype: 'add', params: { values: [456, 378] } });
-  assert.ok(/<svg/.test(a) && a.length > 200);
+  assert.strictEqual(a.status, 'SUCCESS');
+  assert.ok(/<svg/.test(a.svg) && a.svg.length > 200);
   const m = SVGRegistry.render({ type: 'calculation', subtype: 'mul', params: { a: 123, b: 45 } });
-  assert.ok(m.length > 200);
+  assert.strictEqual(m.status, 'SUCCESS');
+  assert.ok(m.svg.length > 200);
 });
 
 // ============ M7-R02 HTML Renderer ============

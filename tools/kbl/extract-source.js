@@ -5,6 +5,8 @@
  * 职责边界：不承担 Generation / POL / UI / Generator 职责。
  *
  * 只读约束：本工具仅 READ/PARSE/VALIDATE/EXTRACT/HASH；绝不写回 root/*.xlsx。
+ * 确定性约束（P28-05）：fingerprint 仅含内容指纹（sha256 + 字节数），不含埋时/环境字段；
+ *   同一 Excel 重复运行产出 byte 级一致的 extract-raw.json（SHA256 完全一致）。
  *
  * 输出：kbl/import/extract-raw.json
  * 结构：{ schemaVersion, source, fingerprint, errors, unit, course, knowledge, stats }
@@ -216,13 +218,11 @@ function extract() {
     if (cu) cu.unitCount++;
   });
 
-  // 4) 指纹（P16-10 基础）
+  // 4) 指纹（P16-10 基础；P28-05 确定性：仅内容指纹，禁 generatedAt/modifiedTime 等环境字段）
   var fpr = {
     fileHash: sha256(fs.readFileSync(SOURCE_FILE)),
     fileSize: fs.statSync(SOURCE_FILE).size,
-    modifiedTime: fs.statSync(SOURCE_FILE).mtimeMs,
-    extractVersion: 'root-v1',
-    generatedAt: new Date().toISOString()
+    extractVersion: 'root-v1'
   };
 
   var stats = {

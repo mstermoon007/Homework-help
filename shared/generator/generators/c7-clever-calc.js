@@ -7,8 +7,7 @@
  *   提取公因数、凑整巧算、分数裂项、整数裂项、等差数列、循环小数化分数、
  *   定义新运算、估算放缩、繁分数化简、数列求和（平方和/立方和）
  *
- * 注：C7 中两个「比较大小」KP（math-g5-c7-compare-size / math-g6-c7-compare-size）
- *     的题型为 recognize（元题型），按 recognize 豁免哲学保留给 selection 家族，不在本族。
+ * 注：C7 当年两个「比较大小」KP（recognize 元题型，曾归 selection 家族）已随竞赛 KP 全部剔除（P25-06），本族永不命中。
  */
 
 var Rng = require('../core/rng.js');
@@ -162,7 +161,7 @@ function makeQuestion(plan, context, i, kp) {
   };
 }
 
-// P25-06 H2：原 C7_KPS（math-gN-c7-* 竞赛制 legacy ID）已随竞赛 KP 全部剔除，
+// P25-06 H2：原 C7_KPS（math-gN-c7-* 历史 ID）已随竞赛 KP 全部剔除，
 // 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS（[] 泛匹配）。
 function createC7Generator(spec) {
   spec = spec || {};

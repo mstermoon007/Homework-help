@@ -3,7 +3,6 @@
  *
  * 统一策略输入对象。
  * 只描述「要什么题」，不包含生成逻辑、SVG/HTML、执行函数。
- * 向后兼容旧 UI 参数（subject/grade/count/difficulty/knowledgePointId 等）。
  *
  * Refactor Step 2（Request/QuestionPlan 重构）：
  *   - 内部 KP 语义唯一为「数组」：knowledgePointIds[]。
@@ -17,8 +16,6 @@
 
 var StrategyConfig = require('./strategy-config.js');
 var QuestionTypeRegistry = require('../knowledge/question-type-registry.js');
-
-var LEGACY_UI_KEYS = ['subject', 'grade', 'count', 'difficulty', 'subtype', 'questionType', 'knowledgePointId', 'knowledgePoints'];
 
 // 标准题型枚举（SSOT：question-type-registry.js 的 canonical 7 类）
 var VALID_QUESTION_TYPES = (QuestionTypeRegistry && QuestionTypeRegistry.all)
@@ -88,22 +85,6 @@ function normalizeRequest(request) {
   if (out.mode != null && MODE_ALIAS[String(out.mode)] != null) out.mode = MODE_ALIAS[String(out.mode)];
   // 清除旧「知识点控制数量」配额：分题型数量统一由 planByType 的 count / perTypeCount / typeCounts 取代
   delete out.kpAllocation;
-  return out;
-}
-
-function normalizeLegacyParams(params) {
-  var out = {};
-  // 旧 UI 参数映射
-  if (params.subject != null) out.subject = params.subject;
-  if (params.grade != null) out.grade = params.grade;
-  if (params.count != null) out.count = Math.max(1, Math.floor(params.count));
-  else if (params.volume != null) out.count = Math.max(1, Math.floor(params.volume));
-  if (params.difficulty != null) {
-    var d = Math.max(DIFFICULTY_MIN, Math.min(DIFFICULTY_MAX, Math.floor(params.difficulty)));
-    out.targetDifficulty = d;
-  }
-  if (params.subtype != null) out.subtype = params.subtype;
-  if (params.questionType != null) out.questionType = params.questionType;
   return out;
 }
 
@@ -262,18 +243,6 @@ function createRequest(params) {
   return req;
 }
 
-function createFromLegacyUI(legacyParams) {
-  // 从旧 UI 参数创建 StrategyRequest
-  var base = normalizeLegacyParams(legacyParams || {});
-  // 保留 legacy 字段供兼容层使用
-  base._legacy = true;
-  return base;
-}
-
-function isLegacyRequest(req) {
-  return req && req._legacy === true;
-}
-
 module.exports = {
   VALID_QUESTION_TYPES: VALID_QUESTION_TYPES,
   DIFFICULTY_MIN: DIFFICULTY_MIN,
@@ -284,9 +253,6 @@ module.exports = {
   MODE_ALIAS: MODE_ALIAS,
   resolveKnowledgePointIds: resolveKnowledgePointIds,
   normalizeRequest: normalizeRequest,
-  normalizeLegacyParams: normalizeLegacyParams,
   validateRequest: validateRequest,
-  createRequest: createRequest,
-  createFromLegacyUI: createFromLegacyUI,
-  isLegacyRequest: isLegacyRequest
+  createRequest: createRequest
 };

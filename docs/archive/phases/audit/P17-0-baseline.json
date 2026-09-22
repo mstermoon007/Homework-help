@@ -1,0 +1,114 @@
+{
+  "auditVersion": "P17-0",
+  "auditDate": "2026-09-15",
+  "projectVersion": "4.3.0",
+  "lastCommit": "1b3249d",
+  "kbl": {
+    "schemaVersion": "1.0.0",
+    "knowledgeCount": 375,
+    "unitCount": 128,
+    "relationCount": 0,
+    "mappingCount": 1570,
+    "canonicalCourseCount": 12,
+    "capabilityCount": 375,
+    "capacityMapKeys": 375
+  },
+  "canonicalTypes": ["calc", "fill", "choice", "judge", "geometry", "classify", "apply"],
+  "canonicalTypeCount": 7,
+  "typeAliases": {
+    "oral": "calc",
+    "vertical": "calc",
+    "mixed": "calc",
+    "cushi": "calc",
+    "recognize": "geometry",
+    "classification": "classify",
+    "open": "apply",
+    "word_problem": "apply"
+  },
+  "generator": {
+    "totalRecords": 26,
+    "totalKPBindings": 116,
+    "generatorsWithZeroKP": 11,
+    "legacyCount": 0,
+    "coreRecords": 26
+  },
+  "orchestration": {
+    "POLEntryCount": 1,
+    "GenerationAPIEntryCount": 1,
+    "PresentationEngineEntryCount": 1,
+    "GenerationCoreExists": false,
+    "executeInlineExists": true
+  },
+  "runtimeChain": {
+    "entry": "PracticeSession.start()",
+    "path": [
+      "PracticeSession.start()",
+      "GenerationAPI.generate(req, options)",
+      "PracticeOrchestrator.orchestrate(req, options, deps)",
+      "executeInline(req, options)",
+      "build(request) → StrategyEngine.plan()",
+      "runPlans(plans, options)",
+      "PresentationEngine.generateQuestions(plan, options)",
+      "Selector → RetryLoop → BatchValidator → SemanticQuestion",
+      "renderQuestions() → HTML/SVG"
+    ]
+  },
+  "validator": {
+    "files": [
+      "answer-validator.js",
+      "batch-validator.js",
+      "composite-validator.js",
+      "difficulty-integrity-validator.js",
+      "difficulty-validator.js",
+      "duplicate-integrity-validator.js",
+      "duplicate-validator.js",
+      "kp-coverage-validator.js",
+      "kp-semantic-validator.js",
+      "quality-scorer.js",
+      "question-validator.js",
+      "validation-pipeline.js"
+    ]
+  },
+  "boundaryViolations": [
+    {
+      "file": "strategy-engine.js",
+      "line": [69, 206],
+      "violation": "require('../knowledge/knowledge-bank.js')",
+      "severity": "A-Runtime"
+    },
+    {
+      "file": "strategy-engine.js",
+      "line": [102, 180, 618, 649],
+      "violation": "require('../generator/generator-registry.js')",
+      "severity": "A-Runtime"
+    },
+    {
+      "file": "strategy-engine.js",
+      "line": [831],
+      "violation": "require('../generator/generator-selector.js')",
+      "severity": "A-Runtime"
+    },
+    {
+      "file": "comprehensive-strategy.js",
+      "line": [29],
+      "violation": "require('../knowledge/knowledge-bank.js')",
+      "severity": "A-Runtime"
+    },
+    {
+      "file": "kp-semantic-validator.js",
+      "line": [21],
+      "violation": "require('../orchestration/knowledge-context.js')",
+      "severity": "A-Runtime"
+    },
+    {
+      "file": "kp-semantic-validator.js",
+      "line": [127],
+      "violation": "require('../generator/generator-registry.js')",
+      "severity": "A-Runtime"
+    }
+  ],
+  "designOnly": {
+    "GenerationCore": "文件不存在于 shared/generation/，仅 api.js 存在",
+    "description": "GEN-03: GenerationCore 为 DESIGN_ONLY 状态，当前 Runtime 通过 executeInline 承担"
+  }
+}

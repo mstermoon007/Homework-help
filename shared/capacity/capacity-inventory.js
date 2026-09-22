@@ -2,7 +2,7 @@
  * shared/capacity/capacity-inventory.js — R3/R4 容量清单（只读 Capacity Map）
  *
  * 目标：将当前生成器的「实际有效容量」显式化，作为 Strategy / Budget 层的输入。
- * 不修改 KnowledgeBank 查询语义、不修改 Generator Capability Registry 职责、
+ * 不修改 KBL Runtime 查询语义、不修改 Generator Capability Registry 职责、
  * 不保存生成执行函数；仅做只读扫描 + 缓存。
  *
  * 每条记录（KP × QuestionType 聚合为 KP 级容量）：

@@ -41,9 +41,9 @@ var ENTRIES = [
   'shared/strategy/comprehensive-strategy.js',
   // ===== M4-19 Generator Runtime（Strategy + Generation Runtime Bundle）=====
   // 显式声明，不自动扫描 shared/generator/ 整目录，避免循环依赖 / Bundle 膨胀 / 初始化顺序失控。
-  // MATH-14：legacy 插件轨道（legacy-adapter / migration-switch / plugins/registry）已删除，
-  // semantic-question-bridge 不被 Strategy 主链引用，故显式加入。
-  'shared/generator/semantic-question-bridge.js'
+  // MATH-14：legacy 插件轨道（legacy-adapter / migration-switch / plugins/registry）已删除；
+  // P28-21：semantic-question-bridge 重复 Legacy 桥已删除（SQ→Legacy 唯一 adapter 见
+  // shared/presentation/render-format.js），故不再纳入 bundle。
 ];
 
 // 浏览器全局 shim：practice.html 已加载这些脚本
@@ -53,15 +53,16 @@ var SHIMS = {
   'shared/core/common.js': 'PluginUtil',
   'shared/catalog/difficulty.js': 'App.Difficulty',
   'shared/catalog/difficulty-static.js': 'App.DifficultyStatic',
-  'shared/knowledge/knowledge-bank.js': 'KnowledgeBankCompat',
+  'shared/knowledge/knowledge-bank.js': 'KnowledgeCompat',
   'shared/knowledge/knowledge-point.js': 'KnowledgePointCompat',
   'shared/knowledge/knowledge-ontology.js': 'KnowledgeOntologyCompat',
   // POL 知识适配边界：页面已以 <script> 加载（knowledge-runtime → knowledge-context → 本 bundle），
   // 注册为委托可让 presentation bundle 复用同一实例，避免内联第二份 KC/Runtime 副本。
-  'shared/orchestration/knowledge-context.js': 'KnowledgeContext',
-  'node:path': '__bundledPathShim',
-  'node:fs': '__bundledFsShim'
+  'shared/orchestration/knowledge-context.js': 'KnowledgeContext'
 };
+
+// P28-29：node:path / node:fs shim 已删除——bundle 内无任何模块 require 它们（均有 try 兜底或根本不用），
+// 属 dead 配置；移除后节点级 path/fs 依赖走对应的普通 require（由调用模块自行保证 Node/浏览器兼容）。
 
 var REQUIRES = /require\(\s*(['"])([^'"]+)\1\s*\)/g;
 
@@ -132,22 +133,8 @@ lines.push('  __defs[id](m, m.exports, __req);');
 lines.push('  return m.exports;');
 lines.push('}');
 
-// path shim（node:path 极简实现）
-lines.push('__defs[\'node:path\'] = function (m) {');
-lines.push('  var posix = {');
-lines.push('    resolve: function (a, b) { return b ? (a.replace(/\\/$/, \'\') + \'/\' + b) : a; },');
-lines.push('    join: function () {');
-lines.push('      var parts = []; for (var i = 0; i < arguments.length; i++) { var p = String(arguments[i]); if (p) parts.push(p.replace(/\\/+$/, \'\')); }');
-lines.push('      return parts.join(\'/\');');
-lines.push('    },');
-lines.push('    dirname: function (p) { var i = p.lastIndexOf(\'/\'); return i === -1 ? \'.\' : p.slice(0, i); },');
-lines.push('    basename: function (p) { var i = p.lastIndexOf(\'/\'); return i === -1 ? p : p.slice(i + 1); },');
-lines.push('    extname: function (p) { var b = posix.basename(p); var i = b.lastIndexOf(\'.\'); return i <= 0 ? \'\' : b.slice(i); },');
-lines.push('    normalize: function (p) { return p; }');
-lines.push('  };');
-lines.push('  posix.posix = posix;');
-lines.push('  m.exports = posix;');
-lines.push('};');
+// path shim（node:path 极简实现）——P28-29 已删除：bundle 内无模块 require 'node:path'，
+// 属 dead shim。若未来再引入需 path 的模块，需同时恢复此 shim 或改走轻量实现。
 
 Object.keys(SHIMS).forEach(function (id) {
   if (id.indexOf('node:') === 0) return;
@@ -190,7 +177,6 @@ lines.push('global.GeneratorRegistry = __req(\'shared/generator/generator-regist
 lines.push('global.CapabilityResolver = __req(\'shared/capability/capability-resolver.js\');');
 lines.push('global.CapabilityModel = __req(\'shared/capability/capability-model.js\');');
 lines.push('global.CapabilityMatrix = __req(\'shared/capability/capability-matrix.js\');');
-lines.push('global.SemanticQuestionBridge = __req(\'shared/generator/semantic-question-bridge.js\');');
 lines.push('global.ComprehensiveStrategy = __req(\'shared/strategy/comprehensive-strategy.js\');');
 lines.push('global.ComplexGen = __req(\'shared/generator/generators/complex.js\');');
 lines.push('global.StrategyBundle = { req: __req, modules: __defs };');

@@ -145,7 +145,7 @@ function makeTheoryQuestion(plan, context, i, kp) {
   };
 }
 
-// P25-06 H2：原 C2_KPS（math-gN-c2-* 竞赛制 legacy ID）已随竞赛 KP 全部剔除，
+// P25-06 H2：原 C2_KPS（math-gN-c2-* 竞赛制 历史 ID）已随竞赛 KP 全部剔除，
 // 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS（[] 泛匹配）。
 function createC2Generator(spec) {
   spec = spec || {};

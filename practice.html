@@ -273,7 +273,8 @@
 <script src="shared/core/common.js"></script>
 <script src="shared/catalog/difficulty.js"></script>
 <script src="shared/catalog/difficulty-static.js"></script>
-<script src="shared/presentation/print.js"></script>
+<!-- P28-30：shared/presentation/print.js 已移出首屏同步链——打印模块仅在 printFile / session.print()
+     调用前由 ensureDeferredReady() 惰性装载（含 ?v 指纹；SW Cache-First 保证离线可打印）。 -->
 <!-- KBL Runtime 单入口 + POL 知识适配 + Frozen Strategy 兼容桥（须先于 strategy bundle） -->
 <script src="shared/knowledge/runtime/knowledge-runtime.js"></script>
 <script src="shared/orchestration/knowledge-context.js"></script>
@@ -302,32 +303,21 @@
 <script src="shared/learner/learner-model.js"></script>
 <script src="shared/learner/learner-storage.js"></script>
 <script src="shared/learner/result-collector.js"></script>
-<!-- M7：统一 Presentation Engine + GenerationEngine（R01-R14）。渲染统一由
-     PresentationRenderer 产出 RenderResult；综合练习分配/规划由 ComprehensiveStrategy
-     （无需重建策略 bundle，独立按需加载）。SVG 生成器(shared/svg-*.js)在 boot 阶段挂载。 -->
-<script src="shared/presentation/render-options.js"></script>
-<script src="shared/presentation/render-result.js"></script>
-<script src="shared/presentation/svg-registry.js"></script>
-<script src="shared/generator/graphic-renderer.js"></script>
-<!-- R-A04：SVG 语义生成器运行时挂载（须先于首次渲染，svg-registry 的懒种子扫描才能捕获）。
-     shared/svg/svg-core.js 提供 SVGUtil；核心渲染族（geometry/calculation/makeTen/chart/diagram/currency）
-     挂载 SVGGenerators.math.*；plugins/svg-*.js 挂载 {clock,area,fraction,dataStats,draw,competition}，
-     经 graphic-renderer → SVGRenderer 派发链产出 <svg>。 -->
-<script src="shared/svg/svg-core.js"></script>
-<script src="shared/svg/svg-geometry.js"></script>
-<script src="shared/svg/svg-calculation.js"></script>
-<script src="shared/svg/svg-make-ten.js"></script>
-<script src="shared/svg/svg-chart.js"></script>
-<script src="shared/svg/svg-diagram.js"></script>
-<script src="shared/svg/svg-currency.js"></script>
-<script src="plugins/svg-clock.js"></script>
-<script src="plugins/svg-area.js"></script>
-<script src="plugins/svg-fraction.js"></script>
-<script src="plugins/svg-data-stats.js"></script>
-<script src="plugins/svg-draw.js"></script>
-<script src="plugins/svg-competition.js"></script>
-<script src="shared/presentation/html-renderer.js"></script>
-<script src="shared/presentation/renderer.js"></script>
+<!-- P28-30 首屏性能治理：渲染栈 / SVG 生成器 / 打印模块不再随首屏同步装载，
+     全部由主流程的 ensureDeferredReady() 在 boot 后即刻顺序惰性装载（见主 IIFE）。
+     装载顺序与旧静态顺序完全一致，保证加载时全局依赖成立：
+       1. print.js（打印模块，仅打印前需要）
+       2. render-options / render-result（M7 渲染选项与契约）
+       3. svg-sanitizer（P28-23 安全边界，须先于 svg-registry）
+       4. svg-registry（SVGRenderer，懒种子扫描会捕获后到生成器）
+       5. graphic-renderer（M4-R11 图形派发门面）
+       6. svg-core + svg-{geometry,calculation,makeTen,chart,diagram,currency}（核心渲染族）
+       7. plugins/svg-{clock,area,fraction,dataStats,draw,competition}（非核心 SVG 插件）
+       8. html-renderer（M7-R02 HTML 渲染器，须先于 renderer.js）
+       9. renderer.js（PresentationRenderer 统一渲染入口，加载时读前述全局）
+     首屏保留的同步重链：Runtime / 能力判定 / 双 bundle / Learner / 编排 / 生成。
+     首次生成/打印前 ensureDeferredReady() 已 resolve，语义与旧同步装载零差异；
+     离线经 sw.js Cache-First（CORE 预缓存 SVG/插件/打印/渲染器）与页面注入 URL 指纹完好。 -->
 <script src="shared/engine/generation-engine.js"></script>
 <!-- D007 修复：浏览器需加载 generation/api.js 才能使 GenerationEngine 走正常路径
      （否则 GenerationAPI 为 null 走回退，回退返回不含 generationId，
@@ -346,6 +336,66 @@
 <script>
 (function () {
   'use strict';
+
+  // ============ P28-30：渲染 / SVG / 打印 延时装载 ============
+  // 首屏不执行：渲染栈、SVG 语义生成器（含非核心插件）、打印模块。这些代码仅在
+  // 首次生成 / 打印前按需装载（boot 即触发，顺序与旧静态顺序一致，保证全局依赖成立）。
+  // 任一文件失败不阻塞：SVG 缺失仅致该题图形缺省（SVGRenderer 返回 ''），文本照常渲染。
+  var DEFERRED_SCRIPTS = [
+    'shared/presentation/print.js',
+    'shared/presentation/render-options.js',
+    'shared/presentation/render-result.js',
+    'shared/presentation/svg-sanitizer.js',
+    'shared/presentation/svg-registry.js',
+    'shared/generator/graphic-renderer.js',
+    'shared/svg/svg-core.js',
+    'shared/svg/svg-geometry.js',
+    'shared/svg/svg-calculation.js',
+    'shared/svg/svg-make-ten.js',
+    'shared/svg/svg-chart.js',
+    'shared/svg/svg-diagram.js',
+    'shared/svg/svg-currency.js',
+    'plugins/svg-clock.js',
+    'plugins/svg-area.js',
+    'plugins/svg-fraction.js',
+    'plugins/svg-data-stats.js',
+    'plugins/svg-draw.js',
+    'plugins/svg-competition.js',
+    'shared/presentation/html-renderer.js',
+    'shared/presentation/renderer.js'
+  ];
+  var _deferredReady = null;
+  // 继承静态脚本的 ?v= 指纹（部署时 add-asset-version.js 注入），与 sw.js 版本缓存键保持一致
+  function deferredVersionQuery() {
+    try {
+      var s = document.querySelector('script[src*="common.js"]');
+      if (s && s.src) {
+        var m = s.src.match(/[?&]v=([^&]+)/);
+        if (m) return '?v=' + encodeURIComponent(m[1]);
+      }
+    } catch (e) { /* 忽略 */ }
+    return '';
+  }
+  function loadDeferredScript(src) {
+    return new Promise(function (resolve) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.async = false; // 顺序执行（与 reduce 链双保险）
+      s.onload = function () { resolve(); };
+      s.onerror = function () { resolve(); }; // 单文件失败不阻塞整体
+      (document.head || document.body).appendChild(s);
+    });
+  }
+  function ensureDeferredReady() {
+    if (!_deferredReady) {
+      var vq = deferredVersionQuery();
+      _deferredReady = DEFERRED_SCRIPTS.reduce(function (p, rel) {
+        return p.then(function () { return loadDeferredScript(rel + vq); });
+      }, Promise.resolve());
+    }
+    return _deferredReady;
+  }
+  // boot 即触发（与关键路径并行下载，任一首次生成/打印门控前通常已就绪）
 
   // ============ 全局状态 ============
   // P3-R04：页面仅保留 UI 状态 + Request 所需字段，无 Plugin / Strategy / Generator 依赖
@@ -495,8 +545,12 @@
   // P1-R01/R03 / P3：统一生成入口（唯一）。页面不再判断 Strategy / Generator / Plugin / Legacy。
   // 关联层：经 PracticeBridge 把 UI 指令翻译给生成层（PracticeSession），并接受 start 反馈。
   // P7-R01: 统一练习入口 —— 由关联层回调 applyExerciseSet 接住生成层反馈。
+  // P28-30：首屏渲染栈 / SVG / 打印为延时装载（ensureDeferredReady），生成前必须就绪——
+  // 渲染链在 start() 内（api.js renderQuestions → PresentationRenderer）将被调用，
+  // 故此处 await 延迟块完成后再触发生成（幂等 Promise，首次之后直过）。
   function generate() {
     if (!window.PracticeBridge) return;
+    ensureDeferredReady().then(function () {
     state.count = Number(state.count) || 20;
     syncTypeCounts();
     window.PracticeBridge.onStartFeedback(applySessionFeedback);
@@ -518,6 +572,7 @@
         raw: { levels: state }
       }
     );
+    });
   }
 
   // 接受生成层 start 的反馈（成功 → 渲染；失败 → 兜底提示）
@@ -677,7 +732,7 @@
 
     function finalizeRender() {
       hideGenProgress(); // 优化点3：揭示完成，收起进度
-      // a11y：为题目卡补齐分组角色与题号标签（与 renderCard 一致）
+      // a11y：为题目卡补齐分组角色与题号标签（卡片结构来自 HTMLRenderer，已含 data-index）
       area.querySelectorAll('.question-card, .problem').forEach(function (card, ci) {
         if (!card.getAttribute('role')) card.setAttribute('role', 'group');
         if (!card.getAttribute('aria-label')) {
@@ -748,6 +803,8 @@
   function collectAnswers() {
     var answers = {};
     document.querySelectorAll('#problemsArea input[data-index], #problemsArea input[data-idx]').forEach(function (inp) {
+      // P28-48：选择题 radio 同组每个都带 data-index，未勾选项不得覆盖（旧逻辑取最后一个 radio 的值）。
+      if ((inp.type === 'radio' || inp.type === 'checkbox') && !inp.checked) return;
       if (inp.hasAttribute('data-index')) {
         answers[inp.getAttribute('data-index')] = inp.value.trim();
       } else if (inp.hasAttribute('data-idx') && inp.hasAttribute('data-field')) {
@@ -824,6 +881,12 @@
 
   // M6-R20：批改结果回灌 Learner Model（知识点级掌握度 / 近期表现 / 错因）。
   // P3-R04：知识点来自 URL 参数（kp/kps），不再依赖插件声明。
+  // P28-32：Learner 数据链逐题对齐（Question→KP→Semantic Target→Answer→Result→Error Pattern→KPS）：
+  //   - 逐题 KP：取 q.knowledgePointId/q.knowledgePoint（legacy 已被 RenderFormat 透传），
+  //     多 KP 会话不再把全部题目记到首个 kpId 下；
+  //   - semanticTarget / spiralLevel：自 legacy 逐题透传（缺失即 null）；
+  //   - errorType：延续 R10——仅接受题面可靠错因，当前无来源则 null。
+  // 批改主流程不受影响（学习记录失败仅 console.warn）。
   function feedLearnerModel(result) {
     if (typeof window.ResultCollector === 'undefined' || typeof window.LearnerStorage === 'undefined' ||
         typeof window.PracticeResult === 'undefined') return;
@@ -839,9 +902,11 @@
         var q = questions[i];
         if (!q) return;
         var userAns = (answers && answers[i] != null) ? answers[i] : '';
+        // P28-32：逐题 KP（RenderFormat 已透传 per-question knowledgePointId）
+        var qkp = (q && (q.knowledgePointId || q.knowledgePoint)) || kpId;
         results.push(window.PracticeResult.create({
           questionId: (q.id != null ? q.id : String(i)),
-          knowledgePointId: kpId,
+          knowledgePointId: qkp,
           correct: ok === true,
           userAnswer: userAns,
           correctAnswer: (result.correctAnswers && result.correctAnswers[i] != null)
@@ -851,6 +916,8 @@
           questionDifficulty: (typeof q.difficulty === 'number') ? q.difficulty : (state.difficulty || null),
           questionType: (q.questionType || q.type || null),
           spiralLevel: (q.spiralLevel != null) ? q.spiralLevel : null,
+          // P28-32：语义目标逐题透传（无则 null，绝不伪造）
+          semanticTarget: (q.semanticTarget != null) ? q.semanticTarget : null,
           errorType: (q.errorType != null) ? q.errorType : null, // R10：仅接受题面可靠错因，当前无来源→null
           status: (ok === true) ? 'correct' : 'wrong',
           timestamp: Date.now()
@@ -897,7 +964,7 @@
       var phHtml = '<div class="result parent-check">' +
         '<div class="score parent">✅ 请家长检查</div>' +
         '<div class="detail">操作题由家长核对完成情况（' + total + ' 题）</div>' +
-        '<div class="tips">' + (tips || '请家长检查书写与画图是否正确') + '</div>' +
+        '<div class="tips">' + esc(tips || '请家长检查书写与画图是否正确') + '</div>' +
         '<div class="redo-wrap"><button class="btn btn-ghost" id="redoAllBtn" style="margin-left:0;">重新生成</button></div></div>';
       var phRa = $('resultArea');
       phRa.innerHTML = phHtml;
@@ -909,7 +976,7 @@
     var html = '<div class="result">' +
       '<div class="score">' + result.score + ' 分</div>' +
       '<div class="detail">答对 ' + result.correct + ' / ' + total + ' 题 · 正确率 ' + (total ? Math.round(result.correct / total * 100) : 0) + '%</div>' +
-      '<div class="tips">' + tips + '</div>' +
+      '<div class="tips">' + esc(tips) + '</div>' +
       '<div class="redo-wrap">' +
       (wrong > 0 ? '<button class="btn btn-ghost" id="redoBtn">错题重做（' + wrong + '）</button>' : '') +
       '<button class="btn btn-ghost" id="redoAllBtn" style="margin-left:8px;">重新生成</button>' +
@@ -982,20 +1049,24 @@
 
   // ============ 打印 ============
   // P6-R04: 打印统一经 Engine 产物（state.lastSemantic）或 DOM 克隆，无 Plugin 依赖。
+  // P28-30：打印经延迟装载的 print.js + 渲染栈（session.print → Print.openFromQuestions →
+  // PresentationRenderer）；故先 ensureDeferredReady() 再打印（幂等，首次之后直过）。
   function printFile() {
-    if (!practiceSession && !state.exerciseSet) return;
-    showLoopToast(state.exerciseSet ? state.exerciseSet.questions.length : 0); // 优化点4：闭环引导
-    // 打印统一经 Engine 产物：单次会话优先 session.print()（走语义题）；
-    // 编排聚合会话（聚合 shim 无 print）回退到已渲染的 #problemsArea 整卷打印。
-    if (practiceSession && typeof practiceSession.print === 'function') {
-      Promise.resolve(practiceSession.print()).catch(function (err) { alert('打印失败：' + err.message); });
-    } else if (window.Print && document) {
-      var area = document.getElementById('problemsArea');
-      var meta = state.exerciseSet && state.exerciseSet.meta;
-      window.Print.open(area, (meta && meta.title) || '练习题', { pageType: 'math' });
-    } else {
-      alert('打印失败：打印模块不可用');
-    }
+    ensureDeferredReady().then(function () {
+      if (!practiceSession && !state.exerciseSet) return;
+      showLoopToast(state.exerciseSet ? state.exerciseSet.questions.length : 0); // 优化点4：闭环引导
+      // 打印统一经 Engine 产物：单次会话优先 session.print()（走语义题）；
+      // 编排聚合会话（聚合 shim 无 print）回退到已渲染的 #problemsArea 整卷打印。
+      if (practiceSession && typeof practiceSession.print === 'function') {
+        Promise.resolve(practiceSession.print()).catch(function (err) { alert('打印失败：' + err.message); });
+      } else if (window.Print && document) {
+        var area = document.getElementById('problemsArea');
+        var meta = state.exerciseSet && state.exerciseSet.meta;
+        window.Print.open(area, (meta && meta.title) || '练习题', { pageType: 'math' });
+      } else {
+        alert('打印失败：打印模块不可用');
+      }
+    });
   }
 
   // 优化点4：生成后闭环引导 Toast（打印→拍照批改→薄弱点追踪）
@@ -1557,6 +1628,9 @@
   // P3-R04：boot 不再加载插件 / 判断 Strategy / Generator / Legacy。
   // 只设置 UI 状态，展示参数面板，并在有知识点参数时自动生成。
   function boot() {
+    // P28-30：boot 即触发渲染/SVG/打印延时装载，与关键路径(bundle/KB)并行下载，
+    // 首次生成/打印门控（ensureDeferredReady）通常即刻就绪，不拖慢首次生成。
+    ensureDeferredReady();
     var rawParams = new URLSearchParams(window.location.search);
     var savedState = StorageManager.loadState();
 
@@ -1656,7 +1730,9 @@
       asmGenerateFromSelection();
     }
 
-    ensureKB.then(initFromUrlSeed).catch(initFromUrlSeed);
+    // P28-30：URL 深链 / 直接打印等 se 自动流程也须在渲染栈 / SVG / 打印就绪后执行
+    //（initFromUrlSeed 内 print 分支直调 PracticeBridge.start 并随即打印）。
+    ensureKB.then(function () { return ensureDeferredReady(); }).then(initFromUrlSeed).catch(initFromUrlSeed);
   }
 
   bindEvents();

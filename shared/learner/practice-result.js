@@ -17,6 +17,9 @@
  *     status,            // 'correct' | 'wrong' | 'unanswered' | 'skipped' | 'redo'
  *     timestamp
  *   }
+ *
+ * P28-31 定位：练习结果的**事实契约**。knowledgePointId 必须源自 SemanticQuestion
+ *   （禁止 UI 猜测）；status/errorType 归一后进入 LearnerModel。本模块不做任何评分/归因。
  */
 (function (global) {
   'use strict';

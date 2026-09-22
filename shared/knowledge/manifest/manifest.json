@@ -1,9 +1,9 @@
 {
   "schemaVersion": "1.0.0",
   "catalogVersion": "math-v1.0.0",
-  "packageVersion": "kbl-math-2026-09-16",
+  "packageVersion": "kbl-math-2026-09-20",
   "buildTool": "tools/kbl/build.js",
-  "buildAt": "2026-09-16T04:30:24.542Z",
+  "buildAt": "2026-09-20T07:24:09.398Z",
   "counts": {
     "knowledgePoints": 375,
     "units": 98,
@@ -21,15 +21,15 @@
     "files": {
       "data/math/curriculum.json": "cacb35c21cc0731aaf4dec56a80e5da257d8de145896d3a7eed79a8274b7f6c1",
       "data/math/g1/knowledge-points.json": "5090721673d97a7e0014994e0c39d689ebe433a57f85db30a919f2cea76fbb4e",
-      "data/math/g2/knowledge-points.json": "0da9c14e9c81d4fedafb785c5c938f231c64e28f809c84aadce2094ac058fcf8",
+      "data/math/g2/knowledge-points.json": "01823406128250f82d136b573c31d6e1b6b567813c2799703c3d51266a2cf87d",
       "data/math/g3/knowledge-points.json": "e9172fb72a912d85c2f08b18be6ac71afebce0f75b055ccf6b4412ba45dbc1f6",
-      "data/math/g4/knowledge-points.json": "0a52645fcc57a3670a94493b11522675b731aa3fd1bcf6070b4056b7d200ac79",
-      "data/math/g5/knowledge-points.json": "2581f91542f2dddb4cf6ed6bcf315300880e7ba723f3fc87bb92638486755058",
+      "data/math/g4/knowledge-points.json": "c4114904e6958b8501ec1c18800de40cc85f0dd728061fb20c13c23140c6d557",
+      "data/math/g5/knowledge-points.json": "730a6119e6795f48778d8268c94ed795f73cc22229164010695033422aac2cd2",
       "data/math/g6/knowledge-points.json": "8102af5485a84672804299f97bfc8a239d48200f08d1c4d3477aafc576ea2b08",
       "relations/math/relations.json": "bedf6cb879cdcd0f17959c684da8fcd9b96021847ca7a33ac6177d28dc934da1",
       "mappings/generation-contract/math.json": "c7a8f8d6ce1a67c02a222706360b5ceb8c6e8808a0baec10ea409955bd87bb0f",
       "index/index.json": "2bdd0282c8694245ab8597f09488c41ce4ce29e44811851e1ea5f5052ad517a3"
     },
-    "rootHash": "18a21dfba5ce951e5024dca74ad92cbeb11c43156e5aa203d3dadc7c70c7704b"
+    "rootHash": "cee1070e5a08a6ad22538380530e6e2580949ca255d6aa9a4dcec41804621df6"
   }
 }

@@ -168,12 +168,15 @@ var A4_PRINTABLE_PX = 718;
     // 构建打印页 HTML：原始样式 + 仅必要的打印覆盖
     // 使用 outerHTML 保留 #problemsArea 容器 id，使原页面对其下卡片的样式作用域
     // （如 .questions-grid .question-card 左对齐）在打印页同样生效，保证排版一致。
+    // P28-23 安全边界：clone 是页面 #problemsArea 的深拷贝 DOM（已由
+    // PresentationRenderer→HTMLRenderer 经安全渲染管线产出，非 raw HTML 字符串）。
+    // outerHTML 仅做 DOM 序列化，不引入用户输入；打印窗口 CSP 已禁 script-src。
     var printHtml = '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n' +
       '<meta charset="UTF-8">\n' +
       '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
       // 安全加固（修复 P1）：打印窗口禁止任何脚本执行，仅允许同源样式与内联样式、图片
       '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; script-src \'none\'; style-src \'self\' \'unsafe-inline\'; img-src \'self\' data:;">\n' +
-      '<title>' + (title || '练习题') + '</title>\n' +
+      '<title>' + escForPrint(title || '练习题') + '</title>\n' +
       originalStyles +
       '<style>\n' +
       '  /* === 打印专用覆盖 === */\n' +
@@ -279,6 +282,9 @@ var A4_PRINTABLE_PX = 718;
     pvOverlay = doc.createElement('div');
     pvOverlay.className = 'pv-overlay';
     pvOverlay.hidden = true;
+    // P28-23 安全边界：此 innerHTML 为静态 UI 模板（工具栏+iframe 外壳），
+    // 不含题目文本/答案/解析等用户内容；用户内容走 iframe.srcdoc（由
+    // buildPrintHtml 产出，CSP 禁 script）。此处非 raw HTML 注入。
     pvOverlay.innerHTML =
       '<div class="pv-toolbar">' +
       '  <span class="pv-title">打印预览</span>' +

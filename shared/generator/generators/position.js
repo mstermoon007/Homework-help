@@ -525,7 +525,7 @@ function createPositionGenerator(spec) {
   };
 }
 
-// P25-06 H2：原 POSITION_KPS（math-gN-m6-* 模块制 legacy ID）已随旧体系 KP 全部剔除，
+// P25-06 H2：原 POSITION_KPS（math-gN-m6-* 模块制 历史 ID）已随旧体系 KP 全部剔除，
 // 对 canonical 375 永不命中；绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function buildAll() {
   return [createPositionGenerator({ id: 'generator:position-direction' })];

@@ -2,7 +2,7 @@
  * shared/engine/knowledge-compat.js — Frozen Strategy bundle 知识兼容桥（构建期接线）
  *
  * 仅为 bundle 内不可改写的冻结 Strategy / Capability 模块提供「旧模块名 → KBL Runtime」委托：
- *   shared/knowledge/knowledge-bank.js    → KnowledgeBankCompat.getEntries
+ *   shared/knowledge/knowledge-bank.js    → KnowledgeCompat.getEntries
  *   shared/knowledge/knowledge-point.js   → KnowledgePointCompat.get
  *   shared/knowledge/knowledge-ontology.js→ KnowledgeOntologyCompat.normalize
  *
@@ -39,7 +39,7 @@
   };
 
   /** knowledge-bank.js 兼容：getEntries(subject, grade) → Practice Context 条目（经 Runtime） */
-  var KnowledgeBankCompat = {
+  var KnowledgeCompat = {
     getEntries: function (subject, grade) {
       var KC = getKC();
       if (!KC) return [];
@@ -49,13 +49,13 @@
 
   global.KnowledgePointCompat = KnowledgePointCompat;
   global.KnowledgeOntologyCompat = KnowledgeOntologyCompat;
-  global.KnowledgeBankCompat = KnowledgeBankCompat;
+  global.KnowledgeCompat = KnowledgeCompat;
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
       KnowledgePointCompat: KnowledgePointCompat,
       KnowledgeOntologyCompat: KnowledgeOntologyCompat,
-      KnowledgeBankCompat: KnowledgeBankCompat
+      KnowledgeCompat: KnowledgeCompat
     };
   }
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

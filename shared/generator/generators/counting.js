@@ -228,7 +228,7 @@ function makeCountingQuestion(plan, context, i, kp) {
   };
 }
 
-// P25-06 H2：原 COUNTING_KPS（math-gN-m10-* 模块制 / math-gN-c3-* 竞赛制 legacy ID）
+// P25-06 H2：原 COUNTING_KPS（math-gN-m10-* 模块制 / math-gN-c3-* 竞赛制 历史 ID）
 // 已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
 // 绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function createCountingGenerator(spec) {

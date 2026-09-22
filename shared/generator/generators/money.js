@@ -518,7 +518,7 @@ function rng() {
   return RNG_HELPER();
 }
 
-// P25-06 H2：原 MONEY_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 legacy ID）
+// P25-06 H2：原 MONEY_KPS（math-gN-mN-* 模块制 / math-gN-c4-* 竞赛制 历史 ID）
 // 已随旧体系 KP 全部剔除，对 canonical 375 永不命中；
 // 绑定 SSOT 在 generator-registry.js CORE_RECORDS。
 function buildAll() {

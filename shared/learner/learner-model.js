@@ -24,6 +24,11 @@
  *
  * R11：Strategy 只能通过本 API 读取，禁止直接读 Storage。
  * R26：normalizeLearnerState() 统一容错（NaN/负数/>1 mastery/非法错因/旧版本数据）。
+ *
+ * P28-31 定位：学习状态基础设施（KnowledgePracticeState 载体 = 逐 KP KpState）。
+ *   只供数据不决策：mastery(EMA)/confidence 是唯一评分入口；recommended* 为非权威默认推荐
+ *   （权威值由 Strategy 层 AdaptiveStrategy 覆盖）；P27-12 统计字段不参与评分。
+ *   禁止：第二套评分系统 / AI 自适应难度 / 复杂推荐模型 / 黑盒评分 / 写 KBL / 伪造学习状态。
  */
 (function (global) {
   'use strict';

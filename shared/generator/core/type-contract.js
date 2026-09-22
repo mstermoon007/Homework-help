@@ -515,7 +515,10 @@
         sq.answer = { value: typeof sq.answer === 'boolean' ? sq.answer : String(sq.answer), acceptable: [] };
       }
       var res = check(qt, sq);
-      if (res.ok) { trace(sq, 'pass', [], []); out.push(sq); continue; }
+      // P28-48：choice 题的作答形态恒为选项点选（optionsPresent 已成立）。
+      // 原生生成器（如 arithmetic 经机械转换路径）可能仍写 answerMode:'input'，
+      // 会让渲染层同时画出 radio 与文本框；enforce 是形态归一收口，统一纠正为 'choice'。
+      if (res.ok) { if (qt === 'choice') sq.answerMode = 'choice'; trace(sq, 'pass', [], []); out.push(sq); continue; }
       var finisher = FORM_BOUND.indexOf(qt) === -1 ? FINISHERS[qt] : null;
       var fixed = null;
       if (finisher) {
@@ -524,6 +527,7 @@
       if (!fixed) { trace(sq, 'drop', res.violations, []); continue; }
       var re = check(qt, sq);
       if (!re.ok) { trace(sq, 'drop', re.violations, fixed.fixed || []); continue; }
+      if (qt === 'choice') sq.answerMode = 'choice';
       trace(sq, 'finish', res.violations, fixed.fixed || []);
       out.push(sq);
     }

@@ -21,7 +21,6 @@ __defs["shared/engine/presentation-engine.js"] = function (module, exports, requ
 'use strict';
 
 var Selector = require("shared/generator/generator-selector.js");
-var GeneratorContract = require("shared/generator/generator-contract.js");
 var RetryLoop = require("shared/generator/retry-loop.js");
 var BatchValidator = require("shared/validator/batch-validator.js");
 var Quality = require("shared/validator/quality-scorer.js");
@@ -29,7 +28,6 @@ var SQ = require("shared/semantic/semantic-question.js");
 var RenderFormat = require("shared/presentation/render-format.js");
 var FeatureFlags = require("shared/catalog/feature-flags.js");
 var Logger = require("shared/state/logger.js");
-var QID = require("shared/knowledge/question-id.js");
 var Metrics = require("shared/state/metrics.js");
 
 
@@ -175,563 +173,15 @@ function generateQuestions(plan, options) {
 }
 
 
-function renderQuestions(questions, options) {
-  if (!Array.isArray(questions) || !questions.length) return '';
-  
-  var isSemantic = questions[0] && questions[0].metadata && (questions[0].knowledgePoint || questions[0].content || questions[0].questionFingerprint);
-  var renderableQuestions = isSemantic
-    ? RenderFormat.toRenderableQuestions(questions)
-    : questions;
-
-  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require("shared/presentation/render.js");
-  try {
-    var html;
-    if (PU && PU.renderGrid) {
-      html = PU.renderGrid(renderableQuestions, options);
-    } else {
-      html = renderableQuestions.map(function (q, i) { return PU.renderCard ? PU.renderCard(q, i, options) : ('<div>Q' + (i+1) + ': ' + (q.q||'') + '</div>'); }).join('');
-    }
-    Metrics.recordRenderResult({ success: true });
-    return html;
-  } catch (e) {
-    Metrics.recordRenderResult({ success: false, errorType: e.name || 'RENDER_ERROR' });
-    throw e;
-  }
-}
-
-
-function checkAnswers(questions, userAnswers, options) {
-  var PU = (typeof global !== 'undefined' && global.PluginUtil) || require("shared/presentation/render.js");
-  if (PU && PU.defaultCheck) {
-    return PU.defaultCheck(questions, userAnswers, options);
-  }
-  
-  var correct = 0;
-  var results = [];
-  questions.forEach(function (q, i) {
-    var ua = userAnswers && userAnswers[i];
-    var isCorrect = false;
-    if (q.inputType === 'choice') {
-      isCorrect = String(ua) === String(q.answer);
-    } else if (q.inputType === 'multi') {
-      isCorrect = Array.isArray(ua) && Array.isArray(q.answer) && JSON.stringify(ua) === JSON.stringify(q.answer);
-    } else {
-      isCorrect = String(ua || '').trim() === String(q.answer || '').trim();
-    }
-    if (isCorrect) correct++;
-    results.push({ index: i, correct: isCorrect, userAnswer: ua, expected: q.answer });
-  });
-  return { score: questions.length ? Math.round(correct / questions.length * 100) : 0, total: questions.length, correct: correct, results: results };
-}
-
-
-function generateAndRender(plan, options) {
-  return generateQuestions(plan, options).then(function (result) {
-    var html = renderQuestions(result.questions, options);
-    return { html: html, questions: result.questions, meta: { semanticQuestions: result.semanticQuestions, quality: result.qualitySummary, validation: result.batchResult } };
-  });
-}
 
 module.exports = {
   generateQuestions: generateQuestions,
-  renderQuestions: renderQuestions,
-  checkAnswers: checkAnswers,
-  generateAndRender: generateAndRender,
   RenderFormat: RenderFormat
 };
 
 
 if (typeof window !== 'undefined') window.PresentationEngine = module.exports;
 if (typeof global !== 'undefined') global.PresentationEngine = module.exports;
-};
-__defs["shared/generation/generation-core.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var isBrowser = typeof window !== 'undefined';
-
-  var GenerationContract = (function () {
-    try { return require("shared/generation/generation-contract.js"); } catch (e) { return null; }
-  })() || (typeof global !== 'undefined' ? global.GenerationContract : null);
-  var Selector = (function () {
-    try { return require("shared/generator/generator-selector.js"); } catch (e) { return null; }
-  })() || (typeof global !== 'undefined' ? global.GeneratorSelector : null);
-  var RetryLoop = (function () {
-    try { return require("shared/generator/retry-loop.js"); } catch (e) { return null; }
-  })() || (typeof global !== 'undefined' ? global.RetryLoop : null);
-  var SQ = (function () {
-    try { return require("shared/semantic/semantic-question.js"); } catch (e) { return null; }
-  })() || (typeof global !== 'undefined' ? global.SemanticQuestion : null);
-
-  var MAX_CELL_RETRIES = 3;
-
-  
-  var _deps = {};
-  var DEP_GLOBAL_KEYS = {
-    selector: 'GeneratorSelector',
-    retryLoop: 'RetryLoop',
-    semanticQuestion: 'SemanticQuestion'
-  };
-  function getDep(name) {
-    if (_deps[name]) return _deps[name];
-    var key = DEP_GLOBAL_KEYS[name];
-    var g = (typeof global !== 'undefined') && global[key];
-    if (g) _deps[name] = g;
-    return _deps[name];
-  }
-  function getSelector() { return Selector || getDep('selector'); }
-  function getRetryLoop() { return RetryLoop || getDep('retryLoop'); }
-  function getSQ() { return SQ || getDep('semanticQuestion'); }
-
-  
-  function collectQuestions(result) {
-    var arr = (result && result.questions) || [];
-    return Array.isArray(arr) ? arr : [];
-  }
-
-  
-  function executeCell(cell, options) {
-    options = options || {};
-    var contract = GenerationContract;
-    var c = contract ? contract.normalizeCell(cell) : cell;
-    if (!c || !c.kpId || !c.questionType) {
-      var badErr = new Error('GenerationCore: 非法 Cell（缺 kpId 或 questionType）');
-      return Promise.resolve({ questions: [], failures: [{ cell: c, error: badErr },], retries: 0 });
-    }
-
-    var baseSeed = options.seed || null;
-    var seenKeys = options.seenKeys || null;
-    var mathSeenKeys = options.mathSeenKeys || null;
-    var maxCellRetries = options.maxRetries != null ? options.maxRetries : MAX_CELL_RETRIES;
-
-    var selector = getSelector();
-    var retryLoop = getRetryLoop();
-    if (!selector || !retryLoop || !getSQ()) {
-      var depErr = new Error('GenerationCore: 依赖不可用（selector/retryLoop/semanticQuestion）');
-      return Promise.resolve({ questions: [], failures: [{ cell: c, error: depErr }], retries: 0 });
-    }
-
-    
-    var sp = {
-      knowledgePointIds: [c.kpId],
-      questionTypeId: c.questionType,
-      difficulty: c.difficulty,
-      count: c.count,
-      seed: baseSeed,
-      constraints: Object.assign({}, c.context || {})
-    };
-
-    var selection;
-    try {
-      selection = selector.selectGenerator(sp, { mode: 'native' });
-    } catch (e) {
-      return Promise.resolve({ questions: [], failures: [{ cell: c, error: e }], retries: 0 });
-    }
-    if (!selection || !selection.record) {
-      return Promise.resolve({
-        questions: [],
-        failures: [{ cell: c, error: new Error('无可用 Generator: ' + c.kpId + '/' + c.questionType) }],
-        retries: 0
-      });
-    }
-    var generator = selector.instantiate(selection, selection.plugin);
-    if (!generator) {
-      return Promise.resolve({
-        questions: [],
-        failures: [{ cell: c, error: new Error('Generator 实例化失败: ' + selection.record.id) }],
-        retries: 0
-      });
-    }
-
-    var attempts = 0;
-    return retryLoop.generateWithRetry(
-      function (p) { return generator.generate(p); },
-      sp,
-      {
-        generatorId: selection.record.id,
-        generatorVersion: selection.record.version || '1.0.0',
-        maxRetries: maxCellRetries,
-        validatorEnabled: options.skipValidation !== true,
-        seed: baseSeed,
-        validatorContext: {
-          generatorId: selection.record.id,
-          seed: baseSeed,
-          seenKeys: seenKeys,
-          mathSeenKeys: mathSeenKeys,
-          plan: sp
-        }
-      }
-    ).then(function (result) {
-      var questions = collectQuestions(result);
-      var failure = null;
-      
-      if (!result.success && (!questions || questions.length === 0)) {
-        failure = {
-          cell: c,
-          error: new Error(((result.error || 'GENERATION_FAILED') + (result.message ? ': ' + result.message : ''))),
-          retries: result.retries || 0
-        };
-      }
-      return {
-        questions: questions,
-        failures: failure ? [failure] : [],
-        retries: result.retries || 0
-      };
-    }).catch(function (err) {
-      return {
-        questions: [],
-        failures: [{ cell: c, error: err, retries: attempts }],
-        retries: attempts
-      };
-    });
-  }
-
-  
-  function execute(plan, options) {
-    options = options || {};
-    var contract = GenerationContract;
-    var normPlan = contract ? contract.normalizePlan(plan || {}) : (plan || { cells: [] });
-    var cells = (Array.isArray(normPlan.cells) ? normPlan.cells : []).concat();
-    var targetTotal = normPlan.targetTotal || cells.reduce(function (n, c) { return n + (c.count || 0); }, 0);
-
-    
-    var seenKeys = new Set();
-    var mathSeenKeys = new Map();
-    if (options.previousSeenKeys) {
-      (options.previousSeenKeys.forEach ? options.previousSeenKeys : []).forEach(function (k) { seenKeys.add(k); });
-    }
-    if (options.previousMathSeenKeys) {
-      var mk = options.previousMathSeenKeys;
-      Object.keys(mk || {}).forEach(function (k) { mathSeenKeys.set(k, mk[k]); });
-    }
-
-    var allQuestions = [];
-    var allFailures = [];
-    var retryTotal = 0;
-    var seq = Promise.resolve();
-    cells.forEach(function (cell) {
-      seq = seq.then(function () {
-        return executeCell(cell, {
-          seenKeys: seenKeys,
-          mathSeenKeys: mathSeenKeys,
-          skipValidation: options.skipValidation,
-          maxRetries: options.maxRetries,
-          seed: options.seed
-        }).then(function (res) {
-          allQuestions.push.apply(allQuestions, res.questions);
-          retryTotal += res.retries;
-          (res.failures || []).forEach(function (f) { allFailures.push(f); });
-          
-          (res.questions || []).forEach(function (sq) {
-            if (sq && sq.questionFingerprint) seenKeys.add(sq.questionFingerprint);
-          });
-        });
-      });
-    });
-
-    return seq.then(function () {
-      var generated = allQuestions.length;
-      var failures = allFailures;
-      var metadata = {
-        retryTotal: retryTotal,
-        generatorIds: [],
-        seenKeys: seenKeys,
-        request: normPlan
-      };
-      if (contract) {
-        return contract.makeResult(allQuestions, { targetTotal: targetTotal, requestedCount: normPlan.requestedCount }, targetTotal - generated, failures, metadata);
-      }
-      var status = generated === 0 ? 'FAILED' : (generated < targetTotal ? 'PARTIAL' : 'SUCCESS');
-      return {
-        questions: allQuestions,
-        generatedCount: generated,
-        plannedCount: targetTotal,
-        shortfall: Math.max(0, targetTotal - generated),
-        failures: failures,
-        metadata: metadata,
-        status: status
-      };
-    });
-  }
-
-  function inject(deps) {
-    if (deps) {
-      for (var k in deps) {
-        if (Object.prototype.hasOwnProperty.call(deps, k)) _deps[k] = deps[k];
-      }
-    }
-    return API;
-  }
-
-  var API = {
-    execute: execute,
-    executeCell: executeCell,
-    MAX_CELL_RETRIES: MAX_CELL_RETRIES,
-    inject: inject
-  };
-
-  global.GenerationCore = API;
-  if (global.App && typeof global.App === 'object') global.App.GenerationCore = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof globalThis !== 'undefined' ? globalThis : (typeof global !== 'undefined' ? global : this));
-};
-__defs["shared/generator/generator-contract.js"] = function (module, exports, require) {
-
-'use strict';
-
-var SQ = require("shared/semantic/semantic-question.js");
-var Pipeline = require("shared/validator/validation-pipeline.js");
-var BatchValidator = require("shared/validator/batch-validator.js");
-var RetryLoop = require("shared/generator/retry-loop.js");
-var QID = require("shared/knowledge/question-id.js");
-
-
-var GENERATOR_CONTRACT = {
-  
-  REQUIRED_FIELDS: ['id', 'generate'],
-
-  
-  PLAN_SCHEMA: {
-    knowledgePointId: { required: true, type: 'string' },
-    questionTypeId: { required: true, type: 'string' },
-    difficulty: { required: true, type: 'number', min: 1, max: 10 },
-    count: { required: true, type: 'number', min: 1 },
-    seed: { required: false, type: 'string' },
-    constraints: { required: false, type: 'object' },
-    planId: { required: false, type: 'string' }
-  },
-
-  
-  OUTPUT_SCHEMA: {
-    
-    items: {
-      id: { type: 'string', required: true },
-      version: { type: 'number', required: true },
-      knowledgePoint: { type: 'string', required: true },
-      difficulty: { type: 'number', required: true },
-      question: { type: 'object', required: true },
-      answer: { type: 'object', required: true },
-      metadata: { type: 'object', required: true }
-    }
-  }
-};
-
-
-function createGenerator(impl) {
-  impl = impl || {};
-  if (typeof impl.generate !== 'function') {
-    throw new Error('Generator 必须实现 generate(plan) 方法');
-  }
-
-  var generatorId = impl.id || 'generator:unknown';
-  var generatorVersion = impl.version || '1.0.0';
-  var capabilities = impl.capabilities || [];
-  var knowledgePoints = impl.knowledgePoints || [];
-
-  var gen = {
-    id: generatorId,
-    version: generatorVersion,
-    capabilities: capabilities,
-    knowledgePoints: knowledgePoints,
-
-    
-    generate: function (plan) {
-      
-      var primaryKp = (Array.isArray(plan && plan.knowledgePointIds) && plan.knowledgePointIds[0]) ||
-        (plan && typeof plan.knowledgePointId === 'string' ? plan.knowledgePointId : null);
-      if (!primaryKp || !plan.questionTypeId || plan.difficulty == null) {
-        throw new Error('Plan 缺少必填字段: knowledgePointIds, questionTypeId, difficulty');
-      }
-
-      
-      var baseSeed = plan.seed || require("shared/knowledge/question-id.js").generateBaseSeed();
-      var seeds = require("shared/knowledge/question-id.js").generateSeedsForPlan({
-        seed: baseSeed,
-        generatorId: impl.id || 'unknown',
-        count: plan.count || 1
-      });
-
-      
-      var questions = [];
-      for (var i = 0; i < (plan.count || 1); i++) {
-        var itemPlan = Object.assign({}, plan, { seed: seeds[i], index: i });
-        var sq = impl.generateItem ? impl.generateItem(itemPlan) : impl.generate(itemPlan);
-        
-        var arr = Array.isArray(sq) ? sq : [sq];
-        arr.forEach(function (item) {
-          questions.push(normalizeOutput(item, itemPlan, i));
-        });
-      }
-
-      
-      if (questions.length > (plan.count || 1)) {
-        questions = questions.slice(0, plan.count || 1);
-      }
-
-      return questions.length === 1 ? questions[0] : questions;
-    },
-
-    
-    generateBatch: function (plan) {
-      var result = this.generate(plan);
-      return Array.isArray(result) ? result : [result];
-    }
-  };
-
-  return gen;
-}
-
-
-function normalizeOutput(item, plan, index) {
-  if (item && item.id && item.metadata && item.metadata.generator) {
-    return item; 
-  }
-  
-  return require("shared/semantic/semantic-question.js").createSemanticQuestion(Object.assign({}, item, {
-    generator: item.generator || 'generator:' + (item.id || 'unknown'),
-    generatorVersion: item.generatorVersion || '1.0.0',
-    seed: plan.seed,
-    index: index,
-    knowledgePoint: (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) || plan.knowledgePointId,
-    difficulty: plan.difficulty,
-    questionType: plan.questionTypeId
-  }));
-}
-
-
-var FORBIDDEN_PATTERNS = [
-  { pattern: /\bMath\.random\b/, label: 'Math.random（随机数必须由注入的随机源提供）' },
-  { pattern: /\bdocument\.(getElementById|querySelector|querySelectorAll|createElement|write|body|head)\b/, label: 'DOM 读取/操作' },
-  { pattern: /\bwindow\.(document|location|alert|confirm|prompt)\b/, label: 'window UI 操作' },
-  { pattern: /\.innerHTML\b|\.outerHTML\b|\.insertAdjacentHTML\b/, label: '直接生成 HTML' },
-  { pattern: /<svg\b|createElementNS\s*\(\s*['"`]http:\/\/www\.w3\.org\/2000\/svg|\.setAttributeNS\s*\(/, label: '直接生成 SVG' },
-  { pattern: /\bsvg\s*[:=]\s*['"`]/, label: 'SVG 字符串字面量（必须剥离至 GraphicRenderer）' },
-  { pattern: /\bg\.appendChild\b|\bdocument\.createElementNS\b|\btextContent\s*=\s*['"`]/, label: 'DOM 渲染代码' },
-  { pattern: /\bparamsFor\s*\(|\bdiffLevel\s*\(|\bcreateProfile\s*\(|\bconsume\s*\(/, label: '自行决定全局难度（必须消费 plan.difficulty/constraints）' }
-];
-
-
-var GENERATOR_DIFFICULTY_PATTERNS = [
-  { pattern: /\bif\s*\([^)]*\bdifficulty\b[^)]*(===|==|!==|!=|<|>|<=|>=)/, label: '难度硬编码条件（if difficulty === …，规则必须迁移至 Strategy）' },
-  { pattern: /\bif\s*\([^)]*\bgrade\b[^)]*(===|==|!==|!=|<|>|<=|>=)/, label: '年级硬编码条件（if grade === …，规则必须迁移至 Strategy）' }
-];
-
-
-var FORBIDDEN_KEYS = ['render', 'check', 'html', 'svg', 'generate', 'generator', 'template', 'execute'];
-
-var SUBJECTS = { math: 'math' };
-
-function isEmptyGraphic(g) {
-  if (g == null || typeof g !== 'object') return false;
-  return (g.type == null) && (g.subtype == null) && (g.svg == null) &&
-    (g.params == null || Object.keys(g.params).length === 0);
-}
-
-
-function validateGeneratorContract(g) {
-  var errors = [];
-  var warnings = [];
-
-  if (!g || typeof g !== 'object') {
-    return { valid: false, errors: ['GeneratorContract 必须是对象'], warnings: warnings };
-  }
-
-  if (typeof g.generate !== 'function') errors.push('generate(plan) 必须是函数');
-  if (typeof g.supports !== 'function') errors.push('supports(plan) 必须是函数');
-
-  return { valid: errors.length === 0, errors: errors, warnings: warnings };
-}
-
-
-function runGeneratorWithValidation(gen, plan, context) {
-  context = context || {};
-  var validatorEnabled = context.validatorEnabled !== false;
-  var maxRetries = context.maxRetries || 3;
-
-  if (!validatorEnabled) {
-    return Promise.resolve(gen.generate(plan)).then(function (questions) {
-      return { questions: Array.isArray(questions) ? questions : [questions], validationResults: [], retries: 0, success: true };
-    });
-  }
-
-  return require("shared/generator/retry-loop.js").generateWithRetry(
-    function (p) { return gen.generate(p); },
-    plan,
-    { generatorId: gen.id, generatorVersion: gen.version, maxRetries: maxRetries, validatorEnabled: true }
-  );
-}
-
-
-function validateSemanticQuestion(q) {
-  var errors = [];
-
-  if (!q || typeof q !== 'object') {
-    return { valid: false, errors: ['SemanticQuestion 必须是对象'] };
-  }
-
-  if (!q.knowledgePointId || typeof q.knowledgePointId !== 'string') errors.push('knowledgePointId 必填');
-  var QTR = require("shared/knowledge/question-type-registry.js");
-  var qTypeValid = QTR.has(q.questionType) || SQ.Schema.isValidQuestionType(q.questionType) || q.questionType === 'read-aloud';
-  if (!q.questionType || !qTypeValid) errors.push('questionType 非法: ' + q.questionType);
-  if (q.difficulty == null || typeof q.difficulty !== 'number') errors.push('difficulty 必填（数字）');
-  if (q.difficultyParams == null || typeof q.difficultyParams !== 'object') {
-    errors.push('difficultyParams 必填');
-  } else {
-    ['level', 'scale', 'steps'].forEach(function (k) {
-      if (typeof q.difficultyParams[k] !== 'number') errors.push('difficultyParams.' + k + ' 必填（数字）');
-    });
-  }
-  if (q.numberRange == null || typeof q.numberRange.min !== 'number' || typeof q.numberRange.max !== 'number' || q.numberRange.min > q.numberRange.max) {
-    errors.push('numberRange 非法: ' + JSON.stringify(q.numberRange));
-  }
-  
-  var answerMode = q.answerMode || 'input';
-  if (answerMode !== 'input' && answerMode !== 'read-aloud') {
-    errors.push('answerMode 非法: ' + answerMode);
-  }
-  if (answerMode === 'input' && q.answer == null) errors.push('answer 必填（input 模式）');
-  if (q.prompt == null || typeof q.prompt !== 'string') errors.push('prompt 必填（字符串）');
-
-  
-  if (q.graphic != null && !isEmptyGraphic(q.graphic)) {
-    if (typeof q.graphic !== 'object' || q.graphic === null) {
-      errors.push('graphic 必须是 { type, subtype, params } 对象');
-    } else {
-      if (typeof q.graphic.type !== 'string' || q.graphic.type.length === 0) {
-        errors.push('graphic.type 必填（字符串）');
-      }
-      if (q.graphic.subtype != null && typeof q.graphic.subtype !== 'string') {
-        errors.push('graphic.subtype 必须是字符串');
-      }
-      if (q.graphic.params != null && typeof q.graphic.params !== 'object') {
-        errors.push('graphic.params 必须是对象');
-      }
-      if (typeof q.graphic.svg === 'string') {
-        errors.push('graphic 禁止内嵌 SVG 字符串（必须剥离至 GraphicRenderer）');
-      }
-    }
-  }
-
-  FORBIDDEN_KEYS.forEach(function (k) {
-    if (q[k] !== undefined) errors.push('SemanticQuestion 禁止字段: ' + k + '（渲染/执行契约不得进入语义层）');
-  });
-
-  return { valid: errors.length === 0, errors: errors };
-}
-
-module.exports = {
-  SUBJECTS: SUBJECTS,
-  FORBIDDEN_PATTERNS: FORBIDDEN_PATTERNS,
-  GENERATOR_DIFFICULTY_PATTERNS: GENERATOR_DIFFICULTY_PATTERNS,
-  FORBIDDEN_KEYS: FORBIDDEN_KEYS,
-  GENERATOR_CONTRACT: GENERATOR_CONTRACT,
-  createGenerator: createGenerator,
-  validateGeneratorContract: validateGeneratorContract,
-  runGeneratorWithValidation: runGeneratorWithValidation,
-  canonSubject: function (s) { return (s || 'math').toLowerCase(); },
-  validateSemanticQuestion: validateSemanticQuestion
-};
 };
 __defs["shared/generator/retry-loop.js"] = function (module, exports, require) {
 
@@ -1967,8 +1417,14 @@ function toRenderableQuestion(sq) {
   var inputType = inputTypeMap[answerMode] || 'text';
 
   var options = null;
-  if (inputType === 'choice' && Array.isArray(sq.distractors) && sq.distractors.length) {
-    options = sq.distractors.map(function (d) { return d.value; });
+  
+  var rawOptions = (Array.isArray(sq.options) && sq.options.length) ? sq.options
+    : (Array.isArray(sq.distractors) && sq.distractors.length) ? sq.distractors
+      : (sq.data && Array.isArray(sq.data.options) && sq.data.options.length) ? sq.data.options : null;
+  if (inputType === 'choice' && rawOptions) {
+    options = rawOptions.map(function (d) {
+      return (d && typeof d === 'object') ? (d.label != null ? d.label : d.value) : d;
+    });
     var correct = sq.answer && sq.answer.value != null ? coerceScalar(sq.answer.value) : '';
     if (correct && options.indexOf(correct) === -1) {
       var seedStr = (sq.seed != null ? String(sq.seed)
@@ -1983,7 +1439,10 @@ function toRenderableQuestion(sq) {
     id: sq.id,
     q: sq.prompt || (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt) || '',
     text: sq.prompt || (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt) || '',
-    answer: sq.answer && sq.answer.value != null ? sq.answer.value : (sq.answer ? sq.answer.value : null),
+    
+    answer: (sq.answer && sq.answer.value != null) ? sq.answer.value
+      : (sq.answer && Array.isArray(sq.answer.acceptable) && sq.answer.acceptable.length) ? sq.answer.acceptable[0]
+        : (sq.answer ? sq.answer.value : null),
     inputType: inputType,
     options: options,
     type: sq.questionType || sq.type || sq.skill || 'calc',
@@ -2002,7 +1461,15 @@ function toRenderableQuestion(sq) {
     numberRange: sq.numberRange,
     render: sq.render || null,
     check: sq.check || null,
-    svg: sq.svg || (sq.graphic && sq.graphic.params && (sq.graphic.params.rawSvg || sq.graphic.params.legacySvg)) || null
+    svg: sq.svg || (sq.graphic && sq.graphic.params && (sq.graphic.params.rawSvg || sq.graphic.params.legacySvg)) || null,
+    
+    
+    
+    semanticTarget: sq.semanticTarget != null ? sq.semanticTarget : null,
+    spiralLevel: sq.spiralLevel != null ? sq.spiralLevel : (sq.constraints && sq.constraints.spiralLevel != null ? sq.constraints.spiralLevel : null),
+    errorType: sq.errorType != null ? sq.errorType : null,
+    
+    __semantic: sq
   };
 }
 
@@ -2210,116 +1677,6 @@ __defs["shared/state/logger.js"] = function (module, exports, require) {
   }
 })(typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
 };
-__defs["shared/knowledge/question-id.js"] = function (module, exports, require) {
-
-'use strict';
-
-var Rng = require("shared/generator/core/rng.js");
-
-var ID_PREFIX = 'q';
-var SEED_DELIMITER = '|';
-var SEED_PART_DELIMITER = ':';
-var SEED_COUNTER = 0;
-
-
-function generateQuestionId(seed, context) {
-  var rng = Rng.createSeededRandom(seed);
-  var parts = [ID_PREFIX];
-
-  
-  var ctxStr = '';
-  if (context) {
-    ctxStr = (context.generatorId || '') + SEED_DELIMITER +
-             (context.index != null ? context.index : '') + SEED_DELIMITER +
-             (context.knowledgePointId || '') + SEED_DELIMITER +
-             (context.difficulty != null ? context.difficulty : '') + SEED_DELIMITER +
-             (context.questionType || '');
-  }
-  var hash = Rng.hashSeed(String(seed) + ctxStr);
-  parts.push(hash.toString(36));
-
-  
-  
-
-  return parts.join('_');
-}
-
-
-function deriveSeed(baseSeed, generatorId, index) {
-  var cleanBase = String(baseSeed || 'auto').replace(/\|/g, '-');
-  var cleanGen = String(generatorId).replace(/\|/g, '-');
-  return [cleanBase, cleanGen, index].join(SEED_DELIMITER);
-}
-
-
-function generateSeedsForPlan(plan) {
-  var base = plan.seed || 'plan-' + Date.now();
-  var genId = plan.generatorId || 'unknown';
-  var count = plan.count || 1;
-  var seeds = [];
-  for (var i = 0; i < count; i++) {
-    seeds.push(deriveSeed(base, genId, i));
-  }
-  return seeds;
-}
-
-
-function parseSeed(seedStr) {
-  if (!seedStr) return { base: null, generatorId: null, index: null, raw: null };
-  var parts = seedStr.split(SEED_DELIMITER);
-  if (parts.length >= 3) {
-    return {
-      base: parts[0],
-      generatorId: parts[1],
-      index: parseInt(parts[2], 10),
-      raw: seedStr
-    };
-  }
-  return { base: seedStr, generatorId: null, index: null, raw: seedStr };
-}
-
-
-function generateBaseSeed(seed) {
-  if (seed != null) return String(seed);
-  
-  SEED_COUNTER = (SEED_COUNTER || 0) + 1;
-  return 'auto-' + Date.now().toString(36) + '-' + SEED_COUNTER.toString(36);
-}
-
-
-function normalizeVersion(v) {
-  if (typeof v === 'string' && /^\d+\.\d+\.\d+/.test(v)) return v;
-  var n = parseInt(v, 10);
-  if (!isNaN(n)) return n + '.0.0';
-  return '1.0.0';
-}
-
-
-function createMetadata(opts) {
-  opts = opts || {};
-  return {
-    generator: opts.generatorId || null,
-    generatorVersion: normalizeVersion(opts.generatorVersion),
-    seed: opts.seed || null,
-    planId: opts.planId || null,
-    timestamp: opts.timestamp || new Date().toISOString(),
-    retryCount: opts.retryCount || 0,
-    validationScore: null,
-    tags: opts.tags || []
-  };
-}
-
-module.exports = {
-  generateQuestionId: generateQuestionId,
-  deriveSeed: deriveSeed,
-  generateSeedsForPlan: generateSeedsForPlan,
-  parseSeed: parseSeed,
-  generateBaseSeed: generateBaseSeed,
-  normalizeVersion: normalizeVersion,
-  createMetadata: createMetadata,
-  Rng: Rng  
-};
-};
 __defs["shared/state/metrics.js"] = function (module, exports, require) {
 
 (function (global) {
@@ -2519,378 +1876,6 @@ __defs["shared/state/metrics.js"] = function (module, exports, require) {
   }
 })(typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
 };
-__defs["shared/generation/generation-contract.js"] = function (module, exports, require) {
-
-(function (global) {
-  'use strict';
-
-  var VERSION = 1;
-
-  
-  var QuestionTypeRegistry = (typeof require === 'function')
-    ? (function () { try { return require("shared/knowledge/question-type-registry.js"); } catch (e) { return null; } })()
-    : (global.QuestionTypeRegistry || null);
-  var CANONICAL_TYPES = (QuestionTypeRegistry && QuestionTypeRegistry.all)
-    ? QuestionTypeRegistry.all().map(function (t) { return t.id; })
-    : ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
-
-  
-  var GENERATION_CONTEXT_FIELDS = [
-    'subject', 'grade', 'difficulty', 'selectLevel', 'style', 'expectedAnswerStyle',
-    'subtype', 'cognitiveLevel', 'spiralLevel', 'max_spiral_level',
-    'customParams', 'settings', 'allowDifficultyOverride',
-    'adaptive', 'adaptiveMode', 'adaptiveDelta', 'learnerProfile'
-  ];
-  
-  var PLANNING_CONTEXT_FIELDS = ['combine', 'planLevel', 'typeCounts', 'perTypeCount', 'count'];
-
-  
-  
-  
-  
-  
-  
-  
-  
-  function normalizeCell(raw) {
-    var c = raw || {};
-    var count = Math.floor(Number(c.count));
-    if (!Number.isFinite(count) || count < 1) count = 1;
-    var difficulty = Number(c.difficulty);
-    if (!Number.isFinite(difficulty)) difficulty = 5;
-    difficulty = Math.max(1, Math.min(10, difficulty));
-    var ctx = {};
-    if (c.context && typeof c.context === 'object') {
-      Object.keys(c.context).forEach(function (k) {
-        if (GENERATION_CONTEXT_FIELDS.indexOf(k) !== -1) ctx[k] = c.context[k];
-      });
-    }
-    
-    var type = c.questionType || (c.context && c.context.questionType);
-    return {
-      kpId: String(c.kpId || (c.context && c.context.kpId) || ''),
-      questionType: String(type || ''),
-      difficulty: difficulty,
-      count: count,
-      context: ctx
-    };
-  }
-
-  function isValidCell(cell) {
-    return !!(cell && typeof cell.kpId === 'string' && cell.kpId &&
-      CANONICAL_TYPES.indexOf(cell.questionType) !== -1 &&
-      typeof cell.difficulty === 'number' && cell.difficulty >= 1 && cell.difficulty <= 10 &&
-      Number.isInteger(cell.count) && cell.count >= 1);
-  }
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  function normalizePlan(raw) {
-    var p = raw || {};
-    var plan = {
-      cells: (Array.isArray(p.cells) ? p.cells : []).map(normalizeCell),
-      targetTotal: Number(p.targetTotal) || 0,
-      requestedCount: Number(p.requestedCount) || 0,
-      selectedTypes: Array.isArray(p.selectedTypes) ? p.selectedTypes.slice() : [],
-      selectedKPs: Array.isArray(p.selectedKPs) ? p.selectedKPs.slice() : []
-    };
-    if (typeof p.explicitCombo === 'boolean') plan.explicitCombo = p.explicitCombo;
-    if (p.meta && typeof p.meta === 'object') plan.meta = p.meta;
-    return plan;
-  }
-
-  
-  
-  function makeStrategyPlan(cell, seedOverride) {
-    return {
-      knowledgePointIds: [cell.kpId],
-      questionTypeId: cell.questionType,
-      difficulty: cell.difficulty,
-      count: cell.count,
-      seed: seedOverride || null,
-      constraints: Object.assign({}, cell.context)
-    };
-  }
-
-  
-  
-  function makeCandidate(cell, generatorId, rawItems) {
-    return {
-      cell: cell,
-      generatorId: String(generatorId || ''),
-      rawItems: Array.isArray(rawItems) ? rawItems : [],
-      attempts: 1
-    };
-  }
-
-  
-  
-  function makeValidationResult(valid, errors, warnings, checks) {
-    return {
-      valid: !!valid,
-      errors: Array.isArray(errors) ? errors : [],
-      warnings: Array.isArray(warnings) ? warnings : [],
-      checks: checks || {},
-      filteredItems: []
-    };
-  }
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  function makeResult(questions, plan, shortfall, failures, metadata) {
-    var requested = (plan && plan.targetTotal) || 0;
-    var generated = Array.isArray(questions) ? questions.length : 0;
-    var status = generated === 0 ? 'FAILED' : (generated < requested ? 'PARTIAL' : 'SUCCESS');
-    return {
-      questions: Array.isArray(questions) ? questions : [],
-      generatedCount: generated,
-      plannedCount: requested,
-      shortfall: requested - generated,
-      failures: Array.isArray(failures) ? failures : [],
-      metadata: metadata || {},
-      status: status
-    };
-  }
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  var API = {
-    VERSION: VERSION,
-    CANONICAL_TYPES: CANONICAL_TYPES,
-    GENERATION_CONTEXT_FIELDS: GENERATION_CONTEXT_FIELDS,
-    PLANNING_CONTEXT_FIELDS: PLANNING_CONTEXT_FIELDS,
-    normalizeCell: normalizeCell,
-    isValidCell: isValidCell,
-    normalizePlan: normalizePlan,
-    makeStrategyPlan: makeStrategyPlan,
-    makeCandidate: makeCandidate,
-    makeValidationResult: makeValidationResult,
-    makeResult: makeResult
-  };
-
-  global.GenerationContract = API;
-  if (global.App && typeof global.App === 'object') global.App.GenerationContract = API;
-  if (typeof module !== 'undefined' && module.exports) module.exports = API;
-})(typeof globalThis !== 'undefined' ? globalThis : (typeof global !== 'undefined' ? global : this));
-};
-__defs["shared/validator/validation-pipeline.js"] = function (module, exports, require) {
-
-'use strict';
-
-var Validator = require("shared/validator/question-validator.js");
-var Schema = require("shared/schemas/semantic-question.schema.js");
-var answerValidator = require("shared/validator/answer-validator.js");
-var difficultyValidator = require("shared/validator/difficulty-validator.js");
-var duplicateValidator = require("shared/validator/duplicate-validator.js");
-var kpCoverageValidator = require("shared/validator/kp-coverage-validator.js");
-var compositeValidator = require("shared/validator/composite-validator.js");
-var difficultyIntegrityValidator = require("shared/validator/difficulty-integrity-validator.js");
-var duplicateIntegrityValidator = require("shared/validator/duplicate-integrity-validator.js");
-var kpSemanticValidator = require("shared/validator/kp-semantic-validator.js");
-
-var ERROR_CODES = Validator.ERROR_CODES;
-var SEVERITY = Validator.SEVERITY;
-
-
-
-
-
-
-var PIPELINE_LAYERS = [
-  {
-    name: 'layer1-critical',
-    steps: [
-      { name: 'schema', fn: Validator.validateSchemaOnly, required: true },
-      { name: 'answer', fn: answerValidator.validateAnswer, required: true },
-      { name: 'kpCoverage', fn: kpCoverageValidator.validateKpCoverage, required: true }
-    ],
-    stopOnFailure: true  
-  },
-  {
-    name: 'layer2-structure',
-    steps: [
-      { name: 'difficulty', fn: difficultyValidator.validateDifficulty, required: false },
-      { name: 'composite', fn: compositeValidator.validateComposite, required: false },
-      
-      { name: 'kpSemantic', fn: kpSemanticValidator.validateKpSemantics, required: false }
-    ],
-    stopOnFailure: false
-  },
-  {
-    name: 'layer3-integrity',
-    steps: [
-      { name: 'difficultyIntegrity', fn: difficultyIntegrityValidator.validateDifficultyIntegrity, required: false },
-      { name: 'duplicateIntegrity', fn: duplicateIntegrityValidator.validateDuplicateIntegrity, required: false }
-    ],
-    stopOnFailure: false
-  },
-  {
-    name: 'layer4-duplicate',
-    steps: [
-      { name: 'duplicate', fn: duplicateValidator.validateDuplicate, required: false }
-    ],
-    stopOnFailure: false
-  }
-];
-
-
-var PIPELINE_STEPS = [];
-PIPELINE_LAYERS.forEach(function (layer) {
-  layer.steps.forEach(function (s) { PIPELINE_STEPS.push(s); });
-});
-
-
-var BATCH_VALIDATORS = [
-  { name: 'kpCoverage', fn: kpCoverageValidator.validateBatchKpCoverage },
-  { name: 'composite', fn: compositeValidator.validateBatchComposite },
-  { name: 'difficultyIntegrity', fn: difficultyIntegrityValidator.validateBatchDifficultyIntegrity },
-  { name: 'duplicateIntegrity', fn: duplicateIntegrityValidator.validateBatchDuplicateIntegrity }
-];
-
-
-function runPipeline(sq, context) {
-  context = context || {};
-  var allErrors = [];
-  var allWarnings = [];
-  var allInfo = [];
-  var scores = [];
-  var checks = {};
-  var seenKeys = context.seenKeys || new Set();
-
-  for (var li = 0; li < PIPELINE_LAYERS.length; li++) {
-    var layer = PIPELINE_LAYERS[li];
-    var layerHasErrors = false;
-
-    for (var si = 0; si < layer.steps.length; si++) {
-      var step = layer.steps[si];
-      var fn = step.fn;
-      var stepContext = Object.assign({}, context, { seenKeys: seenKeys });
-
-      var result;
-      try {
-        result = fn(sq, stepContext);
-      } catch (e) {
-        var err = require("shared/validator/question-validator.js").createError(
-          'VALIDATOR_EXCEPTION', step.name, '验证器异常: ' + e.message, 'ERROR', { stack: e.stack });
-        result = { valid: false, errors: [err], warnings: [], info: [], score: 0, checks: {} };
-      }
-
-      
-      if (result.errors) allErrors.push.apply(allErrors, result.errors);
-      if (result.warnings) allWarnings.push.apply(allWarnings, result.warnings);
-      if (result.info) allInfo.push.apply(allInfo, result.info);
-      if (typeof result.score === 'number') scores.push(result.score);
-      if (result.checks) Object.assign(checks, result.checks);
-
-      
-      if (result.seenKeys) seenKeys = result.seenKeys;
-
-      
-      if (step.required && (!result.valid || (result.errors && result.errors.length))) {
-        layerHasErrors = true;
-      }
-    }
-
-    
-    if (layer.stopOnFailure && layerHasErrors) {
-      break;
-    }
-  }
-
-  var valid = allErrors.length === 0;
-  var score = scores.length ? scores.reduce(function (a, b) { return a + b; }, 0) / scores.length : 1;
-
-  return {
-    valid: valid,
-    errors: allErrors,
-    warnings: allWarnings,
-    info: allInfo,
-    score: score,
-    checks: checks
-  };
-}
-
-
-function runPipelineBatch(questions, context) {
-  context = context || {};
-  var seenKeys = context.seenKeys || new Set();
-  var results = [];
-
-  questions.forEach(function (sq, idx) {
-    var stepContext = Object.assign({}, context, { index: idx, seenKeys: seenKeys });
-    var result = runPipeline(sq, stepContext);
-    results.push(result);
-    if (result.seenKeys) seenKeys = result.seenKeys;
-  });
-
-  return results;
-}
-
-
-function runBatchValidators(questions, context) {
-  context = context || {};
-  var allErrors = [];
-  var allWarnings = [];
-  var allInfo = [];
-  var scores = [];
-  var checks = {};
-
-  BATCH_VALIDATORS.forEach(function (step) {
-    var result;
-    try {
-      result = step.fn(questions, context);
-    } catch (e) {
-      var err = require("shared/validator/question-validator.js").createError(
-        'VALIDATOR_EXCEPTION', step.name, '批次验证器异常: ' + e.message, 'ERROR', { stack: e.stack });
-      result = { valid: false, errors: [err], warnings: [], info: [], score: 0, checks: {} };
-    }
-
-    if (result.errors) allErrors.push.apply(allErrors, result.errors);
-    if (result.warnings) allWarnings.push.apply(allWarnings, result.warnings);
-    if (result.info) allInfo.push.apply(allInfo, result.info);
-    if (typeof result.score === 'number') scores.push(result.score);
-    if (result.checks) Object.assign(checks, result.checks);
-  });
-
-  var valid = allErrors.length === 0;
-  var score = scores.length ? scores.reduce(function (a, b) { return a + b; }, 0) / scores.length : 1;
-
-  return { valid: valid, errors: allErrors, warnings: allWarnings, info: allInfo, score: score, checks: checks };
-}
-
-
-module.exports = {
-  runPipeline: runPipeline,
-  runPipelineBatch: runPipelineBatch,
-  runBatchValidators: runBatchValidators,
-  PIPELINE_STEPS: PIPELINE_STEPS,
-  BATCH_VALIDATORS: BATCH_VALIDATORS
-};
-};
 __defs["shared/validator/question-validator.js"] = function (module, exports, require) {
 
 'use strict';
@@ -2995,6 +1980,347 @@ module.exports = {
   isFatalError: isFatalError,
   ERROR_CODES: ERROR_CODES,
   SEVERITY: SEVERITY
+};
+};
+__defs["shared/validator/validation-pipeline.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Validator = require("shared/validator/question-validator.js");
+var Schema = require("shared/schemas/semantic-question.schema.js");
+var answerValidator = require("shared/validator/answer-validator.js");
+var difficultyValidator = require("shared/validator/difficulty-validator.js");
+var duplicateValidator = require("shared/validator/duplicate-validator.js");
+var kpCoverageValidator = require("shared/validator/kp-coverage-validator.js");
+var compositeValidator = require("shared/validator/composite-validator.js");
+var difficultyIntegrityValidator = require("shared/validator/difficulty-integrity-validator.js");
+var duplicateIntegrityValidator = require("shared/validator/duplicate-integrity-validator.js");
+var kpSemanticValidator = require("shared/validator/kp-semantic-validator.js");
+
+var ERROR_CODES = Validator.ERROR_CODES;
+var SEVERITY = Validator.SEVERITY;
+
+
+
+
+
+
+var PIPELINE_LAYERS = [
+  {
+    name: 'layer1-critical',
+    steps: [
+      { name: 'schema', fn: Validator.validateSchemaOnly, required: true },
+      { name: 'answer', fn: answerValidator.validateAnswer, required: true },
+      { name: 'kpCoverage', fn: kpCoverageValidator.validateKpCoverage, required: true }
+    ],
+    stopOnFailure: true  
+  },
+  {
+    name: 'layer2-structure',
+    steps: [
+      { name: 'difficulty', fn: difficultyValidator.validateDifficulty, required: false },
+      { name: 'composite', fn: compositeValidator.validateComposite, required: false },
+      
+      { name: 'kpSemantic', fn: kpSemanticValidator.validateKpSemantics, required: false }
+    ],
+    stopOnFailure: false
+  },
+  {
+    name: 'layer3-integrity',
+    steps: [
+      { name: 'difficultyIntegrity', fn: difficultyIntegrityValidator.validateDifficultyIntegrity, required: false },
+      { name: 'duplicateIntegrity', fn: duplicateIntegrityValidator.validateDuplicateIntegrity, required: false }
+    ],
+    stopOnFailure: false
+  },
+  {
+    name: 'layer4-duplicate',
+    steps: [
+      { name: 'duplicate', fn: duplicateValidator.validateDuplicate, required: false }
+    ],
+    stopOnFailure: false
+  }
+];
+
+
+var PIPELINE_STEPS = [];
+PIPELINE_LAYERS.forEach(function (layer) {
+  layer.steps.forEach(function (s) { PIPELINE_STEPS.push(s); });
+});
+
+
+var BATCH_VALIDATORS = [
+  { name: 'kpCoverage', fn: kpCoverageValidator.validateBatchKpCoverage },
+  { name: 'composite', fn: compositeValidator.validateBatchComposite },
+  { name: 'difficultyIntegrity', fn: difficultyIntegrityValidator.validateBatchDifficultyIntegrity },
+  { name: 'duplicateIntegrity', fn: duplicateIntegrityValidator.validateBatchDuplicateIntegrity }
+];
+
+
+function runPipeline(sq, context) {
+  context = context || {};
+  var allErrors = [];
+  var allWarnings = [];
+  var allInfo = [];
+  var scores = [];
+  var checks = {};
+  var seenKeys = context.seenKeys || new Set();
+
+  
+  
+  
+  var genErrors = [];
+  var semErrors = [];
+  var semWarnings = [];
+
+  for (var li = 0; li < PIPELINE_LAYERS.length; li++) {
+    var layer = PIPELINE_LAYERS[li];
+    var layerHasErrors = false;
+    var isGenLayer = (layer.name === 'layer1-critical');
+
+    for (var si = 0; si < layer.steps.length; si++) {
+      var step = layer.steps[si];
+      var fn = step.fn;
+      var stepContext = Object.assign({}, context, { seenKeys: seenKeys });
+
+      var result;
+      try {
+        result = fn(sq, stepContext);
+      } catch (e) {
+        var err = require("shared/validator/question-validator.js").createError(
+          'VALIDATOR_EXCEPTION', step.name, '验证器异常: ' + e.message, 'ERROR', { stack: e.stack });
+        result = { valid: false, errors: [err], warnings: [], info: [], score: 0, checks: {} };
+      }
+
+      
+      if (result.errors) {
+        allErrors.push.apply(allErrors, result.errors);
+        if (isGenLayer) genErrors.push.apply(genErrors, result.errors);
+        else semErrors.push.apply(semErrors, result.errors);
+      }
+      if (result.warnings) {
+        allWarnings.push.apply(allWarnings, result.warnings);
+        if (!isGenLayer) semWarnings.push.apply(semWarnings, result.warnings);
+      }
+      if (result.info) allInfo.push.apply(allInfo, result.info);
+      if (typeof result.score === 'number') scores.push(result.score);
+      if (result.checks) Object.assign(checks, result.checks);
+
+      
+      if (result.seenKeys) seenKeys = result.seenKeys;
+
+      
+      if (step.required && (!result.valid || (result.errors && result.errors.length))) {
+        layerHasErrors = true;
+      }
+    }
+
+    
+    if (layer.stopOnFailure && layerHasErrors) {
+      break;
+    }
+  }
+
+  var valid = allErrors.length === 0;
+  var score = scores.length ? scores.reduce(function (a, b) { return a + b; }, 0) / scores.length : 1;
+
+  
+  var generationPass = genErrors.length === 0;
+  var semanticFail = semErrors.length > 0;
+  var semanticWarn = !semanticFail && semWarnings.length > 0;
+  var semanticPass = !semanticFail && semWarnings.length === 0;
+
+  return {
+    valid: valid,
+    errors: allErrors,
+    warnings: allWarnings,
+    info: allInfo,
+    score: score,
+    checks: checks,
+    
+    generationPass: generationPass,
+    semanticPass: semanticPass,
+    semanticWarn: semanticWarn,
+    semanticFail: semanticFail
+  };
+}
+
+
+function runPipelineBatch(questions, context) {
+  context = context || {};
+  var seenKeys = context.seenKeys || new Set();
+  var results = [];
+
+  questions.forEach(function (sq, idx) {
+    var stepContext = Object.assign({}, context, { index: idx, seenKeys: seenKeys });
+    var result = runPipeline(sq, stepContext);
+    results.push(result);
+    if (result.seenKeys) seenKeys = result.seenKeys;
+  });
+
+  return results;
+}
+
+
+function runBatchValidators(questions, context) {
+  context = context || {};
+  var allErrors = [];
+  var allWarnings = [];
+  var allInfo = [];
+  var scores = [];
+  var checks = {};
+
+  BATCH_VALIDATORS.forEach(function (step) {
+    var result;
+    try {
+      result = step.fn(questions, context);
+    } catch (e) {
+      var err = require("shared/validator/question-validator.js").createError(
+        'VALIDATOR_EXCEPTION', step.name, '批次验证器异常: ' + e.message, 'ERROR', { stack: e.stack });
+      result = { valid: false, errors: [err], warnings: [], info: [], score: 0, checks: {} };
+    }
+
+    if (result.errors) allErrors.push.apply(allErrors, result.errors);
+    if (result.warnings) allWarnings.push.apply(allWarnings, result.warnings);
+    if (result.info) allInfo.push.apply(allInfo, result.info);
+    if (typeof result.score === 'number') scores.push(result.score);
+    if (result.checks) Object.assign(checks, result.checks);
+  });
+
+  var valid = allErrors.length === 0;
+  var score = scores.length ? scores.reduce(function (a, b) { return a + b; }, 0) / scores.length : 1;
+
+  
+  var semanticFail = allErrors.length > 0;
+  var semanticWarn = !semanticFail && allWarnings.length > 0;
+  var semanticPass = !semanticFail && allWarnings.length === 0;
+
+  return {
+    valid: valid, errors: allErrors, warnings: allWarnings, info: allInfo, score: score, checks: checks,
+    generationPass: true,
+    semanticPass: semanticPass,
+    semanticWarn: semanticWarn,
+    semanticFail: semanticFail
+  };
+}
+
+
+module.exports = {
+  runPipeline: runPipeline,
+  runPipelineBatch: runPipelineBatch,
+  runBatchValidators: runBatchValidators,
+  PIPELINE_STEPS: PIPELINE_STEPS,
+  BATCH_VALIDATORS: BATCH_VALIDATORS
+};
+};
+__defs["shared/knowledge/question-id.js"] = function (module, exports, require) {
+
+'use strict';
+
+var Rng = require("shared/generator/core/rng.js");
+
+var ID_PREFIX = 'q';
+var SEED_DELIMITER = '|';
+var SEED_PART_DELIMITER = ':';
+var SEED_COUNTER = 0;
+
+
+function generateQuestionId(seed, context) {
+  var rng = Rng.createSeededRandom(seed);
+  var parts = [ID_PREFIX];
+
+  
+  var ctxStr = '';
+  if (context) {
+    ctxStr = (context.generatorId || '') + SEED_DELIMITER +
+             (context.index != null ? context.index : '') + SEED_DELIMITER +
+             (context.knowledgePointId || '') + SEED_DELIMITER +
+             (context.difficulty != null ? context.difficulty : '') + SEED_DELIMITER +
+             (context.questionType || '');
+  }
+  var hash = Rng.hashSeed(String(seed) + ctxStr);
+  parts.push(hash.toString(36));
+
+  
+  
+
+  return parts.join('_');
+}
+
+
+function deriveSeed(baseSeed, generatorId, index) {
+  var cleanBase = String(baseSeed || 'auto').replace(/\|/g, '-');
+  var cleanGen = String(generatorId).replace(/\|/g, '-');
+  return [cleanBase, cleanGen, index].join(SEED_DELIMITER);
+}
+
+
+function generateSeedsForPlan(plan) {
+  var base = plan.seed || 'plan-' + Date.now();
+  var genId = plan.generatorId || 'unknown';
+  var count = plan.count || 1;
+  var seeds = [];
+  for (var i = 0; i < count; i++) {
+    seeds.push(deriveSeed(base, genId, i));
+  }
+  return seeds;
+}
+
+
+function parseSeed(seedStr) {
+  if (!seedStr) return { base: null, generatorId: null, index: null, raw: null };
+  var parts = seedStr.split(SEED_DELIMITER);
+  if (parts.length >= 3) {
+    return {
+      base: parts[0],
+      generatorId: parts[1],
+      index: parseInt(parts[2], 10),
+      raw: seedStr
+    };
+  }
+  return { base: seedStr, generatorId: null, index: null, raw: seedStr };
+}
+
+
+function generateBaseSeed(seed) {
+  if (seed != null) return String(seed);
+  
+  SEED_COUNTER = (SEED_COUNTER || 0) + 1;
+  return 'auto-' + Date.now().toString(36) + '-' + SEED_COUNTER.toString(36);
+}
+
+
+function normalizeVersion(v) {
+  if (typeof v === 'string' && /^\d+\.\d+\.\d+/.test(v)) return v;
+  var n = parseInt(v, 10);
+  if (!isNaN(n)) return n + '.0.0';
+  return '1.0.0';
+}
+
+
+function createMetadata(opts) {
+  opts = opts || {};
+  return {
+    generator: opts.generatorId || null,
+    generatorVersion: normalizeVersion(opts.generatorVersion),
+    seed: opts.seed || null,
+    planId: opts.planId || null,
+    timestamp: opts.timestamp || new Date().toISOString(),
+    retryCount: opts.retryCount || 0,
+    validationScore: null,
+    tags: opts.tags || []
+  };
+}
+
+module.exports = {
+  generateQuestionId: generateQuestionId,
+  deriveSeed: deriveSeed,
+  generateSeedsForPlan: generateSeedsForPlan,
+  parseSeed: parseSeed,
+  generateBaseSeed: generateBaseSeed,
+  normalizeVersion: normalizeVersion,
+  createMetadata: createMetadata,
+  Rng: Rng  
 };
 };
 __defs["shared/validator/duplicate-validator.js"] = function (module, exports, require) {
@@ -3503,14 +2829,13 @@ function safeTrim(v) { return coerceString(v).trim(); }
 
 
 function computeExpectedAnswer(prompt) {
-  var expr = coerceString(prompt).replace(/[？?□_\\s]/g, '').replace(/[×xX]/g, '*').replace(/[÷]/g, '/').replace(/[＝=]/g, '');
+  var expr = coerceString(prompt).replace(/[？?□_\s]/g, '').replace(/[×xX]/g, '*').replace(/[÷]/g, '/').replace(/[＝=]/g, '');
   if (!expr) return null;
 
   try {
-    
-    
-    var fn = new Function('return ' + expr);
-    var result = fn();
+    var tokens = tokenize(expr);
+    var ast = parseExpression(tokens);
+    var result = evaluate(ast);
     if (typeof result === 'number' && isFinite(result)) {
       
       return Number.isInteger(result) ? String(result) : result.toFixed(2).replace(/\.?0+$/, '');
@@ -3518,6 +2843,160 @@ function computeExpectedAnswer(prompt) {
     return String(result);
   } catch (e) {
     return null;
+  }
+}
+
+
+
+function tokenize(str) {
+  var tokens = [];
+  var i = 0;
+  while (i < str.length) {
+    var ch = str[i];
+    if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r') { i++; continue; }
+    if (ch === '+' || ch === '-' || ch === '*' || ch === '/' || ch === '%' || ch === '(' || ch === ')') {
+      tokens.push({ type: 'op', value: ch });
+      i++;
+    } else if ((ch >= '0' && ch <= '9') || ch === '.') {
+      var j = i;
+      var hasDot = false;
+      while (j < str.length) {
+        var c = str[j];
+        if (c >= '0' && c <= '9') { j++; }
+        else if (c === '.' && !hasDot) { hasDot = true; j++; }
+        else { break; }
+      }
+      var numStr = str.slice(i, j);
+      
+      if (numStr === '.' || numStr.endsWith('.')) {
+        
+      }
+      tokens.push({ type: 'num', value: numStr });
+      i = j;
+    } else {
+      
+      throw new Error('Invalid character: ' + ch);
+    }
+  }
+  tokens.push({ type: 'eof' });
+  return tokens;
+}
+
+function createParser(tokens) {
+  var index = 0;
+  function peek() { return tokens[index]; }
+  function consume() { return tokens[index++]; }
+  function expect(type, value) {
+    var t = peek();
+    if (t.type !== type || (value !== undefined && t.value !== value)) {
+      throw new Error('Expected ' + type + (value ? ' ' + value : '') + ', got ' + JSON.stringify(t));
+    }
+    return consume();
+  }
+
+  function parseAddSub() {
+    var left = parseMulDiv();
+    while (true) {
+      var t = peek();
+      if (t.type === 'op' && (t.value === '+' || t.value === '-')) {
+        var op = consume().value;
+        var right = parseMulDiv();
+        left = { type: 'bin', op: op, left: left, right: right };
+      } else break;
+    }
+    return left;
+  }
+
+  function parseMulDiv() {
+    var left = parseUnary();
+    while (true) {
+      var t = peek();
+      if (t.type === 'op' && (t.value === '*' || t.value === '/')) {
+        var op = consume().value;
+        var right = parseUnary();
+        left = { type: 'bin', op: op, left: left, right: right };
+      } else break;
+    }
+    return left;
+  }
+
+  function parseUnary() {
+    var t = peek();
+    if (t.type === 'op' && t.value === '-') {
+      consume();
+      var operand = parseUnary();
+      return { type: 'unary', op: '-', operand: operand };
+    }
+    return parsePostfix();
+  }
+
+  function parsePostfix() {
+    var node = parsePrimary();
+    while (true) {
+      var t = peek();
+      if (t.type === 'op' && t.value === '%') {
+        consume();
+        node = { type: 'postfix', op: '%', operand: node };
+      } else break;
+    }
+    return node;
+  }
+
+  function parsePrimary() {
+    var t = peek();
+    if (t.type === 'num') {
+      consume();
+      var v = t.value;
+      if (v === '.') throw new Error('Invalid number: .');
+      if (v.startsWith('.')) v = '0' + v;
+      if (v.endsWith('.')) v = v.slice(0, -1);
+      return { type: 'num', value: Number(v) };
+    }
+    if (t.type === 'op' && t.value === '(') {
+      consume();
+      var node = parseAddSub();
+      expect('op', ')');
+      return node;
+    }
+    throw new Error('Unexpected token: ' + JSON.stringify(t));
+  }
+
+  return { parse: parseAddSub, peek: peek };
+}
+
+function parseExpression(tokens) {
+  var parser = createParser(tokens);
+  var ast = parser.parse();
+  
+  var finalTok = parser.peek();
+  if (finalTok && finalTok.type !== 'eof') {
+    throw new Error('Unexpected trailing token: ' + JSON.stringify(finalTok));
+  }
+  return ast;
+}
+
+function evaluate(node) {
+  switch (node.type) {
+    case 'num': return node.value;
+    case 'unary':
+      if (node.op === '-') return -evaluate(node.operand);
+      throw new Error('Unknown unary op: ' + node.op);
+    case 'postfix':
+      if (node.op === '%') return evaluate(node.operand) / 100;
+      throw new Error('Unknown postfix op: ' + node.op);
+    case 'bin':
+      var l = evaluate(node.left);
+      var r = evaluate(node.right);
+      switch (node.op) {
+        case '+': return l + r;
+        case '-': return l - r;
+        case '*': return l * r;
+        case '/':
+          if (r === 0) throw new Error('Division by zero');
+          return l / r;
+        default: throw new Error('Unknown binary op: ' + node.op);
+      }
+    default: throw new Error('Unknown AST node: ' + node.type);
   }
 }
 
@@ -4745,5 +4224,4 @@ module.exports = {
 };
 global.PresentationEngine = __req("shared/engine/presentation-engine.js");
 global.PresentationBundle = __req("shared/engine/presentation-engine.js");
-global.GenerationCore = __req("shared/generation/generation-core.js");
 })(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

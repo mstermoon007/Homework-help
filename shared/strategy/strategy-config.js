@@ -53,10 +53,6 @@ function setStrategy(strategy) {
   }
 }
 
-function isLegacy() {
-  return getStrategy() === 'legacy';
-}
-
 function isStrategyV1() {
   return getStrategy() === 'strategy-v1';
 }
@@ -67,8 +63,7 @@ function getConfig() {
     current: getStrategy(),
     overrides: _configOverrides,
     features: {
-      strategyEngine: isStrategyV1(),
-      legacyFallback: isLegacy()
+      strategyEngine: isStrategyV1()
     }
   };
 }
@@ -89,7 +84,6 @@ module.exports = {
   difficultyAnchorOf: difficultyAnchorOf,
   getStrategy: getStrategy,
   setStrategy: setStrategy,
-  isLegacy: isLegacy,
   isStrategyV1: isStrategyV1,
   getConfig: getConfig,
   setConfigOverrides: setConfigOverrides,

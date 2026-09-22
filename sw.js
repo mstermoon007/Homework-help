@@ -50,6 +50,10 @@ const CORE = [
   'assets/logo.webp',
   'assets/logo-math.webp',
   'shared/presentation/print.js',
+  // P28-30：render-options/render-result 已移出 practice.html 首屏同步链（经 ensureDeferredReady
+  // 延后注入）；补入 CORE 预缓存以保证离线首访（未加载页面时）打印/渲染仍完整。
+  'shared/presentation/render-options.js',
+  'shared/presentation/render-result.js',
   'shared/knowledge/runtime/knowledge-runtime.js',
   'shared/orchestration/knowledge-context.js',
   'shared/engine/knowledge-compat.js',
@@ -61,6 +65,7 @@ const CORE = [
   'shared/svg/svg-chart.js',
   'shared/svg/svg-diagram.js',
   'shared/svg/svg-currency.js',
+  'shared/presentation/svg-sanitizer.js',
   'shared/presentation/svg-registry.js',
   'shared/presentation/html-renderer.js',
   'shared/presentation/renderer.js',

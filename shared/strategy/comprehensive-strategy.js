@@ -24,7 +24,6 @@
   }
 
   function getKB() {
-    if (typeof global !== 'undefined' && global.KnowledgeBank) return global.KnowledgeBank;
     if (typeof require === 'function') {
       try { return require('../knowledge/knowledge-bank.js'); } catch (e) { /* ignore */ }
     }
@@ -162,7 +161,7 @@
     var KB = getKB();
     var engine = getStrategyEngine();
     var deps = [];
-    if (!KB) deps.push('shared/knowledge/knowledge-bank.js');
+    if (!KB) deps.push('shared/engine/knowledge-compat.js');
     if (!engine) deps.push('shared/engine/strategy-engine.bundle.js');
     if (deps.length) return Promise.reject(new Error('ComprehensiveStrategy 依赖缺失: ' + deps.join(', ')));
 

@@ -1,10 +1,15 @@
 /**
- * shared/presentation/render-format.js — SemanticQuestion → 可渲染题格式转换
+ * shared/presentation/render-format.js — 唯一 Legacy Adapter（SemanticQuestion → Legacy Question）
  *
  * MATH-14：原 shared/generator/legacy-adapter.js 的 toLegacyQuestion(s) 迁移至此并更名。
- * 职责唯一：把 SemanticQuestion 映射为渲染层（PluginUtil.renderGrid/renderCard）
- * 与批改层（PluginUtil.computeResult）消费的题对象格式（q/text/answer/inputType/
- * options/render/check/svg 等展示字段）。与旧插件体系无关，纯数据映射。
+ * P28-21：确认为全库唯一 SQ→Legacy 转换点 —— semantic-question-bridge.js 与
+ * practice-session._sqToLegacyQuestion() 已删除，所有消费方（PresentationEngine /
+ * PracticeSession / dev 门禁）唯一经本模块。
+ * 职责：把 SemanticQuestion 映射为渲染/批改层（PresentationRenderer / HTMLRenderer /
+ * PluginUtil.computeResult）消费的题对象格式（q/text/answer/inputType/options/
+ * render/check/svg/__semantic 等展示字段）。与旧插件体系无关，纯数据映射。
+ * P28-22：旧渲染器 shared/presentation/render.js（renderCard/renderGrid）已随双轨收口删除，
+ * 唯一渲染链 = PresentationRenderer.renderAll → HTMLRenderer → RenderResult。
  */
 'use strict';
 
@@ -41,8 +46,14 @@ function toRenderableQuestion(sq) {
   var inputType = inputTypeMap[answerMode] || 'text';
 
   var options = null;
-  if (inputType === 'choice' && Array.isArray(sq.distractors) && sq.distractors.length) {
-    options = sq.distractors.map(function (d) { return d.value; });
+  // 统一选项源：sq.options / sq.distractors / sq.data.options（生成器三种写法一致收敛）
+  var rawOptions = (Array.isArray(sq.options) && sq.options.length) ? sq.options
+    : (Array.isArray(sq.distractors) && sq.distractors.length) ? sq.distractors
+      : (sq.data && Array.isArray(sq.data.options) && sq.data.options.length) ? sq.data.options : null;
+  if (inputType === 'choice' && rawOptions) {
+    options = rawOptions.map(function (d) {
+      return (d && typeof d === 'object') ? (d.label != null ? d.label : d.value) : d;
+    });
     var correct = sq.answer && sq.answer.value != null ? coerceScalar(sq.answer.value) : '';
     if (correct && options.indexOf(correct) === -1) {
       var seedStr = (sq.seed != null ? String(sq.seed)
@@ -57,7 +68,10 @@ function toRenderableQuestion(sq) {
     id: sq.id,
     q: sq.prompt || (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt) || '',
     text: sq.prompt || (sq.content && sq.content.prompt) || (sq.question && sq.question.prompt) || '',
-    answer: sq.answer && sq.answer.value != null ? sq.answer.value : (sq.answer ? sq.answer.value : null),
+    // answer 归一：value 优先；缺 value 时回退 acceptable[0]（与旧 _sqToLegacyQuestion 语义一致）
+    answer: (sq.answer && sq.answer.value != null) ? sq.answer.value
+      : (sq.answer && Array.isArray(sq.answer.acceptable) && sq.answer.acceptable.length) ? sq.answer.acceptable[0]
+        : (sq.answer ? sq.answer.value : null),
     inputType: inputType,
     options: options,
     type: sq.questionType || sq.type || sq.skill || 'calc',
@@ -76,7 +90,15 @@ function toRenderableQuestion(sq) {
     numberRange: sq.numberRange,
     render: sq.render || null,
     check: sq.check || null,
-    svg: sq.svg || (sq.graphic && sq.graphic.params && (sq.graphic.params.rawSvg || sq.graphic.params.legacySvg)) || null
+    svg: sq.svg || (sq.graphic && sq.graphic.params && (sq.graphic.params.rawSvg || sq.graphic.params.legacySvg)) || null,
+    // P28-32：Learner 数据链透传字段（semanticTarget / spiralLevel / errorType）。
+    // 供练习会话/页面 feedLearnerModel 逐题构建 PracticeResult；R10 约束保持——
+    // errorType 只透传题面自带可靠值，缺失即 null（不伪造诊断）。
+    semanticTarget: sq.semanticTarget != null ? sq.semanticTarget : null,
+    spiralLevel: sq.spiralLevel != null ? sq.spiralLevel : (sq.constraints && sq.constraints.spiralLevel != null ? sq.constraints.spiralLevel : null),
+    errorType: sq.errorType != null ? sq.errorType : null,
+    // 保留语义引用（页面 read-aloud 判定 / 溯源复用）；实践会话 exerciseSet 依赖此字段。
+    __semantic: sq
   };
 }
 

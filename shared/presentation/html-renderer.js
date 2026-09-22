@@ -40,10 +40,24 @@
   }
 
   function optionsOf(sq) {
-    var opts = (sq && (sq.options || sq.distractors || (sq.data && (sq.data.options || sq.data.distractors)))) || null;
-    if (Array.isArray(opts) && opts.length >= 2) return opts.map(function (o) {
-      return (o && typeof o === 'object') ? (o.label != null ? o.label : o.value) : o;
-    });
+    // P28-48：候选必须逐个做「非空数组」判定。归一化工厂会给每题注入 distractors:[]，
+    // 旧写法 sq.options || sq.distractors || sq.data.options 会被空数组（truthy）短路，
+    // 导致 data.options 中真实存在的选择题选项永远渲染不出来。
+    if (!sq) return null;
+    var cands = [
+      sq.options,
+      sq.distractors,
+      sq.data ? sq.data.options : null,
+      sq.data ? sq.data.distractors : null
+    ];
+    for (var i = 0; i < cands.length; i++) {
+      var opts = cands[i];
+      if (Array.isArray(opts) && opts.length >= 2) {
+        return opts.map(function (o) {
+          return (o && typeof o === 'object') ? (o.label != null ? o.label : o.value) : o;
+        });
+      }
+    }
     return null;
   }
 
@@ -109,18 +123,26 @@
    * @param {Object} [options] { mode, graphic, density } —— graphic 为已生成的 <svg> 字符串；density=compact 追加紧凑类
    * @returns {string} 卡片 HTML
    */
+  /** P28-23：SVG 注入兜底——即使来源非预期也拒绝携带脚本/事件/外联特征的图形串 */
+  function graphicGuard(svg) {
+    if (typeof svg !== 'string' || !svg) return '';
+    if (/<script|<foreignObject|<iframe|<object\b|<embed\b|on[A-Za-z]+\s*=|url\s*\(\s*['"]?\s*javascript/i.test(svg)) return '';
+    return svg;
+  }
+
   function render(sq, index, options) {
     options = options || {};
     var mode = options.mode || 'screen';
     var prompt = promptOf(sq);
-    var graphic = typeof options.graphic === 'string' ? options.graphic : '';
+    var graphic = graphicGuard(options.graphic);
     var answerText = sq && Array.isArray(sq.answerText) ? sq.answerText
       : (sq && sq.answer && Array.isArray(sq.answer.multiplier) ? sq.answer.multiplier : null);
 
     // P2.2（Issue #1 延伸）：density=compact 追加 compact 类（仅 class，卡内结构不变，Node/浏览器输出一致）
     var cardCls = 'question-card' + (options.density === 'compact' ? ' compact' : '');
-    // 生成层统筹：固定样式类（style-{calc|fill|choice|judge|story|shape|open}），供页面固定样式呈现
-    if (sq && typeof sq.style === 'string' && sq.style) cardCls += ' style-' + sq.style;
+    // 生成层统筹：固定样式类（style-{calc|fill|choice|judge|story|shape|open}），供页面固定样式呈现。
+    // P28-23：样式 token 白名单（仅小写字母/数字/连字符），非白名单不进入 class 属性。
+    if (sq && typeof sq.style === 'string' && /^[a-z0-9-]+$/.test(sq.style)) cardCls += ' style-' + sq.style;
     var html = '<div class="' + cardCls + '" data-index="' + index + '" role="group" aria-label="第 ' + (index + 1) + ' 题">';
     html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>' + esc(prompt) + '</div>';
     if (graphic) {
@@ -140,7 +162,10 @@
    */
   function renderGrid(results, options) {
     options = options || {};
-    var cols = options.columns || 3;
+    // P28-23：columns 强制正整数（1..6），禁止任意字符串进入 class/style
+    var cols = Math.floor(Number(options.columns));
+    if (!isFinite(cols) || cols < 1) cols = 3;
+    if (cols > 6) cols = 6;
     var html = '<div class="questions-grid q-grid cols-' + cols + '" style="--grid-cols:' + cols + '">';
     (results || []).forEach(function (r, i) {
       if (r && typeof r.html === 'string') html += r.html;

@@ -7,6 +7,9 @@
  * - Storage 不可用（隐私模式/localStorage 禁用）→ 降级内存模式。
  *
  * 能力：load / save / getKnowledgePoint / updateKnowledgePoint / clear
+ *
+ * P28-31 定位：持久化边界（复用 StorageManager，learnerState 顶层字段；内存降级）。
+ *   只存取状态，不做任何状态计算/推荐；损坏数据一律归一为默认态（不猜测、不补算）。
  */
 (function (global) {
   'use strict';

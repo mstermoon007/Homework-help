@@ -79,17 +79,21 @@
   }
 
   /**
-   * 运行时派发：归一化 graphic 并委托底层 SVG Renderer 产出 <svg> 字符串。
-   * 无法渲染（无描述 / 类型不支持 / 引擎缺失）返回 ''。
+   * 运行时派发：归一化 graphic 并委托底层 SVG Renderer 产出 RenderResult。
+   * 返回标准契约：{ status: 'SUCCESS'|'UNSUPPORTED'|'FAILED', svg?, reason?, error? }
    * @param {Object} graphic { type, subtype, params }
    * @param {Object} [options] renderOptions（透传，不微调）
-   * @returns {string}
+   * @returns {Object}
    */
   function render(graphic, options) {
-    if (!graphic || typeof graphic !== 'object' || typeof graphic.type !== 'string') return '';
+    if (!graphic || typeof graphic !== 'object' || typeof graphic.type !== 'string') {
+      return { status: 'UNSUPPORTED', reason: 'Invalid graphic descriptor' };
+    }
     var engine = getSVGEngine();
-    if (!engine) return '';
-    return engine.render(graphic, options) || '';
+    if (!engine) {
+      return { status: 'FAILED', reason: 'SVG engine not available' };
+    }
+    return engine.render(graphic, options);
   }
 
   var API = {

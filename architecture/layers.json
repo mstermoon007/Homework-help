@@ -54,7 +54,6 @@
           "desc": "语义结构：Schema / semantic-question 归一与构造",
           "files": [
             "shared/semantic/semantic-question.js",
-            "shared/generator/semantic-question-bridge.js",
             "shared/schemas/semantic-question.schema.js"
           ]
         },
@@ -96,11 +95,9 @@
           ]
         },
         "SERVICE_IFACE": {
-          "desc": "生成服务接口：generation/api + 共同生成内核（GenerationCore/契约）",
+          "desc": "生成服务接口：generation/api（共同生成内核 GenerationCore = 测试/历史资产，非生产链，另见 tests/orchestration/p17-*)",
           "files": [
-            "shared/generation/api.js",
-            "shared/generation/generation-core.js",
-            "shared/generation/generation-contract.js"
+            "shared/generation/api.js"
           ]
         },
         "PRESENTATION": {
@@ -112,7 +109,7 @@
             "shared/presentation/render-result.js",
             "shared/presentation/renderer.js",
             "shared/presentation/svg-registry.js",
-            "shared/presentation/render.js",
+            "shared/presentation/svg-sanitizer.js",
             "shared/presentation/print.js"
           ]
         },

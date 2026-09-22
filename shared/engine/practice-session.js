@@ -34,10 +34,23 @@
     : (typeof require !== 'undefined' ? require('../learner/practice-result.js') : null);
   var PluginUtil = (typeof global.PluginUtil !== 'undefined') ? global.PluginUtil
     : (typeof require !== 'undefined' ? require('../core/common.js') : null);
+  // P28-21：唯一 Legacy Adapter = shared/presentation/render-format.js（semantic-question-bridge
+  // 与 _sqToLegacyQuestion 已删除）。浏览器经 PresentationEngine.RenderFormat 取用，Node 直接 require。
+  var RenderFormat = (typeof global.PresentationEngine !== 'undefined' && global.PresentationEngine.RenderFormat)
+    ? global.PresentationEngine.RenderFormat
+    : (typeof require !== 'undefined' ? require('../presentation/render-format.js') : null);
   var PresentationRenderer = (typeof global.PresentationRenderer !== 'undefined') ? global.PresentationRenderer
     : (typeof require !== 'undefined' ? require('../presentation/renderer.js') : null);
   var Print = (typeof global.Print !== 'undefined') ? global.Print
     : (typeof require !== 'undefined' ? require('../presentation/print.js') : null);
+  // P28-30：print.js 已移出首屏同步装载（practice.html 经 ensureDeferredReady 延后注入），
+  // global.Print 在装载期尚未就绪，须在打印调用时再读全局（幂等：任一生成门控后必已就绪；
+  // Node 测试路径仍走 require 兜底），避免捕获期快照成 null。
+  function resolvePrint() {
+    if (typeof global.Print !== 'undefined' && global.Print) return global.Print;
+    if (Print) return Print;
+    return (typeof require !== 'undefined') ? require('../presentation/print.js') : null;
+  }
 
   var Metrics = (typeof global.Metrics !== 'undefined') ? global.Metrics
     : (typeof require !== 'undefined' ? require('../state/metrics.js') : null);
@@ -121,10 +134,11 @@
           throw new Error('该配置下没有可生成的题目');
         }
 
-        // 3. 转换为 legacy 形状供批改/错题本/打印使用
-        var legacy = g.questions.map(function (sq) {
-          return self._sqToLegacyQuestion(sq);
-        });
+        // 3. 转换为 legacy 形状供批改/错题本/打印使用（P28-21：唯一经 RenderFormat 单一适配器）
+        if (!RenderFormat || typeof RenderFormat.toRenderableQuestions !== 'function') {
+          throw new Error('唯一 Legacy Adapter（shared/presentation/render-format.js）不可用');
+        }
+        var legacy = RenderFormat.toRenderableQuestions(g.questions);
 
         self.semanticQuestions = g.questions;
         self.lastSemantic = g;
@@ -283,7 +297,7 @@
 
     // 优先使用 Engine 产物直接打印
     if (this.lastSemantic && this.lastSemantic.questions && this.lastSemantic.questions.length) {
-      return Print.openFromQuestions(this.lastSemantic.questions, { title: title });
+      return resolvePrint().openFromQuestions(this.lastSemantic.questions, { title: title });
     }
 
     // 回退 DOM 克隆打印
@@ -294,7 +308,7 @@
       ? global.PluginUtil.layout.calcOptimalCols(this.exerciseSet, a4w) : 3);
 
     var opts = { pageType: pageType, columns: cols };
-    return Print.open(area, title, opts);
+    return resolvePrint().open(area, title, opts);
   };
 
   /**
@@ -369,6 +383,8 @@
   PracticeSession.prototype._collectAnswers = function () {
     var answers = {};
     document.querySelectorAll('#problemsArea input[data-index], #problemsArea input[data-idx]').forEach(function (inp) {
+      // P28-48：选择题 radio 仅收集已勾选项，避免同组未选项覆盖用户答案。
+      if ((inp.type === 'radio' || inp.type === 'checkbox') && !inp.checked) return;
       if (inp.hasAttribute('data-index')) {
         answers[inp.getAttribute('data-index')] = inp.value.trim();
       } else if (inp.hasAttribute('data-idx') && inp.hasAttribute('data-field')) {
@@ -376,26 +392,6 @@
       }
     });
     return answers;
-  };
-
-  PracticeSession.prototype._sqToLegacyQuestion = function (sq) {
-    var ans = '';
-    if (sq.answer) {
-      if (sq.answer.value != null) ans = sq.answer.value;
-      else if (Array.isArray(sq.answer.acceptable) && sq.answer.acceptable.length) ans = sq.answer.acceptable[0];
-    }
-    return {
-      q: sq.prompt || (sq.content && sq.content.prompt) || '',
-      text: sq.prompt || '',
-      answer: ans,
-      id: sq.id,
-      knowledgePointId: sq.knowledgePoint,
-      questionType: sq.questionType,
-      difficulty: sq.difficulty,
-      inputType: (sq.answerMode === 'choice') ? 'choice' : undefined,
-      options: sq.options || sq.distractors || undefined,
-      __semantic: sq
-    };
   };
 
   PracticeSession.prototype._renderSet = function (set) {
