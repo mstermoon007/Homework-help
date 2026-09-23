@@ -32,19 +32,8 @@
   // P28-19 五段链段名（供门禁与溯源消费；不承载逻辑，仅声明链面）
   var CHAIN_SEGMENTS = ['Misconception', 'Trigger', 'QuestionVariation', 'ExpectedError', 'Feedback'];
 
-  var _overlay = null;
-  var _overlayLoaded = false;
-
-  function getOverlay() {
-    if (_overlayLoaded) return _overlay;
-    _overlayLoaded = true;
-    try {
-      var p = '../../' + 'kbl/' + 'teaching/' + 'misconception-profiles.json';
-      var doc = require(p);
-      if (doc && doc.kps && typeof doc.kps === 'object') _overlay = doc;
-    } catch (e) { /* 浏览器 bundle：kbl/ 数据不打包 → 无指令 */ }
-    return _overlay;
-  }
+  // FINAL-22：misconception-profiles.json 直读 KBL 已移除（Strategy 禁直读 KBL，须经 KnowledgeContext）。
+  // 实测 1570 冻结 mapping 全量 0 命中；自适应变式指令待经 KnowledgeContext 正规通道另行重建。
 
   // 运算形态归一（计划期 token：符号 / 标签 / KBL 运算名 → {add,sub,mult,div} 标签集）
   var OP_NORM = {
@@ -76,7 +65,7 @@
    * @returns {Array<{errorType:string, variant:string, axis:string, basis:string}>}
    */
   function resolveForPlan(opts) {
-    var overlay = getOverlay();
+    var overlay = null; // FINAL-22：KBL teaching 直读已移除
     if (!overlay || !opts || !opts.kpId) return [];
     if (!Array.isArray(opts.errorTypes) || !opts.errorTypes.length) return [];
     var entry = overlay.kps[opts.kpId];
@@ -110,7 +99,6 @@
   var VariationDirective = {
     resolveForPlan: resolveForPlan,
     normalizeOps: normalizeOps,
-    getOverlay: getOverlay,
     CHAIN_SEGMENTS: CHAIN_SEGMENTS
   };
 

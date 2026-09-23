@@ -11,7 +11,9 @@
  *   3. maker 覆盖 4 KP 的全部 ALLOW 行（native binding kp=1 不分题型胜出，
  *      未覆盖题型会 0 产出破坏 verify:allow-gen 1570 门禁）。
  *   4. 证据规则数据 kbl/teaching/evidence-rules.json：断言 kind 仅
- *      field/fieldNot/relation/relationNot 四种。
+ *      field/fieldNot/relation/relationNot/fieldPresent 五种
+ *      （FINAL-31a：fieldPresent=存在性断言，用于按抽题随机取值的语义维度，
+ *      不冻结具体取值）。
  *
  * P26 evidence 全量扩建：规则表从 4 代表 KP 扩到 A 类全量（kp-matrix.json
  * draftSemanticLevel==='A' 的 75 KP × ALLOW 题型，机械派生契约）+ 既有 6 行保留。
@@ -61,7 +63,8 @@ test('pass：声明齐 + required 全满足 + forbidden 无命中', () => {
     data: {
       operation: 'mult',
       timesRelation: 'times-of',
-      semanticEvidence: { relations: ['times-compare', 'multiply-by-times'], constructs: ['base-quantity'] }
+      // FINAL-37：倍 calc 规则深化后要求 base-quantity/multiple/comparison 三构件
+      semanticEvidence: { relations: ['times-compare', 'multiply-by-times'], constructs: ['base-quantity', 'multiple', 'comparison'] }
     }
   }), KP_TIMES);
   assert.equal(r.state, 'pass');
@@ -97,7 +100,8 @@ test('四态进入 validateKpSemantics.checks.semanticEvidence 与 result.semant
   const passSq = sqOf({
     data: {
       operation: 'mult', timesRelation: 'times-of',
-      semanticEvidence: { relations: ['times-compare', 'multiply-by-times'], constructs: [] }
+      // FINAL-37：倍 calc 规则要求三构件，pass 夹具须声明齐全
+      semanticEvidence: { relations: ['times-compare', 'multiply-by-times'], constructs: ['base-quantity', 'multiple', 'comparison'] }
     }
   });
   const out = KpSemantic.validateKpSemantics(passSq, { kpId: KP_TIMES, kpConstraints: null, plan: null });
@@ -121,7 +125,8 @@ test('evidence-rules.json：断言 kind 合法、键不重复、A 类 ALLOW 行�
   const mappings = require(path.join(ROOT, 'kbl', 'canonical', 'mappings.json')).mappings;
   assert.ok(Array.isArray(doc.rules));
   const seen = new Set();
-  const KINDS = new Set(['field', 'fieldNot', 'relation', 'relationNot']);
+  // FINAL-37：新增 construct / constructNot 断言种——结构构件证据（不再装饰）
+  const KINDS = new Set(['field', 'fieldNot', 'relation', 'relationNot', 'fieldPresent', 'construct', 'constructNot']);
   doc.rules.forEach((r) => {
     const key = r.knowledgePointId + '|' + r.questionType;
     assert.ok(!seen.has(key), '规则键不重复: ' + key);

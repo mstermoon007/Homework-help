@@ -4,13 +4,14 @@
  * tests/generator/p27-variation-directive.test.js — P27-11 Misconception→NextVariation 接线
  *
  * 冻结不变量：
- *   1. VariationDirective.resolveForPlan：overlay 命中（kpId × 错因聚焦 × 计划期
- *      triggerPattern：题型 + 运算标签归一）→ 指令 {errorType, variant, axis, basis}；
- *      越界/不匹配/无 overlay → 空数组（fail-open，行为同现状）。
+ *   1. VariationDirective.resolveForPlan：FINAL-22 移除 kbl/teaching overlay 直读后，
+ *      恒返回空数组（fail-open 回归守卫）；指令仅经显式输入进入消费链。
  *   2. AdaptiveStrategy.resolve：misconceptionDirectives 非空且有错因聚焦时
  *      R18 variant 被指令转向（数据驱动，非硬编码）；指令随决策回传。
  *   3. 端到端：StrategyEngine.plan 携带含错因记录的 learnerProfile →
- *      QuestionPlan.variationDirectives 挂载 + variant 转向（真实 overlay 数据）。
+ *      计划不自动携带 variationDirectives（FINAL-22：数据源移除），
+ *      variant 走 R18 兜底「基础」；指令转向链由用例 2 覆盖（数据重建延后，
+ *      见 FINAL-REPAIR-DEFERRED）。
  *   4. 生成器通用消费（arithmetic 族，无 KP 分支）：axis='numeric' 指令 →
  *      运算数收窄到 numberRange 下半区；题面报告 numberRange 保持原值
  *      （validator check#4 语义边界不动）。
@@ -31,22 +32,15 @@ const AdaptiveStrategy = Bundle.req('shared/strategy/adaptive-strategy.js');
 const StrategyEngine = Env.StrategyEngine;
 const Arithmetic = Bundle.req('shared/generator/generators/arithmetic.js');
 
-// 测试环境注入 MisconceptionProfile overlay：bundle 内 variation-directive 用计算路径
-// require kbl/teaching/misconception-profiles.json（浏览器 fail-open 先例，evidence-rules
-// 同款）。bundle 文件本身不含 kbl 数据（check-kbl-uniqueness 门禁），此处仅在
-// dev 测试进程的模块注册表（StrategyBundle.modules 即 __defs）挂载数据，模拟
-// 「数据可得」环境，验证完整消费链。生产浏览器仍 fail-open（无指令=现状）。
-const fs = require('node:fs');
-const OVERLAY_ID = '../../kbl/teaching/misconception-profiles.json'; // 与 variation-directive.js 计算路径逐字一致
-Bundle.modules[OVERLAY_ID] = function (m) {
-  m.exports = JSON.parse(fs.readFileSync(path.join(ROOT, 'kbl', 'teaching', 'misconception-profiles.json'), 'utf8'));
-};
+// FINAL-22：bundle 内 variation-directive 已移除 kbl/teaching/misconception-profiles.json
+// 直读（Strategy→KBL=禁止），overlay 注入模拟块随之删除；指令数据经 KnowledgeContext
+// 正规通道重建前，resolveForPlan 恒返回空（fail-open）。
 
 const KP_MULT = 'math-g2-up-u07-k001'; // 7~9乘除法（g2，multiplication-division 族）
 
 /* ---------------- 1. resolveForPlan ---------------- */
 
-test('overlay 命中：口诀混淆 × calc × 乘除 token → 数值/numeric 指令（带 basis）', () => {
+test('FINAL-22：overlay 数据源已移除 → resolveForPlan 恒返回空（fail-open 回归守卫）', () => {
   ['×', 'mult', 'multiplication'].forEach((tok) => {
     const d = VariationDirective.resolveForPlan({
       kpId: KP_MULT,
@@ -54,11 +48,7 @@ test('overlay 命中：口诀混淆 × calc × 乘除 token → 数值/numeric �
       questionTypeId: 'calc',
       operationTokens: [tok]
     });
-    assert.equal(d.length, 1, 'token ' + tok + ' 应命中');
-    assert.equal(d[0].errorType, '口诀混淆');
-    assert.equal(d[0].variant, '数值');
-    assert.equal(d[0].axis, 'numeric');
-    assert.ok(d[0].basis.length > 0, '指令必须携带 basis 引文');
+    assert.equal(d.length, 0, 'token ' + tok + ' 无 overlay 数据 → 空指令');
   });
 });
 
@@ -126,7 +116,7 @@ function learnerProfileWithRhyme() {
   };
 }
 
-test('StrategyEngine.plan：learnerProfile 携带口诀混淆 → 计划挂 variationDirectives + variant=数值', () => {
+test('StrategyEngine.plan：learnerProfile 携带口诀混淆 → 计划不自动携带 variationDirectives（FINAL-22）', () => {
   const result = StrategyEngine.plan({
     subject: 'math', grade: 2,
     knowledgePointId: KP_MULT,
@@ -137,11 +127,9 @@ test('StrategyEngine.plan：learnerProfile 携带口诀混淆 → 计划挂 vari
   });
   const plan = result.plans[0];
   assert.ok(plan, '应有计划');
-  assert.ok(Array.isArray(plan.variationDirectives) && plan.variationDirectives.length >= 1,
-    '计划必须携带变式指令');
-  assert.equal(plan.variationDirectives[0].errorType, '口诀混淆');
-  assert.equal(plan.variationDirectives[0].axis, 'numeric');
-  assert.equal(plan.variant, '数值', 'R18 被指令转向');
+  assert.equal(plan.variationDirectives, undefined,
+    'FINAL-22：overlay 数据源移除，计划不自动携带变式指令');
+  assert.equal(plan.variant, '基础', 'R18 兜底：有错因 + 低掌握 → 基础（无指令转向）');
 });
 
 test('无 learnerProfile → 计划不带 variationDirectives（现状不变）', () => {

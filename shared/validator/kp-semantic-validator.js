@@ -307,13 +307,19 @@ function getEvidenceRules() {
 }
 
 /** 字段断言：path 相对 sq 根（如 'data.operation'）；数组按多重集比较，其余严格相等 */
-function fieldEquals(sq, path, value) {
+/** 按点路径读取 sq 字段（fieldEquals 的只读内核），返回 undefined 表示路径不可达 */
+function fieldRead(sq, path) {
   var cur = sq;
   var parts = String(path).split('.');
   for (var i = 0; i < parts.length; i++) {
-    if (cur == null || typeof cur !== 'object') return false;
+    if (cur == null || typeof cur !== 'object') return undefined;
     cur = cur[parts[i]];
   }
+  return cur;
+}
+
+function fieldEquals(sq, path, value) {
+  var cur = fieldRead(sq, path);
   if (Array.isArray(value) || Array.isArray(cur)) {
     if (!Array.isArray(value) || !Array.isArray(cur)) return false;
     return value.slice().sort().join('\u0001') === cur.slice().sort().join('\u0001');
@@ -337,15 +343,22 @@ function checkSemanticEvidence(sq, kpId) {
   }
 
   var relations = Array.isArray(decl.relations) ? decl.relations : [];
+  // FINAL-37：constructs 不再装饰——验证器真正校验声明 constructs 是否含规则要求的结构构件。
+  var constructs = Array.isArray(decl.constructs) ? decl.constructs : [];
   var missing = [];
   (rule.required || []).forEach(function (a) {
     if (a.kind === 'relation' && relations.indexOf(a.relation) === -1) missing.push('relation:' + a.relation);
     if (a.kind === 'field' && !fieldEquals(sq, a.path, a.value)) missing.push(a.path);
+    // FINAL-31a：存在性断言——路径可读且非 undefined 即通过，不冻结按抽题随机取值的具体值
+    if (a.kind === 'fieldPresent' && fieldRead(sq, a.path) === undefined) missing.push('present:' + a.path);
+    // FINAL-37：结构构件断言——声明 constructs 须包含该构件（如 base-quantity/multiple/vertex）
+    if (a.kind === 'construct' && constructs.indexOf(a.name) === -1) missing.push('construct:' + a.name);
   });
   var forbiddenHits = [];
   (rule.forbidden || []).forEach(function (a) {
     if (a.kind === 'relationNot' && relations.indexOf(a.relation) !== -1) forbiddenHits.push('relation:' + a.relation);
     if (a.kind === 'fieldNot' && fieldEquals(sq, a.path, a.value)) forbiddenHits.push(a.path);
+    if (a.kind === 'constructNot' && constructs.indexOf(a.name) !== -1) forbiddenHits.push('construct:' + a.name);
   });
 
   if (missing.length || forbiddenHits.length) {

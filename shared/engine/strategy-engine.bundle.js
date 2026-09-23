@@ -23,18 +23,6 @@ __defs["shared/catalog/difficulty-static.js"] = function (m) {
   if (global.App.DifficultyStatic == null) throw new Error('strategy-bundle: 缺少全局 App.DifficultyStatic（请先加载对应脚本）');
   m.exports = global.App.DifficultyStatic;
 };
-__defs["shared/knowledge/knowledge-bank.js"] = function (m) {
-  if (global.KnowledgeCompat == null) throw new Error('strategy-bundle: 缺少全局 KnowledgeCompat（请先加载对应脚本）');
-  m.exports = global.KnowledgeCompat;
-};
-__defs["shared/knowledge/knowledge-point.js"] = function (m) {
-  if (global.KnowledgePointCompat == null) throw new Error('strategy-bundle: 缺少全局 KnowledgePointCompat（请先加载对应脚本）');
-  m.exports = global.KnowledgePointCompat;
-};
-__defs["shared/knowledge/knowledge-ontology.js"] = function (m) {
-  if (global.KnowledgeOntologyCompat == null) throw new Error('strategy-bundle: 缺少全局 KnowledgeOntologyCompat（请先加载对应脚本）');
-  m.exports = global.KnowledgeOntologyCompat;
-};
 __defs["shared/orchestration/knowledge-context.js"] = function (m) {
   if (global.KnowledgeContext == null) throw new Error('strategy-bundle: 缺少全局 KnowledgeContext（请先加载对应脚本）');
   m.exports = global.KnowledgeContext;
@@ -300,18 +288,18 @@ function poolSource(request, mode) {
 }
 
 function poolEntries(source) {
-  var KB = require("shared/knowledge/knowledge-bank.js");
+  var KC = require("shared/orchestration/knowledge-context.js"); 
   var entries = [];
   if (source.unitId != null) {
     var grades = source.grade != null ? [source.grade] : [1, 2, 3, 4, 5, 6];
     var seen = {};
     grades.forEach(function (g) {
-      (KB.getEntries(source.subject, g) || []).forEach(function (e) {
+      (KC.poolContext({ subject: source.subject, grade: g }) || []).forEach(function (e) {
         if (String(e.moduleId) === String(source.unitId) && !seen[e.id]) { seen[e.id] = true; entries.push(e); }
       });
     });
   } else {
-    entries = KB.getEntries(source.subject, source.grade) || [];
+    entries = KC.poolContext({ subject: source.subject, grade: source.grade }) || [];
   }
   return entries;
 }
@@ -436,16 +424,15 @@ var TYPE_KP_MAX_GROUP = 4;
 
 
 function entriesById(ids) {
-  var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
-  var KB = require("shared/knowledge/knowledge-bank.js");
+  var KC = require("shared/orchestration/knowledge-context.js"); 
   var idx = {};
   [1, 2, 3, 4, 5, 6].forEach(function (g) {
-    (KB.getEntries('math', g) || []).forEach(function (e) { idx[e.id] = e; });
+    (KC.poolContext({ subject: 'math', grade: g }) || []).forEach(function (e) { idx[e.id] = e; });
   });
   return ids.map(function (id) {
     if (idx[id]) return idx[id];
     var kp = null;
-    try { kp = KnowledgePoint.get(id); } catch (e) {  }
+    try { kp = KC.strategyView(id); } catch (e) {  }
     return {
       id: id,
       name: (kp && kp.identity && kp.identity.name) || id,
@@ -1166,6 +1153,10 @@ function plan(request) {
     if (Array.isArray(learnerDecision.variationDirectives) && learnerDecision.variationDirectives.length) {
       questionPlan.variationDirectives = learnerDecision.variationDirectives;
     }
+    
+    
+    
+    questionPlan.variation = buildVariationObject(learnerDecision.variant, questionPlan.variationDirectives);
   }
 
   
@@ -1231,27 +1222,8 @@ function formatStrategyTrace(trace) {
 
 
 
-
-var _qtIntentIndex = null;
-function getQtIntentRow(kpId, qt) {
-  if (_qtIntentIndex === null) {
-    _qtIntentIndex = {};
-    try {
-      var p = '../../' + 'kbl/' + 'teaching/' + 'qt-intent.json';
-      var data = require(p);
-      (data && data.rows || []).forEach(function (r) {
-        _qtIntentIndex[r.knowledgeId + '|' + r.questionType] = r;
-      });
-    } catch (e) {
-      
-    }
-  }
-  return _qtIntentIndex[kpId + '|' + qt] || null;
-}
-
-
 function buildExplainability(kp, questionType, finalDifficulty, learnerDecision, selectedGenerator) {
-  var intentRow = getQtIntentRow(kp.id, questionType);
+  var intentRow = null; 
   var trainsWhat = (intentRow && intentRow.intent && intentRow.intent.trainsWhat) || null;
   var whyThisType = (intentRow && intentRow.intent && intentRow.intent.whyThisType) || null;
   var variant = learnerDecision ? learnerDecision.variant : 'fixed';
@@ -1273,6 +1245,61 @@ function buildExplainability(kp, questionType, finalDifficulty, learnerDecision,
       '; errorFocus=' + (errorFocus.length ? errorFocus.join(',') : 'none') +
       '; generator=' + generatorId
   };
+}
+
+
+
+
+function buildVariationObject(variantLabel, directives) {
+  var v = {
+    'numeric': false,
+    'unknown-position': false,
+    'representation': false,
+    'context': false,
+    'operation': false,
+    'cognitive': false
+  };
+  var label = (typeof variantLabel === 'string') ? variantLabel : 'fixed';
+  switch (label) {
+    case '数值':
+      v['numeric'] = true;
+      break;
+    case '呈现':
+      v['numeric'] = true;
+      v['representation'] = true;
+      break;
+    case '情境':
+      v['numeric'] = true;
+      v['context'] = true;
+      break;
+    case '结构':
+      v['numeric'] = true;
+      v['unknown-position'] = true;
+      v['operation'] = true;
+      break;
+    case '迁移':
+      v['numeric'] = true;
+      v['representation'] = true;
+      v['context'] = true;
+      v['cognitive'] = true;
+      break;
+    case '基础':
+    case 'fixed':
+    default:
+      
+      break;
+  }
+  
+  if (Array.isArray(directives)) {
+    directives.forEach(function (d) {
+      if (!d || !d.axis) return;
+      if (d.axis === 'numeric' || d.axis === 'unknown-position' || d.axis === 'representation' ||
+          d.axis === 'context' || d.axis === 'operation' || d.axis === 'cognitive') {
+        v[d.axis] = true;
+      }
+    });
+  }
+  return v;
 }
 
 module.exports = {
@@ -1456,7 +1483,7 @@ __defs["shared/strategy/difficulty-strategy.js"] = function (module, exports, re
 'use strict';
 
 var StaticDifficulty = require("shared/strategy/static-difficulty.js");
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
 var ComplexityStrategy = require("shared/strategy/complexity-strategy.js");
@@ -1500,7 +1527,7 @@ function computeEffectiveDifficulty(options) {
 
   var kp = options.knowledgePoint;
   if (!kp && options.knowledgePointId != null) {
-    kp = KnowledgePoint.get(options.knowledgePointId);
+    kp = KnowledgePoint.strategyView(options.knowledgePointId);
     if (!kp) {
       throw new StrategyError('知识点不存在: ' + options.knowledgePointId, CODES.KP_NOT_FOUND, { knowledgePointId: options.knowledgePointId });
     }
@@ -1640,7 +1667,7 @@ __defs["shared/strategy/target-difficulty.js"] = function (module, exports, requ
 
 var StaticDifficulty = require("shared/strategy/static-difficulty.js");
 var DifficultyStrategy = require("shared/strategy/difficulty-strategy.js");
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
 
@@ -1656,7 +1683,7 @@ function resolveTargetDifficulty(options) {
 
   var kp = options.knowledgePoint;
   if (!kp && options.knowledgePointId != null) {
-    kp = KnowledgePoint.get(options.knowledgePointId);
+    kp = KnowledgePoint.strategyView(options.knowledgePointId);
     if (!kp) {
       throw new StrategyError('知识点不存在: ' + options.knowledgePointId, CODES.KP_NOT_FOUND, { knowledgePointId: options.knowledgePointId });
     }
@@ -1743,7 +1770,7 @@ __defs["shared/strategy/structure-constraints.js"] = function (module, exports, 
 var StaticDifficulty = require("shared/strategy/static-difficulty.js");
 var NumberRangeStrategy = require("shared/strategy/number-range-strategy.js");
 var Difficulty = require("shared/catalog/difficulty.js");
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
 
@@ -1756,7 +1783,7 @@ function resolveStructureConstraints(options) {
 
   var kp = options.knowledgePoint;
   if (!kp && options.knowledgePointId != null) {
-    kp = KnowledgePoint.get(options.knowledgePointId);
+    kp = KnowledgePoint.strategyView(options.knowledgePointId);
     if (!kp) {
       throw new StrategyError('知识点不存在: ' + options.knowledgePointId, CODES.KP_NOT_FOUND, { knowledgePointId: options.knowledgePointId });
     }
@@ -1826,7 +1853,7 @@ __defs["shared/strategy/number-range-strategy.js"] = function (module, exports, 
 var StaticDifficulty = require("shared/strategy/static-difficulty.js");
 var Difficulty = require("shared/catalog/difficulty.js");
 var PluginUtil = require("shared/core/common.js");
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
 
@@ -1856,7 +1883,7 @@ function resolveNumberRange(options) {
 
   var kp = options.knowledgePoint;
   if (!kp && options.knowledgePointId != null) {
-    kp = KnowledgePoint.get(options.knowledgePointId);
+    kp = KnowledgePoint.strategyView(options.knowledgePointId);
     if (!kp) {
       throw new StrategyError('知识点不存在: ' + options.knowledgePointId, CODES.KP_NOT_FOUND, { knowledgePointId: options.knowledgePointId });
     }
@@ -1895,7 +1922,7 @@ __defs["shared/strategy/cognitive-strategy.js"] = function (module, exports, req
 'use strict';
 
 var Registry = require("shared/knowledge/question-type-registry.js");
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
 
@@ -1971,7 +1998,7 @@ function resolveCognitiveLevel(options) {
 
   var kp = options.knowledgePoint;
   if (!kp && options.knowledgePointId != null) {
-    kp = KnowledgePoint.get(options.knowledgePointId);
+    kp = KnowledgePoint.strategyView(options.knowledgePointId);
     if (!kp) {
       throw new StrategyError('知识点不存在: ' + options.knowledgePointId, CODES.KP_NOT_FOUND, { knowledgePointId: options.knowledgePointId });
     }
@@ -2023,7 +2050,7 @@ __defs["shared/strategy/spiral-strategy.js"] = function (module, exports, requir
 
 'use strict';
 
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
 
@@ -2041,7 +2068,7 @@ function resolveSpiral(options) {
 
   var kp = options.knowledgePoint;
   if (!kp && options.knowledgePointId != null) {
-    kp = KnowledgePoint.get(options.knowledgePointId);
+    kp = KnowledgePoint.strategyView(options.knowledgePointId);
     if (!kp) {
       throw new StrategyError('知识点不存在: ' + options.knowledgePointId, CODES.KP_NOT_FOUND, { knowledgePointId: options.knowledgePointId });
     }
@@ -2082,7 +2109,7 @@ __defs["shared/strategy/context-strategy.js"] = function (module, exports, requi
 'use strict';
 
 var Registry = require("shared/knowledge/question-type-registry.js");
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var CognitiveStrategy = require("shared/strategy/cognitive-strategy.js");
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var CODES = require("shared/strategy/strategy-error.js").StrategyError.CODES;
@@ -2096,7 +2123,7 @@ function resolveContextType(options) {
 
   var kp = options.knowledgePoint;
   if (!kp && options.knowledgePointId != null) {
-    kp = KnowledgePoint.get(options.knowledgePointId);
+    kp = KnowledgePoint.strategyView(options.knowledgePointId);
     if (!kp) {
       throw new StrategyError('知识点不存在: ' + options.knowledgePointId, CODES.KP_NOT_FOUND, { knowledgePointId: options.knowledgePointId });
     }
@@ -2203,7 +2230,7 @@ __defs["shared/strategy/strategy-validator.js"] = function (module, exports, req
 
 'use strict';
 
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var Registry = require("shared/knowledge/question-type-registry.js");
 var Resolver = require("shared/capability/capability-resolver.js");
 
@@ -2228,10 +2255,10 @@ function validatePlan(plan) {
     errors.push('① knowledgePointIds 必填（数组）');
   } else {
     kpIds.forEach(function (id) {
-      var k = KnowledgePoint.get(id);
+      var k = KnowledgePoint.strategyView(id);
       if (!k) errors.push('① 知识点不存在: ' + id);
     });
-    kp = KnowledgePoint.get(kpIds[0]);
+    kp = KnowledgePoint.strategyView(kpIds[0]);
   }
 
   
@@ -2619,7 +2646,7 @@ __defs["shared/strategy/strategy-resolver.js"] = function (module, exports, requ
 
 'use strict';
 
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var StrategyError = require("shared/strategy/strategy-error.js").StrategyError;
 var StrategyErrorCodes = require("shared/strategy/strategy-error.js").StrategyError.CODES;
 
@@ -2627,7 +2654,7 @@ function resolveKnowledgePoint(kpId) {
   if (!kpId || typeof kpId !== 'string') {
     throw new StrategyError('knowledgePointId 必填且必须是字符串', StrategyErrorCodes.INVALID_REQUEST);
   }
-  var kp = KnowledgePoint.get(kpId);
+  var kp = KnowledgePoint.strategyView(kpId);
   if (!kp) {
     throw new StrategyError('知识点不存在: ' + kpId, StrategyErrorCodes.KP_NOT_FOUND, { knowledgePointId: kpId });
   }
@@ -2641,7 +2668,7 @@ function resolveMultiple(ids) {
   var results = {};
   ids.forEach(function (id) {
     try {
-      results[id] = KnowledgePoint.get(id);
+      results[id] = KnowledgePoint.strategyView(id);
     } catch (e) {
       results[id] = null;
     }
@@ -2650,7 +2677,7 @@ function resolveMultiple(ids) {
 }
 
 function hasKnowledgePoint(id) {
-  return KnowledgePoint.get(id) !== null;
+  return KnowledgePoint.strategyView(id) !== null;
 }
 
 module.exports = {
@@ -2676,7 +2703,7 @@ __defs["shared/strategy/comprehensive-strategy.js"] = function (module, exports,
 
   function getKB() {
     if (typeof require === 'function') {
-      try { return require("shared/knowledge/knowledge-bank.js"); } catch (e) {  }
+      try { return require("shared/orchestration/knowledge-context.js"); } catch (e) {  } 
     }
     return null;
   }
@@ -2798,11 +2825,11 @@ __defs["shared/strategy/comprehensive-strategy.js"] = function (module, exports,
     var KB = getKB();
     var engine = getStrategyEngine();
     var deps = [];
-    if (!KB) deps.push('shared/engine/knowledge-compat.js');
+    if (!KB) deps.push('shared/orchestration/knowledge-context.js');
     if (!engine) deps.push('shared/engine/strategy-engine.bundle.js');
     if (deps.length) return Promise.reject(new Error('ComprehensiveStrategy 依赖缺失: ' + deps.join(', ')));
 
-    var entries = KB.getEntries(subject, grade) || [];
+    var entries = KB.poolContext({ subject: subject, grade: grade }) || [];
     
     if (request.unitId != null) {
       var unitFiltered = entries.filter(function (e) { return String(e.moduleId) === String(request.unitId); });
@@ -2955,9 +2982,8 @@ __defs["shared/capability/capability-resolver.js"] = function (module, exports, 
 
 'use strict';
 
-var Ontology = require("shared/knowledge/knowledge-ontology.js");
 var Registry = require("shared/knowledge/question-type-registry.js");
-var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
 var CapabilityModel = require("shared/capability/capability-model.js");
 var Matrix = require("shared/capability/capability-matrix.js");
 
@@ -2989,10 +3015,6 @@ function listTeachingDenials() {
 
 function resolve(kp) {
   
-  
-  if (kp && !kp.presentation && (kp.applicable_question_types || kp.grade || kp.modules)) {
-    try { kp = Ontology.normalize(kp); } catch (e) {  }
-  }
   return CapabilityModel.resolveCapability(kp);
 }
 
@@ -3012,7 +3034,7 @@ function resolveFinal(input) {
   }
 
   
-  var kp = KnowledgePoint.get(kpId);
+  var kp = KnowledgePoint.strategyView(kpId);
   if (!kp) {
     return { knowledgePointId: kpId, questionType: qtId, capability: qt.category, decision: 'INVALID', source: { knowledgePoint: 'ontology' }, confidence: 'none' };
   }
@@ -3060,7 +3082,7 @@ function resolveFinal(input) {
 }
 
 function matrix(kp) {
-  var canonical = Ontology.normalize(kp);
+  var canonical = kp; 
   var supported = [];
   var unsupported = [];
 
@@ -3594,10 +3616,10 @@ __defs["shared/generator/generator-registry.js"] = function (module, exports, re
 
 var CORE_RECORDS = [
   
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k001', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u03-k001', 'math-g1-down-u04-k001', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g1-up-u04-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k004', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k003', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u02-k001', 'math-g5-down-u02-k002', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k001', 'math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k001', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u03-k001', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g1-up-u04-k001', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k003', 'math-g2-up-u02-k004', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g5-down-u02-k002'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g5-down-u02-k001', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'geometry', 'calc', 'apply'], questionTypes: ['fill', 'geometry', 'calc', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'geometry', 'calc', 'apply'], questionTypes: ['choice', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
@@ -3631,7 +3653,7 @@ var CORE_RECORDS = [
     knowledgePoints: ['math-g1-down-u07-k001', 'math-g1-down-u07-k002', 'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004', 'math-g3-up-u03-k001', 'math-g3-up-u03-k002', 'math-g1-down-u07-k003', 'math-g3-up-u04-k002', 'math-g3-up-u04-k003', 'math-g3-up-u04-k004'],
     scope: 'core', version: 2, supportsComposite: false },
   { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc'],
-    knowledgePoints: ['math-g4-up-u06-k001', 'math-g5-down-u03-k006', 'math-g1-down-u08-k001', 'math-g2-up-u08-k001', 'math-g3-up-u09-k001', 'math-g4-down-u10-k001', 'math-g4-up-u09-k001', 'math-g5-down-u11-k001', 'math-g5-up-u09-k001', 'math-g6-down-u06-k001', 'math-g6-up-u06-k001', 'math-g1-down-u02-k003', 'math-g1-down-u04-k005', 'math-g1-down-u05-k003', 'math-g1-down-u06-k003', 'math-g1-up-u05-k003', 'math-g1-up-u06-k001', 'math-g2-down-u05-k004', 'math-g2-down-u06-k001', 'math-g2-down-u06-k002', 'math-g2-down-u06-k003', 'math-g2-down-u06-k004', 'math-g2-down-u07-k001', 'math-g2-down-u07-k003', 'math-g3-down-u08-k002', 'math-g3-down-u08-k005', 'math-g3-up-u02-k005', 'math-g3-up-u04-k001', 'math-g4-down-u01-k004', 'math-g4-down-u09-k003', 'math-g5-up-u03-k006', 'math-g5-down-u09-k003', 'math-g6-down-u01-k005'],
+    knowledgePoints: ['math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u03-k006', 'math-g1-down-u08-k001', 'math-g2-up-u08-k001', 'math-g3-up-u09-k001', 'math-g4-down-u10-k001', 'math-g4-up-u09-k001', 'math-g5-down-u11-k001', 'math-g5-up-u09-k001', 'math-g6-down-u06-k001', 'math-g6-up-u06-k001', 'math-g1-down-u02-k003', 'math-g1-down-u04-k005', 'math-g1-down-u05-k003', 'math-g1-down-u06-k003', 'math-g1-up-u05-k003', 'math-g1-up-u06-k001', 'math-g2-down-u05-k004', 'math-g2-down-u06-k001', 'math-g2-down-u06-k002', 'math-g2-down-u06-k003', 'math-g2-down-u06-k004', 'math-g2-down-u07-k001', 'math-g2-down-u07-k003', 'math-g3-down-u08-k002', 'math-g3-down-u08-k005', 'math-g3-up-u02-k005', 'math-g3-up-u04-k001', 'math-g4-down-u01-k004', 'math-g4-down-u09-k003', 'math-g5-up-u03-k006', 'math-g5-down-u09-k003', 'math-g6-down-u01-k005'],
     scope: 'core', version: 2, supportsComposite: false },
 
   
@@ -3810,9 +3832,9 @@ function forSubject(subject) {
 }
 
 function resolveChain(kpId) {
-  var KnowledgePoint = require("shared/knowledge/knowledge-point.js");
+  var KnowledgePoint = require("shared/orchestration/knowledge-context.js"); 
   var Resolver = require("shared/capability/capability-resolver.js");
-  var kp = KnowledgePoint.get(kpId);
+  var kp = KnowledgePoint.strategyView(kpId);
   if (!kp) return null;
   var capabilityQuestionTypes = Resolver.getCapabilities(kp).questionTypes || [];
   return {
@@ -4566,19 +4588,8 @@ __defs["shared/strategy/variation-directive.js"] = function (module, exports, re
   
   var CHAIN_SEGMENTS = ['Misconception', 'Trigger', 'QuestionVariation', 'ExpectedError', 'Feedback'];
 
-  var _overlay = null;
-  var _overlayLoaded = false;
-
-  function getOverlay() {
-    if (_overlayLoaded) return _overlay;
-    _overlayLoaded = true;
-    try {
-      var p = '../../' + 'kbl/' + 'teaching/' + 'misconception-profiles.json';
-      var doc = require(p);
-      if (doc && doc.kps && typeof doc.kps === 'object') _overlay = doc;
-    } catch (e) {  }
-    return _overlay;
-  }
+  
+  
 
   
   var OP_NORM = {
@@ -4601,7 +4612,7 @@ __defs["shared/strategy/variation-directive.js"] = function (module, exports, re
 
   
   function resolveForPlan(opts) {
-    var overlay = getOverlay();
+    var overlay = null; 
     if (!overlay || !opts || !opts.kpId) return [];
     if (!Array.isArray(opts.errorTypes) || !opts.errorTypes.length) return [];
     var entry = overlay.kps[opts.kpId];
@@ -4635,7 +4646,6 @@ __defs["shared/strategy/variation-directive.js"] = function (module, exports, re
   var VariationDirective = {
     resolveForPlan: resolveForPlan,
     normalizeOps: normalizeOps,
-    getOverlay: getOverlay,
     CHAIN_SEGMENTS: CHAIN_SEGMENTS
   };
 
@@ -4789,7 +4799,10 @@ function wrapGenerator(gen, generatorId, generatorVersion) {
     var out = orig(paramPlan, context);
     
     
+    
+    
     var finish = function (sqs) {
+      markSemanticTarget(sqs, paramPlan);
       return attachMeta(TypeContract.enforce(sqs, paramPlan), generatorId, generatorVersion);
     };
     if (out && typeof out.then === 'function') {
@@ -4800,10 +4813,22 @@ function wrapGenerator(gen, generatorId, generatorVersion) {
   return gen;
 }
 
+
+function markSemanticTarget(sqs, plan) {
+  if (!sqs || !plan) return;
+  var arr = Array.isArray(sqs) ? sqs : (sqs.questions && Array.isArray(sqs.questions) ? sqs.questions : null);
+  if (!arr) return;
+  var trainsWhat = (plan.semanticParams && plan.semanticParams.intent && plan.semanticParams.intent.trainsWhat) || null;
+  if (!trainsWhat) return;
+  arr.forEach(function (sq) {
+    if (sq && sq.semanticTarget == null) sq.semanticTarget = trainsWhat;
+  });
+}
+
 function attachMeta(sqs, generatorId, generatorVersion) {
   if (!sqs) return sqs;
   var arr = Array.isArray(sqs) ? sqs : (sqs.questions && Array.isArray(sqs.questions) ? sqs.questions : null);
-  if (!arr) return sqs;
+  if (!arr) return sq;
   arr.forEach(function (sq) {
     if (!sq) return;
     sq.metadata = sq.metadata || {};
@@ -6261,6 +6286,8 @@ __defs["shared/generator/generators/arithmetic.js"] = function (module, exports,
 
 var Rng = require("shared/generator/core/rng.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 
 
@@ -6397,7 +6424,7 @@ function createArithmeticGenerator(spec) {
           }
         });
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
@@ -6423,6 +6450,7 @@ __defs["shared/generator/generators/selection.js"] = function (module, exports, 
 
 var Rng = require("shared/generator/core/rng.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 
 function pkp(plan) {
@@ -6539,7 +6567,7 @@ function createSelectionGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i));
       }
-      return questions;
+      return VariationApply.applyToAll(questions, plan);
     }
   };
   return generator;
@@ -6565,6 +6593,8 @@ __defs["shared/generator/generators/shape.js"] = function (module, exports, requ
 
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -7199,7 +7229,7 @@ function createShapeGenerator(spec) {
         }
         questions.push(q);
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
@@ -7229,6 +7259,8 @@ __defs["shared/generator/generators/position.js"] = function (module, exports, r
 
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -7739,7 +7771,7 @@ function createPositionGenerator(spec) {
         }
         questions.push(q);
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
@@ -7764,6 +7796,8 @@ __defs["shared/generator/generators/money.js"] = function (module, exports, requ
 var Rng = require("shared/generator/core/rng.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
 var OpSem = require("shared/generator/core/op-semantics.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -8262,7 +8296,7 @@ function createMoneyGenerator(spec) {
         }
         questions.push(q);
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
@@ -8289,6 +8323,8 @@ __defs["shared/generator/generators/application.js"] = function (module, exports
 
 var Rng = require("shared/generator/core/rng.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -8336,6 +8372,18 @@ var PROBLEM_TEMPLATES = {
     ops: ['mult'],
     relation: 'B = A × n'
   },
+  
+  'equal-groups': {
+    zh: '已知条件：每份有 {per} 个，共有 {groups} 份。\n问题：一共有多少个？',
+    ops: ['mult'],
+    relation: 'total = per × groups'
+  },
+  
+  'share-equally': {
+    zh: '已知条件：一共 {total} 个，平均分给 {groups} 人。\n问题：每人分得多少个？',
+    ops: ['div'],
+    relation: 'per = total ÷ groups'
+  },
   'divide-multiple': {
     zh: '已知条件：A 有 {a}，B 是 A 的 {n} 分之 1。\n问题：B 有多少？',
     ops: ['div'],
@@ -8363,6 +8411,26 @@ var PROBLEM_TEMPLATES = {
 
 var TEMPLATE_KEYS = Object.keys(PROBLEM_TEMPLATES);
 
+
+
+
+
+var OP_ALIAS = {
+  addition: 'add', subtraction: 'sub', multiplication: 'mult', division: 'div',
+  add: 'add', sub: 'sub', mult: 'mult', div: 'div'
+};
+
+function kpAllowedOps(plan) {
+  var ops = plan && plan.semanticParams && plan.semanticParams.operations;
+  if (!Array.isArray(ops) || ops.length === 0) return null;
+  var out = [];
+  ops.forEach(function (o) {
+    var t = OP_ALIAS[o];
+    if (t && out.indexOf(t) === -1) out.push(t);
+  });
+  return out.length ? out : null;
+}
+
 function getApplicationMeta(kp) {
   var lt = kp.source?.legacyType || kp.legacy?.legacyType;
   var cat = kp.legacy?.category;
@@ -8373,11 +8441,18 @@ function randInt(rng, min, max) {
   return Math.floor(rng() * (max - min + 1)) + min;
 }
 
-function pickTemplate(rng, difficulty) {
+function pickTemplate(rng, difficulty, allowedOps) {
   
-  var simpleTemplates = ['total-from-parts', 'part-from-total', 'compare-more', 'compare-less'];
+  var simpleTemplates = ['total-from-parts', 'part-from-total', 'compare-more', 'compare-less', 'equal-groups', 'share-equally'];
   var complexTemplates = ['multiple', 'divide-multiple', 'grouping', 'distance', 'work'];
   var pool = difficulty >= 4 ? TEMPLATE_KEYS : simpleTemplates;
+  
+  if (allowedOps) {
+    pool = pool.filter(function (k) {
+      return PROBLEM_TEMPLATES[k].ops.every(function (op) { return allowedOps.indexOf(op) !== -1; });
+    });
+    if (pool.length === 0) return null; 
+  }
   return Rng.pick(rng, pool);
 }
 
@@ -8406,6 +8481,14 @@ function generateNumbers(rng, template, difficulty) {
       var a = randInt(rng, minVal, Math.floor(maxVal / 3));
       var n = randInt(rng, 2, 5);
       return { a: a, n: n };
+    case 'equal-groups':
+      var gp = randInt(rng, 2, 9);
+      var gs = randInt(rng, 2, 6);
+      return { per: gp, groups: gs };
+    case 'share-equally':
+      var sg = randInt(rng, 2, 6);
+      var sp = randInt(rng, 2, 9);
+      return { total: sg * sp, groups: sg };
     case 'divide-multiple':
       var n = randInt(rng, 2, 5);
       var b = randInt(rng, minVal, maxVal);
@@ -8435,6 +8518,8 @@ function computeAnswer(template, nums) {
     case 'compare-more': return nums.a + nums.diff;
     case 'compare-less': return nums.a - nums.diff;
     case 'multiple': return nums.a * nums.n;
+    case 'equal-groups': return nums.per * nums.groups;
+    case 'share-equally': return nums.total / nums.groups;
     case 'divide-multiple': return nums.a / nums.n;
     case 'grouping': return nums.total / nums.per;
     case 'distance': return nums.speed * nums.time;
@@ -8461,7 +8546,8 @@ function formatTemplate(template, nums) {
 
 function makeApplicationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var template = pickTemplate(rng, plan.difficulty);
+  var template = pickTemplate(rng, plan.difficulty, kpAllowedOps(plan));
+  if (!template) return null; 
   var nums = generateNumbers(rng, template, plan.difficulty);
   var answer = computeAnswer(template, nums);
   var prompt = formatTemplate(template, nums);
@@ -8599,10 +8685,11 @@ function createApplicationGenerator(spec) {
 
       for (var i = 0; i < count; i++) {
         var q = makeApplicationQuestion(plan, context, i, meta);
+        if (!q) continue; 
         q.data.graphic = makeGraphicForApplication(q.data.template, q.data.numbers);
         questions.push(q);
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
@@ -8626,6 +8713,7 @@ __defs["shared/generator/generators/composite.js"] = function (module, exports, 
 
 
 var Rng = require("shared/generator/core/rng.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -8712,7 +8800,7 @@ function createCompositeGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeCalcToJudge(plan, context, i, kpIds));
       }
-      return questions;
+      return VariationApply.applyToAll(questions, plan);
     }
   };
 }
@@ -8736,6 +8824,8 @@ __defs["shared/generator/generators/counting.js"] = function (module, exports, r
 
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -8790,7 +8880,11 @@ function stairWays(n) {
 function makeCountingQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   
-  var name = (kp && kp.identity && kp.identity.name) || (kp && kp.name) || '计数问题';
+  
+  
+  
+  var name = (plan && plan.semanticParams && plan.semanticParams.name)
+    || (kp && kp.identity && kp.identity.name) || (kp && kp.name) || '计数问题';
 
   
   var type = 'generic';
@@ -8985,7 +9079,7 @@ function createCountingGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeCountingQuestion(plan, context, i, kp));
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
@@ -9006,6 +9100,8 @@ __defs["shared/generator/generators/reasoning.js"] = function (module, exports, 
 
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -9304,7 +9400,7 @@ function createReasoningGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeReasoningQuestion(plan, context, i, kp));
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
@@ -9325,6 +9421,8 @@ __defs["shared/generator/generators/stats.js"] = function (module, exports, requ
 
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -9804,7 +9902,7 @@ function createStatsGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeStatsQuestion(plan, context, i, kp));
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
@@ -9825,6 +9923,8 @@ __defs["shared/generator/generators/picture-equation.js"] = function (module, ex
 
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -9843,7 +9943,13 @@ function seedFor(plan, context, i) {
 
 function makePictureEquationQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '看图列式';
+  
+  
+  
+  
+  
+  
+  var name = (kp && kp.name) || '看图列式';
 
   var type = 'generic';
   if (name.indexOf('线段') !== -1) type = 'segment';
@@ -9957,7 +10063,7 @@ function createPictureEquationGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makePictureEquationQuestion(plan, context, i, kp));
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
@@ -9977,6 +10083,8 @@ __defs["shared/generator/generators/semantic-special.js"] = function (module, ex
 'use strict';
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -10237,10 +10345,10 @@ function createCodeGenerator(spec) {
     generate: function (plan, context) {
       var count = plan.count || 1;
       var qt = plan.questionTypeId;
-      if (qt === 'choice') return buildQuestions(plan, context, count, makeCodeChoice);
-      if (qt === 'apply') return buildQuestions(plan, context, count, makeCodeApply);
-      if (qt === 'judge') return buildQuestions(plan, context, count, makeCodeJudge);
-      return buildQuestions(plan, context, count, makeCodeFill);
+      if (qt === 'choice') return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeCodeChoice), plan), plan);
+      if (qt === 'apply') return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeCodeApply), plan), plan);
+      if (qt === 'judge') return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeCodeJudge), plan), plan);
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeCodeFill), plan), plan);
     }
   };
   return generator;
@@ -10263,6 +10371,8 @@ __defs["shared/generator/generators/classify.js"] = function (module, exports, r
 'use strict';
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -10322,7 +10432,7 @@ function makeSort(plan, context, i) {
   var desc = Rng.randInt(rng, 0, 1) === 1;
   var sorted = nums.slice().sort(function (a, b) { return desc ? b - a : a - b; });
   var orderText = desc ? '从大到小' : '从小到大';
-  var q = buildBase(plan, context, i, { mode: 'classify', sort: { desc: desc, count: n } });
+  var q = buildBase(plan, context, i, { mode: 'classify', sort: { desc: desc, count: n }, items: nums });
   q.prompt = '把下面各数按' + orderText + '的顺序排列：' + nums.join('，') + '。';
   q.answer = { value: sorted.join('，'), acceptable: [] };
   return q;
@@ -10347,7 +10457,7 @@ function createClassificationGenerator(spec) {
 
     generate: function (plan, context) {
       var count = (plan && plan.count) || 1;
-      return buildQuestions(plan, context, count, makeSort);
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeSort), plan), plan);
     }
   };
   return generator;
@@ -10369,6 +10479,8 @@ __defs["shared/generator/generators/percent.js"] = function (module, exports, re
 
 var Rng = require("shared/generator/core/rng.js");
 var SemanticParameters = require("shared/generator/core/semantic-parameters.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -10736,7 +10848,7 @@ function createPercentGenerator(spec) {
       if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
-      return out;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(out, plan), plan);
     }
   };
 }
@@ -10757,6 +10869,8 @@ __defs["shared/generator/generators/concept-meaning.js"] = function (module, exp
 
 var Rng = require("shared/generator/core/rng.js");
 var SemanticParameters = require("shared/generator/core/semantic-parameters.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -10829,7 +10943,8 @@ function timesData(base, times) {
     times: times,
     semanticEvidence: {
       relations: ['times-compare', 'multiply-by-times'],
-      constructs: ['base-quantity', 'times-word']
+      
+      constructs: ['base-quantity', 'multiple', 'comparison']
     }
   };
 }
@@ -10886,7 +11001,8 @@ function fractionData(withOperation, parts, taken) {
     taken: taken,
     semanticEvidence: {
       relations: ['unit-one', 'equal-partition'],
-      constructs: ['fraction-unit']
+      
+      constructs: ['whole', 'part', 'fraction-relation']
     }
   };
   if (withOperation) d.operation = 'div';
@@ -10939,7 +11055,8 @@ function makeAngleFill(plan, context, i) {
     topic: 'vertex-edges',
     semanticEvidence: {
       relations: ['vertex-rays'],
-      constructs: ['vertex', 'edge']
+      
+      constructs: ['vertex', 'rays', 'angle']
     }
   });
   return finish(q, '从一点引出（  ）条射线所组成的图形叫做角。', '2', ['2', '两'],
@@ -11320,7 +11437,7 @@ function createConceptMeaningGenerator(spec) {
       if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
-      return out;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(out, plan), plan);
     }
   };
 }
@@ -11341,6 +11458,8 @@ __defs["shared/generator/generators/semantic-relations.js"] = function (module, 
 
 var Rng = require("shared/generator/core/rng.js");
 var SemanticParameters = require("shared/generator/core/semantic-parameters.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 var QTYPES = ['calc', 'fill', 'apply', 'choice', 'geometry'];
 
@@ -12014,7 +12133,7 @@ function createSemanticRelationsGenerator(spec) {
       if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
-      return out;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(out, plan), plan);
     }
   };
 }
@@ -12034,6 +12153,8 @@ __defs["shared/generator/generators/decimal.js"] = function (module, exports, re
 'use strict';
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -12267,7 +12388,7 @@ function createDecimalGenerator(spec) {
       if (!name) return []; 
       var out = [];
       for (var i = 0; i < count; i++) out.push(buildQuestion(plan, context, i));
-      return out;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(out, plan), plan);
     }
   };
 }
@@ -12286,6 +12407,8 @@ __defs["shared/generator/generators/fraction.js"] = function (module, exports, r
 'use strict';
 
 var Rng = require("shared/generator/core/rng.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
+var VariationApply = require("shared/generator/core/variation-apply.js");
 
 function pkp(plan) {
   if (!plan) return null;
@@ -12520,7 +12643,7 @@ function createFractionGenerator(spec) {
       if (!name) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(buildQuestion(plan, context, i));
-      return out;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(out, plan), plan);
     }
   };
 }
@@ -13083,6 +13206,360 @@ module.exports = {
   buildSpecialKind: buildSpecialKind,
   SPECIAL_KINDS: SPECIAL_KINDS
 };
+
+};
+__defs["shared/generator/core/semantic-evidence.js"] = function (module, exports, require) {
+'use strict';
+
+
+var OP_TO_RELATION = {
+  add: 'add-combine',
+  sub: 'sub-take-away',
+  mult: 'multiply-by-times',
+  div: 'divide-share'
+};
+
+var MIXED_RELATIONS = ['add-combine', 'sub-take-away', 'multiply-by-times', 'divide-share'];
+
+
+function normalizeOp(op) {
+  var s = String(op == null ? '' : op);
+  if (s === '+' || s === 'add' || s === 'addition') return 'add';
+  if (s === '−' || s === '-' || s === 'sub' || s === 'subtraction') return 'sub';
+  if (s === '×' || s === '*' || s === 'mult' || s === 'multiplication') return 'mult';
+  if (s === '÷' || s === '/' || s === 'div' || s === 'division') return 'div';
+  if (s === 'mixed') return 'mixed';
+  return s;
+}
+
+
+function derive(sq, kpOpsNorm) {
+  var data = sq && sq.data;
+  var relations = [];
+  if (data && data.operation != null) {
+    var raw = Array.isArray(data.operation) ? data.operation : [data.operation];
+    raw.forEach(function (op) {
+      var norm = normalizeOp(op);
+      
+      
+      
+      
+      if (kpOpsNorm && kpOpsNorm.indexOf(norm) === -1) return;
+      if (norm === 'mixed') {
+        MIXED_RELATIONS.forEach(function (r) {
+          if (relations.indexOf(r) === -1) relations.push(r);
+        });
+        return;
+      }
+      var rel = OP_TO_RELATION[norm];
+      if (rel && relations.indexOf(rel) === -1) relations.push(rel);
+    });
+  }
+  
+  
+  return { relations: relations, constructs: deriveConstructs(data) };
+}
+
+function pushUniq(arr, v) { if (v && arr.indexOf(v) === -1) arr.push(v); }
+
+
+function deriveConstructs(data) {
+  if (!data || typeof data !== 'object') return [];
+  var c = [];
+  
+  if (data.base != null && data.times != null) {
+    pushUniq(c, 'base-quantity');
+    pushUniq(c, 'multiple');
+    if (data.timesRelation != null) pushUniq(c, 'comparison');
+  }
+  
+  if (data.unitOne || data.equalPartition) pushUniq(c, 'whole');
+  if (data.parts != null && data.taken != null) {
+    pushUniq(c, 'part');
+    pushUniq(c, 'fraction-relation');
+  }
+  
+  if (data.subType === 'angle-parts' || data.topic === 'vertex-edges') {
+    pushUniq(c, 'vertex');
+    pushUniq(c, 'rays');
+    pushUniq(c, 'angle');
+  } else if (data.subType === 'angle-observe' || /^(angle-|.*angle)/.test(data.topic || '')) {
+    pushUniq(c, 'angle');
+  }
+  if (data.topic === 'angle-count' && data.shape != null) pushUniq(c, 'shape');
+  
+  if (data.mode === 'percent-calc') pushUniq(c, 'percentage');
+  if ((data.base != null || data.price != null || data.principal != null ||
+       data.income != null || data.total != null) &&
+      (data.percent != null || data.rate != null)) {
+    pushUniq(c, 'part-whole');
+  }
+  
+  if (data.mode === 'classify' && data.sort != null) {
+    pushUniq(c, 'classification-criterion');
+    if (data.items != null) pushUniq(c, 'items');
+    pushUniq(c, 'ordered-or-classified-result');
+  }
+  return c;
+}
+
+
+function attach(sq, kpOperations) {
+  if (!sq || !sq.data || sq.data.semanticEvidence) return sq;
+  var kpOpsNorm = null;
+  if (kpOperations && kpOperations.length) {
+    kpOpsNorm = kpOperations.map(normalizeOp).filter(function (op) {
+      return op && op !== 'mixed';
+    });
+  } else if (kpOperations && Array.isArray(kpOperations) && kpOperations.length === 0) {
+    
+    
+    kpOpsNorm = [];
+  }
+  sq.data.semanticEvidence = derive(sq, kpOpsNorm);
+  return sq;
+}
+
+
+function attachAll(sqs, plan) {
+  if (!sqs) return sqs;
+  var arr = Array.isArray(sqs) ? sqs : (sqs.questions && Array.isArray(sqs.questions) ? sqs.questions : null);
+  if (!arr) return sqs;
+  var kpOps = (plan && plan.semanticParams && plan.semanticParams.operations) || null;
+  for (var i = 0; i < arr.length; i++) attach(arr[i], kpOps);
+  return sqs;
+}
+
+var api = {
+  derive: derive,
+  attach: attach,
+  attachAll: attachAll
+};
+
+if (typeof module !== 'undefined' && module.exports) module.exports = api;
+
+};
+__defs["shared/generator/core/variation-apply.js"] = function (module, exports, require) {
+
+'use strict';
+
+
+function makeRng(seed) {
+  var s = 0;
+  var str = String(seed == null ? 'variation-default' : seed);
+  for (var i = 0; i < str.length; i++) {
+    s = ((s * 31) + str.charCodeAt(i)) & 0x7fffffff;
+  }
+  if (s === 0) s = 1;
+  return {
+    int: function (lo, hi) {
+      s = (s * 1103515245 + 12345) & 0x7fffffff;
+      return lo + (s % (hi - lo + 1));
+    }
+  };
+}
+
+
+function clone(q) {
+  return JSON.parse(JSON.stringify(q));
+}
+
+
+var ARITH_RE = /^(\d+)\s*([+\-−×÷])\s*(\d+)\s*=\s*\?$/;
+var OP_RESULT = {
+  '+': function (a, b) { return a + b; },
+  '-': function (a, b) { return a - b; },
+  '−': function (a, b) { return a - b; },
+  '×': function (a, b) { return a * b; },
+  '÷': function (a, b) { return b === 0 ? null : a / b; }
+};
+var OP_INVERSE = { '+': '−', '-': '+', '−': '+', '×': '÷', '÷': '×' };
+
+function computeArith(a, opSym, b) {
+  var fn = OP_RESULT[opSym];
+  if (!fn) return null;
+  var r = fn(a, b);
+  if (r == null || r % 1 !== 0 || r < 0) return null;
+  return r;
+}
+
+
+
+function applyNumeric(q, rng) {
+  if (!q.prompt) return false;
+  var m = q.prompt.match(ARITH_RE);
+  if (!m) return false;
+  var a = parseInt(m[1], 10);
+  var opSym = m[2];
+  var b = parseInt(m[3], 10);
+  var na = rng.int(1, 20);
+  var nb = rng.int(1, 20);
+  var result = computeArith(na, opSym, nb);
+  if (result == null) return false;
+  q.prompt = na + ' ' + opSym + ' ' + nb + ' = ?';
+  q.answer = { value: String(result), acceptable: [], explanation: na + ' ' + opSym + ' ' + nb + ' = ' + result };
+  q.data = q.data || {};
+  q.data.numericRoll = { a: na, b: nb, result: result };
+  return true;
+}
+
+function applyUnknownPosition(q, rng) {
+  if (!q.prompt) return false;
+  var m = q.prompt.match(ARITH_RE);
+  if (!m) return false;
+  var a = parseInt(m[1], 10);
+  var opSym = m[2];
+  var b = parseInt(m[3], 10);
+  var result = computeArith(a, opSym, b);
+  if (result == null) return false;
+  var pos = rng.int(1, 2); 
+  var newPrompt, newAnswer;
+  if (pos === 1) {
+    newPrompt = '? ' + opSym + ' ' + b + ' = ' + result;
+    newAnswer = String(a);
+  } else {
+    newPrompt = a + ' ' + opSym + ' ? = ' + result;
+    newAnswer = String(b);
+  }
+  q.prompt = newPrompt;
+  q.answer = { value: newAnswer, acceptable: [], explanation: newPrompt.replace('?', newAnswer) };
+  q.data = q.data || {};
+  q.data.unknownPosition = pos;
+  return true;
+}
+
+var REPS = [
+  { key: '计数器', cue: '（用计数器表示）' },
+  { key: '数轴', cue: '（用数轴表示）' },
+  { key: '算式', cue: '（用算式表示）' },
+  { key: '图形', cue: '（用图形表示）' }
+];
+function applyRepresentation(q, rng) {
+  if (!q.prompt) return false;
+  var r = REPS[rng.int(0, REPS.length - 1)];
+  q.prompt = r.cue + q.prompt;
+  q.data = q.data || {};
+  q.data.representation = r.key;
+  return true;
+}
+
+var CTXS = [
+  { key: '购物', tpl: function (p) { return '商店里，' + p; } },
+  { key: '教室', tpl: function (p) { return '教室里，' + p; } },
+  { key: '分苹果', tpl: function (p) { return '小朋友分苹果：' + p; } }
+];
+function applyContext(q, rng) {
+  if (!q.prompt) return false;
+  var c = CTXS[rng.int(0, CTXS.length - 1)];
+  q.prompt = c.tpl(q.prompt);
+  q.data = q.data || {};
+  q.data.contextType = c.key;
+  return true;
+}
+
+function applyOperation(q, plan, rng) {
+  if (!q.prompt || !q.data) return false;
+  var m = q.prompt.match(ARITH_RE);
+  if (!m) return false;
+  var a = parseInt(m[1], 10);
+  var opSym = m[2];
+  var b = parseInt(m[3], 10);
+  var result = computeArith(a, opSym, b);
+  if (result == null) return false;
+  var kpName = plan && plan.semanticParams && plan.semanticParams.name;
+  var allowInverse = (q.data.operation === 'mixed') ||
+    (kpName && (kpName.indexOf('关系') !== -1 || kpName.indexOf('逆') !== -1 ||
+      kpName.indexOf('加减') !== -1 || kpName.indexOf('乘除') !== -1));
+  if (!allowInverse) return false; 
+  var invSym = OP_INVERSE[opSym];
+  if (!invSym) return false;
+  q.prompt = result + ' ' + invSym + ' ' + b + ' = ?';
+  q.answer = { value: String(a), acceptable: [], explanation: result + ' ' + invSym + ' ' + b + ' = ' + a };
+  q.data.operationInverse = true;
+  return true;
+}
+
+var COGS = [
+  { key: '说明思路', cue: '（请说明你的思路）' },
+  { key: '比较解法', cue: '（比较两种解法）' },
+  { key: '解释为什么', cue: '（解释为什么）' }
+];
+function applyCognitive(q, rng) {
+  if (!q.prompt) return false;
+  var c = COGS[rng.int(0, COGS.length - 1)];
+  q.prompt = q.prompt + ' ' + c.cue;
+  q.hint = (q.hint || '') + (q.hint ? ' | ' : '') + c.key;
+  q.data = q.data || {};
+  q.data.cognitiveHint = c.key;
+  return true;
+}
+
+
+
+var BUCKET_KEYS = ['numeric', 'unknown-position', 'representation', 'context', 'operation', 'cognitive'];
+
+
+function applyVariation(q, variation, plan) {
+  if (!q || !variation || typeof variation !== 'object') return q;
+  var anyOn = false;
+  BUCKET_KEYS.forEach(function (k) { if (variation[k]) anyOn = true; });
+  if (!anyOn) return q; 
+
+  var changed = clone(q);
+  var rng = makeRng(q.seed || (plan && plan.seed) || 'variation-default');
+  var applied = [];
+  var read = [];
+
+  if (variation['numeric']) {
+    read.push('numeric');
+    if (applyNumeric(changed, rng)) applied.push('numeric');
+  }
+  if (variation['unknown-position']) {
+    read.push('unknown-position');
+    if (applyUnknownPosition(changed, rng)) applied.push('unknown-position');
+  }
+  if (variation['representation']) {
+    read.push('representation');
+    if (applyRepresentation(changed, rng)) applied.push('representation');
+  }
+  if (variation['context']) {
+    read.push('context');
+    if (applyContext(changed, rng)) applied.push('context');
+  }
+  if (variation['operation']) {
+    read.push('operation');
+    if (applyOperation(changed, plan, rng)) applied.push('operation');
+  }
+  if (variation['cognitive']) {
+    read.push('cognitive');
+    if (applyCognitive(changed, rng)) applied.push('cognitive');
+  }
+
+  
+  changed.data = changed.data || {};
+  changed.data.variationRead = read;
+  changed.data.variationApplied = applied;
+  return changed;
+}
+
+
+function applyToAll(questions, plan) {
+  if (!Array.isArray(questions)) return questions;
+  var variation = plan && plan.variation;
+  if (!variation || typeof variation !== 'object') return questions; 
+  return questions.map(function (q) { return applyVariation(q, variation, plan); });
+}
+
+var VariationApply = {
+  applyVariation: applyVariation,
+  applyToAll: applyToAll,
+  makeRng: makeRng,
+  BUCKET_KEYS: BUCKET_KEYS
+};
+
+module.exports = VariationApply;
+if (typeof window !== 'undefined') window.VariationApply = VariationApply;
+if (typeof global !== 'undefined') global.VariationApply = VariationApply;
 
 };
 __defs["shared/generator/core/op-semantics.js"] = function (module, exports, require) {

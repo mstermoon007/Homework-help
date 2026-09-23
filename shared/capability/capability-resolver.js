@@ -21,9 +21,8 @@
  */
 'use strict';
 
-var Ontology = require('../knowledge/knowledge-ontology.js');
 var Registry = require('../knowledge/question-type-registry.js');
-var KnowledgePoint = require('../knowledge/knowledge-point.js');
+var KnowledgePoint = require('../orchestration/knowledge-context.js'); // FINAL-22：经 KnowledgeContext 消费
 var CapabilityModel = require('./capability-model.js');
 var Matrix = require('./capability-matrix.js');
 
@@ -55,10 +54,6 @@ function listTeachingDenials() {
 
 function resolve(kp) {
   // canonicalKp 已经是 Canonical KP，直接从 presentation.questionTypes 和 generation.capabilities 推导
-  // 防御：传入 raw legacy KP 时（gate / KB.getCapabilities / 浏览器深链）先归一化，保证能力来源一致
-  if (kp && !kp.presentation && (kp.applicable_question_types || kp.grade || kp.modules)) {
-    try { kp = Ontology.normalize(kp); } catch (e) { /* 保持原样，由 resolveCapability 兜底空结果 */ }
-  }
   return CapabilityModel.resolveCapability(kp);
 }
 
@@ -78,7 +73,7 @@ function resolveFinal(input) {
   }
 
   // 2) 未知知识点 -> INVALID
-  var kp = KnowledgePoint.get(kpId);
+  var kp = KnowledgePoint.strategyView(kpId);
   if (!kp) {
     return { knowledgePointId: kpId, questionType: qtId, capability: qt.category, decision: 'INVALID', source: { knowledgePoint: 'ontology' }, confidence: 'none' };
   }
@@ -126,7 +121,7 @@ function resolveFinal(input) {
 }
 
 function matrix(kp) {
-  var canonical = Ontology.normalize(kp);
+  var canonical = kp; // FINAL-22：Ontology.normalize 幂等恒等，随死 require 一并移除
   var supported = [];
   var unsupported = [];
 

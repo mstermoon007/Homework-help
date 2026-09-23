@@ -13,6 +13,8 @@
 'use strict';
 
 var Rng = require('../core/rng.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -252,7 +254,7 @@ function createDecimalGenerator(spec) {
       if (!name) return []; // fail-closed
       var out = [];
       for (var i = 0; i < count; i++) out.push(buildQuestion(plan, context, i));
-      return out;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(out, plan), plan);
     }
   };
 }

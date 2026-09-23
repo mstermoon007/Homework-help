@@ -7,6 +7,8 @@
  */
 
 var Rng = require('../core/rng.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -486,7 +488,7 @@ function createStatsGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeStatsQuestion(plan, context, i, kp));
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }

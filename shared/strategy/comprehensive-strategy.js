@@ -25,7 +25,7 @@
 
   function getKB() {
     if (typeof require === 'function') {
-      try { return require('../knowledge/knowledge-bank.js'); } catch (e) { /* ignore */ }
+      try { return require('../orchestration/knowledge-context.js'); } catch (e) { /* ignore */ } // FINAL-22：经 KnowledgeContext 消费
     }
     return null;
   }
@@ -161,11 +161,11 @@
     var KB = getKB();
     var engine = getStrategyEngine();
     var deps = [];
-    if (!KB) deps.push('shared/engine/knowledge-compat.js');
+    if (!KB) deps.push('shared/orchestration/knowledge-context.js');
     if (!engine) deps.push('shared/engine/strategy-engine.bundle.js');
     if (deps.length) return Promise.reject(new Error('ComprehensiveStrategy 依赖缺失: ' + deps.join(', ')));
 
-    var entries = KB.getEntries(subject, grade) || [];
+    var entries = KB.poolContext({ subject: subject, grade: grade }) || [];
     // Refactor Step 2：unitId 按 moduleId 过滤（无匹配保持全集，避免误伤既有请求）
     if (request.unitId != null) {
       var unitFiltered = entries.filter(function (e) { return String(e.moduleId) === String(request.unitId); });

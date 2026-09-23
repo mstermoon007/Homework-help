@@ -7,6 +7,8 @@
  */
 
 var Rng = require('../core/rng.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -60,8 +62,12 @@ function stairWays(n) {
 
 function makeCountingQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  // Generator 已与旧知识层断开：KP 上下文不再可用，名称走默认（兼容约束见 pending 登记）
-  var name = (kp && kp.identity && kp.identity.name) || (kp && kp.name) || '计数问题';
+  // FINAL-32：KP 名源改读 plan.semanticParams.name（SemanticParameters.attachToPlan 注入），
+  // 让 variant 分派（加法原理/枚举/最不利/抽屉/容斥/递推/错排/捆绑/插空/隔板/排列/搭配/组合/集合）
+  // 按 KP 真名生效——原 kp={} 恒 undefined 致 variant 恒 'generic'，13 类计数变体全失效。
+  // 保留 kp.name 兜底以兼容直载/旧测试。
+  var name = (plan && plan.semanticParams && plan.semanticParams.name)
+    || (kp && kp.identity && kp.identity.name) || (kp && kp.name) || '计数问题';
 
   // 根据 KP 名称选择题型
   var type = 'generic';
@@ -256,7 +262,7 @@ function createCountingGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeCountingQuestion(plan, context, i, kp));
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }

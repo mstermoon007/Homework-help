@@ -37,14 +37,19 @@ var familyIds = {};
 (semanticFamilies.families || []).forEach(function (f) { familyIds[f.id] = f.name; });
 
 var CORE_QTS = { apply: true, choice: true, fill: true };
-var VALID_EVIDENCE_STATES = { pass: true, warn: true, skip: true };
+// FINAL-40：WARN 不计 PASS——黄金题集只接受 SEMANTIC_PASS。warn/skip/fail 均判非法。
+var VALID_EVIDENCE_STATES = { pass: true };
 
-// 必填字段（expectedEvidence 可选——生成器过渡期不发 semanticEvidence 时为 null）
+// FINAL-40：12 字段记录——以下字段必须非 null（题内确有该信息）
 var REQUIRED_FIELDS = [
-  'kpId', 'semanticFamily', 'learningTarget', 'questionType', 'difficulty',
-  'expectedStructure', 'answer',
-  'validationRules', 'source', 'humanReview'
+  'kpId', 'semanticFamily', 'teachingTarget', 'questionType', 'difficulty',
+  'variation', 'structure', 'semanticEvidence', 'answer', 'validator',
+  'source', 'humanReview'
 ];
+// 以下字段必须「记录在案」但允许 null（诚实缺位，AI 不编造）：
+//   cognitiveTarget（DEF-04：KBL 认知目标待人工 root Excel 治理）
+//   intent（部分 KP×QT 无 qt-intent 行时为 null）
+var RECORDED_NULL_OK = ['cognitiveTarget', 'intent'];
 
 var errors = [];
 var warnings = [];
@@ -67,10 +72,17 @@ var seenKeys = {};
 (golden.questions || []).forEach(function (q, idx) {
   stats.total++;
 
-  // 1. 必填字段
+  // 1. 必填字段（非 null）
   REQUIRED_FIELDS.forEach(function (f) {
     if (q[f] === undefined || q[f] === null) {
       errors.push('Q' + idx + ' 缺字段 ' + f);
+      stats.missingFields++;
+    }
+  });
+  // FINAL-40：cognitiveTarget/intent 必须记录（key 在），但允许 null（诚实缺位）
+  RECORDED_NULL_OK.forEach(function (f) {
+    if (q[f] === undefined) {
+      errors.push('Q' + idx + ' 未记录字段 ' + f);
       stats.missingFields++;
     }
   });
@@ -99,10 +111,13 @@ var seenKeys = {};
     stats.byQuestionType[q.questionType] = (stats.byQuestionType[q.questionType] || 0) + 1;
   }
 
-  // 5. 证据状态合法
-  var evState = q.validationRules && q.validationRules.semanticEvidenceState;
-  if (evState && !VALID_EVIDENCE_STATES[evState]) {
-    errors.push('Q' + idx + ' 证据状态 ' + evState + ' 非法（允许 pass/warn/skip，不允许 fail）');
+  // 5. 证据状态合法（FINAL-40：仅 pass；warn/skip/fail 均非法——WARN 不计 PASS）
+  var evState = q.validator && q.validator.semanticEvidenceState;
+  if (!evState) {
+    errors.push('Q' + idx + ' 未记录 validator.semanticEvidenceState');
+    stats.invalidEvidenceState++;
+  } else if (!VALID_EVIDENCE_STATES[evState]) {
+    errors.push('Q' + idx + ' 证据状态 ' + evState + ' 非法（FINAL-40 仅允许 pass，WARN 不计 PASS）');
     stats.invalidEvidenceState++;
   }
   if (evState) {

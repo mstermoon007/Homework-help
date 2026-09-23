@@ -275,10 +275,9 @@
 <script src="shared/catalog/difficulty-static.js"></script>
 <!-- P28-30：shared/presentation/print.js 已移出首屏同步链——打印模块仅在 printFile / session.print()
      调用前由 ensureDeferredReady() 惰性装载（含 ?v 指纹；SW Cache-First 保证离线可打印）。 -->
-<!-- KBL Runtime 单入口 + POL 知识适配 + Frozen Strategy 兼容桥（须先于 strategy bundle） -->
+<!-- KBL Runtime 单入口 + POL 知识适配（须先于 strategy bundle；FINAL-22 兼容桥已删） -->
 <script src="shared/knowledge/runtime/knowledge-runtime.js"></script>
 <script src="shared/orchestration/knowledge-context.js"></script>
-<script src="shared/engine/knowledge-compat.js"></script>
 <!-- P10-3：POL 能力判定视图（CapabilityResolver + KnowledgeContext 投影）接入浏览器，
      使 practice-orchestrator.plan() 的 feasibleTypes / eligibleKpsForType 在浏览器与 Node 对齐
      （此前仅 Node require 可达 → 浏览器能力判定恒为「全题型可行」）。 -->

@@ -7,6 +7,8 @@
  */
 
 var Rng = require('../core/rng.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -25,7 +27,13 @@ function seedFor(plan, context, i) {
 
 function makePictureEquationQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var name = kp.name || '看图列式';
+  // FINAL-32 注：variant 分派按 name 关键词（线段/大括号/看图列/天平/数阵/幻方/植树/比例尺/小数）
+  // 匹配；不匹配时 fallback '看图列式' 自身命中 '看图列' → 进 brace 分支（含 calc 公式分支与
+  // data.graphic.subtype=brace+params.unit='个'），让证据规则 required subtype=brace / unit='个'
+  // 在 generate 收口 attachAll 自声明 semanticEvidence 后能 PASS。若改读 plan.semanticParams.name（KP 真名）会让无关键词的 KP
+  // （如「加减法的意义和各部分间的关系」「根据可能性大小进行推测」）落入 generic 分支，
+  // 缺 calc 公式 → TypeContract drop → 0 题；故不改动 name 源，variant 分派缺陷另行登记。
+  var name = (kp && kp.name) || '看图列式';
 
   var type = 'generic';
   if (name.indexOf('线段') !== -1) type = 'segment';
@@ -139,7 +147,7 @@ function createPictureEquationGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makePictureEquationQuestion(plan, context, i, kp));
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }

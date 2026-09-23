@@ -14,6 +14,8 @@
 'use strict';
 
 var Rng = require('../core/rng.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -75,7 +77,7 @@ function makeSort(plan, context, i) {
   var desc = Rng.randInt(rng, 0, 1) === 1;
   var sorted = nums.slice().sort(function (a, b) { return desc ? b - a : a - b; });
   var orderText = desc ? '从大到小' : '从小到大';
-  var q = buildBase(plan, context, i, { mode: 'classify', sort: { desc: desc, count: n } });
+  var q = buildBase(plan, context, i, { mode: 'classify', sort: { desc: desc, count: n }, items: nums });
   q.prompt = '把下面各数按' + orderText + '的顺序排列：' + nums.join('，') + '。';
   q.answer = { value: sorted.join('，'), acceptable: [] };
   return q;
@@ -100,7 +102,7 @@ function createClassificationGenerator(spec) {
 
     generate: function (plan, context) {
       var count = (plan && plan.count) || 1;
-      return buildQuestions(plan, context, count, makeSort);
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeSort), plan), plan);
     }
   };
   return generator;

@@ -1,6 +1,6 @@
 {
  "task": "P28-09 Generator Registry 收口 —— GENERATOR_MATRIX",
- "date": "2026-09-22",
+ "date": "2026-09-23",
  "generatorCount": 24,
  "canonicalTypes": [
   "calc",
@@ -46,9 +46,9 @@
    "scope": "core",
    "version": 2,
    "supportsComposite": false,
-   "kpBindings": 33,
+   "kpBindings": 35,
    "contractCarrierRows": 0,
-   "producedRows1570": 108,
+   "producedRows1570": 116,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -76,9 +76,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 13,
+   "kpBindings": 14,
    "contractCarrierRows": 939,
-   "producedRows1570": 52,
+   "producedRows1570": 56,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -89,7 +89,7 @@
    "historical": [],
    "note": "算术族五算子之一，op=add",
    "nativeExtendedTypes": [
-    "choice:13"
+    "choice:14"
    ]
   },
   {
@@ -108,9 +108,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 23,
+   "kpBindings": 20,
    "contractCarrierRows": 0,
-   "producedRows1570": 86,
+   "producedRows1570": 80,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -121,7 +121,7 @@
    "historical": [],
    "note": "op=div",
    "nativeExtendedTypes": [
-    "choice:21"
+    "choice:20"
    ]
   },
   {
@@ -172,9 +172,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 15,
+   "kpBindings": 17,
    "contractCarrierRows": 0,
-   "producedRows1570": 54,
+   "producedRows1570": 64,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -185,7 +185,7 @@
    "historical": [],
    "note": "op=mult",
    "nativeExtendedTypes": [
-    "choice:13"
+    "choice:16"
    ]
   },
   {
@@ -204,9 +204,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 13,
+   "kpBindings": 10,
    "contractCarrierRows": 0,
-   "producedRows1570": 52,
+   "producedRows1570": 40,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -217,7 +217,7 @@
    "historical": [],
    "note": "op=sub",
    "nativeExtendedTypes": [
-    "choice:13"
+    "choice:10"
    ]
   },
   {
@@ -236,7 +236,7 @@
    "supportsComposite": false,
    "kpBindings": 25,
    "contractCarrierRows": 25,
-   "producedRows1570": 89,
+   "producedRows1570": 85,
    "actualProducerTypes": [
     "classify",
     "fill",
@@ -249,8 +249,8 @@
    "note": "唯一 classify 承接者（无重复）；25 KP 绑定；经 kp=1 同时产出 fill/choice/judge/apply → 欠声明（收口发现）",
    "nativeExtendedTypes": [
     "fill:14",
-    "choice:16",
-    "judge:21",
+    "choice:14",
+    "judge:19",
     "apply:13"
    ]
   },

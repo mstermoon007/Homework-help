@@ -287,18 +287,18 @@ function poolSource(request, mode) {
 }
 
 function poolEntries(source) {
-  var KB = require('../knowledge/knowledge-bank.js');
+  var KC = require('../orchestration/knowledge-context.js'); // FINAL-22：经 KnowledgeContext 消费（原 knowledge-bank.js 已并入 KBL runtime）
   var entries = [];
   if (source.unitId != null) {
     var grades = source.grade != null ? [source.grade] : [1, 2, 3, 4, 5, 6];
     var seen = {};
     grades.forEach(function (g) {
-      (KB.getEntries(source.subject, g) || []).forEach(function (e) {
+      (KC.poolContext({ subject: source.subject, grade: g }) || []).forEach(function (e) {
         if (String(e.moduleId) === String(source.unitId) && !seen[e.id]) { seen[e.id] = true; entries.push(e); }
       });
     });
   } else {
-    entries = KB.getEntries(source.subject, source.grade) || [];
+    entries = KC.poolContext({ subject: source.subject, grade: source.grade }) || [];
   }
   return entries;
 }
@@ -423,16 +423,15 @@ var TYPE_KP_MAX_GROUP = 4;
 
 // 按 ID 解析池条目：真实 knowledge-bank 条目优先（name/moduleId/weight 对齐），否则按 KnowledgePoint 合成
 function entriesById(ids) {
-  var KnowledgePoint = require('../knowledge/knowledge-point.js');
-  var KB = require('../knowledge/knowledge-bank.js');
+  var KC = require('../orchestration/knowledge-context.js'); // FINAL-22：经 KnowledgeContext 消费
   var idx = {};
   [1, 2, 3, 4, 5, 6].forEach(function (g) {
-    (KB.getEntries('math', g) || []).forEach(function (e) { idx[e.id] = e; });
+    (KC.poolContext({ subject: 'math', grade: g }) || []).forEach(function (e) { idx[e.id] = e; });
   });
   return ids.map(function (id) {
     if (idx[id]) return idx[id];
     var kp = null;
-    try { kp = KnowledgePoint.get(id); } catch (e) { /* keep null */ }
+    try { kp = KC.strategyView(id); } catch (e) { /* keep null */ }
     return {
       id: id,
       name: (kp && kp.identity && kp.identity.name) || id,
@@ -1160,6 +1159,10 @@ function plan(request) {
     if (Array.isArray(learnerDecision.variationDirectives) && learnerDecision.variationDirectives.length) {
       questionPlan.variationDirectives = learnerDecision.variationDirectives;
     }
+    // FINAL-50：6 桶 variation 真正进入生成参数。buildVariationObject 把 variant label
+    // + directives 建成 6 桶 object 赋给 questionPlan.variation（仅 learner 路径激活；
+    // freeze/edu/golden 默认无 learner → variation=undefined → applyVariation no-op）。
+    questionPlan.variation = buildVariationObject(learnerDecision.variant, questionPlan.variationDirectives);
   }
 
   // P25-13：注入只读 Explainability Metadata（"下一题为什么这样出"可解释链）
@@ -1224,27 +1227,8 @@ function formatStrategyTrace(trace) {
 
 // ============ P25-13：QuestionPlan Explainability Metadata（"下一题为什么这样出"可解释链） ============
 
-// qt-intent.json 行索引（kpId|questionType → row），惰性构建一次后复用
-// 加载方式（有意为之，同 variation-directive.js / kp-semantic-validator.js 先例）：
-//   require 路径用字符串拼接计算，打包器静态正则不会把 kbl/ 数据内联进 bundle
-//   （check-kbl-uniqueness 门禁）。Node 直载正常读取；浏览器运行时 __req 未注册
-//   该 id，抛错被捕获 → 索引留空 → explainability 降级为 kp.module 兜底（fail-open）。
-var _qtIntentIndex = null;
-function getQtIntentRow(kpId, qt) {
-  if (_qtIntentIndex === null) {
-    _qtIntentIndex = {};
-    try {
-      var p = '../../' + 'kbl/' + 'teaching/' + 'qt-intent.json';
-      var data = require(p);
-      (data && data.rows || []).forEach(function (r) {
-        _qtIntentIndex[r.knowledgeId + '|' + r.questionType] = r;
-      });
-    } catch (e) {
-      // bundle 缺失或环境无 KBL teaching 数据：留空索引，explainability 降级为 module 兜底
-    }
-  }
-  return _qtIntentIndex[kpId + '|' + qt] || null;
-}
+// FINAL-22：qt-intent.json 直读 KBL 已移除（Strategy 禁直读 KBL，须经 KnowledgeContext）；
+// explainability 恒走 module 兜底（原 fail-open 降级路径，不进冻结 evidence）。
 
 /**
  * 构建只读 Explainability Metadata。
@@ -1258,7 +1242,7 @@ function getQtIntentRow(kpId, qt) {
  * @returns {Object} explainability 元数据对象
  */
 function buildExplainability(kp, questionType, finalDifficulty, learnerDecision, selectedGenerator) {
-  var intentRow = getQtIntentRow(kp.id, questionType);
+  var intentRow = null; // FINAL-22：qt-intent KBL 直读已移除，explainability 走 module 兜底
   var trainsWhat = (intentRow && intentRow.intent && intentRow.intent.trainsWhat) || null;
   var whyThisType = (intentRow && intentRow.intent && intentRow.intent.whyThisType) || null;
   var variant = learnerDecision ? learnerDecision.variant : 'fixed';
@@ -1280,6 +1264,74 @@ function buildExplainability(kp, questionType, finalDifficulty, learnerDecision,
       '; errorFocus=' + (errorFocus.length ? errorFocus.join(',') : 'none') +
       '; generator=' + generatorId
   };
+}
+
+// ============ FINAL-50：6 桶 variation 真正进入生成参数 ============
+
+/**
+ * 把 adaptive-strategy 的 variant 字符串 label + misconception 指令建成 6 桶 object。
+ * 映射（R18 六变体 → 6 桶）：
+ *   '基础'/'fixed' → {全 false}（baseline 无变式，freeze/edu/golden 默认路径）
+ *   '数值'         → {numeric:true}
+ *   '呈现'         → {numeric:true, representation:true}
+ *   '情境'         → {numeric:true, context:true}
+ *   '结构'         → {numeric:true, 'unknown-position':true, operation:true}
+ *   '迁移'         → {numeric:true, representation:true, context:true, cognitive:true}
+ * directives（misconception overlay，P27-11）非空时，按 directive.axis 显式覆盖。
+ * @param {string} variantLabel   - R18 变体 label
+ * @param {Array}  directives     - misconception 指令（每条 {axis, variant, ...}）
+ * @returns {Object} 6 桶 object（{numeric,unknown-position,representation,context,operation,cognitive}）
+ */
+function buildVariationObject(variantLabel, directives) {
+  var v = {
+    'numeric': false,
+    'unknown-position': false,
+    'representation': false,
+    'context': false,
+    'operation': false,
+    'cognitive': false
+  };
+  var label = (typeof variantLabel === 'string') ? variantLabel : 'fixed';
+  switch (label) {
+    case '数值':
+      v['numeric'] = true;
+      break;
+    case '呈现':
+      v['numeric'] = true;
+      v['representation'] = true;
+      break;
+    case '情境':
+      v['numeric'] = true;
+      v['context'] = true;
+      break;
+    case '结构':
+      v['numeric'] = true;
+      v['unknown-position'] = true;
+      v['operation'] = true;
+      break;
+    case '迁移':
+      v['numeric'] = true;
+      v['representation'] = true;
+      v['context'] = true;
+      v['cognitive'] = true;
+      break;
+    case '基础':
+    case 'fixed':
+    default:
+      // baseline：全 false（freeze/edu/golden 默认无变式）
+      break;
+  }
+  // directives 显式覆盖（P27-11 misconception overlay，当前 overlay=null 故通常空）
+  if (Array.isArray(directives)) {
+    directives.forEach(function (d) {
+      if (!d || !d.axis) return;
+      if (d.axis === 'numeric' || d.axis === 'unknown-position' || d.axis === 'representation' ||
+          d.axis === 'context' || d.axis === 'operation' || d.axis === 'cognitive') {
+        v[d.axis] = true;
+      }
+    });
+  }
+  return v;
 }
 
 module.exports = {

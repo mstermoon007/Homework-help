@@ -3973,13 +3973,19 @@ function getEvidenceRules() {
 }
 
 
-function fieldEquals(sq, path, value) {
+
+function fieldRead(sq, path) {
   var cur = sq;
   var parts = String(path).split('.');
   for (var i = 0; i < parts.length; i++) {
-    if (cur == null || typeof cur !== 'object') return false;
+    if (cur == null || typeof cur !== 'object') return undefined;
     cur = cur[parts[i]];
   }
+  return cur;
+}
+
+function fieldEquals(sq, path, value) {
+  var cur = fieldRead(sq, path);
   if (Array.isArray(value) || Array.isArray(cur)) {
     if (!Array.isArray(value) || !Array.isArray(cur)) return false;
     return value.slice().sort().join('\u0001') === cur.slice().sort().join('\u0001');
@@ -4003,15 +4009,22 @@ function checkSemanticEvidence(sq, kpId) {
   }
 
   var relations = Array.isArray(decl.relations) ? decl.relations : [];
+  
+  var constructs = Array.isArray(decl.constructs) ? decl.constructs : [];
   var missing = [];
   (rule.required || []).forEach(function (a) {
     if (a.kind === 'relation' && relations.indexOf(a.relation) === -1) missing.push('relation:' + a.relation);
     if (a.kind === 'field' && !fieldEquals(sq, a.path, a.value)) missing.push(a.path);
+    
+    if (a.kind === 'fieldPresent' && fieldRead(sq, a.path) === undefined) missing.push('present:' + a.path);
+    
+    if (a.kind === 'construct' && constructs.indexOf(a.name) === -1) missing.push('construct:' + a.name);
   });
   var forbiddenHits = [];
   (rule.forbidden || []).forEach(function (a) {
     if (a.kind === 'relationNot' && relations.indexOf(a.relation) !== -1) forbiddenHits.push('relation:' + a.relation);
     if (a.kind === 'fieldNot' && fieldEquals(sq, a.path, a.value)) forbiddenHits.push(a.path);
+    if (a.kind === 'constructNot' && constructs.indexOf(a.name) !== -1) forbiddenHits.push('construct:' + a.name);
   });
 
   if (missing.length || forbiddenHits.length) {

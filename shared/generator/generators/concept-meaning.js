@@ -31,6 +31,8 @@
 
 var Rng = require('../core/rng.js');
 var SemanticParameters = require('../core/semantic-parameters.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -105,7 +107,8 @@ function timesData(base, times) {
     times: times,
     semanticEvidence: {
       relations: ['times-compare', 'multiply-by-times'],
-      constructs: ['base-quantity', 'times-word']
+      // FINAL-37：与 evidence-rules 同源——倍的结构构件 base/multiple/comparison
+      constructs: ['base-quantity', 'multiple', 'comparison']
     }
   };
 }
@@ -165,7 +168,8 @@ function fractionData(withOperation, parts, taken) {
     taken: taken,
     semanticEvidence: {
       relations: ['unit-one', 'equal-partition'],
-      constructs: ['fraction-unit']
+      // FINAL-37：分数的结构构件 whole/part/fraction-relation
+      constructs: ['whole', 'part', 'fraction-relation']
     }
   };
   if (withOperation) d.operation = 'div';
@@ -220,7 +224,8 @@ function makeAngleFill(plan, context, i) {
     topic: 'vertex-edges',
     semanticEvidence: {
       relations: ['vertex-rays'],
-      constructs: ['vertex', 'edge']
+      // FINAL-37：角的结构构件 vertex/rays/angle
+      constructs: ['vertex', 'rays', 'angle']
     }
   });
   return finish(q, '从一点引出（  ）条射线所组成的图形叫做角。', '2', ['2', '两'],
@@ -611,7 +616,7 @@ function createConceptMeaningGenerator(spec) {
       if (!maker) return [];
       var out = [];
       for (var i = 0; i < count; i++) out.push(maker(plan, context, i));
-      return out;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(out, plan), plan);
     }
   };
 }

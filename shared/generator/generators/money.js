@@ -12,6 +12,8 @@
 var Rng = require('../core/rng.js');
 var Arith = require('../core/arithmetic-core.js');
 var OpSem = require('../core/op-semantics.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -510,7 +512,7 @@ function createMoneyGenerator(spec) {
         }
         questions.push(q);
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }

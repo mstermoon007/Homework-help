@@ -10,6 +10,8 @@
 
 var Rng = require('../core/rng.js');
 var Arith = require('../core/arithmetic-core.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 // P25-09：按 KP 名称机械派生特殊结构 kind（仅除法族当前需要余数结构）。
 // 与 shape/position/money 的 NAME_TO_* 规则同构：消费 selector 注入的
@@ -146,7 +148,7 @@ function createArithmeticGenerator(spec) {
           }
         });
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }

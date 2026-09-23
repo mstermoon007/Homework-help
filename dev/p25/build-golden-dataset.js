@@ -121,37 +121,45 @@ var familyStats = [];
           if (!sqs.length) continue;
           var sq = sqs[0];
 
-          // 自动结构验证：接受 pass/warn/skip（非 fail 即可）。
-          // - pass：规则全满足（含 semanticEvidence 声明匹配）
-          // - warn：规则存在但 semanticEvidence 未声明（过渡期，生成器未发 semanticEvidence）
-          // - skip：无规则（KP×题型无证据规则）
-          // - fail：规则违例（required 缺失或 forbidden 命中）→ 拒绝
+          // 自动语义验证（FINAL-40）：仅接受 SEMANTIC_PASS——WARN 不计 PASS。
+          // - pass：规则全满足（semanticEvidence 声明匹配 + constructs 构件齐全，FINAL-37 强校验）
+          // - warn/skip/fail：拒绝并换下一 KP×QT 重试（不伪造 PASS）
           var evResult = KpSemantic.checkSemanticEvidence(sq, kp.id);
-          if (evResult.state === 'fail') continue;
+          if (evResult.state !== 'pass') continue;
 
           var intentRow = intentByKpQt[kp.id + '|' + qt] || null;
+          var intentObj = intentRow && intentRow.intent || null;
 
           goldenQuestions.push({
             kpId: kp.id,
             semanticFamily: fam.id,
-            learningTarget: (intentRow && intentRow.intent && intentRow.intent.trainsWhat) || kp.name,
+            // FINAL-40：12 字段记录——KP/family/teaching target/cognitive target/QT/intent/
+            //            difficulty/variation/structure/semantic evidence/answer/validator
+            teachingTarget: (intentObj && intentObj.trainsWhat) || kp.name,
+            cognitiveTarget: sq.cognitiveLevel || null, // DEF-04：KBL 认知目标待人工治理，AI 不编造
             questionType: qt,
+            intent: intentObj ? {
+              whyThisType: intentObj.whyThisType || null,
+              legitimacy: intentObj.legitimacy || null,
+              driftRisk: intentObj.driftRisk || null
+            } : null,
             difficulty: sq.difficulty || (sq.plan && sq.plan.difficulty) || null,
-            expectedStructure: {
-              stem: sq.stem || sq.question || (sq.data && sq.data.prompt) || null,
-              options: sq.options || null,
+            variation: (sq.data && (sq.data.subType || sq.data.mode)) || null,
+            structure: {
+              stem: sq.stem || sq.question || (sq.data && sq.data.prompt) || sq.prompt || null,
+              options: sq.options || (sq.data && sq.data.options) || null,
               answer: sq.answer != null ? sq.answer : (sq.data && sq.data.answer)
             },
-            expectedEvidence: sq.data && sq.data.semanticEvidence || null,
+            semanticEvidence: sq.data && sq.data.semanticEvidence || null,
             answer: sq.answer != null
               ? (typeof sq.answer === 'object' ? JSON.stringify(sq.answer) : String(sq.answer))
               : (sq.data && sq.data.answer != null
                 ? (typeof sq.data.answer === 'object' ? JSON.stringify(sq.data.answer) : String(sq.data.answer))
                 : null),
-            validationRules: {
-              kpIdentity: kp.id,
-              questionType: qt,
-              semanticEvidenceState: evResult.state
+            validator: {
+              semanticEvidenceState: evResult.state,
+              errors: (evResult.errors || []).length,
+              warnings: (evResult.warnings || []).length
             },
             source: 'ai-candidate',
             humanReview: 'pending'

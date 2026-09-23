@@ -18,7 +18,7 @@
 'use strict';
 
 var StaticDifficulty = require('./static-difficulty.js');
-var KnowledgePoint = require('../knowledge/knowledge-point.js');
+var KnowledgePoint = require('../orchestration/knowledge-context.js'); // FINAL-22：经 KnowledgeContext 消费
 var StrategyError = require('./strategy-error.js').StrategyError;
 var CODES = require('./strategy-error.js').StrategyError.CODES;
 var ComplexityStrategy = require('./complexity-strategy.js');
@@ -65,7 +65,7 @@ function computeEffectiveDifficulty(options) {
 
   var kp = options.knowledgePoint;
   if (!kp && options.knowledgePointId != null) {
-    kp = KnowledgePoint.get(options.knowledgePointId);
+    kp = KnowledgePoint.strategyView(options.knowledgePointId);
     if (!kp) {
       throw new StrategyError('知识点不存在: ' + options.knowledgePointId, CODES.KP_NOT_FOUND, { knowledgePointId: options.knowledgePointId });
     }

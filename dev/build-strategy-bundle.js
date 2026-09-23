@@ -45,15 +45,12 @@ var ENTRIES = [
 ];
 
 // 浏览器全局 shim：practice.html 已加载这些脚本
-// 知识模块（bank/point/ontology）已删除 → 统一映射到 knowledge-compat.js 的
-// Runtime 兼容对象（KBL Runtime 唯一事实源；不重建旧数据层）。
+// FINAL-22：knowledge-bank/point/ontology 三条映射已删——Strategy 源码假引用清除后无消费者，
+// knowledge-compat.js 桥随删除（不保留 compat 层）。
 var SHIMS = {
   'shared/core/common.js': 'PluginUtil',
   'shared/catalog/difficulty.js': 'App.Difficulty',
   'shared/catalog/difficulty-static.js': 'App.DifficultyStatic',
-  'shared/knowledge/knowledge-bank.js': 'KnowledgeCompat',
-  'shared/knowledge/knowledge-point.js': 'KnowledgePointCompat',
-  'shared/knowledge/knowledge-ontology.js': 'KnowledgeOntologyCompat',
   // POL 知识适配边界：页面已以 <script> 加载（knowledge-runtime → knowledge-context → 本 bundle），
   // 注册为委托可让 presentation bundle 复用同一实例，避免内联第二份 KC/Runtime 副本。
   'shared/orchestration/knowledge-context.js': 'KnowledgeContext'

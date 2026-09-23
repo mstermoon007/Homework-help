@@ -56,12 +56,18 @@ test('3. 15 语义族全覆盖', () => {
   });
 });
 
-test('4. 每条 10 必填字段', () => {
-  const REQUIRED = ['kpId', 'semanticFamily', 'learningTarget', 'questionType',
-    'difficulty', 'expectedStructure', 'answer', 'validationRules', 'source', 'humanReview'];
+test('4. 每条 12 必填字段（FINAL-40：KP/family/teaching target/cognitive target/QT/intent/difficulty/variation/structure/semantic evidence/answer/validator）', () => {
+  const REQUIRED = ['kpId', 'semanticFamily', 'teachingTarget', 'questionType',
+    'difficulty', 'variation', 'structure', 'semanticEvidence', 'answer', 'validator',
+    'source', 'humanReview'];
+  // cognitiveTarget/intent 必须记录（key 在）但允许 null（诚实缺位，DEF-04 不编造）
+  const RECORDED_NULL_OK = ['cognitiveTarget', 'intent'];
   golden.questions.forEach(function (q, i) {
     REQUIRED.forEach(function (f) {
       assert.ok(q[f] !== undefined && q[f] !== null, 'Q' + i + ' 缺字段 ' + f);
+    });
+    RECORDED_NULL_OK.forEach(function (f) {
+      assert.ok(q[f] !== undefined, 'Q' + i + ' 未记录字段 ' + f);
     });
   });
 });
@@ -80,11 +86,11 @@ test('6. 题型仅 apply/choice/fill', () => {
   });
 });
 
-test('7. 证据状态 ∈ {pass, warn, skip}（不允许 fail）', () => {
-  const VALID = { pass: true, warn: true, skip: true };
+test('7. 证据状态仅 pass（FINAL-40：WARN 不计 PASS）', () => {
+  const VALID = { pass: true };
   golden.questions.forEach(function (q, i) {
-    var s = q.validationRules && q.validationRules.semanticEvidenceState;
-    assert.ok(VALID[s], 'Q' + i + ' 证据状态 ' + s + ' 合法');
+    var s = q.validator && q.validator.semanticEvidenceState;
+    assert.ok(VALID[s], 'Q' + i + ' 证据状态 ' + s + ' 非法（FINAL-40 仅 pass）');
   });
 });
 

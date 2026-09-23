@@ -98,6 +98,28 @@
     }
     return null;
   }
+
+  // FINAL-32d：Question Intent 消费链——Node 侧直载 qt-intent.json 查找 trainsWhat。
+  // bundle 环境（kbl/teaching 不内联）下 require 失败 → 返回 null，走 explainability 兜底。
+  // 浏览器跨环境规则：(typeof require==='function') ? require(...) : null。
+  var _qtIntentMap = null;
+  function getTrainsWhatFromIntent(kpId, qt) {
+    if (!kpId || !qt) return null;
+    if (_qtIntentMap === null) {
+      _qtIntentMap = {};
+      try {
+        var doc = (typeof require === 'function') ? require('../../kbl/teaching/qt-intent.json') : null;
+        if (doc && Array.isArray(doc.rows)) {
+          doc.rows.forEach(function (r) {
+            if (r && r.knowledgeId && r.questionType && r.intent && typeof r.intent.trainsWhat === 'string') {
+              _qtIntentMap[r.knowledgeId + '|' + r.questionType] = r.intent.trainsWhat;
+            }
+          });
+        }
+      } catch (e) { /* bundle 环境 kbl/teaching 不内联 */ }
+    }
+    return _qtIntentMap[kpId + '|' + qt] || null;
+  }
   function isComprehensive(request) {
     if (!request) return false;
     if (request.mode === 'comprehensive') return true;
@@ -370,13 +392,19 @@
           if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds.length) {
             q.knowledgePointIds = plan.knowledgePointIds.slice();
           }
-          // P28-32：语义目标随计划注入每题——只读 explainability 元数据（trainsWhat || kp.module，
-          // 与 questionIntent 同源，勿改题面/答案/难度/去重）。供 Learner 数据链
-          // Question→Semantic Target→Result→KnowledgePracticeState 端到端消费。
-          // 归一为字符串：trainsWhat 为长文本；缺行时 kp.module 为 {id,name} 对象——
-          // 一律取 name/id/原始串，杜绝 '[object Object]' 污染 KPS 统计桶。
-          if (plan.explainability && plan.explainability.semanticTarget != null) {
-            q.semanticTarget = normalizeSemanticTarget(plan.explainability.semanticTarget);
+          // P28-32d：语义目标随计划注入每题——消费链优先级：
+          //   1. Generator 层 wrapGenerator 从 semanticParams.intent.trainsWhat 注入（Node 直载生成器）
+          //   2. api.js Node 侧直载 qt-intent.json 查找 trainsWhat（bundle 生成器环境下 semanticParams.intent=null）
+          //   3. plan.explainability.semanticTarget（kp.module 兜底）
+          // 供 Learner 数据链 Question→Semantic Target→Result→KnowledgePracticeState 端到端消费。
+          if (q.semanticTarget == null) {
+            var kpId = q.knowledgePoint || (Array.isArray(q.knowledgePointIds) && q.knowledgePointIds[0]) || null;
+            var tw = kpId ? getTrainsWhatFromIntent(kpId, q.questionType) : null;
+            if (tw) {
+              q.semanticTarget = tw;
+            } else if (plan.explainability && plan.explainability.semanticTarget != null) {
+              q.semanticTarget = normalizeSemanticTarget(plan.explainability.semanticTarget);
+            }
           }
           // D004 修复：统一兜底——若 answer 是对象且缺 explanation，用 prompt+value 生成。
           // 各 generator 可能不写 explanation；在 runPlans 汇聚层兜底保证每题有 explanation。

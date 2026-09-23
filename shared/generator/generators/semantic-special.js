@@ -18,6 +18,8 @@
 'use strict';
 
 var Rng = require('../core/rng.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -282,10 +284,10 @@ function createCodeGenerator(spec) {
     generate: function (plan, context) {
       var count = plan.count || 1;
       var qt = plan.questionTypeId;
-      if (qt === 'choice') return buildQuestions(plan, context, count, makeCodeChoice);
-      if (qt === 'apply') return buildQuestions(plan, context, count, makeCodeApply);
-      if (qt === 'judge') return buildQuestions(plan, context, count, makeCodeJudge);
-      return buildQuestions(plan, context, count, makeCodeFill);
+      if (qt === 'choice') return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeCodeChoice), plan), plan);
+      if (qt === 'apply') return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeCodeApply), plan), plan);
+      if (qt === 'judge') return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeCodeJudge), plan), plan);
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeCodeFill), plan), plan);
     }
   };
   return generator;

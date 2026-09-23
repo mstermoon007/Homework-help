@@ -12,6 +12,7 @@
 
 var Rng = require('../core/rng.js');
 var OS = require('../core/op-semantics.js');
+var VariationApply = require('../core/variation-apply.js');
 var MUL = OS.symbol('multiply') || '×';
 var DIV = OS.symbol('divide') || '÷';
 
@@ -188,7 +189,7 @@ function createC7Generator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i, kp));
       }
-      return questions;
+      return VariationApply.applyToAll(questions, plan);
     }
   };
 }

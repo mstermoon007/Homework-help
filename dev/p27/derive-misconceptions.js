@@ -46,6 +46,25 @@ RULE_ERROR_TYPES.forEach(function (t) {
 var VARIANTS = Adaptive.VARIANTS;
 assert(VARIANTS.length === 6, 'adaptive VARIANTS 应为 6 变体');
 
+// ---- 1b. FINAL-51：Feedback 段固定教学反馈表（5 段链第 5 段：Feedback→slot.feedback）----
+// 与 RULES 表同源同形（errorType→{trigger,variant,axis} 已是固定策略规则表，feedback 为同形机械派生列）。
+// 每条为该错因的标准小学数学教学补救指引——非学生作答数据、非 LLM/AI 编造诊断、非 Math.random 造错，
+// 与 error-model.js 8 错因机械对齐。源同 evidence-rules/kp-matrix：固定规则表，非 root Excel 语义字段。
+var FEEDBACK_BY_ERROR_TYPE = {
+  '计算错误': '逐步复核每一步运算，重算后比对两次结果是否一致',
+  '口诀混淆': '重温乘除法口诀表，对易混口诀（如三四十二/三五十下）专项背诵核对',
+  '概念混淆': '回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）',
+  '符号错误': '检查运算符号与正负号，确认退位/借位方向无误后再下笔',
+  '步骤错误': '按解题步骤逐一核对，补全遗漏环节，确认顺序无误',
+  '审题错误': '重读题目，圈出已知条件与所求，避免漏读或误读条件',
+  '单位错误': '核对计量单位与换算关系，确认单位统一后再作答',
+  '格式错误': '按题目要求规范作答格式，补全书写与标点'
+};
+RULE_ERROR_TYPES.forEach(function (t) {
+  assert(typeof FEEDBACK_BY_ERROR_TYPE[t] === 'string' && FEEDBACK_BY_ERROR_TYPE[t].length > 0,
+    'feedback 表缺漏 errorType: ' + t);
+});
+
 // ---- 1. 变式剖面按 KP 索引 ----
 var rowsByKp = {};
 profile.rows.forEach(function (r) {
@@ -167,7 +186,8 @@ matrix.kps.forEach(function (kp) {
       errorType: rule.errorType,
       basis: basis,
       triggerPattern: rule.trigger,
-      response: { variant: rule.variant, axis: rule.axis, evidenceRows: evRows }
+      response: { variant: rule.variant, axis: rule.axis, evidenceRows: evRows },
+      feedback: FEEDBACK_BY_ERROR_TYPE[rule.errorType]
     });
     stats.byErrorType[rule.errorType] = (stats.byErrorType[rule.errorType] || 0) + 1;
   });
@@ -191,7 +211,8 @@ var out = {
     errorTypes: 'shared/learner/error-model.js ERROR_TYPES（8 类）',
     variants: 'shared/strategy/adaptive-strategy.js VARIANTS（6 变体）',
     kblFacts: 'kbl/teaching/kp-matrix.json（operations/semanticFamily/maxSteps/allowByQuestionType/grade）',
-    axisEvidence: 'kbl/teaching/variation-profiles.json（P27-09 实测变式剖面）'
+    axisEvidence: 'kbl/teaching/variation-profiles.json（P27-09 实测变式剖面）',
+    feedback: 'dev/p27/derive-misconceptions.js FEEDBACK_BY_ERROR_TYPE（FINAL-51：8 错因标准教学补救指引，固定规则表机械派生，非学生作答数据）'
   },
   policy: {
     triggerPattern: '计划期可判定谓词：questionTypes ∈ canonical 7 类；operations ∈ {add,sub,mult,div} 标签（运行时匹配归一符号/标签两种形态）',

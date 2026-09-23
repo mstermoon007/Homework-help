@@ -153,11 +153,6 @@
     return (typeof global !== 'undefined' && global.DifficultyOrchestrator) ? global.DifficultyOrchestrator : null;
   }
 
-  function getKnowledgeContext() {
-    try { return require('./knowledge-context.js'); } catch (e) {}
-    return (typeof global !== 'undefined' && global.KnowledgeContext) ? global.KnowledgeContext : null;
-  }
-
   /**
    * 用户未显式给难度时，预测实际生成难度（策略 7 维静态 + 合成），
    * 使 Capacity 维度与生成维度对齐（P0-02）。无法推导时回落中档 3。

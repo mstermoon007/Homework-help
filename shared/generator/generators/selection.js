@@ -10,6 +10,7 @@
 
 var Rng = require('../core/rng.js');
 var Arith = require('../core/arithmetic-core.js');
+var VariationApply = require('../core/variation-apply.js');
 
 // Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
 function pkp(plan) {
@@ -126,7 +127,7 @@ function createSelectionGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i));
       }
-      return questions;
+      return VariationApply.applyToAll(questions, plan);
     }
   };
   return generator;

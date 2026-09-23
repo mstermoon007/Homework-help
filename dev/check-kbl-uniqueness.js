@@ -41,8 +41,9 @@ var FROZEN_LEGACY_ACCESS = [
   'shared/strategy/comprehensive-strategy.js'
 ];
 var BRIDGE_FILES = [
-  'dev/build-strategy-bundle.js',
-  'shared/engine/knowledge-compat.js'
+  'dev/build-strategy-bundle.js'
+  // FINAL-22：shared/engine/knowledge-compat.js 已物理删除（源码假引用清除后无消费者），
+  // 不再列入受控 bridge 清单。
 ];
 // Phase 2 已收口 FAIL-001/002/003（render.js 死代码 / kp-semantic-validator 死 combine / bundle 副本）。
 // 此后若再出现，按新增违规处理（回归保护）。
@@ -177,7 +178,7 @@ function runDynamic() {
   var result = {
     loaded: false, mounts: 0, apiCalls: {}, contextCopyOverwrite: false,
     legacyGlobals: { KnowledgeBank: 'undefined', KnowledgePoint: 'undefined', KnowledgeOntology: 'undefined' },
-    compatCalls: { KnowledgePointCompatGet: 0, KnowledgeBankCompatGetEntries: 0, KnowledgeOntologyCompatNormalize: 0 },
+    compatCalls: {},
     planOk: false, plans: 0, poolKpIds: 0, semanticQuestions: 0, errors: []
   };
   try {
@@ -197,8 +198,7 @@ function runDynamic() {
     load('shared/knowledge/runtime/knowledge-runtime.js');
     load('shared/orchestration/knowledge-context.js');
     var KC_page = global.KnowledgeContext;
-    load('shared/engine/knowledge-compat.js');
-    var compat = { p: global.KnowledgePointCompat, b: global.KnowledgeBankCompat, o: global.KnowledgeOntologyCompat };
+    // FINAL-22：knowledge-compat.js 已删除（compat 桥无消费者），动态审计不再加载与接线。
     load('shared/engine/strategy-engine.bundle.js');
     load('shared/engine/presentation-engine.bundle.js');
     result.contextCopyOverwrite = (global.KnowledgeContext !== KC_page);
@@ -211,9 +211,6 @@ function runDynamic() {
       result.apiCalls[m] = 0;
       K[m] = function () { result.apiCalls[m]++; return orig.apply(K, arguments); };
     });
-    if (compat.p) { var pg = compat.p.get; compat.p.get = function () { result.compatCalls.KnowledgePointCompatGet++; return pg.apply(compat.p, arguments); }; }
-    if (compat.b) { var bg = compat.b.getEntries; compat.b.getEntries = function () { result.compatCalls.KnowledgeBankCompatGetEntries++; return bg.apply(compat.b, arguments); }; }
-    if (compat.o) { var on = compat.o.normalize; compat.o.normalize = function () { result.compatCalls.KnowledgeOntologyCompatNormalize++; return on.apply(compat.o, arguments); }; }
 
     var KC = global.KnowledgeContext;
     var pool = KC.poolKpIds({ subject: 'math', grade: 2 });
@@ -295,7 +292,6 @@ function main() {
   console.log('Bundle 副本: ' + (bundleRes.dupAdapter.length ? bundleRes.dupAdapter.map(function (x) { return x.file + (x.runtimeDef ? ' [runtime]' : '') + (x.contextDef ? ' [context]' : '') + (x.remounts ? ' [remount]' : ''); }).join('; ') : '无'));
   console.log('动态: mounts=' + dynamicRes.mounts + ' poolKpIds=' + dynamicRes.poolKpIds + ' plans=' + dynamicRes.plans + ' semantic=' + dynamicRes.semanticQuestions);
   console.log('动态 Runtime API 调用: ' + JSON.stringify(dynamicRes.apiCalls));
-  console.log('动态 兼容桥委托: ' + JSON.stringify(dynamicRes.compatCalls));
   console.log('动态 旧全局: ' + JSON.stringify(dynamicRes.legacyGlobals) + (dynamicRes.contextCopyOverwrite ? ' | KnowledgeContext 被 bundle 副本覆盖=true' : ''));
   console.log('新增违规: ' + newFindings.length);
   newFindings.forEach(function (f) { console.log('  [NEW] ' + f.file + ' :: ' + f.pattern); });

@@ -18,7 +18,7 @@
  */
 'use strict';
 
-var KnowledgePoint = require('../knowledge/knowledge-point.js');
+var KnowledgePoint = require('../orchestration/knowledge-context.js'); // FINAL-22：经 KnowledgeContext 消费
 var Registry = require('../knowledge/question-type-registry.js');
 var Resolver = require('../capability/capability-resolver.js');
 
@@ -43,10 +43,10 @@ function validatePlan(plan) {
     errors.push('① knowledgePointIds 必填（数组）');
   } else {
     kpIds.forEach(function (id) {
-      var k = KnowledgePoint.get(id);
+      var k = KnowledgePoint.strategyView(id);
       if (!k) errors.push('① 知识点不存在: ' + id);
     });
-    kp = KnowledgePoint.get(kpIds[0]);
+    kp = KnowledgePoint.strategyView(kpIds[0]);
   }
 
   // ② questionType 合法

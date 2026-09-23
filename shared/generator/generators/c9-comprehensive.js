@@ -17,6 +17,7 @@
  */
 
 var Rng = require('../core/rng.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -259,7 +260,7 @@ function createC9Generator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i, kp));
       }
-      return questions;
+      return VariationApply.applyToAll(questions, plan);
     }
   };
 }

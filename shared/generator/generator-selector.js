@@ -173,7 +173,10 @@ function wrapGenerator(gen, generatorId, generatorVersion) {
     var out = orig(paramPlan, context);
     // P25-07：产出单点收口 —— 按题型教育契约 finish（convertible 机械转换）
     // / drop（form-bound 与不可转换者，fail-closed），再附加追溯元数据。
+    // FINAL-33：semanticEvidence 由 Generator 在 generate 内自声明（attachAll），
+    // wrapper 不再替注入；诚实性由 validator 检查 7/8 把关。
     var finish = function (sqs) {
+      markSemanticTarget(sqs, paramPlan);
       return attachMeta(TypeContract.enforce(sqs, paramPlan), generatorId, generatorVersion);
     };
     if (out && typeof out.then === 'function') {
@@ -184,10 +187,25 @@ function wrapGenerator(gen, generatorId, generatorVersion) {
   return gen;
 }
 
+/** FINAL-32d：Question Intent 消费链闭合——从 plan.semanticParams.intent.trainsWhat 读取
+ *  教学目标，注入到每题 sq.semanticTarget（仅当未设置时）。trainsWhat 是 qt-intent.json
+ *  声明的「训练什么」教育语义，属只读元数据，不影响题面/答案/难度/去重。
+ *  intent 为 null 或 trainsWhat 为空时不注入，保持原有 explainability 兜底路径。 */
+function markSemanticTarget(sqs, plan) {
+  if (!sqs || !plan) return;
+  var arr = Array.isArray(sqs) ? sqs : (sqs.questions && Array.isArray(sqs.questions) ? sqs.questions : null);
+  if (!arr) return;
+  var trainsWhat = (plan.semanticParams && plan.semanticParams.intent && plan.semanticParams.intent.trainsWhat) || null;
+  if (!trainsWhat) return;
+  arr.forEach(function (sq) {
+    if (sq && sq.semanticTarget == null) sq.semanticTarget = trainsWhat;
+  });
+}
+
 function attachMeta(sqs, generatorId, generatorVersion) {
   if (!sqs) return sqs;
   var arr = Array.isArray(sqs) ? sqs : (sqs.questions && Array.isArray(sqs.questions) ? sqs.questions : null);
-  if (!arr) return sqs;
+  if (!arr) return sq;
   arr.forEach(function (sq) {
     if (!sq) return;
     sq.metadata = sq.metadata || {};

@@ -10,6 +10,8 @@
 
 var Rng = require('../core/rng.js');
 var Arith = require('../core/arithmetic-core.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
+var VariationApply = require('../core/variation-apply.js');
 
 function pkp(plan) {
   if (!plan) return null;
@@ -57,6 +59,18 @@ var PROBLEM_TEMPLATES = {
     ops: ['mult'],
     relation: 'B = A × n'
   },
+  // 简单乘法总量（低难度）：每份 × 份数 = 总量
+  'equal-groups': {
+    zh: '已知条件：每份有 {per} 个，共有 {groups} 份。\n问题：一共有多少个？',
+    ops: ['mult'],
+    relation: 'total = per × groups'
+  },
+  // 平均分（低难度除法）：总量 ÷ 份数 = 每份
+  'share-equally': {
+    zh: '已知条件：一共 {total} 个，平均分给 {groups} 人。\n问题：每人分得多少个？',
+    ops: ['div'],
+    relation: 'per = total ÷ groups'
+  },
   'divide-multiple': {
     zh: '已知条件：A 有 {a}，B 是 A 的 {n} 分之 1。\n问题：B 有多少？',
     ops: ['div'],
@@ -84,6 +98,26 @@ var PROBLEM_TEMPLATES = {
 
 var TEMPLATE_KEYS = Object.keys(PROBLEM_TEMPLATES);
 
+// FINAL-31c：KP 运算约束——模板运算必须 ⊆ KP 语义允许运算，杜绝「加法 KP 产出减法应用题」。
+// 运算真源：plan.semanticParams.operations（SemanticParameters.attachToPlan 注入的 KBL
+// semantic.operations，token 为 addition/subtraction/multiplication/division）。
+// operations 为空（KP 无显式运算约束）时不过滤，保持原行为。
+var OP_ALIAS = {
+  addition: 'add', subtraction: 'sub', multiplication: 'mult', division: 'div',
+  add: 'add', sub: 'sub', mult: 'mult', div: 'div'
+};
+
+function kpAllowedOps(plan) {
+  var ops = plan && plan.semanticParams && plan.semanticParams.operations;
+  if (!Array.isArray(ops) || ops.length === 0) return null;
+  var out = [];
+  ops.forEach(function (o) {
+    var t = OP_ALIAS[o];
+    if (t && out.indexOf(t) === -1) out.push(t);
+  });
+  return out.length ? out : null;
+}
+
 function getApplicationMeta(kp) {
   var lt = kp.source?.legacyType || kp.legacy?.legacyType;
   var cat = kp.legacy?.category;
@@ -94,11 +128,18 @@ function randInt(rng, min, max) {
   return Math.floor(rng() * (max - min + 1)) + min;
 }
 
-function pickTemplate(rng, difficulty) {
+function pickTemplate(rng, difficulty, allowedOps) {
   // 低难度用简单模板，高难度用复杂模板
-  var simpleTemplates = ['total-from-parts', 'part-from-total', 'compare-more', 'compare-less'];
+  var simpleTemplates = ['total-from-parts', 'part-from-total', 'compare-more', 'compare-less', 'equal-groups', 'share-equally'];
   var complexTemplates = ['multiple', 'divide-multiple', 'grouping', 'distance', 'work'];
   var pool = difficulty >= 4 ? TEMPLATE_KEYS : simpleTemplates;
+  // FINAL-31c：KP 运算约束过滤（真源 semanticParams.operations；无约束不过滤）
+  if (allowedOps) {
+    pool = pool.filter(function (k) {
+      return PROBLEM_TEMPLATES[k].ops.every(function (op) { return allowedOps.indexOf(op) !== -1; });
+    });
+    if (pool.length === 0) return null; // fail-closed：无合规模板不出题，不产出运算错位题
+  }
   return Rng.pick(rng, pool);
 }
 
@@ -127,6 +168,14 @@ function generateNumbers(rng, template, difficulty) {
       var a = randInt(rng, minVal, Math.floor(maxVal / 3));
       var n = randInt(rng, 2, 5);
       return { a: a, n: n };
+    case 'equal-groups':
+      var gp = randInt(rng, 2, 9);
+      var gs = randInt(rng, 2, 6);
+      return { per: gp, groups: gs };
+    case 'share-equally':
+      var sg = randInt(rng, 2, 6);
+      var sp = randInt(rng, 2, 9);
+      return { total: sg * sp, groups: sg };
     case 'divide-multiple':
       var n = randInt(rng, 2, 5);
       var b = randInt(rng, minVal, maxVal);
@@ -156,6 +205,8 @@ function computeAnswer(template, nums) {
     case 'compare-more': return nums.a + nums.diff;
     case 'compare-less': return nums.a - nums.diff;
     case 'multiple': return nums.a * nums.n;
+    case 'equal-groups': return nums.per * nums.groups;
+    case 'share-equally': return nums.total / nums.groups;
     case 'divide-multiple': return nums.a / nums.n;
     case 'grouping': return nums.total / nums.per;
     case 'distance': return nums.speed * nums.time;
@@ -182,7 +233,8 @@ function formatTemplate(template, nums) {
 
 function makeApplicationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var template = pickTemplate(rng, plan.difficulty);
+  var template = pickTemplate(rng, plan.difficulty, kpAllowedOps(plan));
+  if (!template) return null; // FINAL-31c：fail-closed，不产出运算错位题
   var nums = generateNumbers(rng, template, plan.difficulty);
   var answer = computeAnswer(template, nums);
   var prompt = formatTemplate(template, nums);
@@ -320,10 +372,11 @@ function createApplicationGenerator(spec) {
 
       for (var i = 0; i < count; i++) {
         var q = makeApplicationQuestion(plan, context, i, meta);
+        if (!q) continue; // FINAL-31c：KP 运算约束下无合规模板 → fail-closed 跳过
         q.data.graphic = makeGraphicForApplication(q.data.template, q.data.numbers);
         questions.push(q);
       }
-      return questions;
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
 }
