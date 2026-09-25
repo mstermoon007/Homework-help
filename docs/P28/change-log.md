@@ -25,6 +25,21 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-120｜生成正式发布包：来自冻结 commit，排除本地临时文件（2026-09-25）
+
+- modified: `.gitignore` 新增 `release/`；移除误跟踪的 `.trae/documents/生成质量收口工程_plan.md`（AI 工具本地规划文档）
+- deleted: `.trae/documents/生成质量收口工程_plan.md`（仅从 git 移除，本地保留）
+- reason: FINAL-120 要求发布包必须来自最终冻结 commit，不得来自工作目录或开发者本地临时文件。
+- tests: 实测通过（2026-09-25）：
+  - 生成方式：`git archive --format=tar.gz --prefix=homework-help-5.0.0/ HEAD`（仅含已跟踪文件，自动排除工作目录/临时文件）
+  - 包文件：`release/homework-help-5.0.0.tar.gz`（5.3M）
+  - SHA256：`53e9018810694cc6c48447ccef5a7fbc4d34daa3bc49458c17afd31bf5ccf022`
+  - 构建来源：commit `9feccd6`（源码冻结基线 4123124，`git diff 4123124 HEAD -- shared/ plugins/ feedback/ *.html sw.js` 为空 = 源码零变化）
+  - 禁止项检查全 0：node_modules=0、.trae=0、dev/reports=0、dist=0、.DS_Store=0、release/=0
+  - 关键文件齐全：VERSION、index.html、practice.html、select.html、docs/FINAL-FREEZE.md、answer-validator.js、svg-registry.js、两个 bundle、kbl manifest
+  - 发布清单：`release/RELEASE-MANIFEST-5.0.0.md`（含 commit、SHA256、校验命令、冻结确认）
+- risk: 低。仅清理误跟踪的本地临时文件 + gitignore 新增 release/，不涉及源码。release/ 目录已 gitignore，不入库。
+
 ### FINAL-111｜冻结后禁止再改源码：源码变更=重新验证，禁止偷偷修（2026-09-25）
 
 - modified: `docs/FINAL-FREEZE.md` 新增「冻结后政策」章节
