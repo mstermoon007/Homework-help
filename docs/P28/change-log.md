@@ -25,6 +25,20 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-135｜DEF-008 后半：server_tokens off 关闭 nginx 版本号泄露（2026-09-25）
+
+- modified:
+  - 服务器 `/etc/nginx/nginx.conf`（http 块第 21 行官方预留注释 `# server_tokens off;` 取消注释为 `server_tokens off; # FINAL-135`；最小改动 1 行）
+  - 仓库文档：`docs/FINAL-REPAIR-STATUS.md`（FINAL-135 VERIFIED）、`docs/FINAL-REPAIR-DEFERRED.md`（DEF-008 整体 FIXED）
+- deleted: 无
+- reason: 用户要求修复 DEF-008 剩余的版本号泄露项。加固前实测每个响应头返回 `Server: nginx/1.24.0 (Ubuntu)`，401/404 默认错误页页脚同样显示精确版本与发行版，属信息泄露（降低攻击者指纹识别成本，P3 纵深防御项）。放在 nginx.conf 的 http 块，全局覆盖域名站与裸 IP default_server；未触碰任何 sites-available/sites-enabled 文件，多站点共存零影响。
+- tests:
+  - 变更前 `nginx -T` 确认全配置树 server_tokens 仅 1 处（注释行），无重复指令；备份 /root/nginx.conf.bak-20260925-final135
+  - `nginx -t` 两项成功，reload 无中断
+  - 版本消失：HTTPS 首页、HTTPS practice、HTTP 80 跳转、裸 IP default_server 四个入口 Server 头全部仅为 `nginx`；HTTPS 404、/stats 401、裸 IP 404 三个错误页页脚均仅 `<center>nginx</center>`；404 响应体中 `1.24.0`/`Ubuntu` 字符串计数 0
+  - 功能回归：主站 HTTPS 200、HTTP 301 跳转、/stats 无口令 401/带口令 200、HSTS `max-age=300` 仍在、Let's Encrypt 证书 CN 正常；GoAccess 报表与 cron 不依赖 Server 头，无影响
+- risk: 低。仅停止输出版本信息，不改路由/业务；服务器名 nginx 仍保留（彻底去除需 headers-more 模块，属过度加固不做）。回滚：恢复 /root/nginx.conf.bak-20260925-final135 并 reload。说明：隐藏版本不替代补丁管理，apt 安全更新仍是真实漏洞防线。DEF-008 两项（①HSTS FINAL-133 ②server_tokens FINAL-135）全部闭合；HSTS max-age 提长（86400→31536000）与 includeSubDomains/preload 评估为独立后续增强，不在本 DEF 范围。
+
 ### FINAL-134｜统计报表中文化 + 累计访客数横幅（FINAL-132 增强）（2026-09-25）
 
 - modified:
