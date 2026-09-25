@@ -25,6 +25,21 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-121｜发布包内容检查：白名单产品包，禁止项全 0（2026-09-25）
+
+- modified: 无源码改动；`release/homework-help-5.0.0.tar.gz` 由全量快照重建为白名单产品包（release/ 已 gitignore，不入库）；发布清单 RELEASE-MANIFEST-5.0.0.md 同步更新
+- deleted: 无（旧全量包被同名产品包覆盖）
+- reason: FINAL-121 要求发布包只含正式产品运行所需（HTML/JS/CSS/SVG/knowledge pages/assets/sitemap/robots/manifest/service worker），禁止 tests/dev/archive/临时文件/旧 bundle/旧 KBL/旧页面/审计报告/个人配置。FINAL-120 的 git archive 全量包含 tests(77)/dev(81)/archive(22)/migration(23) 等非产品文件，本任务沿入口引用链（7 根页 script 标签 + sw.js 缓存清单 + knowledge-runtime 数据路径）确定运行时白名单后重建。
+- tests: 实测通过（2026-09-25）：
+  - 构建方式：`git archive HEAD -- <白名单 pathspec>`（commit bf7f625，仍来自冻结 commit 而非工作目录）
+  - 包：3.2M / 571 文件；SHA256 `5335c2c6d0c29a0963e51a8fe4efaad684631e2e149ab8ab5f57f5547ee1d101`
+  - **必含项**：HTML 384（7 根页 + 376 knowledge + feedback 1）、JS 153、CSS 8、SVG 插件 6、assets 6、sitemap.xml/robots.txt/llms.txt/CNAME/VERSION/LICENSE/sw.js、shared/knowledge/manifest/manifest.json、两个最终 bundle —— 全部存在
+  - **禁止项全 0**：tests/dev/archive/migration/scripts/tools/docs/architecture/audit-results/.github/node_modules/.trae 均 0；.gitignore/package.json/P16 基线/svg-test 开发页/shared 内 README 均 0；report|audit 审计报告 0；.env/.workbuddy 个人配置 0；bak|old|tmp|orig|log|DS_Store 临时文件 0
+  - 旧 bundle=0（仅 2 个最终 bundle）；kbl/ 源目录=0（运行时用 shared/knowledge 构建产物，Node 直读 kbl 的 3 处代码均有 require 守卫，浏览器不执行）
+  - 来源证明：解包抽查 index.html/strategy bundle/KBL manifest 的 SHA256 与 `git show HEAD:<file>` 逐一一致
+  - 源码冻结基线 4123124 保持（本任务零源码改动）
+- risk: 无（仅发布产物重组，源码未动；白名单 pathspec 与校验命令已固化进 RELEASE-MANIFEST 可复现）。
+
 ### FINAL-120｜生成正式发布包：来自冻结 commit，排除本地临时文件（2026-09-25）
 
 - modified: `.gitignore` 新增 `release/`；移除误跟踪的 `.trae/documents/生成质量收口工程_plan.md`（AI 工具本地规划文档）
