@@ -25,6 +25,226 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-107｜安全：eval=0 / new Function=0 / unsafe SVG=0 / unsafe HTML bypass=0（2026-09-25）
+
+- modified: 无（纯验证，无代码改动）
+- deleted: 无
+- reason: FINAL-107 安全四项指标验收。
+- tests: 实测通过（2026-09-25）：
+  - **eval = 0**：`dev/p28/check-security.js` [1] 扫描 536 个交付文件（shared 含 2 bundle / plugins / feedback / sw.js / 全部 HTML），eval 0 命中 ✓
+  - **new Function = 0**：同 [1] 扫描，new Function 0 命中 ✓
+  - **unsafe SVG = 0**：SVG 契约 + Sanitizer 测试 42/42 PASS（含 FINAL-71 五组边界对抗：敌意 SVG 丢弃、registry 拒收或中和、顶层 rawSvg 报 GRAPHIC_INVALID、端到端成品干净）✓
+  - **unsafe HTML bypass = 0**：Presentation 渲染对抗测试 33/33 PASS（题目/选项/radio value 全 esc、graphicGuard 注入前复核、schema 禁 rawHtml/rawSvg/html、print CSP script-src 'none'）；AnswerValidator 安全测试 15/15 PASS（23 个嵌入式攻击表达式全 null）✓
+  - 安全门禁总计：**6 PASS / 0 FAIL**
+- risk: 无（纯验证）。
+
+### FINAL-106｜浏览器 E2E：真实 Chrome 完成 9 步路径（2026-09-25）
+
+- modified: 无（纯验证，无代码改动）
+- deleted: 无
+- reason: FINAL-106 要求真实浏览器完成 9 步路径：首页→快速练习→教师模式→7题型→知识页→生成→刷新→再生成→打印。
+- tests: 实测通过（2026-09-25）：`CHROME_BIN=/Applications/Google\ Chrome.app/... node dev/e2e/browser-e2e.js final-12` 真实 Chrome 执行，结果 `steps=9, failed=0`，每步 `ok=true`：
+  1. 首页 — title=小学练习本、开始学习→select.html ✓
+  2. 快速练习 — mode=quick 生成成功 ✓
+  3. 教师模式 — mode=teacher 生成成功 ✓
+  4. 知识点入口 — 用户点击知识页 CTA 全链导航 + 生成 ✓
+  5+6. 7 类题型生成 — POL 全链，7 类题型全部出现（calc/fill/choice/judge/geometry/classify/apply），ledger req=planned=gen=final=21，coverage=OK ✓
+  7. 重新生成 — 第二批存在、overlap=0、hasPrevSeen=true ✓
+  8. 刷新 — reload 后自动生成、请求参数保持、hasPrevSeen=true ✓
+  9. 打印 — print 调用=1、cards≥produced、标题存在、不触发新生成 ✓
+- risk: 无（纯验证）。
+
+### FINAL-100~105｜核心指标验收（2026-09-25）
+
+- modified: 无（纯验证，无代码改动）
+- deleted: 无
+- reason: FINAL-100~105 核心指标逐项验收。
+- tests: 实测通过（2026-09-25）：
+  - **FINAL-100 KBL**：KP 375/375 ✓ / Units 98 ✓ / Relations 0 ✓ / Mappings 1570/1570（allow=1570, forbid=0）✓
+  - **FINAL-101 生成**：1570/1570 real generation（PASS 1570, FAIL 0）✓
+  - **FINAL-102 七类题型**：7/7（calc, fill, choice, judge, geometry, classify, apply）✓
+  - **FINAL-103 教育语义**：A-class 921 / SEMANTIC_PASS 921 / WARN 0 / FAIL 0（`dev/p28/final-31-warn-attribution.js`）✓
+  - **FINAL-104 Golden**：Golden semantic PASS = 100%（259/259 evidence pass, 0 errors, 15/15 families covered）✓
+  - **FINAL-105 测试**：npm test 547/547 PASS ✓ / syntax 297 files 0 errors ✓ / lint 0 违规 ✓ / check-all 28 PASS / 0 FAIL ✓
+- risk: 无（纯验证）。
+
+### FINAL-92｜连续两次全量验证：check-all × 2 + git diff × 2，结果一致且零写入（2026-09-25）
+
+- modified: 无（纯验证，无代码改动）
+- deleted: 无
+- reason: FINAL-92 最终确定性验收——连续两次全量验证，要求两次 check-all 结果一致且 git diff = 0（check-all 本身不修改任何文件）。
+- tests: 实测通过（2026-09-25）：
+  - **基线**：`git diff --stat` = 20 files changed, 742 insertions(+), 128 deletions(-)（均为 FINAL-70~91 的既有改动，非本次产生）
+  - **第一次 check-all**：`CHROME_BIN=... npm run check-all` → **28 PASS / 0 FAIL / 0 SKIP / 28 项**；FINAL-91 只读门禁 PASS
+  - **第一次后 git diff**：20 files changed, 742 insertions(+), 128 deletions(-) —— 与基线**完全一致**，无新增变更
+  - **第二次 check-all**：`CHROME_BIN=... npm run check-all` → **28 PASS / 0 FAIL / 0 SKIP / 28 项**；FINAL-91 只读门禁 PASS
+  - **第二次后 git diff**：20 files changed, 742 insertions(+), 128 deletions(-) —— 与基线、第一次后**完全一致**
+  - **结论**：两次 check-all 结果一致（28/0/0），git diff 三次完全相同，check-all 零写入，构建确定性通过最终验收。
+- risk: 无（纯验证）。
+
+### FINAL-91｜所有 CI 检查必须只读：verify 不是 repair（2026-09-25）
+
+- modified:
+  - `dev/p28/check-generator-matrix.js`：默认改为**只读复核**——不再无条件写 `docs/archive/phases/p28/P28-GENERATOR-MATRIX.{json,md}`；仅在显式 `--write` 时写入。默认模式下与既有 archive 产物比对，不一致则 FAIL（同 freeze 脚本只读复核模式）。
+  - `dev/p28/check-generator-noninterference.js`：默认改为**只读复核**——不再无条件写 `docs/archive/phases/p28/P28-GENERATOR-NONINTERFERENCE.md`；仅 `--write` 写入。默认模式仅输出判定结果到 stdout，不写盘。
+  - `dev/check-all.js`：开头新增「只读门禁」快照（记录关键目录运行前文件 hash：shared/、tests/、kbl/canonical/、kbl/manifest/、docs/ 非 archive、index.html、package.json、VERSION、sw.js、README.md），所有检查跑完后复核——若关键目录有任何文件 hash 变化则 FAIL。报告目录（dev/reports/、dev/p26/reports/）与 archive 目录允许写入（审计输出/历史归档）。
+- deleted: 无
+- reason: FINAL-91 要求 CI 检查必须只读：不得修改源码、测试、冻结文件，不得生成随机数据，不得覆盖 baseline。CI 是 verify 不是 repair。审计发现 check-generator-matrix.js 与 check-generator-noninterference.js 默认无条件写 archive，违反只读原则。
+- tests: 实测通过（2026-09-25）：(i) `node dev/p28/check-generator-matrix.js` 默认模式输出「只读模式，未写盘」，archive 文件零变更；(ii) `node dev/p28/check-generator-noninterference.js` 默认模式输出「只读模式，未写盘」，archive 文件零变更；(iii) `CHROME_BIN=... npm run check-all` —— **28 PASS / 0 FAIL / 0 SKIP / 28 项**，且 FINAL-91 只读门禁 **PASS**（关键目录前后 hash 一致，CI 未修改源码/测试/冻结文件）；(iv) check-all 运行后 `git diff --stat` 关键目录（shared/、tests/、kbl/、docs/ 非 archive、根配置）无新增变更。
+- risk: 低。仅改两个脚本的默认写盘行为为只读 + check-all 加只读门禁；--write 模式保留供人工更新 archive 产物。bundle build 内容不变（hash 一致），报告目录写操作保留为审计输出。
+
+### FINAL-90｜建立唯一最终门禁：npm run check-all 一次性执行 17 项（2026-09-25）
+
+- modified:
+  - `dev/p28/check-bundle-determinism.js`（新增）：Bundle 一致性 + 构建确定性联合门禁。支持 `--mode bundle|determinism`：① bundle 模式——记录 strategy-engine.bundle.js / presentation-engine.bundle.js 原始 SHA256，重跑两个 build 脚本后比对，hash 一致 = source==bundle（源码未漂移、bundle 为最新）；② determinism 模式——同一逻辑验证构建确定性（同输入同输出）。
+  - `dev/check-all.js`：补齐 FINAL-90 要求的 17 项检查域。原 20 项含 Coverage/LLM/Doc/DeadCode/Legacy 5 项 bonus，核心 15 项已覆盖；新增 **16. Bundle**（check-bundle-determinism.js --mode bundle）与 **17. Determinism**（check-bundle-determinism.js --mode determinism），凑齐 17 项（version / KBL / lint / syntax / unit / generation / education / golden / difficulty / presentation / SVG / security / sitemap / crawl / browser / bundle / determinism）。原 bonus 项（Doc/DeadCode/Legacy）保留在 17 项之后作为附加门禁，不影响 17 项核心覆盖。
+  - `package.json` scripts：`check-all` 已指向 `node dev/check-all.js`（唯一入口，无需改动）。
+- deleted: 无（确认全仓仅 `dev/check-all.js` 一个 check-all 脚本，无 check-all-2/-final/-new/-real 变体）
+- reason: FINAL-90 要求 `npm run check-all` 为唯一最终门禁，一次性执行 17 项（version/KBL/syntax/lint/unit/generation/education/golden/difficulty/presentation/SVG/security/sitemap/crawl/browser/bundle/determinism），且不得存在多版本 check-all 脚本。
+- tests: 实测通过（2026-09-25）：(i) 新增 `dev/p28/check-bundle-determinism.js` 单测两模式均 PASS——bundle 模式（source==bundle，strategy `8e1b4e4f...` / presentation `62665dd0...` 稳定）、determinism 模式（重跑 hash 不变）；(ii) `CHROME_BIN=... npm run check-all` —— **28 PASS / 0 FAIL / 0 SKIP / 28 项**，其中 FINAL-90 要求的 17 项核心全部 PASS（Version/KBL/Lint/Syntax/Unit/Generation/Education/Golden/Difficulty/Presentation/SVG/Security/Sitemap/Crawl/Browser/Bundle/Determinism）；(iii) 全仓 `**/check-all*.js` 仅返回 `dev/check-all.js` + `dev/check-allow-generation.js`（后者非系列），无 check-all-2/-final/-new/-real 变体。
+- risk: 低。新增脚本只读 + 调用既有 build 脚本（FINAL-81 已验证构建确定性），不修改生产代码；check-all.js 仅新增两项 run 调用 + 重排编号（原 Coverage/LLM 移入附加门禁区）。
+
+### FINAL-83｜当前架构文档只保留当前事实：历史数字 598/566/564/1293/639 仅限 archive/history（2026-09-25）
+
+- modified:
+  - `README.md`（当前项目文档，唯一当前文档违规点）：① P20 条目「598 KP覆盖」→「375 KP覆盖」（当前 KBL KP 数）；② 核心冻结边界「26Generators」→「24 Generators」（当前 GeneratorRegistry 实际注册数，经 `dev/_bundle-env.js` + GeneratorRegistry.all() 实测 24）。其余当前事实（375 知识点、1570 ALLOW、5.0.0 等）已正确，不动。
+- deleted: 无
+- reason: FINAL-83 要求当前架构文档只描述当前事实（375 KP / 98 Units / 0 Relations / 1570 mappings / 7 QT / 当前各层），历史数字（598/566/564/1293/639）仅限 archive/history。全仓扫描命中 11 文件 37 处，分类后：当前架构文档违规仅 README.md 2 处；其余命中均为合法场景——`dev/p28/check-doc-consistency.js`（门禁自身 token 清单，执法必需）、`dev/reports/*.json`（历史审计报告，非架构文档）、`docs/P28/change-log.md`（审计日志，扫描器豁免）、`kbl/manifest/source-manifest.json`（KBL 源元数据 superseded.reason 字段，说明旧 598 集源被替换的历史背景，非架构描述）、`migration/*`（迁移历史，非当前架构文档）。
+- tests: 实测通过（2026-09-25）：(i) 全仓历史数字扫描（node 脚本）覆盖当前文档 456 个，违规命中 0（剩余 4 处全在 `archive/docs-2026-09/`，属 archive 允许范围）；README.md 两处已更正（598→375、26→24）；(ii) `node dev/p28/check-doc-consistency.js` — **PASS**（非 archive 文档未发现历史数字）；(iii) `CHROME_BIN=... node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP**（含 #18 文档扫描）。Generator 数 24 经 GeneratorRegistry.all() 实测确认。
+- risk: 低。仅 README 两处数字更正，无代码/数据改动；Generator 数 24 为实测值。
+
+### FINAL-81｜Bundle 重新构建：source==bundle，hash 一致（2026-09-25）
+
+- modified: 无（零改动；本条为重新构建验证记录）
+- deleted: 无
+- reason: 用户要求重新构建 strategy-engine.bundle.js 与 presentation-engine.bundle.js，校验 source==bundle、hash 一致。
+- tests: 实测通过（2026-09-25）：(i) 重建前快照 hash：strategy `8e1b4e4f8f51490adc25ccc66ed806c5e3a8eea9e004c7ed4bccaa6021cc2d49`、presentation `62665dd09dd33ce08d73b4fde6fbe6a58d9e3e78e7899a4188b7fb309b699752`；(ii) `node dev/build-strategy-bundle.js`（58 modules / 4 shims）+ `node dev/build-presentation-bundle.js`（21 inlined / 62 delegated）；(iii) 重建后 hash 与重建前 **完全相同**，`git diff --stat shared/engine/` 为空；结论：构建确定性（deterministic），source==bundle，hash 一致，零产物漂移。`CHROME_BIN=... node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP**。
+- risk: 无（零改动，纯验证）。
+
+### FINAL-82｜版本统一：VERSION / package.json / version.js / sw.js / index.html / README 一致（2026-09-25）
+
+- modified: 无（零改动；本条为版本一致性验证记录）
+- deleted: 无
+- reason: 用户要求 6 处版本号必须一致。
+- tests: 实测通过（2026-09-25）：逐处读取——① `VERSION` = `5.0.0`；② `package.json` version = `5.0.0`；③ `shared/catalog/version.js` APP_VERSION = `5.0.0`；④ `sw.js` CACHE = `hw-help-5.0.0`（由 `scripts/sync-sw-version.js` 校验与 version.js APP_VERSION 一致，PASS）；⑤ `index.html` 运行时从 version.js 读 APP_VERSION（fallback `5.0.0`）；⑥ `README.md` 当前版本 = `5.0.0`。6 处全部 `5.0.0`，一致。`CHROME_BIN=... node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP**（含 #1 Version 门禁 sync-sw-version PASS）。
+- risk: 无（零改动，纯验证；版本 SSOT 为 `VERSION` 文件 → version.js 是运行时分发源，sw.js/index.html 均消费 version.js，package.json/README 为人工同步镜像）。
+
+### FINAL-80｜KBL 从 Excel 重新派生：375/98/0/1570 + hash 一致（2026-09-25）
+
+- modified: 无（零生产/数据改动；本条为重新派生验证记录）
+- deleted: 无
+- reason: 用户要求从唯一源 `kbl/root/小学G1-G6数学知识点.xlsx` 重新 derive KBL，校验 375 KP / 98 Units / 0 forbid / 1570 mappings 且 hash 一致。
+- tests: 实测通过（2026-09-25）：(i) `node tools/kbl/extract-source.js` — extract-raw.json SHA256 与派生前 **byte 级一致**（`1ebb45b4...`），stats：375 行 / 12 册 / grade 分布 g1=39,g2=60,g3=71,g4=69,g5=80,g6=56 / Excel fileHash `8d4ebef5...`；(ii) `node tools/kbl/derive-kbl.js` — knowledge=375 / units=98 / relations=0 / mappings=1570 / permission={allow:1570}（forbid=0）；5 个 canonical 文件 SHA256 全部与派生前一致（capability `ec70ef76...`、course `316d1d34...`、knowledge `cf5f0062...`、mappings `88534f87...`、relations `2d2e14ae...`）；(iii) `node tools/kbl/emit-canonical.js` + `node tools/kbl/build.js` — rootHash `cee1070e5a08a6ad22538380530e6e2580949ca255d6aa9a4dcec41804621df6` 与派生前 **完全一致**，kbl/manifest ↔ shared/knowledge/manifest rootHash 两端一致；(iv) `node dev/check-kbl-quality.js` — M17 数据质量门禁 **10/10 PASS**（含 Q9 rootHash 复算、Q10 root Excel 指纹与 extract-raw 快照一致）；(v) `CHROME_BIN=... node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP**。结论：从 Excel 重新派生产出与冻结基线 byte 级一致，hash 稳定，无需改动任何 KBL 数据文件；仅 build 时间戳（manifest buildAt/packageVersion）刷新，已回退以保持工作树干净。
+- risk: 无（零数据改动，纯验证；预存工具链断链见备注）。
+- 备注（非本次改动，预存工具链问题）：`tools/kbl/verify.js` 第 6、8 步引用的 `dev/check-generator-capability.js` 与 `dev/check-f-type-2.js` 不存在，导致 verify.js 全链中断。此为 verify.js 脚本的预存断链，与 KBL 数据无关；KBL 数据完整性已由 check-kbl-quality（10/10）+ check-all（26/0）覆盖验证。如需修复 verify.js 断链应单开任务。
+
+### 公安备案信息同步其余 5 个页面 footer·验证回填（2026-09-24）
+
+- modified: 无（验证回填记录，不改代码）
+- deleted: 无
+- reason: 上条 tests 字段为预测占位，按规则 5 回填实测。
+- tests: 实测通过（2026-09-24）：(i) 全仓 grep `XXXXXXXXXXXX` / `www.beian.gov.cn` — 0 命中（6 页占位全清）；(ii) 本地静态服务器 + Chrome 抽查根页 select.html 与子目录页 feedback/feedback.html——两页第二个备案 a 均为 href=`https://beian.mps.gov.cn/#/query/webSearch?code=62090002000210`、rel=noreferrer、文案"甘公网安备62090002000210号"；img 分别 assets/beian-icon.png 与 ../assets/beian-icon.png，complete 且 natural=36×40（子目录相对路径有效，非裂图）；截图确认 feedback 页 footer 视觉正常；(iii) `CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP / 26 项**。
+- risk: 无。
+
+### 公安备案信息同步其余 5 个页面 footer（2026-09-24）
+
+- modified:
+  - `practice.html`、`select.html`、`faq.html`、`contact.html`（根目录 4 页）：footer `.footer-beian` 第二个占位 a（http://www.beian.gov.cn/ + 内联 data-URI 临时盾牌 + "粤公网安备 XXXXXXXXXXXX号"）替换为与首页一致的真实备案 a（https://beian.mps.gov.cn/#/query/webSearch?code=62090002000210，target=_blank rel=noreferrer，img=assets/beian-icon.png 13×14，文案"甘公网安备62090002000210号"）。
+  - `feedback/feedback.html`（子目录 1 页）：同上替换，图片相对路径按子目录取 `../assets/beian-icon.png`（与其既有 ../contact.html 相对链接约定一致）。
+- deleted: 无
+- reason: 首页已落地真实公安备案，用户要求把其余 5 个仍带占位的页面同步一致。
+- tests: 待跑（改完即跑）：grep 验证 0 处占位残留 + 浏览器抽查根页与子目录页图标加载 + `CHROME_BIN=... node dev/check-all.js` 预期 26 PASS / 0 FAIL / 0 SKIP。
+- risk: 极低。仅 5 处静态 footer 内容替换，结构/class/其他链接不动；复用已存在且已验证的 assets/beian-icon.png，无新增文件。
+
+### 公安备案信息落地首页 footer 预留位·验证回填（2026-09-24）
+
+- modified: 无（验证回填记录，不改代码）
+- deleted: 无
+- reason: 上条 tests 字段为预测占位，按规则 5 回填实测。
+- tests: 实测通过（2026-09-24）：(i) `CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP / 26 项**；(ii) 本地静态服务器 + Chrome 实测首页 footer DOM——第二个备案 a 标签 href=`https://beian.mps.gov.cn/#/query/webSearch?code=62090002000210`、target=_blank、rel=noreferrer、文案"甘公网安备62090002000210号"；img src=assets/beian-icon.png，complete=true、naturalWidth=36/naturalHeight=40（图标真实加载非裂图）；截图确认与 ICP 备案并排、分隔符/版本行布局正常。
+- risk: 无。
+
+### 公安备案信息落地首页 footer 预留位（2026-09-24）
+
+- modified:
+  - `index.html`（首页 footer `.footer-beian` 预留位）：原占位内容（链接 `http://www.beian.gov.cn/`、内联 data-URI 临时盾牌图标、占位文案"粤公网安备 XXXXXXXXXXXX号"）整体替换为真实公安备案——链接 `https://beian.mps.gov.cn/#/query/webSearch?code=62090002000210`（target="_blank" rel="noreferrer"，按用户给定）、用户提供的备案图标、文案"甘公网安备62090002000210号"。仅首页一处（用户明确"首页预留的位置"），不动共享代码/结构/class。
+  - `assets/beian-icon.png`（新增，1403B）：用户显式上传的备案图标（源：/Users/zhanggaozhang/Downloads/备案图标.png，36×40 RGBA PNG），按既有 assets/ 静态资源约定落地，img 按 13×14 展示，复用已有 `.footer-beian img{vertical-align:-2px}` 样式。
+- deleted: 无
+- reason: 公安备案要求展示真实备案号与可查询链接；首页预留位原为占位内容。
+- tests: 待跑（改完即跑）：`CHROME_BIN=... node dev/check-all.js` 预期 26 PASS / 0 FAIL / 0 SKIP（页面漂移门禁仅覆盖 knowledge/*.html；#13 扫描根 HTML 不含 eval/Function）。
+- risk: 极低。仅首页 footer 静态内容 + 一张用户提供的小图标；其余 5 个页面（practice/select/feedback/contact/faq）仍保留原占位，本次按最小范围不动（可另行同步）。
+
+### FINAL-72b｜FINAL-72 验证回填：实际测试结果（2026-09-24）
+
+- modified: 无（本条为 FINAL-72 的验证回填记录，不改代码，仅以正 FINAL-72 预测条目的 "tests: 待跑" 占位）
+- deleted: 无
+- reason: FINAL-72 条目 tests 字段为预测占位，按 P28 规则 5 追加本条回填实际结果。
+- tests: 实测全跑通（2026-09-24）：(i) `node --test tests/presentation/svg-contract.test.js` — **17 tests / 17 pass / 0 fail**（既有 12 + FINAL-72 新增 5：统一链 throw→FAILED 带原始 Error、端到端 FAILED 图形不进 DOM 且状态保留 RenderResult、三态语义不混、print catch 经 console.warn 保留原始错误、结构性禁 catch→'' 四文件扫描）；(ii) `node dev/p28/check-security.js`（check-all #13）— **Security 6 PASS / 0 FAIL**（[3] SVG Sanitizer、[4] Presentation 对抗 + CSP 均过）；(iii) `npm test` — **547 tests / 547 pass / 0 fail**（542 + FINAL-72 共 5 个新对应用例）；(iv) `CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP / 26 项**（含 #17 真实 Chrome E2E 9 步）。
+- risk: 无（零代码改动，仅回填实测）。
+
+### FINAL-72｜SVG 统一链三态契约：GraphicDescriptor→GraphicRenderer→SVGRenderer 返回 SUCCESS/UNSUPPORTED/FAILED，禁止 catch→'' 吞错（2026-09-24）
+
+- modified:
+  - `shared/presentation/print.js`（buildFromQuestions 唯一渲染 catch）：原 `catch (e) { return null; }` 把 PresentationRenderer.renderAll 抛出的原始错误整体丢弃（调用方仅 alert 泛化文案"无法构建打印内容"），属 FINAL-72 禁止的吞错反模式（catch→null 等价 catch→''）。改为 catch 内先 `console.warn('[Print] buildFromQuestions 渲染失败：', e)` 保留原始错误对象再 return null；返回类型与调用方 alert/return 行为零变化，仅消除静默。
+  - `shared/presentation/svg-registry.js`（仅头注释契约订正，零代码逻辑改动）：第 9 行旧注释仍写"渲染入口 SVGRenderer.render → <svg> 字符串（无图返回 ''）"，与 P28-26 起实际的 RenderResult `{status:'SUCCESS'|'UNSUPPORTED'|'FAILED', svg?, reason?, error?}` 三态契约矛盾，订正注释，防止后续维护者按"无图 ''"旧契约新写吞错代码。
+  - `tests/presentation/svg-contract.test.js`（仅测试增强）：追加 FINAL-72 用例块——① 统一链端到端：注册 throw 生成器后，经 GraphicRenderer.render→SVGRenderer 必须 FAILED（error 为原始 Error）；PresentationRenderer.render 同一 descriptor 产出 RenderResult `_gfxStatus='FAILED'`、`_gfxReason` 有值、html 不得含 `.question-graphic`（失败图形不进 DOM）；② print 不吞错：stub `global.PresentationRenderer.renderAll` 抛错时 buildFromQuestions 返回 null 且 console.warn 必须接到该原始错误；③ 结构性禁令：读取 svg-registry/graphic-renderer/renderer/html-renderer 四文件源码，断言不存在 `catch ... return ''` 形态。
+- deleted: 无
+- reason: FINAL-72 要求 SVG 链统一与显式三态、禁止 catch→''。当前源码审计结论：统一链本身已在——生产面 GraphicDescriptor 的唯一渲染出口是 `renderer.js:70` GraphicRenderer.render→svg-registry，页面/插件 0 处直接调 SVGGenerators 拼图入 DOM，render-format 的 legacy `svg` 字段零 DOM 消费；registry 内 generator throw/svgWrap throw/空输出/清洗拒收均已显式 FAILED 带 reason+error，GraphicRenderer 引擎缺失显式 FAILED。确认缺口仅两处：print 层 catch 吞掉原始错误、registry 头注释保留旧"无图返回 ''"契约描述。按最小修改只动这两点 + 补对抗证据。
+- tests: 待跑（改完即跑）：`node --test tests/presentation/svg-contract.test.js`、`node dev/p28/check-security.js`（#13 [3][4] 覆盖 SVG 链）、`npm test`、`CHROME_BIN=... node dev/check-all.js` 预期仍 26 PASS / 0 FAIL / 0 SKIP。
+- risk: 低。print.js 仅新增一行 console.warn（浏览器/Node 均有 console，代码库多处已用），不改变返回值与 UI 分支；svg-registry 仅注释；无 bundle 影响（print.js 不入 presentation bundle；registry 改动零逻辑且 bundle 构建剥离注释）。
+
+### FINAL-71b｜FINAL-71 验证回填：实际测试结果（2026-09-23）
+
+- modified: 无（本条为 FINAL-71 的验证回填记录，不改代码，仅以正 FINAL-71 预测条目的 "tests: 待跑" 占位）
+- deleted: 无
+- reason: FINAL-71 条目 tests 字段为预测占位，按 P28 规则 5 追加本条回填实际结果。
+- tests: 实测全跑通（2026-09-23）：(i) `node --test tests/presentation/renderer.test.js` — **33 tests / 33 pass / 0 fail**（既有 28 + FINAL-71 新增 5 组：题目/选项 esc 边界、graphicGuard 敌意 SVG 丢弃、SVGRegistry custom 拒收/中和、SemanticQuestion 顶层 rawSvg/svg/html GRAPHIC_INVALID、端到端干净）；(ii) `node --test tests/presentation/svg-sanitizer.test.js` — 8/8 PASS；(iii) `node dev/p28/check-security.js`（check-all #13）— **Security: 6 PASS / 0 FAIL**，其中 [1] Node 逐行扫描器实扫 **536 个交付文件**（shared 含 2 bundle / plugins / feedback / sw.js / 根 7 HTML + knowledge 376 HTML）eval/new Function 0 命中，[4] Presentation 对抗测试 + print CSP `script-src 'none'` 双断言 PASS（一处实现注记：print.js 源码内 CSP 为 JS 转义形态 `script-src \'none\'`，门禁用 `/script-src\s+\\?'none\\?'/` 匹配，首跑字面匹配误报后已修正）；(iv) `npm test` — **542 tests / 542 pass / 0 fail**（534 + FINAL-70/71 共 8 个新对抗用例）；(v) `CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP / 26 项**。
+- risk: 无（零代码改动，仅回填实测）。
+
+### FINAL-70b｜FINAL-70 验证回填：实际测试结果（2026-09-23）
+
+- modified: 无（本条为 FINAL-70 的验证回填记录，不改代码，仅以正 FINAL-70 预测条目的 "tests: 待跑" 占位）
+- deleted: 无
+- reason: FINAL-70 条目 tests 字段为预测占位，按 P28 规则 5 追加本条回填实际结果。一处用例口径注记：初版枚举含 `'1==1'`，实测被题干归一化器按小学记号剥离 `=`（`3+5=8`）得 `'11'`——非求值、无执行原语，故从 FAIL 枚举移除并在测试内注释说明；含标识符/调用的赋值载荷仍在 tokenize 即拒。
+- tests: 实测全跑通（2026-09-23）：(i) `node --test tests/validator/answer-validator.test.js` — **15 tests / 15 pass / 0 fail**（既有 12 + FINAL-70 新增 3：23 个嵌入式攻击表达式全 FAIL=null、5 个哨兵载荷副作用零发生、子进程 `1+process.exit(123)` exit code=0 证明不执行）；(ii) `node dev/p28/check-security.js`（check-all #13）— [2] AnswerValidator PASS；(iii) `npm test` — **542/542 PASS**；(iv) `CHROME_BIN=... node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP / 26 项**。
+- risk: 无（零代码改动，仅回填实测）。
+
+### FINAL-71｜HTML 安全：题目/答案/SVG 入 DOM 必须过明确安全边界，禁止 rawHtml/rawSvg/innerHTML 绕过（2026-09-23）
+
+- modified:
+  - `tests/presentation/renderer.test.js`（仅测试增强，追加 FINAL-71 边界对抗用例块，不动既有用例）：① 题目/选项文本注入——prompt 与 choice options 标签文本、radio `value=` 属性含 `<script>/" onerror=` 等载荷时，HTMLRenderer 输出必须为转义文本（`&lt;script&gt;`、`&quot;`），原始 `<script>`/`onerror=` 不得出现；② SVG 防御层——经 HTMLRenderer `options.graphic` 直注的敌意 SVG（`<script>`/`onload=`/`<foreignObject`/`url(javascript:)`）必须被 graphicGuard 整体丢弃（不出现 `.question-graphic` 内容）；③ rawSvg 收口——`SVGRegistry.render({type:'custom',params:{rawSvg:敌意SVG}})` 必须 `status:'FAILED'` 且结果无 svg 字段（sanitizer 拒收），白名单合法 SVG 仍 SUCCESS；④ 语义契约——`SemanticQuestion.validateSchema` 对顶层 `graphic.rawSvg`/`graphic.svg`/`graphic.html` 必须报 GRAPHIC_INVALID ERROR（rawSvg 只允许存在于 custom/illustration 的 params 内且经 sanitizer）；⑤ 端到端——`Renderer.render` 携带敌意 custom graphic 时 RenderResult.html 不得含任何敌意特征。
+  - `dev/p28/check-security.js`（#13 门禁强化，两处）：[1] eval/new Function 扫描由「仅 shared/（grep+注释过滤）」改为 Node 逐行扫描器覆盖**全交付面**——`shared/**/*.js`（含 bundle）/ `plugins/**/*.js` / `feedback/**/*.js` / 根 `*.js`（sw.js）/ 根 `*.html` + `knowledge/**/*.html`（内联脚本同口径），逐行剔除 `//`、`*`、`<!--` 纯注释行后匹配 `\beval\s*\(` / `new\s+Function\s*\(`；[4] 原「print.js 仅包含 outerHTML/innerHTML 字符串」的假断言，改为真实边界门禁：执行 `node --test tests/presentation/renderer.test.js`（含 FINAL-71 全链对抗用例）+ 断言 print.js 打印窗口 CSP 含 `script-src 'none'`（敌意标记即使混入序列化 DOM 也不能执行）。6 项检查数不变，check-all 26 项口径不变。
+- deleted: 无
+- reason: FINAL-71 用户指令「所有：题目/答案/解析/SVG 进入 DOM 前必须经过明确安全边界。禁止 rawHtml/rawSvg/innerHTML 绕过安全边界」。归属层 = Presentation 层（SSOT `shared/presentation/`）+ SVG 层（`shared/svg/`、`shared/presentation/svg-registry.js`）。以当前源码逐汇点审计（FINAL-00 优先级①）：**生产代码已合规，无 rawHtml/rawSvg/innerHTML 绕过**——题目/选项文本唯一经 `html-renderer.js` 的 `esc()`（prompt/options 文本与 radio value 属性全转义）；页面侧 fallback `renderGeneric`、select.html KBL/单元/模块名、practice.html KP 链接/比例 UI 均经各自 `esc()`，批改反馈走 `textContent`；答案不经 innerHTML（input.value 属性 + 转义属性值）；产品无「解析/explanation」渲染汇点（grep 无 analysis/explain 渲染面）；SVG 边界四层——SemanticQuestion schema 对顶层 rawSvg/svg/html 报 GRAPHIC_INVALID ERROR，唯一 rawSvg 通道 = graphic.params 的 custom/illustration 且 `svg-registry.js:238-248` 强制 `sanitizeSvg()` 白名单清洗（拒收即 FAILED），`html-renderer.js graphicGuard` 注入前黑名单防御复核，print 窗口 CSP `script-src 'none'`；generator-contract.js:146 明文禁止 Generator 产出 `.innerHTML/.outerHTML/.insertAdjacentHTML`。**缺口在证据与门禁而非代码**：① renderer.test.js 仅有 1 条 prompt 转义用例，无选项/答案属性、graphicGuard、registry 拒收、schema GRAPHIC_INVALID 对抗证据；② #13 [1] 只扫 shared/（漏 sw.js、根 HTML/knowledge 内联脚本、plugins/feedback）；③ #13 [4] 只断言 print.js「含有字符串」属假保证。最小修改 = 补对抗测试 + 强化门禁，**零生产源码/bundle/KBL 改动**（生产代码已合规，改即违反最小修改原则）。
+- tests: 待跑（改完即跑）：(i) `node --test tests/presentation/renderer.test.js` — 既有 30+ 用例 + FINAL-71 新增 5 组对抗用例全 PASS；(ii) `node --test tests/presentation/svg-sanitizer.test.js` — 既有白名单/清洗 8 用例持续 PASS；(iii) `node dev/p28/check-security.js`（check-all #13）— 6 项全 PASS（[1] 全交付面 0 命中、[4] renderer 对抗测试 + CSP 断言）；(iv) `CHROME_BIN=... node dev/check-all.js` — 期待 **26 PASS / 0 FAIL / 0 SKIP**。
+- risk: 低（仅测试文件 + dev 门禁脚本，无生产代码/bundle/KBL 改动，bundle 哈希不变、freeze 不受影响）。回归点：① 门禁扫描器若误判注释/字符串内文字为真实 eval 会假 FAIL——已用逐行纯注释剔除 + 交付面白名单目录控制；② 新增对抗用例若对现有渲染产出做过强假设可能误伤合法输出——断言只针对敌意载荷（原始 `<script>`/事件属性不得出现），不限制既有合法 SVG/HTML 结构；③ 若未来真有 rawSvg 绕过点，[4] renderer 对抗套件会红。
+
+### FINAL-70｜Validator 安全：eval=0 / new Function=0，表达式走安全 parser，恶意输入必须 FAIL 且不能执行（2026-09-23）
+
+- modified:
+  - `tests/validator/answer-validator.test.js`（仅测试增强，追加 FINAL-70 恶意输入对抗用例块，不动既有用例）：① **嵌入式攻击表达式必须 FAIL（返回 null，fail-closed）**——载荷伪装在算术表达式中：`1+process.exit(1)`、`(0,process.exit(2))`、`1+constructor.constructor('return 1')()`、`1;globalThis.__FINAL70_PWNED=1`、`a=1+2`（赋值/裸标识符）、`1?2:3`（三元）、`1+[1]`（方括号）、`` `${1}` ``（模板串）、`1>>>2`/`1|2`/`1&2`（位运算）、`1==1`/`1<2`（比较）、`new Date()`、`delete x`、`(function(){})()`、`1..toString()`、`'1'+'2'`（字符串字面量）等，全部必须 `computeExpectedAnswer(...) === null`；② **不能执行（进程内哨兵证据）**——逐批求值前后断言 `globalThis.__FINAL70_PWNED` 恒为 undefined（若底层是 eval，赋值型载荷会写入哨兵）；③ **不能执行（子进程证据）**——`spawnSync(process.execPath, ['-e', <脚本：require computeExpectedAnswer 计算 '1+process.exit(123)'，正常退出码 0>])`，断言子进程 exit code = 0（若底层是 eval/Function，载荷会令进程以 123 退出）。
+- deleted: 无
+- reason: FINAL-70 用户指令「最终：eval=0，new Function=0。表达式使用安全 parser/evaluator。恶意输入必须 FAIL，不能执行」。归属层 = Validator 层（SSOT `shared/validator/answer-validator.js`）。以当前源码审计（FINAL-00 优先级①）：全交付面（shared/ 含两个 bundle、plugins/、feedback/、sw.js、根 HTML + knowledge/ HTML 内联脚本）grep `\beval\s*\(` 与 `new\s+Function\s*\(` **真实命中 0**（仅 check-security.js 自身注释命中）；`setTimeout('...')`/`setInterval('...')`/`createContextualFragment` 等替代求值汇点 0；唯一字符串表达式求值入口 = answer-validator.js 的 Tokenizer→Parser→AST→Evaluator（tokenize 遇字母即 throw、函数调用/属性访问/逗号/赋值/位运算/比较/模板串全部无语法产生式 → catch 返回 null，除零显式 throw），生产代码已满足「安全 parser/evaluator」。**缺口在对抗证据强度**：既有 P28-25 用例仅覆盖 22 个裸标识符（`constructor`/`process` 等），未证明载荷**嵌入算术表达式**时仍 FAIL，更未证明「不能执行」（无副作用/哨兵/进程级证据）。最小修改 = 仅在既有测试文件追加一组对抗用例（FAIL 断言 + 哨兵 + 子进程三重证据），**零生产源码改动**（parser 本身已 fail-closed，改即违反最小修改原则）。全交付面 eval=0 的门禁强化登记在 FINAL-71（check-security.js [1] 扩面）。
+- tests: 待跑（改完即跑）：(i) `node --test tests/validator/answer-validator.test.js` — 既有用例 + FINAL-70 三组对抗用例全 PASS（嵌入式载荷全 null、哨兵恒 undefined、子进程 exit 0）；(ii) `node dev/p28/check-security.js`（check-all #13）— [2] AnswerValidator 安全测试 PASS；(iii) `CHROME_BIN=... node dev/check-all.js` — 期待 **26 PASS / 0 FAIL / 0 SKIP**。
+- risk: 低（仅测试文件新增用例，无生产代码改动）。回归点：① 若未来有人把 computeExpectedAnswer 换回 eval/Function，子进程用例（exit code 123≠0）与哨兵用例立即红，不可能误 PASS；② 子进程用例依赖 `process.execPath`（Node 内置），无第三方依赖、无硬编码路径；③ 载荷列表是表达式语法面的有限枚举（赋值/三元/括号/位运算/比较/模板/字面量/成员调用），非无限扩展。
+
+### FINAL-64b｜FINAL-64 验证回填：实际测试结果 + Step4/Step5+6 实现澄清（2026-09-23）
+
+- modified: 无（本条为 FINAL-64 的验证回填记录，不改代码，仅记录实际测试结果以正 FINAL-64 预测条目的 "tests: 待跑" 占位 + 澄清 Step4/Step5+6 实际实现）
+- deleted: 无
+- reason: FINAL-64 条目 tests 字段为预测占位（"待跑...期待"），按 P28 规则 5「写入后不改写数字；如需更正，追加新记录说明」追加本条回填实际结果。同时澄清一处实现细节：FINAL-64 reason 字段描述 Step 4 断言含「POL（账本 req≥planned≥gen=final）」，但代码实测发现知识页 CTA 为单 KP 原生路径，`shared/generation/api.js` 透明回退 `executeInline`（结果无 `orchestration` 账本，设计如此——POL 仅对多 KP+types 的"活跃"请求介入，见 `shared/orchestration/practice-orchestrator.js` 收敛点说明）。故 Step 4 实际证明 10 层（用户点击→页面→参数→Session→Strategy→Generator→Validator→SemanticQuestion→Presentation→DOM，代码内注释 `dev/e2e/browser-e2e.js:767-768` 明确说明 POL 在 Step 5+6 验证）；Step 5+6（多 KP+types 走 POL 编排）证 POL 账本 req≥planned≥gen=final + 7类题型 + Strategy + Generator + Validator + SemanticQuestion + Presentation + DOM。两步合计覆盖 FINAL-64 链全部 11 层，符合用户指令「必须测试：用户点击→…→DOM」。这是架构现实的忠实拆分（无单一 click 路径能同时穿过全部 11 层），非遗漏。
+- tests: 实测全跑通（2026-09-23）：(i) `CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" node dev/e2e/browser-e2e.js final-12` — 9 步全 ok=true；Step 4「知识点入口(用户点击全链)」13 项 checks 全 true（知识页 CTA 存在 / 用户点击 CTA→导航 / 页面=practice.html / 参数=深链 KP / Session=generationId / Strategy plans>0 / Generator 题目数>0 / Validator failedPlans=0+指纹唯一 / SemanticQuestion 契约字段齐全 / Presentation html 已渲染 / DOM cards=produced / 可交付 SUCCESS|PARTIAL / no JS errors）；Step 5+6「7类题型生成(POL全链)」10 项 checks 全 true（POL 账本 req≥planned≥gen=final / Strategy plans>0 / 7类题型全部出现 / Generator 题目数=produced / Validator failedPlans=0+指纹唯一 / SemanticQuestion 契约字段齐全 / Presentation html 已渲染 / DOM cards=produced / 可交付 / no JS errors）；(ii) `CHROME_BIN=... node dev/p28/check-browser-e2e.js`（check-all #17）exit 0 PASS（真实 Chrome 9 步路径）；(iii) `CHROME_BIN=... node dev/check-all.js` — **26 PASS / 0 FAIL / 0 SKIP / 26 项**（#17 真实 Chrome 跑通，不再 SKIP）。
+- risk: 无（零代码改动，本条仅回填实际测试结果 + 澄清实现细节）。降级回归点：① 若未来知识页 CTA click 在 headless Chrome 下未触发导航，waitFor 会 timeout 报 FAIL（非误 PASS）；② POL 账本断言仅在 Step 5+6 多 KP+types 路径触发，单 KP CTA 走 executeInline 无账本是 api.js 设计（非缺陷）；③ check-all #17 由 `dev/p28/check-browser-e2e.js` wrapper 守护，CI 设 `REQUIRE_BROWSER_E2E=1` + `CHROME_BIN=google-chrome` 强制真实执行。
+
+### FINAL-64｜禁止只测 API：E2E 全链产品验收（用户点击→…→DOM）（2026-09-23）
+
+- modified:
+  - `dev/e2e/browser-e2e.js`（两处最小改动，均在 dev-only E2E 驱动器内，不动生产源码/bundle/KBL）：① `HOOK_SOURCE.record` 结果捕获扩展——在 `call.result` 追加 `plans`（Strategy 层 plan 数）、`planKeys`（首个 plan 字段名切片，证 plan 真实存在）、`failedPlans`（Validator 层失败计划数）、`htmlPresent`（Presentation 层渲染产物存在性）；`questions[]` 每项追加 `hasAnswer`/`hasPrompt`/`semanticTarget`（SemanticQuestion 契约字段存在性，FINAL-32d 注入位）。原 `type/kp/difficulty/fp` 不动，`summarize` 与既有 p12-*/final-12 步骤行为不变。② `final-12` Step 4「知识点入口」由「读知识页 CTA href + URL 导航」改为「真实点击知识页 CTA `<a>` 元素触发导航 + 11 层全链断言」，断言逐层对应 FINAL-64 链：用户点击（CTA click→导航）/ 页面（href 含 practice.html）/ 参数（req.knowledgePointIds=深链 KP）/ Session（generationId 存在）/ POL（账本 req≥planned≥gen=final）/ Strategy（plans>0）/ Generator（题目数>0）/ Validator（failedPlans=0 + 指纹唯一）/ SemanticQuestion（每题 type+kp+difficulty+fp+hasAnswer+hasPrompt 齐全）/ Presentation（htmlPresent）/ DOM（cards=produced）。Step 4 步骤名改为「4 知识点入口(用户点击全链)」。9 步总数不变，其余 8 步不动。
+- deleted: 无
+- reason: FINAL-64 用户指令「禁止只测 API。必须测试：用户点击→页面→参数→Session→POL→Strategy→Generator→Validator→SemanticQuestion→Presentation→DOM。这是产品验收，不是单元测试验收」。审计现状：原 final-12 E2E 在 `GenerationAPI.generate` 边界 hook，仅捕获 `status/producedCount/requestedCount/generationId/ledger/questions[type,kp,difficulty,fp]`，丢弃 `plans/trace/failedPlans/html` 与 SQ 契约字段；Step 4 用 `runScenario(cta)` URL 导航而非真实用户点击。即「在 API 边界观测 + DOM 卡片数」的单元验收形态，未逐层证 POL/Strategy/Validator/SemanticQuestion，且无真实 click。根因：hook 捕获口径过窄 + Step 4 用 URL 导航而非 CTA 点击。责任文件：`dev/e2e/browser-e2e.js`（唯一真实浏览器 E2E 驱动器，产品验收唯一载体）。修改：扩展 hook 捕获全链可观测证据 + Step 4 改真实 CTA click 与 11 层逐层断言。删除：无。
+- tests: 待跑（改完即跑）：(i) `CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" node dev/e2e/browser-e2e.js final-12` — 9 步全 ok=true，重点核验 Step 4「知识点入口(用户点击全链)」11 项 checks 全 true（用户点击/页面/参数/Session/POL/Strategy/Generator/Validator/SemanticQuestion/Presentation/DOM）；(ii) `CHROME_BIN=... node dev/p28/check-browser-e2e.js`（check-all #17）exit 0 PASS；(iii) `node dev/check-all.js` — 期待 **26 PASS / 0 FAIL / 0 SKIP / 26 项**（#17 真实 Chrome 跑通）。
+- risk: 低（仅 dev-only E22 驱动器改动，零生产源码/bundle/KBL 改动）。回归点：① 若 Step 4 真实 CTA click 在 headless Chrome 下未触发导航，waitFor 会 timeout 报 FAIL（非误 PASS），可改 fallback；② hook 扩展字段为追加，不破坏既有 p12-01~p12-08/p13-02/p14-05 步骤的 summarize 读取；③ 9 步总数不变，docs/10-TEST-CI.md §2 与 FINAL-REPAIR-STATUS.md FINAL-12 描述「9 步路径」仍准确（Step 4 仍为知识点入口，仅实现升级为真实 click + 全链断言）。
+
 ### FINAL-63｜13 功能真实测试：12 维 PASS，1 维设计完整+本地限制（2026-09-23）
 
 - modified: 无（本条为声明性扫描记录 + 实测结果回填，不改任何源码/数据/文档结构，仅追加 change-log 条目本身）

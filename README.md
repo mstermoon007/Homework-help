@@ -11,12 +11,12 @@
 **P17-FINAL**：架构收口、7类真实生成、数量闭环、难度闭环、依赖门禁  
 **P18**：练习闭环、异常处理、稳定性验证  
 **P19**：页面产品化（二级/三级页面统一、UI服务收口）  
-**P20**：题目质量治理（598 KP覆盖、Generator质量抽检、低容量KP治理）  
+**P20**：题目质量治理（375 KP覆盖、Generator质量抽检、低容量KP治理）  
 **P21**：性能优化、浏览器/打印兼容  
 
 **P23**：数学产品化收口专项——数据源清洗、派生链路验证、生成链路健康、产品验收、最终冻结
 
-**核心冻结边界**：KBL/Runtime/KnowledgeContext/POL/Strategy/26Generators/Validator/SemanticQuestion/Presentation 均为只读态。（GenerationCore 为测试/历史资产，见下。）
+**核心冻结边界**：KBL/Runtime/KnowledgeContext/POL/Strategy/24 Generators/Validator/SemanticQuestion/Presentation 均为只读态。（GenerationCore 为测试/历史资产，见下。）
 
 **健康检查入口**：`npm run verify:frozen-core`、`npm run verify:p17-deps`、`npm test`（全链）
 

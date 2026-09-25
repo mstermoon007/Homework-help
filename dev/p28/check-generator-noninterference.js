@@ -111,8 +111,11 @@ Promise.all(probes).then(function () {
   md.push('');
   GEN_SPAN.forEach(function (c) { md.push('- ' + c[0] + ' · ' + c[1] + ' · ' + c[2] + ' → ' + (c.qs || 0) + ' 题'); });
 
-  fs.writeFileSync(path.join(ROOT, 'docs/archive/phases/p28/P28-GENERATOR-NONINTERFERENCE.md'), md.join('\n') + '\n');
-  console.log('P28-10 四轴回显锁：runtime=' + SWEEP_TOTAL + ' fail=' + RUNTIME_FAILS.length + ' static=' + STATIC_FAILS.length);
+  var WRITE = process.argv.indexOf('--write') !== -1;
+  if (WRITE) {
+    fs.writeFileSync(path.join(ROOT, 'docs/archive/phases/p28/P28-GENERATOR-NONINTERFERENCE.md'), md.join('\n') + '\n');
+  }
+  console.log('P28-10 四轴回显锁：runtime=' + SWEEP_TOTAL + ' fail=' + RUNTIME_FAILS.length + ' static=' + STATIC_FAILS.length + (WRITE ? '（--write 已写 archive）' : '（只读模式，未写盘）'));
   if (RUNTIME_FAILS.length) RUNTIME_FAILS.forEach(function (r) { console.log('  ✗ ' + r.cell[0] + ': ' + r.bad.join('; ')); });
   process.exit(RUNTIME_FAILS.length === 0 && STATIC_FAILS.length === 0 ? 0 : 1);
 });

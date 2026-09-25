@@ -5,7 +5,11 @@
  */
 const { test } = require('node:test');
 const assert = require('node:assert');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 const { computeExpectedAnswer, validateNumericAnswer, validateRemainderAnswer } = require('../../shared/validator/answer-validator.js');
+
+const ANSWER_VALIDATOR_PATH = path.resolve(__dirname, '../../shared/validator/answer-validator.js');
 
 test('P28-24 基本四则运算', function () {
   assert.strictEqual(computeExpectedAnswer('3 + 5'), '8');
@@ -106,6 +110,74 @@ test('P28-25 恶意输入必须全部拦截 REJECT', function () {
     const result = computeExpectedAnswer(m);
     assert.strictEqual(result, null, '必须拦截: ' + m);
   }
+});
+
+test('FINAL-70 恶意输入嵌入算术表达式必须 FAIL（fail-closed 返回 null）', function () {
+  // 载荷伪装在正常算式中——安全 parser 必须对赋值/成员/调用/位运算/比较/三元/模板/字面量等
+  // 非四则语法全部拒绝；任何一个被求值都等于绕过。
+  const embedded = [
+    '1+process.exit(1)',
+    '1 + process.exit(1)',
+    '(0,process.exit(2))',
+    "1+constructor.constructor('return 1')()",
+    '1;globalThis.__FINAL70_PWNED=1',
+    '1+(globalThis.__FINAL70_PWNED=1)',
+    'globalThis.__FINAL70_PWNED=1',
+    'a=1+2',
+    '1?2:3',
+    '1+[1]',
+    '`${1}`',
+    '1>>>2',
+    '1|2',
+    '1&2',
+    '1<2',
+    'new Date()',
+    'delete x',
+    '(function(){})()',
+    '1..toString()',
+    "'1'+'2'",
+    'setTimeout("alert(1)")',
+    'global["eval"]',
+    '1+require("child_process")',
+  ];
+  // 注：'1==1' 不列入——题干归一化器会按小学数学记号剥离 '='（"3+5=8"），
+  // '1==1' → '11' 是无意义数字而非求值（'=' 在到 tokenizer 前已被移除，
+  // 且等号不携带任何执行原语）；任何含标识符/调用的赋值载荷仍在 tokenize 即拒。
+  for (const payload of embedded) {
+    assert.strictEqual(computeExpectedAnswer(payload), null, '恶意表达式必须 FAIL: ' + payload);
+  }
+});
+
+test('FINAL-70 恶意输入不能执行（进程内哨兵：副作用绝不发生）', function () {
+  // 若底层实现退化为 eval/Function，赋值型载荷会写入全局哨兵。
+  delete globalThis.__FINAL70_PWNED;
+  const sentinelPayloads = [
+    'globalThis.__FINAL70_PWNED=1',
+    '1;globalThis.__FINAL70_PWNED=1',
+    '1+(globalThis.__FINAL70_PWNED=1)',
+    '(globalThis.__FINAL70_PWNED="pwned")',
+    'this.__FINAL70_PWNED=1',
+  ];
+  for (const payload of sentinelPayloads) {
+    assert.strictEqual(computeExpectedAnswer(payload), null, '必须拒绝: ' + payload);
+    assert.strictEqual(globalThis.__FINAL70_PWNED, undefined,
+      '载荷被求值（哨兵被写入），说明存在动态执行: ' + payload);
+  }
+  delete globalThis.__FINAL70_PWNED;
+});
+
+test('FINAL-70 恶意输入不能执行（子进程证据：process.exit 载荷不生效）', function () {
+  // 最强证据：在独立 node 进程内计算含 process.exit(123) 的表达式。
+  // 安全 parser 拒绝解析 → 进程正常走到 process.exit(0)，退出码 0；
+  // 若底层是 eval/Function，载荷会令进程以 123 退出（或崩溃为非 0）。
+  const script =
+    'var computeExpectedAnswer = require(' + JSON.stringify(ANSWER_VALIDATOR_PATH) + ').computeExpectedAnswer;' +
+    'var r = computeExpectedAnswer("1+process.exit(123)");' +
+    'if (r !== null) { process.exit(2); }' +
+    'process.exit(0);';
+  const r = spawnSync(process.execPath, ['-e', script], { encoding: 'utf8' });
+  assert.strictEqual(r.status, 0,
+    '子进程退出码 ' + r.status + '（期望 0）；stderr: ' + (r.stderr || '').slice(0, 300));
 });
 
 test('P28-24 validateNumericAnswer 集成', function () {

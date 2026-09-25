@@ -6,7 +6,9 @@
  *     SemanticQuestion 写入最终 <svg> 字符串；
  *   - 注册入口：App.SVGGenerators.register(type, generator)
  *                 App.SVGGenerators.register(type, subtype, generator)
- *   - 渲染入口：SVGRenderer.render(graphic, options) → <svg> 字符串（无图返回 ''）；
+ *   - 渲染入口：SVGRenderer.render(graphic, options) → RenderResult
+ *     { status: 'SUCCESS'|'UNSUPPORTED'|'FAILED', svg?, reason?, error? }（P28-26/FINAL-72 三态契约，
+ *     禁止 catch→'' 吞错；FAILED 必须带 reason/error）；
  *   - 兼容旧链：沿用 shared/svg-*.js 挂载的 global.SVGGenerators.{core,math,cn,en}
  *     （数学竖式/几何/凑十法、语文、英语），启动时自动扫进注册表（shape-name 别名）。
  */

@@ -37,5 +37,6 @@ dev/p28/reports/
 competition-report.json
 *.png
 !assets/poster-*.png
+!assets/beian-icon.png
 banner.jpg
 MEMORY.md

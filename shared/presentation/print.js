@@ -438,6 +438,8 @@ var A4_PRINTABLE_PX = 718;
     try {
       all = PR.renderAll(questions, ro, { columns: columns });
     } catch (e) {
+      // FINAL-72：禁止 catch 吞错——保留原始错误诊断，再回落 null（调用方 alert 兜底）
+      console.warn('[Print] buildFromQuestions 渲染失败：', e);
       return null;
     }
     // P3.2（Issue #1）：作答线按题型自适应——含书写类（应用/开放/作图/简答）保留虚线，纯口算/填空去掉；

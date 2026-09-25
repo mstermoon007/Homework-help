@@ -153,8 +153,20 @@ const HOOK_SOURCE = `
             reason: r.orchestration.reason, coverage: r.orchestration.coverageStatus,
             outOfScope: r.orchestration.outOfScopeDropped, recovered: r.orchestration.budgetRecovered
           } : null,
+          // FINAL-64：全链产品验收——捕获各层可观测证据（非仅 API 边界 status/produced）
+          plans: (r.plans || []).length,                                  // Strategy 层产出（plan 数）
+          planKeys: (r.plans && r.plans[0]) ? Object.keys(r.plans[0]).slice(0, 10) : [],
+          failedPlans: (r.failedPlans || []).length,                     // Validator 层（失败计划数）
+          htmlPresent: typeof r.html === 'string' && r.html.length > 0,   // Presentation 层渲染产物
           questions: (r.questions || []).map(function (q) {
-            return { type: q.questionType, kp: (q.knowledgePointIds || [q.knowledgePointId])[0], difficulty: q.difficulty, fp: q.questionFingerprint };
+            return {
+              type: q.questionType, kp: (q.knowledgePointIds || [q.knowledgePointId])[0],
+              difficulty: q.difficulty, fp: q.questionFingerprint,
+              // SemanticQuestion 层契约字段存在性（FINAL-32d：semanticTarget 注入）
+              hasAnswer: q.answer != null,
+              hasPrompt: !!(q.question || q.prompt),
+              semanticTarget: q.semanticTarget != null
+            };
           })
         };
       } catch (e) { call.result = { err: String(e) }; }
@@ -712,42 +724,93 @@ async function main() {
         out.push({ step: '3 教师模式', ok, checks, produced: (r.questions || []).length, status: r.status });
       }
 
-      // Step 4: 知识点入口（读知识页 CTA 深链）
+      // Step 4: 知识点入口（FINAL-64：用户点击 CTA 全链产品验收，非 URL 导航）
+      // 链：用户点击 → 页面 → 参数 → Session → POL → Strategy → Generator → Validator → SemanticQuestion → Presentation → DOM
       {
+        // 核验知识页 CTA 真实存在（页面完整性）
         const khtml = fs.readFileSync(path.join(ROOT, 'knowledge', UP + '.html'), 'utf8');
         const m = khtml.match(/href="(\.\.\/practice\.html\?[^"]+)"/);
-        const cta = m ? '/' + m[1].replace('../', '') : ('/practice.html?subject=math&grade=2&kps=' + UP);
-        const data = await runScenario(cta, {});
-        const req = (data.calls[0] || {}).req || {};
-        const r = (data.calls[0] || {}).result || {};
-        const kpsOut = Array.from(new Set((r.questions || []).map((q) => q.kp)));
+        const ctaHref = m ? m[1] : null;
+
+        // 真实用户点击：在知识页内点击 CTA <a> 触发导航（非 URL 导航）
+        const tr = await httpJson('http://127.0.0.1:' + CDP_PORT + '/json/new?' + encodeURIComponent('about:blank'), 'PUT');
+        const c = cdpClient(tr.json.webSocketDebuggerUrl); await c.ready;
+        await c.send('Page.enable'); await c.send('Runtime.enable');
+        await c.send('Page.addScriptToEvaluateOnNewDocument', { source: HOOK_SOURCE });
+        await c.send('Page.navigate', { url: 'http://127.0.0.1:' + HTTP_PORT + '/knowledge/' + UP + '.html' });
+        await waitFor(async () => c.evaluate('document.readyState === "complete"', false), 15000, 'knowledge page ready');
+        const clickInfo = await c.evaluate(`(function(){
+          var a = document.querySelector('a[href*="practice.html"]');
+          if (!a) return { clicked: false };
+          var href = a.getAttribute('href');
+          a.click();
+          return { clicked: true, href: href };
+        })()`, false);
+        await waitFor(async () => c.evaluate('location.href.indexOf("practice.html") !== -1 && !!(window.__e2e && window.__e2e.installed && window.__e2e.calls.length && window.__e2e.calls[0].result)', false), 60000, 'click→practice generation');
+        await sleep(500);
+        const data = await c.evaluate(`(function(){
+          var e = window.__e2e || { calls: [], errors: [] };
+          var area = document.getElementById('problemsArea');
+          var grid = area ? area.querySelector('.questions-grid') : null;
+          var cards = grid ? grid.querySelectorAll('.question-card').length : (area ? area.querySelectorAll('.question-card').length : 0);
+          return { calls: e.calls, errors: e.errors, dom: { cards: cards, href: location.href } };
+        })()`, false);
+        c.close();
+
+        const call = (data.calls[0] || {});
+        const req = call.req || {};
+        const r = call.result || {};
+        const qs = r.questions || [];
+        const fps = qs.map((q) => q.fp).filter(Boolean);
+        const uniqFp = new Set(fps).size;
+        const sqOk = qs.length > 0 && qs.every((q) => q.type && q.kp && typeof q.difficulty === 'number' && q.fp && q.hasAnswer && q.hasPrompt);
+        // 注：知识页 CTA 为单 KP 原生路径，api.js 透明回退 executeInline（无 orchestration 账本，设计如此）；
+        // POL 编排层（多 KP+types）在 Step 5+6 验证。本步证明：用户点击→页面→参数→Session→Strategy→Generator→Validator→SemanticQuestion→Presentation→DOM。
         const checks = {
-          '知识页 CTA 解析': !!m,
-          '深链 KP 注入请求': JSON.stringify(req.knowledgePointIds) === JSON.stringify([UP]),
-          '题目 KP=深链 KP': kpsOut.length > 0 && kpsOut.every((k) => k === UP),
+          '知识页 CTA 存在': !!ctaHref,
+          '用户点击 CTA→导航': !!clickInfo.clicked && String(data.dom && data.dom.href || '').indexOf('practice.html') !== -1,
+          '页面=practice.html': String(data.dom && data.dom.href || '').indexOf('practice.html') !== -1,
+          '参数=深链 KP': JSON.stringify(req.knowledgePointIds) === JSON.stringify([UP]),
+          'Session=generationId': !!r.generationId,
+          'Strategy plans>0': typeof r.plans === 'number' && r.plans > 0,
+          'Generator 题目数>0': qs.length > 0,
+          'Validator failedPlans=0+指纹唯一': r.failedPlans === 0 && uniqFp === fps.length,
+          'SemanticQuestion 契约字段齐全': sqOk,
+          'Presentation html 已渲染': r.htmlPresent === true,
+          'DOM cards=produced': !!data.dom && data.dom.cards === (r.producedCount || 0),
           '可交付 SUCCESS|PARTIAL': r.status === 'SUCCESS' || r.status === 'PARTIAL',
           'no JS errors': (data.errors || []).length === 0
         };
         const ok = Object.keys(checks).every((k) => checks[k] === true);
         if (!ok) failed++;
-        out.push({ step: '4 知识点入口', ok, checks, cta: cta.slice(0, 80), produced: (r.questions || []).length });
+        out.push({ step: '4 知识点入口(用户点击全链)', ok, checks, ctaHref: ctaHref || '', produced: qs.length, plans: r.plans, semanticTargetHits: qs.filter((q) => q.semanticTarget).length, status: r.status });
       }
 
-      // Step 5+6: 7 类题型 生成
+      // Step 5+6: 7 类题型 生成（FINAL-64：POL 全链产品验收——多 KP+types 走 POL 编排，账本可观测）
       {
         const data = await runScenario('/practice.html?subject=math&grade=2&kps=' + KPS7 + '&types=' + T7 + '&count=21&difficulty=5', {});
         const s = summarize(data);
+        const r = (data.calls[0] || {}).result || {};
+        const L = s.ledger || {};
+        const qs = r.questions || [];
         const producedTypes = Object.keys(s.types || {});
         const expected = ['calc', 'fill', 'choice', 'judge', 'geometry', 'classify', 'apply'];
+        const sqOk = qs.length > 0 && qs.every((q) => q.type && q.kp && typeof q.difficulty === 'number' && q.fp && q.hasAnswer && q.hasPrompt);
         const checks = {
+          'POL 账本 req≥planned≥gen=final': L.req != null && L.req >= L.planned && L.planned >= L.gen && L.gen === L.final,
+          'Strategy plans>0': typeof r.plans === 'number' && r.plans > 0,
           '7 类题型全部出现': expected.every((t) => producedTypes.indexOf(t) !== -1),
+          'Generator 题目数=produced': s.produced > 0 && s.produced === (r.producedCount || 0),
+          'Validator failedPlans=0+指纹唯一': r.failedPlans === 0 && s.unique === s.produced,
+          'SemanticQuestion 契约字段齐全': sqOk,
+          'Presentation html 已渲染': r.htmlPresent === true,
           'DOM cards=produced': s.domCards === s.produced,
           '可交付 SUCCESS|PARTIAL': s.status === 'SUCCESS' || s.status === 'PARTIAL',
           'no JS errors': (s.errors || []).length === 0
         };
         const ok = Object.keys(checks).every((k) => checks[k] === true);
         if (!ok) failed++;
-        out.push({ step: '5+6 7类题型生成', ok, checks, types: s.types, produced: s.produced, producedTypes: producedTypes });
+        out.push({ step: '5+6 7类题型生成(POL全链)', ok, checks, types: s.types, produced: s.produced, producedTypes: producedTypes, plans: r.plans, ledger: L });
       }
 
       // Step 7: 重新生成

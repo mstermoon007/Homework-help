@@ -131,3 +131,84 @@ test('P28-26 PresentationRenderer handles missing graphic gracefully', function 
   assert.strictEqual(result._gfxStatus, 'UNSUPPORTED');
   assert.strictEqual(result.graphic, '');
 });
+
+// ============================================================
+// FINAL-72：统一链 GraphicDescriptor→GraphicRenderer→SVGRenderer
+// 三态 SUCCESS/UNSUPPORTED/FAILED；禁止 catch→'' 吞错
+// ============================================================
+
+test('FINAL-72 统一链：生成器 throw 经 GraphicRenderer→SVGRenderer 必须 FAILED 且带原始错误', function () {
+  SVGRegistry.register('final72-throw', function () { throw new Error('final72-boom'); });
+  const desc = { type: 'final72-throw', params: { a: 1 } };
+  // 门面层
+  const gr = GraphicRenderer.render(desc);
+  assert.strictEqual(gr.status, 'FAILED');
+  assert.strictEqual(gr.reason, 'Generator threw exception');
+  assert.ok(gr.error instanceof Error);
+  assert.strictEqual(gr.error.message, 'final72-boom');
+  assert.ok(!('svg' in gr), 'FAILED 不得携带 svg 字段');
+  // 底层直连同态
+  const direct = SVGRegistry.render(desc);
+  assert.strictEqual(direct.status, 'FAILED');
+  assert.strictEqual(direct.error.message, 'final72-boom');
+});
+
+test('FINAL-72 端到端：FAILED 图形不进 DOM，状态与原因保留在 RenderResult', function () {
+  const sq = {
+    id: 'f72-e2e',
+    prompt: '看图计算',
+    questionType: 'calc',
+    answer: { value: '1' },
+    graphic: { type: 'final72-throw', params: {} }
+  };
+  const rr = PresentationRenderer.render(sq, {}, 0);
+  assert.strictEqual(rr._gfxStatus, 'FAILED');
+  assert.ok(typeof rr._gfxReason === 'string' && rr._gfxReason.length > 0);
+  assert.strictEqual(rr.graphic, '');
+  assert.ok(rr.html.indexOf('question-graphic') === -1, 'FAILED 图形不得注入 DOM');
+});
+
+test('FINAL-72 三态完备：UNSUPPORTED（未知 descriptor）/ FAILED（空输出）/ SUCCESS 语义不混', function () {
+  SVGRegistry.register('final72-empty', function () { return '   '; });
+  assert.strictEqual(SVGRegistry.renderFor({ type: 'final72-empty', params: {} }).status, 'FAILED');
+  assert.strictEqual(SVGRegistry.renderFor({ type: 'final72-nope' }).status, 'UNSUPPORTED');
+  assert.strictEqual(
+    SVGRegistry.renderFor({ type: 'custom', params: { rawSvg: '<svg><circle r="1"/></svg>' } }).status,
+    'SUCCESS');
+});
+
+test('FINAL-72 print 层：渲染器抛错时返回 null 但不得静默（console.warn 保留原始错误）', function () {
+  require(ROOT + '/shared/presentation/print.js');
+  assert.ok(global.Print && typeof global.Print.buildFromQuestions === 'function');
+  var origPR = global.PresentationRenderer;
+  var origWarn = console.warn;
+  var warned = [];
+  console.warn = function () { warned.push(Array.prototype.slice.call(arguments)); };
+  global.PresentationRenderer = { renderAll: function () { throw new Error('final72-print-boom'); } };
+  try {
+    var out = global.Print.buildFromQuestions([{ id: 'x', prompt: 'p', questionType: 'calc' }], {});
+  } finally {
+    console.warn = origWarn;
+    global.PresentationRenderer = origPR;
+  }
+  assert.strictEqual(out, null);
+  assert.ok(warned.length > 0, 'catch 必须经 console.warn 暴露错误，禁止静默吞掉');
+  var flat = warned.map(function (a) { return a.map(String).join(' '); }).join('\n');
+  assert.ok(flat.indexOf('final72-print-boom') !== -1, '必须保留原始错误信息');
+});
+
+test('FINAL-72 结构性禁令：SVG 链源文件不得存在 catch→\'\' 吞错', function () {
+  var fs = require('node:fs');
+  var files = [
+    'shared/presentation/svg-registry.js',
+    'shared/generator/graphic-renderer.js',
+    'shared/presentation/renderer.js',
+    'shared/presentation/html-renderer.js'
+  ];
+  files.forEach(function (rel) {
+    var src = fs.readFileSync(path.join(ROOT, rel), 'utf8');
+    // 匹配 catch (e) { ... return '' / return "" ... }（return 前仅允许空白）
+    var re = /catch\s*\([^)]*\)\s*\{[\s\S]*?return\s+(?:''|"")\s*;?/;
+    assert.ok(!re.test(src), rel + ' 存在 catch→\'\' 吞错，违反 FINAL-72');
+  });
+});

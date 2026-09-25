@@ -10,6 +10,7 @@ const RenderResult = require(path.join(ROOT, 'shared', 'presentation', 'render-r
 const SVGRegistry = require(path.join(ROOT, 'shared', 'presentation', 'svg-registry.js'));
 const HTMLRenderer = require(path.join(ROOT, 'shared', 'presentation', 'html-renderer.js'));
 const Renderer = require(path.join(ROOT, 'shared', 'presentation', 'renderer.js'));
+const SemanticQuestion = require(path.join(ROOT, 'shared', 'semantic', 'semantic-question.js'));
 
 // svg-*.js 需先于首次渲染就绪（浏览器端由脚本/延迟加载保证；Node 测试显式前置），
 // 否则 svg-registry 的懒种子扫描捕获不到 geometry/calculation/makeTen 生成器。
@@ -234,4 +235,102 @@ test('M7-R06 Print.buildFromQuestions 直接由题组出打印文档', () => {
   assert.ok(html.indexOf('question-card') !== -1);
   assert.ok(html.indexOf('<input') === -1, '打印题面不应含输入框');
   assert.ok(html.indexOf('@page') !== -1);
+});
+
+// ============ FINAL-71 HTML 安全边界：题目/答案/SVG 入 DOM 前必须过边界 ============
+
+test('FINAL-71 题目/选项文本经 esc 边界：敌意载荷只出现为转义文本', () => {
+  const hostilePrompt = '<img src=x onerror="alert(1)"><script>alert(2)</script>';
+  const sq = {
+    prompt: hostilePrompt,
+    answerMode: 'choice',
+    answer: { value: 'x' },
+    options: ['<script>alert(3)</script>', 'x" onerror="alert(4)" y="', '正常选项']
+  };
+  const html = HTMLRenderer.render(sq, 0, { mode: 'screen' });
+  // 原始可执行片段不得出现
+  assert.ok(html.indexOf('<script>') === -1, '不得含原始 <script>');
+  assert.ok(html.indexOf('<img') === -1, '不得含原始 <img>');
+  assert.ok(!/\sonerror\s*=\s*"/.test(html), '不得形成原始 onerror= 属性');
+  // 必须以转义形态存在
+  assert.ok(html.indexOf('&lt;script&gt;') !== -1, 'script 必须转义');
+  assert.ok(html.indexOf('&lt;img') !== -1, 'img 必须转义');
+  assert.ok(html.indexOf('&quot;') !== -1, '选项中的双引号必须转义（radio value 属性注入收口）');
+  // 合法文本不被破坏
+  assert.ok(html.indexOf('正常选项') !== -1);
+});
+
+test('FINAL-71 graphicGuard：敌意 SVG 直注 HTMLRenderer 必须整体丢弃', () => {
+  const hostile = [
+    '<svg><script>alert(1)</script><rect/></svg>',
+    '<svg onload="alert(1)"><rect/></svg>',
+    '<svg><foreignObject><body onload="x()"/></foreignObject></svg>',
+    '<svg><rect fill="url(javascript:alert(1))"/></svg>',
+    '<svg><iframe src="javascript:alert(1)"/></svg>',
+  ];
+  hostile.forEach(function (svg) {
+    const html = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'screen', graphic: svg });
+    assert.ok(html.indexOf('question-graphic') === -1, '敌意图形不得进入图形区: ' + svg);
+    assert.ok(!/<script|onload|foreignObject|javascript:|iframe/i.test(html), '敌意特征不得出现: ' + svg);
+  });
+  // 对照：白名单内合法 SVG 正常渲染
+  const ok = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'screen', graphic: '<svg><rect width="4"/></svg>' });
+  assert.ok(ok.indexOf('question-graphic') !== -1);
+  assert.ok(ok.indexOf('<rect') !== -1);
+});
+
+test('FINAL-71 rawSvg 唯一通道：SVGRegistry custom 敌意输入必须拒收或中和', () => {
+  const hostileFeature = /<script|on[a-z]+\s*=|foreignobject|<iframe|<object\b|<embed\b|javascript:|<image\b/i;
+  // 无白名单元素 / 纯外联载体 → sanitizer 返回空 → FAILED
+  ['<script>alert(1)</script>',
+    'javascript:alert(1)',
+    '<a href="javascript:alert(1)">x</a>'].forEach(function (raw) {
+    const r = SVGRegistry.render({ type: 'custom', params: { rawSvg: raw } });
+    assert.strictEqual(r.status, 'FAILED', '必须拒收: ' + raw);
+    assert.ok(!('svg' in r), 'FAILED 不得携带 svg: ' + raw);
+  });
+  // 携带可剥离敌意特征的输入：允许 SUCCESS，但敌意特征必须被白名单清洗净尽
+  const neutralizable = [
+    '<svg onload="alert(1)"><rect width="2"/></svg>',
+    '<svg><script>alert(1)</script><rect width="2"/></svg>',
+    '<svg><image href="x" onerror="alert(1)"/><rect width="2"/></svg>'
+  ];
+  neutralizable.forEach(function (raw) {
+    const r = SVGRegistry.render({ type: 'custom', params: { rawSvg: raw } });
+    if (r.status === 'SUCCESS') {
+      assert.ok(!hostileFeature.test(r.svg), 'SUCCESS 产物不得残留敌意特征: ' + raw + ' => ' + r.svg);
+    } else {
+      assert.strictEqual(r.status, 'FAILED', '只允许 SUCCESS（已中和）或 FAILED（拒收）: ' + raw);
+    }
+  });
+  // 对照：合法 rawSvg 正常 SUCCESS
+  const ok = SVGRegistry.render({ type: 'custom', params: { rawSvg: '<svg viewBox="0 0 10 10"><rect width="3"/></svg>' } });
+  assert.strictEqual(ok.status, 'SUCCESS');
+  assert.ok(ok.svg.indexOf('rect') !== -1);
+});
+
+test('FINAL-71 语义契约：SemanticQuestion 顶层禁止 rawSvg/svg/html（rawSvg 只能在 params 内）', () => {
+  const rawSvgSq = { questionType: 'calc', prompt: '1+1=', answer: { value: 2 }, graphic: { type: 'custom', rawSvg: '<svg/>' } };
+  const svgSq = { questionType: 'calc', prompt: '1+1=', answer: { value: 2 }, graphic: { type: 'custom', svg: '<svg/>' } };
+  const htmlSq = { questionType: 'calc', prompt: '1+1=', answer: { value: 2 }, graphic: { type: 'custom', html: '<div/>' } };
+  [rawSvgSq, svgSq, htmlSq].forEach(function (sq) {
+    const res = SemanticQuestion.validateSchema(sq);
+    assert.ok(res.errors.some(function (e) { return e.code === 'GRAPHIC_INVALID'; }),
+      '顶层原始 SVG/HTML 必须 GRAPHIC_INVALID: ' + JSON.stringify(Object.keys(sq.graphic)));
+    assert.strictEqual(res.valid, false);
+  });
+  // 对照：rawSvg 位于 custom.params 内（registry 会强制 sanitize）不触发该 ERROR
+  const control = SemanticQuestion.validateSchema({
+    questionType: 'calc', prompt: '1+1=', answer: { value: 2 },
+    graphic: { type: 'custom', params: { rawSvg: '<svg/>' } }
+  });
+  assert.ok(!control.errors.some(function (e) { return e.code === 'GRAPHIC_INVALID'; }),
+    'params.rawSvg 是受控通道，不应报 GRAPHIC_INVALID');
+});
+
+test('FINAL-71 端到端：Renderer 渲染敌意 custom graphic 的题目，成品 HTML 不含任何敌意特征', () => {
+  const sq = { prompt: '看图计算', answer: { value: 1 }, graphic: { type: 'custom', params: { rawSvg: '<script>alert(1)</script>' } } };
+  const r = Renderer.render(sq, { mode: 'screen' }, 0);
+  assert.ok(!/<script|on[a-z]+\s*=|javascript:/i.test(r.html), '成品 HTML 必须干净: ' + r.html);
+  assert.ok(!/<script/i.test(r.graphic), 'graphic 字段必须干净: ' + r.graphic);
 });

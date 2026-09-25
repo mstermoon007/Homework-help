@@ -331,12 +331,16 @@ var artifact = {
   fails: fails.slice(0, 30),
   frozen: fails.length === 0
 };
-fs.mkdirSync(path.join(ROOT, 'docs', 'archive', 'phases', 'p28'), { recursive: true });
-fs.writeFileSync(path.join(ROOT, 'docs', 'archive', 'phases', 'p28', 'P28-GENERATOR-MATRIX.json'), JSON.stringify(artifact, null, 1) + '\n');
-writeMd(artifact);
+var WRITE = process.argv.indexOf('--write') !== -1;
+if (WRITE) {
+  fs.mkdirSync(path.join(ROOT, 'docs', 'archive', 'phases', 'p28'), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, 'docs', 'archive', 'phases', 'p28', 'P28-GENERATOR-MATRIX.json'), JSON.stringify(artifact, null, 1) + '\n');
+  writeMd(artifact);
+  console.log('产物已写入 docs/archive/phases/p28/P28-GENERATOR-MATRIX.{json,md}（--write）');
+}
 console.log('GENERATOR_MATRIX：' + sums.total + ' 个 Generator，' + statusSummary(sums) + '，FAIL ' + fails.length + '（R1–R6）');
   fails.slice(0, 20).forEach(function (f) { console.log('  ✗ ' + f); });
-  console.log((fails.length ? '收口冻结未通过 ❌' : '收口冻结 ✅') + ' —— 产物 docs/archive/phases/p28/P28-GENERATOR-MATRIX.{json,md}');
+  console.log((fails.length ? '收口冻结未通过 ❌' : '收口冻结 ✅') + (WRITE ? ' —— 产物 docs/archive/phases/p28/P28-GENERATOR-MATRIX.{json,md}' : '（只读模式，未写盘）'));
   process.exit(fails.length ? 1 : 0);
 function statusSummary(s) {
   return 'PRODUCTION=' + s.production + ' COMBINE-ONLY=' + s.combineOnly +

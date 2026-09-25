@@ -2,9 +2,13 @@
 'use strict';
 
 // dev/p28/check-security.js
-// P28-40 · 安全面扫描
-// 1. shared/ 生产代码无 eval( / new Function(
-// 2. AnswerValidator 安全测试通过
+// P28-40 · 安全面扫描（FINAL-70/71 强化）
+// 1. 全交付面无 eval( / new Function(（shared 含 bundle / plugins / feedback / 根 js / 全部 html 内联脚本）
+// 2. AnswerValidator 安全测试（含 FINAL-70 嵌入式恶意输入 FAIL + 哨兵 + 子进程不执行证据）
+// 3. SVG Sanitizer 安全测试
+// 4. HTML 安全边界（FINAL-71 Presentation 对抗测试 + 打印窗口 CSP script-src 'none'）
+// 5. KBL 写保护
+// 6. SEO/AI 历史隔离
 
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -18,44 +22,60 @@ console.log('============================================');
 console.log('  P28-40 · 安全面扫描');
 console.log('============================================\n');
 
-// 1. 扫描 shared/ 中的 eval( / new Function(
-console.log('▶ [1] eval / new Function 扫描（shared/ 生产代码）');
-try {
-  const output = execSync(
-    `grep -rn '\\beval\\s*(' shared/ --include='*.js' 2>/dev/null || true`,
-    { cwd: ROOT, encoding: 'utf8' }
-  ).trim();
-  const output2 = execSync(
-    `grep -rn '\\bnew\\s\\+Function\\s*(' shared/ --include='*.js' 2>/dev/null || true`,
-    { cwd: ROOT, encoding: 'utf8' }
-  ).trim();
-  const hits = (output + '\n' + output2).trim();
-  if (hits) {
-    // 过滤注释行
-    const realHits = hits.split('\n').filter(l =>
-      !l.trim().startsWith('//') &&
-      !l.trim().startsWith('*') &&
-      !l.includes("'eval") &&
-      !l.includes('"eval') &&
-      !l.includes('// eval') &&
-      !l.includes('无 eval') &&
-      !l.includes('无 new Function')
-    );
-    if (realHits.length > 0) {
-      console.log('  ✗ FAIL — 发现 eval/new Function：');
-      realHits.forEach(h => console.log('    ' + h));
-      fail++;
-    } else {
-      console.log('  ✓ PASS — 0 处 eval/new Function（仅注释命中）');
-      pass++;
+// FINAL-70/71：交付面文件清单——只扫真实交付给浏览器的产物，
+// 不扫 dev/ tests/ scripts/ archive/ 等开发/历史目录。
+function listProductionFiles() {
+  const files = [];
+  function walk(dir, ext) {
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { return; }
+    for (const e of entries) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) walk(p, ext);
+      else if (e.isFile() && p.endsWith(ext)) files.push(p);
     }
+  }
+  // JS：shared（含两个 bundle）/ plugins / feedback 递归 + 根目录直挂 js（sw.js）
+  ['shared', 'plugins', 'feedback'].forEach(function (d) { walk(path.join(ROOT, d), '.js'); });
+  fs.readdirSync(ROOT, { withFileTypes: true }).forEach(function (e) {
+    if (e.isFile() && e.name.endsWith('.js')) files.push(path.join(ROOT, e.name));
+  });
+  // HTML：根目录公共页（非递归）+ knowledge/ 375 知识页（内联脚本同口径）
+  fs.readdirSync(ROOT, { withFileTypes: true }).forEach(function (e) {
+    if (e.isFile() && e.name.endsWith('.html')) files.push(path.join(ROOT, e.name));
+  });
+  walk(path.join(ROOT, 'knowledge'), '.html');
+  return files;
+}
+
+const DANGEROUS = [
+  { re: /\beval\s*\(/, label: 'eval(' },
+  { re: /new\s+Function\s*\(/, label: 'new Function(' }
+];
+
+// 1. 全交付面 eval( / new Function( 扫描（逐行剔除纯注释行）
+console.log('▶ [1] eval / new Function 全交付面扫描（shared/plugins/feedback/sw.js/全部 HTML）');
+{
+  const hits = [];
+  const scanned = listProductionFiles();
+  scanned.forEach(function (file) {
+    const lines = fs.readFileSync(file, 'utf8').split('\n');
+    lines.forEach(function (line, idx) {
+      const t = line.trim();
+      if (!t || t.startsWith('//') || t.startsWith('*') || t.startsWith('<!--')) return; // 纯注释行
+      DANGEROUS.forEach(function (d) {
+        if (d.re.test(line)) hits.push(path.relative(ROOT, file) + ':' + (idx + 1) + ' [' + d.label + '] ' + t.slice(0, 120));
+      });
+    });
+  });
+  if (hits.length) {
+    console.log('  ✗ FAIL — 交付面发现动态执行汇点：');
+    hits.forEach(function (h) { console.log('    ' + h); });
+    fail++;
   } else {
-    console.log('  ✓ PASS — 0 处 eval/new Function');
+    console.log('  ✓ PASS — 扫描 ' + scanned.length + ' 个交付文件，eval/new Function 0 命中');
     pass++;
   }
-} catch (e) {
-  console.log('  ✓ PASS — 0 处 eval/new Function');
-  pass++;
 }
 
 // 2. AnswerValidator 安全测试
@@ -90,25 +110,41 @@ try {
   fail++;
 }
 
-// 4. HTML 安全边界（print.js 含安全注释）
-console.log('\n▶ [4] HTML 安全边界检查（print.js outerHTML/innerHTML）');
-try {
-  const printSrc = fs.readFileSync(
-    path.join(ROOT, 'shared/presentation/print.js'),
-    'utf8'
-  );
-  const hasOuterHTMLComment = printSrc.includes('outerHTML');
-  const hasInnerHTMLComment = printSrc.includes('innerHTML');
-  if (hasOuterHTMLComment && hasInnerHTMLComment) {
-    console.log('  ✓ PASS — print.js outerHTML/innerHTML 已标注安全边界');
+// 4. HTML 安全边界（FINAL-71）：Presentation 全链对抗测试 + 打印窗口 CSP
+console.log('\n▶ [4] HTML 安全边界（Presentation 对抗测试 + 打印窗口 CSP）');
+{
+  let boundaryOk = true;
+  // 4a. 题目/选项转义、graphicGuard、SVGRegistry rawSvg 拒收/中和、
+  //     SemanticQuestion 顶层 rawSvg/svg/html GRAPHIC_INVALID、端到端干净
+  try {
+    execSync('node --test tests/presentation/renderer.test.js', {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: 'pipe',
+    });
+  } catch (e) {
+    boundaryOk = false;
+    console.log('  ✗ FAIL — Presentation HTML 安全边界对抗测试失败');
+    console.log('    ' + (e.stderr || e.stdout || '').slice(-400));
+  }
+  // 4b. 打印窗口 CSP 必须禁脚本：即使敌意标记混入序列化 DOM 也不能执行
+  try {
+    const printSrc = fs.readFileSync(path.join(ROOT, 'shared/presentation/print.js'), 'utf8');
+    // 源码内为 JS 单引号字符串转义形态：script-src \'none\'
+    if (!/script-src\s+\\?'none\\?'/.test(printSrc)) {
+      boundaryOk = false;
+      console.log('  ✗ FAIL — print.js 打印窗口缺少 CSP script-src \'none\'');
+    }
+  } catch (e) {
+    boundaryOk = false;
+    console.log('  ✗ FAIL — 无法读取 shared/presentation/print.js');
+  }
+  if (boundaryOk) {
+    console.log('  ✓ PASS — Presentation 对抗测试全过 + print CSP script-src \'none\'');
     pass++;
   } else {
-    console.log('  ✗ FAIL — print.js 缺少安全边界标注');
     fail++;
   }
-} catch (e) {
-  console.log('  ✗ FAIL — 无法读取 print.js');
-  fail++;
 }
 
 // 5. KBL 写保护（回写白名单门禁）
