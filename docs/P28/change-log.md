@@ -25,6 +25,27 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-111｜冻结后禁止再改源码：源码变更=重新验证，禁止偷偷修（2026-09-25）
+
+- modified: `docs/FINAL-FREEZE.md` 新增「冻结后政策」章节
+- deleted: 无
+- reason: FINAL-111 要求执行 FINAL-FREEZE 并确立冻结后治理规则：任何源码变化必须重新全量验证，禁止冻结后偷偷修。
+- tests: 冻结态实测确认（2026-09-25）：
+  - check-all **28 PASS / 0 FAIL / 0 SKIP**
+  - git status 源码目录 clean（仅 FINAL-110/111 文档改动）
+  - FINAL-FREEZE.md 存在（5977→含政策章节）
+  - 冻结基线：commit 4123124，check-all 28/0，git clean
+  - 政策写入 FINAL-FREEZE.md：①源码变化=重新 check-all 28/0 ②禁止绕过验证的小修/顺手修 ③CI 只读不 repair ④改动必须登记 change-log 五字段 ⑤确定性验收（两次 check-all 一致 + git diff 零增长）
+- risk: 无（治理规则，不涉及源码改动）。源码冻结基线 = commit 4123124。
+
+### FINAL-110｜生成最终冻结报告 docs/FINAL-FREEZE.md（2026-09-25）
+
+- modified: 新增 `docs/FINAL-FREEZE.md`（1 个文件）
+- deleted: 无
+- reason: FINAL-110 要求生成唯一最终冻结报告，涵盖 24 个字段。
+- tests: 报告已生成并验证：19 个章节覆盖全部 24 字段（项目版本 5.0.0 / 发布时间 2026-09-25 / KBL rootHash cee1070e... / KP 375 / Units 98 / Relations 0 / Mappings 1570 / QuestionTypes 7 / Generator 24 / Bundle hash 8e1b4e4f...+62665dd0... / Difficulty 1-10 / Validator / SVG / Presentation / Learner / Education 921 / Golden 259/259 / Tests 547 / Browser E2E 9/9 / Security eval=0 / Sitemap 381 / AI-Crawler 隔离 / Performance bundle sizes / Git 4123124）。所有数据为实测值。
+- risk: 无（纯文档，数据均已实测）。
+
 ### FINAL-107｜安全：eval=0 / new Function=0 / unsafe SVG=0 / unsafe HTML bypass=0（2026-09-25）
 
 - modified: 无（纯验证，无代码改动）
