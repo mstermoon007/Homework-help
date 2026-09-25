@@ -25,6 +25,34 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-131｜修复 DEF-007：生产域名启用 HTTPS（Let's Encrypt + nginx 443 + HTTP 强制跳转）（2026-09-25）
+
+- modified:
+  - 服务器 `/etc/nginx/sites-available/home.modouyu.top`（certbot --nginx 自动改写：新增 443 ssl server 块含 fullchain/privkey/options-ssl-nginx/dhparam；原 80 server 块改为对 home.modouyu.top 返回 301 跳转 https）
+  - `/etc/letsencrypt/`（新建：账户 317411213@qq.com + live/home.modouyu.top 证书）
+  - `docs/FINAL-REPAIR-STATUS.md`（FINAL-131 登记 VERIFIED）、`docs/FINAL-REPAIR-DEFERRED.md`（DEF-007 OPEN→FIXED）、`docs/FINAL-130-ACCEPTANCE.md`（§9 DEF-007 行更新）
+- deleted: 无
+- reason: 用户要求修复 DEF-007（FINAL-130 确认目录时发现：正式域名仅 HTTP 80，非安全上下文下 navigator.serviceWorker 不可用，产品离线能力在正式域名不生效）。前置核查：DNS home.modouyu.top→121.89.94.239 已对齐；Ubuntu 24.04 + certbot 2.9.0 nginx 插件 + certbot.timer 已在位；站点配置预载 acme-challenge location；sitemap.xml 381 loc 与 robots.txt 本就声明 https、产品文件 0 个 http://home.modouyu.top 硬编码、0 个外部 http 资源 → 零混合内容风险、零仓库源码改动、无需重打包重部署。
+- tests:
+  - 备份：原 nginx 配置 → /root/nginx-home.modouyu.top.bak-20260925
+  - 签发：`certbot --nginx -d home.modouyu.top --agree-tos -m 317411213@qq.com --redirect` 成功；证书 CN=home.modouyu.top，issuer Let's Encrypt YE1，有效期 2026-09-25→2026-12-24；nginx 80/443 双栈监听，443 外部 TCP 可达（云安全组未拦）
+  - HTTP 跳转：`http://home.modouyu.top/` 与 `/practice.html` 均 301 → https 同路径；裸 IP HTTP 访问 default_server 行为不变（200）
+  - 证书校验：openssl s_client Verify return code: 0 (ok)；curl TLSv1.3/AEAD-AES256-GCM，SSL certificate verify ok
+  - HTTPS 电池：/、VERSION、select/practice/知识页、双 bundle（strategy 525687B ×3 次 200，presentation 150329B）、KBL manifest、sw.js、sitemap、logo、feedback 全 200；旧文件 chinese-types.html 404
+  - 续期：`certbot renew --dry-run` 模拟续期成功（certbot.timer 每日自动检查）
+  - 真实浏览器：https 无证书警告；`{protocol:"https:", swSupported:true, secureContext:true}`；practice 生成 20 题；刷新后 `{controller:true, ready:"https://home.modouyu.top/sw.js", cacheKeys:["hw-help-5.0.0"]}`；零混合内容（仅 1 条刷新时序导致的导航中断日志，非业务错误）
+- risk: 低。仅服务器 nginx/证书变更，仓库源码与发布包零改动（不触发 check-all 重跑条件）；80 跳转不影响 acme-challenge（certbot 在 443 块保留该 location，续期演练已实证）；回滚=恢复 /root/nginx-home.modouyu.top.bak-20260925 并 reload nginx。未加 HSTS（属额外加固，超出修复范围；后续如需可在 443 块加 Strict-Transport-Security，建议先小 max-age 观察）。
+
+### FINAL-130b｜FINAL-130 完整验收报告生成 + DEF-007 登记（2026-09-25）
+
+- modified:
+  - 新建 `docs/FINAL-130-ACCEPTANCE.md`（FINAL-130 完整验收报告：结论 ACCEPTED，8 关流水线记录、发布物哈希、服务器实测、23/23 HTTP 电池、8/8 哈希 MATCH、浏览器冒烟、FINAL-123 处置、回滚方案、遗留风险、审计轨迹、签署表）
+  - `docs/FINAL-REPAIR-DEFERRED.md`（新增 DEF-007：生产域名仅 HTTP 80 无 443/SSL，SW 在正式域名不注册，P2 非阻塞运维项）
+- deleted: 无
+- reason: 用户要求生成 FINAL-130 专项完整验收报告。报告全部数值取自 2026-09-25 16:42–16:44 CST 新鲜实测（本地 git/磁盘、服务器 SSH、公网 curl 三路），无占位/沿用值。DEF-007 为确认服务器目标目录时发现的部署前既有现状，按 FINAL-03 规则登记不扩范围。
+- tests: 无（纯文档；报告内容所依据的实测：git clean HEAD=4434400、包 571 文件 SHA256=d0a66e98...、服务器 571 文件 VERSION=5.0.0、HTTP 23/23 200、旧文件 6/6 404、sitemap loc=381、hash 8/8 MATCH、备份 2,574,586 字节在位）
+- risk: 无。零源码/零服务器改动；DEF-007 仅登记 OPEN，不触发任何变更。
+
 ### FINAL-123｜清除 FINAL-22 删 knowledge-compat.js 遗留的 2 处死引用（2026-09-25）
 
 - modified:

@@ -33,6 +33,7 @@
 | DEF-004 | P2 | FINAL-31 | W1/W2：375 KP 全量缺 learningTargets/cognitiveTargets 数据（0/375），teaching target/cognitive target 维度空转 | kbl（KBL 教学语义数据治理，P25-02 范畴） | 否 | OPEN | 待分配（FINAL-32 范围外：P25-02 人工治理，schema E05 红线禁止 AI 伪造 NEEDS_REVIEW 字段） |
 | DEF-005 | P2 | FINAL-31 | P26 derive 脚本按单一 seed 产物回填精确值断言（无稳定性过滤），是 31a/31e 规则行 flaky 的源头；重跑 derive 会回填已被剔除/转 fieldPresent 的断言 | dev/p25/derive-evidence-candidates.js + apply-evidence-candidates.js | 否 | OPEN | 待分配（FINAL-32 范围外：P2 工具链，本任务按 FINAL-31a/31e 先例直接对齐规则，未动 derive 脚本） |
 | DEF-006 | P2 | FINAL-32 | picture-equation variant dispatch 按 KP 名关键词分派（线段/大括号/看图列/天平/数阵/...），KP 真名（如「加减法的意义和各部分间的关系」「根据可能性大小进行推测」）不含关键词→落 generic 分支缺 calc 公式→TypeContract drop→0 题；当前靠 fallback `'看图列式'` 自身命中 '看图列' 隐式进 brace 分支承载，真缺陷未修 | shared/generator/generators/picture-equation.js makePictureEquationQuestion variant 分派 | 否 | OPEN | 待分配（FINAL-32a 回退名源改动保 freeze 稳定，variant dispatch 真缺陷另行治理） |
+| DEF-007 | P2 | FINAL-130 | 生产域名 home.modouyu.top 仅监听 80（HTTP 明文），未配置 443/SSL；非安全上下文下 navigator.serviceWorker 不可用，产品 Service Worker 离线能力在正式域名不生效（localhost 除外） | 服务器 nginx 配置（非仓库源码） | 否 | FIXED | FINAL-131（2026-09-25：Let's Encrypt 证书 + nginx 443 + HTTP 301 跳转 + 自动续期演练通过 + 浏览器确认 SW 注册） |
 
 > 2026-09-23 FINAL-31 登记：DEF-001~005 均为归因中发现的非阻塞语义完备性问题，用户明确决策本轮仅修 P0 真缺陷与规则修复（31a/31b/31c/31d/31e），W5/W6 消费链与验证路径留后续 FINAL-XX。
 >
