@@ -25,6 +25,37 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-123｜清除 FINAL-22 删 knowledge-compat.js 遗留的 2 处死引用（2026-09-25）
+
+- modified:
+  - `select.html`（-1 行：删除第 567 行 `<script src="shared/engine/knowledge-compat.js"></script>`）
+  - `sw.js`（-1 行：删除 CORE 预缓存清单第 59 行 `'shared/engine/knowledge-compat.js',`）
+- deleted: 无（文件已在 FINAL-22 删除，本次仅清除残留引用）
+- reason: 服务器上线验证（FINAL-130）中浏览器实测发现 select.html 加载产生 1 条 `net::ERR_ABORTED .../knowledge-compat.js` 404 console error。根因：FINAL-22 物理删除死桥接文件 `shared/engine/knowledge-compat.js` 时同步了 `_bundle-env/practice.html`，但漏掉 select.html 的 script 标签与 sw.js 的 CORE 清单 2 处引用。FINAL-122 离线验证走 首页→知识页→练习 链路（知识页 CTA 直达 practice.html），未经过 select.html，故漏检。影响评估：功能零影响（knowledge-compat 能力已由 knowledge-context.js 接替，实测选择页→生成 19 题正常）；SW 预缓存逐条 catch（sw.js cacheAll），单条 404 不影响 install/activate/离线。全产品面扫描（7 根页 + 376 knowledge 页 + feedback）确认悬挂引用仅此 1 文件 2 处。
+- tests:
+  - `npm run check-all`（含 CHROME_BIN 真实浏览器 E2E）连续 2 跑均 **28 PASS / 0 FAIL / 0 SKIP**，git diff 前后快照逐字节一致（+2/-2 = 本修复 + STATUS 登记，零检查副作用）
+  - 修复 commit `56b643a`（2 files changed, 2 deletions(-)，pre-commit lint+syntax PASS）
+  - 重新出包：同一白名单 pathspec `git archive` 自 `56b643a`，571 文件不变，新 SHA256=`d0a66e98e42a8192228f7ede172234e3d83bccb094bec33eff579f2766afad67`；包内 select.html/sw.js 的 knowledge-compat 命中=0；禁止项（tests/dev/archive/migration/docs/node_modules/.git）命中=0
+  - 离线重验证：干净解压 + `python3 -m http.server` 根部署，9 关键路径（/、select.html、knowledge 页、双 bundle、manifest、VERSION、beian-icon、sw.js、sitemap）全 200，`/shared/engine/knowledge-compat.js` 按预期 404
+  - 线上复验：重传后 13 关键路径全 200；live `select.html`/`sw.js` 的 compat 引用=0；hash 抽查 4/4 与 git HEAD 逐字节 MATCH；真实浏览器 DOM 级终验 `domHasCompatScript=false`、15 个 script src 无 compat（测试浏览器 profile 残留的 console 旧条目已判定为非本次加载引入）
+- risk: 无。2 行纯删除、零逻辑；唯一已知效应是同版本号（5.0.0）内容替换不触发 SW 缓存名轮换，仅影响两次部署间隔内访问过的客户端磁盘缓存（旧 select.html 功能正常，差异仅 1 条无害 404），真实用户均为首次访问不受影响。
+
+### FINAL-130｜服务器上传上线：5.0.0 全量替换旧版并完成线上验证（2026-09-25）
+
+- modified:
+  - 服务器 `/var/www/Homework-help/`（整体替换：旧 8/21 多学科版 126 文件含 .git → 5.0.0 白名单包 571 文件）
+  - `release/homework-help-5.0.0.tar.gz`（FINAL-123 修复后重建，SHA256=`d0a66e98...`）、`release/homework-help-5.0.0.tar.gz.sha256`、`release/RELEASE-MANIFEST-5.0.0.md`（构建来源更新为 `56b643a`）
+  - `docs/FINAL-REPAIR-STATUS.md`（FINAL-123/FINAL-130 登记）
+- deleted: 服务器旧版目录（已先备份至 `/root/Homework-help.bak-20260925.tar.gz` 2.5MB，可回滚）；本地无文件删除
+- reason: 本专项最后动作。严格执行流水线：全部修复→全部测试→最终冻结→生成发布包→本地发布包验证→Git clean→确认服务器目标目录→上传。目标目录经 nginx 配置确认为 `/var/www/Homework-help`（`server_name home.modouyu.top` + `default_server` 双指向，仅 80 端口）。用户裁决确认全量替换（旧版含 chinese-types/english-types/pinyin-bank 等跨学科残留，不能覆盖式解压）。
+- tests:
+  - 上传前：服务器侧备份完成；scp 后服务器端 `sha256sum` 与本地包逐字节一致（d0a66e98...）
+  - 部署：暂存区解压验证 571 文件 + VERSION=5.0.0 后原子切换（mv 旧目录→mv 新目录→chown www-data:www-data），nginx 配置零改动
+  - 线上 curl 电池：首页/7 根页/knowledge 页/双 bundle/KBL manifest/sitemap/robots/sw.js/CNAME/assets 全 200；旧版文件（chinese-types.html、pinyin-bank.js、.git/config、docs/ 等 8 项）全部按预期 404，无混合态
+  - hash 抽查：live index.html/select.html/sw.js/strategy bundle 与 git HEAD 逐字节 MATCH
+  - 真实浏览器线上冒烟：首页（标题/logo/5.0.0/备案号）→ select.html → practice.html 生成 19 题 → 打印按钮，全 PASS；select.html compat 404 已消除（DOM 级确认）
+- risk: 无（备份可回滚）。遗留说明：两次部署间隔内访问过的浏览器可能持有旧磁盘缓存（同版本号不轮换 SW 缓存名），刷新即自愈；服务器备份 `/root/Homework-help.bak-20260925.tar.gz` 建议保留至下次版本发布。
+
 ### FINAL-122｜发布包再次离线验证：干净解压 + 本地静态服务器全链通过（2026-09-25）
 
 - modified: 无（纯部署验证，零源码/包改动）
