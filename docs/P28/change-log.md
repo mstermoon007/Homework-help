@@ -25,6 +25,22 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-122｜发布包再次离线验证：干净解压 + 本地静态服务器全链通过（2026-09-25）
+
+- modified: 无（纯部署验证，零源码/包改动）
+- deleted: 无
+- reason: FINAL-122 要求服务器上传前，把发布包在本地静态服务器上再走一遍 首页→知识页→练习→生成→打印，确认构建/压缩/路径变化不造成产品故障。
+- tests: 实测通过（2026-09-25）：
+  - 部署形态：`tar -xzf release/homework-help-5.0.0.tar.gz` 解压到 /tmp 干净目录（571 文件完整），`python3 -m http.server` 以**根部署**形态提供服务（与 CNAME 正式域名一致）；测试对象是解压产物，非开发工作目录
+  - **① 首页** PASS：标题"小学练习本"、logo naturalWidth=128 真实加载、页脚版本 5.0.0 + 备案号 62090002000210、CSS/bundle 全 200，无 404、无 JS error
+  - **② 知识页** PASS：knowledge/math-g1-down-u01-k001.html 正常渲染，tokens.css 200，做题 CTA 为相对路径 `../practice.html?...`
+  - **③ 练习入口** PASS：首页→select.html→practice.html（mode=quick）跳转正常，strategy/presentation 两个 bundle 200；另 curl 确认 knowledge-loader 浏览器 XHR 的 10 个 `shared/knowledge/**/*.json` 数据文件全部 200
+  - **④ 生成** PASS：单题型（g2-down-u02-k001/calc/8）生成成功；七类题型（3 KP × 7 类型/21 题）成功生成 21 题，style 覆盖 calc(6)/fill(6)/choice(6)/judge(3)/shape=geometry(3)/sort=classify(3)/story=apply(3) 全 7 类，无"生成失败"、无 404、无 console error
+  - **⑤ 打印** PASS：window.open 拦截钩子实测 `opens=1 / writes=1 / prints=1 / htmlLen=24615 / hasCards=true`，打印后无新增生成请求、无 console error
+  - 过程说明：首轮 UI 未选知识点时出现"该配置下没有可生成的题目"——属空配置 fail-closed 提示（非打包故障）；带显式 kps 参数即正常，与开发树行为一致。打印在弹窗内 `pw.print()`，首轮 stub 主窗口 window.print 未命中，改用 window.open 钩子后通过（验证方法问题，非产品问题）
+  - 全程 status>=400 仅 favicon/`@vite/client`（外部残留标签，非包内请求），包内资源零 404；验证后临时服务器与目录已清理
+- risk: 无（零改动验证）。结论：压缩包解压后在静态服务器根部署下，全链功能与开发树一致，构建/压缩/路径变化未造成故障。
+
 ### FINAL-121｜发布包内容检查：白名单产品包，禁止项全 0（2026-09-25）
 
 - modified: 无源码改动；`release/homework-help-5.0.0.tar.gz` 由全量快照重建为白名单产品包（release/ 已 gitignore，不入库）；发布清单 RELEASE-MANIFEST-5.0.0.md 同步更新
