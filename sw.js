@@ -56,7 +56,6 @@ const CORE = [
   'shared/presentation/render-result.js',
   'shared/knowledge/runtime/knowledge-runtime.js',
   'shared/orchestration/knowledge-context.js',
-  'shared/engine/knowledge-compat.js',
   'shared/catalog/module-catalog.js',
   'shared/svg/svg-core.js',
   'shared/svg/svg-calculation.js',
