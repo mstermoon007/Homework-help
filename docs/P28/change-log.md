@@ -25,6 +25,58 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-134｜统计报表中文化 + 累计访客数横幅（FINAL-132 增强）（2026-09-25）
+
+- modified:
+  - 服务器 `/usr/local/sbin/goaccess-report.sh`（刷新流程由 1 步变 3 步：JSON 报表 → python 烘焙元数据+拼接中文化 JS → HTML 报表加 `--html-report-title='小学练习本 · 访问统计'` 与 `--html-custom-js=zh-custom.js`；旧脚本备份 `/root/goaccess-report.sh.bak-20260925-final134`）
+  - 服务器新增 `/var/lib/goaccess/zh-custom-base.js`（中文化 IIFE：全词精确字典、MutationObserver 动态重译、碎片日期/图表轴/状态码复合分类/面板副标题/页脚处理）
+  - 服务器新增 `/var/lib/goaccess/make_meta.py`（读 JSON 报表 general 段，产出 window.ZH_META：unique_visitors/total_requests/start_date/end_date/date_time）
+  - 服务器新增 `/var/www-stats/zh-custom.js`（每小时重新生成的元数据前缀 + base 拼接产物，与报表同目录被相对引用，随 Basic Auth + X-Robots-Tag 一同保护）
+  - 仓库文档：`docs/FINAL-REPAIR-STATUS.md`（FINAL-134 VERIFIED）
+- deleted: 无（清理了调试期误建的 /var/lib/goaccess/zh-custom.js）
+- reason: 用户要求把统计页面翻译为中文并增加累计访客数。GoAccess 1.8.1 无内置中文；关键事实：①`--html-custom-js` 在该版本输出 `<script src='路径'>` 外部引用而非内联（实证最小用例），故定制 JS 必须 web 可达——放在 /var/www-stats 与报表同目录、cwd 切换后以相对名引用，避免污染产品发布目录；②累计访客权威值为 JSON 报表 `general.unique_visitors`（按 IP 去重，含爬虫；GoAccess 自身口径），持久 DB 持续累积，每小时刷新时烘焙进页面横幅。翻译只做"整段文本精确匹配"的 UI 文案替换，URL/IP/浏览器与系统品牌名（Chrome/Windows 等）/攻击流量二进制等数据值保持原样。
+- tests:
+  - 刷新脚本手动执行 exit=0；meta 实测 window.ZH_META 数字与同次 JSON general 一致
+  - 本地 headless Chrome（20s 虚拟时间，等图表动画完成）完整渲染终验：可见区英文 UI 残留 0（全量短文本扫描，白名单外为空）；横幅显示"累计访客 1,993 人（按 IP 去重，含爬虫）/ 累计请求 22,283 次 / 统计区间 2026-09-11 ～ 2026-09-25 / 数据每小时更新 · 仅在线访问计入"；标题"小学练习本 · 访问统计"；11 个面板标题、12 个概览卡片、表头（命中/访客/传输流量/方法/协议/数据）、最小/最大/平均/合计、图表轴图例、日期（2026-09-25）、状态码分类（2xx 成功/3xx 重定向/4xx 客户端错误）、面板副标题、独立访客口径说明句、页脚（由 GoAccess v1.8.1 与 GWSocket）全部中文；截图复核布局无遮挡（横幅左缘对齐 75px 侧栏）
+  - 数据零误伤抽查：Chrome/Windows/practice.html/IP/GET 等原值保持；UA 中的时间戳与攻击流量 \x 二进制不被替换
+  - 线上：/stats/zh-custom.js 无口令 401、带口令 200、带 X-Robots-Tag noindex；/stats/ 报表 200；/etc/cron.d/goaccess 每小时 :37 条目不变（脚本路径不变，下次 cron 自动产中文版）
+- risk: 低。纯展示层注入，GoAccess 数据/DB/解析逻辑零改动；定制 JS 与报表同生命周期、同鉴权；若定制 JS 加载失败，报表回退为英文原版（脚本 defer 式独立，不影响数据渲染）。回滚：恢复 /root/goaccess-report.sh.bak-20260925-final134 后重跑（HTML 不再引用 zh-custom.js），并删 /var/www-stats/zh-custom.js、/var/lib/goaccess/{zh-custom-base.js,make_meta.py}。口径说明：累计访客=独立 IP（含爬虫），与 GoAccess 面板一致；仅在线访问计入（SW 离线不计，同 FINAL-132 声明）；横幅数字随每小时刷新变化，文档中的 1,993 为验收时点快照。
+
+### FINAL-133｜DEF-008 前半：启用 HSTS 响应头（max-age=300 小值起步）（2026-09-25）
+
+- modified:
+  - 服务器 `/etc/nginx/sites-available/home.modouyu.top`（443 server 块 `index` 行后新增 1 行：`add_header Strict-Transport-Security "max-age=300" always; # FINAL-133`）
+  - 仓库文档：`docs/FINAL-REPAIR-STATUS.md`（FINAL-133 VERIFIED）、`docs/FINAL-REPAIR-DEFERRED.md`（DEF-008 ①HSTS 闭合，收窄为仅余 ②server_tokens）
+- deleted: 无
+- reason: 用户要求修复 DEF-008 中的 HSTS 问题。FINAL-131 已全站 HTTPS，但无 HSTS 时浏览器仍可能先发起一次明文 HTTP（SSL stripping 风险）。HSTS 告知浏览器对该主机后续访问强制走 HTTPS。按 FINAL-131 风险栏预告与行业安全实践，首次启用用 max-age=300（5 分钟）小值，观察 1–2 天无异常后再逐步提长，避免长 max-age 下证书/配置异常时锁死用户。
+- tests:
+  - 备份：/root/nginx-home.modouyu.top.bak-20260925-final133
+  - `nginx -t` syntax ok + test successful，reload 成功（certbot 托管段未触碰，renew 复用现配置不受影响）
+  - 7 个 HTTPS 响应全部带 `Strict-Transport-Security: max-age=300`：/（200）、practice.html、select.html、knowledge/math-g1-down-u01-k001.html、strategy bundle、sitemap.xml、chinese-types.html（404，always 保证错误页也带头）
+  - HTTP 80 的 301 跳转响应不带 HSTS（正确：HSTS 仅在 HTTPS 响应中被浏览器接受）
+  - /stats 行为不变：认证后 200 + X-Robots-Tag 保留、无口令 401；该 location 因自身 add_header 按 nginx 继承规则不继承 server 级 HSTS（预期内；HSTS 按整主机记忆，用户访问任一产品页即获得策略）
+  - 主站 https://home.modouyu.top/ = 200
+- risk: 低。max-age=300 影响窗口仅 5 分钟，异常自然过期；仅 1 行配置；未加 includeSubDomains/preload（影响所有子域，需单独评估）。回滚：恢复 /root/nginx-home.modouyu.top.bak-20260925-final133 并 reload。后续提长路线（另开任务）：观察无异常 → 86400（1 天）→ 31536000（2 年）→ 再评估 includeSubDomains 与 HSTS preload 列表提交。DEF-008 ②server_tokens off 保持 OPEN。
+
+### FINAL-132｜浏览量统计小工具：GoAccess 日志分析报表（/stats/，Basic Auth，零产品改动）（2026-09-25）
+
+- modified:
+  - 服务器新增包：goaccess 1.8.1（apt）、apache2-utils（htpasswd）
+  - 服务器新增文件：`/usr/local/sbin/goaccess-report.sh`（原子刷新脚本）、`/etc/cron.d/goaccess`（每小时 :37 root 执行，cron active）、`/etc/nginx/snippets/stats-goaccess.conf`（/stats location：alias webroot 外目录 + auth_basic + X-Robots-Tag）、`/etc/nginx/.htpasswd-stats`（admin，640 root:www-data）
+  - 服务器新增数据：`/var/lib/goaccess/`（持久化 Tokyo Cabinet DB，1.6M）、`/var/www-stats/index.html`（926K 自包含报表，webroot 之外）
+  - 服务器修改：`/etc/nginx/sites-available/home.modouyu.top`（443 server 块加 1 行 include snippets/stats-goaccess.conf；备份 /root/nginx-home.modouyu.top.bak-20260925-final132）
+  - 仓库文档：`docs/FINAL-REPAIR-STATUS.md`（FINAL-132）、`docs/FINAL-REPAIR-DEFERRED.md`（DEF-008 登记：HSTS+server_tokens 加固批）
+- deleted: 无
+- reason: 用户需求"增加浏览量统计小工具"。方案选型：376 知识页 + 4 根页为零 JS 纯静态 SEO 页且无统一 JS 入口，注入式统计（不蒜子/百度统计/自建 API）需破坏零 JS 设计或引入第三方/首个后端；nginx 访问日志天然覆盖全部 381 页面且自 9/11 起持续记录，故采用 GoAccess 日志分析（用户选定方案 A：站长分析型）。零产品源码/零发布包/check-all 不触发。
+- tests:
+  - 首次全量：zcat -f /var/log/nginx/access.log*（含 .1 明文与 .2–.14.gz 共 15 天日轮转日志）解析 16,758 行，报表 926K，8 面板（日访客/请求文件/404/IP/OS/浏览器/来源/状态码），日期 20260911–20260925 全 15 天
+  - 不重复计数：同日志以 --persist 再解析，全报表 3–6 位数字指纹逐行一致（GoAccess 1.8 用 - 显式 stdin、--persist 持久 DB；1.8 已无 --keep-db-files 参数；输出临时文件必须 .html 扩展名否则报 Invalid filename extension）
+  - 刷新脚本：手动执行 exit=0，原子 mv index.new.html→index.html
+  - nginx：nginx -t 通过后 reload；无/错口令 401、正确口令 200（Content-Type text/html + X-Robots-Tag: noindex, nofollow, noarchive）、/stats→301→/stats/、HTTP→301→HTTPS、裸 IP default_server /stats/ = 404 隔离、主站 / =200 不受影响
+  - 自包含性：报表 0 外部 <link>/脚本资源（内联单文件），离线可看
+  - 浏览器：未认证显示 nginx 401 页（真实浏览器拦截 URL 内嵌凭据，正常使用走 Basic Auth 弹窗）
+- risk: 低。①统计口径：SW 离线浏览任何服务端方案均不可见，在线导航 network-first 可入日志（与产品架构一致）；②日志保留 14 天日轮转，更早历史不可逆（DB 内已聚合数据持久保留）；③凭据仅存于服务器 htpasswd 与用户手中（admin/随机 16 位 bDi0...，建议用户存入密码管理器，丢失可 htpasswd 重置）；④/var/www-stats 在 webroot 外，且 X-Robots-Tag + 401 双保险不进索引，故无需改 robots.txt（避免源码改动）；⑤回滚=删除 include 行 reload nginx + rm 三个新增路径。DEF-008（HSTS/server_tokens）按用户约定稍后单独处理。
+
 ### FINAL-131｜修复 DEF-007：生产域名启用 HTTPS（Let's Encrypt + nginx 443 + HTTP 强制跳转）（2026-09-25）
 
 - modified:
