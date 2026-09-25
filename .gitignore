@@ -17,6 +17,7 @@ __pycache__/
 node_modules/
 dist/
 build/
+release/
 
 # 本地环境配置
 .env
