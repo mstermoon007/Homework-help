@@ -25,6 +25,18 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-136｜首页新增百度搜索资源平台站点验证 meta（2026-09-26）
+
+- modified:
+  - `index.html`（`<head>` 内 canonical 行后新增 1 行：`<meta name="baidu-site-verification" content="codeva-G2GQ581vQb" />`）
+- deleted: 无
+- reason: 用户在百度搜索资源平台以「HTML 标签验证」方式提交站点，平台要求首页 HTML 的 `<head>` 与 `</head>` 之间包含其生成的一次性验证码。归属 Crawl 层（外部发现/SEO 验证）；百度爬虫直接 HTTP GET 首页读取，不执行 JS。仅首页需要，不触碰其他公共页、knowledge 派生页、sitemap/robots 与任何生成链代码。
+- tests:
+  - 静态确认：`grep baidu-site-verification index.html` 命中且位于 `<head>` 区间；canonical/title 等既有标签不变
+  - 全量门禁：`node dev/check-all.js`（0 FAIL；PASS 数以实际输出为准）
+  - 部署后线上确认：`curl -sS https://home.modouyu.top/ | grep baidu-site-verification` 返回该验证码
+- risk: 低。仅 head 增加 1 个无行为 meta，不影响渲染、链接图、sitemap 冻结与 AI 抓取门禁；验证码为百度平台一次性公开令牌，非私密凭据。回滚：删除该行。注意该标签必须随 index.html 发布到服务器 /var/www/Homework-help 后平台方可验证通过（Service Worker 缓存不影响百度服务端直取）。
+
 ### FINAL-135｜DEF-008 后半：server_tokens off 关闭 nginx 版本号泄露（2026-09-25）
 
 - modified:
