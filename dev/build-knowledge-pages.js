@@ -29,20 +29,21 @@ var HASH_RE = /<!--\s*kbgen:hash=([0-9a-f]{64})\s*-->/;
 function runtime() { KC.stats(); return global.App.KNOWLEDGE; }
 var GRADE_CN = { 1: '一年级', 2: '二年级', 3: '三年级', 4: '四年级', 5: '五年级', 6: '六年级' };
 var BOOK_CN = { down: '上册', up: '下册' }; // P26-21 SEO：消歧同学期复习 KP 标题
-var TEMPLATE_VERSION = 3; // P26-21：3 → 标题含学期消歧 + 描述前缀 KP 名 + cleanText 去 MathML
+var TEMPLATE_VERSION = 4; // v3 P26-21：标题消歧/描述前缀/去 MathML；v4 FINAL-145：内联 CSS 色值迁移到 tokens.css 令牌（哈希输入变更，全量重写）
 var BASE_URL = 'https://home.modouyu.top';
 var SAME_UNIT_LINK_CAP = 8; // P26-09：同单元相关 KP 最多取 8 个
 
-var CSS = 'body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;max-width:860px;margin:0 auto;padding:32px 20px;color:#27324a;line-height:1.7;background:#fafbff;}'
-  + '.crumb{font-size:13px;color:#7a879c;margin-bottom:18px;}.crumb a{color:#3f6fd1;text-decoration:none;}'
+// FINAL-145：内联 CSS 色值统一引用 tokens.css 令牌（页面已 <link> 该 SSOT）；三级灰 #9aa5b5/#b3bccd 与尺寸/圆角无对应令牌，保持原值
+var CSS = 'body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;max-width:860px;margin:0 auto;padding:32px 20px;color:var(--ink);line-height:1.7;background:var(--soft-bg);}'
+  + '.crumb{font-size:13px;color:var(--muted);margin-bottom:18px;}.crumb a{color:var(--brand-d);text-decoration:none;}'
   + 'h1{font-size:26px;margin:0 0 6px;}.meta{font-size:13px;color:#9aa5b5;margin-bottom:24px;}'
-  + '.card{background:#fff;border:1px solid #e6ecf7;border-radius:14px;padding:20px 22px;margin:16px 0;box-shadow:0 2px 8px rgba(63,111,209,.06);}'
-  + '.card h2{font-size:18px;margin:0 0 10px;color:#1f2a44;}'
-  + '.kw{display:inline-block;background:#eef3ff;color:#3f6fd1;border-radius:8px;padding:2px 10px;font-size:12px;margin:0 6px 6px 0;}'
-  + '.list{list-style:none;padding:0;margin:0;}.list li{padding:10px 12px;border-bottom:1px solid #eef1f7;}.list li:last-child{border-bottom:none;}'
-  + '.list a{color:#27324a;text-decoration:none;font-weight:600;}.list a:hover{color:#3f6fd1;}.list .sub{font-size:12px;color:#9aa5b5;font-weight:400;margin-left:8px;}'
-  + '.btn{display:inline-block;margin-top:14px;background:#3f6fd1;color:#fff;text-decoration:none;padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px;}'
-  + '.btn.ghost{background:#eef3ff;color:#3f6fd1;}footer{margin-top:40px;font-size:12px;color:#b3bccd;text-align:center;}';
+  + '.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;box-shadow:var(--shadow-card);}'
+  + '.card h2{font-size:18px;margin:0 0 10px;color:var(--ink);}'
+  + '.kw{display:inline-block;background:var(--brand-bg);color:var(--brand-d);border-radius:8px;padding:2px 10px;font-size:12px;margin:0 6px 6px 0;}'
+  + '.list{list-style:none;padding:0;margin:0;}.list li{padding:10px 12px;border-bottom:1px solid var(--line);}.list li:last-child{border-bottom:none;}'
+  + '.list a{color:var(--ink);text-decoration:none;font-weight:600;}.list a:hover{color:var(--brand-d);}.list .sub{font-size:12px;color:#9aa5b5;font-weight:400;margin-left:8px;}'
+  + '.btn{display:inline-block;margin-top:14px;background:var(--brand-d);color:#fff;text-decoration:none;padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px;}'
+  + '.btn.ghost{background:var(--brand-bg);color:var(--brand-d);}footer{margin-top:40px;font-size:12px;color:#b3bccd;text-align:center;}';
 
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {

@@ -5,25 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>联系我们 - 小学练习本</title>
 <meta name="description" content="小学练习本联系方式：开发者电话 13369372133，欢迎功能建议、内容纠错与合作咨询。">
+<!-- 设计令牌统一引用 SSOT（shared/styles/tokens.css），禁止页内重定义同名令牌（FINAL-144） -->
+<link rel="stylesheet" href="shared/styles/tokens.css">
 <style>
-    /* ============ 设计令牌 ============ */
-    :root {
-        --bg: #f3f7fb;
-        --card: #ffffff;
-        --ink: #27324a;
-        --muted: #7a879c;
-        --line: #e3e9f2;
-        --line-strong: #c9d4e6;
-        --brand: #5b8def;
-        --brand-d: #3f6fd1;
-        --brand-bg: #eef3fb;
-        --ok: #22a06b;
-        --shadow: 0 8px 24px rgba(40, 70, 120, .10);
-        --radius-card: 16px;
-        --grad-hero: linear-gradient(160deg, #4a90d9 0%, #6db3f2 40%, #7eb6f0 100%);
-        --grad-logo: linear-gradient(135deg, #5b8def, #7eb6f0);
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {

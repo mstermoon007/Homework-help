@@ -63,7 +63,10 @@
     --math: var(--math-primary);
     --math-bg: #ebf3fd;
     --radius-card: 16px;
-    --grad-hero: linear-gradient(160deg, #4a90d9 0%, #6db3f2 40%, #7eb6f0 100%);
+    /* Hero 渐变加深：brand→math-primary 对角渐变 + 右上角 8% 白径向高光（当前唯一消费方 contact.html；首页/select 页为页内硬编码，待 pages 层迁移） */
+    --grad-hero:
+      radial-gradient(120% 120% at 100% 0%, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, 0) 45%),
+      linear-gradient(135deg, var(--brand) 0%, var(--math-primary) 100%);
     --grad-hero-overlay: linear-gradient(160deg, rgba(74, 144, 217, .55) 0%, rgba(109, 179, 242, .40) 40%, rgba(126, 182, 240, .35) 100%);
     --grad-logo: linear-gradient(135deg, var(--brand), #7eb6f0);
     --grad-cta: linear-gradient(135deg, #8f5608, #a8650b);
@@ -152,5 +155,30 @@
   --q-header-gap: 8px;
   --q-section-gap: 8px;
   --q-grid-gap: 14px;
+
+    /* 字号层级（22px 封顶，儿童产品克制感；字重不在此声明：display 700 / title 600 / body 400 / caption 400，由各组件规则指定） */
+    --font-display: 22px;
+    --font-title: 15px;
+    --font-body: 13px;
+    --font-caption: 12px;
+
+    /* 阴影分层（色相约取 --ink #27324a，pop 带蓝紫相；旧 --shadow 单一值保留，消费方在 components/pages 层逐步迁移） */
+    --shadow-card: 0 1px 2px rgba(39, 50, 74, .04), 0 2px 8px rgba(39, 50, 74, .04);
+    --shadow-card-hover: 0 4px 12px rgba(39, 50, 74, .08);
+    --shadow-pop: 0 6px 20px rgba(58, 102, 200, .20);
+
+    /* 圆角分层（sm 控件 / md 卡片面板 / pill 胶囊；工具栏局部 --toolbar-*-radius: 6px 保留不动） */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-pill: 999px;
+
+    /* 交互态：focus 光晕（取 --brand 15%）；配置页控件/主 CTA 高度（高于工具栏紧凑档，低于 48px） */
+    --ring-focus: 0 0 0 3px rgba(51, 95, 181, .15);
+    --height-control: 34px;
+    --height-cta: 40px;
+
+    /* 掌握度色块（单元行五格：已掌握/未掌握） */
+    --level-done: var(--math-primary);
+    --level-todo: var(--line);
   }
 }

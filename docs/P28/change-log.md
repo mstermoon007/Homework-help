@@ -25,6 +25,34 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-145｜色值令牌统一任务 B：knowledge 构建器模板 CSS 令牌化 + 375 页全量重建（2026-09-26）
+
+- modified:
+  - `dev/build-knowledge-pages.js`（Crawl 层唯一责任模块：①内联 CSS 常量裸色值迁移到 tokens.css 令牌——`#27324a→var(--ink)`(×3)、`#fafbff→var(--soft-bg)`、`#fff→var(--card)`、`#3f6fd1→var(--brand-d)`(×6)、`#7a879c→var(--muted)`、`#e6ecf7/#eef1f7→var(--line)`(×2)、`#eef3ff→var(--brand-bg)`(×2)、`#1f2a44→var(--ink)`、蓝色 rgba 阴影→`var(--shadow-card)`；三级灰 `#9aa5b5`(×2)/`#b3bccd` 及全部字号/圆角/按钮白字 `#fff` 无对应令牌，保持原值不跨层扩张；②`TEMPLATE_VERSION` 3→4，哈希输入变更驱动 375 页全量重写——该文件增量写入按 kbgen:hash 判断且哈希本不含 CSS，升版本是设计内传播路径）
+  - `knowledge/` 下 375 个 KP 详情页 + `knowledge-index.html` + `knowledge-index.json`（构建器机械产物，每页 diff 严格仅 2 行：`<style>` 行与 `kbgen:hash` 行；json 仅 `generatedAt` 时间戳）
+- deleted: 无（剪除旧页 0；无新增/删除文件，URL 集合不变）
+- reason: 色值令牌统一规划任务 B：消除知识页「加载 tokens.css 却零引用」的第五种品牌蓝 `#3f6fd1`（其值恰等于 SSOT `--brand-d`）与整页裸色值。改前已排查全部相关门禁：无任何 check 对知识页全文做哈希（#13 只冻结 381 URL 列表、漂移门禁 `--check` 仅统计 selectable KP 数、SEO 隔离只查关键词/历史）；`build-knowledge-runtime.js` 产物重建后 git 零 diff。映射只用语义精确的既有/ FINAL-143 令牌，不新增令牌（不跨 tokens 层）。
+- tests: ①`npm run build:knowledge`：selectable KP=375、写入/更新 375、剪除 0；批量断言全部知识产物 diff 仅 `<style>`/`kbgen:hash`/json 时间戳三类行，正文/结构/JSON-LD/canonical/OG 零变化；②独立 8013 无缓存端口浏览器回归：详情页 body `rgb(39,50,74)`(ink)、bg `rgb(250,251,255)`(soft-bg)、面包屑收敛 `rgb(95,107,128)`(muted)、链接/按钮 `rgb(63,111,209)`(brand-d)、卡片白底细边 `rgb(227,233,242)`(line)、kw/ghost 浅底 `rgb(238,243,251)`(brand-bg)，4 张卡片渲染正常；索引页 375 个 KP 链接完整、无横向溢出；③`node dev/check-all.js` = **27 PASS / 0 FAIL / 1 SKIP**（#15 无 Chrome 跳过），#13 Sitemap 381 URL 冻结、#14a 375/375、#2 KBL 页面漂移、#16 Bundle hash、#17 构建确定性、FINAL-91 只读门禁全部 PASS。
+- risk: 低-中。源改动仅 1 个构建器文件；377 个产物 diff 虽多但经逐行断言为机械的样式行替换 + 哈希/时间戳，无内容变更。预期内视觉收敛：面包屑文字由 `#7a879c` 沉到 `--muted #5f6b80`、卡片边框/kw 底有 ΔE≈2 以内的极微色相偏移、卡片阴影由蓝相改为 ink 相 `--shadow-card`；正文主色（ink/brand-d/soft-bg/card）为精确替换零变化。任务 C（index.html `--home-*` 别名映射）未启动。回滚：还原构建器 + `git checkout -- knowledge/`（或反向改模板后重新 build:knowledge）。
+
+### FINAL-144｜色值令牌统一任务 A：清理 contact.html 同名异值副本（2026-09-26）
+
+- modified:
+  - `contact.html`（head：删除页内 `<style>` 中私藏的 `:root` 令牌副本 14 个（原 L9-L25），新增 `<link rel="stylesheet" href="shared/styles/tokens.css">` 引用 SSOT，并加注释禁止页内重定义同名令牌；页内其余组件规则一字不动）
+- deleted: 无（14 个同名变量声明以「换源」方式移除，变量本身由 SSOT 供给）
+- reason: 色值令牌统一规划任务 A（经分析确认 contact 副本是当前唯一「改 SSOT 不生效 + 同名异值漂移」实害点，FINAL-143 的 `--grad-hero` 新值即因此在 contact 零生效）。删除前已逐一盘点：contact 共消费 14 个变量（`--bg/--card/--ink/--muted/--line/--line-strong/--brand/--brand-d/--brand-bg/--ok/--shadow/--radius-card/--grad-hero/--grad-logo`），SSOT 全部供给；页面无 `@media print`（符合 06-PRESENTATION §4 契约）。5 个值向 SSOT 收敛（任务预期）：`--brand #5b8def→#335fb5`、`--muted #7a879c→#5f6b80`、`--ok #22a06b→#1c7d52`、`--grad-hero` 旧浅蓝→FINAL-143 深渐变（白字对比度随之提升）、`--grad-logo` 起点同步沉蓝；其余 9 个值本就相同，零变化。
+- tests: ①改前留 computed-style 基线（brand `#5b8def`、hero 浅蓝渐变）与整页截图；改后独立 8012 无缓存端口复测：`:root` 14 变量全部解析为 SSOT 值（brand `#335fb5`、nav-brand computed color `rgb(51,95,181)`、hero 背景为「8% 白径向高光 + 135deg #335fb5→#356fb2」双层渐变），无未定义变量；②结构快照：导航/Hero/2 张卡片/拨号链接+复制按钮/4 条联系说明/footer 备案链接完整，`scrollWidth==innerWidth` 无横向溢出，hero 白字保持白色；③`node dev/check-all.js` = **27 PASS / 0 FAIL / 1 SKIP**（#15 无 Chrome 跳过，与基线一致），含 #13 Sitemap 381 URL 冻结、#2 KBL 页面漂移、#16 Bundle hash、FINAL-91 只读门禁全部 PASS。
+- risk: 低。单文件改源（内联副本 → 外链 SSOT），无 JS/结构变更。预期内视觉变化仅 5 个色值收敛（蓝色整体沉一档、hero 明显加深），已浏览器实测确认无破版；tokens.css 走 `@layer tokens`，页内非分层组件规则引用其自定义属性不受层级影响。后续任务 B（knowledge 构建器模板令牌化）、任务 C（index `--home-*` 别名）未启动，不在本任务范围。回滚：还原 contact.html 单文件。
+
+### FINAL-143｜设计令牌对齐第 1 步：新增 5 组 15 令牌 + 加深 --grad-hero（2026-09-26）
+
+- modified:
+  - `shared/styles/tokens.css`（@layer tokens :root 内：①`--grad-hero` 由浅蓝三段渐变改为「右上角 8% 白径向高光 + 135deg `--brand #335fb5 → --math-primary #356fb2`」双层深渐变；②新增 15 个令牌——字号 `--font-display/title/body/caption` = 22/15/13/12px；阴影 `--shadow-card` / `--shadow-card-hover` / `--shadow-pop`；圆角 `--radius-sm/md/pill` = 6/10/999px；交互态 `--ring-focus` / `--height-control` 34px / `--height-cta` 40px；掌握度 `--level-done`(=`--math-primary`) / `--level-todo`(=`--line`)）
+- deleted: 无
+- reason: 用户「裸色值/宽松密度翻译到现有设计语言」方案第 1-2 步；经 AskUserQuestion 确认本次**仅 tokens 层**，components/states/pages 层改造跨层另开任务。纯增量预备令牌，不引入新色相、不放松密度、不删不改旧令牌（`--shadow`/`--radius-card`/`--toolbar-*-radius` 全部原样保留，9 处 `--shadow` 消费方零改动）。方案 6 处与源码不符之处已按当前仓库修正：`--spacing-lg: 24px` 已存在不新增；蓝紫渐变实为 `--toolbar-btn-grad`/`--toolbar-chip-grad`（#3a66c8→#4a3fb8），`--grad-cta` 是暖棕橙 #8f5608→#a8650b；`--brand-soft` 不存在（应为 `--brand-bg`）；间距命名为 `--spacing-md/lg` 而非 `--spacing-m/l`；现状卡片圆角令牌是 `--radius-card: 16px` 而非「6px 统一」；`--grad-hero` 消费面见 tests③。
+- tests: ①`node dev/check-all.js` = **27 PASS / 0 FAIL / 1 SKIP**（#15 Browser E2E 因命令行环境无 Chrome 跳过，与今日既有基线一致），FINAL-91 只读门禁 PASS、冻结文件零污染；②浏览器无缓存回归（独立 8011 端口起服）：select.html 15 个新令牌 `getComputedStyle` 全部解析为预期值（`--level-done` 正确级联为 `#356fb2`、`--level-todo` 为 `#e3e9f2`），`--grad-hero` 解析为双层渐变；无消费方变更，`#gradeSelect` 高度仍 44px、5 个 select 正常；index.html 标题/底色正常；③消费面实查：tokens.css 由 index/select/practice/faq + 全部 knowledge 页加载，但 `var(--grad-hero)` 全站唯一文本引用在 contact.html，而 **contact.html 不加载 tokens.css**（页内 `<style>` L10-25 私藏令牌副本，且 `--brand #5b8def`、`--muted #7a879c` 等值与 SSOT 不同）；index/select hero 为页内硬编码（select L80 是旧令牌值的拷贝）。故 `--grad-hero` 新值当前**零渲染消费**，是 pages 层迁移前的预备值，本任务线上视觉零变化。
+- risk: 低。15 个新令牌零消费方（纯增量）；唯一改值的 `--grad-hero` 无渲染消费方；旧令牌未删未变。遗留（本任务不扩修）：contact.html 内联令牌副本与 SSOT 漂移、index/select hero 硬编码，均待后续 pages 层任务统一迁移到 `var(--grad-hero)` 后新值方生效。回滚：还原 tokens.css 单文件。
+
 ### FINAL-142｜P2#6 修复：fill 题型批量 ≥70 整批 abort（2026-09-26）
 
 - modified:
