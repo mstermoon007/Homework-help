@@ -25,6 +25,274 @@
 
 ## 记录（新 → 旧）
 
+### P28-UI-SELECT-LAYOUT-15-VERIFY｜select.html 接入验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-15 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: `node dev/p28/check-sitemap-freeze.js` 单跑通过——"382 条 = 6 公共页 + 375 KP + 索引；逐一 HTTP 200、无 redirect、文件存在、canonical 一致"（select.html 的 canonical 新标签被该检查实测校验）；`npm run check-lint` 通过、`npm run verify:syntax` 通过（297 个文件，0 个错误）、`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP（第 13 项标签已为 382 URL 冻结）。git 状态：工作区含 select.html（LAYOUT-01~15 全部改动）、sitemap.xml、sw.js、dev/check-all.js、dev/p28/check-sitemap-freeze.js、docs/P28/change-log.md，未提交（等用户指示）。
+- risk: 无新增代码风险；SW 预缓存与 sitemap 契约变更随下次发布上线验证。
+
+### P28-UI-SELECT-LAYOUT-15｜select.html 正式接入项目（canonical/sitemap/SW 预缓存/冻结契约）（2026-09-26）
+
+- modified:
+  - `select.html`（head 补 `<link rel="canonical" href="https://home.modouyu.top/select.html">`，满足冻结门禁 canonical 一致性检查）
+  - `sitemap.xml`（按字母序在 practice.html 与 subject-types.html 之间新增 select.html 条目：lastmod 2026-09-26 / weekly / 0.6；既有 math-types/subject-types 转发桩条目保留，兼容历史深链）
+  - `dev/p28/check-sitemap-freeze.js`（TOP_OFFICIAL 增加 'select.html'；头注释页面清单与 381→382 总数说明同步）
+  - `dev/check-all.js`（第 13 项标签 '381 URL 冻结'→'382 URL 冻结'）
+  - `sw.js`（CORE 预缓存数组增加 'select.html'，原 subject-types/math-types 桩保留；不改 APP_VERSION——sw.js 字节变化即触发重装预缓存）
+- deleted: 无
+- reason: 用户要求将二级页面最终结果加入项目并覆盖、进行接入。核实发现改造自 LAYOUT-01 起即直接落在项目 select.html（git tracked，工作区已含全部改动），唯一缺口是集成点：sw.js 预缓存清单、sitemap 冻结集、canonical 均未收录该页（此前仅收录两个转发桩）。
+- tests: 计划执行 `node dev/p28/check-sitemap-freeze.js`（382 URL）、`npm run verify:syntax`、`node dev/check-all.js` 28 PASS。
+- risk: 中。触碰 sitemap 冻结契约与 check-all 门禁脚本（仅扩充官方页集 +1 并同步计数），逻辑未改；SW 预缓存新增条目影响线外更新，需随下次发布验证。
+
+### P28-UI-SELECT-LAYOUT-14-VERIFY｜单元三列验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-14 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome CDP 设备模拟实测——1440：单元网格 3 列（distinctLefts=3，14 卡）；390：媒体规则不生效保持单列（distinctLefts=1）；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-14｜快速模式单元选项改三列（2026-09-26）
+
+- modified:
+  - `select.html`（`#unitGridQuick` 桌面网格由 `repeat(2, minmax(0,1fr))` 改为 `repeat(3, minmax(0,1fr))`；768px 以下仍保持单列，行内卡片样式不变）
+- deleted: 无
+- reason: 用户要求快速模式单元选项分三列。
+- tests: 计划执行浏览器复核（1440 单元三列、390 单列不回归）、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。单行 CSS 数值改动。
+
+### P28-UI-SELECT-LAYOUT-13-VERIFY｜三项样式调整验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-13 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome CDP 设备模拟实测（1440）——①教师模式题型 7 卡单行等列（cardTops 全等、字号 13.12px=.82rem），与快速模式样式一致；②快速模式单元 14 卡两栏 7 行（gridCols=2）；③教师模式选单元后知识点胶囊渲染 3 个，kp-hint 元素 3 个、可见 0 个（display:none 生效，截图确认胶囊后无题型标签）；768px 以下手机端两规则不生效（保持原换行/单列）；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-13｜题型样式统一+快速单元两栏+隐藏知识点题型标签（2026-09-26）
+
+- modified:
+  - `select.html`（①教师模式 `#teacherTypeGrid` 并入快速模式题型单行等列规则（`#typeGridQuick, #teacherTypeGrid`，≥768px 单行 7 列、padding 11px 6px、字号 .82rem），两模式题型样式统一；②快速模式 `#unitGridQuick` 在 ≥768px 改为两栏网格（repeat(2, minmax(0,1fr))），行内卡片样式不变，768px 以下保持单列；③新增 `.kp-chip .kp-hint{ display:none }` 隐藏教师模式知识点胶囊后的题型标签，JS 渲染逻辑不动）
+- deleted: 无
+- reason: 用户要求"快速/教师模式题型选项样式统一；快速模式单元选项分左右两栏；教师模式知识点后的题型标签隐藏"。
+- tests: 计划执行浏览器复核（教师模式题型单行、快速单元两栏、kp 胶囊无题型标签、手机端不回归）、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。纯展示层改动，选择逻辑与生成链未触碰。
+
+### P28-UI-SELECT-LAYOUT-12-VERIFY｜四项布局调整验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果；过程中一次修正：桌面媒体块选择器由 `.select-wrap` 提升为 `.select-page .select-wrap` 以压过基础双类规则——首版 geometric 探测 summaryX=168 未贴左，修正后 summaryX=0）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-12 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome CDP 设备模拟实测——1440：摘要栏贴视口左缘（summaryX=0、宽 300、右侧圆角）、主页链接在摘要卡内左上、顶栏细条已移除、7 个题型按钮单行等列（typeRows=1、卡高 60→42、字号 .82rem）、配置区/单元列表正常；390：底部固定摘要条含主页入口、题型保持自动换行（typeRows=4，768px 以下不强制单行）；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-12｜删顶部细条+主页入摘要栏+摘要栏贴左+题型一行化（2026-09-26）
+
+- modified:
+  - `select.html`（①删除 `.top-home` 顶部细条 HTML 及 CSS；②主页链接移入 aside.config-summary 首行（class=home-link，含卡片内小胶囊样式）；③桌面端（≥1024px）摘要栏贴视口左缘：`.select-wrap` 改 max-width:none、margin:0、padding-left:0，`.select-layout` 首列 300px 固定、次列 minmax(0,1240px) 封顶，`.config-summary` 右侧圆角/去左边框，sticky 保持；≤1023px 底部固定条不变；④快速模式题型网格 `#typeGridQuick` 改 `repeat(auto-fit, minmax(0,1fr))` 强制单行 7 等列，按钮 padding 11px 6px、字号 .82rem；教师/竞赛网格不动）
+- deleted: 无（仅文件内代码块删除/替换）
+- reason: 用户要求"删除顶端导航栏；主页按钮加入本次练习标签；本次练习标签贴最左侧边栏；7 个题型按钮缩小并尽量一行显示"。
+- tests: 计划执行浏览器复核（1440 摘要栏贴左、主页链接在卡内、题型 7 个一行、390 底部条含主页入口、非数学置灰不回归）、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。布局类改动；JS 与生成链未触碰。
+
+### P28-UI-SELECT-LAYOUT-11-VERIFY｜摘要栏左移+主页入口验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-11 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。另将样式注释"13. 右侧摘要栏"修正为"13. 摘要栏（左列）"（纯注释，随本任务一并登记）。
+- tests: Chrome headless 实测 1440/390 两档截图——1440 摘要栏（本次练习+开始练习按钮）位于左列 300px、配置区居右、顶部主页链接可点；390 配置卡纵向堆叠+底部固定摘要条正常（右缘裁切为 headless 最小窗宽 500 已知截图假象）；页脚 联系我们/问题反馈 链接确认已存在未重复添加；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-11｜摘要栏移至左侧 + 顶部增加主页入口（2026-09-26）
+
+- modified:
+  - `select.html`（①`.select-layout` 栅格由 `minmax(0,1fr) 300px` 改为 `300px minmax(0,1fr)`，aside.config-summary 移至 .config-column 之前（左列 300px 右列 1fr）；≤1023px 单列+底部固定条模式与 DOM 顺序无关不受影响；②body 顶部、page-hero 之前新增 `.top-home` 细条内 `主页` 链接（href=index.html）及配套样式；③页脚已有 联系我们/问题反馈 链接（footer-meta 内），按需求核对无重复添加）
+- deleted: 无
+- reason: 用户要求"练习标签调整到左侧、且顶部加主页、最下面加联系我们和问题反馈"；页脚两链接已存在，前两项为新增/调整。
+- tests: 计划执行浏览器复核（1440 摘要栏在左、sticky 正常、主页链接可点、页脚链接在、390 移动端底条正常）、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。栅格换列 + 纯新增导航入口；摘要栏 sticky/底部条样式未动。
+
+### P28-UI-SELECT-LAYOUT-10-VERIFY｜移除顶部导航栏验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-10 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome headless 实测 1440/390 两档截图——导航栏消失、hero 直接顶到页首无空隙、摘要栏与开始按钮渲染正常（390 右缘裁切为 headless 最小窗宽 500 已知截图假象，真实 390 布局已在 LAYOUT-08 以设备模拟验证）；全文 grep 确认无 top-nav/nav-* 残留；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-10｜移除二级页面顶部导航栏（2026-09-26）
+
+- modified:
+  - `select.html`（①删除 body 内 `<nav class="top-nav">` 整块（首页/联系我们/问题反馈三个链接）；②删除样式层第 2 节顶部导航 CSS（.top-nav/.nav-brand/.nav-logo/.nav-links/.nav-link 全套）与 ≤767px 媒体查询中 4 行导航覆盖；③摘要栏 sticky 偏移 `top: calc(60px + 20px)` 改为 `top: 20px`（60px 为原导航高度）。JS 无导航引用，无需改动）
+- deleted: 无（仅文件内代码块删除）
+- reason: 用户要求取消二级页面顶部导航栏；hero 直接顶到页首，摘要栏 sticky 偏移同步修正。
+- tests: 计划执行浏览器复核（导航消失、hero 顶部无空隙、sticky 摘要栏跟随正常、桌面/移动两档）、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。纯删除性改动；返回首页入口随导航移除属需求本身含义，不做替代设计。
+
+### P28-UI-SELECT-LAYOUT-09-VERIFY｜移除深色模式验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-09 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome headless（默认深色偏好）实测截图——删除深色回退段后页面保持浅色渲染（白顶栏/浅底/白卡/蓝 hero/橙 CTA），与主页浅色风格一致；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-09｜移除深色模式回退，背景延续主页浅色（2026-09-26）
+
+- modified:
+  - `select.html`（删除样式层第 17 节 `@media (prefers-color-scheme: dark)` 整段深色回退——该段随 LAYOUT-08 参考稿带入，会使深色偏好系统下页面变暗；删除后页面与主页/共享层一致始终浅色，`--bg: #f3f7fb`。其余样式不动）
+- deleted: 无（仅文件内样式块删除）
+- reason: 用户要求背景颜色延续主页浅色风格；主页与 tokens.css 均无深色模式，二级页不应引入深色分支。
+- tests: 计划执行浏览器复核（dark 偏好下页面仍为浅色）、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。纯删除自动生效的媒体查询分支，浅色路径与 LAYOUT-08 验证态完全一致。
+
+### P28-UI-SELECT-LAYOUT-08-VERIFY｜视觉层美化验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-08 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome CDP 实测——①与参考稿并排渲染对比：1440 浅色模式下 select.html 与参考稿视觉效果逐像素级一致（顶栏/hero/卡片/摘要栏/CTA）；②三档视口：1440 两栏 sticky、900 单列+底部玻璃拟态固定摘要条（按钮完整）、390 纵向堆叠+摘要条换行布局均正常；③深色偏好自动回退渲染正常（headless 默认 dark 实证参考稿深色段可用）；④交互回归：teacher/competition/quick 三模式 stage 切换、按钮显隐、href mode= 参数、非数学科目置灰+提示全部正确（注：回归中一次"切换未生效"经最小化逐步排查为测试脚本自身时序假象，最小化用例 t3-t8 与最终顺序用例均通过）；⑤`npm run check-lint` 通过、`npm run verify:syntax` 通过（297 个文件，0 个错误）、`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP（含 Browser/E2E PASS）。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-08｜select.html 视觉层整体美化（参考设计稿接入）（2026-09-26）
+
+- modified:
+  - `select.html`（仅替换 head 内 `<style>@layer pages{...}</style>` 视觉层为参考设计稿 CSS：页面级 --sp-* 设计变量、玻璃拟态顶栏、hero 光斑网格装饰、卡片悬浮阴影分级、题型/知识点卡蓝色系选中态、摘要栏顶部渐变色条、开始按钮橙色渐变+扫光、平滑入场动画、统一 focus-visible 焦点环、1023px 单列断点合并+底部固定摘要条。DOM 结构与 JS 逻辑零改动——已先 diff 确认参考稿 body+script 与当前文件逐行一致）
+- deleted: 无（仅文件内样式块整体替换）
+- reason: 用户提供参考设计代码，要求延续项目特点优化美化二级页面；参考稿即基于当前 DOM 的纯视觉层重设计，按最小修改原则仅替换样式。
+- tests: 计划执行浏览器复核（1440/900/390 三档视觉、与参考稿渲染对比、模式切换/非数学科目置灰交互回归）、`npm run check-lint`、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。参考稿 CSS 接入 @layer pages 后与共享层覆盖关系同现状；交互逻辑未触碰。
+
+### P28-UI-SELECT-LAYOUT-07-VERIFY｜开始按钮移入摘要栏验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-07 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome CDP 实测——①1440 桌面：开始按钮渲染于"本次练习"栏底部、右对齐，stage 内无页脚按钮；②390 移动（Emulation.setDeviceMetricsOverride）：底栏按钮完整显示（x=248 宽 128，右缘 376=390-14 内边距，scrollWidth=390 无横向溢出；注：headless --window-size=390 因 Chrome 最小窗宽 500 产生裁切假象，非真实缺陷）；③交互：quick/teacher/competition 三模式切换后对应按钮显隐与 href mode= 参数均正确，非数学科目（语文）按钮置灰 disabled+href=# 且科目提示显示；④`npm run check-lint` 通过；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`CHROME_BIN` 启用的 `node dev/check-all.js` 结果为 28 PASS / 0 FAIL / 0 SKIP（含 Browser/E2E 真实浏览器 9 步路径 PASS）。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-07｜开始按钮移入"本次练习"摘要栏（2026-09-26）
+
+- modified:
+  - `select.html`（①删除三个 stage 内的 .sel-footer 开始按钮容器，startBtnQuick/startBtnTeacher/startBtnCompetition 三个按钮原 ID 原文本移入摘要栏 .summary-cta-slot 内，非当前模式按钮加 hidden；②按钮样式选择器 .sel-footer .btn-start 系列改为 .summary-cta-slot .btn-start，视觉属性不变；③.summary-cta-slot 由 48px 占位改为 flex 容器（flex:0 0 auto、右对齐），删除两处窄屏媒体查询中对该占位的固定宽高覆盖与 .sel-footer 残留规则；④新增 .btn-start[hidden]{display:none} 防止 display:inline-flex 覆盖 hidden；⑤showStage() 中按模式同步三个按钮 hidden。updateStartBtnUrl 继续遍历 startBtns 三键更新 href/disabled，逻辑不变）
+- deleted: 无（仅文件内代码块删除）
+- reason: 用户要求将开始按钮调整到"本次练习"摘要栏中；摘要栏原 CTA 占位即为此设计，按钮随模式显隐后每模式仍各自独立跳转。
+- tests: 计划执行浏览器复核（按钮位于摘要栏、三模式显隐正确、math 下 href 含 count=20&difficulty=6、非数学科目置灰）、`npm run check-lint`、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。按钮 ID 与 JS 取值键不变，仅 DOM 位置与显隐方式变化；hidden 兜底由专用 CSS 保证。
+
+### P28-UI-SELECT-LAYOUT-06-VERIFY｜删除练习参数卡验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-06 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome headless 实测渲染后 DOM——countSelect/difficultySelect 元素不存在（仅剩脚本内两处 null 兜底读取源码）、startBtnQuick href 仍含 count=20&difficulty=6、摘要栏渲染 模式/范围/题型/单元 四行且无"参数"行；`npm run check-lint` 通过（未发现违规项）；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`CHROME_BIN` 启用的 `node dev/check-all.js` 结果为 28 PASS / 0 FAIL / 0 SKIP（含 Browser/E2E 真实浏览器 9 步路径 PASS）。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-06｜删除练习参数卡（题量/难度）（2026-09-26）
+
+- modified:
+  - `select.html`（①删除"练习参数"折叠卡整体：details.config-params 含 countSelect/difficultySelect 两个下拉；②删除对应 CSS .config-params/.config-params-grid 及窄屏媒体查询引用；③renderSummaryBody 移除"参数"行及 diffMap；④移除 countSelect/difficultySelect 元素引用与 change 监听。保留 updateStartBtnUrl/ensurePolView 中带 null 兜底的读取（题量 20、难度 normal，与原默认一致），生成 URL 输出不变）
+- deleted: 无（仅文件内代码块删除）
+- reason: 用户要求删除本页面练习参数中的难度与题数；页面不再提供这两项选择，走系统默认值。
+- tests: 计划执行浏览器复核（练习参数卡消失、startBtn href 仍含 count=20&difficulty=6、摘要无参数行、无 console 错误）、`npm run check-lint`、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。生成链读值均有 null 兜底且兜底值等于原默认选中值；难度/题量仍由 URL 传给 practice.html，行为与原默认状态完全一致。
+
+### P28-UI-SELECT-LAYOUT-05-VERIFY｜摘要栏选中内容验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-05 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: 浏览器实测三模式摘要初态正确；快速模式勾选题型/单元并改难度后摘要实时更新为"题型 计算题 / 单元 11～20的认识 / 参数 20 题 · 较难"；`npm run check-lint` 通过；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`CHROME_BIN` 启用的 `node dev/check-all.js` 结果为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-05｜本次练习摘要栏显示用户选中内容（2026-09-26）
+
+- modified:
+  - `select.html`（①摘要容器 summary-body 增加 id=summaryBody；②renderSummary() 在 updateStartBtnUrl() 后新增 renderSummaryBody()：按模式输出 模式/范围(年级·科目·册别)/题型/单元/知识点或模块/参数(题量·难度) 行，全部随既有 renderSummary 调用点刷新；③@layer pages 内新增 .sum-row/.sum-label/.sum-value 展示样式，并在两个窄屏媒体查询中让摘要行变紧凑单行；不加事件、不影响生成链）
+- deleted: 无
+- reason: 用户要求"本次练习"面板显示用户当前选中内容；纯展示填充，数据全部来自既有 state 与下拉框当前值。
+- tests: 计划执行浏览器复核三种模式摘要内容随选择刷新、`npm run check-lint`、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。单元名等动态文本经既有 esc() 转义后注入；摘要栏内容变化不参与任何生成参数计算。
+
+### P28-UI-SELECT-LAYOUT-04-VERIFY｜教师模式题型上移验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-04 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: 浏览器实测教师模式标题顺序为 题型→单元/知识点，teacherTypeGrid 使用默认 type-grid（与快速模式一致），teacher-col-mid 右边框已移除，startBtnTeacher 链接正常；`npm run check-lint` 通过；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`CHROME_BIN` 启用的 `node dev/check-all.js` 结果为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-04｜教师模式题型卡上移与快速模式一致（2026-09-26）
+
+- modified:
+  - `select.html`（教师模式 stageTeacher：题型区块移出三栏 teacher-cols，置于卡片顶部，标题改为与快速模式一致的"题型（可多选）"，teacherTypeGrid 改用默认 type-grid 栅格；剩余"单元/知识点"两栏标题改为"单元 → 知识点（可多选）"；.teacher-col-mid 移除失去分隔对象的 border-right。ID、事件、renderTeacher 逻辑与禁用判断不变）
+- deleted: 无
+- reason: 用户要求教师模式题型卡位置与快速模式一致（范围/内容之前、全宽置顶）；纯 DOM 顺序与标题调整。
+- tests: 计划执行浏览器复核教师模式渲染顺序与选择逻辑、`npm run check-lint`、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。teacherTypeGrid 移出 .teacher-col 后改用默认 .type-grid 列宽（与快速模式一致），属预期视觉变化；其余不动。
+
+### P28-UI-SELECT-LAYOUT-03-VERIFY｜题型卡去数量标签验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-03 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: 浏览器实测快速/教师两模式题型卡仅显示题型名称、单元卡数量标签保留；`npm run check-lint` 通过；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`CHROME_BIN` 启用的 `node dev/check-all.js` 结果为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-03｜题型选项卡不再显示知识点数量（2026-09-26）
+
+- modified:
+  - `select.html`（快速模式 typeGridQuick 与教师模式 teacherTypeGrid 两处题型卡渲染移除 `tc-tag` 数量标签，仅保留题型名称；`cnt` 变量保留用于 0 知识点禁用判断；单元卡、教师模式单元卡、竞赛模块卡的数量标签不变）
+- deleted: 无
+- reason: 用户要求题型选项标签中不显示知识点数量；纯展示调整，不改变选择、禁用与生成逻辑。
+- tests: 计划执行浏览器复核两模式题型卡内容、`npm run check-lint`、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。仅删除展示用 span，不影响事件绑定与状态。
+
+### P28-UI-SELECT-LAYOUT-02-VERIFY｜快速模式题型上移验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-02 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: 浏览器实测快速模式渲染顺序为 题型→单元、startBtnQuick 链接正常；`npm run check-lint` 通过；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`CHROME_BIN` 启用的 `node dev/check-all.js` 结果为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-02｜快速模式题型模块上移至单元之前（2026-09-26）
+
+- modified:
+  - `select.html`（仅快速模式 stageQuick 内 DOM 顺序调整：题型标题与 typeGridQuick 容器移到单元标题与 unitGridQuick 之前，即位于范围卡（年级/科目/册别/模式）与单元之间；不动任何样式、ID、事件与生成参数逻辑；教师模式三栏"单元→知识点→题型"顺序保持不变）
+- deleted: 无
+- reason: 用户要求将题型模块上移到年级、科目与单元中间的位置，形成"范围 → 题型 → 单元"的配置递进；纯布局顺序调整。
+- tests: 计划执行 `npm run check-lint`、`npm run verify:syntax`、本地服务器浏览器复核快速模式渲染顺序与开始练习链接，最后 `node dev/check-all.js`。
+- risk: 低。仅移动两个兄弟节点的先后顺序，JS 均按 ID 取元素，与 DOM 顺序无关。
+
+### P28-UI-SELECT-LAYOUT-01-FIX1｜select 窄屏教师栏仅保留布局复位（2026-09-26）
+
+- modified:
+  - `select.html`（移除窄屏教师模式中新增的顶部分隔线、顶部外边距和顶部内边距；仅保留纵向堆叠所需的左右边框/左右内边距复位）
+- deleted: 无
+- reason: 终审时发现该规则新增了原页面没有的分隔线视觉，超出“只改 DOM 结构和栅格、不动视觉样式”的边界；改回仅做布局复位。
+- tests: 重新执行 `npm run check-lint`、`npm run verify:syntax`、真实 Chrome 三档布局复核与 `CHROME_BIN` 启用的 `node dev/check-all.js`。
+- risk: 低。仅影响 ≤767px 教师模式三栏纵向堆叠后的边框与间距，不影响状态、选择和生成参数。
+
+### P28-UI-SELECT-LAYOUT-01-VERIFY｜select 二级页布局改造验证记录（2026-09-26）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-01 已完成实施，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: `npm run check-lint` 通过；`npm run verify:syntax` 通过（297 个文件，0 个错误）；真实 Chrome CDP 在 1440x900 / 900x700 / 390x844 验证两栏、底部固定条、纵向堆叠、无横向溢出及 quick/teacher/competition 三模式册别显隐；`CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" node dev/check-all.js` 结果为 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 无新增代码风险。浏览器发现的 `/favicon.ico` 404 为仓库既有资源缺失，不属于本次 select.html 布局改动，未扩大范围处理。
+
+### P28-UI-SELECT-LAYOUT-01｜select 二级配置页两栏栅格重排（2026-09-26）
+
+- modified:
+  - `select.html`（仅 UI 层：页内样式纳入 `@layer pages`；主体重排为桌面端左配置/右摘要栅格；范围卡字段按年级、科目、册别、模式排列；题量/难度移入折叠参数卡；快速模式单元容器改为纵向列表；新增无事件摘要 aside 与 CTA 空位；保留全部既有控件 ID、name/data-* 与三个开始按钮）
+- deleted: 无
+- reason: 实施用户确认的二级页面布局改造：导航和 Hero 保持通栏，内容区收窄居中；桌面端 1fr/280px 两栏，摘要 sticky；≤1023px 摘要转底部固定条，≤767px 全部纵向堆叠。仅调整 DOM 顺序、栅格、间距和显隐，不改 tokens/components/toolbar、不接入 shared/styles/pages.css、不改 KBL/POL/Generator 等生成链。
+- tests: 计划执行 `npm run check-lint`、`npm run verify:syntax`、`node dev/check-all.js`，并用本地静态服务器在 1440px/900px/390px 验证布局、三种模式选择和开始练习链接。
+- risk: 中低。主要风险为册别控件移动后模式显隐不同步、固定底部条遮挡内容、教师模式三栏在窄屏挤压；通过保留原 ID/事件绑定、按模式显示原册别控件、响应式底部留白和浏览器三档验证控制。
+
 ### FINAL-145｜色值令牌统一任务 B：knowledge 构建器模板 CSS 令牌化 + 375 页全量重建（2026-09-26）
 
 - modified:

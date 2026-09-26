@@ -165,7 +165,7 @@ run('11. SVG          (契约 + Sanitizer)', 'node --test tests/presentation/svg
 run('12. Security     (eval/Function + AnswerValidator + HTML + KBL写保护)', 'node dev/p28/check-security.js');
 
 // ── 13. Sitemap ──
-run('13. Sitemap      (381 URL 冻结)', 'node dev/p28/check-sitemap-freeze.js', { timeout: 120000 });
+run('13. Sitemap      (382 URL 冻结)', 'node dev/p28/check-sitemap-freeze.js', { timeout: 120000 });
 
 // ── 14. Crawl ──
 run('14a. Crawl       (AI Agent 抓取 375/375)', 'node dev/p28/check-ai-agent-crawl.js', { timeout: 120000 });

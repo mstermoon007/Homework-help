@@ -32,6 +32,7 @@ const CACHE = 'hw-help-5.0.0';  // 必须与 shared/catalog/version.js 的 APP_V
 const CORE = [
   './',
   'index.html',
+  'select.html',
   'math-types.html',
   'subject-types.html',
   'practice.html',

@@ -4,415 +4,922 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>选择练习 · 小学练习本</title>
+<link rel="canonical" href="https://home.modouyu.top/select.html">
 <link rel="stylesheet" href="shared/styles/tokens.css">
 <link rel="stylesheet" href="shared/styles/base.css">
 <link rel="stylesheet" href="shared/styles/components.css">
 <link rel="stylesheet" href="shared/styles/styles.css">
 <style>
-  body {
-    font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
-    background: var(--bg);
-    min-height: 100vh;
-    font-size: 14px;
-    -webkit-tap-highlight-color: transparent;
-  }
+@layer pages {
+/* ============================================================
+   选择练习页 · 视觉层（不含任何业务逻辑）
+   —— 所有 ID / class / DOM 结构均与原实现保持一致
+   ============================================================ */
 
-  /* ============ 顶部导航 ============ */
-  .top-nav {
-    background: var(--card);
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+/* ---------- 0. 页面级设计变量 ---------- */
+.select-page{
+  --sp-ink-soft:   #5a6b85;
+  --sp-blue-1:     #123a70;
+  --sp-blue-2:     #2f6fc4;
+  --sp-blue-3:     #4a90d9;
+  --sp-orange-1:   #ffa63d;
+  --sp-orange-2:   #f2801a;
+  --sp-radius-sm:  10px;
+  --sp-radius:     14px;
+  --sp-radius-lg:  20px;
+  --sp-shadow-sm:  0 1px 2px rgba(15,35,70,.05);
+  --sp-shadow:     0 1px 2px rgba(15,35,70,.04), 0 16px 34px -26px rgba(15,35,70,.55);
+  --sp-shadow-lg:  0 2px 6px rgba(15,35,70,.06), 0 26px 52px -34px rgba(15,35,70,.6);
+  --sp-ring:       0 0 0 4px rgba(74,144,217,.18);
+  --sp-ease:       cubic-bezier(.22,.61,.36,1);
+}
+
+/* ---------- 1. 全局 ---------- */
+*,
+*::before,
+*::after{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body.select-page{
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system,
+               BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink, #22314a);
+  min-height: 100vh;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(1100px 560px at 8% -12%, rgba(74,144,217,.13), transparent 62%),
+    radial-gradient(900px 480px at 100% -4%, rgba(255,166,61,.11), transparent 58%),
+    var(--bg, #f4f7fc);
+  background-attachment: fixed;
+}
+
+/* 统一焦点环（键盘可达性） */
+.select-page :focus-visible{
+  outline: 2px solid var(--brand, #2b6cc0);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ---------- 3. 摘要栏主页链接 ---------- */
+.config-summary .home-link{
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--brand, #2b6cc0);
+  text-decoration: none;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(74,144,217,.09);
+  transition: background .18s var(--sp-ease, ease), transform .18s var(--sp-ease, ease);
+}
+.config-summary .home-link:hover{
+  background: rgba(74,144,217,.16);
+  transform: translateY(-1px);
+}
+
+/* ---------- 4. 主视觉横幅 ---------- */
+.page-hero{
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(28px, 4.5vw, 48px) clamp(14px, 3vw, 28px);
+  color: #fff;
+  background: linear-gradient(130deg, var(--sp-blue-1) 0%, var(--sp-blue-2) 46%, var(--sp-blue-3) 100%);
+}
+.page-hero::before{
+  content: "";
+  position: absolute;
+  inset: -60% -10% -20% -10%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(420px 260px at 14% 34%, rgba(255,255,255,.24), transparent 70%),
+    radial-gradient(380px 240px at 86% 8%, rgba(140,205,255,.36), transparent 72%),
+    radial-gradient(300px 200px at 70% 100%, rgba(255,166,61,.20), transparent 70%);
+}
+.page-hero::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(120% 110% at 0% 0%, #000 12%, transparent 72%);
+  mask-image: radial-gradient(120% 110% at 0% 0%, #000 12%, transparent 72%);
+}
+.page-hero .hero-inner{
+  max-width: 1160px;
+  margin: 0 auto;
+}
+.page-hero h1{
+  margin: 0 0 8px;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 900;
+  letter-spacing: .02em;
+  text-shadow: 0 2px 14px rgba(6,26,56,.34);
+}
+.page-hero .hero-desc{
+  margin: 0;
+  max-width: 62ch;
+  font-size: .92rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,.9);
+  text-shadow: 0 1px 6px rgba(6,26,56,.28);
+}
+
+/* ---------- 4. 主容器与两栏栅格 ---------- */
+.select-page .select-wrap{
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 24px clamp(14px, 3vw, 28px) 56px;
+}
+
+.select-layout{
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.config-column{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+.config-column > .sel-block,
+.config-column > details.sel-block{ margin-bottom: 0; }
+
+/* 桌面端：摘要栏贴视口左缘（停靠式侧栏） */
+@media (min-width: 1024px){
+  .select-page .select-wrap{
+    max-width: none;
+    margin: 0;
+    padding: 24px 40px 56px 0;
   }
-  .top-nav .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--brand);
-    text-decoration: none;
+  .select-page .select-layout{
+    grid-template-columns: 300px minmax(0, 1240px);
   }
-  .top-nav .nav-logo {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .select-page .config-summary{
+    border-radius: 0 var(--sp-radius-lg) var(--sp-radius-lg) 0;
+    border-left: none;
   }
-  .top-nav .nav-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-  }
-  .nav-links {
-    display: flex;
-    align-items: center;
+}
+
+/* ---------- 5. 通用卡片 ---------- */
+.sel-block{
+  position: relative;
+  background: var(--card, #fff);
+  border: 1px solid var(--line, #e5edf8);
+  border-radius: var(--sp-radius-lg);
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--sp-shadow);
+  transition: box-shadow .24s var(--sp-ease), border-color .24s var(--sp-ease);
+}
+.sel-block:hover{
+  box-shadow: var(--sp-shadow-lg);
+  border-color: rgba(74,144,217,.24);
+}
+
+.sel-block .blk-title{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: .95rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+  color: var(--ink, #22314a);
+}
+.sel-block .blk-title::before{
+  content: "";
+  flex: 0 0 auto;
+  width: 4px;
+  height: 15px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--sp-blue-3), var(--sp-blue-2));
+}
+.sel-block .blk-title:not(:first-child){ margin-top: 24px; }
+
+/* ---------- 6. 顶部筛选条 ---------- */
+.filter-bar{
+  background: var(--card, #fff);
+  border: 1px solid var(--line, #e5edf8);
+  border-radius: var(--sp-radius-lg);
+  padding: 20px;
+  margin-bottom: 0;
+  box-shadow: var(--sp-shadow);
+}
+
+.config-range{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: end;
+}
+.config-range .filter-item{
+  min-width: 0;
+  flex: none;
+}
+
+.filter-item{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.filter-item .f-label{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .03em;
+  color: var(--sp-ink-soft);
+}
+
+.filter-item select{
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 46px;
+  padding: 0 40px 0 15px;
+  border: 1.5px solid var(--line-strong, #d8e3f3);
+  border-radius: var(--sp-radius);
+  background-color: #fff;
+  color: var(--ink, #22314a);
+  font-family: inherit;
+  font-size: .94rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--sp-shadow-sm);
+  transition: border-color .18s var(--sp-ease), box-shadow .18s var(--sp-ease),
+              background-color .18s var(--sp-ease);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235a6b85' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.filter-item select:hover{
+  border-color: #b6cbe9;
+  background-color: #fcfdff;
+}
+.filter-item select:focus{
+  outline: none;
+  border-color: var(--brand, #2b6cc0);
+  box-shadow: var(--sp-ring);
+}
+
+/* 册别分段控件 */
+.config-book{ display: flex; flex-direction: column; gap: 8px; }
+.config-book[hidden]{ display: none !important; }
+.config-book .book-seg{ margin: 0; }
+
+.book-seg{
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  margin: 12px 0 14px;
+  background: #eef3fa;
+  border: 1px solid var(--line, #e5edf8);
+  border-radius: var(--sp-radius);
+}
+
+.book-seg-btn{
+  border: 0;
+  background: transparent;
+  color: var(--sp-ink-soft);
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: .86rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color .16s var(--sp-ease), background .16s var(--sp-ease),
+              box-shadow .16s var(--sp-ease);
+}
+.book-seg-btn:hover{
+  color: var(--brand, #2b6cc0);
+  background: rgba(255,255,255,.78);
+}
+.book-seg-btn.on{
+  background: #fff;
+  color: var(--brand, #2b6cc0);
+  box-shadow: 0 1px 2px rgba(15,35,70,.10), 0 5px 12px -8px rgba(15,35,70,.7);
+}
+
+/* ---------- 7. 模式说明 ---------- */
+.mode-desc{
+  position: relative;
+  margin: 0 0 18px;
+  padding: 12px 18px 12px 18px;
+  border-radius: 0 var(--sp-radius) var(--sp-radius) 0;
+  border-left: 3px solid var(--sp-blue-3);
+  background: linear-gradient(90deg, rgba(74,144,217,.10), rgba(74,144,217,0) 78%);
+  color: var(--sp-ink-soft);
+  font-size: .89rem;
+  line-height: 1.7;
+}
+.mode-desc:empty{ display: none; }
+
+/* 非数学科目提示 */
+.subject-notice{
+  margin: 0 auto 18px;
+  max-width: 720px;
+  padding: 13px 20px;
+  border-radius: var(--sp-radius);
+  background: #fff8ea;
+  border: 1px solid #ffe0ad;
+  color: #9a5b06;
+  font-size: .91rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 8px 22px -20px rgba(154,91,6,.9);
+}
+
+/* ---------- 8. 舞台切换 ---------- */
+.stage{ display: none; }
+.stage.active{
+  display: block;
+  animation: sp-fade-up .34s var(--sp-ease) both;
+}
+@keyframes sp-fade-up{
+  from{ opacity: 0; transform: translateY(8px); }
+  to  { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- 9. 题型 / 单元网格 ---------- */
+.type-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 10px;
+}
+
+/* 快速/教师模式：7 个题型按钮统一单行等列（桌面/平板，手机保持自动换行） */
+@media (min-width: 768px){
+  #typeGridQuick,
+  #teacherTypeGrid{
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     gap: 8px;
   }
-  .nav-link {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--muted);
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: all 0.2s;
+  #typeGridQuick .type-card,
+  #teacherTypeGrid .type-card{
+    padding: 11px 6px;
+    font-size: .82rem;
   }
-  .nav-link:hover {
-    color: var(--brand);
-    background: var(--brand-bg, #eef5ff);
-  }
-  .nav-link.active {
-    color: var(--brand);
-    background: var(--brand-bg, #eef5ff);
-  }
+}
 
-  /* ============ 主视觉区（小型横幅） ============ */
-  .page-hero {
-    background: linear-gradient(160deg, #4A90D9 0%, #6DB3F2 40%, #7EB6F0 100%);
-    color: #fff;
-    padding: 28px 24px;
-  }
-  .page-hero .hero-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .page-hero h1 {
-    font-size: 1.5rem;
-    font-weight: 900;
-    margin-bottom: 6px;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  }
-  .page-hero .hero-desc {
-    font-size: 0.85rem;
-    opacity: 0.95;
-    line-height: 1.6;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.25);
-  }
+.type-card{
+  position: relative;
+  padding: 15px 12px;
+  border: 1.5px solid var(--line-strong, #d8e3f3);
+  border-radius: var(--sp-radius);
+  background: #fff;
+  color: var(--ink, #22314a);
+  font-family: inherit;
+  font-size: .94rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: var(--sp-shadow-sm);
+  transition: transform .16s var(--sp-ease), border-color .16s var(--sp-ease),
+              color .16s var(--sp-ease), background .16s var(--sp-ease),
+              box-shadow .16s var(--sp-ease);
+}
+.type-card:hover:not(.disabled){
+  border-color: var(--brand, #2b6cc0);
+  color: var(--brand, #2b6cc0);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -16px rgba(43,108,192,.85);
+}
+.type-card:active:not(.disabled){ transform: translateY(0); }
 
-  /* ============ 选择区 ============ */
-  .select-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px 24px 40px;
-  }
+.type-card.on{
+  background: linear-gradient(135deg, var(--sp-blue-2), var(--sp-blue-3));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 12px 26px -14px rgba(43,108,192,.95);
+}
+.type-card.on:hover{ color: #fff; }
 
-  /* 上部筛选条（模式/科目/年级 下拉） */
-  .filter-bar {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: flex-end;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  .filter-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 150px;
-    flex: 1 1 150px;
-  }
-  .filter-item .f-label {
-    font-size: 0.88rem;
-    font-weight: 800;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .filter-item select {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 100%;
-    height: 44px;
-    padding: 0 16px;
-    padding-right: 36px;
-    border: 1.5px solid var(--line-strong, #d6e2f2);
-    border-radius: 10px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237a879c' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-  }
-  .filter-item select:focus {
-    outline: 2px solid rgba(74,144,217,0.35);
-    outline-offset: 1px;
-    border-color: var(--brand);
-  }
+.type-card.disabled{
+  opacity: .42;
+  cursor: not-allowed;
+  filter: grayscale(.4);
+  box-shadow: none;
+}
 
-  /* 中部主视觉区（题型展示） */
-  .stage {
-    display: none;
-  }
-  .stage.active { display: block; }
+.type-card .tc-tag{
+  display: block;
+  margin-top: 5px;
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: var(--sp-ink-soft);
+  transition: color .16s var(--sp-ease);
+}
+.type-card.on .tc-tag{ color: rgba(255,255,255,.88); }
 
-  .sel-block {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 18px;
-  }
-  .sel-block .blk-title {
-    font-size: 0.92rem;
-    font-weight: 800;
-    color: var(--ink);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+.type-empty{
+  grid-column: 1 / -1;
+  padding: 28px 0;
+  text-align: center;
+  color: var(--sp-ink-soft);
+  font-size: .89rem;
+}
 
-  /* 题型网格 */
-  .type-grid {
+/* 单元列表（纵向卡片） */
+.unit-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.unit-list .type-card{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  padding: 14px 18px;
+}
+.unit-list .type-card .tc-tag{
+  margin-top: 0;
+  flex: 0 0 auto;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(74,144,217,.10);
+  color: var(--sp-ink-soft);
+  font-size: .72rem;
+}
+.unit-list .type-card.on .tc-tag{
+  background: rgba(255,255,255,.20);
+  color: rgba(255,255,255,.95);
+}
+
+/* 快速模式：单元选项三列（桌面/平板，手机保持单列） */
+@media (min-width: 768px){
+  #unitGridQuick{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
   }
-  .book-seg {
-    display: flex; gap: 8px; margin: 12px 0 14px; flex-wrap: wrap;
-  }
-  .book-seg-btn {
-    border: 1.5px solid var(--line-strong, #d6e2f2); background: #fff;
-    color: var(--ink, #22314a); padding: 6px 18px; border-radius: 20px;
-    font-size: 0.85rem; cursor: pointer; transition: all .15s ease;
-  }
-  .book-seg-btn:hover { border-color: var(--brand, #2b6cc0); color: var(--brand, #2b6cc0); }
-  .book-seg-btn.on { background: var(--brand, #2b6cc0); border-color: var(--brand, #2b6cc0); color: #fff; }
-  .type-card.disabled { opacity: .45; cursor: not-allowed; }
-  .type-card {
-    border: 1.5px solid var(--line-strong, #d6e2f2);
-    background: #fff;
-    color: var(--ink);
-    border-radius: 12px;
-    padding: 14px 12px;
-    text-align: center;
-    font-size: 0.95rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    user-select: none;
-    position: relative;
-  }
-  .type-card .tc-tag {
-    display: block;
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-  .type-card:hover { border-color: var(--brand); color: var(--brand); }
-  .type-card.on {
-    background: var(--grad-cta);
-    color: #fff;
-    border-color: transparent;
-    box-shadow: 0 4px 14px rgba(245,166,35,0.35);
-  }
-  .type-card.on .tc-tag { color: rgba(255,255,255,0.9); }
-  /* 竞赛知识模块卡（C1–C9） */
-  .module-card { text-align: left; }
-  .module-card .mc-icon { font-size: 18px; margin-right: 4px; }
-  .module-card .mc-desc {
-    display: block; font-size: 0.72rem; font-weight: 500; color: var(--muted);
-    margin-top: 4px; line-height: 1.5;
-  }
-  .module-card.on .mc-desc { color: rgba(255,255,255,0.92); }
-  .type-empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: var(--muted);
-    padding: 24px 0;
-    font-size: 0.9rem;
-  }
+}
 
-  /* 模式说明（选择器下沿，单行，与正文一致无特殊格式） */
-  .mode-desc {
-    font-size: 0.88rem;
-    color: var(--muted);
-    line-height: 1.6;
-    margin: -6px 0 16px;
-  }
+/* ---------- 10. 竞赛模块卡 ---------- */
+.module-card{
+  text-align: left;
+  padding: 16px 16px 14px;
+  line-height: 1.5;
+}
+.module-card .mc-icon{
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 1.05rem;
+  vertical-align: -1px;
+}
+.module-card .mc-desc{
+  display: block;
+  margin-top: 7px;
+  font-size: .73rem;
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--sp-ink-soft);
+}
+.module-card.on .mc-desc{ color: rgba(255,255,255,.9); }
 
-  /* 题型板块右下角操作 */
-  .sel-footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 16px;
-    padding-top: 14px;
+/* ---------- 11. 教师模式两栏 ---------- */
+.teacher-cols{
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+}
+.teacher-col{
+  flex: 1 1 0;
+  min-width: 0;
+}
+.teacher-col-mid{
+  border-left: 1px dashed var(--line-strong, #d8e3f3);
+  padding-left: 22px;
+}
+.teacher-col-right{
+  border-left: 1px dashed var(--line-strong, #d8e3f3);
+  padding-left: 22px;
+}
+.teacher-col .type-grid{
+  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+}
+.teacher-col .col-label{
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--brand, #2b6cc0);
+  opacity: .9;
+}
+
+/* ---------- 12. 知识点胶囊 ---------- */
+.kp-grid{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.kp-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border: 1.5px solid var(--line-strong, #d8e3f3);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink, #22314a);
+  font-family: inherit;
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: var(--sp-shadow-sm);
+  transition: transform .16s var(--sp-ease), border-color .16s var(--sp-ease),
+              color .16s var(--sp-ease), background .16s var(--sp-ease),
+              box-shadow .16s var(--sp-ease);
+}
+.kp-chip:hover{
+  border-color: var(--brand, #2b6cc0);
+  color: var(--brand, #2b6cc0);
+  background: #f6faff;
+  transform: translateY(-1px);
+}
+.kp-chip.on{
+  background: linear-gradient(135deg, var(--sp-blue-2), var(--sp-blue-3));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 10px 22px -14px rgba(43,108,192,.95);
+}
+.kp-chip.on:hover{ color: #fff; background: linear-gradient(135deg, var(--sp-blue-2), var(--sp-blue-3)); }
+
+/* 教师模式：知识点胶囊后的题型标签隐藏 */
+.kp-chip .kp-hint{ display: none; }
+
+.kp-chip .kp-hint,
+.kp-chip .meta{
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(74,144,217,.10);
+  font-size: .68rem;
+  font-weight: 700;
+  color: #5a7aa8;
+  white-space: nowrap;
+  transition: background .16s var(--sp-ease), color .16s var(--sp-ease);
+}
+.kp-chip.on .kp-hint,
+.kp-chip.on .meta{
+  background: rgba(255,255,255,.22);
+  color: rgba(255,255,255,.95);
+}
+
+.kp-group{ margin-bottom: 16px; }
+.kp-group:last-child{ margin-bottom: 0; }
+.kp-group-title{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  font-size: .79rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+  color: var(--sp-ink-soft);
+}
+.kp-group-title.muted{ font-weight: 600; opacity: .85; }
+.kp-group-title .mod-on{
+  padding: 1px 9px;
+  border-radius: 999px;
+  background: var(--brand, #2b6cc0);
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 700;
+}
+
+.chosen-empty{
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  border: 1.5px dashed var(--line-strong, #d8e3f3);
+  border-radius: var(--sp-radius);
+  background: rgba(244,248,253,.7);
+  color: var(--sp-ink-soft);
+  font-size: .84rem;
+  text-align: center;
+}
+
+/* ---------- 13. 摘要栏（左列） ---------- */
+.config-summary{
+  position: sticky;
+  top: 20px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  min-height: 190px;
+  margin: 0;
+  padding: 20px;
+  border-radius: var(--sp-radius-lg);
+  background: var(--card, #fff);
+  border: 1px solid var(--line, #e5edf8);
+  box-shadow: var(--sp-shadow-lg);
+  overflow: hidden;
+}
+.config-summary::before{
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--sp-blue-2), var(--sp-blue-3) 55%, var(--sp-orange-1));
+}
+.config-summary:hover{ box-shadow: var(--sp-shadow-lg); }
+
+.summary-title{ margin-top: 4px; }
+
+.summary-body{
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.summary-body .sum-row{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--line, #e5edf8);
+  font-size: .84rem;
+}
+.summary-body .sum-row:last-child{ border-bottom: none; }
+.summary-body .sum-label{
+  flex: 0 0 auto;
+  color: var(--sp-ink-soft);
+  font-weight: 600;
+}
+.summary-body .sum-value{
+  min-width: 0;
+  text-align: right;
+  font-weight: 700;
+  color: var(--ink, #22314a);
+  word-break: break-word;
+}
+
+.summary-cta-slot{
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line, #e5edf8);
+}
+
+/* 开始按钮 */
+.btn-start{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 34px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--sp-orange-1), var(--sp-orange-2));
+  color: #fff;
+  font-family: inherit;
+  font-size: .98rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 12px 26px -12px rgba(242,128,26,.85);
+  transition: transform .2s var(--sp-ease), box-shadow .2s var(--sp-ease);
+}
+.btn-start::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 32%, rgba(255,255,255,.42) 50%, transparent 68%);
+  transform: translateX(-130%);
+  transition: transform .65s var(--sp-ease);
+  pointer-events: none;
+}
+.btn-start:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px -14px rgba(242,128,26,.95);
+}
+.btn-start:hover::after{ transform: translateX(130%); }
+.btn-start:active{ transform: translateY(0); }
+
+.btn-start[hidden]{ display: none !important; }
+
+.btn-start.disabled,
+.btn-start.disabled:hover{
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  pointer-events: auto;
+}
+.btn-start.disabled::after{ display: none; }
+
+/* ---------- 14. 页脚 ---------- */
+.site-footer{
+  max-width: 1160px;
+  margin: 0 auto 28px;
+  padding: 22px 20px 18px;
+  border-top: 1px solid var(--line, #e5edf8);
+  color: var(--sp-ink-soft);
+  font-size: .79rem;
+  line-height: 1.9;
+  text-align: center;
+}
+.site-footer .footer-meta{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.site-footer a{
+  color: var(--sp-ink-soft);
+  text-decoration: none;
+  transition: color .18s var(--sp-ease);
+}
+.site-footer a:hover{
+  color: var(--brand, #2b6cc0);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.site-footer .footer-sep{ opacity: .45; }
+.site-footer .footer-beian img{ vertical-align: -2px; }
+
+/* ============================================================
+   15. 响应式
+   ============================================================ */
+
+/* 平板：单列 + 底部固定摘要条 */
+@media (max-width: 1023px){
+  .select-page .select-wrap{
+    padding-bottom: calc(96px + 24px);
   }
-  .sel-footer .btn-start {
-    display: inline-flex;
+  .select-layout{
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .config-summary{
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    min-height: 76px;
+    margin: 0;
+    padding: 10px clamp(14px, 3vw, 22px);
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 30px;
-    font-size: 1rem;
-    font-weight: 800;
-    color: #fff;
-    background: var(--grad-cta);
+    gap: 16px;
+    border-radius: 0;
     border: none;
-    border-radius: 22px;
-    cursor: pointer;
-    box-shadow: 0 6px 18px rgba(245,166,35,0.35);
-    transition: all 0.2s;
-    text-decoration: none;
-    letter-spacing: 1px;
+    border-top: 1px solid var(--line, #e5edf8);
+    background: rgba(255,255,255,.94);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    box-shadow: 0 -14px 34px -26px rgba(15,35,70,.85);
   }
-  .sel-footer .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(245,166,35,0.45); }
-  .sel-footer .btn-start.disabled,
-  .sel-footer .btn-start.disabled:hover {
-    opacity: .5; cursor: not-allowed; box-shadow: none; transform: none; pointer-events: auto;
+  .config-summary::before{ display: none; }
+  .config-summary .summary-title{
+    margin: 0;
+    flex: 0 0 auto;
   }
-  .subject-notice {
-    margin: 6px auto 0; max-width: 720px; padding: 12px 18px;
-    background: #fff7e6; border: 1px solid #ffe1a8; color: #a9650a;
-    border-radius: 12px; font-size: .92rem; text-align: center;
-  }
-
-  /* 教师模式：左栏题目模块 + 右栏知识点模块（两栏布局） */
-  .teacher-cols {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-  }
-  .teacher-col {
-    flex: 1 1 0;
+  .config-summary .summary-title::before{ display: none; }
+  .config-summary .summary-body{
+    flex: 1 1 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 16px;
     min-width: 0;
+    overflow: hidden;
   }
-  .teacher-col-right {
-    border-left: 1px solid var(--line-strong, #d6e2f2);
-    padding-left: 20px;
+  .config-summary .summary-body .sum-row{
+    justify-content: flex-start;
+    gap: 5px;
+    padding: 0;
+    border-bottom: none;
+    font-size: .76rem;
   }
-  .teacher-col .type-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  .config-summary .summary-cta-slot{
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    flex: 0 0 auto;
   }
-  .teacher-col .col-label {
-    font-size: 13px;
-    color: var(--brand, #2b6cc0);
-    font-weight: 600;
-    margin-bottom: 10px;
-    padding-left: 2px;
+  .config-summary .btn-start{
+    padding: 11px 26px;
+    font-size: .9rem;
   }
-  .teacher-col-mid {
-    border-left: 1px solid var(--line-strong, #d6e2f2);
-    border-right: 1px solid var(--line-strong, #d6e2f2);
-    padding: 0 20px;
-  }
-  /* 教师模式：知识点模块 */
-  .kp-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .kp-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border: 1.5px solid var(--line-strong, #d6e2f2);
-    border-radius: 999px;
-    background: #fff;
-    color: var(--ink);
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .kp-chip .meta { font-size: 0.7rem; font-weight: 600; color: var(--muted); }
-  .kp-chip .kp-hint { font-size: 0.7rem; font-weight: 600; color: var(--muted); }
-  .kp-chip:hover { border-color: var(--brand); color: var(--brand); }
-  .kp-chip.on {
-    background: var(--brand);
-    color: #fff;
-    border-color: var(--brand);
-  }
-  .kp-chip.on .meta { color: rgba(255,255,255,0.9); }
-  .kp-chip.on .kp-hint { color: rgba(255,255,255,0.9); }
-  .kp-group { margin-bottom: 14px; }
-  .kp-group-title {
-    font-size: 0.8rem;
-    font-weight: 800;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-  .kp-group-title.muted { font-weight: 600; }
-  .kp-group-title .mod-on {
-    display: inline-block;
-    margin-left: 6px;
-    padding: 1px 8px;
-    border-radius: 999px;
-    background: var(--brand);
-    color: #fff;
-    font-size: 0.68rem;
-    font-weight: 700;
-    vertical-align: 1px;
+}
+
+/* 手机 */
+@media (max-width: 767px){
+  body.select-page{ font-size: 14.5px; }
+
+  .page-hero{ padding: 24px 16px 28px; }
+
+  .select-page .select-wrap{
+    padding: 16px 14px calc(104px + 18px);
   }
 
-  .site-footer {
-    max-width: 1200px;
-    margin: 0 auto 24px;
-    padding: 20px 16px 16px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 0.8rem;
-    line-height: 1.9;
-    border-top: 1px solid var(--line-strong, #d6e2f2);
+  .sel-block{
+    padding: 16px;
+    border-radius: var(--sp-radius);
   }
-  .site-footer .footer-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-    justify-content: center;
-  }
-  .site-footer a { color: var(--muted); text-decoration: none; }
-  .site-footer a:hover { color: var(--brand); text-decoration: underline; }
-  .site-footer .footer-sep { opacity: 0.5; }
-  .site-footer .footer-beian img { vertical-align: -2px; }
 
-  @media (max-width: 720px) {
-    .select-wrap { padding: 16px 14px 32px; }
-    .filter-bar { flex-direction: column; align-items: stretch; gap: 14px; }
-    .filter-item { min-width: 0; }
-    .sel-footer { justify-content: center; }
-    .type-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-    .teacher-cols { flex-direction: column; }
-    .teacher-col-right { border-left: none; padding-left: 0; }
+  .config-range{
+    grid-template-columns: 1fr;
+    gap: 14px;
+    align-items: stretch;
   }
+  .config-book .book-seg{ flex-wrap: wrap; }
+
+  .type-grid{
+    grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+    gap: 8px;
+  }
+
+  .teacher-cols{ flex-direction: column; gap: 18px; }
+  .teacher-col-mid,
+  .teacher-col-right{
+    border-left: none;
+    padding-left: 0;
+    padding-top: 16px;
+    border-top: 1px dashed var(--line-strong, #d8e3f3);
+  }
+
+  .config-summary{
+    min-height: 72px;
+    padding: 10px 14px;
+    gap: 12px;
+  }
+  .config-summary .summary-body{ gap: 2px 12px; }
+  .config-summary .summary-body .sum-row{ font-size: .73rem; }
+  .config-summary .btn-start{
+    padding: 10px 20px;
+    font-size: .86rem;
+    letter-spacing: .03em;
+  }
+  .config-summary .summary-title{ font-size: .82rem; }
+
+  .site-footer{ margin-bottom: calc(76px + 16px); }
+}
+
+/* 超小屏：摘要条换行 */
+@media (max-width: 400px){
+  .config-summary{ flex-wrap: wrap; }
+  .config-summary .summary-body{ width: 100%; order: 2; }
+  .config-summary .summary-cta-slot{ margin-left: auto; }
+}
+
+/* ---------- 16. 无障碍：减少动效 ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,
+  *::before,
+  *::after{
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .type-card:hover:not(.disabled),
+  .kp-chip:hover,
+  .btn-start:hover{ transform: none; }
+}
+}
 </style>
 </head>
-<body>
-
-<nav class="top-nav">
-  <a href="index.html" class="nav-brand">
-    <span class="nav-logo"><img src="assets/logo.webp" alt="小学练习本"></span>
-    <span>首页</span>
-  </a>
-  <div class="nav-links">
-    <a href="contact.html" class="nav-link">联系我们</a>
-    <a href="feedback/feedback.html" class="nav-link">问题反馈</a>
-  </div>
-</nav>
+<body class="select-page">
 
 <header class="page-hero">
   <div class="hero-inner">
@@ -423,118 +930,105 @@
 
 <main class="select-wrap">
 
-  <!-- 上部筛选区：模式 / 科目 / 年级 -->
-  <div class="filter-bar">
-    <div class="filter-item">
-      <label class="f-label" for="modeSelect">模式</label>
-      <select id="modeSelect">
-        <option value="quick">快速模式</option>
-        <option value="teacher">教师模式</option>
-        <option value="competition">竞赛模式</option>
-      </select>
-    </div>
-    <div class="filter-item">
-      <label class="f-label" for="subjectSelect">科目</label>
-      <select id="subjectSelect">
-        <option value="math">数学</option>
-        <option value="chinese">语文（接入中）</option>
-        <option value="english">英语（接入中）</option>
-      </select>
-    </div>
-    <div class="filter-item">
-      <label class="f-label" for="gradeSelect">年级</label>
-      <select id="gradeSelect">
-        <option value="1">一年级</option>
-        <option value="2">二年级</option>
-        <option value="3">三年级</option>
-        <option value="4">四年级</option>
-        <option value="5">五年级</option>
-        <option value="6">六年级</option>
-      </select>
-    </div>
-  </div>
-
   <!-- 模式说明（选择器下沿，单行，无特殊格式） -->
   <div class="mode-desc" id="modeDesc"></div>
-
-  <!-- 题量 / 难度 统一控制（R09 / R11：总预算 + 难度系统保留） -->
-  <div class="filter-bar" id="commonBar">
-    <div class="filter-item">
-      <label class="f-label" for="countSelect">题量（总预算）</label>
-      <select id="countSelect">
-        <option value="10">10 题</option>
-        <option value="20" selected>20 题</option>
-        <option value="30">30 题</option>
-      </select>
-    </div>
-    <div class="filter-item">
-      <label class="f-label" for="difficultySelect">难度</label>
-      <select id="difficultySelect">
-        <option value="easy">简单</option>
-        <option value="normal" selected>适中</option>
-        <option value="hard">较难</option>
-      </select>
-    </div>
-  </div>
 
   <!-- 非数学科目占位提示（R14：空白配置空间） -->
   <div class="subject-notice" id="subjectNotice" style="display:none;"></div>
 
-  <!-- 中部主视觉区 -->
-  <div class="stage" id="stageQuick">
-    <div class="sel-block">
-      <div class="blk-title">册别</div>
-      <div class="book-seg" id="bookSegQuick">
-        <button type="button" class="book-seg-btn on" data-book="all">全部</button>
-        <button type="button" class="book-seg-btn" data-book="up">上册</button>
-        <button type="button" class="book-seg-btn" data-book="down">下册</button>
-      </div>
-      <div class="blk-title">单元（可多选）</div>
-      <div class="type-grid" id="unitGridQuick"></div>
-      <div class="blk-title">题型（可多选）</div>
-      <div class="type-grid" id="typeGridQuick"></div>
-      <div class="sel-footer">
+  <div class="select-layout">
+    <aside class="sel-block config-summary" aria-label="本次练习摘要">
+      <a class="home-link" href="index.html">主页</a>
+      <h2 class="blk-title summary-title">本次练习</h2>
+      <div class="summary-body" id="summaryBody"></div>
+      <div class="summary-cta-slot">
         <a class="btn-start" id="startBtnQuick" href="practice.html">开始练习</a>
+        <a class="btn-start" id="startBtnTeacher" href="practice.html" hidden>开始练习</a>
+        <a class="btn-start" id="startBtnCompetition" href="practice.html" hidden>开始练习</a>
       </div>
-    </div>
-  </div>
+    </aside>
+    <div class="config-column">
+      <!-- 范围：年级 → 科目 → 册别 → 模式 -->
+      <section class="sel-block filter-bar config-range">
+        <div class="filter-item">
+          <label class="f-label" for="gradeSelect">年级</label>
+          <select id="gradeSelect">
+            <option value="1">一年级</option>
+            <option value="2">二年级</option>
+            <option value="3">三年级</option>
+            <option value="4">四年级</option>
+            <option value="5">五年级</option>
+            <option value="6">六年级</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label class="f-label" for="subjectSelect">科目</label>
+          <select id="subjectSelect">
+            <option value="math">数学</option>
+            <option value="chinese">语文（接入中）</option>
+            <option value="english">英语（接入中）</option>
+          </select>
+        </div>
+        <div class="filter-item config-book" id="bookWrapQuick">
+          <span class="f-label">册别</span>
+          <div class="book-seg" id="bookSegQuick">
+            <button type="button" class="book-seg-btn" data-book="up">上册</button>
+            <button type="button" class="book-seg-btn" data-book="down">下册</button>
+            <button type="button" class="book-seg-btn on" data-book="all">不限</button>
+          </div>
+        </div>
+        <div class="filter-item config-book" id="bookWrapTeacher" hidden>
+          <span class="f-label">册别</span>
+          <div class="book-seg" id="bookSegTeacher">
+            <button type="button" class="book-seg-btn" data-book="up">上册</button>
+            <button type="button" class="book-seg-btn" data-book="down">下册</button>
+            <button type="button" class="book-seg-btn on" data-book="all">不限</button>
+          </div>
+        </div>
+        <div class="filter-item">
+          <label class="f-label" for="modeSelect">模式</label>
+          <select id="modeSelect">
+            <option value="quick">快速模式</option>
+            <option value="teacher">教师模式</option>
+            <option value="competition">竞赛模式</option>
+          </select>
+        </div>
+      </section>
 
-  <div class="stage" id="stageTeacher">
-    <div class="sel-block">
-      <div class="blk-title">册别</div>
-      <div class="book-seg" id="bookSegTeacher">
-        <button type="button" class="book-seg-btn on" data-book="all">全部</button>
-        <button type="button" class="book-seg-btn" data-book="up">上册</button>
-        <button type="button" class="book-seg-btn" data-book="down">下册</button>
+      <!-- 中部主视觉区 -->
+      <div class="stage" id="stageQuick">
+        <section class="sel-block">
+          <div class="blk-title">题型（可多选）</div>
+          <div class="type-grid" id="typeGridQuick"></div>
+          <div class="blk-title">单元（可多选）</div>
+          <div class="unit-list" id="unitGridQuick"></div>
+        </section>
       </div>
-      <div class="blk-title">单元 → 知识点 → 题型（可多选）</div>
-      <div class="teacher-cols">
-        <div class="teacher-col">
-          <div class="col-label">单元</div>
-          <div class="type-grid" id="teacherUnitGrid"></div>
-        </div>
-        <div class="teacher-col teacher-col-mid">
-          <div class="col-label">知识点</div>
-          <div class="chosen-empty" id="teacherKpHint">先选择单元，再勾选知识点</div>
-          <div class="kp-grid" id="teacherKpGrid"></div>
-        </div>
-        <div class="teacher-col teacher-col-right">
-          <div class="col-label">题型</div>
+
+      <div class="stage" id="stageTeacher">
+        <section class="sel-block">
+          <div class="blk-title">题型（可多选）</div>
           <div class="type-grid" id="teacherTypeGrid"></div>
-        </div>
+          <div class="blk-title">单元 → 知识点（可多选）</div>
+          <div class="teacher-cols">
+            <div class="teacher-col">
+              <div class="col-label">单元</div>
+              <div class="type-grid" id="teacherUnitGrid"></div>
+            </div>
+            <div class="teacher-col teacher-col-mid">
+              <div class="col-label">知识点</div>
+              <div class="chosen-empty" id="teacherKpHint">先选择单元，再勾选知识点</div>
+              <div class="kp-grid" id="teacherKpGrid"></div>
+            </div>
+          </div>
+        </section>
       </div>
-      <div class="sel-footer">
-        <a class="btn-start" id="startBtnTeacher" href="practice.html">开始练习</a>
-      </div>
-    </div>
-  </div>
 
-  <div class="stage" id="stageCompetition">
-    <div class="sel-block">
-      <div class="blk-title">竞赛知识模块（可多选）</div>
-      <div class="type-grid" id="compModuleGrid"></div>
-      <div class="sel-footer">
-        <a class="btn-start" id="startBtnCompetition" href="practice.html">开始练习</a>
+      <div class="stage" id="stageCompetition">
+        <section class="sel-block">
+          <div class="blk-title">竞赛知识模块（可多选）</div>
+          <div class="type-grid" id="compModuleGrid"></div>
+        </section>
       </div>
     </div>
   </div>
@@ -642,6 +1136,8 @@
   var teacherKpHint = document.getElementById('teacherKpHint');
   var bookSegQuick = document.getElementById('bookSegQuick');
   var bookSegTeacher = document.getElementById('bookSegTeacher');
+  var bookWrapQuick = document.getElementById('bookWrapQuick');
+  var bookWrapTeacher = document.getElementById('bookWrapTeacher');
   var modeDesc = document.getElementById('modeDesc');
 
   // R9-② 完整知识点条目读取：经 KnowledgeContext（KBL Runtime）取年级 UI 视图
@@ -844,8 +1340,7 @@
       // P28-48：disabled 此前被拼进 class 属性值（仅灰显），按钮仍可点；现同时输出样式类与原生 disabled 属性
       var disabledCls = cnt === 0 ? ' disabled' : '';
       var disabledAttr = cnt === 0 ? ' disabled' : '';
-      html += '<button type="button" class="type-card' + on + disabledCls + '"' + disabledAttr + ' data-type="' + t.key + '">' + t.label +
-        '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
+      html += '<button type="button" class="type-card' + on + disabledCls + '"' + disabledAttr + ' data-type="' + t.key + '">' + t.label + '</button>';
     });
     gridQuick.innerHTML = html;
     gridQuick.querySelectorAll('.type-card[data-type]').forEach(function (b) {
@@ -976,8 +1471,7 @@
       var cnt = selectedKps.filter(function (k) { return kpMatchesType(k, t, view); }).length;
       var disabledCls = cnt === 0 ? ' disabled' : '';
       var disabledAttr = cnt === 0 ? ' disabled' : '';
-      tHtml += '<button type="button" class="type-card' + on + disabledCls + '"' + disabledAttr + ' data-type="' + t.key + '">' + t.label +
-        '<span class="tc-tag">' + cnt + ' 个知识点</span></button>';
+      tHtml += '<button type="button" class="type-card' + on + disabledCls + '"' + disabledAttr + ' data-type="' + t.key + '">' + t.label + '</button>';
     });
     teacherTypeGrid.innerHTML = tHtml;
     teacherTypeGrid.querySelectorAll('.type-card[data-type]').forEach(function (b) {
@@ -1060,6 +1554,12 @@
     stageQuick.classList.remove('active');
     stageTeacher.classList.remove('active');
     stageCompetition.classList.remove('active');
+    if (bookWrapQuick) bookWrapQuick.hidden = state.mode !== 'quick';
+    if (bookWrapTeacher) bookWrapTeacher.hidden = state.mode !== 'teacher';
+    // 开始按钮已移入摘要栏，随模式显隐
+    Object.keys(startBtns).forEach(function (m) {
+      if (startBtns[m]) startBtns[m].hidden = m !== state.mode;
+    });
     if (state.mode === 'quick') { stageQuick.classList.add('active'); renderQuick(); }
     else if (state.mode === 'teacher') { stageTeacher.classList.add('active'); renderTeacher(); }
     else { stageCompetition.classList.add('active'); renderCompetition(); }
@@ -1150,6 +1650,41 @@
 
   function renderSummary() {
     updateStartBtnUrl();
+    renderSummaryBody();
+  }
+
+  // 摘要栏：只读展示当前选中项（数据来源与 updateStartBtnUrl 同源，不参与生成计算）
+  function renderSummaryBody() {
+    var summaryBody = document.getElementById('summaryBody');
+    if (!summaryBody) return;
+    var modeTitle = (MODE_DESC[state.mode] || MODE_DESC.quick).title;
+    var gradeOpt = gradeSelect.options[gradeSelect.selectedIndex];
+    var subjectOpt = subjectSelect.options[subjectSelect.selectedIndex];
+    var gradeText = gradeOpt ? gradeOpt.text : String(state.grade);
+    var subjectText = subjectOpt ? subjectOpt.text : state.subject;
+    var bookMap = { all: '不限', up: '上册', down: '下册' };
+    var rows = [['模式', esc(modeTitle)]];
+    if (state.mode === 'competition') {
+      rows.push(['范围', esc(gradeText) + ' · ' + esc(subjectText)]);
+      var modCnt = state.competitionModules.length;
+      rows.push(['模块', modCnt ? '已选 ' + modCnt + ' 个' : '未选择']);
+    } else {
+      var book = (state.mode === 'teacher') ? state.teacherBook : state.quickBook;
+      rows.push(['范围', esc(gradeText) + ' · ' + esc(subjectText) + ' · ' + (bookMap[book] || '不限')]);
+      var defs = QUICK_TYPE_DEFS.filter(function (t) {
+        return (state.mode === 'teacher' ? state.teacherTypes : state.quickTypes).indexOf(t.key) !== -1;
+      });
+      rows.push(['题型', defs.length ? defs.map(function (t) { return esc(t.label); }).join('、') : '未选择']);
+      var units = (state.mode === 'teacher') ? state.teacherUnits : state.quickUnits;
+      if (state.mode === 'quick' && !units.length) rows.push(['单元', '全部单元']);
+      else rows.push(['单元', units.length ? units.map(esc).join('、') : '未选择']);
+      if (state.mode === 'teacher') {
+        rows.push(['知识点', state.teacherKps.length ? '已选 ' + state.teacherKps.length + ' 个' : '未选择']);
+      }
+    }
+    summaryBody.innerHTML = rows.map(function (r) {
+      return '<div class="sum-row"><span class="sum-label">' + r[0] + '</span><span class="sum-value">' + r[1] + '</span></div>';
+    }).join('');
   }
 
   function renderAll() {
@@ -1189,11 +1724,6 @@
     state.quickBook = 'all'; state.teacherBook = 'all';
     renderAll();
   });
-  // R09 / R11：题量（总预算）与难度变更即时刷新出口 URL
-  var countSelect = document.getElementById('countSelect');
-  var difficultySelect = document.getElementById('difficultySelect');
-  if (countSelect) countSelect.addEventListener('change', renderSummary);
-  if (difficultySelect) difficultySelect.addEventListener('change', renderSummary);
 
   // 知识库为 KBL Runtime 单文件静态加载（App.KNOWLEDGE），无需按需注入
   function ensureKnowledge(subject) {

@@ -2281,6 +2281,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://home.modouyu.top/select.html</loc>
+    <lastmod>2026-09-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://home.modouyu.top/subject-types.html</loc>
     <lastmod>2026-09-11</lastmod>
     <changefreq>weekly</changefreq>

@@ -3,7 +3,7 @@
  * dev/p28/check-sitemap-freeze.js — P28-35 sitemap 最终冻结门禁（只读）
  *
  * 冻结契约：sitemap = 375 KP（KBL Runtime selectable 精确集合）+ 官方公共页面
- *           （index / math-types / subject-types / practice / faq / knowledge-index），
+ *           （index / math-types / subject-types / select / practice / faq），
  *            且仅此集合（无遗漏、无多余、无重复、无参数/历史 URL）。
  * 逐一验证每个 URL：
  *   1. HTTP 200（本地真实 HTTP 服务；python3 -m http.server 同 e2e 口径）
@@ -26,7 +26,7 @@ const { spawn } = require('child_process');
 const ROOT = path.resolve(__dirname, '..', '..');
 const BASE = 'https://home.modouyu.top/';
 
-const TOP_OFFICIAL = ['index.html', 'math-types.html', 'subject-types.html', 'practice.html', 'faq.html'];
+const TOP_OFFICIAL = ['index.html', 'math-types.html', 'subject-types.html', 'select.html', 'practice.html', 'faq.html'];
 const KP_RE = /^knowledge\/(math-g\d-(up|down)-u\d+-k\d+)\.html$/;
 
 function read(p) { return fs.readFileSync(p, 'utf8'); }
