@@ -500,9 +500,13 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     answer = { value: '旋转中心、旋转方向、旋转角度', acceptable: [] };
     answerMode = 'input';
   } else {
-    var side = Rng.randInt(rng, 5, 20);
-    prompt = name + '：一个图形的边长为' + side + '厘米，求它的面积是多少？';
-    answer = { value: String(side * side), acceptable: [] };
+    // FINAL-138：非度量类 KP（图形认识/分类/长度单位等）不得套用面积计算模板，
+    // 否则「认识厘米和米」「分类」等 KP 会被生成「求面积」跨概念题。
+    // 出与 KP 名称绑定的生活观察开放任务（范式同上方 isCoord 分支）；
+    // 场景按 item 序号轮换，保证同批题目的去重指纹互不相同。
+    var scenes = ['教室里', '家里', '操场上', '上学的路上', '文具盒里', '积木堆里', '超市里', '公园中'];
+    prompt = name + '：请在' + scenes[i % scenes.length] + '找一找与它有关的例子，说一说你是怎样想的？';
+    answer = { value: '举例合理即可', acceptable: [] };
     answerMode = 'input';
   }
 

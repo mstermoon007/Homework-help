@@ -72,6 +72,14 @@ function resolveStructureConstraints(options) {
     allowMultDiv = !!params.allowMultDiv;
   }
 
+  // FINAL-137：年级内容边界护栏——难度档位放行乘除后，再与 KP 年级边界 AND。
+  // KBL 事实：一年级不教乘除（39 个 G1 KP 的 semantic.operations 零 multiplication/division，
+  // 乘除教学自二年级起），故 G1 在任何难度档位（含 d5-d10）都不得生成 ×/÷。
+  // 年级裁决只允许在 Strategy 层（generator-contract 禁止 Generator 层年级硬编码）。
+  if (allowMultDiv && kp.grade === 1) {
+    allowMultDiv = false;
+  }
+
   // M3-12 数值范围
   var numberRange = NumberRangeStrategy.resolveNumberRange({
     settings: options.settings,

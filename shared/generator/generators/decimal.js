@@ -141,9 +141,11 @@ function conceptItem(sub, rng) {
       options: [String(dm), String(m), String(dm * 10)] };
   }
   // readwrite / 意义：0.a 里面有几个 0.1
+  // FINAL-140：G3 初步认识不引用 n÷10（小数除商/分数与除法为后续年级），
+  // 用同年级教材语言「十分之几就是零点几」（8/10 = 0.8，8 个 0.1），/ 记法满足 expressionPresent。
   var n = ri(rng, 2, 9);
   var dec = r1(n / 10);
-  return { stem: fmt(dec) + ' 里面有 ____ 个 0.1（参考：' + n + ' ÷ 10 = ' + fmt(dec) + '）',
+  return { stem: fmt(dec) + ' 里面有 ____ 个 0.1（参考：' + n + '/10 = ' + fmt(dec) + '，' + n + ' 个 0.1）',
     answer: String(n), options: [String(n), String(dec), '10'] };
 }
 

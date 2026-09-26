@@ -404,6 +404,8 @@ function generateWithRetry(generatorFn, plan, context) {
     retries++;
     // D005 修复：连续零新增短路——在 effectiveCap 耗尽前提前判定语义空间饱和。
     // 比纯依赖 DEDUP_MAX_RETRIES 更早暴露饱和（渐进重试场景：每轮部分新增部分重复）。
+    // FINAL-142：语义空间饱和是 Generator 能力上限的如实表达，即使 0 题也返回
+    // PARTIAL（空数组），由编排层按容量记账，而非 FAILED（presentation-engine 不再抛错）。
     if (consecutiveZeroProgress >= CONSECUTIVE_ZERO_PROGRESS && duplicateFailures > 0) {
       var safeQ = result.questions.filter(function (sq) { return !!sq; });
       var safeR = result.validationResults.filter(function (vr, i) { return !!result.questions[i]; });
@@ -412,7 +414,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: safeR,
         retries: retries,
         success: false,
-        status: safeQ.length > 0 ? 'PARTIAL' : 'FAILED',
+        status: 'PARTIAL',
         error: GENERATION_SPACE_EXHAUSTED,
         message: '生成空间耗尽：连续 ' + consecutiveZeroProgress + ' 轮零新增（KP+type+difficulty 在 seenKeys 累积下语义空间饱和）',
         attempts: allResults
@@ -424,12 +426,14 @@ function generateWithRetry(generatorFn, plan, context) {
       var safeQuestions = result.questions.filter(function (sq) { return !!sq; });
       var safeResults = result.validationResults.filter(function (vr, i) { return !!result.questions[i]; });
       if (isDedupOnlyFailure && duplicateFailures > 0) {
+        // FINAL-142：语义空间饱和是 Generator 能力上限的如实表达，即使 0 题也返回
+        // PARTIAL（空数组），由编排层按容量记账，而非 FAILED（presentation-engine 不再抛错）。
         return {
           questions: safeQuestions,
           validationResults: safeResults,
           retries: retries,
           success: false,
-          status: safeQuestions.length > 0 ? 'PARTIAL' : 'FAILED',
+          status: 'PARTIAL',
           error: GENERATION_SPACE_EXHAUSTED,
           message: '生成空间耗尽：仅因重复重试 ' + duplicateFailures + ' 次仍无法产出新题（KP+type+difficulty 语义空间已饱和）',
           attempts: allResults

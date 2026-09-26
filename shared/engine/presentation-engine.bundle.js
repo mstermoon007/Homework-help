@@ -84,11 +84,11 @@ function generateQuestions(plan, options) {
     
     
     
+    
+    
+    
     var isRealError = result.error && result.error !== 'GENERATION_SPACE_EXHAUSTED';
-    if (!result.success && (
-      (!semanticQuestions || semanticQuestions.length === 0) ||
-      isRealError
-    )) {
+    if (!result.success && isRealError) {
       var err = new Error(((result.error || 'GENERATION_FAILED') + (result.message ? ': ' + result.message : '')));
       err.generationFailed = true;
       err.generationError = result.error || null;
@@ -577,6 +577,8 @@ function generateWithRetry(generatorFn, plan, context) {
     retries++;
     
     
+    
+    
     if (consecutiveZeroProgress >= CONSECUTIVE_ZERO_PROGRESS && duplicateFailures > 0) {
       var safeQ = result.questions.filter(function (sq) { return !!sq; });
       var safeR = result.validationResults.filter(function (vr, i) { return !!result.questions[i]; });
@@ -585,7 +587,7 @@ function generateWithRetry(generatorFn, plan, context) {
         validationResults: safeR,
         retries: retries,
         success: false,
-        status: safeQ.length > 0 ? 'PARTIAL' : 'FAILED',
+        status: 'PARTIAL',
         error: GENERATION_SPACE_EXHAUSTED,
         message: '生成空间耗尽：连续 ' + consecutiveZeroProgress + ' 轮零新增（KP+type+difficulty 在 seenKeys 累积下语义空间饱和）',
         attempts: allResults
@@ -597,12 +599,14 @@ function generateWithRetry(generatorFn, plan, context) {
       var safeQuestions = result.questions.filter(function (sq) { return !!sq; });
       var safeResults = result.validationResults.filter(function (vr, i) { return !!result.questions[i]; });
       if (isDedupOnlyFailure && duplicateFailures > 0) {
+        
+        
         return {
           questions: safeQuestions,
           validationResults: safeResults,
           retries: retries,
           success: false,
-          status: safeQuestions.length > 0 ? 'PARTIAL' : 'FAILED',
+          status: 'PARTIAL',
           error: GENERATION_SPACE_EXHAUSTED,
           message: '生成空间耗尽：仅因重复重试 ' + duplicateFailures + ' 次仍无法产出新题（KP+type+difficulty 语义空间已饱和）',
           attempts: allResults

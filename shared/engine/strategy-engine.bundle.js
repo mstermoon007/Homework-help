@@ -1823,6 +1823,14 @@ function resolveStructureConstraints(options) {
   }
 
   
+  
+  
+  
+  if (allowMultDiv && kp.grade === 1) {
+    allowMultDiv = false;
+  }
+
+  
   var numberRange = NumberRangeStrategy.resolveNumberRange({
     settings: options.settings,
     knowledgePoint: kp,
@@ -7083,9 +7091,13 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
     answer = { value: '旋转中心、旋转方向、旋转角度', acceptable: [] };
     answerMode = 'input';
   } else {
-    var side = Rng.randInt(rng, 5, 20);
-    prompt = name + '：一个图形的边长为' + side + '厘米，求它的面积是多少？';
-    answer = { value: String(side * side), acceptable: [] };
+    
+    
+    
+    
+    var scenes = ['教室里', '家里', '操场上', '上学的路上', '文具盒里', '积木堆里', '超市里', '公园中'];
+    prompt = name + '：请在' + scenes[i % scenes.length] + '找一找与它有关的例子，说一说你是怎样想的？';
+    answer = { value: '举例合理即可', acceptable: [] };
     answerMode = 'input';
   }
 
@@ -8422,13 +8434,23 @@ var OP_ALIAS = {
 
 function kpAllowedOps(plan) {
   var ops = plan && plan.semanticParams && plan.semanticParams.operations;
-  if (!Array.isArray(ops) || ops.length === 0) return null;
   var out = [];
-  ops.forEach(function (o) {
-    var t = OP_ALIAS[o];
-    if (t && out.indexOf(t) === -1) out.push(t);
-  });
-  return out.length ? out : null;
+  if (Array.isArray(ops)) {
+    ops.forEach(function (o) {
+      var t = OP_ALIAS[o];
+      if (t && out.indexOf(t) === -1) out.push(t);
+    });
+  }
+  
+  
+  
+  
+  
+  if (!out.length) {
+    var forbidMultDiv = plan && plan.constraints && plan.constraints.allowMultDiv === false;
+    return forbidMultDiv ? ['add', 'sub'] : null;
+  }
+  return out;
 }
 
 function getApplicationMeta(kp) {
@@ -9118,6 +9140,93 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':reason:' + i;
 }
 
+
+
+
+
+
+var TABLE789_NAME = '7～9的乘、除法';
+
+function table789Options(rng, correct, distractors) {
+  var pool = {};
+  pool[Number(correct)] = 1;
+  distractors.forEach(function (x) {
+    x = Number(x);
+    if (x > 0 && x !== Number(correct)) pool[x] = 1;
+  });
+  var arr = Object.keys(pool).map(Number);
+  var filler = 1;
+  while (arr.length < 4) {
+    var cand = Number(correct) + filler * 2;
+    filler++;
+    if (cand > 0 && arr.indexOf(cand) === -1) arr.push(cand);
+  }
+  return Rng.shuffle(rng, arr.slice(0, 4).map(String));
+}
+
+function makeTable789Question(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var qt = plan.questionTypeId;
+  var a = Rng.randInt(rng, 7, 9);
+  var b = Rng.randInt(rng, 2, 9);
+  var p = a * b;
+  var form = i % 5;
+
+  var prompt, answer, options = null, answerMode = 'input', operation;
+
+  if (qt === 'calc') {
+    if (i % 2 === 0) {
+      prompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ____';
+      answer = String(p); operation = 'mult';
+    } else {
+      prompt = '用乘法口诀求商：' + p + ' ÷ ' + a + ' = ____';
+      answer = String(b); operation = 'div';
+    }
+  } else if (qt === 'fill') {
+    if (form === 0) { prompt = a + ' × ' + b + ' = ____'; answer = String(p); operation = 'mult'; }
+    else if (form === 1) { prompt = a + ' × ____ = ' + p; answer = String(b); operation = 'mult'; }
+    else if (form === 2) { prompt = '____ × ' + a + ' = ' + p; answer = String(b); operation = 'mult'; }
+    else if (form === 3) { prompt = p + ' ÷ ' + a + ' = ____'; answer = String(b); operation = 'div'; }
+    else { prompt = p + ' ÷ ____ = ' + b; answer = String(a); operation = 'div'; }
+  } else if (qt === 'choice') {
+    if (form === 0) { prompt = a + ' × ' + b + ' = （ ）'; answer = String(p); options = table789Options(rng, p, [p + a, p - b, p + b, p + 1]); operation = 'mult'; }
+    else if (form === 1) { prompt = a + ' × （ ） = ' + p; answer = String(b); options = table789Options(rng, b, [b + 1, b - 1, b + 2, a]); operation = 'mult'; }
+    else if (form === 2) { prompt = '（ ） × ' + a + ' = ' + p; answer = String(b); options = table789Options(rng, b, [b + 2, b - 1, b + 1, a - 1]); operation = 'mult'; }
+    else if (form === 3) { prompt = p + ' ÷ ' + a + ' = （ ）'; answer = String(b); options = table789Options(rng, b, [b + 1, b - 1, b + 2, a]); operation = 'div'; }
+    else { prompt = p + ' ÷ （ ） = ' + b; answer = String(a); options = table789Options(rng, a, [a + 1, a - 1, a + 2, b]); operation = 'div'; }
+    answerMode = 'choice';
+  } else { 
+    var goods = ['月饼', '笔记本', '彩笔', '气球'];
+    var g = goods[i % goods.length];
+    if (i % 3 === 0) {
+      prompt = '每盒' + g + '有 ' + b + ' 个，买了 ' + a + ' 盒，一共有多少个' + g + '？';
+      answer = String(p); operation = 'mult';
+    } else if (i % 3 === 1) {
+      prompt = '把 ' + p + ' 个' + g + '平均分给 ' + a + ' 个小组，每个小组分得多少个？';
+      answer = String(b); operation = 'div';
+    } else {
+      prompt = '有 ' + p + ' 个' + g + '，每 ' + a + ' 个装一袋，可以装多少袋？';
+      answer = String(b); operation = 'div';
+    }
+  }
+
+  
+  var data = { mode: qt === 'calc' ? 'calc' : 'apply', steps: 1, operation: operation, questionType: qt };
+  if (options) { data.options = options; data.correctIndex = options.indexOf(String(answer)); }
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: { value: String(answer), acceptable: [] },
+    answerMode: answerMode,
+    data: data
+  };
+}
+
 function makeReasoningQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   
@@ -9125,6 +9234,9 @@ function makeReasoningQuestion(plan, context, i, kp) {
   var name = (plan && plan.semanticParams && plan.semanticParams.name)
     || (kp && (kp.name || (kp.identity && kp.identity.name)))
     || '逻辑推理';
+
+  
+  if (name === TABLE789_NAME) return makeTable789Question(plan, context, i);
 
   
   
@@ -11186,11 +11298,12 @@ function buildNumberConceptItem(rng, name) {
       apply: '数数时，10 × ' + u[2] + ' = ' + u[3] + '，10 个' + u[0] + '组成的计数单位是什么？' };
   }
   if (name.indexOf('数位') !== -1) {
+    
     var tens = ri(rng, 1, 9), ones = ri(rng, 1, 9);
     var num0 = tens * 10 + ones;
-    return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' × 10 + ' + ones + ' = ' + num0 + '）',
+    return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '）',
       answer: '十位', options: ['十位', '个位', '百位'],
-      apply: '计数器拨出 ' + num0 + '（' + tens + ' × 10 + ' + ones + ' = ' + num0 + '），' + tens + ' 拨在哪一位上？' };
+      apply: '计数器拨出 ' + num0 + '（' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '），' + tens + ' 拨在哪一位上？' };
   }
   if (name.indexOf('顺序') !== -1 || name.indexOf('相邻') !== -1) {
     var cur = ri(rng, 11, 88);
@@ -11206,10 +11319,11 @@ function buildNumberConceptItem(rng, name) {
       apply: '一年级有 ' + Math.min(a0, b0) + ' 人，二年级有 ' + Math.max(a0, b0) + ' 人，' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '，哪个年级人数多（填 > 或 <）？' };
   }
   if (name.indexOf('组成') !== -1) {
+    
     var t0 = ri(rng, 1, 9), o0 = ri(rng, 1, 9);
-    return { stem: (t0 * 10 + o0) + ' 是由几个十和几个一组成的？（参考：' + t0 + ' × 10 + ' + o0 + ' = ' + (t0 * 10 + o0) + '）',
+    return { stem: (t0 * 10 + o0) + ' 是由几个十和几个一组成的？（参考：' + t0 + ' 个十和 ' + o0 + ' 个一，' + (t0 * 10) + ' + ' + o0 + ' = ' + (t0 * 10 + o0) + '）',
       answer: t0 + '个十和' + o0 + '个一', options: [t0 + '个十和' + o0 + '个一', o0 + '个十和' + t0 + '个一', '1个十和' + o0 + '个一'],
-      apply: '小红有 ' + t0 + ' 捆（每捆10根）零 ' + o0 + ' 根小棒，' + t0 + ' × 10 + ' + o0 + ' = ' + (t0 * 10 + o0) + '，一共多少根，由几个十和几个一组成？' };
+      apply: '小红有 ' + t0 + ' 捆（每捆10根）零 ' + o0 + ' 根小棒，一共多少根，由几个十和几个一组成？（' + (t0 * 10) + ' + ' + o0 + ' = ' + (t0 * 10 + o0) + '）' };
   }
   if (name.indexOf('算盘') !== -1) {
     
@@ -11229,10 +11343,11 @@ function buildNumberConceptItem(rng, name) {
       apply: '算盘十位1个上珠靠梁表示5个十，个位2个下珠靠梁表示2个一，5 × 10 + 2 = ？，表示的数是多少？' };
   }
   
+  
   var t1 = ri(rng, 1, 9), o1 = ri(rng, 1, 9);
-  return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' × 10 + ' + o1 + ' = ' + (t1 * 10 + o1) + '），写作多少？',
+  return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '），写作多少？',
     answer: String(t1 * 10 + o1), options: [String(t1 * 10 + o1), String(t1 + o1), String(o1 * 10 + t1)],
-    apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' × 10 + ' + o1 + ' = ？，这个数写作多少？' };
+    apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' 个十和 ' + o1 + ' 个一合起来写作多少？（' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '）' };
 }
 
 function buildNegativeItem(rng, name) {
@@ -12277,9 +12392,11 @@ function conceptItem(sub, rng) {
       options: [String(dm), String(m), String(dm * 10)] };
   }
   
+  
+  
   var n = ri(rng, 2, 9);
   var dec = r1(n / 10);
-  return { stem: fmt(dec) + ' 里面有 ____ 个 0.1（参考：' + n + ' ÷ 10 = ' + fmt(dec) + '）',
+  return { stem: fmt(dec) + ' 里面有 ____ 个 0.1（参考：' + n + '/10 = ' + fmt(dec) + '，' + n + ' 个 0.1）',
     answer: String(n), options: [String(n), String(dec), '10'] };
 }
 
@@ -12495,7 +12612,7 @@ function conceptItem(sub, rng) {
     } else {
       var n = ri(rng, 1, 4);
       a = { n: n, d: 4 }; b = { n: n, d: 6 };
-      sign = '>'; support = n + ' ÷ ' + a.d + ' 与 ' + n + ' ÷ ' + b.d + '，同分子分母小的大';
+      sign = '>'; support = n + '/' + a.d + ' 与 ' + n + '/' + b.d + '，分子相同分母小的大';
     }
     return { stem: '比较大小：' + fs(a) + ' ○ ' + fs(b) + '（参考：' + support + '），○ 里应填什么（>、< 或 =）？', answer: sign, options: ['>', '<', '='], support: support };
   }
@@ -12539,8 +12656,10 @@ function conceptItem(sub, rng) {
       answer: '1/' + whole, options: ['1/' + whole, String(whole), '1'] };
   }
   
+  
+  
   var d0 = ri(rng, 3, 9);
-  return { stem: '把一个圆平均分成 ' + d0 + ' 份，取其中的 1 份（1 ÷ ' + d0 + '），用分数表示是 ____',
+  return { stem: '把一个圆平均分成 ' + d0 + ' 份，取其中的 1 份（每份是它的 1/' + d0 + '），用分数表示是 ____',
     answer: '1/' + d0, options: ['1/' + d0, '1/' + (d0 + 1), d0 + '/1'] };
 }
 

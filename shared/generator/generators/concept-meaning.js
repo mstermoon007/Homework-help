@@ -363,11 +363,12 @@ function buildNumberConceptItem(rng, name) {
       apply: '数数时，10 × ' + u[2] + ' = ' + u[3] + '，10 个' + u[0] + '组成的计数单位是什么？' };
   }
   if (name.indexOf('数位') !== -1) {
+    // FINAL-139：位值用「几个十几个一」语言 + 整十数加一位数（G1 已学），不用未教学的 ×10
     var tens = ri(rng, 1, 9), ones = ri(rng, 1, 9);
     var num0 = tens * 10 + ones;
-    return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' × 10 + ' + ones + ' = ' + num0 + '）',
+    return { stem: num0 + ' 中数字 ' + tens + ' 在什么位上？（参考：' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '）',
       answer: '十位', options: ['十位', '个位', '百位'],
-      apply: '计数器拨出 ' + num0 + '（' + tens + ' × 10 + ' + ones + ' = ' + num0 + '），' + tens + ' 拨在哪一位上？' };
+      apply: '计数器拨出 ' + num0 + '（' + tens + ' 个十和 ' + ones + ' 个一，' + (tens * 10) + ' + ' + ones + ' = ' + num0 + '），' + tens + ' 拨在哪一位上？' };
   }
   if (name.indexOf('顺序') !== -1 || name.indexOf('相邻') !== -1) {
     var cur = ri(rng, 11, 88);
@@ -383,10 +384,11 @@ function buildNumberConceptItem(rng, name) {
       apply: '一年级有 ' + Math.min(a0, b0) + ' 人，二年级有 ' + Math.max(a0, b0) + ' 人，' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '，哪个年级人数多（填 > 或 <）？' };
   }
   if (name.indexOf('组成') !== -1) {
+    // FINAL-139：同上，位值分解改「几个十和几个一」+ 整十数加一位数
     var t0 = ri(rng, 1, 9), o0 = ri(rng, 1, 9);
-    return { stem: (t0 * 10 + o0) + ' 是由几个十和几个一组成的？（参考：' + t0 + ' × 10 + ' + o0 + ' = ' + (t0 * 10 + o0) + '）',
+    return { stem: (t0 * 10 + o0) + ' 是由几个十和几个一组成的？（参考：' + t0 + ' 个十和 ' + o0 + ' 个一，' + (t0 * 10) + ' + ' + o0 + ' = ' + (t0 * 10 + o0) + '）',
       answer: t0 + '个十和' + o0 + '个一', options: [t0 + '个十和' + o0 + '个一', o0 + '个十和' + t0 + '个一', '1个十和' + o0 + '个一'],
-      apply: '小红有 ' + t0 + ' 捆（每捆10根）零 ' + o0 + ' 根小棒，' + t0 + ' × 10 + ' + o0 + ' = ' + (t0 * 10 + o0) + '，一共多少根，由几个十和几个一组成？' };
+      apply: '小红有 ' + t0 + ' 捆（每捆10根）零 ' + o0 + ' 根小棒，一共多少根，由几个十和几个一组成？（' + (t0 * 10) + ' + ' + o0 + ' = ' + (t0 * 10 + o0) + '）' };
   }
   if (name.indexOf('算盘') !== -1) {
     // P25-09：算盘认数（g2-down-u04-k004）——一个上珠表示5、一个下珠表示1
@@ -406,10 +408,11 @@ function buildNumberConceptItem(rng, name) {
       apply: '算盘十位1个上珠靠梁表示5个十，个位2个下珠靠梁表示2个一，5 × 10 + 2 = ？，表示的数是多少？' };
   }
   // 读写/认识（默认）
+  // FINAL-139：同上，计数器位值用「几个十和几个一」+ 整十数加一位数，不用 ×10
   var t1 = ri(rng, 1, 9), o1 = ri(rng, 1, 9);
-  return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' × 10 + ' + o1 + ' = ' + (t1 * 10 + o1) + '），写作多少？',
+  return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '），写作多少？',
     answer: String(t1 * 10 + o1), options: [String(t1 * 10 + o1), String(t1 + o1), String(o1 * 10 + t1)],
-    apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' × 10 + ' + o1 + ' = ？，这个数写作多少？' };
+    apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' 个十和 ' + o1 + ' 个一合起来写作多少？（' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '）' };
 }
 
 function buildNegativeItem(rng, name) {

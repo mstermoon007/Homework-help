@@ -102,7 +102,7 @@ function conceptItem(sub, rng) {
     } else {
       var n = ri(rng, 1, 4);
       a = { n: n, d: 4 }; b = { n: n, d: 6 };
-      sign = '>'; support = n + ' ÷ ' + a.d + ' 与 ' + n + ' ÷ ' + b.d + '，同分子分母小的大';
+      sign = '>'; support = n + '/' + a.d + ' 与 ' + n + '/' + b.d + '，分子相同分母小的大';
     }
     return { stem: '比较大小：' + fs(a) + ' ○ ' + fs(b) + '（参考：' + support + '），○ 里应填什么（>、< 或 =）？', answer: sign, options: ['>', '<', '='], support: support };
   }
@@ -146,8 +146,10 @@ function conceptItem(sub, rng) {
       answer: '1/' + whole, options: ['1/' + whole, String(whole), '1'] };
   }
   // meaning（初步认识/读写/进一步认识）
+  // FINAL-140：G3 初步认识阶段不引用「分数与除法」关系（a÷b=a/b 为 G5 内容），
+  // 直接用分数记法表达每份；1/d 仍满足 calc expressionPresent（/ 两侧数字）。
   var d0 = ri(rng, 3, 9);
-  return { stem: '把一个圆平均分成 ' + d0 + ' 份，取其中的 1 份（1 ÷ ' + d0 + '），用分数表示是 ____',
+  return { stem: '把一个圆平均分成 ' + d0 + ' 份，取其中的 1 份（每份是它的 1/' + d0 + '），用分数表示是 ____',
     answer: '1/' + d0, options: ['1/' + d0, '1/' + (d0 + 1), d0 + '/1'] };
 }
 

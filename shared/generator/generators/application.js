@@ -109,13 +109,23 @@ var OP_ALIAS = {
 
 function kpAllowedOps(plan) {
   var ops = plan && plan.semanticParams && plan.semanticParams.operations;
-  if (!Array.isArray(ops) || ops.length === 0) return null;
   var out = [];
-  ops.forEach(function (o) {
-    var t = OP_ALIAS[o];
-    if (t && out.indexOf(t) === -1) out.push(t);
-  });
-  return out.length ? out : null;
+  if (Array.isArray(ops)) {
+    ops.forEach(function (o) {
+      var t = OP_ALIAS[o];
+      if (t && out.indexOf(t) === -1) out.push(t);
+    });
+  }
+  // FINAL-137：KP 显式声明的运算最权威（如 G2「2～6的乘法口诀」声明 multiplication，
+  // 低难度档位仍应出乘法应用题），维持 FINAL-31c 语义不过滤。
+  // 仅当 KP 未声明可映射运算（综合/解决问题类，operations 为空或仅 mixed·sequential）时，
+  // 消费 Strategy 层下发的结构约束 allowMultDiv——false 则模板池只留加减。
+  // 年级边界由 Strategy 层裁决（G1 恒 false），本层不做任何年级判断。
+  if (!out.length) {
+    var forbidMultDiv = plan && plan.constraints && plan.constraints.allowMultDiv === false;
+    return forbidMultDiv ? ['add', 'sub'] : null;
+  }
+  return out;
 }
 
 function getApplicationMeta(kp) {

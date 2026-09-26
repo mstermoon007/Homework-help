@@ -25,6 +25,86 @@
 
 ## 记录（新 → 旧）
 
+### FINAL-142｜P2#6 修复：fill 题型批量 ≥70 整批 abort（2026-09-26）
+
+- modified:
+  - `shared/engine/presentation-engine.js`（L99-115：GENERATION_SPACE_EXHAUSTED 即使 0 题也不抛错——语义空间饱和是 Generator 能力上限的如实表达，返回空数组 + PARTIAL，由编排层按容量记账，而非整批 FAILED；isRealError 条件从「!success && (0题 || 真错误)」收窄为「!success && 真错误」）
+  - `shared/generator/retry-loop.js`（L407-421、L428-441：GENERATION_SPACE_EXHAUSTED 的 status 从「safeQ.length>0 ? PARTIAL : FAILED」统一改为 PARTIAL——语义空间饱和不是失败态，是容量上限的如实表达）
+  - `shared/engine/strategy-engine.bundle.js`（重建；retry-loop 由该 bundle 内联；presentation bundle 同批重建零差异）
+- deleted: 无
+- reason: 用户第三批 #6。生产链实锤：fill 题型在 count≥70 时不稳定（有时 SUCCESS 70，有时 FAILED 0，有时 PARTIAL 72），根因=fill 语义空间上限 64-72（Generator 能力上限）+ 空间耗尽时 0 产出整批 FAILED（RetryLoop 第一轮全重复 → 后续轮次无法产出 → presentation-engine 抛错）。修复后语义空间饱和统一返回 PARTIAL（空数组），由编排层按容量记账，不再整批 FAILED。
+- tests: ①局部 `node --test "tests/generator/**/*.test.js" "tests/strategy/**/*.test.js"` 240/240；②生产链定向复测（GE.generate count=64/72/96 d=2/5/8 fill）：FAILED 0/6（修复前 1/6），count=72 d=5 从 FAILED 0 → SUCCESS 72；③`npm run verify:allow-gen` 1570/1570 PASS；④`node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP（含 #16 Bundle hash 一致、FINAL-91 只读门禁）。
+- risk: 低。仅放宽 GENERATION_SPACE_EXHAUSTED 的错误态（FAILED→PARTIAL），不影响真实错误（FATAL_ERROR/NON_RETRYABLE/MAX_RETRIES_EXCEEDED 仍显式失败）；生产 count≤20 不可达语义空间上限，行为不变。回滚：还原 2 个源文件并重建 strategy bundle。
+
+### FINAL-139｜P2#3 修复：G1/G2 数位题「× 10」教学记号越界（2026-09-26）
+
+- modified:
+  - `shared/generator/generators/concept-meaning.js`（`buildNumberConceptItem` 的「数位」「组成」、默认读写三个分支：参考注解由 `t × 10 + o = num` 改为位值语言「t 个十和 o 个一」+ 同年级加法算式 `(t×10) + o = num`，如「7 个十和 4 个一，70 + 4 = 74」；apply 题干同步。只动这 3 个分支）
+  - `shared/engine/strategy-engine.bundle.js`（重建；concept-meaning 由该 bundle 内联；presentation bundle 同批重建零差异，git 无变更）
+  - `shared/capacity/capacity-map.json`（本批随 `node dev/scan-capacity.js --refresh` 全量重建：数位等所涉行数字随全图重测变化，全图归因统一见 FINAL-141 tests；本任务不改容量数字）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json`、`.md`（显式 `--write` 重建；本任务贡献冻结差异 32 行 = G1 5 KP + G2 2 KP × 4 题型 28 行 + 共享同一默认读写分支的 g4-up-u01-k002「数位与数级」4 行）
+- deleted: 无
+- reason: 用户第二批 #3。生产链实锤：G1 5 个数位 KP（g1-down-u03-k002/k003/k004、g1-up-u02-k001、g1-up-u04-k002）的 calc/fill/choice/apply 题干用「7 × 10 + 4 = 74」表达位值，乘法在 G1 未教学（FINAL-137 已确立 G1 零乘除边界）；该记号同时服务 calc 的 expressionPresent 不变式，故不能直接删，改为位值语言 + G1 已教学的「整十数加一位数」加法（70 + 4 = 74），算式不变式继续满足。同分支共享的 G2 g2-down-u04-k002/k003 与 G4 g4-up-u01-k002 一并获得新语言（位值语言在 G2/G4 同样正确）。「计数单位 10×100」「亿 10×10000000」「万改写 ×10000」「算盘 1×5/5×10+2」分支属 G2+ 进率/乘法已教学内容，本任务不动。
+- tests: ①局部 `node --test "tests/generator/**/*.test.js" "tests/strategy/**/*.test.js"` 240/240；②生产链 PracticeSession 定向复测：G1 5 KP + G2 2 KP × calc/fill/choice/apply × d1/d5、count=12 全部实产 12，grep `×\s?10` 零命中，calc 100% 保留「几十+几」加法算式；未动分支回归 g2-down-u04-k001（10×100）/k004（算盘 ×5）/k006（×10000）原×记号在位；③`npm run verify:allow-gen` 1570/1570 PASS；④冻结复核 1570 rows / 0 FAIL / 0 差异，32 行差异逐行归因为 concept-meaning 三个改写分支；⑤`node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP。
+- risk: 低。仅文案替换，答案/选项/题型分派不变；加法算式经 EXPR_RE 与 type-contract calc 校验；G2 共享分支文案同步变化已在冻结证据中归因。回滚：还原 concept-meaning.js 并重建 bundle。
+
+### FINAL-140｜P2#4 修复：G3 分数/小数题引用未教学的除法（2026-09-26）
+
+- modified:
+  - `shared/generator/generators/fraction.js`（`conceptItem`：①意义/读写默认分支「把圆平均分（1 ÷ d）」→「每份是它的 1/d」；②同分子分数比较支撑语「n ÷ d1 与 n ÷ d2」→「n/d1 与 n/d2，分子相同分母小的大」。不动 relation/约分/互化/倒数/分数除法等 G5+ 分支）
+  - `shared/generator/generators/decimal.js`（`conceptItem` 意义/读写默认分支「0.8 里面有几个 0.1（参考：8 ÷ 10 = 0.8）」→「（参考：8/10 = 0.8，8 个 0.1）」；不动小数除法 L100/105、小数点移动 ÷10 等 G4/G5 分支）
+  - `shared/engine/strategy-engine.bundle.js`（重建；presentation bundle 同批重建零差异）
+  - `shared/capacity/capacity-map.json`（随本批全量 --refresh 重建，所涉行数字随全图重测变化，归因统一见 FINAL-141 tests；本任务不改容量数字）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json`、`.md`（显式 `--write` 重建；本任务贡献冻结差异 22 行：g3-down-u07-k001 ×4、g3-up-u08-k002 ×4、g3-up-u08-k003 fill/choice 2（同分母变体 calc/apply 本无÷不变）、g3-up-u08-k005 ×4 =14；共享同一 decimal 意义默认分支的 G4 g4-down-u04-k001/k002「小数的意义/读写」×8）
+- deleted: 无
+- reason: 用户第二批 #4。生产链实锤：G3 g3-up-u08-k002 分数读写、k005 进一步认识分数（全题型）出现「（1 ÷ 3）」，k003 比较分数大小出现「1 ÷ 4 与 1 ÷ 6」；g3-down-u07-k001 认识小数（全题型）出现「8 ÷ 10 = 0.8」。分数与除法的关系 a÷b=a/b 是 G5 教学内容；G3「小数的初步认识」在「分数的初步认识」之后，十分之几即零点几是同年级教材语言。改为分数记法（1/d、n/10）后 ÷ 引用消失且 EXPR_RE 仍识别 `/` 两侧数字，calc expressionPresent 不变式继续满足。G4 g4-down-u04-k001/k002 共享同一小数意义分支，n/10 记法对 G4 同样在年级内。
+- tests: ①局部测试 240/240；②生产链定向复测：4 个 G3 KP × 4 题型 d3/count=10 grep `÷|除以` 零命中且新记法在位（实产 7~8，受 KP 自身语义空间限制，与本任务无关）；③未动分支回归：G5 g5-down-u04-k002 分数与除法关系、G6 g6-up-u03-k002 分数除以整数、G5 g5-up-u03-k001 小数除法的 calc 题干均保留 ÷；④verify:allow-gen 1570/1570；冻结 1570/0/0、22 行差异归因 fraction/decimal 两个 conceptItem 默认分支；check-all 27/0/1SKIP。
+- risk: 低。同分支若被更高年级 KP 共享，分数记法对其同样在年级内（G3 起已学），无语义降级；答案/选项不变。回滚：还原 2 个生成器并重建 bundle。
+
+### FINAL-141｜P2#5 修复：G2「7～9的乘、除法」内容串用 + 容量 1（2026-09-26）
+
+- modified:
+  - `shared/generator/generators/reasoning.js`（新增按 KBL 知识点名称「7～9的乘、除法」精确门控的 7~9 表乘除 maker `makeTable789Question`，覆盖 calc/fill/choice/apply：calc 口诀乘/求商轮换；fill 五种空位等式（a×b=空、a×空=p、空×a=p、p÷a=空、p÷空=b）；choice 同族数值选项题（值约定 correctIndex）；apply 三组 7-9 表内乘除情境题（每盒共多少/平均分/每几个装袋）×四类物品轮换。门控用名称不用 canonical id 字面量（check-kbl-uniqueness 禁止 bundle 内嵌 canonical 数据）；其余 reasoning KP 分派一字不动）
+  - `shared/capacity/capacity-map.json`（全量 `node dev/scan-capacity.js --refresh` 重建，tiers HIGH 330→224 / VERY_LOW 28→94 / LOW 12→47 / MEDIUM 5→10，253 个 KP 行数字变化；本 KP 行在自封顶扫描下只能得到陈旧值 calc=45/fill=1/choice=1/apply=3，故以临时抬高该 KP 旧封顶后真实 GE 生成实测值定向回填：1-3 桶 calc 45 / fill 64 / choice 84 / apply 128，4-6 桶 45/72/84/128，7-10 桶 45/64/84/128，total=45，tier VERY_LOW→HIGH，limited 解除。回填数字全部来自真实生成去重计数，仅 fill 因预存在缺陷改取稳定批量——见 tests②）
+  - `shared/engine/strategy-engine.bundle.js`（重建；presentation bundle 同批重建零差异）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json`、`.md`（显式 `--write` 重建；本任务贡献冻结差异 3 行：k001 fill/choice/apply——calc 冻结样例文本恰好不变；另修复这两行在旧冻结证据中的 FAIL 态，重建后 ALLOW rows=1570 / FAIL 0）
+- deleted: 无
+- reason: 用户第二批 #5。生产链实锤：该 KP（ops=multiplication+division）native 绑在 reasoning，但只有 calc 有 7~9 专用分支（且仅 2 个模板）；fill 的逻辑题无空位 20/20 挂 KP_TYPE_CONTRACT，choice/apply 产出「谁说真话/年龄/盒子标签」无关逻辑推理模板；capacity-map 按实测记 calc/fill/choice=1、apply=3，策略层 plannedCount=1 且立即 CAPACITY_LIMITED，count=20 实产 1/1/1/3，judge/geometry/classify 本就无生成器（契约未 ALLOW）。修复在既有 native 宿主内按知识点名称补齐该 KP 的口诀乘除内容与形式空间（该 KP 是 reasoning 列表中唯一算术 KP，门控不外溢）；不改注册表（算术族一生成器一固定运算，双绑会同分恒定走乘法，求商丢失；禁止新增架构/适配层）。
+- tests: ①局部测试 240/240（含 p25-09-native-bindings L151 reasoning↔k001 绑定锚点、p27 misconception/variation 锚点全过）；②生产链 PracticeSession count=20：calc/fill/choice/apply × d1/d3/d5 共 12 批全部 20/20 SUCCESS，零「说真话/说谎/盒子/年龄」串题，乘除都出现，算式答案机械自洽，choice 选项≥3 且含正确值；兄弟 reasoning KP g6-down-u05-k001（鸽巢）apply 仍出原推理内容。真实容量实测（COUNT=128，GE 显式题型探针）：calc 45 / choice 84 / apply 128；fill 在 64 题及以下 64/64 有效、≥96 整批 0（耗尽后恢复路径批级失败的预存在缺陷，生产 count≤20 不可达，不在本任务扩修范围），d2/d5/d8 稳定实测 64/72/64。另发现扫描器自封顶（编排层按磁盘 capacity-map byType 封顶显式 typeCounts，9/22 引入）导致 `--refresh` 无法抬升任何题型容量，故采用「临时抬高旧封顶→真实生成实测→仅回填该 KP 行」的最小路径，未改扫描器/编排层；③容量全图 253 行变化归因：stash 本批+第一批代码对照实验证明与本批改码无关——旧 committed 容量图 generatedAt=2026-09-19，早于 9/22-23 编排容量门与 p25-04/07 校验器，旧 128 为彼时有效产出，当前代码实测的低数值（如固定识别类 KP 1~8）是真实去重后有效题量，PracticeSession 抽样一致；本批仅定向改动 k001 一行；④verify:allow-gen 1570/1570 PASS；冻结 1570 rows / 0 FAIL / 0 差异，3 行归因 k001 专属 maker；⑤check-all 27 PASS / 0 FAIL / 1 SKIP（check-kbl-uniqueness 曾因首版 KP id 字面量门控报 1 新增违规，已改名称门控归零）。
+- risk: 中。reasoning 为该 KP 的产出形态整体替换（原逻辑题本属串用）；乘除算式经 type-contract/kp-semantic（data.mode 画像 calc/apply 约定）全题型校验，数值答案机械可验；容量图全量重写但非 k001 行均为陈旧缓存对当前代码的真实重测（有 stash 对照证据），实际产出不受损（旧封顶 128 时这些 KP 当前同样只产 1~8）。回滚：还原 reasoning.js/capacity-map 并重建 bundle。
+
+### FINAL-137｜P1#1 修复：一年级出现乘除题（年级内容边界正向越界）（2026-09-26）
+
+- modified:
+  - `shared/strategy/structure-constraints.js`（allowMultDiv 在难度档位结果上再与 KP 年级边界 AND：strategyView.grade===1 时恒为 false；唯一调用方 strategy-engine.js 传入的 kp 即 strategyView，天然带 grade）
+  - `shared/generator/generators/application.js`（`kpAllowedOps(plan)` 增补结构护栏消费：KP 未声明可映射运算（operations 空/仅 mixed·sequential）且 `plan.constraints.allowMultDiv===false` 时，模板池只留 add/sub；KP 显式声明 multiplication/division（G2 起 25 个乘除 KP）时维持 FINAL-31c 原语义不变）
+  - `shared/engine/strategy-engine.bundle.js`（按硬约束重建；所改 3 个模块均由该 bundle 内联。presentation bundle 同批重建但内容零差异，git 无变更）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json`、`.md`（经 `check-generation-matrix-freeze.js --write` 显式重建的冻结证据；本任务贡献 106 处差异中的 50 处，均为 operations 未声明乘除的综合/解决问题类 KP，0 个显式乘除 KP 受影响；另 56 处属 FINAL-138）
+- deleted: 无
+- reason: 用户报「低年级出现高年级运算」。生产等价链（dev/_bundle-env + PracticeSession）实锤两个真源：①Strategy 层 `resolveStructureConstraints` 的 allowMultDiv 只按难度档位（TIERS d≥5 即 true），无 KP 年级边界，G1「10以内连加连减」d5 的 calc/choice 出现 `6 ÷ 3 + 3`、`6 ÷ 6`，且算术裸式经 type-contract `finishApply` 被重造成「每盒鸡蛋/平均分给」乘除应用题；KBL 事实：G1 39 个 KP 的 semantic.operations 零乘除，乘除教学自 G2 起（G2 60 KP 中 25 个显式声明乘除），故年级边界由 Strategy 层裁决（generator-contract 禁止 Generator 层 `if grade`）。②application-word 的 d1-3 simpleTemplates 池含 equal-groups(mult)/share-equally(div)，G1「解决问题」operations 为空导致 FINAL-31c 过滤不生效（kpAllowedOps=null），d1 即产出「每份…共有…份」「平均分给…人」。Generator 层修复只消费 Strategy 下发的 plan.constraints.allowMultDiv，不含任何年级判断，不违反跨层矩阵。G2 乘除 KP 因显式 operations 走声明优先路径，任何难度均不受影响。
+- tests:
+  - 定向复测（生产链 PracticeSession，固定种子）：G1 math-g1-up-u02-k002 d1/d5/d8 全题型零 `×÷*/÷` 真运算；math-g1-down-u02-k003 / math-g1-up-u06-k001 d1/d5 apply·fill·choice 零 equal-groups/share-equally/multiple 模板；G2 math-g2-up-u02-k002（乘法口诀）、math-g2-down-u02-k001（有余数除法）d1/d5 仍正常出乘除题
+  - 局部测试：`node --test "tests/generator/**/*.test.js" "tests/strategy/**/*.test.js"` 240/240 PASS；`tests/orchestration/**` 73/73 PASS
+  - 容量回归：`npm run verify:allow-gen` → ALLOW 真实性 1570 对，PASS 1570 / FAIL 0
+  - 全量门禁：`node dev/check-all.js` → 27 PASS / 0 FAIL / 1 SKIP（浏览器 E2E 在无浏览器环境跳过）
+  - 冻结证据：`check-generation-matrix-freeze.js --write` 后只读复核 ALLOW rows=1570 / FAIL rows=0；106 处证据差异归因脚本核验 = 本任务 50 + FINAL-138 56，其他 0；受影响的 20 个应用题 KP 全部 operations 未声明乘除，显式乘除 KP 零误伤
+- risk: 低-中。行为变化面：①任何 grade=1 KP 在 d5-d10 不再出现乘除（教学期望行为；×/÷ 在 G1 本无 KBL 依据）；②operations 未声明乘除且非 G1 的 KP（如 G3+ 综合 KP）在 d1-d4 的 application-word 模板池收敛为加减（与难度分档 d≥5 才放行乘除的原设计一致），d5+ 不变；显式声明乘除的 G2+ KP 全难度不变。concept-meaning 数位题的「（参考：7 × 10 + 4 = 74）」教学记号不属本任务（第二批 #3 处理）。回滚：还原 2 个源文件并重建 strategy bundle。
+
+### FINAL-138｜P1#2 修复：非度量几何 KP 串用面积题模板（2026-09-26）
+
+- modified:
+  - `shared/generator/generators/shape.js`（`makeGeometryApplyQuestion` 末尾 else 兜底：删除对所有非面积/周长/体积/圆/坐标/变换/立体特征 KP 无条件生成「一个图形的边长为 N 厘米，求它的面积是多少？」的逻辑，改为与 KP 名称绑定的生活观察开放任务；只动该分支）
+  - `shared/engine/strategy-engine.bundle.js`（shape 模块由该 bundle 内联；strategy/presentation 两 bundle 均按硬约束重建，presentation 内容零差异、git 无变更）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json`、`.md`（经 `check-generation-matrix-freeze.js --write` 显式重建；本任务贡献 106 处证据差异中的 56 处：G1/G2 共 7 个非度量几何 KP 的 apply 行，另 50 处属 FINAL-137）
+- deleted: 无
+- reason: 用户报几何模板串用。生产链实锤 d1 即存在：G1「平面图形认识/立体图形初识/生活中的立体图形」、G2「分类的含义/单一标准分类/认识厘米和米/测量物体长度的方法」等 KP 的 apply 题全部被套面积模板（边长 N 求面积），KP 语义与题目教学内容错位。真面积/周长/体积/表面积/圆 KP 均由前面的名称关键词分支或 concept-meaning 的 area-concept maker 承载，不经过 else，故收紧兜底不影响正规度量教学；新开放任务沿用同文件 isCoord 分支既有的「情境任务 + value 文本 + acceptable:[]」apply 合规范式。
+- tests:
+  - 定向复测（生产链 PracticeSession）：上述 G1/G2 KP d1/d5 apply 零「求它的面积」串题，题目含 KP 名称且通过 type-contract apply 校验正常交付；G3「面积的认识」等正规面积 KP apply 仍出面积计算题
+  - 局部测试：`node --test "tests/generator/**/*.test.js"` 全过（含 shape 契约用例；generator+strategy 合计 240/240）
+  - 全量门禁：`node dev/check-all.js` → 27 PASS / 0 FAIL / 1 SKIP（浏览器 E2E 跳过）
+  - 冻结证据：`--write` 重建后逐行核验 56 处几何差异 KP 名单：均为图形认识/观察/分类/长度单位/三角形性质/密铺/圆认识等非度量 KP（G1-G6），无任何名称含面积/周长/体积/表面积的正规度量计算 KP；G3 math-g3-down-u04-k001「面积的认识」apply 仍 5/5 出面积题
+- risk: 低。仅替换一个越界兜底分支的产出文案/答案；正规度量 KP 不经此分支。开放答案与 isCoord 分支同构，渲染/批改链路既有支持。回滚：还原 shape.js 并重建 strategy bundle。
+
 ### FINAL-136｜首页新增百度搜索资源平台站点验证 meta（2026-09-26）
 
 - modified:

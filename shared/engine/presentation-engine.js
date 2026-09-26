@@ -102,11 +102,11 @@ function generateQuestions(plan, options) {
     // 改为可交付 PARTIAL（不整批归零）；仅当「无任何题目」或存在真实生成/校验错误时才失败。
     // 真实错误码（FATAL_ERROR / NON_RETRYABLE / MAX_RETRIES_EXCEEDED）仍显式失败。
     // 注意：其他软校验失败且仍产出可用题目的计划照常交付（保持 R28-3 以来的既有语义）。
+    // FINAL-142：GENERATION_SPACE_EXHAUSTED 即使 0 题也不抛错——语义空间饱和是
+    // Generator 能力上限的如实表达，应返回空数组 + PARTIAL，由编排层按容量记账，
+    // 而非整批 FAILED（生产 count≤20 不可达，但容量扫描 count=128 可触发）。
     var isRealError = result.error && result.error !== 'GENERATION_SPACE_EXHAUSTED';
-    if (!result.success && (
-      (!semanticQuestions || semanticQuestions.length === 0) ||
-      isRealError
-    )) {
+    if (!result.success && isRealError) {
       var err = new Error(((result.error || 'GENERATION_FAILED') + (result.message ? ': ' + result.message : '')));
       err.generationFailed = true;
       err.generationError = result.error || null;

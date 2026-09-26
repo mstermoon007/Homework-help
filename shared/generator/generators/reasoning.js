@@ -25,6 +25,93 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':reason:' + i;
 }
 
+// FINAL-141：「7～9的乘、除法」KP（推理族绑定中唯一的算术 KP：7~9 乘法口诀 + 用口诀求商）
+// 专属 maker。历史实现只有 calc 题型带专用分支且仅 2 个模板；fill/choice/apply 全部落入
+// 通用 logic 模板，产出「谁说真话/年龄/盒子标签」无关逻辑题（fill 还因无空位全挂契约），
+// 容量实测 calc/fill/choice=1、apply=3。按 KBL 知识点名称精确门控补齐（名称门控是本文件
+// 既有分派机制，且不在源码内固化 canonical id），不外溢到其他推理 KP。
+var TABLE789_NAME = '7～9的乘、除法';
+
+function table789Options(rng, correct, distractors) {
+  var pool = {};
+  pool[Number(correct)] = 1;
+  distractors.forEach(function (x) {
+    x = Number(x);
+    if (x > 0 && x !== Number(correct)) pool[x] = 1;
+  });
+  var arr = Object.keys(pool).map(Number);
+  var filler = 1;
+  while (arr.length < 4) {
+    var cand = Number(correct) + filler * 2;
+    filler++;
+    if (cand > 0 && arr.indexOf(cand) === -1) arr.push(cand);
+  }
+  return Rng.shuffle(rng, arr.slice(0, 4).map(String));
+}
+
+function makeTable789Question(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var qt = plan.questionTypeId;
+  var a = Rng.randInt(rng, 7, 9);
+  var b = Rng.randInt(rng, 2, 9);
+  var p = a * b;
+  var form = i % 5;
+
+  var prompt, answer, options = null, answerMode = 'input', operation;
+
+  if (qt === 'calc') {
+    if (i % 2 === 0) {
+      prompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ____';
+      answer = String(p); operation = 'mult';
+    } else {
+      prompt = '用乘法口诀求商：' + p + ' ÷ ' + a + ' = ____';
+      answer = String(b); operation = 'div';
+    }
+  } else if (qt === 'fill') {
+    if (form === 0) { prompt = a + ' × ' + b + ' = ____'; answer = String(p); operation = 'mult'; }
+    else if (form === 1) { prompt = a + ' × ____ = ' + p; answer = String(b); operation = 'mult'; }
+    else if (form === 2) { prompt = '____ × ' + a + ' = ' + p; answer = String(b); operation = 'mult'; }
+    else if (form === 3) { prompt = p + ' ÷ ' + a + ' = ____'; answer = String(b); operation = 'div'; }
+    else { prompt = p + ' ÷ ____ = ' + b; answer = String(a); operation = 'div'; }
+  } else if (qt === 'choice') {
+    if (form === 0) { prompt = a + ' × ' + b + ' = （ ）'; answer = String(p); options = table789Options(rng, p, [p + a, p - b, p + b, p + 1]); operation = 'mult'; }
+    else if (form === 1) { prompt = a + ' × （ ） = ' + p; answer = String(b); options = table789Options(rng, b, [b + 1, b - 1, b + 2, a]); operation = 'mult'; }
+    else if (form === 2) { prompt = '（ ） × ' + a + ' = ' + p; answer = String(b); options = table789Options(rng, b, [b + 2, b - 1, b + 1, a - 1]); operation = 'mult'; }
+    else if (form === 3) { prompt = p + ' ÷ ' + a + ' = （ ）'; answer = String(b); options = table789Options(rng, b, [b + 1, b - 1, b + 2, a]); operation = 'div'; }
+    else { prompt = p + ' ÷ （ ） = ' + b; answer = String(a); options = table789Options(rng, a, [a + 1, a - 1, a + 2, b]); operation = 'div'; }
+    answerMode = 'choice';
+  } else { // apply：7~9 表内乘除情境，三组形式 × 四类物品轮换扩空间
+    var goods = ['月饼', '笔记本', '彩笔', '气球'];
+    var g = goods[i % goods.length];
+    if (i % 3 === 0) {
+      prompt = '每盒' + g + '有 ' + b + ' 个，买了 ' + a + ' 盒，一共有多少个' + g + '？';
+      answer = String(p); operation = 'mult';
+    } else if (i % 3 === 1) {
+      prompt = '把 ' + p + ' 个' + g + '平均分给 ' + a + ' 个小组，每个小组分得多少个？';
+      answer = String(b); operation = 'div';
+    } else {
+      prompt = '有 ' + p + ' 个' + g + '，每 ' + a + ' 个装一袋，可以装多少袋？';
+      answer = String(b); operation = 'div';
+    }
+  }
+
+  // 语义证据画像（kp-semantic profile）约定：calc→data.mode='calc'；fill/choice/apply→'apply'
+  var data = { mode: qt === 'calc' ? 'calc' : 'apply', steps: 1, operation: operation, questionType: qt };
+  if (options) { data.options = options; data.correctIndex = options.indexOf(String(answer)); }
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: { value: String(answer), acceptable: [] },
+    answerMode: answerMode,
+    data: data
+  };
+}
+
 function makeReasoningQuestion(plan, context, i, kp) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   // P25-09：名称以 selector 注入的 semanticParams.name 为准（kp={} 占位曾使分派恒落 logic）；
@@ -32,6 +119,9 @@ function makeReasoningQuestion(plan, context, i, kp) {
   var name = (plan && plan.semanticParams && plan.semanticParams.name)
     || (kp && (kp.name || (kp.identity && kp.identity.name)))
     || '逻辑推理';
+
+  // FINAL-141：7～9 的乘、除法走专属算术 maker，不进入通用逻辑推理模板
+  if (name === TABLE789_NAME) return makeTable789Question(plan, context, i);
 
   // P25-09：calc 为 form-bound 题型（题干必须内嵌算式 EXPR_RE）。
   // 推理族中仅 g2-up-u07-k001（7～9 的乘、除法）ALLOW calc，走 7~9 表乘除列式；

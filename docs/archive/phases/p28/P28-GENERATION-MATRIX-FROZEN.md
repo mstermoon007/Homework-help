@@ -3,7 +3,7 @@
 | 项 | 值 |
 |---|---|
 | 任务 | P28-08 生成矩阵最终冻结：1570 条 ALLOW(KP, QuestionType) 逐条对齐真实 Generator、真实生成、通过 Validator、产出合法 SemanticQuestion；禁 fake/placeholder/empty/fallback 题 |
-| 执行日期 | 2026-09-23 |
+| 执行日期 | 2026-09-26 |
 | 固定 seed | `freeze:<version>|<kp>|<qt>|d<difficulty>`（version=p28-v1，difficulty=3）；同 KP/QT/Difficulty/Seed/Generator/KBL → prompt/answer/sample/promptLen 完全一致，连续复跑字节相同 |
 | 判定规则 | 静态矩阵 == 动态能力端点 == 1570；每行 pluginId ∈ GeneratorRegistry；逐行重生成证据 10 项全绿 |
 
