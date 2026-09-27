@@ -4,13 +4,13 @@
  * 专为新教材补录的语义型知识点提供「语义正确」的专用生成逻辑，
  * 避免泛型生成器（selection-fill / application-word）对非算术语义 KP 输出错误语义题。
  *
- * 本文件内两个生成器：
+ * 本文件内一个生成器：
  *   generator:code-recognition        —— 数字编码（三上综合实践：认识数字编码/编制学号）
- *   generator:equivalent-reasoning    —— 等量代换（三上综合实践：曹冲称象 / 等量代换推理）
+ *   （generator:equivalent-reasoning 已于 FINAL-20 清除：0 mapping、0 evidence、能力被原生绑定族全覆盖）
  *
  * 挂载点：
  *   - generators/index.js  require + buildAll 合并（frozen 清单，改动需 baseline 重锚）
- *   - generator-registry.js CORE_RECORDS 增补 2 条 native 绑定（frozen 清单，同上）
+ *   - generator-registry.js CORE_RECORDS 增补 1 条 native 绑定（frozen 清单，同上）
  *   - selector 无需改动：native binding 最高优先 + 新 id 不触发任何家族硬阻断
  *
  * 输出契约：SemanticQuestion[]（字段与 selection.js buildBase 一致）

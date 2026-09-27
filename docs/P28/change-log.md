@@ -25,6 +25,15 @@
 
 ## 记录（新 → 旧）
 
+### P28-CLEANUP-TARGETED-01｜定点清理：semantic-special.js 头注释残留修正（2026-09-27）
+
+- modified:
+  - `shared/generator/generators/semantic-special.js`（仅文件头注释：「本文件内两个生成器」改「一个生成器」，删除 equivalent-reasoning 描述行并附 FINAL-20 清除注记，「增补 2 条 native 绑定」更正为 1 条——与 generator-registry.js 实际登记一致）
+- deleted: 无文件删除；无代码删除。
+- reason: 用户发起「大扫除」评估后批准定点清理。核查死代码矩阵 11 项：2 个 DELETE 项（LegacyRenderer、SemanticQuestionBridge）物理文件早已删除且全项目无符号残留（仅剩说明性注释与 migration/raw、kbl 冻结数据中的历史字样，按冻结纪律不动）；1 个 DORMANT 项（selection-choice/judge 契约载体）矩阵判定 KEEP，属冻结契约面不动。唯一实质残留为 semantic-special.js 头注释仍描述已删除的 equivalent-reasoning 生成器，会误导后续维护者，予以修正。
+- tests: ①verify:syntax 298 文件 0 错误；②check-all 28 PASS / 0 FAIL / 0 SKIP（首跑出现 1 项 E2E 时序抖动 FAIL，复跑全绿；本改动仅注释、无行为面）；③grep 全项目确认 LegacyRenderer/SemanticQuestionBridge 零代码残留。
+- risk: 零。纯注释修正，不触碰任何代码路径、契约与基线数据。
+
 ### P28-UI-PRACTICE-TOOLBAR-DEFAULT-OPEN-01｜左边栏每次打开页面默认展开，取消折叠状态记忆（2026-09-27）
 
 - modified:
