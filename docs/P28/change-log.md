@@ -25,6 +25,23 @@
 
 ## 记录（新 → 旧）
 
+### P28-UI-SELECT-TEST-01-VERIFY｜二级页面契约测试验证记录（2026-09-27）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-TEST-01 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: `node --test tests/presentation/select-page-contract.test.js` 单跑为 tests 23 / suites 7 / pass 23 / fail 0 / skip 0（一次通过，未修改生产代码）；`npm run verify:syntax` 通过（298 个文件，0 个错误，较前 +1 新测试文件）；`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP，第 5 项全链测试经 `tests/**/*.test.js` 通配自动收录新文件。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-TEST-01｜为二级页面改造补充契约单元测试（2026-09-27）
+
+- modified:
+  - `tests/presentation/select-page-contract.test.js`（新增；node:test，静态读取 select.html / sitemap.xml / sw.js 断言 LAYOUT-01~17 契约：范围卡顺序 年级→科目→模式→册别、已删元素不回归 countSelect/difficultySelect/modeDesc/top-nav/config-params、摘要栏在左且含三模式开始按钮与主页入口、快/教师题型统一选择器、快速单元三列、kp-hint 隐藏、无深色媒体块、canonical 与 sitemap/SW 收录、MODE_DESC 无 desc、count/difficulty null 兜底 20/normal、教师 KP 全展平且单元取消不级联清空、模式轻提示无 confirm、hero 自由顺序文案、esc 转义存在）
+- deleted: 无
+- reason: 用户要求为二级页面修改补充单元测试。项目无 jsdom/DOM 测试栈，沿用 tests/presentation 既有「读源文件做契约断言」方式（与 svg-contract 同类），不新增依赖、不复制入口。
+- tests: 计划执行 `node --test tests/presentation/select-page-contract.test.js` 与 `node dev/check-all.js`（check-all 仍 28 项；第 5 项全链测试通配 `tests/**/*.test.js` 自动收录新文件，用例数随之增长）。
+- risk: 低。纯新增只读测试文件，不改生产代码；断言锚定稳定 ID/语义而非行号。
+
 ### P28-UI-SELECT-LAYOUT-17-VERIFY｜选择顺序自由化验证记录（2026-09-27）
 
 - modified: 无（仅补记验证结果，不新增代码改动）
