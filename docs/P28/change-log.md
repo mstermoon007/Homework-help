@@ -25,6 +25,40 @@
 
 ## 记录（新 → 旧）
 
+### P28-UI-SELECT-LAYOUT-17-VERIFY｜选择顺序自由化验证记录（2026-09-27）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-17 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome CDP 实测（1440）——①范围卡 label 顺序为 年级/科目/模式/册别；②教师模式未选单元时知识点 14 组 39 chips 全展平、hint 为「可直接勾选知识点；点选左侧单元可聚焦对应分组」；③不选单元直接勾 1 个 KP 后 7 张题型卡全部 enabled（修复首版题型统计仍按已选单元收集导致全 disabled 的缺陷：renderTeacherTypeGrid 改为直接由 state.teacherKps 映射 KP 对象）；④点单元聚焦仅显示该组，取消聚焦恢复 14 组且已选 KP 保留（单元不再级联清空 KP）；⑤POL 异步 rerenderStage 重建 DOM 经事件委托验证无影响；⑥快速模式 7 题型/14 单元回归正常；⑦有已选配置时切模式显示 inline 提示，3.5 秒后实测 hidden=true，无选择时不提示；⑧竞赛切换自动回数学。`npm run verify:syntax` 通过（297 个文件，0 个错误）；`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP（含真实浏览器 E2E）。
+- risk: 无新增代码风险；教师模式册别为聚焦语义（显式勾选的 KP 为生成唯一依据），与 collectKps 既有口径一致。
+
+### P28-UI-SELECT-LAYOUT-17｜选择顺序自由化：年级科目固定，其余条件自由勾选（2026-09-27）
+
+- modified:
+  - `select.html`（①范围卡顺序由「年级→科目→册别→模式」改为「年级→科目→模式→册别」，`.config-range` 栅格列模板同步调整（前三项 1fr、册别 auto）；②教师模式知识点解除「先选单元」硬顺序：未选单元时按册别内全部单元分组展开 KP 可直接勾选，选单元仅作聚焦筛选；单元卡取消勾选不再清除其下已选 KP；题型卡计数仍基于已选 KP（本就与顺序无关）；③标题/提示文案去步骤化（blk-title、col-label、teacherKpHint）；④hero 副文案改为自由选择措辞；⑤新增模式切换 inline 轻提示 `#modeSwitchHint`（不使用 confirm 弹窗，遵循产品「无弹窗」承诺；仅当旧模式存在已选配置被清空时出现，3 秒淡出，告知各模式配置相互独立））
+- deleted: 无
+- reason: 用户要求年级、科目固定在前，其余选择项按该科目可实现内容自由选择、不限定顺序（三决策已确认：模式居第三、教师 KP 全部展开+单元聚焦、语文/英语保持占位）。
+- tests: 计划执行浏览器复核（范围卡顺序、教师模式不选单元直接勾 KP、单元聚焦/取消不清空 KP、题型计数、模式切换提示、快速模式自由顺序回归）、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 中。教师模式 KP 全展平改了渲染分支与单元取消语义（聚焦筛选不再级联清空），collectKps 仍以 state.teacherKps 为准，生成链未动；KP 全展开列表加长，以列内限高滚动收纳。
+
+### P28-UI-SELECT-LAYOUT-16-VERIFY｜模式提示行取消验证记录（2026-09-27）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-LAYOUT-16 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: 浏览器实测 select.html——`#modeDesc` 元素不存在、`.mode-desc` 节点数 0；hero 副文案为整合后的三种模式使用顺序静态说明（快速「册别→题型→单元」/教师「册别→题型→单元→知识点」/竞赛 C1–C9）；摘要栏「模式」行仍正常显示「快速模式」（MODE_DESC.title 保留生效）；开始按钮 href 参数正常（count=20&difficulty=6）；console 无报错；`npm run verify:syntax` 通过（297 个文件，0 个错误）；`node dev/check-all.js` 为 28 PASS / 0 FAIL / 0 SKIP（含真实浏览器 E2E 模式切换路径）。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-LAYOUT-16｜取消模式提示行，使用说明并入 hero 副文案（2026-09-27）
+
+- modified:
+  - `select.html`（①删除卡片上方随模式切换的提示行 `<div class="mode-desc" id="modeDesc">` 及 `.mode-desc` / `.mode-desc:empty` 两条 CSS；②hero「选择练习」下 `.hero-desc` 副文案改为静态使用顺序说明（快速：册别→题型→单元；教师：册别→题型→单元→知识点；竞赛：C1–C9 模块组卷）；③JS 删除 `modeDesc` 元素引用与 renderAll 中提示更新两行，MODE_DESC 仅保留 title（摘要栏「模式」行仍在使用），desc 字段同步删除）
+- deleted: 无（随上述修改移除 DOM 节点与 CSS 规则，无整文件删除）
+- reason: 用户要求取消二级页面卡片上方的模式使用提示文字，将使用顺序和方法说明整合到顶部「选择练习」下方的解释文字中。
+- tests: 计划执行浏览器复核（提示行消失、hero 副文案含三种模式说明、摘要栏模式行不受影响、console 无报错）、`npm run verify:syntax`、`node dev/check-all.js`。
+- risk: 低。MODE_DESC.title 仍被 renderSummaryBody 使用，已保留；纯展示层与死代码清理。
+
 ### P28-UI-SELECT-LAYOUT-15-VERIFY｜select.html 接入验证记录（2026-09-26）
 
 - modified: 无（仅补记验证结果，不新增代码改动）

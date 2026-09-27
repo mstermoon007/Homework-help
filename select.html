@@ -226,7 +226,7 @@ body.select-page{
 
 .config-range{
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) auto;
   gap: 18px;
   align-items: end;
 }
@@ -323,20 +323,6 @@ body.select-page{
   box-shadow: 0 1px 2px rgba(15,35,70,.10), 0 5px 12px -8px rgba(15,35,70,.7);
 }
 
-/* ---------- 7. 模式说明 ---------- */
-.mode-desc{
-  position: relative;
-  margin: 0 0 18px;
-  padding: 12px 18px 12px 18px;
-  border-radius: 0 var(--sp-radius) var(--sp-radius) 0;
-  border-left: 3px solid var(--sp-blue-3);
-  background: linear-gradient(90deg, rgba(74,144,217,.10), rgba(74,144,217,0) 78%);
-  color: var(--sp-ink-soft);
-  font-size: .89rem;
-  line-height: 1.7;
-}
-.mode-desc:empty{ display: none; }
-
 /* 非数学科目提示 */
 .subject-notice{
   margin: 0 auto 18px;
@@ -350,6 +336,31 @@ body.select-page{
   font-weight: 600;
   text-align: center;
   box-shadow: 0 8px 22px -20px rgba(154,91,6,.9);
+}
+
+/* 模式切换轻提示（inline，自动淡出，非弹窗） */
+.mode-switch-hint{
+  margin: 0 0 14px;
+  padding: 10px 18px;
+  border-radius: 0 var(--sp-radius) var(--sp-radius) 0;
+  border-left: 3px solid var(--sp-blue-3);
+  background: linear-gradient(90deg, rgba(74,144,217,.10), rgba(74,144,217,0) 78%);
+  color: var(--sp-ink-soft);
+  font-size: .86rem;
+  line-height: 1.6;
+  animation: sp-hint-fade 3s ease forwards;
+}
+.mode-switch-hint[hidden]{ display: none; }
+@keyframes sp-hint-fade{
+  0%, 72%{ opacity: 1; }
+  100%{ opacity: 0; }
+}
+
+/* 教师模式：知识点列全展开时限高滚动，避免分组过长 */
+#teacherKpGrid{
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 6px;
 }
 
 /* ---------- 8. 舞台切换 ---------- */
@@ -924,14 +935,14 @@ body.select-page{
 <header class="page-hero">
   <div class="hero-inner">
     <h1>选择练习</h1>
-    <p class="hero-desc">选择练习模式与学科年级，系统将为您生成匹配的练习题。</p>
+    <p class="hero-desc">先选年级、科目与练习模式；册别、单元、知识点、题型等条件均可按需要自由勾选，不限先后顺序，系统将为您生成匹配的练习题。</p>
   </div>
 </header>
 
 <main class="select-wrap">
 
-  <!-- 模式说明（选择器下沿，单行，无特殊格式） -->
-  <div class="mode-desc" id="modeDesc"></div>
+  <!-- 模式切换轻提示（各模式配置独立，切换后淡出，不使用弹窗） -->
+  <div class="mode-switch-hint" id="modeSwitchHint" hidden></div>
 
   <!-- 非数学科目占位提示（R14：空白配置空间） -->
   <div class="subject-notice" id="subjectNotice" style="display:none;"></div>
@@ -969,6 +980,14 @@ body.select-page{
             <option value="english">英语（接入中）</option>
           </select>
         </div>
+        <div class="filter-item">
+          <label class="f-label" for="modeSelect">模式</label>
+          <select id="modeSelect">
+            <option value="quick">快速模式</option>
+            <option value="teacher">教师模式</option>
+            <option value="competition">竞赛模式</option>
+          </select>
+        </div>
         <div class="filter-item config-book" id="bookWrapQuick">
           <span class="f-label">册别</span>
           <div class="book-seg" id="bookSegQuick">
@@ -984,14 +1003,6 @@ body.select-page{
             <button type="button" class="book-seg-btn" data-book="down">下册</button>
             <button type="button" class="book-seg-btn on" data-book="all">不限</button>
           </div>
-        </div>
-        <div class="filter-item">
-          <label class="f-label" for="modeSelect">模式</label>
-          <select id="modeSelect">
-            <option value="quick">快速模式</option>
-            <option value="teacher">教师模式</option>
-            <option value="competition">竞赛模式</option>
-          </select>
         </div>
       </section>
 
@@ -1009,15 +1020,15 @@ body.select-page{
         <section class="sel-block">
           <div class="blk-title">题型（可多选）</div>
           <div class="type-grid" id="teacherTypeGrid"></div>
-          <div class="blk-title">单元 → 知识点（可多选）</div>
+          <div class="blk-title">单元（聚焦筛选） · 知识点（可多选）</div>
           <div class="teacher-cols">
             <div class="teacher-col">
-              <div class="col-label">单元</div>
+              <div class="col-label">单元（点选可聚焦，不限先后）</div>
               <div class="type-grid" id="teacherUnitGrid"></div>
             </div>
             <div class="teacher-col teacher-col-mid">
-              <div class="col-label">知识点</div>
-              <div class="chosen-empty" id="teacherKpHint">先选择单元，再勾选知识点</div>
+              <div class="col-label">知识点（可直接勾选）</div>
+              <div class="chosen-empty" id="teacherKpHint">可直接勾选知识点；点选左侧单元可聚焦对应分组</div>
               <div class="kp-grid" id="teacherKpGrid"></div>
             </div>
           </div>
@@ -1076,9 +1087,9 @@ body.select-page{
   // ---------- 常量 ----------
   var SUBJECT_CANON = { math: 'math' };
   var MODE_DESC = {
-    quick: { title: '快速模式', desc: '按上下册 → 单元 → 题型，一键生成练习题。' },
-    teacher: { title: '教师模式', desc: '按上下册 → 单元 → 知识点 → 题型，知识点驱动生成。' },
-    competition: { title: '竞赛模式', desc: '按竞赛知识模块（C1–C9）多选，按模块知识点组卷。' }
+    quick: { title: '快速模式' },
+    teacher: { title: '教师模式' },
+    competition: { title: '竞赛模式' }
   };
 
   // 快速模式（数学）：题型类别 → 能力类型匹配（数据驱动，不再锁定模块）。
@@ -1138,7 +1149,6 @@ body.select-page{
   var bookSegTeacher = document.getElementById('bookSegTeacher');
   var bookWrapQuick = document.getElementById('bookWrapQuick');
   var bookWrapTeacher = document.getElementById('bookWrapTeacher');
-  var modeDesc = document.getElementById('modeDesc');
 
   // R9-② 完整知识点条目读取：经 KnowledgeContext（KBL Runtime）取年级 UI 视图
   // （含 applicable_question_types / difficulty / cognitive_level），供选择时提醒使用；
@@ -1378,14 +1388,15 @@ body.select-page{
     return d.innerHTML;
   }
 
-  // P10-3：教师模式「当前展示的 KP 池」（已选单元下全部 KP）→ POL plan 能力视图。
-  // 以展示池（而非仅已选 KP）查询，保证知识点卡在勾选前即显示能力判定提示。
+  // P10-3：教师模式「当前展示的 KP 池」→ POL plan 能力视图。
+  // 选择顺序自由化后：已选单元时仅取聚焦单元；未选单元时取当前册别全部 KP（全展平态）。
   function teacherDisplayPool() {
     var entries = fullKPEntries(state.subject, state.grade);
     var buckets = unitBuckets(entries.filter(function (k) { return kpMatchesBook(k, state.teacherBook); }), state.teacherBook);
     var pool = [], seen = {};
+    var focused = state.teacherUnits.length > 0;
     buckets.forEach(function (bkt) {
-      if (state.teacherUnits.indexOf(bkt.unit) === -1) return;
+      if (focused && state.teacherUnits.indexOf(bkt.unit) === -1) return;
       bkt.kps.forEach(function (k) { if (k && k.id && !seen[k.id]) { seen[k.id] = true; pool.push(k.id); } });
     });
     return pool;
@@ -1406,7 +1417,7 @@ body.select-page{
       teacherUnitGrid.innerHTML = '<div class="type-empty">当前册别暂无单元</div>';
       teacherKpGrid.innerHTML = '';
       teacherTypeGrid.innerHTML = '';
-      if (teacherKpHint) { teacherKpHint.style.display = ''; teacherKpHint.textContent = '先选择单元，再勾选知识点'; }
+      if (teacherKpHint) { teacherKpHint.style.display = ''; teacherKpHint.textContent = '当前册别暂无可选知识点'; }
       return;
     }
     var uHtml = '';
@@ -1418,7 +1429,7 @@ body.select-page{
     });
     teacherUnitGrid.innerHTML = uHtml;
     renderTeacherKpGrid(buckets);
-    renderTeacherTypeGrid(buckets);
+    renderTeacherTypeGrid();
   }
 
   function renderTeacherKpGrid(buckets) {
@@ -1427,16 +1438,14 @@ body.select-page{
       var unitFiltered = entries.filter(function (k) { return kpMatchesBook(k, state.teacherBook); });
       buckets = unitBuckets(unitFiltered, state.teacherBook);
     }
+    // 顺序自由：未选单元时展示当前册别全部单元分组（可直接勾选 KP）；
+    // 选了单元则只渲染聚焦单元分组（单元卡是聚焦筛选器，不是前置条件）。
     var selectedUnits = buckets.filter(function (bkt) { return state.teacherUnits.indexOf(bkt.unit) !== -1; });
-    if (!selectedUnits.length) {
-      teacherKpGrid.innerHTML = '';
-      if (teacherKpHint) { teacherKpHint.style.display = ''; teacherKpHint.textContent = '先选择单元，再勾选知识点'; }
-      return;
-    }
+    var renderBuckets = selectedUnits.length ? selectedUnits : buckets;
     var view = teacherPolView();
     var totalKp = state.teacherKps.length;
     var html = '';
-    selectedUnits.forEach(function (bkt) {
+    renderBuckets.forEach(function (bkt) {
       html += '<div class="kp-group"><div class="kp-group-title">' + esc(bkt.unit) +
         '（已选 ' + bkt.kps.filter(function (k) { return state.teacherKps.indexOf(k.id) !== -1; }).length + '/' + bkt.kps.length + '）</div><div class="kp-grid">';
       bkt.kps.forEach(function (k) {
@@ -1448,22 +1457,28 @@ body.select-page{
       });
       html += '</div></div>';
     });
-    if (teacherKpHint) { teacherKpHint.style.display = totalKp ? 'none' : ''; teacherKpHint.textContent = totalKp ? ('已选 ' + totalKp + ' 个知识点') : '点击知识点卡片多选（高亮）'; }
     teacherKpGrid.innerHTML = html;
+    if (teacherKpHint) {
+      teacherKpHint.style.display = '';
+      if (selectedUnits.length) {
+        teacherKpHint.textContent = totalKp
+          ? ('已选 ' + totalKp + ' 个知识点 · 聚焦 ' + selectedUnits.length + ' 个单元')
+          : ('已聚焦 ' + selectedUnits.length + ' 个单元，点击知识点卡片多选');
+      } else {
+        teacherKpHint.textContent = totalKp
+          ? ('已选 ' + totalKp + ' 个知识点 · 当前显示全部单元分组')
+          : '可直接勾选知识点；点选左侧单元可聚焦对应分组';
+      }
+    }
   }
 
-  // 右栏：题型卡（显示命中已选知识点的题型数量）
-  function renderTeacherTypeGrid(buckets) {
-    // P28-48：KP/单元点击回调以无参形式调用本函数；此前无 buckets 时 selectedKps 恒为空，
-    // 导致已选 KP 后右栏 7 张题型卡全部显示「0 个知识点」。无 buckets 时按当前册别自行重算。
-    if (!buckets) {
-      var allEntries = fullKPEntries(state.subject, state.grade);
-      var scoped = allEntries.filter(function (k) { return kpMatchesBook(k, state.teacherBook); });
-      buckets = unitBuckets(scoped, state.teacherBook);
-    }
-    var selectedKps = [];
-    buckets.filter(function (bkt) { return state.teacherUnits.indexOf(bkt.unit) !== -1; })
-      .forEach(function (bkt) { bkt.kps.forEach(function (k) { if (state.teacherKps.indexOf(k.id) !== -1) selectedKps.push(k); }); });
+  // 题型卡（显示命中已选知识点的题型数量）。
+  // 顺序自由后不再依赖单元聚焦：直接以 state.teacherKps 在全量条目里取 KP 对象统计。
+  function renderTeacherTypeGrid() {
+    var allEntries = fullKPEntries(state.subject, state.grade);
+    var kpById = {};
+    allEntries.forEach(function (k) { kpById[k.id] = k; });
+    var selectedKps = state.teacherKps.map(function (id) { return kpById[id]; }).filter(Boolean);
     var view = teacherPolView();
     var tHtml = '';
     QUICK_TYPE_DEFS.forEach(function (t) {
@@ -1485,22 +1500,13 @@ body.select-page{
     });
   }
 
-  // 教师模式：单元卡（左栏）多选
+  // 教师模式：单元卡（多选）——聚焦筛选器：勾选仅聚焦知识点分组，取消聚焦不清空已选 KP
   teacherUnitGrid.addEventListener('click', function (e) {
     var b = e.target.closest ? e.target.closest('[data-unit]') : null;
     if (!b) return;
     var unit = b.getAttribute('data-unit');
     var idx = state.teacherUnits.indexOf(unit);
     if (idx === -1) state.teacherUnits.push(unit); else state.teacherUnits.splice(idx, 1);
-    // 取消单元时同步清除其下已选知识点
-    if (idx !== -1) {
-      var entries = fullKPEntries(state.subject, state.grade);
-      var bkt = unitBuckets(entries, state.teacherBook).filter(function (x) { return x.unit === unit; })[0];
-      if (bkt) bkt.kps.forEach(function (k) {
-        var ki = state.teacherKps.indexOf(k.id);
-        if (ki !== -1) state.teacherKps.splice(ki, 1);
-      });
-    }
     renderTeacherKpGrid();
     renderTeacherTypeGrid();
     renderSummary();
@@ -1688,8 +1694,6 @@ body.select-page{
   }
 
   function renderAll() {
-    var md = MODE_DESC[state.mode] || MODE_DESC.quick;
-    modeDesc.textContent = md.title + '：' + md.desc;
     if (modeSelect.value !== state.mode) modeSelect.value = state.mode; // 同步 URL 初态
     if (subjectSelect.value !== state.subject) subjectSelect.value = state.subject; // 同步 subject（含 chinese/english 占位）
     if (Number(gradeSelect.value) !== state.grade) gradeSelect.value = String(state.grade); // 同步 grade
@@ -1697,8 +1701,29 @@ body.select-page{
     renderSummary();
   }
 
+  // 模式切换 inline 轻提示（各模式配置独立；不使用 confirm 弹窗）
+  var modeHintTimer = null;
+  function modeHasSelection(m) {
+    if (m === 'quick') return state.quickTypes.length > 0 || state.quickUnits.length > 0;
+    if (m === 'teacher') return state.teacherTypes.length > 0 || state.teacherUnits.length > 0 || state.teacherKps.length > 0;
+    return state.competitionModules.length > 0;
+  }
+  function showModeSwitchHint(text) {
+    var h = document.getElementById('modeSwitchHint');
+    if (!h) return;
+    h.textContent = text;
+    h.hidden = false;
+    h.style.animation = 'none'; // 重启动画
+    void h.offsetWidth;
+    h.style.animation = '';
+    if (modeHintTimer) clearTimeout(modeHintTimer);
+    modeHintTimer = setTimeout(function () { h.hidden = true; }, 3000);
+  }
+
   // 下拉事件
   modeSelect.addEventListener('change', function () {
+    var prev = state.mode;
+    var hadSel = modeHasSelection(prev);
     state.mode = modeSelect.value;
     // 竞赛模式自动切到数学
     if (state.mode === 'competition' && state.subject !== 'math') {
@@ -1706,6 +1731,9 @@ body.select-page{
       subjectSelect.value = 'math';
     }
     if (state.mode !== 'teacher') { state.teacherKps = []; state.teacherTypes = []; state.teacherUnits = []; }
+    if (prev !== state.mode && hadSel) {
+      showModeSwitchHint('已切换为「' + (MODE_DESC[state.mode] || MODE_DESC.quick).title + '」，各模式的配置相互独立。');
+    }
     ensureKnowledge(state.subject).then(renderAll);
   });
   subjectSelect.addEventListener('change', function () {
