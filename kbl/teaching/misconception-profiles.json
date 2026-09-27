@@ -15,18 +15,18 @@
   "counts": {
     "kps": 375,
     "kpsWithSlots": 307,
-    "slots": 971,
+    "slots": 898,
     "byErrorType": {
-      "概念混淆": 160,
+      "概念混淆": 128,
       "审题错误": 307,
-      "格式错误": 160,
+      "格式错误": 128,
       "步骤错误": 200,
       "计算错误": 82,
-      "符号错误": 12,
+      "符号错误": 3,
       "单位错误": 39,
       "口诀混淆": 11
     },
-    "droppedByAxisEvidence": 653
+    "droppedByAxisEvidence": 726
   },
   "kps": {
     "math-g1-down-u01-k001": {
@@ -87,23 +87,6 @@
       "knowledgePointId": "math-g1-down-u02-k003",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -136,21 +119,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -284,42 +252,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
-          "errorType": "符号错误",
-          "basis": "semantic.operations∋subtraction（退位/负向语境）",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ],
-            "operations": [
-              "sub"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -352,21 +284,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -390,42 +307,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
-          "errorType": "符号错误",
-          "basis": "semantic.operations∋subtraction（退位/负向语境）",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ],
-            "operations": [
-              "sub"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
-        },
-        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（4 行）",
           "triggerPattern": {
@@ -441,21 +322,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -517,42 +383,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
-          "errorType": "符号错误",
-          "basis": "semantic.operations∋subtraction（退位/负向语境）",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ],
-            "operations": [
-              "sub"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=4≥2",
           "triggerPattern": {
@@ -585,21 +415,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -850,23 +665,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -899,21 +697,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -1127,23 +910,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -1176,21 +942,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -1214,23 +965,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
@@ -1246,21 +980,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -1804,42 +1523,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
-          "errorType": "符号错误",
-          "basis": "semantic.operations∋subtraction（退位/负向语境）",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ],
-            "operations": [
-              "sub"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -1872,44 +1555,12 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
     "math-g2-down-u06-k001": {
       "knowledgePointId": "math-g2-down-u06-k001",
       "slots": [
-        {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
         {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
@@ -1943,21 +1594,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -2001,42 +1637,6 @@
           "feedback": "重温乘除法口诀表，对易混口诀（如三四十二/三五十下）专项背诵核对"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
-          "errorType": "符号错误",
-          "basis": "semantic.operations∋subtraction（退位/负向语境）",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ],
-            "operations": [
-              "sub"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
-        },
-        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
@@ -2052,21 +1652,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -2074,23 +1659,6 @@
       "knowledgePointId": "math-g2-down-u06-k003",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -2123,21 +1691,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -2145,23 +1698,6 @@
       "knowledgePointId": "math-g2-down-u06-k004",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -2194,21 +1730,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -2252,42 +1773,6 @@
           "feedback": "重温乘除法口诀表，对易混口诀（如三四十二/三五十下）专项背诵核对"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
-          "errorType": "符号错误",
-          "basis": "semantic.operations∋subtraction（退位/负向语境）",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ],
-            "operations": [
-              "sub"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
-        },
-        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
@@ -2303,21 +1788,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -2339,23 +1809,6 @@
             "evidenceRows": 3
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
-        },
-        {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
         {
           "errorType": "步骤错误",
@@ -2390,21 +1843,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -3270,23 +2708,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
@@ -3302,21 +2723,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -4844,23 +4250,6 @@
           "feedback": "重温乘除法口诀表，对易混口诀（如三四十二/三五十下）专项背诵核对"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=3≥2",
           "triggerPattern": {
@@ -4893,21 +4282,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -5057,23 +4431,6 @@
       "knowledgePointId": "math-g3-down-u08-k005",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -5106,21 +4463,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -5460,23 +4802,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=5≥2",
           "triggerPattern": {
@@ -5509,21 +4834,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -5831,23 +5141,6 @@
       "knowledgePointId": "math-g3-up-u04-k001",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -5880,21 +5173,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -6735,23 +6013,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=3≥2",
           "triggerPattern": {
@@ -6784,21 +6045,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -6966,42 +6212,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
-          "errorType": "符号错误",
-          "basis": "semantic.operations∋subtraction（退位/负向语境）",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ],
-            "operations": [
-              "sub"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=3≥2",
           "triggerPattern": {
@@ -7034,21 +6244,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -8934,23 +8129,6 @@
       "knowledgePointId": "math-g4-down-u09-k003",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=3≥2",
           "triggerPattern": {
@@ -8983,21 +8161,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -9019,42 +8182,6 @@
             "evidenceRows": 3
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
-        },
-        {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
-          "errorType": "符号错误",
-          "basis": "semantic.operations∋subtraction（退位/负向语境）",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ],
-            "operations": [
-              "sub"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
         },
         {
           "errorType": "步骤错误",
@@ -9089,21 +8216,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -9782,23 +8894,6 @@
       "knowledgePointId": "math-g4-up-u06-k001",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=statistics",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -9831,21 +8926,6 @@
             "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -10288,23 +9368,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -10337,21 +9400,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -12577,23 +11625,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=3≥2",
           "triggerPattern": {
@@ -12626,21 +11657,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -12820,42 +11836,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
-          "errorType": "符号错误",
-          "basis": "semantic.operations∋subtraction（退位/负向语境）",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ],
-            "operations": [
-              "sub"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=3≥2",
           "triggerPattern": {
@@ -12888,21 +11868,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -13618,23 +12583,6 @@
       "knowledgePointId": "math-g5-up-u03-k006",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=4≥2",
           "triggerPattern": {
@@ -13667,21 +12615,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -14998,23 +13931,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=4≥2",
           "triggerPattern": {
@@ -15047,21 +13963,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -15157,23 +14058,6 @@
       "knowledgePointId": "math-g6-down-u01-k005",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=calculation",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=4≥2",
           "triggerPattern": {
@@ -15206,21 +14090,6 @@
             "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 4
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -16160,23 +15029,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=3≥2",
           "triggerPattern": {
@@ -16209,21 +15061,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -17554,23 +16391,6 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=application-word",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=4≥2",
           "triggerPattern": {
@@ -17603,21 +16423,6 @@
             "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 3
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },

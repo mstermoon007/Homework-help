@@ -340,22 +340,6 @@ function makeApplicationQuestion(plan, context, i, meta) {
   };
 }
 
-function makeGraphicForApplication(template, nums) {
-  // 根据模板类型生成辅助图形
-  return {
-    type: 'geometry',
-    subtype: 'rectangle',
-    params: {
-      width: 6,
-      height: 3,
-      labelSides: false,
-      dashed: true,
-      unit: '',
-      unitPx: 30
-    }
-  };
-}
-
 function createApplicationGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:application';
@@ -383,7 +367,7 @@ function createApplicationGenerator(spec) {
       for (var i = 0; i < count; i++) {
         var q = makeApplicationQuestion(plan, context, i, meta);
         if (!q) continue; // FINAL-31c：KP 运算约束下无合规模板 → fail-closed 跳过
-        q.data.graphic = makeGraphicForApplication(q.data.template, q.data.numbers);
+        // DEF-009：不再附加无教学信息的空虚线矩形（原 makeGraphicForApplication 输出），题面以文字承载条件
         questions.push(q);
       }
       return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);

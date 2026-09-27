@@ -468,7 +468,6 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.width",
             "data.steps"
           ]
         },
@@ -483,43 +482,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -559,43 +523,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -624,9 +553,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.height"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -639,43 +566,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -694,7 +586,9 @@
           "已知条件：一共 42，其中 7。\n问题：剩下多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u02-k003",
@@ -715,43 +609,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -1615,43 +1474,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -1693,43 +1517,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -1756,9 +1545,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.height"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -1771,43 +1558,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -1826,7 +1578,9 @@
           "已知条件：一共 47，其中 37。\n问题：剩下多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u04-k005",
@@ -1834,9 +1588,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.height"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -1849,43 +1601,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -1904,7 +1621,9 @@
           "已知条件：A 有 39，B 比 A 少 15。\n问题：B 有多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u05-k003",
@@ -1925,43 +1644,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -1990,9 +1674,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.height"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -2005,43 +1687,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -2060,7 +1707,9 @@
           "已知条件：A 有 14，B 比 A 少 11。\n问题：B 有多少？ 答：____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u05-k003",
@@ -2083,43 +1732,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -2147,7 +1761,6 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.height",
             "data.numbers.part1"
           ]
         },
@@ -2162,43 +1775,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -2430,9 +2008,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -2445,43 +2021,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -2500,7 +2041,9 @@
           "已知条件：一共 23，其中 17。\n问题：剩下多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u06-k003",
@@ -2508,9 +2051,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -2523,43 +2064,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -2578,7 +2084,9 @@
           "已知条件：一共 14，其中 6。\n问题：剩下多少？ 答：____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u06-k003",
@@ -2586,9 +2094,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -2601,43 +2107,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -2656,7 +2127,9 @@
           "已知条件：一共 32，其中 26。\n问题：剩下多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u06-k003",
@@ -2679,43 +2152,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -3309,43 +2747,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -3385,43 +2788,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -3450,9 +2818,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -3465,43 +2831,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -3520,7 +2851,9 @@
           "已知条件：A 有 6，B 比 A 多 20。\n问题：B 有多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-up-u01-k001",
@@ -4852,43 +4185,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -4930,43 +4228,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -5010,43 +4273,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -5073,9 +4301,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -5088,43 +4314,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -5143,7 +4334,9 @@
           "已知条件：A 有 23，B 比 A 多 20。\n问题：B 有多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-up-u06-k001",
@@ -5151,9 +4344,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.unitPx"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -5166,43 +4357,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -5221,7 +4377,9 @@
           "已知条件：A 有 17，B 比 A 多 16。\n问题：B 有多少？ 答：____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-up-u06-k001",
@@ -5242,43 +4400,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -5307,9 +4430,7 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -5322,43 +4443,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -5377,7 +4463,9 @@
           "已知条件：A 有 10，B 比 A 少 2。\n问题：B 有多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g2-down-u01-k001",
@@ -7764,43 +6852,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -7829,9 +6882,7 @@
       "grade": 2,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -7844,43 +6895,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -7899,7 +6915,9 @@
           "已知条件：A 有 41，B 比 A 少 1。\n问题：B 有多少？ 答：____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g2-down-u05-k004",
@@ -7909,7 +6927,6 @@
         "unknown": {
           "positions": [
             "data.correctIndex",
-            "data.graphic.params.unitPx",
             "data.numbers.diff",
             "data.steps"
           ]
@@ -7925,43 +6942,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8001,43 +6983,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8081,43 +7028,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8157,43 +7069,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8235,43 +7112,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8313,43 +7155,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8393,43 +7200,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8469,43 +7241,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8549,43 +7286,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8625,43 +7327,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8703,43 +7370,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8769,7 +7401,6 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.width",
             "data.numbers.diff"
           ]
         },
@@ -8784,43 +7415,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8862,43 +7458,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -8938,43 +7499,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -9016,43 +7542,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -9094,43 +7585,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -9172,43 +7628,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -9238,7 +7659,6 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.height",
             "data.numbers.diff"
           ]
         },
@@ -9253,43 +7673,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -9316,9 +7701,7 @@
       "grade": 2,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.unitPx"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -9331,43 +7714,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -9386,7 +7734,9 @@
           "已知条件：一共 32，其中 8。\n问题：剩下多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g2-down-u07-k003",
@@ -9407,43 +7757,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -15079,43 +13394,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -15160,43 +13440,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -15223,10 +13468,7 @@
       "grade": 2,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.height",
-            "data.graphic.params.unitPx"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -15239,43 +13481,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -15294,7 +13501,9 @@
           "已知条件：一共 13，其中 10。\n问题：剩下多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g3-down-u01-k001",
@@ -22186,43 +20395,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -22262,43 +20436,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -22340,43 +20479,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -22854,43 +20958,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -22932,43 +21001,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -23010,43 +21044,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -24395,10 +22394,7 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.height",
-            "data.graphic.params.unitPx"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -24411,43 +22407,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -24466,7 +22427,9 @@
           "已知条件：一共 40，其中 10。\n问题：剩下多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g3-up-u02-k005",
@@ -24487,43 +22450,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -24565,43 +22493,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -24643,43 +22536,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -26334,43 +24192,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -26415,43 +24238,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -26491,43 +24279,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -26569,43 +24322,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -30330,9 +28048,7 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -30345,43 +28061,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -30400,7 +28081,9 @@
           "已知条件：一共 17，其中 15。\n问题：剩下多少？ 答：____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g3-up-u09-k001",
@@ -30421,43 +28104,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -30499,43 +28147,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -31041,43 +28654,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -31119,43 +28697,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -31195,43 +28738,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -31275,43 +28783,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -39382,9 +36855,7 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.height"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -39397,43 +36868,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -39452,7 +36888,9 @@
           "已知条件：A 有 10，B 比 A 少 7。\n问题：B 有多少？ 答：____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g4-down-u09-k003",
@@ -39473,43 +36911,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -39551,43 +36954,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -39629,43 +36997,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -39707,43 +37040,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -39773,7 +37071,6 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.height",
             "data.steps"
           ]
         },
@@ -39788,43 +37085,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -43480,10 +40742,7 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.height",
-            "data.graphic.params.unitPx"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -43496,43 +40755,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -43551,7 +40775,9 @@
           "已知条件：A 有 37，B 比 A 少 2。\n问题：B 有多少？ 答：____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g4-up-u06-k001",
@@ -43572,43 +40798,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -43637,10 +40828,7 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.labelSides"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -43653,43 +40841,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -43708,7 +40861,9 @@
           "已知条件：A 有 32，B 比 A 多 8。\n问题：B 有多少？ 答案是 40 —— 对还是错？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g4-up-u06-k001",
@@ -43757,9 +40912,7 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.unitPx"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -43772,43 +40925,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -43827,7 +40945,9 @@
           "已知条件：39 和 10。\n问题：一共多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g4-up-u06-k002",
@@ -45314,43 +42434,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -45394,43 +42479,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -45470,43 +42520,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -54929,7 +51944,6 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.height",
             "data.steps"
           ]
         },
@@ -54944,43 +51958,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -55020,43 +51999,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -55098,43 +52042,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -55689,7 +52598,6 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.unitPx",
             "data.steps"
           ]
         },
@@ -55704,43 +52612,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -55780,43 +52653,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -55858,43 +52696,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -58477,43 +55280,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -58557,43 +55325,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -58633,43 +55366,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -58698,9 +55396,7 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -58713,43 +55409,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -58768,7 +55429,9 @@
           "已知条件：42 和 53。\n问题：一共多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g5-up-u04-k001",
@@ -64558,10 +61221,7 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.height",
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -64574,43 +61234,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -64629,7 +61254,9 @@
           "已知条件：一共 36，其中 12。\n问题：剩下多少？ 答：____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g5-up-u09-k001",
@@ -64638,7 +61265,6 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.width",
             "data.steps"
           ]
         },
@@ -64653,43 +61279,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -64716,9 +61307,7 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -64731,43 +61320,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -64786,7 +61340,9 @@
           "已知条件：A 有 54，B 比 A 多 1。\n问题：B 有多少？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g6-down-u01-k001",
@@ -65457,43 +62013,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -65520,9 +62041,7 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.graphic.params.unitPx"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
@@ -65535,43 +62054,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -65590,7 +62074,9 @@
           "已知条件：47 和 4。\n问题：一共多少？ 答：____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g6-down-u01-k005",
@@ -65613,43 +62099,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -65689,43 +62140,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -70912,43 +67328,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -70990,43 +67371,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -71066,43 +67412,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -77619,43 +73930,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -77699,43 +73975,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [
@@ -77775,43 +74016,8 @@
           "ratio": 1
         },
         "representation": {
-          "present": true,
-          "paths": [
-            "data.graphic.params.dashed",
-            "data.graphic.params.height",
-            "data.graphic.params.labelSides",
-            "data.graphic.params.unit",
-            "data.graphic.params.unitPx",
-            "data.graphic.params.width",
-            "data.graphic.subtype",
-            "data.graphic.type"
-          ],
-          "values": {
-            "data.graphic.params.dashed": [
-              "true"
-            ],
-            "data.graphic.params.height": [
-              "3"
-            ],
-            "data.graphic.params.labelSides": [
-              "false"
-            ],
-            "data.graphic.params.unit": [
-              "\"\""
-            ],
-            "data.graphic.params.unitPx": [
-              "30"
-            ],
-            "data.graphic.params.width": [
-              "6"
-            ],
-            "data.graphic.subtype": [
-              "\"rectangle\""
-            ],
-            "data.graphic.type": [
-              "\"geometry\""
-            ]
-          }
+          "present": false,
+          "paths": []
         },
         "structure": {
           "steps": [

@@ -25,6 +25,51 @@
 
 ## 记录（新 → 旧）
 
+### P28-DEF009-APPLY-GRAPHIC-VERIFY｜DEF-009 收尾：派生数据治理 + 全链验证记录（2026-09-27）
+
+- modified:
+  - `kbl/teaching/variation-profiles.json`（与 evidence-rules 同构剔除：108 个 application 行移除 `data.graphic.*` representation 路径 864 条与对应 values 键，paths 空则 `present=false`；`unknown.positions` 同步过滤 graphic 路径，24 行因此转空补 `unknown-not-observed` flag——语义级等价验证：1299 行中恰 108 行变化、全部为 graphic 剔除+flag 补齐、0 其他变化）
+  - `kbl/teaching/misconception-profiles.json`（裁剪 73 个证据归零 slot——全部为 representation 轴，p27-misconception-profile 测试按 recountAxisEvidence 复算 0 与声明 4 不一致而暴露；971→898 slots，byErrorType 同步（概念混淆 160→128、格式错误 160→128、符号错误 12→3），droppedByAxisEvidence 653→726 如实累计；307 个 KP 无整组清空，保留 slot 逐字节不变）
+  - `docs/FINAL-REPAIR-DEFERRED.md`（DEF-009 OPEN→FIXED 附修复明细；新增 DEF-010 登记预存在 context 漂移）
+- deleted: 无文件删除
+- reason: 补记前条 P28-DEF009-APPLY-GRAPHIC 的「计划执行」部分并修正其预判——⑤「变式画像/misconception 门禁不动」不成立：p27 测试对两份派生数据有机械复算断言（evidenceRows 复算、flags 纪律），graphic 剔除后必须同步治理，红线「响应轴无承载不应产出」要求归零 slot 删除。漂移门禁 4 行 context 漂移经 HEAD worktree 对照实验证实为预存在（HEAD 同行同向，且 HEAD 另有 8 行 representation 空矩形漂移，本次修复恰好全部消除），登记 DEF-010 不扩范围。
+- tests: ①三份派生 JSON 语义级等价验证（evidence-rules：1299 规则 0 violations，仅 108 行减 graphic 断言；variation-profiles：1299 行 0 violations，恰 108 行变化；misconception-profiles：971→898 仅删 73 个 representation slot，保留 slot 逐字节不变）②局部测试 24/24（p27-variation-profile + p27-misconception-profile + p25-16-golden-dataset）③HEAD 对照漂移门禁：10 行 FAIL→4 行，8 处 representation 漂移全消 ④freeze 只读复核 git diff=0（快照不含 graphic，无需 --write）⑤build:presentation 重建后与 HEAD 内容一致（application.js 仅入 strategy bundle）⑥verify:syntax 298 文件 0 错误 ⑦check-all 28 PASS / 0 FAIL / 0 SKIP ⑧CDP 视觉验证：math-g1-down-u02-k003×calc/apply 两页 `svg rect[stroke-dasharray]` 数量均为 0，题目卡正常渲染，空虚线框消失（注：math-g1-down-u01-k001 直连配置 0 题为 HEAD 同样存在的预存在行为，非本修复引入）
+- risk: 低。派生数据三份经语义级等价验证仅目标变化；misconception 裁剪 73 slot 使 representation 轴错因覆盖率下降（160→128 等），属如实反映「该轴已无生成承载」，非功能回退；剩余 4 行 context flaky 不在 check-all 接线中（DEF-010）。
+
+### P28-DEF009-APPLY-GRAPHIC｜修复 DEF-009：application 生成器停止附加空虚线矩形（2026-09-27）
+
+- modified:
+  - `shared/generator/generators/application.js`（删除 `makeGraphicForApplication` 函数及其在 `generate` 循环中的唯一调用 `q.data.graphic = ...`；该 graphic 对全部模板无差别返回 geometry/rectangle{width:6,height:3,labelSides:false,dashed:true,unit:'',unitPx:30}，无标签无数量关系，非教学线段图）
+  - `kbl/teaching/evidence-rules.json`（精准剔除 108 条规则行 required 中全部 `data.graphic.*` 断言——该 108 行经冻结矩阵 P28-GENERATION-MATRIX-FROZEN.json 的 (kp,qt)→generator 映射核对全部且仅属 application 生成器，其 graphic 断言由空矩形机械派生而来；其余 553 条含 data.graphic 断言的规则行因存在与空矩形签名矛盾的取值（unitPx:25/unit:'cm'/rightAngle:true/labelSides:true 等，属 shape 等生成器真实图形）一律不动）
+  - `shared/engine/strategy-engine.bundle.js`（build:strategy 重建，application.js 源码变更同步入 bundle）
+- deleted: 无文件删除
+- reason: 闭合 DEF-009（用户指令）。五步闭环核查：①CDP 实证题卡中央空虚线框 + 溯源 stroke-dasharray='6 4' rect；②锁定 application.js:343-357 为唯一源头；③空 graphic 无教学信息，最小修法为停止附加（真线段图属新功能不在本任务）；④108 条证据规则的 data.graphic 断言系从空矩形派生的伪证据（非人工教学语义），一并清除避免 kpSem FAIL；⑤变式画像/misconception 门禁为静态检查不重比对生成路径，不动；golden 259 题零涉及 graphic。freeze 快照仅含 promptLen/sample(前36字)/ans，graphic 不在其中，prompt/answer 不变故冻结行无需 --write。
+- tests: 计划执行——build:strategy + build:presentation、冻结只读复核（预期无 diff 无需 --write）、tests/generator 相关局部测试、verify:syntax、check-all 28 PASS、CDP 视觉验证空框消失且打印正常。
+- risk: 中。改共享生成器（16 个题型消费面之一）+ 冻结证据数据裁剪；缓解：规则剔除按「签名无矛盾 + 冻结矩阵归属 application」双条件精准匹配（108/108 全中、0 误伤）；prompt/answer 逐字不变，冻结矩阵确定性由重跑比对兜底。
+
+### P28-UI-PRACTICE-LAYOUT-01-VERIFY｜三级练习页布局验证记录（2026-09-27）
+
+- modified:
+  - `docs/FINAL-REPAIR-DEFERRED.md`（新增 DEF-009：登记应用题空虚线矩形为生成器层遗留，OPEN）
+- deleted: 无
+- reason: P28-UI-PRACTICE-LAYOUT-01 验证通过；核查中发现的应用题空 graphic 按用户决策延后，登记 DEF-009 不扩范围。
+- tests: CDP 经 select→practice 正常流程生成 20 题实测——1440/900/390 三档：hero top=0 通栏（蓝渐变）、#sheetTitle（动态文案「一年级数学 · 综合练习（20题）」）与 #timerDisplay 均在 hero 内；.side-rail 贴视口左缘（x=0，桌面 60px/手机 48px），返回按钮文案/回退逻辑保留，.fab-back/.exercise-header 零残留；题卡 .question-answer 与 .answer-inp 边框均 solid；.num 实测 rgb(238,240,243) 底/rgb(154,163,178) 字/50% 圆角/text-align center/22px；docW 无横向溢出。打印态（setEmulatedMedia=print）：.page-hero/.side-rail display:none、答题区虚线恢复 dashed、body padding-left=0（打印 PRINT_QCSS 独立链路零影响）。verify:syntax 298 文件 0 错误；check-all 28 PASS / 0 FAIL / 0 SKIP——含 #6b freeze 矩阵冻结（未碰生成器，无 diff）与 #15 真实浏览器 E2E 9 步路径（首页→练习→生成→打印回归通过）。
+- risk: 无新增代码风险；DEF-009 为生成器层 P2 延后项，不阻塞。
+
+### P28-UI-PRACTICE-LAYOUT-01｜三级练习页布局对齐二级页（2026-09-27）
+
+- modified:
+  - `practice.html`（仅本页 DOM 与内联 `<style>`，不改共享 CSS）：
+    ①新增置顶通栏 `.page-hero`（沿用二级页蓝色渐变语言），将 `#sheetTitle` 与 `#timerDisplay` 迁入（ID 保留，JS 零改动），删除原 `.exercise-header` 空壳；
+    ②删除左上悬浮胶囊 `.fab-back`，改为贴视口左缘的纵向侧边工具栏 `.side-rail`（白底右侧圆角+阴影，含「返回上页」按钮，history.back/select.html 回退逻辑不变），桌面宽 60px、≤767px 48px，body/.wrap/hero 屏幕态左 padding 避让；
+    ③屏幕态（@media screen）清除生成题卡答题区虚线：`#problemsArea .question-answer` 底虚线去除、`#problemsArea .answer-inp` 边框 dashed→solid；
+    ④屏幕态题号 `.num` 改灰色浅字（#9aa3b2）+浅灰圆底（#eef0f3）+文字居中，保持 22px 圆形；
+    ⑤hero 与 side-rail 在 @media print 隐藏，屏幕避让 padding 仅 @media screen 生效。
+- deleted: 无（.fab-back DOM 替换为 .side-rail，非删除功能）
+- reason: 用户要求三级页四项调整。运行态证据：CDP 走 select→practice 正常流程生成 20 题后扫描，虚线来自共享组件 `.question-answer{border-bottom:1px dashed #b9c6de}` 与 `.answer-inp{border:2px dashed}`（components.css），题卡本体为实线；题号现状为蓝底深字（brand-bg/#1A1B1C）。
+- tests: 计划 CDP 1440/900/390 实测：hero 置顶、侧栏贴左、返回可用、虚线消失、题号灰圆居中；打印态（print.js PRINT_QCSS 独立链路）虚线保留、hero/侧栏隐藏；verify:syntax + check-all。
+- risk: 中。题卡为 PluginUtil.renderCard 共享产物，覆盖一律加 `#problemsArea` 前缀且限定 @media screen，不触碰 components.css/pages.css，不影响知识页与打印；#sheetTitle/#timerDisplay 仅迁移位置。
+
 ### P28-CLEANUP-01-VERIFY｜无效代码清理验证记录（2026-09-27）
 
 - modified: 无（仅补记验证结果）

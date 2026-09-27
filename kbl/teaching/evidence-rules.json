@@ -422,45 +422,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -513,45 +474,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -604,45 +526,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -695,45 +578,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -1826,45 +1670,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -1927,45 +1732,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -2028,45 +1794,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -2129,45 +1856,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -2230,45 +1918,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -2331,45 +1980,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -2432,45 +2042,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -2533,45 +2104,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -2969,45 +2501,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -3070,45 +2563,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -3171,45 +2625,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -3272,45 +2687,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -3679,45 +3055,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -3737,45 +3074,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -3795,45 +3093,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -5255,45 +4514,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -5361,45 +4581,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -5467,45 +4648,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -5573,45 +4715,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -5679,45 +4782,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -5737,45 +4801,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -5795,45 +4820,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -9282,45 +8268,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -9383,45 +8330,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -9484,45 +8392,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -9585,45 +8454,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -9686,45 +8516,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -9744,45 +8535,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -9802,45 +8554,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -9860,45 +8573,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -9918,45 +8592,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -9976,45 +8611,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -10034,45 +8630,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -10092,45 +8649,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -10150,45 +8668,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -10208,45 +8687,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -10266,45 +8706,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -10324,45 +8725,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -10382,45 +8744,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -10446,45 +8769,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -10510,45 +8794,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -10574,45 +8819,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -10632,45 +8838,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -10690,45 +8857,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -15816,45 +13944,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -15874,45 +13963,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -15932,45 +13982,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -22947,45 +20958,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -23016,45 +20988,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -23085,45 +21018,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -23406,45 +21300,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -23464,45 +21319,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -23522,45 +21338,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -24829,45 +22606,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -24920,45 +22658,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -25011,45 +22710,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -25102,45 +22762,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -26761,45 +24382,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -26852,45 +24434,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -26943,45 +24486,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -27034,45 +24538,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -30963,45 +28428,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -31021,45 +28447,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -31079,45 +28466,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -31693,45 +29041,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -31799,45 +29108,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -31905,45 +29175,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -32011,45 +29242,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -40819,45 +38011,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -40877,45 +38030,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -40935,45 +38049,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -40993,45 +38068,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -41051,45 +38087,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -41109,45 +38106,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -45059,45 +42017,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -45117,45 +42036,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -45201,45 +42081,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -45259,45 +42100,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -46209,45 +43011,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -46267,45 +43030,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -46325,45 +43049,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -56565,45 +53250,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -56639,45 +53285,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -56713,45 +53320,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -57030,45 +53598,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -57088,45 +53617,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -57146,45 +53636,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -60964,45 +57415,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -61055,45 +57467,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -61146,45 +57519,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -61237,45 +57571,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -66653,45 +62948,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -66711,45 +62967,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -66769,45 +62986,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -67659,45 +63837,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -67750,45 +63889,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -67841,45 +63941,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -67932,45 +63993,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": [
@@ -73671,45 +69693,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -73729,45 +69712,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -73787,45 +69731,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -81345,45 +77250,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -81403,45 +77269,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []
@@ -81461,45 +77288,6 @@
           "kind": "field",
           "path": "data.steps",
           "value": 1
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.type",
-          "value": "geometry"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.subtype",
-          "value": "rectangle"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.width",
-          "value": 6
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.height",
-          "value": 3
-        },
-        {
-          "kind": "fieldPresent",
-          "path": "data.graphic.params.labelSides"
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.dashed",
-          "value": true
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unit",
-          "value": ""
-        },
-        {
-          "kind": "field",
-          "path": "data.graphic.params.unitPx",
-          "value": 30
         }
       ],
       "forbidden": []

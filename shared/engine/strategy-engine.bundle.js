@@ -8665,22 +8665,6 @@ function makeApplicationQuestion(plan, context, i, meta) {
   };
 }
 
-function makeGraphicForApplication(template, nums) {
-  
-  return {
-    type: 'geometry',
-    subtype: 'rectangle',
-    params: {
-      width: 6,
-      height: 3,
-      labelSides: false,
-      dashed: true,
-      unit: '',
-      unitPx: 30
-    }
-  };
-}
-
 function createApplicationGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:application';
@@ -8708,7 +8692,7 @@ function createApplicationGenerator(spec) {
       for (var i = 0; i < count; i++) {
         var q = makeApplicationQuestion(plan, context, i, meta);
         if (!q) continue; 
-        q.data.graphic = makeGraphicForApplication(q.data.template, q.data.numbers);
+        
         questions.push(q);
       }
       return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
