@@ -71,16 +71,9 @@
     --grad-logo: linear-gradient(135deg, var(--brand), #7eb6f0);
     --grad-cta: linear-gradient(135deg, #8f5608, #a8650b);
 
-    /* 工具栏：chip 分段控件（蓝紫系） */
+    /* 工具栏：蓝紫主色（.range-hint 文字、styles.css 进度填充复用；chip 分段控件已移除） */
     --toolbar-chip-ink: #4a5a8a;
-    --toolbar-chip-border: rgba(123, 97, 255, .28);
-    --toolbar-chip-bg: rgba(255, 255, 255, .55);
-    --toolbar-chip-hover-border: rgba(123, 97, 255, .55);
-    --toolbar-chip-hover-bg: rgba(123, 97, 255, .10);
     --toolbar-chip-grad: linear-gradient(135deg, #3a66c8, #4a3fb8);
-    --toolbar-chip-active-border: #6a66e8;
-    --toolbar-chip-active-ink: #ffffff;
-    --toolbar-chip-active-shadow: 0 3px 10px rgba(110, 100, 240, .35);
 
     /* 工具栏：操作按钮 */
     --toolbar-btn-grad: linear-gradient(135deg, #3a66c8, #4a3fb8);
@@ -91,10 +84,7 @@
     --toolbar-btn-ghost-border: rgba(123, 97, 255, .30);
     --toolbar-btn-ghost-hover-bg: rgba(123, 97, 255, .20);
 
-    /* 工具栏：尺寸（紧凑档：chip 26px / 主按钮 28px / 辅助按钮 24px） */
-    --toolbar-font-size: 13px;
-    --toolbar-chip-radius: 6px;
-    --toolbar-chip-pad: 0 12px;
+    /* 工具栏：尺寸（主按钮 28px / 辅助按钮 24px） */
     --toolbar-btn-radius: 6px;
     --toolbar-btn-pad: 0 16px;
     --toolbar-btn-font-size: 13px;
@@ -105,16 +95,7 @@
     --toolbar-group-gap: 6px;
     --toolbar-lbl-margin: 8px;
 
-    /* 工具栏：粘性面板（滚动时常驻可见） */
-    --toolbar-sticky-top: 0px;
-    --toolbar-sticky-z: 10;
-    --toolbar-sticky-bg: rgba(255, 255, 255, .82);
-    --toolbar-sticky-bg-fallback: rgba(255, 255, 255, .96);
-    --toolbar-sticky-border: rgba(91, 141, 239, .18);
-    --toolbar-sticky-blur: 14px;
-
-    /* 工具栏：触控目标与分组分隔 */
-    --toolbar-touch-min: 26px;      /* chip 紧凑高度 */
+    /* 工具栏：触控目标 */
     --toolbar-btn-min-height: 28px; /* 主操作按钮高度 */
 
     /* 工具栏：进度条（已答题数）与分数徽标 */

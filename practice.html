@@ -46,6 +46,7 @@
 <style>
 /* ============ 置顶 Hero（沿用二级选择页蓝色渐变语言，通栏） ============ */
 .page-hero {
+  position: relative; z-index: 1300; /* 通栏置顶：滚动时盖住下方左侧边栏 */
   background: linear-gradient(160deg, #4A90D9 0%, #6DB3F2 40%, #7EB6F0 100%);
   color: #fff;
   padding: 26px 28px 24px;
@@ -70,38 +71,39 @@
   border-radius: 999px; padding: 6px 14px; white-space: nowrap;
 }
 
-/* ============ 贴左缘纵向工具栏（含返回上一页） ============ */
-.side-rail {
-  position: fixed; top: 0; left: 0; z-index: 1200;
-  width: 60px; height: 100vh;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 14px 0; gap: 10px;
-  background: var(--card, #fff);
-  border-right: 1px solid var(--line, #e3e8f0);
-  border-radius: 0 16px 16px 0;
-  box-shadow: 4px 0 18px rgba(20, 40, 90, .10);
-}
-.rail-back {
-  width: 44px; padding: 10px 0; border: none; border-radius: 12px;
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  background: transparent; color: var(--brand, #2b6cc0);
-  font-size: 12px; font-weight: 800; line-height: 1.2; cursor: pointer;
-  transition: background .15s, transform .15s;
-}
-.rail-back .rail-ico { font-size: 19px; line-height: 1; }
-.rail-back:hover { background: var(--brand-bg, #eef5ff); transform: translateX(2px); }
-.rail-back:active { transform: scale(.95); }
-
-/* 屏幕态：内容为贴边工具栏让位（打印无此栏，不加避让） */
-@media screen {
-  body { padding-left: 60px; }
-}
+/* ============ 屏幕态布局：Hero 通栏置顶；其下方为网格行——左 272px 常驻工具栏边栏、
+   右题目内容（网格与 sticky 边栏定位见 pages.css「工具栏边栏」段）。body 不再整体左避让。 ============ */
 @media screen and (max-width: 767px) {
-  body { padding-left: 48px; }
-  .side-rail { width: 48px; }
-  .rail-back { width: 36px; font-size: 11px; }
   .page-hero { padding: 20px 18px 18px; }
   .page-hero h1 { font-size: 1.25rem; }
+}
+
+/* ============ Hero 下方主操作「生成练习」：常驻内容区左上角、突出显示 ============
+   题量/难度/答案/打印/检查/刷新均在左侧常驻边栏；唯一主操作留在内容流。
+   选择器提权（.gen-cta .btn.gen-cta-btn）以覆盖 @layer toolbar 的 .btn.btn-primary。 */
+.gen-cta { display: flex; justify-content: flex-start; padding: 14px 0 2px; }
+.gen-cta .btn.gen-cta-btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 13px 36px; border: 0; border-radius: 14px;
+  font-size: 16px; font-weight: 900; letter-spacing: 2px; line-height: 1.2; color: #fff;
+  background: linear-gradient(135deg, #2f57a8 0%, #335fb5 38%, #4A90D9 72%, #5ba3ec 100%);
+  box-shadow: 0 10px 24px rgba(51, 95, 181, .38), inset 0 1px 0 rgba(255,255,255,.24);
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+.gen-cta .btn.gen-cta-btn:hover {
+  transform: translateY(-2px); filter: brightness(1.06);
+  box-shadow: 0 14px 30px rgba(51, 95, 181, .46), inset 0 1px 0 rgba(255,255,255,.24);
+}
+.gen-cta .btn.gen-cta-btn:active { transform: translateY(0) scale(.97); }
+.gen-cta .btn.gen-cta-btn:disabled {
+  opacity: .55; cursor: not-allowed; transform: none; filter: none;
+  box-shadow: 0 6px 14px rgba(51, 95, 181, .22);
+}
+.gen-cta-ico { font-size: 18px; line-height: 1; }
+@media screen and (max-width: 767px) {
+  .gen-cta { padding: 10px 0 2px; }
+  .gen-cta .btn.gen-cta-btn { padding: 12px 28px; min-height: 46px; font-size: 15px; letter-spacing: 1px; }
 }
 
 /* ============ 屏幕态题目卡视觉（打印走 print.js PRINT_QCSS，不受影响） ============ */
@@ -119,9 +121,9 @@
   }
 }
 
-/* 打印态：hero 与侧栏不进入试卷 */
+/* 打印态：hero / 生成 CTA 不进入试卷（工具栏边栏的打印隐藏统一在 pages.css 工具栏段） */
 @media print {
-  .page-hero, .side-rail { display: none !important; }
+  .page-hero, .gen-cta { display: none !important; }
 }
 </style>
 <style>
@@ -194,13 +196,6 @@
 </style>
 </head>
 <body data-page-node-id="rwBtS9BmX4E1JY5ZLzQA2D">
-<!-- 贴左缘纵向工具栏：有历史回上一页，直达页面回落选题页 -->
-<aside class="side-rail" aria-label="页面工具栏">
-  <button type="button" class="rail-back" aria-label="返回上页" title="返回上页"
-          onclick="history.length &gt; 1 ? history.back() : (location.href='select.html')">
-    <span class="rail-ico" aria-hidden="true">←</span><span>返回</span>
-  </button>
-</aside>
 <!-- 置顶 Hero（标题由 JS 按年级/题型动态写入 #sheetTitle） -->
 <header class="page-hero">
   <div class="hero-inner">
@@ -223,23 +218,27 @@
     </div>
   </div>
 
-  <!-- Layer 2: 工具栏（题型/题量/难度 + 操作按钮） -->
-  <section class="panel controls" id="controlsPanel" style="display:none;" data-page-node-id="YsKfmcheLy420A6evi3t4q">
+  <!-- Layer 2: 工具栏边栏（返回 + 题型/题量/难度 + 操作按钮）——宽屏固定左侧常驻，窄屏流式置顶，
+       样式见 pages.css「工具栏集中管理」段；已取消独立的「工具」开关按钮 -->
+  <section class="panel controls" id="controlsPanel" style="display:none;" aria-label="练习设置" data-page-node-id="YsKfmcheLy420A6evi3t4q">
+    <div class="controls-dock-head">
+      <button type="button" class="sidebar-back" aria-label="返回上页" title="返回上页"
+              onclick="history.length &gt; 1 ? history.back() : (location.href='select.html')">
+        <span class="sidebar-back-ico" aria-hidden="true">←</span><span>返回上页</span>
+      </button>
+      <button type="button" class="dock-collapse" id="dockCollapse" aria-label="收起工具栏" title="收起工具栏"
+              data-page-node-id="dockCollapse-001"><span aria-hidden="true">❮</span></button>
+    </div>
     <div class="controls-grid" data-page-node-id="yyWAl0RoadRa66kO1dvC8H">
       <div class="controls-settings" data-page-node-id="4FzieHDQOrp4FwsjoTRNBr">
         <div class="row" style="margin-top:0;" data-page-node-id="euDtlctXgaofzOZpoHkfjg">
-          <div class="group" id="countGroup" role="radiogroup" aria-label="题量" data-page-node-id="TyWIsgDnSL7FGOv7CKzylm">
-            <span class="lbl" data-page-node-id="5A6amBLnxVYEVmaBsIN0uZ">题量：</span>
+          <div class="group" id="countGroup" data-page-node-id="TyWIsgDnSL7FGOv7CKzylm">
+            <label class="lbl" for="customCount" data-page-node-id="5A6amBLnxVYEVmaBsIN0uZ">自定义题量：</label>
             <div class="setting-content" data-page-node-id="0iAO0b1yUqLAbSlMgM4WkI">
-              <button class="chip active" data-count="20" role="radio" aria-checked="true" data-page-node-id="RKvLa5sIAKWA8Kl0zVqAWg">20题</button>
-              <button class="chip" data-count="30" role="radio" aria-checked="false" data-page-node-id="WHp4lBHDdNeg0eO9yrp893">30题</button>
-              <button class="chip" data-count="50" role="radio" aria-checked="false" data-page-node-id="rwNR5cQwAkrGKJTJAv7fZh">50题</button>
-              <span class="chip custom-chip" data-count="custom" role="radio" aria-checked="false" data-page-node-id="SrpxBdzNoIGCdVQ9kcvhtx">
-                <span class="custom-label" data-page-node-id="25dYRnSXOdwHBkYYwXOxwN">自定义</span>
-                <input type="number" id="customCount" min="1" max="50" step="1" placeholder=""
-                       aria-label="自定义题量" autocomplete="off" class="custom-num"
-                       data-page-node-id="4ACPcfjCustomCount" style="display:none;">
-              </span>
+              <input type="number" id="customCount" min="1" max="50" step="1" value="20"
+                     aria-label="自定义题量（1-50）" autocomplete="off" class="tb-num-input"
+                     data-page-node-id="4ACPcfjCustomCount" style="width:72px;">
+              <span class="range-hint">1~50</span>
               <span class="count-tip" id="countTip" style="display:none;" data-page-node-id="QvKB1cjrG9Wg4P3fzkLjYY"></span>
             </div>
           </div>
@@ -249,7 +248,7 @@
               <input type="number" id="difficultyInput" min="1" max="10" step="1" value="1"
                      title="填写 1-10 的整数，数字越大难度越高（数值更大、逻辑更深）"
                      aria-label="难度（1-10，数字越大越难）"
-                     class="tb-num-input" style="width:64px;" data-page-node-id="2bONAniEKDC8jH8pTudcRo">
+                     class="tb-num-input" style="width:56px;" data-page-node-id="2bONAniEKDC8jH8pTudcRo">
               <span class="range-hint" data-page-node-id="cV3pG0G1cBoDfmCMCVB60y">1~10</span>
             </div>
           </div>
@@ -262,16 +261,13 @@
         </div>
       </div>
       <div class="controls-actions" data-page-node-id="D0d9gaJ9cDIrigmevJ9ogv">
-        <div class="controls-row row-pair" data-page-node-id="umDVdRBGwrJ2MZQChOkagU">
+        <div class="controls-row row-vertical" data-page-node-id="umDVdRBGwrJ2MZQChOkagU">
           <button class="btn btn-ghost" id="revealBtn" disabled data-page-node-id="umGRrQTKojW2UKcgSC4d3h">显示答案</button>
           <button class="btn btn-ghost" id="printBtn" disabled data-page-node-id="FJT3oKFyUd7UeMEP1THpNJ">打印页面</button>
         </div>
-        <div class="controls-row row-pair" data-page-node-id="a0x48ho8f5raJSHhLkHB8v">
+        <div class="controls-row row-vertical" data-page-node-id="a0x48ho8f5raJSHhLkHB8v">
           <button class="btn btn-primary" id="checkBtn" disabled data-page-node-id="VPdjxzxLhCD3WGjInqdfix">检查答案</button>
           <button class="btn btn-ghost" id="refreshResetBtn" title="刷新页面（重新载入并重置状态）" data-page-node-id="9Wa7dcZoe0u78daUsnX975">刷新</button>
-        </div>
-        <div class="controls-row row-single" data-page-node-id="BXAWlJ7RQ9Evl4nLvFAOHQ">
-          <button class="btn btn-primary" id="genBtn" data-page-node-id="MEssgmJfDy15m54Yulf4N8">生成练习</button>
         </div>
       </div>
     </div>
@@ -279,6 +275,10 @@
 
   <!-- Layer 3: 正式内容区（标题与计时器已上移至置顶 .page-hero；本区自第二行起为题目卡） -->
   <div class="exercise-content" data-page-node-id="ZVT5Z2uHXe7PG9AoYzwTkr">
+    <!-- 主操作常驻：Hero 下方左上角，突出渐变按钮（次级操作全部收纳于左侧边栏） -->
+    <div class="gen-cta">
+      <button type="button" class="btn btn-primary gen-cta-btn" id="genBtn" data-page-node-id="MEssgmJfDy15m54Yulf4N8"><span class="gen-cta-ico" aria-hidden="true">✨</span>生成练习</button>
+    </div>
     <div class="gen-progress" id="genProgress" hidden data-page-node-id="Oh5WLXaIT7ydBX1q5TBQCr">
       <div class="gen-progress-track" data-page-node-id="NiMRA7hOzD7jXuQSqZAvx7"><span class="gen-progress-fill" id="genProgressBar" data-page-node-id="ZjvVkq0LEebQ52cduhmGfi"></span></div>
       <div class="gen-progress-text" id="genProgressText" data-page-node-id="eWvoWBsP3rNPAAAYxcEwED">生成中…</div>
@@ -287,6 +287,10 @@
       <div class="empty" data-page-node-id="brnKUKTuvYV5WyYFseRJD5">正在加载练习插件…</div>
     </section>
   </div>
+
+  <!-- 工具栏收起态的展开把手：仅宽屏且 body.controls-collapsed 时显示（pages.css 控制），fixed 贴左缘 -->
+  <button type="button" class="rail-open" id="railOpen" aria-label="展开工具栏" title="展开工具栏"
+          data-page-node-id="railOpen-001"><span aria-hidden="true">❯</span></button>
 
   <section class="result-panel" id="resultArea" aria-live="polite" aria-atomic="true" data-page-node-id="er9vcm4Jhm4Bc46IF5HcZs"></section>
 
@@ -1161,7 +1165,7 @@
     setTimeout(function () { if (!t.classList.contains('show')) t.hidden = true; }, 280);
   }
 
-  // ============ 题量（20 / 30 / 50 / 自定义） ============
+  // ============ 题量（自定义数字，1~50 整数） ============
   function setCount(n) {
     n = Math.round(Number(n));
     if (!(n >= 1 && n <= 50)) { showNotice('题量无效', '自定义题量请填写 1~50 之间的整数。'); return; }
@@ -1173,33 +1177,10 @@
     if (state.exerciseSet) generate();
   }
 
-  // 自定义同框：自定义模式时 chip 变为数字输入框（占位灰字「自定义」，键入即消失）
-  function setCustomBox(showInput, focus) {
-    var inp = $('customCount');
-    var lbl = document.querySelector('#countGroup .custom-chip .custom-label');
-    if (inp) {
-      inp.style.display = showInput ? '' : 'none';
-      if (showInput && focus) inp.focus();
-    }
-    if (lbl) lbl.style.display = showInput ? 'none' : '';
-  }
-
+  // 题量唯一入口：自定义数字输入框（1~50），回填当前 state.count
   function syncCountUI() {
-    var chips = document.querySelectorAll('#countGroup .chip');
-    chips.forEach(function (c) { c.classList.remove('active'); c.setAttribute('aria-checked', 'false'); });
     var customInp = $('customCount');
-    if (state.count === 20 || state.count === 30 || state.count === 50) {
-      document.querySelectorAll('#countGroup .chip[data-count="' + state.count + '"]').forEach(function (c) {
-        c.classList.add('active'); c.setAttribute('aria-checked', 'true');
-      });
-      setCustomBox(false);
-    } else {
-      document.querySelectorAll('#countGroup .chip[data-count="custom"]').forEach(function (c) {
-        c.classList.add('active'); c.setAttribute('aria-checked', 'true');
-      });
-      if (customInp) customInp.value = state.count;
-      setCustomBox(true);
-    }
+    if (customInp) customInp.value = state.count;
     updateCountTip();
   }
 
@@ -1207,9 +1188,7 @@
   function updateCountTip() {
     var tip = $('countTip');
     if (!tip) return;
-    var customChip = document.querySelector('#countGroup .chip[data-count="custom"]');
-    var isCustom = customChip && customChip.classList.contains('active');
-    if (!isCustom || !state.exerciseSet || !state.exerciseSet.questions.length) {
+    if (!state.exerciseSet || !state.exerciseSet.questions.length) {
       tip.style.display = 'none';
       return;
     }
@@ -1643,26 +1622,31 @@
     generate();
   }
 
+  // ============ 工具栏折叠（宽屏；窄屏流式卡片无折叠，按钮被 CSS 隐藏） ============
+  // body.controls-collapsed 驱动 pages.css：面板向左滑出 + 网格列归 0 + 左缘把手出现。
+  // 每次打开页面默认展开（不记忆折叠状态），折叠仅当前页会话内有效。
+  function setControlsCollapsed(v) {
+    document.body.classList.toggle('controls-collapsed', !!v);
+    var c = $('dockCollapse'); if (c) c.setAttribute('aria-expanded', v ? 'false' : 'true');
+    var o = $('railOpen'); if (o) o.setAttribute('aria-expanded', v ? 'false' : 'true');
+  }
+
   // ============ 按钮绑定 ============
   function bindEvents() {
-    document.querySelectorAll('#countGroup .chip').forEach(function (c) {
-      c.addEventListener('click', function () {
-        if (c.dataset.count === 'custom') {
-          document.querySelectorAll('#countGroup .chip').forEach(function (x) { x.classList.remove('active'); x.setAttribute('aria-checked', 'false'); });
-          c.classList.add('active');
-          c.setAttribute('aria-checked', 'true');
-          setCustomBox(true, true);
-          updateCountTip();
-          return;
-        }
-        setCount(+c.dataset.count);
-      });
-    });
+    // 工具栏折叠 / 展开
+    var dockCollapseBtn = $('dockCollapse');
+    if (dockCollapseBtn) dockCollapseBtn.addEventListener('click', function () { setControlsCollapsed(true); });
+    var railOpenBtn = $('railOpen');
+    if (railOpenBtn) railOpenBtn.addEventListener('click', function () { setControlsCollapsed(false); });
+    // 默认展开，并初始化两钮 aria-expanded
+    setControlsCollapsed(false);
+    // 题量：自定义数字输入框，失焦/回车生效；空值或越界（非 1~50 整数）回退为上一次有效值
     var customInp = $('customCount');
     if (customInp) {
       customInp.addEventListener('change', function () {
-        if (customInp.value === '') { syncCountUI(); return; }
-        setCount(customInp.value);
+        var v = Math.round(Number(customInp.value));
+        if (!(v >= 1 && v <= 50)) { syncCountUI(); return; }
+        setCount(v);
       });
       customInp.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') { e.preventDefault(); customInp.blur(); }

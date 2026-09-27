@@ -25,6 +25,81 @@
 
 ## 记录（新 → 旧）
 
+### P28-UI-PRACTICE-TOOLBAR-DEFAULT-OPEN-01｜左边栏每次打开页面默认展开，取消折叠状态记忆（2026-09-27）
+
+- modified:
+  - `practice.html`（① 删除 body 后「首帧前读 localStorage 恢复 controls-collapsed」防 FOUC 内联脚本；② setControlsCollapsed 删除 localStorage 写入；③ bindEvents 的 aria 初始化由「按 body 类幂等同步」改为固定 `setControlsCollapsed(false)` 默认展开）
+  - `shared/styles/pages.css`（边栏段注释更新为「每次打开页面默认展开，不记忆折叠状态」，无规则变化）
+- deleted: 无文件删除；删除内容为 localStorage `practice.toolbar.collapsed` 的读写逻辑（残留旧值静默留存、不再被读取，无副作用）。
+- reason: 用户要求左边栏在网页打开时默认为打开状态。此前折叠状态被记忆，导致收起后重开页面仍是收起。
+- tests: ①verify:syntax 298 文件 0 错误；②check-all 28 PASS / 0 FAIL / 0 SKIP；③隔离 Chrome CDP：先写入残留 localStorage='1' 再导航，页面仍默认展开（无 collapsed 类、面板 x=0、把手隐藏）；会话内点 #dockCollapse 折叠正常（面板 x=-216、把手出现）；再次导航恢复展开。
+- risk: 低。仅删除状态记忆读写，折叠交互本身（class 切换 + CSS 过渡）不变；不触碰生成/打印链路。
+
+### P28-UI-PRACTICE-TOOLBAR-SLIM-01｜边栏收窄 216px + 可折叠到左缘；题量/难度标签换行（2026-09-27）
+
+- modified:
+  - `practice.html`（① body 后新增 1 行内联脚本：首帧前读 localStorage `practice.toolbar.collapsed` 恢复 body.controls-collapsed 类防 FOUC；② `.controls-dock-head` 返回键右侧新增折叠钮 #dockCollapse（❮，margin-left:auto）；③ `.wrap` 内 `.exercise-content` 后新增展开把手 #railOpen（❯，fixed 贴左缘垂直居中）；④ JS 新增 setControlsCollapsed(v)：切换 body 类 + 同步两钮 aria-expanded + 写 localStorage；bindEvents 绑定两钮点击，并在绑定后以当前类幂等调用一次完成 aria 初始同步；⑤ #customCount 内联宽 88→72px、#difficultyInput 64→56px 适配收窄；生成/检查/打印/刷新等全部 id 与绑定零改动）
+  - `shared/styles/pages.css`（宽屏网格 272px→216px 并加 grid-template-columns .25s 过渡；.panel.controls 固定 width:216px + transform .25s 过渡；body.controls-collapsed 时网格列归 0、面板 translateX(-100%) 滑出左缘；新增 .dock-collapse（26px 方形小钮，仅宽屏显示）与 .rail-open（26×64 贴左缘圆角把手，仅宽屏+collapsed 显示，hover 加宽至 30px）；屏幕态新增 .panel.controls .group 纵向布局（flex-direction:column/gap:4px）使题量/难度/分题型标签独占一行、控件换行，.lbl 加 align-self:flex-start 防胶囊被 stretch 拉成全宽横条；窄屏 collapsed 类无任何规则命中（按钮隐藏、面板保持流式）；@media print 追加 .rail-open 隐藏）
+- deleted: 无文件删除；无规则删除（纯新增 + 数值收窄）。
+- reason: 用户要求收窄左侧工具栏、增加可收到左边的折叠功能、题量/难度标签与输入换行以缩小宽度占用。折叠状态记忆沿用历史键名 practice.toolbar.collapsed；窄屏不适用折叠（面板流式），折叠钮与把手由 CSS 在窄屏隐藏。
+- tests: ①verify:syntax 298 文件 0 错误；②check-all 28 PASS / 0 FAIL / 0 SKIP；③隔离 Chrome CDP：1440 宽屏面板 216px/sticky/x=0、内容 x=278；题量与难度 label 均换行（label 底 < input 顶）、输入框 72/56px；点 #dockCollapse → collapsed 类+ls=1+网格列归 0（内容 x=170=(1440-1100)/2）+把手出现，点 #railOpen 还原；折叠后重新导航仍保持收起（记忆生效）；390 窄屏两钮均 display:none、面板 static、collapsed 类无视觉效果；两档 docW=视口宽无横向溢出、0 error/unhandledrejection；截图确认胶囊标签文字宽、不再拉满全宽。
+- risk: 低。折叠纯 CSS 类驱动（transform/网格列宽过渡），JS 仅切换 class 与写 localStorage，不触碰生成/打印/检查链路；打印克隆源仍仅 #problemsArea 且 .rail-open 已加打印隐藏；基线数据与四份契约零改动。
+
+### P28-UI-PRACTICE-HERO-GRID-01｜Hero 通栏置顶、边栏下移为 Hero 下方左列；删练习设置标题/题量分段/双栏按钮（2026-09-27）
+
+- modified:
+  - `practice.html`（① `.page-hero` 内联样式加 position:relative/z-index:1300（层级保险；因边栏 sticky 顶 0 与 Hero 底边恰好衔接，实际不产生重叠）；删除宽屏 `body{padding-left:272px}` 避让，Hero 由此自然拉通整页宽度；② `.controls-dock-head` 删除 `<span class="controls-dock-title">练习设置</span>`，头部仅保留 .sidebar-back 返回按钮；③ #countGroup 删除 20/30/50/自定义 4 个 chip 及 role=radiogroup，改为 label「自定义题量：」+ `<input type="number" id="customCount" min=1 max=50 step=1 value=20 class="tb-num-input" style="width:88px">` + 提示「1~50」+ 保留 #countTip；④ 两个 `.controls-row.row-pair` 改 `.row-vertical`，#revealBtn/#printBtn/#checkBtn/#refreshResetBtn 四个 id、文案、绑定零改动；⑤ JS 删除 setCustomBox()；syncCountUI() 简化为 state.count 回填 #customCount 后调 updateCountTip()；updateCountTip() 删除 custom chip 判断；bindEvents 删除 #countGroup .chip 全部点击逻辑；#customCount change 改为 Math.round 后校验 1~50 整数、非法调 syncCountUI() 回退、合法调 setCount(v)，Enter 仍 blur 触发；题量段注释同步）
+  - `shared/styles/pages.css`（宽屏 @media(min-width:768) 布局重写：.wrap 由全宽容器改 display:grid / grid-template-columns:272px minmax(0,1fr) / align-items:start / max-width:none / margin:0 / padding:0，.wrap>#global-error 跨两列；.panel.controls 由 fixed 改 position:sticky/top:0/z-index:1100/height:100vh/overflow-y:auto 承接左列；.exercise-content 承接原 .wrap 的 max-width:1100/居中/padding；通用态新增 .controls-row.row-vertical flex-direction:column/gap:10px 且子按钮 width:100%；窄屏 max-width:767 .panel.controls position:static/width:auto 保持 Hero 下流式全宽卡片；@media print 规则不变）
+  - `shared/styles/toolbar.css`（删除 .controls-row.row-pair 双栏规则；.controls-actions 改纵向 gap:10px/min-width:0；删除 .group>.type-chips、.group .chip、.chip 基础/hover/active 及 #typeGroup/.type-sub-group/.type-chips/.chip-divider 死规则；注释更新为单列纵向布局）
+  - `shared/styles/tokens.css`（删除零消费令牌 --toolbar-chip-border/--toolbar-chip-bg/--toolbar-chip-hover-border/--toolbar-chip-hover-bg/--toolbar-chip-active-border/--toolbar-chip-active-ink/--toolbar-chip-active-shadow/--toolbar-font-size/--toolbar-chip-radius/--toolbar-chip-pad/--toolbar-touch-min；保留 --toolbar-chip-ink（.range-hint 仍用）与 --toolbar-chip-grad（styles.css 与 --toolbar-progress-fill 仍用））
+- deleted: 无文件删除；删除内容为题量 4 分段 chip 控件及 setCustomBox/chip 点击 JS、「练习设置」标题节点、显示答案/打印/检查/刷新双栏布局规则、零消费 .chip/.custom-chip/.custom-label/.custom-num/.controls-dock-title/.type-chips 样式与 11 个 chip token（全项目 grep 确认 row-pair/custom-chip/custom-label/custom-num/setCustomBox/controls-dock-title/data-count/type-chips/class="chip 零残留；#customCount/#countGroup/#countTip 为保留 id）。
+- reason: 用户四点要求：①三级页左侧边栏放到 Hero 栏下方、Hero 拉通整页宽度；②删除「练习设置」四个字；③题量直接改为用户自行输入的「自定义题量」；④显示答案等按钮取消双栏、纵向依次罗列。所有控件按 id 绑定，位置/容器变化不触碰生成链路（generate 读 state.count/typeCounts 经 PracticeBridge.start）与打印链路（Print.open(#problemsArea)，面板仍为兄弟节点且 @media print display:none）。
+- tests: ①verify:syntax 298 文件 0 错误；②check-all 28 PASS / 0 FAIL / 0 SKIP；③隔离 Chrome CDP（/tmp 一次性脚本，不入项目）：1440 宽屏 Hero x=0/宽1440/底边 y=116 通栏，#controlsPanel position:sticky/x=0/y=116/宽272/top:0/z1100（恰在 Hero 下方），.exercise-content x=306、#genBtn x=322/y=146 在 Hero 下方且在 272 列之后，body 无 padding-left，docW=1440 无横向溢出；滚动 241px 后 panel.top=0 吸附、elementFromPoint(136,10) 命中 controlsPanel；390 窄屏 Hero 全宽、panel position:static/x16/宽358 流式位于 Hero(y152) 与题目(y548) 之间、docW=390 无横向溢出；题量：#countGroup .chip 数量 0，label 文本「自定义题量：」，输入 7 触发 setCount→重新生成（卡片集变化），99/空值均回退旧值 7；四按钮宽屏 x=14/宽243、窄屏 x=29/宽332，y 等距递增（38px）确认纵向满宽罗列；.controls-dock-title 节点不存在、面板 textContent 不含「练习设置」；打印 emulate：.panel.controls/.page-hero/.gen-cta 均 display:none；两档 window.__e 均为空（0 error/unhandledrejection）。
+- risk: 低。纯 Presentation 壳层调整：生成/打印/检查/返回按 id 绑定不变，打印克隆源仍仅 #problemsArea，基线数据（375 KP/98 Units/1570 mappings）与 type/generation/knowledge/generator 四份契约零改动；section#controlsPanel 仍保留 aria-label="练习设置"（不可见无障碍名称）；分题型空态区留白为既有 renderKpRatio 首渲染清空 #kpRatioEmpty 的旧行为，本次不连锁修改。
+
+### P28-UI-PRACTICE-SIDEBAR-MERGE-01｜工具导航合并进常驻左边栏，取消「工具」开关（2026-09-27）
+
+- modified:
+  - `practice.html`（① 删除独立 `.side-rail` 贴缘轨道整块（返回按钮 + #railToggle「工具」按钮 + 分隔条）与 #controlsBackdrop 遮罩节点；返回键以 `.sidebar-back` 形式并入 #controlsPanel 头部 `.controls-dock-head`（与「练习设置」标题同行），onclick 原 history.back/select.html 逻辑原样保留；② `<body>` 移除 controls-collapsed 初始类；③ 内联样式：删除 .side-rail/.rail-back/.rail-toggle-sep 全部规则，宽屏避让由 60/332 双态简化为恒 272px、窄屏由 48px 改为 0（边栏流式置顶不避让），@media print 移除已删除的 .side-rail 选择器；④ bindEvents 删除 bindControlsDock 整段 IIFE（约 50 行：railToggle/dockToggle/backdrop 监听、controls-open/controls-collapsed 类切换、matchMedia 监听、localStorage `practice.toolbar.collapsed` 读写）；生成链路 #genBtn 等全部 id 绑定零改动）
+  - `shared/styles/pages.css`（边栏段重写：宽屏 min-width:768 `.panel.controls` fixed left:0/宽272/上下通栏；新增 .sidebar-back 头部返回键样式；删除 .controls-dock-toggle 圆形收起按钮、.controls-backdrop、body.controls-collapsed/controls-open、窄屏 overlay 抽屉 transform/层级等全部规则；窄屏 max-width:767 改为 position:static 流式置顶卡片（圆角12/无阴影）；@media print 选择器去掉 .controls-backdrop；相关注释同步）
+  - `shared/styles/toolbar.css`（文件头注释更新为「左侧常驻工具栏边栏，返回键已并入面板头部」，无规则变化）
+- deleted: 无文件删除；删除内容为 .side-rail/遮罩 DOM、工具开关按钮及收缩抽屉的 CSS/JS（grep 全项目确认 railToggle/controlsDockToggle/controlsBackdrop/controls-open/controls-collapsed/side-rail/controls-backdrop 零残留）。
+- reason: 用户要求查看内置生成逻辑后，将工具导航直接合并到侧边栏、取消「工具」按钮内置。生成逻辑复核结论：generate() 仅读 state.count/typeCounts 调 PracticeBridge.start，所有按钮（#genBtn/#checkBtn/#revealBtn/#printBtn/#refreshResetBtn/#difficultyInput/#customCount）均在 bindEvents 按 id 绑定，与位置/容器无关——故合并不触碰生成链路；返回键只是从独立轨道移到同一面板头部。
+- tests: ①verify:syntax 298 文件 0 错误 ②check-all 28 PASS / 0 FAIL / 0 SKIP（#15 真实浏览器 E2E 9 步生成/重新生成/刷新/打印全通过，#21 死代码矩阵通过）③隔离 Chrome CDP：1440 宽屏面板 fixed x=0/宽272/y0/上下通栏、body 恒避让 272px、头部「← 返回上页」在面板内、7 类控件（题量/自定义/难度/显示答案/打印/检查/刷新）实测全部在面板内、CTA 在面板外且位于 hero 下方、DOM 顺序 hero<panel<content、docW=1440 无横向溢出；点 #genBtn 重新生成成功；390×844 直载面板 position:static/x16/宽358 流式位于 hero 与题目之间、body 避让 0、控件可见、docW=390 无横向溢出、点 CTA 生成成功、0 error/unhandledrejection；打印 emulate：panel/hero/.gen-cta 全 display:none（返回键随父级面板隐藏）；题量三 chip 在 272px 宽下保持同行不折行。
+- risk: 低。纯展示层容器合并，生成/打印/检查按 id 绑定不受影响；print.js 剔除清单仍命中保留的 `.panel.controls` class，打印克隆源仍仅 #problemsArea；localStorage 旧键 practice.toolbar.collapsed 不再被读写，存量值静默留存无副作用；窄屏由抽屉改为流式置顶，题量/难度等设置在首屏直接可见（无需开关），首屏题目位置相应下移，属本次需求预期。
+
+### P28-UI-PRACTICE-GEN-CTA-01｜生成按钮移出边栏为 Hero 下方突出主操作，次级控件默认收纳（2026-09-27）
+
+- modified:
+  - `practice.html`（① #genBtn 原 `.controls-row.row-single` 整行从 #controlsPanel 移出，改放 `.exercise-content` 顶部新增的 `.gen-cta` 容器（Hero 下方、内容列左上角），按钮文案保持「生成练习」并加 ✨ 图标，id/`data-page-node-id` 不变故既有 generate 绑定零改动；② 内联样式：宽屏 body 避让由「默认 332px / 收起 60px」反转为「默认 60px / `body:not(.controls-collapsed)` 332px」且规则收进 `@media (min-width:768px)`，新增 `.gen-cta .btn.gen-cta-btn` 突出样式（135deg 品牌渐变/16px/900/圆角14/蓝色投影+hover 上浮/:disabled 态，窄屏 46px 触控高），@media print 追加隐藏 .gen-cta；③ `<body>` 默认带 `controls-collapsed` 类（防 FOUC），railToggle 初始 aria-expanded 改 false；④ bindControlsDock：宽屏默认态由「saved==='1' 才收起」改为「仅 saved==='0' 才展开」，两档默认均收纳；移除按钮移出抽屉后不可达的窄屏 genBtn 自动收起监听 3 行）
+  - `shared/styles/toolbar.css`（删除随按钮移出而零消费的 `.controls-row.row-single` 两条规则；操作区注释改为两行次级操作）
+  - `shared/styles/pages.css`（仅更新边栏段注释为「两档默认收纳」，无规则变化）
+- deleted: 无文件删除。
+- reason: 用户要求题量/难度/数量/答案显示/打印/检查/刷新全部并入左侧收纳工具栏，唯一主操作「生成练习」放到左上角 Hero 下方并突出。全部次级控件本就在 #controlsPanel 内，本次实质为：主操作从面板抽离常驻内容流 + 面板两档默认收起（点轨道「工具」展开，偏好仍记 localStorage `practice.toolbar.collapsed`，语义 '0'=显式展开）。
+- tests: ①verify:syntax 298 文件 0 错误 ②check-all 28 PASS / 0 FAIL / 0 SKIP（#15 真实浏览器 E2E 经 GenerationAPI 观测生成/重新生成/刷新/打印全通过，#21 死代码矩阵通过）③隔离 Chrome CDP 实测：1440 默认 controls-collapsed/避让60px/面板 tx=-272 隐藏，CTA rect x=216/y=158（恰在 hero bottom 之下）176×45、gradient+16px/900+投影+白字；轨道展开→避让332px/面板 x=60/w=272/CTA 随内容列右移；« 收起并写 '1'，重载保持收起；写 '0' 重载自动展开；390 窄屏默认抽屉 tx=-315 隐藏、CTA x=64 151×46 可见；抽屉打开时 elementFromPoint 命中面板内 .lbl（CTA 被遮挡不可点）；遮罩点击关闭；关闭态点 CTA 重新生成（题卡刷新、计时器重置）；#genBtn DOM 实测不在 #controlsPanel 内、reveal/check 仍在面板内、.row-single 节点 0 个；打印 emulate：panel/rail/hero/backdrop/.gen-cta 全部 display:none；docW 无横向溢出；页面 0 error/unhandledrejection。
+- risk: 低。纯展示层页面壳移动，生成/打印/检查链路经 id 绑定不受影响；打印克隆源仍仅 #problemsArea，.gen-cta 在其外并加 @media print 双保险；localStorage 键名不变，老用户 '1'/'0' 偏好语义保持（无记录的新用户改为默认收起）。
+
+### P28-UI-PRACTICE-SIDEBAR-01-VERIFY｜左侧边栏收缩改造验证 + 死代码清除（2026-09-27）
+
+- modified:
+  - `shared/styles/toolbar.css`（五步闭环⑤：边栏化后 `.panel.controls` 旧粘性定位段（position:sticky / backdrop-filter / @supports 兜底，共 14 行）已被 pages.css 固定边栏规则在屏幕态完全覆盖、打印态 display:none，成为死规则，整段删除；文件头注释「面板粘性置顶」改为「左侧固定可收缩边栏，定位由 pages.css 覆写」）
+  - `shared/styles/tokens.css`（6 个 `--toolbar-sticky-*` 令牌随粘性段删除后全站零消费，整组删除）
+  - `shared/styles/pages.css`（删除「工具栏集中管理」段内旧 sticky 面板本体规则 6 行；宽屏固定边栏补显式 `box-shadow: 4px 0 18px rgba(20,40,90,.10)` 右缘分隔，不再依赖 .panel 基类阴影；底色/描边仍沿用 @layer toolbar 的 .panel 基类）
+- deleted: 无文件删除（删除内容为上述三文件内的失效 CSS 规则/令牌）
+- reason: P28-UI-PRACTICE-SIDEBAR-01 落地后的「清除无用代码 + 重跑测试确认等价」闭环。删除前 grep 确认：`.panel.controls` 仅 practice.html 使用（print.js 两处为打印剔除清单非样式消费），6 个 sticky 令牌删除后全站零引用。
+- tests: ①隔离 Chrome（临时 profile，无 SW/缓存）CDP 实测 1440×900：默认展开 fixed left=60/宽272/上下贴边/z1100、body 避让 332px、无横向溢出；点 « 收起 → body.controls-collapsed/避让 60px/translateX(-272) 右缘=60 被返回轨遮住/aria-expanded=false/localStorage `practice.toolbar.collapsed=1`；rail「工具」键重新展开恢复 332px；390×844：默认抽屉藏起（translateX(-315)，elementFromPoint rail 区域 0% 命中面板）、railToggle 滑入（x=48/宽300/遮罩 opacity1+pointer-events:auto）、遮罩点击关闭、点「生成练习」自动关闭；直载窄屏（390 首屏）与宽屏后 emulate 390 两场景题卡链路等宽（.wrap 342/#problemsArea 310）②Emulation.setEmulatedMedia('print')：panel/side-rail/page-hero/backdrop 全部 display:none ③页面运行期 0 error/unhandledrejection ④死代码清除后 CDP 布局数据与截图视觉等价 ⑤verify:syntax 298 文件 0 错误 ⑥check-all 清除前后各一次均 28 PASS / 0 FAIL / 0 SKIP（#15 真实浏览器 E2E 9 步路径含生成→打印回归通过，#6b 冻结矩阵无 diff）⑦用户本地预览标签（8014）经时间戳 query 绕开 SW Cache-First 重载 3 个 CSS 后，真实点击「工具」抽屉滑入/遮罩正常。
+- risk: 低。删除的规则经 grep + 双次 check-all 证实无消费；sticky 令牌为工具栏私有令牌不影响其他组件；打印三道防线（print.js 剔除清单、@media print display:none、克隆源仅 #problemsArea）均有效。本地旧标签受 Service Worker Cache-First 影响需硬刷新（Cmd+Shift+R）方见新样式，部署时由既有 ?v 指纹/SW 版本流程处理，非代码问题。
+
+### P28-UI-PRACTICE-SIDEBAR-01｜练习页工具栏调整为左侧可收缩边栏（2026-09-27）
+
+- modified:
+  - `practice.html`（`.side-rail` 段内联样式：body 屏幕态左避让 60px→332px、新增 `body.controls-collapsed` 收起避让与窄屏恒 48px 规则、打印态追加隐藏边栏面板/遮罩；HTML：side-rail 新增「工具」开关按钮、#controlsPanel 内新增头部条（标题 + 收起按钮）、body 下新增 #controlsBackdrop 遮罩；JS bindEvents() 新增约 30 行收缩/展开绑定，宽屏状态写 localStorage `practice.toolbar.collapsed`，窄屏为 overlay 抽屉且点击遮罩/生成后自动收起）
+  - `shared/styles/pages.css`（@layer pages「工具栏集中管理」段尾部新增屏幕态边栏布局：.panel.controls 由 sticky 顶栏改 fixed 左边栏 left:60px/宽272px/独立纵向滚动，.controls-grid 单列；新增 dock 头部/收起按钮样式；≤767px 改 left:48px overlay 抽屉 + 遮罩显隐；原 @media print 的 position:static 覆写替换为 display:none）
+- deleted: 无文件删除
+- reason: 用户需求（查看预览后提出）：将练习页顶部工具栏（题量/难度/分题型题量 + 操作按钮）调整到左侧边栏，并支持收缩。归属页面壳表达层（practice.html 页面布局 + pages.css @layer pages），不涉及 shared/presentation 渲染/打印契约与任何生成链路；打印仍走 Print.open(#problemsArea) 克隆，边栏不在克隆源内。
+- tests: 计划执行——CDP 浏览器实测 1440×900 / 390×844 两档：展开/收缩切换、body 避让宽度、窄屏 overlay 与遮罩关闭、localStorage 持久化、打印态边栏 display:none、无横向溢出；verify:syntax；check-all 28 PASS / 0 FAIL / 0 SKIP；#15 真实浏览器 E2E 回归练习页生成→打印路径。
+- risk: 低。仅练习页屏幕态 CSS 与少量 UI 交互 JS；工具栏 DOM 节点 id/类名保留（#controlsPanel/#genBtn/#printBtn 等既有绑定零改动），打印克隆链路、生成/批改逻辑不受影响；旧 @media print static 覆写删除（面板已脱离文档流且打印克隆源不含它）。
+
 ### P28-DEF009-APPLY-GRAPHIC-VERIFY｜DEF-009 收尾：派生数据治理 + 全链验证记录（2026-09-27）
 
 - modified:

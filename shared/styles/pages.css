@@ -50,10 +50,6 @@
     padding: 2px 10px;
     font-size: 13px;
   }
-  /* chip：更顺滑过渡 + 键盘焦点环；激活态加深投影，强化“选中”层级 */
-  .chip { transition: .2s ease; }
-  .chip:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-  .chip.active { box-shadow: var(--toolbar-chip-active-shadow), 0 2px 8px rgba(20, 40, 90, .12); }
   /* 按钮：统一过渡 + 键盘焦点环 + 轻微字距 */
   .btn { transition: .2s ease; }
   .btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
@@ -203,14 +199,10 @@
   /* ============ 工具栏集中管理（自 practice.html 内联样式迁移，任务3） ============
    * 练习页工具栏全部覆写样式统一维护于此；同层后置 → 覆盖上方精炼段与 @layer toolbar。 */
 
-  /* 面板本体：粘性置顶 + 卡片描边（合并原精炼段的 padding） */
-  .panel.controls {
-    position: sticky; top: 8px; z-index: 60;
-    background: var(--card, #fff); border: 1px solid var(--line, #e3e8f0); border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(40, 70, 120, .10);
-    padding: calc(var(--spacing-md) + 2px) var(--spacing-md);
-  }
-  @media print { .panel.controls { position: static; box-shadow: none; } }
+  /* 面板本体屏幕态为左侧常驻工具栏边栏，规则见本文件尾部「工具栏边栏」段；
+     底色/描边沿用 @layer toolbar 的 .panel 基类。 */
+  /* 打印克隆源仅 #problemsArea；工具栏边栏双保险不进入试卷 */
+  @media print { .panel.controls { display: none !important; } }
 
   /* ===== 知识点卡片题量占比（可调整）===== */
   .kp-ratio { display: flex; flex-direction: column; gap: 8px; width: 100%; }
@@ -241,22 +233,6 @@
   .kp-ratio-types .kp-ratio-item .nm { flex: 0 1 auto; }
   .kp-ratio-types .kp-ratio-item .cnt { flex: 0 0 auto; }
 
-  /* ===== 自定义题量同框：chip 变输入框，占位灰字「自定义」，键入即消失 ===== */
-  .custom-chip { position: relative; padding: 0; }
-  .custom-chip .custom-label { padding: var(--toolbar-chip-pad); display: inline-flex; align-items: center; }
-  .custom-chip .custom-num {
-    border: none; background: transparent; outline: none; text-align: center; font: inherit;
-    color: var(--toolbar-chip-ink); font-weight: 700; width: 64px; min-height: 22px;
-    padding: var(--toolbar-chip-pad);
-  }
-  .custom-chip .custom-num::placeholder { color: var(--muted, #99a); opacity: 0.75; font-weight: 400; }
-  .custom-chip.custom-chip-input { padding: 0; }
-  /* 自定义题量：激活后不显示蓝色高亮选中态（仅视觉中性化，active 类与交互逻辑保留） */
-  #countGroup .custom-chip.active {
-    background: var(--toolbar-chip-bg); color: var(--toolbar-chip-ink);
-    border-color: var(--toolbar-chip-border); box-shadow: none;
-  }
-
   /* ===== 专业（教师）模式：知识点题量填空，横向排列、自动换行、换行缩进 ===== */
   .kp-ratio-flow { display: flex; flex-wrap: wrap; gap: 8px; padding-left: 12px; margin-bottom: 8px; }
   .kp-blank {
@@ -271,5 +247,99 @@
     font-variant-numeric: tabular-nums; background: var(--card); }
   .kp-blank-num:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
   .kp-blank-unit { font-size: 12px; font-weight: 700; color: var(--muted); }
+
+  /* ============ 工具栏边栏（屏幕态） ============
+   * Hero 通栏置顶（见 practice.html 内联样式）；其下方 .wrap 在宽屏为「216px 边栏 + 内容」网格：
+   * 边栏 sticky 贴在 Hero 下方左侧、视口高度内独立滚动；Hero z-index 更高，滚动时边栏从其下方穿过。
+   * 折叠：body.controls-collapsed 时网格列归 0、面板 translateX 滑出左缘，左缘固定把手 #railOpen 出现；
+   * 每次打开页面默认展开（不记忆折叠状态），折叠仅当前页会话内有效。
+   * 窄屏（≤767px）：面板流式置顶卡片（Hero 之下、题目之上），无折叠（把手/折叠钮均隐藏）。 */
+  @media screen and (min-width: 768px) {
+    .wrap {
+      display: grid; grid-template-columns: 216px minmax(0, 1fr); align-items: start;
+      max-width: none; margin: 0; padding: 0;
+      transition: grid-template-columns .25s ease;
+    }
+    body.controls-collapsed .wrap { grid-template-columns: 0 minmax(0, 1fr); }
+    /* 错误横幅若出现，横跨网格整行，不被挤进 216px 边栏列 */
+    .wrap > #global-error { grid-column: 1 / -1; }
+    .panel.controls {
+      position: sticky; top: 0; z-index: 1100;
+      height: 100vh; width: 216px; margin: 0;
+      border-radius: 0; border-top: 0; border-bottom: 0; border-left: 0;
+      box-shadow: 4px 0 18px rgba(20, 40, 90, .10);
+      padding: 14px 12px 20px; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      transition: transform .25s ease;
+    }
+    body.controls-collapsed .panel.controls { transform: translateX(-100%); }
+    /* 右列内容沿用原 .wrap 的 1100 居中与留白（网格已取消 .wrap 内边距，下沉到内容区） */
+    .exercise-content {
+      width: 100%; max-width: 1100px; margin: 0 auto;
+      padding: var(--spacing-md) var(--spacing-md) 60px;
+    }
+  }
+  @media screen {
+    /* 边栏内部：设置区 / 操作区纵向单列堆叠（覆盖 toolbar 层的左右分栏） */
+    .panel.controls .controls-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .panel.controls .controls-actions { min-width: 0; }
+    /* 题量 / 难度等设置组：标题独占一行、控件换行到下一行，收窄横向占用（覆盖 toolbar 层 .group 行内布局） */
+    .panel.controls .group { flex-direction: column; gap: 4px; align-items: stretch; }
+    /* 胶囊标签在纵向布局下保持文字宽度，不拉伸为全宽横条 */
+    .panel.controls .group .lbl { align-self: flex-start; }
+    .panel.controls .group > .setting-content { width: 100%; }
+    /* 头部条：返回上页按钮 + 右侧折叠钮 */
+    .controls-dock-head {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+    }
+    .sidebar-back {
+      flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 12px; cursor: pointer; border-radius: 10px;
+      border: 1px solid var(--line, #e3e8f0); background: var(--soft-bg, #f4f6fb);
+      color: var(--brand, #2b6cc0); font-size: 13px; font-weight: 800; line-height: 1.2;
+      transition: background .15s, border-color .15s, transform .15s;
+    }
+    .sidebar-back .sidebar-back-ico { font-size: 15px; line-height: 1; }
+    .sidebar-back:hover { background: var(--brand-bg, #eef5ff); border-color: var(--brand, #2b6cc0); }
+    .sidebar-back:active { transform: scale(.95); }
+    /* 折叠钮（面板头部右侧，仅宽屏可见）：收起边栏 */
+    .dock-collapse {
+      display: none; margin-left: auto; width: 26px; height: 26px; padding: 0;
+      align-items: center; justify-content: center; cursor: pointer; border-radius: 8px;
+      border: 1px solid var(--line, #e3e8f0); background: var(--soft-bg, #f4f6fb);
+      color: var(--muted, #5f6b80); font-size: 12px; line-height: 1;
+      transition: background .15s, border-color .15s, transform .15s;
+    }
+    .dock-collapse:hover { background: var(--brand-bg, #eef5ff); border-color: var(--brand, #2b6cc0); color: var(--brand, #2b6cc0); }
+    .dock-collapse:active { transform: scale(.92); }
+    /* 展开把手（收起态贴左缘垂直居中，仅宽屏 + collapsed 出现） */
+    .rail-open {
+      display: none; position: fixed; left: 0; top: 50%; transform: translateY(-50%);
+      z-index: 1150; width: 26px; height: 64px; padding: 0; cursor: pointer;
+      align-items: center; justify-content: center;
+      border: 1px solid var(--line, #e3e8f0); border-left: 0;
+      border-radius: 0 10px 10px 0; background: var(--card, #fff);
+      box-shadow: 4px 0 14px rgba(20, 40, 90, .12);
+      color: var(--brand, #2b6cc0); font-size: 13px; line-height: 1;
+      transition: background .15s, width .15s;
+    }
+    .rail-open:hover { background: var(--brand-bg, #eef5ff); width: 30px; }
+    @media screen and (min-width: 768px) {
+      .dock-collapse { display: inline-flex; }
+      body.controls-collapsed .rail-open { display: inline-flex; }
+    }
+    /* 操作按钮：取消双栏并排，显示答案/打印/检查/刷新纵向依次罗列、满宽 */
+    .panel.controls .controls-actions { gap: 10px; }
+    .panel.controls .controls-row.row-vertical { display: flex; flex-direction: column; gap: 10px; }
+    .panel.controls .controls-row.row-vertical > .btn { width: 100%; flex: 1 1 auto; }
+  }
+  @media screen and (max-width: 767px) {
+    /* 窄屏：工具栏回到文档流置顶卡片，不遮挡/不挤压题目内容；collapsed 类在窄屏无效果 */
+    .panel.controls {
+      position: static; width: auto; margin: 0 0 4px;
+      border-radius: 12px; box-shadow: none;
+      padding: 12px 12px 14px;
+    }
+  }
+  @media print { .rail-open { display: none !important; } }
 
 } /* /@layer pages */
