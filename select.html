@@ -1272,7 +1272,18 @@ body.select-page{
     return false;
   }
 
-  // 按（上下册 × 单元）分组知识点，返回 [{ book, unit, label, kps: [] }]
+  // 单元复合标识：跨册同名单元（如「复习与关联」上/下册各一）必须以 册别|单元名 唯一区分，
+  // 选择状态与过滤一律使用 key，禁止只按单元名匹配。
+  function unitKey(book, unit) {
+    return (book || 'all') + '|' + unit;
+  }
+  function unitNameOf(key) {
+    var i = String(key == null ? '' : key).indexOf('|');
+    return i === -1 ? String(key) : String(key).slice(i + 1);
+  }
+  var UNIT_BOOK_LABEL = { up: '上册', down: '下册', mixed: '跨册', advance: '超前', all: '' };
+
+  // 按（上下册 × 单元）分组知识点，返回 [{ book, unit, key, kps: [] }]
   function unitBuckets(entries, book) {
     var map = {};
     entries.forEach(function (k) {
@@ -1280,8 +1291,8 @@ body.select-page{
       if (!kpMatchesBook(k, book)) return;
       var b = k.book || 'all';
       var u = k.unit || ('（' + (b === 'up' ? '上册' : b === 'down' ? '下册' : b === 'advance' ? '超前' : '跨册') + ' 综合）');
-      var key = b + '\u0001' + u;
-      if (!map[key]) map[key] = { book: b, unit: u, kps: [] };
+      var key = unitKey(b, u);
+      if (!map[key]) map[key] = { book: b, unit: u, key: key, kps: [] };
       map[key].kps.push(k);
     });
     return Object.keys(map).map(function (key) { return map[key]; })
@@ -1315,9 +1326,11 @@ body.select-page{
       uHtml = '<div class="type-empty">该册别暂无单元</div>';
     } else {
       buckets.forEach(function (bkt) {
-        var on = state.quickUnits.indexOf(bkt.unit) !== -1 ? ' on' : '';
-        uHtml += '<button type="button" class="type-card' + on + '" data-unit="' + esc(bkt.unit) + '">' + esc(bkt.unit) +
-          '<span class="tc-tag">' + bkt.kps.length + ' 个知识点</span></button>';
+        var on = state.quickUnits.indexOf(bkt.key) !== -1 ? ' on' : '';
+        // 册别=不限时可能出现跨册同名单元，角标带册别以区分；限定单册时整列同册不重复标注
+        var bookTag = state.quickBook === 'all' && UNIT_BOOK_LABEL[bkt.book] ? (UNIT_BOOK_LABEL[bkt.book] + ' · ') : '';
+        uHtml += '<button type="button" class="type-card' + on + '" data-unit="' + esc(bkt.key) + '">' + esc(bkt.unit) +
+          '<span class="tc-tag">' + bookTag + bkt.kps.length + ' 个知识点</span></button>';
       });
     }
     unitGridQuick.innerHTML = uHtml;
@@ -1339,8 +1352,9 @@ body.select-page{
     }
     // P10-3：候选池（与题型无关）→ POL plan 能力视图；题型数按能力判定统计
     var pool = entries.filter(function (k) {
-      return !isCompetitionKp(k) && kpMatchesBook(k, state.quickBook) &&
-        (state.quickUnits.length ? state.quickUnits.indexOf(k.unit) !== -1 : true);
+      if (isCompetitionKp(k) || !kpMatchesBook(k, state.quickBook)) return false;
+      if (!state.quickUnits.length) return true;
+      return state.quickUnits.indexOf(unitKey(k.book || 'all', k.unit)) !== -1;
     });
     var view = ensurePolView('quick', state.subject, state.grade, pool.map(function (k) { return k.id; }));
     var html = '';
@@ -1396,7 +1410,7 @@ body.select-page{
     var pool = [], seen = {};
     var focused = state.teacherUnits.length > 0;
     buckets.forEach(function (bkt) {
-      if (focused && state.teacherUnits.indexOf(bkt.unit) === -1) return;
+      if (focused && state.teacherUnits.indexOf(bkt.key) === -1) return;
       bkt.kps.forEach(function (k) { if (k && k.id && !seen[k.id]) { seen[k.id] = true; pool.push(k.id); } });
     });
     return pool;
@@ -1422,10 +1436,10 @@ body.select-page{
     }
     var uHtml = '';
     buckets.forEach(function (bkt) {
-      var on = state.teacherUnits.indexOf(bkt.unit) !== -1 ? ' on' : '';
-      var bookLabel = bkt.book === 'up' ? '上册' : bkt.book === 'down' ? '下册' : bkt.book === 'advance' ? '超前' : bkt.book === 'mixed' ? '跨册' : '';
-      uHtml += '<button type="button" class="type-card' + on + '" data-unit="' + esc(bkt.unit) + '">' + esc(bkt.unit) +
-        '<span class="tc-tag">' + bookLabel + ' · ' + bkt.kps.length + ' 个知识点</span></button>';
+      var on = state.teacherUnits.indexOf(bkt.key) !== -1 ? ' on' : '';
+      var bookLabel = UNIT_BOOK_LABEL[bkt.book] || '';
+      uHtml += '<button type="button" class="type-card' + on + '" data-unit="' + esc(bkt.key) + '">' + esc(bkt.unit) +
+        '<span class="tc-tag">' + (bookLabel ? bookLabel + ' · ' : '') + bkt.kps.length + ' 个知识点</span></button>';
     });
     teacherUnitGrid.innerHTML = uHtml;
     renderTeacherKpGrid(buckets);
@@ -1440,7 +1454,7 @@ body.select-page{
     }
     // 顺序自由：未选单元时展示当前册别全部单元分组（可直接勾选 KP）；
     // 选了单元则只渲染聚焦单元分组（单元卡是聚焦筛选器，不是前置条件）。
-    var selectedUnits = buckets.filter(function (bkt) { return state.teacherUnits.indexOf(bkt.unit) !== -1; });
+    var selectedUnits = buckets.filter(function (bkt) { return state.teacherUnits.indexOf(bkt.key) !== -1; });
     var renderBuckets = selectedUnits.length ? selectedUnits : buckets;
     var view = teacherPolView();
     var totalKp = state.teacherKps.length;
@@ -1580,8 +1594,9 @@ body.select-page{
       // P10-3：题型能力匹配走 POL plan 能力视图（未就绪时回退 applicable_question_types）。
       var defs = QUICK_TYPE_DEFS.filter(function (t) { return state.quickTypes.indexOf(t.key) !== -1; });
       var pool = entries.filter(function (k) {
-        return !isCompetitionKp(k) && kpMatchesBook(k, state.quickBook) &&
-          (state.quickUnits.length ? state.quickUnits.indexOf(k.unit) !== -1 : true);
+        if (isCompetitionKp(k) || !kpMatchesBook(k, state.quickBook)) return false;
+        if (!state.quickUnits.length) return true;
+        return state.quickUnits.indexOf(unitKey(k.book || 'all', k.unit)) !== -1;
       });
       var view = ensurePolView('quick', subject, grade, pool.map(function (k) { return k.id; }));
       pool.forEach(function (k) {
@@ -1617,7 +1632,10 @@ body.select-page{
     var req = RequestNormalize.createPracticeRequest({
       mode: state.mode, subject: subject, grade: grade,
       book: (book && book !== 'all') ? book : 'all',
-      unit: (state.mode === 'quick' && state.quickUnits.length) ? state.quickUnits : null,
+      // unit 仅传单元中文名数组（与历史口径一致；下游池以显式 knowledgePoints 为准）。
+      // 精度由上方 collectKps 按复合 key 收集的 kps 保证，跨册同名不会在此串册。
+      unit: (state.mode === 'quick' && state.quickUnits.length)
+        ? state.quickUnits.map(unitNameOf) : null,
       knowledgePoints: kps,
       // 竞赛模式按知识模块选 KP，题型交给生成层自选（不再传题型标签）
       tags: [],
@@ -1682,8 +1700,17 @@ body.select-page{
       });
       rows.push(['题型', defs.length ? defs.map(function (t) { return esc(t.label); }).join('、') : '未选择']);
       var units = (state.mode === 'teacher') ? state.teacherUnits : state.quickUnits;
+      // 摘要展示由复合 key 还原单元名；不限册别时带册别前缀以区分跨册同名单元
+      var unitLabel = function (key) {
+        var label = unitNameOf(key);
+        if (book === 'all') {
+          var bl = UNIT_BOOK_LABEL[String(key).split('|')[0]];
+          if (bl) label = bl + ' ' + label;
+        }
+        return esc(label);
+      };
       if (state.mode === 'quick' && !units.length) rows.push(['单元', '全部单元']);
-      else rows.push(['单元', units.length ? units.map(esc).join('、') : '未选择']);
+      else rows.push(['单元', units.length ? units.map(unitLabel).join('、') : '未选择']);
       if (state.mode === 'teacher') {
         rows.push(['知识点', state.teacherKps.length ? '已选 ' + state.teacherKps.length + ' 个' : '未选择']);
       }

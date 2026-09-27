@@ -25,6 +25,32 @@
 
 ## 记录（新 → 旧）
 
+### P28-UI-SELECT-BUG-01-CLEANUP｜同名单元修复收尾：清除重复册别映射（2026-09-27）
+
+- modified:
+  - `select.html`（教师模式单元卡角标由内联三元 `bkt.book==='up'?'上册':...` 改为复用 BUG-01 新增的 `UNIT_BOOK_LABEL[bkt.book] || ''`，消除同一册别映射的第二份实现；渲染输出逐字等价）
+- deleted: 无
+- reason: 用户要求修复必须走「检查问题所在→锁定问题→覆盖修改→测试→清除无用代码」闭环。在最后一环对 BUG-01 改动区做静态扫描：旧分桶键 \u0001、bkt.unit/k.unit 名称匹配均无残留；发现教师卡角标仍保留与 UNIT_BOOK_LABEL 等价的重复三元，按单一 SSOT 原则清除。
+- tests: 契约测试 31/31 通过；verify:syntax 通过（298 文件 0 错误）；CDP 教师模式 G1 实测角标仍为「上册 · 1 个知识点」「下册 · 1 个知识点」与替换前逐字一致；check-all 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 极低。一行等价替换，无行为变化。
+
+### P28-UI-SELECT-BUG-01-VERIFY｜跨册同名单元修复验证记录（2026-09-27）
+
+- modified: 无（仅补记验证结果，不新增代码改动）
+- deleted: 无
+- reason: P28-UI-SELECT-BUG-01 已完成，按追加式审计要求补记实际验证结果，不修改原计划记录。
+- tests: Chrome CDP 实测 G1（数据核查：G1–G5 均有跨册同名单元「复习与关联」）——①不限册别时同名卡为 up|复习与关联（角标「上册 · 1 个知识点」）与 down|复习与关联（「下册 · 1 个知识点」）两张、key 不同；②点上册卡后仅该卡 on，下册卡不高亮（修复前两张同亮）；③开始按钮 href 的 kps 仅 1 个且 books={up:1}，无 down 串入（修复前为上下册各 1 共 2 个）；④摘要单元行显示「上册 复习与关联」；⑤教师模式聚焦仅渲染上册组、仅上册卡 on；⑥限定上册时普通单元角标无冗余册别前缀（「3 个知识点」）、3 个 kps 全 up、摘要为纯单元名。契约测试新增 8 个 BUG-01 防护用例（31 tests / 8 suites 全过）；`npm run verify:syntax` 通过（298 个文件，0 错误）；`node dev/check-all.js` 28 PASS / 0 FAIL / 0 SKIP（含真实浏览器 E2E 首页→练习路径回归）。
+- risk: 无新增代码风险。
+
+### P28-UI-SELECT-BUG-01｜修复跨册同名单元选择范围不精准（2026-09-27）
+
+- modified:
+  - `select.html`（单元选择标识由「单元名」改为复合 key `册别|单元名`：①unitBuckets 输出 key 字段（与内部分桶同口径）；②快速/教师单元卡 data-unit 值改为 key；③state.quickUnits/teacherUnits 存 key，全部匹配点（快速 pool 过滤、collectKps、教师聚焦 displayPool/KpGrid/TypeGrid/点击）改按 key 比对；④册别=不限时快速单元卡角标显示册别（上册/下册/跨册/超前），限定单册时不显示；⑤摘要栏单元行由 key 映射回「单元名」展示；⑥传 createPracticeRequest 的 unit 参数仍传单元中文名数组（与修复前行为一致：该参数下游按 module/unitId 匹配、对中文名不生效，真正池源为 knowledgePoints 显式列表，故不改变生成链契约））
+- deleted: 无
+- reason: 核查发现 G1–G5 均存在跨册同名单元「复习与关联」（up/down 各一，unitBuckets 内部分桶已按 册别+单元名 区分，但对外标识/state/过滤只用单元名）。册别=不限时两张同名卡：点一张两张高亮、快速 collectKps 把两册同名单元 KP 一并收入，范围被错误扩大。
+- tests: 计划 CDP 实测 G1 不限册别只选上册「复习与关联」→ kps 全部 book=up、两张卡仅一张高亮、href kps 不含 down；教师模式聚焦/取消同理；更新 select-page-contract 契约测试；`node dev/check-all.js`。
+- risk: 中。改动选择状态结构与 6 处匹配点，但生成入口（显式 knowledgePoints）口径不变；年级/科目切换原有清空逻辑覆盖 state 残留。
+
 ### P28-UI-SELECT-TEST-01-VERIFY｜二级页面契约测试验证记录（2026-09-27）
 
 - modified: 无（仅补记验证结果，不新增代码改动）

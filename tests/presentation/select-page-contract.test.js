@@ -167,6 +167,47 @@ describe('LAYOUT-04/12/13/14：题型、单元、知识点样式契约', () => {
   });
 });
 
+describe('BUG-01：跨册同名单元必须按复合 key 精确区分', () => {
+  test('存在 unitKey/unitNameOf 复合标识辅助函数', () => {
+    assert.match(js, /function unitKey\(book, unit\)/);
+    assert.match(js, /function unitNameOf\(key\)/);
+  });
+
+  test('unitBuckets 输出 key 字段，且内部分桶使用复合 key', () => {
+    assert.match(js, /key:\s*key,\s*kps:\s*\[\]/);
+  });
+
+  test('单元卡 data-unit 绑定的是 bkt.key 而非单元名', () => {
+    assert.match(js, /data-unit="' \+ esc\(bkt\.key\) \+ '"/);
+    assert.doesNotMatch(js, /data-unit="' \+ esc\(bkt\.unit\) \+ '"/);
+  });
+
+  test('快速模式候选池与 collectKps 均按 unitKey(k.book, k.unit) 匹配（不少于 2 处）', () => {
+    const occurrences = js.match(/state\.quickUnits\.indexOf\(unitKey\(k\.book \|\| 'all', k\.unit\)\)/g) || [];
+    assert.ok(occurrences.length >= 2, 'renderQuick 与 collectKps 两处都必须按复合 key 过滤');
+  });
+
+  test('教师模式聚焦/展示池按 bkt.key 匹配，不残留 bkt.unit 名称匹配', () => {
+    assert.match(js, /state\.teacherUnits\.indexOf\(bkt\.key\)/);
+    assert.doesNotMatch(js, /state\.teacherUnits\.indexOf\(bkt\.unit\)/);
+    assert.doesNotMatch(js, /state\.quickUnits\.indexOf\(k\.unit\)/);
+    assert.doesNotMatch(js, /state\.quickUnits\.indexOf\(bkt\.unit\)/);
+  });
+
+  test('不限册别时单元卡角标带册别，用于区分跨册同名单元', () => {
+    assert.match(js, /state\.quickBook === 'all' && UNIT_BOOK_LABEL\[bkt\.book\]/);
+  });
+
+  test('摘要栏单元行由复合 key 映射回名称，不直接展示 key', () => {
+    assert.match(js, /var label = unitNameOf\(key\)/);
+    assert.doesNotMatch(js, /units\.map\(esc\)\.join/);
+  });
+
+  test('传给生成请求的 unit 参数为单元中文名数组（保持下游历史口径）', () => {
+    assert.match(js, /state\.quickUnits\.map\(unitNameOf\)/);
+  });
+});
+
 describe('LAYOUT-06 兜底：生成参数默认值', () => {
   test('题量/难度下拉缺失时回退 20 / normal（生成链不变）', () => {
     assert.match(js, /var count = countSel \? Number\(countSel\.value\) : 20;/);
