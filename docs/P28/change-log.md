@@ -25,6 +25,26 @@
 
 ## 记录（新 → 旧）
 
+### P28-CLEANUP-01-VERIFY｜无效代码清理验证记录（2026-09-27）
+
+- modified: 无（仅补记验证结果）
+- deleted: 无
+- reason: P28-CLEANUP-01 已完成，补记实际验证结果。
+- tests: 删除后 CSS 孤儿复扫零真孤儿（仅剩 SVG data URI 中 www.w3.org 的 w3/org 误报）；select-page-contract 契约测试 31/31 通过；verify:syntax 298 文件 0 错误；CDP 1440 教师页实测两栏结构、`.teacher-col-mid` 虚线分隔、14 个知识点分组、分组标题字重 800 均与清理前一致（被删 `.muted/.mod-on` 无任何元素受影响）；`node dev/check-all.js` 28 PASS / 0 FAIL / 0 SKIP。git 跟踪变更仅 select.html 与本审计文件（json/DS_Store 均被 .gitignore 忽略，本就不在版本库）。
+- risk: 无。
+
+### P28-CLEANUP-01｜无效代码与文件清理（2026-09-27）
+
+- modified:
+  - `select.html`（删除 3 处零引用孤儿 CSS：①`.teacher-col-right{}` 主规则及 ≤767px 媒体查询中的同名选择器（LAYOUT-12 教师区由三栏改两栏后遗留，全文 DOM/JS 零引用，媒体查询选择器收窄为仅 `.teacher-col-mid`）；②`.kp-group-title.muted{}`；③`.kp-group-title .mod-on{}`（两条类名全文零引用，JS 渲染知识点分组不生成））
+- deleted:
+  - `competition-report.json`（git 未跟踪的本地产物；其自述生成器 `dev/competition-report.js` 在仓库中已不存在，package.json / dev/check-all.js / .github 全仓零引用，为 2026-09-09 遗留孤儿报告）
+  - 仓库内各目录 `.DS_Store`（macOS Finder 系统垃圾，.gitignore 已忽略，无任何代码引用）
+  - `/tmp/chrome-cdp-prof*` 共 22 个本会话 CDP 验证用一次性 Chrome profile（仓库外临时产物，进程已退出）
+- reason: 用户要求检查清理一次无效代码和文件。硬证据方式：Legacy 矩阵 8 项全 KEEP/0 DELETE 不自行扩展；select.html 经函数/变量/CSS 类引用计数扫描（.unit-list、.teacher-col-mid、.col-label 等经核实仍在用，保留）；删除项均满足「全文零引用 + 非入口 + 非配置依赖」。archive/、dev/p26/ 等有意归档/忽略目录不动。
+- tests: 计划重跑 select-page-contract 契约测试、verify:syntax、check-all；CDP 复看教师页与知识点分组渲染无变化。
+- risk: 低。删除 CSS 规则对应类名零引用；json/DS_Store/tmp 均非 git 跟踪、非入口。
+
 ### P28-UI-SELECT-BUG-01-CLEANUP｜同名单元修复收尾：清除重复册别映射（2026-09-27）
 
 - modified:
