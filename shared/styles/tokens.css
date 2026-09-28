@@ -121,20 +121,11 @@
     --grid-gap-print: 8px 6px;
     --spacing-xl: 32px;
     --header-title-size: 2.0rem; /* 页面标题（.page-header）字号基准 */
-  --q-num-size: 12px;
-  --q-text-size: 15px;
-  --q-text-line-height: 1.4;
-  --q-unit-size: 12px;
-  --q-input-size: 14px;
-  --q-input-height: 30px;
-  --q-option-size: 14px;
-  --q-hint-size: 12px;
-  --q-feedback-size: 12px;
-  --q-scene-max-width: 200px;
-  --q-scene-max-height: 140px;
-  --q-card-padding: 12px 14px;
+  /* P28-UI-PRINTSTYLE-CLEANUP-01：删除零消费者死令牌（--q-num-size/--q-text-size/--q-text-line-height/
+   * --q-unit-size/--q-input-size/--q-input-height/--q-option-size/--q-hint-size/--q-feedback-size/
+   * --q-scene-max-width/--q-scene-max-height/--q-card-padding/--q-section-gap——原消费方均为旧插件
+   * 渲染链死类样式，已随本轮清理删除）。仅保留在用令牌： */
   --q-header-gap: 8px;
-  --q-section-gap: 8px;
   --q-grid-gap: 14px;
 
     /* 字号层级（22px 封顶，儿童产品克制感；字重不在此声明：display 700 / title 600 / body 400 / caption 400，由各组件规则指定） */

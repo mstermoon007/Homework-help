@@ -511,8 +511,10 @@
     min-width: 50px;
 }
 
-/* ============ 题目卡片（PluginUtil.renderCard 类化输出，勿删——插件渲染依赖） ============
- * renderCard 只输出 class，样式统一在此维护。 */
+/* ============ 题目卡片（统一渲染器 html-renderer.js 输出 + renderGeneric 降级模板） ============
+ * P28-UI-PRINTSTYLE-CLEANUP-01：删除零产出死类样式（.q-header/.scene-box/.q-hint/.options/.opt/
+ * .input-group/.unit/.qa-row/.qa-label/.formula-inp/compact 家族/.global-tip——旧插件渲染链
+ * render.js 已按 P28-22 删除，无任何生产方输出这些类）。 */
 .question-card {
     display: grid;
     grid-template-rows: auto auto 1fr auto;
@@ -527,13 +529,6 @@
     background: var(--card);
     align-self: start;
     justify-self: start;
-}
-.question-card .q-header {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--q-header-gap);
-    margin: 2px 0 6px;
-
 }
 .question-card .num {
     flex: 0 0 auto;
@@ -550,64 +545,6 @@
     color: var(--ink);
     vertical-align: middle;
 }
-.question-card .scene-box {
-    grid-row: 2;
-    max-width: var(--q-scene-max-width);
-    max-height: var(--q-scene-max-height);
-    margin: 0 auto;
-    display: flex; align-items: center; justify-content: center;
-    gap: 8px; padding: 8px; background: var(--soft-bg);
-    border-radius: 8px;
-
-}
-/* 共享 SVG 生成器（svg-core/svg-geometry/svg-calculation/svg-make-ten）输出：
-   带 viewBox 的完整 <svg>。窄屏等比收缩、打印按容器宽度缩放。 */
-.question-card .scene-box svg {
-    max-width: 100%; height: auto;
-}
-.question-card .q-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
-.question-card .options {
-    grid-row: 4;
-    display: flex; flex-wrap: wrap;
-    justify-content: flex-start; gap: var(--q-grid-gap);
-    margin: 4px 0 0;}
-
-/* 选项（choice 题型）：原生 <button role=radio>，键盘可达 + 可见焦点环 */
-.question-card .opt {
-    appearance: none; -webkit-appearance: none;
-    font: inherit; font-size: var(--q-option-size); font-weight: 600; line-height: 1.2;
-    color: var(--ink); background: var(--soft-bg);
-    border: 2px solid var(--line-strong); border-radius: 8px;
-    padding: 6px 14px; cursor: pointer; margin: 0;
-}
-.question-card .opt:hover { border-color: var(--brand); }
-.question-card .opt:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-.question-card .opt.chosen {
-    background: var(--brand-bg); border-color: var(--brand); color: var(--brand-d);
-    box-shadow: 0 2px 8px rgba(51, 95, 181, .18);
-}
-
-.question-card .input-group {
-    grid-row: 4;
-    display: flex; align-items: center; gap: var(--q-grid-gap);
-    margin-top: 4px;
-}
-
-.question-card .unit { font-size: 13px; color: var(--muted); font-weight: 600; }
-
-.question-card .qa-row {
-    display: flex; align-items: center; justify-content: flex-start;
-    gap: 6px; flex-wrap: wrap; margin: 6px 0;
-}
-
-.question-card .qa-label { font-size: 12px; font-weight: 700; color: var(--muted); }
-
-.question-card .formula-inp {
-    width: 120px; height: 32px;
-    border: 2px dashed var(--line-strong); border-radius: 7px;
-    font-size: 15px; font-weight: 700; text-align: center;
-    color: var(--brand-d); background: var(--soft-bg); outline: none;
-}
 
 /* 答案输入框：默认宽 96px；调用方传 opts.inputWidth 时由内联 style 覆盖 */
 .answer-inp {
@@ -619,54 +556,6 @@
 
 .question-card .feedback { font-size: 12px; font-weight: 700; min-height: 16px; margin-top: 6px; }
 
-/* 紧凑模式（P2.3）：仅服务「屏幕」紧凑场景（口算/填空卡片，density=compact 时由 html-renderer 挂类）。
- * 打印试卷排版不经过本类——打印端为无框无底练习单，样式单一来源 shared/presentation/print.js PRINT_QCSS（P1.1/P1.3）。
- * 两侧语义一致（紧凑=省版面），数值各自独立演进；compact 本类不新增卡片框/阴影/底色。 */
-.question-card.compact {
-  --q-card-padding: 8px 10px;
-  --q-text-size: 14px;
-  --q-scene-max-width: 120px;
-  --q-scene-max-height: 80px;
-  --q-grid-gap: 8px;
-}
-
-.question-card.compact .q-header {
-    grid-template-columns: auto 1fr;
-    gap: var(--q-header-gap);
-}
-
-.question-card.compact .scene-box {
-    max-width: 120px;
-    max-height: 80px;
-    margin: 0 auto;
-}
-
-.question-card.compact .options {
-    grid-row: auto;
-    flex-direction: row;
-    gap: 4px;
-}
-
-.question-card.compact .input-group {
-    margin-top: 2px;
-}
-
-/* 全局提示（任务6：插件 meta.tip，仅显示一次） */
-.global-tip {
-  background: var(--soft-bg);
-  border-left: 4px solid var(--brand-d);
-  margin: 12px 0;
-  padding: 10px 14px;
-  border-radius: 8px;
-  color: var(--ink);
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.global-tip .tip-inner {
-  max-width: 100%;
-}
-
 /* ============ 新渲染器（html-renderer.js / PluginUtil.layout）题目卡片内层结构 ============
  * 屏幕端此前无样式（仅在 shared/presentation/print.js PRINT_QCSS 内定义），导致屏幕与打印不一致。
  * 此处补齐与打印端等价的屏幕样式，保证题干/选项/图形/答题线一致呈现（P0 排版一致性修复）。 */
@@ -677,6 +566,5 @@
 .question-options { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 15px; }
 .question-options .option-letter { display: inline-block; min-width: 20px; font-weight: 700; color: #7c5cff; margin-right: 4px; }
 .question-answer { margin-top: 6px; min-height: 20px; border-bottom: 1px dashed #b9c6de; }
-.question-answer-print { min-height: 20px; }
 .feedback { display: none; }
 .feedback:not(:empty) { display: block; }

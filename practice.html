@@ -106,10 +106,11 @@
   .gen-cta .btn.gen-cta-btn { padding: 12px 28px; min-height: 46px; font-size: 15px; letter-spacing: 1px; }
 }
 
-/* ============ 屏幕态题目卡视觉（打印走 print.js PRINT_QCSS，不受影响） ============ */
+/* ============ 屏幕态题目卡视觉（@media screen：仅屏显生效；打印分别由
+ * print.js 克隆链覆盖样式 / buildPrintQcss 直渲链独立 CSS 接管，不受本段影响） ============ */
 @media screen {
-  /* 清除答题区虚线：作答下划线与输入框改实线浅灰 */
-  #problemsArea .question-answer { border-bottom: 1px solid var(--line, #e3e8f0); }
+  /* 答题区横线删除（P28-UI-ANSWER-LINE-REMOVE-01）：输入框自足，去掉框下作答线 */
+  #problemsArea .question-answer { border-bottom: none; }
   #problemsArea .answer-inp {
     border-style: solid; border-width: 1.5px;
     border-color: var(--line-strong, #d6e2f2);
@@ -866,7 +867,7 @@
     var html = '<div class="q-grid cols-' + cols + '">';
     set.questions.forEach(function (q, i) {
       html += '<div class="question-card" data-index="' + i + '">' +
-        '<span class="num">' + (i + 1) + '</span>' +
+        '<span class="num">' + (i + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' +
         '<span class="q-text">' + esc(q.question || q.text || q.q || '') + '</span>' +
         (q.hint ? '<div style="font-size:11px;color:var(--muted)">💡 ' + esc(q.hint) + '</div>' : '') +
         '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案">' +

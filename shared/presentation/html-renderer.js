@@ -144,7 +144,8 @@
     // P28-23：样式 token 白名单（仅小写字母/数字/连字符），非白名单不进入 class 属性。
     if (sq && typeof sq.style === 'string' && /^[a-z0-9-]+$/.test(sq.style)) cardCls += ' style-' + sq.style;
     var html = '<div class="' + cardCls + '" data-index="' + index + '" role="group" aria-label="第 ' + (index + 1) + ' 题">';
-    html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>' + esc(prompt) + '</div>';
+    // P28-UI-QNUM-GAP-01：题号与正文之间固定 4 个空格宽（&nbsp; 不折叠、打印克隆同源生效）
+    html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' + esc(prompt) + '</div>';
     if (graphic) {
       html += '<div class="question-graphic">' + graphic + '</div>';
     }

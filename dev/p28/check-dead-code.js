@@ -118,6 +118,32 @@ var CANDIDATES = [
     status: 'DORMANT-CONTRACT-CARRIER',
     decision: 'KEEP',
     note: 'contract 375 行 choice + 126 行 judge 名义载体；实际 0 产出（choice 由原生绑定族全覆盖，judge 由 shape/position/classification 覆盖）'
+  },
+
+  // ── 5. SYMBOL-REMOVED（P28-UI-PRINTSTYLE-CLEANUP-01：样式/打印链路死代码定点清理，2026-09-28） ──
+  {
+    file: 'shared/presentation/print.js',
+    symbol: 'Print.preview + Print.previewFromQuestions + ensurePreviewStyle/ensurePreviewDom/fitSheetScale/closePreview + pv-*/lastHtml/lastTitle + PRINT_ROUTES 8 条未用路由（word/makeTen/comprehensive/numberSense/measurement/geometry/shapes/unitConvert）+ label 字段',
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'DEAD-SYMBOL-REMOVED (P28-UI-PRINTSTYLE-CLEANUP-01)',
+    decision: 'REMOVE-SYMBOL',
+    note: '页内 A4 预览模态层全库零调用方（仅定义无引用）；打印路由全库仅 3 处调用均传 math；popupAndPrint 未用 title 参数同步删除'
+  },
+  {
+    file: 'shared/styles/components.css + shared/styles/tokens.css',
+    symbol: '.q-header/.scene-box/.q-hint/.options/.opt/.input-group/.unit/.qa-row/.qa-label/.formula-inp/.question-card.compact 家族/.global-tip/.question-answer-print + 死令牌 --q-num-size/--q-text-size/--q-text-line-height/--q-unit-size/--q-input-size/--q-input-height/--q-option-size/--q-hint-size/--q-feedback-size/--q-scene-max-*/--q-card-padding/--q-section-gap',
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'DEAD-SYMBOL-REMOVED (P28-UI-PRINTSTYLE-CLEANUP-01)',
+    decision: 'REMOVE-SYMBOL',
+    note: '全部为零产出死类（旧插件渲染链 render.js 已按 P28-22 删除，无生产方输出这些类；compact 仅 print 模式挂类而打印文档不加载 components.css）；令牌经全库 var() 消费扫描为零引用。保留在产：.question-card/.num/.q-text(renderGeneric)/.answer-inp/.feedback/question-stem 系'
+  },
+  {
+    file: 'shared/core/check.js',
+    symbol: 'pickOpt / __pickOpt（.opt.chosen 选中态处理）',
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'CANDIDATE-DEFERRED (P28-UI-PRINTSTYLE-CLEANUP-01)',
+    decision: 'KEEP',
+    note: '批改链候选（.opt 类已无任何产出方，pickOpt 零调用）；属批改链非本轮样式/打印范围，暂留待后续批改链治理任务处置'
   }
 ];
 
