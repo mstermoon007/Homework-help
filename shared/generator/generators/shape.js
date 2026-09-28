@@ -77,12 +77,24 @@ var SHAPE_FEATURES = {
   'tessellation': { name: '密铺', features: ['无缝隙不重叠铺满平面', '拼接点处角度和为360度', '可重复单元'], examples: ['地砖', '蜂巢'] }
 };
 
+// P28-GEN-SHAPE-FLAT-SAMPLE-01：flat 兜底族取样域——小学核心平面图形五种，
+// 与「认识平面图形」类 KP 的 concept（长方形/正方形/三角形/圆/平行四边形）一致；
+// 顺序固定，具体取样由每题种子 rng 决定（同 KP 多题可出现不同图形）。
+var FLAT_FAMILY = ['rectangle', 'square', 'triangle', 'circle', 'parallelogram'];
+
 // P25-08：由 KP 名称机械派生图形子类型（替代 kp.source.legacyType 的 kp={} 恒 flat 问题）。
-// 顺序敏感：具体形状优先于泛称（如「正方形」先于「图形」）。
+// 顺序敏感：具体形状优先于泛称（如「正方形」先于「图形」；
+// P28-DEF-012：「圆柱/圆锥」必须先于「圆」，否则被 /圆/ 提前命中误派生为 circle；
+// P28-DEF-015：「正方体/立方」与「长方体」必须先于「正方/长方」，
+// 否则立体图形 KP（观察正方体、长方体/正方体的特征、正方体涂色系）被误派生为 square/rectangle）。
 var NAME_TO_SHAPE = [
+  { re: /正方体|立方/, type: 'cube' },
+  { re: /长.*体|长方体/, type: 'cuboid' },
   { re: /正方/, type: 'square' },
   { re: /长方/, type: 'rectangle' },
   { re: /三角/, type: 'triangle' },
+  { re: /圆柱/, type: 'cylinder' },
+  { re: /圆锥/, type: 'cone' },
   { re: /圆/, type: 'circle' },
   { re: /平行四边形/, type: 'parallelogram' },
   { re: /梯形/, type: 'trapezoid' },
@@ -90,10 +102,6 @@ var NAME_TO_SHAPE = [
   { re: /角(的|各|度|认)/, type: 'angle' },
   { re: /对称/, type: 'symmetry' },
   { re: /密铺/, type: 'tessellation' },
-  { re: /立方/, type: 'cube' },
-  { re: /长.*体|长方体/, type: 'cuboid' },
-  { re: /圆柱/, type: 'cylinder' },
-  { re: /圆锥/, type: 'cone' },
   { re: /球/, type: 'sphere' },
   { re: /立体/, type: 'solid' },
   { re: /平面|图形/, type: 'flat' }
@@ -130,30 +138,30 @@ function generateGraphicParams(subtype, difficulty, rng) {
   switch (subtype) {
     case 'square':
     case 'rectangle':
+      // 平面图形尺寸控制在 2cm 以内（unitPx=25 → 最长边 50px）；不标记直角。
+      // 注意：svg-geometry 渲染端 rightAngle 默认开（!== false 即画），必须显式 false。
       return {
         type: 'geometry',
         subtype: subtype,
         params: {
-          width: Rng.randInt(rng, minDim, maxDim),
-          height: subtype === 'square' ? undefined : Rng.randInt(rng, minDim, maxDim),
-          size: subtype === 'square' ? Rng.randInt(rng, minDim, maxDim) : undefined,
+          width: Rng.randInt(rng, 1, 2),
+          height: subtype === 'square' ? undefined : Rng.randInt(rng, 1, 2),
+          size: subtype === 'square' ? Rng.randInt(rng, 1, 2) : undefined,
           labelSides: rng() < 0.7,
-          rightAngle: true,
+          rightAngle: false,
           unit: unit,
           unitPx: unitPx
         }
       };
     case 'triangle':
-      var a = Rng.randInt(rng, minDim, maxDim);
-      var b = Rng.randInt(rng, minDim, maxDim);
-      var c = Rng.randInt(rng, Math.abs(a-b)+1, Math.min(a+b-1, maxDim));
+      var a = Rng.randInt(rng, 1, 2);
       return {
         type: 'geometry',
         subtype: 'triangle',
         params: {
           p1: [0, 0],
           p2: [a, 0],
-          p3: [Rng.randInt(rng, 0, a), Rng.randInt(rng, 1, maxDim)],
+          p3: [Rng.randInt(rng, 0, a), Rng.randInt(rng, 1, 2)],
           labelSides: rng() < 0.6,
           unit: unit,
           unitPx: unitPx
@@ -199,16 +207,64 @@ function generateGraphicParams(subtype, difficulty, rng) {
           unitPx: unitPx
         }
       };
+    // P28-GEN-SHAPE-FLAT-SAMPLE-01：flat 族取样新增两类平面图形参数分支
+    // （svg-geometry.js 已注册对应渲染器：circle{r}/parallelogram{base,height,offset}）
+    case 'circle':
+      return {
+        type: 'geometry',
+        subtype: 'circle',
+        params: {
+          r: 1, // 半径 1cm → 直径 2cm，满足平面图形 ≤2cm
+          labelRadius: false,
+          unit: unit,
+          unitPx: unitPx
+        }
+      };
+    case 'parallelogram':
+      var pBase = Rng.randInt(rng, 1, 2);
+      return {
+        type: 'geometry',
+        subtype: 'parallelogram',
+        params: {
+          base: pBase,
+          height: Rng.randInt(rng, 1, pBase),
+          offset: Rng.randInt(rng, 1, pBase),
+          labelSides: rng() < 0.6,
+          // 渲染端 showHeight 默认开且伴随直角符号（!== false 即画），显式关闭以满足不标直角
+          showHeight: false,
+          unit: unit,
+          unitPx: unitPx
+        }
+      };
+    case 'trapezoid':
+      // P28-DEF011：补 trapezoid 参数分支（svg-geometry.js 已注册 trapezoid{topBase,bottomBase,height} 渲染器，
+      // 此前缺 case 导致「梯形」KP 落入 default 画长方形答「梯形」图形与答案不一致）。
+      // 平面图形 ≤2cm：整数约束下 topBase<bottomBase 唯一解为上底 1cm、下底 2cm；高 1~2cm。
+      // 渲染端 showHeight 默认开且伴随直角符号（同 parallelogram），显式关闭以满足不标直角。
+      var tHeight = Rng.randInt(rng, 1, 2);
+      return {
+        type: 'geometry',
+        subtype: 'trapezoid',
+        params: {
+          topBase: 1,
+          bottomBase: 2,
+          height: tHeight,
+          labelSides: rng() < 0.6,
+          showHeight: false,
+          unit: unit,
+          unitPx: unitPx
+        }
+      };
     default:
-      // 兜底为长方形
+      // 兜底为长方形（同样 ≤2cm、不标直角）
       return {
         type: 'geometry',
         subtype: 'rectangle',
         params: {
-          width: Rng.randInt(rng, minDim, maxDim),
-          height: Rng.randInt(rng, minDim, maxDim),
+          width: Rng.randInt(rng, 1, 2),
+          height: Rng.randInt(rng, 1, 2),
           labelSides: true,
-          rightAngle: true,
+          rightAngle: false,
           unit: unit,
           unitPx: unitPx
         }
@@ -318,7 +374,6 @@ function makeFeatureQuestion(plan, context, i, shapeMeta, graphic) {
 }
 
 function makeNamingQuestion(plan, context, i, shapeMeta, graphic) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var prompt = '请写出该图形的名称：';
   var answer = shapeMeta.meta.name; var answerObj = { value: answer, acceptable: [] };
 
@@ -386,8 +441,17 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName) {
     answer = { value: angleType, acceptable: ['90度', '90°'] };
     answerMode = 'input';
   } else {
-    // 通用几何图形识别
-    prompt = '请观察图形，' + name;
+    // 通用几何图形识别——P28-GEN-SHAPE-FLAT-SAMPLE-01：题干多表达方案，按该题 rng
+    // 确定性选取（同种子恒定，重新生成在种子变化时呈现不同问法）。
+    // 答案为实际所画图形名（qMeta.meta.name），与「名称」类问法自洽。
+    var GEOMETRY_PROMPTS = [
+      '请观察图形，' + name,
+      name + '：看一看，图中画的是什么图形？',
+      '观察图中的图形，写出它的名称。',
+      name + '：先说一说它是谁，再写出名称。',
+      '图中画了一个图形，它叫什么名字？'
+    ];
+    prompt = GEOMETRY_PROMPTS[Math.floor(rng() * GEOMETRY_PROMPTS.length)];
     answer = { value: shapeMeta.meta.name, acceptable: [] };
     answerMode = 'input';
   }
@@ -428,7 +492,7 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
   if (isFeature && isSolid) {
     // 立体图形特征：面/棱/顶点数量
     var isCube = name.indexOf('正方') !== -1;
-    var faces = 6, edges = 12, vertices = 8;
+    var faces = 6;
     var featPrompt;
     if (isCube) {
       featPrompt = '正方体有 6 个面、12 条棱、8 个顶点。';
@@ -599,7 +663,6 @@ function createShapeGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:shape';
   var subject = spec.subject || 'math';
-  var mode = spec.mode || 'recognition'; // recognition | classification | naming | feature | count
 
   return {
     id: id,
@@ -625,28 +688,36 @@ function createShapeGenerator(spec) {
 
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-        var graphic = generateGraphicParams(shapeMeta.subtype, plan.difficulty, rng);
+        // P28-GEN-SHAPE-FLAT-SAMPLE-01：flat 兜底族（泛称图形 KP，如「平面图形认识」）
+        // 按该题种子 rng 从平面图形族取样具体形状——与 KP concept（直观认识长方形/
+        // 正方形/三角形/圆/平行四边形）对齐；具体形状 KP（名称含正方/长方/三角/圆等）不取样。
+        var qMeta = shapeMeta;
+        if (shapeMeta.legacyType === 'flat') {
+          var picked = FLAT_FAMILY[Math.floor(rng() * FLAT_FAMILY.length)];
+          qMeta = { legacyType: picked, subtype: picked, category: shapeMeta.category, meta: SHAPE_FEATURES[picked] };
+        }
+        var graphic = generateGraphicParams(qMeta.subtype, plan.difficulty, rng);
 
         var q;
         var qt = plan.questionTypeId;
         if (qt === 'choice') {
-          if (rng() < 0.5) q = makeRecognitionQuestion(plan, context, i, shapeMeta, graphic);
-          else q = makeClassificationQuestion(plan, context, i, shapeMeta, graphic);
+          if (rng() < 0.5) q = makeRecognitionQuestion(plan, context, i, qMeta, graphic);
+          else q = makeClassificationQuestion(plan, context, i, qMeta, graphic);
         } else if (qt === 'judge') {
-          q = makeFeatureQuestion(plan, context, i, shapeMeta, graphic);
+          q = makeFeatureQuestion(plan, context, i, qMeta, graphic);
         } else if (qt === 'fill') {
-          if (rng() < 0.6) q = makeNamingQuestion(plan, context, i, shapeMeta, graphic);
-          else q = makeCountQuestion(plan, context, i, shapeMeta, graphic);
+          if (rng() < 0.6) q = makeNamingQuestion(plan, context, i, qMeta, graphic);
+          else q = makeCountQuestion(plan, context, i, qMeta, graphic);
         } else if (qt === 'geometry') {
-          q = makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName);
+          q = makeGeometryQuestion(plan, context, i, qMeta, graphic, kpName);
         } else if (qt === 'apply') {
           // geometry 应用题（面积/周长/体积等）
-          q = makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName);
+          q = makeGeometryApplyQuestion(plan, context, i, qMeta, graphic, kpName);
         } else if (qt === 'calc') {
           // P25-08：几何度量计算（周长/面积/表面积/体积/圆周长/圆面积）—— 题干内嵌算式
           q = makeCalcMeasurementQuestion(plan, context, i, kpName);
         } else {
-          q = makeRecognitionQuestion(plan, context, i, shapeMeta, graphic);
+          q = makeRecognitionQuestion(plan, context, i, qMeta, graphic);
         }
         questions.push(q);
       }
@@ -661,8 +732,7 @@ function createShapeGenerator(spec) {
 function buildAll() {
   return [
     createShapeGenerator({
-      id: 'generator:shape-recognition',
-      mode: 'recognition'
+      id: 'generator:shape-recognition'
     })
   ];
 }

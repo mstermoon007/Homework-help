@@ -150,9 +150,13 @@ test('抽样行重生成：硬轴（context/representation/structure）与剖面
   const sample = profile.rows.filter((r) => r.variation).filter((r, i) => i % 160 === 0).slice(0, 8);
   assert.ok(sample.length >= 4, '抽样行不足');
   for (const r of sample) {
+    // P28-GEN-SHAPE-FLAT-SAMPLE-01：flat 取样族 KP 的图形子类型/参数按条目种子取样，
+    // 无种子会话为非确定观测；复验钉定行级种子（被抽 8 行剖面已按同种子重 derive），
+    // 保证硬轴比对确定性。断言本身不变。
     const session = new PracticeSession({
       subject: 'math', grade: r.grade, count: 6,
-      knowledgePointId: r.knowledgePointId, questionType: r.questionType
+      knowledgePointId: r.knowledgePointId, questionType: r.questionType,
+      seed: 'p27-drift|' + r.knowledgePointId + '|' + r.questionType
     });
     await session.start();
     const samples = (session.semanticQuestions || []).filter((q) => {

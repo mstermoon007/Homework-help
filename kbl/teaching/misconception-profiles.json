@@ -15,18 +15,18 @@
   "counts": {
     "kps": 375,
     "kpsWithSlots": 307,
-    "slots": 898,
+    "slots": 896,
     "byErrorType": {
       "概念混淆": 128,
       "审题错误": 307,
       "格式错误": 128,
       "步骤错误": 200,
-      "计算错误": 82,
-      "符号错误": 3,
+      "计算错误": 80,
       "单位错误": 39,
-      "口诀混淆": 11
+      "口诀混淆": 11,
+      "符号错误": 3
     },
-    "droppedByAxisEvidence": 726
+    "droppedByAxisEvidence": 728
   },
   "kps": {
     "math-g1-down-u01-k001": {
@@ -2645,7 +2645,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 1
+            "evidenceRows": 4
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -2665,13 +2665,13 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 1
+            "evidenceRows": 4
           },
           "feedback": "重温乘除法口诀表，对易混口诀（如三四十二/三五十下）专项背诵核对"
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -2682,7 +2682,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -3903,7 +3903,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -3923,7 +3923,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "重温乘除法口诀表，对易混口诀（如三四十二/三五十下）专项背诵核对"
         },
@@ -8945,13 +8945,13 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 2
+            "evidenceRows": 4
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -8962,7 +8962,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -8984,13 +8984,13 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 2
+            "evidenceRows": 4
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -9001,7 +9001,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -10916,7 +10916,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 2
+            "evidenceRows": 4
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -11450,22 +11450,6 @@
     "math-g5-down-u09-k001": {
       "knowledgePointId": "math-g5-down-u09-k001",
       "slots": [
-        {
-          "errorType": "计算错误",
-          "basis": "semantic.operations=[division]",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "数值",
-            "axis": "numeric",
-            "evidenceRows": 1
-          },
-          "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
-        },
         {
           "errorType": "概念混淆",
           "basis": "semantic.family=application-word",
@@ -13827,22 +13811,6 @@
     "math-g5-up-u08-k004": {
       "knowledgePointId": "math-g5-up-u08-k004",
       "slots": [
-        {
-          "errorType": "计算错误",
-          "basis": "semantic.operations=[mixed]",
-          "triggerPattern": {
-            "questionTypes": [
-              "calc",
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "数值",
-            "axis": "numeric",
-            "evidenceRows": 1
-          },
-          "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
-        },
         {
           "errorType": "概念混淆",
           "basis": "semantic.family=application-word",

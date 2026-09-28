@@ -6670,10 +6670,22 @@ var SHAPE_FEATURES = {
 
 
 
+
+var FLAT_FAMILY = ['rectangle', 'square', 'triangle', 'circle', 'parallelogram'];
+
+
+
+
+
+
 var NAME_TO_SHAPE = [
+  { re: /正方体|立方/, type: 'cube' },
+  { re: /长.*体|长方体/, type: 'cuboid' },
   { re: /正方/, type: 'square' },
   { re: /长方/, type: 'rectangle' },
   { re: /三角/, type: 'triangle' },
+  { re: /圆柱/, type: 'cylinder' },
+  { re: /圆锥/, type: 'cone' },
   { re: /圆/, type: 'circle' },
   { re: /平行四边形/, type: 'parallelogram' },
   { re: /梯形/, type: 'trapezoid' },
@@ -6681,10 +6693,6 @@ var NAME_TO_SHAPE = [
   { re: /角(的|各|度|认)/, type: 'angle' },
   { re: /对称/, type: 'symmetry' },
   { re: /密铺/, type: 'tessellation' },
-  { re: /立方/, type: 'cube' },
-  { re: /长.*体|长方体/, type: 'cuboid' },
-  { re: /圆柱/, type: 'cylinder' },
-  { re: /圆锥/, type: 'cone' },
   { re: /球/, type: 'sphere' },
   { re: /立体/, type: 'solid' },
   { re: /平面|图形/, type: 'flat' }
@@ -6721,30 +6729,30 @@ function generateGraphicParams(subtype, difficulty, rng) {
   switch (subtype) {
     case 'square':
     case 'rectangle':
+      
+      
       return {
         type: 'geometry',
         subtype: subtype,
         params: {
-          width: Rng.randInt(rng, minDim, maxDim),
-          height: subtype === 'square' ? undefined : Rng.randInt(rng, minDim, maxDim),
-          size: subtype === 'square' ? Rng.randInt(rng, minDim, maxDim) : undefined,
+          width: Rng.randInt(rng, 1, 2),
+          height: subtype === 'square' ? undefined : Rng.randInt(rng, 1, 2),
+          size: subtype === 'square' ? Rng.randInt(rng, 1, 2) : undefined,
           labelSides: rng() < 0.7,
-          rightAngle: true,
+          rightAngle: false,
           unit: unit,
           unitPx: unitPx
         }
       };
     case 'triangle':
-      var a = Rng.randInt(rng, minDim, maxDim);
-      var b = Rng.randInt(rng, minDim, maxDim);
-      var c = Rng.randInt(rng, Math.abs(a-b)+1, Math.min(a+b-1, maxDim));
+      var a = Rng.randInt(rng, 1, 2);
       return {
         type: 'geometry',
         subtype: 'triangle',
         params: {
           p1: [0, 0],
           p2: [a, 0],
-          p3: [Rng.randInt(rng, 0, a), Rng.randInt(rng, 1, maxDim)],
+          p3: [Rng.randInt(rng, 0, a), Rng.randInt(rng, 1, 2)],
           labelSides: rng() < 0.6,
           unit: unit,
           unitPx: unitPx
@@ -6790,16 +6798,64 @@ function generateGraphicParams(subtype, difficulty, rng) {
           unitPx: unitPx
         }
       };
+    
+    
+    case 'circle':
+      return {
+        type: 'geometry',
+        subtype: 'circle',
+        params: {
+          r: 1, 
+          labelRadius: false,
+          unit: unit,
+          unitPx: unitPx
+        }
+      };
+    case 'parallelogram':
+      var pBase = Rng.randInt(rng, 1, 2);
+      return {
+        type: 'geometry',
+        subtype: 'parallelogram',
+        params: {
+          base: pBase,
+          height: Rng.randInt(rng, 1, pBase),
+          offset: Rng.randInt(rng, 1, pBase),
+          labelSides: rng() < 0.6,
+          
+          showHeight: false,
+          unit: unit,
+          unitPx: unitPx
+        }
+      };
+    case 'trapezoid':
+      
+      
+      
+      
+      var tHeight = Rng.randInt(rng, 1, 2);
+      return {
+        type: 'geometry',
+        subtype: 'trapezoid',
+        params: {
+          topBase: 1,
+          bottomBase: 2,
+          height: tHeight,
+          labelSides: rng() < 0.6,
+          showHeight: false,
+          unit: unit,
+          unitPx: unitPx
+        }
+      };
     default:
       
       return {
         type: 'geometry',
         subtype: 'rectangle',
         params: {
-          width: Rng.randInt(rng, minDim, maxDim),
-          height: Rng.randInt(rng, minDim, maxDim),
+          width: Rng.randInt(rng, 1, 2),
+          height: Rng.randInt(rng, 1, 2),
           labelSides: true,
-          rightAngle: true,
+          rightAngle: false,
           unit: unit,
           unitPx: unitPx
         }
@@ -6909,7 +6965,6 @@ function makeFeatureQuestion(plan, context, i, shapeMeta, graphic) {
 }
 
 function makeNamingQuestion(plan, context, i, shapeMeta, graphic) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var prompt = '请写出该图形的名称：';
   var answer = shapeMeta.meta.name; var answerObj = { value: answer, acceptable: [] };
 
@@ -6978,7 +7033,16 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName) {
     answerMode = 'input';
   } else {
     
-    prompt = '请观察图形，' + name;
+    
+    
+    var GEOMETRY_PROMPTS = [
+      '请观察图形，' + name,
+      name + '：看一看，图中画的是什么图形？',
+      '观察图中的图形，写出它的名称。',
+      name + '：先说一说它是谁，再写出名称。',
+      '图中画了一个图形，它叫什么名字？'
+    ];
+    prompt = GEOMETRY_PROMPTS[Math.floor(rng() * GEOMETRY_PROMPTS.length)];
     answer = { value: shapeMeta.meta.name, acceptable: [] };
     answerMode = 'input';
   }
@@ -7019,7 +7083,7 @@ function makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName)
   if (isFeature && isSolid) {
     
     var isCube = name.indexOf('正方') !== -1;
-    var faces = 6, edges = 12, vertices = 8;
+    var faces = 6;
     var featPrompt;
     if (isCube) {
       featPrompt = '正方体有 6 个面、12 条棱、8 个顶点。';
@@ -7190,7 +7254,6 @@ function createShapeGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:shape';
   var subject = spec.subject || 'math';
-  var mode = spec.mode || 'recognition'; 
 
   return {
     id: id,
@@ -7216,28 +7279,36 @@ function createShapeGenerator(spec) {
 
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-        var graphic = generateGraphicParams(shapeMeta.subtype, plan.difficulty, rng);
+        
+        
+        
+        var qMeta = shapeMeta;
+        if (shapeMeta.legacyType === 'flat') {
+          var picked = FLAT_FAMILY[Math.floor(rng() * FLAT_FAMILY.length)];
+          qMeta = { legacyType: picked, subtype: picked, category: shapeMeta.category, meta: SHAPE_FEATURES[picked] };
+        }
+        var graphic = generateGraphicParams(qMeta.subtype, plan.difficulty, rng);
 
         var q;
         var qt = plan.questionTypeId;
         if (qt === 'choice') {
-          if (rng() < 0.5) q = makeRecognitionQuestion(plan, context, i, shapeMeta, graphic);
-          else q = makeClassificationQuestion(plan, context, i, shapeMeta, graphic);
+          if (rng() < 0.5) q = makeRecognitionQuestion(plan, context, i, qMeta, graphic);
+          else q = makeClassificationQuestion(plan, context, i, qMeta, graphic);
         } else if (qt === 'judge') {
-          q = makeFeatureQuestion(plan, context, i, shapeMeta, graphic);
+          q = makeFeatureQuestion(plan, context, i, qMeta, graphic);
         } else if (qt === 'fill') {
-          if (rng() < 0.6) q = makeNamingQuestion(plan, context, i, shapeMeta, graphic);
-          else q = makeCountQuestion(plan, context, i, shapeMeta, graphic);
+          if (rng() < 0.6) q = makeNamingQuestion(plan, context, i, qMeta, graphic);
+          else q = makeCountQuestion(plan, context, i, qMeta, graphic);
         } else if (qt === 'geometry') {
-          q = makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName);
+          q = makeGeometryQuestion(plan, context, i, qMeta, graphic, kpName);
         } else if (qt === 'apply') {
           
-          q = makeGeometryApplyQuestion(plan, context, i, shapeMeta, graphic, kpName);
+          q = makeGeometryApplyQuestion(plan, context, i, qMeta, graphic, kpName);
         } else if (qt === 'calc') {
           
           q = makeCalcMeasurementQuestion(plan, context, i, kpName);
         } else {
-          q = makeRecognitionQuestion(plan, context, i, shapeMeta, graphic);
+          q = makeRecognitionQuestion(plan, context, i, qMeta, graphic);
         }
         questions.push(q);
       }
@@ -7252,8 +7323,7 @@ function createShapeGenerator(spec) {
 function buildAll() {
   return [
     createShapeGenerator({
-      id: 'generator:shape-recognition',
-      mode: 'recognition'
+      id: 'generator:shape-recognition'
     })
   ];
 }

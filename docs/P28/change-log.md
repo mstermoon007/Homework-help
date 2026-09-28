@@ -25,6 +25,115 @@
 
 ## 记录（新 → 旧）
 
+### P28-DEF011-SHAPE-01b｜本环节修改后死代码补充清除：buildAll 调用点未消费参数 mode（2026-09-29）
+
+- modified:
+  - `shared/generator/generators/shape.js`（buildAll 调用点删除未消费参数 `mode: 'recognition'`——createShapeGenerator 内部未消费 spec.mode（P28-DEF012-014-SHAPE-01 已删内部死变量），调用点传参为死代码；本环节三任务（DEF-012/015/011）修改 shape.js 后全文复查发现并清除）
+  - `shared/engine/strategy-engine.bundle.js` + `shared/engine/presentation-engine.bundle.js`（shape.js 为 bundle 依赖，双重建保持 source==bundle）
+- deleted: 无文件删除；删除内容为 buildAll 中 `createShapeGenerator({...mode: 'recognition'})` 死参数 1 处。
+- reason: 用户要求清理本环节修改后文件内的无效死代码。通读 shape.js 全文排查：函数全部可达（makeRecognition/Classification/Feature/Naming/Count/Geometry/GeometryApply/CalcMeasurement 均被 generate 分支消费，buildAll 经 bundle 中 Shape.buildAll() 生产调用）；SHAPE_SUBTYPE 各键均被 NAME_TO_SHAPE 或 KP source.legacyType 回退链覆盖（sphere/line-segment/angle/symmetry/tessellation 等落入 default 属预存在行为，非本环节引入，如需治理另登记）；generateGraphicParams 各 case 分支与 SHAPE_SUBTYPE 值域对齐无不可达分支；本环节引入的 tHeight 变量已被消费。唯一定论死代码为 buildAll 调用点 mode 参数。
+- tests: ①dev/p28/check-dead-code.js 14 候选全验证 PASS；②漂移门禁 1299 行 0 硬违例 0 软报告（生成行为等价实证）；③冻结矩阵只读复核「与冻结产物完全一致 git diff=0」（无需 --write，产物零变化）；④局部测试 p27 两测试 + pol-kbl-shape 28/28 PASS；⑤check-all 连续两遍 28 PASS / 0 FAIL / 0 SKIP（含 #16 Bundle source==bundle、#21 Dead Code、FINAL-91 只读门禁），FINAL-92 确定性验收通过。
+- risk: 低。删除参数从未被消费，生成产物零变化（冻结矩阵只读复核 git diff=0 实证）；无架构变化、无行为变更。
+
+### P28-DEF011-SHAPE-01｜DEF-011 修复：generateGraphicParams 补 trapezoid 参数分支（2026-09-29）
+
+- modified:
+  - `shared/generator/generators/shape.js`（DEF-011：generateGraphicParams switch 补 `case 'trapezoid'`——上底 1cm、下底 2cm（整数约束下 topBase<bottomBase 的唯一解，满足平面图形 ≤2cm）、高 `randInt(1,2)` 1~2cm、`labelSides` 按种子、`showHeight:false`（渲染端 svg-geometry.js trapezoid 的 `showHeight!==false` 默认画高线+直角符号，同 parallelogram 陷阱，必须显式关闭）；同步删除原注释中「trapezoid 缺分支属同源独立缺陷，记 FINAL-REPAIR-DEFERRED」的过时表述）
+  - `kbl/teaching/evidence-rules.json`（2 个梯形 KP——math-g4-up-u05-k003「梯形」、math-g5-up-u06-k003「梯形的面积」——共 10 行 `data.graphic.subtype` 值断言 rectangle→trapezoid；`data.shapeName` 原本即为「梯形」无需改；note 追加治理记录）
+  - `kbl/teaching/variation-profiles.json`（1299 行全量带种子重 derive，2 KP 的 representation 轴随派生归位刷新）
+  - `kbl/teaching/misconception-profiles.json`（重跑 derive-misconceptions.js，slot 总数 896 不变——2 KP 变化未触发新增/裁减）
+  - `shared/capacity/capacity-map.json`（`scan-capacity.js --refresh` 全量实测重扫，2 KP 容量行回填）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json` + `.md`（--write 显式重建，FAIL rows=0，只读复核 git diff=0）
+  - `shared/engine/strategy-engine.bundle.js` + `shared/engine/presentation-engine.bundle.js`（shape.js 为 bundle 依赖，双重建保持 source==bundle）
+- deleted: 无文件删除；无符号删除（仅新增一个 switch case 分支与值断言对齐）。
+- reason: 用户决策修复已登记的非阻塞遗留 DEF-011（P3）。根因：generateGraphicParams switch 缺 `case 'trapezoid'`，名称含「梯形」的 KP（NAME_TO_SHAPE `/梯形/`→trapezoid、SHAPE_SUBTYPE trapezoid→trapezoid 均就绪）参数生成落入 default 兜底画长方形，图形与答案「梯形」不一致；渲染端 svg-geometry.js trapezoid{topBase,bottomBase,height} 已注册，仅缺参数分支。
+- tests: ①实测：2 KP × geometry/choice/apply PracticeSession 生成 subtype=trapezoid、shapeName=梯形、topBase=1/bottomBase=2、height∈{1,2}、showHeight=false、geometry 观察题答案「梯形」；②局部：p27-variation-profile + p27-misconception-profile + tests/shape/pol-kbl-shape 28/28 PASS；③门禁：漂移 1299 行 0 硬违例 0 软报告、misconception 链 Z1~Z4 PASS、冻结矩阵 --write FAIL=0 + 只读复核 git diff=0；④check-all 连续两遍 28 PASS / 0 FAIL / 0 SKIP（含 #5 Unit、#6b 矩阵冻结、#15 Browser E2E、FINAL-91 只读门禁），FINAL-92 确定性验收通过。
+- risk: 低。仅新增一个 switch case，爆炸半径精确锁定 2 KP（全库扫描确认仅 2 个名称含「梯形」的 KP）；evidence-rules 值断言与实测生成严格对齐；容量图/剖面/易错点/冻结矩阵全量刷新；无架构变化、无渲染层改动（svg-geometry.js trapezoid 渲染器已注册未动）。
+
+### P28-DEF015-SHAPE-01｜DEF-015 修复：NAME_TO_SHAPE 正方体/长方体 正则顺序归位 + 配套数据治理（2026-09-28）
+
+- modified:
+  - `shared/generator/generators/shape.js`（DEF-015：NAME_TO_SHAPE 中 `/正方体|立方/`、`/长.*体|长方体/` 提前至数组首位（先于 `/正方/`、`/`长方/`），并追加注释说明顺序敏感原因——修复 5 个立体图形 KP（math-g3-up-u01-k003 观察正方体、math-g5-down-u03-k001 长方体的特征、k002 正方体的特征、g5-down-u09-k001 正方体涂色问题、k002 各类涂色小正方体的位置特征）被误派生为 square/rectangle 的 DEF-012 同源缺陷）
+  - `kbl/teaching/evidence-rules.json`（5 KP 共 21 行的 `data.graphic.subtype` 值断言 square→cube/rectangle→cuboid、`data.shapeName` 值断言 正方形→正方体/长方形→长方体，合计 42 处；note 追加治理记录）
+  - `kbl/teaching/variation-profiles.json`（1299 行全量带种子重 derive，5 KP 的 representation 轴随派生归位刷新）
+  - `kbl/teaching/misconception-profiles.json`（重跑 derive-misconceptions.js，slot 总数 896 不变——5 KP 变化未触发新增/裁减）
+  - `shared/capacity/capacity-map.json`（`scan-capacity.js --refresh` 全量实测重扫，5 KP 容量行回填：g3-up-u01-k003 geometry=5、g5-down-u03-k001/k002 geometry=5、g5-down-u09-k001 apply=8 等，g5-down-u09-k002 tier=VERY_LOW 如实反映）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json` + `.md`（--write 显式重建，FAIL rows=0，只读复核 git diff=0）
+  - `shared/engine/strategy-engine.bundle.js` + `shared/engine/presentation-engine.bundle.js`（shape.js 为 bundle 依赖，双重建保持 source==bundle）
+- deleted: 无文件删除；无符号删除（仅正则顺序调整与值断言对齐）。
+- reason: 用户决策修复已登记的非阻塞遗留 DEF-015（P3）。根因：NAME_TO_SHAPE 正则数组顺序敏感，`/正方/`、`/长方/` 先于立方/方体 命中，导致立体图形 KP 被派生为平面图形 square/rectangle，geometry/choice/fill/apply 题画正方形/长方形、答案「正方形/长方形」，与「观察正方体」「长方体的特征」等 KP 教学语义不符。
+- tests: ①实测：5 KP × 主题型 PracticeSession 生成 subtype=cube/cuboid、shapeName=正方体/长方体、答案「正方体/长方体」；②局部：p27-variation-profile + p27-misconception-profile 14/14 PASS、tests/shape/pol-kbl-shape 14/14 PASS；③门禁：漂移 1299 行 0 硬违例 0 软报告、misconception 链 Z1~Z4 PASS、冻结矩阵 --write FAIL=0 + 只读复核 git diff=0；④check-all 连续两遍 28 PASS / 0 FAIL / 0 SKIP（含 #5 Unit、#6b 矩阵冻结、#15 Browser E2E、FINAL-91 只读门禁），FINAL-92 确定性验收通过。
+- risk: 低。仅调整正则顺序不增删条目，爆炸半径精确锁定 5 KP（全库扫描确认无其他名称含「立方/方体」的 KP）；evidence-rules 值断言与实测生成严格对齐；容量图/剖面/易错点/冻结矩阵全量刷新；无架构变化、无新 Wrapper、无渲染层改动。
+
+### P28-DEF012-014-SHAPE-01｜DEF-012/013/014 修复 + 平面图形 ≤2cm 不标直角 + shape.js 死代码清除（2026-09-28）
+
+- modified:
+  - `shared/generator/generators/shape.js`（①DEF-012：NAME_TO_SHAPE 中 `/圆柱/`、`/圆锥/` 提前于 `/圆/`，math-g6-down-u03-k001~k005 共 5 个圆柱/圆锥 KP 派生归位 cylinder/cone——原顺序 `/圆/` 在前将其误派生为 circle；②平面图形尺寸 ≤2cm：square/rectangle 的 width/height/size 改 `randInt(1,2)`、triangle `a=randInt(1,2)` 且 p3 y 改 `randInt(1,2)`、circle 固定 `r:1`（直径 2cm）、parallelogram `pBase=randInt(1,2)`，unitPx=25 → 最长边 50px；③不标记直角：square/rectangle/default 分支显式 `rightAngle:false`、parallelogram 显式 `showHeight:false`——svg-geometry.js 渲染端 `rightAngle!==false`/`showHeight!==false` 默认开，省略参数≠关闭，必须显式传 false；④死代码清除：triangle 分支死变量 b/c、makeNamingQuestion 未消费参数 rng、makeGeometryApplyQuestion 未消费 edges/vertices、createShapeGenerator 未消费 mode）
+  - `dev/p27/derive-variation-profiles.js`（DEF-014：PracticeSession 调用钉定行级种子 `'p27-drift|<kp>|<qt>'`，builtFrom.sampling 写入种子约定声明——与单测、漂移门禁三处同源）
+  - `dev/p27/check-variation-drift.js`（DEF-014/DEF-010：漂移门禁 PracticeSession 同样钉定行级种子，消除无种子抽样 flaky 根因）
+  - `kbl/teaching/evidence-rules.json`（剔除全部 118 条 `data.graphic.params.rightAngle` 断言，note 追加治理记录——平面图形不再标记直角后该断言与新产物不符）
+  - `kbl/teaching/variation-profiles.json`（1299 行全量按行级种子重 derive，消除旧恒-rectangle 时代投影与无种子抖动）
+  - `kbl/teaching/misconception-profiles.json`（重跑 derive-misconceptions.js 对齐新剖面：898→896 slots——math-g5-down-u09-k001、math-g5-up-u08-k004 各裁 1 个 numeric 轴「计算错误」slot（新剖面 numeric.varies 全 false 被「响应轴无承载」如实裁掉）；math-g2-up-u07-k001×计算错误/口诀混淆 evidenceRows 1→4；审题错误 basis 行数对齐）
+  - `shared/capacity/capacity-map.json`（DEF-013：`scan-capacity.js --refresh` 全量实测重扫 375 KP——HIGH 224 / LOW 111 / VERY_LOW 30 / MEDIUM 10；math-g1-down-u01-k001 geometry 1→5、judge 4→7，取样多样化回填容量缓存，Node 侧编排封顶压制解除）
+  - `docs/FINAL-REPAIR-DEFERRED.md`（DEF-010/012/013/014 状态 OPEN→FIXED 并附实测细节；新增 DEF-015（P3 OPEN）：NAME_TO_SHAPE 同类顺序缺陷——`/正方/` 先于 `/立方/`、`/长方/` 先于 `/长.*体|长方体/`，5 个正方体/长方体 KP 被派生为 square/rectangle，修法同 DEF-012，本任务未扩修）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json` + `.md`（--write 显式重建，FAIL rows=0，两遍只读复核 git diff=0）
+  - `shared/engine/strategy-engine.bundle.js` + `shared/engine/presentation-engine.bundle.js`（shape.js 为 bundle 依赖，双重建保持 source==bundle）
+- deleted: 无文件删除；删除内容为 shape.js 5 处死变量/未消费参数（b、c、rng、edges/vertices、mode）、evidence-rules.json 118 条 `data.graphic.params.rightAngle` 断言、misconception-profiles.json 2 个「响应轴无承载」slot。
+- reason: 用户要求 ①修复已登记非阻塞遗留 DEF-012（/圆/ 早于 /圆柱//圆锥/ 的派生顺序缺陷）、DEF-013（Node 侧容量缓存未随取样多样化回填）、DEF-014（剖面取样族行种子钉定）；②同步清理本环节修改后文件内无效死代码；③平面图形大小控制在 2cm 以内且不标记直角。
+- tests: ①局部：p27-variation-profile + p27-misconception-profile 合计 14/14 PASS；check-misconception-chain-gate Z1~Z4 PASS；check-variation-drift 1299 行 0 硬违例 0 软报告；②冻结矩阵 --write 重建 FAIL rows=0，两遍只读复核「与冻结产物完全一致 git diff=0」；③运行态实测：DEF-012 的 5 个 KP geometry 题画圆柱/圆锥且答案「圆柱/圆锥」；Node 侧 PracticeSession 对 math-g1-down-u01-k001×geometry 产 5 题且五形（parallelogram/square/triangle/circle/rectangle）全覆盖；显式 false 后 SVG 无 polyline 直角符号、平面图形最长边 50px=2cm；④check-all 连续两遍 28 PASS / 0 FAIL / 0 SKIP（含 #5 Unit、#6b 矩阵冻结、#15 Browser E2E 真实 Chrome、FINAL-91 只读门禁），FINAL-92 确定性验收通过。
+- risk: 低-中。NAME_TO_SHAPE 仅调整正则顺序不增删条目，圆柱/圆锥 KP 语义证据行（第 5 轮治理后仅余 unit/unitPx 断言）与新派生天然兼容；尺寸收紧与直角消除只影响 shape 族 SVG 参数，呈现层 svg-geometry.js 零改动；容量图为 --refresh 实测回填（只升被压制行）；misconception slot 数变化系 DEF-014 种子化修复的如实后果（evidenceRows 与剖面复算一致）；同类缺陷 DEF-015（正方体/长方体）已登记 OPEN 未修，待用户决策。
+
+### P28-GEN-SHAPE-FLAT-SAMPLE-01b｜flat 取样落地收口：evidence-rules 参数断言治理 + 冻结矩阵重建 + p27 剖面种子钉定（2026-09-28）
+
+- modified:
+  - `kbl/teaching/evidence-rules.json`（第 5 轮治理：derive∈{null,flat,parallelogram,circle} 的 KP 剔除 required 中 `data.graphic.params.*` 形状特异断言（fieldPresent/field，保留 unit/unitPx 两项全分支恒定断言），共剔 480 条/300 块/85 KP——第 1-4 轮仅剔 subtype/shapeName/rightAngle 三类，漏掉 labelSides 等 params 断言致 math-g6-down-u03-k002 choice/judge/geometry kpSem FAIL）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json` + `.md`（check-generation-matrix-freeze.js --write 显式重建：FAIL rows=0；随后只读复核「与冻结产物完全一致 git diff=0」）
+  - `kbl/teaching/variation-profiles.json`（单测抽样的 8 行按行级种子 `p27-drift|<kp>|<qt>` 重 derive，同 Observe 口径就地替换 variation/evidence/flags，89+/70-——flat 取样族行旧剖面为恒-rectangle 时代投影，取样后无种子观测非确定）
+  - `tests/generator/p27-variation-profile.test.js`（抽样行复验 PracticeSession 增加行级种子参数，断言不变，附注记）
+  - `docs/FINAL-REPAIR-DEFERRED.md`（DEF-010 增补取样族无种子抖动说明；新增 DEF-012 NAME_TO_SHAPE /圆/ 早于 /圆柱//圆锥/、DEF-013 容量图取样族行陈旧、DEF-014 剖面取样族行单种子投影）
+- deleted: 无文件删除。
+- reason: P28-GEN-SHAPE-FLAT-SAMPLE-01 的波及面收口。①evidence-rules 第 1-4 轮判据不完整：旧默认分支（恒 rectangle）输出的 params 形状特异断言（labelSides 等）在新 circle/parallelogram 分支与 flat 取样下失配 → 冻结矩阵 3 行 kpSem FAIL；按同判据补全为「剔除 params.* 全部形状特异断言（保留全分支恒定的 unit/unitPx）」。②p27 单测抽样行以无种子 PracticeSession 复验，flat 取样使图形子类型按种子变化 → deepStrictEqual 天然 flaky；按冻结纪律钉定行级种子并同种子重 derive 被抽 8 行，恢复确定性复验，断言未放宽。③更正前条记录一处表述：generateGraphicParams 实际新增分支为 circle/parallelogram 两类，「trapezoid 参数分支」已按纪律回退未落地（见 DEF-011）。
+- tests: ①局部：tests/shape/pol-kbl-shape.test.js 14/14、tests/orchestration/p17-15-quantity-closure.test.js 4/4、tests/generator/p25-04-semantic-evidence.test.js 10/10、tests/generator/p27-variation-profile.test.js 9/9；②冻结矩阵 --write 重建 FAIL rows=0，只读复核与产物完全一致 git diff=0；③运行态：GenerationCore 直连 math-g1-down-u01-k001×geometry 10 计划产 5 题互异，subtype 覆盖 rectangle/square/triangle/circle/parallelogram 五形，prompt 覆盖 5 种题干模板，shortfall 如实 PARTIAL；PracticeSession 多会话实测同 KP fill 跨会话抽中 rectangle/square/triangle 不同形（会话级种子取样生效）；④check-all 28 PASS / 0 FAIL / 0 SKIP（含 #5 Unit、#6b 矩阵冻结、#15 Browser E2E、FINAL-91 只读门禁）。
+- risk: 低-中。evidence-rules 剔除断言仅放宽取样族行的语义门禁（保留 mode/steps/graphic.type/unit/unitPx 断言），具体形状 KP（square/rectangle/triangle 等）断言未动；剖面仅 8 行重 derive，其余行未触碰；单测仅加种子参数断言不变；非阻塞遗留（圆柱/圆锥派生、容量图陈旧、剖面家族感知）已登记 DEF-012/013/014。
+
+### P28-GEN-SHAPE-FLAT-SAMPLE-01｜flat 族 KP 平面图形按种子取样 + geometry 观察题题干多样化（2026-09-28）
+
+- modified: `shared/generator/generators/shape.js`（①generate() 循环内：legacyType=flat 的泛称图形 KP 按该题种子 rng 从平面图形族 [rectangle/square/triangle/circle/parallelogram] 取样 subtype 并派生对应 meta，具体形状 KP 行为不变；②generateGraphicParams 补 circle/parallelogram/trapezoid 参数分支（渲染端 svg-geometry.js 已注册全部所需 subtype，呈现层零改动）；③makeGeometryQuestion 题干由单一「请观察图形，X」扩为 5 种表达模板按 rng 选取）；冻结矩阵经 check-generation-matrix-freeze.js --write 显式重建（设计内更新路径）。deleted: 无。reason: 用户要求 ①完善题干表述增加多种表达方案 ②flat 族 KP 按种子从多种平面图形取样。根因：KP 名「平面图形认识」等泛称落入 NAME_TO_SHAPE 兜底正则 /平面|图形/→flat，被 SHAPE_SUBTYPE 硬映射为 rectangle，导致该族 KP 所有题永远只画长方形；而 KP 教学语义（concept）明确含长方形/正方形/三角形/圆/平行四边形五种图形。tests: 待执行——tests/generator 全量 + tests/presentation + 冻结矩阵重建后 check-all 28 PASS（含 Browser E2E）+ CDP 运行态目检多图形/多题干（结果随本轮会话报告）。risk: 中低——仅 shape.js 单生成器源文件直改（允许的原 Generator 修改，无新 Wrapper/无架构变化）；choice/judge/fill/geometry 的答案与图形同步变为具体形状（教育上更精确）；冻结矩阵 sample/ans/promptLen 变化经显式 --write 重建并 git diff 可查；具体形状 KP（名称含正方/长方/三角/圆等）零影响。
+
+### P28-UI-PRINTSTYLE-CLEANUP-01｜样式与打印链路死代码定点清理（2026-09-28）
+
+- modified:
+  - `shared/presentation/print.js`（① 整体删除页内 A4 预览模态层：Print.preview / previewFromQuestions 及 ensurePreviewStyle / ensurePreviewDom / fitSheetScale / closePreview / PV_A4_WIDTH_PX / pv-* 变量 / lastHtml / lastTitle——全库仅定义零调用；② PRINT_ROUTES 由 9 条删至唯一在用 math 路由并去 label 死字段——全库 3 处调用均传 'math'；③ popupAndPrint 删除未用 title 参数（2 处调用同步）；④ buildPrintHtml 网格查询删除零产出 .comprehensive-grid、page-break 规则由死类 .question-item/.tb-item/.problem 改指真实在产 .question-card（保持「避免题目卡跨页截断」原意图）、删除零产出 .scene-box svg 打印 CSS；⑤ 模块头注释与链路注释同步）
+  - `shared/styles/components.css`（删除零产出死类样式：.q-header / .scene-box（含 svg 子规则）/.q-hint/.options/.opt 家族/.input-group/.unit/.qa-row/.qa-label/.formula-inp/.question-card.compact 家族/.global-tip/.question-answer-print；段注释由「PluginUtil.renderCard 类化输出」更正为实际在产来源——render.js 已按 P28-22 删除）
+  - `shared/styles/tokens.css`（删除零消费者死令牌 13 个：--q-num-size/--q-text-size/--q-text-line-height/--q-unit-size/--q-input-size/--q-input-height/--q-option-size/--q-hint-size/--q-feedback-size/--q-scene-max-width/--q-scene-max-height/--q-card-padding/--q-section-gap；保留在用 --q-header-gap/--q-grid-gap）
+  - `practice.html`（修正过时注释：PRINT_QCSS 已不存在，改为指向克隆链覆盖样式与 buildPrintQcss 直渲链两条真实接管路径）
+  - `dev/p28/check-dead-code.js`（死代码矩阵追加 2 条 REMOVE-SYMBOL 已处置记录 + 1 条批改链候选 pickOpt 暂留记录）
+- deleted: 无文件删除；删除内容为上述死符号/死类/死令牌/死路由与 preview 模态层（约 230 行）。
+- reason: 用户要求按当前最终呈现状态清理样式与打印链路中的无效代码。取证方式：全库 grep 产出方（html-renderer/renderGeneric/practice 注入）与 var() 消费扫描 + 隔离 Chrome CDP 运行态 DOM 实测。判定死代码依据：预览模态层与 8 条路由零调用方；死类无任何生产方输出（旧插件渲染链 render.js 已按 P28-22 删除；compact 仅 print 模式挂类而打印文档不加载 components.css；.opt 与 pickOpt 零调用）；死令牌零 var() 消费。保留防御性清单（removeSelectors/隐藏兜底）为运行时卫生网非死代码；pickOpt 属批改链超本轮范围，登记候选暂留。
+- tests: ①verify:syntax 298 文件 0 错误；②tests/presentation 0 fail；③check-all 27 PASS / 0 FAIL / 1 SKIP（#21 死代码矩阵含新条目 PASS）+ Browser E2E 单独补跑 PASS（真实 Chrome 9 步全路径含打印）；④隔离 Chrome CDP（禁缓存 8788）回归实测：33 卡渲染正常，卡片 border/radius/padding、题号徽章（22×22 灰圆）、4 nbsp 间距、框下无横线全部与清理前一致；Print.preview/previewFromQuestions 已不存在、Print.ROUTES 仅剩 math；buildFromQuestions 输出正常且不含死类；renderGeneric（页内作用域函数）降级链未动。
+- risk: 低-中。删除均为零引用符号，屏显与两条打印链路产物经运行态逐项比对无差异；风险点在于移除了预览模态层这一「潜在调试入口」（如需恢复可从 git 历史取回）；page-break 规则改指 .question-card 使克隆链打印的卡片跨页保护从「失效」恢复为「生效」，属行为修正而非破坏。
+
+### P28-UI-ANSWER-LINE-REMOVE-01｜删除题目卡填空框下方的作答横线（2026-09-28）
+
+- modified:
+  - `practice.html`（屏幕态 `#problemsArea .question-answer` 由 `border-bottom:1px solid var(--line,#e3e8f0)` 改为 `border-bottom:none`，注释同步——该横线紧贴作答输入框下缘，与输入框功能重复）
+  - `shared/presentation/print.js`（buildPrintHtml 打印覆盖新增 `.print-shell .question-answer { border-bottom:none }`——克隆链打印中 components.css 的 `1px dashed #b9c6de` 基样式会使框下横线复现，与屏显不一致，一并覆盖删除）
+- deleted: 无文件删除；删除内容为屏显与克隆打印链中 .question-answer 的框下边框线声明（各 1 处）。
+- reason: 用户要求锁定并删除题目卡中填空框下面的横线。运行态定位：横线 = .question-answer 的 border-bottom（屏显实测 `1px solid rgb(227,233,242)`、距输入框下缘 1px）。主打印链 session.print（buildFromQuestions）渲染的作答区无输入框、其虚线是纯书写线且受 P3.2 answerRule 题型逻辑管辖，不属于「框下横线」，未改动。
+- tests: ①tests/presentation 全部 PASS（0 fail）；②check-all 27 PASS / 0 FAIL / 1 SKIP + Browser E2E 单独补跑 PASS；③隔离 Chrome CDP（禁缓存 8788）：屏显 .question-answer 计算样式 borderBottom=`0px none`（30 卡全量生效），Print.preview 克隆链 iframe 内同为 `0px none`，截图目检输入框下方无横线；前次改动（题号徽章 22×22 灰圆 + 4 nbsp 间距）回归无损。
+- risk: 低。纯呈现层边框删除，不触碰作答数据结构、判分、生成与契约链路；.question-answer 容器与 input 保留，作答/检查/打印功能不变；主打印链书写线（apply/word 等题型）不受影响。
+
+### P28-UI-QNUM-GAP-01｜三级页题号与正文间距 4 空格 + 打印题号与生成页一致（2026-09-28）
+
+- modified:
+  - `shared/presentation/html-renderer.js`（render() 题干 `</span>` 与正文之间插入 4 个 `&nbsp;`——屏显、Print.open 克隆链、buildFromQuestions 直渲链三条链路同源生效，附注记）
+  - `practice.html`（renderGeneric 降级模板 `</span>` 后同样插入 4 个 `&nbsp;`，与主链编号格式一致）
+  - `shared/presentation/print.js`（① buildPrintHtml 打印覆盖：题号由「去徽章裸数字」（P3.1 决策）改为与屏显一致的 22×22 灰色圆形徽章（#eef0f3 底/#9aa3b2 字/text-align:center/12px/700）；② buildPrintQcss（session.print → buildFromQuestions 主打印链）`.question-stem .num` 由裸数字样式改为同一徽章样式）
+- deleted: 无文件删除；删除内容为 print.js 两处打印 CSS 中对题号徽章的剥离声明（width:auto/height:auto/border-radius:0/background:none/min-width:18px 等，被徽章样式取代）。
+- reason: 用户要求三级练习页题目编号与正文中间间距调整为 4 个字符的空格，且打印页题目标号与生成页一致。此前屏显徽章与正文零间距（CDP 实测 margin-right:0、正文紧贴徽章），打印两条链路均把徽章剥成裸数字，与生成页不一致；本改动把间距放进渲染 SSOT（html-renderer），打印覆盖改为与屏显相同徽章，三链路收敛一致。
+- tests: ①verify:syntax 298 文件 0 错误；②tests/presentation 109/109 PASS；③check-all 27 PASS / 0 FAIL / 1 SKIP + Browser E2E 单独补跑 PASS（Chrome 真实 9 步路径，打印 opens/writes/prints=1、printedCards=10）；④隔离 Chrome CDP 运行态实测：屏显题干 `</span>` 后含 4 个 U+00A0、编号右缘到正文首字间距 15px（=4×3.75px 空格宽，15px 字号）；Print.preview 克隆链 iframe 内 .num 计算样式 22×22/圆角 50%/rgb(238,240,243)/rgb(154,163,178)/居中，与屏显逐项一致且题干含 4 nbsp；buildFromQuestions 输出含 4 nbsp + 徽章 CSS；打印预览截图目检灰圆徽章 + 间距正常。
+- risk: 低。仅题号呈现层（HTML 间隙字符 + 打印覆盖样式），不触碰生成/校验/契约/基线数据；nbsp 位于 aria-label 之外的装饰性间隙、不进答案与判分链路；screen 截图中的 bundle（strategy/presentation）零改动（hash 门禁 #16/#17 PASS 佐证）。
+
 ### P28-CLEANUP-TARGETED-01｜定点清理：semantic-special.js 头注释残留修正（2026-09-27）
 
 - modified:

@@ -86,7 +86,9 @@ function diffRow(prof, obs) {
     var samples = [];
     var err = null;
     try {
-      var session = new PracticeSession({ subject: 'math', grade: p.grade, count: N, knowledgePointId: p.kp, questionType: p.qt });
+      // P28-DEF-014：钉定行级种子（与 derive-variation-profiles.js 派生种子同一约定），
+      // 消除无种子抽样导致的硬轴 flaky（DEF-010 同类根因：模板/数字随机跨阈值抖动）。
+      var session = new PracticeSession({ subject: 'math', grade: p.grade, count: N, knowledgePointId: p.kp, questionType: p.qt, seed: 'p27-drift|' + p.kp + '|' + p.qt });
       await session.start();
       samples = (session.semanticQuestions || []).filter(function (q) {
         var qk = q.knowledgePointId || (q.knowledgePointIds && q.knowledgePointIds[0]);

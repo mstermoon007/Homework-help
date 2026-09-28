@@ -67,7 +67,10 @@ var done = 0;
     var samples = [];
     var err = null;
     try {
-      var session = new PracticeSession({ subject: 'math', grade: p.grade, count: N, knowledgePointId: p.kp, questionType: p.qt });
+      // P28-DEF-014：钉定行级种子（与 tests/generator/p27-variation-profile.test.js 复验种子、
+      // dev/p27/check-variation-drift.js 门禁种子同一约定），使取样族行（如 flat 族图形按
+      // 条目种子取样）剖面为确定性观测，可复验、可比对。
+      var session = new PracticeSession({ subject: 'math', grade: p.grade, count: N, knowledgePointId: p.kp, questionType: p.qt, seed: 'p27-drift|' + p.kp + '|' + p.qt });
       await session.start();
       samples = (session.semanticQuestions || []).filter(function (q) {
         var qk = q.knowledgePointId || (q.knowledgePointIds && q.knowledgePointIds[0]);
@@ -142,7 +145,7 @@ var done = 0;
     builtFrom: {
       aClass: 'kbl/teaching/kp-matrix.json draftSemanticLevel=A',
       allow: 'KCV.buildEligibility ALLOW 动态枚举（同 dev/check-allow-generation.js）',
-      sampling: { n: N }
+      sampling: { n: N, seed: 'p27-drift|<kp>|<qt>（P28-DEF-014 行级种子约定，与漂移门禁/单测复验同源）' }
     },
     axes: {
       unknown: '答案位置轴：data 叶子值==answer 值的路径集合（跨样本）',

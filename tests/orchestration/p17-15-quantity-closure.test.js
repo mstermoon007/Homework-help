@@ -63,11 +63,18 @@ test('Q2 时间类 KP calc：P25-07 修复 stats calc 伪容量后 → SUCCESS�
   assert.equal(new Set(prompts).size, 3, '3 题真实互异（非重复填充）');
 });
 
-test('Q3 geometry 小语义空间：count=2 → PARTIAL n≥1（真实短产，非 0）', async () => {
+test('Q3 geometry 小语义空间：P28-GEN-SHAPE-FLAT-SAMPLE-01 题干多样化后容量 ≥2 → SUCCESS，2 题真实互异', async () => {
+  // 前提变更留痕（P28-GEN-SHAPE-FLAT-SAMPLE-01）：本 KP（轴对称的再认识，symmetry 型）
+  // 在 P17-15 审计时真实容量=1，其根因是 geometry 题干单一（「请观察图形，X」），
+  // 同图形同题干被去重削减为 1。题干扩为 5 种表达模板后按条目种子出题，
+  // 真实容量提升至 ≥2，SUCCESS 为如实上报而非伪装。短产如实上报不变量由 Q2 注释与
+  // GenerationCore 语义覆盖（0 < final ≤ planned → PARTIAL 路径仍存在，见 Q1 注释）。
   const res = await realGen('math-g5-down-u05-k003', 'geometry', 2, 5);
-  assert.equal(res.status, 'PARTIAL', 'geometry 语义空间小 → PARTIAL 如实上报');
-  assert.ok(res.questions.length >= 1 && res.questions.length < 2, '0 < final < planned');
+  assert.equal(res.status, 'SUCCESS', '题干多样化后真实容量 ≥2 → SUCCESS');
+  assert.equal(res.questions.length, 2, 'final = count');
   res.questions.forEach((q) => assert.equal(q.questionType, 'geometry'));
+  const prompts = res.questions.map((q) => q.prompt);
+  assert.equal(new Set(prompts).size, 2, '2 题真实互异（非重复填充）');
 });
 
 test('Q4 空请求不伪造：cells=0 → generated=0，无题目无失败', async () => {
