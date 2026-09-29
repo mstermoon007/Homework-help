@@ -42,6 +42,18 @@
 - tests: ①版本升级前在冻结工作区连续两跑 check-all（CHROME_BIN 指向真实 Google Chrome）：28 PASS / 0 FAIL / 0 SKIP（#15 真实浏览器 9 步 E2E 实跑 PASS），两次运行间 git status 零变更（FINAL-91 只读、FINAL-92 确定性）；②升级后 build:knowledge 重建（376 知识页 0 增删，仅 knowledge-index.json version/generatedAt 两行变化）+ node scripts/sync-sw-version.js 版本一致校验 PASS，随后连续两跑 check-all 均 28 PASS / 0 FAIL / 0 SKIP，最终 diff 锁定 9 文件（README/VERSION/package.json/version.js/sw.js/index.html/build-knowledge-pages.js/knowledge-index.json/本日志）；③发布包构建/本地验证与服务器上线证据见随后追加的 P28-RELEASE-V501-PKG / P28-RELEASE-V501-DEPLOY 条目。
 - risk: 低。仅版本号字面量与知识索引产物时间戳变化，无题目生成/答案批改/渲染结构逻辑变化；SW 缓存键变更会触发已访问用户的客户端缓存刷新（预期行为）。回滚：服务器保留 /root 整目录备份包。
 
+### P28-RELEASE-V501-PKG｜V5.0.1 白名单发布包构建 + 本地解压全链验证（2026-09-29）
+
+- modified:
+  - `release/homework-help-5.0.1.tar.gz`（新增，571 文件，3,420,135 字节，SHA256 `a9b353279dfb0f62d021e3bc46db16c0b7b1e03e57bdb5d65b89119ead12d985`，git archive 自冻结 commit `0fb892d`=标签 V5.0.1）
+  - `release/homework-help-5.0.1.tar.gz.sha256`（新增校验侧车，`shasum -c` 实测 OK）
+  - `release/RELEASE-MANIFEST-5.0.1.md`（新增发布清单：构建命令/白名单/内容边界/校验记录/部署与回滚命令）
+  - `docs/P28/change-log.md`（本条登记）
+- deleted: 无。
+- reason: V5.0.1 发布冻结后按 5.0.0 固化流程产出可复现发布包与发布清单，供本地验证与服务器原子部署；白名单条目与 5.0.0 完全一致，未新增/删除。
+- tests: ①内容边界 21 类禁止项逐项实测全 0（tests/dev/docs/archive/migration/scripts/tools/kbl/audit-results/architecture/.github/node_modules/.trae/.gitignore/package.json/svg-test/.env/.DS_Store/bak|old|tmp|orig|log|swp/~/report|audit），仅 2 个最终 bundle，HTML 7 根页+376 knowledge+1 feedback=384，JS 153/CSS 8/JSON 13；②干净目录 /tmp/pkg501-verify 解压后 12 个关键文件（VERSION/sw.js/index/select/practice/README/sitemap/双 bundle/knowledge-index/知识页/version.js）与 `git show HEAD:<file>` 逐字节 MATCH；③`python3 -m http.server 8899` 根部署：23/23 关键路径 HTTP 200，旧版文件 8/8 返回 404，sitemap loc=382，包内 knowledge-compat 引用=0；④真实 Chrome 对解压包 9 步冒烟全 PASS：首页页脚显示 5.0.1 → select 新选择页完整选择流程 → practice 生成 20 题（图形/算式/应用多题型，工具栏折叠与题量控件正常）→ 重新生成内容变化数量不变 → F5 刷新正常 → 打印触发 → 知识页与索引页（375 KP）→ 教师模式知识点入口生成成功；console 无产品错误（@vite/client 为测试浏览器扩展注入，包内 grep 零引用；[SW] Skipped on localhost 为 common.js 预期日志）。
+- risk: 低。发布包不在产品运行链路内（release/ 不在白名单包中），不影响线上；教师模式单知识点少量生成题数为 capacity 既有设计行为，非本版缺陷。
+
 ### P28-INLINE-ANSWER-01｜横向算式填写框内联等号后（问号虚化、打印空白）（2026-09-29）
 
 - modified:
