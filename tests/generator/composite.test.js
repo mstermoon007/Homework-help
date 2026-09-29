@@ -50,7 +50,10 @@ test('composite：单组合生成题量与 KP 覆盖契约', () => {
     assert.deepEqual(q.knowledgePointIds, makePlan().knowledgePointIds);
     assert.equal(q.knowledgePointId, makePlan().knowledgePointIds[0]);
     assert.equal(q.answerMode, 'judge');
-    assert.equal(typeof q.answer, 'boolean');
+    // booleanAnswer 契约：裸布尔或 {value:boolean} 两种形态均合规（V5.1.0 起 explanation 随对象承载）
+    var judgeValue = (q.answer && typeof q.answer === 'object') ? q.answer.value : q.answer;
+    assert.equal(typeof judgeValue, 'boolean');
+    assert.ok(q.answer && q.answer.explanation, '判断题必带解析');
     assert.equal(typeof q.prompt, 'string');
     assert.equal(q.data.composite, true);
     assert.equal(q.data.mode, 'calc-to-judge');

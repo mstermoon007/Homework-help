@@ -68,6 +68,7 @@ function makeStatsQuestion(plan, context, i, kp) {
   }
 
   var prompt, answer, steps, graphic;
+  var judgeExplanation = null;
   var chOpts = null;
   var data = { mode: 'apply', steps: steps, questionType: qt };
   if (type === 'average') {
@@ -162,6 +163,12 @@ function makeStatsQuestion(plan, context, i, kp) {
       var shownJ = isTrueJ ? targetJ.value : targetJ.value + deltaJ;
       prompt = name + '：根据条形图判断：「' + targetJ.label + '有 ' + shownJ + ' 人」——对还是错？';
       answer = isTrueJ;
+      judgeExplanation = isTrueJ
+        ? '条形图中' + targetJ.label + '对应的人数就是 ' + targetJ.value + ' 人，说法正确。'
+        : '条形图中' + targetJ.label + '对应的人数是 ' + targetJ.value + ' 人，不是 ' + shownJ + ' 人，说法错误。';
+      if (!isTrueJ) {
+        data.misconception = '条形图读数错误：' + targetJ.label + '的人数应为 ' + targetJ.value + ' 人，题中读成了 ' + shownJ + ' 人。';
+      }
       data.judgeForm = true;
     } else if (plan.questionTypeId === 'calc') {
       // 列式计算形态：问法收敛为「最多 − 最少」差值，题干内嵌可求值算式
@@ -444,6 +451,11 @@ function makeStatsQuestion(plan, context, i, kp) {
     data.options = chOpts;
     data.correctIndex = chOpts.indexOf(String(answer));
   }
+  // V5.1.0：judge 解析挂到 answer.explanation（非 judge 题为 null，不污染其他形态）
+  var answerObj = typeof answer === 'boolean'
+    ? { value: answer, acceptable: [] }
+    : { value: String(answer), acceptable: [] };
+  if (judgeExplanation) answerObj.explanation = judgeExplanation;
 
   return {
     knowledgePointId: pkp(plan),
@@ -453,7 +465,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: typeof answer === 'boolean' ? { value: answer, acceptable: [] } : { value: String(answer), acceptable: [] },
+    answer: answerObj,
     answerMode: data.choiceForm ? 'choice' : (data.judgeForm ? 'judge' : 'input'),
     data: data
   };

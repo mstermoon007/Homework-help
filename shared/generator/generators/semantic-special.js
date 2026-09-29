@@ -250,15 +250,30 @@ function makeCodeApply(plan, context, i) {
 function makeCodeJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var statements = [
-    { text: '数字编码的每一位都有特定的含义，不能随意改变。', value: true },
-    { text: '数字编码可以用来表示学号、身份证号等信息。', value: true },
-    { text: '数字编码的位数越少，表示的信息就越准确。', value: false },
-    { text: '同一所学校里，两位同学的学号可以完全相同。', value: false }
+    {
+      text: '数字编码的每一位都有特定的含义，不能随意改变。', value: true,
+      explanation: '数字编码中每一位（或每几位）都承载特定信息（如地区、出生日期、顺序号），随意改变会变成另一个编码，说法正确。'
+    },
+    {
+      text: '数字编码可以用来表示学号、身份证号等信息。', value: true,
+      explanation: '学号、身份证号、邮政编码等都是用数字按一定规则编排来表示信息的，说法正确。'
+    },
+    {
+      text: '数字编码的位数越少，表示的信息就越准确。', value: false,
+      explanation: '编码位数多少与信息是否准确没有关系，位数由需要表示的信息量和编码规则决定，说法错误。',
+      misconception: '误认为编码位数越少信息越准确：位数多少取决于要表示的信息量和编码规则，与准确性无关。'
+    },
+    {
+      text: '同一所学校里，两位同学的学号可以完全相同。', value: false,
+      explanation: '学号是区分学生的编码，在同一所学校里必须唯一，两位同学的学号不能完全相同，说法错误。',
+      misconception: '忽视数字编码的唯一性：学号在同一范围内必须一一对应，不能重复。'
+    }
   ];
   var s = Rng.pick(rng, statements);
   var q = buildBase(plan, context, i, { mode: 'judge', codeType: 'concept' });
   q.prompt = '判断对错：' + s.text + '（  ）';
-  q.answer = { value: s.value, acceptable: [] };
+  q.answer = { value: s.value, acceptable: [], explanation: s.explanation };
+  if (s.misconception) q.data.misconception = s.misconception;
   return q;
 }
 

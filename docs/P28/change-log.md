@@ -25,6 +25,72 @@
 
 ## 记录（新 → 旧）
 
+### P28-RELEASE-V510｜V5.1.0 判断题教学闭环发布：版本号统一（2026-09-29）
+
+- modified:
+  - `VERSION`（5.0.1 → 5.1.0）
+  - `package.json`（version 5.0.1 → 5.1.0）
+  - `shared/catalog/version.js`（APP_VERSION SSOT 5.0.1 → 5.1.0）
+  - `sw.js`（CACHE 字面量 hw-help-5.0.1 → hw-help-5.1.0，sync-sw-version 校验一致）
+  - `index.html`（页脚版本兜底字面量 5.0.1 → 5.1.0）
+  - `dev/build-knowledge-pages.js`（knowledge-index.json 注入 version → 5.1.0）
+  - `knowledge/knowledge-index.json`（build:knowledge 重建产物：version 5.1.0 + generatedAt；375 知识页内容无 diff，knowledge-runtime 重建后字节不变）
+  - `docs/P28/change-log.md`（本条登记）
+- deleted: 无
+- reason: ST1（P28-JUDGE-01 生成层解析/错因）+ ST2（P28-JUDGE-02 大按钮控件/批改三层反馈）+ ST3（P28-JUDGE-03 学情链错因持久化）全部完成并通过门禁，按版本管理约定提升 minor 版本并刷新 SW 缓存名，使新版本上线后旧缓存自动失效。
+- tests: ①`node scripts/sync-sw-version.js` 一致；②npm run build:knowledge 成功（375 KP，页面 0 更新，runtime 字节不变）；③`CHROME_BIN=...Google Chrome node dev/check-all.js` 28 PASS / 0 FAIL / 0 SKIP（#1 Version 一致、#15 真实浏览器 E2E、#16 bundle hash、#17 构建确定性）；④judge 教学闭环浏览器实测记录见 P28-JUDGE-02/03。
+- risk: 低。纯版本号与构建产物时间戳变更，无代码逻辑变化；SW 缓存名升级后首次访问自动清理旧缓存。未执行 git commit（按规则等用户明确指令）。
+
+### P28-JUDGE-03｜判断题教学闭环 ST3：自由文本错因入学情链（PracticeResult→recentErrors 持久化，不进 8 类聚类）（2026-09-29）
+
+- modified:
+  - `shared/learner/practice-result.js`（事实契约增 `misconception` 字段：create() 字符串归一（空/非串→null）；fromSemanticQuestion 取 `sq.data.misconception`（opts 可覆盖）；fromLegacy 取 `question.misconception`；errorType R10 门不变）
+  - `shared/learner/learner-model.js`（recentErrors 错题摘要增 `misconception` 透传字段；新增 normalizeMisconception 容错与 MISCONCEPTION_MAX_LEN=200 截断保护 localStorage；normalizeRecentErrors 归一保留；**不写入 errorPatterns、不参与掌握度/题型/语义目标统计**）
+  - `practice.html`（feedLearnerModel 的 PracticeResult.create 逐题传 misconception：优先 `result.misconceptions[i]`，回退 legacy `q.misconception`）
+  - `tests/learner/p28-32-learner-data-chain.test.js`（新增数据链 6：sq.data 自动入事实对象、显式 create 透传、recentErrors 持久化、errorPatterns 保持空、重新归一后保留、非串→null、超长截断 200、答对无错因）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（双 bundle 重建，#16 source==bundle 一致；learner 四文件为页面直载脚本，不在 bundle 内）
+- deleted: 无
+- reason: 用户锁定错因口径为自由文本（sq.data.misconception），需能随错题持久化以诊断学习进度，但明确不做错因聚类统计。故只在既有 recentErrors（cap 20 错题摘要）上增一个透传字段，不新增统计维度、不碰 ErrorModel 8 类 SSOT、不改掌握度算法。真命题本身无错因（null），错因仅假命题答错时有意义。
+- tests: ①局部：`tests/learner/p28-32-learner-data-chain.test.js` 6/6 PASS、learner 域 23/23、全量单测 591/591；②浏览器真实链路（新端口 8932 全新源，规避 SW/HTTP 缓存）：3 题全错批改后 LearnerStorage 中 kp recentErrors 3 条，假命题「边越长角越大」条目 misconception='误认为角的大小由边的长短决定：…'，两条真命题错因为 null，errorPatterns 键数=0（确认自由文本不进聚类），attempts/incorrect=3；③`CHROME_BIN=...Google Chrome node dev/check-all.js` 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 低。新字段为增量可空字段，normalizeLearnerState 对旧状态全兼容（旧记录归一为 null）；200 字截断限定存储增量；不影响任何既有评分/推荐路径。剩余 V5.1.0 版本号统一发布。
+
+### P28-JUDGE-02｜判断题教学闭环 ST2：二值大按钮控件 + 批改三层反馈 + 渲染判据根因修复（2026-09-29）
+
+- modified:
+  - `shared/presentation/html-renderer.js`（新增 renderJudgeAnswer：屏幕态两个大按钮 `label.judge-btn-true/false` 包 radio（value=true/false、name=qN、radiogroup 语义）；打印态「正确（　）错误（　）」。新增 isJudge()：渲染判据 = questionType 'judge' 或 answerMode 'judge'——根因修复见 reason）
+  - `shared/presentation/render-format.js`（legacy 适配 inputType 判定同步以 questionType='judge' 为判据；legacy q 透传 `explanation`（sq.answer.explanation）与 `misconception`（sq.data.misconception））
+  - `shared/core/check.js`（computeResult 返回值增 `explanations[]/misconceptions[]` 逐题数组，判分逻辑零改动：radio 'true'/'false' 与 normalizeAns(boolean) 天然相等）
+  - `shared/bridge/practice-bridge.js`（emitSubmit 反馈透传 explanations/misconceptions）
+  - `shared/presentation/print.js`（buildPrintQcss 增打印去按钮化 CSS：隐藏 .judge-input、.judge-btn 去边框并追加「（　）」）
+  - `shared/styles/components.css`（.question-answer-judge/.judge-btn/.judge-mark/.judge-text 大按钮样式：:has(:checked) 选中态、.question-card.correct/wrong 批改绿红态、.judge-print 打印态）
+  - `practice.html`（judge 作答绑定；markQuestions judge 分支：答对仅「💡 解析」，答错追加「✗ 正确答案：正确/错误」与「⚠️ 错因」；toggleReveal 答案中文化；renderGeneric 降级分支 judge 大按钮；.fb-line/.fb-explain/.fb-mis 反馈样式；result 对象与透传）
+  - `tests/presentation/renderer.test.js`（新增 3 条 V5.1.0 断言：answerMode 被归一为 input 时仍渲染按钮（屏/打）、显式 answerMode=judge 兼容、render-format inputType 与解析/错因透传）
+  - `shared/engine/presentation-engine.bundle.js`（build:presentation 重建，内含 render-format 变更；#16 source==bundle hash 一致）
+- deleted: 无
+- reason: ST1 只产出字段，前端仍把 judge 渲染成旧文本框。浏览器实测锁定根因：createSemanticQuestion 归一化会把 sq.answerMode 收敛为 'input'（judge 在渲染层唯一可靠判据是 questionType='judge' + booleanAnswer 契约），旧 renderAnswer/legacy 适配只看 answerMode 故全部回落文本框。按用户三项决策落地：机制+现有命题补解析、错因用自由文本 sq.data.misconception（非固定 errorType 8 类）、作答控件为两个大按钮（非文本框/非 radio 列表）。未新建任何 UI 体系/兼容层，未改判分 SSOT。
+- tests: ①局部：全量单测 590/590 PASS（新增 3 条渲染断言）；②浏览器真实链路（http.server，types=judge 深链、清 sessionStorage 指纹）实测：3 题渲染 6 个大按钮、0 个文本框；故意 1 对 2 错 → computeResult 钩点捕获 answers/qans/results 一致，33 分，卡片绿/红态正确；三层反馈文案完整（✗正确答案中文化 / 💡解析 / ⚠️错因仅错题出现）；「显示答案」显示「✔ 答案：正确/错误」；Print.buildFromQuestions 浏览器实测含「正确（　）错误（　）」、无 input；③`#printMeasure` 测量克隆含同名 radio 已由既有「未勾选 radio 不收集」逻辑（practice-session._collectAnswers / collectAnswers）排除，非新问题；④`CHROME_BIN=...Google Chrome node dev/check-all.js` 28 PASS / 0 FAIL / 0 SKIP（含 #15 真实浏览器 E2E、#16 bundle hash、#17 构建确定性）。
+- risk: 中低。isJudge 以 questionType 兜底可能影响所有 questionType='judge' 的 SQ——这正是目标集合，且 choice/multi/input 判据不变。打印/降级/显示答案三路均实测。ST3（Learner 学情链透传 misconception）未实施；版本号 V5.1.0 待 ST3 完成后统一提升。
+
+### P28-JUDGE-01｜判断题教学闭环 ST1：生成层全量补解析 + 假命题补自由文本错因（2026-09-29）
+
+- modified:
+  - `shared/generator/core/type-contract.js`（finishJudge 三分支：数值/余数/序列真假命题均写 `answer.explanation`；假命题写 `data.expectedResult/shownResult` 与 `data.misconception`；booleanAnswer 不变式与 enforce() 未动）
+  - `shared/generator/generators/application.js`（judge 分支 answer 改对象形态并带 explanation/misconception；修复假命题偏移量 ±0 时与真答案重合的潜在真值不唯一 bug）
+  - `shared/generator/generators/shape.js`（makeFeatureQuestion 新增 FALSE_FEATURE_POOL，假命题从「非真实特征」池选取，候选全真实则回退真命题；真假 explanation + 假命题 misconception）
+  - `shared/generator/generators/position.js`（方向/平移/旋转/观察/数对 5 处 judge 全补 explanation，假命题补 misconception）
+  - `shared/generator/generators/stats.js`（条形图 judge：judgeExplanation + 假命题 misconception，返回处挂 answerObj.explanation）
+  - `shared/generator/generators/composite.js`（makeCalcToJudge answer 改对象形态带 explanation，假命题补 misconception）
+  - `shared/generator/generators/selection.js`（泛型兜底 judge 真假模板 explanation + 假命题 misconception）
+  - `shared/generator/generators/concept-meaning.js`（makeAngleJudge/makeAreaJudge 命题项扩 explanation/misconception，finish() 统一写 answer 对象；假命题「边越长角越大」「面积单位比长度单位大」带错因）
+  - `shared/generator/generators/semantic-special.js`（makeCodeJudge 4 条命题全补 explanation，2 条假命题补 misconception）
+  - `tests/generator/p25-07-type-contracts.test.js`（新增第 9 节：finishJudge 数值 16 seed 真假覆盖、余数/序列分支、6 个可达 KP 的 PracticeSession E2E 断言 boolean+explanation+假命题 misconception）
+  - `tests/generator/composite.test.js`（answer 断言兼容裸布尔/{value:boolean} 两形态并新增 explanation 必填断言）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（npm run build:strategy / build:presentation 重建产物，源码同构 hash 校验通过）
+- deleted: `shared/.DS_Store`、`tests/.DS_Store`（macOS Finder 未跟踪噪声文件，触发 FINAL-91，删除）；无受版本控制文件删除。
+- reason: 判断题练习闭环要求每题有唯一真值、解析、错因三层诊断；冻结基线中 judge 三种产出模式（finishJudge 机械转换 / 生成器原生 judge 分支 / 手写命题）的 explanation 几乎全空、无自由文本错因承载。本次只在现有 judge 产出上补全，不新增情境 maker、不改 126 条 ALLOW 映射、不改 booleanAnswer 不变式、不碰 error-model 8 类 SSOT；错因按用户决策以自由文本写入 `sq.data.misconception`（data 包透传），解析写入 `sq.answer.explanation`。
+- tests: ①局部：`node --test tests/generator/p25-07-type-contracts.test.js` 29/29 PASS、`tests/generator/p25-18-acceptance.test.js` + `tests/validator/answer-validator.test.js` 28/28 PASS、`tests/generator/composite.test.js` 全绿；②E2E 排障确认浏览器/门禁加载的是预构建 bundle（非直载源码），改源码后必须重建双 bundle；③6 个 E2E 代表 KP 经 registry×126 judge 映射实测可达性后选定（模式A 序列=math-g5-down-u07-k001，模式B=shape/position/application，模式C=angle/area；code-recognition 与算术数值/余数路径在冻结映射下运行时不可达，由 finishJudge 直测覆盖）；④`CHROME_BIN=...Google Chrome node dev/check-all.js` 28 PASS / 0 FAIL / 0 SKIP（含 #16 source==bundle、#17 构建确定性）。
+- risk: 中低。改动面覆盖 9 个生成器文件但均为 judge 分支内追加 explanation/misconception 文本与 answer 对象化；application/shape 两处附带修复了既有真值重合/假命题可能为真的潜在缺陷，非新能力。normalizeSemanticQuestion 已验证原样透传 answer.explanation 与 data.misconception。ST2（渲染控件/批改反馈）与 ST3（Learner 持久化）尚未实施，当前版本前端仍以旧控件展示，新字段已随 SQ 产出但暂不呈现；版本号 V5.1.0 待 ST2/ST3 完成后统一提升。
+
 ### P28-RELEASE-V501｜V5.0.1 版本号统一 + 发布包构建与上线（2026-09-29）
 
 - modified:

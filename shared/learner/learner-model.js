@@ -42,6 +42,7 @@
   var RECENT_WINDOW = 10;       // recentAccuracy 采用的最近结果数
   var RECENT_RESULTS_CAP = 20;  // recentResults 保留上限
   var RECENT_ERRORS_CAP = 20;   // P27-12：recentErrors 保留上限
+  var MISCONCEPTION_MAX_LEN = 200; // V5.1.0：自由文本错因入库长度上限
   var DIFF_MIN = 1, DIFF_MAX = 10;
 
   // ===== 字段默认值 =====
@@ -179,10 +180,20 @@
         questionType: (typeof e.questionType === 'string' && e.questionType) ? e.questionType : null,
         semanticTarget: (typeof e.semanticTarget === 'string' && e.semanticTarget) ? e.semanticTarget : null,
         errorType: ErrorModel.normalizeErrorType(e.errorType),
+        // V5.1.0：判断题自由文本错因（只透传/截断，不参与 errorPatterns 聚类）
+        misconception: normalizeMisconception(e.misconception),
         correct: false,           // recentErrors 只存错题，correct 恒为 false
         timestamp: isValidTs(e.timestamp) ? e.timestamp : null
       };
     }).filter(function (e) { return e && e.timestamp != null; }).slice(-RECENT_ERRORS_CAP);
+  }
+
+  // V5.1.0：自由文本错因容错——非空字符串截断保护 localStorage，空/非串归 null
+  function normalizeMisconception(v) {
+    if (typeof v !== 'string') return null;
+    var s = v.trim();
+    if (!s) return null;
+    return s.length > MISCONCEPTION_MAX_LEN ? s.slice(0, MISCONCEPTION_MAX_LEN) : s;
   }
 
   function recomputeMasteryFallback(s) {
@@ -404,6 +415,8 @@
           questionType: qt,
           semanticTarget: st,
           errorType: etype,
+          // V5.1.0：自由文本错因随错题摘要持久化（不参与 errorPatterns 聚类/掌握度）
+          misconception: normalizeMisconception(result.misconception),
           correct: false,
           timestamp: ts
         });

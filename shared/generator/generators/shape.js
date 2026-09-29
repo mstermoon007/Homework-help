@@ -346,12 +346,35 @@ function makeClassificationQuestion(plan, context, i, shapeMeta, graphic) {
   };
 }
 
+var FALSE_FEATURE_POOL = ['无棱无面', '只有长和宽', '不能滚动', '面是圆形', '有棱有角'];
+
 function makeFeatureQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var isTrue = rng() < 0.5;
   var feature = Rng.pick(rng, shapeMeta.meta.features);
-  var shown = isTrue ? feature : (Rng.pick(rng, ['无棱无面', '只有长和宽', '不能滚动', '面是圆形', '有棱有角']) || feature);
-  var prompt = shapeMeta.meta.name + '的特征是：「' + shown + '」—— 对还是错？';
+  var shown = feature;
+  if (!isTrue) {
+    // V5.1.0：假命题特征必须不属于该图形，排除真实特征，保证命题真值唯一；
+    // 候选全为真实特征时回退为真命题（不假造可能成立的说法）
+    var wrongs = FALSE_FEATURE_POOL.filter(function (f) {
+      return shapeMeta.meta.features.indexOf(f) === -1;
+    });
+    if (wrongs.length) shown = Rng.pick(rng, wrongs);
+    else isTrue = true;
+  }
+  var shapeName = shapeMeta.meta.name;
+  var prompt = shapeName + '的特征是：「' + shown + '」—— 对还是错？';
+  var explanation = isTrue
+    ? '「' + shown + '」是' + shapeName + '的特征，说法正确。'
+    : '「' + shown + '」不是' + shapeName + '的特征，说法错误。';
+  var data = {
+    mode: 'judge',
+    steps: 1,
+    graphic: graphic,
+    shownFeature: shown,
+    shapeName: shapeName
+  };
+  if (!isTrue) data.misconception = '图形特征混淆：把「' + shown + '」误当成了' + shapeName + '的特征。';
 
   return {
     knowledgePointId: pkp(plan),
@@ -361,15 +384,9 @@ function makeFeatureQuestion(plan, context, i, shapeMeta, graphic) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: isTrue, acceptable: [] },
+    answer: { value: isTrue, acceptable: [], explanation: explanation },
     answerMode: 'judge',
-    data: {
-      mode: 'judge',
-      steps: 1,
-      graphic: graphic,
-      shownFeature: shown,
-      shapeName: shapeMeta.meta.name
-    }
+    data: data
   };
 }
 

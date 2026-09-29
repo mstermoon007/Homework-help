@@ -104,6 +104,20 @@ function makeDirectionQuestion(plan, context, i, scene, meta) {
   var shownDir = isTrue ? correctDir : Rng.pick(rng, ['左边', '右边', '上面', '下面', '前面', '后面'].filter(function(d){ return d !== correctDir; }));
   var finalPrompt = obj1.name + '在' + obj2.name + '的' + shownDir + '—— 对还是错？';
   
+  var dirExplanation = isTrue
+    ? obj1.name + '确实在' + obj2.name + '的' + shownDir + '，说法正确。'
+    : obj1.name + '实际在' + obj2.name + '的' + correctDir + '，不是' + shownDir + '，说法错误。';
+  var dirData = {
+    mode: 'judge',
+    steps: 1,
+    scene: scene,
+    targetObj: obj1.name,
+    refObj: obj2.name,
+    direction: shownDir,
+    isTrue: isTrue
+  };
+  if (!isTrue) dirData.misconception = '相对方向辨认错误：以' + obj2.name + '为参照物时，' + obj1.name + '应在' + correctDir + '。';
+
   return {
     knowledgePointId: pkp(plan),
     questionType: 'judge',
@@ -112,17 +126,9 @@ function makeDirectionQuestion(plan, context, i, scene, meta) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: finalPrompt,
-    answer: { value: isTrue, acceptable: [] },
+    answer: { value: isTrue, acceptable: [], explanation: dirExplanation },
     answerMode: 'judge',
-    data: {
-      mode: 'judge',
-      steps: 1,
-      scene: scene,
-      targetObj: obj1.name,
-      refObj: obj2.name,
-      direction: shownDir,
-      isTrue: isTrue
-    }
+    data: dirData
   };
 }
 
@@ -280,12 +286,21 @@ function makeTranslationQuestion(plan, context, i) {
   }
   // judge
   var shown = rng() < 0.5 ? answer : answer + (rng() < 0.5 ? 1 : -1);
+  var transIsTrue = shown === answer;
+  var transData = { mode: 'judge', steps: 1, shapeName: '平移', shownResult: String(shown) };
+  var transExplanation = transIsTrue
+    ? '图形平移了 ' + answer + ' 格，题中答案正确。'
+    : '图形平移的格数应是 ' + answer + ' 格，不是 ' + shown + ' 格。';
+  if (!transIsTrue) {
+    transData.misconception = '平移格数数错：' + (shown > answer ? '多数' : '少数') +
+      '了 1 格，正确应为 ' + answer + ' 格。';
+  }
   return {
     knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
     spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i), prompt: prompt + ' 答案是 ' + shown + ' 格——对还是错？',
-    answer: { value: shown === answer, acceptable: [] }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '平移' }
+    answer: { value: transIsTrue, acceptable: [], explanation: transExplanation }, answerMode: 'judge',
+    data: transData
   };
 }
 
@@ -302,7 +317,7 @@ function makeRotationQuestion(plan, context, i) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '一个图形' + dir + '旋转 ' + angle + ' 度后，形状和大小不变——对还是错？',
-      answer: { value: true, acceptable: [] }, answerMode: 'judge',
+      answer: { value: true, acceptable: [], explanation: '旋转只改变图形的位置和方向，不改变图形的形状和大小，说法正确。' }, answerMode: 'judge',
       data: { mode: 'judge', steps: 1, shapeName: '旋转' }
     };
   }
@@ -361,8 +376,8 @@ function makeObserveQuestion(plan, context, i) {
     spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: '从不同方向观察同一个物体，看到的形状一定相同——对还是错？',
-    answer: { value: false, acceptable: [] }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '观察' }
+    answer: { value: false, acceptable: [], explanation: '从正面、上面、侧面等不同方向观察同一物体，看到的形状可能不同，说法错误。' }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '观察', misconception: '误认为从不同方向观察同一物体，看到的形状一定相同。' }
   };
 }
 
@@ -406,8 +421,8 @@ function makeCoordinateQuestion(plan, context, i) {
     spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: '数对（3，5）表示第 3 行第 5 列——对还是错？',
-    answer: { value: false, acceptable: [] }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '数对' }
+    answer: { value: false, acceptable: [], explanation: '数对中第一个数表示列、第二个数表示行，（3，5）表示第 3 列第 5 行，说法错误。' }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '数对', misconception: '数对的列、行顺序混淆：数对（3，5）表示第 3 列第 5 行，不是第 3 行第 5 列。' }
   };
 }
 

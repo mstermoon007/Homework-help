@@ -105,7 +105,17 @@ function createSelectionGenerator(spec) {
       : base.answer + Rng.pick(base.rng, [-1, 1]) * Rng.randInt(base.rng, 1, 2);
     var qJudge = buildBase(plan, context, i, { mode: 'judge', steps: base.structure.steps, shownResult: String(shown) });
     qJudge.prompt = expr + ' = ' + shown + '（对还是错？）';
-    qJudge.answer = { value: isTrue, acceptable: [] };
+    qJudge.answer = {
+      value: isTrue,
+      acceptable: [],
+      explanation: isTrue
+        ? expr + ' = ' + base.answer + '，计算正确，说法成立。'
+        : expr + ' 的正确结果是 ' + base.answer + '，不是 ' + shown + '，说法错误。'
+    };
+    if (!isTrue) {
+      qJudge.data.misconception = '计算结果错误：' + expr.replace(/\s*=\s*$/, '') + ' 的正确结果是 ' +
+        base.answer + '，题中写成了 ' + shown + '。';
+    }
     return qJudge;
   }
 

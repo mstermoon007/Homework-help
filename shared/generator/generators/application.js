@@ -296,7 +296,24 @@ function makeApplicationQuestion(plan, context, i, meta) {
   
   if (qt === 'judge') {
     var isTrue = rng() < 0.5;
-    var shown = isTrue ? ans : ans + randInt(rng, -5, 5) || 1;
+    // V5.1.0：假命题扰动必须非 0，保证命题真值唯一（delta=0 会把假命题说成正确结果）
+    var judgeDelta = randInt(rng, -5, 5);
+    if (judgeDelta === 0) judgeDelta = 1;
+    var shown = isTrue ? ans : ans + judgeDelta;
+    var judgeExplanation = isTrue
+      ? '题中数量关系正确，答案就是 ' + ans + '，说法正确。'
+      : '根据题中数量关系，正确答案是 ' + ans + '，不是 ' + shown + '，说法错误。';
+    var judgeData = {
+      mode: 'judge',
+      steps: Object.keys(nums).length > 2 ? 2 : 1,
+      template: template,
+      numbers: nums,
+      shownAnswer: shown,
+      relation: PROBLEM_TEMPLATES[template].relation
+    };
+    if (!isTrue) {
+      judgeData.misconception = '数量关系理解错误：按题意正确答案应为 ' + ans + '，题中给成了 ' + shown + '。';
+    }
     return {
       knowledgePointId: pkp(plan),
       questionType: 'judge',
@@ -305,16 +322,9 @@ function makeApplicationQuestion(plan, context, i, meta) {
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: prompt + ' 答案是 ' + shown + ' —— 对还是错？',
-      answer: isTrue,
+      answer: { value: isTrue, acceptable: [], explanation: judgeExplanation },
       answerMode: 'judge',
-      data: {
-        mode: 'judge',
-        steps: Object.keys(nums).length > 2 ? 2 : 1,
-        template: template,
-        numbers: nums,
-        shownAnswer: shown,
-        relation: PROBLEM_TEMPLATES[template].relation
-      }
+      data: judgeData
     };
   }
   

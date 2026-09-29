@@ -339,6 +339,13 @@
       sq.answer.value = (shown === an.num);
       d.shownResult = shownStr;
       d.expectedResult = numStr(an.num) + an.suffix;
+      // V5.1.0：机械转换同步产出解析；假命题附自由文本错因（data 包承载，供反馈与错题诊断）
+      if (shown === an.num) {
+        sq.answer.explanation = '这道题的正确结果就是 ' + shownStr + '，题中说法正确。';
+      } else {
+        sq.answer.explanation = '正确结果是 ' + d.expectedResult + '，不是 ' + shownStr + '，题中说法错误。';
+        d.misconception = '计算结果错误：把答案算成了 ' + shownStr + '，正确结果应为 ' + d.expectedResult + '。';
+      }
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -353,6 +360,14 @@
       sq.prompt = p2;
       sq.answer.value = isTrue2;
       d.shownResult = shownStr2;
+      d.expectedResult = rem.q + '……' + rem.r;
+      // V5.1.0：带余除法判断解析；假命题商出错因
+      if (isTrue2) {
+        sq.answer.explanation = '带余除法的商 ' + rem.q + ' 和余数 ' + rem.r + ' 都正确，题中说法正确。';
+      } else {
+        sq.answer.explanation = '正确结果是 ' + d.expectedResult + '（商应为 ' + rem.q + '，余数仍是 ' + rem.r + '），不是 ' + shownStr2 + '。';
+        d.misconception = '带余除法的商算错了：余数 ' + rem.r + ' 不够再分，商应为 ' + rem.q + '。';
+      }
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -368,6 +383,13 @@
       sq.answer.value = isTrue3;
       d.shownResult = shownSeq.join('，');
       d.expectedResult = correct.join('，');
+      // V5.1.0：排序判断解析；假命题相邻颠倒错因
+      if (isTrue3) {
+        sq.answer.explanation = '这些数按' + (desc ? '从大到小' : '从小到大') + '排列，顺序完全正确。';
+      } else {
+        sq.answer.explanation = '正确的顺序应为 ' + d.expectedResult + '，题中有相邻两个数的位置排反了。';
+        d.misconception = '排序时相邻两个数的大小关系判断错误，正确顺序应为 ' + d.expectedResult + '。';
+      }
       return { fixed: ['booleanAnswer'] };
     }
 

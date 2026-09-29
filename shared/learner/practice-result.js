@@ -14,6 +14,7 @@
  *     spiralLevel,
  *     semanticTarget,   // P27-12：语义目标维度（P25 新增，可回溯用）；无则 null
  *     errorType,         // 只允许来自可靠来源（R10）；否则 null
+ *     misconception,     // V5.1.0：判断题自由文本错因（sq.data.misconception）；不入 errorType 聚类，无则 null
  *     status,            // 'correct' | 'wrong' | 'unanswered' | 'skipped' | 'redo'
  *     timestamp
  *   }
@@ -73,6 +74,9 @@
       semanticTarget: strOrNull(sq.semanticTarget)
         || (Array.isArray(sq.semanticTargets) && sq.semanticTargets.length ? strOrNull(sq.semanticTargets[0]) : null),
       errorType: opts.errorType != null ? opts.errorType : sq.errorType,
+      // V5.1.0：判断题自由文本错因，源自 sq.data.misconception；opts 可显式覆盖
+      misconception: opts.misconception != null ? opts.misconception
+        : (sq.data && sq.data.misconception != null ? sq.data.misconception : null),
       status: opts.status || (opts.correct === true ? STATUS.CORRECT : STATUS.WRONG),
       timestamp: numOrNull(opts.timestamp) || now()
     });
@@ -101,6 +105,9 @@
       spiralLevel: numOrNull(opts.spiralLevel),
       semanticTarget: strOrNull(opts.semanticTarget) || strOrNull(question && question.semanticTarget),
       errorType: opts.errorType != null ? opts.errorType : (question && question.errorType),
+      // V5.1.0：legacy 题对象上的自由文本错因（RenderFormat 自 sq.data.misconception 透传）
+      misconception: opts.misconception != null ? opts.misconception
+        : (question && question.misconception != null ? question.misconception : null),
       status: opts.status || (opts.correct === true ? STATUS.CORRECT : STATUS.WRONG),
       timestamp: numOrNull(opts.timestamp) || now()
     });
@@ -127,6 +134,8 @@
       spiralLevel: numOrNull(partial.spiralLevel),
       semanticTarget: strOrNull(partial.semanticTarget),
       errorType: normalizeErrorTypeField(partial.errorType),
+      // V5.1.0：自由文本错因只做字符串归一，不经 ErrorModel 8 类聚类（用户锁定口径）
+      misconception: strOrNull(partial.misconception),
       status: status,
       timestamp: numOrNull(partial.timestamp) || now()
     };

@@ -1414,14 +1414,19 @@ function toRenderableQuestion(sq) {
   if (!sq) return null;
 
   var answerMode = sq.answerMode || (sq.question && sq.question.answerMode) || 'input';
+  
+  var questionType = sq.questionType || sq.type;
   var inputTypeMap = {
     'input': 'text',
     'choice': 'choice',
+    'judge': 'judge',
     'multi': 'multi',
     'none': 'none',
     'read-aloud': 'read-aloud'
   };
-  var inputType = inputTypeMap[answerMode] || 'text';
+  var inputType = (questionType === 'judge' || answerMode === 'judge')
+    ? 'judge'
+    : (inputTypeMap[answerMode] || 'text');
 
   var options = null;
   
@@ -1475,6 +1480,10 @@ function toRenderableQuestion(sq) {
     semanticTarget: sq.semanticTarget != null ? sq.semanticTarget : null,
     spiralLevel: sq.spiralLevel != null ? sq.spiralLevel : (sq.constraints && sq.constraints.spiralLevel != null ? sq.constraints.spiralLevel : null),
     errorType: sq.errorType != null ? sq.errorType : null,
+    
+    
+    explanation: (sq.answer && sq.answer.explanation != null) ? sq.answer.explanation : null,
+    misconception: (sq.data && sq.data.misconception != null) ? sq.data.misconception : null,
     
     __semantic: sq
   };

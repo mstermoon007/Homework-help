@@ -48,6 +48,22 @@ function makeCalcToJudge(plan, context, i, kpIds) {
   var isTrue = Rng.randInt(rng, 0, 1) === 1;
   var shown = isTrue ? correct : correct + (Rng.randInt(rng, 0, 1) ? 1 : -1);
   var prompt = a + ' ' + op + ' ' + b + ' = ' + shown + ' （对还是错？）';
+  var calcJudgeExplanation = isTrue
+    ? a + ' ' + op + ' ' + b + ' = ' + correct + '，计算正确，说法成立。'
+    : a + ' ' + op + ' ' + b + ' 的正确结果是 ' + correct + '，不是 ' + shown + '，说法错误。';
+  var calcJudgeData = {
+    mode: 'calc-to-judge',
+    steps: 1,
+    primaryKp: pkp(plan),
+    operation: op,
+    operands: [a, b],
+    correct: correct,
+    shown: shown,
+    composite: true
+  };
+  if (!isTrue) {
+    calcJudgeData.misconception = '计算结果错误：' + a + ' ' + op + ' ' + b + ' 的正确结果是 ' + correct + '，题中写成了 ' + shown + '。';
+  }
 
   return {
     knowledgePointId: pkp(plan),
@@ -58,17 +74,9 @@ function makeCalcToJudge(plan, context, i, kpIds) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: isTrue,
-    answerMode: 'judge',    data: {
-      mode: 'calc-to-judge',
-      steps: 1,
-      primaryKp: pkp(plan),
-      operation: op,
-      operands: [a, b],
-      correct: correct,
-      shown: shown,
-      composite: true
-    }
+    answer: { value: isTrue, acceptable: [], explanation: calcJudgeExplanation },
+    answerMode: 'judge',
+    data: calcJudgeData
   };
 }
 

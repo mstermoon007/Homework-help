@@ -39,6 +39,14 @@
     return 'input';
   }
 
+  // V5.1.0：createSemanticQuestion 会把顶层 answerMode 归一为 'input'，
+  // 判断题在渲染层只能以 questionType='judge' + booleanAnswer 为可靠判据（契约 SSOT）。
+  function isJudge(sq) {
+    var qt = sq && (sq.questionType || sq.type);
+    if (qt === 'judge') return true;
+    return answerModeOf(sq) === 'judge';
+  }
+
   function optionsOf(sq) {
     // P28-48：候选必须逐个做「非空数组」判定。归一化工厂会给每题注入 distractors:[]，
     // 旧写法 sq.options || sq.distractors || sq.data.options 会被空数组（truthy）短路，
@@ -86,10 +94,30 @@
     return html;
   }
 
+  // V5.1.0 判断题控件：屏幕端两个大按钮（radio 语义，value=true/false，
+  // 与 normalizeAns(boolean) 的 'true'/'false' 天然对齐）；打印端「正确（　）错误（　）」。
+  function renderJudgeAnswer(index, mode) {
+    if (mode === 'print') {
+      return '<div class="question-answer question-answer-judge judge-print" aria-label="判断区">' +
+        '<span class="judge-choose">正确（　）</span><span class="judge-choose">错误（　）</span></div>';
+    }
+    return '<div class="question-answer question-answer-judge" role="radiogroup" aria-label="判断对错">' +
+      '<label class="judge-btn judge-btn-true"><input type="radio" class="judge-input" name="q' + index +
+        '" value="true" data-index="' + index + '" autocomplete="off" aria-label="判断为正确">' +
+        '<span class="judge-mark">✓</span><span class="judge-text">正确</span></label>' +
+      '<label class="judge-btn judge-btn-false"><input type="radio" class="judge-input" name="q' + index +
+        '" value="false" data-index="' + index + '" autocomplete="off" aria-label="判断为错误">' +
+        '<span class="judge-mark">✗</span><span class="judge-text">错误</span></label>' +
+      '</div>';
+  }
+
   function renderAnswer(sq, index, options, mode, answerText) {
     var modePrint = mode === 'print';
     var modeVal = answerModeOf(sq);
     var html = '';
+    if (isJudge(sq)) {
+      return renderJudgeAnswer(index, mode);
+    }
     if (modePrint) {
       // 打印留空作答，不输出可输入框（交互交给屏幕模式）
       html += '<div class="question-answer question-answer-' + mode + '" aria-label="作答区"></div>';

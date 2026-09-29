@@ -25,22 +25,29 @@
     return normalizeAns(ua) === normalizeAns(ans);
   }
 
-  /** 通用批改：返回 { score,total,correct,message,results,correctAnswers } */
+  /** 通用批改：返回 { score,total,correct,message,results,correctAnswers,
+   *  explanations,misconceptions }（V5.1.0：逐题解析/自由文本错因，供反馈与学情诊断） */
   function computeResult(questions, userAnswers, opts) {
     opts = opts || {};
     var checkFn = opts.checkFn || defaultQCheck;
-    var correct = 0, results = [], correctAnswers = [];
+    var correct = 0, results = [], correctAnswers = [], explanations = [], misconceptions = [];
     questions.forEach(function (q, i) {
       var ok = checkFn(q, userAnswers, i);
       if (ok) correct++;
       results.push(ok);
       var disp = Array.isArray(q.answer) ? q.answer.join('、') : q.answer;
       correctAnswers.push(q.answerParts ? q.answerParts.join('、') : disp);
+      explanations.push(q.explanation != null ? q.explanation : null);
+      misconceptions.push(q.misconception != null ? q.misconception : null);
     });
     var total = questions.length;
     var score = total ? Math.round(correct / total * 100) : 0;
     var message = score === 100 ? '太棒了！全对！' : score >= 80 ? '很不错！' : '继续加油！';
-    return { score: score, total: total, correct: correct, message: message, results: results, correctAnswers: correctAnswers };
+    return {
+      score: score, total: total, correct: correct, message: message,
+      results: results, correctAnswers: correctAnswers,
+      explanations: explanations, misconceptions: misconceptions
+    };
   }
 
   /** 选项点击处理（choice 题型，写入隐藏 input）。选中态由 components.css 的 .opt.chosen 呈现 */

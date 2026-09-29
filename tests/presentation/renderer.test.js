@@ -342,3 +342,45 @@ test('FINAL-71 端到端：Renderer 渲染敌意 custom graphic 的题目，成�
   assert.ok(!/<script|on[a-z]+\s*=|javascript:/i.test(r.html), '成品 HTML 必须干净: ' + r.html);
   assert.ok(!/<script/i.test(r.graphic), 'graphic 字段必须干净: ' + r.graphic);
 });
+
+// ============ V5.1.0 judge 教学闭环：二值按钮 + 打印留空 + legacy 适配 ============
+test('V5.1.0 judge：归一化后 answerMode=input 仍以 questionType 判为大按钮（屏/打）', () => {
+  // 复现浏览器实测根因：createSemanticQuestion 把顶层 answerMode 归一为 'input'，
+  // 判断题只能靠 questionType=judge + booleanAnswer 识别，不得回落文本框。
+  const sq = {
+    questionType: 'judge', answerMode: 'input',
+    prompt: '角的两条边越长，角就越大。',
+    answer: { value: false, explanation: '角的大小与边的长短无关。' },
+    data: { misconception: '误认为角的大小由边的长短决定' }
+  };
+  const scr = HTMLRenderer.render(sq, 0, { mode: 'screen' });
+  assert.ok(scr.indexOf('judge-btn') !== -1, '屏幕态应渲染大按钮');
+  assert.strictEqual((scr.match(/judge-btn-true|judge-btn-false/g) || []).length, 2, '正确/错误各一个按钮');
+  assert.ok(scr.indexOf('name="q0"') !== -1 && scr.indexOf('value="true"') !== -1, 'true 单选');
+  assert.ok(scr.indexOf('value="false"') !== -1, 'false 单选');
+  assert.ok(scr.indexOf('answer-inp') === -1, 'judge 不得渲染文本框');
+  const prn = HTMLRenderer.render(sq, 0, { mode: 'print' });
+  assert.ok(prn.indexOf('正确（　）') !== -1 && prn.indexOf('错误（　）') !== -1, '打印态为括号留空');
+});
+
+test('V5.1.0 judge：显式 answerMode=judge 同样走按钮（兼容直造 SQ）', () => {
+  const sq = { questionType: 'judge', answerMode: 'judge', prompt: '1 米 = 100 厘米。', answer: { value: true } };
+  const html = HTMLRenderer.render(sq, 2, { mode: 'screen' });
+  assert.ok(html.indexOf('name="q2"') !== -1);
+  assert.ok(html.indexOf('judge-btn') !== -1);
+});
+
+test('V5.1.0 judge：render-format 以 questionType 收敛 inputType 并透传解析/错因', () => {
+  const RF = require(path.join(ROOT, 'shared', 'presentation', 'render-format.js'));
+  const sq = {
+    questionType: 'judge', answerMode: 'input',
+    prompt: 'p',
+    answer: { value: true, explanation: '说法正确。' },
+    data: { misconception: null }
+  };
+  const q = RF.toRenderableQuestion(sq);
+  assert.strictEqual(q.inputType, 'judge');
+  assert.strictEqual(q.answer, true);
+  assert.strictEqual(q.explanation, '说法正确。');
+  assert.strictEqual(q.misconception, null);
+});

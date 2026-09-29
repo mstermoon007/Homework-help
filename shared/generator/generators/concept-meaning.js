@@ -257,13 +257,24 @@ function makeAngleGeometry(plan, context, i) {
 function makeAngleJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var items = [
-    { text: '角的两条边越长，这个角就越大。', value: false },
-    { text: '一个角有一个顶点和两条边。', value: true },
-    { text: '从一点引出两条射线所组成的图形叫做角。', value: true }
+    {
+      text: '角的两条边越长，这个角就越大。', value: false,
+      explanation: '角的大小只与两边张开的程度有关，与边的长短无关，边画得再长角也不会变大，说法错误。',
+      misconception: '误认为角的大小由边的长短决定：角的大小只取决于两边张开的程度。'
+    },
+    {
+      text: '一个角有一个顶点和两条边。', value: true,
+      explanation: '角由一个顶点和从这个顶点引出的两条边组成，说法正确。'
+    },
+    {
+      text: '从一点引出两条射线所组成的图形叫做角。', value: true,
+      explanation: '这是角的定义：从一点引出两条射线所组成的图形就是角，说法正确。'
+    }
   ];
   var s = Rng.pick(rng, items);
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-concept', statement: s.text, shownResult: s.value ? '对' : '错' });
-  return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], null);
+  if (s.misconception) q.data.misconception = s.misconception;
+  return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
 
 /* ================================================================
@@ -310,13 +321,24 @@ function makeAreaGeometry(plan, context, i) {
 function makeAreaJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var items = [
-    { text: '黑板面的大小就是黑板面的面积。', value: true },
-    { text: '1 平方米比 1 米大。', value: false },
-    { text: '物体表面或封闭图形的大小叫做它们的面积。', value: true }
+    {
+      text: '黑板面的大小就是黑板面的面积。', value: true,
+      explanation: '物体表面的大小就是这个面的面积，黑板面的大小就是黑板面的面积，说法正确。'
+    },
+    {
+      text: '1 平方米比 1 米大。', value: false,
+      explanation: '平方米是面积单位，米是长度单位，两者计量的量不同，不能比较大小，说法错误。',
+      misconception: '面积单位与长度单位混淆：不同类的计量单位之间不能比较大小。'
+    },
+    {
+      text: '物体表面或封闭图形的大小叫做它们的面积。', value: true,
+      explanation: '这是面积的定义：物体表面或封闭图形的大小叫做它们的面积，说法正确。'
+    }
   ];
   var s = Rng.pick(rng, items);
   var q = buildBase(plan, context, i, { subType: 'area-concept', quantityKind: 'area', statement: s.text, shownResult: s.value ? '对' : '错' });
-  return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], null);
+  if (s.misconception) q.data.misconception = s.misconception;
+  return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
 
 /* ================================================================

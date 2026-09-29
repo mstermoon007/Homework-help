@@ -578,3 +578,39 @@
 .question-answer { margin-top: 6px; min-height: 20px; border-bottom: 1px dashed #b9c6de; }
 .feedback { display: none; }
 .feedback:not(:empty) { display: block; }
+
+/* V5.1.0 判断题：两个大按钮（正确/错误），radio 语义由 html-renderer 输出 */
+.question-answer-judge {
+    display: flex; gap: 12px; margin-top: 10px;
+    border-bottom: none; min-height: 0;
+}
+.judge-btn {
+    flex: 1 1 0; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 0; border: 2px solid var(--line-strong); border-radius: 12px;
+    background: var(--card); color: var(--ink);
+    font-size: 17px; font-weight: 800; line-height: 1;
+    cursor: pointer; user-select: none;
+    transition: border-color .12s ease, background .12s ease, color .12s ease;
+}
+.judge-btn .judge-mark { font-size: 16px; font-weight: 900; color: var(--muted); }
+.judge-btn:hover { border-color: var(--brand-d); }
+.judge-btn .judge-input {
+    position: absolute; width: 1px; height: 1px; opacity: 0;
+    margin: -1px; padding: 0; border: 0; clip: rect(0 0 0 0); overflow: hidden;
+}
+.judge-btn:has(.judge-input:checked) {
+    border-color: var(--brand-d); background: var(--brand-bg); color: var(--brand);
+}
+.judge-btn:has(.judge-input:checked) .judge-mark { color: var(--brand-d); }
+/* 批改后：答对标绿、答错标红 */
+.question-card.correct .judge-btn:has(.judge-input:checked) {
+    border-color: var(--ok); background: var(--ok-bg); color: var(--ok);
+}
+.question-card.correct .judge-btn:has(.judge-input:checked) .judge-mark { color: var(--ok); }
+.question-card.wrong .judge-btn:has(.judge-input:checked) {
+    border-color: var(--bad); background: var(--bad-bg); color: var(--bad);
+}
+.question-card.wrong .judge-btn:has(.judge-input:checked) .judge-mark { color: var(--bad); }
+/* 打印直渲：正确（　）错误（　） */
+.judge-print { gap: 24px; font-size: 15px; font-weight: 700; }
+.judge-print .judge-choose { white-space: nowrap; letter-spacing: 1px; }

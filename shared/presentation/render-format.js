@@ -36,14 +36,19 @@ function toRenderableQuestion(sq) {
   if (!sq) return null;
 
   var answerMode = sq.answerMode || (sq.question && sq.question.answerMode) || 'input';
+  // V5.1.0：归一化后 answerMode 可能为 'input'，判断题以 questionType='judge' 为可靠判据。
+  var questionType = sq.questionType || sq.type;
   var inputTypeMap = {
     'input': 'text',
     'choice': 'choice',
+    'judge': 'judge',
     'multi': 'multi',
     'none': 'none',
     'read-aloud': 'read-aloud'
   };
-  var inputType = inputTypeMap[answerMode] || 'text';
+  var inputType = (questionType === 'judge' || answerMode === 'judge')
+    ? 'judge'
+    : (inputTypeMap[answerMode] || 'text');
 
   var options = null;
   // 统一选项源：sq.options / sq.distractors / sq.data.options（生成器三种写法一致收敛）
@@ -97,6 +102,10 @@ function toRenderableQuestion(sq) {
     semanticTarget: sq.semanticTarget != null ? sq.semanticTarget : null,
     spiralLevel: sq.spiralLevel != null ? sq.spiralLevel : (sq.constraints && sq.constraints.spiralLevel != null ? sq.constraints.spiralLevel : null),
     errorType: sq.errorType != null ? sq.errorType : null,
+    // V5.1.0 判断题教学闭环：解析随 answer.explanation 承载；错因为生成器写入的自由文本
+    // （data.misconception 透传，与 error-model 固定 8 类 SSOT 无关）。缺失即 null。
+    explanation: (sq.answer && sq.answer.explanation != null) ? sq.answer.explanation : null,
+    misconception: (sq.data && sq.data.misconception != null) ? sq.data.misconception : null,
     // 保留语义引用（页面 read-aloud 判定 / 溯源复用）；实践会话 exerciseSet 依赖此字段。
     __semantic: sq
   };

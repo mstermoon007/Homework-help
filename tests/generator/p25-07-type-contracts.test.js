@@ -219,3 +219,89 @@ test('端到端：无 kp 绑定 calc 行由声明 calc 的生成器承载且产�
   const c = TC.check('calc', qs[0]);
   assert.equal(c.ok, true, '契约违例：' + (c.violations || []).join(','));
 });
+
+/* ---------------- 9. V5.1.0 judge 教学闭环：解析 + 假命题错因 ----------------
+ * 不变式 booleanAnswer 保持冻结（见第 2 节）；下列为产出层附加要求：
+ *   - 每道 judge 题必须带非空 answer.explanation（讲清命题为何真/假）；
+ *   - 假命题（answer.value===false）必须带非空 data.misconception（自由文本错因）；
+ *   - 三模式（finishJudge 机械转换 / 原生 judge 分支 / 手写命题）同口径。 */
+
+test('judge finisher：数值题机械转换后必带解析；假命题必带错因，且真假两种都能产出', () => {
+  let sawTrue = false, sawFalse = false;
+  for (let s = 0; s < 16; s++) {
+    const q = sq('judge', {
+      prompt: '列式计算：13 + 8 = ?',
+      answer: { value: '21', acceptable: [] },
+      seed: 'judge-finisher-expl-' + s,
+      data: {}
+    });
+    const out = TC.enforce([q], { questionTypeId: 'judge' });
+    assert.equal(out.length, 1, '可机械转换的数值判断题不应 drop');
+    const t = out[0];
+    assert.equal(typeof t.answer.value, 'boolean');
+    assert.ok(t.answer.explanation && t.answer.explanation.length >= 5, '判断题必须带解析');
+    if (t.answer.value === false) {
+      sawFalse = true;
+      assert.ok(t.data.misconception && t.data.misconception.length >= 5, '假命题必须带错因');
+      assert.ok(t.data.expectedResult && t.data.shownResult, '假命题保留对照数据');
+      assert.notEqual(t.data.shownResult, t.data.expectedResult, '假命题展示值必须不同于正确结果');
+    } else {
+      sawTrue = true;
+      assert.equal(t.data.misconception, undefined, '真命题不写错因');
+    }
+  }
+  assert.ok(sawTrue && sawFalse, '16 个 seed 内应同时覆盖真/假命题');
+});
+
+test('judge finisher：余数题与排序题同样带解析/错因', () => {
+  const rem = sq('judge', {
+    prompt: '23 ÷ 4 = ?', answer: { value: '5……3', acceptable: [] }, seed: 'judge-rem-1', data: {}
+  });
+  const remOut = TC.enforce([rem], { questionTypeId: 'judge' });
+  assert.equal(remOut.length, 1);
+  assert.ok(remOut[0].answer.explanation.length >= 5);
+  if (remOut[0].answer.value === false) assert.ok(remOut[0].data.misconception.length >= 5);
+
+  const seq = sq('judge', {
+    prompt: '把 3、1、2 从小到大排列：3，1，2。',
+    answer: { value: '1，2，3', acceptable: [] }, seed: 'judge-seq-1', data: {}
+  });
+  const seqOut = TC.enforce([seq], { questionTypeId: 'judge' });
+  assert.equal(seqOut.length, 1);
+  assert.ok(seqOut[0].answer.explanation.length >= 5);
+  if (seqOut[0].answer.value === false) assert.ok(seqOut[0].data.misconception.length >= 5);
+});
+
+// 代表 KP 覆盖三模式：算术族=模式A finishJudge；shape/position/application/stats=模式B；
+// angle/area/code=模式C 手写命题。
+const JUDGE_REPRESENTATIVE_KPS = [
+  { kp: 'math-g5-down-u07-k001', grade: 5 }, // 排序（模式A finishJudge 序列分支）
+  { kp: 'math-g2-up-u01-k001', grade: 2 },   // 图形特征（模式B shape）
+  { kp: 'math-g2-up-u04-k003', grade: 2 },   // 平移方向（模式B position）
+  { kp: 'math-g4-up-u06-k002', grade: 4 },   // 应用题判断（模式B application）
+  { kp: 'math-g3-up-u07-k002', grade: 3 },   // 角的认识（模式C）
+  { kp: 'math-g3-down-u04-k001', grade: 3 }  // 面积的认识（模式C）
+];
+
+for (const rep of JUDGE_REPRESENTATIVE_KPS) {
+  const kpId = rep.kp;
+  test('端到端 judge 教学闭环：' + kpId + ' 每题带解析、假命题带错因', async () => {
+    const session = new PracticeSession({
+      subject: 'math', grade: rep.grade, count: 8,
+      knowledgePointId: kpId, questionType: 'judge'
+    });
+    await session.start();
+    const qs = session.semanticQuestions || [];
+    assert.ok(qs.length >= 1, '该 KP 应能产出判断题');
+    qs.forEach(q => {
+      assert.equal(q.questionType, 'judge');
+      assert.equal(typeof q.answer.value, 'boolean', 'booleanAnswer 不变式');
+      assert.ok(q.answer.explanation && String(q.answer.explanation).length >= 5,
+        '判断题必须带解析：' + (q.prompt || '').slice(0, 30));
+      if (q.answer.value === false) {
+        assert.ok(q.data && q.data.misconception && String(q.data.misconception).length >= 5,
+          '假命题必须带错因：' + (q.prompt || '').slice(0, 30));
+      }
+    });
+  });
+}

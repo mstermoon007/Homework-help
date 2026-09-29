@@ -257,6 +257,14 @@ var A4_PRINTABLE_PX = 718;
     '.question-options .option-letter { display:inline-block; min-width:20px; font-weight:700; color:#7c5cff; margin-right:4px; }' +
     '.question-answer { margin-top:6px; min-height:20px;' + (keepRule ? ' border-bottom:1px dashed #b9c6de;' : '') + ' }' +
     '.question-answer-print { min-height:20px; }' +
+    // V5.1.0 判断题打印：克隆链去按钮化，输出「正确（　）错误（　）」；直渲链 .judge-print 同形
+    '.question-answer-judge { display:flex; flex-wrap:wrap; gap:6px 24px; margin-top:6px; border:none; min-height:0; font-size:15px; font-weight:700; }' +
+    '.judge-input { display:none; }' +
+    '.judge-btn { display:inline-block; border:none !important; border-radius:0; padding:0 !important; background:transparent !important; color:#27324a !important; font-size:15px; font-weight:700; flex:none; }' +
+    '.judge-btn .judge-mark { display:none; }' +
+    '.judge-btn::after { content:"（　）"; }' +
+    '.judge-print { gap:6px 24px; }' +
+    '.judge-print .judge-choose { white-space:nowrap; letter-spacing:1px; }' +
     // P28-INLINE-ANSWER-01：横向算式等号后空白盒（直渲 print 模式，与屏幕输入框等宽等高，无问号）
     '.eq-answer { white-space:nowrap; }' +
     '.answer-inp-inline { display:inline-block; width:72px; height:30px; margin-left:2px; vertical-align:middle; box-sizing:border-box; }' +

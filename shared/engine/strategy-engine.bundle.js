@@ -4156,6 +4156,7 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
   var RECENT_WINDOW = 10;       
   var RECENT_RESULTS_CAP = 20;  
   var RECENT_ERRORS_CAP = 20;   
+  var MISCONCEPTION_MAX_LEN = 200; 
   var DIFF_MIN = 1, DIFF_MAX = 10;
 
   
@@ -4293,10 +4294,20 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
         questionType: (typeof e.questionType === 'string' && e.questionType) ? e.questionType : null,
         semanticTarget: (typeof e.semanticTarget === 'string' && e.semanticTarget) ? e.semanticTarget : null,
         errorType: ErrorModel.normalizeErrorType(e.errorType),
+        
+        misconception: normalizeMisconception(e.misconception),
         correct: false,           
         timestamp: isValidTs(e.timestamp) ? e.timestamp : null
       };
     }).filter(function (e) { return e && e.timestamp != null; }).slice(-RECENT_ERRORS_CAP);
+  }
+
+  
+  function normalizeMisconception(v) {
+    if (typeof v !== 'string') return null;
+    var s = v.trim();
+    if (!s) return null;
+    return s.length > MISCONCEPTION_MAX_LEN ? s.slice(0, MISCONCEPTION_MAX_LEN) : s;
   }
 
   function recomputeMasteryFallback(s) {
@@ -4509,6 +4520,8 @@ __defs["shared/learner/learner-model.js"] = function (module, exports, require) 
           questionType: qt,
           semanticTarget: st,
           errorType: etype,
+          
+          misconception: normalizeMisconception(result.misconception),
           correct: false,
           timestamp: ts
         });
@@ -5959,6 +5972,13 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
       sq.answer.value = (shown === an.num);
       d.shownResult = shownStr;
       d.expectedResult = numStr(an.num) + an.suffix;
+      
+      if (shown === an.num) {
+        sq.answer.explanation = '这道题的正确结果就是 ' + shownStr + '，题中说法正确。';
+      } else {
+        sq.answer.explanation = '正确结果是 ' + d.expectedResult + '，不是 ' + shownStr + '，题中说法错误。';
+        d.misconception = '计算结果错误：把答案算成了 ' + shownStr + '，正确结果应为 ' + d.expectedResult + '。';
+      }
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -5973,6 +5993,14 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
       sq.prompt = p2;
       sq.answer.value = isTrue2;
       d.shownResult = shownStr2;
+      d.expectedResult = rem.q + '……' + rem.r;
+      
+      if (isTrue2) {
+        sq.answer.explanation = '带余除法的商 ' + rem.q + ' 和余数 ' + rem.r + ' 都正确，题中说法正确。';
+      } else {
+        sq.answer.explanation = '正确结果是 ' + d.expectedResult + '（商应为 ' + rem.q + '，余数仍是 ' + rem.r + '），不是 ' + shownStr2 + '。';
+        d.misconception = '带余除法的商算错了：余数 ' + rem.r + ' 不够再分，商应为 ' + rem.q + '。';
+      }
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -5988,6 +6016,13 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
       sq.answer.value = isTrue3;
       d.shownResult = shownSeq.join('，');
       d.expectedResult = correct.join('，');
+      
+      if (isTrue3) {
+        sq.answer.explanation = '这些数按' + (desc ? '从大到小' : '从小到大') + '排列，顺序完全正确。';
+      } else {
+        sq.answer.explanation = '正确的顺序应为 ' + d.expectedResult + '，题中有相邻两个数的位置排反了。';
+        d.misconception = '排序时相邻两个数的大小关系判断错误，正确顺序应为 ' + d.expectedResult + '。';
+      }
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -6553,7 +6588,17 @@ function createSelectionGenerator(spec) {
       : base.answer + Rng.pick(base.rng, [-1, 1]) * Rng.randInt(base.rng, 1, 2);
     var qJudge = buildBase(plan, context, i, { mode: 'judge', steps: base.structure.steps, shownResult: String(shown) });
     qJudge.prompt = expr + ' = ' + shown + '（对还是错？）';
-    qJudge.answer = { value: isTrue, acceptable: [] };
+    qJudge.answer = {
+      value: isTrue,
+      acceptable: [],
+      explanation: isTrue
+        ? expr + ' = ' + base.answer + '，计算正确，说法成立。'
+        : expr + ' 的正确结果是 ' + base.answer + '，不是 ' + shown + '，说法错误。'
+    };
+    if (!isTrue) {
+      qJudge.data.misconception = '计算结果错误：' + expr.replace(/\s*=\s*$/, '') + ' 的正确结果是 ' +
+        base.answer + '，题中写成了 ' + shown + '。';
+    }
     return qJudge;
   }
 
@@ -6937,12 +6982,35 @@ function makeClassificationQuestion(plan, context, i, shapeMeta, graphic) {
   };
 }
 
+var FALSE_FEATURE_POOL = ['无棱无面', '只有长和宽', '不能滚动', '面是圆形', '有棱有角'];
+
 function makeFeatureQuestion(plan, context, i, shapeMeta, graphic) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var isTrue = rng() < 0.5;
   var feature = Rng.pick(rng, shapeMeta.meta.features);
-  var shown = isTrue ? feature : (Rng.pick(rng, ['无棱无面', '只有长和宽', '不能滚动', '面是圆形', '有棱有角']) || feature);
-  var prompt = shapeMeta.meta.name + '的特征是：「' + shown + '」—— 对还是错？';
+  var shown = feature;
+  if (!isTrue) {
+    
+    
+    var wrongs = FALSE_FEATURE_POOL.filter(function (f) {
+      return shapeMeta.meta.features.indexOf(f) === -1;
+    });
+    if (wrongs.length) shown = Rng.pick(rng, wrongs);
+    else isTrue = true;
+  }
+  var shapeName = shapeMeta.meta.name;
+  var prompt = shapeName + '的特征是：「' + shown + '」—— 对还是错？';
+  var explanation = isTrue
+    ? '「' + shown + '」是' + shapeName + '的特征，说法正确。'
+    : '「' + shown + '」不是' + shapeName + '的特征，说法错误。';
+  var data = {
+    mode: 'judge',
+    steps: 1,
+    graphic: graphic,
+    shownFeature: shown,
+    shapeName: shapeName
+  };
+  if (!isTrue) data.misconception = '图形特征混淆：把「' + shown + '」误当成了' + shapeName + '的特征。';
 
   return {
     knowledgePointId: pkp(plan),
@@ -6952,15 +7020,9 @@ function makeFeatureQuestion(plan, context, i, shapeMeta, graphic) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: { value: isTrue, acceptable: [] },
+    answer: { value: isTrue, acceptable: [], explanation: explanation },
     answerMode: 'judge',
-    data: {
-      mode: 'judge',
-      steps: 1,
-      graphic: graphic,
-      shownFeature: shown,
-      shapeName: shapeMeta.meta.name
-    }
+    data: data
   };
 }
 
@@ -7435,6 +7497,20 @@ function makeDirectionQuestion(plan, context, i, scene, meta) {
   var shownDir = isTrue ? correctDir : Rng.pick(rng, ['左边', '右边', '上面', '下面', '前面', '后面'].filter(function(d){ return d !== correctDir; }));
   var finalPrompt = obj1.name + '在' + obj2.name + '的' + shownDir + '—— 对还是错？';
   
+  var dirExplanation = isTrue
+    ? obj1.name + '确实在' + obj2.name + '的' + shownDir + '，说法正确。'
+    : obj1.name + '实际在' + obj2.name + '的' + correctDir + '，不是' + shownDir + '，说法错误。';
+  var dirData = {
+    mode: 'judge',
+    steps: 1,
+    scene: scene,
+    targetObj: obj1.name,
+    refObj: obj2.name,
+    direction: shownDir,
+    isTrue: isTrue
+  };
+  if (!isTrue) dirData.misconception = '相对方向辨认错误：以' + obj2.name + '为参照物时，' + obj1.name + '应在' + correctDir + '。';
+
   return {
     knowledgePointId: pkp(plan),
     questionType: 'judge',
@@ -7443,17 +7519,9 @@ function makeDirectionQuestion(plan, context, i, scene, meta) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: finalPrompt,
-    answer: { value: isTrue, acceptable: [] },
+    answer: { value: isTrue, acceptable: [], explanation: dirExplanation },
     answerMode: 'judge',
-    data: {
-      mode: 'judge',
-      steps: 1,
-      scene: scene,
-      targetObj: obj1.name,
-      refObj: obj2.name,
-      direction: shownDir,
-      isTrue: isTrue
-    }
+    data: dirData
   };
 }
 
@@ -7611,12 +7679,21 @@ function makeTranslationQuestion(plan, context, i) {
   }
   
   var shown = rng() < 0.5 ? answer : answer + (rng() < 0.5 ? 1 : -1);
+  var transIsTrue = shown === answer;
+  var transData = { mode: 'judge', steps: 1, shapeName: '平移', shownResult: String(shown) };
+  var transExplanation = transIsTrue
+    ? '图形平移了 ' + answer + ' 格，题中答案正确。'
+    : '图形平移的格数应是 ' + answer + ' 格，不是 ' + shown + ' 格。';
+  if (!transIsTrue) {
+    transData.misconception = '平移格数数错：' + (shown > answer ? '多数' : '少数') +
+      '了 1 格，正确应为 ' + answer + ' 格。';
+  }
   return {
     knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
     spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i), prompt: prompt + ' 答案是 ' + shown + ' 格——对还是错？',
-    answer: { value: shown === answer, acceptable: [] }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '平移' }
+    answer: { value: transIsTrue, acceptable: [], explanation: transExplanation }, answerMode: 'judge',
+    data: transData
   };
 }
 
@@ -7633,7 +7710,7 @@ function makeRotationQuestion(plan, context, i) {
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: '一个图形' + dir + '旋转 ' + angle + ' 度后，形状和大小不变——对还是错？',
-      answer: { value: true, acceptable: [] }, answerMode: 'judge',
+      answer: { value: true, acceptable: [], explanation: '旋转只改变图形的位置和方向，不改变图形的形状和大小，说法正确。' }, answerMode: 'judge',
       data: { mode: 'judge', steps: 1, shapeName: '旋转' }
     };
   }
@@ -7692,8 +7769,8 @@ function makeObserveQuestion(plan, context, i) {
     spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: '从不同方向观察同一个物体，看到的形状一定相同——对还是错？',
-    answer: { value: false, acceptable: [] }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '观察' }
+    answer: { value: false, acceptable: [], explanation: '从正面、上面、侧面等不同方向观察同一物体，看到的形状可能不同，说法错误。' }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '观察', misconception: '误认为从不同方向观察同一物体，看到的形状一定相同。' }
   };
 }
 
@@ -7737,8 +7814,8 @@ function makeCoordinateQuestion(plan, context, i) {
     spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: '数对（3，5）表示第 3 行第 5 列——对还是错？',
-    answer: { value: false, acceptable: [] }, answerMode: 'judge',
-    data: { mode: 'judge', steps: 1, shapeName: '数对' }
+    answer: { value: false, acceptable: [], explanation: '数对中第一个数表示列、第二个数表示行，（3，5）表示第 3 列第 5 行，说法错误。' }, answerMode: 'judge',
+    data: { mode: 'judge', steps: 1, shapeName: '数对', misconception: '数对的列、行顺序混淆：数对（3，5）表示第 3 列第 5 行，不是第 3 行第 5 列。' }
   };
 }
 
@@ -8691,7 +8768,24 @@ function makeApplicationQuestion(plan, context, i, meta) {
   
   if (qt === 'judge') {
     var isTrue = rng() < 0.5;
-    var shown = isTrue ? ans : ans + randInt(rng, -5, 5) || 1;
+    
+    var judgeDelta = randInt(rng, -5, 5);
+    if (judgeDelta === 0) judgeDelta = 1;
+    var shown = isTrue ? ans : ans + judgeDelta;
+    var judgeExplanation = isTrue
+      ? '题中数量关系正确，答案就是 ' + ans + '，说法正确。'
+      : '根据题中数量关系，正确答案是 ' + ans + '，不是 ' + shown + '，说法错误。';
+    var judgeData = {
+      mode: 'judge',
+      steps: Object.keys(nums).length > 2 ? 2 : 1,
+      template: template,
+      numbers: nums,
+      shownAnswer: shown,
+      relation: PROBLEM_TEMPLATES[template].relation
+    };
+    if (!isTrue) {
+      judgeData.misconception = '数量关系理解错误：按题意正确答案应为 ' + ans + '，题中给成了 ' + shown + '。';
+    }
     return {
       knowledgePointId: pkp(plan),
       questionType: 'judge',
@@ -8700,16 +8794,9 @@ function makeApplicationQuestion(plan, context, i, meta) {
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
       prompt: prompt + ' 答案是 ' + shown + ' —— 对还是错？',
-      answer: isTrue,
+      answer: { value: isTrue, acceptable: [], explanation: judgeExplanation },
       answerMode: 'judge',
-      data: {
-        mode: 'judge',
-        steps: Object.keys(nums).length > 2 ? 2 : 1,
-        template: template,
-        numbers: nums,
-        shownAnswer: shown,
-        relation: PROBLEM_TEMPLATES[template].relation
-      }
+      data: judgeData
     };
   }
   
@@ -8823,6 +8910,22 @@ function makeCalcToJudge(plan, context, i, kpIds) {
   var isTrue = Rng.randInt(rng, 0, 1) === 1;
   var shown = isTrue ? correct : correct + (Rng.randInt(rng, 0, 1) ? 1 : -1);
   var prompt = a + ' ' + op + ' ' + b + ' = ' + shown + ' （对还是错？）';
+  var calcJudgeExplanation = isTrue
+    ? a + ' ' + op + ' ' + b + ' = ' + correct + '，计算正确，说法成立。'
+    : a + ' ' + op + ' ' + b + ' 的正确结果是 ' + correct + '，不是 ' + shown + '，说法错误。';
+  var calcJudgeData = {
+    mode: 'calc-to-judge',
+    steps: 1,
+    primaryKp: pkp(plan),
+    operation: op,
+    operands: [a, b],
+    correct: correct,
+    shown: shown,
+    composite: true
+  };
+  if (!isTrue) {
+    calcJudgeData.misconception = '计算结果错误：' + a + ' ' + op + ' ' + b + ' 的正确结果是 ' + correct + '，题中写成了 ' + shown + '。';
+  }
 
   return {
     knowledgePointId: pkp(plan),
@@ -8833,17 +8936,9 @@ function makeCalcToJudge(plan, context, i, kpIds) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: isTrue,
-    answerMode: 'judge',    data: {
-      mode: 'calc-to-judge',
-      steps: 1,
-      primaryKp: pkp(plan),
-      operation: op,
-      operands: [a, b],
-      correct: correct,
-      shown: shown,
-      composite: true
-    }
+    answer: { value: isTrue, acceptable: [], explanation: calcJudgeExplanation },
+    answerMode: 'judge',
+    data: calcJudgeData
   };
 }
 
@@ -9648,6 +9743,7 @@ function makeStatsQuestion(plan, context, i, kp) {
   }
 
   var prompt, answer, steps, graphic;
+  var judgeExplanation = null;
   var chOpts = null;
   var data = { mode: 'apply', steps: steps, questionType: qt };
   if (type === 'average') {
@@ -9742,6 +9838,12 @@ function makeStatsQuestion(plan, context, i, kp) {
       var shownJ = isTrueJ ? targetJ.value : targetJ.value + deltaJ;
       prompt = name + '：根据条形图判断：「' + targetJ.label + '有 ' + shownJ + ' 人」——对还是错？';
       answer = isTrueJ;
+      judgeExplanation = isTrueJ
+        ? '条形图中' + targetJ.label + '对应的人数就是 ' + targetJ.value + ' 人，说法正确。'
+        : '条形图中' + targetJ.label + '对应的人数是 ' + targetJ.value + ' 人，不是 ' + shownJ + ' 人，说法错误。';
+      if (!isTrueJ) {
+        data.misconception = '条形图读数错误：' + targetJ.label + '的人数应为 ' + targetJ.value + ' 人，题中读成了 ' + shownJ + ' 人。';
+      }
       data.judgeForm = true;
     } else if (plan.questionTypeId === 'calc') {
       
@@ -10024,6 +10126,11 @@ function makeStatsQuestion(plan, context, i, kp) {
     data.options = chOpts;
     data.correctIndex = chOpts.indexOf(String(answer));
   }
+  
+  var answerObj = typeof answer === 'boolean'
+    ? { value: answer, acceptable: [] }
+    : { value: String(answer), acceptable: [] };
+  if (judgeExplanation) answerObj.explanation = judgeExplanation;
 
   return {
     knowledgePointId: pkp(plan),
@@ -10033,7 +10140,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
     prompt: prompt,
-    answer: typeof answer === 'boolean' ? { value: answer, acceptable: [] } : { value: String(answer), acceptable: [] },
+    answer: answerObj,
     answerMode: data.choiceForm ? 'choice' : (data.judgeForm ? 'judge' : 'input'),
     data: data
   };
@@ -10477,15 +10584,30 @@ function makeCodeApply(plan, context, i) {
 function makeCodeJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var statements = [
-    { text: '数字编码的每一位都有特定的含义，不能随意改变。', value: true },
-    { text: '数字编码可以用来表示学号、身份证号等信息。', value: true },
-    { text: '数字编码的位数越少，表示的信息就越准确。', value: false },
-    { text: '同一所学校里，两位同学的学号可以完全相同。', value: false }
+    {
+      text: '数字编码的每一位都有特定的含义，不能随意改变。', value: true,
+      explanation: '数字编码中每一位（或每几位）都承载特定信息（如地区、出生日期、顺序号），随意改变会变成另一个编码，说法正确。'
+    },
+    {
+      text: '数字编码可以用来表示学号、身份证号等信息。', value: true,
+      explanation: '学号、身份证号、邮政编码等都是用数字按一定规则编排来表示信息的，说法正确。'
+    },
+    {
+      text: '数字编码的位数越少，表示的信息就越准确。', value: false,
+      explanation: '编码位数多少与信息是否准确没有关系，位数由需要表示的信息量和编码规则决定，说法错误。',
+      misconception: '误认为编码位数越少信息越准确：位数多少取决于要表示的信息量和编码规则，与准确性无关。'
+    },
+    {
+      text: '同一所学校里，两位同学的学号可以完全相同。', value: false,
+      explanation: '学号是区分学生的编码，在同一所学校里必须唯一，两位同学的学号不能完全相同，说法错误。',
+      misconception: '忽视数字编码的唯一性：学号在同一范围内必须一一对应，不能重复。'
+    }
   ];
   var s = Rng.pick(rng, statements);
   var q = buildBase(plan, context, i, { mode: 'judge', codeType: 'concept' });
   q.prompt = '判断对错：' + s.text + '（  ）';
-  q.answer = { value: s.value, acceptable: [] };
+  q.answer = { value: s.value, acceptable: [], explanation: s.explanation };
+  if (s.misconception) q.data.misconception = s.misconception;
   return q;
 }
 
@@ -11254,13 +11376,24 @@ function makeAngleGeometry(plan, context, i) {
 function makeAngleJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var items = [
-    { text: '角的两条边越长，这个角就越大。', value: false },
-    { text: '一个角有一个顶点和两条边。', value: true },
-    { text: '从一点引出两条射线所组成的图形叫做角。', value: true }
+    {
+      text: '角的两条边越长，这个角就越大。', value: false,
+      explanation: '角的大小只与两边张开的程度有关，与边的长短无关，边画得再长角也不会变大，说法错误。',
+      misconception: '误认为角的大小由边的长短决定：角的大小只取决于两边张开的程度。'
+    },
+    {
+      text: '一个角有一个顶点和两条边。', value: true,
+      explanation: '角由一个顶点和从这个顶点引出的两条边组成，说法正确。'
+    },
+    {
+      text: '从一点引出两条射线所组成的图形叫做角。', value: true,
+      explanation: '这是角的定义：从一点引出两条射线所组成的图形就是角，说法正确。'
+    }
   ];
   var s = Rng.pick(rng, items);
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-concept', statement: s.text, shownResult: s.value ? '对' : '错' });
-  return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], null);
+  if (s.misconception) q.data.misconception = s.misconception;
+  return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
 
 
@@ -11305,13 +11438,24 @@ function makeAreaGeometry(plan, context, i) {
 function makeAreaJudge(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var items = [
-    { text: '黑板面的大小就是黑板面的面积。', value: true },
-    { text: '1 平方米比 1 米大。', value: false },
-    { text: '物体表面或封闭图形的大小叫做它们的面积。', value: true }
+    {
+      text: '黑板面的大小就是黑板面的面积。', value: true,
+      explanation: '物体表面的大小就是这个面的面积，黑板面的大小就是黑板面的面积，说法正确。'
+    },
+    {
+      text: '1 平方米比 1 米大。', value: false,
+      explanation: '平方米是面积单位，米是长度单位，两者计量的量不同，不能比较大小，说法错误。',
+      misconception: '面积单位与长度单位混淆：不同类的计量单位之间不能比较大小。'
+    },
+    {
+      text: '物体表面或封闭图形的大小叫做它们的面积。', value: true,
+      explanation: '这是面积的定义：物体表面或封闭图形的大小叫做它们的面积，说法正确。'
+    }
   ];
   var s = Rng.pick(rng, items);
   var q = buildBase(plan, context, i, { subType: 'area-concept', quantityKind: 'area', statement: s.text, shownResult: s.value ? '对' : '错' });
-  return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], null);
+  if (s.misconception) q.data.misconception = s.misconception;
+  return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
 
 

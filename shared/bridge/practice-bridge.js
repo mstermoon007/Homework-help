@@ -364,7 +364,10 @@
         total: result && result.total,
         correct: result && result.correct,
         results: result && result.results,
-        correctAnswers: result && result.correctAnswers
+        correctAnswers: result && result.correctAnswers,
+        // V5.1.0：逐题解析/自由文本错因透传到反馈 UI（computeResult 产出）
+        explanations: result && result.explanations,
+        misconceptions: result && result.misconceptions
       });
     }).catch(function (err) {
       if (requestId !== _generationRequestId) return;

@@ -161,6 +161,58 @@ test('P28-32 数据链 4：R10 门（无 errorType 不伪造；无 semanticTarge
   assert.ok(hasOwn(state.knowledgePoints['math-g1-down-u01-k001'].semanticTargetStats, 'null'), '缺失标签归 null 桶');
 });
 
+test('P28-32 数据链 6（V5.1.0 judge）：自由文本错因 PracticeResult→recentErrors 持久化，且不入 errorType 聚类', async () => {
+  const KP = 'math-g3-up-u07-k002';
+  // 6.1 fromSemanticQuestion：sq.data.misconception 自动入事实对象；答对也可携带但 recentErrors 不记
+  const sq = {
+    id: 'q_judge_1', knowledgePoint: KP, questionType: 'judge',
+    semanticTarget: '图形概念', answer: { value: false },
+    data: { misconception: '误认为角的大小由边的长短决定' }
+  };
+  const pr = global.PracticeResult.fromSemanticQuestion(sq, { correct: false, userAnswer: 'true' });
+  assert.equal(pr.misconception, '误认为角的大小由边的长短决定', 'sq.data.misconception 入 PracticeResult');
+  assert.equal(pr.errorType, null, '自由文本错因不得冒充 R10 errorType');
+
+  // 6.2 create：显式传入逐题错因（页面 feedLearnerModel 口径）
+  const pr2 = global.PracticeResult.create({
+    questionId: 'q_judge_2', knowledgePointId: KP, questionType: 'judge',
+    correct: false, userAnswer: 'true', semanticTarget: '图形概念',
+    misconception: '周长公式漏乘2'
+  });
+  assert.equal(pr2.misconception, '周长公式漏乘2');
+
+  let state = global.ResultCollector.collect(global.LearnerModel.normalizeLearnerState(null), [pr, pr2], {});
+  let kp = state.knowledgePoints[KP];
+  assert.deepEqual(kp.errorPatterns, {}, '自由文本错因不进 errorPatterns 聚类');
+  assert.equal(kp.recentErrors.length, 2);
+  assert.equal(kp.recentErrors[0].misconception, '误认为角的大小由边的长短决定');
+  assert.equal(kp.recentErrors[1].misconception, '周长公式漏乘2');
+
+  // 6.3 重新归一（LearnerStorage 读写等价）后字段保留；脏数据容错（非串→null、超长截断）
+  state.knowledgePoints[KP].recentErrors.push({
+    questionType: 'judge', semanticTarget: null, errorType: null, correct: false,
+    misconception: 12345, timestamp: Date.now()
+  });
+  const longText = '长'.repeat(250);
+  state.knowledgePoints[KP].recentErrors.push({
+    questionType: 'judge', semanticTarget: null, errorType: null, correct: false,
+    misconception: longText, timestamp: Date.now()
+  });
+  state = global.LearnerModel.normalizeLearnerState(state);
+  kp = state.knowledgePoints[KP];
+  assert.equal(kp.recentErrors[0].misconception, '误认为角的大小由边的长短决定', '归一后保留');
+  assert.equal(kp.recentErrors[2].misconception, null, '非字符串错因归 null');
+  const longEntry = kp.recentErrors[kp.recentErrors.length - 1];
+  assert.ok(longEntry.misconception.length === 200, '超长错因截断 200');
+
+  // 6.4 答对题：misconception 允许在事实对象上存在，但 recentErrors 不收录
+  const prOk = global.PracticeResult.fromSemanticQuestion(
+    { id: 'q_ok', knowledgePoint: KP, questionType: 'judge', semanticTarget: null, answer: { value: true }, data: {} },
+    { correct: true, userAnswer: 'true' }
+  );
+  assert.equal(prOk.misconception, null);
+});
+
 test('P28-32 数据链 5：RenderFormat 透传（semanticTarget/knowledgePointId/spiralLevel/errorType 供页面 feed）', async () => {
   const KP = 'math-g2-down-u02-k001';
   const g = await GenerationAPI.generate(

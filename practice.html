@@ -120,6 +120,10 @@
     background: #eef0f3; color: #9aa3b2;
     text-align: center; font-weight: 700;
   }
+  /* V5.1.0 判断题批改反馈：答案/解析/错因逐行 */
+  #problemsArea .feedback .fb-line { font-size: 12.5px; font-weight: 600; line-height: 1.6; }
+  #problemsArea .feedback .fb-explain { color: var(--muted); }
+  #problemsArea .feedback .fb-mis { color: var(--warn); }
 }
 
 /* 打印态：hero / 生成 CTA 不进入试卷（工具栏边栏的打印隐藏统一在 pages.css 工具栏段） */
@@ -866,17 +870,25 @@
     var cols = PluginUtil.layout.calcOptimalCols(set, (document.getElementById('problemsArea') || {}).offsetWidth || 1000);
     var html = '<div class="q-grid cols-' + cols + '">';
     set.questions.forEach(function (q, i) {
+      // V5.1.0 判断题降级渲染：与 html-renderer 同构的两个大按钮（radio value=true/false）
+      var isJudge = q.questionType === 'judge' || q.type === 'judge' || q.inputType === 'judge';
+      var judgeHtml = isJudge
+        ? '<div class="question-answer question-answer-judge" role="radiogroup" aria-label="判断对错">' +
+          '<label class="judge-btn judge-btn-true"><input type="radio" class="judge-input" name="q' + i + '" value="true" data-index="' + i + '" autocomplete="off" aria-label="判断为正确"><span class="judge-mark">✓</span><span class="judge-text">正确</span></label>' +
+          '<label class="judge-btn judge-btn-false"><input type="radio" class="judge-input" name="q' + i + '" value="false" data-index="' + i + '" autocomplete="off" aria-label="判断为错误"><span class="judge-mark">✗</span><span class="judge-text">错误</span></label>' +
+          '</div>'
+        : '';
       // P28-INLINE-ANSWER-01：横向算式「… = ?」作答框内联于等号后（问号虚化 placeholder）
       var rawQ = String(q.question || q.text || q.q || '');
-      var eqM = rawQ.match(/^(.*[=＝])\s*[？?]\s*$/);
+      var eqM = !isJudge && rawQ.match(/^(.*[=＝])\s*[？?]\s*$/);
       var stemHtml = eqM
         ? '<span class="q-text">' + esc(eqM[1].replace(/[=＝]\s*$/, '').replace(/\s+$/, '')) + '</span>' +
           '<span class="eq-answer">&nbsp;=&nbsp;<input type="text" class="answer-inp answer-inp-inline" placeholder="？" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案"></span>'
         : '<span class="q-text">' + esc(rawQ) + '</span>' +
-          '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案">';
+          (isJudge ? '' : '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案">');
       html += '<div class="question-card" data-index="' + i + '">' +
         '<span class="num">' + (i + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' +
-        stemHtml +
+        stemHtml + judgeHtml +
         (q.hint ? '<div style="font-size:11px;color:var(--muted)">💡 ' + esc(q.hint) + '</div>' : '') +
         '<div class="feedback"></div>' +
         '</div>';
@@ -925,7 +937,13 @@
       showNotice('批改结果不兼容', 'check 必须返回 { score, total, correct, results, correctAnswers }');
       return;
     }
-    var result = { score: fb.score, total: fb.total, correct: fb.correct, results: fb.results, correctAnswers: fb.correctAnswers };
+    var result = {
+      score: fb.score, total: fb.total, correct: fb.correct,
+      results: fb.results, correctAnswers: fb.correctAnswers,
+      // V5.1.0：判断题逐题解析/错因（computeResult → bridge 透传）
+      explanations: Array.isArray(fb.explanations) ? fb.explanations : [],
+      misconceptions: Array.isArray(fb.misconceptions) ? fb.misconceptions : []
+    };
     state.checkResult = result;
     state.answered = true;
     markQuestions(result);
@@ -1005,6 +1023,11 @@
           // P28-32：语义目标逐题透传（无则 null，绝不伪造）
           semanticTarget: (q.semanticTarget != null) ? q.semanticTarget : null,
           errorType: (q.errorType != null) ? q.errorType : null, // R10：仅接受题面可靠错因，当前无来源→null
+          // V5.1.0：判断题自由文本错因逐题透传（computeResult.misconceptions → 学情持久化；
+          // 不进 errorType 8 类聚类）；答对/无错因时为 null
+          misconception: (result.misconceptions && result.misconceptions[i] != null)
+            ? result.misconceptions[i]
+            : (q.misconception != null ? q.misconception : null),
           status: (ok === true) ? 'correct' : 'wrong',
           timestamp: Date.now()
         }));
@@ -1023,6 +1046,7 @@
 
   function markQuestions(result) {
     var area = $('problemsArea');
+    var questions = (state.exerciseSet && state.exerciseSet.questions) || [];
     result.results.forEach(function (isRight, i) {
       var card = area.querySelector('.question-card[data-index="' + i + '"], .problem[data-i="' + i + '"]');
       if (!card) return;
@@ -1033,10 +1057,31 @@
         inp.classList.remove('correct', 'wrong');
         inp.classList.add(isRight ? 'correct' : 'wrong');
       }
+      var q = questions[i] || {};
+      var isJudge = q.questionType === 'judge' || q.type === 'judge' || q.inputType === 'judge';
+      var fb = card.querySelector('.feedback');
+      if (!fb) return;
+      // V5.1.0 判断题：二值答案中文化；每题给解析，答错再追加正确答案与错因诊断。
+      if (isJudge) {
+        var lines = [];
+        var truthText = (v) => (v === true || v === 'true') ? '正确' : '错误';
+        if (!isRight) {
+          lines.push('<div class="fb-line fb-answer">✗ 正确答案：' + esc(truthText(result.correctAnswers && result.correctAnswers[i])) + '</div>');
+        }
+        var exp = result.explanations && result.explanations[i];
+        if (exp) lines.push('<div class="fb-line fb-explain">💡 解析：' + esc(exp) + '</div>');
+        if (!isRight) {
+          var mis = result.misconceptions && result.misconceptions[i];
+          if (mis) lines.push('<div class="fb-line fb-mis">⚠️ 错因：' + esc(mis) + '</div>');
+        }
+        fb.innerHTML = lines.join('');
+        fb.style.color = isRight ? 'var(--ok)' : 'var(--bad)';
+        return;
+      }
       if (!isRight) {
-        var fb = card.querySelector('.feedback');
         var tip = '✗ 正确答案：' + (result.correctAnswers && result.correctAnswers[i]);
-        if (fb) { fb.textContent = tip; fb.style.color = 'var(--bad)'; }
+        fb.textContent = tip;
+        fb.style.color = 'var(--bad)';
       }
     });
   }
@@ -1126,9 +1171,13 @@
       var old = card.querySelector('.revealed-answer');
       if (old) old.remove();
       var ans = result.correctAnswers && result.correctAnswers[i];
+      var rq = state.exerciseSet.questions[i] || {};
+      var revealIsJudge = rq.questionType === 'judge' || rq.type === 'judge' || rq.inputType === 'judge';
+      var ansText = ans == null ? '—'
+        : (revealIsJudge ? ((ans === true || ans === 'true') ? '正确' : '错误') : ans);
       var d = el('div', 'revealed-answer');
       d.style.cssText = 'font-size:12px;color:var(--brand-d);font-weight:700;margin-top:6px';
-      d.textContent = '✔ 答案：' + (ans != null ? ans : '—');
+      d.textContent = '✔ 答案：' + ansText;
       card.appendChild(d);
     });
   }
