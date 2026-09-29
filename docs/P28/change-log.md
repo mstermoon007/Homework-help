@@ -42,6 +42,18 @@
 - tests: ①版本升级前在冻结工作区连续两跑 check-all（CHROME_BIN 指向真实 Google Chrome）：28 PASS / 0 FAIL / 0 SKIP（#15 真实浏览器 9 步 E2E 实跑 PASS），两次运行间 git status 零变更（FINAL-91 只读、FINAL-92 确定性）；②升级后 build:knowledge 重建（376 知识页 0 增删，仅 knowledge-index.json version/generatedAt 两行变化）+ node scripts/sync-sw-version.js 版本一致校验 PASS，随后连续两跑 check-all 均 28 PASS / 0 FAIL / 0 SKIP，最终 diff 锁定 9 文件（README/VERSION/package.json/version.js/sw.js/index.html/build-knowledge-pages.js/knowledge-index.json/本日志）；③发布包构建/本地验证与服务器上线证据见随后追加的 P28-RELEASE-V501-PKG / P28-RELEASE-V501-DEPLOY 条目。
 - risk: 低。仅版本号字面量与知识索引产物时间戳变化，无题目生成/答案批改/渲染结构逻辑变化；SW 缓存键变更会触发已访问用户的客户端缓存刷新（预期行为）。回滚：服务器保留 /root 整目录备份包。
 
+### P28-RELEASE-V501-DEPLOY｜V5.0.1 服务器原子部署 + 线上三层验证（2026-09-29）
+
+- modified:
+  - 服务器 `/var/www/Homework-help/`（整目录原子替换：5.0.0 包 571 文件 → 5.0.1 包 571 文件，属主 www-data:www-data，nginx 配置零改动）
+  - 服务器 `/root/Homework-help.bak-20260929.tar.gz`（新增回滚备份，3,450,514 字节，571 文件，含部署前线上热修的百度 meta；旧备份 Homework-help.bak-20260925.tar.gz 并存）
+  - `release/RELEASE-MANIFEST-5.0.1.md`（回填上线证据；release/ 为 gitignore 本地产物，不入库）
+  - `docs/P28/change-log.md`（本条登记）
+- deleted: 服务器暂存目录 `/var/www/Homework-help.old-swap` 与 `/var/www/Homework-help.new`（原子切换流程结束清理）、`/tmp/homework-help-5.0.1.tar.gz`（上传暂存包，核对后删除）；无其他删除。
+- reason: 用户授权全流程发布。部署前核查发现 2026-09-26 曾对线上 index.html 做过一次服务器侧热修（FINAL-136 百度站点验证 meta，token `codeva-G2GQ581vQb`，服务器留有 index.html.bak-20260926-final136）；逐字节 diff 确认该热修已包含在冻结包内（三处 token 一致，线上 index.html 与包内仅版本兜底行 5.0.0→5.0.1 一处差异），原子替换零丢失。
+- tests: ①服务器 SSH 实测：nginx active、现役版本 5.0.0/571 文件/www-data 属主、磁盘 34G 空闲、无 .new/.old-swap 残留；②备份完整（571 文件，VERSION=5.0.0，含百度 meta）；③scp 后远端 sha256sum=`a9b35327...12d985` 与本地逐字节一致；④暂存目录解压核验 571 文件/VERSION=5.0.1/CACHE='hw-help-5.0.1'/百度 meta=1/knowledge-index=5.0.1/临时文件 0/bundle 2/knowledge 页 376，随后原子 mv 切换 + chown；⑤线上第一层（公网 curl）：HTTP 301→HTTPS、HSTS 在、Server 无版本号（server_tokens off 保持）、23/23 关键路径 200、旧版文件 8/8 返回 404、sitemap loc=382、裸 IP default_server /VERSION=5.0.1；⑥第二层 hash 一致：公网取回 16 文件（VERSION/sw.js/7 根页/README/sitemap/双 bundle/version.js/knowledge-index/知识页）与 `git show HEAD:<file>` 16/16 MATCH；⑦第三层真实 Chrome：首页页脚 5.0.1 + APP_VERSION='5.0.1'、`caches.keys()=["hw-help-5.0.1"]`（旧 hw-help-5.0.0 已被 SW activate 清理）、active SW 为 /sw.js（内容 CACHE=hw-help-5.0.1）、select 选择流程/练习生成 20 题/重生成/刷新/打印/知识页与索引/教师模式知识点生成 4 题均 PASS，console 无产品错误、网络无 4xx/5xx、knowledge-compat 0 请求（@vite/client ERR_ABORTED 为测试浏览器扩展注入，包内零引用）。
+- risk: 低。nginx 配置零改动（HTTPS/HSTS/server_tokens/GoAccess 等服务器侧既有配置不受目录替换影响）；已访问用户由新 CACHE 键自动完成缓存切换（实测旧缓存被清理）；回滚路径：`sudo tar -xzf /root/Homework-help.bak-20260929.tar.gz -C /var/www` 后 chown www-data。
+
 ### P28-RELEASE-V501-PKG｜V5.0.1 白名单发布包构建 + 本地解压全链验证（2026-09-29）
 
 - modified:
