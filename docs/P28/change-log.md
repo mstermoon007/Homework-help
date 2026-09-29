@@ -25,6 +25,23 @@
 
 ## 记录（新 → 旧）
 
+### P28-RELEASE-V501｜V5.0.1 版本号统一 + 发布包构建与上线（2026-09-29）
+
+- modified:
+  - `VERSION`（5.0.0 → 5.0.1）
+  - `package.json`（version 字段 5.0.0 → 5.0.1）
+  - `shared/catalog/version.js`（APP_VERSION SSOT：'5.0.0' → '5.0.1'）
+  - `sw.js`（CACHE 字面量 'hw-help-5.0.0' → 'hw-help-5.0.1'，受 scripts/sync-sw-version.js 校验）
+  - `index.html`（页脚版本号兜底字面量 '5.0.0' → '5.0.1'）
+  - `README.md`（当前版本 5.0.1 + 新增 V5.0.1 变更说明条目；历史条目「P24…版本统一 5.0.0」作为历史事实保留）
+  - `dev/build-knowledge-pages.js`（knowledge-index.json 注入 version 字面量 → '5.0.1'）
+  - `knowledge/knowledge-index.json`（build:knowledge 重建产物：version 字段 + generatedAt 时间戳；376 知识页本身不含版本号，无 diff）
+  - `docs/P28/change-log.md`（本条登记）
+- deleted: 12 个磁盘 `.DS_Store`（根目录及 archive/docs/kbl/shared/tests/.trae 等，均为 git 未跟踪的 macOS Finder 文件，不进 git 也不进白名单发布包）；无受版本控制文件删除。
+- reason: 自 2026-09-25 V5.0.0 上线（线上包构建自 commit `56b643a`）以来共 20 个提交：①百度搜索资源平台站点验证 meta（FINAL-136）；②年级内容边界修复（FINAL-137~142）；③设计令牌统一 + 376 知识页模板令牌化（FINAL-143~145）；④二级选择页 select.html 重构美化正式接入并进入 sitemap/SW 预缓存，含跨册同名单元复合 key 修复与契约测试（UI-SELECT-LAYOUT-01~17/BUG-01）；⑤练习页布局对齐二级页 + Hero 通栏/可折叠边栏/题量自定义/按钮纵排（P28-UI-PRACTICE-LAYOUT/HERO/TOOLBAR）；⑥应用题停止附加空虚线矩形（P28-DEF009）；⑦图形生成器派生链与证据治理（DEF-011/012/015-SHAPE）；⑧「数的组成」纯代码多样化 + 删除题干答案显示 + 不可达兜底循环清除（COMPOSITION-DIVERSIFY-01/01b）；⑨横向算式填写框内联等号后、问号虚化、打印空白（INLINE-ANSWER-01）；⑩三批死代码/孤儿 CSS 定点清理。用户要求全项目检查清理后标记 V5.0.1 并重新上传服务器。
+- tests: ①版本升级前在冻结工作区连续两跑 check-all（CHROME_BIN 指向真实 Google Chrome）：28 PASS / 0 FAIL / 0 SKIP（#15 真实浏览器 9 步 E2E 实跑 PASS），两次运行间 git status 零变更（FINAL-91 只读、FINAL-92 确定性）；②升级后 build:knowledge 重建（376 知识页 0 增删，仅 knowledge-index.json version/generatedAt 两行变化）+ node scripts/sync-sw-version.js 版本一致校验 PASS，随后连续两跑 check-all 均 28 PASS / 0 FAIL / 0 SKIP，最终 diff 锁定 9 文件（README/VERSION/package.json/version.js/sw.js/index.html/build-knowledge-pages.js/knowledge-index.json/本日志）；③发布包构建/本地验证与服务器上线证据见随后追加的 P28-RELEASE-V501-PKG / P28-RELEASE-V501-DEPLOY 条目。
+- risk: 低。仅版本号字面量与知识索引产物时间戳变化，无题目生成/答案批改/渲染结构逻辑变化；SW 缓存键变更会触发已访问用户的客户端缓存刷新（预期行为）。回滚：服务器保留 /root 整目录备份包。
+
 ### P28-INLINE-ANSWER-01｜横向算式填写框内联等号后（问号虚化、打印空白）（2026-09-29）
 
 - modified:

@@ -250,7 +250,7 @@ function indexJson(byGrade, total) {
     });
   });
   return JSON.stringify({
-    version: '5.0.0',
+    version: '5.0.1',
     subject: 'math',
     generatedAt: new Date().toISOString(),
     total: total,
