@@ -25,6 +25,20 @@
 
 ## 记录（新 → 旧）
 
+### P28-INLINE-ANSWER-01｜横向算式填写框内联等号后（问号虚化、打印空白）（2026-09-29）
+
+- modified:
+  - `shared/presentation/html-renderer.js`（新增 INLINE_EQ_RE 与 inlineExpression：识别以「= ?/＝？」结尾、answerMode=input、无选项的横向算式；题干中「= 」与作答框包进 .eq-answer nowrap 片段，屏幕端输出 72×30 内联输入框、placeholder=「？」；print 模式输出等宽空白 span；取消该类题独立 .question-answer 作答行）
+  - `shared/styles/components.css`（新增 .eq-answer nowrap、.answer-inp-inline 72×30、placeholder 浅色半透明虚化样式）
+  - `shared/presentation/print.js`（PRINT_QCSS 增加 .eq-answer/.answer-inp-inline/.answer-inp-printblank 打印规则：空白盒与屏幕框等宽等高、无问号）
+  - `practice.html`（renderGeneric 降级链同步：eqM 命中时同样的 .eq-answer 内联结构）
+  - `tests/presentation/renderer.test.js`（M7-R02 断言更新为新内联结构 + 新增 print 空白盒用例）
+  - `shared/engine/strategy-engine.bundle.js` + `presentation-engine.bundle.js`（双重建保持 source==bundle）
+- deleted: 无文件删除；删除内容为该类题独立作答行输出（渲染分支条件跳过）。
+- reason: 用户要求「78 − 62 − 14 = ?」类横向算式将填写框放到等号后、问号虚化，打印时空白即可。
+- tests: ①Node bundle 实测 6 题：screen HTML 6 内联框/6 虚化 placeholder/0 独立作答行，print HTML 6 空白盒/0 placeholder/0 input，INLINE-ANSWER STRUCTURE PASS；②浏览器实测截图确认：窄列下等号与框同行（nowrap 生效），问号浅色虚化；打印直渲页等号后空白盒无问号；③相关 5 测试文件 76/76 PASS；④check-all 连续两遍 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 低中。改动仅在呈现层，题干/答案/批改数据链不变；仅「= ?」结尾且无选项的 input 题形态变化（arithmetic/variation-apply/picture-equation 同源覆盖）；选择题经 optionsOf 排除不受影响。
+
 ### P28-COMPOSITION-DIVERSIFY-01b｜compositionReverseOptions 不可达兜底循环删除（2026-09-29）
 
 - modified:

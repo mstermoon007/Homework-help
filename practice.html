@@ -866,11 +866,18 @@
     var cols = PluginUtil.layout.calcOptimalCols(set, (document.getElementById('problemsArea') || {}).offsetWidth || 1000);
     var html = '<div class="q-grid cols-' + cols + '">';
     set.questions.forEach(function (q, i) {
+      // P28-INLINE-ANSWER-01：横向算式「… = ?」作答框内联于等号后（问号虚化 placeholder）
+      var rawQ = String(q.question || q.text || q.q || '');
+      var eqM = rawQ.match(/^(.*[=＝])\s*[？?]\s*$/);
+      var stemHtml = eqM
+        ? '<span class="q-text">' + esc(eqM[1].replace(/[=＝]\s*$/, '').replace(/\s+$/, '')) + '</span>' +
+          '<span class="eq-answer">&nbsp;=&nbsp;<input type="text" class="answer-inp answer-inp-inline" placeholder="？" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案"></span>'
+        : '<span class="q-text">' + esc(rawQ) + '</span>' +
+          '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案">';
       html += '<div class="question-card" data-index="' + i + '">' +
         '<span class="num">' + (i + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' +
-        '<span class="q-text">' + esc(q.question || q.text || q.q || '') + '</span>' +
+        stemHtml +
         (q.hint ? '<div style="font-size:11px;color:var(--muted)">💡 ' + esc(q.hint) + '</div>' : '') +
-        '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案">' +
         '<div class="feedback"></div>' +
         '</div>';
     });

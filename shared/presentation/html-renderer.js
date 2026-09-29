@@ -130,6 +130,19 @@
     return svg;
   }
 
+  // P28-INLINE-ANSWER-01：横向算式（题干以「= ?」结尾）作答框内联到等号后：
+  // 屏幕端「？」作浅色 placeholder（虚化）；打印克隆链清空 value/placeholder 呈空白盒，
+  // 直渲 print 模式渲染等宽空白 span；下方独立作答行不再输出。
+  var INLINE_EQ_RE = /^(.*[=＝])\s*[？?]\s*$/;
+  function inlineExpression(sq, prompt) {
+    if (!sq || answerModeOf(sq) !== 'input') return null;
+    if (optionsOf(sq)) return null;  // 选择题（selection.js 的 calc 选择题等）不内联
+    var m = String(prompt).match(INLINE_EQ_RE);
+    if (!m) return null;
+    // 去掉尾部「=」：等号与填写框一起包进 .eq-answer（nowrap），保证窄列下等号不与框分离
+    return m[1].replace(/[=＝]\s*$/, '').replace(/\s+$/, '');
+  }
+
   function render(sq, index, options) {
     options = options || {};
     var mode = options.mode || 'screen';
@@ -137,6 +150,7 @@
     var graphic = graphicGuard(options.graphic);
     var answerText = sq && Array.isArray(sq.answerText) ? sq.answerText
       : (sq && sq.answer && Array.isArray(sq.answer.multiplier) ? sq.answer.multiplier : null);
+    var inlineLeft = inlineExpression(sq, prompt);
 
     // P2.2（Issue #1 延伸）：density=compact 追加 compact 类（仅 class，卡内结构不变，Node/浏览器输出一致）
     var cardCls = 'question-card' + (options.density === 'compact' ? ' compact' : '');
@@ -145,12 +159,27 @@
     if (sq && typeof sq.style === 'string' && /^[a-z0-9-]+$/.test(sq.style)) cardCls += ' style-' + sq.style;
     var html = '<div class="' + cardCls + '" data-index="' + index + '" role="group" aria-label="第 ' + (index + 1) + ' 题">';
     // P28-UI-QNUM-GAP-01：题号与正文之间固定 4 个空格宽（&nbsp; 不折叠、打印克隆同源生效）
-    html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' + esc(prompt) + '</div>';
+    html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;';
+    if (inlineLeft) {
+      // .eq-answer nowrap：窄列下「= 填写框」整体换行，等号与框永不分离
+      html += esc(inlineLeft) + '<span class="eq-answer">&nbsp;=&nbsp;';
+      if (mode === 'print') {
+        html += '<span class="answer-inp answer-inp-inline answer-inp-printblank" aria-label="作答空白"></span>';
+      } else {
+        html += '<input type="text" class="answer-inp answer-inp-inline" placeholder="？" data-index="' + index +
+          '" autocomplete="off" aria-label="第 ' + (index + 1) + ' 题 答案">';
+      }
+      html += '</span>';
+    } else {
+      html += esc(prompt);
+    }
+    html += '</div>';
     if (graphic) {
       html += '<div class="question-graphic">' + graphic + '</div>';
     }
     html += renderOptions(sq, index, options, mode, answerText);
-    html += renderAnswer(sq, index, options, mode, answerText);
+    // P28-INLINE-ANSWER-01：横向算式作答框已内联于题干，跳过独立作答行
+    if (!inlineLeft) html += renderAnswer(sq, index, options, mode, answerText);
     html += '<div class="feedback"></div>';
     html += '</div>';
     return html;

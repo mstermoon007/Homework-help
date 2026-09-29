@@ -130,9 +130,17 @@ test('M7-R03 竖式 calculation 描述符（数组/双参适配）', () => {
 // ============ M7-R02 HTML Renderer ============
 test('M7-R02 卡片语义类名', () => {
   const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', answer: { value: 8 } }, 0, { mode: 'screen' });
-  ['question-card', 'question-stem', 'question-answer', 'answer-inp', 'data-index="0"'].forEach(sel => {
+  // P28-INLINE-ANSWER-01：横向算式作答框内联于等号后（问号虚化 placeholder），不再有独立 question-answer
+  ['question-card', 'question-stem', 'eq-answer', 'answer-inp-inline', 'placeholder="？"', 'data-index="0"'].forEach(sel => {
     assert.ok(html.indexOf(sel) !== -1, '缺少 ' + sel);
   });
+  assert.ok(!/question-answer/.test(html), '横向算式不应再输出独立 question-answer');
+});
+
+test('P28-INLINE-ANSWER-01 print 模式等号后空白盒（无问号）', () => {
+  const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', answer: { value: 8 } }, 0, { mode: 'print' });
+  assert.ok(/eq-answer/.test(html) && /answer-inp-printblank/.test(html), '应渲染等宽空白盒');
+  assert.ok(!/placeholder/.test(html) && !/<input/.test(html), 'print 不应含问号或输入框');
 });
 
 // ============ P2: density 契约生效（Issue #1 延伸） ============

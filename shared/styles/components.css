@@ -554,6 +554,16 @@
     color: var(--brand-d); background: var(--soft-bg); outline: none;
 }
 
+/* P28-INLINE-ANSWER-01：横向算式作答框内联于等号后（打印克隆链清空 value/placeholder，呈空白盒） */
+/* 等号与填写框整体不换行：窄列下一起移到下一行 */
+.eq-answer { white-space: nowrap; }
+.answer-inp-inline {
+    width: 72px; height: 30px;
+    margin-left: 2px; vertical-align: middle;
+}
+/* 问号虚化：浅色半透明 placeholder */
+.answer-inp-inline::placeholder { color: var(--muted); opacity: .5; font-weight: 700; }
+
 .question-card .feedback { font-size: 12px; font-weight: 700; min-height: 16px; margin-top: 6px; }
 
 /* ============ 新渲染器（html-renderer.js / PluginUtil.layout）题目卡片内层结构 ============
