@@ -705,8 +705,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 14,
+          "answerMax": 58
         },
         "context": {
           "present": true,
@@ -726,9 +726,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "82 是由几个十和几个一组成的？（参考：8 个十和 2 个一，80 + 2 = 82）",
-          "92 是由几个十和几个一组成的？（参考：9 个十和 2 个一，90 + 2 = 92）",
-          "59 是由几个十和几个一组成的？（参考：5 个十和 9 个一，50 + 9 = 59）"
+          "51 可以分成几个十和几个一？",
+          "5个十和1个一合起来是多少？",
+          "29 里面有几个十和几个一？"
         ]
       },
       "flags": [
@@ -746,8 +746,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 36,
+          "answerMax": 38
         },
         "context": {
           "present": true,
@@ -767,9 +767,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "72 是由几个十和几个一组成的____（参考：7 个十和 2 个一，70 + 2 = 72）",
-          "38 是由几个十和几个一组成的____（参考：3 个十和 8 个一，30 + 8 = 38）",
-          "31 是由几个十和几个一组成的____（参考：3 个十和 1 个一，30 + 1 = 31）"
+          "72 是由（ ）个十和（ ）个一组成的。",
+          "3个十和8个一合起来是 ____。",
+          "31 是由（ ）个十和（ ）个一组成的。"
         ]
       },
       "flags": [
@@ -787,8 +787,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 49,
+          "answerMax": 86
         },
         "context": {
           "present": true,
@@ -808,9 +808,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "51 是由几个十和几个一组成的？（参考：5 个十和 1 个一，50 + 1 = 51）",
-          "64 是由几个十和几个一组成的？（参考：6 个十和 4 个一，60 + 4 = 64）",
-          "86 是由几个十和几个一组成的？（参考：8 个十和 6 个一，80 + 6 = 86）"
+          "十位上有5 颗珠子，个位上有1 颗珠子，这个数是多少？",
+          "一个数由6个十和4个一组成，这个数是多少？",
+          "8个十和6个一合起来是多少？"
         ]
       },
       "flags": [
@@ -828,8 +828,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 12,
+          "answerMax": 95
         },
         "context": {
           "present": true,
@@ -849,9 +849,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "小红有 1 捆（每捆10根）零 9 根小棒，一共多少根，由几个十和几个一组成？（10 + 9 = 19）",
-          "小红有 8 捆（每捆10根）零 8 根小棒，一共多少根，由几个十和几个一组成？（80 + 8 = 88）",
-          "小红有 9 捆（每捆10根）零 5 根小棒，一共多少根，由几个十和几个一组成？（90 + 5 = 95）"
+          "1 排汽车，每排 10 辆，另外还有 9 辆，一共有多少辆汽车？",
+          "8 盒鸡蛋，每盒 10 个，另外还有 8 个，一共有多少个鸡蛋？",
+          "9 堆苹果，每堆 10 个，另外还有 5 个，一共有多少个苹果？"
         ]
       },
       "flags": [
@@ -4084,8 +4084,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 23,
+          "answerMax": 45
         },
         "context": {
           "present": true,
@@ -4105,9 +4105,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "96 是由几个十和几个一组成的？（参考：9 个十和 6 个一，90 + 6 = 96）",
-          "59 是由几个十和几个一组成的？（参考：5 个十和 9 个一，50 + 9 = 59）",
-          "45 是由几个十和几个一组成的？（参考：4 个十和 5 个一，40 + 5 = 45）"
+          "96 是由几个十和几个一组成的？",
+          "59 是由几个十和几个一组成的？",
+          "一个数由4个十和5个一组成，这个数是多少？"
         ]
       },
       "flags": [
@@ -4125,8 +4125,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 36,
+          "answerMax": 97
         },
         "context": {
           "present": true,
@@ -4146,9 +4146,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "86 是由几个十和几个一组成的____（参考：8 个十和 6 个一，80 + 6 = 86）",
-          "36 是由几个十和几个一组成的____（参考：3 个十和 6 个一，30 + 6 = 36）",
-          "97 是由几个十和几个一组成的____（参考：9 个十和 7 个一，90 + 7 = 97）"
+          "8个十和6个一合起来是 ____。",
+          "3个十和6个一合起来是 ____。",
+          "9个十和7个一合起来是 ____。"
         ]
       },
       "flags": [
@@ -4166,8 +4166,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 34,
+          "answerMax": 67
         },
         "context": {
           "present": true,
@@ -4187,9 +4187,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "41 是由几个十和几个一组成的？（参考：4 个十和 1 个一，40 + 1 = 41）",
-          "85 是由几个十和几个一组成的？（参考：8 个十和 5 个一，80 + 5 = 85）",
-          "34 是由几个十和几个一组成的？（参考：3 个十和 4 个一，30 + 4 = 34）"
+          "一个数由4个十和1个一组成，这个数是多少？",
+          "85 可以分成几个十和几个一？",
+          "一个数由3个十和4个一组成，这个数是多少？"
         ]
       },
       "flags": [
@@ -4207,8 +4207,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 38,
+          "answerMax": 38
         },
         "context": {
           "present": true,
@@ -4228,9 +4228,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "小红有 8 捆（每捆10根）零 3 根小棒，一共多少根，由几个十和几个一组成？（80 + 3 = 83）",
-          "小红有 5 捆（每捆10根）零 7 根小棒，一共多少根，由几个十和几个一组成？（50 + 7 = 57）",
-          "小红有 1 捆（每捆10根）零 2 根小棒，一共多少根，由几个十和几个一组成？（10 + 2 = 12）"
+          "有 83 本书本，每 10 本书本摞成一摞，可以摞成几摞？还剩几本？",
+          "有 57 颗糖果，每 10 颗糖果装成一袋，可以装成几袋？还剩几颗？",
+          "有 12 本书本，每 10 本书本摞成一摞，可以摞成几摞？还剩几本？"
         ]
       },
       "flags": [
@@ -6097,8 +6097,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 17,
+          "answerMax": 98
         },
         "context": {
           "present": true,
@@ -6118,9 +6118,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "98 是由几个十和几个一组成的？（参考：9 个十和 8 个一，90 + 8 = 98）",
-          "17 是由几个十和几个一组成的？（参考：1 个十和 7 个一，10 + 7 = 17）",
-          "63 是由几个十和几个一组成的？（参考：6 个十和 3 个一，60 + 3 = 63）"
+          "一个数由9个十和8个一组成，这个数是多少？",
+          "十位上有1 颗珠子，个位上有7 颗珠子，这个数是多少？",
+          "一个数由6个十和3个一组成，这个数是多少？"
         ]
       },
       "flags": [
@@ -6138,8 +6138,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 12,
+          "answerMax": 12
         },
         "context": {
           "present": true,
@@ -6159,9 +6159,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "69 是由几个十和几个一组成的____（参考：6 个十和 9 个一，60 + 9 = 69）",
-          "12 是由几个十和几个一组成的____（参考：1 个十和 2 个一，10 + 2 = 12）",
-          "49 是由几个十和几个一组成的____（参考：4 个十和 9 个一，40 + 9 = 49）"
+          "69 是由（ ）个十和（ ）个一组成的。",
+          "1个十和2个一合起来是 ____。",
+          "49 是由（ ）个十和（ ）个一组成的。"
         ]
       },
       "flags": [
@@ -6179,8 +6179,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 15,
+          "answerMax": 82
         },
         "context": {
           "present": true,
@@ -6200,9 +6200,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "45 是由几个十和几个一组成的？（参考：4 个十和 5 个一，40 + 5 = 45）",
-          "82 是由几个十和几个一组成的？（参考：8 个十和 2 个一，80 + 2 = 82）",
-          "71 是由几个十和几个一组成的？（参考：7 个十和 1 个一，70 + 1 = 71）"
+          "一个数由4个十和5个一组成，这个数是多少？",
+          "8个十和2个一合起来是多少？",
+          "一个数由7个十和1个一组成，这个数是多少？"
         ]
       },
       "flags": [
@@ -6219,9 +6219,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 6,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 5,
+          "answerMin": 58,
+          "answerMax": 58
         },
         "context": {
           "present": true,
@@ -6241,9 +6241,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "小红有 5 捆（每捆10根）零 6 根小棒，一共多少根，由几个十和几个一组成？（50 + 6 = 56）",
-          "小红有 4 捆（每捆10根）零 3 根小棒，一共多少根，由几个十和几个一组成？（40 + 3 = 43）",
-          "小红有 5 捆（每捆10根）零 5 根小棒，一共多少根，由几个十和几个一组成？（50 + 5 = 55）"
+          "5 捆小棒，每捆 10 根，另外还有 8 根，一共有多少根小棒？",
+          "有 92 个鸡蛋，每 10 个鸡蛋装成一盒，可以装成几盒？还剩几个？",
+          "有 27 个鸡蛋，每 10 个鸡蛋装成一盒，可以装成几盒？还剩几个？"
         ]
       },
       "flags": [
@@ -36782,8 +36782,8 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 5,
-          "answerMin": 2,
+          "distinctAnswers": 4,
+          "answerMin": 3,
           "answerMax": 6
         },
         "context": {
@@ -36801,9 +36801,9 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 5,
         "generators": {
-          "generator:position-direction": 6
+          "generator:position-direction": 5
         },
         "samplePrompts": [
           "一个图形先向左3格，再向上3格，一共平移了多少格？ ____ 格",
@@ -54310,7 +54310,7 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 5,
+          "distinctAnswers": 4,
           "answerMin": 4,
           "answerMax": 15
         },
@@ -54330,9 +54330,9 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 5,
         "generators": {
-          "generator:reasoning": 6
+          "generator:reasoning": 5
         },
         "samplePrompts": [
           "用一口锅烙5张饼，每张饼两面都要烙，每面需要 2 分钟。至少需要多少分钟？",
@@ -54591,9 +54591,9 @@
         }
       },
       "evidence": {
-        "samples": 5,
+        "samples": 4,
         "generators": {
-          "generator:reasoning": 5
+          "generator:reasoning": 4
         },
         "samplePrompts": [
           "甲、乙、丙三人中只有一人说真话。甲说：「乙在说谎。」乙说：「丙在说谎。」丙说：「甲和乙都在说谎。」谁说了真话？",

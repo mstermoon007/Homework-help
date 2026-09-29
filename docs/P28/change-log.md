@@ -25,6 +25,30 @@
 
 ## 记录（新 → 旧）
 
+### P28-COMPOSITION-DIVERSIFY-01b｜compositionReverseOptions 不可达兜底循环删除（2026-09-29）
+
+- modified:
+  - `shared/generator/generators/concept-meaning.js`（删除 compositionReverseOptions 中 `for d=2..30` 兜底循环：前 3 个有效候选恒互异——t≠o 时 {数位写反, t+o, n−1}，t=o 时 {t+o, n−1, n−10}，两两重合方程 9t=1/9t=10 均无整数解、n≥11 保证非负，循环体不可达；注释补充该证明）
+  - `shared/engine/strategy-engine.bundle.js` + `presentation-engine.bundle.js`（concept-meaning.js 为 bundle 依赖，双重建保持 source==bundle）
+- deleted: 无文件删除；删除内容为 1 个不可达兜底循环（1 行）。
+- reason: 用户要求删除 P28-COMPOSITION-DIVERSIFY-01 复查出的死代码并验证。正向 compositionForwardOptions 的同类兜底循环有实际触发场景（t=o=1）保留，仅逆向循环删除。
+- tests: ①288 题压测重跑 PASS（0 泄露、choice 选项齐全）；②漂移门禁 1299 行 0 硬违例 0 软报告；③冻结矩阵只读复核「与冻结产物完全一致 git diff=0」——产物零变化实证，无需 --write；④局部 111 测试全 PASS；⑤check-all 连续两遍 28 PASS / 0 FAIL / 0 SKIP。
+- risk: 低。循环从未执行，生成产物零变化（冻结矩阵只读复核实证）；无架构变化、无行为变更。
+
+### P28-COMPOSITION-DIVERSIFY-01｜「数的组成」纯代码多样化生成 + 删除题干答案显示（2026-09-29）
+
+- modified:
+  - `shared/generator/generators/concept-meaning.js`（新增 COMPOSITION_SCENES 语境词项库 6 类[苹果/汽车/小棒/鸡蛋/糖果/书本] + compositionPhrase/compositionForwardOptions/compositionReverseOptions 槽位组合 + buildCompositionItem 生成体 + validateCompositionItem 程序校验；「数的组成」分支改为调用 buildCompositionItem：calc 正向 5 式/逆向 3 式、fill 专用双空位/单空位、choice 3 干扰项互异、apply 语境按方向同源；makeByItem 支持 item.fill 专用填空形式并把 item.operation 透传为 data.operation）
+  - `kbl/teaching/variation-profiles.json`（1299 行全量带种子重 derive，3 KP 各轴随题干刷新）
+  - `kbl/teaching/misconception-profiles.json`（重 derive，slot 总数 896 不变）
+  - `shared/capacity/capacity-map.json`（--refresh 重扫：3 KP calc 81→126、fill/choice/apply 81，tier=HIGH）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json` + `.md`（--write 重建，恰好 12 行差异=3 KP×4 QT，FAIL=0，只读复核 git diff=0）
+  - `shared/engine/strategy-engine.bundle.js` + `presentation-engine.bundle.js`（concept-meaning.js 为 bundle 依赖，双重建保持 source==bundle）
+- deleted: 无文件删除；删除内容为 3 KP 题干内嵌的答案显示（「（参考：t 个十和 o 个一，t×10 + o = n）」及 apply 尾部等式）。
+- reason: 用户提供纯代码方案，要求优化「88 是由几个十和几个一组成的？（参考：…）」题型并删除答案显示。根因：①题干单一样式且内嵌完整分解，学生无需作答；②calc 的 expressionPresent 原本仅靠泄露算式通过，删除后改由 data.operation='add' 承载（KP operations=[]，semantic-evidence 据此过滤不声明算术关系，两不冲突）；③旧 choice 干扰项不足时以「都不是（3）」填充。全程纯代码：数字分解 n=10×t+o → 方向/词项槽位 → 规则组合 → 程序校验，不调用大模型、不维护完整句子模板库。
+- tests: ①4 种子×3 KP×4 QT 压测 288 题：0 泄露、0 失败、choice 均 4 选项含答案；②局部 111 测试全 PASS（p25-04/09/06×2 + p27×2）；③漂移门禁 1299 行 0 硬违例 0 软报告、misconception 链 Z1~Z4 PASS；④冻结矩阵 --write FAIL=0 + 只读 git diff=0；⑤check-all 连续两遍 28 PASS / 0 FAIL / 0 SKIP（含 #15 真实 Browser E2E、#16 source==bundle、FINAL-91 只读门禁），FINAL-92 确定性验收通过。
+- risk: 中低。题干与部分选项文本变化（3 KP×4 QT 精确爆炸半径，冻结矩阵 12 行实证无越界）；答案值格式不变（组成短语/数字），批改链不受影响；n 域保持 t,o∈1..9 与改造前一致。
+
 ### P28-DEF011-SHAPE-01b｜本环节修改后死代码补充清除：buildAll 调用点未消费参数 mode（2026-09-29）
 
 - modified:

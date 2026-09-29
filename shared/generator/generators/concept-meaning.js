@@ -329,6 +329,153 @@ function makeAreaJudge(plan, context, i) {
 
 function ri(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
 
+/* ================================================================
+ * P28-COMPOSITION-DIVERSIFY-01：「数的组成」纯代码多样化生成
+ *
+ * 不调用大模型、不维护完整句子模板库：数字分解 n=10×t+o → 方向/词项槽位 →
+ * 规则组合 → validateCompositionItem 程序校验；题干不再内嵌「（参考：…）」
+ * 向学生泄露答案（calc 的 expressionPresent 改由 data.operation='add' 承载；
+ * KP operations=[]，semantic-evidence 据此过滤不声明算术关系，不冲突）。
+ * ================================================================ */
+
+// 语境词项库：物品 / 个体量词 / 分组量词 / 分组动作
+var COMPOSITION_SCENES = [
+  { item: '苹果', unit: '个', group: '堆', action: '堆成' },
+  { item: '汽车', unit: '辆', group: '排', action: '排成' },
+  { item: '小棒', unit: '根', group: '捆', action: '捆成' },
+  { item: '鸡蛋', unit: '个', group: '盒', action: '装成' },
+  { item: '糖果', unit: '颗', group: '袋', action: '装成' },
+  { item: '书本', unit: '本', group: '摞', action: '摞成' }
+];
+
+function compositionPhrase(t, o) { return t + '个十和' + o + '个一'; }
+
+/* 正向干扰项：写反 / 置1 / ±1 三类经典错误；穷尽兜底保证 ≥3 个互异 */
+function compositionForwardOptions(t, o) {
+  var correct = compositionPhrase(t, o);
+  var wrongs = [];
+  function add(tt, oo) {
+    if (tt < 1 || tt > 9 || oo < 1 || oo > 9) return;
+    var s = compositionPhrase(tt, oo);
+    if (s !== correct && wrongs.indexOf(s) === -1) wrongs.push(s);
+  }
+  if (t !== o) add(o, t);      // 十位个位写反（经典错误）
+  add(1, o);                   // 十位误为 1
+  add(t, 1);                   // 个位误为 1
+  add(t - 1, o); add(t + 1, o);
+  add(t, o - 1); add(t, o + 1);
+  for (var tt = 1; tt <= 9 && wrongs.length < 3; tt++) {
+    for (var oo = 1; oo <= 9; oo++) add(tt, oo);
+  }
+  return [correct].concat(wrongs.slice(0, 3));
+}
+
+/* 逆向干扰项：前 3 个有效候选恒互异（t+o、n−1、n−10 两两不重合有整数解证明，
+ * n≥11 保证非负），无需兜底循环——P28-COMPOSITION-DIVERSIFY-01b 死代码清除 */
+function compositionReverseOptions(t, o) {
+  var n = t * 10 + o;
+  var correct = String(n);
+  var wrongs = [];
+  function addNum(x) {
+    var s = String(x);
+    if (x !== n && x >= 0 && wrongs.indexOf(s) === -1) wrongs.push(s);
+  }
+  if (t !== o) addNum(o * 10 + t);  // 数位写反
+  addNum(t + o);                    // 十位个位直接相加（漏乘10的经典错误）
+  addNum(n - 1); addNum(n + 1);
+  addNum(n - 10); addNum(n + 10);
+  return [correct].concat(wrongs.slice(0, 3));
+}
+
+/** 程序校验（对应方案校验规则）：位值不写反、题干要素齐全、填空有空位、选项互异且含答案、无答案泄露 */
+function validateCompositionItem(item, t, o, n) {
+  var reverse = item.answer === String(n);
+  function compact(s) { return String(s).replace(/\s/g, ''); }
+  // 非判断题：任何题干禁止出现写反的位值（o个十 / t个一）
+  if (t !== o) {
+    [item.stem, item.apply].forEach(function (s) {
+      var c = compact(s);
+      if (c.indexOf(o + '个十') !== -1 || c.indexOf(t + '个一') !== -1) {
+        throw new Error('composition: 题干十位个位写反');
+      }
+    });
+  }
+  if (!reverse) {
+    if (compact(item.stem).indexOf(String(n)) === -1) throw new Error('composition: 正向题干缺数字');
+    if (item.stem.indexOf('十') === -1 || item.stem.indexOf('几') === -1) throw new Error('composition: 正向题干缺提问');
+    var cf = compact(item.apply);
+    if (cf.indexOf(String(n)) === -1 || cf.indexOf('每10') === -1) throw new Error('composition: 语境缺每10分组');
+  } else {
+    var cs = compact(item.stem);
+    // 组成可为「t个十/o个一」短语或计数器「t颗/o颗珠子」形式
+    var hasParts = (cs.indexOf(t + '个十') !== -1 && cs.indexOf(o + '个一') !== -1)
+      || (cs.indexOf(t + '颗') !== -1 && cs.indexOf(o + '颗') !== -1);
+    if (!hasParts) throw new Error('composition: 逆向题干缺组成');
+    var ca = compact(item.apply);
+    if (ca.indexOf('10') === -1 || ca.indexOf('多少') === -1) throw new Error('composition: 语境逆向缺条件');
+  }
+  if (!/____|（\s*）/.test(item.fill)) throw new Error('composition: fill 缺空位');
+  var opts = item.options, seen = {};
+  if (opts.length < 4) throw new Error('composition: 选项不足 4 个');
+  for (var i = 0; i < opts.length; i++) {
+    if (seen[opts[i]]) throw new Error('composition: 选项重复');
+    seen[opts[i]] = 1;
+  }
+  if (opts.indexOf(item.answer) === -1) throw new Error('composition: 答案不在选项中');
+  if (/参考/.test(item.stem + item.apply + item.fill)) throw new Error('composition: 题干仍含答案显示');
+}
+
+function buildCompositionItem(rng) {
+  var t = ri(rng, 1, 9), o = ri(rng, 1, 9);
+  var n = t * 10 + o;
+  var reverse = rng() < 0.5;
+
+  // calc 题干：正向 5 式 / 逆向 3 式（槽位组合，方向由种子决定）
+  var stem;
+  if (!reverse) {
+    switch (ri(rng, 0, 4)) {
+      case 0: stem = n + ' 是由几个十和几个一组成的？'; break;
+      case 1: stem = n + ' 里面有几个十和几个一？'; break;
+      case 2: stem = n + ' 中有几个十、几个一？'; break;
+      case 3: stem = n + ' 的十位上是几？个位上是几？'; break;
+      default: stem = n + ' 可以分成几个十和几个一？';
+    }
+  } else {
+    switch (ri(rng, 0, 2)) {
+      case 0: stem = compositionPhrase(t, o) + '合起来是多少？'; break;
+      case 1: stem = '一个数由' + compositionPhrase(t, o) + '组成，这个数是多少？'; break;
+      default: stem = '十位上有' + t + ' 颗珠子，个位上有' + o + ' 颗珠子，这个数是多少？';
+    }
+  }
+
+  // fill 题干：专用双空位 / 单空位形式（calc 多问句的机械替换不可靠）
+  var fillStem = !reverse
+    ? n + ' 是由（ ）个十和（ ）个一组成的。'
+    : compositionPhrase(t, o) + '合起来是 ____。';
+
+  // apply 题干：语境词项槽位，方向与 item 一致（保证答案同源）
+  var scene = COMPOSITION_SCENES[ri(rng, 0, COMPOSITION_SCENES.length - 1)];
+  var applyStem;
+  if (!reverse) {
+    applyStem = '有 ' + n + ' ' + scene.unit + scene.item + '，每 10 ' + scene.unit + scene.item +
+      scene.action + '一' + scene.group + '，可以' + scene.action + '几' + scene.group + '？还剩几' + scene.unit + '？';
+  } else {
+    applyStem = t + ' ' + scene.group + scene.item + '，每' + scene.group + ' 10 ' + scene.unit +
+      '，另外还有 ' + o + ' ' + scene.unit + '，一共有多少' + scene.unit + scene.item + '？';
+  }
+
+  var item = {
+    stem: stem,
+    fill: fillStem,
+    apply: applyStem,
+    answer: reverse ? String(n) : compositionPhrase(t, o),
+    options: reverse ? compositionReverseOptions(t, o) : compositionForwardOptions(t, o),
+    operation: 'add'
+  };
+  validateCompositionItem(item, t, o, n);
+  return item;
+}
+
 function buildNumberConceptItem(rng, name) {
   // P25-09：g1-up-u01-k001「1-5数的认识」——素材必须限定在 1~5，
   // 不能落默认分支的两位数（off-grade）；n∈2..5 保证 n−1 ≥ 1。
@@ -384,11 +531,9 @@ function buildNumberConceptItem(rng, name) {
       apply: '一年级有 ' + Math.min(a0, b0) + ' 人，二年级有 ' + Math.max(a0, b0) + ' 人，' + Math.max(a0, b0) + ' − ' + Math.min(a0, b0) + ' = ' + Math.abs(a0 - b0) + '，哪个年级人数多（填 > 或 <）？' };
   }
   if (name.indexOf('组成') !== -1) {
-    // FINAL-139：同上，位值分解改「几个十和几个一」+ 整十数加一位数
-    var t0 = ri(rng, 1, 9), o0 = ri(rng, 1, 9);
-    return { stem: (t0 * 10 + o0) + ' 是由几个十和几个一组成的？（参考：' + t0 + ' 个十和 ' + o0 + ' 个一，' + (t0 * 10) + ' + ' + o0 + ' = ' + (t0 * 10 + o0) + '）',
-      answer: t0 + '个十和' + o0 + '个一', options: [t0 + '个十和' + o0 + '个一', o0 + '个十和' + t0 + '个一', '1个十和' + o0 + '个一'],
-      apply: '小红有 ' + t0 + ' 捆（每捆10根）零 ' + o0 + ' 根小棒，一共多少根，由几个十和几个一组成？（' + (t0 * 10) + ' + ' + o0 + ' = ' + (t0 * 10 + o0) + '）' };
+    // P28-COMPOSITION-DIVERSIFY-01：纯代码多样化生成（正向/逆向 × 问答/填空/6类语境），
+    // 题干不再内嵌答案；详见 buildCompositionItem。
+    return buildCompositionItem(rng);
   }
   if (name.indexOf('算盘') !== -1) {
     // P25-09：算盘认数（g2-down-u04-k004）——一个上珠表示5、一个下珠表示1
@@ -542,12 +687,17 @@ function makeByItem(plan, context, i, builder, subType) {
   var params = plan.semanticParams || {};
   var item = builder(rng, params.name || '');
   var qt = plan.questionTypeId;
-  var q = buildBase(plan, context, i, { subType: subType });
+  // item.operation 透传为 data.operation（仅 composition 项提供 'add'，承载 calc expressionPresent）
+  var q = buildBase(plan, context, i, { subType: subType, operation: item.operation });
   var stem = item.stem, answer = item.answer;
   if (qt === 'apply') stem = item.apply || item.stem;
   if (qt === 'fill') {
-    stem = stem.replace('多少？', '____').replace('什么？', '____').replace('？', '____');
-    if (!/____|\(\s*\)/.test(stem)) stem += ' ____';
+    if (item.fill) {
+      stem = item.fill;  // builder 专用填空形式（多问句机械替换不可靠）
+    } else {
+      stem = stem.replace('多少？', '____').replace('什么？', '____').replace('？', '____');
+      if (!/____|\(\s*\)/.test(stem)) stem += ' ____';
+    }
   }
   if (qt === 'choice') {
     finishChoice(q, rng, item.answer, item.options.filter(function (o) { return o !== item.answer; }));
