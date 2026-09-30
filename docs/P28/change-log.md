@@ -25,6 +25,15 @@
 
 ## 记录（新 → 旧）
 
+### P28-REMOVE-LOOP-TOAST-01｜删除 practice.html 生成后闭环引导 Toast 提示功能（2026-09-30）
+- modified:
+  - `practice.html`（删除 loop-toast 提示浮层全部相关代码:CSS `.loop-toast` 样式块、HTML `#loopToast` 容器、`printFile` 内 `showLoopToast` 调用、`showLoopToast`/`hideLoopToast` 函数定义、`#loopToastClose` 事件绑定,共 ~53 行）
+- deleted:
+  - `practice.html` 内联的「生成后闭环引导 Toast」功能（文案「已生成 X 题 ✓ 打印后让孩子试试,完成后可拍照上传批改」+「继续练习」/「知道了」按钮 + 7 秒自动隐藏逻辑）
+- reason: 用户要求删除该提示功能。归属层为页面入口 practice.html 单文件内联 UI,不跨层、不涉及 shared/ 任何模块或 KBL 数据。触发点在 `printFile()` 打印开始前调 `showLoopToast(count)`,与生成/打印/检查/渲染主链路无耦合,纯引导性 UI。
+- tests: ① grep `loop-toast|loopToast|showLoopToast|hideLoopToast|拍照上传批改|继续练习` in practice.html → 0 匹配,无残留;② `node dev/check-all.js` → 27 PASS / 0 FAIL / 1 SKIP / 28 项;③ 浏览器实测:加载 practice.html console 0 error,生成 20 题成功,点打印后 loop-toast 浮层不再出现,打印后 console 0 error。
+- risk: 低。纯删除页面级引导 UI,`showLoopToast` 调用点（printFile 内）与定义/绑定同步删除,无悬挂引用;不影响生成/打印/检查/渲染主链路。
+
 ### P28-CLEANUP-01｜项目大扫除:删除历史遗留 + dev 草稿 + 本地系统垃圾（2026-09-30）
 - modified:
   - `docs/P28/change-log.md`（追加本次清理记录）

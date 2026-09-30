@@ -144,28 +144,6 @@
 }
 .gen-progress-text { margin-top: 6px; font-size: 12.5px; font-weight: 700; color: var(--muted); text-align: center; }
 
-/* 优化点4：生成后闭环引导 Toast */
-.loop-toast {
-  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(20px);
-  z-index: 200; max-width: 420px; width: calc(100% - 32px);
-  background: var(--card); border: 1px solid var(--type-card-border, var(--line));
-  border-radius: 14px; box-shadow: 0 12px 36px rgba(40, 70, 120, .22);
-  padding: 14px 16px; opacity: 0; transition: opacity .25s, transform .25s; pointer-events: none;
-}
-.loop-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
-.loop-toast[hidden] { display: none; }
-.loop-toast-body { display: flex; align-items: flex-start; gap: 10px; }
-.loop-toast-ico { font-size: 20px; line-height: 1.2; }
-.loop-toast-txt { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.5; }
-.loop-toast-txt b { color: var(--subject-primary, #4A90D9); }
-.loop-toast-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
-.loop-toast-btn {
-  border: 1px solid var(--line); background: var(--subject-primary-soft, #eaf3ff);
-  color: var(--subject-primary, #4A90D9);
-  border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer;
-}
-  .loop-toast-btn.ghost { background: var(--soft-bg); color: var(--muted); border-color: var(--line); }
-
   /* ============ 任务3：底部知识页入口（当前知识点 → knowledge/{kpId}.html） ============ */
   .kp-links {
     max-width: 860px; margin: 12px 0 0; padding: 10px 14px;
@@ -296,18 +274,6 @@
           data-print-hide data-page-node-id="railOpen-001"><span aria-hidden="true">❯</span></button>
 
   <section class="result-panel" id="resultArea" aria-live="polite" aria-atomic="true" data-page-node-id="er9vcm4Jhm4Bc46IF5HcZs"></section>
-
-  <!-- 优化点4：生成后闭环引导 Toast（打印→拍照批改→薄弱点） -->
-  <div class="loop-toast" id="loopToast" hidden role="status" data-page-node-id="KSY9um62LEr8rfLABpquGP">
-    <div class="loop-toast-body" data-page-node-id="HVF6aWFn1LmAWV8xGllyUu">
-      <span class="loop-toast-ico" data-page-node-id="QZkhOV60PJmDwHg5BtsA52">📘</span>
-      <div class="loop-toast-txt" data-page-node-id="qNuWYVkAQAJqtYkV34c2fJ">已生成 <b id="loopToastCount" data-page-node-id="RiI3qjIYXsH0kl1I2IDRHK">0</b> 题 ✓ 打印后让孩子试试，完成后可拍照上传批改 →</div>
-    </div>
-    <div class="loop-toast-actions" data-page-node-id="47cq6bKvhWCfN1i5b8Tv1a">
-      <a class="loop-toast-btn" id="loopToastPractice" href="subject-types.html" data-page-node-id="CKljX4E6oj518w0eH0anfA">继续练习</a>
-      <button class="loop-toast-btn ghost" id="loopToastClose" type="button" data-page-node-id="sw5FXKDFqtzi9Y9DovpEUb">知道了</button>
-    </div>
-  </div>
 
   <!-- 任务3：底部知识页入口（当前知识点 → knowledge/{kpId}.html） -->
   <div class="kp-links" id="kpLinksBar" hidden data-page-node-id="AygW7RhOx1BVxQ2jyP4EGm">
@@ -1186,7 +1152,6 @@
   function printFile() {
     ensureDeferredReady().then(function () {
       if (!practiceSession && !state.exerciseSet) return;
-      showLoopToast(state.exerciseSet ? state.exerciseSet.questions.length : 0); // 优化点4：闭环引导
       // 打印统一经 Engine 产物：单次会话优先 session.print()（走语义题）；
       // 编排聚合会话（聚合 shim 无 print）回退到已渲染的 #problemsArea 整卷打印。
       if (practiceSession && typeof practiceSession.print === 'function') {
@@ -1199,24 +1164,6 @@
         alert('打印失败：打印模块不可用');
       }
     });
-  }
-
-  // 优化点4：生成后闭环引导 Toast（打印→拍照批改→薄弱点追踪）
-  function showLoopToast(n) {
-    var t = $('loopToast'); if (!t) return;
-    var c = $('loopToastCount'); if (c) c.textContent = (n || 0);
-    t.hidden = false;
-    // 强制 reflow 以便过渡动画生效
-    void t.offsetWidth;
-    t.classList.add('show');
-    clearTimeout(t._hideTimer);
-    t._hideTimer = setTimeout(hideLoopToast, 7000);
-  }
-  function hideLoopToast() {
-    var t = $('loopToast'); if (!t) return;
-    t.classList.remove('show');
-    clearTimeout(t._hideTimer);
-    setTimeout(function () { if (!t.classList.contains('show')) t.hidden = true; }, 280);
   }
 
   // ============ 题量（自定义数字，1~50 整数） ============
@@ -1715,9 +1662,6 @@
     $('checkBtn').addEventListener('click', check);
     $('revealBtn').addEventListener('click', toggleReveal);
     $('printBtn').addEventListener('click', printFile);
-    // 优化点4：闭环引导 Toast 关闭
-    var loopClose = $('loopToastClose');
-    if (loopClose) loopClose.addEventListener('click', hideLoopToast);
     // U2 清理：原 resize 防抖回调体为空（自适应难度记忆已移除），为无操作死监听，直接删除。
     // 刷新重置：重新加载页面（原自适应难度记忆功能已移除）
     var refreshResetBtn = $('refreshResetBtn');
