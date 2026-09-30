@@ -296,21 +296,28 @@
 
     var title = this._buildTitle();
     var pageType = 'math';
+    var PrintMod = resolvePrint();
+
+    // 列数与屏显预览同源：固定 meta.columns 优先；否则按 A4 可打印宽度（Print.LAYOUT）走 layout 算法。
+    // P28-UI-PRINT-WYSIWYG-01：主链不再恒定 3 列；列跨由 print.js 经同一 layout 阈值按题目长度计算。
+    var fixedCols = this.exerciseSet.meta && this.exerciseSet.meta.columns;
+    var a4w = (PrintMod && PrintMod.LAYOUT && PrintMod.LAYOUT.printableWidthPx) || 718;
+    var cols = fixedCols || (global.PluginUtil && global.PluginUtil.layout
+      ? global.PluginUtil.layout.calcOptimalCols(this.exerciseSet, a4w) : 3);
 
     // 优先使用 Engine 产物直接打印
     if (this.lastSemantic && this.lastSemantic.questions && this.lastSemantic.questions.length) {
-      return resolvePrint().openFromQuestions(this.lastSemantic.questions, { title: title });
+      return PrintMod.openFromQuestions(this.lastSemantic.questions, {
+        title: title,
+        columns: cols,
+        fixed: !!fixedCols
+      });
     }
 
     // 回退 DOM 克隆打印
     var area = document.getElementById('problemsArea');
-    var fixedCols = this.exerciseSet.meta && this.exerciseSet.meta.columns;
-    var a4w = 718;
-    var cols = fixedCols ? fixedCols : (global.PluginUtil && global.PluginUtil.layout
-      ? global.PluginUtil.layout.calcOptimalCols(this.exerciseSet, a4w) : 3);
-
     var opts = { pageType: pageType, columns: cols };
-    return resolvePrint().open(area, title, opts);
+    return PrintMod.open(area, title, opts);
   };
 
   /**

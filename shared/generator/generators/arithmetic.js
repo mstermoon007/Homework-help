@@ -13,14 +13,10 @@ var Arith = require('../core/arithmetic-core.js');
 var SemanticEvidence = require('../core/semantic-evidence.js');
 var VariationApply = require('../core/variation-apply.js');
 
-// P25-09：按 KP 名称机械派生特殊结构 kind（仅除法族当前需要余数结构）。
-// 与 shape/position/money 的 NAME_TO_* 规则同构：消费 selector 注入的
-// plan.semanticParams.name，禁止 KP ID 猜测；无命中返回 null 走通用结构。
-function deriveKindFromName(name, op) {
-  if (!name) return null;
-  if (op === 'div' && name.indexOf('余数') !== -1) return 'div-remainder';
-  return null;
-}
+// P28-NAME-MIGRATION-02：kind 派生迁至 semantic-parameters.js（SSOT 边界），
+// 经 plan.semanticParams.kind 暴露。本生成器只读不改写；保留 op='div' 防御层确保
+// mixed 生成器在余数 KP 上不误派生（mixed op≠'div' 不命中 → 走通用结构）。余数 KP
+// （math-g2-down-u02-k001）路由到 generator:arithmetic-division → op='div' → 命中。
 
 // Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
 function pkp(plan) {
@@ -97,11 +93,11 @@ function createArithmeticGenerator(spec) {
       for (var i = 0; i < count; i++) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
-        // P25-09：优先显式 kind；其次按 KP 名称派生（有余数除法 → q……r 结构）
-        var kpName = plan.semanticParams && plan.semanticParams.name;
-        var nameKind = deriveKindFromName(kpName, op);
+        // P28-NAME-MIGRATION-02：kind 来自 plan.semanticParams.kind（SSOT 派生）；
+        // op='div' 防御层仅 division 生成器命中，mixed 生成器跳过避免误派生
+        var semKind = (op === 'div' && plan.semanticParams) ? plan.semanticParams.kind : null;
         var kind = constraints.kind ||
-          ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || nameKind;
+          ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || semKind;
         var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: genRange });
         if (!structure) {
           structure = Arith.generateStructure(rng, {
@@ -137,6 +133,8 @@ function createArithmeticGenerator(spec) {
           // D004 修复：补 answer.explanation，包含运算表达式与结果，供答题页显示解题步骤
           answer: { value: String(answer), acceptable: [], explanation: prompt.replace(' = ?', ' = ' + answer) },
           answerMode: 'input',
+          // P28-FORM-CONTRACT-01：声明横向算式作答框内联到等号后（替代渲染器正则识别）
+          response: { layout: 'inline-after-equals' },
           hint: null,
           data: {
             // C2：data.operation 必须用「运算标签字符串」。plan.operation 在新计划形态下

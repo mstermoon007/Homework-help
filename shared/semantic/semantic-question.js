@@ -165,6 +165,10 @@ function createSemanticQuestion(raw) {
   if (raw.data != null) sq.data = deepClone(raw.data);
   if (raw.hint != null) sq.hint = raw.hint;
 
+  // P28-FORM-CONTRACT-01：透传形态声明字段 response.layout（生成器声明、渲染器消费）。
+  // 缺省 null → 渲染器回落 block 布局（可见退化，非静默）；layout 枚举由 Schema 校验。
+  if (raw.response != null) sq.response = deepClone(raw.response);
+
   // 选择题兼容：sq.data.options 缺省时由 options 补全，并尽量反推 correctIndex
   if (sq.data && !Array.isArray(sq.data.options) && Array.isArray(sq.options) && sq.options.length) {
     sq.data.options = sq.options.slice();
@@ -275,6 +279,7 @@ function normalizeSemanticQuestion(raw) {
       ? deepClone(raw.graphic)
       : (raw.svg ? { type: 'custom', params: { rawSvg: raw.svg } } : null),
     constraints: deepClone(raw.constraints) || {},
+    response: deepClone(raw.response),  // P28-FORM-CONTRACT-01：形态声明透传（layout 枚举由 Schema 校验）
     metadata: raw.metadata || {
       generator: raw.generator || raw.pluginId || raw.source,
       generatorVersion: raw.generatorVersion || raw.version,
@@ -372,6 +377,16 @@ function validateSchema(sq) {
   }
   if (sq.question && sq.question.answerMode && !Schema.isValidAnswerMode(sq.question.answerMode)) {
     warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'question.answerMode', message: '未知 answerMode: ' + sq.question.answerMode, severity: Schema.SEVERITY.WARNING });
+  }
+
+  // --- ⑤.5 Response（形态声明，P28-FORM-CONTRACT-01）---
+  // 可选字段：缺省 null → 渲染器回落 block；存在则校验类型与 layout 枚举（warning，不阻断）。
+  if (sq.response != null) {
+    if (typeof sq.response !== 'object') {
+      warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'response', message: 'response 必须为对象', severity: Schema.SEVERITY.WARNING });
+    } else if (sq.response.layout != null && !Schema.isValidResponseLayout(sq.response.layout)) {
+      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'response.layout', message: '未知 response.layout: ' + sq.response.layout, severity: Schema.SEVERITY.WARNING });
+    }
   }
 
   // --- ⑥ Answer ---

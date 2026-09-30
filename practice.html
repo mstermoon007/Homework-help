@@ -126,10 +126,8 @@
   #problemsArea .feedback .fb-mis { color: var(--warn); }
 }
 
-/* 打印态：hero / 生成 CTA 不进入试卷（工具栏边栏的打印隐藏统一在 pages.css 工具栏段） */
-@media print {
-  .page-hero, .gen-cta { display: none !important; }
-}
+/* P28-UI-PRINT-WYSIWYG-01：打印态隐藏一律打 data-print-hide 标记，
+   规则唯一定义在 shared/styles/components.css，页面不私带 @media print。 */
 </style>
 <style>
 /* 优化点3：生成进度（乐观 UI，非阻塞渐进揭示） */
@@ -201,8 +199,8 @@
 </style>
 </head>
 <body data-page-node-id="rwBtS9BmX4E1JY5ZLzQA2D">
-<!-- 置顶 Hero（标题由 JS 按年级/题型动态写入 #sheetTitle） -->
-<header class="page-hero">
+<!-- 置顶 Hero（标题由 JS 按年级/题型动态写入 #sheetTitle；不进入打印） -->
+<header class="page-hero" data-print-hide>
   <div class="hero-inner">
     <h1 id="sheetTitle" data-page-node-id="HpyihXREs7FXk7wuYbo1DU">统一练习页</h1>
     <p class="hero-desc">在线作答 · 自动批改 · 可打印练习单；左侧可随时返回选题页。</p>
@@ -225,7 +223,7 @@
 
   <!-- Layer 2: 工具栏边栏（返回 + 题型/题量/难度 + 操作按钮）——宽屏固定左侧常驻，窄屏流式置顶，
        样式见 pages.css「工具栏集中管理」段；已取消独立的「工具」开关按钮 -->
-  <section class="panel controls" id="controlsPanel" style="display:none;" aria-label="练习设置" data-page-node-id="YsKfmcheLy420A6evi3t4q">
+  <section class="panel controls" id="controlsPanel" style="display:none;" aria-label="练习设置" data-print-hide data-page-node-id="YsKfmcheLy420A6evi3t4q">
     <div class="controls-dock-head">
       <button type="button" class="sidebar-back" aria-label="返回上页" title="返回上页"
               onclick="history.length &gt; 1 ? history.back() : (location.href='select.html')">
@@ -280,8 +278,8 @@
 
   <!-- Layer 3: 正式内容区（标题与计时器已上移至置顶 .page-hero；本区自第二行起为题目卡） -->
   <div class="exercise-content" data-page-node-id="ZVT5Z2uHXe7PG9AoYzwTkr">
-    <!-- 主操作常驻：Hero 下方左上角，突出渐变按钮（次级操作全部收纳于左侧边栏） -->
-    <div class="gen-cta">
+    <!-- 主操作常驻：Hero 下方左上角，突出渐变按钮（次级操作全部收纳于左侧边栏；不进入打印） -->
+    <div class="gen-cta" data-print-hide>
       <button type="button" class="btn btn-primary gen-cta-btn" id="genBtn" data-page-node-id="MEssgmJfDy15m54Yulf4N8"><span class="gen-cta-ico" aria-hidden="true">✨</span>生成练习</button>
     </div>
     <div class="gen-progress" id="genProgress" hidden data-page-node-id="Oh5WLXaIT7ydBX1q5TBQCr">
@@ -293,9 +291,9 @@
     </section>
   </div>
 
-  <!-- 工具栏收起态的展开把手：仅宽屏且 body.controls-collapsed 时显示（pages.css 控制），fixed 贴左缘 -->
+  <!-- 工具栏收起态的展开把手：仅宽屏且 body.controls-collapsed 时显示（pages.css 控制），fixed 贴左缘；不进入打印 -->
   <button type="button" class="rail-open" id="railOpen" aria-label="展开工具栏" title="展开工具栏"
-          data-page-node-id="railOpen-001"><span aria-hidden="true">❯</span></button>
+          data-print-hide data-page-node-id="railOpen-001"><span aria-hidden="true">❯</span></button>
 
   <section class="result-panel" id="resultArea" aria-live="polite" aria-atomic="true" data-page-node-id="er9vcm4Jhm4Bc46IF5HcZs"></section>
 
@@ -823,8 +821,8 @@
           card.setAttribute('aria-label', '第 ' + ((nd != null ? Number(nd) + 1 : ci + 1)) + ' 题');
         }
       });
-      // 卡片式/文字式网格按题目长度自适应列数（适配 A4 竖版宽度）
-      if (!meta.exam) PluginUtil.layout.fitColumns(area, set);
+      // 卡片式/文字式网格按题目长度自适应列数（P28-UI-PRINT-WYSIWYG-01：显式传 A4 718px，列数与打印同源）
+      if (!meta.exam) PluginUtil.layout.fitColumns(area, set, a4PrintableWidthPx('math'));
       // 按当前排版估算「填多少题可正好铺满 A4 整页」的推荐值
       updateCountTip();
       // 回车快捷批改
@@ -851,18 +849,17 @@
   }
 
   // ============ A4 竖版宽度自适应 ============
-  // 列数算法已收敛为单一来源：shared/core/common.js 的 PluginUtil.layout
-  // （calcOptimalCols / fitColumns / estimateCardWidth / renderLen / gridColumnsFromDom / applySpanning）。
-  // 预览与打印共用同一套逻辑，避免双份代码再次漂移。本页仅保留需要 Print.ROUTES 的 A4 宽度换算。
+  // 列数算法已收敛为单一来源：shared/core/core.js 的 PluginUtil.layout
+  // （calcOptimalCols / fitColumns / estimateCardWidth / renderLen / spanForLength / gridColumnsFromDom / applySpanning）。
+  // 预览与打印共用同一套逻辑、同一宽度，避免双份代码再次漂移。
 
-  // A4 竖版可打印宽度（px），与 shared/presentation/print.js 的 @page 边距保持一致
-  // 不同题型路由边距不同（如 makeTen 8mm、其余 12mm/10mm），按路由取对应可打印宽
-  function a4PrintableWidthPx(pageType) {
-    var route = (window.Print && window.Print.ROUTES && window.Print.ROUTES[pageType]) || {};
-    var mm = (route.pageMargin || '12mm 10mm').match(/([\d.]+)mm\s+([\d.]+)mm/);
-    var h = mm ? parseFloat(mm[2]) : 10; // 左右边距（mm）
-    var MM = 96 / 25.4;
-    return Math.round((210 - 2 * h) * MM);
+  // A4 竖版可打印宽度（px）：唯一真相 Print.LAYOUT（shared/presentation/print.js）。
+  // print.js 经 ensureDeferredReady 惰性装载，生成前必已就绪；未就绪时按契约常量保守回退（190mm=718px）。
+  function a4PrintableWidthPx(/* pageType */) {
+    if (window.Print && window.Print.LAYOUT && window.Print.LAYOUT.printableWidthPx) {
+      return window.Print.LAYOUT.printableWidthPx;
+    }
+    return Math.round(190 * 96 / 25.4);
   }
 
   // 插件无 render 时的通用降级渲染
@@ -1253,27 +1250,31 @@
     var src = area.querySelector('.questions-grid, .q-grid');
     if (!src || !src.children.length) { tip.style.display = 'none'; return; }
     // 打印/A4 端：按 A4 可打印宽度动态计算列数（与打印页完全一致，避免屏幕列数硬塞 A4）
-    var cfg = 'math';
-    var printableW = a4PrintableWidthPx(cfg);
+    var printableW = a4PrintableWidthPx('math');
     var fixedCols = state.exerciseSet.meta && state.exerciseSet.meta.columns;
     var cols = fixedCols ? fixedCols : PluginUtil.layout.calcOptimalCols(state.exerciseSet, printableW);
-    // 上下边距用于后续高度测算（与 shared/presentation/print.js 的 @page 边距一致）
-    var route = (window.Print && window.Print.ROUTES && window.Print.ROUTES[cfg]) || {};
-    var m = (route.pageMargin || '12mm 10mm').match(/([\d.]+)mm\s+([\d.]+)mm/);
-    var v = m ? parseFloat(m[1]) : 12;   // 上下边距
+    // 上下边距用于后续高度测算（唯一真相 Print.LAYOUT.pageMargin；未装载时按契约 12mm 回退）
+    var v = (window.Print && window.Print.LAYOUT && window.Print.LAYOUT.marginVMm) || 12;
     var MM = 96 / 25.4;
     var printableH = (297 - 2 * v) * MM;          // 一页内容高（px）
+    // 打印密度（tokens.css print token）：测量容器必须用打印 gap/padding，高度才与真实打印一致
+    var PRINT_GAP = '8px 6px', PRINT_GAP_ROW = 8, PRINT_CARD_PAD = '6px 8px';
 
     // 隐藏测量容器：与打印同宽、同列数、同间距，克隆当前卡片循环排布（保留打印端列跨），实测铺满高度
     var meas = $('printMeasure');
     if (!meas) { meas = el('div'); meas.id = 'printMeasure'; area.appendChild(meas); }
     meas.style.cssText = 'position:fixed;left:-20000px;top:0;width:' + printableW + 'px;visibility:hidden;';
     var g = el('div');
-    g.style.cssText = 'display:grid;grid-template-columns:repeat(' + cols + ',minmax(0,1fr));gap:14px;grid-auto-flow:row dense;';
+    g.style.cssText = 'display:grid;grid-template-columns:repeat(' + cols + ',minmax(0,1fr));gap:' + PRINT_GAP + ';grid-auto-flow:row dense;';
     meas.innerHTML = '';
     meas.appendChild(g);
     var pats = [];
-    for (var ci = 0; ci < src.children.length; ci++) pats.push(src.children[ci].cloneNode(true));
+    for (var ci = 0; ci < src.children.length; ci++) {
+      var pat = src.children[ci].cloneNode(true);
+      // 屏幕态卡片 padding 经 pages.css 的 #problemsArea !important 规则生效，测量打印高度需同权覆盖
+      pat.style.setProperty('padding', PRINT_CARD_PAD, 'important');
+      pats.push(pat);
+    }
     var fitted = 0;
     for (var n = 1; n <= 80; n++) {
       g.appendChild(pats[(n - 1) % pats.length].cloneNode(true));
@@ -1296,7 +1297,7 @@
       for (var hi = 0; hi < kids2.length; hi++) hsum += kids2[hi].getBoundingClientRect().height;
       var avgH = hsum / kids2.length;
       var remain = printableH - (bottom - firstTop);
-      fitted += Math.max(0, Math.floor(remain / (avgH + 14)) * cols);
+      fitted += Math.max(0, Math.floor(remain / (avgH + PRINT_GAP_ROW)) * cols);
     }
     var n = Math.min(50, Math.max(1, fitted));
     tip.textContent = 'Tips，推荐设置 ' + n + ' 可以打印 A4 整页';

@@ -209,9 +209,22 @@
     var GAP = 12;             // 网格列间隙(px)
     var CN_W = 14, EN_W = 9;  // 中文字宽 / 英文数字字宽(px @96dpi)
 
-    /** 取题目核心文本（仅算式/问句，不含 hint/input/序号） */
+    /** 取题目核心文本（仅算式/问句，不含 hint/input/序号）。
+     *  q.prompt = SemanticQuestion 题干字段（打印直渲链与屏显预览必须同源度量，P28-UI-PRINT-WYSIWYG-01） */
     function coreText(q) {
-      return String(q.q || q.text || q.question || '').trim();
+      // P28-UI-PRINT-WYSIWYG-01：与 HTMLRenderer.promptOf 同源——SemanticQuestion 题干可能位于
+      // prompt / content.prompt / question.prompt（对象）/ stem；legacy 位于 q / text / question（字符串）。
+      // 度量字段缺漏会导致打印列跨全部漏判（屏显走 renderable 对象有 text，打印走原始 DTO 只有 content.prompt）。
+      if (!q) return '';
+      var t = q.prompt
+        || (q.content && q.content.prompt)
+        || (q.question && typeof q.question === 'object' ? q.question.prompt : null)
+        || q.stem
+        || q.q
+        || q.text
+        || (typeof q.question === 'string' ? q.question : null)
+        || '';
+      return String(t).trim();
     }
 
     /** 度量题目核心文本长度（用于跨列判定；图形/多输入额外占宽） */
@@ -223,8 +236,18 @@
         if (h.indexOf('<svg') !== -1) score += 8;
         if (h.indexOf('combine-inp') !== -1) score += 8;
         if (h.indexOf('scene-box') !== -1) score += 10;
+        // SemanticQuestion 无 render 函数：图形描述符在 q.graphic / q.data.graphic
+        if (!h && (q.graphic || (q.data && q.data.graphic))) score += 8;
       } catch (e) { /* ignore */ }
       return score;
+    }
+
+    /** 跨列阈值唯一来源（预览 fitColumns / 打印 applySpanning / 直渲 buildFromQuestions 共用）：
+     *  L≥50 通栏；26≤L<50 跨 min(2,base) 列；其余 null（调用方按 span 1 处理） */
+    function spanForLength(L, base) {
+      if (L >= 50) return '1 / -1';
+      if (L >= 26) return 'span ' + Math.min(2, base);
+      return null;
     }
 
     /** 估算单卡最小渲染宽度(px)：仅核心文本 + 输入框 + 图形；hint 不参与宽度决策 */
@@ -259,11 +282,14 @@
       return Math.max(1, Math.min(4, rawCols));
     }
 
-    /** 预览/打印通用：设网格列数 + 按长度跨列 + 卡片撑满列宽。匹配所有网格容器类名。 */
-    function fitColumns(container, set) {
+    /** 预览/打印通用：设网格列数 + 按长度跨列 + 卡片撑满列宽。匹配所有网格容器类名。
+     *  availWidth 显式传入时按该宽度算列数（practice.html 传 A4 718px，与打印同源）；
+     *  缺省回落容器实测宽度（旧行为）。 */
+    function fitColumns(container, set, availWidth) {
       var qs = set.questions || [];
       var fixed = set.meta && set.meta.columns;
-      var base = fixed || calcOptimalCols(set, (container && container.offsetWidth) || (typeof window !== 'undefined' ? window.innerWidth - 40 : 1000));
+      var widthSrc = availWidth || (container && container.offsetWidth) || (typeof window !== 'undefined' ? window.innerWidth - 40 : 1000);
+      var base = fixed || calcOptimalCols(set, widthSrc);
       container.querySelectorAll('.questions-grid, .q-grid, .comprehensive-grid').forEach(function (grid) {
         grid.style.gridTemplateColumns = 'repeat(' + base + ', minmax(0, 1fr))';
         grid.style.gridAutoFlow = 'row dense';
@@ -282,9 +308,7 @@
               if (item.querySelector('.q-badge')) L += 12;
             }
           }
-          if (L >= 50) item.style.gridColumn = '1 / -1';
-          else if (L >= 26) item.style.gridColumn = 'span ' + Math.min(2, base);
-          else item.style.gridColumn = 'span 1';
+          item.style.gridColumn = spanForLength(L, base) || 'span 1';
           item.style.justifySelf = 'stretch';
         }
       });
@@ -329,9 +353,7 @@
         if (card.querySelector('svg')) L += 8;
         if (card.querySelector('.combine-inp')) L += 8;
         if (card.querySelector('.scene-box')) L += 10;
-        if (L >= 50) card.style.gridColumn = '1 / -1';
-        else if (L >= 26) card.style.gridColumn = 'span ' + Math.min(2, base);
-        else card.style.gridColumn = 'span 1';
+        card.style.gridColumn = spanForLength(L, base) || 'span 1';
         card.style.justifySelf = 'stretch';
       }
     }
@@ -340,6 +362,7 @@
       GAP: GAP,
       coreText: coreText,
       renderLen: renderLen,
+      spanForLength: spanForLength,
       estimateCardWidth: estimateCardWidth,
       calcOptimalCols: calcOptimalCols,
       fitColumns: fitColumns,

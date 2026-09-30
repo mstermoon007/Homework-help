@@ -614,3 +614,10 @@
 /* 打印直渲：正确（　）错误（　） */
 .judge-print { gap: 24px; font-size: 15px; font-weight: 700; }
 .judge-print .judge-choose { white-space: nowrap; letter-spacing: 1px; }
+
+/* P28-UI-PRINT-WYSIWYG-01：打印态隐藏唯一声明式入口。
+   页面层只在元素上打 data-print-hide 标记，不在各页/各 CSS 私写 @media print 选择器。
+   打印 SSOT（@page / 纸张 / 试卷排版）仍在 shared/presentation/print.js。 */
+@media print {
+  [data-print-hide] { display: none !important; }
+}

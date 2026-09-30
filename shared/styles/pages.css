@@ -137,20 +137,8 @@
   /* 练习页题目卡片覆写：强制左对齐（覆盖部分插件内联 text-align:center）+ 紧凑内边距 */
   #problemsArea .questions-grid .question-card,
   #problemsArea .q-grid .question-card { text-align: left !important; padding: var(--card-padding-screen) !important; }
-  @media print {
-    #problemsArea .questions-grid .question-card,
-    #problemsArea .q-grid .question-card { padding: var(--card-padding-print) !important; }
-    #problemsArea .questions-grid .question-card,
-    #problemsArea .q-grid .question-card { text-align: left !important; }
-  /* M13 提前预习：乘除法表静态卡片（单卡通栏 + 表格边框） */
-  #problemsArea .preview-table-card { grid-column: 1 / -1; text-align: center !important; }
-  .preview-table { border-collapse: collapse; margin: 10px auto 2px; font-size: 13px; }
-  .preview-table caption { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-  .preview-table td { border: 1px solid var(--line); padding: 4px 8px; white-space: nowrap; }
-  /* 批改反馈：空时不占高（基础字号/字重由 components 层 .question-card .feedback 提供） */
-  .question-card .feedback { min-height: 0; margin-top: 4px; }
-  .question-card .feedback:empty { display: none; }
-} /* /@media print */
+  /* P28-UI-PRINT-WYSIWYG-01：原 @media print 块（打印 padding/左对齐、.preview-table* 通栏表格、
+     .feedback 空时不占高）已迁入打印 SSOT —— shared/presentation/print.js 克隆文档 buildPrintHtml。 */
 
   .correct-answer { font-size: 12px; color: var(--bad); font-weight: 700; margin-top: 6px; }
   /* 答案输入框状态（基础宽高在 components 层 .answer-inp） */
@@ -200,9 +188,8 @@
    * 练习页工具栏全部覆写样式统一维护于此；同层后置 → 覆盖上方精炼段与 @layer toolbar。 */
 
   /* 面板本体屏幕态为左侧常驻工具栏边栏，规则见本文件尾部「工具栏边栏」段；
-     底色/描边沿用 @layer toolbar 的 .panel 基类。 */
-  /* 打印克隆源仅 #problemsArea；工具栏边栏双保险不进入试卷 */
-  @media print { .panel.controls { display: none !important; } }
+     底色/描边沿用 @layer toolbar 的 .panel 基类。
+     打印隐藏：元素打 data-print-hide，规则在 components.css（P28-UI-PRINT-WYSIWYG-01）。 */
 
   /* ===== 知识点卡片题量占比（可调整）===== */
   .kp-ratio { display: flex; flex-direction: column; gap: 8px; width: 100%; }
@@ -340,6 +327,6 @@
       padding: 12px 12px 14px;
     }
   }
-  @media print { .rail-open { display: none !important; } }
+  /* .rail-open 打印隐藏：元素打 data-print-hide，规则在 components.css（P28-UI-PRINT-WYSIWYG-01） */
 
 } /* /@layer pages */

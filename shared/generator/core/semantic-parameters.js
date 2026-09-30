@@ -220,6 +220,25 @@
     return { subTopic: null, evidence: null };
   }
 
+  /**
+   * deriveKindFromName(facts) → 按 KP 名称 + operations 机械派生特殊结构 kind
+   * P28-NAME-MIGRATION-02：从 arithmetic.js 迁入 SSOT 边界，让 plan.semanticParams.kind
+   * 成为派生单一暴露点。当前仅除法族余数 KP 命中：facts.operations 含 'division' 且
+   * facts.name 含「余数」→ 'div-remainder'（div-remainder → Arith.buildSpecialKind 产出
+   * q……r 结构）；无命中返回 null 走通用结构。
+   * 与原 arithmetic.js 内 deriveKindFromName(name, op='div') 等价（余数 KP 路由到
+   * generator:arithmetic-division；mixed 生成器在 op≠'div' 时由 generator 侧防御层排除）。
+   * 双环境等价：派生只依赖 facts.name/operations，不依赖 teaching 表收窄。
+   */
+  function deriveKindFromName(facts) {
+    if (!facts || !facts.name) return null;
+    if (facts.operations && facts.operations.indexOf('division') !== -1 &&
+        facts.name.indexOf('余数') !== -1) {
+      return 'div-remainder';
+    }
+    return null;
+  }
+
   /* ------------------------------------------------------------------ *
    * Resolver
    * ------------------------------------------------------------------ */
@@ -245,6 +264,7 @@
       if (!primaryFamily && facts.coarseFamily) primaryFamily = facts.coarseFamily;
 
       var derived = deriveSubTopic(facts, familyEntry && familyEntry.primary ? familyEntry.primary : null);
+      var kind = deriveKindFromName(facts);
 
       var intentRow = questionType ? getIntent(kpId, questionType) : null;
       var intent = null;
@@ -270,10 +290,12 @@
         subTopicEvidence: derived.evidence,
         operations: facts.operations.slice(),
         representations: facts.representations.slice(),
+        kind: kind,
         intent: intent,
         sources: {
           family: familySource,
           subTopic: 'mechanical-rule:kbl-name-concept',
+          kind: kind ? 'mechanical-rule:kbl-name-operations' : 'none',
           intent: intent ? 'teaching:qt-intent' : 'none'
         }
       };
@@ -309,6 +331,7 @@
     attachToPlan: singleton.attachToPlan,
     // 机械派生原语（供 dev 审计/测试做双环境一致性比对，业务消费方应走 resolve）
     deriveSubTopic: deriveSubTopic,
+    deriveKindFromName: deriveKindFromName,
     readFacts: readFacts
   };
 

@@ -45,7 +45,7 @@
 .controls-settings .row { display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
 
 /* 面板定位：practice.html 屏幕态为 Hero 下方左侧常驻边栏（pages.css @layer pages 边栏段统一定义），
-   打印由 print.js 剔除清单 + pages.css @media print 双重隐藏；本层不再提供粘性定位。 */
+   打印由 print.js 克隆剔除清单 + 元素 data-print-hide（components.css 唯一规则）双重隐藏；本层不再提供粘性定位。 */
 
 /* ===== 工具栏数字输入框（自定义题量 / 难度 / 专项「最大数」等）=====
  * 统一令牌着色，去除历史内联硬编码色；聚焦环用 --brand，与 btn 一致 */

@@ -25,6 +25,95 @@
 
 ## 记录（新 → 旧）
 
+### P28-CLEANUP-01｜项目大扫除:删除历史遗留 + dev 草稿 + 本地系统垃圾（2026-09-30）
+- modified:
+  - `docs/P28/change-log.md`（追加本次清理记录）
+- deleted:
+  - `P16-FOLLOWUP-C0-baseline.json`（P16 已冻结历史阶段的 C0 基线快照,已被 docs/archive/ 归档取代）
+  - `audit-results/g1-field-consumption.json` + `audit-results/` 目录（P16 早期审计产物,9/9 后无更新,目录清空后删除）
+  - `dev/fingerprint-report.json`、`dev/fingerprint-report.md`、`dev/generator-family-map.json`、`dev/generator-migration-report.json`（开发过程一次性报告产物）
+  - `dev/test-svg-core.js`、`dev/test-svg-calculation.js`、`dev/test-svg-geometry.js`、`dev/test-svg-make-ten.js`、`dev/svg-test.html`（SVG 计算草稿与测试页,非 check-all/tests 依赖）
+  - 9 个 `.DS_Store`（根/kbl/archive/tests/shared/shared-knowledge/docs/dev/migration,gitignore 已忽略,无 git 改动）
+- reason: 用户发起项目大扫除,选定清理范围:本地系统垃圾 + 历史阶段遗留 + dev 临时报告与 SVG 草稿。安全核查确认无活代码依赖:`dev/check-all.js` 不引用任何待删文件;`dev/check-kbl-uniqueness.js` 仅将 `audit-results` 写入 EXCLUDE_DIRS 字符串常量作排除扫描用,不依赖目录存在;`dev/p28/check-seo-ai-history-isolation.js` 仅将 `audit-results` 作为隔离规则字符串常量,不依赖目录存在。未触及 git 工作区 22 个已修改源码与 2 个未追踪新测试,未动 stash。
+- tests: `node dev/check-all.js` → 27 PASS / 0 FAIL / 1 SKIP / 28 项（与清理前一致,#16 bundle hash PASS / #17 确定性 PASS / FINAL-91 只读门禁前后 hash 一致）。
+- risk: 低。删除文件均为历史快照/一次性报告/草稿/系统垃圾,无源码、契约、配置改动;check-all 与 tests/ 不依赖这些文件。删除被 git 追踪的文件（P16 基线 + audit-results JSON + dev 7 份报告草稿）会产生 git D 标记,需用户择机 commit;本规则不自动提交。
+
+### P28-SEM-GATE-FIX-01｜SEM-GATE normalizeOp 补 KBL 全称映射 + 合并 NAME-MIGRATION 三条记录为一条（2026-09-30）
+
+- modified:
+  - `shared/validator/kp-semantic-validator.js`（normalizeOp 补 addition→add / subtraction→sub / multiplication→mult / division→div 全称映射；KBL semantic.operations 用全称，题目 data.operation 用短名，缺映射会导致门禁在真实 PracticeSession 路径对所有算术 KP 误报 warning）
+  - `tests/validator/kp-semantic-validator.test.js`（新增 1 条断言：KBL 全称 vs 题目短名 normalizeOp 归一后不误报——div∈[division] / add∈[addition] / mult∈[multiplication] / sub∈[subtraction] / mixed∈[addition,subtraction]）
+  - `shared/engine/strategy-engine.bundle.js`（build:strategy 重建，validator 内联副本同步）
+  - `shared/engine/presentation-engine.bundle.js`（build:presentation 重建，validator 内联副本同步）
+  - `docs/P28/change-log.md`（合并 P28-NAME-MIGRATION-01 / 01-ABORT / 02 三条为一条 P28-NAME-MIGRATION，修正 attachToPlan 从未调用的错误分析）
+- deleted: 无
+- reason: 审查发现 SEM-GATE 的 normalizeOp 只处理短名（div/add/mult/sub）和符号（÷+-×），不处理 KBL 全称（division/addition/multiplication/subtraction）。在真实 PracticeSession 路径，wrapGenerator 调 attachToPlan 填充 plan.semanticParams.operations=['division']，门禁 normalizeOp('division') 返回 'division'（未命中分支），与题目 data.operation='div' 比较后不匹配 → 对所有除法 KP 误报 warning。此 bug 被 freeze 测试路径隐藏（freeze 不经 wrapGenerator → plan.semanticParams=undefined → 门禁跳过）。补全称映射后门禁在真实路径能正确归一比较。同时合并 NAME-MIGRATION 三条 change-log（原 01 预登记 / 01-ABORT 撤销 / 02 迁入 SSOT）为一条，修正 02 中"attachToPlan 从未调用"的错误分析——实际 generator-selector.js L172 wrapGenerator 在每次 generate 前调 attachToPlan，plan.semanticParams 在主路径被填充，semKind 被消费，迁移前后行为等价。
+- tests: 实测 ①`node --test tests/validator/kp-semantic-validator.test.js` 7/7 PASS（原 6 + 新增 KBL 全称归一）；②`node --test tests/generator/*.test.js tests/validator/*.test.js` 267/267 PASS（原 266 + 新增 1）；③`node dev/build-strategy-bundle.js` + `node dev/build-presentation-bundle.js` 双 bundle 重建，`node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP（#16 bundle hash PASS / #17 确定性 PASS / #6b freeze 只读无 git diff）。
+- risk: 低。normalizeOp 仅新增 4 个全称映射分支，不改既有短名/符号映射逻辑。warn-only 门禁不阻断生成。合并 change-log 记录不改动源码。
+
+### P28-NAME-MIGRATION｜integer-arithmetic 族 name 派生迁至 semantic-parameters.js（SSOT 边界内派生 helper）（2026-09-30）
+
+> 修正说明：本条由原 P28-NAME-MIGRATION-01 / 01-ABORT / 02 三条合并而来。01 预登记后实施时发现假设错误（deriveKindFromName 是活跃写者，不是冗余 fallback）→ 01-ABORT 撤销 → 02 改为迁入 SSOT。02 原分析称"attachToPlan 从未调用、plan.semanticParams 一直 undefined"有误：实际 generator-selector.js wrapGenerator 在每次 generate 前调 attachToPlan，plan.semanticParams 在主路径被填充。迁移前后 semKind 与 nameKind 行为等价。
+
+- modified:
+  - `shared/generator/core/semantic-parameters.js`（新增 deriveKindFromName helper：从 facts.name 含「余数」+ facts.operations 含 division 派生 'div-remainder'；resolve 返回对象加 kind 字段；sources.kind 派生源标识；api 导出 deriveKindFromName 供审计/测试）
+  - `shared/generator/generators/arithmetic.js`（删 L16-23 deriveKindFromName 函数及前置注释；L100-104 改读 plan.semanticParams.kind，保留 op='div' 防御层确保 mixed 生成器不误派生；注释更新指向 SSOT 边界）
+  - `shared/engine/strategy-engine.bundle.js`（build:strategy 重建；semantic-parameters.js 内联副本 + arithmetic.js 内联副本同步）
+  - `shared/engine/presentation-engine.bundle.js`（build:presentation 重建；arithmetic.js / validator 内联副本同步）
+  - `tests/generator/p28-name-migration.test.js`（新建 3 条断言：resolve 暴露 kind / 余数 KP 端到端零变化 / 直驱乘法 op≠div 不命中防御层）
+- deleted: 无文件；删 `shared/generator/generators/arithmetic.js` 中 deriveKindFromName 函数（L19-23）+ nameKind fallback 链（L101 kpName、L102 nameKind、L104 末 || nameKind）
+- reason: 把 deriveKindFromName 从 generator 内迁到 semantic-parameters.js（KBL SSOT 边界内派生 helper），让 plan.semanticParams.kind 成为 SSOT 暴露的单一写者，generator 只读不改写。不改 KBL raw 数据。行为等价机制：generator-selector.js wrapGenerator 在每次 generate 前调 attachToPlan(plan) → plan.semanticParams 被填充（含 kind 字段）→ generator 读 plan.semanticParams.kind。迁移前 nameKind 经 deriveKindFromName(plan.semanticParams.name, op) 派生；迁移后 semKind 经 plan.semanticParams.kind 读取（resolve 内调同一个派生逻辑）。二者在主路径行为等价。原 01-ABORT 证明 deriveKindFromName 是活跃写者（删除后 q……r 消失），因 kind='div-remainder' → Arith.buildSpecialKind 产出 q……r 结构。
+- tests: 实测 ①`node --test tests/generator/p28-name-migration.test.js` 3/3 PASS；②`node --test tests/generator/*.test.js tests/validator/*.test.js` 267/267 PASS；③`node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP。
+- risk: 低。kind 派生逻辑机械等价（name 含「余数」+ operations 含 division → div-remainder）；双环境等价（派生只依赖 facts.name/operations，不依赖 teaching 表收窄）；余数 KP 端到端行为零变化。
+
+### P28-FORM-CONTRACT-01｜B-1/B-2 形态契约显式化：SemanticQuestion.response.layout 字段 + 删除 html-renderer `= ?` 字符串判定（2026-09-30）
+
+- modified:
+  - `shared/semantic/semantic-question.js`（normalizeSemanticQuestion 透传 raw.response；Schema 新增 response.layout 枚举 'inline-after-equals'|'block'，默认 null）
+  - `shared/presentation/html-renderer.js`（inlineExpression 改读 sq.response.layout==='inline-after-equals'；删除 INLINE_EQ_RE 正则与 endsWith 判定）
+  - `shared/generator/generators/arithmetic.js`（产出载荷增 response:{layout:'inline-after-equals'}）
+  - `shared/generator/generators/picture-equation.js`（产出载荷增 response:{layout:'inline-after-equals'}；多分支仅 decimal-context 等以「= ?」结尾分支内联生效，其余分支无尾缀自动回落 block）
+  - `shared/generator/generators/c1-number-puzzle.js`（产出载荷增 response:{layout:'inline-after-equals'}；多分支仅 isSymbol「★ = ?」分支内联，其余分支回落 block）
+  - `shared/schemas/semantic-question.schema.js`（RESPONSE_LAYOUTS 枚举 + isValidResponseLayout，供 Schema 校验认 response.layout）
+  - `tests/presentation/renderer.test.js`（既有 6 个「= ?」用例补 response 字段；新增 5 条形态契约测试：声明 inline→eq-answer / 缺 response→block / 无「= ?」尾缀 fallback block / 选择题不内联 / Schema 枚举 + normalize 透传）
+  - `docs/06-PRESENTATION.md`（§5 补 response.layout 声明字段索引）
+  - `shared/engine/presentation-engine.bundle.js`（build:presentation 重建，#16 source==bundle）
+- deleted: 无；删除 `shared/presentation/html-renderer.js` 中 INLINE_EQ_RE 字符串检测正则及其 endsWith 调用路径。
+- reason: R6/R7 形态契约隐式——渲染器靠题干以「= ?」结尾正则判定作答框内联，改题干格式即静默退化作答框。改为生成器声明、Executor 归一、渲染器只消费显式字段，止住字符串耦合。属分析确认的根因 B，低风险、纯增字段、独立于 A/C。grep 全 generators 目录确认实际产出「= ?」题干的只有 arithmetic / picture-equation / c1-number-puzzle 三个生成器；fraction/decimal/percent/money/selection 等均不产出「= ?」尾缀（selection 为选择题，由 optionsOf 护栏排除不内联）。多分支生成器（picture-equation/c1-number-puzzle）以声明 + fallback 设计，无尾缀分支自动回落 block，行为与旧正则未匹配等价，零回归。
+- tests: 实测 ①`node --test tests/presentation/renderer.test.js` 53/53 PASS（既有 48 + 新增 5）；②`node --test tests/generator/*.test.js tests/validator/*.test.js` 263/263 PASS；③`node dev/build-presentation-bundle.js` + `node dev/build-strategy-bundle.js` 双 bundle 重建，`node dev/p28/check-bundle-determinism.js --mode bundle` PASS（source==bundle，hash 一致）；④`node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP（#15 Browser E2E 本机无 Chrome，CI 强制；#16 bundle hash、#17 构建确定性 PASS；#6b freeze 只读无 git diff；#20 doc 历史数字扫描无违例）。
+- risk: 低。response 字段为 SemanticQuestion 契约的新增（非改写），经 Executor 归一兼容；未迁移的生成器缺字段时回落 block 布局（可见退化，非静默）。多分支 fallback 设计保证 picture-equation/c1-number-puzzle 非内联分支行为不变。freeze 产物只记 promptLen/sample/ans/generator/schema/kpSem/tc 标志，response 字段不入产物，零影响。门禁 #20 doc 历史数字扫描无违例确认。
+
+### P28-SEM-GATE-01｜A-4 运行时语义门禁：Validator 断言产出题 operations ⊆ semanticParams.operations（2026-09-30）
+
+- modified:
+  - `shared/validator/kp-semantic-validator.js`（新增 checkOperationSemanticGate(sq, plan)：warn-only 断言题目 data.operation ⊆ plan.semanticParams.operations（KBL SSOT）；在 validateKpSemantics 步骤 3.5 接入（既有 KP 语义校验后），valid 保持 true 不阻断生成；exports 导出函数；跳过四态：无 plan / 无 semanticParams.operations / 题目无 data.operation / SSOT 为空；mixed 与多运算 SSOT 同口径放行）
+  - `tests/validator/kp-semantic-validator.test.js`（新建文件，6 条门禁用例：子集通过 / 非子集 warning warn-only valid 保持 true / mixed 多运算 / 跳过四态 / 集成 valid 保持 true）
+  - `shared/engine/strategy-engine.bundle.js`（build:strategy 重建，#16 source==bundle）
+- deleted: 无
+- reason: R1/R2 语义决策多写者（name 派生、registry 绑定、semanticParams 并存）的 forcing function。先上运行时门禁把不一致暴露为 warning，再按族增量迁移 name 派生→读 semantic 字段；门禁本身不改正文，只加断言。属分析确认的根因 A 的护栏，独立于 B。原计划含「kind ∈ semantic.structure」项，因生成器产出题目无 kind 字段（arithmetic 等把 kind 用作内部 buildSpecialKind 输入，未写入 data），不可运行时校验，该项延后至 name 派生迁移阶段。
+- tests: 实测 ①`node --test tests/validator/kp-semantic-validator.test.js` 6/6 PASS；②`node --test tests/generator/*.test.js tests/validator/*.test.js` 263/263 PASS（既有测试 plan:null 或无 semanticParams → SEM-GATE 跳过，无回归）；③`node dev/build-strategy-bundle.js` 重建，`node dev/p28/check-bundle-determinism.js --mode bundle` PASS；④`node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP。warn-only 试运行：既有 1570 行 freeze 矩阵 plan 无 semanticParams → SEM-GATE 跳过，freeze 不受影响，#6b 只读无 git diff。
+- risk: 中低。warn-only 试运行（SEVERITY.WARNING），不阻断生成、不破坏 freeze、不转红。待按族增量迁移 name 派生→读 semantic 字段、确认误报率后再评估是否转 fail-closed。门禁只加断言不改正文，与 P28-FORM-CONTRACT-01 无耦合，可独立交付。
+
+### P28-UI-PRINT-WYSIWYG-01｜预览/打印结构同源收口：双链骨架/边距/judge/列数列跨单一真相（2026-09-30）
+
+- modified:
+  - `shared/presentation/print.js`（新增 Print.LAYOUT 单一常量（210mm/190mm/12mm 10mm/718px/96dpi）与 buildPrintDocument 双链共用骨架（CSP/@page/shell/title 同源）；抽 buildJudgePrintCss 并注入克隆链（修复克隆链判断题打出「✓正确/✗错误」边框按钮、去按钮规则错挂直渲链问题）；buildPrintQcss 边距 10mm 8mm→统一 12mm 10mm、grid 补 row dense；buildFromQuestions 经 PluginUtil.layout 按 718px 同算法计算列数与每题 span 并透传；克隆链修复先 setProperty('--grid-cols') 后赋 style.cssText 被整体冲掉、列数回落默认 3 列的漂移（变量并入 cssText 并显式写 grid-template-columns/row dense）；导出 cssTokenVal 兜底常量供契约断言）
+  - `shared/presentation/html-renderer.js`（render() options 增 span：白名单 `span [1-4]`/`1 / -1` 校验后输出内联 grid-column；renderGrid 零改动）
+  - `shared/presentation/renderer.js`（render() 增第 4 参 extra 透传 span；renderAll 透传 gridOptions.spans）
+  - `shared/core/core.js`（Layout.coreText 与 html-renderer.promptOf 同源：认 q.prompt/content.prompt/question.prompt(对象)/stem 及 legacy q/text/question(字符串)；renderLen 增 q.graphic/data.graphic 图形加分——预览/打印度量单一实现）
+  - `shared/engine/practice-session.js`（主链 session.print 经 calcOptimalCols(set, Print.LAYOUT.printableWidthPx) 计算列数并传 openFromQuestions，不再恒定 3 列）
+  - `practice.html`（fitColumns 显式传 A4 718px 同源宽度；a4PrintableWidthPx/推荐题量测量改读 Print.LAYOUT；测量容器改用打印 token gap 8px 6px + 卡片 padding 6px 8px；.page-hero/.gen-cta/.panel.controls/.rail-open 打 data-print-hide 标记并删内联 @media print）
+  - `shared/styles/pages.css`（删除 3 处 @media print：克隆链内容样式（卡片 padding/左对齐/.preview-table*）迁入 print.js 克隆文档；.panel.controls/.rail-open 改由 data-print-hide 承接）
+  - `shared/styles/components.css`（新增唯一 @media print 声明式规则 [data-print-hide]{display:none!important}）
+  - `tests/presentation/renderer.test.js`（新增排版契约断言：双链 @page 边距同源 12mm 10mm、CSP 禁 script、190mm；token 兜底值===tokens.css 解析值；judge 克隆去按钮形态；buildFromQuestions 列数/span 输出；prompt/graphic 度量）
+  - `shared/engine/presentation-engine.bundle.js`（build:presentation 重建，#16 source==bundle）
+  - `docs/06-PRESENTATION.md`（§4 打印约定补 SSOT 索引：LAYOUT 常量/双链/算法/token；删除已失效 pvOverlay 条目）
+  - `docs/P28/change-log.md`（本条登记）
+- deleted: 无文件删除；删除 pages.css 3 处、practice.html 1 处页面私有 @media print 块（行为由 print.js / [data-print-hide] 承接）。
+- reason: 实测预览与实际打印不一致的根因是 Presentation 层内存在两条真相：主打印链恒定 3 列且零列跨（session.print 不传 columns、renderGrid 不输出 span），屏显按容器宽度+题目长度跨列；双链边距 12mm 10mm vs 10mm 8mm；judge 去按钮 CSS 挂错链导致克隆链打印出边框按钮；718px/190mm/margin 在 3 处重复。按「结构同源、不增层、不双轨」收口：列数/列跨算法仍唯一来自 PluginUtil.layout（core.js），打印文档骨架唯一来自 print.js，屏/打密度差异只经 tokens.css 两个 print token 表达。
+- tests: ①`node --test tests/presentation/renderer.test.js` 48/48 PASS（新增 12 条排版契约：LAYOUT 常量、token 兜底===tokens.css 解析、buildPrintDocument CSP/@page/190mm、buildJudgePrintCss、spanForLength/coreText 含 DTO 嵌套题干、span 白名单、renderAll 透传、直渲动态列数+列跨、fixed 不跨列、DTO 卷列跨）；②`npm test` 全量 602/602 PASS；③`npm run build:presentation` 重建，#16 source==bundle、#17 确定性 PASS；④`node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP（#15 Browser E2E 本机无 Chrome，CI 强制）；⑤浏览器实测（本地静态服务，window.open 桩捕获真实打印文档）：30 题混合卷屏显与打印均 2 列、30 卡一致、span 2 卡片 6=6、通栏 0=0；@page 12mm 10mm、CSP script-src 'none'、190mm、无 10mm 8mm；data-print-hide 4 个且 components.css 规则命中。实测中发现并修复两处真实漂移：直渲链对原始 DTO（题干在 content.prompt）列跨全漏（coreText 同源修复）、克隆链 cssText 冲掉 --grid-cols 回落 3 列。判断题该 KP 无生成器未覆盖到浏览器形态，judge 打印形态由单测（judge-print/（　）/无 input/无按钮、buildJudgePrintCss）与 CI Browser E2E 覆盖。
+- risk: 中低。直渲链边距由 10mm 8mm 收紧为 12mm 10mm（契约 190mm 内容宽不变，纵向边距 +2mm）；主链列数由恒定 3 变为按题量动态（1-4），长题新增通栏/半宽 span，可能改变既有打印分页密度（正向，与预览一致）；span 经白名单校验无注入面。feedback.html 与 styles.css 中不进入打印链的 @media print 本次不动（无 Print 调用/元素已不存在）。未执行 git commit。
+
 ### P28-RELEASE-V510｜V5.1.0 判断题教学闭环发布：版本号统一（2026-09-29）
 
 - modified:

@@ -158,17 +158,21 @@
     return svg;
   }
 
-  // P28-INLINE-ANSWER-01：横向算式（题干以「= ?」结尾）作答框内联到等号后：
-  // 屏幕端「？」作浅色 placeholder（虚化）；打印克隆链清空 value/placeholder 呈空白盒，
-  // 直渲 print 模式渲染等宽空白 span；下方独立作答行不再输出。
-  var INLINE_EQ_RE = /^(.*[=＝])\s*[？?]\s*$/;
+  // P28-FORM-CONTRACT-01：横向算式作答框内联由生成器声明 response.layout='inline-after-equals'
+  // 决定（语义字段），不再靠题干以「= ?」结尾的正则识别（删除 INLINE_EQ_RE）。
+  // 形态识别上移为声明字段；此处仅在 layout 已声明时机械剥离尾缀「= ?」（格式化辅助，
+  // 非形态识别）。若题干无该尾缀（如多分支生成器的非算式分支），回落 block 布局，
+  // 与旧正则未匹配时行为等价。屏幕端「？」作浅色 placeholder（虚化）；打印克隆链清空
+  // value/placeholder 呈空白盒；下方独立作答行不再输出。
+  var TRAILING_EQ_BLANK_RE = /\s*[=＝]\s*[？?]\s*$/;
   function inlineExpression(sq, prompt) {
-    if (!sq || answerModeOf(sq) !== 'input') return null;
+    if (!sq || !sq.response || sq.response.layout !== 'inline-after-equals') return null;
+    if (answerModeOf(sq) !== 'input') return null;
     if (optionsOf(sq)) return null;  // 选择题（selection.js 的 calc 选择题等）不内联
-    var m = String(prompt).match(INLINE_EQ_RE);
-    if (!m) return null;
-    // 去掉尾部「=」：等号与填写框一起包进 .eq-answer（nowrap），保证窄列下等号不与框分离
-    return m[1].replace(/[=＝]\s*$/, '').replace(/\s+$/, '');
+    var p = String(prompt);
+    var left = p.replace(TRAILING_EQ_BLANK_RE, '');
+    if (left === p) return null;  // 无「= ?」尾缀 → 回落 block（与旧正则未匹配等价）
+    return left;
   }
 
   function render(sq, index, options) {
@@ -185,7 +189,13 @@
     // 生成层统筹：固定样式类（style-{calc|fill|choice|judge|story|shape|open}），供页面固定样式呈现。
     // P28-23：样式 token 白名单（仅小写字母/数字/连字符），非白名单不进入 class 属性。
     if (sq && typeof sq.style === 'string' && /^[a-z0-9-]+$/.test(sq.style)) cardCls += ' style-' + sq.style;
-    var html = '<div class="' + cardCls + '" data-index="' + index + '" role="group" aria-label="第 ' + (index + 1) + ' 题">';
+    // P28-UI-PRINT-WYSIWYG-01：列跨由 PluginUtil.layout 统一度量后经 options.span 透传（打印与预览同阈值）。
+    // 白名单只允许 grid-column 两种形态，杜绝任意字符串进入 style 属性。
+    var spanStyle = '';
+    if (options.span && /^(?:span [1-4]|1 \/ -1)$/.test(options.span)) {
+      spanStyle = ' style="grid-column:' + options.span + '"';
+    }
+    var html = '<div class="' + cardCls + '" data-index="' + index + '"' + spanStyle + ' role="group" aria-label="第 ' + (index + 1) + ' 题">';
     // P28-UI-QNUM-GAP-01：题号与正文之间固定 4 个空格宽（&nbsp; 不折叠、打印克隆同源生效）
     html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;';
     if (inlineLeft) {

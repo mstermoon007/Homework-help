@@ -159,11 +159,45 @@ function checkOperation(sq, kpConstraints) {
   return { errors: errors, warnings: warnings };
 }
 
+/**
+ * 3.5 Operation Semantic Gate (P28-SEM-GATE-01)：
+ * 题目 data.operation 必须 ⊆ plan.semanticParams.operations（KBL 语义 SSOT）。
+ * 属根因 A「语义决策多写者」的 forcing function：暴露 name 派生 / registry 绑定 / constraints
+ * 与 KBL semanticParams.operations 的不一致。先 warn-only 试运行（不阻断生成），
+ * 确认误报率后再转 fail-closed；门禁本身不改正文，只加断言。
+ * 跳过条件：无 plan / 无 semanticParams.operations / 题目无 data.operation / SSOT 为空。
+ * 注：原计划含「kind ∈ semantic.structure」项，因生成器产出题目无 kind 字段（kind 仅
+ * 为生成内部结构变量，未写入 data）而不可运行时校验，该项延后至 name 派生迁移阶段。
+ */
+function checkOperationSemanticGate(sq, plan) {
+  var warnings = [];
+  if (!plan) return warnings;
+  var semOps = plan.semanticParams && plan.semanticParams.operations;
+  if (!Array.isArray(semOps) || !semOps.length) return warnings;  // 无 SSOT 时不构成违例
+  var sqOp = sq && sq.data && sq.data.operation;
+  if (sqOp == null) return warnings;  // 题目无运算信息时跳过
+  var sqOps = Array.isArray(sqOp) ? sqOp : [sqOp];
+  var semOpsNorm = semOps.map(normalizeOp);
+  var mismatch = sqOps.some(function (op) {
+    var n = normalizeOp(op);
+    // 'mixed' 表示混合运算，当 SSOT 支持多种运算时视为合法（与 checkOperation 同口径）
+    if (n === 'mixed' && semOps.length > 1) return false;
+    return semOpsNorm.indexOf(n) === -1;
+  });
+  if (mismatch) {
+    warnings.push(createError(ERROR_CODES.KP_SEMANTIC_OPERATION, 'operation',
+      '[SEM-GATE] 题目运算 ' + JSON.stringify(sqOps) + ' 不在 plan.semanticParams.operations ' + JSON.stringify(semOps) + ' 内（KBL SSOT）',
+      SEVERITY.WARNING,
+      { semanticParamsOperations: semOps, questionOperation: sqOps }));
+  }
+  return warnings;
+}
+
 function normalizeOp(op) {
-  if (op === '+' || op === 'add') return 'add';
-  if (op === '−' || op === '-' || op === 'sub') return 'sub';
-  if (op === '×' || op === '*' || op === 'mult') return 'mult';
-  if (op === '÷' || op === '/' || op === 'div') return 'div';
+  if (op === '+' || op === 'add' || op === 'addition') return 'add';
+  if (op === '−' || op === '-' || op === 'sub' || op === 'subtraction') return 'sub';
+  if (op === '×' || op === '*' || op === 'mult' || op === 'multiplication') return 'mult';
+  if (op === '÷' || op === '/' || op === 'div' || op === 'division') return 'div';
   return op;
 }
 
@@ -544,6 +578,9 @@ function validateKpSemantics(sq, context) {
   var opResult = checkOperation(sq, kpConstraints);
   allErrors.push.apply(allErrors, opResult.errors);
   allWarnings.push.apply(allWarnings, opResult.warnings);
+
+  // 3.5 Operation Semantic Gate (P28-SEM-GATE-01)：题目 data.operation ⊆ plan.semanticParams.operations（KBL SSOT）；warn-only
+  allWarnings.push.apply(allWarnings, checkOperationSemanticGate(sq, plan));
   
   // 4. Numeric
   allErrors.push.apply(allErrors, checkNumeric(sq, kpConstraints));
@@ -601,6 +638,7 @@ module.exports = {
   checkKpIdentity: checkKpIdentity,
   checkQuestionType: checkQuestionType,
   checkOperation: checkOperation,
+  checkOperationSemanticGate: checkOperationSemanticGate,
   checkNumeric: checkNumeric,
   checkStructure: checkStructure,
   checkContent: checkContent,

@@ -30,6 +30,11 @@
   // ====== 答案模式 ======
   var ANSWER_MODES = ['input', 'choice', 'multi', 'none', 'read-aloud'];
 
+  // ====== 答案形态布局（P28-FORM-CONTRACT-01：生成器声明、渲染器消费，非题干字符串判定）======
+  // inline-after-equals：横向算式作答框内联到等号后（题干以「= ?」结尾）
+  // block：作答框独立成行（缺省/未声明时回落）
+  var RESPONSE_LAYOUTS = ['inline-after-equals', 'block'];
+
   // ====== 图形类型 ======
   var GRAPHIC_TYPES = [
     'geometry',   // 几何图形
@@ -236,6 +241,7 @@
     DIFFICULTY_LEVELS: DIFFICULTY_LEVELS,
     COGNITIVE_LEVELS: COGNITIVE_LEVELS,
     ANSWER_MODES: ANSWER_MODES,
+    RESPONSE_LAYOUTS: RESPONSE_LAYOUTS,
     GRAPHIC_TYPES: GRAPHIC_TYPES,
     GRAPHIC_SUBTYPES: GRAPHIC_SUBTYPES,
     DISTRACTOR_ERROR_TYPES: DISTRACTOR_ERROR_TYPES,
@@ -261,6 +267,7 @@
     isValidDifficulty: function (d) { return DIFFICULTY_LEVELS.indexOf(d) !== -1; },
     isValidCognitiveLevel: function (c) { return COGNITIVE_LEVELS.indexOf(c) !== -1; },
     isValidAnswerMode: function (m) { return ANSWER_MODES.indexOf(m) !== -1; },
+    isValidResponseLayout: function (l) { return RESPONSE_LAYOUTS.indexOf(l) !== -1; },
     isValidGraphicType: function (t) { return GRAPHIC_TYPES.indexOf(t) !== -1; },
     isValidGraphicSubtype: function (type, subtype) {
       var list = GRAPHIC_SUBTYPES[type];

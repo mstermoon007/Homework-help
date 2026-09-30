@@ -1093,6 +1093,10 @@ function createSemanticQuestion(raw) {
   if (raw.hint != null) sq.hint = raw.hint;
 
   
+  
+  if (raw.response != null) sq.response = deepClone(raw.response);
+
+  
   if (sq.data && !Array.isArray(sq.data.options) && Array.isArray(sq.options) && sq.options.length) {
     sq.data.options = sq.options.slice();
   }
@@ -1197,6 +1201,7 @@ function normalizeSemanticQuestion(raw) {
       ? deepClone(raw.graphic)
       : (raw.svg ? { type: 'custom', params: { rawSvg: raw.svg } } : null),
     constraints: deepClone(raw.constraints) || {},
+    response: deepClone(raw.response),  
     metadata: raw.metadata || {
       generator: raw.generator || raw.pluginId || raw.source,
       generatorVersion: raw.generatorVersion || raw.version,
@@ -1289,6 +1294,16 @@ function validateSchema(sq) {
   }
   if (sq.question && sq.question.answerMode && !Schema.isValidAnswerMode(sq.question.answerMode)) {
     warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'question.answerMode', message: '未知 answerMode: ' + sq.question.answerMode, severity: Schema.SEVERITY.WARNING });
+  }
+
+  
+  
+  if (sq.response != null) {
+    if (typeof sq.response !== 'object') {
+      warnings.push({ code: Schema.ERROR_CODES.FIELD_TYPE_MISMATCH, field: 'response', message: 'response 必须为对象', severity: Schema.SEVERITY.WARNING });
+    } else if (sq.response.layout != null && !Schema.isValidResponseLayout(sq.response.layout)) {
+      warnings.push({ code: Schema.ERROR_CODES.ENUM_VALUE_INVALID, field: 'response.layout', message: '未知 response.layout: ' + sq.response.layout, severity: Schema.SEVERITY.WARNING });
+    }
   }
 
   
@@ -2583,6 +2598,11 @@ __defs["shared/schemas/semantic-question.schema.js"] = function (module, exports
   var ANSWER_MODES = ['input', 'choice', 'multi', 'none', 'read-aloud'];
 
   
+  
+  
+  var RESPONSE_LAYOUTS = ['inline-after-equals', 'block'];
+
+  
   var GRAPHIC_TYPES = [
     'geometry',   
     'chart',      
@@ -2788,6 +2808,7 @@ __defs["shared/schemas/semantic-question.schema.js"] = function (module, exports
     DIFFICULTY_LEVELS: DIFFICULTY_LEVELS,
     COGNITIVE_LEVELS: COGNITIVE_LEVELS,
     ANSWER_MODES: ANSWER_MODES,
+    RESPONSE_LAYOUTS: RESPONSE_LAYOUTS,
     GRAPHIC_TYPES: GRAPHIC_TYPES,
     GRAPHIC_SUBTYPES: GRAPHIC_SUBTYPES,
     DISTRACTOR_ERROR_TYPES: DISTRACTOR_ERROR_TYPES,
@@ -2813,6 +2834,7 @@ __defs["shared/schemas/semantic-question.schema.js"] = function (module, exports
     isValidDifficulty: function (d) { return DIFFICULTY_LEVELS.indexOf(d) !== -1; },
     isValidCognitiveLevel: function (c) { return COGNITIVE_LEVELS.indexOf(c) !== -1; },
     isValidAnswerMode: function (m) { return ANSWER_MODES.indexOf(m) !== -1; },
+    isValidResponseLayout: function (l) { return RESPONSE_LAYOUTS.indexOf(l) !== -1; },
     isValidGraphicType: function (t) { return GRAPHIC_TYPES.indexOf(t) !== -1; },
     isValidGraphicSubtype: function (type, subtype) {
       var list = GRAPHIC_SUBTYPES[type];
@@ -3860,11 +3882,36 @@ function checkOperation(sq, kpConstraints) {
   return { errors: errors, warnings: warnings };
 }
 
+
+function checkOperationSemanticGate(sq, plan) {
+  var warnings = [];
+  if (!plan) return warnings;
+  var semOps = plan.semanticParams && plan.semanticParams.operations;
+  if (!Array.isArray(semOps) || !semOps.length) return warnings;  
+  var sqOp = sq && sq.data && sq.data.operation;
+  if (sqOp == null) return warnings;  
+  var sqOps = Array.isArray(sqOp) ? sqOp : [sqOp];
+  var semOpsNorm = semOps.map(normalizeOp);
+  var mismatch = sqOps.some(function (op) {
+    var n = normalizeOp(op);
+    
+    if (n === 'mixed' && semOps.length > 1) return false;
+    return semOpsNorm.indexOf(n) === -1;
+  });
+  if (mismatch) {
+    warnings.push(createError(ERROR_CODES.KP_SEMANTIC_OPERATION, 'operation',
+      '[SEM-GATE] 题目运算 ' + JSON.stringify(sqOps) + ' 不在 plan.semanticParams.operations ' + JSON.stringify(semOps) + ' 内（KBL SSOT）',
+      SEVERITY.WARNING,
+      { semanticParamsOperations: semOps, questionOperation: sqOps }));
+  }
+  return warnings;
+}
+
 function normalizeOp(op) {
-  if (op === '+' || op === 'add') return 'add';
-  if (op === '−' || op === '-' || op === 'sub') return 'sub';
-  if (op === '×' || op === '*' || op === 'mult') return 'mult';
-  if (op === '÷' || op === '/' || op === 'div') return 'div';
+  if (op === '+' || op === 'add' || op === 'addition') return 'add';
+  if (op === '−' || op === '-' || op === 'sub' || op === 'subtraction') return 'sub';
+  if (op === '×' || op === '*' || op === 'mult' || op === 'multiplication') return 'mult';
+  if (op === '÷' || op === '/' || op === 'div' || op === 'division') return 'div';
   return op;
 }
 
@@ -4184,6 +4231,9 @@ function validateKpSemantics(sq, context) {
   var opResult = checkOperation(sq, kpConstraints);
   allErrors.push.apply(allErrors, opResult.errors);
   allWarnings.push.apply(allWarnings, opResult.warnings);
+
+  
+  allWarnings.push.apply(allWarnings, checkOperationSemanticGate(sq, plan));
   
   
   allErrors.push.apply(allErrors, checkNumeric(sq, kpConstraints));
@@ -4241,6 +4291,7 @@ module.exports = {
   checkKpIdentity: checkKpIdentity,
   checkQuestionType: checkQuestionType,
   checkOperation: checkOperation,
+  checkOperationSemanticGate: checkOperationSemanticGate,
   checkNumeric: checkNumeric,
   checkStructure: checkStructure,
   checkContent: checkContent,

@@ -5573,6 +5573,16 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
   }
 
   
+  function deriveKindFromName(facts) {
+    if (!facts || !facts.name) return null;
+    if (facts.operations && facts.operations.indexOf('division') !== -1 &&
+        facts.name.indexOf('余数') !== -1) {
+      return 'div-remainder';
+    }
+    return null;
+  }
+
+  
 
   function createSemanticParameterResolver(options) {
     var getKp = (options && typeof options.getKp === 'function') ? options.getKp : defaultGetKp;
@@ -5592,6 +5602,7 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
       if (!primaryFamily && facts.coarseFamily) primaryFamily = facts.coarseFamily;
 
       var derived = deriveSubTopic(facts, familyEntry && familyEntry.primary ? familyEntry.primary : null);
+      var kind = deriveKindFromName(facts);
 
       var intentRow = questionType ? getIntent(kpId, questionType) : null;
       var intent = null;
@@ -5617,10 +5628,12 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
         subTopicEvidence: derived.evidence,
         operations: facts.operations.slice(),
         representations: facts.representations.slice(),
+        kind: kind,
         intent: intent,
         sources: {
           family: familySource,
           subTopic: 'mechanical-rule:kbl-name-concept',
+          kind: kind ? 'mechanical-rule:kbl-name-operations' : 'none',
           intent: intent ? 'teaching:qt-intent' : 'none'
         }
       };
@@ -5653,6 +5666,7 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
     attachToPlan: singleton.attachToPlan,
     
     deriveSubTopic: deriveSubTopic,
+    deriveKindFromName: deriveKindFromName,
     readFacts: readFacts
   };
 
@@ -6335,11 +6349,7 @@ var VariationApply = require("shared/generator/core/variation-apply.js");
 
 
 
-function deriveKindFromName(name, op) {
-  if (!name) return null;
-  if (op === 'div' && name.indexOf('余数') !== -1) return 'div-remainder';
-  return null;
-}
+
 
 
 function pkp(plan) {
@@ -6417,10 +6427,10 @@ function createArithmeticGenerator(spec) {
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
         
-        var kpName = plan.semanticParams && plan.semanticParams.name;
-        var nameKind = deriveKindFromName(kpName, op);
+        
+        var semKind = (op === 'div' && plan.semanticParams) ? plan.semanticParams.kind : null;
         var kind = constraints.kind ||
-          ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || nameKind;
+          ((plan.constraints && plan.constraints.kind) || (plan.kind || null)) || semKind;
         var structure = Arith.buildSpecialKind(rng, { kind: kind, numberRange: genRange });
         if (!structure) {
           structure = Arith.generateStructure(rng, {
@@ -6456,6 +6466,8 @@ function createArithmeticGenerator(spec) {
           
           answer: { value: String(answer), acceptable: [], explanation: prompt.replace(' = ?', ' = ' + answer) },
           answerMode: 'input',
+          
+          response: { layout: 'inline-after-equals' },
           hint: null,
           data: {
             
@@ -10304,6 +10316,9 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     prompt: prompt,
     answer: { value: String(answer), acceptable: [] },
     answerMode: 'input',
+    
+    
+    response: { layout: 'inline-after-equals' },
     data: data
   };
 }

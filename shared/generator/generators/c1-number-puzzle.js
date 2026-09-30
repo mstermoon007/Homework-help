@@ -89,6 +89,9 @@ function makePuzzleQuestion(plan, context, i, kp) {
     prompt: prompt,
     answer: { value: String(answer), acceptable: [] },
     answerMode: 'input',
+    // P28-FORM-CONTRACT-01：声明横向算式内联（isSymbol 分支以「★ = ?」结尾时生效；
+    // vertical/horizontal/digit-reasoning/else 分支题干无该尾缀，渲染器回落 block，与旧正则未匹配等价）
+    response: { layout: 'inline-after-equals' },
     data: {
       mode: 'apply',
       steps: 3,

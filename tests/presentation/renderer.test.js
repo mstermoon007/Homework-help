@@ -129,7 +129,7 @@ test('M7-R03 竖式 calculation 描述符（数组/双参适配）', () => {
 
 // ============ M7-R02 HTML Renderer ============
 test('M7-R02 卡片语义类名', () => {
-  const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', answer: { value: 8 } }, 0, { mode: 'screen' });
+  const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 8 } }, 0, { mode: 'screen' });
   // P28-INLINE-ANSWER-01：横向算式作答框内联于等号后（问号虚化 placeholder），不再有独立 question-answer
   ['question-card', 'question-stem', 'eq-answer', 'answer-inp-inline', 'placeholder="？"', 'data-index="0"'].forEach(sel => {
     assert.ok(html.indexOf(sel) !== -1, '缺少 ' + sel);
@@ -138,19 +138,67 @@ test('M7-R02 卡片语义类名', () => {
 });
 
 test('P28-INLINE-ANSWER-01 print 模式等号后空白盒（无问号）', () => {
-  const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', answer: { value: 8 } }, 0, { mode: 'print' });
+  const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 8 } }, 0, { mode: 'print' });
   assert.ok(/eq-answer/.test(html) && /answer-inp-printblank/.test(html), '应渲染等宽空白盒');
   assert.ok(!/placeholder/.test(html) && !/<input/.test(html), 'print 不应含问号或输入框');
 });
 
+// ============ P28-FORM-CONTRACT-01 形态契约：response.layout 声明字段 ============
+test('P28-FORM-CONTRACT-01 声明 inline-after-equals → 内联 eq-answer（screen）', () => {
+  const html = HTMLRenderer.render({ prompt: '6 + 4 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 10 } }, 0, { mode: 'screen' });
+  assert.ok(/eq-answer/.test(html), '应输出 .eq-answer 内联作答框');
+  assert.ok(/answer-inp-inline/.test(html), '应含内联输入框');
+  assert.ok(html.indexOf('6 + 4') !== -1, '应保留等号左侧表达式');
+  assert.ok(!/question-answer/.test(html), '不应再输出独立 question-answer 行');
+});
+
+test('P28-FORM-CONTRACT-01 缺 response 字段 → 回落 block（形态识别不靠字符串）', () => {
+  // 旧行为靠「= ?」结尾正则识别内联；新契约下缺声明即 block，删除正则后字符串不再驱动形态
+  const html = HTMLRenderer.render({ prompt: '7 + 1 = ?', answerMode: 'input', answer: { value: 8 } }, 0, { mode: 'screen' });
+  assert.ok(html.indexOf('eq-answer') === -1, '缺 response.layout 不应内联');
+  assert.ok(/question-answer/.test(html), '应输出独立 question-answer 行（block）');
+});
+
+test('P28-FORM-CONTRACT-01 声明 inline 但题干无「= ?」尾缀 → 回落 block（fallback 等价旧正则未匹配）', () => {
+  // 多分支生成器非算式分支：声明了 inline 但题干不以「= ?」结尾，回落 block
+  const html = HTMLRenderer.render({ prompt: '请计算结果。', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 5 } }, 0, { mode: 'screen' });
+  assert.ok(html.indexOf('eq-answer') === -1, '无「= ?」尾缀不应内联');
+  assert.ok(/question-answer/.test(html), '应回落 block');
+});
+
+test('P28-FORM-CONTRACT-01 选择题即使声明 inline 也不内联（optionsOf 护栏）', () => {
+  const html = HTMLRenderer.render({ prompt: '3 + 2 = ?', answerMode: 'choice', response: { layout: 'inline-after-equals' }, options: ['4', '5', '6'], answer: { value: '5' } }, 0, { mode: 'screen' });
+  assert.ok(html.indexOf('eq-answer') === -1, '选择题不应内联');
+  assert.ok(/question-options/.test(html), '应输出选项区');
+});
+
+test('P28-FORM-CONTRACT-01 Schema 认 response.layout 枚举 + normalize 透传', () => {
+  const SQ = SemanticQuestion;
+  const Schema = SQ.Schema;
+  assert.strictEqual(Schema.isValidResponseLayout('inline-after-equals'), true);
+  assert.strictEqual(Schema.isValidResponseLayout('block'), true);
+  assert.strictEqual(Schema.isValidResponseLayout('bogus'), false);
+  // 归一化透传：response 字段经 normalizeSemanticQuestion 保留
+  const sq = SQ.normalizeSemanticQuestion({ knowledgePoint: 'math-test-k001', questionType: 'calc', prompt: '1+1=?', answer: { value: 2 }, response: { layout: 'inline-after-equals' } });
+  assert.strictEqual(sq && sq.response && sq.response.layout, 'inline-after-equals', 'normalize 应透传 response.layout');
+  // Schema 校验：合法 layout 不阻断
+  const v = SQ.validateSchema(sq);
+  assert.strictEqual(v.valid, true, '合法 layout 不应阻断');
+  // 未知 layout 值出 warning（不阻断）
+  const sqBad = SQ.normalizeSemanticQuestion({ knowledgePoint: 'math-test-k002', questionType: 'calc', prompt: '2+2=?', answer: { value: 4 }, response: { layout: 'bogus' } });
+  const vBad = SQ.validateSchema(sqBad);
+  assert.strictEqual(vBad.valid, true, '未知 layout 仅 warning 不阻断');
+  assert.ok((vBad.warnings || []).some(function (w) { return w.field === 'response.layout'; }), '应出 response.layout warning');
+});
+
 // ============ P2: density 契约生效（Issue #1 延伸） ============
 test('P2 density=compact → 卡片带 compact 类', () => {
-  const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', answer: { value: 8 } }, 0, { mode: 'screen', density: 'compact' });
+  const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 8 } }, 0, { mode: 'screen', density: 'compact' });
   assert.ok(/class="question-card compact"/.test(html), '应输出 class="question-card compact"');
 });
 
 test('P2 density 缺省/normal → 不输出 compact 类（屏幕回归）', () => {
-  const def = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', answer: { value: 8 } }, 0, { mode: 'screen' });
+  const def = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 8 } }, 0, { mode: 'screen' });
   assert.ok(/class="question-card"/.test(def), '缺省应为纯 question-card');
   const norm = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'screen', density: 'normal' });
   assert.ok(/class="question-card"/.test(norm), 'normal 不应带 compact');
@@ -206,7 +254,7 @@ test('M7-R02 HTML 转义防注入', () => {
 // ============ M7-R01/R05 统一 Renderer ============
 test('M7-R01 render/renderAll → RenderResult[] + 契约合规', () => {
   const qs = [
-    { id: 'q1', prompt: '12 + 7 = ?', answerMode: 'input', answer: { value: 19 } },
+    { id: 'q1', prompt: '12 + 7 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 19 } },
     { id: 'q2', prompt: '选一选', answerMode: 'choice', answer: { value: '2' }, options: ['1', '2', '3'] }
   ];
   const all = Renderer.renderAll(qs, { mode: 'screen' }, { columns: 2 });
@@ -236,7 +284,7 @@ test('M7-R06 Print.buildFromQuestions 直接由题组出打印文档', () => {
   const Print = Mod.Print || Mod;
   assert.strictEqual(typeof Print.buildFromQuestions, 'function');
   const html = Print.buildFromQuestions([
-    { prompt: '7 × 8 = ?', answerMode: 'input', answer: { value: 56 } },
+    { prompt: '7 × 8 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 56 } },
     { prompt: '选出最大', answerMode: 'choice', options: ['3', '9', '5'], answer: { value: '9' } }
   ], { title: '二年级 数学（2题）', columns: 2 });
   assert.ok(html.indexOf('ps-title') !== -1);
@@ -383,4 +431,116 @@ test('V5.1.0 judge：render-format 以 questionType 收敛 inputType 并透传�
   assert.strictEqual(q.answer, true);
   assert.strictEqual(q.explanation, '说法正确。');
   assert.strictEqual(q.misconception, null);
+});
+
+// ============ P28-UI-PRINT-WYSIWYG-01：预览/打印排版同源契约 ============
+const fs = require('node:fs');
+const PrintMod = require(path.join(ROOT, 'shared', 'presentation', 'print.js'));
+const Print = PrintMod.Print || PrintMod;
+const coreMod = require(path.join(ROOT, 'shared', 'core', 'core.js'));
+const Layout = (typeof globalThis !== 'undefined' && globalThis.PluginUtil && globalThis.PluginUtil.layout) || coreMod.Layout;
+
+test('P28-UI-PRINT-WYSIWYG-01 Print.LAYOUT：A4 契约常量（190mm / 12mm 10mm / 718px）', () => {
+  assert.strictEqual(Print.LAYOUT.pageMargin, '12mm 10mm');
+  assert.strictEqual(Print.LAYOUT.pageWidthMm, 210);
+  assert.strictEqual(Print.LAYOUT.contentWidthMm, 190);
+  assert.strictEqual(Print.LAYOUT.printableWidthPx, 718);
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 token 兜底值必须与 tokens.css 解析值一致（防两处真相漂移）', () => {
+  const tokensCss = fs.readFileSync(path.join(ROOT, 'shared', 'styles', 'tokens.css'), 'utf8');
+  Object.keys(Print.TOKEN_DEFAULTS).forEach(function (name) {
+    const m = tokensCss.match(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ':\\s*([^;]+);'));
+    assert.ok(m, 'tokens.css 应定义 ' + name);
+    assert.strictEqual(m[1].trim(), Print.TOKEN_DEFAULTS[name], name + ' 兜底值漂移');
+  });
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 buildPrintDocument：CSP 禁 script / @page 同源 / shell 190mm', () => {
+  const doc = Print.buildPrintDocument({ title: '二年级 数学', extraCss: '.x{}', bodyHtml: '<b>B</b>' });
+  assert.ok(doc.indexOf("script-src 'none'") !== -1, 'CSP 必须显式禁 script');
+  assert.ok(doc.indexOf('margin: 12mm 10mm') !== -1, '@page 边距取 LAYOUT');
+  assert.ok(doc.indexOf('max-width: 190mm') !== -1, 'shell 内容宽 190mm');
+  assert.ok(doc.indexOf('class="print-sheet"') !== -1 && doc.indexOf('ps-title') !== -1, '双链统一 shell/标题');
+  assert.ok(doc.indexOf('二年级 数学') !== -1, '标题经转义后注入');
+  assert.ok(doc.indexOf('10mm 8mm') === -1, '不得再出现旧直渲链边距');
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 judge 打印形态唯一实现：克隆链去按钮 + （　）', () => {
+  const css = Print.buildJudgePrintCss();
+  assert.ok(css.indexOf('.judge-input { display:none; }') !== -1, 'radio 隐藏');
+  assert.ok(css.indexOf('.judge-btn::after { content:"（　）"; }') !== -1, '按钮后输出空括号');
+  assert.ok(css.indexOf('border:none !important') !== -1, '去边框');
+  assert.ok(css.indexOf('.judge-mark { display:none; }') !== -1, '去 ✓/✗ 标记');
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 layout 单一阈值：prompt 度量 / graphic 加分 / spanForLength', () => {
+  assert.strictEqual(Layout.coreText({ prompt: '5 + 3 = ?' }), '5 + 3 = ?', 'coreText 认 SemanticQuestion.prompt');
+  assert.ok(Layout.renderLen({ prompt: '一'.repeat(50) }) >= 50);
+  assert.ok(Layout.renderLen({ prompt: '看图列式', graphic: { type: 'geometry' } }) >= 10, '图形题 +8 占宽');
+  assert.strictEqual(Layout.spanForLength(50, 3), '1 / -1');
+  assert.strictEqual(Layout.spanForLength(26, 3), 'span 2');
+  assert.strictEqual(Layout.spanForLength(26, 1), 'span 1', '单列时最多 span 1');
+  assert.strictEqual(Layout.spanForLength(25, 4), null);
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 coreText 与 html-renderer promptOf 同源（DTO 嵌套题干不漏度量）', () => {
+  assert.strictEqual(Layout.coreText({ content: { prompt: 'content 题干' } }), 'content 题干');
+  assert.strictEqual(Layout.coreText({ question: { prompt: '嵌套题干' } }), '嵌套题干');
+  assert.strictEqual(Layout.coreText({ stem: 'stem 题干' }), 'stem 题干');
+  assert.strictEqual(Layout.coreText({ q: 'legacy q' }), 'legacy q');
+  assert.strictEqual(Layout.coreText({ text: 'legacy text' }), 'legacy text');
+  assert.strictEqual(Layout.coreText({ question: 'legacy 字符串题干' }), 'legacy 字符串题干');
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 直渲链：题干在 content.prompt 的原始 DTO 也必须正确列跨', () => {
+  const qs = [
+    { content: { prompt: '1' }, answerMode: 'input', answer: { value: 1 } },
+    { content: { prompt: '应'.repeat(30) }, answerMode: 'input', answer: { value: 'x' } },
+    { content: { prompt: '应'.repeat(60) }, answerMode: 'input', answer: { value: 'y' } }
+  ];
+  const html = Print.buildFromQuestions(qs, { title: 'DTO卷', columns: 2 });
+  assert.ok(html.indexOf('grid-column:span 2') !== -1, '30 字 content.prompt → span 2');
+  assert.ok(html.indexOf('grid-column:1 / -1') !== -1, '60 字 content.prompt → 通栏');
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 html-renderer span 白名单：合法透传 / 非法拒绝', () => {
+  const ok = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'print', span: '1 / -1' });
+  assert.ok(ok.indexOf('style="grid-column:1 / -1"') !== -1);
+  const ok2 = HTMLRenderer.render({ prompt: 'p' }, 1, { mode: 'print', span: 'span 2' });
+  assert.ok(ok2.indexOf('style="grid-column:span 2"') !== -1);
+  const evil = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'print', span: 'x:expression(alert(1))' });
+  assert.ok(evil.indexOf('expression') === -1, '非白名单 span 不得进入 style');
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 renderAll 透传 spans：长题通栏 / 短题单格', () => {
+  const all = Renderer.renderAll(
+    [{ prompt: '1' }, { prompt: '应'.repeat(50) }],
+    { mode: 'print' },
+    { columns: 4, spans: ['span 1', '1 / -1'] }
+  );
+  assert.ok(all.html.indexOf('style="grid-column:span 1"') !== -1);
+  assert.ok(all.html.indexOf('style="grid-column:1 / -1"') !== -1);
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 直渲链：按 718px 动态列数 + 长题列跨 + 双链同源骨架', () => {
+  const qs = [];
+  for (let i = 0; i < 8; i++) qs.push({ prompt: String(i), answerMode: 'input', answer: { value: i } });
+  qs.push({ prompt: '应'.repeat(60), answerMode: 'input', answer: { value: '长' } });
+  const html = Print.buildFromQuestions(qs, { title: '动态列数卷' });
+  assert.ok(html, '应成功构建');
+  assert.ok(html.indexOf('--grid-cols:4') !== -1, '8 张极短卡 @718px 应排 4 列');
+  assert.ok(html.indexOf('grid-column:1 / -1') !== -1, '60 字长题应通栏');
+  assert.ok(html.indexOf('margin: 12mm 10mm') !== -1 && html.indexOf("script-src 'none'") !== -1,
+    '直渲链与克隆链共用骨架（边距/CSP）');
+  assert.ok(html.indexOf('10mm 8mm') === -1, '旧边距不得回归');
+});
+
+test('P28-UI-PRINT-WYSIWYG-01 固定列数（fixed）不输出列跨，列数以调用方为准', () => {
+  const html = Print.buildFromQuestions(
+    [{ prompt: '应'.repeat(60), answerMode: 'input', answer: { value: 'x' } }],
+    { title: '固定卷', columns: 2, fixed: true }
+  );
+  assert.ok(html.indexOf('--grid-cols:2') !== -1);
+  assert.ok(html.indexOf('grid-column:') === -1, '固定模式不做列跨');
 });

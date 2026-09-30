@@ -61,16 +61,23 @@
    * @param {Object} sq SemanticQuestion（或兼容 Legacy Question）
    * @param {Object} [options] renderOptions（自动 normalize；未指定按 screen 默认）
    * @param {number} [index] 题号（缺省用 0）
+   * @param {Object} [extra] 网格上下文 { span }：列跨由 PluginUtil.layout 统一度量后透传（打印/预览同源）
    * @returns {Object} RenderResult
    */
-  function render(sq, options, index) {
+  function render(sq, options, index, extra) {
     var ro = RenderOptions.normalize(options);
     var i = typeof index === 'number' ? index : 0;
     var graphicDesc = graphicOf(sq);
     var gfxResult = graphicDesc ? GraphicRenderer.render(graphicDesc, ro) : { status: 'UNSUPPORTED', reason: 'No graphic descriptor' };
     var svg = extractSvg(gfxResult);
     // P2.1（Issue #1 延伸）：density 透传给 HTML 渲染器（仅影响 HTML 输出，不进 RenderResult 元数据）
-    var html = HTMLRenderer.render(sq, i, { mode: ro.mode, graphic: svg, density: ro.density });
+    // P28-UI-PRINT-WYSIWYG-01：span 列跨透传（白名单在 html-renderer 内校验）
+    var html = HTMLRenderer.render(sq, i, {
+      mode: ro.mode,
+      graphic: svg,
+      density: ro.density,
+      span: extra && extra.span
+    });
     var rr = RenderResult.create(sq, html, svg);
     // 附加渲染状态元数据供上游诊断（不破坏 RenderResult 契约）
     rr._gfxStatus = gfxResult.status;
@@ -83,17 +90,17 @@
    * html 为整组网格 HTML（供整页/打印直接注入）。
    * @param {Array<Object>} questions
    * @param {Object} [options]
-   * @param {Object} [gridOptions] { columns } 网格列数
+   * @param {Object} [gridOptions] { columns, spans } 网格列数；spans[i] 为该题列跨（grid-column 值，可空）
    * @returns {{ items:Array, html:string, renderOptions:Object }}
    */
   function renderAll(questions, options, gridOptions) {
     var ro = RenderOptions.normalize(options);
     var list = Array.isArray(questions) ? questions : [];
+    var g = gridOptions || {};
     var items = [];
     for (var i = 0; i < list.length; i++) {
-      items.push(render(list[i], ro, i));
+      items.push(render(list[i], ro, i, { span: g.spans ? g.spans[i] : null }));
     }
-    var g = gridOptions || {};
     var html = HTMLRenderer.renderGrid(items, { mode: ro.mode, columns: g.columns });
     return { items: items, html: html, renderOptions: ro };
   }
