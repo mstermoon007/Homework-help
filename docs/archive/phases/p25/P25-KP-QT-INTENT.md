@@ -19,5 +19,5 @@
 
 ## 产物
 
-- [qt-intent.json](../../kbl/teaching/qt-intent.json) — 1570 行意图矩阵（五问 + 逐问状态 + evidence 溯源）
-- [qt-intent-sample.xlsx](../../kbl/teaching/qt-intent-sample.xlsx) — 人工抽查单（99 行，按语义族分层 + needs-review 负面样本）
+- [qt-intent.json](../../../../kbl/teaching/qt-intent.json) — 1570 行意图矩阵（五问 + 逐问状态 + evidence 溯源）
+- [qt-intent-sample.xlsx](../../../../kbl/teaching/qt-intent-sample.xlsx) — 人工抽查单（99 行，按语义族分层 + needs-review 负面样本）

@@ -9,12 +9,12 @@
 //
 // 数据来源：
 //   - GENERATOR_MATRIX 声明表（下方 DECL，人工审计结论，本文件内嵌纯数据）
-//   - registry（shared/generator/generator-registry.js，31 条记录，动态）
+//   - registry（shared/generator/generator-registry.js，24 条记录，动态；P28-CLEANUP-02 后）
 //   - P28-08 冻结证据（docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json，1570 行实际承载，动态）
 //   - 生成契约 carrier（shared/knowledge/mappings/generation-contract/math.json，动态）
 //
 // 判定规则：
-//   R1 覆盖：registry 31 个 id 与 DECL 一一对应（无遗漏/无多余）
+//   R1 覆盖：registry 24 个 id 与 DECL 一一对应（无遗漏/无多余）
 //   R2 题型：DECL.supportedQuestionTypes === registry record.questionTypes（规范 7 类，无旧令牌）
 //   R3 声明完整性：semanticFamily / inputContract / outputContract / validator 非空
 //   R4 声明一致性：冻结证据 actualProducerTypes ⊆ 声明题型（无未声明产出）
@@ -353,7 +353,7 @@ function writeMd(a) {
   md.push('');
   md.push('| 项 | 值 |');
   md.push('|---|---|');
-  md.push('| 任务 | P28-09 Generator Registry 收口：31 个 Generator 逐个澄清 生产使用/测试使用/历史使用/重复能力/legacy capability，并强制声明 id · semantic family · supported question types · input contract · output contract · validator · production status |');
+  md.push('| 任务 | P28-09 Generator Registry 收口：' + a.generatorCount + ' 个 Generator 逐个澄清 生产使用/测试使用/历史使用/重复能力/legacy capability，并强制声明 id · semantic family · supported question types · input contract · output contract · validator · production status（P28-CLEANUP-02 后 24 个） |');
   md.push('| 执行日期 | ' + a.date + ' |');
   md.push('| 判定规则 | R1 覆盖 / R2 题型=registry / R3 声明完整 / R4 产出⊆声明 / R5 状态一致 / R6 无 legacy（统一门禁 `node dev/p28/check-generator-matrix.js`） |');
   md.push('');
@@ -364,7 +364,7 @@ function writeMd(a) {
     ' · DORMANT-NO-BINDING=' + a.statusCounts.dormantNoBinding + ' ' + (a.frozen ? '—— 收口冻结 ✅' : '—— 存在 FAIL ❌') + '**');
   md.push('');
   md.push('冻结证据：1570 行真实生成（P28-08）中，实际承载行合计 = ' + a.statusCounts.sumProducedRows +
-    '；历史使用集中在 `archive/legacy-tests/generator/*`（31 个 id 全量旧测试）+ `migration/excel-raw/*`（4 个）+ kbl 冻结产物。');
+    '；旧 31-id 全量测试与 `migration/excel-raw/*` 提取档案均已清除（后者 P28-CLEANUP-02），历史使用证据仅留 kbl 冻结产物。');
   md.push('');
   md.push('## 2. GENERATOR_MATRIX（逐 Generator 7 项声明）');
   md.push('');
@@ -380,10 +380,10 @@ function writeMd(a) {
   md.push('');
   md.push('| 维度 | 结论 |');
   md.push('|---|---|');
-  md.push('| **生产使用** | 21 个实际承载（1570 冻结行全部落于原生绑定生成器）；composite 仅 combine 场景；其余 10 个 0 产出行（见 §4） |');
+  md.push('| **生产使用** | 21 个实际承载（1570 冻结行全部落于原生绑定生成器）；composite 仅 combine 场景；其余 2 个契约载体 0 产出行（见 §4） |');
   md.push('| **测试使用** | 直接 id 引用 14 个文件：arithmetic-addition/multiplication (p27-variation-directive)、shape (p25-07-type-contracts)、money/application/reasoning/code/percent/concept/semantic-relations/decimal/fraction (p25-09-native-bindings)、concept (p25-04/p25-06)、classification (p17-10-classify)、composite (composite)；间接经 1570 门禁全覆盖 |');
-  md.push('| **历史使用** | `archive/legacy-tests/generator/core-generators.test.js`（31/31 全量）、registry/selector legacy tests、`migration/excel-raw/kps.json+mappings.json`（addition+selection×3+classification）、`archive/docs-2026-09/migration-reports/*`、`archive/r6-gate-cleanup/*`、kbl 冻结产物（generation-matrix/kp-matrix/教学 semantic-review） |');
-  md.push('| **重复能力** | selection-choice（375 行 choice 载体）/ selection-judge（126 行 judge 载体）实际 0 产出——choice/judge 已由 shape/position/concept/application 等原生绑定族全覆盖；complex-calc、c1/c2/c5c6/c7/c9、equivalent-reasoning 的 apply/calc/fill/choice 全被覆盖、0 产出 |');
+  md.push('| **历史使用** | 旧 31-id 全量 generator 测试与 `migration/excel-raw/*` 提取档案均已移除（后者 P28-CLEANUP-02）；现存证据为 kbl 冻结产物（generation-matrix/kp-matrix/教学 semantic-review） |');
+  md.push('| **重复能力** | selection-choice（375 行 choice 载体）/ selection-judge（126 行 judge 载体）实际 0 产出——choice/judge 已由 shape/position/concept/application 等原生绑定族全覆盖；complex-calc、c1/c2/c5c6/c7/c9 六个无绑定孤儿源码已随 P28-CLEANUP-02 删除（equivalent-reasoning 记录已随 FINAL-20 移除） |');
   md.push('| **legacy capability** | 能力面无旧令牌（P28-07 已清，R6 通过）；剩余：selection 族几何为名义声明、stats 欠声明 judge、classification 欠声明 fill/choice/judge/apply、application/equivalent answer 契约偏差、c9 陈旧注释 |');
   md.push('');
   md.push('## 4. 状态明细');

@@ -20,8 +20,8 @@
  *   - icon     展示图标（emoji，可选）
  *   - desc     模块描述（可选）
  *   - gradeStatus  按年级就绪状态（仅数学竞赛模块）：{ [grade]: 'active' | 'placeholder' }
- *       与 shared/knowledge/knowledge-bank.js 对应年级知识点 status 保持一致。
- *       五年级竞赛处于重新开发阶段（见 docs/DEV_LOG.md 附录 D，原 g5-competition-knowledge-map），
+ *       与 KBL runtime 对应年级知识点 status 保持一致（旧 knowledge-bank.js 已随 FINAL-22 并入 KBL runtime）。
+ *       五年级竞赛处于重新开发阶段（见 docs/archive/phases/DEV_LOG.md 附录 D，原 g5-competition-knowledge-map），
  *       四年级/六年级沿用既有实现；基础模块 M0-M12 全年级 active。
  *
  * 导出：

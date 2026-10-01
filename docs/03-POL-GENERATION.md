@@ -44,7 +44,7 @@ SSOT：`shared/knowledge/question-type-registry.js`
 
 ## 3. Generator Registry 收口（P28-09）
 
-**31 个 Generator · PRODUCTION=21 · COMBINE-ONLY=1 · DORMANT-CARRIER=2 · DORMANT-NO-BINDING=7**
+**24 个 Generator · PRODUCTION=21 · COMBINE-ONLY=1 · DORMANT-CARRIER=2 · DORMANT-NO-BINDING=0**
 
 每个 Generator 必须声明：id · semantic family · supported question types · input contract · output contract · validator · production status。
 
@@ -55,7 +55,7 @@ SSOT：`shared/knowledge/question-type-registry.js`
 | PRODUCTION（1570 实际承载 ≥1 行） | 21 |
 | PRODUCTION-COMBINE-ONLY（combine 专享） | 1（`generator:composite`） |
 | DORMANT-CONTRACT-CARRIER（契约名义载体，0 产出） | 2（`selection-choice`、`selection-judge`） |
-| DORMANT-NO-BINDING（0 绑定 0 产出） | 7 |
+| DORMANT-NO-BINDING（0 绑定 0 产出） | 0（P28-CLEANUP-02：6 个孤儿源码已删） |
 
 门禁：`node dev/p28/check-generator-matrix.js`
 

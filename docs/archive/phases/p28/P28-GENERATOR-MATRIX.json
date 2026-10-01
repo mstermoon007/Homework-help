@@ -1,6 +1,6 @@
 {
  "task": "P28-09 Generator Registry 收口 —— GENERATOR_MATRIX",
- "date": "2026-09-23",
+ "date": "2026-10-01",
  "generatorCount": 24,
  "canonicalTypes": [
   "calc",
@@ -76,9 +76,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 14,
+   "kpBindings": 13,
    "contractCarrierRows": 939,
-   "producedRows1570": 56,
+   "producedRows1570": 52,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -89,7 +89,7 @@
    "historical": [],
    "note": "算术族五算子之一，op=add",
    "nativeExtendedTypes": [
-    "choice:14"
+    "choice:13"
    ]
   },
   {
@@ -140,9 +140,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 10,
+   "kpBindings": 8,
    "contractCarrierRows": 0,
-   "producedRows1570": 28,
+   "producedRows1570": 20,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -153,7 +153,7 @@
    "historical": [],
    "note": "op=mixed",
    "nativeExtendedTypes": [
-    "choice:7"
+    "choice:5"
    ]
   },
   {
@@ -204,9 +204,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 10,
+   "kpBindings": 7,
    "contractCarrierRows": 0,
-   "producedRows1570": 40,
+   "producedRows1570": 28,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -217,7 +217,7 @@
    "historical": [],
    "note": "op=sub",
    "nativeExtendedTypes": [
-    "choice:10"
+    "choice:7"
    ]
   },
   {
@@ -327,9 +327,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 42,
+   "kpBindings": 48,
    "contractCarrierRows": 0,
-   "producedRows1570": 167,
+   "producedRows1570": 191,
    "actualProducerTypes": [
     "calc",
     "fill",

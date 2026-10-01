@@ -7,31 +7,31 @@
 
 | 项 | 值 | 来源 |
 | --- | --- | --- |
-| KP 总数 | **375** | kbl/canonical/knowledge.json (generatedAt 2026-09-16T03:45:35.380Z) |
+| KP 总数 | **375** | kbl/canonical/knowledge.json (generatedAt undefined) |
 | ALLOW 映射 | **1570**（permission 全 allow） | kbl/canonical/mappings.json (generatedAt —，与 generation-contract/math.json 同源同计数) |
 | capability 视图 | 375 | kbl/canonical/capability.json |
 | runtime 语义库 | 375（semantic/assessment 块） | kbl/data/math/g1..g6（与 runtime 副本逐字节一致） |
-| 原生 Generator 记录 | 31（其中 22 个有 KP 绑定，绑定 KP 共 375 个） | shared/generator/generator-registry.js CORE_RECORDS |
+| 原生 Generator 记录 | 24（其中 22 个有 KP 绑定，绑定 KP 共 375 个） | shared/generator/generator-registry.js CORE_RECORDS |
 | 规范题型 | calc / fill / choice / judge / geometry / classify / apply | question-type-registry |
 
 不变式校验：KP=375 ✔ / ALLOW=1570 ✔ / capability 覆盖 375 ✔ / 语义库覆盖 375 ✔ / 映射无空 pluginId ✔
 
 ## 1. KP 总表与字段口径（对应指令第 1/2 项）
 
-全量 375 行见 [kp-matrix.json](../../kbl/teaching/kp-matrix.json)。字段口径：`grade/book/unitId/unitNo/unitName/module(domain)/name/description(definition)/cognitiveLevel/seedDifficulty/numberRange/maxSteps/questionTypes(allowedTypes)/semanticFamily/operations/representations/assessmentQuestionTypes/misconceptionSlots(现 assessment.errors 空槽)/generatorBindings(registry 原生绑定)/canonicalPlugins(canonical 粗派生承载)/allowByQuestionType/draftSemanticLevel/draftBasis`。
+全量 375 行见 [kp-matrix.json](../../../../kbl/teaching/kp-matrix.json)。字段口径：`grade/book/unitId/unitNo/unitName/module(domain)/name/description(definition)/cognitiveLevel/seedDifficulty/numberRange/maxSteps/questionTypes(allowedTypes)/semanticFamily/operations/representations/assessmentQuestionTypes/misconceptionSlots(现 assessment.errors 空槽)/generatorBindings(registry 原生绑定)/canonicalPlugins(canonical 粗派生承载)/allowByQuestionType/draftSemanticLevel/draftBasis`。
 
 ### 分布
 
-- 草拟分级：{"A":307,"B":67,"C":1}
+- 草拟分级：{"A":313,"B":61,"C":1}
 - domain 分布：{"geometry":101,"algebra":189,"practice":60,"statistics":25}
 - 年级·册分布：{"g1-down":25,"g1-up":14,"g2-down":32,"g2-up":28,"g3-down":35,"g3-up":36,"g4-down":41,"g4-up":28,"g5-down":44,"g5-up":36,"g6-down":29,"g6-up":27}
 
 ## 2. 1570 条 KP×QuestionType 映射（对应指令第 3 项）
 
-全量 1570 行见 [generation-matrix.json](../../kbl/teaching/generation-matrix.json)（每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation/draftSemanticLevel）。
+全量 1570 行见 [generation-matrix.json](../../../../kbl/teaching/generation-matrix.json)（每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation/draftSemanticLevel）。
 
 - 按题型分布：{"apply":375,"choice":375,"fill":375,"geometry":105,"judge":126,"calc":189,"classify":25}
-- 按草拟分级×题型：{"A":{"apply":307,"choice":307,"fill":307,"geometry":105,"judge":126,"calc":122,"classify":25},"B":{"apply":67,"calc":67,"choice":67,"fill":67},"C":{"apply":1,"choice":1,"fill":1}}
+- 按草拟分级×题型：{"A":{"apply":313,"choice":313,"fill":313,"geometry":105,"judge":126,"calc":128,"classify":25},"B":{"apply":61,"calc":61,"choice":61,"fill":61},"C":{"apply":1,"choice":1,"fill":1}}
 
 ## 3. 承载模型：每条映射实际使用的 Generator（对应指令第 4 项）
 
@@ -52,8 +52,10 @@ Generator 的「语义族」以其 questionTypes/capabilities + 所绑定 KP 的
 - `shared/generator/core/kp-complex-semantics.js` — M4-R18 KP 级复杂运算语义解析
 - `shared/generator/core/op-semantics.js` — 操作 ID → 符号 查询助手
 - `shared/generator/core/rng.js` — M4-R06 核心随机源（可复现，禁止 Math.random）
+- `shared/generator/core/semantic-evidence.js` — FINAL-31b：消费处派生语义证据声明（generator/core 纯代码模块）。
 - `shared/generator/core/semantic-parameters.js` — GenerationParameters 运行时 Read Model（P25-06）
 - `shared/generator/core/type-contract.js` — P25-07 七题型教育契约执行层
+- `shared/generator/core/variation-apply.js` — FINAL-50 6 桶变式应用器
 
 - 专项注入点：`kp-arithmetic-semantics.js` 的 `CANONICAL_KP_OVERRIDES`（当前 1 条：math-g5-up-u02-k002 → dec-mult，`knowledgePoints:[]` 形态以过 kbl-uniqueness 门禁）；`percent.js` 以 KP 尾缀 '001'~'006' 分派 6 个子类型 maker（P24-02）。
 - 已知债务：尾缀分派是事实上的 KP 硬编码，列入 P25-06 审计项。
@@ -93,12 +95,12 @@ Generator 的「语义族」以其 questionTypes/capabilities + 所绑定 KP 的
 
 | 级别 | 数量 | 说明 |
 | --- | --- | --- |
-| A 深语义型 | 307 | 全表见 kbl/teaching/kp-matrix.json（draftSemanticLevel=A） |
-| B 结构语义型 | 67 | 同上（=B） |
+| A 深语义型 | 313 | 全表见 kbl/teaching/kp-matrix.json（draftSemanticLevel=A） |
+| B 结构语义型 | 61 | 同上（=B） |
 | C 通用基础型 | 1 | 同上（=C） |
 | D 待治理型 | 0 | 同上（=D）；P25-02 优先治理对象 |
 
-A 类样例（前 20）：math-g1-down-u01-k001, math-g1-down-u02-k003, math-g1-down-u03-k002, math-g1-down-u03-k003, math-g1-down-u03-k004, math-g1-down-u03-k005, math-g1-down-u03-k006, math-g1-down-u04-k005, math-g1-down-u05-k003, math-g1-down-u06-k002, math-g1-down-u06-k003, math-g1-down-u07-k001, math-g1-down-u07-k002, math-g1-down-u07-k003, math-g1-down-u08-k001, math-g1-up-u01-k001, math-g1-up-u02-k001, math-g1-up-u03-k001, math-g1-up-u03-k002, math-g1-up-u04-k002 …
+A 类样例（前 20）：math-g1-down-u01-k001, math-g1-down-u02-k003, math-g1-down-u03-k001, math-g1-down-u03-k002, math-g1-down-u03-k003, math-g1-down-u03-k004, math-g1-down-u03-k005, math-g1-down-u03-k006, math-g1-down-u04-k005, math-g1-down-u05-k003, math-g1-down-u06-k002, math-g1-down-u06-k003, math-g1-down-u07-k001, math-g1-down-u07-k002, math-g1-down-u07-k003, math-g1-down-u08-k001, math-g1-up-u01-k001, math-g1-up-u02-k001, math-g1-up-u03-k001, math-g1-up-u03-k002 …
 
 D 类全列：（无）
 
@@ -110,5 +112,5 @@ D 类全列：（无）
 ## 10. 复现
 
 ```bash
-node dev/p25/build-baseline.js   # 只读；产出 docs/p25/ 三件套
+node dev/p25/build-baseline.js   # 只读；产出 kbl/teaching 两件套 + docs/archive/phases/p25 报告
 ```

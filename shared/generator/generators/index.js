@@ -4,7 +4,6 @@
  * Generator id → 工厂/实例映射。
  *   Arithmetic: addition / subtraction / multiplication / division / mixed-calculation
  *   Selection: fill / choice / judge
- *   Complex: complex-calc
  *   Shape: shape-recognition
  *   Position: position-direction
  *   Money: money-measurement

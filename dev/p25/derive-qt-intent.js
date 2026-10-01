@@ -22,7 +22,7 @@
  *       shared/knowledge/question-type-registry.js（题型元数据：category/cognitiveLevels/supports）
  * 输出：kbl/teaching/qt-intent.json（1570 行意图矩阵）
  *       kbl/teaching/qt-intent-sample.xlsx（人工抽查单：按语义族分层抽样）
- *       docs/p25/P25-KP-QT-INTENT.md（报告）
+ *       docs/archive/phases/p25/P25-KP-QT-INTENT.md（报告，归档位）
  */
 
 var fs = require('fs');
@@ -30,7 +30,7 @@ var path = require('path');
 
 var ROOT = path.resolve(__dirname, '..', '..');
 var TEACHING_DIR = path.join(ROOT, 'kbl', 'teaching');
-var DOCS_DIR = path.join(ROOT, 'docs', 'p25');
+var DOCS_DIR = path.join(ROOT, 'docs', 'archive', 'phases', 'p25');
 var XLSX = require(path.join(ROOT, 'tools', 'kbl', 'xlsx.js'));
 
 function assert(cond, msg) {
@@ -403,9 +403,10 @@ md.push('- `no-type-evidence` / `no-type-contrast`：推导证据不足');
 md.push('');
 md.push('## 产物');
 md.push('');
-md.push('- [qt-intent.json](../../kbl/teaching/qt-intent.json) — 1570 行意图矩阵（五问 + 逐问状态 + evidence 溯源）');
-md.push('- [qt-intent-sample.xlsx](../../kbl/teaching/qt-intent-sample.xlsx) — 人工抽查单（' + sampleRows.length + ' 行，按语义族分层 + needs-review 负面样本）');
+md.push('- [qt-intent.json](../../../../kbl/teaching/qt-intent.json) — 1570 行意图矩阵（五问 + 逐问状态 + evidence 溯源）');
+md.push('- [qt-intent-sample.xlsx](../../../../kbl/teaching/qt-intent-sample.xlsx) — 人工抽查单（' + sampleRows.length + ' 行，按语义族分层 + needs-review 负面样本）');
 md.push('');
+fs.mkdirSync(DOCS_DIR, { recursive: true });
 fs.writeFileSync(path.join(DOCS_DIR, 'P25-KP-QT-INTENT.md'), md.join('\n'));
 
 // ---------- 9. 汇总 ----------
@@ -413,4 +414,4 @@ console.log('[P25-03] 意图矩阵推导完成（AI 受限推导核准流程）'
 console.log('  1570/1570 行；confirmed=' + confirmedRows.length + ' ai-verified=' + aiRows.length + ' needs-review=' + nrRows.length + ' 打回=' + rejectedRows.length);
 console.log('  旗标：' + JSON.stringify(flagDist));
 console.log('  抽查单：' + sampleRows.length + ' 行（' + Object.keys(sampledKp).length + ' 个 KP）');
-console.log('  产出：kbl/teaching/qt-intent.json, kbl/teaching/qt-intent-sample.xlsx, docs/p25/P25-KP-QT-INTENT.md');
+console.log('  产出：kbl/teaching/qt-intent.json, kbl/teaching/qt-intent-sample.xlsx, docs/archive/phases/p25/P25-KP-QT-INTENT.md');

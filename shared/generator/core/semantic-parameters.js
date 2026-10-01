@@ -177,7 +177,7 @@
     nameConceptRule('percent-target-rate', ['percent'], /达标/),
     nameConceptRule('percent-change', ['percent'], /增产|减产|增减/, /多（?少）?百分之几|百分之几的数是多少/),
     nameConceptRule('percent-of', ['percent'], /百分数的意义/, /百分之几/),
-    // —— P25-09 数概念/代数族（concept-meaning / c2-number-theory 消费）——
+    // —— P25-09 数概念/代数族（concept-meaning 消费）——
     // （number-theory 规则已上移至规则表首位，理由见上）
     nameConceptRule('algebra-letter', ['number-sense'], /字母|含有字母的式子/),
     nameConceptRule('negative-number', ['number-sense'], /正负数|负数|数轴/),

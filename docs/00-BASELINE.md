@@ -76,12 +76,12 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| Generator 总数 | **31** | `shared/generator/generator-registry.js` |
+| Generator 总数 | **24** | `shared/generator/generator-registry.js` |
 | PRODUCTION | **21** | 同上 |
 | PRODUCTION-COMBINE-ONLY | **1**（`generator:composite`） | 同上 |
 | DORMANT-CONTRACT-CARRIER | **2**（`selection-choice` / `selection-judge`） | 同上 |
-| DORMANT-NO-BINDING | **7**（竞赛 C 族 + 预留） | 同上 |
-| Generator 文件 | 24（`shared/generator/generators/*.js`） | — |
+| DORMANT-NO-BINDING | **0**（P28-CLEANUP-02：6 个无绑定孤儿源码已删） | 同上 |
+| Generator 文件 | 18 个生成器模块（`shared/generator/generators/` 另含 `index.js` 桶文件，共 19 个 .js） | — |
 | 四轴禁令 | Z1 数量 / Z2 题型 / Z3 难度 / Z4 KP — Generator 不得自决 | `dev/p28/check-generator-noninterference.js` |
 
 ---

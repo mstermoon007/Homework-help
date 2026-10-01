@@ -1,9 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "builtFrom": {
-    "knowledge": "2026-09-16T03:45:35.380Z",
-    "capability": "2026-09-16T03:45:35.384Z"
-  },
+  "builtFrom": {},
   "counts": {
     "knowledgePoints": 375,
     "allowMappings": 1570
@@ -187,7 +184,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R07:理解;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-down-u03-k001",
@@ -197,7 +194,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R07:理解;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-down-u03-k001",
@@ -207,7 +204,7 @@
       "pluginId": "generator:selection-choice",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R07:理解;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-down-u03-k001",
@@ -217,7 +214,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R07:理解;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-down-u03-k002",
@@ -1297,7 +1294,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R06:初始认识;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-up-u04-k001",
@@ -1307,7 +1304,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R06:初始认识;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-up-u04-k001",
@@ -1317,7 +1314,7 @@
       "pluginId": "generator:selection-choice",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R06:初始认识;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-up-u04-k001",
@@ -1327,7 +1324,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R06:初始认识;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-up-u04-k002",
@@ -1417,7 +1414,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R08:综合应用;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-up-u05-k001",
@@ -1427,7 +1424,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R08:综合应用;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-up-u05-k001",
@@ -1437,7 +1434,7 @@
       "pluginId": "generator:selection-choice",
       "coefficient": 1,
       "derivation": "R08:综合应用;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-up-u05-k001",
@@ -1447,7 +1444,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R08:综合应用;R10:步数=1",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g1-up-u05-k002",
@@ -5797,7 +5794,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R09:运算;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g3-up-u02-k003",
@@ -5807,7 +5804,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R09:运算;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g3-up-u02-k003",
@@ -5817,7 +5814,7 @@
       "pluginId": "generator:selection-choice",
       "coefficient": 1,
       "derivation": "R09:运算;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g3-up-u02-k003",
@@ -5827,7 +5824,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R09:运算;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g3-up-u02-k004",
@@ -5837,7 +5834,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R09:运算;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g3-up-u02-k004",
@@ -5847,7 +5844,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R09:运算;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g3-up-u02-k004",
@@ -5857,7 +5854,7 @@
       "pluginId": "generator:selection-choice",
       "coefficient": 1,
       "derivation": "R09:运算;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g3-up-u02-k004",
@@ -5867,7 +5864,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R09:运算;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g3-up-u02-k005",
@@ -8827,7 +8824,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g4-up-u01-k001",
@@ -8837,7 +8834,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g4-up-u01-k001",
@@ -8847,7 +8844,7 @@
       "pluginId": "generator:selection-choice",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g4-up-u01-k001",
@@ -8857,7 +8854,7 @@
       "pluginId": "generator:arithmetic-addition",
       "coefficient": 1,
       "derivation": "R02:数域=整数域;R10:步数=2",
-      "draftSemanticLevel": "B"
+      "draftSemanticLevel": "A"
     },
     {
       "knowledgeId": "math-g4-up-u01-k002",
@@ -15792,9 +15789,9 @@
           "fill",
           "apply"
         ],
-        "bindingsCount": 13,
+        "bindingsCount": 7,
         "boundKpDraftLevels": {
-          "B": 13
+          "B": 7
         },
         "supportsComposite": false,
         "version": 1
@@ -15811,10 +15808,10 @@
           "fill",
           "apply"
         ],
-        "bindingsCount": 15,
+        "bindingsCount": 17,
         "boundKpDraftLevels": {
-          "B": 13,
-          "A": 2
+          "B": 16,
+          "A": 1
         },
         "supportsComposite": false,
         "version": 1
@@ -15831,10 +15828,9 @@
           "fill",
           "apply"
         ],
-        "bindingsCount": 23,
+        "bindingsCount": 20,
         "boundKpDraftLevels": {
-          "B": 21,
-          "A": 2
+          "B": 20
         },
         "supportsComposite": false,
         "version": 1
@@ -15851,9 +15847,9 @@
           "fill",
           "apply"
         ],
-        "bindingsCount": 10,
+        "bindingsCount": 8,
         "boundKpDraftLevels": {
-          "B": 7,
+          "B": 5,
           "A": 3
         },
         "supportsComposite": false,
@@ -15912,21 +15908,6 @@
           "geometry",
           "calc",
           "apply"
-        ],
-        "bindingsCount": 0,
-        "boundKpDraftLevels": {},
-        "supportsComposite": false,
-        "version": 1
-      },
-      {
-        "pluginId": "generator:complex-calc",
-        "questionTypes": [
-          "calc",
-          "fill"
-        ],
-        "capabilities": [
-          "calc",
-          "fill"
         ],
         "bindingsCount": 0,
         "boundKpDraftLevels": {},
@@ -16020,9 +16001,9 @@
           "judge",
           "calc"
         ],
-        "bindingsCount": 33,
+        "bindingsCount": 35,
         "boundKpDraftLevels": {
-          "A": 33
+          "A": 35
         },
         "supportsComposite": false,
         "version": 2
@@ -16104,81 +16085,6 @@
         "version": 1
       },
       {
-        "pluginId": "generator:c1-number-puzzle",
-        "questionTypes": [
-          "apply",
-          "calc"
-        ],
-        "capabilities": [
-          "apply",
-          "calc"
-        ],
-        "bindingsCount": 0,
-        "boundKpDraftLevels": {},
-        "supportsComposite": false,
-        "version": 1
-      },
-      {
-        "pluginId": "generator:c2-number-theory",
-        "questionTypes": [
-          "apply",
-          "calc"
-        ],
-        "capabilities": [
-          "apply",
-          "calc"
-        ],
-        "bindingsCount": 0,
-        "boundKpDraftLevels": {},
-        "supportsComposite": false,
-        "version": 1
-      },
-      {
-        "pluginId": "generator:c5-c6-journey-engineering",
-        "questionTypes": [
-          "apply",
-          "calc"
-        ],
-        "capabilities": [
-          "apply",
-          "calc"
-        ],
-        "bindingsCount": 0,
-        "boundKpDraftLevels": {},
-        "supportsComposite": false,
-        "version": 1
-      },
-      {
-        "pluginId": "generator:c7-clever-calc",
-        "questionTypes": [
-          "apply",
-          "calc"
-        ],
-        "capabilities": [
-          "apply",
-          "calc"
-        ],
-        "bindingsCount": 0,
-        "boundKpDraftLevels": {},
-        "supportsComposite": false,
-        "version": 1
-      },
-      {
-        "pluginId": "generator:c9-comprehensive",
-        "questionTypes": [
-          "apply",
-          "calc"
-        ],
-        "capabilities": [
-          "apply",
-          "calc"
-        ],
-        "bindingsCount": 0,
-        "boundKpDraftLevels": {},
-        "supportsComposite": false,
-        "version": 1
-      },
-      {
         "pluginId": "generator:composite",
         "questionTypes": [
           "calc",
@@ -16218,23 +16124,6 @@
         "boundKpDraftLevels": {
           "A": 5
         },
-        "supportsComposite": false,
-        "version": 2
-      },
-      {
-        "pluginId": "generator:equivalent-reasoning",
-        "questionTypes": [
-          "fill",
-          "choice",
-          "apply"
-        ],
-        "capabilities": [
-          "fill",
-          "choice",
-          "apply"
-        ],
-        "bindingsCount": 0,
-        "boundKpDraftLevels": {},
         "supportsComposite": false,
         "version": 2
       },
@@ -16290,9 +16179,9 @@
           "geometry",
           "judge"
         ],
-        "bindingsCount": 42,
+        "bindingsCount": 48,
         "boundKpDraftLevels": {
-          "A": 42
+          "A": 48
         },
         "supportsComposite": false,
         "version": 1

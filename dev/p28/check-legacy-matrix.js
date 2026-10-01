@@ -48,16 +48,6 @@ var CANDIDATES = [
     decision: 'KEEP',
     note: '生产路径：mode==="legacy"||"shadow" 时 effectiveDifficulty=legacyEffective；测试：adaptive-strategy.test.js'
   },
-  // ── 6. knowledge-compat.js: KnowledgeCompat ──
-  {
-    file: 'shared/engine/knowledge-compat.js',
-    symbol: 'KnowledgePointCompat + KnowledgeOntologyCompat + KnowledgeCompat',
-    reason: 'KBL 运行时兼容层：KnowledgePoint → KP/Ontology 适配（StrategyEngine 依赖）',
-    callers: { prod: 3, test: 0, dev: 3, bundle: 1 },
-    deleteCondition: 'KBL schema 统一后可删；当前为生产依赖',
-    decision: 'KEEP',
-    note: '调用者：comprehensive-strategy.js / sw.js / _bundle-env.js / check-kbl-uniqueness.js / check-knowledge-access.js / build-strategy-bundle.js'
-  },
   // ── 7. question-type-registry.js: LEGACY_DISPLAY_NAMES ──
   {
     file: 'shared/knowledge/question-type-registry.js',

@@ -37,8 +37,7 @@
             "shared/engine/practice-session.js",
             "shared/engine/presentation-engine.js",
             "shared/engine/presentation-engine.bundle.js",
-            "shared/engine/strategy-engine.bundle.js",
-            "shared/engine/knowledge-compat.js"
+            "shared/engine/strategy-engine.bundle.js"
           ]
         },
         "STRATEGY": {

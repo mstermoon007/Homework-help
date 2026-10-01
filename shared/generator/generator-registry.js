@@ -30,7 +30,7 @@ var CORE_RECORDS = [
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'geometry', 'calc', 'apply'], questionTypes: ['choice', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'geometry', 'calc', 'apply'], questionTypes: ['judge', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   // P25-09：原 5 个误绑 KP 已全部迁出（g1-up-u03-k001→shape；g2-down-u04-k002/3/4/6→concept）。
-  // FINAL-20：complex-calc dormant（0 mapping、0 evidence、重复能力被算术族全覆盖），从生产 bundle 排除。源码保留。
+  // P28-CLEANUP-02：complex-calc 源码已删除（FINAL-20 起 0 绑定 0 产出、从未注册入本注册表；用户 2026-10-01 显式指令）。
 
   // P0-04 Step 15-20: 新增形状/位置/金钱/应用题 Generator
   // P25-07：version 升 2（classification choice 选项 null 修复 + flat 语义回退）；
@@ -82,7 +82,7 @@ var CORE_RECORDS = [
   { id: 'generator:picture-equation', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
     knowledgePoints: ['math-g4-down-u01-k001', 'math-g5-up-u07-k003'],
     scope: 'core', version: 1, supportsComposite: false },
-  // FINAL-20：c1/c2/c5-c6/c7/c9 dormant（0 mapping、0 evidence、竞赛 C 族预留），从生产 bundle 排除。源码保留。
+  // P28-CLEANUP-02：c1/c2/c5-c6/c7/c9 竞赛 C 族预留源码已删除（从未注册入本注册表、0 绑定 0 产出；用户 2026-10-01 显式指令）。
   { id: 'generator:composite', subject: 'math', capabilities: ['calc', 'judge', 'fill', 'apply'], questionTypes: ['calc', 'judge', 'fill', 'apply'],
     knowledgePoints: ['math-g1-up-u01-k001', 'math-g2-down-u07-k001', 'math-g2-up-u01-k005', 'math-g3-up-u02-k001', 'math-g4-up-u03-k001'],
     scope: 'core', version: 1, supportsComposite: true },

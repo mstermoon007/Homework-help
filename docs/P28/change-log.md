@@ -25,6 +25,62 @@
 
 ## 记录（新 → 旧）
 
+### P28-CLEANUP-02c｜derive-qt-intent 归档输出路径修复 + qt-intent 派生追平（去 OOXML 富文本泄漏）+ p25 报告相对链接深度修正（2026-10-01）
+- modified:
+  - `dev/p25/derive-qt-intent.js`（与 CLEANUP-02 同病的第三个 P25 脚本：DOCS_DIR `docs/p25/`→`docs/archive/phases/p25/` 并补 mkdir（此前重跑 ENOENT 半崩，json 已写而 md 失败）；md 内产物相对链接 `../../kbl/`→`../../../../kbl/`（归档位加深两级）；头部/console 同步）
+  - `dev/p25/build-baseline.js` / `dev/p25/draft-semantic-matrix.js`（报告 md 内 `[*.json|xlsx](../../kbl/teaching/...)` 链接深度修正为 `../../../../kbl/teaching/...`；CLEANUP-02 改输出目录时漏改行内链接，draft 脚本首轮曾误修为 `../../../` 仍断链，本次一并修正）
+  - `dev/p25/build-coverage-report.js`（1 行注释：`docs/p25/P25-14-COVERAGE-REPORT.md`→归档位）
+  - `kbl/teaching/qt-intent.json`（白名单脚本重派生追平：37 行 trainsWhat 文案清除 `<r>/<rPr>` OOXML 富文本 run 泄漏——上游抽取净化后该产物从未重跑，属 CLEANUP-02 同类的"陈旧派生产物"）
+  - `kbl/teaching/qt-intent-sample.xlsx`、`docs/archive/phases/p25/P25-KP-QT-INTENT.md`（同脚本重生成）
+  - `docs/archive/phases/p25/P25-BASELINE.md`、`docs/archive/phases/p25/P25-SEMANTIC-MATRIX.md`（链接修正后重生成）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason: 用户要求清查"未迁移内容、坏链、未完成派生"。定向扫描发现：① derive-qt-intent.js 是第三个残留 `docs/p25/` 输出路径的派生脚本（重跑 ENOENT，属真 bug 非仅陈旧注释）；② 其产物 qt-intent.json 因该 bug 长期未追平，携带上游早已净化的 OOXML 富文本标记；③ CLEANUP-02 移动 p25 报告归档位时行内相对链接深度未同步加深（含本轮自引入的一处 `../../../` 误修），脚本重生成即产坏链。
+- tests: ① 三个 p25 派生脚本全部 EXIT=0 重跑成功；② 脚本化链接校验：p25 三份报告相对链接 broken=0；③ `node dev/check-all.js` **27 PASS / 0 FAIL / 1 SKIP**（SKIP 同前：#15 浏览器 E2E）；④ qt-intent.json 差异仅 37 行富文本标记清除，无字段结构变化。
+- risk: 低。脚本路径/链接修正不影响运行时；qt-intent.json 为白名单脚本机械重派生，变化方向是纯净化（去标记），且该文件为 dev 观察产物（coverage 门禁 allowlist 内的 declared-only，生产运行时不直读）。
+
+### P28-CLEANUP-02b｜final-50 codemod 清单移除 6 个已删文件名（2026-10-01）
+- modified:
+  - `dev/p28/final-50-apply-generators.js`（FILES Category B：删除 `c1-number-puzzle.js`/`c2-number-theory.js`/`c7-clever-calc.js`/`c9-comprehensive.js`/`c5-c6-journey-engineering.js`/`complex.js` 六行，8→2；注释同步标注。CLEANUP-02 尾部遗留：用户确认后执行的最小跟进）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason: 6 个孤儿生成器源码已随 P28-CLEANUP-02 删除，该一次性 codemod 清单中的死文件名使任何重跑（含 --dry）报 6 条 NOT FOUND；属旧代码产生的失效标记。脚本本身保留（FINAL-50 执行历史），仅清理清单与既有文件集合对齐。
+- tests: ① `node dev/p28/final-50-apply-generators.js --dry` EXIT=0，改动 0 / 跳过 18（幂等，不再报 NOT FOUND）；② `node dev/check-all.js` **27 PASS / 0 FAIL / 1 SKIP**（SKIP 同前：#15 浏览器 E2E 环境依赖）。
+- risk: 低。纯数据清单收缩，无运行时链路引用该脚本；现存 18 个生成器全部已注入（跳过），行为零变化。
+
+### P28-CLEANUP-02｜迁移脚手架清除 + 旧生成器孤儿源码删除 + 重复归档/失效标记治理（2026-10-01）
+- modified:
+  - `migration/knowledge-access-expectations.json`（按门禁真实命中重建：仅 `shared/catalog/module-catalog.js→downstream-pending`、`tools/kbl/roundtrip.js→tools` 两条；旧文件是 598/566 KP 时代数百条预期的陈旧基线）
+  - `dev/p28/check-dead-code.js`（6 个孤儿生成器条目从 BUNDLE-EXCLUDED/EXCLUDE 改为 `status:'DELETED (P28-CLEANUP-02)'` + decision DELETE，门禁断言其不再存在）
+  - `dev/p28/check-legacy-matrix.js`（移除已不存在的 `shared/engine/knowledge-compat.js` KEEP 行——该桥 FINAL-22 已物理删除，矩阵条目是失效标记；候选 8→7）
+  - `shared/generator/generator-registry.js` / `shared/generator/generators/index.js`（仅注释/头部：6 个已删文件与 Complex 族的陈旧说明改为 P28-CLEANUP-02 删除注记，无注册表逻辑变化）
+  - `dev/p25/build-baseline.js`（报告输出路径 `docs/p25/`→`docs/archive/phases/p25/` 并补 mkdir；ARITH_RE 去掉 complex-calc；注释/日志同步）
+  - `dev/p25/draft-semantic-matrix.js`（同样的归档输出路径修复 + mkdir + xlsx 相对链接深度修正）
+  - `dev/p28/check-generator-matrix.js`（头部 31→24；报告模板清除 `migration/excel-raw/*` 等已消失路径与 31/10 等陈旧数字，改为删除注记）
+  - 派生产物重生成（白名单脚本，非手改）：`kbl/teaching/generation-matrix.json`（generatorIndex 31→24，仅删 7 条 registryGenerators 死条目；**1570 行映射零变化**）、`kbl/teaching/kp-matrix.json`（追平 FIX6：A=313/B=61/C=1）、`kbl/teaching/semantic-review.json`（从 P25-02 起草期陈旧版本 D=93/B=41/C=166/A=75 重建到当前 313/61/1，10 处 `generator:complex-calc` 失效标记清零）、`kbl/teaching/semantic-matrix.xlsx`（同脚本重生成）、`docs/archive/phases/p25/P25-BASELINE.md`、`docs/archive/phases/p25/P25-SEMANTIC-MATRIX.md`、`docs/archive/phases/p28/P28-GENERATOR-MATRIX.{json,md}`（--write 重生成）
+  - 现行文档同步：`docs/00-BASELINE.md`（Generator 31→24、DORMANT-NO-BINDING 7→0、生成器文件 24→18 模块）、`docs/03-POL-GENERATION.md`（同口径）、`docs/02-KBL.md`（隔离结论：迁移档案已清除、knowledge-compat/knowledge-bank 已删的真相）、`docs/06-PRESENTATION.md`（inline 布局声明方去掉已删的 c1-number-puzzle）、`shared/knowledge/README.md`（迁移溯源处置段重写）、`architecture/layers.json`（CORE_ENGINE 移除已删 knowledge-compat.js）、`shared/catalog/module-catalog.js`（头部注释：knowledge-bank.js→KBL runtime、DEV_LOG 归档路径）、`shared/generator/core/semantic-parameters.js`（1 行注释去掉 c2-number-theory）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - **迁移脚手架 17 个**：`migration/raw/{id-map,kps,mappings,relations,report,units}.json`、`migration/excel-raw/{extensions,id-map,kps,mappings,relations,report,units}.json`、`migration/archive/baseline-migration/KBL_BASELINE.{json,md}`、`migration/legacy-baseline.json`、`migration/kbl-migration-report.md`（空目录同步移除；其中旧 relations.json 含 1293 旧关系行/600 前置边/**10 条环形回边**，现行关系由 `tools/kbl/derive-relations.js` 另行派生并已验证无环；无任何运行/构建代码消费 migration/raw 与 excel-raw）
+  - **6 个 DORMANT-NO-BINDING 孤儿生成器源码**：`shared/generator/generators/{complex,c1-number-puzzle,c2-number-theory,c5-c6-journey-engineering,c7-clever-calc,c9-comprehensive}.js`（0 绑定/0 evidence/0 测试/不在 index/registry CORE_RECORDS/门禁 DECL/生产 bundle 中；**此删除依据用户 2026-10-01 明确指令，覆盖 FINAL-20「源码保留」的原决定**；selection-choice/selection-judge 两个 DORMANT-CONTRACT-CARRIER 不动）
+  - **62 个字节级重复归档**：`docs/archive/` 下 phases/ 树之外的全部历史副本（根目录 41 个散件含 DEV_LOG/VERSION/P16 followup/审计与 pol 文档/2 个中文设计文档、audit/ 12 个、freeze-20260919/ 4 个、human-data-requests/ 5 个），逐份与 `docs/archive/phases/` 内规范副本字节相同；空目录移除，`docs/archive/` 现仅余 `phases/`
+- reason: 用户指令推进全量迁移收尾并清除完全失效的旧代码及其无效/重复/循环标记。审计确认：迁移脚手架是旧 598/566 KP 基线的一次性输入（含 10 条环形回边），与现行 canonical 派生链无关；6 个生成器源码在 FINAL-20 后已是事实上的孤儿（注册/索引/门禁/bundle 均不含），FINAL-20 的「保留」仅为保守决定，用户明确要求删除；docs/archive 双份副本违反单一归档位；另发现 knowledge-compat.js（FINAL-22 删）在 layers.json/legacy 矩阵/README/02-KBL 中仍被当作存活组件，以及 teaching 产物停留在 P25-02 起草期、含已删生成器标记，均为旧代码遗留的失效标记。访问门禁基线按真实命中重建而非删除（`dev/check-knowledge-access.js` 硬编码依赖该路径）。
+- tests: ① `node dev/check-knowledge-access.js` PASS（2 条基线）；② `check-dead-code` PASS（14 candidates，6 个 DELETED 断言文件不存在）；③ `check-generator-matrix` PASS（**24 个：PRODUCTION=21 COMBINE-ONLY=1 DORMANT-CARRIER=2 NO-BINDING=0，FAIL 0**）；④ `check-legacy-matrix` PASS（7 candidates）；⑤ `check-generation-matrix-freeze` PASS（1570/1570，git diff=0）；⑥ bundle/determinism 双模式 PASS（两个 bundle hash 稳定：strategy 82be81a2… / presentation 66638ccd…）；⑦ 两个 P25 派生脚本 + 矩阵 --write 各重跑两次，工作区零新增漂移（幂等）；⑧ `npm test` **617 pass / 0 fail**；⑨ `node dev/check-all.js` **27 PASS / 0 FAIL / 1 SKIP**（SKIP 仅 #15 真实浏览器 E2E，既有环境依赖项）。
+- risk: 低。删除物均无运行时消费者：bundle hash 前后一致证明 6 个生成器从未进生产包；1570 冻结映射与 375 KP 数据零变化；teaching JSON 为白名单脚本机械重生成。注意：(1) `dev/p28/final-50-apply-generators.js` 为 FINAL-50 一次性 codemod（无门禁/测试引用），其 FILES 清单保留 6 个已删文件名属真实历史档案，如今重跑会报 NOT FOUND，不修复、不删除（超出本次批准范围）；(2) `docs/P28-FINAL-FREEZE.md`、`docs/FINAL-*.md` 等注明日期的快照保留当时数字（31/7）不改写；(3) 未执行任何 git commit，全部改动（含此前未提交的 FIX6c）留在工作树。
+
+### P28-FIX6c｜evidence 派生链加固：反面采样（A）+ 基线 fail 硬闸门（B）（2026-10-01）
+- modified:
+  - `dev/p25/derive-evidence-candidates.js`（① A：主采样窗口（auto seed，N=6）之外，每行 ALLOW 增加显式异种子反面采样（seed=260101+i，N=6）；"主窗口全样本等值"的标量字段若在反面窗口取到不同值，即非结构恒定量，field 值断言降级 fieldPresent（打标 counter-sample-downgraded），bool 维持无条件降级；报告 schemaVersion p26-evidence-derive.1→.2，sampling 记 counterSample，summary 增 counterDowngraded 计数。② B：报告写出后若基线证据 fail 总数 >0 则打印相关行并 exit 1，概率性错误契约不得静默混入）
+  - `dev/p25/reports/evidence-derive-report.json`（双倍采样重建：5974 pass / 0 fail / 0 skip；counterDowngraded=0——全库非 bool 稳定字段在异种子窗口均保持恒定，既有 1570 行规则形态零漂移）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason: FIX6b 修掉了 isTrue 单点 flake 并补了 bool 护栏，但制度性盲区仍在：(1) 任何随抽题变化的标量（枚举/窄题空间数值）都可能被小样本巧合冻成恒定值，bool 护栏只覆盖 bool；(2) derive 报告的 baselineStates.fail 只打印不拦截，FIX6 时那 1 个 fail 才得以静默混入。A 用独立种子窗口主动证伪字段恒定性（bool 护栏的通用化），B 让 fail 无法被忽视。
+- tests: ① 全量 derive 实跑（313 A 类 × 1323 ALLOW 行 × 双窗口 12 题/行）：EXIT=0（B 闸门通过）、5974 pass / 0 fail / 0 skip、反面采样降级 0 行（候选形态与既有规则一致，apply 无新增/无漂移）；② `node dev/check-all.js` **27 PASS / 0 FAIL / 1 SKIP**；③ `npm test` 617/0。
+- risk: 低。derive 是开发期脚本（非运行时链路）；A 只影响未来新派生候选的形态（值断言→存在性断言，方向变严为松），不改既有 1570 行规则；B 仅在 fail>0 时阻断，当前基线 0 fail。派生耗时约翻倍（约 16s→约 30s 量级），可接受。
+
 ### P28-FIX6b｜修复剪纸活动×judge 采样 flake（bool 冻结断言降级 fieldPresent + derive/apply 护栏）（2026-10-01）
 - modified:
   - `kbl/teaching/evidence-rules.json`（1 行：math-g3-down-u01-k004×judge 规则 required 中 `{field data.isTrue=true}` → `{fieldPresent data.isTrue}`；判断题对错各半随抽题随机，fieldPresent 存在性断言与 FINAL-31a 设立语义一致，全库审计确认 bool 值冻结仅此 1 行）

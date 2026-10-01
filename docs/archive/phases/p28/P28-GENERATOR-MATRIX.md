@@ -2,15 +2,15 @@
 
 | 项 | 值 |
 |---|---|
-| 任务 | P28-09 Generator Registry 收口：31 个 Generator 逐个澄清 生产使用/测试使用/历史使用/重复能力/legacy capability，并强制声明 id · semantic family · supported question types · input contract · output contract · validator · production status |
-| 执行日期 | 2026-09-23 |
+| 任务 | P28-09 Generator Registry 收口：24 个 Generator 逐个澄清 生产使用/测试使用/历史使用/重复能力/legacy capability，并强制声明 id · semantic family · supported question types · input contract · output contract · validator · production status（P28-CLEANUP-02 后 24 个） |
+| 执行日期 | 2026-10-01 |
 | 判定规则 | R1 覆盖 / R2 题型=registry / R3 声明完整 / R4 产出⊆声明 / R5 状态一致 / R6 无 legacy（统一门禁 `node dev/p28/check-generator-matrix.js`） |
 
 ## 1. 收口结论
 
 **24 个 Generator · PRODUCTION=21 · COMBINE-ONLY=1 · DORMANT-CARRIER=2 · DORMANT-NO-BINDING=0 —— 收口冻结 ✅**
 
-冻结证据：1570 行真实生成（P28-08）中，实际承载行合计 = 1570；历史使用集中在 `archive/legacy-tests/generator/*`（31 个 id 全量旧测试）+ `migration/excel-raw/*`（4 个）+ kbl 冻结产物。
+冻结证据：1570 行真实生成（P28-08）中，实际承载行合计 = 1570；旧 31-id 全量测试与 `migration/excel-raw/*` 提取档案均已清除（后者 P28-CLEANUP-02），历史使用证据仅留 kbl 冻结产物。
 
 ## 2. GENERATOR_MATRIX（逐 Generator 7 项声明）
 
@@ -45,10 +45,10 @@
 
 | 维度 | 结论 |
 |---|---|
-| **生产使用** | 21 个实际承载（1570 冻结行全部落于原生绑定生成器）；composite 仅 combine 场景；其余 10 个 0 产出行（见 §4） |
+| **生产使用** | 21 个实际承载（1570 冻结行全部落于原生绑定生成器）；composite 仅 combine 场景；其余 2 个契约载体 0 产出行（见 §4） |
 | **测试使用** | 直接 id 引用 14 个文件：arithmetic-addition/multiplication (p27-variation-directive)、shape (p25-07-type-contracts)、money/application/reasoning/code/percent/concept/semantic-relations/decimal/fraction (p25-09-native-bindings)、concept (p25-04/p25-06)、classification (p17-10-classify)、composite (composite)；间接经 1570 门禁全覆盖 |
-| **历史使用** | `archive/legacy-tests/generator/core-generators.test.js`（31/31 全量）、registry/selector legacy tests、`migration/excel-raw/kps.json+mappings.json`（addition+selection×3+classification）、`archive/docs-2026-09/migration-reports/*`、`archive/r6-gate-cleanup/*`、kbl 冻结产物（generation-matrix/kp-matrix/教学 semantic-review） |
-| **重复能力** | selection-choice（375 行 choice 载体）/ selection-judge（126 行 judge 载体）实际 0 产出——choice/judge 已由 shape/position/concept/application 等原生绑定族全覆盖；complex-calc、c1/c2/c5c6/c7/c9、equivalent-reasoning 的 apply/calc/fill/choice 全被覆盖、0 产出 |
+| **历史使用** | 旧 31-id 全量 generator 测试与 `migration/excel-raw/*` 提取档案均已移除（后者 P28-CLEANUP-02）；现存证据为 kbl 冻结产物（generation-matrix/kp-matrix/教学 semantic-review） |
+| **重复能力** | selection-choice（375 行 choice 载体）/ selection-judge（126 行 judge 载体）实际 0 产出——choice/judge 已由 shape/position/concept/application 等原生绑定族全覆盖；complex-calc、c1/c2/c5c6/c7/c9 六个无绑定孤儿源码已随 P28-CLEANUP-02 删除（equivalent-reasoning 记录已随 FINAL-20 移除） |
 | **legacy capability** | 能力面无旧令牌（P28-07 已清，R6 通过）；剩余：selection 族几何为名义声明、stats 欠声明 judge、classification 欠声明 fill/choice/judge/apply、application/equivalent answer 契约偏差、c9 陈旧注释 |
 
 ## 4. 状态明细

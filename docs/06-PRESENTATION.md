@@ -71,11 +71,11 @@ SemanticQuestion 是全链唯一题目数据契约，禁止第二套题目对象
 | 真相 | 唯一来源 |
 |---|---|
 | `response.layout` 枚举（`'inline-after-equals'` / `'block'`） | `shared/schemas/semantic-question.schema.js`（RESPONSE_LAYOUTS + isValidResponseLayout） |
-| 声明方：生成器产出载荷 `response: { layout }` | arithmetic / picture-equation / c1-number-puzzle（实际产出 `= ?` 尾缀的生成器） |
+| 声明方：生成器产出载荷 `response: { layout }` | arithmetic / picture-equation（实际产出 `= ?` 尾缀的生成器） |
 | 归一：raw.response 透传到 sq.response | `shared/semantic/semantic-question.js` normalizeSemanticQuestion |
 | 消费：`inlineExpression(sq, prompt)` 读 `sq.response.layout==='inline-after-equals'` | `shared/presentation/html-renderer.js`；选择题（optionsOf）一律不内联 |
 | Fallback：声明 inline 但题干无 `= ?` 尾缀 | 自动回落 `block`（与旧正则未匹配等价） |
 
 - 删除 html-renderer 旧的 `INLINE_EQ_RE` 字符串检测正则与 `endsWith('= ?')` 调用路径。
 - 未声明 `response` 字段的生成器默认回落 block 布局（可见退化，非静默）。
-- 多分支生成器（picture-equation / c1-number-puzzle）以声明 + fallback 设计，无 `= ?` 尾缀的分支自动回落 block，行为不变。
+- 多分支生成器（picture-equation）以声明 + fallback 设计，无 `= ?` 尾缀的分支自动回落 block，行为不变。

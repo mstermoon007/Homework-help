@@ -84,9 +84,8 @@ SEO / AI / Crawler / LLM（只读消费）
 ### 隔离结论
 
 - **当前生产代码**（shared/tools/plugins/页面/scripts/）= **0 命中**
-- 历史内容（archive/migration/冻结文档/历史报告）隔离保留
-- 兼容桥：`KnowledgeBankCompat` → `KnowledgeCompat`（行为保持，纯接线符号）
-- 模块键 `shared/knowledge/knowledge-bank.js` 保留为冻结 Strategy require 标识（结构性接线）
+- 冻结文档/历史报告隔离保留于 `docs/archive/`；`migration/` 一次性提取档案已随 P28-CLEANUP-02 清除，仅余访问门禁基线 `migration/knowledge-access-expectations.json`
+- 兼容桥 `KnowledgeBankCompat` → `KnowledgeCompat` 与旧模块键 `shared/knowledge/knowledge-bank.js` 已随 FINAL-22 物理删除（无消费者，不保留兼容层）
 
 ### 门禁
 

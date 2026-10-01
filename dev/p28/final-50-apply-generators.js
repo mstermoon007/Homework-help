@@ -43,14 +43,8 @@ var FILES = {
     'buildQuestions(plan, context, count, makeCodeJudge)',
     'buildQuestions(plan, context, count, makeCodeFill)'
   ]},
-  // Category B (8)
-  'c1-number-puzzle.js': { mode: 'B' },
-  'c2-number-theory.js': { mode: 'B' },
-  'c7-clever-calc.js': { mode: 'B' },
-  'c9-comprehensive.js': { mode: 'B' },
-  'c5-c6-journey-engineering.js': { mode: 'B' },
+  // Category B (2)（P28-CLEANUP-02：c1/c2/c7/c9/c5-c6/complex 六个孤儿源码已删，从清单移除）
   'composite.js': { mode: 'B' },
-  'complex.js': { mode: 'B' },
   'selection.js': { mode: 'B' }
 };
 

@@ -100,10 +100,10 @@ node dev/check-knowledge-access.js # 静态访问门禁（KBL ACCESS AUDIT）
 
 - `kbl/`（canonical source）保留一次迁移的溯源字段供追踪；`build` 分发产物已剔除
   （`oldUnitId` 等仅存在于 canonical，不进入 `shared/knowledge/` 与 bundle）。
-- `migration/raw` 为提取档案（一次性输入源，`id-map.json` 仅供工具内部使用，运行层不存在 old→new 映射）；
-  `migration/knowledge-access-expectations.json` 为访问门禁基线，长期保留。
-- 冻结 Strategy/Capability 内不可改写的旧模块名引用，统一经
-  `shared/engine/knowledge-compat.js`（`KnowledgeCompat` 等）委托回 KBL Runtime；
+- 一次性迁移提取档案（`migration/raw`、`migration/excel-raw` 及旧迁移报告）已随
+  P28-CLEANUP-02 清除；运行层不存在 old→new 映射。`migration/` 现仅保留
+  `knowledge-access-expectations.json`（`dev/check-knowledge-access.js` 访问门禁基线，长期保留）。
+- 旧 `shared/engine/knowledge-compat.js` 兼容桥已随 FINAL-22 物理删除（无消费者）；
   唯一性由 `dev/check-kbl-uniqueness.js` 门禁强制（生产代码不得再出现旧知识记号）。
 
 ## KBL 永久规范（方案 §44）

@@ -15,7 +15,7 @@
  * 输入：kbl/teaching/kp-matrix.json（P25-00 基线，KBL 教学语义扩展层）
  * 输出：kbl/teaching/semantic-review.json（机读评审文件）
  *       kbl/teaching/semantic-matrix.xlsx（人工评审表：总览 / A类评审 / D类治理 / 字段口径）
- *       docs/p25/P25-SEMANTIC-MATRIX.md（摘要）
+ *       docs/archive/phases/p25/P25-SEMANTIC-MATRIX.md（摘要，归档位）
  */
 
 var fs = require('fs');
@@ -23,7 +23,7 @@ var path = require('path');
 
 var ROOT = path.resolve(__dirname, '..', '..');
 var TEACHING_DIR = path.join(ROOT, 'kbl', 'teaching');
-var DOCS_DIR = path.join(ROOT, 'docs', 'p25');
+var DOCS_DIR = path.join(ROOT, 'docs', 'archive', 'phases', 'p25');
 var XLSX = require(path.join(ROOT, 'tools', 'kbl', 'xlsx.js'));
 
 function assert(cond, msg) {
@@ -212,8 +212,8 @@ md.push('| NEEDS_REVIEW 字段格 | ' + review.counts.needsReviewFieldCells + ' 
 md.push('');
 md.push('## 产物');
 md.push('');
-md.push('- [semantic-matrix.xlsx](../../kbl/teaching/semantic-matrix.xlsx) — 人工评审表（总览 / A类评审 / D类治理 / 字段口径）');
-md.push('- [semantic-review.json](../../kbl/teaching/semantic-review.json) — 机读评审文件（含 workflow 与逐字段状态）');
+md.push('- [semantic-matrix.xlsx](../../../../kbl/teaching/semantic-matrix.xlsx) — 人工评审表（总览 / A类评审 / D类治理 / 字段口径）');
+md.push('- [semantic-review.json](../../../../kbl/teaching/semantic-review.json) — 机读评审文件（含 workflow 与逐字段状态）');
 md.push('');
 md.push('## 状态机');
 md.push('');
@@ -225,10 +225,11 @@ md.push('```');
 md.push('');
 md.push('禁止：AI 直接 confirmed；confirmed 数据未回灌 KBL 前不得进入正式数据链路（P25-01 Schema E05 会拒绝 NEEDS_REVIEW 携带内容）。');
 md.push('');
+fs.mkdirSync(DOCS_DIR, { recursive: true });
 fs.writeFileSync(path.join(DOCS_DIR, 'P25-SEMANTIC-MATRIX.md'), md.join('\n'));
 
 // ---------- 6. 汇总 ----------
 console.log('[P25-02] 语义覆盖矩阵起草完成（只读，未修改任何正式数据）');
 console.log('  覆盖 375/375；semanticLevel：' + JSON.stringify(levelDist));
 console.log('  A 类提案覆盖：' + proposalCount + '/' + aRows.length + '；NEEDS_REVIEW 字段格：' + review.counts.needsReviewFieldCells);
-console.log('  产出：kbl/teaching/semantic-matrix.xlsx, kbl/teaching/semantic-review.json, docs/p25/P25-SEMANTIC-MATRIX.md');
+console.log('  产出：kbl/teaching/semantic-matrix.xlsx, kbl/teaching/semantic-review.json, docs/archive/phases/p25/P25-SEMANTIC-MATRIX.md');

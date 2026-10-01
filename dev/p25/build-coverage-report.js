@@ -230,7 +230,7 @@ dimensions.forEach(function (dim) {
 
 // CI allowlist：已知 declared-only 字段（dev 基线/观察产物，非生产消费对象）。
 // --strict 仅对 allowlist 之外的新增 declared-only 字段阻断，避免回归。
-// 详见 docs/p25/P25-14-COVERAGE-REPORT.md §4。
+// 详见 docs/archive/phases/p25/P25-14-COVERAGE-REPORT.md §4。
 var KNOWN_DECLARED_ONLY = {
   'kpSemantic.kp-matrix.json': true,           // dev 基线矩阵，生产运行时直读 kbl/root
   'variation.variation-profiles.json': true    // P27-09 观察产物，生产由 variation-directive.js 接入

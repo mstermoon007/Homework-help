@@ -5,14 +5,14 @@
 | 项 | 值 |
 | --- | --- |
 | 覆盖 | 375/375 KP |
-| semanticLevel 分布 | {"D":93,"B":41,"C":166,"A":75} |
-| A 类带 learningTargets 提案 | 75 / 75（提案=KBL 定义机械分句，子串断言防虚构） |
-| NEEDS_REVIEW 字段格 | 1800 |
+| semanticLevel 分布 | {"A":313,"B":61,"C":1} |
+| A 类带 learningTargets 提案 | 313 / 313（提案=KBL 定义机械分句，子串断言防虚构） |
+| NEEDS_REVIEW 字段格 | 1562 |
 
 ## 产物
 
-- [semantic-matrix.xlsx](../../kbl/teaching/semantic-matrix.xlsx) — 人工评审表（总览 / A类评审 / D类治理 / 字段口径）
-- [semantic-review.json](../../kbl/teaching/semantic-review.json) — 机读评审文件（含 workflow 与逐字段状态）
+- [semantic-matrix.xlsx](../../../../kbl/teaching/semantic-matrix.xlsx) — 人工评审表（总览 / A类评审 / D类治理 / 字段口径）
+- [semantic-review.json](../../../../kbl/teaching/semantic-review.json) — 机读评审文件（含 workflow 与逐字段状态）
 
 ## 状态机
 

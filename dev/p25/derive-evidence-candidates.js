@@ -108,11 +108,21 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
     var allowedRels = KpSemantic.getAllowedRelations(kpSem);
 
     var samples = [];
+    var probeSamples = [];
     var err = null;
     try {
       var session = new PracticeSession({ subject: 'math', grade: p.grade, count: N, knowledgePointId: p.kp, questionType: p.qt });
       await session.start();
       samples = (session.semanticQuestions || []).filter(function (q) {
+        var qk = q.knowledgePointId || (q.knowledgePointIds && q.knowledgePointIds[0]);
+        return q.questionType === p.qt && qk === p.kp;
+      });
+      // P28-FIX6b 加固 A：反面采样——主窗口（auto seed）之外，用显式异种子再采 N 题。
+      // 任何"主窗口全样本等值"的标量字段，若在反面样本中取到不同值，即非结构恒定量，
+      // 冻结成 field 值断言必埋雷（bool/枚举/窄题空间数值同此理），降级 fieldPresent。
+      var probe = new PracticeSession({ subject: 'math', grade: p.grade, count: N, knowledgePointId: p.kp, questionType: p.qt, seed: 260101 + i });
+      await probe.start();
+      probeSamples = (probe.semanticQuestions || []).filter(function (q) {
         var qk = q.knowledgePointId || (q.knowledgePointIds && q.knowledgePointIds[0]);
         return q.questionType === p.qt && qk === p.kp;
       });
@@ -122,11 +132,24 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
 
     // 字段普查聚合 + 声明聚合 + 基线证据状态
     var fieldAgg = {};   // path -> {present, values:{json:count}, types:{}}
+    var probeAgg = {};   // path -> {present, values:{json:true}}（反面样本，只用于挑战恒定性）
     var declSets = {};   // json( relations ) -> count
     var generators = {};
     var states = {};
     var prompts = [];
     var intentConflicts = [];
+
+    probeSamples.forEach(function (q) {
+      var flat = {};
+      census(q.data, flat, '', 3);
+      Object.keys(flat).forEach(function (pth) {
+        var f = flat[pth];
+        if (f.t === 'object' || f.t === 'array' || f.t === 'null') return;
+        if (!probeAgg[pth]) probeAgg[pth] = { present: 0, values: {} };
+        probeAgg[pth].present++;
+        probeAgg[pth].values[JSON.stringify(f.v)] = true;
+      });
+    });
 
     samples.forEach(function (q) {
       var gen = (q.metadata && q.metadata.generator) || '?';
@@ -212,16 +235,26 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
     // 数值字段仅在 ≥3 个 distinct 样本下稳定时才可信（单样本数值可能是巧合值），否则丢弃打标
     // boolean 字段不产值断言：bool 仅两值，小样本"全同值"无统计意义（N=6 时概率≈3%），
     // 冻结具体值必然埋雷（P28-FIX6b：judge 题 isTrue 被冻成 true 的 flake）——降级为存在性断言
+    // 任何类型的标量再经反面样本挑战：异种子窗口取到不同值即非结构恒定量，同样降级 fieldPresent
+    function probeVaries(f) {
+      var pa = probeAgg[f.path];
+      if (!pa || !pa.present) return false;
+      return Object.keys(pa.values).some(function (j) { return j !== JSON.stringify(f.value); });
+    }
     var requiredFields = [];
     stableFields.forEach(function (f) {
+      var vary = probeVaries(f);
       if (typeof f.value === 'number') {
-        if (samples.length >= 3) requiredFields.push({ kind: 'field', path: f.path, value: f.value });
+        if (samples.length < 3) return;
+        if (vary) { flags.push('counter-sample-downgraded:' + f.path); requiredFields.push({ kind: 'fieldPresent', path: f.path }); return; }
+        requiredFields.push({ kind: 'field', path: f.path, value: f.value });
         return;
       }
       if (typeof f.value === 'boolean') {
         requiredFields.push({ kind: 'fieldPresent', path: f.path });
         return;
       }
+      if (vary) { flags.push('counter-sample-downgraded:' + f.path); requiredFields.push({ kind: 'fieldPresent', path: f.path }); return; }
       requiredFields.push({ kind: 'field', path: f.path, value: f.value });
     });
     if (stableFields.some(function (f) { return typeof f.value === 'number'; }) && samples.length < 3) {
@@ -282,6 +315,7 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
     aKps: aKps.length,
     pairs: pairs.length,
     genError: 0, noSample: 0, ruleable: 0, notRuleable: 0, existingKept: 0,
+    counterDowngraded: 0,
     baseline: { pass: 0, warn: 0, skip: 0, fail: 0 },
     intentConflictRows: 0,
     byQt: {}
@@ -292,6 +326,7 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
     if (r.candidate) summary.ruleable++; else summary.notRuleable++;
     if (r.flags.indexOf('existing-rule-kept') !== -1) summary.existingKept++;
     if (r.intentConflicts.length) summary.intentConflictRows++;
+    if (r.flags.some(function (f) { return f.indexOf('counter-sample-downgraded:') === 0; })) summary.counterDowngraded++;
     Object.keys(r.baselineStates).forEach(function (s) { summary.baseline[s] = (summary.baseline[s] || 0) + r.baselineStates[s]; });
     summary.byQt[r.qt] = (summary.byQt[r.qt] || 0) + 1;
   });
@@ -300,9 +335,9 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
   if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
   var outPath = path.join(outDir, 'evidence-derive-report.json');
   fs.writeFileSync(outPath, JSON.stringify({
-    schemaVersion: 'p26-evidence-derive.1',
+    schemaVersion: 'p26-evidence-derive.2',
     generatedAt: new Date().toISOString(),
-    sampling: { n: N },
+    sampling: { n: N, counterSample: { n: N, seedBase: 260101, note: '显式异种子反面采样，挑战字段恒定性' } },
     builtFrom: {
       aClass: 'kbl/teaching/kp-matrix.json draftSemanticLevel=A',
       allow: 'KCV.buildEligibility ALLOW 动态枚举（同 dev/check-allow-generation.js）',
@@ -315,12 +350,23 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
 
   console.log('A 类 KP：' + summary.aKps + '，ALLOW 行：' + summary.pairs);
   console.log('可派生候选行：' + summary.ruleable + '，无稳定证据行：' + summary.notRuleable + '，已有规则保留：' + summary.existingKept);
+  console.log('反面采样降级行：' + summary.counterDowngraded + '（field 值断言→fieldPresent）');
   console.log('基线证据状态分布：' + JSON.stringify(summary.baseline));
   console.log('生成失败行：' + summary.genError + '，无样本行：' + summary.noSample + '，意图矛盾行：' + summary.intentConflictRows);
   console.log('报告：' + outPath);
   rows.filter(function (r) { return r.flags.indexOf('gen-error') !== -1; }).slice(0, 20).forEach(function (r) {
     console.log('  GEN-ERROR ' + r.kp + '×' + r.qt);
   });
+
+  // P28-FIX6b 加固 B：基线 fail 硬闸门——任何真实样本不满足既有规则即退出非零，
+  // 概率性错误契约（如 bool 被冻成固定值）不得静默混入派生流程。
+  if (summary.baseline.fail > 0) {
+    console.error('[derive] 基线证据 fail = ' + summary.baseline.fail + '（必须为 0）；相关行：');
+    rows.filter(function (r) { return (r.baselineStates.fail || 0) > 0; }).slice(0, 20).forEach(function (r) {
+      console.error('  FAIL ' + r.kp + '×' + r.qt + ' ' + JSON.stringify(r.baselineStates) + ' flags=' + JSON.stringify(r.flags));
+    });
+    process.exit(1);
+  }
 })().catch(function (e) {
   console.error('派生失败：', e);
   process.exit(1);
