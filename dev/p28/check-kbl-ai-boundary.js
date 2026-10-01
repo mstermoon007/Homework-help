@@ -33,6 +33,8 @@ const KBL_DIR_NAME = 'kbl';
 const KBL_WRITER_WHITELIST = [
   'tools/kbl/extract-source.js',
   'tools/kbl/derive-kbl.js',
+  'tools/kbl/derive-relations.js',
+  'tools/kbl/derive-bc-evidence-rules.js', // B/C 通用算法 KP evidence 规则（kbl/teaching/evidence-rules.json）
   'tools/kbl/emit-canonical.js',
   'tools/kbl/build.js',
   'tools/kbl/publish.js',

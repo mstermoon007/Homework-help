@@ -9,10 +9,10 @@
  *   3. 15 语义族全覆盖（byFamily 键集 = 15）
  *   4. 每条 10 必填字段（kpId/semanticFamily/learningTarget/questionType/difficulty/
  *      expectedStructure/answer/validationRules/source/humanReview）
- *   5. source='ai-candidate' + humanReview='pending'
+ *   5. source='ai-candidate' + humanReview='llm-finalized'（用户 2026-09-30 取消人工复核）
  *   6. 题型仅 apply/choice/fill（核心三题型）
  *   7. 证据状态 ∈ {pass, warn, skip}（不允许 fail）
- *   8. KP 均为 A 类（draftSemanticLevel==='A'）
+ *   8. KP 均在 kp-matrix 375 KP 内（A 类概念 + B/C 通用算法，SEMANTIC_PASS 收录）
  *   9. 无重复题（kpId+questionType+answer 唯一）
  *  10. validate-golden-dataset.js 通过（0 errors）
  */
@@ -31,9 +31,8 @@ const golden = JSON.parse(fs.readFileSync(GOLDEN_PATH, 'utf8'));
 const matrix = JSON.parse(fs.readFileSync(MATRIX_PATH, 'utf8'));
 const families = JSON.parse(fs.readFileSync(FAMILIES_PATH, 'utf8'));
 
-const aClassKpIds = new Set(
-  matrix.kps.filter(function (k) { return k.draftSemanticLevel === 'A'; }).map(function (k) { return k.id; })
-);
+// 合法 KP = kp-matrix 全部 KP（375）；收录门槛为 SEMANTIC_PASS，不再按 draftSemanticLevel 限 A 类。
+const knownKpIds = new Set(matrix.kps.map(function (k) { return k.id; }));
 const familyIds = (families.families || []).map(function (f) { return f.id; });
 
 test('1. golden-questions.json 存在且 schema 正确', () => {
@@ -72,10 +71,10 @@ test('4. 每条 12 必填字段（FINAL-40：KP/family/teaching target/cognitive
   });
 });
 
-test('5. source=ai-candidate + humanReview=pending', () => {
+test('5. source=ai-candidate + humanReview=llm-finalized', () => {
   golden.questions.forEach(function (q, i) {
     assert.equal(q.source, 'ai-candidate', 'Q' + i + ' source');
-    assert.equal(q.humanReview, 'pending', 'Q' + i + ' humanReview');
+    assert.equal(q.humanReview, 'llm-finalized', 'Q' + i + ' humanReview');
   });
 });
 
@@ -94,10 +93,24 @@ test('7. 证据状态仅 pass（FINAL-40：WARN 不计 PASS）', () => {
   });
 });
 
-test('8. KP 均为 A 类', () => {
+test('8. KP 均在 375 内；A 类全覆盖 + B/C 通用算法覆盖 ≥61（SEMANTIC_PASS 门槛收录）', () => {
+  const aIds = new Set(
+    matrix.kps.filter(function (k) { return k.draftSemanticLevel === 'A'; }).map(function (k) { return k.id; })
+  );
+  const covered = new Set();
+  let bcCovered = 0;
   golden.questions.forEach(function (q, i) {
-    assert.ok(aClassKpIds.has(q.kpId), 'Q' + i + ' KP ' + q.kpId + ' 是 A 类');
+    assert.ok(knownKpIds.has(q.kpId), 'Q' + i + ' KP ' + q.kpId + ' 在 kp-matrix 内');
+    if (!covered.has(q.kpId)) {
+      covered.add(q.kpId);
+      if (!aIds.has(q.kpId)) bcCovered++;
+    }
   });
+  let aCovered = 0;
+  aIds.forEach(function (id) { if (covered.has(id)) aCovered++; });
+  assert.equal(aCovered, aIds.size, 'A 类 KP 必须全覆盖（' + aCovered + '/' + aIds.size + '）');
+  assert.ok(bcCovered >= 62, 'B/C 通用算法 KP 覆盖应 ≥62，实际 ' + bcCovered);
+  assert.ok(covered.size >= 369, '语义覆盖 KP 应 ≥369，实际 ' + covered.size);
 });
 
 test('9. 无重复题（kpId+questionType+answer 前50字符唯一）', () => {

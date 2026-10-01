@@ -210,10 +210,20 @@ evidenceRules.rules.forEach(function (r) { existingKeys[r.knowledgePointId + '|'
 
     // required fields：全样本等值的标量字段（数值随题变化的字段天然不稳定，不会被选中）
     // 数值字段仅在 ≥3 个 distinct 样本下稳定时才可信（单样本数值可能是巧合值），否则丢弃打标
-    var requiredFields = stableFields.filter(function (f) {
-      if (typeof f.value === 'number') return samples.length >= 3;
-      return true;
-    }).map(function (f) { return { kind: 'field', path: f.path, value: f.value }; });
+    // boolean 字段不产值断言：bool 仅两值，小样本"全同值"无统计意义（N=6 时概率≈3%），
+    // 冻结具体值必然埋雷（P28-FIX6b：judge 题 isTrue 被冻成 true 的 flake）——降级为存在性断言
+    var requiredFields = [];
+    stableFields.forEach(function (f) {
+      if (typeof f.value === 'number') {
+        if (samples.length >= 3) requiredFields.push({ kind: 'field', path: f.path, value: f.value });
+        return;
+      }
+      if (typeof f.value === 'boolean') {
+        requiredFields.push({ kind: 'fieldPresent', path: f.path });
+        return;
+      }
+      requiredFields.push({ kind: 'field', path: f.path, value: f.value });
+    });
     if (stableFields.some(function (f) { return typeof f.value === 'number'; }) && samples.length < 3) {
       flags.push('numeric-stable-field-dropped');
     }

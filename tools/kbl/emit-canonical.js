@@ -113,7 +113,7 @@ function buildKpEntry(k) {
     weight: 1,
     status: 'active',
     publication: 'published',
-    difficultyAnnotation: { seedDifficulty: c.seedDifficulty, cognitiveLevel: c.cognitiveLevel, maxSteps: steps, numberRange: null, note: 'root 释义派生展示值；难度权威见 shared/catalog/difficulty.js' },
+    difficultyAnnotation: { seedDifficulty: c.seedDifficulty, cognitiveLevel: c.cognitiveLevel, maxSteps: steps, spiral: c.spiral, numberRange: null, note: 'root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）' },
     source: { system: 'kbl-root-derived' },
     meta: { schemaVersion: '1.0.0', hash: null, version: 1, deprecatedReason: null, notes: (c.derivation.rules || []).join(';'), derivedFields: ['module', 'type', 'semantic', 'content', 'assessment', 'generation', 'difficultyAnnotation', 'publication', 'numberRange'], updatedAt: null }
   };

@@ -29,31 +29,31 @@
     "note": "硬轴值无关（生成器题面形态旗标），漂移即 FAIL；软轴依赖 RNG 抽样值/生成器内随机结构，漂移 report-only。结构边界由 validator check#5（maxSteps/structure）另行守护"
   },
   "counts": {
-    "kps": 307,
-    "rows": 1299,
-    "profiled": 1299
+    "kps": 313,
+    "rows": 1323,
+    "profiled": 1323
   },
   "summary": {
-    "aKps": 307,
-    "pairs": 1299,
-    "profiled": 1299,
+    "aKps": 313,
+    "pairs": 1323,
+    "profiled": 1323,
     "genError": 0,
     "noSample": 0,
     "singleSample": 304,
-    "unknownNotObserved": 822,
+    "unknownNotObserved": 846,
     "byQt": {
-      "fill": 307,
-      "choice": 307,
+      "fill": 313,
+      "choice": 313,
       "judge": 126,
       "geometry": 105,
-      "apply": 307,
-      "calc": 122,
+      "apply": 313,
+      "calc": 128,
       "classify": 25
     },
     "axisCoverage": {
       "unknown": 477,
-      "numericVaries": 872,
-      "contextPresent": 1295,
+      "numericVaries": 896,
+      "contextPresent": 1319,
       "representationPresent": 554,
       "structureMultiStep": 19
     }
@@ -693,6 +693,170 @@
         ]
       },
       "flags": []
+    },
+    {
+      "knowledgePointId": "math-g1-down-u03-k001",
+      "questionType": "calc",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 5,
+          "answerMax": 90
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "一个一个地数：6 个一是多少？（参考：5 + 1 = 6）",
+          "十个十个地数：数 4 次是多少？（参考：10 + 10 + 10 + 10 = 40）",
+          "十个十个地数：数 3 次是多少？（参考：10 + 10 + 10 = 30）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-down-u03-k001",
+      "questionType": "fill",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 6,
+          "answerMax": 90
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "一个一个地数：7 个一是____（参考：6 + 1 = 7）",
+          "十个十个地数：数 8 次是____（参考：70 + 10 = 80）",
+          "十个十个地数：数 9 次是____（参考：80 + 10 = 90）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-down-u03-k001",
+      "questionType": "choice",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 2,
+          "answerMax": 100
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "十个十个地数：数 7 次是多少？（参考：60 + 10 = 70）",
+          "一个一个地数：2 个一是多少？（参考：1 + 1 = 2）",
+          "一个一个地数：6 个一是多少？（参考：5 + 1 = 6）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-down-u03-k001",
+      "questionType": "apply",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 2,
+          "answerMax": 90
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "数小棒，一根一根地数，数了 4 根（1 + 1 + 1 + 1 = 4），4 个一是多少根？",
+          "一捆小棒 10 根，9 捆小棒十个十个地数（80 + 10 = 90），9 个十是多少根？",
+          "一捆小棒 10 根，7 捆小棒十个十个地数（60 + 10 = 70），7 个十是多少根？"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u03-k002",
@@ -4074,6 +4238,170 @@
       ]
     },
     {
+      "knowledgePointId": "math-g1-up-u04-k001",
+      "questionType": "calc",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 16,
+          "answerMax": 19
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "计数器十位 1 颗珠、个位 9 颗珠（1 个十和 9 个一，10 + 9 = 19），这个数写作多少？",
+          "18 里面有几个十和几个一？（参考：10 + 8 = 18）",
+          "17 里面有几个十和几个一？（参考：10 + 7 = 17）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-up-u04-k001",
+      "questionType": "fill",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 14,
+          "answerMax": 14
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "19 里面有几个十和几个一____（参考：10 + 9 = 19）",
+          "17 里面有几个十和几个一____（参考：10 + 7 = 17）",
+          "18 里面有几个十和几个一____（参考：10 + 8 = 18）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-up-u04-k001",
+      "questionType": "choice",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 11,
+          "answerMax": 17
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "15 里面有几个十和几个一？（参考：10 + 5 = 15）",
+          "计数器十位 1 颗珠、个位 1 颗珠（1 个十和 1 个一，10 + 1 = 11），这个数写作多少？",
+          "17 里面有几个十和几个一？（参考：10 + 7 = 17）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-up-u04-k001",
+      "questionType": "apply",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 11,
+          "answerMax": 17
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "数一数：十位拨 1 颗、个位拨 7 颗，1 个十和 7 个一合起来写作多少？（10 + 7 = 17）",
+          "摆小棒表示 17（10 + 7 = 17），要摆 1 捆（10 根）零几根？",
+          "数一数：十位拨 1 颗、个位拨 3 颗，1 个十和 3 个一合起来写作多少？（10 + 3 = 13）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
       "knowledgePointId": "math-g1-up-u04-k002",
       "questionType": "calc",
       "grade": 1,
@@ -4231,6 +4559,170 @@
           "有 83 本书本，每 10 本书本摞成一摞，可以摞成几摞？还剩几本？",
           "有 57 颗糖果，每 10 颗糖果装成一袋，可以装成几袋？还剩几颗？",
           "有 12 本书本，每 10 本书本摞成一摞，可以摞成几摞？还剩几本？"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-up-u05-k001",
+      "questionType": "calc",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 5,
+          "answerMin": 12,
+          "answerMax": 17
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "用凑十法计算：8 + 5 = 8 + 2 + 3 = ？（先把 8 凑成 10，10 + 3 = 13）",
+          "用凑十法计算：8 + 4 = 8 + 2 + 2 = ？（先把 8 凑成 10，10 + 2 = 12）",
+          "用凑十法计算：9 + 8 = 9 + 1 + 7 = ？（先把 9 凑成 10，10 + 7 = 17）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-up-u05-k001",
+      "questionType": "fill",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 5,
+          "answerMin": 11,
+          "answerMax": 18
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "用凑十法计算：8 + 5 = 8 + 2 + 3 = ____（先把 8 凑成 10，10 + 3 = 13）",
+          "用凑十法计算：9 + 2 = 9 + 1 + 1 = ____（先把 9 凑成 10，10 + 1 = 11）",
+          "用凑十法计算：8 + 3 = 8 + 2 + 1 = ____（先把 8 凑成 10，10 + 1 = 11）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-up-u05-k001",
+      "questionType": "choice",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 5,
+          "answerMin": 11,
+          "answerMax": 18
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "用凑十法计算：8 + 5 = 8 + 2 + 3 = ？（先把 8 凑成 10，10 + 3 = 13）",
+          "用凑十法计算：9 + 2 = 9 + 1 + 1 = ？（先把 9 凑成 10，10 + 1 = 11）",
+          "用凑十法计算：9 + 3 = 9 + 1 + 2 = ？（先把 9 凑成 10，10 + 2 = 12）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g1-up-u05-k001",
+      "questionType": "apply",
+      "grade": 1,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 12,
+          "answerMax": 18
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "小兔采蘑菇，上午采 9 个、下午采 9 个。用凑十法：9 + 9 = 9 + 1 + 8，一共采了多少个？",
+          "小兔采蘑菇，上午采 9 个、下午采 6 个。用凑十法：9 + 6 = 9 + 1 + 5，一共采了多少个？",
+          "小兔采蘑菇，上午采 8 个、下午采 8 个。用凑十法：8 + 8 = 8 + 2 + 6，一共采了多少个？"
         ]
       },
       "flags": [
@@ -23301,6 +23793,334 @@
       ]
     },
     {
+      "knowledgePointId": "math-g3-up-u02-k003",
+      "questionType": "calc",
+      "grade": 3,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 18,
+          "answerMax": 80
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "先算小括号里面的：(6 + 4) × 3 = 10 × 3 = ？（先算 6 + 4 = 10）",
+          "先算小括号里面的：(2 + 4) × 3 = 6 × 3 = ？（先算 2 + 4 = 6）",
+          "先算小括号里面的：(6 + 7) × 4 = 13 × 4 = ？（先算 6 + 7 = 13）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g3-up-u02-k003",
+      "questionType": "fill",
+      "grade": 3,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 5,
+          "answerMin": 22,
+          "answerMax": 70
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "先算小括号里面的：(8 + 3) × 4 = 11 × 4 = ____（先算 8 + 3 = 11）",
+          "先算小括号里面的：(7 + 7) × 5 = 14 × 5 = ____（先算 7 + 7 = 14）",
+          "先算小括号里面的：(6 + 5) × 2 = 11 × 2 = ____（先算 6 + 5 = 11）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g3-up-u02-k003",
+      "questionType": "choice",
+      "grade": 3,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 5,
+          "answerMin": 16,
+          "answerMax": 56
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "先算小括号里面的：(5 + 9) × 4 = 14 × 4 = ？（先算 5 + 9 = 14）",
+          "先算小括号里面的：(2 + 4) × 4 = 6 × 4 = ？（先算 2 + 4 = 6）",
+          "先算小括号里面的：(5 + 3) × 2 = 8 × 2 = ？（先算 5 + 3 = 8）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g3-up-u02-k003",
+      "questionType": "apply",
+      "grade": 3,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 8,
+          "answerMax": 70
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "商店上午卖出 9 个、下午卖出 8 个气球，每个气球 2 元。先算一共卖出多少个，再算卖了多少元：(9 + 8) × 2 = ？元",
+          "商店上午卖出 5 个、下午卖出 9 个气球，每个气球 4 元。先算一共卖出多少个，再算卖了多少元：(5 + 9) × 4 = ？元",
+          "商店上午卖出 7 个、下午卖出 7 个气球，每个气球 5 元。先算一共卖出多少个，再算卖了多少元：(7 + 7) × 5 = ？元"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g3-up-u02-k004",
+      "questionType": "calc",
+      "grade": 3,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 5,
+          "answerMin": 1,
+          "answerMax": 45
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "按脱式计算规范一步一步算：21 + 29 − 48 = 50 − 48 = ？（第一步 21 + 29 = 50）",
+          "按脱式计算规范一步一步算：28 + 34 − 17 = 62 − 17 = ？（第一步 28 + 34 = 62）",
+          "按脱式计算规范一步一步算：21 + 13 − 21 = 34 − 21 = ？（第一步 21 + 13 = 34）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g3-up-u02-k004",
+      "questionType": "fill",
+      "grade": 3,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 5,
+          "answerMin": 1,
+          "answerMax": 64
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "按脱式计算规范一步一步算：28 + 11 − 38 = 39 − 38 = ____（第一步 28 + 11 = 39）",
+          "按脱式计算规范一步一步算：31 + 17 − 39 = 48 − 39 = ____（第一步 31 + 17 = 48）",
+          "按脱式计算规范一步一步算：29 + 17 − 37 = 46 − 37 = ____（第一步 29 + 17 = 46）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g3-up-u02-k004",
+      "questionType": "choice",
+      "grade": 3,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 5,
+          "answerMin": 11,
+          "answerMax": 35
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "按脱式计算规范一步一步算：45 + 28 − 59 = 73 − 59 = ？（第一步 45 + 28 = 73）",
+          "按脱式计算规范一步一步算：22 + 31 − 29 = 53 − 29 = ？（第一步 22 + 31 = 53）",
+          "按脱式计算规范一步一步算：49 + 20 − 52 = 69 − 52 = ？（第一步 49 + 20 = 69）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g3-up-u02-k004",
+      "questionType": "apply",
+      "grade": 3,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 6,
+          "answerMin": 1,
+          "answerMax": 45
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 6,
+        "generators": {
+          "generator:concept-meaning": 6
+        },
+        "samplePrompts": [
+          "图书角原有 15 本书，又买来 17 本，借出 7 本。脱式：15 + 17 − 7 = 32 − 7，还剩多少本？",
+          "图书角原有 31 本书，又买来 16 本，借出 11 本。脱式：31 + 16 − 11 = 47 − 11，还剩多少本？",
+          "图书角原有 23 本书，又买来 28 本，借出 41 本。脱式：23 + 28 − 41 = 51 − 41，还剩多少本？"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
       "knowledgePointId": "math-g3-up-u02-k005",
       "questionType": "calc",
       "grade": 3,
@@ -36280,8 +37100,8 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": 0,
+          "distinctAnswers": 2,
+          "answerMin": 2,
           "answerMax": 3
         },
         "context": {
@@ -36299,9 +37119,9 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 5,
         "generators": {
-          "generator:position-direction": 6
+          "generator:position-direction": 5
         },
         "samplePrompts": [
           "一个图形先向右1格，再向下3格，一共平移了多少格？",
@@ -38007,9 +38827,9 @@
         }
       },
       "evidence": {
-        "samples": 5,
+        "samples": 4,
         "generators": {
-          "generator:reasoning": 5
+          "generator:reasoning": 4
         },
         "samplePrompts": [
           "甲、乙、丙三人中只有一人说真话。甲说：「乙在说谎。」乙说：「丙在说谎。」丙说：「甲和乙都在说谎。」谁说了真话？",
@@ -38450,6 +39270,170 @@
         ]
       },
       "flags": []
+    },
+    {
+      "knowledgePointId": "math-g4-up-u01-k001",
+      "questionType": "calc",
+      "grade": 4,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 3,
+          "answerMin": null,
+          "answerMax": null
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 3,
+        "generators": {
+          "generator:concept-meaning": 3
+        },
+        "samplePrompts": [
+          "10 个一十是多少？（10 × 10 = 100）",
+          "10 个一千是多少？（10 × 1000 = 10000）",
+          "10 个一百是多少？（10 × 100 = 1000）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g4-up-u01-k001",
+      "questionType": "fill",
+      "grade": 4,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 3,
+          "answerMin": null,
+          "answerMax": null
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 3,
+        "generators": {
+          "generator:concept-meaning": 3
+        },
+        "samplePrompts": [
+          "10 个一百是____（10 × 100 = 1000）",
+          "10 个一千是____（10 × 1000 = 10000）",
+          "10 个一十是____（10 × 10 = 100）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g4-up-u01-k001",
+      "questionType": "choice",
+      "grade": 4,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 3,
+          "answerMin": null,
+          "answerMax": null
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 3,
+        "generators": {
+          "generator:concept-meaning": 3
+        },
+        "samplePrompts": [
+          "10 个一千是多少？（10 × 1000 = 10000）",
+          "10 个一十是多少？（10 × 10 = 100）",
+          "10 个一百是多少？（10 × 100 = 1000）"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
+    },
+    {
+      "knowledgePointId": "math-g4-up-u01-k001",
+      "questionType": "apply",
+      "grade": 4,
+      "variation": {
+        "unknown": {
+          "positions": []
+        },
+        "numeric": {
+          "varies": true,
+          "distinctAnswers": 3,
+          "answerMin": null,
+          "answerMax": null
+        },
+        "context": {
+          "present": true,
+          "ratio": 1
+        },
+        "representation": {
+          "present": false,
+          "paths": []
+        },
+        "structure": {
+          "steps": []
+        }
+      },
+      "evidence": {
+        "samples": 3,
+        "generators": {
+          "generator:concept-meaning": 3
+        },
+        "samplePrompts": [
+          "数数时，10 × 1000 = 10000，10 个一千组成的计数单位是什么？",
+          "数数时，10 × 100 = 1000，10 个一百组成的计数单位是什么？",
+          "数数时，10 × 10 = 100，10 个一十组成的计数单位是什么？"
+        ]
+      },
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g4-up-u01-k002",
@@ -42364,7 +43348,7 @@
         "samplePrompts": [
           "已知条件：A 有 16，B 比 A 多 32。\n问题：B 有多少？ 答案是 43 —— 对还是错？",
           "已知条件：一共 54，其中 38。\n问题：剩下多少？ 答案是 16 —— 对还是错？",
-          "已知条件：A 有 22，B 比 A 多 26。\n问题：B 有多少？ 答案是 48 —— 对还是错？"
+          "已知条件：A 有 22，B 比 A 多 26。\n问题：B 有多少？ 答案是 49 —— 对还是错？"
         ]
       },
       "flags": [
@@ -42790,7 +43774,7 @@
         "samplePrompts": [
           "已知条件：A 有 12，B 比 A 少 5。\n问题：B 有多少？ 答案是 7 —— 对还是错？",
           "已知条件：A 有 23，B 比 A 多 20。\n问题：B 有多少？ 答案是 45 —— 对还是错？",
-          "已知条件：一共 25，其中 23。\n问题：剩下多少？ 答案是 2 —— 对还是错？"
+          "已知条件：一共 25，其中 23。\n问题：剩下多少？ 答案是 3 —— 对还是错？"
         ]
       },
       "flags": [
@@ -54198,9 +55182,9 @@
         }
       },
       "evidence": {
-        "samples": 4,
+        "samples": 3,
         "generators": {
-          "generator:reasoning": 4
+          "generator:reasoning": 3
         },
         "samplePrompts": [
           "甲、乙、丙三人中只有一人说真话。甲说：「乙在说谎。」乙说：「丙在说谎。」丙说：「甲和乙都在说谎。」谁说了真话？",
@@ -57502,8 +58486,8 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 5,
-          "answerMin": 2,
+          "distinctAnswers": 4,
+          "answerMin": 3,
           "answerMax": 6
         },
         "context": {
@@ -57521,9 +58505,9 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 5,
         "generators": {
-          "generator:position-direction": 6
+          "generator:position-direction": 5
         },
         "samplePrompts": [
           "一个图形先向右2格，再向下2格，一共平移了多少格？ ____ 格",
@@ -61953,9 +62937,9 @@
         }
       },
       "evidence": {
-        "samples": 4,
+        "samples": 3,
         "generators": {
-          "generator:reasoning": 4
+          "generator:reasoning": 3
         },
         "samplePrompts": [
           "甲、乙、丙三人中只有一人说真话。甲说：「乙在说谎。」乙说：「丙在说谎。」丙说：「甲和乙都在说谎。」谁说了真话？",

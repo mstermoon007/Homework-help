@@ -9,7 +9,8 @@
 //   3. 族一致性：semanticFamily 必须在 semantic-families.json 15 族中
 //   4. 题型合法：questionType 必须在核心题型 apply/choice/fill 中
 //   5. 证据状态合法：semanticEvidenceState ∈ {pass, warn, skip}（不允许 fail）
-//   6. source='ai-candidate' + humanReview='pending'
+//   6. source='ai-candidate' + humanReview='llm-finalized'（用户 2026-09-30 取消人工复核；
+//      质量保险＝真实生成 + SEMANTIC_PASS 机器验证）
 //   7. 族覆盖：15 族全部有题（每族 ≥1）
 //   8. 答案非空：answer 非空字符串/非 null
 //   9. 无重复题：同 (kpId, questionType, answer) 不重复
@@ -28,10 +29,10 @@ var semanticFamilies = JSON.parse(fs.readFileSync(path.join(ROOT, 'kbl', 'teachi
 
 var STRICT = process.argv.indexOf('--strict') !== -1;
 
-var aClassKpIds = {};
-kpMatrix.kps.filter(function (k) { return k.draftSemanticLevel === 'A'; }).forEach(function (k) {
-  aClassKpIds[k.id] = true;
-});
+// 合法 KP = kp-matrix 全部 KP（不再限 A 类）；是否收录由 SEMANTIC_PASS 门槛把关，
+// 无 evidence 规则（skip）/题面与语义不符的 KP 不会进入题集。
+var knownKpIds = {};
+kpMatrix.kps.forEach(function (k) { knownKpIds[k.id] = true; });
 
 var familyIds = {};
 (semanticFamilies.families || []).forEach(function (f) { familyIds[f.id] = f.name; });
@@ -87,9 +88,9 @@ var seenKeys = {};
     }
   });
 
-  // 2. KP 存在性
-  if (q.kpId && !aClassKpIds[q.kpId]) {
-    errors.push('Q' + idx + ' KP ' + q.kpId + ' 不在 A 类 KP 中');
+  // 2. KP 存在性（kp-matrix 全部 375 KP）
+  if (q.kpId && !knownKpIds[q.kpId]) {
+    errors.push('Q' + idx + ' KP ' + q.kpId + ' 不在 kp-matrix 的 375 KP 中');
     stats.invalidKp++;
   }
 
@@ -128,8 +129,8 @@ var seenKeys = {};
   if (q.source !== 'ai-candidate') {
     errors.push('Q' + idx + ' source 应为 ai-candidate，实际 ' + q.source);
   }
-  if (q.humanReview !== 'pending') {
-    errors.push('Q' + idx + ' humanReview 应为 pending，实际 ' + q.humanReview);
+  if (q.humanReview !== 'llm-finalized') {
+    errors.push('Q' + idx + ' humanReview 应为 llm-finalized，实际 ' + q.humanReview);
   }
 
   // 8. 答案非空

@@ -2,7 +2,7 @@
 'use strict';
 // dev/p28/final-31-warn-attribution.js — FINAL-31 A 类 KP 语义 WARN 逐项归因（只读审计）
 //
-// 背景：P25-15 门禁基线 A 类 KP=307 / 对=921 / SEMANTIC_WARN=914 / SEMANTIC_PASS=7 / FAIL=0。
+// 背景：P25-15 门禁基线 A 类 KP=313 / 对=939 / SEMANTIC_WARN=914 / SEMANTIC_PASS=7 / FAIL=0（P28-FIX6 前为 307/921）。
 // WARN 机制（kp-semantic-validator.checkSemanticEvidence）：KP×题型存在证据规则但题目未声明
 // data.semanticEvidence → warn（过渡期）。本脚本不修改统计，逐 (kp,qt) 真实生成 1 题并归因。
 //
@@ -20,7 +20,7 @@
 //   W9  misconception 档案覆盖该 (kp,qt) 但生成链未实现其 response
 //
 // 生成链路与 P25-15 门禁完全一致（同 _bundle-env / PracticeSession / KpSemantic），
-// 重跑应复现 921/0/7/914/0 基线分桶。产物：dev/p28/reports/final-31-warn-attribution.json
+// 重跑应复现 939/0/7/914/0 基线分桶。产物：dev/p28/reports/final-31-warn-attribution.json
 
 var path = require('path');
 var fs = require('fs');

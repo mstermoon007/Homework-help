@@ -4079,6 +4079,16 @@ function checkSemanticEvidence(sq, kpId) {
     if (a.kind === 'fieldPresent' && fieldRead(sq, a.path) === undefined) missing.push('present:' + a.path);
     
     if (a.kind === 'construct' && constructs.indexOf(a.name) === -1) missing.push('construct:' + a.name);
+    
+    
+    if (a.kind === 'relationAny' &&
+      !(Array.isArray(a.any) && a.any.some(function (r) { return relations.indexOf(r) !== -1; }))) {
+      missing.push('relationAny:[' + (a.any || []).join(',') + ']');
+    }
+    if (a.kind === 'constructAny' &&
+      !(Array.isArray(a.any) && a.any.some(function (n) { return constructs.indexOf(n) !== -1; }))) {
+      missing.push('constructAny:[' + (a.any || []).join(',') + ']');
+    }
   });
   var forbiddenHits = [];
   (rule.forbidden || []).forEach(function (a) {

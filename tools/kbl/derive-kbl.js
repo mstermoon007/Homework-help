@@ -37,6 +37,15 @@ var GRADE_DIFF_BASE = { g1: 2, g2: 3, g3: 4, g4: 5, g5: 6, g6: 7 };
 var GRADE_STEPS_BASE = { g1: 1, g2: 1, g3: 2, g4: 2, g5: 3, g6: 3 };
 var TYPE_CAPACITY = { calc: 20, apply: 20, fill: 14, choice: 12, judge: 12, geometry: 10, classify: 6 };
 
+// 螺旋档位派生（R-SP：cognitiveLevel 基档 + seedDifficulty≥8 加档；clamp [1,6]）
+// LLM 开发期统筹定案（reviewStatus=llm-finalized-dev；用户 2026-09-30 指令取消人工确认环节），公式可重跑
+var COG_SPIRAL_BASE = { recognize: 2, understand: 3, apply: 4, analyze: 5 };
+function deriveSpiralMaxLevel(cog, seed) {
+  var base = COG_SPIRAL_BASE[cog] || 1;
+  var max = base + (seed >= 8 ? 1 : 0);
+  return Math.max(1, Math.min(6, max));
+}
+
 // ---------- 释义文本规则（R 系列；evidence 取自命中片段） ----------
 function ranges(s) {
   // 返回 { descriptor, maxVal, evidence }
@@ -116,6 +125,8 @@ function derive() {
   });
 
   // ---------- 3. relations（root 无关系字段 → 空集；保持真实，禁止猜测） ----------
+  // 注意：P1 起前置关系由 tools/kbl/derive-relations.js 专责派生（LLM 开发期推断 inferred 集）。
+  //       此处写空集仅为单脚本独立运行的兜底；标准流水线须在本脚本后跑 derive-relations.js 覆盖之。
   var relations = [];
 
   // ---------- 4. capability / mappings（既有派生逻辑） ----------
@@ -148,6 +159,9 @@ function derive() {
     else if (/解决|综合|灵活/.test(s)) { cog = 'analyze'; ev.push('R08:综合应用'); }
     else if (/计算|运算/.test(s)) { cog = 'understand'; ev.push('R09:运算'); }
 
+    // 螺旋档位（R-SP：从 cognitiveLevel + seedDifficulty 派生 maxLevel；level 起步=1）
+    var spiralMaxLevel = deriveSpiralMaxLevel(cog, diff);
+
     // 步数（排除纯认知）
     var steps = GRADE_STEPS_BASE[grade] || 1;
     steps += stepsBoost;
@@ -175,6 +189,7 @@ function derive() {
       cognitiveLevel: cog,
       seedDifficulty: diff,
       maxSteps: steps,
+      spiral: { level: 1, maxLevel: spiralMaxLevel },
       allowedTypes: allowedTypes,
       capacity: capacitySum,
       derivation: { rules: ev, evidence: (rng.evidence.concat(fam, ops).slice(0, 8)) }

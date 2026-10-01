@@ -20,6 +20,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -58,6 +62,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -98,6 +106,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -139,6 +151,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -181,6 +197,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -218,6 +238,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -251,6 +275,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -286,6 +314,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -320,6 +352,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -354,6 +390,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -384,6 +424,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -414,6 +458,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -445,6 +493,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 3,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -478,6 +530,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -509,6 +565,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -543,6 +603,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -576,6 +640,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -609,6 +677,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -644,6 +716,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -677,6 +753,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -710,6 +790,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -743,6 +827,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -776,6 +864,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -811,6 +903,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -847,6 +943,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -884,6 +984,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -920,6 +1024,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -957,6 +1065,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -992,6 +1104,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 3,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1028,6 +1144,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1065,6 +1185,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1101,6 +1225,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1134,6 +1262,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1171,6 +1303,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1211,6 +1347,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1248,6 +1388,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -1281,6 +1425,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 2,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -1312,6 +1460,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -1347,6 +1499,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -1380,6 +1536,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -1409,6 +1569,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -1439,6 +1603,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -1470,6 +1638,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -1500,6 +1672,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -1533,6 +1709,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -1570,6 +1750,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1607,6 +1791,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1643,6 +1831,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1678,6 +1870,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1712,6 +1908,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1744,6 +1944,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1778,6 +1982,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1814,6 +2022,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1849,6 +2061,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -1882,6 +2098,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -1914,6 +2134,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -1946,6 +2170,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -1976,6 +2204,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -2007,6 +2239,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -2041,6 +2277,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -2073,6 +2313,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -2106,6 +2350,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -2141,6 +2389,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -2176,6 +2428,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -2211,6 +2467,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2251,6 +2511,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2292,6 +2556,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -2326,6 +2594,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2356,6 +2628,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2383,6 +2659,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2415,6 +2695,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2451,6 +2735,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2486,6 +2774,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2523,6 +2815,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2563,6 +2859,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2600,6 +2900,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2634,6 +2938,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2667,6 +2975,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 3,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2702,6 +3014,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2739,6 +3055,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2776,6 +3096,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2812,6 +3136,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2844,6 +3172,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2876,6 +3208,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2910,6 +3246,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2944,6 +3284,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -2978,6 +3322,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3013,6 +3361,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3049,6 +3401,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3086,6 +3442,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3124,6 +3484,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3161,6 +3525,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3198,6 +3566,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -3236,6 +3608,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -3274,6 +3650,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -3306,6 +3686,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -3342,6 +3726,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -3381,6 +3769,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 1,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -3414,6 +3806,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -3448,6 +3844,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -3481,6 +3881,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -3513,6 +3917,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -3545,6 +3953,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3580,6 +3992,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3613,6 +4029,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3641,6 +4061,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3673,6 +4097,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 9,
       "maxSteps": 5,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3709,6 +4137,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -3741,6 +4173,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -3774,6 +4210,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -3808,6 +4248,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 5,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -3841,6 +4285,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3870,6 +4318,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3903,6 +4355,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -3935,6 +4391,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -3968,6 +4428,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4004,6 +4468,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4040,6 +4508,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4075,6 +4547,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4110,6 +4586,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4145,6 +4625,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -4175,6 +4659,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -4201,6 +4689,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -4230,6 +4722,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -4259,6 +4755,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -4288,6 +4788,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -4320,6 +4824,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -4353,6 +4861,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -4384,6 +4896,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -4416,6 +4932,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4453,6 +4973,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4491,6 +5015,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4531,6 +5059,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4570,6 +5102,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4610,6 +5146,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -4645,6 +5185,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -4677,6 +5221,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -4709,6 +5257,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -4741,6 +5293,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -4775,6 +5331,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4812,6 +5372,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4848,6 +5412,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4883,6 +5451,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4918,6 +5490,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4953,6 +5529,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -4988,6 +5568,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -5022,6 +5606,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -5056,6 +5644,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -5089,6 +5681,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -5122,6 +5718,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -5157,6 +5757,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -5191,6 +5795,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -5226,6 +5834,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -5260,6 +5872,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -5293,6 +5909,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -5326,6 +5946,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -5361,6 +5985,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -5393,6 +6021,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -5422,6 +6054,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5453,6 +6089,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5488,6 +6128,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5526,6 +6170,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5566,6 +6214,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5606,6 +6258,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5646,6 +6302,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -5685,6 +6345,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -5722,6 +6386,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -5755,6 +6423,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -5786,6 +6458,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 4,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -5818,6 +6494,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -5852,6 +6532,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5886,6 +6570,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5920,6 +6608,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5954,6 +6646,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -5990,6 +6686,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6025,6 +6725,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6058,6 +6762,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -6091,6 +6799,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -6124,6 +6836,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -6158,6 +6874,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6193,6 +6913,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6230,6 +6954,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6268,6 +6996,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6306,6 +7038,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6342,6 +7078,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6377,6 +7117,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -6410,6 +7154,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -6442,6 +7190,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -6475,6 +7227,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -6507,6 +7263,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -6542,6 +7302,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -6574,6 +7338,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -6604,6 +7372,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -6643,6 +7415,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -6677,6 +7453,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -6710,6 +7490,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -6740,6 +7524,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -6774,6 +7562,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -6812,6 +7604,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6851,6 +7647,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6891,6 +7691,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6929,6 +7733,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -6964,6 +7772,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -6998,6 +7810,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7029,6 +7845,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7059,6 +7879,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7091,6 +7915,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7123,6 +7951,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7159,6 +7991,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7200,6 +8036,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7242,6 +8082,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7278,6 +8122,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7315,6 +8163,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7355,6 +8207,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7399,6 +8255,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7437,6 +8297,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7471,6 +8335,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7503,6 +8371,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7535,6 +8407,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7567,6 +8443,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7599,6 +8479,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7631,6 +8515,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7668,6 +8556,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7710,6 +8602,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7753,6 +8649,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7796,6 +8696,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -7833,6 +8737,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7867,6 +8775,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7904,6 +8816,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7937,6 +8853,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 5,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -7968,6 +8888,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -8005,6 +8929,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -8042,6 +8970,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -8078,6 +9010,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -8112,6 +9048,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -8147,6 +9087,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -8178,6 +9122,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -8211,6 +9159,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -8254,6 +9206,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 2,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -8294,6 +9250,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -8328,6 +9288,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -8361,6 +9325,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -8397,6 +9365,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8437,6 +9409,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8476,6 +9452,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8516,6 +9496,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8556,6 +9540,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8597,6 +9585,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8636,6 +9628,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8674,6 +9670,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8711,6 +9711,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8750,6 +9754,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8784,6 +9792,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8818,6 +9830,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -8855,6 +9871,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -8891,6 +9911,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -8926,6 +9950,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8962,6 +9990,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -8998,6 +10030,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -9031,6 +10067,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -9064,6 +10104,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9098,6 +10142,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9132,6 +10180,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9169,6 +10221,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9208,6 +10264,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9246,6 +10306,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9278,6 +10342,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -9308,6 +10376,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -9341,6 +10413,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -9374,6 +10450,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -9407,6 +10487,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -9437,6 +10521,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -9467,6 +10555,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -9501,6 +10593,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -9543,6 +10639,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -9583,6 +10683,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9618,6 +10722,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9653,6 +10761,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9688,6 +10800,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -9724,6 +10840,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -9759,6 +10879,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -9794,6 +10918,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -9829,6 +10957,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -9862,6 +10994,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -9895,6 +11031,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9929,6 +11069,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9963,6 +11107,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -9997,6 +11145,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -10031,6 +11183,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -10066,6 +11222,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -10105,6 +11265,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10145,6 +11309,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10183,6 +11351,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10223,6 +11395,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10263,6 +11439,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10303,6 +11483,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10340,6 +11524,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -10375,6 +11563,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -10408,6 +11600,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -10443,6 +11639,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -10483,6 +11683,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10526,6 +11730,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10569,6 +11777,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10612,6 +11824,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10654,6 +11870,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -10696,6 +11916,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -10733,6 +11957,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -10767,6 +11995,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "fill",
         "choice",
@@ -10802,6 +12034,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -10834,6 +12070,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -10863,6 +12103,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 6,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -10893,6 +12137,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -10930,6 +12178,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -10965,6 +12217,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -10997,6 +12253,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -11030,6 +12290,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -11064,6 +12328,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -11096,6 +12364,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -11136,6 +12408,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -11180,6 +12456,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11219,6 +12499,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11258,6 +12542,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11298,6 +12586,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11340,6 +12632,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11388,6 +12684,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11432,6 +12732,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11474,6 +12778,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -11517,6 +12825,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -11558,6 +12870,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -11602,6 +12918,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -11647,6 +12967,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -11688,6 +13012,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11726,6 +13054,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11766,6 +13098,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11805,6 +13141,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11841,6 +13181,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -11880,6 +13224,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -11923,6 +13271,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -11965,6 +13317,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12005,6 +13361,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12045,6 +13405,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12084,6 +13448,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12126,6 +13494,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -12164,6 +13536,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -12198,6 +13574,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -12233,6 +13613,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -12269,6 +13653,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12305,6 +13693,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12344,6 +13736,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12383,6 +13779,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12419,6 +13819,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12454,6 +13858,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12489,6 +13897,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12526,6 +13938,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12557,6 +13973,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12591,6 +14011,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12630,6 +14054,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 9,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -12666,6 +14094,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -12700,6 +14132,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -12733,6 +14169,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 2
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -12767,6 +14207,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -12801,6 +14245,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 8,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "geometry",
         "fill",
@@ -12837,6 +14285,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12872,6 +14324,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12906,6 +14362,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 8,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12942,6 +14402,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -12982,6 +14446,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -13021,6 +14489,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 5
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -13058,6 +14530,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -13097,6 +14573,10 @@
       "cognitiveLevel": "analyze",
       "seedDifficulty": 10,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 6
+      },
       "allowedTypes": [
         "calc",
         "fill",
@@ -13135,6 +14615,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -13161,6 +14645,10 @@
       "cognitiveLevel": "apply",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -13187,6 +14675,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 7,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -13214,6 +14706,10 @@
       "cognitiveLevel": "understand",
       "seedDifficulty": 8,
       "maxSteps": 4,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 4
+      },
       "allowedTypes": [
         "apply",
         "fill",
@@ -13252,6 +14748,10 @@
       "cognitiveLevel": "recognize",
       "seedDifficulty": 10,
       "maxSteps": 3,
+      "spiral": {
+        "level": 1,
+        "maxLevel": 3
+      },
       "allowedTypes": [
         "apply",
         "fill",

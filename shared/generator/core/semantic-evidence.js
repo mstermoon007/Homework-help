@@ -49,28 +49,43 @@ function normalizeOp(op) {
 function derive(sq, kpOpsNorm) {
   var data = sq && sq.data;
   var relations = [];
+  var algoOps = []; // 本题实际声明的通用算法类型（归一化 add/sub/mult/div；mixed 展开四者）
   if (data && data.operation != null) {
     var raw = Array.isArray(data.operation) ? data.operation : [data.operation];
+    // mixed 的算法域 = KP 显式列出的基础运算之并；仅当 KP 只声明 mixed、未列任何基础运算
+    // （如"混合运算的定义"）时才放开全部四则。这样"连加连减 [add,sub,mixed,sequential]"
+    // 只展开加减，不会越界声明乘除。
+    var kpBase = kpOpsNorm ? ['add', 'sub', 'mult', 'div'].filter(function (n) { return kpOpsNorm.indexOf(n) !== -1; }) : null;
+    var opAllowed = function (n) {
+      if (!kpOpsNorm) return true;
+      if (kpOpsNorm.indexOf(n) !== -1) return true; // 显式列出该基础运算
+      if (kpOpsNorm.indexOf('mixed') !== -1 && kpBase.length === 0) return true; // 纯 mixed → 四则
+      return false;
+    };
     raw.forEach(function (op) {
       var norm = normalizeOp(op);
-      // FINAL-32：KP 语义过滤——若 kpOpsNorm 为 truthy（KP 提供 operations 数组，可能为空
-      // 如 statistics 族）且 norm 不在其中，跳过该 operation（不声明算术关系）。
-      // 算术族 KP（operations 非空）由 FINAL-31c 模板过滤保证 data.operation ∈ KP operations，
-      // 此处过滤为恒真通过；非算术族 KP 的 data.operation 是模板制品，声明空 relations 更诚实。
-      if (kpOpsNorm && kpOpsNorm.indexOf(norm) === -1) return;
+      // mixed（连加连减/运算顺序）：KP 常只列基础词 [add,sub] 而题面发射 'mixed'。
+      // 不整体丢弃——展开为四则，逐个按 KP 允许集过滤（只声明落在集内的基础算法，不越界）。
       if (norm === 'mixed') {
-        MIXED_RELATIONS.forEach(function (r) {
-          if (relations.indexOf(r) === -1) relations.push(r);
+        ['add', 'sub', 'mult', 'div'].forEach(function (n) {
+          if (!opAllowed(n)) return;
+          var mr = OP_TO_RELATION[n];
+          if (mr && relations.indexOf(mr) === -1) relations.push(mr);
+          if (algoOps.indexOf(n) === -1) algoOps.push(n);
         });
         return;
       }
+      // FINAL-32：KP 语义过滤——若 kpOpsNorm 为 truthy（KP 提供 operations 数组，可能为空
+      // 如 statistics 族）且 norm 不在其中，跳过该 operation（不声明算术关系）。
+      if (!opAllowed(norm)) return;
       var rel = OP_TO_RELATION[norm];
       if (rel && relations.indexOf(rel) === -1) relations.push(rel);
+      if (rel && algoOps.indexOf(norm) === -1) algoOps.push(norm);
     });
   }
   // FINAL-37：constructs 不再恒空——从题目已构造 data 真实字段派生结构构件。
   // 仅描述题内确实存在的事实（字段在场即构件在场），不虚构；由 validator check#7 把关。
-  return { relations: relations, constructs: deriveConstructs(data) };
+  return { relations: relations, constructs: deriveConstructs(data, algoOps) };
 }
 
 function pushUniq(arr, v) { if (v && arr.indexOf(v) === -1) arr.push(v); }
@@ -86,7 +101,15 @@ function pushUniq(arr, v) { if (v && arr.indexOf(v) === -1) arr.push(v); }
  * 已显式声明 semanticEvidence 的 maker（concept-meaning 深语义 makers）不经过本函数
  * （attach 已声明即跳过），故 maker 自声明 constructs 须与规则命名同源。
  */
-function deriveConstructs(data) {
+// 通用算法类型 → 算法执行构件（不绑定进位/退位/竖式等特定方法，只描述题内执行的通用算法）
+var ALGO_CONSTRUCT = {
+  add: 'addition',
+  sub: 'subtraction',
+  mult: 'multiplication',
+  div: 'division'
+};
+
+function deriveConstructs(data, algoOps) {
   if (!data || typeof data !== 'object') return [];
   var c = [];
   // 倍的认识
@@ -123,6 +146,11 @@ function deriveConstructs(data) {
     if (data.items != null) pushUniq(c, 'items');
     pushUniq(c, 'ordered-or-classified-result');
   }
+  // 通用算法（B/C 通用算法 KP）：题目未命中任何概念族构件时，按本题实际执行的通用算法类型
+  // 兜底声明算法构件（data.operation 在场即事实，互斥——已有概念构件则不叠加，避免污染 A 类）。
+  if (c.length === 0 && Array.isArray(algoOps)) {
+    algoOps.forEach(function (op) { pushUniq(c, ALGO_CONSTRUCT[op]); });
+  }
   return c;
 }
 
@@ -142,9 +170,9 @@ function attach(sq, kpOperations) {
   if (!sq || !sq.data || sq.data.semanticEvidence) return sq;
   var kpOpsNorm = null;
   if (kpOperations && kpOperations.length) {
-    kpOpsNorm = kpOperations.map(normalizeOp).filter(function (op) {
-      return op && op !== 'mixed';
-    });
+    // 保留 'mixed'：derive 据其判定 allowsAll（混合运算允许其展开出的各基础算法），
+    // 剔除会让 operations=['mixed'] 的 KP 退化为空集、声明空证据。
+    kpOpsNorm = kpOperations.map(normalizeOp).filter(Boolean);
   } else if (kpOperations && Array.isArray(kpOperations) && kpOperations.length === 0) {
     // 显式传入空数组（KP 语义 operations=[]，非算术族）：传 [] 让 derive 过滤掉所有
     // 模板制品的 data.operation，声明空 relations。

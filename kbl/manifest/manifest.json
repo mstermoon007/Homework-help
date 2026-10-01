@@ -6,7 +6,7 @@
   "counts": {
     "knowledgePoints": 375,
     "units": 98,
-    "relations": 0,
+    "relations": 373,
     "mappings": 1570
   },
   "idRules": {
@@ -15,6 +15,6 @@
     "generatedOnce": true,
     "runtimePositionIndependent": true
   },
-  "rootHash": "cee1070e5a08a6ad22538380530e6e2580949ca255d6aa9a4dcec41804621df6",
-  "distributedRootHash": "cee1070e5a08a6ad22538380530e6e2580949ca255d6aa9a4dcec41804621df6"
+  "rootHash": "d79a04c9a7fadff807a4783b6e92cd065e14d0a409d5e069f8c035b3c9d02ea1",
+  "distributedRootHash": "d79a04c9a7fadff807a4783b6e92cd065e14d0a409d5e069f8c035b3c9d02ea1"
 }

@@ -38,7 +38,7 @@ function assert(name, cond, detail) {
 // ---- 1. 数据装载 + 完整性 ----
 const s = K.stats();
 assert('数量守恒: 375 KP', s.knowledgePoints === 375, JSON.stringify(s.byGrade));
-assert('单元 98 / 关系 0 / 映射 1570', s.units === 98 && s.relations === 0 && s.mappings === 1570);
+assert('单元 98 / 关系 373 / 映射 1570', s.units === 98 && s.relations === 373 && s.mappings === 1570);
 assert('permission 全 allow(canonical: 1570 allow)', s.permissions.allow === 1570 && s.permissions.forbid === 0 && s.permissions.degrade === 0 && s.permissions.missing === 0);
 
 const manifest = require(path.join(ROOT, 'shared/knowledge/manifest/manifest.json'));
@@ -83,9 +83,9 @@ const noEssay = K.canGenerate(drillId, 'essay');
 assert('canGenerate(essay)=missing', !noEssay.allowed && noEssay.permission === 'missing');
 assert('canGenerate(未知 KP)=unknown', !K.canGenerate('math-g0-up-u01-k001', 'calc').allowed);
 
-// ---- 5. 关系 + 闭包（canonical relations 为空集 → 空语义断言）----
+// ---- 5. 关系 + 闭包（P1 inferred prerequisite 集：凑十 → 加法口算 有出边）----
 assert('关系完整性 0 issue', Relation.integrityCheck().pass === true && Relation.integrityCheck().issues.length === 0);
-assert('relationsFor(凑十) 0 出边', K.relationsFor(drillId).outgoing.length === 0 && K.relationsFor(drillId).incoming.length === 0);
+assert('relationsFor(凑十) 有 prerequisite 出边', K.relationsFor(drillId).outgoing.length > 0 && K.relationsFor(drillId).outgoing.every(function (r) { return r.relation === 'prerequisite'; }));
 const cls = Relation.closure(drillId, { types: ['related'], direction: 'out', maxDepth: 5 });
 assert('closure(related) 空结果', Array.isArray(cls) && cls.length === 0, 'closure size ' + cls.length);
 

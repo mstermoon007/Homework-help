@@ -131,10 +131,12 @@ test('context 契约：defaults / allowPure / allowContextual 稳定', () => {
   });
 });
 
-test('spiral 边界默认固定为 {level:1,maxLevel:1}（P0 显式契约）', () => {
+test('spiral 从 KBL difficultyAnnotation 派生（level=1 起步，maxLevel ∈ [1,6]；无字段 fallback 占位）', () => {
   allKps().forEach(({ kp }) => {
     const view = KC.strategyView(kp.knowledgeId);
-    assert.deepStrictEqual(view.spiral, { level: 1, maxLevel: 1 });
+    assert.ok(view.spiral, 'spiral 字段存在');
+    assert.strictEqual(view.spiral.level, 1, 'level 起步=1');
+    assert.ok(view.spiral.maxLevel >= 1 && view.spiral.maxLevel <= 6, 'maxLevel ∈ [1,6]');
   });
 });
 

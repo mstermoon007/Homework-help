@@ -499,6 +499,53 @@ function buildCompositionItem(rng) {
 }
 
 function buildNumberConceptItem(rng, name) {
+  // P28-FIX6：g1-down-u03-k001「数数」——一个一个地数/十个十个地数，10个一是十、10个十是一百
+  // （数=逐次加一/加十，operation 如实标 add 并内嵌加法参考式，承载 calc expressionPresent）
+  if (name.indexOf('数数') !== -1) {
+    var parts = [];
+    if (rng() < 0.5) {
+      var ct = ri(rng, 2, 10);
+      var tensTotal = ct * 10;
+      var steps;
+      if (ct <= 6) {
+        for (var k = 0; k < ct; k++) parts.push('10');
+        steps = parts.join(' + ') + ' = ' + tensTotal;
+      } else {
+        steps = ((ct - 1) * 10) + ' + 10 = ' + tensTotal;
+      }
+      return { stem: '十个十个地数：数 ' + ct + ' 次是多少？（参考：' + steps + '）',
+        answer: String(tensTotal), options: [String(tensTotal), String(tensTotal + 10), String(tensTotal - 10)],
+        apply: '一捆小棒 10 根，' + ct + ' 捆小棒十个十个地数（' + steps + '），' + ct + ' 个十是多少根？',
+        operation: 'add' };
+    }
+    var co = ri(rng, 2, 9);
+    var ones;
+    if (co <= 5) {
+      for (var k2 = 0; k2 < co; k2++) parts.push('1');
+      ones = parts.join(' + ') + ' = ' + co;
+    } else {
+      ones = (co - 1) + ' + 1 = ' + co;
+    }
+    return { stem: '一个一个地数：' + co + ' 个一是多少？（参考：' + ones + '）',
+      answer: String(co), options: [String(co), String(co + 1), String(co + 10)],
+      apply: '数小棒，一根一根地数，数了 ' + co + ' 根（' + ones + '），' + co + ' 个一是多少根？',
+      operation: 'add' };
+  }
+  // P28-FIX6：g1-up-u04-k001「11—20数的认识」——素材限定 11~19（1 个十和几个一）
+  if (name.indexOf('11—20') !== -1 || name.indexOf('11-20') !== -1 ||
+      name.indexOf('11～20') !== -1 || name.indexOf('11~20') !== -1) {
+    var o2 = ri(rng, 1, 9);
+    var n2 = 10 + o2;
+    if (rng() < 0.5) {
+      return { stem: n2 + ' 里面有几个十和几个一？（参考：10 + ' + o2 + ' = ' + n2 + '）',
+        answer: '1 个十和 ' + o2 + ' 个一',
+        options: ['1 个十和 ' + o2 + ' 个一', o2 + ' 个十和 1 个一', n2 + ' 个十'],
+        apply: '摆小棒表示 ' + n2 + '（10 + ' + o2 + ' = ' + n2 + '），要摆 1 捆（10 根）零几根？' };
+    }
+    return { stem: '计数器十位 1 颗珠、个位 ' + o2 + ' 颗珠（1 个十和 ' + o2 + ' 个一，10 + ' + o2 + ' = ' + n2 + '），这个数写作多少？',
+      answer: String(n2), options: [String(n2), String(1 + o2), String(o2 * 10 + 1)],
+      apply: '数一数：十位拨 1 颗、个位拨 ' + o2 + ' 颗，1 个十和 ' + o2 + ' 个一合起来写作多少？（10 + ' + o2 + ' = ' + n2 + '）' };
+  }
   // P25-09：g1-up-u01-k001「1-5数的认识」——素材必须限定在 1~5，
   // 不能落默认分支的两位数（off-grade）；n∈2..5 保证 n−1 ≥ 1。
   if (name.indexOf('1-5') !== -1 || name.indexOf('1～5') !== -1) {
@@ -580,6 +627,43 @@ function buildNumberConceptItem(rng, name) {
   return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '），写作多少？',
     answer: String(t1 * 10 + o1), options: [String(t1 * 10 + o1), String(t1 + o1), String(o1 * 10 + t1)],
     apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' 个十和 ' + o1 + ' 个一合起来写作多少？（' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '）' };
+}
+
+// P28-FIX6：g1-up-u05-k001「凑十法」——拆小数凑十再算（题面是加法，operation 如实标 add；
+// KP semantic.operations=[]，attach 会把关系过滤为空，不产生越界声明）
+function buildMakeTenItem(rng) {
+  var a = ri(rng, 8, 9);
+  var need = 10 - a;
+  var b = ri(rng, need + 1, 9);
+  var rest = b - need;
+  var sum = a + b;
+  return { stem: '用凑十法计算：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + ' = ？（先把 ' + a + ' 凑成 10，10 + ' + rest + ' = ' + sum + '）',
+    answer: String(sum), options: [String(sum), String(sum - 1), String(sum + 1)],
+    apply: '小兔采蘑菇，上午采 ' + a + ' 个、下午采 ' + b + ' 个。用凑十法：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + '，一共采了多少个？',
+    operation: 'add' };
+}
+
+// P28-FIX6：g3-up-u02-k003「有括号运算顺序」——先算小括号里面的，再算括号外面的
+function buildBracketOrderItem(rng) {
+  var x = ri(rng, 2, 9), y = ri(rng, 2, 9), z = ri(rng, 2, 5);
+  var inner = x + y;
+  var ans = inner * z;
+  return { stem: '先算小括号里面的：(' + x + ' + ' + y + ') × ' + z + ' = ' + inner + ' × ' + z + ' = ？（先算 ' + x + ' + ' + y + ' = ' + inner + '）',
+    answer: String(ans), options: [String(ans), String(x + y * z), String(ans - z)],
+    apply: '商店上午卖出 ' + x + ' 个、下午卖出 ' + y + ' 个气球，每个气球 ' + z + ' 元。先算一共卖出多少个，再算卖了多少元：(' + x + ' + ' + y + ') × ' + z + ' = ？元',
+    operation: 'mixed' };
+}
+
+// P28-FIX6：g3-up-u02-k004「脱式计算规范」——等号上下对齐，一步一计算，不跳步
+function buildStepwiseItem(rng) {
+  var a = ri(rng, 12, 49), b = ri(rng, 11, 39);
+  var s1 = a + b;
+  var c = ri(rng, 2, s1 - 1);
+  var ans = s1 - c;
+  return { stem: '按脱式计算规范一步一步算：' + a + ' + ' + b + ' − ' + c + ' = ' + s1 + ' − ' + c + ' = ？（第一步 ' + a + ' + ' + b + ' = ' + s1 + '）',
+    answer: String(ans), options: [String(ans), String(s1), String(a + b + c)],
+    apply: '图书角原有 ' + a + ' 本书，又买来 ' + b + ' 本，借出 ' + c + ' 本。脱式：' + a + ' + ' + b + ' − ' + c + ' = ' + s1 + ' − ' + c + '，还剩多少本？',
+    operation: 'mixed' };
 }
 
 function buildNegativeItem(rng, name) {
@@ -734,6 +818,9 @@ function makeNegativeNumber(plan, context, i) { return makeByItem(plan, context,
 function makeMultDivRelation(plan, context, i) { return makeByItem(plan, context, i, buildMultDivRelationItem, 'multdiv-relation'); }
 function makeAlgebraLetter(plan, context, i) { return makeByItem(plan, context, i, buildAlgebraLetterItem, 'algebra-letter'); }
 function makeNumberTheory(plan, context, i) { return makeByItem(plan, context, i, buildNumberTheoryItem, 'number-theory'); }
+function makeMakeTen(plan, context, i) { return makeByItem(plan, context, i, buildMakeTenItem, 'make-ten'); }
+function makeBracketOrder(plan, context, i) { return makeByItem(plan, context, i, buildBracketOrderItem, 'bracket-order'); }
+function makeStepwise(plan, context, i) { return makeByItem(plan, context, i, buildStepwiseItem, 'stepwise-format'); }
 
 var P25_09_SUBTOPIC_QTS = ['calc', 'fill', 'apply', 'choice'];
 function bindP2509(fn) {
@@ -756,7 +843,11 @@ var SUBTOPIC_MAKERS = {
   'negative-number': bindP2509(makeNegativeNumber),
   'multdiv-relation': bindP2509(makeMultDivRelation),
   'algebra-letter': bindP2509(makeAlgebraLetter),
-  'number-theory': bindP2509(makeNumberTheory)
+  'number-theory': bindP2509(makeNumberTheory),
+  // P28-FIX6：凑十法 / 有括号运算顺序 / 脱式计算规范
+  'make-ten': bindP2509(makeMakeTen),
+  'bracket-order': bindP2509(makeBracketOrder),
+  'stepwise-format': bindP2509(makeStepwise)
 };
 
 /** 取本 plan 的语义参数：优先 selector 注入；缺省时即时派生（直连调用方/单测兜底，同一 SSOT） */

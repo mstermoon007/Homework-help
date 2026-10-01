@@ -5,7 +5,7 @@
  *
  * 冻结不变量：
  *   1. dev/check-educational-generation.js 存在
- *   2. A 类 KP 来源 kp-matrix.json 且数量 = 307
+ *   2. A 类 KP 来源 kp-matrix.json 且数量 = 313
  *   3. 核心题型 = apply/choice/fill
  *   4. 四态分桶枚举完整（GENERATION_PASS/SEMANTIC_PASS/SEMANTIC_WARN/SEMANTIC_FAIL）
  *   5. 报告 educational-generation-report.json schema 正确
@@ -36,10 +36,10 @@ test('1. 脚本 dev/check-educational-generation.js 存在', () => {
   assert.ok(fs.existsSync(SCRIPT), '脚本存在');
 });
 
-test('2. A 类 KP 来源 kp-matrix.json 且数量 = 307', () => {
+test('2. A 类 KP 来源 kp-matrix.json 且数量 = 313', () => {
   const aCount = matrix.kps.filter(function (k) { return k.draftSemanticLevel === 'A'; }).length;
-  assert.equal(aCount, 307, 'A 类 KP = 307');
-  assert.equal(matrix.distributions.byDraftLevel.A, 307, 'distributions.byDraftLevel.A = 307');
+  assert.equal(aCount, 313, 'A 类 KP = 313');
+  assert.equal(matrix.distributions.byDraftLevel.A, 313, 'distributions.byDraftLevel.A = 313');
 });
 
 test('3. 核心题型 = apply/choice/fill', () => {

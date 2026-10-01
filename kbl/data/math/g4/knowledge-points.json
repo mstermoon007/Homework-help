@@ -93,8 +93,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -209,8 +213,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -325,8 +333,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -441,8 +453,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "recognize",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 2
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -557,8 +573,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -675,8 +695,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -798,8 +822,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "recognize",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 2
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -921,8 +949,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "recognize",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 2
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -1044,8 +1076,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -1162,8 +1198,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -1280,8 +1320,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -1398,8 +1442,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -1517,8 +1565,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -1636,8 +1688,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -1754,8 +1810,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "analyze",
         "maxSteps": 3,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 6
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -1877,8 +1937,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 3
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -2000,8 +2064,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -2123,8 +2191,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "recognize",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 2
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -2246,8 +2318,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -2371,8 +2447,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -2496,8 +2576,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -2618,8 +2702,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -2743,8 +2831,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "analyze",
         "maxSteps": 3,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 6
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -2853,8 +2945,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 3
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -2957,8 +3053,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "recognize",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 2
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -3064,8 +3164,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -3168,8 +3272,12 @@
         "seedDifficulty": 6,
         "cognitiveLevel": "apply",
         "maxSteps": 3,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -3278,8 +3386,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "recognize",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 2
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -3397,8 +3509,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 3
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -3517,8 +3633,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 3
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -3636,8 +3756,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 3
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -3751,8 +3875,12 @@
         "seedDifficulty": 6,
         "cognitiveLevel": "analyze",
         "maxSteps": 3,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 5
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -3874,8 +4002,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -3997,8 +4129,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -4120,8 +4256,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -4235,8 +4375,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 3
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -4350,8 +4494,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 3
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -4465,8 +4613,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 3
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -4585,8 +4737,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "analyze",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 5
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -4703,8 +4859,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -4819,8 +4979,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 5
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -4935,8 +5099,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 5
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -5051,8 +5219,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 5
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -5169,8 +5341,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 5
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -5288,8 +5464,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 5
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -5404,8 +5584,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 5
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -5527,8 +5711,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -5650,8 +5838,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -5773,8 +5965,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -5896,8 +6092,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -6019,8 +6219,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -6142,8 +6346,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -6261,8 +6469,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -6380,8 +6592,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -6500,8 +6716,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -6619,8 +6839,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -6742,8 +6966,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -6865,8 +7093,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -6988,8 +7220,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -7111,8 +7347,12 @@
         "seedDifficulty": 5,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -7234,8 +7474,12 @@
         "seedDifficulty": 6,
         "cognitiveLevel": "analyze",
         "maxSteps": 3,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 5
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -7361,8 +7605,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 3
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -7488,8 +7736,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -7613,8 +7865,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -7738,8 +7994,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "analyze",
         "maxSteps": 3,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 6
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -7845,8 +8105,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -7952,8 +8216,12 @@
         "seedDifficulty": 7,
         "cognitiveLevel": "apply",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -8059,8 +8327,12 @@
         "seedDifficulty": 9,
         "cognitiveLevel": "analyze",
         "maxSteps": 3,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 6
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"
@@ -8172,8 +8444,12 @@
         "seedDifficulty": 8,
         "cognitiveLevel": "understand",
         "maxSteps": 2,
+        "spiral": {
+          "level": 1,
+          "maxLevel": 4
+        },
         "numberRange": null,
-        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js"
+        "note": "root 释义派生展示值；难度权威见 shared/catalog/difficulty.js；spiral.maxLevel=llm-finalized-dev（LLM 开发期定案）"
       },
       "source": {
         "system": "kbl-root-derived"

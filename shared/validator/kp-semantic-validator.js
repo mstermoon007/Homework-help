@@ -387,6 +387,16 @@ function checkSemanticEvidence(sq, kpId) {
     if (a.kind === 'fieldPresent' && fieldRead(sq, a.path) === undefined) missing.push('present:' + a.path);
     // FINAL-37：结构构件断言——声明 constructs 须包含该构件（如 base-quantity/multiple/vertex）
     if (a.kind === 'construct' && constructs.indexOf(a.name) === -1) missing.push('construct:' + a.name);
+    // 通用算法 KP：单题只执行本 KP 所允许多种通用算法中的一种——声明关系/构件须与允许集有交集
+    // （正面要求"声明了本 KP 的某种合法算法"，空声明/越界算法不通过）。
+    if (a.kind === 'relationAny' &&
+      !(Array.isArray(a.any) && a.any.some(function (r) { return relations.indexOf(r) !== -1; }))) {
+      missing.push('relationAny:[' + (a.any || []).join(',') + ']');
+    }
+    if (a.kind === 'constructAny' &&
+      !(Array.isArray(a.any) && a.any.some(function (n) { return constructs.indexOf(n) !== -1; }))) {
+      missing.push('constructAny:[' + (a.any || []).join(',') + ']');
+    }
   });
   var forbiddenHits = [];
   (rule.forbidden || []).forEach(function (a) {

@@ -1,13 +1,13 @@
 {
   "schemaVersion": "1.0.0",
   "catalogVersion": "math-v1.0.0",
-  "packageVersion": "kbl-math-2026-09-20",
+  "packageVersion": "kbl-math-2026-09-30",
   "buildTool": "tools/kbl/build.js",
-  "buildAt": "2026-09-20T07:24:09.398Z",
+  "buildAt": "2026-09-30T13:50:02.954Z",
   "counts": {
     "knowledgePoints": 375,
     "units": 98,
-    "relations": 0,
+    "relations": 373,
     "mappings": 1570
   },
   "idRules": {
@@ -20,16 +20,16 @@
     "algorithm": "sha256",
     "files": {
       "data/math/curriculum.json": "cacb35c21cc0731aaf4dec56a80e5da257d8de145896d3a7eed79a8274b7f6c1",
-      "data/math/g1/knowledge-points.json": "5090721673d97a7e0014994e0c39d689ebe433a57f85db30a919f2cea76fbb4e",
-      "data/math/g2/knowledge-points.json": "01823406128250f82d136b573c31d6e1b6b567813c2799703c3d51266a2cf87d",
-      "data/math/g3/knowledge-points.json": "e9172fb72a912d85c2f08b18be6ac71afebce0f75b055ccf6b4412ba45dbc1f6",
-      "data/math/g4/knowledge-points.json": "c4114904e6958b8501ec1c18800de40cc85f0dd728061fb20c13c23140c6d557",
-      "data/math/g5/knowledge-points.json": "730a6119e6795f48778d8268c94ed795f73cc22229164010695033422aac2cd2",
-      "data/math/g6/knowledge-points.json": "8102af5485a84672804299f97bfc8a239d48200f08d1c4d3477aafc576ea2b08",
-      "relations/math/relations.json": "bedf6cb879cdcd0f17959c684da8fcd9b96021847ca7a33ac6177d28dc934da1",
+      "data/math/g1/knowledge-points.json": "e5fb155a2f6a0771c4426f8e74515e89a2069715aa957ff91690b72eadc077c5",
+      "data/math/g2/knowledge-points.json": "9cd06b0d4dedfa4ad45d30455fbf87c6efb188bc173459a216ff756b2ea23f94",
+      "data/math/g3/knowledge-points.json": "7b3b27ec2b7e2b4526818dacb1e5975fe1edb64d3810e7263abfad8be8336f80",
+      "data/math/g4/knowledge-points.json": "7d58f7cbe0ea07c458ad6256d7ea0faa6e6134eead21854c281bcb4053b3278a",
+      "data/math/g5/knowledge-points.json": "33fae1ee21d55ad1c790a8525fc0a93f93fbb04eac8de8beba6d82f57d223364",
+      "data/math/g6/knowledge-points.json": "2e734323ebb8482dee1cbdb75103992191b3072acf3d27476164b8cb8d5ce594",
+      "relations/math/relations.json": "d2968eab236b174825c31c7e78f3f171a545439e0eda24b9903b7f582b2687eb",
       "mappings/generation-contract/math.json": "c7a8f8d6ce1a67c02a222706360b5ceb8c6e8808a0baec10ea409955bd87bb0f",
       "index/index.json": "2bdd0282c8694245ab8597f09488c41ce4ce29e44811851e1ea5f5052ad517a3"
     },
-    "rootHash": "cee1070e5a08a6ad22538380530e6e2580949ca255d6aa9a4dcec41804621df6"
+    "rootHash": "d79a04c9a7fadff807a4783b6e92cd065e14d0a409d5e069f8c035b3c9d02ea1"
   }
 }

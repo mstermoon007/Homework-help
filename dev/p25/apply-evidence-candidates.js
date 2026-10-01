@@ -31,7 +31,7 @@ var QTR = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry
 
 var QT_IDS = {};
 QTR.TYPES.forEach(function (t) { QT_IDS[t.id] = true; });
-var KINDS = ['field', 'fieldNot', 'relation', 'relationNot'];
+var KINDS = ['field', 'fieldNot', 'fieldPresent', 'relation', 'relationNot'];
 
 var aIds = {};
 matrix.kps.forEach(function (k) { if (k.draftSemanticLevel === 'A') aIds[k.id] = k; });
@@ -91,7 +91,7 @@ var skipped = 0;
 
   (c.required || []).concat(c.forbidden || []).forEach(function (a) {
     if (KINDS.indexOf(a.kind) === -1) fail('非法 kind: ' + key + ' ← ' + a.kind);
-    if (a.kind === 'field' || a.kind === 'fieldNot') {
+    if (a.kind === 'field' || a.kind === 'fieldNot' || a.kind === 'fieldPresent') {
       if (typeof a.path !== 'string' || a.path.indexOf('data.') !== 0) fail('field 路径必须以 data. 开头: ' + key);
     }
     if (a.kind === 'relation') {
@@ -130,11 +130,14 @@ doc.rules.sort(function (a, b) {
     : (a.knowledgePointId < b.knowledgePointId ? -1 : 1);
 });
 
-doc.schemaVersion = 'p26-evidence.1';
+doc.schemaVersion = 'p26-evidence.3';
 doc.note = 'P25-04 起步（4 代表 KP 人工规则），P26 扩建为 A 类全量（' + aIds.length +
-  ' KP × ALLOW 题型，机械派生）。派生真值源：dev/p25/reports/evidence-derive-report.json' +
+  ' KP × ALLOW 题型，机械派生）；P28-FIX6 后 A 类扩至 313（6 个误绑 B 类 KP 升 A 重绑 concept-meaning）。' +
+  'B/C 类通用算法规则（relationAny/constructAny 形态，247 行）由 tools/kbl/derive-bc-evidence-rules.js 独立维护，本脚本只增补缺 A 类行、不动 B/C 行。' +
+  '派生真值源：dev/p25/reports/evidence-derive-report.json' +
   '（真实生成产出字段稳定性 + KBL 语义事实跨家族守卫），派生脚本 dev/p25/derive-evidence-candidates.js，' +
-  '合并闸门 dev/p25/apply-evidence-candidates.js。断言 kind 仅 field/fieldNot/relation/relationNot；' +
+  '合并闸门 dev/p25/apply-evidence-candidates.js。断言 kind：A 类仅 field/fieldNot/relation/relationNot；' +
+  'B/C 类另有 relationAny/constructAny（算法类型∈允许集正面断言）。' +
   'required relation 均经 intent-relations 允许集过滤（与 validator check#8 同源）。' +
   '消费方：shared/validator/kp-semantic-validator.js checkSemanticEvidence；' +
   '供给方：generator 在 sq.data.semanticEvidence 中按题声明 {relations:[],constructs:[]}。' +

@@ -219,7 +219,7 @@
       errors: (kp.assessment && kp.assessment.errors) ? kp.assessment.errors.slice() : [],
       generation: { capabilities: capabilities },
       capabilities: capabilities.map(function (c) { return c.id; }).filter(Boolean),
-      spiral: { level: 1, maxLevel: 1 },
+      spiral: anno.spiral || { level: 1, maxLevel: 1 },
       metadata: { weight: Number(kp.weight) || 1 },
       legacy: {
         difficulty: anno.seedDifficulty != null ? anno.seedDifficulty : null,

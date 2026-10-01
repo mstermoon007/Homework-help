@@ -13,9 +13,13 @@
 //      new PracticeSession({count:1}) → session.start() → 收 1 题
 //   5. 自动结构验证：KpSemantic.checkSemanticEvidence(sq, kpId) 必须 'pass'
 //      （不收 warn/skip/fail）；不通过则换下一 KP 重试
-//   6. 每条 9 字段 + source:'ai-candidate' + humanReview:'pending'
+//   6. 每条 12 字段 + source:'ai-candidate' + humanReview:'llm-finalized'
+//      （用户 2026-09-30 取消人工复核环节；质量保险＝真实 PracticeSession 生成
+//        + KpSemantic.checkSemanticEvidence 仅收 pass 的机器行为验证，非 LLM 自证）
 //
-// 用法：node dev/p25/build-golden-dataset.js [--per-family 20] [--max-families 15]
+// 用法：
+//   node dev/p25/build-golden-dataset.js [--per-family 20] [--max-families 15]   # 默认：按族抽样（原行为）
+//   node dev/p25/build-golden-dataset.js --fill-missing [--grade g1]             # 覆盖模式：为未覆盖 A 类 KP 补题（追加，不重生成已有题）
 // 产出：kbl/teaching/golden-questions.json
 
 var fs = require('fs');
@@ -46,6 +50,11 @@ var idx = args.indexOf('--per-family');
 if (idx !== -1 && args[idx + 1]) PER_FAMILY = Math.max(1, parseInt(args[idx + 1], 10));
 idx = args.indexOf('--max-families');
 if (idx !== -1 && args[idx + 1]) MAX_FAMILIES = Math.max(1, parseInt(args[idx + 1], 10));
+// 覆盖模式：为尚未进入题集的 A 类 KP 真实生成金题并追加（默认抽样行为不变）
+var FILL_MISSING = args.indexOf('--fill-missing') !== -1;
+idx = args.indexOf('--grade');
+var FILL_GRADE = (idx !== -1 && args[idx + 1]) ? args[idx + 1] : null; // 如 'g1'；null=全年级
+var PER_KP_CAP = 3; // 用户决策：每个缺额 KP 按适用核心题型最多收 3 条（题型不足则按实际数）
 
 // A 类 KP 按族分组（用 kpFamilies[kpId].primary 映射，不用 kp.semanticFamily）
 var aClassKps = kpMatrix.kps.filter(function (k) { return k.draftSemanticLevel === 'A'; });
@@ -86,7 +95,117 @@ function allowedQts(kpId) {
 var goldenQuestions = [];
 var familyStats = [];
 
+// 真实生成单题并仅在 SEMANTIC_PASS 时收录（抽样/覆盖两模式共用的核心采集单元）
+async function collectOne(kp, qt, famId) {
+  var grade = gradeFromKpId(kp.id);
+  var session = new PracticeSession({
+    subject: 'math', grade: grade, count: 1,
+    knowledgePointId: kp.id, questionType: qt
+  });
+  await session.start();
+  var sqs = session.semanticQuestions || [];
+  if (!sqs.length) return null;
+  var sq = sqs[0];
+  var evResult = KpSemantic.checkSemanticEvidence(sq, kp.id);
+  if (evResult.state !== 'pass') return null; // 不伪造 PASS
+  var intentRow = intentByKpQt[kp.id + '|' + qt] || null;
+  var intentObj = intentRow && intentRow.intent || null;
+  return {
+    kpId: kp.id,
+    semanticFamily: famId,
+    teachingTarget: (intentObj && intentObj.trainsWhat) || kp.name,
+    cognitiveTarget: sq.cognitiveLevel || null,
+    questionType: qt,
+    intent: intentObj ? {
+      whyThisType: intentObj.whyThisType || null,
+      legitimacy: intentObj.legitimacy || null,
+      driftRisk: intentObj.driftRisk || null
+    } : null,
+    difficulty: sq.difficulty || (sq.plan && sq.plan.difficulty) || null,
+    // 变式维度：A 类概念题取 subType/mode；B/C 通用算法题无概念子型，退而取题内真实
+    // 算法类型 operation（add/sub/mult/div/mixed）——同为题面已构造事实，不虚构。
+    variation: (sq.data && (sq.data.subType || sq.data.mode || sq.data.operation)) || null,
+    structure: {
+      stem: sq.stem || sq.question || (sq.data && sq.data.prompt) || sq.prompt || null,
+      options: sq.options || (sq.data && sq.data.options) || null,
+      answer: sq.answer != null ? sq.answer : (sq.data && sq.data.answer)
+    },
+    semanticEvidence: sq.data && sq.data.semanticEvidence || null,
+    answer: sq.answer != null
+      ? (typeof sq.answer === 'object' ? JSON.stringify(sq.answer) : String(sq.answer))
+      : (sq.data && sq.data.answer != null
+        ? (typeof sq.data.answer === 'object' ? JSON.stringify(sq.data.answer) : String(sq.data.answer))
+        : null),
+    validator: {
+      semanticEvidenceState: evResult.state,
+      errors: (evResult.errors || []).length,
+      warnings: (evResult.warnings || []).length
+    },
+    source: 'ai-candidate',
+    humanReview: 'llm-finalized'
+  };
+}
+
+// 覆盖模式：保留已生成题，仅为未覆盖 A 类 KP 追加真实生成的 pass 题（不重生成已有题）
+async function runFillMissing() {
+  var outPath = path.join(ROOT, 'kbl', 'teaching', 'golden-questions.json');
+  var existing = fs.existsSync(outPath)
+    ? JSON.parse(fs.readFileSync(outPath, 'utf8'))
+    : { questions: [] };
+  var base = Array.isArray(existing.questions) ? existing.questions.slice() : [];
+  var covered = {};
+  base.forEach(function (q) { covered[q.kpId] = true; });
+
+  // 候选为全部未覆盖 KP（不限 A 类）：collectOne 仅在 SEMANTIC_PASS 时收录，
+  // 故无通用算法锚/题面与语义不符的 KP（无 evidence 规则 → skip）自然收不进来，不靠层级硬卡。
+  var candidates = kpMatrix.kps.filter(function (k) {
+    if (covered[k.id]) return false;
+    return FILL_GRADE ? k.grade === FILL_GRADE : true;
+  });
+  console.log('覆盖模式：缺额候选 ' + candidates.length + ' 个 KP' + (FILL_GRADE ? '（' + FILL_GRADE + '）' : '') + '，已有题 ' + base.length);
+
+  var added = [];
+  for (var ci = 0; ci < candidates.length; ci++) {
+    var kp = candidates[ci];
+    var entry = kpFamiliesMap[kp.id];
+    var famId = (entry && entry.primary) || 'unknown';
+    var qts = allowedQts(kp.id).filter(function (qt) { return CORE_QTS.indexOf(qt) !== -1; }).slice(0, PER_KP_CAP);
+    for (var qi = 0; qi < qts.length; qi++) {
+      try {
+        var q = await collectOne(kp, qts[qi], famId);
+        if (q) { added.push(q); process.stdout.write('\r  + ' + kp.id + ' [' + qts[qi] + '] pass（新增 ' + added.length + '）        '); }
+      } catch (e) { /* 单题失败跳过 */ }
+    }
+  }
+  process.stdout.write('\n');
+
+  // 合并 + 全量去重（kpId|questionType|answer前50，与 validate 口径一致）
+  var seenKeys = {};
+  var merged = [];
+  base.concat(added).forEach(function (q) {
+    var key = q.kpId + '|' + q.questionType + '|' + String(q.answer || '').slice(0, 50);
+    if (seenKeys[key]) return;
+    seenKeys[key] = true;
+    merged.push(q);
+  });
+
+  var byFamily = {};
+  merged.forEach(function (q) { byFamily[q.semanticFamily] = (byFamily[q.semanticFamily] || 0) + 1; });
+  var output = {
+    schemaVersion: 'p25-16-v1',
+    generatedAt: new Date().toISOString(),
+    purpose: 'P25-16 黄金题集 — 15 语义族抽样 + A 类 KP 覆盖补漏；真实生成 + SEMANTIC_PASS 机器验证（LLM 开发期定案）',
+    source: 'ai-candidate',
+    reviewStatus: 'llm-finalized-dev',
+    counts: { total: merged.length, families: Object.keys(byFamily).length, byFamily: byFamily },
+    questions: merged
+  };
+  fs.writeFileSync(outPath, JSON.stringify(output, null, 2));
+  console.log('覆盖补漏完成：新增 ' + added.length + '，总题 ' + merged.length + '，覆盖族 ' + Object.keys(byFamily).length + '/15');
+}
+
 (async function run() {
+  if (FILL_MISSING) { await runFillMissing(); return; }
   var families = (semanticFamilies.families || []).slice(0, MAX_FAMILIES);
   var totalCollected = 0;
 
@@ -144,7 +263,9 @@ var familyStats = [];
               driftRisk: intentObj.driftRisk || null
             } : null,
             difficulty: sq.difficulty || (sq.plan && sq.plan.difficulty) || null,
-            variation: (sq.data && (sq.data.subType || sq.data.mode)) || null,
+            // 变式维度：A 类概念题取 subType/mode；B/C 通用算法题无概念子型，退而取题内真实
+    // 算法类型 operation（add/sub/mult/div/mixed）——同为题面已构造事实，不虚构。
+    variation: (sq.data && (sq.data.subType || sq.data.mode || sq.data.operation)) || null,
             structure: {
               stem: sq.stem || sq.question || (sq.data && sq.data.prompt) || sq.prompt || null,
               options: sq.options || (sq.data && sq.data.options) || null,
@@ -162,7 +283,7 @@ var familyStats = [];
               warnings: (evResult.warnings || []).length
             },
             source: 'ai-candidate',
-            humanReview: 'pending'
+            humanReview: 'llm-finalized'
           });
           collected++;
           totalCollected++;
@@ -181,7 +302,7 @@ var familyStats = [];
     generatedAt: new Date().toISOString(),
     purpose: 'P25-16 黄金题集 — 15 语义族 × ~20 题 AI 候选 + 自动结构验证（SEMANTIC_PASS）',
     source: 'ai-candidate',
-    reviewStatus: 'pending-human-confirmation',
+    reviewStatus: 'llm-finalized-dev',
     counts: {
       total: goldenQuestions.length,
       families: familyStats.length,
@@ -201,5 +322,5 @@ var familyStats = [];
     console.log('    ' + s.family + ' (' + s.name + ') — ' + s.collected + ' 题');
   });
   console.log('  产出：' + path.relative(ROOT, outPath));
-  console.log('  全部 humanReview=pending，待人工确认后翻 confirmed');
+  console.log('  全部 humanReview=llm-finalized（LLM 开发期定案；机器生成 + SEMANTIC_PASS 验证为质量保险）');
 })();

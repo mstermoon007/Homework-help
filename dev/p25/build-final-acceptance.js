@@ -127,7 +127,7 @@ var eduPass = eduGenReport && eduGenReport.summary
   ? (eduGenReport.summary.pass || 0) : null;
 metrics.push({
   key: 'aClassSemanticPass',
-  expected: 921,
+  expected: 939,
   actual: eduPass,
   status: eduGenReport && eduGenReport.summary && eduGenReport.summary.semanticFail === 0
     ? 'pass' : 'fail',

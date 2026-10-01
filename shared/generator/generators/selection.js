@@ -10,6 +10,7 @@
 
 var Rng = require('../core/rng.js');
 var Arith = require('../core/arithmetic-core.js');
+var SemanticEvidence = require('../core/semantic-evidence.js');
 var VariationApply = require('../core/variation-apply.js');
 
 // Refactor Step 2：QuestionPlan 主知识点 ID（数组唯一语义；边界兼容旧单数）
@@ -34,11 +35,39 @@ function createSelectionGenerator(spec) {
     return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
   }
 
+  // FINAL-31c 同源（见 application.js）：KP 语义运算约束。真源 plan.semanticParams.operations
+  // （SemanticParameters.attachToPlan 注入的 KBL semantic.operations，token 为
+  // addition/subtraction/multiplication/division）。KP 显式声明运算时，题面算式必须落在
+  // 允许集内，杜绝「乘除 KP（如 g2-down-u07-k002 数量关系整合）产出加法口算」的语义错位。
+  // operations 为空（KP 无显式运算约束）时不过滤，保持原行为。
+  var OP_ALIAS = {
+    addition: 'add', subtraction: 'sub', multiplication: 'mult', division: 'div',
+    add: 'add', sub: 'sub', mult: 'mult', div: 'div'
+  };
+  function kpAllowedOps(plan) {
+    var ops = plan && plan.semanticParams && plan.semanticParams.operations;
+    var out = [];
+    if (Array.isArray(ops)) {
+      ops.forEach(function (o) {
+        var t = OP_ALIAS[o];
+        if (t && out.indexOf(t) === -1) out.push(t);
+      });
+    }
+    return out.length ? out : null;
+  }
+
   function baseArithmetic(plan, context, i) {
     var constraints = plan.constraints || {};
     var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+    var operation = context.operation || plan.operation || 'mixed';
+    // KP 运算约束：声明的运算 ∉ 允许集（含默认 'mixed'）→ 从允许集确定性择一，
+    // 并按运算收束算符池（generateStructure 对 'mult'/'div' 只出对应算符）。
+    var allowedOps = kpAllowedOps(plan);
+    if (allowedOps && allowedOps.indexOf(Arith.normalizeOperation(operation)) === -1) {
+      operation = allowedOps[Math.floor(rng() * allowedOps.length)];
+    }
     var structure = Arith.generateStructure(rng, {
-      operation: context.operation || plan.operation || 'mixed',
+      operation: operation,
       numberRange: constraints.numberRange,
       maxSteps: constraints.maxSteps,
       allowBracket: constraints.allowBracket,
@@ -46,7 +75,7 @@ function createSelectionGenerator(spec) {
       noNegative: true
     });
     var answer = Arith.calculateAnswer(structure.operands, structure.operators);
-    return { rng: rng, structure: structure, answer: answer, constraints: constraints };
+    return { rng: rng, structure: structure, answer: answer, constraints: constraints, operation: operation };
   }
 
   function buildBase(plan, context, i, extra) {
@@ -77,7 +106,7 @@ function createSelectionGenerator(spec) {
     var expr = Arith.formatExpression(base.structure.operands, base.structure.operators);
 
     if (mode === 'fill') {
-      var qFill = buildBase(plan, context, i, { mode: 'fill', steps: base.structure.steps });
+      var qFill = buildBase(plan, context, i, { mode: 'fill', operation: base.operation, steps: base.structure.steps });
       qFill.prompt = expr + ' = ____';
       qFill.answer = { value: String(base.answer), acceptable: [] };
       return qFill;
@@ -90,7 +119,7 @@ function createSelectionGenerator(spec) {
         distractors = Arith.generateDistractors(base.rng, base.answer, 3, null);
       }
       var options = Rng.shuffle(base.rng, distractors.concat([base.answer]).map(String));
-      var qChoice = buildBase(plan, context, i, { mode: 'choice', steps: base.structure.steps });
+      var qChoice = buildBase(plan, context, i, { mode: 'choice', operation: base.operation, steps: base.structure.steps });
       qChoice.prompt = expr + ' = ?';
       qChoice.answer = { value: String(base.answer), acceptable: [] };
       qChoice.data.options = options;
@@ -103,7 +132,7 @@ function createSelectionGenerator(spec) {
     var shown = isTrue
       ? base.answer
       : base.answer + Rng.pick(base.rng, [-1, 1]) * Rng.randInt(base.rng, 1, 2);
-    var qJudge = buildBase(plan, context, i, { mode: 'judge', steps: base.structure.steps, shownResult: String(shown) });
+    var qJudge = buildBase(plan, context, i, { mode: 'judge', operation: base.operation, steps: base.structure.steps, shownResult: String(shown) });
     qJudge.prompt = expr + ' = ' + shown + '（对还是错？）';
     qJudge.answer = {
       value: isTrue,
@@ -137,7 +166,9 @@ function createSelectionGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i));
       }
-      return VariationApply.applyToAll(questions, plan);
+      // FINAL-33 同源（见 arithmetic.js）：Generator 自声明 semanticEvidence（依据题面
+      // 真实 data.operation 派生 relations/constructs），诚实性由 validator 检查 7/8 把关。
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
   return generator;

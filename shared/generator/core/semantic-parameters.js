@@ -181,14 +181,23 @@
     // （number-theory 规则已上移至规则表首位，理由见上）
     nameConceptRule('algebra-letter', ['number-sense'], /字母|含有字母的式子/),
     nameConceptRule('negative-number', ['number-sense'], /正负数|负数|数轴/),
-    nameConceptRule('number-concept', ['number-sense'],
-      /组成|读数|写数|读写|认识|数位|顺序|计数单位|亿|近似数|改写|百数表|大小比较|比较|相邻|算盘/),
+    // —— P28-FIX6 整数运算策略/规范概念（concept-meaning 消费）——
+    // 必须位于 number-concept 之前：「有括号运算顺序」名称含「顺序」，后置会被 number-concept 截胡。
+    // 挂 integer-arithmetic 族后该族收窄非空（此前回退全扫），故 number-concept / multdiv-relation
+    // 的 families 同步扩 integer-arithmetic——否则 g4-down-u01-k003「四则混合运算顺序」（全扫命中
+    // number-concept「顺序」）、g2-down-u05-k003 / g4-down-u01-k001「…各部分…关系」（全扫命中
+    // multdiv-relation「各部分」）在 Node 收窄路径丢失命中，双环境漂移。
+    nameConceptRule('make-ten', ['integer-arithmetic'], /凑十/),
+    nameConceptRule('bracket-order', ['integer-arithmetic'], /括号/),
+    nameConceptRule('stepwise-format', ['integer-arithmetic'], /脱式/),
+    nameConceptRule('number-concept', ['number-sense', 'integer-arithmetic'],
+      /数数|组成|读数|写数|读写|认识|数位|顺序|计数单位|亿|近似数|改写|百数表|大小比较|比较|相邻|算盘/),
     // —— P25-09 乘除关系族（concept-meaning 消费）——
     // 名称正则必须自带运算语境：裸「意义/关系」会在 bundle 降级全扫路径跨族误匹配
     // （如「比例的意义」被本规则截胡，ratio-basics 无法命中 → 双环境不一致）。
     // 真正承载的 7 KP：余数和除数的关系/乘除法互逆关系/加减法各部分名称与关系/
     // 加减法的意义和各部分间的关系/乘除法的意义和各部分间的关系/平均数的意义/商与被除数的大小关系。
-    nameConceptRule('multdiv-relation', ['multiplicative-relation'],
+    nameConceptRule('multdiv-relation', ['multiplicative-relation', 'integer-arithmetic'],
       /互逆|各部分|余数|被除数|平均数的意义/),
     // —— P25-09 比例基础（semantic-relations 消费）——
     nameConceptRule('scale-map', ['ratio-proportion'], /比例尺/),

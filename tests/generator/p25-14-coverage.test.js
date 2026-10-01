@@ -7,7 +7,7 @@
  *   1. dev/p25/build-coverage-report.js 产出 dev/p25/reports/coverage-report.json
  *   2. 报告含 7 维覆盖率统计（kpSemantic/questionTypeSemantic/generatorSemantic/
  *      evidence/variation/misconception/learnerFeedback）
- *   3. 基线数字匹配：375 KP / 1570 ALLOW / 307 A 类
+ *   3. 基线数字匹配：375 KP / 1570 ALLOW / 313 A 类
  *   4. 每个 dimension 的 fields 含 status 字段（implemented | declared-only）
  *   5. 至少 5/7 维全 implemented（允许 2 项 declared-only：kp-matrix.json 与
  *      variation-profiles.json 为 dev-only 基线/观察产物，非生产消费对象）
@@ -46,11 +46,11 @@ test('P25-14 #2：含 7 维覆盖率统计', () => {
   assert.equal(report.dimensions.length, 7, '维度总数 = 7');
 });
 
-test('P25-14 #3：基线数字匹配 375 / 1570 / 307', () => {
+test('P25-14 #3：基线数字匹配 375 / 1570 / 313', () => {
   const report = runReport();
   assert.equal(report.baseline.knowledgePoints, 375, 'KP 总数 = 375');
   assert.equal(report.baseline.allowMappings, 1570, 'ALLOW 总数 = 1570');
-  assert.equal(report.baseline.aClassKPs, 307, 'A 类 KP = 307');
+  assert.equal(report.baseline.aClassKPs, 313, 'A 类 KP = 313');
 });
 
 test('P25-14 #4：每个 dimension fields 含 status 字段', () => {

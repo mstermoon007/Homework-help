@@ -31,7 +31,7 @@ test('1. kbl = 375', () => assertMetric('kbl', 375));
 test('2. allow = 1570', () => assertMetric('allow', 1570));
 test('3. realGen = 1570', () => assertMetric('realGen', 1570));
 test('4. questionTypes = 7', () => assertMetric('questionTypes', 7));
-test('5. aClassSemanticPass = 921', () => assertMetric('aClassSemanticPass', 921));
+test('5. aClassSemanticPass = 939', () => assertMetric('aClassSemanticPass', 939));
 test('6. goldenPass = 100', () => assertMetric('goldenPass', 100));
 test('7. variation = pass', () => assertMetric('variation', 'pass'));
 test('8. misconception = pass', () => assertMetric('misconception', 'pass'));

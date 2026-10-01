@@ -3624,11 +3624,11 @@ __defs["shared/generator/generator-registry.js"] = function (module, exports, re
 
 var CORE_RECORDS = [
   
-  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k001', 'math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k001', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u03-k001', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g1-up-u04-k001', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002', 'math-g4-up-u01-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k001', 'math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k003', 'math-g2-up-u02-k004', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g5-down-u02-k002'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g5-down-u02-k001', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'geometry', 'calc', 'apply'], questionTypes: ['fill', 'geometry', 'calc', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'geometry', 'calc', 'apply'], questionTypes: ['choice', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'geometry', 'calc', 'apply'], questionTypes: ['judge', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
@@ -3726,8 +3726,12 @@ var CORE_RECORDS = [
   
   
   
+  
+  
+  
   { id: 'generator:concept-meaning', subject: 'math', capabilities: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'], questionTypes: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'],
-    knowledgePoints: ['math-g2-down-u03-k003', 'math-g3-up-u07-k002', 'math-g3-down-u04-k001', 'math-g5-down-u04-k001', 'math-g1-down-u03-k002', 'math-g1-down-u03-k003', 'math-g1-down-u03-k004', 'math-g1-down-u03-k005', 'math-g1-down-u03-k006', 'math-g1-up-u02-k001', 'math-g1-up-u04-k002', 'math-g2-down-u04-k001', 'math-g2-down-u04-k002', 'math-g2-down-u04-k003', 'math-g2-down-u04-k004', 'math-g2-down-u04-k005', 'math-g2-down-u04-k006', 'math-g4-up-u01-k002', 'math-g4-up-u01-k003', 'math-g4-up-u01-k004', 'math-g4-up-u01-k005', 'math-g4-up-u01-k006', 'math-g5-up-u05-k004', 'math-g5-down-u02-k003', 'math-g5-down-u02-k004', 'math-g5-down-u02-k005', 'math-g5-down-u02-k006', 'math-g6-down-u01-k001', 'math-g6-down-u01-k002', 'math-g6-down-u01-k003', 'math-g6-down-u01-k004', 'math-g6-up-u07-k001', 'math-g6-up-u07-k002', 'math-g6-up-u07-k003', 'math-g5-up-u05-k001', 'math-g5-up-u05-k002', 'math-g5-up-u05-k003', 'math-g2-down-u03-k001', 'math-g4-down-u01-k002', 'math-g2-down-u03-k004', 'math-g2-down-u03-k005', 'math-g1-up-u01-k001'],
+    knowledgePoints: ['math-g2-down-u03-k003', 'math-g3-up-u07-k002', 'math-g3-down-u04-k001', 'math-g5-down-u04-k001', 'math-g1-down-u03-k002', 'math-g1-down-u03-k003', 'math-g1-down-u03-k004', 'math-g1-down-u03-k005', 'math-g1-down-u03-k006', 'math-g1-up-u02-k001', 'math-g1-up-u04-k002', 'math-g2-down-u04-k001', 'math-g2-down-u04-k002', 'math-g2-down-u04-k003', 'math-g2-down-u04-k004', 'math-g2-down-u04-k005', 'math-g2-down-u04-k006', 'math-g4-up-u01-k002', 'math-g4-up-u01-k003', 'math-g4-up-u01-k004', 'math-g4-up-u01-k005', 'math-g4-up-u01-k006', 'math-g5-up-u05-k004', 'math-g5-down-u02-k003', 'math-g5-down-u02-k004', 'math-g5-down-u02-k005', 'math-g5-down-u02-k006', 'math-g6-down-u01-k001', 'math-g6-down-u01-k002', 'math-g6-down-u01-k003', 'math-g6-down-u01-k004', 'math-g6-up-u07-k001', 'math-g6-up-u07-k002', 'math-g6-up-u07-k003', 'math-g5-up-u05-k001', 'math-g5-up-u05-k002', 'math-g5-up-u05-k003', 'math-g2-down-u03-k001', 'math-g4-down-u01-k002', 'math-g2-down-u03-k004', 'math-g2-down-u03-k005', 'math-g1-up-u01-k001',
+      'math-g1-down-u03-k001', 'math-g1-up-u04-k001', 'math-g4-up-u01-k001', 'math-g1-up-u05-k001', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004'],
     scope: 'core', version: 1, supportsComposite: false },
 
   
@@ -5533,14 +5537,23 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
     
     nameConceptRule('algebra-letter', ['number-sense'], /字母|含有字母的式子/),
     nameConceptRule('negative-number', ['number-sense'], /正负数|负数|数轴/),
-    nameConceptRule('number-concept', ['number-sense'],
-      /组成|读数|写数|读写|认识|数位|顺序|计数单位|亿|近似数|改写|百数表|大小比较|比较|相邻|算盘/),
     
     
     
     
     
-    nameConceptRule('multdiv-relation', ['multiplicative-relation'],
+    
+    nameConceptRule('make-ten', ['integer-arithmetic'], /凑十/),
+    nameConceptRule('bracket-order', ['integer-arithmetic'], /括号/),
+    nameConceptRule('stepwise-format', ['integer-arithmetic'], /脱式/),
+    nameConceptRule('number-concept', ['number-sense', 'integer-arithmetic'],
+      /数数|组成|读数|写数|读写|认识|数位|顺序|计数单位|亿|近似数|改写|百数表|大小比较|比较|相邻|算盘/),
+    
+    
+    
+    
+    
+    nameConceptRule('multdiv-relation', ['multiplicative-relation', 'integer-arithmetic'],
       /互逆|各部分|余数|被除数|平均数的意义/),
     
     nameConceptRule('scale-map', ['ratio-proportion'], /比例尺/),
@@ -6505,6 +6518,7 @@ __defs["shared/generator/generators/selection.js"] = function (module, exports, 
 
 var Rng = require("shared/generator/core/rng.js");
 var Arith = require("shared/generator/core/arithmetic-core.js");
+var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
 var VariationApply = require("shared/generator/core/variation-apply.js");
 
 
@@ -6529,11 +6543,39 @@ function createSelectionGenerator(spec) {
     return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
   }
 
+  
+  
+  
+  
+  
+  var OP_ALIAS = {
+    addition: 'add', subtraction: 'sub', multiplication: 'mult', division: 'div',
+    add: 'add', sub: 'sub', mult: 'mult', div: 'div'
+  };
+  function kpAllowedOps(plan) {
+    var ops = plan && plan.semanticParams && plan.semanticParams.operations;
+    var out = [];
+    if (Array.isArray(ops)) {
+      ops.forEach(function (o) {
+        var t = OP_ALIAS[o];
+        if (t && out.indexOf(t) === -1) out.push(t);
+      });
+    }
+    return out.length ? out : null;
+  }
+
   function baseArithmetic(plan, context, i) {
     var constraints = plan.constraints || {};
     var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+    var operation = context.operation || plan.operation || 'mixed';
+    
+    
+    var allowedOps = kpAllowedOps(plan);
+    if (allowedOps && allowedOps.indexOf(Arith.normalizeOperation(operation)) === -1) {
+      operation = allowedOps[Math.floor(rng() * allowedOps.length)];
+    }
     var structure = Arith.generateStructure(rng, {
-      operation: context.operation || plan.operation || 'mixed',
+      operation: operation,
       numberRange: constraints.numberRange,
       maxSteps: constraints.maxSteps,
       allowBracket: constraints.allowBracket,
@@ -6541,7 +6583,7 @@ function createSelectionGenerator(spec) {
       noNegative: true
     });
     var answer = Arith.calculateAnswer(structure.operands, structure.operators);
-    return { rng: rng, structure: structure, answer: answer, constraints: constraints };
+    return { rng: rng, structure: structure, answer: answer, constraints: constraints, operation: operation };
   }
 
   function buildBase(plan, context, i, extra) {
@@ -6572,7 +6614,7 @@ function createSelectionGenerator(spec) {
     var expr = Arith.formatExpression(base.structure.operands, base.structure.operators);
 
     if (mode === 'fill') {
-      var qFill = buildBase(plan, context, i, { mode: 'fill', steps: base.structure.steps });
+      var qFill = buildBase(plan, context, i, { mode: 'fill', operation: base.operation, steps: base.structure.steps });
       qFill.prompt = expr + ' = ____';
       qFill.answer = { value: String(base.answer), acceptable: [] };
       return qFill;
@@ -6585,7 +6627,7 @@ function createSelectionGenerator(spec) {
         distractors = Arith.generateDistractors(base.rng, base.answer, 3, null);
       }
       var options = Rng.shuffle(base.rng, distractors.concat([base.answer]).map(String));
-      var qChoice = buildBase(plan, context, i, { mode: 'choice', steps: base.structure.steps });
+      var qChoice = buildBase(plan, context, i, { mode: 'choice', operation: base.operation, steps: base.structure.steps });
       qChoice.prompt = expr + ' = ?';
       qChoice.answer = { value: String(base.answer), acceptable: [] };
       qChoice.data.options = options;
@@ -6598,7 +6640,7 @@ function createSelectionGenerator(spec) {
     var shown = isTrue
       ? base.answer
       : base.answer + Rng.pick(base.rng, [-1, 1]) * Rng.randInt(base.rng, 1, 2);
-    var qJudge = buildBase(plan, context, i, { mode: 'judge', steps: base.structure.steps, shownResult: String(shown) });
+    var qJudge = buildBase(plan, context, i, { mode: 'judge', operation: base.operation, steps: base.structure.steps, shownResult: String(shown) });
     qJudge.prompt = expr + ' = ' + shown + '（对还是错？）';
     qJudge.answer = {
       value: isTrue,
@@ -6632,7 +6674,9 @@ function createSelectionGenerator(spec) {
       for (var i = 0; i < count; i++) {
         questions.push(makeQuestion(plan, context, i));
       }
-      return VariationApply.applyToAll(questions, plan);
+      
+      
+      return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
   };
   return generator;
@@ -11619,6 +11663,53 @@ function buildCompositionItem(rng) {
 function buildNumberConceptItem(rng, name) {
   
   
+  if (name.indexOf('数数') !== -1) {
+    var parts = [];
+    if (rng() < 0.5) {
+      var ct = ri(rng, 2, 10);
+      var tensTotal = ct * 10;
+      var steps;
+      if (ct <= 6) {
+        for (var k = 0; k < ct; k++) parts.push('10');
+        steps = parts.join(' + ') + ' = ' + tensTotal;
+      } else {
+        steps = ((ct - 1) * 10) + ' + 10 = ' + tensTotal;
+      }
+      return { stem: '十个十个地数：数 ' + ct + ' 次是多少？（参考：' + steps + '）',
+        answer: String(tensTotal), options: [String(tensTotal), String(tensTotal + 10), String(tensTotal - 10)],
+        apply: '一捆小棒 10 根，' + ct + ' 捆小棒十个十个地数（' + steps + '），' + ct + ' 个十是多少根？',
+        operation: 'add' };
+    }
+    var co = ri(rng, 2, 9);
+    var ones;
+    if (co <= 5) {
+      for (var k2 = 0; k2 < co; k2++) parts.push('1');
+      ones = parts.join(' + ') + ' = ' + co;
+    } else {
+      ones = (co - 1) + ' + 1 = ' + co;
+    }
+    return { stem: '一个一个地数：' + co + ' 个一是多少？（参考：' + ones + '）',
+      answer: String(co), options: [String(co), String(co + 1), String(co + 10)],
+      apply: '数小棒，一根一根地数，数了 ' + co + ' 根（' + ones + '），' + co + ' 个一是多少根？',
+      operation: 'add' };
+  }
+  
+  if (name.indexOf('11—20') !== -1 || name.indexOf('11-20') !== -1 ||
+      name.indexOf('11～20') !== -1 || name.indexOf('11~20') !== -1) {
+    var o2 = ri(rng, 1, 9);
+    var n2 = 10 + o2;
+    if (rng() < 0.5) {
+      return { stem: n2 + ' 里面有几个十和几个一？（参考：10 + ' + o2 + ' = ' + n2 + '）',
+        answer: '1 个十和 ' + o2 + ' 个一',
+        options: ['1 个十和 ' + o2 + ' 个一', o2 + ' 个十和 1 个一', n2 + ' 个十'],
+        apply: '摆小棒表示 ' + n2 + '（10 + ' + o2 + ' = ' + n2 + '），要摆 1 捆（10 根）零几根？' };
+    }
+    return { stem: '计数器十位 1 颗珠、个位 ' + o2 + ' 颗珠（1 个十和 ' + o2 + ' 个一，10 + ' + o2 + ' = ' + n2 + '），这个数写作多少？',
+      answer: String(n2), options: [String(n2), String(1 + o2), String(o2 * 10 + 1)],
+      apply: '数一数：十位拨 1 颗、个位拨 ' + o2 + ' 颗，1 个十和 ' + o2 + ' 个一合起来写作多少？（10 + ' + o2 + ' = ' + n2 + '）' };
+  }
+  
+  
   if (name.indexOf('1-5') !== -1 || name.indexOf('1～5') !== -1) {
     var n5 = ri(rng, 2, 5);
     return { stem: '数一数：' + n5 + ' 前面一个数是多少？（参考：' + n5 + ' − 1 = ' + (n5 - 1) + '）',
@@ -11698,6 +11789,43 @@ function buildNumberConceptItem(rng, name) {
   return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '），写作多少？',
     answer: String(t1 * 10 + o1), options: [String(t1 * 10 + o1), String(t1 + o1), String(o1 * 10 + t1)],
     apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' 个十和 ' + o1 + ' 个一合起来写作多少？（' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '）' };
+}
+
+
+
+function buildMakeTenItem(rng) {
+  var a = ri(rng, 8, 9);
+  var need = 10 - a;
+  var b = ri(rng, need + 1, 9);
+  var rest = b - need;
+  var sum = a + b;
+  return { stem: '用凑十法计算：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + ' = ？（先把 ' + a + ' 凑成 10，10 + ' + rest + ' = ' + sum + '）',
+    answer: String(sum), options: [String(sum), String(sum - 1), String(sum + 1)],
+    apply: '小兔采蘑菇，上午采 ' + a + ' 个、下午采 ' + b + ' 个。用凑十法：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + '，一共采了多少个？',
+    operation: 'add' };
+}
+
+
+function buildBracketOrderItem(rng) {
+  var x = ri(rng, 2, 9), y = ri(rng, 2, 9), z = ri(rng, 2, 5);
+  var inner = x + y;
+  var ans = inner * z;
+  return { stem: '先算小括号里面的：(' + x + ' + ' + y + ') × ' + z + ' = ' + inner + ' × ' + z + ' = ？（先算 ' + x + ' + ' + y + ' = ' + inner + '）',
+    answer: String(ans), options: [String(ans), String(x + y * z), String(ans - z)],
+    apply: '商店上午卖出 ' + x + ' 个、下午卖出 ' + y + ' 个气球，每个气球 ' + z + ' 元。先算一共卖出多少个，再算卖了多少元：(' + x + ' + ' + y + ') × ' + z + ' = ？元',
+    operation: 'mixed' };
+}
+
+
+function buildStepwiseItem(rng) {
+  var a = ri(rng, 12, 49), b = ri(rng, 11, 39);
+  var s1 = a + b;
+  var c = ri(rng, 2, s1 - 1);
+  var ans = s1 - c;
+  return { stem: '按脱式计算规范一步一步算：' + a + ' + ' + b + ' − ' + c + ' = ' + s1 + ' − ' + c + ' = ？（第一步 ' + a + ' + ' + b + ' = ' + s1 + '）',
+    answer: String(ans), options: [String(ans), String(s1), String(a + b + c)],
+    apply: '图书角原有 ' + a + ' 本书，又买来 ' + b + ' 本，借出 ' + c + ' 本。脱式：' + a + ' + ' + b + ' − ' + c + ' = ' + s1 + ' − ' + c + '，还剩多少本？',
+    operation: 'mixed' };
 }
 
 function buildNegativeItem(rng, name) {
@@ -11852,6 +11980,9 @@ function makeNegativeNumber(plan, context, i) { return makeByItem(plan, context,
 function makeMultDivRelation(plan, context, i) { return makeByItem(plan, context, i, buildMultDivRelationItem, 'multdiv-relation'); }
 function makeAlgebraLetter(plan, context, i) { return makeByItem(plan, context, i, buildAlgebraLetterItem, 'algebra-letter'); }
 function makeNumberTheory(plan, context, i) { return makeByItem(plan, context, i, buildNumberTheoryItem, 'number-theory'); }
+function makeMakeTen(plan, context, i) { return makeByItem(plan, context, i, buildMakeTenItem, 'make-ten'); }
+function makeBracketOrder(plan, context, i) { return makeByItem(plan, context, i, buildBracketOrderItem, 'bracket-order'); }
+function makeStepwise(plan, context, i) { return makeByItem(plan, context, i, buildStepwiseItem, 'stepwise-format'); }
 
 var P25_09_SUBTOPIC_QTS = ['calc', 'fill', 'apply', 'choice'];
 function bindP2509(fn) {
@@ -11872,7 +12003,11 @@ var SUBTOPIC_MAKERS = {
   'negative-number': bindP2509(makeNegativeNumber),
   'multdiv-relation': bindP2509(makeMultDivRelation),
   'algebra-letter': bindP2509(makeAlgebraLetter),
-  'number-theory': bindP2509(makeNumberTheory)
+  'number-theory': bindP2509(makeNumberTheory),
+  
+  'make-ten': bindP2509(makeMakeTen),
+  'bracket-order': bindP2509(makeBracketOrder),
+  'stepwise-format': bindP2509(makeStepwise)
 };
 
 
@@ -13710,34 +13845,57 @@ function normalizeOp(op) {
 function derive(sq, kpOpsNorm) {
   var data = sq && sq.data;
   var relations = [];
+  var algoOps = []; 
   if (data && data.operation != null) {
     var raw = Array.isArray(data.operation) ? data.operation : [data.operation];
+    
+    
+    
+    var kpBase = kpOpsNorm ? ['add', 'sub', 'mult', 'div'].filter(function (n) { return kpOpsNorm.indexOf(n) !== -1; }) : null;
+    var opAllowed = function (n) {
+      if (!kpOpsNorm) return true;
+      if (kpOpsNorm.indexOf(n) !== -1) return true; 
+      if (kpOpsNorm.indexOf('mixed') !== -1 && kpBase.length === 0) return true; 
+      return false;
+    };
     raw.forEach(function (op) {
       var norm = normalizeOp(op);
       
       
-      
-      
-      if (kpOpsNorm && kpOpsNorm.indexOf(norm) === -1) return;
       if (norm === 'mixed') {
-        MIXED_RELATIONS.forEach(function (r) {
-          if (relations.indexOf(r) === -1) relations.push(r);
+        ['add', 'sub', 'mult', 'div'].forEach(function (n) {
+          if (!opAllowed(n)) return;
+          var mr = OP_TO_RELATION[n];
+          if (mr && relations.indexOf(mr) === -1) relations.push(mr);
+          if (algoOps.indexOf(n) === -1) algoOps.push(n);
         });
         return;
       }
+      
+      
+      if (!opAllowed(norm)) return;
       var rel = OP_TO_RELATION[norm];
       if (rel && relations.indexOf(rel) === -1) relations.push(rel);
+      if (rel && algoOps.indexOf(norm) === -1) algoOps.push(norm);
     });
   }
   
   
-  return { relations: relations, constructs: deriveConstructs(data) };
+  return { relations: relations, constructs: deriveConstructs(data, algoOps) };
 }
 
 function pushUniq(arr, v) { if (v && arr.indexOf(v) === -1) arr.push(v); }
 
 
-function deriveConstructs(data) {
+
+var ALGO_CONSTRUCT = {
+  add: 'addition',
+  sub: 'subtraction',
+  mult: 'multiplication',
+  div: 'division'
+};
+
+function deriveConstructs(data, algoOps) {
   if (!data || typeof data !== 'object') return [];
   var c = [];
   
@@ -13774,6 +13932,11 @@ function deriveConstructs(data) {
     if (data.items != null) pushUniq(c, 'items');
     pushUniq(c, 'ordered-or-classified-result');
   }
+  
+  
+  if (c.length === 0 && Array.isArray(algoOps)) {
+    algoOps.forEach(function (op) { pushUniq(c, ALGO_CONSTRUCT[op]); });
+  }
   return c;
 }
 
@@ -13782,9 +13945,9 @@ function attach(sq, kpOperations) {
   if (!sq || !sq.data || sq.data.semanticEvidence) return sq;
   var kpOpsNorm = null;
   if (kpOperations && kpOperations.length) {
-    kpOpsNorm = kpOperations.map(normalizeOp).filter(function (op) {
-      return op && op !== 'mixed';
-    });
+    
+    
+    kpOpsNorm = kpOperations.map(normalizeOp).filter(Boolean);
   } else if (kpOperations && Array.isArray(kpOperations) && kpOperations.length === 0) {
     
     

@@ -15,7 +15,7 @@
  *   5. ALLOW 基线 = 1570（实时跑 buildEligibility 统计）
  *   6. educational-generation-report.json 存在且 semanticFail = 0
  *   7. golden-validation-report.json passed = true（0 errors）
- *   8. 黄金题 kpId 全部 ∈ A 类 KP 集合
+ *   8. 黄金题 kpId 全部 ∈ kp-matrix 375 KP（A 类概念 + B/C 通用算法）
  *   9. 黄金题 questionType 全部 ∈ apply/choice/fill
  *  10. coverage-report.json 无新增 declared-only 字段（newDeclaredOnly = 0）
  */
@@ -39,9 +39,8 @@ const EDU_GEN_REPORT = JSON.parse(fs.readFileSync(path.join(ROOT, 'dev', 'p25', 
 const GOLDEN_VAL_REPORT = JSON.parse(fs.readFileSync(path.join(ROOT, 'dev', 'p25', 'reports', 'golden-validation-report.json'), 'utf8'));
 const COVERAGE_REPORT = JSON.parse(fs.readFileSync(path.join(ROOT, 'dev', 'p25', 'reports', 'coverage-report.json'), 'utf8'));
 
-const aClassKpIds = new Set(
-  MATRIX.kps.filter(function (k) { return k.draftSemanticLevel === 'A'; }).map(function (k) { return k.id; })
-);
+// 合法 KP = kp-matrix 全部 375 KP（golden 收录门槛为 SEMANTIC_PASS，含 A 类概念 + B/C 通用算法）。
+const knownKpIds = new Set(MATRIX.kps.map(function (k) { return k.id; }));
 
 // ---------- CI 接线（4） ----------
 
@@ -97,9 +96,9 @@ test('7. golden-validation-report.json passed = true（0 errors）', () => {
   assert.equal(GOLDEN_VAL_REPORT.errors.length, 0, '0 errors');
 });
 
-test('8. 黄金题 kpId 全部 ∈ A 类 KP 集合', () => {
+test('8. 黄金题 kpId 全部 ∈ kp-matrix 375 KP（A 类概念 + B/C 通用算法）', () => {
   (GOLDEN.questions || []).forEach(function (q, i) {
-    assert.ok(aClassKpIds.has(q.kpId), 'Q' + i + ' kpId ' + q.kpId + ' ∈ A 类 KP');
+    assert.ok(knownKpIds.has(q.kpId), 'Q' + i + ' kpId ' + q.kpId + ' ∈ kp-matrix 375 KP');
   });
 });
 

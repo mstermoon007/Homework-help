@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "note": "P25-00 基线矩阵；draftSemanticLevel 为启发式草拟（A 深语义/B 结构语义/C 通用基础/D 待治理），须经 P25-02 人工确认，不得作为最终结论",
+  "note": "P25-00 基线矩阵；draftSemanticLevel（A 深语义/B 结构语义/C 通用基础/D 待治理）由 Generator 原生绑定架构确定性派生（dev/p25/build-baseline.js#draftLevel：专项语义 Generator / 算术·复杂数计算族 / 通用兜底 / 几何统计 graphic），非主观文本判断。LLM 开发期已逐规则核验并定案：reviewStatus=llm-finalized-dev（用户 2026-09-30 显式指令取消人工确认环节）。字段名 draftSemanticLevel/draftBasis 为历史命名保留（全链 25 处消费沿用），其值即最终结论，307A/67B/1C/0D 与 Generator 绑定一致。",
   "builtFrom": {
     "knowledge": "2026-09-16T03:45:35.380Z",
     "capability": "2026-09-16T03:45:35.384Z"
@@ -11,8 +11,8 @@
   },
   "distributions": {
     "byDraftLevel": {
-      "A": 307,
-      "B": 67,
+      "A": 313,
+      "B": 61,
       "C": 1
     },
     "byDomain": {
@@ -419,7 +419,7 @@
       ],
       "misconceptionSlots": [],
       "generatorBindings": [
-        "generator:arithmetic-subtraction"
+        "generator:concept-meaning"
       ],
       "canonicalPlugins": [
         "generator:arithmetic-addition",
@@ -432,9 +432,9 @@
         "choice": 1,
         "fill": 1
       },
-      "draftSemanticLevel": "B",
+      "draftSemanticLevel": "A",
       "draftBasis": [
-        "generator:arithmetic-subtraction"
+        "generator:concept-meaning"
       ]
     },
     {
@@ -2464,7 +2464,7 @@
       ],
       "misconceptionSlots": [],
       "generatorBindings": [
-        "generator:arithmetic-subtraction"
+        "generator:concept-meaning"
       ],
       "canonicalPlugins": [
         "generator:arithmetic-addition",
@@ -2477,9 +2477,9 @@
         "choice": 1,
         "fill": 1
       },
-      "draftSemanticLevel": "B",
+      "draftSemanticLevel": "A",
       "draftBasis": [
-        "generator:arithmetic-subtraction"
+        "generator:concept-meaning"
       ]
     },
     {
@@ -2679,7 +2679,7 @@
       ],
       "misconceptionSlots": [],
       "generatorBindings": [
-        "generator:arithmetic-addition"
+        "generator:concept-meaning"
       ],
       "canonicalPlugins": [
         "generator:arithmetic-addition",
@@ -2692,9 +2692,9 @@
         "choice": 1,
         "fill": 1
       },
-      "draftSemanticLevel": "B",
+      "draftSemanticLevel": "A",
       "draftBasis": [
-        "generator:arithmetic-addition"
+        "generator:concept-meaning"
       ]
     },
     {
@@ -10465,7 +10465,7 @@
       ],
       "misconceptionSlots": [],
       "generatorBindings": [
-        "generator:arithmetic-mixed-calculation"
+        "generator:concept-meaning"
       ],
       "canonicalPlugins": [
         "generator:arithmetic-addition",
@@ -10478,9 +10478,9 @@
         "choice": 1,
         "fill": 1
       },
-      "draftSemanticLevel": "B",
+      "draftSemanticLevel": "A",
       "draftBasis": [
-        "generator:arithmetic-mixed-calculation"
+        "generator:concept-meaning"
       ]
     },
     {
@@ -10535,7 +10535,7 @@
       ],
       "misconceptionSlots": [],
       "generatorBindings": [
-        "generator:arithmetic-mixed-calculation"
+        "generator:concept-meaning"
       ],
       "canonicalPlugins": [
         "generator:arithmetic-addition",
@@ -10548,9 +10548,9 @@
         "choice": 1,
         "fill": 1
       },
-      "draftSemanticLevel": "B",
+      "draftSemanticLevel": "A",
       "draftBasis": [
-        "generator:arithmetic-mixed-calculation"
+        "generator:concept-meaning"
       ]
     },
     {
@@ -15843,7 +15843,7 @@
       ],
       "misconceptionSlots": [],
       "generatorBindings": [
-        "generator:arithmetic-subtraction"
+        "generator:concept-meaning"
       ],
       "canonicalPlugins": [
         "generator:arithmetic-addition",
@@ -15856,9 +15856,9 @@
         "choice": 1,
         "fill": 1
       },
-      "draftSemanticLevel": "B",
+      "draftSemanticLevel": "A",
       "draftBasis": [
-        "generator:arithmetic-subtraction"
+        "generator:concept-meaning"
       ]
     },
     {

@@ -46,9 +46,9 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| Relations | **0** | `kbl/canonical/relations.json` |
+| Relations | **373**（全 `inferred:true` / `prerequisite` / `reviewStatus:llm-finalized-dev`） | `kbl/canonical/relations.json` |
 
-当前版本不含知识点间关系数据。`relations.json` 结构存在，`relations` 数组为空。
+前置关系由 LLM 在开发期基于源 Excel 教学语义统筹推断并直接定案（用户 2026-09-30 显式指令：不设人工确认环节，上线零 LLM 依赖）。派生器 `tools/kbl/derive-relations.js`：R-REL-01 同单元序号顺序 277 条 + R-REL-02 同册跨单元递进 58 条 + R-REL-03 跨册/跨年级概念主干链 38 条（整数认识/加减/乘除/分数/小数/图形/测量/线角/数系/运动 11 族）。`inferred:true` 为溯源标记，`llm-finalized-dev` 表示 LLM 即开发期最终确认者；三元组全局去重、链内年级严格递增收敛无环。root Excel 本身无关系字段。
 
 ---
 

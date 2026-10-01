@@ -87,8 +87,9 @@ Object.keys(idx.byId).forEach(function (id) {
   ok(idx.byId[id].unitId && byUnitCount[idx.byId[id].unitId], 'byId 索引 unit 缺失: ' + id);
 });
 
-// ---- 关系门禁（canonical = 空集，root 无关系字段） ----
-ok(relDoc.relations.length === 0, '关系数应为 0（root 无关系字段）实际 ' + relDoc.relations.length);
+// ---- 关系门禁（LLM 开发期统筹定案：全 inferred prerequisite，reviewStatus=llm-finalized-dev） ----
+ok(relDoc.relations.length > 0, '关系数应 >0（LLM 开发期定案）实际 ' + relDoc.relations.length);
+ok(relDoc.relations.every(function (r) { return r.inferred === true && r.reviewStatus === 'llm-finalized-dev'; }), '关系须全 inferred:true + reviewStatus=llm-finalized-dev');
 var relKey = new Set();
 relDoc.relations.forEach(function (r) {
   ok(kpSet.has(r.fromId), '关系源未知: ' + r.fromId);

@@ -3,8 +3,8 @@
  * dev/check-kbl-quality.js — KBL 收口 M17 数据质量门禁（10 项，全新 canonical 数据层）
  *
  * 10 项：
- *   Q1  数量守恒：unit 98 / KP 375 / relations 0 / mappings 1570 with kbl/manifest 一致
- *   Q2  Canonical relations 为空集（释义派生，无迁移关系）；roundtrip 保障 source 一致
+ *   Q1  数量守恒：unit 98 / KP 375 / relations 373 / mappings 1570 with kbl/manifest 一致
+ *   Q2  Canonical relations 为 LLM 开发期定案集（全 prerequisite、inferred、reviewStatus=llm-finalized-dev）；质量校验自环/重复/类型
  *   Q3  ID 规则：全部 KP id 匹配规范 pattern 且全局唯一
  *   Q4  引用完整性：KP.unitId→单元、mapping.knowledgeId→KP、relation 端点→KP 零悬空
  *   Q5  关系质量：无自环、无重复三元组、prerequisite 无环（canonical 下恒真）
@@ -28,7 +28,7 @@ var Registry = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-reg
 var REG_TYPES = (Registry.TYPES || []).map(function (t) { return t.id; });
 var CANON_ID = /^math-g[1-6]-(up|down|mixed|advance|comprehensive)-u\d{2}-k\d{3}$/;
 
-var EXPECT = { knowledgePoints: 375, units: 98, relations: 0, mappings: 1570 };
+var EXPECT = { knowledgePoints: 375, units: 98, relations: 373, mappings: 1570 };
 
 function readJson(p) { return JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8')); }
 
@@ -55,12 +55,14 @@ if (!Array.isArray(mappings)) mappings = mappings.mappings || [];
 
 // ---- Q1 数量守恒 ----
 var mc = manifest.counts || {};
-item('Q1 数量守恒(kbl/manifest 98/375/0/1570)',
+item('Q1 数量守恒(kbl/manifest 98/375/373/1570)',
   mc.units === EXPECT.units && mc.knowledgePoints === EXPECT.knowledgePoints && mc.relations === EXPECT.relations && mc.mappings === EXPECT.mappings,
   JSON.stringify(mc));
 
-// ---- Q2 Canonical relations 空集 ----
-item('Q2 relations==0（释义派生、无迁移关系集）', rels.length === 0, 'relations=' + rels.length);
+// ---- Q2 Canonical relations：LLM 开发期定案（全 prerequisite、inferred、reviewStatus=llm-finalized-dev） ----
+item('Q2 relations>0 且全 inferred+llm-finalized-dev（LLM 开发期统筹定案）',
+  rels.length > 0 && rels.every(function (r) { return r.inferred === true && r.relation === 'prerequisite' && r.reviewStatus === 'llm-finalized-dev'; }),
+  'relations=' + rels.length);
 
 // ---- Q3 ID 规则 ----
 var badIds = kpIds.filter(function (id) { return !CANON_ID.test(id); });

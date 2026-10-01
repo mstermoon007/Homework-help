@@ -2,6 +2,2991 @@
   "schemaVersion": "1.0.0",
   "subject": "math",
   "source": "kbl/root/小学G1-G6数学知识点.xlsx",
-  "note": "SRC 无关系字段；旧关系 1287 行已按裁决清除。关系集为空，待人工源补充或后续从释义派生。",
-  "relations": []
+  "note": "前置关系由 LLM 在开发期基于源 Excel 教学语义统筹推断并直接定案（R-REL-01 同单元序号 + R-REL-02 同册跨单元 + R-REL-03 跨册/跨年级概念主干链）。inferred=true 为溯源标记；reviewStatus=llm-finalized-dev 表示无人工确认环节、LLM 即最终确认者（用户 2026-09-30 显式指令）。三元组全局去重，链内年级严格递增收敛无环。",
+  "relations": [
+    {
+      "fromId": "math-g1-up-u01-k001",
+      "toId": "math-g1-up-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-up-u01-k002",
+      "toId": "math-g1-up-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-up-u02-k001",
+      "toId": "math-g1-up-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-up-u03-k001",
+      "toId": "math-g1-up-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-up-u04-k001",
+      "toId": "math-g1-up-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-up-u04-k002",
+      "toId": "math-g1-up-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-up-u05-k001",
+      "toId": "math-g1-up-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-up-u05-k002",
+      "toId": "math-g1-up-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u02-k001",
+      "toId": "math-g1-down-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u02-k002",
+      "toId": "math-g1-down-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u03-k001",
+      "toId": "math-g1-down-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u03-k002",
+      "toId": "math-g1-down-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u03-k003",
+      "toId": "math-g1-down-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u03-k004",
+      "toId": "math-g1-down-u03-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u03-k005",
+      "toId": "math-g1-down-u03-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u04-k001",
+      "toId": "math-g1-down-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u04-k002",
+      "toId": "math-g1-down-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u04-k003",
+      "toId": "math-g1-down-u04-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u04-k004",
+      "toId": "math-g1-down-u04-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u05-k001",
+      "toId": "math-g1-down-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u05-k002",
+      "toId": "math-g1-down-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u06-k001",
+      "toId": "math-g1-down-u06-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u06-k002",
+      "toId": "math-g1-down-u06-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u07-k001",
+      "toId": "math-g1-down-u07-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-down-u07-k002",
+      "toId": "math-g1-down-u07-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u01-k001",
+      "toId": "math-g2-up-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u01-k002",
+      "toId": "math-g2-up-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u01-k003",
+      "toId": "math-g2-up-u01-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u01-k004",
+      "toId": "math-g2-up-u01-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u01-k005",
+      "toId": "math-g2-up-u01-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u02-k001",
+      "toId": "math-g2-up-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u02-k002",
+      "toId": "math-g2-up-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u02-k003",
+      "toId": "math-g2-up-u02-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u03-k001",
+      "toId": "math-g2-up-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u03-k002",
+      "toId": "math-g2-up-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u03-k003",
+      "toId": "math-g2-up-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u03-k004",
+      "toId": "math-g2-up-u03-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u04-k001",
+      "toId": "math-g2-up-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u04-k002",
+      "toId": "math-g2-up-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u04-k003",
+      "toId": "math-g2-up-u04-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u05-k001",
+      "toId": "math-g2-up-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u05-k002",
+      "toId": "math-g2-up-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u05-k003",
+      "toId": "math-g2-up-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u05-k004",
+      "toId": "math-g2-up-u05-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-up-u07-k001",
+      "toId": "math-g2-up-u07-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u01-k001",
+      "toId": "math-g2-down-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u01-k002",
+      "toId": "math-g2-down-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u02-k001",
+      "toId": "math-g2-down-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u02-k002",
+      "toId": "math-g2-down-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u02-k003",
+      "toId": "math-g2-down-u02-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u02-k004",
+      "toId": "math-g2-down-u02-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u03-k001",
+      "toId": "math-g2-down-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u03-k002",
+      "toId": "math-g2-down-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u03-k003",
+      "toId": "math-g2-down-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u03-k004",
+      "toId": "math-g2-down-u03-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u03-k005",
+      "toId": "math-g2-down-u03-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u04-k001",
+      "toId": "math-g2-down-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u04-k002",
+      "toId": "math-g2-down-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u04-k003",
+      "toId": "math-g2-down-u04-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u04-k004",
+      "toId": "math-g2-down-u04-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u04-k005",
+      "toId": "math-g2-down-u04-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u04-k006",
+      "toId": "math-g2-down-u04-k007",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u05-k001",
+      "toId": "math-g2-down-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u05-k002",
+      "toId": "math-g2-down-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u05-k003",
+      "toId": "math-g2-down-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u06-k001",
+      "toId": "math-g2-down-u06-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u06-k002",
+      "toId": "math-g2-down-u06-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u06-k003",
+      "toId": "math-g2-down-u06-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u07-k001",
+      "toId": "math-g2-down-u07-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g2-down-u07-k002",
+      "toId": "math-g2-down-u07-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u01-k001",
+      "toId": "math-g3-up-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u01-k002",
+      "toId": "math-g3-up-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u02-k001",
+      "toId": "math-g3-up-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u02-k002",
+      "toId": "math-g3-up-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u02-k003",
+      "toId": "math-g3-up-u02-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u02-k004",
+      "toId": "math-g3-up-u02-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u03-k001",
+      "toId": "math-g3-up-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u03-k002",
+      "toId": "math-g3-up-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u03-k003",
+      "toId": "math-g3-up-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u04-k001",
+      "toId": "math-g3-up-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u04-k002",
+      "toId": "math-g3-up-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u04-k003",
+      "toId": "math-g3-up-u04-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u05-k001",
+      "toId": "math-g3-up-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u05-k002",
+      "toId": "math-g3-up-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u05-k003",
+      "toId": "math-g3-up-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u05-k004",
+      "toId": "math-g3-up-u05-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u06-k001",
+      "toId": "math-g3-up-u06-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u06-k002",
+      "toId": "math-g3-up-u06-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u06-k003",
+      "toId": "math-g3-up-u06-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u06-k004",
+      "toId": "math-g3-up-u06-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u07-k001",
+      "toId": "math-g3-up-u07-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u07-k002",
+      "toId": "math-g3-up-u07-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u07-k003",
+      "toId": "math-g3-up-u07-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u08-k001",
+      "toId": "math-g3-up-u08-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u08-k002",
+      "toId": "math-g3-up-u08-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u08-k003",
+      "toId": "math-g3-up-u08-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-up-u08-k004",
+      "toId": "math-g3-up-u08-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u01-k001",
+      "toId": "math-g3-down-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u01-k002",
+      "toId": "math-g3-down-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u01-k003",
+      "toId": "math-g3-down-u01-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u02-k001",
+      "toId": "math-g3-down-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u02-k002",
+      "toId": "math-g3-down-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u02-k003",
+      "toId": "math-g3-down-u02-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u02-k004",
+      "toId": "math-g3-down-u02-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u02-k005",
+      "toId": "math-g3-down-u02-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u03-k001",
+      "toId": "math-g3-down-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u03-k002",
+      "toId": "math-g3-down-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u03-k003",
+      "toId": "math-g3-down-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u04-k001",
+      "toId": "math-g3-down-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u04-k002",
+      "toId": "math-g3-down-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u04-k003",
+      "toId": "math-g3-down-u04-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u04-k004",
+      "toId": "math-g3-down-u04-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u05-k001",
+      "toId": "math-g3-down-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u05-k002",
+      "toId": "math-g3-down-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u05-k003",
+      "toId": "math-g3-down-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u06-k001",
+      "toId": "math-g3-down-u06-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u07-k001",
+      "toId": "math-g3-down-u07-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u07-k002",
+      "toId": "math-g3-down-u07-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u07-k003",
+      "toId": "math-g3-down-u07-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u08-k001",
+      "toId": "math-g3-down-u08-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u08-k002",
+      "toId": "math-g3-down-u08-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u08-k003",
+      "toId": "math-g3-down-u08-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u08-k004",
+      "toId": "math-g3-down-u08-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g3-down-u08-k005",
+      "toId": "math-g3-down-u08-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u01-k001",
+      "toId": "math-g4-up-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u01-k002",
+      "toId": "math-g4-up-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u01-k003",
+      "toId": "math-g4-up-u01-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u01-k004",
+      "toId": "math-g4-up-u01-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u01-k005",
+      "toId": "math-g4-up-u01-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u02-k001",
+      "toId": "math-g4-up-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u02-k002",
+      "toId": "math-g4-up-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u03-k001",
+      "toId": "math-g4-up-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u03-k002",
+      "toId": "math-g4-up-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u04-k001",
+      "toId": "math-g4-up-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u04-k002",
+      "toId": "math-g4-up-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u05-k001",
+      "toId": "math-g4-up-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u05-k002",
+      "toId": "math-g4-up-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u05-k003",
+      "toId": "math-g4-up-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u06-k001",
+      "toId": "math-g4-up-u06-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u06-k002",
+      "toId": "math-g4-up-u06-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u06-k003",
+      "toId": "math-g4-up-u06-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u08-k001",
+      "toId": "math-g4-up-u08-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-up-u08-k002",
+      "toId": "math-g4-up-u08-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u01-k001",
+      "toId": "math-g4-down-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u01-k002",
+      "toId": "math-g4-down-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u01-k003",
+      "toId": "math-g4-down-u01-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u02-k001",
+      "toId": "math-g4-down-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u02-k002",
+      "toId": "math-g4-down-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u03-k001",
+      "toId": "math-g4-down-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u03-k002",
+      "toId": "math-g4-down-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u03-k003",
+      "toId": "math-g4-down-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u04-k001",
+      "toId": "math-g4-down-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u04-k002",
+      "toId": "math-g4-down-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u04-k003",
+      "toId": "math-g4-down-u04-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u04-k004",
+      "toId": "math-g4-down-u04-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u04-k005",
+      "toId": "math-g4-down-u04-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u04-k006",
+      "toId": "math-g4-down-u04-k007",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u05-k001",
+      "toId": "math-g4-down-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u05-k002",
+      "toId": "math-g4-down-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u05-k003",
+      "toId": "math-g4-down-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u05-k004",
+      "toId": "math-g4-down-u05-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u05-k005",
+      "toId": "math-g4-down-u05-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u06-k001",
+      "toId": "math-g4-down-u06-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u06-k002",
+      "toId": "math-g4-down-u06-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u06-k003",
+      "toId": "math-g4-down-u06-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u07-k001",
+      "toId": "math-g4-down-u07-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u07-k002",
+      "toId": "math-g4-down-u07-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u07-k003",
+      "toId": "math-g4-down-u07-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u07-k004",
+      "toId": "math-g4-down-u07-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u08-k001",
+      "toId": "math-g4-down-u08-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u08-k002",
+      "toId": "math-g4-down-u08-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u08-k003",
+      "toId": "math-g4-down-u08-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u09-k001",
+      "toId": "math-g4-down-u09-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g4-down-u09-k002",
+      "toId": "math-g4-down-u09-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u01-k001",
+      "toId": "math-g5-up-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u01-k002",
+      "toId": "math-g5-up-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u02-k001",
+      "toId": "math-g5-up-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u02-k002",
+      "toId": "math-g5-up-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u02-k003",
+      "toId": "math-g5-up-u02-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u02-k004",
+      "toId": "math-g5-up-u02-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u03-k001",
+      "toId": "math-g5-up-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u03-k002",
+      "toId": "math-g5-up-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u03-k003",
+      "toId": "math-g5-up-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u03-k004",
+      "toId": "math-g5-up-u03-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u03-k005",
+      "toId": "math-g5-up-u03-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u04-k001",
+      "toId": "math-g5-up-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u04-k002",
+      "toId": "math-g5-up-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u05-k001",
+      "toId": "math-g5-up-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u05-k002",
+      "toId": "math-g5-up-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u05-k003",
+      "toId": "math-g5-up-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u06-k001",
+      "toId": "math-g5-up-u06-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u06-k002",
+      "toId": "math-g5-up-u06-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u06-k003",
+      "toId": "math-g5-up-u06-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u06-k004",
+      "toId": "math-g5-up-u06-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u06-k005",
+      "toId": "math-g5-up-u06-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u07-k001",
+      "toId": "math-g5-up-u07-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u07-k002",
+      "toId": "math-g5-up-u07-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u07-k003",
+      "toId": "math-g5-up-u07-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u08-k001",
+      "toId": "math-g5-up-u08-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u08-k002",
+      "toId": "math-g5-up-u08-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-up-u08-k003",
+      "toId": "math-g5-up-u08-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u01-k001",
+      "toId": "math-g5-down-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u01-k002",
+      "toId": "math-g5-down-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u02-k001",
+      "toId": "math-g5-down-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u02-k002",
+      "toId": "math-g5-down-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u02-k003",
+      "toId": "math-g5-down-u02-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u02-k004",
+      "toId": "math-g5-down-u02-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u02-k005",
+      "toId": "math-g5-down-u02-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u03-k001",
+      "toId": "math-g5-down-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u03-k002",
+      "toId": "math-g5-down-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u03-k003",
+      "toId": "math-g5-down-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u03-k004",
+      "toId": "math-g5-down-u03-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u03-k005",
+      "toId": "math-g5-down-u03-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u04-k001",
+      "toId": "math-g5-down-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u04-k002",
+      "toId": "math-g5-down-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u04-k003",
+      "toId": "math-g5-down-u04-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u04-k004",
+      "toId": "math-g5-down-u04-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u04-k005",
+      "toId": "math-g5-down-u04-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u05-k001",
+      "toId": "math-g5-down-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u05-k002",
+      "toId": "math-g5-down-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u05-k003",
+      "toId": "math-g5-down-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u06-k001",
+      "toId": "math-g5-down-u06-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u06-k002",
+      "toId": "math-g5-down-u06-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u06-k003",
+      "toId": "math-g5-down-u06-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u06-k004",
+      "toId": "math-g5-down-u06-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u07-k001",
+      "toId": "math-g5-down-u07-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u07-k002",
+      "toId": "math-g5-down-u07-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u08-k001",
+      "toId": "math-g5-down-u08-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u08-k002",
+      "toId": "math-g5-down-u08-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u09-k001",
+      "toId": "math-g5-down-u09-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u09-k002",
+      "toId": "math-g5-down-u09-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u10-k001",
+      "toId": "math-g5-down-u10-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u10-k002",
+      "toId": "math-g5-down-u10-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g5-down-u10-k003",
+      "toId": "math-g5-down-u10-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u01-k001",
+      "toId": "math-g6-up-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u01-k002",
+      "toId": "math-g6-up-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u02-k001",
+      "toId": "math-g6-up-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u02-k002",
+      "toId": "math-g6-up-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u02-k003",
+      "toId": "math-g6-up-u02-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u03-k001",
+      "toId": "math-g6-up-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u03-k002",
+      "toId": "math-g6-up-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u03-k003",
+      "toId": "math-g6-up-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u03-k004",
+      "toId": "math-g6-up-u03-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u04-k001",
+      "toId": "math-g6-up-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u04-k002",
+      "toId": "math-g6-up-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u04-k003",
+      "toId": "math-g6-up-u04-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u04-k004",
+      "toId": "math-g6-up-u04-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u05-k001",
+      "toId": "math-g6-up-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u05-k002",
+      "toId": "math-g6-up-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u05-k003",
+      "toId": "math-g6-up-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u05-k004",
+      "toId": "math-g6-up-u05-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u05-k005",
+      "toId": "math-g6-up-u05-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u07-k001",
+      "toId": "math-g6-up-u07-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-up-u07-k002",
+      "toId": "math-g6-up-u07-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u01-k001",
+      "toId": "math-g6-down-u01-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u01-k002",
+      "toId": "math-g6-down-u01-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u01-k003",
+      "toId": "math-g6-down-u01-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u01-k004",
+      "toId": "math-g6-down-u01-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u02-k001",
+      "toId": "math-g6-down-u02-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u02-k002",
+      "toId": "math-g6-down-u02-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u02-k003",
+      "toId": "math-g6-down-u02-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u02-k004",
+      "toId": "math-g6-down-u02-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u03-k001",
+      "toId": "math-g6-down-u03-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u03-k002",
+      "toId": "math-g6-down-u03-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u03-k003",
+      "toId": "math-g6-down-u03-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u03-k004",
+      "toId": "math-g6-down-u03-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u03-k005",
+      "toId": "math-g6-down-u03-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u04-k001",
+      "toId": "math-g6-down-u04-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u04-k002",
+      "toId": "math-g6-down-u04-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u04-k003",
+      "toId": "math-g6-down-u04-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u04-k004",
+      "toId": "math-g6-down-u04-k005",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u04-k005",
+      "toId": "math-g6-down-u04-k006",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u04-k006",
+      "toId": "math-g6-down-u04-k007",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u04-k007",
+      "toId": "math-g6-down-u04-k008",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u05-k001",
+      "toId": "math-g6-down-u05-k002",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u05-k002",
+      "toId": "math-g6-down-u05-k003",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g6-down-u05-k003",
+      "toId": "math-g6-down-u05-k004",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-01:同单元序号顺序"
+    },
+    {
+      "fromId": "math-g1-up-u01-k003",
+      "toId": "math-g1-up-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-up-u02-k002",
+      "toId": "math-g1-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-up-u03-k002",
+      "toId": "math-g1-up-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-up-u04-k003",
+      "toId": "math-g1-up-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-down-u01-k001",
+      "toId": "math-g1-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-down-u02-k003",
+      "toId": "math-g1-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-down-u03-k006",
+      "toId": "math-g1-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-down-u04-k005",
+      "toId": "math-g1-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-down-u05-k003",
+      "toId": "math-g1-down-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-down-u06-k003",
+      "toId": "math-g1-down-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-up-u01-k006",
+      "toId": "math-g2-up-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-up-u02-k004",
+      "toId": "math-g2-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-down-u02-k005",
+      "toId": "math-g2-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-down-u03-k006",
+      "toId": "math-g2-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g2-down-u04-k007",
+      "toId": "math-g2-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-up-u01-k003",
+      "toId": "math-g3-up-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-up-u02-k005",
+      "toId": "math-g3-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-up-u07-k004",
+      "toId": "math-g3-up-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-down-u01-k004",
+      "toId": "math-g3-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-down-u02-k006",
+      "toId": "math-g3-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-down-u03-k004",
+      "toId": "math-g3-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-down-u04-k005",
+      "toId": "math-g3-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-down-u05-k004",
+      "toId": "math-g3-down-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g3-down-u06-k002",
+      "toId": "math-g3-down-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-up-u01-k006",
+      "toId": "math-g4-up-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-up-u02-k003",
+      "toId": "math-g4-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-up-u03-k003",
+      "toId": "math-g4-up-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-up-u04-k003",
+      "toId": "math-g4-up-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-up-u05-k004",
+      "toId": "math-g4-up-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-down-u01-k004",
+      "toId": "math-g4-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-down-u02-k003",
+      "toId": "math-g4-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-down-u03-k004",
+      "toId": "math-g4-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-down-u04-k007",
+      "toId": "math-g4-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-down-u05-k006",
+      "toId": "math-g4-down-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-down-u06-k004",
+      "toId": "math-g4-down-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-down-u07-k005",
+      "toId": "math-g4-down-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g4-down-u08-k004",
+      "toId": "math-g4-down-u09-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-up-u01-k003",
+      "toId": "math-g5-up-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-up-u02-k005",
+      "toId": "math-g5-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-up-u03-k006",
+      "toId": "math-g5-up-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-up-u04-k003",
+      "toId": "math-g5-up-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-up-u05-k004",
+      "toId": "math-g5-up-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-up-u06-k006",
+      "toId": "math-g5-up-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-down-u01-k003",
+      "toId": "math-g5-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-down-u02-k006",
+      "toId": "math-g5-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-down-u03-k006",
+      "toId": "math-g5-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-down-u04-k006",
+      "toId": "math-g5-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-down-u05-k004",
+      "toId": "math-g5-down-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-down-u06-k005",
+      "toId": "math-g5-down-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g5-down-u07-k003",
+      "toId": "math-g5-down-u08-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-up-u01-k003",
+      "toId": "math-g6-up-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-up-u02-k004",
+      "toId": "math-g6-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-up-u03-k005",
+      "toId": "math-g6-up-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-up-u04-k005",
+      "toId": "math-g6-up-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-down-u01-k005",
+      "toId": "math-g6-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-down-u02-k005",
+      "toId": "math-g6-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-down-u03-k006",
+      "toId": "math-g6-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g6-down-u04-k008",
+      "toId": "math-g6-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-02:同册跨单元递进"
+    },
+    {
+      "fromId": "math-g1-up-u04-k001",
+      "toId": "math-g1-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(整数认识)"
+    },
+    {
+      "fromId": "math-g1-down-u03-k001",
+      "toId": "math-g2-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(整数认识)"
+    },
+    {
+      "fromId": "math-g2-down-u04-k001",
+      "toId": "math-g4-up-u01-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(整数认识)"
+    },
+    {
+      "fromId": "math-g1-up-u05-k001",
+      "toId": "math-g1-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(加减运算)"
+    },
+    {
+      "fromId": "math-g1-down-u02-k001",
+      "toId": "math-g1-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(加减运算)"
+    },
+    {
+      "fromId": "math-g1-down-u04-k001",
+      "toId": "math-g1-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(加减运算)"
+    },
+    {
+      "fromId": "math-g1-down-u05-k001",
+      "toId": "math-g2-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(加减运算)"
+    },
+    {
+      "fromId": "math-g2-up-u02-k001",
+      "toId": "math-g2-up-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(乘法)"
+    },
+    {
+      "fromId": "math-g2-up-u07-k001",
+      "toId": "math-g3-up-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(乘法)"
+    },
+    {
+      "fromId": "math-g3-up-u05-k001",
+      "toId": "math-g4-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(乘法)"
+    },
+    {
+      "fromId": "math-g2-up-u03-k001",
+      "toId": "math-g2-up-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(除法)"
+    },
+    {
+      "fromId": "math-g2-up-u07-k001",
+      "toId": "math-g2-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(除法)"
+    },
+    {
+      "fromId": "math-g2-down-u02-k001",
+      "toId": "math-g3-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(除法)"
+    },
+    {
+      "fromId": "math-g3-up-u08-k001",
+      "toId": "math-g5-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(分数)"
+    },
+    {
+      "fromId": "math-g5-down-u04-k001",
+      "toId": "math-g5-down-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(分数)"
+    },
+    {
+      "fromId": "math-g5-down-u06-k001",
+      "toId": "math-g6-up-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(分数)"
+    },
+    {
+      "fromId": "math-g6-up-u02-k001",
+      "toId": "math-g6-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(分数)"
+    },
+    {
+      "fromId": "math-g3-down-u07-k001",
+      "toId": "math-g4-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(小数)"
+    },
+    {
+      "fromId": "math-g4-down-u04-k001",
+      "toId": "math-g4-down-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(小数)"
+    },
+    {
+      "fromId": "math-g4-down-u06-k001",
+      "toId": "math-g5-up-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(小数)"
+    },
+    {
+      "fromId": "math-g5-up-u02-k001",
+      "toId": "math-g5-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(小数)"
+    },
+    {
+      "fromId": "math-g1-up-u03-k001",
+      "toId": "math-g1-down-u01-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形认识)"
+    },
+    {
+      "fromId": "math-g1-down-u01-k001",
+      "toId": "math-g3-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形认识)"
+    },
+    {
+      "fromId": "math-g3-down-u03-k001",
+      "toId": "math-g4-up-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形认识)"
+    },
+    {
+      "fromId": "math-g4-up-u05-k001",
+      "toId": "math-g4-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形认识)"
+    },
+    {
+      "fromId": "math-g4-down-u05-k001",
+      "toId": "math-g5-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形认识)"
+    },
+    {
+      "fromId": "math-g5-down-u03-k001",
+      "toId": "math-g6-up-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形认识)"
+    },
+    {
+      "fromId": "math-g6-up-u04-k001",
+      "toId": "math-g6-down-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形认识)"
+    },
+    {
+      "fromId": "math-g2-up-u05-k001",
+      "toId": "math-g3-up-u03-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(测量)"
+    },
+    {
+      "fromId": "math-g3-up-u03-k001",
+      "toId": "math-g3-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(测量)"
+    },
+    {
+      "fromId": "math-g3-down-u04-k001",
+      "toId": "math-g5-up-u06-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(测量)"
+    },
+    {
+      "fromId": "math-g3-up-u07-k001",
+      "toId": "math-g4-up-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(线与角)"
+    },
+    {
+      "fromId": "math-g5-up-u05-k001",
+      "toId": "math-g5-down-u02-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(数系与代数)"
+    },
+    {
+      "fromId": "math-g5-down-u02-k001",
+      "toId": "math-g6-up-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(数系与代数)"
+    },
+    {
+      "fromId": "math-g6-up-u05-k001",
+      "toId": "math-g6-down-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(数系与代数)"
+    },
+    {
+      "fromId": "math-g3-down-u01-k001",
+      "toId": "math-g4-down-u07-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形运动)"
+    },
+    {
+      "fromId": "math-g4-down-u07-k001",
+      "toId": "math-g5-up-u04-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形运动)"
+    },
+    {
+      "fromId": "math-g5-up-u04-k001",
+      "toId": "math-g5-down-u05-k001",
+      "relation": "prerequisite",
+      "inferred": true,
+      "reviewStatus": "llm-finalized-dev",
+      "rule": "R-REL-03:LLM概念链(图形运动)"
+    }
+  ]
 }

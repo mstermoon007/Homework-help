@@ -125,8 +125,10 @@ test('evidence-rules.json：断言 kind 合法、键不重复、A 类 ALLOW 行�
   const mappings = require(path.join(ROOT, 'kbl', 'canonical', 'mappings.json')).mappings;
   assert.ok(Array.isArray(doc.rules));
   const seen = new Set();
-  // FINAL-37：新增 construct / constructNot 断言种——结构构件证据（不再装饰）
-  const KINDS = new Set(['field', 'fieldNot', 'relation', 'relationNot', 'fieldPresent', 'construct', 'constructNot']);
+  // FINAL-37：construct / constructNot 结构构件断言；
+  // P28-GENERIC-ALGO：relationAny / constructAny 通用算法 KP"算法类型∈允许集"正面断言。
+  const KINDS = new Set(['field', 'fieldNot', 'relation', 'relationNot', 'fieldPresent',
+    'construct', 'constructNot', 'relationAny', 'constructAny']);
   doc.rules.forEach((r) => {
     const key = r.knowledgePointId + '|' + r.questionType;
     assert.ok(!seen.has(key), '规则键不重复: ' + key);
@@ -150,13 +152,30 @@ test('evidence-rules.json：断言 kind 合法、键不重复、A 类 ALLOW 行�
   aAllowRows.forEach((key) => {
     assert.ok(seen.has(key), 'A 类 ALLOW 行缺证据规则: ' + key);
   });
-  // 规则行范围精确：= A 类 ALLOW 行（既有 6 行 ⊆ 其中——4 代表 KP 已随矩阵刷新入 A）
-  assert.equal(doc.rules.length, aAllowRows.size,
-    '规则行数应恰为 A 类 ALLOW 行数');
-  doc.rules.forEach((r) => {
-    assert.ok(aKps.has(r.knowledgePointId),
-      '规则行 KP 越界（非 A 类）: ' + r.knowledgePointId);
+  // A 类规则范围精确：A 类规则行数恰为 A 类 ALLOW 行数（不被 B/C 扩建侵蚀）。
+  const aRules = doc.rules.filter((r) => aKps.has(r.knowledgePointId));
+  assert.equal(aRules.length, aAllowRows.size,
+    'A 类规则行数应恰为 A 类 ALLOW 行数（不被扩建侵蚀）');
+
+  // P28-GENERIC-ALGO：B/C 通用算法 KP 规则——不绑定特定方法，直接以通用算法类型为构件。
+  // 形态冻结：required 恰为 [fieldPresent data.operation, relationAny, constructAny]，
+  // forbidden 为空；inferred + llm-finalized-dev 溯源；KP 必须在 kp-matrix 且为 B/C 类。
+  const levelById = new Set();
+  matrix.kps.forEach((k) => levelById.add(k.id));
+  const bcRules = doc.rules.filter((r) => !aKps.has(r.knowledgePointId));
+  assert.ok(bcRules.length >= 1, '应存在 B/C 通用算法规则');
+  bcRules.forEach((r) => {
+    assert.ok(levelById.has(r.knowledgePointId), 'B/C 规则 KP 须在 kp-matrix: ' + r.knowledgePointId);
+    assert.equal(r.inferred, true, r.knowledgePointId + ' inferred=true');
+    assert.equal(r.reviewStatus, 'llm-finalized-dev', r.knowledgePointId + ' reviewStatus');
+    const kinds = (r.required || []).map((a) => a.kind).sort();
+    assert.deepEqual(kinds, ['constructAny', 'fieldPresent', 'relationAny'],
+      r.knowledgePointId + '|' + r.questionType + ' B/C 规则 required 形态异常: ' + kinds.join(','));
+    assert.ok((r.forbidden || []).length === 0, r.knowledgePointId + ' B/C 规则 forbidden 应为空');
   });
+  // 总行数 = A 类 ALLOW 行 + B/C 通用算法行（无第三类来源）
+  assert.equal(doc.rules.length, aAllowRows.size + bcRules.length,
+    '规则总行数应恰为 A 类 ALLOW 行 + B/C 通用算法行');
 });
 
 /* ---------------- 3. 绑定与路由 ---------------- */

@@ -25,6 +25,167 @@
 
 ## 记录（新 → 旧）
 
+### P28-FIX6b｜修复剪纸活动×judge 采样 flake（bool 冻结断言降级 fieldPresent + derive/apply 护栏）（2026-10-01）
+- modified:
+  - `kbl/teaching/evidence-rules.json`（1 行：math-g3-down-u01-k004×judge 规则 required 中 `{field data.isTrue=true}` → `{fieldPresent data.isTrue}`；判断题对错各半随抽题随机，fieldPresent 存在性断言与 FINAL-31a 设立语义一致，全库审计确认 bool 值冻结仅此 1 行）
+  - `dev/p25/derive-evidence-candidates.js`（requiredFields 派生护栏：boolean 字段与 number 同等对待——bool 仅两值、小样本"全同值"无统计意义（N=6 全同概率≈3%），不再产 `field` 值断言，降级产 `fieldPresent`；防止重跑 derive 再埋同类雷）
+  - `dev/p25/apply-evidence-candidates.js`（KINDS 白名单补 `fieldPresent`，且 fieldPresent 同走 data. 前缀校验；不补则含 fieldPresent 的候选被合并闸门拒绝）
+  - `dev/p25/reports/evidence-derive-report.json`（derive 复跑重建：基线证据状态 5971 pass / 0 fail，flake 消除）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason: P28-FIX6 终验时发现 derive 基线 1 个 fail（g3-down-u01-k004 剪纸活动×judge 部分样本 isTrue=false 被判 fail）。根因：生成器行为正确（position.js judge 题 rng()<0.5 对错各半是教育正确设计，isTrue 恒写入 data）；是 derive 护栏有洞——number 有 ≥3 样本护栏而 boolean 没有，N=6 采样恰好全 true 时把随机 bool 冻结成 `data.isTrue=true` 值断言；此前门禁全绿仅因教育门禁/golden 的确定性采样窗口未覆盖 false 样本。修复分两层：规则行改 fieldPresent（治标，仅 1 行受影响），derive/apply 补 bool 护栏（治本防复发）。
+- tests: ① 该 KP×judge 六档采样窗口（count=1..6）共 18 样本全 pass，isTrue 分布 10 true/8 false（修复前 8 个 false 样本必 fail）；② derive 全量复跑：313 A 类 × 1323 ALLOW 行，基线 **5971 pass / 0 fail / 0 skip**（对比 FIX6 时 5842/1/132），全量候选 bool 值冻结断言数 0；③ `npm test` 617/0；④ `node dev/check-all.js` **27 PASS / 0 FAIL / 1 SKIP**。
+- risk: 低。规则变严→松（field 值断言→fieldPresent 存在性断言），不可能引入新 fail；derive/apply 改动只影响未来重派生候选形态，既有 1570 行规则不变（apply 只补缺、键冲突跳过）。
+
+### P28-FIX6｜6 个 skip KP 生成器绑定修复（重绑 concept-meaning 升 A；A 类 307→313；evidence 1546→1570；golden 1096→1114 覆盖 375/375）（2026-10-01）
+- modified:
+  - `shared/generator/core/semantic-parameters.js`（SUBTOPIC_RULES：number-concept nameRe 加「数数」；新增 3 条 integer-arithmetic 族规则 make-ten/凑十、bracket-order/括号、stepwise-format/脱式，**置于 number-concept 之前**（「有括号运算顺序」含「顺序」防截胡）；number-concept 与 multdiv-relation 的 families 同步扩 integer-arithmetic——该族此前无规则、Node 收窄回退全扫，新规则使收窄非空后须保证 g4-down-u01-k003（四则混合运算顺序→number-concept）、g2-down-u05-k003/g4-down-u01-k001（各部分→multdiv-relation）等族内 KP 双环境派生不漂移）
+  - `shared/generator/generators/concept-meaning.js`（buildNumberConceptItem 新增「数数」分支（逐次加一/加十，内嵌加法参考式承载 calc expressionPresent，operation:'add'）与「11—20」分支（素材限定 11~19：1 个十和几个一）；新增 buildMakeTenItem/buildBracketOrderItem/buildStepwiseItem 三个 builder 及 maker 注册（make-ten/bracket-order/stepwise-format）；均走 makeByItem 统一包装，KP operations=[] 时 attach 过滤 relations 为空、不越界声明）
+  - `shared/generator/generator-registry.js`（6 个误绑 KP 归位 concept-meaning：g1-down-u03-k001 数数、g1-up-u04-k001 11—20数的认识、g4-up-u01-k001 计数单位与十进制计数法（原 arithmetic-subtraction）；g1-up-u05-k001 凑十法（原 arithmetic-addition）；g3-up-u02-k003 有括号运算顺序、g3-up-u02-k004 脱式计算规范（原 arithmetic-mixed-calculation））
+  - `kbl/teaching/kp-matrix.json`（6 行 generatorBindings→["generator:concept-meaning"]、draftSemanticLevel B→A、draftBasis 同步；distributions.byDraftLevel {A:307,B:67}→{A:313,B:61}，C:1 不变）
+  - `dev/p25/apply-evidence-candidates.js`（schemaVersion p26-evidence.1→**p26-evidence.3**，note 更正为 A 类 313 + B/C 段（relationAny/constructAny 247 行）并存的真实口径，防止 apply 把版本/说明回退）
+  - `kbl/teaching/evidence-rules.json`（1546→**1570**，derive+apply 机械派生 6 KP × 4 ALLOW 题型 = 24 条 A 类纯 field 断言规则（data.mode='concept-meaning' + data.subType=子主题），覆盖 KP 369→**375**）
+  - `kbl/teaching/variation-profiles.json`（1299→**1323** 行，derive-variation-profiles 重建）
+  - `kbl/teaching/golden-questions.json`（1096→**1114**，--fill-missing 补采 6 KP × 3 核心题型 18 题全 SEMANTIC_PASS，覆盖 369→**375** KP）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.{json,md}`（--write 重建：24 行从加法/减法/混合口算改为语义正确题，如「用凑十法计算：9 + 6 = 9 + 1 + 5 = ？」「先算小括号里面的：(4 + 6) × 3 = ？」）
+  - `tests/generator/p25-15-educational-gate.test.js` / `tests/generator/p25-14-coverage.test.js`（A 类计数断言 307→**313**）
+  - `dev/p25/build-final-acceptance.js` / `tests/generator/p25-18-acceptance.test.js`（aClassSemanticPass 921→**939**=313×3）
+  - `dev/p28/final-31-warn-attribution.js`（注释基线数字同步 307/921→313/939，无硬断言）
+  - `dev/p25/reports/*`（evidence-derive-report、educational-generation-report、p25-final-acceptance 等派生报告重建）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason: B/C 通用算法证据落地后剩 6 个 skip KP，根因均为生成器绑定错位——数概念/策略/规范类 KP（semantic.operations=[]，KBL 诚实判定非四则执行点）被绑到纯口算生成器，产出连减/普通加法/无括号混合运算等与 KP 语义无关的题。按既定方案全部重绑 concept-meaning 专项语义生成器并升 A：数概念 3 个归 number-concept（补「数数」「11—20」两个 maker 分支；计数单位分支已存在），凑十法/有括号/脱式 3 个新建策略与规范 maker。设计取舍：新 maker 不显式声明 arithmetic relations（KP operations=[]，check#8 会判越界），A 类规则纯 field 断言（与 g4-up-u01-k002 既有形态一致）；凑十法 operation:'add' 如实标注（attach 依空允许集过滤为空，不产生越界声明）。
+- tests: ① 6 KP × 4 ALLOW 题型 × 2 样本端到端 **48/48 SEMANTIC_PASS**（skip 清零）；② 双环境 subTopic 等价探针 69 个消费方绑定 KP 0 分歧；③ derive 全量 313 A 类 × 1323 ALLOW 行候选全部可派生、0 生成失败（基线 1 个 fail 为既有无关 flake：g3-down-u01-k004 剪纸活动×judge 部分样本缺 data.isTrue，不在本次范围）；④ `npm test`（含 p25-18 的 939 与 p27 的 1323 行覆盖断言）全绿；⑤ `node dev/check-all.js` **27 PASS / 0 FAIL / 1 SKIP**（6b 冻结矩阵 1570 行 0 FAIL、7 教育语义生成 939 对 0 FAIL、8 golden 1114 题 0 errors）。
+- risk: 低。6 个 KP 的 ALLOW 行产出从错语义题改为概念正确题（冻结证据逐行可查）；arithmetic-addition/subtraction/mixed-calculation 各减 1-3 个绑定，其余 22 个绑定 KP 不受影响；integer-arithmetic 族收窄语义变化但经 families 扩列保持全族双环境一致（g3-up-u02-k002 无括号运算顺序 subTopic number-concept→bracket-order 为概念归位修正，其生成器绑定未变、arithmetic 生成器不消费 subTopic）。
+
+### P28-GENERIC-ALGO-EVIDENCE-01-FIX1｜修复 g2-down-u07-k002 生成器绑定缺陷（selection-fill 补 KP 语义运算约束，3 行冻结产物更新，62 KP/1096 题）（2026-10-01）
+- modified:
+  - `shared/generator/generators/selection.js`（① 新增 `kpAllowedOps` 读取 `plan.semanticParams.operations` 并按 KP 语义运算约束过滤——与 application.js 的 FINAL-31c 同源对齐，杜绝 selection-fill 无视 KP 语义运算的 bug；② `baseArithmetic` 若默认运算/上下文运算 ∉ KP 允许集，则从允许集随机择一；③ 返回 actual `operation` 供后续标注；④ fill/choice/judge 三 maker 的 data 补 `operation` 字段；⑤ generate 收口加 `SemanticEvidence.attachAll`，自声明 semanticEvidence 与 arithmetic 族同源）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.{json,md}`（`--write` 重建冻结证据：math-g2-down-u07-k002 的 fill/apply/choice 三行从加法口算更新为乘除题，如 `2 × 6 − 1 = ____` / `每盒鸡蛋有 6 个，买了 8 盒，一共有多少个鸡蛋？`）
+  - `kbl/teaching/evidence-rules.json`（244→**247**，补入 math-g2-down-u07-k002 三条规则 fill/apply/choice）
+  - `kbl/teaching/golden-questions.json`（1093→**1096**，补采该 KP 三题全 SEMANTIC_PASS）
+  - `dev/p25/reports/golden-validation-report.json`（1096 题 0 errors）
+  - `tests/generator/p25-16-golden-dataset.test.js`（B/C 覆盖下限 61→62、总覆盖 368→369）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason: 上一记录中 7 个 skip KP 之一 math-g2-down-u07-k002（数量关系整合，semantic.operations=[multiplication,division]）被 generator:selection-fill 错误生成成无 operation 字段的加法口算题（如 22+38）。根因是 selection.js 长期缺失 KP 语义运算约束过滤（application.js 在 FINAL-31c 已修，selection.js 漏同步），且 maker 未标注 data.operation 未声明 semanticEvidence。本次补完约束链：KP 语义运算→过滤→标注→attachAll，该 KP 三题型全部产出 mult/div、证据 pass，仍保持 registry 原生绑定（kp=1）不变、不连锁改分级/矩阵契约。
+- tests: ① 修复后 fill/apply/choice 三题型全部产出 mult/div（如 `8 × 6 = 48` / `64 ÷ 8 = 7` / `每盒鸡蛋有 6 个，买了 8 盒，一共多少个？=48`）；② validator 端到端 pass（该 KP 补入 3 条 evidence 规则）；③ golden 1096 题 0 errors；④ `npm test` **617/0**；⑤ `node dev/check-all.js` **27 PASS / 0 FAIL / 1 SKIP**（#6b 矩阵冻结重建后一致）。
+- risk: 低。selection-fill 冻结证据中仅服务 math-g2-down-u07-k002 的 3 行，修复后完全符合 KP 语义；其余 selection 系（choice/judge）未改 kp 绑定，能力声明不变。generateStructure 运算约束路径与 arithmetic 族同源，noNegative 保持 true，数值生成范围与干扰项逻辑未变。
+
+### P28-GENERIC-ALGO-EVIDENCE-01｜B/C 通用算法 KP 语义生成全覆盖（skip→pass：61 KP；evidence 1299→1543；golden 910→1093，覆盖 307→368）（2026-09-30）
+- modified:
+  - `shared/generator/core/semantic-evidence.js`（通用算法语义补齐：① `derive()` 收集本题实际执行的通用算法类型 `algoOps`（add/sub/mult/div，mixed 展开）；② mixed 不再被整体丢弃——按 KP 显式列出的基础运算逐个过滤展开，仅当 KP 只声明 `mixed`、未列任何基础运算（如"混合运算的定义"）才放开四则（"连加连减 [add,sub,mixed,sequential]"只展开加减，不越界乘除）；③ `attach()` 归一化时保留 `mixed`（原 `.filter(op=>op!=='mixed')` 会让纯 mixed KP 退化为空集）；④ `deriveConstructs(data,algoOps)` 新增通用算法构件映射 add→addition / sub→subtraction / mult→multiplication / div→division，仅在**未命中任何 A 类概念族构件时互斥兜底**（A 类 910 题零回归），不绑定进位/退位/竖式等特定方法词，构件完全由题面真实 `data.operation` 派生）
+  - `shared/validator/kp-semantic-validator.js`（`checkSemanticEvidence` required 新增两类正面断言 `relationAny{any:[]}` / `constructAny{any:[]}`：声明关系/构件须与 KP 允许的通用算法集**有交集**，空声明或越界算法判 fail。多算法 KP（21 个加减/乘除/四则复合）单题只执行其一，静态规则须如此表达；不使用 forbidden 反向放水）
+  - `tools/kbl/derive-bc-evidence-rules.js`（**新建**可重跑派生器：枚举 draftSemanticLevel≠A 的 KP × KCV ALLOW 题型，真实 PracticeSession 生成 N=4 题，仅当每题都满足 `data.operation` 在场 + relations/constructs 与 KP `semantic.operations` 允许集相交且不越界时才产规则（required 恰 [fieldPresent data.operation, relationAny, constructAny]，forbidden 空，inferred=true、reviewStatus=llm-finalized-dev）；幂等——写盘前剔除本批 B/C 旧规则，A 类 1299 条原样保留；不达标 KP 不产规则保持 skip）
+  - `dev/p28/check-kbl-ai-boundary.js`（KBL_WRITER_WHITELIST 加 `tools/kbl/derive-bc-evidence-rules.js`）
+  - `kbl/teaching/evidence-rules.json`（1299→**1543**：新增 244 条 B/C 通用算法规则、覆盖 61 KP；schemaVersion p26-evidence.1→`.2`；assertionKinds.required 登记 relationAny/constructAny；note 顶部追加派生口径说明）
+  - `dev/p25/build-golden-dataset.js`（① `--fill-missing` 缺额候选从 A 类扩为 kp-matrix **全集**——是否收录仍由 collectOne 的 SEMANTIC_PASS 硬卡，无规则/语义不符 KP 自然收不进；② 采集与抽样两处 `variation` 兜底取题面真实 `data.operation`，解决 B/C 题无 subType/mode 导致的缺字段）
+  - `dev/p25/validate-golden-dataset.js`（金题合法 KP 集从 A 类 307 改为 kp-matrix 全 375；错误文案同步；证据态仍仅 pass，质量门禁不放宽）
+  - `tests/generator/p25-04-semantic-evidence.test.js`（KINDS 登记 relationAny/constructAny；A 类规则数仍恰为 A 类 ALLOW 行数"不被侵蚀"；新增 B/C 规则形态冻结 deepEqual [constructAny,fieldPresent,relationAny]+forbidden 空+inferred/reviewStatus 溯源；总行数=A ALLOW+B/C）
+  - `tests/generator/p25-16-golden-dataset.test.js`（#8 从"均为 A 类"改为"∈375 + A 类全覆盖 + B/C 覆盖≥61 + 总覆盖≥368"；头注释同步）
+  - `tests/generator/p25-17-anti-regression.test.js`（#8 防回归断言从 ∈A 类改为 ∈kp-matrix 375；头注释同步）
+  - `kbl/teaching/golden-questions.json`（910→**1093**：新增 183 条 B/C 全 SEMANTIC_PASS；distinct 覆盖 KP 307→**368**=307 A+61 B/C；15/15 族；题型 fill368/choice368/apply357；counts/byFamily 重算）
+  - `dev/p25/reports/golden-validation-report.json`（validate 重生：1093 题 0 errors / 0 warnings，全 pass）
+  - `shared/engine/strategy-engine.bundle.js` + `shared/engine/presentation-engine.bundle.js`（从当前 source 重建，#16 source==bundle hash 一致）
+  - `docs/P28/change-log.md`（追加本次记录）
+- deleted:
+  - `shared/.DS_Store`（macOS Finder 垃圾文件，触发 FINAL-91 只读门禁 hash 漂移；非源码、非 tracked 内容变更）
+- reason: 用户要求"剔除退回旧信息、全面推进 375 KP 语义生成（不只是能出题）"。根因两层：① 数据层 evidence-rules 只含 A 类代表 KP 规则行，校验器无规则即 skip；② 生成器层 `deriveConstructs()` 只建模 5 个 A 类**概念族**（倍/分数/角/百分数/分类），不认识通用算法执行语义，B/C 题有 relations 却 constructs=[]。按用户关键决策"**不绑定进位/退位/竖式等特定方法，直接用通用算法类型（加/减/乘/除）决定语义类型**"，补齐"算法执行语义"这一整层：Generator 按题面真实 `data.operation` 声明通用算法构件，Validator 增"算法类型∈KP 允许集"正面断言，规则经真实生成机械派生（非手写、非 LLM 自证），上线零 LLM 依赖。坚持诚实红线：题面不存在的算法事实绝不虚构，无算法锚或题面与 KP 语义不符的 7 个 KP 不产规则、不收金题（见 risk），不用规则粉饰覆盖率。
+- tests: ① 探针端到端遍历 68 B/C × ALLOW 题型真实生成：题级证据态 **pass 976 / fail 0 / skip 108**（skip 全来自 7 个无规则 KP），61 个 B/C KP 全 pass；② 派生器预演 271 ALLOW 对 → 244 规则、27 对跳过（24 no-algorithm-anchor 属 6 概念/规范 KP + 3 no-data.operation 属绑定缺陷 KP）；③ `node dev/p25/build-golden-dataset.js --fill-missing` 新增 183 全 pass，总 1093，覆盖 368 KP/15 族；④ `node dev/p25/validate-golden-dataset.js` 1093 题 0 errors/0 warnings、`{pass:1093}`；⑤ `npm test` **617/0**（p25-04、p25-16 均 10/10，p25-17 通过；aClassSemanticPass=921 等 A 类指标不变）；⑥ `node dev/check-all.js` **27 PASS / 0 FAIL / 1 SKIP**（#16 bundle、#18 coverage、#20 doc 数字扫描均过）。
+- risk: 低-中。① **7 个 KP 保持 skip 是诚实边界而非退化**：6 个无通用算法锚（数数、11-20 数的认识、凑十法、有括号运算顺序、脱式计算规范、计数单位与十进制计数法——`semantic.operations` 为空，属数概念/书写规范，非四则算法执行），其语义化需另建概念/规范构件体系，不在本次"通用算法"范围；② **独立缺陷已定位但未在本次修**：`math-g2-down-u07-k002`（数量关系整合，semantic.operations=[multiplication,division]）被 `generator:selection-fill` 生成成**无 operation 字段的加法口算题**（如 22+38），属生成器绑定与 KP 语义不符，语义层无法诚实补证（硬加乘法构件即虚构），已单列待另开任务修绑定；③ 通用构件仅在无概念构件时兜底，A 类路径零影响（910 题 + aClassSemanticPass=921 不变佐证）；④ 质量依赖"真实生成 + SEMANTIC_PASS"机器链与生成器确定性（RNG 受控、静态 JSON、上线零 LLM）。
+
+### P28-GOLDEN-FINALIZE-02｜金题集 A 类 KP 全量覆盖（G2-G6 批量补漏：262→910，307/307）（2026-09-30）
+- modified:
+  - `kbl/teaching/golden-questions.json`（`--fill-missing` 全量跑：对剩余 216 个未覆盖 A 类 KP 各真实生成 apply/choice/fill 3 题，新增 **648** 条全 SEMANTIC_PASS；262→**910**；A 类覆盖 91→**307/307 = 100%**；counts/byFamily/generatedAt 重算，覆盖族保持 15/15）
+  - `dev/p25/reports/golden-validation-report.json`（validate 重生：910 题 0 errors）
+  - `docs/P28/change-log.md`（追加本次记录）
+- deleted:
+  - 无
+- reason: 承接 P28-GOLDEN-FINALIZE-01 的 G1 试点（模式已验证可靠），按用户"先试点再批量"决策批量补齐 G2-G6。648 条全部经真实 PracticeSession 生成 + KpSemantic.checkSemanticEvidence 硬卡 pass，非手写/非 LLM 自证；脚本一次性采集完才写盘，中途失败不污染题集。至此金题集完成 A 类 KP 全量覆盖（B/C 类不属 golden 范围——门禁规定 kpId 必须为 A 类）。
+- tests: ① 后台批量 exit 0，216 缺额 ×3 全 pass（新增 648，无一条 warn/skip/fail）；② A 类覆盖统计 307/307、缺 0；③ 证据态 `{pass:910}`，humanReview 非 llm-finalized 数=0；④ `node dev/p25/validate-golden-dataset.js` 910 题 0 errors、15/15 族、PASS；⑤ 抽样人工核答案正确（G4 13+14=27；G5 20 个平均分 8 人=1/8；G6 100 元八折=80）；⑥ `node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP；⑦ `npm test` 617/0（含 p25-16 冻结不变量 10/10）。
+- risk: 低-中。质量完全依赖"真实生成 + SEMANTIC_PASS"机器链（已验证 910/910 pass 且抽样答案正确）。acceptable 数组部分题为空（Checker 以 value 为准），非本次引入的退化。910 条题面为生成器确定性产出（RNG 受控），题集为静态 JSON，上线零 LLM 依赖。B/C 类 68 KP 本就不在 golden 门禁范围。
+
+### P28-GOLDEN-FINALIZE-01｜金题集取消人工复核 + G1 试点覆盖补漏（259→262，新增 --fill-missing）（2026-09-30）
+- modified:
+  - `dev/p25/build-golden-dataset.js`（① 范式：默认抽样与新题的 `humanReview:'pending'`→`'llm-finalized'`、顶层 `reviewStatus`→`llm-finalized-dev`、console/头注释更新；② 新增 `--fill-missing [--grade gN]` 覆盖模式 + `collectOne(kp,qt,fam)`（真实 PracticeSession 生成单题，KpSemantic.checkSemanticEvidence 仅收 pass）+ `runFillMissing()`（读现有题集、只对未覆盖 A 类 KP 追加、每 KP 适用核心题型最多 3 条、按 kp|qt|answer 去重、重算 counts、不重生成已有题）；默认按族抽样行为完全不变）
+  - `dev/p25/validate-golden-dataset.js:12,132`（门禁 humanReview 合法值 `pending`→`llm-finalized`，错误文案/注释同步；source 仍须 ai-candidate、证据态仍仅 pass，质量门禁不放宽）
+  - `tests/generator/p25-16-golden-dataset.test.js:12,75-80`（冻结不变量 #5 与用例断言 `pending`→`llm-finalized`）
+  - `kbl/teaching/golden-questions.json`（现有 259 条 `humanReview` 全量迁移 pending→llm-finalized，**题面/answer/source/validator 零改动**；顶层 reviewStatus=llm-finalized-dev；新增 math-g1-up-u04-k002「数的组成」真实生成 3 条 apply/choice/fill；259→262，counts/byFamily/purpose/generatedAt 同步）
+  - `docs/P28/change-log.md`（追加本次记录）
+- deleted:
+  - 无
+- reason: 用户 2026-09-30 显式指令取消人工确认环节，golden 由 LLM 在开发期统筹定案。原 P25-16 三阶段（AI 候选→结构验证→**人工复核**）的人工环节取消，质量保险改由**机器行为证据链**承担：金题不是手写/LLM 自证，而是 build-golden-dataset 经真实 `PracticeSession.start()` 生成、`KpSemantic.checkSemanticEvidence` 硬卡 SEMANTIC_PASS（warn/skip/fail 一律不收，不伪造），answer 为真实题目答案。原脚本按族抽样封顶 20、不追 KP 全覆盖，故新增 `--fill-missing` 按 A 类 KP 补漏；G1 试点只缺 1 个 A 类 KP（22 A 类已覆盖 21）。source 仍为 ai-candidate（题确由生成器产出，溯源诚实），仅 humanReview 状态升格；字段名 humanReview 保留（最小修改，避免连带重构）。
+- tests: ① `node dev/p25/build-golden-dataset.js --fill-missing --grade g1` → k002 新增 3 条全 pass，总 262，覆盖族 15/15；② `node dev/p25/validate-golden-dataset.js` → 262 题 0 errors / 0 warnings，证据态 `{pass:262}`，题型 fill91/choice91/apply80；③ k002 三题答案数学正确（fill:34=3个十和4个一；choice:86=8个十和6个一；apply:2×10+9=29）；④ `node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP；⑤ `npm test` 617/0，其中 p25-16 单测 10/10；⑥ grep 确认代码/门禁/测试/数据已无 humanReview=pending（仅 docs/archive 历史快照保留，属历史记录不改）。
+- risk: 中。质量范式从"人工复核"转为"真实生成+语义 PASS 机器验证"，消除了人工兜底，依赖 SEMANTIC_PASS 与 Generator/Checker 的正确性（已为现有 1570 ALLOW 真实生成门禁长期覆盖，风险可控）。`--fill-missing` 为新增能力，默认抽样路径未改。剩余覆盖缺口：307 A 类现覆盖约 91，G2-G6 尚有约 216 个 A 类 KP 待按年级分批补（`--fill-missing --grade gN`，逐批过 validate/check-all），在后续轮次推进。
+
+### P28-SEMANTIC-FINALIZE-01｜教学语义分级 LLM 定案：kp-matrix draftSemanticLevel 升格（375 值不变）（2026-09-30）
+- modified:
+  - `kbl/teaching/kp-matrix.json`（仅顶层 note：从"启发式草拟/须经 P25-02 人工确认/不得作为最终结论"升格为"reviewStatus=llm-finalized-dev，LLM 开发期逐规则核验定案"；375 个 KP 的 draftSemanticLevel/draftBasis 值与 builtFrom/counts 全部不动）
+  - `docs/P28/change-log.md`（追加本次记录）
+- deleted:
+  - 无
+- reason: 用户 2026-09-30 显式指令取消人工确认环节，教学语义由 LLM 开发期统筹定案。LLM 复核结论：`draftLevel()`（dev/p25/build-baseline.js:119-133）是**纯确定性函数**——A 深语义/B 算术族/C 通用兜底/D 几何统计 完全由 Generator 原生绑定（bindByKp）+ domain + representations.graphic 客观决定，307A/67B/1C/0D 是 Generator 承载架构的事实投影，非主观文本判断。故逐个重判会破坏与生成器绑定的一致性，正确动作是升格治理状态而非改值。字段名 draftSemanticLevel/draftBasis 保留（全链 25 处消费，改名违反 P28 最小修改/禁止顺手重构），定案语义由文件级 note 承载（该文件无逐 KP pending 字段，note 是唯一治理状态锚）。
+- 重要排雷：曾尝试重跑 `dev/p25/build-baseline.js` 重生，发现其 md 输出目录 `docs/p25/` 已在前期大扫除归档删除（脚本写 P25-BASELINE.md 时 ENOENT 半崩），且脚本依赖旧 canonical 的 generatedAt 形状，重跑导致 builtFrom 变空、generation-matrix.json 伪漂移 135 行；已 `git checkout` 完全回退该两文件，teaching 层恢复干净。L2 最终采用"直接编辑文件级 note、不重跑历史脚本"的安全路径。
+- tests: ① `node -e require('kbl/teaching/kp-matrix.json')` JSON 合法；② `node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP；③ grep 确认无门禁/测试断言旧 note 措辞（"不得作为最终/启发式草拟/须经 P25-02"仅存于两个历史生成器，非活门禁）；④ 数据值零变更（仅 note 单行）。
+- risk: 低。值零变更、无脚本/消费链/测试改动。P25 build-baseline.js 处于半失效状态（输出目录已归档），本次不修（历史冻结脚本，修它属无关改动），后续若需重生 teaching 矩阵须先恢复输出目录或改输出到 archive——另开任务。教学语义其余主观空槽（semantic-review.json 的 9 字段）大多已由后续 P25-03 qt-intent / P25-09 variation / P25-10 misconception 专项承接，不在本次范围。
+
+### P28-REL-DERIVE-02｜取消人工确认环节：relations LLM 统筹定案 + R-REL-03 跨册概念链（336→373）（2026-09-30）
+- modified:
+  - `tools/kbl/derive-relations.js`（重写：统一治理状态去 `pending`，每条改 `inferred:true + reviewStatus:'llm-finalized-dev'`；新增 R-REL-03 LLM 跨册/跨年级概念主干链 11 族锚点表 38 边；三元组 fromId|relation|toId 全局 Set 去重；R-REL-02 排除词加"整理和复习"，59→58）
+  - `tools/kbl/derive-kbl.js`（spiral R-SP 注释去 pending-human-confirmation → llm-finalized-dev；逻辑不变）
+  - `tools/kbl/emit-canonical.js:116`（difficultyAnnotation.note 去 spiral pending 措辞 → llm-finalized-dev）
+  - `kbl/canonical/relations.json`（373 条，含 reviewStatus，顶层加 reviewStatus；无 pending）+ `kbl/relations/math/relations.json` + `shared/knowledge/relations/math/relations.json`（全链重生）
+  - `kbl/canonical/capability.json` + `kbl/data/math/g*/knowledge-points.json` + `shared/knowledge/data/math/g*/knowledge-points.json` + 两 manifest（全链重跑：derive-kbl→derive-relations→emit→build；counts.relations=373，rootHash d79a04c9）
+  - `tools/kbl/validate.js:90-92`（关系门禁从 inferred+pending 改 inferred+reviewStatus=llm-finalized-dev）
+  - `dev/check-kbl-quality.js`（EXPECT.relations 336→373；Q1 标签/头注释 373；Q2 改 llm-finalized-dev 强校验）
+  - `dev/verify-kbl-runtime.js:41`（runtime 关系计数 336→373）
+  - `docs/00-BASELINE.md`（Relations 段 373，写明 R-REL-01/02/03 构成与 llm-finalized-dev 治理语义、无环）
+  - `.trae/skills/kbl-derived-field/SKILL.md`（派生数据治理状态词更新为 llm-finalized-dev，补概念链锚点表方法论）
+  - `docs/P28/change-log.md`（追加本次记录）
+- deleted:
+  - 无
+- reason: 用户 2026-09-30 显式指令——不做单独人工确认环节，教学语义/relations/golden 等均由 LLM 在开发期基于源 Excel 统筹优化定案、上线零 LLM 依赖。此为 P28《AI 编程规则》"用户显式指令覆盖禁令并留存依据"条款的适用：覆盖禁令#5（AI 不自行编数据），边界为"全部从源 Excel 派生、静态固化、可重跑可审计"。①relations 从机械顺序集升级：R-REL-03 补 11 条跨册/跨年级教学主干链（整数认识/加减/乘/除/分数/小数/图形认识/测量/线角/数系代数/图形运动），消除"关系只在同册、缺跨年概念依赖"的局限；②spiral/relations 去 pending，LLM 即开发期最终确认者。另核查"58 非发布 KP"为伪问题：canonical 375 全 active/published、知识页 selectable=375、sitemap 375，该历史产品决策项已收口，无施工。
+- tests: ① derive-relations 输出 373（R-REL-01:277 + R-REL-02:58 + R-REL-03:38），11 族 38 边锚点全命中；② Kahn 拓扑校验 363 节点全部消去 → 无环；全局去重无重复三元组；③ `node tools/kbl/validate.js` PASS（inferred+reviewStatus 门禁 + 自环/重复/悬空/类型）；④ `node dev/check-all.js` 27 PASS / 0 FAIL / 1 SKIP；⑤ `npm test` 617 pass / 0 fail；⑥ 全链重生幂等，rootHash 一致 d79a04c9；⑦ 数据中 `pending` 字样 0 残留（relations/spiral note）。
+- risk: 中。用户显式覆盖禁令#5 已留存指令依据（本条 reason）。R-REL-03 概念链为 LLM 教学判断固化（锚点规则可重跑可回退），但仍属推断非 Excel 原生字段，故保留 `inferred:true` 溯源不伪装人工源。后续 L2（kp-matrix draftSemanticLevel 375 定案）、L3（golden 90/375 覆盖缺口，补齐规模约上千条完整金题）仍待分层推进。
+
+### P28-REL-DERIVE-01｜P1 前置关系 LLM 开发期推断（336 条 inferred prerequisite）（2026-09-30）
+- modified:
+  - `tools/kbl/derive-relations.js`（**新建**；P1 关系派生入口。读 canonical/knowledge.json，规则 R-REL-01 同 grade+book+unit 内按 knowledgeNo 顺序连边 277 条 + R-REL-02 同册跨 unit 按 unitOrdinal 递进 59 条，排除"复习与关联/综合实践"单元；输出 fromId/toId/relation=prerequisite/inferred:true/rule/pending=human-confirmation）
+  - `kbl/canonical/relations.json`（空集 → 336 条 inferred 关系，source=llm-derived-dev，含 note/inferredCount）
+  - `kbl/relations/math/relations.json`（emit-canonical.js 同步）
+  - `shared/knowledge/relations/math/relations.json` + `shared/knowledge/manifest/manifest.json` + `kbl/manifest/manifest.json`（build.js 同步，counts.relations 0→336，rootHash 重算）
+  - `dev/p28/check-kbl-ai-boundary.js`（KBL_WRITER_WHITELIST 加 `tools/kbl/derive-relations.js`，新增离线派生工具入白名单）
+  - `tools/kbl/validate.js:90-92`（关系门禁从"必须 0"改为">0 且全 inferred:true"；自环/重复/类型/悬空质量校验保留不动）
+  - `dev/check-kbl-quality.js`（EXPECT.relations 0→336；Q1 标签/头注释 336；Q2 从"relations==0"改为">0 且全 inferred+prerequisite"）
+  - `dev/verify-kbl-runtime.js:41,86-88`（runtime 关系计数 0→336；凑十 KP 断言从"0 出边"改为"有 prerequisite 出边"；完整性 0 issue 保留；closure(related) 空结果保留）
+  - `tools/kbl/derive-kbl.js:127-129`（加注释：空集为单脚本兜底，标准流水线须后跑 derive-relations.js 覆盖；行为不变）
+  - `docs/00-BASELINE.md`（Relations 段 0→336，说明 P1 inferred 来源/规则/待人工确认）
+  - `docs/P28/change-log.md`（追加本次记录）
+- deleted:
+  - 无
+- reason: KBL relations 自 P16 起为空集（root Excel 无关系字段，旧 1287 行裁决清除），note 留有"待人工源补充或后续从释义派生"口子。用户选择 LLM 语义推断（开发期一次性，上线零 LLM 依赖）补前置关系。规则基于教学语义结构化字段（年级/册/单元序号/knowledgeNo 教学顺序），非随机编造；全量标 inferred:true + pending-human-confirmation 与人工源区分，可重跑可回退，不跨年级深推、不基于 definition 文本猜测。
+- tests: ① `node tools/kbl/derive-relations.js` → 336（R-REL-01:277 + R-REL-02:59）；② emit-canonical + build 同步，kbl/shared manifest counts.relations=336 一致，rootHash 重算；③ `node dev/check-all.js` → 27 PASS / 0 FAIL / 1 SKIP；④ `npm test` → 617 pass / 0 fail；⑤ Q5 关系质量（自环 0/重复 0/环 0，序号单调递增收敛恒真）+ runtime integrity 0 issue 通过；⑥ 抽样凑十 math-g1-up-u05-k001 → 加法口算 k002 有 prerequisite 出边。
+- risk: 中。关系为推断非人工确认（已全标 inferred + pending，不污染人工源；人工确认后转正式）。执行顺序依赖：derive-kbl.js 仍写空集兜底，标准流水线须 derive-kbl → derive-relations → emit-canonical → build（已在两脚本头注释 + 本条登记）。未做跨年级/跨册关系（避免误推），覆盖面限于同册教学顺序，后续可增强。门禁断言随数据补全更新（非放宽：质量校验全保留，新增 inferred 标记强校验）。
+
+### P28-SPIRAL-DERIVE-01｜KBL spiral.maxLevel 派生补全（缺口 A：螺旋数据空转）（2026-09-30）
+- modified:
+  - `tools/kbl/derive-kbl.js`（+`COG_SPIRAL_BASE` 常量 + `deriveSpiralMaxLevel(cog, seed)` 函数；capability 派生 return 加 `spiral: { level: 1, maxLevel }` 字段；R-SP 公式：recognize→2/understand→3/apply→4/analyze→5 + seedDifficulty≥8 +1，clamp[1,6]）
+  - `tools/kbl/emit-canonical.js:116`（difficultyAnnotation 包装加 `spiral: c.spiral` 字段，note 标 `spiral.maxLevel: pending-human-confirmation`）
+  - `kbl/canonical/capability.json`（重派生，375 KP 全有 spiral；maxLevel 分布 2:41/3:53/4:177/5:89/6:15）
+  - `kbl/data/math/g1..g6/knowledge-points.json`（重派生，difficultyAnnotation.spiral 流通到运行时数据层）
+  - `shared/knowledge/data/math/g1..g6/knowledge-points.json`（build.js 同步副本）
+  - `shared/orchestration/knowledge-context.js:222`（buildView 读 `anno.spiral` 替换硬编码 `{level:1, maxLevel:1}` 占位，fallback 保留占位向后兼容）
+  - `tests/shape/pol-kbl-shape.test.js:134`（测试从「占位契约 1/1」更新为「派生契约：level=1 起步，maxLevel ∈ [1,6]」）
+  - `docs/P28/change-log.md`（追加本次记录）
+- deleted:
+  - 无
+- reason: KBL 无 spiral 字段，knowledge-context.js:222 运行时硬编码 `{level:1, maxLevel:1}` 占位（pol-kbl-pending 登记），导致 strategy-engine.js:1011 competition 模式取高位恒为 1，螺旋档位无法生效。补真实派生公式（从已冻结的 capability.cognitiveLevel + seedDifficulty 派生，不跨层读 teaching 草拟字段 draftSemanticLevel），让 spiral.maxLevel 流通到运行时。
+- tests: ① `node tools/kbl/derive-kbl.js` → capability 375 全有 spiral，分布 2:41/3:53/4:177/5:89/6:15；② `node tools/kbl/emit-canonical.js` → kbl/data 375 KP spiral 流通；③ `node tools/kbl/build.js` → shared 副本同步；④ `npm test` → 617 pass / 0 fail；⑤ `node dev/check-all.js` → 27 PASS / 0 FAIL / 1 SKIP / 28 项；⑥ `node dev/p28/check-kbl-ai-boundary.js` → KBL 写保护完好，零漂移；⑦ 抽样 math-g3-up-u02-k005（cog=analyze, seed=9）→ spiral.maxLevel=6，占位 1/1 不再产生。
+- risk: 低。公式登记在 derive-kbl.js 内可重跑，capability.json note 标 pending-human-confirmation；消费链（strategy-engine.js:1009/1011 + adaptive-strategy.js R16）已存在不动，只是数据从占位变派生；不新建目录/模块/字段（coreElements 不引入）；不跨层读 teaching 草拟字段；测试从占位契约更新为派生契约（非放宽标准，是契约随数据补全更新）。
+
 ### P28-REMOVE-LOOP-TOAST-01｜删除 practice.html 生成后闭环引导 Toast 提示功能（2026-09-30）
 - modified:
   - `practice.html`（删除 loop-toast 提示浮层全部相关代码:CSS `.loop-toast` 样式块、HTML `#loopToast` 容器、`printFile` 内 `showLoopToast` 调用、`showLoopToast`/`hideLoopToast` 函数定义、`#loopToastClose` 事件绑定,共 ~53 行）
