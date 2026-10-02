@@ -25,6 +25,15 @@
 
 ## 记录（新 → 旧）
 
+### P28-HOLLOW-05｜shape-flat 收口裁决落档：SHAPE_OK 4 KP 白名单 + calc 行划界（零生产代码改动）（2026-10-02）
+- modified:
+  - `tests/generator/p28-hollow-shape-themed.test.js`（头部注释补「有意排除」段：SHAPE_OK 4 KP 精确 canonical id 名单及教学裁决理由；calc 行划界与现状证据）
+  - `~/.trae-cn/memory/projects/-Users-zhanggaozhang-Code-Homework-Help--p2-4ab44bde5372764f7069/project_memory.md`（探针重写口径补 SHAPE_OK 4 个精确 id；calc 行另线裁决）
+- deleted: 无
+- reason: 用户对 HOLLOW-04 收口时两个有意排除项给出最终裁决，落档防止后续 AI 重跑空心探针时重复打标（规则禁止再审计）：①**SHAPE_OK 4 KP 不修**——`math-g1-down-u01-k001` 平面图形认识、`math-g4-up-u02-k001` 角的再认识、`math-g4-up-u02-k003` 角的分类、`math-g6-up-u04-k001` 圆和扇形的认识，均为纯形状识别 KP，flat 认图模板（认图形/辨角/说名称）正是其教学目标，1570 冻结样本输出正确，永不入 SHAPE_THEME；②**calc 行划界**——shape-recognition 承载的计算行不属 shape-flat 语义空心范畴；实测现行 1570 ALLOW（189 calc 行）与运行时 `shared/knowledge/mappings/generation-contract/math.json` 中 shape 的 75 个绑定 KP 的 calc 行均为 0，shape.js 仅保留直接能力调用时的泛型 calc 兜底；如未来需要治理，另开独立任务线，不在 HOLLOW 系列内扩修。本次仅注释/记忆落档。
+- tests: `node --test tests/generator/p28-hollow-shape-themed.test.js`（12/12 PASS）；`node dev/check-all.js`（27 PASS / 0 FAIL / 1 SKIP，浏览器项无 Chrome SKIP 为本地常态）
+- risk: 零生产代码行为变化，无契约/冻结物/bundle 变更，无需重建或重冻；SHAPE_OK 为精确 canonical id 白名单；不 git commit（用户未要求）。
+
 ### P28-HOLLOW-04｜shape-flat 全修收尾：BORDERLINE 4 KP/20 行补入 SHAPE_THEME（66→70，新增族 18 角的度量）（2026-10-02）
 - modified:
   - `shared/generator/generators/shape.js`（SHAPE_THEME 补 4 条目：`math-g3-up-u01-k002` 反推观察角→族 2 观察物体、`math-g6-up-u04-k004` 利用圆设计图案→族 6 旋转与图案设计、`math-g3-up-u07-k003` 角的度量初步 + `math-g4-up-u02-k002` 角的度量→新增族 18 角的度量；每条 facts×3/wrongs×3/nums×3 数值互异/scenes×3 均按既有四参格式）

@@ -19,6 +19,15 @@
  *      steps；不挂 data.operation——g5-down-u09-k001/k002 FORBID 算术 operation）。
  *   3. PracticeSession E2E（冻结 seed 抽样 6 族）元数据 generator = shape-recognition，
  *      题面同样不落 SHAPE_FLAT。
+ *
+ * 有意排除（用户裁决 2026-10-02 / P28-HOLLOW-05，探针白名单，永不在 shape-flat 治理范围）：
+ *   - SHAPE_OK 4 KP——纯形状识别 KP，flat 认图模板（认图形/辨角/说名称）正是其教学目标，
+ *     输出正确，不入 SHAPE_THEME：
+ *       math-g1-down-u01-k001 平面图形认识、math-g4-up-u02-k001 角的再认识、
+ *       math-g4-up-u02-k003 角的分类、math-g6-up-u04-k001 圆和扇形的认识。
+ *   - calc 行——shape-recognition 承载的计算行不属 shape-flat 语义空心范畴：
+ *     现行 1570 ALLOW 与运行时 generation-contract 中 shape 的 75 KP 均无 calc 行，
+ *     shape.js 仅保留泛型 calc 兜底；如需治理另开任务线，不在 HOLLOW 系列内扩修。
  */
 
 const { test } = require('node:test');
