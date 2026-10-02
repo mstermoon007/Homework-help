@@ -7,9 +7,12 @@
  * （全部由 generator:shape-recognition 承载，几何认识/度量/运动类）。修复方式为
  * shape.js 内 SHAPE_THEME 主题化分派：66 KP × choice/judge/fill/geometry/apply
  * 统一走 makeThemedShapeQuestion（教学素材题面/答案），不落 flat 随机认图模板。
+ * P28-HOLLOW-04：补 4 个 BORDERLINE KP（g3-up-u01-k002 反推观察角、
+ * g3-up-u07-k003 角的度量初步、g4-up-u02-k002 角的度量、g6-up-u04-k004
+ * 利用圆设计图案）共 20 行，66→70 KP、263→283 行，新增形态族 18。
  *
  * 冻结不变量：
- *   1. SHAPE_THEME 恰覆盖 66 KP；matrix 中 66 KP × 五题型行 ≥ 探针的 263 行。
+ *   1. SHAPE_THEME 恰覆盖 70 KP；matrix 中 70 KP × 五题型行 ≥ 探针的 283 行。
  *   2. maker 真实产出（count=3）：题面不命中 SHAPE_FLAT 模板、含 KP 名前缀语义、
  *      指纹两两互异（choice/fill 靠互异 operands，judge/geometry/apply 靠题面哈希）、
  *      judge 假命题必带 data.misconception；证据包络保持（mode=graphic/shapeName/
@@ -54,9 +57,9 @@ function gradeOf(kp) { return Number(/^math-g(\d)-/.exec(kp)[1]); }
 
 /* ---------------- 0. 覆盖面对账 ---------------- */
 
-test('覆盖：SHAPE_THEME 恰 66 KP，matrix 主题行不少于探针 263 行', () => {
-  assert.equal(THEMED_KPS.size, 66, 'SHAPE_THEME 应恰覆盖 66 KP，实际 ' + THEMED_KPS.size);
-  assert.ok(ROWS.length >= 263, '66 KP × 五题型行应 ≥ 263（探针空心行），实际 ' + ROWS.length);
+test('覆盖：SHAPE_THEME 恰 70 KP，matrix 主题行不少于探针 283 行', () => {
+  assert.equal(THEMED_KPS.size, 70, 'SHAPE_THEME 应恰覆盖 70 KP（66 + HOLLOW-04 补 4），实际 ' + THEMED_KPS.size);
+  assert.ok(ROWS.length >= 283, '70 KP × 五题型行应 ≥ 283（263 探针空心行 + 20 BORDERLINE 行），实际 ' + ROWS.length);
 });
 
 /* ---------------- 1. 选择器路由（抽样对账，全量由探针复核收口） ---------------- */
@@ -72,8 +75,8 @@ test('selector：主题行路由 shape-recognition（match 全 1）', () => {
         r.knowledgeId + ' / ' + r.questionType + ' match 应全 1');
     }
   });
-  // 探针实测 263 行 gen 全为 shape-recognition；此处对账路由命中率不回落
-  assert.ok(routed >= 263, '路由到 shape-recognition 的主题行应 ≥ 263，实际 ' + routed);
+  // 探针实测 283 行 gen 全为 shape-recognition；此处对账路由命中率不回落
+  assert.ok(routed >= 283, '路由到 shape-recognition 的主题行应 ≥ 283，实际 ' + routed);
 });
 
 /* ---------------- 2. 主题化 maker 产出/契约/语义/去重 ---------------- */
@@ -136,7 +139,7 @@ test('maker：不落 flat 模板、含 KP 名、契约通过、指纹互异、ju
   });
 });
 
-/* ---------------- 3. PracticeSession E2E（冻结 seed，17 形态族抽样 6 行） ---------------- */
+/* ---------------- 3. PracticeSession E2E（冻结 seed，18 形态族抽样 9 行） ---------------- */
 
 const E2E_ROWS = [
   ['math-g1-up-u03-k001', 'judge'],    // 立体图形特征
@@ -144,7 +147,10 @@ const E2E_ROWS = [
   ['math-g5-down-u09-k001', 'choice'], // 正方体涂色（FORBID 算术 operation）
   ['math-g6-down-u03-k001', 'fill'],   // 圆柱度量
   ['math-g3-down-u08-k006', 'apply'],  // 复习·重叠问题
-  ['math-g4-down-u05-k001', 'geometry']// 三角形族
+  ['math-g4-down-u05-k001', 'geometry'],// 三角形族
+  ['math-g3-up-u01-k002', 'choice'],   // 族2·反推观察角（HOLLOW-04）
+  ['math-g4-up-u02-k002', 'geometry'], // 族18·角的度量（HOLLOW-04）
+  ['math-g6-up-u04-k004', 'apply']     // 族6·利用圆设计图案（HOLLOW-04）
 ];
 
 E2E_ROWS.forEach(function (row) {

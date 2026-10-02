@@ -25,6 +25,22 @@
 
 ## 记录（新 → 旧）
 
+### P28-HOLLOW-04｜shape-flat 全修收尾：BORDERLINE 4 KP/20 行补入 SHAPE_THEME（66→70，新增族 18 角的度量）（2026-10-02）
+- modified:
+  - `shared/generator/generators/shape.js`（SHAPE_THEME 补 4 条目：`math-g3-up-u01-k002` 反推观察角→族 2 观察物体、`math-g6-up-u04-k004` 利用圆设计图案→族 6 旋转与图案设计、`math-g3-up-u07-k003` 角的度量初步 + `math-g4-up-u02-k002` 角的度量→新增族 18 角的度量；每条 facts×3/wrongs×3/nums×3 数值互异/scenes×3 均按既有四参格式）
+  - `shared/generator/generator-registry.js`（shape-recognition version 4→5 + P28-HOLLOW-04 注释）
+  - `tests/generator/p28-hollow-shape-themed.test.js`（覆盖断言 66→70 KP、263→283 行；路由对账 ≥283；E2E 6→9 行补 k002 choice / g4-up-u02-k002 geometry / k004 apply 三个新入表族抽样；头部注释补 HOLLOW-04 段）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（build:strategy/build:presentation 重建——E2E 走 bundle，未重建前 k004 apply 仍出 flat 模板，重建后 12/12）
+  - `kbl/teaching/variation-profiles.json`、`kbl/teaching/misconception-profiles.json`（题面文案变更后重 derive）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.{json,md}`（1570 行证据重冻 FAIL rows=0）
+  - `docs/00-BASELINE.md`（Tests 655→658 用例三处：用例表/Performance/门禁链；文件数 64 不变）
+  - `~/.trae-cn/memory/projects/.../project_memory.md`（当前态：shape-recognition v5/70 KP/18 族/BORDERLINE 分类不存在；探针口径删 SHAPE_BORDERLINE；npm test 655→658）
+- deleted:
+  - `/tmp/borderline-probe.js`（本次 20 行复核探针，一次性脚本，复核 0 FLAT 后清理）
+- reason: 用户指令「继续执行 shape-flat 全修任务」——HOLLOW-02 遗留的 SHAPE_BORDERLINE 4 KP/20 行是当时探针判定「表面图形词重叠、非高置信」而排除的边缘行。复核实测：20 行全部命中 SHAPE_FLAT 模板且教学语义空心（反推观察角出「圆的特征」、角的度量出「共有几个角」不涉量角器与度数、圆设计图案出「共有几个圆」），属空心无疑，按 HOLLOW-02 同构最小修改补入主题表。角两 KP 语义同源故合开新族 18；k002/k004 就近归族 2/族 6。calc 行不在本次范围。
+- tests: 定向 `tests/generator/p28-hollow-shape-themed.test.js` 12/12 PASS；探针复核 20 行 0 FLAT；derive-variation-profiles + derive-misconceptions 重跑；1570 重冻 FAIL=0；generator matrix 23 Gen FAIL 0；`npm test` 658/658 PASS；check-all 27 PASS / 0 FAIL / 1 SKIP（串行）
+- risk: 4 KP 的 choice/judge/fill/geometry/apply 题面与答案整体更换（教学意图即如此），1570 冻结证据已重冻赐封；v=i%3 三变式数值互异已核验（k002: 1/3/6；k003: 90/1/2；g4-k002: 90/45/30；k004: 90/60/120）；SHAPE_THEME 键为精确 canonical id，无副作用；不 git commit。
+
 ### P28-HOLLOW-03a｜HOLLOW-03 清理补漏：/tmp 探针残留 8 个 + 测试文件 2 处死链注释（2026-10-02）
 - modified:
   - `tests/generator/p28-hollow-shape-themed.test.js`（L6/L39 注释引用已删除的 `/tmp/kp-hollow-final.js`，去除死路径、保留「探针打标 263 行/flat 指纹零命中」语义说明）

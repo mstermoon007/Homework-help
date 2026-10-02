@@ -50,8 +50,10 @@ var CORE_RECORDS = [
       // 行，非 geometry 行回落到 money-measurement / arithmetic-mixed-calculation / application-word。
       // P28-HOLLOW-02：SHAPE_THEME 主题化分派（66 KP 教学素材 maker 全接管 choice/judge/
       // fill/geometry/apply），消除 flat 空心模板题面，version 3→4。
+      // P28-HOLLOW-04：SHAPE_THEME 补 4 个 BORDERLINE KP（反推观察角/角的度量初步/角的度量/
+      // 利用圆设计图案，66→70），新增形态族 18 角的度量，version 4→5。
     ],
-    scope: 'core', version: 4, supportsComposite: false },
+    scope: 'core', version: 5, supportsComposite: false },
   { id: 'generator:position-direction', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'geometry', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'geometry', 'apply'],
     knowledgePoints: ['math-g2-up-u04-k003', 'math-g2-up-u04-k004', 'math-g3-down-u01-k002', 'math-g3-down-u01-k003', 'math-g3-down-u01-k004', 'math-g3-up-u01-k001', 'math-g4-down-u02-k003', 'math-g4-down-u07-k003', 'math-g4-down-u07-k004', 'math-g4-down-u07-k005', 'math-g5-down-u01-k003', 'math-g5-up-u01-k001', 'math-g5-up-u01-k003', 'math-g5-up-u04-k001', 'math-g5-up-u04-k002', 'math-g6-up-u01-k001', 'math-g6-up-u01-k002', 'math-g6-up-u01-k003', 'math-g2-up-u04-k001', 'math-g2-up-u04-k002', 'math-g5-up-u01-k002', 'math-g4-up-u08-k001', 'math-g4-up-u08-k002', 'math-g4-up-u08-k003', 'math-g5-up-u04-k003'],
     scope: 'core', version: 2, supportsComposite: false },

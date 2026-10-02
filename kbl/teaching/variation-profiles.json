@@ -40,7 +40,7 @@
     "genError": 0,
     "noSample": 0,
     "singleSample": 328,
-    "unknownNotObserved": 990,
+    "unknownNotObserved": 993,
     "byQt": {
       "fill": 313,
       "choice": 313,
@@ -51,8 +51,8 @@
       "classify": 25
     },
     "axisCoverage": {
-      "unknown": 333,
-      "numericVaries": 952,
+      "unknown": 330,
+      "numericVaries": 957,
       "contextPresent": 1313,
       "representationPresent": 550,
       "structureMultiStep": 26
@@ -22177,15 +22177,16 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.shapeName",
-            "data.targetName"
+            "data.graphic.params.size",
+            "data.graphic.params.width",
+            "data.steps"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 1,
+          "answerMax": 1
         },
         "context": {
           "present": true,
@@ -22242,7 +22243,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "请写出该图形的名称： ____"
+          "反推观察角：从正上方看桌上的正方体，能看到____个面"
         ]
       },
       "flags": [
@@ -22328,7 +22329,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "下列哪个图形属于平行四边形？"
+          "反推观察角：从正上方看桌上的正方体，能看到____个面（选出正确答案）"
         ]
       },
       "flags": [
@@ -22430,9 +22431,9 @@
           "generator:shape-recognition": 4
         },
         "samplePrompts": [
-          "三角形的特征是：「3个角」—— 对还是错？",
-          "平行四边形的特征是：「面是圆形」—— 对还是错？",
-          "长方形的特征是：「4个角都是直角」—— 对还是错？"
+          "反推观察角：判断对错——「根据看到的平面图形，可以反推出观察者所在的方向」。这个说法对吗？",
+          "反推观察角：判断对错——「从上面看物体，能看到它的侧面」。这个说法对吗？",
+          "反推观察角：判断对错——「同一个物体从不同方向观察，看到的形状可能不同」。这个说法对吗？"
         ]
       },
       "flags": []
@@ -22443,13 +22444,15 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.steps"
+          ]
         },
         "numeric": {
           "varies": false,
-          "distinctAnswers": 3,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 1,
+          "answerMin": 1,
+          "answerMax": 1
         },
         "context": {
           "present": true,
@@ -22500,12 +22503,11 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "图中显示的是什么角？"
+          "反推观察角：观察下图（三角形），想一想——从正上方看桌上的正方体，能看到____个面"
         ]
       },
       "flags": [
-        "single-sample",
-        "unknown-not-observed"
+        "single-sample"
       ]
     },
     {
@@ -22517,8 +22519,8 @@
           "positions": []
         },
         "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
+          "varies": true,
+          "distinctAnswers": 3,
           "answerMin": null,
           "answerMax": null
         },
@@ -22529,13 +22531,14 @@
         "representation": {
           "present": true,
           "paths": [
+            "data.graphic.params.base",
+            "data.graphic.params.height",
             "data.graphic.params.labelRadius",
             "data.graphic.params.labelSides",
-            "data.graphic.params.p1",
-            "data.graphic.params.p2",
-            "data.graphic.params.p3",
+            "data.graphic.params.offset",
             "data.graphic.params.r",
             "data.graphic.params.rightAngle",
+            "data.graphic.params.showHeight",
             "data.graphic.params.size",
             "data.graphic.params.unit",
             "data.graphic.params.unitPx",
@@ -22544,25 +22547,32 @@
             "data.graphic.type"
           ],
           "values": {
+            "data.graphic.params.base": [
+              "2"
+            ],
+            "data.graphic.params.height": [
+              "1"
+            ],
             "data.graphic.params.labelRadius": [
               "false"
             ],
             "data.graphic.params.labelSides": [
-              "false",
               "true"
             ],
-            "data.graphic.params.p1": [],
-            "data.graphic.params.p2": [],
-            "data.graphic.params.p3": [],
+            "data.graphic.params.offset": [
+              "1"
+            ],
             "data.graphic.params.r": [
               "1"
             ],
             "data.graphic.params.rightAngle": [
               "false"
             ],
+            "data.graphic.params.showHeight": [
+              "false"
+            ],
             "data.graphic.params.size": [
-              "1",
-              "2"
+              "1"
             ],
             "data.graphic.params.unit": [
               "\"cm\""
@@ -22571,13 +22581,12 @@
               "25"
             ],
             "data.graphic.params.width": [
-              "1",
               "2"
             ],
             "data.graphic.subtype": [
               "\"circle\"",
-              "\"square\"",
-              "\"triangle\""
+              "\"parallelogram\"",
+              "\"square\""
             ],
             "data.graphic.type": [
               "\"geometry\""
@@ -22591,14 +22600,14 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 3,
         "generators": {
-          "generator:shape-recognition": 6
+          "generator:shape-recognition": 3
         },
         "samplePrompts": [
-          "反推观察角：请在教室里找一找与它有关的例子，说一说你是怎样想的？",
-          "反推观察角：请在家里找一找与它有关的例子，说一说你是怎样想的？",
-          "反推观察角：请在操场上找一找与它有关的例子，说一说你是怎样想的？"
+          "反推观察角：小明看桌上的茶叶筒是一个圆，先猜一猜它是哪种立体图形，再说说小明是从哪个方向观察的？",
+          "反推观察角：先从一个方向观察你的文具盒并画出看到的形状，再让同桌根据你画的形状猜你站的方向？",
+          "反推观察角：先观察一个物体的上面是正方形、侧面是长方形，再猜它是什么立体图形，说说根据？"
         ]
       },
       "flags": [
@@ -27365,16 +27374,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.shapeName",
-            "data.targetName"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -27431,11 +27437,12 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "请写出该图形的名称： ____"
+          "角的度量（初步）：直角是____°"
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -27445,16 +27452,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.graphic.params.width",
-            "data.steps"
+            "data.correctIndex"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 3,
+          "answerMax": 3
         },
         "context": {
           "present": true,
@@ -27511,7 +27516,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "下列哪个是角的特征？"
+          "角的度量（初步）：直角是____°（选出正确答案）"
         ]
       },
       "flags": [
@@ -27592,9 +27597,9 @@
           "generator:shape-recognition": 4
         },
         "samplePrompts": [
-          "角的特征是：「面是圆形」—— 对还是错？",
-          "角的特征是：「有一个顶点」—— 对还是错？",
-          "角的特征是：「两条边是射线」—— 对还是错？"
+          "角的度量（初步）：判断对错——「角的边越长，角就越大」。这个说法对吗？",
+          "角的度量（初步）：判断对错——「用三角尺上的直角可以判断一个角是不是直角」。这个说法对吗？",
+          "角的度量（初步）：判断对错——「角的大小与两条边张开的程度有关，与边的长短无关」。这个说法对吗？"
         ]
       },
       "flags": []
@@ -27609,9 +27614,9 @@
         },
         "numeric": {
           "varies": false,
-          "distinctAnswers": 3,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 1,
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -27668,7 +27673,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "图中显示的是什么角？"
+          "角的度量（初步）：观察下图（角），想一想——直角是____°"
         ]
       },
       "flags": [
@@ -27685,8 +27690,8 @@
           "positions": []
         },
         "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
+          "varies": true,
+          "distinctAnswers": 3,
           "answerMin": null,
           "answerMax": null
         },
@@ -27708,8 +27713,7 @@
           ],
           "values": {
             "data.graphic.params.height": [
-              "1",
-              "2"
+              "1"
             ],
             "data.graphic.params.labelSides": [
               "true"
@@ -27724,7 +27728,6 @@
               "25"
             ],
             "data.graphic.params.width": [
-              "1",
               "2"
             ],
             "data.graphic.subtype": [
@@ -27742,14 +27745,14 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 3,
         "generators": {
-          "generator:shape-recognition": 6
+          "generator:shape-recognition": 3
         },
         "samplePrompts": [
-          "角的度量（初步）：请在教室里找一找与它有关的例子，说一说你是怎样想的？",
-          "角的度量（初步）：请在家里找一找与它有关的例子，说一说你是怎样想的？",
-          "角的度量（初步）：请在操场上找一找与它有关的例子，说一说你是怎样想的？"
+          "角的度量（初步）：先用三角尺的直角比一比数学书封面的 4 个角，再说说它们各是什么角？",
+          "角的度量（初步）：先找出 3 时整钟面上时针和分针组成的角，再说说它是直角、锐角还是钝角？",
+          "角的度量（初步）：先把剪刀慢慢张开再合拢，观察张开的角，说说角的大小和什么有关？"
         ]
       },
       "flags": [
@@ -39593,16 +39596,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.shapeName",
-            "data.targetName"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -39659,11 +39659,12 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "请写出该图形的名称： ____"
+          "角的度量：直角是____°"
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -39737,7 +39738,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "下列哪个图形属于角？"
+          "角的度量：直角是____°（选出正确答案）"
         ]
       },
       "flags": [
@@ -39779,8 +39780,7 @@
           ],
           "values": {
             "data.graphic.params.height": [
-              "1",
-              "2"
+              "1"
             ],
             "data.graphic.params.labelSides": [
               "true"
@@ -39818,9 +39818,9 @@
           "generator:shape-recognition": 4
         },
         "samplePrompts": [
-          "角的特征是：「无棱无面」—— 对还是错？",
-          "角的特征是：「两条边是射线」—— 对还是错？",
-          "角的特征是：「不能滚动」—— 对还是错？"
+          "角的度量：判断对错——「量角时量角器中心对准角的一条边就行」。这个说法对吗？",
+          "角的度量：判断对错——「量角器中心对准角的顶点，0°刻度线对准角的一条边」。这个说法对吗？",
+          "角的度量：判断对错——「读数时内圈外圈刻度可以随便看」。这个说法对吗？"
         ]
       },
       "flags": []
@@ -39835,9 +39835,9 @@
         },
         "numeric": {
           "varies": false,
-          "distinctAnswers": 3,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 1,
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -39894,7 +39894,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "图中显示的是什么角？"
+          "角的度量：观察下图（角），想一想——直角是____°"
         ]
       },
       "flags": [
@@ -39911,8 +39911,8 @@
           "positions": []
         },
         "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
+          "varies": true,
+          "distinctAnswers": 3,
           "answerMin": null,
           "answerMax": null
         },
@@ -39968,14 +39968,14 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 3,
         "generators": {
-          "generator:shape-recognition": 6
+          "generator:shape-recognition": 3
         },
         "samplePrompts": [
-          "角的度量：请在教室里找一找与它有关的例子，说一说你是怎样想的？",
-          "角的度量：请在家里找一找与它有关的例子，说一说你是怎样想的？",
-          "角的度量：请在操场上找一找与它有关的例子，说一说你是怎样想的？"
+          "角的度量：先用量角器量出数学书封面一个角的度数，再说说你是怎么量的？",
+          "角的度量：先画一个角，再用量角器量出它的度数，同桌交换互相检查？",
+          "角的度量：先估一估三角尺上每个角的度数，再用量角器量一量验证？"
         ]
       },
       "flags": [
@@ -73338,16 +73338,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.shapeName",
-            "data.targetName"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": null,
-          "answerMax": null
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -73396,11 +73393,12 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "请写出该图形的名称： ____"
+          "利用圆设计图案：把一个圆绕圆心平均分成 4 份设计图案，每份圆心角是____°"
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -73468,7 +73466,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "下列哪个图形属于圆？"
+          "利用圆设计图案：把一个圆绕圆心平均分成 4 份设计图案，每份圆心角是____°（选出正确答案）"
         ]
       },
       "flags": [
@@ -73538,9 +73536,9 @@
           "generator:shape-recognition": 4
         },
         "samplePrompts": [
-          "圆的特征是：「只有长和宽」—— 对还是错？",
-          "圆的特征是：「没有直线边」—— 对还是错？",
-          "圆的特征是：「有棱有角」—— 对还是错？"
+          "利用圆设计图案：判断对错——「用圆设计图案时，圆规两脚间的距离可以随便改变」。这个说法对吗？",
+          "利用圆设计图案：判断对错——「利用圆的对称性，绕圆心旋转同样的图形可以设计出美丽的图案」。这个说法对吗？",
+          "利用圆设计图案：判断对错——「把圆绕圆心旋转后，图形会变形」。这个说法对吗？"
         ]
       },
       "flags": []
@@ -73551,15 +73549,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.shapeName"
-          ]
+          "positions": []
         },
         "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
-          "answerMin": null,
-          "answerMax": null
+          "varies": true,
+          "distinctAnswers": 3,
+          "answerMin": 60,
+          "answerMax": 120
         },
         "context": {
           "present": true,
@@ -73603,17 +73599,19 @@
         }
       },
       "evidence": {
-        "samples": 5,
+        "samples": 3,
         "generators": {
-          "generator:shape-recognition": 5
+          "generator:shape-recognition": 3
         },
         "samplePrompts": [
-          "利用圆设计图案：先说一说它是谁，再写出名称。",
-          "请观察图形，利用圆设计图案",
-          "利用圆设计图案：看一看，图中画的是什么图形？"
+          "利用圆设计图案：观察下图（圆），想一想——把一个圆绕圆心平均分成 4 份设计图案，每份圆心角是____°",
+          "利用圆设计图案：观察下图（圆），想一想——把一个圆绕圆心平均分成 6 份，每份圆心角是____°",
+          "利用圆设计图案：观察下图（圆），想一想——把一个圆绕圆心平均分成 3 份，每份圆心角是____°"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g6-up-u04-k004",
@@ -73624,8 +73622,8 @@
           "positions": []
         },
         "numeric": {
-          "varies": false,
-          "distinctAnswers": 1,
+          "varies": true,
+          "distinctAnswers": 3,
           "answerMin": null,
           "answerMax": null
         },
@@ -73671,14 +73669,14 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 3,
         "generators": {
-          "generator:shape-recognition": 6
+          "generator:shape-recognition": 3
         },
         "samplePrompts": [
-          "利用圆设计图案：请在教室里找一找与它有关的例子，说一说你是怎样想的？",
-          "利用圆设计图案：请在家里找一找与它有关的例子，说一说你是怎样想的？",
-          "利用圆设计图案：请在操场上找一找与它有关的例子，说一说你是怎样想的？"
+          "利用圆设计图案：先用圆规画一个圆，再把它平均分成 4 份，涂色设计一个图案？",
+          "利用圆设计图案：先以同一点为圆心画 3 个大小不同的圆，再说说组成的图案有几条对称轴？",
+          "利用圆设计图案：先在方格纸上用圆弧设计一个简单图案，再数一数它有几条对称轴？"
         ]
       },
       "flags": [

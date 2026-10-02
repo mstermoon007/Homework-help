@@ -91,8 +91,8 @@
 | 项 | 值 | SSOT |
 |---|---|---|
 | 测试文件 | **64** | `tests/**/*.test.js` |
-| 测试用例 | **655** | `npm test` |
-| PASS | **655** | 同上 |
+| 测试用例 | **658** | `npm test` |
+| PASS | **658** | 同上 |
 | FAIL | **0** | 同上 |
 | 测试套件数 | 17 | 同上 |
 
@@ -158,7 +158,7 @@
 | 零运行时依赖 | 纯前端静态站，无 npm 运行时包 | `package.json`（`private: true`，无 `dependencies`） |
 | 静态站构建 | `knowledge/*.html` 由 KBL 单向生成，带 `kbgen:hash` 指纹 | `dev/build-knowledge-pages.js` |
 | Bundle 产物 | `strategy-engine.bundle.js` / `presentation-engine.bundle.js`（预构建） | `shared/engine/` |
-| `npm test` 耗时 | 约 7–8s（655 用例，随机器波动） | — |
+| `npm test` 耗时 | 约 7–8s（658 用例，随机器波动） | — |
 | `npm run verify` 耗时 | ~8s（8 步 M0 门禁） | — |
 | `verify:allow-gen` 耗时 | ~2-4 min（1570 串行真实生成） | `scripts/run-all-checks.sh` |
 
@@ -193,7 +193,7 @@ UI 只是 Request 的输入端；题型/难度/数量决策全部在 POL 及以�
 | 1 | `npm run check:sw-version` | SW 版本一致性 |
 | 2 | `npm run check-lint` | 静态质量 lint |
 | 3 | `npm run verify:syntax` | 全项目 JS 语法（286 文件） |
-| 4 | `npm test` | 全链测试（655/655） |
+| 4 | `npm test` | 全链测试（658/658） |
 | 5 | `npm run verify` | M0 聚合门禁（8 步） |
 | 6 | `npm run verify:allow-gen` | 1570 ALLOW 真实生成 |
 | 7 | `node dev/p28/check-kbl-ai-boundary.js` | KBL 回写白名单 + 页面漂移 |
