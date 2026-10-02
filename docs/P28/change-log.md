@@ -25,6 +25,15 @@
 
 ## 记录（新 → 旧）
 
+### P28-HOLLOW-03a｜HOLLOW-03 清理补漏：/tmp 探针残留 8 个 + 测试文件 2 处死链注释（2026-10-02）
+- modified:
+  - `tests/generator/p28-hollow-shape-themed.test.js`（L6/L39 注释引用已删除的 `/tmp/kp-hollow-final.js`，去除死路径、保留「探针打标 263 行/flat 指纹零命中」语义说明）
+- deleted:
+  - `/tmp` 修复期探针残留 8 个（仓库外，非追踪文件）：hollow.err、kp-edge.out、kp-gen-tpl.out、kp-geo-watch.out、kp-sem-audit.err、p1-count.js、p1-prebuild.js、shape-all.txt（与 HOLLOW-03 已删 14 个同族，Oct 2 时间戳核实）
+- reason: 用户指令「清理本次修复中遗留的临时文件或注释」。范围限定 commit 00d91a6（GEO-NATIVE + HOLLOW-01/02/03 + BASELINE-SYNC）引入项：该提交新增行扫描无 console.log/debugger/TODO/FIXME 残留；仓库内无未追踪临时文件（工作树干净）；仅余上述 /tmp 残留与 2 处死链注释。docs/ 下 /tmp 引用属 change-log 历史审计记录，append-only 不动。
+- tests: `node --test tests/generator/p28-hollow-shape-themed.test.js`（9/9 PASS）+ `node dev/check-all.js`（27 PASS / 0 FAIL / 1 SKIP）
+- risk: 零生产代码行为变化；仅测试注释与仓库外 /tmp 文件；不 git commit（用户未要求）。
+
 ### P28-HOLLOW-03｜HOLLOW-01/02 收尾：修复垃圾清理 + 当前态数据统一（基线/规则/FINAL 旧文档/AI 记忆口径对齐）（2026-10-02）
 - modified:
   - `tests/generator/p28-hollow-shape-themed.test.js`（核查未使用 require 诊断：`_bundle-env` 实为 E2E PracticeSession 依赖的副作用导入，删除会导致 6 个 E2E 用例「StrategyEngine 不可用」，恢复并补「副作用导入勿删」注释）

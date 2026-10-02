@@ -3,7 +3,7 @@
 /**
  * tests/generator/p28-hollow-shape-themed.test.js — P28-HOLLOW-02 shape-flat 空心全修
  *
- * 背景：空心探针（/tmp/kp-hollow-final.js）打标 263 行高置信 shape-flat 空心 / 66 KP
+ * 背景：空心探针打标 263 行高置信 shape-flat 空心 / 66 KP
  * （全部由 generator:shape-recognition 承载，几何认识/度量/运动类）。修复方式为
  * shape.js 内 SHAPE_THEME 主题化分派：66 KP × choice/judge/fill/geometry/apply
  * 统一走 makeThemedShapeQuestion（教学素材题面/答案），不落 flat 随机认图模板。
@@ -36,7 +36,7 @@ const PracticeSession = require(path.join(ROOT, 'shared', 'engine', 'practice-se
 const SHAPE = 'generator:shape-recognition';
 const THEMED_QTS = ['choice', 'judge', 'fill', 'geometry', 'apply'];
 
-// 探针同款 flat 模板指纹（/tmp/kp-hollow-final.js 口径，修复后必须零命中）
+// 探针同款 flat 模板指纹（修复后必须零命中）
 const SHAPE_FLAT = /请写出该图形的名称|观察图中的图形，写出它的名称|图中画了一个图形，它叫什么名字|图中共有几个|下列哪个图形属于|下列哪个是.{0,6}的特征|的特征是：|图中显示的是什么角|下列哪个图形属于角|在教室里找一找|先说一说它是谁/;
 
 // SHAPE_THEME 66 KP 以 shape.js 表为 SSOT（正则取键，测试内不另存清单防漂移）
