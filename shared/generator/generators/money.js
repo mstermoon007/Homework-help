@@ -308,10 +308,101 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
   return result;
 }
 
+// P28-GEO-NATIVE-03：度量 KP 的 geometry 原生 maker（长度 4 KP + 面积 2 KP）。
+// 这 6 个 KP 源 Excel 标注在「图形与几何」域，geometry 行此前被 shape kp=0 兜底成
+// 无关认图题。按 plan.semanticParams.name（经 getMoneyMeta 同源派生 kind）分派：
+// 长度走刻度尺/线段（diagram.segment），面积走正方形网格模型（geometry.square/rectangle）。
+function makeMeasurementGeometryQuestion(plan, context, i, meta) {
+  var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
+  var kind = meta.kind === 'area' ? 'area' : 'length';
+  var prompt, answer, graphic, modelKind;
+
+  if (kind === 'area') {
+    if (kpName.indexOf('进率') !== -1) {
+      // g3-down-u04-k004：面积单位间的进率——边长 1 分米(10 厘米)的正方形摆满 1 平方厘米
+      modelKind = 'area-unit-rate';
+      prompt = '看图想一想：边长 1 分米（也就是 10 厘米）的正方形纸，' +
+        '摆满边长 1 厘米的小正方形，一共可以摆满多少个？1 平方分米 = ____ 平方厘米。';
+      answer = '100';
+      graphic = {
+        type: 'geometry', subtype: 'rectangle',
+        params: { width: 10, height: 10, labelSides: true, rightAngle: false, unit: 'cm', unitPx: 22 }
+      };
+    } else {
+      // g3-down-u04-k002：常用面积单位——边长 1 厘米的正方形面积是 1 平方厘米
+      modelKind = 'area-unit';
+      prompt = '看图填面积单位：边长是 1 厘米的正方形，它的面积是 1 ____（填面积单位）。';
+      answer = '平方厘米';
+      graphic = {
+        type: 'geometry',
+        subtype: 'square',
+        params: { size: 3, labelSides: false, rightAngle: false, unit: 'cm', unitPx: 26 }
+      };
+    }
+  } else if (kpName.indexOf('合适') !== -1) {
+    // g2-up-u05-k005：选择合适的长度单位
+    modelKind = 'length-unit-choice';
+    prompt = '看图选择合适的长度单位填空：食指的宽大约是 1 ____，教室的长大约是 8 ____。' +
+      '（两个空都填“厘米”或“米”，用顿号隔开）';
+    answer = '厘米、米';
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: 1, part: 1, unit: 'cm', partLabel: '1', totalLabel: '1', otherLabel: '' }
+    };
+  } else if (kpName.indexOf('从小到大') !== -1) {
+    // g3-up-u03-k001：常用长度单位（从小到大）
+    modelKind = 'length-units-order';
+    prompt = '看图把学过的长度单位按从小到大的顺序写出来（用顿号隔开）。';
+    answer = '毫米、厘米、分米、米、千米';
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: 1000, part: 100, unit: 'cm', partLabel: '100', totalLabel: '1000' }
+    };
+  } else if (kpName.indexOf('进率') !== -1) {
+    // g3-up-u03-k002：长度单位进率
+    modelKind = 'length-unit-rate';
+    prompt = '看图填空：把 1 米长的线段平均分成 10 份，每份长 1 分米。1 米 = ____ 分米。';
+    answer = '10';
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: 10, part: 1, unit: 'cm', partLabel: '1', totalLabel: '10' }
+    };
+  } else {
+    // g2-up-u05-k001：认识厘米和米
+    modelKind = 'length-unit';
+    prompt = '看图填空：米和厘米都是长度单位，量较短物体的长度用厘米，量较长物体的长度用米。1 米 = ____ 厘米。';
+    answer = '100';
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: 100, part: 30, unit: 'cm', partLabel: '30', totalLabel: '100' }
+    };
+  }
+
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: 'geometry',
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: { value: answer, acceptable: [] },
+    answerMode: 'input',
+    data: {
+      mode: 'geometry',
+      steps: 1,
+      kind: modelKind,
+      measureKind: kind,
+      operation: 'conversion',
+      graphic: graphic
+    }
+  };
+}
+
 function makeWordProblemQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var kind = meta.kind;
-  
+
   if (kind === 'rmb') {
     var aFen = randDenom(rng, 20);
     var bFen = randDenom(rng, 20);
@@ -445,8 +536,8 @@ function createMoneyGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['fill', 'choice', 'judge', 'apply', 'calc'],
-    questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc'],
+    capabilities: ['fill', 'choice', 'judge', 'apply', 'calc', 'geometry'],
+    questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc', 'geometry'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -470,7 +561,10 @@ function createMoneyGenerator(spec) {
         var qt = plan.questionTypeId;
         var isRMB = meta.kind === 'rmb';
         
-        if (qt === 'fill') {
+        if (qt === 'geometry') {
+          // P28-GEO-NATIVE-03：度量 KP geometry 行走刻度尺/线段/面积模型原生 maker
+          q = makeMeasurementGeometryQuestion(plan, context, i, meta);
+        } else if (qt === 'fill') {
           // FINAL-13：换算/计算分支选择必须由题目固定 seed 决定；
           // 此前用模块级 Date.now() 种子 RNG，导致同 seed 跨运行题面漂移。
           var fillBranchRng = Rng.createSeededRandom(seedFor(plan, context, i) + ':fill-branch');
@@ -489,10 +583,11 @@ function createMoneyGenerator(spec) {
         } else {
           q = makeRMBConversionQuestion(plan, context, i, meta);
         }
-        
-        q.data.graphic = makeGraphicForMoney(meta, plan.difficulty);
+
+        // P28-GEO-NATIVE-03：geometry 题已在 maker 内绑定语义图形，跳过通用图形覆盖
+        if (qt !== 'geometry') q.data.graphic = makeGraphicForMoney(meta, plan.difficulty);
         // 人民币轨：发真实 currency/rmb 描述符（按题干实际金额画币值图标）
-        if (meta.kind === 'rmb' && q.data) {
+        if (qt !== 'geometry' && meta.kind === 'rmb' && q.data) {
           var amounts = null;
           var qd = q.data;
           if (Array.isArray(qd.operands) && qd.operands.length >= 2) {

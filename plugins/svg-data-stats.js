@@ -34,7 +34,7 @@
         // 标签
         inner += U.svgText(x + barW/2, innerH + 18, d.label || '', { fontSize: 11, textAnchor: 'middle', fill: '#27324a' });
         // 数值
-        inner += UsvgText(x + barW/2, innerH - barH - 4, d.value, { fontSize: 11, textAnchor: 'middle', fill: '#27324a', fontWeight: '600' });
+        inner += U.svgText(x + barW/2, innerH - barH - 4, d.value, { fontSize: 11, textAnchor: 'middle', fill: '#27324a', fontWeight: '600' });
       });
 
       return U.svgWrap(inner, { width: w, height: h });

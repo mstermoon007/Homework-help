@@ -3626,9 +3626,9 @@ var CORE_RECORDS = [
   
   { id: 'generator:arithmetic-addition', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u04-k001', 'math-g1-down-u04-k002', 'math-g1-down-u05-k001', 'math-g1-down-u06-k001', 'math-g1-up-u01-k002', 'math-g1-up-u01-k003', 'math-g1-up-u04-k003', 'math-g1-up-u05-k002', 'math-g2-down-u04-k007', 'math-g2-down-u05-k001', 'math-g2-down-u05-k003', 'math-g4-down-u03-k001', 'math-g4-up-u04-k001'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:arithmetic-subtraction', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-down-u02-k001', 'math-g1-down-u02-k002', 'math-g1-down-u04-k003', 'math-g1-down-u04-k004', 'math-g1-down-u05-k002', 'math-g2-down-u05-k002', 'math-g4-down-u03-k002'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k003', 'math-g2-up-u02-k004', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003', 'math-g4-up-u06-k001', 'math-g5-down-u02-k002'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g5-down-u02-k001', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
-  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-multiplication', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-up-u02-k001', 'math-g2-up-u02-k002', 'math-g2-up-u02-k003', 'math-g2-up-u02-k004', 'math-g3-up-u05-k001', 'math-g3-up-u05-k002', 'math-g3-up-u05-k003', 'math-g3-up-u05-k004', 'math-g3-up-u05-k005', 'math-g4-up-u03-k001', 'math-g4-up-u03-k002', 'math-g4-up-u03-k003', 'math-g4-down-u03-k003', 'math-g4-up-u04-k002', 'math-g4-up-u04-k003'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-division', subject: 'math', capabilities: ['calc', 'fill', 'apply'], questionTypes: ['calc', 'fill', 'apply'], knowledgePoints: ['math-g2-down-u02-k001', 'math-g2-down-u02-k002', 'math-g2-down-u02-k003', 'math-g2-down-u02-k004', 'math-g2-down-u03-k002', 'math-g2-down-u03-k006', 'math-g2-up-u03-k001', 'math-g2-up-u03-k002', 'math-g2-up-u03-k003', 'math-g2-up-u03-k004', 'math-g2-up-u03-k005', 'math-g2-up-u07-k002', 'math-g3-down-u02-k001', 'math-g3-down-u02-k002', 'math-g3-down-u02-k003', 'math-g3-down-u02-k004', 'math-g3-down-u02-k005', 'math-g3-down-u02-k006', 'math-g5-up-u03-k003'], scope: 'core', version: 1, supportsComposite: false },
+  { id: 'generator:arithmetic-mixed-calculation', subject: 'math', capabilities: ['calc', 'fill', 'apply', 'geometry'], questionTypes: ['calc', 'fill', 'apply', 'geometry'], knowledgePoints: ['math-g1-up-u02-k002', 'math-g3-up-u02-k001', 'math-g3-up-u02-k002', 'math-g4-down-u01-k003', 'math-g4-down-u03-k004', 'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-fill', subject: 'math', capabilities: ['fill', 'geometry', 'calc', 'apply'], questionTypes: ['fill', 'geometry', 'calc', 'apply'], knowledgePoints: ['math-g2-down-u07-k002'], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-choice', subject: 'math', capabilities: ['choice', 'geometry', 'calc', 'apply'], questionTypes: ['choice', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:selection-judge', subject: 'math', capabilities: ['judge', 'geometry', 'calc', 'apply'], questionTypes: ['judge', 'geometry', 'calc', 'apply'], knowledgePoints: [], scope: 'core', version: 1, supportsComposite: false },
@@ -3646,27 +3646,30 @@ var CORE_RECORDS = [
   
   
   { id: 'generator:shape-recognition', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'calc', 'geometry', 'apply'],
-    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g3-down-u05-k001', 'math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g1-down-u01-k001', 'math-g1-up-u03-k002', 'math-g2-up-u05-k003', 'math-g2-up-u05-k004', 'math-g2-up-u06-k001', 'math-g3-down-u01-k001', 'math-g3-down-u03-k004', 'math-g3-down-u08-k003', 'math-g3-down-u08-k006', 'math-g3-up-u01-k002', 'math-g3-up-u01-k003', 'math-g3-up-u03-k003', 'math-g3-up-u03-k004', 'math-g3-up-u07-k001', 'math-g3-up-u07-k004', 'math-g4-down-u02-k002', 'math-g4-down-u05-k001', 'math-g4-down-u05-k002', 'math-g4-down-u05-k003', 'math-g4-down-u05-k004', 'math-g4-down-u05-k005', 'math-g4-down-u05-k006', 'math-g4-up-u02-k001', 'math-g4-up-u02-k003', 'math-g4-up-u05-k001', 'math-g4-up-u05-k002', 'math-g4-up-u05-k003', 'math-g4-up-u05-k004', 'math-g5-down-u01-k002', 'math-g5-down-u03-k001', 'math-g5-down-u03-k002', 'math-g5-up-u08-k001', 'math-g5-up-u08-k002', 'math-g5-up-u08-k003', 'math-g5-up-u08-k004', 'math-g6-down-u03-k006', 'math-g6-up-u04-k001', 'math-g6-up-u04-k004', 'math-g6-up-u04-k005', 'math-g2-up-u05-k002', 'math-g3-down-u03-k002', 'math-g3-down-u03-k003', 'math-g3-down-u04-k003', 'math-g3-down-u04-k005', 'math-g3-up-u07-k003', 'math-g4-up-u02-k002', 'math-g5-down-u03-k003', 'math-g6-down-u03-k005', 'math-g6-up-u04-k002', 'math-g6-up-u04-k003', 'math-g1-up-u03-k001', 'math-g3-down-u03-k001', 'math-g5-down-u09-k001', 'math-g5-down-u09-k002',
+    knowledgePoints: ['math-g4-down-u02-k001', 'math-g4-down-u07-k001', 'math-g4-down-u07-k002', 'math-g5-down-u01-k001', 'math-g5-down-u03-k004', 'math-g5-down-u03-k005', 'math-g5-down-u05-k001', 'math-g5-down-u05-k002', 'math-g5-down-u05-k003', 'math-g5-down-u05-k004', 'math-g5-up-u06-k001', 'math-g5-up-u06-k002', 'math-g5-up-u06-k003', 'math-g5-up-u06-k004', 'math-g5-up-u06-k005', 'math-g5-up-u06-k006', 'math-g6-down-u03-k001', 'math-g6-down-u03-k002', 'math-g6-down-u03-k003', 'math-g6-down-u03-k004', 'math-g6-up-u02-k001', 'math-g1-down-u01-k001', 'math-g1-up-u03-k002', 'math-g2-up-u05-k003', 'math-g2-up-u05-k004', 'math-g2-up-u06-k001', 'math-g3-down-u01-k001', 'math-g3-down-u03-k004', 'math-g3-down-u08-k003', 'math-g3-down-u08-k006', 'math-g3-up-u01-k002', 'math-g3-up-u01-k003', 'math-g3-up-u03-k003', 'math-g3-up-u03-k004', 'math-g3-up-u07-k001', 'math-g3-up-u07-k004', 'math-g4-down-u02-k002', 'math-g4-down-u05-k001', 'math-g4-down-u05-k002', 'math-g4-down-u05-k003', 'math-g4-down-u05-k004', 'math-g4-down-u05-k005', 'math-g4-down-u05-k006', 'math-g4-up-u02-k001', 'math-g4-up-u02-k003', 'math-g4-up-u05-k001', 'math-g4-up-u05-k002', 'math-g4-up-u05-k003', 'math-g4-up-u05-k004', 'math-g5-down-u01-k002', 'math-g5-down-u03-k001', 'math-g5-down-u03-k002', 'math-g5-up-u08-k001', 'math-g5-up-u08-k002', 'math-g5-up-u08-k003', 'math-g5-up-u08-k004', 'math-g6-down-u03-k006', 'math-g6-up-u04-k001', 'math-g6-up-u04-k004', 'math-g6-up-u04-k005', 'math-g2-up-u05-k002', 'math-g3-down-u03-k002', 'math-g3-down-u03-k003', 'math-g3-down-u04-k003', 'math-g3-down-u04-k005', 'math-g3-up-u07-k003', 'math-g4-up-u02-k002', 'math-g5-down-u03-k003', 'math-g6-down-u03-k005', 'math-g6-up-u04-k002', 'math-g6-up-u04-k003', 'math-g1-up-u03-k001', 'math-g3-down-u03-k001', 'math-g5-down-u09-k001', 'math-g5-down-u09-k002',
       
       
       
-      'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004',
-      'math-g3-up-u03-k001', 'math-g3-up-u03-k002', 'math-g5-down-u03-k006',
-      'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'],
-    scope: 'core', version: 3, supportsComposite: false },
+      
+      
+      
+    ],
+    scope: 'core', version: 4, supportsComposite: false },
   { id: 'generator:position-direction', subject: 'math', capabilities: ['choice', 'judge', 'fill', 'geometry', 'apply'], questionTypes: ['choice', 'judge', 'fill', 'geometry', 'apply'],
     knowledgePoints: ['math-g2-up-u04-k003', 'math-g2-up-u04-k004', 'math-g3-down-u01-k002', 'math-g3-down-u01-k003', 'math-g3-down-u01-k004', 'math-g3-up-u01-k001', 'math-g4-down-u02-k003', 'math-g4-down-u07-k003', 'math-g4-down-u07-k004', 'math-g4-down-u07-k005', 'math-g5-down-u01-k003', 'math-g5-up-u01-k001', 'math-g5-up-u01-k003', 'math-g5-up-u04-k001', 'math-g5-up-u04-k002', 'math-g6-up-u01-k001', 'math-g6-up-u01-k002', 'math-g6-up-u01-k003', 'math-g2-up-u04-k001', 'math-g2-up-u04-k002', 'math-g5-up-u01-k002', 'math-g4-up-u08-k001', 'math-g4-up-u08-k002', 'math-g4-up-u08-k003', 'math-g5-up-u04-k003'],
     scope: 'core', version: 2, supportsComposite: false },
-  { id: 'generator:money-measurement', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply', 'calc'], questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc'],
+  { id: 'generator:money-measurement', subject: 'math', capabilities: ['fill', 'choice', 'judge', 'apply', 'calc', 'geometry'], questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc', 'geometry'],
     knowledgePoints: ['math-g1-down-u07-k001', 'math-g1-down-u07-k002', 'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004', 'math-g3-up-u03-k001', 'math-g3-up-u03-k002', 'math-g1-down-u07-k003', 'math-g3-up-u04-k002', 'math-g3-up-u04-k003', 'math-g3-up-u04-k004'],
     scope: 'core', version: 2, supportsComposite: false },
-  { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc'],
-    knowledgePoints: ['math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g5-down-u03-k006', 'math-g1-down-u08-k001', 'math-g2-up-u08-k001', 'math-g3-up-u09-k001', 'math-g4-down-u10-k001', 'math-g4-up-u09-k001', 'math-g5-down-u11-k001', 'math-g5-up-u09-k001', 'math-g6-down-u06-k001', 'math-g6-up-u06-k001', 'math-g1-down-u02-k003', 'math-g1-down-u04-k005', 'math-g1-down-u05-k003', 'math-g1-down-u06-k003', 'math-g1-up-u05-k003', 'math-g1-up-u06-k001', 'math-g2-down-u05-k004', 'math-g2-down-u06-k001', 'math-g2-down-u06-k002', 'math-g2-down-u06-k003', 'math-g2-down-u06-k004', 'math-g2-down-u07-k001', 'math-g2-down-u07-k003', 'math-g3-down-u08-k002', 'math-g3-down-u08-k005', 'math-g3-up-u02-k005', 'math-g3-up-u04-k001', 'math-g4-down-u01-k004', 'math-g4-down-u09-k003', 'math-g5-up-u03-k006', 'math-g5-down-u09-k003', 'math-g6-down-u01-k005'],
+  { id: 'generator:application-word', subject: 'math', capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'geometry'], questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'geometry'],
+    knowledgePoints: ['math-g5-down-u03-k006', 'math-g1-down-u08-k001', 'math-g2-up-u08-k001', 'math-g3-up-u09-k001', 'math-g4-down-u10-k001', 'math-g4-up-u09-k001', 'math-g5-down-u11-k001', 'math-g5-up-u09-k001', 'math-g6-down-u06-k001', 'math-g6-up-u06-k001', 'math-g1-down-u02-k003', 'math-g1-down-u04-k005', 'math-g1-down-u05-k003', 'math-g1-down-u06-k003', 'math-g1-up-u05-k003', 'math-g1-up-u06-k001', 'math-g2-down-u05-k004', 'math-g2-down-u06-k001', 'math-g2-down-u06-k002', 'math-g2-down-u06-k003', 'math-g2-down-u06-k004', 'math-g2-down-u07-k001', 'math-g2-down-u07-k003', 'math-g3-down-u08-k002', 'math-g3-down-u08-k005', 'math-g3-up-u02-k005', 'math-g3-up-u04-k001', 'math-g4-down-u01-k004', 'math-g4-down-u09-k003', 'math-g5-up-u03-k006', 'math-g5-down-u09-k003', 'math-g6-down-u01-k005'],
     scope: 'core', version: 2, supportsComposite: false },
 
   
   { id: 'generator:counting', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g3-down-u08-k001', 'math-g3-up-u08-k001'],
+    
+    
+    knowledgePoints: ['math-g3-down-u08-k001'],
     scope: 'core', version: 1, supportsComposite: false },
   
   
@@ -3674,20 +3677,30 @@ var CORE_RECORDS = [
   
   
   { id: 'generator:reasoning', subject: 'math', capabilities: ['apply', 'calc', 'fill', 'choice'], questionTypes: ['apply', 'calc', 'fill', 'choice'],
-    knowledgePoints: ['math-g2-up-u07-k001', 'math-g4-down-u09-k001', 'math-g4-down-u09-k002', 'math-g5-down-u08-k001', 'math-g5-down-u08-k002', 'math-g5-down-u08-k003', 'math-g5-down-u10-k001', 'math-g5-down-u10-k002', 'math-g5-down-u10-k003', 'math-g5-down-u10-k004', 'math-g5-up-u07-k002', 'math-g6-down-u05-k001', 'math-g6-down-u05-k002', 'math-g6-down-u05-k003', 'math-g6-down-u05-k004'],
+    knowledgePoints: ['math-g2-up-u07-k001', 'math-g4-down-u09-k001', 'math-g4-down-u09-k002', 'math-g5-down-u08-k001', 'math-g5-down-u08-k002', 'math-g5-down-u08-k003', 'math-g5-down-u10-k001', 'math-g5-down-u10-k002', 'math-g5-down-u10-k003', 'math-g5-down-u10-k004', 'math-g6-down-u05-k001', 'math-g6-down-u05-k002', 'math-g6-down-u05-k003', 'math-g6-down-u05-k004'],
     scope: 'core', version: 1, supportsComposite: false },
   
   
   
-  { id: 'generator:stats', subject: 'math', capabilities: ['apply', 'calc', 'fill', 'choice'], questionTypes: ['apply', 'calc', 'fill', 'choice'],
-    knowledgePoints: ['math-g2-down-u01-k001', 'math-g2-down-u01-k002', 'math-g2-down-u01-k003', 'math-g3-down-u06-k001', 'math-g3-down-u06-k002', 'math-g3-down-u08-k004', 'math-g4-down-u08-k004', 'math-g4-up-u07-k001', 'math-g5-down-u07-k001', 'math-g5-down-u07-k002', 'math-g5-down-u07-k003'],
+  
+  
+  
+  { id: 'generator:stats', subject: 'math', capabilities: ['apply', 'calc', 'fill', 'choice', 'judge', 'classify'], questionTypes: ['apply', 'calc', 'fill', 'choice', 'judge', 'classify'],
+    knowledgePoints: ['math-g2-down-u01-k001', 'math-g2-down-u01-k002', 'math-g2-down-u01-k003', 'math-g3-down-u06-k001', 'math-g3-down-u06-k002', 'math-g3-down-u08-k004', 'math-g4-down-u08-k004', 'math-g4-up-u07-k001', 'math-g5-down-u07-k001', 'math-g5-down-u07-k002', 'math-g5-down-u07-k003',
+      'math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g2-up-u01-k003', 'math-g2-up-u01-k004', 'math-g2-up-u01-k005', 'math-g2-up-u01-k006',
+      'math-g3-down-u05-k001', 'math-g3-down-u05-k002', 'math-g3-down-u05-k003', 'math-g3-down-u05-k004',
+      'math-g4-down-u08-k001', 'math-g4-down-u08-k002', 'math-g4-down-u08-k003',
+      'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g4-up-u06-k004',
+      'math-g5-up-u07-k001', 'math-g5-up-u07-k002', 'math-g5-up-u07-k003', 'math-g5-up-u07-k004'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:picture-equation', subject: 'math', capabilities: ['apply', 'calc'], questionTypes: ['apply', 'calc'],
-    knowledgePoints: ['math-g4-down-u01-k001', 'math-g5-up-u07-k003'],
+    knowledgePoints: ['math-g4-down-u01-k001'],
     scope: 'core', version: 1, supportsComposite: false },
   
   { id: 'generator:composite', subject: 'math', capabilities: ['calc', 'judge', 'fill', 'apply'], questionTypes: ['calc', 'judge', 'fill', 'apply'],
-    knowledgePoints: ['math-g1-up-u01-k001', 'math-g2-down-u07-k001', 'math-g2-up-u01-k005', 'math-g3-up-u02-k001', 'math-g4-up-u03-k001'],
+    
+    
+    knowledgePoints: ['math-g1-up-u01-k001', 'math-g2-down-u07-k001', 'math-g3-up-u02-k001', 'math-g4-up-u03-k001'],
     scope: 'core', version: 1, supportsComposite: true },
 
   
@@ -3699,15 +3712,8 @@ var CORE_RECORDS = [
     knowledgePoints: ['math-g3-up-u06-k001', 'math-g3-up-u06-k002', 'math-g3-up-u06-k003', 'math-g3-up-u06-k004', 'math-g3-up-u06-k005'],
     scope: 'core', version: 2, supportsComposite: false },
   
-
   
   
-  
-  
-  
-  { id: 'generator:classification', subject: 'math', capabilities: ['classify'], questionTypes: ['classify'],
-    knowledgePoints: ['math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g2-up-u01-k003', 'math-g2-up-u01-k004', 'math-g2-up-u01-k005', 'math-g2-up-u01-k006', 'math-g3-down-u05-k001', 'math-g3-down-u05-k002', 'math-g3-down-u05-k003', 'math-g3-down-u05-k004', 'math-g4-up-u06-k001', 'math-g4-up-u06-k002', 'math-g4-up-u06-k003', 'math-g4-up-u06-k004', 'math-g4-down-u08-k001', 'math-g4-down-u08-k002', 'math-g4-down-u08-k003', 'math-g4-down-u08-k004', 'math-g5-up-u07-k001', 'math-g5-up-u07-k002', 'math-g5-up-u07-k003', 'math-g5-up-u07-k004', 'math-g5-down-u07-k001', 'math-g5-down-u07-k002', 'math-g5-down-u07-k003'],
-    scope: 'core', version: 2, supportsComposite: false },
 
   
   
@@ -3731,7 +3737,9 @@ var CORE_RECORDS = [
   
   { id: 'generator:concept-meaning', subject: 'math', capabilities: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'], questionTypes: ['calc', 'fill', 'apply', 'choice', 'geometry', 'judge'],
     knowledgePoints: ['math-g2-down-u03-k003', 'math-g3-up-u07-k002', 'math-g3-down-u04-k001', 'math-g5-down-u04-k001', 'math-g1-down-u03-k002', 'math-g1-down-u03-k003', 'math-g1-down-u03-k004', 'math-g1-down-u03-k005', 'math-g1-down-u03-k006', 'math-g1-up-u02-k001', 'math-g1-up-u04-k002', 'math-g2-down-u04-k001', 'math-g2-down-u04-k002', 'math-g2-down-u04-k003', 'math-g2-down-u04-k004', 'math-g2-down-u04-k005', 'math-g2-down-u04-k006', 'math-g4-up-u01-k002', 'math-g4-up-u01-k003', 'math-g4-up-u01-k004', 'math-g4-up-u01-k005', 'math-g4-up-u01-k006', 'math-g5-up-u05-k004', 'math-g5-down-u02-k003', 'math-g5-down-u02-k004', 'math-g5-down-u02-k005', 'math-g5-down-u02-k006', 'math-g6-down-u01-k001', 'math-g6-down-u01-k002', 'math-g6-down-u01-k003', 'math-g6-down-u01-k004', 'math-g6-up-u07-k001', 'math-g6-up-u07-k002', 'math-g6-up-u07-k003', 'math-g5-up-u05-k001', 'math-g5-up-u05-k002', 'math-g5-up-u05-k003', 'math-g2-down-u03-k001', 'math-g4-down-u01-k002', 'math-g2-down-u03-k004', 'math-g2-down-u03-k005', 'math-g1-up-u01-k001',
-      'math-g1-down-u03-k001', 'math-g1-up-u04-k001', 'math-g4-up-u01-k001', 'math-g1-up-u05-k001', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004'],
+      'math-g1-down-u03-k001', 'math-g1-up-u04-k001', 'math-g4-up-u01-k001', 'math-g1-up-u05-k001', 'math-g3-up-u02-k003', 'math-g3-up-u02-k004',
+      
+      'math-g5-down-u02-k001', 'math-g5-down-u02-k002'],
     scope: 'core', version: 1, supportsComposite: false },
 
   
@@ -3742,11 +3750,13 @@ var CORE_RECORDS = [
 
   
   
+  
+  
   { id: 'generator:decimal-number', subject: 'math', capabilities: ['calc', 'fill', 'choice', 'apply'], questionTypes: ['calc', 'fill', 'choice', 'apply'],
     knowledgePoints: ['math-g3-down-u07-k001', 'math-g3-down-u07-k002', 'math-g3-down-u07-k003', 'math-g3-down-u07-k004', 'math-g4-down-u04-k001', 'math-g4-down-u04-k002', 'math-g4-down-u04-k003', 'math-g4-down-u04-k004', 'math-g4-down-u04-k005', 'math-g4-down-u04-k006', 'math-g4-down-u04-k007', 'math-g4-down-u06-k001', 'math-g4-down-u06-k002', 'math-g4-down-u06-k003', 'math-g4-down-u06-k004', 'math-g5-up-u02-k001', 'math-g5-up-u02-k002', 'math-g5-up-u02-k003', 'math-g5-up-u02-k004', 'math-g5-up-u02-k005', 'math-g5-up-u03-k001', 'math-g5-up-u03-k002', 'math-g5-up-u03-k004', 'math-g5-up-u03-k005'],
     scope: 'core', version: 1, supportsComposite: false },
   { id: 'generator:fraction-number', subject: 'math', capabilities: ['calc', 'fill', 'choice', 'apply'], questionTypes: ['calc', 'fill', 'choice', 'apply'],
-    knowledgePoints: ['math-g3-up-u08-k002', 'math-g3-up-u08-k003', 'math-g3-up-u08-k004', 'math-g3-up-u08-k005', 'math-g5-down-u04-k002', 'math-g5-down-u04-k003', 'math-g5-down-u04-k004', 'math-g5-down-u04-k005', 'math-g5-down-u04-k006', 'math-g5-down-u06-k001', 'math-g5-down-u06-k002', 'math-g5-down-u06-k003', 'math-g5-down-u06-k004', 'math-g5-down-u06-k005', 'math-g6-up-u03-k001', 'math-g6-up-u03-k002', 'math-g6-up-u03-k003', 'math-g6-up-u03-k004', 'math-g6-up-u03-k005'],
+    knowledgePoints: ['math-g3-up-u08-k001', 'math-g3-up-u08-k002', 'math-g3-up-u08-k003', 'math-g3-up-u08-k004', 'math-g3-up-u08-k005', 'math-g5-down-u04-k002', 'math-g5-down-u04-k003', 'math-g5-down-u04-k004', 'math-g5-down-u04-k005', 'math-g5-down-u04-k006', 'math-g5-down-u06-k001', 'math-g5-down-u06-k002', 'math-g5-down-u06-k003', 'math-g5-down-u06-k004', 'math-g5-down-u06-k005', 'math-g6-up-u03-k001', 'math-g6-up-u03-k002', 'math-g6-up-u03-k003', 'math-g6-up-u03-k004', 'math-g6-up-u03-k005'],
     scope: 'core', version: 1, supportsComposite: false }
 ];
 
@@ -5504,7 +5514,9 @@ __defs["shared/generator/core/semantic-parameters.js"] = function (module, expor
     
     
     
-    nameConceptRule('number-theory', ['number-sense'], /倍数的特征|奇数|偶数|质数|合数|奇偶性/),
+    
+    
+    nameConceptRule('number-theory', ['number-sense'], /因数|倍数的特征|奇数|偶数|质数|合数|奇偶性/),
     
     nameConceptRule('times-concept', ['multiple-ratio'], /倍/),
     nameConceptRule('angle-concept', ['geometric-figure'], /角(的认识|各部分)/, /两条射线/),
@@ -6232,7 +6244,7 @@ __defs["shared/generator/generators/index.js"] = function (module, exports, requ
 
 
 
-var ENGINE_VERSION = '2.1.0';
+var ENGINE_VERSION = '2.2.0';
 
 var Arithmetic = require("shared/generator/generators/arithmetic.js");
 var Selection = require("shared/generator/generators/selection.js");
@@ -6246,7 +6258,6 @@ var Reasoning = require("shared/generator/generators/reasoning.js");
 var Stats = require("shared/generator/generators/stats.js");
 var PictureEquation = require("shared/generator/generators/picture-equation.js");
 var SemanticSpecial = require("shared/generator/generators/semantic-special.js");
-var Classification = require("shared/generator/generators/classify.js");
 var Percent = require("shared/generator/generators/percent.js");
 var ConceptMeaning = require("shared/generator/generators/concept-meaning.js");
 var SemanticRelations = require("shared/generator/generators/semantic-relations.js");
@@ -6266,7 +6277,6 @@ var ALL = [].concat(
   Stats.buildAll(),
   PictureEquation.buildAll(),
   SemanticSpecial.buildAll(),
-  Classification.buildAll(),
   Percent.buildAll(),
   ConceptMeaning.buildAll(),
   SemanticRelations.buildAll(),
@@ -6380,6 +6390,76 @@ var FAMILY = {
   'mixed-calculation': { op: 'mixed' }
 };
 
+
+
+
+
+function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
+  var rng = Rng.createSeededRandom(seedFn(plan, context, i));
+  var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
+  var prompt, answer, graphic, modelKind;
+
+  if (kpName.indexOf('混合') !== -1) {
+    
+    var total3 = 8;
+    var part3 = 6;
+    modelKind = 'fraction-distributive';
+    prompt = '看图用乘法分配律简便计算：一条线段长 ' + total3 + ' 米，先取它的 1/4，' +
+      '再取它的 2/4，两次一共取了多少米？(1/4 + 2/4) × ' + total3 + ' = ____';
+    answer = String(part3);
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: total3, part: part3, unit: 'cm', partLabel: String(part3), totalLabel: String(total3) }
+    };
+  } else if (kpName.indexOf('解决问题') !== -1) {
+    
+    var total4 = 24;
+    var first4 = 18; 
+    var answer4 = 12; 
+    modelKind = 'fraction-twice';
+    prompt = '看图解决问题：果园里共有 ' + total4 + ' 棵果树，苹果树占 3/4，' +
+      '红富士苹果树又占苹果树的 2/3。红富士苹果树有多少棵？____';
+    answer = String(answer4);
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: total4, part: first4, unit: 'cm', partLabel: String(first4), totalLabel: String(total4) }
+    };
+  } else {
+    
+    var den = Rng.pick(rng, [3, 4, 6]);
+    var whole = den * Rng.randInt(rng, 2, 4);
+    var num = Rng.randInt(rng, 1, den - 1);
+    var part = (whole / den) * num;
+    modelKind = 'fraction-of-quantity';
+    prompt = '看图列式计算：一袋面粉重 ' + whole + ' 千克，做点心用去了它的 ' +
+      num + '/' + den + '，用去了多少千克？' + whole + ' × ' + num + '/' + den + ' = ____';
+    answer = String(part);
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: whole, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(whole) }
+    };
+  }
+
+  return {
+    knowledgePointId: (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) || plan.knowledgePointId,
+    questionType: 'geometry',
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFn(plan, context, i),
+    prompt: prompt,
+    answer: { value: answer, acceptable: [] },
+    answerMode: 'input',
+    data: {
+      mode: 'geometry',
+      steps: 1,
+      kind: modelKind,
+      graphic: graphic,
+      operation: 'mult'
+    }
+  };
+}
+
 function createArithmeticGenerator(spec) {
   spec = spec || {};
   var op = spec.operation || 'add';
@@ -6405,11 +6485,16 @@ function createArithmeticGenerator(spec) {
       : (plan.operationStr || null));
   }
 
+  
+  var declaredTypes = id === 'generator:arithmetic-mixed-calculation'
+    ? ['calc', 'fill', 'apply', 'geometry']
+    : ['calc', 'fill', 'apply'];
+
   return {
     id: id,
     subject: subject,
-    capabilities: ['calc', 'fill', 'apply'],
-    questionTypes: ['calc', 'fill', 'apply'],
+    capabilities: declaredTypes,
+    questionTypes: declaredTypes,
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -6437,6 +6522,11 @@ function createArithmeticGenerator(spec) {
       }
 
       for (var i = 0; i < count; i++) {
+        
+        if (id === 'generator:arithmetic-mixed-calculation' && plan.questionTypeId === 'geometry') {
+          questions.push(makeFractionMultiplyGeometryQuestion(plan, context, i, seedFor));
+          continue;
+        }
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
         
@@ -7132,6 +7222,106 @@ function makeCountQuestion(plan, context, i, shapeMeta, graphic) {
   };
 }
 
+
+
+
+
+
+
+
+function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
+  var qt = plan.questionTypeId;
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var den = Rng.pick(rng, [4, 5, 6, 8]);
+  var num = Rng.randInt(rng, 1, den - 2);
+  var times = Rng.pick(rng, [2, 3]);
+  var numerator = num * times;
+  var mixedWhole = Math.floor(numerator / den);
+  var mixedRemain = numerator % den;
+  var fracStr = numerator + '/' + den;
+  var answerStr = fracStr;
+  var acceptable = [];
+  if (mixedWhole > 0 && mixedRemain > 0) acceptable.push(mixedWhole + '又' + mixedRemain + '/' + den);
+  if (mixedRemain === 0) answerStr = String(mixedWhole);
+  var expr = num + '/' + den + ' × ' + times;
+
+  function fracGraphic(unitPx) {
+    var params = { total: den, part: num, unit: 'cm', partLabel: String(num), totalLabel: String(den) };
+    if (unitPx) params.unitPx = unitPx;
+    return { type: 'geometry', subtype: 'segment', params: params };
+  }
+
+  var data = {
+    mode: qt,
+    steps: 1,
+    kind: 'fraction-times-integer',
+    graphic: fracGraphic(null),
+    fractionNumerator: num,
+    fractionDenominator: den,
+    times: times
+  };
+  var prompt, answerObj, answerMode = 'input';
+
+  if (qt === 'geometry') {
+    prompt = '看图列式计算：把单位“1”平均分成 ' + den + ' 份，取其中的 ' + num +
+      ' 份表示 ' + num + '/' + den + '。这样的 ' + times + ' 份，一共是单位“1”的几分之几？' +
+      expr + ' = ____';
+    answerObj = { value: answerStr, acceptable: acceptable };
+  } else if (qt === 'fill') {
+    prompt = '看图填空：分数条把单位“1”平均分成 ' + den + ' 份，涂色部分表示 ' + num + '/' + den
+      + '。同样的涂色部分有 ' + times + ' 条，合起来是 ' + expr + ' = ____。';
+    answerObj = { value: answerStr, acceptable: acceptable };
+  } else if (qt === 'choice') {
+    
+    var pool = [answerStr];
+    [num * (times + 1), numerator + 1, numerator - 1, numerator + 2, numerator - 2].forEach(function (x) {
+      var s = x + '/' + den;
+      if (x >= 1 && pool.indexOf(s) === -1 && pool.length < 4) pool.push(s);
+    });
+    var options = Rng.shuffle(rng, pool);
+    data.options = options;
+    data.correctIndex = options.indexOf(answerStr);
+    prompt = '看图选择：分数条涂色部分是 ' + num + '/' + den + '，有 ' + times
+      + ' 条同样的涂色部分。' + expr + ' 的结果是哪个？';
+    answerObj = { value: answerStr, acceptable: acceptable };
+    answerMode = 'choice';
+  } else if (qt === 'judge') {
+    var isTrue = rng() < 0.5;
+    var shownNum = isTrue ? numerator : numerator + 1;
+    data.graphic = fracGraphic(25);
+    prompt = '看图判断：' + num + '/' + den + ' 乘 ' + times + '，' + times + ' 条涂色部分合起来表示 '
+      + shownNum + '/' + den + '。这个说法对吗？';
+    answerObj = {
+      value: isTrue,
+      acceptable: [],
+      explanation: isTrue
+        ? expr + ' = ' + fracStr + '，分子乘整数、分母不变，说法正确。'
+        : expr + ' = ' + fracStr + '，不是 ' + shownNum + '/' + den + '，说法错误。'
+    };
+    answerMode = 'judge';
+  } else { 
+    data.steps = 2;
+    data.graphic = fracGraphic(25);
+    prompt = '看图解决问题：一根彩带长 ' + num + '/' + den + ' 米（分数条平均分成 ' + den
+      + ' 份、涂色 ' + num + ' 份）。先说出一根彩带的长度，再列式计算 ' + times
+      + ' 根这样的彩带一共长多少米：' + expr + ' = ？（米）';
+    answerObj = { value: answerStr, acceptable: acceptable };
+  }
+
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: answerObj,
+    answerMode: answerMode,
+    data: data
+  };
+}
+
 function makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   
@@ -7368,6 +7558,740 @@ function makeCalcMeasurementQuestion(plan, context, i, kpName) {
   };
 }
 
+
+
+
+
+
+
+function shapeTheme(facts, wrongs, nums, scenes) {
+  return {
+    facts: facts,
+    wrongs: wrongs.map(function (w) { return { t: w[0], m: w[1] }; }),
+    nums: nums.map(function (x) { return { q: x[0], a: x[1], n: x[2] }; }),
+    scenes: (scenes || []).map(function (s) { return { t: s[0], a: s[1] }; })
+  };
+}
+
+var SHAPE_THEME = {
+  
+  'math-g1-up-u03-k001': shapeTheme( 
+    ['立体图形都有长、宽、高，占有一定的空间', '长方体、正方体、圆柱和球都是立体图形', '平面图形只有长和宽，立体图形还有高'],
+    [['立体图形只有长和宽，没有厚度', '把立体图形当成了平面图形：立体图形有长、宽、高，占有空间。'],
+     ['球有平平的面和尖尖的顶点', '球没有平面也没有顶点，全身是曲面，能任意滚动。'],
+     ['圆柱的侧面展开是一个圆', '圆柱侧面沿高展开是长方形，上下底面才是圆。']],
+    [['一个长方体有____个面', '6', 6], ['一个正方体有____条棱', '12', 12], ['一个长方体有____个顶点', '8', 8]],
+    [['在积木盒里找出 3 个立体图形积木，先说出它们的名字，再数一数其中一个有几个面', '如长方体、正方体、圆柱积木；一个正方体积木有 6 个面'],
+     ['先摸一摸文具盒，说一说它是哪种立体图形，再数一数它有几条棱', '文具盒是长方体，有 12 条棱'],
+     ['先观察一个魔方，说出它是什么立体图形，再数一数它的面、棱和顶点', '魔方是正方体：6 个面、12 条棱、8 个顶点']]),
+  'math-g1-up-u03-k002': shapeTheme( 
+    ['文具盒、砖头可以看作长方体，魔方、骰子可以看作正方体', '水桶、铅笔可以看作圆柱，皮球、地球仪可以看作球', '生活中许多物品的形状都可以看作立体图形'],
+    [['课本封面是长方体', '课本整体是长方体；封面只是它的一个面，是长方形（平面图形）。'],
+     ['足球是圆柱', '足球圆圆的能任意滚动，是球；圆柱有两个平平的圆形底面。'],
+     ['水杯的形状是球', '水杯有两个圆形底面和一个曲面侧面，是圆柱。']],
+    [['一个魔方（正方体）有____个面', '6', 6], ['骰子是正方体，它有____个顶点', '8', 8], ['一块砖头（长方体）有____条棱', '12', 12]],
+    [['先在教室里找出 2 个长方体物品，再说说为什么它们是长方体？', '如讲台、文具盒：都有 6 个长方形的面、12 条棱、8 个顶点'],
+     ['先在家里找一个圆柱形物品，再指出它的两个底面在哪里？', '如水杯：上下两个圆面是底面，周围的曲面是侧面'],
+     ['先说说皮球为什么不是圆柱，再找一个真正的圆柱形物品？', '皮球没有平平的底面、能任意滚动，是球；罐头盒才是圆柱']]),
+  'math-g5-down-u03-k001': shapeTheme( 
+    ['长方体有 6 个面，相对的面完全相同', '长方体有 12 条棱，相对的 4 条棱长度相等', '长方体有 8 个顶点，相交于一个顶点的三条棱分别叫长、宽、高'],
+    [['长方体的 6 个面一定都是长方形', '特殊情况下长方体有两个相对的面是正方形。'],
+     ['长方体的 12 条棱都一样长', '12 条棱分 3 组，每组 4 条相等；三组棱一般不相等。'],
+     ['长方体有 6 个顶点', '长方体有 8 个顶点，6 是面的个数，别把面和顶点混淆。']],
+    [['一个长方体有____个面', '6', 6], ['一个长方体有____条棱', '12', 12], ['一个长方体有____个顶点', '8', 8]],
+    [['先找一个长方体纸盒，指出它的长、宽、高，再数一数有几组长度相等的棱', '12 条棱分 3 组，每组 4 条相等'],
+     ['先观察一个长方体收纳箱，数出它的面、棱、顶点，再说说相对的面有什么关系？', '6 个面、12 条棱、8 个顶点；相对的面完全相同'],
+     ['先用小棒搭一个长方体框架，数一数用了几根小棒、几个接头，再说说分别对应长方体的什么', '12 根小棒是 12 条棱，8 个接头是 8 个顶点']]),
+  'math-g5-down-u03-k002': shapeTheme( 
+    ['正方体的 6 个面都是正方形且完全相同', '正方体的 12 条棱长度都相等', '正方体有 8 个顶点，是特殊的长方体'],
+    [['正方体不是长方体', '正方体是长、宽、高都相等的特殊长方体。'],
+     ['正方体只有 4 条棱相等', '正方体的 12 条棱全都相等。'],
+     ['正方体的面可以是长方形', '正方体每个面都是完全相同的正方形。']],
+    [['一个正方体有____条棱', '12', 12], ['一个正方体有____个面', '6', 6], ['正方体每个面有____条边', '4', 4]],
+    [['先用同样大的小正方体摆一摆，再说说正方体的 6 个面有什么关系？', '6 个面都是完全相同的正方形'],
+     ['先量一量魔方一条棱的长度，再说说它的 12 条棱各有多长？', '12 条棱全都一样长'],
+     ['先把一个正方体盒子沿棱剪开，数一数展开图中有几个正方形，再说说发现了什么', '6 个完全相同的正方形']]),
+  'math-g6-down-u03-k001': shapeTheme( 
+    ['圆柱有两个完全相同的圆形底面和一个曲面侧面', '圆柱两个底面之间的距离叫作高，圆柱有无数条高', '圆柱的侧面沿高展开是长方形，长方形的长等于底面周长'],
+    [['圆柱只有一条高', '圆柱两个底面之间有无数条高，长度都相等。'],
+     ['圆柱的侧面展开是一个圆', '圆柱侧面沿高展开是长方形，底面才是圆。'],
+     ['圆柱的 3 个面都是平面', '圆柱只有 2 个底面是平面，侧面是曲面。']],
+    [['圆柱有____个底面', '2', 2], ['圆柱的底面和侧面一共有____个面', '3', 3], ['圆柱有____个顶点', '0', 0]],
+    [['先找一个圆柱形水杯，指出它的底面和侧面，再数一数它一共有几个面', '2 个圆形底面和 1 个曲面侧面，共 3 个面'],
+     ['先剪开圆柱形茶叶筒的侧面商标纸铺平，再算一算展开长方形的长（量出底面周长）是多少', '长方形的长=底面周长，宽=圆柱的高'],
+     ['先量出圆柱形笔筒两个底面之间的距离，再说说这个距离叫什么、数一数这样的高有几条', '叫作圆柱的高，两个底面之间有无数条高']]),
+  'math-g6-down-u03-k004': shapeTheme( 
+    ['圆锥有一个圆形底面和一个曲面侧面', '从圆锥的顶点到底面圆心的距离叫作高，圆锥只有一条高', '圆锥的侧面展开是一个扇形'],
+    [['圆锥有无数条高', '圆锥只有从顶点到底面圆心的一条高；有无数条高的是圆柱。'],
+     ['圆锥有两个底面', '圆锥只有一个圆形底面，上面收成一个顶点。'],
+     ['圆锥的侧面展开是长方形', '圆锥侧面展开是扇形；侧面展开是长方形的是圆柱。']],
+    [['圆锥有____个底面', '1', 1], ['圆锥的底面和侧面一共有____个面', '2', 2], ['3 个圆锥一共有____个顶点', '3', 3]],
+    [['先找一个圆锥形冰激凌筒，指出它的底面、侧面和顶点，再数一数它一共有几个面', '1 个圆形底面和 1 个曲面侧面，共 2 个面'],
+     ['先量出圆锥模型从顶点到底面圆心的距离，再说说这个距离叫什么、数一数这样的高有几条', '叫作圆锥的高，只有 1 条'],
+     ['先猜一猜圆锥的侧面展开是什么图形，再沿一条母线剪开模型数一数展开图有几条边', '展开是扇形，有 2 条直边和 1 条弧']]),
+
+  
+  'math-g3-up-u01-k003': shapeTheme( 
+    ['从前面、上面、左面看一个正方体，看到的都是正方形', '观察由同样正方体搭成的图形，从不同方向看形状可能不同', '数搭成的图形用了几个正方体，要按层数，注意被挡住的'],
+    [['从任何方向看正方体，看到的形状都不同', '正方体每个面都是正方形，从前面、上面、左面看都是正方形。'],
+     ['数正方体个数时，看不见的一定不存在', '被挡住的正方体也要数——按层推算，不能只数看得见的。'],
+     ['从上面看正方体看到的是长方形', '正方体每个面都是正方形，从上面看也是正方形。']],
+    [['站在一个位置观察正方体，最多能同时看到____个面', '3', 3], ['正对着正方体的一个面看，只能看到____个面', '1', 1], ['用 2 个同样的正方体排成一行，从上面看能看到____个正方形', '2', 2]],
+    [['把 4 个同样的正方体摆成 2×2 的方阵，先从上面看一看，再说出看到了几个正方形', '从上面看是 4 个正方形组成的大正方形'],
+     ['用 3 个正方体搭一个「L」形，先从上面看，再说出看到了几个正方形', '从上面看到 2 个正方形（L 形占两格）'],
+     ['先观察桌上的粉笔盒（正方体），再说说你最多能同时看到几个面、各是什么形状', '最多同时看到 3 个面，每个面都是正方形']]),
+  'math-g4-down-u02-k001': shapeTheme( 
+    ['从前面、上面、左面观察同一物体，看到的形状可能不同', '观察由小正方体组成的立体图形时，要先确定观察的方向', '同一物体从不同方向看，看到的正方形个数和排列可能不同'],
+    [['从哪个方向看，看到的形状都一样', '观察方向不同，看到的形状可能不同，要逐方向确认。'],
+     ['从上面看到的列数一定和从前面看到的一样', '上面看到的是前后排列，前面看到的是左右排列，两者不一定相同。'],
+     ['从前面看是 3 个正方形，这个立体就只有 3 个小正方体', '前面看不到被挡住的正方体，实际个数可能更多。']],
+    [['站在同一位置观察一个长方体盒子，最多能同时看到____个面', '3', 3], ['一个立体从前面看是 2 个正方形、从上面看也是 2 个正方形，它至少由____个小正方体组成', '2', 2], ['最少用____个同样的小正方体可以拼成一个大正方体', '8', 8]],
+    [['把 4 个小正方体摆成一排，先画出从上面看到的形状，再画出从前面看到的形状？', '从上面看是 4 个正方形排一行；从前面看是 1 个正方形（或 4 个排一行，取决于摆的方向）'],
+     ['用 4 个小正方体搭成 2×2 方阵，先从左面看，再说出看到的形状？', '从左面看是 2 个正方形并排'],
+     ['观察讲桌上的粉笔盒，先选一个方向观察，再说说换一个方向看到的形状是否相同？', '从不同方向看，看到的面不同，形状都是正方形']]),
+  'math-g4-down-u02-k002': shapeTheme( 
+    ['根据从不同方向看到的平面图形，可以推断立体图形的形状', '只给从一个方向看到的图形，摆法可能不止一种', '给出从前面、上面、左面三个方向看到的图形，一般能确定立体的样子'],
+    [['只看从一个方向看到的图形，就能确定立体的样子', '一个方向只能看到一部分，必须结合多个方向的视图才能确定。'],
+     ['从上面看是 4 个正方形，立体就只有一层', '从上面看只能确定底层占位，上面还可能叠着正方体。'],
+     ['三个方向看到的正方形个数一定相同', '三个方向的视图分别反映长、宽、高，个数一般不同。']],
+    [['从上面看一个立体是 3 个正方形排一行，它的第一层有____个小正方体', '3', 3], ['从前面看是 2 个正方形、从上面看是 2 个正方形、从左面看是 1 个正方形，这个立体由____个小正方体组成', '2', 2], ['从上面看是 4 个正方形（2×2），从前面看是 2 个正方形排一行，这个立体有____层', '1', 1]],
+    [['给出从上面看是 3 个正方形排一行的视图，先用小正方体摆出底层，再说一说有几种摆法', '底层 3 个排一行，往上叠的摆法不唯一'],
+     ['先从前面、上面、左面分别观察一个搭好的立体，画出三个视图，再根据视图让同学还原？', '三个方向视图结合才能还原立体'],
+     ['只给你从前面看到的 2 个正方形，先猜一猜立体有几个小正方体，再说明为什么不能确定', '只看到前面，被挡住的个数未知，摆法不唯一']]),
+  'math-g5-down-u01-k001': shapeTheme( 
+    ['从正面、左面、上面观察同一立体图形，看到的平面图形可能不同', '辨认视图时要看清每行每列各有几个正方形', '观察方向变了，看到的形状和正方形的排列也会跟着变'],
+    [['从正面看到的形状就是立体本身的样子', '正面视图只是一个方向的样子，还要结合其他方向。'],
+     ['从上面看到的正方形个数就是立体的总个数', '上面只能看到最上层的占位，被压在下面的数不清。'],
+     ['同一立体从不同方向看，正方形个数一定相同', '方向不同，看到的个数和排列可能不同。']],
+    [['一个立体从正面看是 3 个正方形、从上面看是 4 个正方形，它至少有____个小正方体', '4', 4], ['观察立体图形常用正面、左面、上面，一共____个方向', '3', 3], ['从正面看是竖着排的 2 个正方形，说明这个立体最高有____层', '2', 2]],
+    [['用 4 个小正方体搭一个立体，先画出从正面看到的形状，再画出从上面看到的形状？', '视图取决于搭法，如排一行：正面 1 个或 4 个、上面 4 个排一行'],
+     ['先观察由 5 个小正方体搭成的立体，再说出从哪个方向看到的正方形最多？', '比较正面、左面、上面的视图，个数可能不同'],
+     ['把 3 个小正方体叠成一竖列，先分别从正面和上面看，再说出各看到几个正方形', '正面看是 3 个竖排，上面看是 1 个']]),
+  'math-g5-down-u01-k002': shapeTheme( 
+    ['根据从三个方向看到的图形，可以还原出立体图形', '只根据一个方向的视图摆一摆，摆法往往不唯一', '先按从上面看到的图形确定底层，再按从正面和左面看到的确定层数'],
+    [['按一个方向的视图摆出的立体是唯一的', '一个方向的视图挡不住的部分看不见，摆法不唯一。'],
+     ['还原时可以不数被挡住的正方体', '被挡住的正方体要根据三个方向的视图推算。'],
+     ['从上面看到的图形决定立体的高', '从上面看到的是底面占位；高由正面和左面视图决定。']],
+    [['从上面看是 4 个正方形（2×2），搭这个立体第一层要____个小正方体', '4', 4], ['从正面看最高一列有 3 个正方形，这个立体有____层', '3', 3], ['用 5 个小正方体搭立体，从上面看是 3 个正方形，第二层有____个小正方体', '2', 2]],
+    [['先根据「从上面看是 3 个正方形排一行」摆好底层，再根据「从正面看最高 2 层」补上第二层？', '底层 3 个排一行，某一列上再叠 1 个'],
+     ['给出三个方向的视图，先摆一摆，再数一数一共用了几个小正方体', '按上→正→左顺序核对，个数由视图推算'],
+     ['只用「从正面看是 2 个正方形」摆一摆，先摆出两种不同摆法，再说明为什么不唯一？', '被挡住的个数和位置无法确定，摆法不唯一']]),
+
+  
+  'math-g2-up-u05-k002': shapeTheme( 
+    ['测量时把尺子的刻度 0 对准物体的一端，另一端对着几就是几厘米', '如果不是从刻度 0 开始量，物体长度=末端刻度−起始刻度', '测量时尺子要放正、贴紧被测物体'],
+    [['量长度时尺子斜着放也没关系', '尺子必须放正贴紧，斜放量不准。'],
+     ['从刻度 2 量到刻度 7，物体长 7 厘米', '长度=7−2=5 厘米，要减去起始刻度。'],
+     ['把尺子随便往物体上一放就能读出长度', '要把刻度 0（或某一刻度）对准物体一端，才能正确读数。']],
+    [['铅笔一端对着刻度 0，另一端对着刻度 8，铅笔长____厘米', '8', 8], ['橡皮一端对着刻度 2，另一端对着刻度 6，橡皮长____厘米', '4', 4], ['纸条一端对着刻度 3，另一端对着刻度 10，纸条长____厘米', '7', 7]],
+    [['先量一量自己的铅笔：把刻度 0 对准一端，再读出另一端对着的刻度？', '按实际读数，如 15 厘米'],
+     ['一张纸条从刻度 4 量到刻度 11，先写出算式，再算出长度？', '11−4=7（厘米）'],
+     ['先用尺子量出课本的长，再说说你是怎样对准刻度的？', '把刻度 0 对准课本一端，另一端对着几就是几厘米']]),
+  'math-g2-up-u05-k004': shapeTheme( 
+    ['画线段通常从尺子的刻度 0 画起', '画几厘米的线段就画到刻度几的地方', '画好后要在线段的两端点上端点'],
+    [['画 5 厘米的线段，从刻度 1 画到刻度 5', '从刻度 1 到刻度 5 只有 4 厘米；从刻度 0 画到刻度 5 才是 5 厘米。'],
+     ['画线段不用尺子也能画直', '要沿尺子的边画，才能保证线段是直的。'],
+     ['线段画好后不需要标端点', '线段有两个端点，画完要标出两端。']],
+    [['画一条 5 厘米的线段，从刻度 0 画到刻度____', '5', 5], ['画一条 8 厘米的线段，从刻度 0 画到刻度____', '8', 8], ['从刻度 2 画到刻度 9，画出的线段长____厘米', '7', 7]],
+    [['先画一条 6 厘米的线段，再和同桌互相量一量画得准不准？', '从刻度 0 画到刻度 6，并标出两个端点'],
+     ['先画一条比 10 厘米短 3 厘米的线段，再说说它长几厘米', '10−3=7，画一条 7 厘米的线段'],
+     ['先画出一条 4 厘米的线段，再画出一条比它长 2 厘米的线段？', '再画 6 厘米的线段']]),
+  'math-g2-up-u06-k001': shapeTheme( 
+    ['一拃、一步、一庹都可以当作「身体上的尺子」来估测长度', '用身体上的尺子量出的结果是近似值，每个人的「身体尺」长度不同', '估测后再用尺子量一量，可以检验估得准不准'],
+    [['每个人一拃的长度都一样', '身体大小不同，一拃长度不同，所以身体尺只能估测。'],
+     ['用身体尺量出的长度是精确值', '身体尺只能估出大约长度，精确测量要用尺子。'],
+     ['身体尺不能用来估计教室的长度', '可以用步数估计：步长×步数≈教室长度。']],
+    [['小明一拃约 10 厘米，量得课桌宽约 4 拃，课桌宽约____厘米', '40', 40], ['小红一步约 50 厘米，走 8 步大约是____厘米', '400', 400], ['小刚一庹约 1 米，黑板约 3 庹，黑板长约____米', '3', 3]],
+    [['先量出自己的一拃约几厘米，再用拃估测课桌的长', '如：一拃约 12 厘米，课桌约 5 拃，约 60 厘米'],
+     ['先用步数估计教室的长，再用卷尺量一量检验？', '步长×步数≈估计值，与实测对比'],
+     ['先估一估黑板的长（用庹），再说说估测和精确测量有什么不同？', '身体尺得近似值，尺子量得精确值']]),
+  'math-g3-up-u03-k003': shapeTheme( 
+    ['量较短较精细的物体用毫米作单位，如硬币的厚度', '量不长不短的物体用分米作单位，如课桌的高度', '量较长的距离用千米作单位，如公路的长度'],
+    [['测量操场跑道的长度用毫米作单位', '跑道很长，应用米或千米；毫米用于很短很精细的物体。'],
+     ['硬币的厚度用千米作单位', '硬币很薄，要用毫米作单位。'],
+     ['千米只能用来量地图上的距离', '千米用于量较长路程，如两城之间、公路长度。']],
+    [['1 分米=____厘米', '10', 10], ['1 千米=____米', '1000', 1000], ['3 分米=____厘米', '30', 30]],
+    [['先说出量硬币厚度、课桌高度、公路长度分别用什么单位，再各举一个例子？', '毫米、分米、千米；如指甲厚度用毫米'],
+     ['先估一估课本的厚度，再选择毫米或分米作单位量一量？', '课本较薄，用毫米作单位'],
+     ['从学校到家的距离用什么单位？先估一估，再说说为什么不用毫米', '用千米（或米）；距离长，毫米太小不方便']]),
+  'math-g3-up-u03-k004': shapeTheme( 
+    ['操场跑道一圈 200 米，5 圈就是 1 千米', '正常步行 10 分钟约走 1 千米', '测量时把刻度 0 对齐物体一端，另一端对着的刻度就是长度'],
+    [['10 个 100 米是 1000 千米', '10 个 100 米是 1000 米，也就是 1 千米，不是 1000 千米。'],
+     ['量比较长的距离用厘米作单位最方便', '长距离用米或千米作单位才方便。'],
+     ['2 千米和 2000 米不一样长', '1 千米=1000 米，2 千米=2000 米，一样长。']],
+    [['跑道一圈 200 米，____圈正好是 1 千米', '5', 5], ['2 千米=____米', '2000', 2000], ['小明步行 10 分钟约走 1 千米，走 30 分钟约走____千米', '3', 3]],
+    [['先算一算跑道 5 圈是多少米，再说说它等于几千米', '200×5=1000 米=1 千米'],
+     ['先估一估从教室走到校门大约几分钟，再推算大约多少米', '如：5 分钟约 500 米（按 10 分钟约 1 千米估）'],
+     ['一根绳子从刻度 0 量到刻度 25，先读出长度，再剪去 10 厘米还剩几厘米', '长 25 厘米，25−10=15 厘米']]),
+
+  
+  'math-g2-up-u05-k003': shapeTheme( 
+    ['线段是直的，有两个端点', '线段可以量出长度', '连接两点之间只能画一条线段'],
+    [['线段可以向两端无限延长', '线段有两个端点，不能延长；能无限延长的是直线。'],
+     ['弯曲的线也是线段', '线段必须是直的，弯曲的不是线段。'],
+     ['线段没有端点', '线段有两个端点；没有端点的是直线。']],
+    [['线段有____个端点', '2', 2], ['连接两个点只能画____条线段', '1', 1], ['一条线段有 2 个端点，3 条线段一共有____个端点', '6', 6]],
+    [['先在本子上画一条线段，标出两个端点，再量出它的长度？', '按实际测量，如 5 厘米'],
+     ['先找出黑板上的一条线段（如边框），再说说它为什么是线段？', '它是直的、有两个端点、可以量长度'],
+     ['连接本子上两个点，先画一画，再说说能画几条线段', '只能画 1 条线段']]),
+  'math-g3-up-u07-k001': shapeTheme( 
+    ['线段有两个端点，可以测量长度', '射线有一个端点，向一端无限延伸', '直线没有端点，向两端无限延伸'],
+    [['射线有两个端点', '射线只有一个端点，另一端无限延伸。'],
+     ['直线可以量出长度', '直线向两端无限延伸，不能度量长度。'],
+     ['线段能向一端无限延伸', '线段两个端点都固定，不能延伸。']],
+    [['线段有____个端点', '2', 2], ['射线有____个端点', '1', 1], ['直线有____个端点', '0', 0]],
+    [['先画出一条线段、一条射线、一条直线，再分别标出它们的端点？', '线段 2 个端点，射线 1 个，直线没有'],
+     ['先说说手电筒射出的光线可以看作哪种线，再说明理由？', '射线：有一个端点，向一端无限延伸'],
+     ['先在直线上点出两个点，再说说这两个点之间的部分叫什么？', '线段，它有 2 个端点，可以量长度']]),
+  'math-g3-up-u07-k004': shapeTheme( 
+    ['线段、射线、直线都是直的线', '线段有两个端点、射线有一个、直线没有端点', '三种线中只有线段可以度量长度'],
+    [['线段、射线、直线都可以度量长度', '只有线段可以度量；射线和直线无限延伸，不能度量。'],
+     ['射线比直线短', '射线和直线都无限长，无法比较长短。'],
+     ['把线段两端都无限延长就得到射线', '两端都无限延长得到的是直线；只延长一端才是射线。']],
+    [['射线有____个端点', '1', 1], ['直线有____个端点', '0', 0], ['一条直线上有 3 个点，相邻两点连成一条线段，共有____条线段', '3', 3]],
+    [['先列表比较线段、射线、直线的端点个数，再说说哪种能度量长度？', '线段 2 个、射线 1 个、直线 0 个；只有线段能度量'],
+     ['先画出一条射线，再把它反向延长，说说得到了什么线？', '得到一条直线'],
+     ['数一数：一条线段上有 4 个点（含端点），先画一画，再说出一共有几条线段', '3+2+1=6 条线段']]),
+
+  
+  'math-g3-down-u01-k001': shapeTheme( 
+    ['对折后两边能完全重合的图形是轴对称图形', '折痕所在的直线叫作对称轴', '长方形有 2 条对称轴，正方形有 4 条对称轴'],
+    [['对折后两边差不多的图形就是轴对称图形', '必须完全重合才是轴对称图形，「差不多」不行。'],
+     ['平行四边形是轴对称图形', '一般平行四边形沿任何直线对折都不能完全重合，不是轴对称图形。'],
+     ['轴对称图形只能有一条对称轴', '可以有多条，如正方形有 4 条、圆有无数条。']],
+    [['长方形有____条对称轴', '2', 2], ['正方形有____条对称轴', '4', 4], ['等腰三角形有____条对称轴', '1', 1]],
+    [['先剪出一个长方形纸片对折，再数一数它有几条对称轴、说说它是不是轴对称图形', '2 条对称轴，对折能完全重合，是轴对称图形'],
+     ['先数一数树叶一半轮廓上有几个关键点，再沿对称轴补画出另一半', '按关键点到对称轴距离相等补画，两边完全重合'],
+     ['先找出几个轴对称的字母（如 A、H、M），再数一数每个字母有几条对称轴', 'A、H、M 各有 1 条竖直对称轴']]),
+  'math-g4-down-u07-k001': shapeTheme( 
+    ['沿一条直线对折后两边完全重合的图形是轴对称图形', '在轴对称图形中，对称点到对称轴的距离相等', '圆有无数条对称轴'],
+    [['对称点到对称轴的距离不相等', '对称点到对称轴的距离一定相等，这是轴对称的性质。'],
+     ['圆只有 4 条对称轴', '圆的每条直径所在直线都是对称轴，有无数条。'],
+     ['只要图形两边一样大就是轴对称图形', '必须沿对称轴对折后完全重合，仅「一样大」不一定重合。']],
+    [['正方形有____条对称轴', '4', 4], ['长方形有____条对称轴', '2', 2], ['等边三角形有____条对称轴', '3', 3]],
+    [['先在方格纸上画一个三角形并数一数它有几个顶点，再画出它关于竖直对称轴的轴对称图形', '3 个顶点，对应点到对称轴距离相等'],
+     ['先量出一组对应点到对称轴的距离，再求一求另一组对应点的距离、说说发现了什么', '对应点到对称轴的距离都相等'],
+     ['先判断平行四边形是不是轴对称图形，再数一数它能找到几条对称轴并说明理由', '0 条：沿任何直线对折都不能完全重合，不是轴对称图形']]),
+  'math-g4-down-u07-k002': shapeTheme( 
+    ['补全轴对称图形时，先找出图形上的关键点', '数出关键点到对称轴的格数，在对称轴另一侧描出对应点', '对应点到对称轴的距离相等，最后连线成形'],
+    [['对应点可以随便描，只要在对称轴另一侧就行', '对应点到对称轴的格数必须和原来的点相等。'],
+     ['补全时先连线再找点', '正确顺序是找点→数格→描点→连线。'],
+     ['对应点在对称轴的同一侧', '对应点必须在对称轴的另一侧，且距离相等。']],
+    [['一个点到对称轴的距离是 3 格，它的对应点到对称轴的距离是____格', '3', 3], ['关键点距对称轴 2 格，对应点应描在对称轴另一侧第____格', '2', 2], ['一个点到对称轴 5 格，它的对应点距对称轴____格', '5', 5]],
+    [['先在方格纸上数出对称轴左边半图有几个顶点，再补全右边的另一半', '按对应点到对称轴格数相等逐点描出后连线'],
+     ['先找出半图的 3 个关键点到对称轴的距离，再描出对应点并数一数一共补了几个点', '补 3 个对应点，距离与原点相等'],
+     ['先补全以虚线为对称轴的「小房子」半图，再数一数一共补了几个对应点', '按半图顶点数确定，如 5 个']]),
+  'math-g5-down-u05-k003': shapeTheme( 
+    ['对称点到对称轴的距离相等，对称点的连线与对称轴垂直', '在方格纸上补全轴对称图形：找点、数格、描点、连线', '汉字和字母中也有轴对称，如「中」「A」'],
+    [['对称点的连线与对称轴平行', '对称点的连线与对称轴垂直，且被对称轴平分。'],
+     ['所有三角形都是轴对称图形', '只有等腰、等边三角形是轴对称图形，普通三角形不是。'],
+     ['对称轴两侧的图形大小可以不同', '对称轴两侧必须完全相同（能重合）。']],
+    [['点 A 到对称轴的距离是 4 格，对称点 A′到对称轴的距离是____格', '4', 4], ['等边三角形有____条对称轴', '3', 3], ['长方形有____条对称轴', '2', 2]],
+    [['先画出长方形、正方形、等腰三角形，再分别数一数各有几条对称轴', '长方形 2 条，正方形 4 条，等腰三角形 1 条'],
+     ['先画出圆的两条不同对称轴，再说说圆一共有多少条对称轴', '无数条，每条直径所在直线都是对称轴'],
+     ['先判断等边三角形有几条对称轴，再画出来数一数验证', '3 条，每个顶点与对边中点的连线都是对称轴']]),
+
+  
+  'math-g5-down-u05-k001': shapeTheme( 
+    ['旋转的三要素是旋转中心、旋转方向和旋转角度', '图形旋转后形状和大小不变，只是位置发生变化', '旋转方向分顺时针和逆时针两种'],
+    [['旋转后图形的形状会改变', '旋转只改变位置和方向，形状和大小都不变。'],
+     ['旋转只需要知道旋转角度就够了', '必须同时知道旋转中心、方向和角度三要素。'],
+     ['顺时针和逆时针旋转 90°的结果一样', '方向不同，旋转后的位置不同。']],
+    [['旋转的三要素一共有____个', '3', 3], ['钟表指针从 12 走到 3，绕中心顺时针旋转了____度', '90', 90], ['指针从 12 走到 6，旋转了____度', '180', 180]],
+    [['先观察钟表指针从 12 走到 3，再说出旋转中心、方向，并算一算旋转了多少度', '绕中心点顺时针旋转 90°'],
+     ['先把三角形纸片绕一个顶点顺时针旋转 90°，再数一数旋转前后图形各占几格、说说什么没变', '形状和大小不变，只是位置变了'],
+     ['先说一说风车转动是绕哪一点、向什么方向旋转，再比一比它和钟表指针方向相差多少', '绕中心点旋转；同向为顺时针，相差 0°']]),
+  'math-g5-down-u05-k002': shapeTheme( 
+    ['画旋转图形先确定旋转中心', '找出关键点，按旋转方向和角度确定对应点', '最后顺次连接对应点，得到旋转后的图形'],
+    [['旋转 90°后图形的大小会变', '旋转不改变形状和大小，只改变位置。'],
+     ['画旋转图形时可以不找关键点直接画', '要先找关键点、定对应点，再连线，否则画不准。'],
+     ['绕不同的点旋转同一个图形，结果一样', '旋转中心不同，旋转后的位置不同。']],
+    [['把线段绕端点旋转____度，正好转到与原来垂直的位置', '90', 90], ['图形绕一点旋转____度后，能与原来的位置完全重合（转一整圈）', '360', 360], ['钟表上分针走 30 分钟，旋转了____度', '180', 180]],
+    [['先在方格纸上画一面小旗并数一数占了几个格点，再把它绕旗杆底端顺时针旋转 90°画出来', '关键点绕中心转 90°，形状大小不变'],
+     ['先画出一条线段绕端点逆时针旋转 90°后的位置，再数一数旋转前后线段各占几格', '格数相同，只是方向变了'],
+     ['先把方格纸上的三角形绕一个顶点旋转 180°，再数一数对应点到旋转中心的距离各有几格', '对应点与旋转中心距离相等']]),
+  'math-g5-down-u05-k004': shapeTheme( 
+    ['利用平移、旋转和轴对称可以设计出美丽的图案', '设计图案时常把同一个基本图形反复运动', '图形运动后形状和大小都不变'],
+    [['设计图案只能用旋转一种方法', '平移、旋转、轴对称都可以用于设计图案。'],
+     ['图案设计中的基本图形经过运动会变形', '平移、旋转、轴对称都不改变图形的形状和大小。'],
+     ['同一个基本图形只能设计出一种图案', '运动方式、次数不同，可以设计出多种图案。']],
+    [['把一个基本图形绕一点每次旋转 90°，旋转____次后回到原位置', '4', 4], ['把一个图形每次旋转 60°，旋转____次后回到原位置', '6', 6], ['把一个图形每次旋转 180°，旋转____次后回到原位置', '2', 2]],
+    [['先选一个基本图形（如三角形），再把它绕一点每次旋转 90°，画出得到的图案', '旋转 3 次（连原图共 4 个）组成风车样图案'],
+     ['先用一个正方形通过平移设计一条花边，再说说用了几次平移', '每次平移一个边长，图案连续排列'],
+     ['先画一个基本图形，再分别用轴对称和旋转各设计一个图案，比较它们的相同点', '运动后形状、大小都不变，只是位置方向不同']]),
+
+  
+  'math-g3-down-u03-k002': shapeTheme( 
+    ['封闭图形一周的长度叫作它的周长', '测量周长可以先用线绕图形一周，再量出线的长度', '不封闭的图形没有周长'],
+    [['不封闭的图形也有周长', '周长是封闭图形一周的长度，不封闭谈不上「一周」。'],
+     ['图形里面的大小叫周长', '里面的大小是面积；一周的长度才是周长。'],
+     ['只要量一条边就能知道周长', '周长是一周所有边的长度之和。']],
+    [['一个三角形三条边分别是 3 厘米、4 厘米、5 厘米，它的周长是____厘米', '12', 12], ['正方形边长 4 厘米，周长是____厘米', '16', 16], ['一个四边形四条边分别是 2、3、4、5 厘米，周长是____厘米', '14', 14]],
+    [['先用绳子绕课本封面一周，再量出绳子的长度并说说这就是课本封面的什么、是多少厘米', '课本封面的周长，如 88 厘米'],
+     ['先用彩笔描出树叶边线的一周，再说说这一周的长度叫什么、大约有多少厘米', '树叶的周长，按实际估计'],
+     ['先用直尺量出三角形纸片三条边的长度，再算出它的周长是多少厘米', '三条边相加，如 3+4+5=12 厘米']]),
+  'math-g3-down-u03-k003': shapeTheme( 
+    ['长方形周长=（长+宽）×2', '正方形周长=边长×4', '已知长方形周长和长，可以求宽：宽=周长÷2−长'],
+    [['长方形周长=长+宽', '周长是一周的长度，要用（长+宽）×2。'],
+     ['正方形周长=边长×边长', '边长×边长是面积；周长是边长×4。'],
+     ['长方形和正方形的周长公式一样', '长方形用（长+宽）×2，正方形用边长×4。']],
+    [['长方形长 6 厘米、宽 4 厘米，周长是____厘米', '20', 20], ['正方形边长 7 厘米，周长是____厘米', '28', 28], ['长方形周长 24 厘米、长 8 厘米，宽是____厘米', '4', 4]],
+    [['先量出课本封面的长和宽，再算出它的周长是多少厘米', '（长+宽）×2，如（26+18)×2=88 厘米'],
+     ['先算出边长 5 厘米正方形的周长是多少，再说说为什么可以用边长×4', '5×4=20 厘米，4 条边一样长'],
+     ['一块长方形菜地长 8 米、宽 5 米，先写出算式，再算出围栏长多少米', '(8+5)×2=26 米']]),
+  'math-g3-down-u03-k004': shapeTheme( 
+    ['用同样的小正方形可以拼成不同形状的图形', '拼成的图形形状不同，周长可能不同', '拼的时候重合的边越多，露在外面的边越少，周长越短'],
+    [['拼成的图形形状不同，周长一定相同', '拼法不同，露在外面的边数不同，周长一般不同。'],
+     ['4 个小正方形无论怎么拼，周长都一样', '拼成一排周长是 10 条边长，拼成 2×2 周长是 8 条边长，不一样。'],
+     ['拼图时面积和周长都不变', '面积不变（小正方形个数不变），周长随拼法改变。']],
+    [['用 4 个边长 1 厘米的小正方形拼成一排，拼成的长方形周长是____厘米', '10', 10], ['用 4 个边长 1 厘米的小正方形拼成 2×2 的大正方形，周长是____厘米', '8', 8], ['用 6 个边长 1 厘米的小正方形拼成 1 行 6 列的长方形，周长是____厘米', '14', 14]],
+    [['先用 4 个小正方形拼成一排，算一算周长；再拼成 2×2，比一比哪个周长短？', '一排 10 条边长，2×2 是 8 条边长，2×2 更短'],
+     ['用 6 个小正方形先拼两种不同的长方形，再分别算出周长？', '1×6 周长 14 条边长，2×3 周长 10 条边长'],
+     ['先想一想：怎样拼能让周长最短？再用 4 个小正方形验证', '重合边越多周长越短，2×2 拼法周长最短']]),
+
+  
+  'math-g3-down-u04-k003': shapeTheme( 
+    ['长方形面积=长×宽', '正方形面积=边长×边长', '面积要用平方单位，如平方厘米'],
+    [['长方形面积=（长+宽）×2', '（长+宽）×2 是周长；面积=长×宽。'],
+     ['正方形面积=边长×4', '边长×4 是周长；面积=边长×边长。'],
+     ['面积的单位是厘米', '面积用平方厘米等平方单位；厘米是长度单位。']],
+    [['长方形长 6 厘米、宽 3 厘米，面积是____平方厘米', '18', 18], ['正方形边长 5 厘米，面积是____平方厘米', '25', 25], ['长方形面积 24 平方厘米、长 6 厘米，宽是____厘米', '4', 4]],
+    [['先用 1 平方厘米的小方格铺满长 4 厘米、宽 3 厘米的长方形，再数一数它的面积是多少平方厘米', '4×3=12 平方厘米'],
+     ['先算出边长 6 厘米正方形的面积是多少，再说说为什么用边长×边长', '6×6=36 平方厘米，每行 6 格共 6 行'],
+     ['一张课桌面长 12 分米、宽 5 分米，先写出算式，再算出面积是多少平方分米', '12×5=60 平方分米']]),
+  'math-g3-down-u04-k005': shapeTheme( 
+    ['周长是封闭图形一周的长度，面积是图形面的大小', '周长用长度单位，面积用平方单位', '周长相等的图形，面积不一定相等'],
+    [['周长相等的长方形，面积一定相等', '如 6×2 与 5×3 周长都是 16 厘米，面积 12≠15，不一定相等。'],
+     ['面积大的图形周长一定大', '面积和周长没有必然大小关系，要分别计算。'],
+     ['边长 4 厘米的正方形，周长和面积完全一样', '周长 16 厘米、面积 16 平方厘米，数值相同但意义和单位不同。']],
+    [['长 6 厘米、宽 2 厘米的长方形，面积是____平方厘米', '12', 12], ['长 5 厘米、宽 3 厘米的长方形，面积是____平方厘米', '15', 15], ['边长 4 厘米的正方形，周长是____厘米', '16', 16]],
+    [['先用 12 根同样长的小棒围一个长方形，再说说它的周长是多少、面积是否确定', '周长是 12 根小棒的长；面积随长宽不同而不同'],
+     ['先算出边长 4 厘米正方形的周长和面积各是多少，再说说两个结果表示什么', '周长 16 厘米（边线长度），面积 16 平方厘米（面的大小）'],
+     ['一个长方形长 6 厘米、宽 2 厘米，先算周长再算面积，说说两个结果各是多少、单位为什么不同', '周长 16 厘米用长度单位，面积 12 平方厘米用面积单位']]),
+
+  
+  'math-g5-up-u06-k001': shapeTheme( 
+    ['平行四边形的面积=底×高，用字母表示 S=ah', '把平行四边形沿高剪开，可以拼成一个长方形', '拼成的长方形的长等于平行四边形的底，宽等于高'],
+    [['平行四边形面积=底×斜边', '面积=底×高，高是垂直距离，不是斜边。'],
+     ['平行四边形拉成长方形后面积不变', '拉成长方形后周长不变，但高变了，面积改变。'],
+     ['只要底相等，平行四边形面积就相等', '面积由底和高共同决定，底相等高不同面积也不同。']],
+    [['平行四边形底 6 厘米、高 4 厘米，面积是____平方厘米', '24', 24], ['平行四边形面积 30 平方厘米、底 6 厘米，高是____厘米', '5', 5], ['平行四边形底 9 厘米、高 4 厘米，面积是____平方厘米', '36', 36]],
+    [['先把平行四边形沿高剪开拼成长方形，再说说拼成的长方形与原来面积相差多少', '面积相等（相差 0）：长方形的长=底，宽=高'],
+     ['先量出平行四边形模型的一组底和高，再算出它的面积是多少平方厘米', '面积=底×高，如底 8 厘米、高 5 厘米得 40 平方厘米'],
+     ['一个平行四边形花坛底 6 米、高 4 米，先写出算式，再算出面积是多少平方米', '6×4=24 平方米']]),
+  'math-g5-up-u06-k002': shapeTheme( 
+    ['三角形的面积=底×高÷2，用字母表示 S=ah÷2', '两个完全一样的三角形可以拼成一个平行四边形', '拼成的平行四边形面积是每个三角形面积的 2 倍'],
+    [['三角形面积=底×高', '忘了÷2：三角形面积=底×高÷2。'],
+     ['任意两个三角形都能拼成平行四边形', '必须是两个完全一样的三角形才能拼成。'],
+     ['三角形的面积与它的形状有关', '面积只与底和高有关，与形状无关。']],
+    [['三角形底 8 厘米、高 5 厘米，面积是____平方厘米', '20', 20], ['三角形面积 24 平方厘米、底 8 厘米，高是____厘米', '6', 6], ['三角形底 6 厘米、高 4 厘米，面积是____平方厘米', '12', 12]],
+    [['先用两个完全一样的三角形拼成平行四边形，再说说一个三角形的面积怎么求', '平行四边形面积的一半：底×高÷2'],
+     ['先量出红领巾的底和高，再算出它的面积是多少平方厘米', '面积=底×高÷2，如底 100 厘米、高 33 厘米得 1650 平方厘米'],
+     ['一块三角形警示牌底 6 分米、高 4 分米，先写出算式，再算出面积是多少平方分米', '6×4÷2=12 平方分米']]),
+  'math-g5-up-u06-k003': shapeTheme( 
+    ['梯形的面积=（上底+下底）×高÷2，用字母表示 S=(a+b)h÷2', '两个完全一样的梯形可以拼成一个平行四边形', '拼成的平行四边形的底等于梯形上底与下底的和'],
+    [['梯形面积=（上底+下底）×高', '忘了÷2：梯形面积=（上底+下底）×高÷2。'],
+     ['梯形的面积只与上底、下底有关', '面积还与高有关，三者共同决定。'],
+     ['任意两个梯形都能拼成平行四边形', '必须是两个完全一样的梯形才能拼成。']],
+    [['梯形上底 3 厘米、下底 5 厘米、高 4 厘米，面积是____平方厘米', '16', 16], ['梯形上底 2 厘米、下底 6 厘米、高 5 厘米，面积是____平方厘米', '20', 20], ['梯形面积 30 平方厘米，上底 4 厘米、下底 6 厘米，高是____厘米', '6', 6]],
+    [['先用两个完全一样的梯形拼成平行四边形，再说说梯形面积公式是怎么求出来的', '（上底+下底）×高÷2'],
+     ['一个梯形上底 3 厘米、下底 7 厘米、高 4 厘米，先写出算式，再算出面积是多少平方厘米', '(3+7)×4÷2=20 平方厘米'],
+     ['先量出梯形水渠横断面的上底、下底和高，再算出横断面面积是多少', '（上底+下底）×高÷2，按实测代入']]),
+  'math-g5-up-u06-k004': shapeTheme( 
+    ['组合图形可以分成几个学过的简单图形', '分别算出各部分的面积，再相加或相减', '分的方法不同，算出的总面积相同'],
+    [['组合图形的面积只能用一种方法计算', '可以分割求和，也可以补成大图形求差。'],
+     ['分法不同，算出的总面积可能不同', '无论怎么分，总面积不变。'],
+     ['组合图形面积等于各部分周长的和', '面积是各部分面积的和，与周长无关。']],
+    [['一个组合图形分成面积 12 平方厘米和 8 平方厘米的两部分，总面积是____平方厘米', '20', 20], ['大正方形面积 25 平方厘米，挖去面积 9 平方厘米的小正方形，剩下____平方厘米', '16', 16], ['组合图形分成 10 平方厘米的三角形和 15 平方厘米的长方形，总面积是____平方厘米', '25', 25]],
+    [['先把「L」形纸板分成两个长方形，再算出它的总面积是多少', '分割法：两个长方形面积相加'],
+     ['先在大长方形中添补一块变成规则图形，再算出阴影部分面积是多少', '添补法：大图形面积−补上的面积'],
+     ['先量出组合图形各边的长度，再选分割或添补的方法算出面积是多少', '按分割后各基本图形面积求和（或求差）']]),
+  'math-g5-up-u06-k005': shapeTheme( 
+    ['方格纸上每个小方格的面积是 1 平方厘米', '不满一格的可以两个拼成一格来数', '格点多边形的面积与格点数量之间有规律（皮克定理思想）'],
+    [['不满一格的都按一格算', '不满一格要拼合估算，两个半格算一格。'],
+     ['格点多边形面积只能用公式算', '可以先数整格、再拼半格来估计面积。'],
+     ['数格子时，格点数量与面积无关', '格点数量与面积之间有固定规律。']],
+    [['每个小方格 1 平方厘米，一个图形占 8 个整格和 4 个半格，面积约____平方厘米', '10', 10], ['占 6 个整格和 2 个半格，面积约____平方厘米', '7', 7], ['占 10 个整格和 6 个半格，面积约____平方厘米', '13', 13]],
+    [['先在方格纸上画一个顶点都在格点上的三角形，再用数格子的方法数一数它的面积约是多少', '满格按 1 算，不满格按半格算，合计即约面积'],
+     ['先数出格点多边形内部和边界上的格点各有多少个，再试着用皮克定理算出面积', '内部格点数+边界格点数÷2−1'],
+     ['先画出上底 2 格、下底 4 格、高 3 格的梯形，再用数格子验证面积是多少格', '(2+4)×3÷2=9 格，与数格子结果一致']]),
+  'math-g5-up-u06-k006': shapeTheme( 
+    ['等底等高的平行四边形面积相等', '等底等高的三角形面积相等', '等底等高的平行四边形面积是三角形面积的 2 倍'],
+    [['等底等高的三角形形状一定相同', '等底等高只保证面积相等，形状可以不同。'],
+     ['等底等高的平行四边形和三角形面积相等', '等底等高时，平行四边形面积是三角形的 2 倍。'],
+     ['面积相等的三角形一定等底等高', '面积相等只需底×高的积相等，底和高可以分别不同。']],
+    [['平行四边形底 6 厘米、高 4 厘米，与它等底等高的三角形面积是____平方厘米', '12', 12], ['三角形面积 10 平方厘米，与它等底等高的平行四边形面积是____平方厘米', '20', 20], ['两个等底等高的三角形，一个面积是 15 平方厘米，另一个面积是____平方厘米', '15', 15]],
+    [['先画出两个等底等高的不同形状三角形，再算一算它们的面积相差多少', '相差 0：等底等高的三角形面积相等'],
+     ['先在两条平行线之间画 3 个同底的三角形，再说说它们的面积各是多少、有什么关系', '高都等于平行线间距离，面积相等'],
+     ['先比较平行四边形与和它等底等高的三角形的面积，再说说相差多少倍', '平行四边形面积是三角形的 2 倍']]),
+
+  
+  'math-g4-down-u05-k001': shapeTheme( 
+    ['三角形有 3 条边、3 个角和 3 个顶点', '三角形具有稳定性，生活中常用来加固', '四边形容易变形，三角形不容易变形'],
+    [['三角形容易变形', '三角形具有稳定性；容易变形的是四边形。'],
+     ['三角形有 4 条边', '三角形有 3 条边；4 条边的是四边形。'],
+     ['自行车车架做成三角形只是为了好看', '是利用三角形的稳定性，使车架牢固。']],
+    [['一个三角形有____条边', '3', 3], ['两个独立的三角形一共有____个角', '6', 6], ['3 个独立的三角形一共有____个顶点', '9', 9]],
+    [['先找出生活中用三角形加固的例子，再说说它利用了什么特性？', '如自行车车架、屋顶桁架，利用三角形的稳定性'],
+     ['先用小棒拼一个三角形和一个四边形，拉一拉，说说哪个容易变形？', '三角形拉不动（稳定），四边形容易变形'],
+     ['先数一数一个三角形的边、角、顶点各有多少，再说给同桌听', '3 条边、3 个角、3 个顶点']]),
+  'math-g4-down-u05-k002': shapeTheme( 
+    ['从三角形的一个顶点向对边作垂线，顶点和垂足之间的线段叫高', '这条对边叫三角形的底', '三角形有 3 条高'],
+    [['三角形只有 1 条高', '每个顶点都可以向对边作高，共 3 条。'],
+     ['三角形的高一定在三角形里面', '钝角三角形有两条高在三角形外面。'],
+     ['底和高可以随便搭配', '高必须是从顶点向它的对边（底）作的垂线段。']],
+    [['三角形有____条高', '3', 3], ['直角三角形的两条直角边互为底和高，它有____条高在三角形的边上', '2', 2], ['3 个独立的三角形一共有____条高', '9', 9]],
+    [['先画一个锐角三角形，再从一个顶点向对边画出它的高？', '从顶点向对边作垂线，标出垂足'],
+     ['先指出直角三角形的三条高，再说说哪两条高就是直角边？', '两条直角边互为底和高，第三条在斜边上'],
+     ['先画一个钝角三角形，再试着画出它的 3 条高，说说发现了什么？', '两条高落在三角形外面']]),
+  'math-g4-down-u05-k003': shapeTheme( 
+    ['三角形任意两边的和大于第三边', '判断能否围成三角形：两条短边之和与最长边比较', '三角形任意两边之差小于第三边'],
+    [['任意三条线段都能围成三角形', '必须满足任意两边之和大于第三边。'],
+     ['边长 2、3、6 厘米能围成三角形', '2+3=5<6，两短边之和不大于最长边，围不成。'],
+     ['判断时要把两短边之和与最短的边比较', '应与最长边比较：两短边之和＞最长边才能围成。']],
+    [['三条边分别是 3、4、5 厘米，其中两条短边之和是____厘米', '7', 7], ['边长 2、3、6 厘米，两条短边之和是____厘米', '5', 5], ['三角形两边分别是 4 厘米和 6 厘米，第三边一定小于____厘米', '10', 10]],
+    [['先用小棒（如 3、4、5 厘米）摆一摆，再说说为什么能围成三角形？', '3+4>5，两短边之和大于最长边，能围成'],
+     ['给 2、3、6 厘米三根小棒，先摆一摆，再说明为什么围不成？', '2+3=5<6，两短边之和不够长，围不成'],
+     ['已知两边是 5 和 8 厘米，先写出第三边的范围，再举一个能围成的长度？', '3＜第三边＜13，如 7 厘米']]),
+  'math-g4-down-u05-k004': shapeTheme( 
+    ['按角分：锐角三角形、直角三角形、钝角三角形', '按边分：不等边三角形、等腰三角形（等边三角形是特殊的等腰三角形）', '三个角都是锐角的三角形是锐角三角形'],
+    [['有一个角是锐角的三角形是锐角三角形', '三个角都是锐角才是锐角三角形；每个三角形至少有 2 个锐角。'],
+     ['等边三角形不是等腰三角形', '等边三角形是特殊的等腰三角形。'],
+     ['一个三角形可以同时是直角三角形和钝角三角形', '直角和钝角不能共存于一个三角形（内角和 180°）。']],
+    [['三角形按角分类，可以分成____类', '3', 3], ['等边三角形的每个角都是____度', '60', 60], ['直角三角形有____个直角', '1', 1]],
+    [['先量出一个三角形三个角的度数，再说说它按角分属于哪一类', '三个角都是锐角→锐角三角形；有直角→直角三角形；有钝角→钝角三角形'],
+     ['先画一个等腰三角形，再说说它按边分属于哪一类、按角分可能属于哪一类', '按边是等腰三角形；按角可能是锐角、直角或钝角三角形'],
+     ['把几个三角形卡片先按角分类，再按边分类，说说两次分类结果', '标准不同，分类结果不同']]),
+  'math-g4-down-u05-k005': shapeTheme( 
+    ['三角形的内角和是 180°', '把三角形的三个角拼在一起，正好是一个平角', '知道两个角的度数，可以求第三个角：用 180°减去两角之和'],
+    [['三角形的内角和是 360°', '三角形内角和是 180°；360°是四边形的内角和。'],
+     ['大三角形的内角和比小三角形大', '所有三角形的内角和都是 180°，与大小无关。'],
+     ['直角三角形的内角和是 90°', '直角三角形也是三角形，内角和仍是 180°。']],
+    [['三角形两个角分别是 60°和 70°，第三个角是____度', '50', 50], ['直角三角形一个锐角是 35°，另一个锐角是____度', '55', 55], ['等边三角形每个角都是____度', '60', 60]],
+    [['先量出一个三角形三个角的度数，再加一加，验证内角和？', '三个角相加等于 180°'],
+     ['把纸三角形的三个角撕下来拼一拼，先说一说拼成了什么角，再写出内角和？', '拼成一个平角，内角和 180°'],
+     ['已知两个角是 45°和 65°，先写出算式，再求第三个角', '180−45−65=70（度）']]),
+  'math-g4-down-u05-k006': shapeTheme( 
+    ['四边形的内角和是 360°', '把四边形分成两个三角形，2×180°=360°', '知道四边形三个角的度数，可以求第四个角'],
+    [['四边形的内角和是 180°', '四边形可分成 2 个三角形，内角和是 360°。'],
+     ['只有正方形的内角和是 360°', '所有四边形的内角和都是 360°。'],
+     ['五边形的内角和也是 360°', '五边形分成 3 个三角形，内角和是 540°。']],
+    [['四边形三个角分别是 90°、100°、80°，第四个角是____度', '90', 90], ['四边形的内角和是____度', '360', 360], ['一个五边形可以分成____个三角形', '3', 3]],
+    [['先画一个四边形并连一条对角线，说说分成了几个三角形，再写出内角和', '分成 2 个三角形，2×180°=360°'],
+     ['先量出任意四边形四个角的度数，再加一加验证？', '四个角相加等于 360°'],
+     ['已知四边形三个角是 90°、90°、70°，先列式，再求第四个角', '360−90−90−70=110（度）']]),
+
+  
+  'math-g3-down-u03-k001': shapeTheme( 
+    ['长方形对边相等，四个角都是直角', '正方形四条边都相等，四个角都是直角', '由几条线段围成的封闭图形叫多边形'],
+    [['长方形的四条边都相等', '长方形只是对边相等；四边都相等的是正方形。'],
+     ['正方形的角不一定是直角', '正方形四个角都是直角。'],
+     ['四边形都是长方形', '四边形包括长方形、正方形、梯形等多种。']],
+    [['长方形有____个直角', '4', 4], ['长方形有____组对边', '2', 2], ['一个长方形和一个正方形一共有____条边', '8', 8]],
+    [['先量出长方形纸片的四条边各是多少厘米，再说说对边有什么关系、四个角都是什么角', '对边相等，四个角都是直角'],
+     ['先折一折正方形纸片数一数四条边是否都相等，再说说它和长方形的相同点与不同点', '四边都相等；都有 4 个直角，正方形是特殊的长方形'],
+     ['先用小棒摆出长方形和正方形各一个，再数一数各用了几根小棒、说说边的特点', '各 4 根；长方形对边相等，正方形 4 边都相等']]),
+  'math-g4-up-u05-k001': shapeTheme( 
+    ['在同一平面内，不相交的两条直线互相平行', '两条直线相交成直角时，互相垂直', '可以用三角尺和直尺画平行线和垂线'],
+    [['同一平面内两条直线不是平行就是垂直', '还可能只是一般相交（不成直角）。'],
+     ['平行线会相交于很远的一点', '同一平面内平行线永不相交。'],
+     ['互相垂直的两条直线不相交', '垂直是相交成直角的特殊情况，它们相交。']],
+    [['一个直角是 90°，两个直角拼起来是____度', '180', 180], ['正方形相邻两边互相垂直，一个正方形有____组互相垂直的邻边', '4', 4], ['长方形的两组对边分别平行，每组对边有____条', '2', 2]],
+    [['先在练习本上画一组平行线，再说说为什么它们永不相交？', '同一平面内，沿直线方向延长也不相交'],
+     ['先用三角尺画出已知直线的一条垂线，再量一量夹角？', '夹角是 90°'],
+     ['在教室里找两组互相平行和两组互相垂直的边，先说一说，再指出来？', '如书本对边平行、邻边垂直']]),
+  'math-g4-up-u05-k002': shapeTheme( 
+    ['两组对边分别平行的四边形叫平行四边形', '平行四边形的对边平行且相等，对角相等', '平行四边形容易变形（不稳定性），如伸缩门'],
+    [['平行四边形具有稳定性', '平行四边形容易变形；有稳定性的是三角形。'],
+     ['只有一组对边平行的四边形是平行四边形', '两组对边分别平行才是；只有一组的是梯形。'],
+     ['平行四边形的四个角都是直角', '一般平行四边形的角不是直角；四个直角的是长方形。']],
+    [['平行四边形有____条边', '4', 4], ['平行四边形有____组对边分别平行', '2', 2], ['一个平行四边形和一个三角形一共有____条边', '7', 7]],
+    [['先用小棒拼一个平行四边形，拉一拉，说说发现了什么？', '容易变形，具有不稳定性'],
+     ['先量出平行四边形的两组对边，再说说它们有什么关系？', '对边平行且相等'],
+     ['找一找生活中的平行四边形（如伸缩门、篱笆），先指出来，再说说利用了什么特性？', '利用平行四边形容易变形的特性']]),
+  'math-g4-up-u05-k003': shapeTheme( 
+    ['只有一组对边平行的四边形叫梯形', '梯形平行的两边叫上底和下底，不平行的两边叫腰', '两腰相等的梯形叫等腰梯形，有一个直角的叫直角梯形'],
+    [['两组对边分别平行的四边形是梯形', '那是平行四边形；梯形只有一组对边平行。'],
+     ['梯形的两条腰一定相等', '只有等腰梯形的腰相等，一般梯形不相等。'],
+     ['梯形只有 2 条高', '梯形两底之间可以画无数条高。']],
+    [['梯形有____组对边平行', '1', 1], ['直角梯形有____个直角', '2', 2], ['一个梯形有____条边', '4', 4]],
+    [['先画一个梯形，标出上底、下底和两条腰，再画出它的一条高？', '高是两底之间的垂线段'],
+     ['先判断：平行四边形是不是梯形？再说说理由', '不是；梯形只有一组对边平行，平行四边形有两组'],
+     ['先画一个直角梯形，再说说它有几个直角', '直角梯形有 2 个直角']]),
+  'math-g4-up-u05-k004': shapeTheme( 
+    ['长方形和正方形是特殊的平行四边形', '正方形是特殊的长方形', '梯形只有一组对边平行，与平行四边形不同类'],
+    [['长方形不是平行四边形', '长方形两组对边分别平行，是特殊的平行四边形。'],
+     ['正方形不是长方形', '正方形是长和宽相等的特殊长方形。'],
+     ['梯形也是平行四边形', '梯形只有一组对边平行，不符合平行四边形定义。']],
+    [['平行四边形、长方形、正方形都有____组对边平行', '2', 2], ['梯形有____组对边平行', '1', 1], ['一个长方形和一个梯形一共有____条边', '8', 8]],
+    [['先用集合图把四边形、平行四边形、长方形、正方形、梯形整理出来，再说说谁是谁的特殊情况', '长方形是特殊的平行四边形，正方形是特殊的长方形'],
+     ['先判断：正方形是不是平行四边形？再说明理由', '是；两组对边分别平行，是特殊的平行四边形'],
+     ['先说出梯形和平行四边形的相同点和不同点，再各画一个？', '都有 4 条边；平行四边形两组对边平行，梯形只有一组']]),
+
+  
+  'math-g5-down-u03-k003': shapeTheme( 
+    ['长方体或正方体 6 个面的总面积叫作它的表面积', '长方体表面积=（长×宽+长×高+宽×高）×2', '正方体表面积=棱长×棱长×6'],
+    [['表面积只要算看得见的 3 个面', '表面积是 6 个面的总面积，看不见的面也要算。'],
+     ['正方体表面积=棱长×棱长×4', '正方体有 6 个面，表面积=棱长×棱长×6。'],
+     ['表面积的单位是立方厘米', '表面积用平方单位；立方单位是体积单位。']],
+    [['正方体棱长 2 厘米，表面积是____平方厘米', '24', 24], ['长方体长 3 厘米、宽 2 厘米、高 1 厘米，表面积是____平方厘米', '22', 22], ['正方体棱长 1 厘米，表面积是____平方厘米', '6', 6]],
+    [['先量出长方体纸盒的长、宽、高，再算出它的表面积是多少平方厘米', '（长×宽+长×高+宽×高）×2，如（10×8+10×6+8×6)×2=376 平方厘米'],
+     ['先算出棱长 5 厘米正方体的表面积是多少，再说说为什么可以用棱长×棱长×6', '5×5×6=150 平方厘米，6 个面完全相同'],
+     ['先拆开一个长方体包装盒铺平，数一数它有几个面，再说明表面积就是这些面的面积之和', '6 个面的面积之和']]),
+  'math-g5-down-u03-k004': shapeTheme( 
+    ['物体所占空间的大小叫作物体的体积', '常用体积单位有立方厘米、立方分米、立方米，相邻两个单位间的进率是 1000', '长方体体积=长×宽×高，正方体体积=棱长×棱长×棱长'],
+    [['体积和面积用的是同样的单位', '体积用立方单位，面积用平方单位。'],
+     ['相邻体积单位之间的进率是 100', '是 1000，不是 100。'],
+     ['长方体体积=（长+宽+高）×4', '（长+宽+高）×4 是棱长总和；体积=长×宽×高。']],
+    [['长方体长 4 厘米、宽 3 厘米、高 2 厘米，体积是____立方厘米', '24', 24], ['正方体棱长 3 厘米，体积是____立方厘米', '27', 27], ['1 立方分米=____立方厘米', '1000', 1000]],
+    [['先用 1 立方厘米的小正方体摆一个长 4、宽 3、高 2 的长方体，再数一数体积是多少立方厘米', '4×3×2=24 个，即 24 立方厘米'],
+     ['先算出棱长 3 厘米正方体的体积是多少，再说说它和表面积有什么不同', '3×3×3=27 立方厘米；体积是占空间大小，表面积是 6 个面的面积和'],
+     ['先把一块石头放进盛水的量杯，再看一看水面上升了多少、说说上升的水的体积和石头有什么关系', '上升部分水的体积就是石头的体积']]),
+  'math-g5-down-u03-k005': shapeTheme( 
+    ['容器所能容纳物体的体积叫作容器的容积', '计量液体的体积常用升和毫升', '1 升=1 立方分米，1 毫升=1 立方厘米，1 升=1000 毫升'],
+    [['容积和体积完全相同', '体积是物体本身占的空间；容积是容器能装多少，要从里面量。'],
+     ['1 升=100 毫升', '1 升=1000 毫升。'],
+     ['计量液体体积只能用立方米', '液体常用升和毫升作单位。']],
+    [['1 升=____毫升', '1000', 1000], ['2 升=____毫升', '2000', 2000], ['5000 毫升=____升', '5', 5]],
+    [['先说出水瓶的容积大约是多少，再看看标签上的净含量验证', '如 500 毫升，与标签一致'],
+     ['一个长方体鱼缸从里面量长 5 分米、宽 3 分米、高 2 分米，先算容积，再说说能装多少升水', '5×3×2=30 立方分米=30 升'],
+     ['先把 2500 毫升换算成升，再说说换算时要除以几', '2500÷1000=2.5 升，除以进率 1000']]),
+
+  
+  'math-g6-down-u03-k002': shapeTheme( 
+    ['圆柱的表面积=侧面积+两个底面的面积', '圆柱的侧面积=底面周长×高', '圆柱的底面是圆，底面积=πr²'],
+    [['圆柱表面积=侧面积', '还要加上两个底面的面积。'],
+     ['圆柱侧面积=底面积×高', '侧面积=底面周长×高。'],
+     ['圆柱表面积只算一个底面', '上下两个底面完全相同，都要算。']],
+    [['圆柱底面半径 1 厘米、高 5 厘米，侧面积是____平方厘米（π取3.14）', '31.4', 31.4], ['底面半径 2 厘米的圆柱，两个底面积一共是____平方厘米（π取3.14）', '25.12', 25.12], ['圆柱底面周长 6.28 厘米、高 10 厘米，侧面积是____平方厘米', '62.8', 62.8]],
+    [['先量出圆柱形水杯的底面半径和高，再算出它的表面积是多少', '侧面积+两个底面积：2πrh+2πr²，按实测代入'],
+     ['先算一个底面半径 2 分米、高 5 分米的圆柱表面积，再说说侧面积是多少、怎么算的', '侧面积=底面周长×高=62.8 平方分米，表面积=62.8+2×3.14×2²=87.92 平方分米'],
+     ['先拆一个圆柱形纸筒，数一数它的表面由几部分组成，再说说表面积怎么求', '3 部分：侧面积+两个底面积']]),
+  'math-g6-down-u03-k003': shapeTheme( 
+    ['圆柱的体积=底面积×高，用字母表示 V=Sh=πr²h', '把圆柱切拼成近似的长方体，体积不变', '拼成的长方体的底面积等于圆柱的底面积，高等于圆柱的高'],
+    [['圆柱体积=底面周长×高', '底面周长×高是侧面积；体积=底面积×高。'],
+     ['圆柱体积是与它等底等高圆锥体积的三分之一', '说反了：圆锥体积是等底等高圆柱的三分之一。'],
+     ['底面积相等、高不相等的圆柱体积相等', '体积由底面积和高共同决定。']],
+    [['圆柱底面积 10 平方厘米、高 4 厘米，体积是____立方厘米', '40', 40], ['圆柱底面半径 2 厘米、高 5 厘米，体积是____立方厘米（π取3.14）', '62.8', 62.8], ['圆柱体积 60 立方厘米、底面积 12 平方厘米，高是____厘米', '5', 5]],
+    [['先算一个底面积 10 平方厘米、高 6 厘米的圆柱体积是多少，再说说公式怎么来的', '底面积×高=60 立方厘米，由长方体体积推导'],
+     ['先量出圆柱形罐子的底面半径和高，再算出它的体积是多少立方厘米', 'V=πr²h，按实测代入'],
+     ['一根圆柱形木料底面半径 2 分米、长 10 分米，先写出算式，再算出体积是多少立方分米', '3.14×2²×10=125.6 立方分米']]),
+  'math-g6-down-u03-k005': shapeTheme( 
+    ['圆锥的体积等于与它等底等高圆柱体积的三分之一', '圆锥的体积 V=(1/3)Sh=(1/3)πr²h', '等底等高的圆柱体积是圆锥的 3 倍'],
+    [['圆锥体积=底面积×高', '忘了乘 1/3：等底等高时圆锥体积是圆柱的三分之一。'],
+     ['任意圆锥的体积都是圆柱体积的三分之一', '必须强调「等底等高」，否则关系不成立。'],
+     ['等底等高的圆柱和圆锥体积相等', '圆柱体积是圆锥的 3 倍。']],
+    [['圆锥与圆柱等底等高，圆柱体积 30 立方厘米，圆锥体积是____立方厘米', '10', 10], ['圆锥底面积 12 平方厘米、高 6 厘米，体积是____立方厘米', '24', 24], ['圆锥体积 15 立方厘米，与它等底等高的圆柱体积是____立方厘米', '45', 45]],
+    [['先用等底等高的圆锥和圆柱容器做倒沙实验，再说说圆锥体积是圆柱的几分之几', '倒 3 次正好装满：圆锥体积是等底等高圆柱的 1/3'],
+     ['先算一个底面积 12 平方厘米、高 6 厘米的圆锥体积是多少，再与同底同高的圆柱比一比', '12×6÷3=24 立方厘米，是圆柱体积（72）的 1/3'],
+     ['一个圆锥形沙堆底面半径 3 米、高 2 米，先写出算式，再算出体积是多少立方米', '3.14×3²×2÷3=18.84 立方米']]),
+  'math-g6-down-u03-k006': shapeTheme( 
+    ['求圆柱形水桶能装多少水，就是求它的容积（从里面量）', '求做圆柱形水桶用多少铁皮，就是求它的表面积', '计算前先统一单位，再选择公式'],
+    [['求水桶能装多少水就是求表面积', '能装多少是容积；用多少铁皮才是表面积。'],
+     ['圆锥形沙堆的体积=底面积×高', '忘了乘 1/3：圆锥体积=底面积×高÷3。'],
+     ['无盖水桶的表面积要算两个底面', '无盖只算一个底面加侧面。']],
+    [['圆柱形水桶底面积 20 平方分米、高 5 分米，能装水____升', '100', 100], ['圆锥形沙堆底面积 9 平方米、高 2 米，体积是____立方米', '6', 6], ['圆柱形水杯底面半径 3 厘米、高 10 厘米，容积约____立方厘米（π取3.14）', '282.6', 282.6]],
+    [['一个圆柱形粮囤底面积 6 平方米、高 2 米，先算它能装多少立方米粮食，再说说用了什么公式', '6×2=12 立方米，用体积=底面积×高'],
+     ['做一个无盖圆柱形水桶，底面半径 2 分米、高 5 分米，先算侧面积，再加上一个底面积求用多少铁皮（π取3.14）', '侧面积 62.8 平方分米，加底面 12.56，共 75.36 平方分米'],
+     ['一个圆锥形沙堆底面积 12 平方米、高 1.5 米，先列式再算出沙堆体积', '12×1.5÷3=6（立方米）']]),
+
+  
+  'math-g6-up-u04-k002': shapeTheme( 
+    ['围成圆的曲线的长叫作圆的周长', '圆的周长与直径的比值是一个固定的数，叫作圆周率 π，π≈3.14', '圆的周长 C=πd 或 C=2πr'],
+    [['圆周率 π=3', 'π≈3.14，是一个固定不变的数。'],
+     ['大圆的圆周率比小圆大', '圆周率与圆的大小无关，都是 π。'],
+     ['圆的周长=半径×π', 'C=2πr 或 πd；半径乘 π 只是周长的一半。']],
+    [['圆的直径 10 厘米，周长是____厘米（π取3.14）', '31.4', 31.4], ['圆的半径 2 厘米，周长是____厘米（π取3.14）', '12.56', 12.56], ['圆的半径 10 厘米，周长是____厘米（π取3.14）', '62.8', 62.8]],
+    [['先用绳子绕圆形杯口一周量出周长，再算一算周长除以直径的商约是多少', '商约是 3.14，即圆周率 π'],
+     ['先算一个直径 10 厘米的圆的周长是多少，再说说用了哪个公式', 'C=πd=3.14×10=31.4 厘米'],
+     ['一个圆形花坛半径 4 米，先写出算式，再算出绕花坛一圈有多少米', 'C=2πr=2×3.14×4=25.12 米']]),
+  'math-g6-up-u04-k003': shapeTheme( 
+    ['圆的面积 S=πr²', '把圆分成若干等份拼成近似长方形，长方形的长≈圆周长的一半', '拼成的长方形的宽≈圆的半径，面积与圆相等'],
+    [['圆的面积=πd', 'πd 是周长公式；面积=πr²。'],
+     ['圆的面积=πr', '面积=π×r×r，不是 π×r。'],
+     ['圆拼成近似长方形后周长和面积都不变', '面积不变，但周长变了（多了两条半径）。']],
+    [['圆的半径 3 厘米，面积是____平方厘米（π取3.14）', '28.26', 28.26], ['圆的半径 2 厘米，面积是____平方厘米（π取3.14）', '12.56', 12.56], ['圆的半径 10 厘米，面积是____平方厘米（π取3.14）', '314', 314]],
+    [['先把圆形纸片剪成若干等份拼成近似长方形，再说说圆面积公式是怎么推导出来的、近似长方形的宽约是多少', '长=圆周长的一半、宽=半径，S=πr²'],
+     ['先算一个半径 3 厘米的圆的面积是多少，再说说计算顺序', '先算 r²=9，S=3.14×9=28.26 平方厘米'],
+     ['一个圆形桌面直径 8 分米，先求出半径，再算出面积是多少平方分米', 'r=4 分米，3.14×4²=50.24 平方分米']]),
+  'math-g6-up-u04-k005': shapeTheme( 
+    ['相邻跑道起跑线的距离差=跑道宽×2π', '外圈跑道比内圈长，所以外圈起跑线要提前', '各跑道直道部分长度相同，差距来自弯道（两个半圆合成一个圆）'],
+    [['所有跑道的运动员应从同一起跑线出发', '外圈更长，外圈起跑线要提前才公平。'],
+     ['相邻跑道长度差=跑道宽×π', '两个弯道合成一个圆，半径差=跑道宽，周长差=跑道宽×2π。'],
+     ['起跑线差距与跑道宽无关', '差距=跑道宽×2π，跑道越宽差距越大。']],
+    [['跑道宽 1 米，相邻起跑线的距离差约是____米（π取3.14）', '6.28', 6.28], ['跑道宽 1.5 米，相邻起跑线的距离差约是____米（π取3.14）', '9.42', 9.42], ['跑道宽 2 米，相邻起跑线的距离差约是____米（π取3.14）', '12.56', 12.56]],
+    [['400 米跑道宽 1 米，先算相邻两道相差多少米，再说说为什么起跑线要提前', '1×2×3.14=6.28 米，外圈更长所以提前'],
+     ['先量一量操场跑道的宽度，再算出相邻起跑线的距离差？', '如宽 1.2 米：1.2×2×3.14≈7.54 米'],
+     ['先说说为什么各道直道部分不用调整，只有弯道产生差距？', '直道长度相同；两个半圆弯道合成一个圆，半径差造成周长差']]),
+
+  
+  'math-g5-up-u08-k001': shapeTheme( 
+    ['图形之间不留空隙、不重叠地铺满整个平面，这种铺法叫密铺', '密铺常用相同的图形反复拼接', '地砖、蜂巢都是生活中的密铺'],
+    [['图形之间有重叠也叫密铺', '密铺要求不留空隙也不重叠。'],
+     ['留有缝隙的铺法也是密铺', '密铺必须不留空隙。'],
+     ['只有正方形才能密铺', '三角形、长方形、正六边形等也能密铺。']],
+    [['密铺要求拼接点处各内角之和是____度', '360', 360], ['用边长 1 分米的正方形地砖铺 1 平方米的地面，需要____块', '100', 100], ['边长 2 分米的正方形地砖，4 块能铺____平方分米', '16', 16]],
+    [['先观察教室地面的地砖，说说它是不是密铺，再指出拼接点？', '地砖不留空隙不重叠，是密铺'],
+     ['先用同样的三角形纸片拼一拼，说说能不能密铺，再看看拼接点处有几个角', '能密铺；拼接点处各角合起来是 360°'],
+     ['先画一画：用圆能不能铺满一张纸不留缝隙？再说说结论', '圆与圆之间必有空隙，不能密铺']]),
+  'math-g5-up-u08-k002': shapeTheme( 
+    ['正方形、长方形、三角形、平行四边形和梯形都能单独密铺', '正五边形、圆不能单独密铺', '任意相同的三角形都能密铺'],
+    [['圆可以单独密铺', '圆与圆之间必有空隙，不能单独密铺。'],
+     ['正五边形可以单独密铺', '正五边形内角 108°，360 不是 108 的整数倍，不能密铺。'],
+     ['只有规则图形才能密铺', '任意三角形、任意四边形都能密铺。']],
+    [['正方形、三角形、圆、平行四边形中，能单独密铺的有____种', '3', 3], ['正六边形的每个内角是____度', '120', 120], ['拼接点处 3 个正六边形的内角合起来是____度', '360', 360]],
+    [['先用同样的正方形、圆纸片分别拼一拼，再说说哪个能密铺、为什么？', '正方形能密铺；圆之间有空隙不能密铺'],
+     ['先猜一猜正五边形能不能密铺，再用 108°算一算拼接点处的角？', '3×108°=324°≠360°，不能密铺'],
+     ['把两个完全一样的三角形拼一拼，先拼成平行四边形，再说说三角形能否密铺？', '任意相同三角形都能密铺']]),
+  'math-g5-up-u08-k003': shapeTheme( 
+    ['拼接点处各内角之和恰好为 360°时，图形能够密铺', '正六边形每个内角 120°，3 个拼在一起正好是 360°', '正方形每个内角 90°，4 个拼在一起是 360°'],
+    [['拼接点处内角和是 180°就能密铺', '必须是 360°——绕一点铺满一周。'],
+     ['正五边形 3 个内角拼起来正好 360°', '3×108°=324°，不是 360°，所以正五边形不能密铺。'],
+     ['只要图形好看就能密铺', '能否密铺取决于拼接点处内角和是否为 360°。']],
+    [['正方形内角 90°，拼接点处需要____个正方形才能密铺', '4', 4], ['正六边形内角 120°，拼接点处需要____个正六边形才能密铺', '3', 3], ['正三角形内角 60°，拼接点处需要____个正三角形才能密铺', '6', 6]],
+    [['先算出正六边形的内角，再算一算拼接点处要几个才能密铺', '120°，3×120°=360°，要 3 个'],
+     ['先想一想正八边形（内角 135°）能不能单独密铺，再用 360°算一算？', '360÷135 不是整数，不能单独密铺'],
+     ['先用正三角形纸片拼一拼，数出拼接点处有几个角，再算出角度和', '6 个角，6×60°=360°，能密铺']]),
+  'math-g5-up-u08-k004': shapeTheme( 
+    ['可以用平移、旋转、轴对称把基本图形组成密铺图案', '设计密铺图案先选能密铺的基本图形', '密铺图案体现了数学与艺术的结合'],
+    [['设计密铺图案只能用一种图形', '可以用多种能密铺的图形组合设计。'],
+     ['密铺图案中图形之间可以留空隙', '密铺必须不留空隙、不重叠。'],
+     ['基本图形经过平移后会变形', '平移、旋转、轴对称都不改变图形的形状和大小。']],
+    [['用边长 1 厘米的正方形拼密铺图案，6 块能铺____平方厘米', '6', 6], ['把一个基本图形平移 3 次，连原来的共有____个基本图形', '4', 4], ['用 8 块面积各 2 平方厘米的三角形密铺，总面积是____平方厘米', '16', 16]],
+    [['先选一个能密铺的基本图形（如正方形），再用平移设计一条密铺花边', '每次平移一个边长，连续铺满'],
+     ['先用两种颜色的正三角形交替密铺，再说说拼接点处角的关系', '6 个 60°角合起来 360°'],
+     ['先画一个基本图形，再用旋转的方法设计一个密铺图案，说说用了几次旋转', '如绕一点每次旋转 90°，转 3 次形成图案']]),
+
+  
+  'math-g5-down-u09-k001': shapeTheme( 
+    ['把大正方体棱长平均分成 n 份切开，三面涂色的小正方体在顶点处，有 8 个', '两面涂色的在棱上（不含顶点），有 12×(n−2) 个', '一面涂色的在面上（不含棱和顶点），有 6×(n−2)² 个；没有涂色的在内部'],
+    [['三面涂色的小正方体有 6 个', '三面涂色的在 8 个顶点处，共 8 个。'],
+     ['两面涂色的在面上', '两面涂色的在棱上（顶点除外）。'],
+     ['没有涂色的小正方体在大正方体表面', '没有涂色的在内部，有 (n−2)³ 个。']],
+    [['把大正方体棱长 3 等分切开，三面涂色的小正方体有____个', '8', 8], ['棱长 3 等分，两面涂色的有 12×(3−2)=____个', '12', 12], ['棱长 3 等分，一面涂色的有 6×(3−2)²=____个', '6', 6]],
+    [['把棱长 3 等分的大正方体表面涂色，先数一数三面涂色的有几个，再说说它们在哪里', '8 个，都在顶点处'],
+     ['棱长 4 等分时，先列出两面涂色的算式，再算出个数', '12×(4−2)=24 个'],
+     ['棱长 3 等分时，先算没有涂色的个数，再说说它们藏在哪儿', '(3−2)³=1 个，在最中间']]),
+  'math-g5-down-u09-k002': shapeTheme( 
+    ['三面涂色的小正方体在大正方体的顶点处', '两面涂色的在棱上（除去顶点）', '一面涂色的在面上（除去棱和顶点），没有涂色的在内部'],
+    [['三面涂色的在面中央', '三面涂色的只能在顶点处。'],
+     ['没有涂色的在棱上', '棱上的至少两面涂色；没涂色的藏在内部。'],
+     ['一面涂色的在顶点处', '顶点处是三面涂色；一面涂色的在面中央。']],
+    [['棱长 4 等分的大正方体，两面涂色的有 12×(4−2)=____个', '24', 24], ['棱长 4 等分，没有涂色的有 (4−2)³=____个', '8', 8], ['棱长 5 等分，一面涂色的有 6×(5−2)²=____个', '54', 54]],
+    [['先把大正方体表面涂色后切成 27 个小正方体，再数一数三面涂色的有几个、在什么位置', '8 个，都在顶点处'],
+     ['先说说两面涂色的小正方体在大正方体的什么位置，再算一算 3×3×3 时有多少个', '在棱上（不含顶点），12 条棱各 1 个共 12 个'],
+     ['先说说一面涂色的小正方体在什么位置，再算一算 4×4×4 时有多少个', '在每个面的中间，6 个面各 4 个共 24 个']]),
+
+  
+  'math-g3-down-u08-k003': shapeTheme( 
+    ['长方形周长=（长+宽）×2，面积=长×宽', '对折后能完全重合的图形是轴对称图形', '平移和旋转都不改变图形的形状和大小'],
+    [['平移后图形的大小会改变', '平移只改变位置，形状和大小不变。'],
+     ['周长和面积是同一个概念', '周长是一周的长度，面积是面的大小。'],
+     ['旋转后图形的形状会改变', '旋转只改变方向和位置，形状和大小不变。']],
+    [['长方形长 7 厘米、宽 3 厘米，周长是____厘米', '20', 20], ['长方形长 7 厘米、宽 3 厘米，面积是____平方厘米', '21', 21], ['正方形边长 6 厘米，周长是____厘米', '24', 24]],
+    [['先算出一个长 8 厘米、宽 4 厘米的长方形的周长和面积，再说说两个结果有什么不同？', '周长 24 厘米（长度），面积 32 平方厘米（面的大小）'],
+     ['先画一个图形，再把它向右平移 5 格，说说平移前后什么没变？', '形状和大小不变，只是位置变了'],
+     ['先判断一个图形是不是轴对称图形，再画出它的对称轴？', '沿对称轴对折能完全重合才是轴对称图形']]),
+  'math-g3-down-u08-k006': shapeTheme( 
+    ['解决重叠问题要先求两部分的和，再减去重复的部分', '重叠（重复）的部分只能算一次', '可以画集合图帮助分析重叠问题'],
+    [['两部分相加就是总数，不用管重复', '重复部分被算了两次，必须减去一次。'],
+     ['重叠部分要算两次', '重叠部分只能算一次。'],
+     ['参加两个小组的人数之和一定等于总人数', '有重复时，和大于总人数，要减去重复人数。']],
+    [['语文小组 8 人、数学小组 9 人，两组都参加的有 3 人，一共有____人', '14', 14], ['会游泳的 10 人、会骑车的 12 人，两样都会的有 4 人，至少会一样的有____人', '18', 18], ['订报纸的 15 人、订杂志的 10 人，两种都订的有 5 人，一共有____人', '20', 20]],
+    [['先列出 8+9，再减去重复的 3 人，说说为什么要减？', '都参加的 3 人被算了两次，要减去一次'],
+     ['班上 20 人订语文报、18 人订数学报，8 人两种都订，先画集合图，再算总人数？', '20+18−8=30 人'],
+     ['先调查小组里会打乒乓球和会打羽毛球的人数，再算至少会一样的有多少人', '两部分相加再减去两样都会的人数']])
+};
+
+
+
+function numClean(x) { return Math.round(x * 100) / 100; }
+function numDistractors(n) {
+  var cands = [n + 1, n - 1, n + 2, n - 2, n * 2, n + 10, Math.round(n / 2), n + 3, n - 3, n * 3];
+  var out = [];
+  for (var k = 0; k < cands.length && out.length < 3; k++) {
+    var x = numClean(cands[k]);
+    if (typeof x !== 'number' || !isFinite(x)) continue;
+    if (x > 0 && x !== n && out.indexOf(x) === -1) out.push(x);
+  }
+  return out.map(function (x) { return String(x); });
+}
+
+
+
+
+
+
+function makeThemedShapeQuestion(plan, context, i, qMeta, graphic, theme) {
+  var qt = plan.questionTypeId;
+  var name = (plan.semanticParams && plan.semanticParams.name) || '图形';
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var v = ((i % 3) + 3) % 3;
+  var facts = theme.facts;
+  var wrongs = theme.wrongs;
+  var nums = theme.nums;
+  var data = { mode: qt, steps: 1, graphic: graphic, shapeName: qMeta.meta.name };
+  var prompt, answer, answerMode = 'input';
+
+  if (qt === 'choice') {
+    var cItem = nums[v % nums.length];
+    var options = Rng.shuffle(rng, [cItem.a].concat(numDistractors(cItem.n)));
+    data.options = options;
+    data.correctIndex = options.indexOf(cItem.a);
+    data.operands = [cItem.n];
+    prompt = name + '：' + cItem.q + '（选出正确答案）';
+    answer = { value: String(data.correctIndex), acceptable: [] };
+    answerMode = 'choice';
+  } else if (qt === 'judge') {
+    var isTrue = rng() < 0.5;
+    var shown, explanation;
+    if (isTrue) {
+      shown = facts[i % facts.length];
+      explanation = '「' + shown + '」——符合' + name + '的知识，说法正确。';
+    } else {
+      var w = wrongs[i % wrongs.length];
+      shown = w.t;
+      explanation = '「' + shown + '」——' + w.m;
+      data.misconception = w.m;
+    }
+    data.shownStatement = shown;
+    prompt = name + '：判断对错——「' + shown + '」。这个说法对吗？';
+    answer = { value: isTrue, acceptable: [], explanation: explanation };
+    answerMode = 'judge';
+  } else if (qt === 'fill') {
+    var fItem = nums[v % nums.length];
+    data.operands = [fItem.n];
+    prompt = name + '：' + fItem.q;
+    answer = { value: fItem.a, acceptable: [] };
+  } else if (qt === 'geometry') {
+    var gItem = nums[v % nums.length];
+    data.operands = [gItem.n];
+    prompt = name + '：观察下图（' + qMeta.meta.name + '），想一想——' + gItem.q;
+    answer = { value: gItem.a, acceptable: [] };
+  } else { 
+    var sList = theme.scenes.length
+      ? theme.scenes
+      : nums.map(function (x) { return { t: x.q, a: x.a }; });
+    var sItem = sList[v % sList.length];
+    data.steps = 2;
+    prompt = name + '：' + sItem.t;
+    answer = { value: sItem.a, acceptable: [] };
+  }
+
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: qt,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: answer,
+    answerMode: answerMode,
+    data: data
+  };
+}
+
 function createShapeGenerator(spec) {
   spec = spec || {};
   var id = spec.id || 'generator:shape';
@@ -7409,6 +8333,21 @@ function createShapeGenerator(spec) {
 
         var q;
         var qt = plan.questionTypeId;
+        
+        
+        if (kpName.indexOf('分数乘整数') !== -1
+          && ['fill', 'choice', 'judge', 'apply', 'geometry'].indexOf(qt) !== -1) {
+          questions.push(makeFractionTimesIntegerQuestion(plan, context, i, kpName));
+          continue;
+        }
+        
+        
+        var themedId = (plan.semanticParams && plan.semanticParams.knowledgePointId) || pkp(plan);
+        var themed = SHAPE_THEME[themedId];
+        if (themed && ['choice', 'judge', 'fill', 'geometry', 'apply'].indexOf(qt) !== -1) {
+          questions.push(makeThemedShapeQuestion(plan, context, i, qMeta, graphic, themed));
+          continue;
+        }
         if (qt === 'choice') {
           if (rng() < 0.5) q = makeRecognitionQuestion(plan, context, i, qMeta, graphic);
           else q = makeClassificationQuestion(plan, context, i, qMeta, graphic);
@@ -8307,10 +9246,101 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
   return result;
 }
 
+
+
+
+
+function makeMeasurementGeometryQuestion(plan, context, i, meta) {
+  var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
+  var kind = meta.kind === 'area' ? 'area' : 'length';
+  var prompt, answer, graphic, modelKind;
+
+  if (kind === 'area') {
+    if (kpName.indexOf('进率') !== -1) {
+      
+      modelKind = 'area-unit-rate';
+      prompt = '看图想一想：边长 1 分米（也就是 10 厘米）的正方形纸，' +
+        '摆满边长 1 厘米的小正方形，一共可以摆满多少个？1 平方分米 = ____ 平方厘米。';
+      answer = '100';
+      graphic = {
+        type: 'geometry', subtype: 'rectangle',
+        params: { width: 10, height: 10, labelSides: true, rightAngle: false, unit: 'cm', unitPx: 22 }
+      };
+    } else {
+      
+      modelKind = 'area-unit';
+      prompt = '看图填面积单位：边长是 1 厘米的正方形，它的面积是 1 ____（填面积单位）。';
+      answer = '平方厘米';
+      graphic = {
+        type: 'geometry',
+        subtype: 'square',
+        params: { size: 3, labelSides: false, rightAngle: false, unit: 'cm', unitPx: 26 }
+      };
+    }
+  } else if (kpName.indexOf('合适') !== -1) {
+    
+    modelKind = 'length-unit-choice';
+    prompt = '看图选择合适的长度单位填空：食指的宽大约是 1 ____，教室的长大约是 8 ____。' +
+      '（两个空都填“厘米”或“米”，用顿号隔开）';
+    answer = '厘米、米';
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: 1, part: 1, unit: 'cm', partLabel: '1', totalLabel: '1', otherLabel: '' }
+    };
+  } else if (kpName.indexOf('从小到大') !== -1) {
+    
+    modelKind = 'length-units-order';
+    prompt = '看图把学过的长度单位按从小到大的顺序写出来（用顿号隔开）。';
+    answer = '毫米、厘米、分米、米、千米';
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: 1000, part: 100, unit: 'cm', partLabel: '100', totalLabel: '1000' }
+    };
+  } else if (kpName.indexOf('进率') !== -1) {
+    
+    modelKind = 'length-unit-rate';
+    prompt = '看图填空：把 1 米长的线段平均分成 10 份，每份长 1 分米。1 米 = ____ 分米。';
+    answer = '10';
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: 10, part: 1, unit: 'cm', partLabel: '1', totalLabel: '10' }
+    };
+  } else {
+    
+    modelKind = 'length-unit';
+    prompt = '看图填空：米和厘米都是长度单位，量较短物体的长度用厘米，量较长物体的长度用米。1 米 = ____ 厘米。';
+    answer = '100';
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: 100, part: 30, unit: 'cm', partLabel: '30', totalLabel: '100' }
+    };
+  }
+
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: 'geometry',
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: { value: answer, acceptable: [] },
+    answerMode: 'input',
+    data: {
+      mode: 'geometry',
+      steps: 1,
+      kind: modelKind,
+      measureKind: kind,
+      operation: 'conversion',
+      graphic: graphic
+    }
+  };
+}
+
 function makeWordProblemQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var kind = meta.kind;
-  
+
   if (kind === 'rmb') {
     var aFen = randDenom(rng, 20);
     var bFen = randDenom(rng, 20);
@@ -8444,8 +9474,8 @@ function createMoneyGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['fill', 'choice', 'judge', 'apply', 'calc'],
-    questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc'],
+    capabilities: ['fill', 'choice', 'judge', 'apply', 'calc', 'geometry'],
+    questionTypes: ['fill', 'choice', 'judge', 'apply', 'calc', 'geometry'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -8469,7 +9499,10 @@ function createMoneyGenerator(spec) {
         var qt = plan.questionTypeId;
         var isRMB = meta.kind === 'rmb';
         
-        if (qt === 'fill') {
+        if (qt === 'geometry') {
+          
+          q = makeMeasurementGeometryQuestion(plan, context, i, meta);
+        } else if (qt === 'fill') {
           
           
           var fillBranchRng = Rng.createSeededRandom(seedFor(plan, context, i) + ':fill-branch');
@@ -8488,10 +9521,11 @@ function createMoneyGenerator(spec) {
         } else {
           q = makeRMBConversionQuestion(plan, context, i, meta);
         }
+
         
-        q.data.graphic = makeGraphicForMoney(meta, plan.difficulty);
+        if (qt !== 'geometry') q.data.graphic = makeGraphicForMoney(meta, plan.difficulty);
         
-        if (meta.kind === 'rmb' && q.data) {
+        if (qt !== 'geometry' && meta.kind === 'rmb' && q.data) {
           var amounts = null;
           var qd = q.data;
           if (Array.isArray(qd.operands) && qd.operands.length >= 2) {
@@ -8769,6 +9803,55 @@ function formatTemplate(template, nums) {
   return str;
 }
 
+
+
+
+function makeDisplacementVolumeQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var length = Rng.pick(rng, [10, 12]);
+  var width = Rng.pick(rng, [6, 8]);
+  var waterBefore = 5;
+  var rise = Rng.pick(rng, [2, 3]);
+  var waterAfter = waterBefore + rise;
+  var volume = length * width * rise;
+  var prompt = '看图解决问题：一个长方体玻璃缸（无盖），从里面量长 ' + length + ' 厘米、宽 ' +
+    width + ' 厘米，缸里装有深 ' + waterBefore + ' 厘米的水。把一块不规则的石块完全浸没在水中' +
+    '（水没有溢出），水面上升到 ' + waterAfter + ' 厘米。这块石块的体积是多少立方厘米？____';
+  var graphic = {
+    type: 'geometry',
+    subtype: 'cuboid',
+    params: { length: length, height: waterAfter, width: width, labelSides: true, unit: 'cm', unitPx: 22 }
+  };
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: 'geometry',
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: {
+      value: String(volume),
+      acceptable: [volume + '立方厘米'],
+      explanation: '石块体积 = 玻璃缸底面积 × 水面上升高度 = ' + length + ' × ' + width +
+        ' × (' + waterAfter + '−' + waterBefore + ') = ' + volume + '（立方厘米）'
+    },
+    answerMode: 'input',
+    data: {
+      mode: 'geometry',
+      steps: 2,
+      kind: 'displacement-volume',
+      tankLength: length,
+      tankWidth: width,
+      waterBefore: waterBefore,
+      waterAfter: waterAfter,
+      rise: rise,
+      operation: 'mult',
+      graphic: graphic
+    }
+  };
+}
+
 function makeApplicationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var template = pickTemplate(rng, plan.difficulty, kpAllowedOps(plan));
@@ -8886,8 +9969,8 @@ function createApplicationGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['apply', 'fill', 'choice', 'judge', 'calc'],
-    questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc'],
+    capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'geometry'],
+    questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'geometry'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -8903,7 +9986,13 @@ function createApplicationGenerator(spec) {
       var meta = getApplicationMeta(kp);
 
       for (var i = 0; i < count; i++) {
-        var q = makeApplicationQuestion(plan, context, i, meta);
+        var q;
+        
+        if (plan.questionTypeId === 'geometry') {
+          questions.push(makeDisplacementVolumeQuestion(plan, context, i));
+          continue;
+        }
+        q = makeApplicationQuestion(plan, context, i, meta);
         if (!q) continue; 
         
         questions.push(q);
@@ -9756,7 +10845,847 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':stats:' + i;
 }
 
+
+
+
+var STAT_SHAPE = {
+  'math-g2-up-u01-k001': 'classify-geo',   
+  'math-g2-up-u01-k002': 'classify-geo',   
+  'math-g2-up-u01-k003': 'classify',       
+  'math-g2-up-u01-k004': 'classify',       
+  'math-g2-up-u01-k005': 'classify',       
+  'math-g2-up-u01-k006': 'classify',       
+  'math-g3-down-u05-k001': 'classify-geo', 
+  'math-g3-down-u05-k002': 'classify',     
+  'math-g3-down-u05-k003': 'classify',     
+  'math-g3-down-u05-k004': 'classify',     
+  'math-g4-down-u08-k001': 'classify',     
+  'math-g4-down-u08-k002': 'classify',     
+  'math-g4-down-u08-k003': 'classify',     
+  'math-g4-down-u08-k004': 'lunch-chart',  
+  'math-g4-up-u06-k001': 'bar-single',     
+  'math-g4-up-u06-k002': 'bar-double',     
+  'math-g4-up-u06-k003': 'bar-double',     
+  'math-g4-up-u06-k004': 'classify',       
+  'math-g5-up-u07-k001': 'classify',       
+  'math-g5-up-u07-k002': 'probability-size',   
+  'math-g5-up-u07-k003': 'probability-infer',  
+  'math-g5-up-u07-k004': 'classify',       
+  'math-g5-down-u07-k001': 'line-chart',   
+  'math-g5-down-u07-k002': 'line-double',  
+  'math-g5-down-u07-k003': 'line-analyze'  
+};
+
+
+function statTheme(criterion, altCriteria, items, groups, conclusion) {
+  return { criterion: criterion, altCriteria: altCriteria, items: items,
+    groups: groups, conclusion: conclusion };
+}
+
+var STAT_THEMES = {
+  'math-g2-up-u01-k001': statTheme('颜色', ['形状', '大小', '用途'],
+    ['红圆卡', '红方卡', '蓝圆卡', '黄三角卡', '红三角卡', '黄方卡'],
+    { '红色': ['红圆卡', '红方卡', '红三角卡'], '蓝色': ['蓝圆卡'], '黄色': ['黄三角卡', '黄方卡'] },
+    '分类后不用逐个数，就能很快说出每种颜色的卡片各有几张。'),
+  'math-g2-up-u01-k002': statTheme('用途', ['颜色', '长短', '价格'],
+    ['铅笔', '橡皮', '尺子', '转笔刀', '水彩笔', '文具盒'],
+    { '用来书写': ['铅笔', '水彩笔'], '用来测量': ['尺子'], '用来擦拭或收纳': ['橡皮', '转笔刀', '文具盒'] },
+    '全组自始至终只用一个标准分类，结果不重复、不遗漏。'),
+  'math-g2-up-u01-k003': statTheme('颜色', ['大小', '材质', '扣眼个数'],
+    ['红圆扣', '红方扣', '蓝圆扣', '蓝方扣', '黄圆扣', '黄方扣'],
+    { '红色': ['红圆扣', '红方扣'], '蓝色': ['蓝圆扣', '蓝方扣'], '黄色': ['黄圆扣', '黄方扣'] },
+    '同一堆纽扣按颜色分是一种结果，还可以换一个标准（形状）再分一次。'),
+  'math-g2-up-u01-k004': statTheme('先分动物和植物、再分鱼类和鸟类', ['颜色', '体重', '叫声'],
+    ['鲫鱼', '麻雀', '杨树', '鲤鱼', '柳树', '老鹰'],
+    { '会游的鱼': ['鲫鱼', '鲤鱼'], '会飞的鸟': ['麻雀', '老鹰'], '树木': ['杨树', '柳树'] },
+    '先分成动物、植物两大类，再把动物细分成鱼类和鸟类，这就是逐层分类。'),
+  'math-g2-up-u01-k005': statTheme('调查的场合', ['卡片颜色', '同学的身高', '当天的日期'],
+    ['举手计数', '画正字记录', '投票表决', '逐个询问', '问卷调查'],
+    { '现场快速统计': ['举手计数', '画正字记录', '逐个询问'], '正式调查': ['投票表决', '问卷调查'] },
+    '不同统计方法适合不同场合，人少时举手、画正字最快，人多且分散时用问卷。'),
+  'math-g2-up-u01-k006': statTheme('天气情况', ['气温高低', '风向', '日期单双'],
+    ['周一晴', '周二阴', '周三晴', '周四雨', '周五晴', '周六阴'],
+    { '晴天': ['周一晴', '周三晴', '周五晴'], '阴天': ['周二阴', '周六阴'], '雨天': ['周四雨'] },
+    '把每天的天气分类填入统计表，一眼就能看出哪种天气最多。'),
+  'math-g3-down-u05-k001': statTheme('数据的来源', ['数据的大小', '记录的速度', '纸张的颜色'],
+    ['举手统计', '投票统计', '实地测量', '上网查询', '问卷调查'],
+    { '直接收集的数据': ['举手统计', '投票统计', '实地测量', '问卷调查'], '间接获取的数据': ['上网查询'] },
+    '统计前要先确定收集方法：可以直接调查测量，也可以查阅现成资料。'),
+  'math-g3-down-u05-k002': statTheme('喜欢的水果类别', ['姓名笔画', '性别', '所在年级'],
+    ['小红喜欢苹果', '小明喜欢香蕉', '小丽喜欢苹果', '小强喜欢葡萄', '小美喜欢香蕉', '小军喜欢苹果'],
+    { '喜欢苹果': ['小红喜欢苹果', '小丽喜欢苹果', '小军喜欢苹果'], '喜欢香蕉': ['小明喜欢香蕉', '小美喜欢香蕉'], '喜欢葡萄': ['小强喜欢葡萄'] },
+    '原始记录按类别整理并计数后，才能看出喜欢每种水果的各有几人。'),
+  'math-g3-down-u05-k003': statTheme('性别加运动项目', ['年龄大小', '当天天气', '器材颜色'],
+    ['男生跳绳', '女生跳绳', '男生跑步', '女生踢毽', '男生篮球', '女生跑步'],
+    { '男生项目': ['男生跳绳', '男生跑步', '男生篮球'], '女生项目': ['女生跳绳', '女生踢毽', '女生跑步'] },
+    '把男生、女生两类数据按同一项目合到一张复式统计表里，才便于比较。'),
+  'math-g3-down-u05-k004': statTheme('问题是否需要统计', ['问题字数', '提问时间', '同学性别'],
+    ['全班最爱吃什么水果', '1加1等于几', '一个月里雨天有几天', '自己的名字'],
+    { '需要统计才能回答': ['全班最爱吃什么水果', '一个月里雨天有几天'], '不用统计就知道': ['1加1等于几', '自己的名字'] },
+    '只有需要收集大量数据回答的问题才做统计，不是每个问题都要调查。'),
+  'math-g4-down-u08-k001': statTheme('与平均身高130cm比较', ['同学姓氏', '鞋码大小', '头发长短'],
+    ['身高125cm', '身高130cm', '身高135cm', '身高140cm', '身高120cm'],
+    { '高于平均数': ['身高135cm', '身高140cm'], '等于平均数': ['身高130cm'], '低于平均数': ['身高125cm', '身高120cm'] },
+    '平均数代表一组数据的整体水平，数据可以围绕它上下波动。'),
+  'math-g4-down-u08-k002': statTheme('分数段', ['考试科目', '字迹是否工整', '考试日期'],
+    ['85分', '90分', '95分', '80分', '100分'],
+    { '90分及以上': ['90分', '95分', '100分'], '90分以下': ['85分', '80分'] },
+    '先求总数再除以人数得到平均数，用分数段整理可以检验平均成绩落在哪一段。'),
+  'math-g4-down-u08-k003': statTheme('性别加图书类别', ['图书厚薄', '封面颜色', '借书日期'],
+    ['男生借故事书8本', '女生借故事书10本', '男生借科普书6本', '女生借科普书7本'],
+    { '男生借书': ['男生借故事书8本', '男生借科普书6本'], '女生借书': ['女生借故事书10本', '女生借科普书7本'] },
+    '复式条形图要按两个类别（性别、图书种类）整理数据，长条才能成对比较。'),
+  'math-g4-down-u08-k004': statTheme('荤素搭配', ['菜品价格', '餐具颜色', '餐厅名称'],
+    ['红烧肉', '清蒸鱼', '炒青菜', '拌黄瓜', '炸鸡腿', '烧豆腐'],
+    { '荤菜': ['红烧肉', '清蒸鱼', '炸鸡腿'], '素菜': ['炒青菜', '拌黄瓜', '烧豆腐'] },
+    '配菜要荤素搭配，再对照热量和脂肪标准判断套餐是否合格。'),
+  'math-g4-up-u06-k001': statTheme('答案的获取方式', ['月份名称', '条形的颜色', '标题的字数'],
+    ['哪个月借出最多', '四个月一共借出多少', '最多比最少多多少', '哪个月借出最少'],
+    { '看图直接读出': ['哪个月借出最多', '哪个月借出最少'], '需要计算得到': ['四个月一共借出多少', '最多比最少多多少'] },
+    '读条形统计图时要分清哪些信息直接读、哪些要先计算。'),
+  'math-g4-up-u06-k002': statTheme('是否需要跨组计算', ['项目名称', '图例颜色', '调查年份'],
+    ['男生参加篮球的有几人', '男女生参加篮球相差几人', '篮球组一共有几人', '女生参加哪项最多'],
+    { '单组直接读取': ['男生参加篮球的有几人', '女生参加哪项最多'], '两组计算得到': ['男女生参加篮球相差几人', '篮球组一共有几人'] },
+    '复式条形图既能读单组数据，也能把男女生成对比较或求合计。'),
+  'math-g4-up-u06-k003': statTheme('读图步骤的先后', ['直条的颜色', '纸张的大小', '学校名称'],
+    ['先看标题知道统计内容', '看图例分清两组直条', '比较成对直条的长短', '读出对应的数据'],
+    { '读图准备': ['先看标题知道统计内容', '看图例分清两组直条'], '比较与读数': ['比较成对直条的长短', '读出对应的数据'] },
+    '横向和纵向复式条形图只是直条方向不同，数据和读法完全一致。'),
+  'math-g4-up-u06-k004': statTheme('统计图能否回答', ['直条粗细', '版面位置', '标点符号'],
+    ['喜欢苹果的有多少人', '明天谁会来买水果', '香蕉比梨多几人', '下周气温是多少'],
+    { '图中数据能回答': ['喜欢苹果的有多少人', '香蕉比梨多几人'], '图中数据不能回答': ['明天谁会来买水果', '下周气温是多少'] },
+    '数据分析只能基于统计图中的数据，没有根据的猜测不能当作结论。'),
+  'math-g5-up-u07-k001': statTheme('事件发生的可能性', ['事件字数', '发生地点', '记录方式'],
+    ['太阳从东方升起', '明天本地会下雨', '掷一枚硬币正面朝上', '标准大气压下水加热到100℃沸腾', '买彩票中一等奖'],
+    { '一定发生': ['太阳从东方升起', '标准大气压下水加热到100℃沸腾'], '可能发生': ['明天本地会下雨', '掷一枚硬币正面朝上', '买彩票中一等奖'] },
+    '确定事件一定发生或一定不发生，不确定事件可能发生也可能不发生。'),
+  'math-g5-up-u07-k002': statTheme('可能性的大小', ['球的颜色名称', '摸球的先后', '盒子的形状'],
+    ['10红1白摸到红球', '10红1白摸到白球', '5红5白摸到红球', '5红5白摸到白球'],
+    { '可能性大': ['10红1白摸到红球'], '可能性小': ['10红1白摸到白球'], '可能性相等': ['5红5白摸到红球', '5红5白摸到白球'] },
+    '个体在总数中所占数量越多，出现的可能性越大；数量相等时可能性相等。'),
+  'math-g5-up-u07-k003': statTheme('由出现次数推测数量多少', ['球的颜色深浅', '球的大小', '摸球的时间'],
+    ['摸20次红球16次白球4次', '转指针红色8次蓝色2次', '掷骰子6点只出现1次', '抽奖100次一等奖1次'],
+    { '推测数量（机会）多': ['摸20次红球16次白球4次', '转指针红色8次蓝色2次'], '推测数量（机会）少': ['掷骰子6点只出现1次', '抽奖100次一等奖1次'] },
+    '重复试验中某结果出现次数多，可以推测它对应的数量可能更多，但推测不是确定结论。'),
+  'math-g5-up-u07-k004': statTheme('点数和的可能性大小', ['骰子颜色', '投掷姿势', '桌面材质'],
+    ['点数和是2', '点数和是3', '点数和是5', '点数和是7', '点数和是9', '点数和是12'],
+    { '可能性大（和为5至9）': ['点数和是5', '点数和是7', '点数和是9'], '可能性小（和为2、3、11、12）': ['点数和是2', '点数和是3', '点数和是12'] },
+    '两个骰子点数和的组合数不同，和为5、6、7、8、9的组合多，掷出的可能性更大。'),
+  'math-g5-down-u07-k001': statTheme('折线描述的变化方式', ['数据颜色', '网格线粗细', '标题长短'],
+    ['周一到周三气温持续上升', '周三到周五气温持平', '周五到周六气温下降', '全周最高气温在周六'],
+    { '描述上升、下降或持平': ['周一到周三气温持续上升', '周三到周五气温持平', '周五到周六气温下降'], '描述极值': ['全周最高气温在周六'] },
+    '折线的升降陡缓直接反映数据随时间的变化趋势，最高点最低点也要读准。'),
+  'math-g5-down-u07-k002': statTheme('单条趋势与双线比较', ['图例颜色', '纸张大小', '城市名称'],
+    ['第一条线整体在上升', '两条线的差距在变大', '两条线在周三相交', '只有第二条线在下降'],
+    { '描述单条折线趋势': ['第一条线整体在上升', '只有第二条线在下降'], '两条折线对比': ['两条线的差距在变大', '两条线在周三相交'] },
+    '复式折线图既要分别看每条线的趋势，又要比较两条线的差距和交点。'),
+  'math-g5-down-u07-k003': statTheme('结论是否有数据支撑', ['折线颜色', '坐标格数', '星期的顺序'],
+    ['本周气温先降后升', '周末两天温度最低', '周三到周四温差最大', '下周一定会更热'],
+    { '有数据支撑的结论': ['本周气温先降后升', '周末两天温度最低', '周三到周四温差最大'], '没有根据的推测': ['下周一定会更热'] },
+    '根据折线图分析要对图上每一个点说话，趋势可描述，未来数据不能凭空断定。')
+};
+
+function statGroupsArr(theme) {
+  return Object.keys(theme.groups).map(function (label) {
+    return { label: label, members: theme.groups[label] };
+  });
+}
+
+function statPartitionText(theme) {
+  return statGroupsArr(theme).map(function (g) {
+    return g.label + '：' + g.members.join('、');
+  }).join('；');
+}
+
+function statSq(plan, context, i, prompt, answerVal, answerMode, data, explanation) {
+  var answerObj = (typeof answerVal === 'boolean')
+    ? { value: answerVal, acceptable: [] }
+    : { value: String(answerVal), acceptable: [] };
+  if (explanation) answerObj.explanation = explanation;
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: plan.questionTypeId,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: answerObj,
+    answerMode: answerMode,
+    data: data
+  };
+}
+
+function statName(plan) {
+  return (plan && plan.semanticParams && plan.semanticParams.name) || '统计';
+}
+
+
+function makeClassifyShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  var groupsArr = statGroupsArr(theme);
+  var list = theme.items.join('、');
+  var data = { mode: 'classify', steps: 1, questionType: qt };
+  var prompt, answer, explanation, mode = 'input';
+  var countsText = groupsArr.map(function (g) { return '「' + g.label + '」' + g.members.length + ' 项'; }).join('，');
+  var gMax = groupsArr.slice().sort(function (a, b) { return b.members.length - a.members.length; })[0];
+
+  if (qt === 'classify') {
+    data.sort = { by: theme.criterion };
+    data.items = theme.items.slice();
+    data.groups = theme.groups;
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类整理：' + list
+        + '。请写出分类结果。';
+      answer = statPartitionText(theme);
+    } else if (v === 1) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。分好后数一数，每一类各有多少项？';
+      answer = countsText;
+    } else {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。一共分成几类？哪一类包含的事物最多？';
+      answer = '一共 ' + groupsArr.length + ' 类，「' + gMax.label + '」最多，有 ' + gMax.members.length + ' 项';
+    }
+  } else if (qt === 'fill') {
+    if (v === 0) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。分到「' + groupsArr[0].label + '」这一类的事物一共有 ____ 项。';
+      answer = String(groupsArr[0].members.length);
+    } else if (v === 1) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。分到「' + groupsArr[1].label + '」这一类的事物一共有 ____ 项。';
+      answer = String(groupsArr[1].members.length);
+    } else {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。所有参与分类的事物合起来一共有 ____ 项。';
+      answer = String(theme.items.length);
+    }
+  } else if (qt === 'apply') {
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：先把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。再回答问题——' + theme.conclusion;
+      answer = statPartitionText(theme) + '。' + theme.conclusion;
+    } else if (v === 1) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。先完成分类，再数出每一类各有多少项。';
+      answer = countsText;
+    } else {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。哪一类包含的事物最多？比最少的一类多几项？';
+      var gMin = groupsArr.slice().sort(function (a, b) { return a.members.length - b.members.length; })[0];
+      answer = '「' + gMax.label + '」最多（' + gMax.members.length + ' 项），比「' + gMin.label
+        + '」多 ' + (gMax.members.length - gMin.members.length) + ' 项';
+    }
+  } else if (qt === 'judge') {
+    var flat = [];
+    groupsArr.forEach(function (g) {
+      g.members.forEach(function (m) { flat.push({ item: m, group: g.label }); });
+    });
+    var pick = flat[v];
+    var otherLabels = groupsArr.map(function (g) { return g.label; }).filter(function (l) { return l !== pick.group; });
+    var isTrue = v !== 1;
+    var shownGroup = isTrue ? pick.group : otherLabels[v % otherLabels.length];
+    prompt = name + '：按「' + theme.criterion + '」分类，「' + pick.item + '」应该分到「'
+      + shownGroup + '」这一类。这个说法对吗？';
+    answer = isTrue;
+    mode = 'judge';
+    explanation = isTrue
+      ? '「' + pick.item + '」按' + theme.criterion + '确实属于「' + pick.group + '」，分类正确。'
+      : '「' + pick.item + '」按' + theme.criterion + '应属于「' + pick.group + '」，不是「' + shownGroup + '」，分类错误。';
+    if (!isTrue) data.misconception = '分类标准混淆：「' + pick.item + '」按' + theme.criterion
+      + '应分到「' + pick.group + '」，误分到了「' + shownGroup + '」。';
+  } else { 
+    data.sort = true;
+    data.items = theme.items.slice();
+    mode = 'choice';
+    if (v === 0) {
+      var opts0 = theme.altCriteria.slice(0, 3).concat([theme.criterion]);
+      data.options = opts0;
+      data.correctIndex = opts0.indexOf(theme.criterion);
+      var partition = groupsArr.map(function (g) { return g.label + '（' + g.members.length + '项）'; }).join('、');
+      prompt = name + '：小明把下面的事物分成了几组（' + partition + '）：' + list
+        + '。他最可能是按哪个标准分类的？';
+      answer = theme.criterion;
+    } else if (v === 1) {
+      var opts1 = [theme.altCriteria[0]].concat(theme.altCriteria.slice(1, 3), [theme.criterion]);
+      data.options = opts1;
+      data.correctIndex = opts1.indexOf(theme.altCriteria[0]);
+      prompt = name + '：对下面的事物做分类：' + list
+        + '。下面四个标准中，哪一个最不适合用来给这组事物分类？';
+      answer = theme.altCriteria[0];
+    } else {
+      
+      var anchorGroup = gMax;
+      var anchor = anchorGroup.members[0];
+      var partner = anchorGroup.members[1];
+      var outsiders = [];
+      groupsArr.forEach(function (g) {
+        if (g.label === anchorGroup.label) return;
+        g.members.forEach(function (m) { outsiders.push(m); });
+      });
+      var opts2 = [partner].concat(outsiders.slice(0, 3));
+      data.options = opts2;
+      data.correctIndex = 0;
+      prompt = name + '：按「' + theme.criterion + '」分类时，「' + anchor
+        + '」所在的那一类还有哪个事物？';
+      answer = partner;
+    }
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
+}
+
+
+function makeClassifyGeoShape(plan, context, i, name, theme) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+
+  var groupsArr = statGroupsArr(theme);
+  var total = theme.items.length;
+  var gMax = groupsArr.slice().sort(function (a, b) { return b.members.length - a.members.length; })[0];
+  var part = gMax.members.length;
+  var rest = total - part;
+  function geo(unitPx) {
+    var params = { total: total, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(total) };
+    if (unitPx) params.unitPx = unitPx;
+    return { type: 'geometry', subtype: 'segment', params: params };
+  }
+  var list = theme.items.join('、');
+  var data = { mode: qt, steps: 1, questionType: qt, graphic: geo(qt === 'judge' || qt === 'apply' ? 25 : null) };
+  var prompt, answer, explanation, mode = 'input';
+  
+  var targets = [
+    { label: '第一段', n: part },
+    { label: '第二段（另一类）', n: rest },
+    { label: '整条线段（一共）', n: total }
+  ];
+
+  if (qt === 'fill') {
+    var t = targets[v];
+    prompt = name + '：看图，整条线段表示全部 ' + total + ' 个事物（共 ' + total + 'cm），'
+      + '按「' + theme.criterion + '」把「' + gMax.label + '」的 ' + part + ' 个分在第一段。'
+      + '事物：' + list + '。' + t.label + '表示 ____ 个。';
+    answer = String(t.n);
+  } else if (qt === 'choice') {
+    var numPool = [part];
+    [rest, total, part - 1, part + 2, rest + 1, total + 1].forEach(function (n) {
+      if (n >= 1 && numPool.indexOf(n) === -1 && numPool.length < 4) numPool.push(n);
+    });
+    var numericOpts = Rng.shuffle(rng, numPool.map(function (n) { return n + '个'; }));
+    var tc = targets[v];
+    prompt = name + '：看图，线段按「' + theme.criterion + '」把 ' + total + ' 个事物分成两段，'
+      + '第一段是「' + gMax.label + '」。' + tc.label + '表示多少个？';
+    answer = tc.n + '个';
+    data.options = numericOpts;
+    data.correctIndex = numericOpts.indexOf(tc.n + '个');
+    mode = 'choice';
+  } else if (qt === 'judge') {
+    var tj = targets[v];
+    var isTrue = v !== 1;
+    var shownCount = isTrue ? tj.n : tj.n + 1;
+    prompt = name + '：看图，有人说' + tj.label + '表示 '
+      + shownCount + ' 个' + (tj.label === '第一段' ? '（标出 ' + shownCount + 'cm）' : '') + '。这个说法对吗？';
+    answer = isTrue;
+    mode = 'judge';
+    explanation = isTrue
+      ? '图上' + tj.label + '对应的数量就是 ' + tj.n + ' 个，说法正确。'
+      : '图上' + tj.label + '对应 ' + tj.n + ' 个，不是 ' + shownCount + ' 个，说法错误。';
+    if (!isTrue) data.misconception = '线段图读数错误：' + tj.label + '对应 ' + tj.n
+      + ' 个，题中读成了 ' + shownCount + ' 个。';
+  } else { 
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：看图，' + total + 'cm 的整条线段表示 ' + total + ' 个事物，'
+        + '第一段 ' + part + 'cm 表示「' + gMax.label + '」的 ' + part + ' 个。'
+        + '先数出另一类有几个，再求两类事物一共多少个。';
+      answer = String(total);
+    } else if (v === 1) {
+      prompt = name + '：看图，整条线段表示 ' + total + ' 个事物，第一段表示「' + gMax.label
+        + '」的 ' + part + ' 个。两段表示的数量相差几个？';
+      answer = String(Math.abs(part - rest));
+    } else {
+      prompt = name + '：看图，' + total + ' 个事物分成两段，第一段表示「' + gMax.label
+        + '」的 ' + part + ' 个。两段分别表示多少个？';
+      answer = part + '个和' + rest + '个';
+    }
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
+}
+
+
+var BAR_SINGLE_SERIES = [
+  { label: '一月', value: 12 }, { label: '二月', value: 18 },
+  { label: '三月', value: 9 }, { label: '四月', value: 15 }
+];
+function makeBarSingleShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var series = BAR_SINGLE_SERIES;
+  var max = series.slice().sort(function (a, b) { return b.value - a.value; })[0];
+  var min = series.slice().sort(function (a, b) { return a.value - b.value; })[0];
+  var sum = series.reduce(function (acc, s) { return acc + s.value; }, 0);
+  var mar = series[2]; 
+  var apr = series[3];
+  var graphic = { type: 'chart', subtype: 'bar',
+    params: { title: '四年级各班图书角月借阅量', yLabel: '本', data: series } };
+  var data = { mode: qt, steps: 1, questionType: qt, graphic: graphic };
+  var prompt, answer, explanation, mode = 'input';
+
+  if (qt === 'apply') {
+    if (v === 0) {
+      prompt = name + '：观察条形统计图，哪个月借出的图书最多？借出多少本？';
+      answer = max.label + '，' + max.value + '本';
+    } else if (v === 1) {
+      prompt = name + '：观察条形统计图，哪个月借出的图书最少？借出多少本？';
+      answer = min.label + '，' + min.value + '本';
+    } else {
+      prompt = name + '：观察条形统计图，这四个月一共借出图书多少本？';
+      answer = sum + '本';
+      data.steps = 2;
+    }
+  } else if (qt === 'choice') {
+    if (v === 2) {
+      var optsN = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：观察条形统计图，借出 ' + mar.value + ' 本图书的是哪个月？';
+      answer = mar.label;
+      data.options = optsN;
+      data.correctIndex = optsN.indexOf(mar.label);
+    } else {
+      var target = v === 0 ? max : min;
+      var opts = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：观察条形统计图，借出图书最' + (v === 0 ? '多' : '少') + '的是哪个月？';
+      answer = target.label;
+      data.options = opts;
+      data.correctIndex = opts.indexOf(target.label);
+    }
+    mode = 'choice';
+  } else if (qt === 'fill') {
+    if (v === 0) {
+      prompt = name + '：观察条形统计图，借出图书最多的月份是____，这个月借出 ____ 本。';
+      answer = max.label + '，' + max.value + '本';
+    } else if (v === 1) {
+      prompt = name + '：观察条形统计图，借出图书最少的月份是____，这个月借出 ____ 本。';
+      answer = min.label + '，' + min.value + '本';
+    } else {
+      prompt = name + '：观察条形统计图，四月借出图书 ____ 本。';
+      answer = String(apr.value);
+    }
+  } else { 
+    var claims = [
+      { s: apr, shown: apr.value, isTrue: true },
+      { s: series[0], shown: apr.value, isTrue: false }, 
+      { s: series[1], shown: series[1].value, isTrue: true } 
+    ];
+    var c = claims[v];
+    prompt = name + '：看条形图判断：「' + c.s.label + '借出图书 ' + c.shown + ' 本」——对吗？';
+    answer = c.isTrue;
+    mode = 'judge';
+    explanation = c.isTrue
+      ? '条形图中' + c.s.label + '对应的借阅量就是 ' + c.s.value + ' 本，说法正确。'
+      : '条形图中' + c.s.label + '借阅量是 ' + c.s.value + ' 本，不是 ' + c.shown + ' 本，说法错误。';
+    if (!c.isTrue) data.misconception = '条形图读数错误：' + c.s.label + '借阅量应为 ' + c.s.value
+      + ' 本，题中读成了 ' + c.shown + ' 本。';
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
+}
+
+
+var BAR_DOUBLE_SERIES = [
+  { label: '篮球', a: 18, b: 10 }, { label: '跳绳', a: 12, b: 16 },
+  { label: '跑步', a: 9, b: 7 }, { label: '踢毽', a: 6, b: 13 }
+];
+function makeBarDoubleShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var series = BAR_DOUBLE_SERIES;
+  var basketball = series[0]; 
+  var rope = series[1];       
+  var run = series[2];        
+  var kick = series[3];       
+  var girlMax = series.slice().sort(function (x, y) { return y.b - x.b; })[0];
+  var boyMax = series.slice().sort(function (x, y) { return y.a - x.a; })[0];
+  var graphic = { type: 'chart', subtype: 'bar',
+    params: { title: '五年级男女生最喜欢的运动', yLabel: '人数', data: series } };
+  var data = { mode: qt, steps: 1, questionType: qt, graphic: graphic, template: 'double-bar-compare' };
+  var prompt, answer, explanation, mode = 'input';
+
+  if (qt === 'apply') {
+    data.operation = 'add';
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：复式条形统计图中，篮球项目男生 ' + basketball.a + ' 人、女生 ' + basketball.b
+        + ' 人。参加篮球项目的一共有多少人？列式：' + basketball.a + ' + ' + basketball.b + ' = ？';
+      answer = String(basketball.a + basketball.b);
+    } else if (v === 1) {
+      prompt = name + '：复式条形统计图中，跳绳项目男生 ' + rope.a + ' 人、女生 ' + rope.b
+        + ' 人。参加跳绳项目的一共有多少人？列式：' + rope.a + ' + ' + rope.b + ' = ？';
+      answer = String(rope.a + rope.b);
+    } else {
+      var boysTotal = basketball.a + rope.a + run.a + kick.a;
+      prompt = name + '：复式条形统计图给出了四个项目的男女生人数。男生参加这四个项目的一共有多少人？'
+        + '列式：' + basketball.a + ' + ' + rope.a + ' + ' + run.a + ' + ' + kick.a + ' = ？';
+      answer = String(boysTotal);
+    }
+  } else if (qt === 'fill') {
+    data.operation = 'add';
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：复式条形统计图中，篮球项目男生 ' + basketball.a + ' 人、女生 ' + basketball.b
+        + ' 人。参加篮球项目的一共多少人？' + basketball.a + ' + ' + basketball.b + ' = ____（人）';
+      answer = String(basketball.a + basketball.b);
+    } else if (v === 1) {
+      prompt = name + '：复式条形统计图中，跳绳项目男生 ' + rope.a + ' 人、女生 ' + rope.b
+        + ' 人。参加跳绳项目的一共多少人？' + rope.a + ' + ' + rope.b + ' = ____（人）';
+      answer = String(rope.a + rope.b);
+    } else {
+      var boysTwo = run.a + kick.a;
+      prompt = name + '：复式条形统计图中，跑步项目男生 ' + run.a + ' 人，踢毽项目男生 ' + kick.a
+        + ' 人。这两个项目的男生一共多少人？' + run.a + ' + ' + kick.a + ' = ____（人）';
+      answer = String(boysTwo);
+    }
+  } else if (qt === 'choice') {
+    mode = 'choice';
+    if (v === 0) {
+      var opts = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看复式条形统计图，女生参加人数最多的是哪个项目？';
+      answer = girlMax.label;
+      data.options = opts;
+      data.correctIndex = opts.indexOf(girlMax.label);
+    } else if (v === 1) {
+      var optsB = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看复式条形统计图，男生参加人数最多的是哪个项目？';
+      answer = boyMax.label;
+      data.options = optsB;
+      data.correctIndex = optsB.indexOf(boyMax.label);
+    } else {
+      var totalB = basketball.a + basketball.b;
+      var numOpts = Rng.shuffle(rng, [totalB, totalB - 2, totalB + 2, totalB + 4].map(function (n) { return n + '人'; }));
+      prompt = name + '：看复式条形统计图，参加篮球项目的一共有多少人？';
+      answer = totalB + '人';
+      data.options = numOpts;
+      data.correctIndex = numOpts.indexOf(totalB + '人');
+    }
+  } else { 
+    var gap = basketball.a - basketball.b;
+    var ropeGap = rope.b - rope.a;
+    var claims = [
+      { text: '篮球项目男生比女生多 ' + gap + ' 人', shownAnswer: gap, isTrue: true },
+      { text: '篮球项目男生比女生多 ' + (gap + 1) + ' 人', shownAnswer: gap + 1, isTrue: false },
+      { text: '跳绳项目女生比男生多 ' + ropeGap + ' 人', shownAnswer: ropeGap, isTrue: true }
+    ];
+    var c = claims[v];
+    prompt = name + '：看复式条形图判断：「' + c.text + '」——对吗？';
+    answer = c.isTrue;
+    data.shownAnswer = c.shownAnswer;
+    mode = 'judge';
+    explanation = c.isTrue
+      ? '对照复式条形图读数，' + c.text + '，说法正确。'
+      : '对照复式条形图，篮球男女生相差 ' + gap + ' 人，不是 ' + c.shownAnswer + ' 人，说法错误。';
+    if (!c.isTrue) data.misconception = '复式条形图比较错误：篮球男女生相差 ' + gap
+      + ' 人，题中说成了 ' + c.shownAnswer + ' 人。';
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
+}
+
+
+var LUNCH_SERIES = [
+  { label: '猪肉炖粉条', value: 2462 }, { label: '炸鸡排', value: 1254 },
+  { label: '香菇油菜', value: 911 }, { label: '韭菜豆芽', value: 755 }
+];
+function makeLunchChartShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'judge' || qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var series = LUNCH_SERIES;
+  var pork = series[0], fry = series[1], veg = series[2], bean = series[3];
+  var max = series.slice().sort(function (a, b) { return b.value - a.value; })[0];
+  var min = series.slice().sort(function (a, b) { return a.value - b.value; })[0];
+  var graphic = { type: 'chart', subtype: 'bar',
+    params: { title: '常见菜热量（千焦）', yLabel: '千焦', data: series } };
+  var data = { mode: 'apply', steps: 1, questionType: qt, graphic: graphic };
+  var prompt, answer, mode = 'input';
+
+  if (qt === 'apply') {
+    if (v === 0) {
+      prompt = name + '：条形图给出了四种菜每份的热量。搭配一份套餐，选炸鸡排和香菇油菜，'
+        + '这两个菜一共有多少千焦？';
+      answer = String(fry.value + veg.value);
+    } else if (v === 1) {
+      prompt = name + '：条形图给出了四种菜每份的热量。一份猪肉炖粉条加一份韭菜豆芽，'
+        + '这两个菜一共有多少千焦？';
+      answer = String(pork.value + bean.value);
+    } else {
+      prompt = name + '：条形图给出了四种菜每份的热量。热量最高的菜比热量最低的菜多多少千焦？';
+      answer = String(max.value - min.value);
+      data.steps = 2;
+    }
+  } else if (qt === 'choice') {
+    mode = 'choice';
+    if (v === 0) {
+      var opts = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看条形图，四种菜中热量最高的是哪一种？';
+      answer = max.label;
+      data.options = opts;
+      data.correctIndex = opts.indexOf(max.label);
+    } else if (v === 1) {
+      var optsMin = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看条形图，四种菜中热量最低的是哪一种？';
+      answer = min.label;
+      data.options = optsMin;
+      data.correctIndex = optsMin.indexOf(min.label);
+    } else {
+      var optsV = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看条形图，每份热量是 ' + fry.value + ' 千焦的是哪一种菜？';
+      answer = fry.label;
+      data.options = optsV;
+      data.correctIndex = optsV.indexOf(fry.label);
+    }
+    data.choiceForm = true;
+  } else { 
+    var fills = [
+      { dish: bean, ask: '韭菜豆芽' },
+      { dish: veg, ask: '香菇油菜' },
+      { dish: pork, ask: '猪肉炖粉条' }
+    ];
+    var f = fills[v];
+    prompt = name + '：看条形图，' + f.ask + '每份的热量是 ____ 千焦。';
+    answer = String(f.dish.value);
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data);
+}
+
+
+var LINE_HIGH = [
+  { label: '周一', value: 24 }, { label: '周二', value: 22 }, { label: '周三', value: 26 },
+  { label: '周四', value: 28 }, { label: '周五', value: 25 }, { label: '周六', value: 30 },
+  { label: '周日', value: 27 }
+];
+var LINE_LOW = [16, 15, 18, 19, 17, 21, 20];
+function makeLineShape(plan, context, i, name, theme, isDouble, isAnalyze) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'judge' || qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var series = isDouble
+    ? LINE_HIGH.map(function (s, si) { return { label: s.label, a: s.value, b: LINE_LOW[si] }; })
+    : LINE_HIGH.slice();
+  var hi = LINE_HIGH.slice().sort(function (x, y) { return y.value - x.value; })[0];
+  var lo = LINE_HIGH.slice().sort(function (x, y) { return x.value - y.value; })[0];
+  var graphic = { type: 'chart', subtype: 'line',
+    params: { title: isDouble ? '一周最高气温与最低气温' : '一周气温变化', data: series } };
+  var applySteps = isDouble ? 2 : 1;
+  var data = { mode: 'apply', steps: applySteps, questionType: qt, graphic: graphic };
+  var prompt, answer, mode = 'input';
+  var highSum = LINE_HIGH.reduce(function (acc, s) { return acc + s.value; }, 0); 
+  var fri = LINE_HIGH[4]; 
+
+  if (qt === 'apply') {
+    if (isDouble) {
+      var satA = series[5].a, satB = series[5].b;
+      if (v === 0) {
+        prompt = name + '：看复式折线统计图（实线最高气温、虚线最低气温）。'
+          + '先读出周六的两个气温，再算周六最高气温比最低气温高多少℃？';
+        answer = (satA - satB) + '℃';
+      } else if (v === 1) {
+        prompt = name + '：看复式折线统计图（实线最高气温、虚线最低气温）。'
+          + '周六的最高气温和最低气温分别是多少℃？这两个气温一共是多少℃？';
+        answer = satA + '℃和' + satB + '℃，一共' + (satA + satB) + '℃';
+      } else {
+        prompt = name + '：看复式折线统计图，这一周出现过的最高气温和最低气温各是多少℃？相差多少℃？';
+        var wHi = LINE_HIGH.slice().sort(function (x, y) { return y.value - x.value; })[0].value;
+        var wLo = LINE_LOW.slice().sort(function (x, y) { return x - y; })[0];
+        answer = '最高 ' + wHi + '℃，最低 ' + wLo + '℃，相差 ' + (wHi - wLo) + '℃';
+      }
+    } else if (isAnalyze) {
+      if (v === 0) {
+        prompt = name + '：看折线统计图，说一说这一周气温整体怎样变化？最高、最低分别出现在哪天、是多少℃？';
+        answer = '周二降到最低 ' + lo.value + '℃，随后波动上升，周六最高 ' + hi.value + '℃';
+      } else if (v === 1) {
+        prompt = name + '：看折线统计图，这一周气温最高的是星期几？是多少℃？';
+        answer = hi.label + '，' + hi.value + '℃';
+      } else {
+        prompt = name + '：看折线统计图，这一周气温最低的是星期几？是多少℃？';
+        answer = lo.label + '，' + lo.value + '℃';
+      }
+    } else {
+      if (v === 0) {
+        prompt = name + '：看折线统计图，气温最高的是星期几？是多少℃？';
+        answer = hi.label + '，' + hi.value + '℃';
+      } else if (v === 1) {
+        prompt = name + '：看折线统计图，气温最低的是星期几？是多少℃？';
+        answer = lo.label + '，' + lo.value + '℃';
+      } else {
+        prompt = name + '：看折线统计图，这一周的最高气温（每天一个）加起来一共是多少℃？';
+        answer = highSum + '℃';
+        data.steps = 2;
+      }
+    }
+  } else if (qt === 'choice') {
+    mode = 'choice';
+    data.choiceForm = true;
+    var target;
+    if (v === 0) target = hi;
+    else if (v === 1) target = lo;
+    else target = fri;
+    var opts = Rng.shuffle(rng, LINE_HIGH.map(function (s) { return s.label; }));
+    prompt = v === 2
+      ? name + '：看折线统计图，最高气温是 ' + fri.value + '℃ 的是星期几？'
+      : name + '：看折线统计图，' + (v === 0 ? '最高气温' : '最低气温') + '出现在星期几？';
+    answer = target.label;
+    data.options = opts;
+    data.correctIndex = opts.indexOf(target.label);
+  } else { 
+    if (v === 0) {
+      prompt = name + '：看折线统计图填空：这一周的最高气温是 ____ ℃，出现在星期____。';
+      answer = hi.value + '℃，' + hi.label;
+    } else if (v === 1) {
+      prompt = name + '：看折线统计图填空：这一周的最低气温是 ____ ℃，出现在星期____。';
+      answer = lo.value + '℃，' + lo.label;
+    } else {
+      prompt = name + '：看折线统计图填空：周四的最高气温是 ____ ℃。';
+      answer = LINE_HIGH[3].value + '℃';
+    }
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data);
+}
+
+
+function makeProbabilitySizeShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'judge' || qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var bag = { '红球': 8, '白球': 3, '黄球': 1 };
+  var colors = Object.keys(bag);
+  var maxColor = colors.slice().sort(function (a, b) { return bag[b] - bag[a]; })[0];
+  var minColor = colors.slice().sort(function (a, b) { return bag[a] - bag[b]; })[0];
+  var data = { mode: 'apply', steps: 1, questionType: qt };
+  var prompt, answer, mode = 'input';
+  var desc = colors.map(function (c) { return bag[c] + '个' + c; }).join('、');
+  var total = colors.reduce(function (acc, c) { return acc + bag[c]; }, 0);
+
+  if (qt === 'apply') {
+    if (v === 0) {
+      prompt = name + '：盒子里有 ' + desc + '（球除颜色外完全相同），任意摸出一个球，'
+        + '摸到哪种颜色球的可能性最大？为什么？';
+      answer = maxColor + '；' + maxColor + '数量最多，所以摸到的可能性最大';
+    } else if (v === 1) {
+      prompt = name + '：盒子里有 ' + desc + '（球除颜色外完全相同），任意摸出一个球，'
+        + '摸到哪种颜色球的可能性最小？为什么？';
+      answer = minColor + '；' + minColor + '数量最少，所以摸到的可能性最小';
+    } else {
+      prompt = name + '：盒子里有 ' + desc + '（球除颜色外完全相同），任意摸出一个球，'
+        + '摸到可能性最大的球和可能性最小的球各是什么颜色？';
+      answer = '可能性最大的是' + maxColor + '，可能性最小的是' + minColor;
+    }
+  } else if (qt === 'choice') {
+    mode = 'choice';
+    data.choiceForm = true;
+    if (v === 0) {
+      var opts = Rng.shuffle(rng, colors.slice());
+      prompt = name + '：盒子里有 ' + desc + '，任意摸出一个球，摸到哪种球的可能性最大？';
+      answer = maxColor;
+      data.options = opts;
+      data.correctIndex = opts.indexOf(maxColor);
+    } else if (v === 1) {
+      var optsMin = Rng.shuffle(rng, colors.slice());
+      prompt = name + '：盒子里有 ' + desc + '，任意摸出一个球，摸到哪种球的可能性最小？';
+      answer = minColor;
+      data.options = optsMin;
+      data.correctIndex = optsMin.indexOf(minColor);
+    } else {
+      var optsN = Rng.shuffle(rng, colors.slice());
+      prompt = name + '：盒子里有 ' + desc + '，任意摸出一个球，摸到数量有 ' + bag['白球'] + ' 个的是哪种球？';
+      answer = '白球';
+      data.options = optsN;
+      data.correctIndex = optsN.indexOf('白球');
+    }
+  } else { 
+    if (v === 0) {
+      prompt = name + '：盒子里有 ' + desc + '，任意摸一个球，摸到____球的可能性最大。';
+      answer = maxColor;
+    } else if (v === 1) {
+      prompt = name + '：盒子里有 ' + desc + '，任意摸一个球，摸到____球的可能性最小。';
+      answer = minColor;
+    } else {
+      prompt = name + '：盒子里有 ' + desc + '，一共有 ____ 个球。';
+      answer = String(total);
+    }
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data);
+}
+
+
+function makeProbabilityInferShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt !== 'apply') return makeClassifyShape(plan, context, i, name, theme);
+  var red = 16, white = 4;
+  var graphic = { type: 'diagram', subtype: 'brace',
+    params: { left: red, right: white, unit: '个' } };
+  var data = { mode: 'apply', steps: 1, questionType: 'apply', graphic: graphic };
+  var intro = name + '：盒子里装有红球和白球（每组小球表示 1 个，左组●是红球 ' + red
+    + ' 个，右组○是白球 ' + white + ' 个，见下图）。小组做摸球试验，每次摸一个、记下颜色后放回，'
+    + '重复 20 次，结果摸到红球 16 次、白球 4 次。';
+  var prompt, answer;
+  if (v === 0) {
+    prompt = intro + '根据试验结果推测：盒中哪种球可能更多？再摸一次最可能摸到什么球？';
+    answer = '红球可能更多，再摸一次最可能摸到红球';
+  } else if (v === 1) {
+    prompt = intro + '根据试验结果推测：盒中红球和白球哪种可能更少？为什么？';
+    answer = '白球可能更少；试验中摸到白球只有 4 次，明显少于红球的 16 次';
+  } else {
+    prompt = intro + '20 次试验中摸到红球的次数比白球多几次？据此推测盒中哪种球可能更多？';
+    answer = '多 ' + (red - white) + ' 次；推测红球可能更多';
+    data.steps = 2;
+  }
+  return statSq(plan, context, i, prompt, answer, 'input', data);
+}
+
+function makeShapedStatsQuestion(plan, context, i) {
+  var kpId = (plan.semanticParams && plan.semanticParams.knowledgePointId) || pkp(plan);
+  var shape = STAT_SHAPE[kpId];
+  var name = statName(plan);
+  var theme = STAT_THEMES[kpId];
+  switch (shape) {
+    case 'classify':
+      return makeClassifyShape(plan, context, i, name, theme);
+    case 'classify-geo':
+      return makeClassifyGeoShape(plan, context, i, name, theme);
+    case 'bar-single':
+      return makeBarSingleShape(plan, context, i, name, theme);
+    case 'bar-double':
+      return makeBarDoubleShape(plan, context, i, name, theme);
+    case 'lunch-chart':
+      return makeLunchChartShape(plan, context, i, name, theme);
+    case 'line-chart':
+      return makeLineShape(plan, context, i, name, theme, false, false);
+    case 'line-double':
+      return makeLineShape(plan, context, i, name, theme, true, false);
+    case 'line-analyze':
+      return makeLineShape(plan, context, i, name, theme, false, true);
+    case 'probability-size':
+      return makeProbabilitySizeShape(plan, context, i, name, theme);
+    case 'probability-infer':
+      return makeProbabilityInferShape(plan, context, i, name, theme);
+    default:
+      return null;
+  }
+}
+
 function makeStatsQuestion(plan, context, i, kp) {
+  var shapedId = (plan.semanticParams && plan.semanticParams.knowledgePointId) || pkp(plan);
+  if (STAT_SHAPE[shapedId]) return makeShapedStatsQuestion(plan, context, i);
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   
   var name = (plan && plan.semanticParams && plan.semanticParams.name)
@@ -10213,8 +12142,9 @@ function createStatsGenerator(spec) {
     subject: 'math',
     
     
-    capabilities: ['apply', 'calc', 'fill', 'choice'],
-    questionTypes: ['apply', 'calc', 'fill', 'choice'],
+    
+    capabilities: ['apply', 'calc', 'fill', 'choice', 'judge', 'classify'],
+    questionTypes: ['apply', 'calc', 'fill', 'choice', 'judge', 'classify'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -10709,113 +12639,6 @@ function buildAll() {
 
 module.exports = {
   createCodeGenerator: createCodeGenerator,
-  buildAll: buildAll
-};
-
-};
-__defs["shared/generator/generators/classify.js"] = function (module, exports, require) {
-
-'use strict';
-
-var Rng = require("shared/generator/core/rng.js");
-var SemanticEvidence = require("shared/generator/core/semantic-evidence.js");
-var VariationApply = require("shared/generator/core/variation-apply.js");
-
-function pkp(plan) {
-  if (!plan) return null;
-  if (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) return plan.knowledgePointIds[0];
-  if (typeof plan.knowledgePointId === 'string' && plan.knowledgePointId) return plan.knowledgePointId;
-  return null;
-}
-
-function seedFor(plan, context, i) {
-  if (context && context.seed != null) return context.seed + ':' + i;
-  if (plan && plan.seed != null) return plan.seed + ':' + i;
-  return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':' + i;
-}
-
-function buildBase(plan, context, i, extra) {
-  var constraints = plan.constraints || {};
-  return {
-    knowledgePointId: pkp(plan),
-    questionType: plan.questionTypeId,
-    difficulty: plan.difficulty,
-    difficultyParams: {
-      level: plan.difficulty,
-      scale: constraints.scale != null ? constraints.scale : 1,
-      steps: constraints.maxSteps != null ? constraints.maxSteps : 1,
-      allowBracket: !!constraints.allowBracket,
-      allowMultDiv: !!constraints.allowMultDiv
-    },
-    numberRange: constraints.numberRange || { min: 1, max: 10 },
-    spiralLevel: plan.spiralLevel != null ? plan.spiralLevel : 1,
-    context: plan.contextType != null ? plan.contextType : 'standard',
-    seed: seedFor(plan, context, i),
-    hint: null,
-    answerMode: 'input',
-    data: extra || {}
-  };
-}
-
-function buildQuestions(plan, context, count, make) {
-  var out = [];
-  for (var i = 0; i < count; i++) out.push(make(plan, context, i));
-  return out;
-}
-
-
-
-function makeSort(plan, context, i) {
-  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
-  var range = (plan.constraints && plan.constraints.numberRange) || { min: 1, max: 10 };
-  var n = Rng.randInt(rng, 3, 5);
-  var nums = [];
-  var guard = 0;
-  while (nums.length < n && guard < 100) {
-    var v = Rng.randInt(rng, range.min, range.max);
-    if (nums.indexOf(v) === -1) nums.push(v);
-    guard++;
-  }
-  var desc = Rng.randInt(rng, 0, 1) === 1;
-  var sorted = nums.slice().sort(function (a, b) { return desc ? b - a : a - b; });
-  var orderText = desc ? '从大到小' : '从小到大';
-  var q = buildBase(plan, context, i, { mode: 'classify', sort: { desc: desc, count: n }, items: nums });
-  q.prompt = '把下面各数按' + orderText + '的顺序排列：' + nums.join('，') + '。';
-  q.answer = { value: sorted.join('，'), acceptable: [] };
-  return q;
-}
-
-function createClassificationGenerator(spec) {
-  spec = spec || {};
-  var id = spec.id || 'generator:classification';
-  var generator = {
-    id: id,
-    subject: 'math',
-    capabilities: ['classify'],
-    questionTypes: ['classify'],
-    
-    
-    knowledgePoints: spec.knowledgePoints || [],
-
-    supports: function (plan) {
-      if (!plan || !plan.questionTypeId) return false;
-      return plan.questionTypeId === 'classify';
-    },
-
-    generate: function (plan, context) {
-      var count = (plan && plan.count) || 1;
-      return SemanticEvidence.attachAll(VariationApply.applyToAll(buildQuestions(plan, context, count, makeSort), plan), plan);
-    }
-  };
-  return generator;
-}
-
-function buildAll() {
-  return [createClassificationGenerator()];
-}
-
-module.exports = {
-  createClassificationGenerator: createClassificationGenerator,
   buildAll: buildAll
 };
 
@@ -11882,6 +13705,35 @@ function buildAlgebraLetterItem(rng, name) {
 
 
 function buildNumberTheoryItem(rng, name) {
+  
+  
+  if (name.indexOf('因数和倍数') !== -1) {
+    var fa = ri(rng, 2, 8), fb = fa + ri(rng, 1, 9 - fa), fp = fa * fb;
+    var facStmt = fa + ' 和 ' + fb;
+    return { operation: 'mult',
+      stem: '在整数乘法中，两个乘数都是积的因数：' + fa + ' × ' + fb + ' = ' + fp
+        + '（也可看作 ' + fp + ' ÷ ' + fa + ' = ' + fb + '）。下面哪一组数是 ' + fp + ' 的因数？',
+      answer: facStmt,
+      options: [facStmt, fa + ' 和 ' + fp, fb + ' 和 ' + fp],
+      fill: '根据 ' + fa + ' × ' + fb + ' = ' + fp + ' 可知，____ 和 ____ 是 ' + fp + ' 的因数。',
+      apply: '礼品店把 ' + fp + ' 块月饼装盒，每盒 ' + fa + ' 块，正好装 ' + fb + ' 盒（'
+        + fa + ' × ' + fb + ' = ' + fp + '）。哪两个数是 ' + fp + ' 的因数？' };
+  }
+  
+  
+  if (name.indexOf('因数与倍数') !== -1) {
+    var fn2 = ri(rng, 3, 9);
+    return { operation: 'mult',
+      stem: '用一个数依次乘 1、2、3……可以找它的倍数：' + fn2 + ' × 1 = ' + fn2 + '，'
+        + fn2 + ' × 2 = ' + (fn2 * 2) + '，' + fn2 + ' × 3 = ' + (fn2 * 3) + '。'
+        + fn2 + ' 最小的倍数是多少？',
+      answer: String(fn2),
+      options: [String(fn2), '1', String(fn2 * 2), '0'],
+      fill: fn2 + ' × 1 = ____，可见一个数最小的倍数就是它本身。',
+      apply: '计数器按 ' + fn2 + ' 的倍数累加：' + fn2 + ' × 1 = ' + fn2 + '，'
+        + fn2 + ' × 2 = ' + (fn2 * 2) + '，' + fn2 + ' × 3 = ' + (fn2 * 3)
+        + '……照这样能一直写下去吗？' + fn2 + ' 最小的倍数是多少？' };
+  }
   
   if (name.indexOf('奇偶性') !== -1 || name.indexOf('和的奇偶') !== -1) {
     var patterns = [

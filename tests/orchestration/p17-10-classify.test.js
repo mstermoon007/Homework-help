@@ -7,14 +7,18 @@
  * orchestrate → build → runPlans → generateQuestions，不经过 GenerationCore；
  * 本测试直接装载 tests/fixtures/generation-core.js 验证其 execute 语义。
  *
- * 冻结不变量（canonical 7 类对齐，assert 数据链为运行时绑定真值源）：
- *   generator:classification 运行时绑定 == 权威生成映射（mappings/generation-contract/math.json）
- *     classify→generator:classification 的 25 个 canonical 载体（无 legacy 残留绑定）。
- *   classify 计划：selector 首选 generator:classification（非 shape-recognition / 非选择类）。
- *   25 载体全量真实生成：execute 返回 SUCCESS，每张题 questionType = classify（不越界为 choice/geometry 等）。
- *   反向作用域：同 KP 的 calc/geometry 计划不产生 classify 题（classify 语义不泄漏到非 classify 计划）。
- *   选择优先级：kp 本体绑定 ≥ semanticOp ≥ capability ≥ qt（classify 载体与泛型家族 kp 并列时，
- *     由 capability/qt 决胜 → classification 胜出）。
+ * P28-HOLLOW-01 演进：generator:classification 已退役（仅数字排序单模板、
+ * 25 个统计/分类/概率 KP 全部空心）。25 个 canonical classify 载体的五类行
+ * （fill/choice/judge/apply/classify 共 125 行）全部由 generator:stats 的
+ * 8 形态组原生 maker 承接。
+ *
+ * 冻结不变量：
+ *   权威生成映射 classify→generator:stats 恰 25 行；stats 运行时绑定覆盖该 25 KP，
+ *   generator:classification 不再存在于注册表（无 legacy 回潮）。
+ *   五类计划：selector 首选 generator:stats（match.kp=1，本体绑定）。
+ *   25 载体 × 5 题型全量真实生成：execute SUCCESS，questionType/KP 精确回显（不越界）。
+ *   反向作用域：25 载体的 calc/geometry 在能力端点即非 ALLOW（selector 前的 KCV 闸门拦截，
+ *   stats maker 永不被这两类计划触达；五类计划内部不串题型已由 C3 全量覆盖）。
  */
 'use strict';
 
@@ -28,7 +32,7 @@ const GenerationCore = require(path.join(ROOT, 'tests', 'fixtures', 'generation-
 const retryLoop = require(path.join(ROOT, 'shared', 'generator', 'retry-loop.js'));
 const semanticQuestion = require(path.join(ROOT, 'shared', 'semantic', 'semantic-question.js'));
 
-// canonical 25 个 classify 载体（kbl capability classify ∈ allowedTypes ∩ 权威生成映射 classify→generation:classification）
+// canonical 25 个 classify 载体（kbl capability classify ∈ allowedTypes ∩ 权威生成映射 classify→generator:stats）
 const CANONICAL_CLASSIFY_KPS = [
   'math-g2-up-u01-k001', 'math-g2-up-u01-k002', 'math-g2-up-u01-k003', 'math-g2-up-u01-k004', 'math-g2-up-u01-k005', 'math-g2-up-u01-k006',
   'math-g3-down-u05-k001', 'math-g3-down-u05-k002', 'math-g3-down-u05-k003', 'math-g3-down-u05-k004',
@@ -39,31 +43,40 @@ const CANONICAL_CLASSIFY_KPS = [
 ];
 // 3.0 旧层残留绑定（必须不再出现在运行时注册表；DEV_LOG:1838「第三套旧层 ID」）
 const LEGACY_LEFT = ['math-g3-down-u03-k001', 'math-g3-down-u08-k001', 'math-g3-up-u08-k001', 'math-g4-up-u01-k003'];
+// P28-HOLLOW-01：25 载体在 stats maker 下真实承接的五类 ALLOW 行（无 calc/geometry）
+const STATS_FIVE_TYPES = ['fill', 'choice', 'judge', 'apply', 'classify'];
 
 before(() => {
   GenerationCore.inject({ selector: Env.GeneratorSelector, retryLoop, semanticQuestion });
 });
 
-async function execClassify(kp, count) {
+async function execCell(kp, questionType, count) {
   return GenerationCore.execute(
-    { cells: [{ kpId: kp, questionType: 'classify', count }] },
+    { cells: [{ kpId: kp, questionType, count }] },
     { skipValidation: false }
   );
 }
 
-test('C1 运行时绑定 == 权威生成映射（25 载体，无 legacy 残留）', () => {
+test('C1 运行时绑定 == 权威生成映射（25 载体归 stats，classification 已退役）', () => {
   const mappings = require(path.join(ROOT, 'shared', 'knowledge', 'mappings', 'generation-contract', 'math.json')).mappings;
   const mapKps = mappings
-    .filter((r) => r.questionType === 'classify' && r.pluginId === 'generator:classification')
+    .filter((r) => r.questionType === 'classify' && r.pluginId === 'generator:stats')
     .map((r) => r.knowledgeId)
     .sort();
-  assert.equal(mapKps.length, 25, '权威映射 classify→classification 恰 25 行');
+  assert.equal(mapKps.length, 25, '权威映射 classify→stats 恰 25 行');
   assert.deepEqual(mapKps, CANONICAL_CLASSIFY_KPS.slice().sort(), '映射 == canonical 载体清单');
+  assert.equal(
+    mappings.filter((r) => r.pluginId === 'generator:classification').length, 0,
+    '映射不得残留 generator:classification'
+  );
 
-  const record = Env.GeneratorRegistry.get('generator:classification');
-  assert.ok(record, '注册表含 generator:classification');
-  assert.deepEqual(record.knowledgePoints.slice().sort(), mapKps, '运行时绑定已对齐权威映射');
-  assert.ok(record.version >= 2, '注册表版本已随 P17-10 绑定重对齐提升');
+  assert.equal(Env.GeneratorRegistry.get('generator:classification'), null, 'generator:classification 已退役');
+  const record = Env.GeneratorRegistry.get('generator:stats');
+  assert.ok(record, '注册表含 generator:stats');
+  assert.ok(mapKps.every((id) => record.knowledgePoints.indexOf(id) !== -1), 'stats 绑定覆盖 25 载体');
+  STATS_FIVE_TYPES.forEach((t) => {
+    assert.ok(record.questionTypes.indexOf(t) !== -1, 'stats 声明题型含 ' + t);
+  });
   assert.ok(!LEGACY_LEFT.some((id) => record.knowledgePoints.indexOf(id) !== -1), 'legacy 旧层绑定已清理');
 
   // 25 载体全部来自 classify 能力声明（allowedTypes 含 classify）
@@ -72,30 +85,38 @@ test('C1 运行时绑定 == 权威生成映射（25 载体，无 legacy 残留�
   assert.ok(mapKps.every((id) => carriers.indexOf(id) !== -1), '载体 ⊆ 能力声明 classify 集合');
 });
 
-test('C2 classify 计划：selector 首选 generator:classification', () => {
-  const s = Env.GeneratorSelector.selectGenerator(
-    { knowledgePointIds: ['math-g2-up-u01-k001'], questionTypeId: 'classify', count: 2, constraints: {} },
-    { mode: 'native' }
-  );
-  assert.equal(s.generatorId, 'generator:classification', '不应误选 shape-recognition / 选择类生成器');
-  assert.equal(s.match.kp, 1, '本体绑定命中（kp 优先）');
+test('C2 五类计划：selector 首选 generator:stats（本体绑定 kp=1）', () => {
+  STATS_FIVE_TYPES.forEach((qt) => {
+    const s = Env.GeneratorSelector.selectGenerator(
+      { knowledgePointIds: ['math-g2-up-u01-k001'], questionTypeId: qt, count: 2, constraints: {} },
+      { mode: 'native' }
+    );
+    assert.equal(s.generatorId, 'generator:stats', qt + ' 应首选 stats');
+    assert.equal(s.match.kp, 1, qt + ' 本体绑定命中（kp 优先）');
+  });
 });
 
-test('C3 25 载体全量真实生成：SUCCESS，每张题 questionType = classify（不越界）', async () => {
+test('C3 25 载体 × 5 题型全量真实生成：SUCCESS，题型/KP 精确回显（125 行不越界）', async () => {
   for (const kp of CANONICAL_CLASSIFY_KPS) {
-    const res = await execClassify(kp, 2);
-    assert.equal(res.status, 'SUCCESS', kp + ' status');
-    assert.equal(res.questions.length, 2, kp + ' 题量');
-    res.questions.forEach((q) => {
-      assert.equal(q.questionType, 'classify', kp + ' 应产出 classify，而非 secondary 题型');
-    });
+    for (const qt of STATS_FIVE_TYPES) {
+      const res = await execCell(kp, qt, 1);
+      assert.equal(res.status, 'SUCCESS', kp + ' / ' + qt + ' status=' + res.status);
+      assert.equal(res.questions.length, 1, kp + ' / ' + qt + ' 题量');
+      const q = res.questions[0];
+      assert.equal(q.questionType, qt, kp + ' / ' + qt + ' 题型回显，不越界');
+      assert.equal(q.knowledgePointId, kp, kp + ' / ' + qt + ' KP 回显');
+      assert.equal(q.metadata && q.metadata.generator, 'generator:stats', kp + ' / ' + qt + ' 由 stats 真实产出');
+    }
   }
 });
 
-test('C4 反向作用域：classify 语义不泄漏到同 KP 的 calc/geometry 计划', async () => {
-  const KP = 'math-g2-up-u01-k001';
-  const calc = await GenerationCore.execute({ cells: [{ kpId: KP, questionType: 'calc', count: 2 }] }, { skipValidation: false });
-  calc.questions.forEach((q) => assert.notEqual(q.questionType, 'classify', 'calc 计划不得产出 classify'));
-  const geo = await GenerationCore.execute({ cells: [{ kpId: KP, questionType: 'geometry', count: 2 }] }, { skipValidation: false });
-  geo.questions.forEach((q) => assert.equal(q.questionType, 'geometry', 'geometry 计划产出 geometry 类（shape 家族仍优先）'));
+test('C4 反向作用域：25 载体 calc/geometry 在能力端点非 ALLOW（stats 不被触达，五类行不串题型）', () => {
+  const KCV = require(path.join(ROOT, 'shared', 'capability', 'knowledge-capability-view.js'));
+  CANONICAL_CLASSIFY_KPS.forEach((kp) => {
+    const ev = KCV.buildEligibility([kp], ['calc', 'geometry', 'classify']);
+    const m = (ev.matrix && ev.matrix[kp]) || {};
+    assert.notEqual(m.calc, 'ALLOW', kp + ' calc 非 ALLOW');
+    assert.notEqual(m.geometry, 'ALLOW', kp + ' geometry 非 ALLOW');
+    assert.equal(m.classify, 'ALLOW', kp + ' classify 仍 ALLOW');
+  });
 });

@@ -1158,6 +1158,10 @@ function normalizeSemanticQuestion(raw) {
     context: raw.context,
     
     
+    
+    spiralLevel: raw.spiralLevel,
+    
+    
     answer: (function () {
       var rawHasAnswer = (typeof raw !== 'undefined' && raw !== null) &&
         Object.prototype.hasOwnProperty.call(raw, 'answer') && raw.answer != null;

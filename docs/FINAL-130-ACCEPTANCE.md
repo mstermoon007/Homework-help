@@ -1,5 +1,7 @@
 # FINAL-130 验收报告 — 服务器上传上线（专项最后动作）
 
+> ⚠️ **历史验收档案（2026-09-25，一次性上线记录）。** 文中 28 PASS / 0 SKIP 为当时真实 Chrome 环境记录。当前唯一基线以 [00-BASELINE.md](00-BASELINE.md) 为准；本地无 Chrome 时 check-all 常态为 27 PASS / 0 FAIL / 1 SKIP；后续变更见 [P28/change-log.md](P28/change-log.md)。
+
 | 字段 | 值 |
 |---|---|
 | 任务编号 | FINAL-130 |

@@ -41,7 +41,7 @@ var GEN_SPAN = [
   ['generator:percent-calc',               'calc',  'math-g6-up-u05-k001'],
   ['generator:shape-recognition',          'judge', 'math-g2-up-u01-k001'],
   ['generator:position-direction',         'judge', 'math-g2-up-u04-k001'],
-  ['generator:classification',             'fill',  'math-g2-down-u03-k003'],
+  ['generator:stats',                     'fill',  'math-g3-down-u06-k001'],
   ['generator:concept-meaning',            'apply', 'math-g1-down-u01-k001']
 ];
 

@@ -241,6 +241,55 @@ function formatTemplate(template, nums) {
   return str;
 }
 
+// P28-GEO-NATIVE-04：g5-down-u03-k006「不规则物体的体积」geometry 原生 maker。
+// 排水法：长方体玻璃缸底面积 × 水面上升高度 = 不规则物体体积。
+// 图形用已注册的 geometry.cuboid 描述符画玻璃缸（对象参数、渲染器现成）。
+function makeDisplacementVolumeQuestion(plan, context, i) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var length = Rng.pick(rng, [10, 12]);
+  var width = Rng.pick(rng, [6, 8]);
+  var waterBefore = 5;
+  var rise = Rng.pick(rng, [2, 3]);
+  var waterAfter = waterBefore + rise;
+  var volume = length * width * rise;
+  var prompt = '看图解决问题：一个长方体玻璃缸（无盖），从里面量长 ' + length + ' 厘米、宽 ' +
+    width + ' 厘米，缸里装有深 ' + waterBefore + ' 厘米的水。把一块不规则的石块完全浸没在水中' +
+    '（水没有溢出），水面上升到 ' + waterAfter + ' 厘米。这块石块的体积是多少立方厘米？____';
+  var graphic = {
+    type: 'geometry',
+    subtype: 'cuboid',
+    params: { length: length, height: waterAfter, width: width, labelSides: true, unit: 'cm', unitPx: 22 }
+  };
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: 'geometry',
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: {
+      value: String(volume),
+      acceptable: [volume + '立方厘米'],
+      explanation: '石块体积 = 玻璃缸底面积 × 水面上升高度 = ' + length + ' × ' + width +
+        ' × (' + waterAfter + '−' + waterBefore + ') = ' + volume + '（立方厘米）'
+    },
+    answerMode: 'input',
+    data: {
+      mode: 'geometry',
+      steps: 2,
+      kind: 'displacement-volume',
+      tankLength: length,
+      tankWidth: width,
+      waterBefore: waterBefore,
+      waterAfter: waterAfter,
+      rise: rise,
+      operation: 'mult',
+      graphic: graphic
+    }
+  };
+}
+
 function makeApplicationQuestion(plan, context, i, meta) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var template = pickTemplate(rng, plan.difficulty, kpAllowedOps(plan));
@@ -358,8 +407,8 @@ function createApplicationGenerator(spec) {
   return {
     id: id,
     subject: subject,
-    capabilities: ['apply', 'fill', 'choice', 'judge', 'calc'],
-    questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc'],
+    capabilities: ['apply', 'fill', 'choice', 'judge', 'calc', 'geometry'],
+    questionTypes: ['apply', 'fill', 'choice', 'judge', 'calc', 'geometry'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -375,7 +424,13 @@ function createApplicationGenerator(spec) {
       var meta = getApplicationMeta(kp);
 
       for (var i = 0; i < count; i++) {
-        var q = makeApplicationQuestion(plan, context, i, meta);
+        var q;
+        // P28-GEO-NATIVE-04：geometry 行（不规则物体的体积/排水法）走原生几何 maker
+        if (plan.questionTypeId === 'geometry') {
+          questions.push(makeDisplacementVolumeQuestion(plan, context, i));
+          continue;
+        }
+        q = makeApplicationQuestion(plan, context, i, meta);
         if (!q) continue; // FINAL-31c：KP 运算约束下无合规模板 → fail-closed 跳过
         // DEF-009：不再附加无教学信息的空虚线矩形（原 makeGraphicForApplication 输出），题面以文字承载条件
         questions.push(q);

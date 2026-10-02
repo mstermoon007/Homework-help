@@ -1,6 +1,8 @@
 # P28-FINAL-FREEZE
 
 > 最终冻结快照。P28 工程治理完成。
+>
+> ⚠️ **历史快照（2026-09-22），非当前状态。** 本文数字（31 Generator / 534 测试 / 26 PASS 等）为冻结当时记录，不再随演进而更新。**当前唯一基线以 [00-BASELINE.md](00-BASELINE.md) 为准**；冻结后的变更按时间顺序见 [P28/change-log.md](P28/change-log.md)；开工流水线见 `.trae/rules/ai-coding-workflow.md`。
 
 ## 基本信息
 

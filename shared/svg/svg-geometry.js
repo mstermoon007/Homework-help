@@ -352,8 +352,16 @@
     _helpers: { rightAngleMark: rightAngleMark, angleArc: angleArc, tickMark: tickMark }
   };
 
+  // P28-GEO-NATIVE：线段图是几何度量/分数模型的通用示意，复用 svg-diagram.segment
+  // （同一实现，不新增渲染器），并在 geometry 命名空间暴露，使 {type:'geometry',subtype:'segment'}
+  // 描述符可经 geometry 类型直接解析（geometry 证据规则要求 graphic.type 恒为 'geometry'）。
+  var SVGDiagram = (typeof require !== 'undefined') ? require('./svg-diagram.js') : (global.SVGDiagram || null);
+
   // kebab 别名：schema/描述符使用 'position-grid'，SVGRenderer 为精确键索引
   SVGGeometry['position-grid'] = positionGrid;
+  if (SVGDiagram && typeof SVGDiagram.segment === 'function') {
+    SVGGeometry.segment = SVGDiagram.segment;
+  }
 
   global.SVGGeometry = SVGGeometry;
 

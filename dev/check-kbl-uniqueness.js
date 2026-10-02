@@ -151,9 +151,16 @@ function scanBundles() {
     // 检测 KBL 数据内嵌前先剥离（数据内嵌会携带 knowledgeId+name/semantic/unitName 等载荷）。
     // P25-06：capability-resolver 的 TEACHING_DENIALS 同为「ID 引用表」（键=kpId|qt，无数据载荷；
     // 理由/证据 SSOT 在 kbl/teaching/teaching-denials.json），一并剥离，按合法引用对待。
+    // P28-HOLLOW-01：stats 的 STAT_SHAPE/STAT_THEMES 亦为「ID 引用键查表」（键=kpId；
+    // 值=生成器自有形态组名/教学素材，非 canonical 的 name/semantic/unitName 载荷），一并剥离。
     var dataText = src
       .replace(/knowledgePoints:\s*\[[\s\S]*?\]/g, '')
-      .replace(/TEACHING_DENIALS\s*=\s*\{[\s\S]*?\n\};/g, '');
+      .replace(/TEACHING_DENIALS\s*=\s*\{[\s\S]*?\n\};/g, '')
+      .replace(/STAT_SHAPE\s*=\s*\{[\s\S]*?\n\};/g, '')
+      .replace(/STAT_THEMES\s*=\s*\{[\s\S]*?\n\};/g, '')
+      // P28-HOLLOW-02：shape 的 SHAPE_THEME 同为「ID 引用键查表」（键=kpId；
+      // 值=生成器自有教学素材，非 canonical 载荷），一并剥离。
+      .replace(/SHAPE_THEME\s*=\s*\{[\s\S]*?\n\};/g, '');
     var rec = {
       file: rel,
       // 副本判定：内联 KC/Runtime 会挂载全局（shim 委托不会）

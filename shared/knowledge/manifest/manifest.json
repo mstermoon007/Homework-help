@@ -1,9 +1,9 @@
 {
   "schemaVersion": "1.0.0",
   "catalogVersion": "math-v1.0.0",
-  "packageVersion": "kbl-math-2026-09-30",
+  "packageVersion": "kbl-math-2026-10-02",
   "buildTool": "tools/kbl/build.js",
-  "buildAt": "2026-09-30T13:50:02.954Z",
+  "buildAt": "2026-10-02T11:00:18.520Z",
   "counts": {
     "knowledgePoints": 375,
     "units": 98,
@@ -27,9 +27,9 @@
       "data/math/g5/knowledge-points.json": "33fae1ee21d55ad1c790a8525fc0a93f93fbb04eac8de8beba6d82f57d223364",
       "data/math/g6/knowledge-points.json": "2e734323ebb8482dee1cbdb75103992191b3072acf3d27476164b8cb8d5ce594",
       "relations/math/relations.json": "d2968eab236b174825c31c7e78f3f171a545439e0eda24b9903b7f582b2687eb",
-      "mappings/generation-contract/math.json": "c7a8f8d6ce1a67c02a222706360b5ceb8c6e8808a0baec10ea409955bd87bb0f",
+      "mappings/generation-contract/math.json": "1ac2597e669f22b0528ceedf30146419542b5e528d428cc2cae333c4057eb350",
       "index/index.json": "2bdd0282c8694245ab8597f09488c41ce4ce29e44811851e1ea5f5052ad517a3"
     },
-    "rootHash": "d79a04c9a7fadff807a4783b6e92cd065e14d0a409d5e069f8c035b3c9d02ea1"
+    "rootHash": "20609e50cad9928142ae45b31ea637f55ddfee8abfaed908e3f19a828e2bfbcf"
   }
 }

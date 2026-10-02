@@ -718,8 +718,37 @@ function buildAlgebraLetterItem(rng, name) {
     apply: '小明今年 a 岁，爸爸比他大 ' + d0 + ' 岁（a = 10 时 10 + ' + d0 + ' = ' + (10 + d0) + '），爸爸的岁数用含字母的式子怎样表示？' };
 }
 
-/* g5-down-u02-k003~k006：倍数特征 / 奇偶数 / 质合数 / 和的奇偶性 */
+/* g5-down-u02-k001~k006：因数倍数概念 / 因数倍数特征 / 倍数特征 / 奇偶数 / 质合数 / 和的奇偶性 */
 function buildNumberTheoryItem(rng, name) {
+  // P28-HOLLOW-03：k001 因数和倍数的概念（operations=[multiplication,division]，
+  // 证据行要 data.operation + relationAny[multiply-by-times|divide-share] + constructAny）
+  if (name.indexOf('因数和倍数') !== -1) {
+    var fa = ri(rng, 2, 8), fb = fa + ri(rng, 1, 9 - fa), fp = fa * fb;
+    var facStmt = fa + ' 和 ' + fb;
+    return { operation: 'mult',
+      stem: '在整数乘法中，两个乘数都是积的因数：' + fa + ' × ' + fb + ' = ' + fp
+        + '（也可看作 ' + fp + ' ÷ ' + fa + ' = ' + fb + '）。下面哪一组数是 ' + fp + ' 的因数？',
+      answer: facStmt,
+      options: [facStmt, fa + ' 和 ' + fp, fb + ' 和 ' + fp],
+      fill: '根据 ' + fa + ' × ' + fb + ' = ' + fp + ' 可知，____ 和 ____ 是 ' + fp + ' 的因数。',
+      apply: '礼品店把 ' + fp + ' 块月饼装盒，每盒 ' + fa + ' 块，正好装 ' + fb + ' 盒（'
+        + fa + ' × ' + fb + ' = ' + fp + '）。哪两个数是 ' + fp + ' 的因数？' };
+  }
+  // P28-HOLLOW-03：k002 因数与倍数的特征（operations=[multiplication]，
+  // 证据行要 data.operation + multiply-by-times + multiplication）
+  if (name.indexOf('因数与倍数') !== -1) {
+    var fn2 = ri(rng, 3, 9);
+    return { operation: 'mult',
+      stem: '用一个数依次乘 1、2、3……可以找它的倍数：' + fn2 + ' × 1 = ' + fn2 + '，'
+        + fn2 + ' × 2 = ' + (fn2 * 2) + '，' + fn2 + ' × 3 = ' + (fn2 * 3) + '。'
+        + fn2 + ' 最小的倍数是多少？',
+      answer: String(fn2),
+      options: [String(fn2), '1', String(fn2 * 2), '0'],
+      fill: fn2 + ' × 1 = ____，可见一个数最小的倍数就是它本身。',
+      apply: '计数器按 ' + fn2 + ' 的倍数累加：' + fn2 + ' × 1 = ' + fn2 + '，'
+        + fn2 + ' × 2 = ' + (fn2 * 2) + '，' + fn2 + ' × 3 = ' + (fn2 * 3)
+        + '……照这样能一直写下去吗？' + fn2 + ' 最小的倍数是多少？' };
+  }
   // 和的奇偶性（必须先于「奇数」分支）
   if (name.indexOf('奇偶性') !== -1 || name.indexOf('和的奇偶') !== -1) {
     var patterns = [

@@ -25,6 +25,173 @@
 
 ## 记录（新 → 旧）
 
+### P28-HOLLOW-03｜HOLLOW-01/02 收尾：修复垃圾清理 + 当前态数据统一（基线/规则/FINAL 旧文档/AI 记忆口径对齐）（2026-10-02）
+- modified:
+  - `tests/generator/p28-hollow-shape-themed.test.js`（核查未使用 require 诊断：`_bundle-env` 实为 E2E PracticeSession 依赖的副作用导入，删除会导致 6 个 E2E 用例「StrategyEngine 不可用」，恢复并补「副作用导入勿删」注释）
+  - `docs/00-BASELINE.md`（Generators 24/PRODUCTION 21→**23/20**，registry 运行时实测；生成器模块 18 个→17 个（classify.js 已于 HOLLOW-01 删除，含 index.js 共 18 个 .js）；Tests 62 文件/631 例→**64 文件/655 例**，npm test ~6s→~7s；generator-registry 目录注释 24 条→23 条；门禁链 631/631→655/655）
+  - `docs/03-POL-GENERATION.md`（Generator 收口段 24/PRODUCTION=21→23/20，状态分布表 21→20）
+  - `.trae/rules/ai-coding-workflow.md`（流水线第 8 步 check-all 口径 **26 PASS/0 FAIL→27 PASS / 0 FAIL / 1 SKIP**，注明浏览器项无 Chrome 时 SKIP 为本地常态）
+  - `docs/P28-FINAL-FREEZE.md`、`docs/FINAL-FREEZE.md`、`docs/FINAL-130-ACCEPTANCE.md`、`docs/FINAL-REPAIR-BASELINE.md`、`docs/FINAL-REPAIR-STATUS.md`、`docs/FINAL-REPAIR-DEFERRED.md`（顶部加历史快照/废止指引横幅：当前唯一基线以 `docs/00-BASELINE.md` 为准、冻结后变更看本日志；**正文历史数字一律不改写**——快照即档案；FINAL-REPAIR-BASELINE 原「AI 每次开始任务前必须读取此文件」指令同步改为废止指引，消除与 00-BASELINE「唯一当前基线」的双当前态冲突）
+  - `~/.trae-cn/memory/user_profile.md`（进度编号口径 P25-XX→当前 P28-XX，P25 归档；审计日志路径已在 docs/P28/）
+  - `~/.trae-cn/memory/projects/-Users-zhanggaozhang-Code-Homework-Help--p2-4ab44bde5372764f7069/project_memory.md`（Hard Constraints：check-all 口径 28 PASS→27 PASS/0 FAIL/1 SKIP；「开工必读 FINAL-REPAIR-*」三条改指 docs/00-BASELINE.md + P28 流水线规则；Engineering Conventions 增补 HOLLOW-01/02 当前态：classification 生成器退役、shape-recognition v4+SHAPE_THEME 66 KP 分派、空心探针 0 行；Lessons 增补主题 maker 三条教训）
+- deleted:
+  - `/tmp` 修复期临时草稿 14 个（仓库外，非追踪文件）：kp-chain-audit.js、kp-chain-predict.js、kp-edge.js、kp-final-stat.js、kp-flat-tags.js、kp-gen-tpl.js、kp-geo-probe.js、kp-geo-src-probe.js、kp-geo-watch.js、kp-hollow-final.js、kp-sem-audit.js、p1-stats-probe.js、shape-extract.js、shape-scenes.json
+- reason: 用户指令「检查遗漏、清理修复垃圾、统一数据防止后续 AI 回忆旧记忆恢复过时设定与代码」。证据采集：①registry 运行时 `records.length=23`、`generators/` 实存 17 模块+index=18 .js；②`find tests` = 64 文件、`npm test` = 655 用例；③规则文件与 6 份 FINAL/P28 旧文档仍写 26/28 PASS、24 Generator；④FINAL-REPAIR-BASELINE 自称「任务前必读/记录当前真实状态」，与 00-BASELINE「项目唯一当前基线」构成双当前态，且项目记忆 Hard Constraint 要求 AI 开工读它，是旧记忆复活的主入口；⑤新测试「未使用 require」诊断经复现实为副作用导入（误报性提示），保留并注释。遗漏对账：sf-1..sf-7 七步产物均在（check-all 27 PASS、探针 0、1570 重冻 FAIL=0、matrix 23 Gen、CHANGELOG），禁改文件（kbl/teaching/generation-matrix.json、kp-matrix.json、semantic-review.json、kbl/canonical/mappings.json、manifest）git status 确认未动；SHAPE_BORDERLINE 4 KP/20 行按既定范围不修。
+- tests: 改后重跑 `tests/generator/p28-hollow-shape-themed.test.js`（9/9）+ `npm test`（655/655）+ `node dev/check-all.js`（27 PASS / 0 FAIL / 1 SKIP，含 #20 历史数字扫描 PASS）
+- risk: 纯文档/记忆/测试卫生清理，**零生产代码行为变化**，无需重建 bundle、无需重冻；FINAL 旧文档只加横幅不改快照数字（档案纪律与 change-log 同）；删除仅及仓库外 /tmp 草稿；记忆文件位于 ~/.trae-cn 不属 git 仓库；不 git commit。
+
+### P28-HOLLOW-02｜shape-flat 空心全修：SHAPE_THEME 66 KP 教学素材表 + makeThemedShapeQuestion 统一 maker 接管五题型（2026-10-02）
+- modified:
+  - `shared/generator/generators/shape.js`（新增 SHAPE_THEME 66 KP 教学素材表——facts 真命题×3 / wrongs [假命题,误区]×3 / nums [设问,答案,互异数值]×3 / scenes [两步情境,参考答案]×3，按 17 形态族分组注释；新增 makeThemedShapeQuestion 统一 maker 与 numDistractors/numClean 数值干扰项派生；generate() 内分数乘整数守卫后接 SHAPE_THEME 分派，命中即接管 choice/judge/fill/geometry/apply，不落 flat 随机认图模板；补 2 个漏写 nums 条目（g5-down-u03-k001/k002）、27 个漏写 scenes 条目；63 个 apply scenes 末尾补「？」过 contextPresent 契约）
+  - `shared/generator/generator-registry.js`（shape-recognition version 3→4 + P28-HOLLOW-02 注释）
+  - `dev/check-kbl-uniqueness.js`（bundle 内嵌检测剥离 SHAPE_THEME「ID 引用键查表」，与 STAT_SHAPE/STAT_THEMES 同语义先例）
+  - `tests/generator/p28-hollow-shape-themed.test.js`（新建：66 KP×五题型 ≥263 行不落 SHAPE_FLAT 模板、题面含 KP 名、count=3 指纹互异、judge 假命题带 data.misconception、证据包络 mode/graphic/shapeName/steps 保持且不挂 data.operation、6 族 E2E 抽样）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（build:strategy/build:presentation 重建）
+  - `kbl/teaching/variation-profiles.json`、`kbl/teaching/misconception-profiles.json`（题面文案变更后 derive-variation-profiles / derive-misconceptions 重 derive）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.{json,md}`（1570 行证据重冻，FAIL rows=0）、`docs/archive/phases/p28/P28-GENERATOR-MATRIX.{json,md}`（重生成，23 Gen FAIL 0）
+- deleted: 无
+- reason: 空心探针打标 263 行高置信 shape-flat 空心 / 66 KP（全部由 generator:shape-recognition 承载）：flat 兜底按题种子随机取样平面图形产出「请写出该图形的名称/图中共有几个/下列哪个图形属于」等无 KP 特化模板题，与度量/运动/观察等子语义完全无关。按方案 1（P28-HOLLOW-01）先例的最小修改：单表 SHAPE_THEME + 统一 maker（证据包络与泛型路径一致，仅替换题面/答案/选项语义载荷），choice/fill 靠互异 operands、judge/geometry/apply 靠题面哈希保证 count>1 去重不塌缩；所有新题面以 KP 名前缀规避 SHAPE_FLAT 全部 11 个模板。SHAPE_BORDERLINE 4 KP/20 行与 calc 行不在本次范围。
+- tests: `tests/generator/p28-hollow-shape-themed.test.js` 9/9 PASS；`npm test` 655/655 PASS；derive-variation-profiles（1323 行成剖面、生成失败 0）+ derive-misconceptions（920 槽）重跑；探针复核 1570/1570 高置信空心 0 行 / 0 KP（263 行清零）；check-all 27 PASS / 0 FAIL / 1 SKIP（浏览器项 SKIP 正常）
+- risk: 66 KP 的 choice/judge/fill/geometry/apply 题面与答案整体更换（教学意图即如此），1570 冻结证据已重冻赐封；v=i%3 三确定性变式依赖每 KP nums 三数值互异（已逐一核验）；judge 真假由题种子 rng 决定，重跑确定；SHAPE_THEME 键为精确 canonical id，绑定外 KP 不命中、无副作用。
+
+### P28-HOLLOW-01｜方案 1 空心治理：25 统计 KP×5 行归 stats 形态组 + 因数倍数 8 行归 concept + 分数乘整数 4 行归 shape；generator:classification 退役（2026-10-02）
+- modified:
+  - `shared/generator/generator-registry.js`（stats 扩 6 题型/32 KP 并接管 25 统计/分类/概率 KP；删 classification CORE_RECORDS；cross 绑定迁移；concept 新增 g5-down-u02-k001/k002）
+  - `shared/generator/generators/stats.js`（新增 STAT_SHAPE 25KP→8 形态组查表、STAT_THEMES 主题素材、8 个形态组 maker；choice 补 data.sort、geo 数值选项 numPool 去重两真实 bug；本轮 8 maker 全部 v=i%3 三确定性变式修复 count=3 去重短产；4 处 judge 假命题补 data.misconception；line-chart 拆 line-chart/line-double/line-analyze 消除函数体 KP 字面量）
+  - `shared/generator/generators/index.js`（删 classify require/调用；ENGINE_VERSION=2.2.0；23 Generator）
+  - `shared/generator/core/semantic-parameters.js`（number-theory 正则补「因数」）
+  - `shared/generator/generators/concept-meaning.js`（buildNumberTheoryItem k001/k002 两分支，透传 item.operation）
+  - `shared/generator/generators/shape.js`（makeFractionTimesIntegerQuestion 按 qt 五分支参数化 + generate 守卫；严禁 data.operation）
+  - `kbl/mappings/generation-contract/math.json`、`shared/knowledge/mappings/generation-contract/math.json`（classify 25 行 pluginId: generator:classification→generator:stats）+ 两个 `manifest/manifest.json`（tools/kbl/build.js 重建 rootHash 20609e50…）
+  - `dev/p28/check-generator-matrix.js`（23 Gen；删 classification DECL；stats 等 DECL note 更新）、`check-generator-noninterference.js`（GEN_SPAN stats cell g3-down-u05-k002→g3-down-u06-k001）、`final-31-warn-attribution.js`、`final-50-apply-generators.js`、`check-dead-code.js`（classify.js DELETED 候选）
+  - `dev/check-kbl-uniqueness.js`（bundle 内嵌检测剥离 STAT_SHAPE/STAT_THEMES「ID 引用键查表」，与 knowledgePoints 数组/TEACHING_DENIALS 同语义先例）
+  - `tests/orchestration/p17-10-classify.test.js`（重写 C1–C4：映射 25 行、selector→stats、125 行 execute 全回显、KCV 反向闸门）
+  - `tests/generator/p28-hollow-plan1-native.test.js`（新建：因数 8 行→concept、分数乘整数 5 行→shape 原生承接断言）
+  - `tests/generator/p25-07-type-contracts.test.js`（3 个 judge 代表 KP 注释更新）
+  - `kbl/teaching/variation-profiles.json`、`kbl/teaching/misconception-profiles.json`（P27 derive 脚本按当前生成器重建，修复抽样行硬轴/evidenceRows 漂移）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.{json,md}`（重冻 1570 ALLOW FAIL=0）、`P28-GENERATOR-MATRIX.{json,md}`（重生成 23 Gen FAIL 0）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（重建）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - `shared/generator/generators/classify.js`（退役：仅数字排序单模板，25 个统计/分类/概率 KP 全部空心）
+- reason:
+  - 用户决策只做方案 1（25 统计 KP×5 行 + 因数倍数 8 行 + 分数乘整数非几何 4 行 ≈137 行空心），确认效果后再谈全修。形态组 maker 初版多个分支与 i 无关，count>1 会话指纹去重塌缩为 1（p17-14 T2 面临 FAIL），故全部改为 v=i%3 三确定性变式（同一证据 data、变体设问），保持 seed 确定性。
+- tests:
+  - 定向 51/51（p17-10 / p17-14 / p25-07 / p28-hollow-plan1-native）；`npm test` 646/646
+  - 冻结：1570 ALLOW / FAIL=0，只读复核 git diff=0；matrix 23 Gen（PRODUCTION=20 COMBINE-ONLY=1 DORMANT-CARRIER=2）FAIL 0；noninterference runtime=8 fail=0
+  - `node dev/check-all.js`：**27 PASS / 0 FAIL / 1 SKIP**
+  - 空心探针复核：方案 1 的 25 KP 无一残留；剩余 263 行高置信空心全部 shape-flat（shape-recognition 承载）——既有 backlog，属「是否全修」后续决策范围
+- risk:
+  - GEN_SPAN stats 观察 cell 换 g3-down-u06-k001：fill 去重指纹按 operand 排序归一、不含题面（duplicate-validator SEMANTIC_TYPES 无 fill），分类填空题 prompt 无数字时语义空间天然饱和为 1，非本任务回归；通用路径 KP 含数据数字可稳定 n=3，满足不夺权观察目的。
+  - `kbl/teaching/{generation-matrix,kp-matrix,semantic-review}.json` 与 `kbl/canonical/mappings.json` 残留 generator:classification：均为 P25 build-baseline 快照产物（历史事实记录），运行时权威为 `shared/knowledge/mappings/generation-contract/math.json`（已清零），无门禁校验冲突（check-all PASS 证实）；不回刷以免越界重写 P25 基线档案。
+  - variation/misconception profiles 已按 P27 derive 脚本重建；若未来 maker 文案再变，需重跑两 derive 脚本防抽样漂移。
+
+### P28-BASELINE-SYNC｜00-BASELINE 历史数字对齐当前真实状态（2026-10-02）
+- modified:
+  - `docs/00-BASELINE.md`（Tests：测试文件 58→62、用例/PASS 534→631、套件 9→17；目录分布补 `tests/generator-registry/`、`tests/shape/`、`tests/request/`、`tests/bridge/` 4 行；Sitemap：URL 381→382、组成 5 公共页→6 公共页（补 `select`）；Performance：`npm test` ~11s→~6s；门禁链与 Generated File Policy 内 534/381 旧数字同步）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason:
+  - P28-GEO-NATIVE 交付后基线文档三处数字落后于真实状态（用例数随测试增长、sitemap 早已含 select.html 共 382 URL）；用户明确要求更新。文档只做事实对齐，不改任何代码/数据/冻结产物。
+  - 交接摘要曾提到「26→27 PASS」落后，实际本文档无 check-all 计数（check-all 不在该文档门禁链表），无需改。
+- tests:
+  - `node dev/check-all.js`：27 PASS / 0 FAIL / 1 SKIP（含 #20 Doc 历史数字扫描）；纯文档改动，不涉及 npm test 与 bundle。
+- risk:
+  - 无。仅文档数字与事实对齐，无源码/测试/冻结文件改动。
+
+### P28-GEO-NATIVE｜11 个 geometry 空心行补原生 maker：分数乘法 4 + 长度面积 6 + 排水法体积 1（2026-10-02）
+- modified:
+  - `shared/generator/generator-registry.js`（3 条 CORE_RECORDS 补声明 `geometry`：arithmetic-mixed-calculation、money-measurement、application-word 的 capabilities/questionTypes 各加一项；KP 绑定列表与 KBL 映射均不动）
+  - `shared/generator/generators/shape.js`（新增 `makeFractionTimesIntegerQuestion`：g6-up-u02-k001「分数乘整数」单位分数条线段模型；geometry 分支按 semanticParams.name 命中「分数乘整数」时走该 maker，不落 flat 随机认图；k001 仍由 shape kp=1 承接，producer 不变）
+  - `shared/generator/generators/arithmetic.js`（新增 `makeFractionMultiplyGeometryQuestion`：k002 一个数乘分数（求一个数的几分之几）、k003 分配律线段模型、k004 连续求几分之几，按 semanticParams.name 分派；mixed 实例 capabilities 加 geometry；generate 循环 geometry 入口）
+  - `shared/generator/generators/money.js`（新增 `makeMeasurementGeometryQuestion`：长度 4 KP（认识厘米和米/选择合适长度单位/长度单位排序/进率）走刻度尺线段，面积 2 KP（常用面积单位/面积进率）走正方形/10×10 模型；generate 增 geometry 分派并跳过通用 graphic 覆盖；实例 capabilities 加 geometry）
+  - `shared/generator/generators/application.js`（新增 `makeDisplacementVolumeQuestion`：g5-down-u03-k006 排水法，长×宽×水面上升高度，cuboid 玻璃缸图；generate 增 geometry 入口；实例 capabilities 加 geometry）
+  - `shared/svg/svg-geometry.js`（SVGGeometry 复用挂载 `svg-diagram.segment` 为 `segment` 子类型，使 `{type:'geometry',subtype:'segment'}` 描述符可解析——证据规则要求 geometry 题 graphic.type 恒为 'geometry'；同一实现复用，未新增渲染器）
+  - `tests/generator/p28-geometry-native-makers.test.js`（新增：选择器精确路由 + 源码 maker 产出/TypeContract/SVG 真实渲染/语义关键词/不回落泛型认图 + 11 个 PracticeSession E2E，共 13 用例）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（重建，门禁 16/17 验证 source==bundle 与确定性）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json`、`.md`（显式 `--write` 重冻：仍 1570 行 FAIL=0；10 行 producer 由 shape-recognition 换原生生成器，k001 producer 不变但产出内容修复；shape 承载 421→371、mixed +3=35、money +6=50、application +1=121）
+  - `dev/p28/check-generator-matrix.js`（DECL 4 条 note 同步本次 geometry 声明与新承载行数；R1–R6 仍 FAIL 0）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无（临时探针脚本均在 /tmp，未入工作区）
+- reason:
+  - 全链路核对（375 KP → capability → 生成器 → 题型，1570 行）发现 11 个 geometry ALLOW 行「结构闭合、语义空心」：源 Excel 将分数乘法单元（4 KP，domain=图形与几何）与 6 个测量 KP、1 个排水法体积 KP 标在图形与几何域，但这些 KP 均为 shape-recognition 的 kp=0 泛型兜底（名义载体 selection-fill 不产几何），`deriveShapeTypeFromName` 对其名称无具体形状信号，落入 flat 随机认图——分数乘法 KP 产出「认平行四边形」、面积单位 KP 产出「认三角形」。
+  - 按用户决策「全保 1570，补原生 maker，尊重源 Excel domain 标注」：10 行由 kp=1 原生绑定生成器加 geometry 声明后经选择器既有打分（kp>capability>qt）自然接管，k001 已绑 shape 故在 shape 内补分支。不改 KBL 源数据、不加层、不加 shim、不加新生成器。
+  - 11 行图形全部经现成注册渲染器真实出 SVG（geometry.segment/square/rectangle/cuboid），并满足 kbl/teaching/evidence-rules.json 的 geometry 证据要求（data.mode=geometry、graphic.type=geometry、params.unit=cm）。
+- tests:
+  - 新增定向测试 13/13 通过；`npm test` 全链 631/631（原 618 +13）。
+  - `node dev/p28/check-generation-matrix-freeze.js --write` 重冻 1570 行 FAIL rows=0；只读复核 git diff=0。
+  - 静态预测比对：除预期 10 行 producer 变更外零连带（k001 producer 不变）。
+  - `node dev/check-all.js`：27 PASS / 0 FAIL / 1 SKIP（浏览器 E2E 跳过）。
+- risk:
+  - 低。选择器行为变化经 1570 行全量静态预测确认仅限 10 个目标 geometry 行；新增 maker 仅在 geometry 题型 + 对应 KP 名称命中时触发，其余题型路径（fill/apply/calc/choice/judge）分支与数据未动。
+  - 三条注册记录新增能力声明为「补欠声明」（其实现已新增对应 maker），form-bound 门 R4 校验通过；非目标 KP 的任何行不因声明扩大而改路由（kp=1 优先，目标 11 KP 外无 KP 同时被这些生成器绑定且需要 geometry）。
+  - 冻结证据文件已同步重冻，matrix-freeze 门禁恢复只读绿。
+
+### P28-FIX-C｜SemanticQuestion 归一化漏映射修复：normalizeSemanticQuestion 补透传 spiralLevel（2026-10-02）
+- modified:
+  - `shared/semantic/semantic-question.js`（`normalizeSemanticQuestion` 的 legacy→标准字段映射表 `mapped` 补 `spiralLevel: raw.spiralLevel` 一行，紧邻既有 D003 context 修复；非法/缺省仍由 `createSemanticQuestion` 的 `coerceInteger(raw.spiralLevel) || 1` 兜底，无逻辑外改动）
+  - `tests/presentation/renderer.test.js`（新增 P28-FIX-C 用例：normalize 保留 2/6、缺省回落 1、非法值回落 1，共 4 断言，挂在既有 response.layout 归一化透传用例旁）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（重建，门禁 16/17 验证 source==bundle 且构建确定性 hash 不变）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason:
+  - 24 个生成器均在题目载荷写入 `spiralLevel: plan.spiralLevel`，但所有题目在 RetryLoop 中必经 `normalizeSemanticQuestion`；其 legacy 映射表漏列 spiralLevel，导致 `createSemanticQuestion` 收到 undefined 后恒回落 1。与文件内已修复的 D003（context 同型漏映射）完全同构。
+  - 后果：`spiral.maxLevel` 钳制/竞争抬档/自适应目标档在 plan 层全部正确，却无法到达题目元数据——`practice-result.js` 学习记录螺旋档恒为 1、`render-format.js` 透传 UI 的 spiralLevel 恒为 1；题目内容不受影响（context/complexity/数值约束在 plan 期定型）。
+  - 属架构冻结表 SemanticQuestion 层（SSOT：shared/semantic/semantic-question.js）的字段契约补全，一行最小修改，不动 plan/生成器/学习者数据结构。
+- tests:
+  - 单元：`node --test tests/presentation/renderer.test.js` → 54/54 PASS（新增 4 断言全过）。
+  - 端到端：PracticeSession 高掌握 learnerProfile（mastery/confidence/recentAccuracy=0.95，attempts=10）× `math-g1-up-u01-k001`（maxLevel=2）自适应 calc 生成 3 题，`sq.spiralLevel` 由修复前恒 `[1,1,1]` 变为正确的 `[2,2,2]`。
+  - 手工直测 normalize：2→2、6→6、缺省→1、'abc'→1。
+  - `node dev/check-all.js` → **27 PASS / 0 FAIL / 1 SKIP**（28 项；15. Browser/E2E 因本机无浏览器跳过，与既有基线一致；5.Unit/6a 1570 真实生成/6b 冻结/10 Presentation/16 Bundle/17 Determinism 均 PASS）。
+- risk: 低。修复前所有归一化题目的 spiralLevel 事实恒为 1，本次仅让该字段反映 plan 已算出的正确值（1-6 整数，由 resolveSpiral 钳制保证），无新增字段、无默认值语义变化、不影响题目内容与难度；教学剖面派生（p27 两个 derive 脚本）grep 确认不消费 spiralLevel，冻结证据行不含该字段，故无需重建数据产物。
+
+---
+
+### P28-FIX-B｜Generator-KP 语义错绑修复：g3-up-u08-k001（初步认识分数）从 counting 移交 fraction-number + 证据规则/教学剖面/冻结证据追平（2026-10-02）
+- modified:
+  - `shared/generator/generator-registry.js`（`generator:counting` 的 knowledgePoints 移除 `math-g3-up-u08-k001`，仅保留 `math-g3-down-u08-k001`；`generator:fraction-number` 补绑该 KP，分数 KP 19→20；两处注释说明错绑根因与 meaning 派生）
+  - `shared/generator/generators/fraction.js`（头注释承载 KP 数 19→20，无逻辑改动；名称含「认识」经 NAME_RULES 派生 meaning maker）
+  - `kbl/teaching/evidence-rules.json`（k001 的 calc/fill/choice/apply 4 行 required 从计数搭配时代的 `data.mode=apply / data.steps=2 / data.questionType=*` 改为分数语义断言 `data.mode=fraction / data.subType=meaning / data.steps=1`，与同单元 k002 规则同构；forbidden 关系集不变）
+  - `kbl/teaching/variation-profiles.json`（确定性重建：1323 行剖面反映新路由真实产出，生成失败行 0）
+  - `kbl/teaching/misconception-profiles.json`（确定性重建：313 KP / 902 slot）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json`、`.md`（1570 行冻结证据 `--write` 重建；k001 四行 generator 由 counting 变为 fraction-number，FAIL rows=0）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（重建，bundle hash 门禁验证 source==bundle）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason:
+  - `math-g3-up-u08-k001`（初步认识分数，semantic.family=fraction）在运行时注册表唯一原生绑定为 `generator:counting`，其仅产乘法原理搭配题（"从 a 种水果和 b 种饮料中各选一种，a×b=？"），与分数语义完全无关；题面靠 counting.js 拼接 KP 名"初步认识分数："造成"挂分数名出乘法题"。同单元 k002-k005 均绑 fraction-number 唯独 k001 漏绑。
+  - 属架构冻结表 Generator 层（SSOT：generator-registry.js）的绑定修正，沿 P28-FIX-A 先例同步追平证据/剖面/冻结产物，不新增层、不新增生成器、不改 KBL 数据与 ALLOW 矩阵（1570 行 KP×QT 覆盖不变）。
+- tests:
+  - 定向 E2E：PracticeSession 固定 freeze seed 复跑 k001 × calc/fill/choice/apply，四行均路由 `generator:fraction-number`，产题形如"把一个圆平均分成 d 份取 1 份→1/d"，KpSemantic / TypeContract / Schema 全 PASS。
+  - 局部测试：`node --test tests/generator/p25-09-native-bindings.test.js tests/orchestration/p17-10-classify.test.js tests/generator/p27-variation-profile.test.js` → 26/26 PASS（p17-10 的 LEGACY_LEFT 清单含 k001 但仅约束 classification 映射，不受影响）。
+  - 矩阵冻结：`--write` 重建后只读复跑"与冻结产物完全一致（git diff=0）"。
+  - `node dev/check-all.js` → **27 PASS / 0 FAIL / 1 SKIP**（28 项；15. Browser/E2E 因本机无浏览器跳过，与既有基线一致）。
+- risk: 低。仅 1 个 KP 的 4 个 ALLOW 行从"语义错误的乘法搭配题"变为"语义正确的几分之一概念题"，题型/难度/数量契约不变；counting 仍绑定 g3-down-u08-k001（三下复习 KP，搭配题归属是否恰当属独立议题，本次按最小修改不动）；全部衍生数据均由确定性脚本从真实生成产出重建，无手工伪造。
+
+---
+
+### P28-FIX-A｜Generator-KP 双绑路由截胡修复：shape-recognition 移除 10 个 geometry 双绑 KP + 证据规则/变式剖面/易错点 overlay 同步追平（2026-10-02）
+- modified:
+  - `shared/generator/generator-registry.js`（shape-recognition 的 knowledgePoints 移除 10 个 P25-09 geometry 双绑 KP：g2-up-u05-k001/k005、g3-down-u04-k002/k004、g3-up-u03-k001/k002、g5-down-u03-k006、g6-up-u02-k002/k003/k004；注释同步说明截胡根因与回落机制）
+  - `kbl/teaching/evidence-rules.json`（40 条非 geometry 行的 required 移除 graphic/mode/steps/kind 字段断言，改为 fieldPresent(data.mode) 或 fieldPresent(data.operation) 存在性断言；geometry 行保持原样）
+  - `kbl/teaching/variation-profiles.json`（重建：1323 行剖面反映新路由下的真实生成产出）
+  - `kbl/teaching/misconception-profiles.json`（重建：902 slot 与剖面 evidenceRows 复算一致）
+  - `tests/generator/p25-09-native-bindings.test.js`（selector 测试新增 P28-FIX-A 豁免集：10 个 KP 的 geometry 行允许 kp=0 由 shape-recognition 经 form-bound 门 + capability 匹配承载）
+  - `docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json/.md`（1570 行冻结证据重建）
+  - `shared/engine/strategy-engine.bundle.js`、`shared/engine/presentation-engine.bundle.js`（重建）
+  - `docs/P28/change-log.md`（追加本记录）
+- deleted:
+  - 无
+- reason: 修复「生成器与知识点链接逻辑」审计发现的语义级路由 Bug：shape-recognition 同时绑定 10 个 KP（kp=1）且声明全部 6 种题型，version=3 使其在非 geometry 行也恒定胜出，导致「认识厘米和米」等计量/运算 KP 被出成图形计数/识别题。移除双绑后，geometry 行经 form-bound 门 + capability 匹配仍由 shape-recognition 承载（kp=0 但 generator 正确），非 geometry 行回落到 money-measurement / arithmetic-mixed-calculation / application-word 本体生成器（kp=1）。
+- tests: ① 10/10 路由验证（5 个非 geometry 行回落正确 + 5 个 geometry 行仍由 shape 承载）；② `node --test "tests/**/*.test.js"` 全绿（含 selector 豁免集、证据规则、变式剖面、易错点 overlay 复算一致）；③ `node dev/check-educational-generation.js --extended` 1323 PASS / 0 FAIL；④ `node dev/p28/check-generation-matrix-freeze.js --write` 1570 行冻结重建，FAIL=0；⑤ `node dev/check-all.js` **27 PASS / 0 FAIL / 1 SKIP**（SKIP 同前：#15 浏览器 E2E）。
+- risk: 低。10 个 KP 的非 geometry 行从「语义错误的图形题」变为「语义正确的计量/运算题」，题型覆盖不变；geometry 行路由不变（仍 shape-recognition）。证据规则/变式剖面/易错点 overlay 均基于真实生成产出重建，无手工伪造。
+
+---
+
 ### P28-CLEANUP-02c｜derive-qt-intent 归档输出路径修复 + qt-intent 派生追平（去 OOXML 富文本泄漏）+ p25 报告相对链接深度修正（2026-10-01）
 - modified:
   - `dev/p25/derive-qt-intent.js`（与 CLEANUP-02 同病的第三个 P25 脚本：DOCS_DIR `docs/p25/`→`docs/archive/phases/p25/` 并补 mkdir（此前重跑 ENOENT 半崩，json 已写而 md 失败）；md 内产物相对链接 `../../kbl/`→`../../../../kbl/`（归档位加深两级）；头部/console 同步）

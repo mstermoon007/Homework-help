@@ -148,7 +148,9 @@
     // number-theory 必须全局最先：①先于 number-concept（倍数特征/奇偶/质合也含「数」字）；
     // ②先于 times-concept 的裸「倍」——「2、5、3的倍数的特征」「因数与倍数的特征」在 bundle
     // 降级全扫时会被 /倍/ 抢先命中 times-concept，与 Node 族收窄路径（number-theory）不一致。
-    nameConceptRule('number-theory', ['number-sense'], /倍数的特征|奇数|偶数|质数|合数|奇偶性/),
+    // P28-HOLLOW-03：补「因数」——g5-down-u02-k001「因数和倍数的概念」否则落 times-concept
+    // （canonical 375 KP 中含「因数」者仅 k001/k002，均属本族）。
+    nameConceptRule('number-theory', ['number-sense'], /因数|倍数的特征|奇数|偶数|质数|合数|奇偶性/),
     // —— 概念理解族（concept-meaning 生成器消费）——
     nameConceptRule('times-concept', ['multiple-ratio'], /倍/),
     nameConceptRule('angle-concept', ['geometric-figure'], /角(的认识|各部分)/, /两条射线/),

@@ -191,6 +191,15 @@ test('P28-FORM-CONTRACT-01 Schema 认 response.layout 枚举 + normalize 透传'
   assert.ok((vBad.warnings || []).some(function (w) { return w.field === 'response.layout'; }), '应出 response.layout warning');
 });
 
+// ============ P28-FIX-C：normalize 必须透传 spiralLevel（与 D003 context 同型漏映射） ============
+test('P28-FIX-C normalizeSemanticQuestion 透传 spiralLevel（保留/缺省/非法兜底）', () => {
+  const SQ = SemanticQuestion;
+  assert.strictEqual(SQ.normalizeSemanticQuestion({ questionType: 'calc', prompt: 'p', answer: { value: 1 }, spiralLevel: 2 }).spiralLevel, 2, 'spiralLevel=2 应保留');
+  assert.strictEqual(SQ.normalizeSemanticQuestion({ questionType: 'calc', prompt: 'p', answer: { value: 1 }, spiralLevel: 6 }).spiralLevel, 6, 'spiralLevel=6 应保留');
+  assert.strictEqual(SQ.normalizeSemanticQuestion({ questionType: 'calc', prompt: 'p', answer: { value: 1 } }).spiralLevel, 1, '缺省应回落 1');
+  assert.strictEqual(SQ.normalizeSemanticQuestion({ questionType: 'calc', prompt: 'p', answer: { value: 1 }, spiralLevel: 'abc' }).spiralLevel, 1, '非法值应回落 1');
+});
+
 // ============ P2: density 契约生效（Issue #1 延伸） ============
 test('P2 density=compact → 卡片带 compact 类', () => {
   const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 8 } }, 0, { mode: 'screen', density: 'compact' });

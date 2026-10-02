@@ -25,7 +25,861 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':stats:' + i;
 }
 
+/* ==================================================================
+ * P28-HOLLOW-01：25 个统计/分类/概率 KP 的原生形态组
+ *
+ * 旧 generator:classification 仅有「数字排序」单模板，85 个非 classify 行与统计 KP
+ * 语义全部空心。退役后按 kbl/teaching/evidence-rules.json 的形态组在 stats 内原生承接。
+ * 形态分派用 STAT_SHAPE 精确查 canonical KP（plan.semanticParams.knowledgePointId 同源），
+ * 教学内容由 STAT_THEMES 逐 KP 提供（分类标准/互异标准/结论），题干均带 KP 名称。
+ * 同名 KP（g4-down-u08-k003 与 g4-up-u06-k002 均名「复式条形统计图」）证据形态不同，
+ * 名称分派无法区分，故形态表按精确 ID 声明，非猜测子串。
+ * ================================================================== */
+
+// 形态组 id 与证据规则一一对应（见 kbl/teaching/evidence-rules.json）
+var STAT_SHAPE = {
+  'math-g2-up-u01-k001': 'classify-geo',   // 分类的含义（低年级几何表征行）
+  'math-g2-up-u01-k002': 'classify-geo',   // 单一标准分类
+  'math-g2-up-u01-k003': 'classify',       // 不同标准分类
+  'math-g2-up-u01-k004': 'classify',       // 逐层分类
+  'math-g2-up-u01-k005': 'classify',       // 统计方法
+  'math-g2-up-u01-k006': 'classify',       // 简单统计表
+  'math-g3-down-u05-k001': 'classify-geo', // 数据的收集方法（几何表征行）
+  'math-g3-down-u05-k002': 'classify',     // 数据的整理方法
+  'math-g3-down-u05-k003': 'classify',     // 复式统计表
+  'math-g3-down-u05-k004': 'classify',     // 统计的应用
+  'math-g4-down-u08-k001': 'classify',     // 平均数的意义（禁止 data.operation）
+  'math-g4-down-u08-k002': 'classify',     // 求平均数的方法（禁止 data.operation）
+  'math-g4-down-u08-k003': 'classify',     // 复式条形统计图（同名 KP，形态=classify）
+  'math-g4-down-u08-k004': 'lunch-chart',  // 解决问题——营养午餐
+  'math-g4-up-u06-k001': 'bar-single',     // 单式条形统计图（mode=qt/steps=1）
+  'math-g4-up-u06-k002': 'bar-double',     // 复式条形统计图（同名 KP，形态=template/operation）
+  'math-g4-up-u06-k003': 'bar-double',     // 横向与纵向复式条形统计图
+  'math-g4-up-u06-k004': 'classify',       // 读图与数据分析
+  'math-g5-up-u07-k001': 'classify',       // 事件发生的确定性与不确定性
+  'math-g5-up-u07-k002': 'probability-size',   // 可能性的大小
+  'math-g5-up-u07-k003': 'probability-infer',  // 根据可能性大小进行推测（apply 行要 diagram）
+  'math-g5-up-u07-k004': 'classify',       // 掷一掷（选学）
+  'math-g5-down-u07-k001': 'line-chart',   // 单式折线统计图（steps=1）
+  'math-g5-down-u07-k002': 'line-double',  // 复式折线统计图（steps=2）
+  'math-g5-down-u07-k003': 'line-analyze'  // 读图与分析（steps=1）
+};
+
+// 每个 KP 一套真实分类教学内容：标准、3 个干扰标准、事物、分组、应用结论
+function statTheme(criterion, altCriteria, items, groups, conclusion) {
+  return { criterion: criterion, altCriteria: altCriteria, items: items,
+    groups: groups, conclusion: conclusion };
+}
+
+var STAT_THEMES = {
+  'math-g2-up-u01-k001': statTheme('颜色', ['形状', '大小', '用途'],
+    ['红圆卡', '红方卡', '蓝圆卡', '黄三角卡', '红三角卡', '黄方卡'],
+    { '红色': ['红圆卡', '红方卡', '红三角卡'], '蓝色': ['蓝圆卡'], '黄色': ['黄三角卡', '黄方卡'] },
+    '分类后不用逐个数，就能很快说出每种颜色的卡片各有几张。'),
+  'math-g2-up-u01-k002': statTheme('用途', ['颜色', '长短', '价格'],
+    ['铅笔', '橡皮', '尺子', '转笔刀', '水彩笔', '文具盒'],
+    { '用来书写': ['铅笔', '水彩笔'], '用来测量': ['尺子'], '用来擦拭或收纳': ['橡皮', '转笔刀', '文具盒'] },
+    '全组自始至终只用一个标准分类，结果不重复、不遗漏。'),
+  'math-g2-up-u01-k003': statTheme('颜色', ['大小', '材质', '扣眼个数'],
+    ['红圆扣', '红方扣', '蓝圆扣', '蓝方扣', '黄圆扣', '黄方扣'],
+    { '红色': ['红圆扣', '红方扣'], '蓝色': ['蓝圆扣', '蓝方扣'], '黄色': ['黄圆扣', '黄方扣'] },
+    '同一堆纽扣按颜色分是一种结果，还可以换一个标准（形状）再分一次。'),
+  'math-g2-up-u01-k004': statTheme('先分动物和植物、再分鱼类和鸟类', ['颜色', '体重', '叫声'],
+    ['鲫鱼', '麻雀', '杨树', '鲤鱼', '柳树', '老鹰'],
+    { '会游的鱼': ['鲫鱼', '鲤鱼'], '会飞的鸟': ['麻雀', '老鹰'], '树木': ['杨树', '柳树'] },
+    '先分成动物、植物两大类，再把动物细分成鱼类和鸟类，这就是逐层分类。'),
+  'math-g2-up-u01-k005': statTheme('调查的场合', ['卡片颜色', '同学的身高', '当天的日期'],
+    ['举手计数', '画正字记录', '投票表决', '逐个询问', '问卷调查'],
+    { '现场快速统计': ['举手计数', '画正字记录', '逐个询问'], '正式调查': ['投票表决', '问卷调查'] },
+    '不同统计方法适合不同场合，人少时举手、画正字最快，人多且分散时用问卷。'),
+  'math-g2-up-u01-k006': statTheme('天气情况', ['气温高低', '风向', '日期单双'],
+    ['周一晴', '周二阴', '周三晴', '周四雨', '周五晴', '周六阴'],
+    { '晴天': ['周一晴', '周三晴', '周五晴'], '阴天': ['周二阴', '周六阴'], '雨天': ['周四雨'] },
+    '把每天的天气分类填入统计表，一眼就能看出哪种天气最多。'),
+  'math-g3-down-u05-k001': statTheme('数据的来源', ['数据的大小', '记录的速度', '纸张的颜色'],
+    ['举手统计', '投票统计', '实地测量', '上网查询', '问卷调查'],
+    { '直接收集的数据': ['举手统计', '投票统计', '实地测量', '问卷调查'], '间接获取的数据': ['上网查询'] },
+    '统计前要先确定收集方法：可以直接调查测量，也可以查阅现成资料。'),
+  'math-g3-down-u05-k002': statTheme('喜欢的水果类别', ['姓名笔画', '性别', '所在年级'],
+    ['小红喜欢苹果', '小明喜欢香蕉', '小丽喜欢苹果', '小强喜欢葡萄', '小美喜欢香蕉', '小军喜欢苹果'],
+    { '喜欢苹果': ['小红喜欢苹果', '小丽喜欢苹果', '小军喜欢苹果'], '喜欢香蕉': ['小明喜欢香蕉', '小美喜欢香蕉'], '喜欢葡萄': ['小强喜欢葡萄'] },
+    '原始记录按类别整理并计数后，才能看出喜欢每种水果的各有几人。'),
+  'math-g3-down-u05-k003': statTheme('性别加运动项目', ['年龄大小', '当天天气', '器材颜色'],
+    ['男生跳绳', '女生跳绳', '男生跑步', '女生踢毽', '男生篮球', '女生跑步'],
+    { '男生项目': ['男生跳绳', '男生跑步', '男生篮球'], '女生项目': ['女生跳绳', '女生踢毽', '女生跑步'] },
+    '把男生、女生两类数据按同一项目合到一张复式统计表里，才便于比较。'),
+  'math-g3-down-u05-k004': statTheme('问题是否需要统计', ['问题字数', '提问时间', '同学性别'],
+    ['全班最爱吃什么水果', '1加1等于几', '一个月里雨天有几天', '自己的名字'],
+    { '需要统计才能回答': ['全班最爱吃什么水果', '一个月里雨天有几天'], '不用统计就知道': ['1加1等于几', '自己的名字'] },
+    '只有需要收集大量数据回答的问题才做统计，不是每个问题都要调查。'),
+  'math-g4-down-u08-k001': statTheme('与平均身高130cm比较', ['同学姓氏', '鞋码大小', '头发长短'],
+    ['身高125cm', '身高130cm', '身高135cm', '身高140cm', '身高120cm'],
+    { '高于平均数': ['身高135cm', '身高140cm'], '等于平均数': ['身高130cm'], '低于平均数': ['身高125cm', '身高120cm'] },
+    '平均数代表一组数据的整体水平，数据可以围绕它上下波动。'),
+  'math-g4-down-u08-k002': statTheme('分数段', ['考试科目', '字迹是否工整', '考试日期'],
+    ['85分', '90分', '95分', '80分', '100分'],
+    { '90分及以上': ['90分', '95分', '100分'], '90分以下': ['85分', '80分'] },
+    '先求总数再除以人数得到平均数，用分数段整理可以检验平均成绩落在哪一段。'),
+  'math-g4-down-u08-k003': statTheme('性别加图书类别', ['图书厚薄', '封面颜色', '借书日期'],
+    ['男生借故事书8本', '女生借故事书10本', '男生借科普书6本', '女生借科普书7本'],
+    { '男生借书': ['男生借故事书8本', '男生借科普书6本'], '女生借书': ['女生借故事书10本', '女生借科普书7本'] },
+    '复式条形图要按两个类别（性别、图书种类）整理数据，长条才能成对比较。'),
+  'math-g4-down-u08-k004': statTheme('荤素搭配', ['菜品价格', '餐具颜色', '餐厅名称'],
+    ['红烧肉', '清蒸鱼', '炒青菜', '拌黄瓜', '炸鸡腿', '烧豆腐'],
+    { '荤菜': ['红烧肉', '清蒸鱼', '炸鸡腿'], '素菜': ['炒青菜', '拌黄瓜', '烧豆腐'] },
+    '配菜要荤素搭配，再对照热量和脂肪标准判断套餐是否合格。'),
+  'math-g4-up-u06-k001': statTheme('答案的获取方式', ['月份名称', '条形的颜色', '标题的字数'],
+    ['哪个月借出最多', '四个月一共借出多少', '最多比最少多多少', '哪个月借出最少'],
+    { '看图直接读出': ['哪个月借出最多', '哪个月借出最少'], '需要计算得到': ['四个月一共借出多少', '最多比最少多多少'] },
+    '读条形统计图时要分清哪些信息直接读、哪些要先计算。'),
+  'math-g4-up-u06-k002': statTheme('是否需要跨组计算', ['项目名称', '图例颜色', '调查年份'],
+    ['男生参加篮球的有几人', '男女生参加篮球相差几人', '篮球组一共有几人', '女生参加哪项最多'],
+    { '单组直接读取': ['男生参加篮球的有几人', '女生参加哪项最多'], '两组计算得到': ['男女生参加篮球相差几人', '篮球组一共有几人'] },
+    '复式条形图既能读单组数据，也能把男女生成对比较或求合计。'),
+  'math-g4-up-u06-k003': statTheme('读图步骤的先后', ['直条的颜色', '纸张的大小', '学校名称'],
+    ['先看标题知道统计内容', '看图例分清两组直条', '比较成对直条的长短', '读出对应的数据'],
+    { '读图准备': ['先看标题知道统计内容', '看图例分清两组直条'], '比较与读数': ['比较成对直条的长短', '读出对应的数据'] },
+    '横向和纵向复式条形图只是直条方向不同，数据和读法完全一致。'),
+  'math-g4-up-u06-k004': statTheme('统计图能否回答', ['直条粗细', '版面位置', '标点符号'],
+    ['喜欢苹果的有多少人', '明天谁会来买水果', '香蕉比梨多几人', '下周气温是多少'],
+    { '图中数据能回答': ['喜欢苹果的有多少人', '香蕉比梨多几人'], '图中数据不能回答': ['明天谁会来买水果', '下周气温是多少'] },
+    '数据分析只能基于统计图中的数据，没有根据的猜测不能当作结论。'),
+  'math-g5-up-u07-k001': statTheme('事件发生的可能性', ['事件字数', '发生地点', '记录方式'],
+    ['太阳从东方升起', '明天本地会下雨', '掷一枚硬币正面朝上', '标准大气压下水加热到100℃沸腾', '买彩票中一等奖'],
+    { '一定发生': ['太阳从东方升起', '标准大气压下水加热到100℃沸腾'], '可能发生': ['明天本地会下雨', '掷一枚硬币正面朝上', '买彩票中一等奖'] },
+    '确定事件一定发生或一定不发生，不确定事件可能发生也可能不发生。'),
+  'math-g5-up-u07-k002': statTheme('可能性的大小', ['球的颜色名称', '摸球的先后', '盒子的形状'],
+    ['10红1白摸到红球', '10红1白摸到白球', '5红5白摸到红球', '5红5白摸到白球'],
+    { '可能性大': ['10红1白摸到红球'], '可能性小': ['10红1白摸到白球'], '可能性相等': ['5红5白摸到红球', '5红5白摸到白球'] },
+    '个体在总数中所占数量越多，出现的可能性越大；数量相等时可能性相等。'),
+  'math-g5-up-u07-k003': statTheme('由出现次数推测数量多少', ['球的颜色深浅', '球的大小', '摸球的时间'],
+    ['摸20次红球16次白球4次', '转指针红色8次蓝色2次', '掷骰子6点只出现1次', '抽奖100次一等奖1次'],
+    { '推测数量（机会）多': ['摸20次红球16次白球4次', '转指针红色8次蓝色2次'], '推测数量（机会）少': ['掷骰子6点只出现1次', '抽奖100次一等奖1次'] },
+    '重复试验中某结果出现次数多，可以推测它对应的数量可能更多，但推测不是确定结论。'),
+  'math-g5-up-u07-k004': statTheme('点数和的可能性大小', ['骰子颜色', '投掷姿势', '桌面材质'],
+    ['点数和是2', '点数和是3', '点数和是5', '点数和是7', '点数和是9', '点数和是12'],
+    { '可能性大（和为5至9）': ['点数和是5', '点数和是7', '点数和是9'], '可能性小（和为2、3、11、12）': ['点数和是2', '点数和是3', '点数和是12'] },
+    '两个骰子点数和的组合数不同，和为5、6、7、8、9的组合多，掷出的可能性更大。'),
+  'math-g5-down-u07-k001': statTheme('折线描述的变化方式', ['数据颜色', '网格线粗细', '标题长短'],
+    ['周一到周三气温持续上升', '周三到周五气温持平', '周五到周六气温下降', '全周最高气温在周六'],
+    { '描述上升、下降或持平': ['周一到周三气温持续上升', '周三到周五气温持平', '周五到周六气温下降'], '描述极值': ['全周最高气温在周六'] },
+    '折线的升降陡缓直接反映数据随时间的变化趋势，最高点最低点也要读准。'),
+  'math-g5-down-u07-k002': statTheme('单条趋势与双线比较', ['图例颜色', '纸张大小', '城市名称'],
+    ['第一条线整体在上升', '两条线的差距在变大', '两条线在周三相交', '只有第二条线在下降'],
+    { '描述单条折线趋势': ['第一条线整体在上升', '只有第二条线在下降'], '两条折线对比': ['两条线的差距在变大', '两条线在周三相交'] },
+    '复式折线图既要分别看每条线的趋势，又要比较两条线的差距和交点。'),
+  'math-g5-down-u07-k003': statTheme('结论是否有数据支撑', ['折线颜色', '坐标格数', '星期的顺序'],
+    ['本周气温先降后升', '周末两天温度最低', '周三到周四温差最大', '下周一定会更热'],
+    { '有数据支撑的结论': ['本周气温先降后升', '周末两天温度最低', '周三到周四温差最大'], '没有根据的推测': ['下周一定会更热'] },
+    '根据折线图分析要对图上每一个点说话，趋势可描述，未来数据不能凭空断定。')
+};
+
+function statGroupsArr(theme) {
+  return Object.keys(theme.groups).map(function (label) {
+    return { label: label, members: theme.groups[label] };
+  });
+}
+
+function statPartitionText(theme) {
+  return statGroupsArr(theme).map(function (g) {
+    return g.label + '：' + g.members.join('、');
+  }).join('；');
+}
+
+function statSq(plan, context, i, prompt, answerVal, answerMode, data, explanation) {
+  var answerObj = (typeof answerVal === 'boolean')
+    ? { value: answerVal, acceptable: [] }
+    : { value: String(answerVal), acceptable: [] };
+  if (explanation) answerObj.explanation = explanation;
+  return {
+    knowledgePointId: pkp(plan),
+    questionType: plan.questionTypeId,
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFor(plan, context, i),
+    prompt: prompt,
+    answer: answerObj,
+    answerMode: answerMode,
+    data: data
+  };
+}
+
+function statName(plan) {
+  return (plan && plan.semanticParams && plan.semanticParams.name) || '统计';
+}
+
+/**
+ * 纯分类形态组（groups B/C 及 chart/probability 组的 judge/classify 行）：
+ * 证据规则要求 fill/apply/judge/choice 也以 data.mode='classify' 承载分类语义，
+ * choice 另需 data.sort=true；classify 三件套由 mode=classify+sort+items 自动派生。
+ * 每个分支 3 个 i 确定性变式（v=i%3），保证 count=3 的练习不产生重复题。
+ */
+function makeClassifyShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  var groupsArr = statGroupsArr(theme);
+  var list = theme.items.join('、');
+  var data = { mode: 'classify', steps: 1, questionType: qt };
+  var prompt, answer, explanation, mode = 'input';
+  var countsText = groupsArr.map(function (g) { return '「' + g.label + '」' + g.members.length + ' 项'; }).join('，');
+  var gMax = groupsArr.slice().sort(function (a, b) { return b.members.length - a.members.length; })[0];
+
+  if (qt === 'classify') {
+    data.sort = { by: theme.criterion };
+    data.items = theme.items.slice();
+    data.groups = theme.groups;
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类整理：' + list
+        + '。请写出分类结果。';
+      answer = statPartitionText(theme);
+    } else if (v === 1) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。分好后数一数，每一类各有多少项？';
+      answer = countsText;
+    } else {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。一共分成几类？哪一类包含的事物最多？';
+      answer = '一共 ' + groupsArr.length + ' 类，「' + gMax.label + '」最多，有 ' + gMax.members.length + ' 项';
+    }
+  } else if (qt === 'fill') {
+    if (v === 0) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。分到「' + groupsArr[0].label + '」这一类的事物一共有 ____ 项。';
+      answer = String(groupsArr[0].members.length);
+    } else if (v === 1) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。分到「' + groupsArr[1].label + '」这一类的事物一共有 ____ 项。';
+      answer = String(groupsArr[1].members.length);
+    } else {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。所有参与分类的事物合起来一共有 ____ 项。';
+      answer = String(theme.items.length);
+    }
+  } else if (qt === 'apply') {
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：先把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。再回答问题——' + theme.conclusion;
+      answer = statPartitionText(theme) + '。' + theme.conclusion;
+    } else if (v === 1) {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。先完成分类，再数出每一类各有多少项。';
+      answer = countsText;
+    } else {
+      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
+        + '。哪一类包含的事物最多？比最少的一类多几项？';
+      var gMin = groupsArr.slice().sort(function (a, b) { return a.members.length - b.members.length; })[0];
+      answer = '「' + gMax.label + '」最多（' + gMax.members.length + ' 项），比「' + gMin.label
+        + '」多 ' + (gMax.members.length - gMin.members.length) + ' 项';
+    }
+  } else if (qt === 'judge') {
+    var flat = [];
+    groupsArr.forEach(function (g) {
+      g.members.forEach(function (m) { flat.push({ item: m, group: g.label }); });
+    });
+    var pick = flat[v];
+    var otherLabels = groupsArr.map(function (g) { return g.label; }).filter(function (l) { return l !== pick.group; });
+    var isTrue = v !== 1;
+    var shownGroup = isTrue ? pick.group : otherLabels[v % otherLabels.length];
+    prompt = name + '：按「' + theme.criterion + '」分类，「' + pick.item + '」应该分到「'
+      + shownGroup + '」这一类。这个说法对吗？';
+    answer = isTrue;
+    mode = 'judge';
+    explanation = isTrue
+      ? '「' + pick.item + '」按' + theme.criterion + '确实属于「' + pick.group + '」，分类正确。'
+      : '「' + pick.item + '」按' + theme.criterion + '应属于「' + pick.group + '」，不是「' + shownGroup + '」，分类错误。';
+    if (!isTrue) data.misconception = '分类标准混淆：「' + pick.item + '」按' + theme.criterion
+      + '应分到「' + pick.group + '」，误分到了「' + shownGroup + '」。';
+  } else { // choice
+    data.sort = true;
+    data.items = theme.items.slice();
+    mode = 'choice';
+    if (v === 0) {
+      var opts0 = theme.altCriteria.slice(0, 3).concat([theme.criterion]);
+      data.options = opts0;
+      data.correctIndex = opts0.indexOf(theme.criterion);
+      var partition = groupsArr.map(function (g) { return g.label + '（' + g.members.length + '项）'; }).join('、');
+      prompt = name + '：小明把下面的事物分成了几组（' + partition + '）：' + list
+        + '。他最可能是按哪个标准分类的？';
+      answer = theme.criterion;
+    } else if (v === 1) {
+      var opts1 = [theme.altCriteria[0]].concat(theme.altCriteria.slice(1, 3), [theme.criterion]);
+      data.options = opts1;
+      data.correctIndex = opts1.indexOf(theme.altCriteria[0]);
+      prompt = name + '：对下面的事物做分类：' + list
+        + '。下面四个标准中，哪一个最不适合用来给这组事物分类？';
+      answer = theme.altCriteria[0];
+    } else {
+      // 同组配对：锚点取最大类的首个成员，正确项=同类另一成员，干扰项取其他类成员
+      var anchorGroup = gMax;
+      var anchor = anchorGroup.members[0];
+      var partner = anchorGroup.members[1];
+      var outsiders = [];
+      groupsArr.forEach(function (g) {
+        if (g.label === anchorGroup.label) return;
+        g.members.forEach(function (m) { outsiders.push(m); });
+      });
+      var opts2 = [partner].concat(outsiders.slice(0, 3));
+      data.options = opts2;
+      data.correctIndex = 0;
+      prompt = name + '：按「' + theme.criterion + '」分类时，「' + anchor
+        + '」所在的那一类还有哪个事物？';
+      answer = partner;
+    }
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
+}
+
+/** 组 A：低年级几何表征行——分类任务配 unit=cm 的 segment 几何描述符；v=i%3 三变式 */
+function makeClassifyGeoShape(plan, context, i, name, theme) {
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+
+  var groupsArr = statGroupsArr(theme);
+  var total = theme.items.length;
+  var gMax = groupsArr.slice().sort(function (a, b) { return b.members.length - a.members.length; })[0];
+  var part = gMax.members.length;
+  var rest = total - part;
+  function geo(unitPx) {
+    var params = { total: total, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(total) };
+    if (unitPx) params.unitPx = unitPx;
+    return { type: 'geometry', subtype: 'segment', params: params };
+  }
+  var list = theme.items.join('、');
+  var data = { mode: qt, steps: 1, questionType: qt, graphic: geo(qt === 'judge' || qt === 'apply' ? 25 : null) };
+  var prompt, answer, explanation, mode = 'input';
+  // 三个读数目标：第一段 part / 第二段 rest / 整条 total
+  var targets = [
+    { label: '第一段', n: part },
+    { label: '第二段（另一类）', n: rest },
+    { label: '整条线段（一共）', n: total }
+  ];
+
+  if (qt === 'fill') {
+    var t = targets[v];
+    prompt = name + '：看图，整条线段表示全部 ' + total + ' 个事物（共 ' + total + 'cm），'
+      + '按「' + theme.criterion + '」把「' + gMax.label + '」的 ' + part + ' 个分在第一段。'
+      + '事物：' + list + '。' + t.label + '表示 ____ 个。';
+    answer = String(t.n);
+  } else if (qt === 'choice') {
+    var numPool = [part];
+    [rest, total, part - 1, part + 2, rest + 1, total + 1].forEach(function (n) {
+      if (n >= 1 && numPool.indexOf(n) === -1 && numPool.length < 4) numPool.push(n);
+    });
+    var numericOpts = Rng.shuffle(rng, numPool.map(function (n) { return n + '个'; }));
+    var tc = targets[v];
+    prompt = name + '：看图，线段按「' + theme.criterion + '」把 ' + total + ' 个事物分成两段，'
+      + '第一段是「' + gMax.label + '」。' + tc.label + '表示多少个？';
+    answer = tc.n + '个';
+    data.options = numericOpts;
+    data.correctIndex = numericOpts.indexOf(tc.n + '个');
+    mode = 'choice';
+  } else if (qt === 'judge') {
+    var tj = targets[v];
+    var isTrue = v !== 1;
+    var shownCount = isTrue ? tj.n : tj.n + 1;
+    prompt = name + '：看图，有人说' + tj.label + '表示 '
+      + shownCount + ' 个' + (tj.label === '第一段' ? '（标出 ' + shownCount + 'cm）' : '') + '。这个说法对吗？';
+    answer = isTrue;
+    mode = 'judge';
+    explanation = isTrue
+      ? '图上' + tj.label + '对应的数量就是 ' + tj.n + ' 个，说法正确。'
+      : '图上' + tj.label + '对应 ' + tj.n + ' 个，不是 ' + shownCount + ' 个，说法错误。';
+    if (!isTrue) data.misconception = '线段图读数错误：' + tj.label + '对应 ' + tj.n
+      + ' 个，题中读成了 ' + shownCount + ' 个。';
+  } else { // apply，steps=2
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：看图，' + total + 'cm 的整条线段表示 ' + total + ' 个事物，'
+        + '第一段 ' + part + 'cm 表示「' + gMax.label + '」的 ' + part + ' 个。'
+        + '先数出另一类有几个，再求两类事物一共多少个。';
+      answer = String(total);
+    } else if (v === 1) {
+      prompt = name + '：看图，整条线段表示 ' + total + ' 个事物，第一段表示「' + gMax.label
+        + '」的 ' + part + ' 个。两段表示的数量相差几个？';
+      answer = String(Math.abs(part - rest));
+    } else {
+      prompt = name + '：看图，' + total + ' 个事物分成两段，第一段表示「' + gMax.label
+        + '」的 ' + part + ' 个。两段分别表示多少个？';
+      answer = part + '个和' + rest + '个';
+    }
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
+}
+
+/** 组 E：单式条形统计图（mode=qt、steps=1，无 graphic 强制；带 chart 增强真实读题） */
+var BAR_SINGLE_SERIES = [
+  { label: '一月', value: 12 }, { label: '二月', value: 18 },
+  { label: '三月', value: 9 }, { label: '四月', value: 15 }
+];
+function makeBarSingleShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var series = BAR_SINGLE_SERIES;
+  var max = series.slice().sort(function (a, b) { return b.value - a.value; })[0];
+  var min = series.slice().sort(function (a, b) { return a.value - b.value; })[0];
+  var sum = series.reduce(function (acc, s) { return acc + s.value; }, 0);
+  var mar = series[2]; // 三月 9 本
+  var apr = series[3];
+  var graphic = { type: 'chart', subtype: 'bar',
+    params: { title: '四年级各班图书角月借阅量', yLabel: '本', data: series } };
+  var data = { mode: qt, steps: 1, questionType: qt, graphic: graphic };
+  var prompt, answer, explanation, mode = 'input';
+
+  if (qt === 'apply') {
+    if (v === 0) {
+      prompt = name + '：观察条形统计图，哪个月借出的图书最多？借出多少本？';
+      answer = max.label + '，' + max.value + '本';
+    } else if (v === 1) {
+      prompt = name + '：观察条形统计图，哪个月借出的图书最少？借出多少本？';
+      answer = min.label + '，' + min.value + '本';
+    } else {
+      prompt = name + '：观察条形统计图，这四个月一共借出图书多少本？';
+      answer = sum + '本';
+      data.steps = 2;
+    }
+  } else if (qt === 'choice') {
+    if (v === 2) {
+      var optsN = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：观察条形统计图，借出 ' + mar.value + ' 本图书的是哪个月？';
+      answer = mar.label;
+      data.options = optsN;
+      data.correctIndex = optsN.indexOf(mar.label);
+    } else {
+      var target = v === 0 ? max : min;
+      var opts = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：观察条形统计图，借出图书最' + (v === 0 ? '多' : '少') + '的是哪个月？';
+      answer = target.label;
+      data.options = opts;
+      data.correctIndex = opts.indexOf(target.label);
+    }
+    mode = 'choice';
+  } else if (qt === 'fill') {
+    if (v === 0) {
+      prompt = name + '：观察条形统计图，借出图书最多的月份是____，这个月借出 ____ 本。';
+      answer = max.label + '，' + max.value + '本';
+    } else if (v === 1) {
+      prompt = name + '：观察条形统计图，借出图书最少的月份是____，这个月借出 ____ 本。';
+      answer = min.label + '，' + min.value + '本';
+    } else {
+      prompt = name + '：观察条形统计图，四月借出图书 ____ 本。';
+      answer = String(apr.value);
+    }
+  } else { // judge：三个确定性读数断言
+    var claims = [
+      { s: apr, shown: apr.value, isTrue: true },
+      { s: series[0], shown: apr.value, isTrue: false }, // 一月 12 本≠15
+      { s: series[1], shown: series[1].value, isTrue: true } // 二月 18 本
+    ];
+    var c = claims[v];
+    prompt = name + '：看条形图判断：「' + c.s.label + '借出图书 ' + c.shown + ' 本」——对吗？';
+    answer = c.isTrue;
+    mode = 'judge';
+    explanation = c.isTrue
+      ? '条形图中' + c.s.label + '对应的借阅量就是 ' + c.s.value + ' 本，说法正确。'
+      : '条形图中' + c.s.label + '借阅量是 ' + c.s.value + ' 本，不是 ' + c.shown + ' 本，说法错误。';
+    if (!c.isTrue) data.misconception = '条形图读数错误：' + c.s.label + '借阅量应为 ' + c.s.value
+      + ' 本，题中读成了 ' + c.shown + ' 本。';
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
+}
+
+/** 组 F：复式条形统计图（apply/fill 要 data.operation；choice/judge 要 data.template） */
+var BAR_DOUBLE_SERIES = [
+  { label: '篮球', a: 18, b: 10 }, { label: '跳绳', a: 12, b: 16 },
+  { label: '跑步', a: 9, b: 7 }, { label: '踢毽', a: 6, b: 13 }
+];
+function makeBarDoubleShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var series = BAR_DOUBLE_SERIES;
+  var basketball = series[0]; // a18 b10
+  var rope = series[1];       // a12 b16
+  var run = series[2];        // a9 b7
+  var kick = series[3];       // a6 b13
+  var girlMax = series.slice().sort(function (x, y) { return y.b - x.b; })[0];
+  var boyMax = series.slice().sort(function (x, y) { return y.a - x.a; })[0];
+  var graphic = { type: 'chart', subtype: 'bar',
+    params: { title: '五年级男女生最喜欢的运动', yLabel: '人数', data: series } };
+  var data = { mode: qt, steps: 1, questionType: qt, graphic: graphic, template: 'double-bar-compare' };
+  var prompt, answer, explanation, mode = 'input';
+
+  if (qt === 'apply') {
+    data.operation = 'add';
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：复式条形统计图中，篮球项目男生 ' + basketball.a + ' 人、女生 ' + basketball.b
+        + ' 人。参加篮球项目的一共有多少人？列式：' + basketball.a + ' + ' + basketball.b + ' = ？';
+      answer = String(basketball.a + basketball.b);
+    } else if (v === 1) {
+      prompt = name + '：复式条形统计图中，跳绳项目男生 ' + rope.a + ' 人、女生 ' + rope.b
+        + ' 人。参加跳绳项目的一共有多少人？列式：' + rope.a + ' + ' + rope.b + ' = ？';
+      answer = String(rope.a + rope.b);
+    } else {
+      var boysTotal = basketball.a + rope.a + run.a + kick.a;
+      prompt = name + '：复式条形统计图给出了四个项目的男女生人数。男生参加这四个项目的一共有多少人？'
+        + '列式：' + basketball.a + ' + ' + rope.a + ' + ' + run.a + ' + ' + kick.a + ' = ？';
+      answer = String(boysTotal);
+    }
+  } else if (qt === 'fill') {
+    data.operation = 'add';
+    data.steps = 2;
+    if (v === 0) {
+      prompt = name + '：复式条形统计图中，篮球项目男生 ' + basketball.a + ' 人、女生 ' + basketball.b
+        + ' 人。参加篮球项目的一共多少人？' + basketball.a + ' + ' + basketball.b + ' = ____（人）';
+      answer = String(basketball.a + basketball.b);
+    } else if (v === 1) {
+      prompt = name + '：复式条形统计图中，跳绳项目男生 ' + rope.a + ' 人、女生 ' + rope.b
+        + ' 人。参加跳绳项目的一共多少人？' + rope.a + ' + ' + rope.b + ' = ____（人）';
+      answer = String(rope.a + rope.b);
+    } else {
+      var boysTwo = run.a + kick.a;
+      prompt = name + '：复式条形统计图中，跑步项目男生 ' + run.a + ' 人，踢毽项目男生 ' + kick.a
+        + ' 人。这两个项目的男生一共多少人？' + run.a + ' + ' + kick.a + ' = ____（人）';
+      answer = String(boysTwo);
+    }
+  } else if (qt === 'choice') {
+    mode = 'choice';
+    if (v === 0) {
+      var opts = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看复式条形统计图，女生参加人数最多的是哪个项目？';
+      answer = girlMax.label;
+      data.options = opts;
+      data.correctIndex = opts.indexOf(girlMax.label);
+    } else if (v === 1) {
+      var optsB = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看复式条形统计图，男生参加人数最多的是哪个项目？';
+      answer = boyMax.label;
+      data.options = optsB;
+      data.correctIndex = optsB.indexOf(boyMax.label);
+    } else {
+      var totalB = basketball.a + basketball.b;
+      var numOpts = Rng.shuffle(rng, [totalB, totalB - 2, totalB + 2, totalB + 4].map(function (n) { return n + '人'; }));
+      prompt = name + '：看复式条形统计图，参加篮球项目的一共有多少人？';
+      answer = totalB + '人';
+      data.options = numOpts;
+      data.correctIndex = numOpts.indexOf(totalB + '人');
+    }
+  } else { // judge：三个确定性断言；data.template + data.shownAnswer
+    var gap = basketball.a - basketball.b;
+    var ropeGap = rope.b - rope.a;
+    var claims = [
+      { text: '篮球项目男生比女生多 ' + gap + ' 人', shownAnswer: gap, isTrue: true },
+      { text: '篮球项目男生比女生多 ' + (gap + 1) + ' 人', shownAnswer: gap + 1, isTrue: false },
+      { text: '跳绳项目女生比男生多 ' + ropeGap + ' 人', shownAnswer: ropeGap, isTrue: true }
+    ];
+    var c = claims[v];
+    prompt = name + '：看复式条形图判断：「' + c.text + '」——对吗？';
+    answer = c.isTrue;
+    data.shownAnswer = c.shownAnswer;
+    mode = 'judge';
+    explanation = c.isTrue
+      ? '对照复式条形图读数，' + c.text + '，说法正确。'
+      : '对照复式条形图，篮球男女生相差 ' + gap + ' 人，不是 ' + c.shownAnswer + ' 人，说法错误。';
+    if (!c.isTrue) data.misconception = '复式条形图比较错误：篮球男女生相差 ' + gap
+      + ' 人，题中说成了 ' + c.shownAnswer + ' 人。';
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data, explanation);
+}
+
+/** 组 D：营养午餐（apply/choice/fill 行 mode=apply + questionType + chart；judge/classify 走分类） */
+var LUNCH_SERIES = [
+  { label: '猪肉炖粉条', value: 2462 }, { label: '炸鸡排', value: 1254 },
+  { label: '香菇油菜', value: 911 }, { label: '韭菜豆芽', value: 755 }
+];
+function makeLunchChartShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'judge' || qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var series = LUNCH_SERIES;
+  var pork = series[0], fry = series[1], veg = series[2], bean = series[3];
+  var max = series.slice().sort(function (a, b) { return b.value - a.value; })[0];
+  var min = series.slice().sort(function (a, b) { return a.value - b.value; })[0];
+  var graphic = { type: 'chart', subtype: 'bar',
+    params: { title: '常见菜热量（千焦）', yLabel: '千焦', data: series } };
+  var data = { mode: 'apply', steps: 1, questionType: qt, graphic: graphic };
+  var prompt, answer, mode = 'input';
+
+  if (qt === 'apply') {
+    if (v === 0) {
+      prompt = name + '：条形图给出了四种菜每份的热量。搭配一份套餐，选炸鸡排和香菇油菜，'
+        + '这两个菜一共有多少千焦？';
+      answer = String(fry.value + veg.value);
+    } else if (v === 1) {
+      prompt = name + '：条形图给出了四种菜每份的热量。一份猪肉炖粉条加一份韭菜豆芽，'
+        + '这两个菜一共有多少千焦？';
+      answer = String(pork.value + bean.value);
+    } else {
+      prompt = name + '：条形图给出了四种菜每份的热量。热量最高的菜比热量最低的菜多多少千焦？';
+      answer = String(max.value - min.value);
+      data.steps = 2;
+    }
+  } else if (qt === 'choice') {
+    mode = 'choice';
+    if (v === 0) {
+      var opts = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看条形图，四种菜中热量最高的是哪一种？';
+      answer = max.label;
+      data.options = opts;
+      data.correctIndex = opts.indexOf(max.label);
+    } else if (v === 1) {
+      var optsMin = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看条形图，四种菜中热量最低的是哪一种？';
+      answer = min.label;
+      data.options = optsMin;
+      data.correctIndex = optsMin.indexOf(min.label);
+    } else {
+      var optsV = Rng.shuffle(rng, series.map(function (s) { return s.label; }));
+      prompt = name + '：看条形图，每份热量是 ' + fry.value + ' 千焦的是哪一种菜？';
+      answer = fry.label;
+      data.options = optsV;
+      data.correctIndex = optsV.indexOf(fry.label);
+    }
+    data.choiceForm = true;
+  } else { // fill
+    var fills = [
+      { dish: bean, ask: '韭菜豆芽' },
+      { dish: veg, ask: '香菇油菜' },
+      { dish: pork, ask: '猪肉炖粉条' }
+    ];
+    var f = fills[v];
+    prompt = name + '：看条形图，' + f.ask + '每份的热量是 ____ 千焦。';
+    answer = String(f.dish.value);
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data);
+}
+
+/** 组 G：折线统计图（apply/choice/fill 行 mode=apply + questionType + chart；judge/classify 走分类） */
+var LINE_HIGH = [
+  { label: '周一', value: 24 }, { label: '周二', value: 22 }, { label: '周三', value: 26 },
+  { label: '周四', value: 28 }, { label: '周五', value: 25 }, { label: '周六', value: 30 },
+  { label: '周日', value: 27 }
+];
+var LINE_LOW = [16, 15, 18, 19, 17, 21, 20];
+function makeLineShape(plan, context, i, name, theme, isDouble, isAnalyze) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'judge' || qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var series = isDouble
+    ? LINE_HIGH.map(function (s, si) { return { label: s.label, a: s.value, b: LINE_LOW[si] }; })
+    : LINE_HIGH.slice();
+  var hi = LINE_HIGH.slice().sort(function (x, y) { return y.value - x.value; })[0];
+  var lo = LINE_HIGH.slice().sort(function (x, y) { return x.value - y.value; })[0];
+  var graphic = { type: 'chart', subtype: 'line',
+    params: { title: isDouble ? '一周最高气温与最低气温' : '一周气温变化', data: series } };
+  var applySteps = isDouble ? 2 : 1;
+  var data = { mode: 'apply', steps: applySteps, questionType: qt, graphic: graphic };
+  var prompt, answer, mode = 'input';
+  var highSum = LINE_HIGH.reduce(function (acc, s) { return acc + s.value; }, 0); // 182
+  var fri = LINE_HIGH[4]; // 周五 25
+
+  if (qt === 'apply') {
+    if (isDouble) {
+      var satA = series[5].a, satB = series[5].b;
+      if (v === 0) {
+        prompt = name + '：看复式折线统计图（实线最高气温、虚线最低气温）。'
+          + '先读出周六的两个气温，再算周六最高气温比最低气温高多少℃？';
+        answer = (satA - satB) + '℃';
+      } else if (v === 1) {
+        prompt = name + '：看复式折线统计图（实线最高气温、虚线最低气温）。'
+          + '周六的最高气温和最低气温分别是多少℃？这两个气温一共是多少℃？';
+        answer = satA + '℃和' + satB + '℃，一共' + (satA + satB) + '℃';
+      } else {
+        prompt = name + '：看复式折线统计图，这一周出现过的最高气温和最低气温各是多少℃？相差多少℃？';
+        var wHi = LINE_HIGH.slice().sort(function (x, y) { return y.value - x.value; })[0].value;
+        var wLo = LINE_LOW.slice().sort(function (x, y) { return x - y; })[0];
+        answer = '最高 ' + wHi + '℃，最低 ' + wLo + '℃，相差 ' + (wHi - wLo) + '℃';
+      }
+    } else if (isAnalyze) {
+      if (v === 0) {
+        prompt = name + '：看折线统计图，说一说这一周气温整体怎样变化？最高、最低分别出现在哪天、是多少℃？';
+        answer = '周二降到最低 ' + lo.value + '℃，随后波动上升，周六最高 ' + hi.value + '℃';
+      } else if (v === 1) {
+        prompt = name + '：看折线统计图，这一周气温最高的是星期几？是多少℃？';
+        answer = hi.label + '，' + hi.value + '℃';
+      } else {
+        prompt = name + '：看折线统计图，这一周气温最低的是星期几？是多少℃？';
+        answer = lo.label + '，' + lo.value + '℃';
+      }
+    } else {
+      if (v === 0) {
+        prompt = name + '：看折线统计图，气温最高的是星期几？是多少℃？';
+        answer = hi.label + '，' + hi.value + '℃';
+      } else if (v === 1) {
+        prompt = name + '：看折线统计图，气温最低的是星期几？是多少℃？';
+        answer = lo.label + '，' + lo.value + '℃';
+      } else {
+        prompt = name + '：看折线统计图，这一周的最高气温（每天一个）加起来一共是多少℃？';
+        answer = highSum + '℃';
+        data.steps = 2;
+      }
+    }
+  } else if (qt === 'choice') {
+    mode = 'choice';
+    data.choiceForm = true;
+    var target;
+    if (v === 0) target = hi;
+    else if (v === 1) target = lo;
+    else target = fri;
+    var opts = Rng.shuffle(rng, LINE_HIGH.map(function (s) { return s.label; }));
+    prompt = v === 2
+      ? name + '：看折线统计图，最高气温是 ' + fri.value + '℃ 的是星期几？'
+      : name + '：看折线统计图，' + (v === 0 ? '最高气温' : '最低气温') + '出现在星期几？';
+    answer = target.label;
+    data.options = opts;
+    data.correctIndex = opts.indexOf(target.label);
+  } else { // fill
+    if (v === 0) {
+      prompt = name + '：看折线统计图填空：这一周的最高气温是 ____ ℃，出现在星期____。';
+      answer = hi.value + '℃，' + hi.label;
+    } else if (v === 1) {
+      prompt = name + '：看折线统计图填空：这一周的最低气温是 ____ ℃，出现在星期____。';
+      answer = lo.value + '℃，' + lo.label;
+    } else {
+      prompt = name + '：看折线统计图填空：周四的最高气温是 ____ ℃。';
+      answer = LINE_HIGH[3].value + '℃';
+    }
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data);
+}
+
+/** 组 H：可能性的大小（apply/choice/fill 行 mode=apply + questionType；judge/classify 走分类） */
+function makeProbabilitySizeShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt === 'judge' || qt === 'classify') return makeClassifyShape(plan, context, i, name, theme);
+  var rng = Rng.createSeededRandom(seedFor(plan, context, i));
+  var bag = { '红球': 8, '白球': 3, '黄球': 1 };
+  var colors = Object.keys(bag);
+  var maxColor = colors.slice().sort(function (a, b) { return bag[b] - bag[a]; })[0];
+  var minColor = colors.slice().sort(function (a, b) { return bag[a] - bag[b]; })[0];
+  var data = { mode: 'apply', steps: 1, questionType: qt };
+  var prompt, answer, mode = 'input';
+  var desc = colors.map(function (c) { return bag[c] + '个' + c; }).join('、');
+  var total = colors.reduce(function (acc, c) { return acc + bag[c]; }, 0);
+
+  if (qt === 'apply') {
+    if (v === 0) {
+      prompt = name + '：盒子里有 ' + desc + '（球除颜色外完全相同），任意摸出一个球，'
+        + '摸到哪种颜色球的可能性最大？为什么？';
+      answer = maxColor + '；' + maxColor + '数量最多，所以摸到的可能性最大';
+    } else if (v === 1) {
+      prompt = name + '：盒子里有 ' + desc + '（球除颜色外完全相同），任意摸出一个球，'
+        + '摸到哪种颜色球的可能性最小？为什么？';
+      answer = minColor + '；' + minColor + '数量最少，所以摸到的可能性最小';
+    } else {
+      prompt = name + '：盒子里有 ' + desc + '（球除颜色外完全相同），任意摸出一个球，'
+        + '摸到可能性最大的球和可能性最小的球各是什么颜色？';
+      answer = '可能性最大的是' + maxColor + '，可能性最小的是' + minColor;
+    }
+  } else if (qt === 'choice') {
+    mode = 'choice';
+    data.choiceForm = true;
+    if (v === 0) {
+      var opts = Rng.shuffle(rng, colors.slice());
+      prompt = name + '：盒子里有 ' + desc + '，任意摸出一个球，摸到哪种球的可能性最大？';
+      answer = maxColor;
+      data.options = opts;
+      data.correctIndex = opts.indexOf(maxColor);
+    } else if (v === 1) {
+      var optsMin = Rng.shuffle(rng, colors.slice());
+      prompt = name + '：盒子里有 ' + desc + '，任意摸出一个球，摸到哪种球的可能性最小？';
+      answer = minColor;
+      data.options = optsMin;
+      data.correctIndex = optsMin.indexOf(minColor);
+    } else {
+      var optsN = Rng.shuffle(rng, colors.slice());
+      prompt = name + '：盒子里有 ' + desc + '，任意摸出一个球，摸到数量有 ' + bag['白球'] + ' 个的是哪种球？';
+      answer = '白球';
+      data.options = optsN;
+      data.correctIndex = optsN.indexOf('白球');
+    }
+  } else { // fill
+    if (v === 0) {
+      prompt = name + '：盒子里有 ' + desc + '，任意摸一个球，摸到____球的可能性最大。';
+      answer = maxColor;
+    } else if (v === 1) {
+      prompt = name + '：盒子里有 ' + desc + '，任意摸一个球，摸到____球的可能性最小。';
+      answer = minColor;
+    } else {
+      prompt = name + '：盒子里有 ' + desc + '，一共有 ____ 个球。';
+      answer = String(total);
+    }
+  }
+  return statSq(plan, context, i, prompt, answer, mode, data);
+}
+
+/** 组 I：根据可能性推测——apply 行要 diagram 图（unit=个）；其余走分类形态；v=i%3 三变式 */
+function makeProbabilityInferShape(plan, context, i, name, theme) {
+  var qt = plan.questionTypeId;
+  var v = ((i % 3) + 3) % 3;
+  if (qt !== 'apply') return makeClassifyShape(plan, context, i, name, theme);
+  var red = 16, white = 4;
+  var graphic = { type: 'diagram', subtype: 'brace',
+    params: { left: red, right: white, unit: '个' } };
+  var data = { mode: 'apply', steps: 1, questionType: 'apply', graphic: graphic };
+  var intro = name + '：盒子里装有红球和白球（每组小球表示 1 个，左组●是红球 ' + red
+    + ' 个，右组○是白球 ' + white + ' 个，见下图）。小组做摸球试验，每次摸一个、记下颜色后放回，'
+    + '重复 20 次，结果摸到红球 16 次、白球 4 次。';
+  var prompt, answer;
+  if (v === 0) {
+    prompt = intro + '根据试验结果推测：盒中哪种球可能更多？再摸一次最可能摸到什么球？';
+    answer = '红球可能更多，再摸一次最可能摸到红球';
+  } else if (v === 1) {
+    prompt = intro + '根据试验结果推测：盒中红球和白球哪种可能更少？为什么？';
+    answer = '白球可能更少；试验中摸到白球只有 4 次，明显少于红球的 16 次';
+  } else {
+    prompt = intro + '20 次试验中摸到红球的次数比白球多几次？据此推测盒中哪种球可能更多？';
+    answer = '多 ' + (red - white) + ' 次；推测红球可能更多';
+    data.steps = 2;
+  }
+  return statSq(plan, context, i, prompt, answer, 'input', data);
+}
+
+function makeShapedStatsQuestion(plan, context, i) {
+  var kpId = (plan.semanticParams && plan.semanticParams.knowledgePointId) || pkp(plan);
+  var shape = STAT_SHAPE[kpId];
+  var name = statName(plan);
+  var theme = STAT_THEMES[kpId];
+  switch (shape) {
+    case 'classify':
+      return makeClassifyShape(plan, context, i, name, theme);
+    case 'classify-geo':
+      return makeClassifyGeoShape(plan, context, i, name, theme);
+    case 'bar-single':
+      return makeBarSingleShape(plan, context, i, name, theme);
+    case 'bar-double':
+      return makeBarDoubleShape(plan, context, i, name, theme);
+    case 'lunch-chart':
+      return makeLunchChartShape(plan, context, i, name, theme);
+    case 'line-chart':
+      return makeLineShape(plan, context, i, name, theme, false, false);
+    case 'line-double':
+      return makeLineShape(plan, context, i, name, theme, true, false);
+    case 'line-analyze':
+      return makeLineShape(plan, context, i, name, theme, false, true);
+    case 'probability-size':
+      return makeProbabilitySizeShape(plan, context, i, name, theme);
+    case 'probability-infer':
+      return makeProbabilityInferShape(plan, context, i, name, theme);
+    default:
+      return null;
+  }
+}
+
 function makeStatsQuestion(plan, context, i, kp) {
+  var shapedId = (plan.semanticParams && plan.semanticParams.knowledgePointId) || pkp(plan);
+  if (STAT_SHAPE[shapedId]) return makeShapedStatsQuestion(plan, context, i);
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   // P25-09：名称以 selector 注入的 semanticParams.name 为准（kp={} 占位曾使分派恒落 chart-read）。
   var name = (plan && plan.semanticParams && plan.semanticParams.name)
@@ -482,8 +1336,9 @@ function createStatsGenerator(spec) {
     subject: 'math',
     // P25-09：补 fill/choice——数据收集/时间类 native KP 的 ALLOW 含 fill/choice；
     // fill 由 finisher 补空位，choice 读图题在源码内自建选项（bar-chart/chart-read 分支）。
-    capabilities: ['apply', 'calc', 'fill', 'choice'],
-    questionTypes: ['apply', 'calc', 'fill', 'choice'],
+    // P28-HOLLOW-01：25 个统计/分类/概率 KP 的 judge/classify 行由 stats 形态组原生承接。
+    capabilities: ['apply', 'calc', 'fill', 'choice', 'judge', 'classify'],
+    questionTypes: ['apply', 'calc', 'fill', 'choice', 'judge', 'classify'],
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {

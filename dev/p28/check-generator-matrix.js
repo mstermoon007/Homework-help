@@ -9,12 +9,12 @@
 //
 // 数据来源：
 //   - GENERATOR_MATRIX 声明表（下方 DECL，人工审计结论，本文件内嵌纯数据）
-//   - registry（shared/generator/generator-registry.js，24 条记录，动态；P28-CLEANUP-02 后）
+//   - registry（shared/generator/generator-registry.js，23 条记录，动态；P28-HOLLOW-01 后）
 //   - P28-08 冻结证据（docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json，1570 行实际承载，动态）
 //   - 生成契约 carrier（shared/knowledge/mappings/generation-contract/math.json，动态）
 //
 // 判定规则：
-//   R1 覆盖：registry 24 个 id 与 DECL 一一对应（无遗漏/无多余）
+//   R1 覆盖：registry id 与 DECL 一一对应（无遗漏/无多余）
 //   R2 题型：DECL.supportedQuestionTypes === registry record.questionTypes（规范 7 类，无旧令牌）
 //   R3 声明完整性：semanticFamily / inputContract / outputContract / validator 非空
 //   R4 声明一致性：冻结证据 actualProducerTypes ⊆ 声明题型（无未声明产出）
@@ -71,7 +71,7 @@ var DECL = {
     inputContract: '同 arithmetic-addition（op=mixed；operationSet 算子集）',
     outputContract: '同上（data.operation=mixed）',
     validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'PRODUCTION', note: 'op=mixed'
+    status: 'PRODUCTION', note: 'op=mixed；P28-GEO-NATIVE：声明 +geometry，g6 分数乘法 k002-k004 geometry 行走线段/面积模型 maker（3 行）'
   },
   'generator:selection-fill': {
     family: 'selection', kblFamily: 'integer-arithmetic',
@@ -92,7 +92,7 @@ var DECL = {
     inputContract: 'plan + constraints',
     outputContract: 'answerMode=input; prompt=算式+“=shown（对还是错？）”; data{mode:judge,steps,shownResult}',
     validator: 'pipeline(kpSemantic+TypeContract[booleanAnswer]+schema)',
-    status: 'DORMANT-CONTRACT-CARRIER', note: '重复能力：contract 126 行 judge 名义载体，实际 0 产出（judge 由 shape/position/classification 覆盖）'
+    status: 'DORMANT-CONTRACT-CARRIER', note: '重复能力：contract 126 行 judge 名义载体，实际 0 产出（judge 由 shape/position/stats 覆盖）'
   },
   // FINAL-20：complex-calc dormant，从生产 bundle 排除。GENERATOR_CONTRACTS 条目移除。
   'generator:shape-recognition': {
@@ -100,7 +100,7 @@ var DECL = {
     inputContract: 'plan + semanticParams.name（deriveShapeTypeFromName 派生具体图形）',
     outputContract: 'choice4/judge/fill/geometry/calc; data{graphic{type:geometry,subtype},options,correctIndex}; 度量 calc 含列式',
     validator: 'pipeline(kpSemantic+TypeContract[geometry:graphicPresent]+schema)',
-    status: 'PRODUCTION', note: '1570 最大承载（421 行）；88 KP 绑定'
+    status: 'PRODUCTION', note: '1570 最大承载；75 KP 绑定；P28-GEO-NATIVE：分数乘整数(k001) 五行走单位分数条 maker（producer 不变，shape 内部修复）；P28-HOLLOW-01：3 个图形分类 KP 解绑交 stats'
   },
   'generator:position-direction': {
     family: 'position', kblFamily: 'spatial-reasoning',
@@ -114,14 +114,14 @@ var DECL = {
     inputContract: 'plan + semanticParams.name+concept（deriveMeasureKind: rmb/length/area/mass/time/capacity）',
     outputContract: 'fill/choice/judge/apply/calc; data{kind,operation,originalAmount/targetUnit/fromUnit/toUnit,options}; graphic currency/rectangle',
     validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'PRODUCTION', note: '12 KP 绑定；模块级 rng 非逐题确定'
+    status: 'PRODUCTION', note: '12 KP 绑定；模块级 rng 非逐题确定；P28-GEO-NATIVE：声明 +geometry，6 个长度/面积 KP geometry 行走刻度尺线段/正方形面积模型 maker（6 行）'
   },
   'generator:application-word': {
     family: 'application', kblFamily: 'word-application',
     inputContract: 'plan only（不读 semanticParams）；模板+随机数驱动（模板由难度闸）',
     outputContract: '模板题; data{mode,steps,template,numbers,relation,options,correctIndex,shownAnswer}; answer=原始 string/boolean（契约偏差，由下游归一）; graphic 矩形虚线',
     validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'PRODUCTION', note: '33 KP 绑定；answer 不走 {value,acceptable}（收口发现）'
+    status: 'PRODUCTION', note: '32 KP 绑定；answer 不走 {value,acceptable}（收口发现）；P28-GEO-NATIVE：声明 +geometry，g5-down-u03-k006 geometry 行走排水法测体积（长方体缸）maker（1 行）；P28-HOLLOW-01：3 个统计图表 KP 解绑交 stats'
   },
   'generator:counting': {
     family: 'counting', kblFamily: 'multiplicative-relation',
@@ -135,21 +135,21 @@ var DECL = {
     inputContract: 'plan + semanticParams.name（推理 subtype 派生）',
     outputContract: 'apply/calc/fill/choice; data{mode,steps,operation,options,correctIndex}',
     validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'PRODUCTION', note: '15 KP 绑定'
+    status: 'PRODUCTION', note: '14 KP 绑定；P28-HOLLOW-01：g5-up-u07-k002（可能性大小判断）解绑交 stats'
   },
   'generator:stats': {
     family: 'stats', kblFamily: 'statistics-probability',
-    inputContract: 'plan + semanticParams.name（统计/时间/日历 subtype 派生）',
-    outputContract: 'apply/calc/fill/choice; data{mode:apply,graphic{type:chart},choiceForm/judgeForm/calcForm,options}; judge 经 data.judgeForm 产出',
+    inputContract: 'plan + semanticParams.name（统计/时间/日历/概率 subtype + STAT_SHAPE 25KP 形态组查表）',
+    outputContract: 'apply/calc/fill/choice/judge/classify; 8 形态组原生 maker; data{mode,graphic{type:chart/geometry/diagram},options,correctIndex,sort,items,groups}; judge answer boolean',
     validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'PRODUCTION', note: '欠声明 judge：产出 judgeForm 但能力数组无 judge（收口发现）'
+    status: 'PRODUCTION', note: '32 KP 绑定；P28-HOLLOW-01：classification 退役，25 统计/分类/概率 KP 的五类行（125 行）由 8 形态组原生 maker 承接，judge/classify 声明已补齐'
   },
   'generator:picture-equation': {
     family: 'picture-equation', kblFamily: 'number-sense',
     inputContract: 'plan only（不读 semanticParams）',
     outputContract: 'apply/calc 看图列式; data{mode,steps,questionType,graphic{type:diagram,subtype:segment/brace/balance/scale}}',
     validator: 'pipeline(kpSemantic+TypeContract+schema)',
-    status: 'PRODUCTION', note: '2 KP 绑定'
+    status: 'PRODUCTION', note: '1 KP 绑定；P28-HOLLOW-01：g5-up-u07-k003（根据可能性推测）解绑交 stats'
   },
   'generator:composite': {
     family: 'composite', kblFamily: '跨族（combine 组合）',
@@ -166,13 +166,8 @@ var DECL = {
     status: 'PRODUCTION', note: '5 KP 绑定（数字编码单元）'
   },
   // FINAL-20：equivalent-reasoning 死符号已从 semantic-special.js 清除。GENERATOR_CONTRACTS 条目移除。
-  'generator:classification': {
-    family: 'classification', kblFamily: 'classification',
-    inputContract: 'plan + constraints{numberRange}',
-    outputContract: '分类/排序; data{mode:classify,sort{desc,count}}; answerMode=input',
-    validator: 'pipeline(kpSemantic[metaExempt]+TypeContract+schema)',
-    status: 'PRODUCTION', note: '唯一 classify 承接者（无重复）；25 KP 绑定；经 kp=1 同时产出 fill/choice/judge/apply → 欠声明（收口发现）'
-  },
+  // P28-HOLLOW-01：generator:classification 已退役（注册条目+DECL+源码 classify.js 全清），
+  // 25 KP 五类行（125 行）迁入 stats 8 形态组原生 maker。
   'generator:percent-calc': {
     family: 'percent', kblFamily: 'percent',
     inputContract: 'plan + constraints + semanticParams.subTopic（paramsOf→SUBTOPIC_MAKERS）',
@@ -185,7 +180,7 @@ var DECL = {
     inputContract: 'plan + constraints + semanticParams.subTopic+name（次数/分数意义/角/面积/负数等 maker）',
     outputContract: '概念题（列式/填空/判断/选择）; data{mode:concept-meaning,subType,semanticEvidence{relations,constructs},options,correctIndex}',
     validator: 'pipeline(kpSemantic[checkSemanticEvidence]+TypeContract+schema)',
-    status: 'PRODUCTION', note: '42 KP 绑定（1570 第二大承载，167 行）'
+    status: 'PRODUCTION', note: '50 KP 绑定（1570 第二大承载）；P28-HOLLOW-01：因数和倍数的概念/特征 2 KP（8 行）由 arithmetic 迁入 number-theory maker'
   },
   'generator:semantic-relations': {
     family: 'semantic-relations', kblFamily: 'ratio-proportion / multiple-ratio / unit-measurement',
@@ -353,7 +348,7 @@ function writeMd(a) {
   md.push('');
   md.push('| 项 | 值 |');
   md.push('|---|---|');
-  md.push('| 任务 | P28-09 Generator Registry 收口：' + a.generatorCount + ' 个 Generator 逐个澄清 生产使用/测试使用/历史使用/重复能力/legacy capability，并强制声明 id · semantic family · supported question types · input contract · output contract · validator · production status（P28-CLEANUP-02 后 24 个） |');
+  md.push('| 任务 | P28-09 Generator Registry 收口：' + a.generatorCount + ' 个 Generator 逐个澄清 生产使用/测试使用/历史使用/重复能力/legacy capability，并强制声明 id · semantic family · supported question types · input contract · output contract · validator · production status（P28-HOLLOW-01 后 ' + a.generatorCount + ' 个） |');
   md.push('| 执行日期 | ' + a.date + ' |');
   md.push('| 判定规则 | R1 覆盖 / R2 题型=registry / R3 声明完整 / R4 产出⊆声明 / R5 状态一致 / R6 无 legacy（统一门禁 `node dev/p28/check-generator-matrix.js`） |');
   md.push('');
@@ -380,11 +375,11 @@ function writeMd(a) {
   md.push('');
   md.push('| 维度 | 结论 |');
   md.push('|---|---|');
-  md.push('| **生产使用** | 21 个实际承载（1570 冻结行全部落于原生绑定生成器）；composite 仅 combine 场景；其余 2 个契约载体 0 产出行（见 §4） |');
-  md.push('| **测试使用** | 直接 id 引用 14 个文件：arithmetic-addition/multiplication (p27-variation-directive)、shape (p25-07-type-contracts)、money/application/reasoning/code/percent/concept/semantic-relations/decimal/fraction (p25-09-native-bindings)、concept (p25-04/p25-06)、classification (p17-10-classify)、composite (composite)；间接经 1570 门禁全覆盖 |');
+  md.push('| **生产使用** | ' + a.generators.filter(function (r) { return r.producedRows1570 > 0; }).length + ' 个实际承载（1570 冻结行全部落于原生绑定生成器）；composite 仅 combine 场景；其余 2 个契约载体 0 产出行（见 §4） |');
+  md.push('| **测试使用** | 直接 id 引用 14 个文件：arithmetic-addition/multiplication (p27-variation-directive)、shape (p25-07-type-contracts)、money/application/reasoning/code/percent/concept/semantic-relations/decimal/fraction (p25-09-native-bindings)、concept (p25-04/p25-06)、stats (p17-10-classify/p28-hollow-plan1-native)、composite (composite)；间接经 1570 门禁全覆盖 |');
   md.push('| **历史使用** | 旧 31-id 全量 generator 测试与 `migration/excel-raw/*` 提取档案均已移除（后者 P28-CLEANUP-02）；现存证据为 kbl 冻结产物（generation-matrix/kp-matrix/教学 semantic-review） |');
   md.push('| **重复能力** | selection-choice（375 行 choice 载体）/ selection-judge（126 行 judge 载体）实际 0 产出——choice/judge 已由 shape/position/concept/application 等原生绑定族全覆盖；complex-calc、c1/c2/c5c6/c7/c9 六个无绑定孤儿源码已随 P28-CLEANUP-02 删除（equivalent-reasoning 记录已随 FINAL-20 移除） |');
-  md.push('| **legacy capability** | 能力面无旧令牌（P28-07 已清，R6 通过）；剩余：selection 族几何为名义声明、stats 欠声明 judge、classification 欠声明 fill/choice/judge/apply、application/equivalent answer 契约偏差、c9 陈旧注释 |');
+  md.push('| **legacy capability** | 能力面无旧令牌（P28-07 已清，R6 通过）；剩余：selection 族几何为名义声明、application/equivalent answer 契约偏差、c9 陈旧注释 |');
   md.push('');
   md.push('## 4. 状态明细');
   md.push('');
@@ -399,13 +394,13 @@ function writeMd(a) {
   md.push('');
   md.push('## 5. 收口发现（契约/声明漂移，不阻塞现行生产，待 P28-10 处置）');
   md.push('');
-  md.push('1. `generator:stats` 欠声明 judge：`data.judgeForm` 可产出 judge，能力数组无 judge（现行 routing 由 classification/shape 覆盖，不达）。');
-  md.push('2. `generator:classification` 欠声明 fill/choice/judge/apply：经 kp=1 在 25 绑定 KP 上产出 4 类；补齐声明会改变 tiebreak 路由，需联动审计，故列入待处置。');
+  md.push('1. P28-HOLLOW-01 已处置：`generator:stats` 补齐 judge/classify 声明并以 8 形态组原生 maker 承接 25 个统计/分类/概率 KP 的五类行（125 行）；`generator:classification` 退役（注册/DECL/源码全清）。');
+  md.push('2. P28-HOLLOW-01 已处置：因数和倍数的概念/特征 2 KP（8 行）迁入 concept-meaning number-theory maker；分数乘整数 g6-up-u02-k001 四非几何行由 shape 内部参数化 maker 承接。');
   md.push('3. selection 族几何名义声明：maker 仅产出算术形态，form-bound 门内从不命中 geometry（无害）。');
   md.push('4. `generator:application-word` answer 原始 string/boolean（非 `{value,acceptable}`），由下游 TypeContract/schema 归一（契约偏差）。');
   md.push('5. `generator:equivalent-reasoning` FINAL-20 已从 semantic-special.js 清除（0 产出死符号）。');
   // FINAL-20：c9-comprehensive 已从生产 bundle 排除，头部注释陈旧提示随之移除。
-  md.push('7. 非 formBound 泛型产出（native kp=1 扩展）：arithmetic×5、selection-fill、counting、picture-equation、percent-calc、classification 在未声明 choice/fill/apply/judge 情况下仍经 kp=1 产出该类题（maker 泛化）；form-bound（calc/geometry/classify）受 form-bound 声明门约束，本次无一违例（R4 全绿）。');
+  md.push('7. 非 formBound 泛型产出（native kp=1 扩展）：arithmetic×5、selection-fill、counting、picture-equation、percent-calc 在未声明 choice/fill/apply/judge 情况下仍经 kp=1 产出该类题（maker 泛化）；form-bound（calc/geometry/classify）受 form-bound 声明门约束，本次无一违例（R4 全绿）。');
   md.push('');
   md.push('## 6. 门禁');
   md.push('');

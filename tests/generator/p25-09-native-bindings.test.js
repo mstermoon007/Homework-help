@@ -78,13 +78,25 @@ test('注册表：全量 375 KP 均有 core 生成器 native 绑定，且无残�
 
 test('selector：全部 1570 对 ALLOW 均由 kp=1 native 候选承载（无 kp=0 兜底截胡）', () => {
   assert.ok(ALLOW_PAIRS.length >= 1570, 'ALLOW 对数基线 1570，实际 ' + ALLOW_PAIRS.length);
+  // P28-FIX-A：10 个 KP 的 geometry 行由 shape-recognition 经 form-bound 门 + capability 匹配承载
+  //（kp=0 但 generator 正确），非 geometry 行已回落到本体生成器（kp=1）。
+  const FORM_BOUND_GEOMETRY_OK = new Set([
+    'math-g2-up-u05-k001', 'math-g2-up-u05-k005', 'math-g3-down-u04-k002', 'math-g3-down-u04-k004',
+    'math-g3-up-u03-k001', 'math-g3-up-u03-k002', 'math-g5-down-u03-k006',
+    'math-g6-up-u02-k002', 'math-g6-up-u02-k003', 'math-g6-up-u02-k004'
+  ]);
   const bad = [];
   ALLOW_PAIRS.forEach(function (p) {
     const r = Selector.selectGenerator({
       knowledgePointIds: [p.kp], questionTypeId: p.qt, difficulty: 2, count: 1
     });
     if (r.source !== 'priority' || !r.match || r.match.kp !== 1) {
-      bad.push(p.kp + '×' + p.qt + ' => ' + r.source + '/kp=' + (r.match && r.match.kp));
+      // 豁免：P28-FIX-A geometry 行由 shape-recognition capability 匹配承载
+      var isGeometryExempt = p.qt === 'geometry' && FORM_BOUND_GEOMETRY_OK.has(p.kp) &&
+        r.generatorId === 'generator:shape-recognition';
+      if (!isGeometryExempt) {
+        bad.push(p.kp + '×' + p.qt + ' => ' + r.source + '/kp=' + (r.match && r.match.kp));
+      }
     }
   });
   assert.deepEqual(bad, [], '非 native 承载的 ALLOW 行');

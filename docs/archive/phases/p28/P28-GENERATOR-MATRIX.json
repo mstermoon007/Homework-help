@@ -1,7 +1,7 @@
 {
  "task": "P28-09 Generator Registry 收口 —— GENERATOR_MATRIX",
- "date": "2026-10-01",
- "generatorCount": 24,
+ "date": "2026-10-02",
+ "generatorCount": 23,
  "canonicalTypes": [
   "calc",
   "fill",
@@ -12,8 +12,8 @@
   "apply"
  ],
  "statusCounts": {
-  "total": 24,
-  "production": 21,
+  "total": 23,
+  "production": 20,
   "combineOnly": 1,
   "dormantCarrier": 2,
   "dormantNoBinding": 0,
@@ -37,7 +37,8 @@
     "fill",
     "choice",
     "judge",
-    "calc"
+    "calc",
+    "geometry"
    ],
    "inputContract": "plan only（不读 semanticParams）；模板+随机数驱动（模板由难度闸）",
    "outputContract": "模板题; data{mode,steps,template,numbers,relation,options,correctIndex,shownAnswer}; answer=原始 string/boolean（契约偏差，由下游归一）; graphic 矩形虚线",
@@ -46,19 +47,20 @@
    "scope": "core",
    "version": 2,
    "supportsComposite": false,
-   "kpBindings": 35,
+   "kpBindings": 32,
    "contractCarrierRows": 0,
-   "producedRows1570": 116,
+   "producedRows1570": 109,
    "actualProducerTypes": [
     "calc",
     "fill",
     "choice",
     "apply",
-    "judge"
+    "judge",
+    "geometry"
    ],
    "tests": [],
    "historical": [],
-   "note": "33 KP 绑定；answer 不走 {value,acceptable}（收口发现）"
+   "note": "32 KP 绑定；answer 不走 {value,acceptable}（收口发现）；P28-GEO-NATIVE：声明 +geometry，g5-down-u03-k006 geometry 行走排水法测体积（长方体缸）maker（1 行）；P28-HOLLOW-01：3 个统计图表 KP 解绑交 stats"
   },
   {
    "id": "generator:arithmetic-addition",
@@ -108,9 +110,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 20,
+   "kpBindings": 19,
    "contractCarrierRows": 0,
-   "producedRows1570": 80,
+   "producedRows1570": 76,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -121,7 +123,7 @@
    "historical": [],
    "note": "op=div",
    "nativeExtendedTypes": [
-    "choice:20"
+    "choice:19"
    ]
   },
   {
@@ -131,7 +133,8 @@
    "supportedQuestionTypes": [
     "calc",
     "fill",
-    "apply"
+    "apply",
+    "geometry"
    ],
    "inputContract": "同 arithmetic-addition（op=mixed；operationSet 算子集）",
    "outputContract": "同上（data.operation=mixed）",
@@ -142,18 +145,21 @@
    "supportsComposite": false,
    "kpBindings": 8,
    "contractCarrierRows": 0,
-   "producedRows1570": 20,
+   "producedRows1570": 35,
    "actualProducerTypes": [
     "calc",
     "fill",
     "choice",
-    "apply"
+    "apply",
+    "judge",
+    "geometry"
    ],
    "tests": [],
    "historical": [],
-   "note": "op=mixed",
+   "note": "op=mixed；P28-GEO-NATIVE：声明 +geometry，g6 分数乘法 k002-k004 geometry 行走线段/面积模型 maker（3 行）",
    "nativeExtendedTypes": [
-    "choice:5"
+    "choice:8",
+    "judge:3"
    ]
   },
   {
@@ -172,9 +178,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 17,
+   "kpBindings": 15,
    "contractCarrierRows": 0,
-   "producedRows1570": 64,
+   "producedRows1570": 60,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -185,7 +191,7 @@
    "historical": [],
    "note": "op=mult",
    "nativeExtendedTypes": [
-    "choice:16"
+    "choice:15"
    ]
   },
   {
@@ -218,40 +224,6 @@
    "note": "op=sub",
    "nativeExtendedTypes": [
     "choice:7"
-   ]
-  },
-  {
-   "id": "generator:classification",
-   "semanticFamily": "classification",
-   "family": "classification",
-   "supportedQuestionTypes": [
-    "classify"
-   ],
-   "inputContract": "plan + constraints{numberRange}",
-   "outputContract": "分类/排序; data{mode:classify,sort{desc,count}}; answerMode=input",
-   "validator": "pipeline(kpSemantic[metaExempt]+TypeContract+schema)",
-   "productionStatus": "PRODUCTION",
-   "scope": "core",
-   "version": 2,
-   "supportsComposite": false,
-   "kpBindings": 25,
-   "contractCarrierRows": 25,
-   "producedRows1570": 85,
-   "actualProducerTypes": [
-    "classify",
-    "fill",
-    "choice",
-    "judge",
-    "apply"
-   ],
-   "tests": [],
-   "historical": [],
-   "note": "唯一 classify 承接者（无重复）；25 KP 绑定；经 kp=1 同时产出 fill/choice/judge/apply → 欠声明（收口发现）",
-   "nativeExtendedTypes": [
-    "fill:14",
-    "choice:14",
-    "judge:19",
-    "apply:13"
    ]
   },
   {
@@ -300,7 +272,7 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": true,
-   "kpBindings": 5,
+   "kpBindings": 4,
    "contractCarrierRows": 0,
    "producedRows1570": 0,
    "actualProducerTypes": [],
@@ -327,9 +299,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 48,
+   "kpBindings": 50,
    "contractCarrierRows": 0,
-   "producedRows1570": 191,
+   "producedRows1570": 199,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -340,7 +312,7 @@
    ],
    "tests": [],
    "historical": [],
-   "note": "42 KP 绑定（1570 第二大承载，167 行）"
+   "note": "50 KP 绑定（1570 第二大承载）；P28-HOLLOW-01：因数和倍数的概念/特征 2 KP（8 行）由 arithmetic 迁入 number-theory maker"
   },
   {
    "id": "generator:counting",
@@ -357,21 +329,20 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 2,
+   "kpBindings": 1,
    "contractCarrierRows": 0,
-   "producedRows1570": 7,
+   "producedRows1570": 3,
    "actualProducerTypes": [
     "fill",
     "choice",
-    "apply",
-    "calc"
+    "apply"
    ],
    "tests": [],
    "historical": [],
    "note": "2 KP 绑定",
    "nativeExtendedTypes": [
-    "fill:2",
-    "choice:2"
+    "fill:1",
+    "choice:1"
    ]
   },
   {
@@ -421,9 +392,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 19,
+   "kpBindings": 20,
    "contractCarrierRows": 0,
-   "producedRows1570": 76,
+   "producedRows1570": 80,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -443,7 +414,8 @@
     "choice",
     "judge",
     "apply",
-    "calc"
+    "calc",
+    "geometry"
    ],
    "inputContract": "plan + semanticParams.name+concept（deriveMeasureKind: rmb/length/area/mass/time/capacity）",
    "outputContract": "fill/choice/judge/apply/calc; data{kind,operation,originalAmount/targetUnit/fromUnit/toUnit,options}; graphic currency/rectangle",
@@ -454,16 +426,18 @@
    "supportsComposite": false,
    "kpBindings": 12,
    "contractCarrierRows": 0,
-   "producedRows1570": 20,
+   "producedRows1570": 50,
    "actualProducerTypes": [
     "fill",
     "choice",
     "apply",
+    "judge",
+    "geometry",
     "calc"
    ],
    "tests": [],
    "historical": [],
-   "note": "12 KP 绑定；模块级 rng 非逐题确定"
+   "note": "12 KP 绑定；模块级 rng 非逐题确定；P28-GEO-NATIVE：声明 +geometry，6 个长度/面积 KP geometry 行走刻度尺线段/正方形面积模型 maker（6 行）"
   },
   {
    "id": "generator:percent-calc",
@@ -512,9 +486,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 2,
+   "kpBindings": 1,
    "contractCarrierRows": 0,
-   "producedRows1570": 5,
+   "producedRows1570": 4,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -523,7 +497,7 @@
    ],
    "tests": [],
    "historical": [],
-   "note": "2 KP 绑定",
+   "note": "1 KP 绑定；P28-HOLLOW-01：g5-up-u07-k003（根据可能性推测）解绑交 stats",
    "nativeExtendedTypes": [
     "fill:1",
     "choice:1"
@@ -578,9 +552,9 @@
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 15,
+   "kpBindings": 14,
    "contractCarrierRows": 0,
-   "producedRows1570": 46,
+   "producedRows1570": 43,
    "actualProducerTypes": [
     "calc",
     "fill",
@@ -589,7 +563,7 @@
    ],
    "tests": [],
    "historical": [],
-   "note": "15 KP 绑定"
+   "note": "14 KP 绑定；P28-HOLLOW-01：g5-up-u07-k002（可能性大小判断）解绑交 stats"
   },
   {
    "id": "generator:selection-choice",
@@ -671,7 +645,7 @@
    "actualProducerTypes": [],
    "tests": [],
    "historical": [],
-   "note": "重复能力：contract 126 行 judge 名义载体，实际 0 产出（judge 由 shape/position/classification 覆盖）"
+   "note": "重复能力：contract 126 行 judge 名义载体，实际 0 产出（judge 由 shape/position/stats 覆盖）"
   },
   {
    "id": "generator:semantic-relations",
@@ -722,11 +696,11 @@
    "validator": "pipeline(kpSemantic+TypeContract[geometry:graphicPresent]+schema)",
    "productionStatus": "PRODUCTION",
    "scope": "core",
-   "version": 3,
+   "version": 4,
    "supportsComposite": false,
-   "kpBindings": 88,
+   "kpBindings": 75,
    "contractCarrierRows": 0,
-   "producedRows1570": 421,
+   "producedRows1570": 359,
    "actualProducerTypes": [
     "fill",
     "choice",
@@ -736,7 +710,7 @@
    ],
    "tests": [],
    "historical": [],
-   "note": "1570 最大承载（421 行）；88 KP 绑定"
+   "note": "1570 最大承载；75 KP 绑定；P28-GEO-NATIVE：分数乘整数(k001) 五行走单位分数条 maker（producer 不变，shape 内部修复）；P28-HOLLOW-01：3 个图形分类 KP 解绑交 stats"
   },
   {
    "id": "generator:stats",
@@ -746,27 +720,31 @@
     "apply",
     "calc",
     "fill",
-    "choice"
+    "choice",
+    "judge",
+    "classify"
    ],
-   "inputContract": "plan + semanticParams.name（统计/时间/日历 subtype 派生）",
-   "outputContract": "apply/calc/fill/choice; data{mode:apply,graphic{type:chart},choiceForm/judgeForm/calcForm,options}; judge 经 data.judgeForm 产出",
+   "inputContract": "plan + semanticParams.name（统计/时间/日历/概率 subtype + STAT_SHAPE 25KP 形态组查表）",
+   "outputContract": "apply/calc/fill/choice/judge/classify; 8 形态组原生 maker; data{mode,graphic{type:chart/geometry/diagram},options,correctIndex,sort,items,groups}; judge answer boolean",
    "validator": "pipeline(kpSemantic+TypeContract+schema)",
    "productionStatus": "PRODUCTION",
    "scope": "core",
    "version": 1,
    "supportsComposite": false,
-   "kpBindings": 11,
-   "contractCarrierRows": 0,
-   "producedRows1570": 38,
+   "kpBindings": 32,
+   "contractCarrierRows": 25,
+   "producedRows1570": 151,
    "actualProducerTypes": [
     "calc",
     "fill",
     "choice",
-    "apply"
+    "apply",
+    "judge",
+    "classify"
    ],
    "tests": [],
    "historical": [],
-   "note": "欠声明 judge：产出 judgeForm 但能力数组无 judge（收口发现）"
+   "note": "32 KP 绑定；P28-HOLLOW-01：classification 退役，25 统计/分类/概率 KP 的五类行（125 行）由 8 形态组原生 maker 承接，judge/classify 声明已补齐"
   }
  ],
  "fails": [],

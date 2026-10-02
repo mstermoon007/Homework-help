@@ -1,7 +1,7 @@
 /**
  * shared/generator/generators/fraction.js — P25-09 分数专项 Generator
  *
- * 承载 19 个分数 KP（g3 初步认识 → g5 意义/性质/加减 → g6 倒数/除法/混合），
+ * 承载 20 个分数 KP（g3 初步认识 → g5 意义/性质/加减 → g6 倒数/除法/混合），
  * 取代被 shape-recognition v3 截胡产出的语义无关题。
  *
  * 分派：消费 plan.semanticParams.name，按 NAME_RULES 机械派生子类型。

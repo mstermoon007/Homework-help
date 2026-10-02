@@ -274,11 +274,12 @@ test('judge finisher：余数题与排序题同样带解析/错因', () => {
 
 // 代表 KP 覆盖三模式：算术族=模式A finishJudge；shape/position/application/stats=模式B；
 // angle/area/code=模式C 手写命题。
+// P28-HOLLOW-01：g5-down-u07-k001 / g2-up-u01-k001 / g4-up-u06-k002 judge 均改由 stats 原生 maker（模式B）。
 const JUDGE_REPRESENTATIVE_KPS = [
-  { kp: 'math-g5-down-u07-k001', grade: 5 }, // 排序（模式A finishJudge 序列分支）
-  { kp: 'math-g2-up-u01-k001', grade: 2 },   // 图形特征（模式B shape）
+  { kp: 'math-g5-down-u07-k001', grade: 5 }, // 统计判断（模式B stats；P28-HOLLOW-01 前为 classification 排序序列分支）
+  { kp: 'math-g2-up-u01-k001', grade: 2 },   // 图形分类统计判断（模式B stats）
   { kp: 'math-g2-up-u04-k003', grade: 2 },   // 平移方向（模式B position）
-  { kp: 'math-g4-up-u06-k002', grade: 4 },   // 应用题判断（模式B application）
+  { kp: 'math-g4-up-u06-k002', grade: 4 },   // 复式条形统计判断（模式B stats）
   { kp: 'math-g3-up-u07-k002', grade: 3 },   // 角的认识（模式C）
   { kp: 'math-g3-down-u04-k001', grade: 3 }  // 面积的认识（模式C）
 ];

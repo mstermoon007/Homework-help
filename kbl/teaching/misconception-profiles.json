@@ -14,19 +14,19 @@
   },
   "counts": {
     "kps": 375,
-    "kpsWithSlots": 307,
-    "slots": 896,
+    "kpsWithSlots": 313,
+    "slots": 920,
     "byErrorType": {
-      "概念混淆": 128,
-      "审题错误": 307,
-      "格式错误": 128,
-      "步骤错误": 200,
-      "计算错误": 80,
+      "概念混淆": 131,
+      "审题错误": 313,
+      "格式错误": 131,
+      "步骤错误": 210,
+      "计算错误": 82,
       "单位错误": 39,
       "口诀混淆": 11,
       "符号错误": 3
     },
-    "droppedByAxisEvidence": 728
+    "droppedByAxisEvidence": 710
   },
   "kps": {
     "math-g1-down-u01-k001": {
@@ -103,6 +103,28 @@
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
+        {
+          "errorType": "审题错误",
+          "basis": "variation profile context.present（4 行）",
+          "triggerPattern": {
+            "questionTypes": [
+              "apply",
+              "judge",
+              "choice"
+            ]
+          },
+          "response": {
+            "variant": "情境",
+            "axis": "context",
+            "evidenceRows": 4
+          },
+          "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        }
+      ]
+    },
+    "math-g1-down-u03-k001": {
+      "knowledgePointId": "math-g1-down-u03-k001",
+      "slots": [
         {
           "errorType": "审题错误",
           "basis": "variation profile context.present（4 行）",
@@ -868,8 +890,52 @@
         }
       ]
     },
+    "math-g1-up-u04-k001": {
+      "knowledgePointId": "math-g1-up-u04-k001",
+      "slots": [
+        {
+          "errorType": "审题错误",
+          "basis": "variation profile context.present（4 行）",
+          "triggerPattern": {
+            "questionTypes": [
+              "apply",
+              "judge",
+              "choice"
+            ]
+          },
+          "response": {
+            "variant": "情境",
+            "axis": "context",
+            "evidenceRows": 4
+          },
+          "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        }
+      ]
+    },
     "math-g1-up-u04-k002": {
       "knowledgePointId": "math-g1-up-u04-k002",
+      "slots": [
+        {
+          "errorType": "审题错误",
+          "basis": "variation profile context.present（4 行）",
+          "triggerPattern": {
+            "questionTypes": [
+              "apply",
+              "judge",
+              "choice"
+            ]
+          },
+          "response": {
+            "variant": "情境",
+            "axis": "context",
+            "evidenceRows": 4
+          },
+          "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        }
+      ]
+    },
+    "math-g1-up-u05-k001": {
+      "knowledgePointId": "math-g1-up-u05-k001",
       "slots": [
         {
           "errorType": "审题错误",
@@ -2023,6 +2089,23 @@
     "math-g2-up-u01-k006": {
       "knowledgePointId": "math-g2-up-u01-k006",
       "slots": [
+        {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=2≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
+        },
         {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
@@ -3745,7 +3828,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 4
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -3787,6 +3870,23 @@
       "knowledgePointId": "math-g3-down-u05-k002",
       "slots": [
         {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=2≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
+        },
+        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
@@ -3809,6 +3909,23 @@
       "knowledgePointId": "math-g3-down-u05-k003",
       "slots": [
         {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=2≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
+        },
+        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
@@ -3830,6 +3947,23 @@
     "math-g3-down-u05-k004": {
       "knowledgePointId": "math-g3-down-u05-k004",
       "slots": [
+        {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=3≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
+        },
         {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
@@ -4779,6 +4913,50 @@
             "evidenceRows": 5
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
+        }
+      ]
+    },
+    "math-g3-up-u02-k003": {
+      "knowledgePointId": "math-g3-up-u02-k003",
+      "slots": [
+        {
+          "errorType": "审题错误",
+          "basis": "variation profile context.present（4 行）",
+          "triggerPattern": {
+            "questionTypes": [
+              "apply",
+              "judge",
+              "choice"
+            ]
+          },
+          "response": {
+            "variant": "情境",
+            "axis": "context",
+            "evidenceRows": 4
+          },
+          "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        }
+      ]
+    },
+    "math-g3-up-u02-k004": {
+      "knowledgePointId": "math-g3-up-u02-k004",
+      "slots": [
+        {
+          "errorType": "审题错误",
+          "basis": "variation profile context.present（4 行）",
+          "triggerPattern": {
+            "questionTypes": [
+              "apply",
+              "judge",
+              "choice"
+            ]
+          },
+          "response": {
+            "variant": "情境",
+            "axis": "context",
+            "evidenceRows": 4
+          },
+          "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
       ]
     },
@@ -7893,9 +8071,26 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 5
+            "evidenceRows": 4
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
+        },
+        {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=2≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
         {
           "errorType": "审题错误",
@@ -7936,6 +8131,23 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=2≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
+        },
+        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
@@ -7957,6 +8169,23 @@
     "math-g4-down-u08-k003": {
       "knowledgePointId": "math-g4-down-u08-k003",
       "slots": [
+        {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=2≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
+        },
         {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
@@ -8009,7 +8238,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 3
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -8214,6 +8443,28 @@
             "variant": "情境",
             "axis": "context",
             "evidenceRows": 3
+          },
+          "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        }
+      ]
+    },
+    "math-g4-up-u01-k001": {
+      "knowledgePointId": "math-g4-up-u01-k001",
+      "slots": [
+        {
+          "errorType": "审题错误",
+          "basis": "variation profile context.present（4 行）",
+          "triggerPattern": {
+            "questionTypes": [
+              "apply",
+              "judge",
+              "choice"
+            ]
+          },
+          "response": {
+            "variant": "情境",
+            "axis": "context",
+            "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -8894,6 +9145,23 @@
       "knowledgePointId": "math-g4-up-u06-k001",
       "slots": [
         {
+          "errorType": "概念混淆",
+          "basis": "semantic.family=statistics",
+          "triggerPattern": {
+            "questionTypes": [
+              "choice",
+              "judge",
+              "classify"
+            ]
+          },
+          "response": {
+            "variant": "呈现",
+            "axis": "representation",
+            "evidenceRows": 4
+          },
+          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
+        },
+        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -8906,7 +9174,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 4
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -8926,6 +9194,21 @@
             "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        },
+        {
+          "errorType": "格式错误",
+          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
+          "triggerPattern": {
+            "questionTypes": [
+              "fill"
+            ]
+          },
+          "response": {
+            "variant": "基础",
+            "axis": "representation",
+            "evidenceRows": 4
+          },
+          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -8933,6 +9216,23 @@
       "knowledgePointId": "math-g4-up-u06-k002",
       "slots": [
         {
+          "errorType": "概念混淆",
+          "basis": "semantic.family=statistics",
+          "triggerPattern": {
+            "questionTypes": [
+              "choice",
+              "judge",
+              "classify"
+            ]
+          },
+          "response": {
+            "variant": "呈现",
+            "axis": "representation",
+            "evidenceRows": 4
+          },
+          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
+        },
+        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -8945,7 +9245,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 4
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -8965,6 +9265,21 @@
             "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        },
+        {
+          "errorType": "格式错误",
+          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
+          "triggerPattern": {
+            "questionTypes": [
+              "fill"
+            ]
+          },
+          "response": {
+            "variant": "基础",
+            "axis": "representation",
+            "evidenceRows": 4
+          },
+          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -8972,6 +9287,23 @@
       "knowledgePointId": "math-g4-up-u06-k003",
       "slots": [
         {
+          "errorType": "概念混淆",
+          "basis": "semantic.family=statistics",
+          "triggerPattern": {
+            "questionTypes": [
+              "choice",
+              "judge",
+              "classify"
+            ]
+          },
+          "response": {
+            "variant": "呈现",
+            "axis": "representation",
+            "evidenceRows": 4
+          },
+          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
+        },
+        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -8984,7 +9316,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 4
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -9004,12 +9336,44 @@
             "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        },
+        {
+          "errorType": "格式错误",
+          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
+          "triggerPattern": {
+            "questionTypes": [
+              "fill"
+            ]
+          },
+          "response": {
+            "variant": "基础",
+            "axis": "representation",
+            "evidenceRows": 4
+          },
+          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
     "math-g4-up-u06-k004": {
       "knowledgePointId": "math-g4-up-u06-k004",
       "slots": [
+        {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=3≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
+        },
         {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
@@ -10155,7 +10519,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 5
+            "evidenceRows": 1
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -10204,7 +10568,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 5
+            "evidenceRows": 1
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
@@ -11134,7 +11498,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 3
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -11205,7 +11569,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 3
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -11276,7 +11640,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 3
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -11450,6 +11814,22 @@
     "math-g5-down-u09-k001": {
       "knowledgePointId": "math-g5-down-u09-k001",
       "slots": [
+        {
+          "errorType": "计算错误",
+          "basis": "semantic.operations=[division]",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill"
+            ]
+          },
+          "response": {
+            "variant": "数值",
+            "axis": "numeric",
+            "evidenceRows": 1
+          },
+          "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
+        },
         {
           "errorType": "概念混淆",
           "basis": "semantic.family=application-word",
@@ -13445,6 +13825,23 @@
       "knowledgePointId": "math-g5-up-u07-k001",
       "slots": [
         {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=3≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
+        },
+        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
@@ -13479,7 +13876,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 3
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -13535,7 +13932,7 @@
           "response": {
             "variant": "结构",
             "axis": "structure",
-            "evidenceRows": 1
+            "evidenceRows": 5
           },
           "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
         },
@@ -13576,6 +13973,23 @@
     "math-g5-up-u07-k004": {
       "knowledgePointId": "math-g5-up-u07-k004",
       "slots": [
+        {
+          "errorType": "步骤错误",
+          "basis": "capability.maxSteps=3≥2",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill",
+              "apply"
+            ]
+          },
+          "response": {
+            "variant": "结构",
+            "axis": "structure",
+            "evidenceRows": 5
+          },
+          "feedback": "按解题步骤逐一核对，补全遗漏环节，确认顺序无误"
+        },
         {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
@@ -13811,6 +14225,22 @@
     "math-g5-up-u08-k004": {
       "knowledgePointId": "math-g5-up-u08-k004",
       "slots": [
+        {
+          "errorType": "计算错误",
+          "basis": "semantic.operations=[mixed]",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill"
+            ]
+          },
+          "response": {
+            "variant": "数值",
+            "axis": "numeric",
+            "evidenceRows": 1
+          },
+          "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
+        },
         {
           "errorType": "概念混淆",
           "basis": "semantic.family=application-word",
@@ -15332,7 +15762,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 5
+            "evidenceRows": 1
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -15355,7 +15785,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（5 行）",
+          "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -15366,7 +15796,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 5
+            "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         },
@@ -15381,7 +15811,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 5
+            "evidenceRows": 1
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
@@ -15403,7 +15833,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 5
+            "evidenceRows": 1
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -15426,7 +15856,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（5 行）",
+          "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -15437,7 +15867,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 5
+            "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         },
@@ -15452,7 +15882,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 5
+            "evidenceRows": 1
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
@@ -15474,7 +15904,7 @@
           "response": {
             "variant": "呈现",
             "axis": "representation",
-            "evidenceRows": 5
+            "evidenceRows": 1
           },
           "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
         },
@@ -15497,7 +15927,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（5 行）",
+          "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -15508,7 +15938,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 5
+            "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         },
@@ -15523,7 +15953,7 @@
           "response": {
             "variant": "基础",
             "axis": "representation",
-            "evidenceRows": 5
+            "evidenceRows": 1
           },
           "feedback": "按题目要求规范作答格式，补全书写与标点"
         }

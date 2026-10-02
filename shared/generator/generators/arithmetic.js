@@ -34,6 +34,76 @@ var FAMILY = {
   'mixed-calculation': { op: 'mixed' }
 };
 
+// P28-GEO-NATIVE-02：分数乘法单元 geometry 原生 maker（g6-up-u02-k002/k003/k004）。
+// 源 Excel 将该单元标在「图形与几何」域，三 KP 各有 geometry ALLOW 行，此前被 shape
+// kp=0 泛型兜底成无关认图题。mixed 生成器 kp=1 且声明 geometry 后自然承接，
+// 用线段图（diagram.segment，对象参数、渲染器现成）承载「求一个数的几分之几」。
+function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
+  var rng = Rng.createSeededRandom(seedFn(plan, context, i));
+  var kpName = (plan.semanticParams && plan.semanticParams.name) || '';
+  var prompt, answer, graphic, modelKind;
+
+  if (kpName.indexOf('混合') !== -1) {
+    // k003：运算律——乘法分配律的线段模型 (1/4 + 2/4) × 8
+    var total3 = 8;
+    var part3 = 6;
+    modelKind = 'fraction-distributive';
+    prompt = '看图用乘法分配律简便计算：一条线段长 ' + total3 + ' 米，先取它的 1/4，' +
+      '再取它的 2/4，两次一共取了多少米？(1/4 + 2/4) × ' + total3 + ' = ____';
+    answer = String(part3);
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: total3, part: part3, unit: 'cm', partLabel: String(part3), totalLabel: String(total3) }
+    };
+  } else if (kpName.indexOf('解决问题') !== -1) {
+    // k004：连续求一个数的几分之几（找准单位“1”）
+    var total4 = 24;
+    var first4 = 18; // 3/4
+    var answer4 = 12; // 再取 2/3
+    modelKind = 'fraction-twice';
+    prompt = '看图解决问题：果园里共有 ' + total4 + ' 棵果树，苹果树占 3/4，' +
+      '红富士苹果树又占苹果树的 2/3。红富士苹果树有多少棵？____';
+    answer = String(answer4);
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: total4, part: first4, unit: 'cm', partLabel: String(first4), totalLabel: String(total4) }
+    };
+  } else {
+    // k002：一个数乘分数——单位“1”的量 × 对应分率 = 对应分量
+    var den = Rng.pick(rng, [3, 4, 6]);
+    var whole = den * Rng.randInt(rng, 2, 4);
+    var num = Rng.randInt(rng, 1, den - 1);
+    var part = (whole / den) * num;
+    modelKind = 'fraction-of-quantity';
+    prompt = '看图列式计算：一袋面粉重 ' + whole + ' 千克，做点心用去了它的 ' +
+      num + '/' + den + '，用去了多少千克？' + whole + ' × ' + num + '/' + den + ' = ____';
+    answer = String(part);
+    graphic = {
+      type: 'geometry', subtype: 'segment',
+      params: { total: whole, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(whole) }
+    };
+  }
+
+  return {
+    knowledgePointId: (Array.isArray(plan.knowledgePointIds) && plan.knowledgePointIds[0]) || plan.knowledgePointId,
+    questionType: 'geometry',
+    difficulty: plan.difficulty,
+    spiralLevel: plan.spiralLevel || 1,
+    context: plan.contextType || 'standard',
+    seed: seedFn(plan, context, i),
+    prompt: prompt,
+    answer: { value: answer, acceptable: [] },
+    answerMode: 'input',
+    data: {
+      mode: 'geometry',
+      steps: 1,
+      kind: modelKind,
+      graphic: graphic,
+      operation: 'mult'
+    }
+  };
+}
+
 function createArithmeticGenerator(spec) {
   spec = spec || {};
   var op = spec.operation || 'add';
@@ -59,11 +129,16 @@ function createArithmeticGenerator(spec) {
       : (plan.operationStr || null));
   }
 
+  // P28-GEO-NATIVE-02：mixed-calculation 承接 g6 分数乘法单元 geometry 行（注册表同步声明）
+  var declaredTypes = id === 'generator:arithmetic-mixed-calculation'
+    ? ['calc', 'fill', 'apply', 'geometry']
+    : ['calc', 'fill', 'apply'];
+
   return {
     id: id,
     subject: subject,
-    capabilities: ['calc', 'fill', 'apply'],
-    questionTypes: ['calc', 'fill', 'apply'],
+    capabilities: declaredTypes,
+    questionTypes: declaredTypes,
     knowledgePoints: spec.knowledgePoints || [],
 
     supports: function (plan) {
@@ -91,6 +166,11 @@ function createArithmeticGenerator(spec) {
       }
 
       for (var i = 0; i < count; i++) {
+        // P28-GEO-NATIVE-02：mixed 的 geometry 行走分数乘法线段/运算律模型
+        if (id === 'generator:arithmetic-mixed-calculation' && plan.questionTypeId === 'geometry') {
+          questions.push(makeFractionMultiplyGeometryQuestion(plan, context, i, seedFor));
+          continue;
+        }
         var rng = Rng.createSeededRandom(seedFor(plan, context, i));
         var opSet = context.operationSet || planOperationSet(plan);
         // P28-NAME-MIGRATION-02：kind 来自 plan.semanticParams.kind（SSOT 派生）；

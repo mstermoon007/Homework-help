@@ -1,5 +1,7 @@
 # FINAL-REPAIR-STATUS — 任务状态机制
 
+> ⚠️ **历史机制文档（FINAL 期）。** 当前任务状态与变更不再维护于本文；当前唯一基线以 [00-BASELINE.md](00-BASELINE.md) 为准，后续任务登记在 [P28/change-log.md](P28/change-log.md)。下文条目（含 26 PASS 口径）为历史记录，不得凭旧记忆重开；重开前须以当前源码/测试重新验证。
+>
 > 禁止 AI 根据旧记忆重新打开已经解决的问题（FINAL-02）。
 > 每项任务只能处于以下状态之一：`PENDING` / `IN_PROGRESS` / `FIXED` / `VERIFIED` / `FROZEN`。
 

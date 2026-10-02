@@ -1437,7 +1437,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -1482,7 +1482,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -1527,7 +1527,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -1572,7 +1572,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -1617,7 +1617,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -1662,7 +1662,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -5811,7 +5811,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -5856,7 +5856,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -5901,7 +5901,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -5946,7 +5946,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -7116,7 +7116,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -7161,7 +7161,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -7206,7 +7206,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -7251,7 +7251,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -8745,7 +8745,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -8790,7 +8790,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -8835,7 +8835,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -8880,7 +8880,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -10113,7 +10113,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -10158,7 +10158,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -10203,7 +10203,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -10248,7 +10248,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -11625,7 +11625,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -11670,7 +11670,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },
@@ -11715,7 +11715,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived"
     },

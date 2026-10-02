@@ -36,7 +36,6 @@ var FILES = {
   'counting.js': { mode: 'A', varName: 'questions' },
   'picture-equation.js': { mode: 'A', varName: 'questions' },
   'concept-meaning.js': { mode: 'A', varName: 'out' },
-  'classify.js': { mode: 'A-inline', varName: 'buildQuestions(plan, context, count, makeSort)' },
   'semantic-special.js': { mode: 'A-multi-inline', varNames: [
     'buildQuestions(plan, context, count, makeCodeChoice)',
     'buildQuestions(plan, context, count, makeCodeApply)',

@@ -111,6 +111,14 @@ var CANDIDATES = [
     decision: 'REMOVE-SYMBOL',
     note: 'equivalent-reasoning 死符号已从 semantic-special.js 清除（工厂+题库+导出全删）；code-recognition 保留（15 行 freeze 产出）'
   },
+  {
+    file: 'shared/generator/generators/classify.js',
+    symbol: 'generator:classification',
+    prodCalls: 0, testCalls: 0, bundleCalls: 0,
+    status: 'DELETED (P28-HOLLOW-01)',
+    decision: 'DELETE',
+    note: '仅数字排序单模板，25 个统计/分类/概率 KP 的 125 行全部空心；P28-HOLLOW-01 由 stats 8 形态组原生 maker 承接（注册条目/DECL/index/映射 25 行同步迁移）'
+  },
 
   // ── 4. DORMANT-CONTRACT-CARRIER（契约名义载体，0 产出） ──
   {
@@ -119,7 +127,7 @@ var CANDIDATES = [
     prodCalls: 0, testCalls: 0, bundleCalls: 1,
     status: 'DORMANT-CONTRACT-CARRIER',
     decision: 'KEEP',
-    note: 'contract 375 行 choice + 126 行 judge 名义载体；实际 0 产出（choice 由原生绑定族全覆盖，judge 由 shape/position/classification 覆盖）'
+    note: 'contract 375 行 choice + 126 行 judge 名义载体；实际 0 产出（choice 由原生绑定族全覆盖，judge 由 shape/position/stats 覆盖）'
   },
 
   // ── 5. SYMBOL-REMOVED（P28-UI-PRINTSTYLE-CLEANUP-01：样式/打印链路死代码定点清理，2026-09-28） ──

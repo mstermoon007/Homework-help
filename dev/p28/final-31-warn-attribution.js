@@ -58,7 +58,6 @@ var GEN_CONSUMES_PROFILE = {
   'generator:picture-equation': true,      // FINAL-33 attachAll 消费 semanticParams.operations
   'generator:composite': false,            // composite.js 仅 combine>=2 KP 计划激活（本门禁单 KP 不触达）
   'generator:code-recognition': true,      // semantic-special.js:72
-  'generator:classification': true,        // FINAL-33 attachAll 消费 semanticParams.operations
   'generator:percent-calc': true,          // percent.js:365
   'generator:concept-meaning': true,       // concept-meaning.js:584（且声明 semanticEvidence）
   'generator:semantic-relations': true,    // semantic-relations.js:697

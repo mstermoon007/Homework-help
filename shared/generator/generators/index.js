@@ -12,10 +12,10 @@
  */
 'use strict';
 
-// 数学生成引擎版本标签（V2.1：native-only 单轨 + 23 Generator 语义路由 +
-// legacy 插件轨道退役 + math-g2-column 答案/check 归一化挂账清零）。
+// 数学生成引擎版本标签（V2.2：native-only 单轨 + 23 Generator 语义路由 +
+// P28-HOLLOW-01：classification 退役，25 统计/分类/概率 KP 五类行由 stats 原生 maker 承接）。
 // 注意：这是「生成引擎」版本，与 shared/catalog/version.js 的 APP_VERSION（PWA 缓存版本）是两个独立概念。
-var ENGINE_VERSION = '2.1.0';
+var ENGINE_VERSION = '2.2.0';
 
 var Arithmetic = require('./arithmetic.js');
 var Selection = require('./selection.js');
@@ -29,7 +29,6 @@ var Reasoning = require('./reasoning.js');
 var Stats = require('./stats.js');
 var PictureEquation = require('./picture-equation.js');
 var SemanticSpecial = require('./semantic-special.js');
-var Classification = require('./classify.js');
 var Percent = require('./percent.js');
 var ConceptMeaning = require('./concept-meaning.js');
 var SemanticRelations = require('./semantic-relations.js');
@@ -49,7 +48,6 @@ var ALL = [].concat(
   Stats.buildAll(),
   PictureEquation.buildAll(),
   SemanticSpecial.buildAll(),
-  Classification.buildAll(),
   Percent.buildAll(),
   ConceptMeaning.buildAll(),
   SemanticRelations.buildAll(),
