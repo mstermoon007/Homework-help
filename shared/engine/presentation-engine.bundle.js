@@ -2737,7 +2737,10 @@ __defs["shared/schemas/semantic-question.schema.js"] = function (module, exports
     KP_SEMANTIC_INTENT_CONFLICT: 'KP_SEMANTIC_INTENT_CONFLICT',
 
     
-    KP_TYPE_CONTRACT: 'KP_TYPE_CONTRACT'
+    KP_TYPE_CONTRACT: 'KP_TYPE_CONTRACT',
+
+    
+    KP_SEMANTIC_INTENT_ALIGNMENT: 'KP_SEMANTIC_INTENT_ALIGNMENT'
   };
 
   
@@ -4225,6 +4228,84 @@ function checkTypeContract(sq) {
 }
 
 
+
+
+var QT_FOCUS_MAP = {
+  calc: 'calculation', fill: 'written', apply: 'application',
+  choice: 'selection', judge: 'selection', geometry: 'geometry', classify: 'classification'
+};
+
+
+var QT_EXPRESSION_MAP = {
+  calc: 'expression', fill: 'text', apply: 'context-word',
+  choice: 'option-selection', judge: 'binary-judgement', geometry: 'graphic-construction', classify: 'grouping'
+};
+
+function checkIntentAlignment(sq, plan) {
+  var errors = [];
+  var sp = plan && plan.semanticParams ? plan.semanticParams : null;
+  
+  if (!sp && plan) {
+    try {
+      var SP = require("shared/generator/core/semantic-parameters.js");
+      sp = SP.attachToPlan(plan).semanticParams;
+    } catch (e) {  }
+  }
+  if (!sp || !sp.intent) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+  var intent = sp.intent;
+  var qt = sq.questionType || sq.questionTypeId || null;
+  if (!qt) return { state: 'skip', errors: errors, warnings: [] };
+
+  
+  var expectedFocus = QT_FOCUS_MAP[qt];
+  if (intent.focus && expectedFocus && intent.focus !== expectedFocus) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'focus',
+      'intent.focus ' + intent.focus + ' 与题型 ' + qt + ' 期望 focus ' + expectedFocus + ' 不一致',
+      SEVERITY.ERROR, { intentFocus: intent.focus, questionType: qt, expectedFocus: expectedFocus }));
+  }
+
+  
+  
+  var hasGraphic = !!(sq.data && sq.data.graphic);
+  var allowedReps = intent.allowedRepresentations || [];
+  if (allowedReps.length && allowedReps.indexOf('graphic') === -1 && hasGraphic) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'representation',
+      'intent.allowedRepresentations 不含 graphic 但题目含图形',
+      SEVERITY.ERROR, { allowedRepresentations: allowedReps, hasGraphic: hasGraphic }));
+  }
+
+  
+  var graphicRole = intent.graphicRole;
+  if (graphicRole === 'carrier' && !hasGraphic) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
+      'intent.graphicRole=carrier 要求题目必须含图形，实际未含',
+      SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
+  }
+  if (graphicRole === null && hasGraphic) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
+      'intent.graphicRole=null 要求题目不含图形，实际含图形',
+      SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
+  }
+
+  
+  var expectedMode = QT_EXPRESSION_MAP[qt];
+  var modes = intent.expressionModes || [];
+  if (expectedMode && modes.length && modes.indexOf(expectedMode) === -1) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'expressionMode',
+      'intent.expressionModes ' + JSON.stringify(modes) + ' 不含题型 ' + qt + ' 期望模式 ' + expectedMode,
+      SEVERITY.ERROR, { expressionModes: modes, questionType: qt, expectedMode: expectedMode }));
+  }
+
+  return {
+    state: errors.length ? 'fail' : 'pass',
+    errors: errors,
+    warnings: []
+  };
+}
+
+
 function validateKpSemantics(sq, context) {
   context = context || {};
   var plan = context.plan;
@@ -4273,6 +4354,10 @@ function validateKpSemantics(sq, context) {
   var typeContractResult = checkTypeContract(sq);
   allErrors.push.apply(allErrors, typeContractResult.errors);
 
+  
+  var intentAlignmentResult = checkIntentAlignment(sq, plan);
+  allErrors.push.apply(allErrors, intentAlignmentResult.errors);
+
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
 
@@ -4285,6 +4370,7 @@ function validateKpSemantics(sq, context) {
     semanticEvidence: evidenceResult.state,
     intentConsistency: intentResult.state,
     typeContract: typeContractResult.state,
+    intentAlignment: intentAlignmentResult.state,
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
@@ -4294,7 +4380,8 @@ function validateKpSemantics(sq, context) {
       content: contentResult.errors.length === 0 ? 'pass' : 'fail',
       semanticEvidence: evidenceResult.state,
       intentConsistency: intentResult.state,
-      typeContract: typeContractResult.state
+      typeContract: typeContractResult.state,
+      intentAlignment: intentAlignmentResult.state
     }
   };
 }
@@ -4312,6 +4399,7 @@ module.exports = {
   checkSemanticEvidence: checkSemanticEvidence,
   checkIntentEvidenceConsistency: checkIntentEvidenceConsistency,
   checkTypeContract: checkTypeContract,
+  checkIntentAlignment: checkIntentAlignment,
   getAllowedRelations: getAllowedRelations,
   getEvidenceRules: getEvidenceRules
 };

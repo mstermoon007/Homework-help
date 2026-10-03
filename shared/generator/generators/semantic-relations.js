@@ -225,8 +225,8 @@ function makePeriodFill(plan, context, i) {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem
   });
-  return finish(q, '图形按「' + p.shapes.join('') + '」为一组重复排列，第 ' + p.period
-    + ' 个图形是（  ）。', p.shape, [p.shapes],
+  return finish(q, '找规律：「' + p.shapes.join('') + '」依次重复出现，第 ' + p.period
+    + ' 个图形是 ____。', p.shape, [p.shapes],
     p.period + ' ÷ ' + p.n + ' = ' + p.quotient + '……' + p.rem
       + '，余数 ' + (p.rem === 0 ? '0（取末位）' : p.rem) + ' → 「' + p.shape + '」');
 }

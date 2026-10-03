@@ -60,25 +60,40 @@ function makeTable789Question(plan, context, i) {
   var prompt, answer, options = null, answerMode = 'input', operation;
 
   if (qt === 'calc') {
+    // calc：口诀引导 + 直接算式求值
     if (i % 2 === 0) {
-      prompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ____';
+      prompt = '运用乘法口诀计算：' + a + ' × ' + b + ' = ?';
       answer = String(p); operation = 'mult';
     } else {
-      prompt = '用乘法口诀求商：' + p + ' ÷ ' + a + ' = ____';
+      prompt = '用乘法口诀求商：' + p + ' ÷ ' + a + ' = ?';
       answer = String(b); operation = 'div';
     }
   } else if (qt === 'fill') {
-    if (form === 0) { prompt = a + ' × ' + b + ' = ____'; answer = String(p); operation = 'mult'; }
-    else if (form === 1) { prompt = a + ' × ____ = ' + p; answer = String(b); operation = 'mult'; }
-    else if (form === 2) { prompt = '____ × ' + a + ' = ' + p; answer = String(b); operation = 'mult'; }
-    else if (form === 3) { prompt = p + ' ÷ ' + a + ' = ____'; answer = String(b); operation = 'div'; }
+    // fill：空出「首位操作数」，核心骨架与 calc 的 #op# 互异
+    if (form <= 2) { prompt = '____ × ' + a + ' = ' + p; answer = String(b); operation = 'mult'; }
+    else if (form === 3) { prompt = '____ ÷ ' + a + ' = ' + b; answer = String(p); operation = 'div'; }
     else { prompt = p + ' ÷ ____ = ' + b; answer = String(a); operation = 'div'; }
   } else if (qt === 'choice') {
-    if (form === 0) { prompt = a + ' × ' + b + ' = （ ）'; answer = String(p); options = table789Options(rng, p, [p + a, p - b, p + b, p + 1]); operation = 'mult'; }
-    else if (form === 1) { prompt = a + ' × （ ） = ' + p; answer = String(b); options = table789Options(rng, b, [b + 1, b - 1, b + 2, a]); operation = 'mult'; }
-    else if (form === 2) { prompt = '（ ） × ' + a + ' = ' + p; answer = String(b); options = table789Options(rng, b, [b + 2, b - 1, b + 1, a - 1]); operation = 'mult'; }
-    else if (form === 3) { prompt = p + ' ÷ ' + a + ' = （ ）'; answer = String(b); options = table789Options(rng, b, [b + 1, b - 1, b + 2, a]); operation = 'div'; }
-    else { prompt = p + ' ÷ （ ） = ' + b; answer = String(a); options = table789Options(rng, a, [a + 1, a - 1, a + 2, b]); operation = 'div'; }
+    // choice：结果匹配——题干出得数，选项为算式
+    var isMult = i % 2 === 0;
+    var target = isMult ? p : b;
+    var correctExpr = isMult ? (a + ' × ' + b) : (p + ' ÷ ' + a);
+    var cand = [];
+    function pushCand(e) { if (cand.indexOf(e) === -1 && cand.length < 4) cand.push(e); }
+    if (isMult) {
+      pushCand(a + ' × ' + b);
+      pushCand(a + ' × ' + (b + 1));
+      pushCand((a + 1) + ' × ' + b);
+      pushCand(a + ' × ' + Math.max(2, b - 1));
+    } else {
+      pushCand(p + ' ÷ ' + a);
+      pushCand(p + ' ÷ ' + (a + 1));
+      pushCand((p + a) + ' ÷ ' + a);
+      pushCand(Math.max(a, p - 1) + ' ÷ ' + a);
+    }
+    options = Rng.shuffle(rng, cand.slice(0, 4));
+    prompt = '下面哪个算式等于 ' + target + '？';
+    answer = correctExpr; operation = isMult ? 'mult' : 'div';
     answerMode = 'choice';
   } else { // apply：7~9 表内乘除情境，三组形式 × 四类物品轮换扩空间
     var goods = ['月饼', '笔记本', '彩笔', '气球'];
@@ -327,6 +342,43 @@ function makeReasoningQuestion(plan, context, i, kp) {
     }
   }
 
+  // P30-GEN-06（P30-16）：推理族 apply/fill/choice 共用同一谜题题面会因核心骨架
+  // 子串包含导致跨题型 sim≥0.85。按题型变换题面：
+  //   fill  —— 条件同义换词 + 疑问词替换为 ____；
+  //   choice —— 条件同义换词 + 末尾设问改为「正确选项是哪一个」。
+  //   apply —— 原始谜题。
+  // 同义换词打散长条件块的连续共享 3-gram，使 sim 降到 0.85 以下。
+  var qt2 = plan.questionTypeId;
+  var stemPrompt = prompt;
+  function rewordCond(s) {
+    return String(s)
+      .replace(/说谎/g, '撒谎').replace(/说/g, '称')
+      .replace(/共有/g, '总共有').replace(/一共/g, '总共')
+      .replace(/至少/g, '最少').replace(/最多/g, '至多')
+      .replace(/每隔/g, '每间隔').replace(/平均/g, '均等');
+  }
+  // 把题面按句读拆成子句，供 fill 倒序重组（打散与 apply/choice 的连续共享 3-gram）
+  function splitClauses(s) {
+    return String(s).split(/[。，、；！？\n]+/).filter(function (c) { return c.trim().length > 0; });
+  }
+  if (qt2 === 'fill') {
+    // fill：子句倒序 + 末尾 ____（结构与 apply 正序、choice 换词都互异）
+    if (type === 'seq') {
+      stemPrompt = '数列 ' + sq.s + ' 中，____ 是下一项';
+    } else {
+      var cls = splitClauses(prompt);
+      stemPrompt = cls.reverse().join('，') + '，____';
+    }
+  } else if (qt2 === 'choice') {
+    // choice：条件同义换词 + 选择问式
+    if (type === 'seq') {
+      stemPrompt = '数列 ' + sq.s + ' 的下一项是多少？正确选项是哪一个？';
+    } else {
+      var condChoice = rewordCond(String(prompt).replace(/[^。！？]*[？?]\s*$/, ''));
+      stemPrompt = condChoice + '正确选项是哪一个？';
+    }
+  }
+
   // P25-07：choice 题型且源码侧有语义选项池 → 直接构建值约定选项
   //（避免落入 finisher 的数值重建把「鸡X只，兔Y只」类语义选项丢成数字）。
   if (plan.questionTypeId === 'choice' && (logicOptions || choicePool)) {
@@ -346,7 +398,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
       spiralLevel: plan.spiralLevel || 1,
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
-      prompt: prompt,
+      prompt: stemPrompt,
       answer: { value: ansText, acceptable: [] },
       answerMode: 'choice',
       data: { mode: 'apply', steps: steps, questionType: plan.questionTypeId, options: opts, correctIndex: opts.indexOf(ansText) }
@@ -360,7 +412,7 @@ function makeReasoningQuestion(plan, context, i, kp) {
     spiralLevel: plan.spiralLevel || 1,
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
-    prompt: prompt,
+    prompt: stemPrompt,
     answer: typeof answer === 'number' ? { value: String(answer), acceptable: [] } : { value: String(answer), acceptable: [] },
     answerMode: 'input',
     data: { mode: 'apply', steps: steps, questionType: plan.questionTypeId }

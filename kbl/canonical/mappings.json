@@ -209,7 +209,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=1"
@@ -259,7 +259,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=1"
@@ -579,7 +579,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=1"
@@ -1389,7 +1389,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R07:理解;R10:步数=1"
@@ -1589,7 +1589,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R07:理解;R10:步数=1"
@@ -1639,7 +1639,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=1"
@@ -1689,7 +1689,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=1"
@@ -1739,7 +1739,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=1"
@@ -1789,7 +1789,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=1"
@@ -1839,7 +1839,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R10:步数=2"
@@ -2219,7 +2219,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=1"
@@ -2269,7 +2269,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=1"
@@ -2319,7 +2319,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=1"
@@ -2369,7 +2369,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=1"
@@ -2419,7 +2419,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=1"
@@ -2469,7 +2469,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=1"
@@ -2519,7 +2519,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=1"
@@ -2569,7 +2569,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=1"
@@ -2619,7 +2619,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=1"
@@ -2669,7 +2669,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=1"
@@ -3149,7 +3149,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R10:步数=2"
@@ -4049,7 +4049,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -4099,7 +4099,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -4149,7 +4149,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -4399,7 +4399,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -4449,7 +4449,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -4499,7 +4499,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -4549,7 +4549,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R04:问题情境;R08:综合应用;R10:步数=3"
@@ -5099,7 +5099,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -5149,7 +5149,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=2"
@@ -5199,7 +5199,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=2"
@@ -5249,7 +5249,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -5529,7 +5529,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -5579,7 +5579,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -5629,7 +5629,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -5679,7 +5679,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -5969,7 +5969,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=2"
@@ -6019,7 +6019,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=2"
@@ -6069,7 +6069,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R09:运算;R10:步数=2"
@@ -6119,7 +6119,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -6169,7 +6169,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=2"
@@ -6219,7 +6219,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -6269,7 +6269,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R09:运算;R10:步数=2"
@@ -6319,7 +6319,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -6369,7 +6369,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -6449,7 +6449,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=2"
@@ -6499,7 +6499,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=2"
@@ -6549,7 +6549,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=2"
@@ -6599,7 +6599,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R04:问题情境;R10:步数=3"
@@ -7279,7 +7279,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=2"
@@ -7329,7 +7329,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=2"
@@ -7379,7 +7379,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -7669,7 +7669,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R07:理解;R10:步数=2"
@@ -7719,7 +7719,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -7769,7 +7769,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=2"
@@ -7819,7 +7819,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -7899,7 +7899,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=2"
@@ -7949,7 +7949,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=2"
@@ -7999,7 +7999,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -8049,7 +8049,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=3"
@@ -8379,7 +8379,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -8429,7 +8429,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -8479,7 +8479,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -8969,7 +8969,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -9019,7 +9019,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -9069,7 +9069,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -9119,7 +9119,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -9169,7 +9169,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -9219,7 +9219,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -9429,7 +9429,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -9479,7 +9479,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=2"
@@ -9529,7 +9529,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=2"
@@ -9579,7 +9579,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=2"
@@ -9629,7 +9629,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R04:问题情境;R08:综合应用;R10:步数=3"
@@ -9709,7 +9709,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R07:理解;R10:步数=2"
@@ -9759,7 +9759,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=2"
@@ -9809,7 +9809,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=2"
@@ -9859,7 +9859,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=3"
@@ -9999,7 +9999,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -10049,7 +10049,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -10099,7 +10099,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -10589,7 +10589,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R06:初始认识;R10:步数=3"
@@ -10639,7 +10639,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=3"
@@ -10689,7 +10689,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R04:问题情境;R08:综合应用;R10:步数=4"
@@ -10899,7 +10899,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -10949,7 +10949,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -10999,7 +10999,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -11049,7 +11049,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R09:运算;R10:步数=3"
@@ -11099,7 +11099,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -11149,7 +11149,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -11229,7 +11229,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -11279,7 +11279,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -11329,7 +11329,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -11379,7 +11379,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -11549,7 +11549,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -11599,7 +11599,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -11649,7 +11649,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -11939,7 +11939,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -11989,7 +11989,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -12039,7 +12039,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -12089,7 +12089,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -12139,7 +12139,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -12189,7 +12189,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R09:运算;R10:步数=3"
@@ -12479,7 +12479,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=3"
@@ -12529,7 +12529,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -12579,7 +12579,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=3"
@@ -12629,7 +12629,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R04:问题情境;R08:综合应用;R10:步数=4"
@@ -12909,7 +12909,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -12959,7 +12959,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -13009,7 +13009,7 @@
       "questionType": "classify",
       "capability": "classify",
       "permission": "allow",
-      "pluginId": "generator:classification",
+      "pluginId": "generator:stats",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -13359,7 +13359,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -13409,7 +13409,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R05:高阶数系;R10:步数=3"
@@ -13459,7 +13459,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R10:步数=4"
@@ -13509,7 +13509,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R05:高阶数系;R07:理解;R10:步数=3"
@@ -13559,7 +13559,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R07:理解;R10:步数=4"
@@ -13609,7 +13609,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R05:高阶数系;R09:运算;R10:步数=3"
@@ -13659,7 +13659,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R08:综合应用;R10:步数=4"
@@ -13909,7 +13909,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=3"
@@ -13959,7 +13959,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R10:步数=3"
@@ -14009,7 +14009,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R09:运算;R10:步数=3"
@@ -14059,7 +14059,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R08:综合应用;R10:步数=3"
@@ -14109,7 +14109,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R04:问题情境;R07:理解;R10:步数=4"
@@ -14919,7 +14919,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R06:初始认识;R10:步数=3"
@@ -14969,7 +14969,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -15019,7 +15019,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -15069,7 +15069,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R06:初始认识;R10:步数=3"
@@ -15119,7 +15119,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -15169,7 +15169,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R04:问题情境;R08:综合应用;R10:步数=4"
@@ -15499,7 +15499,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R10:步数=3"
@@ -15549,7 +15549,7 @@
       "questionType": "geometry",
       "capability": "geometry",
       "permission": "allow",
-      "pluginId": "generator:selection-fill",
+      "pluginId": "generator:arithmetic-mixed-calculation",
       "coefficient": 1,
       "source": "kbl-derived",
       "derivation": "R02:数域=整数域;R04:问题情境;R05:高阶数系;R08:综合应用;R10:步数=4"

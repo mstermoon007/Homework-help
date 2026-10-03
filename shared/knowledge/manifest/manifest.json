@@ -1,9 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "catalogVersion": "math-v1.0.0",
-  "packageVersion": "kbl-math-2026-10-02",
+  "packageVersion": "kbl-math-2026-09-13",
   "buildTool": "tools/kbl/build.js",
-  "buildAt": "2026-10-02T11:00:18.520Z",
   "counts": {
     "knowledgePoints": 375,
     "units": 98,
@@ -20,16 +19,16 @@
     "algorithm": "sha256",
     "files": {
       "data/math/curriculum.json": "cacb35c21cc0731aaf4dec56a80e5da257d8de145896d3a7eed79a8274b7f6c1",
-      "data/math/g1/knowledge-points.json": "e5fb155a2f6a0771c4426f8e74515e89a2069715aa957ff91690b72eadc077c5",
-      "data/math/g2/knowledge-points.json": "9cd06b0d4dedfa4ad45d30455fbf87c6efb188bc173459a216ff756b2ea23f94",
-      "data/math/g3/knowledge-points.json": "7b3b27ec2b7e2b4526818dacb1e5975fe1edb64d3810e7263abfad8be8336f80",
-      "data/math/g4/knowledge-points.json": "7d58f7cbe0ea07c458ad6256d7ea0faa6e6134eead21854c281bcb4053b3278a",
-      "data/math/g5/knowledge-points.json": "33fae1ee21d55ad1c790a8525fc0a93f93fbb04eac8de8beba6d82f57d223364",
-      "data/math/g6/knowledge-points.json": "2e734323ebb8482dee1cbdb75103992191b3072acf3d27476164b8cb8d5ce594",
+      "data/math/g1/knowledge-points.json": "670c9b2546820d46bb9cf567c7b591ceb8f41adeeb9eeb05d40ff5006623587b",
+      "data/math/g2/knowledge-points.json": "9ed52ea8b25c5f48bf4f4e9c2603a410c196f09164ce1331e1d8ad0a39b049b6",
+      "data/math/g3/knowledge-points.json": "64eb22e1727870ab2e92b55b684e74d0f0f5514d8cefd705c7525a0f7fd40f95",
+      "data/math/g4/knowledge-points.json": "16ac1a755df7f72a69dd499e3ab40cda69fc7d4cea9a0105cfc2a4ea22004dbd",
+      "data/math/g5/knowledge-points.json": "2a5f444b1653c9353245300811e33426982213d7e55264fb3468fab68b606c98",
+      "data/math/g6/knowledge-points.json": "dbe5fabf69bbd66ca3baa86dcf38c01928b6bb988aed3043f799662a3d178f86",
       "relations/math/relations.json": "d2968eab236b174825c31c7e78f3f171a545439e0eda24b9903b7f582b2687eb",
-      "mappings/generation-contract/math.json": "1ac2597e669f22b0528ceedf30146419542b5e528d428cc2cae333c4057eb350",
+      "mappings/generation-contract/math.json": "e3fc2017b954d67b8aa61d396c96c521c0fd593f069bdbd486ed5cd4628c2136",
       "index/index.json": "2bdd0282c8694245ab8597f09488c41ce4ce29e44811851e1ea5f5052ad517a3"
     },
-    "rootHash": "20609e50cad9928142ae45b31ea637f55ddfee8abfaed908e3f19a828e2bfbcf"
+    "rootHash": "fadfcbdda0d83fbe5d4aad81a73828752138eb0fc896932cc4976bf99a020df4"
   }
 }

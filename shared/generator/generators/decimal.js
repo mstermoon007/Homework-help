@@ -106,47 +106,260 @@ function divStructure(rng) {
 }
 
 /* ------------------------------------------------------------------ *
- * 概念结构（返回 {prompt, answer, options, story}）
+ * P30-GEN-06（P30-16）：子类型 × 题型 Assessment Target 真分工
+ *
+ * 同一小数概念在四种题型上承担不同训练目标（KBL 概念/运算受限派生，非随机换壳）：
+ *   calc   —— 列式计算（直接求值，算式在场）
+ *   fill   —— 形式转换/逆推填空（空位承担结构性子目标，如 小数↔分数、小数点移动填倍数）
+ *   choice —— 表征/关系辨析（选项是不同表征或不同算式，不是同值 ±0.1）
+ *   apply  —— 真实情境迁移（米/分米/元/角/商品/身高）
+ *
+ * 题型集仍为 calc/fill/choice/apply（C 类小数 KP 的 ALLOW 集，未扩题型）。
  * ------------------------------------------------------------------ */
 
-function conceptItem(sub, rng) {
-  if (sub === 'compare') {
-    var a = r1(ri(rng, 11, 88) / 10), b = r1(ri(rng, 11, 88) / 10);
-    while (b === a) b = r1(ri(rng, 11, 88) / 10);
-    var sign = a > b ? '>' : '<';
-    return { stem: '比较大小：' + fmt(a) + ' ○ ' + fmt(b) + '（参考：' + fmt(Math.max(a, b)) + ' − ' + fmt(Math.min(a, b)) + ' = ' + fmt(r1(Math.abs(a - b))) + '），○ 里应填什么（>、< 或 =）？', answer: sign,
-      options: ['>', '<', '='], support: fmt(Math.max(a, b)) + ' − ' + fmt(Math.min(a, b)) + ' = ' + fmt(r1(Math.abs(a - b))) };
+var GOODS = ['笔记本', '橡皮', '彩带', '布料'];
+var MEASURE_TAILS = { add: ['米', '元'], sub: ['元', '千克'] };
+
+function numOpt(rng, correct, pool) {
+  var uniq = {}, out = [];
+  uniq[String(correct)] = 1; out.push(String(correct));
+  for (var k = 0; k < pool.length && out.length < 4; k++) {
+    var v = pool[k];
+    if (v == null) continue;
+    var s = fmt(v);
+    if (!uniq[s] && Number(s) > 0) { uniq[s] = 1; out.push(s); }
   }
+  var guard = 0;
+  while (out.length < 4 && guard++ < 30) out.push(fmt(r2(Number(correct) + 0.1 * (out.length + 1))));
+  return Rng.shuffle(rng, out.slice(0, 4));
+}
+
+// 受限算式求值（仅支持小数与 + − × ÷，先乘除后加减；用于校验干扰项得数不与正确答案相撞）
+function evalExpr(s) {
+  var tokens = String(s).match(/[\d.]+|[+\-−×÷]/g);
+  if (!tokens) return null;
+  var vals = [], ops = [], i, t;
+  function prec(o) { return (o === '×' || o === '÷') ? 2 : 1; }
+  function calc(x, o, y) {
+    if (o === '+') return x + y;
+    if (o === '−' || o === '-') return x - y;
+    if (o === '×' || o === 'x' || o === '*') return x * y;
+    if (o === '÷' || o === '/') return x / y;
+    return null;
+  }
+  for (i = 0; i < tokens.length; i++) {
+    t = tokens[i];
+    if (/[\d.]/.test(t)) {
+      vals.push(Number(t));
+    } else {
+      while (ops.length && prec(ops[ops.length - 1]) >= prec(t)) {
+        var y = vals.pop(), x = vals.pop(), o = ops.pop(), v = calc(x, o, y);
+        if (v == null) return null;
+        vals.push(v);
+      }
+      ops.push(t);
+    }
+  }
+  while (ops.length) {
+    var y2 = vals.pop(), x2 = vals.pop(), o2 = ops.pop(), v2 = calc(x2, o2, y2);
+    if (v2 == null) return null;
+    vals.push(v2);
+  }
+  return vals.length === 1 ? r4(vals[0]) : null;
+}
+
+// 算式结构（addsub/addsub-mix/mult/div/mult-estimate）的四题型真分工
+function arithmeticTyped(sub, qt, rng) {
+  var st;
+  if (sub === 'div') st = divStructure(rng);
+  else if (sub === 'addsub-mix') st = addsubStructure(rng, true);
+  else st = (sub === 'addsub') ? addsubStructure(rng, false) : multStructure(rng);
+  var expr = st.expr, answer = st.answer;
+  var nums = expr.match(/[\d.]+/g);
+  var mOp = (/÷/.test(expr)) ? '÷' : (/×/.test(expr)) ? '×' : (/−/.test(expr)) ? '−' : '+';
+  var correctVal = evalExpr(expr);
+
+  if (qt === 'calc') {
+    return { prompt: '列式计算：' + expr + ' = ？', answer: answer, options: null };
+  }
+
+  if (qt === 'fill') {
+    // 逆推填空：已知得数与一个操作数，填另一个操作数（未知数位置子目标）
+    var parts = /^([\d.]+)\s*([+\-−×÷])\s*([\d.]+)$/.exec(expr);
+    if (parts) {
+      var a = parts[1], op = parts[2], b = parts[3];
+      if (rng() < 0.5) return { prompt: '在 ____ 里填上合适的数：____ ' + op + ' ' + b + ' = ' + answer, answer: a, options: null };
+      return { prompt: '在 ____ 里填上合适的数：' + a + ' ' + op + ' ____ = ' + answer, answer: b, options: null };
+    }
+    return { prompt: '在 ____ 里填上合适的数：' + expr + ' = ____', answer: answer, options: null };
+  }
+
+  if (qt === 'choice') {
+    // 关系辨析：四个算式中找得数等于给定值的那个；干扰项替换首操作数并经求值去重
+    var seenExpr = {}, optsArr = [expr];
+    seenExpr[expr] = 1;
+    var deltas = [1, -1, 2, 0.1, -0.1, 3];
+    for (var k = 0; k < deltas.length && optsArr.length < 4; k++) {
+      var nv = r4(Number(nums[0]) + deltas[k]);
+      if (nv <= 0) continue;
+      var cand = fmt(nv) + ' ' + expr.slice(String(nums[0]).length).replace(/^\s*/, '');
+      if (seenExpr[cand]) continue;
+      var cv = evalExpr(cand);
+      if (cv == null || (correctVal != null && r4(Math.abs(cv - correctVal)) < 0.001)) continue;
+      seenExpr[cand] = 1;
+      optsArr.push(cand);
+    }
+    var guard = 0;
+    while (optsArr.length < 4 && guard++ < 50) {
+      var rv = r2(Number(nums[0]) + (guard % 2 === 0 ? guard : -guard) * 0.7);
+      if (rv <= 0) continue;
+      var cand2 = fmt(rv) + ' ' + expr.slice(String(nums[0]).length).replace(/^\s*/, '');
+      if (!seenExpr[cand2]) { seenExpr[cand2] = 1; optsArr.push(cand2); }
+    }
+    return { prompt: '下面哪个算式的得数是 ' + answer + '？（  ）', answer: expr, options: Rng.shuffle(rng, optsArr.slice(0, 4)) };
+  }
+
+  // apply：真实情境迁移（小数数量须可连续计量：乘价用「每米彩带 × 米数」，不用「买 2.3 本」）
+  var goods = pick(rng, GOODS);
+  var story;
+  if (nums.length === 3) {
+    story = '文具店盘点：上午营业额 ' + nums[0] + ' 元，中午变化 ' + nums[1] + ' 元，下午变化 ' + nums[2] + ' 元，列式求现在的营业额';
+  } else if (mOp === '×') {
+    story = '彩带每米 ' + nums[1] + ' 元，买 ' + nums[0] + ' 米，列式求一共要付多少元';
+  } else if (mOp === '÷') {
+    story = '把 ' + nums[0] + ' 米长的彩带平均分成 ' + nums[1] + ' 段，列式求每段长多少米';
+  } else if (mOp === '−') {
+    story = '买' + goods + '付 ' + nums[0] + ' 元，找回 ' + nums[1] + ' 元，列式求' + goods + '多少元';
+  } else {
+    story = '买' + goods + '用去 ' + nums[0] + ' 元，又买一支笔用去 ' + nums[1] + ' 元，列式求一共花了多少元';
+  }
+  return { prompt: story + '：' + expr + ' = ？', answer: answer, options: null };
+}
+
+// 乘法估算（mult-estimate）的四题型真分工：把一位小数估成最接近的整数再乘
+function estimateTyped(qt, rng) {
+  var tx = ri(rng, 22, 88);
+  while (tx % 10 === 0) tx = ri(rng, 22, 88); // 十分位非零，保证 exact ≠ est（选项不撞）
+  var x = r1(tx / 10);                        // 2.2–8.8 的一位小数，nearest≥2
+  var nearest = Math.round(x);
+  var n = ri(rng, 2, 9);
+  var est = nearest * n;
+  var exact = r2(x * n);
+  if (qt === 'calc') {
+    return { prompt: '估算（先把 ' + fmt(x) + ' 看成最接近的整数，再列式）：' + fmt(x) + ' × ' + n + ' ≈ ？', answer: String(est), options: null };
+  }
+  if (qt === 'fill') {
+    return { prompt: '估算填空：把 ' + fmt(x) + ' 看成最接近的整数，____ × ' + n + ' ≈ ' + est, answer: String(nearest), options: null };
+  }
+  if (qt === 'choice') {
+    var optsE = Rng.shuffle(rng, [String(est), fmt(exact), String((nearest + 1) * n), String((nearest - 1) * n)]);
+    return { prompt: '估算 ' + fmt(x) + ' × ' + n + '，下面哪个得数最合理？（  ）', answer: String(est), options: optsE };
+  }
+  return { prompt: '彩带每米 ' + fmt(x) + ' 元，买 ' + n + ' 米，先估成整数再算，大约要带多少元？', answer: String(est), options: null };
+}
+
+// 概念子类型的四题型真分工
+function conceptTyped(sub, qt, rng) {
+  if (sub === 'readwrite') {
+    var n = ri(rng, 2, 9), dec = r1(n / 10);
+    if (qt === 'calc') return { prompt: '列式（十分之几就是零点几）：' + n + '/10 = ？', answer: fmt(dec), options: null };
+    if (qt === 'fill') return { prompt: fmt(dec) + ' 写成分数是 ____/10（填分子）', answer: String(n), options: null };
+    if (qt === 'choice') {
+      var opts = numOpt(rng, fmt(dec), [r1((n === 9 ? 8 : n + 1) / 10), r1(Math.max(1, n - 1) / 10), r1(n / 100), n]);
+      return { prompt: '下面哪个小数表示 ' + n + '/10 ？（  ）', answer: fmt(dec), options: opts };
+    }
+    return { prompt: '把 1 米平均分成 10 份，取其中 ' + n + ' 份，这 ' + n + ' 份一共长多少米？', answer: fmt(dec), options: null };
+  }
+
   if (sub === 'nature') {
     var base = r1(ri(rng, 12, 85) / 10);
-    return { stem: '根据小数的性质，化简 ' + fmt(base) + '0 = ____', answer: fmt(base),
-      options: [fmt(base), fmt(base) + '0', fmt(r1(base / 10))], support: fmt(base) + '0 − 0 = ' + fmt(base) + '0' };
+    var full = base.toFixed(1) + '0';   // 2.0 → '2.00'，不能用 '2'+'0'（会变成 20）
+    if (qt === 'calc') return { prompt: '根据小数的性质化简，列式：' + full + ' − 0 = ？', answer: fmt(base), options: null };
+    if (qt === 'fill') return { prompt: '小数的性质：在 ____ 里填上合适的数，' + full + ' = ____', answer: fmt(base), options: null };
+    if (qt === 'choice') {
+      var opts2 = numOpt(rng, fmt(base), [fmt(r1(base / 10)), String(Math.round(base * 10)), fmt(r1(base + 1))]);
+      return { prompt: '下面各数中，与 ' + full + ' 大小相等的是？（  ）', answer: fmt(base), options: opts2 };
+    }
+    return { prompt: '一块橡皮标价 ' + full + ' 元，根据小数的性质去掉末尾不影响大小的零，它可以写成多少元？', answer: fmt(base), options: null };
   }
-  if (sub === 'point-move') {
-    var p = r2(ri(rng, 11, 99) / 100);
-    var right = rng() < 0.5;
-    return { expr: (right ? fmt(p) + ' × 10' : fmt(ri(rng, 11, 99) * 10) + ' ÷ 10'),
-      answer: right ? fmt(r2(p * 10)) : fmt(r2(ri(rng, 11, 99) / 10)),
-      stem: (right ? '小数点向右移动一位：' + fmt(p) + ' × 10 = ____' : '小数点向左移动一位：' + fmt(ri(rng, 11, 99)) + ' ÷ 10 = ____') };
-  }
+
   if (sub === 'approx') {
     var x = r2(ri(rng, 105, 999) / 100);
     var one = r1(Math.round(x * 10) / 10);
-    return { stem: fmt(x) + ' 保留一位小数 ≈ ____（参考：' + fmt(one) + ' + 0.0 = ' + fmt(one) + '）', answer: fmt(one),
-      options: [fmt(one), fmt(Math.round(x)), fmt(r2(x + 0.1))] };
+    if (qt === 'calc') {
+      // 算式在场：先求两个两位小数之和，再用四舍五入法保留一位小数（得数是近似数）
+      var u = r2(ri(rng, 105, 499) / 100), v2 = r2(ri(rng, 105, 499) / 100);
+      var raw = r2(u + v2), rounded = r1(Math.round(raw * 10) / 10), guardAp = 0;
+      while (fmt(raw) === fmt(rounded) && guardAp++ < 20) {
+        v2 = r2(ri(rng, 105, 499) / 100); raw = r2(u + v2); rounded = r1(Math.round(raw * 10) / 10);
+      }
+      return { prompt: '列式计算（得数用四舍五入法保留一位小数）：' + fmt(u) + ' + ' + fmt(v2) + ' = ？', answer: fmt(rounded), options: null };
+    }
+    if (qt === 'fill') return { prompt: '一个两位小数保留一位小数后是 ' + fmt(one) + '，这个两位小数可能是 ____（写出一个即可）', answer: fmt(x), options: null };
+    if (qt === 'choice') {
+      // 干扰项保留一位小数后必须是不同的近似值（one±0.1/0.2），避免出现第二个正确选项
+      var opts3 = Rng.shuffle(rng, [fmt(x), fmt(r2(one + 0.12)), fmt(r2(one - 0.08)), fmt(r1(one + 0.2))]);
+      return { prompt: '下面哪个数保留一位小数约是 ' + fmt(one) + ' ？（  ）', answer: fmt(x), options: opts3 };
+    }
+    return { prompt: '小华量得身高 ' + fmt(x) + ' 米，保留一位小数，他的身高大约是多少米？', answer: fmt(one), options: null };
   }
+
+  if (sub === 'point-move') {
+    var p = r2(ri(rng, 11, 99) / 100);
+    var right = rng() < 0.5;
+    if (right) {
+      var after = r2(p * 10);
+      if (qt === 'calc') return { prompt: '列式计算（小数点向右移动一位）：' + fmt(p) + ' × 10 = ？', answer: fmt(after), options: null };
+      if (qt === 'fill') return { prompt: '小数点向右移动一位，在 ____ 里填数：' + fmt(p) + ' × ____ = ' + fmt(after), answer: '10', options: null };
+      if (qt === 'choice') {
+        var opts4 = numOpt(rng, fmt(after), [fmt(r2(p * 100)), fmt(r2(p)), fmt(r2(p + 1))]);
+        return { prompt: '把 ' + fmt(p) + ' 扩大到原来的 10 倍，得到多少？（  ）', answer: fmt(after), options: opts4 };
+      }
+      return { prompt: '1 米 = 10 分米，' + fmt(p) + ' 米是多少分米？', answer: fmt(after), options: null };
+    }
+    var xi = ri(rng, 11, 99);
+    var afterL = r1(xi / 10);
+    if (qt === 'calc') return { prompt: '列式计算（小数点向左移动一位）：' + xi + ' ÷ 10 = ？', answer: fmt(afterL), options: null };
+    if (qt === 'fill') return { prompt: '小数点向左移动一位，在 ____ 里填数：' + xi + ' ÷ ____ = ' + fmt(afterL), answer: '10', options: null };
+    if (qt === 'choice') {
+      var opts5 = numOpt(rng, fmt(afterL), [fmt(r1(xi / 100)), String(xi), fmt(r1(xi / 10 + 1))]);
+      return { prompt: '把 ' + xi + ' 缩小到原来的 1/10，得到多少？（  ）', answer: fmt(afterL), options: opts5 };
+    }
+    return { prompt: '计算器上显示 ' + xi + '，把这个数缩小到原来的十分之一，屏幕上变成多少？', answer: fmt(afterL), options: null };
+  }
+
   if (sub === 'unit') {
     var m = ri(rng, 2, 9), dm = m * 10;
-    return { expr: m + ' × 10', answer: String(dm), stem: m + ' 米 = ' + m + ' × 10 = ____ 分米',
-      options: [String(dm), String(m), String(dm * 10)] };
+    if (qt === 'calc') return { prompt: '列式换算：' + m + ' × 10 = ？（分米）', answer: String(dm), options: null };
+    if (qt === 'fill') return { prompt: '在 ____ 里填上合适的数：' + m + ' 米 = ____ 分米', answer: String(dm), options: null };
+    if (qt === 'choice') {
+      var opts6 = numOpt(rng, String(dm), [String(m), String(dm * 10), String(dm + 10), String(dm - 10)]);
+      return { prompt: m + ' 米等于多少分米？（  ）', answer: String(dm), options: opts6 };
+    }
+    return { prompt: '做一条彩带用布 ' + m + ' 米，合多少分米？', answer: String(dm), options: null };
   }
-  // readwrite / 意义：0.a 里面有几个 0.1
-  // FINAL-140：G3 初步认识不引用 n÷10（小数除商/分数与除法为后续年级），
-  // 用同年级教材语言「十分之几就是零点几」（8/10 = 0.8，8 个 0.1），/ 记法满足 expressionPresent。
-  var n = ri(rng, 2, 9);
-  var dec = r1(n / 10);
-  return { stem: fmt(dec) + ' 里面有 ____ 个 0.1（参考：' + n + '/10 = ' + fmt(dec) + '，' + n + ' 个 0.1）',
-    answer: String(n), options: [String(n), String(dec), '10'] };
+
+  // compare：比较大小（calc 求差比较 / fill 填符号 / choice 比较式辨析 / apply 跳远情境）
+  var a = r1(ri(rng, 11, 88) / 10), b = r1(ri(rng, 11, 88) / 10);
+  while (b === a) b = r1(ri(rng, 11, 88) / 10);
+  var sign = a > b ? '>' : '<';
+  var hi = fmt(Math.max(a, b)), lo = fmt(Math.min(a, b)), diff = fmt(r1(Math.abs(a - b)));
+  if (qt === 'calc') return { prompt: '列式比一比：' + hi + ' − ' + lo + ' = ？（差大于 0，说明前者大）', answer: diff, options: null };
+  if (qt === 'fill') return { prompt: '比较大小，在 ____ 里填上合适的符号（>、< 或 =）：' + fmt(a) + ' ____ ' + fmt(b), answer: sign, options: null };
+  if (qt === 'choice') {
+    // 比较式辨析：四个大小关系中只有一个成立
+    var opp = sign === '>' ? '<' : '>';
+    var correct = fmt(a) + ' ' + sign + ' ' + fmt(b);
+    var opts7 = Rng.shuffle(rng, [
+      correct,
+      fmt(a) + ' ' + opp + ' ' + fmt(b),
+      fmt(a) + ' = ' + fmt(b),
+      fmt(b) + ' ' + sign + ' ' + fmt(a)
+    ]);
+    return { prompt: '下面大小关系正确的是？（  ）', answer: correct, options: opts7 };
+  }
+  var ming = sign === '>' ? '小明' : '小红';
+  return { prompt: '跳远比赛，小明跳了 ' + fmt(a) + ' 米，小红跳了 ' + fmt(b) + ' 米，谁跳得更远？', answer: ming, options: null };
 }
 
 /* ------------------------------------------------------------------ *
@@ -159,66 +372,19 @@ function buildQuestion(plan, context, i) {
   var sub = deriveSubtype(name);
   var qt = plan.questionTypeId;
 
-  var prompt, answer, options = null, steps = 1;
+  var arithmeticSubs = { 'addsub': 1, 'addsub-mix': 1, 'mult': 1, 'div': 1, 'word': 1 };
+  var typed = sub === 'mult-estimate' ? estimateTyped(qt, rng)
+    : arithmeticSubs[sub] ? arithmeticTyped(sub === 'word' ? 'mult' : sub, qt, rng)
+    : conceptTyped(sub, qt, rng);
 
-  var calcSubs = { 'addsub': 1, 'addsub-mix': 1, 'mult': 1, 'mult-estimate': 1, 'div': 1, 'point-move': 1, 'unit': 1 };
+  var prompt = typed.prompt;
+  var answer = typed.answer;
+  var options = typed.options || null;
 
-  if (sub === 'word') {
-    var inner = rng() < 0.5 ? addsubStructure(rng, false) : multStructure(rng);
-    var goods = pick(rng, ['笔记本', '橡皮', '彩带', '布料']);
-    prompt = '买' + goods + '一共花了 ' + inner.expr.replace(' ', '').replace(' ', '') + ' 元。列式计算 ' + inner.expr + ' = 多少元？';
-    answer = inner.answer;
-  } else if (calcSubs[sub]) {
-    var st;
-    if (sub === 'addsub' || sub === 'addsub-mix') st = addsubStructure(rng, sub === 'addsub-mix');
-    else if (sub === 'div') st = divStructure(rng);
-    else if (sub === 'point-move' || sub === 'unit') st = null;
-    else st = multStructure(rng);
-    if (st) {
-      prompt = '列式计算：' + st.expr + ' = ？';
-      answer = st.answer;
-    } else {
-      var c = conceptItem(sub, rng);
-      prompt = '列式计算：' + c.stem;
-      answer = c.answer; options = c.options;
-    }
-  } else {
-    var item = conceptItem(sub, rng);
-    prompt = item.stem;
-    answer = item.answer; options = item.options;
-  }
-
-  // fill：把 ？/____ 归一为空位
-  if (qt === 'fill') {
-    prompt = prompt.replace(' = ？', ' = ____').replace('？', '____');
-    if (!/____|\(\s*\)/.test(prompt)) prompt += ' ____';
-  }
-
-  var data = { mode: 'decimal', subType: sub, steps: steps };
-  if (qt === 'choice') {
-    var pool;
-    if (options) {
-      pool = options.map(String).slice(0, 4);
-    } else if (!isNaN(Number(answer))) {
-      var num = Number(answer);
-      var cand = {};
-      cand[String(num)] = 1;
-      [r2(num + 0.1), r2(num - 0.1), r2(num + 1), r2(num - 1), r2(num + 0.2)].forEach(function (x) {
-        if (x > 0) cand[fmt(x)] = 1;
-      });
-      pool = Object.keys(cand);
-      while (pool.length < 4) pool.push(fmt(r2(num + pool.length + 0.3)));
-      pool = pool.slice(0, 4);
-    } else {
-      pool = [String(answer), '都不是', '无法确定'];
-    }
-    var uniq = [], seen = {};
-    pool.forEach(function (o) { o = String(o); if (!seen[o]) { seen[o] = 1; uniq.push(o); } });
-    while (uniq.length < 4) uniq.push('以上都不对（' + uniq.length + '）');
-    options = Rng.shuffle(rng, uniq.slice(0, 4));
+  var data = { mode: 'decimal', subType: sub, steps: 1 };
+  if (qt === 'choice' && options) {
     data.options = options;
-    data.correctIndex = options.indexOf(String(answer));
-    answer = String(answer);
+    data.correctIndex = options.map(String).indexOf(String(answer));
   }
 
   return {

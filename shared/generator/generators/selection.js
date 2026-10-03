@@ -104,48 +104,57 @@ function createSelectionGenerator(spec) {
   function makeQuestion(plan, context, i) {
     var base = baseArithmetic(plan, context, i);
     var expr = Arith.formatExpression(base.structure.operands, base.structure.operators);
+    var qt = plan.questionTypeId;
 
-    if (mode === 'fill') {
+    // P30-GEN-06（P30-16）：selection-* 生成器可能被 KP 绑定承接多题型（fill/choice/judge/apply/calc），
+    // 题面须按 qt 分化骨架，不能恒用创建时的 mode。
+    if (qt === 'fill') {
       var qFill = buildBase(plan, context, i, { mode: 'fill', operation: base.operation, steps: base.structure.steps });
-      qFill.prompt = expr + ' = ____';
+      qFill.prompt = '计算：' + expr + ' = ____';
       qFill.answer = { value: String(base.answer), acceptable: [] };
       return qFill;
     }
 
-    if (mode === 'choice') {
+    if (qt === 'choice') {
       var distractors = Arith.generateDistractors(base.rng, base.answer, 3, base.constraints.numberRange);
       if (distractors.length < 2) {
-        // numberRange 过窄（如 {1,1}）时放宽干扰项范围，保证至少 2 个不同干扰项
         distractors = Arith.generateDistractors(base.rng, base.answer, 3, null);
       }
       var options = Rng.shuffle(base.rng, distractors.concat([base.answer]).map(String));
       var qChoice = buildBase(plan, context, i, { mode: 'choice', operation: base.operation, steps: base.structure.steps });
-      qChoice.prompt = expr + ' = ?';
+      qChoice.prompt = '请选择正确答案：' + expr + ' = ？';
       qChoice.answer = { value: String(base.answer), acceptable: [] };
       qChoice.data.options = options;
       qChoice.data.correctIndex = options.indexOf(String(base.answer));
       return qChoice;
     }
 
-    // judge：命题正确与否
-    var isTrue = base.rng() < 0.5;
-    var shown = isTrue
-      ? base.answer
-      : base.answer + Rng.pick(base.rng, [-1, 1]) * Rng.randInt(base.rng, 1, 2);
-    var qJudge = buildBase(plan, context, i, { mode: 'judge', operation: base.operation, steps: base.structure.steps, shownResult: String(shown) });
-    qJudge.prompt = expr + ' = ' + shown + '（对还是错？）';
-    qJudge.answer = {
-      value: isTrue,
-      acceptable: [],
-      explanation: isTrue
-        ? expr + ' = ' + base.answer + '，计算正确，说法成立。'
-        : expr + ' 的正确结果是 ' + base.answer + '，不是 ' + shown + '，说法错误。'
-    };
-    if (!isTrue) {
-      qJudge.data.misconception = '计算结果错误：' + expr.replace(/\s*=\s*$/, '') + ' 的正确结果是 ' +
-        base.answer + '，题中写成了 ' + shown + '。';
+    if (qt === 'judge') {
+      var isTrue = base.rng() < 0.5;
+      var shown = isTrue
+        ? base.answer
+        : base.answer + Rng.pick(base.rng, [-1, 1]) * Rng.randInt(base.rng, 1, 2);
+      var qJudge = buildBase(plan, context, i, { mode: 'judge', operation: base.operation, steps: base.structure.steps, shownResult: String(shown) });
+      qJudge.prompt = '判断对错：' + expr + ' = ' + shown + '（对还是错？）';
+      qJudge.answer = {
+        value: isTrue,
+        acceptable: [],
+        explanation: isTrue
+          ? expr + ' = ' + base.answer + '，计算正确，说法成立。'
+          : expr + ' 的正确结果是 ' + base.answer + '，不是 ' + shown + '，说法错误。'
+      };
+      if (!isTrue) {
+        qJudge.data.misconception = '计算结果错误：' + expr.replace(/\s*=\s*$/, '') + ' 的正确结果是 ' +
+          base.answer + '，题中写成了 ' + shown + '。';
+      }
+      return qJudge;
     }
-    return qJudge;
+
+    // apply / calc：直接写得数形态，前缀与 fill/choice/judge 区分
+    var qOther = buildBase(plan, context, i, { mode: mode, operation: base.operation, steps: base.structure.steps });
+    qOther.prompt = '直接写得数：' + expr + ' = ____';
+    qOther.answer = { value: String(base.answer), acceptable: [] };
+    return qOther;
   }
 
   var generator = {

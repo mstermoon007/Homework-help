@@ -95,6 +95,11 @@
     return _familyTable[kpId] || null;
   }
 
+  // P30-06：qt-intent 生成权威白名单——只有 confirmed（人工核准）/ ai-verified（受限推导全绿）
+  // 的行允许把教学意图与 assessment 约束挂到 GenerationParameters；
+  // needs-review / 未知状态不具生成权威（仅进审查报告），resolve 时 intent/assessment 一律为 null。
+  var INTENT_AUTHORITY_STATUSES = { confirmed: true, 'ai-verified': true };
+
   var _intentIndex = null;
   function getIntent(kpId, questionType) {
     if (_intentIndex === null) {
@@ -279,7 +284,10 @@
 
       var intentRow = questionType ? getIntent(kpId, questionType) : null;
       var intent = null;
-      if (intentRow && intentRow.intent) {
+      var expression = null;
+      var graphic = null;
+      // P30-06：needs-review 行不得作为生成权威——意图文本与机器约束均不挂载
+      if (intentRow && INTENT_AUTHORITY_STATUSES[intentRow.status] && intentRow.intent) {
         intent = {
           trainsWhat: intentRow.intent.trainsWhat || null,
           whyThisType: intentRow.intent.whyThisType || null,
@@ -287,6 +295,19 @@
           driftRisk: intentRow.intent.driftRisk || null,
           legitimacy: intentRow.intent.legitimacy || null
         };
+        // P30-05/P30-10：机器可执行约束并入 intent 块（权威行才对 Generator 可见）
+        if (intentRow.assessment && typeof intentRow.assessment === 'object') {
+          intent.targetCodes = (intentRow.assessment.targetCodes || []).slice();
+          intent.focus = intentRow.assessment.focus || null;
+          intent.requiredRelations = (intentRow.assessment.requiredRelations || []).slice();
+          intent.requiredConstructs = (intentRow.assessment.requiredConstructs || []).slice();
+          intent.allowedRepresentations = (intentRow.assessment.allowedRepresentations || []).slice();
+          intent.expressionModes = (intentRow.assessment.expressionModes || []).slice();
+          intent.graphicRole = intentRow.assessment.graphicRole == null ? null : intentRow.assessment.graphicRole;
+        }
+        // P30-10：expression/graphic 顶层投影（仅权威行）
+        expression = { modes: intent.expressionModes || [] };
+        graphic = intent.graphicRole != null ? { role: intent.graphicRole } : null;
       }
 
       return {
@@ -303,11 +324,15 @@
         representations: facts.representations.slice(),
         kind: kind,
         intent: intent,
+        expression: expression,
+        graphic: graphic,
         sources: {
           family: familySource,
           subTopic: 'mechanical-rule:kbl-name-concept',
           kind: kind ? 'mechanical-rule:kbl-name-operations' : 'none',
-          intent: intent ? 'teaching:qt-intent' : 'none'
+          // P30-06：blocked:<status> 显式标注「行存在但无生成权威」，供审计区分缺失与被拦
+          intent: intent ? ('teaching:qt-intent:' + intentRow.status)
+            : (intentRow ? ('blocked:qt-intent:' + intentRow.status) : 'none')
         }
       };
     }

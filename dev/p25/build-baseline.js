@@ -12,8 +12,11 @@
  *
  * 产出（全部新增文件，可重复运行）：
  *   kbl/teaching/kp-matrix.json             —— 375 KP 教学语义矩阵（含 A/B/C/D 草拟分级 + 依据）
- *   kbl/teaching/generation-matrix.json     —— 1570 映射逐行 + Generator 实际使用索引
  *   docs/archive/phases/p25/P25-BASELINE.md —— 11 项基线报告（归档位）
+ *
+ * P30-04：不再产出 kbl/teaching/generation-matrix.json——1570 映射逐行的唯一真源是
+ *   kbl/canonical/mappings.json（发射：kbl|shared/knowledge/.../generation-contract/math.json），
+ *   冻结证据在 docs/archive/phases/p28/P28-GENERATION-MATRIX-FROZEN.json；该快照零消费者且会陈旧，物理删除。
  *
  * 不变式（违反即 exit 1）：
  *   KP = 375、ALLOW = 1570、permission 全 allow、映射/能力/语义库 KP 全覆盖且 ID 一致
@@ -273,7 +276,7 @@ var kpMatrixJson = {
   kps: kpMatrix
 };
 fs.writeFileSync(path.join(OUT_DIR, 'kp-matrix.json'), JSON.stringify(kpMatrixJson, null, 2) + '\n');
-fs.writeFileSync(path.join(OUT_DIR, 'generation-matrix.json'), JSON.stringify(generationMatrix, null, 2) + '\n');
+// P30-04：generation-matrix.json 已删（1570 逐行真源 = canonical/mappings.json；零消费者的重复快照）
 
 // ---------- 9. BASELINE.md ----------
 function lvlList(level) {
@@ -312,7 +315,7 @@ md.push('- 年级·册分布：' + JSON.stringify(gradeDist));
 md.push('');
 md.push('## 2. 1570 条 KP×QuestionType 映射（对应指令第 3 项）');
 md.push('');
-md.push('全量 1570 行见 [generation-matrix.json](../../../../kbl/teaching/generation-matrix.json)（每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation/draftSemanticLevel）。');
+md.push('全量 1570 行的唯一真源见 `kbl/canonical/mappings.json`（运行时发射副本 `kbl/mappings/generation-contract/math.json`；每行含 knowledgeId/questionType/capability/permission/pluginId/coefficient/derivation，draftSemanticLevel 见 kp-matrix.json）。');
 md.push('');
 md.push('- 按题型分布：' + JSON.stringify(qtDist));
 md.push('- 按草拟分级×题型：' + JSON.stringify(levelQt));
@@ -385,4 +388,4 @@ console.log('[P25-00] 基线构建完成（只读，未修改任何源码/数据
 console.log('  KP = ' + kpIds.length + ' / ALLOW = ' + mapRows.length + ' / capability = ' + capRows.length + ' / 语义库 = ' + Object.keys(semById).length);
 console.log('  草拟分级：A=' + aList.length + ' B=' + bList.length + ' C=' + cList.length + ' D=' + dList.length);
 console.log('  registry 原生绑定 Generator：' + recs.length + ' 记录 / canonical 粗派生承载种类：' + generationMatrix.generatorIndex.canonicalPluginCoverage.length);
-console.log('  产出：docs/archive/phases/p25/P25-BASELINE.md, kbl/teaching/kp-matrix.json, kbl/teaching/generation-matrix.json');
+console.log('  产出：docs/archive/phases/p25/P25-BASELINE.md, kbl/teaching/kp-matrix.json');

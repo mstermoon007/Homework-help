@@ -1,6 +1,6 @@
 {
  "task": "P28-09 Generator Registry 收口 —— GENERATOR_MATRIX",
- "date": "2026-10-02",
+ "date": "2026-10-03",
  "generatorCount": 23,
  "canonicalTypes": [
   "calc",
@@ -144,7 +144,7 @@
    "version": 1,
    "supportsComposite": false,
    "kpBindings": 8,
-   "contractCarrierRows": 0,
+   "contractCarrierRows": 105,
    "producedRows1570": 35,
    "actualProducerTypes": [
     "calc",
@@ -608,7 +608,7 @@
    "version": 1,
    "supportsComposite": false,
    "kpBindings": 1,
-   "contractCarrierRows": 105,
+   "contractCarrierRows": 0,
    "producedRows1570": 3,
    "actualProducerTypes": [
     "fill",
@@ -696,7 +696,7 @@
    "validator": "pipeline(kpSemantic+TypeContract[geometry:graphicPresent]+schema)",
    "productionStatus": "PRODUCTION",
    "scope": "core",
-   "version": 4,
+   "version": 5,
    "supportsComposite": false,
    "kpBindings": 75,
    "contractCarrierRows": 0,

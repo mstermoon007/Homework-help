@@ -144,6 +144,7 @@ run('6a. Generation   (1570 ALLOW 真实生成)', 'node dev/check-allow-generati
 run('6b. Generation   (矩阵冻结)', 'node dev/p28/check-generation-matrix-freeze.js');
 run('6c. Generation   (Generator Registry)', 'node dev/p28/check-generator-matrix.js');
 run('6d. Generation   (四轴不夺权)', 'node dev/p28/check-generator-noninterference.js');
+run('6e. Generation   (KP×QT Maker 分工矩阵)', 'node dev/p30/check-kp-qt-maker-matrix.js', { timeout: 600000 });
 
 // ── 7. Education ──
 run('7.  Education    (教育语义生成)', 'node dev/check-educational-generation.js');

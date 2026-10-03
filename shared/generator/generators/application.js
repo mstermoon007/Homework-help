@@ -28,69 +28,81 @@ function seedFor(plan, context, i) {
   return (pkp(plan) + '|' + plan.questionTypeId + '|' + plan.difficulty + '|' + plan.count) + ':apply:' + i;
 }
 
-// 典型应用题模板
+// 典型应用题模板。choiceZh 为 choice/judge 专用精简题面（单行、措辞与 apply 的
+// 「已知条件…\n问题：…」双行结构互异，避免核心骨架子串包含导致跨题型 sim=1.0）。
 var PROBLEM_TEMPLATES = {
   // 总量 = 分量 + 分量
   'total-from-parts': {
     zh: '已知条件：{a} 和 {b}。\n问题：一共多少？',
+    choiceZh: '{a} 与 {b} 相加，和是多少？',
     ops: ['add'],
     relation: 'total = part1 + part2'
   },
   // 总量 - 分量 = 分量
   'part-from-total': {
     zh: '已知条件：一共 {total}，其中 {part1}。\n问题：剩下多少？',
+    choiceZh: '从 {total} 里去掉 {part1}，还剩多少？',
     ops: ['sub'],
     relation: 'part2 = total - part1'
   },
   // 比较：多几个 / 少几个
   'compare-more': {
     zh: '已知条件：A 有 {a}，B 比 A 多 {diff}。\n问题：B 有多少？',
+    choiceZh: '{a} 增加 {diff} 后是多少？',
     ops: ['add'],
     relation: 'B = A + diff'
   },
   'compare-less': {
     zh: '已知条件：A 有 {a}，B 比 A 少 {diff}。\n问题：B 有多少？',
+    choiceZh: '{a} 减少 {diff} 后是多少？',
     ops: ['sub'],
     relation: 'B = A - diff'
   },
   // 倍数关系
   'multiple': {
     zh: '已知条件：A 有 {a}，B 是 A 的 {n} 倍。\n问题：B 有多少？',
+    choiceZh: '{a} 的 {n} 倍是多少？',
     ops: ['mult'],
     relation: 'B = A × n'
   },
   // 简单乘法总量（低难度）：每份 × 份数 = 总量
   'equal-groups': {
     zh: '已知条件：每份有 {per} 个，共有 {groups} 份。\n问题：一共有多少个？',
+    choiceZh: '每份 {per} 个，{groups} 份一共多少个？',
     ops: ['mult'],
     relation: 'total = per × groups'
   },
   // 平均分（低难度除法）：总量 ÷ 份数 = 每份
   'share-equally': {
     zh: '已知条件：一共 {total} 个，平均分给 {groups} 人。\n问题：每人分得多少个？',
+    choiceZh: '{total} 个平均分给 {groups} 人，每人几个？',
     ops: ['div'],
     relation: 'per = total ÷ groups'
   },
   'divide-multiple': {
     zh: '已知条件：A 有 {a}，B 是 A 的 {n} 分之 1。\n问题：B 有多少？',
+    choiceZh: '{a} 的 {n} 分之一是多少？',
     ops: ['div'],
     relation: 'B = A ÷ n'
   },
   // 分配/分组
   'grouping': {
     zh: '已知条件：一共 {total}，每组 {per}。\n问题：能分几组？',
+    choiceZh: '{total} 个按每组 {per} 个分，能分几组？',
     ops: ['div'],
     relation: 'groups = total ÷ per'
   },
   // 行程：速度 × 时间 = 路程
   'distance': {
     zh: '已知条件：速度 {speed}，时间 {time}。\n问题：路程多少？',
+    choiceZh: '速度 {speed}，时间 {time}，路程是多少？',
     ops: ['mult'],
     relation: 'distance = speed × time'
   },
   // 工程：效率 × 时间 = 总量
   'work': {
     zh: '已知条件：效率 {rate}，时间 {time}。\n问题：完成多少？',
+    choiceZh: '效率 {rate}，时间 {time}，总量是多少？',
     ops: ['mult'],
     relation: 'work = rate × time'
   }
@@ -225,6 +237,29 @@ function computeAnswer(template, nums) {
   return nums.a + (nums.b || 0);
 }
 
+// P30-GEN-06（P30-16）：由模板派生「操作数 + 运算符」序列，供 calc/fill 生成
+// 与 apply 故事题面互异的算式骨架。
+var OP_SYM = { add: '+', sub: '−', mult: '×', div: '÷' };
+function buildExpression(template, nums) {
+  switch (template) {
+    case 'total-from-parts': return { operands: [nums.a, nums.b], ops: ['+'] };
+    case 'part-from-total': return { operands: [nums.total, nums.part1], ops: ['−'] };
+    case 'compare-more': return { operands: [nums.a, nums.diff], ops: ['+'] };
+    case 'compare-less': return { operands: [nums.a, nums.diff], ops: ['−'] };
+    case 'multiple': return { operands: [nums.a, nums.n], ops: ['×'] };
+    case 'equal-groups': return { operands: [nums.per, nums.groups], ops: ['×'] };
+    case 'share-equally': return { operands: [nums.total, nums.groups], ops: ['÷'] };
+    case 'divide-multiple': return { operands: [nums.a, nums.n], ops: ['÷'] };
+    case 'grouping': return { operands: [nums.total, nums.per], ops: ['÷'] };
+    case 'distance': return { operands: [nums.speed, nums.time], ops: ['×'] };
+    case 'work': return { operands: [nums.rate, nums.time], ops: ['×'] };
+  }
+  return { operands: [nums.a || 0, nums.b || 0], ops: ['+'] };
+}
+function formatExpr(expr) {
+  return expr.operands[0] + ' ' + expr.ops[0] + ' ' + expr.operands[1];
+}
+
 function formatTemplate(template, nums) {
   var tpl = PROBLEM_TEMPLATES[template];
   var str = tpl.zh;
@@ -297,6 +332,12 @@ function makeApplicationQuestion(plan, context, i, meta) {
   var nums = generateNumbers(rng, template, plan.difficulty);
   var answer = computeAnswer(template, nums);
   var prompt = formatTemplate(template, nums);
+  // choice/judge 专用精简题面（与 apply 故事骨架互异）
+  var choiceZh = PROBLEM_TEMPLATES[template].choiceZh || PROBLEM_TEMPLATES[template].zh;
+  var choicePrompt = choiceZh;
+  Object.keys(nums).forEach(function (key) {
+    choicePrompt = choicePrompt.replace('{' + key + '}', String(nums[key]));
+  });
   
   // 添加干扰项（用于 choice）：必须凑齐 3 个为正、互异且不等于答案的干扰项。
   // FINAL-13：此前仅抽 3 次、合法才入集 → 可能只剩 2 个干扰项（3 选项），
@@ -328,7 +369,7 @@ function makeApplicationQuestion(plan, context, i, meta) {
       spiralLevel: plan.spiralLevel || 1,
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
-      prompt: prompt,
+      prompt: choicePrompt,
       answer: String(ans),
       answerMode: 'choice',
       data: {
@@ -370,14 +411,25 @@ function makeApplicationQuestion(plan, context, i, meta) {
       spiralLevel: plan.spiralLevel || 1,
       context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
-      prompt: prompt + ' 答案是 ' + shown + ' —— 对还是错？',
+      prompt: choicePrompt + ' 答案是 ' + shown + ' —— 对还是错？',
       answer: { value: isTrue, acceptable: [], explanation: judgeExplanation },
       answerMode: 'judge',
       data: judgeData
     };
   }
   
-  // fill / apply / calc / oral
+  // fill / apply / calc：apply 保留完整情境故事；calc 用直接算式；fill 用逆推填空
+  // （空首位操作数，使核心骨架与 calc 的 #op# 互异）。
+  var appExpr = buildExpression(template, nums);
+  var stemPrompt = prompt;
+  var stemAnswer = String(answer);
+  if (qt === 'calc') {
+    stemPrompt = formatExpr(appExpr) + ' = ?';
+  } else if (qt === 'fill') {
+    stemPrompt = '____ ' + appExpr.ops[0] + ' ' + appExpr.operands[1] + ' = ' + answer;
+    stemAnswer = String(appExpr.operands[0]);
+  }
+
   return {
     knowledgePointId: pkp(plan),
     questionType: qt,
@@ -385,9 +437,9 @@ function makeApplicationQuestion(plan, context, i, meta) {
     spiralLevel: plan.spiralLevel || 1,
     context: plan.contextType || 'standard',
     seed: seedFor(plan, context, i),
-    prompt: prompt,
-    answer: String(answer),
-    answerMode: qt === 'apply' ? 'input' : 'input',
+    prompt: stemPrompt,
+    answer: stemAnswer,
+    answerMode: 'input',
     data: {
       mode: qt,
       steps: Object.keys(nums).length > 2 ? 2 : 1,

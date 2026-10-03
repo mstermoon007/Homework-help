@@ -80,7 +80,7 @@ function buildKpEntry(k) {
   var representations = ['numeric'];
   if (isGeo || c.families.indexOf('graph') !== -1) representations.push('graphic');
   var steps = c.maxSteps != null ? c.maxSteps : 1;
-  var nr = c.numberRange && !isGeo ? { min: 1, max: c.numberRange.max || 100 } : null;
+  var nr = c.numberRange && !isGeo && c.numberRange.numMax != null ? { min: 1, max: c.numberRange.numMax } : null;
   var entry = {
     knowledgeId: k.id,
     subject: 'math',

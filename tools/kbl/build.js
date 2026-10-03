@@ -69,6 +69,9 @@ var index = readJson(path.join(SRC, 'index/index.json'));
 emit('index/index.json', JSON.stringify(index));
 
 // ---- 4. Manifest + rootHash（数据文件序: path:hash） ----
+// P28-05/P30-03 确定性：manifest 禁止 wall-clock 字段（buildAt/日期 packageVersion），
+// 否则每次重建都脏 tracked 文件。packageVersion 继承 kbl/manifest 源清单（稳定），时间溯源在源清单。
+var srcManifestForBuild = readJson(path.join(SRC, 'manifest/manifest.json'));
 var kpCount = Object.keys(grades).reduce(function (n, g) { return n + grades[g].knowledgePoints.length; }, 0);
 var DATA_RELS = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json'];
 var rootInput = DATA_RELS.map(function (rel) { return rel + ':' + files[rel] + '\n'; }).join('');
@@ -76,9 +79,8 @@ var rootHash = sha(rootInput);
 var manifest = {
   schemaVersion: curriculum.schemaVersion,
   catalogVersion: 'math-v1.0.0',
-  packageVersion: 'kbl-math-' + new Date().toISOString().slice(0, 10),
+  packageVersion: srcManifestForBuild.packageVersion || 'kbl-math',
   buildTool: 'tools/kbl/build.js',
-  buildAt: new Date().toISOString(),
   counts: { knowledgePoints: kpCount, units: curriculum.units.length, relations: relations.relations.length, mappings: mappings.mappings.length },
   idRules: { pattern: '^(math|chinese|english)-g[1-6]-(up|down|mixed|advance|comprehensive)-u\\d{2}-k\\d{3}$', stable: true, generatedOnce: true, runtimePositionIndependent: true },
   integrity: { algorithm: 'sha256', files: files, rootHash: rootHash }

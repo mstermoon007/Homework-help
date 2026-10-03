@@ -11,7 +11,8 @@
       "knowledgeName": "1-5数的认识",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 5
       },
       "operations": [],
       "families": [
@@ -52,7 +53,8 @@
       "knowledgeName": "5以内的加减法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 5
       },
       "operations": [
         "addition",
@@ -96,7 +98,8 @@
       "knowledgeName": "0的认识和加减法",
       "domain": "algebra",
       "numberRange": {
-        "max": 5
+        "max": 5,
+        "numMax": 5
       },
       "operations": [
         "addition",
@@ -139,7 +142,8 @@
       "knowledgeName": "6和10的认识",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10
       },
       "operations": [
         "addition",
@@ -185,7 +189,8 @@
       "knowledgeName": "10以内连加连减",
       "domain": "algebra",
       "numberRange": {
-        "max": 10
+        "max": 10,
+        "numMax": 10
       },
       "operations": [
         "addition",
@@ -305,7 +310,8 @@
       "knowledgeName": "11—20数的认识",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -345,7 +351,8 @@
       "knowledgeName": "数的组成",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -668,7 +675,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -709,7 +717,8 @@
       "knowledgeName": "数数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -746,7 +755,8 @@
       "knowledgeName": "数的组成",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [],
       "families": [],
@@ -783,7 +793,8 @@
       "knowledgeName": "读数与写数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [],
       "families": [],
@@ -820,7 +831,8 @@
       "knowledgeName": "数位",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -857,7 +869,8 @@
       "knowledgeName": "数的顺序",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [],
       "families": [],
@@ -894,7 +907,8 @@
       "knowledgeName": "比较大小",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [],
       "families": [
@@ -934,7 +948,8 @@
       "knowledgeName": "两位数不进位加法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [
         "addition"
@@ -975,7 +990,8 @@
       "knowledgeName": "两位数进位加法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [
         "addition"
@@ -1015,7 +1031,8 @@
       "knowledgeName": "两位数不退位减法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [
         "subtraction"
@@ -1056,7 +1073,8 @@
       "knowledgeName": "两位数退位减法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [
         "subtraction"
@@ -1135,7 +1153,8 @@
       "knowledgeName": "两位数加（竖式计算）",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [
         "addition"
@@ -1176,7 +1195,8 @@
       "knowledgeName": "两位数减（竖式计算）",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [
         "subtraction"
@@ -1291,7 +1311,8 @@
       "knowledgeName": "图形表述数量关系",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -1488,7 +1509,8 @@
       "knowledgeName": "综合运用本册知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "mixed"
@@ -1596,7 +1618,8 @@
       "knowledgeName": "不同标准分类",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -1665,7 +1688,8 @@
       "knowledgeName": "统计方法",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -1702,7 +1726,8 @@
       "knowledgeName": "简单统计表",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -1740,7 +1765,8 @@
       "knowledgeName": "乘法的初步认识",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -1782,7 +1808,8 @@
       "knowledgeName": "2～6的乘法口诀",
       "domain": "algebra",
       "numberRange": {
-        "max": 6
+        "max": 6,
+        "numMax": 6
       },
       "operations": [
         "multiplication"
@@ -1973,7 +2000,8 @@
       "knowledgeName": "除法算式名称",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -2012,7 +2040,8 @@
       "knowledgeName": "用2～6的乘法口诀求商",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 6
       },
       "operations": [
         "multiplication",
@@ -2379,7 +2408,8 @@
       "knowledgeName": "选择合适的长度单位",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -2457,7 +2487,8 @@
       "knowledgeName": "7～9的乘、除法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 9
       },
       "operations": [
         "multiplication",
@@ -2500,7 +2531,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 9
+        "max": 9,
+        "numMax": 9
       },
       "operations": [
         "multiplication",
@@ -2545,7 +2577,8 @@
       "knowledgeName": "综合运用本册知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "mixed"
@@ -2686,7 +2719,8 @@
       "knowledgeName": "有余数除法的含义",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -2726,7 +2760,8 @@
       "knowledgeName": "余数和除数的关系",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -2765,7 +2800,8 @@
       "knowledgeName": "除法竖式运算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -2805,7 +2841,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -2848,7 +2885,8 @@
       "knowledgeName": "周期问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -2929,7 +2967,8 @@
       "knowledgeName": "平均分两类模型",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -3004,7 +3043,8 @@
       "knowledgeName": "两类倍应用题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -3046,7 +3086,8 @@
       "knowledgeName": "逆向倍数问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -3086,7 +3127,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -3129,7 +3171,8 @@
       "knowledgeName": "计数单位",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -3165,7 +3208,8 @@
       "knowledgeName": "数的组成",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -3201,7 +3245,8 @@
       "knowledgeName": "万以内数读写",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10000
       },
       "operations": [],
       "families": [],
@@ -3239,7 +3284,8 @@
       "knowledgeName": "算盘认数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -3275,7 +3321,8 @@
       "knowledgeName": "万以内数大小比较",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10000
       },
       "operations": [],
       "families": [
@@ -3315,7 +3362,8 @@
       "knowledgeName": "近似数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -3351,7 +3399,8 @@
       "knowledgeName": "整百、千口算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -3392,7 +3441,8 @@
       "knowledgeName": "三位数加法竖式",
       "domain": "algebra",
       "numberRange": {
-        "max": 1000
+        "max": 1000,
+        "numMax": 1000
       },
       "operations": [
         "addition"
@@ -3433,7 +3483,8 @@
       "knowledgeName": "三位数减法竖式",
       "domain": "algebra",
       "numberRange": {
-        "max": 1000
+        "max": 1000,
+        "numMax": 1000
       },
       "operations": [
         "subtraction"
@@ -3474,7 +3525,8 @@
       "knowledgeName": "加减法各部分名称与关系",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -3515,7 +3567,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10000
       },
       "operations": [
         "addition",
@@ -3559,7 +3612,8 @@
       "knowledgeName": "连环画提取信息",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -3595,7 +3649,8 @@
       "knowledgeName": "综合运用本学期知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10000
       },
       "operations": [
         "addition",
@@ -3643,7 +3698,8 @@
       "knowledgeName": "创作数学连环画",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -3679,7 +3735,8 @@
       "knowledgeName": "列式解答",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -3715,7 +3772,8 @@
       "knowledgeName": "数与运算整合",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10000
       },
       "operations": [
         "addition",
@@ -3759,7 +3817,8 @@
       "knowledgeName": "数量关系整合",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -4088,7 +4147,8 @@
       "knowledgeName": "两步解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "mixed"
@@ -4384,7 +4444,8 @@
       "knowledgeName": "称重实践",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -4419,7 +4480,8 @@
       "knowledgeName": "口算乘法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10
       },
       "operations": [
         "multiplication"
@@ -4459,7 +4521,8 @@
       "knowledgeName": "笔算乘法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10
       },
       "operations": [
         "multiplication"
@@ -4499,7 +4562,8 @@
       "knowledgeName": "连续进位乘法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -4538,7 +4602,8 @@
       "knowledgeName": "有关0的乘法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -4577,7 +4642,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -4618,7 +4684,8 @@
       "knowledgeName": "认识生活中的数字编码",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -4715,7 +4782,8 @@
       "knowledgeName": "数字编码的特点",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -4923,7 +4991,8 @@
       "knowledgeName": "初步认识分数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -4964,7 +5033,8 @@
       "knowledgeName": "分数的读写",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -5005,7 +5075,8 @@
       "knowledgeName": "比较分数大小",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -5047,7 +5118,8 @@
       "knowledgeName": "分数的简单计算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -5093,7 +5165,8 @@
       "knowledgeName": "进一步认识分数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -5135,7 +5208,8 @@
       "knowledgeName": "综合运用本册知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "mixed"
@@ -5322,7 +5396,8 @@
       "knowledgeName": "口算除法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100
       },
       "operations": [
         "division"
@@ -5363,7 +5438,8 @@
       "knowledgeName": "笔算除法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10
       },
       "operations": [
         "division"
@@ -5403,7 +5479,8 @@
       "knowledgeName": "0的除法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -5442,7 +5519,8 @@
       "knowledgeName": "除法验算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -5481,7 +5559,8 @@
       "knowledgeName": "除法估算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -5520,7 +5599,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -5902,7 +5982,8 @@
       "knowledgeName": "数据的收集方法",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -5939,7 +6020,8 @@
       "knowledgeName": "数据的整理方法",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -5976,7 +6058,8 @@
       "knowledgeName": "复式统计表",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -6080,7 +6163,8 @@
       "knowledgeName": "平年与闰年的判断方法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -6119,7 +6203,8 @@
       "knowledgeName": "认识小数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -6160,7 +6245,8 @@
       "knowledgeName": "小数的大小比较",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -6202,7 +6288,8 @@
       "knowledgeName": "简单的小数加、减法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -6248,7 +6335,8 @@
       "knowledgeName": "小数的应用",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -6291,7 +6379,8 @@
       "knowledgeName": "数与运算",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 10
       },
       "operations": [
         "division"
@@ -6335,7 +6424,8 @@
       "knowledgeName": "数量关系",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -6416,7 +6506,8 @@
       "knowledgeName": "数据的收集、整理与表达",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -6485,7 +6576,8 @@
       "knowledgeName": "数学广角——重叠问题",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -6525,7 +6617,8 @@
       "knowledgeName": "计数单位与十进制计数法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -6561,7 +6654,8 @@
       "knowledgeName": "数位与数级",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100000000
       },
       "operations": [],
       "families": [
@@ -6601,7 +6695,8 @@
       "knowledgeName": "亿以内数的读法与写法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100000000
       },
       "operations": [],
       "families": [],
@@ -6639,7 +6734,8 @@
       "knowledgeName": "亿以上数的认识",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": 100000000
       },
       "operations": [],
       "families": [],
@@ -6677,7 +6773,8 @@
       "knowledgeName": "数的大小比较",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -6716,7 +6813,8 @@
       "knowledgeName": "数的改写与求近似数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition"
@@ -6865,7 +6963,8 @@
       "knowledgeName": "口算乘法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -6904,7 +7003,8 @@
       "knowledgeName": "笔算乘法",
       "domain": "algebra",
       "numberRange": {
-        "max": 1000
+        "max": 1000,
+        "numMax": 1000
       },
       "operations": [
         "multiplication"
@@ -6945,7 +7045,8 @@
       "knowledgeName": "积的变化规律",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -6984,7 +7085,8 @@
       "knowledgeName": "加法模型",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -7028,7 +7130,8 @@
       "knowledgeName": "乘法模型",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -7069,7 +7172,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -7256,7 +7360,8 @@
       "knowledgeName": "单式条形统计图",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -7293,7 +7398,8 @@
       "knowledgeName": "复式条形统计图",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -7365,7 +7471,8 @@
       "knowledgeName": "读图与数据分析",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -7404,7 +7511,8 @@
       "knowledgeName": "1亿有多大",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "subtraction"
@@ -7481,7 +7589,8 @@
       "knowledgeName": "描述位置",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -7550,7 +7659,8 @@
       "knowledgeName": "综合运用本册知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "mixed"
@@ -7594,7 +7704,8 @@
       "knowledgeName": "加减法的意义和各部分间的关系",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -7636,7 +7747,8 @@
       "knowledgeName": "乘除法的意义和各部分间的关系",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -7980,7 +8092,8 @@
       "knowledgeName": "综合运用运算律",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -8024,7 +8137,8 @@
       "knowledgeName": "小数的意义",
       "domain": "algebra",
       "numberRange": {
-        "max": 1000
+        "max": 1000,
+        "numMax": 1000
       },
       "operations": [
         "division"
@@ -8073,7 +8187,8 @@
       "knowledgeName": "小数的读法和写法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -8113,7 +8228,8 @@
       "knowledgeName": "小数的性质",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -8153,7 +8269,8 @@
       "knowledgeName": "小数的大小比较",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -8195,7 +8312,8 @@
       "knowledgeName": "小数点移动引起小数大小的变化",
       "domain": "algebra",
       "numberRange": {
-        "max": 1000
+        "max": 1000,
+        "numMax": 1000
       },
       "operations": [
         "multiplication"
@@ -8243,7 +8361,8 @@
       "knowledgeName": "小数与单位换算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -8288,7 +8407,8 @@
       "knowledgeName": "小数的近似数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -8544,7 +8664,8 @@
       "knowledgeName": "位数相同的小数加减法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -8590,7 +8711,8 @@
       "knowledgeName": "位数不同的小数加减法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -8636,7 +8758,8 @@
       "knowledgeName": "小数加减混合运算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -8684,7 +8807,8 @@
       "knowledgeName": "整数加法运算律推广到小数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -8766,7 +8890,8 @@
       "knowledgeName": "补全轴对称图形",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -8806,7 +8931,8 @@
       "knowledgeName": "平移",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -8920,7 +9046,8 @@
       "knowledgeName": "平均数的意义",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -8961,7 +9088,8 @@
       "knowledgeName": "求平均数的方法",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -9001,7 +9129,8 @@
       "knowledgeName": "复式条形统计图",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -9041,7 +9170,8 @@
       "knowledgeName": "解决问题——营养午餐",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -9080,7 +9210,8 @@
       "knowledgeName": "列表法",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -9115,7 +9246,8 @@
       "knowledgeName": "假设法",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -9150,7 +9282,8 @@
       "knowledgeName": "解决问题——解题模型",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -9191,7 +9324,8 @@
       "knowledgeName": "综合运用本册知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -9354,7 +9488,8 @@
       "knowledgeName": "小数乘整数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -9398,7 +9533,8 @@
       "knowledgeName": "小数乘小数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -9441,7 +9577,8 @@
       "knowledgeName": "整数乘法运算律推广到小数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -9485,7 +9622,8 @@
       "knowledgeName": "小数乘法的估算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -9529,7 +9667,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -9574,7 +9713,8 @@
       "knowledgeName": "除数是整数的小数除法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -9617,7 +9757,8 @@
       "knowledgeName": "一个数除以小数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -9661,7 +9802,8 @@
       "knowledgeName": "商与被除数的大小关系",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -9700,7 +9842,8 @@
       "knowledgeName": "小数除法的验算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -9743,7 +9886,8 @@
       "knowledgeName": "循环小数的初步感知",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -9820,7 +9964,8 @@
       "knowledgeName": "轴对称、平移深化",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -9943,7 +10088,8 @@
       "knowledgeName": "用字母表示数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -9981,7 +10127,8 @@
       "knowledgeName": "用字母表示数量关系",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -10021,7 +10168,8 @@
       "knowledgeName": "求含有字母的式子的值",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -10060,7 +10208,8 @@
       "knowledgeName": "探秘百数表（选学）",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -10254,7 +10403,8 @@
       "knowledgeName": "格点多边形的面积（选学）",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -10369,7 +10519,8 @@
       "knowledgeName": "可能性的大小",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -10406,7 +10557,8 @@
       "knowledgeName": "根据可能性大小进行推测",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -10443,7 +10595,8 @@
       "knowledgeName": "掷一掷（选学）",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -10582,7 +10735,8 @@
       "knowledgeName": "设计密铺图案",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "mixed"
@@ -10624,7 +10778,8 @@
       "knowledgeName": "综合运用本册知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -10712,7 +10867,8 @@
       "knowledgeName": "根据平面视图搭建立体图形",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -10790,7 +10946,8 @@
       "knowledgeName": "因数和倍数的概念",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -10831,7 +10988,8 @@
       "knowledgeName": "因数与倍数的特征",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -10870,7 +11028,8 @@
       "knowledgeName": "2、5、3的倍数的特征",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -10909,7 +11068,8 @@
       "knowledgeName": "奇数与偶数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -10948,7 +11108,8 @@
       "knowledgeName": "质数与合数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -10987,7 +11148,8 @@
       "knowledgeName": "和的奇偶性规律",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -11254,7 +11416,8 @@
       "knowledgeName": "分数的意义",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -11298,7 +11461,8 @@
       "knowledgeName": "分数与除法的关系",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -11341,7 +11505,8 @@
       "knowledgeName": "真分数和假分数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -11383,7 +11548,8 @@
       "knowledgeName": "分数的基本性质",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -11428,7 +11594,8 @@
       "knowledgeName": "约分与通分",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -11471,7 +11638,8 @@
       "knowledgeName": "分数和小数的互化",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -11671,7 +11839,8 @@
       "knowledgeName": "同分母分数加减法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -11717,7 +11886,8 @@
       "knowledgeName": "异分母分数加减法",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -11764,7 +11934,8 @@
       "knowledgeName": "分数加减混合运算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -11812,7 +11983,8 @@
       "knowledgeName": "整数加法运算律推广到分数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -11858,7 +12030,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -11905,7 +12078,8 @@
       "knowledgeName": "单式折线统计图",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "subtraction"
@@ -11948,7 +12122,8 @@
       "knowledgeName": "复式折线统计图",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -11988,7 +12163,8 @@
       "knowledgeName": "读图与分析",
       "domain": "statistics",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -12025,7 +12201,8 @@
       "knowledgeName": "找次品的基本策略",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -12063,7 +12240,8 @@
       "knowledgeName": "最优策略的规律",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -12128,7 +12306,8 @@
       "knowledgeName": "正方体涂色问题",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -12167,7 +12346,8 @@
       "knowledgeName": "各类涂色小正方体的位置特征",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -12208,7 +12388,8 @@
       "knowledgeName": "化繁为简的探究方法",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -12281,7 +12462,8 @@
       "knowledgeName": "优化方案的探究",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -12319,7 +12501,8 @@
       "knowledgeName": "规律发现",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -12357,7 +12540,8 @@
       "knowledgeName": "运筹思想的渗透",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [],
@@ -12393,7 +12577,8 @@
       "knowledgeName": "综合运用本册知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -12444,7 +12629,8 @@
       "knowledgeName": "用有序数对确定位置",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition"
@@ -12532,7 +12718,8 @@
       "knowledgeName": "两种定位方法的适用场景",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -12575,7 +12762,8 @@
       "knowledgeName": "分数乘整数",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -12620,7 +12808,8 @@
       "knowledgeName": "一个数乘分数",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -12668,7 +12857,8 @@
       "knowledgeName": "分数、小数混合运算及运算律",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -12723,7 +12913,8 @@
       "knowledgeName": "解决问题",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -12765,7 +12956,8 @@
       "knowledgeName": "倒数的认识",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -12813,7 +13005,8 @@
       "knowledgeName": "分数除以整数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -12858,7 +13051,8 @@
       "knowledgeName": "一个数除以分数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication",
@@ -12903,7 +13097,8 @@
       "knowledgeName": "分数混合运算",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition",
@@ -12955,7 +13150,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "division"
@@ -13044,7 +13240,8 @@
       "knowledgeName": "圆的周长",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13086,7 +13283,8 @@
       "knowledgeName": "圆的面积",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "addition"
@@ -13213,7 +13411,8 @@
       "knowledgeName": "百分数的意义",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13258,7 +13457,8 @@
       "knowledgeName": "百分数与分数、小数的互化",
       "domain": "algebra",
       "numberRange": {
-        "max": 1000
+        "max": 1000,
+        "numMax": 1000
       },
       "operations": [
         "division"
@@ -13307,7 +13507,8 @@
       "knowledgeName": "百分数的应用——折扣",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13350,7 +13551,8 @@
       "knowledgeName": "百分数的应用——利率",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13395,7 +13597,8 @@
       "knowledgeName": "确定达标线（新增专题）",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13438,7 +13641,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13482,7 +13686,8 @@
       "knowledgeName": "综合运用本册知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "mixed"
@@ -13527,7 +13732,8 @@
       "knowledgeName": "寻找负数",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13565,7 +13771,8 @@
       "knowledgeName": "认识负数",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13604,7 +13811,8 @@
       "knowledgeName": "应用负数",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13644,7 +13852,8 @@
       "knowledgeName": "负数的意义",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13684,7 +13893,8 @@
       "knowledgeName": "正负数的读写",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13724,7 +13934,8 @@
       "knowledgeName": "数轴上的正负数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13769,7 +13980,8 @@
       "knowledgeName": "正负数的大小比较",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13810,7 +14022,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -13887,7 +14100,8 @@
       "knowledgeName": "成数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -14001,7 +14215,8 @@
       "knowledgeName": "生活与百分数",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -14045,7 +14260,8 @@
       "knowledgeName": "圆柱的认识",
       "domain": "geometry",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -14392,7 +14608,8 @@
       "knowledgeName": "正比例",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -14434,7 +14651,8 @@
       "knowledgeName": "反比例",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "multiplication"
@@ -14479,7 +14697,8 @@
       "knowledgeName": "比例尺",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [],
       "families": [
@@ -14560,7 +14779,8 @@
       "knowledgeName": "解决问题",
       "domain": "algebra",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "mixed"
@@ -14733,7 +14953,8 @@
       "knowledgeName": "综合运用小学知识",
       "domain": "practice",
       "numberRange": {
-        "max": 100
+        "max": 100,
+        "numMax": null
       },
       "operations": [
         "mixed"

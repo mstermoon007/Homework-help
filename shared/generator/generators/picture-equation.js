@@ -56,14 +56,21 @@ function makePictureEquationQuestion(plan, context, i, kp) {
   } else if (type === 'brace') {
     var a = Rng.randInt(rng, 5, 30);
     var b = Rng.randInt(rng, 5, 30);
-    prompt = '根据大括号图：左边有' + a + '个苹果，右边有' + b + '个苹果，一共有多少个？';
-    answer = a + b; steps = 1;
-    graphic = { type: 'diagram', subtype: 'brace', params: { left: a, right: b, unit: '个' } };
-    // P25-07：calc 计划下列式计算形态，题干内嵌可求值算式
-    if (plan.questionTypeId === 'calc') {
+    var braceQt = plan.questionTypeId;
+    // P30-GEN-06（P30-16）：brace 题型按 Assessment Target 分化骨架，
+    // 避免 fill/choice 经 finisher 包装后与 apply 共享同一 coreStem。
+    if (braceQt === 'calc') {
       prompt = '看图列式：大括号图左边有 ' + a + ' 个苹果，右边有 ' + b + ' 个苹果。'
         + '列式计算一共有多少个：' + a + ' + ' + b + ' = ？';
+    } else if (braceQt === 'fill') {
+      prompt = '大括号图：左边 ' + a + ' 个、右边 ' + b + ' 个苹果，合起来是 ____ 个。';
+    } else if (braceQt === 'choice') {
+      prompt = '看大括号图，左边 ' + a + ' 个苹果、右边 ' + b + ' 个，总数是多少？';
+    } else {
+      prompt = '根据大括号图：左边有' + a + '个苹果，右边有' + b + '个苹果，一共有多少个？';
     }
+    answer = a + b; steps = 1;
+    graphic = { type: 'diagram', subtype: 'brace', params: { left: a, right: b, unit: '个' } };
   } else if (type === 'balance') {
     var left = Rng.randInt(rng, 5, 20);
     var right = left;

@@ -206,14 +206,20 @@ function makeCountingQuestion(plan, context, i, kp) {
   } else {
     var a = Rng.randInt(rng, 2, 6);
     var b = Rng.randInt(rng, 2, 6);
-    prompt = name + '：从' + a + '种水果和' + b + '种饮料中各选一种，共有多少种搭配？';
-    answer = a * b;
-    steps = 2;
-    // P25-07：calc 计划下列式计算形态（乘法原理），题干内嵌可求值算式
-    if (plan.questionTypeId === 'calc') {
+    var cQt = plan.questionTypeId;
+    // P30-GEN-06（P30-16）：搭配问题按题型分化骨架，fill/choice 不再与 apply 共享同一 coreStem。
+    if (cQt === 'calc') {
       prompt = name + '：从' + a + '种水果和' + b + '种饮料中各选一种，一共有多少种搭配？'
         + '列式：' + a + ' × ' + b + ' = ？';
+    } else if (cQt === 'fill') {
+      prompt = name + '：' + a + ' 种水果配 ' + b + ' 种饮料，各选一种，共有 ____ 种搭配。';
+    } else if (cQt === 'choice') {
+      prompt = name + '：水果 ' + a + ' 种、饮料 ' + b + ' 种，各选一种的搭配数是多少？';
+    } else {
+      prompt = name + '：从' + a + '种水果和' + b + '种饮料中各选一种，共有多少种搭配？';
     }
+    answer = a * b;
+    steps = 2;
   }
 
   return {

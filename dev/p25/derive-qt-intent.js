@@ -19,7 +19,20 @@
  *
  * 输入：kbl/data/math/g1..g6/knowledge-points.json
  *       kbl/mappings/generation-contract/math.json（ALLOW 真值源）
+ *       kbl/relations/math/relations.json（canonical 前置关系，assessment.requiredRelations）
  *       shared/knowledge/question-type-registry.js（题型元数据：category/cognitiveLevels/supports）
+ *
+ * P30-05：每行追加机器可执行投影 row.assessment（Generator 可直接消费的约束，全部由
+ *   KBL 事实 × QTR 题型元数据机械投影，零新教学数据、零自然语言猜测）：
+ *     targetCodes           [knowledgeId]——本题考核的 canonical 目标码
+ *     focus                 QTR category 枚举（calculation/written/selection/geometry/classification/application）
+ *     requiredRelations     本 KP 直接前置的 canonical KP 码集合（prerequisite 边起点；无前置 = []，非 null）
+ *     requiredConstructs    KBL semantic.operations 操作构念（概念/图形类 KP 可为 []）
+ *     allowedRepresentations KBL representations ∩ 题型承载能力（numeric/graphic；不兼容为 []）
+ *     expressionModes       题型级表达模式（7 条闭式枚举 EXPRESSION_MODES，题型级元数据）
+ *     graphicRole           graphic 为图形与几何域×geometry 题主载体='carrier'；
+ *                           KP 含图形且题型支持图形的其他行='auxiliary'；否则 null
+ *
  * 输出：kbl/teaching/qt-intent.json（1570 行意图矩阵）
  *       kbl/teaching/qt-intent-sample.xlsx（人工抽查单：按语义族分层抽样）
  *       docs/archive/phases/p25/P25-KP-QT-INTENT.md（报告，归档位）
@@ -51,7 +64,37 @@ var mappings = Array.isArray(mappingsRaw) ? mappingsRaw : mappingsRaw.mappings;
 var allow = mappings.filter(function (m) { return m.permission === 'allow'; });
 assert(allow.length === 1570, 'ALLOW 应为 1570，实际 ' + allow.length);
 
+// P30-05：canonical 前置关系（唯一真源经发射副本；assessment.requiredRelations 投影输入）。
+// relations.json 边无独立 id（字段 fromId/toId/relation），故投影为指向本 KP 的前置 KP canonical 码集合。
+var relationsDoc = JSON.parse(fs.readFileSync(path.join(ROOT, 'kbl', 'relations', 'math', 'relations.json'), 'utf8'));
+var prereqByKp = {};
+(relationsDoc.relations || []).forEach(function (rel) {
+  if (rel.relation === 'prerequisite' && rel.toId && rel.fromId) {
+    (prereqByKp[rel.toId] = prereqByKp[rel.toId] || []).push(rel.fromId);
+  }
+});
+
 var QTR = require(path.join(ROOT, 'shared', 'knowledge', 'question-type-registry.js'));
+
+// P30-15：读取生成器注册表，区分 geometry×geometry 行中真实产图（shape-recognition）与概念文字（concept-meaning）路由
+var GRegistry = require(path.join(ROOT, 'shared', 'generator', 'generator-registry.js'));
+var GEN_CONCEPT_KP = (function () {
+  var recs = GRegistry.all();
+  var cm = null;
+  recs.forEach(function (g) { if (g.id === 'generator:concept-meaning') cm = g; });
+  return cm && cm.knowledgePoints ? cm.knowledgePoints : [];
+})();
+
+// P30-05 题型级表达模式闭式枚举（7 条，题型级机器元数据；与 CATEGORY_CN/TYPE_SCOPE 同性质，非 KP 级硬编码）
+var EXPRESSION_MODES = {
+  calc: ['expression'],
+  fill: ['expression', 'text'],
+  choice: ['option-selection'],
+  judge: ['binary-judgement'],
+  geometry: ['graphic-construction'],
+  classify: ['grouping'],
+  apply: ['context-word']
+};
 
 // ---------- 2. 题型元数据（源自 QTR，题型级 7 条，非 KP 级硬编码） ----------
 var LEVEL_CN = { recognize: '认识', understand: '理解', apply: '应用', analyze: '分析', recall: '了解' };
@@ -97,6 +140,7 @@ function kpFacts(kp) {
   var ann = kp.difficultyAnnotation || {};
   var def = (kp.content && typeof kp.content.description === 'string') ? kp.content.description : '';
   var firstSentence = def.split(/[。；;]/).map(function (s) { return s.trim(); }).filter(Boolean)[0] || '';
+  var reps = Array.isArray(sem.representations) ? sem.representations : [];
   return {
     id: kp.knowledgeId,
     name: kp.name || '',
@@ -104,7 +148,9 @@ function kpFacts(kp) {
     concept: sem.concept || '',
     definitionHead: firstSentence,
     level: ann.cognitiveLevel || '',
-    graphic: (sem.representations || []).indexOf('graphic') !== -1,
+    graphic: reps.indexOf('graphic') !== -1,
+    representations: reps,
+    operations: Array.isArray(sem.operations) ? sem.operations : [],
     module: kp.module || '',
     family: sem.family || ''
   };
@@ -202,6 +248,29 @@ function deriveRow(knowledgeId, questionType) {
     if (!cognitiveOk && repOk) flags.push('legitimacy-cognitive-only');
   }
 
+  // P30-05 机器可执行 assessment（全部字段机械投影；空集 = 该事实不存在，非猜测）
+  var allowedReps = [];
+  if (questionType !== 'geometry' && f.representations.indexOf('numeric') !== -1) allowedReps.push('numeric');
+  if (f.graphic && t.supports && t.supports.graphic) allowedReps.push('graphic');
+  var graphicRole = null;
+  if (f.graphic && t.supports && t.supports.graphic) {
+    if (f.module === 'geometry' && questionType === 'geometry') {
+      // P30-15：concept-meaning 承载的 geometry×geometry 行产纯文字概念题，graphicRole 降为 auxiliary（不强制产图）
+      graphicRole = (GEN_CONCEPT_KP.indexOf(knowledgeId) !== -1) ? 'auxiliary' : 'carrier';
+    } else {
+      graphicRole = 'auxiliary';
+    }
+  }
+  var assessment = {
+    targetCodes: [knowledgeId],
+    focus: t.category,
+    requiredRelations: (prereqByKp[knowledgeId] || []).slice().sort(),
+    requiredConstructs: f.operations.slice().sort(),
+    allowedRepresentations: allowedReps,
+    expressionModes: (EXPRESSION_MODES[questionType] || []).slice(),
+    graphicRole: graphicRole
+  };
+
   var values = {
     trainsWhat: what,
     whyThisType: why,
@@ -217,6 +286,7 @@ function deriveRow(knowledgeId, questionType) {
     questionType: questionType,
     status: rowStatus,
     intent: values,
+    assessment: assessment,
     intentStatus: st,
     evidence: {
       kbl: { cognitiveLevel: f.level, representations: f.graphic ? ['numeric', 'graphic'] : ['numeric'], module: f.module, family: f.family },
@@ -242,6 +312,29 @@ rows.forEach(function (r) {
     if (r.status === 'ai-verified') assert(r.intent[k] !== null, 'ai-verified 行有空问: ' + r.knowledgeId + '|' + r.questionType + '.' + k);
   });
 });
+
+// P30-05 红线断言：assessment 是合法机器投影（结构/枚举/溯源），不允许猜测值
+var FOCUS_ENUM = ['calculation', 'written', 'selection', 'geometry', 'classification', 'application'];
+var REP_ENUM = ['numeric', 'graphic'];
+var GRAPHIC_ROLES = ['carrier', 'auxiliary'];
+rows.forEach(function (r) {
+  var a = r.assessment;
+  assert(a && typeof a === 'object', r.knowledgeId + '|' + r.questionType + ' 缺 assessment');
+  assert(Array.isArray(a.targetCodes) && a.targetCodes.length === 1 && a.targetCodes[0] === r.knowledgeId, 'targetCodes 非法: ' + r.knowledgeId);
+  assert(FOCUS_ENUM.indexOf(a.focus) !== -1, 'focus 非 QTR category 枚举: ' + a.focus);
+  ['requiredRelations', 'requiredConstructs', 'allowedRepresentations', 'expressionModes'].forEach(function (k) {
+    assert(Array.isArray(a[k]), 'assessment.' + k + ' 必须为数组: ' + r.knowledgeId);
+  });
+  a.requiredRelations.forEach(function (code) { assert(/^math-g[1-6]-/.test(code), 'requiredRelations 非 canonical KP 码: ' + code); });
+  a.allowedRepresentations.forEach(function (rep) { assert(REP_ENUM.indexOf(rep) !== -1, 'allowedRepresentations 越界: ' + rep); });
+  assert(a.expressionModes.length >= 1, 'expressionModes 空: ' + r.knowledgeId + '|' + r.questionType);
+  assert(a.graphicRole === null || GRAPHIC_ROLES.indexOf(a.graphicRole) !== -1, 'graphicRole 非法: ' + a.graphicRole);
+});
+// 按去重 KP 汇总 requiredRelations（同 KP 的多行投影同一集合），必须恰好覆盖 373 条 canonical 前置边
+var prereqEdgesByKp = {};
+rows.forEach(function (r) { prereqEdgesByKp[r.knowledgeId] = r.assessment.requiredRelations; });
+var prereqTotal = Object.keys(prereqEdgesByKp).reduce(function (n, k) { return n + prereqEdgesByKp[k].length; }, 0);
+assert(prereqTotal === relationsDoc.relations.length, 'requiredRelations 投影总数 ' + prereqTotal + ' != canonical 前置边 ' + relationsDoc.relations.length);
 
 var aiRows = rows.filter(function (r) { return r.status === 'ai-verified'; });
 var nrRows = rows.filter(function (r) { return r.status === 'needs-review'; });
@@ -272,13 +365,24 @@ if (reviewLedger) {
     if (v.verdict === '通过') {
       hit.status = 'confirmed';
       // 人工修正覆盖：correctedIntent 逐字段覆盖推导文本，被覆盖字段状态记 confirmed（人工）
-      if (v.correctedIntent) {
-        Object.keys(v.correctedIntent).forEach(function (k) {
-          assert(Object.prototype.hasOwnProperty.call(hit.intent, k), 'correctedIntent 未知字段 ' + k);
-          hit.intent[k] = v.correctedIntent[k];
-          hit.intentStatus[k] = 'confirmed';
-        });
+      if (v.correctedIntent || v.correctedAssessment) {
+        if (v.correctedIntent) {
+          Object.keys(v.correctedIntent).forEach(function (k) {
+            assert(Object.prototype.hasOwnProperty.call(hit.intent, k), 'correctedIntent 未知字段 ' + k);
+            hit.intent[k] = v.correctedIntent[k];
+            hit.intentStatus[k] = 'confirmed';
+          });
+        }
+        // P30-15：评审回流扩展——裁决可覆盖 assessment 机器字段（源头教学事实裁决，如图形表征；
+        // 先例：正方体涂色 KP 经 P28-HOLLOW-05 冻结裁决产图，但 emit-canonical 机械派生仅 geometry 域/graph 族补 graphic）
+        if (v.correctedAssessment) {
+          Object.keys(v.correctedAssessment).forEach(function (k) {
+            assert(Object.prototype.hasOwnProperty.call(hit.assessment, k), 'correctedAssessment 未知字段 ' + k);
+            hit.assessment[k] = v.correctedAssessment[k];
+          });
+        }
         hit.evidence.humanReview = { verdict: 'confirmed', batch: av.batch, corrected: true, origin: av.origin || '' };
+        if (v.correctedAssessment) hit.evidence.humanReview.correctedAssessment = Object.keys(v.correctedAssessment);
       } else {
         // 冻结回放：confirmed 时点的人工快照优先于后续推导规则变更（确认语义 = 确认当时文本）
         if (v.textFrozen) {

@@ -105,7 +105,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -116,7 +116,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -292,7 +292,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -303,7 +303,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -330,7 +330,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -341,7 +341,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -423,7 +423,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -434,7 +434,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -705,7 +705,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -716,7 +716,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -759,7 +759,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -994,7 +994,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1005,7 +1005,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -1032,7 +1032,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1043,7 +1043,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -1552,7 +1552,7 @@
       "slots": [
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1563,7 +1563,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -1607,7 +1607,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1618,7 +1618,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -1646,7 +1646,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1657,7 +1657,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -1704,7 +1704,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1715,7 +1715,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -1743,7 +1743,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1754,7 +1754,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -1782,7 +1782,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1793,7 +1793,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -1840,7 +1840,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1851,7 +1851,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -1895,7 +1895,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -1906,7 +1906,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -2754,7 +2754,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（2 行）",
+          "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -2765,7 +2765,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 2
+            "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -2792,7 +2792,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -2803,7 +2803,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -4402,7 +4402,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -4413,7 +4413,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -4583,7 +4583,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -4594,7 +4594,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -4998,7 +4998,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -5009,7 +5009,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -5337,7 +5337,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -5348,7 +5348,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -6209,7 +6209,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -6220,7 +6220,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -6408,7 +6408,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -6419,7 +6419,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -6825,7 +6825,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -8071,7 +8071,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 4
+            "evidenceRows": 5
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -8376,7 +8376,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -8387,7 +8387,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -8431,7 +8431,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -8442,7 +8442,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -8579,7 +8579,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（3 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -8590,7 +8590,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -9750,7 +9750,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -9761,7 +9761,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -10049,7 +10049,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -10087,7 +10087,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -10542,7 +10542,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（5 行）",
+          "basis": "variation profile context.present（4 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -10553,7 +10553,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 5
+            "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         },
@@ -12007,7 +12007,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -12018,7 +12018,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -12218,7 +12218,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -12229,7 +12229,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -12965,7 +12965,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -12976,7 +12976,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -13254,7 +13254,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -14347,7 +14347,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -14358,7 +14358,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -14474,7 +14474,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（4 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -14485,7 +14485,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 4
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -14540,7 +14540,7 @@
       "slots": [
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（4 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -14551,7 +14551,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -15445,7 +15445,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -15456,7 +15456,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -15785,7 +15785,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -15796,7 +15796,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         },
@@ -15856,7 +15856,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -15867,7 +15867,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         },
@@ -15927,7 +15927,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -15938,7 +15938,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         },
@@ -15974,7 +15974,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 4
+            "evidenceRows": 3
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
@@ -16626,7 +16626,7 @@
       "slots": [
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（4 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -16637,7 +16637,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 4
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }
@@ -16807,7 +16807,7 @@
         },
         {
           "errorType": "审题错误",
-          "basis": "variation profile context.present（3 行）",
+          "basis": "variation profile context.present（2 行）",
           "triggerPattern": {
             "questionTypes": [
               "apply",
@@ -16818,7 +16818,7 @@
           "response": {
             "variant": "情境",
             "axis": "context",
-            "evidenceRows": 3
+            "evidenceRows": 2
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
         }

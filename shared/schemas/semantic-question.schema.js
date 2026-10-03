@@ -166,7 +166,10 @@
     KP_SEMANTIC_INTENT_CONFLICT: 'KP_SEMANTIC_INTENT_CONFLICT',
 
     // P25-07 七题型教育契约（结构不变式违例）
-    KP_TYPE_CONTRACT: 'KP_TYPE_CONTRACT'
+    KP_TYPE_CONTRACT: 'KP_TYPE_CONTRACT',
+
+    // P30-15 Intent Alignment（生成结果与 intent 机器字段对齐）
+    KP_SEMANTIC_INTENT_ALIGNMENT: 'KP_SEMANTIC_INTENT_ALIGNMENT'
   };
 
   // ====== 严重级别 ======

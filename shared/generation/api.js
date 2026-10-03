@@ -102,6 +102,8 @@
   // FINAL-32d：Question Intent 消费链——Node 侧直载 qt-intent.json 查找 trainsWhat。
   // bundle 环境（kbl/teaching 不内联）下 require 失败 → 返回 null，走 explainability 兜底。
   // 浏览器跨环境规则：(typeof require==='function') ? require(...) : null。
+  // P30-06：仅 confirmed / ai-verified 行具生成权威；needs-review 行不得注入 semanticTarget。
+  var INTENT_AUTHORITY_STATUSES = { confirmed: true, 'ai-verified': true };
   var _qtIntentMap = null;
   function getTrainsWhatFromIntent(kpId, qt) {
     if (!kpId || !qt) return null;
@@ -111,7 +113,8 @@
         var doc = (typeof require === 'function') ? require('../../kbl/teaching/qt-intent.json') : null;
         if (doc && Array.isArray(doc.rows)) {
           doc.rows.forEach(function (r) {
-            if (r && r.knowledgeId && r.questionType && r.intent && typeof r.intent.trainsWhat === 'string') {
+            if (r && r.knowledgeId && r.questionType && INTENT_AUTHORITY_STATUSES[r.status]
+              && r.intent && typeof r.intent.trainsWhat === 'string') {
               _qtIntentMap[r.knowledgeId + '|' + r.questionType] = r.intent.trainsWhat;
             }
           });

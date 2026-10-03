@@ -233,8 +233,18 @@ function indexHtml(byGrade, total) {
   return html + '\n<!-- kbgen:hash=' + hash + ' -->\n';
 }
 
+// P30-03 确定性：generatedAt 取 KBL 数据构建时间（kbl/manifest），禁止墙钟，
+// 否则同一数据每次重建都脏 knowledge-index.json（违反 P28-05 确定性）。
+function kblGeneratedAt() {
+  try {
+    var mf = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'kbl', 'manifest', 'manifest.json'), 'utf8'));
+    if (mf.generatedAt) return mf.generatedAt;
+  } catch (e) { /* fall through */ }
+  return null;
+}
+
 // P26-11：knowledge-index.json（KBL 派生只读索引；非第二知识库，每次 build 重生）
-function indexJson(byGrade, total) {
+function indexJson(byGrade, total, generatedAt) {
   var kps = [];
   Object.keys(byGrade).sort().forEach(function (g) {
     byGrade[g].forEach(function (kp) {
@@ -249,13 +259,14 @@ function indexJson(byGrade, total) {
       });
     });
   });
-  return JSON.stringify({
+  var doc = {
     version: '5.1.0',
-    subject: 'math',
-    generatedAt: new Date().toISOString(),
-    total: total,
-    knowledgePoints: kps
-  }, null, 2);
+    subject: 'math'
+  };
+  if (generatedAt) doc.generatedAt = generatedAt;
+  doc.total = total;
+  doc.knowledgePoints = kps;
+  return JSON.stringify(doc, null, 2);
 }
 
 function main() {
@@ -298,7 +309,7 @@ function main() {
       });
     });
     fs.writeFileSync(path.join(OUT_DIR, 'knowledge-index.html'), indexHtml(byGrade, total), 'utf8');
-    fs.writeFileSync(path.join(OUT_DIR, 'knowledge-index.json'), indexJson(byGrade, total), 'utf8');
+    fs.writeFileSync(path.join(OUT_DIR, 'knowledge-index.json'), indexJson(byGrade, total, kblGeneratedAt()), 'utf8');
 
     // 剪除：带 kbgen 标记但不在本次产物集合的旧页（legacy ID 页 / 模块页）
     fs.readdirSync(OUT_DIR).forEach(function (name) {

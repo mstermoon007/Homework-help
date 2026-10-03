@@ -479,6 +479,8 @@
               adaptiveMode: genReq.adaptiveMode,
               adaptiveDelta: genReq.adaptiveDelta,
               learnerProfile: genReq.learnerProfile,
+              // P30-11：intentSpec 透传（POL 不重新解释教学语义，仅随 cell 传递）
+              intentSpec: genReq.intentSpec,
               // FINAL-13：显式 seed 随 cell 传递（冻结/可复现）；未指定为 undefined，下游 auto seed 不变。
               seed: genReq.seed
             };

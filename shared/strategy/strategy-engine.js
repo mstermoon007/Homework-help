@@ -1005,6 +1005,12 @@ function plan(request) {
     settings: request.settings
   });
 
+  // P30-14：KBL maxSteps 事实边界——难度推导的 steps 不得超过知识点语义承载上限
+  var kpMaxSteps = (kp.structure && typeof kp.structure.maxSteps === 'number') ? kp.structure.maxSteps : null;
+  if (kpMaxSteps != null && structure.maxSteps > kpMaxSteps) {
+    structure.maxSteps = kpMaxSteps;
+  }
+
   var spiralInputLevel = request.spiralLevel;
   if (learnerDecision && spiralInputLevel == null) spiralInputLevel = learnerDecision.targetSpiralLevel;
   // P0-02 Step 10：单点直连 competition 请求未显式指定螺旋档时，目标取 KP 螺旋余量高位
@@ -1101,7 +1107,9 @@ function plan(request) {
     variationMode: spiral.variationMode,
     contextType: contextType,
     constraints: constraints,
-    generator: selectedGenerator
+    generator: selectedGenerator,
+    // P30-11：intentSpec 透传（Strategy 不重新解释教学语义，仅随 plan 传递）
+    intentSpec: request.intentSpec != null ? request.intentSpec : undefined
   };
   if (request.combine === true) {
     questionPlan.combine = true;

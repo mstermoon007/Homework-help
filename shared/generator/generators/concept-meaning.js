@@ -129,7 +129,7 @@ function makeTimesFill(plan, context, i) {
   var times = Rng.randInt(rng, 2, 5);
   var ans = base * times;
   var q = buildBase(plan, context, i, timesData(base, times));
-  return finish(q, base + ' 的 ' + times + ' 倍是 ____。', String(ans), [String(ans)],
+  return finish(q, '求一个数的几倍是多少，用乘法计算：' + base + ' × ' + times + ' = ____', String(ans), [String(ans)],
     base + ' × ' + times + ' = ' + ans);
 }
 
@@ -228,7 +228,7 @@ function makeAngleFill(plan, context, i) {
       constructs: ['vertex', 'rays', 'angle']
     }
   });
-  return finish(q, '从一点引出（  ）条射线所组成的图形叫做角。', '2', ['2', '两'],
+  return finish(q, '一个角有 1 个顶点和 ____ 条边。', '2', ['2', '两'],
     '角由一个顶点和两条边（射线）组成');
 }
 
@@ -290,7 +290,7 @@ function makeAreaFill(plan, context, i) {
       constructs: ['surface', 'size']
     }
   });
-  return finish(q, '物体表面或封闭图形的大小叫做它们的（  ）。', '面积', ['面积'], null);
+  return finish(q, '测量或比较图形表面的大小，要用 ____ 单位。', '面积', ['面积'], null);
 }
 
 function makeAreaApply(plan, context, i) {
@@ -564,12 +564,13 @@ function buildNumberConceptItem(rng, name) {
     var n0 = ri(rng, 2, 8) * 10000;
     return { stem: '把 ' + n0 + ' 改写成用「万」作单位的数：' + n0 + ' = ' + (n0 / 10000) + ' × 10000，等于多少万？',
       answer: String(n0 / 10000) + '万', options: [n0 / 10000 + '万', n0 / 1000 + '万', n0 + '万'],
+      fill: '' + n0 + ' = ____ 万',
       apply: '某城市人口约 ' + n0 + ' 人，' + n0 + ' = ' + (n0 / 10000) + ' × 10000，改写成用万作单位是多少万人？' };
   }
   if (name.indexOf('亿') !== -1) {
     return { stem: '10 个一千万是多少？（10 × 10000000 = 100000000）',
       answer: '一亿', options: ['一亿', '一千万', '一百万'],
-      apply: '计数器上一千万一千万地数，10 × 10000000 = 100000000，10 个一千万是多少？' };
+      apply: '计数器上一千万一千万地数，数 10 次（10 × 10000000 = 100000000），得到的新计数单位是什么？' };
   }
   if (name.indexOf('计数单位') !== -1) {
     var units = [['一百', '一千', 100, 1000], ['一十', '一百', 10, 100], ['一千', '一万', 1000, 10000]];
@@ -639,6 +640,7 @@ function buildMakeTenItem(rng) {
   var sum = a + b;
   return { stem: '用凑十法计算：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + ' = ？（先把 ' + a + ' 凑成 10，10 + ' + rest + ' = ' + sum + '）',
     answer: String(sum), options: [String(sum), String(sum - 1), String(sum + 1)],
+    fill: '凑十法最后一步：10 + ' + rest + ' = ____',
     apply: '小兔采蘑菇，上午采 ' + a + ' 个、下午采 ' + b + ' 个。用凑十法：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + '，一共采了多少个？',
     operation: 'add' };
 }
@@ -650,6 +652,7 @@ function buildBracketOrderItem(rng) {
   var ans = inner * z;
   return { stem: '先算小括号里面的：(' + x + ' + ' + y + ') × ' + z + ' = ' + inner + ' × ' + z + ' = ？（先算 ' + x + ' + ' + y + ' = ' + inner + '）',
     answer: String(ans), options: [String(ans), String(x + y * z), String(ans - z)],
+    fill: '小括号内先求和，再乘 ' + z + '，最后结果是 ____',
     apply: '商店上午卖出 ' + x + ' 个、下午卖出 ' + y + ' 个气球，每个气球 ' + z + ' 元。先算一共卖出多少个，再算卖了多少元：(' + x + ' + ' + y + ') × ' + z + ' = ？元',
     operation: 'mixed' };
 }
@@ -662,6 +665,7 @@ function buildStepwiseItem(rng) {
   var ans = s1 - c;
   return { stem: '按脱式计算规范一步一步算：' + a + ' + ' + b + ' − ' + c + ' = ' + s1 + ' − ' + c + ' = ？（第一步 ' + a + ' + ' + b + ' = ' + s1 + '）',
     answer: String(ans), options: [String(ans), String(s1), String(a + b + c)],
+    fill: '脱式计算：先算加法再算减法，最后得数是 ____',
     apply: '图书角原有 ' + a + ' 本书，又买来 ' + b + ' 本，借出 ' + c + ' 本。脱式：' + a + ' + ' + b + ' − ' + c + ' = ' + s1 + ' − ' + c + '，还剩多少本？',
     operation: 'mixed' };
 }
@@ -703,18 +707,21 @@ function buildAlgebraLetterItem(rng, name) {
   if (name.indexOf('数量关系') !== -1) {
     return { stem: '速度用 v 表示，时间用 t 表示，路程 s 等于什么？（参考：80 × 2 = 160）',
       answer: 's = v × t', options: ['s = v × t', 's = v + t', 's = v − t'],
+      fill: '速度 × 时间 = 路程，用字母表示为 ____',
       apply: '汽车每小时行 v 千米，行了 t 小时（如 80 × 2 = 160），路程 s 用字母怎样表示？' };
   }
   if (name.indexOf('值') !== -1) {
     var a3 = ri(rng, 2, 6), k3 = ri(rng, 2, 5);
     return { stem: '当 a = ' + a3 + ' 时，' + k3 + 'a + 1 = ' + k3 + ' × ' + a3 + ' + 1 = 多少？',
       answer: String(k3 * a3 + 1), options: [String(k3 * a3 + 1), String(k3 * a3), String(a3 + 1)],
+      fill: '当 a = ' + a3 + ' 时，' + k3 + ' × a + 1 = ____',
       apply: '文具店有 a 盒彩笔，每盒 ' + k3 + ' 支还多 1 支样品。当 a = ' + a3 + ' 时，' + k3 + ' × ' + a3 + ' + 1 = ？，共多少支？' };
   }
   // 用字母表示数
   var d0 = ri(rng, 4, 20);
   return { stem: '小明今年 a 岁，爸爸比他大 ' + d0 + ' 岁。当 a = 10 时，10 + ' + d0 + ' = 多少，爸爸岁数用字母怎样表示？',
     answer: 'a + ' + d0 + '（岁）', options: ['a + ' + d0, 'a − ' + d0, 'a × ' + d0],
+    fill: '爸爸比小明大 ' + d0 + ' 岁，用含字母的式子表示爸爸的岁数：____',
     apply: '小明今年 a 岁，爸爸比他大 ' + d0 + ' 岁（a = 10 时 10 + ' + d0 + ' = ' + (10 + d0) + '），爸爸的岁数用含字母的式子怎样表示？' };
 }
 
@@ -730,6 +737,8 @@ function buildNumberTheoryItem(rng, name) {
         + '（也可看作 ' + fp + ' ÷ ' + fa + ' = ' + fb + '）。下面哪一组数是 ' + fp + ' 的因数？',
       answer: facStmt,
       options: [facStmt, fa + ' 和 ' + fp, fb + ' 和 ' + fp],
+      // P30-GEN-06（P30-16）：choice 须含「因数」关键词且骨架与 calc/apply 互异。
+      choice: '把 ' + fp + ' 块月饼装盒（' + fa + ' × ' + fb + ' = ' + fp + '）。' + fp + ' 的因数是哪两个？',
       fill: '根据 ' + fa + ' × ' + fb + ' = ' + fp + ' 可知，____ 和 ____ 是 ' + fp + ' 的因数。',
       apply: '礼品店把 ' + fp + ' 块月饼装盒，每盒 ' + fa + ' 块，正好装 ' + fb + ' 盒（'
         + fa + ' × ' + fb + ' = ' + fp + '）。哪两个数是 ' + fp + ' 的因数？' };
@@ -762,6 +771,7 @@ function buildNumberTheoryItem(rng, name) {
     var ps = pa + pb;
     return { stem: pt.rule + '：' + pa + ' + ' + pb + ' = ' + ps + '，' + pa + ' 与 ' + pb + ' 的和是奇数还是偶数？',
       answer: pt.res, options: ['偶数', '奇数', '无法确定'],
+      fill: pt.rule + '，' + pa + ' + ' + pb + ' 的和是 ____',
       apply: '两队人数分别是 ' + pa + ' 和 ' + pb + '（' + pt.rule + '），' + pa + ' + ' + pb + ' = ' + ps + '，两队合并后的总人数是奇数还是偶数？' };
   }
   // 质数与合数
@@ -774,6 +784,7 @@ function buildNumberTheoryItem(rng, name) {
     var d2 = pool.splice(ri(rng, 0, pool.length - 1), 1)[0];
     return { stem: '一个数只有 1 和它本身两个因数就是质数：1 × ' + pn + ' = ' + pn + '。下面哪个数是质数？',
       answer: String(pn), options: [String(pn), String(d1), String(d2)],
+      fill: '1 × ' + pn + ' = ' + pn + '，' + pn + ' 的因数只有 1 和 ____',
       apply: '分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 ' + pn + '（1 × ' + pn + ' = ' + pn + '）能分成人数相同且多于1人的小组吗，它是质数还是合数？' };
   }
   // 奇数与偶数
@@ -783,11 +794,13 @@ function buildNumberTheoryItem(rng, name) {
     if (askEven) {
       return { stem: '2 的倍数是偶数：' + en + ' ÷ 2 = ' + (en / 2) + '。下面哪个数是偶数？',
         answer: String(en), options: [String(en), String(en + 1), String(en + 3)],
+        fill: '' + en + ' ÷ 2 = ' + (en / 2) + ' 没有余数，____ 是 2 的倍数',
         apply: '门牌号按单双号排列，' + en + ' ÷ 2 = ' + (en / 2) + ' 没有余数，' + en + ' 号是奇数还是偶数？' };
     }
     var on = ri(rng, 2, 24) * 2 - 1;
     return { stem: '不是 2 的倍数的数是奇数，如 ' + on + ' ÷ 2 = ' + ((on - 1) / 2) + '……1。下面哪个数是奇数？',
       answer: String(on), options: [String(on), String(on + 1), String(on - 1)],
+      fill: '' + on + ' ÷ 2 余 1，____ 不是 2 的倍数',
       apply: '报数时逢双数蹲下，' + on + ' ÷ 2 余 1 不能整除，' + on + ' 号同学该蹲下吗，' + on + ' 是奇数还是偶数？' };
   }
   // 2、5、3 的倍数的特征（默认）
@@ -813,33 +826,62 @@ function buildNumberTheoryItem(rng, name) {
     : '（参考：' + fn + ' ÷ ' + ft.f + ' = ' + (fn / ft.f) + '）';
   return { stem: ft.text + ' 的数是 ' + ft.f + ' 的倍数' + fref + '。下面哪个数是 ' + ft.f + ' 的倍数？',
     answer: String(fn), options: [String(fn), String(fd1), String(fd2)],
+    fill: ft.text + '，____ 是 ' + ft.f + ' 的倍数',
     apply: '体育分组每组 ' + ft.f + ' 人正好分完，人数须是 ' + ft.f + ' 的倍数。班级人数 ' + fn + fref + '，哪个班能正好分完？' };
 }
 
-/** 统一按题型包装 item（calc 直接用 stem；fill 补空位；choice 取 options；apply 取情境题干） */
+// 从 stem 中提取支撑算式（优先括号内的运算式，其次冒号后的等式），用于 fill 填空题干
+function extractSupport(stem) {
+  var s = String(stem);
+  var m = /（([^）]*[=×÷+\-−*x/][^）]*)）/.exec(s);
+  if (m) return m[1].trim();
+  var m2 = /[:：]\s*([^，。？?]*[=×÷+\-−*x/][^，。？?]*)/.exec(s);
+  if (m2) return m2[1].trim();
+  return s.replace(/（[\s\S]*?）/g, '').replace(/多少|什么|几|是[？?]?$|[？?]/g, '').trim();
+}
+
+// 取 stem 首段语境（到第一个句读符号前），用于 choice 选择问法的简短题干
+function headContext(stem) {
+  var s = String(stem).replace(/（[\s\S]*?）/g, '');
+  var cut = s.search(/[，。：:？?]/);
+  return cut >= 0 ? s.slice(0, cut) : s.slice(0, 14);
+}
+
 function makeByItem(plan, context, i, builder, subType) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var params = plan.semanticParams || {};
   var item = builder(rng, params.name || '');
   var qt = plan.questionTypeId;
-  // item.operation 透传为 data.operation（仅 composition 项提供 'add'，承载 calc expressionPresent）
   var q = buildBase(plan, context, i, { subType: subType, operation: item.operation });
-  var stem = item.stem, answer = item.answer;
-  if (qt === 'apply') stem = item.apply || item.stem;
-  if (qt === 'fill') {
+  var answer = item.answer;
+
+  // P30-GEN-06（P30-16）：四题型承担不同 Assessment Target，核心骨架须两两互异
+  //   calc  —— 直问式列式求值（stem，含参考算式，operation 满足 expressionPresent）
+  //   fill  —— 算式支撑填空：根据参考算式把答案填入横线（骨架=参考算式，与 calc 直问、apply 情境均不同）
+  //   apply —— 真实情境问句（item.apply）
+  //   choice—— 短语境选择问法：「{首段语境}，下面哪个选项正确？」（骨架含「下面哪个选项正确」，与 calc 不同）
+  var prompt;
+  if (qt === 'calc') {
+    prompt = item.stem;
+  } else if (qt === 'fill') {
     if (item.fill) {
-      stem = item.fill;  // builder 专用填空形式（多问句机械替换不可靠）
+      prompt = item.fill;
     } else {
-      stem = stem.replace('多少？', '____').replace('什么？', '____').replace('？', '____');
-      if (!/____|\(\s*\)/.test(stem)) stem += ' ____';
+      prompt = '根据算式把答案填在横线上：' + extractSupport(item.stem) + ' = ____';
     }
-  }
-  if (qt === 'choice') {
-    finishChoice(q, rng, item.answer, item.options.filter(function (o) { return o !== item.answer; }));
-    q.prompt = stem;
+  } else if (qt === 'apply') {
+    prompt = item.apply || item.stem;
+  } else {
+    // choice
+    var wrongs = (item.options || []).filter(function (o) { return o !== item.answer; });
+    finishChoice(q, rng, item.answer, wrongs);
+    // choice 用 apply 语境首部（与 calc 的 stem 首部不同），保证核心骨架互异；
+    // 若 item 提供了专用 choice 题面（含 KP 关键词），优先使用。
+    var ctxSrc = item.choice || (headContext(item.apply || item.stem) + '，下面哪个选项正确？');
+    q.prompt = ctxSrc + '（  ）';
     return q;
   }
-  return finish(q, stem, answer, [answer], stem.replace(/（参考.*?）/, ''));
+  return finish(q, prompt, answer, [answer], prompt.replace(/（参考.*?）/, ''));
 }
 
 function makeNumberConcept(plan, context, i) { return makeByItem(plan, context, i, buildNumberConceptItem, 'number-concept'); }

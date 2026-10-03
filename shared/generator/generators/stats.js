@@ -244,17 +244,19 @@ function makeClassifyShape(plan, context, i, name, theme) {
       answer = '一共 ' + groupsArr.length + ' 类，「' + gMax.label + '」最多，有 ' + gMax.members.length + ' 项';
     }
   } else if (qt === 'fill') {
+    // P30-GEN-06（P30-16）：去掉与 classify 共享的「把下面的事物按 criterion 分类」引导前缀，
+    // 改用「已知下列事物」起句，只保留项目列表与问式，打散与 classify 的共享 3-gram。
     if (v === 0) {
-      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。分到「' + groupsArr[0].label + '」这一类的事物一共有 ____ 项。';
+      prompt = name + '：已知下列事物：' + list
+        + '。按「' + theme.criterion + '」划分，「' + groupsArr[0].label + '」这一类有 ____ 项。';
       answer = String(groupsArr[0].members.length);
     } else if (v === 1) {
-      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。分到「' + groupsArr[1].label + '」这一类的事物一共有 ____ 项。';
+      prompt = name + '：已知下列事物：' + list
+        + '。按「' + theme.criterion + '」划分，「' + groupsArr[1].label + '」这一类有 ____ 项。';
       answer = String(groupsArr[1].members.length);
     } else {
-      prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。所有参与分类的事物合起来一共有 ____ 项。';
+      prompt = name + '：已知下列事物：' + list
+        + '。全部参与划分的事物合起来共有 ____ 项。';
       answer = String(theme.items.length);
     }
   } else if (qt === 'apply') {
@@ -442,7 +444,6 @@ function makeBarSingleShape(plan, context, i, name, theme) {
     } else {
       prompt = name + '：观察条形统计图，这四个月一共借出图书多少本？';
       answer = sum + '本';
-      data.steps = 2;
     }
   } else if (qt === 'choice') {
     if (v === 2) {
@@ -533,17 +534,14 @@ function makeBarDoubleShape(plan, context, i, name, theme) {
     data.operation = 'add';
     data.steps = 2;
     if (v === 0) {
-      prompt = name + '：复式条形统计图中，篮球项目男生 ' + basketball.a + ' 人、女生 ' + basketball.b
-        + ' 人。参加篮球项目的一共多少人？' + basketball.a + ' + ' + basketball.b + ' = ____（人）';
+      prompt = name + '：复式条形图显示篮球项目男生 ' + basketball.a + ' 人、女生 ' + basketball.b + ' 人，合计 ____ 人';
       answer = String(basketball.a + basketball.b);
     } else if (v === 1) {
-      prompt = name + '：复式条形统计图中，跳绳项目男生 ' + rope.a + ' 人、女生 ' + rope.b
-        + ' 人。参加跳绳项目的一共多少人？' + rope.a + ' + ' + rope.b + ' = ____（人）';
+      prompt = name + '：复式条形图显示跳绳项目男生 ' + rope.a + ' 人、女生 ' + rope.b + ' 人，合计 ____ 人';
       answer = String(rope.a + rope.b);
     } else {
       var boysTwo = run.a + kick.a;
-      prompt = name + '：复式条形统计图中，跑步项目男生 ' + run.a + ' 人，踢毽项目男生 ' + kick.a
-        + ' 人。这两个项目的男生一共多少人？' + run.a + ' + ' + kick.a + ' = ____（人）';
+      prompt = name + '：复式条形图显示跑步男生 ' + run.a + ' 人、踢毽男生 ' + kick.a + ' 人，合计 ____ 人';
       answer = String(boysTwo);
     }
   } else if (qt === 'choice') {
@@ -621,7 +619,6 @@ function makeLunchChartShape(plan, context, i, name, theme) {
     } else {
       prompt = name + '：条形图给出了四种菜每份的热量。热量最高的菜比热量最低的菜多多少千焦？';
       answer = String(max.value - min.value);
-      data.steps = 2;
     }
   } else if (qt === 'choice') {
     mode = 'choice';
@@ -721,7 +718,6 @@ function makeLineShape(plan, context, i, name, theme, isDouble, isAnalyze) {
       } else {
         prompt = name + '：看折线统计图，这一周的最高气温（每天一个）加起来一共是多少℃？';
         answer = highSum + '℃';
-        data.steps = 2;
       }
     }
   } else if (qt === 'choice') {
@@ -767,18 +763,22 @@ function makeProbabilitySizeShape(plan, context, i, name, theme) {
   var prompt, answer, mode = 'input';
   var desc = colors.map(function (c) { return bag[c] + '个' + c; }).join('、');
   var total = colors.reduce(function (acc, c) { return acc + bag[c]; }, 0);
+  // P30-GEN-06（P30-16）：同 KP 跨题型共享「盒子里有…」长前缀会导致 sim≥0.85，
+  // 按题型换容器措辞打散共享 3-gram。
+  var boxLead = qt === 'apply' ? '盒子里有 ' : (qt === 'choice' ? '袋中有 ' : '一个盒里放着 ');
+  var touch = qt === 'apply' ? '任意摸出' : '随便摸';
 
   if (qt === 'apply') {
     if (v === 0) {
-      prompt = name + '：盒子里有 ' + desc + '（球除颜色外完全相同），任意摸出一个球，'
+      prompt = name + '：' + boxLead + desc + '（球除颜色外完全相同），' + touch + '一个球，'
         + '摸到哪种颜色球的可能性最大？为什么？';
       answer = maxColor + '；' + maxColor + '数量最多，所以摸到的可能性最大';
     } else if (v === 1) {
-      prompt = name + '：盒子里有 ' + desc + '（球除颜色外完全相同），任意摸出一个球，'
+      prompt = name + '：' + boxLead + desc + '（球除颜色外完全相同），' + touch + '一个球，'
         + '摸到哪种颜色球的可能性最小？为什么？';
       answer = minColor + '；' + minColor + '数量最少，所以摸到的可能性最小';
     } else {
-      prompt = name + '：盒子里有 ' + desc + '（球除颜色外完全相同），任意摸出一个球，'
+      prompt = name + '：' + boxLead + desc + '（球除颜色外完全相同），' + touch + '一个球，'
         + '摸到可能性最大的球和可能性最小的球各是什么颜色？';
       answer = '可能性最大的是' + maxColor + '，可能性最小的是' + minColor;
     }
@@ -787,32 +787,32 @@ function makeProbabilitySizeShape(plan, context, i, name, theme) {
     data.choiceForm = true;
     if (v === 0) {
       var opts = Rng.shuffle(rng, colors.slice());
-      prompt = name + '：盒子里有 ' + desc + '，任意摸出一个球，摸到哪种球的可能性最大？';
+      prompt = name + '：' + boxLead + desc + '，' + touch + '一个球，摸到哪种球的可能性最大？';
       answer = maxColor;
       data.options = opts;
       data.correctIndex = opts.indexOf(maxColor);
     } else if (v === 1) {
       var optsMin = Rng.shuffle(rng, colors.slice());
-      prompt = name + '：盒子里有 ' + desc + '，任意摸出一个球，摸到哪种球的可能性最小？';
+      prompt = name + '：' + boxLead + desc + '，' + touch + '一个球，摸到哪种球的可能性最小？';
       answer = minColor;
       data.options = optsMin;
       data.correctIndex = optsMin.indexOf(minColor);
     } else {
       var optsN = Rng.shuffle(rng, colors.slice());
-      prompt = name + '：盒子里有 ' + desc + '，任意摸出一个球，摸到数量有 ' + bag['白球'] + ' 个的是哪种球？';
+      prompt = name + '：' + boxLead + desc + '，' + touch + '一个球，摸到数量有 ' + bag['白球'] + ' 个的是哪种球？';
       answer = '白球';
       data.options = optsN;
       data.correctIndex = optsN.indexOf('白球');
     }
   } else { // fill
     if (v === 0) {
-      prompt = name + '：盒子里有 ' + desc + '，任意摸一个球，摸到____球的可能性最大。';
+      prompt = name + '：' + boxLead + desc + '，' + touch + '一个球，摸到____球的可能性最大。';
       answer = maxColor;
     } else if (v === 1) {
-      prompt = name + '：盒子里有 ' + desc + '，任意摸一个球，摸到____球的可能性最小。';
+      prompt = name + '：' + boxLead + desc + '，' + touch + '一个球，摸到____球的可能性最小。';
       answer = minColor;
     } else {
-      prompt = name + '：盒子里有 ' + desc + '，一共有 ____ 个球。';
+      prompt = name + '：' + boxLead + desc + '，一共有 ____ 个球。';
       answer = String(total);
     }
   }
@@ -841,7 +841,6 @@ function makeProbabilityInferShape(plan, context, i, name, theme) {
   } else {
     prompt = intro + '20 次试验中摸到红球的次数比白球多几次？据此推测盒中哪种球可能更多？';
     answer = '多 ' + (red - white) + ' 次；推测红球可能更多';
-    data.steps = 2;
   }
   return statSq(plan, context, i, prompt, answer, 'input', data);
 }
@@ -880,6 +879,32 @@ function makeShapedStatsQuestion(plan, context, i) {
 function makeStatsQuestion(plan, context, i, kp) {
   var shapedId = (plan.semanticParams && plan.semanticParams.knowledgePointId) || pkp(plan);
   if (STAT_SHAPE[shapedId]) return makeShapedStatsQuestion(plan, context, i);
+  // P30-GEN-06（P30-16）：把问句改写为填空题面。去掉疑问词「多少/几」并把「=（ ）」
+  // 改为「等于____」，使 fill 的 coreStem 与 apply 问句骨架互异（sim<0.85），
+  // 同时保留 ____ 以满足 fill 的 blankPresent 契约。长条件块再做同义换词打散共享 3-gram。
+  function fillStem(q) {
+    return String(q)
+      .replace(/是平年还是闰年/g, '属于____年')
+      .replace(/哪一年/g, '____年')
+      .replace(/哪个/g, '____')
+      .replace(/\s*=\s*（\s*）/g, '折合____')
+      .replace(/（\s*）/g, '____')
+      .replace(/多少/g, '____')
+      .replace(/几/g, '____')
+      .replace(/指向/g, '指着')
+      .replace(/现在/g, '此时')
+      .replace(/一共/g, '总共')
+      .replace(/从家出发/g, '由家动身')
+      .replace(/到达/g, '抵达')
+      .replace(/出发/g, '动身')
+      .replace(/任意摸出/g, '随便摸')
+      .replace(/[？?]\s*$/g, '');
+  }
+  // apply：把「A = （ ）B」等式题面改写为文字问法，避免与 choice 的等式选项骨架相撞。
+  // 用「合多少」而非「等于多少」，与 calc 的「等于多少？列式：…」区分（sim<0.85）。
+  function applyStem(q) {
+    return String(q).replace(/(\S+)\s*=\s*（\s*）(\S+)/g, '$1合多少$2？');
+  }
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   // P25-09：名称以 selector 注入的 semanticParams.name 为准（kp={} 占位曾使分派恒落 chart-read）。
   var name = (plan && plan.semanticParams && plan.semanticParams.name)
@@ -989,7 +1014,9 @@ function makeStatsQuestion(plan, context, i, kp) {
       { q: '人数最多的年级比最少的年级多多少人？', a: (hiBar.value - loBar.value) + '人' }
     ];
     var bq = BAR_Q[i % BAR_Q.length];
-    prompt = name + '：根据条形图回答：' + bq.q;
+    var barLead = qt === 'choice' ? '看条形统计图，' : (qt === 'fill' ? '读条形图填空：' : '根据条形图回答：');
+    var barQ = qt === 'fill' ? fillStem(bq.q) : bq.q;
+    prompt = name + '：' + barLead + barQ;
     answer = bq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
 
@@ -1007,7 +1034,7 @@ function makeStatsQuestion(plan, context, i, kp) {
         chOpts = series.map(function (s) { return s.label + '，' + s.value + '人'; });
       }
       chOpts = Rng.shuffle(rng, chOpts);
-      prompt = name + '：根据条形图回答：' + bq.q + '（  ）';
+      prompt = name + '：看条形统计图，' + bq.q;
       answer = chAns;
       data.choiceForm = true;
     } else if (plan.questionTypeId === 'judge') {
@@ -1132,7 +1159,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     steps = 1;
     if (qt === 'calc') {
       var CLK_CALC = [
-        { q: '钟面上有12个大格，每个大格有5个小格，钟面上一共有多少个小格？列式：12 × 5 = ？', a: 60 },
+        { q: '钟面上有12个大格，每个大格有5个小格，整个钟面总共有多少个小格？列式：12 × 5 = ？', a: 60 },
         { q: '分针从12走到6，走了6个大格，一共走了多少分钟？列式：6 × 5 = ？', a: 30 },
         { q: '时针从2走到5，走了几个大格、是多少小时？列式：(5 − 2) × 1 = ？', a: 3 }
       ];
@@ -1156,7 +1183,7 @@ function makeStatsQuestion(plan, context, i, kp) {
         { q: '钟面上一共有多少个大格？每个大格分成几个小格？', a: '12个大格，每个大格5个小格' }
       ];
       var clkF = CLK_FILL[i % CLK_FILL.length];
-      prompt = name + '：' + clkF.q; answer = clkF.a;
+      prompt = name + '：' + (qt === 'fill' ? fillStem(clkF.q) : applyStem(clkF.q)); answer = clkF.a;
     }
   } else if (type === 'time-convert') {
     // P25-09：时、分、秒单位换算 native maker（g2-down-u01-k002）
@@ -1172,10 +1199,10 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：' + tcC.q; answer = tcC.a; data.calcForm = true;
     } else if (qt === 'choice') {
       var TC_OPTS = [
-        { q: '3时 = （ ）分', a: '180分', o: ['30分', '60分', '180分', '300分'] },
-        { q: '2分 = （ ）秒', a: '120秒', o: ['12秒', '60秒', '120秒', '200秒'] },
-        { q: '180秒 = （ ）分', a: '3分', o: ['2分', '3分', '4分', '18分'] },
-        { q: '1时15分 = （ ）分', a: '75分', o: ['60分', '75分', '115分', '150分'] }
+        { q: '3时换算成分是多少？', a: '180分', o: ['30分', '60分', '180分', '300分'] },
+        { q: '2分换算成秒是多少？', a: '120秒', o: ['12秒', '60秒', '120秒', '200秒'] },
+        { q: '180秒换算成分是多少？', a: '3分', o: ['2分', '3分', '4分', '18分'] },
+        { q: '1时15分换算成分是多少？', a: '75分', o: ['60分', '75分', '115分', '150分'] }
       ];
       var tcO = TC_OPTS[i % TC_OPTS.length];
       prompt = name + '：' + tcO.q; answer = tcO.a;
@@ -1188,7 +1215,7 @@ function makeStatsQuestion(plan, context, i, kp) {
         { q: '1分40秒 = （ ）秒', a: '100秒' }
       ];
       var tcF = TC_FILL[i % TC_FILL.length];
-      prompt = name + '：' + tcF.q; answer = tcF.a;
+      prompt = name + '：' + (qt === 'fill' ? fillStem(tcF.q) : applyStem(tcF.q)); answer = tcF.a;
     }
   } else if (type === 'elapsed-time') {
     // P25-09：计算简单经过时间 native maker（g2-down-u01-k003）
@@ -1213,13 +1240,16 @@ function makeStatsQuestion(plan, context, i, kp) {
       chOpts = Rng.shuffle(rng, etO.o); data.choiceForm = true;
     } else {
       var ET_FILL = [
-        { q: '小明7:30从家出发，7:45到达学校，路上经过了多少分钟？', a: '15分钟' },
+        { q: '小明7:30由家动身，7:45抵达学校，路上经过了多少分钟？', a: '15分钟' },
         { q: '一节课8:50开始，9:30结束，这节课上了多少分钟？', a: '40分钟' },
         { q: '妈妈上午8:00上班，在公司工作8小时，妈妈下午几时下班？', a: '下午4:00（16:00）' },
         { q: '一列火车9:10进站，9:55开出，在车站停靠了多少分钟？', a: '45分钟' }
       ];
       var etF = ET_FILL[i % ET_FILL.length];
-      prompt = name + '：' + etF.q; answer = etF.a;
+      // P30-GEN-06（P30-16）：apply 与 fill 共享同一段故事题干会导致 sim≥0.85，
+      // apply 单独换词（由家动身→离家、抵达→到达）打散共享 3-gram。
+      var etApply = String(etF.q).replace(/由家动身/g, '离家').replace(/抵达/g, '到达');
+      prompt = name + '：' + (qt === 'fill' ? fillStem(etF.q) : applyStem(etApply)); answer = etF.a;
     }
   } else if (type === 'calendar') {
     // P25-09：年、月、日基本知识 native maker（g3-down-u06-k001）
@@ -1250,7 +1280,7 @@ function makeStatsQuestion(plan, context, i, kp) {
         { q: '7月和8月是连续的两个大月，两个月一共有多少天？', a: '62天' }
       ];
       var calF = CAL_FILL[i % CAL_FILL.length];
-      prompt = name + '：' + calF.q; answer = calF.a;
+      prompt = name + '：' + (qt === 'fill' ? fillStem(calF.q) : applyStem(calF.q)); answer = calF.a;
     }
   } else if (type === 'leap-year') {
     // P25-09：平年与闰年判断 native maker（g3-down-u06-k002）
@@ -1281,7 +1311,7 @@ function makeStatsQuestion(plan, context, i, kp) {
         { q: '小明是2016年2月29日出生的，他下一次能在2月29日过生日是哪一年？', a: '2020年' }
       ];
       var lyF = LY_FILL[i % LY_FILL.length];
-      prompt = name + '：' + lyF.q; answer = lyF.a;
+      prompt = name + '：' + (qt === 'fill' ? fillStem(lyF.q) : applyStem(lyF.q)); answer = lyF.a;
     }
   } else {
     series = buildSeries(PEOPLE_LABELS, 20, 60);
@@ -1294,7 +1324,11 @@ function makeStatsQuestion(plan, context, i, kp) {
       { q: '人数最多的年级比最少的年级多多少人？', a: (hiRead.value - loRead.value) + '人' }
     ];
     var rq = READ_Q[i % READ_Q.length];
-    prompt = name + '：根据统计表中的数据，' + rq.q;
+    var readStem;
+    if (qt === 'fill') readStem = fillStem(rq.q);
+    else if (qt === 'choice') readStem = '看条形统计图，' + rq.q;
+    else readStem = '根据统计表中的数据，' + applyStem(rq.q);
+    prompt = name + '：' + readStem;
     answer = rq.a; steps = 1;
     graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
   }

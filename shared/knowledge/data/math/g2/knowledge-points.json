@@ -341,10 +341,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -596,10 +593,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -725,10 +719,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 2
       },
       "weight": 1,
@@ -848,10 +839,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -1571,10 +1559,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -1696,7 +1681,7 @@
         ],
         "numberRange": {
           "min": 1,
-          "max": 100
+          "max": 6
         },
         "maxSteps": 1
       },
@@ -3208,7 +3193,7 @@
         ],
         "numberRange": {
           "min": 1,
-          "max": 100
+          "max": 9
         },
         "maxSteps": 1
       },
@@ -3444,10 +3429,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -3917,10 +3899,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -4039,10 +4018,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -4161,10 +4137,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -4284,10 +4257,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 2
       },
       "weight": 1,
@@ -4416,10 +4386,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 2
       },
       "weight": 1,
@@ -4658,10 +4625,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -4900,10 +4864,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 2
       },
       "weight": 1,
@@ -5022,10 +4983,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 2
       },
       "weight": 1,
@@ -5145,10 +5103,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 2
       },
       "weight": 1,
@@ -5265,10 +5220,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -5385,10 +5337,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -5507,7 +5456,7 @@
         ],
         "numberRange": {
           "min": 1,
-          "max": 100
+          "max": 10000
         },
         "maxSteps": 1
       },
@@ -5625,10 +5574,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -5747,7 +5693,7 @@
         ],
         "numberRange": {
           "min": 1,
-          "max": 100
+          "max": 10000
         },
         "maxSteps": 1
       },
@@ -5865,10 +5811,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -5988,10 +5931,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -6355,10 +6295,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,
@@ -6480,7 +6417,7 @@
         ],
         "numberRange": {
           "min": 1,
-          "max": 100
+          "max": 10000
         },
         "maxSteps": 2
       },
@@ -6589,10 +6526,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 2
       },
       "weight": 1,
@@ -6708,7 +6642,7 @@
         ],
         "numberRange": {
           "min": 1,
-          "max": 100
+          "max": 10000
         },
         "maxSteps": 1
       },
@@ -6817,10 +6751,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 2
       },
       "weight": 1,
@@ -6928,10 +6859,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 2
       },
       "weight": 1,
@@ -7045,7 +6973,7 @@
         ],
         "numberRange": {
           "min": 1,
-          "max": 100
+          "max": 10000
         },
         "maxSteps": 1
       },
@@ -7157,10 +7085,7 @@
             "type": "question-format"
           }
         ],
-        "numberRange": {
-          "min": 1,
-          "max": 100
-        },
+        "numberRange": null,
         "maxSteps": 1
       },
       "weight": 1,

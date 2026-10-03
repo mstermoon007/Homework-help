@@ -97,12 +97,15 @@ function makePercentOf(plan, context, i) {
   var p = Rng.pick(rng, CLEAN_PERCENTS);
   var ans = Math.round(base * p / 100 * 100) / 100;
   var prompt;
-  if (qt(plan) === 'apply') {
-    prompt = '图书室有 ' + base + ' 本图书，其中 ' + p + '% 是故事书。故事书有多少本？';
-  } else if (qt(plan) === 'fill') {
-    prompt = base + ' 的 ' + p + '% 等于 ____。';
-  } else {
+  var t = qt(plan);
+  if (t === 'calc') {
     prompt = '列式计算：' + base + ' × ' + p + '% = ？';
+  } else if (t === 'fill') {
+    prompt = '求 ' + base + ' 的 ' + p + '%，结果是 ____';
+  } else if (t === 'choice') {
+    prompt = base + ' 的 ' + p + '% 是多少？';
+  } else {
+    prompt = '图书室有 ' + base + ' 本图书，其中 ' + p + '% 是故事书。故事书有多少本？';
   }
   return finish(buildBase(plan, context, i, { subType: 'percent-of', base: base, percent: p }),
     prompt, ans, base + ' × ' + p + '% = ' + ans);
@@ -112,32 +115,36 @@ function makePercentOf(plan, context, i) {
 function makeConversion(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var variant = i % 3;
-  var isCalc = qt(plan) === 'calc';
+  var t = qt(plan);
+  var isCalc = t === 'calc';
   var q = buildBase(plan, context, i, { subType: 'percent-conversion', variant: variant });
   if (variant === 0) {
     var d = (Rng.randInt(rng, 1, 9) * 10 + Rng.randInt(rng, 1, 9)) / 100;
     var dpct = Math.round(d * 100);
-    var stem0 = isCalc
-      ? '把小数 ' + d.toFixed(2) + ' 化成百分数，列式：' + d.toFixed(2) + ' =（ ）%（只填数字）。'
-      : '把小数 ' + d.toFixed(2) + ' 化成百分数是（ ）%（只填数字）。';
+    var stem0;
+    if (isCalc) stem0 = '把小数 ' + d.toFixed(2) + ' 化成百分数，列式：' + d.toFixed(2) + ' =（ ）%（只填数字）。';
+    else if (t === 'fill') stem0 = d.toFixed(2) + ' = ____%（只填数字）';
+    else if (t === 'choice') stem0 = '小数 ' + d.toFixed(2) + ' 化成百分数是多少？（只填数字）';
+    else stem0 = '把小数 ' + d.toFixed(2) + ' 化成百分数，结果是多少？（只填数字）';
     return finish(q, stem0, dpct, d.toFixed(2) + ' = ' + dpct + '%');
   }
   if (variant === 1) {
     var f = Rng.pick(rng, FRACTION_PERCENT);
-    var stem = qt(plan) === 'fill'
-      ? '把分数 ' + f.num + '/' + f.den + ' 化成百分数：____%（只填数字）'
-      : (isCalc
-        ? '把分数 ' + f.num + '/' + f.den + ' 化成百分数，列式：' + f.num + '/' + f.den + ' =（ ）%（只填数字）'
-        : f.num + '/' + f.den + ' 化成百分数是多少？（只填数字）');
+    var stem;
+    if (isCalc) stem = '把分数 ' + f.num + '/' + f.den + ' 化成百分数，列式：' + f.num + '/' + f.den + ' =（ ）%（只填数字）';
+    else if (t === 'fill') stem = f.num + '/' + f.den + ' = ____%（只填数字）';
+    else if (t === 'choice') stem = '分数 ' + f.num + '/' + f.den + ' 化成百分数是多少？（只填数字）';
+    else stem = '把分数 ' + f.num + '/' + f.den + ' 化成百分数，结果是多少？（只填数字）';
     return finish(q, stem, f.percent, f.num + '/' + f.den + ' = ' + f.percent + '%');
   }
   var p = Rng.pick(rng, CLEAN_PERCENTS);
   var dec = (p / 100).toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
   if (isCalc) {
-    // P25-07：calc 列式形态「80 ÷ 100 =（ ）」
     return finish(q, '把 ' + p + '% 化成小数，列式：' + p + ' ÷ 100 =（ ）。', dec, p + '% = ' + dec);
   }
-  return finish(q, '把 ' + p + '% 化成小数是（ ）。', dec, p + '% = ' + dec);
+  if (t === 'fill') return finish(q, p + '% = ____', dec, p + '% = ' + dec);
+  if (t === 'choice') return finish(q, p + '% 化成小数是多少？', dec, p + '% = ' + dec);
+  return finish(q, '把 ' + p + '% 化成小数，结果是多少？', dec, p + '% = ' + dec);
 }
 
 /* ---------- k003 百分数的应用——折扣 ---------- */
@@ -147,21 +154,24 @@ function makeDiscount(plan, context, i) {
   var d = Rng.pick(rng, DISCOUNTS);
   var cur = Math.round(price * d.rate) / 100;
   var askSaved = (i % 2 === 1);
-  var prompt;
-  // P25-07：calc 列式计算形态「price × rate% = ？」
-  if (qt(plan) === 'calc') {
-    return finish(buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: 'current' }),
+  var t = qt(plan);
+  // calc 行断言 data.ask='current'：calc 恒 current；saved 变体仅 fill/choice/apply 承载
+  var bb = buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: (t === 'calc') ? 'current' : (askSaved ? 'saved' : 'current') });
+  if (t === 'calc') {
+    // evidence-rules：折扣 calc 行断言 data.ask='current'（T2 教学事实：calc=现价列式，
+    // 「求便宜」问法由 fill/choice/apply 的 askSaved 变体承载），calc 不产 saved 变体
+    return finish(bb,
       '列式计算：一件商品原价 ' + price + ' 元，现在' + d.label + '出售，现价是多少元？列式：' + price + ' × ' + d.rate + '% = ？',
       cur, '现价 ' + price + ' × ' + d.rate + '% = ' + cur + ' 元');
   }
   if (askSaved) {
-    prompt = '一件商品原价 ' + price + ' 元，现在' + d.label + '出售，买这件商品可以便宜多少元？';
-    return finish(buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: 'saved' }),
-      prompt, price - cur, '便宜 ' + price + ' − ' + cur + ' = ' + (price - cur) + ' 元');
+    if (t === 'fill') return finish(bb, '商品原价 ' + price + ' 元，' + d.label + '出售，便宜 ____ 元', price - cur, '便宜 ' + price + ' − ' + cur + ' = ' + (price - cur) + ' 元');
+    if (t === 'choice') return finish(bb, '原价 ' + price + ' 元，' + d.label + '出售，便宜多少元？', price - cur, '便宜 ' + price + ' − ' + cur + ' = ' + (price - cur) + ' 元');
+    return finish(bb, '某商品原价 ' + price + ' 元，打' + d.label + '销售，买这件商品可以便宜多少元？', price - cur, '便宜 ' + price + ' − ' + cur + ' = ' + (price - cur) + ' 元');
   }
-  prompt = '一件商品原价 ' + price + ' 元，现在' + d.label + '出售，现价是多少元？';
-  return finish(buildBase(plan, context, i, { subType: 'percent-discount', price: price, rate: d.rate, ask: 'current' }),
-    prompt, cur, '现价 ' + price + ' × ' + d.rate + '% = ' + cur + ' 元');
+  if (t === 'fill') return finish(bb, '商品原价 ' + price + ' 元，' + d.label + '出售，现价是 ____ 元', cur, '现价 ' + price + ' × ' + d.rate + '% = ' + cur + ' 元');
+  if (t === 'choice') return finish(bb, '原价 ' + price + ' 元，' + d.label + '出售，现价是多少元？', cur, '现价 ' + price + ' × ' + d.rate + '% = ' + cur + ' 元');
+  return finish(bb, '某商品原价 ' + price + ' 元，打' + d.label + '销售，现价多少元？', cur, '现价 ' + price + ' × ' + d.rate + '% = ' + cur + ' 元');
 }
 
 /* ---------- k004 百分数的应用——利率 ---------- */
@@ -172,51 +182,51 @@ function makeInterest(plan, context, i) {
   var years = Rng.randInt(rng, 1, 3);
   var interest = principal * rate * years / 100;
   var askTotal = (i % 2 === 1);
-  // P25-07：calc 列式计算形态「principal × rate% × years = ？」（利息问法）
-  if (qt(plan) === 'calc') {
-    return finish(buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: 'interest' }),
+  var t = qt(plan);
+  // calc 行断言 data.ask='interest'：calc 恒 interest；total 变体仅 fill/choice/apply 承载
+  var bb = buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: (t === 'calc') ? 'interest' : (askTotal ? 'total' : 'interest') });
+  if (t === 'calc') {
+    // evidence-rules：利率 calc 行断言 data.ask='interest'（T2 教学事实：calc=利息列式，
+    // 「求本息」问法由 fill/choice/apply 的 askTotal 变体承载），calc 不产 total 变体
+    return finish(bb,
       '列式计算：' + principal + ' 元存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。列式求到期利息：' + principal + ' × ' + rate + '% × ' + years + ' = ？',
       interest, '利息 ' + principal + ' × ' + rate + '% × ' + years + ' = ' + interest + ' 元');
   }
   if (askTotal) {
-    return finish(buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: 'total' }),
-      '小明把 ' + principal + ' 元压岁钱存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期时一共可以取回多少元？',
-      principal + interest, '本息合计 ' + principal + ' + ' + interest + ' = ' + (principal + interest) + ' 元');
+    if (t === 'fill') return finish(bb, '____ 元是 ' + principal + ' 元本金按 ' + rate + '% 年利率存 ' + years + ' 年的到期本息', principal + interest, '本息合计 ' + principal + ' + ' + interest + ' = ' + (principal + interest) + ' 元');
+    if (t === 'choice') return finish(bb, '本金 ' + principal + ' 元，年利率 ' + rate + '%，存期 ' + years + ' 年，到期本息共多少元？', principal + interest, '本息合计 ' + principal + ' + ' + interest + ' = ' + (principal + interest) + ' 元');
+    return finish(bb, '小明把 ' + principal + ' 元压岁钱存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期时一共可以取回多少元？', principal + interest, '本息合计 ' + principal + ' + ' + interest + ' = ' + (principal + interest) + ' 元');
   }
-  return finish(buildBase(plan, context, i, { subType: 'percent-interest', principal: principal, rate: rate, years: years, ask: 'interest' }),
-    '小明把 ' + principal + ' 元存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期可得利息多少元？',
-    interest, '利息 ' + principal + ' × ' + rate + '% × ' + years + ' = ' + interest + ' 元');
+  if (t === 'fill') return finish(bb, '____ 元是 ' + principal + ' 元本金按 ' + rate + '% 年利率存 ' + years + ' 年的利息', interest, '利息 ' + principal + ' × ' + rate + '% × ' + years + ' = ' + interest + ' 元');
+  if (t === 'choice') return finish(bb, '本金 ' + principal + ' 元，年利率 ' + rate + '%，存期 ' + years + ' 年，利息是多少元？', interest, '利息 ' + principal + ' × ' + rate + '% × ' + years + ' = ' + interest + ' 元');
+  return finish(bb, '小明把 ' + principal + ' 元存入银行，年利率 ' + rate + '%，存期 ' + years + ' 年。到期可得利息多少元？', interest, '利息 ' + principal + ' × ' + rate + '% × ' + years + ' = ' + interest + ' 元');
 }
 
 /* ---------- k005 确定达标线：达标率 / 至少达标人数 ---------- */
 function makeRateLine(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var q = buildBase(plan, context, i, { subType: 'percent-target-rate' });
-  // P25-07：calc 列式计算形态「total × rate% = ？」（求达标人数问法）
-  if (qt(plan) === 'calc') {
-    var ctotal = Rng.pick(rng, [50, 100, 200, 400, 500]);
-    var crate = Rng.pick(rng, [80, 90, 95, 75, 60]);
-    var cneed = Math.round(ctotal * crate / 100);
-    return finish(q,
-      '列式计算：学校规定体育达标率不低于 ' + crate + '%，全年级共 ' + ctotal + ' 人。列式求至少达标人数：' + ctotal + ' × ' + crate + '% = ？',
-      cneed, ctotal + ' × ' + crate + '% = ' + cneed + ' 人');
-  }
+  var t = qt(plan);
   if (i % 2 === 1) {
     // 已知达标率与总人数，求至少达标人数
     var total = Rng.pick(rng, [50, 100, 200, 400, 500]);
     var ratePct = Rng.pick(rng, [80, 90, 95, 75, 60]);
     var need = Math.round(total * ratePct / 100);
-    return finish(q,
-      '学校规定体育达标率不低于 ' + ratePct + '%。全年级共 ' + total + ' 人，至少要有多少人达标？',
-      need, total + ' × ' + ratePct + '% = ' + need + ' 人');
+    if (t === 'calc') return finish(q, '列式计算：学校规定体育达标率不低于 ' + ratePct + '%，全年级共 ' + total + ' 人。列式求至少达标人数：' + total + ' × ' + ratePct + '% = ？', need, total + ' × ' + ratePct + '% = ' + need + ' 人');
+    if (t === 'fill') return finish(q, '____ 人是 ' + total + ' 人按 ' + ratePct + '% 达标率至少达标的人数', need, total + ' × ' + ratePct + '% = ' + need + ' 人');
+    if (t === 'choice') return finish(q, '全年级 ' + total + ' 人，达标率 ' + ratePct + '%，至少达标多少人？', need, total + ' × ' + ratePct + '% = ' + need + ' 人');
+    return finish(q, '学校规定体育达标率不低于 ' + ratePct + '%。全年级共 ' + total + ' 人，至少要有多少人达标？', need, total + ' × ' + ratePct + '% = ' + need + ' 人');
   }
   // 已知总人数与达标人数，求达标率
   var total2 = Rng.pick(rng, [40, 50, 100, 200, 250]);
   var pct = Rng.pick(rng, CLEAN_PERCENTS.concat([95, 85]));
   var reached = Math.round(total2 * pct / 100);
-  return finish(q,
-    '六年级共有 ' + total2 + ' 人，体育达标 ' + reached + ' 人。达标率是（ ）%（只填数字）。',
-    Math.round(reached / total2 * 100), reached + ' ÷ ' + total2 + ' ×100% = ' + Math.round(reached / total2 * 100) + '%');
+  var rateAns = Math.round(reached / total2 * 100);
+  var expl = reached + ' ÷ ' + total2 + ' ×100% = ' + rateAns + '%';
+  if (t === 'calc') return finish(q, '列式计算：六年级共有 ' + total2 + ' 人，体育达标 ' + reached + ' 人。列式求达标率：' + reached + ' ÷ ' + total2 + ' × 100% = ？', rateAns, expl);
+  if (t === 'fill') return finish(q, '____% 是 ' + total2 + ' 人中 ' + reached + ' 人达标的达标率（只填数字）', rateAns, expl);
+  if (t === 'choice') return finish(q, '总人数 ' + total2 + ' 人，达标 ' + reached + ' 人，达标率是多少？（只填数字）', rateAns, expl);
+  return finish(q, '六年级共有 ' + total2 + ' 人，体育达标 ' + reached + ' 人。达标率是多少？（只填数字）', rateAns, expl);
 }
 
 /* ---------- k006 解决问题：求比一个数多/少百分之几 ---------- */
@@ -226,21 +236,21 @@ function makePercentChange(plan, context, i) {
   var p = Rng.pick(rng, CLEAN_PERCENTS);
   var increase = (i % 2 === 0);
   var ans = increase ? base + base * p / 100 : base - base * p / 100;
-  var prompt;
-  // P25-07：calc 列式计算形态「base ± base × p% = ？」
-  if (qt(plan) === 'calc') {
-    return finish(buildBase(plan, context, i, { subType: 'percent-change', base: base, percent: p, increase: increase }),
-      '列式计算：' + base + (increase ? ' + ' : ' − ') + base + ' × ' + p + '% = ？',
-      ans, base + ' × (1' + (increase ? '+' : '−') + p + '%) = ' + ans);
+  var t = qt(plan);
+  var bb = buildBase(plan, context, i, { subType: 'percent-change', base: base, percent: p, increase: increase });
+  var op = increase ? '+' : '−';
+  var expl = base + ' × (1' + op + p + '%) = ' + ans;
+  if (t === 'calc') {
+    return finish(bb, '列式计算：' + base + (increase ? ' + ' : ' − ') + base + ' × ' + p + '% = ？', ans, expl);
   }
   if (increase) {
-    prompt = '果园去年收苹果 ' + base + ' 千克，今年比去年增产 ' + p + '%，今年收苹果多少千克？';
-  } else {
-    prompt = '一件衣服原价 ' + base + ' 元，店庆期间降价 ' + p + '% 出售，现价多少元？';
+    if (t === 'fill') return finish(bb, '____ 千克是 ' + base + ' 千克增产 ' + p + '% 后的产量', ans, expl);
+    if (t === 'choice') return finish(bb, base + ' 千克增产 ' + p + '% 后是多少千克？', ans, expl);
+    return finish(bb, '果园去年收苹果 ' + base + ' 千克，今年比去年增产 ' + p + '%，今年收苹果多少千克？', ans, expl);
   }
-  return finish(buildBase(plan, context, i, { subType: 'percent-change', base: base, percent: p, increase: increase }),
-    prompt, ans,
-    base + ' × (1' + (increase ? '+' : '−') + p + '%) = ' + ans);
+  if (t === 'fill') return finish(bb, '____ 元是 ' + base + ' 元降价 ' + p + '% 后的现价', ans, expl);
+  if (t === 'choice') return finish(bb, base + ' 元降价 ' + p + '% 后是多少元？', ans, expl);
+  return finish(bb, '一件衣服原价 ' + base + ' 元，店庆期间降价 ' + p + '% 出售，现价多少元？', ans, expl);
 }
 
 /* ---------- P25-09 k003 百分数的应用——税率 ---------- */
@@ -250,19 +260,13 @@ function makeTax(plan, context, i) {
   var rate = Rng.pick(rng, [3, 5, 6, 10]);
   var tax = Math.round(income * rate) / 100;
   var goods = Rng.pick(rng, ['商店某月的营业额', '一家餐馆某月的营业额', '某公司某月的营业额']);
-  if (qt(plan) === 'calc') {
-    return finish(buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate }),
-      '列式计算：' + goods + '是 ' + income + ' 元，按 ' + rate + '% 的税率缴纳税款，应缴纳税款多少元？列式：' + income + ' × ' + rate + '% = ？',
-      tax, '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元');
-  }
-  if (qt(plan) === 'fill') {
-    return finish(buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate }),
-      income + ' × ' + rate + '% = ____（元）',
-      tax, '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元');
-  }
-  return finish(buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate }),
-    goods + '是 ' + income + ' 元，按规定要按 ' + rate + '% 的税率缴纳税款。这家应缴纳税款多少元？',
-    tax, '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元');
+  var t = qt(plan);
+  var bb = buildBase(plan, context, i, { subType: 'percent-tax', income: income, rate: rate });
+  var expl = '应纳税额 ' + income + ' × ' + rate + '% = ' + tax + ' 元';
+  if (t === 'calc') return finish(bb, '列式计算：' + goods + '是 ' + income + ' 元，按 ' + rate + '% 的税率缴纳税款，应缴纳税款多少元？列式：' + income + ' × ' + rate + '% = ？', tax, expl);
+  if (t === 'fill') return finish(bb, '____ 元是 ' + income + ' 元营业额按 ' + rate + '% 税率缴纳的税款', tax, expl);
+  if (t === 'choice') return finish(bb, '营业额 ' + income + ' 元，税率 ' + rate + '%，应纳税多少元？', tax, expl);
+  return finish(bb, goods + '是 ' + income + ' 元，按规定要按 ' + rate + '% 的税率缴纳税款。这家应缴纳税款多少元？', tax, expl);
 }
 
 /* ---------- P25-09 k002 百分数的应用——成数（几成 = 十分之几 = 百分之几十） ---------- */
@@ -274,32 +278,26 @@ var CHENGSHU = [
 function makeChengshu(plan, context, i) {
   var rng = Rng.createSeededRandom(seedFor(plan, context, i));
   var c = Rng.pick(rng, CHENGSHU);
+  var t = qt(plan);
   // 变体 0：成数 → 百分数；变体 1：成数应用（求增产量）
   if (i % 2 === 0) {
     var q = buildBase(plan, context, i, { subType: 'percent-chengshu', chengshu: c.label, ask: 'convert' });
-    var stemC = qt(plan) === 'calc'
-      ? '列式：把' + c.label + '改写成百分数，' + c.num + ' ÷ 10 = （ ）%（只填数字）。'
-      : (qt(plan) === 'fill'
-        ? c.label + ' = ' + c.num + ' ÷ 10 = ____%（只填数字）'
-        : '农业收成常用「成数」表示：' + c.label + ' = ' + c.num + ' ÷ 10，' + c.label + '改写成百分数是多少？（只填数字）');
+    var stemC;
+    if (t === 'calc') stemC = '列式：把' + c.label + '改写成百分数，' + c.num + ' ÷ 10 = （ ）%（只填数字）。';
+    else if (t === 'fill') stemC = c.label + ' = ____%（只填数字）';
+    else if (t === 'choice') stemC = '选择：' + c.label + ' 化成百分数是多少？';
+    else stemC = '农业收成常用「成数」表示：' + c.label + '改写成百分数是多少？（只填数字）';
     return finish(q, stemC, c.rate, c.label + ' = ' + c.num + '/10 = ' + c.rate + '%');
   }
   var base = Rng.pick(rng, [200, 300, 400, 500, 600, 800]);
   var gain = Math.round(base * c.rate) / 100;
   var crop = Rng.pick(rng, ['小麦', '玉米', '水稻', '苹果']);
-  if (qt(plan) === 'calc') {
-    return finish(buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' }),
-      '列式计算：去年产' + crop + ' ' + base + ' 吨，今年比去年增产' + c.label + '（' + c.rate + '%），今年增产多少吨？列式：' + base + ' × ' + c.rate + '% = ？',
-      gain, '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨');
-  }
-  if (qt(plan) === 'fill') {
-    return finish(buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' }),
-      '去年产' + crop + ' ' + base + ' 吨，今年增产' + c.label + '（' + c.rate + '%）：' + base + ' × ' + c.rate + '% = ____（吨）',
-      gain, '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨');
-  }
-  return finish(buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' }),
-    '李叔叔家去年产' + crop + ' ' + base + ' 吨，今年风调雨顺，比去年增产' + c.label + '（也就是 ' + c.rate + '%）。今年比去年增产多少吨？',
-    gain, '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨');
+  var bb = buildBase(plan, context, i, { subType: 'percent-chengshu', base: base, rate: c.rate, ask: 'gain' });
+  var expl = '增产量 ' + base + ' × ' + c.rate + '% = ' + gain + ' 吨';
+  if (t === 'calc') return finish(bb, '列式计算：去年产' + crop + ' ' + base + ' 吨，今年比去年增产' + c.label + '（' + c.rate + '%），今年增产多少吨？列式：' + base + ' × ' + c.rate + '% = ？', gain, expl);
+  if (t === 'fill') return finish(bb, '____ 吨是 ' + base + ' 吨' + crop + '今年增产' + c.label + '的增产量', gain, expl);
+  if (t === 'choice') return finish(bb, '去年产' + crop + ' ' + base + ' 吨，今年增产' + c.label + '，增产多少吨？', gain, expl);
+  return finish(bb, '李叔叔家去年产' + crop + ' ' + base + ' 吨，今年风调雨顺，比去年增产' + c.label + '（也就是 ' + c.rate + '%）。今年比去年增产多少吨？', gain, expl);
 }
 
 /* ---------- P25-09 k005 生活与百分数：促销/普及率等综合生活情境 ---------- */
@@ -333,19 +331,13 @@ function makeLife(plan, context, i) {
       expr: price + ' × ' + rate2 + '%'
     };
   }
-  if (qt(plan) === 'calc') {
-    return finish(buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct }),
-      '列式计算：' + scenario.story + '列式：' + scenario.expr + ' = ？',
-      scenario.ans, scenario.expr + ' = ' + scenario.ans);
-  }
-  if (qt(plan) === 'fill') {
-    return finish(buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct }),
-      scenario.story + '（列式：' + scenario.expr + ' = ____）',
-      scenario.ans, scenario.expr + ' = ' + scenario.ans);
-  }
-  return finish(buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct }),
-    scenario.story,
-    scenario.ans, scenario.expr + ' = ' + scenario.ans);
+  var t = qt(plan);
+  var bb = buildBase(plan, context, i, { subType: 'percent-life', base: scenario.total, percent: scenario.pct });
+  var expl = scenario.expr + ' = ' + scenario.ans;
+  if (t === 'calc') return finish(bb, '列式计算：' + scenario.story + '列式：' + scenario.expr + ' = ？', scenario.ans, expl);
+  if (t === 'fill') return finish(bb, scenario.total + ' 的 ' + scenario.pct + '% 等于 ____', scenario.ans, expl);
+  if (t === 'choice') return finish(bb, '求 ' + scenario.expr + ' 的结果是多少？', scenario.ans, expl);
+  return finish(bb, scenario.story, scenario.ans, expl);
 }
 
 // 子类型按 GenerationParameters.subTopic 分派（键与 semantic-parameters 规则一一对应）。

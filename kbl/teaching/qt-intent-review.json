@@ -828,6 +828,768 @@
           }
         }
       }
+    },
+    {
+      "batch": "p30-15-2026-10-03",
+      "origin": "用户裁决（P30-15 Intent Alignment）：修正 2 个正方体涂色 KP（6 行 qt-intent）图形表征，使 T2 意图矩阵与 P28-HOLLOW-05 冻结产图行为一致。",
+      "verdicts": {
+        "math-g5-down-u09-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：P28-HOLLOW-05 冻结产图行为与 KBL 机械派生「numeric-only」矛盾。经裁定，正方体涂色 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u09-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：P28-HOLLOW-05 冻结产图行为与 KBL 机械派生「numeric-only」矛盾。经裁定，正方体涂色 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u09-k001|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：P28-HOLLOW-05 冻结产图行为与 KBL 机械派生「numeric-only」矛盾。经裁定，正方体涂色 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u09-k002|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：P28-HOLLOW-05 冻结产图行为与 KBL 机械派生「numeric-only」矛盾。经裁定，正方体涂色 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u09-k002|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：P28-HOLLOW-05 冻结产图行为与 KBL 机械派生「numeric-only」矛盾。经裁定，正方体涂色 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u09-k002|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：P28-HOLLOW-05 冻结产图行为与 KBL 机械派生「numeric-only」矛盾。经裁定，正方体涂色 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        }
+      }
+    },
+    {
+      "batch": "p30-15-2026-10-03-visual-kp",
+      "origin": "用户裁决（P30-15 Intent Alignment）：扩展评审回流至 9 个视觉化 KP（人民币/质量单位/统计/看图列式）共 28 行，使 T2 意图矩阵与生成器合法产图行为一致。",
+      "verdicts": {
+        "math-g1-down-u07-k003|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g1-down-u07-k003|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g1-down-u07-k003|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k002|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k003|calc": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k003|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k003|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k003|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k004|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k004|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-up-u04-k004|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g2-up-u01-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g2-up-u01-k001|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g2-up-u01-k001|judge": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g2-up-u01-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g2-up-u01-k002|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g2-up-u01-k002|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g2-up-u01-k002|judge": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g2-up-u01-k002|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-down-u05-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-down-u05-k001|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-down-u05-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-down-u08-k004|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-down-u08-k004|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g3-down-u08-k004|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-down-u01-k001|calc": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-down-u01-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-down-u01-k001|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：人民币/质量单位/统计图表/看图列式 KP 经各自生成器合法产图（money-measurement/stats/picture-equation），但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        }
+      }
+    },
+    {
+      "batch": "p30-15-2026-10-03-class-b",
+      "origin": "用户裁决（P30-15 Intent Alignment）：补齐剩余 28 行视觉化 KP（stats/position-direction/picture-equation），使 T2 意图矩阵与生成器合法产图行为一致。",
+      "verdicts": {
+        "math-g4-down-u01-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-down-u08-k004|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k001|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k002|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k002|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k002|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k003|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k003|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u06-k003|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u08-k001|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u08-k002|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u08-k002|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u08-k002|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u08-k003|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u08-k003|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g4-up-u08-k003|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u07-k001|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u07-k001|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u07-k001|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u07-k002|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u07-k002|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u07-k002|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u07-k003|fill": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u07-k003|choice": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-down-u07-k003|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        },
+        "math-g5-up-u07-k003|apply": {
+          "verdict": "通过",
+          "fromStatus": "ai-verified",
+          "note": "用户裁决（2026-10-03 P30-15）：stats/position-direction/picture-equation 类 KP 经各自生成器合法产图，但 emit-canonical 机械派生仅 geometry 域补 graphic 未覆盖。裁定这些 KP 以图形为辅助载体，allowedRepresentations 补 graphic，graphicRole 修正为 auxiliary。",
+          "correctedAssessment": {
+            "allowedRepresentations": [
+              "numeric",
+              "graphic"
+            ],
+            "graphicRole": "auxiliary"
+          }
+        }
+      }
     }
   ]
 }

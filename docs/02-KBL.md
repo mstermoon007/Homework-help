@@ -9,20 +9,38 @@
 |---|---|---|
 | KP | **375** | `kbl/canonical/knowledge.json` |
 | Units | **98** | `kbl/canonical/course.json` |
-| Relations | **0** | `kbl/canonical/relations.json` |
+| Relations | **373**（全 `inferred:true` / `prerequisite` / `llm-finalized-dev`：R-REL-01 277 + R-REL-02 58 + R-REL-03 38） | `kbl/canonical/relations.json`（唯一派生真源） |
 | ALLOW 映射 | **1570** | `kbl/canonical/mappings.json` |
 | Canonical ID | `{subject}-{grade}-{book}-u{nn}-k{nnn}` | KBL Runtime |
 | Root Excel | `kbl/root/小学G1-G6数学知识点.xlsx` | 人工维护，AI 不得修改 |
 
-## 2. 构建链（KBL 派生）
+## 2. 唯一构建链（KBL 派生；P30-02 锁定）
 
 ```
-Root Excel（kbl/root/）
-  → tools/kbl/extract-source.js      → kbl/import/
-  → tools/kbl/derive-kbl.js          → kbl/canonical/
-  → tools/kbl/emit-canonical.js      → kbl/ 运行时分发
-  → tools/kbl/build.js               → kbl/manifest/（完整性指纹）
+Root Excel（kbl/root/，T0 人工事实源，只读）
+  → tools/kbl/extract-source.js      → kbl/import/extract-raw.json
+  → tools/kbl/derive-kbl.js          → kbl/canonical/{course,knowledge,capability,mappings,relations(空集)}
+  → tools/kbl/derive-relations.js    → kbl/canonical/relations.json（373 inferred，覆盖空集）
+  → tools/kbl/emit-canonical.js      → kbl/data · kbl/relations · kbl/mappings · kbl/index（发射副本）
+  → tools/kbl/build.js               → shared/knowledge 运行时镜像 + manifest（rootHash）
+  → dev/build-knowledge-runtime.js + dev/build-knowledge-pages.js → runtime bundle + knowledge/*.html
 ```
+
+一键有序重建（顺序固定，禁止单跑 derive-kbl 后跳过 derive-relations，否则 relations 被空集覆盖）：
+
+```bash
+npm run kbl:rebuild   # = kbl:extract → kbl:derive（derive-kbl→derive-relations→emit→build）→ build:knowledge
+```
+
+### 真源 vs 发射副本（禁止双写）
+
+| 数据 | 唯一派生真源（仅白名单脚本可写） | 发射副本（只读，只能由发射链再生） |
+|---|---|---|
+| Relations | `kbl/canonical/relations.json`（`derive-relations.js` 专责） | `kbl/relations/math/relations.json`、`shared/knowledge/relations/math/relations.json` |
+| Mappings | `kbl/canonical/mappings.json`（`derive-kbl.js`） | `kbl/mappings/generation-contract/math.json`、`shared/knowledge/mappings/generation-contract/math.json`（emit 剥离 `derivation` 字段） |
+| KP / 课程树 / index | `kbl/canonical/{knowledge,course}.json` | `kbl/data/**`、`shared/knowledge/data/**`、两 `index/index.json` |
+
+血缘门禁：`node dev/p30/check-kbl-lineage.js`（L1 Excel 指纹→L6 rootHash 全等；副本漂移即 FAIL）。
 
 ## 3. Deterministic Build（P28-05）
 
@@ -41,8 +59,9 @@ KBL 唯一可写方为离线派生/评审/收口工具，全部人工驱动，�
 | 脚本 | 职责 | 写入目标 |
 |---|---|---|
 | `tools/kbl/extract-source.js` | Root Excel → 原始抽取 | `kbl/import/` |
-| `tools/kbl/derive-kbl.js` | Canonical 派生入口 | `kbl/canonical/` |
-| `tools/kbl/emit-canonical.js` | Canonical → 运行时分发 | `kbl/` |
+| `tools/kbl/derive-kbl.js` | Canonical 派生入口（relations 先置空集） | `kbl/canonical/` |
+| `tools/kbl/derive-relations.js` | 前置关系唯一派生（必须紧随 derive-kbl） | `kbl/canonical/relations.json` |
+| `tools/kbl/emit-canonical.js` | Canonical → 运行时分发（发射副本，禁止手改） | `kbl/data`、`kbl/relations`、`kbl/mappings`、`kbl/index` |
 | `tools/kbl/build.js` | 镜像发布 + 完整性指纹 | `kbl/manifest/` |
 | `tools/kbl/publish.js` | 快照/发布 | `kbl/releases/` |
 | `dev/p25/build-baseline.js` 等 P25 教学语义派生 | 基线/意图/证据/金题/语义族 | `kbl/teaching/` |

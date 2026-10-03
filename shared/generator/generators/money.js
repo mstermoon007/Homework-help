@@ -265,11 +265,16 @@ function makeMeasurementConversionQuestion(plan, context, i, meta) {
   answer = Math.round(answer * 1e6) / 1e6;
   var qt = plan.questionTypeId;
   var prompt;
-  // P25-08：calc 题型必须内嵌算式（EXPR_RE 或 BLANK_EQ_RE）
+  // P30-GEN-06（P30-16）：fill/choice/judge/calc 共用「X 单位 = ____ Y 单位」等式会导致
+  // coreStem 完全相同（sim=1.0）。按题型加专属引导语与问法分化骨架。
   if (qt === 'calc') {
     prompt = baseValue + fromUnit.unit + ' = ' + baseValue + ' × ' + factor + ' = ____ ' + toUnit.unit;
+  } else if (qt === 'choice') {
+    prompt = baseValue + fromUnit.unit + ' 换算成 ' + toUnit.unit + ' 是多少？';
+  } else if (qt === 'judge') {
+    prompt = '判断对错：' + baseValue + fromUnit.unit + ' = ____ ' + toUnit.unit;
   } else {
-    prompt = baseValue + fromUnit.unit + ' = ____ ' + toUnit.unit;
+    prompt = '单位换算填空：' + baseValue + fromUnit.unit + ' = ____ ' + toUnit.unit;
   }
   
   var result = {

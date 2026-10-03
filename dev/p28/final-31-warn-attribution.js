@@ -13,7 +13,7 @@
 //   W7  题型与教育目标不匹配——仅当 qt-intent legitimacy 明确否定（当前数据无此信号，保留分支）
 //   W8  variation 改变知识点本质——仅当 variation 指令实际进入计划（FINAL-22a 后计划不携带，保留分支）
 //   辅助标记（非主类，逐条记录）：
-//   W1  learningTargets 缺失（TeachingSemanticProfile NEEDS_REVIEW）
+//   W1  learningTargets 缺失（KBL 证据行字段为空，数据级 NEEDS_REVIEW）
 //   W2  cognitiveTargets 缺失（同上）
 //   W3  qt-intent 意图行缺失
 //   W6  系统性：validator warn 路径不评测规则字段断言（WARN 态 = 零验证）

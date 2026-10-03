@@ -118,6 +118,43 @@ test('消费方 fail-closed：percent 语义参数缺失/子类型无 maker → 
   assert.equal(ok[0].data.subType, 'percent-of');
 });
 
+test('P30-05 权威行挂载 intent 机器约束（confirmed 行）', () => {
+  const p = SP.resolve('math-g1-up-u03-k001', 'geometry'); // confirmed
+  assert.ok(p.intent, 'confirmed 行必须挂载 intent');
+  assert.deepEqual(p.intent.targetCodes, ['math-g1-up-u03-k001'], 'targetCodes 溯源本 KP');
+  assert.equal(p.intent.focus, 'geometry');
+  assert.ok(Array.isArray(p.intent.requiredRelations), 'requiredRelations 为数组');
+  assert.ok(Array.isArray(p.intent.requiredConstructs), 'requiredConstructs 为数组');
+  assert.deepEqual(p.intent.allowedRepresentations, ['graphic']);
+  assert.deepEqual(p.intent.expressionModes, ['graphic-construction']);
+  assert.equal(p.intent.graphicRole, 'carrier');
+  assert.ok(typeof p.intent.trainsWhat === 'string', 'confirmed 行 intent 五问可读');
+  assert.deepEqual(p.expression, { modes: ['graphic-construction'] }, 'expression 投影');
+  assert.deepEqual(p.graphic, { role: 'carrier' }, 'graphic 投影');
+  assert.equal(p.sources.intent, 'teaching:qt-intent:confirmed');
+});
+
+test('P30-05 ai-verified 行同样挂载 intent 机器约束', () => {
+  const p = SP.resolve('math-g1-up-u01-k002', 'calc'); // ai-verified
+  assert.ok(p.intent, 'ai-verified 行必须挂载 intent');
+  assert.equal(p.intent.focus, 'calculation');
+  assert.deepEqual(p.intent.expressionModes, ['expression']);
+  assert.ok(p.intent.requiredConstructs.indexOf('addition') !== -1, '操作构念来自 KBL semantic.operations');
+  assert.deepEqual(p.expression, { modes: ['expression'] }, 'expression 投影');
+  assert.equal(p.graphic, null, 'graphicRole 为 null 时 graphic 投影为 null');
+  assert.equal(p.sources.intent, 'teaching:qt-intent:ai-verified');
+});
+
+test('P30-06 needs-review 行零生成权威：intent/expression/graphic 均为 null', () => {
+  const p = SP.resolve('math-g1-up-u02-k001', 'calc'); // needs-review
+  assert.equal(p.intent, null, 'needs-review 的教学意图不得进入生成参数');
+  assert.equal(p.expression, null, 'needs-review 的 expression 投影为 null');
+  assert.equal(p.graphic, null, 'needs-review 的 graphic 投影为 null');
+  assert.equal(p.sources.intent, 'blocked:qt-intent:needs-review', 'sources 须显式标注被拦状态');
+  // subTopic 等 KBL 机械派生不受影响（被拦的是教学意图，不是知识点事实）
+  assert.ok(p.subTopic === null || typeof p.subTopic === 'string');
+});
+
 test('消费方 fail-closed：concept-meaning 子类型无 maker → 返回 []', () => {
   const createConcept = require(path.join(ROOT, 'shared', 'generator', 'generators', 'concept-meaning.js')).createConceptMeaningGenerator;
   const gen = createConcept();

@@ -58,99 +58,302 @@ function deriveSubtype(name) {
  * 分数运算结构
  * ------------------------------------------------------------------ */
 
-function sameDenomAdd(rng, maxD) {
-  var d = ri(rng, 3, maxD || 9);
-  var n1 = ri(rng, 1, d - 1), n2 = ri(rng, 1, d - n1);
-  var add = ri(rng, 0, 1);
-  if (add) return { expr: n1 + '/' + d + ' + ' + n2 + '/' + d, answer: fs(simp(n1 + n2, d)) };
-  var hi = Math.max(n1, n2), lo = Math.min(n1, n2);
-  return { expr: hi + '/' + d + ' − ' + lo + '/' + d, answer: fs(simp(hi - lo, d)) };
-}
-
 function diffDenomAdd(rng) {
   var d1 = pick(rng, [2, 3, 4, 6]), d2 = pick(rng, [3, 5, 4, 6].filter(function (x) { return x !== d1; }));
   var n1 = ri(rng, 1, d1 - 1), n2 = ri(rng, 1, d2 - 1);
   var lcm = d1 * d2 / gcd(d1, d2);
   var num = n1 * (lcm / d1) + n2 * (lcm / d2);
-  return { expr: n1 + '/' + d1 + ' + ' + n2 + '/' + d2, answer: fs(simp(num, lcm)) };
+  return { d1: d1, d2: d2, n1: n1, n2: n2, lcm: lcm,
+    expr: n1 + '/' + d1 + ' + ' + n2 + '/' + d2, ans: simp(num, lcm) };
 }
 
 function fracDiv(rng) {
   var n1 = ri(rng, 1, 5), d1 = ri(rng, 2, 8);
   var n2 = ri(rng, 1, 5), d2 = ri(rng, 2, 8);
-  var r = simp(n1 * d2, d1 * n2);
-  return { expr: n1 + '/' + d1 + ' ÷ ' + n2 + '/' + d2, answer: fs(r) };
+  return { n1: n1, d1: d1, n2: n2, d2: d2,
+    expr: n1 + '/' + d1 + ' ÷ ' + n2 + '/' + d2, ans: simp(n1 * d2, d1 * n2) };
 }
 
 function fracDivInt(rng) {
   var d = ri(rng, 2, 8), n = ri(rng, 1, d - 1), k = ri(rng, 2, 6);
-  return { expr: n + '/' + d + ' ÷ ' + k, answer: fs(simp(n, d * k)) };
+  return { n: n, d: d, k: k,
+    expr: n + '/' + d + ' ÷ ' + k, ans: simp(n, d * k) };
 }
 
 /* ------------------------------------------------------------------ *
- * 概念题
+ * P30-GEN-06（P30-16）：子类型 × 题型 Assessment Target 真分工
+ *
+ *   calc   —— 列式计算/列式转换（算式在场，直接求结果）
+ *   fill   —— 结构性逆推/通分约分过程填空（空位承担子目标）
+ *   choice —— 得数选式 / 等值·分类·倒数辨析（四个备选项求值或判类互异）
+ *   apply  —— 分蛋糕/修路/分装等真实分数情境迁移
+ *
+ * 题型集仍为 calc/fill/choice/apply（未扩题型）；备选项全部真实可判，无「以上都不对」。
  * ------------------------------------------------------------------ */
 
-function conceptItem(sub, rng) {
-  if (sub === 'compare') {
-    var same = rng() < 0.5;
-    var a, b, sign, support;
-    if (same) {
-      var d = ri(rng, 4, 9);
-      a = { n: ri(rng, 1, d - 2), d: d }; b = { n: ri(rng, a.n + 1, d - 1), d: d };
-      sign = '<'; support = b.n + ' − ' + a.n + ' = ' + (b.n - a.n) + '，同分母分子大的大';
-    } else {
-      var n = ri(rng, 1, 4);
-      a = { n: n, d: 4 }; b = { n: n, d: 6 };
-      sign = '>'; support = n + '/' + a.d + ' 与 ' + n + '/' + b.d + '，分子相同分母小的大';
+function fparse(t) { var p = String(t).split('/'); return { n: +p[0], d: +p[1] }; }
+function fadd(a, b) { var l = a.d * b.d / gcd(a.d, b.d); return simp(a.n * (l / a.d) + b.n * (l / b.d), l); }
+function fsub(a, b) { var l = a.d * b.d / gcd(a.d, b.d); return simp(a.n * (l / a.d) - b.n * (l / b.d), l); }
+function fmul(a, b) { return simp(a.n * b.n, a.d * b.d); }
+function fdiv(a, b) { return simp(a.n * b.d, a.d * b.n); }
+function fstr(f) { return f.d === 1 ? String(f.n) : fs(f); }
+
+// 受限分数四则求值（先同级左到右，仅用于备选项判重；出现负数/零除数返回 null）
+function fracEval(s) {
+  var m = String(s).match(/\d+\/\d+|\d+|[+\-−×÷]/g);
+  if (!m || m.length < 3) return null;
+  var acc = (m[0].indexOf('/') !== -1) ? fparse(m[0]) : { n: +m[0], d: 1 };
+  for (var k = 1; k < m.length; k += 2) {
+    var op = m[k], t = m[k + 1];
+    if (!t) return null;
+    var b = (t.indexOf('/') !== -1) ? fparse(t) : { n: +t, d: 1 };
+    if (op === '+') acc = fadd(acc, b);
+    else if (op === '−' || op === '-') { acc = fsub(acc, b); if (acc.n < 0) return null; }
+    else if (op === '×' || op === 'x' || op === '*') acc = fmul(acc, b);
+    else if (op === '÷' || op === '/') { if (b.n === 0) return null; acc = fdiv(acc, b); }
+    else return null;
+  }
+  return acc;
+}
+
+// 四个算式备选项：正确式 + 扰动分子的算式（逐个求值去重，保证四个得数互异）
+function exprOptionsFrac(rng, expr, correctVal) {
+  var m = String(expr).match(/\d+\/\d+|\d+|[+\-−×÷]/g);
+  var pos = [];
+  m.forEach(function (t, i) { if (!/[+\-−×÷]/.test(t)) pos.push(i); });
+  var opts = [expr], seenE = {}, seenV = {};
+  seenE[expr] = 1; seenV[fstr(correctVal)] = 1;
+  var deltas = [1, -1, 2, -2, 3, -3], guard = 0;
+  while (opts.length < 4 && guard++ < 400) {
+    var pi = pos[guard % pos.length], dlt = deltas[Math.floor(guard / pos.length) % deltas.length];
+    var orig = m[pi], isF = orig.indexOf('/') !== -1, f0 = isF ? fparse(orig) : { n: +orig, d: 1 };
+    var nn = f0.n + dlt;
+    if (nn < 1) continue;
+    var parts = m.slice();
+    parts[pi] = isF ? nn + '/' + f0.d : String(nn);
+    var cand = parts.join(' ');
+    if (seenE[cand]) continue;
+    var v = fracEval(cand);
+    if (!v || seenV[fstr(v)]) continue;
+    seenE[cand] = 1; seenV[fstr(v)] = 1; opts.push(cand);
+  }
+  return Rng.shuffle(rng, opts.slice(0, 4));
+}
+
+function calcItem(expr, ansF, hint) {
+  return { prompt: (hint ? hint + '：' : '列式计算：') + expr + ' = ？', answer: fs(ansF), options: null };
+}
+function choiceExprItem(rng, expr, ansF, stemPrefix) {
+  return { prompt: (stemPrefix || '下面哪个算式的得数是 ') + fs(ansF) + '？（  ）', answer: expr,
+    options: exprOptionsFrac(rng, expr, ansF) };
+}
+function applyItem(story, expr, ansF) {
+  return { prompt: story + '：' + expr + ' = ？', answer: fs(ansF), options: null };
+}
+
+// 运算类子类型（word/addsub/addsub-diff/mix/div）的四题型真分工
+function arithmeticTyped(sub, qt, rng) {
+  if (sub === 'word') {
+    var wd = ri(rng, 3, 9), wa = ri(rng, 1, wd - 2), wb = ri(rng, 1, wd - wa - 1);
+    var wexpr = wa + '/' + wd + ' + ' + wb + '/' + wd, wans = simp(wa + wb, wd);
+    if (qt === 'calc') return calcItem(wexpr, wans);
+    if (qt === 'fill') {
+      return { prompt: '一块蛋糕，小明吃了这块蛋糕的 ' + wa + '/' + wd + '，剩下的小红正好吃完，小红吃了这块蛋糕的 ____',
+        answer: fs({ n: wd - wa, d: wd }), options: null };
     }
-    return { stem: '比较大小：' + fs(a) + ' ○ ' + fs(b) + '（参考：' + support + '），○ 里应填什么（>、< 或 =）？', answer: sign, options: ['>', '<', '='], support: support };
+    if (qt === 'choice') {
+      return { prompt: '一块蛋糕，小明吃了 ' + wa + '/' + wd + '，小红吃了 ' + wb + '/' + wd +
+        '，求两人一共吃了这块蛋糕的几分之几，下面哪个列式正确？（  ）',
+        answer: wexpr, options: exprOptionsFrac(rng, wexpr, wans) };
+    }
+    return { prompt: '一块蛋糕，小明吃了这块蛋糕的 ' + wa + '/' + wd + '，小红吃了 ' + wb + '/' + wd +
+      '，两人一共吃了这块蛋糕的几分之几？列式 ' + wexpr + ' = ？', answer: fs(wans), options: null };
   }
-  if (sub === 'relation') {
-    var n = ri(rng, 2, 8), d = n + ri(rng, 1, 4);
-    return { stem: n + ' ÷ ' + d + ' = ____（用分数表示商）', answer: n + '/' + d, options: [n + '/' + d, d + '/' + n, (n + d) + '/' + d] };
+
+  if (sub === 'addsub') {
+    var d = ri(rng, 3, 9), add = rng() < 0.5;
+    if (add) {
+      var a = ri(rng, 1, d - 2), b = ri(rng, 1, d - a);
+      var ae = a + '/' + d + ' + ' + b + '/' + d, aa = simp(a + b, d);
+      if (qt === 'calc') return calcItem(ae, aa);
+      if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：' + a + '/' + d + ' + ____ = ' + (a + b) + '/' + d,
+        answer: b + '/' + d, options: null };
+      if (qt === 'choice') return choiceExprItem(rng,ae, aa);
+      return applyItem('一根彩带，第一次用去这根彩带的 ' + a + '/' + d + '，第二次又用去 ' + b + '/' + d +
+        '，列式求两次一共用去这根彩带的几分之几', ae, aa);
+    }
+    var hi = ri(rng, 2, d - 1), lo = ri(rng, 1, hi - 1);
+    var se = hi + '/' + d + ' − ' + lo + '/' + d, sa = simp(hi - lo, d);
+    if (qt === 'calc') return calcItem(se, sa);
+    if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：' + hi + '/' + d + ' − ____ = ' + (hi - lo) + '/' + d,
+      answer: lo + '/' + d, options: null };
+    if (qt === 'choice') return choiceExprItem(rng, se, sa);
+    return applyItem('一根彩带长是单位「1」，先用去这根彩带的 ' + hi + '/' + d + '，又用去 ' + lo + '/' + d +
+      '，列式求还剩这根彩带的几分之几', se, sa);
   }
-  if (sub === 'proper') {
-    var improper = rng() < 0.5;
-    var pn = improper ? ri(rng, 5, 9) : ri(rng, 1, 4);
-    var pd = ri(rng, pn + 1, pn + 5);
-    var fracStr = pn + '/' + (improper ? Math.max(2, pn - ri(rng, 1, 2)) : pd);
-    var isImproper = parseInt(fracStr.split('/')[0], 10) >= parseInt(fracStr.split('/')[1], 10);
-    return { stem: fracStr + ' 的分子' + (isImproper ? '大于或等于分母' : '小于分母') + '，它是 ____ 分数（参考：' +
-        pn + ' − ' + fracStr.split('/')[1] + ' = ' + (pn - parseInt(fracStr.split('/')[1], 10)) + '）',
-      answer: isImproper ? '假分数' : '真分数', options: ['真分数', '假分数', '带分数'] };
+
+  if (sub === 'addsub-diff') {
+    var s2 = diffDenomAdd(rng);
+    var de = s2.expr, da = s2.ans;
+    if (qt === 'calc') return calcItem(de, da, '列式计算（先通分）');
+    if (qt === 'fill') {
+      var c1 = s2.n1 * (s2.lcm / s2.d1);
+      return { prompt: '先通分再填空：' + s2.n1 + '/' + s2.d1 + ' = ____/' + s2.lcm,
+        answer: c1 + '/' + s2.lcm, options: null };
+    }
+    if (qt === 'choice') return choiceExprItem(rng, de, da);
+    return applyItem('修路队第一天修了这条路的 ' + s2.n1 + '/' + s2.d1 + '，第二天修了 ' + s2.n2 + '/' + s2.d2 +
+      '，列式求两天一共修了这条路的几分之几（异分母先通分）', de, da);
   }
+
+  if (sub === 'mix') {
+    var md = ri(rng, 4, 9);
+    var m1 = ri(rng, 1, md - 3), m2 = ri(rng, 1, md - m1 - 2), m3 = ri(rng, 1, md - m1 - m2 - 1);
+    var me = m1 + '/' + md + ' + ' + m2 + '/' + md + ' + ' + m3 + '/' + md, ma = simp(m1 + m2 + m3, md);
+    if (qt === 'calc') return calcItem(me, ma);
+    if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：' + m1 + '/' + md + ' + ' + m2 + '/' + md +
+      ' + ____ = ' + (m1 + m2 + m3) + '/' + md, answer: m3 + '/' + md, options: null };
+    if (qt === 'choice') return choiceExprItem(rng, me, ma);
+    return applyItem('看一本书，第一天看了全书的 ' + m1 + '/' + md + '，第二天看了 ' + m2 + '/' + md +
+      '，第三天看了 ' + m3 + '/' + md + '，列式求三天一共看了全书的几分之几', me, ma);
+  }
+
+  // div
+  if (rng() < 0.5) {
+    var dv = fracDiv(rng), de2 = dv.expr, da2 = dv.ans;
+    if (qt === 'calc') return calcItem(de2, da2);
+    if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：____ ÷ ' + dv.n2 + '/' + dv.d2 + ' = ' + fs(da2),
+      answer: dv.n1 + '/' + dv.d1, options: null };
+    if (qt === 'choice') return choiceExprItem(rng, de2, da2);
+    return applyItem('把 ' + dv.n1 + '/' + dv.d1 + ' 米长的彩带剪成每段 ' + dv.n2 + '/' + dv.d2 +
+      ' 米的小段，列式求能剪多少段', de2, da2);
+  }
+  var di = fracDivInt(rng), ie = di.expr, ia = di.ans;
+  if (qt === 'calc') return calcItem(ie, ia);
+  if (qt === 'fill') return { prompt: '在 ____ 里填上合适的数：' + di.n + '/' + di.d + ' ÷ ____ = ' + fs(ia),
+    answer: String(di.k), options: null };
+  if (qt === 'choice') return choiceExprItem(rng, ie, ia);
+  return applyItem('把 ' + di.n + '/' + di.d + ' 升果汁平均分给 ' + di.k + ' 个小朋友，列式求每人分得多少升', ie, ia);
+}
+
+// 概念类子类型（meaning/nature/compare/relation/proper/reciprocal）的四题型真分工
+function conceptTyped(sub, qt, rng) {
+  if (sub === 'meaning') {
+    var d0 = ri(rng, 4, 9), n0 = ri(rng, 2, d0 - 2);
+    if (qt === 'calc') {
+      return { prompt: '分数单位累加，列式：1/' + d0 + ' + 1/' + d0 + ' + 1/' + d0 + ' = ？',
+        answer: '3/' + d0, options: null };
+    }
+    if (qt === 'fill') return { prompt: '把一个圆平均分成 ' + d0 + ' 份，每份是它的 1/____',
+      answer: String(d0), options: null };
+    if (qt === 'choice') {
+      var optsM = Rng.shuffle(rng, [n0 + '/' + d0, (n0 + 1) + '/' + d0, '1/' + d0, d0 + '/' + n0]);
+      return { prompt: '把一个圆平均分成 ' + d0 + ' 份，取其中 ' + n0 + ' 份，下面哪个分数表示涂色部分？（  ）',
+        answer: n0 + '/' + d0, options: optsM };
+    }
+    return { prompt: '把一个蛋糕平均分给 ' + d0 + ' 个小朋友，每人得到这个蛋糕的几分之几？',
+      answer: '1/' + d0, options: null };
+  }
+
   if (sub === 'nature') {
-    var variant = ri(rng, 0, 2);
-    if (variant === 0) {
-      var d2 = ri(rng, 3, 8), k2 = ri(rng, 2, 5);
-      return { stem: '分数基本性质：1/' + d2 + ' 的分子分母同乘 ' + k2 + '（1 × ' + k2 + ' = ' + k2 + '），得到 ____/' + (d2 * k2),
-        answer: String(k2), options: [String(k2), String(1), String(d2 * k2)] };
+    if (qt === 'calc') {
+      var g2 = ri(rng, 2, 5), ca = ri(rng, 1, 4), cb = ca + ri(rng, 1, 3);
+      var cn = g2 * ca, cd = g2 * cb, cr = simp(cn, cd);
+      return { prompt: '约成最简分数（分子分母同除以 ' + g2 + '，列式：' + cn + ' ÷ ' + g2 + ' = ' + cr.n + '）：' +
+        cn + '/' + cd + ' = ？', answer: fs(cr), options: null };
     }
-    if (variant === 1) {
-      var n3 = ri(rng, 2, 5) * 2, d3 = n3 + ri(rng, 1, 4) * 2;
-      var g = gcd(n3, d3), rn = n3 / g, rd = d3 / g;
-      return { stem: '约分：' + n3 + '/' + d3 + ' = ' + rn + '/____（分子分母同除以 ' + g + '，' + n3 + ' ÷ ' + g + ' = ' + rn + '）',
-        answer: String(rd), options: [String(rd), String(g), String(d3)] };
+    if (qt === 'fill') {
+      var bd = ri(rng, 3, 8), bk = ri(rng, 2, 5);
+      return { prompt: '分数的基本性质，在 ____ 里填数：1/' + bd + ' = ____/' + (bd * bk),
+        answer: String(bk), options: null };
     }
-    return { stem: '分数与小数互化：1/2 = 1 ÷ 2 = ____', answer: '0.5', options: ['0.5', '0.2', '0.1'] };
+    if (qt === 'choice') {
+      var g3 = ri(rng, 2, 4), rn3 = ri(rng, 1, 4), rd3 = rn3 + ri(rng, 1, 3);
+      var en = g3 * rn3, ed = g3 * rd3, rr = simp(en, ed);
+      var optsN = Rng.shuffle(rng, [fs(rr), (en + 1) + '/' + ed, en + '/' + (ed + 1), (rr.n + 1) + '/' + rr.d]);
+      return { prompt: '下面哪个分数与 ' + en + '/' + ed + ' 大小相等？（  ）', answer: fs(rr), options: optsN };
+    }
+    var ag = ri(rng, 2, 5), ab = ag + ri(rng, 1, 3), an = ag * ri(rng, 1, ab - 1);
+    var ar = simp(an, ab * ag);
+    return { prompt: '合唱队有 ' + (ab * ag) + ' 人，其中男生 ' + an + ' 人，列式求男生占全队人数的几分之几（约成最简分数）：' +
+      an + '/' + (ab * ag) + ' = ？', answer: fs(ar), options: null };
   }
-  if (sub === 'reciprocal') {
-    if (rng() < 0.5) {
-      var nn = ri(rng, 2, 8), dd = nn + ri(rng, 1, 3);
-      return { stem: nn + '/' + dd + ' 的分子分母调换位置，它的倒数是 ____（参考：' + nn + ' × ' + dd + ' 作新分母）',
-        answer: dd + '/' + nn, options: [dd + '/' + nn, nn + '/' + dd, '1'] };
+
+  if (sub === 'compare') {
+    var cd2 = ri(rng, 4, 9), clo = ri(rng, 1, cd2 - 2), chi = ri(rng, clo + 1, cd2 - 1);
+    var lf = clo + '/' + cd2, hf = chi + '/' + cd2;
+    if (qt === 'calc') {
+      return { prompt: '列式比一比：' + hf + ' − ' + lf + ' = ？（差大于 0，说明同分母时分子大的分数大）',
+        answer: fs(simp(chi - clo, cd2)), options: null };
     }
-    var whole = ri(rng, 2, 9);
-    return { stem: whole + ' 可以写成 ' + whole + '/1，它的倒数是 ____（参考：' + whole + ' ÷ ' + whole + ' = 1）',
-      answer: '1/' + whole, options: ['1/' + whole, String(whole), '1'] };
+    if (qt === 'fill') return { prompt: '比较大小，在 ____ 里填上 >、< 或 =：' + lf + ' ____ ' + hf,
+      answer: '<', options: null };
+    if (qt === 'choice') {
+      var optsC = Rng.shuffle(rng, [lf + ' < ' + hf, lf + ' > ' + hf, lf + ' = ' + hf, hf + ' < ' + lf]);
+      return { prompt: '下面大小关系正确的是？（  ）', answer: lf + ' < ' + hf, options: optsC };
+    }
+    return { prompt: '小华和小明跑同样长的一段路，小华用了 ' + lf + ' 分钟，小明用了 ' + hf +
+      ' 分钟，谁用的时间更短？', answer: '小华', options: null };
   }
-  // meaning（初步认识/读写/进一步认识）
-  // FINAL-140：G3 初步认识阶段不引用「分数与除法」关系（a÷b=a/b 为 G5 内容），
-  // 直接用分数记法表达每份；1/d 仍满足 calc expressionPresent（/ 两侧数字）。
-  var d0 = ri(rng, 3, 9);
-  return { stem: '把一个圆平均分成 ' + d0 + ' 份，取其中的 1 份（每份是它的 1/' + d0 + '），用分数表示是 ____',
-    answer: '1/' + d0, options: ['1/' + d0, '1/' + (d0 + 1), d0 + '/1'] };
+
+  if (sub === 'relation') {
+    var rn1 = ri(rng, 2, 6), rd1 = rn1 + ri(rng, 1, 4);
+    if (qt === 'calc') return { prompt: '用分数表示除法的商，列式：' + rn1 + ' ÷ ' + rd1 + ' = ？',
+      answer: rn1 + '/' + rd1, options: null };
+    if (qt === 'fill') return { prompt: '分数与除法，在 ____ 里填除数：' + rn1 + ' ÷ ____ = ' + rn1 + '/' + rd1,
+      answer: String(rd1), options: null };
+    if (qt === 'choice') {
+      var correct = rn1 + ' ÷ ' + rd1;
+      var optsR = Rng.shuffle(rng, [correct, rd1 + ' ÷ ' + rn1, rn1 + ' + ' + rd1, rn1 + ' × ' + rd1]);
+      return { prompt: '下面哪个算式的商用分数 ' + rn1 + '/' + rd1 + ' 表示？（  ）', answer: correct, options: optsR };
+    }
+    return { prompt: '把 ' + rn1 + ' 个同样大的月饼平均分给 ' + rd1 + ' 个小朋友，每人分得多少个月饼？（用分数表示）',
+      answer: rn1 + '/' + rd1, options: null };
+  }
+
+  if (sub === 'proper') {
+    if (qt === 'calc') {
+      var improper = rng() < 0.5;
+      var pq, qq;
+      if (improper) { qq = ri(rng, 2, 5); pq = qq + ri(rng, 1, 4); }
+      else { pq = ri(rng, 1, 4); qq = pq + ri(rng, 2, 5); }
+      return { prompt: '比较分子与分母（列式：' + pq + ' − ' + qq + ' = ？）：分数 ' + pq + '/' + qq +
+        ' 的分子减去分母，得数是多少？', answer: String(pq - qq), options: null };
+    }
+    if (qt === 'fill') {
+      var imp2 = rng() < 0.5;
+      var p2, q2;
+      if (imp2) { q2 = ri(rng, 2, 6); p2 = q2 + ri(rng, 1, 3); }
+      else { p2 = ri(rng, 1, 5); q2 = p2 + ri(rng, 1, 4); }
+      return { prompt: '分数 ' + p2 + '/' + q2 + ' 的分子' + (imp2 ? '大于分母' : '小于分母') + '，它是 ____ 分数',
+        answer: imp2 ? '假分数' : '真分数', options: null };
+    }
+    if (qt === 'choice') {
+      var bd3 = ri(rng, 4, 7), impN = bd3 + ri(rng, 1, 3);
+      var impFrac = impN + '/' + bd3;
+      var optsP = Rng.shuffle(rng, ['1/' + bd3, '2/' + bd3, '3/' + bd3, impFrac]);
+      return { prompt: '下面四个分数中，哪个是假分数？（  ）', answer: impFrac, options: optsP };
+    }
+    var pg = ri(rng, 2, 6), qg = pg + ri(rng, 1, 3);
+    return { prompt: '把 ' + pg + ' 个同样大的面包平均分给 ' + qg + ' 个小组，每个小组分得多少个面包？（用分数表示）',
+      answer: pg + '/' + qg, options: null };
+  }
+
+  // reciprocal
+  var ra = ri(rng, 2, 7), rb = ra + ri(rng, 1, 3);
+  var orig = ra + '/' + rb, recip = rb + '/' + ra;
+  if (qt === 'calc') {
+    return { prompt: '写出 ' + orig + ' 的倒数，再列式检验乘积：' + orig + ' × ' + recip + ' = ？',
+      answer: '1', options: null };
+  }
+  if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：' + orig + ' × ____ = 1',
+    answer: recip, options: null };
+  if (qt === 'choice') {
+    var optsRc = Rng.shuffle(rng, [recip, orig, '1', (rb + 1) + '/' + ra]);
+    return { prompt: '下面哪个数是 ' + orig + ' 的倒数？（  ）', answer: recip, options: optsRc };
+  }
+  return { prompt: '小明写了分数 ' + orig + '，小红要写一个分数使两数乘积等于 1，小红应该写什么分数？',
+    answer: recip, options: null };
 }
 
 /* ------------------------------------------------------------------ *
@@ -163,60 +366,17 @@ function buildQuestion(plan, context, i) {
   var sub = deriveSubtype(name);
   var qt = plan.questionTypeId;
 
-  var prompt, answer, options = null;
+  var ARITH_SUBS = { word: 1, addsub: 1, 'addsub-diff': 1, mix: 1, div: 1 };
+  var typed = ARITH_SUBS[sub] ? arithmeticTyped(sub, qt, rng) : conceptTyped(sub, qt, rng);
 
-  if (sub === 'word') {
-    // 强制同分母加法结构（sameDenomAdd 可能随机出减法，split(' + ') 会失真）
-    var wd = ri(rng, 3, 9), wn1 = ri(rng, 1, wd - 1), wn2 = ri(rng, 1, wd - wn1);
-    var wexpr = wn1 + '/' + wd + ' + ' + wn2 + '/' + wd;
-    var wans = fs(simp(wn1 + wn2, wd));
-    prompt = '一块蛋糕，小明吃了 ' + wn1 + '/' + wd + '，小红吃了 ' + wn2 + '/' + wd +
-      '。两人一共吃了这块蛋糕的几分之几？列式 ' + wexpr + ' = ？';
-    answer = wans;
-  } else if (sub === 'addsub') {
-    var s1 = sameDenomAdd(rng, 9);
-    prompt = '列式计算：' + s1.expr + ' = ？';
-    answer = s1.answer;
-  } else if (sub === 'addsub-diff') {
-    var s2 = diffDenomAdd(rng);
-    prompt = '列式计算（先通分）：' + s2.expr + ' = ？';
-    answer = s2.answer;
-  } else if (sub === 'mix') {
-    var a = sameDenomAdd(rng, 9), b = sameDenomAdd(rng, 9);
-    var d = ri(rng, 3, 9), n1 = ri(rng, 1, d - 2), n2 = ri(rng, 1, d - n1 - 1), n3 = ri(rng, 1, d - n1 - n2);
-    var tot = n1 + n2 + n3;
-    prompt = '列式计算：' + n1 + '/' + d + ' + ' + n2 + '/' + d + ' + ' + n3 + '/' + d + ' = ？';
-    answer = fs(simp(tot, d));
-  } else if (sub === 'div') {
-    var dv = rng() < 0.5 ? fracDiv(rng) : fracDivInt(rng);
-    prompt = '列式计算：' + dv.expr + ' = ？';
-    answer = dv.answer;
-  } else {
-    var item = conceptItem(sub, rng);
-    prompt = item.stem;
-    answer = item.answer;
-    options = item.options;
-  }
-
-  if (qt === 'fill') {
-    prompt = prompt.replace(' = ？', ' = ____').replace('？', '____');
-    if (!/____|\(\s*\)/.test(prompt)) prompt += ' ____';
-  }
-  if (qt === 'apply' && /列式计算/.test(prompt)) {
-    prompt = prompt.replace('列式计算（先通分）：', '解决问题——先通分再计算：').replace('列式计算：', '解决问题——列式计算：');
-  }
+  var prompt = typed.prompt;
+  var answer = typed.answer;
+  var options = typed.options || null;
 
   var data = { mode: 'fraction', subType: sub, steps: 1 };
-  if (qt === 'choice') {
-    var pool;
-    if (options) pool = options.map(String);
-    else { pool = [String(answer)]; }
-    var uniq = [], seen = {};
-    pool.forEach(function (o) { o = String(o); if (!seen[o]) { seen[o] = 1; uniq.push(o); } });
-    while (uniq.length < 4) uniq.push('以上都不对（' + uniq.length + '）');
-    options = Rng.shuffle(rng, uniq.slice(0, 4));
+  if (qt === 'choice' && options) {
     data.options = options;
-    data.correctIndex = options.indexOf(String(answer));
+    data.correctIndex = options.map(String).indexOf(String(answer));
   }
 
   return {

@@ -47,8 +47,10 @@ function deriveSpiralMaxLevel(cog, seed) {
 }
 
 // ---------- 释义文本规则（R 系列；evidence 取自命中片段） ----------
+// P30-14：ranges() 双轨输出——max 为难度等级（冻结，供 R02 难度加分），numMax 为数值上限（供 emit-canonical generation.numberRange）。
+// numMax 规则：仅精确数值证据，无「整数域/数」兜底（那是难度信号非数域事实）；无证据 → null。
 function ranges(s) {
-  // 返回 { descriptor, maxVal, evidence }
+  // 返回 { descriptor, max(难度等级), numMax(数值上限), evidence }
   var ev = [];
   var max = 0;
   ['亿以内', '万以内', '千以内'].forEach(function (w) {
@@ -64,7 +66,24 @@ function ranges(s) {
   if (/一位/.test(s)) { max = Math.max(max, 10); ev.push('一位数'); }
   if (/整数/.test(s) || /自然数/.test(s) || /数/ .test(s)) { max = Math.max(max, 100); ev.push('整数域'); }
   var descriptor = max >= 8 ? '亿级' : max >= 6 ? '百万级' : max >= 5 ? '万级' : max >= 4 ? '千级' : max >= 3 ? '百级' : max >= 2 ? '十级' : '二十以内';
-  return { max: max, evidence: ev };
+
+  // P30-14 数值上限推导（独立于难度等级）
+  var numMax = null;
+  var m2;
+  m2 = /(\d+)以内/.exec(s);
+  if (m2) { numMax = Number(m2[1]); }
+  if (numMax == null) {
+    m2 = /(\d+)[～~\-至](\d+)/.exec(s);
+    if (m2) { numMax = Number(m2[2]); }
+  }
+  if (numMax == null && s.indexOf('亿以内') !== -1) { numMax = 100000000; }
+  if (numMax == null && s.indexOf('万以内') !== -1) { numMax = 10000; }
+  if (numMax == null && s.indexOf('千以内') !== -1) { numMax = 1000; }
+  if (numMax == null && /三位/.test(s)) { numMax = 1000; }
+  if (numMax == null && /两位/.test(s)) { numMax = 100; }
+  if (numMax == null && /一位/.test(s)) { numMax = 10; }
+
+  return { max: max, numMax: numMax, evidence: ev };
 }
 
 function detectFamilies(s) {
@@ -183,7 +202,7 @@ function derive() {
       unitId: k.unitId,
       knowledgeName: k.knowledgeName,
       domain: k.domainNorm,
-      numberRange: rng.max > 0 ? { descriptor: rng.descriptor, max: rng.max } : null,
+      numberRange: rng.max > 0 ? { descriptor: rng.descriptor, max: rng.max, numMax: rng.numMax } : null,
       operations: ops,
       families: fam,
       cognitiveLevel: cog,

@@ -37,7 +37,9 @@ const DATA_PATTERNS = ['data', 'relations', 'mappings', 'index', 'manifest'].map
 const IGNORE_DIRS = ['node_modules', '.git', 'archive', 'migration', 'docs', 'shared/knowledge/runtime'];
 const TOOLS = new Set(['tools/kbl/build.js', 'tools/kbl/publish.js', 'tools/kbl/verify.js',
   'dev/verify-kbl-runtime.js', 'dev/build-knowledge-runtime.js', 'dev/check-knowledge-access.js',
-  'dev/check-kbl-quality.js', 'dev/p28/check-generation-matrix-freeze.js']);
+  'dev/check-kbl-quality.js', 'dev/p28/check-generation-matrix-freeze.js',
+  // P30-01/02 离线血缘/基线门禁：职责即逐字节校验 canonical→发射副本→runtime 镜像一致性
+  'dev/p30/build-baseline.js', 'dev/p30/check-kbl-lineage.js']);
 
 function hitKind(content) {
   const kinds = [];

@@ -564,6 +564,94 @@ function checkTypeContract(sq) {
 }
 
 /**
+ * 10. Intent Alignment（P30-15）：生成结果与 plan.semanticParams.intent 机器字段对齐。
+ *
+ * 验证四个维度：
+ *   focus           — intent.focus 与 questionType 的映射一致性
+ *   representation  — intent.allowedRepresentations 与题目实际表征
+ *   graphicRole     — intent.graphicRole 与题目是否含图形
+ *   expressionMode  — intent.expressionModes 与题目形态推导
+ *
+ * 三态：skip（无 plan.semanticParams.intent）/ pass / fail（SEVERITY.ERROR）
+ */
+
+// 题型 → focus 机械映射（canonical 7 类）
+var QT_FOCUS_MAP = {
+  calc: 'calculation', fill: 'written', apply: 'application',
+  choice: 'selection', judge: 'selection', geometry: 'geometry', classify: 'classification'
+};
+
+// 题型 → expressionMode 机械推导
+var QT_EXPRESSION_MAP = {
+  calc: 'expression', fill: 'text', apply: 'context-word',
+  choice: 'option-selection', judge: 'binary-judgement', geometry: 'graphic-construction', classify: 'grouping'
+};
+
+function checkIntentAlignment(sq, plan) {
+  var errors = [];
+  var sp = plan && plan.semanticParams ? plan.semanticParams : null;
+  // P30-15：retry-loop 传入的 plan 未经 attachToPlan，兜底自算 semanticParams
+  if (!sp && plan) {
+    try {
+      var SP = require('../generator/core/semantic-parameters.js');
+      sp = SP.attachToPlan(plan).semanticParams;
+    } catch (e) { /* 依赖不可用 → skip */ }
+  }
+  if (!sp || !sp.intent) {
+    return { state: 'skip', errors: errors, warnings: [] };
+  }
+  var intent = sp.intent;
+  var qt = sq.questionType || sq.questionTypeId || null;
+  if (!qt) return { state: 'skip', errors: errors, warnings: [] };
+
+  // 1. focus 对齐
+  var expectedFocus = QT_FOCUS_MAP[qt];
+  if (intent.focus && expectedFocus && intent.focus !== expectedFocus) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'focus',
+      'intent.focus ' + intent.focus + ' 与题型 ' + qt + ' 期望 focus ' + expectedFocus + ' 不一致',
+      SEVERITY.ERROR, { intentFocus: intent.focus, questionType: qt, expectedFocus: expectedFocus }));
+  }
+
+  // 2. representation 对齐：allowedRepresentations 不含 'graphic' 时题目不应含 graphic（反向约束）
+  //    含 'graphic' 是「允许」非「必须」——强制含图由 graphicRole=carrier 承担（见下）
+  var hasGraphic = !!(sq.data && sq.data.graphic);
+  var allowedReps = intent.allowedRepresentations || [];
+  if (allowedReps.length && allowedReps.indexOf('graphic') === -1 && hasGraphic) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'representation',
+      'intent.allowedRepresentations 不含 graphic 但题目含图形',
+      SEVERITY.ERROR, { allowedRepresentations: allowedReps, hasGraphic: hasGraphic }));
+  }
+
+  // 3. graphicRole 对齐
+  var graphicRole = intent.graphicRole;
+  if (graphicRole === 'carrier' && !hasGraphic) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
+      'intent.graphicRole=carrier 要求题目必须含图形，实际未含',
+      SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
+  }
+  if (graphicRole === null && hasGraphic) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
+      'intent.graphicRole=null 要求题目不含图形，实际含图形',
+      SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
+  }
+
+  // 4. expressionMode 对齐
+  var expectedMode = QT_EXPRESSION_MAP[qt];
+  var modes = intent.expressionModes || [];
+  if (expectedMode && modes.length && modes.indexOf(expectedMode) === -1) {
+    errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'expressionMode',
+      'intent.expressionModes ' + JSON.stringify(modes) + ' 不含题型 ' + qt + ' 期望模式 ' + expectedMode,
+      SEVERITY.ERROR, { expressionModes: modes, questionType: qt, expectedMode: expectedMode }));
+  }
+
+  return {
+    state: errors.length ? 'fail' : 'pass',
+    errors: errors,
+    warnings: []
+  };
+}
+
+/**
  * 主验证入口
  * @param {Object} sq SemanticQuestion
  * @param {Object} context { plan: QuestionPlan, kpConstraints: Object }
@@ -616,6 +704,10 @@ function validateKpSemantics(sq, context) {
   var typeContractResult = checkTypeContract(sq);
   allErrors.push.apply(allErrors, typeContractResult.errors);
 
+  // 10. Intent Alignment（P30-15：生成结果与 intent 机器字段对齐；skip/pass/fail）
+  var intentAlignmentResult = checkIntentAlignment(sq, plan);
+  allErrors.push.apply(allErrors, intentAlignmentResult.errors);
+
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
 
@@ -628,6 +720,7 @@ function validateKpSemantics(sq, context) {
     semanticEvidence: evidenceResult.state,
     intentConsistency: intentResult.state,
     typeContract: typeContractResult.state,
+    intentAlignment: intentAlignmentResult.state,
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
@@ -637,7 +730,8 @@ function validateKpSemantics(sq, context) {
       content: contentResult.errors.length === 0 ? 'pass' : 'fail',
       semanticEvidence: evidenceResult.state,
       intentConsistency: intentResult.state,
-      typeContract: typeContractResult.state
+      typeContract: typeContractResult.state,
+      intentAlignment: intentAlignmentResult.state
     }
   };
 }
@@ -655,6 +749,7 @@ module.exports = {
   checkSemanticEvidence: checkSemanticEvidence,
   checkIntentEvidenceConsistency: checkIntentEvidenceConsistency,
   checkTypeContract: checkTypeContract,
+  checkIntentAlignment: checkIntentAlignment,
   getAllowedRelations: getAllowedRelations,
   getEvidenceRules: getEvidenceRules
 };

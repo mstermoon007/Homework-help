@@ -253,13 +253,27 @@ function makeTranslationQuestion(plan, context, i) {
   var qt = plan.questionTypeId;
   var hWord = dx > 0 ? '向右' + dx + '格' : '向左' + (-dx) + '格';
   var vWord = dy > 0 ? '向下' + dy + '格' : '向上' + (-dy) + '格';
-  var prompt = '一个图形先' + hWord + '，再' + vWord + '，一共平移了多少格？';
   var answer = Math.abs(dx) + Math.abs(dy);
+  // judge 的 shown 须在构造 prompt 前确定（judge 题面内嵌 shown）
+  var shown = rng() < 0.5 ? answer : answer + (rng() < 0.5 ? 1 : -1);
+  var hDir = dx > 0 ? '右' : '左';
+  var vDir = dy > 0 ? '下' : '上';
+  // P30-GEN-06（P30-16）：fill/choice/judge 不得共享「一个图形先…再…一共平移了多少格」骨架，
+  // 按题型换引导词与问法打散共享 3-gram。
+  var prompt;
+  if (qt === 'fill') {
+    prompt = '图形先向' + hDir + '平移 ' + Math.abs(dx) + ' 格，再向' + vDir + '平移 ' + Math.abs(dy)
+      + ' 格，总共移动 ____ 格。';
+  } else if (qt === 'choice') {
+    prompt = '一个图形先' + hWord + '，再' + vWord + '，一共平移了多少格？';
+  } else {
+    prompt = '一个图形先' + hWord + '、再' + vWord + '，共平移 ' + shown + ' 格，对还是错？';
+  }
   if (qt === 'fill') {
     return {
       knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
-      seed: seedFor(plan, context, i), prompt: prompt + ' ____ 格',
+      seed: seedFor(plan, context, i), prompt: prompt,
       answer: { value: String(answer), acceptable: [] }, answerMode: 'input',
       data: { mode: 'fill', steps: 1, shapeName: '平移' }
     };
@@ -285,7 +299,6 @@ function makeTranslationQuestion(plan, context, i) {
     };
   }
   // judge
-  var shown = rng() < 0.5 ? answer : answer + (rng() < 0.5 ? 1 : -1);
   var transIsTrue = shown === answer;
   var transData = { mode: 'judge', steps: 1, shapeName: '平移', shownResult: String(shown) };
   var transExplanation = transIsTrue
@@ -298,7 +311,7 @@ function makeTranslationQuestion(plan, context, i) {
   return {
     knowledgePointId: pkp(plan), questionType: 'judge', difficulty: plan.difficulty,
     spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
-    seed: seedFor(plan, context, i), prompt: prompt + ' 答案是 ' + shown + ' 格——对还是错？',
+    seed: seedFor(plan, context, i), prompt: prompt,
     answer: { value: transIsTrue, acceptable: [], explanation: transExplanation }, answerMode: 'judge',
     data: transData
   };

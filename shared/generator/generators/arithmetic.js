@@ -104,6 +104,73 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
   };
 }
 
+// P30-GEN-06（P30-16）：算术族 apply 题面生成器。
+// - 单运算：真实情境（苹果/分物），不含符号算式，核心骨架与 calc 互异。
+// - 多步：用「加上/减去/乘/除以」文字运算词串联，自动尊重先乘除后加减，
+//   符号不进题面，核心骨架（仅数字与汉字）与 calc（符号序列）互异。
+function buildApplyStory(structure, op) {
+  var ops = structure.operands, oprs = structure.operators;
+  var a = ops[0], b = ops[1];
+  if (ops.length === 2) {
+    if (op === 'add') return '小明有 ' + a + ' 个苹果，又买来 ' + b + ' 个，一共有多少个？';
+    if (op === 'sub') return '小明有 ' + a + ' 个苹果，吃了 ' + b + ' 个，还剩多少个？';
+    if (op === 'mult') return '每盒有 ' + a + ' 个苹果，' + b + ' 盒一共有多少个？';
+    if (op === 'div') return '把 ' + a + ' 个苹果平均分给 ' + b + ' 个小朋友，每人多少个？';
+  }
+  // 多步：先把 ×/÷ 段合成「A 乘 B / A 除以 B」短语，再用「加/减」串联
+  var terms = [String(a)];
+  var termOps = [];
+  for (var i = 0; i < oprs.length; i++) {
+    var o = oprs[i], v = String(ops[i + 1]);
+    if (o === '×' || o === '*' || o === '÷' || o === '/') {
+      var w = (o === '×' || o === '*') ? '乘' : '除以';
+      terms[terms.length - 1] = terms[terms.length - 1] + ' ' + w + ' ' + v;
+    } else {
+      termOps.push(o === '+' ? '加' : '减');
+      terms.push(v);
+    }
+  }
+  var s = '把 ' + terms[0];
+  for (var j = 0; j < termOps.length; j++) {
+    s += '，' + termOps[j] + ' ' + terms[j + 1];
+  }
+  return s + '，结果是多少？';
+}
+
+// P30-GEN-06：算术 choice 干扰项——扰动最后一个操作数生成结果不同的算式。
+function buildDistractorExpressions(structure, correctAnswer) {
+  var baseOps = structure.operands.slice();
+  var oprs = structure.operators;
+  var last = baseOps.length - 1;
+  var out = [];
+  var deltas = [1, 2, -1, -2];
+  for (var i = 0; i < deltas.length && out.length < 3; i++) {
+    var nv = baseOps[last] + deltas[i];
+    if (nv < 0) continue;
+    var trialOps = baseOps.slice();
+    trialOps[last] = nv;
+    var res = Arith.calculateAnswer(trialOps, oprs);
+    if (String(res) === String(correctAnswer)) continue;
+    var expr = Arith.formatExpression(trialOps, oprs);
+    if (out.indexOf(expr) === -1) out.push(expr);
+  }
+  // 若扰动不足 3 个，扰动倒数第二个操作数兜底
+  var guard = 0;
+  while (out.length < 3 && guard < 8 && baseOps.length >= 2) {
+    guard++;
+    var nv2 = baseOps[last - 1] + (guard % 2 === 0 ? guard : -guard);
+    if (nv2 < 0) continue;
+    var t2 = baseOps.slice();
+    t2[last - 1] = nv2;
+    var r2 = Arith.calculateAnswer(t2, oprs);
+    if (String(r2) === String(correctAnswer)) continue;
+    var e2 = Arith.formatExpression(t2, oprs);
+    if (out.indexOf(e2) === -1) out.push(e2);
+  }
+  while (out.length < 3) out.push(baseOps.join(' + ') + ' + ' + (out.length + 1));
+  return out.slice(0, 3);
+}
+
 function createArithmeticGenerator(spec) {
   spec = spec || {};
   var op = spec.operation || 'add';
@@ -192,11 +259,43 @@ function createArithmeticGenerator(spec) {
           });
         }
         var answer = structure.answer != null ? structure.answer : Arith.calculateAnswer(structure.operands, structure.operators);
-        var prompt = Arith.formatExpression(structure.operands, structure.operators) + ' = ?';
+        var qt = plan.questionTypeId;
+        var prompt, outAnswer = answer, options = null;
+
+        if (qt === 'fill') {
+          // P30-GEN-06（P30-16）：fill = 逆推填空（空出一个操作数，已知得数求操作数），
+          // 与 calc 的「直接求值」承担不同 Assessment Target；缺失操作数使核心骨架
+          // （#op# 模式）与 calc 互异。
+          var ops = structure.operands, oprs = structure.operators;
+          // 空「非末尾」操作数：末尾空位会因等号右侧得数仍保留 # 而使核心骨架
+          // 退化为 #op#（与 calc 相同）；空首位/中位可保证骨架互异。
+          var blankIdx = ops.length > 2 ? Rng.randInt(rng, 0, ops.length - 2) : 0;
+          var fillParts = [];
+          for (var fi = 0; fi < ops.length; fi++) {
+            fillParts.push(fi === blankIdx ? '____' : ops[fi]);
+            if (fi < oprs.length) fillParts.push(oprs[fi]);
+          }
+          prompt = '填空：' + fillParts.join(' ') + ' = ' + answer;
+          outAnswer = ops[blankIdx];
+        } else if (qt === 'apply') {
+          // P30-GEN-06：apply = 真实情境迁移，直接生成情境题面（不依赖 finisher 包装，
+          // 避免「= ?」被 contextPresent 短路而退化为裸算式）。
+          prompt = buildApplyStory(structure, op);
+        } else if (qt === 'choice') {
+          // P30-GEN-06：choice = 结果匹配。题干给出得数，选项为算式，选出结果等于该
+          // 数的算式。题干不含符号算式，核心骨架与 calc/fill/apply 互异。
+          var correctExpr = Arith.formatExpression(structure.operands, structure.operators);
+          prompt = '下面哪个算式等于 ' + answer + '？';
+          var distractorExprs = buildDistractorExpressions(structure, answer);
+          options = Rng.shuffle(rng, [correctExpr].concat(distractorExprs));
+          outAnswer = correctExpr;
+        } else {
+          prompt = Arith.formatExpression(structure.operands, structure.operators) + ' = ?';
+        }
 
         questions.push({
           knowledgePointId: pkp(plan),
-          questionType: plan.questionTypeId,
+          questionType: qt,
           difficulty: plan.difficulty,
           difficultyParams: {
             level: plan.difficulty,
@@ -211,20 +310,17 @@ function createArithmeticGenerator(spec) {
           seed: seedFor(plan, context, i),
           prompt: prompt,
           // D004 修复：补 answer.explanation，包含运算表达式与结果，供答题页显示解题步骤
-          answer: { value: String(answer), acceptable: [], explanation: prompt.replace(' = ?', ' = ' + answer) },
+          answer: { value: String(outAnswer), acceptable: [], explanation: prompt.replace(' = ?', ' = ' + answer) },
           answerMode: 'input',
           // P28-FORM-CONTRACT-01：声明横向算式作答框内联到等号后（替代渲染器正则识别）
           response: { layout: 'inline-after-equals' },
           hint: null,
           data: {
-            // C2：data.operation 必须用「运算标签字符串」。plan.operation 在新计划形态下
-            // 是算符数组（如 ['+']），直接送 normalizeOperation 会落入兜底 'mixed'，
-            // 导致单运算 KP（如竖式加法 KP operation=['+']）的题目被误标 mixed 而
-            // 触发 KP_SEMANTIC_OPERATION；优先级与上方 generateStructure 的运算决策一致。
             operation: Arith.normalizeOperation(context.operation || planOperationStr(plan) || op),
             steps: structure.steps
           }
         });
+        if (options) questions[questions.length - 1].data.options = options;
       }
       return SemanticEvidence.attachAll(VariationApply.applyToAll(questions, plan), plan);
     }
