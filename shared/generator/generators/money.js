@@ -331,6 +331,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
       answer = '100';
       graphic = {
         type: 'geometry', subtype: 'rectangle',
+        role: 'quantity-correspondence',
         params: { width: 10, height: 10, labelSides: true, rightAngle: false, unit: 'cm', unitPx: 22 }
       };
     } else {
@@ -341,6 +342,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
       graphic = {
         type: 'geometry',
         subtype: 'square',
+        role: 'quantity-correspondence',
         params: { size: 3, labelSides: false, rightAngle: false, unit: 'cm', unitPx: 26 }
       };
     }
@@ -352,6 +354,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     answer = '厘米、米';
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: 1, part: 1, unit: 'cm', partLabel: '1', totalLabel: '1', otherLabel: '' }
     };
   } else if (kpName.indexOf('从小到大') !== -1) {
@@ -361,6 +364,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     answer = '毫米、厘米、分米、米、千米';
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: 1000, part: 100, unit: 'cm', partLabel: '100', totalLabel: '1000' }
     };
   } else if (kpName.indexOf('进率') !== -1) {
@@ -370,6 +374,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     answer = '10';
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: 10, part: 1, unit: 'cm', partLabel: '1', totalLabel: '10' }
     };
   } else {
@@ -379,6 +384,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     answer = '100';
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: 100, part: 30, unit: 'cm', partLabel: '30', totalLabel: '100' }
     };
   }
@@ -518,6 +524,7 @@ function makeGraphicForMoney(meta, difficulty) {
     return {
       type: 'calculation',
       subtype: 'rmb',
+      role: 'calculation-support',
       params: {
         operation: 'money',
         showRMB: true,
@@ -529,6 +536,7 @@ function makeGraphicForMoney(meta, difficulty) {
   return {
     type: 'geometry',
     subtype: 'rectangle',
+    role: 'quantity-correspondence',
     params: { width: 8, height: 3, labelSides: false, unit: 'cm', unitPx: 30 }
   };
 }
@@ -605,7 +613,7 @@ function createMoneyGenerator(spec) {
           }
           var op = OpSem.symbol(qd.operation);
           if (amounts && amounts.length) {
-            q.data.graphic = { type: 'currency', subtype: 'rmb', params: { amounts: amounts, op: op } };
+            q.data.graphic = { type: 'currency', subtype: 'rmb', role: 'quantity-correspondence', params: { amounts: amounts, op: op } };
           } else {
             delete q.data.graphic;
           }

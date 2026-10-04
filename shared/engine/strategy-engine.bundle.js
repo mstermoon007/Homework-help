@@ -6444,6 +6444,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     answer = String(part3);
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: total3, part: part3, unit: 'cm', partLabel: String(part3), totalLabel: String(total3) }
     };
   } else if (kpName.indexOf('解决问题') !== -1) {
@@ -6457,6 +6458,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     answer = String(answer4);
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: total4, part: first4, unit: 'cm', partLabel: String(first4), totalLabel: String(total4) }
     };
   } else {
@@ -6471,6 +6473,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     answer = String(part);
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: whole, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(whole) }
     };
   }
@@ -7430,7 +7433,7 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
   function fracGraphic(unitPx) {
     var params = { total: den, part: num, unit: 'cm', partLabel: String(num), totalLabel: String(den) };
     if (unitPx) params.unitPx = unitPx;
-    return { type: 'geometry', subtype: 'segment', params: params };
+    return { type: 'geometry', subtype: 'segment', role: 'calculation-support', params: params };
   }
 
   var data = {
@@ -8824,6 +8827,7 @@ function makeGraphicForPosition(scene, difficulty) {
   return {
     type: 'geometry',
     subtype: 'position-grid',
+    role: 'number-position',
     params: {
       gridSize: gridSize,
       unitPx: 35,
@@ -9502,6 +9506,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
       answer = '100';
       graphic = {
         type: 'geometry', subtype: 'rectangle',
+        role: 'quantity-correspondence',
         params: { width: 10, height: 10, labelSides: true, rightAngle: false, unit: 'cm', unitPx: 22 }
       };
     } else {
@@ -9512,6 +9517,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
       graphic = {
         type: 'geometry',
         subtype: 'square',
+        role: 'quantity-correspondence',
         params: { size: 3, labelSides: false, rightAngle: false, unit: 'cm', unitPx: 26 }
       };
     }
@@ -9523,6 +9529,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     answer = '厘米、米';
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: 1, part: 1, unit: 'cm', partLabel: '1', totalLabel: '1', otherLabel: '' }
     };
   } else if (kpName.indexOf('从小到大') !== -1) {
@@ -9532,6 +9539,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     answer = '毫米、厘米、分米、米、千米';
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: 1000, part: 100, unit: 'cm', partLabel: '100', totalLabel: '1000' }
     };
   } else if (kpName.indexOf('进率') !== -1) {
@@ -9541,6 +9549,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     answer = '10';
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: 10, part: 1, unit: 'cm', partLabel: '1', totalLabel: '10' }
     };
   } else {
@@ -9550,6 +9559,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     answer = '100';
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: 100, part: 30, unit: 'cm', partLabel: '30', totalLabel: '100' }
     };
   }
@@ -9689,6 +9699,7 @@ function makeGraphicForMoney(meta, difficulty) {
     return {
       type: 'calculation',
       subtype: 'rmb',
+      role: 'calculation-support',
       params: {
         operation: 'money',
         showRMB: true,
@@ -9700,6 +9711,7 @@ function makeGraphicForMoney(meta, difficulty) {
   return {
     type: 'geometry',
     subtype: 'rectangle',
+    role: 'quantity-correspondence',
     params: { width: 8, height: 3, labelSides: false, unit: 'cm', unitPx: 30 }
   };
 }
@@ -9776,7 +9788,7 @@ function createMoneyGenerator(spec) {
           }
           var op = OpSem.symbol(qd.operation);
           if (amounts && amounts.length) {
-            q.data.graphic = { type: 'currency', subtype: 'rmb', params: { amounts: amounts, op: op } };
+            q.data.graphic = { type: 'currency', subtype: 'rmb', role: 'quantity-correspondence', params: { amounts: amounts, op: op } };
           } else {
             delete q.data.graphic;
           }
@@ -10093,6 +10105,7 @@ function makeDisplacementVolumeQuestion(plan, context, i) {
   var graphic = {
     type: 'geometry',
     subtype: 'cuboid',
+    role: 'quantity-correspondence',
     params: { length: length, height: waterAfter, width: width, labelSides: true, unit: 'cm', unitPx: 22 }
   };
   return {
@@ -11503,7 +11516,7 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
   function geo(unitPx) {
     var params = { total: total, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(total) };
     if (unitPx) params.unitPx = unitPx;
-    return { type: 'geometry', subtype: 'segment', params: params };
+    return { type: 'geometry', subtype: 'segment', role: 'calculation-support', params: params };
   }
   var list = theme.items.join('、');
   var data = { mode: qt, steps: 1, questionType: qt, graphic: geo(qt === 'judge' || qt === 'apply' ? 25 : null) };
@@ -11584,6 +11597,7 @@ function makeBarSingleShape(plan, context, i, name, theme) {
   var mar = series[2]; 
   var apr = series[3];
   var graphic = { type: 'chart', subtype: 'bar',
+    role: 'data-comparison',
     params: { title: '四年级各班图书角月借阅量', yLabel: '本', data: series } };
   var data = { mode: qt, steps: 1, questionType: qt, graphic: graphic };
   var prompt, answer, explanation, mode = 'input';
@@ -11663,6 +11677,7 @@ function makeBarDoubleShape(plan, context, i, name, theme) {
   var girlMax = series.slice().sort(function (x, y) { return y.b - x.b; })[0];
   var boyMax = series.slice().sort(function (x, y) { return y.a - x.a; })[0];
   var graphic = { type: 'chart', subtype: 'bar',
+    role: 'data-comparison',
     params: { title: '五年级男女生最喜欢的运动', yLabel: '人数', data: series } };
   var data = { mode: qt, steps: 1, questionType: qt, graphic: graphic, template: 'double-bar-compare' };
   var prompt, answer, explanation, mode = 'input';
@@ -11757,6 +11772,7 @@ function makeLunchChartShape(plan, context, i, name, theme) {
   var max = series.slice().sort(function (a, b) { return b.value - a.value; })[0];
   var min = series.slice().sort(function (a, b) { return a.value - b.value; })[0];
   var graphic = { type: 'chart', subtype: 'bar',
+    role: 'data-comparison',
     params: { title: '常见菜热量（千焦）', yLabel: '千焦', data: series } };
   var data = { mode: 'apply', steps: 1, questionType: qt, graphic: graphic };
   var prompt, answer, mode = 'input';
@@ -11827,6 +11843,7 @@ function makeLineShape(plan, context, i, name, theme, isDouble, isAnalyze) {
   var hi = LINE_HIGH.slice().sort(function (x, y) { return y.value - x.value; })[0];
   var lo = LINE_HIGH.slice().sort(function (x, y) { return x.value - y.value; })[0];
   var graphic = { type: 'chart', subtype: 'line',
+    role: 'data-comparison',
     params: { title: isDouble ? '一周最高气温与最低气温' : '一周气温变化', data: series } };
   var applySteps = isDouble ? 2 : 1;
   var data = { mode: 'apply', steps: applySteps, questionType: qt, graphic: graphic };
@@ -11980,6 +11997,7 @@ function makeProbabilityInferShape(plan, context, i, name, theme) {
   if (qt !== 'apply') return makeClassifyShape(plan, context, i, name, theme);
   var red = 16, white = 4;
   var graphic = { type: 'diagram', subtype: 'brace',
+    role: 'calculation-support',
     params: { left: red, right: white, unit: '个' } };
   var data = { mode: 'apply', steps: 1, questionType: 'apply', graphic: graphic };
   var intro = name + '：盒子里装有红球和白球（每组小球表示 1 个，左组●是红球 ' + red
@@ -12148,7 +12166,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     var lcq = LC_Q[i % LC_Q.length];
     prompt = name + '：根据折线图回答：' + lcq.q;
     answer = lcq.a; steps = 1;
-    graphic = { type: 'chart', subtype: 'line', params: { title: '一周气温变化', data: series } };
+    graphic = { type: 'chart', subtype: 'line', role: 'data-comparison', params: { title: '一周气温变化', data: series } };
     if (qt === 'choice') {
       
       var lcTarget = (i % 2 === 0) ? hi : lo;
@@ -12172,7 +12190,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     var barQ = qt === 'fill' ? fillStem(bq.q) : bq.q;
     prompt = name + '：' + barLead + barQ;
     answer = bq.a; steps = 1;
-    graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
+    graphic = { type: 'chart', subtype: 'bar', role: 'data-comparison', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
 
     
     
@@ -12225,7 +12243,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     var pieAns = pie.idx < 0 ? pie.extra + '人' : pieData[pie.idx].percent + '人';
     prompt = name + '：根据扇形图，如果总人数是100人，' + pie.ask;
     answer = pieAns; steps = 2;
-    graphic = { type: 'chart', subtype: 'pie', params: { title: '最喜欢的科目', data: pieData } };
+    graphic = { type: 'chart', subtype: 'pie', role: 'data-comparison', params: { title: '最喜欢的科目', data: pieData } };
     if (qt === 'choice') {
       var pieMax = pieData.slice().sort(function (x, y) { return y.percent - x.percent; })[0];
       chOpts = Rng.shuffle(rng, SUBJECT_LABELS.slice());
@@ -12258,6 +12276,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     graphic = {
       type: 'chart',
       subtype: name.indexOf('折线') !== -1 ? 'line' : 'bar',
+      role: 'data-comparison',
       params: { title: '男生女生运动情况', yLabel: '人数', data: series }
     };
     if (qt === 'choice') {
@@ -12291,7 +12310,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     var dcMax = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
     var dcMin = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
     var dcTotal = series.reduce(function (acc, s) { return acc + s.value; }, 0);
-    graphic = { type: 'chart', subtype: 'bar', params: { title: tv.title, yLabel: tv.unit, data: series } };
+    graphic = { type: 'chart', subtype: 'bar', role: 'data-comparison', params: { title: tv.title, yLabel: tv.unit, data: series } };
     if (qt === 'choice') {
       var dcAskMax = (i % 2 === 0);
       chOpts = Rng.shuffle(rng, tv.labels.slice());
@@ -12484,7 +12503,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     else readStem = '根据统计表中的数据，' + applyStem(rq.q);
     prompt = name + '：' + readStem;
     answer = rq.a; steps = 1;
-    graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
+    graphic = { type: 'chart', subtype: 'bar', role: 'data-comparison', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
   }
 
   if (graphic) data.graphic = graphic;
@@ -12609,7 +12628,7 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     var part = Rng.randInt(rng, 5, total - 5);
     prompt = '根据线段图：总长' + total + '，其中一部分是' + part + '，求另一部分是多少？';
     answer = total - part; steps = 1;
-    graphic = { type: 'diagram', subtype: 'segment', params: { total: total, part: part, unit: '' } };
+    graphic = { type: 'diagram', subtype: 'segment', role: 'calculation-support', params: { total: total, part: part, unit: '' } };
   } else if (type === 'brace') {
     var a = Rng.randInt(rng, 5, 30);
     var b = Rng.randInt(rng, 5, 30);
@@ -12627,14 +12646,14 @@ function makePictureEquationQuestion(plan, context, i, kp) {
       prompt = '根据大括号图：左边有' + a + '个苹果，右边有' + b + '个苹果，一共有多少个？';
     }
     answer = a + b; steps = 1;
-    graphic = { type: 'diagram', subtype: 'brace', params: { left: a, right: b, unit: '个' } };
+    graphic = { type: 'diagram', subtype: 'brace', role: 'calculation-support', params: { left: a, right: b, unit: '个' } };
   } else if (type === 'balance') {
     var left = Rng.randInt(rng, 5, 20);
     var right = left;
     var unknown = Rng.randInt(rng, 2, 8);
     prompt = '天平平衡：左边有' + left + '，右边有' + unknown + ' + ?。求?的值。';
     answer = left - unknown; steps = 2;
-    graphic = { type: 'diagram', subtype: 'balance', params: { left: left, rightUnknown: unknown, unit: '' } };
+    graphic = { type: 'diagram', subtype: 'balance', role: 'calculation-support', params: { left: left, rightUnknown: unknown, unit: '' } };
   } else if (type === 'number-array') {
     prompt = name + '：请在数阵图的空位中填入1-5的数字，使每条线上三个数的和都相等。';
     answer = '（数阵解略）'; steps = 3;
@@ -12646,13 +12665,13 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     var gap = Rng.randInt(rng, 5, 15);
     prompt = name + '：线段图表示一条长' + roadLen + '米的公路，每隔' + gap + '米种一棵树（两端都栽），一共种多少棵？';
     answer = Math.floor(roadLen / gap) + 1; steps = 2;
-    graphic = { type: 'diagram', subtype: 'segment', params: { total: roadLen, part: gap, unit: '米', otherLabel: '…' } };
+    graphic = { type: 'diagram', subtype: 'segment', role: 'calculation-support', params: { total: roadLen, part: gap, unit: '米', otherLabel: '…' } };
   } else if (type === 'scale') {
     var scale = Rng.randInt(rng, 1000, 50000);
     var mapDist = Rng.randInt(rng, 2, 10);
     prompt = name + '：比例尺1:' + scale + '，地图上量得距离' + mapDist + 'cm，求实际距离（单位：km）。';
     answer = (mapDist * scale / 100000).toFixed(2); steps = 2;
-    graphic = { type: 'diagram', subtype: 'scale', params: { scale: scale, mapDist: mapDist } };
+    graphic = { type: 'diagram', subtype: 'scale', role: 'calculation-support', params: { scale: scale, mapDist: mapDist } };
   } else if (type === 'decimal-context') {
     var w = Rng.randInt(rng, 1, 9);
     var d = Rng.randInt(rng, 1, 9);
@@ -12663,7 +12682,7 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     var y = Rng.randInt(rng, 3, 20);
     prompt = name + '：根据图示信息列式并计算。';
     answer = x + y; steps = 1;
-    graphic = { type: 'diagram', subtype: 'brace', params: { left: x, right: y, unit: '' } };
+    graphic = { type: 'diagram', subtype: 'brace', role: 'calculation-support', params: { left: x, right: y, unit: '' } };
   }
 
   var data = { mode: plan.questionTypeId, steps: steps, questionType: plan.questionTypeId };

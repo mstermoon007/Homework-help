@@ -349,7 +349,7 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
   function geo(unitPx) {
     var params = { total: total, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(total) };
     if (unitPx) params.unitPx = unitPx;
-    return { type: 'geometry', subtype: 'segment', params: params };
+    return { type: 'geometry', subtype: 'segment', role: 'calculation-support', params: params };
   }
   var list = theme.items.join('、');
   var data = { mode: qt, steps: 1, questionType: qt, graphic: geo(qt === 'judge' || qt === 'apply' ? 25 : null) };
@@ -430,6 +430,7 @@ function makeBarSingleShape(plan, context, i, name, theme) {
   var mar = series[2]; // 三月 9 本
   var apr = series[3];
   var graphic = { type: 'chart', subtype: 'bar',
+    role: 'data-comparison',
     params: { title: '四年级各班图书角月借阅量', yLabel: '本', data: series } };
   var data = { mode: qt, steps: 1, questionType: qt, graphic: graphic };
   var prompt, answer, explanation, mode = 'input';
@@ -509,6 +510,7 @@ function makeBarDoubleShape(plan, context, i, name, theme) {
   var girlMax = series.slice().sort(function (x, y) { return y.b - x.b; })[0];
   var boyMax = series.slice().sort(function (x, y) { return y.a - x.a; })[0];
   var graphic = { type: 'chart', subtype: 'bar',
+    role: 'data-comparison',
     params: { title: '五年级男女生最喜欢的运动', yLabel: '人数', data: series } };
   var data = { mode: qt, steps: 1, questionType: qt, graphic: graphic, template: 'double-bar-compare' };
   var prompt, answer, explanation, mode = 'input';
@@ -603,6 +605,7 @@ function makeLunchChartShape(plan, context, i, name, theme) {
   var max = series.slice().sort(function (a, b) { return b.value - a.value; })[0];
   var min = series.slice().sort(function (a, b) { return a.value - b.value; })[0];
   var graphic = { type: 'chart', subtype: 'bar',
+    role: 'data-comparison',
     params: { title: '常见菜热量（千焦）', yLabel: '千焦', data: series } };
   var data = { mode: 'apply', steps: 1, questionType: qt, graphic: graphic };
   var prompt, answer, mode = 'input';
@@ -673,6 +676,7 @@ function makeLineShape(plan, context, i, name, theme, isDouble, isAnalyze) {
   var hi = LINE_HIGH.slice().sort(function (x, y) { return y.value - x.value; })[0];
   var lo = LINE_HIGH.slice().sort(function (x, y) { return x.value - y.value; })[0];
   var graphic = { type: 'chart', subtype: 'line',
+    role: 'data-comparison',
     params: { title: isDouble ? '一周最高气温与最低气温' : '一周气温变化', data: series } };
   var applySteps = isDouble ? 2 : 1;
   var data = { mode: 'apply', steps: applySteps, questionType: qt, graphic: graphic };
@@ -826,6 +830,7 @@ function makeProbabilityInferShape(plan, context, i, name, theme) {
   if (qt !== 'apply') return makeClassifyShape(plan, context, i, name, theme);
   var red = 16, white = 4;
   var graphic = { type: 'diagram', subtype: 'brace',
+    role: 'calculation-support',
     params: { left: red, right: white, unit: '个' } };
   var data = { mode: 'apply', steps: 1, questionType: 'apply', graphic: graphic };
   var intro = name + '：盒子里装有红球和白球（每组小球表示 1 个，左组●是红球 ' + red
@@ -994,7 +999,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     var lcq = LC_Q[i % LC_Q.length];
     prompt = name + '：根据折线图回答：' + lcq.q;
     answer = lcq.a; steps = 1;
-    graphic = { type: 'chart', subtype: 'line', params: { title: '一周气温变化', data: series } };
+    graphic = { type: 'chart', subtype: 'line', role: 'data-comparison', params: { title: '一周气温变化', data: series } };
     if (qt === 'choice') {
       // P25-09：最高/最低日选项取自 7 个数据点（标签互异⇒选项串互异），答案值约定
       var lcTarget = (i % 2 === 0) ? hi : lo;
@@ -1018,7 +1023,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     var barQ = qt === 'fill' ? fillStem(bq.q) : bq.q;
     prompt = name + '：' + barLead + barQ;
     answer = bq.a; steps = 1;
-    graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
+    graphic = { type: 'chart', subtype: 'bar', role: 'data-comparison', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
 
     // P25-07 题型形态适配：choice/judge/calc 计划下产出对应教育形态
     //（原生只产「读图问答题」，choice 无选项、judge 非布尔、calc 无算式，均不合规）。
@@ -1071,7 +1076,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     var pieAns = pie.idx < 0 ? pie.extra + '人' : pieData[pie.idx].percent + '人';
     prompt = name + '：根据扇形图，如果总人数是100人，' + pie.ask;
     answer = pieAns; steps = 2;
-    graphic = { type: 'chart', subtype: 'pie', params: { title: '最喜欢的科目', data: pieData } };
+    graphic = { type: 'chart', subtype: 'pie', role: 'data-comparison', params: { title: '最喜欢的科目', data: pieData } };
     if (qt === 'choice') {
       var pieMax = pieData.slice().sort(function (x, y) { return y.percent - x.percent; })[0];
       chOpts = Rng.shuffle(rng, SUBJECT_LABELS.slice());
@@ -1104,6 +1109,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     graphic = {
       type: 'chart',
       subtype: name.indexOf('折线') !== -1 ? 'line' : 'bar',
+      role: 'data-comparison',
       params: { title: '男生女生运动情况', yLabel: '人数', data: series }
     };
     if (qt === 'choice') {
@@ -1137,7 +1143,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     var dcMax = series.slice().sort(function (x, y) { return y.value - x.value; })[0];
     var dcMin = series.slice().sort(function (x, y) { return x.value - y.value; })[0];
     var dcTotal = series.reduce(function (acc, s) { return acc + s.value; }, 0);
-    graphic = { type: 'chart', subtype: 'bar', params: { title: tv.title, yLabel: tv.unit, data: series } };
+    graphic = { type: 'chart', subtype: 'bar', role: 'data-comparison', params: { title: tv.title, yLabel: tv.unit, data: series } };
     if (qt === 'choice') {
       var dcAskMax = (i % 2 === 0);
       chOpts = Rng.shuffle(rng, tv.labels.slice());
@@ -1330,7 +1336,7 @@ function makeStatsQuestion(plan, context, i, kp) {
     else readStem = '根据统计表中的数据，' + applyStem(rq.q);
     prompt = name + '：' + readStem;
     answer = rq.a; steps = 1;
-    graphic = { type: 'chart', subtype: 'bar', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
+    graphic = { type: 'chart', subtype: 'bar', role: 'data-comparison', params: { title: '各年级人数统计', yLabel: '人数', data: series } };
   }
 
   if (graphic) data.graphic = graphic;

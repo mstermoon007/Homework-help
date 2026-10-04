@@ -52,7 +52,7 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     var part = Rng.randInt(rng, 5, total - 5);
     prompt = '根据线段图：总长' + total + '，其中一部分是' + part + '，求另一部分是多少？';
     answer = total - part; steps = 1;
-    graphic = { type: 'diagram', subtype: 'segment', params: { total: total, part: part, unit: '' } };
+    graphic = { type: 'diagram', subtype: 'segment', role: 'calculation-support', params: { total: total, part: part, unit: '' } };
   } else if (type === 'brace') {
     var a = Rng.randInt(rng, 5, 30);
     var b = Rng.randInt(rng, 5, 30);
@@ -70,14 +70,14 @@ function makePictureEquationQuestion(plan, context, i, kp) {
       prompt = '根据大括号图：左边有' + a + '个苹果，右边有' + b + '个苹果，一共有多少个？';
     }
     answer = a + b; steps = 1;
-    graphic = { type: 'diagram', subtype: 'brace', params: { left: a, right: b, unit: '个' } };
+    graphic = { type: 'diagram', subtype: 'brace', role: 'calculation-support', params: { left: a, right: b, unit: '个' } };
   } else if (type === 'balance') {
     var left = Rng.randInt(rng, 5, 20);
     var right = left;
     var unknown = Rng.randInt(rng, 2, 8);
     prompt = '天平平衡：左边有' + left + '，右边有' + unknown + ' + ?。求?的值。';
     answer = left - unknown; steps = 2;
-    graphic = { type: 'diagram', subtype: 'balance', params: { left: left, rightUnknown: unknown, unit: '' } };
+    graphic = { type: 'diagram', subtype: 'balance', role: 'calculation-support', params: { left: left, rightUnknown: unknown, unit: '' } };
   } else if (type === 'number-array') {
     prompt = name + '：请在数阵图的空位中填入1-5的数字，使每条线上三个数的和都相等。';
     answer = '（数阵解略）'; steps = 3;
@@ -89,13 +89,13 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     var gap = Rng.randInt(rng, 5, 15);
     prompt = name + '：线段图表示一条长' + roadLen + '米的公路，每隔' + gap + '米种一棵树（两端都栽），一共种多少棵？';
     answer = Math.floor(roadLen / gap) + 1; steps = 2;
-    graphic = { type: 'diagram', subtype: 'segment', params: { total: roadLen, part: gap, unit: '米', otherLabel: '…' } };
+    graphic = { type: 'diagram', subtype: 'segment', role: 'calculation-support', params: { total: roadLen, part: gap, unit: '米', otherLabel: '…' } };
   } else if (type === 'scale') {
     var scale = Rng.randInt(rng, 1000, 50000);
     var mapDist = Rng.randInt(rng, 2, 10);
     prompt = name + '：比例尺1:' + scale + '，地图上量得距离' + mapDist + 'cm，求实际距离（单位：km）。';
     answer = (mapDist * scale / 100000).toFixed(2); steps = 2;
-    graphic = { type: 'diagram', subtype: 'scale', params: { scale: scale, mapDist: mapDist } };
+    graphic = { type: 'diagram', subtype: 'scale', role: 'calculation-support', params: { scale: scale, mapDist: mapDist } };
   } else if (type === 'decimal-context') {
     var w = Rng.randInt(rng, 1, 9);
     var d = Rng.randInt(rng, 1, 9);
@@ -106,7 +106,7 @@ function makePictureEquationQuestion(plan, context, i, kp) {
     var y = Rng.randInt(rng, 3, 20);
     prompt = name + '：根据图示信息列式并计算。';
     answer = x + y; steps = 1;
-    graphic = { type: 'diagram', subtype: 'brace', params: { left: x, right: y, unit: '' } };
+    graphic = { type: 'diagram', subtype: 'brace', role: 'calculation-support', params: { left: x, right: y, unit: '' } };
   }
 
   var data = { mode: plan.questionTypeId, steps: steps, questionType: plan.questionTypeId };

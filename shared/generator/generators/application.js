@@ -293,6 +293,7 @@ function makeDisplacementVolumeQuestion(plan, context, i) {
   var graphic = {
     type: 'geometry',
     subtype: 'cuboid',
+    role: 'quantity-correspondence',
     params: { length: length, height: waterAfter, width: width, labelSides: true, unit: 'cm', unitPx: 22 }
   };
   return {

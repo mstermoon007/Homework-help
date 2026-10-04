@@ -53,6 +53,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     answer = String(part3);
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: total3, part: part3, unit: 'cm', partLabel: String(part3), totalLabel: String(total3) }
     };
   } else if (kpName.indexOf('解决问题') !== -1) {
@@ -66,6 +67,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     answer = String(answer4);
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: total4, part: first4, unit: 'cm', partLabel: String(first4), totalLabel: String(total4) }
     };
   } else {
@@ -80,6 +82,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     answer = String(part);
     graphic = {
       type: 'geometry', subtype: 'segment',
+      role: 'quantity-correspondence',
       params: { total: whole, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(whole) }
     };
   }

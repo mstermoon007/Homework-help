@@ -29,6 +29,30 @@
 
 ## 记录（新 → 旧）
 
+### P30-22-SUPP｜segment 别名补漏：stats.js + shape.js 两处 geometry.segment 补 role（2026-10-04）
+- modified:
+  - `shared/generator/generators/stats.js`（L352 `geo()` 返回 `{type:'geometry', subtype:'segment', role:'calculation-support', ...}`；segment 是 `SVGGeometry.segment = SVGDiagram.segment` 别名，diagram 语义取 calculation-support）
+  - `shared/generator/generators/shape.js`（L511 `fracGraphic()` 返回 `{type:'geometry', subtype:'segment', role:'calculation-support', ...}`；同上 segment 别名）
+- deleted: 无
+- reason: P30-22 补漏。审计发现 1570 行全量中仍有 17 行 graphic 无显式 role（stats 12 行 + shape-recognition 5 行），根因是 `geometry.segment` 作为 diagram 别名存在，agent 按 type=geometry 规则补了 quantity-correspondence，但 segment 语义实为部分-整体线段图（calculation-support）。最小修正：2 处 role 改 calculation-support。
+- tests: 1570 行全量审计 missing role 从 17→0；`npm test` 651/651 PASS；`node dev/check-all.js` 连续 3 次 **29 PASS / 0 FAIL / 1 SKIP / 30 项**。
+- risk: ①segment 别名在 svg-geometry.js 中经 `SVGGeometry.segment = SVGDiagram.segment` 注册，descriptor 的 type='geometry' 是合法的（geometry 证据规则要求 type 恒为 geometry），role 取 calculation-support 与 diagram.brace/segment 语义对齐；②未 git commit。
+
+### P30-22｜Generator 决定图形语义：6 个 generator 的 graphic 描述符补显式 role（2026-10-04）
+- modified:
+  - `shared/generator/generators/position.js`（1 处构造点 `makeGraphicForPosition` return：`role:'number-position'`，覆盖 choice/judge/fill/geometry/apply 全部 5 个 `q.data.graphic = graphic` 赋值点及兜底 graphic2；geometry.position-grid 语义为数的位置/方向，不用 type 默认映射）
+  - `shared/generator/generators/money.js`（9 处：makeMeasurementGeometryQuestion 6 处 geometry（rectangle/square/segment×4）→ `role:'quantity-correspondence'`；makeGraphicForMoney 2 处——calculation.rmb → `role:'calculation-support'`、geometry.rectangle → `role:'quantity-correspondence'`；人民币轨 currency.rmb 1 处 → `role:'quantity-correspondence'`）
+  - `shared/generator/generators/stats.js`（11 处：10 处 chart（bar×7/line×2/pie×1，含单式/复式条形、折线、扇形、数据收集、chart-read 兜底）→ `role:'data-comparison'`；1 处 diagram.brace（可能性推测）→ `role:'calculation-support'`）
+  - `shared/generator/generators/picture-equation.js`（6 处 diagram（segment/brace/balance/segment/scale/brace）→ `role:'calculation-support'`）
+  - `shared/generator/generators/application.js`（1 处 geometry.cuboid 排水法体积 → `role:'quantity-correspondence'`）
+  - `shared/generator/generators/arithmetic.js`（3 处 geometry.segment 分数乘法 → `role:'quantity-correspondence'`）
+  - `kbl/teaching/variation-profiles.json`（§9 重派生：derive-variation-profiles.js；representation 轴补 `data.graphic.role` 路径与取值，829+/243- 行仅限 role 维度）
+  - `shared/engine/strategy-engine.bundle.js` + `presentation-engine.bundle.js`（重建，过 16/17 确定性门禁）
+- deleted: 无
+- reason: P30-22「Generator 决定图形语义，不让下游填默认」。graphic-renderer.js 已有 GRAPHIC_ROLES 枚举与 GRAPHIC_TYPE_ROLES 缺省映射（显式 graphic.role 优先），但 6 个 generator 的 31 处 graphic 构造点未显式设 role，下游只能按 type 默认填值。按 type→role 规则表（geometry/currency→quantity-correspondence，chart→data-comparison，diagram/calculation→calculation-support）补显式 role；position-grid 语义为「数的位置/方向」，显式用 number-position 而非 type 默认。role 放置位置遵循 shape.js 既有惯例（subtype 之后、params 之前）。
+- tests: 6 文件 `node -e require` 语法 OK；`node --test tests/generator/graphic-renderer.test.js p28-geometry-native-makers.test.js generator-contract.test.js generator-mode.test.js` 32/32 PASS；`tests/generator/p27-variation-profile.test.js` 9/9 PASS（重派生后）；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**（第 15 项浏览器 E2E 本地无 Chrome SKIP）。
+- risk: ①money.js makeGraphicForMoney 2 处构造点超出任务清单行号（L332-380+L608），但属同一文件 graphic 产出点且规则表显式覆盖 calculation type，不补则仍走下游默认，与任务目的冲突，故一并补上并在此留存依据；②arithmetic.js 3 处注释称「diagram.segment」但代码实为 `type:'geometry'`，按规则表以 graphic.type 为准取 quantity-correspondence；③variation-profiles.json 重派生未触碰题型/KP/难度轴，derive 报告零生成失败行；④未 git commit。
+
 ### P30-SVG-02｜线段断链修复：line-segment renderer + generator + evidence-rules（2026-10-04）
 - modified:
   - `shared/svg/svg-geometry.js`（新增 `lineSegment(o)` renderer：水平线段 + 两端端点圆点 + 可选长度标注；params: `{length(cm), labelLength, unit, unitPx}`；注册 `'line-segment': lineSegment`）

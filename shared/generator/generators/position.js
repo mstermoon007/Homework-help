@@ -216,6 +216,7 @@ function makeGraphicForPosition(scene, difficulty) {
   return {
     type: 'geometry',
     subtype: 'position-grid',
+    role: 'number-position',
     params: {
       gridSize: gridSize,
       unitPx: 35,

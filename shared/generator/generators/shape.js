@@ -508,7 +508,7 @@ function makeFractionTimesIntegerQuestion(plan, context, i, kpName) {
   function fracGraphic(unitPx) {
     var params = { total: den, part: num, unit: 'cm', partLabel: String(num), totalLabel: String(den) };
     if (unitPx) params.unitPx = unitPx;
-    return { type: 'geometry', subtype: 'segment', params: params };
+    return { type: 'geometry', subtype: 'segment', role: 'calculation-support', params: params };
   }
 
   var data = {
