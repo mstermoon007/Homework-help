@@ -29,6 +29,27 @@
 
 ## 记录（新 → 旧）
 
+### P30-25｜SVG 语义类型覆盖审计：11 类 renderer 全注册，descriptor→renderer→SVG 链 100% 通（2026-10-04）
+- modified: 无（审计确认，无代码改动）
+- deleted: 无
+- reason: P30-25「补齐 SVG 语义类型」审计。确认三点：①11 类语义类型（geometry/fraction/clock/area/calculation/make-ten/dataStats/chart/diagram/currency/draw）全部有注册 renderer（`GraphicRenderer.isSupported` 全 true）；②1570 行全量审计 549 行含图，18 个 type/subtype 组合全部 supported+rendered，零 UNSUPPORTED/FAILED；③12 个 generator 不产 graphic 属符合设计——qt-intent.json 中仅 geometry 题型有 carrier=99（必须配图），其余题型（calc/fill/choice/judge/apply/classify）无 carrier，graphicRole=auxiliary/null 属可选/不需图。
+- tests: 1570 行全量审计 549 行含图 100% rendered SUCCESS；11 类 `isSupported` 全 true；`npm test` 651/651 PASS；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**。
+- risk: ①fraction/clock/area/calculation/make-ten/dataStats/draw 7 类 renderer 已注册但当前 1570 行不产出，属「能力存在但无激活场景」，非断链；②若未来新增这些类型的 generator，renderer 可直接复用；③未 git commit。
+
+### P30-24｜SVG 只负责表现：渲染层输入审计（2026-10-04）
+- modified: 无（审计确认，无代码改动）
+- deleted: 无
+- reason: P30-24「SVG 只负责表现」审计。确认三点：①所有 svg renderer 入口函数只接收单一 graphic params 对象（`o`/`opts`），不接收 question/answer/KP/intent 上下文；②svg-make-ten.js 的 `steps.answer` 是从 `graphic.params.a + graphic.params.b` 内部计算的数学结果，非访问题目答案；③svg-registry.render(graphic, options) 派发接口只传 graphic descriptor，不透传 question 数据。
+- tests: 全量 grep 审计 shared/svg/*.js + plugins/svg-*.js + shared/presentation/svg-registry.js，无 `question`/`.answer`/`knowledgePoint`/`intent.`/`plan.`/`correctIndex` 访问（svg-make-ten 的 `steps.answer` 为内部计算字段，非题目答案访问）；`npm test` 651/651 PASS；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**。
+- risk: ①svg-make-ten 的 `steps.answer` 命名易误解，但语义是「凑十步骤的数学结果」（a+b），非「题目标准答案」，当前 suffice；②未 git commit。
+
+### P30-23｜Intent→Generator→GraphicDescriptor 语义链验证（2026-10-04）
+- modified: 无（验证链已存在，本轮仅审计确认）
+- deleted: 无
+- reason: P30-23「Generator 决定图形语义」验证链审计。确认三点：①所有 Generator 显式设 graphic.role（P30-22 完成，549 行含图 100% 覆盖）；②kp-semantic-validator 已建立 Graphic Alignment Gate——intent.graphicRole=carrier→必须含图、intent.graphicRole=null→禁止含图、graphic.role 须合法枚举（quantity-correspondence/number-position/angle-measure/fraction-part/area-measure/data-comparison/calculation-support/auxiliary）；③intent.graphicRole（carrier/auxiliary/null，表"图是否核心载体"）与 graphic.role（具体语义角色）是不同维度，不强制相等，避免过度约束。
+- tests: 1570 行全量审计——549 行含图全部显式 role；`npm test` 651/651 PASS；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**。
+- risk: ①发现 119 行 intent.graphicRole=null 但题目含图（shape-recognition 77 行、position-direction 18 行、money-measurement 10 行、stats 6 行），属 qt-intent.json（T2 数据）标注缺口——按 P30 数据铁律 AI 不手编教学语义 JSON，记录为已知债务，待人工评审或派生脚本修复；②未 git commit。
+
 ### P30-22-SUPP｜segment 别名补漏：stats.js + shape.js 两处 geometry.segment 补 role（2026-10-04）
 - modified:
   - `shared/generator/generators/stats.js`（L352 `geo()` 返回 `{type:'geometry', subtype:'segment', role:'calculation-support', ...}`；segment 是 `SVGGeometry.segment = SVGDiagram.segment` 别名，diagram 语义取 calculation-support）
