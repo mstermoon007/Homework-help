@@ -29,6 +29,13 @@
 
 ## 记录（新 → 旧）
 
+### P31-A/B/C｜M×V 全量命中审计 + 浏览器 E2E 实跑 + 测试目录 taxonomy 重排（2026-10-04）
+- modified: dev/p28/check-legacy-matrix.js（note 路径 generator→generation）；dev/p27/derive-variation-profiles.js（注释路径 generator→generation）；tests/{source,semantic,orchestration,generation,adaptive}/* 头部 doc-comment 路径同步
+- deleted: 无（目录重组为 git mv，保留历史）
+- reason: P31（P30 延续子任务）。**P31-A M×V 全量命中审计**：313 KP × 920 misconception slots 全量实测，经 KnowledgeContext 正规通道 + PracticeSession(adaptive=true, learnerProfile.knowledgePoints[kp].errorPatterns) 真实链路，920/920 slots 全匹配产出 directive（axis: representation 265/context 352/structure 210/numeric 93；variant: 呈现 134/情境 352/基础 131/结构 210/数值 93），0 未命中。此前探针 60% 空为 artifact（只测首个 ALLOW 题型，未遍历 slot.triggerPattern.questionTypes 目标题型）。**P31-B 浏览器 E2E**：CHROME_BIN=/Applications/Google Chrome.app，9 步路径（首页→快速→教师→KP→7类→生成→重生成→刷新→打印）全 PASS，打印 10 张。**P31-C 测试 taxonomy 重排**：56 个测试文件从 14 目录重组为 9 目标桶（source/semantic/orchestration/generation/validator/presentation/adaptive + fixtures/helpers），删除 bridge/difficulty/request/shape/strategy/unit/learner/generator/generator-registry 9 个历史目录；check-all 硬连线 tests/presentation/* 与 tests/validator/* 未变动无需改；dev/p28/check-legacy-matrix.js + dev/p27/derive-variation-profiles.js 中 generator→generation 路径注释同步。
+- tests: `npm test` **655 PASS / 0 FAIL**；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**（FINAL-91 只读门禁 PASS）；Browser E2E 真实 Chrome PASS；M×V 审计 920/920 命中。
+- risk: ①tests/ 头部 doc-comment 路径为注释级同步，不影响逻辑；②dev/p28/reports/*.json 历史矩阵含旧路径属冻结档案不动；③未 git commit。
+
 ### P30-39/40/41/42/43｜全量重生成 + 最终全链测试 + 真实抽样 + 最终冻结（2026-10-04）
 - modified: scripts/generate-sitemap.js（STATIC_PAGES 补 select.html：重生成暴露其遗漏，冻结 sitemap 382=6 公共页+375KP+索引，生成器是唯一 SSOT）；sitemap.xml（重生成 382 URL）；tools/kbl/validate.js（V5 DATA_FILES 补 teaching/misconception-profiles.json，与 build.js DATA_RELS / verify-kbl-runtime rels 三清单对齐——P30-31 rootHash 口径漂移修复）
 - deleted: 无（P30-42 扫描：无 /tmp、probe、audit-output、debug、snapshot、临时 JSON/CSV/图片残留）

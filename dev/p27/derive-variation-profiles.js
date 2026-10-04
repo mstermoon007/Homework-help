@@ -67,7 +67,7 @@ var done = 0;
     var samples = [];
     var err = null;
     try {
-      // P28-DEF-014：钉定行级种子（与 tests/generator/p27-variation-profile.test.js 复验种子、
+      // P28-DEF-014：钉定行级种子（与 tests/generation/p27-variation-profile.test.js 复验种子、
       // dev/p27/check-variation-drift.js 门禁种子同一约定），使取样族行（如 flat 族图形按
       // 条目种子取样）剖面为确定性观测，可复验、可比对。
       var session = new PracticeSession({ subject: 'math', grade: p.grade, count: N, knowledgePointId: p.kp, questionType: p.qt, seed: 'p27-drift|' + p.kp + '|' + p.qt });

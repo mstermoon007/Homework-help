@@ -26,7 +26,7 @@ var CANDIDATES = [
     callers: { prod: 0, test: 1, dev: 0, bundle: 1 },
     deleteCondition: '测试迁移到 fromSemanticQuestion 后可删；当前测试仍依赖',
     decision: 'KEEP',
-    note: 'tests/generator/p27-12-knowledge-practice-state.test.js 调用 fromLegacy 验证 semanticTarget 传递'
+    note: 'tests/generation/p27-12-knowledge-practice-state.test.js 调用 fromLegacy 验证 semanticTarget 传递'
   },
   // ── 4. learner-model.js: recomputeMasteryFallback ──
   {
