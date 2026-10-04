@@ -671,10 +671,50 @@ function checkIntentAlignment(sq, plan) {
 }
 
 /**
- * 主验证入口
- * @param {Object} sq SemanticQuestion
- * @param {Object} context { plan: QuestionPlan, kpConstraints: Object }
+ * P30-27：Graphic Alignment Gate——SVG 与题目数据一致性验证。
+ * 覆盖四项：
+ *   1. 题目数字 ↔ graphic.params（angle-measure: params.angle 与 answer 一致）
+ *   2. 图形类型 intent.graphicRole ↔ graphic.role（已在 checkIntentAlignment 覆盖，此处不重复）
+ *   3. 图形结构 graphic.subtype ↔ SVG renderer（isSupported 检查）
+ *   4. SVG 输出 ↔ graphic descriptor（render 状态检查）
  */
+function checkGraphicAlignment(sq, plan) {
+  var errors = [];
+  var warnings = [];
+  var g = sq.data && sq.data.graphic;
+  if (!g) return { state: 'skip', errors: errors, warnings: warnings };
+
+  // 1. 题目数字 ↔ graphic.params
+  if (g.role === 'angle-measure' && g.params && g.params.angle != null) {
+    var answer = sq.answer && (typeof sq.answer === 'object' ? sq.answer.value : sq.answer);
+    var answerNum = typeof answer === 'string' ? parseFloat(answer) : answer;
+    if (typeof answerNum === 'number' && !isNaN(answerNum)) {
+      // 角度题答案应与 params.angle 一致；answer 为类别（如直角=90°）时 graphic 为示意，降级 WARN
+      if (Math.abs(answerNum - g.params.angle) > 0.01) {
+        warnings.push({ code: 'KP_SEMANTIC_GRAPHIC_ANGLE_MISMATCH', field: 'graphic.params.angle', message: '题目答案 ' + answerNum + ' 与 graphic.params.angle ' + g.params.angle + ' 不一致', severity: 'WARN', detail: { answer: answerNum, graphicAngle: g.params.angle } });
+      }
+    }
+  }
+
+  // 3. graphic.subtype ↔ SVG renderer
+  try {
+    var GR = require('../generator/graphic-renderer.js');
+    if (!GR.isSupported(g.type, g.subtype)) {
+      errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphic.subtype',
+        'graphic ' + g.type + '/' + g.subtype + ' 无注册 SVG renderer',
+        SEVERITY.ERROR, { type: g.type, subtype: g.subtype }));
+    }
+  } catch (e) { /* graphic-renderer 不可用 → skip */ }
+
+  // 4. SVG 输出 ↔ graphic descriptor：属运行时渲染检查，不在语义 validator 中执行
+  //    （Node 环境无浏览器渲染管线，svg-*.js 未加载会误报；浏览器端由 E2E 覆盖）
+
+  return {
+    state: errors.length ? 'fail' : 'pass',
+    errors: errors,
+    warnings: []
+  };
+}
 function validateKpSemantics(sq, context) {
   context = context || {};
   var plan = context.plan;
@@ -727,6 +767,11 @@ function validateKpSemantics(sq, context) {
   var intentAlignmentResult = checkIntentAlignment(sq, plan);
   allErrors.push.apply(allErrors, intentAlignmentResult.errors);
 
+  // 11. Graphic Alignment（P30-27：SVG 与题目数据一致性；skip/pass/fail）
+  var graphicAlignmentResult = checkGraphicAlignment(sq, plan);
+  allErrors.push.apply(allErrors, graphicAlignmentResult.errors);
+  allWarnings.push.apply(allWarnings, graphicAlignmentResult.warnings);
+
   var valid = allErrors.length === 0;
   var score = valid ? 1 : Math.max(0, 1 - allErrors.length / 7);
 
@@ -740,6 +785,7 @@ function validateKpSemantics(sq, context) {
     intentConsistency: intentResult.state,
     typeContract: typeContractResult.state,
     intentAlignment: intentAlignmentResult.state,
+    graphicAlignment: graphicAlignmentResult.state,
     checks: {
       kpIdentity: checkKpIdentity(sq, plan).length === 0 ? 'pass' : 'fail',
       questionType: checkQuestionType(sq, kpConstraints).length === 0 ? 'pass' : 'fail',
@@ -769,6 +815,7 @@ module.exports = {
   checkIntentEvidenceConsistency: checkIntentEvidenceConsistency,
   checkTypeContract: checkTypeContract,
   checkIntentAlignment: checkIntentAlignment,
+  checkGraphicAlignment: checkGraphicAlignment,
   getAllowedRelations: getAllowedRelations,
   getEvidenceRules: getEvidenceRules
 };

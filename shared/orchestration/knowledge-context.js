@@ -286,6 +286,16 @@
     return K.unit(unitId) || null;
   }
 
+  /**
+   * P30-31：MisconceptionProfile 只读查询（Strategy 经本通道消费，禁直读 kbl/teaching）。
+   * 返回该 KP 的 overlay 条目 { knowledgePointId, slots: [...] }；无 slot / 未装载 → null。
+   */
+  function misconceptionsFor(knowledgeId) {
+    var K = getRuntime();
+    if (!K || typeof K.misconceptionsFor !== 'function') return null;
+    return K.misconceptionsFor(knowledgeId) || null;
+  }
+
   function stats() {
     var K = getRuntime();
     if (!K || typeof K.stats !== 'function') return null;
@@ -321,6 +331,7 @@
     poolContext: poolContext,
     selectable: selectable,
     unit: unit,
+    misconceptionsFor: misconceptionsFor,
     stats: stats
   };
 

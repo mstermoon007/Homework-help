@@ -213,7 +213,6 @@
             "shared/capability/capability-matrix.js",
             "shared/capability/capability-model.js",
             "shared/capability/capability-resolver.js",
-            "shared/capability/capability-scan-context.js",
             "shared/capability/knowledge-capability-view.js",
             "shared/capacity/capacity-inventory.js"
           ]

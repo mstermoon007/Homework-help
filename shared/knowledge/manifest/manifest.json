@@ -27,8 +27,9 @@
       "data/math/g6/knowledge-points.json": "dbe5fabf69bbd66ca3baa86dcf38c01928b6bb988aed3043f799662a3d178f86",
       "relations/math/relations.json": "d2968eab236b174825c31c7e78f3f171a545439e0eda24b9903b7f582b2687eb",
       "mappings/generation-contract/math.json": "e3fc2017b954d67b8aa61d396c96c521c0fd593f069bdbd486ed5cd4628c2136",
-      "index/index.json": "2bdd0282c8694245ab8597f09488c41ce4ce29e44811851e1ea5f5052ad517a3"
+      "index/index.json": "2bdd0282c8694245ab8597f09488c41ce4ce29e44811851e1ea5f5052ad517a3",
+      "teaching/misconception-profiles.json": "20f1e438835654e7b2399b66ff479eec2803a3df212662347fcf740f215c8d5b"
     },
-    "rootHash": "fadfcbdda0d83fbe5d4aad81a73828752138eb0fc896932cc4976bf99a020df4"
+    "rootHash": "158b74dac30524535cc851dbd712db3d835a51f55ebee5159c2024c18c092678"
   }
 }

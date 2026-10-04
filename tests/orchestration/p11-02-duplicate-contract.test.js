@@ -176,6 +176,16 @@ test('D9 重新生成尽量避开上一批（A 语义）：大空间 overlap = 0
   assert.equal(fps(t2.questions).filter((fp) => tiny1.indexOf(fp) !== -1).length, 0, '零复用');
 });
 
+test('D11 P30-35：同 KP/QT 同 seed → 指纹全等（确定性）；异 seed → 可识别变化；完全相同 → 去重剔除', async () => {
+  const a = await gen(KP_LARGE, { count: 8, seed: 'p30-35-a' });
+  const b = await gen(KP_LARGE, { count: 8, seed: 'p30-35-a' });
+  assert.deepEqual(fps(a.questions), fps(b.questions), '同 KP/QT + 同 seed → 确定性重放（指纹全等）');
+
+  const c = await gen(KP_LARGE, { count: 8, seed: 'p30-35-c' });
+  assert.equal(uniq(fps(c.questions)).length, fps(c.questions).length, '异 seed 批内仍唯一（完全相同 → 去重剔除）');
+  assert.notDeepEqual(fps(a.questions), fps(c.questions), '异 seed 同 KP/QT → 必须有可识别 variation（指纹序列不同）');
+});
+
 test('D10 最终总链：finalCount = unique(finalQuestions).length，且满足 P11-01 数量不变量', async () => {
   const r = await gen(KP_LARGE, { count: 20 });
   const list = fps(r.questions);

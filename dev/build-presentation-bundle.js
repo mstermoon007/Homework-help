@@ -57,9 +57,8 @@ function isDelegated(id) {
 }
 
 function stripComments(code) {
-  return code
-    .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/\/\/.*$/gm, '');
+  // 只删除块注释；不删除行注释（无法安全区分正则表达式/字符串内的 //）
+  return code.replace(/\/\*[\s\S]*?\*\//g, '');
 }
 
 // P28-28 + FINAL-17：GenerationCore 原位于 shared/generation/generation-core.js，

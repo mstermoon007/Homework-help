@@ -29,6 +29,69 @@
 
 ## 记录（新 → 旧）
 
+### P30-39/40/41/42/43｜全量重生成 + 最终全链测试 + 真实抽样 + 最终冻结（2026-10-04）
+- modified: scripts/generate-sitemap.js（STATIC_PAGES 补 select.html：重生成暴露其遗漏，冻结 sitemap 382=6 公共页+375KP+索引，生成器是唯一 SSOT）；sitemap.xml（重生成 382 URL）；tools/kbl/validate.js（V5 DATA_FILES 补 teaching/misconception-profiles.json，与 build.js DATA_RELS / verify-kbl-runtime rels 三清单对齐——P30-31 rootHash 口径漂移修复）
+- deleted: 无（P30-42 扫描：无 /tmp、probe、audit-output、debug、snapshot、临时 JSON/CSV/图片残留）
+- reason: P30-39 全量重生成：kbl:extract（Excel hash 8d4ebef5… 不变）→ kbl:derive（375/98/373/1570，rootHash 158b74da… 不变）→ derive-variation-profiles（失败 0）+ derive-misconceptions（920 slots）→ build:knowledge（runtime+376 页，0 写 0 剪）→ build:strategy（57 模块）→ build:presentation（25 内联）→ generate:sitemap。重跑相对现状零漂移，确定性成立。P30-40 固定顺序：verify 8/8 PASS → verify:syntax 289 文件 0 错 → verify:allow-gen 1570/1570 → verify:education 939/0 → verify:coverage → verify:golden → npm test 655/0 → check-all 29/0/1。P30-41 抽样：G1–G6 计算域 7 题型（非 ALLOW 对被能力闸门正确拒绝）+ 8 重点域（数与代数/图形几何/统计/应用题/分数/小数/百分数/低年级计算）ALLOW 对真实生成全 OK，SVG/答案/难度/KP 一致。P30-43 生成 FINAL-REPAIR-STATUS.md + FINAL-ACCEPTANCE.md（根目录，仅最终事实）。
+- tests: `npm test` **655 PASS / 0 FAIL**；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**（FINAL-91 只读门禁 PASS；15 Browser E2E 本地 SKIP 无 Chrome）；`check-sitemap-freeze` 382 URL PASS；`select-page-contract` sitemap 收录断言恢复 PASS；阶段四 §6 门禁：check-variation-entry-gate PASS、check-misconception-chain-gate PASS、check-variation-drift 硬违例 0、check-semantic-determinism-gate PASS（固定 seed 5 连跑逐字节一致）。
+- risk: ①sitemap.xml 重生成以 lastmod=mtime 刷新日期字段（URL 集合不变，冻结门禁按 URL 集校验 PASS）；②FINAL-REPAIR-STATUS.md / FINAL-ACCEPTANCE.md 在根目录、不在 FINAL-91 READONLY_PATHS 内；③未 git commit。
+
+### P30-36/37/38｜物理清理：1 生产零消费者 + 7 个一次性/探针 dev 脚本（2026-10-04）
+- modified: architecture/layers.json（CAPABILITY 文件清单移除已删条目）
+- deleted: shared/capability/capability-scan-context.js；dev/p28/final-31-warn-attribution.js；dev/p28/final-37-deepen-evidence.js；dev/p28/final-50-apply-generators.js；dev/p28/final-50-variation-probe.js；dev/p25/check-intent-dynamic.js；dev/p28/check-p28-49-full-pipeline.js；dev/test-sw-cache-upgrade.js
+- reason: P30-36 物理清理。逐一满足 §5 删除前置（生产零消费者 + 无门禁以其存在为通过条件 + 档案不动）：①capability-scan-context.js——M2-R08 全量扫描上下文，消费方 R04/R06/R07 审计脚本已在历史清理中删除，全仓（shared/dev/tests/tools/scripts/*.html，排除 archive）路径与 basename 双重检索 0 命中，check-dead-code 15 候选不含它、无门禁依赖；②final-31-warn-attribution（一次性只读归因审计，报告冻结于 dev/p28/reports/）、final-37-deepen-evidence（自声明「一次性迁移脚本」）、final-50-apply-generators（一次性批量注入器，已应用且幂等）、final-50-variation-probe（一次性三态探针）——P30-36「temporary audit / old probes」；③check-intent-dynamic——report-only 观测探针（默认 exit 0 不阻断，非门禁）；④check-p28-49-full-pipeline——P28-49 一次性闭环验证，全链路（Generate→Validate→Semantic→Render）由常设门禁 6a（1570 ALLOW 真实生成经 PracticeSession 全链）持续覆盖；⑤test-sw-cache-upgrade——SW V1→V2 一次性场景回归。保留：check-variation-entry-gate / check-misconception-chain-gate / check-cross-layer（P30 §5/§6 本阶段规定工具与门禁）、check-intent-authority / check-teaching-schema（本战役 P30-06/08 阶段门禁）、audit-generator-hardcode（零容忍静态扫描，6d 行为探测不覆盖其全生成器模式扫描面）、check-semantic-determinism-gate（§6 阶段四判据「无 learner 逐字节相等」直接检查器）。P30-38 测试重复审计：56 个测试文件头部逐一比对，无同规则重复（p17-10=classify 25 载体×5 题型权威映射 vs p17-14=7 类各 1 载体冒烟，规则不同）；测试目录 taxonomy 重排会强制改动 check-all 硬连线路径且 56 文件 churn，记为债务不执行。
+- tests: check-syntax 289 文件 0 错；check-dead-code 15 候选 PASS；check-legacy-matrix 7 候选 PASS；check-cross-layer 0 新增违规边；`npm test` **655 PASS / 0 FAIL**；check-all 见本条 risk ①。
+- risk: ①check-all 重跑中，结果以本条下方补充为准；②layers.json 为描述性架构文件（无门禁消费），docs/archive 内历史矩阵提及已删文件属冻结档案不动；③未 git commit。
+
+### P30-35｜重复题控制：同 seed 确定性重放 + 异 seed 可识别变化（D11）（2026-10-04）
+- modified: tests/orchestration/p11-02-duplicate-contract.test.js（新增 D11）
+- deleted: 无
+- reason: P30-35「重复题控制」。D11 断言：同 KP/QT + 同 seed → questionFingerprint 序列全等（确定性重放）；异 seed → 批内唯一且指纹序列必异（可识别 variation）；完全相同候选由既有去重链剔除（D5/D6 已覆盖）。
+- tests: `node --test tests/orchestration/p11-02-duplicate-contract.test.js` 全过；`npm test` 655/655。
+- risk: 低（纯测试增量）；未 git commit。
+
+### P30-31/32/33/34｜VariationDirective 经 KnowledgeContext 正规通道重接 + Misconception→Variation 实效（2026-10-04）
+- modified: tools/kbl/build.js（T2 overlay 镜像进 shared/knowledge/teaching/ + DATA_RELS）；shared/knowledge/runtime/knowledge-contract.js（PUBLIC_API +misconceptionsFor）；knowledge-loader.js（DATA_FILES + CACHE）；knowledge-query.js（misconceptionsFor 查询 + stats）；knowledge-api.js（导出）；shared/orchestration/knowledge-context.js（misconceptionsFor 包装）；shared/strategy/variation-directive.js（resolveForPlan 接受 opts.profile 注入，废弃 var overlay=null）；shared/strategy/strategy-engine.js（learner 路径经 KnowledgeContext.misconceptionsFor 注入 profile）；dev/verify-kbl-runtime.js（rels 清单 + misconceptionsFor 断言）；tests/generator/p27-variation-directive.test.js（FINAL-22 fail-open 契约重写为 P30-31 接通态契约 + 3 个端到端）；shared/knowledge/runtime/knowledge-runtime.js / shared/engine/strategy-engine.bundle.js / presentation-engine.bundle.js（重建）；kbl/manifest/manifest.json + shared/knowledge/manifest/manifest.json（rootHash 重冻）；kbl/teaching/variation-profiles.json + misconception-profiles.json（§9 重派生，修 drift 17 行 HARD-DRIFT）
+- deleted: 无（新增分发镜像 shared/knowledge/teaching/misconception-profiles.json，T3 只读副本）
+- reason: P30-31 断链修复：variation-directive.js `var overlay = null` 为 FINAL-22 移除 KBL 直读后的残留断点；按用户指令不恢复旧 require(kbl/...)，改走 Learner→AdaptiveStrategy→KnowledgeContext→MisconceptionProfile→VariationDirective→QuestionPlan→Generator 正规通道。P30-32：命中错误产出 errorType/expectedError/variant/axis/feedback/basis 六字段进 plan。P30-33 端到端证据：步骤错误触发 unknown-position 结构变式（prompt 4+39=? → ?+9=26）、审题错误触发 context 情境变式、确定性重放。P30-34：测试断言变式不突破 KP/题型/难度（Z1–Z4 不夺权）。
+- tests: p27-variation-directive.test.js 接通态契约全过；verify-kbl-runtime PASS（375/98/373/1570 守恒 + rootHash 一致 + misconceptionsFor 真实返回）；dev/p27/check-variation-drift.js PASS（0 硬违例）；`npm test` 655/655。
+- risk: ①T2→T3 新增一个镜像文件，build.js DATA_RELS 与 verify-kbl-runtime rels 双清单需同步（已同步）；②drift 门禁基线随 data.graphic.role（P30-21）重派生；③未 git commit。
+
+### P30-30｜阶段三门禁：Intent→GraphicDescriptor→SVG→Validator 全链路测试通过（2026-10-04）
+- modified: dev/build-presentation-bundle.js, shared/engine/presentation-engine.bundle.js, shared/engine/strategy-engine.bundle.js
+- deleted: 无
+- reason: P30-30「阶段三门禁」执行。全链路测试覆盖 geometry/fraction/clock/area/calculation/make-ten/dataStats/chart/diagram/currency 11 类语义类型。同步修复 bundle 构建 bug：`stripComments` 无法区分正则表达式与字符串，误将 `/.replace(/"/g, '&quot;')/` 中的 `"` 当作字符串开始，导致后续所有字符串状态错位，最终截断 `xmlns="http://www.w3.org/2000/svg"` 为 `xmlns="http:`。修复：只删除 `/* */` 块注释，不删除 `//` 行注释（无法安全区分正则/字符串内的 `//`）。
+- tests: `npm test` **651/651 PASS**；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**；浏览器渲染 E2E 本地 SKIP（无 Chrome），CI 需 CHROME_BIN。
+- risk: ①bundle 大小因保留行注释略有增加（~5-10KB，可接受）；②未 git commit。
+
+### P30-29｜SVG 重复架构审计：零重叠、零重复实现（2026-10-04）
+- modified: 无（审计确认，无代码改动）
+- deleted: 无
+- reason: P30-29「清理 SVG 重复架构」审计。确认：①`shared/svg/`（geometry/calculation/makeTen/chart/diagram/currency/core）与 `plugins/`（area/clock/competition/dataStats/draw/fraction）命名空间零重叠；②12 个 type 在 graphic-renderer GRAPHIC_RENDERERS 中各有唯一映射，无重复实现；③56 个导出函数无重复命名。
+- tests: 全量文件比对零重叠；`npm test` 651/651 PASS；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**。
+- risk: 无重复架构可删，当前职责划分清晰（Generator=图形描述 / GraphicRenderer=派发 / SVGRenderer=输出 / svg-*.js=单一实现）。
+
+### P30-28｜SVG 不得成为随机装饰：carrier/null 门禁审计（2026-10-04）
+- modified: 无（审计确认，无代码改动）
+- deleted: 无
+- reason: P30-28「SVG 不得成为随机装饰」审计。确认：①carrier→必须含图（0 违规）；②null→禁止含图（119 违规，T2 数据缺口，qt-intent.json 标注不全，已在 P30-23 记录）；③validator 已覆盖 carrier/null 检查（checkIntentAlignment）。
+- tests: 1570 行全量审计 carrier missing=0、null has graphic=119；`npm test` 651/651 PASS；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**。
+- risk: 119 行 `intent=null` 但含图属 T2 数据缺口，待人工评审或派生脚本修复，AI 不手编教学语义 JSON。
+
+### P30-27｜Graphic Alignment Gate：SVG 与题目数据一致性验证（2026-10-04）
+- modified: shared/validator/kp-semantic-validator.js, dev/build-presentation-bundle.js, shared/engine/presentation-engine.bundle.js, shared/engine/strategy-engine.bundle.js
+- deleted: 无
+- reason: P30-27「Graphic Alignment Gate」新增 `checkGraphicAlignment`：①angle-measure 时检查 `graphic.params.angle` 与 `answer` 一致性（answer 为类别如直角=90° 时降级 WARN，因 graphic 为示意）；②`graphic.subtype` 必须有注册 SVG renderer（isSupported 检查）。同步修复 bundle 构建脚本 bug：`stripComments` 的 `//` 正则误删字符串内 URL（`http://www.w3.org/2000/svg` 被截断为 `http:`），导致 presentation-engine.bundle.js 语法错误。改为 `([^:"']|^)//[^"'\n]*$` 保护字符串内 `//`。
+- tests: `math-g3-up-u07-k003`（角的度量初步）answer=90（直角）与 graphic.params.angle=60 不一致 → WARN（非 ERROR，因 graphic 为示意非度量）；`npm test` 651/651 PASS；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**。
+- risk: ①angle 一致性检查为 WARN 级，非强制约束——「角的分类」题 graphic 为示意，answer 是类别度数而非具体角度；②bundle 构建修复影响所有含 `//` 字符串的模块（svg-registry.js 的 xmlns URL 是唯一已知案例）。
+
+### P30-26｜Geometry 语义错位修复确认：角的度量全链一致（2026-10-04）
+- modified: 无（P30-SVG-01 已完成修复，本轮仅验证确认）
+- deleted: 无
+- reason: P30-26「角的度量」语义错位修复确认。验证链：Intent(graphicRole=carrier) → Generator(graphic={type:geometry, subtype:angle, role:angle-measure, params:{angle:85}}) → SVG(angle renderer 两射线+顶点+圆弧) → Validator(carrier→必须含图 ✅)。修复前断链：Intent=angle-measure 但 Generator 产 rectangle graphic、SVG 无 angle renderer；修复后（P30-SVG-01）全链语义一致。
+- tests: `math-g4-up-u02-k002` 实产 `graphic={type:geometry, subtype:angle, role:angle-measure, params:{angle:NN}}` → SVG SUCCESS；`npm test` 651/651 PASS；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**。
+- risk: 无新增风险（P30-SVG-01 已记录 angle renderer + evidence-rules 修复的风险）。
+
 ### P30-25｜SVG 语义类型覆盖审计：11 类 renderer 全注册，descriptor→renderer→SVG 链 100% 通（2026-10-04）
 - modified: 无（审计确认，无代码改动）
 - deleted: 无

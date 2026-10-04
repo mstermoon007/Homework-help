@@ -943,6 +943,12 @@ function plan(request) {
     // P27-11：Misconception→NextVariation——错因聚焦 × MisconceptionProfile
     // triggerPattern（计划期可判定谓词）→ 变式指令，传入 R18 做变体转向
     var VariationDirective = require('./variation-directive.js');
+    // P30-31：MisconceptionProfile 经 KnowledgeContext 正规通道取出（Strategy 禁直读 KBL）：
+    // Learner → AdaptiveStrategy → KnowledgeContext → MisconceptionProfile → VariationDirective
+    var KcMc = require('../orchestration/knowledge-context.js');
+    var misconceptionProfile = (KcMc && typeof KcMc.misconceptionsFor === 'function')
+      ? KcMc.misconceptionsFor(kp.id)
+      : null;
     // 运算 token 回退链：算术语义算符（精确）→ KBL 事实 operations 标签（粗粒度，
     // multiplication/division 等，与 MisconceptionProfile trigger 词汇同源）；
     // 三者皆无 → null（仅匹配无运算限定的 trigger）
@@ -952,7 +958,8 @@ function plan(request) {
       kpId: kp.id,
       errorTypes: AdaptiveStrategy.errorFocusFor(kpState, 2),
       questionTypeId: questionType,
-      operationTokens: planOperationTokens
+      operationTokens: planOperationTokens,
+      profile: misconceptionProfile
     });
     learnerDecision = AdaptiveStrategy.resolve({
       kpId: kp.id,

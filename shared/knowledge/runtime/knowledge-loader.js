@@ -40,6 +40,8 @@
   }
   var read = (typeof module !== 'undefined' && module.exports) ? readNode : readBrowser;
 
+  // P30-31：+ teaching/misconception-profiles.json（T2 教学语义 overlay 镜像，
+  // 完整性同样纳入 manifest.integrity 校验；消费口 = Query.misconceptionsFor）
   var DATA_FILES = [
     'data/math/curriculum.json',
     'data/math/g1/knowledge-points.json',
@@ -51,6 +53,7 @@
     'relations/math/relations.json',
     'mappings/generation-contract/math.json',
     'index/index.json',
+    'teaching/misconception-profiles.json',
     'manifest/manifest.json'
   ];
 
@@ -91,6 +94,7 @@
         relations: data['relations/math/relations.json'].relations,
         mappingDoc: data['mappings/generation-contract/math.json'],
         index: data['index/index.json'],
+        misconceptions: data['teaching/misconception-profiles.json'],
         manifest: manifest,
         rootHash: manifest.integrity.rootHash
       };

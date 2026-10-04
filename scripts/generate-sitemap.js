@@ -17,6 +17,7 @@ const STATIC_PAGES = [
   'index.html',
   'math-types.html',
   'subject-types.html',
+  'select.html',
   'practice.html',
   'faq.html'
 ];

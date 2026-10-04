@@ -41,9 +41,11 @@
   var PUBLICATIONS = ['published', 'draft'];
 
   // 唯一公开入口的方法白名单（Runtime 除白名单外不得向页面/引擎暴露其他方法）
+  // P30-31：+ misconceptionsFor（T2 MisconceptionProfile overlay 只读分发，供 KnowledgeContext→Strategy 消费）
   var PUBLIC_API = Object.freeze([
     'get', 'byGrade', 'byBook', 'byUnit', 'selectable',
-    'canGenerate', 'searchByName', 'unit', 'relationsFor', 'stats'
+    'canGenerate', 'searchByName', 'unit', 'relationsFor', 'stats',
+    'misconceptionsFor'
   ].sort());
 
   function isKnowledgeId(id) { return typeof id === 'string' && ID_REGEX.test(id); }
@@ -111,6 +113,8 @@
   }
   var read = (typeof module !== 'undefined' && module.exports) ? readNode : readBrowser;
 
+  // P30-31：+ teaching/misconception-profiles.json（T2 教学语义 overlay 镜像，
+  // 完整性同样纳入 manifest.integrity 校验；消费口 = Query.misconceptionsFor）
   var DATA_FILES = [
     'data/math/curriculum.json',
     'data/math/g1/knowledge-points.json',
@@ -122,6 +126,7 @@
     'relations/math/relations.json',
     'mappings/generation-contract/math.json',
     'index/index.json',
+    'teaching/misconception-profiles.json',
     'manifest/manifest.json'
   ];
 
@@ -162,6 +167,7 @@
         relations: data['relations/math/relations.json'].relations,
         mappingDoc: data['mappings/generation-contract/math.json'],
         index: data['index/index.json'],
+        misconceptions: data['teaching/misconception-profiles.json'],
         manifest: manifest,
         rootHash: manifest.integrity.rootHash
       };
@@ -499,6 +505,13 @@
     return { unitId: u.unitId, grade: u.grade, book: u.book, unitNo: u.unitNo, unitName: u.unitName, unitType: u.unitType, status: u.status, knowledgePointCount: kps.length, knowledgePoints: kps.map(function (k) { return k.knowledgeId; }) };
   }
 
+  // P30-31：MisconceptionProfile 只读查询（供 Strategy 经 KnowledgeContext 消费）
+  function misconceptionsFor(kpId) {
+    var c = load();
+    if (!c.misconceptions || !c.misconceptions.kps) return null;
+    return c.misconceptions.kps[kpId] || null;
+  }
+
   function stats() {
     var c = load();
     var byGrade = {}; var byBook = {};
@@ -506,6 +519,7 @@
       byGrade[k.grade] = (byGrade[k.grade] || 0) + 1;
       byBook[k.grade + '-' + k.book] = (byBook[k.grade + '-' + k.book] || 0) + 1;
     });
+    var m = c.misconceptions && c.misconceptions.counts ? c.misconceptions.counts : null;
     return {
       knowledgePoints: c.ksps.length,
       units: c.curriculum.units.length,
@@ -515,7 +529,8 @@
       byGrade: byGrade,
       byBook: byBook,
       rootHash: c.rootHash,
-      schemaVersion: c.manifest.schemaVersion
+      schemaVersion: c.manifest.schemaVersion,
+      misconceptions: m ? { slots: m.slots, kpsWithSlots: m.kpsWithSlots } : null
     };
   }
 
@@ -527,6 +542,7 @@
     selectable: selectable,
     searchByName: searchByName,
     unit: unit,
+    misconceptionsFor: misconceptionsFor,
     stats: stats
   };
 
@@ -583,6 +599,7 @@
     searchByName: Query.searchByName,
     unit: Query.unit,
     relationsFor: function (id) { return Relation.relationsFor(id); },
+    misconceptionsFor: Query.misconceptionsFor,
     stats: Query.stats
   };
 

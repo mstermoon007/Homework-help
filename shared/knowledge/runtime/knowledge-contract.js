@@ -26,9 +26,11 @@
   var PUBLICATIONS = ['published', 'draft'];
 
   // 唯一公开入口的方法白名单（Runtime 除白名单外不得向页面/引擎暴露其他方法）
+  // P30-31：+ misconceptionsFor（T2 MisconceptionProfile overlay 只读分发，供 KnowledgeContext→Strategy 消费）
   var PUBLIC_API = Object.freeze([
     'get', 'byGrade', 'byBook', 'byUnit', 'selectable',
-    'canGenerate', 'searchByName', 'unit', 'relationsFor', 'stats'
+    'canGenerate', 'searchByName', 'unit', 'relationsFor', 'stats',
+    'misconceptionsFor'
   ].sort());
 
   function isKnowledgeId(id) { return typeof id === 'string' && ID_REGEX.test(id); }

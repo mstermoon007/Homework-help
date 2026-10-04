@@ -9,6 +9,7 @@
  *   relations/math/relations.json
  *   mappings/generation-contract/math.json
  *   index/index.json
+ *   teaching/misconception-profiles.json（P30-31：T2 教学语义经 Runtime 公开 API 分发）
  *   manifest/manifest.json
  *
  * 幂等：无变更时产物与哈希不变。rootHash 同时回填 kbl/manifest/manifest.json。
@@ -37,6 +38,9 @@ var grades = {};
 });
 var relations = readJson(path.join(SRC, 'relations/math/relations.json'));
 var mappings = readJson(path.join(SRC, 'mappings/generation-contract/math.json'));
+// P30-31：MisconceptionProfile overlay（T2，dev/p27/derive-misconceptions.js 派生）镜像进运行时，
+// 供 KBL Runtime 公开 API misconceptionsFor 分发（Strategy 禁直读 kbl/，经 KnowledgeContext 消费）。
+var misconceptions = readJson(path.join(SRC, 'teaching/misconception-profiles.json'));
 
 // ---- 2. Strip 迁移期溯源字段（distribution = runtime 数据，仅 canonical 字段） ----
 // 注意：顶层 generatedAt 也须剥离 —— 否则每次 normalize 会刷新时间戳，导致 rootHash 随重建漂移，
@@ -68,12 +72,15 @@ emit('mappings/generation-contract/math.json', JSON.stringify(mappings));
 var index = readJson(path.join(SRC, 'index/index.json'));
 emit('index/index.json', JSON.stringify(index));
 
+// teaching overlay 原样镜像（derived 产物已带 schema/counts 溯源，不剥离字段）
+emit('teaching/misconception-profiles.json', JSON.stringify(misconceptions));
+
 // ---- 4. Manifest + rootHash（数据文件序: path:hash） ----
 // P28-05/P30-03 确定性：manifest 禁止 wall-clock 字段（buildAt/日期 packageVersion），
 // 否则每次重建都脏 tracked 文件。packageVersion 继承 kbl/manifest 源清单（稳定），时间溯源在源清单。
 var srcManifestForBuild = readJson(path.join(SRC, 'manifest/manifest.json'));
 var kpCount = Object.keys(grades).reduce(function (n, g) { return n + grades[g].knowledgePoints.length; }, 0);
-var DATA_RELS = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json'];
+var DATA_RELS = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json'];
 var rootInput = DATA_RELS.map(function (rel) { return rel + ':' + files[rel] + '\n'; }).join('');
 var rootHash = sha(rootInput);
 var manifest = {

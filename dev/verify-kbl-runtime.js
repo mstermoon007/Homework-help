@@ -42,7 +42,8 @@ assert('单元 98 / 关系 373 / 映射 1570', s.units === 98 && s.relations ===
 assert('permission 全 allow(canonical: 1570 allow)', s.permissions.allow === 1570 && s.permissions.forbid === 0 && s.permissions.degrade === 0 && s.permissions.missing === 0);
 
 const manifest = require(path.join(ROOT, 'shared/knowledge/manifest/manifest.json'));
-const rels = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json'];
+// P30-31：与 tools/kbl/build.js DATA_RELS 保持一致（含 teaching/misconception-profiles.json）
+const rels = ['data/math/curriculum.json', 'data/math/g1/knowledge-points.json', 'data/math/g2/knowledge-points.json', 'data/math/g3/knowledge-points.json', 'data/math/g4/knowledge-points.json', 'data/math/g5/knowledge-points.json', 'data/math/g6/knowledge-points.json', 'relations/math/relations.json', 'mappings/generation-contract/math.json', 'index/index.json', 'teaching/misconception-profiles.json'];
 const rootInput = rels.map(r => {
   const b = fs.readFileSync(path.join(ROOT, 'shared/knowledge', r));
   return r + ':' + crypto.createHash('sha256').update(b).digest('hex') + '\n';
@@ -72,6 +73,12 @@ assert('byUnit 凑十单元 × 3', K.byUnit('math-g1-up-u05').length === 3);
 assert('unit() 元数据', K.unit('math-g1-up-u05').knowledgePointCount === 3 && K.unit('math-g1-up-u05').unitName === '20以内的进位加法');
 const selG1 = K.selectable({ grade: 'g1' });
 assert('selectable(g1) 全部可生成', selG1.every(k => Policy.isSelectable(k)) && selG1.length <= 39);
+
+// ---- 3b. MisconceptionProfile 分发（P30-31：T2 overlay 经 Runtime 公开 API 只读分发）----
+const mcOverlay = K.misconceptionsFor('math-g2-up-u07-k001');
+assert('misconceptionsFor(7~9乘除法) 返回 slots', mcOverlay && Array.isArray(mcOverlay.slots) && mcOverlay.slots.length > 0);
+assert('misconceptionsFor(未知 KP) = null', K.misconceptionsFor('math-g0-up-u01-k001') === null);
+assert('stats 携带 misconceptions 计数', s.misconceptions && s.misconceptions.slots > 0);
 
 // ---- 4. 权限裁决 ----
 // canonical：全部映射 allow；无映射类型（essay）→ missing；未知 KP → unknown

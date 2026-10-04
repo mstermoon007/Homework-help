@@ -939,6 +939,12 @@ function plan(request) {
     var VariationDirective = require("shared/strategy/variation-directive.js");
     
     
+    var KcMc = require("shared/orchestration/knowledge-context.js");
+    var misconceptionProfile = (KcMc && typeof KcMc.misconceptionsFor === 'function')
+      ? KcMc.misconceptionsFor(kp.id)
+      : null;
+    
+    
     
     var planOperationTokens = (arithSem && arithSem.operators) || (complexSem && complexSem.operators) ||
       (Array.isArray(kp.operations) && kp.operations.length ? kp.operations : null);
@@ -946,7 +952,8 @@ function plan(request) {
       kpId: kp.id,
       errorTypes: AdaptiveStrategy.errorFocusFor(kpState, 2),
       questionTypeId: questionType,
-      operationTokens: planOperationTokens
+      operationTokens: planOperationTokens,
+      profile: misconceptionProfile
     });
     learnerDecision = AdaptiveStrategy.resolve({
       kpId: kp.id,
@@ -4657,11 +4664,10 @@ __defs["shared/strategy/variation-directive.js"] = function (module, exports, re
 
   
   function resolveForPlan(opts) {
-    var overlay = null; 
-    if (!overlay || !opts || !opts.kpId) return [];
-    if (!Array.isArray(opts.errorTypes) || !opts.errorTypes.length) return [];
-    var entry = overlay.kps[opts.kpId];
+    if (!opts || !opts.kpId) return [];
+    var entry = opts.profile || null; 
     if (!entry || !Array.isArray(entry.slots)) return [];
+    if (!Array.isArray(opts.errorTypes) || !opts.errorTypes.length) return [];
     var focus = {};
     opts.errorTypes.forEach(function (t) { if (typeof t === 'string') focus[t] = true; });
     var planOps = normalizeOps(opts.operationTokens);

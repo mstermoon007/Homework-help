@@ -10,11 +10,12 @@
  *     → Generator 通用消费（axis='numeric' → 数值低位巩固，见 arithmetic.js）
  *
  * 数据源：kbl/teaching/misconception-profiles.json（P27-10 overlay）。
- * 加载方式（有意为之，同 kp-semantic-validator.js evidence-rules 先例）：
- *   require 路径用字符串拼接计算，打包器静态正则不会把 kbl/ 数据内联进 bundle
- *   （check-kbl-uniqueness 门禁）。Node 直载正常读取；浏览器运行时 __req 未注册
- *   该 id，抛错被捕获 → overlay=null → 指令为空（fail-open，行为与现状一致；
- *   易错点门禁的完整链路由 Node 测试与 dev 门禁覆盖）。
+ * 加载方式（P30-31 正规通道重建）：
+ *   Strategy 禁直读 kbl/（FINAL-22 红线）。overlay 经运行时镜像
+ *   shared/knowledge/teaching/misconception-profiles.json → KBL Runtime 公开 API
+ *   misconceptionsFor → KnowledgeContext.misconceptionsFor → strategy-engine 按 KP
+ *   取出条目注入本模块 opts.profile。本模块保持纯解析：不读文件、不读全局、不缓存数据。
+ *   profile 缺失/无 slots → 空指令（数据缺失如实返回空，非兜底伪造）。
  *
  * 红线：纯解析；不改 Learner 状态、不选生成器、不做 KP ID 分支——一切命中
  * 都来自 overlay 数据（P27-10 机械派生，每 slot 带 basis 引文）。
@@ -32,8 +33,8 @@
   // P28-19 五段链段名（供门禁与溯源消费；不承载逻辑，仅声明链面）
   var CHAIN_SEGMENTS = ['Misconception', 'Trigger', 'QuestionVariation', 'ExpectedError', 'Feedback'];
 
-  // FINAL-22：misconception-profiles.json 直读 KBL 已移除（Strategy 禁直读 KBL，须经 KnowledgeContext）。
-  // 实测 1570 冻结 mapping 全量 0 命中；自适应变式指令待经 KnowledgeContext 正规通道另行重建。
+  // P30-31：overlay 经 KnowledgeContext 正规通道注入（见 opts.profile）；
+  // 本模块无数据源读取（FINAL-22 直读 KBL 已移除，P30-31 以注入方式重建消费链）。
 
   // 运算形态归一（计划期 token：符号 / 标签 / KBL 运算名 → {add,sub,mult,div} 标签集）
   var OP_NORM = {
@@ -57,19 +58,20 @@
   /**
    * 计划期变式指令解析（Misconception→NextVariation 唯一入口）。
    * @param {Object} opts {
-   *   kpId            : string   （KP，overlay 键）
+   *   kpId            : string   （KP，溯源/日志用）
    *   errorTypes      : string[] （错因聚焦，来自 adaptive errorFocus / learner getErrors）
    *   questionTypeId  : string   （canonical 题型）
    *   operationTokens?: string[]|string（计划运算 token，符号/标签混排均可）
+   *   profile         : Object|null（P30-31：KnowledgeContext.misconceptionsFor(kpId)
+   *                     返回的该 KP overlay 条目 { knowledgePointId, slots }，注入消费）
    * }
-   * @returns {Array<{errorType:string, variant:string, axis:string, basis:string}>}
+   * @returns {Array<{errorType:string, expectedError:string, variant:string, axis:string, feedback:string, basis:string}>}
    */
   function resolveForPlan(opts) {
-    var overlay = null; // FINAL-22：KBL teaching 直读已移除
-    if (!overlay || !opts || !opts.kpId) return [];
-    if (!Array.isArray(opts.errorTypes) || !opts.errorTypes.length) return [];
-    var entry = overlay.kps[opts.kpId];
+    if (!opts || !opts.kpId) return [];
+    var entry = opts.profile || null; // P30-31：数据经 KnowledgeContext 注入（Strategy 禁直读 KBL）
     if (!entry || !Array.isArray(entry.slots)) return [];
+    if (!Array.isArray(opts.errorTypes) || !opts.errorTypes.length) return [];
     var focus = {};
     opts.errorTypes.forEach(function (t) { if (typeof t === 'string') focus[t] = true; });
     var planOps = normalizeOps(opts.operationTokens);

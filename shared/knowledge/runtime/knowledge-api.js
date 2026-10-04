@@ -46,6 +46,7 @@
     searchByName: Query.searchByName,
     unit: Query.unit,
     relationsFor: function (id) { return Relation.relationsFor(id); },
+    misconceptionsFor: Query.misconceptionsFor,
     stats: Query.stats
   };
 

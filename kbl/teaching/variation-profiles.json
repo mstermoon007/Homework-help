@@ -8464,6 +8464,7 @@
             "data.graphic.params.total",
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -8482,6 +8483,9 @@
             ],
             "data.graphic.params.unit": [
               "\"cm\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -8536,6 +8540,7 @@
             "data.graphic.params.total",
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -8554,6 +8559,9 @@
             ],
             "data.graphic.params.unit": [
               "\"cm\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -8610,6 +8618,7 @@
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
             "data.graphic.params.unitPx",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -8631,6 +8640,9 @@
             ],
             "data.graphic.params.unitPx": [
               "25"
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -8734,6 +8746,7 @@
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
             "data.graphic.params.unitPx",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -8755,6 +8768,9 @@
             ],
             "data.graphic.params.unitPx": [
               "25"
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -8812,6 +8828,7 @@
             "data.graphic.params.total",
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -8830,6 +8847,9 @@
             ],
             "data.graphic.params.unit": [
               "\"cm\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -8884,6 +8904,7 @@
             "data.graphic.params.total",
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -8902,6 +8923,9 @@
             ],
             "data.graphic.params.unit": [
               "\"cm\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -8958,6 +8982,7 @@
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
             "data.graphic.params.unitPx",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -8979,6 +9004,9 @@
             ],
             "data.graphic.params.unitPx": [
               "25"
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -9082,6 +9110,7 @@
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
             "data.graphic.params.unitPx",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -9103,6 +9132,9 @@
             ],
             "data.graphic.params.unitPx": [
               "25"
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -19286,6 +19318,7 @@
             "data.graphic.params.total",
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -19304,6 +19337,9 @@
             ],
             "data.graphic.params.unit": [
               "\"cm\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -19358,6 +19394,7 @@
             "data.graphic.params.total",
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -19376,6 +19413,9 @@
             ],
             "data.graphic.params.unit": [
               "\"cm\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -19432,6 +19472,7 @@
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
             "data.graphic.params.unitPx",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -19453,6 +19494,9 @@
             ],
             "data.graphic.params.unitPx": [
               "25"
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -19556,6 +19600,7 @@
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
             "data.graphic.params.unitPx",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -19577,6 +19622,9 @@
             ],
             "data.graphic.params.unitPx": [
               "25"
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -72143,6 +72191,7 @@
             "data.graphic.params.total",
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -72161,6 +72210,9 @@
             ],
             "data.graphic.params.unit": [
               "\"cm\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -72216,6 +72268,7 @@
             "data.graphic.params.total",
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -72234,6 +72287,9 @@
             ],
             "data.graphic.params.unit": [
               "\"cm\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -72290,6 +72346,7 @@
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
             "data.graphic.params.unitPx",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -72323,6 +72380,9 @@
             ],
             "data.graphic.params.unitPx": [
               "25"
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -72381,6 +72441,7 @@
             "data.graphic.params.total",
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -72405,6 +72466,9 @@
             ],
             "data.graphic.params.unit": [
               "\"cm\""
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
@@ -72460,6 +72524,7 @@
             "data.graphic.params.totalLabel",
             "data.graphic.params.unit",
             "data.graphic.params.unitPx",
+            "data.graphic.role",
             "data.graphic.subtype",
             "data.graphic.type"
           ],
@@ -72491,6 +72556,9 @@
             ],
             "data.graphic.params.unitPx": [
               "25"
+            ],
+            "data.graphic.role": [
+              "\"calculation-support\""
             ],
             "data.graphic.subtype": [
               "\"segment\""
