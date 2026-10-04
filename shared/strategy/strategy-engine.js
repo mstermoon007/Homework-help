@@ -967,8 +967,6 @@ function plan(request) {
       staticDifficulty: staticProfile.level,
       difficulty: request.difficulty != null ? request.difficulty : null,
       allowDifficultyOverride: request.allowDifficultyOverride,
-      adaptiveMode: request.adaptiveMode,
-      adaptiveDelta: difficulty.adaptiveDelta,
       maxSpiralLevel: maxSpiral,
       misconceptionDirectives: misconceptionDirectives
     });

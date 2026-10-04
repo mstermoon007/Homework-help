@@ -14,7 +14,7 @@
 |---|---|---|---|
 | 1 | KnowledgePracticeState | `shared/learner/learner-model.js`（逐 KP `KpState`） | 逐知识点学习状态：mastery(EMA)/confidence/attempts/correct/incorrect/accuracy/recentAccuracy/recentResults、errorPatterns、exposureCount/lastPracticedAt、recommendedDifficulty/recommendedSpiralLevel、questionTypeStats、semanticTargetStats、recentErrors、misconceptionStats。纯数据与更新规则，不触碰 Storage、不持有策略 |
 | 2 | ErrorModel | `shared/learner/error-model.js` | 错因 SSOT：固定 8 类 + `other`；只采信 Validator/SemanticQuestion 提供的 errorType，无可靠错因一律 null（不伪造诊断） |
-| 3 | PracticeResult | `shared/learner/practice-result.js` | 练习结果标准对象与三入口工厂（fromSemanticQuestion / fromLegacy / create）；`knowledgePointId` 必须来自 SemanticQuestion |
+| 3 | PracticeResult | `shared/learner/practice-result.js` | 练习结果标准对象与入口工厂（fromSemanticQuestion / create）；`knowledgePointId` 必须来自 SemanticQuestion |
 | 4 | ResultCollector | `shared/learner/result-collector.js` | 统一「批改结果 → PracticeResult → LearnerModel.update」批量链路 |
 | 5 | LearnerStorage | `shared/learner/learner-storage.js` | 持久化：复用 StorageManager，`'hw-help-state'.learnerState`；损坏→默认态、Storage 不可用→内存降级 |
 

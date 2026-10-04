@@ -33,7 +33,7 @@
     'subject', 'grade', 'difficulty', 'selectLevel', 'style', 'expectedAnswerStyle',
     'subtype', 'cognitiveLevel', 'spiralLevel', 'max_spiral_level',
     'customParams', 'settings', 'allowDifficultyOverride',
-    'adaptive', 'adaptiveMode', 'adaptiveDelta', 'learnerProfile'
+    'adaptive', 'adaptiveDelta', 'learnerProfile'
   ];
   // 规划级字段（不属于 cell）：combine / planLevel / typeCounts / perTypeCount / count（父级总预算）
   var PLANNING_CONTEXT_FIELDS = ['combine', 'planLevel', 'typeCounts', 'perTypeCount', 'count'];

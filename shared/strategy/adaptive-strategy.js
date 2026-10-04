@@ -1,10 +1,10 @@
 /**
- * shared/strategy/adaptive-strategy.js — M6-R12..R18 / R22 自适应策略
+ * shared/strategy/adaptive-strategy.js — M6-R12..R18 自适应策略
  *
- * 输入：{ knowledgePoint, staticDifficulty, learnerState, difficulty, allowDifficultyOverride, adaptiveMode, legacyDelta }
+ * 输入：{ knowledgePoint, staticDifficulty, learnerState, difficulty, allowDifficultyOverride }
  * 输出：{
  *   effectiveDifficulty, targetSpiralLevel, cognitiveLevel, variant, errorFocus,
- *   adjustment, mastery, confidence, recentAccuracy, mode, shadow?
+ *   adjustment, mastery, confidence, recentAccuracy, mode
  * }
  *
  * 规则：
@@ -14,7 +14,6 @@
  *   - R16 mastery+confidence+recentAccuracy → spiralLevel
  *   - R17 errorPatterns → errorFocus（Generator 接收）
  *   - R18 变体选择（基础/数值/呈现/情境/结构/迁移）
- *   - R22 新旧自适应对照（legacy / new / shadow）
  */
 'use strict';
 
@@ -150,8 +149,6 @@ function cognitiveFor(mastery) {
  *   staticDifficulty,              // 知识点固有难度
  *   difficulty,                    // 用户显式难度（可选）
  *   allowDifficultyOverride,       // 是否允许用户难度覆盖
- *   adaptiveMode,                  // 'legacy' | 'new' | 'shadow'
- *   legacyDelta,                   // 旧 currentDelta（供 legacy/shadow）
  *   maxSpiralLevel,
  *   cognitiveLevel                 // 引擎已选认知层级（可选，用于输出）
  * }
@@ -171,9 +168,7 @@ function resolve(opts) {
   var confidence = kp.confidence;
   var recentAccuracy = kp.recentAccuracy;
   var attempts = kp.attempts;
-  var mode = opts.adaptiveMode === 'legacy' || opts.adaptiveMode === 'shadow' ? opts.adaptiveMode
-    : (attempts > 0 ? 'new' : 'new'); // 无证据也走 new（adjustment=0），保证接管
-  var legacyDelta = clampAdj(safeNumber(opts.legacyDelta, 0));
+  var mode = 'new'; // 唯一模式（P31 D3a：legacy/shadow 对照分支已物理删除——归一化只产布尔，字符串模式不可达）
 
   // ---- 学习者调整量 ----
   var adj = 0;
@@ -187,20 +182,7 @@ function resolve(opts) {
   adj = clampAdj(adj);
 
   var learnerEffective = clampDiff(base + adj);
-
-  // ---- shadow / legacy 对照（R22）----
-  var legacyEffective = clampDiff(base + legacyDelta);
-  var shadow = null;
-  if (mode === 'shadow') {
-    shadow = {
-      legacyDelta: legacyDelta,
-      learnerAdjustment: adj,
-      legacyEffective: legacyEffective,
-      learnerEffective: learnerEffective
-    };
-  }
-
-  var effectiveDifficulty = (mode === 'legacy' || mode === 'shadow') ? legacyEffective : learnerEffective;
+  var effectiveDifficulty = learnerEffective;
 
   // ---- spiral / variant / errorFocus / cognitive ----
   var focus = errorFocusFor(kp, 2);
@@ -225,7 +207,6 @@ function resolve(opts) {
     attempts: attempts,
     mode: mode,
     baseDifficulty: base,
-    shadow: shadow,
     recommendedDifficulty: learnerEffective,
     recommendedSpiralLevel: targetSpiral
   };

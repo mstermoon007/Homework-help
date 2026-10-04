@@ -18,16 +18,6 @@ var fs = require('fs');
 var ROOT = path.resolve(__dirname, '..', '..');
 
 var CANDIDATES = [
-  // ── 1. practice-result.js: fromLegacy ──
-  {
-    file: 'shared/learner/practice-result.js',
-    symbol: 'fromLegacy()',
-    reason: '从旧格式 question 对象构造 PracticeResult（pre-SemanticQuestion 时代）',
-    callers: { prod: 0, test: 1, dev: 0, bundle: 1 },
-    deleteCondition: '测试迁移到 fromSemanticQuestion 后可删；当前测试仍依赖',
-    decision: 'KEEP',
-    note: 'tests/generation/p27-12-knowledge-practice-state.test.js 调用 fromLegacy 验证 semanticTarget 传递'
-  },
   // ── 4. learner-model.js: recomputeMasteryFallback ──
   {
     file: 'shared/learner/learner-model.js',
@@ -37,16 +27,6 @@ var CANDIDATES = [
     deleteCondition: 'KBL 数据全部补齐 mastery 字段后可删；当前为生产安全网',
     decision: 'KEEP',
     note: '内部调用（line 127）：data.mastery 缺失时 fallback 重算。生产路径安全网'
-  },
-  // ── 5. adaptive-strategy.js: legacyDelta / legacyEffective ──
-  {
-    file: 'shared/strategy/adaptive-strategy.js',
-    symbol: 'legacyDelta + legacyEffective',
-    reason: 'legacy/shadow 自适应模式下使用旧 delta 计算 effectiveDifficulty',
-    callers: { prod: 1, test: 1, dev: 0, bundle: 1 },
-    deleteCondition: 'adaptiveMode 不再支持 legacy/shadow 模式后可删；当前为活跃模式之一',
-    decision: 'KEEP',
-    note: '生产路径：mode==="legacy"||"shadow" 时 effectiveDifficulty=legacyEffective；测试：adaptive-strategy.test.js'
   },
   // ── 7. question-type-registry.js: LEGACY_DISPLAY_NAMES ──
   {

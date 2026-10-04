@@ -130,7 +130,7 @@
   /**
    * 组装统一 PracticeRequest（所有页面出口的唯一结构）。
    * @param {Object} opts { mode, subject, grade, book, moduleId, unit, knowledgePoints,
-   *                        tags, questionTypes, count, difficulty, adaptiveMode, adaptiveDelta }
+   *                        tags, questionTypes, count, difficulty, adaptiveDelta }
    * @returns {Object} PracticeRequest
    */
   function createPracticeRequest(opts) {
@@ -155,7 +155,6 @@
       count: Number(opts.count) > 0 ? Number(opts.count) : 20,
       difficulty: normalizeDifficulty(opts.difficulty),
       difficultyParam: normalizeDifficultyParam(opts.difficulty),
-      adaptiveMode: !!opts.adaptiveMode,
       adaptiveDelta: Number(opts.adaptiveDelta) || 0
     };
   }

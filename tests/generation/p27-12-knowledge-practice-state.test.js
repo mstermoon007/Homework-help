@@ -14,7 +14,7 @@
  *   5. misconceptionStats 由 errorPatterns 经 ErrorModel.getErrorFocus 派生（只读视图，不另存 SSOT）；
  *      与 AdaptiveStrategy.errorFocusFor 同源。
  *   6. normalizeLearnerState 自愈：旧数据无新字段 → 默认空对象/数组；损坏字段 → sanitize。
- *   7. PracticeResult.fromSemanticQuestion / fromLegacy / create 携带 semanticTarget。
+ *   7. PracticeResult.fromSemanticQuestion / create 携带 semanticTarget。
  *   8. 红线：mastery/confidence/recommended* 仍是唯一评分入口；新增字段不参与评分。
  *
  * 红线（任务书 P25-12）：不改 Difficulty Core；不建第二套评分系统；只提供学习状态数据。
@@ -239,18 +239,9 @@ test('P27-12 #9 PracticeResult.fromSemanticQuestion 携带 semanticTarget', () =
   assert.strictEqual(pr3.semanticTarget, null);
 });
 
-test('P27-12 #9b PracticeResult.fromLegacy 与 create 携带 semanticTarget', () => {
-  const q = { id: 'q1', questionType: 'calc', semanticTarget: '计量单位' };
-  const pr = PracticeResult.fromLegacy(q, { knowledgePointId: KP, correct: true });
-  assert.strictEqual(pr.semanticTarget, '计量单位');
-  // fromLegacy opts.semanticTarget 优先
-  const pr2 = PracticeResult.fromLegacy({ questionType: 'calc' }, {
-    knowledgePointId: KP, correct: true, semanticTarget: '应用情境'
-  });
-  assert.strictEqual(pr2.semanticTarget, '应用情境');
-  // create 直接传入
-  const pr3 = PracticeResult.create({ knowledgePointId: KP, correct: true, semanticTarget: '逻辑推理' });
-  assert.strictEqual(pr3.semanticTarget, '逻辑推理');
+test('P27-12 #9b PracticeResult.create 携带 semanticTarget', () => {
+  const pr = PracticeResult.create({ knowledgePointId: KP, correct: true, semanticTarget: '逻辑推理' });
+  assert.strictEqual(pr.semanticTarget, '逻辑推理');
 });
 
 test('P27-12 #10 recentErrors 超 cap 20 保留末段', () => {

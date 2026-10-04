@@ -25,8 +25,7 @@ function kp(fields) {
 function resolve(opts) {
   return Adaptive.resolve(Object.assign({
     kpId: 'KP', learnerState: null, staticDifficulty: 5,
-    difficulty: null, allowDifficultyOverride: true,
-    adaptiveMode: 'new', legacyDelta: 0
+    difficulty: null, allowDifficultyOverride: true
   }, opts));
 }
 
@@ -102,30 +101,6 @@ test('M6-R18 变体随掌握度迁移：基础→数值/呈现→情境/结构�
   assert.ok(['数值', '呈现'].includes(b.variant), '掌握中 → 数值/呈现, got ' + b.variant);
   assert.ok(['情境', '结构'].includes(c.variant), '熟练 → 情境/结构, got ' + c.variant);
   assert.strictEqual(e.variant, '迁移');
-});
-
-test('M6-R22 shadow/legacy：新旧对照，实际用 legacy', () => {
-  const shadow = resolve({
-    adaptiveMode: 'shadow', legacyDelta: 1,
-    learnerState: kp({ mastery: 0.2, recentAccuracy: 0.1, recentResults: [0, 0, 0] }) // learner 想降难度
-  });
-  assert.strictEqual(shadow.mode, 'shadow');
-  assert.strictEqual(shadow.effectiveDifficulty, 6, 'shadow 采用 legacy 结果');
-  assert.ok(shadow.shadow, 'shadow 附带对照信息');
-  assert.deepStrictEqual(shadow.shadow, {
-    legacyDelta: 1,
-    learnerAdjustment: -1,
-    legacyEffective: 6,
-    learnerEffective: 4
-  });
-
-  const legacy = resolve({
-    adaptiveMode: 'legacy', legacyDelta: -2,
-    learnerState: kp({ mastery: 0.9 })
-  });
-  assert.strictEqual(legacy.mode, 'legacy');
-  assert.strictEqual(legacy.effectiveDifficulty, 3, 'legacy 用旧 delta');
-  assert.ok(!legacy.shadow);
 });
 
 test('M6-R13 难度限幅：adjustment ∈ [-2, +2]，effective ∈ [1, 10]', () => {

@@ -98,14 +98,13 @@ test('难度上下文随 cell 传递（P10-3 修复：adaptive/learnerProfile/cu
   const p = await PO.plan({
     subject: 'math', grade: GRADE, knowledgePointIds: KPS.slice(0, 1),
     questionTypes: ['calc'], count: 6, difficulty: 4,
-    adaptive: true, adaptiveMode: 'new', adaptiveDelta: 0.5,
+    adaptive: true, adaptiveDelta: 0.5,
     learnerProfile: profile, allowDifficultyOverride: true,
     customParams: { foo: 1 }, settings: { bar: 2 }
   }, {});
   assert.equal(p.active, true);
   // genReq 保留父请求语义字段（供 cell 执行）
   assert.equal(p.request.adaptive, true);
-  assert.equal(p.request.adaptiveMode, 'new');
   assert.equal(p.request.adaptiveDelta, 0.5);
   assert.deepEqual(p.request.learnerProfile, profile);
   assert.equal(p.request.allowDifficultyOverride, true);

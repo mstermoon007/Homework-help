@@ -961,8 +961,6 @@ function plan(request) {
       staticDifficulty: staticProfile.level,
       difficulty: request.difficulty != null ? request.difficulty : null,
       allowDifficultyOverride: request.allowDifficultyOverride,
-      adaptiveMode: request.adaptiveMode,
-      adaptiveDelta: difficulty.adaptiveDelta,
       maxSpiralLevel: maxSpiral,
       misconceptionDirectives: misconceptionDirectives
     });
@@ -3554,9 +3552,7 @@ function resolve(opts) {
   var confidence = kp.confidence;
   var recentAccuracy = kp.recentAccuracy;
   var attempts = kp.attempts;
-  var mode = opts.adaptiveMode === 'legacy' || opts.adaptiveMode === 'shadow' ? opts.adaptiveMode
-    : (attempts > 0 ? 'new' : 'new'); 
-  var legacyDelta = clampAdj(safeNumber(opts.legacyDelta, 0));
+  var mode = 'new'; 
 
   
   var adj = 0;
@@ -3570,20 +3566,7 @@ function resolve(opts) {
   adj = clampAdj(adj);
 
   var learnerEffective = clampDiff(base + adj);
-
-  
-  var legacyEffective = clampDiff(base + legacyDelta);
-  var shadow = null;
-  if (mode === 'shadow') {
-    shadow = {
-      legacyDelta: legacyDelta,
-      learnerAdjustment: adj,
-      legacyEffective: legacyEffective,
-      learnerEffective: learnerEffective
-    };
-  }
-
-  var effectiveDifficulty = (mode === 'legacy' || mode === 'shadow') ? legacyEffective : learnerEffective;
+  var effectiveDifficulty = learnerEffective;
 
   
   var focus = errorFocusFor(kp, 2);
@@ -3608,7 +3591,6 @@ function resolve(opts) {
     attempts: attempts,
     mode: mode,
     baseDifficulty: base,
-    shadow: shadow,
     recommendedDifficulty: learnerEffective,
     recommendedSpiralLevel: targetSpiral
   };

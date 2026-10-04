@@ -511,6 +511,9 @@
   // 关联层：把 URL 入参翻译成生成层指令并构造会话（不直接 new 生成层）
   function initPracticeSession() {
     if (!window.PracticeBridge) return;
+    // D1(P31)：深链 adaptiveMode=new 时同样读回历史画像（此前该路径 learnerProfile 恒为 null，
+    // 会话收到 adaptive 但无画像 → 引擎不激活；首访无记录时仍为 null）。
+    var initProfile = urlParams.adaptiveMode === 'new' ? resolveLearnerProfile() : null;
     practiceSession = window.PracticeBridge.newSession({
       mode: urlParams.adaptiveMode === 'new' ? 'adaptive' : (urlParams.kps ? 'multi-kp' : 'native'),
       subject: urlParams.subject || 'math',
@@ -518,7 +521,7 @@
       knowledgePointId: urlParams.kp,
       knowledgePoints: urlParams.kps ? urlParams.kps.split(',').filter(Boolean) : null,
       questionType: urlParams.qt,
-      adaptive: urlParams.adaptiveMode === 'new', learnerProfile: null, state: state
+      adaptive: urlParams.adaptiveMode === 'new', learnerProfile: initProfile, state: state
     });
   }
 
@@ -595,6 +598,22 @@
   // P28-30：首屏渲染栈 / SVG / 打印为延时装载（ensureDeferredReady），生成前必须就绪——
   // 渲染链在 start() 内（api.js renderQuestions → PresentationRenderer）将被调用，
   // 故此处 await 延迟块完成后再触发生成（幂等 Promise，首次之后直过）。
+  // D1(P31)：读回 LearnerStorage 中的学习者画像。批改后画像只写不读是已登记断点，
+  // 这里在每次生成前读回：存在已记录知识点状态（掌握度/错因计数）→ 返回归一化画像；
+  // 首访/存储不可用/解析失败 → null（绝不伪造，生成行为与无历史时逐字节一致）。
+  function resolveLearnerProfile() {
+    if (typeof window.LearnerStorage === 'undefined' || !window.LearnerStorage ||
+        typeof window.LearnerStorage.load !== 'function') return null;
+    try {
+      var profile = window.LearnerStorage.load();
+      var kps = profile && profile.knowledgePoints;
+      if (!kps || typeof kps !== 'object' || !Object.keys(kps).length) return null;
+      return profile;
+    } catch (e) {
+      return null;
+    }
+  }
+
   function generate() {
     if (!window.PracticeBridge) return;
     ensureDeferredReady().then(function () {
@@ -603,6 +622,7 @@
     window.PracticeBridge.onStartFeedback(applySessionFeedback);
     // U3 清理：deriveTypeName/state 均在本 IIFE 作用域内定义，恒可用，
     // 原「typeof x !== 'undefined' ? x : null」三元恒取真分支，直接简化为直接引用。
+    var learnerProfile = resolveLearnerProfile();
     window.PracticeBridge.start(
       {
         state: state,
@@ -616,6 +636,8 @@
         // 双量控制：总数量（count）+ 分题型数量（typeCounts，Σ 恒等于总数）。旧 kpAllocation「知识点控制数量」已废除。
         perTypeCount: (state.typeCounts && state.typeCounts.length === 1) ? state.typeCounts[0].count : null,
         typeCounts: state.typeCounts || null,
+        // D1(P31)：有历史学习记录 → 经 adaptive 通道按掌握度/错因生成有意义变式（KP/题型/范围不变，引擎内保证）；首访无记录 → null（行为同历史）。
+        adaptive: !!learnerProfile, learnerProfile: learnerProfile,
         raw: { levels: state }
       }
     );
@@ -1769,6 +1791,7 @@
             }, 300);
           });
           syncTypeCounts();
+          var printLearnerProfile = resolveLearnerProfile();
           window.PracticeBridge.start(
             {
               state: state,
@@ -1779,6 +1802,8 @@
               titleType: deriveTypeName(),
               perTypeCount: (state.typeCounts && state.typeCounts.length === 1) ? state.typeCounts[0].count : null,
               typeCounts: state.typeCounts || null,
+              // D1(P31)：直接打印同样读回历史画像（与在线生成一致；首访 null → 标准卷）。
+              adaptive: !!printLearnerProfile, learnerProfile: printLearnerProfile,
               raw: { levels: state }
             }
           );

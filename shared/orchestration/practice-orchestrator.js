@@ -20,7 +20,7 @@
  *     subject / grade / difficulty / selectLevel / style / expectedAnswerStyle
  *     subtype / cognitiveLevel / spiralLevel / max_spiral_level
  *     customParams / settings / allowDifficultyOverride
- *     adaptive / adaptiveMode / adaptiveDelta / learnerProfile
+ *     adaptive / adaptiveDelta / learnerProfile
  *
  *   [规划上下文 Planning Context] cell 不得继承（只属于多 KP 合并/计划级语义）：
  *     combine / planLevel / typeCounts（父级预算）/ perTypeCount / count（父级总预算）
@@ -476,7 +476,6 @@
               settings: genReq.settings,
               allowDifficultyOverride: genReq.allowDifficultyOverride,
               adaptive: genReq.adaptive,
-              adaptiveMode: genReq.adaptiveMode,
               adaptiveDelta: genReq.adaptiveDelta,
               learnerProfile: genReq.learnerProfile,
               // P30-11：intentSpec 透传（POL 不重新解释教学语义，仅随 cell 传递）

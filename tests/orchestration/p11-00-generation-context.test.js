@@ -37,7 +37,6 @@ const GENERATION_CONTEXT = {
   settings: { b: 2 },
   allowDifficultyOverride: true,
   adaptive: true,
-  adaptiveMode: 'new',
   adaptiveDelta: 0.5,
   learnerProfile: { mastery: 0.6, confidence: 0.8 }
 };
@@ -103,7 +102,7 @@ test('④ 真实执行链：cellReq 进入 Strategy 后用户难度保持（1/5/
     const store = [];
     const req = {
       subject: 'math', grade: GRADE, knowledgePointIds: [KPS[0]],
-      questionTypes: ['calc'], count: 2, difficulty: d, adaptive: true, adaptiveMode: 'new'
+      questionTypes: ['calc'], count: 2, difficulty: d, adaptive: true
     };
     await PO.orchestrate(req, {}, { execute: captureExecute(store) });
     const cell = store[0];

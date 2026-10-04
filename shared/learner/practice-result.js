@@ -83,37 +83,6 @@
   }
 
   /**
-   * 兼容入口：从 legacy 题目对象构造（仍需显式提供 knowledgePointId）。
-   * UI 层不得自行猜测：kpId 必须来自 resolveKnowledgePointId() 等既有映射。
-   */
-  function fromLegacy(question, opts) {
-    opts = opts || {};
-    var kpId = strOrNull(opts.knowledgePointId);
-    if (!kpId) {
-      throw new Error('PracticeResult.fromLegacy: 需要显式 knowledgePointId（必须来自既有知识点映射，禁止猜）');
-    }
-    return create({
-      questionId: strOrNull(question && (question.id || question.questionId)),
-      knowledgePointId: kpId,
-      correct: opts.correct === true,
-      userAnswer: opts.userAnswer,
-      correctAnswer: opts.correctAnswer != null ? opts.correctAnswer
-        : (question && question.answer != null ? question.answer : null),
-      responseTime: numOrNull(opts.responseTime),
-      questionDifficulty: numOrNull(opts.questionDifficulty),
-      questionType: strOrNull(question && (question.questionType || question.type)),
-      spiralLevel: numOrNull(opts.spiralLevel),
-      semanticTarget: strOrNull(opts.semanticTarget) || strOrNull(question && question.semanticTarget),
-      errorType: opts.errorType != null ? opts.errorType : (question && question.errorType),
-      // V5.1.0：legacy 题对象上的自由文本错因（RenderFormat 自 sq.data.misconception 透传）
-      misconception: opts.misconception != null ? opts.misconception
-        : (question && question.misconception != null ? question.misconception : null),
-      status: opts.status || (opts.correct === true ? STATUS.CORRECT : STATUS.WRONG),
-      timestamp: numOrNull(opts.timestamp) || now()
-    });
-  }
-
-  /**
    * 基础工厂：补全默认值、规范化字段。
    */
   function create(partial) {
@@ -152,8 +121,7 @@
   var PracticeResult = {
     STATUS: STATUS,
     create: create,
-    fromSemanticQuestion: fromSemanticQuestion,
-    fromLegacy: fromLegacy
+    fromSemanticQuestion: fromSemanticQuestion
   };
 
   global.PracticeResult = PracticeResult;
