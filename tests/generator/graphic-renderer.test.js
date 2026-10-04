@@ -57,7 +57,7 @@ test('M4-R11：graphic.type 必填', () => {
 
 test('M4-R11：GraphicRenderer 解析 graphic → SVG 渲染器', () => {
   const r = GraphicRenderer.resolveGraphicRenderer({ type: 'geometry', subtype: 'shape', params: { n: 4 } });
-  assert.deepStrictEqual(r, { type: 'geometry', subtype: 'shape', params: { n: 4 }, renderer: 'svg-geometry', label: '几何图形' });
+  assert.deepStrictEqual(r, { type: 'geometry', subtype: 'shape', params: { n: 4 }, role: 'quantity-correspondence', renderer: 'svg-geometry', label: '几何图形' });
   assert.strictEqual(GraphicRenderer.isSupported('make-ten'), true);
   assert.strictEqual(GraphicRenderer.isSupported('unknown-type'), false);
   assert.strictEqual(GraphicRenderer.resolveGraphicRenderer({ type: 'nope' }), null);

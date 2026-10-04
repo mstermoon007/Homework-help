@@ -231,6 +231,56 @@
     return finish(inner, o);
   }
 
+  /**
+   * P30-26：角——两条射线从同一顶点出发，中间画角度弧。
+   * 与 sector 不同：不填充扇形面，仅画边与弧，表达「角的度量」语义。
+   * @param {Object} o { angle(度), rayLength, labelAngle, arcRadius }
+   */
+  function angle(o) {
+    var ang = Number(o.angle) || 0;
+    var len = px(o.rayLength || 2, o);
+    var cx = len + 16, cy = len + 16;
+    // 边 1：水平向右
+    var ex1 = cx + len, ey1 = cy;
+    // 边 2：逆时针旋转 ang 度
+    var rad = ang * Math.PI / 180;
+    var ex2 = cx + len * Math.cos(rad), ey2 = cy - len * Math.sin(rad);
+    var inner = '';
+    inner += U.svgLine(cx, cy, ex1, ey1, { strokeWidth: 2 });
+    inner += U.svgLine(cx, cy, ex2, ey2, { strokeWidth: 2 });
+    // 顶点
+    inner += U.svgCircle(cx, cy, 2.5, { fill: D.stroke });
+    // 角度弧
+    var arcR = Math.min(28, len * 0.5);
+    if (o.labelAngle !== false) {
+      inner += angleArc(cx, cy, ex1, ey1, ex2, ey2, arcR, (o.labelAngle != null ? o.labelAngle : ang) + '°');
+    } else {
+      inner += angleArc(cx, cy, ex1, ey1, ex2, ey2, arcR, null);
+    }
+    return finish(inner, o);
+  }
+
+  /**
+   * 线段：两个端点 + 直线段，表达「线段可度量」语义。
+   * @param {Object} o { length(cm), labelLength, unit, unitPx }
+   */
+  function lineSegment(o) {
+    var len = px(o.length || 2, o);
+    var x1 = 16, y1 = 40;
+    var x2 = x1 + len, y2 = y1;
+    var inner = '';
+    // 线段
+    inner += U.svgLine(x1, y1, x2, y2, { strokeWidth: 2 });
+    // 端点
+    inner += U.svgCircle(x1, y1, 2.5, { fill: D.stroke });
+    inner += U.svgCircle(x2, y2, 2.5, { fill: D.stroke });
+    // 长度标注（可选）
+    if (o.labelLength !== false) {
+      inner += U.svgText((x1 + x2) / 2, y1 + 20, (o.length || 2) + (o.unit || 'cm'), { fontSize: 12, fill: D.textColor, 'text-anchor': 'middle' });
+    }
+    return finish(inner, o);
+  }
+
   // ============ 立体图形（简化斜二测透视） ============
   function cuboid(o) {
     var w = px(o.length, o), h = px(o.height, o), d = px(o.width, o) * 0.55;
@@ -344,7 +394,8 @@
   var SVGGeometry = {
     rectangle: rectangle, square: square, triangle: triangle,
     parallelogram: parallelogram, trapezoid: trapezoid,
-    circle: circle, sector: sector,
+    circle: circle, sector: sector, angle: angle,
+    'line-segment': lineSegment,
     cuboid: cuboid, cube: cube, cylinder: cylinder, cone: cone,
     translationDemo: translationDemo, rotationDemo: rotationDemo, reflectionDemo: reflectionDemo,
     tickMark: tickMark,

@@ -107,8 +107,14 @@ function buildQuestionFingerprint(sq) {
   // R6：语义型题型（应用/几何/判断/分类/开放/辨识）题面即为内容，原指纹忽略题面文字
   // 会导致不同设问/不同统计对象被误判为重复、容量塌缩为 1。补齐题面内容指纹。
   // 计算类题型（calc/fill 等）维持 operand 排序归一（同式异写=同指纹）语义，不附加题面哈希。
+  // fill/choice 无操作数时为语义题（认图/概念/统计/方位），无 operand 可区分，
+  // 须附加题面哈希；有操作数时维持 operand 归一语义不变。
   var SEMANTIC_TYPES = { apply: 1, geometry: 1, judge: 1, classify: 1, open: 1, recognize: 1 };
-  if (SEMANTIC_TYPES[sq.questionType || sq.type]) parts.push('ph:' + promptHash(sq));
+  var qt = sq.questionType || sq.type;
+  var hasOperands = operands.length > 0;
+  if (SEMANTIC_TYPES[qt] || ((qt === 'fill' || qt === 'choice') && !hasOperands)) {
+    parts.push('ph:' + promptHash(sq));
+  }
   return parts.join('|');
 }
 

@@ -29,6 +29,54 @@
 
 ## 记录（新 → 旧）
 
+### P30-SVG-02｜线段断链修复：line-segment renderer + generator + evidence-rules（2026-10-04）
+- modified:
+  - `shared/svg/svg-geometry.js`（新增 `lineSegment(o)` renderer：水平线段 + 两端端点圆点 + 可选长度标注；params: `{length(cm), labelLength, unit, unitPx}`；注册 `'line-segment': lineSegment`）
+  - `shared/generator/generators/shape.js`（`generateGraphicParams()` 新增 `case 'line-segment'`：`{type:'geometry', subtype:'line-segment', role:'quantity-correspondence', params:{length:randInt(1,2), labelLength:rng()<0.7, unit, unitPx}}`）
+  - `kbl/teaching/evidence-rules.json`（3 个线段 KP×5 题型共 15 条：`subtype` rectangle→line-segment；`fieldPresent` labelSides→length；shapeName 保持「线段」）
+  - `kbl/teaching/variation-profiles.json` + `misconception-profiles.json`（§9 重派生：derive-variation-profiles.js + derive-misconceptions.js）
+  - `shared/engine/strategy-engine.bundle.js` + `presentation-engine.bundle.js`（重建）
+  - `dev/p28/check-generation-matrix-frozen.json` + `dev/p30/check-kp-qt-maker-matrix.json`（1570 行产出变化，`--write` 重冻）
+- deleted: 无
+- reason: 修复 P30 阶段三遗留线段断链。3 个线段 KP（math-g2-up-u05-k003/k004、math-g3-up-u07-k001）的证据规则要求 subtype=rectangle，但语义应为 line-segment；SHAPE_SUBTYPE/NAME_TO_SHAPE/SHAPE_FEATURES 中已有 `line-segment` 定义但 `generateGraphicParams` 缺 case、svg-geometry 缺 renderer，导致落入 default→rectangle。最小修改：补 renderer + generator case + 证据规则对齐。
+- tests: `node --test tests/generator/p28-hollow-shape-themed.test.js` 12/12 PASS；`npm test` 651/651 PASS；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**；`math-g2-up-u05-k003` 实产 `graphic={type:'geometry',subtype:'line-segment',role:'quantity-correspondence',params:{length:NN}}` → SVG SUCCESS。
+- risk: ①未新建 line/ray/straight-line 区分，3 个 KP 统一用 `line-segment` 表达「线段可度量」语义（射线/直线在小学阶段无度量场景，当前 suffice）；②`labelLength` 默认 70% 概率显示长度标注，与 rectangle `labelSides` 行为一致；③未 git commit。
+
+### P30-SVG-01｜阶段三：GraphicDescriptor 语义统一 + 角的度量修复 + Graphic Alignment Gate（2026-10-03）
+- modified:
+  - `shared/generator/graphic-renderer.js`（新增 `GRAPHIC_ROLES` 枚举：quantity-correspondence/number-position/angle-measure/fraction-part/area-measure/data-comparison/calculation-support/auxiliary；新增 `GRAPHIC_TYPE_ROLES` type→默认 role 映射；`resolveGraphicRenderer()` 返回 `role` 字段（显式 graphic.role 优先，否则 type 默认）；新增 `isValidRole()`、`resolveRoleFromIntent()`；API 导出全部新增符号）
+  - `shared/svg/svg-geometry.js`（新增 `angle(o)` renderer：顶点出发两条射线 + 角度圆弧，无填充扇形；params: `{angle:deg, rayLength, labelAngle}`；注册进 `SVGGeometry`）
+  - `shared/generator/generators/shape.js`（`generateGraphicParams()` 新增 `case 'angle'`：`{type:'geometry', subtype:'angle', role:'angle-measure', params:{angle:randInt(10,170), rayLength:2, labelAngle:false, unit, unitPx}}`；其余 geometry case 补 `role:'quantity-correspondence'`；`NAME_TO_SHAPE` 角正则收窄为 `/角的(度量|认识|再认识|分类)/`，避免误匹配「从不同角度观察立体图形」）
+  - `kbl/teaching/evidence-rules.json`（直接编辑——无派生脚本且规则事实错误属 P30-26 断链：4 个角的度量 KP×5 题型 `subtype` rectangle→angle、移除 `labelSides` fieldPresent、新增 `params.angle` fieldPresent；`math-g5-down-u01-k001`×5 题型 `subtype` rectangle→cuboid、shapeName 角→立体图形、移除 labelSides）
+  - `shared/validator/kp-semantic-validator.js`（`checkIntentAlignment` graphicRole 校验扩展 P30-27/28：carrier→必须含图、null→禁止含图、auxiliary→可选；新增 graphic.role 合法枚举校验；区分 intent.graphicRole 与 graphic.role 两个维度不强制相等）
+  - `tests/generator/graphic-renderer.test.js`（`resolveGraphicRenderer` 输出断言补 `role:'quantity-correspondence'`）
+  - `kbl/teaching/variation-profiles.json` + `kbl/teaching/misconception-profiles.json`（shape.js/evidence-rules 改动触发 §9 重派生：derive-variation-profiles.js + derive-misconceptions.js）
+  - `shared/engine/strategy-engine.bundle.js` + `presentation-engine.bundle.js`（kp-semantic-validator 改动后重建）
+  - `dev/p30/check-kp-qt-maker-matrix.json`（shape.js angle case 影响 maker 矩阵，`--write` 重冻）
+  - `dev/p28/check-generation-matrix-frozen.json`（1570 行产出变化，`--write` 重冻）
+- deleted: 无（P30-29 审计确认：shared/svg/ 挂载 geometry/calculation/makeTen/chart/diagram/currency，plugins/ 挂载 area/clock/competition/dataStats/draw/fraction，命名空间零重叠，无重复实现可删）
+- reason: 阶段三 Generator+SVG 语义联动。P30-21/22：统一 GraphicDescriptor 为 `{type, subtype, params, role}`，role 表「图为什么存在」。P30-23：Generator 决定图形语义（shape.js 显式设 role）。P30-26：修复角的度量断链——Intent=angle-measure 但 Generator 产 rectangle graphic、SVG 无 angle renderer；新增 angle renderer + angle case + 证据规则对齐。P30-27/28：Graphic Alignment Gate——carrier 必须有图、null 禁止有图、graphic.role 合法枚举校验。P30-29：SVG 重复架构审计，确认无重复层。P30-24：SVG 只读 graphic.type/subtype/params，不猜题目/答案/KP（svg-registry 既有设计满足）。
+- tests: `node --test tests/generator/p28-hollow-shape-themed.test.js` 12/12 PASS；`tests/generator/p28-geometry-native-makers.test.js` 28/28 PASS；`tests/generator/graphic-renderer.test.js` PASS；`npm test` 651/651 PASS；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**；浏览器渲染验证：angle SVG（两射线+顶点+圆弧）在 http server 下 Chrome 渲染正确。`math-g4-up-u02-k002` 实产 `graphic={type:'geometry',subtype:'angle',role:'angle-measure',params:{angle:NN}}` → SVG SUCCESS。
+- risk: ①evidence-rules.json 直接编辑（无派生脚本，规则事实错误属 P30-26 断链修复授权），已在 change-log 留存依据；②仍有 3 个线段 KP（math-g2-up-u05-k003/k004、math-g3-up-u07-k001）证据规则要求 rectangle 但语义应为 line，`line-segment` 在 NAME_TO_SHAPE/SHAPE_SUBTYPE 存在但无 generateGraphicParams case 且无 SVG renderer，属阶段三遗留线段断链，本轮不触碰（需新建 line renderer，超出角的度量 scope）；③轴对称 KP 仍用 rectangle 承载，语义可接受；④未 git commit。
+
+### P30-GEN-10｜Semantic Equivalence：非算术 fill/choice 指纹塌缩修复（2026-10-03）
+- modified:
+  - `shared/validator/duplicate-validator.js`（`buildQuestionFingerprint` L107-117：`fill`/`choice` 无操作数时追加 `ph:promptHash`；有操作数时维持 operand 排序归一语义不变。`SEMANTIC_TYPES` 仍为 `{apply, geometry, judge, classify, open, recognize}`，不扩表）
+  - `shared/engine/presentation-engine.bundle.js`（重建，inlined 21 / delegated 61）
+- deleted: 无
+- reason: P30-18 scope 界定并落地。根因：`fill`/`choice` 不在 `SEMANTIC_TYPES`，非算术题（认图/概念/统计/方位）无数字操作数时指纹不含任何语义内容，导致同 KP 同结构的不同题目（如「三角形」vs「正方形」）指纹完全相同 → RetryLoop 去重全判重复 → 容量塌缩为 1。诊断覆盖 595 行 capacityGap，确认 89 行为指纹塌缩（fill=38、choice=51；按生成器：position-direction=36、concept-meaning=19、stats=16、shape-recognition=8、reasoning=4、decimal-number=2、code-recognition=2、fraction-number=2）。修复条件：`(qt==='fill'||qt==='choice') && operands.length===0` 时附加题面哈希，算术 fill/choice（有 operands）行为不变。
+- tests: 单元验证——算术 fill `3+5=___` 与 `5+3=___` 指纹相同（operand 归一保持，无 `ph:`）；非算术 fill「三角形」与「正方形」指纹互异（含 `ph:`）。`node --test tests/generator/p28-hollow-shape-themed.test.js tests/orchestration/p11-02-duplicate-contract.test.js tests/orchestration/p11-03-capacity-recovery.test.js` 32/32 PASS。`npm test` 651/651 PASS。`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**（6a/6b/6f/16/17 全 PASS，FINAL-91 只读门禁 PASS）。classify 复测：capacityGap 595→555（改善 40 行），position-direction 43→13（改善 30 行），shape-recognition 260→258（改善 2 行）。
+- risk: ①指纹为运行时计算，Golden/冻结矩阵（6a/6b 均 count=1）不存储指纹，无冻结漂移；②89 行塌缩中仅 40 行容量恢复至 6，其余 49 行因变式池本身不足（generator 产出 < 6 互异题）仍有 capacityGap，属阶段四变式扩容债务，本轮不触碰；③`buildMathFingerprint` 复用 `buildQuestionFingerprint`，跨 KP 去重同步获 ph:，非算术题跨 KP 同题面仍判重（正确）；未 git commit。
+
+### P30-GEN-09｜阶段二债务闭环：失败分类脚本接入 check-all + BASELINE 口径修正（2026-10-03）
+- modified:
+  - `dev/check-all.js`（Generation 段新增 6f 项：`node dev/p30/check-generation-failure-classify.js`，timeout 1200000ms；不带 --write，CI 不落盘报告，避免 FINAL-91 只读门禁误触发）
+  - `docs/00-BASELINE.md`（测试口径修正：测试文件 64→63、用例 658→651、PASS 658→651、套件数 17→15、耗时说明 658→651、门禁表 658/658→651/651——P30-07 删除 teaching-semantic-profile.test.js（10 用例）后未同步基线）
+- deleted: 无
+- reason: 用户指令「优先解决第二阶段债务问题」。三项债务阶段归属判定：①capacityGap 595 行→关联 P30-17 表达维度+阶段四变式，阶段二不可闭环；②check-generation-failure-classify.js 未接入 check-all→P30-GEN-07 产物、P30-GEN-08 已修通 7 行 FAILED，脚本当前 pass=true（Layer A 1570/1570 全绿、Layer B 0 FAILED/0 failedPlan/0 zeroQuestion，capacityGap 595 行按 FINAL-142 仅记账不判 FAIL），属阶段二可闭环债务；③P30-17/P30-18 medium 排期→P30-17 绑 capacityGap（阶段四）、P30-18 需 scope，本轮不动。本任务闭环债务②。脚本实测耗时 17.4s（1570 行×2 层 in-process），接入 check-all 后总项数 29→30。
+- tests: `node dev/p30/check-generation-failure-classify.js` 退出码 0，Layer A FAIL=0、Layer B failedPlan=0、zeroQuestion=0；`node dev/check-all.js` **29 PASS / 0 FAIL / 1 SKIP / 30 项**（6f PASS，FINAL-91 只读门禁 PASS）；`npm test` 651/651 PASS。
+- risk: ①脚本 Layer A（count=1）与 6a/6b 口径重叠，check-all 增加约 17s 耗时，可接受；②capacityGap 595 行仍为阶段四变式债务，本轮不触碰；③BASELINE 测试数修正仅改文档数字，不影响任何生产代码/数据/冻结物；未 git commit。
+
 ### P30-GEN-08｜修复 count=6 下 0 题交付的 7 行 FAILED（2026-10-03）
 - modified:
   - `shared/generator/generators/percent.js`（makeDiscount/makeInterest：calc 分支题面恒「现价列式/利息列式」，删除 calc 内 askSaved/askTotal 变体；关键修正：`buildBase` 的 `data.ask` 也按题型三元化——`(t === 'calc') ? 'current'/'interest' : (变体开关 ? 对应值 : 缺省值)`，否则 calc 奇数 i 仍写违例值；fill/choice/apply 的 saved/total 变体承载不变）

@@ -10049,7 +10049,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 3
+            "evidenceRows": 4
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },

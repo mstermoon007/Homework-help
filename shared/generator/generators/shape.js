@@ -99,7 +99,7 @@ var NAME_TO_SHAPE = [
   { re: /平行四边形/, type: 'parallelogram' },
   { re: /梯形/, type: 'trapezoid' },
   { re: /线段|画线段/, type: 'line-segment' },
-  { re: /角(的|各|度|认)/, type: 'angle' },
+  { re: /角的(度量|认识|再认识|分类)/, type: 'angle' },
   { re: /对称/, type: 'symmetry' },
   { re: /密铺/, type: 'tessellation' },
   { re: /球/, type: 'sphere' },
@@ -143,6 +143,7 @@ function generateGraphicParams(subtype, difficulty, rng) {
       return {
         type: 'geometry',
         subtype: subtype,
+        role: 'quantity-correspondence',
         params: {
           width: Rng.randInt(rng, 1, 2),
           height: subtype === 'square' ? undefined : Rng.randInt(rng, 1, 2),
@@ -158,6 +159,7 @@ function generateGraphicParams(subtype, difficulty, rng) {
       return {
         type: 'geometry',
         subtype: 'triangle',
+        role: 'quantity-correspondence',
         params: {
           p1: [0, 0],
           p2: [a, 0],
@@ -173,6 +175,7 @@ function generateGraphicParams(subtype, difficulty, rng) {
       return {
         type: 'geometry',
         subtype: subtype,
+        role: 'quantity-correspondence',
         params: {
           length: subtype === 'cube' ? edge : Rng.randInt(rng, minDim, maxDim),
           width: subtype === 'cube' ? edge : Rng.randInt(rng, minDim, maxDim),
@@ -187,6 +190,7 @@ function generateGraphicParams(subtype, difficulty, rng) {
       return {
         type: 'geometry',
         subtype: 'cylinder',
+        role: 'quantity-correspondence',
         params: {
           r: Rng.randInt(rng, 1, Math.max(2, Math.floor(maxDim/2))),
           height: Rng.randInt(rng, minDim, maxDim),
@@ -199,6 +203,7 @@ function generateGraphicParams(subtype, difficulty, rng) {
       return {
         type: 'geometry',
         subtype: 'cone',
+        role: 'quantity-correspondence',
         params: {
           r: Rng.randInt(rng, 1, Math.max(2, Math.floor(maxDim/2))),
           height: Rng.randInt(rng, minDim, maxDim),
@@ -213,6 +218,7 @@ function generateGraphicParams(subtype, difficulty, rng) {
       return {
         type: 'geometry',
         subtype: 'circle',
+        role: 'quantity-correspondence',
         params: {
           r: 1, // 半径 1cm → 直径 2cm，满足平面图形 ≤2cm
           labelRadius: false,
@@ -225,6 +231,7 @@ function generateGraphicParams(subtype, difficulty, rng) {
       return {
         type: 'geometry',
         subtype: 'parallelogram',
+        role: 'quantity-correspondence',
         params: {
           base: pBase,
           height: Rng.randInt(rng, 1, pBase),
@@ -245,6 +252,7 @@ function generateGraphicParams(subtype, difficulty, rng) {
       return {
         type: 'geometry',
         subtype: 'trapezoid',
+        role: 'quantity-correspondence',
         params: {
           topBase: 1,
           bottomBase: 2,
@@ -255,11 +263,45 @@ function generateGraphicParams(subtype, difficulty, rng) {
           unitPx: unitPx
         }
       };
+    case 'angle':
+      // P30-26：角的度量——subtype=angle + role=angle-measure，
+      // 确保 Intent(angle-measure) → Generator(angle descriptor) → SVG(angle) 语义一致，
+      // 不再落入 default 画长方形。角度与题目答案由同一 params.angle 派生。
+      var deg = Rng.randInt(rng, 10, 170);
+      return {
+        type: 'geometry',
+        subtype: 'angle',
+        role: 'angle-measure',
+        params: {
+          angle: deg,
+          rayLength: 2,
+          labelAngle: false,
+          unit: unit,
+          unitPx: unitPx
+        }
+      };
+    case 'line-segment':
+      // P30-SVG-02：线段——subtype=line-segment + role=quantity-correspondence，
+      // 确保 Intent(线段可度量) → Generator(line-segment descriptor) → SVG(line-segment) 语义一致，
+      // 不再落入 default 画长方形。长度与题目答案由同一 params.length 派生。
+      var segLen = Rng.randInt(rng, 1, 2);
+      return {
+        type: 'geometry',
+        subtype: 'line-segment',
+        role: 'quantity-correspondence',
+        params: {
+          length: segLen,
+          labelLength: rng() < 0.7,
+          unit: unit,
+          unitPx: unitPx
+        }
+      };
     default:
       // 兜底为长方形（同样 ≤2cm、不标直角）
       return {
         type: 'geometry',
         subtype: 'rectangle',
+        role: 'quantity-correspondence',
         params: {
           width: Rng.randInt(rng, 1, 2),
           height: Rng.randInt(rng, 1, 2),

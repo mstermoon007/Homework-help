@@ -622,8 +622,15 @@ function checkIntentAlignment(sq, plan) {
       SEVERITY.ERROR, { allowedRepresentations: allowedReps, hasGraphic: hasGraphic }));
   }
 
-  // 3. graphicRole 对齐
+  // 3. graphicRole 对齐（P30-22/27/28）
+  //    intent.graphicRole 取值：carrier（图为核心载体，必须有图）/ auxiliary（图为辅助，可选）/ null（不需图）。
+  //    carrier → 必须含 graphic；null → 禁止含 graphic；auxiliary → 不约束有无。
   var graphicRole = intent.graphicRole;
+  var GRAPHIC_ROLES = {
+    'quantity-correspondence': 1, 'number-position': 1, 'angle-measure': 1,
+    'fraction-part': 1, 'area-measure': 1, 'data-comparison': 1,
+    'calculation-support': 1, 'auxiliary': 1, 'carrier': 1
+  };
   if (graphicRole === 'carrier' && !hasGraphic) {
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
       'intent.graphicRole=carrier 要求题目必须含图形，实际未含',
@@ -633,6 +640,18 @@ function checkIntentAlignment(sq, plan) {
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
       'intent.graphicRole=null 要求题目不含图形，实际含图形',
       SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
+  }
+  // P30-27：graphic.role 合法性校验。
+  // 注意：intent.graphicRole（carrier/auxiliary/null，表"图是否核心载体"）与
+  // graphic.role（quantity-correspondence/angle-measure/...，表"图的具体语义角色"）
+  // 是不同维度，不强制相等；仅校验 graphic.role 属于合法枚举。
+  if (hasGraphic) {
+    var gRole = sq.data.graphic.role;
+    if (gRole != null && !GRAPHIC_ROLES[gRole]) {
+      errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphic.role',
+        'graphic.role=' + gRole + ' 不在合法枚举内',
+        SEVERITY.ERROR, { graphicRole: gRole }));
+    }
   }
 
   // 4. expressionMode 对齐

@@ -1,6 +1,6 @@
 {
  "task": "P28-08 1570 Generation Matrix 最终冻结",
- "date": "2026-10-03",
+ "date": "2026-10-04",
  "seedPolicy": {
   "version": "p28-v1",
   "difficulty": 3,
@@ -16089,8 +16089,8 @@
    "kpSem": 1,
    "tc": 1,
    "realGen": 1,
-   "promptLen": 68,
-   "sample": "从不同角度观察立体图形：观察下图（角），想一想——一个立体从正面看是 3",
+   "promptLen": 71,
+   "sample": "从不同角度观察立体图形：观察下图（立体图形），想一想——一个立体从正面看",
    "ans": "4",
    "ok": true,
    "err": null

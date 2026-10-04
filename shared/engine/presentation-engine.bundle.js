@@ -2455,8 +2455,14 @@ function buildQuestionFingerprint(sq) {
   
   
   
+  
+  
   var SEMANTIC_TYPES = { apply: 1, geometry: 1, judge: 1, classify: 1, open: 1, recognize: 1 };
-  if (SEMANTIC_TYPES[sq.questionType || sq.type]) parts.push('ph:' + promptHash(sq));
+  var qt = sq.questionType || sq.type;
+  var hasOperands = operands.length > 0;
+  if (SEMANTIC_TYPES[qt] || ((qt === 'fill' || qt === 'choice') && !hasOperands)) {
+    parts.push('ph:' + promptHash(sq));
+  }
   return parts.join('|');
 }
 
@@ -4277,7 +4283,14 @@ function checkIntentAlignment(sq, plan) {
   }
 
   
+  
+  
   var graphicRole = intent.graphicRole;
+  var GRAPHIC_ROLES = {
+    'quantity-correspondence': 1, 'number-position': 1, 'angle-measure': 1,
+    'fraction-part': 1, 'area-measure': 1, 'data-comparison': 1,
+    'calculation-support': 1, 'auxiliary': 1, 'carrier': 1
+  };
   if (graphicRole === 'carrier' && !hasGraphic) {
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
       'intent.graphicRole=carrier 要求题目必须含图形，实际未含',
@@ -4287,6 +4300,18 @@ function checkIntentAlignment(sq, plan) {
     errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphicRole',
       'intent.graphicRole=null 要求题目不含图形，实际含图形',
       SEVERITY.ERROR, { graphicRole: graphicRole, hasGraphic: hasGraphic }));
+  }
+  
+  
+  
+  
+  if (hasGraphic) {
+    var gRole = sq.data.graphic.role;
+    if (gRole != null && !GRAPHIC_ROLES[gRole]) {
+      errors.push(createError(ERROR_CODES.KP_SEMANTIC_INTENT_ALIGNMENT, 'graphic.role',
+        'graphic.role=' + gRole + ' 不在合法枚举内',
+        SEVERITY.ERROR, { graphicRole: gRole }));
+    }
   }
 
   
