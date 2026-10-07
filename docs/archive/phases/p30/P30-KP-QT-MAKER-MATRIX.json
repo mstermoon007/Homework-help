@@ -14,9 +14,9 @@
       "target-frozen": 334
     },
     "byIntentStatus": {
-      "confirmed": 152,
+      "confirmed": 153,
       "ai-verified": 1133,
-      "needs-review": 285
+      "needs-review": 284
     },
     "kpClass": {
       "pure-target": 305,
@@ -1915,8 +1915,8 @@
       "hasOptions": false,
       "isJudge": false,
       "hasBlank": false,
-      "core": "看图列式盘子里原来有#个桃小猴子吃掉#个还剩多少个",
-      "sample": "看图列式：盘子里原来有 11 个桃，小猴子吃掉 9 个（在图中圈出吃掉的部分）。还剩多少个？"
+      "core": "列式计算盘子里原来有#个桃小猴子吃掉#个还剩多少个",
+      "sample": "列式计算：盘子里原来有 11 个桃，小猴子吃掉 9 个。还剩多少个？"
     },
     {
       "kp": "math-g1-down-u06-k002",
@@ -4373,7 +4373,7 @@
       "qt": "calc",
       "generator": "generator:semantic-relations",
       "makerKey": "generator:semantic-relations|semantic-relations",
-      "intentStatus": "needs-review",
+      "intentStatus": "confirmed",
       "focus": "calculation",
       "level": "target",
       "hasOptions": false,

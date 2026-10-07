@@ -51,12 +51,12 @@ SemanticQuestion 是全链唯一题目数据契约，禁止第二套题目对象
 | A4 版式常量（210/190mm、12mm 10mm、718px@96dpi） | `Print.LAYOUT`（print.js），practice.html 与 practice-session.js 只读不复制 |
 | 打印文档骨架（CSP 禁 script / @page / .print-sheet / .ps-title） | `Print.buildPrintDocument()`（克隆链与直渲链共用） |
 | 判断题打印形态（去按钮 /「正确（　）错误（　）」） | `Print.buildJudgePrintCss()`（双链共用） |
-| 列数 / 列跨算法与阈值（≥50 通栏、≥26 半宽） | `PluginUtil.layout`（shared/core/core.js）：calcOptimalCols / fitColumns / renderLen / spanForLength / gridColumnsFromDom / applySpanning |
+| 列数 / 列跨唯一决策（P31-03 结构特征决策表：题型/图形档/选项/作答信号 + 长度信号） | `QuestionLayout.plan()`（shared/presentation/layout.js；P31-02 自 core.js 物理迁入，P31-03 升级为 plan/itemFor/spanToCss；长度阈值 ≥50 通栏、≥26 半宽仅对 choice/classify/apply/未知 DTO 保留） |
 | 屏 / 打密度差异 | 仅 tokens.css 的 `--grid-gap-print`、`--card-padding-print`；print.js 兜底值由契约测试锁定一致 |
 | 打印态页面 chrome 隐藏 | 元素打 `data-print-hide` 标记；唯一规则在 shared/styles/components.css |
 
 - 两条打印链：主链 `session.print() → Print.openFromQuestions`（SemanticQuestion 直渲，动态列数+列跨）；降级/反馈重打 `Print.open`（#problemsArea DOM 克隆）。
-- 屏显列数计算宽度必须传 `Print.LAYOUT.printableWidthPx`，不得用容器实测宽度。
+- 屏显列数由 `QuestionLayout.plan()` 在渲染期决策（`renderer.renderAll` 先算 plan 透传 HTML，宽度缺省 `Print.LAYOUT.printableWidthPx`=718，不得用容器实测宽度）；P31-04 起渲染后不再改 DOM（fitColumns 已物理删除）。
 
 ## 5. HTML 安全边界（P28-23）
 

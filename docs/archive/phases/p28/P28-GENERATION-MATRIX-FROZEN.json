@@ -1,6 +1,6 @@
 {
  "task": "P28-08 1570 Generation Matrix 最终冻结",
- "date": "2026-10-04",
+ "date": "2026-10-07",
  "seedPolicy": {
   "version": "p28-v1",
   "difficulty": 3,
@@ -1289,8 +1289,8 @@
    "kpSem": 1,
    "tc": 1,
    "realGen": 1,
-   "promptLen": 46,
-   "sample": "看图列式：盘子里原来有 11 个桃，小猴子吃掉 9 个（在图中圈出吃掉的",
+   "promptLen": 34,
+   "sample": "列式计算：盘子里原来有 11 个桃，小猴子吃掉 9 个。还剩多少个？",
    "ans": "2",
    "ok": true,
    "err": null

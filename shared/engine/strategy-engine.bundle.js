@@ -14429,13 +14429,19 @@ function makeAddRelCalc(plan, context, i) {
     operation: subtract ? 'sub' : 'add',
     barModel: true
   });
+  
+  
+  
+  
+  
+  
   if (subtract) {
-    return finish(q, '看图列式：盘子里原来有 ' + (take + left) + ' 个桃，小猴子吃掉 ' + take
-      + ' 个（在图中圈出吃掉的部分）。还剩多少个？', left, [],
+    return finish(q, '列式计算：盘子里原来有 ' + (take + left) + ' 个桃，小猴子吃掉 ' + take
+      + ' 个。还剩多少个？', left, [],
       '总数 − 吃掉的部分 = 剩下的部分：' + (take + left) + ' − ' + take + ' = ' + left);
   }
-  return finish(q, '看图列式：草地上左边有 ' + left + ' 只羊，右边又来了 ' + take
-    + ' 只羊（在图中画出两部分）。一共有多少只羊？', take + left, [],
+  return finish(q, '列式计算：草地上左边有 ' + left + ' 只羊，右边又来了 ' + take
+    + ' 只羊。一共有多少只羊？', take + left, [],
     '两部分合起来：' + left + ' + ' + take + ' = ' + (take + left));
 }
 
@@ -14444,7 +14450,18 @@ function makeAddRelFill(plan, context, i) {
   var a = Rng.randInt(rng, 3, 9);
   var b = Rng.randInt(rng, 3, 9);
   var q = buildBase(plan, context, i, {
-    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true
+    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
+    
+    
+    
+    
+    graphic: {
+      type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+      params: {
+        total: a + b, part: a, unit: '',
+        partLabel: String(a), otherLabel: String(b), totalLabel: '?'
+      }
+    }
   });
   return finish(q, '看线段图填空：第一条线段表示 ' + a + '，第二条线段表示 ' + b
     + '，两条线段合起来表示（  ）。', a + b, [String(a + b)],
@@ -14477,7 +14494,19 @@ function makeAddRelChoice(plan, context, i) {
   var a = Rng.randInt(rng, 4, 9);
   var b = Rng.randInt(rng, 4, 9);
   var q = buildBase(plan, context, i, {
-    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true
+    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
+    
+    
+    
+    
+    
+    graphic: {
+      type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+      params: {
+        total: a + b, part: a, unit: '',
+        partLabel: String(a), otherLabel: String(b), totalLabel: '?'
+      }
+    }
   });
   q.prompt = '线段图把总数分成两部分：第一部分是 ' + a + '，第二部分是 ' + b
     + '。求总数应该用下面哪个算式？（  ）';
@@ -14490,7 +14519,18 @@ function makeAddRelGeometry(plan, context, i) {
   var a = Rng.randInt(rng, 4, 9);
   var longer = Rng.randInt(rng, 2, 6);
   var q = buildBase(plan, context, i, {
-    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true
+    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
+    
+    
+    
+    
+    graphic: {
+      type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+      params: {
+        total: a + longer, part: a, unit: '',
+        partLabel: String(a), otherLabel: '长出 ' + longer, totalLabel: '?'
+      }
+    }
   });
   return finish(q, '看线段图：第一条线段表示 ' + a + '，第二条线段比第一条长 ' + longer
     + '（在图上标出长出来的那一段）。第二条线段表示多少？', a + longer, [String(a + longer)],
@@ -14576,7 +14616,16 @@ function makePeriodGeometry(plan, context, i) {
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem,
-    graphicPattern: p.shapes.join('')
+    graphicPattern: p.shapes.join(''),
+    
+    
+    
+    
+    
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: p.shapes.join(''), times: 2 }
+    }
   });
   return finish(q, '观察排列图：' + p.shapes.join('') + p.shapes.join('') + '……'
     + '照这样接着画，第 ' + p.period + ' 个位置应该画什么图形？', p.shape, [p.shape],

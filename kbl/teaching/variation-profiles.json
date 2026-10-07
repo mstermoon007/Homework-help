@@ -40,7 +40,7 @@
     "genError": 0,
     "noSample": 0,
     "singleSample": 336,
-    "unknownNotObserved": 981,
+    "unknownNotObserved": 979,
     "byQt": {
       "fill": 313,
       "choice": 313,
@@ -51,10 +51,10 @@
       "classify": 25
     },
     "axisCoverage": {
-      "unknown": 342,
+      "unknown": 344,
       "numericVaries": 944,
       "contextPresent": 1277,
-      "representationPresent": 550,
+      "representationPresent": 553,
       "structureMultiStep": 22
     }
   },
@@ -2089,7 +2089,9 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.total"
+          ]
         },
         "numeric": {
           "varies": true,
@@ -2102,8 +2104,62 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.otherLabel",
+            "data.graphic.params.part",
+            "data.graphic.params.partLabel",
+            "data.graphic.params.total",
+            "data.graphic.params.totalLabel",
+            "data.graphic.params.unit",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.otherLabel": [
+              "\"3\"",
+              "\"5\"",
+              "\"6\""
+            ],
+            "data.graphic.params.part": [
+              "3",
+              "4",
+              "6",
+              "7",
+              "9"
+            ],
+            "data.graphic.params.partLabel": [
+              "\"3\"",
+              "\"4\"",
+              "\"6\"",
+              "\"7\"",
+              "\"9\""
+            ],
+            "data.graphic.params.total": [
+              "11",
+              "12",
+              "14",
+              "15",
+              "7",
+              "9"
+            ],
+            "data.graphic.params.totalLabel": [
+              "\"?\""
+            ],
+            "data.graphic.params.unit": [
+              "\"\""
+            ],
+            "data.graphic.role": [
+              "\"quantity-correspondence\""
+            ],
+            "data.graphic.subtype": [
+              "\"segment\""
+            ],
+            "data.graphic.type": [
+              "\"geometry\""
+            ]
+          }
         },
         "structure": {
           "steps": []
@@ -2120,9 +2176,7 @@
           "看线段图填空：第一条线段表示 6，第二条线段表示 5，两条线段合起来表示（  ）。"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g1-down-u06-k002",
@@ -2143,8 +2197,60 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.otherLabel",
+            "data.graphic.params.part",
+            "data.graphic.params.partLabel",
+            "data.graphic.params.total",
+            "data.graphic.params.totalLabel",
+            "data.graphic.params.unit",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.otherLabel": [
+              "\"6\"",
+              "\"7\"",
+              "\"8\"",
+              "\"9\""
+            ],
+            "data.graphic.params.part": [
+              "4",
+              "5",
+              "6",
+              "9"
+            ],
+            "data.graphic.params.partLabel": [
+              "\"4\"",
+              "\"5\"",
+              "\"6\"",
+              "\"9\""
+            ],
+            "data.graphic.params.total": [
+              "10",
+              "12",
+              "13",
+              "14",
+              "16"
+            ],
+            "data.graphic.params.totalLabel": [
+              "\"?\""
+            ],
+            "data.graphic.params.unit": [
+              "\"\""
+            ],
+            "data.graphic.role": [
+              "\"quantity-correspondence\""
+            ],
+            "data.graphic.subtype": [
+              "\"segment\""
+            ],
+            "data.graphic.type": [
+              "\"geometry\""
+            ]
+          }
         },
         "structure": {
           "steps": []
@@ -2171,7 +2277,9 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": []
+          "positions": [
+            "data.graphic.params.total"
+          ]
         },
         "numeric": {
           "varies": true,
@@ -2184,8 +2292,58 @@
           "ratio": 1
         },
         "representation": {
-          "present": false,
-          "paths": []
+          "present": true,
+          "paths": [
+            "data.graphic.params.otherLabel",
+            "data.graphic.params.part",
+            "data.graphic.params.partLabel",
+            "data.graphic.params.total",
+            "data.graphic.params.totalLabel",
+            "data.graphic.params.unit",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type"
+          ],
+          "values": {
+            "data.graphic.params.otherLabel": [
+              "\"长出 2\"",
+              "\"长出 3\"",
+              "\"长出 4\"",
+              "\"长出 5\""
+            ],
+            "data.graphic.params.part": [
+              "4",
+              "6",
+              "9"
+            ],
+            "data.graphic.params.partLabel": [
+              "\"4\"",
+              "\"6\"",
+              "\"9\""
+            ],
+            "data.graphic.params.total": [
+              "11",
+              "12",
+              "13",
+              "8",
+              "9"
+            ],
+            "data.graphic.params.totalLabel": [
+              "\"?\""
+            ],
+            "data.graphic.params.unit": [
+              "\"\""
+            ],
+            "data.graphic.role": [
+              "\"quantity-correspondence\""
+            ],
+            "data.graphic.subtype": [
+              "\"segment\""
+            ],
+            "data.graphic.type": [
+              "\"geometry\""
+            ]
+          }
         },
         "structure": {
           "steps": []
@@ -2202,9 +2360,7 @@
           "看线段图：第一条线段表示 4，第二条线段比第一条长 5（在图上标出长出来的那一段）。第二条线段表示多少？"
         ]
       },
-      "flags": [
-        "unknown-not-observed"
-      ]
+      "flags": []
     },
     {
       "knowledgePointId": "math-g1-down-u06-k002",
@@ -5772,9 +5928,33 @@
         "representation": {
           "present": true,
           "paths": [
+            "data.graphic.params.pattern",
+            "data.graphic.params.times",
+            "data.graphic.role",
+            "data.graphic.subtype",
+            "data.graphic.type",
             "data.graphicPattern"
           ],
           "values": {
+            "data.graphic.params.pattern": [
+              "\"△□☆○\"",
+              "\"△☆\"",
+              "\"○□\"",
+              "\"○☆△□\"",
+              "\"☆□○\""
+            ],
+            "data.graphic.params.times": [
+              "2"
+            ],
+            "data.graphic.role": [
+              "\"auxiliary\""
+            ],
+            "data.graphic.subtype": [
+              "\"pattern\""
+            ],
+            "data.graphic.type": [
+              "\"diagram\""
+            ],
             "data.graphicPattern": [
               "\"△□☆○\"",
               "\"△☆\"",

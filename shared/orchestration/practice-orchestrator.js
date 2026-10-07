@@ -424,7 +424,8 @@
     if (typeof execute !== 'function') return Promise.reject(new Error('PracticeOrchestrator.orchestrate 需要 execute 回调'));
 
     var RO = getRenderOptions ? getRenderOptions() : null;
-    var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop', density: 'normal' };
+    // P31-FIX-10：回落字面量同步移除 density（密度档位唯一走 QuestionLayoutPlan）
+    var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop' };
     var generationId = 'g-' + Date.now().toString(36) + '-' + (++_seq).toString(36);
 
     return plan(request, options).then(function (p) {

@@ -230,14 +230,12 @@ async function runScenario(urlPath, opts) {
     var noticeEl = area ? area.querySelector('.notice .big') : null;
     var grid = area ? area.querySelector('.questions-grid') : null;
     var cards = grid ? grid.querySelectorAll('.question-card').length : (area ? area.querySelectorAll('.question-card').length : 0);
-    var measure = area ? area.querySelectorAll('#printMeasure .question-card').length : 0;
     var answers = area ? area.querySelectorAll('.answer-inp, .choice-option, .question-answer').length : 0;
     return {
       calls: e.calls,
       errors: e.errors,
       dom: {
         cards: cards,
-        measureCards: measure,
         answers: answers,
         notice: noticeEl ? noticeEl.textContent : '',
         printDisabled: !!(document.getElementById('printBtn') && document.getElementById('printBtn').disabled),
@@ -613,7 +611,12 @@ async function main() {
         const overlap = (second.result && second.result.questions || []).filter((q) => fps1.has(q.fp)).length;
         const checks = {
           '重新生成触发第二次生成': !!second.result,
-          '请求参数保持（subject/grade/types/kps/count/difficulty）': JSON.stringify(first.req) === JSON.stringify(second.req),
+          // P31-FIX-04：口径同 9 步链 step7——剥离 previousGenerationId（C2 跨代去重）与
+          // mode（D1 派生：历史画像→adaptive 通道）两处合法语义差异，UI 驱动参数须全等
+          '请求参数保持（subject/grade/types/kps/count/difficulty）': (() => {
+            const strip = (r) => { const c = Object.assign({}, r || {}); delete c.previousGenerationId; delete c.mode; return JSON.stringify(c); };
+            return strip(first.req) === strip(second.req);
+          })(),
           'hasPrevSeen = true': second.opts && second.opts.hasPrevSeen === true,
           'overlap = 0（A 语义）': overlap === 0,
           '新批可交付': second.result && (second.result.status === 'SUCCESS' || second.result.status === 'PARTIAL'),
@@ -821,7 +824,14 @@ async function main() {
         const overlap = ((second.result || {}).questions || []).filter((q) => fps1.has(q.fp)).length;
         const checks = {
           '重新生成 第二批存在': !!(second.result && second.result.status),
-          '请求参数保持': JSON.stringify(first.req) === JSON.stringify(second.req),
+          // P31-FIX-04：口径修正——「保持」语义只针对 UI 驱动参数（subject/grade/kps/types/
+          // count/difficulty）。两处合法语义差异剥离：①previousGenerationId（C2/D001 跨代
+          // 去重，bridge 注入）；②mode（D1 派生字段：历史画像存在时 regenerate 走 adaptive
+          // 通道生成变式，KP/题型/范围不变由引擎保证，P30 6d 门禁管）。
+          '请求参数保持': (() => {
+            const strip = (r) => { const c = Object.assign({}, r || {}); delete c.previousGenerationId; delete c.mode; return JSON.stringify(c); };
+            return strip(first.req) === strip(second.req);
+          })(),
           'hasPrevSeen=true': second.opts && second.opts.hasPrevSeen === true,
           'overlap=0': overlap === 0,
           'no JS errors': (data.errors || []).length === 0

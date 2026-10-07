@@ -106,25 +106,9 @@
   .gen-cta .btn.gen-cta-btn { padding: 12px 28px; min-height: 46px; font-size: 15px; letter-spacing: 1px; }
 }
 
-/* ============ 屏幕态题目卡视觉（@media screen：仅屏显生效；打印分别由
- * print.js 克隆链覆盖样式 / buildPrintQcss 直渲链独立 CSS 接管，不受本段影响） ============ */
-@media screen {
-  /* 答题区横线删除（P28-UI-ANSWER-LINE-REMOVE-01）：输入框自足，去掉框下作答线 */
-  #problemsArea .question-answer { border-bottom: none; }
-  #problemsArea .answer-inp {
-    border-style: solid; border-width: 1.5px;
-    border-color: var(--line-strong, #d6e2f2);
-  }
-  /* 题号：灰色浅字 + 浅灰圆形底 + 居中 */
-  #problemsArea .question-card .num {
-    background: #eef0f3; color: #9aa3b2;
-    text-align: center; font-weight: 700;
-  }
-  /* V5.1.0 判断题批改反馈：答案/解析/错因逐行 */
-  #problemsArea .feedback .fb-line { font-size: 12.5px; font-weight: 600; line-height: 1.6; }
-  #problemsArea .feedback .fb-explain { color: var(--muted); }
-  #problemsArea .feedback .fb-mis { color: var(--warn); }
-}
+/* P31-08：原 @media screen 题目组件内联段（question-answer 去线 / answer-inp 实线 /
+   .num 灰底圆徽章 / feedback fb-* 批改反馈）已物理迁出——题卡视觉唯一维护在
+   shared/styles/components.css（@media screen 边界与卡 correct/wrong 类驱动同源保留）。 */
 
 /* P28-UI-PRINT-WYSIWYG-01：打印态隐藏一律打 data-print-hide 标记，
    规则唯一定义在 shared/styles/components.css，页面不私带 @media print。 */
@@ -389,6 +373,8 @@
   // 首次生成 / 打印前按需装载（boot 即触发，顺序与旧静态顺序一致，保证全局依赖成立）。
   // 任一文件失败不阻塞：SVG 缺失仅致该题图形缺省（SVGRenderer 返回 ''），文本照常渲染。
   var DEFERRED_SCRIPTS = [
+    // P31-02：排版唯一 SSOT，print.js / 渲染器均依赖，必须排首位
+    'shared/presentation/layout.js',
     'shared/presentation/print.js',
     'shared/presentation/render-options.js',
     'shared/presentation/render-result.js',
@@ -656,8 +642,8 @@
       return;
     }
     if (fb.html) {
-      // 生成层统筹：直接采用 Engine 成品 HTML（含 SVG 图形与固定样式类 style-*），
-      // 大服务层不再自行拼题卡，仅做信息流转与页面样式挂载。
+      // 生成层统筹：直接采用 Engine 成品 HTML（含 SVG 图形与 plan 排版档位类 density-*/stem-*/graphic-*/options-*），
+      // 大服务层不再自行拼题卡，仅做信息流转与页面样式挂载。（P31-10：style-* 死类输出已删）
       state.lastSemantic = { html: fb.html, questions: fb.questions || [] };
       applyExerciseSet({ questions: fb.questions || [], meta: fb.meta });
     }
@@ -756,14 +742,14 @@
     var typeName = isWrongBook ? '错题本 · 练习' : deriveTypeName();
     $('sheetTitle').textContent = buildTitle(state.grade, typeName, set.questions.length);
     updateResourceLD(typeName, state.grade);
-    // P3-R04：题目区域统一使用 Engine 渲染成品（state.lastSemantic.html），
-    // 不再回退 legacy renderLegacySet / renderGeneric / plugin.render。
+    // P3-R04：题目区域统一使用 Engine 渲染成品（state.lastSemantic.html）；
+    // P31-06：错题本/重做 raw 题集转正走唯一渲染链 PresentationRenderer.renderAll（原 renderGeneric
+    // 第二渲染器已物理删除，渲染异常由 renderAll 内部唯一应急出口 renderEmergency 兜底）。
     var body;
     if (state.lastSemantic && state.lastSemantic.html) {
       body = state.lastSemantic.html;
     } else {
-      // 错题本 / 重做等原始题集：用通用降级渲染（不依赖插件）
-      body = renderGeneric(set);
+      body = renderRawSetHtml(set);
     }
     // 渲染策略（任务 3.3）：先快速拼好整段 HTML（SVG 已在 generate 阶段生成），
     // 解析为离线 DOM 树后分块（每块 8 个）插入文档，避免一次性大量节点插入导致主线程长阻塞；
@@ -775,20 +761,16 @@
     $('resultArea').innerHTML = '';
 
     var target, nodes;
-    if (!meta.exam && tmp.firstElementChild &&
+    if (tmp.firstElementChild &&
         /questions-grid|q-grid/.test(tmp.firstElementChild.className || '')) {
       // 已含网格容器：抽空后分批回填其卡片（保持顺序）
       target = tmp.firstElementChild;
       nodes = Array.prototype.slice.call(target.children);
       while (target.firstChild) target.removeChild(target.firstChild);
-    } else if (!meta.exam) {
+    } else {
       // 兜底：原始顶层节点作为卡片，包一层网格容器
       target = document.createElement('div');
       target.className = 'questions-grid';
-      nodes = Array.prototype.slice.call(tmp.children);
-    } else {
-      // 期末模拟卷等：顶层区块直接分批追加
-      target = area;
       nodes = Array.prototype.slice.call(tmp.children);
     }
     if (target !== area) area.appendChild(target);
@@ -809,8 +791,8 @@
           card.setAttribute('aria-label', '第 ' + ((nd != null ? Number(nd) + 1 : ci + 1)) + ' 题');
         }
       });
-      // 卡片式/文字式网格按题目长度自适应列数（P28-UI-PRINT-WYSIWYG-01：显式传 A4 718px，列数与打印同源）
-      if (!meta.exam) PluginUtil.layout.fitColumns(area, set, a4PrintableWidthPx('math'));
+      // P31-04：列数/列跨/档位已在渲染期由 QuestionLayout.plan 注入 HTML（--grid-cols + 卡内联 span +
+      // density-*/stem-*/options-*/graphic-* 类），渲染后不再改 DOM（原 fitColumns 二次排版已删）。
       // 按当前排版估算「填多少题可正好铺满 A4 整页」的推荐值
       updateCountTip();
       // 回车快捷批改
@@ -837,8 +819,12 @@
   }
 
   // ============ A4 竖版宽度自适应 ============
-  // 列数算法已收敛为单一来源：shared/core/core.js 的 PluginUtil.layout
-  // （calcOptimalCols / fitColumns / estimateCardWidth / renderLen / spanForLength / gridColumnsFromDom / applySpanning）。
+  // 列数算法已收敛为唯一排版 SSOT：shared/presentation/layout.js 的全局 QuestionLayout
+  // （P31-03 起统一入口 plan(itemFor 结构特征决策表 → {columns,items}) + spanToCss；
+  //  P31-04 起渲染期由 renderer.renderAll 算 plan 并透传 HTML（--grid-cols + 档位类），主链渲染后不再改 DOM；
+  //  P31-05 起屏/打经 planFor 缓存取数（print/updateCountTip 与渲染同键同值）；度量 coreText/renderLen/
+  //  estimateCardWidth/calcOptimalCols 保留（plan 列数决策仍消费）；
+  //  gridColumnsFromDom/applySpanning 克隆 DOM 二次度量已物理删除，打印克隆链采信渲染期内联样式）。
   // 预览与打印共用同一套逻辑、同一宽度，避免双份代码再次漂移。
 
   // A4 竖版可打印宽度（px）：唯一真相 Print.LAYOUT（shared/presentation/print.js）。
@@ -850,36 +836,13 @@
     return Math.round(190 * 96 / 25.4);
   }
 
-  // 插件无 render 时的通用降级渲染
-  function renderGeneric(set) {
-    var cols = PluginUtil.layout.calcOptimalCols(set, (document.getElementById('problemsArea') || {}).offsetWidth || 1000);
-    var html = '<div class="q-grid cols-' + cols + '">';
-    set.questions.forEach(function (q, i) {
-      // V5.1.0 判断题降级渲染：与 html-renderer 同构的两个大按钮（radio value=true/false）
-      var isJudge = q.questionType === 'judge' || q.type === 'judge' || q.inputType === 'judge';
-      var judgeHtml = isJudge
-        ? '<div class="question-answer question-answer-judge" role="radiogroup" aria-label="判断对错">' +
-          '<label class="judge-btn judge-btn-true"><input type="radio" class="judge-input" name="q' + i + '" value="true" data-index="' + i + '" autocomplete="off" aria-label="判断为正确"><span class="judge-mark">✓</span><span class="judge-text">正确</span></label>' +
-          '<label class="judge-btn judge-btn-false"><input type="radio" class="judge-input" name="q' + i + '" value="false" data-index="' + i + '" autocomplete="off" aria-label="判断为错误"><span class="judge-mark">✗</span><span class="judge-text">错误</span></label>' +
-          '</div>'
-        : '';
-      // P28-INLINE-ANSWER-01：横向算式「… = ?」作答框内联于等号后（问号虚化 placeholder）
-      var rawQ = String(q.question || q.text || q.q || '');
-      var eqM = !isJudge && rawQ.match(/^(.*[=＝])\s*[？?]\s*$/);
-      var stemHtml = eqM
-        ? '<span class="q-text">' + esc(eqM[1].replace(/[=＝]\s*$/, '').replace(/\s+$/, '')) + '</span>' +
-          '<span class="eq-answer">&nbsp;=&nbsp;<input type="text" class="answer-inp answer-inp-inline" placeholder="？" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案"></span>'
-        : '<span class="q-text">' + esc(rawQ) + '</span>' +
-          (isJudge ? '' : '<input type="text" class="answer-inp" data-index="' + i + '" autocomplete="off" aria-label="第 ' + (i + 1) + ' 题 答案">');
-      html += '<div class="question-card" data-index="' + i + '">' +
-        '<span class="num">' + (i + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' +
-        stemHtml + judgeHtml +
-        (q.hint ? '<div style="font-size:11px;color:var(--muted)">💡 ' + esc(q.hint) + '</div>' : '') +
-        '<div class="feedback"></div>' +
-        '</div>';
-    });
-    html += '</div>';
-    return html;
+  // P31-06：错题本/重做 raw 题集转正渲染（原 renderGeneric 第二渲染器及其重复 judge 模板已物理删除）。
+  // raw 题集为 RenderFormat Legacy DTO（每条带 __semantic 原始 SQ 引用），经 __semantic 取完整结构
+  // 字段走唯一渲染链 renderAll；缺引用的极端数据回落原对象。渲染异常由 renderAll 内部逐题降级到
+  // 唯一应急出口 renderEmergency（单列、纯文本题干、标准作答 input），此处零兜底拼接。
+  function renderRawSetHtml(set) {
+    var qs = (set.questions || []).map(function (q) { return (q && q.__semantic) ? q.__semantic : q; });
+    return PresentationRenderer.renderAll(qs, { mode: 'screen' }, { availWidth: a4PrintableWidthPx() }).html;
   }
 
   // ============ 收集答案 ============
@@ -1060,13 +1023,12 @@
           if (mis) lines.push('<div class="fb-line fb-mis">⚠️ 错因：' + esc(mis) + '</div>');
         }
         fb.innerHTML = lines.join('');
-        fb.style.color = isRight ? 'var(--ok)' : 'var(--bad)';
+        // P31-08：反馈色由卡 correct/wrong 类经 components.css 驱动，不再渲染后写内联 style
         return;
       }
       if (!isRight) {
         var tip = '✗ 正确答案：' + (result.correctAnswers && result.correctAnswers[i]);
         fb.textContent = tip;
-        fb.style.color = 'var(--bad)';
       }
     });
   }
@@ -1123,6 +1085,13 @@
     state.checkResult = null;
     state.answered = false;
     state.count = wrongQuestions.length;
+    // P31-FIX-02：同步复位生成层会话（复位 CHECKED 状态机并切换错题子集）——
+    // 此前只复位页面状态，重做轮批改被 session.submit() 以「当前状态不允许提交」拒绝。
+    if (window.PracticeBridge && typeof window.PracticeBridge.redoWrong === 'function') {
+      window.PracticeBridge.redoWrong().catch(function (err) {
+        showNotice('重做失败', (err && err.message) || '会话复位失败');
+      });
+    }
     render(set);
     // 重做即新一轮作答：隐藏上一轮批改结果，并复位「显示答案」状态，
     // 避免陈旧分数误导、以及 revealed 标记与已重渲染 DOM 的状态错位（E2E C1 捕获）。
@@ -1181,7 +1150,7 @@
       } else if (window.Print && document) {
         var area = document.getElementById('problemsArea');
         var meta = state.exerciseSet && state.exerciseSet.meta;
-        window.Print.open(area, (meta && meta.title) || '练习题', { pageType: 'math' });
+        window.Print.open(area, (meta && meta.title) || '练习题');
       } else {
         alert('打印失败：打印模块不可用');
       }
@@ -1218,20 +1187,27 @@
     var area = $('problemsArea');
     var src = area.querySelector('.questions-grid, .q-grid');
     if (!src || !src.children.length) { tip.style.display = 'none'; return; }
-    // 打印/A4 端：按 A4 可打印宽度动态计算列数（与打印页完全一致，避免屏幕列数硬塞 A4）
+    // 打印/A4 端：列数经 plan 缓存取（P31-05：与打印链同键 mode:'print'+718px 同值，杜绝三处估算漂移）
     var printableW = a4PrintableWidthPx('math');
-    var fixedCols = state.exerciseSet.meta && state.exerciseSet.meta.columns;
-    var cols = fixedCols ? fixedCols : PluginUtil.layout.calcOptimalCols(state.exerciseSet, printableW);
+    var planSrc = (state.lastSemantic && state.lastSemantic.questions && state.lastSemantic.questions.length)
+      ? state.lastSemantic.questions : state.exerciseSet;
+    var cols = QuestionLayout.planFor(planSrc, { mode: 'print', availWidth: printableW }).columns;
     // 上下边距用于后续高度测算（唯一真相 Print.LAYOUT.pageMargin；未装载时按契约 12mm 回退）
     var v = (window.Print && window.Print.LAYOUT && window.Print.LAYOUT.marginVMm) || 12;
     var MM = 96 / 25.4;
     var printableH = (297 - 2 * v) * MM;          // 一页内容高（px）
-    // 打印密度（tokens.css print token）：测量容器必须用打印 gap/padding，高度才与真实打印一致
-    var PRINT_GAP = '8px 6px', PRINT_GAP_ROW = 8, PRINT_CARD_PAD = '6px 8px';
+    // 打印密度（tokens.css print token，唯一真相 Print.tokenVal）：测量容器必须用打印 gap/padding，高度才与真实打印一致
+    var PT = window.Print || null;
+    var PRINT_GAP = (PT && typeof PT.tokenVal === 'function') ? PT.tokenVal('--grid-gap-print') : '8px 6px';
+    var PRINT_GAP_ROW = parseInt(PRINT_GAP, 10) || 8;
+    var PRINT_CARD_PAD = (PT && typeof PT.tokenVal === 'function') ? PT.tokenVal('--card-padding-print') : '6px 8px';
 
     // 隐藏测量容器：与打印同宽、同列数、同间距，克隆当前卡片循环排布（保留打印端列跨），实测铺满高度
+    // P31-FIX-06：必须挂在 #problemsArea 之外（document.body）——克隆卡内含 input[data-index]/.question-card，
+    // 留在 area 内会污染全域粗扫（collectAnswers/session._collectAnswers/aria 循环/Enter 绑定/显示答案映射；
+    // 克隆序在真实网格之后，其空值会覆盖用户作答）。
     var meas = $('printMeasure');
-    if (!meas) { meas = el('div'); meas.id = 'printMeasure'; area.appendChild(meas); }
+    if (!meas) { meas = el('div'); meas.id = 'printMeasure'; document.body.appendChild(meas); }
     meas.style.cssText = 'position:fixed;left:-20000px;top:0;width:' + printableW + 'px;visibility:hidden;';
     var g = el('div');
     g.style.cssText = 'display:grid;grid-template-columns:repeat(' + cols + ',minmax(0,1fr));gap:' + PRINT_GAP + ';grid-auto-flow:row dense;';
@@ -1240,7 +1216,7 @@
     var pats = [];
     for (var ci = 0; ci < src.children.length; ci++) {
       var pat = src.children[ci].cloneNode(true);
-      // 屏幕态卡片 padding 经 pages.css 的 #problemsArea !important 规则生效，测量打印高度需同权覆盖
+      // 测量打印高度：以打印 padding 同权覆盖屏幕卡片 padding
       pat.style.setProperty('padding', PRINT_CARD_PAD, 'important');
       pats.push(pat);
     }
@@ -1784,7 +1760,7 @@
                 Promise.resolve(s.print()).catch(function (err) { alert('打印失败：' + err.message); });
               } else if (window.Print && document) {
                 var area = document.getElementById('problemsArea');
-                window.Print.open(area, (fb.meta && fb.meta.title) || '练习题', { pageType: 'math' });
+                window.Print.open(area, (fb.meta && fb.meta.title) || '练习题');
               } else {
                 alert('打印失败：打印模块不可用');
               }

@@ -376,6 +376,14 @@
     return session;
   }
 
+  // 错题重做：透传生成层既有 redoWrong()（复位会话状态机并切换为错题子集）。
+  // P31-FIX-02：此前 UI 层重做只复位页面状态，会话停于 CHECKED，重做轮批改被
+  // session.submit() 的状态守卫以「当前状态不允许提交」拒绝（HEAD 既存断链）。
+  function redoWrong() {
+    if (!_session) return Promise.reject(new Error('尚未生成练习会话'));
+    return _session.redoWrong();
+  }
+
   // 组装配对新会话的会话（供错题本重做等复用）
   function newSession(ins) {
     var Ctor = sessionCtor();
@@ -411,6 +419,7 @@
     control: ControlService,           // 外围控制层（服务模式整块）
     start: start,
     submit: submit,
+    redoWrong: redoWrong,
     newSession: newSession,
     onStartFeedback: onStartFeedback,
     onSubmitFeedback: onSubmitFeedback,

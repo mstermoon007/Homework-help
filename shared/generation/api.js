@@ -75,9 +75,20 @@
   }
 
   function getOrchestrator() { return getDep('orchestrator'); }
-  function getPresentationRenderer() { return getDep('presentationRenderer'); }
+  // P31-FIX-03：Node 全局未挂载时显式装载 UMD（require 副作用即挂 global.PresentationRenderer）。
+  // 此前该装载由 practice-session.js 的依赖声明副作用隐式提供，声明删除后在此就近兜底。
+  function getPresentationRenderer() {
+    if (_deps.presentationRenderer) return _deps.presentationRenderer;
+    var g = getDep('presentationRenderer');
+    if (g) return g;
+    if (typeof require !== 'undefined') {
+      require('../presentation/renderer.js');
+      return _deps.presentationRenderer || global.PresentationRenderer || null;
+    }
+    return null;
+  }
   function getRenderOptions() { return getDep('renderOptions'); }
-  function getGeneratorRegistry() { return getDep('generatorRegistry'); }
+  // P31-FIX-08：getGeneratorRegistry 已随唯一消费者 resolveGenerator（零导出零调用死函数）物理删除。
   function getStrategyValidator() { return getDep('strategyValidator'); }
   function getStrategyEngine() { return getDep('strategyEngine'); }
   function getComprehensiveStrategy() { return getDep('comprehensiveStrategy'); }
@@ -456,7 +467,8 @@
     if (engine.subject !== 'math') return engine.generate(request, options);
 
     var RO = getRenderOptions();
-    var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop', density: 'normal' };
+    // P31-FIX-10：回落字面量同步移除 density（密度档位唯一走 QuestionLayoutPlan）
+    var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop' };
 
     // C2: 铸造本代 generationId（单调自增 + 时间戳，无 Math.random）
     var generationId = 'g-' + Date.now().toString(36) + '-' + (++_generationSeq).toString(36);
@@ -540,7 +552,8 @@
   function generateSync(request, options) {
     options = options || {};
     var RO = getRenderOptions();
-    var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop', density: 'normal' };
+    // P31-FIX-10：回落字面量同步移除 density（密度档位唯一走 QuestionLayoutPlan）
+    var ro = RO ? RO.normalize(options.renderOptions) : { mode: 'screen', theme: 'default', device: 'desktop' };
 
     // Core Domain 收缩（Refactor Step 1）：非 math 请求直接拒绝，不进生成链。
     assertMathOnly(request);
@@ -613,15 +626,8 @@
     return result.valid ? [] : (result.errors || ['未知校验错误']);
   }
 
-  /**
-   * Generator 解析
-   * @param {Object} query
-   * @returns {Object|null}
-   */
-  function resolveGenerator(query) {
-    var G = getGeneratorRegistry();
-    return (G && typeof G.resolve === 'function') ? G.resolve(query || {}) : null;
-  }
+  // P31-FIX-08：resolveGenerator 已物理删除（不进 API 导出面、模块内零调用、全库零引用；
+  // git 追溯 a51ff07 page-wiring 期遗留，P31-FIX-07 登记、用户裁决删除）。
 
   /**
    * R2/R5：全局题量预算机制（Budget + Capacity 收口）

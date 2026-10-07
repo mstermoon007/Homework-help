@@ -81,9 +81,9 @@ rows.forEach(function (r) {
     }
   }
 });
-check('A2a', 'needs-review 行零生成权威（intent/expression/graphic 全 null，285 行全测）', blockedOk,
+check('A2a', 'needs-review 行零生成权威（intent/expression/graphic 全 null，' + tally['needs-review'] + ' 行全测）', blockedOk,
   tally['needs-review'] + ' 行实测' + (bad.length ? '；首条: ' + bad[0] : ''));
-check('A2b', 'confirmed/ai-verified 行挂载 intent（1285 行全测）', authOk,
+check('A2b', 'confirmed/ai-verified 行挂载 intent（' + (tally.confirmed + tally['ai-verified']) + ' 行全测）', authOk,
   (tally.confirmed + tally['ai-verified']) + ' 行实测' + (bad.length ? '；首条: ' + bad[0] : ''));
 check('A2c', '权威行 intent 含 7 个机器字段且 targetCodes 溯源', assessOk,
   bad.length ? '首条: ' + bad[0] : '7/7 字段 × ' + (tally.confirmed + tally['ai-verified']) + ' 行');

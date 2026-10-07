@@ -8,8 +8,8 @@
  *   - PracticeSession 为唯一练习流程入口
  *   - 页面仅调用 session.start() / session.submit() / session.review()
  *   - 答案判定统一经 check() / AnswerValidator，页面不自行实现判断
- *   - 结果收集经 PracticeResult → ResultCollector → LearnerModel → Storage
- *   - 错题本/重做/显示答案保留现有能力，经 StorageManager
+ *   - 批改结果由页面经 PracticeBridge 反馈消费（P31-FIX-03：learner 收集链依赖声明已随
+ *     零消费者物理删除）；错题本/重做经页面 raw 题集链（openWrongBook 死方法已删）
  */
 (function (global) {
   'use strict';
@@ -24,14 +24,8 @@
     : (typeof require !== 'undefined' ? require('./generation-engine.js') : null);
   var GenerationAPI = (typeof global.GenerationAPI !== 'undefined') ? global.GenerationAPI
     : (GenerationEngine || (typeof require !== 'undefined' ? require('../generation/api.js') : null));
-  var StorageManager = (typeof global.StorageManager !== 'undefined') ? global.StorageManager
-    : (typeof require !== 'undefined' ? require('../state/storage.js') : null);
-  var ResultCollector = (typeof global.ResultCollector !== 'undefined') ? global.ResultCollector
-    : (typeof require !== 'undefined' ? require('../learner/result-collector.js') : null);
-  var LearnerStorage = (typeof global.LearnerStorage !== 'undefined') ? global.LearnerStorage
-    : (typeof require !== 'undefined' ? require('../learner/learner-storage.js') : null);
-  var PracticeResult = (typeof global.PracticeResult !== 'undefined') ? global.PracticeResult
-    : (typeof require !== 'undefined' ? require('../learner/practice-result.js') : null);
+  // P31-FIX-03：四个 HEAD 既存零引用依赖声明物理删除（ResultCollector/LearnerStorage/
+  // PracticeResult/PresentationRenderer，P31-10 登记项，全文件无消费经三方印证）
   var PluginUtil = (typeof global.PluginUtil !== 'undefined') ? global.PluginUtil
     : (typeof require !== 'undefined' ? require('../core/common.js') : null);
   // P28-21：唯一 Legacy Adapter = shared/presentation/render-format.js（semantic-question-bridge
@@ -39,8 +33,6 @@
   var RenderFormat = (typeof global.PresentationEngine !== 'undefined' && global.PresentationEngine.RenderFormat)
     ? global.PresentationEngine.RenderFormat
     : (typeof require !== 'undefined' ? require('../presentation/render-format.js') : null);
-  var PresentationRenderer = (typeof global.PresentationRenderer !== 'undefined') ? global.PresentationRenderer
-    : (typeof require !== 'undefined' ? require('../presentation/renderer.js') : null);
   var Print = (typeof global.Print !== 'undefined') ? global.Print
     : (typeof require !== 'undefined' ? require('../presentation/print.js') : null);
   // P28-30：print.js 已移出首屏同步装载（practice.html 经 ensureDeferredReady 延后注入），
@@ -50,6 +42,12 @@
     if (typeof global.Print !== 'undefined' && global.Print) return global.Print;
     if (Print) return Print;
     return (typeof require !== 'undefined') ? require('../presentation/print.js') : null;
+  }
+  // P31-02：排版 SSOT 已迁至 shared/presentation/layout.js（浏览器经 DEFERRED_SCRIPTS
+  // 装载为全局 QuestionLayout，先于 print.js；Node 测试走 require 兜底）。
+  function resolveLayout() {
+    if (typeof global.QuestionLayout !== 'undefined' && global.QuestionLayout) return global.QuestionLayout;
+    return (typeof require !== 'undefined') ? require('../presentation/layout.js') : null;
   }
 
   var Metrics = (typeof global.Metrics !== 'undefined') ? global.Metrics
@@ -249,38 +247,14 @@
     this.exerciseSet = set;
     this.checkResult = null;
     this.answers = {};
+    // P31-FIX-02：与页面 P3-R04 同语义——重做轮清除 Engine 渲染成品（上一代语义题），
+    // 避免 session.print() 仍按 lastSemantic 打出上一代全量题而非当前错题子集。
+    this.lastSemantic = null;
     this.state = STATE.ANSWERING;
     this.startTime = Date.now();
 
     return Promise.resolve({
       questions: wrongQuestions,
-      html: this._renderSet(set),
-      meta: set.meta
-    });
-  };
-
-  /**
-   * 打开错题本
-   * @returns {Promise<{ questions, html, meta }>}
-   */
-  PracticeSession.prototype.openWrongBook = function () {
-    var pid = this._getPracticeContextId();
-    var wrongs = StorageManager.getWrongList(pid);
-    var questions = [];
-    wrongs.forEach(function (w) { if (w.questionData) questions.push(w.questionData); });
-
-    if (!questions.length) {
-      return Promise.reject(new Error('暂无错题'));
-    }
-
-    var set = { questions: questions, meta: { title: '错题本 · 练习' } };
-    this.exerciseSet = set;
-    this.checkResult = null;
-    this.answers = {};
-    this.state = STATE.ANSWERING;
-
-    return Promise.resolve({
-      questions: questions,
       html: this._renderSet(set),
       meta: set.meta
     });
@@ -295,29 +269,22 @@
     }
 
     var title = this._buildTitle();
-    var pageType = 'math';
     var PrintMod = resolvePrint();
 
-    // 列数与屏显预览同源：固定 meta.columns 优先；否则按 A4 可打印宽度（Print.LAYOUT）走 layout 算法。
-    // P28-UI-PRINT-WYSIWYG-01：主链不再恒定 3 列；列跨由 print.js 经同一 layout 阈值按题目长度计算。
-    var fixedCols = this.exerciseSet.meta && this.exerciseSet.meta.columns;
+    // P31-05：列数唯一取 layout plan 缓存（planFor，mode:'print' + A4 718px 与打印链同键同值），
+    // 不再单独 calcOptimalCols。P31-10：meta.columns 死数据面读取已删（生产零写入方，固定列仅存 ctx.fixed 显式能力）。
     var a4w = (PrintMod && PrintMod.LAYOUT && PrintMod.LAYOUT.printableWidthPx) || 718;
-    var cols = fixedCols || (global.PluginUtil && global.PluginUtil.layout
-      ? global.PluginUtil.layout.calcOptimalCols(this.exerciseSet, a4w) : 3);
+    var layout = resolveLayout();
 
-    // 优先使用 Engine 产物直接打印
+    // 优先使用 Engine 产物直接打印（列数/列跨/分页由 print.js 内 planFor 决策）
     if (this.lastSemantic && this.lastSemantic.questions && this.lastSemantic.questions.length) {
-      return PrintMod.openFromQuestions(this.lastSemantic.questions, {
-        title: title,
-        columns: cols,
-        fixed: !!fixedCols
-      });
+      return PrintMod.openFromQuestions(this.lastSemantic.questions, { title: title });
     }
 
-    // 回退 DOM 克隆打印
+    // 回退 DOM 克隆打印：列数经 plan 缓存取（题集对象与渲染/提示同源），克隆链采信渲染期内联列跨
+    var cols = (layout && layout.planFor ? layout.planFor(this.exerciseSet, { mode: 'print', availWidth: a4w }).columns : 3) || 3;
     var area = document.getElementById('problemsArea');
-    var opts = { pageType: pageType, columns: cols };
-    return PrintMod.open(area, title, opts);
+    return PrintMod.open(area, title, { columns: cols });
   };
 
   /**

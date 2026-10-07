@@ -10,7 +10,8 @@
  *   - 版式常量 Print.LAYOUT（A4 / 190mm / 12mm 10mm / 718px），双链与屏显预览共用
  *   - 打印文档骨架唯一来源 buildPrintDocument（CSP / @page / shell / 标题），两条链都调用
  *   - 判断题打印形态唯一来源 buildJudgePrintCss（克隆链去按钮化 / 直渲链（　）形态）
- *   - 列数 / 列跨算法唯一来源 shared/core/core.js 的 PluginUtil.layout
+ *   - 列数 / 列跨算法唯一来源 shared/presentation/layout.js 的 QuestionLayout（P31-02 自 core.js 物理迁入；
+ *     P31-05 起经 planFor 缓存取数，克隆链采信渲染期内联样式，零二次度量）
  *   - 屏 / 打密度差异只经 tokens.css 的 --grid-gap-print / --card-padding-print 表达
  *
  * 设计原则：打印页面与预览页面排版完全一致。
@@ -40,19 +41,13 @@
   // Node / 样式未就位时回落此表。值必须与 tokens.css 一致（renderer.test.js 契约断言锁定）。
   var PRINT_TOKEN_DEFAULTS = {
     '--grid-gap-print': '8px 6px',
-    '--card-padding-print': '6px 8px'
-  };
-
-  // ============ 打印路由（页面类型 → 克隆链预处理） ============
-  // P28-UI-PRINTSTYLE-CLEANUP-01：仅保留唯一在用路由 math（全库调用均传 'math'），
-  // 其余 8 条零调用方路由已删除。页边距不在此配置，统一走 PRINT_LAYOUT.pageMargin。
-  var PRINT_ROUTES = {
-    math: {
-      beforeClone: function(clone, cols) {
-        var grid = clone.querySelector('.questions-grid');
-        if (grid) grid.style.gridTemplateColumns = 'repeat(' + (cols || 3) + ', 1fr)';
-      }
-    }
+    '--card-padding-print': '6px 8px',
+    // P31-07：图形三档宽度 / 打印 inline 作答空白盒尺寸（与 tokens.css 同源字面量）
+    '--graphic-w-small': '120px',
+    '--graphic-w-medium': '220px',
+    '--graphic-w-large': '360px',
+    '--answer-w-print': '72px',
+    '--answer-h-print': '30px'
   };
 
   // 打印文档统一 CSP：禁任何脚本，仅同源样式 + 内联样式、同源图片与 data 图
@@ -139,9 +134,7 @@
    */
   function buildPrintHtml(container, title, options) {
     options = options || {};
-    var pageType = options.pageType || 'math';
     var columns = options.columns || 3;
-    var route = PRINT_ROUTES[pageType] || PRINT_ROUTES.math;
 
     var sourceEl;
     if (typeof container === 'string') {
@@ -178,38 +171,26 @@
       inputs[j].placeholder = '';
     }
 
-    // 页面类型预处理（如设置列数）
-    if (route.beforeClone) {
-      route.beforeClone(clone, columns);
-    }
-
-    // ============ A4 自适应列数 + 强制撑满 ============
-    // 与预览(practice.html)共用 PluginUtil.layout 同一套算法，保证打印页与屏幕页排版完全一致、不再漂移。
-    //   - 列数：调用方已传(固定/预览算好)则复用；否则从克隆 DOM 文本按同算法估算
-    //   - 每张卡片按题目长度跨列 + 撑满列宽（applySpanning 与预览 fitColumns 同逻辑）
-    // A4 竖版可打印宽度：PRINT_LAYOUT.printableWidthPx（190mm@96dpi ≈ 718px，与预览同源）
-    // 网格容器（q-grid：renderGeneric 降级链产出；questions-grid：统一渲染器产出）
+    // ============ 网格列数 / 列跨：P31-05 起完全采信渲染期 plan 产物，零二次度量 ============
+    // 屏幕渲染时 renderGrid 已注入容器内联 --grid-cols、每卡内联 grid-column（原 gridColumnsFromDom /
+    // applySpanning 克隆 DOM 二次度量已物理删除）。克隆 cssText 原样保留这些内联样式，此处仅重写打印必需项：
+    //   - 列数：源 DOM 内联 --grid-cols > .q-grid cols-N 类（renderGeneric 降级链）> options.columns > 3
+    //   - 每卡 gridColumn / justify-self 随克隆保留，不再重算
+    //   - gap 单一来源 = tokens.css --grid-gap-print（内联 var() 带兜底，防样式链接失效）
     var grids = clone.querySelectorAll('.questions-grid, .q-grid');
-    if (grids.length) {
-      // 列数：调用方已传(固定/预览算好)则复用；否则由 layout 统一按 DOM 估算
-      var a4Cols = options.columns
-        ? options.columns
-        : PluginUtil.layout.gridColumnsFromDom(clone, PRINT_LAYOUT.printableWidthPx);
-      // 通过内联样式设定列数，与屏幕端保持一致
-      // P28-UI-PRINT-WYSIWYG-01：--grid-cols 必须随 cssText 一起写入（先 setProperty 再赋 cssText 会被整体冲掉，
-      // 导致克隆链回落到样式表默认 3 列，与屏显漂移）。
-      for (var gi = 0; gi < grids.length; gi++) {
-        // P1.3（Issue #1）：gap 单一来源 = tokens.css --grid-gap-print（内联 var() 带兜底，防样式链接失效）
-        grids[gi].style.cssText =
-          '--grid-cols:' + a4Cols + ';' +
-          'display:grid;' +
-          'grid-template-columns:repeat(' + a4Cols + ', minmax(0,1fr));' +
-          'grid-auto-flow:row dense;' +
-          'gap:var(--grid-gap-print,' + PRINT_TOKEN_DEFAULTS['--grid-gap-print'] + ');' +
-          'width:100%;';
-      }
-      // 每张卡片按长度跨列 + 撑满列宽（与预览 fitColumns 完全一致）
-      PluginUtil.layout.applySpanning(clone, a4Cols);
+    for (var gi = 0; gi < grids.length; gi++) {
+      var gEl = grids[gi];
+      var inlineCols = parseInt(gEl.style.getPropertyValue('--grid-cols'), 10);
+      var classCols = (gEl.className.match(/(?:^|\s)cols-([1-6])(?:\s|$)/) || [])[1];
+      var a4Cols = inlineCols || Number(classCols) || columns;
+      // P28-UI-PRINT-WYSIWYG-01：--grid-cols 必须随 cssText 一起写入（先 setProperty 再赋 cssText 会被整体冲掉）
+      gEl.style.cssText =
+        '--grid-cols:' + a4Cols + ';' +
+        'display:grid;' +
+        'grid-template-columns:repeat(' + a4Cols + ', minmax(0,1fr));' +
+        'grid-auto-flow:row dense;' +
+        'gap:var(--grid-gap-print,' + PRINT_TOKEN_DEFAULTS['--grid-gap-print'] + ');' +
+        'width:100%;';
     }
 
     // 收集原始页面样式（原样复制，保证排版一致）
@@ -234,8 +215,8 @@
       // 用与屏幕态同 id 权重的选择器压过屏幕 padding/对齐
       '  #problemsArea .questions-grid .question-card,\n' +
       '  #problemsArea .q-grid .question-card { padding: var(--card-padding-print,' + PRINT_TOKEN_DEFAULTS['--card-padding-print'] + ') !important; text-align: left !important; }\n' +
-      // P28-UI-QNUM-GAP-01：打印端题号与屏显（生成页）一致——保留 22×22 灰色圆形徽章
-      '  .print-sheet .question-card .num { display:inline-block; width:22px; height:22px; border-radius:50%; background:#eef0f3; color:#9aa3b2 !important; font-weight:700; font-size:12px; text-align:center; vertical-align:middle; justify-content:center; min-width:0; padding:0; box-shadow:none; }\n' +
+      // P31-08：原克隆链 22×22 灰色圆徽章覆盖整条删除——题号纯文本「N.」规则唯一定义在
+      // components.css（.question-card .num + ::after），克隆文档原样复制页面样式自然继承，屏打同形。
       // P28-UI-ANSWER-LINE-REMOVE-01：克隆链打印与屏显一致——输入框下方不再保留作答横线
       '  .print-sheet .question-answer { border-bottom: none; }\n' +
       '  /* 隐藏交互元素（DOM已移除，CSS兜底） */\n' +
@@ -244,7 +225,7 @@
       '  .actions, .meta, .result, .wrong-section, .history-box,\n' +
       '  .mark-icon, .correct-answer, .feedback, .reveal, .step-hint,\n' +
       '  .badge, .formula-placeholder, .tb-feedback, .tb-think, .tb-num, .timer-bar, .controls, footer { display: none !important; }\n' +
-      '  /* 避免题目卡跨页截断（P28-UI-PRINTSTYLE-CLEANUP-01：原 .question-item/.tb-item/.problem 为零产出死类，改指真实在产的 .question-card） */\n' +
+      '  /* 分页兜底：直渲链卡片带 density-*/break 内联（PRINT_QCSS 档位规则），克隆链降级渲染产物无档位标记 → 整卡 avoid */\n' +
       '  .question-card { page-break-inside: avoid; }\n' +
       // 自 pages.css @media print 迁入：M13 乘除法表静态卡片（单卡通栏 + 表格边框）
       '  #problemsArea .preview-table-card { grid-column: 1 / -1; text-align: center !important; }\n' +
@@ -268,8 +249,7 @@
    * @param {string|Element} container - 内容容器选择器或DOM元素
    * @param {string} title - 打印标题
    * @param {Object} options
-   *   - pageType: 页面类型（唯一在用：math）
-   *   - columns: 列数
+   *   - columns: 列数兜底（源 DOM 无渲染期列数信息时使用；P31-05 起列数优先采信渲染期内联 --grid-cols / cols-N 类）
    */
   function open(container, title, options) {
     var printHtml = buildPrintHtml(container, title, options);
@@ -298,17 +278,17 @@
     return null;
   }
 
-  /** 解析 PluginUtil.layout（浏览器全局 → Node require core.js 回退；缺失返回 null） */
+  /** 解析 QuestionLayout（P31-02 起唯一排版 SSOT；浏览器全局 → Node require layout.js 回退；缺失返回 null） */
   function resolveLayout() {
     try {
-      if (typeof window !== 'undefined' && window.PluginUtil && window.PluginUtil.layout) return window.PluginUtil.layout;
+      if (typeof window !== 'undefined' && window.QuestionLayout) return window.QuestionLayout;
     } catch (e) { /* ignore */ }
     if (typeof require === 'function') {
-      try { require('../core/core.js'); } catch (e) { /* ignore */ }
+      try { return require('./layout.js'); } catch (e) { /* ignore */ }
     }
     try {
-      if (typeof globalThis !== 'undefined' && globalThis.PluginUtil && globalThis.PluginUtil.layout) {
-        return globalThis.PluginUtil.layout;
+      if (typeof globalThis !== 'undefined' && globalThis.QuestionLayout) {
+        return globalThis.QuestionLayout;
       }
     } catch (e) { /* ignore */ }
     return null;
@@ -328,33 +308,49 @@
   // A4 竖版打印专用 CSS（不依赖页面自带样式，独立自足）
   // P1.1（Issue #1 [Frozen Core Fix]）：打印去卡片化 + 间距收紧——纸张上无框无底，靠间距分隔。
   // @page / body 纸宽 / shell / 标题 / judge 形态已在 buildBasePrintCss，此处仅网格与题卡。
+  // P31-05：分页决策 = plan 档位（density 类经渲染期注入 HTML）：
+  //   compact 连续排（auto）/ standard 不拆卡（avoid）/ expanded 不拆卡 + 卡内联 break:keep 最高优先；
+  //   无档位卡（fixed 固定列模式不透传档位）回落整卡 avoid。列数/列跨决策不在此（唯 plan 经内联样式表达）。
   function buildPrintQcss(opts) {
     opts = opts || {};
     // P3.2（Issue #1）：answerRule=false 时口算/填空卷去作答虚线，由网格间距分隔（默认保留）
     var keepRule = opts.answerRule !== false;
     return 'body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; }' +
     '.questions-grid { display:grid; gap:' + cssTokenVal('--grid-gap-print') + '; grid-template-columns:repeat(var(--grid-cols,3), minmax(0,1fr)); grid-auto-flow:row dense; }' +
-    '.question-card { position:relative; padding:' + cssTokenVal('--card-padding-print') + '; page-break-inside:avoid; break-inside:avoid; box-sizing:border-box; }' +
-    // P3.3（Issue #1）：无图形短卡放行跨页拆分，提高页底密度（:has 不支持时自动退化为整卡 avoid）
-    '.question-card:not(:has(.question-graphic)) { page-break-inside:auto; break-inside:auto; }' +
+    '.question-card { position:relative; padding:' + cssTokenVal('--card-padding-print') + '; box-sizing:border-box; }' +
+    // P31-05 分页三档（消费渲染期注入的 density-* 类）
+    '.density-compact { page-break-inside:auto; break-inside:auto; }' +
+    '.density-standard { page-break-inside:avoid; break-inside:avoid; }' +
+    '.density-expanded { page-break-inside:avoid; break-inside:avoid; }' +
+    '.question-card:not([class~="density-compact"]):not([class~="density-standard"]):not([class~="density-expanded"]) { page-break-inside:avoid; break-inside:avoid; }' +
     '.question-stem { font-size:15px; line-height:1.5; font-weight:600; }' +
-    '.question-stem .num { display:inline-block; width:22px; height:22px; border-radius:50%; background:#eef0f3; color:#9aa3b2; font-weight:700; font-size:12px; text-align:center; vertical-align:middle; }' +
+    // P31-08：题号纯文本「N.」（直渲文档不引 components.css，此为同规则自持字面量；
+    // .num DOM 文本仍为纯数字，句号由 ::after 生成），与屏幕/克隆链同形
+    '.question-card .num { display:inline-block; min-width:1.6em; font-weight:600; color:#27324a; }' +
+    '.question-card .num::after { content:\'.\'; }' +
     '.question-graphic { margin:6px 0 4px; text-align:center; }' +
-    '.question-graphic svg { max-width:100%; height:auto; }' +
+    '.question-graphic svg { display:block; margin:0 auto; max-width:100%; height:auto; }' +
+    // P31-07：图形档位与 components.css 同源（尺寸走 token；直渲文档不引 tokens.css，经 tokenVal 拼字面量）
+    '.question-graphic.graphic-small svg { max-width:' + cssTokenVal('--graphic-w-small') + '; }' +
+    '.question-graphic.graphic-medium svg { max-width:' + cssTokenVal('--graphic-w-medium') + '; }' +
+    '.question-graphic.graphic-large svg { max-width:' + cssTokenVal('--graphic-w-large') + '; }' +
     '.question-options { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:8px; font-size:15px; }' +
+    // P31-07：选项两档（inline 继承 flex 流式；two-column 两列网格，与屏幕 components.css 同规则）
+    '.question-options.options-two-column { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px 14px; }' +
     '.question-options .option-letter { display:inline-block; min-width:20px; font-weight:700; color:#7c5cff; margin-right:4px; }' +
     '.question-answer { margin-top:6px; min-height:20px;' + (keepRule ? ' border-bottom:1px dashed #b9c6de;' : '') + ' }' +
     '.question-answer-print { min-height:20px; }' +
     // P28-INLINE-ANSWER-01：横向算式等号后空白盒（直渲 print 模式，与屏幕输入框等宽等高，无问号）
+    // P31-07：宽高走打印 token（--answer-w-print/--answer-h-print，与 tokens.css 同源）
     '.eq-answer { white-space:nowrap; }' +
-    '.answer-inp-inline { display:inline-block; width:72px; height:30px; margin-left:2px; vertical-align:middle; box-sizing:border-box; }' +
+    '.answer-inp-inline { display:inline-block; width:' + cssTokenVal('--answer-w-print') + '; height:' + cssTokenVal('--answer-h-print') + '; margin-left:2px; vertical-align:middle; box-sizing:border-box; }' +
     '.answer-inp-printblank { border:2px dashed #c9d4e6; border-radius:7px; background:#fafbff; }' +
     '.feedback { display:none; }';
   }
 
   /**
    * 直接由 SemanticQuestion[]（或兼容 Legacy Question）构建打印页完整 HTML。
-   * 列数 / 每题列跨与屏显预览同源：PluginUtil.layout 按 PRINT_LAYOUT.printableWidthPx 计算。
+   * 列数 / 每题列跨与屏显预览同源：QuestionLayout 按 PRINT_LAYOUT.printableWidthPx 计算。
    * @param {Array<Object>} questions
    * @param {Object} [options] { title, columns（显式列数，缺省按 718px 动态计算）, fixed（true=固定列数不做列跨）, answerRule, renderOptions }
    * @returns {string|null} 完整 HTML
@@ -366,26 +362,29 @@
     if (!PR || !Array.isArray(questions) || !questions.length) return null;
     var RO = resolveNS('RenderOptions', './render-options.js');
     var ro = RO ? RO.normalize(options.renderOptions, 'print')
-      : Object.assign({ mode: 'print', paper: 'A4', density: 'compact' }, options.renderOptions || {});
+      : Object.assign({ mode: 'print', paper: 'A4' }, options.renderOptions || {});
 
-    // 列数：调用方显式传入（session 已按固定 meta 或 718px 算好）则复用；
-    // 否则本处按 A4 可打印宽度走 layout 同一算法；layout 缺失（极端环境）回落 3 列。
+    // P31-03：列数与每题列跨统一取 QuestionLayout.plan（屏 / 打 / 直渲同源）；
+    // P31-05：经 planFor 取（与渲染期 renderAll 同键复用缓存）；调用方显式 columns 复用；
+    // layout 缺失（极端环境）回落 3 列、不跨列；固定列模式不跨列。
     var layout = resolveLayout();
     var columns = options.columns || 3;
-    if (!options.columns && layout) {
-      columns = layout.calcOptimalCols({ questions: questions }, PRINT_LAYOUT.printableWidthPx);
-    }
-    // 列跨：与预览 fitColumns 同一阈值（spanForLength：≥50 通栏 / ≥26 半宽）；固定列数模式不跨列。
     var spans = null;
-    if (layout && !options.fixed) {
-      spans = questions.map(function (q, i) {
-        return layout.spanForLength(layout.renderLen(q, i), columns) || 'span 1';
+    if (layout) {
+      var lp = layout.planFor(questions, {
+        mode: 'print',
+        availWidth: PRINT_LAYOUT.printableWidthPx,
+        columns: options.columns || undefined,
+        fixed: !!options.fixed
       });
+      columns = lp.columns;
+      if (!options.fixed) spans = lp.items.map(function (it) { return layout.spanToCss(it.span); });
     }
 
     var all;
     try {
-      all = PR.renderAll(questions, ro, { columns: columns, spans: spans });
+      // P31-04：fixed 透传 renderAll（固定列模式不输出列跨，P28-UI-PRINT-WYSIWYG-01 契约保持）
+      all = PR.renderAll(questions, ro, { columns: columns, spans: spans, fixed: !!options.fixed });
     } catch (e) {
       // FINAL-72：禁止 catch 吞错——保留原始错误诊断，再回落 null（调用方 alert 兜底）
       console.warn('[Print] buildFromQuestions 渲染失败：', e);
@@ -420,7 +419,9 @@
   global.Print = {
     LAYOUT: PRINT_LAYOUT,
     TOKEN_DEFAULTS: PRINT_TOKEN_DEFAULTS,
-    ROUTES: PRINT_ROUTES,
+    // P31-05：打印 token 读取（浏览器 getComputedStyle 真值 / Node 兜底字面量）——practice.html
+    // updateCountTip 测量容器经此取间距，与打印页同源（原页面硬编码已删）
+    tokenVal: cssTokenVal,
     open: open,
     buildPrintDocument: buildPrintDocument,
     buildJudgePrintCss: buildJudgePrintCss,

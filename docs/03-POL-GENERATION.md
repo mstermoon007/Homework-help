@@ -21,7 +21,7 @@ SSOT：`shared/knowledge/question-type-registry.js`
 |---|---|---|
 | Registry | TYPES 恰为 7 类 | ✅ |
 | Strategy | 题型集=7 | ✅ `VALID_QUESTION_TYPES = Registry.all()` |
-| Generator capability | 能力声明=canonical | ✅ 31 生成器全部 canonical |
+| Generator capability | 能力声明=canonical | ✅ 23 生成器全部 canonical（P31-FIX-01 对齐基线口径，原文 31 系 P28 时代漂移） |
 | Validator | 题型集=canonical | ✅ TypeContract `CONTRACT_MAP` 恰为 7 |
 | Presentation | 题型集=canonical | ✅ 无旧令牌 |
 

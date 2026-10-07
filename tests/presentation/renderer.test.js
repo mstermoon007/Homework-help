@@ -17,6 +17,7 @@ const SemanticQuestion = require(path.join(ROOT, 'shared', 'semantic', 'semantic
 require(path.join(ROOT, 'shared', 'svg', 'svg-core.js'));
 require(path.join(ROOT, 'shared', 'svg', 'svg-geometry.js'));
 require(path.join(ROOT, 'shared', 'svg', 'svg-calculation.js'));
+require(path.join(ROOT, 'shared', 'svg', 'svg-diagram.js')); // P31-07：diagram brace（graphic-small 真实渲染）
 
 // ============ M7-R07 统一 renderOptions ============
 test('M7-R07 screen 默认值', () => {
@@ -24,14 +25,15 @@ test('M7-R07 screen 默认值', () => {
   assert.strictEqual(ro.mode, 'screen');
   assert.strictEqual(ro.theme, 'default');
   assert.strictEqual(ro.device, 'desktop');
-  assert.strictEqual(ro.density, 'normal');
+  // P31-FIX-10：density 已从 renderOptions 默认值移除（密度档位唯一走 QuestionLayoutPlan）
+  assert.ok(!('density' in ro), 'screen 默认不再含 density');
 });
 
-test('M7-R07 print 默认值（paper A4 / density compact）', () => {
+test('M7-R07 print 默认值（paper A4；P31-FIX-10 起无 density）', () => {
   const ro = RenderOptions.normalize({}, 'print');
   assert.strictEqual(ro.mode, 'print');
   assert.strictEqual(ro.paper, 'A4');
-  assert.strictEqual(ro.density, 'compact');
+  assert.ok(!('density' in ro), 'print 默认不再含 density');
 });
 
 test('M7-R07 normalize 不修改调用方输入', () => {
@@ -200,22 +202,21 @@ test('P28-FIX-C normalizeSemanticQuestion 透传 spiralLevel（保留/缺省/非
   assert.strictEqual(SQ.normalizeSemanticQuestion({ questionType: 'calc', prompt: 'p', answer: { value: 1 }, spiralLevel: 'abc' }).spiralLevel, 1, '非法值应回落 1');
 });
 
-// ============ P2: density 契约生效（Issue #1 延伸） ============
-test('P2 density=compact → 卡片带 compact 类', () => {
-  const html = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 8 } }, 0, { mode: 'screen', density: 'compact' });
-  assert.ok(/class="question-card compact"/.test(html), '应输出 class="question-card compact"');
+// ============ P31-FIX-10：裸 compact 死双轨删除（原 P2 density 契约，随证据重写） ============
+// 原 P2.1/P2.2「renderOptions.density='compact' → 卡片挂裸 .compact 类」已物理删除：
+// 其 CSS 早于 P28-UI-PRINTSTYLE-CLEANUP-01 删除（门禁 21 矩阵登记），生产方幸存为零消费挂类；
+// P31-04 后密度档位唯一轨道=QuestionLayoutPlan 的 density-* 白名单类（见下方 P31-04/07 用例）。
+test('P31-FIX-10 renderOptions 传 density=compact 不再产生裸 compact 类（防双轨回归）', () => {
+  const html = HTMLRenderer.render(
+    { prompt: '5 + 3 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 8 } },
+    0, { mode: 'screen', density: 'compact' });
+  assert.ok(!/class="question-card compact"/.test(html), '裸 compact 类不得复活');
+  assert.ok(/class="question-card"/.test(html), '无 plan 档位时为纯 question-card');
 });
 
-test('P2 density 缺省/normal → 不输出 compact 类（屏幕回归）', () => {
-  const def = HTMLRenderer.render({ prompt: '5 + 3 = ?', answerMode: 'input', response: { layout: 'inline-after-equals' }, answer: { value: 8 } }, 0, { mode: 'screen' });
-  assert.ok(/class="question-card"/.test(def), '缺省应为纯 question-card');
-  const norm = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'screen', density: 'normal' });
-  assert.ok(/class="question-card"/.test(norm), 'normal 不应带 compact');
-});
-
-test('P2 Renderer.render 透传 normalize 后 density（print 默认 compact）', () => {
+test('P31-FIX-10 print 默认 renderOptions 不再带 density → 单题 render 不挂裸 compact 类', () => {
   const r = Renderer.render({ prompt: '1 + 1 = 2', answer: { value: '2' } }, { mode: 'print' }, 0);
-  assert.ok(/class="question-card compact"/.test(r.html), 'print 模式 HTML 应含 compact 类');
+  assert.ok(!/class="question-card compact"/.test(r.html), 'print 模式不得再含裸 compact 类（单题直渲无 plan 档位）');
   assert.ok(!('density' in r) && !('density' in (r.metadata || {})), 'density 不得进入 RenderResult 元数据');
 });
 
@@ -446,8 +447,9 @@ test('V5.1.0 judge：render-format 以 questionType 收敛 inputType 并透传�
 const fs = require('node:fs');
 const PrintMod = require(path.join(ROOT, 'shared', 'presentation', 'print.js'));
 const Print = PrintMod.Print || PrintMod;
-const coreMod = require(path.join(ROOT, 'shared', 'core', 'core.js'));
-const Layout = (typeof globalThis !== 'undefined' && globalThis.PluginUtil && globalThis.PluginUtil.layout) || coreMod.Layout;
+// P31-02：排版 SSOT 物理迁至 shared/presentation/layout.js（全局 QuestionLayout）
+const Layout = (typeof globalThis !== 'undefined' && globalThis.QuestionLayout)
+  || require(path.join(ROOT, 'shared', 'presentation', 'layout.js'));
 
 test('P28-UI-PRINT-WYSIWYG-01 Print.LAYOUT：A4 契约常量（190mm / 12mm 10mm / 718px）', () => {
   assert.strictEqual(Print.LAYOUT.pageMargin, '12mm 10mm');
@@ -483,14 +485,76 @@ test('P28-UI-PRINT-WYSIWYG-01 judge 打印形态唯一实现：克隆链去按�
   assert.ok(css.indexOf('.judge-mark { display:none; }') !== -1, '去 ✓/✗ 标记');
 });
 
-test('P28-UI-PRINT-WYSIWYG-01 layout 单一阈值：prompt 度量 / graphic 加分 / spanForLength', () => {
+test('P31-03 layout 决策表：prompt/graphic 度量保留；跨列改由 plan 结构决策（spanForLength 已删）', () => {
   assert.strictEqual(Layout.coreText({ prompt: '5 + 3 = ?' }), '5 + 3 = ?', 'coreText 认 SemanticQuestion.prompt');
   assert.ok(Layout.renderLen({ prompt: '一'.repeat(50) }) >= 50);
-  assert.ok(Layout.renderLen({ prompt: '看图列式', graphic: { type: 'geometry' } }) >= 10, '图形题 +8 占宽');
-  assert.strictEqual(Layout.spanForLength(50, 3), '1 / -1');
-  assert.strictEqual(Layout.spanForLength(26, 3), 'span 2');
-  assert.strictEqual(Layout.spanForLength(26, 1), 'span 1', '单列时最多 span 1');
-  assert.strictEqual(Layout.spanForLength(25, 4), null);
+  assert.ok(Layout.renderLen({ prompt: '看图列式', graphic: { type: 'geometry' } }) >= 10, '图形题 +8 占宽度量保留（列数估算仍消费）');
+  assert.strictEqual(typeof Layout.spanForLength, 'undefined', 'P31-05：纯长度跨列函数已随克隆链物理删除');
+  // B 桶：geometry 短题 → expanded/full；F 桶：calc 长题不再被长度拉宽 → compact/span1
+  const p = Layout.plan([
+    { questionType: 'geometry', prompt: '看图' },
+    { questionType: 'calc', prompt: '计'.repeat(60) }
+  ], { columns: 3 });
+  assert.deepStrictEqual([p.items[0].density, p.items[0].span], ['expanded', 'full']);
+  assert.deepStrictEqual([p.items[1].density, p.items[1].span], ['compact', 1]);
+  // 标准档长度分层仅对 choice/classify/apply/未知 DTO 保留：26 半宽 / 50 通栏
+  const dto = Layout.plan([
+    { content: { prompt: '应'.repeat(30) } },
+    { content: { prompt: '应'.repeat(60) } }
+  ], { columns: 2 }).items;
+  assert.strictEqual(dto[0].span, 2);
+  assert.strictEqual(dto[1].span, 'full');
+  assert.strictEqual(Layout.spanToCss(dto[0].span), 'span 2');
+  assert.strictEqual(Layout.spanToCss(dto[1].span), '1 / -1');
+  assert.strictEqual(Layout.spanToCss(1), 'span 1', '单列/单格档');
+});
+
+// ============ P31-04：plan 字段真实被 HTML 消费（渲染后不再改 DOM） ============
+
+test('P31-04 renderAll 先算 plan 并透传：span/density/stem/options 档位出现在成品 HTML', () => {
+  const qs = [
+    { questionType: 'geometry', prompt: '看图', graphic: { type: 'geometry', subtype: 'triangle', params: {} } },
+    { questionType: 'calc', prompt: '计'.repeat(60) },
+    { questionType: 'choice', prompt: '选式', options: ['15 − 14', '15 − 13', '15 − 12', '15 − 11'] },
+    { questionType: 'fill', prompt: '列式：6 × 5 = ？', response: { layout: 'inline-after-equals' } }
+  ];
+  const all = Renderer.renderAll(qs, { mode: 'screen' });
+  // 容器列数来自 plan（cols-N 类 + --grid-cols 内联，CSS .q-grid 消费）
+  assert.ok(/cols-[1-6]/.test(all.html), '容器带 cols-N 类');
+  assert.ok(/--grid-cols:[1-6]/.test(all.html), '容器注入 --grid-cols');
+  // span：geometry → 通栏内联（html-renderer 白名单形态）；P31-05：expanded/keep 卡随 style 附带分页内联
+  assert.ok(all.html.indexOf('style="grid-column:1 / -1;page-break-inside:avoid;break-inside:avoid"') !== -1, 'geometry 通栏 span + keep 分页经渲染期注入');
+  // density 档位类（plan 决策，白名单 density-*）
+  assert.ok(/question-card[^"]*density-expanded/.test(all.html), 'geometry/带图题 expanded 档位类');
+  assert.ok(/question-card[^"]*density-compact/.test(all.html), 'calc 题 compact 档位类');
+  // options mode 类（G 桶：表达式选项 two-column）
+  assert.ok(/class="question-options options-two-column"/.test(all.html), '选项容器 two-column mode 类');
+  // stem 类（H 桶：inline-after-equals → stem-inline）
+  assert.ok(/question-card[^"]*stem-inline/.test(all.html), 'inline-after-equals 题 stem-inline 类');
+});
+
+test('P31-04 graphicGear 档位类：.question-graphic 带 graphic-medium；非法档位不进 class', () => {
+  const html = HTMLRenderer.render({ questionType: 'fill', prompt: '看图填空' }, 0,
+    { mode: 'screen', graphic: '<svg></svg>', graphicGear: 'medium' });
+  assert.ok(/class="question-graphic graphic-medium"/.test(html), 'medium 档 → graphic-medium 类');
+  const noGear = HTMLRenderer.render({ questionType: 'fill', prompt: '纯文本' }, 0,
+    { mode: 'screen', graphic: '<svg></svg>' });
+  assert.ok(/class="question-graphic"/.test(noGear), '无档位不带 graphic-* 类');
+  const evil = HTMLRenderer.render({ questionType: 'fill', prompt: 'p' }, 0,
+    { mode: 'screen', graphic: '<svg></svg>', graphicGear: 'x:expression(alert(1))' });
+  assert.ok(evil.indexOf('expression') === -1, '白名单外档位不得进入 class');
+});
+
+test('P31-04 renderGrid：plan 列数注入 --grid-cols；dense flow 随容器（接替 fitColumns 网格语义）', () => {
+  const html = HTMLRenderer.renderGrid([{ html: '<div class="question-card"></div>' }], { columns: 2 });
+  assert.ok(html.indexOf('cols-2') !== -1 && html.indexOf('--grid-cols:2') !== -1);
+  assert.ok(html.indexOf('grid-auto-flow:row dense') !== -1, 'dense flow 随渲染期注入');
+});
+
+test('P31-04 layout 导出：fitColumns 已物理删除（主链渲染后零 DOM 改写）', () => {
+  assert.strictEqual(typeof Layout.fitColumns, 'undefined', 'fitColumns 零消费者后删除');
+  assert.strictEqual(typeof Layout.plan, 'function');
+  assert.strictEqual(typeof Layout.planFor, 'function', 'P31-05：plan 缓存取数入口');
 });
 
 test('P28-UI-PRINT-WYSIWYG-01 coreText 与 html-renderer promptOf 同源（DTO 嵌套题干不漏度量）', () => {
@@ -552,4 +616,313 @@ test('P28-UI-PRINT-WYSIWYG-01 固定列数（fixed）不输出列跨，列数以
   );
   assert.ok(html.indexOf('--grid-cols:2') !== -1);
   assert.ok(html.indexOf('grid-column:') === -1, '固定模式不做列跨');
+});
+
+// ============ P31-05：plan 缓存（planFor）+ 克隆/直渲链统一取数 + 分页档位 ============
+
+test('P31-05 planFor 缓存：同题集对象 + 同决策面返回同一结果；决策面变化重算；不同题集不共享', () => {
+  const qs = [
+    { questionType: 'geometry', prompt: '看图' },
+    { questionType: 'calc', prompt: '计'.repeat(60) }
+  ];
+  const a = Layout.planFor(qs, { mode: 'print', availWidth: 718 });
+  assert.strictEqual(Layout.planFor(qs, { mode: 'print', availWidth: 718 }), a, '缓存命中：同一引用');
+  assert.notStrictEqual(Layout.planFor(qs, { mode: 'print', availWidth: 718, columns: 2 }), a, '决策面（columns）变化 → 重算');
+  assert.strictEqual(Layout.planFor(qs, { mode: 'print', availWidth: 718, columns: 2 }).columns, 2, '显式 columns 生效');
+  assert.notStrictEqual(Layout.planFor(qs, { mode: 'screen', availWidth: 718 }), a, '决策面（mode）变化 → 重算');
+  assert.notStrictEqual(Layout.planFor([...qs], { mode: 'print', availWidth: 718 }), a, '不同题集对象不共享缓存');
+  const set = { questions: qs, meta: { columns: 3 } };
+  const d = Layout.planFor(set, { mode: 'print', availWidth: 718 });
+  assert.strictEqual(Layout.planFor(set, { mode: 'print', availWidth: 718 }), d, '{questions,meta} 包装形态同样命中');
+  assert.strictEqual(d.columns, a.columns, 'P31-10：meta.columns 死数据面已删，对象形态与数组形态同动态列数');
+});
+
+test('P31-05 renderAll 经 planFor 取数：渲染列数与直取 planFor 同键同值', () => {
+  const qs = [
+    { questionType: 'geometry', prompt: '看图', graphic: { type: 'geometry', subtype: 'triangle', params: {} } },
+    { questionType: 'calc', prompt: '计'.repeat(60) },
+    { questionType: 'choice', prompt: '选式', options: ['15 − 14', '15 − 13', '15 − 12', '15 − 11'] }
+  ];
+  const all = Renderer.renderAll(qs, { mode: 'screen' }, { availWidth: 718 });
+  const cached = Layout.planFor(qs, { mode: 'screen', availWidth: 718 });
+  assert.ok(all.html.indexOf('--grid-cols:' + cached.columns) !== -1, '渲染容器列数 = planFor 缓存结果');
+});
+
+test('P31-05 plan.break 真实消费：expanded 卡内联不跨页 + PRINT_QCSS 分页三档随 density 类', () => {
+  const qs = [
+    { questionType: 'geometry', prompt: '看图', graphic: { type: 'geometry', subtype: 'triangle', params: {} } },
+    { questionType: 'calc', prompt: '计'.repeat(60) },
+    { questionType: 'choice', prompt: '选式', options: ['15 − 14', '15 − 13', '15 − 12', '15 − 11'] }
+  ];
+  const html = Print.buildFromQuestions(qs, { title: '分页卷' });
+  // expanded（geometry）卡：span full + break:keep → 内联 page-break（最高优先不拆卡）
+  assert.ok(html.indexOf('style="grid-column:1 / -1;page-break-inside:avoid;break-inside:avoid"') !== -1,
+    'expanded/keep 卡内联避免跨页拆分');
+  // 分页三档 CSS（消费渲染期注入的 density-* 类）
+  assert.ok(html.indexOf('.density-compact { page-break-inside:auto; break-inside:auto; }') !== -1, 'compact 档连续排');
+  assert.ok(html.indexOf('.density-standard { page-break-inside:avoid; break-inside:avoid; }') !== -1, 'standard 档不拆卡');
+  assert.ok(html.indexOf('.density-expanded { page-break-inside:avoid; break-inside:avoid; }') !== -1, 'expanded 档不拆卡');
+  // 非 keep 卡不输出内联分页（auto 档交 CSS）
+  assert.ok(html.indexOf('style="grid-column:span 1;page-break-inside') === -1, '非 keep 卡无内联分页');
+  // 旧无差别 avoid / :has 兜底规则不得回归
+  assert.ok(html.indexOf(':has(') === -1, 'P3.3 :has 兜底规则已由分页三档取代');
+});
+
+test('P31-05 html-renderer break 白名单：keep 输出内联分页；auto/非白名单不进 style', () => {
+  const keep = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'print', break: 'keep' });
+  assert.ok(keep.indexOf('style="page-break-inside:avoid;break-inside:avoid"') !== -1);
+  const auto = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'print', break: 'auto' });
+  assert.ok(auto.indexOf('page-break-inside') === -1, 'auto 不输出分页内联');
+  const evil = HTMLRenderer.render({ prompt: 'p' }, 0, { mode: 'print', break: 'x"onmouseover="alert(1)' });
+  assert.ok(evil.indexOf('onmouseover') === -1, '白名单外 break 不得进入 style');
+});
+
+test('P31-05 Print.tokenVal：Node 回落契约字面量（与 TOKEN_DEFAULTS 同源）', () => {
+  assert.strictEqual(Print.tokenVal('--grid-gap-print'), '8px 6px');
+  assert.strictEqual(Print.tokenVal('--card-padding-print'), '6px 8px');
+  assert.strictEqual(Print.tokenVal('--unknown-token'), undefined, '未知 token 无兜底');
+});
+
+test('P31-05 打印链收口：克隆链二次度量与路由列数决策已物理删除', () => {
+  assert.strictEqual(typeof Layout.gridColumnsFromDom, 'undefined', '克隆 DOM 列数估算已删');
+  assert.strictEqual(typeof Layout.applySpanning, 'undefined', '克隆 DOM 列跨重写已删');
+  assert.strictEqual(typeof Layout.spanForLength, 'undefined', '纯长度跨列已删');
+  assert.strictEqual(typeof Print.ROUTES, 'undefined', 'PRINT_ROUTES（beforeClone 列数覆写）已删');
+  const printSrc = fs.readFileSync(path.join(ROOT, 'shared', 'presentation', 'print.js'), 'utf8');
+  assert.ok(printSrc.indexOf('options.pageType') === -1, 'pageType 参数已删（零调用语义）');
+});
+
+// ============ P31-06 raw 题集转正 + 唯一应急链 ============
+
+test('P31-06 ① 错题本/重做 raw 题集（Legacy DTO __semantic）经 renderAll 正常渲染：完整卡 + data-index + 批改绑定结构', () => {
+  const RF = require(path.join(ROOT, 'shared', 'presentation', 'render-format.js'));
+  const sqs = [
+    { id: 'r1', questionType: 'calc', prompt: '3 + 4 = ?', answerMode: 'input', answer: { value: 7 } },
+    { id: 'r2', questionType: 'choice', prompt: '选答案', answerMode: 'choice', options: ['4', '5', '6'], answer: { value: '5' } },
+    { id: 'r3', questionType: 'judge', prompt: '判断：3 > 2', answer: { value: true } }
+  ];
+  // redo 场景真实数据形态：RenderFormat Legacy DTO（带 __semantic 原始 SQ 引用），
+  // 页面 renderRawSetHtml 经 __semantic 取 SQ 走唯一渲染链（renderGeneric 已物理删除）。
+  const legacy = RF.toRenderableQuestions(sqs);
+  assert.ok(legacy.every(q => q.__semantic), '前置：raw 题集每条带 __semantic 引用');
+  const html = Renderer.renderAll(legacy.map(q => q.__semantic || q), { mode: 'screen' }, { availWidth: 718 }).html;
+  assert.strictEqual((html.match(/class="question-card/g) || []).length, 3, '三题三卡');
+  [0, 1, 2].forEach(i => {
+    assert.ok(html.indexOf('data-index="' + i + '"') !== -1, 'data-index 连续（collectAnswers/computeResult 绑定面）');
+  });
+  assert.ok(html.indexOf('3 + 4 = ?') !== -1, '题干完整');
+  assert.ok(/question-options/.test(html) && /type="radio"/.test(html), 'choice 输出真实选项 radio（不再退化为文本框）');
+  assert.ok(/name="q2" value="true"/.test(html), 'judge 输出同组 radio（value=true/false，radio 同组批改契约保持）');
+});
+
+test('P31-06 ② SVG 失败（status≠SUCCESS）题目仍完整显示：题干/作答在，失败图形不注入', () => {
+  const sq = { questionType: 'fill', prompt: '看图填名称', answerMode: 'input', answer: { value: '三角形' }, graphic: { type: 'no-such-graphic-type' } };
+  const all = Renderer.renderAll([sq], { mode: 'screen' }, {});
+  assert.notStrictEqual(all.items[0]._gfxStatus, 'SUCCESS', '图形状态非 SUCCESS');
+  assert.ok(all.html.indexOf('看图填名称') !== -1, '题干仍完整显示');
+  assert.ok(/answer-inp/.test(all.html), '作答输入框仍在');
+  assert.ok(!/<svg/.test(all.html) && all.html.indexOf('question-graphic') === -1, '失败图形不注入也不吞题');
+});
+
+test('P31-06 ③ 单题渲染异常 → 唯一应急出口 renderEmergency（纯文本题干 + 标准作答，无选项区）', () => {
+  const orig = HTMLRenderer.render;
+  HTMLRenderer.render = function () { throw new Error('模拟渲染器异常'); };
+  try {
+    const sqs = [
+      { questionType: 'choice', prompt: '应急选择题', answerMode: 'choice', options: ['A 项', 'B 项'], answer: { value: 'A 项' } },
+      { questionType: 'calc', prompt: '应急算式 2 + 2 = ?', answer: { value: 4 } }
+    ];
+    const all = Renderer.renderAll(sqs, { mode: 'screen' }, {});
+    assert.ok(!/question-options/.test(all.html), '应急卡无选项区（正常 choice 链必有，据此可辨应急产物）');
+    assert.ok(all.html.indexOf('应急选择题') !== -1 && all.html.indexOf('应急算式') !== -1, '纯文本题干不丢');
+    assert.strictEqual((all.html.match(/class="answer-inp"/g) || []).length, 2, '每题一个标准作答 input');
+    [0, 1].forEach(i => {
+      assert.ok(all.html.indexOf('data-index="' + i + '"') !== -1, 'data-index 绑定保留');
+    });
+    assert.ok(!all.items.some(r => r.html === ''), '禁止 catch→\'\'：应急产物非空');
+  } finally {
+    HTMLRenderer.render = orig;
+  }
+});
+
+test('P31-06 ④ plan 异常 → 安全单列 plan（columns=1 全 compact），渲染不中断', () => {
+  const orig = Layout.planFor;
+  Layout.planFor = function () { throw new Error('模拟排版决策异常'); };
+  try {
+    const qs = [
+      { questionType: 'calc', prompt: '1 + 1 = ?', answer: { value: 2 } },
+      { questionType: 'fill', prompt: '填'.repeat(60), answer: { value: 'x' } }
+    ];
+    const all = Renderer.renderAll(qs, { mode: 'screen' }, {});
+    assert.ok(all.html.indexOf('--grid-cols:1') !== -1, '容器安全单列');
+    assert.ok(!/grid-column:span 2|grid-column:1 \/ -1/.test(all.html), '安全档无跨列');
+    assert.ok(/density-compact/.test(all.html), '全 compact 档');
+    assert.ok(/answer-inp/.test(all.html), '渲染不中断，题目完整');
+    assert.strictEqual((all.html.match(/class="question-card/g) || []).length, 2);
+  } finally {
+    Layout.planFor = orig;
+  }
+});
+
+// ============ P31-07：graphic/options 档位 CSS 接线 + 打印作答框 token ============
+
+test('P31-07 带图题在三档 density 下 graphic-* 与 density-* 类共存（真实 SVG 成功渲染）', () => {
+  const brace = { type: 'diagram', subtype: 'brace', params: { left: 3, right: 5, unit: '个' } };
+  const square = { type: 'geometry', subtype: 'square', params: { size: 4 } };
+  const cylinder = { type: 'geometry', subtype: 'cylinder', params: { r: 30, height: 60 } };
+  const qs = [
+    { questionType: 'calc', prompt: '看图列式', graphic: brace, answer: { value: 8 } },        // compact + small
+    { questionType: 'choice', prompt: '看图选择', graphic: brace, options: ['3 个', '5 个', '8 个', '9 个'], answer: { value: '8 个' } }, // standard + small
+    { questionType: 'fill', prompt: '求正方形面积', graphic: square, answer: { value: 16 } },   // expanded + medium
+    { questionType: 'geometry', prompt: '求圆柱体积', graphic: cylinder, answer: { value: 1 } } // expanded + large
+  ];
+  const all = Renderer.renderAll(qs, { mode: 'screen' }, {});
+  // 前置：四题图形均真实渲染（容器存在的前提）
+  assert.strictEqual(all.items.filter(r => r._gfxStatus === 'SUCCESS').length, 4, '四图均 SUCCESS');
+  assert.ok(/density-compact[^"]*[^>]*>[\s\S]{0,400}?graphic-small/.test(all.html) ||
+    /question-card[^"]*density-compact[\s\S]*?question-graphic graphic-small/.test(all.html),
+    'compact 卡携带 graphic-small');
+  assert.ok(/question-card[^"]*density-standard[\s\S]*?question-graphic graphic-small/.test(all.html),
+    'standard 卡携带 graphic-small');
+  assert.ok(/question-card[^"]*density-expanded[\s\S]*?question-graphic graphic-medium/.test(all.html),
+    'expanded 卡携带 graphic-medium');
+  assert.ok(/question-card[^"]*density-expanded[\s\S]*?question-graphic graphic-large/.test(all.html),
+    'expanded 卡携带 graphic-large');
+});
+
+test('P31-07 components.css 真实消费档位类：图形三档尺寸 + 选项两列网格（tokens 引用）', () => {
+  const css = fs.readFileSync(path.join(ROOT, 'shared', 'styles', 'components.css'), 'utf8');
+  ['.question-graphic.graphic-small svg', '.question-graphic.graphic-medium svg', '.question-graphic.graphic-large svg']
+    .forEach(sel => assert.ok(css.indexOf(sel) !== -1, 'CSS 缺图形档位规则: ' + sel));
+  assert.ok(/\.question-graphic\.graphic-small svg\s*\{[^}]*var\(--graphic-w-small\)/.test(css), 'small 走 token');
+  assert.ok(/\.question-graphic\.graphic-medium svg\s*\{[^}]*var\(--graphic-w-medium\)/.test(css), 'medium 走 token');
+  assert.ok(/\.question-graphic\.graphic-large svg\s*\{[^}]*var\(--graphic-w-large\)/.test(css), 'large 走 token');
+  assert.ok(/\.question-options\.options-two-column\s*\{[^}]*display:\s*grid/.test(css), 'two-column → 两列网格');
+  assert.ok(/grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/.test(css), '两列等宽');
+  // 屏幕作答框 96×32 保持（任务书：屏幕保持）
+  assert.ok(/\.answer-inp\s*\{[^}]*width:\s*96px;\s*height:\s*32px/.test(css), '屏幕作答框保持 96×32');
+});
+
+test('P31-07 tokens.css 定义图形三档宽度 + 打印作答框尺寸（屏打唯一真相）', () => {
+  const tokens = fs.readFileSync(path.join(ROOT, 'shared', 'styles', 'tokens.css'), 'utf8');
+  [
+    ['--graphic-w-small: 120px'], ['--graphic-w-medium: 220px'], ['--graphic-w-large: 360px'],
+    ['--answer-w-print: 72px'], ['--answer-h-print: 30px']
+  ].forEach(([decl]) => assert.ok(tokens.indexOf(decl) !== -1, 'tokens.css 缺: ' + decl));
+});
+
+test('P31-07 Print.tokenVal 新 token 兜底 + 与 tokens.css 字面量同源', () => {
+  assert.strictEqual(Print.tokenVal('--graphic-w-small'), '120px');
+  assert.strictEqual(Print.tokenVal('--graphic-w-medium'), '220px');
+  assert.strictEqual(Print.tokenVal('--graphic-w-large'), '360px');
+  assert.strictEqual(Print.tokenVal('--answer-w-print'), '72px');
+  assert.strictEqual(Print.tokenVal('--answer-h-print'), '30px');
+});
+
+test('P31-07 直渲打印文档：图形三档/选项两列规则与屏幕同源；inline 空白盒尺寸走 token', () => {
+  const brace = { type: 'diagram', subtype: 'brace', params: { left: 3, right: 5, unit: '个' } };
+  const square = { type: 'geometry', subtype: 'square', params: { size: 4 } };
+  const cylinder = { type: 'geometry', subtype: 'cylinder', params: { r: 30, height: 60 } };
+  const qs = [
+    { questionType: 'calc', prompt: '看图列式', graphic: brace, answer: { value: 8 } },
+    { questionType: 'choice', prompt: '选算式', graphic: brace, options: ['15 − 14', '15 − 13', '15 − 12', '15 − 11'], answer: { value: '15 − 11' } },
+    { questionType: 'fill', prompt: '求正方形面积', graphic: square, answer: { value: 16 } },
+    { questionType: 'geometry', prompt: '求圆柱体积', graphic: cylinder, answer: { value: 1 } }
+  ];
+  const html = Print.buildFromQuestions(qs, { title: 'P31-07 档位卷' });
+  assert.ok(html.indexOf('.question-graphic.graphic-small svg') !== -1 && html.indexOf('max-width:120px') !== -1, '打印 small 档');
+  assert.ok(html.indexOf('.question-graphic.graphic-medium svg') !== -1 && html.indexOf('max-width:220px') !== -1, '打印 medium 档');
+  assert.ok(html.indexOf('.question-graphic.graphic-large svg') !== -1 && html.indexOf('max-width:360px') !== -1, '打印 large 档');
+  assert.ok(html.indexOf('.question-options.options-two-column') !== -1, '打印选项两列规则同源');
+  assert.ok(/\.answer-inp-inline\s*\{[^}]*width:72px;\s*height:30px/.test(html), '打印 inline 空白盒 72×30 经 token 拼出');
+});
+
+// ==================== P31-08：CSS 物理清理 + 视觉微调（题号纯文本/题卡题干/三表归位） ====================
+
+test('P31-08 tokens.css 题卡圆角 + 题干字号/行高/字重 SSOT', () => {
+  const tokens = fs.readFileSync(path.join(ROOT, 'shared', 'styles', 'tokens.css'), 'utf8');
+  [
+    ['--card-radius: 8px'], ['--stem-size: 17px'],
+    ['--stem-line-height: 1.6'], ['--stem-weight: 600']
+  ].forEach(([decl]) => assert.ok(tokens.indexOf(decl) !== -1, 'tokens.css 缺: ' + decl));
+});
+
+test('P31-08 components.css：圆徽章物理消失→纯文本「N.」、q-text 死规则清除、题干走 token', () => {
+  const css = fs.readFileSync(path.join(ROOT, 'shared', 'styles', 'components.css'), 'utf8');
+  // 卡片圆角走 token（任务书 6-8px）
+  assert.ok(/\.question-card\s*\{[\s\S]*?border-radius:\s*var\(--card-radius\)/.test(css), '卡片圆角走 --card-radius');
+  // 题号：纯文本规则 + ::after 句号
+  assert.ok(/\.question-card \.num\s*\{[^}]*font-weight:\s*var\(--stem-weight\)[^}]*color:\s*var\(--ink\)/.test(css), '题号纯文本（token 字重/ink 色）');
+  assert.ok(/\.question-card \.num::after\s*\{\s*content:\s*'\.'/.test(css), '句号由 ::after 纯视觉生成');
+  // 圆徽章视觉物理消失：任何 .num 规则块不得再含 50% 圆底/22px 盒/徽章底色
+  const numBlocks = css.match(/\.num\s*\{[^}]*\}/g) || [];
+  numBlocks.forEach(b => {
+    assert.ok(!/border-radius:\s*50%/.test(b), '题号规则残留圆底: ' + b);
+    assert.ok(!/background:/.test(b), '题号规则残留徽章底色: ' + b);
+    assert.ok(!/width:\s*22px/.test(b), '题号规则残留 22px 盒: ' + b);
+  });
+  // 旧 renderGeneric 链死样式物理清除
+  assert.ok(!/\.q-text\s*[,.{:]/.test(css), '.q-text 死规则应物理删除（唯一生产方 renderGeneric 已于 P31-06 删除）');
+  assert.ok(!/\.question-stem \.num\s*\{/.test(css), '题号规则不得再在 .question-stem 下重复定义');
+  // 题干 17px/1.6/600 走 token；删 800 粗体
+  assert.ok(/\.question-stem\s*\{[^}]*font-size:\s*var\(--stem-size\)[^}]*line-height:\s*var\(--stem-line-height\)[^}]*font-weight:\s*var\(--stem-weight\)/.test(css), '题干三值走 token');
+  const stemBlock = css.match(/\.question-stem\s*\{[^}]*\}/)[0];
+  assert.ok(!/font-weight:\s*800/.test(stemBlock), '题干不得残留 800 粗体');
+});
+
+test('P31-08 components.css：practice.html 题目内联段迁入（screen 边界保持）+ 反馈色类驱动', () => {
+  const css = fs.readFileSync(path.join(ROOT, 'shared', 'styles', 'components.css'), 'utf8');
+  // @media screen 边界：屏幕去作答线 + 实线细边框；打印 media 不命中（克隆/直渲各自自持）
+  const screenBlock = css.match(/@media screen\s*\{[\s\S]*?\n\}/)[0];
+  assert.ok(/\.question-answer\s*\{[^}]*border-bottom:\s*none/.test(screenBlock), '屏幕去作答线迁入');
+  assert.ok(/\.answer-inp\s*\{[^}]*border-style:\s*solid[^}]*border-width:\s*1\.5px/.test(screenBlock), '屏幕作答框实线 1.5px 迁入');
+  // 批改反馈三行样式迁入 + 颜色由卡 correct/wrong 类驱动（替代 JS 内联）
+  assert.ok(/\.question-card \.feedback \.fb-line\s*\{[^}]*12\.5px/.test(css), 'fb-line 迁入');
+  assert.ok(/\.question-card \.feedback \.fb-explain\s*\{[^}]*var\(--muted\)/.test(css), 'fb-explain 迁入');
+  assert.ok(/\.question-card \.feedback \.fb-mis\s*\{[^}]*var\(--warn\)/.test(css), 'fb-mis 迁入');
+  assert.ok(/\.question-card\.correct \.feedback\s*\{[^}]*var\(--ok\)/.test(css), '答对反馈色类驱动');
+  assert.ok(/\.question-card\.wrong \.feedback\s*\{[^}]*var\(--bad\)/.test(css), '答错反馈色类驱动');
+  // 屏幕作答框 96×32 不改（P31-07 锁定）
+  assert.ok(/\.answer-inp\s*\{[^}]*width:\s*96px;\s*height:\s*32px/.test(css), '屏幕作答框保持 96×32');
+});
+
+test('P31-08 pages.css：网格规则唯一归并、480 断点单一、题卡覆写迁出', () => {
+  const pages = fs.readFileSync(path.join(ROOT, 'shared', 'styles', 'pages.css'), 'utf8');
+  assert.ok(/\.questions-grid,\s*\.q-grid\s*\{[\s\S]*?gap:\s*var\(--grid-gap-screen\)[\s\S]*?grid-template-columns:\s*repeat\(var\(--grid-cols,\s*1\),\s*minmax\(0,\s*1fr\)\)/.test(pages), '网格唯一规则 + token 间距 + plan 注入列数');
+  assert.ok(!/^\s*\.q-grid\s*\{/m.test(pages), '裸 .q-grid 网格声明应归并删除');
+  assert.ok(!/^\s*\.questions-grid\s*\{/m.test(pages), '裸 .questions-grid 网格声明应归并删除');
+  assert.strictEqual((pages.match(/max-width:\s*480px/g) || []).length, 1, '<480px 断点只能有一处');
+  assert.ok(!/#problemsArea[^{]*\.question-card[^}]*!important/.test(pages), '题卡 text-align/padding !important 覆写应归位 components 基础规则');
+});
+
+test('P31-08 print.js：克隆链徽章覆盖删除（同源继承）、直渲链纯文本题号、打印题干 15px 保持', () => {
+  const printSrc = fs.readFileSync(path.join(ROOT, 'shared', 'styles', '..', 'presentation', 'print.js'), 'utf8');
+  assert.ok(!/\.print-sheet \.question-card \.num/.test(printSrc), '克隆链圆徽章覆盖整条删除');
+  assert.ok(!/\.num\s*\{[^}]*border-radius:50%/.test(printSrc), 'print.js 不得残留任何圆徽章 .num 规则');
+  assert.ok(!/background:#eef0f3[^;]*;[^;]*;[^\n]*num|num[^\n]*background:#eef0f3/.test(printSrc), '徽章灰底字面量清除');
+  // 直渲打印文档实证
+  const html = Print.buildFromQuestions(
+    [{ questionType: 'calc', prompt: '1 + 1 = ?', answer: { value: 2 } }],
+    { title: 'P31-08 题号卷' }
+  );
+  assert.ok(html.indexOf('.question-card .num { display:inline-block; min-width:1.6em') !== -1, '直渲纯文本题号');
+  assert.ok(html.indexOf(".question-card .num::after { content:'.'; }") !== -1, '直渲 ::after 句号');
+  assert.ok(!/\.num[^{]*\{[^}]*50%/.test(html), '直渲文档无圆底');
+  assert.ok(/\.question-stem\s*\{[^}]*font-size:15px;\s*line-height:1\.5;\s*font-weight:600/.test(html), '打印题干保持纸张口径 15px/1.5/600');
+});
+
+test('P31-08 practice.html 题目组件内联样式清零（含渲染后 fb.style.color）；.num DOM 文本仍为纯数字', () => {
+  const page = fs.readFileSync(path.join(ROOT, 'practice.html'), 'utf8');
+  assert.ok(!/#problemsArea \.question-card \.num/.test(page), '页面不再私写题号样式');
+  assert.ok(!/#problemsArea \.answer-inp/.test(page), '页面不再私写作答框样式');
+  assert.ok(!/#problemsArea \.question-answer/.test(page), '页面不再私写作答区样式');
+  assert.ok(!/#problemsArea \.feedback/.test(page), '页面不再私写反馈样式');
+  assert.ok(!/fb\.style\.color/.test(page), '批改反馈色不再渲染后写内联（类驱动）');
+  // DOM 契约不动：句号纯视觉，.num 文本仍为纯数字
+  const all = Renderer.renderAll(
+    [{ questionType: 'calc', prompt: '1 + 1 = ?', answer: { value: 2 } }],
+    { mode: 'screen' }, {}
+  );
+  assert.ok(/<span class="num">1<\/span>/.test(all.html), '.num DOM 文本为纯数字（无句号）');
+  assert.ok(!/<span class="num">1\.<\/span>/.test(all.html), '句号不得进入 DOM');
 });

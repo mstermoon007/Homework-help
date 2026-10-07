@@ -511,18 +511,19 @@
     min-width: 50px;
 }
 
-/* ============ 题目卡片（统一渲染器 html-renderer.js 输出 + renderGeneric 降级模板） ============
+/* ============ 题目卡片（统一渲染器 html-renderer.js 输出） ============
  * P28-UI-PRINTSTYLE-CLEANUP-01：删除零产出死类样式（.q-header/.scene-box/.q-hint/.options/.opt/
  * .input-group/.unit/.qa-row/.qa-label/.formula-inp/compact 家族/.global-tip——旧插件渲染链
- * render.js 已按 P28-22 删除，无任何生产方输出这些类）。 */
+ * render.js 已按 P28-22 删除，无任何生产方输出这些类）。
+ * P31-08：旧 renderGeneric 第二渲染器链的 .q-text/圆徽章 .num 样式随其唯一生产方删除而物理清除
+ * （renderGeneric 已于 P31-06 物理删除）；题号三处圆徽章归一为纯文本「N.」。 */
 .question-card {
     display: grid;
     grid-template-rows: auto auto 1fr auto;
     gap: var(--q-header-gap) var(--q-grid-gap);
     overflow: hidden;
-    /* 保留原有样式属性 */
     border: 1px solid var(--line);
-    border-radius: 10px;
+    border-radius: var(--card-radius);
     padding: var(--card-padding-screen);
     position: relative;
     text-align: left;
@@ -530,21 +531,16 @@
     align-self: start;
     justify-self: start;
 }
+/* P31-08：题号统一纯文本「N.」——.num DOM 文本仍为纯数字（html-renderer 契约不动），
+   句号由 ::after 纯视觉生成；屏/打同形（克隆链复制本样式自然继承，直渲链 PRINT_QCSS 自持同规则）。
+   min-width 让个位数与多位题号后的题干起点对齐。 */
 .question-card .num {
-    flex: 0 0 auto;
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 22px; height: 22px; border-radius: 50%;
-    vertical-align: middle; flex-shrink: 0;
-    background: var(--brand-bg); color: var(--brand-d);
-    font-weight: 800; font-size: 12px;
-}
-.question-card .q-text {
-    display: inline;
-    font-size: 17px;
-    font-weight: 800;
+    display: inline-block;
+    min-width: 1.6em;
+    font-weight: var(--stem-weight);
     color: var(--ink);
-    vertical-align: middle;
 }
+.question-card .num::after { content: '.'; }
 
 /* 答案输入框：默认宽 96px；调用方传 opts.inputWidth 时由内联 style 覆盖 */
 .answer-inp {
@@ -566,18 +562,43 @@
 
 .question-card .feedback { font-size: 12px; font-weight: 700; min-height: 16px; margin-top: 6px; }
 
-/* ============ 新渲染器（html-renderer.js / PluginUtil.layout）题目卡片内层结构 ============
+/* ============ 新渲染器（html-renderer.js / QuestionLayout）题目卡片内层结构 ============
  * 屏幕端此前无样式（仅在 shared/presentation/print.js PRINT_QCSS 内定义），导致屏幕与打印不一致。
  * 此处补齐与打印端等价的屏幕样式，保证题干/选项/图形/答题线一致呈现（P0 排版一致性修复）。 */
-.question-stem { font-size: 15px; line-height: 1.5; font-weight: 600; }
-.question-stem .num { display: inline-block; min-width: 18px; font-weight: 800; color: #1A1B1C; }
+.question-stem { font-size: var(--stem-size); line-height: var(--stem-line-height); font-weight: var(--stem-weight); }
 .question-graphic { margin: 6px 0 4px; text-align: center; }
-.question-graphic svg { max-width: 100%; height: auto; }
+.question-graphic svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+/* P31-07：图形档位（plan.graphicGear 渲染期随卡注入 graphic-small/medium/large；
+   尺寸唯一真相 tokens.css --graphic-w-*，屏/打同源；无档位类保持 100% 上限） */
+.question-graphic.graphic-small svg { max-width: var(--graphic-w-small); }
+.question-graphic.graphic-medium svg { max-width: var(--graphic-w-medium); }
+.question-graphic.graphic-large svg { max-width: var(--graphic-w-large); }
 .question-options { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 15px; }
+/* P31-07：选项档位（plan.optionsMode）。inline 继承上方 flex 流式（短选项横排换行，默认形态）；
+   two-column：表达式/等宽选项两列网格，杜绝任意折行（G 桶 4×7 字选项证据）。
+   枚举仅 inline｜two-column（single-column 全库证据不足，P31-03 过门口径不做）。 */
+.question-options.options-two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 14px; }
 .question-options .option-letter { display: inline-block; min-width: 20px; font-weight: 700; color: #7c5cff; margin-right: 4px; }
 .question-answer { margin-top: 6px; min-height: 20px; border-bottom: 1px dashed #b9c6de; }
 .feedback { display: none; }
 .feedback:not(:empty) { display: block; }
+
+/* P31-08：屏幕题件规则（自 practice.html @media screen 内联段迁入，题目组件样式唯一维护于此；
+   @media screen 包裹保持原媒体边界——打印克隆文档在 print media 下不命中，
+   克隆链作答区去线由 print.js cloneCss 自持，直渲链由 PRINT_QCSS 自持）。 */
+@media screen {
+  /* P28-UI-ANSWER-LINE-REMOVE-01：输入框自足，屏幕去掉框下作答线 */
+  .question-answer { border-bottom: none; }
+  .answer-inp { border-style: solid; border-width: 1.5px; border-color: var(--line-strong); }
+}
+
+/* P31-08：批改反馈（自 practice.html 迁入；颜色由卡 correct/wrong 类驱动，
+   替代 markQuestions 渲染后写 fb.style.color 内联） */
+.question-card .feedback .fb-line { font-size: 12.5px; font-weight: 600; line-height: 1.6; }
+.question-card .feedback .fb-explain { color: var(--muted); }
+.question-card .feedback .fb-mis { color: var(--warn); }
+.question-card.correct .feedback { color: var(--ok); }
+.question-card.wrong .feedback { color: var(--bad); }
 
 /* V5.1.0 判断题：两个大按钮（正确/错误），radio 语义由 html-renderer 输出 */
 .question-answer-judge {

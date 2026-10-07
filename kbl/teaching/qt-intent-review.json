@@ -1590,6 +1590,23 @@
           }
         }
       }
+    },
+    {
+      "batch": "p31-fix11-2026-10-06",
+      "origin": "用户裁决（2026-10-06，P31-FIX-11 遗留人工裁决项）：math-g2-down-u02-k005|calc 机器提案 numeric-only 原样通过——calc 题型原生不支持图形（type.supports.graphic=false），与全库 187/189 calc 行同口径；题面只问余数、周期组引号内自足、无看图指示，已符合表征要求。人工接受 legitimacy 空问（与 sample-1 needs-review 通过口径一致）。",
+      "verdicts": {
+        "math-g2-down-u02-k005|calc": {
+          "verdict": "通过",
+          "fromStatus": "needs-review",
+          "note": "用户裁决（2026-10-06 P31-FIX-11）：接受机器提案 allowedRepresentations=['numeric'] / graphicRole=null；该 calc 行本就无图形指示，无需 correctedAssessment；legitimacy 维持 null（人工接受其空问）。",
+          "textFrozen": {
+            "trainsWhat": "通过calc（计算题）训练计算过程与得数产出，对象为「周期问题」（利用有余数除法找图形、彩旗排列规律）；题型限定：不承载概念表述与图形操作",
+            "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内",
+            "differentiation": "同 KP 其他允许题型：apply、choice、fill、geometry。本题型差异——apply属综合应用而本题型属计算操作；apply支持图形；choice属辨认判断而本题型属计算操作",
+            "driftRisk": "风险（calc）：题面退化为纯算式，知识点语义情境丢失（算对≠理解该知识的意义）；表征冲突：本知识点含图形表征而该题型不支持图形，图形语义将降级为文字/算式"
+          }
+        }
+      }
     }
   ]
 }

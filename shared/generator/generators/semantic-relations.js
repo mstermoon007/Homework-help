@@ -118,13 +118,19 @@ function makeAddRelCalc(plan, context, i) {
     operation: subtract ? 'sub' : 'add',
     barModel: true
   });
+  // P31-FIX-11（用户 2026-10-06 显式裁决，覆盖 P31 题面文案禁改面，依据留存 change-log）：
+  // 本 KP×calc 意图已经 sample-1 人工评审「通过」——calc 题型原生不支持图形
+  // （type.supports.graphic=false），driftRisk 明示「图形语义将降级为文字/算式」。
+  // 原题面「看图列式…（在图中圈出/画出）」引用不存在的图，违反已确认意图；
+  // 改为纯文字情境「列式计算」，保留具象情境（防 driftRisk 所警告的退化为纯算式）、
+  // 数字/答案/解析逐字不变。
   if (subtract) {
-    return finish(q, '看图列式：盘子里原来有 ' + (take + left) + ' 个桃，小猴子吃掉 ' + take
-      + ' 个（在图中圈出吃掉的部分）。还剩多少个？', left, [],
+    return finish(q, '列式计算：盘子里原来有 ' + (take + left) + ' 个桃，小猴子吃掉 ' + take
+      + ' 个。还剩多少个？', left, [],
       '总数 − 吃掉的部分 = 剩下的部分：' + (take + left) + ' − ' + take + ' = ' + left);
   }
-  return finish(q, '看图列式：草地上左边有 ' + left + ' 只羊，右边又来了 ' + take
-    + ' 只羊（在图中画出两部分）。一共有多少只羊？', take + left, [],
+  return finish(q, '列式计算：草地上左边有 ' + left + ' 只羊，右边又来了 ' + take
+    + ' 只羊。一共有多少只羊？', take + left, [],
     '两部分合起来：' + left + ' + ' + take + ' = ' + (take + left));
 }
 
@@ -133,7 +139,18 @@ function makeAddRelFill(plan, context, i) {
   var a = Rng.randInt(rng, 3, 9);
   var b = Rng.randInt(rng, 3, 9);
   var q = buildBase(plan, context, i, {
-    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true
+    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
+    // P31-FIX-09：题面「看线段图填空」此前零 graphic（P31-FIX-05 risk① 登记同族
+    // NO-DESC）。fill 行 intent graphicRole=auxiliary / allowedRepresentations 含
+    // 'graphic'（逐题型核实），补图合法；接通既有 diagram.segment 渲染器（与
+    // makeAddRelGeometry 同款）：蓝括号=第一条 a，橙括号=第二条 b，总括=所求 ?。
+    graphic: {
+      type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+      params: {
+        total: a + b, part: a, unit: '',
+        partLabel: String(a), otherLabel: String(b), totalLabel: '?'
+      }
+    }
   });
   return finish(q, '看线段图填空：第一条线段表示 ' + a + '，第二条线段表示 ' + b
     + '，两条线段合起来表示（  ）。', a + b, [String(a + b)],
@@ -166,7 +183,19 @@ function makeAddRelChoice(plan, context, i) {
   var a = Rng.randInt(rng, 4, 9);
   var b = Rng.randInt(rng, 4, 9);
   var q = buildBase(plan, context, i, {
-    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true
+    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
+    // P31-FIX-09：题面「线段图把总数分成两部分」此前零 graphic（P31-FIX-05 risk①
+    // 登记同族 NO-DESC）。choice 行 intent graphicRole=auxiliary /
+    // allowedRepresentations 含 'graphic'（逐题型核实），补图合法；接通既有
+    // diagram.segment 渲染器（与 makeAddRelGeometry 同款）：蓝括号=第一部分 a，
+    // 橙括号=第二部分 b，总括=所求总数 ?。
+    graphic: {
+      type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+      params: {
+        total: a + b, part: a, unit: '',
+        partLabel: String(a), otherLabel: String(b), totalLabel: '?'
+      }
+    }
   });
   q.prompt = '线段图把总数分成两部分：第一部分是 ' + a + '，第二部分是 ' + b
     + '。求总数应该用下面哪个算式？（  ）';
@@ -179,7 +208,18 @@ function makeAddRelGeometry(plan, context, i) {
   var a = Rng.randInt(rng, 4, 9);
   var longer = Rng.randInt(rng, 2, 6);
   var q = buildBase(plan, context, i, {
-    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true
+    subTopic: 'pictorial-additive-relation', operation: 'add', barModel: true,
+    // P31-FIX-05：题面「看线段图…（在图上标出长出来的那一段）」此前零 graphic
+    // （P31-09 登记 G1 geometry 长桶 NO-DESC 断链）。接通既有 diagram.segment 渲染器
+    // （arithmetic.js P28-GEO-NATIVE-02 同款先例）：蓝括号=第一条的量 a，
+    // 橙括号=长出的部分，总括=所求 ?。参数全部来自本题已确定语义（a/longer/未知总长）。
+    graphic: {
+      type: 'geometry', subtype: 'segment', role: 'quantity-correspondence',
+      params: {
+        total: a + longer, part: a, unit: '',
+        partLabel: String(a), otherLabel: '长出 ' + longer, totalLabel: '?'
+      }
+    }
   });
   return finish(q, '看线段图：第一条线段表示 ' + a + '，第二条线段比第一条长 ' + longer
     + '（在图上标出长出来的那一段）。第二条线段表示多少？', a + longer, [String(a + longer)],
@@ -268,7 +308,16 @@ function makePeriodGeometry(plan, context, i) {
   var q = buildBase(plan, context, i, {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem,
-    graphicPattern: p.shapes.join('')
+    graphicPattern: p.shapes.join(''),
+    // P31-FIX-05：题面「观察排列图…照这样接着画」此前零 graphic（P31-09 登记
+    // G2 geometry 中桶 NO-DESC 断链）。接通 diagram.pattern 渲染器（本任务新增
+    // subtype，位于既有 svg-diagram.js 的 diagram 族）：表达周期组重复 + 省略号
+    // 延续 + 未知位置 ?。intent.graphicRole=auxiliary / allowedRepresentations=
+    // ['graphic']（已核实），补图合法；type='diagram' 与 brace/segment 同族路由。
+    graphic: {
+      type: 'diagram', subtype: 'pattern', role: 'auxiliary',
+      params: { pattern: p.shapes.join(''), times: 2 }
+    }
   });
   return finish(q, '观察排列图：' + p.shapes.join('') + p.shapes.join('') + '……'
     + '照这样接着画，第 ' + p.period + ' 个位置应该画什么图形？', p.shape, [p.shape],

@@ -74,7 +74,10 @@
     var modePrint = mode === 'print';
     var html = '';
     if (opts) {
-      html += '<div class="question-options">';
+      // P31-04：选项容器输出 plan mode 类（options-inline / options-two-column，白名单外不加）
+      var optModeCls = (options && PLAN_OPTIONS_RE.test(options.optionsMode))
+        ? ' options-' + options.optionsMode : '';
+      html += '<div class="question-options' + optModeCls + '">';
       for (var i = 0; i < opts.length; i++) {
         var letter = String.fromCharCode(65 + i);
         if (modePrint) {
@@ -110,6 +113,16 @@
         '<span class="judge-mark">✗</span><span class="judge-text">错误</span></label>' +
       '</div>';
   }
+
+  // P31-04：QuestionLayoutPlan 档位 class 白名单（P28-23 口径：枚举外一律不进 class 属性）。
+  // 档位来源唯一：renderer.renderAll 渲染前算 QuestionLayout.plan 透传；CSS 消费在 P31-07/08 接线。
+  // P31-FIX-10：旧 ro.density 用户偏好→裸 'compact' 类双轨已物理删除（全 styles/PRINT_QCSS
+  // 零规则、全库零 DOM 消费，门禁 21 P28-UI-PRINTSTYLE-CLEANUP-01 早已删其 CSS 但生产方幸存）；
+  // 密度档位唯一轨道=plan 透传的 density-* 前缀类。
+  var PLAN_DENSITY_RE = /^(?:compact|standard|expanded)$/;
+  var PLAN_STEM_RE = /^(?:inline|block)$/;
+  var PLAN_OPTIONS_RE = /^(?:inline|two-column)$/;
+  var PLAN_GRAPHIC_RE = /^(?:small|medium|large)$/; // none → 无 .question-graphic 容器，不输出类
 
   function renderAnswer(sq, index, options, mode, answerText) {
     var modePrint = mode === 'print';
@@ -148,7 +161,7 @@
    * 渲染单题卡片。
    * @param {Object} sq SemanticQuestion
    * @param {number} index 题号（0 基）
-   * @param {Object} [options] { mode, graphic, density } —— graphic 为已生成的 <svg> 字符串；density=compact 追加紧凑类
+   * @param {Object} [options] { mode, graphic, layoutDensity, stem, optionsMode, graphicGear, span, break } —— graphic 为已生成的 <svg> 字符串；排版档位仅取自 QuestionLayoutPlan 白名单字段
    * @returns {string} 卡片 HTML
    */
   /** P28-23：SVG 注入兜底——即使来源非预期也拒绝携带脚本/事件/外联特征的图形串 */
@@ -184,17 +197,25 @@
       : (sq && sq.answer && Array.isArray(sq.answer.multiplier) ? sq.answer.multiplier : null);
     var inlineLeft = inlineExpression(sq, prompt);
 
-    // P2.2（Issue #1 延伸）：density=compact 追加 compact 类（仅 class，卡内结构不变，Node/浏览器输出一致）
-    var cardCls = 'question-card' + (options.density === 'compact' ? ' compact' : '');
-    // 生成层统筹：固定样式类（style-{calc|fill|choice|judge|story|shape|open}），供页面固定样式呈现。
-    // P28-23：样式 token 白名单（仅小写字母/数字/连字符），非白名单不进入 class 属性。
-    if (sq && typeof sq.style === 'string' && /^[a-z0-9-]+$/.test(sq.style)) cardCls += ' style-' + sq.style;
-    // P28-UI-PRINT-WYSIWYG-01：列跨由 PluginUtil.layout 统一度量后经 options.span 透传（打印与预览同阈值）。
+    // P31-FIX-10：旧 P2.2「density=compact 追加裸 compact 类」已物理删除（零 CSS/零 DOM
+    // 消费的死双轨，密度档位唯一轨道=plan 的 density-* 类）。
+    // P31-04：plan 排版档位 → density-*/stem-* 类（来源为 renderAll 透传的 plan 档位，白名单外不进 class）
+    var cardCls = 'question-card';
+    if (PLAN_DENSITY_RE.test(options.layoutDensity)) cardCls += ' density-' + options.layoutDensity;
+    if (PLAN_STEM_RE.test(options.stem)) cardCls += ' stem-' + options.stem;
+    // P31-10：style-* 死 CSS 类输出已删（全 styles 三表零规则、全库零 DOM 消费，三方印证；
+    // sq.style 字段本身保留，strategy 层 SSOT 不在 P31 范围）。
+    // P28-UI-PRINT-WYSIWYG-01：列跨由 QuestionLayout（shared/presentation/layout.js）统一度量后经 options.span 透传（打印与预览同阈值）。
     // 白名单只允许 grid-column 两种形态，杜绝任意字符串进入 style 属性。
-    var spanStyle = '';
+    // P31-05：plan.break='keep' → 卡内联不跨页分页（expanded 卡最高优先不拆页）；'auto'/缺省不输出。
+    var styleParts = [];
     if (options.span && /^(?:span [1-4]|1 \/ -1)$/.test(options.span)) {
-      spanStyle = ' style="grid-column:' + options.span + '"';
+      styleParts.push('grid-column:' + options.span);
     }
+    if (options.break === 'keep') {
+      styleParts.push('page-break-inside:avoid;break-inside:avoid');
+    }
+    var spanStyle = styleParts.length ? ' style="' + styleParts.join(';') + '"' : '';
     var html = '<div class="' + cardCls + '" data-index="' + index + '"' + spanStyle + ' role="group" aria-label="第 ' + (index + 1) + ' 题">';
     // P28-UI-QNUM-GAP-01：题号与正文之间固定 4 个空格宽（&nbsp; 不折叠、打印克隆同源生效）
     html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -213,7 +234,9 @@
     }
     html += '</div>';
     if (graphic) {
-      html += '<div class="question-graphic">' + graphic + '</div>';
+      // P31-04：图形档位类（plan.graphicGear：small/medium/large；none 或无档位不输出 graphic-* 类）
+      var gearCls = PLAN_GRAPHIC_RE.test(options.graphicGear) ? ' graphic-' + options.graphicGear : '';
+      html += '<div class="question-graphic' + gearCls + '">' + graphic + '</div>';
     }
     html += renderOptions(sq, index, options, mode, answerText);
     // P28-INLINE-ANSWER-01：横向算式作答框已内联于题干，跳过独立作答行
@@ -225,6 +248,9 @@
 
   /**
    * 渲染一组题 → 网格容器 HTML。
+   * P31-04：columns 由 QuestionLayout.plan 决策后传入（--grid-cols 注入，CSS .q-grid 消费）；
+   * grid-auto-flow:row dense 由 plan 跨列共同构成网格执行语义（原 practice.html fitColumns 行为，
+   * 渲染后二次改 DOM 已删除）。
    * @param {Array<RenderResult>} results
    * @param {Object} options { mode, columns }
    */
@@ -234,8 +260,8 @@
     var cols = Math.floor(Number(options.columns));
     if (!isFinite(cols) || cols < 1) cols = 3;
     if (cols > 6) cols = 6;
-    var html = '<div class="questions-grid q-grid cols-' + cols + '" style="--grid-cols:' + cols + '">';
-    (results || []).forEach(function (r, i) {
+    var html = '<div class="questions-grid q-grid cols-' + cols + '" style="--grid-cols:' + cols + ';grid-auto-flow:row dense">';
+    (results || []).forEach(function (r) {
       if (r && typeof r.html === 'string') html += r.html;
       else if (r && typeof r === 'string') html += r;
     });
@@ -243,12 +269,42 @@
     return html;
   }
 
+  // P31-06：唯一应急渲染（renderAll 单题渲染异常时启用；不参与任何布局决策，禁止扩建为第二渲染器）。
+  // 契约：单列普通卡 + 题号 + 纯文本题干 + 标准作答 input（data-index 保障答案收集/批改绑定）。
+  // 图形一律不渲染，原题带图形描述符时输出文本占位。题干字段面与 layout.coreText 同源
+  //（prompt/content.prompt/question.prompt/stem/q/text/question 字符串），任何形态题都不丢题干。
+  function emergencyPromptOf(q) {
+    if (!q) return '';
+    var t = q.prompt
+      || (q.content && q.content.prompt)
+      || (q.question && typeof q.question === 'object' ? q.question.prompt : null)
+      || q.stem
+      || q.q
+      || q.text
+      || (typeof q.question === 'string' ? q.question : null)
+      || '';
+    return String(t);
+  }
+
+  function renderEmergency(q, index) {
+    var hasGraphic = !!(q && (q.graphic || (q.data && q.data.graphic)));
+    var html = '<div class="question-card" data-index="' + index + '" role="group" aria-label="第 ' + (index + 1) + ' 题">';
+    html += '<div class="question-stem"><span class="num">' + (index + 1) + '</span>&nbsp;&nbsp;&nbsp;&nbsp;' +
+      esc(emergencyPromptOf(q)) + '</div>';
+    if (hasGraphic) html += '<div>（图示略）</div>';
+    html += '<div class="question-answer"><input type="text" class="answer-inp" data-index="' + index +
+      '" autocomplete="off" aria-label="第 ' + (index + 1) + ' 题 答案"></div>';
+    html += '<div class="feedback"></div>';
+    html += '</div>';
+    return html;
+  }
+
+  // P31-FIX-07：renderOptions/renderAnswer/esc 仅 render()/renderEmergency 模块内部消费，
+  // 外部（页面/打印/Node 测试/其他引擎）零成员访问，导出条目物理删除（函数本体保留）。
   var API = {
     render: render,
     renderGrid: renderGrid,
-    renderOptions: renderOptions,
-    renderAnswer: renderAnswer,
-    esc: esc
+    renderEmergency: renderEmergency
   };
 
   global.HTMLRenderer = API;

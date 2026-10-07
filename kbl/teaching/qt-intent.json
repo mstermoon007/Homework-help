@@ -18,9 +18,9 @@
   },
   "counts": {
     "rows": 1570,
-    "confirmed": 152,
+    "confirmed": 153,
     "aiVerified": 1133,
-    "needsReview": 285,
+    "needsReview": 284,
     "rejected": 0,
     "byQuestionType": {
       "calc": 189,
@@ -20844,7 +20844,7 @@
     {
       "knowledgeId": "math-g2-down-u02-k005",
       "questionType": "calc",
-      "status": "needs-review",
+      "status": "confirmed",
       "intent": {
         "trainsWhat": "通过calc（计算题）训练计算过程与得数产出，对象为「周期问题」（利用有余数除法找图形、彩旗排列规律）；题型限定：不承载概念表述与图形操作",
         "whyThisType": "calc（计算题，计算操作）选取依据——认知匹配：本知识点认知层级「应用」在calc题型认知区间[了解/理解/应用]内",
@@ -20906,7 +20906,11 @@
         ],
         "flags": [
           "representation-conflict"
-        ]
+        ],
+        "humanReview": {
+          "verdict": "confirmed",
+          "batch": "p31-fix11-2026-10-06"
+        }
       }
     },
     {

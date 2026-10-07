@@ -119,6 +119,14 @@
     --card-padding-print: 6px 8px;
     --grid-gap-screen: 14px;
     --grid-gap-print: 8px 6px;
+    /* P31-07：图形档位宽度（plan.graphicGear 由描述符 type/role/subtype/params 确定性映射；
+       屏/打共用，PRINT_QCSS 经 Print.tokenVal 取同值；SVG 自带宽高时 max-width 仍生效） */
+    --graphic-w-small: 120px;   /* diagram：brace/计算支撑示意图 */
+    --graphic-w-medium: 220px;  /* geometry：平面几何对应图 */
+    --graphic-w-large: 360px;   /* number-position 网格 / 立体图（expanded 通栏卡内居中） */
+    /* P31-07：打印作答框（屏幕 .answer-inp 96×32 保持；打印 inline 空白盒尺寸走 token） */
+    --answer-w-print: 72px;
+    --answer-h-print: 30px;
     --spacing-xl: 32px;
     --header-title-size: 2.0rem; /* 页面标题（.page-header）字号基准 */
   /* P28-UI-PRINTSTYLE-CLEANUP-01：删除零消费者死令牌（--q-num-size/--q-text-size/--q-text-line-height/
@@ -127,6 +135,13 @@
    * 渲染链死类样式，已随本轮清理删除）。仅保留在用令牌： */
   --q-header-gap: 8px;
   --q-grid-gap: 14px;
+
+  /* P31-08：题卡/题干视觉微调 SSOT（题卡视觉唯一消费在 components.css；
+     打印直渲文档不引本表，纸张口径 15px 由 PRINT_QCSS 自持字面量） */
+  --card-radius: 8px;          /* 卡片圆角（任务书 6-8px；打印去卡片化不消费） */
+  --stem-size: 17px;           /* 屏幕题干字号（A4 718px WYSIWYG） */
+  --stem-line-height: 1.6;
+  --stem-weight: 600;          /* normal/medium 区间取 medium */
 
     /* 字号层级（22px 封顶，儿童产品克制感；字重不在此声明：display 700 / title 600 / body 400 / caption 400，由各组件规则指定） */
     --font-display: 22px;

@@ -4,8 +4,9 @@
  * 依赖顺序：tokens → base → components → states → toolbar → pages → subjects
  * （本层高于 toolbar，可安全覆写练习页工具栏样式；subjects 层仅在二级题型页启用，为本层序最高）。
  *
- * 注：旧版练习页样式由 renderCard 类化方案替代，属死代码，未搬入本层。当前仅保留综合练习仍在用的
- *     .questions-grid / .q-wrap / .q-badge 容器类。
+ * 注：旧版练习页样式由 renderCard 类化方案替代，属死代码，未搬入本层。当前题目网格唯一容器类
+ *     .questions-grid / .q-grid（P31-FIX-07：.q-wrap/.q-badge 随 math-comprehensive 插件退役，
+ *     全库零生产方，已物理删除）。
  */
 @layer pages {
 
@@ -101,9 +102,20 @@
 
   /* 题目区域 */
   #problemsArea .empty { text-align: center; color: var(--muted); padding: 46px 10px; font-size: 14px; }
-  .q-grid { display: grid; gap: 14px; grid-template-columns: repeat(var(--grid-cols, 1), 1fr); }
-  /* 响应式断点：<480px 强制单列，其他由 JS 通过 --grid-cols 设定 */
-  @media (max-width: 480px) { .q-grid { grid-template-columns: 1fr !important; } }
+  /* 题目网格（P31-08：.questions-grid/.q-grid 两处声明归并为一——html-renderer 容器同时挂
+     questions-grid q-grid cols-N，practice.html 兜底容器仅 questions-grid；列数由唯一排版中心
+     plan 经 --grid-cols 注入；间距 SSOT=tokens.css --grid-gap-screen）。 */
+  .questions-grid, .q-grid {
+    display: grid;
+    gap: var(--grid-gap-screen);
+    grid-template-columns: repeat(var(--grid-cols, 1), minmax(0, 1fr));
+    margin: 15px 0;
+  }
+  /* 响应式断点：<480px 强制单列（@media 无法引用 var()，断点值与 tokens --bp-xs 口径一致）；
+     其他宽度由 JS 通过 --grid-cols 设定。 */
+  @media (max-width: 480px) {
+    .questions-grid, .q-grid { grid-template-columns: 1fr !important; }
+  }
 
   /* ===== 响应式布局（断点令牌见 tokens.css：--bp-sm=640 / --bp-md=768 / --bp-lg=1024；
      @media 条件无法引用 var()，此处硬编码同值）===== */
@@ -128,17 +140,11 @@
     .exercise-header h1 { font-size: 26px; }
   }
 
-  /* 屏幕端：卡片/文字网格按 A4 竖版思路自适应（打印端由 JS 按题目长度设定列数） */
-  @media (max-width: 480px) {
-    #problemsArea .questions-grid { grid-template-columns: 1fr !important; }
-    #problemsArea .q-badge { position: static; display: inline-block; margin: 2px 0 6px; }
-  }
-
-  /* 练习页题目卡片覆写：强制左对齐（覆盖部分插件内联 text-align:center）+ 紧凑内边距 */
-  #problemsArea .questions-grid .question-card,
-  #problemsArea .q-grid .question-card { text-align: left !important; padding: var(--card-padding-screen) !important; }
-  /* P28-UI-PRINT-WYSIWYG-01：原 @media print 块（打印 padding/左对齐、.preview-table* 通栏表格、
-     .feedback 空时不占高）已迁入打印 SSOT —— shared/presentation/print.js 克隆文档 buildPrintHtml。 */
+  /* P31-08：原第二处 <480px 单列块已与上方网格断点合并；
+     题卡 text-align/padding 覆写已归位 components.css .question-card 基础规则
+     （唯一生产方 html-renderer/emergency 均不写内联 text-align/padding，!important 覆写无消费）。
+     P28-UI-PRINT-WYSIWYG-01：打印 padding/左对齐、.preview-table* 通栏表格、.feedback 空时不占高
+     仍在打印 SSOT —— shared/presentation/print.js 克隆文档 buildPrintHtml。 */
 
   .correct-answer { font-size: 12px; color: var(--bad); font-weight: 700; margin-top: 6px; }
   /* 答案输入框状态（基础宽高在 components 层 .answer-inp） */
@@ -156,33 +162,13 @@
   .result .tips { font-size: 13px; color: var(--muted); margin-top: 4px; }
   .result .redo-wrap { margin-top: 14px; }
 
-  /* 综合练习：来源题型徽标容器（math-comprehensive 实时渲染） */
-  .questions-grid { display: grid; gap: 18px 25px; margin: 15px 0; }
-  .q-wrap { position: relative; display: flex; flex-direction: column; }
-  .q-badge {
-    position: absolute; top: 8px; right: 10px; z-index: 3;
-    font-size: 11px; color: #5a6b8c; background: #f0f4fb;
-    border: 1px solid #e0e7f3; border-radius: 10px; padding: 1px 9px;
-  }
-
   /* 自定义数量/难度输入框占位符（原 practice.html body 内联 style 迁移） */
   #customCount::placeholder, #difficultyInput::placeholder { color: #b0b8c6; font-weight: 400; font-size: 12px; }
 
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 12px; }
 
-  /* 期末模拟卷（exam 子类型）：分部分区块，打印时各大部分间合理分页 */
-  .exam-paper { display: block; }
-  .exam-part {
-    break-inside: avoid; page-break-inside: avoid;
-    margin: 6px 0 14px;
-  }
-  .exam-part-title {
-    font-size: 16px; line-height: 1.5; margin: 8px 0 6px;
-    padding-left: 9px; border-left: 4px solid var(--brand, #3b5bdb);
-    font-weight: 700;
-  }
-  .exam-part-items { display: block; }
-  .exam-part-items .q-wrap { margin: 4px 0; }
+  /* P31-10：期末模拟卷死 CSS 已删（.exam-paper/.exam-part*/.q-wrap，meta.exam 零生产写入方，
+     practice.html 死分支同步删除，全库 js/html 零类名引用三方印证） */
 
   /* ============ 工具栏集中管理（自 practice.html 内联样式迁移，任务3） ============
    * 练习页工具栏全部覆写样式统一维护于此；同层后置 → 覆盖上方精炼段与 @layer toolbar。 */

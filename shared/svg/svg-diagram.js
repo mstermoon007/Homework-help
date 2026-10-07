@@ -1,13 +1,14 @@
 // shared/svg/svg-diagram.js — 看图列式示意图生成器（SVGDiagram）
 //
 // 依赖 shared/svg/svg-core.js。输出完整 <svg> 字符串。
-// 挂载 SVGGenerators.math.diagram.{brace,segment,balance,scale}。
+// 挂载 SVGGenerators.math.diagram.{brace,segment,balance,scale,pattern}。
 //
 // 描述符参数：
 //   brace    { left, right, unit, leftLabel?, rightLabel?, totalLabel? }  大括号合整体
 //   segment  { total, part, unit, totalLabel?, partLabel?, otherLabel? }  线段图（未知段留 ?）
 //   balance  { left, leftLabel, rightUnknown, rightLabel, unit?, weightLabel? } 天平平衡
 //   scale    { scale, mapDist, ratioLabel? }                              比例尺
+//   pattern  { pattern, times? }                                          周期排列（P31-FIX-05）
 //
 // 无效参数返回 ''（不抛异常）。
 
@@ -97,6 +98,29 @@
     return U.svgWrap(inner, { viewBox: '0 0 ' + W + ' 190', width: o.width, padding: 10 });
   }
 
+  /** P31-FIX-05：周期排列图——一组图形重复 times 次 + 省略号 + 未知位置问号 */
+  function pattern(o) {
+    var shapes = String(o.pattern || '').replace(/[\s，、,]/g, '').split('');
+    if (!shapes.length) return '';
+    var times = Math.max(1, Math.min(4, Number(o.times) || 2));
+    var W = 380, y = 92;
+    var cells = shapes.length * times + 2;
+    var pitch = (W - 48) / cells;
+    var inner = '';
+    var x = 24 + pitch / 2;
+    for (var r = 0; r < times; r++) {
+      for (var s = 0; s < shapes.length; s++) {
+        inner += U.svgText(x, y, shapes[s], { fontSize: 24, fill: INK, 'text-anchor': 'middle', fontWeight: 700 });
+        x += pitch;
+      }
+    }
+    // 省略号（延续）+ 未知位置（红问号，与 segment 图 ? 同色语义）
+    inner += U.svgText(x, y, '…', { fontSize: 24, fill: AXIS, 'text-anchor': 'middle' });
+    x += pitch;
+    inner += U.svgText(x, y, '?', { fontSize: 28, fill: RED, 'text-anchor': 'middle', fontWeight: 700 });
+    return U.svgWrap(inner, { viewBox: '0 0 ' + W + ' 150', width: o.width, padding: 10 });
+  }
+
   /** 天平平衡：左边重量已知，右边未知 + 补偿 */
   function balance(o) {
     var left = Math.max(0, Number(o.left) || 0);
@@ -145,7 +169,7 @@
     return U.svgWrap(inner, { viewBox: '0 0 ' + W + ' 180', width: o.width, padding: 10 });
   }
 
-  var SVGDiagram = { brace: brace, segment: segment, balance: balance, scale: scale };
+  var SVGDiagram = { brace: brace, segment: segment, balance: balance, scale: scale, pattern: pattern };
 
   global.SVGDiagram = SVGDiagram;
   global.SVGGenerators = global.SVGGenerators || {};

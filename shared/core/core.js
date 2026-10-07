@@ -199,177 +199,8 @@
   // MATH-14 native-only：reportCoverage/_maybeReportCoverage 已随 legacy 插件轨道（PLUGIN_REGISTRY）退役；
   // 覆盖统计由 native Generator 轨道承接（dev/check-core-generators.js：549/549）。
 
-  // ============ [L1 布局 · 灵活列数计算] ============
-  // 预览(practice.html)与打印(print.js)共用的唯一列数算法来源，避免双份代码漂移。
-  // 原则：仅用「题目本身」(算式/问句)决定布局，hint 是辅助信息、自动换行不撑宽。
-  //   ① calcOptimalCols → estimateCardWidth 算每张卡最小宽度 → 决定网格几列
-  //   ② fitColumns      → renderLen 度题目文本长度       → 决定单题跨几列
-  //   ③ 预览用 set 直接计算；打印端无 set，改用 gridColumnsFromDom / applySpanning 从 DOM 估算（同算法）
-  var Layout = (function () {
-    var GAP = 12;             // 网格列间隙(px)
-    var CN_W = 14, EN_W = 9;  // 中文字宽 / 英文数字字宽(px @96dpi)
-
-    /** 取题目核心文本（仅算式/问句，不含 hint/input/序号）。
-     *  q.prompt = SemanticQuestion 题干字段（打印直渲链与屏显预览必须同源度量，P28-UI-PRINT-WYSIWYG-01） */
-    function coreText(q) {
-      // P28-UI-PRINT-WYSIWYG-01：与 HTMLRenderer.promptOf 同源——SemanticQuestion 题干可能位于
-      // prompt / content.prompt / question.prompt（对象）/ stem；legacy 位于 q / text / question（字符串）。
-      // 度量字段缺漏会导致打印列跨全部漏判（屏显走 renderable 对象有 text，打印走原始 DTO 只有 content.prompt）。
-      if (!q) return '';
-      var t = q.prompt
-        || (q.content && q.content.prompt)
-        || (q.question && typeof q.question === 'object' ? q.question.prompt : null)
-        || q.stem
-        || q.q
-        || q.text
-        || (typeof q.question === 'string' ? q.question : null)
-        || '';
-      return String(t).trim();
-    }
-
-    /** 度量题目核心文本长度（用于跨列判定；图形/多输入额外占宽） */
-    function renderLen(q, i) {
-      var txt = coreText(q);
-      var score = txt.length;
-      try {
-        var h = (typeof q.render === 'function') ? q.render(i) : '';
-        if (h.indexOf('<svg') !== -1) score += 8;
-        if (h.indexOf('combine-inp') !== -1) score += 8;
-        if (h.indexOf('scene-box') !== -1) score += 10;
-        // SemanticQuestion 无 render 函数：图形描述符在 q.graphic / q.data.graphic
-        if (!h && (q.graphic || (q.data && q.data.graphic))) score += 8;
-      } catch (e) { /* ignore */ }
-      return score;
-    }
-
-    /** 跨列阈值唯一来源（预览 fitColumns / 打印 applySpanning / 直渲 buildFromQuestions 共用）：
-     *  L≥50 通栏；26≤L<50 跨 min(2,base) 列；其余 null（调用方按 span 1 处理） */
-    function spanForLength(L, base) {
-      if (L >= 50) return '1 / -1';
-      if (L >= 26) return 'span ' + Math.min(2, base);
-      return null;
-    }
-
-    /** 估算单卡最小渲染宽度(px)：仅核心文本 + 输入框 + 图形；hint 不参与宽度决策 */
-    function estimateCardWidth(q, idx) {
-      var w = 0;
-      var txt = coreText(q);
-      var cn = (txt.match(/[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/g) || []).length;
-      var en = txt.length - cn;
-      w += cn * CN_W + en * EN_W;
-      try {
-        var h = (typeof q.render === 'function') ? q.render(idx) : '';
-        if (h.indexOf('combine-inp') !== -1) w += 96 * 3;
-        else if (q.inputCount && q.inputCount > 1) w += 96 * q.inputCount;
-        else if (q.type === 'multi' || (q.answer && Array.isArray(q.answer))) w += 96 * 2;
-        else w += 96;
-        if (h.indexOf('<svg') !== -1 || h.indexOf('<canvas') !== -1 || h.indexOf('scene-box') !== -1) w += 120;
-      } catch (e) { w += 96; }
-      w += 32 + 16; // 卡片内边距 + 安全边距
-      return Math.max(w, 140);
-    }
-
-    /** 动态最优列数：set.meta.columns 优先(固定模式)，否则按中位数卡宽计算 [1,4] */
-    function calcOptimalCols(set, availWidth) {
-      var qs = set.questions;
-      if (!qs || !qs.length) return 3;
-      if (set.meta && set.meta.columns) return set.meta.columns;
-      var widths = qs.map(function (q, i) { return estimateCardWidth(q, i); });
-      widths.sort(function (a, b) { return a - b; });
-      var medianW = widths[Math.floor(widths.length / 2)];
-      var colNeed = medianW + GAP;
-      var rawCols = Math.floor((availWidth + GAP) / colNeed);
-      return Math.max(1, Math.min(4, rawCols));
-    }
-
-    /** 预览/打印通用：设网格列数 + 按长度跨列 + 卡片撑满列宽。匹配所有网格容器类名。
-     *  availWidth 显式传入时按该宽度算列数（practice.html 传 A4 718px，与打印同源）；
-     *  缺省回落容器实测宽度（旧行为）。 */
-    function fitColumns(container, set, availWidth) {
-      var qs = set.questions || [];
-      var fixed = set.meta && set.meta.columns;
-      var widthSrc = availWidth || (container && container.offsetWidth) || (typeof window !== 'undefined' ? window.innerWidth - 40 : 1000);
-      var base = fixed || calcOptimalCols(set, widthSrc);
-      container.querySelectorAll('.questions-grid, .q-grid, .comprehensive-grid').forEach(function (grid) {
-        grid.style.gridTemplateColumns = 'repeat(' + base + ', minmax(0, 1fr))';
-        grid.style.gridAutoFlow = 'row dense';
-        var kids = grid.children;
-        for (var i = 0; i < kids.length; i++) {
-          var item = kids[i];
-          if (fixed) { item.style.gridColumn = 'span 1'; item.style.justifySelf = 'stretch'; continue; }
-          var idx = item.getAttribute('data-index');
-          var L = 0;
-          if (idx !== null && qs[+idx]) {
-            L = renderLen(qs[+idx], +idx);
-          } else {
-            var inner = item.querySelector('[data-index]');
-            if (inner && qs[+inner.getAttribute('data-index')]) {
-              L = renderLen(qs[+inner.getAttribute('data-index')], +inner.getAttribute('data-index'));
-              if (item.querySelector('.q-badge')) L += 12;
-            }
-          }
-          item.style.gridColumn = spanForLength(L, base) || 'span 1';
-          item.style.justifySelf = 'stretch';
-        }
-      });
-    }
-
-    /** 打印端：克隆 DOM 无 question 对象，改从 .question-card 文本估算列数（与 estimateCardWidth 同算法） */
-    function gridColumnsFromDom(clone, availWidth) {
-      var cards = clone.querySelectorAll('.question-card');
-      if (!cards.length) return 3;
-      var widths = [];
-      for (var wi = 0; wi < cards.length; wi++) {
-        var c = cards[wi];
-        var t = (c.querySelector('.q-text') ? (c.querySelector('.q-text').textContent || '') : (c.textContent || '')).trim();
-        var hintEl = c.querySelector('.q-hint');
-        if (hintEl) t = t.replace(hintEl.textContent, '');
-        t = t.trim();
-        var cn = (t.match(/[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/g) || []).length;
-        var en = t.length - cn;
-        var cw = cn * CN_W + en * EN_W;
-        var inputs = c.querySelectorAll('input:not(.formula-inp)');
-        cw += Math.max(inputs.length, 1) * 96;
-        if (c.querySelector('.scene-box, svg, canvas, img')) cw += 120;
-        cw += 32 + 16;
-        widths.push(Math.max(cw, 140));
-      }
-      widths.sort(function (a, b) { return a - b; });
-      var medianW = widths[Math.floor(widths.length / 2)];
-      var rawCols = Math.floor((availWidth + GAP) / (medianW + GAP));
-      return Math.max(1, Math.min(4, rawCols));
-    }
-
-    /** 打印端：对克隆 DOM 应用与预览一致的 per-card 跨列（从 DOM 文本度量，保证打印/预览排版一致） */
-    function applySpanning(clone, base) {
-      var cards = clone.querySelectorAll('.question-card');
-      for (var i = 0; i < cards.length; i++) {
-        var card = cards[i];
-        var t = (card.querySelector('.q-text') ? (card.querySelector('.q-text').textContent || '') : (card.textContent || '')).trim();
-        var hintEl = card.querySelector('.q-hint');
-        if (hintEl) t = t.replace(hintEl.textContent, '');
-        t = t.trim();
-        var L = t.length;
-        if (card.querySelector('svg')) L += 8;
-        if (card.querySelector('.combine-inp')) L += 8;
-        if (card.querySelector('.scene-box')) L += 10;
-        card.style.gridColumn = spanForLength(L, base) || 'span 1';
-        card.style.justifySelf = 'stretch';
-      }
-    }
-
-    return {
-      GAP: GAP,
-      coreText: coreText,
-      renderLen: renderLen,
-      spanForLength: spanForLength,
-      estimateCardWidth: estimateCardWidth,
-      calcOptimalCols: calcOptimalCols,
-      fitColumns: fitColumns,
-      gridColumnsFromDom: gridColumnsFromDom,
-      applySpanning: applySpanning
-    };
-  })();
+  // P31-02：[L1 布局 · 灵活列数计算] 已物理迁出至 shared/presentation/layout.js
+  // （全局 QuestionLayout；预览 practice.html 与打印 print.js 共用唯一排版 SSOT，不留别名）。
 
   // ============ 科目工具按需加载（shared/catalog/subject-utils.js） ============
   // Node：同步 require 并挂全局；浏览器：异步注入脚本（失败仅告警，功能不受影响）。
@@ -413,7 +244,6 @@
   global.PluginUtil.diffMax = diffMax;
   global.PluginUtil.normalizeAns = normalizeAns;
   global.PluginUtil.createPoolCache = createPoolCache;
-  global.PluginUtil.layout = Layout;
   // 跨模块裸调用兼容（check.js 等经全局解析）
   global.normalizeAns = normalizeAns;
   // App（站点）
@@ -441,8 +271,7 @@
       randInt: randInt, shuffle: shuffle, rand: rand,
       diffLevel: diffLevel, diffScale: diffScale, diffMax: diffMax,
       normPY: normPY, normHZ: normHZ, normalizeAns: normalizeAns,
-      createPoolCache: createPoolCache,
-      Layout: Layout
+      createPoolCache: createPoolCache
     };
   }
 
