@@ -32,6 +32,16 @@
 
 ## 记录（新 → 旧）
 
+### P33-15｜architecture/layers.json 归档 + 根目录 architecture/ 物理清零（2026-10-08）
+
+- modified:
+  - [architecture/layers.json](file:///Users/zhanggaozhang/Code/Homework%20Help/docs/archive/phases/snapshots/layers-P25.json) → `docs/archive/phases/snapshots/layers-P25.json`（git mv，归档为 P25 时期历史快照，按 P28 §5「archive 不动」原则保留）。
+- deleted:
+  - 根目录 `architecture/` 整目录（运行时清零，按 P28 §5「运行时清零即可」判例 + 红线 #3「禁止新建顶层源码目录」反向规则——不留空顶层目录）。
+- reason: 用户指令「继续清理其他历史文件」选择 A+B 全面排查。dev/ 根目录 23 个文件三方印证全部活跃（每文件至少 1 个外部引用：`difficulty-anchor-table.js` 被 tests/orchestration/difficulty-anchor.test.js 引用；`scan-capacity.js` 被 shared/capability/capacity-inventory.js 引用；`check-kbl-quality.js` 被 tools/kbl/verify.js + dev/check-knowledge-access.js 引用；其余 20 个均被 package.json scripts 或 dev/check-all.js 显式调用），无死代码。唯一三方印证零活跃消费者的是 `architecture/layers.json`（grep 全库消费者：仅 docs/ 9 处历史文档命中；tests/ No matches found；check-all 零引用）。该文件是 P25 时期"文件→层"物理归属映射数据（274 行 JSON），与 [docs/01-ARCHITECTURE.md](file:///Users/zhanggaozhang/Code/Homework%20Help/docs/01-ARCHITECTURE.md) §2 架构层级冻结表（"层→责任模块"规则表，132 行 markdown，活跃 SSOT）职责不重叠但信息独有，故采用归档而非物理删除以保留历史信息。
+- tests: 三方印证 + 重跑门禁零回归。①grep 全库消费者：`grep -rln 'architecture/layers\.json\|layers\.json' --exclude-dir=docs .` 返回空（活跃代码零引用）；②tests/ 引用：`grep architecture/layers tests/` No matches found；③check-all 引用：`grep 'architecture/layers\|dev/p\d+' dev/check-all.js` 返回 21 处但全是 dev/p25|p28|p30|p32 子目录引用，无 architecture/；④check-all 重跑 **30 PASS / 0 FAIL / 1 SKIP / 31 项**（与归档前完全一致，#21 Dead Code PASS / #22 Legacy PASS / FINAL-91 只读门禁 PASS）；⑤375/98/373/1570 口径不变（#6a/#6b 验证）；⑥dev/ 根目录 23 文件活跃消费者全列表见 reason 字段。
+- risk: 低。①归档文件仍在仓库（仅位置变 docs/archive/phases/snapshots/layers-P25.json），可查历史；②architecture/ 顶层目录物理清零，符合红线 #3「禁止新建顶层源码目录」反向规则；③活跃代码、测试、门禁零引用，归档不影响生成/批改/渲染/门禁/测试；④未 git commit，等用户显式指令。
+
 ### P33-14｜清理指向已删 archive 的历史说明注释（2026-10-08）
 
 - modified:
