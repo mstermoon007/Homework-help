@@ -171,7 +171,8 @@ function applyCognitive(q, rng) {
   if (!q.prompt) return false;
   var c = COGS[rng.int(0, COGS.length - 1)];
   q.prompt = q.prompt + ' ' + c.cue;
-  q.hint = (q.hint || '') + (q.hint ? ' | ' : '') + c.key;
+  // P32-AS-15：认知变式只允许写入 data.cognitiveHint；q.hint 曾被污染写入，
+  // 而 hint 是题面相邻的提示通道（1570 行生产者恒为 null），物理删除该写入。
   q.data = q.data || {};
   q.data.cognitiveHint = c.key;
   return true;

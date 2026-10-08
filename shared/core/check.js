@@ -1,42 +1,56 @@
 /**
- * shared/core/check.js — 批改逻辑（任务 3.2 拆分）
+ * shared/core/check.js — 批改聚合（P32 答案系统收口）
  *
- * defaultQCheck / computeResult / pickOpt（选项点击）。
- * （P28-22：旧 render.js createPlugin 已删除，defaultQCheck 由综合练习/批改层共用。）
- * normalizeAns 由 core.js 挂全局，本文件直接裸调用。
+ * computeResult / pickOpt（选项点击）。
+ * 判分唯一权威 = AnswerValidator.gradeUserAnswer（shared/validator/answer-validator.js）：
+ *   - 浏览器：经 global.PresentationEngine.AnswerValidator（presentation-engine.bundle 暴露）
+ *   - Node：require 兜底（同目录相对路径）
+ * P32-AS-06/08：defaultQCheck、q.answerParts 分支、opts.checkFn 轨道已物理删除；
+ * 归一化唯一存在于 answer-validator（旧 core.normalizeAns 已删）。
  */
 (function (global) {
   'use strict';
 
-  /** 缺省单题判定（批改层/综合练习共用）：
-   *  - inputType 'multi'：按 answers['i:j'] 分字段比较（数组答案；字符串答案按 、/，/, 拆分）
-   *  - 其余（text/choice）：整串比较（数组答案拼接后比较） */
-  function defaultQCheck(q, answers, i) {
-    if (q.inputType === 'multi') {
-      var parts = Array.isArray(q.answer) ? q.answer : String(q.answer).split(/[、,，]/);
-      for (var j = 0; j < parts.length; j++) {
-        var uv = answers ? answers[i + ':' + j] : undefined;
-        if (normalizeAns(uv) !== normalizeAns(parts[j])) return false;
-      }
-      return true;
+  function resolveAnswerValidator() {
+    if (global.PresentationEngine && global.PresentationEngine.AnswerValidator) {
+      return global.PresentationEngine.AnswerValidator;
     }
-    var ua = answers ? answers[i] : undefined;
-    var ans = Array.isArray(q.answer) ? q.answer.join('') : q.answer;
-    return normalizeAns(ua) === normalizeAns(ans);
+    if (typeof require === 'function') {
+      try { return require('../validator/answer-validator.js'); } catch (e) { /* 装载异常：按不可判处理 */ }
+    }
+    return null;
   }
 
   /** 通用批改：返回 { score,total,correct,message,results,correctAnswers,
-   *  explanations,misconceptions }（V5.1.0：逐题解析/自由文本错因，供反馈与学情诊断） */
-  function computeResult(questions, userAnswers, opts) {
-    opts = opts || {};
-    var checkFn = opts.checkFn || defaultQCheck;
+   *  explanations,misconceptions,parentCheck }（V5.1.0：逐题解析/自由文本错因；P32-AS-20 加 parentCheck）
+   * P32-AS-06：逐题委托 gradeUserAnswer；correctAnswers 只取 answerSpec.value 的显示值，
+   * acceptable 白名单永不进入上屏字段。
+   * P32-AS-20（用户裁决 2026-10-08）：任一 grade===null → parentCheck=true 触发 UI 既有家长检查分支。 */
+  function computeResult(questions, userAnswers) {
+    var validator = resolveAnswerValidator();
     var correct = 0, results = [], correctAnswers = [], explanations = [], misconceptions = [];
+    // P32-AS-20（用户裁决 2026-10-08 列入 AS-20 修断链）：
+    // 任一题 grade === null（apply/geometry 长文本说理不可自动判）→ result.parentCheck = true，
+    // UI 既有 parentCheck 分支（practice.html L1041-1053）由死分支转正。
+    // results[i] 仍按 grade === true 计 false（null → false），不"非空即对"；correct 不变。
+    var parentCheck = false;
     questions.forEach(function (q, i) {
-      var ok = checkFn(q, userAnswers, i);
+      var grade = null;
+      if (validator) {
+        grade = validator.gradeUserAnswer(
+          userAnswers ? userAnswers[i] : undefined,
+          q.answerSpec || null,
+          { questionType: q.questionType || q.type, prompt: q.q || q.text }
+        );
+      }
+      // results 为布尔数组（practice.html 提交/显答案两条消费链契约）：
+      // grade === null 表示不可自动判（家长检查通道），不计为正确——禁止非空即对。
+      var ok = grade === true;
       if (ok) correct++;
       results.push(ok);
+      if (grade === null) parentCheck = true;
       var disp = Array.isArray(q.answer) ? q.answer.join('、') : q.answer;
-      correctAnswers.push(q.answerParts ? q.answerParts.join('、') : disp);
+      correctAnswers.push(disp);
       explanations.push(q.explanation != null ? q.explanation : null);
       misconceptions.push(q.misconception != null ? q.misconception : null);
     });
@@ -46,7 +60,8 @@
     return {
       score: score, total: total, correct: correct, message: message,
       results: results, correctAnswers: correctAnswers,
-      explanations: explanations, misconceptions: misconceptions
+      explanations: explanations, misconceptions: misconceptions,
+      parentCheck: parentCheck
     };
   }
 
@@ -67,15 +82,13 @@
 
   // ============ 增量挂载 ============
   global.PluginUtil = global.PluginUtil || {};
-  global.PluginUtil.defaultQCheck = defaultQCheck;
   global.PluginUtil.computeResult = computeResult;
   global.PluginUtil.pickOpt = pickOpt;
-  global.defaultQCheck = defaultQCheck;     // 跨模块裸调用兼容（综合练习/批改层）
   global.__pickOpt = pickOpt;               // 卡片 onclick="window.__pickOpt(this)" 兼容
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-      defaultQCheck: defaultQCheck, computeResult: computeResult, pickOpt: pickOpt
+      computeResult: computeResult, pickOpt: pickOpt
     };
   }
 

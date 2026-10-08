@@ -890,7 +890,11 @@
       results: fb.results, correctAnswers: fb.correctAnswers,
       // V5.1.0：判断题逐题解析/错因（computeResult → bridge 透传）
       explanations: Array.isArray(fb.explanations) ? fb.explanations : [],
-      misconceptions: Array.isArray(fb.misconceptions) ? fb.misconceptions : []
+      misconceptions: Array.isArray(fb.misconceptions) ? fb.misconceptions : [],
+      // P32-AS-20（用户裁决 2026-10-08 扩展 D 端点）：computeResult.parentCheck
+      // 经 PracticeBridge.submit → applySessionSubmitFeedback 透传到 UI 消费端
+      // （showResult L1041 既有 parentCheck 分支由死分支转正——完整四端点链路）
+      parentCheck: !!fb.parentCheck
     };
     state.checkResult = result;
     state.answered = true;

@@ -15,18 +15,18 @@
   "counts": {
     "kps": 375,
     "kpsWithSlots": 313,
-    "slots": 920,
+    "slots": 923,
     "byErrorType": {
-      "概念混淆": 131,
+      "概念混淆": 132,
       "审题错误": 313,
-      "格式错误": 131,
+      "格式错误": 132,
       "步骤错误": 210,
       "计算错误": 82,
+      "符号错误": 4,
       "单位错误": 39,
-      "口诀混淆": 11,
-      "符号错误": 3
+      "口诀混淆": 11
     },
-    "droppedByAxisEvidence": 710
+    "droppedByAxisEvidence": 707
   },
   "kps": {
     "math-g1-down-u01-k001": {
@@ -367,6 +367,42 @@
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },
         {
+          "errorType": "概念混淆",
+          "basis": "semantic.family=calculation",
+          "triggerPattern": {
+            "questionTypes": [
+              "choice",
+              "judge",
+              "classify"
+            ]
+          },
+          "response": {
+            "variant": "呈现",
+            "axis": "representation",
+            "evidenceRows": 3
+          },
+          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
+        },
+        {
+          "errorType": "符号错误",
+          "basis": "semantic.operations∋subtraction（退位/负向语境）",
+          "triggerPattern": {
+            "questionTypes": [
+              "calc",
+              "fill"
+            ],
+            "operations": [
+              "sub"
+            ]
+          },
+          "response": {
+            "variant": "呈现",
+            "axis": "representation",
+            "evidenceRows": 3
+          },
+          "feedback": "检查运算符号与正负号，确认退位/借位方向无误后再下笔"
+        },
+        {
           "errorType": "审题错误",
           "basis": "variation profile context.present（5 行）",
           "triggerPattern": {
@@ -382,6 +418,21 @@
             "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
+        },
+        {
+          "errorType": "格式错误",
+          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
+          "triggerPattern": {
+            "questionTypes": [
+              "fill"
+            ]
+          },
+          "response": {
+            "variant": "基础",
+            "axis": "representation",
+            "evidenceRows": 3
+          },
+          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -10087,7 +10138,7 @@
           "response": {
             "variant": "数值",
             "axis": "numeric",
-            "evidenceRows": 3
+            "evidenceRows": 1
           },
           "feedback": "逐步复核每一步运算，重算后比对两次结果是否一致"
         },

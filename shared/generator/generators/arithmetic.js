@@ -54,7 +54,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
-      params: { total: total3, part: part3, unit: 'cm', partLabel: String(part3), totalLabel: String(total3) }
+      params: { total: total3, part: part3, unit: 'cm', partLabel: '?', totalLabel: String(total3) }
     };
   } else if (kpName.indexOf('解决问题') !== -1) {
     // k004：连续求一个数的几分之几（找准单位“1”）
@@ -83,7 +83,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
-      params: { total: whole, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(whole) }
+      params: { total: whole, part: part, unit: 'cm', partLabel: '?', totalLabel: String(whole) }
     };
   }
 

@@ -24,7 +24,7 @@
  *   generateQuestions(plan, options)
  *   （P28-22 已删除无调用方导出 renderQuestions / checkAnswers / generateAndRender：
  *     渲染唯一链为 PresentationRenderer.renderAll → HTMLRenderer → RenderResult，
- *     批改唯一入口为 PluginUtil.computeResult / defaultQCheck。）
+ *     批改唯一入口为 PluginUtil.computeResult，逐题委托 AnswerValidator.gradeUserAnswer。）
  *
  * 渲染层适配：
  *   - 生成核心仅输出 SemanticQuestion[]
@@ -39,6 +39,8 @@ var BatchValidator = require('../validator/batch-validator.js');
 var Quality = require('../validator/quality-scorer.js');
 var SQ = require('../semantic/semantic-question.js');
 var RenderFormat = require('../presentation/render-format.js');
+// P32-AS-05：判分唯一权威随 bundle 暴露给浏览器侧 check.js（global.PresentationEngine.AnswerValidator）
+var AnswerValidator = require('../validator/answer-validator.js');
 var FeatureFlags = require('../catalog/feature-flags.js');
 var Logger = require('../state/logger.js');
 var Metrics = require('../state/metrics.js');
@@ -197,12 +199,14 @@ function generateQuestions(plan, options) {
  * P28-22：renderQuestions / checkAnswers / generateAndRender 已删除（均无生产调用；
  * 原 renderQuestions 经 PluginUtil.renderGrid/renderCard —— 随 shared/presentation/render.js 一并删除）。
  * 渲染唯一链：PresentationRenderer.renderAll → HTMLRenderer → RenderResult（见 shared/presentation/renderer.js）；
- * 判分唯一入口：PluginUtil.computeResult / defaultQCheck（shared/core/check.js）。
+ * 判分唯一入口：PluginUtil.computeResult（shared/core/check.js），逐题委托
+ * AnswerValidator.gradeUserAnswer（P32-AS-05 起，旧 defaultQCheck 已物理删除）。
  */
 
 module.exports = {
   generateQuestions: generateQuestions,
-  RenderFormat: RenderFormat
+  RenderFormat: RenderFormat,
+  AnswerValidator: AnswerValidator
 };
 
 // 浏览器全局挂载

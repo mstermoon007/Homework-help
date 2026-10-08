@@ -257,18 +257,31 @@ function validateChoiceAnswer(answerObj, options) {
   return { match: true, errors: [], warnings: [] };
 }
 
+// P32-AS-05/07：判断题布尔词表为全模块唯一 SSOT（质检 validateJudgeAnswer 与
+// 运行时 gradeUserAnswer 共用），答案期望只从 answer.value 自证，不再 hardcode true。
+var JUDGE_TRUE_SET = ['true', '对', '是', 'yes', 'y', 't', '1', '✓', '正确'];
+var JUDGE_FALSE_SET = ['false', '错', '否', 'no', 'n', 'f', '0', '✗', '错误'];
+
+// boolean / 布尔词 → true|false；无法识别 → null
+function parseJudgeValue(v) {
+  if (v === true) return true;
+  if (v === false) return false;
+  var s = coerceString(v).toLowerCase().trim();
+  if (JUDGE_TRUE_SET.indexOf(s) !== -1) return true;
+  if (JUDGE_FALSE_SET.indexOf(s) !== -1) return false;
+  return null;
+}
+
 /**
  * 验证判断题答案（对/错、true/false、是/否、✓/✗）
  * @param {Object} answerObj
- * @param {boolean} expected 期望布尔值
+ * @param {boolean} expected 期望布尔值（P32-AS-07 起由 answer.value 自证，调用方不得再 hardcode）
  * @returns {Object}
  */
 function validateJudgeAnswer(answerObj, expected) {
   var errors = [];
   var val = coerceString(answerObj.value).toLowerCase().trim();
-  var trueSet = ['true', '对', '是', 'yes', 'y', 't', '1', 'true', '✓', '正确'];
-  var falseSet = ['false', '错', '否', 'no', 'n', 'f', '0', 'false', '✗', '错误'];
-  var parsed = trueSet.indexOf(val) !== -1 ? true : (falseSet.indexOf(val) !== -1 ? false : null);
+  var parsed = parseJudgeValue(answerObj.value);
   if (parsed === null) {
     errors.push(createError(ERROR_CODES.ANSWER_TYPE_MISMATCH, 'answer.value', '判断题答案格式非法: ' + val, SEVERITY.ERROR));
     return { match: false, errors: errors, warnings: [] };
@@ -278,6 +291,158 @@ function validateJudgeAnswer(answerObj, expected) {
     errors.push(createError(ERROR_CODES.ANSWER_MISMATCH, 'answer.value', '判断题答案错误：期望 ' + (expected ? '对' : '错') + '，实际 ' + val, SEVERITY.ERROR));
   }
   return { match: match, errors: errors, warnings: [] };
+}
+
+// P32-AS-05：运行时批改归一化（判分唯一一处，口径等价旧 core.normalizeAns）：
+// 去全部空白 → 余数记号（……/.../余）统一为「……」→ 小写。
+function normalizeAnswerText(v) {
+  return coerceString(v)
+    .replace(/\s+/g, '')
+    .replace(/(?:…+|\.{2,}|余)/g, '……')
+    .toLowerCase();
+}
+
+// 答案标量候选：value + acceptable 中标量元素（嵌套数组等缺陷形态不参与判分）
+function answerCandidates(answerSpec) {
+  var out = [];
+  function push(v) {
+    var s = coerceString(v).trim();
+    if (s !== '') out.push(s);
+  }
+  if (!answerSpec) return out;
+  push(answerSpec.value);
+  if (Array.isArray(answerSpec.acceptable)) {
+    for (var i = 0; i < answerSpec.acceptable.length; i++) {
+      if (typeof answerSpec.acceptable[i] === 'string' || typeof answerSpec.acceptable[i] === 'number') {
+        push(answerSpec.acceptable[i]);
+      }
+    }
+  }
+  return out;
+}
+
+// P32-AS-13：classify 按 data.groups 做「组→项集合」顺序无关配对。
+// 用户串可解析且集合完全一致 → true；确定错误（缺组/多项/错项/越界重复/多余标签）→ false；无法解析 → null（parentCheck）。
+function gradeClassify(userRaw, groups) {
+  if (!groups || typeof groups !== 'object') return null;
+  var normItem = function (v) { return coerceString(v).replace(/\s+/g, ''); };
+  var expected = Object.keys(groups).map(function (name) {
+    return {
+      name: normItem(name),
+      items: new Set((Array.isArray(groups[name]) ? groups[name] : []).map(normItem))
+    };
+  }).filter(function (g) { return g.name !== ''; });
+  if (!expected.length) return null;
+
+  var parsed = {};
+  var segs = coerceString(userRaw).split(/[;；\n]+/);
+  for (var s = 0; s < segs.length; s++) {
+    var seg = segs[s].trim();
+    if (!seg) continue;
+    var mi = seg.match(/^(.+?)[：:](.+)$/);
+    if (!mi) return null;
+    var name = normItem(mi[1]);
+    if (Object.prototype.hasOwnProperty.call(parsed, name)) return false;
+    parsed[name] = mi[2].split(/[、，,]/).map(normItem).filter(Boolean);
+  }
+  if (Object.keys(parsed).length !== expected.length) return false;
+
+  var usedItems = new Set();
+  for (var i = 0; i < expected.length; i++) {
+    var got = parsed[expected[i].name];
+    if (!got) return null;
+    if (got.length !== expected[i].items.size) return false;
+    for (var j = 0; j < got.length; j++) {
+      if (!expected[i].items.has(got[j])) return false;
+      if (usedItems.has(got[j])) return false;
+      usedItems.add(got[j]);
+    }
+  }
+  return true;
+}
+
+/**
+ * P32-AS-05：运行时判分唯一入口（computeResult 逐题调用）。
+ * @param {*} userRaw 用户原始作答（practice.html 采集值）
+ * @param {Object} answerSpec RenderFormat 产出的只读答案规格 {value,acceptable,precision,unit,mode,groups?}
+ * @param {Object} ctx {questionType, prompt, data}
+ * @returns {boolean|null} true 正确；false 错误；null 不可自动判定（走家长检查通道，禁止非空即对）
+ */
+function gradeUserAnswer(userRaw, answerSpec, ctx) {
+  if (!answerSpec || answerSpec.value == null || coerceString(answerSpec.value).trim() === '') return null;
+  var qt = ctx && ctx.questionType ? ctx.questionType : null;
+  var raw = coerceString(userRaw);
+  if (!raw.trim()) return false;
+
+  // judge：期望由 answer.value 自证
+  if (qt === 'judge' || qt === 'true-false') {
+    var expected = parseJudgeValue(answerSpec.value);
+    if (expected === null) return null;
+    var given = parseJudgeValue(raw.trim());
+    return given === null ? false : given === expected;
+  }
+
+  // choice：与选项值精确匹配（归一化）
+  if (qt === 'choice') {
+    var targets = answerCandidates(answerSpec).map(normalizeAnswerText);
+    return targets.indexOf(normalizeAnswerText(raw)) !== -1;
+  }
+
+  // classify：组→项集合顺序无关配对
+  if (qt === 'classify') {
+    return gradeClassify(raw, answerSpec.groups);
+  }
+
+  // none / read-aloud：无自动判分
+  if (qt === 'none' || qt === 'read-aloud') return null;
+
+  // P32-AS-14：apply / geometry 的边界——数值/短答可判子问自动判分；
+  // 模型答案为长文本说理/作图/实操（「先…再说说…」「按实际测量…」「如…」类开放答案，
+  // 逐字匹配必然误判）时不做自动判分，返回 null 走家长检查（parentCheck），
+  // 禁止「非空即对」也禁止把开放题机械判错。判据：任一候选为纯数值（容差可判），
+  // 或存在汉字数 ≤ 6 的短答候选（如「闰年」「红球」「2020年」）；否则 → null。
+  if (qt === 'apply' || qt === 'geometry') {
+    var autoGradeable = answerCandidates(answerSpec).some(function (c) {
+      var cs = coerceString(c);
+      if (coerceNumber(cs) != null) return true;
+      return cs.replace(/[^\u4e00-\u9fa5]/g, '').length <= 6;
+    });
+    if (!autoGradeable) return null;
+  }
+
+  // calc / fill / geometry / apply（及其余文本/数值短答）：
+  // 余数语义优先 → 数值容差 → 归一化文本白名单
+  var cNorm = answerCandidates(answerSpec).map(normalizeAnswerText);
+  var uNorm = normalizeAnswerText(raw);
+  var prompt = ctx && ctx.prompt ? coerceString(ctx.prompt) : '';
+
+  var hasRemainderExpected = cNorm.some(function (c) { return /^\d+……\d+$/.test(c); });
+  var dm = prompt.match(/(\d+)\s*[÷/]\s*(\d+)/);
+  var um = uNorm.match(/^(\d+)……(\d+)$/);
+  if (hasRemainderExpected && um) {
+    if (dm) {
+      var a = parseInt(dm[1], 10), b = parseInt(dm[2], 10);
+      if (!(b > 0)) return null;
+      var q = parseInt(um[1], 10), r = parseInt(um[2], 10);
+      if (r >= b) return false;
+      return b * q + r === a;
+    }
+    // 题干无法解析除法结构时退回文本等价比较
+    return cNorm.some(function (c) { return c === uNorm; });
+  }
+
+  var un = coerceNumber(raw.replace(/\s+/g, ''));
+  if (un != null) {
+    var precision = answerSpec.precision != null ? Number(answerSpec.precision) : 2;
+    if (isNaN(precision)) precision = 2;
+    var tolerance = Math.pow(10, -precision);
+    for (var i = 0; i < cNorm.length; i++) {
+      var cn = coerceNumber(cNorm[i]);
+      if (cn != null && Math.abs(cn - un) < tolerance) return true;
+    }
+  }
+
+  return cNorm.some(function (c) { return c === uNorm; });
 }
 
 /**
@@ -352,9 +517,17 @@ function validateAnswer(sq) {
     errors.push.apply(errors, res.errors);
     warnings.push.apply(warnings, res.warnings);
   } else if (qType === 'judge' || qType === 'true-false') {
-    // 判断题需知期望值（此处无法自动推断，仅做格式校验）
-    var res2 = validateJudgeAnswer(answerObj, true); // 默认期望 true，实际应从题干推断
-    warnings.push({ code: 'JUDGE_ANSWER_UNVERIFIED', field: 'answer', message: '判断题正确性需人工/规则核对', severity: 'INFO' });
+    // P32-AS-07：期望布尔只从 answer.value 自证（生成器契约：value 为布尔或布尔词），
+    // 删除 hardcode true + 丢弃比对结果的假阳性 INFO。
+    var expectedBool = parseJudgeValue(answerObj.value);
+    if (expectedBool === null) {
+      errors.push(createError(ERROR_CODES.ANSWER_TYPE_MISMATCH, 'answer.value',
+        '判断题答案格式非法: ' + coerceString(answerObj.value), SEVERITY.ERROR));
+    } else {
+      var res2 = validateJudgeAnswer(answerObj, expectedBool);
+      errors.push.apply(errors, res2.errors);
+      warnings.push.apply(warnings, res2.warnings);
+    }
   } else if (qType === 'fill' || qType === 'calc') {
     // 有余数除法（a ÷ b = q……r）：余数记号无法用表达式求值，走专用语义校验
     var remResult = validateRemainderAnswer(answerObj, prompt);
@@ -391,6 +564,9 @@ function validateAnswer(sq) {
 
 module.exports = {
   validateAnswer: validateAnswer,
+  gradeUserAnswer: gradeUserAnswer,
+  parseJudgeValue: parseJudgeValue,
+  normalizeAnswerText: normalizeAnswerText,
   computeExpectedAnswer: computeExpectedAnswer,
   validateNumericAnswer: validateNumericAnswer,
   validateRemainderAnswer: validateRemainderAnswer,

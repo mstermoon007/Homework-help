@@ -365,6 +365,13 @@ function makeReasoningQuestion(plan, context, i, kp) {
     // fill：子句倒序 + 末尾 ____（结构与 apply 正序、choice 换词都互异）
     if (type === 'seq') {
       stemPrompt = '数列 ' + sq.s + ' 中，____ 是下一项';
+    } else if (/「[^」]*[。，、；！？]/.test(prompt)) {
+      // P32-AS-16E：直接引语内含句读（说谎模板「甲说：「乙在说谎。」…」）时禁止机械倒序——
+      // splitClauses 会把引语句号与「甲、乙、丙」顿号当子句边界，倒序后引号截断、
+      // 语序错乱成病句。改为正序命题的换词填空式（引语是逻辑命题本体，仅换叙述措辞），
+      // 答案（乙）与三步推理不变。
+      stemPrompt = '有甲、乙、丙三人，其中只有一人说真话。甲称乙撒了谎，乙称丙撒了谎，' +
+        '丙则称甲、乙两人都撒了谎。说真话的是 ____。';
     } else {
       var cls = splitClauses(prompt);
       stemPrompt = cls.reverse().join('，') + '，____';
@@ -373,6 +380,11 @@ function makeReasoningQuestion(plan, context, i, kp) {
     // choice：条件同义换词 + 选择问式
     if (type === 'seq') {
       stemPrompt = '数列 ' + sq.s + ' 的下一项是多少？正确选项是哪一个？';
+    } else if (/「[^」]*[。，、；！？]/.test(prompt)) {
+      // P32-AS-16E：直接引语内含句读（说谎模板）时，机械删尾问句会连同引语右引号
+      // 一起吃掉（丙的话未闭合）。改用引语闭合的换词选择式（命题等价，答案不变）。
+      stemPrompt = '甲、乙、丙三人中只有一人称真话。甲称：「乙撒了谎。」' +
+        '乙称：「丙撒了谎。」丙称：「甲、乙两人都撒了谎。」正确选项是哪一个？';
     } else {
       var condChoice = rewordCond(String(prompt).replace(/[^。！？]*[？?]\s*$/, ''));
       stemPrompt = condChoice + '正确选项是哪一个？';

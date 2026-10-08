@@ -5,10 +5,10 @@
   "source": "ai-candidate",
   "reviewStatus": "llm-finalized-dev",
   "counts": {
-    "total": 1114,
+    "total": 1112,
     "families": 15,
     "byFamily": {
-      "number-sense": 119,
+      "number-sense": 117,
       "integer-arithmetic": 87,
       "multiplicative-relation": 114,
       "multiple-ratio": 9,
@@ -23320,106 +23320,21 @@
       "variation": "number-theory",
       "structure": {
         "stem": {
-          "prompt": "一个数只有 1 和它本身两个因数就是质数：1 × 19 = 19。下面哪个数是质数____",
+          "prompt": "在 17、14、6 中，____ 只有 1 和它本身两个因数，是质数。",
           "answerMode": "input"
         },
         "options": null,
         "answer": {
-          "value": "19",
-          "acceptable": [
-            "19"
-          ],
-          "explanation": "一个数只有 1 和它本身两个因数就是质数：1 × 19 = 19。下面哪个数是质数____"
-        }
-      },
-      "semanticEvidence": {
-        "relations": [],
-        "constructs": []
-      },
-      "answer": "{\"value\":\"19\",\"acceptable\":[\"19\"],\"explanation\":\"一个数只有 1 和它本身两个因数就是质数：1 × 19 = 19。下面哪个数是质数____\"}",
-      "validator": {
-        "semanticEvidenceState": "pass",
-        "errors": 0,
-        "warnings": 0
-      },
-      "source": "ai-candidate",
-      "humanReview": "llm-finalized"
-    },
-    {
-      "kpId": "math-g5-down-u02-k005",
-      "semanticFamily": "number-sense",
-      "teachingTarget": "通过choice（选择题）训练辨认、对应与辨析（在干扰项下做出正确选择），对象为「质数与合数」（只有1和它本身两个因数的数叫作质数（素数），除了1和它本身还有其他因数的数叫作合数）；题型限定：不承载完整的书写与计算过程",
-      "cognitiveTarget": null,
-      "questionType": "choice",
-      "intent": {
-        "whyThisType": "choice（选择题，辨认判断）选取依据——认知匹配：本知识点认知层级「应用」在choice题型认知区间[认识/理解/应用]内",
-        "legitimacy": "成立：认知层级「应用」落于choice认知区间[认识/理解/应用]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性",
-        "driftRisk": "风险（choice）：干扰项排除法使「辨认」替代「理解」，答对不代表掌握（猜测成分）"
-      },
-      "difficulty": 3,
-      "variation": "number-theory",
-      "structure": {
-        "stem": {
-          "prompt": "一个数只有 1 和它本身两个因数就是质数：1 × 7 = 7。下面哪个数是质数？",
-          "answerMode": "choice"
-        },
-        "options": [
-          "都不是（3）",
-          "14",
-          "9",
-          "7"
-        ],
-        "answer": {
-          "value": "7",
+          "value": "17",
           "acceptable": [],
-          "explanation": "一个数只有 1 和它本身两个因数就是质数：1 × 7 = 7。下面哪个数是质数？"
+          "explanation": "在 17、14、6 中，____ 只有 1 和它本身两个因数，是质数。"
         }
       },
       "semanticEvidence": {
         "relations": [],
         "constructs": []
       },
-      "answer": "{\"value\":\"7\",\"acceptable\":[],\"explanation\":\"一个数只有 1 和它本身两个因数就是质数：1 × 7 = 7。下面哪个数是质数？\"}",
-      "validator": {
-        "semanticEvidenceState": "pass",
-        "errors": 0,
-        "warnings": 0
-      },
-      "source": "ai-candidate",
-      "humanReview": "llm-finalized"
-    },
-    {
-      "kpId": "math-g5-down-u02-k005",
-      "semanticFamily": "number-sense",
-      "teachingTarget": "通过apply（解决问题/应用题）训练在情境中运用与迁移，对象为「质数与合数」（只有1和它本身两个因数的数叫作质数（素数），除了1和它本身还有其他因数的数叫作合数）；题型限定：不承载方法定义的复述",
-      "cognitiveTarget": null,
-      "questionType": "apply",
-      "intent": {
-        "whyThisType": "apply（解决问题/应用题，综合应用）选取依据——认知匹配：本知识点认知层级「应用」在apply题型认知区间[理解/应用/分析]内",
-        "legitimacy": "成立：认知层级「应用」落于apply认知区间[理解/应用/分析]，数值表征与题型形态兼容；配合 driftRisk 所列风险的命题侧规避，该 KP×题型组合具备教育正当性",
-        "driftRisk": "风险（apply）：情境阅读负担淹没数学内核，考查点从数学滑向语文阅读"
-      },
-      "difficulty": 3,
-      "variation": "number-theory",
-      "structure": {
-        "stem": {
-          "prompt": "分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 7（1 × 7 = 7）能分成人数相同且多于1人的小组吗，它是质数还是合数？",
-          "answerMode": "input"
-        },
-        "options": null,
-        "answer": {
-          "value": "7",
-          "acceptable": [
-            "7"
-          ],
-          "explanation": "分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 7（1 × 7 = 7）能分成人数相同且多于1人的小组吗，它是质数还是合数？"
-        }
-      },
-      "semanticEvidence": {
-        "relations": [],
-        "constructs": []
-      },
-      "answer": "{\"value\":\"7\",\"acceptable\":[\"7\"],\"explanation\":\"分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 7（1 × 7 = 7）能分成人数相同且多于1人的小组吗，它是质数还是合数？\"}",
+      "answer": "{\"value\":\"17\",\"acceptable\":[],\"explanation\":\"在 17、14、6 中，____ 只有 1 和它本身两个因数，是质数。\"}",
       "validator": {
         "semanticEvidenceState": "pass",
         "errors": 0,

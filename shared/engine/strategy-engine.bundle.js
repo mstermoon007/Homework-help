@@ -5783,10 +5783,9 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
     var opts = d.options;
     if (!Array.isArray(opts) || !sq.answer || sq.answer.value == null) return false;
     var v = String(sq.answer.value);
-    if (opts.map(String).indexOf(v) !== -1) return true;                       
-    if (d.correctIndex != null && v === String(d.correctIndex)                 
-      && d.correctIndex >= 0 && d.correctIndex < opts.length) return true;
-    return false;
+    
+    
+    return opts.map(String).indexOf(v) !== -1;
   }
 
   function checkBooleanAnswer(sq) {
@@ -5943,18 +5942,34 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
     return Rng.shuffle(rng, opts).map(function (n) { return numStr(n) + (suffix || ''); });
   }
 
+  
+  
+  
+  
+  
+  function normalizeChoiceIndex(sq) {
+    if (!sq || !sq.answer || sq.answer.value == null) return false;
+    var d = dataOf(sq);
+    var opts = d.options;
+    if (!Array.isArray(opts) || d.correctIndex == null) return false;
+    if (d.correctIndex < 0 || d.correctIndex >= opts.length) return false;
+    if (!opts.every(function (o) { return typeof o === 'string' || typeof o === 'number'; })) return false;
+    var v = String(sq.answer.value);
+    if (v !== String(d.correctIndex)) return false;
+    if (v === String(opts[d.correctIndex])) return false;
+    d.options = opts.map(String);
+    sq.answer.value = String(d.options[d.correctIndex]);
+    return true;
+  }
+
   function finishChoice(sq, rng) {
     var d = dataOf(sq);
     var opts = d.options;
 
     
-    if (Array.isArray(opts) && opts.length >= 3 && sq.answer && sq.answer.value != null
-      && d.correctIndex != null && d.correctIndex >= 0 && d.correctIndex < opts.length
-      && opts.every(function (o) { return typeof o === 'string' || typeof o === 'number'; })
-      && opts.map(String).indexOf(String(sq.answer.value)) === -1
-      && String(sq.answer.value) === String(d.correctIndex)) {
-      d.options = opts.map(String);
-      sq.answer.value = String(d.options[d.correctIndex]);
+    
+    
+    if (normalizeChoiceIndex(sq)) {
       return { fixed: ['answerInOptions'] };
     }
 
@@ -6041,6 +6056,8 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
         sq.answer.explanation = '正确结果是 ' + d.expectedResult + '，不是 ' + shownStr + '，题中说法错误。';
         d.misconception = '计算结果错误：把答案算成了 ' + shownStr + '，正确结果应为 ' + d.expectedResult + '。';
       }
+      
+      sq.answerMode = 'judge';
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -6063,6 +6080,7 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
         sq.answer.explanation = '正确结果是 ' + d.expectedResult + '（商应为 ' + rem.q + '，余数仍是 ' + rem.r + '），不是 ' + shownStr2 + '。';
         d.misconception = '带余除法的商算错了：余数 ' + rem.r + ' 不够再分，商应为 ' + rem.q + '。';
       }
+      sq.answerMode = 'judge'; 
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -6085,6 +6103,7 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
         sq.answer.explanation = '正确的顺序应为 ' + d.expectedResult + '，题中有相邻两个数的位置排反了。';
         d.misconception = '排序时相邻两个数的大小关系判断错误，正确顺序应为 ' + d.expectedResult + '。';
       }
+      sq.answerMode = 'judge'; 
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -6220,11 +6239,18 @@ __defs["shared/generator/core/type-contract.js"] = function (module, exports, re
       if (sq.answer != null && (typeof sq.answer === 'string' || typeof sq.answer === 'number' || typeof sq.answer === 'boolean')) {
         sq.answer = { value: typeof sq.answer === 'boolean' ? sq.answer : String(sq.answer), acceptable: [] };
       }
+      
+      var indexNormalized = (qt === 'choice') ? normalizeChoiceIndex(sq) : false;
       var res = check(qt, sq);
       
       
       
-      if (res.ok) { if (qt === 'choice') sq.answerMode = 'choice'; trace(sq, 'pass', [], []); out.push(sq); continue; }
+      if (res.ok) {
+        if (qt === 'choice') sq.answerMode = 'choice';
+        trace(sq, indexNormalized ? 'finish' : 'pass', [], indexNormalized ? ['answerInOptions'] : []);
+        out.push(sq);
+        continue;
+      }
       var finisher = FORM_BOUND.indexOf(qt) === -1 ? FINISHERS[qt] : null;
       var fixed = null;
       if (finisher) {
@@ -6433,7 +6459,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
-      params: { total: total3, part: part3, unit: 'cm', partLabel: String(part3), totalLabel: String(total3) }
+      params: { total: total3, part: part3, unit: 'cm', partLabel: '?', totalLabel: String(total3) }
     };
   } else if (kpName.indexOf('解决问题') !== -1) {
     
@@ -6462,7 +6488,7 @@ function makeFractionMultiplyGeometryQuestion(plan, context, i, seedFn) {
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
-      params: { total: whole, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(whole) }
+      params: { total: whole, part: part, unit: 'cm', partLabel: '?', totalLabel: String(whole) }
     };
   }
 
@@ -7517,7 +7543,7 @@ function makeGeometryQuestion(plan, context, i, shapeMeta, graphic, kpName) {
     
     
     var GEOMETRY_PROMPTS = [
-      '请观察图形，' + name,
+      '图中显示的是什么图形？',
       name + '：看一看，图中画的是什么图形？',
       '观察图中的图形，写出它的名称。',
       name + '：先说一说它是谁，再写出名称。',
@@ -7865,7 +7891,7 @@ var SHAPE_THEME = {
     [['量长度时尺子斜着放也没关系', '尺子必须放正贴紧，斜放量不准。'],
      ['从刻度 2 量到刻度 7，物体长 7 厘米', '长度=7−2=5 厘米，要减去起始刻度。'],
      ['把尺子随便往物体上一放就能读出长度', '要把刻度 0（或某一刻度）对准物体一端，才能正确读数。']],
-    [['铅笔一端对着刻度 0，另一端对着刻度 8，铅笔长____厘米', '8', 8], ['橡皮一端对着刻度 2，另一端对着刻度 6，橡皮长____厘米', '4', 4], ['纸条一端对着刻度 3，另一端对着刻度 10，纸条长____厘米', '7', 7]],
+    [['铅笔一端对着刻度 2，另一端对着刻度 10，铅笔长____厘米', '8', 8], ['橡皮一端对着刻度 2，另一端对着刻度 6，橡皮长____厘米', '4', 4], ['纸条一端对着刻度 3，另一端对着刻度 10，纸条长____厘米', '7', 7]],
     [['先量一量自己的铅笔：把刻度 0 对准一端，再读出另一端对着的刻度？', '按实际读数，如 15 厘米'],
      ['一张纸条从刻度 4 量到刻度 11，先写出算式，再算出长度？', '11−4=7（厘米）'],
      ['先用尺子量出课本的长，再说说你是怎样对准刻度的？', '把刻度 0 对准课本一端，另一端对着几就是几厘米']]),
@@ -7874,7 +7900,7 @@ var SHAPE_THEME = {
     [['画 5 厘米的线段，从刻度 1 画到刻度 5', '从刻度 1 到刻度 5 只有 4 厘米；从刻度 0 画到刻度 5 才是 5 厘米。'],
      ['画线段不用尺子也能画直', '要沿尺子的边画，才能保证线段是直的。'],
      ['线段画好后不需要标端点', '线段有两个端点，画完要标出两端。']],
-    [['画一条 5 厘米的线段，从刻度 0 画到刻度____', '5', 5], ['画一条 8 厘米的线段，从刻度 0 画到刻度____', '8', 8], ['从刻度 2 画到刻度 9，画出的线段长____厘米', '7', 7]],
+    [['画一条 5 厘米的线段，如果从刻度 1 画起，应画到刻度____', '6', 6], ['画一条 8 厘米的线段，如果从刻度 2 画起，应画到刻度____', '10', 10], ['从刻度 2 画到刻度 9，画出的线段长____厘米', '7', 7]],
     [['先画一条 6 厘米的线段，再和同桌互相量一量画得准不准？', '从刻度 0 画到刻度 6，并标出两个端点'],
      ['先画一条比 10 厘米短 3 厘米的线段，再说说它长几厘米', '10−3=7，画一条 7 厘米的线段'],
      ['先画出一条 4 厘米的线段，再画出一条比它长 2 厘米的线段？', '再画 6 厘米的线段']]),
@@ -9004,7 +9030,9 @@ function makeCoordinateQuestion(plan, context, i) {
       knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
-      prompt: '在方格图中，点 A 的位置用数对表示是（____，' + y + '），它在第 ' + x + ' 列。',
+      
+      
+      prompt: '在方格图中，点 A 的位置用数对（' + x + '，' + y + '）表示（数对中第一个数表示列），点 A 在第 ____ 列。',
       answer: { value: String(x), acceptable: [] }, answerMode: 'input',
       data: { mode: 'fill', steps: 1, shapeName: '数对' }
     };
@@ -9548,7 +9576,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
-      params: { total: 100, part: 30, unit: 'cm', partLabel: '30', totalLabel: '100' }
+      params: { total: 100, part: 30, unit: 'cm', partLabel: '30', totalLabel: '?' }
     };
   }
 
@@ -11071,6 +11099,13 @@ function makeReasoningQuestion(plan, context, i, kp) {
     
     if (type === 'seq') {
       stemPrompt = '数列 ' + sq.s + ' 中，____ 是下一项';
+    } else if (/「[^」]*[。，、；！？]/.test(prompt)) {
+      
+      
+      
+      
+      stemPrompt = '有甲、乙、丙三人，其中只有一人说真话。甲称乙撒了谎，乙称丙撒了谎，' +
+        '丙则称甲、乙两人都撒了谎。说真话的是 ____。';
     } else {
       var cls = splitClauses(prompt);
       stemPrompt = cls.reverse().join('，') + '，____';
@@ -11079,6 +11114,11 @@ function makeReasoningQuestion(plan, context, i, kp) {
     
     if (type === 'seq') {
       stemPrompt = '数列 ' + sq.s + ' 的下一项是多少？正确选项是哪一个？';
+    } else if (/「[^」]*[。，、；！？]/.test(prompt)) {
+      
+      
+      stemPrompt = '甲、乙、丙三人中只有一人称真话。甲称：「乙撒了谎。」' +
+        '乙称：「丙撒了谎。」丙称：「甲、乙两人都撒了谎。」正确选项是哪一个？';
     } else {
       var condChoice = rewordCond(String(prompt).replace(/[^。！？]*[？?]\s*$/, ''));
       stemPrompt = condChoice + '正确选项是哪一个？';
@@ -11417,8 +11457,10 @@ function makeClassifyShape(plan, context, i, name, theme) {
   } else if (qt === 'apply') {
     data.steps = 2;
     if (v === 0) {
+      
+      
       prompt = name + '：先把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。再回答问题——' + theme.conclusion;
+        + '。先写出分类结果，再说一说按这个标准分类说明了什么。';
       answer = statPartitionText(theme) + '。' + theme.conclusion;
     } else if (v === 1) {
       prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
@@ -11501,13 +11543,20 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
   var gMax = groupsArr.slice().sort(function (a, b) { return b.members.length - a.members.length; })[0];
   var part = gMax.members.length;
   var rest = total - part;
-  function geo(unitPx) {
-    var params = { total: total, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(total) };
+  
+  
+  function geo(unitPx, mask) {
+    var params = { total: total, part: part, unit: 'cm',
+      partLabel: mask === 'part' ? '?' : String(part),
+      totalLabel: mask === 'total' ? '?' : String(total) };
     if (unitPx) params.unitPx = unitPx;
     return { type: 'geometry', subtype: 'segment', role: 'calculation-support', params: params };
   }
   var list = theme.items.join('、');
-  var data = { mode: qt, steps: 1, questionType: qt, graphic: geo(qt === 'judge' || qt === 'apply' ? 25 : null) };
+  var mask = null;
+  if (qt === 'fill' || qt === 'choice') mask = v === 0 ? 'part' : (v === 2 ? 'total' : null);
+  else if (qt === 'apply') mask = v === 0 ? 'total' : (v === 2 ? 'part' : null);
+  var data = { mode: qt, steps: 1, questionType: qt, graphic: geo(qt === 'judge' || qt === 'apply' ? 25 : null, mask) };
   var prompt, answer, explanation, mode = 'input';
   
   var targets = [
@@ -11518,9 +11567,10 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
 
   if (qt === 'fill') {
     var t = targets[v];
-    prompt = name + '：看图，整条线段表示全部 ' + total + ' 个事物（共 ' + total + 'cm），'
-      + '按「' + theme.criterion + '」把「' + gMax.label + '」的 ' + part + ' 个分在第一段。'
-      + '事物：' + list + '。' + t.label + '表示 ____ 个。';
+    
+    
+    prompt = name + '：看图，按「' + theme.criterion + '」把事物分成两段，「' + gMax.label
+      + '」的事物在第一段。事物：' + list + '。' + t.label + '表示 ____ 个。';
     answer = String(t.n);
   } else if (qt === 'choice') {
     var numPool = [part];
@@ -11551,17 +11601,18 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
   } else { 
     data.steps = 2;
     if (v === 0) {
-      prompt = name + '：看图，' + total + 'cm 的整条线段表示 ' + total + ' 个事物，'
-        + '第一段 ' + part + 'cm 表示「' + gMax.label + '」的 ' + part + ' 个。'
-        + '先数出另一类有几个，再求两类事物一共多少个。';
+      
+      prompt = name + '：看图，线段图按「' + theme.criterion + '」分成两段，第一段表示「'
+        + gMax.label + '」的事物。事物：' + list + '。先数出另一类有几个，再求两类事物一共多少个。';
       answer = String(total);
     } else if (v === 1) {
       prompt = name + '：看图，整条线段表示 ' + total + ' 个事物，第一段表示「' + gMax.label
         + '」的 ' + part + ' 个。两段表示的数量相差几个？';
       answer = String(Math.abs(part - rest));
     } else {
-      prompt = name + '：看图，' + total + ' 个事物分成两段，第一段表示「' + gMax.label
-        + '」的 ' + part + ' 个。两段分别表示多少个？';
+      
+      prompt = name + '：看图，线段图按「' + theme.criterion + '」分成两段，第一段表示「'
+        + gMax.label + '」的事物。事物：' + list + '。两段分别表示多少个？';
       answer = part + '个和' + rest + '个';
     }
   }
@@ -12465,14 +12516,24 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：' + lyO.q; answer = lyO.a;
       chOpts = Rng.shuffle(rng, lyO.o); data.choiceForm = true;
     } else {
+      
+      
+      
       var LY_FILL = [
-        { q: '2024年是平年还是闰年？写出判断理由。', a: '闰年；2024 ÷ 4 = 506，没有余数，公历年份是4的倍数的一般是闰年' },
-        { q: '1900年是平年还是闰年？为什么？', a: '平年；整百年份必须是400的倍数才是闰年，1900不是400的倍数' },
-        { q: '闰年全年有多少天？比平年多几天？', a: '366天，比平年多1天' },
-        { q: '小明是2016年2月29日出生的，他下一次能在2月29日过生日是哪一年？', a: '2020年' }
+        { q: '2024年是平年还是闰年？写出判断理由。', short: '闰年', acc: [], a: '闰年；2024 ÷ 4 = 506，没有余数，公历年份是4的倍数的一般是闰年' },
+        { q: '1900年是平年还是闰年？为什么？', short: '平年', acc: [], a: '平年；整百年份必须是400的倍数才是闰年，1900不是400的倍数' },
+        { q: '闰年全年有多少天？', short: '366', acc: ['366天'], a: '闰年全年有 366 天（7×31+4×30+29），比平年多 1 天' },
+        { q: '小明是2016年2月29日出生的，他下一次能在2月29日过生日是哪一年？', short: '2020年', acc: ['2020'], a: '2020 年（2016 + 4 = 2020，4 年一闰）' }
       ];
       var lyF = LY_FILL[i % LY_FILL.length];
-      prompt = name + '：' + (qt === 'fill' ? fillStem(lyF.q) : applyStem(lyF.q)); answer = lyF.a;
+      prompt = name + '：' + (qt === 'fill' ? fillStem(lyF.q) : applyStem(lyF.q));
+      if (qt === 'fill') {
+        answer = lyF.short;
+        var lyAcceptable = lyF.acc.slice();
+        var lyExplain = lyF.a;
+      } else {
+        answer = lyF.a;
+      }
     }
   } else {
     series = buildSeries(PEOPLE_LABELS, 20, 60);
@@ -12503,8 +12564,9 @@ function makeStatsQuestion(plan, context, i, kp) {
   
   var answerObj = typeof answer === 'boolean'
     ? { value: answer, acceptable: [] }
-    : { value: String(answer), acceptable: [] };
+    : { value: String(answer), acceptable: lyAcceptable || [] };
   if (judgeExplanation) answerObj.explanation = judgeExplanation;
+  if (lyExplain) answerObj.explanation = lyExplain; 
 
   return {
     knowledgePointId: pkp(plan),
@@ -13469,7 +13531,17 @@ function buildBase(plan, context, i, extra) {
 
 function finish(q, prompt, answer, acceptable, explanation) {
   q.prompt = prompt;
-  q.answer = { value: answer, acceptable: acceptable || [], explanation: explanation || null };
+  
+  
+  
+  var valueKey = String(answer);
+  q.answer = {
+    value: answer,
+    acceptable: (Array.isArray(acceptable) ? acceptable : []).filter(function (x) {
+      return (typeof x === 'string' || typeof x === 'number') && String(x) !== valueKey;
+    }),
+    explanation: explanation || null
+  };
   return q;
 }
 
@@ -13663,6 +13735,7 @@ function makeAngleJudge(plan, context, i) {
   ];
   var s = Rng.pick(rng, items);
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-concept', statement: s.text, shownResult: s.value ? '对' : '错' });
+  q.answerMode = 'judge'; 
   if (s.misconception) q.data.misconception = s.misconception;
   return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
@@ -13725,6 +13798,7 @@ function makeAreaJudge(plan, context, i) {
   ];
   var s = Rng.pick(rng, items);
   var q = buildBase(plan, context, i, { subType: 'area-concept', quantityKind: 'area', statement: s.text, shownResult: s.value ? '对' : '错' });
+  q.answerMode = 'judge'; 
   if (s.misconception) q.data.misconception = s.misconception;
   return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
@@ -13876,33 +13950,36 @@ function buildNumberConceptItem(rng, name) {
   
   
   if (name.indexOf('数数') !== -1) {
-    var parts = [];
     if (rng() < 0.5) {
       var ct = ri(rng, 2, 10);
       var tensTotal = ct * 10;
-      var steps;
+      
+      
+      var tensExpr;
       if (ct <= 6) {
-        for (var k = 0; k < ct; k++) parts.push('10');
-        steps = parts.join(' + ') + ' = ' + tensTotal;
+        tensExpr = [];
+        for (var kt = 0; kt < ct; kt++) tensExpr.push('10');
+        tensExpr = tensExpr.join(' + ') + ' = ？';
       } else {
-        steps = ((ct - 1) * 10) + ' + 10 = ' + tensTotal;
+        tensExpr = ((ct - 1) * 10) + ' + 10 = ？';
       }
-      return { stem: '十个十个地数：数 ' + ct + ' 次是多少？（参考：' + steps + '）',
+      return { stem: '十个十个地数：数 ' + ct + ' 次是多少？（' + tensExpr + '）',
         answer: String(tensTotal), options: [String(tensTotal), String(tensTotal + 10), String(tensTotal - 10)],
-        apply: '一捆小棒 10 根，' + ct + ' 捆小棒十个十个地数（' + steps + '），' + ct + ' 个十是多少根？',
+        apply: '一捆小棒 10 根，' + ct + ' 捆小棒十个十个地数，' + ct + ' 个十是多少根？',
         operation: 'add' };
     }
     var co = ri(rng, 2, 9);
-    var ones;
+    var onesExpr;
     if (co <= 5) {
-      for (var k2 = 0; k2 < co; k2++) parts.push('1');
-      ones = parts.join(' + ') + ' = ' + co;
+      onesExpr = [];
+      for (var ko = 0; ko < co; ko++) onesExpr.push('1');
+      onesExpr = onesExpr.join(' + ') + ' = ？';
     } else {
-      ones = (co - 1) + ' + 1 = ' + co;
+      onesExpr = (co - 1) + ' + 1 = ？';
     }
-    return { stem: '一个一个地数：' + co + ' 个一是多少？（参考：' + ones + '）',
+    return { stem: '一个一个地数：' + co + ' 个一是多少？（' + onesExpr + '）',
       answer: String(co), options: [String(co), String(co + 1), String(co + 10)],
-      apply: '数小棒，一根一根地数，数了 ' + co + ' 根（' + ones + '），' + co + ' 个一是多少根？',
+      apply: '数小棒，一根一根地数，数了 ' + co + ' 根，' + co + ' 个一是多少根？',
       operation: 'add' };
   }
   
@@ -13911,26 +13988,28 @@ function buildNumberConceptItem(rng, name) {
     var o2 = ri(rng, 1, 9);
     var n2 = 10 + o2;
     if (rng() < 0.5) {
-      return { stem: n2 + ' 里面有几个十和几个一？（参考：10 + ' + o2 + ' = ' + n2 + '）',
+      return { stem: n2 + ' 里面有几个十和几个一？（10 + ' + o2 + ' = ？）',
         answer: '1 个十和 ' + o2 + ' 个一',
         options: ['1 个十和 ' + o2 + ' 个一', o2 + ' 个十和 1 个一', n2 + ' 个十'],
-        apply: '摆小棒表示 ' + n2 + '（10 + ' + o2 + ' = ' + n2 + '），要摆 1 捆（10 根）零几根？' };
+        apply: '摆小棒表示 ' + n2 + '，要摆 1 捆（10 根）零几根？' };
     }
-    return { stem: '计数器十位 1 颗珠、个位 ' + o2 + ' 颗珠（1 个十和 ' + o2 + ' 个一，10 + ' + o2 + ' = ' + n2 + '），这个数写作多少？',
+    
+    
+    return { stem: '计数器十位 1 颗珠、个位 ' + o2 + ' 颗珠（1 个十和 ' + o2 + ' 个一，10 + ' + o2 + ' = ？），这个数写作多少？',
       answer: String(n2), options: [String(n2), String(1 + o2), String(o2 * 10 + 1)],
-      apply: '数一数：十位拨 1 颗、个位拨 ' + o2 + ' 颗，1 个十和 ' + o2 + ' 个一合起来写作多少？（10 + ' + o2 + ' = ' + n2 + '）' };
+      apply: '数一数：十位拨 1 颗、个位拨 ' + o2 + ' 颗，1 个十和 ' + o2 + ' 个一合起来写作多少？' };
   }
   
   
   if (name.indexOf('1-5') !== -1 || name.indexOf('1～5') !== -1) {
     var n5 = ri(rng, 2, 5);
-    return { stem: '数一数：' + n5 + ' 前面一个数是多少？（参考：' + n5 + ' − 1 = ' + (n5 - 1) + '）',
+    return { stem: '数一数：' + n5 + ' 前面一个数是多少？（' + n5 + ' − 1 = ？）',
       answer: String(n5 - 1), options: [String(n5 - 1), String(n5), String(n5 + 1)],
-      apply: '排队报数，小明报 ' + n5 + '（' + n5 + ' − 1 = ' + (n5 - 1) + '），他前面一个同学报几？' };
+      apply: '排队报数，小明报 ' + n5 + '，他前面一个同学报几？' };
   }
   if (name.indexOf('百数表') !== -1) {
     var x0 = ri(rng, 12, 88);
-    return { stem: '百数表中，' + x0 + ' 右边一个数是多少？（参考：' + x0 + ' + 1 = ' + (x0 + 1) + '）',
+    return { stem: '百数表中，' + x0 + ' 右边一个数是多少？（' + x0 + ' + 1 = ？）',
       answer: String(x0 + 1), options: [String(x0 + 1), String(x0 + 10), String(x0 - 1)],
       apply: '在百数表（每行10个数）里圈出 ' + x0 + '，它右边一格的数是多少？（' + x0 + ' + 1 = ？）' };
   }
@@ -13983,25 +14062,29 @@ function buildNumberConceptItem(rng, name) {
     
     var abPick = rng();
     if (abPick < 0.34) {
-      return { stem: '算盘上一个上珠靠梁表示几？（参考：1 × 5 = 5）',
+      return { stem: '算盘上一个上珠靠梁表示几？（1 × 5 = ？）',
         answer: '5', options: ['5', '1', '10'],
-        apply: '在算盘上拨数，1 个上珠靠梁，1 × 5 = 5，它表示数字几？' };
+        apply: '在算盘上拨数，1 个上珠靠梁，它表示数字几？' };
     }
     if (abPick < 0.67) {
-      return { stem: '算盘上一个下珠靠梁表示几？（参考：1 × 1 = 1）',
+      return { stem: '算盘上一个下珠靠梁表示几？（1 × 1 = ？）',
         answer: '1', options: ['1', '5', '10'],
-        apply: '在算盘上拨数，1 个下珠靠梁，1 × 1 = 1，它表示数字几？' };
+        apply: '在算盘上拨数，1 个下珠靠梁，它表示数字几？' };
     }
-    return { stem: '算盘的十位上1个上珠靠梁、个位上2个下珠靠梁，表示的数是多少？（参考：5 × 10 + 2 = 52）',
+    
+    
+    return { stem: '算盘的十位上1个上珠靠梁、个位上2个下珠靠梁，表示的数是多少？（5 × 10 + 2 = ？）',
       answer: '52', options: ['52', '25', '70'],
       apply: '算盘十位1个上珠靠梁表示5个十，个位2个下珠靠梁表示2个一，5 × 10 + 2 = ？，表示的数是多少？' };
   }
   
   
   var t1 = ri(rng, 1, 9), o1 = ri(rng, 1, 9);
-  return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '），写作多少？',
+  
+  
+  return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ？），写作多少？',
     answer: String(t1 * 10 + o1), options: [String(t1 * 10 + o1), String(t1 + o1), String(o1 * 10 + t1)],
-    apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' 个十和 ' + o1 + ' 个一合起来写作多少？（' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '）' };
+    apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' 个十和 ' + o1 + ' 个一合起来写作多少？' };
 }
 
 
@@ -14012,7 +14095,8 @@ function buildMakeTenItem(rng) {
   var b = ri(rng, need + 1, 9);
   var rest = b - need;
   var sum = a + b;
-  return { stem: '用凑十法计算：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + ' = ？（先把 ' + a + ' 凑成 10，10 + ' + rest + ' = ' + sum + '）',
+  
+  return { stem: '用凑十法计算：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + ' = ？（先把 ' + a + ' 凑成 10，再算 10 + ' + rest + '）',
     answer: String(sum), options: [String(sum), String(sum - 1), String(sum + 1)],
     fill: '凑十法最后一步：10 + ' + rest + ' = ____',
     apply: '小兔采蘑菇，上午采 ' + a + ' 个、下午采 ' + b + ' 个。用凑十法：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + '，一共采了多少个？',
@@ -14047,9 +14131,11 @@ function buildStepwiseItem(rng) {
 function buildNegativeItem(rng, name) {
   if (name.indexOf('数轴') !== -1) {
     var k0 = ri(rng, 2, 6);
-    return { stem: '在数轴上，0 左边第 ' + k0 + ' 格表示什么数？（参考：0 − ' + k0 + ' = −' + k0 + '）',
+    
+    
+    return { stem: '在数轴上，0 左边第 ' + k0 + ' 格表示什么数？（0 − ' + k0 + ' = ？）',
       answer: '−' + k0, options: ['−' + k0, String(k0), '0'],
-      apply: '温度计以 0℃ 为分界，0 − ' + k0 + ' = −' + k0 + '，数轴上 0 左边第 ' + k0 + ' 格是什么数？' };
+      apply: '温度计以 0℃ 为分界，数轴上 0 左边第 ' + k0 + ' 格是什么数？' };
   }
   if (name.indexOf('比较') !== -1) {
     var a1 = ri(rng, 2, 8), b1 = a1 + ri(rng, 1, 5);
@@ -14121,14 +14207,15 @@ function buildNumberTheoryItem(rng, name) {
   
   if (name.indexOf('因数与倍数') !== -1) {
     var fn2 = ri(rng, 3, 9);
+    
     return { operation: 'mult',
-      stem: '用一个数依次乘 1、2、3……可以找它的倍数：' + fn2 + ' × 1 = ' + fn2 + '，'
+      stem: '用一个数依次乘 1、2、3……可以找它的倍数：'
         + fn2 + ' × 2 = ' + (fn2 * 2) + '，' + fn2 + ' × 3 = ' + (fn2 * 3) + '。'
         + fn2 + ' 最小的倍数是多少？',
       answer: String(fn2),
       options: [String(fn2), '1', String(fn2 * 2), '0'],
       fill: fn2 + ' × 1 = ____，可见一个数最小的倍数就是它本身。',
-      apply: '计数器按 ' + fn2 + ' 的倍数累加：' + fn2 + ' × 1 = ' + fn2 + '，'
+      apply: '计数器按 ' + fn2 + ' 的倍数累加：'
         + fn2 + ' × 2 = ' + (fn2 * 2) + '，' + fn2 + ' × 3 = ' + (fn2 * 3)
         + '……照这样能一直写下去吗？' + fn2 + ' 最小的倍数是多少？' };
   }
@@ -14142,11 +14229,12 @@ function buildNumberTheoryItem(rng, name) {
     var pt = patterns[ri(rng, 0, patterns.length - 1)];
     var pa = pt.oddA ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
     var pb = pt.oddB ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
-    var ps = pa + pb;
-    return { stem: pt.rule + '：' + pa + ' + ' + pb + ' = ' + ps + '，' + pa + ' 与 ' + pb + ' 的和是奇数还是偶数？',
+    
+    
+    return { stem: '不计算，判断：' + pa + ' + ' + pb + ' = ？的得数是奇数还是偶数？（根据和的奇偶规律判断）',
       answer: pt.res, options: ['偶数', '奇数', '无法确定'],
-      fill: pt.rule + '，' + pa + ' + ' + pb + ' 的和是 ____',
-      apply: '两队人数分别是 ' + pa + ' 和 ' + pb + '（' + pt.rule + '），' + pa + ' + ' + pb + ' = ' + ps + '，两队合并后的总人数是奇数还是偶数？' };
+      fill: pa + ' + ' + pb + ' 的和是 ____（填「奇数」或「偶数」，不计算）',
+      apply: '两队人数分别是 ' + pa + ' 和 ' + pb + '，不计算，两队合并后的总人数是奇数还是偶数？' };
   }
   
   if (name.indexOf('质数') !== -1 || name.indexOf('合数') !== -1) {
@@ -14156,10 +14244,16 @@ function buildNumberTheoryItem(rng, name) {
     var pool = composites.slice();
     var d1 = pool.splice(ri(rng, 0, pool.length - 1), 1)[0];
     var d2 = pool.splice(ri(rng, 0, pool.length - 1), 1)[0];
-    return { stem: '一个数只有 1 和它本身两个因数就是质数：1 × ' + pn + ' = ' + pn + '。下面哪个数是质数？',
+    
+    
+    
+    return { stem: '一个数只有 1 和它本身两个因数就是质数（如 5 × 6 = 30，30 有多个因数，是合数）。下面哪个数是质数？',
       answer: String(pn), options: [String(pn), String(d1), String(d2)],
-      fill: '1 × ' + pn + ' = ' + pn + '，' + pn + ' 的因数只有 1 和 ____',
-      apply: '分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 ' + pn + '（1 × ' + pn + ' = ' + pn + '）能分成人数相同且多于1人的小组吗，它是质数还是合数？' };
+      fill: '在 ' + pn + '、' + d1 + '、' + d2 + ' 中，____ 只有 1 和它本身两个因数，是质数。',
+      
+      
+      applyAnswer: '质数',
+      apply: '分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 ' + pn + ' 能分成人数相同且多于1人的小组吗，它是质数还是合数？' };
   }
   
   if (name.indexOf('奇数') !== -1 || name.indexOf('偶数') !== -1) {
@@ -14169,13 +14263,19 @@ function buildNumberTheoryItem(rng, name) {
       return { stem: '2 的倍数是偶数：' + en + ' ÷ 2 = ' + (en / 2) + '。下面哪个数是偶数？',
         answer: String(en), options: [String(en), String(en + 1), String(en + 3)],
         fill: '' + en + ' ÷ 2 = ' + (en / 2) + ' 没有余数，____ 是 2 的倍数',
-        apply: '门牌号按单双号排列，' + en + ' ÷ 2 = ' + (en / 2) + ' 没有余数，' + en + ' 号是奇数还是偶数？' };
+        
+        
+        applyAnswer: '偶数',
+        
+        apply: '门牌号按单双号排列，' + en + ' 号是奇数还是偶数？' };
     }
     var on = ri(rng, 2, 24) * 2 - 1;
     return { stem: '不是 2 的倍数的数是奇数，如 ' + on + ' ÷ 2 = ' + ((on - 1) / 2) + '……1。下面哪个数是奇数？',
       answer: String(on), options: [String(on), String(on + 1), String(on - 1)],
       fill: '' + on + ' ÷ 2 余 1，____ 不是 2 的倍数',
-      apply: '报数时逢双数蹲下，' + on + ' ÷ 2 余 1 不能整除，' + on + ' 号同学该蹲下吗，' + on + ' 是奇数还是偶数？' };
+      applyAnswer: '奇数',
+      
+      apply: '报数时逢双数蹲下，' + on + ' 号同学该蹲下吗，' + on + ' 是奇数还是偶数？' };
   }
   
   var feats = [
@@ -14195,13 +14295,14 @@ function buildNumberTheoryItem(rng, name) {
   var fn = ft.build();
   var fd1 = ft.bad(fn), fd2 = ft.bad(fn);
   while (fd2 === fd1 || fd2 === fn) fd2 = ft.bad(fn);
-  var fsum = Math.floor(fn / 10) + fn % 10;
-  var fref = ft.f === 3 ? '（数字和 ' + fsum + '，' + fsum + ' ÷ 3 = ' + (fsum / 3) + '）'
-    : '（参考：' + fn + ' ÷ ' + ft.f + ' = ' + (fn / ft.f) + '）';
-  return { stem: ft.text + ' 的数是 ' + ft.f + ' 的倍数' + fref + '。下面哪个数是 ' + ft.f + ' 的倍数？',
+  
+  
+  
+  return { stem: ft.text + ' 的数是 ' + ft.f + ' 的倍数。下面哪个数是 ' + ft.f + ' 的倍数？'
+      + '（仿照 7 ÷ ' + ft.f + ' 的做法，把每个选项除以 ' + ft.f + '，看余数是不是 0）',
     answer: String(fn), options: [String(fn), String(fd1), String(fd2)],
     fill: ft.text + '，____ 是 ' + ft.f + ' 的倍数',
-    apply: '体育分组每组 ' + ft.f + ' 人正好分完，人数须是 ' + ft.f + ' 的倍数。班级人数 ' + fn + fref + '，哪个班能正好分完？' };
+    apply: '体育分组每组 ' + ft.f + ' 人正好分完，人数须是 ' + ft.f + ' 的倍数。班级人数 ' + fn + '，哪个班能正好分完？' };
 }
 
 
@@ -14241,10 +14342,16 @@ function makeByItem(plan, context, i, builder, subType) {
     if (item.fill) {
       prompt = item.fill;
     } else {
-      prompt = '根据算式把答案填在横线上：' + extractSupport(item.stem) + ' = ____';
+      
+      
+      
+      var support = extractSupport(item.stem).replace(/[=＝]\s*[^=＝]*$/, '= ____');
+      prompt = '根据算式把答案填在横线上：' + support;
     }
   } else if (qt === 'apply') {
     prompt = item.apply || item.stem;
+    
+    if (item.applyAnswer != null) answer = item.applyAnswer;
   } else {
     
     var wrongs = (item.options || []).filter(function (o) { return o !== item.answer; });
@@ -14390,10 +14497,16 @@ function buildBase(plan, context, i, extra) {
 }
 
 function finish(q, prompt, answer, acceptable, explanation) {
+  var value = String(answer);
   q.prompt = prompt;
   q.answer = {
-    value: String(answer),
-    acceptable: acceptable || [],
+    value: value,
+    
+    
+    
+    acceptable: (Array.isArray(acceptable) ? acceptable : []).filter(function (x) {
+      return (typeof x === 'string' || typeof x === 'number') && String(x) !== value;
+    }),
     explanation: explanation || (prompt.replace(/[？?]\s*$/, '') + ' = ' + answer)
   };
   return q;
@@ -14573,8 +14686,10 @@ function makePeriodFill(plan, context, i) {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem
   });
+  
+  
   return finish(q, '找规律：「' + p.shapes.join('') + '」依次重复出现，第 ' + p.period
-    + ' 个图形是 ____。', p.shape, [p.shapes],
+    + ' 个图形是 ____。', p.shape, [],
     p.period + ' ÷ ' + p.n + ' = ' + p.quotient + '……' + p.rem
       + '，余数 ' + (p.rem === 0 ? '0（取末位）' : p.rem) + ' → 「' + p.shape + '」');
 }
@@ -14946,7 +15061,7 @@ function makeRatioCalc(plan, context, i) {
   var q2 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
   return finish(q2, '列式计算：判断 ' + p.a + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d
     + ' 能否组成比例。检验：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d) + '，' + p.b + ' × ' + p.c + ' = '
-    + (p.b * p.c) + '，积相等，填「能」或「不能」。',
+    + (p.b * p.c) + '。根据检验结果，填「能」或「不能」。',
     '能', ['能'],
     '比值相等（' + p.a + '/' + p.b + ' = ' + p.c + '/' + p.d + '），可以组成比例');
 }
@@ -14981,10 +15096,11 @@ function makeRatioApply(plan, context, i) {
   var q = buildBase(plan, context, i, {
     subTopic: 'ratio-basics', aspect: 'apply-solve', ratioA: c0.a, ratioB: c0.b, given: c0.c
   });
-  return finish(q, c0.label + '（' + c0.a + '∶' + c0.b + ' = ' + c0.c + '∶x）。按照这个比，' + c0.ask + '？'
-    + '列式 ' + c0.a + ' × x = ' + c0.b + ' × ' + c0.c + ' = ' + (c0.b * c0.c) + '，x = ？',
+  
+  
+  return finish(q, c0.label + '（' + c0.a + '∶' + c0.b + ' = ' + c0.c + '∶x）。按照这个比，' + c0.ask + '？列比例求 x。',
     x, [String(x)],
-    '解比例：x = ' + c0.b + ' × ' + c0.c + ' ÷ ' + c0.a + ' = ' + x + c0.unit);
+    '解比例：' + c0.a + ' × x = ' + c0.b + ' × ' + c0.c + '，x = ' + c0.b + ' × ' + c0.c + ' ÷ ' + c0.a + ' = ' + x + c0.unit);
 }
 
 function makeRatioChoice(plan, context, i) {
@@ -15666,6 +15782,12 @@ function arithmeticTyped(sub, qt, rng) {
         '，列式求两次一共用去这根彩带的几分之几', ae, aa);
     }
     var hi = ri(rng, 2, d - 1), lo = ri(rng, 1, hi - 1);
+    
+    
+    
+    while (hi - lo === lo) {
+      d = ri(rng, 3, 9); hi = ri(rng, 2, d - 1); lo = ri(rng, 1, hi - 1);
+    }
     var se = hi + '/' + d + ' − ' + lo + '/' + d, sa = simp(hi - lo, d);
     if (qt === 'calc') return calcItem(se, sa);
     if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：' + hi + '/' + d + ' − ____ = ' + (hi - lo) + '/' + d,
@@ -15703,7 +15825,11 @@ function arithmeticTyped(sub, qt, rng) {
 
   
   if (rng() < 0.5) {
-    var dv = fracDiv(rng), de2 = dv.expr, da2 = dv.ans;
+    var dv = fracDiv(rng);
+    
+    
+    while (dv.n2 === dv.d2) dv = fracDiv(rng);
+    var de2 = dv.expr, da2 = dv.ans;
     if (qt === 'calc') return calcItem(de2, da2);
     if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：____ ÷ ' + dv.n2 + '/' + dv.d2 + ' = ' + fs(da2),
       answer: dv.n1 + '/' + dv.d1, options: null };
@@ -16768,7 +16894,8 @@ function applyCognitive(q, rng) {
   if (!q.prompt) return false;
   var c = COGS[rng.int(0, COGS.length - 1)];
   q.prompt = q.prompt + ' ' + c.cue;
-  q.hint = (q.hint || '') + (q.hint ? ' | ' : '') + c.key;
+  
+  
   q.data = q.data || {};
   q.data.cognitiveHint = c.key;
   return true;

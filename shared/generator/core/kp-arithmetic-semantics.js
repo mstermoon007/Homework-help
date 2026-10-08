@@ -28,7 +28,7 @@ var SINGLE_STEP_PROFILE = {
   mult: { operators: [OP_MUL], steps: 1 },
   div: { operators: [OP_DIV], steps: 1 },
   // 有余数除法：a ÷ b = q……r（0<r<b），由 buildDivRemainder 专用结构承载，
-  // 答案为余数记号字符串，与 normalizeAns 的余数记号归一化配套。
+  // 答案为余数记号字符串，与 AnswerValidator.normalizeAnswerText 的余数记号归一化配套。
   remainder: { operators: [OP_DIV], steps: 1, kind: 'div-remainder' }
 };
 

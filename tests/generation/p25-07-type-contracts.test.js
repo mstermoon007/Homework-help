@@ -85,12 +85,29 @@ test('choice：无选项 → 违例；值约定合规 → pass', () => {
   assert.equal(ok.ok, true);
 });
 
-test('choice：索引约定（answer.value=String(correctIndex)）合规', () => {
+test('choice：索引约定（answer.value=String(correctIndex)）在 check 层不合规——单一值约定（P32-AS-16）', () => {
+  // 渲染（radio value=选项文本）、判分（gradeUserAnswer choice 精确匹配文本）、上屏均为文本约定；
+  // check 层只认 answer.value ∈ options 文本，索引串必须由 enforce 预归一收口，禁止双约定。
   const r = TC.check('choice', sq('choice', {
     prompt: '3 + 4 等于几？', answer: { value: '1', acceptable: [] },
     data: { options: ['6', '7', '8'], correctIndex: 1 }
   }));
-  assert.equal(r.ok, true);
+  assert.equal(r.ok, false);
+});
+
+test('enforce：索引串与干扰项文本撞串时预归一仍以 correctIndex 改写（g5-down-u01-k001 复现题，P32-AS-16）', () => {
+  // options=["6","3","5","4"]、correctIndex=3、value="3"：索引串恰好等于干扰项文本，
+  // 若归一放在 check 之后，check 会按值约定误判合法，假答案 "3" 一路放行。
+  // 预归一在 check 之前以 correctIndex 为准改写为 "4"。
+  const q = sq('choice', {
+    prompt: '下面哪个数是合数？', answer: { value: '3', acceptable: [] },
+    data: { options: ['6', '3', '5', '4'], correctIndex: 3 }
+  });
+  const out = TC.enforce([q], { questionTypeId: 'choice' });
+  assert.equal(out.length, 1);
+  assert.equal(out[0].answer.value, '4');
+  assert.equal(out[0].metadata.typeContract.action, 'finish');
+  assert.ok((out[0].metadata.typeContract.fixed || []).indexOf('answerInOptions') !== -1);
 });
 
 test('judge：非布尔答案 → 违例；布尔 → pass', () => {

@@ -262,8 +262,10 @@ function makeClassifyShape(plan, context, i, name, theme) {
   } else if (qt === 'apply') {
     data.steps = 2;
     if (v === 0) {
+      // P32-AS-16：原句把结论 theme.conclusion 直接写在题面（自问自答）。改为只给任务，
+      // 结论作为参考答案/解析在提交后通道呈现；说理任务经 AS-14 边界走家长检查（grade=null）。
       prompt = name + '：先把下面的事物按「' + theme.criterion + '」分类：' + list
-        + '。再回答问题——' + theme.conclusion;
+        + '。先写出分类结果，再说一说按这个标准分类说明了什么。';
       answer = statPartitionText(theme) + '。' + theme.conclusion;
     } else if (v === 1) {
       prompt = name + '：把下面的事物按「' + theme.criterion + '」分类：' + list
@@ -346,13 +348,20 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
   var gMax = groupsArr.slice().sort(function (a, b) { return b.members.length - a.members.length; })[0];
   var part = gMax.members.length;
   var rest = total - part;
-  function geo(unitPx) {
-    var params = { total: total, part: part, unit: 'cm', partLabel: String(part), totalLabel: String(total) };
+  // P32-AS-18 延伸：所求段标注遮蔽——线段图只标注已知段，问哪段哪段标 '?'，
+  // 防图形把所求量化为已知（§9.2 L2 口径）；judge 的标注是判断主张材料，不遮。
+  function geo(unitPx, mask) {
+    var params = { total: total, part: part, unit: 'cm',
+      partLabel: mask === 'part' ? '?' : String(part),
+      totalLabel: mask === 'total' ? '?' : String(total) };
     if (unitPx) params.unitPx = unitPx;
     return { type: 'geometry', subtype: 'segment', role: 'calculation-support', params: params };
   }
   var list = theme.items.join('、');
-  var data = { mode: qt, steps: 1, questionType: qt, graphic: geo(qt === 'judge' || qt === 'apply' ? 25 : null) };
+  var mask = null;
+  if (qt === 'fill' || qt === 'choice') mask = v === 0 ? 'part' : (v === 2 ? 'total' : null);
+  else if (qt === 'apply') mask = v === 0 ? 'total' : (v === 2 ? 'part' : null);
+  var data = { mode: qt, steps: 1, questionType: qt, graphic: geo(qt === 'judge' || qt === 'apply' ? 25 : null, mask) };
   var prompt, answer, explanation, mode = 'input';
   // 三个读数目标：第一段 part / 第二段 rest / 整条 total
   var targets = [
@@ -363,9 +372,10 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
 
   if (qt === 'fill') {
     var t = targets[v];
-    prompt = name + '：看图，整条线段表示全部 ' + total + ' 个事物（共 ' + total + 'cm），'
-      + '按「' + theme.criterion + '」把「' + gMax.label + '」的 ' + part + ' 个分在第一段。'
-      + '事物：' + list + '。' + t.label + '表示 ____ 个。';
+    // P32-AS-16：原题面先用文字给出 total/part（「全部 N 个」「红的 N 个分在第一段」），
+    // 再问第一段/整条表示几个，自问自答。改由事物清单（list）与线段图承载数据，学生点数作答。
+    prompt = name + '：看图，按「' + theme.criterion + '」把事物分成两段，「' + gMax.label
+      + '」的事物在第一段。事物：' + list + '。' + t.label + '表示 ____ 个。';
     answer = String(t.n);
   } else if (qt === 'choice') {
     var numPool = [part];
@@ -396,17 +406,18 @@ function makeClassifyGeoShape(plan, context, i, name, theme) {
   } else { // apply，steps=2
     data.steps = 2;
     if (v === 0) {
-      prompt = name + '：看图，' + total + 'cm 的整条线段表示 ' + total + ' 个事物，'
-        + '第一段 ' + part + 'cm 表示「' + gMax.label + '」的 ' + part + ' 个。'
-        + '先数出另一类有几个，再求两类事物一共多少个。';
+      // P32-AS-16：原句两次写明 total（问的正是 total），删数量文字，数据走清单与线段图
+      prompt = name + '：看图，线段图按「' + theme.criterion + '」分成两段，第一段表示「'
+        + gMax.label + '」的事物。事物：' + list + '。先数出另一类有几个，再求两类事物一共多少个。';
       answer = String(total);
     } else if (v === 1) {
       prompt = name + '：看图，整条线段表示 ' + total + ' 个事物，第一段表示「' + gMax.label
         + '」的 ' + part + ' 个。两段表示的数量相差几个？';
       answer = String(Math.abs(part - rest));
     } else {
-      prompt = name + '：看图，' + total + ' 个事物分成两段，第一段表示「' + gMax.label
-        + '」的 ' + part + ' 个。两段分别表示多少个？';
+      // P32-AS-16：原句直接给出第一段数量 part（答案前半），同上改由清单/线段图承载
+      prompt = name + '：看图，线段图按「' + theme.criterion + '」分成两段，第一段表示「'
+        + gMax.label + '」的事物。事物：' + list + '。两段分别表示多少个？';
       answer = part + '个和' + rest + '个';
     }
   }
@@ -1310,14 +1321,24 @@ function makeStatsQuestion(plan, context, i, kp) {
       prompt = name + '：' + lyO.q; answer = lyO.a;
       chOpts = Rng.shuffle(rng, lyO.o); data.choiceForm = true;
     } else {
+      // P32-AS-14：fill 只判可判短答（short/acc），完整说理放 explanation（提交后通道）；
+      // apply 保留完整参考答案（说理开放题，gradeUserAnswer 依长文本边界返回 null→家长检查）。
+      // 第 3 题原题含两问（多少天+多几天），fill 只有一个作答位，收敛为单问。
       var LY_FILL = [
-        { q: '2024年是平年还是闰年？写出判断理由。', a: '闰年；2024 ÷ 4 = 506，没有余数，公历年份是4的倍数的一般是闰年' },
-        { q: '1900年是平年还是闰年？为什么？', a: '平年；整百年份必须是400的倍数才是闰年，1900不是400的倍数' },
-        { q: '闰年全年有多少天？比平年多几天？', a: '366天，比平年多1天' },
-        { q: '小明是2016年2月29日出生的，他下一次能在2月29日过生日是哪一年？', a: '2020年' }
+        { q: '2024年是平年还是闰年？写出判断理由。', short: '闰年', acc: [], a: '闰年；2024 ÷ 4 = 506，没有余数，公历年份是4的倍数的一般是闰年' },
+        { q: '1900年是平年还是闰年？为什么？', short: '平年', acc: [], a: '平年；整百年份必须是400的倍数才是闰年，1900不是400的倍数' },
+        { q: '闰年全年有多少天？', short: '366', acc: ['366天'], a: '闰年全年有 366 天（7×31+4×30+29），比平年多 1 天' },
+        { q: '小明是2016年2月29日出生的，他下一次能在2月29日过生日是哪一年？', short: '2020年', acc: ['2020'], a: '2020 年（2016 + 4 = 2020，4 年一闰）' }
       ];
       var lyF = LY_FILL[i % LY_FILL.length];
-      prompt = name + '：' + (qt === 'fill' ? fillStem(lyF.q) : applyStem(lyF.q)); answer = lyF.a;
+      prompt = name + '：' + (qt === 'fill' ? fillStem(lyF.q) : applyStem(lyF.q));
+      if (qt === 'fill') {
+        answer = lyF.short;
+        var lyAcceptable = lyF.acc.slice();
+        var lyExplain = lyF.a;
+      } else {
+        answer = lyF.a;
+      }
     }
   } else {
     series = buildSeries(PEOPLE_LABELS, 20, 60);
@@ -1348,8 +1369,9 @@ function makeStatsQuestion(plan, context, i, kp) {
   // V5.1.0：judge 解析挂到 answer.explanation（非 judge 题为 null，不污染其他形态）
   var answerObj = typeof answer === 'boolean'
     ? { value: answer, acceptable: [] }
-    : { value: String(answer), acceptable: [] };
+    : { value: String(answer), acceptable: lyAcceptable || [] };
   if (judgeExplanation) answerObj.explanation = judgeExplanation;
+  if (lyExplain) answerObj.explanation = lyExplain; // P32-AS-14：说理 fill 的完整理由走解析通道
 
   return {
     knowledgePointId: pkp(plan),

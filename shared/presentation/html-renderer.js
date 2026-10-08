@@ -98,7 +98,7 @@
   }
 
   // V5.1.0 判断题控件：屏幕端两个大按钮（radio 语义，value=true/false，
-  // 与 normalizeAns(boolean) 的 'true'/'false' 天然对齐）；打印端「正确（　）错误（　）」。
+  // 与 AnswerValidator.parseJudgeValue 的 'true'/'false' 词表对齐）；打印端「正确（　）错误（　）」。
   function renderJudgeAnswer(index, mode) {
     if (mode === 'print') {
       return '<div class="question-answer question-answer-judge judge-print" aria-label="判断区">' +

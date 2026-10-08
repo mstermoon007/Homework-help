@@ -3,7 +3,7 @@
  *
  * 站点常量 / 路由 / 年级参数 / 随机·标准化工具 / 灵活列数布局 / 知识点覆盖。
  * 以「增量挂载」方式把导出挂到 window.PluginUtil / window.App（浏览器）与 globalThis（Node），
- * 使跨模块裸调用（如 check.js 调 defaultQCheck）经全局对象解析，避免循环依赖。
+ * 使跨模块调用经全局对象解析，避免循环依赖。
  *
  * 由 shared/core/common.js（聚合出口）按需加载：
  *   浏览器：common.js 经 document.write 注入本文件；Node：common.js 经 require 加载本文件。
@@ -149,22 +149,9 @@
   }
 
   // ============ 插件渲染/批改辅助（供 plugins/*.js 复用） ============
-
-  /**
-   * 标准化答案比较：去空格、小写；并归一化有余数除法的余数记号——
-   * 「……」「…」「...」「余」统一为「……」，使标准答案 "4……3" 与用户输入
-   * "4...3" / "4…3" / "4余3" 同源可比。批改层（check.js/defaultQCheck）与
-   * golden 自测（check-golden.js/buildUserAnswers）共用此唯一口径，
-   * 不得在调用方各自做 trim/记号替换。
-   * 注意：单个小数点（如 3.5）不受影响（正则要求 ≥2 个连续点）。
-   */
-  function normalizeAns(v) {
-    return String(v == null ? '' : v)
-      .trim()
-      .replace(/\s+/g, '')
-      .replace(/(…+|\.{2,}|余)/g, '……')
-      .toLowerCase();
-  }
+  // P32-AS-08：normalizeAns 已物理删除——答案归一化唯一存在于
+  // shared/validator/answer-validator.js（gradeUserAnswer/normalizeAnswerText），
+  // computeResult 逐题委托，调用方不得各自做 trim/记号替换。
 
   // ============ 公共题目池（PoolCache：跨调用连续发牌、Fisher-Yates 洗牌、不重复直至穷举） ============
 
@@ -242,10 +229,7 @@
   global.PluginUtil.diffLevel = diffLevel;
   global.PluginUtil.diffScale = diffScale;
   global.PluginUtil.diffMax = diffMax;
-  global.PluginUtil.normalizeAns = normalizeAns;
   global.PluginUtil.createPoolCache = createPoolCache;
-  // 跨模块裸调用兼容（check.js 等经全局解析）
-  global.normalizeAns = normalizeAns;
   // App（站点）
   global.App.SUBJECT_NAMES = SUBJECT_NAMES;
   global.App.ROUTES = ROUTES;
@@ -270,7 +254,7 @@
       buildLink: buildLink, buildPluginLink: buildPluginLink,
       randInt: randInt, shuffle: shuffle, rand: rand,
       diffLevel: diffLevel, diffScale: diffScale, diffMax: diffMax,
-      normPY: normPY, normHZ: normHZ, normalizeAns: normalizeAns,
+      normPY: normPY, normHZ: normHZ,
       createPoolCache: createPoolCache
     };
   }

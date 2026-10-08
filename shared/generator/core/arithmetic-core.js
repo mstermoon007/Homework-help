@@ -406,8 +406,8 @@ function buildDivTens(rng, range) {
 /**
  * 有余数除法（div-remainder，二年级表内域）：a ÷ b = q …… r，恒有 0 < r < b。
  * b（除数）、q（商）取表内 2..9，余数 r 取 1..b-1，被除数 a = b*q + r 保证 ≤ range.max。
- * answer 直接携带 "q……r"（小学教材余数记号），与批改层 normalizeAns 的余数记号归一化配套，
- * 使「5……2 / 5...2 / 5余2」等输入同源可比。
+ * answer 直接携带 "q……r"（小学教材余数记号），与判分层 AnswerValidator.normalizeAnswerText
+ * 的余数记号归一化配套，使「5……2 / 5...2 / 5余2」等输入同源可比。
  * @returns {{ operands:[a,b], operators:[÷], steps:1, answer:string }}
  */
 function buildDivRemainder(rng, range) {

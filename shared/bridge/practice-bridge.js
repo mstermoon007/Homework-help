@@ -367,7 +367,11 @@
         correctAnswers: result && result.correctAnswers,
         // V5.1.0：逐题解析/自由文本错因透传到反馈 UI（computeResult 产出）
         explanations: result && result.explanations,
-        misconceptions: result && result.misconceptions
+        misconceptions: result && result.misconceptions,
+        // P32-AS-20（用户裁决 2026-10-08 扩展 D 端点）：parentCheck 信号透传
+        // computeResult.parentCheck → PracticeBridge.submit → applySessionSubmitFeedback
+        // → showResult L1041 既有 parentCheck 分支由死分支转正（完整四端点链路）
+        parentCheck: !!(result && result.parentCheck)
       });
     }).catch(function (err) {
       if (requestId !== _generationRequestId) return;

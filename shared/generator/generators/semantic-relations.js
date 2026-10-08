@@ -77,10 +77,16 @@ function buildBase(plan, context, i, extra) {
 }
 
 function finish(q, prompt, answer, acceptable, explanation) {
+  var value = String(answer);
   q.prompt = prompt;
   q.answer = {
-    value: String(answer),
-    acceptable: acceptable || [],
+    value: value,
+    // P32-AS-11 契约 A：acceptable 只许「与 value 不同的标量语义等价答案」。
+    // value 复制（本文件历史上各 maker 普遍传 [String(ans)]）与嵌套数组
+    //（周期题误把整组形状当等价）在装配口剔除，不进判分白名单。
+    acceptable: (Array.isArray(acceptable) ? acceptable : []).filter(function (x) {
+      return (typeof x === 'string' || typeof x === 'number') && String(x) !== value;
+    }),
     explanation: explanation || (prompt.replace(/[？?]\s*$/, '') + ' = ' + answer)
   };
   return q;
@@ -265,8 +271,10 @@ function makePeriodFill(plan, context, i) {
     subTopic: 'periodic-pattern', operation: 'div',
     periodLength: p.n, periodPosition: p.period, remainder: p.rem
   });
+  // P32-AS-11：第二参曾误传 [p.shapes]（整组形状=错误答案集合，嵌套数组缺陷），
+  // 第 k 个图形唯一解为 p.shape，无等价答案，acceptable 必须为空。
   return finish(q, '找规律：「' + p.shapes.join('') + '」依次重复出现，第 ' + p.period
-    + ' 个图形是 ____。', p.shape, [p.shapes],
+    + ' 个图形是 ____。', p.shape, [],
     p.period + ' ÷ ' + p.n + ' = ' + p.quotient + '……' + p.rem
       + '，余数 ' + (p.rem === 0 ? '0（取末位）' : p.rem) + ' → 「' + p.shape + '」');
 }
@@ -646,7 +654,7 @@ function makeRatioCalc(plan, context, i) {
   var q2 = buildBase(plan, context, i, { subTopic: 'ratio-basics', aspect: 'meaning' });
   return finish(q2, '列式计算：判断 ' + p.a + '∶' + p.b + ' 和 ' + p.c + '∶' + p.d
     + ' 能否组成比例。检验：' + p.a + ' × ' + p.d + ' = ' + (p.a * p.d) + '，' + p.b + ' × ' + p.c + ' = '
-    + (p.b * p.c) + '，积相等，填「能」或「不能」。',
+    + (p.b * p.c) + '。根据检验结果，填「能」或「不能」。',
     '能', ['能'],
     '比值相等（' + p.a + '/' + p.b + ' = ' + p.c + '/' + p.d + '），可以组成比例');
 }
@@ -681,10 +689,11 @@ function makeRatioApply(plan, context, i) {
   var q = buildBase(plan, context, i, {
     subTopic: 'ratio-basics', aspect: 'apply-solve', ratioA: c0.a, ratioB: c0.b, given: c0.c
   });
-  return finish(q, c0.label + '（' + c0.a + '∶' + c0.b + ' = ' + c0.c + '∶x）。按照这个比，' + c0.ask + '？'
-    + '列式 ' + c0.a + ' × x = ' + c0.b + ' × ' + c0.c + ' = ' + (c0.b * c0.c) + '，x = ？',
+  // P32-AS-16：题面不得预先完成解比例（原式「1 × x = 4 × 6 = 24，x = ？」已算出答案）；
+  // 只保留比例式（a∶b = c∶x，均为任务必需已知量），列式与求解由学生完成。
+  return finish(q, c0.label + '（' + c0.a + '∶' + c0.b + ' = ' + c0.c + '∶x）。按照这个比，' + c0.ask + '？列比例求 x。',
     x, [String(x)],
-    '解比例：x = ' + c0.b + ' × ' + c0.c + ' ÷ ' + c0.a + ' = ' + x + c0.unit);
+    '解比例：' + c0.a + ' × x = ' + c0.b + ' × ' + c0.c + '，x = ' + c0.b + ' × ' + c0.c + ' ÷ ' + c0.a + ' = ' + x + c0.unit);
 }
 
 function makeRatioChoice(plan, context, i) {

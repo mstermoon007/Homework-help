@@ -385,7 +385,7 @@ function makeMeasurementGeometryQuestion(plan, context, i, meta) {
     graphic = {
       type: 'geometry', subtype: 'segment',
       role: 'quantity-correspondence',
-      params: { total: 100, part: 30, unit: 'cm', partLabel: '30', totalLabel: '100' }
+      params: { total: 100, part: 30, unit: 'cm', partLabel: '30', totalLabel: '?' }
     };
   }
 

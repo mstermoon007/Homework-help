@@ -1,4 +1,4 @@
-'use strict';
+-'use strict';
 
 /**
  * tests/generation/p28-hollow-shape-themed.test.js — P28-HOLLOW-02 shape-flat 空心全修
@@ -128,6 +128,13 @@ test('maker：不落 flat 模板、含 KP 名、契约通过、指纹互异、ju
       }
 
       // TypeContract
+      // P32-AS-16：choice 索引约定（answer.value=String(correctIndex)）由 enforce 预归一
+      // 单点收口为值约定，maker 侧不逐个改写；此处对齐生产链 maker→enforce→check。
+      if (qt === 'choice') {
+        const kept = TC.enforce([q], { questionTypeId: qt });
+        assert.equal(kept.length, 1, tag + ' choice 经预归一后必须保留（不得 drop）');
+        assert.notEqual(String(q.answer.value), '', tag + ' 预归一后答案非空');
+      }
       const tv = TC.check(qt, q);
       assert.ok(tv.ok, tag + ' TypeContract: ' + JSON.stringify(tv.violations));
 

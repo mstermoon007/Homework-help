@@ -22,6 +22,35 @@ function coerceScalar(v) {
   return String(v);
 }
 
+// P32-AS-04：批改专用只读答案规格。与显示用 answer 分离——
+// acceptable 仅用于判分白名单，任何 UI 不得渲染 answerSpec；批改禁止回读 __semantic。
+// acceptable 只接受 string/number 标量并打平为 string[]（嵌套数组等缺陷形态不参与判分，AS-11 清数据）。
+function buildAnswerSpec(sq, answerMode) {
+  var a = sq.answer;
+  if (!a || typeof a !== 'object') return null;
+  var acceptable = [];
+  if (Array.isArray(a.acceptable)) {
+    for (var i = 0; i < a.acceptable.length; i++) {
+      var item = a.acceptable[i];
+      if (typeof item === 'string' || typeof item === 'number') acceptable.push(String(item));
+    }
+  }
+  var value = a.value != null ? a.value : (acceptable.length ? acceptable[0] : null);
+  var spec = {
+    value: value,
+    acceptable: acceptable,
+    precision: a.precision != null ? a.precision : null,
+    unit: a.unit != null ? a.unit : null,
+    mode: answerMode
+  };
+  // P32-AS-13：classify 结构化答案只在 data.groups，透传供组→项集合判定（顺序无关）。
+  var qt = sq.questionType || sq.type;
+  if (qt === 'classify' && sq.data && sq.data.groups && typeof sq.data.groups === 'object') {
+    spec.groups = sq.data.groups;
+  }
+  return spec;
+}
+
 function seededIndex(seedStr) {
   var h = 2166136261;
   var s = String(seedStr);
@@ -106,6 +135,8 @@ function toRenderableQuestion(sq) {
     // （data.misconception 透传，与 error-model 固定 8 类 SSOT 无关）。缺失即 null。
     explanation: (sq.answer && sq.answer.explanation != null) ? sq.answer.explanation : null,
     misconception: (sq.data && sq.data.misconception != null) ? sq.data.misconception : null,
+    // P32-AS-04：批改专用只读规格（判分唯一权威 answer-validator.gradeUserAnswer 消费）。
+    answerSpec: buildAnswerSpec(sq, answerMode),
     // 保留语义引用（页面 read-aloud 判定 / 溯源复用）；实践会话 exerciseSet 依赖此字段。
     __semantic: sq
   };

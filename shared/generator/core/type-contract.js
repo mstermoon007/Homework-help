@@ -13,9 +13,11 @@
  *   - 不新增题型、不改写教育语义：finisher 只做形态归一（空位/选项/布尔/情境包装），
  *     答案数值与运算关系保持不变（judge 的 shown 值派生自原答案 ±1，真值随之机械确定）。
  *   - fail-closed：finisher 不可转换 → drop，绝不静默放行或回退其他题型。
- *   - choice 双约定归一：selection 系用「值约定」（answer.value ∈ options），
- *     shape 系历史用「索引约定」（answer.value = String(correctIndex)）——
- *     不变式两者都接受，finisher 统一归一为值约定。
+ *   - choice 单约定（P32-AS-16 收紧）：answer.value 必须等于正确选项**文本**（值约定）——
+ *     渲染（radio value=选项文本）、判分（gradeUserAnswer 精确匹配）、上屏均消费文本；
+ *     shape/position/money 历史「索引约定」（answer.value=String(correctIndex)）不再合法，
+ *     由 finishChoice① 机械归一为值约定后才放行（旧 check 双约定导致转换器永不触发，
+ *     索引值上屏成假答案/假选项）。
  *   - 纯代码模块：不读知识层文件（kbl-access 门禁），不依赖 KnowledgeContext；
  *     契约 JSON 仅由 dev 审计脚本对齐校验（JSON↔code 不变式 id 一致性）。
  */
@@ -79,10 +81,9 @@
     var opts = d.options;
     if (!Array.isArray(opts) || !sq.answer || sq.answer.value == null) return false;
     var v = String(sq.answer.value);
-    if (opts.map(String).indexOf(v) !== -1) return true;                       // 值约定
-    if (d.correctIndex != null && v === String(d.correctIndex)                 // 索引约定
-      && d.correctIndex >= 0 && d.correctIndex < opts.length) return true;
-    return false;
+    // P32-AS-16：只认值约定（answer.value 为正确选项文本）。索引约定由 finishChoice① 归一，
+    // check 不再放行——否则渲染按文本取 radio 值、判分按文本精确匹配，索引串会成假答案。
+    return opts.map(String).indexOf(v) !== -1;
   }
 
   function checkBooleanAnswer(sq) {
@@ -246,18 +247,34 @@
     return Rng.shuffle(rng, opts).map(function (n) { return numStr(n) + (suffix || ''); });
   }
 
+  // P32-AS-16：索引约定无条件预归一（在 check 之前执行）。
+  // 判据：value === String(correctIndex) 且 value ≠ options[correctIndex]（后者成立时
+  // 索引约定与值约定指向同一选项，两种解释等价，无需改写）。必须先于 check——否则索引串
+  // 恰好与某干扰项文本撞串时（如 options=["6","3","5","4"]、correctIndex=3、value="3"），
+  // check 会按值约定误判合法，假答案一路放行到渲染与判分。
+  function normalizeChoiceIndex(sq) {
+    if (!sq || !sq.answer || sq.answer.value == null) return false;
+    var d = dataOf(sq);
+    var opts = d.options;
+    if (!Array.isArray(opts) || d.correctIndex == null) return false;
+    if (d.correctIndex < 0 || d.correctIndex >= opts.length) return false;
+    if (!opts.every(function (o) { return typeof o === 'string' || typeof o === 'number'; })) return false;
+    var v = String(sq.answer.value);
+    if (v !== String(d.correctIndex)) return false;
+    if (v === String(opts[d.correctIndex])) return false;
+    d.options = opts.map(String);
+    sq.answer.value = String(d.options[d.correctIndex]);
+    return true;
+  }
+
   function finishChoice(sq, rng) {
     var d = dataOf(sq);
     var opts = d.options;
 
-    // ① options 可信但 answer.value 与 options 脱节（索引约定/错位）→ 归一为值约定
-    if (Array.isArray(opts) && opts.length >= 3 && sq.answer && sq.answer.value != null
-      && d.correctIndex != null && d.correctIndex >= 0 && d.correctIndex < opts.length
-      && opts.every(function (o) { return typeof o === 'string' || typeof o === 'number'; })
-      && opts.map(String).indexOf(String(sq.answer.value)) === -1
-      && String(sq.answer.value) === String(d.correctIndex)) {
-      d.options = opts.map(String);
-      sq.answer.value = String(d.options[d.correctIndex]);
+    // ① options 可信但 answer.value 是索引约定（value=String(correctIndex)）→ 归一为值约定。
+    // P32-AS-16：常规路径已由 enforce 前置 normalizeChoiceIndex 收口；此分支保留作 finisher
+    // 通道（check 失败后复检前）的同口径兜底。
+    if (normalizeChoiceIndex(sq)) {
       return { fixed: ['answerInOptions'] };
     }
 
@@ -346,6 +363,8 @@
         sq.answer.explanation = '正确结果是 ' + d.expectedResult + '，不是 ' + shownStr + '，题中说法错误。';
         d.misconception = '计算结果错误：把答案算成了 ' + shownStr + '，正确结果应为 ' + d.expectedResult + '。';
       }
+      // P32-AS-12：机械转换产出的判断题必须自证 answerMode（原默认 input 漏标 9 行）。
+      sq.answerMode = 'judge';
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -368,6 +387,7 @@
         sq.answer.explanation = '正确结果是 ' + d.expectedResult + '（商应为 ' + rem.q + '，余数仍是 ' + rem.r + '），不是 ' + shownStr2 + '。';
         d.misconception = '带余除法的商算错了：余数 ' + rem.r + ' 不够再分，商应为 ' + rem.q + '。';
       }
+      sq.answerMode = 'judge'; // P32-AS-12：带余除法判断题 answerMode 自证
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -390,6 +410,7 @@
         sq.answer.explanation = '正确的顺序应为 ' + d.expectedResult + '，题中有相邻两个数的位置排反了。';
         d.misconception = '排序时相邻两个数的大小关系判断错误，正确顺序应为 ' + d.expectedResult + '。';
       }
+      sq.answerMode = 'judge'; // P32-AS-12：排序判断题 answerMode 自证
       return { fixed: ['booleanAnswer'] };
     }
 
@@ -536,11 +557,18 @@
       if (sq.answer != null && (typeof sq.answer === 'string' || typeof sq.answer === 'number' || typeof sq.answer === 'boolean')) {
         sq.answer = { value: typeof sq.answer === 'boolean' ? sq.answer : String(sq.answer), acceptable: [] };
       }
+      // P32-AS-16：choice 索引约定先于 check 无条件归一（见 normalizeChoiceIndex 注释）。
+      var indexNormalized = (qt === 'choice') ? normalizeChoiceIndex(sq) : false;
       var res = check(qt, sq);
       // P28-48：choice 题的作答形态恒为选项点选（optionsPresent 已成立）。
       // 原生生成器（如 arithmetic 经机械转换路径）可能仍写 answerMode:'input'，
       // 会让渲染层同时画出 radio 与文本框；enforce 是形态归一收口，统一纠正为 'choice'。
-      if (res.ok) { if (qt === 'choice') sq.answerMode = 'choice'; trace(sq, 'pass', [], []); out.push(sq); continue; }
+      if (res.ok) {
+        if (qt === 'choice') sq.answerMode = 'choice';
+        trace(sq, indexNormalized ? 'finish' : 'pass', [], indexNormalized ? ['answerInOptions'] : []);
+        out.push(sq);
+        continue;
+      }
       var finisher = FORM_BOUND.indexOf(qt) === -1 ? FINISHERS[qt] : null;
       var fixed = null;
       if (finisher) {

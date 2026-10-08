@@ -183,6 +183,12 @@ function arithmeticTyped(sub, qt, rng) {
         '，列式求两次一共用去这根彩带的几分之几', ae, aa);
     }
     var hi = ri(rng, 2, d - 1), lo = ri(rng, 1, hi - 1);
+    // P32-AS-16：fill 形式「hi/d − ____ = (hi−lo)/d」，当 hi−lo=lo 时 RHS 恰为答案
+    // （如 2/3 − ____ = 1/3，v=1/3），排除该巧合。注意 d=3 时 (hi,lo) 只能取 (2,1)
+    // 且必然命中，故 d 也要重抽，否则在固定 rng 区间内死循环。
+    while (hi - lo === lo) {
+      d = ri(rng, 3, 9); hi = ri(rng, 2, d - 1); lo = ri(rng, 1, hi - 1);
+    }
     var se = hi + '/' + d + ' − ' + lo + '/' + d, sa = simp(hi - lo, d);
     if (qt === 'calc') return calcItem(se, sa);
     if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：' + hi + '/' + d + ' − ____ = ' + (hi - lo) + '/' + d,
@@ -220,7 +226,11 @@ function arithmeticTyped(sub, qt, rng) {
 
   // div
   if (rng() < 0.5) {
-    var dv = fracDiv(rng), de2 = dv.expr, da2 = dv.ans;
+    var dv = fracDiv(rng);
+    // P32-AS-16：fill 形式「____ ÷ n2/d2 = 商」求被除数；除数=1（n2=d2，如 2/2）时
+    // 被除数与商相等，RHS 即答案，排除。
+    while (dv.n2 === dv.d2) dv = fracDiv(rng);
+    var de2 = dv.expr, da2 = dv.ans;
     if (qt === 'calc') return calcItem(de2, da2);
     if (qt === 'fill') return { prompt: '在 ____ 里填上合适的分数：____ ÷ ' + dv.n2 + '/' + dv.d2 + ' = ' + fs(da2),
       answer: dv.n1 + '/' + dv.d1, options: null };

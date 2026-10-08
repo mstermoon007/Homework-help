@@ -405,7 +405,9 @@ function makeCoordinateQuestion(plan, context, i) {
       knowledgePointId: pkp(plan), questionType: 'fill', difficulty: plan.difficulty,
       spiralLevel: plan.spiralLevel || 1, context: plan.contextType || 'standard',
       seed: seedFor(plan, context, i),
-      prompt: '在方格图中，点 A 的位置用数对表示是（____，' + y + '），它在第 ' + x + ' 列。',
+      // P32-AS-16：原句「（____，y），它在第 x 列」在叙述中直接给出所求列数 x。
+      // 改为给完整数对 + 列/行规则，由学生把第一个数解读为列（逆方向考查数对意义）。
+      prompt: '在方格图中，点 A 的位置用数对（' + x + '，' + y + '）表示（数对中第一个数表示列），点 A 在第 ____ 列。',
       answer: { value: String(x), acceptable: [] }, answerMode: 'input',
       data: { mode: 'fill', steps: 1, shapeName: '数对' }
     };

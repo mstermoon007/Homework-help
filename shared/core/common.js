@@ -3,7 +3,7 @@
  *
  * 旧版单体（~1160 行）已拆分为职责单一的子模块（均 <300 行，增量挂载到 window.PluginUtil / window.App）：
  *   core.js        运行时核心：站点常量/路由/年级参数、随机·标准化工具、灵活列数布局、知识点覆盖
- *   check.js        defaultQCheck / computeResult / pickOpt
+ *   check.js        computeResult（逐题委托 AnswerValidator.gradeUserAnswer）/ pickOpt
  *   ui-state.js     escHtml / UIState
  *   storage.js      本地练习状态持久化 StorageManager
  *   （render.js 已按 P28-22 删除：renderCard/renderGrid/clockSVG/createPlugin 无生产调用，

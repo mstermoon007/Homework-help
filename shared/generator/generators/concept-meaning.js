@@ -72,7 +72,17 @@ function buildBase(plan, context, i, extra) {
 
 function finish(q, prompt, answer, acceptable, explanation) {
   q.prompt = prompt;
-  q.answer = { value: answer, acceptable: acceptable || [], explanation: explanation || null };
+  // P32-AS-11 契约 A：acceptable 只许「与 value 不同的标量语义等价答案」
+  //（如 2/两、甲/图形甲）。本文件历史上大量 maker 把 value 原样复制进 acceptable
+  //（含 judge 的 boolean 复制），在装配口统一剔除；真等价（字符串不同）保留。
+  var valueKey = String(answer);
+  q.answer = {
+    value: answer,
+    acceptable: (Array.isArray(acceptable) ? acceptable : []).filter(function (x) {
+      return (typeof x === 'string' || typeof x === 'number') && String(x) !== valueKey;
+    }),
+    explanation: explanation || null
+  };
   return q;
 }
 
@@ -273,6 +283,7 @@ function makeAngleJudge(plan, context, i) {
   ];
   var s = Rng.pick(rng, items);
   var q = buildBase(plan, context, i, { subType: 'angle-observe', topic: 'angle-concept', statement: s.text, shownResult: s.value ? '对' : '错' });
+  q.answerMode = 'judge'; // P32-AS-12：陈述判断为原生判断题，answerMode 不得沿用 input 默认值
   if (s.misconception) q.data.misconception = s.misconception;
   return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
@@ -337,6 +348,7 @@ function makeAreaJudge(plan, context, i) {
   ];
   var s = Rng.pick(rng, items);
   var q = buildBase(plan, context, i, { subType: 'area-concept', quantityKind: 'area', statement: s.text, shownResult: s.value ? '对' : '错' });
+  q.answerMode = 'judge'; // P32-AS-12：陈述判断为原生判断题，answerMode 不得沿用 input 默认值
   if (s.misconception) q.data.misconception = s.misconception;
   return finish(q, '判断对错：' + s.text + '（  ）', s.value, [s.value], s.explanation);
 }
@@ -502,33 +514,36 @@ function buildNumberConceptItem(rng, name) {
   // P28-FIX6：g1-down-u03-k001「数数」——一个一个地数/十个十个地数，10个一是十、10个十是一百
   // （数=逐次加一/加十，operation 如实标 add 并内嵌加法参考式，承载 calc expressionPresent）
   if (name.indexOf('数数') !== -1) {
-    var parts = [];
     if (rng() < 0.5) {
       var ct = ri(rng, 2, 10);
       var tensTotal = ct * 10;
-      var steps;
+      // P32-AS-16：参考式含完整得数（…= tensTotal），删得数保留加法支架（末步 = ？），
+      // 同时满足 calc expressionPresent（type-contract 要求题面含可求值算式）。
+      var tensExpr;
       if (ct <= 6) {
-        for (var k = 0; k < ct; k++) parts.push('10');
-        steps = parts.join(' + ') + ' = ' + tensTotal;
+        tensExpr = [];
+        for (var kt = 0; kt < ct; kt++) tensExpr.push('10');
+        tensExpr = tensExpr.join(' + ') + ' = ？';
       } else {
-        steps = ((ct - 1) * 10) + ' + 10 = ' + tensTotal;
+        tensExpr = ((ct - 1) * 10) + ' + 10 = ？';
       }
-      return { stem: '十个十个地数：数 ' + ct + ' 次是多少？（参考：' + steps + '）',
+      return { stem: '十个十个地数：数 ' + ct + ' 次是多少？（' + tensExpr + '）',
         answer: String(tensTotal), options: [String(tensTotal), String(tensTotal + 10), String(tensTotal - 10)],
-        apply: '一捆小棒 10 根，' + ct + ' 捆小棒十个十个地数（' + steps + '），' + ct + ' 个十是多少根？',
+        apply: '一捆小棒 10 根，' + ct + ' 捆小棒十个十个地数，' + ct + ' 个十是多少根？',
         operation: 'add' };
     }
     var co = ri(rng, 2, 9);
-    var ones;
+    var onesExpr;
     if (co <= 5) {
-      for (var k2 = 0; k2 < co; k2++) parts.push('1');
-      ones = parts.join(' + ') + ' = ' + co;
+      onesExpr = [];
+      for (var ko = 0; ko < co; ko++) onesExpr.push('1');
+      onesExpr = onesExpr.join(' + ') + ' = ？';
     } else {
-      ones = (co - 1) + ' + 1 = ' + co;
+      onesExpr = (co - 1) + ' + 1 = ？';
     }
-    return { stem: '一个一个地数：' + co + ' 个一是多少？（参考：' + ones + '）',
+    return { stem: '一个一个地数：' + co + ' 个一是多少？（' + onesExpr + '）',
       answer: String(co), options: [String(co), String(co + 1), String(co + 10)],
-      apply: '数小棒，一根一根地数，数了 ' + co + ' 根（' + ones + '），' + co + ' 个一是多少根？',
+      apply: '数小棒，一根一根地数，数了 ' + co + ' 根，' + co + ' 个一是多少根？',
       operation: 'add' };
   }
   // P28-FIX6：g1-up-u04-k001「11—20数的认识」——素材限定 11~19（1 个十和几个一）
@@ -537,26 +552,28 @@ function buildNumberConceptItem(rng, name) {
     var o2 = ri(rng, 1, 9);
     var n2 = 10 + o2;
     if (rng() < 0.5) {
-      return { stem: n2 + ' 里面有几个十和几个一？（参考：10 + ' + o2 + ' = ' + n2 + '）',
+      return { stem: n2 + ' 里面有几个十和几个一？（10 + ' + o2 + ' = ？）',
         answer: '1 个十和 ' + o2 + ' 个一',
         options: ['1 个十和 ' + o2 + ' 个一', o2 + ' 个十和 1 个一', n2 + ' 个十'],
-        apply: '摆小棒表示 ' + n2 + '（10 + ' + o2 + ' = ' + n2 + '），要摆 1 捆（10 根）零几根？' };
+        apply: '摆小棒表示 ' + n2 + '，要摆 1 捆（10 根）零几根？' };
     }
-    return { stem: '计数器十位 1 颗珠、个位 ' + o2 + ' 颗珠（1 个十和 ' + o2 + ' 个一，10 + ' + o2 + ' = ' + n2 + '），这个数写作多少？',
+    // P32-AS-16：删括号内完整算式（10 + o2 = n2 直接写出写作结果），珠数组成保留；
+    // 支架式末步改「= ？」继续承载 calc expressionPresent。
+    return { stem: '计数器十位 1 颗珠、个位 ' + o2 + ' 颗珠（1 个十和 ' + o2 + ' 个一，10 + ' + o2 + ' = ？），这个数写作多少？',
       answer: String(n2), options: [String(n2), String(1 + o2), String(o2 * 10 + 1)],
-      apply: '数一数：十位拨 1 颗、个位拨 ' + o2 + ' 颗，1 个十和 ' + o2 + ' 个一合起来写作多少？（10 + ' + o2 + ' = ' + n2 + '）' };
+      apply: '数一数：十位拨 1 颗、个位拨 ' + o2 + ' 颗，1 个十和 ' + o2 + ' 个一合起来写作多少？' };
   }
   // P25-09：g1-up-u01-k001「1-5数的认识」——素材必须限定在 1~5，
   // 不能落默认分支的两位数（off-grade）；n∈2..5 保证 n−1 ≥ 1。
   if (name.indexOf('1-5') !== -1 || name.indexOf('1～5') !== -1) {
     var n5 = ri(rng, 2, 5);
-    return { stem: '数一数：' + n5 + ' 前面一个数是多少？（参考：' + n5 + ' − 1 = ' + (n5 - 1) + '）',
+    return { stem: '数一数：' + n5 + ' 前面一个数是多少？（' + n5 + ' − 1 = ？）',
       answer: String(n5 - 1), options: [String(n5 - 1), String(n5), String(n5 + 1)],
-      apply: '排队报数，小明报 ' + n5 + '（' + n5 + ' − 1 = ' + (n5 - 1) + '），他前面一个同学报几？' };
+      apply: '排队报数，小明报 ' + n5 + '，他前面一个同学报几？' };
   }
   if (name.indexOf('百数表') !== -1) {
     var x0 = ri(rng, 12, 88);
-    return { stem: '百数表中，' + x0 + ' 右边一个数是多少？（参考：' + x0 + ' + 1 = ' + (x0 + 1) + '）',
+    return { stem: '百数表中，' + x0 + ' 右边一个数是多少？（' + x0 + ' + 1 = ？）',
       answer: String(x0 + 1), options: [String(x0 + 1), String(x0 + 10), String(x0 - 1)],
       apply: '在百数表（每行10个数）里圈出 ' + x0 + '，它右边一格的数是多少？（' + x0 + ' + 1 = ？）' };
   }
@@ -609,25 +626,29 @@ function buildNumberConceptItem(rng, name) {
     // P25-09：算盘认数（g2-down-u04-k004）——一个上珠表示5、一个下珠表示1
     var abPick = rng();
     if (abPick < 0.34) {
-      return { stem: '算盘上一个上珠靠梁表示几？（参考：1 × 5 = 5）',
+      return { stem: '算盘上一个上珠靠梁表示几？（1 × 5 = ？）',
         answer: '5', options: ['5', '1', '10'],
-        apply: '在算盘上拨数，1 个上珠靠梁，1 × 5 = 5，它表示数字几？' };
+        apply: '在算盘上拨数，1 个上珠靠梁，它表示数字几？' };
     }
     if (abPick < 0.67) {
-      return { stem: '算盘上一个下珠靠梁表示几？（参考：1 × 1 = 1）',
+      return { stem: '算盘上一个下珠靠梁表示几？（1 × 1 = ？）',
         answer: '1', options: ['1', '5', '10'],
-        apply: '在算盘上拨数，1 个下珠靠梁，1 × 1 = 1，它表示数字几？' };
+        apply: '在算盘上拨数，1 个下珠靠梁，它表示数字几？' };
     }
-    return { stem: '算盘的十位上1个上珠靠梁、个位上2个下珠靠梁，表示的数是多少？（参考：5 × 10 + 2 = 52）',
+    // P32-AS-16：删参考式得数 52（直接给出所表示的数），支架式保留「= ？」承载 expressionPresent；
+    // apply 保留「5 × 10 + 2 = ？」问式支架
+    return { stem: '算盘的十位上1个上珠靠梁、个位上2个下珠靠梁，表示的数是多少？（5 × 10 + 2 = ？）',
       answer: '52', options: ['52', '25', '70'],
       apply: '算盘十位1个上珠靠梁表示5个十，个位2个下珠靠梁表示2个一，5 × 10 + 2 = ？，表示的数是多少？' };
   }
   // 读写/认识（默认）
   // FINAL-139：同上，计数器位值用「几个十和几个一」+ 整十数加一位数，不用 ×10
   var t1 = ri(rng, 1, 9), o1 = ri(rng, 1, 9);
-  return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '），写作多少？',
+  // P32-AS-16：删括号内完整算式（t1×10 + o1 = 结果直接写出写作答案），珠数组成保留；
+  // 支架式保留「整十数 + 一位数 = ？」承载 expressionPresent
+  return { stem: '计数器十位 ' + t1 + ' 颗珠、个位 ' + o1 + ' 颗珠（' + t1 + ' 个十和 ' + o1 + ' 个一，' + (t1 * 10) + ' + ' + o1 + ' = ？），写作多少？',
     answer: String(t1 * 10 + o1), options: [String(t1 * 10 + o1), String(t1 + o1), String(o1 * 10 + t1)],
-    apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' 个十和 ' + o1 + ' 个一合起来写作多少？（' + (t1 * 10) + ' + ' + o1 + ' = ' + (t1 * 10 + o1) + '）' };
+    apply: '数一数：十位拨 ' + t1 + ' 颗、个位拨 ' + o1 + ' 颗，' + t1 + ' 个十和 ' + o1 + ' 个一合起来写作多少？' };
 }
 
 // P28-FIX6：g1-up-u05-k001「凑十法」——拆小数凑十再算（题面是加法，operation 如实标 add；
@@ -638,7 +659,8 @@ function buildMakeTenItem(rng) {
   var b = ri(rng, need + 1, 9);
   var rest = b - need;
   var sum = a + b;
-  return { stem: '用凑十法计算：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + ' = ？（先把 ' + a + ' 凑成 10，10 + ' + rest + ' = ' + sum + '）',
+  // P32-AS-16：删括号内「10 + rest = sum」末步得数；分解式保留（最终 = ？ 承担求答）
+  return { stem: '用凑十法计算：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + ' = ？（先把 ' + a + ' 凑成 10，再算 10 + ' + rest + '）',
     answer: String(sum), options: [String(sum), String(sum - 1), String(sum + 1)],
     fill: '凑十法最后一步：10 + ' + rest + ' = ____',
     apply: '小兔采蘑菇，上午采 ' + a + ' 个、下午采 ' + b + ' 个。用凑十法：' + a + ' + ' + b + ' = ' + a + ' + ' + need + ' + ' + rest + '，一共采了多少个？',
@@ -673,9 +695,11 @@ function buildStepwiseItem(rng) {
 function buildNegativeItem(rng, name) {
   if (name.indexOf('数轴') !== -1) {
     var k0 = ri(rng, 2, 6);
-    return { stem: '在数轴上，0 左边第 ' + k0 + ' 格表示什么数？（参考：0 − ' + k0 + ' = −' + k0 + '）',
+    // P32-AS-16：删「0 − k = −k」参考式的得数（直接写出所求负数）；
+    // 减法支架保留「0 − k = ？」承载 expressionPresent，0 左边第 k 格即推导线索
+    return { stem: '在数轴上，0 左边第 ' + k0 + ' 格表示什么数？（0 − ' + k0 + ' = ？）',
       answer: '−' + k0, options: ['−' + k0, String(k0), '0'],
-      apply: '温度计以 0℃ 为分界，0 − ' + k0 + ' = −' + k0 + '，数轴上 0 左边第 ' + k0 + ' 格是什么数？' };
+      apply: '温度计以 0℃ 为分界，数轴上 0 左边第 ' + k0 + ' 格是什么数？' };
   }
   if (name.indexOf('比较') !== -1) {
     var a1 = ri(rng, 2, 8), b1 = a1 + ri(rng, 1, 5);
@@ -747,14 +771,15 @@ function buildNumberTheoryItem(rng, name) {
   // 证据行要 data.operation + multiply-by-times + multiplication）
   if (name.indexOf('因数与倍数') !== -1) {
     var fn2 = ri(rng, 3, 9);
+    // P32-AS-16：删首句「fn2 × 1 = fn2」（直接写出最小倍数即答案），保留 ×2、×3 找倍数支架
     return { operation: 'mult',
-      stem: '用一个数依次乘 1、2、3……可以找它的倍数：' + fn2 + ' × 1 = ' + fn2 + '，'
+      stem: '用一个数依次乘 1、2、3……可以找它的倍数：'
         + fn2 + ' × 2 = ' + (fn2 * 2) + '，' + fn2 + ' × 3 = ' + (fn2 * 3) + '。'
         + fn2 + ' 最小的倍数是多少？',
       answer: String(fn2),
       options: [String(fn2), '1', String(fn2 * 2), '0'],
       fill: fn2 + ' × 1 = ____，可见一个数最小的倍数就是它本身。',
-      apply: '计数器按 ' + fn2 + ' 的倍数累加：' + fn2 + ' × 1 = ' + fn2 + '，'
+      apply: '计数器按 ' + fn2 + ' 的倍数累加：'
         + fn2 + ' × 2 = ' + (fn2 * 2) + '，' + fn2 + ' × 3 = ' + (fn2 * 3)
         + '……照这样能一直写下去吗？' + fn2 + ' 最小的倍数是多少？' };
   }
@@ -768,11 +793,12 @@ function buildNumberTheoryItem(rng, name) {
     var pt = patterns[ri(rng, 0, patterns.length - 1)];
     var pa = pt.oddA ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
     var pb = pt.oddB ? ri(rng, 1, 9) * 2 - 1 : ri(rng, 1, 9) * 2;
-    var ps = pa + pb;
-    return { stem: pt.rule + '：' + pa + ' + ' + pb + ' = ' + ps + '，' + pa + ' 与 ' + pb + ' 的和是奇数还是偶数？',
+    // P32-AS-16：规则结论（偶数+偶数=偶数）与已算和 16+8=24 都直接给出答案，
+    // 题面只留加法式与「奇数还是偶数」之问，由学生先判两个加数的奇偶再下结论。
+    return { stem: '不计算，判断：' + pa + ' + ' + pb + ' = ？的得数是奇数还是偶数？（根据和的奇偶规律判断）',
       answer: pt.res, options: ['偶数', '奇数', '无法确定'],
-      fill: pt.rule + '，' + pa + ' + ' + pb + ' 的和是 ____',
-      apply: '两队人数分别是 ' + pa + ' 和 ' + pb + '（' + pt.rule + '），' + pa + ' + ' + pb + ' = ' + ps + '，两队合并后的总人数是奇数还是偶数？' };
+      fill: pa + ' + ' + pb + ' 的和是 ____（填「奇数」或「偶数」，不计算）',
+      apply: '两队人数分别是 ' + pa + ' 和 ' + pb + '，不计算，两队合并后的总人数是奇数还是偶数？' };
   }
   // 质数与合数
   if (name.indexOf('质数') !== -1 || name.indexOf('合数') !== -1) {
@@ -782,10 +808,16 @@ function buildNumberTheoryItem(rng, name) {
     var pool = composites.slice();
     var d1 = pool.splice(ri(rng, 0, pool.length - 1), 1)[0];
     var d2 = pool.splice(ri(rng, 0, pool.length - 1), 1)[0];
-    return { stem: '一个数只有 1 和它本身两个因数就是质数：1 × ' + pn + ' = ' + pn + '。下面哪个数是质数？',
+    // P32-AS-16：删「1 × pn = pn」因式分解（等于在题面指认质数答案）；
+    // fill 改为候选集内判定（pn/d1/d2 为任务必需已知量，与 choice 同源）。
+    // calc 用候选之外的 5 × 6 = 30 作合数反例承载 expressionPresent，不点名任何选项。
+    return { stem: '一个数只有 1 和它本身两个因数就是质数（如 5 × 6 = 30，30 有多个因数，是合数）。下面哪个数是质数？',
       answer: String(pn), options: [String(pn), String(d1), String(d2)],
-      fill: '1 × ' + pn + ' = ' + pn + '，' + pn + ' 的因数只有 1 和 ____',
-      apply: '分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 ' + pn + '（1 × ' + pn + ' = ' + pn + '）能分成人数相同且多于1人的小组吗，它是质数还是合数？' };
+      fill: '在 ' + pn + '、' + d1 + '、' + d2 + ' 中，____ 只有 1 和它本身两个因数，是质数。',
+      // P32-AS-16D 规格缺陷修复：apply 问「质数还是合数」，标准答案必须是分类结论
+      // 而非糖果数数字（calc/choice/fill 仍以数字为答案），与 P32-AS-11 奇偶分支同口径。
+      applyAnswer: '质数',
+      apply: '分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 ' + pn + ' 能分成人数相同且多于1人的小组吗，它是质数还是合数？' };
   }
   // 奇数与偶数
   if (name.indexOf('奇数') !== -1 || name.indexOf('偶数') !== -1) {
@@ -795,13 +827,19 @@ function buildNumberTheoryItem(rng, name) {
       return { stem: '2 的倍数是偶数：' + en + ' ÷ 2 = ' + (en / 2) + '。下面哪个数是偶数？',
         answer: String(en), options: [String(en), String(en + 1), String(en + 3)],
         fill: '' + en + ' ÷ 2 = ' + (en / 2) + ' 没有余数，____ 是 2 的倍数',
-        apply: '门牌号按单双号排列，' + en + ' ÷ 2 = ' + (en / 2) + ' 没有余数，' + en + ' 号是奇数还是偶数？' };
+        // P32-AS-11 规格缺陷修复：apply 问「奇数还是偶数」，标准答案必须是奇偶结论
+        // 而非门牌号数字（calc/choice/fill 仍以数字为答案）。
+        applyAnswer: '偶数',
+        // P32-AS-16：删「en ÷ 2 = … 没有余数」证明（直接推出偶/奇结论），奇偶由学生判
+        apply: '门牌号按单双号排列，' + en + ' 号是奇数还是偶数？' };
     }
     var on = ri(rng, 2, 24) * 2 - 1;
     return { stem: '不是 2 的倍数的数是奇数，如 ' + on + ' ÷ 2 = ' + ((on - 1) / 2) + '……1。下面哪个数是奇数？',
       answer: String(on), options: [String(on), String(on + 1), String(on - 1)],
       fill: '' + on + ' ÷ 2 余 1，____ 不是 2 的倍数',
-      apply: '报数时逢双数蹲下，' + on + ' ÷ 2 余 1 不能整除，' + on + ' 号同学该蹲下吗，' + on + ' 是奇数还是偶数？' };
+      applyAnswer: '奇数',
+      // P32-AS-16：同上，删「余 1 不能整除」证明
+      apply: '报数时逢双数蹲下，' + on + ' 号同学该蹲下吗，' + on + ' 是奇数还是偶数？' };
   }
   // 2、5、3 的倍数的特征（默认）
   var feats = [
@@ -821,13 +859,14 @@ function buildNumberTheoryItem(rng, name) {
   var fn = ft.build();
   var fd1 = ft.bad(fn), fd2 = ft.bad(fn);
   while (fd2 === fd1 || fd2 === fn) fd2 = ft.bad(fn);
-  var fsum = Math.floor(fn / 10) + fn % 10;
-  var fref = ft.f === 3 ? '（数字和 ' + fsum + '，' + fsum + ' ÷ 3 = ' + (fsum / 3) + '）'
-    : '（参考：' + fn + ' ÷ ' + ft.f + ' = ' + (fn / ft.f) + '）';
-  return { stem: ft.text + ' 的数是 ' + ft.f + ' 的倍数' + fref + '。下面哪个数是 ' + ft.f + ' 的倍数？',
+  // P32-AS-16：fref 是「fn 能被 f 整除」的完整验证（参考：85 ÷ 5 = 17 / 数字和验证），
+  // 等于在题面替学生完成判定、直接指认正确选项；规则陈述 + 候选数保留，验证由学生完成。
+  // calc 仍需可求值算式承载 expressionPresent：用与候选无关的 7 ÷ f 做检验示范，不点名正确项。
+  return { stem: ft.text + ' 的数是 ' + ft.f + ' 的倍数。下面哪个数是 ' + ft.f + ' 的倍数？'
+      + '（仿照 7 ÷ ' + ft.f + ' 的做法，把每个选项除以 ' + ft.f + '，看余数是不是 0）',
     answer: String(fn), options: [String(fn), String(fd1), String(fd2)],
     fill: ft.text + '，____ 是 ' + ft.f + ' 的倍数',
-    apply: '体育分组每组 ' + ft.f + ' 人正好分完，人数须是 ' + ft.f + ' 的倍数。班级人数 ' + fn + fref + '，哪个班能正好分完？' };
+    apply: '体育分组每组 ' + ft.f + ' 人正好分完，人数须是 ' + ft.f + ' 的倍数。班级人数 ' + fn + '，哪个班能正好分完？' };
 }
 
 // 从 stem 中提取支撑算式（优先括号内的运算式，其次冒号后的等式），用于 fill 填空题干
@@ -867,10 +906,16 @@ function makeByItem(plan, context, i, builder, subType) {
     if (item.fill) {
       prompt = item.fill;
     } else {
-      prompt = '根据算式把答案填在横线上：' + extractSupport(item.stem) + ' = ____';
+      // P32-AS-16：支架算式只保留操作数，末尾「= 结果」必须换成空位——
+      // extractSupport 抽出的参考式含完整答案（如「60 + 8 = 68」），直接拼「= ____」
+      // 会形成双等号病句并在题面写出答案。
+      var support = extractSupport(item.stem).replace(/[=＝]\s*[^=＝]*$/, '= ____');
+      prompt = '根据算式把答案填在横线上：' + support;
     }
   } else if (qt === 'apply') {
     prompt = item.apply || item.stem;
+    // P32-AS-11：题问结论（奇/偶）时答案规格随题型切换，缺省回退 item.answer。
+    if (item.applyAnswer != null) answer = item.applyAnswer;
   } else {
     // choice
     var wrongs = (item.options || []).filter(function (o) { return o !== item.answer; });

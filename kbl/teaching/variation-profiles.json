@@ -39,8 +39,8 @@
     "profiled": 1323,
     "genError": 0,
     "noSample": 0,
-    "singleSample": 336,
-    "unknownNotObserved": 979,
+    "singleSample": 337,
+    "unknownNotObserved": 1047,
     "byQt": {
       "fill": 313,
       "choice": 313,
@@ -51,8 +51,8 @@
       "classify": 25
     },
     "axisCoverage": {
-      "unknown": 344,
-      "numericVaries": 944,
+      "unknown": 276,
+      "numericVaries": 942,
       "contextPresent": 1277,
       "representationPresent": 553,
       "structureMultiStep": 22
@@ -143,14 +143,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.shapeName"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -747,9 +747,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "一个一个地数：6 个一是多少？（参考：5 + 1 = 6）",
-          "十个十个地数：数 4 次是多少？（参考：10 + 10 + 10 + 10 = 40）",
-          "十个十个地数：数 3 次是多少？（参考：10 + 10 + 10 = 30）"
+          "一个一个地数：6 个一是多少？（5 + 1 = ？）",
+          "十个十个地数：数 4 次是多少？（10 + 10 + 10 + 10 = ？）",
+          "十个十个地数：数 3 次是多少？（10 + 10 + 10 = ？）"
         ]
       },
       "flags": [
@@ -788,9 +788,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：6 + 1 = 7 = ____",
-          "根据算式把答案填在横线上：参考：70 + 10 = 80 = ____",
-          "根据算式把答案填在横线上：参考：80 + 10 = 90 = ____"
+          "根据算式把答案填在横线上：6 + 1 = ____",
+          "根据算式把答案填在横线上：70 + 10 = ____",
+          "根据算式把答案填在横线上：80 + 10 = ____"
         ]
       },
       "flags": [
@@ -869,9 +869,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "数小棒，一根一根地数，数了 4 根（1 + 1 + 1 + 1 = 4），4 个一是多少根？",
-          "一捆小棒 10 根，9 捆小棒十个十个地数（80 + 10 = 90），9 个十是多少根？",
-          "一捆小棒 10 根，7 捆小棒十个十个地数（60 + 10 = 70），7 个十是多少根？"
+          "数小棒，一根一根地数，数了 4 根，4 个一是多少根？",
+          "一捆小棒 10 根，9 捆小棒十个十个地数，9 个十是多少根？",
+          "一捆小棒 10 根，7 捆小棒十个十个地数，7 个十是多少根？"
         ]
       },
       "flags": [
@@ -1074,9 +1074,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "计数器十位 8 颗珠、个位 9 颗珠（8 个十和 9 个一，80 + 9 = 89），写作多少？",
-          "计数器十位 2 颗珠、个位 1 颗珠（2 个十和 1 个一，20 + 1 = 21），写作多少？",
-          "计数器十位 7 颗珠、个位 2 颗珠（7 个十和 2 个一，70 + 2 = 72），写作多少？"
+          "计数器十位 8 颗珠、个位 9 颗珠（8 个十和 9 个一，80 + 9 = ？），写作多少？",
+          "计数器十位 2 颗珠、个位 1 颗珠（2 个十和 1 个一，20 + 1 = ？），写作多少？",
+          "计数器十位 7 颗珠、个位 2 颗珠（7 个十和 2 个一，70 + 2 = ？），写作多少？"
         ]
       },
       "flags": [
@@ -1115,9 +1115,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：2 个十和 7 个一，20 + 7 = 27 = ____",
-          "根据算式把答案填在横线上：9 个十和 3 个一，90 + 3 = 93 = ____",
-          "根据算式把答案填在横线上：6 个十和 5 个一，60 + 5 = 65 = ____"
+          "根据算式把答案填在横线上：2 个十和 7 个一，20 + 7 = ____",
+          "根据算式把答案填在横线上：9 个十和 3 个一，90 + 3 = ____",
+          "根据算式把答案填在横线上：6 个十和 5 个一，60 + 5 = ____"
         ]
       },
       "flags": [
@@ -1196,9 +1196,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "数一数：十位拨 3 颗、个位拨 8 颗，3 个十和 8 个一合起来写作多少？（30 + 8 = 38）",
-          "数一数：十位拨 7 颗、个位拨 2 颗，7 个十和 2 个一合起来写作多少？（70 + 2 = 72）",
-          "数一数：十位拨 6 颗、个位拨 9 颗，6 个十和 9 个一合起来写作多少？（60 + 9 = 69）"
+          "数一数：十位拨 3 颗、个位拨 8 颗，3 个十和 8 个一合起来写作多少？",
+          "数一数：十位拨 7 颗、个位拨 2 颗，7 个十和 2 个一合起来写作多少？",
+          "数一数：十位拨 6 颗、个位拨 9 颗，6 个十和 9 个一合起来写作多少？"
         ]
       },
       "flags": [
@@ -1278,9 +1278,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：1 个十和 9 个一，10 + 9 = 19 = ____",
-          "根据算式把答案填在横线上：参考：3 个十和 6 个一，30 + 6 = 36 = ____",
-          "根据算式把答案填在横线上：参考：4 个十和 1 个一，40 + 1 = 41 = ____"
+          "根据算式把答案填在横线上：参考：1 个十和 9 个一，10 + 9 = ____",
+          "根据算式把答案填在横线上：参考：3 个十和 6 个一，30 + 6 = ____",
+          "根据算式把答案填在横线上：参考：4 个十和 1 个一，40 + 1 = ____"
         ]
       },
       "flags": [
@@ -1442,9 +1442,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：23 − 1 = 22 = ____",
-          "根据算式把答案填在横线上：参考：31 − 1 = 30 = ____",
-          "根据算式把答案填在横线上：参考：77 − 1 = 76 = ____"
+          "根据算式把答案填在横线上：参考：23 − 1 = ____",
+          "根据算式把答案填在横线上：参考：31 − 1 = ____",
+          "根据算式把答案填在横线上：参考：77 − 1 = ____"
         ]
       },
       "flags": [
@@ -1606,9 +1606,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：75 − 66 = 9 = ____",
-          "根据算式把答案填在横线上：参考：58 − 50 = 8 = ____",
-          "根据算式把答案填在横线上：参考：95 − 87 = 8 = ____"
+          "根据算式把答案填在横线上：参考：75 − 66 = ____",
+          "根据算式把答案填在横线上：参考：58 − 50 = ____",
+          "根据算式把答案填在横线上：参考：95 − 87 = ____"
         ]
       },
       "flags": [
@@ -2074,9 +2074,9 @@
           "generator:semantic-relations": 6
         },
         "samplePrompts": [
-          "看图列式：盘子里原来有 8 个桃，小猴子吃掉 5 个（在图中圈出吃掉的部分）。还剩多少个？",
-          "看图列式：草地上左边有 5 只羊，右边又来了 6 只羊（在图中画出两部分）。一共有多少只羊？",
-          "看图列式：盘子里原来有 9 个桃，小猴子吃掉 4 个（在图中圈出吃掉的部分）。还剩多少个？"
+          "列式计算：盘子里原来有 8 个桃，小猴子吃掉 5 个。还剩多少个？",
+          "列式计算：草地上左边有 5 只羊，右边又来了 6 只羊。一共有多少只羊？",
+          "列式计算：盘子里原来有 9 个桃，小猴子吃掉 4 个。还剩多少个？"
         ]
       },
       "flags": [
@@ -2647,15 +2647,13 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": 0,
-          "answerMax": 3
+          "distinctAnswers": 6,
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -2704,7 +2702,9 @@
           "2角 + 5角 = ____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u07-k001",
@@ -2842,16 +2842,13 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": 0,
-          "answerMax": 3
+          "distinctAnswers": 6,
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -2900,7 +2897,9 @@
           "1角 − 1角 = ____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u07-k002",
@@ -3038,16 +3037,13 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": 0,
-          "answerMax": 3
+          "distinctAnswers": 5,
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -3096,7 +3092,9 @@
           "2分 + 5分 = ____"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g1-down-u07-k003",
@@ -3326,9 +3324,9 @@
           "generator:concept-meaning": 4
         },
         "samplePrompts": [
-          "数一数：3 前面一个数是多少？（参考：3 − 1 = 2）",
-          "数一数：2 前面一个数是多少？（参考：2 − 1 = 1）",
-          "数一数：5 前面一个数是多少？（参考：5 − 1 = 4）"
+          "数一数：3 前面一个数是多少？（3 − 1 = ？）",
+          "数一数：2 前面一个数是多少？（2 − 1 = ？）",
+          "数一数：5 前面一个数是多少？（5 − 1 = ？）"
         ]
       },
       "flags": [
@@ -3367,9 +3365,9 @@
           "generator:concept-meaning": 4
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：2 − 1 = 1 = ____",
-          "根据算式把答案填在横线上：参考：3 − 1 = 2 = ____",
-          "根据算式把答案填在横线上：参考：4 − 1 = 3 = ____"
+          "根据算式把答案填在横线上：2 − 1 = ____",
+          "根据算式把答案填在横线上：3 − 1 = ____",
+          "根据算式把答案填在横线上：4 − 1 = ____"
         ]
       },
       "flags": [
@@ -3448,9 +3446,9 @@
           "generator:concept-meaning": 4
         },
         "samplePrompts": [
-          "排队报数，小明报 5（5 − 1 = 4），他前面一个同学报几？",
-          "排队报数，小明报 4（4 − 1 = 3），他前面一个同学报几？",
-          "排队报数，小明报 2（2 − 1 = 1），他前面一个同学报几？"
+          "排队报数，小明报 5，他前面一个同学报几？",
+          "排队报数，小明报 4，他前面一个同学报几？",
+          "排队报数，小明报 2，他前面一个同学报几？"
         ]
       },
       "flags": [
@@ -3489,9 +3487,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "计数器十位 4 颗珠、个位 4 颗珠（4 个十和 4 个一，40 + 4 = 44），写作多少？",
-          "计数器十位 6 颗珠、个位 9 颗珠（6 个十和 9 个一，60 + 9 = 69），写作多少？",
-          "计数器十位 2 颗珠、个位 7 颗珠（2 个十和 7 个一，20 + 7 = 27），写作多少？"
+          "计数器十位 4 颗珠、个位 4 颗珠（4 个十和 4 个一，40 + 4 = ？），写作多少？",
+          "计数器十位 6 颗珠、个位 9 颗珠（6 个十和 9 个一，60 + 9 = ？），写作多少？",
+          "计数器十位 2 颗珠、个位 7 颗珠（2 个十和 7 个一，20 + 7 = ？），写作多少？"
         ]
       },
       "flags": [
@@ -3530,9 +3528,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：1 个十和 4 个一，10 + 4 = 14 = ____",
-          "根据算式把答案填在横线上：8 个十和 1 个一，80 + 1 = 81 = ____",
-          "根据算式把答案填在横线上：9 个十和 3 个一，90 + 3 = 93 = ____"
+          "根据算式把答案填在横线上：1 个十和 4 个一，10 + 4 = ____",
+          "根据算式把答案填在横线上：8 个十和 1 个一，80 + 1 = ____",
+          "根据算式把答案填在横线上：9 个十和 3 个一，90 + 3 = ____"
         ]
       },
       "flags": [
@@ -3611,9 +3609,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "数一数：十位拨 7 颗、个位拨 4 颗，7 个十和 4 个一合起来写作多少？（70 + 4 = 74）",
-          "数一数：十位拨 8 颗、个位拨 9 颗，8 个十和 9 个一合起来写作多少？（80 + 9 = 89）",
-          "数一数：十位拨 2 颗、个位拨 9 颗，2 个十和 9 个一合起来写作多少？（20 + 9 = 29）"
+          "数一数：十位拨 7 颗、个位拨 4 颗，7 个十和 4 个一合起来写作多少？",
+          "数一数：十位拨 8 颗、个位拨 9 颗，8 个十和 9 个一合起来写作多少？",
+          "数一数：十位拨 2 颗、个位拨 9 颗，2 个十和 9 个一合起来写作多少？"
         ]
       },
       "flags": [
@@ -3708,16 +3706,13 @@
       "grade": 1,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 6,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -3782,7 +3777,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -4143,14 +4139,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.graphic.params.length"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 6,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -4512,9 +4508,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "计数器十位 1 颗珠、个位 9 颗珠（1 个十和 9 个一，10 + 9 = 19），这个数写作多少？",
-          "18 里面有几个十和几个一？（参考：10 + 8 = 18）",
-          "17 里面有几个十和几个一？（参考：10 + 7 = 17）"
+          "计数器十位 1 颗珠、个位 9 颗珠（1 个十和 9 个一，10 + 9 = ？），这个数写作多少？",
+          "18 里面有几个十和几个一？（10 + 8 = ？）",
+          "17 里面有几个十和几个一？（10 + 7 = ？）"
         ]
       },
       "flags": [
@@ -4553,9 +4549,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：10 + 9 = 19 = ____",
-          "根据算式把答案填在横线上：参考：10 + 7 = 17 = ____",
-          "根据算式把答案填在横线上：参考：10 + 8 = 18 = ____"
+          "根据算式把答案填在横线上：10 + 9 = ____",
+          "根据算式把答案填在横线上：10 + 7 = ____",
+          "根据算式把答案填在横线上：10 + 8 = ____"
         ]
       },
       "flags": [
@@ -4635,9 +4631,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "数一数：十位拨 1 颗、个位拨 7 颗，1 个十和 7 个一合起来写作多少？（10 + 7 = 17）",
-          "摆小棒表示 17（10 + 7 = 17），要摆 1 捆（10 根）零几根？",
-          "数一数：十位拨 1 颗、个位拨 3 颗，1 个十和 3 个一合起来写作多少？（10 + 3 = 13）"
+          "数一数：十位拨 1 颗、个位拨 7 颗，1 个十和 7 个一合起来写作多少？",
+          "摆小棒表示 17，要摆 1 捆（10 根）零几根？",
+          "数一数：十位拨 1 颗、个位拨 3 颗，1 个十和 3 个一合起来写作多少？"
         ]
       },
       "flags": [
@@ -4840,9 +4836,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "用凑十法计算：8 + 5 = 8 + 2 + 3 = ？（先把 8 凑成 10，10 + 3 = 13）",
-          "用凑十法计算：8 + 4 = 8 + 2 + 2 = ？（先把 8 凑成 10，10 + 2 = 12）",
-          "用凑十法计算：9 + 8 = 9 + 1 + 7 = ？（先把 9 凑成 10，10 + 7 = 17）"
+          "用凑十法计算：8 + 5 = 8 + 2 + 3 = ？（先把 8 凑成 10，再算 10 + 3）",
+          "用凑十法计算：8 + 4 = 8 + 2 + 2 = ？（先把 8 凑成 10，再算 10 + 2）",
+          "用凑十法计算：9 + 8 = 9 + 1 + 7 = ？（先把 9 凑成 10，再算 10 + 7）"
         ]
       },
       "flags": [
@@ -5835,7 +5831,7 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 9,
+          "distinctAnswers": 3,
           "answerMin": null,
           "answerMax": null
         },
@@ -6097,9 +6093,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：因为 4 × 7 = 28，所以 28 ÷ 4 = = ____",
-          "根据算式把答案填在横线上：因为 3 × 2 = 6，所以 6 ÷ 3 = = ____",
-          "根据算式把答案填在横线上：因为 2 × 7 = 14，所以 14 ÷ 2 = = ____"
+          "根据算式把答案填在横线上：因为 4 × 7 = 28，所以 28 ÷ 4 = ____",
+          "根据算式把答案填在横线上：因为 3 × 2 = 6，所以 6 ÷ 3 = ____",
+          "根据算式把答案填在横线上：因为 2 × 7 = 14，所以 14 ÷ 2 = ____"
         ]
       },
       "flags": [
@@ -6753,9 +6749,9 @@
           "generator:concept-meaning": 3
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：10 × 10 = 100 = ____",
-          "根据算式把答案填在横线上：10 × 100 = 1000 = ____",
-          "根据算式把答案填在横线上：10 × 1000 = 10000 = ____"
+          "根据算式把答案填在横线上：10 × 10 = ____",
+          "根据算式把答案填在横线上：10 × 100 = ____",
+          "根据算式把答案填在横线上：10 × 1000 = ____"
         ]
       },
       "flags": [
@@ -7039,9 +7035,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "计数器十位 2 颗珠、个位 2 颗珠（2 个十和 2 个一，20 + 2 = 22），写作多少？",
-          "计数器十位 1 颗珠、个位 9 颗珠（1 个十和 9 个一，10 + 9 = 19），写作多少？",
-          "计数器十位 4 颗珠、个位 6 颗珠（4 个十和 6 个一，40 + 6 = 46），写作多少？"
+          "计数器十位 2 颗珠、个位 2 颗珠（2 个十和 2 个一，20 + 2 = ？），写作多少？",
+          "计数器十位 1 颗珠、个位 9 颗珠（1 个十和 9 个一，10 + 9 = ？），写作多少？",
+          "计数器十位 4 颗珠、个位 6 颗珠（4 个十和 6 个一，40 + 6 = ？），写作多少？"
         ]
       },
       "flags": [
@@ -7080,9 +7076,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：3 个十和 3 个一，30 + 3 = 33 = ____",
-          "根据算式把答案填在横线上：1 个十和 1 个一，10 + 1 = 11 = ____",
-          "根据算式把答案填在横线上：4 个十和 9 个一，40 + 9 = 49 = ____"
+          "根据算式把答案填在横线上：3 个十和 3 个一，30 + 3 = ____",
+          "根据算式把答案填在横线上：1 个十和 1 个一，10 + 1 = ____",
+          "根据算式把答案填在横线上：4 个十和 9 个一，40 + 9 = ____"
         ]
       },
       "flags": [
@@ -7161,9 +7157,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "数一数：十位拨 3 颗、个位拨 9 颗，3 个十和 9 个一合起来写作多少？（30 + 9 = 39）",
-          "数一数：十位拨 4 颗、个位拨 8 颗，4 个十和 8 个一合起来写作多少？（40 + 8 = 48）",
-          "数一数：十位拨 8 颗、个位拨 3 颗，8 个十和 3 个一合起来写作多少？（80 + 3 = 83）"
+          "数一数：十位拨 3 颗、个位拨 9 颗，3 个十和 9 个一合起来写作多少？",
+          "数一数：十位拨 4 颗、个位拨 8 颗，4 个十和 8 个一合起来写作多少？",
+          "数一数：十位拨 8 颗、个位拨 3 颗，8 个十和 3 个一合起来写作多少？"
         ]
       },
       "flags": [
@@ -7202,9 +7198,9 @@
           "generator:concept-meaning": 3
         },
         "samplePrompts": [
-          "算盘的十位上1个上珠靠梁、个位上2个下珠靠梁，表示的数是多少？（参考：5 × 10 + 2 = 52）",
-          "算盘上一个上珠靠梁表示几？（参考：1 × 5 = 5）",
-          "算盘上一个下珠靠梁表示几？（参考：1 × 1 = 1）"
+          "算盘的十位上1个上珠靠梁、个位上2个下珠靠梁，表示的数是多少？（5 × 10 + 2 = ？）",
+          "算盘上一个上珠靠梁表示几？（1 × 5 = ？）",
+          "算盘上一个下珠靠梁表示几？（1 × 1 = ？）"
         ]
       },
       "flags": [
@@ -7243,9 +7239,9 @@
           "generator:concept-meaning": 3
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：1 × 5 = 5 = ____",
-          "根据算式把答案填在横线上：参考：1 × 1 = 1 = ____",
-          "根据算式把答案填在横线上：参考：5 × 10 + 2 = 52 = ____"
+          "根据算式把答案填在横线上：1 × 5 = ____",
+          "根据算式把答案填在横线上：1 × 1 = ____",
+          "根据算式把答案填在横线上：5 × 10 + 2 = ____"
         ]
       },
       "flags": [
@@ -7324,8 +7320,8 @@
           "generator:concept-meaning": 3
         },
         "samplePrompts": [
-          "在算盘上拨数，1 个上珠靠梁，1 × 5 = 5，它表示数字几？",
-          "在算盘上拨数，1 个下珠靠梁，1 × 1 = 1，它表示数字几？",
+          "在算盘上拨数，1 个上珠靠梁，它表示数字几？",
+          "在算盘上拨数，1 个下珠靠梁，它表示数字几？",
           "算盘十位1个上珠靠梁表示5个十，个位2个下珠靠梁表示2个一，5 × 10 + 2 = ？，表示的数是多少？"
         ]
       },
@@ -7406,9 +7402,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：21 − 16 = 5 = ____",
-          "根据算式把答案填在横线上：参考：63 − 58 = 5 = ____",
-          "根据算式把答案填在横线上：参考：64 − 56 = 8 = ____"
+          "根据算式把答案填在横线上：参考：21 − 16 = ____",
+          "根据算式把答案填在横线上：参考：63 − 58 = ____",
+          "根据算式把答案填在横线上：参考：64 − 56 = ____"
         ]
       },
       "flags": [
@@ -8622,8 +8618,7 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel"
+            "data.graphic.params.part"
           ]
         },
         "numeric": {
@@ -8653,7 +8648,7 @@
               "3"
             ],
             "data.graphic.params.partLabel": [
-              "\"3\""
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "6"
@@ -8687,7 +8682,7 @@
           "generator:stats": 1
         },
         "samplePrompts": [
-          "分类的含义：看图，整条线段表示全部 6 个事物（共 6cm），按「颜色」把「红色」的 3 个分在第一段。事物：红圆卡、红方卡、蓝圆卡、黄三角卡、红三角卡、黄方卡"
+          "分类的含义：看图，按「颜色」把事物分成两段，「红色」的事物在第一段。事物：红圆卡、红方卡、蓝圆卡、黄三角卡、红三角卡、黄方卡。第一段表示 ____ 个。"
         ]
       },
       "flags": [
@@ -8729,7 +8724,7 @@
               "3"
             ],
             "data.graphic.params.partLabel": [
-              "\"3\""
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "6"
@@ -8903,8 +8898,7 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel"
+            "data.graphic.params.total"
           ]
         },
         "numeric": {
@@ -8935,13 +8929,15 @@
               "3"
             ],
             "data.graphic.params.partLabel": [
-              "\"3\""
+              "\"3\"",
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "6"
             ],
             "data.graphic.params.totalLabel": [
-              "\"6\""
+              "\"6\"",
+              "\"?\""
             ],
             "data.graphic.params.unit": [
               "\"cm\""
@@ -8972,9 +8968,9 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "分类的含义：看图，6cm 的整条线段表示 6 个事物，第一段 3cm 表示「红色」的 3 个。先数出另一类有几个，再求两类事物一共多少个。",
+          "分类的含义：看图，线段图按「颜色」分成两段，第一段表示「红色」的事物。事物：红圆卡、红方卡、蓝圆卡、黄三角卡、红三角卡、黄方卡。先数出另一类有几个，再求两类事物",
           "分类的含义：看图，整条线段表示 6 个事物，第一段表示「红色」的 3 个。两段表示的数量相差几个？",
-          "分类的含义：看图，6 个事物分成两段，第一段表示「红色」的 3 个。两段分别表示多少个？"
+          "分类的含义：看图，线段图按「颜色」分成两段，第一段表示「红色」的事物。事物：红圆卡、红方卡、蓝圆卡、黄三角卡、红三角卡、黄方卡。两段分别表示多少个？"
         ]
       },
       "flags": []
@@ -8986,8 +8982,7 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel"
+            "data.graphic.params.part"
           ]
         },
         "numeric": {
@@ -9017,7 +9012,7 @@
               "3"
             ],
             "data.graphic.params.partLabel": [
-              "\"3\""
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "6"
@@ -9051,7 +9046,7 @@
           "generator:stats": 1
         },
         "samplePrompts": [
-          "单一标准分类：看图，整条线段表示全部 6 个事物（共 6cm），按「用途」把「用来擦拭或收纳」的 3 个分在第一段。事物：铅笔、橡皮、尺子、转笔刀、水彩笔、文具"
+          "单一标准分类：看图，按「用途」把事物分成两段，「用来擦拭或收纳」的事物在第一段。事物：铅笔、橡皮、尺子、转笔刀、水彩笔、文具盒。第一段表示 ____ 个。"
         ]
       },
       "flags": [
@@ -9093,7 +9088,7 @@
               "3"
             ],
             "data.graphic.params.partLabel": [
-              "\"3\""
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "6"
@@ -9267,8 +9262,7 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel"
+            "data.graphic.params.total"
           ]
         },
         "numeric": {
@@ -9299,13 +9293,15 @@
               "3"
             ],
             "data.graphic.params.partLabel": [
-              "\"3\""
+              "\"3\"",
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "6"
             ],
             "data.graphic.params.totalLabel": [
-              "\"6\""
+              "\"6\"",
+              "\"?\""
             ],
             "data.graphic.params.unit": [
               "\"cm\""
@@ -9336,9 +9332,9 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "单一标准分类：看图，6cm 的整条线段表示 6 个事物，第一段 3cm 表示「用来擦拭或收纳」的 3 个。先数出另一类有几个，再求两类事物一共多少个。",
+          "单一标准分类：看图，线段图按「用途」分成两段，第一段表示「用来擦拭或收纳」的事物。事物：铅笔、橡皮、尺子、转笔刀、水彩笔、文具盒。先数出另一类有几个，再求两类事",
           "单一标准分类：看图，整条线段表示 6 个事物，第一段表示「用来擦拭或收纳」的 3 个。两段表示的数量相差几个？",
-          "单一标准分类：看图，6 个事物分成两段，第一段表示「用来擦拭或收纳」的 3 个。两段分别表示多少个？"
+          "单一标准分类：看图，线段图按「用途」分成两段，第一段表示「用来擦拭或收纳」的事物。事物：铅笔、橡皮、尺子、转笔刀、水彩笔、文具盒。两段分别表示多少个？"
         ]
       },
       "flags": []
@@ -9549,7 +9545,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "不同标准分类：先把下面的事物按「颜色」分类：红圆扣、红方扣、蓝圆扣、蓝方扣、黄圆扣、黄方扣。再回答问题——同一堆纽扣按颜色分是一种结果，还可以换一个标准（形状）",
+          "不同标准分类：先把下面的事物按「颜色」分类：红圆扣、红方扣、蓝圆扣、蓝方扣、黄圆扣、黄方扣。先写出分类结果，再说一说按这个标准分类说明了什么。",
           "不同标准分类：把下面的事物按「颜色」分类：红圆扣、红方扣、蓝圆扣、蓝方扣、黄圆扣、黄方扣。先完成分类，再数出每一类各有多少项。",
           "不同标准分类：把下面的事物按「颜色」分类：红圆扣、红方扣、蓝圆扣、蓝方扣、黄圆扣、黄方扣。哪一类包含的事物最多？比最少的一类多几项？"
         ]
@@ -9764,7 +9760,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "逐层分类：先把下面的事物按「先分动物和植物、再分鱼类和鸟类」分类：鲫鱼、麻雀、杨树、鲤鱼、柳树、老鹰。再回答问题——先分成动物、植物两大类，再把动物细分成鱼类和",
+          "逐层分类：先把下面的事物按「先分动物和植物、再分鱼类和鸟类」分类：鲫鱼、麻雀、杨树、鲤鱼、柳树、老鹰。先写出分类结果，再说一说按这个标准分类说明了什么。",
           "逐层分类：把下面的事物按「先分动物和植物、再分鱼类和鸟类」分类：鲫鱼、麻雀、杨树、鲤鱼、柳树、老鹰。先完成分类，再数出每一类各有多少项。",
           "逐层分类：把下面的事物按「先分动物和植物、再分鱼类和鸟类」分类：鲫鱼、麻雀、杨树、鲤鱼、柳树、老鹰。哪一类包含的事物最多？比最少的一类多几项？"
         ]
@@ -9979,7 +9975,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "统计方法：先把下面的事物按「调查的场合」分类：举手计数、画正字记录、投票表决、逐个询问、问卷调查。再回答问题——不同统计方法适合不同场合，人少时举手、画正字最快",
+          "统计方法：先把下面的事物按「调查的场合」分类：举手计数、画正字记录、投票表决、逐个询问、问卷调查。先写出分类结果，再说一说按这个标准分类说明了什么。",
           "统计方法：把下面的事物按「调查的场合」分类：举手计数、画正字记录、投票表决、逐个询问、问卷调查。先完成分类，再数出每一类各有多少项。",
           "统计方法：把下面的事物按「调查的场合」分类：举手计数、画正字记录、投票表决、逐个询问、问卷调查。哪一类包含的事物最多？比最少的一类多几项？"
         ]
@@ -10194,7 +10190,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "简单统计表：先把下面的事物按「天气情况」分类：周一晴、周二阴、周三晴、周四雨、周五晴、周六阴。再回答问题——把每天的天气分类填入统计表，一眼就能看出哪种天气最多",
+          "简单统计表：先把下面的事物按「天气情况」分类：周一晴、周二阴、周三晴、周四雨、周五晴、周六阴。先写出分类结果，再说一说按这个标准分类说明了什么。",
           "简单统计表：把下面的事物按「天气情况」分类：周一晴、周二阴、周三晴、周四雨、周五晴、周六阴。先完成分类，再数出每一类各有多少项。",
           "简单统计表：把下面的事物按「天气情况」分类：周一晴、周二阴、周三晴、周四雨、周五晴、周六阴。哪一类包含的事物最多？比最少的一类多几项？"
         ]
@@ -10286,15 +10282,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -10668,15 +10663,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -11050,14 +11044,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -11431,14 +11425,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -11968,8 +11962,7 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel"
+            "data.graphic.params.total"
           ]
         },
         "numeric": {
@@ -12005,7 +11998,7 @@
               "100"
             ],
             "data.graphic.params.totalLabel": [
-              "\"100\""
+              "\"?\""
             ],
             "data.graphic.params.unit": [
               "\"cm\""
@@ -12183,7 +12176,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "测量物体长度的方法：铅笔一端对着刻度 0，另一端对着刻度 8，铅笔长____厘米"
+          "测量物体长度的方法：铅笔一端对着刻度 2，另一端对着刻度 10，铅笔长____厘米"
         ]
       },
       "flags": [
@@ -12197,15 +12190,13 @@
       "grade": 2,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 8,
+          "answerMax": 8
         },
         "context": {
           "present": true,
@@ -12258,11 +12249,12 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "测量物体长度的方法：铅笔一端对着刻度 0，另一端对着刻度 8，铅笔长____厘米（选出正确答案）"
+          "测量物体长度的方法：铅笔一端对着刻度 2，另一端对着刻度 10，铅笔长____厘米（选出正确答案）"
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -12459,7 +12451,7 @@
           "generator:shape-recognition": 5
         },
         "samplePrompts": [
-          "测量物体长度的方法：观察下图（平行四边形），想一想——铅笔一端对着刻度 0，另一端对着刻度 8，铅笔长____厘米",
+          "测量物体长度的方法：观察下图（平行四边形），想一想——铅笔一端对着刻度 2，另一端对着刻度 10，铅笔长____厘米",
           "测量物体长度的方法：观察下图（圆），想一想——橡皮一端对着刻度 2，另一端对着刻度 6，橡皮长____厘米",
           "测量物体长度的方法：观察下图（三角形），想一想——纸条一端对着刻度 3，另一端对着刻度 10，纸条长____厘米"
         ]
@@ -12960,8 +12952,8 @@
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 5,
-          "answerMax": 5
+          "answerMin": 6,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -13014,7 +13006,7 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "画线段的方法：画一条 5 厘米的线段，从刻度 0 画到刻度____"
+          "画线段的方法：画一条 5 厘米的线段，如果从刻度 1 画起，应画到刻度____"
         ]
       },
       "flags": [
@@ -13028,16 +13020,13 @@
       "grade": 2,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.length"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 6,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -13090,11 +13079,12 @@
           "generator:shape-recognition": 1
         },
         "samplePrompts": [
-          "画线段的方法：画一条 5 厘米的线段，从刻度 0 画到刻度____（选出正确答案）"
+          "画线段的方法：画一条 5 厘米的线段，如果从刻度 1 画起，应画到刻度____（选出正确答案）"
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -13184,8 +13174,8 @@
         "numeric": {
           "varies": true,
           "distinctAnswers": 3,
-          "answerMin": 5,
-          "answerMax": 8
+          "answerMin": 6,
+          "answerMax": 10
         },
         "context": {
           "present": true,
@@ -13239,8 +13229,8 @@
           "generator:shape-recognition": 3
         },
         "samplePrompts": [
-          "画线段的方法：观察下图（线段），想一想——画一条 5 厘米的线段，从刻度 0 画到刻度____",
-          "画线段的方法：观察下图（线段），想一想——画一条 8 厘米的线段，从刻度 0 画到刻度____",
+          "画线段的方法：观察下图（线段），想一想——画一条 5 厘米的线段，如果从刻度 1 画起，应画到刻度____",
+          "画线段的方法：观察下图（线段），想一想——画一条 8 厘米的线段，如果从刻度 2 画起，应画到刻度____",
           "画线段的方法：观察下图（线段），想一想——从刻度 2 画到刻度 9，画出的线段长____厘米"
         ]
       },
@@ -13806,15 +13796,13 @@
       "grade": 2,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 40,
+          "answerMax": 40
         },
         "context": {
           "present": true,
@@ -13871,7 +13859,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -14575,14 +14564,15 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.graphic.params.height",
+            "data.graphic.params.width"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 2,
+          "answerMax": 2
         },
         "context": {
           "present": true,
@@ -14950,16 +14940,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": 0,
-          "answerMax": 2
+          "distinctAnswers": 5,
+          "answerMin": 2,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -14986,7 +14973,9 @@
           "一个图形先向右2格，再向上3格，一共平移了多少格？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g3-down-u01-k002",
@@ -15231,15 +15220,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -15265,7 +15252,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -15546,15 +15534,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -15932,15 +15919,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -16005,7 +15990,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -16339,15 +16325,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 12,
+          "answerMax": 12
         },
         "context": {
           "present": true,
@@ -16412,7 +16396,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -16811,15 +16796,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 20,
+          "answerMax": 20
         },
         "context": {
           "present": true,
@@ -16884,7 +16867,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -17229,17 +17213,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.size",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 10,
+          "answerMax": 10
         },
         "context": {
           "present": true,
@@ -17304,7 +17284,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -18291,15 +18272,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 18,
+          "answerMax": 18
         },
         "context": {
           "present": true,
@@ -18364,7 +18343,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -19099,15 +19079,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 12,
+          "answerMax": 12
         },
         "context": {
           "present": true,
@@ -19166,7 +19144,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -19476,8 +19455,7 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel"
+            "data.graphic.params.part"
           ]
         },
         "numeric": {
@@ -19507,7 +19485,7 @@
               "4"
             ],
             "data.graphic.params.partLabel": [
-              "\"4\""
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "5"
@@ -19541,7 +19519,7 @@
           "generator:stats": 1
         },
         "samplePrompts": [
-          "数据的收集方法：看图，整条线段表示全部 5 个事物（共 5cm），按「数据的来源」把「直接收集的数据」的 4 个分在第一段。事物：举手统计、投票统计、实地测量、"
+          "数据的收集方法：看图，按「数据的来源」把事物分成两段，「直接收集的数据」的事物在第一段。事物：举手统计、投票统计、实地测量、上网查询、问卷调查。第一段表示 __"
         ]
       },
       "flags": [
@@ -19583,7 +19561,7 @@
               "4"
             ],
             "data.graphic.params.partLabel": [
-              "\"4\""
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "5"
@@ -19757,8 +19735,7 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.total",
-            "data.graphic.params.totalLabel"
+            "data.graphic.params.total"
           ]
         },
         "numeric": {
@@ -19789,13 +19766,15 @@
               "4"
             ],
             "data.graphic.params.partLabel": [
-              "\"4\""
+              "\"4\"",
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "5"
             ],
             "data.graphic.params.totalLabel": [
-              "\"5\""
+              "\"5\"",
+              "\"?\""
             ],
             "data.graphic.params.unit": [
               "\"cm\""
@@ -19826,9 +19805,9 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "数据的收集方法：看图，5cm 的整条线段表示 5 个事物，第一段 4cm 表示「直接收集的数据」的 4 个。先数出另一类有几个，再求两类事物一共多少个。",
+          "数据的收集方法：看图，线段图按「数据的来源」分成两段，第一段表示「直接收集的数据」的事物。事物：举手统计、投票统计、实地测量、上网查询、问卷调查。先数出另一类有",
           "数据的收集方法：看图，整条线段表示 5 个事物，第一段表示「直接收集的数据」的 4 个。两段表示的数量相差几个？",
-          "数据的收集方法：看图，5 个事物分成两段，第一段表示「直接收集的数据」的 4 个。两段分别表示多少个？"
+          "数据的收集方法：看图，线段图按「数据的来源」分成两段，第一段表示「直接收集的数据」的事物。事物：举手统计、投票统计、实地测量、上网查询、问卷调查。两段分别表示多"
         ]
       },
       "flags": []
@@ -20039,7 +20018,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "数据的整理方法：先把下面的事物按「喜欢的水果类别」分类：小红喜欢苹果、小明喜欢香蕉、小丽喜欢苹果、小强喜欢葡萄、小美喜欢香蕉、小军喜欢苹果。再回答问题——原始记",
+          "数据的整理方法：先把下面的事物按「喜欢的水果类别」分类：小红喜欢苹果、小明喜欢香蕉、小丽喜欢苹果、小强喜欢葡萄、小美喜欢香蕉、小军喜欢苹果。先写出分类结果，再说",
           "数据的整理方法：把下面的事物按「喜欢的水果类别」分类：小红喜欢苹果、小明喜欢香蕉、小丽喜欢苹果、小强喜欢葡萄、小美喜欢香蕉、小军喜欢苹果。先完成分类，再数出每一",
           "数据的整理方法：把下面的事物按「喜欢的水果类别」分类：小红喜欢苹果、小明喜欢香蕉、小丽喜欢苹果、小强喜欢葡萄、小美喜欢香蕉、小军喜欢苹果。哪一类包含的事物最多？"
         ]
@@ -20254,7 +20233,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "复式统计表：先把下面的事物按「性别加运动项目」分类：男生跳绳、女生跳绳、男生跑步、女生踢毽、男生篮球、女生跑步。再回答问题——把男生、女生两类数据按同一项目合到",
+          "复式统计表：先把下面的事物按「性别加运动项目」分类：男生跳绳、女生跳绳、男生跑步、女生踢毽、男生篮球、女生跑步。先写出分类结果，再说一说按这个标准分类说明了什么",
           "复式统计表：把下面的事物按「性别加运动项目」分类：男生跳绳、女生跳绳、男生跑步、女生踢毽、男生篮球、女生跑步。先完成分类，再数出每一类各有多少项。",
           "复式统计表：把下面的事物按「性别加运动项目」分类：男生跳绳、女生跳绳、男生跑步、女生踢毽、男生篮球、女生跑步。哪一类包含的事物最多？比最少的一类多几项？"
         ]
@@ -20468,7 +20447,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "统计的应用：先把下面的事物按「问题是否需要统计」分类：全班最爱吃什么水果、1加1等于几、一个月里雨天有几天、自己的名字。再回答问题——只有需要收集大量数据回答的",
+          "统计的应用：先把下面的事物按「问题是否需要统计」分类：全班最爱吃什么水果、1加1等于几、一个月里雨天有几天、自己的名字。先写出分类结果，再说一说按这个标准分类说",
           "统计的应用：把下面的事物按「问题是否需要统计」分类：全班最爱吃什么水果、1加1等于几、一个月里雨天有几天、自己的名字。先完成分类，再数出每一类各有多少项。",
           "统计的应用：把下面的事物按「问题是否需要统计」分类：全班最爱吃什么水果、1加1等于几、一个月里雨天有几天、自己的名字。哪一类包含的事物最多？比最少的一类多几项？"
         ]
@@ -20702,9 +20681,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": null,
-          "answerMax": null
+          "distinctAnswers": 6,
+          "answerMin": 366,
+          "answerMax": 2020
         },
         "context": {
           "present": true,
@@ -20728,7 +20707,7 @@
         "samplePrompts": [
           "平年与闰年的判断方法：2024年属于____年？写出判断理由。",
           "平年与闰年的判断方法：1900年属于____年？为什么",
-          "平年与闰年的判断方法：闰年全年有____天？比平年多____天"
+          "平年与闰年的判断方法：闰年全年有____天"
         ]
       },
       "flags": [
@@ -20813,7 +20792,7 @@
         "samplePrompts": [
           "平年与闰年的判断方法：2024年是平年还是闰年？写出判断理由。",
           "平年与闰年的判断方法：1900年是平年还是闰年？为什么？",
-          "平年与闰年的判断方法：闰年全年有多少天？比平年多几天？"
+          "平年与闰年的判断方法：闰年全年有多少天？"
         ]
       },
       "flags": [
@@ -21856,15 +21835,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 20,
+          "answerMax": 20
         },
         "context": {
           "present": true,
@@ -21929,7 +21906,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -22436,16 +22414,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.size"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 14,
+          "answerMax": 14
         },
         "context": {
           "present": true,
@@ -22510,7 +22485,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -22656,15 +22632,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -22690,7 +22664,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -23442,15 +23417,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 3,
+          "answerMax": 3
         },
         "context": {
           "present": true,
@@ -23519,7 +23492,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -25172,17 +25146,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.r",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 10,
+          "answerMax": 10
         },
         "context": {
           "present": true,
@@ -25239,7 +25209,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -25628,15 +25599,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 5,
+          "answerMax": 5
         },
         "context": {
           "present": true,
@@ -25701,7 +25670,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -27728,15 +27698,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 2,
+          "answerMax": 2
         },
         "context": {
           "present": true,
@@ -27793,7 +27761,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -28310,15 +28279,13 @@
       "grade": 3,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -28379,7 +28346,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -28702,14 +28670,15 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.graphic.params.height",
+            "data.steps"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 1,
+          "answerMax": 1
         },
         "context": {
           "present": true,
@@ -29715,7 +29684,7 @@
         "samplePrompts": [
           "下面哪个算式的得数是 6/7？（  ）",
           "下面哪个算式的得数是 4/7？（  ）",
-          "下面哪个算式的得数是 1/7？（  ）"
+          "下面哪个算式的得数是 3/5？（  ）"
         ]
       },
       "flags": [
@@ -30457,9 +30426,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：因为 3 × 8 = 24，所以 24 ÷ 3 = = ____",
-          "根据算式把答案填在横线上：因为 4 × 3 = 12，所以 12 ÷ 4 = = ____",
-          "根据算式把答案填在横线上：因为 7 × 6 = 42，所以 42 ÷ 7 = = ____"
+          "根据算式把答案填在横线上：因为 3 × 8 = 24，所以 24 ÷ 3 = ____",
+          "根据算式把答案填在横线上：因为 4 × 3 = 12，所以 12 ÷ 4 = ____",
+          "根据算式把答案填在横线上：因为 7 × 6 = 42，所以 42 ÷ 7 = ____"
         ]
       },
       "flags": [
@@ -30812,15 +30781,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 3,
+          "answerMax": 3
         },
         "context": {
           "present": true,
@@ -30877,7 +30844,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -31711,14 +31679,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -33293,15 +33261,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 3,
+          "answerMax": 3
         },
         "context": {
           "present": true,
@@ -33360,7 +33326,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -33673,16 +33640,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 3,
+          "answerMax": 3
         },
         "context": {
           "present": true,
@@ -33741,7 +33705,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -34053,15 +34018,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 7,
+          "answerMax": 7
         },
         "context": {
           "present": true,
@@ -34120,7 +34083,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -34812,16 +34776,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 50,
+          "answerMax": 50
         },
         "context": {
           "present": true,
@@ -34880,7 +34841,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -35198,18 +35160,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.height",
-            "data.graphic.params.offset",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -35278,7 +35235,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -36339,16 +36297,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -36413,7 +36368,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -36753,15 +36709,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 3,
+          "answerMax": 3
         },
         "context": {
           "present": true,
@@ -36826,7 +36780,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -37127,16 +37082,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": 1,
-          "answerMax": 3
+          "distinctAnswers": 4,
+          "answerMin": 2,
+          "answerMax": 5
         },
         "context": {
           "present": true,
@@ -37163,7 +37115,9 @@
           "一个图形先向左1格，再向上2格，一共平移了多少格？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g4-down-u07-k003",
@@ -37409,16 +37363,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": 0,
-          "answerMax": 3
+          "distinctAnswers": 5,
+          "answerMin": 2,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -37445,7 +37396,9 @@
           "一个图形先向左2格，再向下2格，一共平移了多少格？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g4-down-u07-k004",
@@ -37692,15 +37645,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.correctIndex"
           ]
         },
         "numeric": {
           "varies": true,
           "distinctAnswers": 4,
-          "answerMin": 0,
-          "answerMax": 3
+          "answerMin": 3,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -38129,7 +38081,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "平均数的意义：先把下面的事物按「与平均身高130cm比较」分类：身高125cm、身高130cm、身高135cm、身高140cm、身高120cm。再回答问题——平",
+          "平均数的意义：先把下面的事物按「与平均身高130cm比较」分类：身高125cm、身高130cm、身高135cm、身高140cm、身高120cm。先写出分类结果，",
           "平均数的意义：把下面的事物按「与平均身高130cm比较」分类：身高125cm、身高130cm、身高135cm、身高140cm、身高120cm。先完成分类，再数出",
           "平均数的意义：把下面的事物按「与平均身高130cm比较」分类：身高125cm、身高130cm、身高135cm、身高140cm、身高120cm。哪一类包含的事物最"
         ]
@@ -38343,7 +38295,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "求平均数的方法：先把下面的事物按「分数段」分类：85分、90分、95分、80分、100分。再回答问题——先求总数再除以人数得到平均数，用分数段整理可以检验平均成",
+          "求平均数的方法：先把下面的事物按「分数段」分类：85分、90分、95分、80分、100分。先写出分类结果，再说一说按这个标准分类说明了什么。",
           "求平均数的方法：把下面的事物按「分数段」分类：85分、90分、95分、80分、100分。先完成分类，再数出每一类各有多少项。",
           "求平均数的方法：把下面的事物按「分数段」分类：85分、90分、95分、80分、100分。哪一类包含的事物最多？比最少的一类多几项？"
         ]
@@ -38557,7 +38509,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "复式条形统计图：先把下面的事物按「性别加图书类别」分类：男生借故事书8本、女生借故事书10本、男生借科普书6本、女生借科普书7本。再回答问题——复式条形图要按两",
+          "复式条形统计图：先把下面的事物按「性别加图书类别」分类：男生借故事书8本、女生借故事书10本、男生借科普书6本、女生借科普书7本。先写出分类结果，再说一说按这个",
           "复式条形统计图：把下面的事物按「性别加图书类别」分类：男生借故事书8本、女生借故事书10本、男生借科普书6本、女生借科普书7本。先完成分类，再数出每一类各有多少",
           "复式条形统计图：把下面的事物按「性别加图书类别」分类：男生借故事书8本、女生借故事书10本、男生借科普书6本、女生借科普书7本。哪一类包含的事物最多？比最少的一"
         ]
@@ -38889,7 +38841,7 @@
           "generator:reasoning": 3
         },
         "samplePrompts": [
-          "」谁说了真话，」丙说：「甲和乙都在说谎，」乙说：「丙在说谎，甲说：「乙在说谎，丙三人中只有一人说真话，乙，甲，____",
+          "有甲、乙、丙三人，其中只有一人说真话。甲称乙撒了谎，乙称丙撒了谎，丙则称甲、乙两人都撒了谎。说真话的是 ____。",
           "三人中谁最大，小明今年 10 岁，小红比小刚大 3 岁，小明比小红大 2 岁，____",
           "应该从哪个盒子摸，就能判断所有盒子里装的是什么，只从其中一个盒子里摸出一个水果，标签全都贴错了，三个盒子上分别标着「苹果」「橘子」「混合」，____"
         ]
@@ -38933,7 +38885,7 @@
           "generator:reasoning": 4
         },
         "samplePrompts": [
-          "甲、乙、丙三人中只有一人称真话。甲称：「乙在撒谎。」乙称：「丙在撒谎。」丙称：「甲和乙都在撒谎。正确选项是哪一个？",
+          "甲、乙、丙三人中只有一人称真话。甲称：「乙撒了谎。」乙称：「丙撒了谎。」丙称：「甲、乙两人都撒了谎。」正确选项是哪一个？",
           "小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 12 岁。正确选项是哪一个？",
           "三个盒子上分别标着「苹果」「橘子」「混合」，标签全都贴错了。只从其中一个盒子里摸出一个水果，就能判断所有盒子里装的是什么。正确选项是哪一个？"
         ]
@@ -39020,7 +38972,7 @@
           "generator:reasoning": 1
         },
         "samplePrompts": [
-          "」谁说了真话，」丙说：「甲和乙都在说谎，」乙说：「丙在说谎，甲说：「乙在说谎，丙三人中只有一人说真话，乙，甲，____"
+          "有甲、乙、丙三人，其中只有一人说真话。甲称乙撒了谎，乙称丙撒了谎，丙则称甲、乙两人都撒了谎。说真话的是 ____。"
         ]
       },
       "flags": [
@@ -39062,7 +39014,7 @@
           "generator:reasoning": 1
         },
         "samplePrompts": [
-          "甲、乙、丙三人中只有一人称真话。甲称：「乙在撒谎。」乙称：「丙在撒谎。」丙称：「甲和乙都在撒谎。正确选项是哪一个？"
+          "甲、乙、丙三人中只有一人称真话。甲称：「乙撒了谎。」乙称：「丙撒了谎。」丙称：「甲、乙两人都撒了谎。」正确选项是哪一个？"
         ]
       },
       "flags": [
@@ -39447,9 +39399,9 @@
           "generator:concept-meaning": 3
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：10 × 100 = 1000 = ____",
-          "根据算式把答案填在横线上：10 × 1000 = 10000 = ____",
-          "根据算式把答案填在横线上：10 × 10 = 100 = ____"
+          "根据算式把答案填在横线上：10 × 100 = ____",
+          "根据算式把答案填在横线上：10 × 1000 = ____",
+          "根据算式把答案填在横线上：10 × 10 = ____"
         ]
       },
       "flags": [
@@ -39610,9 +39562,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：6 个十和 4 个一，60 + 4 = 64 = ____",
-          "根据算式把答案填在横线上：参考：5 个十和 8 个一，50 + 8 = 58 = ____",
-          "根据算式把答案填在横线上：参考：3 个十和 8 个一，30 + 8 = 38 = ____"
+          "根据算式把答案填在横线上：参考：6 个十和 4 个一，60 + 4 = ____",
+          "根据算式把答案填在横线上：参考：5 个十和 8 个一，50 + 8 = ____",
+          "根据算式把答案填在横线上：参考：3 个十和 8 个一，30 + 8 = ____"
         ]
       },
       "flags": [
@@ -39773,7 +39725,7 @@
           "generator:concept-meaning": 1
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：10 × 10000000 = 100000000 = ____"
+          "根据算式把答案填在横线上：10 × 10000000 = ____"
         ]
       },
       "flags": [
@@ -39933,7 +39885,7 @@
           "generator:concept-meaning": 1
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：10 × 10000000 = 100000000 = ____"
+          "根据算式把答案填在横线上：10 × 10000000 = ____"
         ]
       },
       "flags": [
@@ -40094,9 +40046,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：38 − 35 = 3 = ____",
-          "根据算式把答案填在横线上：参考：43 − 34 = 9 = ____",
-          "根据算式把答案填在横线上：参考：46 − 44 = 2 = ____"
+          "根据算式把答案填在横线上：参考：38 − 35 = ____",
+          "根据算式把答案填在横线上：参考：43 − 34 = ____",
+          "根据算式把答案填在横线上：参考：46 − 44 = ____"
         ]
       },
       "flags": [
@@ -40434,14 +40386,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.feature"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -40828,15 +40780,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -40897,7 +40847,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -41224,15 +41175,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.shapeName"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -41618,15 +41568,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 180,
+          "answerMax": 180
         },
         "context": {
           "present": true,
@@ -41695,7 +41643,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -42105,15 +42054,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -42182,7 +42129,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -42549,16 +42497,15 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.graphic.params.bottomBase",
-            "data.graphic.params.height"
+            "data.graphic.params.topBase",
+            "data.steps"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 1,
+          "answerMax": 1
         },
         "context": {
           "present": true,
@@ -42984,15 +42931,13 @@
       "grade": 4,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 2,
+          "answerMax": 2
         },
         "context": {
           "present": true,
@@ -43051,7 +42996,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -44497,7 +44443,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "读图与数据分析：先把下面的事物按「统计图能否回答」分类：喜欢苹果的有多少人、明天谁会来买水果、香蕉比梨多几人、下周气温是多少。再回答问题——数据分析只能基于统计",
+          "读图与数据分析：先把下面的事物按「统计图能否回答」分类：喜欢苹果的有多少人、明天谁会来买水果、香蕉比梨多几人、下周气温是多少。先写出分类结果，再说一说按这个标准",
           "读图与数据分析：把下面的事物按「统计图能否回答」分类：喜欢苹果的有多少人、明天谁会来买水果、香蕉比梨多几人、下周气温是多少。先完成分类，再数出每一类各有多少项。",
           "读图与数据分析：把下面的事物按「统计图能否回答」分类：喜欢苹果的有多少人、明天谁会来买水果、香蕉比梨多几人、下周气温是多少。哪一类包含的事物最多？比最少的一类多"
         ]
@@ -44791,14 +44737,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -45019,14 +44965,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -45247,14 +45193,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -45611,14 +45557,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.graphic.params.width"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -46035,15 +45981,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.graphic.params.height"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -46456,14 +46401,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -46764,9 +46709,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 6,
-          "answerMin": 12,
-          "answerMax": 70
+          "distinctAnswers": 3,
+          "answerMin": 15,
+          "answerMax": 93
         },
         "context": {
           "present": true,
@@ -46781,14 +46726,14 @@
         }
       },
       "evidence": {
-        "samples": 6,
+        "samples": 3,
         "generators": {
-          "generator:concept-meaning": 6
+          "generator:concept-meaning": 3
         },
         "samplePrompts": [
-          "个位上是 0、2、4、6、8 的数是 2 的倍数（参考：54 ÷ 2 = 27）。下面哪个数是 2 的倍数？",
-          "个位上是 0 或 5 的数是 5 的倍数（参考：70 ÷ 5 = 14）。下面哪个数是 5 的倍数？",
-          "个位上是 0 或 5 的数是 5 的倍数（参考：55 ÷ 5 = 11）。下面哪个数是 5 的倍数？"
+          "个位上是 0、2、4、6、8 的数是 2 的倍数。下面哪个数是 2 的倍数？（仿照 7 ÷ 2 的做法，把每个选项除以 2，看余数是不是 0）",
+          "各位上数字之和是 3 的倍数 的数是 3 的倍数。下面哪个数是 3 的倍数？（仿照 7 ÷ 3 的做法，把每个选项除以 3，看余数是不是 0）",
+          "个位上是 0 或 5 的数是 5 的倍数。下面哪个数是 5 的倍数？（仿照 7 ÷ 5 的做法，把每个选项除以 5，看余数是不是 0）"
         ]
       },
       "flags": [
@@ -46909,9 +46854,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "体育分组每组 3 人正好分完，人数须是 3 的倍数。班级人数 15（数字和 6，6 ÷ 3 = 2），哪个班能正好分完？",
-          "体育分组每组 5 人正好分完，人数须是 5 的倍数。班级人数 10（参考：10 ÷ 5 = 2），哪个班能正好分完？",
-          "体育分组每组 3 人正好分完，人数须是 3 的倍数。班级人数 72（数字和 9，9 ÷ 3 = 3），哪个班能正好分完？"
+          "体育分组每组 3 人正好分完，人数须是 3 的倍数。班级人数 15，哪个班能正好分完？",
+          "体育分组每组 5 人正好分完，人数须是 5 的倍数。班级人数 10，哪个班能正好分完？",
+          "体育分组每组 3 人正好分完，人数须是 3 的倍数。班级人数 72，哪个班能正好分完？"
         ]
       },
       "flags": [
@@ -47050,9 +46995,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 6,
-          "answerMin": 18,
-          "answerMax": 37
+          "distinctAnswers": 2,
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -47072,9 +47017,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "门牌号按单双号排列，36 ÷ 2 = 18 没有余数，36 号是奇数还是偶数？",
-          "报数时逢双数蹲下，37 ÷ 2 余 1 不能整除，37 号同学该蹲下吗，37 是奇数还是偶数？",
-          "报数时逢双数蹲下，31 ÷ 2 余 1 不能整除，31 号同学该蹲下吗，31 是奇数还是偶数？"
+          "门牌号按单双号排列，36 号是奇数还是偶数？",
+          "报数时逢双数蹲下，37 号同学该蹲下吗，37 是奇数还是偶数？",
+          "报数时逢双数蹲下，31 号同学该蹲下吗，31 是奇数还是偶数？"
         ]
       },
       "flags": [
@@ -47090,10 +47035,10 @@
           "positions": []
         },
         "numeric": {
-          "varies": true,
-          "distinctAnswers": 5,
-          "answerMin": 7,
-          "answerMax": 19
+          "varies": false,
+          "distinctAnswers": 1,
+          "answerMin": 17,
+          "answerMax": 17
         },
         "context": {
           "present": true,
@@ -47108,17 +47053,16 @@
         }
       },
       "evidence": {
-        "samples": 5,
+        "samples": 1,
         "generators": {
-          "generator:concept-meaning": 5
+          "generator:concept-meaning": 1
         },
         "samplePrompts": [
-          "一个数只有 1 和它本身两个因数就是质数：1 × 17 = 17。下面哪个数是质数？",
-          "一个数只有 1 和它本身两个因数就是质数：1 × 19 = 19。下面哪个数是质数？",
-          "一个数只有 1 和它本身两个因数就是质数：1 × 7 = 7。下面哪个数是质数？"
+          "一个数只有 1 和它本身两个因数就是质数（如 5 × 6 = 30，30 有多个因数，是合数）。下面哪个数是质数？"
         ]
       },
       "flags": [
+        "single-sample",
         "unknown-not-observed"
       ]
     },
@@ -47132,9 +47076,9 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 5,
+          "distinctAnswers": 3,
           "answerMin": 7,
-          "answerMax": 19
+          "answerMax": 17
         },
         "context": {
           "present": true,
@@ -47154,9 +47098,9 @@
           "generator:concept-meaning": 5
         },
         "samplePrompts": [
-          "1 × 19 = 19，19 的因数只有 1 和 ____",
-          "1 × 7 = 7，7 的因数只有 1 和 ____",
-          "1 × 11 = 11，11 的因数只有 1 和 ____"
+          "在 11、20、15 中，____ 只有 1 和它本身两个因数，是质数。",
+          "在 7、18、6 中，____ 只有 1 和它本身两个因数，是质数。",
+          "在 7、4、8 中，____ 只有 1 和它本身两个因数，是质数。"
         ]
       },
       "flags": [
@@ -47212,10 +47156,10 @@
           "positions": []
         },
         "numeric": {
-          "varies": true,
-          "distinctAnswers": 5,
-          "answerMin": 7,
-          "answerMax": 19
+          "varies": false,
+          "distinctAnswers": 1,
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -47235,9 +47179,9 @@
           "generator:concept-meaning": 5
         },
         "samplePrompts": [
-          "分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 7（1 × 7 = 7）能分成人数相同且多于1人的小组吗，它是质数还是合数？",
-          "分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 13（1 × 13 = 13）能分成人数相同且多于1人的小组吗，它是质数还是合",
-          "分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 17（1 × 17 = 17）能分成人数相同且多于1人的小组吗，它是质数还是合"
+          "分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 7 能分成人数相同且多于1人的小组吗，它是质数还是合数？",
+          "分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 13 能分成人数相同且多于1人的小组吗，它是质数还是合数？",
+          "分糖果时，合数能平均分给多于一个小组（如 3 × 3 = 9），质数不能。糖果数 17 能分成人数相同且多于1人的小组吗，它是质数还是合数？"
         ]
       },
       "flags": [
@@ -47276,9 +47220,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "奇数 + 奇数 = 偶数：11 + 13 = 24，11 与 13 的和是奇数还是偶数？",
-          "偶数 + 偶数 = 偶数：14 + 16 = 30，14 与 16 的和是奇数还是偶数？",
-          "奇数 + 奇数 = 偶数：5 + 17 = 22，5 与 17 的和是奇数还是偶数？"
+          "不计算，判断：11 + 13 = ？的得数是奇数还是偶数？（根据和的奇偶规律判断）",
+          "不计算，判断：14 + 16 = ？的得数是奇数还是偶数？（根据和的奇偶规律判断）",
+          "不计算，判断：5 + 17 = ？的得数是奇数还是偶数？（根据和的奇偶规律判断）"
         ]
       },
       "flags": [
@@ -47317,9 +47261,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "奇数 + 偶数 = 奇数，7 + 16 的和是 ____",
-          "奇数 + 奇数 = 偶数，13 + 7 的和是 ____",
-          "奇数 + 偶数 = 奇数，13 + 14 的和是 ____"
+          "7 + 16 的和是 ____（填「奇数」或「偶数」，不计算）",
+          "13 + 7 的和是 ____（填「奇数」或「偶数」，不计算）",
+          "13 + 14 的和是 ____（填「奇数」或「偶数」，不计算）"
         ]
       },
       "flags": [
@@ -47399,9 +47343,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "两队人数分别是 3 和 3（奇数 + 奇数 = 偶数），3 + 3 = 6，两队合并后的总人数是奇数还是偶数？",
-          "两队人数分别是 10 和 10（偶数 + 偶数 = 偶数），10 + 10 = 20，两队合并后的总人数是奇数还是偶数？",
-          "两队人数分别是 3 和 16（奇数 + 偶数 = 奇数），3 + 16 = 19，两队合并后的总人数是奇数还是偶数？"
+          "两队人数分别是 3 和 3，不计算，两队合并后的总人数是奇数还是偶数？",
+          "两队人数分别是 10 和 10，不计算，两队合并后的总人数是奇数还是偶数？",
+          "两队人数分别是 3 和 16，不计算，两队合并后的总人数是奇数还是偶数？"
         ]
       },
       "flags": [
@@ -47496,15 +47440,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.graphic.params.height"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 6,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -47920,16 +47863,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 12,
+          "answerMax": 12
         },
         "context": {
           "present": true,
@@ -47998,7 +47938,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -48359,15 +48300,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 24,
+          "answerMax": 24
         },
         "context": {
           "present": true,
@@ -48436,7 +48375,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -48840,16 +48780,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.size"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 24,
+          "answerMax": 24
         },
         "context": {
           "present": true,
@@ -48914,7 +48851,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -49312,19 +49250,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.base",
-            "data.graphic.params.height",
-            "data.graphic.params.offset",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 1000,
+          "answerMax": 1000
         },
         "context": {
           "present": true,
@@ -49393,7 +49325,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -50288,7 +50221,7 @@
         "samplePrompts": [
           "把 3/4 米长的彩带剪成每段 1/2 米的小段，列式求能剪多少段：3/4 ÷ 1/2 = ？",
           "把 1/6 米长的彩带剪成每段 2/8 米的小段，列式求能剪多少段：1/6 ÷ 2/8 = ？",
-          "把 1/3 米长的彩带剪成每段 5/5 米的小段，列式求能剪多少段：1/3 ÷ 5/5 = ？"
+          "把 1/4 米长的彩带剪成每段 2/3 米的小段，列式求能剪多少段：1/4 ÷ 2/3 = ？"
         ]
       },
       "flags": [
@@ -51520,15 +51453,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -51597,7 +51528,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -51989,17 +51921,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.height",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -52064,7 +51992,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -52405,15 +52334,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -52472,7 +52399,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -52828,7 +52756,7 @@
         "samplePrompts": [
           "列式计算：4/6 + 2/6 = ？",
           "列式计算：2/7 + 3/7 = ？",
-          "列式计算：2/3 − 1/3 = ？"
+          "列式计算：4/6 − 1/6 = ？"
         ]
       },
       "flags": [
@@ -52914,7 +52842,7 @@
         "samplePrompts": [
           "下面哪个算式的得数是 1/1？（  ）",
           "下面哪个算式的得数是 3/8？（  ）",
-          "下面哪个算式的得数是 1/3？（  ）"
+          "下面哪个算式的得数是 1/7？（  ）"
         ]
       },
       "flags": [
@@ -53343,7 +53271,7 @@
         },
         "samplePrompts": [
           "列式计算：1/4 + 1/4 = ？",
-          "列式计算：2/4 − 1/4 = ？",
+          "列式计算：5/9 − 2/9 = ？",
           "列式计算：1/7 + 3/7 = ？"
         ]
       },
@@ -53385,9 +53313,9 @@
           "generator:fraction-number": 6
         },
         "samplePrompts": [
-          "在 ____ 里填上合适的分数：2/4 + ____ = 3/4",
-          "在 ____ 里填上合适的分数：2/7 + ____ = 4/7",
-          "在 ____ 里填上合适的分数：3/5 − ____ = 2/5"
+          "在 ____ 里填上合适的分数：4/6 − ____ = 1/6",
+          "在 ____ 里填上合适的分数：3/5 − ____ = 2/5",
+          "在 ____ 里填上合适的分数：5/8 + ____ = 8/8"
         ]
       },
       "flags": [
@@ -53428,9 +53356,9 @@
           "generator:fraction-number": 6
         },
         "samplePrompts": [
-          "下面哪个算式的得数是 5/6？（  ）",
-          "下面哪个算式的得数是 1/2？（  ）",
-          "下面哪个算式的得数是 1/4？（  ）"
+          "下面哪个算式的得数是 2/7？（  ）",
+          "下面哪个算式的得数是 4/5？（  ）",
+          "下面哪个算式的得数是 5/9？（  ）"
         ]
       },
       "flags": [
@@ -53447,7 +53375,7 @@
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 3,
+          "distinctAnswers": 6,
           "answerMin": null,
           "answerMax": null
         },
@@ -53471,9 +53399,9 @@
           "generator:fraction-number": 6
         },
         "samplePrompts": [
-          "一根彩带，第一次用去这根彩带的 3/6，第二次又用去 3/6，列式求两次一共用去这根彩带的几分之几：3/6 + 3/6 = ？",
-          "一根彩带，第一次用去这根彩带的 1/5，第二次又用去 2/5，列式求两次一共用去这根彩带的几分之几：1/5 + 2/5 = ？",
-          "一根彩带，第一次用去这根彩带的 1/3，第二次又用去 2/3，列式求两次一共用去这根彩带的几分之几：1/3 + 2/3 = ？"
+          "一根彩带，第一次用去这根彩带的 4/8，第二次又用去 4/8，列式求两次一共用去这根彩带的几分之几：4/8 + 4/8 = ？",
+          "一根彩带，第一次用去这根彩带的 2/4，第二次又用去 1/4，列式求两次一共用去这根彩带的几分之几：2/4 + 1/4 = ？",
+          "一根彩带，第一次用去这根彩带的 1/9，第二次又用去 5/9，列式求两次一共用去这根彩带的几分之几：1/9 + 5/9 = ？"
         ]
       },
       "flags": [
@@ -54958,15 +54886,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 8,
+          "answerMax": 8
         },
         "context": {
           "present": true,
@@ -55035,7 +54961,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -55224,15 +55151,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 24,
+          "answerMax": 24
         },
         "context": {
           "present": true,
@@ -55301,7 +55226,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -55553,7 +55479,7 @@
           "generator:reasoning": 5
         },
         "samplePrompts": [
-          "」谁说了真话，」丙说：「甲和乙都在说谎，」乙说：「丙在说谎，甲说：「乙在说谎，丙三人中只有一人说真话，乙，甲，____",
+          "有甲、乙、丙三人，其中只有一人说真话。甲称乙撒了谎，乙称丙撒了谎，丙则称甲、乙两人都撒了谎。说真话的是 ____。",
           "三人中谁最大，小明今年 10 岁，小红比小刚大 3 岁，小明比小红大 2 岁，____",
           "应该从哪个盒子摸，就能判断所有盒子里装的是什么，只从其中一个盒子里摸出一个水果，标签全都贴错了，三个盒子上分别标着「苹果」「橘子」「混合」，____"
         ]
@@ -55597,7 +55523,7 @@
           "generator:reasoning": 3
         },
         "samplePrompts": [
-          "甲、乙、丙三人中只有一人称真话。甲称：「乙在撒谎。」乙称：「丙在撒谎。」丙称：「甲和乙都在撒谎。正确选项是哪一个？",
+          "甲、乙、丙三人中只有一人称真话。甲称：「乙撒了谎。」乙称：「丙撒了谎。」丙称：「甲、乙两人都撒了谎。」正确选项是哪一个？",
           "小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 11 岁。正确选项是哪一个？",
           "三个盒子上分别标着「苹果」「橘子」「混合」，标签全都贴错了。只从其中一个盒子里摸出一个水果，就能判断所有盒子里装的是什么。正确选项是哪一个？"
         ]
@@ -55946,7 +55872,7 @@
           "generator:reasoning": 4
         },
         "samplePrompts": [
-          "」谁说了真话，」丙说：「甲和乙都在说谎，」乙说：「丙在说谎，甲说：「乙在说谎，丙三人中只有一人说真话，乙，甲，____",
+          "有甲、乙、丙三人，其中只有一人说真话。甲称乙撒了谎，乙称丙撒了谎，丙则称甲、乙两人都撒了谎。说真话的是 ____。",
           "三人中谁最大，小明今年 10 岁，小红比小刚大 3 岁，小明比小红大 2 岁，____",
           "应该从哪个盒子摸，就能判断所有盒子里装的是什么，只从其中一个盒子里摸出一个水果，标签全都贴错了，三个盒子上分别标着「苹果」「橘子」「混合」，____"
         ]
@@ -55990,7 +55916,7 @@
           "generator:reasoning": 4
         },
         "samplePrompts": [
-          "甲、乙、丙三人中只有一人称真话。甲称：「乙在撒谎。」乙称：「丙在撒谎。」丙称：「甲和乙都在撒谎。正确选项是哪一个？",
+          "甲、乙、丙三人中只有一人称真话。甲称：「乙撒了谎。」乙称：「丙撒了谎。」丙称：「甲、乙两人都撒了谎。」正确选项是哪一个？",
           "小明比小红大 2 岁，小红比小刚大 3 岁，小明今年 10 岁。正确选项是哪一个？",
           "三个盒子上分别标着「苹果」「橘子」「混合」，标签全都贴错了。只从其中一个盒子里摸出一个水果，就能判断所有盒子里装的是什么。正确选项是哪一个？"
         ]
@@ -56222,15 +56148,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -56256,7 +56180,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -56536,14 +56461,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -56917,15 +56842,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -58987,15 +58911,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.correctIndex"
           ]
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 3,
-          "answerMin": 1,
-          "answerMax": 3
+          "distinctAnswers": 5,
+          "answerMin": 2,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -59267,15 +59190,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -59301,7 +59222,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -59582,14 +59504,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -60398,9 +60320,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "百数表中，80 右边一个数是多少？（参考：80 + 1 = 81）",
-          "百数表中，47 右边一个数是多少？（参考：47 + 1 = 48）",
-          "百数表中，63 右边一个数是多少？（参考：63 + 1 = 64）"
+          "百数表中，80 右边一个数是多少？（80 + 1 = ？）",
+          "百数表中，47 右边一个数是多少？（47 + 1 = ？）",
+          "百数表中，63 右边一个数是多少？（63 + 1 = ？）"
         ]
       },
       "flags": [
@@ -60439,9 +60361,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：45 + 1 = 46 = ____",
-          "根据算式把答案填在横线上：参考：31 + 1 = 32 = ____",
-          "根据算式把答案填在横线上：参考：28 + 1 = 29 = ____"
+          "根据算式把答案填在横线上：45 + 1 = ____",
+          "根据算式把答案填在横线上：31 + 1 = ____",
+          "根据算式把答案填在横线上：28 + 1 = ____"
         ]
       },
       "flags": [
@@ -60621,15 +60543,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 24,
+          "answerMax": 24
         },
         "context": {
           "present": true,
@@ -60698,7 +60618,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -61049,15 +60970,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 20,
+          "answerMax": 20
         },
         "context": {
           "present": true,
@@ -61116,7 +61035,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -61439,15 +61359,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 16,
+          "answerMax": 16
         },
         "context": {
           "present": true,
@@ -61516,7 +61434,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -61862,15 +61781,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 20,
+          "answerMax": 20
         },
         "context": {
           "present": true,
@@ -61935,7 +61852,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -62324,17 +62242,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.r",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 10,
+          "answerMax": 10
         },
         "context": {
           "present": true,
@@ -62391,7 +62305,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -62767,19 +62682,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.base",
-            "data.graphic.params.height",
-            "data.graphic.params.offset",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 12,
+          "answerMax": 12
         },
         "context": {
           "present": true,
@@ -62848,7 +62757,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -64041,7 +63951,7 @@
           "generator:stats": 3
         },
         "samplePrompts": [
-          "掷一掷（选学）：先把下面的事物按「点数和的可能性大小」分类：点数和是2、点数和是3、点数和是5、点数和是7、点数和是9、点数和是12。再回答问题——两个骰子点数",
+          "掷一掷（选学）：先把下面的事物按「点数和的可能性大小」分类：点数和是2、点数和是3、点数和是5、点数和是7、点数和是9、点数和是12。先写出分类结果，再说一说按",
           "掷一掷（选学）：把下面的事物按「点数和的可能性大小」分类：点数和是2、点数和是3、点数和是5、点数和是7、点数和是9、点数和是12。先完成分类，再数出每一类各有",
           "掷一掷（选学）：把下面的事物按「点数和的可能性大小」分类：点数和是2、点数和是3、点数和是5、点数和是7、点数和是9、点数和是12。哪一类包含的事物最多？比最少"
         ]
@@ -64137,16 +64047,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 360,
+          "answerMax": 360
         },
         "context": {
           "present": true,
@@ -64211,7 +64118,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -64385,16 +64293,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.width"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": 3,
+          "answerMax": 3
         },
         "context": {
           "present": true,
@@ -64459,7 +64364,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -64634,16 +64540,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 4,
+          "answerMax": 4
         },
         "context": {
           "present": true,
@@ -64708,7 +64611,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -64882,15 +64786,13 @@
       "grade": 5,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 6,
+          "answerMax": 6
         },
         "context": {
           "present": true,
@@ -64955,7 +64857,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -65246,7 +65149,7 @@
           "generator:concept-meaning": 1
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：0 − 5 = −5 = ____"
+          "根据算式把答案填在横线上：参考：0 − 5 = ____"
         ]
       },
       "flags": [
@@ -65406,7 +65309,7 @@
           "generator:concept-meaning": 1
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：0 − 5 = −5 = ____"
+          "根据算式把答案填在横线上：参考：0 − 5 = ____"
         ]
       },
       "flags": [
@@ -65526,9 +65429,9 @@
           "generator:concept-meaning": 5
         },
         "samplePrompts": [
-          "在数轴上，0 左边第 5 格表示什么数？（参考：0 − 5 = −5）",
-          "在数轴上，0 左边第 6 格表示什么数？（参考：0 − 6 = −6）",
-          "在数轴上，0 左边第 4 格表示什么数？（参考：0 − 4 = −4）"
+          "在数轴上，0 左边第 5 格表示什么数？（0 − 5 = ？）",
+          "在数轴上，0 左边第 6 格表示什么数？（0 − 6 = ？）",
+          "在数轴上，0 左边第 4 格表示什么数？（0 − 4 = ？）"
         ]
       },
       "flags": [
@@ -65567,9 +65470,9 @@
           "generator:concept-meaning": 5
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：0 − 3 = −3 = ____",
-          "根据算式把答案填在横线上：参考：0 − 2 = −2 = ____",
-          "根据算式把答案填在横线上：参考：0 − 6 = −6 = ____"
+          "根据算式把答案填在横线上：0 − 3 = ____",
+          "根据算式把答案填在横线上：0 − 2 = ____",
+          "根据算式把答案填在横线上：0 − 6 = ____"
         ]
       },
       "flags": [
@@ -65648,9 +65551,9 @@
           "generator:concept-meaning": 4
         },
         "samplePrompts": [
-          "温度计以 0℃ 为分界，0 − 3 = −3，数轴上 0 左边第 3 格是什么数？",
-          "温度计以 0℃ 为分界，0 − 4 = −4，数轴上 0 左边第 4 格是什么数？",
-          "温度计以 0℃ 为分界，0 − 6 = −6，数轴上 0 左边第 6 格是什么数？"
+          "温度计以 0℃ 为分界，数轴上 0 左边第 3 格是什么数？",
+          "温度计以 0℃ 为分界，数轴上 0 左边第 4 格是什么数？",
+          "温度计以 0℃ 为分界，数轴上 0 左边第 6 格是什么数？"
         ]
       },
       "flags": [
@@ -65730,9 +65633,9 @@
           "generator:concept-meaning": 6
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：7 − 4 = 3，负号后越大数越小 = ____",
-          "根据算式把答案填在横线上：参考：6 − 5 = 1，负号后越大数越小 = ____",
-          "根据算式把答案填在横线上：参考：10 − 5 = 5，负号后越大数越小 = ____"
+          "根据算式把答案填在横线上：参考：8 − 6 = ____",
+          "根据算式把答案填在横线上：参考：8 − 3 = ____",
+          "根据算式把答案填在横线上：参考：8 − 5 = ____"
         ]
       },
       "flags": [
@@ -66898,16 +66801,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 2,
+          "answerMax": 2
         },
         "context": {
           "present": true,
@@ -66968,7 +66868,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -67295,15 +67196,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 31.4,
+          "answerMax": 31.4
         },
         "context": {
           "present": true,
@@ -67364,7 +67263,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -67695,16 +67595,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.height"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 40,
+          "answerMax": 40
         },
         "context": {
           "present": true,
@@ -67765,7 +67662,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -68099,14 +67997,15 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.graphic.params.r",
+            "data.steps"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 1,
+          "answerMax": 1
         },
         "context": {
           "present": true,
@@ -68495,15 +68394,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 3,
-          "answerMax": 3
+          "answerMin": 10,
+          "answerMax": 10
         },
         "context": {
           "present": true,
@@ -68564,7 +68461,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -68891,15 +68789,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 100,
+          "answerMax": 100
         },
         "context": {
           "present": true,
@@ -68958,7 +68854,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -69296,9 +69193,9 @@
           "generator:semantic-relations": 6
         },
         "samplePrompts": [
-          "列式计算：判断 4∶8 和 2∶4 能否组成比例。检验：4 × 4 = 16，8 × 2 = 16，积相等，填「能」或「不能」。",
-          "列式计算：判断 3∶9 和 4∶12 能否组成比例。检验：3 × 12 = 36，9 × 4 = 36，积相等，填「能」或「不能」。",
-          "列式计算：判断 4∶6 和 8∶12 能否组成比例。检验：4 × 12 = 48，6 × 8 = 48，积相等，填「能」或「不能」。"
+          "列式计算：判断 4∶8 和 2∶4 能否组成比例。检验：4 × 4 = 16，8 × 2 = 16。根据检验结果，填「能」或「不能」。",
+          "列式计算：判断 3∶9 和 4∶12 能否组成比例。检验：3 × 12 = 36，9 × 4 = 36。根据检验结果，填「能」或「不能」。",
+          "列式计算：判断 4∶6 和 8∶12 能否组成比例。检验：4 × 12 = 48，6 × 8 = 48。根据检验结果，填「能」或「不能」。"
         ]
       },
       "flags": [
@@ -69419,9 +69316,9 @@
           "generator:semantic-relations": 3
         },
         "samplePrompts": [
-          "国旗长与宽的比是 3∶2，一面国旗长 9 分米（3∶2 = 9∶x）。按照这个比，宽应该是多少分米？列式 3 × x = 2 × 9 = 18，x = ？",
-          "配制盐水时盐与水的比是 2∶3，用了 8 克盐（2∶3 = 8∶x）。按照这个比，需要加水多少克？列式 2 × x = 3 × 8 = 24，x = ？",
-          "调蜂蜜水时蜂蜜与水的比是 1∶4，放了 6 份蜂蜜（1∶4 = 6∶x）。按照这个比，需要加同样份数的水多少份？列式 1 × x = 4 × 6 = 24，x "
+          "国旗长与宽的比是 3∶2，一面国旗长 9 分米（3∶2 = 9∶x）。按照这个比，宽应该是多少分米？列比例求 x。",
+          "配制盐水时盐与水的比是 2∶3，用了 8 克盐（2∶3 = 8∶x）。按照这个比，需要加水多少克？列比例求 x。",
+          "调蜂蜜水时蜂蜜与水的比是 1∶4，放了 6 份蜂蜜（1∶4 = 6∶x）。按照这个比，需要加同样份数的水多少份？列比例求 x。"
         ]
       },
       "flags": [
@@ -69583,9 +69480,9 @@
           "generator:semantic-relations": 3
         },
         "samplePrompts": [
-          "配制盐水时盐与水的比是 2∶3，用了 8 克盐（2∶3 = 8∶x）。按照这个比，需要加水多少克？列式 2 × x = 3 × 8 = 24，x = ？",
-          "国旗长与宽的比是 3∶2，一面国旗长 9 分米（3∶2 = 9∶x）。按照这个比，宽应该是多少分米？列式 3 × x = 2 × 9 = 18，x = ？",
-          "调蜂蜜水时蜂蜜与水的比是 1∶4，放了 6 份蜂蜜（1∶4 = 6∶x）。按照这个比，需要加同样份数的水多少份？列式 1 × x = 4 × 6 = 24，x "
+          "配制盐水时盐与水的比是 2∶3，用了 8 克盐（2∶3 = 8∶x）。按照这个比，需要加水多少克？列比例求 x。",
+          "国旗长与宽的比是 3∶2，一面国旗长 9 分米（3∶2 = 9∶x）。按照这个比，宽应该是多少分米？列比例求 x。",
+          "调蜂蜜水时蜂蜜与水的比是 1∶4，放了 6 份蜂蜜（1∶4 = 6∶x）。按照这个比，需要加同样份数的水多少份？列比例求 x。"
         ]
       },
       "flags": [
@@ -69624,9 +69521,9 @@
           "generator:semantic-relations": 6
         },
         "samplePrompts": [
-          "列式计算：判断 9∶12 和 12∶16 能否组成比例。检验：9 × 16 = 144，12 × 12 = 144，积相等，填「能」或「不能」。",
-          "列式计算：判断 4∶6 和 8∶12 能否组成比例。检验：4 × 12 = 48，6 × 8 = 48，积相等，填「能」或「不能」。",
-          "列式计算：判断 4∶8 和 2∶4 能否组成比例。检验：4 × 4 = 16，8 × 2 = 16，积相等，填「能」或「不能」。"
+          "列式计算：判断 9∶12 和 12∶16 能否组成比例。检验：9 × 16 = 144，12 × 12 = 144。根据检验结果，填「能」或「不能」。",
+          "列式计算：判断 4∶6 和 8∶12 能否组成比例。检验：4 × 12 = 48，6 × 8 = 48。根据检验结果，填「能」或「不能」。",
+          "列式计算：判断 4∶8 和 2∶4 能否组成比例。检验：4 × 4 = 16，8 × 2 = 16。根据检验结果，填「能」或「不能」。"
         ]
       },
       "flags": [
@@ -69747,9 +69644,9 @@
           "generator:semantic-relations": 3
         },
         "samplePrompts": [
-          "调蜂蜜水时蜂蜜与水的比是 1∶4，放了 6 份蜂蜜（1∶4 = 6∶x）。按照这个比，需要加同样份数的水多少份？列式 1 × x = 4 × 6 = 24，x ",
-          "国旗长与宽的比是 3∶2，一面国旗长 9 分米（3∶2 = 9∶x）。按照这个比，宽应该是多少分米？列式 3 × x = 2 × 9 = 18，x = ？",
-          "配制盐水时盐与水的比是 2∶3，用了 8 克盐（2∶3 = 8∶x）。按照这个比，需要加水多少克？列式 2 × x = 3 × 8 = 24，x = ？"
+          "调蜂蜜水时蜂蜜与水的比是 1∶4，放了 6 份蜂蜜（1∶4 = 6∶x）。按照这个比，需要加同样份数的水多少份？列比例求 x。",
+          "国旗长与宽的比是 3∶2，一面国旗长 9 分米（3∶2 = 9∶x）。按照这个比，宽应该是多少分米？列比例求 x。",
+          "配制盐水时盐与水的比是 2∶3，用了 8 克盐（2∶3 = 8∶x）。按照这个比，需要加水多少克？列比例求 x。"
         ]
       },
       "flags": [
@@ -71335,9 +71232,9 @@
           "generator:position-direction": 6
         },
         "samplePrompts": [
-          "在方格图中，点 A 的位置用数对表示是（____，4），它在第 9 列。",
-          "在方格图中，点 A 的位置用数对表示是（____，4），它在第 5 列。",
-          "在方格图中，点 A 的位置用数对表示是（____，2），它在第 4 列。"
+          "在方格图中，点 A 的位置用数对（9，4）表示（数对中第一个数表示列），点 A 在第 ____ 列。",
+          "在方格图中，点 A 的位置用数对（5，4）表示（数对中第一个数表示列），点 A 在第 ____ 列。",
+          "在方格图中，点 A 的位置用数对（4，2）表示（数对中第一个数表示列），点 A 在第 ____ 列。"
         ]
       },
       "flags": [
@@ -71350,16 +71247,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": true,
-          "distinctAnswers": 4,
-          "answerMin": 0,
-          "answerMax": 3
+          "distinctAnswers": 6,
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -71386,7 +71280,9 @@
           "点 A 在第 6 列第 3 行，用数对表示是？"
         ]
       },
-      "flags": []
+      "flags": [
+        "unknown-not-observed"
+      ]
     },
     {
       "knowledgePointId": "math-g6-up-u01-k001",
@@ -71665,15 +71561,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex",
-            "data.steps"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -72047,14 +71942,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.correctDirection"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 2,
-          "answerMax": 2
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -72904,8 +72799,7 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel"
+            "data.graphic.params.part"
           ]
         },
         "numeric": {
@@ -72939,11 +72833,7 @@
               "9"
             ],
             "data.graphic.params.partLabel": [
-              "\"12\"",
-              "\"2\"",
-              "\"4\"",
-              "\"8\"",
-              "\"9\""
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "12",
@@ -73167,8 +73057,7 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.graphic.params.part",
-            "data.graphic.params.partLabel"
+            "data.graphic.params.part"
           ]
         },
         "numeric": {
@@ -73198,7 +73087,7 @@
               "6"
             ],
             "data.graphic.params.partLabel": [
-              "\"6\""
+              "\"?\""
             ],
             "data.graphic.params.total": [
               "8"
@@ -73739,7 +73628,7 @@
         },
         "samplePrompts": [
           "列式计算：5/6 ÷ 2 = ？",
-          "列式计算：1/3 ÷ 3/3 = ？",
+          "列式计算：5/2 ÷ 3/5 = ？",
           "列式计算：1/3 ÷ 2/8 = ？"
         ]
       },
@@ -73911,7 +73800,7 @@
         },
         "samplePrompts": [
           "列式计算：1/2 ÷ 4 = ？",
-          "列式计算：4/8 ÷ 5/5 = ？",
+          "列式计算：4/7 ÷ 2/6 = ？",
           "列式计算：1/7 ÷ 4/3 = ？"
         ]
       },
@@ -73954,7 +73843,7 @@
         },
         "samplePrompts": [
           "在 ____ 里填上合适的数：1/2 ÷ ____ = 1/4",
-          "在 ____ 里填上合适的分数：____ ÷ 3/3 = 1/4",
+          "在 ____ 里填上合适的分数：____ ÷ 1/3 = 3/1",
           "在 ____ 里填上合适的分数：____ ÷ 3/4 = 8/9"
         ]
       },
@@ -74474,14 +74363,14 @@
       "variation": {
         "unknown": {
           "positions": [
-            "data.correctIndex"
+            "data.feature"
           ]
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": null,
+          "answerMax": null
         },
         "context": {
           "present": true,
@@ -74842,17 +74731,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.r",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 31.4,
+          "answerMax": 31.4
         },
         "context": {
           "present": true,
@@ -74909,7 +74794,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -75213,15 +75099,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 0,
-          "answerMax": 0
+          "answerMin": 28.26,
+          "answerMax": 28.26
         },
         "context": {
           "present": true,
@@ -75278,7 +75162,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -75582,17 +75467,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.r",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 90,
+          "answerMax": 90
         },
         "context": {
           "present": true,
@@ -75649,7 +75530,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -75961,17 +75843,13 @@
       "grade": 6,
       "variation": {
         "unknown": {
-          "positions": [
-            "data.correctIndex",
-            "data.graphic.params.height",
-            "data.steps"
-          ]
+          "positions": []
         },
         "numeric": {
           "varies": false,
           "distinctAnswers": 1,
-          "answerMin": 1,
-          "answerMax": 1
+          "answerMin": 6.28,
+          "answerMax": 6.28
         },
         "context": {
           "present": true,
@@ -76040,7 +75918,8 @@
         ]
       },
       "flags": [
-        "single-sample"
+        "single-sample",
+        "unknown-not-observed"
       ]
     },
     {
@@ -77480,7 +77359,7 @@
           "generator:concept-meaning": 1
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：0 − 5 = −5 = ____"
+          "根据算式把答案填在横线上：参考：0 − 5 = ____"
         ]
       },
       "flags": [
@@ -77600,7 +77479,7 @@
           "generator:concept-meaning": 1
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：0 − 5 = −5 = ____"
+          "根据算式把答案填在横线上：参考：0 − 5 = ____"
         ]
       },
       "flags": [
@@ -77720,7 +77599,7 @@
           "generator:concept-meaning": 1
         },
         "samplePrompts": [
-          "根据算式把答案填在横线上：参考：0 − 5 = −5 = ____"
+          "根据算式把答案填在横线上：参考：0 − 5 = ____"
         ]
       },
       "flags": [
