@@ -2,6 +2,43 @@
 
 > 阶段报告全文见 `docs/archive/phases/`；此处为按版本聚合的变更摘要。
 
+## v5.1.0 — P30/P31/P32 收口（2026-10-08）
+
+### 答案系统收口（P32）
+
+- 单一判分权威：`shared/validator/answer-validator.js` 同归运行时批改与出题质检；删除 `defaultQCheck` 第二套判定（P32-AS-08）。
+- 答案数据不丢失：RenderFormat 保留完整 answer 规格，acceptable 白名单运行时真实生效。
+- parentCheck 通道：`shared/core/check.js computeResult` 聚合 `grade===null` 信号（apply/geometry 长文本说理 85 行 eligible），UI 既有「✅ 请家长检查」面板由死转正；红线 #5 不破（null → results[i]=false，不"非空即对"）。
+- 答案防泄露门禁（AS-18，check-all 第 31 项 6g）：L1 严格 token 扫描 + 163 条显式白名单注册表、L2 渲染 SVG text 扫描（修复 AS-02 只扫 q.graphic 漏 data.graphic 的审计盲区）、L3 结构断言、L4 hint=0、自判回放 FALSE=0。
+- 真实运行时闭环取证（AS-19）：3 场景 ×7 类断言 = 86 断言全 PASS，屏打 WYSIWYG `--grid-cols` 同源验证。
+- P32 战役最终冻结（2026-10-08 AS-21）：npm test 742/742、check-all 31/0/0（CI 标尺）。
+
+### 显示层排版收口（P31）
+
+- 排版决策收口：`shared/presentation/layout.js` 唯一排版决策中心（纯函数、无 DOM）；`shared/core/core.js` Layout 物理迁出，无 `PluginUtil.layout` 别名。
+- screen/print 2 模式 + 1 emergency 渲染器；题目编号统一「1.」纯文本。
+- 第二渲染器（`practice.html renderGeneric`）物理删除；二次度量清除。
+- P31 战役五阶段（SCAN/CORE/WIRE/VISUAL/ACCEPT）10 任务全部完成。
+
+### SVG / 图形描述符治理（P30）
+
+- 数据权限分级（T0-T3）+ 语义消费规则（接通 T2 已有教学语义到既有消费方，不新造语义）。
+- 断链修复四要素登记；同族 NO-DESC 断链逐题型核实教学意图后三向分流。
+- 死代码三方印证（全库 grep + 门禁 21/22 + 测试面）后物理删除不留壳。
+- P30 战役最终冻结（2026-10-04）：4 阶段门禁全部过门。
+
+### 文档与基线对齐（P33-01/02/03）
+
+- 6 个 deprecated 历史快照（FINAL-REPAIR-STATUS / FINAL-REPAIR-BASELINE / FINAL-130-ACCEPTANCE / FINAL-REPAIR-DEFERRED / FINAL-FREEZE / P28-FINAL-FREEZE）归档至 `docs/archive/phases/snapshots/`。
+- `docs/00-BASELINE.md` 版本号 5.0.0 → 5.1.0、SW 缓存名 `hw-help-5.0.0` → `hw-help-5.1.0`（对齐 VERSION/package.json/sw.js 实测）。
+- 本节追加澄清 v5.0.0 期间 Sitemap 381 URL 为当时口径；当前基线 Sitemap **382 URL**（6 公共页 + 375 KP + 1 索引页）。
+
+### 门禁与测试
+
+- check-all 30 项：本地 29 PASS / 0 FAIL / 1 SKIP（无 Chrome 时第 15 项 SKIP；CI 设 CHROME_BIN 为 31 PASS / 0 FAIL / 0 SKIP）。
+- npm test 742/742 PASS / 0 FAIL（14 测试套件）。
+- 375/98/373/1570 口径全程不变。
+
 ## v5.0.0 — FROZEN（2026-09-19 起进入维护模式）
 
 ### 架构基线（T10 最终冻结）

@@ -10,8 +10,8 @@
 
 | 项 | 值 | SSOT |
 |---|---|---|
-| 版本号 | **5.0.0** | `VERSION` / `package.json` / `shared/catalog/version.js` |
-| SW 缓存名 | `hw-help-5.0.0` | `sw.js` |
+| 版本号 | **5.1.0** | `VERSION` / `package.json` / `shared/catalog/version.js` |
+| SW 缓存名 | `hw-help-5.1.0` | `sw.js` |
 | 形态 | 纯前端静态站，零运行时依赖 | — |
 | 浏览器 + Node 双环境兼容 | ✓ | — |
 
