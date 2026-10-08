@@ -6,7 +6,6 @@ const CS = require('../../shared/strategy/comprehensive-strategy.js');
 
 // 分配器自 comprehensive 重构后移入 shared/strategy/comprehensive-strategy.js
 // 签名：allocateByWeight(weights, total) → number[]（和为 total，长度 = weights.length）
-// 旧版 math-comprehensive.js（已删）签名 allocateByWeight(count, plugins, weights) → 顺序调整
 const allocateByWeight = (count, plugins, weights) => CS.allocateByWeight(weights, count);
 
 test.describe('allocateByWeight', () => {

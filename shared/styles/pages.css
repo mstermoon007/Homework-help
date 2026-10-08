@@ -5,8 +5,7 @@
  * （本层高于 toolbar，可安全覆写练习页工具栏样式；subjects 层仅在二级题型页启用，为本层序最高）。
  *
  * 注：旧版练习页样式由 renderCard 类化方案替代，属死代码，未搬入本层。当前题目网格唯一容器类
- *     .questions-grid / .q-grid（P31-FIX-07：.q-wrap/.q-badge 随 math-comprehensive 插件退役，
- *     全库零生产方，已物理删除）。
+ *     .questions-grid / .q-grid。
  */
 @layer pages {
 

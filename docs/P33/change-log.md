@@ -32,6 +32,34 @@
 
 ## 记录（新 → 旧）
 
+### P33-14｜清理指向已删 archive 的历史说明注释（2026-10-08）
+
+- modified:
+  - [tests/source/allocateByWeight.test.js#L9](file:///Users/zhanggaozhang/Code/Homework%20Help/tests/source/allocateByWeight.test.js#L9) — 删除指向已删 `archive/plugins-removed/math-comprehensive.js` 的历史说明注释「旧版 math-comprehensive.js（已删）签名 allocateByWeight(count, plugins, weights) → 顺序调整」；保留 L7-L8 当前说明（指向 `shared/strategy/comprehensive-strategy.js` 当前实现与签名）。
+  - [shared/styles/pages.css#L7-L9](file:///Users/zhanggaozhang/Code/Homework%20Help/shared/styles/pages.css#L7-L9) — 删除 P31-FIX-07 历史说明括注「（P31-FIX-07：.q-wrap/.q-badge 随 math-comprehensive 插件退役，全库零生产方，已物理删除）」；保留当前说明「当前题目网格唯一容器类 .questions-grid / .q-grid」。
+- deleted: 无（纯注释行删除，无文件级删除）。
+- reason: 用户指令「先清理那两个历史注释」。P33-13 物理删除 `archive/plugins-removed/math-comprehensive.js` 后，这两处注释成指向已不存在的文件的历史说明，按 P28 死代码清理「物理删除不留壳」原则，最小修改删历史注释行；当前说明部分保留不动（非红线 #9 顺手重构范畴）。
+- tests: ①[tests/source/allocateByWeight.test.js](file:///Users/zhanggaozhang/Code/Homework%20Help/tests/source/allocateByWeight.test.js) 定向测试 **6 PASS / 0 FAIL**（count=0/正常分配/权重边界等 6 用例全 PASS）；②check-all 重跑 **30 PASS / 0 FAIL / 1 SKIP / 31 项**（与改动前完全一致，#5 Unit PASS / #10 Presentation PASS / #11 SVG PASS / #21 Dead Code PASS / #22 Legacy PASS / FINAL-91 只读门禁 PASS）；③375/98/373/1570 口径不变。
+- risk: 极低。①仅删 2 行历史说明注释，不动当前代码/CSS 规则/测试断言；②L9 已删 `plugins` 未读取的 diagnostic 提示是测试代码遗留签名问题，与本注释清理无关，按红线 #9「不顺手改无关缺陷」未动；③未 git commit，等用户显式指令。
+
+### P33-13｜archive 退役存档目录 g1-curriculum-2026 / plugins-removed 物理删除（2026-10-08）
+
+- deleted: [archive/g1-curriculum-2026/](file:///Users/zhanggaozhang/Code/Homework%20Help/archive/g1-curriculum-2026/) 整目录 2 文件——`math-g1-patterns.js` / `math-statistics.js`；[archive/plugins-removed/](file:///Users/zhanggaozhang/Code/Homework%20Help/archive/plugins-removed/) 整目录 2 文件——`math-competition-placeholder.js` / `math-comprehensive.js`（git rm -r，物理删除不留壳，共 4 文件）。
+- modified: 无（纯删除，无文件改动）。
+- reason: 用户指令「继续清理 archive/g1-curriculum-2026/ 与 archive/plugins-removed/」。两目录均为 P28/P31 时期退役插件的历史存档（g1-curriculum-2026 为 G1 课程模式与统计的旧版生成器；plugins-removed 为 P31-FIX-07 退役的 math-comprehensive 等插件存档）。按 P28 死代码清理规则三方印证确证零活跃消费者，物理删除不留壳。
+- tests: 三方印证 + 重跑门禁零回归。①grep 全库消费者：`grep -rln 'g1-curriculum-2026|plugins-removed|math-competition-placeholder|math-comprehensive' dev/ tests/ scripts/ tools/ shared/`，外部命中仅 [tests/source/allocateByWeight.test.js#L9](file:///Users/zhanggaozhang/Code/Homework%20Help/tests/source/allocateByWeight.test.js#L9) 注释「旧版 math-comprehensive.js（已删）签名 allocateByWeight(count, plugins, weights) → 顺序调整」与 [shared/styles/pages.css#L8](file:///Users/zhanggaozhang/Code/Homework%20Help/shared/styles/pages.css#L8) 注释「P31-FIX-07：.q-wrap/.q-badge 随 math-comprehensive 插件退役，全库零生产方，已物理删除」——均为历史说明性注释，非活跃代码引用；其余命中在 `docs/archive/phases/*.json` / `docs/P31/change-log.md` / `docs/P31/P31-TASK-BOOK.md` / `docs/P33/change-log.md` 均为档案/文档登记；②check-all #21 Dead Code PASS / #22 Legacy 治理 PASS；③check-all 重跑 **30 PASS / 0 FAIL / 1 SKIP / 31 项**（与删除前完全一致，FINAL-91 只读门禁 PASS）；④375/98/373/1570 口径不变（#6a/#6b 验证）；⑤tests/source/allocateByWeight.test.js L9 与 shared/styles/pages.css L8 注释按红线 #9「不顺手改无关缺陷」保留不动，作为历史说明。
+- risk: 低。①两目录均 archive/ 下的退役存档，非生产代码/测试/样式/门禁；②外部引用全部是注释或文档历史登记，删除不影响生成/批改/渲染/门禁/测试；③红线 #9「顺手重构、连锁修无关缺陷」未触——未顺手改 tests/ 注释与 pages.css 注释（属历史说明，无活跃代码价值）；④未 git commit，等用户显式指令。
+
+### P33-12｜根目录 FINAL 归档 + audit-probes 物理删除（2026-10-08）
+
+- modified:
+  - [FINAL-ACCEPTANCE.md](file:///Users/zhanggaozhang/Code/Homework%20Help/docs/archive/phases/snapshots/FINAL-ACCEPTANCE-P30.md) → [docs/archive/phases/snapshots/FINAL-ACCEPTANCE-P30.md](file:///Users/zhanggaozhang/Code/Homework%20Help/docs/archive/phases/snapshots/FINAL-ACCEPTANCE-P30.md)（git mv，重命名 -P30 避免 P28 时期同名冲突）
+  - [FINAL-REPAIR-STATUS.md](file:///Users/zhanggaozhang/Code/Homework%20Help/docs/archive/phases/snapshots/FINAL-REPAIR-STATUS-P30.md) → [docs/archive/phases/snapshots/FINAL-REPAIR-STATUS-P30.md](file:///Users/zhanggaozhang/Code/Homework%20Help/docs/archive/phases/snapshots/FINAL-REPAIR-STATUS-P30.md)（git mv，同上重命名；L48 `本文档 + FINAL-ACCEPTANCE.md` 同目录相对引用仍可解析，未改写）
+- deleted: [archive/audit-probes/](file:///Users/zhanggaozhang/Code/Homework%20Help/archive/audit-probes/) 整目录 13 文件——c1-rapid-click-probe.js / c2-dedup-stats-probe.js / composite-routing-probe.js / context-propagation-probe.js / d007-repro-probe.js / final-browser-sim-probe.js / fix-stats-kp-limits.js / kb-data-completion.js / kp-coverage-probe.js / question-integrity-probe.js / stress-probe.js / v2-core/AUDIT_BASELINE.md / v2-core/V2_CORE_AUDIT_REPORT.md（git rm -r，物理删除不留壳）
+- reason: 用户指令「清理 GitHub 上的作废无效文件，且服务器不需要文件」。根目录 2 个 FINAL-*.md 是 P30 时期（2026-10-04）deprecated snapshot，与 P33-INIT 归档口径一致，补齐 P33-FINAL 漏归档（P33-FINAL 仅归档 docs/ 顶层 6 个，未触及根目录 P30 时期版本）。archive/audit-probes/ 13 文件是 P28 时期审计探针，已完成历史使命，经三方印证确证零活跃消费者，按 P28 死代码清理规则物理删除。本次清理只动根目录 2 + archive/audit-probes/ 13，未触及任何生产代码/测试/KBL/bundle。
+- tests: 三方印证 + 重跑门禁零回归。①grep 全库消费者：`grep -rln audit-probes dev/ tests/ scripts/ tools/ shared/` 五大源码目录零命中（外部引用仅在 `archive/` 内部 + `dev/p28/reports/*.json` 与 `dev/reports/v41-regression/`，后者均被 `.gitignore` 忽略，不在 git）；②tests/ 零引用：`grep -r archive/audit-probes tests/` 返回 No matches found；③check-all 重跑 **30 PASS / 0 FAIL / 1 SKIP / 31 项**（与清理前完全一致，#21 Dead Code PASS / #22 Legacy PASS / FINAL-91 只读门禁 PASS 关键目录前后 hash 一致）；④375/98/373/1570 口径不变（#6a/#6b 验证）。
+- risk: 低。①归档文件仍在仓库（仅位置 + 重命名变），可查历史；②audit-probes 13 文件经三方印证确证零活跃引用，删除不影响生成/批改/渲染/门禁/测试；③本战役红线 #9「顺手重构、连锁修无关缺陷」未触——只动根目录 2 + audit-probes 13，未顺带处理 archive/g1-curriculum-2026/ 与 archive/plugins-removed/（用户未授权，留待后续）；④未 git commit，等用户显式指令。
+
 ### P33-FINAL｜P33 战役最终冻结（2026-10-08）
 - modified: 无（冻结记录，无文件改动）。
 - deleted: 无。
