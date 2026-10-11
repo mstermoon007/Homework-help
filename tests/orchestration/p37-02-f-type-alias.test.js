@@ -3,7 +3,7 @@
 // 修复点：
 //   ① RECOGNIZE_KEYWORDS 认读子串启发式删除——不再将宽泛子串误归 geometry；
 //   ② factor-multiple/factor/all → geometry 错别名物理删除；
-//   ③ capability-model type 优先（rawType 仅在 type 缺失时补充）；
+//   ③ capability-model type 权威——rawType 全链已于 P39-01 清零（消费链 + 数据字段）；
 //   ④ winning 死别名键物理删除（P36-03 已删 reasoning.js sudoku/winning 生成分支，
 //      kbl/ 与运行时 375 KP 数据零命中，三方印证后删除）。
 // 取证事实（2026-10-12）：canonical 375 KP 与运行时数据全为规范 7 类值，三修复点
@@ -54,8 +54,8 @@ test('P37-02 显式 canonical 别名不受影响：oral→calc / recognize→geo
   assert.equal(QTR.normalizeQuestionType('open', { allowHeuristic: false }).id, 'apply');
 });
 
-test('P37-02 ③ capability-model：type 优先，rawType 仅在 type 缺失时补充', () => {
-  // 合成 KP：type=calc（权威），rawType=factor-multiple（历史污染值，修复前会优先走错别名）
+test('P39-01 ③ rawType 全链清零：capability 解析只认 type，rawType 不参与（含兜底移除负断言）', () => {
+  // 合成 KP：type=calc（唯一权威），rawType=factor-multiple（历史污染值——rawType 恒被忽略）
   const kp = {
     id: 'synthetic-p37-02',
     presentation: { questionTypes: [{ type: 'calc', rawType: 'factor-multiple' }] },
@@ -63,18 +63,35 @@ test('P37-02 ③ capability-model：type 优先，rawType 仅在 type 缺失时�
   };
   const cap = CapabilityModel.resolveCapability(kp);
   assert.equal(cap.questionTypes.length, 1, '合成 KP 只推导出 1 个题型');
-  assert.equal(cap.questionTypes[0].id, 'calc', 'type 优先：capability 取 calc 而非 geometry');
+  assert.equal(cap.questionTypes[0].id, 'calc', 'capability 只取 type');
 });
 
-test('P37-02 ③ capability-model：type 缺失时 rawType 兜底（补充语义保留）', () => {
+test('P39-01 ③ rawType 全链清零：type 缺失时 rawType 不兜底（1570 行取证 rawType 恒 null，兜底语义已删）', () => {
   const kp = {
-    id: 'synthetic-p37-02-b',
+    id: 'synthetic-p39-01',
     presentation: { questionTypes: [{ rawType: 'fill' }] },
     generation: { capabilities: [] }
   };
   const cap = CapabilityModel.resolveCapability(kp);
-  assert.equal(cap.questionTypes.length, 1);
-  assert.equal(cap.questionTypes[0].id, 'fill', 'type 缺失时 rawType 补充生效');
+  assert.equal(cap.questionTypes.length, 0, 'rawType 不再兜底：无 type 则不产出题型');
+});
+
+test('P39-01 防双轨回归：rawType 消费链不得复活', () => {
+  // 物理删除断言（P30 死代码规则，不留壳）：rawType 在生产链零消费零产出
+  // （断言匹配代码模式 .rawType 属性访问 / rawType: 键字面量；注释留档不受限）
+  const fs = require('fs');
+  const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
+  const hasCodeRef = (s) => /\.rawType\b/.test(s) || /\brawType\s*:/.test(s);
+  assert.equal(hasCodeRef(src('shared/capability/capability-model.js')), false,
+    'capability-model 不得引用 rawType');
+  assert.equal(hasCodeRef(src('shared/strategy/question-type-strategy.js')), false,
+    'question-type-strategy 不得读取 rawType');
+  assert.equal(hasCodeRef(src('shared/strategy/static-difficulty.js')), false,
+    'static-difficulty 不得读取 rawType');
+  assert.equal(hasCodeRef(src('shared/orchestration/knowledge-context.js')), false,
+    'knowledge-context 不得输出 rawType 字段');
+  assert.equal(hasCodeRef(src('tools/kbl/emit-canonical.js')), false,
+    'emit-canonical 不得再派生 rawType 数据字段');
 });
 
 test('P37-02 防双轨回归：RECOGNIZE_KEYWORDS 常量不得复活', () => {

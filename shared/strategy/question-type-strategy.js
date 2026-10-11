@@ -90,7 +90,7 @@ function getDefaultFromKP(kp, supported) {
   var qts = kp && kp.presentation && kp.presentation.questionTypes;
   if (!Array.isArray(qts)) return null;
   for (var i = 0; i < qts.length; i++) {
-    var token = qts[i] && (qts[i].rawType || qts[i].type);
+    var token = qts[i] && qts[i].type;
     if (!token) continue;
     var norm = Registry.normalizeQuestionType(token);
     if (norm && norm.id && supported.indexOf(norm.id) !== -1) return norm.id;

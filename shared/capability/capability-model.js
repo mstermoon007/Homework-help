@@ -19,7 +19,6 @@
  */
 'use strict';
 
-var TYPES = require('../knowledge/question-type-registry.js').TYPES;
 var Registry = require('../knowledge/question-type-registry.js');
 
 function defaultCapability() {
@@ -44,11 +43,13 @@ function isValidCapability(c) {
 
 function resolveCapability(canonicalKp) {
   // 基于 Canonical KnowledgePoint 推导 capability（能力声明，非执行器）。
-  // 数据来源：presentation.questionTypes（已归一化）+ generation.capabilities（数据推导）。
+  // 数据来源：presentation.questionTypes（strategyView 投影，已归一化）+ generation.capabilities（数据推导）。
+  // P37-02（F-TYPE-2 修复③）+ P39-01（死链清理）：rawType 全链清零——canonical/runtime 数据
+  // rawType 恒 null（1570/1570 取证），P37-02 已裁决已归一化 type 是题型唯一权威。
   var result = defaultCapability();
   result.knowledgePointId = canonicalKp.id || '';
 
-  var pushQt = function (typeToken, qtMeta) {
+  var pushQt = function (typeToken) {
     if (!typeToken) return;
     var std = Registry.normalizeQuestionType(typeToken);
     if (!std.id) return;
@@ -58,17 +59,15 @@ function resolveCapability(canonicalKp) {
     result.questionTypes.push({
       id: std.id,
       cognitiveLevels: (qt && qt.cognitiveLevels) || ['understand'],
-      difficultyRange: inferDifficultyRange(canonicalKp, std.id),
+      difficultyRange: inferDifficultyRange(canonicalKp),
       priority: 1,
       supported: true
     });
   };
 
-  // 1) 从 canonical presentation.questionTypes 推导。
-  //    P37-02（F-TYPE-2 修复③）：type（已归一化题型）优先，rawType（历史原始值）
-  //    仅在 type 缺失时补充——历史 rawType 走别名表可能错归题型，已归一化 type 是权威。
+  // 1) 从 canonical presentation.questionTypes 推导（题型唯一来源：已归一化 type）。
   (canonicalKp.presentation && canonicalKp.presentation.questionTypes || []).forEach(function (q) {
-    pushQt(q.type || q.rawType);
+    pushQt(q.type);
   });
 
   // 2) 从 canonical generation.capabilities（M1 数据推导）补充
@@ -80,7 +79,7 @@ function resolveCapability(canonicalKp) {
   return result;
 }
 
-function inferDifficultyRange(kp, qtypeId) {
+function inferDifficultyRange(kp) {
   // Canonical 推断 difficultyRange [min, max]：
   //   structure.maxSteps / numeric.range / cognition.level（number 或 raw 字符串）
   var ms = 1;

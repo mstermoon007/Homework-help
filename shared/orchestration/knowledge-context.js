@@ -132,7 +132,6 @@
       return {
         type: q.type,
         weight: Number(q.coefficient) || 1,
-        rawType: q.rawType || q.type,
         cognitiveLevels: null,
         difficultyFactor: null
       };

@@ -15,18 +15,18 @@
   "counts": {
     "kps": 375,
     "kpsWithSlots": 313,
-    "slots": 923,
+    "slots": 917,
     "byErrorType": {
-      "概念混淆": 132,
+      "概念混淆": 129,
       "审题错误": 313,
-      "格式错误": 132,
+      "格式错误": 129,
       "步骤错误": 210,
       "计算错误": 82,
       "符号错误": 4,
       "单位错误": 39,
       "口诀混淆": 11
     },
-    "droppedByAxisEvidence": 707
+    "droppedByAxisEvidence": 713
   },
   "kps": {
     "math-g1-down-u01-k001": {
@@ -6551,23 +6551,6 @@
       "knowledgePointId": "math-g4-down-u02-k002",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=geometry",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 5
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=2≥2",
           "triggerPattern": {
@@ -6600,21 +6583,6 @@
             "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 5
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
@@ -9822,23 +9790,6 @@
       "knowledgePointId": "math-g5-down-u01-k001",
       "slots": [
         {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=geometry",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 5
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
-        {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=3≥2",
           "triggerPattern": {
@@ -9887,44 +9838,12 @@
             "evidenceRows": 5
           },
           "feedback": "核对计量单位与换算关系，确认单位统一后再作答"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 5
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },
     "math-g5-down-u01-k002": {
       "knowledgePointId": "math-g5-down-u01-k002",
       "slots": [
-        {
-          "errorType": "概念混淆",
-          "basis": "semantic.family=geometry",
-          "triggerPattern": {
-            "questionTypes": [
-              "choice",
-              "judge",
-              "classify"
-            ]
-          },
-          "response": {
-            "variant": "呈现",
-            "axis": "representation",
-            "evidenceRows": 5
-          },
-          "feedback": "回归概念定义，辨析易混淆概念的关键属性差异（如被除数与除数 roles）"
-        },
         {
           "errorType": "步骤错误",
           "basis": "capability.maxSteps=3≥2",
@@ -9958,21 +9877,6 @@
             "evidenceRows": 5
           },
           "feedback": "重读题目，圈出已知条件与所求，避免漏读或误读条件"
-        },
-        {
-          "errorType": "格式错误",
-          "basis": "ALLOW questionTypes∋fill（答案格式敏感）",
-          "triggerPattern": {
-            "questionTypes": [
-              "fill"
-            ]
-          },
-          "response": {
-            "variant": "基础",
-            "axis": "representation",
-            "evidenceRows": 5
-          },
-          "feedback": "按题目要求规范作答格式，补全书写与标点"
         }
       ]
     },

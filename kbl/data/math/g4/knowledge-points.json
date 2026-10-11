@@ -36,23 +36,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -153,23 +149,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -273,23 +265,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -393,23 +381,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -513,23 +497,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -632,23 +612,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -750,28 +726,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -877,28 +848,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -1004,28 +970,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -1132,23 +1093,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -1251,23 +1208,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -1373,23 +1326,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -1493,23 +1442,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -1613,23 +1558,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -1732,23 +1673,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -1850,28 +1787,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -1977,28 +1909,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -2104,28 +2031,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -2231,28 +2153,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -2357,28 +2274,23 @@
         "questionTypes": [
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "classify",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -2483,28 +2395,23 @@
         "questionTypes": [
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "classify",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -2609,28 +2516,23 @@
         "questionTypes": [
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "classify",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -2735,28 +2637,23 @@
         "questionTypes": [
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "classify",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -2864,18 +2761,15 @@
         "questionTypes": [
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -2972,18 +2866,15 @@
         "questionTypes": [
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -3080,18 +2971,15 @@
         "questionTypes": [
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -3188,18 +3076,15 @@
         "questionTypes": [
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -3299,18 +3184,15 @@
         "questionTypes": [
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -3410,23 +3292,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -3531,23 +3409,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -3654,23 +3528,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -3773,23 +3643,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -3891,28 +3757,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -4018,28 +3879,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -4145,28 +4001,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -4273,23 +4124,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -4392,23 +4239,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -4511,23 +4354,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -4632,23 +4471,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -4751,23 +4586,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -4871,23 +4702,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -4988,23 +4815,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -5105,23 +4928,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -5224,23 +5043,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -5347,23 +5162,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -5464,23 +5275,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -5582,28 +5389,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -5709,28 +5511,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -5836,28 +5633,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -5963,28 +5755,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -6090,28 +5877,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -6217,28 +5999,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -6346,23 +6123,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -6466,23 +6239,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -6587,23 +6356,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -6707,23 +6472,19 @@
         "questionTypes": [
           {
             "type": "calc",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -6825,28 +6586,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -6952,28 +6708,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -7079,28 +6830,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -7206,28 +6952,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -7333,28 +7074,23 @@
         "questionTypes": [
           {
             "type": "geometry",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -7461,28 +7197,23 @@
         "questionTypes": [
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "classify",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -7589,28 +7320,23 @@
         "questionTypes": [
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "classify",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -7715,28 +7441,23 @@
         "questionTypes": [
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "classify",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -7841,28 +7562,23 @@
         "questionTypes": [
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "classify",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "judge",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -7967,18 +7683,15 @@
         "questionTypes": [
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -8075,18 +7788,15 @@
         "questionTypes": [
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -8183,18 +7893,15 @@
         "questionTypes": [
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [
@@ -8297,18 +8004,15 @@
         "questionTypes": [
           {
             "type": "apply",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "fill",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           },
           {
             "type": "choice",
-            "coefficient": 1,
-            "rawType": null
+            "coefficient": 1
           }
         ],
         "contextDefault": [

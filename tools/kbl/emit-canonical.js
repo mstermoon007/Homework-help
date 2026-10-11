@@ -73,7 +73,7 @@ function buildKpEntry(k) {
   var maps = (mapByKp[k.id] || []);
   maps.sort(function (a, b) { return primaryTypeOrder.indexOf(a.questionType) - primaryTypeOrder.indexOf(b.questionType); });
   var primary = maps[0] || null;
-  var questionTypes = (c.allowedTypes || []).map(function (t) { return { type: t, coefficient: 1, rawType: null }; });
+  var questionTypes = (c.allowedTypes || []).map(function (t) { return { type: t, coefficient: 1 }; });
   var isGeo = k.domain === 'geometry';
   var ops = (c.operations || []).map(function (o) { return OP_MAP[o] || o; });
   if (isGeo) ops = [];

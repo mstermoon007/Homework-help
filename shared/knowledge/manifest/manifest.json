@@ -19,17 +19,17 @@
     "algorithm": "sha256",
     "files": {
       "data/math/curriculum.json": "cacb35c21cc0731aaf4dec56a80e5da257d8de145896d3a7eed79a8274b7f6c1",
-      "data/math/g1/knowledge-points.json": "670c9b2546820d46bb9cf567c7b591ceb8f41adeeb9eeb05d40ff5006623587b",
-      "data/math/g2/knowledge-points.json": "9ed52ea8b25c5f48bf4f4e9c2603a410c196f09164ce1331e1d8ad0a39b049b6",
-      "data/math/g3/knowledge-points.json": "64eb22e1727870ab2e92b55b684e74d0f0f5514d8cefd705c7525a0f7fd40f95",
-      "data/math/g4/knowledge-points.json": "16ac1a755df7f72a69dd499e3ab40cda69fc7d4cea9a0105cfc2a4ea22004dbd",
-      "data/math/g5/knowledge-points.json": "2a5f444b1653c9353245300811e33426982213d7e55264fb3468fab68b606c98",
-      "data/math/g6/knowledge-points.json": "dbe5fabf69bbd66ca3baa86dcf38c01928b6bb988aed3043f799662a3d178f86",
+      "data/math/g1/knowledge-points.json": "06c590c388b97ad71e74ea56934d98977d861b14f73db15f42b99cea02b7970f",
+      "data/math/g2/knowledge-points.json": "718a435261f3c717dc4514544e5f3e52d1112e0492a89c2ec925f6eae67b94b5",
+      "data/math/g3/knowledge-points.json": "152b699b6c42e5c07fbd25ffa46dd5844e22710df5889e21971a3f9bee1358b4",
+      "data/math/g4/knowledge-points.json": "584f4382798f36dd58d5531b240a4f03f9e59cb6d5e37f9f90a55b877136e65a",
+      "data/math/g5/knowledge-points.json": "6c95d714a26e2a48aea0a8375fabde36d804bb97a5b1463b27052a69d7fa1a67",
+      "data/math/g6/knowledge-points.json": "d26567bc45febe2ffd6da531339d1fc44031c89485f2346ffff6f869d46378a2",
       "relations/math/relations.json": "d2968eab236b174825c31c7e78f3f171a545439e0eda24b9903b7f582b2687eb",
       "mappings/generation-contract/math.json": "e3fc2017b954d67b8aa61d396c96c521c0fd593f069bdbd486ed5cd4628c2136",
       "index/index.json": "2bdd0282c8694245ab8597f09488c41ce4ce29e44811851e1ea5f5052ad517a3",
-      "teaching/misconception-profiles.json": "760e8141eccb5ab5c36fe009c691c506802f9e047c618653a4b096a2305f84c1"
+      "teaching/misconception-profiles.json": "157ca9140c2b2064e10359683fc21c810dca634f573d644841ce759c09f9427b"
     },
-    "rootHash": "af40e17a2affb50810ef516bbbd39595f1b4c471e0a3f5ada5a2379ace8d8df8"
+    "rootHash": "82c59dfeba12607691254dcbb1241e0f7991d6fe4539fa3b06f62d5705420298"
   }
 }

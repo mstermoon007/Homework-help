@@ -1412,7 +1412,7 @@ function getDefaultFromKP(kp, supported) {
   var qts = kp && kp.presentation && kp.presentation.questionTypes;
   if (!Array.isArray(qts)) return null;
   for (var i = 0; i < qts.length; i++) {
-    var token = qts[i] && (qts[i].rawType || qts[i].type);
+    var token = qts[i] && qts[i].type;
     if (!token) continue;
     var norm = Registry.normalizeQuestionType(token);
     if (norm && norm.id && supported.indexOf(norm.id) !== -1) return norm.id;
@@ -1461,7 +1461,7 @@ function toEngineMeta(kp) {
   meta.number_range_default = (kp.numeric && kp.numeric.range) || null;
   meta.context_default = (kp.context && kp.context.defaults && kp.context.defaults[0]) || null;
   meta.applicable_question_types = ((kp.presentation && kp.presentation.questionTypes) || []).map(function (q) {
-    return { type: q.type || q.rawType, coefficient: q.weight != null ? q.weight : 1 };
+    return { type: q.type, coefficient: q.weight != null ? q.weight : 1 };
   });
   return meta;
 }
@@ -5013,7 +5013,6 @@ __defs["shared/capability/capability-model.js"] = function (module, exports, req
 
 'use strict';
 
-var TYPES = require("shared/knowledge/question-type-registry.js").TYPES;
 var Registry = require("shared/knowledge/question-type-registry.js");
 
 function defaultCapability() {
@@ -5039,10 +5038,12 @@ function isValidCapability(c) {
 function resolveCapability(canonicalKp) {
   
   
+  
+  
   var result = defaultCapability();
   result.knowledgePointId = canonicalKp.id || '';
 
-  var pushQt = function (typeToken, qtMeta) {
+  var pushQt = function (typeToken) {
     if (!typeToken) return;
     var std = Registry.normalizeQuestionType(typeToken);
     if (!std.id) return;
@@ -5052,17 +5053,15 @@ function resolveCapability(canonicalKp) {
     result.questionTypes.push({
       id: std.id,
       cognitiveLevels: (qt && qt.cognitiveLevels) || ['understand'],
-      difficultyRange: inferDifficultyRange(canonicalKp, std.id),
+      difficultyRange: inferDifficultyRange(canonicalKp),
       priority: 1,
       supported: true
     });
   };
 
   
-  
-  
   (canonicalKp.presentation && canonicalKp.presentation.questionTypes || []).forEach(function (q) {
-    pushQt(q.type || q.rawType);
+    pushQt(q.type);
   });
 
   
@@ -5074,7 +5073,7 @@ function resolveCapability(canonicalKp) {
   return result;
 }
 
-function inferDifficultyRange(kp, qtypeId) {
+function inferDifficultyRange(kp) {
   
   
   var ms = 1;

@@ -41,7 +41,7 @@ function toEngineMeta(kp) {
   meta.number_range_default = (kp.numeric && kp.numeric.range) || null;
   meta.context_default = (kp.context && kp.context.defaults && kp.context.defaults[0]) || null;
   meta.applicable_question_types = ((kp.presentation && kp.presentation.questionTypes) || []).map(function (q) {
-    return { type: q.type || q.rawType, coefficient: q.weight != null ? q.weight : 1 };
+    return { type: q.type, coefficient: q.weight != null ? q.weight : 1 };
   });
   return meta;
 }
