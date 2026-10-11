@@ -3234,7 +3234,7 @@ __defs["shared/knowledge/question-type-registry.js"] = function (module, exports
     'avg-speed': 'apply', 'ratio-prop': 'apply', 'ratio-simp': 'apply', 'frac-percent': 'apply', 'cy-cone': 'apply',
     'cyl-cone': 'apply', 'number-shape': 'apply', 'percent-ratio': 'apply', 'magic-adv': 'apply', 'array-adv': 'apply',
     competition: 'apply', modulo: 'apply', recursion: 'apply', derangement: 'apply', periodic: 'apply',
-    'sequence-sum': 'apply', extremum: 'apply', winning: 'apply', 'define-op': 'apply', 'complex-frac': 'apply',
+    'sequence-sum': 'apply', extremum: 'apply', 'define-op': 'apply', 'complex-frac': 'apply',
     diophantine: 'apply', eq1: 'apply', eq2: 'apply', 'frac-mult-int': 'apply', 'frac-mult-frac': 'apply',
     'frac-div-int': 'apply', 'frac-div-frac': 'apply', 'dec-perc': 'apply', 'frac-mult-div': 'apply',
     'solve-proportion': 'apply', 'frac-order': 'apply', 'solve-equation': 'apply', 'cylinder-cone': 'apply',
@@ -3260,7 +3260,7 @@ __defs["shared/knowledge/question-type-registry.js"] = function (module, exports
     motion: 'geometry', transform: 'geometry', basic: 'geometry', meet: 'geometry', chase: 'geometry', train: 'geometry',
     river: 'geometry', extreme: 'geometry', drawer: 'geometry', integrated: 'geometry', misc: 'geometry', mock: 'geometry',
     'geometry-count': 'geometry', 'circle-angle': 'geometry', 'solid-rotation': 'geometry', 'interval-departure': 'geometry',
-    'pick-up': 'geometry', mixture: 'geometry', all: 'geometry', 'factor-multiple': 'geometry',
+    'pick-up': 'geometry', mixture: 'geometry',
     read: 'geometry', number: 'geometry', count: 'geometry', tally: 'geometry', enum: 'geometry',
     recognize: 'geometry',
     table: 'geometry', picto: 'geometry', set: 'geometry', place: 'geometry',
@@ -3268,7 +3268,7 @@ __defs["shared/knowledge/question-type-registry.js"] = function (module, exports
     ym: 'geometry', relation: 'geometry', operator: 'geometry', readwrite: 'geometry', approx: 'geometry',
     length: 'geometry', mass: 'geometry', time: 'geometry', pattern: 'geometry', 'mult-meaning': 'geometry',
     'div-meaning': 'geometry', unit: 'geometry', convert: 'geometry', order: 'geometry', compare: 'geometry',
-    'big-compare': 'geometry', parity: 'geometry', divisible: 'geometry', prime: 'geometry', factor: 'geometry',
+    'big-compare': 'geometry', parity: 'geometry', divisible: 'geometry', prime: 'geometry',
     'digit-reason': 'geometry',
     classify: 'classify', sort: 'classify', group: 'classify', grouping: 'classify', category: 'classify',
     'class-sort': 'classify', tallyChart: 'classify'
@@ -3282,13 +3282,6 @@ __defs["shared/knowledge/question-type-registry.js"] = function (module, exports
     'rotation-draw', 'polygon-height', 'coordinate-plot', 'geomcount', 'geometry-count', 'grid-quad',
     'circle-angle', 'solid-rotation', 'angle-degree', 'angle-metric', 'shape-feature', 'line-ray',
     'draw-line', 'draw-angle', 'draw-shape', 'motion', 'transform', 'count-graph', 'measure'
-  ];
-
-  var RECOGNIZE_KEYWORDS = [
-    'read', 'number', 'count', 'tally', 'enum', 'classify', 'table', 'picto', 'set', 'place',
-    'digit', 'composite', 'shard', 'ym', 'relation', 'operator', 'readwrite', 'approx', 'length',
-    'mass', 'time', 'pattern', 'meaning', 'unit', 'convert', 'order', 'compare', 'parity',
-    'divisible', 'prime', 'factor', 'recognize', 'recall'
   ];
 
   var BY_ID = {};
@@ -3324,9 +3317,10 @@ __defs["shared/knowledge/question-type-registry.js"] = function (module, exports
     for (i = 0; i < GEOMETRY_KEYWORDS.length; i++) {
       if (lower.indexOf(GEOMETRY_KEYWORDS[i]) !== -1) return { id: 'geometry', confidence: 'heuristic' };
     }
-    for (i = 0; i < RECOGNIZE_KEYWORDS.length; i++) {
-      if (lower.indexOf(RECOGNIZE_KEYWORDS[i]) !== -1) return { id: 'geometry', confidence: 'heuristic' };
-    }
+    
+    
+    
+    
     if (opts.allowHeuristic !== false) return { id: 'calc', confidence: 'heuristic' };
     return { id: null, confidence: 'unmapped' };
   }
@@ -5065,8 +5059,10 @@ function resolveCapability(canonicalKp) {
   };
 
   
+  
+  
   (canonicalKp.presentation && canonicalKp.presentation.questionTypes || []).forEach(function (q) {
-    pushQt(q.rawType || q.type);
+    pushQt(q.type || q.rawType);
   });
 
   

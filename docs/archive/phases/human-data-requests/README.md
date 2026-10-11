@@ -131,6 +131,19 @@
 | H4 | F-TYPE-2 Frozen 修复授权 | 未授权；76~79/598 KP（13%）capability 与声明题型不一致 | 题型分布真实性（POL 侧仅按 ALLOW 分配可降噪不治本） | 授权修复 或 明确随 H1 数据修复时一并处理 |
 | H5 | adaptive UI / favicon / 低容量文案 | 未决（可选） | 无 | 可继续挂起；任一启用时单独提需求 |
 
+### H1–H5 签批处置结果（P37，2026-10-12）
+
+> 用户 2026-10-12 指令「按照P36的序列，根据方案，逐项解决」，逐项取证（只读）+ AskUserQuestion 签批。
+> 核心发现：H1/H2/H3 数字口径均为 P13 期 598-KP 旧体系，按当前基线（canonical 375 / 1570 ALLOW）重新对账后大部分已随体系重建消解。
+
+| # | 处置 | 取证结论 |
+|---|---|---|
+| H1 | **取证销账（旧口径污染）** | 源 Excel 实际仅 2 sheet：Sheet1 375 行（字段：年级/版本/册/数学分类/单元/单元名称/知识点/知识点释义，无映射列）+「知识点」空表——**无 sheet 4 可派生**。且当前 375 KP **100% 有 allow 绑定**（mappings unique=375，缺口 0），6b 1570 行全 PASS。「243/598 缺口」已随 P25+ 体系重建消解。未来提升每 KP 题型行数属增强，非债务 |
+| H2 | **取证销账（旧口径污染）** | seedDifficulty/cognitiveLevel/type/maxSteps/numberRange 为 P13 期字段体系，当前 canonical 结构已不含；语义由 T2 派生（qt-intent/variation-profiles）+ Difficulty Authority + `plan.constraints.numberRange`（P35-DEBT-1 接通 23 生成器）替代。G1 样本正常生成（g1-down-u01-k001 5 行 / g1-down-u02-k002 4 行 ALLOW） |
+| H3 | **销账（25 已接入 + 33 维持剔除）** | 58 = 25 个已在当前 375 且 active+有绑定（可练）；33 个（7 deprecated / 25 active-draft / 1 inactive）源 Excel 已无行（Sheet1=375 行）。用户签批**维持剔除**，基线 375 不动。未来接入须 root Excel 补行 + 基线扩容（375→408）+ 全链重冻，另立项 |
+| H4 | **已授权 Frozen 修复 → P37-02 执行** | 用户 2026-10-12 签批「授权 Frozen 修复」。执行前须按当前 375 口径重新取证：① RECOGNIZE_KEYWORDS ② factor 族→geometry 别名 ③ capability-model 三修复点是否仍存在于当前代码（76~79/598 为旧口径），并处置 P36-03 登记的 question-type-registry `'winning'` 键可达性 |
+| H5 | **销账（维持现状）** | 用户签批「查阅源excel，若是旧数据污染，直接清理」——三项均非 Excel 数据问题：favicon 404 维持、adaptive UI 挂起（启用需产品定义数据来源）、低容量 KP 不加提示文案。登记维持现状销账 |
+
 ---
 
 ## 汇总表

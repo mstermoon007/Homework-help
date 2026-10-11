@@ -14,7 +14,7 @@
  * 归并策略（确定性、可审计）：
  *   1) 精确匹配 7 类规范 ID
  *   2) 显式 canonical 别名（operate->calc / recognize->geometry / open->apply / classify 独立）
- *   3) 关键字启发式：几何关键字 -> geometry；认读关键字 -> geometry；其余 -> calc
+ *   3) 关键字启发式：几何关键字 -> geometry；其余 -> calc（P37-02 删除认读关键字启发式）
  * 启发式归并结果在 verifier 中以 WARNING 暴露，不静默伪造。
  *
  * 纯数据 + 纯函数；不依赖 DOM / 插件 / 生成器。
@@ -90,7 +90,7 @@
     'avg-speed': 'apply', 'ratio-prop': 'apply', 'ratio-simp': 'apply', 'frac-percent': 'apply', 'cy-cone': 'apply',
     'cyl-cone': 'apply', 'number-shape': 'apply', 'percent-ratio': 'apply', 'magic-adv': 'apply', 'array-adv': 'apply',
     competition: 'apply', modulo: 'apply', recursion: 'apply', derangement: 'apply', periodic: 'apply',
-    'sequence-sum': 'apply', extremum: 'apply', winning: 'apply', 'define-op': 'apply', 'complex-frac': 'apply',
+    'sequence-sum': 'apply', extremum: 'apply', 'define-op': 'apply', 'complex-frac': 'apply',
     diophantine: 'apply', eq1: 'apply', eq2: 'apply', 'frac-mult-int': 'apply', 'frac-mult-frac': 'apply',
     'frac-div-int': 'apply', 'frac-div-frac': 'apply', 'dec-perc': 'apply', 'frac-mult-div': 'apply',
     'solve-proportion': 'apply', 'frac-order': 'apply', 'solve-equation': 'apply', 'cylinder-cone': 'apply',
@@ -116,7 +116,7 @@
     motion: 'geometry', transform: 'geometry', basic: 'geometry', meet: 'geometry', chase: 'geometry', train: 'geometry',
     river: 'geometry', extreme: 'geometry', drawer: 'geometry', integrated: 'geometry', misc: 'geometry', mock: 'geometry',
     'geometry-count': 'geometry', 'circle-angle': 'geometry', 'solid-rotation': 'geometry', 'interval-departure': 'geometry',
-    'pick-up': 'geometry', mixture: 'geometry', all: 'geometry', 'factor-multiple': 'geometry',
+    'pick-up': 'geometry', mixture: 'geometry',
     read: 'geometry', number: 'geometry', count: 'geometry', tally: 'geometry', enum: 'geometry',
     recognize: 'geometry',
     table: 'geometry', picto: 'geometry', set: 'geometry', place: 'geometry',
@@ -124,7 +124,7 @@
     ym: 'geometry', relation: 'geometry', operator: 'geometry', readwrite: 'geometry', approx: 'geometry',
     length: 'geometry', mass: 'geometry', time: 'geometry', pattern: 'geometry', 'mult-meaning': 'geometry',
     'div-meaning': 'geometry', unit: 'geometry', convert: 'geometry', order: 'geometry', compare: 'geometry',
-    'big-compare': 'geometry', parity: 'geometry', divisible: 'geometry', prime: 'geometry', factor: 'geometry',
+    'big-compare': 'geometry', parity: 'geometry', divisible: 'geometry', prime: 'geometry',
     'digit-reason': 'geometry',
     classify: 'classify', sort: 'classify', group: 'classify', grouping: 'classify', category: 'classify',
     'class-sort': 'classify', tallyChart: 'classify'
@@ -138,13 +138,6 @@
     'rotation-draw', 'polygon-height', 'coordinate-plot', 'geomcount', 'geometry-count', 'grid-quad',
     'circle-angle', 'solid-rotation', 'angle-degree', 'angle-metric', 'shape-feature', 'line-ray',
     'draw-line', 'draw-angle', 'draw-shape', 'motion', 'transform', 'count-graph', 'measure'
-  ];
-
-  var RECOGNIZE_KEYWORDS = [
-    'read', 'number', 'count', 'tally', 'enum', 'classify', 'table', 'picto', 'set', 'place',
-    'digit', 'composite', 'shard', 'ym', 'relation', 'operator', 'readwrite', 'approx', 'length',
-    'mass', 'time', 'pattern', 'meaning', 'unit', 'convert', 'order', 'compare', 'parity',
-    'divisible', 'prime', 'factor', 'recognize', 'recall'
   ];
 
   var BY_ID = {};
@@ -180,9 +173,10 @@
     for (i = 0; i < GEOMETRY_KEYWORDS.length; i++) {
       if (lower.indexOf(GEOMETRY_KEYWORDS[i]) !== -1) return { id: 'geometry', confidence: 'heuristic' };
     }
-    for (i = 0; i < RECOGNIZE_KEYWORDS.length; i++) {
-      if (lower.indexOf(RECOGNIZE_KEYWORDS[i]) !== -1) return { id: 'geometry', confidence: 'heuristic' };
-    }
+    // P37-02（F-TYPE-2 修复①）：RECOGNIZE_KEYWORDS 认读子串启发式已删除——
+    // 该启发式将 read/count/pattern/factor 等宽泛子串误归 geometry，是历史 598-KP
+    // 口径题型不一致（F-TYPE-2）的根因之一。未命中显式别名/几何关键字时落到
+    // 通用兜底（allowHeuristic ? calc : null），不再特判 geometry。
     if (opts.allowHeuristic !== false) return { id: 'calc', confidence: 'heuristic' };
     return { id: null, confidence: 'unmapped' };
   }

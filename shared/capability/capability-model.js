@@ -64,9 +64,11 @@ function resolveCapability(canonicalKp) {
     });
   };
 
-  // 1) 从 canonical presentation.questionTypes（含 rawType）推导
+  // 1) 从 canonical presentation.questionTypes 推导。
+  //    P37-02（F-TYPE-2 修复③）：type（已归一化题型）优先，rawType（历史原始值）
+  //    仅在 type 缺失时补充——历史 rawType 走别名表可能错归题型，已归一化 type 是权威。
   (canonicalKp.presentation && canonicalKp.presentation.questionTypes || []).forEach(function (q) {
-    pushQt(q.rawType || q.type);
+    pushQt(q.type || q.rawType);
   });
 
   // 2) 从 canonical generation.capabilities（M1 数据推导）补充
